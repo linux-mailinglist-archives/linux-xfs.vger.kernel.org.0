@@ -2,123 +2,157 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 482CE22BD8F
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 07:35:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 299BB22BDA4
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 07:43:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgGXFfd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Jul 2020 01:35:33 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:46430 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726277AbgGXFfc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 01:35:32 -0400
-Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 247FBD5A713;
-        Fri, 24 Jul 2020 15:35:27 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jyqMg-0003Y7-JZ; Fri, 24 Jul 2020 15:35:26 +1000
-Date:   Fri, 24 Jul 2020 15:35:26 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Allison Collins <allison.henderson@oracle.com>
+        id S1726280AbgGXFnn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Jul 2020 01:43:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34326 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgGXFnm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 01:43:42 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06O5cP0s065696;
+        Fri, 24 Jul 2020 05:43:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=VIo4FYpjFm5+NIyGSgCJLUdoy9aE8bd6gPe0wttPKtY=;
+ b=Y54UPlR4KEwmEoElggW3CqVkumcVv/rqvHjNrOV0REGEebSOg7NgrgvB0Iv1BqD1rWp+
+ jln/DTmgh+bmeOQtnqbsBnhdydebFF6lx4BJ8wd/PIi8Z3aAj5hRJyuRcKn2xisqRgY7
+ KH1CLjOvqn3pRcS5Ei6Udb1xIetU4SqisACo4aZaU8r9zueLs9AYJ7KTt5RAmjKFBo+d
+ 3A3nQNf09Td6sjoyjKHo4taCgxC0DQYpnj0N2AG7hVEaoZJ/myhENxDzmmG1ircHA6cZ
+ HUoIpur1PsU71hB8SoGd3awUe4oq0pid6xjVT/fy0tx8M12QTCzM7EGmUOCLYn+a8q5k Iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 32bs1mw73x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 24 Jul 2020 05:43:40 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06O5dBO4154074;
+        Fri, 24 Jul 2020 05:41:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32fhy6sswp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jul 2020 05:41:39 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06O5ackh007852;
+        Fri, 24 Jul 2020 05:36:38 GMT
+Received: from localhost (/10.159.156.50)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 23 Jul 2020 22:36:38 -0700
+Date:   Thu, 23 Jul 2020 22:36:37 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Carlos Maiolino <cmaiolino@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v11 00/25] xfs: Delay Ready Attributes
-Message-ID: <20200724053526.GP2005@dread.disaster.area>
-References: <20200721001606.10781-1-allison.henderson@oracle.com>
- <20200724034100.GN2005@dread.disaster.area>
+Subject: Re: [PATCH 1/5] xfs: Remove kmem_zone_alloc() usage
+Message-ID: <20200724053637.GQ3151642@magnolia>
+References: <20200722090518.214624-1-cmaiolino@redhat.com>
+ <20200722090518.214624-2-cmaiolino@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200724034100.GN2005@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
-        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=kj9zAlcOel0A:10 a=_RQrkK6FrEwA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=wVkfdLxGgUcmzkAhm8wA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200722090518.214624-2-cmaiolino@redhat.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ phishscore=0 adultscore=0 malwarescore=0 bulkscore=0 suspectscore=5
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240042
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007240042
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 01:41:00PM +1000, Dave Chinner wrote:
-> On Mon, Jul 20, 2020 at 05:15:41PM -0700, Allison Collins wrote:
-> > Hi all,
-> > 
-> > This set is a subset of a larger series for delayed attributes. Which is a
-> > subset of an even larger series, parent pointers. Delayed attributes allow
-> > attribute operations (set and remove) to be logged and committed in the same
-> > way that other delayed operations do. This allows more complex operations (like
-> > parent pointers) to be broken up into multiple smaller transactions. To do
-> > this, the existing attr operations must be modified to operate as either a
-> > delayed operation or a inline operation since older filesystems will not be
-> > able to use the new log entries.  This means that they cannot roll, commit, or
-> > finish transactions.  Instead, they return -EAGAIN to allow the calling
-> > function to handle the transaction. In this series, we focus on only the clean
-> > up and refactoring needed to accomplish this. We will introduce delayed attrs
-> > and parent pointers in a later set.
-> > 
-> > At the moment, I would like people to focus their review efforts on just this
-> > "delay ready" subseries, as I think that is a more conservative use of peoples
-> > review time.  I also think the set is a bit much to manage all at once, and we
-> > need to get the infrastructure ironed out before we focus too much anything
-> > that depends on it. But I do have the extended series for folks that want to
-> > see the bigger picture of where this is going.
-> > 
-> > To help organize the set, I've arranged the patches to make sort of mini sets.
-> > I thought it would help reviewers break down the reviewing some. For reviewing
-> > purposes, the set could be broken up into 4 different phases:
-> > 
-> > Error code filtering (patches 1-2):
-> > These two patches are all about finding and catching error codes that need to
-> > be sent back up to user space before starting delayed operations.  Errors that
-> > happen during a delayed operation are treated like internal errors that cause a
-> > shutdown.  But we wouldnt want that for example: when the user tries to rename
-> > a non existent attr.  So the idea is that we need to find all such conditions,
-> > and take care of them before starting a delayed operation.
-> >    xfs: Add xfs_has_attr and subroutines
-> >    xfs: Check for -ENOATTR or -EEXIST
-> > 
-> > Move transactions upwards (patches 3-12): 
-> > The goal of this subset is to try and move all the transaction specific code up
-> > the call stack much as possible.  The idea being that once we get them to the
-> > top, we can introduce the statemachine to handle the -EAGAIN logic where ever
-> > the transactions used to be.
-> >   xfs: Factor out new helper functions xfs_attr_rmtval_set
-> >   xfs: Pull up trans handling in xfs_attr3_leaf_flipflags
-> >   xfs: Split apart xfs_attr_leaf_addname
-> >   xfs: Refactor xfs_attr_try_sf_addname
-> >   xfs: Pull up trans roll from xfs_attr3_leaf_setflag
-> >   xfs: Factor out xfs_attr_rmtval_invalidate
-> >   xfs: Pull up trans roll in xfs_attr3_leaf_clearflag
-> >   xfs: Refactor xfs_attr_rmtval_remove
-> >   xfs: Pull up xfs_attr_rmtval_invalidate
-> >   xfs: Add helper function xfs_attr_node_shrink
-> > 
-> > Modularizing and cleanups (patches 13-22):
-> > Now that we have pulled the transactions up to where we need them, it's time to
-> > start breaking down the top level functions into new subfunctions. The goal
-> > being to work towards a top level function that deals mostly with the
-> > statemachine, and helpers for those states
-> >   xfs: Remove unneeded xfs_trans_roll_inode calls
-> >   xfs: Remove xfs_trans_roll in xfs_attr_node_removename
-> >   xfs: Add helpers xfs_attr_is_shortform and xfs_attr_set_shortform
-> >   xfs: Add helper function xfs_attr_leaf_mark_incomplete
-> >   xfs: Add remote block helper functions
-> >   xfs: Add helper function xfs_attr_node_removename_setup
-> >   xfs: Add helper function xfs_attr_node_removename_rmt
-> >   xfs: Simplify xfs_attr_leaf_addname
-> >   xfs: Simplify xfs_attr_node_addname
-> >   xfs: Lift -ENOSPC handler from xfs_attr_leaf_addname
+On Wed, Jul 22, 2020 at 11:05:14AM +0200, Carlos Maiolino wrote:
+> Use kmem_cache_alloc() directly.
 > 
-> I'm happy to see everything up to here merged.
+> All kmem_zone_alloc() users pass 0 as flags, which are translated into:
+> GFP_KERNEL | __GFP_NOWARN, and kmem_zone_alloc() loops forever until the
+> allocation succeeds.
+> 
+> We can use __GFP_NOFAIL to tell the allocator to loop forever rather
+> than doing it ourself, and because the allocation will never fail, we do
+> not need to use __GFP_NOWARN anymore. Hence, all callers can be
+> converted to use GFP_KERNEL | __GFP_NOFAIL
+> 
+> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 
-BTW, that translates as:
+Looks ok to me too (I put the comment back in),
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Acked-by: Dave Chinner <dchinner@redhat.com>
+--D
 
-For the first 22 patches.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> ---
+> 
+> Changelog:
+> 	V2:
+> 		- Wire up xfs_inode_alloc to use __GFP_NOFAIL
+> 		  if it's called inside a transaction
+> 		- Rewrite changelog in a more decent way.
+> 	V3:
+> 		- Use __GFP_NOFAIL unconditionally in xfs_inode_alloc(),
+> 		  use of PF_FSTRANS will be added when the patch re-adding
+> 		  it is moved to mainline.
+> 
+>  fs/xfs/libxfs/xfs_alloc.c |  3 ++-
+>  fs/xfs/libxfs/xfs_bmap.c  |  3 ++-
+>  fs/xfs/xfs_icache.c       | 10 ++--------
+>  3 files changed, 6 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+> index 203e74fa64aa6..583242253c027 100644
+> --- a/fs/xfs/libxfs/xfs_alloc.c
+> +++ b/fs/xfs/libxfs/xfs_alloc.c
+> @@ -2467,7 +2467,8 @@ xfs_defer_agfl_block(
+>  	ASSERT(xfs_bmap_free_item_zone != NULL);
+>  	ASSERT(oinfo != NULL);
+>  
+> -	new = kmem_zone_alloc(xfs_bmap_free_item_zone, 0);
+> +	new = kmem_cache_alloc(xfs_bmap_free_item_zone,
+> +			       GFP_KERNEL | __GFP_NOFAIL);
+>  	new->xefi_startblock = XFS_AGB_TO_FSB(mp, agno, agbno);
+>  	new->xefi_blockcount = 1;
+>  	new->xefi_oinfo = *oinfo;
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index 667cdd0dfdf4a..fd5c0d669d0d7 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -553,7 +553,8 @@ __xfs_bmap_add_free(
+>  #endif
+>  	ASSERT(xfs_bmap_free_item_zone != NULL);
+>  
+> -	new = kmem_zone_alloc(xfs_bmap_free_item_zone, 0);
+> +	new = kmem_cache_alloc(xfs_bmap_free_item_zone,
+> +			       GFP_KERNEL | __GFP_NOFAIL);
+>  	new->xefi_startblock = bno;
+>  	new->xefi_blockcount = (xfs_extlen_t)len;
+>  	if (oinfo)
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 58a750ce689c0..c2d97e4f131fb 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -36,14 +36,8 @@ xfs_inode_alloc(
+>  {
+>  	struct xfs_inode	*ip;
+>  
+> -	/*
+> -	 * if this didn't occur in transactions, we could use
+> -	 * KM_MAYFAIL and return NULL here on ENOMEM. Set the
+> -	 * code up to do this anyway.
+> -	 */
+> -	ip = kmem_zone_alloc(xfs_inode_zone, 0);
+> -	if (!ip)
+> -		return NULL;
+> +	ip = kmem_cache_alloc(xfs_inode_zone, GFP_KERNEL | __GFP_NOFAIL);
+> +
+>  	if (inode_init_always(mp->m_super, VFS_I(ip))) {
+>  		kmem_cache_free(xfs_inode_zone, ip);
+>  		return NULL;
+> -- 
+> 2.26.2
+> 
