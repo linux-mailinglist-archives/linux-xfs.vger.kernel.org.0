@@ -2,60 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D98222CB3F
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 18:43:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7988A22CB5D
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 18:46:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbgGXQnG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Jul 2020 12:43:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33804 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbgGXQnG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 12:43:06 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OGWet3137593
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:43:03 GMT
+        id S1726617AbgGXQqc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Jul 2020 12:46:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:58386 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbgGXQqc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 12:46:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OGVvIX099143
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:46:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
  subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=aWKcJtprvT5DjVSiT0zikw1G+q6b5v29bvF43hLcTyw=;
- b=lYO/oLNoDiPay0gLbSD0y0T03mTuY6712PNgkken1eoidb83AHc57rS2kvEYgyvu1WBk
- ohJE2jp9cwBdWa1GrupAFUg+t2zMcX1xfuEme1IS3dDonTyjHGI1WNyntEe5dRshRxVf
- v3Bos4JcLzdAXLwDqXolT8h9yOoeTHhZ5SDc0icOljlluhaYN3eip4XQnHyuC+swCWtO
- 2y0bI57cH6UR5qabUaSPO0jGtUHXd550S43YmWZGYoZ3KtXQZ72vObotGGDgXZs5H6XY
- SB0E9b8W3/m0EQv91ex/XeFbN4OR/v+H0NYEwg+zRCKfKnt2uk/996tclGKH3D16BRFs 0g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32brgs04w7-1
+ bh=/+vpTZ7u4gb8QKOfDzOOVT5hJSaFP4o/IU2dpyXJRvg=;
+ b=bUv49ZmnFwARtSJf0o2oBNIAgvSm44lmRaa9+Lo7k2ooqlpYrpzKVVRdehx14c6GNJlc
+ 3TM4B+7YHbtS3HI9yiI+zJWBk+rlEL8u9jkaIKorQ/TuKva3eMPjSJF4H7uk+huX++nZ
+ Jg4JudOF1xlXF4xAC2oZY/NcNzOTznQ+QnJWyUJaAf7soG8YpXcPYW640Faj/SPMslpu
+ rzkNaLEwLt/4D7Vq2OGmEe1guZb9h8VJ+bqVfIUQekz1UxhGpMuMTlo7qCnNLzD7wnQK
+ vGT1R9Qoh8WgOPUeFyPEy9r5edNN2tIZrji7BYQ0ldv+8G0XM8a892450zgr4mK2osjI hQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 32bs1n040a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:43:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OGYK5E175378
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:43:03 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32g38w8yx9-1
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:46:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06OGhcgX092042
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:44:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 32g3dw81k5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:43:02 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06OGgrso026951
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:42:53 GMT
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:44:28 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06OGiRMP015963
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 16:44:27 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Jul 2020 16:42:53 +0000
-Date:   Fri, 24 Jul 2020 09:42:52 -0700
+        with ESMTP ; Fri, 24 Jul 2020 09:44:27 -0700
+Date:   Fri, 24 Jul 2020 09:44:26 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next updated to 073a5a695e63
-Message-ID: <20200724164252.GJ7625@magnolia>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to 9f347d7a7e0e
+Message-ID: <20200724164426.GW3151642@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=2 spamscore=0
- mlxlogscore=999 adultscore=0 malwarescore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007240128
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=2
+ malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007240128
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9692 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 suspectscore=2 adultscore=0 clxscore=1015 mlxlogscore=999
- priorityscore=1501 phishscore=0 lowpriorityscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 bulkscore=0 adultscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
+ spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2007240128
 Sender: linux-xfs-owner@vger.kernel.org
@@ -71,20 +71,63 @@ The for-next branch of the xfs-linux repository at:
 
 has just been updated.
 
-This branch adds both quota cleanup patchsets to the async inode
-flushing series from two weeks ago.  This is about as far as I want to
-go during the first week of the merge window.
+This second update contains both Carlos' series that eliminates our
+bespoke kmem_alloc flags in favor of using the existing slab
+functionality; and the first 22 patches of Allison's xattr cleanup
+series, which by consolidating transaction management duties starts us
+down the path towards directory parent pointers.  These patches have had
+less time to soak together, so I think I'll delay these until the second
+week of the merge window.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.  This is it for 5.9, other than bug fixes.
+
+Sorry for this being later in the week than I wanted.  Still recovering
+from back problems. :(
 
 The new head of the for-next branch is commit:
 
-073a5a695e63 xfs: xfs_btree_staging.h: delete duplicated words
+9f347d7a7e0e xfs: Lift -ENOSPC handler from xfs_attr_leaf_addname
 
 New Commits:
+
+Allison Collins (22):
+      [cfe3d8821c6f] xfs: Add xfs_has_attr and subroutines
+      [9a1ba001993d] xfs: Check for -ENOATTR or -EEXIST
+      [4b971430bc8c] xfs: Factor out new helper functions xfs_attr_rmtval_set
+      [6b92c2b89831] xfs: Pull up trans handling in xfs_attr3_leaf_flipflags
+      [11708ea13985] xfs: Split apart xfs_attr_leaf_addname
+      [c7f19ffd8361] xfs: Refactor xfs_attr_try_sf_addname
+      [83735a6dfca0] xfs: Pull up trans roll from xfs_attr3_leaf_setflag
+      [ae20f9b47979] xfs: Factor out xfs_attr_rmtval_invalidate
+      [28d507b43854] xfs: Pull up trans roll in xfs_attr3_leaf_clearflag
+      [963110828639] xfs: Refactor xfs_attr_rmtval_remove
+      [5ad9fab778e2] xfs: Pull up xfs_attr_rmtval_invalidate
+      [ca2b2d9c6bb3] xfs: Add helper function xfs_attr_node_shrink
+      [7191ab01f48f] xfs: Remove unneeded xfs_trans_roll_inode calls
+      [7edd32bc0375] xfs: Remove xfs_trans_roll in xfs_attr_node_removename
+      [5c017e3e7378] xfs: Add helpers xfs_attr_is_shortform and xfs_attr_set_shortform
+      [e55de149f8f3] xfs: Add helper function xfs_attr_leaf_mark_incomplete
+      [2f9cc8554f2a] xfs: Add remote block helper functions
+      [534c7e150352] xfs: Add helper function xfs_attr_node_removename_setup
+      [a977f5557e6e] xfs: Add helper function xfs_attr_node_removename_rmt
+      [daea66493061] xfs: Simplify xfs_attr_leaf_addname
+      [e4dbaf503021] xfs: Simplify xfs_attr_node_addname
+      [9f347d7a7e0e] xfs: Lift -ENOSPC handler from xfs_attr_leaf_addname
 
 Brian Foster (3):
       [f74681ba2006] xfs: preserve rmapbt swapext block reservation from freed blocks
       [c22c309bbfb2] xfs: drain the buf delwri queue before xfsaild idles
       [dddf0bdecbbd] xfs: fix inode allocation block res calculation precedence
+
+Carlos Maiolino (5):
+      [a96bebcf8ac3] xfs: Remove kmem_zone_alloc() usage
+      [7b4920b0e334] xfs: Remove kmem_zone_zalloc() usage
+      [cc0417dabb7e] xfs: Modify xlog_ticket_alloc() to use kernel's MM API
+      [5736c4aab953] xfs: remove xfs_zone_{alloc,zalloc} helpers
+      [65b9e9b3fac8] xfs: Refactor xfs_da_state_alloc() helper
 
 Christoph Hellwig (1):
       [76622c88c2ce] xfs: remove SYNC_WAIT and SYNC_TRYLOCK
@@ -195,65 +238,89 @@ YueHaibing (1):
 
 Code Diffstat:
 
+ fs/xfs/kmem.c                      |  21 -
+ fs/xfs/kmem.h                      |   8 -
  fs/xfs/libxfs/xfs_ag.c             |   4 +-
  fs/xfs/libxfs/xfs_ag_resv.h        |  12 -
- fs/xfs/libxfs/xfs_alloc.c          |  22 +-
- fs/xfs/libxfs/xfs_alloc_btree.c    |   8 +-
+ fs/xfs/libxfs/xfs_alloc.c          |  25 +-
+ fs/xfs/libxfs/xfs_alloc_btree.c    |  10 +-
+ fs/xfs/libxfs/xfs_attr.c           | 912 ++++++++++++++++++++++---------------
+ fs/xfs/libxfs/xfs_attr.h           |   1 +
+ fs/xfs/libxfs/xfs_attr_leaf.c      | 117 +++--
+ fs/xfs/libxfs/xfs_attr_leaf.h      |   3 +
+ fs/xfs/libxfs/xfs_attr_remote.c    | 216 ++++++---
+ fs/xfs/libxfs/xfs_attr_remote.h    |   3 +-
+ fs/xfs/libxfs/xfs_bmap.c           |   8 +-
  fs/xfs/libxfs/xfs_bmap.h           |  19 +-
+ fs/xfs/libxfs/xfs_bmap_btree.c     |   2 +-
  fs/xfs/libxfs/xfs_btree_staging.h  |   6 +-
+ fs/xfs/libxfs/xfs_da_btree.c       |  12 +-
+ fs/xfs/libxfs/xfs_da_btree.h       |   2 +-
+ fs/xfs/libxfs/xfs_dir2_node.c      |  17 +-
  fs/xfs/libxfs/xfs_dquot_buf.c      |  25 +-
  fs/xfs/libxfs/xfs_format.h         |  36 +-
  fs/xfs/libxfs/xfs_ialloc.c         |  28 +-
+ fs/xfs/libxfs/xfs_ialloc_btree.c   |   2 +-
  fs/xfs/libxfs/xfs_inode_buf.c      |  33 +-
  fs/xfs/libxfs/xfs_inode_buf.h      |   6 -
+ fs/xfs/libxfs/xfs_inode_fork.c     |   6 +-
  fs/xfs/libxfs/xfs_quota_defs.h     |  31 +-
- fs/xfs/libxfs/xfs_refcount_btree.c |   4 +-
- fs/xfs/libxfs/xfs_rmap_btree.c     |   9 +-
+ fs/xfs/libxfs/xfs_refcount_btree.c |   6 +-
+ fs/xfs/libxfs/xfs_rmap_btree.c     |  11 +-
  fs/xfs/libxfs/xfs_rtbitmap.c       |   2 +-
  fs/xfs/libxfs/xfs_shared.h         |   1 +
- fs/xfs/libxfs/xfs_trans_inode.c    | 110 ++++--
+ fs/xfs/libxfs/xfs_trans_inode.c    | 110 +++--
  fs/xfs/libxfs/xfs_trans_space.h    |   2 +-
  fs/xfs/scrub/bmap.c                |  22 +-
- fs/xfs/scrub/quota.c               |  83 ++---
+ fs/xfs/scrub/dabtree.c             |   4 +-
+ fs/xfs/scrub/quota.c               |  83 ++--
  fs/xfs/scrub/repair.c              |  10 +-
  fs/xfs/scrub/repair.h              |   4 +-
- fs/xfs/scrub/rtbitmap.c            |  47 +++
+ fs/xfs/scrub/rtbitmap.c            |  47 ++
+ fs/xfs/xfs_bmap_item.c             |   4 +-
  fs/xfs/xfs_bmap_util.c             |  18 +-
- fs/xfs/xfs_buf.c                   |  40 ++-
- fs/xfs/xfs_buf.h                   |  48 ++-
- fs/xfs/xfs_buf_item.c              | 434 +++++++++++------------
+ fs/xfs/xfs_buf.c                   |  44 +-
+ fs/xfs/xfs_buf.h                   |  48 +-
+ fs/xfs/xfs_buf_item.c              | 436 +++++++++---------
  fs/xfs/xfs_buf_item.h              |   8 +-
  fs/xfs/xfs_buf_item_recover.c      |  14 +-
- fs/xfs/xfs_dquot.c                 | 413 ++++++++++++----------
- fs/xfs/xfs_dquot.h                 | 129 ++++---
+ fs/xfs/xfs_dquot.c                 | 415 +++++++++--------
+ fs/xfs/xfs_dquot.h                 | 129 ++++--
  fs/xfs/xfs_dquot_item.c            |  26 +-
  fs/xfs/xfs_dquot_item_recover.c    |  14 +-
+ fs/xfs/xfs_extfree_item.c          |   6 +-
  fs/xfs/xfs_file.c                  |  28 +-
- fs/xfs/xfs_icache.c                | 368 ++++++-------------
+ fs/xfs/xfs_icache.c                | 378 +++++----------
  fs/xfs/xfs_icache.h                |   5 +-
- fs/xfs/xfs_inode.c                 | 702 +++++++++++++++++--------------------
+ fs/xfs/xfs_icreate_item.c          |   2 +-
+ fs/xfs/xfs_inode.c                 | 702 +++++++++++++---------------
  fs/xfs/xfs_inode.h                 |   5 +-
- fs/xfs/xfs_inode_item.c            | 319 +++++++++--------
+ fs/xfs/xfs_inode_item.c            | 322 ++++++-------
  fs/xfs/xfs_inode_item.h            |  24 +-
  fs/xfs/xfs_inode_item_recover.c    |   2 +-
- fs/xfs/xfs_iomap.c                 |  42 +--
+ fs/xfs/xfs_iomap.c                 |  42 +-
  fs/xfs/xfs_linux.h                 |   4 -
+ fs/xfs/xfs_log.c                   |   9 +-
+ fs/xfs/xfs_log_cil.c               |   3 +-
+ fs/xfs/xfs_log_priv.h              |   4 +-
  fs/xfs/xfs_log_recover.c           |   5 +-
  fs/xfs/xfs_mount.c                 |  15 +-
  fs/xfs/xfs_mount.h                 |   1 -
- fs/xfs/xfs_qm.c                    | 189 +++++-----
- fs/xfs/xfs_qm.h                    | 104 +++---
+ fs/xfs/xfs_qm.c                    | 189 ++++----
+ fs/xfs/xfs_qm.h                    | 104 ++---
  fs/xfs/xfs_qm_bhv.c                |  22 +-
- fs/xfs/xfs_qm_syscalls.c           | 250 ++++++-------
+ fs/xfs/xfs_qm_syscalls.c           | 250 +++++-----
  fs/xfs/xfs_quota.h                 |  19 +-
  fs/xfs/xfs_quotaops.c              |  26 +-
- fs/xfs/xfs_reflink.c               | 355 +++++++++----------
+ fs/xfs/xfs_refcount_item.c         |   5 +-
+ fs/xfs/xfs_reflink.c               | 355 +++++++--------
  fs/xfs/xfs_reflink.h               |   2 -
+ fs/xfs/xfs_rmap_item.c             |   5 +-
  fs/xfs/xfs_super.c                 |  19 +-
- fs/xfs/xfs_trace.h                 | 225 ++++++++----
- fs/xfs/xfs_trans.c                 |  19 +-
+ fs/xfs/xfs_trace.h                 | 226 ++++++---
+ fs/xfs/xfs_trans.c                 |  23 +-
  fs/xfs/xfs_trans.h                 |   5 -
  fs/xfs/xfs_trans_ail.c             |  26 +-
  fs/xfs/xfs_trans_buf.c             |  15 +-
- fs/xfs/xfs_trans_dquot.c           | 366 +++++++++----------
- 61 files changed, 2440 insertions(+), 2390 deletions(-)
+ fs/xfs/xfs_trans_dquot.c           | 369 ++++++++-------
+ 85 files changed, 3277 insertions(+), 2963 deletions(-)
