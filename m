@@ -2,162 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5559522BDF1
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 08:13:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABB6A22BDF2
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 08:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgGXGNs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Jul 2020 02:13:48 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20340 "EHLO
+        id S1726567AbgGXGNy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Jul 2020 02:13:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58848 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726178AbgGXGNs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 02:13:48 -0400
+        with ESMTP id S1726178AbgGXGNy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 02:13:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1595571227;
+        s=mimecast20190719; t=1595571232;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=hOs/+Z1TAprZ/Tr3hSwuV2KPK7EvslyeXlcmX5gxBNA=;
-        b=i/U4sdbdxkZU3PnNpR4Dx5YEFbhY+1uI4zqSzSnqfMNfH8iRB0cqTPuGygI41gRj4oK2Fc
-        nRXEFR3ZRt6LCEgBDAwfu/M++sdBFCrQVbTJcykxaUSd017+Rp2nRw2/xHciSG9sNLYhSa
-        Ga/E025dHM2o1JOJ5EO9H5i43VINWTs=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-yGcp9yKaM4qZzJQKdbXnvA-1; Fri, 24 Jul 2020 02:13:45 -0400
-X-MC-Unique: yGcp9yKaM4qZzJQKdbXnvA-1
-Received: by mail-pf1-f200.google.com with SMTP id y73so5614007pfb.8
-        for <linux-xfs@vger.kernel.org>; Thu, 23 Jul 2020 23:13:44 -0700 (PDT)
+        bh=BO9n6hVZpzBnYCRr3ajb6n9ABkf1XIdzDLUFQFkkBXg=;
+        b=Mw8uXqKlDUncI9OeWGZMffQq+DgoooXG845FVPkdNyjwboxJx5Rdy3WgcMVhQ+twYzI0hM
+        FBah3SetED078JiWRL/iQncNIimbCHf4GwpJqZZ6rdzC2eRRRDizoBo8TidXwYCKFyi36i
+        VUEsFkxq36cMR1K8A75ZSqpGq9+AF0g=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-fBNXa7xtPn6PKdQ7QccUVQ-1; Fri, 24 Jul 2020 02:13:50 -0400
+X-MC-Unique: fBNXa7xtPn6PKdQ7QccUVQ-1
+Received: by mail-pl1-f200.google.com with SMTP id o10so4887221plk.12
+        for <linux-xfs@vger.kernel.org>; Thu, 23 Jul 2020 23:13:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hOs/+Z1TAprZ/Tr3hSwuV2KPK7EvslyeXlcmX5gxBNA=;
-        b=GoCvWDezKmwdcarjly4jkK+cf+5agrWDDPNJ8zQhuDUPSv+MfB0jpY0R0X84/r5SYo
-         fMSrIX9EVBL8qc5+k/0P7bPHRX9kcvBkXVI/0W/araPXtb3shuHLqeprBLLbFlAbEUau
-         ylviUdfsKitKDxIKGNRPQ0qTn/Kp906k4dofPd3g8wDiSL7w4I2LZmvicNiUT4FBdsmM
-         Pn2jE3uoZ4IGJ7JuuIQYd6ap4POqtJPgePUaqRGy4ITOPW2TeUrq1B+ohKUEOSLov95d
-         rvTbfR4V6HlmH9+iD7Hq+3vSq1xvsPdSOPBtsK/fh6IaIkWPPR4U/GCk+jxcGHflqrdt
-         C/9g==
-X-Gm-Message-State: AOAM533aUfhOLRKHZaB4tZGZiYUzK/xSpDkydBytQV7daC8oa+mCo8F5
-        SFT+jtF0SIprUf+MmzXVrT/faItm6tEXCHT4yxsyzIe8bdeawWTOtq/yz4GCvEwymzrbTc8HoZC
-        FHq9mNhB6+gIdcBO3RsyE
-X-Received: by 2002:a63:aa42:: with SMTP id x2mr7079274pgo.361.1595571223770;
-        Thu, 23 Jul 2020 23:13:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyJKF6Xj727ZmWeXsPgIaavEOv8Ii5bc5PStndkuwrWLZdG/c0i+xZXaJePH4++tCqwxLOc5g==
-X-Received: by 2002:a63:aa42:: with SMTP id x2mr7079254pgo.361.1595571223426;
-        Thu, 23 Jul 2020 23:13:43 -0700 (PDT)
+        bh=BO9n6hVZpzBnYCRr3ajb6n9ABkf1XIdzDLUFQFkkBXg=;
+        b=ahG6KqWOgPnREa4CjUIk3PcW1pqV+uVZa5GxRJPqyqJxizcFRKGa2vM6mHwjErwj7z
+         5pEGx9u56by/BYJBcJATbYxLX5uFlpr1y42s84JYXhDkWXFFYtXgEIaV69PakfoUxi0o
+         +GZFVcFldjqHOfLFf3nFZ+q75AGtLOqdE0RUerekTXRHZ1CiusmHIt51Czua49GK9RBN
+         7ZGpRQKW+MVrO1VZSVHWVaQiWoerxr/eQeHScY/mwZ0tjPdwhFXgJc9ova6/AhMg2rNE
+         a5oLjtLwTG+EKNX30v2qrWKFpk/BJM+TXthoiiCcUzmG51Rv6RRpAksN8L4JMqlJWyTz
+         bkMg==
+X-Gm-Message-State: AOAM532u2m3WHKpZAlTk1oKy0cZnz0QVzIBp4k2nsM40TWyHhVEn0vM/
+        XxL/6F3JglaBnzwdFrlYMkttrMwGrp/LIq67jH79XWcrmLj/QoMcxVvkvuFGKJ6lNVU0QwFJMcl
+        91N3vLjubNx6oIALaGRJq
+X-Received: by 2002:a17:90b:142:: with SMTP id em2mr3698916pjb.236.1595571228764;
+        Thu, 23 Jul 2020 23:13:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwi0lfJxN3LUPXyniNKbGZ5zXjR4At1YzAr1dGX1T7B5reH5/EJCMd0ieU4V59nKoevcW9czQ==
+X-Received: by 2002:a17:90b:142:: with SMTP id em2mr3698899pjb.236.1595571228533;
+        Thu, 23 Jul 2020 23:13:48 -0700 (PDT)
 Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id n15sm4899232pjf.12.2020.07.23.23.13.40
+        by smtp.gmail.com with ESMTPSA id n15sm4899232pjf.12.2020.07.23.23.13.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Jul 2020 23:13:42 -0700 (PDT)
+        Thu, 23 Jul 2020 23:13:47 -0700 (PDT)
 From:   Gao Xiang <hsiangkao@redhat.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <david@fromorbit.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Brian Foster <bfoster@redhat.com>,
         Gao Xiang <hsiangkao@redhat.com>
-Subject: [RFC PATCH v2 0/3] xfs: more unlinked inode list optimization v2
-Date:   Fri, 24 Jul 2020 14:12:56 +0800
-Message-Id: <20200724061259.5519-1-hsiangkao@redhat.com>
+Subject: [RFC PATCH v2 1/3] xfs: arrange all unlinked inodes into one list
+Date:   Fri, 24 Jul 2020 14:12:57 +0800
+Message-Id: <20200724061259.5519-2-hsiangkao@redhat.com>
 X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20200707135741.487-1-hsiangkao@redhat.com>
+In-Reply-To: <20200724061259.5519-1-hsiangkao@redhat.com>
 References: <20200707135741.487-1-hsiangkao@redhat.com>
+ <20200724061259.5519-1-hsiangkao@redhat.com>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi forks,
+There is no need to keep old multiple short unlink inode buckets
+since we have an in-memory double linked list for all unlinked
+inodes.
 
-Sorry for long delay these days due to my work ineffective, this is RFC
-v2 of this patchset addressing previous constructive comments...
+Apart from the perspective of the necessity, the main advantage
+is the log and AGI update can be reduced since each AG has the
+only one head now, which is implemented in the following patches.
 
-This RFC patchset mainly addresses the thoughts [*] and [**] from Dave's
-original patchset,
-https://lore.kernel.org/r/20200623095015.1934171-1-david@fromorbit.com
+Therefore, this patch applies the new way in xfs_iunlink() and
+keep the old approach in xfs_iunlink_remove_inode() path as
+well so inode eviction can still work properly in recovery.
 
-In short, it focues on the following ideas mentioned by Dave:
- - use bucket 0 instead of multiple buckets since in-memory double
-   linked list finally works;
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/xfs/xfs_inode.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
- - avoid taking AGI buffer and unnecessary AGI update if possible, so
-   1) add a new lock and keep proper locking order to avoid deadlock;
-   2) insert a new unlinked inode from the tail instead of head;
-
-In addition, it's worth noticing 3 things:
- - xfs_iunlink_remove() should support old multiple buckets in order
-   to keep old inode unlinked list (old image) working when recovering.
-
- - (but) OTOH, the old kernel recovery _shouldn't_ work with new image
-   since the bucket_index from old xfs_iunlink_remove() is generated
-   by the old formula (rather than keep in xfs_inode), which is now
-   fixed as 0. So this feature is not forward compatible without some
-   extra backport patches;
-
- - a tail xfs_inode pointer is also added in the perag, which keeps 
-   track of the tail of bucket 0 since it's mainly used for xfs_iunlink().
-
- - the old kernel recovery shouldn't work with new image since
-     its bucket_index from old kernel is 
-
-The git tree is also available at
-git://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git tags/xfs/iunlink_opt_v2
-
-Gitweb:
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/log/?h=xfs/iunlink_opt_v2
-
-Some limited test for debugging only is done (mainly fsstress and manual
-power-cut tests) and it's worth noticing that when I tested fsstress for
-much longer time, it showed the following kernel message twice and it
-haven't been reproduced again for about 3 days, and I have no idea what's
-wrong over the current logic, so it could be better to send out the patchset
-first and go on reproducing with extra debugging prints added...
-
-[ 7884.930106] XFS (sda): bad inode magic/vsn daddr 111232 #0 (magic=5050)
-[ 7884.930988] XFS (sda): Metadata corruption detected at xfs_buf_ioend+0x11a/0x190, xfs_inode block 0x1b280 xfs_inode_buf_verify
-[ 7884.932418] XFS (sda): Unmount and run xfs_repair
-[ 7884.933154] XFS (sda): First 128 bytes of corrupted metadata buffer:
-[ 7884.934253] 00000000: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.935495] 00000010: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.936752] 00000020: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.937761] 00000030: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.939336] 00000040: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.940914] 00000050: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.942382] 00000060: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.943513] 00000070: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
-[ 7884.945006] XFS (sda): metadata I/O error in "xfs_imap_to_bp+0x61/0xd0" at daddr 0x1b280 len 32 error 117
-[ 7884.952066] XFS (sda): xfs_do_force_shutdown(0x1) called from line 312 of file fs/xfs/xfs_trans_buf.c. Return address = ffffffff983ea7e0
-[ 7884.952494] sda: writeback error on inode 20695, offset 770048, sector 1970864
-[ 7884.954353] XFS (sda): I/O Error Detected. Shutting down filesystem
-[ 7884.956566] sda: writeback error on inode 117946, offset 2347008, sector 612424
-[ 7884.956802] XFS (sda): Please unmount the filesystem and rectify the problem(s)
-[ 7884.958943] XFS (sda): xfs_inactive_ifree: xfs_trans_commit returned error -117
-fsstress: check_cwd failure
-[ 7884.963475] XFS (sda): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -5, agno 0
-
-Comments and directions are welcomed. :)
-
-Thanks,
-Gao Xiang
-
-
-Changes since v1:
- - show some number of reduced AGI buffer modification (Darrick);
- - add comments about pag_unlinked_mutex, pag_unlinked_tail (Darrick);
- - avoid touching xfs_iunlink_update_bucket() logic (Dave);
- - spilt "xfs: don't access AGI on unlinked inodes if it can" into 2 patches (Dave);
- - add xfs_iunlink_insert_lock/xfs_iunlink_remove_lock/xfs_iunlink_unlock to
-   make the code easy to follow (Dave).
-
-Gao Xiang (3):
-  xfs: arrange all unlinked inodes into one list
-  xfs: introduce perag iunlink lock
-  xfs: insert unlinked inodes from tail
-
- fs/xfs/xfs_inode.c       | 202 ++++++++++++++++++++++++++++-----------
- fs/xfs/xfs_log_recover.c |   5 +
- fs/xfs/xfs_mount.c       |   2 +
- fs/xfs/xfs_mount.h       |   6 ++
- 4 files changed, 159 insertions(+), 56 deletions(-)
-
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index ab288424764c..4994398373df 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -33,6 +33,7 @@
+ #include "xfs_symlink.h"
+ #include "xfs_trans_priv.h"
+ #include "xfs_log.h"
++#include "xfs_log_priv.h"
+ #include "xfs_bmap_btree.h"
+ #include "xfs_reflink.h"
+ #include "xfs_iunlink_item.h"
+@@ -2001,14 +2002,13 @@ xfs_iunlink_insert_inode(
+ 	xfs_agino_t		agno = XFS_INO_TO_AGNO(mp, ip->i_ino);
+ 	xfs_agino_t		agino = XFS_INO_TO_AGINO(mp, ip->i_ino);
+ 	xfs_agino_t		next_agino;
+-	short			bucket_index = agino % XFS_AGI_UNLINKED_BUCKETS;
+ 
+ 	/*
+ 	 * Get the index into the agi hash table for the list this inode will
+ 	 * go on.  Make sure the pointer isn't garbage and that this inode
+ 	 * isn't already on the list.
+ 	 */
+-	next_agino = be32_to_cpu(agi->agi_unlinked[bucket_index]);
++	next_agino = be32_to_cpu(agi->agi_unlinked[0]);
+ 	if (next_agino == agino ||
+ 	    !xfs_verify_agino_or_null(mp, agno, next_agino)) {
+ 		xfs_buf_mark_corrupt(agibp);
+@@ -2036,7 +2036,7 @@ xfs_iunlink_insert_inode(
+ 	}
+ 
+ 	/* Point the head of the list to point to this inode. */
+-	return xfs_iunlink_update_bucket(tp, agno, agibp, bucket_index, agino);
++	return xfs_iunlink_update_bucket(tp, agno, agibp, 0, agino);
+ }
+ 
+ /*
+@@ -2055,10 +2055,17 @@ xfs_iunlink_remove_inode(
+ 	xfs_agino_t		agno = XFS_INO_TO_AGNO(mp, ip->i_ino);
+ 	xfs_agino_t		agino = XFS_INO_TO_AGINO(mp, ip->i_ino);
+ 	xfs_agino_t		next_agino = ip->i_next_unlinked;
+-	short			bucket_index = agino % XFS_AGI_UNLINKED_BUCKETS;
+ 	int			error;
+ 
+ 	if (ip->i_prev_unlinked == NULLAGINO) {
++		struct xlog	*log = mp->m_log;
++		short		bucket_index = 0;
++
++		/* During recovery, the old multiple bucket can be applied */
++		if ((!log || log->l_flags & XLOG_RECOVERY_NEEDED) &&
++		    be32_to_cpu(agi->agi_unlinked[0]) != agino)
++			bucket_index = agino % XFS_AGI_UNLINKED_BUCKETS;
++
+ 		/* remove from head of list */
+ 		if (be32_to_cpu(agi->agi_unlinked[bucket_index]) != agino) {
+ 			xfs_buf_mark_corrupt(agibp);
 -- 
 2.18.1
 
