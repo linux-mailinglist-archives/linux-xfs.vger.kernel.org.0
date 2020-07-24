@@ -2,114 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21BA722CE0E
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 20:45:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE3A822CE52
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 21:05:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgGXSpU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Jul 2020 14:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgGXSpT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 14:45:19 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6B7C08C5DB
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 11:45:18 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id k4so6623094pjs.1
-        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 11:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=xyIxbqTzEFkSiRwtwQaLWA16wfxvhvC5m78qlSH1ff0=;
-        b=mBULbubnOs99wcWvCkuB8DaDJihSO0xMIW84PX5bW6WTDj309RqVaJPHsyAy2kaKCY
-         sOD/egWqVHLZ7OUz7656r6qh6CE0O+9+ekoTB8ggySlZKOVBPFRyQhOpz3iP8O3KzA66
-         TlNycAcYS2Bt5YOOhe3NHBNfRzmIluIfVqVEZaOTBNsFH2DN2tFUJgfwzvHk+Cfu4ktE
-         Ux2qbNoUcHcJSGpYoyJrtPpZVCLD/G+F6TaLMtwwue8ZozjlRyZ5Pqd2SCUqaAjZRuwa
-         2twdFk1AzPx/nwa4i8eqkv4wxZlZ4QpFLnVvKFEWArFlrDNn6OdFdOF+0n5c6jitoG4w
-         V/dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=xyIxbqTzEFkSiRwtwQaLWA16wfxvhvC5m78qlSH1ff0=;
-        b=NC+5L8maI87deI2DlOa1ygyR/kPHFUrNkzIvKFt1nzSCMsMSifogXzRYBze2HQ7BuG
-         qjs97IuuRggOaK7zUmvXQFo3BvNcUBGbG1oXaq5Vseywb4Aexx5W0g2RGEkmVQks6odd
-         dNWPnet2r/7JTbKAso8s/EPE6I3FxW4FJtuSILZ5FY4JWYBaa9/QdhirlHciAL2G6/dZ
-         HvjvRJL0m+7V4/eqK/J2U1WYLjAD8xAK6qgz5CQ3C1gjZHGdbcQKO3aXIM3ZCJhGjk1f
-         S6kBwgIIEAYbwqjzSE59Pqt5PixuoPC9Vvw2SdC3lSBJOmTYUXePT7XVDhqUxpzwKR1K
-         NBvA==
-X-Gm-Message-State: AOAM530OqAo+WsDeX7JRcJLJwr4dF/nc2j8Wi0gZNgJVIaUXC4Egp7vW
-        czfGXBvYhwTO04D/2We4ktWVFzD+mPw=
-X-Google-Smtp-Source: ABdhPJzkqIhgfmuH4Tw2HNitGStx6+I2VoJ2h2ZcDf2nCz9kSOHpDDkKAQY+0hH0A++BUEd5FyALMx/aU4Y=
-X-Received: by 2002:a17:90a:1fcb:: with SMTP id z11mr1970016pjz.1.1595616317802;
- Fri, 24 Jul 2020 11:45:17 -0700 (PDT)
-Date:   Fri, 24 Jul 2020 18:45:01 +0000
-In-Reply-To: <20200724184501.1651378-1-satyat@google.com>
-Message-Id: <20200724184501.1651378-8-satyat@google.com>
-Mime-Version: 1.0
-References: <20200724184501.1651378-1-satyat@google.com>
-X-Mailer: git-send-email 2.28.0.rc0.142.g3c755180ce-goog
-Subject: [PATCH v6 7/7] fscrypt: update documentation for direct I/O support
-From:   Satya Tangirala <satyat@google.com>
-To:     linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, Satya Tangirala <satyat@google.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S1726553AbgGXTFf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Jul 2020 15:05:35 -0400
+Received: from sandeen.net ([63.231.237.45]:55418 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726416AbgGXTFf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 24 Jul 2020 15:05:35 -0400
+Received: from Liberator.local (c-71-237-195-212.hsd1.or.comcast.net [71.237.195.212])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 3F7234D1BA2
+        for <linux-xfs@vger.kernel.org>; Fri, 24 Jul 2020 14:04:51 -0500 (CDT)
+From:   Eric Sandeen <sandeen@sandeen.net>
+Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
+ mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
+ nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
+ WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
+ vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
+ ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
+ sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
+ BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
+ gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
+ LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
+ dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
+ bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
+ aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
+ UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
+ EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
+ sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
+ 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
+ gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
+ 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
+ 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
+ WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
+ Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
+ X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
+ SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
+ 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
+ GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
+ 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
+ Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
+ ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
+ TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
+ gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
+ AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
+ YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
+ mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
+ LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
+ LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
+ MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
+ JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
+ Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
+ m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
+ fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
+To:     linux-xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfsprogs v5.7.0 released
+Message-ID: <6c56d6aa-d3b9-92af-4137-b812172505bd@sandeen.net>
+Date:   Fri, 24 Jul 2020 12:05:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="o0EiM4XYYc2gerHlXOkSUiDQfIMpdt7lF"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Update fscrypt documentation to reflect the addition of direct I/O support
-and document the necessary conditions for direct I/O on encrypted files.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--o0EiM4XYYc2gerHlXOkSUiDQfIMpdt7lF
+Content-Type: multipart/mixed; boundary="HuzjHMgHyuZLuFys9rDiDw9Xph1cGPlRV"
 
-Signed-off-by: Satya Tangirala <satyat@google.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- Documentation/filesystems/fscrypt.rst | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+--HuzjHMgHyuZLuFys9rDiDw9Xph1cGPlRV
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-index 423c5a0daf45..b9bbd6c612ff 100644
---- a/Documentation/filesystems/fscrypt.rst
-+++ b/Documentation/filesystems/fscrypt.rst
-@@ -1049,8 +1049,10 @@ astute users may notice some differences in behavior:
-   may be used to overwrite the source files but isn't guaranteed to be
-   effective on all filesystems and storage devices.
- 
--- Direct I/O is not supported on encrypted files.  Attempts to use
--  direct I/O on such files will fall back to buffered I/O.
-+- Direct I/O is supported on encrypted files only under some
-+  circumstances (see `Direct I/O support`_ for details). When these
-+  circumstances are not met, attempts to use direct I/O on encrypted
-+  files will fall back to buffered I/O.
- 
- - The fallocate operations FALLOC_FL_COLLAPSE_RANGE and
-   FALLOC_FL_INSERT_RANGE are not supported on encrypted files and will
-@@ -1123,6 +1125,20 @@ It is not currently possible to backup and restore encrypted files
- without the encryption key.  This would require special APIs which
- have not yet been implemented.
- 
-+Direct I/O support
-+==================
-+
-+Direct I/O on encrypted files is supported through blk-crypto. In
-+particular, this means the kernel must have CONFIG_BLK_INLINE_ENCRYPTION
-+enabled, the filesystem must have had the 'inlinecrypt' mount option
-+specified, and either hardware inline encryption must be present, or
-+CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK must have been enabled. Further,
-+any I/O must be aligned to the filesystem block size (*not* necessarily
-+the same as the block device's block size) - in particular, any userspace
-+buffer into which data is read/written from must also be aligned to the
-+filesystem block size. If any of these conditions isn't met, attempts to do
-+direct I/O on an encrypted file will fall back to buffered I/O.
-+
- Encryption policy enforcement
- =============================
- 
--- 
-2.28.0.rc0.142.g3c755180ce-goog
+Hi folks,
 
+xfsprogs v5.7.0 has been released, and the xfsprogs repository at:
+
+	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+
+has just been updated.
+
+Tarballs are available at:
+
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.7.0.tar=
+=2Egz
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.7.0.tar=
+=2Exz
+https://www.kernel.org/pub/linux/utils/fs/xfs/xfsprogs/xfsprogs-5.7.0.tar=
+=2Esign
+
+The new head of the master branch is commit:
+
+97194e73 (HEAD -> guilt/for-next, tag: v5.7.0, refs/patches/for-next/5.7.=
+0) xfsprogs: Release v5.7.0
+
+Abbreviated changelog:
+
+xxfsprogs-5.7.0 (24 Jul 2020)
+        - xfs_io: Document '-q' option for sendfile command (Xiao Yang)
+
+xfsprogs-5.7.0-rc1 (15 Jul 2020)
+        - remove libreadline support (Christoph Hellwig)
+        - xfs_quota: allow individual timer extension (Eric Sandeen)
+        - xfs_quota: fix unsigned int id comparisons (Darrick Wong)
+        - xfs_repair: fix progress reporting (Eric Sandeen)
+        - xfs_repair: fix minrecs error during phase5 btree rebuild (Gao =
+Xiang)
+        - xfs_repair: add missing validations to match xfs_check (Darrick=
+ Wong)
+        - xfs_repair: use btree bulk loading (Darrick Wong)
+        - xfs_io: fix copy_range argument parsing (Eric Sandeen)
+        - xfs_io: document -q option for pread/pwrite command (Xiao Yang)=
+
+        - xfs_metadump: man page fixes (Kaixu Xia)
+        - xfs_db: fix crc invalidation segfault (Anthony Iliopoulos)
+
+xfsprogs-5.7.0-rc0 (07 May 2020)
+        - libxfs changes merged from kernel 5.7
+
+Thanks,
+-Eric
+
+
+
+--HuzjHMgHyuZLuFys9rDiDw9Xph1cGPlRV--
+
+--o0EiM4XYYc2gerHlXOkSUiDQfIMpdt7lF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl8bMPsACgkQIK4WkuE9
+3uArMRAAyHYHro674gM3cTqI9b4bHHIzppqI193+DVG361RZ7xKTXNjOk9rLbE8o
+WJvq5Qfadb3xISz9zanPaw6f6i2//n4wX4teHelBTFw4YmUGKA/VAot3tXRNvkcj
+0NfWNDSWHkYCCLoVxe9YdZVsOlH5HVsqbJkp7wGcTR3cYksqTtFxJp9CvOSgYvcy
+UBvbybr9p/DUnI3TUp5VmhyG048DCEgY4DAD86bg37jlRYNPWx1bYSFtUeYIugzU
+rSNpc/Z8f5vQo1FpPDjuOxVTQoAv/YQSn7PXY9VksAObDuIm11xwuvDBr/PUds7l
+6Z0XKfCbgSh26F78g/4JDM6jpM1O2jD0MGRlL82Vl1rtBK8fdscdCsZDzA8vO2pF
+lkkskw53Z596IC/J0+6upoyfHPl+n8lbMoJOJVp5o83lLVbrxxcQX44dyHnuAc7U
+RfO1oyUaLfHHtLI8A/GoGZ3MZAjhcr9S+X29oeC8l6bJv2RrkbFtAOgZ6yZ6whIb
+onXxhWPWynzIVnHmb49F2JWpWr6hwUgavy2JHxeA5SY7Mnpz9gnLFaEC6RZckpNy
+WUwhzkR2259vaFQugHWYIsMzgUfcCkhoZznI71iEM4kFntYW1GgMY0RCzJOJ5OdH
+hbSGtKsY+fbXZAIWKvAh3koxRr7kSmuTEta8z9GS0c5YG+j0S6M=
+=HA+p
+-----END PGP SIGNATURE-----
+
+--o0EiM4XYYc2gerHlXOkSUiDQfIMpdt7lF--
