@@ -2,248 +2,162 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2907122BDA9
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 07:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5559522BDF1
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Jul 2020 08:13:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbgGXFoZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Jul 2020 01:44:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:34966 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgGXFoX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 01:44:23 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06O5bwnH065327;
-        Fri, 24 Jul 2020 05:44:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=R5I2YakBmNpkY+ouCQoPiI0yZo5RO2vdq9lUlxcp7qM=;
- b=tADtUa99/hmTzcv1Uhg4BxM0mL4CSNP02gkVTC6uVfUy6IxAzmUjArktRBa+oHi6pvAN
- Q0zSRl8BjEXHsHdIV+OGp7WsoAuQkCBrK5J5pCMG9ViGF1i5Y1qzuqcRyeuWSPNV6Bss
- QyXtcI738EttXf5BmXmxW9QzQgYZ7FBW1Rt0bNDhlu/nyWGlKzkIXvv4LrxmDsMdABti
- 7D4+ofn0Crl0y5FrYbn0Jeu/LtVOzsZFrqhAuejZFkYCyRCR6F4TFRqUxeveWxZfMXsW
- SmAF82E60FyI5s+FbIVCn9zh/pF23nsQ0O2amJIEuP5Aa1KNzXrV7W1n/p/dhb6Kubnp Rg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 32bs1mw78u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 24 Jul 2020 05:44:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06O5cADm105199;
-        Fri, 24 Jul 2020 05:42:18 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 32fn6q0r62-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Jul 2020 05:42:18 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 06O5edtL009136;
-        Fri, 24 Jul 2020 05:40:39 GMT
-Received: from localhost (/10.159.156.50)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 24 Jul 2020 05:40:39 +0000
-Date:   Thu, 23 Jul 2020 22:40:38 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Carlos Maiolino <cmaiolino@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/5] xfs: Refactor xfs_da_state_alloc() helper
-Message-ID: <20200724054037.GU3151642@magnolia>
-References: <20200722090518.214624-1-cmaiolino@redhat.com>
- <20200722090518.214624-6-cmaiolino@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722090518.214624-6-cmaiolino@redhat.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- adultscore=0 phishscore=0 bulkscore=0 suspectscore=7 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2007240042
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9691 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=7 bulkscore=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 clxscore=1015
- spamscore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2007240042
+        id S1726565AbgGXGNs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Jul 2020 02:13:48 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20340 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726178AbgGXGNs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Jul 2020 02:13:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1595571227;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=hOs/+Z1TAprZ/Tr3hSwuV2KPK7EvslyeXlcmX5gxBNA=;
+        b=i/U4sdbdxkZU3PnNpR4Dx5YEFbhY+1uI4zqSzSnqfMNfH8iRB0cqTPuGygI41gRj4oK2Fc
+        nRXEFR3ZRt6LCEgBDAwfu/M++sdBFCrQVbTJcykxaUSd017+Rp2nRw2/xHciSG9sNLYhSa
+        Ga/E025dHM2o1JOJ5EO9H5i43VINWTs=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-239-yGcp9yKaM4qZzJQKdbXnvA-1; Fri, 24 Jul 2020 02:13:45 -0400
+X-MC-Unique: yGcp9yKaM4qZzJQKdbXnvA-1
+Received: by mail-pf1-f200.google.com with SMTP id y73so5614007pfb.8
+        for <linux-xfs@vger.kernel.org>; Thu, 23 Jul 2020 23:13:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=hOs/+Z1TAprZ/Tr3hSwuV2KPK7EvslyeXlcmX5gxBNA=;
+        b=GoCvWDezKmwdcarjly4jkK+cf+5agrWDDPNJ8zQhuDUPSv+MfB0jpY0R0X84/r5SYo
+         fMSrIX9EVBL8qc5+k/0P7bPHRX9kcvBkXVI/0W/araPXtb3shuHLqeprBLLbFlAbEUau
+         ylviUdfsKitKDxIKGNRPQ0qTn/Kp906k4dofPd3g8wDiSL7w4I2LZmvicNiUT4FBdsmM
+         Pn2jE3uoZ4IGJ7JuuIQYd6ap4POqtJPgePUaqRGy4ITOPW2TeUrq1B+ohKUEOSLov95d
+         rvTbfR4V6HlmH9+iD7Hq+3vSq1xvsPdSOPBtsK/fh6IaIkWPPR4U/GCk+jxcGHflqrdt
+         C/9g==
+X-Gm-Message-State: AOAM533aUfhOLRKHZaB4tZGZiYUzK/xSpDkydBytQV7daC8oa+mCo8F5
+        SFT+jtF0SIprUf+MmzXVrT/faItm6tEXCHT4yxsyzIe8bdeawWTOtq/yz4GCvEwymzrbTc8HoZC
+        FHq9mNhB6+gIdcBO3RsyE
+X-Received: by 2002:a63:aa42:: with SMTP id x2mr7079274pgo.361.1595571223770;
+        Thu, 23 Jul 2020 23:13:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJKF6Xj727ZmWeXsPgIaavEOv8Ii5bc5PStndkuwrWLZdG/c0i+xZXaJePH4++tCqwxLOc5g==
+X-Received: by 2002:a63:aa42:: with SMTP id x2mr7079254pgo.361.1595571223426;
+        Thu, 23 Jul 2020 23:13:43 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id n15sm4899232pjf.12.2020.07.23.23.13.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Jul 2020 23:13:42 -0700 (PDT)
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Gao Xiang <hsiangkao@redhat.com>
+Subject: [RFC PATCH v2 0/3] xfs: more unlinked inode list optimization v2
+Date:   Fri, 24 Jul 2020 14:12:56 +0800
+Message-Id: <20200724061259.5519-1-hsiangkao@redhat.com>
+X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20200707135741.487-1-hsiangkao@redhat.com>
+References: <20200707135741.487-1-hsiangkao@redhat.com>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 22, 2020 at 11:05:18AM +0200, Carlos Maiolino wrote:
-> Every call to xfs_da_state_alloc() also requires setting up state->args
-> and state->mp
-> 
-> Change xfs_da_state_alloc() to receive an xfs_da_args_t as argument and
-> return a xfs_da_state_t with both args and mp already set.
-> 
-> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+Hi forks,
 
-Will fix the typedef thing for xfs_da_state_alloc when I commit this;
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Sorry for long delay these days due to my work ineffective, this is RFC
+v2 of this patchset addressing previous constructive comments...
 
---D
+This RFC patchset mainly addresses the thoughts [*] and [**] from Dave's
+original patchset,
+https://lore.kernel.org/r/20200623095015.1934171-1-david@fromorbit.com
 
-> ---
-> 
-> Changelog:
-> 	V3:
-> 		- Originally this patch removed xfs_da_state_alloc(),
-> 		  per hch's suggestion, instead of removing, it has been
-> 		  refactored, to also set state->{args,mp} which removes
-> 		  a few lines of code.
-> 
->  fs/xfs/libxfs/xfs_attr.c      | 17 +++++------------
->  fs/xfs/libxfs/xfs_da_btree.c  |  8 ++++++--
->  fs/xfs/libxfs/xfs_da_btree.h  |  2 +-
->  fs/xfs/libxfs/xfs_dir2_node.c | 17 +++++------------
->  fs/xfs/scrub/dabtree.c        |  4 +---
->  5 files changed, 18 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index 3b1bd6e112f89..52e01fc0c5d04 100644
-> --- a/fs/xfs/libxfs/xfs_attr.c
-> +++ b/fs/xfs/libxfs/xfs_attr.c
-> @@ -750,9 +750,7 @@ xfs_attr_node_addname(
->  	dp = args->dp;
->  	mp = dp->i_mount;
->  restart:
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = mp;
-> +	state = xfs_da_state_alloc(args);
->  
->  	/*
->  	 * Search to see if name already exists, and get back a pointer
-> @@ -899,9 +897,8 @@ xfs_attr_node_addname(
->  		 * attr, not the "new" one.
->  		 */
->  		args->attr_filter |= XFS_ATTR_INCOMPLETE;
-> -		state = xfs_da_state_alloc();
-> -		state->args = args;
-> -		state->mp = mp;
-> +		state = xfs_da_state_alloc(args);
-> +
->  		state->inleaf = 0;
->  		error = xfs_da3_node_lookup_int(state, &retval);
->  		if (error)
-> @@ -975,9 +972,7 @@ xfs_attr_node_removename(
->  	 * Tie a string around our finger to remind us where we are.
->  	 */
->  	dp = args->dp;
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = dp->i_mount;
-> +	state = xfs_da_state_alloc(args);
->  
->  	/*
->  	 * Search to see if name exists, and get back a pointer to it.
-> @@ -1207,9 +1202,7 @@ xfs_attr_node_get(xfs_da_args_t *args)
->  
->  	trace_xfs_attr_node_get(args);
->  
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = args->dp->i_mount;
-> +	state = xfs_da_state_alloc(args);
->  
->  	/*
->  	 * Search to see if name exists, and get back a pointer to it.
-> diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-> index a4e1f01daf3d8..47da88154b434 100644
-> --- a/fs/xfs/libxfs/xfs_da_btree.c
-> +++ b/fs/xfs/libxfs/xfs_da_btree.c
-> @@ -79,9 +79,13 @@ kmem_zone_t *xfs_da_state_zone;	/* anchor for state struct zone */
->   * We don't put them on the stack since they're large.
->   */
->  xfs_da_state_t *
-> -xfs_da_state_alloc(void)
-> +xfs_da_state_alloc(xfs_da_args_t *args)
->  {
-> -	return kmem_cache_zalloc(xfs_da_state_zone, GFP_NOFS | __GFP_NOFAIL);
-> +	xfs_da_state_t *state = kmem_cache_zalloc(xfs_da_state_zone,
-> +						  GFP_NOFS | __GFP_NOFAIL);
-> +	state->args = args;
-> +	state->mp = args->dp->i_mount;
-> +	return state;
->  }
->  
->  /*
-> diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-> index 6e25de6621e4f..bb039dcb0cce4 100644
-> --- a/fs/xfs/libxfs/xfs_da_btree.h
-> +++ b/fs/xfs/libxfs/xfs_da_btree.h
-> @@ -219,7 +219,7 @@ enum xfs_dacmp xfs_da_compname(struct xfs_da_args *args,
->  				const unsigned char *name, int len);
->  
->  
-> -xfs_da_state_t *xfs_da_state_alloc(void);
-> +xfs_da_state_t *xfs_da_state_alloc(xfs_da_args_t *args);
->  void xfs_da_state_free(xfs_da_state_t *state);
->  
->  void	xfs_da3_node_hdr_from_disk(struct xfs_mount *mp,
-> diff --git a/fs/xfs/libxfs/xfs_dir2_node.c b/fs/xfs/libxfs/xfs_dir2_node.c
-> index 6ac4aad98cd76..5d51265d29d6f 100644
-> --- a/fs/xfs/libxfs/xfs_dir2_node.c
-> +++ b/fs/xfs/libxfs/xfs_dir2_node.c
-> @@ -2015,9 +2015,7 @@ xfs_dir2_node_addname(
->  	/*
->  	 * Allocate and initialize the state (btree cursor).
->  	 */
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = args->dp->i_mount;
-> +	state = xfs_da_state_alloc(args);
->  	/*
->  	 * Look up the name.  We're not supposed to find it, but
->  	 * this gives us the insertion point.
-> @@ -2086,9 +2084,8 @@ xfs_dir2_node_lookup(
->  	/*
->  	 * Allocate and initialize the btree cursor.
->  	 */
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = args->dp->i_mount;
-> +	state = xfs_da_state_alloc(args);
-> +
->  	/*
->  	 * Fill in the path to the entry in the cursor.
->  	 */
-> @@ -2139,9 +2136,7 @@ xfs_dir2_node_removename(
->  	/*
->  	 * Allocate and initialize the btree cursor.
->  	 */
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = args->dp->i_mount;
-> +	state = xfs_da_state_alloc(args);
->  
->  	/* Look up the entry we're deleting, set up the cursor. */
->  	error = xfs_da3_node_lookup_int(state, &rval);
-> @@ -2206,9 +2201,7 @@ xfs_dir2_node_replace(
->  	/*
->  	 * Allocate and initialize the btree cursor.
->  	 */
-> -	state = xfs_da_state_alloc();
-> -	state->args = args;
-> -	state->mp = args->dp->i_mount;
-> +	state = xfs_da_state_alloc(args);
->  
->  	/*
->  	 * We have to save new inode number and ftype since
-> diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
-> index 44b15015021f3..e56786f0a13c8 100644
-> --- a/fs/xfs/scrub/dabtree.c
-> +++ b/fs/xfs/scrub/dabtree.c
-> @@ -476,9 +476,7 @@ xchk_da_btree(
->  	ds.dargs.whichfork = whichfork;
->  	ds.dargs.trans = sc->tp;
->  	ds.dargs.op_flags = XFS_DA_OP_OKNOENT;
-> -	ds.state = xfs_da_state_alloc();
-> -	ds.state->args = &ds.dargs;
-> -	ds.state->mp = mp;
-> +	ds.state = xfs_da_state_alloc(&ds.dargs);
->  	ds.sc = sc;
->  	ds.private = private;
->  	if (whichfork == XFS_ATTR_FORK) {
-> -- 
-> 2.26.2
-> 
+In short, it focues on the following ideas mentioned by Dave:
+ - use bucket 0 instead of multiple buckets since in-memory double
+   linked list finally works;
+
+ - avoid taking AGI buffer and unnecessary AGI update if possible, so
+   1) add a new lock and keep proper locking order to avoid deadlock;
+   2) insert a new unlinked inode from the tail instead of head;
+
+In addition, it's worth noticing 3 things:
+ - xfs_iunlink_remove() should support old multiple buckets in order
+   to keep old inode unlinked list (old image) working when recovering.
+
+ - (but) OTOH, the old kernel recovery _shouldn't_ work with new image
+   since the bucket_index from old xfs_iunlink_remove() is generated
+   by the old formula (rather than keep in xfs_inode), which is now
+   fixed as 0. So this feature is not forward compatible without some
+   extra backport patches;
+
+ - a tail xfs_inode pointer is also added in the perag, which keeps 
+   track of the tail of bucket 0 since it's mainly used for xfs_iunlink().
+
+ - the old kernel recovery shouldn't work with new image since
+     its bucket_index from old kernel is 
+
+The git tree is also available at
+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git tags/xfs/iunlink_opt_v2
+
+Gitweb:
+https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/log/?h=xfs/iunlink_opt_v2
+
+Some limited test for debugging only is done (mainly fsstress and manual
+power-cut tests) and it's worth noticing that when I tested fsstress for
+much longer time, it showed the following kernel message twice and it
+haven't been reproduced again for about 3 days, and I have no idea what's
+wrong over the current logic, so it could be better to send out the patchset
+first and go on reproducing with extra debugging prints added...
+
+[ 7884.930106] XFS (sda): bad inode magic/vsn daddr 111232 #0 (magic=5050)
+[ 7884.930988] XFS (sda): Metadata corruption detected at xfs_buf_ioend+0x11a/0x190, xfs_inode block 0x1b280 xfs_inode_buf_verify
+[ 7884.932418] XFS (sda): Unmount and run xfs_repair
+[ 7884.933154] XFS (sda): First 128 bytes of corrupted metadata buffer:
+[ 7884.934253] 00000000: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.935495] 00000010: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.936752] 00000020: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.937761] 00000030: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.939336] 00000040: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.940914] 00000050: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.942382] 00000060: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.943513] 00000070: 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50 50  PPPPPPPPPPPPPPPP
+[ 7884.945006] XFS (sda): metadata I/O error in "xfs_imap_to_bp+0x61/0xd0" at daddr 0x1b280 len 32 error 117
+[ 7884.952066] XFS (sda): xfs_do_force_shutdown(0x1) called from line 312 of file fs/xfs/xfs_trans_buf.c. Return address = ffffffff983ea7e0
+[ 7884.952494] sda: writeback error on inode 20695, offset 770048, sector 1970864
+[ 7884.954353] XFS (sda): I/O Error Detected. Shutting down filesystem
+[ 7884.956566] sda: writeback error on inode 117946, offset 2347008, sector 612424
+[ 7884.956802] XFS (sda): Please unmount the filesystem and rectify the problem(s)
+[ 7884.958943] XFS (sda): xfs_inactive_ifree: xfs_trans_commit returned error -117
+fsstress: check_cwd failure
+[ 7884.963475] XFS (sda): xfs_imap_lookup: xfs_ialloc_read_agi() returned error -5, agno 0
+
+Comments and directions are welcomed. :)
+
+Thanks,
+Gao Xiang
+
+
+Changes since v1:
+ - show some number of reduced AGI buffer modification (Darrick);
+ - add comments about pag_unlinked_mutex, pag_unlinked_tail (Darrick);
+ - avoid touching xfs_iunlink_update_bucket() logic (Dave);
+ - spilt "xfs: don't access AGI on unlinked inodes if it can" into 2 patches (Dave);
+ - add xfs_iunlink_insert_lock/xfs_iunlink_remove_lock/xfs_iunlink_unlock to
+   make the code easy to follow (Dave).
+
+Gao Xiang (3):
+  xfs: arrange all unlinked inodes into one list
+  xfs: introduce perag iunlink lock
+  xfs: insert unlinked inodes from tail
+
+ fs/xfs/xfs_inode.c       | 202 ++++++++++++++++++++++++++++-----------
+ fs/xfs/xfs_log_recover.c |   5 +
+ fs/xfs/xfs_mount.c       |   2 +
+ fs/xfs/xfs_mount.h       |   6 ++
+ 4 files changed, 159 insertions(+), 56 deletions(-)
+
+-- 
+2.18.1
+
