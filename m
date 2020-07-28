@@ -2,315 +2,136 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 588DD2310F9
-	for <lists+linux-xfs@lfdr.de>; Tue, 28 Jul 2020 19:32:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90F0723111D
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Jul 2020 19:49:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731892AbgG1RcZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Jul 2020 13:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732017AbgG1RcX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jul 2020 13:32:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8ECCC0619D2;
-        Tue, 28 Jul 2020 10:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ymwyLR6E9FBcV6Ft90yQ2Cyth/yiRVXdOd0/9Ew87Fw=; b=Ws68dMdVOQtjwvOo89K8dy9a3M
-        slVMe+G2IHm2vd5YSdeiUe3K13mJ0IOo8oW1Izu1e1SDovm96RTePzrbNsAVzKHaN3wfCkO+1dhP/
-        tl153zNybYGgZRgOF6a5mfkqEqhBpUoY/t7WQEJlQy6XrfdcWodSyWSJzatJobKilIM3futKlQY8s
-        ByfxfFeoPY+CMVlOkBVN6+THCTiW9z7rDJBcuPCrAGM+SuEwd6mJMcKYxsX9jDWebskWVY0lQWmpY
-        XtDEEIf5+Ru+57JJ9jgHmataTmnvy8aK+9r/jM/6LUmHkdZkYdUF0bNL6CZm+DRg216eRYwlA3L5f
-        zTAWTIRw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k0TSd-0001tN-G0; Tue, 28 Jul 2020 17:32:19 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/2] iomap: Convert readahead to iomap_iter
-Date:   Tue, 28 Jul 2020 18:32:15 +0100
-Message-Id: <20200728173216.7184-3-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200728173216.7184-1-willy@infradead.org>
-References: <20200728173216.7184-1-willy@infradead.org>
+        id S1728391AbgG1RtU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 28 Jul 2020 13:49:20 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39950 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728365AbgG1RtT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jul 2020 13:49:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SHc5ar075252
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jul 2020 17:49:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=+HB5pvbXh39Mft2tVd/IIlDsgLYWJyJnPKvhej8uwDs=;
+ b=QMrGsbSnVXpVnPgiYCdQSm7R9Pik94Bp9BBSkii5U9DHJ/7zHhc+MCAOC0Y7B7C0tuzF
+ +pbovi1WMteB+f+DP6dccE10JTtFdhfDNMlS1gKV9sAPoLsSnvBaoLDy2dMBFEnmviQH
+ frPd5uMRjcWnXKu2Cm9u6Lxi2xYril7ESBYpRqTiZMHUo5mt7iR26Rodr0zkWlItagdT
+ 5XH1OS7bdTtI0hwrHW+ybM+th6Uu23ZcLFtMlcXlc89Qf67ytN67UT4J4q+4mwJOkNrE
+ MAOcXX3Q1EoRPZBlwVtz9qS1XPEjoySCcwlcX+yKLK4WNKOWDcdlyZcdufYNsMmqu1UD bA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32hu1j8yj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jul 2020 17:49:18 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06SHWjbN162368
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jul 2020 17:49:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32hu5ug62x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jul 2020 17:49:18 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06SHnIfS016324
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jul 2020 17:49:18 GMT
+Received: from [192.168.1.226] (/67.1.142.158)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 10:49:17 -0700
+Subject: Re: [bug report] xfs: Add xfs_has_attr and subroutines
+To:     dan.carpenter@oracle.com
+Cc:     linux-xfs@vger.kernel.org
+References: <20200728115752.GA426300@mwanda>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <487b69f6-b9a2-7fd1-23cb-defcb2eb033c@oracle.com>
+Date:   Tue, 28 Jul 2020 10:49:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200728115752.GA426300@mwanda>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=895
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007280128
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=881
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ phishscore=0 adultscore=0 suspectscore=4 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007280128
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This approach removes at least two indirect function calls from the
-readahead path.  Previous call chain (indirect function calls marked *):
 
-xfs_vm_readahead
-  iomap_readahead
-    iomap_apply
-      xfs_read_iomap_begin [*]
-      iomap_readahead_actor [*]
-        iomap_readpage_actor
 
-New call chain:
+On 7/28/20 4:57 AM, dan.carpenter@oracle.com wrote:
+> Hello Allison Collins,
+> 
+> The patch cfe3d8821c6f: "xfs: Add xfs_has_attr and subroutines" from
+> Jul 20, 2020, leads to the following Smatch warning:
+> 
+> 	fs/xfs/libxfs/xfs_attr.c:1431 xfs_attr_node_get()
+> 	warn: variable dereferenced before check 'state' (see line 1426)
+> 
+> fs/xfs/libxfs/xfs_attr.c
+>    1398  STATIC int
+>    1399  xfs_attr_node_get(
+>    1400          struct xfs_da_args      *args)
+>    1401  {
+>    1402          struct xfs_da_state     *state;
+>    1403          struct xfs_da_state_blk *blk;
+>    1404          int                     i;
+>    1405          int                     error;
+>    1406
+>    1407          trace_xfs_attr_node_get(args);
+>    1408
+>    1409          /*
+>    1410           * Search to see if name exists, and get back a pointer to it.
+>    1411           */
+>    1412          error = xfs_attr_node_hasname(args, &state);
+>    1413          if (error != -EEXIST)
+>    1414                  goto out_release;
+>                          ^^^^^^^^^^^^^^^^
+> state can be NULL.
+> 
+>    1415
+>    1416          /*
+>    1417           * Get the value, local or "remote"
+>    1418           */
+>    1419          blk = &state->path.blk[state->path.active - 1];
+>    1420          error = xfs_attr3_leaf_getvalue(blk->bp, args);
+>    1421
+>    1422          /*
+>    1423           * If not in a transaction, we have to release all the buffers.
+>    1424           */
+>    1425  out_release:
+>    1426          for (i = 0; i < state->path.active; i++) {
+>                                  ^^^^^^^^^^^^^^^^^^
+> Dereference
+> 
+>    1427                  xfs_trans_brelse(args->trans, state->path.blk[i].bp);
+>    1428                  state->path.blk[i].bp = NULL;
+>    1429          }
+>    1430
+>    1431          if (state)
+>                      ^^^^^
+> To late.
+> 
+>    1432                  xfs_da_state_free(state);
+>    1433          return error;
+>    1434  }
+> 
+> regards,
+> dan carpenter
+> 
+Thanks for the catch, with send a patch for this
 
-xfs_vm_readahead
-  xfs_iomap_next_read
-  iomi_advance
-  iomap_readahead
-    iomap_readpage_actor
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 82 ++++++++++++++----------------------------
- fs/xfs/xfs_aops.c      |  9 ++++-
- fs/xfs/xfs_iomap.c     | 15 ++++++++
- fs/xfs/xfs_iomap.h     |  2 ++
- fs/zonefs/super.c      | 20 ++++++++++-
- include/linux/iomap.h  | 10 +++++-
- 6 files changed, 79 insertions(+), 59 deletions(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index bcfc288dba3f..fff23ed6a682 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -206,13 +206,6 @@ iomap_read_end_io(struct bio *bio)
- 	bio_put(bio);
- }
- 
--struct iomap_readpage_ctx {
--	struct page		*cur_page;
--	bool			cur_page_in_bio;
--	struct bio		*bio;
--	struct readahead_control *rac;
--};
--
- static void
- iomap_read_inline_data(struct inode *inode, struct page *page,
- 		struct iomap *iomap)
-@@ -369,35 +362,10 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
- }
- EXPORT_SYMBOL_GPL(iomap_readpage);
- 
--static loff_t
--iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
--		void *data, struct iomap *iomap, struct iomap *srcmap)
--{
--	struct iomap_readpage_ctx *ctx = data;
--	loff_t done, ret;
--
--	for (done = 0; done < length; done += ret) {
--		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
--			if (!ctx->cur_page_in_bio)
--				unlock_page(ctx->cur_page);
--			put_page(ctx->cur_page);
--			ctx->cur_page = NULL;
--		}
--		if (!ctx->cur_page) {
--			ctx->cur_page = readahead_page(ctx->rac);
--			ctx->cur_page_in_bio = false;
--		}
--		ret = iomap_readpage_actor(inode, pos + done, length - done,
--				ctx, iomap, srcmap);
--	}
--
--	return done;
--}
--
- /**
-  * iomap_readahead - Attempt to read pages from a file.
-+ * @iomi: The iomap iterator for this operation.
-  * @rac: Describes the pages to be read.
-- * @ops: The operations vector for the filesystem.
-  *
-  * This function is for filesystems to call to implement their readahead
-  * address_space operation.
-@@ -409,35 +377,37 @@ iomap_readahead_actor(struct inode *inode, loff_t pos, loff_t length,
-  * function is called with memalloc_nofs set, so allocations will not cause
-  * the filesystem to be reentered.
-  */
--void iomap_readahead(struct readahead_control *rac, const struct iomap_ops *ops)
-+loff_t iomap_readahead(struct iomap_iter *iomi, struct iomap_readpage_ctx *ctx)
- {
--	struct inode *inode = rac->mapping->host;
--	loff_t pos = readahead_pos(rac);
--	loff_t length = readahead_length(rac);
--	struct iomap_readpage_ctx ctx = {
--		.rac	= rac,
--	};
--
--	trace_iomap_readahead(inode, readahead_count(rac));
-+	loff_t done, ret, length = iomap_length(iomi);
- 
--	while (length > 0) {
--		loff_t ret = iomap_apply(inode, pos, length, 0, ops,
--				&ctx, iomap_readahead_actor);
--		if (ret <= 0) {
--			WARN_ON_ONCE(ret == 0);
--			break;
-+	for (done = 0; done < length; done += ret) {
-+		if (ctx->cur_page && offset_in_page(iomi->pos + done) == 0) {
-+			if (!ctx->cur_page_in_bio)
-+				unlock_page(ctx->cur_page);
-+			put_page(ctx->cur_page);
-+			ctx->cur_page = NULL;
- 		}
--		pos += ret;
--		length -= ret;
-+		if (!ctx->cur_page) {
-+			ctx->cur_page = readahead_page(ctx->rac);
-+			ctx->cur_page_in_bio = false;
-+		}
-+		ret = iomap_readpage_actor(iomi->inode, iomi->pos + done,
-+				length - done, ctx,
-+				&iomi->iomap, &iomi->srcmap);
- 	}
- 
--	if (ctx.bio)
--		submit_bio(ctx.bio);
--	if (ctx.cur_page) {
--		if (!ctx.cur_page_in_bio)
--			unlock_page(ctx.cur_page);
--		put_page(ctx.cur_page);
-+	if (iomi->len == done) {
-+		if (ctx->bio)
-+			submit_bio(ctx->bio);
-+		if (ctx->cur_page) {
-+			if (!ctx->cur_page_in_bio)
-+				unlock_page(ctx->cur_page);
-+			put_page(ctx->cur_page);
-+		}
- 	}
-+
-+	return done;
- }
- EXPORT_SYMBOL_GPL(iomap_readahead);
- 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index b35611882ff9..2884752e40e8 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -625,7 +625,14 @@ STATIC void
- xfs_vm_readahead(
- 	struct readahead_control	*rac)
- {
--	iomap_readahead(rac, &xfs_read_iomap_ops);
-+	IOMAP_ITER(iomi, rac->mapping->host, readahead_pos(rac),
-+			readahead_length(rac), 0);
-+	struct iomap_readpage_ctx ctx = {
-+		.rac = rac,
-+	};
-+
-+	while (iomap_iter(&iomi, xfs_iomap_next_read))
-+		iomi.copied = iomap_readahead(&iomi, &ctx);
- }
- 
- static int
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 0e3f62cde375..66f2fcaf136e 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1150,6 +1150,21 @@ const struct iomap_ops xfs_read_iomap_ops = {
- 	.iomap_begin		= xfs_read_iomap_begin,
- };
- 
-+int
-+xfs_iomap_next_read(
-+	const struct iomap_iter *iomi,
-+	struct iomap		*iomap,
-+	struct iomap		*srcmap)
-+{
-+	if (iomi->copied < 0)
-+		return iomi->copied;
-+	if (iomi->copied >= iomi->len)
-+		return 0;
-+
-+	return xfs_read_iomap_begin(iomi->inode, iomi->pos + iomi->copied,
-+			iomi->len - iomi->copied, iomi->flags, iomap, srcmap);
-+}
-+
- static int
- xfs_seek_iomap_begin(
- 	struct inode		*inode,
-diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
-index 7d3703556d0e..1b1fa225e938 100644
---- a/fs/xfs/xfs_iomap.h
-+++ b/fs/xfs/xfs_iomap.h
-@@ -46,4 +46,6 @@ extern const struct iomap_ops xfs_read_iomap_ops;
- extern const struct iomap_ops xfs_seek_iomap_ops;
- extern const struct iomap_ops xfs_xattr_iomap_ops;
- 
-+int xfs_iomap_next_read(const struct iomap_iter *iomi, struct iomap *iomap,
-+		struct iomap *srcmap);
- #endif /* __XFS_IOMAP_H__*/
-diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
-index 07bc42d62673..4842b85ce36d 100644
---- a/fs/zonefs/super.c
-+++ b/fs/zonefs/super.c
-@@ -70,6 +70,17 @@ static int zonefs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	return 0;
- }
- 
-+static int zonefs_iomap_next(const struct iomap_iter *iomi,
-+		struct iomap *iomap, struct iomap *srcmap)
-+{
-+	if (iomi->copied < 0)
-+		return iomi->copied;
-+	if (iomi->copied >= iomi->len)
-+		return 0;
-+	return zonefs_iomap_begin(iomi->inode, iomi->pos + iomi->copied,
-+			iomi->len - iomi->copied, iomi->flags, iomap, srcmap);
-+}
-+
- static const struct iomap_ops zonefs_iomap_ops = {
- 	.iomap_begin	= zonefs_iomap_begin,
- };
-@@ -81,7 +92,14 @@ static int zonefs_readpage(struct file *unused, struct page *page)
- 
- static void zonefs_readahead(struct readahead_control *rac)
- {
--	iomap_readahead(rac, &zonefs_iomap_ops);
-+	IOMAP_ITER(iomi, rac->mapping->host, readahead_pos(rac),
-+			readahead_length(rac), 0);
-+	struct iomap_readpage_ctx ctx = {
-+		.rac = rac,
-+	};
-+
-+	while (iomap_iter(&iomi, zonefs_iomap_next))
-+		iomi.copied = iomap_readahead(&iomi, &ctx);
- }
- 
- /*
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index fe58e68ec0c1..dd9bfed85c4f 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -212,7 +212,6 @@ loff_t iomap_apply(struct inode *inode, loff_t pos, loff_t length,
- ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
- 		const struct iomap_ops *ops);
- int iomap_readpage(struct page *page, const struct iomap_ops *ops);
--void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
- int iomap_set_page_dirty(struct page *page);
- int iomap_is_partially_uptodate(struct page *page, unsigned long from,
- 		unsigned long count);
-@@ -299,6 +298,15 @@ int iomap_writepages(struct address_space *mapping,
- 		struct writeback_control *wbc, struct iomap_writepage_ctx *wpc,
- 		const struct iomap_writeback_ops *ops);
- 
-+struct iomap_readpage_ctx {
-+	struct page		*cur_page;
-+	bool			cur_page_in_bio;
-+	struct bio		*bio;
-+	struct readahead_control *rac;
-+};
-+
-+loff_t iomap_readahead(struct iomap_iter *, struct iomap_readpage_ctx *);
-+
- /*
-  * Flags for direct I/O ->end_io:
-  */
--- 
-2.27.0
-
+Allison
