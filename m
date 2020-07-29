@@ -2,99 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F17C2317B5
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jul 2020 04:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 092CA2318C0
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jul 2020 06:39:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730407AbgG2Cei (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Jul 2020 22:34:38 -0400
-Received: from mgwym02.jp.fujitsu.com ([211.128.242.41]:31123 "EHLO
-        mgwym02.jp.fujitsu.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728401AbgG2Cei (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jul 2020 22:34:38 -0400
-X-Greylist: delayed 670 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Jul 2020 22:34:37 EDT
-Received: from yt-mxauth.gw.nic.fujitsu.com (unknown [192.168.229.68]) by mgwym02.jp.fujitsu.com with smtp
-         id 3a0c_3585_bdf6d9c4_114e_4c2a_95f9_ad8cda76aa74;
-        Wed, 29 Jul 2020 11:23:22 +0900
-Received: from m3051.s.css.fujitsu.com (m3051.s.css.fujitsu.com [10.134.21.209])
-        by yt-mxauth.gw.nic.fujitsu.com (Postfix) with ESMTP id AD5C6AC00CB
-        for <linux-xfs@vger.kernel.org>; Wed, 29 Jul 2020 11:23:21 +0900 (JST)
-Received: from [10.133.122.138] (VPC-Y08P0560358.g01.fujitsu.local [10.133.122.138])
-        by m3051.s.css.fujitsu.com (Postfix) with ESMTP id A19C7320;
-        Wed, 29 Jul 2020 11:23:21 +0900 (JST)
-Subject: Re: Can we change the S_DAX flag immediately on XFS without dropping
- caches?
-To:     Dave Chinner <david@fromorbit.com>,
-        "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
-Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "ira.weiny@intel.com" <ira.weiny@intel.com>
-References: <9dc179147f6a47279d801445f3efeecc@G08CNEXMBPEKD04.g08.fujitsu.local>
- <20200728022059.GX2005@dread.disaster.area>
-From:   Yasunori Goto <y-goto@fujitsu.com>
-Message-ID: <573feb69-bc38-8eb4-ee9b-7c49802eb737@fujitsu.com>
-Date:   Wed, 29 Jul 2020 11:23:21 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        id S1726336AbgG2Ej0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Jul 2020 00:39:26 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33736 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbgG2Ej0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Jul 2020 00:39:26 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06T4bnOu015375
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jul 2020 04:39:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=T0ddFLEm4jTmoirv8T/fqwh/udKNWbHma0J1e4q77EU=;
+ b=Am/sb1bAWBvVsz9TYnal3upZjqTLjh0a+UwD3F7mj7JELWOyYtw9OWFm8Do7rI4oC94e
+ fTAfe6+S3jRyaajbFC7CMX7lzZsTOp82Hu8GppdfpqSWMoV9TvkLQVrP9XRCXfcO2IKk
+ 8hnzxyAGW1oSdaL1J/ohg1fSo1ri9aVpiq386cJWKylvhIuxP0MgaTxnHLH+cz1n3EPO
+ mL9n1sZoIqHPPgyn/7pmie6w0s7X0JOJ6aZonyWNyEYdRgi+INJajKwnCCjsrxD7IuXb
+ 8VgXiA+ufWF4PwU7CeCKo0QeMeZFZXEnm6s6396p2VFI9TgjA0StMR0YKbw4sELoqfoe YA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 32hu1jb7rw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jul 2020 04:39:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 06T4WjOU043246
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jul 2020 04:37:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 32hu5v67am-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jul 2020 04:37:24 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 06T4bONv031455
+        for <linux-xfs@vger.kernel.org>; Wed, 29 Jul 2020 04:37:24 GMT
+Received: from [192.168.1.226] (/67.1.123.207)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 28 Jul 2020 21:37:24 -0700
+Subject: Re: [PATCH 1/1] xfs: Fix Smatch warning in xfs_attr_node_get
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <20200729000853.10215-1-allison.henderson@oracle.com>
+ <20200729012348.GD3151642@magnolia>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <2d4984ad-8970-7868-ebcb-d61b9e61d42e@oracle.com>
+Date:   Tue, 28 Jul 2020 21:37:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200728022059.GX2005@dread.disaster.area>
+In-Reply-To: <20200729012348.GD3151642@magnolia>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2007290031
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9696 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ phishscore=0 adultscore=0 suspectscore=2 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2007290032
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
 
-On 2020/07/28 11:20, Dave Chinner wrote:
-> On Tue, Jul 28, 2020 at 02:00:08AM +0000, Li, Hao wrote:
->> Hi,
+
+On 7/28/20 6:23 PM, Darrick J. Wong wrote:
+> On Tue, Jul 28, 2020 at 05:08:53PM -0700, Allison Collins wrote:
+>> Fix warning: variable dereferenced before check 'state' in
+>> xfs_attr_node_get.  If xfs_attr_node_hasname fails, it may return a null
+>> state.  If state is null, do not derefrence it.  Go straight to out.
 >>
->> I have noticed that we have to drop caches to make the changing of S_DAX
->> flag take effect after using chattr +x to turn on DAX for a existing
->> regular file. The related function is xfs_diflags_to_iflags, whose
->> second parameter determines whether we should set S_DAX immediately.
-> Yup, as documented in Documentation/filesystems/dax.txt. Specifically:
->
->   6. When changing the S_DAX policy via toggling the persistent FS_XFLAG_DAX flag,
->      the change in behaviour for existing regular files may not occur
->      immediately.  If the change must take effect immediately, the administrator
->      needs to:
->
->      a) stop the application so there are no active references to the data set
->         the policy change will affect
->
->      b) evict the data set from kernel caches so it will be re-instantiated when
->         the application is restarted. This can be achieved by:
->
->         i. drop-caches
->         ii. a filesystem unmount and mount cycle
->         iii. a system reboot
->
->> I can't figure out why we do this. Is this because the page caches in
->> address_space->i_pages are hard to deal with?
-> Because of unfixable races in the page fault path that prevent
-> changing the caching behaviour of the inode while concurrent access
-> is possible. The only way to guarantee races can't happen is to
-> cycle the inode out of cache.
+>> Signed-off-by: Allison Collins <allison.henderson@oracle.com>
+>> ---
+>>   fs/xfs/libxfs/xfs_attr.c | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+>> index e5ec9ed..90b7b24 100644
+>> --- a/fs/xfs/libxfs/xfs_attr.c
+>> +++ b/fs/xfs/libxfs/xfs_attr.c
+>> @@ -1409,6 +1409,9 @@ xfs_attr_node_get(
+>>   	 * Search to see if name exists, and get back a pointer to it.
+>>   	 */
+>>   	error = xfs_attr_node_hasname(args, &state);
+>> +	if (!state)
+>> +		goto out;
+>> +
+>>   	if (error != -EEXIST)
+>>   		goto out_release;
+>>   
+>> @@ -1426,7 +1429,7 @@ xfs_attr_node_get(
+> 
+> I would've just changed the for loop to:
+> 
+> 	for (i = 0; state && i < state->path.active; i++) {
+> 
+> Since that way we'd know that the error-out path always does the right
+> thing wrt any resources that could have been allocated.
+> 
+Sure, will update
 
-I understand why the drop_cache operation is necessary. Thanks.
-
-BTW, even normal user becomes to able to change DAX flag for an inode,
-drop_cache operation still requires root permission, right?
-
-So, if kernel have a feature for normal user can operate drop cache for 
-"a inode" with
-its permission, I think it improve the above limitation, and
-we would like to try to implement it recently.
-
-Do you have any opinion making such feature?
-(Agree/opposition, or any other comment?)
-
-Thanks,
-
--- 
-Yasunori Goto
-
+Allison
+> --D
+> 
+>>   		xfs_trans_brelse(args->trans, state->path.blk[i].bp);
+>>   		state->path.blk[i].bp = NULL;
+>>   	}
+>> -
+>> +out:
+>>   	if (state)
+>>   		xfs_da_state_free(state);
+>>   	return error;
+>> -- 
+>> 2.7.4
+>>
