@@ -2,106 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 75C322353F2
-	for <lists+linux-xfs@lfdr.de>; Sat,  1 Aug 2020 20:10:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A90A523545A
+	for <lists+linux-xfs@lfdr.de>; Sat,  1 Aug 2020 22:56:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgHASK1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 1 Aug 2020 14:10:27 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:43661 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726901AbgHASK1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 1 Aug 2020 14:10:27 -0400
-Received: from [192.168.0.4] (ip5f5aeff1.dynamic.kabel-deutschland.de [95.90.239.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: buczek)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 67A172064608E;
-        Sat,  1 Aug 2020 20:10:23 +0200 (CEST)
-Subject: Re: xfs_reclaim_inodes_ag taking several seconds
-From:   Donald Buczek <buczek@molgen.mpg.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <8284912e-b99a-31af-1901-a38ea03b8648@molgen.mpg.de>
- <20200731223255.GG2005@dread.disaster.area>
- <d515fa07-5198-fc3c-24ac-d35aa4e08668@molgen.mpg.de>
-Message-ID: <0f0416a5-2af8-b4be-d53e-6af61082424a@molgen.mpg.de>
-Date:   Sat, 1 Aug 2020 20:10:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726545AbgHAU4j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 1 Aug 2020 16:56:39 -0400
+Received: from sonic302-55.consmr.mail.ne1.yahoo.com ([66.163.186.181]:41231
+        "EHLO sonic302-55.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726477AbgHAU4j (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 1 Aug 2020 16:56:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1596315398; bh=5dfJpJ2n7jvaJeEqdG/Th7hZpF39HdOLqDHZltZR/a4=; h=Date:From:Reply-To:Subject:References:From:Subject; b=uabN743qgV6gDYS11QnYGDqq4PKO0KnLD+z04+Vn7VGrB0lam2u4QB2Kj8zSiAmUcWZ9harQy1wNbTz3t8PEKQHh7NZ+UdXSoKvxigTPtNLPSXHSgpmPmTgbq9WDIXbnz4Yal8AXkEcfxHVgoHVKhdTTIay8A8aJLqhqCBS3feYvcgiapL3EVhxw+dyEbrtZ5cj4c0cdUjw7lL3A28C9JU8nCpXS2IXwYuRLl+5nv/gkVt0loU/mwi3QbyWI07CiR3h69t75olbXUAhHJ2ShnXM0gM74NWKAeCBYmyvsYDowo+r0HCFGb5dDnKnRJt3u7hrDuyucR+n3WeuTOl3DSQ==
+X-YMail-OSG: JYAOCnQVM1m0uxfQyAA.RgdO85J6yEIGOjtaIadmHQXe4yuom35xI3J0HvBfP4X
+ LgqYyBNHaSN0TGHdxoRj7n73iszG6qMlhDIDhDuZNQb45obN8so6b58DOqbuqWgLukY.9atva5d4
+ IBr_shHB7IrHdP4OJaG4lpUo_tuaMYLxQqllflSnB9hj_vPaZv8x7PfO3ImOq5l9FJFAIxvUzkdy
+ t_USt1VIRoj8q_MiKA_KspJinGZjH9vNVdtSRdJqVk3JUOvUU.jlFR.IXdkyvXntNdXN_oy86.Rd
+ g0Q29YrAZox0RJTeykV_9cthjzCbMTNaqPiemADYgmLOMozsdHgYzuAOpeVSV.hTXLkFeWPVcX_1
+ LCpM6fVobTZIjW6FGW89euTjHqJ.NnUWVTNKsp42gJBoVsFY75Z9uwYUOKyONUeXerZEMUuzhwCL
+ jp.ef8sxP0JZu8WwOcJg9tt0Zske_iYu81dFqBmlt581JW40mqji_mM3ukIBIjibYTF7AQocVGrI
+ a8cDM69SKaUimfKZAYHmuaqB9HAyTxA0RtnFL6tTKsVUzw8z.3NM10O6FeYB__esVL.g84FJz3Cd
+ p_AvBKTtgjisaAUS.cF_igsWPk2._XwJbwig1zwLtObQatyUGi0yP7F3mmxlK4XsKTmMXURK539k
+ FpvV2hZ3SQamuYGdmg7caiZAtE01x6go7gWHdtfdFYF_NslZEmicHSRiM_2PbLbAbYj4o1n_mDWk
+ FWoDxg8QTBLTh_sjD95_itIZOkhALmLTfoic1XKt1TjUjk3KfFdGVwZ2OODh2mwYWZhlIzzFXhSB
+ KM2APGEXCtp4IhDF_88Z2GGvUNGduC76KNFuCk5b8xN_vs0yVp3LbfgiiQkRlqTDkUPER5pU21aT
+ Puk28A0GIRR3EcvxPJAqbyGd.nkXxF9wg3z0ZYdBSftobKNftIQzt.8wqod2s7DrX.2WiEydcew4
+ _0oE1B8LlFQthfAZHGqIki6lQ8LxnT1m3Otn1bQnGyIJLkvwGz2mP5lodmbAh4YVKTxYtlFkB6x3
+ Wo0ljDIzXO5rRutboXQL0KfgCyqfY7miGK3WRYLeasgr2bEsnL_R1M3stW.51Qq6htVFclGprb9i
+ w5EmLjrHGr8vzP9AwdiBdSiwK8nRI1k4lPH.FdjXxQ2cOhT.QRyi5N0jhdJiiOIOQABbhC.truQ0
+ 4MJvHONYt4E6JMGhhKYRBOQKT5fCLUGxUHCXvawk5Ncc63gdDiuatmhL5Dx9AD3DuO5Rj0izrADI
+ mi3eK0GNvOrEVYQwZKUdN3LsSd4tW8e9K7o97BpQkPis1KhvATOpkaXbj.sCCZIm1Gh8GEYuYcbw
+ sWak-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Sat, 1 Aug 2020 20:56:38 +0000
+Date:   Sat, 1 Aug 2020 20:54:38 +0000 (UTC)
+From:   Michel D'Hooghe <aerrr02@gtaorg.in>
+Reply-To: pay_rolldepartment@consultant.com
+Message-ID: <2144501764.10598131.1596315278130@mail.yahoo.com>
+Subject: RE
 MIME-Version: 1.0
-In-Reply-To: <d515fa07-5198-fc3c-24ac-d35aa4e08668@molgen.mpg.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <2144501764.10598131.1596315278130.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 
-On 01.08.20 12:25, Donald Buczek wrote:
 
-> So if I understand you correctly, this is expected behavior with this kind of load and conceptual changes are already scheduled for kernel 5.9. I don't understand most of it, but isn't it true that with that planned changes the impact might be better limited to the filesystem, so that the performance of other areas of the system might improve? I'd love to test that with our load, but I don't want to risk our backup data and it would be difficult to produce the same load on a toy system. The patch set is not yet ready to be tested on production data, is it?
-> 
-> So I guess I'll try to put the backup processes into one or more cgroups to limit the memory available for their fs caches and leave some room for unrelated (maintenance) processes. I hope, that makes sense.
+You have been allocated some funds by WORLD BANK GROUP' & Qatar 2022 FIFA WORLD CUP & you are advised to urgently respond to this email: (payrolldepartment100@consultant.com) for more clarifications.
 
-Which it doesn't, because it totally ignores what was said before. The affected processes were not waiting for memory but for the shrinker to finish.
-
-D.
-
-> 
-> Thank you both four your analysis!
-> 
-> Donald
-> 
->> And if you have 30 million inodes in memory, and lots of them are
->> dirty, and the shrinkers are running, then they will be doing
->> dirty inode writeback to throttle memory reclaim to
->> ensure it makes progress and doesn't declare OOM and kill processes
->> permaturely.
->>
->> You have spinning disks, RAID6. I'm betting that it can only clean a
->> couple of hundred inodes a second because RAID6 is severely IOP
->> limited for small writes (like inode clusters). And when you many,
->> many thousands (maybe millions) of dirty inodes, anything that has
->> to wait on inode writeback is going to be waiting for some time...
->>
->>> root:done:/home/buczek/linux_problems/shrinker_semaphore/# xfs_info /amd/done/C/C8024
->>> meta-data=/dev/md0               isize=512    agcount=102, agsize=268435328 blks
->>>           =                       sectsz=4096  attr=2, projid32bit=1
->>>           =                       crc=1        finobt=1, sparse=1, rmapbt=0
->>>           =                       reflink=0
->>> data     =                       bsize=4096   blocks=27348629504, imaxpct=1
->>>           =                       sunit=128    swidth=1792 blks
->>> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
->>> log      =internal log           bsize=4096   blocks=521728, version=2
->>
->> And full size journals, so the filesystem can hold an awful lot of
->> active dirty inodes in memory before it starts throttling on a full
->> journal (think millions of dirty inodes per filesystem)...
->>
->> So, yeah, this is the classic "in memory operation is orders of
->> magnitude faster than disk operation" and it all comes crashing down
->> when something needs to wait for inodes to be written back. The
->> patchset Darrick pointed you at should fix the shrinker issue, but
->> it's likely that this will just push the problem to the next
->> throttling point, which is the journal filling up.
->>
->> IOWs, I suspect fixing your shrinker problem is only going to make
->> the overload of dirty inodes in the system behave worse, because
->> running out of journal space cause *all modifications* to the
->> filesystem to start taking significant delays while they wait for
->> inode writeback to free journal space, not just have things
->> trying to register/unregister shrinkers take delays...
->>
->> Cheers,
->>
->> Dave.
->>
-> 
-
--- 
-Donald Buczek
-buczek@molgen.mpg.de
-Tel: +49 30 8413 1433
+Michel D'Hooghe (Sec. Zone Co-coordinator).
