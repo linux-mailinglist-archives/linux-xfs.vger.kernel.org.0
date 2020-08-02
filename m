@@ -2,54 +2,116 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A90A523545A
-	for <lists+linux-xfs@lfdr.de>; Sat,  1 Aug 2020 22:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C20F239CF2
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 Aug 2020 01:04:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgHAU4j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 1 Aug 2020 16:56:39 -0400
-Received: from sonic302-55.consmr.mail.ne1.yahoo.com ([66.163.186.181]:41231
-        "EHLO sonic302-55.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726477AbgHAU4j (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 1 Aug 2020 16:56:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1596315398; bh=5dfJpJ2n7jvaJeEqdG/Th7hZpF39HdOLqDHZltZR/a4=; h=Date:From:Reply-To:Subject:References:From:Subject; b=uabN743qgV6gDYS11QnYGDqq4PKO0KnLD+z04+Vn7VGrB0lam2u4QB2Kj8zSiAmUcWZ9harQy1wNbTz3t8PEKQHh7NZ+UdXSoKvxigTPtNLPSXHSgpmPmTgbq9WDIXbnz4Yal8AXkEcfxHVgoHVKhdTTIay8A8aJLqhqCBS3feYvcgiapL3EVhxw+dyEbrtZ5cj4c0cdUjw7lL3A28C9JU8nCpXS2IXwYuRLl+5nv/gkVt0loU/mwi3QbyWI07CiR3h69t75olbXUAhHJ2ShnXM0gM74NWKAeCBYmyvsYDowo+r0HCFGb5dDnKnRJt3u7hrDuyucR+n3WeuTOl3DSQ==
-X-YMail-OSG: JYAOCnQVM1m0uxfQyAA.RgdO85J6yEIGOjtaIadmHQXe4yuom35xI3J0HvBfP4X
- LgqYyBNHaSN0TGHdxoRj7n73iszG6qMlhDIDhDuZNQb45obN8so6b58DOqbuqWgLukY.9atva5d4
- IBr_shHB7IrHdP4OJaG4lpUo_tuaMYLxQqllflSnB9hj_vPaZv8x7PfO3ImOq5l9FJFAIxvUzkdy
- t_USt1VIRoj8q_MiKA_KspJinGZjH9vNVdtSRdJqVk3JUOvUU.jlFR.IXdkyvXntNdXN_oy86.Rd
- g0Q29YrAZox0RJTeykV_9cthjzCbMTNaqPiemADYgmLOMozsdHgYzuAOpeVSV.hTXLkFeWPVcX_1
- LCpM6fVobTZIjW6FGW89euTjHqJ.NnUWVTNKsp42gJBoVsFY75Z9uwYUOKyONUeXerZEMUuzhwCL
- jp.ef8sxP0JZu8WwOcJg9tt0Zske_iYu81dFqBmlt581JW40mqji_mM3ukIBIjibYTF7AQocVGrI
- a8cDM69SKaUimfKZAYHmuaqB9HAyTxA0RtnFL6tTKsVUzw8z.3NM10O6FeYB__esVL.g84FJz3Cd
- p_AvBKTtgjisaAUS.cF_igsWPk2._XwJbwig1zwLtObQatyUGi0yP7F3mmxlK4XsKTmMXURK539k
- FpvV2hZ3SQamuYGdmg7caiZAtE01x6go7gWHdtfdFYF_NslZEmicHSRiM_2PbLbAbYj4o1n_mDWk
- FWoDxg8QTBLTh_sjD95_itIZOkhALmLTfoic1XKt1TjUjk3KfFdGVwZ2OODh2mwYWZhlIzzFXhSB
- KM2APGEXCtp4IhDF_88Z2GGvUNGduC76KNFuCk5b8xN_vs0yVp3LbfgiiQkRlqTDkUPER5pU21aT
- Puk28A0GIRR3EcvxPJAqbyGd.nkXxF9wg3z0ZYdBSftobKNftIQzt.8wqod2s7DrX.2WiEydcew4
- _0oE1B8LlFQthfAZHGqIki6lQ8LxnT1m3Otn1bQnGyIJLkvwGz2mP5lodmbAh4YVKTxYtlFkB6x3
- Wo0ljDIzXO5rRutboXQL0KfgCyqfY7miGK3WRYLeasgr2bEsnL_R1M3stW.51Qq6htVFclGprb9i
- w5EmLjrHGr8vzP9AwdiBdSiwK8nRI1k4lPH.FdjXxQ2cOhT.QRyi5N0jhdJiiOIOQABbhC.truQ0
- 4MJvHONYt4E6JMGhhKYRBOQKT5fCLUGxUHCXvawk5Ncc63gdDiuatmhL5Dx9AD3DuO5Rj0izrADI
- mi3eK0GNvOrEVYQwZKUdN3LsSd4tW8e9K7o97BpQkPis1KhvATOpkaXbj.sCCZIm1Gh8GEYuYcbw
- sWak-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Sat, 1 Aug 2020 20:56:38 +0000
-Date:   Sat, 1 Aug 2020 20:54:38 +0000 (UTC)
-From:   Michel D'Hooghe <aerrr02@gtaorg.in>
-Reply-To: pay_rolldepartment@consultant.com
-Message-ID: <2144501764.10598131.1596315278130@mail.yahoo.com>
-Subject: RE
+        id S1726693AbgHBXBz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Aug 2020 19:01:55 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:57774 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726257AbgHBXBz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Aug 2020 19:01:55 -0400
+Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 9F77B109820;
+        Mon,  3 Aug 2020 09:01:50 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k2MzE-0000Mk-Pv; Mon, 03 Aug 2020 09:01:48 +1000
+Date:   Mon, 3 Aug 2020 09:01:48 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [RFC 1/1] pmem: Add cond_resched() in bio_for_each_segment loop
+ in pmem_make_request
+Message-ID: <20200802230148.GA2114@dread.disaster.area>
+References: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <2144501764.10598131.1596315278130.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16271 YMailNodin Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0
+        a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=VnNF1IyMAAAA:8 a=7-415B0cAAAA:8
+        a=qczKg5P-FDsFxSpMrEAA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Wed, Jul 29, 2020 at 02:15:18PM +0530, Ritesh Harjani wrote:
+> For systems which do not have CONFIG_PREEMPT set and
+> if there is a heavy multi-threaded load/store operation happening
+> on pmem + sometimes along with device latencies, softlockup warnings like
+> this could trigger. This was seen on Power where pagesize is 64K.
+> 
+> To avoid softlockup, this patch adds a cond_resched() in this path.
+> 
+> <...>
+> watchdog: BUG: soft lockup - CPU#31 stuck for 22s!
+> <...>
+> CPU: 31 PID: 15627 <..> 5.3.18-20
+> <...>
+> NIP memcpy_power7+0x43c/0x7e0
+> LR memcpy_flushcache+0x28/0xa0
+> 
+> Call Trace:
+> memcpy_power7+0x274/0x7e0 (unreliable)
+> memcpy_flushcache+0x28/0xa0
+> write_pmem+0xa0/0x100 [nd_pmem]
+> pmem_do_bvec+0x1f0/0x420 [nd_pmem]
+> pmem_make_request+0x14c/0x370 [nd_pmem]
+> generic_make_request+0x164/0x400
+> submit_bio+0x134/0x2e0
+> submit_bio_wait+0x70/0xc0
+> blkdev_issue_zeroout+0xf4/0x2a0
+> xfs_zero_extent+0x90/0xc0 [xfs]
+> xfs_bmapi_convert_unwritten+0x198/0x230 [xfs]
+> xfs_bmapi_write+0x284/0x630 [xfs]
+> xfs_iomap_write_direct+0x1f0/0x3e0 [xfs]
+> xfs_file_iomap_begin+0x344/0x690 [xfs]
+> dax_iomap_pmd_fault+0x488/0xc10
+> __xfs_filemap_fault+0x26c/0x2b0 [xfs]
+> __handle_mm_fault+0x794/0x1af0
+> handle_mm_fault+0x12c/0x220
+> __do_page_fault+0x290/0xe40
+> do_page_fault+0x38/0xc0
+> handle_page_fault+0x10/0x30
+> 
+> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> ---
+>  drivers/nvdimm/pmem.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index 2df6994acf83..fcf7af13897e 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -214,6 +214,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
+>  			bio->bi_status = rc;
+>  			break;
+>  		}
+> +		cond_resched();
 
+There are already cond_resched() calls between submitted bios in
+blkdev_issue_zeroout() via both __blkdev_issue_zero_pages() and
+__blkdev_issue_write_zeroes(), so I'm kinda wondering where the
+problem is coming from here.
 
-You have been allocated some funds by WORLD BANK GROUP' & Qatar 2022 FIFA WORLD CUP & you are advised to urgently respond to this email: (payrolldepartment100@consultant.com) for more clarifications.
+Just how big is the bio being issued here that it spins for 22s
+trying to copy it?
 
-Michel D'Hooghe (Sec. Zone Co-coordinator).
+And, really, if the system is that bound on cacheline bouncing that
+it prevents memcpy() from making progress, I think we probably
+should be issuing a soft lockup warning like this...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
