@@ -2,111 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0FD223DEF7
-	for <lists+linux-xfs@lfdr.de>; Thu,  6 Aug 2020 19:36:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFBB223E246
+	for <lists+linux-xfs@lfdr.de>; Thu,  6 Aug 2020 21:33:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgHFRfa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 6 Aug 2020 13:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729339AbgHFRfX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 6 Aug 2020 13:35:23 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D180823131;
-        Thu,  6 Aug 2020 15:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596726464;
-        bh=iNFLlgEhiYwp8ZRVI4J6gnGFP+JhjSTOqd0S/pIkyto=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y05pH6hS7jyZT5I8hGUXIH6dhp6PsUwz5DjbgHn90eVss5blosSYAtqvXLAZi0cru
-         f/6d9Z2uXGUfy8Dt/nLbxnBREXGcOJF2eIAY58tqgMl8+/8KY3/bfqo+hawGgia2CQ
-         XCtAqh4Tnn0mF+9oROVTrcDvkJ111VpXtBDsG5RA=
-Date:   Thu, 6 Aug 2020 08:07:43 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, riteshh@linux.ibm.com,
-        rgoldwyn@suse.de, agruenba@redhat.com, linux-btrfs@vger.kernel.org
-Subject: [GIT PULL v2] iomap: new code for 5.9-rc1
-Message-ID: <20200806150743.GC6090@magnolia>
+        id S1726150AbgHFTdz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 6 Aug 2020 15:33:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59006 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbgHFTdz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 6 Aug 2020 15:33:55 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076FDKla152834;
+        Thu, 6 Aug 2020 15:15:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=1AolOzPIOMQfffxKB/08KHsr7Q43v8tlBZ0VC1SgVt0=;
+ b=Jx8yPjarhGqYqBChfic+cjx/BI/ITyQWMId9lGoivE/0I7swJiFhYUNxa0WEUbMWt/v/
+ Z1S3CkmvxQWeVAElcXL9Jsf42P34si+clZMrb87bA7oVBZVJ/3vg5EgocSfzkryra2gP
+ Ai+jJhSR0TPgOudRPLlGaNPI8EsjO51252JYAntus0KSTK5GANtYIt0yHqx2tmU4reYY
+ QrJq4G8+gM1/Y7yh02eMb3tqIPlFwhqGb3N7tvfZhI3p0l7XNDCz1kRurw2w8N8aOybY
+ wxKcCdKOEIRPQxXmdmask8dYuICptSbXEbvifLmlSmILL6EqzYqEJKknDX8CBRxt2gjD kA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32r6gwukgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 06 Aug 2020 15:15:34 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 076FD0oh121832;
+        Thu, 6 Aug 2020 15:13:34 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 32pdnwmrks-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Aug 2020 15:13:34 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 076FDWUG023250;
+        Thu, 6 Aug 2020 15:13:33 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Aug 2020 08:13:32 -0700
+Date:   Thu, 6 Aug 2020 08:13:31 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Message-ID: <20200806151331.GD6107@magnolia>
+References: <20200806150527.2283029-1-devel@etsukata.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200806150527.2283029-1-devel@etsukata.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 spamscore=0 mlxscore=0
+ bulkscore=0 adultscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008060109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9704 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 priorityscore=1501
+ phishscore=0 clxscore=1011 suspectscore=2 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008060109
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+On Fri, Aug 07, 2020 at 12:05:27AM +0900, Eiichi Tsukata wrote:
+> If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+> shows the following warning:
 
-Please pull these new changes to the iomap code for 5.9.  The most
-notable changes are:
-
-1) iomap no longer invalidate the page cache when performing a direct
-read, since doing so is unnecessary and the old directio code doesn't do
-that either.
-
-2) iomap embraced the use of returning ENOTBLK from a direct write to
-trigger falling back to a buffered write since ext4 already did this and
-btrfs wants it for their port.
-
-3) iomap falls back to buffered writes if we're doing a direct write and
-the page cache invalidation after the flush fails; this was necessary to
-handle a corner case in the btrfs port.
-
-4) Remove email virus scanner detritus that was accidentally included in
-yesterday's pull request.  Clearly I need(ed) to update my git branch
-checker scripts. :(
-
-The branch merges cleanly with your HEAD branch as of a few minutes ago.
-Please let me know if there are any strange problems.
+This needs to be sent to the xfs mailing list, per get_maintainers.pl.
 
 --D
 
-The following changes since commit dcb7fd82c75ee2d6e6f9d8cc71c52519ed52e258:
-
-  Linux 5.8-rc4 (2020-07-05 16:20:22 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.9-merge-5
-
-for you to fetch changes up to 60263d5889e6dc5987dc51b801be4955ff2e4aa7:
-
-  iomap: fall back to buffered writes for invalidation failures (2020-08-05 09:24:16 -0700)
-
-----------------------------------------------------------------
-New code for 5.9:
-- Make sure we call ->iomap_end with a failure code if ->iomap_begin
-  failed in any way; some filesystems need to try to undo things.
-- Don't invalidate the page cache during direct reads since we already
-  sync'd the cache with disk.
-- Make direct writes fall back to the page cache if the pre-write
-  cache invalidation fails.  This avoids a cache coherency problem.
-- Fix some idiotic virus scanner warning bs in the previous tag.
-
-----------------------------------------------------------------
-Andreas Gruenbacher (1):
-      iomap: Make sure iomap_end is called after iomap_begin
-
-Christoph Hellwig (2):
-      xfs: use ENOTBLK for direct I/O to buffered I/O fallback
-      iomap: fall back to buffered writes for invalidation failures
-
-Dave Chinner (1):
-      iomap: Only invalidate page cache pages on direct IO writes
-
- fs/ext4/file.c       |  2 ++
- fs/gfs2/file.c       |  3 ++-
- fs/iomap/apply.c     | 13 +++++++++----
- fs/iomap/direct-io.c | 37 +++++++++++++++++++++----------------
- fs/iomap/trace.h     |  1 +
- fs/xfs/xfs_file.c    |  8 ++++----
- fs/zonefs/super.c    |  7 +++++--
- 7 files changed, 44 insertions(+), 27 deletions(-)
+>   UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+>   member access within null pointer of type 'struct xfs_kobj'
+>   Call Trace:
+>    dump_stack+0x10e/0x195
+>    ubsan_type_mismatch_common+0x241/0x280
+>    __ubsan_handle_type_mismatch_v1+0x32/0x40
+>    init_xfs_fs+0x12b/0x28f
+>    do_one_initcall+0xdd/0x1d0
+>    do_initcall_level+0x151/0x1b6
+>    do_initcalls+0x50/0x8f
+>    do_basic_setup+0x29/0x2b
+>    kernel_init_freeable+0x19f/0x20b
+>    kernel_init+0x11/0x1e0
+>    ret_from_fork+0x22/0x30
+> 
+> Fix it by checking parent_kobj before the code accesses its member.
+> 
+> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+> ---
+>  fs/xfs/xfs_sysfs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+> index e9f810fc6731..aad67dc4ab5b 100644
+> --- a/fs/xfs/xfs_sysfs.h
+> +++ b/fs/xfs/xfs_sysfs.h
+> @@ -32,9 +32,9 @@ xfs_sysfs_init(
+>  	struct xfs_kobj		*parent_kobj,
+>  	const char		*name)
+>  {
+> +	struct kobject *parent = parent_kobj ? &parent_kobj->kobject : NULL;
+>  	init_completion(&kobj->complete);
+> -	return kobject_init_and_add(&kobj->kobject, ktype,
+> -				    &parent_kobj->kobject, "%s", name);
+> +	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
+>  }
+>  
+>  static inline void
+> -- 
+> 2.26.2
+> 
