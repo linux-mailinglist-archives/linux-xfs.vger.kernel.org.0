@@ -2,176 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AD5023EA42
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Aug 2020 11:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA4423EDDB
+	for <lists+linux-xfs@lfdr.de>; Fri,  7 Aug 2020 15:14:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgHGJXV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Aug 2020 05:23:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29414 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725881AbgHGJXT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Aug 2020 05:23:19 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07794hFE059704;
-        Fri, 7 Aug 2020 05:23:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding : message-id; s=pp1;
- bh=1g03ZrsAvU3imE8zwOJzFzX6Suq13FXKqdRyOgNIzuI=;
- b=FQ1PLt4hTiHEifRKRogJbBRU0tM++7lUxJhJhMy37d8wi5v2vJQGVWc5epptKaJAAKaf
- zFR0PfjkxG0sHFpDhgbLo8GzgHmBECLnvFRWLK8//U8yrG7a6DoXQ5ZPAwF+1oOusvtt
- oi/OfsdMBgiaWtTPFYvdjHE/5hfZmvZheldkYRajo0e+695gxhYSZBZK/4uf/T4xKGe6
- 3kXAgbf80M0BB6pn0layHneR7SWuuW26yt6zZWMMtCpkpGhrfX6p2N6UJ+xtcagIzsAP
- 6OTvE/hQNBGv8jQ2GvogUNB4RWAy189bTxa/wh5sxZdAu7aePV/hdXnbYelRSlY8DPB+ aA== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 32rephmdet-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 05:23:16 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0779F7Qc031564;
-        Fri, 7 Aug 2020 09:23:15 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma02fra.de.ibm.com with ESMTP id 32n018bykk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Aug 2020 09:23:15 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0779Lk4p61276644
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Aug 2020 09:21:46 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C61464C04E;
-        Fri,  7 Aug 2020 09:23:12 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3CF64C046;
-        Fri,  7 Aug 2020 09:23:11 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.36.111])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Aug 2020 09:23:11 +0000 (GMT)
-Subject: Re: [RFC 1/1] pmem: Add cond_resched() in bio_for_each_segment loop
- in pmem_make_request
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-References: <0d96e2481f292de2cda8828b03d5121004308759.1596011292.git.riteshh@linux.ibm.com>
- <20200802230148.GA2114@dread.disaster.area>
- <20200803071405.64C0711C058@d06av25.portsmouth.uk.ibm.com>
- <20200803215144.GB2114@dread.disaster.area>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Fri, 7 Aug 2020 14:53:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        id S1726428AbgHGNOB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 Aug 2020 09:14:01 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:4473 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726392AbgHGNOA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 Aug 2020 09:14:00 -0400
+X-IronPort-AV: E=Sophos;i="5.75,445,1589212800"; 
+   d="scan'208";a="97774911"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 07 Aug 2020 21:13:42 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
+        by cn.fujitsu.com (Postfix) with ESMTP id 807F34CE34DD;
+        Fri,  7 Aug 2020 21:13:36 +0800 (CST)
+Received: from G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) by
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 7 Aug 2020 21:13:38 +0800
+Received: from localhost.localdomain (10.167.225.141) by
+ G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Fri, 7 Aug 2020 21:13:36 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>
+CC:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
+        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@lst.de>, <rgoldwyn@suse.de>,
+        <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
+Subject: [RFC PATCH 0/8] fsdax: introduce FS query interface to support reflink
+Date:   Fri, 7 Aug 2020 21:13:28 +0800
+Message-ID: <20200807131336.318774-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200803215144.GB2114@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200807092311.B3CF64C046@d06av22.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-07_05:2020-08-06,2020-08-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 mlxlogscore=999 clxscore=1015 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008070064
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 807F34CE34DD.AD5BB
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+This patchset is a try to resolve the problem of tracking shared page
+for fsdax.
+
+Instead of per-page tracking method, this patchset introduces a query
+interface: get_shared_files(), which is implemented by each FS, to
+obtain the owners of a shared page.  It returns an owner list of this
+shared page.  Then, the memory-failure() iterates the list to be able
+to notify each process using files that sharing this page.
+
+The design of the tracking method is as follow:
+1. dax_assocaite_entry() associates the owner's info to this page
+- For non-reflink case:
+  page->mapping,->index stores the file's mapping, offset in file.
+    A dax page is not shared by other files. dax_associate_entry() is
+    called only once.  So, use page->mapping,->index to store the
+    owner's info.
+- For reflink case:
+  page->mapping,->index stores the block device, offset in device.
+    A dax page is shared more than once.  So, dax_assocaite_entry()
+    will be called more than once.  We introduce page->zone_device_data
+    as reflink counter, to indicate that this page is shared and how
+    many owners now is using this page. The page->mapping,->index is
+    used to store the block_device of the fs and page offset of this
+    device.
+
+2. dax_lock_page() calls query interface to lock each dax entry
+- For non-reflink case:
+  owner's info is stored in page->mapping,->index.
+    So, It is easy to lock its dax entry.
+- For reflink case:
+  owner's info is obtained by calling get_shared_files(), which is
+  implemented by FS.
+    The FS context could be found in block_device that stored by
+    page->mapping.  Then lock the dax entries of the owners.
+
+In memory-failure(), since the owner list has been obtained in 
+dax_lock_page(), just iterate the list and handle the error.  This
+patchset didn't handle the memory failure on metadata of FS because
+I haven't found a way to distinguish whether this page contains
+matadata yet.  Still working on it.
+
+==
+I also borrowed and made some changes on Goldwyn's patchsets.
+These patches makes up for the lack of CoW mechanism in fsdax.
+
+The rests are dax & reflink support for xfs.
+
+(Rebased on v5.8)
+==
+Shiyang Ruan (8):
+  fs: introduce get_shared_files() for dax&reflink
+  fsdax, mm: track files sharing dax page for memory-failure
+  fsdax: introduce dax_copy_edges() for COW
+  fsdax: copy data before write
+  fsdax: replace mmap entry in case of CoW
+  fsdax: dedup file range to use a compare function
+  fs/xfs: handle CoW for fsdax write() path
+  fs/xfs: support dedupe for fsdax
+
+ fs/btrfs/reflink.c     |   3 +-
+ fs/dax.c               | 302 +++++++++++++++++++++++++++++++++++------
+ fs/ocfs2/file.c        |   2 +-
+ fs/read_write.c        |  11 +-
+ fs/xfs/xfs_bmap_util.c |   6 +-
+ fs/xfs/xfs_file.c      |  10 +-
+ fs/xfs/xfs_iomap.c     |   3 +-
+ fs/xfs/xfs_iops.c      |  11 +-
+ fs/xfs/xfs_reflink.c   |  80 ++++++-----
+ fs/xfs/xfs_super.c     |  67 +++++++++
+ include/linux/dax.h    |  18 ++-
+ include/linux/fs.h     |  11 +-
+ include/linux/mm.h     |   8 ++
+ mm/memory-failure.c    | 138 ++++++++++++-------
+ 14 files changed, 529 insertions(+), 141 deletions(-)
+
+-- 
+2.27.0
 
 
-On 8/4/20 3:21 AM, Dave Chinner wrote:
-> On Mon, Aug 03, 2020 at 12:44:04PM +0530, Ritesh Harjani wrote:
->>
->>
->> On 8/3/20 4:31 AM, Dave Chinner wrote:
->>> On Wed, Jul 29, 2020 at 02:15:18PM +0530, Ritesh Harjani wrote:
->>>> For systems which do not have CONFIG_PREEMPT set and
->>>> if there is a heavy multi-threaded load/store operation happening
->>>> on pmem + sometimes along with device latencies, softlockup warnings like
->>>> this could trigger. This was seen on Power where pagesize is 64K.
->>>>
->>>> To avoid softlockup, this patch adds a cond_resched() in this path.
->>>>
->>>> <...>
->>>> watchdog: BUG: soft lockup - CPU#31 stuck for 22s!
->>>> <...>
->>>> CPU: 31 PID: 15627 <..> 5.3.18-20
->>>> <...>
->>>> NIP memcpy_power7+0x43c/0x7e0
->>>> LR memcpy_flushcache+0x28/0xa0
->>>>
->>>> Call Trace:
->>>> memcpy_power7+0x274/0x7e0 (unreliable)
->>>> memcpy_flushcache+0x28/0xa0
->>>> write_pmem+0xa0/0x100 [nd_pmem]
->>>> pmem_do_bvec+0x1f0/0x420 [nd_pmem]
->>>> pmem_make_request+0x14c/0x370 [nd_pmem]
->>>> generic_make_request+0x164/0x400
->>>> submit_bio+0x134/0x2e0
->>>> submit_bio_wait+0x70/0xc0
->>>> blkdev_issue_zeroout+0xf4/0x2a0
->>>> xfs_zero_extent+0x90/0xc0 [xfs]
->>>> xfs_bmapi_convert_unwritten+0x198/0x230 [xfs]
->>>> xfs_bmapi_write+0x284/0x630 [xfs]
->>>> xfs_iomap_write_direct+0x1f0/0x3e0 [xfs]
->>>> xfs_file_iomap_begin+0x344/0x690 [xfs]
->>>> dax_iomap_pmd_fault+0x488/0xc10
->>>> __xfs_filemap_fault+0x26c/0x2b0 [xfs]
->>>> __handle_mm_fault+0x794/0x1af0
->>>> handle_mm_fault+0x12c/0x220
->>>> __do_page_fault+0x290/0xe40
->>>> do_page_fault+0x38/0xc0
->>>> handle_page_fault+0x10/0x30
->>>>
->>>> Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->>>> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
->>>> ---
->>>>    drivers/nvdimm/pmem.c | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
->>>> index 2df6994acf83..fcf7af13897e 100644
->>>> --- a/drivers/nvdimm/pmem.c
->>>> +++ b/drivers/nvdimm/pmem.c
->>>> @@ -214,6 +214,7 @@ static blk_qc_t pmem_make_request(struct request_queue *q, struct bio *bio)
->>>>    			bio->bi_status = rc;
->>>>    			break;
->>>>    		}
->>>> +		cond_resched();
->>>
->>> There are already cond_resched() calls between submitted bios in
->>> blkdev_issue_zeroout() via both __blkdev_issue_zero_pages() and
->>> __blkdev_issue_write_zeroes(), so I'm kinda wondering where the
->>> problem is coming from here.
->>
->> This problem is coming from that bio call- submit_bio()
->>
->>>
->>> Just how big is the bio being issued here that it spins for 22s
->>> trying to copy it?
->>
->> It's 256 (due to BIO_MAX_PAGES) * 64KB (pagesize) = 16MB.
->> So this is definitely not an easy trigger as per tester was mainly seen
->> on a VM.
-> 
-> Right, so a memcpy() of 16MB of data in a single bio is taking >22s?
-> 
-> If so, then you can't solve this problem with cond_resched() - if
-> something that should only take half a millisecond to run is taking
-> 22s of CPU time, there are bigger problems occurring that need
-> fixing.
-> 
-> i.e. if someone is running a workload that has effectively
-> livelocked the hardware cache coherency protocol across the entire
-> machine, then changing kernel code that requires memory bandwidth to
-> be available is not going to fix the problem. All is does is shoot
-> the messenger that tells you there is something going wrong.
 
-Thanks Dave. Appreciate your inputs in this area.
-Yes, agreed on the fact that we should not shoot the messenger itself.
-Will look more into this.
-
--ritesh
