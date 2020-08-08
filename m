@@ -2,55 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5310A23F265
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 Aug 2020 20:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2FE823F644
+	for <lists+linux-xfs@lfdr.de>; Sat,  8 Aug 2020 06:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbgHGSB1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 Aug 2020 14:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgHGSB1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 7 Aug 2020 14:01:27 -0400
-Subject: Re: [GIT PULL] xfs: new code for 5.9-rc1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1596823287;
-        bh=+K6uo2vXfoM35kneAHG8QLTckjLRBhkJkxZr2m4oIXM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=P0O3rW/4+Ugy2PB4py/qZJzb9DW5oglONMPEmr2hsdsBsJXjhUnChkyhwNgHdqH5D
-         n6hCLGuNoa0PwF4zZL++X3WFMh6Hcxw16mXKeCzFySqj+GimaAIAYm75/ielYNrbUR
-         QSI12DT3CuGWlaZOP+fjW9Nq6wRrsSNyW86L4Z8k=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200807040817.GD6096@magnolia>
-References: <20200807040817.GD6096@magnolia>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200807040817.GD6096@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-merge-7
-X-PR-Tracked-Commit-Id: 818d5a91559ffe1e1f2095dcbbdb96c13fdb94ec
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5631c5e0eb9035d92ceb20fcd9cdb7779a3f5cc7
-Message-Id: <159682328702.30890.11249398306478997606.pr-tracker-bot@kernel.org>
-Date:   Fri, 07 Aug 2020 18:01:27 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        id S1726233AbgHHEHP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 8 Aug 2020 00:07:15 -0400
+Received: from [125.140.134.231] ([125.140.134.231]:50104 "EHLO
+        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725267AbgHHEHP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 8 Aug 2020 00:07:15 -0400
+Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
+         Sat, 8 Aug 2020 13:02:22 +0900
+Reply-To: <williiamrichard2999@yahoo.com>
+From:   "williams richard" <richardwilliamsrichard355@gmail.com>
+Subject: INVESTMENT PARTNER
+Date:   Fri, 7 Aug 2020 21:02:29 -0700
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <WIN-DAONO245HJFTRhl00aec379@WIN-DAONO245HJF>
+X-OriginalArrivalTime: 08 Aug 2020 04:02:22.0806 (UTC) FILETIME=[B8161760:01D66D38]
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pull request you sent on Thu, 6 Aug 2020 21:08:17 -0700:
+Dear Sir/Madam
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-merge-7
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5631c5e0eb9035d92ceb20fcd9cdb7779a3f5cc7
+I work as an agent to some Investors. Do you need a business loan or
+funds for a business idea or want to expand but need huge funding? We
+are expanding our investment presence by granting debt loan to fund
+viable and lucrative projects. If you have any project that needs
+funding, kindly revert to me with your business plan and if we find
+your business to be worthy of investment, you will be promptly
+contacted and both parties will meet face to face and have a
+round-table meeting together.
 
-Thank you!
+Good documentation will be carried out between you and the Investor
+before putting down his funds.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Regards
+
+
+
+williams richard 
+
+via  williiamrichard2999@yahoo.com
