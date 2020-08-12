@@ -2,97 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD664242C14
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Aug 2020 17:20:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EA7C242C23
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Aug 2020 17:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHLPT6 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 12 Aug 2020 11:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgHLPTz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 Aug 2020 11:19:55 -0400
-From:   bugzilla-daemon@bugzilla.kernel.org
-Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 208827] [fio io_uring] io_uring write data crc32c verify failed
-Date:   Wed, 12 Aug 2020 15:19:54 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: axboe@kernel.dk
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-208827-201763-FeQfLIVMLw@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-208827-201763@https.bugzilla.kernel.org/>
+        id S1726477AbgHLPYS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Aug 2020 11:24:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21634 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726226AbgHLPYP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Aug 2020 11:24:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597245852;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7qxoaFZi7LOtc05kjRfqfAqAvTG1AzpTDVdRlH1Navs=;
+        b=PPNyaH+lRjCcPWs7TAu7QOzMvydcCcdr82qu4tica+RzlhsMoVYluyv1xhuvpMTB8FmIzx
+        OWn058nMIFejsd4jsv+vtkgWmbToZRjVz2JFTwilRlrO0NSfyCWyjAGm8n8Qc54YU3Sfbz
+        XFg6rLzq3uJYHfAHWf5j/515HXoDriM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-311-lU9_jMx7NWC1KjbVeF5RvA-1; Wed, 12 Aug 2020 11:24:10 -0400
+X-MC-Unique: lU9_jMx7NWC1KjbVeF5RvA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5CF83802816;
+        Wed, 12 Aug 2020 15:24:09 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F10C25DA69;
+        Wed, 12 Aug 2020 15:24:08 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        bugzilla-daemon@bugzilla.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [Bug 208827] [fio io_uring] io_uring write data crc32c verify failed
 References: <bug-208827-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        <bug-208827-201763-ubSctIQBY4@https.bugzilla.kernel.org/>
+        <20200810000932.GH2114@dread.disaster.area>
+        <20200810035605.GI2114@dread.disaster.area>
+        <20200810070807.GJ2114@dread.disaster.area>
+        <20200810090859.GK2114@dread.disaster.area>
+        <eeb0524b-3aa7-0f5f-22a6-f7faf2532355@kernel.dk>
+        <1e2d99ff-a893-9100-2684-f0f2c2d1b787@kernel.dk>
+        <cd94fcfb-6a8f-b0f4-565e-74733d71d7c3@kernel.dk>
+        <x49zh70zyt6.fsf@segfault.boston.devel.redhat.com>
+        <20200811220929.GQ2114@dread.disaster.area>
+        <a36fb6bd-ed0b-6eda-83be-83c0e7b377ce@kernel.dk>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Wed, 12 Aug 2020 11:24:07 -0400
+In-Reply-To: <a36fb6bd-ed0b-6eda-83be-83c0e7b377ce@kernel.dk> (Jens Axboe's
+        message of "Wed, 12 Aug 2020 09:13:58 -0600")
+Message-ID: <x49v9hnzy3s.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=208827
+Jens Axboe <axboe@kernel.dk> writes:
 
---- Comment #23 from Jens Axboe (axboe@kernel.dk) ---
-On 8/11/20 5:00 PM, Dave Chinner wrote:
-> On Wed, Aug 12, 2020 at 07:59:13AM +1000, Dave Chinner wrote:
->> On Tue, Aug 11, 2020 at 07:10:30AM -0600, Jens Axboe wrote:
->>> What job file are you running? It's not impossible that I broken
->>> something else in fio, the io_u->verify_offset is a bit risky... I'll
->>> get it fleshed out shortly.
->>
->> Details are in the bugzilla I pointed you at. I modified the
->> original config specified to put per-file and offset identifiers
->> into the file data rather than using random data. This is
->> "determining the origin of stale data 101" stuff - the first thing
->> we _always_ do when trying to diagnose data corruption is identify
->> where the bad data came from.
->>
->> Entire config file is below.
-> 
-> Just as a data point: btrfs fails this test even faster than XFS.
-> Both with the old 3.21 fio binary and the new one.
+> Yes, it would ideally wait, or at least trigger on the last one. I'll
+> see if I can improve that. For any of my testing, the amount of
+> triggered short reads is minimal. For the verify case that we just ran,
+> we're talking 8-12 ios out of 820 thousand, or 0.001% of them. So
+> nothing that makes a performance difference in practical terms, though
+> it would be nice to not hand back short reads if we can avoid it. Not
+> for performance reasons, but for usage reasons.
 
-I can't trigger any failures with the fixes I committed, so that's a bit
-puzzling. What storage are you running this on? I'll try a few other
-things.
+I think you could make the case that handing back a short read is a
+bug (unless RWF_NOWAIT was specified, of course).  At the very least, it
+violates the principle of least surprise, and the fact that it happens
+infrequently actually makes it a worse problem when it comes to
+debugging.
 
-> Evidence points to this code being very poorly tested. Both
-> filesystems it is enabled on fail validation with the tool is
-> supposed to exercise and validate io_uring IO path behaviour.
-> 
-> Regardless of whether this is a tool failure or a kernel code
-> failure, the fact is that nobody ran data validation tests on this
-> shiny new code. And for a storage API that is reading and writing
-> user data, that's a pretty major process failure....
-> 
-> Improvements required, Jens.
+-Jeff
 
-Let's turn down the condescension and assumptions a notch, please. The
-fio io_uring engine was originally written to benchmark it, and I
-haven't really been using it for verification purposes (as is evident).
-In my experience, I get much better validation from running internal
-production. And plenty of that has been done.
-
-That said, the fio side should of course work, since others can't
-necessarily run what I'm running, and it does provide ways to exercise
-it that aren't necessarily seen in prod. But blankly assuming that
-"nobody ran data validation tests on this shiny new code" is blatantly
-false.
-
--- 
-You are receiving this mail because:
-You are watching the assignee of the bug.
