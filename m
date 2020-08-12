@@ -2,164 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B91224288D
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Aug 2020 13:12:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6206A242BFB
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Aug 2020 17:14:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgHLLMt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 Aug 2020 07:12:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44295 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726698AbgHLLMs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Aug 2020 07:12:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597230766;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=oUEnp0Yj02JG1pY1UUZcnloHZpZB6Q+kugMnDRFsOkA=;
-        b=XKNuSSMsFFJWs+zLcd4zXfBKVENbwIX/D5jO/T+5lrIJhalyzp1F8eANkLSZNPl1QlXC1v
-        tGQwNv0lAaTHveXBMWB8TGEMTOGca6A5vS/WINPk9sttgAc4ts60th5s0QwgdHLeBD/otF
-        bcpfOSqm5wrGsXhnu/5nsdLkCEGKurw=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-YYA-z5VpN-q6F5jYb_75ZA-1; Wed, 12 Aug 2020 07:12:44 -0400
-X-MC-Unique: YYA-z5VpN-q6F5jYb_75ZA-1
-Received: by mail-pj1-f71.google.com with SMTP id e2so1492234pjm.3
-        for <linux-xfs@vger.kernel.org>; Wed, 12 Aug 2020 04:12:44 -0700 (PDT)
+        id S1726503AbgHLPOI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 Aug 2020 11:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726583AbgHLPOE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Aug 2020 11:14:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5BC9C061383
+        for <linux-xfs@vger.kernel.org>; Wed, 12 Aug 2020 08:14:03 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id c6so1292600pje.1
+        for <linux-xfs@vger.kernel.org>; Wed, 12 Aug 2020 08:14:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j9NGGzZzSvyjeNBCzqvn69Zw3a2I8W6CMwCC26Npc5A=;
+        b=sT0Z0+8EyYMRiGTz8Q7rC7/yVQIizzIhlO1w4+5U20KMsgnfRRtFw/J6tkGqNd48hd
+         7qDB5UVk0vx2OD5lPrNHXunP7GIbVyaOiNpUjdvpEoOSzPRmsSrirtPZDhshJoWllg2N
+         55hDuKpfKzdFK1rC/eMV1SX0VR3sUKFo3HhxmJfhymQIT9EE/vYlhyrhOvEfgZuy4ZhL
+         lotXlhfjVlfBJkTwpT/3mbkijrLTBGerypk9glqW5dzouio1VFF+Zt8lKBo6iAsiBX07
+         ksfA5fUBYHKM/aKkA7KVg/CYZITalaK8yLjij91tdZS6G/o6ao0TebpJBkH5f8Lp7KUz
+         rpAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oUEnp0Yj02JG1pY1UUZcnloHZpZB6Q+kugMnDRFsOkA=;
-        b=YYm2iXpaHAijmH8LEGQkKiopq29vCgzmxj/Rg8D9yxCWetAbA/xlpdTZkeK5U6HC55
-         Nw4M+KSrzSqwhNjnbL/ZEMwwiNMI3GkgsKE//zZwzmbPf/NZj0QUKZ2oPuO4FQoalPx7
-         x89KMn41ig0J63oVqOB7txpyCa5LonOS5MluBuLUQt0jEdrUFAX77txc75fklpb7MPMr
-         EEnbAlNXuRI9TdWxIRxDy+FadD0J5W64ZIByVw0zsJmKtrRXeylkdsv3A3zQ039eQeIW
-         XP7L9w2/pB4ZLe8M80kvcDQZveAa7GZuQAq9K9hwfbJK8j0RsQIBCWinmO4J45WjACQu
-         jyBg==
-X-Gm-Message-State: AOAM532hazYNW/9G0eEtlONtvk63uXAAB1p57GBx3q3erePZvT3GQXny
-        pM2ak4Iygrr/lo9Humfsbx7jae/r4evrEh2pE6UJ+GuIXaEmrmuGkh2YzHMPtM9nY5nIRkUdQcK
-        6NIH5hzYnnrMeRZDBxsHh
-X-Received: by 2002:a63:565d:: with SMTP id g29mr4817693pgm.220.1597230763710;
-        Wed, 12 Aug 2020 04:12:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxmHjJkPyplPHeQPa3CO+ZmZCuRc/v1OU0jUS91KTswxeQpYcxy7xNY0LQQSXO9PnmgCir+hQ==
-X-Received: by 2002:a63:565d:: with SMTP id g29mr4817670pgm.220.1597230763366;
-        Wed, 12 Aug 2020 04:12:43 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id q17sm2120463pfh.32.2020.08.12.04.12.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2020 04:12:42 -0700 (PDT)
-Date:   Wed, 12 Aug 2020 19:12:33 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 13/13] xfs: reorder iunlink remove operation in xfs_ifree
-Message-ID: <20200812111233.GB759@xiangao.remote.csb>
-References: <20200812092556.2567285-1-david@fromorbit.com>
- <20200812092556.2567285-14-david@fromorbit.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j9NGGzZzSvyjeNBCzqvn69Zw3a2I8W6CMwCC26Npc5A=;
+        b=Tax5lOMQjGXoYKqmUQ1L9j0GH4ST/atQPO0uiJMHIdIrLs3r/JwY4ecJcQ2KQ3VsMJ
+         cIhJ+r4mJLbGaDR1KLnnYP7g19aqneIce3fW8RWEs3ixprNDUAMt0YkYWoMvVn0q8PVS
+         pgxwxBLL4Ep7gbVBqrqAbashIoF9cizyJpG638cad1qJjPxAyijeAwOxWi9PqEZHjt4t
+         vHFXRpjm3exdWwDOQL+3bCZa01QBVtf+l/C57yKFuuud+QOI/JBJIxW/jW4Upgr6feEq
+         7TjsJibIFdc0mx9RH0NIJlj5NGGKUHql3EnEVkWvLims9STkpkAiMTpTHr4I0uofoF3i
+         mwzQ==
+X-Gm-Message-State: AOAM532ENjJ7kbHBo8p+AjHYVz36aU+VtgYnRAXaitFlUdC/9rdbV0B5
+        1h4x1Op7Gos2x63tJowVolEruf6bwu4=
+X-Google-Smtp-Source: ABdhPJxGMHE63W2CFDg7P4c34VoyIufLMuXwcEt5GuCWXCXJCt7gOJ/WO5MYH4Ic9SDQO1jvi9WeZg==
+X-Received: by 2002:a17:902:bd47:: with SMTP id b7mr5949238plx.144.1597245240438;
+        Wed, 12 Aug 2020 08:14:00 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id q7sm2801650pfl.156.2020.08.12.08.13.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Aug 2020 08:13:59 -0700 (PDT)
+Subject: Re: [Bug 208827] [fio io_uring] io_uring write data crc32c verify
+ failed
+To:     Dave Chinner <david@fromorbit.com>, Jeff Moyer <jmoyer@redhat.com>
+Cc:     bugzilla-daemon@bugzilla.kernel.org, linux-xfs@vger.kernel.org
+References: <bug-208827-201763@https.bugzilla.kernel.org/>
+ <bug-208827-201763-ubSctIQBY4@https.bugzilla.kernel.org/>
+ <20200810000932.GH2114@dread.disaster.area>
+ <20200810035605.GI2114@dread.disaster.area>
+ <20200810070807.GJ2114@dread.disaster.area>
+ <20200810090859.GK2114@dread.disaster.area>
+ <eeb0524b-3aa7-0f5f-22a6-f7faf2532355@kernel.dk>
+ <1e2d99ff-a893-9100-2684-f0f2c2d1b787@kernel.dk>
+ <cd94fcfb-6a8f-b0f4-565e-74733d71d7c3@kernel.dk>
+ <x49zh70zyt6.fsf@segfault.boston.devel.redhat.com>
+ <20200811220929.GQ2114@dread.disaster.area>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a36fb6bd-ed0b-6eda-83be-83c0e7b377ce@kernel.dk>
+Date:   Wed, 12 Aug 2020 09:13:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812092556.2567285-14-david@fromorbit.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200811220929.GQ2114@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 07:25:56PM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
+On 8/11/20 4:09 PM, Dave Chinner wrote:
+> On Tue, Aug 11, 2020 at 04:56:37PM -0400, Jeff Moyer wrote:
+>> Jens Axboe <axboe@kernel.dk> writes:
+>>
+>>> So it seems to me like the file state is consistent, at least after the
+>>> run, and that this seems more likely to be a fio issue with short
+>>> read handling.
+>>
+>> Any idea why there was a short read, though?
 > 
-> The O_TMPFILE creation implementation creates a specific order of
-> operations for inode allocation/freeing and unlinked list
-> modification. Currently both are serialised by the AGI, so the order
-> doesn't strictly matter as long as the are both in the same
-> transaction.
+> Yes. See:
 > 
-> However, if we want to move the unlinked list insertions largely
-> out from under the AGI lock, then we have to be concerned about the
-> order in which we do unlinked list modification operations.
-> O_TMPFILE creation tells us this order is inode allocation/free,
-> then unlinked list modification.
+> https://lore.kernel.org/linux-xfs/20200807024211.GG2114@dread.disaster.area/T/#maf3bd9325fb3ac0773089ca58609a2cea0386ddf
 > 
-> Change xfs_ifree() to use this same ordering on unlinked list
-> removal. THis way we always guarantee that when we enter the
-> iunlinked list removal code from this path, we have the already
-> locked and we don't have to worry about lock nesting AGI reads
-> inside unlink list locks because it's already locked and attached to
-> the transaction.
+> It's a race between the readahead io completion marking pages
+> uptodate and unlocking them, and the io_uring worker function
+> getting woken on the first page being unlocked and running the
+> buffered read before the entire readahead IO completion has unlocked
+> all the pages in the IO.
 > 
-> We can do this safely as the inode freeing and unlinked list removal
-> are done in the same transaction and hence are atomic operations
-> with resepect to log recovery.
+> Basically, io_uring is re-running the IOCB_NOWAIT|IOCB_WAITQ IO when
+> there are still pages locked under IO. This will happen much more
+> frequently the larger the buffered read (these are only 64kB) and
+> the readahead windows are opened.
+> 
+> Essentially, the io_uring buffered read needs to wait until _all_
+> pages in the IO are marked up to date and unlocked, not just the
+> first one. And not just the last one, either - readahead can be
+> broken into multiple bios (because it spans extents) and there is no
+> guarantee of order of completion of the readahead bios given by the
+> readahead code....
 
-Yeah, due to all these constraints, such reorder is much cleaner,
-otherwise it needs forcely taking AGI lock in xfs_iunlink_remove()
-in advance as what I did in my new v3 ( due to exist AGI lock in
-xfs_difree() )...
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/tree/fs/xfs/xfs_inode.c?h=xfs/iunlink_opt_v3#n2511
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/commit/fs/xfs/xfs_inode.c?h=xfs/iunlink_opt_v3&id=79a6a18a7f13d12726c2554e2581a56fc473b152
+Yes, it would ideally wait, or at least trigger on the last one. I'll
+see if I can improve that. For any of my testing, the amount of
+triggered short reads is minimal. For the verify case that we just ran,
+we're talking 8-12 ios out of 820 thousand, or 0.001% of them. So
+nothing that makes a performance difference in practical terms, though
+it would be nice to not hand back short reads if we can avoid it. Not
+for performance reasons, but for usage reasons.
 
-Since the new based patchset is out, I will look into this patchset
-and skip sending out my v3 (looks like the previous logging order
-issues has been resolved) and directly rebase the rest patches
-into v4.
-
-Thanks,
-Gao Xiang
-
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_inode.c | 22 ++++++++++++----------
->  1 file changed, 12 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index ce128ff12762..7ee778bcde06 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -2283,14 +2283,13 @@ xfs_ifree_cluster(
->  }
->  
->  /*
-> - * This is called to return an inode to the inode free list.
-> - * The inode should already be truncated to 0 length and have
-> - * no pages associated with it.  This routine also assumes that
-> - * the inode is already a part of the transaction.
-> + * This is called to return an inode to the inode free list.  The inode should
-> + * already be truncated to 0 length and have no pages associated with it.  This
-> + * routine also assumes that the inode is already a part of the transaction.
->   *
-> - * The on-disk copy of the inode will have been added to the list
-> - * of unlinked inodes in the AGI. We need to remove the inode from
-> - * that list atomically with respect to freeing it here.
-> + * The on-disk copy of the inode will have been added to the list of unlinked
-> + * inodes in the AGI. We need to remove the inode from that list atomically with
-> + * respect to freeing it here.
->   */
->  int
->  xfs_ifree(
-> @@ -2308,13 +2307,16 @@ xfs_ifree(
->  	ASSERT(ip->i_d.di_nblocks == 0);
->  
->  	/*
-> -	 * Pull the on-disk inode from the AGI unlinked list.
-> +	 * Free the inode first so that we guarantee that the AGI lock is going
-> +	 * to be taken before we remove the inode from the unlinked list. This
-> +	 * makes the AGI lock -> unlinked list modification order the same as
-> +	 * used in O_TMPFILE creation.
->  	 */
-> -	error = xfs_iunlink_remove(tp, ip);
-> +	error = xfs_difree(tp, ip->i_ino, &xic);
->  	if (error)
->  		return error;
->  
-> -	error = xfs_difree(tp, ip->i_ino, &xic);
-> +	error = xfs_iunlink_remove(tp, ip);
->  	if (error)
->  		return error;
->  
-> -- 
-> 2.26.2.761.g0e0b3e54be
-> 
+-- 
+Jens Axboe
 
