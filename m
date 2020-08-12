@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F299242775
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 Aug 2020 11:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E12F242777
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 Aug 2020 11:26:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgHLJ0D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1727854AbgHLJ0D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 12 Aug 2020 05:26:03 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:44455 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726409AbgHLJ0B (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Aug 2020 05:26:01 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:42509 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727846AbgHLJ0C (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 Aug 2020 05:26:02 -0400
 Received: from dread.disaster.area (pa49-180-53-24.pa.nsw.optusnet.com.au [49.180.53.24])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 05B0FD7CF95
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 037A73A6473
         for <linux-xfs@vger.kernel.org>; Wed, 12 Aug 2020 19:25:58 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1k5n1B-0003Ql-Fv
+        id 1k5n1B-0003Qo-HC
         for linux-xfs@vger.kernel.org; Wed, 12 Aug 2020 19:25:57 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.93)
         (envelope-from <david@fromorbit.com>)
-        id 1k5n1B-00AltK-5O
+        id 1k5n1B-00AltP-7l
         for linux-xfs@vger.kernel.org; Wed, 12 Aug 2020 19:25:57 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 10/13] xfs: re-order AGI updates in unlink list updates
-Date:   Wed, 12 Aug 2020 19:25:53 +1000
-Message-Id: <20200812092556.2567285-11-david@fromorbit.com>
+Subject: [PATCH 11/13] xfs: combine iunlink inode update functions
+Date:   Wed, 12 Aug 2020 19:25:54 +1000
+Message-Id: <20200812092556.2567285-12-david@fromorbit.com>
 X-Mailer: git-send-email 2.26.2.761.g0e0b3e54be
 In-Reply-To: <20200812092556.2567285-1-david@fromorbit.com>
 References: <20200812092556.2567285-1-david@fromorbit.com>
@@ -36,7 +36,7 @@ Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0
         a=moVtWZxmCkf3aAMJKIb/8g==:117 a=moVtWZxmCkf3aAMJKIb/8g==:17
-        a=y4yBn9ojGxQA:10 a=20KFwNOVAAAA:8 a=nhtNILuVBLXkEHnFDBAA:9
+        a=y4yBn9ojGxQA:10 a=20KFwNOVAAAA:8 a=0fqpcPgYxoWGbWmxxZ0A:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -44,176 +44,123 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-We always access and check the AGI bucket entry for the unlinked
-list even if we are not going to need it either for lookup or remove
-purposes. Move the code that accesses the AGI to the code that
-modifes the AGI, hence keeping the AGI accesses local to the code
-that needs to modify it.
+Combine the logging of the inode unlink list update into the
+calling function that looks up the buffer we end up logging. These
+do not need to be separate functions as they are both short, simple
+operations and there's only a single call path through them. This
+new function will end up being the core of the iunlink log item
+processing...
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_inode.c | 84 ++++++++++++++++------------------------------
- 1 file changed, 28 insertions(+), 56 deletions(-)
+ fs/xfs/xfs_inode.c | 58 ++++++++++++++++------------------------------
+ 1 file changed, 20 insertions(+), 38 deletions(-)
 
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index b098e5df07e7..4f616e1b64dc 100644
+index 4f616e1b64dc..82242d15b1d7 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -1918,44 +1918,53 @@ xfs_inactive(
-  */
+@@ -1972,38 +1972,12 @@ xfs_iunlink_update_bucket(
+ 	return 0;
+ }
  
- /*
-- * Point the AGI unlinked bucket at an inode and log the results.  The caller
-- * is responsible for validating the old value.
-+ * Point the AGI unlinked bucket at an inode and log the results. The caller
-+ * passes in the expected current agino the bucket points at via @cur_agino so
-+ * we can validate that we are about to remove the inode we expect to be
-+ * removing from the AGI bucket.
-  */
--STATIC int
-+static int
- xfs_iunlink_update_bucket(
- 	struct xfs_trans	*tp,
- 	xfs_agnumber_t		agno,
- 	struct xfs_buf		*agibp,
--	xfs_agino_t		old_agino,
-+	xfs_agino_t		cur_agino,
- 	xfs_agino_t		new_agino)
- {
--	struct xlog		*log = tp->t_mountp->m_log;
-+	struct xfs_mount	*mp = tp->t_mountp;
-+	struct xlog		*log = mp->m_log;
- 	struct xfs_agi		*agi = agibp->b_addr;
--	xfs_agino_t		old_value;
-+	xfs_agino_t		old_agino;
- 	unsigned int		bucket_index;
- 	int                     offset;
- 
--	ASSERT(xfs_verify_agino_or_null(tp->t_mountp, agno, new_agino));
-+	ASSERT(xfs_verify_agino_or_null(mp, agno, new_agino));
- 
-+	/*
-+	 * We don't need to traverse the on disk unlinked list to find the
-+	 * previous inode in the list when removing inodes anymore, so we don't
-+	 * use multiple on-disk lists anymore. Hence we always use bucket 0
-+	 * unless we are in log recovery in which case we might be recovering an
-+	 * old filesystem that has multiple buckets.
-+	 */
- 	bucket_index = 0;
--	/* During recovery, the old multiple bucket index can be applied */
- 	if (!log || log->l_flags & XLOG_RECOVERY_NEEDED) {
--		ASSERT(old_agino != NULLAGINO);
-+		ASSERT(cur_agino != NULLAGINO);
- 
--		if (be32_to_cpu(agi->agi_unlinked[0]) != old_agino)
--			bucket_index = old_agino % XFS_AGI_UNLINKED_BUCKETS;
-+		if (be32_to_cpu(agi->agi_unlinked[0]) != cur_agino)
-+			bucket_index = cur_agino % XFS_AGI_UNLINKED_BUCKETS;
- 	}
- 
--	old_value = be32_to_cpu(agi->agi_unlinked[bucket_index]);
--	trace_xfs_iunlink_update_bucket(tp->t_mountp, agno, bucket_index,
--			old_value, new_agino);
+-/* Set an on-disk inode's next_unlinked pointer. */
+-STATIC void
+-xfs_iunlink_update_dinode(
+-	struct xfs_trans	*tp,
+-	xfs_agnumber_t		agno,
+-	xfs_agino_t		agino,
+-	struct xfs_buf		*ibp,
+-	struct xfs_dinode	*dip,
+-	struct xfs_imap		*imap,
+-	xfs_agino_t		next_agino)
+-{
+-	struct xfs_mount	*mp = tp->t_mountp;
+-	int			offset;
 -
--	/* check if the old agi_unlinked head is as expected */
--	if (old_value != old_agino) {
-+	old_agino = be32_to_cpu(agi->agi_unlinked[bucket_index]);
-+	if (new_agino == old_agino || cur_agino != old_agino ||
-+	    !xfs_verify_agino_or_null(mp, agno, old_agino)) {
- 		xfs_buf_mark_corrupt(agibp);
+-	ASSERT(xfs_verify_agino_or_null(mp, agno, next_agino));
+-
+-	trace_xfs_iunlink_update_dinode(mp, agno, agino,
+-			be32_to_cpu(dip->di_next_unlinked), next_agino);
+-
+-	dip->di_next_unlinked = cpu_to_be32(next_agino);
+-	offset = imap->im_boffset +
+-			offsetof(struct xfs_dinode, di_next_unlinked);
+-
+-	/* need to recalc the inode CRC if appropriate */
+-	xfs_dinode_calc_crc(mp, dip);
+-	xfs_trans_inode_buf(tp, ibp);
+-	xfs_trans_log_buf(tp, ibp, offset, offset + sizeof(xfs_agino_t) - 1);
+-}
+-
+-/* Set an in-core inode's unlinked pointer and return the old value. */
++/*
++ * Look up the inode cluster buffer and log the on-disk unlinked inode change
++ * we need to make.
++ */
+ STATIC int
+-xfs_iunlink_update_inode(
++xfs_iunlink_log_inode(
+ 	struct xfs_trans	*tp,
+ 	struct xfs_inode	*ip,
+ 	xfs_agnumber_t		agno,
+@@ -2013,6 +1987,7 @@ xfs_iunlink_update_inode(
+ 	struct xfs_mount	*mp = tp->t_mountp;
+ 	struct xfs_dinode	*dip;
+ 	struct xfs_buf		*ibp;
++	int			offset;
+ 	int			error;
+ 
+ 	ASSERT(xfs_verify_agino_or_null(mp, agno, next_agino));
+@@ -2028,9 +2003,17 @@ xfs_iunlink_update_inode(
  		return -EFSCORRUPTED;
  	}
  
-+	trace_xfs_iunlink_update_bucket(mp, agno, bucket_index,
-+			old_agino, new_agino);
+-	/* Ok, update the new pointer. */
+-	xfs_iunlink_update_dinode(tp, agno, XFS_INO_TO_AGINO(mp, ip->i_ino),
+-			ibp, dip, &ip->i_imap, next_agino);
++	trace_xfs_iunlink_update_dinode(mp, agno,
++			XFS_INO_TO_AGINO(mp, ip->i_ino),
++			be32_to_cpu(dip->di_next_unlinked), next_agino);
 +
- 	agi->agi_unlinked[bucket_index] = cpu_to_be32(new_agino);
- 	offset = offsetof(struct xfs_agi, agi_unlinked) +
- 			(sizeof(xfs_agino_t) * bucket_index);
-@@ -2032,44 +2041,25 @@ xfs_iunlink_insert_inode(
- 	struct xfs_inode	*ip)
- {
- 	struct xfs_mount	*mp = tp->t_mountp;
--	struct xfs_agi		*agi;
- 	struct xfs_inode	*nip;
--	xfs_agino_t		next_agino;
-+	xfs_agino_t		next_agino = NULLAGINO;
- 	xfs_agino_t		agino = XFS_INO_TO_AGINO(mp, ip->i_ino);
- 	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, ip->i_ino);
- 	int			error;
++	dip->di_next_unlinked = cpu_to_be32(next_agino);
++	offset = ip->i_imap.im_boffset +
++			offsetof(struct xfs_dinode, di_next_unlinked);
++
++	xfs_dinode_calc_crc(mp, dip);
++	xfs_trans_inode_buf(tp, ibp);
++	xfs_trans_log_buf(tp, ibp, offset, offset + sizeof(xfs_agino_t) - 1);
+ 	return 0;
+ }
  
--	agi = agibp->b_addr;
--
--	/*
--	 * We don't need to traverse the on disk unlinked list to find the
--	 * previous inode in the list when removing inodes anymore, so we don't
--	 * need multiple on-disk lists anymore. Hence we always use bucket 0.
--	 * Make sure the pointer isn't garbage and that this inode isn't already
--	 * on the list.
--	 */
--	next_agino = be32_to_cpu(agi->agi_unlinked[0]);
--	if (next_agino == agino ||
--	    !xfs_verify_agino_or_null(mp, agno, next_agino)) {
--		xfs_buf_mark_corrupt(agibp);
--		return -EFSCORRUPTED;
--	}
--
- 	nip = list_first_entry_or_null(&agibp->b_pag->pag_ici_unlink_list,
- 					struct xfs_inode, i_unlink);
- 	if (nip) {
--		ASSERT(next_agino == XFS_INO_TO_AGINO(mp, nip->i_ino));
- 
- 		/*
- 		 * There is already another inode in the bucket, so point this
+@@ -2056,7 +2039,7 @@ xfs_iunlink_insert_inode(
  		 * inode to the current head of the list.
  		 */
-+		next_agino = XFS_INO_TO_AGINO(mp, nip->i_ino);
- 		error = xfs_iunlink_update_inode(tp, ip, agno, NULLAGINO,
+ 		next_agino = XFS_INO_TO_AGINO(mp, nip->i_ino);
+-		error = xfs_iunlink_update_inode(tp, ip, agno, NULLAGINO,
++		error = xfs_iunlink_log_inode(tp, ip, agno, NULLAGINO,
  						 next_agino);
  		if (error)
  			return error;
--	} else {
--		ASSERT(next_agino == NULLAGINO);
+@@ -2129,7 +2112,7 @@ xfs_iunlink_remove_inode(
  	}
  
- 	/* Point the head of the list to point to this inode. */
-@@ -2122,28 +2112,11 @@ xfs_iunlink_remove_inode(
- 	struct xfs_inode	*ip)
- {
- 	struct xfs_mount	*mp = tp->t_mountp;
--	struct xfs_agi		*agi;
- 	xfs_agino_t		agino = XFS_INO_TO_AGINO(mp, ip->i_ino);
- 	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, ip->i_ino);
- 	xfs_agino_t		next_agino = NULLAGINO;
--	xfs_agino_t		head_agino;
- 	int			error;
+ 	/* Clear the on disk next unlinked pointer for this inode. */
+-	error = xfs_iunlink_update_inode(tp, ip, agno, next_agino, NULLAGINO);
++	error = xfs_iunlink_log_inode(tp, ip, agno, next_agino, NULLAGINO);
+ 	if (error)
+ 		return error;
  
--	agi = agibp->b_addr;
--
--	/*
--	 * We don't need to traverse the on disk unlinked list to find the
--	 * previous inode in the list when removing inodes anymore, so we don't
--	 * need multiple on-disk lists anymore. Hence we always use bucket 0.
--	 * Make sure the head pointer isn't garbage.
--	 */
--	head_agino = be32_to_cpu(agi->agi_unlinked[0]);
--	if (!xfs_verify_agino(mp, agno, head_agino)) {
--		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
--				agi, sizeof(*agi));
--		return -EFSCORRUPTED;
--	}
--
- 	/*
- 	 * Get the next agino in the list. If we are at the end of the list,
- 	 * then the previous inode's i_next_unlinked filed will get cleared.
-@@ -2165,7 +2138,6 @@ xfs_iunlink_remove_inode(
+@@ -2138,8 +2121,7 @@ xfs_iunlink_remove_inode(
  					struct xfs_inode, i_unlink)) {
  		struct xfs_inode *pip = list_prev_entry(ip, i_unlink);
  
--		ASSERT(head_agino != agino);
- 		return xfs_iunlink_update_inode(tp, pip, agno, agino,
- 						next_agino);
+-		return xfs_iunlink_update_inode(tp, pip, agno, agino,
+-						next_agino);
++		return xfs_iunlink_log_inode(tp, pip, agno, agino, next_agino);
  	}
+ 
+ 	/* Point the head of the list to the next unlinked inode. */
 -- 
 2.26.2.761.g0e0b3e54be
 
