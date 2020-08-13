@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A93D2441C0
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Aug 2020 01:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53AB92441BC
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Aug 2020 01:27:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgHMX3X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Aug 2020 19:29:23 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41038 "EHLO
+        id S1726531AbgHMX13 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Aug 2020 19:27:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39992 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgHMX3X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Aug 2020 19:29:23 -0400
+        with ESMTP id S1726205AbgHMX12 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Aug 2020 19:27:28 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DNGgYn101708;
-        Thu, 13 Aug 2020 23:29:18 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DNGfDS101684;
+        Thu, 13 Aug 2020 23:27:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=i/YwT7eUJOevy2xTAt3p+Vzhba+H0q5iwyv6mYG0qdQ=;
- b=0RbIDVR1RgVlu9E9DEKWdMoPbs9uOkbBtDCw45dp1F8lMwvI2fMOP4faU+VdYwgioE8d
- LEsnzUZ4ezLBVO3aJMd7UbpssH6b7FiD7yQoW7JTtg6TfREySAvYruVuSQn869xo8Xu8
- vXPLS7noWBW6Ql0PCl12fYf00J7HDn50sZGRVHDhXRg7i974Gf2QGPt4psLMKQh+YVeU
- dVr3YcrwXBvPWTndiXoS6BTdPnyU28mhljcTSxQlLvMSi2GS6YPgftJJJBkxXuAd0Pqy
- hXIYSwnh5QG4f234Oe0SZq4xuP4zeAHEPayXn1JpjHEmFpOPKDir44Ju0QDRQU9VmIgz mg== 
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=NrvXyBzLOS3AW3h2bReoUrdAYJLGs3feCqUkOxhNE4o=;
+ b=nw7+GNypMa0DPbDs0Aqf4lrBZo7z0BRW0oHCmDXRuITcEAyTrjOuTfc1/FV8HxeAcza5
+ huZVTiGU3YU/bPOZ4mJuUUghxjyGeb6njn42ZEJmLdcwIKgh6IY+6jrnFtIjuXW1jbjH
+ vUgEHrVmXQXbTtaLU49WmhNRCfFfCHfo+dJHTUnje7EGl1qRgUWAdmSyMFu6Eld4sRSb
+ VOhaYHqZp7XQJrX8Kln6P2aMA0qEe/uDxlBmlz3FgKO4D041fs5xnjIM0xXtZSfJNUMa
+ yD417V2HrqhV0FSf6SHEDZNrPdygOfML+cohbU6FTfIA146a1mx4dqTHFcKzzHT5uKzw SA== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 32w73cakqq-1
+        by userp2120.oracle.com with ESMTP id 32w73cakjk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 23:29:18 +0000
+        Thu, 13 Aug 2020 23:27:24 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DNDcMe190387;
-        Thu, 13 Aug 2020 23:27:18 GMT
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DNDcOx190337;
+        Thu, 13 Aug 2020 23:27:24 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32u3h63tgf-1
+        by userp3020.oracle.com with ESMTP id 32u3h63tjk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 23:27:18 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07DNRH0F016232;
-        Thu, 13 Aug 2020 23:27:17 GMT
+        Thu, 13 Aug 2020 23:27:24 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07DNRNfQ016251;
+        Thu, 13 Aug 2020 23:27:23 GMT
 Received: from localhost (/10.159.233.223)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Aug 2020 23:27:16 +0000
-Subject: [PATCH v2 0/4] xfsprogs: various small enhancements
+        with ESMTP ; Thu, 13 Aug 2020 23:27:23 +0000
+Subject: [PATCH 1/4] xfs_db: fix nlink usage in check
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Eric Sandeen <sandeen@redhat.com>, linux-xfs@vger.kernel.org
-Date:   Thu, 13 Aug 2020 16:27:16 -0700
-Message-ID: <159736123670.3063459.13610109048148937841.stgit@magnolia>
+Date:   Thu, 13 Aug 2020 16:27:22 -0700
+Message-ID: <159736124295.3063459.16896525594275470708.stgit@magnolia>
+In-Reply-To: <159736123670.3063459.13610109048148937841.stgit@magnolia>
+References: <159736123670.3063459.13610109048148937841.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -66,31 +68,35 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This short series contains a couple of enhancements.  The first patch
-fixes a bug in xfs_check that we introduced during the 5.8 resync.  The
-second patch allows administrators to set the DAX inode flag on the
-entire filesystem at format time.  There's also manpage updates and
-xfs_db support for the dax inode flag!
+process_inode uses a local convenience variable to abstract the
+differences between the ondisk nlink fields in a v1 inode and a v2
+inode.  Use this variable for checking and reporting errors.
 
-In v2 we add some more documentation updates and tweaks suggested by the
-maintainer.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=xfsprogs-5.8-fixes
+Fixes: 6526f30e4801 ("xfs_db: stop misusing an onstack inode")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 ---
- db/check.c          |    4 ++--
- db/inode.c          |    3 +++
- man/man8/mkfs.xfs.8 |   22 ++++++++++++++++++----
- mkfs/xfs_mkfs.c     |   14 ++++++++++++++
- 4 files changed, 37 insertions(+), 6 deletions(-)
+ db/check.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+
+diff --git a/db/check.c b/db/check.c
+index c2233a0d1ba7..ef0e82d4efa1 100644
+--- a/db/check.c
++++ b/db/check.c
+@@ -2797,10 +2797,10 @@ process_inode(
+ 					be64_to_cpu(dip->di_nblocks), ino);
+ 			error++;
+ 		}
+-		if (dip->di_nlink != 0) {
++		if (nlink != 0) {
+ 			if (v)
+ 				dbprintf(_("bad nlink %d for free inode %lld\n"),
+-					be32_to_cpu(dip->di_nlink), ino);
++					nlink, ino);
+ 			error++;
+ 		}
+ 		if (dip->di_mode != 0) {
 
