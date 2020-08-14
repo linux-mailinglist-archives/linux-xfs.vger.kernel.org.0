@@ -2,150 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5E1E2441BF
-	for <lists+linux-xfs@lfdr.de>; Fri, 14 Aug 2020 01:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2FB244459
+	for <lists+linux-xfs@lfdr.de>; Fri, 14 Aug 2020 06:40:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbgHMX1s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Aug 2020 19:27:48 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40494 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726205AbgHMX1r (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Aug 2020 19:27:47 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DNIA9V116433;
-        Thu, 13 Aug 2020 23:27:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=hh5rvYV8ZH+D5jX6i8nDMT01GFvNXgfTEQ6fjjM+Di8=;
- b=DmYXiyg/zL3mzafUz5NfLuxFEV+SadlXZ4Axq5HDQojAnVSs9B8+AdjwW/eoVlaDga65
- 48vlT6gQz5Ce1ctJV8W9gyUCXzDpJrsEo4Yc+v0SREuRXJXmFL9oNyvWaff6nzM8NeL6
- AtKG3c941yeQcyUrDgPGUA0dS4s6CxMzu7JGqut6gqbrWQC4+E21YB5T/fnZCB9o2gp1
- H5lNspBeJG4sBFAZaM9Txu9us5hGZ4KhWks2f75OrQU9WCvHWHRVnLGtmJ7xYNhUbJPS
- RIsMjzA/9MxhpSX/hS6P7BPUlcNbxztQwxvleXQ+wW36aW3hJg/Fzum+mNkYiqZTR7DE Yw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32t2ye1vdv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 13 Aug 2020 23:27:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07DNDbub190271;
-        Thu, 13 Aug 2020 23:27:45 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32u3h63tsn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 13 Aug 2020 23:27:45 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07DNRicP017069;
-        Thu, 13 Aug 2020 23:27:44 GMT
-Received: from localhost (/10.159.233.223)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 13 Aug 2020 23:27:44 +0000
-Subject: [PATCH 4/4] mkfs: allow setting dax flag on root directory
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     sandeen@sandeen.net, darrick.wong@oracle.com
+        id S1726139AbgHNEkt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 14 Aug 2020 00:40:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59736 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726064AbgHNEks (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 14 Aug 2020 00:40:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597380047;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KQRJuPlsHvNlpRjz9RKW6SWwct26B4ITHNgalZv+MVE=;
+        b=K+gKlCThqQeNJN5BOq/UZfCm4M7QIgfqlL59LBFBEY4LDCVrSHYNtwAG2Vj3aPVx1uxqVY
+        DTgCsneJjC3JxnIgCQkKkqdOKMouEj6v/fpTr/j+6D98xhvpLaH94mHxudcJEXnnYcGoCI
+        +twlf6oSyrgLindtXNg1d6J0l5zwNTs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-421-9VLiZV6_P_OFnwNlLvWVow-1; Fri, 14 Aug 2020 00:40:44 -0400
+X-MC-Unique: 9VLiZV6_P_OFnwNlLvWVow-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A460100CF64;
+        Fri, 14 Aug 2020 04:40:43 +0000 (UTC)
+Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B6B4A1992D;
+        Fri, 14 Aug 2020 04:40:42 +0000 (UTC)
+Date:   Fri, 14 Aug 2020 12:53:35 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 13 Aug 2020 16:27:44 -0700
-Message-ID: <159736126408.3063459.10843086291491627861.stgit@magnolia>
-In-Reply-To: <159736123670.3063459.13610109048148937841.stgit@magnolia>
-References: <159736123670.3063459.13610109048148937841.stgit@magnolia>
-User-Agent: StGit/0.19
+Subject: Re: [PATCH v2] xfs_db: use correct inode to set inode type
+Message-ID: <20200814045335.GR2937@dhcp-12-102.nay.redhat.com>
+Mail-Followup-To: Eric Sandeen <sandeen@sandeen.net>,
+        linux-xfs@vger.kernel.org
+References: <20200813173050.26203-1-zlang@redhat.com>
+ <647f04d7-1a71-2dd0-fc8b-98e3f65afd9f@sandeen.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9712 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 spamscore=0 suspectscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008130162
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9712 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 priorityscore=1501
- malwarescore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008130162
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <647f04d7-1a71-2dd0-fc8b-98e3f65afd9f@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Aug 13, 2020 at 03:49:42PM -0500, Eric Sandeen wrote:
+> On 8/13/20 10:30 AM, Zorro Lang wrote:
+> > A test fails as:
+> >   # xfs_db -c "inode 133" -c "addr" -c "p core.size" -c "type inode" -c "addr" -c "p core.size" /dev/sdb1
+> >   current
+> >           byte offset 68096, length 512
+> >           buffer block 128 (fsbno 16), 32 bbs
+> >           inode 133, dir inode -1, type inode
+> >   core.size = 123142
+> >   current
+> >           byte offset 65536, length 512
+> >           buffer block 128 (fsbno 16), 32 bbs
+> >           inode 128, dir inode 128, type inode
+> >   core.size = 42
+> > 
+> > The "type inode" command accidentally moves the io cursor because it
+> > forgets to include the io cursor's buffer offset when it computes the
+> > inode number from the io cursor's location.
+> > 
+> > Fixes: 533d1d229a88 ("xfs_db: properly set inode type")
+> > 
+> > Reported-by: Jianhong Yin <jiyin@redhat.com>
+> > Signed-off-by: Zorro Lang <zlang@redhat.com>
+> 
+> This looks good to me, I'll test it.  And I think I have a cleanup
+> to the whole function, after this fix...
 
-Teach mkfs to set the DAX flag on the root directory so that all new
-files can be created in dax mode.  This is a complement to removing the
-mount option.
+Sure, the buffer verification code is added by:
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- man/man8/mkfs.xfs.8 |   10 ++++++++++
- mkfs/xfs_mkfs.c     |   14 ++++++++++++++
- 2 files changed, 24 insertions(+)
+  9ba69ce2 ("db: verify buffer on type change")
 
+But later we turn to use set_cur() in set_iocur_type(), which looks do
+buffer verification too.
 
-diff --git a/man/man8/mkfs.xfs.8 b/man/man8/mkfs.xfs.8
-index 7d3f3552ff12..3ad9e5449f58 100644
---- a/man/man8/mkfs.xfs.8
-+++ b/man/man8/mkfs.xfs.8
-@@ -398,6 +398,16 @@ will have this extent size hint applied.
- The value must be provided in units of filesystem blocks.
- Directories will pass on this hint to newly created regular files and
- directories.
-+.TP
-+.BI daxinherit= value
-+If set, all inodes created by
-+.B mkfs.xfs
-+will be created with the DAX flag set.
-+Directories will pass on this flag on to newly created regular files
-+and directories.
-+By default,
-+.B mkfs.xfs
-+will not enable DAX mode.
- .RE
- .TP
- .B \-f
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 2e6cd280e388..a687f385a9c1 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -60,6 +60,7 @@ enum {
- 	D_PROJINHERIT,
- 	D_EXTSZINHERIT,
- 	D_COWEXTSIZE,
-+	D_DAXINHERIT,
- 	D_MAX_OPTS,
- };
- 
-@@ -254,6 +255,7 @@ static struct opt_params dopts = {
- 		[D_PROJINHERIT] = "projinherit",
- 		[D_EXTSZINHERIT] = "extszinherit",
- 		[D_COWEXTSIZE] = "cowextsize",
-+		[D_DAXINHERIT] = "daxinherit",
- 	},
- 	.subopt_params = {
- 		{ .index = D_AGCOUNT,
-@@ -369,6 +371,12 @@ static struct opt_params dopts = {
- 		  .maxval = UINT_MAX,
- 		  .defaultval = SUBOPT_NEEDS_VAL,
- 		},
-+		{ .index = D_DAXINHERIT,
-+		  .conflicts = { { NULL, LAST_CONFLICT } },
-+		  .minval = 0,
-+		  .maxval = 1,
-+		  .defaultval = 1,
-+		},
- 	},
- };
- 
-@@ -1434,6 +1442,12 @@ data_opts_parser(
- 		cli->fsx.fsx_cowextsize = getnum(value, opts, subopt);
- 		cli->fsx.fsx_xflags |= FS_XFLAG_COWEXTSIZE;
- 		break;
-+	case D_DAXINHERIT:
-+		if (getnum(value, opts, subopt))
-+			cli->fsx.fsx_xflags |= FS_XFLAG_DAX;
-+		else
-+			cli->fsx.fsx_xflags &= ~FS_XFLAG_DAX;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
+Thanks,
+Zorro
+
+> 
+> Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+> 
+> > ---
+> > 
+> > V2 did below changes:
+> > 0) git commit log is changed.
+> > 1) Separate out several clear steps to calculate inode.
+> > 2) Remove improper comment which describe inode calculation.
+> > 
+> > Thanks,
+> > Zorro
+> > 
+> >  db/io.c | 18 ++++++++++--------
+> >  1 file changed, 10 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/db/io.c b/db/io.c
+> > index 6628d061..884da599 100644
+> > --- a/db/io.c
+> > +++ b/db/io.c
+> > @@ -588,18 +588,20 @@ set_iocur_type(
+> >  {
+> >  	struct xfs_buf	*bp = iocur_top->bp;
+> >  
+> > -	/* Inodes are special; verifier checks all inodes in the chunk */
+> > +	/*
+> > +	 * Inodes are special; verifier checks all inodes in the chunk, the
+> > +	 * set_cur_inode() will help that
+> > +	 */
+> >  	if (type->typnm == TYP_INODE) {
+> >  		xfs_daddr_t	b = iocur_top->bb;
+> > +		xfs_agblock_t	agbno;
+> > +		xfs_agino_t	agino;
+> >  		xfs_ino_t	ino;
+> >  
+> > -		/*
+> > -		 * Note that this will back up to the beginning of the inode
+> > - 		 * which contains the current disk location; daddr may change.
+> > - 		 */
+> > -		ino = XFS_AGINO_TO_INO(mp, xfs_daddr_to_agno(mp, b),
+> > -			((b << BBSHIFT) >> mp->m_sb.sb_inodelog) %
+> > -			XFS_AGB_TO_AGINO(mp, mp->m_sb.sb_agblocks));
+> > +		agbno = xfs_daddr_to_agbno(mp, b);
+> > +		agino = XFS_OFFBNO_TO_AGINO(mp, agbno,
+> > +				iocur_top->boff / mp->m_sb.sb_inodesize);
+> > +		ino = XFS_AGINO_TO_INO(mp, xfs_daddr_to_agno(mp, b), agino);
+> >  		set_cur_inode(ino);
+> >  		return;
+> >  	}
+> > 
+> 
 
