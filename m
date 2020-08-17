@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9DDB247AD9
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 00:59:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E69A1247ADB
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 00:59:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbgHQW7O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Aug 2020 18:59:14 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52056 "EHLO
+        id S1727896AbgHQW7Y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Aug 2020 18:59:24 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52180 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbgHQW7K (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Aug 2020 18:59:10 -0400
+        with ESMTP id S1727874AbgHQW7X (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Aug 2020 18:59:23 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvu3o052952;
-        Mon, 17 Aug 2020 22:59:08 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvetj050132;
+        Mon, 17 Aug 2020 22:59:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=5/vhehjIWMNnKaMyo8ThWFz415yix7tfO2/Olnh/8k8=;
- b=OjZYP7w2DVFR4b93R4P3fS6RVgDJ8vkGnDkRtqaEsULvE5eSUumgkwsJursOhYojltG+
- ILekVLt5jM7OjLk9sxEus2r24Zmih21+J78cT/9rEkt3OqupuE9kmKEmWvj0pz9hWkW2
- KRC56swdjtL1YatqoZ4D6w/Vmdn6969YApZMHtHMOlCyhM1cYudsL4OzyxAjtKpnFAah
- ynFujkn5gmDie+y4Mc3NgM3+erYqEGZRKTpTUc7fFdFJ91Oec1OhjvKres6kXdvfZR6P
- /ZHBHTWMsEE4Qqqw54b9foDzMk2DuOUE3lkEPDtcNAB8dJvuiNzlASToUHdDf1zEmmHg ag== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32x7nm9jqs-1
+ bh=UBfUoAELtb46bUNUuLIK4DmaGHrmeZIjSKU4svr1uvI=;
+ b=hFqswaFqA6y30VfolUfT0auL3esnhvRO8aUaBFcVa81WzACw+LNzwSM4aps78FqXS5VM
+ JDfbqmuTa96fiiI731OyFNhcp9b8B91sC+4mCFDTud8bJBmIuQyQ2f/3ZxJWHuCSDZlp
+ 86d4UJWTaWdf0JAbwb/2NcMWJCpZdmhxSOEV8LTPSJc4Ec4Ai/v2UaqpB25vdSd54Flz
+ JOHw0V+ASzkPUgVVi9Hz7x+Pv5D3JFxAyrSRwEoiUjhztSmvnIPAZLD6FK1vLl2TtVz+
+ DmT6RUNV1ANU79GJfuNe4N15gYFmNOaqf9rUeSqyhG1WXbORRuiV3QeXhpQ2x4bNGIYo Mw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 32x7nm9jrd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Aug 2020 22:59:08 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMwAXU084875;
-        Mon, 17 Aug 2020 22:59:08 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32xsfr59as-1
+        Mon, 17 Aug 2020 22:59:21 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvjXg113897;
+        Mon, 17 Aug 2020 22:59:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 32xsm18qtw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 22:59:07 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07HMx7VW025401;
-        Mon, 17 Aug 2020 22:59:07 GMT
+        Mon, 17 Aug 2020 22:59:20 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07HMxKv1014548;
+        Mon, 17 Aug 2020 22:59:20 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Aug 2020 15:59:06 -0700
-Subject: [PATCH 02/18] xfs: explicitly define inode timestamp range
+        with ESMTP ; Mon, 17 Aug 2020 15:59:20 -0700
+Subject: [PATCH 04/18] xfs: refactor default quota grace period setting code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 17 Aug 2020 15:59:06 -0700
-Message-ID: <159770514598.3958786.15730645159608118691.stgit@magnolia>
+Date:   Mon, 17 Aug 2020 15:59:19 -0700
+Message-ID: <159770515944.3958786.9980493388979059788.stgit@magnolia>
 In-Reply-To: <159770513155.3958786.16108819726679724438.stgit@magnolia>
 References: <159770513155.3958786.16108819726679724438.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,9 +53,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008170153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
@@ -70,64 +70,44 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Formally define the inode timestamp ranges that existing filesystems
-support, and switch the vfs timetamp ranges to use it.
+Refactor the code that sets the default quota grace period into a helper
+function so that we can override the ondisk behavior later.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libxfs/libxfs_api_defs.h |    4 ++++
- libxfs/xfs_format.h      |   19 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ libxfs/xfs_format.h |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 99bc5b936da7..4ee02473df0d 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -14,6 +14,10 @@ struct timespec64 {
- 	long		tv_nsec;		/* nanoseconds */
- };
- 
-+#define U32_MAX		((uint32_t)~0U)
-+#define S32_MAX		((int32_t)(U32_MAX >> 1))
-+#define S32_MIN		((int32_t)(-S32_MAX - 1))
-+
- /*
-  * This file defines all the kernel based functions we expose to userspace
-  * via the libxfs_* namespace. This is kept in a separate header file so
 diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
-index 88cbcb7950c3..f2a851e49ec3 100644
+index 829eb1e035a5..a60d4ed40946 100644
 --- a/libxfs/xfs_format.h
 +++ b/libxfs/xfs_format.h
-@@ -849,11 +849,30 @@ struct xfs_agfl {
- 	    ASSERT(xfs_daddr_to_agno(mp, d) == \
- 		   xfs_daddr_to_agno(mp, (d) + (len) - 1)))
- 
-+/*
-+ * XFS Timestamps
-+ * ==============
+@@ -1206,6 +1206,11 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
+  * time zero is the Unix epoch, Jan  1 00:00:01 UTC 1970.  An expiration value
+  * of zero means that the quota limit has not been reached, and therefore no
+  * expiration has been set.
 + *
-+ * Inode timestamps consist of signed 32-bit counters for seconds and
-+ * nanoseconds; time zero is the Unix epoch, Jan  1 00:00:00 UTC 1970.
-+ */
- typedef struct xfs_timestamp {
- 	__be32		t_sec;		/* timestamp seconds */
- 	__be32		t_nsec;		/* timestamp nanoseconds */
- } xfs_timestamp_t;
++ * The grace period for each quota type is stored in the root dquot (id = 0)
++ * and is applied to a non-root dquot when it exceeds the soft or hard limits.
++ * The length of quota grace periods are unsigned 32-bit quantities measured in
++ * units of seconds.  A value of zero means to use the default period.
+  */
+ 
+ /*
+@@ -1220,6 +1225,14 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
+  */
+ #define XFS_DQ_TIMEOUT_MAX	((int64_t)U32_MAX)
  
 +/*
-+ * Smallest possible timestamp with traditional timestamps, which is
-+ * Dec 13 20:45:52 UTC 1901.
++ * Default quota grace periods, ranging from zero (use the compiled defaults)
++ * to ~136 years.  These are applied to a non-root dquot that has exceeded
++ * either limit.
 + */
-+#define XFS_INO_TIME_MIN	((int64_t)S32_MIN)
-+
-+/*
-+ * Largest possible timestamp with traditional timestamps, which is
-+ * Jan 19 03:14:07 UTC 2038.
-+ */
-+#define XFS_INO_TIME_MAX	((int64_t)S32_MAX)
++#define XFS_DQ_GRACE_MIN	((int64_t)0)
++#define XFS_DQ_GRACE_MAX	((int64_t)U32_MAX)
 +
  /*
-  * On-disk inode structure.
-  *
+  * This is the main portion of the on-disk representation of quota information
+  * for a user.  We pad this with some more expansion room to construct the on
 
