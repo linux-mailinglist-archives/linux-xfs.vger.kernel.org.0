@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1CA247AEB
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 01:00:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43936247AD6
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 00:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbgHQXAg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Aug 2020 19:00:36 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:41792 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726575AbgHQXAe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Aug 2020 19:00:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMuw9Q136142;
-        Mon, 17 Aug 2020 23:00:33 GMT
+        id S1727997AbgHQW6o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Aug 2020 18:58:44 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:35054 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727966AbgHQW6m (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Aug 2020 18:58:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMwLmh164217;
+        Mon, 17 Aug 2020 22:58:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=HsRxM1oSlxMo1eeof782reUI9q/L3hg6Oz7kwDvvZVU=;
- b=HHejy9OofTsXxy8XA9WzCUWt0nTEN8rxEEWG2ThsZ5DSO46138byprr/nTUtWs2nT6DS
- yGP0/dlGEtBCaqOKeAvK8ulwen4NCdbxxBCCbpH4iYmmWEH8l9yYtaEvybw3Xp9hC/Xz
- Z/mKDnuT+pXP7F7jmxRSjCOBkyuf531TNzzzHtDWrsDsFzFTnuqLWbfgG03IlAco2P8I
- r08ZW9ZabG/ZvCfdth7tP3v66AeeXd1cOavyt2BBpg2KwHgFipc4sNJlkYVP+llPStn/
- +wiAF/cxYNop11/GYReBb+JMq2HyxcK8ivZw/tJ8XUpJ9Ab5OPXWQYAhnFBx6oQeLR0i kA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 32x8bn1g4a-1
+ bh=/lDMMuf19pkPwalcpYnbJOLa9uMieT610+hZqZXat8k=;
+ b=b1+aDKcp6+3cNHfK2MzApohK3xg4cq955Dp+LQGJmQn0ylEmv/98ZOEG91xtHDsPkXKI
+ mU4+9sXaTolqvkwteILYbppA1Dzewz21ij1ZFAus07dP276oqkXbQUiNW9iGJo2RX0V+
+ AzIQbdlWoD1PSvocbSTSCrDsI4rK1tc5x6NctOPoHuCeQB3CMmWjdfOviRHypXRyhYOy
+ wKgysKOXYMMRuwADYvuzc5jbaFoWqxqQseE9k2SUCBXuwh9J0BoYP/5Qvsj8nr0ra3gB
+ VwnCz009nyqcOjDOhC7Rxfn7uNG67zbRrFju36Nwwd9Bd1eHXnbUwZsPfgjPC8QTsF4D /Q== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32x74r1mr7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Aug 2020 23:00:33 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMw9rJ084669;
-        Mon, 17 Aug 2020 22:58:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 32xsfr591g-1
+        Mon, 17 Aug 2020 22:58:39 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvjRX113907;
+        Mon, 17 Aug 2020 22:58:39 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 32xsm18pe9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 22:58:32 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07HMwVUD025142;
-        Mon, 17 Aug 2020 22:58:31 GMT
+        Mon, 17 Aug 2020 22:58:39 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07HMwcAl017698;
+        Mon, 17 Aug 2020 22:58:38 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Aug 2020 15:58:31 -0700
-Subject: [PATCH 4/7] xfs_repair: check inode btree block counters in AGI
+        with ESMTP ; Mon, 17 Aug 2020 15:58:37 -0700
+Subject: [PATCH 5/7] xfs_repair: regenerate inode btree block counters in AGI
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 17 Aug 2020 15:58:30 -0700
-Message-ID: <159770511056.3958545.1816196170854601929.stgit@magnolia>
+Date:   Mon, 17 Aug 2020 15:58:36 -0700
+Message-ID: <159770511687.3958545.383115865231736129.stgit@magnolia>
 In-Reply-To: <159770508586.3958545.417872750558976156.stgit@magnolia>
 References: <159770508586.3958545.417872750558976156.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,14 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=2 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008170153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=2 adultscore=0 spamscore=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1015 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2008170153
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,103 +70,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Make sure that both inode btree block counters in the AGI are correct.
+Reset both inode btree block counters in the AGI when rebuilding the
+metadata indexes.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- repair/scan.c |   38 +++++++++++++++++++++++++++++++++++---
- 1 file changed, 35 insertions(+), 3 deletions(-)
+ repair/phase5.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
 
-diff --git a/repair/scan.c b/repair/scan.c
-index 42b299f75067..f05d0c918ce9 100644
---- a/repair/scan.c
-+++ b/repair/scan.c
-@@ -1948,6 +1948,12 @@ _("invalid inode count, inode chunk %d/%u, count %d ninodes %d\n"),
- 	return suspect;
- }
- 
-+struct ino_priv {
-+	struct aghdr_cnts	*agcnts;
-+	uint32_t		ino_blocks;
-+	uint32_t		fino_blocks;
-+};
-+
- /*
-  * this one walks the inode btrees sucking the info there into
-  * the incore avl tree.  We try and rescue corrupted btree records
-@@ -1976,7 +1982,8 @@ scan_inobt(
- 	void			*priv,
- 	const struct xfs_buf_ops *ops)
- {
--	struct aghdr_cnts	*agcnts = priv;
-+	struct ino_priv		*ipriv = priv;
-+	struct aghdr_cnts	*agcnts = ipriv->agcnts;
- 	char			*name;
- 	xfs_agino_t		lastino = 0;
- 	int			i;
-@@ -2022,6 +2029,17 @@ scan_inobt(
- 			return;
- 	}
- 
-+	switch (magic) {
-+	case XFS_FIBT_MAGIC:
-+	case XFS_FIBT_CRC_MAGIC:
-+		ipriv->fino_blocks++;
-+		break;
-+	case XFS_IBT_MAGIC:
-+	case XFS_IBT_CRC_MAGIC:
-+		ipriv->ino_blocks++;
-+		break;
-+	}
-+
- 	/*
- 	 * check for btree blocks multiply claimed, any unknown/free state
- 	 * is ok in the bitmap block.
-@@ -2347,6 +2365,9 @@ validate_agi(
- 	xfs_agnumber_t		agno,
- 	struct aghdr_cnts	*agcnts)
- {
-+	struct ino_priv		priv = {
-+		.agcnts = agcnts,
-+	};
- 	xfs_agblock_t		bno;
- 	int			i;
- 	uint32_t		magic;
-@@ -2356,7 +2377,7 @@ validate_agi(
- 		magic = xfs_sb_version_hascrc(&mp->m_sb) ? XFS_IBT_CRC_MAGIC
- 							 : XFS_IBT_MAGIC;
- 		scan_sbtree(bno, be32_to_cpu(agi->agi_level),
--			    agno, 0, scan_inobt, 1, magic, agcnts,
-+			    agno, 0, scan_inobt, 1, magic, &priv,
- 			    &xfs_inobt_buf_ops);
- 	} else {
- 		do_warn(_("bad agbno %u for inobt root, agno %d\n"),
-@@ -2369,7 +2390,7 @@ validate_agi(
- 			magic = xfs_sb_version_hascrc(&mp->m_sb) ?
- 					XFS_FIBT_CRC_MAGIC : XFS_FIBT_MAGIC;
- 			scan_sbtree(bno, be32_to_cpu(agi->agi_free_level),
--				    agno, 0, scan_inobt, 1, magic, agcnts,
-+				    agno, 0, scan_inobt, 1, magic, &priv,
- 				    &xfs_finobt_buf_ops);
- 		} else {
- 			do_warn(_("bad agbno %u for finobt root, agno %d\n"),
-@@ -2377,6 +2398,17 @@ validate_agi(
- 		}
+diff --git a/repair/phase5.c b/repair/phase5.c
+index 446f7ec0a1db..b97d23809f3c 100644
+--- a/repair/phase5.c
++++ b/repair/phase5.c
+@@ -172,6 +172,11 @@ build_agi(
+ 				cpu_to_be32(btr_fino->newbt.afake.af_levels);
  	}
  
 +	if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
-+		if (be32_to_cpu(agi->agi_iblocks) != priv.ino_blocks)
-+			do_warn(_("bad inobt block count %u, saw %u\n"),
-+					priv.ino_blocks,
-+					be32_to_cpu(agi->agi_iblocks));
-+		if (be32_to_cpu(agi->agi_fblocks) != priv.fino_blocks)
-+			do_warn(_("bad finobt block count %u, saw %u\n"),
-+					priv.fino_blocks,
-+					be32_to_cpu(agi->agi_fblocks));
++		agi->agi_iblocks = cpu_to_be32(btr_ino->newbt.afake.af_blocks);
++		agi->agi_fblocks = cpu_to_be32(btr_fino->newbt.afake.af_blocks);
 +	}
 +
- 	if (be32_to_cpu(agi->agi_count) != agcnts->agicount) {
- 		do_warn(_("agi_count %u, counted %u in ag %u\n"),
- 			 be32_to_cpu(agi->agi_count), agcnts->agicount, agno);
+ 	libxfs_buf_mark_dirty(agi_buf);
+ 	libxfs_buf_relse(agi_buf);
+ }
 
