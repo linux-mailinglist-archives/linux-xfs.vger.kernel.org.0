@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5D4247AF2
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 01:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60770247AF4
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 01:01:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgHQXBI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Aug 2020 19:01:08 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53246 "EHLO
+        id S1728239AbgHQXBN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Aug 2020 19:01:13 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53304 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbgHQXBE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Aug 2020 19:01:04 -0400
+        with ESMTP id S1728171AbgHQXBK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Aug 2020 19:01:10 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMwRhk062519;
-        Mon, 17 Aug 2020 23:01:02 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvPF8050021;
+        Mon, 17 Aug 2020 23:01:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=+g2PZx/TR92HVgEKixvinl5tbZKZ0I/HPqbjXHTqpmI=;
- b=xeaCnycHgyHWFcZpgKQhNlFZJXr66E2pWiChmnaGxuVDT7KpMgko/Cu1YG/p11q65qrj
- Q8SQdtPFr/IDZ7p21gZwCCk+dlsCSHt6xx2LmiCWgi37NJ+iFLoJ9oCtGCxF8FdOU5Oh
- PraVH3MVtOAXAv098jgnnvxjnNlbJzfQWf4YmXVpkjW625XH7G6kPY+Gr2f8HtbQKacg
- rHyz6j6EBrxOiydGq19eoOZuDyWCq6LgCF6JSv4GXa6dqkzYHYFhI8ru6MKryNRfPLmb
- wAXxc1VhseA7qhJumkQKUFwSO+I959evBtZ6mbBHpyY5ouhebc+gr0Ua+eHAWGYQ4NlC wA== 
+ bh=HrKUevwODpTMU16sd9yaBbJ3yneCdNDu+DPD41i1jk0=;
+ b=qHmD5s3adIXeSF95SEVqEWdab9NAVD7sEYS97p3/n59efyOZYJhFCEuC8DQ7dSOZZeHa
+ ZuvrnujggZfWgn8le26gb2b3VuJ/lDxlU04AJ+qhpd/SoovkRtSKa5foqAnFWQ7g5eHd
+ DKTbz9+Co9KXDFR7Ent5zbXCNZ3q3jH0yBFYS/4R1d9462ZFV4iRKI61Q0cV12CzNXWH
+ 9zqNXUl3LgZYQoE4Wuy7KgdQ+fxzAuKJ1LRGE6IEdAYhZR7mIoDov5ioKUwO5GSd49+/
+ wuhsXiXJxiNGdvy2WeXivNEB1bexO6AwmSlE7zVwAPxkRaLhMmE/1/HXTTOf/CgOHUK+ Wg== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 32x7nm9jxb-1
+        by aserp2120.oracle.com with ESMTP id 32x7nm9k0a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Aug 2020 23:01:02 +0000
+        Mon, 17 Aug 2020 23:01:08 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvjDR113883;
-        Mon, 17 Aug 2020 23:01:02 GMT
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HMvjTC113905;
+        Mon, 17 Aug 2020 23:01:08 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 32xsm18ub0-1
+        by aserp3020.oracle.com with ESMTP id 32xsm18un1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Aug 2020 23:01:01 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07HN11ms015559;
-        Mon, 17 Aug 2020 23:01:01 GMT
+        Mon, 17 Aug 2020 23:01:08 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07HN17ZV015638;
+        Mon, 17 Aug 2020 23:01:07 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Aug 2020 16:01:01 -0700
-Subject: [PATCH 1/4] xfs/122: embiggen struct xfs_agi size for inobtcount
- feature
+        with ESMTP ; Mon, 17 Aug 2020 16:01:07 -0700
+Subject: [PATCH 2/4] xfs: test inobtcount upgrade
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Mon, 17 Aug 2020 16:01:00 -0700
-Message-ID: <159770526028.3960575.6276880648755854682.stgit@magnolia>
+Date:   Mon, 17 Aug 2020 16:01:06 -0700
+Message-ID: <159770526657.3960575.11874406628211391398.stgit@magnolia>
 In-Reply-To: <159770525400.3960575.11977829712550002800.stgit@magnolia>
 References: <159770525400.3960575.11977829712550002800.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -71,54 +70,126 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Make the expected AGI size larger for the inobtcount feature.
+Make sure we can actually upgrade filesystems to support inobtcounts.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/xfs/010     |    3 ++-
- tests/xfs/030     |    2 ++
- tests/xfs/122.out |    2 +-
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ common/xfs        |   16 ++++++++++++++
+ tests/xfs/910     |   60 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/910.out |    3 +++
+ tests/xfs/group   |    1 +
+ 4 files changed, 80 insertions(+)
+ create mode 100755 tests/xfs/910
+ create mode 100644 tests/xfs/910.out
 
 
-diff --git a/tests/xfs/010 b/tests/xfs/010
-index b65dd3ba..a5090316 100755
---- a/tests/xfs/010
-+++ b/tests/xfs/010
-@@ -114,7 +114,8 @@ _check_scratch_fs
- _corrupt_finobt_root $SCRATCH_DEV
- 
- filter_finobt_repair() {
--	sed -e '/^agi has bad CRC/d' | \
-+	sed -e '/^agi has bad CRC/d' \
-+	    -e '/^bad finobt block/d' | \
- 		_filter_repair_lostblocks
+diff --git a/common/xfs b/common/xfs
+index ce279041..05ed768a 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -955,3 +955,19 @@ _xfs_get_cowgc_interval() {
+ 		_fail "Can't find cowgc interval procfs knob?"
+ 	fi
  }
- 
-diff --git a/tests/xfs/030 b/tests/xfs/030
-index ebe4c92a..52a43ebc 100755
---- a/tests/xfs/030
-+++ b/tests/xfs/030
-@@ -44,6 +44,8 @@ _check_ag()
- 			    -e '/^bad agbno AGBNO for refcntbt/d' \
- 			    -e '/^agf has bad CRC/d' \
- 			    -e '/^agi has bad CRC/d' \
-+			    -e '/^bad inobt block count/d' \
-+			    -e '/^bad finobt block count/d' \
- 			    -e '/^Missing reverse-mapping record.*/d' \
- 			    -e '/^unknown block state, ag AGNO, block.*/d'
- 	done
-diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index 45c42e59..837f4cae 100644
---- a/tests/xfs/122.out
-+++ b/tests/xfs/122.out
-@@ -112,7 +112,7 @@ sizeof(struct xfs_scrub_metadata) = 64
- sizeof(struct xfs_unmount_log_format) = 8
- sizeof(xfs_agf_t) = 224
- sizeof(xfs_agfl_t) = 36
--sizeof(xfs_agi_t) = 336
-+sizeof(xfs_agi_t) = 344
- sizeof(xfs_alloc_key_t) = 8
- sizeof(xfs_alloc_rec_incore_t) = 8
- sizeof(xfs_alloc_rec_t) = 8
++
++_require_xfs_mkfs_inobtcount()
++{
++	_scratch_mkfs_xfs_supported -m inobtcount=1 >/dev/null 2>&1 \
++	   || _notrun "mkfs.xfs doesn't have inobtcount feature"
++}
++
++_require_xfs_scratch_inobtcount()
++{
++	_require_scratch
++
++	_scratch_mkfs -m inobtcount=1 > /dev/null
++	_try_scratch_mount || \
++		_notrun "inobtcount not supported by scratch filesystem type: $FSTYP"
++	_scratch_unmount
++}
+diff --git a/tests/xfs/910 b/tests/xfs/910
+new file mode 100755
+index 00000000..3cc5fca2
+--- /dev/null
++++ b/tests/xfs/910
+@@ -0,0 +1,60 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
++#
++# FS QA Test No. 910
++#
++# Check that we can upgrade a filesystem to support inobtcount and that
++# everything works properly after the upgrade.
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1    # failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++	rm -f $tmp.*
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
++
++# real QA test starts here
++_supported_fs xfs
++_supported_os Linux
++_require_command "$XFS_ADMIN_PROG" "xfs_admin"
++_require_xfs_mkfs_inobtcount
++_require_xfs_scratch_inobtcount
++
++rm -f $seqres.full
++
++# Format V5 filesystem without inode btree counter support and populate it
++_scratch_mkfs -m crc=1,inobtcount=0 > $seqres.full
++_scratch_xfs_db -c 'version' -c 'sb 0' -c 'p' >> $seqres.full
++_scratch_mount >> $seqres.full
++
++echo moo > $SCRATCH_MNT/urk
++
++_scratch_unmount
++_check_scratch_fs
++
++# Now upgrade to inobtcount support
++_scratch_xfs_admin -O inobtcount >> $seqres.full
++_check_scratch_fs
++_scratch_xfs_db -c 'version' -c 'sb 0' -c 'p' -c 'agi 0' -c 'p' >> $seqres.full
++
++# Mount again, look at our files
++_scratch_mount >> $seqres.full
++cat $SCRATCH_MNT/urk
++
++# success, all done
++echo Silence is golden.
++status=0
++exit
+diff --git a/tests/xfs/910.out b/tests/xfs/910.out
+new file mode 100644
+index 00000000..83992f49
+--- /dev/null
++++ b/tests/xfs/910.out
+@@ -0,0 +1,3 @@
++QA output created by 910
++moo
++Silence is golden.
+diff --git a/tests/xfs/group b/tests/xfs/group
+index 8ecdc5ba..b144d391 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -531,4 +531,5 @@
+ 746 auto quick online_repair
+ 747 auto quick scrub
+ 748 auto quick scrub
++910 auto quick inobtcount
+ 915 auto quick quota
 
