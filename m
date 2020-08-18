@@ -2,67 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84AAF24899A
-	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 17:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C2F12489B8
+	for <lists+linux-xfs@lfdr.de>; Tue, 18 Aug 2020 17:25:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgHRPVf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Aug 2020 11:21:35 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37530 "EHLO
+        id S1727998AbgHRPZc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 Aug 2020 11:25:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41050 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgHRPVc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Aug 2020 11:21:32 -0400
+        with ESMTP id S1728001AbgHRPZa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Aug 2020 11:25:30 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IF7QBe057927;
-        Tue, 18 Aug 2020 15:21:28 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IF7oPF058170;
+        Tue, 18 Aug 2020 15:25:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=hJ5HFHX+fJiHH+k0sECbS3I+mdQ2Dc4/79qOjc9Z4LM=;
- b=x+3JNjmJY3fRYZCHAJ/B+mOGRxWDNT1WhHX/H3f6+Y6khHWIkGIlONPT6HQLCqzFxOWu
- clURHfjlIRvDX5ARbb9g4sGfFTKpghYmb3V1FEREMU3AGfEz165MHocNSBnlyrrwgL85
- blX1Eb8qCDdin9dGH45G0C/Vx71y4H9gDDi+ncrYZwTFzV8Rn8pd4J9G7+rlFAcITUHM
- x0gZvOMBLgsUitKd4sCBtZKA8mCe2/RKe32d/gnbvZsR0Zxp7xYBd2mI9dFOTssB6tcr
- wVSDC6dmg184KnEEUXHBm8nGd4ybhmmp4LL+uCfDMKiwbOEF8ULN1PT5nE9aTumKW3Q2 Jg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 32x7nmdggg-1
+ in-reply-to; s=corp-2020-01-29;
+ bh=0M2d49ZTrODkNPmKwGu/GadYp01feo/vCURdWwjRads=;
+ b=jqJuByB5GLH1rMG3Sey15zuHlgAtrdkR+aNZTVIq3gHYlLjtWq665urMQIRege/DEHFk
+ n58K+Ojyj3ceLLt4QVLnwZDSzQSc+QYdel6RHltvKzcYZB/3JWkUW27oONOI25vmRZWt
+ 5+WLaKOEFG5XL1sTHM9C3rHcKVu12naeFy5IwYS9iNv5q+g/ClQtuHgNVoh88q1tQwbU
+ 0KAGSxTosS4un1qU5t6T/v10uPmf0+XmnFba7VZudGSCW59lhzQ9AQR1Tc/tkR0S8a4w
+ dNTaNc9781zDq60pBfMNHdJTcqlLorp+x/V5ut0911D4XQ56NO7XDq1JDmxfkI9kFF9E +w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 32x7nmdhdv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Aug 2020 15:21:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IF8EoD003662;
-        Tue, 18 Aug 2020 15:19:27 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 32xsfs0eb4-1
+        Tue, 18 Aug 2020 15:25:27 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IF7mhB119437;
+        Tue, 18 Aug 2020 15:25:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 32xsm342g8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 15:19:27 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07IFJObv002497;
-        Tue, 18 Aug 2020 15:19:26 GMT
+        Tue, 18 Aug 2020 15:25:26 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07IFPP1l030135;
+        Tue, 18 Aug 2020 15:25:25 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Aug 2020 08:19:24 -0700
-Date:   Tue, 18 Aug 2020 08:19:23 -0700
+        with ESMTP ; Tue, 18 Aug 2020 08:25:24 -0700
+Date:   Tue, 18 Aug 2020 08:25:23 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Amir Goldstein <amir73il@gmail.com>
 Cc:     Eric Sandeen <sandeen@sandeen.net>,
         linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH 3/7] xfs_db: add bigtime upgrade path
-Message-ID: <20200818151923.GN6096@magnolia>
-References: <159770508586.3958545.417872750558976156.stgit@magnolia>
- <159770510435.3958545.6606540263072605314.stgit@magnolia>
- <CAOQ4uxiL3Ja6dH9TbpQVtZfegc6jz2_pB7qE-a4Bg0XQLeLcAw@mail.gmail.com>
+Subject: Re: [PATCH 03/18] xfs: refactor quota expiration timer modification
+Message-ID: <20200818152523.GO6096@magnolia>
+References: <159770513155.3958786.16108819726679724438.stgit@magnolia>
+ <159770515211.3958786.7094290347539609121.stgit@magnolia>
+ <CAOQ4uxjKta9UgtJ6rWE4Wy9hxGGGJOOxu+LuLY0Mf5i1kR69Ew@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAOQ4uxiL3Ja6dH9TbpQVtZfegc6jz2_pB7qE-a4Bg0XQLeLcAw@mail.gmail.com>
+In-Reply-To: <CAOQ4uxjKta9UgtJ6rWE4Wy9hxGGGJOOxu+LuLY0Mf5i1kR69Ew@mail.gmail.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=788
- spamscore=0 suspectscore=1 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=1
+ malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008180111
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 spamscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=799
+ impostorscore=0 priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=999
  lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2008180111
@@ -71,19 +70,40 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 05:14:27PM +0300, Amir Goldstein wrote:
-> On Tue, Aug 18, 2020 at 2:24 AM Darrick J. Wong <darrick.wong@oracle.com>=
- wrote:
+On Tue, Aug 18, 2020 at 05:21:59PM +0300, Amir Goldstein wrote:
+> On Tue, Aug 18, 2020 at 2:24 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
 > >
 > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > >
-> > Enable users to upgrade their filesystems to bigtime support.
->=20
-> That was supposed to be "inobtcount" (title as well)
+> > Define explicit limits on the range of quota grace period expiration
+> > timeouts and refactor the code that modifies the timeouts into helpers
+> > that clamp the values appropriately.
+> >
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> There is no refactoring here, but I suppose you want to keep the commit
+> names aligned with kernel commits, so
 
-Fixed, thanks. :)
+FWIW, these patches of mine where (1) 'xfs: ' is in the subject; (2) the
+changes only touch things in libxfs and the bare minimum to avoid build
+breakage; and (3) whose commit log don't really match the changes are
+straight ports of the kernel-space patches.
+
+I hesitate to use the libxfs-apply script for these patches (even though
+Eric will do that when he's resyncing for real) because the source
+commit ids will probably never match what ends up in Linus tree.
+
+I don't know if anyone /else/ follows this convention, but in my
+xfsprogs series, I try to prefix patches that change /only/ userspace
+libxfs with the tag 'libxfs: ', so that reviewers can spend more time on
+the patches that tag either libxfs directly or some userspace program.
+
+That said, this is really not obvious.  I've wondered if I should amend
+libxfs-apply to be able to quote the source commit subject line so that
+it's more obvious when a patch is simply a userspace port.  Would that
+help?
 
 --D
 
-> Thanks,
-> Amir.
+> 
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
