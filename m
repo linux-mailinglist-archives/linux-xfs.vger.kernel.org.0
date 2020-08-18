@@ -2,228 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1597C24913D
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 Aug 2020 00:54:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F405724914E
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 Aug 2020 01:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHRWyy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 Aug 2020 18:54:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40900 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgHRWyy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Aug 2020 18:54:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IMqS89186136;
-        Tue, 18 Aug 2020 22:54:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=TwWrV3B75+gMajlYbCM+4qAqKtnHxYI2wE18zQHwwWo=;
- b=woB1KUqKO8gjASU+X6rNiy9qMyZ+NmvS21JX1HC5lcuf8e77HfndqwuyUvoFGOxwetlA
- kT56q2zqm+MOMUaqw4nBf03VaGEDxdrMh2ThWucCkcAMTuvA+iH0TRIt2KUgLt/YnAml
- SPOe3YtE3RrytunjnldWP2XnKLoEl4oGwZOKnwcI7Gj+2/oojlhJT4c7DVUqihEDjrp3
- JNl39ftbpEV1fdh3Cd06bij1U8WKVD8AQjyTZE3wZ/UAD0oQ5+yczRewUBlmuW+5DHuL
- XwgAkhMBYGmm1uIWQyMgLgBbYZnpns0J02kQWaoSObS8K2M40dTKD/SbNAQHIyXWHH7+ rg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 32x74r7pg4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Aug 2020 22:54:50 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07IMsFA0088114;
-        Tue, 18 Aug 2020 22:54:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 32xsfsekkd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Aug 2020 22:54:50 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07IMsnMG004154;
-        Tue, 18 Aug 2020 22:54:49 GMT
-Received: from localhost (/10.159.129.94)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Aug 2020 15:54:49 -0700
-Date:   Tue, 18 Aug 2020 15:54:47 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 12/13] xfs: remove xlog_recover_iodone
-Message-ID: <20200818225447.GM6096@magnolia>
-References: <20200709150453.109230-1-hch@lst.de>
- <20200709150453.109230-13-hch@lst.de>
+        id S1727080AbgHRXBa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 Aug 2020 19:01:30 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:57303 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726985AbgHRXB3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 Aug 2020 19:01:29 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 676C36AD961;
+        Wed, 19 Aug 2020 09:01:22 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k8AbZ-00074m-AS; Wed, 19 Aug 2020 09:01:21 +1000
+Date:   Wed, 19 Aug 2020 09:01:21 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com, sandeen@sandeen.net
+Subject: Re: [PATCH v2 00/11] xfs: widen timestamps to deal with y2038
+Message-ID: <20200818230121.GC21744@dread.disaster.area>
+References: <159770500809.3956827.8869892960975362931.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200709150453.109230-13-hch@lst.de>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9717 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- spamscore=0 suspectscore=1 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008180161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9717 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=1 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008180161
+In-Reply-To: <159770500809.3956827.8869892960975362931.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
+        a=lPygvI_Yo-riPWGLOK4A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 09, 2020 at 05:04:52PM +0200, Christoph Hellwig wrote:
-> The log recovery I/O completion handler does not substancially differ from
-
-"substantially"
-
-> the normal one except for the fact that we:
+On Mon, Aug 17, 2020 at 03:56:48PM -0700, Darrick J. Wong wrote:
+> Hi all,
 > 
->  a) never retry failed writes
->  b) can have log items that aren't on the AIL
->  c) never have inode/dquot log items attached and thus don't need to
->     handle them
-> 
-> Add conditionals for (a) and (b) to the ioend code, while (c) doesn't
-> need special handling anyway.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> This series performs some refactoring of our timestamp and inode
+> encoding functions, then retrofits the timestamp union to handle
+> timestamps as a 64-bit nanosecond counter.  Next, it adds bit shifting
+> to the non-root dquot timer fields to boost their effective size to 34
+> bits.  These two changes enable correct time handling on XFS through the
+> year 2486.
 
-With that one typo fixed:
+A bit more detail would be nice :)
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Like, the inode timestamp has a range of slightly greater than 2^34
+because 10^9 < 2^30. i.e.
 
---D
+Inode timestamp range in days:
 
-> ---
->  fs/xfs/libxfs/xfs_log_recover.h |  1 -
->  fs/xfs/xfs_buf.c                | 20 ++++++++++++--------
->  fs/xfs/xfs_buf_item.c           |  4 ++++
->  fs/xfs/xfs_buf_item_recover.c   |  2 +-
->  fs/xfs/xfs_log_recover.c        | 25 -------------------------
->  5 files changed, 17 insertions(+), 35 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_log_recover.h b/fs/xfs/libxfs/xfs_log_recover.h
-> index 641132d0e39ddd..3cca2bfe714cb2 100644
-> --- a/fs/xfs/libxfs/xfs_log_recover.h
-> +++ b/fs/xfs/libxfs/xfs_log_recover.h
-> @@ -121,7 +121,6 @@ struct xlog_recover {
->  void xlog_buf_readahead(struct xlog *log, xfs_daddr_t blkno, uint len,
->  		const struct xfs_buf_ops *ops);
->  bool xlog_is_buffer_cancelled(struct xlog *log, xfs_daddr_t blkno, uint len);
-> -void xlog_recover_iodone(struct xfs_buf *bp);
->  
->  void xlog_recover_release_intent(struct xlog *log, unsigned short intent_type,
->  		uint64_t intent_id);
-> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> index 8bbd28f39a927b..1172d5fa06aad2 100644
-> --- a/fs/xfs/xfs_buf.c
-> +++ b/fs/xfs/xfs_buf.c
-> @@ -1241,6 +1241,15 @@ xfs_buf_ioend_handle_error(
->  
->  	xfs_buf_ioerror_alert_ratelimited(bp);
->  
-> +	/*
-> +	 * We're not going to bother about retrying this during recovery.
-> +	 * One strike!
-> +	 */
-> +	if (bp->b_flags & _XBF_LOGRECOVERY) {
-> +		xfs_force_shutdown(mp, SHUTDOWN_META_IO_ERROR);
-> +		return false;
-> +	}
-> +
->  	/*
->  	 * Synchronous writes will have callers process the error.
->  	 */
-> @@ -1310,13 +1319,6 @@ xfs_buf_ioend(
->  			bp->b_ops->verify_read(bp);
->  		if (!bp->b_error)
->  			bp->b_flags |= XBF_DONE;
-> -	} else if (bp->b_flags & _XBF_LOGRECOVERY) {
-> -		/*
-> -		 * If this is a log recovery buffer, we aren't doing
-> -		 * transactional I/O yet so we need to let the log recovery code
-> -		 * handle I/O completions:
-> -		 */
-> -		xlog_recover_iodone(bp);
->  	} else {
->  		if (!bp->b_error) {
->  			bp->b_flags &= ~XBF_WRITE_FAIL;
-> @@ -1343,9 +1345,11 @@ xfs_buf_ioend(
->  			xfs_buf_inode_iodone(bp);
->  		else if (bp->b_flags & _XBF_DQUOTS)
->  			xfs_buf_dquot_iodone(bp);
-> +
->  	}
->  
-> -	bp->b_flags &= ~(XBF_READ | XBF_WRITE | XBF_READ_AHEAD);
-> +	bp->b_flags &= ~(XBF_READ | XBF_WRITE | XBF_READ_AHEAD |
-> +			 _XBF_LOGRECOVERY);
->  
->  	if (bp->b_flags & XBF_ASYNC)
->  		xfs_buf_relse(bp);
-> diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-> index ccfd747d32e410..ab87c1294f7584 100644
-> --- a/fs/xfs/xfs_buf_item.c
-> +++ b/fs/xfs/xfs_buf_item.c
-> @@ -967,8 +967,12 @@ xfs_buf_item_done(
->  	 * xfs_trans_ail_delete() takes care of these.
->  	 *
->  	 * Either way, AIL is useless if we're forcing a shutdown.
-> +	 *
-> +	 * Note that log recovery writes might have buffer items that are not on
-> +	 * the AIL during normal operations.
->  	 */
->  	xfs_trans_ail_delete(&bp->b_log_item->bli_item,
-> +			     (bp->b_flags & _XBF_LOGRECOVERY) ? 0 :
->  			     SHUTDOWN_CORRUPT_INCORE);
->  	xfs_buf_item_relse(bp);
->  }
-> diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-> index 74c851f60eeeb1..1bbae3ab1322f7 100644
-> --- a/fs/xfs/xfs_buf_item_recover.c
-> +++ b/fs/xfs/xfs_buf_item_recover.c
-> @@ -414,7 +414,7 @@ xlog_recover_validate_buf_type(
->  	 *
->  	 * Write verifiers update the metadata LSN from log items attached to
->  	 * the buffer. Therefore, initialize a bli purely to carry the LSN to
-> -	 * the verifier. We'll clean it up in our ->iodone() callback.
-> +	 * the verifier.
->  	 */
->  	if (bp->b_ops) {
->  		struct xfs_buf_log_item	*bip;
-> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index 741a2c247bc585..b181f3253e6e74 100644
-> --- a/fs/xfs/xfs_log_recover.c
-> +++ b/fs/xfs/xfs_log_recover.c
-> @@ -265,31 +265,6 @@ xlog_header_check_mount(
->  	return 0;
->  }
->  
-> -void
-> -xlog_recover_iodone(
-> -	struct xfs_buf	*bp)
-> -{
-> -	if (!bp->b_error) {
-> -		bp->b_flags |= XBF_DONE;
-> -	} else if (!XFS_FORCED_SHUTDOWN(bp->b_mount)) {
-> -		/*
-> -		 * We're not going to bother about retrying this during
-> -		 * recovery. One strike!
-> -		 */
-> -		xfs_buf_ioerror_alert(bp, __this_address);
-> -		xfs_force_shutdown(bp->b_mount, SHUTDOWN_META_IO_ERROR);
-> -	}
-> -
-> -	/*
-> -	 * On v5 supers, a bli could be attached to update the metadata LSN.
-> -	 * Clean it up.
-> -	 */
-> -	if (bp->b_log_item)
-> -		xfs_buf_item_relse(bp);
-> -	ASSERT(bp->b_log_item == NULL);
-> -	bp->b_flags &= ~_XBF_LOGRECOVERY;
-> -}
-> -
->  /*
->   * This routine finds (to an approximation) the first block in the physical
->   * log which contains the given cycle.  It uses a binary search algorithm.
-> -- 
-> 2.26.2
-> 
+$ echo $(((2**62 / (1000*1000*1000) / 86400) * 2**2))
+213500
+$
+
+While the quota timer range in days is:
+$ echo $(((2**34 / 86400)))
+198841
+$
+
+There's ~15,000 days difference in range here, which in years is
+about 40 years. Hence the inodes have a timestamp range out to
+~2485 from the 1901 epoch start, while quota timers have a range
+out to only 2445 from the epoch start.
+
+Some discussion of the different ranges, the problems it might cause
+and why we don't have to worry about it would be appreciated :)
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
