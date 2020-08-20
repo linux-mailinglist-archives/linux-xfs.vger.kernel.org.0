@@ -2,68 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EF6C24AA65
-	for <lists+linux-xfs@lfdr.de>; Thu, 20 Aug 2020 01:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6707324ABC8
+	for <lists+linux-xfs@lfdr.de>; Thu, 20 Aug 2020 02:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHSX6s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 19 Aug 2020 19:58:48 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43091 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726617AbgHSX6r (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 Aug 2020 19:58:47 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8F34D821B8C;
-        Thu, 20 Aug 2020 09:58:41 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1k8Xya-0004DL-Kq; Thu, 20 Aug 2020 09:58:40 +1000
-Date:   Thu, 20 Aug 2020 09:58:40 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com, sandeen@sandeen.net
-Subject: Re: [PATCH 08/11] xfs: widen ondisk timestamps to deal with y2038
- problem
-Message-ID: <20200819235840.GA7941@dread.disaster.area>
-References: <159770500809.3956827.8869892960975362931.stgit@magnolia>
- <159770505894.3956827.5973810026298120596.stgit@magnolia>
- <20200818233535.GD21744@dread.disaster.area>
- <20200819214322.GE6096@magnolia>
+        id S1728034AbgHTANT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 Aug 2020 20:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726885AbgHTABe (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C95221741;
+        Thu, 20 Aug 2020 00:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597881694;
+        bh=MBkMboyOu2HC7rdoGgP22MXfHtANShRjgzrfZ9vVLzg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dR55g5B6YKKtXq737J/lJXnJg/a+P2Z5ZLFG3oSqGOQUmKakA2lRD4XEwJPaKG+47
+         9s63DusfCxAZ98Gsol127tuXy2wukDZHSE8dMQmQ8cC+TIauFT5oFU77d7Qh1NWDCR
+         UZb7lvREpM61HuQDfnhdw4MubPaNJz2qzH7ON/3Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 13/27] xfs: fix inode quota reservation checks
+Date:   Wed, 19 Aug 2020 20:01:02 -0400
+Message-Id: <20200820000116.214821-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
+References: <20200820000116.214821-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819214322.GE6096@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
-        a=slvXnHkSztNsWyrOnaMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:43:22PM -0700, Darrick J. Wong wrote:
-> On Wed, Aug 19, 2020 at 09:35:35AM +1000, Dave Chinner wrote:
-> > On Mon, Aug 17, 2020 at 03:57:39PM -0700, Darrick J. Wong wrote:
-> The correct approach (I think) is to perform the shifting and masking on
-> the raw __be64 value before converting them to incore format via
-> be32_to_cpu, but now I have to work out all four cases by hand instead
-> of letting the compiler do the legwork for me.  I don't remember if it's
-> correct to go around shifting and masking __be64 values.
-> 
-> I guess the good news is that at least we have generic/402 to catch
-> these kinds of persistence problems, but ugh.
-> 
-> Anyway, what are you afraid of?  The C compiler smoking crack and not
-> actually overlapping the two union elements?  We could control for
-> that...
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-No, I just didn't really like the way the code in the encode/decode
-helpers turned out...
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-Cheers,
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-Dave.
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
+
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
+
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index c0f73b82c0551..ed0ce8b301b40 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -647,7 +647,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = defq->iwarnlimit;
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.1
+
