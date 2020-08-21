@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6381324DD8F
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Aug 2020 19:20:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8477824DCE2
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Aug 2020 19:09:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbgHURTi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Aug 2020 13:19:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
+        id S1728261AbgHURJY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Aug 2020 13:09:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgHUQQY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:24 -0400
+        id S1726693AbgHUQRh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:17:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 056EA208DB;
-        Fri, 21 Aug 2020 16:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65A1222CBE;
+        Fri, 21 Aug 2020 16:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026583;
-        bh=6hGfcRIphleuAYcqTaa24I3W/RhvfskpVxpCaxeJGPY=;
+        s=default; t=1598026653;
+        bh=MNw6hv+n4FmolpYNZqWRXgFUcU0srZLtGhvIID2kPU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v1Y9liOGpBOmzzwSd1uNwyS5w/Ncd5naOhA40ZI8CYbGM2TjLl124Od9fam5qQbcY
-         wh70NLmmLgLNrvgCr/s7KQ/D14hxwbQyocnp9/m/DXvidHkYwa6tM7Ec1T8djB0Ltn
-         DsPovQZ9eC7ZscrXWmSmtIoPyrv1QY+gJ7EDu4NY=
+        b=1AI8CHk4xcVauaSleUA/Y1rZwgASIjD0s+UMvOWnhhvOtUL/wyam7QAk+AhqByT43
+         8yMBld39jsXzAmSnAIXovhN74ox5l//Hv5pVVlUQXGqRF1KLSG9aGVX1plN9y3Oixn
+         NiUjQM7+PDhKA2vax7SbjeQrZck3gTXkVW3ETLj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>,
         Brian Foster <bfoster@redhat.com>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 31/61] xfs: Don't allow logging of XFS_ISTALE inodes
-Date:   Fri, 21 Aug 2020 12:15:15 -0400
-Message-Id: <20200821161545.347622-31-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 23/48] xfs: Don't allow logging of XFS_ISTALE inodes
+Date:   Fri, 21 Aug 2020 12:16:39 -0400
+Message-Id: <20200821161704.348164-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
-References: <20200821161545.347622-1-sashal@kernel.org>
+In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
+References: <20200821161704.348164-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -109,7 +109,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 26 insertions(+), 4 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-index 2b8ccb5b975df..e59507a24a839 100644
+index a9ad90926b873..6c7354abd0aea 100644
 --- a/fs/xfs/libxfs/xfs_trans_inode.c
 +++ b/fs/xfs/libxfs/xfs_trans_inode.c
 @@ -36,6 +36,7 @@ xfs_trans_ijoin(
@@ -120,7 +120,7 @@ index 2b8ccb5b975df..e59507a24a839 100644
  
  	/*
  	 * Get a log_item_desc to point at the new item.
-@@ -89,6 +90,7 @@ xfs_trans_log_inode(
+@@ -91,6 +92,7 @@ xfs_trans_log_inode(
  
  	ASSERT(ip->i_itemp != NULL);
  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
@@ -129,10 +129,10 @@ index 2b8ccb5b975df..e59507a24a839 100644
  	/*
  	 * Don't bother with i_lock for the I_DIRTY_TIME check here, as races
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 8bf1d15be3f6a..67c232283a171 100644
+index d95dc9b0f0bba..a1135b86e79f9 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -1136,7 +1136,7 @@ xfs_reclaim_inode(
+@@ -1132,7 +1132,7 @@ xfs_reclaim_inode(
  			goto out_ifunlock;
  		xfs_iunpin_wait(ip);
  	}
@@ -141,7 +141,7 @@ index 8bf1d15be3f6a..67c232283a171 100644
  		xfs_ifunlock(ip);
  		goto reclaim;
  	}
-@@ -1223,6 +1223,7 @@ xfs_reclaim_inode(
+@@ -1219,6 +1219,7 @@ xfs_reclaim_inode(
  	xfs_ilock(ip, XFS_ILOCK_EXCL);
  	xfs_qm_dqdetach(ip);
  	xfs_iunlock(ip, XFS_ILOCK_EXCL);
@@ -150,10 +150,10 @@ index 8bf1d15be3f6a..67c232283a171 100644
  	__xfs_inode_free(ip);
  	return error;
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 8845faa8161a9..e38dd625e914b 100644
+index 18f4b262e61ce..b339ff93df997 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -1744,10 +1744,31 @@ xfs_inactive_ifree(
+@@ -1761,10 +1761,31 @@ xfs_inactive_ifree(
  		return error;
  	}
  
@@ -186,7 +186,7 @@ index 8845faa8161a9..e38dd625e914b 100644
  	if (error) {
  		/*
  		 * If we fail to free the inode, shut down.  The cancel
-@@ -1760,7 +1781,6 @@ xfs_inactive_ifree(
+@@ -1777,7 +1798,6 @@ xfs_inactive_ifree(
  			xfs_force_shutdown(mp, SHUTDOWN_META_IO_ERROR);
  		}
  		xfs_trans_cancel(tp);
@@ -194,7 +194,7 @@ index 8845faa8161a9..e38dd625e914b 100644
  		return error;
  	}
  
-@@ -1778,7 +1798,6 @@ xfs_inactive_ifree(
+@@ -1795,7 +1815,6 @@ xfs_inactive_ifree(
  		xfs_notice(mp, "%s: xfs_trans_commit returned error %d",
  			__func__, error);
  
