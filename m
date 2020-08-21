@@ -2,157 +2,127 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B409424DC7D
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Aug 2020 19:04:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D17FA24DF20
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Aug 2020 20:11:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbgHURDt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Aug 2020 13:03:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21900 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728587AbgHURCk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Aug 2020 13:02:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598029358;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lwS+kAPJtqLdpQqI1czJvEdFIatqGdZKK7fsajHisA0=;
-        b=gMth1jkeraWlQnmaLvLtVyUW6NTc+hAV+VNZgeoraESfnm4QGaSFBS5EROiZzMYQvgtBP5
-        zG2obFY+eLJOjbQhsWjA3zzrhFq3vFsUxZMa/czm9k9oLHajPVLcDQCdHajt0NrvW1syI2
-        TefZRgg6DwJWfs80NigqecLwecAy0AY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-574-SF_3072jPQajpoxq_FW_aQ-1; Fri, 21 Aug 2020 13:02:36 -0400
-X-MC-Unique: SF_3072jPQajpoxq_FW_aQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D178AEF63;
-        Fri, 21 Aug 2020 17:02:35 +0000 (UTC)
-Received: from bfoster (ovpn-112-11.rdu2.redhat.com [10.10.112.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 34FEE5D9CC;
-        Fri, 21 Aug 2020 17:02:33 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 13:02:32 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Alberto Garcia <berto@igalia.com>
-Cc:     Dave Chinner <david@fromorbit.com>, Kevin Wolf <kwolf@redhat.com>,
-        Vladimir Sementsov-Ogievskiy <vsementsov@virtuozzo.com>,
-        qemu-block@nongnu.org, qemu-devel@nongnu.org,
-        Max Reitz <mreitz@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 0/1] qcow2: Skip copy-on-write when allocating a zero
- cluster
-Message-ID: <20200821170232.GA220086@bfoster>
-References: <w518sedz3td.fsf@maestria.local.igalia.com>
- <20200817155307.GS11402@linux.fritz.box>
- <w51pn7memr7.fsf@maestria.local.igalia.com>
- <20200819150711.GE10272@linux.fritz.box>
- <20200819175300.GA141399@bfoster>
- <w51v9hdultt.fsf@maestria.local.igalia.com>
- <20200820215811.GC7941@dread.disaster.area>
- <20200821110506.GB212879@bfoster>
- <w51364gjkcj.fsf@maestria.local.igalia.com>
- <w51zh6oi4en.fsf@maestria.local.igalia.com>
+        id S1726358AbgHUSLj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Aug 2020 14:11:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49422 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726057AbgHUSLj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Aug 2020 14:11:39 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LI1dKk193635;
+        Fri, 21 Aug 2020 14:11:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=8yvEI0g2E8xG0SJMCtpKCuoNmNMpLdEw9u+yzYkMfTk=;
+ b=VIJtt3CGuTG5sUiykNJVYhLxmszHb9Wdm6J2EYpLcqgQckwJbpZSCOXpbpZTT7qfDYek
+ khVO23HbKGkVeXfY7yvjblSsk5ons8MFYnUE+xfiKmPxrpQy2O1Uzm3t5KljAQGAS3Bi
+ JVDBAhSLcbgn8Q/8zPHOpshUdkZ+z1NKbejUMvQAwJmfqD5Cb+GA0p96cn0q/15zvROB
+ kz1jz3TOeBsOPq4XU9WgyJQDHOHnllQQ5W6D/cbf6KeGIc+tarqDXE2nurzt4C1Xegzr
+ zNxTx2jCdFLnGYmixgTjm89ER17TSvq+cH5qFnlKiQjfTRrfDAjs6hfREYhPvOx3uYJk 1Q== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3327xucbrh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 14:11:31 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LIB7c5003354;
+        Fri, 21 Aug 2020 18:11:28 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma05fra.de.ibm.com with ESMTP id 3304bujubn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 18:11:28 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LI9ucF56230152
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 18:09:56 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 767124C044;
+        Fri, 21 Aug 2020 18:11:25 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C639E4C04A;
+        Fri, 21 Aug 2020 18:11:23 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.33.217])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 18:11:23 +0000 (GMT)
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+To:     linux-block@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, axboe@kernel.dk,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shivaprasad G Bhat <sbhat@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Subject: [PATCH 1/1] block: Set same_page to false in __bio_try_merge_page if ret is false
+Date:   Fri, 21 Aug 2020 23:41:17 +0530
+Message-Id: <e50582833c897c1a51a676d7726d1380a3e5a678.1598032711.git.riteshh@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <w51zh6oi4en.fsf@maestria.local.igalia.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ impostorscore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 mlxlogscore=981 lowpriorityscore=0
+ bulkscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210166
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:12:32PM +0200, Alberto Garcia wrote:
-> On Fri 21 Aug 2020 01:42:52 PM CEST, Alberto Garcia wrote:
-> > On Fri 21 Aug 2020 01:05:06 PM CEST, Brian Foster <bfoster@redhat.com> wrote:
-> >>> > 1) off: for every write request QEMU initializes the cluster (64KB)
-> >>> >         with fallocate(ZERO_RANGE) and then writes the 4KB of data.
-> >>> > 
-> >>> > 2) off w/o ZERO_RANGE: QEMU writes the 4KB of data and fills the rest
-> >>> >         of the cluster with zeroes.
-> >>> > 
-> >>> > 3) metadata: all clusters were allocated when the image was created
-> >>> >         but they are sparse, QEMU only writes the 4KB of data.
-> >>> > 
-> >>> > 4) falloc: all clusters were allocated with fallocate() when the image
-> >>> >         was created, QEMU only writes 4KB of data.
-> >>> > 
-> >>> > 5) full: all clusters were allocated by writing zeroes to all of them
-> >>> >         when the image was created, QEMU only writes 4KB of data.
-> >>> > 
-> >>> > As I said in a previous message I'm not familiar with xfs, but the
-> >>> > parts that I don't understand are
-> >>> > 
-> >>> >    - Why is (4) slower than (1)?
-> >>> 
-> >>> Because fallocate() is a full IO serialisation barrier at the
-> >>> filesystem level. If you do:
-> >>> 
-> >>> fallocate(whole file)
-> >>> <IO>
-> >>> <IO>
-> >>> <IO>
-> >>> .....
-> >>> 
-> >>> The IO can run concurrent and does not serialise against anything in
-> >>> the filesysetm except unwritten extent conversions at IO completion
-> >>> (see answer to next question!)
-> >>> 
-> >>> However, if you just use (4) you get:
-> >>> 
-> >>> falloc(64k)
-> >>>   <wait for inflight IO to complete>
-> >>>   <allocates 64k as unwritten>
-> >>> <4k io>
-> >>>   ....
-> >>> falloc(64k)
-> >>>   <wait for inflight IO to complete>
-> >>>   ....
-> >>>   <4k IO completes, converts 4k to written>
-> >>>   <allocates 64k as unwritten>
-> >>> <4k io>
-> >>> falloc(64k)
-> >>>   <wait for inflight IO to complete>
-> >>>   ....
-> >>>   <4k IO completes, converts 4k to written>
-> >>>   <allocates 64k as unwritten>
-> >>> <4k io>
-> >>>   ....
-> >>> 
-> >>
-> >> Option 4 is described above as initial file preallocation whereas
-> >> option 1 is per 64k cluster prealloc. Prealloc mode mixup aside, Berto
-> >> is reporting that the initial file preallocation mode is slower than
-> >> the per cluster prealloc mode. Berto, am I following that right?
-> 
-> After looking more closely at the data I can see that there is a peak of
-> ~30K IOPS during the first 5 or 6 seconds and then it suddenly drops to
-> ~7K for the rest of the test.
-> 
-> I was running fio with --ramp_time=5 which ignores the first 5 seconds
-> of data in order to let performance settle, but if I remove that I can
-> see the effect more clearly. I can observe it with raw files (in 'off'
-> and 'prealloc' modes) and qcow2 files in 'prealloc' mode. With qcow2 and
-> preallocation=off the performance is stable during the whole test.
-> 
+If we hit the UINT_MAX limit of bio->bi_iter.bi_size and so we are anyway
+not merging this page in this bio, then it make sense to make same_page
+also as false before returning.
 
-That's interesting. I ran your fio command (without --ramp_time and with
---runtime=5m) against a file on XFS (so no qcow2, no zero_range) once
-with sparse file with a 64k extent size hint and again with a fully
-preallocated 25GB file and I saw similar results in terms of the delta.
-This was just against an SSD backed vdisk in my local dev VM, but I saw
-~5800 iops for the full preallocation test and ~6200 iops with the
-extent size hint.
+Without this patch, we hit below WARNING in iomap.
+This mostly happens with very large memory system and / or after tweaking
+vm dirty threshold params to delay writeback of dirty data.
 
-I do notice an initial iops burst as described for both tests, so I
-switched to use a 60s ramp time and 60s runtime. With that longer ramp
-up time, I see ~5000 iops with the 64k extent size hint and ~5500 iops
-with the full 25GB prealloc. Perhaps the unexpected performance delta
-with qcow2 is similarly transient towards the start of the test and the
-runtime is short enough that it skews the final results..?
+WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
+ CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
+ Call Trace:
+  __remove_mapping+0x154/0x320 (unreliable)
+  iomap_releasepage+0x80/0x180
+  try_to_release_page+0x94/0xe0
+  invalidate_inode_page+0xc8/0x110
+  invalidate_mapping_pages+0x1dc/0x540
+  generic_fadvise+0x3c8/0x450
+  xfs_file_fadvise+0x2c/0xe0 [xfs]
+  vfs_fadvise+0x3c/0x60
+  ksys_fadvise64_64+0x68/0xe0
+  sys_fadvise64+0x28/0x40
+  system_call_exception+0xf8/0x1c0
+  system_call_common+0xf0/0x278
 
-Brian
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+---
+[prev discussion]:- https://patchwork.kernel.org/patch/11723453/
 
-> Berto
-> 
+ block/bio.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/block/bio.c b/block/bio.c
+index a7366c02c9b5..675ecd81047b 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -877,8 +877,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+ 		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+ 
+ 		if (page_is_mergeable(bv, page, len, off, same_page)) {
+-			if (bio->bi_iter.bi_size > UINT_MAX - len)
++			if (bio->bi_iter.bi_size > UINT_MAX - len) {
++				*same_page = false;
+ 				return false;
++			}
+ 			bv->bv_len += len;
+ 			bio->bi_iter.bi_size += len;
+ 			return true;
+-- 
+2.25.4
 
