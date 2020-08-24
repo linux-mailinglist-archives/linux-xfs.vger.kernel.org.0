@@ -2,21 +2,21 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 365E4250B9E
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Aug 2020 00:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C21A2250BB9
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Aug 2020 00:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHXW1X convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 24 Aug 2020 18:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35836 "EHLO mail.kernel.org"
+        id S1726303AbgHXWfR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 24 Aug 2020 18:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHXW1T (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:27:19 -0400
+        id S1726519AbgHXWfR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 24 Aug 2020 18:35:17 -0400
 From:   bugzilla-daemon@bugzilla.kernel.org
 Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
 To:     linux-xfs@vger.kernel.org
 Subject: [Bug 209005] xfs_repair 5.7.0: missing newline in message: entry at
  block N offset NN in directory inode NNNNNN has illegal name "/foo":
-Date:   Mon, 24 Aug 2020 22:27:19 +0000
+Date:   Mon, 24 Aug 2020 22:35:16 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -25,14 +25,14 @@ X-Bugzilla-Component: XFS
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: low
-X-Bugzilla-Who: cs@cskk.id.au
+X-Bugzilla-Who: sandeen@redhat.com
 X-Bugzilla-Status: NEEDINFO
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-209005-201763-v25JDTo37q@https.bugzilla.kernel.org/>
+Message-ID: <bug-209005-201763-AdsIHeRB5G@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-209005-201763@https.bugzilla.kernel.org/>
 References: <bug-209005-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -47,35 +47,15 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=209005
 
---- Comment #6 from Cameron Simpson (cs@cskk.id.au) ---
-Sorry for the delay, been asleep.
+--- Comment #7 from Eric Sandeen (sandeen@redhat.com) ---
+Thanks for the info, and sorry for missing the 5.7.0 in the title.  And no
+reason to apologize for sleeping in .au during my day in the US ;)
 
-Alas, the filesystem has been repaired and I didn't keep a log, or alas, a
-transcript.
+I think I can recreate the problem now, and the code is just kind of messy in
+there, I'll see what I can do to make it a bit saner (with sane messages too).
 
-The xfs_repair is from xfsprogs 5.7.0.
-
-By contrast, the filesystem is made by quite an old kernel:
-
-Linux octopus 3.16.0-7-amd64 #1 SMP Debian 3.16.59-1 (2018-10-03) x86_64
-GNU/Linux
-
-and I have seen this filenames-with-a-leading-slash in a previous repair of an
-XFS filesystem from this machine.
-
-This bug report is really about the messaging, not the bogus filenames; I
-accept that the kernel is old and the XFS implementation therefore many
-bugfixes behind.
-
-For added fun the FS is on an iscsi device from a QNAP NAS (because QNAPs don't
-do XFS); I started the repair after getting link errors on the FS, after a
-building wide power out took out the machine and the NAS; and we had to reseat
-a drive in the raidset. It's just backups, but it has 5TB of highly linked
-files in it.
-
-Just FYI, BTW, a second run of xfs_repair after the big repair corrected a few
-hardlink counts (but a mere handful, maybe 4, after the previous repair did
-thousands of fixes).
+Thanks,
+-Eric
 
 -- 
 You are receiving this mail because:
