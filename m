@@ -2,83 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A04925005C
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Aug 2020 17:04:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E3D425006E
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Aug 2020 17:09:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHXPEb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Aug 2020 11:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39304 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgHXPE0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Aug 2020 11:04:26 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3D0C0617A9;
-        Mon, 24 Aug 2020 08:04:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8CP6fVQFmATmTA1mY6X4BjyYws+1260yHBdv8vP3vaA=; b=abBFOKCuZv5f3di1oL2KpM+NYX
-        3jL/ZHpavzavy6HHSEvGScySN4B2OLgWxbltw14zWrUpj7tQFvq2IlvmFiLgtzkhTcycrFXioZVCj
-        jVUGq4nLATCW0S1bNtYkidrzspSdwR8K60jIsr0RPBF2cxijXTBLeOJ1WeOMZSp/vBHi+UpQV85/0
-        5fSNqFHc+ZTkoHT8XmdxHNDlmHH8fdzjWJF/uE49Z8OYVBbH348GA0dQ8c7yT06WZcSIL7cdyySc8
-        SAu7lKtuxV8m9AJo5nGSa8Hw5lYXnAqpy8p0CTJuO4czS5S6jQgEEHkR8bD5CEjMjb9QrJeMOK2Wd
-        iZalW7Yg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAE1B-0003Nv-An; Mon, 24 Aug 2020 15:04:17 +0000
-Date:   Mon, 24 Aug 2020 16:04:17 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        willy@infradead.org
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-Message-ID: <20200824150417.GA12258@infradead.org>
-References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
- <20200820231140.GE7941@dread.disaster.area>
- <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
- <20200821215358.GG7941@dread.disaster.area>
- <20200822131312.GA17997@infradead.org>
- <20200824142823.GA295033@bfoster>
+        id S1725781AbgHXPJH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Aug 2020 11:09:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34966 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbgHXPIp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Aug 2020 11:08:45 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OF8Sxp005862;
+        Mon, 24 Aug 2020 15:08:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=WIEAunfvpebQwdMMGaTdQskRvyWBPd2/e+fiMwWEOVw=;
+ b=rsRCzv+oms5y90ywKDeD6C4B5FBfEPPBhwuh66s522bqxpAwgCW/Xebx58muTnxzi2E5
+ omtmGaIPUsJAA+OSdkiR+Jfvjo9/XRAlYjwhFZ3z7DWJvJqllxwjXwC9AHoGrTsvBc6F
+ j/4dfE+nUsBRC0WgBOYM5ZrHjTHcC9FdlxnHgIKZfcj7PtfI97h4hQGLdG+Dt+9chkM0
+ n7tVGyV+fUiyA/NExI0VHq0hjkzkjplVYGu6WmhXMUdp/viKUpuLU23aACrspWQF0aCs
+ RRZFu4mFCnYDlrQxHMcqfJT2FfH+k4D0HT4D+FJ33BGlPnOG/oNR8Y0EyJiHsToEibiv Hg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 333cshw5sh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 15:08:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OF0Ce9193965;
+        Mon, 24 Aug 2020 15:08:35 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 333ru51wkd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 15:08:35 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07OF8Xs1021101;
+        Mon, 24 Aug 2020 15:08:33 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Aug 2020 08:08:33 -0700
+Date:   Mon, 24 Aug 2020 08:08:32 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>
+Subject: Re: [RFC PATCH] xfs: use log_incompat feature instead of speculate
+ matching
+Message-ID: <20200824150832.GV6096@magnolia>
+References: <20200823172421.GA16579@xiangao.remote.csb>
+ <20200824081900.27573-1-hsiangkao@aol.com>
+ <20200824083402.GB16579@xiangao.remote.csb>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824142823.GA295033@bfoster>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200824083402.GB16579@xiangao.remote.csb>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 suspectscore=1 spamscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1015
+ spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=1 mlxlogscore=999 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240122
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:28:23AM -0400, Brian Foster wrote:
-> Do I understand the current code (__bio_try_merge_page() ->
-> page_is_mergeable()) correctly in that we're checking for physical page
-> contiguity and not necessarily requiring a new bio_vec per physical
-> page?
-
-
-Yes.
-
-> With regard to Dave's earlier point around seeing excessively sized bio
-> chains.. If I set up a large memory box with high dirty mem ratios and
-> do contiguous buffered overwrites over a 32GB range followed by fsync, I
-> can see upwards of 1GB per bio and thus chains on the order of 32+ bios
-> for the entire write. If I play games with how the buffered overwrite is
-> submitted (i.e., in reverse) however, then I can occasionally reproduce
-> a ~32GB chain of ~32k bios, which I think is what leads to problems in
-> I/O completion on some systems. Granted, I don't reproduce soft lockup
-> issues on my system with that behavior, so perhaps there's more to that
-> particular issue.
+On Mon, Aug 24, 2020 at 04:34:02PM +0800, Gao Xiang wrote:
+> On Mon, Aug 24, 2020 at 04:19:00PM +0800, Gao Xiang wrote:
+> > From: Gao Xiang <hsiangkao@redhat.com>
+> > 
+> > Use a log_incompat feature just to be safe.
+> > If the current mount is in RO state, it will defer
+> > to next RW remount.
+> > 
+> > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> > ---
+> > 
+> > After some careful thinking, I think it's probably not working for
+> > supported V4 XFS filesystem. So, I think we'd probably insist on the
+> > previous way (correct me if I'm wrong)...
+> > 
+> > (since xfs_sb_to_disk() refuses to set up any feature bits for non V5
+> >  fses. That is another awkward setting here (doesn't write out/check
+> >  feature bits for V4 even though using V4 sb reserved fields) and
+> >  unless let V4 completely RO since this commit. )
+> > 
+> > Just send out as a RFC patch. Not fully tested after I thought as above.
 > 
-> Regardless, it seems reasonable to me to at least have a conservative
-> limit on the length of an ioend bio chain. Would anybody object to
-> iomap_ioend growing a chain counter and perhaps forcing into a new ioend
-> if we chain something like more than 1k bios at once?
+> Unless we also use sb_features2 for V4 filesystem to entirely
+> refuse to mount such V4 filesystem...
+> Some more opinions on this?
 
-So what exactly is the problem of processing a long chain in the
-workqueue vs multiple small chains?  Maybe we need a cond_resched()
-here and there, but I don't see how we'd substantially change behavior.
+Frankly, V4 is pretty old, so I wouldn't bother.  We only build new
+features for V5 format.
+
+--D
+
+> Thanks,
+> Gao Xiang
+> 
