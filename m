@@ -2,116 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8218624F12F
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Aug 2020 04:35:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EDBA24F137
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Aug 2020 04:38:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgHXCf4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 23 Aug 2020 22:35:56 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41982 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbgHXCfz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 23 Aug 2020 22:35:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O2Xvp2119324;
-        Mon, 24 Aug 2020 02:35:46 GMT
+        id S1728102AbgHXCia (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 23 Aug 2020 22:38:30 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40580 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgHXCi2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 23 Aug 2020 22:38:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O2ZILO095809;
+        Mon, 24 Aug 2020 02:38:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=oEjGg+JMiaoMzOVnAdvvFthqxXC+uNPRgd5aT74cZ0k=;
- b=GNUZa3i0SpdvkSVusQenM4gOtXOvercqiBtwQnENc6Q9yJStw6CSZZeQDE/muhrJcgKu
- RdiCxLUf/HvtJRmFenpaa8SkGR33w7Dh0Ly1xnit8IyYreDPQAdXpSL53pHy3ie5BHjt
- mL7/bRXZpgRQO8WJTFfDi3A8QagNKLcXIruqIbbcxnw3r7mkuyQZqdjND9c5n4CJ+Uyz
- OxEwNwEQiAT4T3tGYDsnS6YuVDmGlN5JJyNhJu4Ed+PpAqUfTRcIDEFCcvpcH+nVrh/q
- isvXHanNiZts4wj6octe+zUFopGQwvpIET/JhrTuUnBjFLzTllrlHtTYoaBT8CdJLyY5 uw== 
+ bh=c/2ofQx276N6lqjqIpB+jG75+KnvssLZiJ9/4RK5No0=;
+ b=CzV1LGn1kP3v1uCM9RjGf5/uKY0GDBku6u6hQOgq2copE5s/W+PqIkWFSEiXPP8B8C5z
+ Jlag0pJRoGLT1rvlq8d9give6YzlBOyEUzBBuX1+5h9ntl3PzuARfMFLZLMHSmsNv7f7
+ uESRRGB5oFkaf3ut5mvc/RJEp+/ryfBoFYpKHrP77bFJHhqdXUa1i+gZgO8biJq9QxpF
+ U/rUTsPHTNNdKpW0DPAeu7sICIg/tv7QUdfAw/SMIvkdqeRI/HQWLO6WzmxvCsxkNIP7
+ tyMCJOwGFEm9j+hUxAi6MA+qQrH0O1y53Sf98LoBSg6Nj7dwvGS8YPAzKdN9JY5StIIL cQ== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 333dbrj2r7-1
+        by userp2120.oracle.com with ESMTP id 333w6tgkm7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 02:35:46 +0000
+        Mon, 24 Aug 2020 02:38:23 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O2ZAtQ063796;
-        Mon, 24 Aug 2020 02:35:45 GMT
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07O2ZBSi063898;
+        Mon, 24 Aug 2020 02:38:23 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 333r9gm8me-1
+        by userp3030.oracle.com with ESMTP id 333r9gm9td-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 02:35:45 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07O2ZiiR008973;
-        Mon, 24 Aug 2020 02:35:44 GMT
+        Mon, 24 Aug 2020 02:38:23 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07O2cLru028742;
+        Mon, 24 Aug 2020 02:38:22 GMT
 Received: from localhost (/10.159.140.7)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 23 Aug 2020 19:35:44 -0700
-Date:   Sun, 23 Aug 2020 19:35:43 -0700
+        with ESMTP ; Sun, 23 Aug 2020 19:38:21 -0700
+Date:   Sun, 23 Aug 2020 19:38:19 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@infradead.org>
 Cc:     Amir Goldstein <amir73il@gmail.com>, linux-xfs@vger.kernel.org,
         sandeen@sandeen.net
-Subject: Re: [PATCH 07/11] xfs: convert struct xfs_timestamp to union
-Message-ID: <20200824023543.GQ6096@magnolia>
+Subject: Re: [PATCH 09/11] xfs: refactor quota timestamp coding
+Message-ID: <20200824023819.GR6096@magnolia>
 References: <159797588727.965217.7260803484540460144.stgit@magnolia>
- <159797593518.965217.18264791906308377426.stgit@magnolia>
- <20200822071830.GG1629@infradead.org>
+ <159797594823.965217.2346364691307432620.stgit@magnolia>
+ <20200822073356.GI1629@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200822071830.GG1629@infradead.org>
+In-Reply-To: <20200822073356.GI1629@infradead.org>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
  suspectscore=1 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008240009
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9722 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=1
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240009
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=1 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240009
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 08:18:30AM +0100, Christoph Hellwig wrote:
-> On Thu, Aug 20, 2020 at 07:12:15PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Convert the xfs_timestamp struct to a union so that we can overload it
-> > in the next patch.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> > ---
-> >  fs/xfs/libxfs/xfs_format.h     |   16 +++++++++-------
-> >  fs/xfs/libxfs/xfs_inode_buf.c  |    4 ++--
-> >  fs/xfs/libxfs/xfs_inode_buf.h  |    4 ++--
-> >  fs/xfs/libxfs/xfs_log_format.h |   16 +++++++++-------
-> >  fs/xfs/scrub/inode.c           |    2 +-
-> >  fs/xfs/xfs_inode_item.c        |    6 +++---
-> >  fs/xfs/xfs_ondisk.h            |    4 ++--
-> >  7 files changed, 28 insertions(+), 24 deletions(-)
-> > 
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-> > index 1f3a2be6c396..772113db41aa 100644
-> > --- a/fs/xfs/libxfs/xfs_format.h
-> > +++ b/fs/xfs/libxfs/xfs_format.h
-> > @@ -856,9 +856,11 @@ struct xfs_agfl {
-> >   * Inode timestamps consist of signed 32-bit counters for seconds and
-> >   * nanoseconds; time zero is the Unix epoch, Jan  1 00:00:00 UTC 1970.
-> >   */
-> > -struct xfs_timestamp {
-> > -	__be32		t_sec;		/* timestamp seconds */
-> > -	__be32		t_nsec;		/* timestamp nanoseconds */
-> > +union xfs_timestamp {
-> > +	struct {
-> > +		__be32		t_sec;		/* timestamp seconds */
-> > +		__be32		t_nsec;		/* timestamp nanoseconds */
-> > +	};
-> >  };
+On Sat, Aug 22, 2020 at 08:33:56AM +0100, Christoph Hellwig wrote:
+> > +/* Convert an on-disk timer value into an incore timer value. */
+> > +void
+> > +xfs_dquot_from_disk_timestamp(
+> > +	struct xfs_disk_dquot	*ddq,
+> > +	time64_t		*timer,
+> > +	__be32			dtimer)
+> > +{
+> > +	*timer = be32_to_cpu(dtimer);
+> > +}
+> > +
+> > +/* Convert an incore timer value into an on-disk timer value. */
+> > +void
+> > +xfs_dquot_to_disk_timestamp(
+> > +	struct xfs_dquot	*dqp,
+> > +	__be32			*dtimer,
+> > +	time64_t		timer)
+> > +{
+> > +	*dtimer = cpu_to_be32(timer);
 > 
-> Wouldn't it make sense to merge the typedef removal patch into this
-> one to avoid touching all the users twice?
+> Why not return the values?
 
-Will fix.  I wasn't sure if people would howl about making both changes
-at once, and it's easier to combine two patches. ;)
+I'll fix those return vlaues too.
 
 --D
