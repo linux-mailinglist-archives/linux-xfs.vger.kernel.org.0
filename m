@@ -2,68 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 065E3251DFE
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Aug 2020 19:16:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF829251E14
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Aug 2020 19:18:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgHYRQC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Aug 2020 13:16:02 -0400
-Received: from business50-2.web-hosting.com ([199.188.200.117]:58598 "EHLO
-        business50-2.web-hosting.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726090AbgHYRQB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Aug 2020 13:16:01 -0400
-X-Greylist: delayed 2033 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 13:16:01 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=theglobalskills.website; s=default; h=Content-Transfer-Encoding:
-        Content-Type:Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Sender:Cc:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=JxN24FC+RiNrimlgVUlLqPFOWQ6cCZEOLOb3lOMz8Sw=; b=aNzvvdzGvTYg+gHSofgT2I+yv
-        /Oykm+Xzw6rJbaU2g0HRKEGil51zaBi1Dj6yGvymdom5MmRshvZVuAfG+Cy/l+ExZeJD45Wq0AulC
-        7oqxGQof9MWF4WHVjhYWBsWkZzWZ3HJMDT8Q+M9OdzuAvzEA0TsLrBNjSqc6VZHbXu1WD9G+qyf6u
-        iXYqqpTbaoAZe/5bttAXAnisS28iiWf2o9P0qAtx6jrHoQlembNGSE0OJbyaRRvMmr3jEasqIC3te
-        mzulqNkX8mTGzt73mH48TkM89rYtfl84TYYUo3qU/bNNse2wDvvGv9/cDcwFSaO3iNZ2I3IbHSbAB
-        dmcF2MIVA==;
-Received: from [::1] (port=59384 helo=business50.web-hosting.com)
-        by business50.web-hosting.com with esmtpa (Exim 4.93)
-        (envelope-from <admin@theglobalskills.website>)
-        id 1kAbZu-0046BB-DQ; Tue, 25 Aug 2020 12:13:47 -0400
+        id S1726374AbgHYRSx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Aug 2020 13:18:53 -0400
+Received: from fanzine.igalia.com ([178.60.130.6]:38392 "EHLO
+        fanzine.igalia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgHYRS2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Aug 2020 13:18:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com; s=20170329;
+        h=Content-Type:MIME-Version:Message-ID:Date:References:In-Reply-To:Subject:Cc:To:From; bh=NRuZ0LyzRm4DjommZhDcvSlF725dOGlT2jpGRP/6sTE=;
+        b=SVrqDkjA5NLym8V/ERjmtPwQdbukrc/bGdB4ViJwrptUP0t2vvDZZ3oaM4NjQMsm3fbNoaEkqyBEdFpMtLlFZe1v9cXuBw4HGJcGZXqLoUh42k0g84pTeAKREk4VgYrWuofXtckK8MDT/t1vMkskcWJQIGiH3DL0Gp2nyRhJLVK4OYAscLWKHAoJ66PHkuKjTAGVo3ptoaplOu9jPDzIybnVPE8oPB1jMb3Vdx+xX1dxOrPPFZnTojsPBp7yfsEpA+uf1MAgo091DN5/wNKAH++smJ97U+kVfM2msiLE2MXgAMMoXT+4ZS4kN5+7pWwCCN/18jtQH70WOE8c/fwpaQ==;
+Received: from maestria.local.igalia.com ([192.168.10.14] helo=mail.igalia.com)
+        by fanzine.igalia.com with esmtps 
+        (Cipher TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim)
+        id 1kAcaS-00048N-28; Tue, 25 Aug 2020 19:18:20 +0200
+Received: from berto by mail.igalia.com with local (Exim)
+        id 1kAcaR-000403-Ot; Tue, 25 Aug 2020 19:18:19 +0200
+From:   Alberto Garcia <berto@igalia.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Dave Chinner <david@fromorbit.com>, Kevin Wolf <kwolf@redhat.com>,
+        Vladimir Sementsov-Ogievskiy <vsementsov@virtuozzo.com>,
+        qemu-block@nongnu.org, qemu-devel@nongnu.org,
+        Max Reitz <mreitz@redhat.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 0/1] qcow2: Skip copy-on-write when allocating a zero cluster
+In-Reply-To: <20200825165415.GB321765@bfoster>
+References: <w51pn7memr7.fsf@maestria.local.igalia.com> <20200819150711.GE10272@linux.fritz.box> <20200819175300.GA141399@bfoster> <w51v9hdultt.fsf@maestria.local.igalia.com> <20200820215811.GC7941@dread.disaster.area> <20200821110506.GB212879@bfoster> <w51364gjkcj.fsf@maestria.local.igalia.com> <w51zh6oi4en.fsf@maestria.local.igalia.com> <20200821170232.GA220086@bfoster> <w51d03evrol.fsf@maestria.local.igalia.com> <20200825165415.GB321765@bfoster>
+User-Agent: Notmuch/0.18.2 (http://notmuchmail.org) Emacs/24.4.1 (i586-pc-linux-gnu)
+Date:   Tue, 25 Aug 2020 19:18:19 +0200
+Message-ID: <w51d03etzj8.fsf@maestria.local.igalia.com>
 MIME-Version: 1.0
-Date:   Tue, 25 Aug 2020 12:13:35 -0400
-From:   mdg <admin@theglobalskills.website>
-To:     undisclosed-recipients:;
-Subject: ``responds``
-Reply-To: barthmasharwd2817@gmail.com
-Mail-Reply-To: barthmasharwd2817@gmail.com
-Message-ID: <a37c0a89927ab79154ced6764ce6a965@theglobalskills.website>
-X-Sender: admin@theglobalskills.website
-User-Agent: Roundcube Webmail/1.3.13
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-OutGoing-Spam-Status: No, score=1.8
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - business50.web-hosting.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - theglobalskills.website
-X-Get-Message-Sender-Via: business50.web-hosting.com: authenticated_id: admin@theglobalskills.website
-X-Authenticated-Sender: business50.web-hosting.com: admin@theglobalskills.website
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+Content-Type: text/plain
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Tue 25 Aug 2020 06:54:15 PM CEST, Brian Foster wrote:
+> If I compare this 5m fio test between XFS and ext4 on a couple of my
+> systems (with either no prealloc or full file prealloc), I end up seeing
+> ext4 run slightly faster on my vm and XFS slightly faster on bare metal.
+> Either way, I don't see that huge disparity where ext4 is 5-6 times
+> faster than XFS. Can you describe the test, filesystem and storage in
+> detail where you observe such a discrepancy?
 
+Here's the test:
 
-attn,
+fio --filename=/path/to/file.raw --direct=1 --randrepeat=1 \
+    --eta=always --ioengine=libaio --iodepth=32 --numjobs=1 \
+    --name=test --size=25G --io_limit=25G --ramp_time=0 \
+    --rw=randwrite --bs=4k --runtime=300 --time_based=1
 
-Bestätigen Sie, ob Sie dieses Konto noch verwenden. Es gibt ein 
-Vermächtnis, das Ihren Namen hat. Kontaktieren Sie uns unter: 
-barthmasharwd2817|at|gmail.com
+The size of the XFS filesystem is 126 GB and it's almost empty, here's
+the xfs_info output:
 
-Grüße
+meta-data=/dev/vg/test           isize=512    agcount=4, agsize=8248576
+blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1,
+         rmapbt=0
+         =                       reflink=0
+data     =                       bsize=4096   blocks=32994304, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=16110, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+The size of the ext4 filesystem is 99GB, of which 49GB are free (that
+is, without the file used in this test). The filesystem uses 4KB
+blocks, a 128M journal and these features:
+
+Filesystem revision #:    1 (dynamic)
+Filesystem features:      has_journal ext_attr resize_inode dir_index
+                          filetype needs_recovery extent flex_bg
+                          sparse_super large_file huge_file uninit_bg
+                          dir_nlink extra_isize
+Filesystem flags:         signed_directory_hash
+Default mount options:    user_xattr acl
+
+In both cases I'm using LVM on top of LUKS and the hard drive is a
+Samsung SSD 850 PRO 1TB.
+
+The Linux version is 4.19.132-1 from Debian.
+
+Berto
