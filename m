@@ -2,95 +2,188 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B34832514F9
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Aug 2020 11:07:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DE6C25163F
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Aug 2020 12:06:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgHYJHm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Aug 2020 05:07:42 -0400
-Received: from sonic303-1.consmr.mail.bf2.yahoo.com ([74.6.131.40]:33543 "EHLO
-        sonic303-1.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729205AbgHYJHm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Aug 2020 05:07:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598346461; bh=hkYSfrxTonACfliPSB6IYnWC0p+Veg0756S5roQpVX8=; h=Date:From:Reply-To:Subject:References:From:Subject; b=jtOwt1cGUPU8PikXMo3ltYAwNu+YsrBfsVmDM7mZqnlX0qcU9ZWaTu6rmT7PSmzSMKUT7DpLdxh5oHmuHD3a5z3saNoftmwhyW9+VimH1nu6TlpGvtUxKlMOT2ofqU9TYvq9VMxZiQmRpE2no/mixDoxEpJ8aoCFuvGvuw1J0CU75V5nA30hdcYmceESoegLXJzuuiJLyqGsa6jF/UuYt7QU60tNZPRGb4pIjsJ8UNqlqWhWqez+I6J18zMPSok6G16WaoJYBanKdzqvGIexYUqpoWIs6OI99NVYNH4tSlw0QnDgl3iO+sckiDX1Za3weqk2YuTKz9r+MWYYZHBajA==
-X-YMail-OSG: a.csGUIVM1nRs5yjgFfqWmdHXm4zibTWJCs9FyC802tkhMRJ6tdPgn3eX2WkOHO
- .aVFaILlx9bOOXRgItdy3LM2LOhbwrJKcXSJzbHDNl.cHRwUkowU4TX23lvUOe98K38.XBy89.wx
- .2ZBzfHBfviL.87uMJX6FMGwsCYK5CuZlg7jtrcR4u7grUFOK.RuChOZ3z4OrEueuf8eNi1Lu_5U
- Ao.LSQB26QJxPRKoCm8d0a0WZt46MPVagDGOQwc0A_YYOTgW3iMu.xw.8QZJYeUaf7TjTrVXs7kj
- ggrqSb3FlKs1GNsLA7yZlNfBJ5W8OrZ8Hh5kGJKGCc1af2zsBmTsy_Qz5gKbieGMjuwgqBKu7YL5
- DjuB6yyx5WiUM4yxPnONcnQGKIHtYIxi.AxfnYXPZEvT.Nat4nnpWHdcKAx9cFZ4BLYTMfChX9JU
- VW9pg_7kXTLERcOQGhRrA8P1ySySrjtNB35HNNTnlESWltKdWMWUaaihB6D9ly_1A40tPSqwNUhV
- IxljG5V6i7s6FZzE3BEc5vYkmu4TjVWgQq9I.hsh_nvr8ZosXfIrlf5ggfPonM_XxQoMabo9QEzh
- RC9YBRBMmRCZWIBT5sAXLiYrTkhSAGeR92gf99eQ8MtehkXy4VvtRCrpgUUGIgPk9GS2Fs102zeI
- lJ4Fs8omc4bIASMZa1tii2mNoxyqqB12KVn0XydwnMczmuCclkbmlIYrZwx_rXae.fRs0j_SjxbZ
- yNdbMkI.rchXnmiBRXYKwuz8A22TyJPj3M0MdvojKIQkWYD9v_3umXQaroWIM79Ay0NTz8zWVcJy
- xFW0YCNSh57ex4Ia7E1ffTn669LLfq5TxfZ5zWxdgK1GSElAmmhNAnFbU3JQwVKmz53tbqnugRdP
- hGdlXRGMxsHBZf37xJtZvA0QgqvfNHoBBhJ7iqnId0aOGyMObXThgXPehBUFas2yO_Wt2EXKbd46
- Dz0qJQ1nnCFiGHHC._tmwNSehlT2OZ13IuvoahEzQlEXZFcUx7F2Muab3cU.GWCt3aS9iTvgY8ZU
- ru.CxkesIG4pZ18.bzGpFw9MZuqKM0E3VtCPbOrfZJjbwPlkEvVLeaQ8CgR4PtxhK3izwWGHZ_SM
- fImkepKPelOg8r9S9MZSycczyiXbcDhPWlQYpt3yLbcNbwoUWXWEUvv_pscs8AfKXwkBJHB01o1e
- aWeJg78K6vC8a1miwH9WNz.Efu_VuTCPybMjIfbvU7OAPEsglp6HOS_7JCrey0ToQdZyUXHufX0R
- DdtL.Iw1BCZVXdABnMb39lkzq8xpxgvEQFp9mk7irc8SYAnZ09aP0ngDXRSpnebMKzKFWekSJs6x
- EbDuzWwCegmDGXlwmKcpNpRXfgp28qewgjUF81Wtz.z1Xxb9fLRUHc.XaUCe1gxKnhnpQmHYij7i
- aIb2FTDafb.sL5ipg2libaHlWWPNx_OsiHdabNWo2M0HfEy8oG1c-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.bf2.yahoo.com with HTTP; Tue, 25 Aug 2020 09:07:41 +0000
-Date:   Tue, 25 Aug 2020 09:07:38 +0000 (UTC)
-From:   Sgt Vivian Robert <sgtvivarob@gmail.com>
-Reply-To: sgtvivarob@gmail.com
-Message-ID: <560999273.5272175.1598346458271@mail.yahoo.com>
-Subject:  kindly respond to my mail
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <560999273.5272175.1598346458271.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16455 YMailNodin Mozilla/5.0 (Windows NT 6.1; rv:79.0) Gecko/20100101 Firefox/79.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1729456AbgHYKGr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Aug 2020 06:06:47 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31369 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726000AbgHYKGr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Aug 2020 06:06:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598350005;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=cN3ogaTWLiUQM5qi6rq+x6SyLW5kXQnWEzTmvZKQ9EA=;
+        b=NHbdrLRNAr+4s+VVCWwl97TvhgvCd18PDVRFGLaOjGpsyhcoQBvsgT/uE44NwTJDyWX5Cv
+        0cXhbXkq/V55gfxgkuyKULr1dxwSoN5KRPDczfzgvVTfbXcifSripSEprZ6VG+znHhm+/p
+        gUHwgFHbfydJsdXg0pIXQbnZE68e284=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-y5Y9AGjcMA2B-MUv06nwqQ-1; Tue, 25 Aug 2020 06:06:43 -0400
+X-MC-Unique: y5Y9AGjcMA2B-MUv06nwqQ-1
+Received: by mail-pg1-f197.google.com with SMTP id k32so7482238pgm.15
+        for <linux-xfs@vger.kernel.org>; Tue, 25 Aug 2020 03:06:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cN3ogaTWLiUQM5qi6rq+x6SyLW5kXQnWEzTmvZKQ9EA=;
+        b=lGK0XIsXygK/TficXK3FyL9v0ppJuOxCzGp/DHV2Fb5GgR51L7u34fyewCwJ6oaxUH
+         ii46fcdGXP4ViDbUhUm9u2QYYK6uJWOvC4jYrSoHF6AEupWRZ82dYocnJF22CnIbT21R
+         JSRLSh9qLa7c4dBjFD0kel1tReqffe6C6583pzMm3pTKfQrQWf/SHDvdcB6/w7Hhs8Qs
+         gIbyo4R4mfotHsIzNs+b0ad7eZ+JQerymnVgYssNWauQdE8l/Hy9y5SVIDjBinSA0X5g
+         XTpouH7O7jweleqDJ6TcL9vPXOxUmSCwNDQDCVIihOizKql5kkNrUbhmMaolTKmGlmUe
+         yf4Q==
+X-Gm-Message-State: AOAM531+NQkXoopQXz4H3blkDqSPH+JJfpDp2uA+oM825imyPuZLwMIs
+        9nVsPeDsfJV2MgWgfV/dvRxLa9x8dw1VAFgCgQuaca1y5r5VLmn/kHHpmBmH7iIWKj+mjIX3l4q
+        n3b7CB306Tp44vCTneX8B
+X-Received: by 2002:a62:a203:: with SMTP id m3mr7020985pff.86.1598350002262;
+        Tue, 25 Aug 2020 03:06:42 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcK2DQr+fqEP4sv0NVhQRkKqXhzEppbWXjWEuzWrGvIkEZTHz5Snx/8E7Fq7kPd7AUh9uFvQ==
+X-Received: by 2002:a62:a203:: with SMTP id m3mr7020971pff.86.1598350001960;
+        Tue, 25 Aug 2020 03:06:41 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id s125sm14499821pfb.125.2020.08.25.03.06.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 03:06:41 -0700 (PDT)
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Gao Xiang <hsiangkao@redhat.com>
+Subject: [PATCH] xfs: use log_incompat feature instead of speculate matching
+Date:   Tue, 25 Aug 2020 18:06:01 +0800
+Message-Id: <20200825100601.2529-1-hsiangkao@redhat.com>
+X-Mailer: git-send-email 2.18.1
+In-Reply-To: <20200824154120.GA23868@xiangao.remote.csb>
+References: <20200824154120.GA23868@xiangao.remote.csb>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Add a log_incompat (v5) or sb_features2 (v4) feature
+of a single long iunlinked list just to be safe. Hence,
+older kernels will refuse to replay log for v5 images
+or mount entirely for v4 images.
 
+If the current mount is in RO state, it will defer
+to the next RW (re)mount to add such flag instead.
 
-Good=C2=A0Day,=C2=A0I=C2=A0am=C2=A0glad=C2=A0to=C2=A0contact=C2=A0you=C2=A0=
-through=C2=A0this=C2=A0medium=C2=A0I=E2=80=99m=C2=A0Sgt=C2=A0Vivian=C2=A0Ro=
-bert=C2=A0am=C2=A0from=C2=A0united=C2=A0state,=C2=A028=C2=A0years=C2=A0old=
-=C2=A0single=C2=A0I=C2=A0am=C2=A0the=C2=A0only=C2=A0surviving=C2=A0child=C2=
-=A0of=C2=A0my=C2=A0late=C2=A0parents,=C2=A0I=C2=A0am=C2=A0America=C2=A0fema=
-le=C2=A0soldier=C2=A0presently=C2=A0in=C2=A0Afghanistan=C2=A0for=C2=A0the=
-=C2=A0training,=C2=A0advising=C2=A0the=C2=A0Afghan=C2=A0forces=C2=A0and=C2=
-=A0also=C2=A0helping=C2=A0in=C2=A0stabilizing=C2=A0the=C2=A0country=C2=A0ag=
-ainst=C2=A0security=C2=A0challenges,=C2=A0am=C2=A0Actually=C2=A0seeking=C2=
-=A0your=C2=A0assistance=C2=A0to=C2=A0evacuate=C2=A0the=C2=A0sum=C2=A0of=C2=
-=A0$3.5=C2=A0million,=C2=A0This=C2=A0money=C2=A0I=C2=A0got=C2=A0it=C2=A0as=
-=C2=A0my=C2=A0reward=C2=A0in=C2=A0service=C2=A0by=C2=A0Afghanistan=C2=A0gov=
-ernment=C2=A0to=C2=A0support=C2=A0me=C2=A0for=C2=A0my=C2=A0Good=C2=A0job=C2=
-=A0in=C2=A0their=C2=A0land.=C2=A0Right=C2=A0now,=C2=A0I=C2=A0want=C2=A0you=
-=C2=A0to=C2=A0stand=C2=A0as=C2=A0my=C2=A0beneficiary=C2=A0and=C2=A0receive=
-=C2=A0the=C2=A0fund=C2=A0my=C2=A0certificate=C2=A0of=C2=A0deposit=C2=A0from=
-=C2=A0the=C2=A0Bank=C2=A0where=C2=A0this=C2=A0fund=C2=A0deposited=C2=A0and=
-=C2=A0my=C2=A0authorization=C2=A0letter=C2=A0is=C2=A0with=C2=A0me=C2=A0now.=
-My=C2=A0contact=C2=A0with=C2=A0you=C2=A0is=C2=A0not=C2=A0by=C2=A0my=C2=A0po=
-wer=C2=A0but=C2=A0it=C2=A0is=C2=A0divinely=C2=A0made=C2=A0for=C2=A0God's=C2=
-=A0purpose=C2=A0to=C2=A0be=C2=A0fulfilled=C2=A0in=C2=A0our=C2=A0lives.=C2=
-=A0I=C2=A0want=C2=A0you=C2=A0to=C2=A0be=C2=A0rest=C2=A0assured=C2=A0that=C2=
-=A0this=C2=A0transaction=C2=A0is=C2=A0legitimate=C2=A0and=C2=A0a=C2=A0100%=
-=C2=A0risk=C2=A0free=C2=A0involvement,=C2=A0all=C2=A0you=C2=A0have=C2=A0to=
-=C2=A0do=C2=A0is=C2=A0to=C2=A0keep=C2=A0it=C2=A0secret=C2=A0and=C2=A0confid=
-ential=C2=A0to=C2=A0yourself=C2=A0,=C2=A0this=C2=A0transaction=C2=A0will=C2=
-=A0not=C2=A0take=C2=A0more=C2=A0than=C2=A07=C2=A0working=C2=A0banking=C2=A0=
-days=C2=A0for=C2=A0the=C2=A0money=C2=A0to=C2=A0get=C2=A0into=C2=A0your=C2=
-=A0account=C2=A0based=C2=A0on=C2=A0your=C2=A0sincerity=C2=A0and=C2=A0cooper=
-ation.=C2=A0i=C2=A0want=C2=A0you=C2=A0to=C2=A0take=C2=A040%=C2=A0Percent=C2=
-=A0of=C2=A0the=C2=A0total=C2=A0money=C2=A0for=C2=A0your=C2=A0personal=C2=A0=
-use=C2=A0While=C2=A020%=C2=A0Percent=C2=A0of=C2=A0the=C2=A0money=C2=A0will=
-=C2=A0go=C2=A0to=C2=A0charity,=C2=A0people=C2=A0in=C2=A0the=C2=A0street=C2=
-=A0and=C2=A0helping=C2=A0the=C2=A0orphanage=C2=A0the=C2=A0remaining=C2=A040=
-%=C2=A0percent=C2=A0of=C2=A0the=C2=A0total=C2=A0money=C2=A0.you=C2=A0will=
-=C2=A0assist=C2=A0me=C2=A0to=C2=A0invest=C2=A0it=C2=A0in=C2=A0a=C2=A0good=
-=C2=A0profitable=C2=A0Venture=C2=A0or=C2=A0you=C2=A0keep=C2=A0it=C2=A0for=
-=C2=A0me=C2=A0until=C2=A0I=C2=A0arrive=C2=A0your=C2=A0country.=C2=A0If=C2=
-=A0you=E2=80=99re=C2=A0willing=C2=A0to=C2=A0assist=C2=A0me=C2=A0contact=C2=
-=A0me=C2=A0through=C2=A0my=C2=A0email=C2=A0address=C2=A0=E2=80=9Csgtvivarob=
-@gmail.com.
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+Different combinations have been tested (v4/v5 and before/after patch).
 
-Sgt=C2=A0Vivian=C2=A0Robert
+Based on the top of
+`[PATCH 13/13] xfs: reorder iunlink remove operation in xfs_ifree`
+https://lore.kernel.org/r/20200812092556.2567285-14-david@fromorbit.com
+
+Either folding or rearranging this patch would be okay.
+
+Maybe xfsprogs could be also patched as well to change the default
+feature setting, but let me send out this first...
+
+(It's possible that I'm still missing something...
+ Kindly point out any time.)
+
+ fs/xfs/libxfs/xfs_format.h | 29 +++++++++++++++++++++++++++--
+ fs/xfs/xfs_inode.c         |  2 +-
+ fs/xfs/xfs_mount.c         |  6 ++++++
+ 3 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 31b7ece985bb..a859fe601f6e 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -79,12 +79,14 @@ struct xfs_ifork;
+ #define XFS_SB_VERSION2_PROJID32BIT	0x00000080	/* 32 bit project id */
+ #define XFS_SB_VERSION2_CRCBIT		0x00000100	/* metadata CRCs */
+ #define XFS_SB_VERSION2_FTYPE		0x00000200	/* inode type in dir */
++#define XFS_SB_VERSION2_NEW_IUNLINK	0x00000400	/* (v4) new iunlink */
+ 
+ #define	XFS_SB_VERSION2_OKBITS		\
+ 	(XFS_SB_VERSION2_LAZYSBCOUNTBIT	| \
+ 	 XFS_SB_VERSION2_ATTR2BIT	| \
+ 	 XFS_SB_VERSION2_PROJID32BIT	| \
+-	 XFS_SB_VERSION2_FTYPE)
++	 XFS_SB_VERSION2_FTYPE		| \
++	 XFS_SB_VERSION2_NEW_IUNLINK)
+ 
+ /* Maximum size of the xfs filesystem label, no terminating NULL */
+ #define XFSLABEL_MAX			12
+@@ -479,7 +481,9 @@ xfs_sb_has_incompat_feature(
+ 	return (sbp->sb_features_incompat & feature) != 0;
+ }
+ 
+-#define XFS_SB_FEAT_INCOMPAT_LOG_ALL 0
++#define XFS_SB_FEAT_INCOMPAT_LOG_NEW_IUNLINK	(1 << 0)
++#define XFS_SB_FEAT_INCOMPAT_LOG_ALL	\
++		(XFS_SB_FEAT_INCOMPAT_LOG_NEW_IUNLINK)
+ #define XFS_SB_FEAT_INCOMPAT_LOG_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_LOG_ALL
+ static inline bool
+ xfs_sb_has_incompat_log_feature(
+@@ -563,6 +567,27 @@ static inline bool xfs_sb_version_hasreflink(struct xfs_sb *sbp)
+ 		(sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_REFLINK);
+ }
+ 
++static inline bool xfs_sb_has_new_iunlink(struct xfs_sb *sbp)
++{
++	if (XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5)
++		return sbp->sb_features_log_incompat &
++			XFS_SB_FEAT_INCOMPAT_LOG_NEW_IUNLINK;
++
++	return xfs_sb_version_hasmorebits(sbp) &&
++		(sbp->sb_features2 & XFS_SB_VERSION2_NEW_IUNLINK);
++}
++
++static inline void xfs_sb_add_new_iunlink(struct xfs_sb *sbp)
++{
++	if (XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5) {
++		sbp->sb_features_log_incompat |=
++			XFS_SB_FEAT_INCOMPAT_LOG_NEW_IUNLINK;
++		return;
++	}
++	sbp->sb_versionnum |= XFS_SB_VERSION_MOREBITSBIT;
++	sbp->sb_features2 |= XFS_SB_VERSION2_NEW_IUNLINK;
++}
++
+ /*
+  * end of superblock version macros
+  */
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 7ee778bcde06..1656ed7dcadf 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1952,7 +1952,7 @@ xfs_iunlink_update_bucket(
+ 	if (!log || log->l_flags & XLOG_RECOVERY_NEEDED) {
+ 		ASSERT(cur_agino != NULLAGINO);
+ 
+-		if (be32_to_cpu(agi->agi_unlinked[0]) != cur_agino)
++		if (!xfs_sb_has_new_iunlink(&mp->m_sb))
+ 			bucket_index = cur_agino % XFS_AGI_UNLINKED_BUCKETS;
+ 	}
+ 
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index f28c969af272..a3b2e3c3d32f 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -836,6 +836,12 @@ xfs_mountfs(
+ 		goto out_fail_wait;
+ 	}
+ 
++	if (!xfs_sb_has_new_iunlink(sbp)) {
++		xfs_warn(mp, "will switch to long iunlinked list on r/w");
++		xfs_sb_add_new_iunlink(sbp);
++		mp->m_update_sb = true;
++	}
++
+ 	/* Make sure the summary counts are ok. */
+ 	error = xfs_check_summary_counts(mp);
+ 	if (error)
+-- 
+2.18.1
+
