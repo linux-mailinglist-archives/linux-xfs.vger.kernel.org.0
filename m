@@ -2,72 +2,145 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 917C1253A10
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 00:06:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A4BD253A13
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 00:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHZWGC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Aug 2020 18:06:02 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:50774 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726753AbgHZWGB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 18:06:01 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 64E246AD4C9;
-        Thu, 27 Aug 2020 08:05:59 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kB3YM-0003r9-Dt; Thu, 27 Aug 2020 08:05:58 +1000
-Date:   Thu, 27 Aug 2020 08:05:58 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] build: add support for libinih for mkfs
-Message-ID: <20200826220558.GX12131@dread.disaster.area>
-References: <20200826015634.3974785-1-david@fromorbit.com>
- <20200826015634.3974785-2-david@fromorbit.com>
- <18ce951d-c209-9c60-3f6c-0c7989c587ae@sandeen.net>
+        id S1726803AbgHZWGL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Aug 2020 18:06:11 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53052 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHZWGK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 18:06:10 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07QM0FXP028655;
+        Wed, 26 Aug 2020 22:06:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=lsGkjL5A3R7042uOJBYG6oldQNYET+BiyVVSFDayDq4=;
+ b=Shjq7Sy+tDJmtS8amKrZY0tUUI7esokZU63QbLp1/QcReYWcCzR59bWvFY/JckrVkviT
+ Ea9PALmM8jQM1glk71ktxd7K+NnwnD2Wbg4NyF+bJ+a+EkKXK3+Jiv1ikaZBinUHm3zc
+ j6I+hF0Qy/o1Wv2Q3/+cPGnwQPRVP9jssEFh87gR/7nZsTyBAvkkguvCMg4YWHp1kVL/
+ 7fJBcJ3aL5qFd43+tSPin5rVGp8Idd6BIDYvE6b0MS82lDxtdp706Go3pYXcIO1QqAGY
+ ndafW2NDXXKdOKYtklQb2k1rdo3CJyJuhMqvkI8hAFC9ivp1zsGGULRef8CJYtqiOBVn QQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 333dbs31nb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 22:06:05 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07QM4r6n113824;
+        Wed, 26 Aug 2020 22:06:05 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 333r9mpx46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 22:06:04 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07QM64uI026920;
+        Wed, 26 Aug 2020 22:06:04 GMT
+Received: from localhost (/10.159.146.4)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Aug 2020 15:06:04 -0700
+Subject: [PATCH 10/11] xfs: trace timestamp limits
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     darrick.wong@oracle.com, david@fromorbit.com, hch@infradead.org
+Cc:     linux-xfs@vger.kernel.org, amir73il@gmail.com, sandeen@sandeen.net
+Date:   Wed, 26 Aug 2020 15:06:03 -0700
+Message-ID: <159847956308.2601708.12409676822646276735.stgit@magnolia>
+In-Reply-To: <159847949739.2601708.16579235017313836378.stgit@magnolia>
+References: <159847949739.2601708.16579235017313836378.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <18ce951d-c209-9c60-3f6c-0c7989c587ae@sandeen.net>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=KcmsTjQD c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=20KFwNOVAAAA:8 a=NHsjDDs8AAAA:20
-        a=7-415B0cAAAA:8 a=lW4MfNZ0gOILfn9SGHoA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008260170
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260169
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 04:51:50PM -0500, Eric Sandeen wrote:
-> On 8/25/20 8:56 PM, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > Need to make sure the library is present so we can build mkfs with
-> > config file support.
-> 
-> Can you add https://github.com/benhoyt/inih to doc/INSTALL as a
-> dependency?
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Distros should be shipping that library, and configure asks you to
-install it if it isn't present, just like it does for all the other
-libraries xfsprogs depends on. We want users to install distro
-libraries, not have to build dependencies from source and install
-them...
+Add a couple of tracepoints so that we can check the timestamp limits
+being set on inodes and quotas.
 
-> (that's probably pretty out of date now anyway but it seems worth
-> documenting any new requirement)
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/xfs_qm.c    |    2 ++
+ fs/xfs/xfs_super.c |    1 +
+ fs/xfs/xfs_trace.h |   26 ++++++++++++++++++++++++++
+ 3 files changed, 29 insertions(+)
 
-Yeah, we need a lot more than just e2fsprogs-devel and UUIDs these
-days. I'd prefer that doc/INSTALL just says "the configure script
-will prompt you to install missing build dependencies" rather than
-iterate them here and have the list be perpetually incomplete....
 
-Cheers,
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index 259588a4227d..3f82e0c92c2d 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -670,6 +670,8 @@ xfs_qm_init_quotainfo(
+ 		qinf->qi_expiry_min = XFS_DQ_LEGACY_EXPIRY_MIN;
+ 		qinf->qi_expiry_max = XFS_DQ_LEGACY_EXPIRY_MAX;
+ 	}
++	trace_xfs_quota_expiry_range(mp, qinf->qi_expiry_min,
++			qinf->qi_expiry_max);
+ 
+ 	mp->m_qflags |= (mp->m_sb.sb_qflags & XFS_ALL_QUOTA_CHKD);
+ 
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 58be2220ae05..8230c902a813 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1491,6 +1491,7 @@ xfs_fc_fill_super(
+ 		sb->s_time_min = XFS_LEGACY_TIME_MIN;
+ 		sb->s_time_max = XFS_LEGACY_TIME_MAX;
+ 	}
++	trace_xfs_inode_timestamp_range(mp, sb->s_time_min, sb->s_time_max);
+ 	sb->s_iflags |= SB_I_CGROUPWB;
+ 
+ 	set_posix_acl_flag(sb);
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index abb1d859f226..a3a35a2d8ed9 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -3844,6 +3844,32 @@ TRACE_EVENT(xfs_btree_bload_block,
+ 		  __entry->nr_records)
+ )
+ 
++DECLARE_EVENT_CLASS(xfs_timestamp_range_class,
++	TP_PROTO(struct xfs_mount *mp, time64_t min, time64_t max),
++	TP_ARGS(mp, min, max),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(long long, min)
++		__field(long long, max)
++	),
++	TP_fast_assign(
++		__entry->dev = mp->m_super->s_dev;
++		__entry->min = min;
++		__entry->max = max;
++	),
++	TP_printk("dev %d:%d min %lld max %lld",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->min,
++		  __entry->max)
++)
++
++#define DEFINE_TIMESTAMP_RANGE_EVENT(name) \
++DEFINE_EVENT(xfs_timestamp_range_class, name, \
++	TP_PROTO(struct xfs_mount *mp, long long min, long long max), \
++	TP_ARGS(mp, min, max))
++DEFINE_TIMESTAMP_RANGE_EVENT(xfs_inode_timestamp_range);
++DEFINE_TIMESTAMP_RANGE_EVENT(xfs_quota_expiry_range);
++
+ #endif /* _TRACE_XFS_H */
+ 
+ #undef TRACE_INCLUDE_PATH
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
