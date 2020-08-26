@@ -2,122 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AA582523C5
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 00:47:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E850F25255A
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 03:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726570AbgHYWrb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 25 Aug 2020 18:47:31 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:38057 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726466AbgHYWr1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Aug 2020 18:47:27 -0400
+        id S1726635AbgHZB4i (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 25 Aug 2020 21:56:38 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:39104 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726599AbgHZB4i (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 25 Aug 2020 21:56:38 -0400
 Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id A3EF5D5C5D3;
-        Wed, 26 Aug 2020 08:47:22 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 7643B1AAB40
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Aug 2020 11:56:36 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1kAhir-0000YA-VI; Wed, 26 Aug 2020 08:47:21 +1000
-Date:   Wed, 26 Aug 2020 08:47:21 +1000
+        id 1kAkfz-0000zV-En
+        for linux-xfs@vger.kernel.org; Wed, 26 Aug 2020 11:56:35 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.93)
+        (envelope-from <david@fromorbit.com>)
+        id 1kAkfy-00Gg2A-Tw
+        for linux-xfs@vger.kernel.org; Wed, 26 Aug 2020 11:56:34 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH v6 2/2] xfs: avoid transaction reservation recursion
-Message-ID: <20200825224721.GU12131@dread.disaster.area>
-References: <20200824014234.7109-1-laoar.shao@gmail.com>
- <20200824014234.7109-3-laoar.shao@gmail.com>
- <20200824130925.a3d2d2b75ac3a6b4eba72fb9@linux-foundation.org>
- <20200824205647.GG17456@casper.infradead.org>
- <20200825053233.GN12131@dread.disaster.area>
- <CALOAHbAhhGXn3N7BTBqh336q0_P1WJH5xXtnBhdsBdS516NAvA@mail.gmail.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/3] mkfs: Configuration file defined options
+Date:   Wed, 26 Aug 2020 11:56:31 +1000
+Message-Id: <20200826015634.3974785-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbAhhGXn3N7BTBqh336q0_P1WJH5xXtnBhdsBdS516NAvA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.3 cv=QIgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
         a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8 a=pGLkceISAAAA:8
-        a=nJcYd_7gk-7Rvg5WbY0A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=y4yBn9ojGxQA:10 a=fQT_pJ0R_GJRKqMx_sYA:9
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:22:08PM +0800, Yafang Shao wrote:
-> On Tue, Aug 25, 2020 at 1:32 PM Dave Chinner <david@fromorbit.com> wrote:
-> >
-> > On Mon, Aug 24, 2020 at 09:56:47PM +0100, Matthew Wilcox wrote:
-> > > On Mon, Aug 24, 2020 at 01:09:25PM -0700, Andrew Morton wrote:
-> > > > On Mon, 24 Aug 2020 09:42:34 +0800 Yafang Shao <laoar.shao@gmail.com> wrote:
-> > > >
-> > > > > --- a/include/linux/iomap.h
-> > > > > +++ b/include/linux/iomap.h
-> > > > > @@ -271,4 +271,11 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
-> > > > >  # define iomap_swapfile_activate(sis, swapfile, pagespan, ops)   (-EIO)
-> > > > >  #endif /* CONFIG_SWAP */
-> > > > >
-> > > > > +/* Use the journal_info to indicate current is in a transaction */
-> > > > > +static inline bool
-> > > > > +fstrans_context_active(void)
-> > > > > +{
-> > > > > + return current->journal_info != NULL;
-> > > > > +}
-> > > >
-> > > > Why choose iomap.h for this?
-> > >
-> > > Because it gets used in iomap/buffered-io.c
-> > >
-> > > I don't think this is necessarily a useful abstraction, to be honest.
-> > > I'd just open-code 'if (current->journal_info)' or !current->journal_info,
-> > > whichever way round the code is:
-> > >
-> > > fs/btrfs/delalloc-space.c:              if (current->journal_info)
-> > > fs/ceph/xattr.c:                if (current->journal_info) {
-> > > fs/gfs2/bmap.c:         if (current->journal_info) {
-> > > fs/jbd2/transaction.c:  if (WARN_ON(current->journal_info)) {
-> > > fs/reiserfs/super.c:    if (!current->journal_info) {
-> >
-> > /me wonders idly if any of the other filesystems that use
-> > current->journal_info can have an active transaction while calling
-> > ->writepages...
-> >
-> > .... and if so, whether this patchset has taken the wrong path in
-> > trying to use current->journal_info for XFS to re-implement this
-> > warning.....
-> >
-> > .... so we'll have to remove or rework this yet again when other
-> > filesystems are converted to use iomap....
-> >
-> > /me suspects the btrfs_write_and_wait_transaction() is a path where
-> > this can actually happen...
-> >
-> 
-> How about adding a flag in struct writeback_control ?
-> struct writeback_control {
->     ...
->     unsigned fstrans_check:1; /* Whether to check the current is in fstrans */
-> };
-> 
-> Then we can set it in xfs_vm_writepage(s), for example,
-> 
-> xfs_vm_writepage
-> {
->     wbc->fstrans_check = 1;  // set it for XFS only.
->     return iomap_writepage(page, wbc, &wpc.ctx, &xfs_writeback_ops);
-> }
+Hi Folks,
 
-Yeah, but if we are doing that then I think we should just remove
-the check completely from iomap_writepage() and move it up into
-xfs_vm_writepage() and xfs_vm_writepages().
+Because needing config files for mkfs came up yet again in
+discussion, here is a simple implementation of INI format config
+files. These config files behave identically to options specified on
+the command line - the do not change defaults, they do not override
+CLI options, they are not overridden by cli options.
+
+Example:
+
+$ echo -e "[metadata]\ncrc = 0" > foo
+$ mkfs/mkfs.xfs -N -c file=foo -d file=1,size=100m blah
+Ini debug: file foo, section metadata, name crc, value 0
+Parameters parsed from config file foo successfully
+meta-data=blah                   isize=256    agcount=4, agsize=6400 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=0        finobt=0, sparse=0, rmapbt=0
+         =                       reflink=0
+data     =                       bsize=4096   blocks=25600, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=853, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+$
+
+And there's a V4 filesystem as specified by the option defined
+in the config file. If we do:
+
+$ mkfs/mkfs.xfs -N -c file=foo -m crc=1 -d file=1,size=100m blah
+Ini debug: file foo, section metadata, name crc, value 0
+-m crc option respecified
+Usage: mkfs.xfs
+.....
+$
+
+You can see it errors out because the CRC option was specified in
+both the config file and on the CLI.
+
+There's lots of stuff we can do to make the conflict and respec
+error messages better, but that doesn't change the basic
+functionality of config file based mkfs options. To allow for future
+changes to the way we want to apply the config file, I created a
+full option subtype for config files. That means we can add another
+option to say "apply config file as default values rather than as
+options" if we decide that is functionality that we want to support.
+
+But policy decisions like that are completely separate to the
+mechanism, so these patches don't try to address desires to ship
+"tuned" configs, system wide option files, shipping distro specific
+defaults in config files, etc. This is purely a mechanism to allow
+users to specify options via files instead of on the CLI.  No more,
+no less.
+
+So to preempt the endless bikeshedding from derailing getting this
+functionality merged, all I'm going to say is "no". No feature
+creep, no "but I want to ...", "can you make it pink...", nothing.
+All I care about is providing a mechanism that people are still
+asking for, and that's all I'm going to provide here.
+
+I'm happy to fix bugs and code stuff that people want fixed to get
+it merged, but in terms of functionality being provided I'm
+essentially saying "take it or leave it" because I'm not going to
+waste time bikeshedding this whole thing again.
+
+This has only been given a basic smoke test right now (see above!
+:).  I need to get Darrick's tests from the previous round of config
+file bikeshedding working in my test environment to do more
+substantial testing of this....
 
 Cheers,
 
 Dave.
+
+
+Dave Chinner (3):
+  build: add support for libinih for mkfs
+  mkfs: add initial ini format config file parsing support
+  mkfs: hook up suboption parsing to ini files
+
+ configure.ac         |   3 +
+ include/builddefs.in |   1 +
+ include/linux.h      |   2 +-
+ m4/package_inih.m4   |  20 ++++
+ mkfs/Makefile        |   2 +-
+ mkfs/xfs_mkfs.c      | 218 +++++++++++++++++++++++++++++++++++++------
+ 6 files changed, 218 insertions(+), 28 deletions(-)
+ create mode 100644 m4/package_inih.m4
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.28.0
+
