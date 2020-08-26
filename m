@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F282F253182
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 16:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9648125318A
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 16:39:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHZOi0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Aug 2020 10:38:26 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43363 "EHLO
+        id S1726241AbgHZOi4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Aug 2020 10:38:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20447 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726818AbgHZOiW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 10:38:22 -0400
+        with ESMTP id S1726690AbgHZOiX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 10:38:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598452700;
+        s=mimecast20190719; t=1598452702;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BAjoWMEzpDcrIGtK3T9GxKod+8xS53mLbcVkLV2jYWg=;
-        b=OORTDeT22ykWiiNVN8H3tywzXORgA374p19ISLHC1uchSuwieYW6HCGNzFJVqifrIx4a5T
-        t9WdCRiylN15sLRv84xTv2R8tw1hjHAo1ApHk2qqk6ImxS79P5oQ2CNlPViuga9rpRLy90
-        xAduYZh7jSFdtWsuDojm5KXiitrO/Ds=
+        bh=NHE/nZbwiOoblJJMtTZR2g1xUXRlA7Vnz3roC9Mkkck=;
+        b=OtOc7RxC1NTDu2WGmi6/kSvhF2rwElB/H0ybn131+7B6ZlzLSGI6u/DX0T6Gmi7mx5vb6n
+        YpZ5EEzQL9nHB1rn8xoGHvYnkiuPH8wejkWU8yR6itxa+0FxTCUqyWUPYjkkEQMF34EDVJ
+        /aLAkmNMPAJM7CR+Z4qmaGmyJXjurWE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-352-EhX-zQ3ZOkuG_GCbG5XXHg-1; Wed, 26 Aug 2020 10:38:17 -0400
-X-MC-Unique: EhX-zQ3ZOkuG_GCbG5XXHg-1
+ us-mta-29-TNWqgDd0MJ6JOm2Ac0bUdA-1; Wed, 26 Aug 2020 10:38:18 -0400
+X-MC-Unique: TNWqgDd0MJ6JOm2Ac0bUdA-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A307385C731;
-        Wed, 26 Aug 2020 14:38:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E70B85C734;
+        Wed, 26 Aug 2020 14:38:17 +0000 (UTC)
 Received: from bfoster.redhat.com (ovpn-112-11.rdu2.redhat.com [10.10.112.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 557877049D;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C484650EB6;
         Wed, 26 Aug 2020 14:38:16 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     fstests@vger.kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/4] generic/455: use thin volume for dmlogwrites target device
-Date:   Wed, 26 Aug 2020 10:38:13 -0400
-Message-Id: <20200826143815.360002-3-bfoster@redhat.com>
+Subject: [PATCH 3/4] generic/457: use thin volume for dmlogwrites target device
+Date:   Wed, 26 Aug 2020 10:38:14 -0400
+Message-Id: <20200826143815.360002-4-bfoster@redhat.com>
 In-Reply-To: <20200826143815.360002-1-bfoster@redhat.com>
 References: <20200826143815.360002-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -55,14 +55,14 @@ allow it to run consistently and reliably on XFS.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- tests/generic/455 | 36 ++++++++++++++++++++++--------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+ tests/generic/457 | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
-diff --git a/tests/generic/455 b/tests/generic/455
-index 05621220..72a44fda 100755
---- a/tests/generic/455
-+++ b/tests/generic/455
-@@ -16,12 +16,14 @@ status=1	# failure is the default!
+diff --git a/tests/generic/457 b/tests/generic/457
+index 82367304..42a064d8 100755
+--- a/tests/generic/457
++++ b/tests/generic/457
+@@ -16,6 +16,7 @@ status=1	# failure is the default!
  _cleanup()
  {
  	_log_writes_cleanup
@@ -70,22 +70,23 @@ index 05621220..72a44fda 100755
  }
  trap "_cleanup; exit \$status" 0 1 2 3 15
  
- # get standard environment, filters and checks
+@@ -23,6 +24,7 @@ trap "_cleanup; exit \$status" 0 1 2 3 15
  . ./common/rc
  . ./common/filter
+ . ./common/reflink
 +. ./common/dmthin
  . ./common/dmlogwrites
  
  # real QA test starts here
-@@ -30,6 +32,7 @@ _supported_os Linux
- _require_test
- _require_scratch_nocheck
+@@ -32,6 +34,7 @@ _require_test
+ _require_scratch_reflink
+ _require_cp_reflink
  _require_log_writes
 +_require_dm_target thin-pool
  
  rm -f $seqres.full
  
-@@ -42,13 +45,12 @@ check_files()
+@@ -44,13 +47,12 @@ check_files()
  		local filename=$(basename $i)
  		local mark="${filename##*.}"
  		echo "checking $filename" >> $seqres.full
@@ -102,7 +103,7 @@ index 05621220..72a44fda 100755
  	done
  }
  
-@@ -56,8 +58,16 @@ SANITY_DIR=$TEST_DIR/fsxtests
+@@ -58,8 +60,16 @@ SANITY_DIR=$TEST_DIR/fsxtests
  rm -rf $SANITY_DIR
  mkdir $SANITY_DIR
  
@@ -120,7 +121,7 @@ index 05621220..72a44fda 100755
  
  _log_writes_mkfs >> $seqres.full 2>&1
  
-@@ -88,14 +98,13 @@ _log_writes_mark last
+@@ -92,14 +102,13 @@ _log_writes_mark last
  _log_writes_unmount
  _log_writes_mark end
  _log_writes_remove
@@ -139,7 +140,7 @@ index 05621220..72a44fda 100755
  
  for j in `seq 0 $((NUM_FILES-1))`; do
  	check_files testfile$j
-@@ -103,14 +112,13 @@ done
+@@ -107,8 +116,8 @@ done
  
  # Check the end
  echo "checking post umount" >> $seqres.full
@@ -150,13 +151,6 @@ index 05621220..72a44fda 100755
  for j in `seq 0 $((NUM_FILES-1))`; do
  	md5=$(_md5_checksum $SCRATCH_MNT/testfile$j)
  	[ "${md5}" != "${test_md5[$j]}" ] && _fail "testfile$j end md5sum mismatched"
- done
--_scratch_unmount
--_check_scratch_fs
-+_dmthin_check_fs
- 
- echo "Silence is golden"
- status=0
 -- 
 2.25.4
 
