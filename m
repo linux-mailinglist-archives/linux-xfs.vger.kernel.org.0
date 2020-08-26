@@ -2,181 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A39253532
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 18:46:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0146A2535B5
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 19:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgHZQqU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Aug 2020 12:46:20 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44164 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgHZQpt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 12:45:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07QGjHEs009180;
-        Wed, 26 Aug 2020 16:45:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=7+G2P1AlTibMZ0nvG/xklh07G0bOHO6xqQyBNhbR6c0=;
- b=kdpn5WQrijhic98wvHqRq7nM4Fa9lfWLthQR96eIzVsi/caalyS7TM7/W4fX4qp4BqIT
- 1Va+fDebKByzZ6mtlhuD6AG5aQ69xJgyZVugNZrauadGYi1h/S0jP79XC6ITQ9mB03Iv
- 0cOdCoPePeSXESnsYUBVdZXQ5D4hWgOdcSrpj9jBteLB3jwW3r/myQ1Ov2vDA5Qod/1R
- rksHfcBxv6gxNY6tafKPtVNu2ukXSBj9w2Xv/W1fBu4jccgFr5+jLRDeyD9FYk+P2zGw
- 09FJUPqTKR1bvFoNcWP4OOQGMH5hd5yKGyNkyoh8/H8+uw1R5buOafHm8Bjt50KoBtnG Dw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 333w6u05gd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 16:45:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07QGiqE4107833;
-        Wed, 26 Aug 2020 16:45:43 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 333r9mcnpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 16:45:43 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07QGjfbU028505;
-        Wed, 26 Aug 2020 16:45:42 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Aug 2020 09:45:41 -0700
-Date:   Wed, 26 Aug 2020 09:45:40 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Carlos Maiolino <cmaiolino@redhat.com>
+        id S1726803AbgHZRH0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Aug 2020 13:07:26 -0400
+Received: from sandeen.net ([63.231.237.45]:50290 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726783AbgHZRHZ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:07:25 -0400
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 5D652324E4F;
+        Wed, 26 Aug 2020 12:07:13 -0500 (CDT)
+Subject: Re: [PATCH V2] xfs: fix boundary test in xfs_attr_shortform_verify
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH V2] xfs: Remove kmem_zalloc_large()
-Message-ID: <20200826164540.GQ6096@magnolia>
-References: <20200826161402.55132-1-cmaiolino@redhat.com>
+References: <63722af5-2d8d-2455-17ee-988defd3126f@redhat.com>
+ <689c4eda-dd80-c1bd-843f-1b485bfddc5a@redhat.com>
+ <20200826164420.GP6096@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Message-ID: <aae7d7e5-956b-a5ba-a085-93da412895c4@sandeen.net>
+Date:   Wed, 26 Aug 2020 12:07:23 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826161402.55132-1-cmaiolino@redhat.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=5
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008260124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=5 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008260124
+In-Reply-To: <20200826164420.GP6096@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 06:14:02PM +0200, Carlos Maiolino wrote:
-> This patch aims to replace kmem_zalloc_large() with global kernel memory
-> API. So, all its callers are now using kvzalloc() directly, so kmalloc()
-> fallsback to vmalloc() automatically.
+On 8/26/20 11:44 AM, Darrick J. Wong wrote:
+> On Wed, Aug 26, 2020 at 11:19:54AM -0500, Eric Sandeen wrote:
+>> The boundary test for the fixed-offset parts of xfs_attr_sf_entry in
+>> xfs_attr_shortform_verify is off by one, because the variable array
+>> at the end is defined as nameval[1] not nameval[].
+>> Hence we need to subtract 1 from the calculation.
+>>
+>> This can be shown by:
+>>
+>> # touch file
+>> # setfattr -n root.a file
+>>
+>> and verifications will fail when it's written to disk.
+>>
+>> This only matters for a last attribute which has a single-byte name
+>> and no value, otherwise the combination of namelen & valuelen will
+>> push endp further out and this test won't fail.
+>>
+>> Fixes: 1e1bbd8e7ee06 ("xfs: create structure verifier function for shortform xattrs")
+>> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 > 
-> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
-> ---
-> 
-> Changelog:
-> 
-> 	V2:
-> 		Remove __GFP_RETRY_MAYFAIL from the kvzalloc() calls
-> 
->  fs/xfs/kmem.h          | 6 ------
->  fs/xfs/scrub/symlink.c | 3 ++-
->  fs/xfs/xfs_acl.c       | 2 +-
->  fs/xfs/xfs_ioctl.c     | 4 ++--
->  fs/xfs/xfs_rtalloc.c   | 2 +-
->  5 files changed, 6 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-> index fb1d066770723..38007117697ef 100644
-> --- a/fs/xfs/kmem.h
-> +++ b/fs/xfs/kmem.h
-> @@ -71,12 +71,6 @@ kmem_zalloc(size_t size, xfs_km_flags_t flags)
->  	return kmem_alloc(size, flags | KM_ZERO);
->  }
->  
-> -static inline void *
-> -kmem_zalloc_large(size_t size, xfs_km_flags_t flags)
-> -{
-> -	return kmem_alloc_large(size, flags | KM_ZERO);
-> -}
-> -
->  /*
->   * Zone interfaces
->   */
-> diff --git a/fs/xfs/scrub/symlink.c b/fs/xfs/scrub/symlink.c
-> index 5641ae512c9ef..5a721a9adea78 100644
-> --- a/fs/xfs/scrub/symlink.c
-> +++ b/fs/xfs/scrub/symlink.c
-> @@ -22,11 +22,12 @@ xchk_setup_symlink(
->  	struct xfs_inode	*ip)
->  {
->  	/* Allocate the buffer without the inode lock held. */
-> -	sc->buf = kmem_zalloc_large(XFS_SYMLINK_MAXLEN + 1, 0);
-> +	sc->buf = kvzalloc(XFS_SYMLINK_MAXLEN + 1, GFP_KERNEL);
->  	if (!sc->buf)
->  		return -ENOMEM;
->  
->  	return xchk_setup_inode_contents(sc, ip, 0);
-> +
+> Looks ok.
 
-Nit: empty line added here.
+thanks
+ 
+> From whom should I be expecting a test case?
 
-Everything else looks fine to me.
+from me or a TBD delegate.  Will follow up soon.
 
---D
+-Eric
 
->  }
->  
->  /* Symbolic links. */
-> diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
-> index d4c687b5cd067..c544951a0c07f 100644
-> --- a/fs/xfs/xfs_acl.c
-> +++ b/fs/xfs/xfs_acl.c
-> @@ -192,7 +192,7 @@ __xfs_set_acl(struct inode *inode, struct posix_acl *acl, int type)
->  
->  	if (acl) {
->  		args.valuelen = XFS_ACL_SIZE(acl->a_count);
-> -		args.value = kmem_zalloc_large(args.valuelen, 0);
-> +		args.value = kvzalloc(args.valuelen, GFP_KERNEL);
->  		if (!args.value)
->  			return -ENOMEM;
->  		xfs_acl_to_disk(args.value, acl);
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 6f22a66777cd0..4428b893f8372 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -404,7 +404,7 @@ xfs_ioc_attr_list(
->  	     context.cursor.offset))
->  		return -EINVAL;
->  
-> -	buffer = kmem_zalloc_large(bufsize, 0);
-> +	buffer = kvzalloc(bufsize, GFP_KERNEL);
->  	if (!buffer)
->  		return -ENOMEM;
->  
-> @@ -1690,7 +1690,7 @@ xfs_ioc_getbmap(
->  	if (bmx.bmv_count > ULONG_MAX / recsize)
->  		return -ENOMEM;
->  
-> -	buf = kmem_zalloc_large(bmx.bmv_count * sizeof(*buf), 0);
-> +	buf = kvzalloc(bmx.bmv_count * sizeof(*buf), GFP_KERNEL);
->  	if (!buf)
->  		return -ENOMEM;
->  
-> diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-> index 6209e7b6b895b..0558f92ecdb83 100644
-> --- a/fs/xfs/xfs_rtalloc.c
-> +++ b/fs/xfs/xfs_rtalloc.c
-> @@ -862,7 +862,7 @@ xfs_alloc_rsum_cache(
->  	 * lower bound on the minimum level with any free extents. We can
->  	 * continue without the cache if it couldn't be allocated.
->  	 */
-> -	mp->m_rsum_cache = kmem_zalloc_large(rbmblocks, 0);
-> +	mp->m_rsum_cache = kvzalloc(rbmblocks, GFP_KERNEL);
->  	if (!mp->m_rsum_cache)
->  		xfs_warn(mp, "could not allocate realtime summary cache");
->  }
-> -- 
-> 2.26.2
-> 
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+
