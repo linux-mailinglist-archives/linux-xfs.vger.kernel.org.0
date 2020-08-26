@@ -2,55 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94277252B70
-	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 12:33:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10A25252B71
+	for <lists+linux-xfs@lfdr.de>; Wed, 26 Aug 2020 12:33:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgHZKdt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1728132AbgHZKdv convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 26 Aug 2020 06:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728191AbgHZKdt (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Wed, 26 Aug 2020 06:33:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21359 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728132AbgHZKdq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 06:33:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598438024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wAyQ9pl6w1Uleq0G50f+7T2F2RA5fjsYKTQVPqWVtYc=;
-        b=ND5g5xsmlVkxyXOU+bENQ1MB5zBjQiX5cvbXpSFucU3nK43Mybnz35nftbKeeVMDYkxL2H
-        XWRWWQjoi0fql2Gm1yDTAItw5lLBh9nZTqjco+OrsqLhDlMdJTePbqp3pJ0w1EnDw+VOdL
-        lyJS2ZQ2jePMDPqFFd+6wttrmRUhDho=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-86-izhif0rxOLKzydx9OtAiAg-1; Wed, 26 Aug 2020 06:33:42 -0400
-X-MC-Unique: izhif0rxOLKzydx9OtAiAg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5C15189594E;
-        Wed, 26 Aug 2020 10:33:41 +0000 (UTC)
-Received: from bfoster (ovpn-112-11.rdu2.redhat.com [10.10.112.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8BD481992F;
-        Wed, 26 Aug 2020 10:33:41 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 06:33:39 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     bugzilla-daemon@bugzilla.kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [Bug 209039] New: xfs_fsr skips most of the files as no
- improvement will be made
-Message-ID: <20200826103339.GA355009@bfoster>
-References: <bug-209039-201763@https.bugzilla.kernel.org/>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From:   bugzilla-daemon@bugzilla.kernel.org
+Authentication-Results: mail.kernel.org; dkim=permerror (bad message/signature format)
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 209039] xfs_fsr skips most of the files as no improvement will
+ be made
+Date:   Wed, 26 Aug 2020 10:33:46 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: bfoster@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-209039-201763-Mr4LOLSTcB@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-209039-201763@https.bugzilla.kernel.org/>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <bug-209039-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:40:57AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
+https://bugzilla.kernel.org/show_bug.cgi?id=209039
+
+--- Comment #1 from bfoster@redhat.com ---
+On Wed, Aug 26, 2020 at 07:40:57AM +0000, bugzilla-daemon@bugzilla.kernel.org
+wrote:
 > https://bugzilla.kernel.org/show_bug.cgi?id=209039
 > 
 >             Bug ID: 209039
@@ -109,7 +108,8 @@ fragmented from the cursory numbers.
 >     ino=138
 >     ...
 > 
-> This means the file would still consist of 4 parts across the hdd platter after
+> This means the file would still consist of 4 parts across the hdd platter
+> after
 > defragmentation and because of that it's skipped. But why isn't it able to
 > merge the parts of this and hundreds of other files?
 > 
@@ -127,11 +127,14 @@ which can be misleading). Is that the case here?
 > 
 >     xfs_db -r /dev/md1 -c "inode 133" -c "bmap -d"
 >     data offset 0 startblock 1314074773 (4/240332949) count 2097151 flag 0
->     data offset 2097151 startblock 1316171924 (4/242430100) count 2097151 flag
+>     data offset 2097151 startblock 1316171924 (4/242430100) count 2097151
+>     flag
 > 0
->     data offset 4194302 startblock 1318269075 (4/244527251) count 2097151 flag
+>     data offset 4194302 startblock 1318269075 (4/244527251) count 2097151
+>     flag
 > 0
->     data offset 6291453 startblock 1320366226 (4/246624402) count 1121800 flag
+>     data offset 6291453 startblock 1320366226 (4/246624402) count 1121800
+>     flag
 > 0
 
 In this case, it looks like you already have maximum sized (~8GB)
@@ -144,5 +147,8 @@ Brian
 > -- 
 > You are receiving this mail because:
 > You are watching the assignee of the bug.
-> 
+>
 
+-- 
+You are receiving this mail because:
+You are watching the assignee of the bug.
