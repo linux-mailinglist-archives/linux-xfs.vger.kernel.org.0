@@ -2,161 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B60E4253B27
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 02:37:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D344253B6A
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 03:34:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgH0Aha (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Aug 2020 20:37:30 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58692 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgH0Aha (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 20:37:30 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0UNHe068816
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:37:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=Ogx3uf06LnNxXeihSfFk/bX/y4Fpd/5x+UEklNws19g=;
- b=sLOdfOpmaOOt0llRLl8qieo6sVyP3mnUmpqtgMbAd5TbwHH/u88zhpisrzbwCuBBKlDE
- jafAUaY3AA7uAdBQSxfya3T0NDuHp0Wmh194OixkN/g5uNr55G+ehpzrEXq88U66XEuP
- INistqolzSPSdeavmEZ4qEN9bCX32wOUe+/S2G+cUBsltC+X2++blM014rcftfsl1er8
- 2k7iDttkeJyPFrotsBWAcxT8qfp2qCkZbL/+BZEPxUZJpHqaR5NFokYoKZhg8ch9mXkw
- i/ycvamt3UmiPpoa/M2yO8Qfu2QVq/rZ4GsEUd3hXY23RqZTatQb0faJvTyTCeAwkypy 8w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 333dbs3eg0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:37:28 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0UgcE169395
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:28 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 333ru0t85a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:28 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07R0ZRX0021787
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:27 GMT
-Received: from localhost.localdomain (/67.1.244.254)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Aug 2020 17:35:27 -0700
-From:   Allison Collins <allison.henderson@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v12 8/8] xfs_io: Add delayed attributes error tag
-Date:   Wed, 26 Aug 2020 17:35:18 -0700
-Message-Id: <20200827003518.1231-9-allison.henderson@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827003518.1231-1-allison.henderson@oracle.com>
-References: <20200827003518.1231-1-allison.henderson@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0
- phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270001
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=1
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270001
+        id S1726786AbgH0Be6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Aug 2020 21:34:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49312 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgH0Be6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 21:34:58 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EE58C0617BB;
+        Wed, 26 Aug 2020 18:34:57 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id k20so3454660qtq.11;
+        Wed, 26 Aug 2020 18:34:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wLy+bW88Yt+UeLAJkekbjwnN6inFO2kqTqlou1glKoo=;
+        b=sfCu3w1t9MRqXxPwApt7NbPjCmgvic/WoFwplUThrnXHZxTuFSoKmcVXKIBrk8xGxy
+         +K74kZqxqV18vRwuC3NsZRaTHf0vZO5i/MhY//17v2R2L5cI59TDTMvNM7ipmUQPIzTR
+         BIrlxMdgZYm7BEMeTTMX6yLfNIJZ/2JY4cNuXDJ9DPCBonHQTHdF/NDXDlE+Dzw3nplf
+         mM9umZGH0RRG4FXwXovsjwOLC02g3zzSclmBs80E62UVbx0BuAaLcUOfVgb+VYuZD4Ab
+         f8kvp1P421lbs4PjOwF1NT73qKOC8iVdD42wGVP55xAeOmpi1Hz2eD05yetYKVSZ8Zlo
+         n2Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wLy+bW88Yt+UeLAJkekbjwnN6inFO2kqTqlou1glKoo=;
+        b=Q6n88xeg+6ic4X1q7GDikn9URL7sOsN3OiKZhS4HbDA+fIqUOqNTM5FHJi92cfpoM2
+         KuAqjfGgVil6yG3N4mX2PvZEnJBqRWLd3pjMLs8Vo6XljxOy6XaPvLNjODRghjh1KYTO
+         63y2vi/pjGYsbfWHAByrE2R7SWWjULOgjOk3v4C2KHthkNBQJSjskFJ77LqUJcvq8yrG
+         oyQiVOk9XYKI5nrk4RZOcuyUD6dOmjWGFfPL8zKFeDoCUarCNnJ63Zk7wOBCIjpv3Lbx
+         4zPlX1TS4OM0OBreLiC+t0FM1aJ/qSQneUaTUbsy4pUcPHm8FyjE8PRY/cvjucJiExeA
+         VO7Q==
+X-Gm-Message-State: AOAM533wwbZ2j3Z1z8O/Ew1OGEH7+uxte9ZV/m+yQN50NfwKnIhVDNCH
+        fzuWfyKPkyWsWL5W8kabxd4=
+X-Google-Smtp-Source: ABdhPJyevdcgqqfc3h+7QKmmzaFxNkVoDTNXHTujj3mA88GdzVfRlB5F2vgLQeXJQJ8iZGGdcEt0CA==
+X-Received: by 2002:aed:3bb3:: with SMTP id r48mr16515536qte.328.1598492096784;
+        Wed, 26 Aug 2020 18:34:56 -0700 (PDT)
+Received: from localhost.localdomain ([50.236.19.102])
+        by smtp.gmail.com with ESMTPSA id i18sm631846qtv.39.2020.08.26.18.34.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 18:34:55 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     david@fromorbit.com, hch@infradead.org, darrick.wong@oracle.com,
+        willy@infradead.org, mhocko@kernel.org, akpm@linux-foundation.org
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v7 0/2] avoid xfs transaction reservation recursion 
+Date:   Thu, 27 Aug 2020 09:34:42 +0800
+Message-Id: <20200827013444.24270-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch adds an error tag that we can use to test delayed attribute
-recovery and replay
+This patchset avoids transaction reservation recursion by reintroducing
+the discarded PF_FSTRANS in a new way, suggested by Dave. In this new
+implementation, four new helpers are introduced, which are
+xfs_trans_context_{set, clear, update} and fstrans_context_active,
+suggested by Dave. And re-using the task->journal_info to indicates
+whehter the task is in fstrans or not, suggested by Willy
 
-Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Allison Collins <allison.henderson@oracle.com>
----
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_attr_item.c       | 8 ++++++++
- fs/xfs/xfs_error.c           | 3 +++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+Patch #1 is picked from Willy's patchset "Overhaul memalloc_no*"[1]
 
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 53b305d..cb38cbf 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -56,7 +56,8 @@
- #define XFS_ERRTAG_FORCE_SUMMARY_RECALC			33
- #define XFS_ERRTAG_IUNLINK_FALLBACK			34
- #define XFS_ERRTAG_BUF_IOERROR				35
--#define XFS_ERRTAG_MAX					36
-+#define XFS_ERRTAG_DELAYED_ATTR				36
-+#define XFS_ERRTAG_MAX					37
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -97,5 +98,6 @@
- #define XFS_RANDOM_FORCE_SUMMARY_RECALC			1
- #define XFS_RANDOM_IUNLINK_FALLBACK			(XFS_RANDOM_DEFAULT/10)
- #define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
-+#define XFS_RANDOM_DELAYED_ATTR				1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index 923c288..ed71003 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -35,6 +35,8 @@
- #include "xfs_quota.h"
- #include "xfs_log_priv.h"
- #include "xfs_log_recover.h"
-+#include "xfs_error.h"
-+#include "xfs_errortag.h"
- 
- static const struct xfs_item_ops xfs_attri_item_ops;
- static const struct xfs_item_ops xfs_attrd_item_ops;
-@@ -310,6 +312,11 @@ xfs_trans_attr(
- 	if (error)
- 		return error;
- 
-+	if (XFS_TEST_ERROR(false, args->dp->i_mount, XFS_ERRTAG_DELAYED_ATTR)) {
-+		error = -EIO;
-+		goto out;
-+	}
-+
- 	switch (op_flags) {
- 	case XFS_ATTR_OP_FLAGS_SET:
- 		args->op_flags |= XFS_DA_OP_ADDNAME;
-@@ -324,6 +331,7 @@ xfs_trans_attr(
- 		break;
- 	}
- 
-+out:
- 	/*
- 	 * Mark the transaction dirty, even on error. This ensures the
- 	 * transaction is aborted, which:
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 7f6e208..fc551cb 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -54,6 +54,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_FORCE_SUMMARY_RECALC,
- 	XFS_RANDOM_IUNLINK_FALLBACK,
- 	XFS_RANDOM_BUF_IOERROR,
-+	XFS_RANDOM_DELAYED_ATTR,
- };
- 
- struct xfs_errortag_attr {
-@@ -164,6 +165,7 @@ XFS_ERRORTAG_ATTR_RW(force_repair,	XFS_ERRTAG_FORCE_SCRUB_REPAIR);
- XFS_ERRORTAG_ATTR_RW(bad_summary,	XFS_ERRTAG_FORCE_SUMMARY_RECALC);
- XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
-+XFS_ERRORTAG_ATTR_RW(delayed_attr,	XFS_ERRTAG_DELAYED_ATTR);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -202,6 +204,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(bad_summary),
- 	XFS_ERRORTAG_ATTR_LIST(iunlink_fallback),
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
-+	XFS_ERRORTAG_ATTR_LIST(delayed_attr),
- 	NULL,
- };
- 
+[1] https://lore.kernel.org/linux-mm/20200625113122.7540-1-willy@infradead.org/
+
+v7:
+- check fstrans recursion for XFS only, by introducing a new member in
+  struct writeback_control.
+
+v6:
+- add Michal's ack and comment in patch #1.
+
+v5:
+- pick one of Willy's patch
+- introduce four new helpers, per Dave
+
+v4:
+- retitle from "xfs: introduce task->in_fstrans for transaction reservation recursion protection"
+- reuse current->journal_info, per Willy
+
+Matthew Wilcox (Oracle) (1):
+  mm: Add become_kswapd and restore_kswapd
+
+Yafang Shao (1):
+  xfs: avoid transaction reservation recursion
+
+ fs/iomap/buffered-io.c    |  4 ++--
+ fs/xfs/libxfs/xfs_btree.c | 14 ++++++++------
+ fs/xfs/xfs_aops.c         | 11 +++++++++--
+ fs/xfs/xfs_linux.h        |  4 ----
+ fs/xfs/xfs_trans.c        | 19 +++++++++----------
+ fs/xfs/xfs_trans.h        | 30 ++++++++++++++++++++++++++++++
+ include/linux/sched/mm.h  | 23 +++++++++++++++++++++++
+ include/linux/writeback.h |  3 +++
+ mm/vmscan.c               | 16 +---------------
+ 9 files changed, 85 insertions(+), 39 deletions(-)
+
 -- 
-2.7.4
+2.18.4
 
