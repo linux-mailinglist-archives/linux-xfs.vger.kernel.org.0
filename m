@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17489253B0B
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 02:29:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 490AA253B0D
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 02:29:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgH0A3Y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Aug 2020 20:29:24 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37818 "EHLO
+        id S1726940AbgH0A30 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Aug 2020 20:29:26 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37824 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726930AbgH0A3X (ORCPT
+        with ESMTP id S1726929AbgH0A3X (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 20:29:23 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0TMCX165433
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:22 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0TIxJ165383
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=hGNUlw22ritFAAlu9lkCiILIO8GjFnLrT1TAquGQXwo=;
- b=J6Be2NrjUzus5nsR3wj2TvqmUH7BIZS8N82lLhpd7yN653BJnCcp9jdrMDdYIT6C9g/a
- 85y2EQLvP9geDCN+9fTQhgbxhA3WallN49rTBiDzkU5WmY9X9BXwRKl7oOBrnzWwxt4f
- PJDdbIHDa4MM5yaTHBb0VhiaU3E6hx1ZflNgZKv1JAadDotKZmFfiLr/u4jLfkl2SLWK
- 0o1kKcRHk0ch0Yjf7SWFhpubjfRLxqJ6bWvvrFe1csSq3dfO01fJc7pLKM7p8EdgN6Lg
- 3gjbXuwHJlxGpcIRw3moIcqGfUuzS13w5H4T56RIA3zoJtcOcpmqanVE3szrMR/mwYMi xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 333w6u1ywh-1
+ bh=hoghDP00s+RHLEHpLT6vn/TeCPRRPA/K/+orz34PGVo=;
+ b=qq/ZTIArYUqs95B4N2FPVS45RbfEs+c8oFCiQ4e+Sp6cLVrr14+FJJfMo39cWjOe/3PQ
+ TN+Qy8wAJbpj/aEQXzyAvIXaKoZYNh3J2BO0Mz9V3RUeiCz6xu5Qwnq5U53l4cqJiMMM
+ 7iQiDIe2bCLhbGec/iTYspoBBbrzaK/aGwnmC0gXuijDXwFwPqH/Z0iz/x/Sz3wVZVkt
+ E1VxTOqDv7kwV9VM+XAJ7wbgIZdocA8lGhugTG05hY73FH7ChJuAwclDR7nZdPtMNo3F
+ D/kaLNf+msYFH+uy4cpWZZl6nO0KlFZAxitkxaM170JboIbcdXPW388YGxrKsuBuz7tB Gg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 333w6u1ywk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
         for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:22 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0AHoB121760
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:21 GMT
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0ArGF025945
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:22 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 333rubkgcs-1
+        by aserp3030.oracle.com with ESMTP id 333r9mswwj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:21 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:22 +0000
 Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07R0TLib016979
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07R0TLcP016982
         for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:29:21 GMT
 Received: from localhost.localdomain (/67.1.244.254)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Wed, 26 Aug 2020 17:29:21 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v12 28/32] xfsprogs: Add feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR
-Date:   Wed, 26 Aug 2020 17:28:52 -0700
-Message-Id: <20200827002856.1131-29-allison.henderson@oracle.com>
+Subject: [PATCH v12 29/32] xfsprogs: Enable delayed attributes
+Date:   Wed, 26 Aug 2020 17:28:53 -0700
+Message-Id: <20200827002856.1131-30-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827002856.1131-1-allison.henderson@oracle.com>
 References: <20200827002856.1131-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=1 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270000
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008270000
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
  mlxlogscore=999 suspectscore=1 phishscore=0 malwarescore=0 spamscore=0
@@ -63,70 +63,61 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch adds a new feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR which
-can be used to control turning on/off delayed attributes
+Finally enable delayed attributes in xfs_attr_set and xfs_attr_remove.
+We only do this for new filesystems that have the feature bit enabled
+because we cant add new log entries to older filesystems
 
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 ---
- libxfs/xfs_format.h | 11 ++++++++++-
- libxfs/xfs_fs.h     |  1 +
- libxfs/xfs_sb.c     |  2 ++
- 3 files changed, 13 insertions(+), 1 deletion(-)
+ libxfs/xfs_attr.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
-index 3ccaf0a..770e4b4c 100644
---- a/libxfs/xfs_format.h
-+++ b/libxfs/xfs_format.h
-@@ -479,7 +479,9 @@ xfs_sb_has_incompat_feature(
- 	return (sbp->sb_features_incompat & feature) != 0;
- }
+diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
+index ed25894..6afcfe3 100644
+--- a/libxfs/xfs_attr.c
++++ b/libxfs/xfs_attr.c
+@@ -517,6 +517,7 @@ xfs_attr_set(
+ {
+ 	struct xfs_inode	*dp = args->dp;
+ 	struct xfs_mount	*mp = dp->i_mount;
++	struct xfs_sb		*sbp = &mp->m_sb;
+ 	struct xfs_trans_res	tres;
+ 	bool			rsvd = (args->attr_filter & XFS_ATTR_ROOT);
+ 	int			error, local;
+@@ -602,9 +603,17 @@ xfs_attr_set(
+ 		if (error != -ENOATTR && error != -EEXIST)
+ 			goto out_trans_cancel;
  
--#define XFS_SB_FEAT_INCOMPAT_LOG_ALL 0
-+#define XFS_SB_FEAT_INCOMPAT_LOG_DELATTR   (1 << 0)	/* Delayed Attributes */
-+#define XFS_SB_FEAT_INCOMPAT_LOG_ALL \
-+	(XFS_SB_FEAT_INCOMPAT_LOG_DELATTR)
- #define XFS_SB_FEAT_INCOMPAT_LOG_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_LOG_ALL
- static inline bool
- xfs_sb_has_incompat_log_feature(
-@@ -563,6 +565,13 @@ static inline bool xfs_sb_version_hasreflink(struct xfs_sb *sbp)
- 		(sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_REFLINK);
- }
- 
-+static inline bool xfs_sb_version_hasdelattr(struct xfs_sb *sbp)
-+{
-+	return (XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5 &&
-+		(sbp->sb_features_log_incompat &
-+		XFS_SB_FEAT_INCOMPAT_LOG_DELATTR));
-+}
+-		error = xfs_attr_set_args(args);
++		if (xfs_sb_version_hasdelattr(sbp))
++			error = xfs_attr_set_deferred(dp, args->trans,
++					      args->name, args->namelen,
++					      args->attr_filter, args->value,
++					      args->valuelen);
++		else
++			error = xfs_attr_set_args(args);
 +
- /*
-  * end of superblock version macros
-  */
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 84bcffa..67b1f97 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -249,6 +249,7 @@ typedef struct xfs_fsop_resblks {
- #define XFS_FSOP_GEOM_FLAGS_SPINODES	(1 << 18) /* sparse inode chunks   */
- #define XFS_FSOP_GEOM_FLAGS_RMAPBT	(1 << 19) /* reverse mapping btree */
- #define XFS_FSOP_GEOM_FLAGS_REFLINK	(1 << 20) /* files can share blocks */
-+#define XFS_FSOP_GEOM_FLAGS_DELATTR	(1 << 21) /* delayed attributes	    */
+ 		if (error)
+ 			goto out_trans_cancel;
++
+ 		/* shortform attribute has already been committed */
+ 		if (!args->trans)
+ 			goto out_unlock;
+@@ -613,7 +622,13 @@ xfs_attr_set(
+ 		if (error != -EEXIST)
+ 			goto out_trans_cancel;
  
- /*
-  * Minimum and maximum sizes need for growth checks.
-diff --git a/libxfs/xfs_sb.c b/libxfs/xfs_sb.c
-index 7e73b40..fd56315 100644
---- a/libxfs/xfs_sb.c
-+++ b/libxfs/xfs_sb.c
-@@ -1143,6 +1143,8 @@ xfs_fs_geometry(
- 		geo->flags |= XFS_FSOP_GEOM_FLAGS_RMAPBT;
- 	if (xfs_sb_version_hasreflink(sbp))
- 		geo->flags |= XFS_FSOP_GEOM_FLAGS_REFLINK;
-+	if (xfs_sb_version_hasdelattr(sbp))
-+		geo->flags |= XFS_FSOP_GEOM_FLAGS_DELATTR;
- 	if (xfs_sb_version_hassector(sbp))
- 		geo->logsectsize = sbp->sb_logsectsize;
- 	else
+-		error = xfs_attr_remove_args(args);
++		if (xfs_sb_version_hasdelattr(sbp))
++			error = xfs_attr_remove_deferred(dp, args->trans,
++							 args->name,
++							 args->namelen,
++							 args->attr_filter);
++		else
++			error = xfs_attr_remove_args(args);
+ 		if (error)
+ 			goto out_trans_cancel;
+ 	}
 -- 
 2.7.4
 
