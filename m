@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68697253B23
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 02:35:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F02B253B22
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 02:35:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgH0Afa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Aug 2020 20:35:30 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40820 "EHLO
+        id S1726798AbgH0Af3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Aug 2020 20:35:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40830 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbgH0Af3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 20:35:29 -0400
+        with ESMTP id S1726867AbgH0Af2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Aug 2020 20:35:28 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0TJNu165410
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:27 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0U4V1165861
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=fXh674qmcBj/GadcbWkoc0WCV/TeoPzCthhzxpv/phY=;
- b=l4J4TPWkfBWKcy6zEEn1GXjB5EYHLu9jhpVjxu/MIwnFPLjks4wLZh54Yzu/7nQq9/Tn
- Fm45EAQkDmaXNNCnMwxZiGvZ2HV/MmJrJLgt7ZKMD7VMcM+HWxfHTUhNo2ina19fsTUf
- moAc6lBQa1WEx9/kjJ4Vlo16ZX8Cnj4D6QrJ5gAvKJ+gcj6UEX6IPGpJBrzi/4MLW9uc
- LlmmYEAoebrUUXBpKJJvCcT3GdE9G/SZdOJlD++IKZvhbf/AT9Ah46aR9puBfvL7+kIR
- py+yx668AVSUOqhdvBPhYvqBFcWloexVamAkRWDF/vxizNjxPTb120jq3MtP3Hzy14hT PQ== 
+ bh=ghq/LRhlG3/fLwLni1UbAvezz0ervvp1yIkyZnmEgrM=;
+ b=ssl0Jlp0ter2glMcRgGq/1A6zZy/vp3eTo+zLsjGNXR2g/CfrspAk1lwU0hLIk6VVwnK
+ PrKndDg/gIxUnQebnBbbvtZsi5cpnANaPUdRP6KLjNCkY2g3Qlz+LqroAk8fjSkupbk7
+ MdhK7y8L5B7f+BKJs4S4primqRXlv9IGdqIG90urMoSCqyoKvA1ZSwEtPGLXuD08aWYx
+ YKaBeZFvEqAKPKMiSIJFWVCzcYSgFIM+03/y9hhi1NfJPksMoPtVf4RrfML2Ant2TnMI
+ QpmcWeqoIQrZIvCWQmp9JHwxn8uUtYicyLU6J7o9spv6MbhqsPCO3DVw1PZril2Qy6Vy dg== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 333w6u20a5-1
+        by userp2120.oracle.com with ESMTP id 333w6u20a6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
         for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:27 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0UrC6066715
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:26 GMT
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07R0Urnr066699
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:27 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 333r9mt21x-1
+        by aserp3030.oracle.com with ESMTP id 333r9mt221-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:26 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:27 +0000
 Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07R0ZQ5Q020447
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07R0ZQwl020450
         for <linux-xfs@vger.kernel.org>; Thu, 27 Aug 2020 00:35:26 GMT
 Received: from localhost.localdomain (/67.1.244.254)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Wed, 26 Aug 2020 17:35:26 -0700
 From:   Allison Collins <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v12 5/8] xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
-Date:   Wed, 26 Aug 2020 17:35:15 -0700
-Message-Id: <20200827003518.1231-6-allison.henderson@oracle.com>
+Subject: [PATCH v12 6/8] xfs: Add feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR
+Date:   Wed, 26 Aug 2020 17:35:16 -0700
+Message-Id: <20200827003518.1231-7-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200827003518.1231-1-allison.henderson@oracle.com>
 References: <20200827003518.1231-1-allison.henderson@oracle.com>
@@ -63,144 +63,86 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-These routines to set up and start a new deferred attribute operations.
-These functions are meant to be called by any routine needing to
-initiate a deferred attribute operation as opposed to the existing
-inline operations. New helper function xfs_attr_item_init also added.
+This patch adds a new feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR which
+can be used to control turning on/off delayed attributes
 
-Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
 Signed-off-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/libxfs/xfs_attr.c | 91 ++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_attr.h |  7 ++++
- 2 files changed, 98 insertions(+)
+ fs/xfs/libxfs/xfs_format.h | 11 ++++++++++-
+ fs/xfs/libxfs/xfs_fs.h     |  1 +
+ fs/xfs/libxfs/xfs_sb.c     |  2 ++
+ fs/xfs/xfs_super.c         |  4 ++++
+ 4 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index cf75742..7b79868 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -25,6 +25,7 @@
- #include "xfs_trans_space.h"
- #include "xfs_trace.h"
- #include "xfs_attr_item.h"
-+#include "xfs_attr.h"
- 
- /*
-  * xfs_attr.c
-@@ -643,6 +644,96 @@ xfs_attr_set(
- 	goto out_unlock;
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 31b7ece..cc417ef 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -479,7 +479,9 @@ xfs_sb_has_incompat_feature(
+ 	return (sbp->sb_features_incompat & feature) != 0;
  }
  
-+STATIC int
-+xfs_attr_item_init(
-+	struct xfs_inode	*dp,		/* inode for attr operation */
-+	struct xfs_trans	*tp,		/* transaction for attr op */
-+	const unsigned char	*name,		/* attr name */
-+	unsigned int		namelen,	/* attr namelen */
-+	unsigned int		flags,		/* attr flags */
-+	const unsigned char	*value,		/* attr value */
-+	unsigned int		valuelen,	/* attr value len */
-+	unsigned int		op_flags,	/* op flag (set or remove) */
-+	struct xfs_attr_item	**attr)		/* new xfs_attr_item */
-+{
-+
-+	struct xfs_attr_item	*new;
-+	char			*name_value;
-+
-+	/*
-+	 * All set operations must have a name but not necessarily a value.
-+	 */
-+	if (!namelen) {
-+		ASSERT(0);
-+		return -EINVAL;
-+	}
-+
-+	new = kmem_alloc_large(XFS_ATTR_ITEM_SIZEOF(namelen, valuelen),
-+			 KM_NOFS);
-+	name_value = ((char *)new) + sizeof(struct xfs_attr_item);
-+	memset(new, 0, XFS_ATTR_ITEM_SIZEOF(namelen, valuelen));
-+	new->xattri_ip = dp;
-+	new->xattri_op_flags = op_flags;
-+	new->xattri_name_len = namelen;
-+	new->xattri_value_len = valuelen;
-+	new->xattri_flags = flags;
-+	memcpy(&name_value[0], name, namelen);
-+	new->xattri_name = name_value;
-+	new->xattri_value = name_value + namelen;
-+
-+	if (valuelen > 0)
-+		memcpy(&name_value[namelen], value, valuelen);
-+
-+	*attr = new;
-+	return 0;
-+}
-+
-+/* Sets an attribute for an inode as a deferred operation */
-+int
-+xfs_attr_set_deferred(
-+	struct xfs_inode	*dp,
-+	struct xfs_trans	*tp,
-+	const unsigned char	*name,
-+	unsigned int		namelen,
-+	unsigned int		flags,
-+	const unsigned char	*value,
-+	unsigned int		valuelen)
-+{
-+	struct xfs_attr_item	*new;
-+	int			error = 0;
-+
-+	error = xfs_attr_item_init(dp, tp, name, namelen, flags, value,
-+				   valuelen, XFS_ATTR_OP_FLAGS_SET, &new);
-+	if (error)
-+		return error;
-+
-+	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &new->xattri_list);
-+
-+	return 0;
-+}
-+
-+/* Removes an attribute for an inode as a deferred operation */
-+int
-+xfs_attr_remove_deferred(
-+	struct xfs_inode        *dp,
-+	struct xfs_trans	*tp,
-+	const unsigned char	*name,
-+	unsigned int		namelen,
-+	unsigned int		flags)
-+{
-+
-+	struct xfs_attr_item *new;
-+
-+	int error  = xfs_attr_item_init(dp, tp, name, namelen, flags, NULL, 0,
-+				  XFS_ATTR_OP_FLAGS_REMOVE, &new);
-+	if (error)
-+		return error;
-+
-+	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &new->xattri_list);
-+
-+	return 0;
-+}
-+
- /*========================================================================
-  * External routines when attribute list is inside the inode
-  *========================================================================*/
-diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index 23b8308..4643b3f 100644
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -328,5 +328,12 @@ bool xfs_attr_namecheck(const void *name, size_t length);
- void xfs_delattr_context_init(struct xfs_delattr_context *dac,
- 			      struct xfs_da_args *args);
- int xfs_attr_calc_size(struct xfs_da_args *args, int *local);
-+int xfs_attr_set_deferred(struct xfs_inode *dp, struct xfs_trans *tp,
-+			  const unsigned char *name, unsigned int namelen,
-+			  unsigned int flags, const unsigned char *value,
-+			  unsigned int valuelen);
-+int xfs_attr_remove_deferred(struct xfs_inode *dp, struct xfs_trans *tp,
-+			    const unsigned char *name, unsigned int namelen,
-+			    unsigned int flags);
+-#define XFS_SB_FEAT_INCOMPAT_LOG_ALL 0
++#define XFS_SB_FEAT_INCOMPAT_LOG_DELATTR   (1 << 0)	/* Delayed Attributes */
++#define XFS_SB_FEAT_INCOMPAT_LOG_ALL \
++	(XFS_SB_FEAT_INCOMPAT_LOG_DELATTR)
+ #define XFS_SB_FEAT_INCOMPAT_LOG_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_LOG_ALL
+ static inline bool
+ xfs_sb_has_incompat_log_feature(
+@@ -563,6 +565,13 @@ static inline bool xfs_sb_version_hasreflink(struct xfs_sb *sbp)
+ 		(sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_REFLINK);
+ }
  
- #endif	/* __XFS_ATTR_H__ */
++static inline bool xfs_sb_version_hasdelattr(struct xfs_sb *sbp)
++{
++	return (XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5 &&
++		(sbp->sb_features_log_incompat &
++		XFS_SB_FEAT_INCOMPAT_LOG_DELATTR));
++}
++
+ /*
+  * end of superblock version macros
+  */
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index 84bcffa..67b1f97 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -249,6 +249,7 @@ typedef struct xfs_fsop_resblks {
+ #define XFS_FSOP_GEOM_FLAGS_SPINODES	(1 << 18) /* sparse inode chunks   */
+ #define XFS_FSOP_GEOM_FLAGS_RMAPBT	(1 << 19) /* reverse mapping btree */
+ #define XFS_FSOP_GEOM_FLAGS_REFLINK	(1 << 20) /* files can share blocks */
++#define XFS_FSOP_GEOM_FLAGS_DELATTR	(1 << 21) /* delayed attributes	    */
+ 
+ /*
+  * Minimum and maximum sizes need for growth checks.
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index ae9aaf1..0d2e793 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -1166,6 +1166,8 @@ xfs_fs_geometry(
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_RMAPBT;
+ 	if (xfs_sb_version_hasreflink(sbp))
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_REFLINK;
++	if (xfs_sb_version_hasdelattr(sbp))
++		geo->flags |= XFS_FSOP_GEOM_FLAGS_DELATTR;
+ 	if (xfs_sb_version_hassector(sbp))
+ 		geo->logsectsize = sbp->sb_logsectsize;
+ 	else
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 71ac6c1..7698cf5 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1549,6 +1549,10 @@ xfs_fc_fill_super(
+ 		goto out_filestream_unmount;
+ 	}
+ 
++	if (xfs_sb_version_hasdelattr(&mp->m_sb))
++		xfs_alert(mp,
++	"EXPERIMENTAL delayed attrs feature enabled. Use at your own risk!");
++
+ 	error = xfs_mountfs(mp);
+ 	if (error)
+ 		goto out_filestream_unmount;
 -- 
 2.7.4
 
