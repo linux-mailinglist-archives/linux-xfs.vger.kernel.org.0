@@ -2,58 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09009253E12
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 08:45:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4975F253E2F
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Aug 2020 08:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgH0GpO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 Aug 2020 02:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41650 "EHLO
+        id S1726266AbgH0GvT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 Aug 2020 02:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgH0GpJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Aug 2020 02:45:09 -0400
+        with ESMTP id S1726123AbgH0GvS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 Aug 2020 02:51:18 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78EEC061264
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Aug 2020 23:45:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF679C061264
+        for <linux-xfs@vger.kernel.org>; Wed, 26 Aug 2020 23:51:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XXLVvxpZ8PzqRBuGV2q8vqrvl2JuN2rAMzSyw08s7ns=; b=TQongY1y4q/3Js1DpUSYPr6BBl
-        H1EkVmzFe/Pccux0bid+Lv64WElVPgqcaMZ4nea8JIVZRu3Q6JS/98hMiKEENagW5xbXX7ZQfP3vc
-        j4yN37ayst+OrhSu77G8iQjUEjlqQReyVXdYH2pRdde6Im5okHULIdztHPCdp3MDuaSbEiLl8zNQ9
-        u3FsSPWmz/YF20dXAkaS6Y0WgTQRvaYrt5E+rPeFoJui8LG7OefJbL18vstNDrDf4djcmuihfEwef
-        4TaiIfdzTnw43tbuFDHyoyx/ykM5+1J6NtmPKRxGu5TQhJ1aBtgr/iWk4cdskf/CPGOSon3aex2sB
-        xxAxgkmQ==;
+        bh=vthlFXsNWj/Fp8fnh1mbUSu3EE6eYeV8Gxe3HE8nbi4=; b=RkqBz5/hmOVt9WSo4U1E1Z1wCw
+        zVM48AKzWryC3e8tCm1/W/+sCVo481Kvkh67uUj4dqJNyg+zG0rUuzf6Hmr1S1b+oNpVDWOvuKY35
+        Maz+ulY7nBjsq0wfSPcYCf7OlH8Ur/v86p6Z6H5F+7rFvGD5p8w3cjDJsczEc12YF/P2jIfIFagr9
+        XyFTOvwgBls3pkDRjwWzcPAnFz1cbJnoQ+lcpM5GoXmHl5C1YXvylWrnE2Sv6nz1BvLxZxBbwmun3
+        bCK43jkE669wsmhJH3bD7QG2QD4EFNQp2Z9F+kizyk5c8CNJZ0d2HyOJFM1sc8QVyG1P50bVsDIDi
+        NVzZTe+g==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kBBek-0004QM-Kd; Thu, 27 Aug 2020 06:45:06 +0000
-Date:   Thu, 27 Aug 2020 07:45:06 +0100
+        id 1kBBkg-0004vq-OZ; Thu, 27 Aug 2020 06:51:14 +0000
+Date:   Thu, 27 Aug 2020 07:51:14 +0100
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     david@fromorbit.com, hch@infradead.org, linux-xfs@vger.kernel.org,
         amir73il@gmail.com, sandeen@sandeen.net
-Subject: Re: [PATCH 05/11] xfs: move xfs_log_dinode_to_disk to the log
- recovery code
-Message-ID: <20200827064506.GF14944@infradead.org>
+Subject: Re: [PATCH 07/11] xfs: kill struct xfs_ictimestamp
+Message-ID: <20200827065114.GA17534@infradead.org>
 References: <159847949739.2601708.16579235017313836378.stgit@magnolia>
- <159847953041.2601708.2391074537438610709.stgit@magnolia>
+ <159847954327.2601708.9783406435973854389.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159847953041.2601708.2391074537438610709.stgit@magnolia>
+In-Reply-To: <159847954327.2601708.9783406435973854389.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 03:05:30PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Move this function to xfs_inode_item_recover.c since there's only one
-> caller of it.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> + */
+> +static inline xfs_ictimestamp_t
+> +xfs_inode_to_log_dinode_ts(
+> +	const struct timespec64	tv)
+> +{
+> +	uint64_t		t;
+> +
+> +#ifdef __LITTLE_ENDIAN
+> +	t = ((uint64_t)tv.tv_nsec << 32) | ((uint64_t)tv.tv_sec & 0xffffffff);
+> +#elif __BIG_ENDIAN
+> +	t = ((int64_t)tv.tv_sec << 32) | ((uint64_t)tv.tv_nsec & 0xffffffff);
+> +#else
+> +# error System is neither little nor big endian?
+> +#endif
+> +	return t;
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Looking at this I wonder if we should just keep the struct and cast
+to it locally in the conversion functions, as that should take
+care of everything.  Or just keep the union from the previous version,
+sorry..
