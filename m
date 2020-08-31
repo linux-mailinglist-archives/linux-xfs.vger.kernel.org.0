@@ -2,98 +2,146 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C756625738A
-	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 08:08:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27E61257429
+	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 09:15:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbgHaGIG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Aug 2020 02:08:06 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37178 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaGIE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 02:08:04 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V5sok1113638;
-        Mon, 31 Aug 2020 06:07:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=lVFtdbYgFjbgN7h06Znl8pPv/izIIhUXPRfgCiBSeTE=;
- b=k5el5+vRHuYZZ+CFyLs/VTnww69xl4R6WnOOcgKCbipIuEEMHGawXUlTdkhGSzaDr+U9
- 8AtdygssafzK1q42Mmrdy9fe5O02TCfv2kaGdyjRoi+gaS9j2LFm38gsCjNkL8UxcxUP
- mEHLE+Zka8j9LF6rVO9zepN91WbdZpSwchCKiOe1bHyo6bUYfnX+qQ9tarxqEhN2erQW
- c3/+f2uvLGW6+olPkb+UScUf27yCqOdolqoqW5cu7+uEVR0d0BvsF48cU6h7HJokrtWs
- 6WtrviR08BY90sskvXOzXs5z3ayaJIY48J43v1K7bBIBAJ4wz0AElHpaDu/koIPehhMQ bw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 337eeqmc2m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 06:07:57 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V5t8lw021658;
-        Mon, 31 Aug 2020 06:07:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 3380kk6vm8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 06:07:56 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07V67uBL028847;
-        Mon, 31 Aug 2020 06:07:56 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 30 Aug 2020 23:07:56 -0700
-Subject: [PATCH 11/11] xfs: enable big timestamps
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com, david@fromorbit.com, hch@infradead.org
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        linux-xfs@vger.kernel.org, amir73il@gmail.com, sandeen@sandeen.net
-Date:   Sun, 30 Aug 2020 23:07:59 -0700
-Message-ID: <159885407932.3608006.12834647369484871421.stgit@magnolia>
-In-Reply-To: <159885400575.3608006.17716724192510967135.stgit@magnolia>
-References: <159885400575.3608006.17716724192510967135.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S1726255AbgHaHPU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Aug 2020 03:15:20 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1358 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727881AbgHaHOt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 03:14:49 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4ca3380001>; Mon, 31 Aug 2020 00:14:01 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 31 Aug 2020 00:14:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 31 Aug 2020 00:14:46 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 07:14:45 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 31 Aug 2020 07:14:45 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.61.194]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4ca3640001>; Mon, 31 Aug 2020 00:14:45 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v3 0/3] bio: Direct IO: convert to pin_user_pages_fast()
+Date:   Mon, 31 Aug 2020 00:14:36 -0700
+Message-ID: <20200831071439.1014766-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008310042
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008310042
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598858041; bh=lyrZ2gUylyRDxgfVzrsrWPEjnlS8I/rM0/dBNY/ekqg=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=AgIKKxMPpvPxMJX1X6WknDKq7jsksqwEJe5FEcBiW0igy4qyYjQ84yGeMTbtq+TWF
+         zTn6BBJbfbTKPXo+7YWdA+YA2fCiYofpXzPA9gyg3abtY4Py9wyzm65QkQvH5d0MgM
+         J35idY/iyfHlBPCGXm/0LYqqmhTzoehWr/2E9D9cnf4LcDr0rP9ocdqym538+ZwzhN
+         OA/mVZs5qZg+OwrNX+rebHjMGMVXa0lrHflwoEV3kbh6gRVMa0DEb7fuowvO2JeBJR
+         hxflPqdMFfa4mjGIpQMOdgm2ZwdC6ypG/z9nDW+l1P6WsXJaoNzBUNJGM8kf/6Uh3m
+         g7wtUVLD5D+6g==
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+bio: convert get_user_pages_fast() --> pin_user_pages_fast()
 
-Enable the big timestamp feature.
+Change generic block/bio Direct IO routines, to acquire FOLL_PIN user
+pages via the recently added routines:
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
----
- fs/xfs/libxfs/xfs_format.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+    iov_iter_pin_pages()
+    iov_iter_pin_pages_alloc()
+    pin_page()
+
+This effectively converts several file systems (ext4, for example) that
+use the common Direct IO routines.
+
+Change the corresponding page release calls from put_page() to
+unpin_user_page().
+
+Change bio_release_pages() to handle FOLL_PIN pages. In fact, after this
+patch, that is the *only* type of pages that bio_release_pages()
+handles.
+
+Design notes
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+Quite a few approaches have been considered over the years. This one is
+inspired by Christoph Hellwig's July, 2019 observation that there are
+only 5 ITER_ types, and we can simplify handling of them for Direct IO
+[1]. Accordingly, this patch implements the following pseudocode:
+
+Direct IO behavior:
+
+    ITER_IOVEC:
+        pin_user_pages_fast();
+        break;
+
+    ITER_PIPE:
+        for each page:
+             pin_page();
+        break;
+
+    ITER_KVEC:    // already elevated page refcount, leave alone
+    ITER_BVEC:    // already elevated page refcount, leave alone
+    ITER_DISCARD: // discard
+        return -EFAULT or -ENVALID;
+
+...which works for callers that already have sorted out which case they
+are in. Such as, Direct IO in the block/bio layers.
+
+Note that this does leave ITER_KVEC and ITER_BVEC unconverted, for now.
+
+Page acquisition: The iov_iter_get_pages*() routines above are at just
+the right level in the call stack: the callers already know which system
+to use, and so it's a small change to just drop in the replacement
+routines. And it's a fan-in/fan-out point: block/bio call sites for
+Direct IO funnel their page acquisitions through the
+iov_iter_get_pages*() routines, and there are many other callers of
+those. And we can't convert all of the callers at once--too many
+subsystems are involved, and it would be a too large and too risky
+patch.
+
+Page release: there are already separate release routines: put_page()
+vs. unpin_user_page(), so it's already done there.
+
+[1] https://lore.kernel.org/kvm/20190724061750.GA19397@infradead.org/
+
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 394159808ffa..dd764da08f6f 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -471,7 +471,8 @@ xfs_sb_has_ro_compat_feature(
- #define XFS_SB_FEAT_INCOMPAT_ALL \
- 		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
- 		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
--		 XFS_SB_FEAT_INCOMPAT_META_UUID)
-+		 XFS_SB_FEAT_INCOMPAT_META_UUID| \
-+		 XFS_SB_FEAT_INCOMPAT_BIGTIME)
- 
- #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
- static inline bool
+
+John Hubbard (3):
+  mm/gup: introduce pin_page()
+  iov_iter: introduce iov_iter_pin_pages*() routines
+  bio: convert get_user_pages_fast() --> pin_user_pages_fast()
+
+ block/bio.c          |  24 ++++-----
+ block/blk-map.c      |   6 +--
+ fs/direct-io.c       |  28 +++++------
+ fs/iomap/direct-io.c |   2 +-
+ include/linux/mm.h   |   2 +
+ include/linux/uio.h  |   5 ++
+ lib/iov_iter.c       | 113 ++++++++++++++++++++++++++++++++++++++++---
+ mm/gup.c             |  33 +++++++++++++
+ 8 files changed, 175 insertions(+), 38 deletions(-)
+
+--=20
+2.28.0
 
