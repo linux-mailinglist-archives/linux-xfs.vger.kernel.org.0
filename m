@@ -2,52 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0611E25738B
-	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 08:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09AA3257381
+	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 08:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725810AbgHaGJG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Aug 2020 02:09:06 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:50016 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaGJG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 02:09:06 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V5sIDa177714;
-        Mon, 31 Aug 2020 06:08:58 GMT
+        id S1726573AbgHaGHP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Aug 2020 02:07:15 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48002 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgHaGHN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 02:07:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V5rVUi018865;
+        Mon, 31 Aug 2020 06:07:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=k1zi3z0iHgVIyENMoVpmHWGElnWLUPCXnyVCPOaArHQ=;
- b=EVcAgyVt4Z8zY0G1iy1NrixsPhCUWIOVToHxxBlcJY9mc8uusPzmZN3hVUtfLWLLqFYS
- WP8iaEBzewNnBkTkbj7W3EtodHPRyNlot4K97eORmuTwkB0ESZB1eldigoMZq/v2qwq7
- LlyfSJsE4XnJc4SfhnMhvHJBZQJxfdEdwsA52bedzMoJ3Xdw30FLLQg70pRdM7VWZq96
- AwjICdgWChvTML0oAxIuHVagefKG+wXcLdmppuwnh47epgPaQ0ObflJ1Tb/32OGRduOF
- LSSoT5mZdQ+0h3xWDuYfZiFS9zKyqZimKbLmRvnP9oa8aQSfHPrh4FBSUhnJonAS/NaL DQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 337eykvamf-1
+ bh=ie2NgonRa/1Ead82nki8V6q2/q8cqwrg6edjcPx8Es8=;
+ b=SozLfpmgPgOEcXJlpf/IW+COXnVAuAa8UxwTFmjQzz8ASyvGa9kwyKUc81BjFUOyOFr+
+ 85Dq+57LnYYTFMxmZ5KTHK4us6EPaSQHFBpr8szuBShmOMFC2Cwc8zEY4QbGeRfYsd6M
+ fsZtYDHUVxKiMilyyD6G5JoVr7zeIyd6PFTDq1yOAYlnuFQAv7HlWeOe4Ix4vtf/c4yZ
+ aV4srgm0rYGKi2Aed0DUXjKRp8H1OWXLfEVNxBQ59/RWfz+D8IfUlCFX0uo3fOpm/0Gx
+ ppwyo7fej2fMaziJfCTRTxeMWvYl5UrUl2aFspTGNhY4RMp57LJbwWHFizF8zyozi+TA Vg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 337qrhbd7n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 06:08:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V5tbNl123808;
-        Mon, 31 Aug 2020 06:06:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 3380xu99ax-1
+        Mon, 31 Aug 2020 06:07:04 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V5uWvi096803;
+        Mon, 31 Aug 2020 06:07:03 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 3380wybg4k-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 06:06:57 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07V66u4H003254;
-        Mon, 31 Aug 2020 06:06:56 GMT
+        Mon, 31 Aug 2020 06:07:03 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07V673VB028499;
+        Mon, 31 Aug 2020 06:07:03 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 30 Aug 2020 23:06:56 -0700
-Subject: [PATCH 02/11] xfs: refactor quota expiration timer modification
+        with ESMTP ; Sun, 30 Aug 2020 23:07:02 -0700
+Subject: [PATCH 03/11] xfs: refactor default quota grace period setting code
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, david@fromorbit.com, hch@infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>,
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
         Allison Collins <allison.henderson@oracle.com>,
         linux-xfs@vger.kernel.org, amir73il@gmail.com, sandeen@sandeen.net
-Date:   Sun, 30 Aug 2020 23:06:59 -0700
-Message-ID: <159885401923.3608006.15529590239645021330.stgit@magnolia>
+Date:   Sun, 30 Aug 2020 23:07:06 -0700
+Message-ID: <159885402592.3608006.10830807263487637818.stgit@magnolia>
 In-Reply-To: <159885400575.3608006.17716724192510967135.stgit@magnolia>
 References: <159885400575.3608006.17716724192510967135.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,15 +56,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2008310042
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- priorityscore=1501 phishscore=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 spamscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008310042
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
@@ -72,202 +73,95 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Define explicit limits on the range of quota grace period expiration
-timeouts and refactor the code that modifies the timeouts into helpers
-that clamp the values appropriately.  Note that we'll refactor the
-default grace period timer separately.
+Refactor the code that sets the default quota grace period into a helper
+function so that we can override the ondisk behavior later.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 ---
- fs/xfs/libxfs/xfs_format.h |   24 ++++++++++++++++++++++++
- fs/xfs/xfs_dquot.c         |   22 ++++++++++++++++++----
- fs/xfs/xfs_dquot.h         |    2 ++
- fs/xfs/xfs_qm.c            |    2 ++
- fs/xfs/xfs_qm.h            |    4 ++++
- fs/xfs/xfs_qm_syscalls.c   |   16 +++++++++++-----
- 6 files changed, 61 insertions(+), 9 deletions(-)
+ fs/xfs/libxfs/xfs_format.h |   13 +++++++++++++
+ fs/xfs/xfs_dquot.c         |    8 ++++++++
+ fs/xfs/xfs_dquot.h         |    1 +
+ fs/xfs/xfs_qm_syscalls.c   |    4 ++--
+ 4 files changed, 24 insertions(+), 2 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index e57360a8fd16..cb316053d3db 100644
+index cb316053d3db..4b68a473b090 100644
 --- a/fs/xfs/libxfs/xfs_format.h
 +++ b/fs/xfs/libxfs/xfs_format.h
-@@ -1199,6 +1199,30 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
- 
- #define XFS_DQTYPE_ANY		(XFS_DQTYPE_REC_MASK)
- 
-+/*
-+ * XFS Quota Timers
-+ * ================
+@@ -1209,6 +1209,11 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
+  * been reached, and therefore no expiration has been set.  Therefore, the
+  * ondisk min and max defined here can be used directly to constrain the incore
+  * quota expiration timestamps on a Unix system.
 + *
-+ * Traditional quota grace period expiration timers are an unsigned 32-bit
-+ * seconds counter; time zero is the Unix epoch, Jan  1 00:00:01 UTC 1970.
-+ * Note that an expiration value of zero means that the quota limit has not
-+ * been reached, and therefore no expiration has been set.  Therefore, the
-+ * ondisk min and max defined here can be used directly to constrain the incore
-+ * quota expiration timestamps on a Unix system.
-+ */
-+
++ * The grace period for each quota type is stored in the root dquot (id = 0)
++ * and is applied to a non-root dquot when it exceeds the soft or hard limits.
++ * The length of quota grace periods are unsigned 32-bit quantities measured in
++ * units of seconds.  A value of zero means to use the default period.
+  */
+ 
+ /*
+@@ -1223,6 +1228,14 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
+  */
+ #define XFS_DQ_LEGACY_EXPIRY_MAX	((int64_t)U32_MAX)
+ 
 +/*
-+ * Smallest possible ondisk quota expiration value with traditional timestamps.
-+ * This corresponds exactly with the incore expiration Jan  1 00:00:01 UTC 1970.
++ * Default quota grace periods, ranging from zero (use the compiled defaults)
++ * to ~136 years.  These are applied to a non-root dquot that has exceeded
++ * either limit.
 + */
-+#define XFS_DQ_LEGACY_EXPIRY_MIN	((int64_t)1)
-+
-+/*
-+ * Largest possible ondisk quota expiration value with traditional timestamps.
-+ * This corresponds exactly with the incore expiration Feb  7 06:28:15 UTC 2106.
-+ */
-+#define XFS_DQ_LEGACY_EXPIRY_MAX	((int64_t)U32_MAX)
++#define XFS_DQ_GRACE_MIN		((int64_t)0)
++#define XFS_DQ_GRACE_MAX		((int64_t)U32_MAX)
 +
  /*
   * This is the main portion of the on-disk representation of quota information
   * for a user.  We pad this with some more expansion room to construct the on
 diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index bcd73b9c2994..f34841f98d44 100644
+index f34841f98d44..e63a933413a3 100644
 --- a/fs/xfs/xfs_dquot.c
 +++ b/fs/xfs/xfs_dquot.c
-@@ -98,12 +98,25 @@ xfs_qm_adjust_dqlimits(
- 		xfs_dquot_set_prealloc_limits(dq);
+@@ -110,6 +110,14 @@ xfs_dquot_set_timeout(
+ 					  qi->qi_expiry_max);
  }
  
-+/* Set the expiration time of a quota's grace period. */
++/* Set the length of the default grace period. */
 +time64_t
-+xfs_dquot_set_timeout(
-+	struct xfs_mount	*mp,
-+	time64_t		timeout)
++xfs_dquot_set_grace_period(
++	time64_t		grace)
 +{
-+	struct xfs_quotainfo	*qi = mp->m_quotainfo;
-+
-+	return clamp_t(time64_t, timeout, qi->qi_expiry_min,
-+					  qi->qi_expiry_max);
++	return clamp_t(time64_t, grace, XFS_DQ_GRACE_MIN, XFS_DQ_GRACE_MAX);
 +}
 +
  /*
   * Determine if this quota counter is over either limit and set the quota
   * timers as appropriate.
-  */
- static inline void
- xfs_qm_adjust_res_timer(
-+	struct xfs_mount	*mp,
- 	struct xfs_dquot_res	*res,
- 	struct xfs_quota_limits	*qlim)
- {
-@@ -112,7 +125,8 @@ xfs_qm_adjust_res_timer(
- 	if ((res->softlimit && res->count > res->softlimit) ||
- 	    (res->hardlimit && res->count > res->hardlimit)) {
- 		if (res->timer == 0)
--			res->timer = ktime_get_real_seconds() + qlim->time;
-+			res->timer = xfs_dquot_set_timeout(mp,
-+					ktime_get_real_seconds() + qlim->time);
- 	} else {
- 		if (res->timer == 0)
- 			res->warnings = 0;
-@@ -145,9 +159,9 @@ xfs_qm_adjust_dqtimers(
- 	ASSERT(dq->q_id);
- 	defq = xfs_get_defquota(qi, xfs_dquot_type(dq));
- 
--	xfs_qm_adjust_res_timer(&dq->q_blk, &defq->blk);
--	xfs_qm_adjust_res_timer(&dq->q_ino, &defq->ino);
--	xfs_qm_adjust_res_timer(&dq->q_rtb, &defq->rtb);
-+	xfs_qm_adjust_res_timer(dq->q_mount, &dq->q_blk, &defq->blk);
-+	xfs_qm_adjust_res_timer(dq->q_mount, &dq->q_ino, &defq->ino);
-+	xfs_qm_adjust_res_timer(dq->q_mount, &dq->q_rtb, &defq->rtb);
- }
- 
- /*
 diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-index 282a65da93c7..0e449101c861 100644
+index 0e449101c861..f642884a6834 100644
 --- a/fs/xfs/xfs_dquot.h
 +++ b/fs/xfs/xfs_dquot.h
-@@ -237,4 +237,6 @@ typedef int (*xfs_qm_dqiterate_fn)(struct xfs_dquot *dq,
- int xfs_qm_dqiterate(struct xfs_mount *mp, xfs_dqtype_t type,
+@@ -238,5 +238,6 @@ int xfs_qm_dqiterate(struct xfs_mount *mp, xfs_dqtype_t type,
  		xfs_qm_dqiterate_fn iter_fn, void *priv);
  
-+time64_t xfs_dquot_set_timeout(struct xfs_mount *mp, time64_t timeout);
-+
+ time64_t xfs_dquot_set_timeout(struct xfs_mount *mp, time64_t timeout);
++time64_t xfs_dquot_set_grace_period(time64_t grace);
+ 
  #endif /* __XFS_DQUOT_H__ */
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index be67570badf8..b83a12ecfc35 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -661,6 +661,8 @@ xfs_qm_init_quotainfo(
- 	/* Precalc some constants */
- 	qinf->qi_dqchunklen = XFS_FSB_TO_BB(mp, XFS_DQUOT_CLUSTER_SIZE_FSB);
- 	qinf->qi_dqperchunk = xfs_calc_dquots_per_chunk(qinf->qi_dqchunklen);
-+	qinf->qi_expiry_min = XFS_DQ_LEGACY_EXPIRY_MIN;
-+	qinf->qi_expiry_max = XFS_DQ_LEGACY_EXPIRY_MAX;
- 
- 	mp->m_qflags |= (mp->m_sb.sb_qflags & XFS_ALL_QUOTA_CHKD);
- 
-diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-index 9c078c35d924..e3dabab44097 100644
---- a/fs/xfs/xfs_qm.h
-+++ b/fs/xfs/xfs_qm.h
-@@ -65,6 +65,10 @@ struct xfs_quotainfo {
- 	struct xfs_def_quota	qi_grp_default;
- 	struct xfs_def_quota	qi_prj_default;
- 	struct shrinker		qi_shrinker;
-+
-+	/* Minimum and maximum quota expiration timestamp values. */
-+	time64_t		qi_expiry_min;
-+	time64_t		qi_expiry_max;
- };
- 
- static inline struct radix_tree_root *
 diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 1c542b4a5220..750f775ae915 100644
+index 750f775ae915..ca1b57d291dc 100644
 --- a/fs/xfs/xfs_qm_syscalls.c
 +++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -479,13 +479,19 @@ xfs_setqlim_warns(
- 
- static inline void
- xfs_setqlim_timer(
-+	struct xfs_mount	*mp,
- 	struct xfs_dquot_res	*res,
- 	struct xfs_quota_limits	*qlim,
- 	s64			timer)
+@@ -486,8 +486,8 @@ xfs_setqlim_timer(
  {
--	res->timer = timer;
--	if (qlim)
-+	if (qlim) {
-+		/* Set the length of the default grace period. */
-+		res->timer = timer;
- 		qlim->time = timer;
-+	} else {
-+		/* Set the grace period expiration on a quota. */
-+		res->timer = xfs_dquot_set_timeout(mp, timer);
-+	}
- }
- 
- /*
-@@ -574,7 +580,7 @@ xfs_qm_scall_setqlim(
- 	if (newlim->d_fieldmask & QC_SPC_WARNS)
- 		xfs_setqlim_warns(res, qlim, newlim->d_spc_warns);
- 	if (newlim->d_fieldmask & QC_SPC_TIMER)
--		xfs_setqlim_timer(res, qlim, newlim->d_spc_timer);
-+		xfs_setqlim_timer(mp, res, qlim, newlim->d_spc_timer);
- 
- 	/* Blocks on the realtime device. */
- 	hard = (newlim->d_fieldmask & QC_RT_SPC_HARD) ?
-@@ -590,7 +596,7 @@ xfs_qm_scall_setqlim(
- 	if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
- 		xfs_setqlim_warns(res, qlim, newlim->d_rt_spc_warns);
- 	if (newlim->d_fieldmask & QC_RT_SPC_TIMER)
--		xfs_setqlim_timer(res, qlim, newlim->d_rt_spc_timer);
-+		xfs_setqlim_timer(mp, res, qlim, newlim->d_rt_spc_timer);
- 
- 	/* Inodes */
- 	hard = (newlim->d_fieldmask & QC_INO_HARD) ?
-@@ -606,7 +612,7 @@ xfs_qm_scall_setqlim(
- 	if (newlim->d_fieldmask & QC_INO_WARNS)
- 		xfs_setqlim_warns(res, qlim, newlim->d_ino_warns);
- 	if (newlim->d_fieldmask & QC_INO_TIMER)
--		xfs_setqlim_timer(res, qlim, newlim->d_ino_timer);
-+		xfs_setqlim_timer(mp, res, qlim, newlim->d_ino_timer);
- 
- 	if (id != 0) {
- 		/*
+ 	if (qlim) {
+ 		/* Set the length of the default grace period. */
+-		res->timer = timer;
+-		qlim->time = timer;
++		res->timer = xfs_dquot_set_grace_period(timer);
++		qlim->time = res->timer;
+ 	} else {
+ 		/* Set the grace period expiration on a quota. */
+ 		res->timer = xfs_dquot_set_timeout(mp, timer);
 
