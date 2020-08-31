@@ -2,160 +2,198 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2AC42581B3
-	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 21:22:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 772712581EF
+	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 21:42:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgHaTWV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Aug 2020 15:22:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33299 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726526AbgHaTWV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 15:22:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598901739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=R7PBr5r7gHbAh5anLZPvJGvsxr1dZnoNAcE4WBTZb/w=;
-        b=NeVXwcHTknr0lTOeiJPMyziKrRyODSHK1H3fqnmj+2nTgIQQ4jr+ekoEAE4ntilHKmbWYM
-        9+nSZOUNrty5SRImp4w6U/R6jGmXhNwQvuDCF1Hu+QHiN/E06pSpmEiDisg0oL6hSex3j4
-        eadxzl2Joes/vP77D8s1iedec3PqXro=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-BqS2p38-PHKv44U8YjVz4A-1; Mon, 31 Aug 2020 15:22:16 -0400
-X-MC-Unique: BqS2p38-PHKv44U8YjVz4A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18A621084C85;
-        Mon, 31 Aug 2020 19:22:16 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EF17860C15;
-        Mon, 31 Aug 2020 19:22:15 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 07VJMF9o008638;
-        Mon, 31 Aug 2020 15:22:15 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 07VJMFrU008634;
-        Mon, 31 Aug 2020 15:22:15 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Mon, 31 Aug 2020 15:22:15 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>
-Subject: RCU stall when using XFS
-Message-ID: <alpine.LRH.2.02.2008311513150.7870@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        id S1728986AbgHaTmT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Aug 2020 15:42:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50604 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgHaTmT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 15:42:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VJdFCY086800;
+        Mon, 31 Aug 2020 19:42:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=7dsDhcAotj7XDhkaoX3G6Vp0N3yoCZnOXIRBGD82lGI=;
+ b=LUiTctpeY4bJduOmRLdwyrqE9e0Nw703QlqlftaZV3o9x/Ll+KDhBg9APsyOD/5eonBz
+ Mc9d9BhOaQZiIPB0w8WtnOl/GJKBcE0BcP8aEPWzKTEHPW66Zyz4yJ08qPfJjLQkPnHo
+ JzVtVhYeJAdr3BLvox9YDmG+bHnI5gH8N6bdZIETqcjWene9filVNsaE4IvZC3Ky6d0r
+ x29UQCeQz0IDRvGFv10iZOgXK9k382BOX6VBQzNPomrftTD/R9xIoxH+32tdZSp0Nuhm
+ yXwKHVMalOhNxekR98Tc9fsowVruUM6xkWCHqMwAr0kVXe9qNWMTCtczBA/KNqaCy2uR 0A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 337eeqr84h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 19:42:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VJaY27181868;
+        Mon, 31 Aug 2020 19:40:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 3380x157gg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 19:40:15 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07VJeFDp005198;
+        Mon, 31 Aug 2020 19:40:15 GMT
+Received: from localhost (/10.159.252.155)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 31 Aug 2020 12:40:15 -0700
+Date:   Mon, 31 Aug 2020 12:40:18 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/5] xfs: store inode btree block counts in AGI header
+Message-ID: <20200831194018.GS6096@magnolia>
+References: <159858219107.3058056.6897728273666872031.stgit@magnolia>
+ <159858219730.3058056.14835592680951054838.stgit@magnolia>
+ <20200831190637.GC12035@bfoster>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831190637.GC12035@bfoster>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=7 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=7
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310115
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi
+On Mon, Aug 31, 2020 at 03:06:37PM -0400, Brian Foster wrote:
+> On Thu, Aug 27, 2020 at 07:36:37PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Add a btree block usage counters for both inode btrees to the AGI header
+> > so that we don't have to walk the entire finobt at mount time to create
+> > the per-AG reservations.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  fs/xfs/libxfs/xfs_ag.c           |    4 ++++
+> >  fs/xfs/libxfs/xfs_format.h       |   18 +++++++++++++++++-
+> >  fs/xfs/libxfs/xfs_ialloc.c       |    1 +
+> >  fs/xfs/libxfs/xfs_ialloc_btree.c |   21 +++++++++++++++++++++
+> >  fs/xfs/xfs_ondisk.h              |    2 +-
+> >  fs/xfs/xfs_super.c               |    4 ++++
+> >  6 files changed, 48 insertions(+), 2 deletions(-)
+> > 
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
+> > index 8cf73fe4338e..65d443c787d0 100644
+> > --- a/fs/xfs/libxfs/xfs_ag.c
+> > +++ b/fs/xfs/libxfs/xfs_ag.c
+> > @@ -333,6 +333,10 @@ xfs_agiblock_init(
+> >  	}
+> >  	for (bucket = 0; bucket < XFS_AGI_UNLINKED_BUCKETS; bucket++)
+> >  		agi->agi_unlinked[bucket] = cpu_to_be32(NULLAGINO);
+> > +	if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
+> > +		agi->agi_iblocks = cpu_to_be32(1);
+> > +		agi->agi_fblocks = cpu_to_be32(1);
+> > +	}
+> 
+> With independent tree counters, shouldn't we be checking for hasfinobt()
+> for such finobt changes?
 
-I report this RCU stall when working with one 512GiB file the XFS 
-filesystem on persistent memory. Except for the warning, there was no 
-observed misbehavior.
+DOH.  Yes, it should, now that hasinobtcounts() no longer requires
+hasfinobt.  I'll fix that.
 
-Perhaps, it is missing cond_resched() somewhere.
+> >  }
+> >  
+> >  typedef void (*aghdr_init_work_f)(struct xfs_mount *mp, struct xfs_buf *bp,
+> ...
+> > diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
+> > index 3c8aebc36e64..ee9d407ab9da 100644
+> > --- a/fs/xfs/libxfs/xfs_ialloc_btree.c
+> > +++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
+> > @@ -67,6 +67,25 @@ xfs_finobt_set_root(
+> >  			   XFS_AGI_FREE_ROOT | XFS_AGI_FREE_LEVEL);
+> >  }
+> >  
+> > +/* Update the inode btree block counter for this btree. */
+> > +static inline void
+> > +xfs_inobt_mod_blockcount(
+> > +	struct xfs_btree_cur	*cur,
+> > +	int			howmuch)
+> > +{
+> > +	struct xfs_buf		*agbp = cur->bc_ag.agbp;
+> > +	struct xfs_agi		*agi = agbp->b_addr;
+> > +
+> > +	if (!xfs_sb_version_hasinobtcounts(&cur->bc_mp->m_sb))
+> > +		return;
+> > +
+> > +	if (cur->bc_btnum == XFS_BTNUM_FINO)
+> > +		be32_add_cpu(&agi->agi_fblocks, howmuch);
+> > +	else
+> > +		be32_add_cpu(&agi->agi_iblocks, howmuch);
+> > +	xfs_ialloc_log_agi(cur->bc_tp, agbp, XFS_AGI_IBLOCKS);
+> 
+> Similarly, I thought we were going to be logging them separately as
+> well..? It seems odd to log an unused field in the finobt=0 case. Hm?
 
-Mikulas
+...and that.  Thank you for catching that.
 
+--D
 
-[187395.754249] XFS (pmem3): Mounting V5 Filesystem
-[187395.766583] XFS (pmem3): Ending clean mount
-[187395.771434] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[188226.398260] rcu: INFO: rcu_sched self-detected stall on CPU
-[188226.404609] rcu: 	11-....: (37223 ticks this GP) idle=5a2/1/0x4000000000000000 softirq=259495/259495 fqs=13202 
-[188226.416134] 	(t=60017 jiffies g=8444929 q=28811)
-[188226.421405] NMI backtrace for cpu 11
-[188226.425492] CPU: 11 PID: 36509 Comm: kworker/11:0 Tainted: G S         O      5.9.0-rc2 #3
-[188226.434886] Hardware name: Intel Corporation PURLEY/PURLEY, BIOS PLYXCRB1.86B.0576.D20.1902150028 02/15/2019
-[188226.446099] Workqueue: xfs-conv/pmem3 xfs_end_io [xfs]
-[188226.451966] Call Trace:
-[188226.454818]  <IRQ>
-[188226.457184]  dump_stack+0x57/0x70
-[188226.460980]  nmi_cpu_backtrace.cold.8+0x13/0x4f
-[188226.466135]  ? lapic_can_unplug_cpu.cold.36+0x37/0x37
-[188226.471870]  nmi_trigger_cpumask_backtrace+0xc8/0xca
-[188226.477512]  rcu_dump_cpu_stacks+0xae/0xdc
-[188226.482182]  rcu_sched_clock_irq.cold.94+0x10a/0x366
-[188226.487822]  ? trigger_load_balance+0x3c/0x240
-[188226.492881]  ? tick_sched_do_timer+0x70/0x70
-[188226.497742]  ? tick_sched_do_timer+0x70/0x70
-[188226.502620]  update_process_times+0x24/0x60
-[188226.507401]  tick_sched_handle.isra.26+0x35/0x40
-[188226.512651]  tick_sched_timer+0x65/0x80
-[188226.517083]  __hrtimer_run_queues+0x100/0x280
-[188226.522042]  hrtimer_interrupt+0x100/0x220
-[188226.526710]  ? rcu_iw_handler+0x19/0x40
-[188226.531089]  __sysvec_apic_timer_interrupt+0x5d/0xf0
-[188226.536720]  asm_call_on_stack+0xf/0x20
-[188226.541098]  </IRQ>
-[188226.543540]  sysvec_apic_timer_interrupt+0x73/0x80
-[188226.548984]  asm_sysvec_apic_timer_interrupt+0x12/0x20
-[188226.554844] RIP: 0010:_raw_spin_unlock_irqrestore+0xe/0x10
-[188226.561062] Code: 00 8b 07 85 c0 75 0b ba 01 00 00 00 f0 0f b1 17 74 03 31 c0 c3 b8 01 00 00 00 c3 90 0f 1f 44 00 00 c6 07 00 0f 1f 40 00 56 9d <c3> 90 0f 1f 44 00 00 8b 07 a9 ff 01 00 00 75 1e ba 00 02 00 00 f0
-[188226.582119] RSP: 0000:ffffb013ce1dbd28 EFLAGS: 00000206
-[188226.588049] RAX: 0000000000000000 RBX: ffffefef65cd7f40 RCX: 0000000000000180
-[188226.596109] RDX: ffff8956c7d1fa38 RSI: 0000000000000206 RDI: ffff896c5dcd4db0
-[188226.604171] RBP: 0000000000000001 R08: ffffb013ce1dbcf0 R09: 0000000000000206
-[188226.612232] R10: 00000000000313d5 R11: 0000000000000001 R12: ffff896a0bbe4000
-[188226.620293] R13: ffff896d59ae4800 R14: ffff896c5dcd4da8 R15: ffff8c9234c54860
-[188226.628399]  test_clear_page_writeback+0xd7/0x300
-[188226.633750]  end_page_writeback+0x43/0x60
-[188226.638326]  iomap_finish_ioend+0x17f/0x200
-[188226.643103]  ? xfs_iomap_write_unwritten+0x18a/0x2c0 [xfs]
-[188226.649322]  iomap_finish_ioends+0x43/0xa0
-[188226.653999]  xfs_end_ioend+0x6b/0x100 [xfs]
-[188226.658825]  ? xfs_setfilesize_ioend+0x60/0x60 [xfs]
-[188226.664482]  xfs_end_io+0xad/0xe0 [xfs]
-[188226.668860]  process_one_work+0x206/0x3d0
-[188226.673431]  ? process_one_work+0x3d0/0x3d0
-[188226.678197]  worker_thread+0x2d/0x3d0
-[188226.682380]  ? process_one_work+0x3d0/0x3d0
-[188226.687146]  kthread+0x116/0x130
-[188226.690844]  ? kthread_park+0x80/0x80
-[188226.695029]  ret_from_fork+0x1f/0x30
-[188510.467258] XFS (pmem3): Unmounting Filesystem
-[188514.316739] XFS (pmem3): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[188514.325229] XFS (pmem3): Mounting V5 Filesystem
-[188514.338115] XFS (pmem3): Ending clean mount
-[188514.342969] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[188547.273256] XFS (pmem3): Unmounting Filesystem
-[188551.349615] XFS (pmem3): Mounting V5 Filesystem
-[188551.362393] XFS (pmem3): Ending clean mount
-[188551.367259] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[188623.505834] XFS (pmem3): Unmounting Filesystem
-[188627.935790] XFS (pmem3): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[188627.944297] XFS (pmem3): Mounting V5 Filesystem
-[188627.957588] XFS (pmem3): Ending clean mount
-[188627.962455] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[188727.574325] XFS (pmem3): Unmounting Filesystem
-[188730.257546] XFS (pmem3): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[188730.266029] XFS (pmem3): Mounting V5 Filesystem
-[188730.277924] XFS (pmem3): Ending clean mount
-[188730.282780] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[188731.157151] XFS (pmem3): Unmounting Filesystem
-[188732.031577] XFS (pmem3): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[188732.040047] XFS (pmem3): Mounting V5 Filesystem
-[188732.049865] XFS (pmem3): Ending clean mount
-[188732.054673] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[188752.654883] XFS (pmem3): Unmounting Filesystem
-[188753.536132] XFS (pmem3): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[188753.544610] XFS (pmem3): Mounting V5 Filesystem
-[188753.556100] XFS (pmem3): Ending clean mount
-[188753.560954] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[189643.193075] XFS (pmem3): Unmounting Filesystem
-[189646.828861] XFS (pmem3): Mounting V5 Filesystem
-[189646.841023] XFS (pmem3): Ending clean mount
-[189646.845865] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-[189703.029858] XFS (pmem3): Unmounting Filesystem
-[189705.756862] XFS (pmem3): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
-[189705.765342] XFS (pmem3): Mounting V5 Filesystem
-[189705.777044] XFS (pmem3): Ending clean mount
-[189705.781896] xfs filesystem being mounted at /mnt/xfs supports timestamps until 2038 (0x7fffffff)
-
+> Brian
+> 
+> > +}
+> > +
+> >  STATIC int
+> >  __xfs_inobt_alloc_block(
+> >  	struct xfs_btree_cur	*cur,
+> > @@ -102,6 +121,7 @@ __xfs_inobt_alloc_block(
+> >  
+> >  	new->s = cpu_to_be32(XFS_FSB_TO_AGBNO(args.mp, args.fsbno));
+> >  	*stat = 1;
+> > +	xfs_inobt_mod_blockcount(cur, 1);
+> >  	return 0;
+> >  }
+> >  
+> > @@ -134,6 +154,7 @@ __xfs_inobt_free_block(
+> >  	struct xfs_buf		*bp,
+> >  	enum xfs_ag_resv_type	resv)
+> >  {
+> > +	xfs_inobt_mod_blockcount(cur, -1);
+> >  	return xfs_free_extent(cur->bc_tp,
+> >  			XFS_DADDR_TO_FSB(cur->bc_mp, XFS_BUF_ADDR(bp)), 1,
+> >  			&XFS_RMAP_OINFO_INOBT, resv);
+> > diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
+> > index 5f04d8a5ab2a..acb9b737fe6b 100644
+> > --- a/fs/xfs/xfs_ondisk.h
+> > +++ b/fs/xfs/xfs_ondisk.h
+> > @@ -23,7 +23,7 @@ xfs_check_ondisk_structs(void)
+> >  	XFS_CHECK_STRUCT_SIZE(struct xfs_acl_entry,		12);
+> >  	XFS_CHECK_STRUCT_SIZE(struct xfs_agf,			224);
+> >  	XFS_CHECK_STRUCT_SIZE(struct xfs_agfl,			36);
+> > -	XFS_CHECK_STRUCT_SIZE(struct xfs_agi,			336);
+> > +	XFS_CHECK_STRUCT_SIZE(struct xfs_agi,			344);
+> >  	XFS_CHECK_STRUCT_SIZE(struct xfs_bmbt_key,		8);
+> >  	XFS_CHECK_STRUCT_SIZE(struct xfs_bmbt_rec,		16);
+> >  	XFS_CHECK_STRUCT_SIZE(struct xfs_bmdr_block,		4);
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index 71ac6c1cdc36..c7ffcb57b586 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -1549,6 +1549,10 @@ xfs_fc_fill_super(
+> >  		goto out_filestream_unmount;
+> >  	}
+> >  
+> > +	if (xfs_sb_version_hasinobtcounts(&mp->m_sb))
+> > +		xfs_warn(mp,
+> > + "EXPERIMENTAL inode btree counters feature in use. Use at your own risk!");
+> > +
+> >  	error = xfs_mountfs(mp);
+> >  	if (error)
+> >  		goto out_filestream_unmount;
+> > 
+> 
