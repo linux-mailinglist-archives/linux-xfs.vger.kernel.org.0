@@ -2,206 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9749257A06
-	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 15:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD451257A94
+	for <lists+linux-xfs@lfdr.de>; Mon, 31 Aug 2020 15:37:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHaNFL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Aug 2020 09:05:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53854 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727822AbgHaNEn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 09:04:43 -0400
+        id S1726249AbgHaNhN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Aug 2020 09:37:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21990 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726167AbgHaNhM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Aug 2020 09:37:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598879077;
+        s=mimecast20190719; t=1598881031;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=caiKHWoFXSc44qBiL0gEkrtplZlVj8+U4iWK8nzgO5I=;
-        b=SDnmskQvgOVGldP232SZVb3yCYbhBPwMkWbcrMtOsSCVNtwZczsNQhccmsxvCF7ve3aFen
-        mg1WjA+u6fIURpsxRXYjSDJNuh+tOz8JnDsYAl7d0PRGxOah+KcsihZbebCcnWJ5I/C4KC
-        VrvjQrWHPqCJEiTk9N+/D+VT66+EEuc=
+        bh=2UQlaaQbEqJq0JnauzBl0tDMMFva0ELTV14u3iIxOpI=;
+        b=e62Fn9NOxS6u+DMGca7evh/LgxaX+d3zNRlKBMqejxeuMSPvjX2N/+MKE/YAvo+VlkAh4h
+        BxVvZlUOgVAFVq4vWxqNIBPJHRkTTdK6hjHdLuAXtb4z/AQrdJslZ+1t04IkTNc3OToXvq
+        bm0dbTwZ5jqU3sW2VnFBsUmUABijvzc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-pDp64IyvNNWa_Ow8xbIkvA-1; Mon, 31 Aug 2020 09:04:34 -0400
-X-MC-Unique: pDp64IyvNNWa_Ow8xbIkvA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-27-VMijLeYRO3aRH-8REPjg3g-1; Mon, 31 Aug 2020 09:37:07 -0400
+X-MC-Unique: VMijLeYRO3aRH-8REPjg3g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00D278015A8
-        for <linux-xfs@vger.kernel.org>; Mon, 31 Aug 2020 13:04:33 +0000 (UTC)
-Received: from eorzea.redhat.com (unknown [10.40.193.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 57F915D9D5
-        for <linux-xfs@vger.kernel.org>; Mon, 31 Aug 2020 13:04:32 +0000 (UTC)
-From:   Carlos Maiolino <cmaiolino@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/4] xfs: Remove typedef xfs_attr_shortform_t
-Date:   Mon, 31 Aug 2020 15:04:23 +0200
-Message-Id: <20200831130423.136509-5-cmaiolino@redhat.com>
-In-Reply-To: <20200831130423.136509-1-cmaiolino@redhat.com>
-References: <20200831130423.136509-1-cmaiolino@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2D3C51006705;
+        Mon, 31 Aug 2020 13:37:06 +0000 (UTC)
+Received: from bfoster (ovpn-113-130.rdu2.redhat.com [10.10.113.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 97DA65C22D;
+        Mon, 31 Aug 2020 13:37:05 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 09:37:03 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        fstests <fstests@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH 1/4] generic: require discard zero behavior for
+ dmlogwrites on XFS
+Message-ID: <20200831133703.GA2667@bfoster>
+References: <20200826143815.360002-1-bfoster@redhat.com>
+ <20200826143815.360002-2-bfoster@redhat.com>
+ <CAOQ4uxjYf2Hb4+Zid7KeWUcu3sOgqR30de_0KwwjVbwNw1HfJg@mail.gmail.com>
+ <20200827070237.GA22194@infradead.org>
+ <CAOQ4uxhhN6Gj9AZBvEHUDLjTRKWi7=rOhitmbDLWFA=dCZQxXw@mail.gmail.com>
+ <20200827073700.GA30374@infradead.org>
+ <c59a4ed6-2698-ab61-6a73-143e273d9e22@toxicpanda.com>
+ <20200827170242.GA16905@infradead.org>
+ <20200827183507.GB434083@bfoster>
+ <20200829064659.GB29069@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829064659.GB29069@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
----
- fs/xfs/libxfs/xfs_attr.c      |  4 ++--
- fs/xfs/libxfs/xfs_attr_leaf.c | 16 ++++++++--------
- fs/xfs/libxfs/xfs_da_format.h |  4 ++--
- fs/xfs/xfs_attr_list.c        |  2 +-
- fs/xfs/xfs_ondisk.h           | 12 ++++++------
- 5 files changed, 19 insertions(+), 19 deletions(-)
+On Sat, Aug 29, 2020 at 07:46:59AM +0100, Christoph Hellwig wrote:
+> On Thu, Aug 27, 2020 at 02:35:07PM -0400, Brian Foster wrote:
+> > OTOH, perhaps the thinp behavior could be internal, but conditional
+> > based on XFS. It's not really clear to me if this problem is more of an
+> > XFS phenomenon or just that XFS happens to have some unique recovery
+> > checking logic that explicitly detects it. It seems more like the
+> > latter, but I don't know enough about ext4 or btrfs to say..
+> 
+> The way I understand the tests (and Josefs mail seems to confirm that)
+> is that it uses discards to ensure data disappears.  Unfortunately
+> that's only how discard sometimes work, but not all the time.
+> 
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 2b48fdb394e80..0468ead236924 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -525,8 +525,8 @@ xfs_attr_set(
- 
- static inline int xfs_attr_sf_totsize(struct xfs_inode *dp) {
- 
--	xfs_attr_shortform_t *sf =
--		(xfs_attr_shortform_t *)dp->i_afp->if_u1.if_data;
-+	struct xfs_attr_shortform *sf =
-+		(struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
- 
- 	return (be16_to_cpu(sf->hdr.totsize));
- 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index bcc76ff298646..f64ab351b760c 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -728,14 +728,14 @@ xfs_attr_shortform_add(
- 
- 	ifp = dp->i_afp;
- 	ASSERT(ifp->if_flags & XFS_IFINLINE);
--	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
- 	if (xfs_attr_sf_findname(args, &sfe, NULL) == -EEXIST)
- 		ASSERT(0);
- 
- 	offset = (char *)sfe - (char *)sf;
- 	size = xfs_attr_sf_entsize_byname(args->namelen, args->valuelen);
- 	xfs_idata_realloc(dp, size, XFS_ATTR_FORK);
--	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
- 	sfe = (struct xfs_attr_sf_entry *)((char *)sf + offset);
- 
- 	sfe->namelen = args->namelen;
-@@ -787,7 +787,7 @@ xfs_attr_shortform_remove(
- 
- 	dp = args->dp;
- 	mp = dp->i_mount;
--	sf = (xfs_attr_shortform_t *)dp->i_afp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
- 
- 	error = xfs_attr_sf_findname(args, &sfe, &base);
- 	if (error != -EEXIST)
-@@ -837,7 +837,7 @@ xfs_attr_shortform_remove(
- int
- xfs_attr_shortform_lookup(xfs_da_args_t *args)
- {
--	xfs_attr_shortform_t *sf;
-+	struct xfs_attr_shortform *sf;
- 	struct xfs_attr_sf_entry *sfe;
- 	int i;
- 	struct xfs_ifork *ifp;
-@@ -846,7 +846,7 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
- 
- 	ifp = args->dp->i_afp;
- 	ASSERT(ifp->if_flags & XFS_IFINLINE);
--	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
- 	sfe = &sf->list[0];
- 	for (i = 0; i < sf->hdr.count;
- 				sfe = xfs_attr_sf_nextentry(sfe), i++) {
-@@ -873,7 +873,7 @@ xfs_attr_shortform_getvalue(
- 	int			i;
- 
- 	ASSERT(args->dp->i_afp->if_flags == XFS_IFINLINE);
--	sf = (xfs_attr_shortform_t *)args->dp->i_afp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)args->dp->i_afp->if_u1.if_data;
- 	sfe = &sf->list[0];
- 	for (i = 0; i < sf->hdr.count;
- 				sfe = xfs_attr_sf_nextentry(sfe), i++) {
-@@ -908,12 +908,12 @@ xfs_attr_shortform_to_leaf(
- 
- 	dp = args->dp;
- 	ifp = dp->i_afp;
--	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
- 	size = be16_to_cpu(sf->hdr.totsize);
- 	tmpbuffer = kmem_alloc(size, 0);
- 	ASSERT(tmpbuffer != NULL);
- 	memcpy(tmpbuffer, ifp->if_u1.if_data, size);
--	sf = (xfs_attr_shortform_t *)tmpbuffer;
-+	sf = (struct xfs_attr_shortform *)tmpbuffer;
- 
- 	xfs_idata_realloc(dp, -size, XFS_ATTR_FORK);
- 	xfs_bmap_local_to_extents_empty(args->trans, dp, XFS_ATTR_FORK);
-diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
-index e86185a1165b3..b40a4e80f5ee6 100644
---- a/fs/xfs/libxfs/xfs_da_format.h
-+++ b/fs/xfs/libxfs/xfs_da_format.h
-@@ -579,7 +579,7 @@ xfs_dir2_block_leaf_p(struct xfs_dir2_block_tail *btp)
- /*
-  * Entries are packed toward the top as tight as possible.
-  */
--typedef struct xfs_attr_shortform {
-+struct xfs_attr_shortform {
- 	struct xfs_attr_sf_hdr {	/* constant-structure header block */
- 		__be16	totsize;	/* total bytes in shortform list */
- 		__u8	count;	/* count of active entries */
-@@ -591,7 +591,7 @@ typedef struct xfs_attr_shortform {
- 		uint8_t flags;	/* flags bits (see xfs_attr_leaf.h) */
- 		uint8_t nameval[];	/* name & value bytes concatenated */
- 	} list[1];			/* variable sized array */
--} xfs_attr_shortform_t;
-+};
- 
- typedef struct xfs_attr_leaf_map {	/* RLE map of free bytes */
- 	__be16	base;			  /* base of free region */
-diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
-index fbe5574f08930..8f8837fe21cf0 100644
---- a/fs/xfs/xfs_attr_list.c
-+++ b/fs/xfs/xfs_attr_list.c
-@@ -61,7 +61,7 @@ xfs_attr_shortform_list(
- 	int				error = 0;
- 
- 	ASSERT(dp->i_afp != NULL);
--	sf = (xfs_attr_shortform_t *)dp->i_afp->if_u1.if_data;
-+	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
- 	ASSERT(sf != NULL);
- 	if (!sf->hdr.count)
- 		return 0;
-diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index 5f04d8a5ab2a9..ad51c8eb447b1 100644
---- a/fs/xfs/xfs_ondisk.h
-+++ b/fs/xfs/xfs_ondisk.h
-@@ -84,12 +84,12 @@ xfs_check_ondisk_structs(void)
- 	XFS_CHECK_OFFSET(xfs_attr_leaf_name_remote_t, namelen,	8);
- 	XFS_CHECK_OFFSET(xfs_attr_leaf_name_remote_t, name,	9);
- 	XFS_CHECK_STRUCT_SIZE(xfs_attr_leafblock_t,		40);
--	XFS_CHECK_OFFSET(xfs_attr_shortform_t, hdr.totsize,	0);
--	XFS_CHECK_OFFSET(xfs_attr_shortform_t, hdr.count,	2);
--	XFS_CHECK_OFFSET(xfs_attr_shortform_t, list[0].namelen,	4);
--	XFS_CHECK_OFFSET(xfs_attr_shortform_t, list[0].valuelen, 5);
--	XFS_CHECK_OFFSET(xfs_attr_shortform_t, list[0].flags,	6);
--	XFS_CHECK_OFFSET(xfs_attr_shortform_t, list[0].nameval,	7);
-+	XFS_CHECK_OFFSET(struct xfs_attr_shortform, hdr.totsize, 0);
-+	XFS_CHECK_OFFSET(struct xfs_attr_shortform, hdr.count,	 2);
-+	XFS_CHECK_OFFSET(struct xfs_attr_shortform, list[0].namelen,	4);
-+	XFS_CHECK_OFFSET(struct xfs_attr_shortform, list[0].valuelen,	5);
-+	XFS_CHECK_OFFSET(struct xfs_attr_shortform, list[0].flags,	6);
-+	XFS_CHECK_OFFSET(struct xfs_attr_shortform, list[0].nameval,	7);
- 	XFS_CHECK_STRUCT_SIZE(xfs_da_blkinfo_t,			12);
- 	XFS_CHECK_STRUCT_SIZE(xfs_da_intnode_t,			16);
- 	XFS_CHECK_STRUCT_SIZE(xfs_da_node_entry_t,		8);
--- 
-2.26.2
+I think Amir's followup describes how the infrastructure uses discard
+better than I could. I'm not intimately familiar with how it works, so
+my goal was to take the same approach as generic/482 and update the
+tests to provide the predictable behavior expected by the
+infrastructure. If folks want to revisit all of that to improve the
+tests to not rely on discard and break that dependency, that seems like
+a fine direction, but it also seems that can come later as improvements
+to the broader infrastructure.
+
+> > > We have a write zeroes operation in the block layer.  For some devices
+> > > this is as efficient as discard, and that should (I think) dm.
+> > > 
+> > 
+> > Do you mean BLKZEROOUT? I see that is more efficient than writing zeroes
+> > from userspace, but I don't think it's efficient enough to solve this
+> > problem. It takes about 3m to manually zero my 15GB lvm (dm-linear)
+> > scratch device on my test vm via dd using sync writes. A 'blkdiscard -z'
+> > saves me about half that time, but IIRC this is an operation that would
+> > occur every time the logwrites device is replayed to a particular
+> > recovery point (which can happen many times per test).
+> 
+> Are we talking about the block layer interface or the userspace syscall
+> one?  I though it was the former, in which case REQ_OP_WRITE_ZEROES
+> is the interface.  User interface is harder - you need to use fallocate
+> on the block device, but the flags are mapped kinda weird:
+> 
+> FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE guarantees you a
+> REQ_OP_WRITE_ZEROES, but there is a bunch of other variants that include
+> fallbacks.
+> 
+
+I was using the BLKZEROOUT ioctl in my previous test because
+fallocate(PUNCH_HOLE|KEEP_SIZE) (zeroing offload) isn't supported on
+this device. I see similar results as above with
+fallocate(PUNCH_HOLE|KEEP_SIZE) though, which seems to fall back to
+__blkdev_issue_zero_pages() in that case.
+
+Brian
 
