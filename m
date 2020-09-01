@@ -2,153 +2,208 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 642AD258BEB
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 11:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E00DB258C32
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 11:59:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgIAJpe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 05:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726140AbgIAJpc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 05:45:32 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4C4C061244
-        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 02:45:31 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y6so262551plk.10
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Sep 2020 02:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/Tvk6H0MlVNrnywGGKO+Nwz27CfixoSwIlZe7pivxaA=;
-        b=m3k3pk5vjJoqmAAS9fzcpMkgIh5/qEsA/HNligd6jRl62+VobY4wG7yZkJxeWeuOiY
-         HLiOZGvAEj0B2OzmNUwtlX4Jd/K5wSxlak0JZZr4q7CwAUMKz1kucUyKcqY84sj+ULLK
-         c6CKHpBh/4D4t+OrA893h+JCbTeEcCywcGrZ3LREyrMhakfefykBAC9BFGIe715bo3Sn
-         6P2Wv0Fg7uAKtDdT1u0xcRuQFKEbTHysxdDGAifWrjIB/Qq/BSTixG88LnffQByuDFN4
-         eZxiZqMISjFkN6cHLPGh4kBJdkrG6CfH4lCAIUmRowiA50Fh4ic5fnv3Osx+wDuOF1/l
-         6X3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/Tvk6H0MlVNrnywGGKO+Nwz27CfixoSwIlZe7pivxaA=;
-        b=Fe0y8pgujXXTrhTdwXqNUhD9ndQ8VjXOsMd+b8K8vGe7XoUZuxiI7Zv4Zn7D7Ukt1b
-         CfEDCorW3kMgHc/SXznBm+A0H6ORCR0GIVPmBrWuZXgqB0dlXZHnLE+hAvcMUf3ejLar
-         J2R4MQjZbEwIlDtF29wjDDIvpoK4wMQuGuEt5CITUQZXjWWOkBfo4Zxq6Hgk1/+Pt2nU
-         lQDiA6fCbc3w0IdEAXXpxU8oek9wXS1JMAWGcG7cDQltPbnWs9IQI8W7oWOR6S6UnGeo
-         NrSMhnFuvN0Mko/e/fpgR/cmZdSPm6sq2NCHB0qkIy6utRi/jrnHdmdaIGtpv8pul8xd
-         3SOQ==
-X-Gm-Message-State: AOAM531d5BkJ5DuyXx+Dj5wVz19YK6T4zljtjOPPRkt52qRifOgyPovV
-        kTSj8Ti1rRPWDIHa87VE0uMYDO+tOss=
-X-Google-Smtp-Source: ABdhPJxjJZtI18GiThz/00OeYhrpZA5rnPmPgi4f0W9rvoEv1biwT1i3mcEc8Qe1QZDvmXZyt5BDzg==
-X-Received: by 2002:a17:90a:b38b:: with SMTP id e11mr779832pjr.94.1598953531356;
-        Tue, 01 Sep 2020 02:45:31 -0700 (PDT)
-Received: from garuda.localnet ([122.171.183.205])
-        by smtp.gmail.com with ESMTPSA id f17sm1252141pfq.67.2020.09.01.02.45.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 02:45:30 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@infradead.org
-Subject: Re: [PATCH V3 10/10] xfs: Check for extent overflow when swapping extents
-Date:   Tue, 01 Sep 2020 15:15:16 +0530
-Message-ID: <799478968.03WXDaQWZF@garuda>
-In-Reply-To: <20200831162039.GI6096@magnolia>
-References: <20200820054349.5525-1-chandanrlinux@gmail.com> <20200820054349.5525-11-chandanrlinux@gmail.com> <20200831162039.GI6096@magnolia>
+        id S1726131AbgIAJ71 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 05:59:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53511 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725848AbgIAJ71 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 05:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598954365;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=8JPTEWbSRYysyTCBKXdxRckEy3Bm2vSPej7nEiqzAY8=;
+        b=HIsgH5cuGJDec4SDHEARQm9rK+7zNsyH2myVFkJ4lphQ8JTeAPOn6zdtb2mQY8ZDX6tMMo
+        4FYyUaWqXn2lFXIQj6Hl0WItNId2b7lo55FrPjEtVdBAiatNxDVjmfe70PK74LRtzoqOME
+        9YsoNpcJS2CXbCI/1qVBoz7Kb5RKTPA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-519-ywLld_jQMpaNp7Q6KsLfuA-1; Tue, 01 Sep 2020 05:59:23 -0400
+X-MC-Unique: ywLld_jQMpaNp7Q6KsLfuA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 979B18014D8
+        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 09:59:22 +0000 (UTC)
+Received: from eorzea.redhat.com (unknown [10.40.194.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 11FB460C04
+        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 09:59:21 +0000 (UTC)
+From:   Carlos Maiolino <cmaiolino@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [RFC PATCH] xfs: add inline helper to convert from data fork to xfs_attr_shortform
+Date:   Tue,  1 Sep 2020 11:59:19 +0200
+Message-Id: <20200901095919.238598-1-cmaiolino@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Monday 31 August 2020 9:50:39 PM IST Darrick J. Wong wrote:
-> On Thu, Aug 20, 2020 at 11:13:49AM +0530, Chandan Babu R wrote:
-> > Removing an initial range of source/donor file's extent and adding a new
-> > extent (from donor/source file) in its place will cause extent count to
-> > increase by 1.
-> > 
-> > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
-> > ---
-> >  fs/xfs/libxfs/xfs_inode_fork.h |  6 ++++++
-> >  fs/xfs/xfs_bmap_util.c         | 11 +++++++++++
-> >  2 files changed, 17 insertions(+)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-> > index d1c675cf803a..4219b01f1034 100644
-> > --- a/fs/xfs/libxfs/xfs_inode_fork.h
-> > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-> > @@ -100,6 +100,12 @@ struct xfs_ifork {
-> >   */
-> >  #define XFS_IEXT_REFLINK_REMAP_CNT(smap_real, dmap_written) \
-> >  	(((smap_real) ? 1 : 0) + ((dmap_written) ? 1 : 0))
-> > +/*
-> > + * Removing an initial range of source/donor file's extent and adding a new
-> > + * extent (from donor/source file) in its place will cause extent count to
-> > + * increase by 1.
-> > + */
-> > +#define XFS_IEXT_SWAP_RMAP_CNT		(1)
-> >  
-> >  /*
-> >   * Fork handling.
-> > diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> > index e682eecebb1f..7105525dadd5 100644
-> > --- a/fs/xfs/xfs_bmap_util.c
-> > +++ b/fs/xfs/xfs_bmap_util.c
-> > @@ -1375,6 +1375,17 @@ xfs_swap_extent_rmap(
-> >  		/* Unmap the old blocks in the source file. */
-> >  		while (tirec.br_blockcount) {
-> >  			ASSERT(tp->t_firstblock == NULLFSBLOCK);
-> > +
-> > +			error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
-> > +					XFS_IEXT_SWAP_RMAP_CNT);
-> > +			if (error)
-> > +				goto out;
-> > +
-> > +			error = xfs_iext_count_may_overflow(tip, XFS_DATA_FORK,
-> > +					XFS_IEXT_SWAP_RMAP_CNT);
-> 
-> Heh, the old swapext code is very gritty.  Two questions--
-> 
-> If either of irec and uirec describe a hole, why do we need to check for
-> an extent count overflow?
+Hi folks, while working on the attr structs cleanup, I've noticed there
+are so many places where we do:
 
-Thanks for pointing this out. I missed this. The check for overflow should be
-moved later in the code i.e. after reading up the extent mappings. Also, the
-overflow check should be made on source file only if the donor file extent
-has a valid on-disk mapping and vice versa.
+(struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
 
-> 
-> Second, is the transaction clean at the point where we could goto out?
-> I'm pretty sure it is, but if there's a chance we could end up bailing
-> out with a dirty transaction, then we need to do this check elsewhere
-> such that we don't shut down the filesystem.
-> 
-> (I'm pretty sure the answer to #2 is "yes", but I thought I'd better
-> ask.)
+So, I thought it would be worth to add another inline function to do
+this conversion and remove all these casts.
 
-In xfs_swap_extents(), the code between allocating a new transaction and
-invoking xfs_swap_extent_rmap() does not peform any operation that can dirty
-the transaction.
+To achieve this, it will be required to include xfs_inode.h header on
+xfs_attr_sf.h, so it can access the xfs_inode definition. Also, if this
+patch is an acceptable idea, it will make sense then to keep the
+xfs_attr_sf_totsize() function also inside xfs_attr_sf.h (which has been
+moved on my series to avoid the additional #include), so, I thought on
+sending this RFC patch to get comments if it's a good idea or not, and,
+if it is, I'll add this patch to my series before sending it over.
 
-Inside xfs_swap_extent_rmap(), we invoke xfs_defer_finish() every time we
-register deferred operations to exchange extents between two inodes'
-forks. xfs_defer_finish() will always return with a clean transaction. So, we
-can safely return an error code on detecting an overflow.
-> 
-> --D
-> 
-> > +			if (error)
-> > +				goto out;
-> > +
-> >  			trace_xfs_swap_extent_rmap_remap_piece(tip, &tirec);
-> >  
-> >  			/* Read extent from the source file */
-> 
+I didn't focus on check if this patch is totally correct (only build
+test), since my idea is to gather you guys opinions about having this
+new inline function, so don't bother on reviewing the patch itself by
+now, only the function name if you guys prefer some other name.
 
+Also, this patch is build on top of my clean up series (V2), not yet
+sent to the list, so it won't apply anyway.
+
+Cheers.
+
+Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+---
+ fs/xfs/libxfs/xfs_attr.c      |  4 ++--
+ fs/xfs/libxfs/xfs_attr_leaf.c | 16 ++++++++--------
+ fs/xfs/libxfs/xfs_attr_sf.h   |  6 ++++++
+ fs/xfs/xfs_attr_list.c        |  2 +-
+ 4 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index ff1fa2ed40ab9..1dccc8b9f31f6 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -525,8 +525,8 @@ xfs_attr_set(
+ 
+ /* total space in use */
+ static inline int xfs_attr_sf_totsize(struct xfs_inode *dp) {
+-	struct xfs_attr_shortform *sf =
+-		(struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
++	struct xfs_attr_shortform *sf = xfs_attr_ifork_to_sf(dp);
++
+ 	return be16_to_cpu(sf->hdr.totsize);
+ }
+ 
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index f64ab351b760c..ac92eba8745d6 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -681,7 +681,7 @@ xfs_attr_sf_findname(
+ 	int			end;
+ 	int			i;
+ 
+-	sf = (struct xfs_attr_shortform *)args->dp->i_afp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(args->dp);
+ 	sfe = &sf->list[0];
+ 	end = sf->hdr.count;
+ 	for (i = 0; i < end; sfe = xfs_attr_sf_nextentry(sfe),
+@@ -728,14 +728,14 @@ xfs_attr_shortform_add(
+ 
+ 	ifp = dp->i_afp;
+ 	ASSERT(ifp->if_flags & XFS_IFINLINE);
+-	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(dp);
+ 	if (xfs_attr_sf_findname(args, &sfe, NULL) == -EEXIST)
+ 		ASSERT(0);
+ 
+ 	offset = (char *)sfe - (char *)sf;
+ 	size = xfs_attr_sf_entsize_byname(args->namelen, args->valuelen);
+ 	xfs_idata_realloc(dp, size, XFS_ATTR_FORK);
+-	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(dp);
+ 	sfe = (struct xfs_attr_sf_entry *)((char *)sf + offset);
+ 
+ 	sfe->namelen = args->namelen;
+@@ -787,7 +787,7 @@ xfs_attr_shortform_remove(
+ 
+ 	dp = args->dp;
+ 	mp = dp->i_mount;
+-	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(dp);
+ 
+ 	error = xfs_attr_sf_findname(args, &sfe, &base);
+ 	if (error != -EEXIST)
+@@ -846,7 +846,7 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
+ 
+ 	ifp = args->dp->i_afp;
+ 	ASSERT(ifp->if_flags & XFS_IFINLINE);
+-	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(args->dp);
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count;
+ 				sfe = xfs_attr_sf_nextentry(sfe), i++) {
+@@ -873,7 +873,7 @@ xfs_attr_shortform_getvalue(
+ 	int			i;
+ 
+ 	ASSERT(args->dp->i_afp->if_flags == XFS_IFINLINE);
+-	sf = (struct xfs_attr_shortform *)args->dp->i_afp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(args->dp);
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count;
+ 				sfe = xfs_attr_sf_nextentry(sfe), i++) {
+@@ -908,7 +908,7 @@ xfs_attr_shortform_to_leaf(
+ 
+ 	dp = args->dp;
+ 	ifp = dp->i_afp;
+-	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(dp);
+ 	size = be16_to_cpu(sf->hdr.totsize);
+ 	tmpbuffer = kmem_alloc(size, 0);
+ 	ASSERT(tmpbuffer != NULL);
+@@ -1018,7 +1018,7 @@ xfs_attr_shortform_verify(
+ 
+ 	ASSERT(ip->i_afp->if_format == XFS_DINODE_FMT_LOCAL);
+ 	ifp = XFS_IFORK_PTR(ip, XFS_ATTR_FORK);
+-	sfp = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
++	sfp = xfs_attr_ifork_to_sf(ip);
+ 	size = ifp->if_bytes;
+ 
+ 	/*
+diff --git a/fs/xfs/libxfs/xfs_attr_sf.h b/fs/xfs/libxfs/xfs_attr_sf.h
+index 540ad3332a9c8..a51aed1dab6c1 100644
+--- a/fs/xfs/libxfs/xfs_attr_sf.h
++++ b/fs/xfs/libxfs/xfs_attr_sf.h
+@@ -3,6 +3,8 @@
+  * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+  * All Rights Reserved.
+  */
++
++#include "xfs_inode.h"
+ #ifndef __XFS_ATTR_SF_H__
+ #define	__XFS_ATTR_SF_H__
+ 
+@@ -47,4 +49,8 @@ xfs_attr_sf_nextentry(struct xfs_attr_sf_entry *sfep) {
+ 					    xfs_attr_sf_entsize(sfep));
+ }
+ 
++static inline struct xfs_attr_shortform *
++xfs_attr_ifork_to_sf(struct xfs_inode *ino) {
++	return (struct xfs_attr_shortform *)ino->i_afp->if_u1.if_data;
++}
+ #endif	/* __XFS_ATTR_SF_H__ */
+diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+index 8f8837fe21cf0..7c0ebdeb43567 100644
+--- a/fs/xfs/xfs_attr_list.c
++++ b/fs/xfs/xfs_attr_list.c
+@@ -61,7 +61,7 @@ xfs_attr_shortform_list(
+ 	int				error = 0;
+ 
+ 	ASSERT(dp->i_afp != NULL);
+-	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
++	sf = xfs_attr_ifork_to_sf(dp);
+ 	ASSERT(sf != NULL);
+ 	if (!sf->hdr.count)
+ 		return 0;
 -- 
-chandan
-
-
+2.26.2
 
