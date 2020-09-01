@@ -2,210 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12CB0259B2A
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 18:58:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B19259CE2
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 19:21:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732310AbgIAQ63 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 12:58:29 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55138 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729753AbgIAQ63 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 12:58:29 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081GsqIC013967;
-        Tue, 1 Sep 2020 16:58:25 GMT
+        id S1728998AbgIARVF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 13:21:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40464 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728771AbgIAPMn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 11:12:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081F9ll8133109;
+        Tue, 1 Sep 2020 15:12:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=chjhHiC2k/sqNWn5/4uxgE//BhRfgaLCUPDPnlhOZvA=;
- b=GIVML+4jINdApfy/Z8/1qy+I88HQCLU4AF036hMYtfUkxOWFhLoCDlPg7grEw4CZtpR0
- fJxdq4gnMxYOaCmugXiAxYjZlkLTZZcVas5EX2fLUN68+oX8ikzXXSepNJmErDAc7EFl
- Opp62q5j648nHV632GR5NYd5tCZxQMBbgfrlbci0tNt6jTMJCAGAeBR6u9RIoayyRaW3
- YQTvnBB1Xzs7V1UBG0u7dRIWpIORErCv/6naq+5qKWguJ8XvbpsZJTPdXoazVwfVRWdn
- QjsE5pjREueJT/H/Juakd1dLfvHChZDwEzld9t8JDfH5oLRESkxtdk0Y7H5bT4uer4o4 lQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 337eeqwqgu-1
+ bh=69XBy7Prznwop6rn97Xe1cVn6rbsvD5ZvUeBPMnuuvQ=;
+ b=pFHku2uaE5OiCnbPBE6xpzZ33M2FVJwUkv41wIGr1eBRvVX/dLV2AiEu+2mcgdlcN9jz
+ P19htcvLglSXz81j4njmBNFFVwP3EGTEEH8GdUB8imSUJFkq9e6dY8pmZU2IunLd2Ld7
+ l7aQjD6MsPP91eC1sfisbSYM9jteII6gJ+rLjz38o3rvopgslch/ER9Jo/+uFfvzVFvA
+ 7zNvfHbMnqOiL5MYHzWymPOfjC//GlihH4O9PUsTsxAmk6cLaLswsnxEHCDPgsWqzN/0
+ wfsXeYLH16jc1YrAgXIPK3Or+xRD637UIpcl8+PB5ngbaO5EsGu10pApM/STlAKIDCuw BA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 339dmmudhh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 01 Sep 2020 16:58:25 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081Gt2OP055502;
-        Tue, 1 Sep 2020 16:58:25 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 3380ss523n-1
+        Tue, 01 Sep 2020 15:12:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081F9uEW117432;
+        Tue, 1 Sep 2020 15:12:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 3380xwkduh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Sep 2020 16:58:24 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 081GwOmN017517;
-        Tue, 1 Sep 2020 16:58:24 GMT
-Received: from localhost (/10.159.133.7)
+        Tue, 01 Sep 2020 15:12:31 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 081FCT5i023180;
+        Tue, 1 Sep 2020 15:12:29 GMT
+Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Sep 2020 09:58:23 -0700
-Date:   Tue, 1 Sep 2020 09:58:21 -0700
+        with ESMTP ; Tue, 01 Sep 2020 08:12:29 -0700
+Date:   Tue, 1 Sep 2020 08:12:33 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 13/15] xfs: simplify xfs_trans_getsb
-Message-ID: <20200901165821.GF6096@magnolia>
-References: <20200901155018.2524-1-hch@lst.de>
- <20200901155018.2524-14-hch@lst.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] iomap: fix WARN_ON_ONCE() from unprivileged users
+Message-ID: <20200901151233.GC6096@magnolia>
+References: <20200831182353.14593-1-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901155018.2524-14-hch@lst.de>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=1
+In-Reply-To: <20200831182353.14593-1-cai@lca.pw>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=56
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009010141
+ definitions=main-2009010126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=56
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010126
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 05:50:16PM +0200, Christoph Hellwig wrote:
-> Remove the mp argument as this function is only called in transaction
-> context, and open code xfs_getsb given that the function already accesses
-> the buffer pointer in the mount point directly.
+On Mon, Aug 31, 2020 at 02:23:53PM -0400, Qian Cai wrote:
+> It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
+> unprivileged users which would taint the kernel, or worse - panic if
+> panic_on_warn or panic_on_taint is set. Hence, just convert it to
+> pr_warn_ratelimited() to let users know their workloads are racing.
+> Thank Dave Chinner for the initial analysis of the racing reproducers.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Looks pretty straightforward to me,
-
+Looks ok to me too.
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/libxfs/xfs_sb.c |  4 ++--
->  fs/xfs/xfs_trans.c     |  2 +-
->  fs/xfs/xfs_trans.h     |  2 +-
->  fs/xfs/xfs_trans_buf.c | 46 ++++++++++++++----------------------------
->  4 files changed, 19 insertions(+), 35 deletions(-)
+> v4: use %pD4.
+> v3: Keep the default case and update the message.
+> v2: Record the path, pid and command as well.
 > 
-> diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-> index ae9aaf1f34bfcc..15d03d96753769 100644
-> --- a/fs/xfs/libxfs/xfs_sb.c
-> +++ b/fs/xfs/libxfs/xfs_sb.c
-> @@ -954,7 +954,7 @@ xfs_log_sb(
->  	struct xfs_trans	*tp)
->  {
->  	struct xfs_mount	*mp = tp->t_mountp;
-> -	struct xfs_buf		*bp = xfs_trans_getsb(tp, mp);
-> +	struct xfs_buf		*bp = xfs_trans_getsb(tp);
->  
->  	mp->m_sb.sb_icount = percpu_counter_sum(&mp->m_icount);
->  	mp->m_sb.sb_ifree = percpu_counter_sum(&mp->m_ifree);
-> @@ -1084,7 +1084,7 @@ xfs_sync_sb_buf(
->  	if (error)
->  		return error;
->  
-> -	bp = xfs_trans_getsb(tp, mp);
-> +	bp = xfs_trans_getsb(tp);
->  	xfs_log_sb(tp);
->  	xfs_trans_bhold(tp, bp);
->  	xfs_trans_set_sync(tp);
-> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-> index ed72867b1a1937..ca18a040336a1d 100644
-> --- a/fs/xfs/xfs_trans.c
-> +++ b/fs/xfs/xfs_trans.c
-> @@ -468,7 +468,7 @@ xfs_trans_apply_sb_deltas(
->  	xfs_buf_t	*bp;
->  	int		whole = 0;
->  
-> -	bp = xfs_trans_getsb(tp, tp->t_mountp);
-> +	bp = xfs_trans_getsb(tp);
->  	sbp = bp->b_addr;
->  
->  	/*
-> diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-> index b752501818d257..f46534b7523698 100644
-> --- a/fs/xfs/xfs_trans.h
-> +++ b/fs/xfs/xfs_trans.h
-> @@ -209,7 +209,7 @@ xfs_trans_read_buf(
->  				      flags, bpp, ops);
->  }
->  
-> -struct xfs_buf	*xfs_trans_getsb(xfs_trans_t *, struct xfs_mount *);
-> +struct xfs_buf	*xfs_trans_getsb(struct xfs_trans *);
->  
->  void		xfs_trans_brelse(xfs_trans_t *, struct xfs_buf *);
->  void		xfs_trans_bjoin(xfs_trans_t *, struct xfs_buf *);
-> diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
-> index 11cd666cd99a63..42d63b830cb9c8 100644
-> --- a/fs/xfs/xfs_trans_buf.c
-> +++ b/fs/xfs/xfs_trans_buf.c
-> @@ -166,50 +166,34 @@ xfs_trans_get_buf_map(
->  }
->  
->  /*
-> - * Get and lock the superblock buffer of this file system for the
-> - * given transaction.
-> - *
-> - * We don't need to use incore_match() here, because the superblock
-> - * buffer is a private buffer which we keep a pointer to in the
-> - * mount structure.
-> + * Get and lock the superblock buffer for the given transaction.
->   */
-> -xfs_buf_t *
-> +struct xfs_buf *
->  xfs_trans_getsb(
-> -	xfs_trans_t		*tp,
-> -	struct xfs_mount	*mp)
-> +	struct xfs_trans	*tp)
->  {
-> -	xfs_buf_t		*bp;
-> -	struct xfs_buf_log_item	*bip;
-> +	struct xfs_buf		*bp = tp->t_mountp->m_sb_bp;
->  
->  	/*
-> -	 * Default to just trying to lock the superblock buffer
-> -	 * if tp is NULL.
-> +	 * Just increment the lock recursion count if the buffer is already
-> +	 * attached to this transaction.
->  	 */
-> -	if (tp == NULL)
-> -		return xfs_getsb(mp);
-> -
-> -	/*
-> -	 * If the superblock buffer already has this transaction
-> -	 * pointer in its b_fsprivate2 field, then we know we already
-> -	 * have it locked.  In this case we just increment the lock
-> -	 * recursion count and return the buffer to the caller.
-> -	 */
-> -	bp = mp->m_sb_bp;
->  	if (bp->b_transp == tp) {
-> -		bip = bp->b_log_item;
-> +		struct xfs_buf_log_item	*bip = bp->b_log_item;
-> +
->  		ASSERT(bip != NULL);
->  		ASSERT(atomic_read(&bip->bli_refcount) > 0);
->  		bip->bli_recur++;
-> +
->  		trace_xfs_trans_getsb_recur(bip);
-> -		return bp;
-> -	}
-> +	} else {
-> +		xfs_buf_lock(bp);
-> +		xfs_buf_hold(bp);
-> +		_xfs_trans_bjoin(tp, bp, 1);
->  
-> -	bp = xfs_getsb(mp);
-> -	if (bp == NULL)
-> -		return NULL;
-> +		trace_xfs_trans_getsb(bp->b_log_item);
-> +	}
->  
-> -	_xfs_trans_bjoin(tp, bp, 1);
-> -	trace_xfs_trans_getsb(bp->b_log_item);
->  	return bp;
->  }
->  
+>  fs/iomap/direct-io.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index c1aafb2ab990..9519113ebc35 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -388,6 +388,16 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+>  	case IOMAP_INLINE:
+>  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+> +	case IOMAP_DELALLOC:
+> +		/*
+> +		 * DIO is not serialised against mmap() access at all, and so
+> +		 * if the page_mkwrite occurs between the writeback and the
+> +		 * iomap_apply() call in the DIO path, then it will see the
+> +		 * DELALLOC block that the page-mkwrite allocated.
+> +		 */
+> +		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %pD4 Comm: %.20s\n",
+> +				    dio->iocb->ki_filp, current->comm);
+> +		return -EIO;
+>  	default:
+>  		WARN_ON_ONCE(1);
+>  		return -EIO;
 > -- 
-> 2.28.0
+> 2.18.4
 > 
