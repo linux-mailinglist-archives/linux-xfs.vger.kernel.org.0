@@ -2,139 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A8E6259028
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 16:19:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12516258FFF
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 16:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgIAOSi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 10:18:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728302AbgIAOQp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 10:16:45 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37404C061258;
-        Tue,  1 Sep 2020 07:08:39 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id w3so1273837ilh.5;
-        Tue, 01 Sep 2020 07:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=td0ICH2xNq/CHmD71me9EyhcsICT9Kh4ztqwaFSKtRI=;
-        b=RwUGH06OcU4La3EK0xzsNLfoIvDvnse+yg0P4rwlruB3KnVWUlCSQBGnaP2m28Bsa+
-         zzssF32v40X2xkYSeis1Kg0qANnECLljIv1R0u/2UJ2xWKbErzy7WH71Hqwguf2u3KmG
-         MX/Rro3QB4KUBvryHorpA7+ak3R3xLtb0xFrUGudHKpwzEObAdSIVDL1YT7qCqry55Bq
-         lF3uUserOX+A0Z5ejx1A8NTkP9GbL05mJVG5owYXRLVQoJDVQnIiL57P/lqZHgyau93d
-         4leZbhVLUPjYAs5TtLCpthKvKjQ9hAEcGCZ5Kl6N3h7Hfdy/gTgaXp8KTNqZOq2qcLD9
-         4T5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=td0ICH2xNq/CHmD71me9EyhcsICT9Kh4ztqwaFSKtRI=;
-        b=ew9W5oaFvG0ISAhYoww4ksQhkp9GNAZLGcJDbYaR+kG9pmh4rdAA1+cZN+cEUvq4FS
-         +BqEE/aXUsYywf/+V3fnG3OLoOdbTZs+nUDuR7Y1I3XuBfncW55Kthm4gwHv0CRHuBgq
-         FKe53hAILqt5BUbDBMjDTohvybhDosuslPGrXugWPXBIroHKqhroJLttcMkWwBbOvGUz
-         RY9aaAWadFe8Vj/EBNl8kbaR/GHALhxp+6523PGy6Py0fRTM+HqDzc7YQFA0CemF2Uee
-         MLwZNL9tXk3Y3DqTGR0IBz1TjEmRpqGNZGA9eTxw0fChinMx8FO7agHySLzsYA0BqSUY
-         ZsXg==
-X-Gm-Message-State: AOAM530sTjxnf3ISrbadZcpMAPa2BhydVyafTDo1ZRL9PyHszLpp5zZG
-        zc1mrt6ERn9TDUjbVMP3xPcKKEuytzioyRuZkQo=
-X-Google-Smtp-Source: ABdhPJwPtb/6O5gixQFSOYIJQtvlD4OGSyFzlmNc7mvdx/m3W25Y1ydrHW7nbIYEx++fsYtxIi5j2u7nwsHlv+o52xk=
-X-Received: by 2002:a05:6e02:dc3:: with SMTP id l3mr1444630ilj.137.1598969318525;
- Tue, 01 Sep 2020 07:08:38 -0700 (PDT)
+        id S1727794AbgIAON4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 10:13:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55612 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728288AbgIAONu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 10:13:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598969629;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jf5yG0PZro7cmIhKmGXIng++78MYkp945pYe3ACO57Y=;
+        b=Fg3L5Dd/MuK7c3gNQ7H15axnU07cLAP5/joxjFq6LZpzyRcVEnSW+gJP7oDGqW0rtABeKV
+        +9OTAtlc5Yhe3DnSJtkR+9oQYTJI22oujQGK4y5IbX7P5i2E3kMOWjQNTJzoXTNOUUv3aK
+        +XBrhf9CLKO9MtLO/jrDVO6/OMERFCQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-u50_sXMuO-OTjdOmC6mTog-1; Tue, 01 Sep 2020 10:13:48 -0400
+X-MC-Unique: u50_sXMuO-OTjdOmC6mTog-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67180807336
+        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 14:13:46 +0000 (UTC)
+Received: from bfoster (ovpn-113-130.rdu2.redhat.com [10.10.113.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01A135C1A3;
+        Tue,  1 Sep 2020 14:13:43 +0000 (UTC)
+Date:   Tue, 1 Sep 2020 10:13:41 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Carlos Maiolino <cmaiolino@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH] xfs: add inline helper to convert from data fork to
+ xfs_attr_shortform
+Message-ID: <20200901141341.GB174813@bfoster>
+References: <20200901095919.238598-1-cmaiolino@redhat.com>
 MIME-Version: 1.0
-References: <20200901134728.185353-1-bfoster@redhat.com> <20200901134728.185353-4-bfoster@redhat.com>
-In-Reply-To: <20200901134728.185353-4-bfoster@redhat.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 1 Sep 2020 17:08:27 +0300
-Message-ID: <CAOQ4uxhKGUkyEYUsyH=X4YD6EJmu+_FbHhoL+ZtarXqU0NfNkw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] generic/470: use thin volume for dmlogwrites
- target device
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     fstests <fstests@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901095919.238598-1-cmaiolino@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 4:48 PM Brian Foster <bfoster@redhat.com> wrote:
->
-> dmlogwrites support for XFS depends on discard zeroing support of
-> the intended target device. Update the test to use a thin volume and
-> allow it to run consistently and reliably on XFS.
->
-> Signed-off-by: Brian Foster <bfoster@redhat.com>
+On Tue, Sep 01, 2020 at 11:59:19AM +0200, Carlos Maiolino wrote:
+> Hi folks, while working on the attr structs cleanup, I've noticed there
+> are so many places where we do:
+> 
+> (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
+> 
+> So, I thought it would be worth to add another inline function to do
+> this conversion and remove all these casts.
+> 
+> To achieve this, it will be required to include xfs_inode.h header on
+> xfs_attr_sf.h, so it can access the xfs_inode definition. Also, if this
+> patch is an acceptable idea, it will make sense then to keep the
+> xfs_attr_sf_totsize() function also inside xfs_attr_sf.h (which has been
+> moved on my series to avoid the additional #include), so, I thought on
+> sending this RFC patch to get comments if it's a good idea or not, and,
+> if it is, I'll add this patch to my series before sending it over.
+> 
+> I didn't focus on check if this patch is totally correct (only build
+> test), since my idea is to gather you guys opinions about having this
+> new inline function, so don't bother on reviewing the patch itself by
+> now, only the function name if you guys prefer some other name.
+> 
+> Also, this patch is build on top of my clean up series (V2), not yet
+> sent to the list, so it won't apply anyway.
+> 
+> Cheers.
+> 
+> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 > ---
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+>  fs/xfs/libxfs/xfs_attr.c      |  4 ++--
+>  fs/xfs/libxfs/xfs_attr_leaf.c | 16 ++++++++--------
+>  fs/xfs/libxfs/xfs_attr_sf.h   |  6 ++++++
+>  fs/xfs/xfs_attr_list.c        |  2 +-
+>  4 files changed, 17 insertions(+), 11 deletions(-)
+> 
+...
+> diff --git a/fs/xfs/libxfs/xfs_attr_sf.h b/fs/xfs/libxfs/xfs_attr_sf.h
+> index 540ad3332a9c8..a51aed1dab6c1 100644
+> --- a/fs/xfs/libxfs/xfs_attr_sf.h
+> +++ b/fs/xfs/libxfs/xfs_attr_sf.h
+> @@ -3,6 +3,8 @@
+>   * Copyright (c) 2000,2002,2005 Silicon Graphics, Inc.
+>   * All Rights Reserved.
+>   */
+> +
+> +#include "xfs_inode.h"
 
->  tests/generic/470 | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
->
-> diff --git a/tests/generic/470 b/tests/generic/470
-> index fd6da563..c77499a2 100755
-> --- a/tests/generic/470
-> +++ b/tests/generic/470
-> @@ -20,12 +20,14 @@ _cleanup()
->  {
->         cd /
->         _log_writes_cleanup
-> +       _dmthin_cleanup
->         rm -f $tmp.*
+FWIW, I thought we tried to avoid including headers from other headers
+like this. I'm also wondering if it's an issue that we'd be including a
+a header that is external to libxfs from a libxfs header. Perhaps this
+could be simplified by passing the xfs_ifork pointer to the new helper
+rather than the xfs_inode and/or moving the helper to
+libxfs/xfs_inode_fork.h and putting a forward declaration of
+xfs_attr_shortform in there..?
+
+Brian
+
+>  #ifndef __XFS_ATTR_SF_H__
+>  #define	__XFS_ATTR_SF_H__
+>  
+> @@ -47,4 +49,8 @@ xfs_attr_sf_nextentry(struct xfs_attr_sf_entry *sfep) {
+>  					    xfs_attr_sf_entsize(sfep));
 >  }
->
->  # get standard environment, filters and checks
->  . ./common/rc
->  . ./common/filter
-> +. ./common/dmthin
->  . ./common/dmlogwrites
->
->  # remove previous $seqres.full before test
-> @@ -34,12 +36,21 @@ rm -f $seqres.full
->  # real QA test starts here
->  _supported_fs generic
->  _supported_os Linux
-> -_require_scratch
-> +_require_scratch_nocheck
->  _require_log_writes_dax_mountopt "dax"
-> +_require_dm_target thin-pool
->  _require_xfs_io_command "mmap" "-S"
->  _require_xfs_io_command "log_writes"
->
-> -_log_writes_init $SCRATCH_DEV
-> +devsize=$((1024*1024*200 / 512))        # 200m phys/virt size
-> +csize=$((1024*64 / 512))                # 64k cluster size
-> +lowspace=$((1024*1024 / 512))           # 1m low space threshold
-> +
-> +# Use a thin device to provide deterministic discard behavior. Discards are used
-> +# by the log replay tool for fast zeroing to prevent out-of-order replay issues.
-> +_dmthin_init $devsize $devsize $csize $lowspace
-> +
-> +_log_writes_init $DMTHIN_VOL_DEV
->  _log_writes_mkfs >> $seqres.full 2>&1
->  _log_writes_mount -o dax
->
-> @@ -52,14 +63,14 @@ $XFS_IO_PROG -t -c "truncate $LEN" -c "mmap -S 0 $LEN" -c "mwrite 0 $LEN" \
->  # Unmount the scratch dir and tear down the log writes target
->  _log_writes_unmount
->  _log_writes_remove
-> -_check_scratch_fs
-> +_dmthin_check_fs
->
->  # destroy previous filesystem so we can be sure our rebuild works
-> -_scratch_mkfs >> $seqres.full 2>&1
-> +_mkfs_dev $DMTHIN_VOL_DEV >> $seqres.full 2>&1
->
->  # check pre-unmap state
-> -_log_writes_replay_log preunmap $SCRATCH_DEV
-> -_scratch_mount
-> +_log_writes_replay_log preunmap $DMTHIN_VOL_DEV
-> +_dmthin_mount
->
->  # We should see $SCRATCH_MNT/test as having 1 MiB in block allocations
->  du -sh $SCRATCH_MNT/test | _filter_scratch | _filter_spaces
-> --
-> 2.25.4
->
+>  
+> +static inline struct xfs_attr_shortform *
+> +xfs_attr_ifork_to_sf(struct xfs_inode *ino) {
+> +	return (struct xfs_attr_shortform *)ino->i_afp->if_u1.if_data;
+> +}
+>  #endif	/* __XFS_ATTR_SF_H__ */
+> diff --git a/fs/xfs/xfs_attr_list.c b/fs/xfs/xfs_attr_list.c
+> index 8f8837fe21cf0..7c0ebdeb43567 100644
+> --- a/fs/xfs/xfs_attr_list.c
+> +++ b/fs/xfs/xfs_attr_list.c
+> @@ -61,7 +61,7 @@ xfs_attr_shortform_list(
+>  	int				error = 0;
+>  
+>  	ASSERT(dp->i_afp != NULL);
+> -	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
+> +	sf = xfs_attr_ifork_to_sf(dp);
+>  	ASSERT(sf != NULL);
+>  	if (!sf->hdr.count)
+>  		return 0;
+> -- 
+> 2.26.2
+> 
+
