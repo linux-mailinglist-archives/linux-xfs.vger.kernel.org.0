@@ -2,169 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46C5825902C
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 16:19:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7628E2591B3
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 16:54:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgIAOTo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 10:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbgIAOTY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 10:19:24 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AB8C06124F
-        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 07:19:02 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y6so597305plk.10
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Sep 2020 07:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v11SjyOsuI/B6VQH0Mb3spC9mABv57EZFh+BrgGZcoA=;
-        b=XtxIE56Yug/MNivc566j2wvKbxgIT/9loqDjsMWVEzghxg8TuiKjgRo/YcY0lNAaEw
-         BOb1hLfCZxevTwKuX3+it5QFtoubcWYcDbWqktGLC5JWUFFPhlv/YoquStGCMtowI/Ud
-         MoaI9QFGQVwtPp7XlH0eWdTngKiXeUDjCc9DrJBVoeNGyiQ952cttHzwBKqDSEcgwY8y
-         EXbkESG2NEq2/IaD7DljDrO1hNLkosx2dCFrEhiIuq2eWtT2lemTWHX+m/7Q59tsGgm8
-         f0FdrgulAUCjOKF4RdTJQ4TUWE3RZis5u0g9EVTInFigWGdXK4yff2Suj2GGX3OxAHPj
-         xeOQ==
+        id S1728720AbgIAOyH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 10:54:07 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28184 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727807AbgIALs1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 07:48:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598960877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Zh2HerV6rWg9oliTGGXvRm15q/KpJ1R2KbtJMG2tbPw=;
+        b=Sc6l+hsi0p8maio7fFK92PdikFu8Ax0wGlAnNhpnxYreNLYY1VV+1OoVNkeU0owgaviVPn
+        R512Bp1pBPybSKPTRt6tqYUuY+sjdazArmDpCoMfctPXHu7HpQHrHC97BcoePvpLMaWIKN
+        kDbWt9TJ8XXgaxDlowGP+m1dghQs+OM=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-230-TMCFHfHbMQe5xtzwbEILuA-1; Tue, 01 Sep 2020 07:47:56 -0400
+X-MC-Unique: TMCFHfHbMQe5xtzwbEILuA-1
+Received: by mail-pf1-f198.google.com with SMTP id x125so493317pfc.4
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Sep 2020 04:47:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v11SjyOsuI/B6VQH0Mb3spC9mABv57EZFh+BrgGZcoA=;
-        b=lcBEOEGr/OBFKlIj58ir4Qh0SPvBXas/wK2bbgVCjnUE/Hs0bVnt3Dp56k+q5BhINr
-         9aR/s1lWcola/HvuBVgmlFiBh0untzTIW35CgNu8/riGI+smL8pUmJXefL0SrjJcgpjt
-         l2PGysrWn/XDPm4OjW5Spf09RLhaKPQvZSEWi6NxZVobj+Xfpc2wurl/0I6kb1lWqMV7
-         15XDpbTA5x9zW0ijgB1bCkBveCPcQplJxj9gPRAk5hd6yuFOEZf1+SvEi746xdwXBT9g
-         GJT/dWkWiS8Etqx934Sec0p+jrmtQ4PFI9ynJxZ0WGgOcExBi4m8wpoVfODB1j1rAtxe
-         vf7Q==
-X-Gm-Message-State: AOAM531OSOAm9guaj4ePD31OM6zOWpNehLfX4WDdBY87C7eOoRljDI3V
-        iVCQwf4KTGRybqjxcLDvVw0=
-X-Google-Smtp-Source: ABdhPJwGLO337z94l5hIfxXWKu7uFRV4zruQBs4NYOpeYJdwVlKleA+YQDPCbw06dE+/Tfep8er2HQ==
-X-Received: by 2002:a17:902:7606:: with SMTP id k6mr1626300pll.171.1598969942058;
-        Tue, 01 Sep 2020 07:19:02 -0700 (PDT)
-Received: from garuda.localnet ([122.171.183.205])
-        by smtp.gmail.com with ESMTPSA id gb19sm1699244pjb.38.2020.09.01.07.18.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zh2HerV6rWg9oliTGGXvRm15q/KpJ1R2KbtJMG2tbPw=;
+        b=Bx5URfGADo+f/3jeplzeqmuluHKRBfTGY+pTaA+GTBhFaB3MuTZUQvaW2u44qgoSzK
+         zvbM9NB4egmf3vEXxBI+LbYxYH4OjUj2tO0QMi2JXMSuNqROwlyYj13PRYyBpei5f1p6
+         Yl70dTgG2Ro1pVxr6NtkDluDZwhe1fWyGPDIRpvorV+cMfa5IIMphrtlAVNULgadiAS6
+         izttyY+o0UXoIGUatSaiJd8KrJrVeaLRybKVHa+ASZ5GMqAcFXIalRqjpT6O87LhcX3W
+         fipNXgEhSLZlWEjJzThq0SqUxgXPnvBE8wZGovRcU0LRmxnStJSl3/p3dKKhnuSaowVu
+         00sQ==
+X-Gm-Message-State: AOAM533ynEzW63OQXb8dRq3otTxDWcQAGHMnMyg2381/y44ZqFO/eE1X
+        o4bazxNMryRL10HsrbTz6Hfyb4cGBpbLcF7iTUSvItCCrqnMAIWVz6LWdEqsQAs8yxlhJSrMbPd
+        uN4DLN1uFqG5krzfccPu/
+X-Received: by 2002:a17:90b:4d0d:: with SMTP id mw13mr1191393pjb.43.1598960875086;
+        Tue, 01 Sep 2020 04:47:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz1r6A561I4kp/WUycEepgRQsmKl4jDWvQ0lw8qwfFCHWgZ65EonSR1/7uIeWkJ2Yc5npZNgg==
+X-Received: by 2002:a17:90b:4d0d:: with SMTP id mw13mr1191379pjb.43.1598960874856;
+        Tue, 01 Sep 2020 04:47:54 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id s8sm1680209pfm.180.2020.09.01.04.47.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 07:19:01 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
+        Tue, 01 Sep 2020 04:47:54 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 19:47:43 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, bfoster@redhat.com
-Subject: Re: [PATCH 1/3] xfs: Introduce xfs_iext_max() helper
-Date:   Tue, 01 Sep 2020 19:48:03 +0530
-Message-ID: <11106167.P8SlRhgUvP@garuda>
-In-Reply-To: <20200831204340.GV6096@magnolia>
-References: <20200831130010.454-1-chandanrlinux@gmail.com> <20200831130010.454-2-chandanrlinux@gmail.com> <20200831204340.GV6096@magnolia>
+Cc:     david@fromorbit.com, hch@infradead.org,
+        Amir Goldstein <amir73il@gmail.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        linux-xfs@vger.kernel.org, sandeen@sandeen.net
+Subject: Re: [PATCH 11/11] xfs: enable big timestamps
+Message-ID: <20200901114743.GG32609@xiangao.remote.csb>
+References: <159885400575.3608006.17716724192510967135.stgit@magnolia>
+ <159885407932.3608006.12834647369484871421.stgit@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159885407932.3608006.12834647369484871421.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tuesday 1 September 2020 2:13:40 AM IST Darrick J. Wong wrote:
-> On Mon, Aug 31, 2020 at 06:30:08PM +0530, Chandan Babu R wrote:
-> > xfs_iext_max() returns the maximum number of extents possible for either
-> > data fork or attribute fork. This helper will be extended further in a
-> > future commit when maximum extent counts associated with data/attribute
-> > forks are increased.
-> > 
-> > No functional changes have been made.
+On Sun, Aug 30, 2020 at 11:07:59PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Hmm....
+> Enable the big timestamp feature.
 > 
-> > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
-> > ---
-> >  fs/xfs/libxfs/xfs_bmap.c       |  9 ++++-----
-> >  fs/xfs/libxfs/xfs_inode_buf.c  |  8 +++-----
-> >  fs/xfs/libxfs/xfs_inode_fork.h | 10 ++++++++++
-> >  3 files changed, 17 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> > index dcc8eeecd571..16b983b8977d 100644
-> > --- a/fs/xfs/libxfs/xfs_bmap.c
-> > +++ b/fs/xfs/libxfs/xfs_bmap.c
-> > @@ -74,13 +74,12 @@ xfs_bmap_compute_maxlevels(
-> >  	 * for both ATTR1 and ATTR2 we have to assume the worst case scenario
-> >  	 * of a minimum size available.
-> >  	 */
-> > -	if (whichfork == XFS_DATA_FORK) {
-> > -		maxleafents = MAXEXTNUM;
-> > +	maxleafents = xfs_iext_max(&mp->m_sb, whichfork);
-> > +	if (whichfork == XFS_DATA_FORK)
-> >  		sz = XFS_BMDR_SPACE_CALC(MINDBTPTRS);
-> > -	} else {
-> > -		maxleafents = MAXAEXTNUM;
-> > +	else
-> >  		sz = XFS_BMDR_SPACE_CALC(MINABTPTRS);
-> > -	}
-> > +
-> >  	maxrootrecs = xfs_bmdr_maxrecs(sz, 0);
-> >  	minleafrecs = mp->m_bmap_dmnr[0];
-> >  	minnoderecs = mp->m_bmap_dmnr[1];
-> > diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-> > index 8d5dd08eab75..5dcd71bfab2e 100644
-> > --- a/fs/xfs/libxfs/xfs_inode_buf.c
-> > +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-> > @@ -369,6 +369,7 @@ xfs_dinode_verify_fork(
-> >  	int			whichfork)
-> >  {
-> >  	uint32_t		di_nextents = XFS_DFORK_NEXTENTS(dip, whichfork);
-> > +	xfs_extnum_t		max_extents;
-> >  
-> >  	switch (XFS_DFORK_FORMAT(dip, whichfork)) {
-> >  	case XFS_DINODE_FMT_LOCAL:
-> > @@ -390,12 +391,9 @@ xfs_dinode_verify_fork(
-> >  			return __this_address;
-> >  		break;
-> >  	case XFS_DINODE_FMT_BTREE:
-> > -		if (whichfork == XFS_ATTR_FORK) {
-> > -			if (di_nextents > MAXAEXTNUM)
-> > -				return __this_address;
-> > -		} else if (di_nextents > MAXEXTNUM) {
-> > +		max_extents = xfs_iext_max(&mp->m_sb, whichfork);
-> > +		if (di_nextents > max_extents)
-> >  			return __this_address;
-> > -		}
-> >  		break;
-> >  	default:
-> >  		return __this_address;
-> > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-> > index 4219b01f1034..75e07078967e 100644
-> > --- a/fs/xfs/libxfs/xfs_inode_fork.h
-> > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-> > @@ -153,6 +153,16 @@ static inline int8_t xfs_ifork_format(struct xfs_ifork *ifp)
-> >  	return ifp->if_format;
-> >  }
-> >  
-> > +static inline xfs_extnum_t xfs_iext_max(struct xfs_sb *sbp, int whichfork)
-> > +{
-> > +	ASSERT(whichfork == XFS_DATA_FORK || whichfork == XFS_ATTR_FORK);
-> > +
-> > +	if (whichfork == XFS_DATA_FORK)
-> > +		return MAXEXTNUM;
-> > +	else
-> > +		return MAXAEXTNUM;
-> 
-> ...I kinda wish you /had/ made the functional change to make this return
-> MAXEXTNUM for cow forks, even if none of the callers actually care. :)
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 
-Ok. I will include that change in the next version.
+Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
 
-> 
-> --D
-> 
-> > +}
-> > +
-> >  struct xfs_ifork *xfs_iext_state_to_fork(struct xfs_inode *ip, int state);
-> >  
-> >  int		xfs_iformat_data_fork(struct xfs_inode *, struct xfs_dinode *);
-> 
-
-
--- 
-chandan
-
-
+Thanks,
+Gao Xiang
 
