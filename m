@@ -2,83 +2,188 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 267A9258AF1
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 11:05:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 601D8258BF6
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 11:46:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgIAJFD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 05:05:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59483 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725989AbgIAJFC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 05:05:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598951101;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZRMfd1Ojg52uZn3PpFFKZFU8lGZ3/xBuEGUrM++javY=;
-        b=btsV4PppFMfpHn+ZxVVCvX6+b9t9XVgoyjYlFsJbQL0f2YVyeViErVkyj5y96EB1q0AL00
-        Fm/1RbrVxZoacDemIGqa3P8TdrIXXBJW81AeZUKDkcZ3VhJGJwCTf4rCEjSS8c8T20puCS
-        gXEdaILzknC48e6Tpz4HdeiXswYm8Sc=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-Jgg3paeJNK6GdO9JvrDWdA-1; Tue, 01 Sep 2020 05:04:59 -0400
-X-MC-Unique: Jgg3paeJNK6GdO9JvrDWdA-1
-Received: by mail-pl1-f198.google.com with SMTP id w20so291722plp.8
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Sep 2020 02:04:59 -0700 (PDT)
+        id S1726536AbgIAJqE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 05:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbgIAJqD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 05:46:03 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C833EC061244
+        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 02:46:02 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so275186plt.3
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Sep 2020 02:46:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AsAvaOhJVaJyOu+sKoqeUEkpyN59TsTyMphJJKdKk4Q=;
+        b=HkXskkPeq8VqtOhxNv7xIzrIgNqfjyTU5pKEyu+KHWdPj4rkYARDaLoyH+R3ll/+W0
+         Q7MY9kMUsXSQoRtgLIJiW3X+Z8RHkrEJOt0Cmz8XpesIc5oTRLeS01qX/t2dOanuxNSu
+         nQpWa1uSSZiTxTqWKfappsNpXn48CNDQfwmaqv5ONs3ESwC8jL5Z5J0QGQBSQ7wBWAuZ
+         gnF32Ld1O8UlY2yZ6v973+E6DifZJMDqKOlvPwk8muSAf02D9i5FiVMpN6jPJGIuAOBt
+         CfAJhGgcec5TXrlZ2qQi6+8301XFWYXT3uOTpm2JSphlKpDNvxdQeAWzBo5cMF9+MKu9
+         Zj0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZRMfd1Ojg52uZn3PpFFKZFU8lGZ3/xBuEGUrM++javY=;
-        b=ZKOskXkMSgjEOg4KefKRvc/rd6vgdnzcWx/6mMDCbYAiX1yrDrP2XaAt4pX6bfrcQQ
-         JJ+r5db1/9OxY9miTQWL6Zmv63Y5b5YvL9dC3MP5JIKgLTxSOptyCS2aQLiwdFYV5atI
-         IMX/wpSnLIdF8ODlRwM5njVg8gknAieYb5I5shi0VsXdnmcq9mggsD5MdtC9VZ7pVCXe
-         qbll+V+maFHiopW8EjM9vfZMO/XLabIUtGVi0A6zWkqjOUIe0caF4XHi+6xcri3TRc2n
-         i0UHQLxPWTz2B86xWPJpU6eWf074gu8huNckrXvtJnq1b+N0BkhHROh64Grp6Xu858Ik
-         m96w==
-X-Gm-Message-State: AOAM532HfBzP7vAZqVtvrZ9q2OXRhXrC7wYpCnHdH96cWtfyFTCPfsVI
-        dg8JhLPi4qbxPanlsefR1IZznaibFuuRJrvMNkx070tjYJ3l8gs7lPmSjHlORzEuiLVsqn0iD8C
-        A/D4RKUUKDKElhOTmcBDE
-X-Received: by 2002:a17:902:7b8a:: with SMTP id w10mr534587pll.145.1598951098309;
-        Tue, 01 Sep 2020 02:04:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwgVEfhUKCICpeasyQdRbsj6+iSaKLWY728G4THgiBwssk0bjYKu4NMAij/DL8g1Anb4GApQg==
-X-Received: by 2002:a17:902:7b8a:: with SMTP id w10mr534574pll.145.1598951098084;
-        Tue, 01 Sep 2020 02:04:58 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id i1sm1264224pgq.41.2020.09.01.02.04.55
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AsAvaOhJVaJyOu+sKoqeUEkpyN59TsTyMphJJKdKk4Q=;
+        b=qs31th1EJbX3nXEhregvysercDL1IVX1tOY10woYrSxAZsp6BQI+avL9iI+zZt73jT
+         1vVyJzeUYs8797ACzu0YOTzNwavObMhoxlTQU2Ln/MOcvMgxjQzL5PIjnAC/CX51JQVg
+         nwIjLThCTnPpjwCIjyBN3LINYvDG7qDHQHaGgke93DL4ETziXUZ/9UAyZnLKZkV8XYLy
+         bxq/XqM9V+VBeXyiwmSlHtFgMtNQaZpKVy3TeR8W05qSPB/pYCok9mPbTUNdO7moicc0
+         GejWk8Np6MLkFMADeBgq4Ubfqjeffcw2nNCMtm7skKLHMgW+ijviv5OSFIQbyULtmYwA
+         Z5Eg==
+X-Gm-Message-State: AOAM532BeY8emkBRdHSX4WO/IkDjljZoamihDiPEn1/9BXT/Fb8cKckA
+        NWPjysrQWTBNmcrFKvBMbGI=
+X-Google-Smtp-Source: ABdhPJz/aFcaQttX0s2kmBtyT5DXavJ+NCxVqsAH6OtzQg1EHAA9wSr+d3KFx9qI3unAxngjvj2lkA==
+X-Received: by 2002:a17:90a:9103:: with SMTP id k3mr806501pjo.4.1598953562318;
+        Tue, 01 Sep 2020 02:46:02 -0700 (PDT)
+Received: from garuda.localnet ([122.171.183.205])
+        by smtp.gmail.com with ESMTPSA id ga20sm918639pjb.11.2020.09.01.02.46.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 02:04:57 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 17:04:47 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
+        Tue, 01 Sep 2020 02:46:01 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     david@fromorbit.com, hch@infradead.org, linux-xfs@vger.kernel.org,
-        amir73il@gmail.com, sandeen@sandeen.net
-Subject: Re: [PATCH 07/11] xfs: redefine xfs_ictimestamp_t
-Message-ID: <20200901090447.GD32609@xiangao.remote.csb>
-References: <159885400575.3608006.17716724192510967135.stgit@magnolia>
- <159885405305.3608006.13513560786992998269.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@infradead.org
+Subject: Re: [PATCH V3 01/10] xfs: Add helper for checking per-inode extent count overflow
+Date:   Tue, 01 Sep 2020 15:14:21 +0530
+Message-ID: <6636871.qDoI5iUcXa@garuda>
+In-Reply-To: <20200831164435.GO6096@magnolia>
+References: <20200820054349.5525-1-chandanrlinux@gmail.com> <20200831160823.GG6096@magnolia> <20200831164435.GO6096@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159885405305.3608006.13513560786992998269.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 11:07:33PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Monday 31 August 2020 10:14:35 PM IST Darrick J. Wong wrote:
+> On Mon, Aug 31, 2020 at 09:08:23AM -0700, Darrick J. Wong wrote:
+> > On Thu, Aug 20, 2020 at 11:13:40AM +0530, Chandan Babu R wrote:
+> > > XFS does not check for possible overflow of per-inode extent counter
+> > > fields when adding extents to either data or attr fork.
+> > > 
+> > > For e.g.
+> > > 1. Insert 5 million xattrs (each having a value size of 255 bytes) and
+> > >    then delete 50% of them in an alternating manner.
+> > > 
+> > > 2. On a 4k block sized XFS filesystem instance, the above causes 98511
+> > >    extents to be created in the attr fork of the inode.
+> > > 
+> > >    xfsaild/loop0  2008 [003]  1475.127209: probe:xfs_inode_to_disk: (ffffffffa43fb6b0) if_nextents=98511 i_ino=131
+> > > 
+> > > 3. The incore inode fork extent counter is a signed 32-bit
+> > >    quantity. However the on-disk extent counter is an unsigned 16-bit
+> > >    quantity and hence cannot hold 98511 extents.
+> > > 
+> > > 4. The following incorrect value is stored in the attr extent counter,
+> > >    # xfs_db -f -c 'inode 131' -c 'print core.naextents' /dev/loop0
+> > >    core.naextents = -32561
+> > > 
+> > > This commit adds a new helper function (i.e.
+> > > xfs_iext_count_may_overflow()) to check for overflow of the per-inode
+> > > data and xattr extent counters. Future patches will use this function to
+> > > make sure that an FS operation won't cause the extent counter to
+> > > overflow.
+> > > 
+> > > Suggested-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> > 
+> > Seems reasonable so far...
+> > 
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > --D
+> > 
+> > > ---
+> > >  fs/xfs/libxfs/xfs_inode_fork.c | 23 +++++++++++++++++++++++
+> > >  fs/xfs/libxfs/xfs_inode_fork.h |  2 ++
+> > >  2 files changed, 25 insertions(+)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
+> > > index 0cf853d42d62..3a084aea8f85 100644
+> > > --- a/fs/xfs/libxfs/xfs_inode_fork.c
+> > > +++ b/fs/xfs/libxfs/xfs_inode_fork.c
+> > > @@ -23,6 +23,7 @@
+> > >  #include "xfs_da_btree.h"
+> > >  #include "xfs_dir2_priv.h"
+> > >  #include "xfs_attr_leaf.h"
+> > > +#include "xfs_types.h"
+> > >  
+> > >  kmem_zone_t *xfs_ifork_zone;
+> > >  
+> > > @@ -728,3 +729,25 @@ xfs_ifork_verify_local_attr(
+> > >  
+> > >  	return 0;
+> > >  }
+> > > +
+> > > +int
+> > > +xfs_iext_count_may_overflow(
+> > > +	struct xfs_inode	*ip,
+> > > +	int			whichfork,
+> > > +	int			nr_to_add)
+> > > +{
+> > > +	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
+> > > +	uint64_t		max_exts;
+> > > +	uint64_t		nr_exts;
+> > > +
+> > > +	if (whichfork == XFS_COW_FORK)
+> > > +		return 0;
+> > > +
+> > > +	max_exts = (whichfork == XFS_ATTR_FORK) ? MAXAEXTNUM : MAXEXTNUM;
+> > > +
+> > > +	nr_exts = ifp->if_nextents + nr_to_add;
+> > > +	if (nr_exts < ifp->if_nextents || nr_exts > max_exts)
+> > > +		return -EFBIG;
 > 
-> Redefine xfs_ictimestamp_t as a uint64_t typedef in preparation for the
-> bigtime functionality.  Preserve the legacy structure format so that we
-> can let the compiler take care of the masking and shifting.
+> Something I thought of after the fact -- can you add a new fault
+> injection point to lower the max extent count?  That way we can
+> facilitate the construction of fstests cases to check the operation of
+> the new predicate without having to spend lots of time constructing huge
+> fragmented files.
+
+Sure, I will do that.
+
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> (There /are/ test cases somewhere, riiight? ;))
 
-Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
+Apart from executing xfstests, I had tested the patchset with the use case
+described in the commit message of this patch. But with an error injection
+facility available, it should be easier to add tests to fstests. I will work
+on that. Thanks for the suggestion.
 
-Thanks,
-Gao Xiang
+> 
+> No need to add it here, you can tack it onto the end of the series as a
+> new patch.
+> 
+> --D
+> 
+> > > +
+> > > +	return 0;
+> > > +}
+> > > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
+> > > index a4953e95c4f3..0beb8e2a00be 100644
+> > > --- a/fs/xfs/libxfs/xfs_inode_fork.h
+> > > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
+> > > @@ -172,5 +172,7 @@ extern void xfs_ifork_init_cow(struct xfs_inode *ip);
+> > >  
+> > >  int xfs_ifork_verify_local_data(struct xfs_inode *ip);
+> > >  int xfs_ifork_verify_local_attr(struct xfs_inode *ip);
+> > > +int xfs_iext_count_may_overflow(struct xfs_inode *ip, int whichfork,
+> > > +		int nr_to_add);
+> > >  
+> > >  #endif	/* __XFS_INODE_FORK_H__ */
+> 
+
+
+-- 
+chandan
+
+
 
