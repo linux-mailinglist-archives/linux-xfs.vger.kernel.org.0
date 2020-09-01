@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFEAF259565
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 17:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C18AC25955E
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 17:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729618AbgIAPux (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 11:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57370 "EHLO
+        id S1728306AbgIAPup (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 11:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729643AbgIAPuh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 11:50:37 -0400
+        with ESMTP id S1728330AbgIAPui (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 11:50:38 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3821C061262
-        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 08:50:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22289C061244
+        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 08:50:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=DhXz/LIncd1hAxsZLT580maUYEqABL5l83uIKFTA+dk=; b=MdKUgK2XzmjZ/05AW3wsfp0Nz3
-        dbEVhvHrOja/GBYMcTXoGcTvsScPBJFi8iqYt725CmEaMuO2+Jbl5rc2i60V6l9iAjBOR6UXCtIc/
-        zXj4nteORIA8x4+tk5nDEKde4F1p4aoVK/l5jqqqJO/85hTvbiHWI/QTkhnM7DqWj9mjFTD1jdxMh
-        5ej2miKMWkKn6aYbD1DyKKJ2qMOINdmbt5InPYwiEW+ryg907SgkEWcQW/P+TgNk6bfI9E6sLLJ4K
-        Mko9EotsAlv/b3jbt7JFsWJluXG4qWGAl03S7NtZOCYe1akMByXx99HDIROtehsxXzrfVCK+Q5u10
-        QSYXCg5w==;
+        bh=LNJkGIGOQ7LITg03Wf4rqulTsuSIKJCXI0RUg/sl3BU=; b=jXAPzoxrLDZ6IeBjNs9f/twekb
+        Ig/DOZfTYbwtHhUcQBxphcsIIuvbrRSQbNFU372OK7EWGPVFO7ttp7FvZSobyaTaSBlqOzYk4/ANd
+        zkEOdQmT3nTbhqd5afzuDUfg5tn2ndsA2tH5eTaz5066XJt5+n/SiI3m+7UH+K42clg/lwUsQ1AvY
+        3WFHkHWHqEeSt2u+gWCjxGiLqPhCZK4rBXt94L/QlyvMM8MAz4zKxN73eUjupEK8E4jMyDW+6+sAz
+        U/QvCSuzBpOThiR5KmXdDchdeGLYizKxlxGxH8ItMTAiT8bYfV0W+UY7R8HtVgyhU18zK4zsZ7AkD
+        +d1yzlSQ==;
 Received: from [2001:4bb8:18c:45ba:2f95:e5:ca6b:9b4a] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD8YM-0003mh-6P; Tue, 01 Sep 2020 15:50:34 +0000
+        id 1kD8YN-0003mm-Hb; Tue, 01 Sep 2020 15:50:35 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
 Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 09/15] xfs: simplify the xfs_buf_ioend_disposition calling convention
-Date:   Tue,  1 Sep 2020 17:50:12 +0200
-Message-Id: <20200901155018.2524-10-hch@lst.de>
+Subject: [PATCH 10/15] xfs: use xfs_buf_item_relse in xfs_buf_item_done
+Date:   Tue,  1 Sep 2020 17:50:13 +0200
+Message-Id: <20200901155018.2524-11-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901155018.2524-1-hch@lst.de>
 References: <20200901155018.2524-1-hch@lst.de>
@@ -44,95 +44,39 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that all the actual error handling is in a single place,
-xfs_buf_ioend_disposition just needs to return true if took ownership of
-the buffer, or false if not instead of the tristate.  Also move the
-error check back in the caller to optimize for the fast path, and give
-the function a better fitting name.
+Reuse xfs_buf_item_relse instead of duplicating it.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_buf.c | 36 +++++++++---------------------------
- 1 file changed, 9 insertions(+), 27 deletions(-)
+ fs/xfs/xfs_buf_item.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 951d9c35b3170c..13435cce2699e4 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1223,29 +1223,17 @@ xfs_buf_ioerror_permanent(
-  * If we get repeated async write failures, then we take action according to the
-  * error configuration we have been set up to use.
-  *
-- * Multi-state return value:
-- *
-- * XBF_IOEND_FINISH: run callback completions
-- * XBF_IOEND_DONE: resubmitted immediately, do not run any completions
-- * XBF_IOEND_FAIL: transient error, run failure callback completions and then
-- *    release the buffer
-+ * Returns true if this function took care of error handling and the caller must
-+ * not touch the buffer again.  Return false if the caller should proceed with
-+ * normal I/O completion handling.
-  */
--enum xfs_buf_ioend_disposition {
--	XBF_IOEND_FINISH,
--	XBF_IOEND_DONE,
--	XBF_IOEND_FAIL,
--};
--
--static enum xfs_buf_ioend_disposition
--xfs_buf_ioend_disposition(
-+static bool
-+xfs_buf_ioend_handle_error(
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index 9245c62b48f9f3..5a7293d0719bb4 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -958,8 +958,6 @@ void
+ xfs_buf_item_done(
  	struct xfs_buf		*bp)
  {
- 	struct xfs_mount	*mp = bp->b_mount;
- 	struct xfs_error_cfg	*cfg;
- 
--	if (likely(!bp->b_error))
--		return XBF_IOEND_FINISH;
+-	struct xfs_buf_log_item	*bip = bp->b_log_item;
 -
  	/*
- 	 * If we've already decided to shutdown the filesystem because of I/O
- 	 * errors, there's no point in giving this a retry.
-@@ -1291,18 +1279,18 @@ xfs_buf_ioend_disposition(
- 		ASSERT(list_empty(&bp->b_li_list));
- 	xfs_buf_ioerror(bp, 0);
- 	xfs_buf_relse(bp);
--	return XBF_IOEND_FAIL;
-+	return true;
- 
- resubmit:
- 	xfs_buf_ioerror(bp, 0);
- 	bp->b_flags |= (XBF_WRITE | XBF_DONE | XBF_WRITE_FAIL);
- 	xfs_buf_submit(bp);
--	return XBF_IOEND_DONE;
-+	return true;
- out_stale:
- 	xfs_buf_stale(bp);
- 	bp->b_flags |= XBF_DONE;
- 	trace_xfs_buf_error_relse(bp, _RET_IP_);
--	return XBF_IOEND_FINISH;
-+	return false;
+ 	 * If we are forcibly shutting down, this may well be off the AIL
+ 	 * already. That's because we simulate the log-committed callbacks to
+@@ -969,8 +967,7 @@ xfs_buf_item_done(
+ 	 *
+ 	 * Either way, AIL is useless if we're forcing a shutdown.
+ 	 */
+-	xfs_trans_ail_delete(&bip->bli_item, SHUTDOWN_CORRUPT_INCORE);
+-	bp->b_log_item = NULL;
+-	xfs_buf_item_free(bip);
+-	xfs_buf_rele(bp);
++	xfs_trans_ail_delete(&bp->b_log_item->bli_item,
++			     SHUTDOWN_CORRUPT_INCORE);
++	xfs_buf_item_relse(bp);
  }
- 
- static void
-@@ -1340,14 +1328,8 @@ xfs_buf_ioend(
- 			bp->b_flags |= XBF_DONE;
- 		}
- 
--		switch (xfs_buf_ioend_disposition(bp)) {
--		case XBF_IOEND_DONE:
--			return;
--		case XBF_IOEND_FAIL:
-+		if (unlikely(bp->b_error) && xfs_buf_ioend_handle_error(bp))
- 			return;
--		default:
--			break;
--		}
- 
- 		/* clear the retry state */
- 		bp->b_last_error = 0;
 -- 
 2.28.0
 
