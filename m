@@ -2,93 +2,78 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03BF8259198
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 16:53:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F227E25955A
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Sep 2020 17:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgIAOud (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 10:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
+        id S1729248AbgIAPuh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 11:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728681AbgIAOu2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 10:50:28 -0400
+        with ESMTP id S1732205AbgIAPuW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 11:50:22 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7277CC061244;
-        Tue,  1 Sep 2020 07:50:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93927C061244
+        for <linux-xfs@vger.kernel.org>; Tue,  1 Sep 2020 08:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3Rt/RZHQFZtQJpY49CCYUhZi6SfUgNAgVHQnBlTr1a8=; b=p0kE1kiXY5lbGjtOOeelZHKPdk
-        7iMPjVGysg30dWVyHTYa/7qTF85jbeQApGpvwh9vLRAeSov9Kkw9pyOYtg6MLHPei5ysnPcg/D0wP
-        OVFO7sIcqeFGxFQF+OWY+FNImcPS1QlADW1bKTujj68AEqLLCmI22G2oHbx/iSdPe6dZJqZ0ndze2
-        wdSk3Lg3vBJLzB0pSQXyzKM7zWDzdte/mlFQmSFd1sb7kZifW1JTL+PcnrV+c878uuvpb5Zz2eth7
-        EZ58fYYp9C0RNZ+YM3mPSztxfw3WkMAdW64l27FlJElaZ++LGU7SJUCyKFQ5EOgkvEaxpEY4s7y+c
-        juZfy6Iw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD7c9-0006mc-FV; Tue, 01 Sep 2020 14:50:25 +0000
-Date:   Tue, 1 Sep 2020 15:50:25 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] block: Add bio_for_each_thp_segment_all
-Message-ID: <20200901145025.GA23220@infradead.org>
-References: <20200824151700.16097-1-willy@infradead.org>
- <20200824151700.16097-5-willy@infradead.org>
- <20200827084431.GA15909@infradead.org>
- <20200831194837.GJ14765@casper.infradead.org>
- <20200901053426.GB24560@infradead.org>
- <20200901130525.GK14765@casper.infradead.org>
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=3EAi0+GCJdfy4Yuj9A4bm0t2HyIP/Tzn29GaY/tYyJs=; b=opW6oQmOv2Io/MPdwm99bUh7gl
+        AwSZOo3WiHbp1jFz/4Iy3vjnL8ETPKCYUM/hId7hUO33dSuQf6jxWfF1hSYjLt35NPSh+HxoVrxg7
+        +k0vaaQjTQUwk1gQlh8VSbuE63olrk32Nqb2ns3Dd6IX9pcotGpHWyumTNYBI7adeDFoG43Mqd0Z2
+        V7pWeJZpYX9cjUl91f0MINOiZn3yTBAsdymozpxLf+awqP4YD+7v01gkOZrQ/DWCP2RBwE4YjOfK8
+        zqioJSthW9TnOFyQ+vs/I3TZN2LdBltZrvRN540/OB9XXq2GMJdUAnb7+7m+FDLHsnpG5tBFZll33
+        aEh8iEpw==;
+Received: from [2001:4bb8:18c:45ba:2f95:e5:ca6b:9b4a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD8Y7-0003kt-Iw
+        for linux-xfs@vger.kernel.org; Tue, 01 Sep 2020 15:50:20 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     linux-xfs@vger.kernel.org
+Subject: tidy up the buffer cache implementation v3
+Date:   Tue,  1 Sep 2020 17:50:03 +0200
+Message-Id: <20200901155018.2524-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901130525.GK14765@casper.infradead.org>
+Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 02:05:25PM +0100, Matthew Wilcox wrote:
-> > >                 struct page *page = bvec->bv_page;
-> > > 
-> > >                 while (length > 0) { 
-> > >                         size_t count = thp_size(page) - offset;
-> > >                         
-> > >                         if (count > length)
-> > >                                 count = length;
-> > >                         iomap_read_page_end_io(page, offset, count, error);
-> > >                         page += (offset + count) / PAGE_SIZE;
-> > 
-> > Shouldn't the page_size here be thp_size?
-> 
-> No.  Let's suppose we have a 20kB I/O which starts on a page boundary and
-> the first page is order-2.  To get from the first head page to the second
-> page, we need to add 4, which is 16kB / 4kB, not 16kB / 16kB.
+Hi all,
 
-True.
+this series ties up some old and new bits in the XFS buffer
+cache, and consolidates a fair amount of code.
 
-> I'm not entirely sure the bvec would shrink.  On 64-bit systems, it's
-> currently 8 bytes for the struct page, 4 bytes for the len and 4 bytes
-> for the offset.  Sure, we can get rid of the offset, but the compiler
-> will just pad the struct from 12 bytes back to 16.  On 32-bit systems
-> with 32-bit phys_addr_t, we go from 12 bytes down to 8, but most 32-bit
-> systems have a 64-bit phys_addr_t these days, don't they?
+Changes since v1:
+ - don't pass buf ops to _xfs_buf_read
+ - add two more cleanup patches
 
-Actually on those system that still are 32-bit because they are so
-tiny I'd very much still expect a 32-bit phys_addr_t.  E.g. arm
-without LPAE or 32-bit RISC-V.
+Changes since v1:
+ - fix read flag propagation in _xfs_buf_read
+ - improve a few commit messages and comments
 
-But yeah, point taken on the alignment for the 64-bit ones.
-
-> That's a bit more boilerplate than I'd like, but if bio_vec is going to
-> lose its bv_page then I don't see a better way.  Unless we come up with
-> a different page/offset/length struct that bio_vecs are decomposed into.
-
-I'm not sure it is going to lose bv_page any time soon.  I'd sure like
-to, but least time something like that came up Linus wasn't entirely
-in favor.  Things might have changed now, though and I think it is about
-time to give it another try.
+Diffstat:
+ libxfs/xfs_log_recover.h |    1 
+ libxfs/xfs_sb.c          |    4 
+ libxfs/xfs_trans_inode.c |    6 -
+ xfs_buf.c                |  208 +++++++++++++++++++++++++++++++------
+ xfs_buf.h                |   17 ---
+ xfs_buf_item.c           |  264 +----------------------------------------------
+ xfs_buf_item.h           |   12 ++
+ xfs_buf_item_recover.c   |    2 
+ xfs_dquot.c              |   14 ++
+ xfs_inode.c              |    6 -
+ xfs_inode_item.c         |   12 +-
+ xfs_inode_item.h         |    1 
+ xfs_log_recover.c        |   58 ++--------
+ xfs_mount.c              |   17 ---
+ xfs_mount.h              |    1 
+ xfs_quota.h              |    8 -
+ xfs_trace.h              |    2 
+ xfs_trans.c              |    2 
+ xfs_trans.h              |    2 
+ xfs_trans_buf.c          |   46 ++------
+ 20 files changed, 261 insertions(+), 422 deletions(-)
