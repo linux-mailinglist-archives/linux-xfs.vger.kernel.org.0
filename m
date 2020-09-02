@@ -2,95 +2,154 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C67E25A35E
-	for <lists+linux-xfs@lfdr.de>; Wed,  2 Sep 2020 04:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A75525A355
+	for <lists+linux-xfs@lfdr.de>; Wed,  2 Sep 2020 04:57:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIBC6b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 22:58:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51856 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbgIBC6a (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 22:58:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822t002003383;
-        Wed, 2 Sep 2020 02:58:27 GMT
+        id S1727041AbgIBC46 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 22:56:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46960 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgIBC4y (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 22:56:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822rup8124328;
+        Wed, 2 Sep 2020 02:56:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=9GXy1bvQg9yVOrA0/n0XErdfwiKWz13YUKgpdfKB7iM=;
- b=IcC70pGnY2Issp5yR+7cwa4q7Nob8PM/P3ZJzwn4JMsKoP4tbrBE7oGEVK/V1NcR/ODw
- uvW/HVHAq4bN38MGMhxNelQel57lU7KdMDZyxVjHVDK1IGN9T/h7KqG4T6lHKPwiQOAI
- AuAb4HhlK9zfbZFK5zUlpiOutYmpE9inQuVVQlBz93+pypLcd5zkXtZylxCL6xASY0u4
- /xHLyCmSVKtj5eyNklmncInTsmU6yQaeWs46WCb6TuLqB6LQSfuUO10XMRbrOH/HxKSr
- pxyDn21ZwVBYIa9a4vcnYRDU45L5bevkF6f8jIHsCY1XS2Zhbj+oymyMGzcJpHtfN4hi 4A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 337eeqyvq5-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=EmvtfxfrrFnkYFBGvMIk1f7AKNCW8BLf2+lfpQo3aFA=;
+ b=uGtQastCVc4GtelGOu+KGN9x62iua8e/y0GvgznSRzXiTiqwxrJoOJRsL3I3waa2qT84
+ myldebrT2xCR+5ifgWyNZX0jIxMJGf0NfRRKjiyGsrC0o7+vMRQo7IpOt3TakcCzOHuu
+ HoK2lBE8z0TAyHiYTrFR2C8Qszejo/nt62HcdpUp8IOS0CuqPtZI1Gy/rCuoI5fK7z43
+ fo1viT8li4FqCtaHtfbW3m2KwsAA/WeA/hLmpo/3IVxjJNT4Cp7PQFjTF14hOh2djQMP
+ +vVEPjTMKctX1GexERBGKrZ9CgvclB0wFj+EqIRS3ZwFZmjzd+tSgWFacoMNhJdIPcGX gQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 339dmmxa5b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 02 Sep 2020 02:58:27 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822t2IQ186182;
-        Wed, 2 Sep 2020 02:56:26 GMT
+        Wed, 02 Sep 2020 02:56:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822sbvQ131803;
+        Wed, 2 Sep 2020 02:56:41 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3380st0wam-1
+        by aserp3020.oracle.com with ESMTP id 3380x58fd5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Sep 2020 02:56:26 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0822uPQ4005483;
-        Wed, 2 Sep 2020 02:56:25 GMT
+        Wed, 02 Sep 2020 02:56:41 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0822uUnT005495;
+        Wed, 2 Sep 2020 02:56:30 GMT
 Received: from localhost (/10.159.133.7)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Sep 2020 19:56:25 -0700
-Subject: [PATCH 5/5] xfs: enable new inode btree counters feature
+        with ESMTP ; Tue, 01 Sep 2020 19:56:30 -0700
+Subject: [PATCH v6 00/11] xfs: widen timestamps to deal with y2038
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com, bfoster@redhat.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 01 Sep 2020 19:56:24 -0700
-Message-ID: <159901538396.547164.17425767749025474625.stgit@magnolia>
-In-Reply-To: <159901535219.547164.1381621861988558776.stgit@magnolia>
-References: <159901535219.547164.1381621861988558776.stgit@magnolia>
+To:     darrick.wong@oracle.com, david@fromorbit.com, hch@infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Gao Xiang <hsiangkao@redhat.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        linux-xfs@vger.kernel.org, amir73il@gmail.com, sandeen@sandeen.net
+Date:   Tue, 01 Sep 2020 19:56:27 -0700
+Message-ID: <159901538766.548109.8040337941204954344.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009020026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020026
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Enable the new inode btree counters feature.
+This series performs some refactoring of our timestamp and inode
+encoding functions, then retrofits the timestamp union to handle
+timestamps as a 64-bit nanosecond counter.  Next, it adds bit shifting
+to the non-root dquot timer fields to boost their effective size to 34
+bits.  These two changes enable correct time handling on XFS through the
+year 2486.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+On a current V5 filesystem, inodes timestamps are a signed 32-bit
+seconds counter, with 0 being the Unix epoch.  Quota timers are an
+unsigned 32-bit seconds counter, with 0 also being the Unix epoch.
+
+This means that inode timestamps can range from:
+-(2^31-1) (13 Dec 1901) through (2^31-1) (19 Jan 2038).
+
+And quota timers can range from:
+0 (1 Jan 1970) through (2^32-1) (7 Feb 2106).
+
+With the bigtime encoding turned on, inode timestamps are an unsigned
+64-bit nanoseconds counter, with 0 being the 1901 epoch.  Quota timers
+are a 34-bit unsigned second counter right shifted two bits, with 0
+being the Unix epoch, and capped at the maximum inode timestamp value.
+
+This means that inode timestamps can range from:
+0 (13 Dec 1901) through (2^64-1 / 1e9) (2 Jul 2486)
+
+Quota timers could theoretically range from:
+0 (1 Jan 1970) through (((2^34-1) + (2^31-1)) & ~3) (16 Jun 2582).
+
+But with the capping in place, the quota timers maximum is:
+max((2^64-1 / 1e9) - (2^31-1), (((2^34-1) + (2^31-1)) & ~3) (2 Jul 2486).
+
+v2: rebase to 5.9, having landed the quota refactoring
+v3: various suggestions by Amir and Dave
+v4: drop the timestamp unions, add "is bigtime?" predicates everywhere
+v5: reintroduce timestamp unions as *legacy* timestamp unions
+v6: minor stylistic changes
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=bigtime
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bigtime
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=bigtime
 ---
- fs/xfs/libxfs/xfs_format.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 03cbedb7eafc..fe129fe16d5f 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -453,7 +453,8 @@ xfs_sb_has_compat_feature(
- #define XFS_SB_FEAT_RO_COMPAT_ALL \
- 		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
- 		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
--		 XFS_SB_FEAT_RO_COMPAT_REFLINK)
-+		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
-+		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
- #define XFS_SB_FEAT_RO_COMPAT_UNKNOWN	~XFS_SB_FEAT_RO_COMPAT_ALL
- static inline bool
- xfs_sb_has_ro_compat_feature(
+ fs/xfs/libxfs/xfs_dquot_buf.c   |   35 +++++++
+ fs/xfs/libxfs/xfs_format.h      |  190 ++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/libxfs/xfs_fs.h          |    1 
+ fs/xfs/libxfs/xfs_ialloc.c      |    4 +
+ fs/xfs/libxfs/xfs_inode_buf.c   |  130 +++++++++++++--------------
+ fs/xfs/libxfs/xfs_inode_buf.h   |   15 +++
+ fs/xfs/libxfs/xfs_log_format.h  |    7 +
+ fs/xfs/libxfs/xfs_quota_defs.h  |    8 +-
+ fs/xfs/libxfs/xfs_sb.c          |    2 
+ fs/xfs/libxfs/xfs_shared.h      |    3 +
+ fs/xfs/libxfs/xfs_trans_inode.c |   11 ++
+ fs/xfs/scrub/inode.c            |   31 +++++-
+ fs/xfs/xfs_dquot.c              |   52 +++++++++--
+ fs/xfs/xfs_dquot.h              |    3 +
+ fs/xfs/xfs_inode.c              |    4 -
+ fs/xfs/xfs_inode.h              |    5 +
+ fs/xfs/xfs_inode_item.c         |   34 +++++--
+ fs/xfs/xfs_inode_item_recover.c |   76 ++++++++++++++++
+ fs/xfs/xfs_ioctl.c              |    3 -
+ fs/xfs/xfs_ondisk.h             |   24 +++++
+ fs/xfs/xfs_qm.c                 |   13 +++
+ fs/xfs/xfs_qm.h                 |    4 +
+ fs/xfs/xfs_qm_syscalls.c        |   18 ++--
+ fs/xfs/xfs_super.c              |   14 ++-
+ fs/xfs/xfs_trace.h              |   26 +++++
+ fs/xfs/xfs_trans_dquot.c        |    6 +
+ 26 files changed, 602 insertions(+), 117 deletions(-)
 
