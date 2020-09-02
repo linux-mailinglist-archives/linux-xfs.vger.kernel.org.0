@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E47125A34C
-	for <lists+linux-xfs@lfdr.de>; Wed,  2 Sep 2020 04:56:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C67E25A35E
+	for <lists+linux-xfs@lfdr.de>; Wed,  2 Sep 2020 04:58:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgIBC4Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 1 Sep 2020 22:56:25 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50654 "EHLO
+        id S1726298AbgIBC6b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 1 Sep 2020 22:58:31 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:51856 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726269AbgIBC4X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 22:56:23 -0400
+        with ESMTP id S1726174AbgIBC6a (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 1 Sep 2020 22:58:30 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822t5on003433;
-        Wed, 2 Sep 2020 02:56:20 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822t002003383;
+        Wed, 2 Sep 2020 02:58:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=OnkVnIhdtSp8kPFGqZr/s1dT2+oAyW9ZmWlLwbLlzPE=;
- b=z2qI6GOKDvNrtbu7yztR4rrVv8ovug4nPkHcop1J71bI1CW6JmovEu89T2mvdaci1u4B
- vQpI5NVFZCQDxI06/oo8CUgD+6TOzp+/k2cOf94zDI+jl5fnVWHrZ85HjYBAeiqhrtA/
- FTr3BjcEUqXhbP4+pWAufonFGX55oAbUh86bs8Nx0rVUIRSTX5a64dbFSZYLjmiOb6nu
- zjR2lHulSP54Xi74l0p48ftQZMNzrI+hjMOyNEK9VVWVJYsIMXRg+Jw1drycFVr2R6Au
- jQLFR9iDBgHyHvhD2ubh75Y06QBgQT7aMH2yx+ps7UuIpjC9rJpk+TLalmjbCGcHBLC7 vA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 337eeqyvhy-1
+ bh=9GXy1bvQg9yVOrA0/n0XErdfwiKWz13YUKgpdfKB7iM=;
+ b=IcC70pGnY2Issp5yR+7cwa4q7Nob8PM/P3ZJzwn4JMsKoP4tbrBE7oGEVK/V1NcR/ODw
+ uvW/HVHAq4bN38MGMhxNelQel57lU7KdMDZyxVjHVDK1IGN9T/h7KqG4T6lHKPwiQOAI
+ AuAb4HhlK9zfbZFK5zUlpiOutYmpE9inQuVVQlBz93+pypLcd5zkXtZylxCL6xASY0u4
+ /xHLyCmSVKtj5eyNklmncInTsmU6yQaeWs46WCb6TuLqB6LQSfuUO10XMRbrOH/HxKSr
+ pxyDn21ZwVBYIa9a4vcnYRDU45L5bevkF6f8jIHsCY1XS2Zhbj+oymyMGzcJpHtfN4hi 4A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 337eeqyvq5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 02 Sep 2020 02:56:20 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822tCOg037777;
-        Wed, 2 Sep 2020 02:56:20 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 3380kp8hqe-1
+        Wed, 02 Sep 2020 02:58:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0822t2IQ186182;
+        Wed, 2 Sep 2020 02:56:26 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 3380st0wam-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Sep 2020 02:56:19 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0822uJwY028164;
-        Wed, 2 Sep 2020 02:56:19 GMT
+        Wed, 02 Sep 2020 02:56:26 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0822uPQ4005483;
+        Wed, 2 Sep 2020 02:56:25 GMT
 Received: from localhost (/10.159.133.7)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Sep 2020 19:56:19 -0700
-Subject: [PATCH 4/5] xfs: support inode btree blockcounts in online repair
+        with ESMTP ; Tue, 01 Sep 2020 19:56:25 -0700
+Subject: [PATCH 5/5] xfs: enable new inode btree counters feature
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, bfoster@redhat.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 01 Sep 2020 19:56:17 -0700
-Message-ID: <159901537765.547164.7777551130535148618.stgit@magnolia>
+Date:   Tue, 01 Sep 2020 19:56:24 -0700
+Message-ID: <159901538396.547164.17425767749025474625.stgit@magnolia>
 In-Reply-To: <159901535219.547164.1381621861988558776.stgit@magnolia>
 References: <159901535219.547164.1381621861988558776.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,14 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=2 malwarescore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009020026
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009020026
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
  lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=2
+ phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009020026
 Sender: linux-xfs-owner@vger.kernel.org
@@ -70,91 +70,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add the necessary bits to the online repair code to support logging the
-inode btree counters when rebuilding the btrees, and to support fixing
-the counters when rebuilding the AGI.
+Enable the new inode btree counters feature.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ialloc_btree.c |   16 +++++++++++++---
- fs/xfs/scrub/agheader_repair.c   |   24 ++++++++++++++++++++++++
- 2 files changed, 37 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_format.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-index 1df04e48bd87..219f57f4b5a7 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-@@ -504,19 +504,29 @@ xfs_inobt_commit_staged_btree(
- {
- 	struct xfs_agi		*agi = agbp->b_addr;
- 	struct xbtree_afakeroot	*afake = cur->bc_ag.afake;
-+	int			fields;
- 
- 	ASSERT(cur->bc_flags & XFS_BTREE_STAGING);
- 
- 	if (cur->bc_btnum == XFS_BTNUM_INO) {
-+		fields = XFS_AGI_ROOT | XFS_AGI_LEVEL;
- 		agi->agi_root = cpu_to_be32(afake->af_root);
- 		agi->agi_level = cpu_to_be32(afake->af_levels);
--		xfs_ialloc_log_agi(tp, agbp, XFS_AGI_ROOT | XFS_AGI_LEVEL);
-+		if (xfs_sb_version_hasinobtcounts(&cur->bc_mp->m_sb)) {
-+			agi->agi_iblocks = cpu_to_be32(afake->af_blocks);
-+			fields |= XFS_AGI_IBLOCKS;
-+		}
-+		xfs_ialloc_log_agi(tp, agbp, fields);
- 		xfs_btree_commit_afakeroot(cur, tp, agbp, &xfs_inobt_ops);
- 	} else {
-+		fields = XFS_AGI_FREE_ROOT | XFS_AGI_FREE_LEVEL;
- 		agi->agi_free_root = cpu_to_be32(afake->af_root);
- 		agi->agi_free_level = cpu_to_be32(afake->af_levels);
--		xfs_ialloc_log_agi(tp, agbp, XFS_AGI_FREE_ROOT |
--					     XFS_AGI_FREE_LEVEL);
-+		if (xfs_sb_version_hasinobtcounts(&cur->bc_mp->m_sb)) {
-+			agi->agi_fblocks = cpu_to_be32(afake->af_blocks);
-+			fields |= XFS_AGI_IBLOCKS;
-+		}
-+		xfs_ialloc_log_agi(tp, agbp, fields);
- 		xfs_btree_commit_afakeroot(cur, tp, agbp, &xfs_finobt_ops);
- 	}
- }
-diff --git a/fs/xfs/scrub/agheader_repair.c b/fs/xfs/scrub/agheader_repair.c
-index bca2ab1d4be9..401f71579ce6 100644
---- a/fs/xfs/scrub/agheader_repair.c
-+++ b/fs/xfs/scrub/agheader_repair.c
-@@ -810,10 +810,34 @@ xrep_agi_calc_from_btrees(
- 	error = xfs_ialloc_count_inodes(cur, &count, &freecount);
- 	if (error)
- 		goto err;
-+	if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
-+		xfs_agblock_t	blocks;
-+
-+		error = xfs_btree_count_blocks(cur, &blocks);
-+		if (error)
-+			goto err;
-+		agi->agi_iblocks = cpu_to_be32(blocks);
-+	}
- 	xfs_btree_del_cursor(cur, error);
- 
- 	agi->agi_count = cpu_to_be32(count);
- 	agi->agi_freecount = cpu_to_be32(freecount);
-+
-+	if (xfs_sb_version_hasfinobt(&mp->m_sb) &&
-+	    xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
-+		xfs_agblock_t	blocks;
-+
-+		cur = xfs_inobt_init_cursor(mp, sc->tp, agi_bp, sc->sa.agno,
-+				XFS_BTNUM_FINO);
-+		if (error)
-+			goto err;
-+		error = xfs_btree_count_blocks(cur, &blocks);
-+		if (error)
-+			goto err;
-+		xfs_btree_del_cursor(cur, error);
-+		agi->agi_fblocks = cpu_to_be32(blocks);
-+	}
-+
- 	return 0;
- err:
- 	xfs_btree_del_cursor(cur, error);
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 03cbedb7eafc..fe129fe16d5f 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -453,7 +453,8 @@ xfs_sb_has_compat_feature(
+ #define XFS_SB_FEAT_RO_COMPAT_ALL \
+ 		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
+ 		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
+-		 XFS_SB_FEAT_RO_COMPAT_REFLINK)
++		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
++		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
+ #define XFS_SB_FEAT_RO_COMPAT_UNKNOWN	~XFS_SB_FEAT_RO_COMPAT_ALL
+ static inline bool
+ xfs_sb_has_ro_compat_feature(
 
