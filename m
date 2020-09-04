@@ -2,218 +2,174 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC71D25D752
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Sep 2020 13:30:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F25E025D728
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Sep 2020 13:27:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgIDLaT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 4 Sep 2020 07:30:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33222 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730176AbgIDLZ7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 4 Sep 2020 07:25:59 -0400
+        id S1730181AbgIDL1T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 4 Sep 2020 07:27:19 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22117 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730205AbgIDL0V (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 4 Sep 2020 07:26:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599218737;
+        s=mimecast20190719; t=1599218756;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=xqh10yFr/VvS952VcxbxSRvr/Ou7HYLqYUldy9PuKJM=;
-        b=X9YMFutOAYlp56jvU36TyhV466MCtpuZlnErr1QCsrUK5gM60Qc6sBBl43/++2nCYFWYua
-        B9EannAWpkhj6c7l0Rivpr7WIwyL8DMd6B/TI0pBO9CIl30evoRbKtCIKD5O7y1DW+6MRl
-        yPsuKYAhHyQv2QdP0CtbyTRGszDm6z8=
+        bh=8BIKFR1pM/3NwoCXzlWerY2LwOyTaxWq4LD956AaKNE=;
+        b=Osckwb5sSclIbzkroMKpG0PAoXSwpNSv2lHtRqelI2EWNVi4+A6RN6VBjUFh7sMQPG4UGv
+        LRVpaTsDLiQKVioFHvHdsrqKZwKHoo+k2QqW6gX2BXGsfwKuNHaivh58azt1Dp3cZslJ3B
+        0Z4N+22XTNeQNthOHd2rGARy6lNu9P4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-7wer37hGMHmfo_j6-WzjHw-1; Fri, 04 Sep 2020 07:25:35 -0400
-X-MC-Unique: 7wer37hGMHmfo_j6-WzjHw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-45-mA0W8wwiPEGy0_P1QmDqow-1; Fri, 04 Sep 2020 07:25:54 -0400
+X-MC-Unique: mA0W8wwiPEGy0_P1QmDqow-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D121985B683;
-        Fri,  4 Sep 2020 11:25:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBA941007470;
+        Fri,  4 Sep 2020 11:25:53 +0000 (UTC)
 Received: from bfoster (ovpn-113-130.rdu2.redhat.com [10.10.113.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 603D45D9CC;
-        Fri,  4 Sep 2020 11:25:31 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 07:25:29 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 577A87EED7;
+        Fri,  4 Sep 2020 11:25:50 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 07:25:48 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Gao Xiang <hsiangkao@redhat.com>
 Cc:     linux-xfs@vger.kernel.org,
         "Darrick J . Wong" <darrick.wong@oracle.com>
-Subject: Re: [PATCH v3 1/2] xfs: avoid LR buffer overrun due to crafted
- h_{len,size}
-Message-ID: <20200904112529.GB529978@bfoster>
+Subject: Re: [PATCH v2 2/2] xfs: clean up calculation of LR header blocks
+Message-ID: <20200904112548.GC529978@bfoster>
 References: <20200904082516.31205-1-hsiangkao@redhat.com>
- <20200904082516.31205-2-hsiangkao@redhat.com>
+ <20200904082516.31205-3-hsiangkao@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904082516.31205-2-hsiangkao@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200904082516.31205-3-hsiangkao@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:25:15PM +0800, Gao Xiang wrote:
-> Currently, crafted h_len has been blocked for the log
-> header of the tail block in commit a70f9fe52daa ("xfs:
-> detect and handle invalid iclog size set by mkfs").
-> 
-> However, each log record could still have crafted h_len,
-> h_size and cause log record buffer overrun. So let's
-> check (h_len vs h_size) and (h_size vs buffer size)
-> for each log record as well instead.
+On Fri, Sep 04, 2020 at 04:25:16PM +0800, Gao Xiang wrote:
+> Let's use DIV_ROUND_UP() to calculate log record header
+> blocks as what did in xlog_get_iclog_buffer_size() and
+> wrap up common helpers for log recovery.
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 > ---
-> v2: https://lore.kernel.org/r/20200902141923.26422-1-hsiangkao@redhat.com
+> v1: https://lore.kernel.org/r/20200902140923.24392-1-hsiangkao@redhat.com
 > 
-> changes since v2:
->  - rename argument h_size to bufsize to make it clear (Brian);
->  - leave the mkfs workaround logic in xlog_do_recovery_pass() (Brian);
->  - add XLOG_VERSION_2 checking logic since old logrecv1 doesn't have
->    h_size field just to be safe.
+> changes since v1:
+>  - add another helper xlog_logrec_hblks() for the cases with
+>    xfs_sb_version_haslogv2(), and use xlog_logrecv2_hblks()
+>    for the case of xlog_do_recovery_pass() since it has more
+>    complex logic other than just calculate hblks...
 > 
->  fs/xfs/xfs_log_recover.c | 50 +++++++++++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 21 deletions(-)
+>  fs/xfs/xfs_log.c         |  4 +--
+>  fs/xfs/xfs_log_recover.c | 53 ++++++++++++++++------------------------
+>  2 files changed, 22 insertions(+), 35 deletions(-)
 > 
+...
 > diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-> index e2ec91b2d0f4..28d952794bfa 100644
+> index 28d952794bfa..c6163065f6e0 100644
 > --- a/fs/xfs/xfs_log_recover.c
 > +++ b/fs/xfs/xfs_log_recover.c
-> @@ -2904,9 +2904,10 @@ STATIC int
->  xlog_valid_rec_header(
->  	struct xlog		*log,
->  	struct xlog_rec_header	*rhead,
-> -	xfs_daddr_t		blkno)
-> +	xfs_daddr_t		blkno,
-> +	int			bufsize)
->  {
-> -	int			hlen;
-> +	int			hlen, hsize = XLOG_BIG_RECORD_BSIZE;
+> @@ -397,6 +397,23 @@ xlog_find_verify_cycle(
+>  	return error;
+>  }
 >  
->  	if (XFS_IS_CORRUPT(log->l_mp,
->  			   rhead->h_magicno != cpu_to_be32(XLOG_HEADER_MAGIC_NUM)))
-> @@ -2920,10 +2921,22 @@ xlog_valid_rec_header(
->  		return -EFSCORRUPTED;
->  	}
->  
-> -	/* LR body must have data or it wouldn't have been written */
-> +	/*
-> +	 * LR body must have data (or it wouldn't have been written) and
-> +	 * h_len must not be greater than h_size with one exception (see
-> +	 * comments in xlog_do_recovery_pass()).
-> +	 */
-
-I wouldn't mention the exceptional case at all here since I think it
-just adds confusion. It's an unfortunate wart with mkfs that requires a
-kernel workaround, and I think it's better to keep it one place. I.e.,
-should it ever be removed, I find it unlikely somebody will notice this
-comment and fix it up accordingly.
-
->  	hlen = be32_to_cpu(rhead->h_len);
-> -	if (XFS_IS_CORRUPT(log->l_mp, hlen <= 0 || hlen > INT_MAX))
-> +	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb) &&
-> +	    (be32_to_cpu(rhead->h_version) & XLOG_VERSION_2))
-> +		hsize = be32_to_cpu(rhead->h_size);
+> +static inline int xlog_logrecv2_hblks(struct xlog_rec_header *rh)
+> +{
+> +	int	h_size = be32_to_cpu(rh->h_size);
 > +
-> +	if (XFS_IS_CORRUPT(log->l_mp, hlen <= 0 || hlen > hsize))
->  		return -EFSCORRUPTED;
+> +	if ((be32_to_cpu(rh->h_version) & XLOG_VERSION_2) &&
+> +	    h_size > XLOG_HEADER_CYCLE_SIZE)
+> +		return DIV_ROUND_UP(h_size, XLOG_HEADER_CYCLE_SIZE);
+> +	return 1;
+> +}
 > +
-> +	if (bufsize && XFS_IS_CORRUPT(log->l_mp, bufsize < hsize))
-> +		return -EFSCORRUPTED;
-
-Please do something like the following so the full corruption check
-logic is readable:
-
-	if (XFS_IS_CORRUPT(..., bufsize && hsize > bufsize))
-		return -EFSCORRUPTED;
-
+> +static inline int xlog_logrec_hblks(struct xlog *log, xlog_rec_header_t *rh)
+> +{
+> +	if (!xfs_sb_version_haslogv2(&log->l_mp->m_sb))
+> +		return 1;
+> +	return xlog_logrecv2_hblks(rh);
+> +}
 > +
->  	if (XFS_IS_CORRUPT(log->l_mp,
->  			   blkno > log->l_logBBsize || blkno > INT_MAX))
->  		return -EFSCORRUPTED;
-> @@ -2984,9 +2997,6 @@ xlog_do_recovery_pass(
->  			goto bread_err1;
->  
->  		rhead = (xlog_rec_header_t *)offset;
-> -		error = xlog_valid_rec_header(log, rhead, tail_blk);
-> -		if (error)
-> -			goto bread_err1;
 
-This technically defers broader corruption checks (i.e., magic number,
-etc.) until after functional code starts using other fields below. I
-don't think we should remove this.
-
->  
->  		/*
->  		 * xfsprogs has a bug where record length is based on lsunit but
-> @@ -3001,21 +3011,19 @@ xlog_do_recovery_pass(
->  		 */
->  		h_size = be32_to_cpu(rhead->h_size);
->  		h_len = be32_to_cpu(rhead->h_len);
-> -		if (h_len > h_size) {
-> -			if (h_len <= log->l_mp->m_logbsize &&
-> -			    be32_to_cpu(rhead->h_num_logops) == 1) {
-> -				xfs_warn(log->l_mp,
-> +		if (h_len > h_size && h_len <= log->l_mp->m_logbsize &&
-> +		    rhead->h_num_logops == cpu_to_be32(1)) {
-> +			xfs_warn(log->l_mp,
->  		"invalid iclog size (%d bytes), using lsunit (%d bytes)",
-> -					 h_size, log->l_mp->m_logbsize);
-> -				h_size = log->l_mp->m_logbsize;
-> -			} else {
-> -				XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW,
-> -						log->l_mp);
-> -				error = -EFSCORRUPTED;
-> -				goto bread_err1;
-> -			}
-> +				 h_size, log->l_mp->m_logbsize);
-> +			h_size = log->l_mp->m_logbsize;
-> +			rhead->h_size = cpu_to_be32(h_size);
-
-I don't think we should update rhead like this, particularly in a rare
-and exclusive case. This structure should reflect what is on disk.
-
-All in all, I think this patch should be much more focused:
-
-1.) Add the bufsize parameter and associated corruption check to
-xlog_valid_rec_header().
-2.) Pass the related value from the existing calls.
-3.) (Optional) If there's reason to revalidate after executing the mkfs
-workaround, add a second call within the branch that implements the
-h_size workaround.
-
-Also, please test the workaround case to make sure it still works as
-expected (if you haven't already).
+h_version is assigned based on xfs_sb_version_haslogv2() in the first
+place so I'm not sure I see the need for multiple helpers like this, at
+least with the current code. I can't really speak to why some code
+checks the feature bit and/or the record header version and not the
+other way around, but perhaps there's some historical reason I'm not
+aware of. Regardless, is there ever a case where
+xfs_sb_version_haslogv2() == true and h_version != 2? That strikes me as
+more of a corruption scenario than anything..
 
 Brian
 
->  		}
+>  /*
+>   * Potentially backup over partial log record write.
+>   *
+> @@ -489,15 +506,7 @@ xlog_find_verify_log_record(
+>  	 * reset last_blk.  Only when last_blk points in the middle of a log
+>  	 * record do we update last_blk.
+>  	 */
+> -	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb)) {
+> -		uint	h_size = be32_to_cpu(head->h_size);
+> -
+> -		xhdrs = h_size / XLOG_HEADER_CYCLE_SIZE;
+> -		if (h_size % XLOG_HEADER_CYCLE_SIZE)
+> -			xhdrs++;
+> -	} else {
+> -		xhdrs = 1;
+> -	}
+> +	xhdrs = xlog_logrec_hblks(log, head);
 >  
-> +		error = xlog_valid_rec_header(log, rhead, tail_blk, 0);
-> +		if (error)
-> +			goto bread_err1;
-> +
->  		if ((be32_to_cpu(rhead->h_version) & XLOG_VERSION_2) &&
->  		    (h_size > XLOG_HEADER_CYCLE_SIZE)) {
->  			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
-> @@ -3096,7 +3104,7 @@ xlog_do_recovery_pass(
->  			}
->  			rhead = (xlog_rec_header_t *)offset;
->  			error = xlog_valid_rec_header(log, rhead,
-> -						split_hblks ? blk_no : 0);
-> +					split_hblks ? blk_no : 0, h_size);
->  			if (error)
->  				goto bread_err2;
+>  	if (*last_blk - i + extra_bblks !=
+>  	    BTOBB(be32_to_cpu(head->h_len)) + xhdrs)
+> @@ -1184,22 +1193,7 @@ xlog_check_unmount_rec(
+>  	 * below. We won't want to clear the unmount record if there is one, so
+>  	 * we pass the lsn of the unmount record rather than the block after it.
+>  	 */
+> -	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb)) {
+> -		int	h_size = be32_to_cpu(rhead->h_size);
+> -		int	h_version = be32_to_cpu(rhead->h_version);
+> -
+> -		if ((h_version & XLOG_VERSION_2) &&
+> -		    (h_size > XLOG_HEADER_CYCLE_SIZE)) {
+> -			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
+> -			if (h_size % XLOG_HEADER_CYCLE_SIZE)
+> -				hblks++;
+> -		} else {
+> -			hblks = 1;
+> -		}
+> -	} else {
+> -		hblks = 1;
+> -	}
+> -
+> +	hblks = xlog_logrec_hblks(log, rhead);
+>  	after_umount_blk = xlog_wrap_logbno(log,
+>  			rhead_blk + hblks + BTOBB(be32_to_cpu(rhead->h_len)));
 >  
-> @@ -3177,7 +3185,7 @@ xlog_do_recovery_pass(
->  			goto bread_err2;
->  
->  		rhead = (xlog_rec_header_t *)offset;
-> -		error = xlog_valid_rec_header(log, rhead, blk_no);
-> +		error = xlog_valid_rec_header(log, rhead, blk_no, h_size);
+> @@ -3024,15 +3018,10 @@ xlog_do_recovery_pass(
 >  		if (error)
->  			goto bread_err2;
+>  			goto bread_err1;
 >  
+> -		if ((be32_to_cpu(rhead->h_version) & XLOG_VERSION_2) &&
+> -		    (h_size > XLOG_HEADER_CYCLE_SIZE)) {
+> -			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
+> -			if (h_size % XLOG_HEADER_CYCLE_SIZE)
+> -				hblks++;
+> +		hblks = xlog_logrecv2_hblks(rhead);
+> +		if (hblks != 1) {
+>  			kmem_free(hbp);
+>  			hbp = xlog_alloc_buffer(log, hblks);
+> -		} else {
+> -			hblks = 1;
+>  		}
+>  	} else {
+>  		ASSERT(log->l_sectBBsize == 1);
 > -- 
 > 2.18.1
 > 
