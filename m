@@ -2,55 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E21825E948
-	for <lists+linux-xfs@lfdr.de>; Sat,  5 Sep 2020 19:18:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 574C025EB2F
+	for <lists+linux-xfs@lfdr.de>; Sun,  6 Sep 2020 00:02:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbgIERS2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 5 Sep 2020 13:18:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727875AbgIERST (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 5 Sep 2020 13:18:19 -0400
-Subject: Re: [GIT PULL] xfs: small fixes (2) for 5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599326299;
-        bh=RAQ4c3VNoOhZRKvVwWBdsYPhu7/YMGF/LOA+JwNMCvo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ZRi51ApAoVN5LGyL9r/m9km8xkvR57WYe7DO9l2KSUTv98GZ/ahcJNEfuFYQAFPIW
-         GujMD9MQGzrLq6JvjKkBRllUxf2nycJIbl5k2nZFxK23wPT1Z/J3pfaR+GGq+2ozHg
-         vvLYIQ6n3xIebAGZLv0TAtbV2wt5NewCtRWOmrvo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200905155243.GB7955@magnolia>
-References: <20200905155243.GB7955@magnolia>
-X-PR-Tracked-List-Id: <linux-xfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200905155243.GB7955@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-fixes-2
-X-PR-Tracked-Commit-Id: d0c20d38af135b2b4b90aa59df7878ef0c8fbef4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9322c47b21b9e05d7f9c037aa2c472e9f0dc7f3b
-Message-Id: <159932629910.1747.12909105499699699907.pr-tracker-bot@kernel.org>
-Date:   Sat, 05 Sep 2020 17:18:19 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        id S1728400AbgIEWCf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 5 Sep 2020 18:02:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbgIEWCe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 5 Sep 2020 18:02:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35ACCC061244;
+        Sat,  5 Sep 2020 15:02:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Tlllsl+2PJQqHKeCcF6Zt/oIJ3kjkjvjZo5ekbYN/2w=; b=OBnzX/hN/ATaX+2T63VHasT+Xx
+        iT2umIL+vj2hYX2fG4UOhbqedoVPHh8S23NOop5hWTR5UyjRvFQGrCz7a+j4ytCfknwrWRLhWxGHY
+        OUi/x1LKcpYcyxmeQGKeKcHEEp968FrDIAVnJIJivwSs3pbiX58iOl4iKOOrEmLwtwp/tADdO0JvJ
+        QX/VLWP6960IbZpp9TIObB3zX/IJk9bgXBUhuIL4e47cGsQfCfwk5XIUa01nZnOaD9Trip50nLiB1
+        ewNrMH/lh1nNlcdyxbuz0Oza8x7h3bgVtTO5a4BxMPXFdrrWMRFqcMunbdMXNbcVQajDNzq4QELvu
+        7Vgr29OA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEgGV-0007li-Fe; Sat, 05 Sep 2020 22:02:31 +0000
+Date:   Sat, 5 Sep 2020 23:02:31 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v2] quota: widen timestamps for the fs_disk_quota
+ structure
+Message-ID: <20200905220231.GB16750@casper.infradead.org>
+References: <20200905164703.GC7955@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200905164703.GC7955@magnolia>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pull request you sent on Sat, 5 Sep 2020 08:52:43 -0700:
+On Sat, Sep 05, 2020 at 09:47:03AM -0700, Darrick J. Wong wrote:
+> +static inline void copy_to_xfs_dqblk_ts(const struct fs_disk_quota *d,
+> +		__s32 *timer_lo, __s8 *timer_hi, s64 timer)
+> +{
+> +	*timer_lo = timer;
+> +	if (d->d_fieldmask & FS_DQ_BIGTIME)
+> +		*timer_hi = timer >> 32;
+> +	else
+> +		*timer_hi = 0;
+> +}
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.9-fixes-2
+Is that actually the right thing to do?  If FS_DQ_BIGTIME is not set,
+I would expect us to avoid writing to timer_hi at all.  Alternatively, if
+we do want to write to timer_hi, why not write to it unconditionally?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9322c47b21b9e05d7f9c037aa2c472e9f0dc7f3b
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
