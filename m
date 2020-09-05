@@ -2,201 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4EF25E919
-	for <lists+linux-xfs@lfdr.de>; Sat,  5 Sep 2020 18:47:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5EE725E926
+	for <lists+linux-xfs@lfdr.de>; Sat,  5 Sep 2020 18:54:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgIEQrM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 5 Sep 2020 12:47:12 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37628 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgIEQrL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 5 Sep 2020 12:47:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 085GjQh4025137;
-        Sat, 5 Sep 2020 16:47:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=kyDXhauH7sz7EyCkCw5JPloouhqpGchEOI8FSeyqsoY=;
- b=SVS7dWGWZawIFcz0WQXMhEX0hT8kiKvEvaDwOdSTCmMaLvaTZUT+E9VowVq96+gvoHIh
- BMXi1YUvWGudV6Eri7hp9WCz+9jMxN4tSVYUj4Pch2NTjyGPxMbcHGIA9hFP4Tn8VAjA
- 3hzdJyoBDsGGrI762ioLFxzxw7d1DHrFeoigbSqS3jBpBM2TezKGiICsFjg+spfWEUQG
- ZSSTEtN8lLQr6AA6IwFTPQz6RAnPugMoe+4EKSWMNlbsBcg6hpGKzli7C9ftVT7eBhot
- VVxdyWnB/owvi5Wr1/gdPx36SX7mFrxHHKmY2Mex/MEmgfwOr+HzK66NRSIMY01BcZEg jw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33c23qhkj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 05 Sep 2020 16:47:07 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 085GiruY073951;
-        Sat, 5 Sep 2020 16:47:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33c2g0t51b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 05 Sep 2020 16:47:06 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 085Gl43Z000797;
-        Sat, 5 Sep 2020 16:47:04 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 05 Sep 2020 09:47:04 -0700
-Date:   Sat, 5 Sep 2020 09:47:03 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH v2] quota: widen timestamps for the fs_disk_quota structure
-Message-ID: <20200905164703.GC7955@magnolia>
+        id S1726590AbgIEQyz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 5 Sep 2020 12:54:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48750 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbgIEQyy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 5 Sep 2020 12:54:54 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA3D2C061244
+        for <linux-xfs@vger.kernel.org>; Sat,  5 Sep 2020 09:54:53 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id nw23so12555410ejb.4
+        for <linux-xfs@vger.kernel.org>; Sat, 05 Sep 2020 09:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WiPzQYToprkedvPvy23+d8Sogck/PPDXaDM0aINUTxs=;
+        b=IbD/06LcWNINiD1qQx76yuC4NnGDIsm3+GWIOtgRCjshaVtDI/A02DI5qKetncQ5Eq
+         ETJ/AP0MURo4tMxU2BWA9ZqY9wz8byBe5Nb/ZFb/npAfuJhH/nO2eJvqX1EnmPNcLt9a
+         /DIWjA8HitbuHHT5Zgo8zabEuZouEGY3xlN9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WiPzQYToprkedvPvy23+d8Sogck/PPDXaDM0aINUTxs=;
+        b=J9jPcT3vugYfonKfq0KLmBLyVWFKICvRY/iy7y7gP5Rd4z242u+EUzS7GKrDX1GTLT
+         7g5Gy8bbL36izRcbbX9Q1PrGZ0vCDOGrzYbl8gNB4c0ojujVkvKG8nXfxDTO8QXQN4t0
+         dvAc9KHnbWzFq6c8VopwxK9ErGRoavvp3FFACOUZu5WchXa3HjUUZ143K/Son1GPTeln
+         MB1wkn3HF2i53Nc8658AdqTFCeHM6+RSOrgkKdUO28S+xzyDW7cWMi0cWanGTkGdqIZV
+         24Rv7ALRB6lx3cORhZ6H1z7H6CxWSEcPBuOZr3dCbIV1GuTz8XLuBmbLSLanwwBWV1Zl
+         MG/Q==
+X-Gm-Message-State: AOAM532ji+vhotrubASBGi3pOxdYFzZCSccrk4cktAdRD8Y15zpIKbIj
+        QVfKmGVur0PIrYiN4+uBd7rimrxrArPJ3g==
+X-Google-Smtp-Source: ABdhPJzX2vjuZjzBji9U5vT9AKC2qF5Qpz94hMZ+UrsS0R4zm47oukMzpMMqIrXsXAUve4PuueR27A==
+X-Received: by 2002:a17:906:2d42:: with SMTP id e2mr12926625eji.10.1599324890893;
+        Sat, 05 Sep 2020 09:54:50 -0700 (PDT)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id r16sm768475edc.57.2020.09.05.09.54.50
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 09:54:50 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id z22so12534753ejl.7
+        for <linux-xfs@vger.kernel.org>; Sat, 05 Sep 2020 09:54:50 -0700 (PDT)
+X-Received: by 2002:a19:c8c6:: with SMTP id y189mr6480035lff.125.1599324489251;
+ Sat, 05 Sep 2020 09:48:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9735 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009050163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9735 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=1 spamscore=0
- malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009050163
+References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009050805250.12419@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com>
+In-Reply-To: <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 5 Sep 2020 09:47:53 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh=0V27kdRkBAOkCDXSeFYmB=VzC0hMQVbmaiFV_1ZaCA@mail.gmail.com>
+Message-ID: <CAHk-=wh=0V27kdRkBAOkCDXSeFYmB=VzC0hMQVbmaiFV_1ZaCA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] xfs: don't update mtime on COW faults
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Sat, Sep 5, 2020 at 5:13 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
+>
+> When running in a dax mode, if the user maps a page with MAP_PRIVATE and
+> PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
+> when the user hits a COW fault.
 
-Soon, XFS will support quota grace period expiration timestamps beyond
-the year 2038, widen the timestamp fields to handle the extra time bits.
-Internally, XFS now stores unsigned 34-bit quantities, so the extra 8
-bits here should work fine.  (Note that XFS is the only user of this
-structure.)
+So your patch is obviously correct,  but at the same time I look at
+the (buggy) ext2/xfs code you fixed, and I go "well, that was a really
+natural mistake to make".
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
-v2: use __s8 for timestamp extension
----
- fs/quota/quota.c               |   43 +++++++++++++++++++++++++++++++++++-----
- include/uapi/linux/dqblk_xfs.h |   11 +++++++++-
- 2 files changed, 48 insertions(+), 6 deletions(-)
+So I get the feeling that "yes, this was an ext2 and xfs bug, but we
+kind of set those filesystems up to fail".
 
-diff --git a/fs/quota/quota.c b/fs/quota/quota.c
-index 5444d3c4d93f..eefac57c52fd 100644
---- a/fs/quota/quota.c
-+++ b/fs/quota/quota.c
-@@ -481,6 +481,14 @@ static inline u64 quota_btobb(u64 bytes)
- 	return (bytes + (1 << XFS_BB_SHIFT) - 1) >> XFS_BB_SHIFT;
- }
- 
-+static inline s64 copy_from_xfs_dqblk_ts(const struct fs_disk_quota *d,
-+		__s32 timer, __s8 timer_hi)
-+{
-+	if (d->d_fieldmask & FS_DQ_BIGTIME)
-+		return (u32)timer | (s64)timer_hi << 32;
-+	return timer;
-+}
-+
- static void copy_from_xfs_dqblk(struct qc_dqblk *dst, struct fs_disk_quota *src)
- {
- 	dst->d_spc_hardlimit = quota_bbtob(src->d_blk_hardlimit);
-@@ -489,14 +497,18 @@ static void copy_from_xfs_dqblk(struct qc_dqblk *dst, struct fs_disk_quota *src)
- 	dst->d_ino_softlimit = src->d_ino_softlimit;
- 	dst->d_space = quota_bbtob(src->d_bcount);
- 	dst->d_ino_count = src->d_icount;
--	dst->d_ino_timer = src->d_itimer;
--	dst->d_spc_timer = src->d_btimer;
-+	dst->d_ino_timer = copy_from_xfs_dqblk_ts(src, src->d_itimer,
-+						  src->d_itimer_hi);
-+	dst->d_spc_timer = copy_from_xfs_dqblk_ts(src, src->d_btimer,
-+						  src->d_btimer_hi);
- 	dst->d_ino_warns = src->d_iwarns;
- 	dst->d_spc_warns = src->d_bwarns;
- 	dst->d_rt_spc_hardlimit = quota_bbtob(src->d_rtb_hardlimit);
- 	dst->d_rt_spc_softlimit = quota_bbtob(src->d_rtb_softlimit);
- 	dst->d_rt_space = quota_bbtob(src->d_rtbcount);
- 	dst->d_rt_spc_timer = src->d_rtbtimer;
-+	dst->d_rt_spc_timer = copy_from_xfs_dqblk_ts(src, src->d_rtbtimer,
-+						     src->d_rtbtimer_hi);
- 	dst->d_rt_spc_warns = src->d_rtbwarns;
- 	dst->d_fieldmask = 0;
- 	if (src->d_fieldmask & FS_DQ_ISOFT)
-@@ -588,10 +600,28 @@ static int quota_setxquota(struct super_block *sb, int type, qid_t id,
- 	return sb->s_qcop->set_dqblk(sb, qid, &qdq);
- }
- 
-+static inline void copy_to_xfs_dqblk_ts(const struct fs_disk_quota *d,
-+		__s32 *timer_lo, __s8 *timer_hi, s64 timer)
-+{
-+	*timer_lo = timer;
-+	if (d->d_fieldmask & FS_DQ_BIGTIME)
-+		*timer_hi = timer >> 32;
-+	else
-+		*timer_hi = 0;
-+}
-+
-+static inline bool want_bigtime(s64 timer)
-+{
-+	return timer > S32_MAX || timer < S32_MIN;
-+}
-+
- static void copy_to_xfs_dqblk(struct fs_disk_quota *dst, struct qc_dqblk *src,
- 			      int type, qid_t id)
- {
- 	memset(dst, 0, sizeof(*dst));
-+	if (want_bigtime(src->d_ino_timer) || want_bigtime(src->d_spc_timer) ||
-+	    want_bigtime(src->d_rt_spc_timer))
-+		dst->d_fieldmask |= FS_DQ_BIGTIME;
- 	dst->d_version = FS_DQUOT_VERSION;
- 	dst->d_id = id;
- 	if (type == USRQUOTA)
-@@ -606,14 +636,17 @@ static void copy_to_xfs_dqblk(struct fs_disk_quota *dst, struct qc_dqblk *src,
- 	dst->d_ino_softlimit = src->d_ino_softlimit;
- 	dst->d_bcount = quota_btobb(src->d_space);
- 	dst->d_icount = src->d_ino_count;
--	dst->d_itimer = src->d_ino_timer;
--	dst->d_btimer = src->d_spc_timer;
-+	copy_to_xfs_dqblk_ts(dst, &dst->d_itimer, &dst->d_itimer_hi,
-+			     src->d_ino_timer);
-+	copy_to_xfs_dqblk_ts(dst, &dst->d_btimer, &dst->d_btimer_hi,
-+			     src->d_spc_timer);
- 	dst->d_iwarns = src->d_ino_warns;
- 	dst->d_bwarns = src->d_spc_warns;
- 	dst->d_rtb_hardlimit = quota_btobb(src->d_rt_spc_hardlimit);
- 	dst->d_rtb_softlimit = quota_btobb(src->d_rt_spc_softlimit);
- 	dst->d_rtbcount = quota_btobb(src->d_rt_space);
--	dst->d_rtbtimer = src->d_rt_spc_timer;
-+	copy_to_xfs_dqblk_ts(dst, &dst->d_rtbtimer, &dst->d_rtbtimer_hi,
-+			     src->d_rt_spc_timer);
- 	dst->d_rtbwarns = src->d_rt_spc_warns;
- }
- 
-diff --git a/include/uapi/linux/dqblk_xfs.h b/include/uapi/linux/dqblk_xfs.h
-index 03d890b80ebc..16d73f54376d 100644
---- a/include/uapi/linux/dqblk_xfs.h
-+++ b/include/uapi/linux/dqblk_xfs.h
-@@ -66,7 +66,10 @@ typedef struct fs_disk_quota {
- 	__s32		d_btimer;	/* similar to above; for disk blocks */
- 	__u16	  	d_iwarns;       /* # warnings issued wrt num inodes */
- 	__u16	  	d_bwarns;       /* # warnings issued wrt disk blocks */
--	__s32		d_padding2;	/* padding2 - for future use */
-+	__s8		d_itimer_hi;	/* upper 8 bits of timer values */
-+	__s8		d_btimer_hi;
-+	__s8		d_rtbtimer_hi;
-+	__s8		d_padding2;	/* padding2 - for future use */
- 	__u64		d_rtb_hardlimit;/* absolute limit on realtime blks */
- 	__u64		d_rtb_softlimit;/* preferred limit on RT disk blks */
- 	__u64		d_rtbcount;	/* # realtime blocks owned */
-@@ -121,6 +124,12 @@ typedef struct fs_disk_quota {
- #define FS_DQ_RTBCOUNT		(1<<14)
- #define FS_DQ_ACCT_MASK		(FS_DQ_BCOUNT | FS_DQ_ICOUNT | FS_DQ_RTBCOUNT)
- 
-+/*
-+ * Quota expiration timestamps are 40-bit signed integers, with the upper 8
-+ * bits encoded in the _hi fields.
-+ */
-+#define FS_DQ_BIGTIME		(1<<15)
-+
- /*
-  * Various flags related to quotactl(2).
-  */
+Could this possibly have been avoided by having nicer interfaces?
+
+Grepping around, and doing a bit of "git blame", I note that ext4 used
+to have this exact same bug too, but it was fixed three years ago in
+commit fd96b8da68d3 ("ext4: fix fault handling when mounted with -o
+dax,ro") and nobody at the time clearly realized it might be a
+pattern.
+
+And honestly, it's possible that the pattern came from cut-and-paste
+errors, but it's equally likely that the pattern was there simply
+because it was such a natural pattern and such an easy and natural
+mistake to make.
+
+Maybe it's inevitable. Some people do want (and need) the information
+whether it was a write just because they care about the page table
+issues (ie marking the pte dirty etc). To that kind of situation,
+whether it's shared or not might not matter all that much. But to a
+filesystem, a private write vs a shared write are quite different
+things.
+
+So I don't really have any suggestions, and maybe it's just what it
+is, but maybe somebody has an idea for how to make it slightly less
+natural to make this mistake..
+
+But maybe just a test-case is all it takes, like Darrick suggests.
+
+                  Linus
