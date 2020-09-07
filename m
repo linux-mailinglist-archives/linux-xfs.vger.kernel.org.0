@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3260260416
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Sep 2020 20:04:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F73C260415
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Sep 2020 20:04:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgIGSEK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Sep 2020 14:04:10 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47788 "EHLO
+        id S1729226AbgIGSEB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Sep 2020 14:04:01 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47600 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbgIGSEJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Sep 2020 14:04:09 -0400
+        with ESMTP id S1729492AbgIGSDx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Sep 2020 14:03:53 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HxZ6c012133
-        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:04:08 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HxAdM012023
+        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:03:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ampOzmgKBo1WcneINNVwprhHpdkxGL5mcnOjJAz2fYY=;
- b=Z2MuI7bYeKhaR+v9NFd5kaZ8qv86zDM8YTXldOUKBOVwW31lsGfJ7fRZ5AYwt0i1jdI2
- oZgqg2s70nr5IJ936ysZZ9PZ4Td5JNme4j0AQyOwFZJX67XV739LQWOZiAL79+FlMV7D
- a8ebMrQ5PRGtrp+V3/8kDKVfUO6qv6hmcNb7hq20oSHPnQ1wEhyYjvtLkq/q4uzT9rl6
- 7yRB+sXNcc9Hbfk91aJGcDCuBQRzbszYYgflWbF0PQ4AU8nQCHRMD5hlWne03iRwCjWi
- 9Gkw/8XUDI/bRHM8Kk301g5e8FY7ckKRZ34IYAgNe9W48TDiCBs7Abb8z9zwlf8ia4il sw== 
+ bh=FuXl3zraW/egma2vZGGohTRJ9M9TeKUJoXDjw4V4ATw=;
+ b=ob8W1qv6C7y3aZB289lATpqjKn42jO+im8+9ZOkqIO7nhYHxs1KpGTakg7tN9Y1WAlwR
+ qNLZQpzCwEvlHkr3AuRtowmDKEhu5PkVO5oOIQ2RuRcsea4zOtwfj5pauDj5v7Rwtg/W
+ uM/pyCz8Vgv553H/h4lm3bhoMhU+dceYEOoTdWq1EyKcsO98AEocsfBBhkw1+K/WbUoX
+ Nucee5QIti/Fb7JxReZqYOOgXxSLdkY4BOEPywDyXGf2MGMcSf9HP67QUq23bp7P/tI3
+ qvJRyp1o7RlDwtdBLHvZgeuhJzHGOzQRons4UrbOWR+IhfGGT7z4SFrlF2vKwNDLggZQ GA== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33c23qqp9c-1
+        by userp2130.oracle.com with ESMTP id 33c23qqp8c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Mon, 07 Sep 2020 18:04:08 +0000
+        for <linux-xfs@vger.kernel.org>; Mon, 07 Sep 2020 18:03:51 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087I0vY1049424
-        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:02:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33cmk16414-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087I0veD049451
+        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:01:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 33cmk163d3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 07 Sep 2020 18:02:07 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 087I27EA006536
-        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:02:07 GMT
+        for <linux-xfs@vger.kernel.org>; Mon, 07 Sep 2020 18:01:50 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 087I1nWv024947
+        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:01:49 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Sep 2020 11:01:15 -0700
-Subject: [PATCH 2/3] xfs: make sure the rt allocator doesn't run off the end
+        with ESMTP ; Mon, 07 Sep 2020 11:01:21 -0700
+Subject: [PATCH 3/3] xfs: ensure that fpunch, fcollapse,
+ and finsert operations are aligned to rt extent size
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 07 Sep 2020 11:01:14 -0700
-Message-ID: <159950167474.582172.16930353017934744381.stgit@magnolia>
+Date:   Mon, 07 Sep 2020 11:01:20 -0700
+Message-ID: <159950168085.582172.4254559621934598919.stgit@magnolia>
 In-Reply-To: <159950166214.582172.6124562615225976168.stgit@magnolia>
 References: <159950166214.582172.6124562615225976168.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -70,49 +71,48 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-There's an overflow bug in the realtime allocator.  If the rt volume is
-large enough to handle a single allocation request that is larger than
-the maximum bmap extent length and the rt bitmap ends exactly on a
-bitmap block boundary, it's possible that the near allocator will try to
-check the freeness of a range that extends past the end of the bitmap.
-This fails with a corruption error and shuts down the fs.
-
-Therefore, constrain maxlen so that the range scan cannot run off the
-end of the rt bitmap.
+Make sure that any fallocate operation that requires the range to be
+block-aligned also checks that the range is aligned to the realtime
+extent size.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_rtalloc.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/xfs/xfs_bmap_util.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 6209e7b6b895..86994d7f7cba 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -247,6 +247,9 @@ xfs_rtallocate_extent_block(
- 		end = XFS_BLOCKTOBIT(mp, bbno + 1) - 1;
- 	     i <= end;
- 	     i++) {
-+		/* Make sure we don't scan off the end of the rt volume. */
-+		maxlen = min(mp->m_sb.sb_rextents, i + maxlen) - i;
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 5123f82f2477..f2a8a0e75e1f 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -946,6 +946,14 @@ xfs_free_file_space(
+ 	startoffset_fsb = XFS_B_TO_FSB(mp, offset);
+ 	endoffset_fsb = XFS_B_TO_FSBT(mp, offset + len);
+ 
++	/* We can only free complete realtime extents. */
++	if (XFS_IS_REALTIME_INODE(ip)) {
++		xfs_extlen_t	extsz = xfs_get_extsz_hint(ip);
 +
- 		/*
- 		 * See if there's a free extent of maxlen starting at i.
- 		 * If it's not so then next will contain the first non-free.
-@@ -442,6 +445,14 @@ xfs_rtallocate_extent_near(
- 	 */
- 	if (bno >= mp->m_sb.sb_rextents)
- 		bno = mp->m_sb.sb_rextents - 1;
-+
-+	/* Make sure we don't run off the end of the rt volume. */
-+	maxlen = min(mp->m_sb.sb_rextents, bno + maxlen) - bno;
-+	if (maxlen < minlen) {
-+		*rtblock = NULLRTBLOCK;
-+		return 0;
++		if ((startoffset_fsb | endoffset_fsb) & (extsz - 1))
++			return -EINVAL;
 +	}
 +
  	/*
- 	 * Try the exact allocation first.
+ 	 * Need to zero the stuff we're not freeing, on disk.
  	 */
+@@ -1139,6 +1147,14 @@ xfs_insert_file_space(
+ 
+ 	trace_xfs_insert_file_space(ip);
+ 
++	/* We can only insert complete realtime extents. */
++	if (XFS_IS_REALTIME_INODE(ip)) {
++		xfs_extlen_t	extsz = xfs_get_extsz_hint(ip);
++
++		if ((stop_fsb | shift_fsb) & (extsz - 1))
++			return -EINVAL;
++	}
++
+ 	error = xfs_bmap_can_insert_extents(ip, stop_fsb, shift_fsb);
+ 	if (error)
+ 		return error;
 
