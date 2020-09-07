@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0D722603A7
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Sep 2020 19:52:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1D8F2603B5
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Sep 2020 19:53:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbgIGRwv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Sep 2020 13:52:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57626 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729453AbgIGRwl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Sep 2020 13:52:41 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HnGoq100150;
-        Mon, 7 Sep 2020 17:52:39 GMT
+        id S1729284AbgIGRxq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Sep 2020 13:53:46 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57278 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729249AbgIGRxH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Sep 2020 13:53:07 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HnrHI043246;
+        Mon, 7 Sep 2020 17:53:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=brmWY9IyKB1yP4GFNvqSV/7RyxRXVd1KeB3oCV8JysQ=;
- b=SS/tQzcHF8EHz0frUvcqOyc2EG+fIfvbt500PzrKN3A+pmyVatGHajtxS3eUPodckm6t
- 5Tej9PSKAgamTIlNHJEEBdMHUACdXEfEpRWroP8mM/4zcK+1LJCrHWujDqovlRB3HYgx
- KTTxDi21jBc8pjtuqA7PKSAt6iM6G1ZcrnLp40bXR6kEpW5GPRY+duwJdC9tbnJVIRXD
- uIp5nUlpgFTEHiQzZQTn09Kjsp1rmsJY8JtZ7cj3ZBDbnrv6iK3Ctuy09Ts7TZZfoVCk
- guzjIeOzKJ8q/nsiZHfp+71fiVVah/STpa4hCnfZYXmV2zJn8cgJrvA0dD8FzPJ7rFv/ BQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33c2mkqj92-1
+ bh=pkA/Ld/GEwt/h+wC1sPCqhNTsJ1v9d+yZz56BL3DpuE=;
+ b=mg/gw2bCDbQe0BTOeuHRrE0iX/7HYCn1jsqybIUYTWgpuRlDz6IQA2ZBDI76GcKkxCtC
+ iZqi8T3ViQ63ktJPqVGXN7nI7gQKH77hlJs0Kmf3ycEGmJhlrcHjhA9sHPznljmB1f5u
+ YrN44GM6JZmwO6Urct0pTGHJKSaqVVuCqYO65LKlXcGqUJibB03nvO7nks4DUkAUL/FV
+ DztSzVuLSQ1o8zYCGUDeSa5F/8yNOXY5N9aPc914+EI+aT1Cvxu9oMuTFt4PjvP6YQ0R
+ UpmvmLkT0tsHIxexuXwROkioEOTOonCHGAetADcGTp91pI5VpU7oYQygPhgka9LY6U6H Ww== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33c3amqgmc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 07 Sep 2020 17:52:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HoCQO066176;
-        Mon, 7 Sep 2020 17:52:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 33cmkuurcc-1
+        Mon, 07 Sep 2020 17:53:02 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HovxB017069;
+        Mon, 7 Sep 2020 17:53:02 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 33cmk15nfx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Sep 2020 17:52:38 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 087HqbUI012306;
-        Mon, 7 Sep 2020 17:52:37 GMT
+        Mon, 07 Sep 2020 17:53:01 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 087Hr08A021789;
+        Mon, 7 Sep 2020 17:53:00 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Sep 2020 10:51:50 -0700
-Subject: [PATCH 3/4] mkfs: fix reflink/rmap logic w.r.t. realtime devices and
- crc=0 support
+        with ESMTP ; Mon, 07 Sep 2020 10:51:56 -0700
+Subject: [PATCH 4/4] mkfs: set required parts of the realtime geometry before
+ computing log geometry
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 07 Sep 2020 10:51:49 -0700
-Message-ID: <159950110896.567664.15989009829117632135.stgit@magnolia>
+Date:   Mon, 07 Sep 2020 10:51:55 -0700
+Message-ID: <159950111530.567664.7302518339658104292.stgit@magnolia>
 In-Reply-To: <159950108982.567664.1544351129609122663.stgit@magnolia>
 References: <159950108982.567664.1544351129609122663.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,15 +54,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9737 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009070171
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9737 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009070171
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
@@ -71,62 +71,48 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-mkfs has some logic to deal with situations where reflink or rmapbt are
-turned on and the administrator has configured a realtime device or a V4
-filesystem; such configurations are not allowed.
+The minimum log size depends on the transaction reservation sizes, which
+in turn depend on the realtime device geometry.  Therefore, we need to
+set up some of the rt geometry before we can compute the real minimum
+log size.
 
-The logic ought to disable reflink and/or rmapbt if they're enabled due
-to being the defaults, and it ought to complain and abort if they're
-enabled because the admin explicitly turned them on.
-
-Unfortunately, the logic here doesn't do that and makes no sense at all
-since usage() exits the program.  Fix it to follow what everything else
-does.
+This fixes a problem where mkfs, given a small data device and a
+realtime volume, formats a filesystem with a log that is too small to
+pass the mount time log size checks.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- mkfs/xfs_mkfs.c |   18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ mkfs/xfs_mkfs.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 
 diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 39fad9576088..6b55ca3e4c57 100644
+index 6b55ca3e4c57..408198e9ec70 100644
 --- a/mkfs/xfs_mkfs.c
 +++ b/mkfs/xfs_mkfs.c
-@@ -1973,7 +1973,7 @@ _("sparse inodes not supported without CRC support\n"));
- 		}
- 		cli->sb_feat.spinodes = false;
+@@ -3237,6 +3237,9 @@ start_superblock_setup(
+ 	} else
+ 		sbp->sb_logsunit = 0;
  
--		if (cli->sb_feat.rmapbt) {
-+		if (cli->sb_feat.rmapbt && cli_opt_set(&mopts, M_RMAPBT)) {
- 			fprintf(stderr,
- _("rmapbt not supported without CRC support\n"));
- 			usage();
-@@ -1995,17 +1995,19 @@ _("cowextsize not supported without reflink support\n"));
- 		usage();
++	/* log reservation calculations depend on rt geometry */
++	sbp->sb_rblocks = cfg->rtblocks;
++	sbp->sb_rextsize = cfg->rtextblocks;
+ }
+ 
+ static void
+@@ -3274,14 +3277,12 @@ finish_superblock_setup(
  	}
  
--	if (cli->sb_feat.reflink && cli->xi->rtname) {
--		fprintf(stderr,
-+	if (cli->xi->rtname) {
-+		if (cli->sb_feat.reflink && cli_opt_set(&mopts, M_REFLINK)) {
-+			fprintf(stderr,
- _("reflink not supported with realtime devices\n"));
--		usage();
-+			usage();
-+		}
- 		cli->sb_feat.reflink = false;
--	}
- 
--	if (cli->sb_feat.rmapbt && cli->xi->rtname) {
--		fprintf(stderr,
-+		if (cli->sb_feat.rmapbt && cli_opt_set(&mopts, M_RMAPBT)) {
-+			fprintf(stderr,
- _("rmapbt not supported with realtime devices\n"));
--		usage();
-+			usage();
-+		}
- 		cli->sb_feat.rmapbt = false;
- 	}
- 
+ 	sbp->sb_dblocks = cfg->dblocks;
+-	sbp->sb_rblocks = cfg->rtblocks;
+ 	sbp->sb_rextents = cfg->rtextents;
+ 	platform_uuid_copy(&sbp->sb_uuid, &cfg->uuid);
+ 	/* Only in memory; libxfs expects this as if read from disk */
+ 	platform_uuid_copy(&sbp->sb_meta_uuid, &cfg->uuid);
+ 	sbp->sb_logstart = cfg->logstart;
+ 	sbp->sb_rootino = sbp->sb_rbmino = sbp->sb_rsumino = NULLFSINO;
+-	sbp->sb_rextsize = cfg->rtextblocks;
+ 	sbp->sb_agcount = (xfs_agnumber_t)cfg->agcount;
+ 	sbp->sb_rbmblocks = cfg->rtbmblocks;
+ 	sbp->sb_logblocks = (xfs_extlen_t)cfg->logblocks;
 
