@@ -2,117 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F73C260415
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Sep 2020 20:04:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52B722605B5
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Sep 2020 22:37:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729226AbgIGSEB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Sep 2020 14:04:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47600 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729492AbgIGSDx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Sep 2020 14:03:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087HxAdM012023
-        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:03:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=FuXl3zraW/egma2vZGGohTRJ9M9TeKUJoXDjw4V4ATw=;
- b=ob8W1qv6C7y3aZB289lATpqjKn42jO+im8+9ZOkqIO7nhYHxs1KpGTakg7tN9Y1WAlwR
- qNLZQpzCwEvlHkr3AuRtowmDKEhu5PkVO5oOIQ2RuRcsea4zOtwfj5pauDj5v7Rwtg/W
- uM/pyCz8Vgv553H/h4lm3bhoMhU+dceYEOoTdWq1EyKcsO98AEocsfBBhkw1+K/WbUoX
- Nucee5QIti/Fb7JxReZqYOOgXxSLdkY4BOEPywDyXGf2MGMcSf9HP67QUq23bp7P/tI3
- qvJRyp1o7RlDwtdBLHvZgeuhJzHGOzQRons4UrbOWR+IhfGGT7z4SFrlF2vKwNDLggZQ GA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33c23qqp8c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Mon, 07 Sep 2020 18:03:51 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 087I0veD049451
-        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:01:50 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33cmk163d3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 07 Sep 2020 18:01:50 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 087I1nWv024947
-        for <linux-xfs@vger.kernel.org>; Mon, 7 Sep 2020 18:01:49 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 07 Sep 2020 11:01:21 -0700
-Subject: [PATCH 3/3] xfs: ensure that fpunch, fcollapse,
- and finsert operations are aligned to rt extent size
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 07 Sep 2020 11:01:20 -0700
-Message-ID: <159950168085.582172.4254559621934598919.stgit@magnolia>
-In-Reply-To: <159950166214.582172.6124562615225976168.stgit@magnolia>
-References: <159950166214.582172.6124562615225976168.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S1729319AbgIGUhS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Sep 2020 16:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729231AbgIGUhO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Sep 2020 16:37:14 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E15C061755;
+        Mon,  7 Sep 2020 13:37:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=TFwGHGfKe+HZJQRFWe+TXpSvT9u+E0qJCWrNre5pxiE=; b=jXmghTJy/3FfDdWwKm8BWwfwX6
+        55oGdWz/+oZYpM2N2GVt2YoAGJPFQJRyrEjl8YOioSnW2VcB2IXn5/+zygxK8FgLb8dJ3YQZ6/QF3
+        otE3V519s9Li3tARQBzRl6mDdAHkJrI9BAyMXr0Tj3s37cyiTA+CEToybsOQoYrnwyJiqX9dN/A0z
+        u8lFGTir6IethBr3P/k6JBZlB0rWIcfJkE2zMKK6ENYQEptDoikKpv4mYufiQvetKjbL7pyPOl01S
+        j4n80nsxIKg2SIVS5yp8xPURzNLaUFHj9HriPEyb2uCBJzjH31A+cgGpG8tdztPfpIlU0Hzlv/14r
+        aZP0ax4w==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFNsy-00013B-J4; Mon, 07 Sep 2020 20:37:08 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 0/2] Fix silent write loss in iomap
+Date:   Mon,  7 Sep 2020 21:37:05 +0100
+Message-Id: <20200907203707.3964-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9737 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009070173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9737 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=3 spamscore=0
- malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009070172
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+While working on the THP patchset, I decided to inject errors, and
+unfortunately I found a hole in our handling of errors with non-THPs.
+You can probably reproduce these errors by inserting your own error
+injection for readahead pages; mine is a little too tied to the THP
+patchset to post.
 
-Make sure that any fallocate operation that requires the range to be
-block-aligned also checks that the range is aligned to the realtime
-extent size.
+The basic outline of the problem is:
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_bmap_util.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ - read(ahead) hits an error, page is marked Error, !Uptodate
+ - write_begin succeeds at reading in page, but it is not marked
+   Uptodate due to PageError being set
+ - write path copies data to page, write() call returns success
+ - subsequent read() sees a page which is !Uptodate, clears Error,
+   calls ->readpage, re-reads data from storage, overwrites data
+   from write() with old data.
 
+The solution presented here is to behave compatibly with mm/filemap.c.
+I don't _like_ how we handle PageError for read errors.  See that other
+mail to linux-fsdevel for details, but this solution fixes an error that
+can be hit by people with flaky storage.
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 5123f82f2477..f2a8a0e75e1f 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -946,6 +946,14 @@ xfs_free_file_space(
- 	startoffset_fsb = XFS_B_TO_FSB(mp, offset);
- 	endoffset_fsb = XFS_B_TO_FSBT(mp, offset + len);
- 
-+	/* We can only free complete realtime extents. */
-+	if (XFS_IS_REALTIME_INODE(ip)) {
-+		xfs_extlen_t	extsz = xfs_get_extsz_hint(ip);
-+
-+		if ((startoffset_fsb | endoffset_fsb) & (extsz - 1))
-+			return -EINVAL;
-+	}
-+
- 	/*
- 	 * Need to zero the stuff we're not freeing, on disk.
- 	 */
-@@ -1139,6 +1147,14 @@ xfs_insert_file_space(
- 
- 	trace_xfs_insert_file_space(ip);
- 
-+	/* We can only insert complete realtime extents. */
-+	if (XFS_IS_REALTIME_INODE(ip)) {
-+		xfs_extlen_t	extsz = xfs_get_extsz_hint(ip);
-+
-+		if ((stop_fsb | shift_fsb) & (extsz - 1))
-+			return -EINVAL;
-+	}
-+
- 	error = xfs_bmap_can_insert_extents(ip, stop_fsb, shift_fsb);
- 	if (error)
- 		return error;
+I've done this as two patches because there are actually two independent
+problems here.  The bug is not fixed without applying both patches, so
+I'm happy to combine them into a single patch if that makes life easier.
+
+The problem was introduced with commit 9dc55f1389f9, which made setting
+PageUptodate conditional on PageError().
+
+Matthew Wilcox (Oracle) (2):
+  iomap: Clear page error before beginning a write
+  iomap: Mark read blocks uptodate in write_begin
+
+ fs/iomap/buffered-io.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+-- 
+2.28.0
 
