@@ -2,59 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE96261CC9
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Sep 2020 21:26:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67A67261EBE
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Sep 2020 21:55:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbgIHT0l (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Sep 2020 15:26:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54128 "EHLO
+        id S1730635AbgIHTzD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Sep 2020 15:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731049AbgIHQAE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Sep 2020 12:00:04 -0400
+        with ESMTP id S1730633AbgIHPhg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Sep 2020 11:37:36 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91DF4C0A3BFB
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Sep 2020 07:56:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C095C0A3BDE
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Sep 2020 07:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=v0oOq/BgEza2TzxnE+CUqmkgzLYIVPwroGdksDyuuxI=; b=pys5xW7pmZqvmmWrzOCWOzM0Wh
-        jr6H4d+brLU+7SP6itWtV1wYw7rN1JgOGuNSGR3mUTVVPRBUddyLhDvvFfRqUenH3CWSnv/YwVqDO
-        DIu4Q33XGrxWatyTT8ykSixF94xJqE2ylxkoSOt0Wcox5tY14DrzZz+vGAAirjWgvyXYN2ovZkjJ/
-        NuPaIvbx4x1zG0OkUBN8dMnOq9e6NvkkKlDVqcwdnXvUdyZ/bch6x9hzM/Kx2Zzr6JjhZkDZ6+G6F
-        l/Bt8cLn6G7F0u3lFXokcmP/1GkShK8VyqgACwodGWRUrCdFHqy6+4SP93q5KXX/RPbd/HIq1M9bn
-        AiOgPgKw==;
+        bh=AMgLq1kYZyqxV9AEXO2bzlSBvFlrttNFS1FgelJYwd4=; b=t2nS1uzkl0bzvxMmgZT15jAbYK
+        lCO29zPOChVVGK+6qCWlzyb0NcThMqsiouR6sJjflMNCdFkJDGeiPxwbGFQ0AUKBlXLXo70OlTVJS
+        J+DmwsDu5ExB3Pb0VSh1Vp1OKrBw0ZS3Adt4OA4twU7c9Bgxu5Smf7ECUz7/i1/9C7/oY7CplGEJQ
+        Jehqev00K306HXKr3jc7oCOQbkipAQPc809/PCAZf9SjdoylC9P7YQs5+Vf4iZUcf4XTSWh2oosvf
+        /GFsr5r3wYMvPrFtam5aorcQv9LSXQhqpAxlhI6Nmywzr4zGux6VnQRPX0w/11/dNxVB4ZdTrmgcF
+        Z2THFvWA==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf2d-0003A0-0b; Tue, 08 Sep 2020 14:56:31 +0000
-Date:   Tue, 8 Sep 2020 15:56:14 +0100
+        id 1kFezL-0002sr-A8; Tue, 08 Sep 2020 14:52:51 +0000
+Date:   Tue, 8 Sep 2020 15:52:51 +0100
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] xfs: don't propagate RTINHERIT -> REALTIME when
- there is no rtdev
-Message-ID: <20200908145614.GL6039@infradead.org>
-References: <159950166214.582172.6124562615225976168.stgit@magnolia>
- <159950166858.582172.16284988680675778406.stgit@magnolia>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 5/7] xfs_repair: fix handling of data blocks colliding
+ with existing metadata
+Message-ID: <20200908145251.GJ6039@infradead.org>
+References: <159950111751.567790.16914248540507629904.stgit@magnolia>
+ <159950114896.567790.10646736292763230158.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159950166858.582172.16284988680675778406.stgit@magnolia>
+In-Reply-To: <159950114896.567790.10646736292763230158.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:01:08AM -0700, Darrick J. Wong wrote:
+On Mon, Sep 07, 2020 at 10:52:28AM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> While running generic/042 with -drtinherit=1 set in MKFS_OPTIONS, I
-> observed that the kernel will gladly set the realtime flag on any file
-> created on the loopback filesystem even though that filesystem doesn't
-> actually have a realtime device attached.  This leads to verifier
-> failures and doesn't make any sense, so be smarter about this.
+> Prior to commit a406779bc8d8, any blocks in a data fork extent that
+> collided with existing blocks would cause the entire data fork extent to
+> be rejected.  Unfortunately, the patch to add data block sharing support
+> suppressed checking for any collision, including metadata.  What we
+> really wanted to do here during a check_dups==1 scan is to is check for
+> specific collisions and without updating the block mapping data.
+> 
+> So, move the check_dups test after the for-switch construction.  This
+> re-enables detecting collisions between data fork blocks and a
+> previously scanned chunk of metadata, and improves the specificity of
+> the error message that results.
+> 
+> This was found by fuzzing recs[2].free=zeroes in xfs/364, though this
+> patch alone does not solve all the problems that scenario presents.
+> 
+> Fixes: a406779bc8d8 ("xfs_repair: handle multiple owners of data blocks")
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Looks good, but add an overly long line.  Which just suggested that
-the whole flag inheritance really needs to be split into a helper..
+Looks good,
 
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
