@@ -2,61 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF2EE2620D8
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Sep 2020 22:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A6BA2620BF
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Sep 2020 22:15:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgIHUQf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Sep 2020 16:16:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46562 "EHLO
+        id S1730907AbgIHUPL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Sep 2020 16:15:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729851AbgIHPKB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Sep 2020 11:10:01 -0400
+        with ESMTP id S1730000AbgIHPKl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Sep 2020 11:10:41 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6271C0A5533
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Sep 2020 07:58:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 638C7C008599;
+        Tue,  8 Sep 2020 07:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=nnxlTweDKsjmEER/IBtEWhhmYpgtrlDppZ+nsrR0iYE=; b=kmWkgFuvP1nxw/+jcItWoGkWtz
-        1FVmevnI82JMxsqp6/5nhi0DbP1cNV9ZOrk46YhCFqALua1/3wqNwjmKcr7M87V2UKYvA7W0uL5dX
-        IW+plL1iV2+PamB/bjtKNH2uMbVdL+vQCH8k3mPEQu5rQ3aJw8LVPxHXkpG4lzpRBkfFocS84HxXq
-        OTSFQLYjh1GfyQl4pjP+xit5gGAKH8mFYXSaixQe/U1y34C5S2k+1XfDry0fHGGib/yde0Ioa/H67
-        maL4Js0kooFZ0Rgar4MEBewaTxQ0HXk1rMVQjp6p6EQgYDfxkhb5ewFvhbLJdmQp6VpygRjeiBOVR
-        z5MHjojA==;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=ucrLpPUSygiKHx5/XLaUJmgkp0
+        qnbsKOyQsZTl5747Ai7SA+5Gi/Il+xaY/nz60utOb/A0+cI6TqhYf9CD4adjc0joJ9IMTcGroIp0z
+        W83F8uJkCAfc6Ey5twbC95I6s0gRb3k2+N/Kf375fQXFMYbrLwn4ZmATrl8VxntrdZvWcLkUfxaAR
+        tCzcQdQmlb5vvyJ8uxhZHG2OXnxnt5Gvve5X44ppSPMuq7q5Pywhr0/k6DfodFhs4x+wjcz1hnY5s
+        am+4aewKyBvm2FN4vBlNXY8uNZwNzEFYMMB6aIj6u7jnPEl2qYWopVH3eZ7gOKQ7Vb+i7gCdg5mXM
+        +f/91QQw==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf4f-0003EV-0W; Tue, 08 Sep 2020 14:58:21 +0000
-Date:   Tue, 8 Sep 2020 15:58:20 +0100
+        id 1kFf65-0003IE-DX; Tue, 08 Sep 2020 14:59:49 +0000
+Date:   Tue, 8 Sep 2020 15:59:49 +0100
 From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] xfs: make sure the rt allocator doesn't run off the
- end
-Message-ID: <20200908145820.GM6039@infradead.org>
-References: <159950166214.582172.6124562615225976168.stgit@magnolia>
- <159950167474.582172.16930353017934744381.stgit@magnolia>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] iomap: Clear page error before beginning a write
+Message-ID: <20200908145949.GO6039@infradead.org>
+References: <20200907203707.3964-1-willy@infradead.org>
+ <20200907203707.3964-2-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <159950167474.582172.16930353017934744381.stgit@magnolia>
+In-Reply-To: <20200907203707.3964-2-willy@infradead.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
-
-On Mon, Sep 07, 2020 at 11:01:14AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> There's an overflow bug in the realtime allocator.  If the rt volume is
-> large enough to handle a single allocation request that is larger than
-> the maximum bmap extent length and the rt bitmap ends exactly on a
-> bitmap block boundary, it's possible that the near allocator will try to
-> check the freeness of a range that extends past the end of the bitmap.
-> This fails with a corruption error and shuts down the fs.
-> 
-> Therefore, constrain maxlen so that the range scan cannot run off the
-> end of the rt bitmap.
 
 Looks good,
 
