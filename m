@@ -2,183 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 064C3265532
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Sep 2020 00:48:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B46B26559A
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Sep 2020 01:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725298AbgIJWsv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 10 Sep 2020 18:48:51 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:38108 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgIJWsu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Sep 2020 18:48:50 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AMmXvB006499;
-        Thu, 10 Sep 2020 22:48:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=7a+TcbBWYswSHzfXqSN6M7qJ999n+JtUuDhWkNAYmgw=;
- b=qwmW176rv4N9qm72zeyPQYufrfzUJHO+ZTCW3X16k7lEpCh9kn9C+yykp1Ye8lqWfDbP
- LtAJuPK5wO/evqMOMlqBMFOkQ5MXuUJ0kFxyNIMyrsuOvGcoECZPZOdbQZ55YCT5WWDG
- 43nMATyCLgvrnBjNYMDZsula7nbYP/Hlnjh8ZlPbhaGRjY9uOtBCSJvkCJpF/TcAa8Yl
- CIEgImH6JWdgOJO9VtgWBzJaKzilBfQenM0oaVekUxKMv2G5dAl4gVp4KNh8giQV7bvd
- pYbjEv4wuh5X0Bb/Nawvp7nsxjNA2Aio5PqSAfrO6EWJTTn/WBaLYmd612TI3RcTwZTg BQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 33c2mmb0ku-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 10 Sep 2020 22:48:47 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08AMkZAD002416;
-        Thu, 10 Sep 2020 22:48:46 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 33cmm1xt5c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Sep 2020 22:48:46 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08AMmir6015465;
-        Thu, 10 Sep 2020 22:48:44 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Sep 2020 15:48:44 -0700
-Date:   Thu, 10 Sep 2020 15:48:42 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: [PATCH v2] xfs: deprecate the V4 format
-Message-ID: <20200910224842.GR7955@magnolia>
+        id S1725747AbgIJXrP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 10 Sep 2020 19:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58522 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgIJXrM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Sep 2020 19:47:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A1CCC061756;
+        Thu, 10 Sep 2020 16:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=gATiEIJ5yym8gDZW7pIpWvARxJPI7Am+GdMp2jh+5MM=; b=NU+A3j4UiyhwWUqTbemQKJ7NoT
+        bJbdq0iulAfED6zqYzsugnRZeP4UFzoCZXBTUxe3UU0nxN1pxpDgbXamafmx7vgty1r6sztkFceoc
+        uhCtLXWHHlRk8UEarcpLejYVsKtGgEDyGzsi1+3zAjHhmygjlNrGDioIz9zRv1FhKFM6KhSKpk31W
+        9giPinWY+QjDf/q+iQqddSd89v8Xi9iu/rSoc6Qc49vUBRfO7hQxKyAA3RwyRbQ3MzGLfQgWh0J7X
+        BFCVnyNyY/g0MCXWFxTQJUOtq/pm5rcIOT9stXwsB8VLtzKhCFJprAB/2wZXJI9/bYGDR9edkQMRp
+        lHM6Bawg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kGWHU-0001RW-R5; Thu, 10 Sep 2020 23:47:08 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Dave Kleikamp <shaggy@kernel.org>,
+        jfs-discussion@lists.sourceforge.net
+Subject: [PATCH v2 0/9] THP iomap patches for 5.10
+Date:   Fri, 11 Sep 2020 00:46:58 +0100
+Message-Id: <20200910234707.5504-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 suspectscore=1
- spamscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009100198
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 suspectscore=1 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009100199
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+These patches are carefully plucked from the THP series.  I would like
+them to hit 5.10 to make the THP patchset merge easier.  Some of these
+are just generic improvements that make sense on their own terms, but
+the overall intent is to support THPs in iomap.
 
-The V4 filesystem format contains known weaknesses in the on-disk format
-that make metadata verification diffiult.  In addition, the format will
-does not support dates past 2038 and will not be upgraded to do so.
-Therefore, we should start the process of retiring the old format to
-close off attack surfaces and to encourage users to migrate onto V5.
+v2:
+ - Move the call to flush_dcache_page (Christoph)
+ - Clarify comments (Darrick)
+ - Rename read_count to read_bytes_pending (Christoph)
+ - Rename write_count to write_bytes_pending (Christoph)
+ - Restructure iomap_readpage_actor() (Christoph)
+ - Change return type of the zeroing functions from loff_t to s64
 
-Therefore, make XFS V4 support a configurable option.  For the first
-period it will be default Y in case some distributors want to withdraw
-support early; for the second period it will be default N so that anyone
-who wishes to continue support can do so; and after that, support will
-be removed from the kernel.
+Matthew Wilcox (Oracle) (9):
+  iomap: Fix misplaced page flushing
+  fs: Introduce i_blocks_per_page
+  iomap: Use kzalloc to allocate iomap_page
+  iomap: Use bitmap ops to set uptodate bits
+  iomap: Support arbitrarily many blocks per page
+  iomap: Convert read_count to read_bytes_pending
+  iomap: Convert write_count to write_bytes_pending
+  iomap: Convert iomap_write_end types
+  iomap: Change calling convention for zeroing
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
-v2: define what is a V4 filesystem, update the administrator guide
----
- Documentation/admin-guide/xfs.rst |   20 ++++++++++++++++++++
- fs/xfs/Kconfig                    |   23 +++++++++++++++++++++++
- fs/xfs/xfs_mount.c                |   11 +++++++++++
- 3 files changed, 54 insertions(+)
+ fs/dax.c                |  13 ++-
+ fs/iomap/buffered-io.c  | 173 +++++++++++++++++-----------------------
+ fs/jfs/jfs_metapage.c   |   2 +-
+ fs/xfs/xfs_aops.c       |   2 +-
+ include/linux/dax.h     |   3 +-
+ include/linux/pagemap.h |  16 ++++
+ 6 files changed, 96 insertions(+), 113 deletions(-)
 
-diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-index f461d6c33534..68d69733a1df 100644
---- a/Documentation/admin-guide/xfs.rst
-+++ b/Documentation/admin-guide/xfs.rst
-@@ -210,6 +210,25 @@ When mounting an XFS filesystem, the following options are accepted.
- 	inconsistent namespace presentation during or after a
- 	failover event.
- 
-+Deprecation of V4 Format
-+========================
-+
-+The V4 filesystem format lacks certain features that are supported by
-+the V5 format, such as metadata checksumming, strengthened metadata
-+verification, and the ability to store timestamps past the year 2038.
-+Because of this, the V4 format is deprecated.  All users should upgrade
-+by backing up their files, reformatting, and restoring from the backup.
-+
-+Administrators and users can detect a V4 filesystem by running xfs_info
-+against a filesystem mountpoint and checking for a string beginning with
-+"crc=".  If the string "crc=0" is found, or no "crc=" string is found,
-+the filesystem is a V4 filesystem.
-+
-+The deprecation will take place in two parts.  Support for mounting V4
-+filesystems can now be disabled at kernel build time via Kconfig option.
-+The option will default to yes until September 2025, at which time it
-+will be changed to default to no.  In September 2030, support will be
-+removed from the codebase entirely.
- 
- Deprecated Mount Options
- ========================
-@@ -217,6 +236,7 @@ Deprecated Mount Options
- ===========================     ================
-   Name				Removal Schedule
- ===========================     ================
-+Mounting with V4 filesystem     September 2030
- ===========================     ================
- 
- 
-diff --git a/fs/xfs/Kconfig b/fs/xfs/Kconfig
-index e685299eb3d2..5970d0f77db9 100644
---- a/fs/xfs/Kconfig
-+++ b/fs/xfs/Kconfig
-@@ -22,6 +22,29 @@ config XFS_FS
- 	  system of your root partition is compiled as a module, you'll need
- 	  to use an initial ramdisk (initrd) to boot.
- 
-+config XFS_SUPPORT_V4
-+	bool "Support deprecated V4 (crc=0) format"
-+	default y
-+	help
-+	  The V4 filesystem format lacks certain features that are supported
-+	  by the V5 format, such as metadata checksumming, strengthened
-+	  metadata verification, and the ability to store timestamps past the
-+	  year 2038.  Because of this, the V4 format is deprecated.  All users
-+	  should upgrade by backing up their files, reformatting, and restoring
-+	  from the backup.
-+
-+	  Administrators and users can detect a V4 filesystem by running
-+	  xfs_info against a filesystem mountpoint and checking for a string
-+	  beginning with "crc=".  If the string "crc=0" is found, or no "crc="
-+	  string is found, the filesystem is a V4 filesystem.
-+
-+	  This option will become default N in September 2025.  Support for the
-+	  V4 format will be removed entirely in September 2030.  Distributors
-+	  can say N here to withdraw support earlier.
-+
-+	  To continue supporting the old V4 format (crc=0), say Y.
-+	  To close off an attack surface, say N.
-+
- config XFS_QUOTA
- 	bool "XFS Quota support"
- 	depends on XFS_FS
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index ed69c4bfda71..3678dfeecd64 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -315,6 +315,17 @@ xfs_readsb(
- 		goto release_buf;
- 	}
- 
-+#ifndef CONFIG_XFS_SUPPORT_V4
-+	/* V4 support is undergoing deprecation. */
-+	if (!xfs_sb_version_hascrc(sbp)) {
-+		if (loud)
-+			xfs_warn(mp,
-+	"Deprecated V4 format (crc=0) not supported by kernel.");
-+		error = -EINVAL;
-+		goto release_buf;
-+	}
-+#endif
-+
- 	/*
- 	 * We must be able to do sector-sized and sector-aligned IO.
- 	 */
+-- 
+2.28.0
+
