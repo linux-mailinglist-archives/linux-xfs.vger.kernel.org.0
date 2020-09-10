@@ -2,69 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58798263AA7
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Sep 2020 04:39:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26815263C84
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Sep 2020 07:37:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbgIJCis convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 9 Sep 2020 22:38:48 -0400
-Received: from kanlli.eu ([146.255.98.105]:52862 "EHLO mail.foescocursos.es"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730871AbgIJCg1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 9 Sep 2020 22:36:27 -0400
-X-Greylist: delayed 14186 seconds by postgrey-1.27 at vger.kernel.org; Wed, 09 Sep 2020 22:36:26 EDT
-Received: from 131.red-95-120-15.dynamicip.rima-tde.net (131.red-95-120-15.dynamicip.rima-tde.net [95.120.15.131])
-        by mail.foescocursos.es (Postfix) with ESMTPSA id 02BB9B1A4C
-        for <linux-xfs@vger.kernel.org>; Thu, 10 Sep 2020 00:37:24 +0200 (CEST)
-Authentication-Results: mail.foescocursos.es;
-        spf=pass (sender IP is 95.120.15.131) smtp.mailfrom=info21@foescoformaciones.es smtp.helo=131.red-95-120-15.dynamicip.rima-tde.net
-Received-SPF: pass (mail.foescocursos.es: connection is authenticated)
+        id S1726300AbgIJFhD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 10 Sep 2020 01:37:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39048 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbgIJFg4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Sep 2020 01:36:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A5Y7X3035347;
+        Thu, 10 Sep 2020 05:36:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=f7HM1P8+41ytrqzvdHR1rFc9DLg/iUO0fEp2qJ8LFXI=;
+ b=xyIq9BnjcLQjO9osTcLHZR8qbdGoc7+NE5m6zRubtStjK4bAElZxEjNGXK3geNRo/Icz
+ LQQB/XLwGb5jCL9xkckn92/ugDCU03kv2jPBISRpz215mf9g/MaFkGkpLs9iTw3MP4/m
+ nhppWmJhjkfTffl18ejNjny5Jx2rHrC0XoCMoCfYpfq20B5GMulqgQ6xEtRf70xzP2p7
+ /eK9r/NsSEIz6iqELObiB3YFchhV2U64StlaDX8y/lyf90+6zHzilTMulsF1nxejW+h7
+ EwQG42x/rKyFJOMm/R4RI1Wr1coEywyfXMVvhjIkM8NYsx/Vu8jZyCTc58QSgpZ1GTyo /A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33c3an5nkg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 10 Sep 2020 05:36:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08A5Ze9A094630;
+        Thu, 10 Sep 2020 05:36:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 33dacmmpau-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Sep 2020 05:36:49 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08A5aj5o024967;
+        Thu, 10 Sep 2020 05:36:45 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 09 Sep 2020 22:36:45 -0700
+Subject: [PATCH v2 0/2] xfs: fix a few realtime bugs
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
+Date:   Wed, 09 Sep 2020 22:36:42 -0700
+Message-ID: <159971620202.1311472.11867327944494045509.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-From:   "FOESCO" <info21@foescoformaciones.es>
-Reply-To: info21@foescoformaciones.es
-To:     linux-xfs@vger.kernel.org
-Subject: FOESCO Informa
-Content-Type: text/plain
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Smart_Send_4_3_3
-Date:   Thu, 10 Sep 2020 00:37:25 +0200
-Message-ID: <734449557381648184610@DESKTOP-TILJS7C>
-X-PPP-Message-ID: <20200909223725.26409.71619@mail.foescocursos.es>
-X-PPP-Vhost: foescoformaciones.es
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=802 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 suspectscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100053
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9739 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ mlxlogscore=835 suspectscore=0 adultscore=0 mlxscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009100053
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Buenos días
+Hi all,
 
+This series fixes some problems with inode flags being propagated
+incorrectly when a directory has the rtinherit flag set but there is no
+realtime device.
 
-Soy Alex Pons, director de FOESCO (Formación Estatal Continua).
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Llegadas estas fechas y como cada año, recordamos a todas las empresas Españolas su derecho a consumir el Crédito de Formación del que disponen para la formación de sus empleados, antes de su caducidad a final de año.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
+--D
 
-Actualmente se encuentra abierto el plazo de inscripción para la Convocatoria SEPTIEMBRE 2020 de Cursos Bonificables con cargo al Crédito de Formación 2020.
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-bugs
+---
+ fs/xfs/xfs_inode.c |  114 ++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 66 insertions(+), 48 deletions(-)
 
-
-Deseáis que os mandemos la información?
-
-
-Quedamos a la espera de vuestra respuesta.
-
-
-Saludos cordiales.
-
-
-Alex Pons
-Director FOESCO.
-
-FOESCO Formación Estatal Continua.
-Entidad Organizadora: B200592AA
-www.foesco.com
-e-mail:     cursos@foesco.net
-Tel:     910 323 794
-(Horario de 9h a 15h y de 17h a 20h de Lunes a Viernes)
-
-FOESCO ofrece formación a empresas y trabajadores en activo a través de cursos bonificados por la Fundación Estatal para la Formación en el Empleo (antiguo FORCEM) que gestiona las acciones formativas de FORMACIÓN CONTINUA para trabajadores y se rige por la ley 30/2015 de 9 de Septiembre.
-
-Antes de imprimir este e-mail piense bien si es necesario hacerlo. Before printing this e-mail please think twice if you really need it. FOESCO Tfno: 910 382 880 Email: cursos@foesco.com. La información transmitida en este mensaje está dirigida solamente a las personas o entidades que figuran en el encabezamiento y contiene información confidencial, por lo que, si usted lo recibiera por error, por favor destrúyalo sin copiarlo, usarlo ni distribuirlo, comunicándolo inmediatamente al emisor del mensaje. De conformidad con lo dispuesto en el Reglamento Europeo del 2016/679, del 27 de Abril de 2016, FOESCO le informa que los datos por usted suministrados serán tratados con las medidas de seguridad conformes a la normativa vigente que se requiere. Dichos datos serán empleados con fines de gestión. Para el ejercicio de sus derechos de transparencia, información, acceso, rectificación, supresión o derecho al olvido, limitación del tratamiento , portabilidad de datos y oposición de sus datos de carácter personal deberá dirigirse a la dirección del Responsable del tratamiento a C/ LAGUNA DEL MARQUESADO Nº10, 28021, MADRID, "PULSANDO AQUI" <mailto:bajas@foesco.com?Subject=BAJA%20CORREOS> y "ENVIAR" o a traves de la dirección de correo electrónico: bajas@foesco.com <mailto:bajas@foesco.com?Subject=BAJA%20CORREOS>
