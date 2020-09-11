@@ -2,193 +2,108 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74D072655AD
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Sep 2020 01:47:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EB3C265732
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Sep 2020 04:59:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725801AbgIJXrm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 10 Sep 2020 19:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbgIJXrP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Sep 2020 19:47:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ADE4C061756;
-        Thu, 10 Sep 2020 16:47:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=WP2cPvRQ2Iyrw0S8nzMEBDANY5cJE6s8OG42laM1g3Q=; b=ucCJyhUZc4UdOxtdfOh3F4QKlR
-        9wU+/1rqSAIT5Y2i+inbPju4AHXD4BaUjHQk7pQQV83FGlzTAv/3PGaan7Z2A8+4AVhqgunyin2kD
-        r7G8gSO+kB+0uL4lrljEZv6dFpXfvnC2Ql2vJmiUf5WDjpRdm7VjvTZg3SnU9wHaBCgAVlJQZqiiA
-        xWNp2Vsiyu5nauMCoAe0XGWRL8d4HvN5+TmeC3jqnFn7ViNZ7R16wvHCj2MyZ6q0HXU1pYwXB5BW7
-        sbYiNNAXSkjypI9M2QjHzIgdlP/y4Y1a54lx4WMbjlxLzsS+jFV/M6vepPgNMVdKi81h1cLfqQ8Ne
-        q/L6symw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kGWHY-0001T3-K0; Thu, 10 Sep 2020 23:47:12 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Dave Kleikamp <shaggy@kernel.org>,
-        jfs-discussion@lists.sourceforge.net
-Subject: [PATCH v2 9/9] iomap: Change calling convention for zeroing
-Date:   Fri, 11 Sep 2020 00:47:07 +0100
-Message-Id: <20200910234707.5504-10-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200910234707.5504-1-willy@infradead.org>
-References: <20200910234707.5504-1-willy@infradead.org>
+        id S1725497AbgIKC7x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 10 Sep 2020 22:59:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46272 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgIKC7w (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Sep 2020 22:59:52 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08B2xovi010673;
+        Fri, 11 Sep 2020 02:59:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=bUbt5MGmUHat+AQGOW/RicA8UPsr7DCCfBgbpSs8sYw=;
+ b=NcKL7PooTOz8OdKsmkOy19qMqJJvRsxNJxpmY8EqE2MF3gQJG5pEGA+F1mL6eyTEzUcJ
+ 5IDfIJ0lI1cC7tPdqH11wTJMOJvfckAy+kAabshEVT5Va2XR1E9B1VZ8vza61zA+CjE9
+ y76wg5wy9NAVaXv8yS2ZCb0kxcH1Fpx2KMQfj2bt3jf6zmdw3Ud624eZbbHlJdTnOsgD
+ KsijMQcZKV8WEw+M/L82/QwZsYFUXChX996XgpdQfA1IE9HICI15Ihd13d1zj6WcX+WC
+ YgGEM/lFQqggwQ2CuVycTSvdIqi1vY0cgYg/bXMkVNYaxnm/3splkVQFhxKQz1dNzGLX PA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 33c23rbn6k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 11 Sep 2020 02:59:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08B2taQS041577;
+        Fri, 11 Sep 2020 02:57:50 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 33cmew98rq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 11 Sep 2020 02:57:50 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08B2vk9U019429;
+        Fri, 11 Sep 2020 02:57:49 GMT
+Received: from [192.168.1.223] (/67.1.244.254)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 10 Sep 2020 19:57:46 -0700
+Subject: Re: [PATCH 1/4] man: install all manpages that redirect to another
+ manpage
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>, sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org
+References: <159950108982.567664.1544351129609122663.stgit@magnolia>
+ <159950109644.567664.3395622067779955144.stgit@magnolia>
+From:   Allison Collins <allison.henderson@oracle.com>
+Message-ID: <94fde0c5-043a-560d-80b1-52f777453ff6@oracle.com>
+Date:   Thu, 10 Sep 2020 19:57:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <159950109644.567664.3395622067779955144.stgit@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 adultscore=0
+ bulkscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009110022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 bulkscore=0 suspectscore=0 spamscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009110023
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Pass the full length to iomap_zero() and dax_iomap_zero(), and have
-them return how many bytes they actually handled.  This is preparatory
-work for handling THP, although it looks like DAX could actually take
-advantage of it if there's a larger contiguous area.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/dax.c               | 13 ++++++-------
- fs/iomap/buffered-io.c | 33 +++++++++++++++------------------
- include/linux/dax.h    |  3 +--
- 3 files changed, 22 insertions(+), 27 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 994ab66a9907..6ad346352a8c 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1037,18 +1037,18 @@ static vm_fault_t dax_load_hole(struct xa_state *xas,
- 	return ret;
- }
- 
--int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
--		   struct iomap *iomap)
-+s64 dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap)
- {
- 	sector_t sector = iomap_sector(iomap, pos & PAGE_MASK);
- 	pgoff_t pgoff;
- 	long rc, id;
- 	void *kaddr;
- 	bool page_aligned = false;
--
-+	unsigned offset = offset_in_page(pos);
-+	unsigned size = min_t(u64, PAGE_SIZE - offset, length);
- 
- 	if (IS_ALIGNED(sector << SECTOR_SHIFT, PAGE_SIZE) &&
--	    IS_ALIGNED(size, PAGE_SIZE))
-+	    (size == PAGE_SIZE))
- 		page_aligned = true;
- 
- 	rc = bdev_dax_pgoff(iomap->bdev, sector, PAGE_SIZE, &pgoff);
-@@ -1058,8 +1058,7 @@ int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
- 	id = dax_read_lock();
- 
- 	if (page_aligned)
--		rc = dax_zero_page_range(iomap->dax_dev, pgoff,
--					 size >> PAGE_SHIFT);
-+		rc = dax_zero_page_range(iomap->dax_dev, pgoff, 1);
- 	else
- 		rc = dax_direct_access(iomap->dax_dev, pgoff, 1, &kaddr, NULL);
- 	if (rc < 0) {
-@@ -1072,7 +1071,7 @@ int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
- 		dax_flush(iomap->dax_dev, kaddr + offset, size);
- 	}
- 	dax_read_unlock(id);
--	return 0;
-+	return size;
- }
- 
- static loff_t
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index cb25a7b70401..3e1eb40a73fd 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -898,11 +898,13 @@ iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
- }
- EXPORT_SYMBOL_GPL(iomap_file_unshare);
- 
--static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
--		unsigned bytes, struct iomap *iomap, struct iomap *srcmap)
-+static s64 iomap_zero(struct inode *inode, loff_t pos, u64 length,
-+		struct iomap *iomap, struct iomap *srcmap)
- {
- 	struct page *page;
- 	int status;
-+	unsigned offset = offset_in_page(pos);
-+	unsigned bytes = min_t(u64, PAGE_SIZE - offset, length);
- 
- 	status = iomap_write_begin(inode, pos, bytes, 0, &page, iomap, srcmap);
- 	if (status)
-@@ -914,38 +916,33 @@ static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
- 	return iomap_write_end(inode, pos, bytes, bytes, page, iomap, srcmap);
- }
- 
--static loff_t
--iomap_zero_range_actor(struct inode *inode, loff_t pos, loff_t count,
--		void *data, struct iomap *iomap, struct iomap *srcmap)
-+static loff_t iomap_zero_range_actor(struct inode *inode, loff_t pos,
-+		loff_t length, void *data, struct iomap *iomap,
-+		struct iomap *srcmap)
- {
- 	bool *did_zero = data;
- 	loff_t written = 0;
--	int status;
- 
- 	/* already zeroed?  we're done. */
- 	if (srcmap->type == IOMAP_HOLE || srcmap->type == IOMAP_UNWRITTEN)
--		return count;
-+		return length;
- 
- 	do {
--		unsigned offset, bytes;
--
--		offset = offset_in_page(pos);
--		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
-+		s64 bytes;
- 
- 		if (IS_DAX(inode))
--			status = dax_iomap_zero(pos, offset, bytes, iomap);
-+			bytes = dax_iomap_zero(pos, length, iomap);
- 		else
--			status = iomap_zero(inode, pos, offset, bytes, iomap,
--					srcmap);
--		if (status < 0)
--			return status;
-+			bytes = iomap_zero(inode, pos, length, iomap, srcmap);
-+		if (bytes < 0)
-+			return bytes;
- 
- 		pos += bytes;
--		count -= bytes;
-+		length -= bytes;
- 		written += bytes;
- 		if (did_zero)
- 			*did_zero = true;
--	} while (count > 0);
-+	} while (length > 0);
- 
- 	return written;
- }
-diff --git a/include/linux/dax.h b/include/linux/dax.h
-index 6904d4e0b2e0..951a851a0481 100644
---- a/include/linux/dax.h
-+++ b/include/linux/dax.h
-@@ -214,8 +214,7 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
- int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index);
- int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
- 				      pgoff_t index);
--int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
--			struct iomap *iomap);
-+s64 dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap);
- static inline bool dax_mapping(struct address_space *mapping)
- {
- 	return mapping->host && IS_DAX(mapping->host);
--- 
-2.28.0
+On 9/7/20 10:51 AM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Some of the ioctl manpages do not contain any information other than a
+> pointer to a different manpage.  These aren't picked up by the install
+> scripts, so fix them so that they do.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Ok, makes sense
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
 
+> ---
+>   include/buildmacros |    3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> 
+> diff --git a/include/buildmacros b/include/buildmacros
+> index f8d54200382a..6f34d7c528fa 100644
+> --- a/include/buildmacros
+> +++ b/include/buildmacros
+> @@ -95,9 +95,10 @@ INSTALL_MAN = \
+>   	@for d in $(MAN_PAGES); do \
+>   		first=true; \
+>   		for m in `$(AWK) \
+> -			'/^\.S[h|H] NAME/ {ok=1; next} ok {print; exit}' $$d \
+> +			'/^\.S[h|H] NAME/ {ok=1; next} /^\.so/ {printf("so %s\n", FILENAME); exit} ok {print; exit}' $$d \
+>   			| $(SED) \
+>   				-e 's/^\.Nm //' -e 's/,/ /g' -e 's/\\-.*//' \
+> +				-e 's/^so \([_a-zA-Z]*\)\.[0-9]/\1/g' \
+>   				-e 's/\\\f[0-9]//g' -e 's/  / /g;q'`; \
+>   		do \
+>   			[ -z "$$m" -o "$$m" = "\\" ] && continue; \
+> 
