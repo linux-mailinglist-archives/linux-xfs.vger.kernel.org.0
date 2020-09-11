@@ -2,125 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C274265731
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Sep 2020 04:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE22D2657E6
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Sep 2020 06:14:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgIKC6E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 10 Sep 2020 22:58:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:52126 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgIKC6D (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Sep 2020 22:58:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08B2t2MT026840;
-        Fri, 11 Sep 2020 02:58:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ENgbjNRw2ilMRP6bbvLM0qKAbNWzokSbSVtzZfQb21E=;
- b=vkDaOkB+erfi8Rmbo1zHGxwQEWzUEbvDiiAEfxOyhNTseKtYB7JmsCuR75B0FEYo3xRJ
- XwleQhyzMWnSx8vVc1rAK2sJLA3Z/9TbbUpqAlp76uSB/7FIvJc74kJ7YA9lDox+h8Al
- 2Iw0nwpHXcCn6EIXJeqqXkgz9tLNL/PiX640KaU/PtqaU1/bQu76Sc+hxa8O8iWpUp1R
- KFnxWtLs8hox+Xd+JY9QEg5NAajX4qk8RFwQMzxEBYPlzTM2c/acx6s275JUo9HLhlr9
- 73XVHO4APmZeiOHdo3Y+gS0P9cifLTaXHaLpJFDITKB9TlVsPhzmZxuoKJIal8DEb7LC aQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 33c2mmbjbh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Sep 2020 02:58:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08B2tBur116016;
-        Fri, 11 Sep 2020 02:58:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33cmkbh46p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 11 Sep 2020 02:58:01 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08B2w1Ln019545;
-        Fri, 11 Sep 2020 02:58:01 GMT
-Received: from [192.168.1.223] (/67.1.244.254)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 10 Sep 2020 19:58:00 -0700
-Subject: Re: [PATCH 4/4] mkfs: set required parts of the realtime geometry
- before computing log geometry
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>, sandeen@sandeen.net
-Cc:     linux-xfs@vger.kernel.org
-References: <159950108982.567664.1544351129609122663.stgit@magnolia>
- <159950111530.567664.7302518339658104292.stgit@magnolia>
-From:   Allison Collins <allison.henderson@oracle.com>
-Message-ID: <b0d8c204-38b6-60de-51e2-f10207eccc70@oracle.com>
-Date:   Thu, 10 Sep 2020 19:58:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1725554AbgIKEON (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 11 Sep 2020 00:14:13 -0400
+Received: from dedicated-afm47.rev.nazwa.pl ([77.55.142.47]:34817 "EHLO
+        dedicated-afm47.rev.nazwa.pl" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbgIKEOL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 11 Sep 2020 00:14:11 -0400
+X-Virus-Scanned: by amavisd-new using ClamAV (19)
+X-Spam-Flag: NO
+X-Spam-Score: -1
+X-Spam-Level: 
+X-Spam-Status: No, score=-1 tagged_above=-10 tests=[ALL_TRUSTED=-1]
+        autolearn=disabled
+Received: from poczta.sysgroup.pl (dedicated-aib150.rev.nazwa.pl [77.55.209.150])
+        by server192927.nazwa.pl (Postfix) with ESMTP id 1CCAB1C6051;
+        Fri, 11 Sep 2020 06:14:09 +0200 (CEST)
 MIME-Version: 1.0
-In-Reply-To: <159950111530.567664.7302518339658104292.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009110022
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9740 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
- phishscore=0 adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 suspectscore=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009110022
+Date:   Fri, 11 Sep 2020 06:14:09 +0200
+From:   "LinuxAdmin.pl - administracja serwerami Linux" <info@linuxadmin.pl>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: xfs_info: no info about XFS version?
+Reply-To: info@linuxadmin.pl
+In-Reply-To: <55432d32-83ed-fccd-52ff-70b36a75fd07@sandeen.net>
+References: <01aa416f70d0d780b337fb77756a88a8@linuxadmin.pl>
+ <55432d32-83ed-fccd-52ff-70b36a75fd07@sandeen.net>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <57839a674d8b54baafa40d2b002e19b5@linuxadmin.pl>
+X-Sender: info@linuxadmin.pl
+Organization: LinuxAdmin.pl - administracja serwerami Linux
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+W dniu 2020-09-10 22:44, Eric Sandeen napisał(a):
+> On 9/10/20 3:26 PM, LinuxAdmin.pl - administracja serwerami Linux 
+> wrote:
+>> 
+>> Hello,
+>> 
+>> why there is no info about XFS version on xfs_info?
+> 
+> Yeah, this is confusing.
+> 
+> TBH I think "V4" vs "V5" is a secret developer handshake.  Admins know
+> this as "not-crc-enabled" vs "crc-enabled"
+> 
+> Below is a V4 filesystem, due to crc=0
 
+That's the point! How you will be determining the version number in V7? 
+crc=3 xyz=0 abc=1?
+I know that is V4 (migration to V5 already planned!) but thinking the 
+human way - it will be nice to have a simple info of used version :)
 
-On 9/7/20 10:51 AM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+> -Eric
 > 
-> The minimum log size depends on the transaction reservation sizes, which
-> in turn depend on the realtime device geometry.  Therefore, we need to
-> set up some of the rt geometry before we can compute the real minimum
-> log size.
-> 
-> This fixes a problem where mkfs, given a small data device and a
-> realtime volume, formats a filesystem with a log that is too small to
-> pass the mount time log size checks.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Ok looks good
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-> ---
->   mkfs/xfs_mkfs.c |    5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> 
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index 6b55ca3e4c57..408198e9ec70 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -3237,6 +3237,9 @@ start_superblock_setup(
->   	} else
->   		sbp->sb_logsunit = 0;
->   
-> +	/* log reservation calculations depend on rt geometry */
-> +	sbp->sb_rblocks = cfg->rtblocks;
-> +	sbp->sb_rextsize = cfg->rtextblocks;
->   }
->   
->   static void
-> @@ -3274,14 +3277,12 @@ finish_superblock_setup(
->   	}
->   
->   	sbp->sb_dblocks = cfg->dblocks;
-> -	sbp->sb_rblocks = cfg->rtblocks;
->   	sbp->sb_rextents = cfg->rtextents;
->   	platform_uuid_copy(&sbp->sb_uuid, &cfg->uuid);
->   	/* Only in memory; libxfs expects this as if read from disk */
->   	platform_uuid_copy(&sbp->sb_meta_uuid, &cfg->uuid);
->   	sbp->sb_logstart = cfg->logstart;
->   	sbp->sb_rootino = sbp->sb_rbmino = sbp->sb_rsumino = NULLFSINO;
-> -	sbp->sb_rextsize = cfg->rtextblocks;
->   	sbp->sb_agcount = (xfs_agnumber_t)cfg->agcount;
->   	sbp->sb_rbmblocks = cfg->rtbmblocks;
->   	sbp->sb_logblocks = (xfs_extlen_t)cfg->logblocks;
-> 
+>> # LANG=en_US.UTF-8 xfs_info /dev/sdb1
+>> meta-data=/dev/sdb1              isize=256    agcount=4, 
+>> agsize=6553408 blks
+>>          =                       sectsz=512   attr=2, projid32bit=0
+>>          =                       crc=0        finobt=0, sparse=0, 
+>> rmapbt=0
+>>          =                       reflink=0
+>> data     =                       bsize=4096   blocks=26213632, 
+>> imaxpct=25
+>>          =                       sunit=0      swidth=0 blks
+>> naming   =version 2              bsize=4096   ascii-ci=0, ftype=0
+>> log      =internal log           bsize=4096   blocks=12799, version=2
+>>          =                       sectsz=512   sunit=0 blks, 
+>> lazy-count=1
+>> realtime =none                   extsz=4096   blocks=0, rtextents=0
+>> 
+
+-- 
+LinuxAdmin.pl - administracja serwerami Linux
+Wojciech Błaszkowski
++48 600 197 207
