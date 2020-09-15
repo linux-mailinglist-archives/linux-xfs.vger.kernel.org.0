@@ -2,75 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 930C026A143
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 10:48:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F157826A2F5
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 12:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726189AbgIOIss (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Sep 2020 04:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726123AbgIOIsq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Sep 2020 04:48:46 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59568C06174A;
-        Tue, 15 Sep 2020 01:48:46 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id u6so3167221iow.9;
-        Tue, 15 Sep 2020 01:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GfhLVgRMJ2Uaz4wqw/1QGz+EqR3zSee7S6K5qC/BaWQ=;
-        b=GYBYduF9P1Zn2HNNWUlTEjmYqplrFqJ/OQwQi72bnrjWMdwd/bYMjBfRLihktwLZFB
-         VbKX4yWZBOeisJUURA8UyklhUslOrBC1bpzQu1CM8f/3d2Q5TL76Wn/4JNArcnt6T6qN
-         FNQyjJOhFFD7+dmpYqQhAhWied0KNyKx19P/rvIm2YyohNZPbyoL5xedQiXmDrQ1S5Vq
-         tKfpo9vBeEVLnmLtFDMLQ4+TLEHHGCcoE2Qq8YOp2/kccwQK96f9qoQg9zJ6ThY65nOQ
-         27F16YcVzv6FOS44VZwaOGUle/xxU/wn23ijIMAsKAkyBLib9HqYovPjIt5h0kqqRC1v
-         6pvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GfhLVgRMJ2Uaz4wqw/1QGz+EqR3zSee7S6K5qC/BaWQ=;
-        b=r4ZFBVLWhJRfgn0yPbt1Aw/eDT6vDJJqIF8Zx9eaXiSZzi+KOMTf2/jyXAVy03Fxk6
-         OcLoX23/jI5oH6rQNv42SpLU5MVoWyWjTT5FHhM4+qt069x7h5Sr0QRR/GDK7jEZRU0C
-         DB3d8cPhawPF7PwowbO7SX+hB2uCBfQfi3fhyqPCz7jpnk+7vQzWLW8l6LdwGAGzhfl2
-         /lknx+nBvYhaqnQRdADjPD/jCZr2MiwZ/O99Yeol+Fjx1abJmn3US2F+roR5GKfiAc/U
-         qnIFfEwOW5Curm6bTIbKMXTljqGCtSQzrFtYhy5fZYJgRVPISmFi1IeqYBLUjQdDlfFu
-         aTYw==
-X-Gm-Message-State: AOAM533W25deyoh19FB77xciMOIg8HPXiK89EheWG0A1IeutOlqj4krf
-        lJfCOu3j8i1d4MII4Bm3AznGaf2Ez636ckQ2c7lgCKVMIW8=
-X-Google-Smtp-Source: ABdhPJzispuPkFF2WshKu6dqY4Uwyx9SyGpi20z5JljBv2k0TRb3GQ6wZHBI9/MLC4iiGAVvUxebtoa0hIc63azp3qY=
-X-Received: by 2002:a02:734f:: with SMTP id a15mr17341979jae.120.1600159725747;
- Tue, 15 Sep 2020 01:48:45 -0700 (PDT)
+        id S1726140AbgIOKNb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Sep 2020 06:13:31 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:32367 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726169AbgIOKN2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Sep 2020 06:13:28 -0400
+X-IronPort-AV: E=Sophos;i="5.76,429,1592841600"; 
+   d="scan'208";a="99252004"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 15 Sep 2020 18:13:19 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 2B52448990DF;
+        Tue, 15 Sep 2020 18:13:14 +0800 (CST)
+Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 15 Sep 2020 18:13:12 +0800
+Received: from localhost.localdomain (10.167.225.141) by
+ G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Tue, 15 Sep 2020 18:13:11 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <darrick.wong@oracle.com>,
+        <dan.j.williams@intel.com>, <david@fromorbit.com>, <hch@lst.de>,
+        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
+Subject: [RFC PATCH 0/4] fsdax: introduce fs query to support reflink
+Date:   Tue, 15 Sep 2020 18:13:07 +0800
+Message-ID: <20200915101311.144269-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <160013417420.2923511.6825722200699287884.stgit@magnolia> <160013424591.2923511.7236445306723372509.stgit@magnolia>
-In-Reply-To: <160013424591.2923511.7236445306723372509.stgit@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 15 Sep 2020 11:48:34 +0300
-Message-ID: <CAOQ4uxiyUWS+PzUsbz5V4ebgtpcbhr4E5cSFkBE3eeT7nhiY0A@mail.gmail.com>
-Subject: Re: [PATCH 11/24] overlay/{069,071}: fix undefined variables
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 2B52448990DF.AB1A2
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 4:44 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
->
-> From: Darrick J. Wong <darrick.wong@oracle.com>
->
-> Change OVL_BASE_TEST_MNT -> OVL_BASE_TEST_DIR, since the former is not
-> actually defined anywhere.
->
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
+This patchset is a try to resolve the problem of tracking shared page
+for fsdax.
 
-Oops...
-Thanks for fixing this.
+This patchset moves owner tracking from dax_assocaite_entry() to pmem
+device, by introducing an interface ->memory_failure() of struct
+pagemap.  The interface is called by memory_failure() in mm, and
+implemented by pmem device.  Then pmem device find the filesystem
+which the damaged page located in, and call ->storage_lost() to track
+files or metadata assocaited with this page.  Finally we are able to
+try to fix the damaged data in filesystem and do other necessary
+processing, such as killing processes who are using the files
+affected.
 
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+The call trace is like this:
+ memory_failure()
+   pgmap->ops->memory_failure()      => pmem_pgmap_memory_failure()
+     bdev->bd_super->storage_lost()  => xfs_fs_storage_lost()
+       xfs_rmap_query_range()
+         xfs_storage_lost_helper()
+           mf_recover_controller->recover_fn => \ 
+                            memory_failure_dev_pagemap_kill_procs()
+
+The collect_procs() and kill_procs() are moved into a callback which
+is passed from memory_failure() to xfs_storage_lost_helper().  So we
+can call it when a file assocaited is found, instead of creating a
+file list and iterate it.
+
+The fsdax & reflink support for XFS is not contained in this patchset.
+
+(Rebased on v5.9-rc2)
+==
+
+Shiyang Ruan (4):
+  fs: introduce ->storage_lost() for memory-failure
+  pagemap: introduce ->memory_failure()
+  mm, fsdax: refactor dax handler in memory-failure
+  fsdax: remove useless (dis)associate functions
+
+ block/genhd.c            |  12 ++++
+ drivers/nvdimm/pmem.c    |  31 ++++++++++
+ fs/dax.c                 |  64 ++------------------
+ fs/xfs/xfs_super.c       |  80 ++++++++++++++++++++++++
+ include/linux/dax.h      |   5 +-
+ include/linux/fs.h       |   1 +
+ include/linux/genhd.h    |   2 +
+ include/linux/memremap.h |   3 +
+ include/linux/mm.h       |  14 +++++
+ mm/memory-failure.c      | 127 ++++++++++++++++++++++++---------------
+ 10 files changed, 229 insertions(+), 110 deletions(-)
+
+-- 
+2.28.0
+
+
+
