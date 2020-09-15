@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A42D269B8C
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:47:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5C8B269B6D
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:45:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgIOBrD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 14 Sep 2020 21:47:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47144 "EHLO
+        id S1726068AbgIOBpJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 14 Sep 2020 21:45:09 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45998 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbgIOBrC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:47:02 -0400
+        with ESMTP id S1726062AbgIOBpH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:45:07 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1i5Uo147445;
-        Tue, 15 Sep 2020 01:46:59 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1iBUt147465;
+        Tue, 15 Sep 2020 01:45:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=76hQgMbEEeHLaojm+wBPtYPe43PNt6BTtsupBb5F3j8=;
- b=HRWfYpMdZthkPj8pl1GqkhYl91XIPLLEPL2nyKgY1VvSYXMVTJvFg9dN68HLjGzPJVe/
- 324zz+YeNlZYibTLpE02eSA+cNXkKA7ITuslU2Nh26Two6BAPKIKA99c+SdJb5tDA+o+
- VE/GR9bdHldnH38iPK/jKx7YWZjlntO0wnV5DFSG3tROF8awzhCPSDiD1gQ8glzCJvJ1
- wQQLr3FBI7ltGx77mC4GRzNWQwsVpiDedK6MLroYkn06fOy+fV5MujGNedvVwYvwPRES
- 89RBkewgm0SCDEelG0bsti9m3j0YfNFuo7oxjfRd2fzKWnN7cI26qMsgOLQh5JJETmP9 Rg== 
+ bh=yUMD9a5OoiDxVogijMMpxGUcklEVM6umGk+hlhTUJ0Y=;
+ b=TLJgxuxYr0pOu/Rrl40sugcviDG3j5NgEyMgX5hP8VGzu6JN/lQeGrp7QXLUR+PKC5v7
+ L/OkKDl8j3ssKekBbbj+O5fZTzNLMJdM1wv/W0b6eklPu95o3Fip5d0/SgBxqPYhReV5
+ ODbFbP6Vnyc6kSRjWV9xdepTfFEUfCtZXRTDjzFumfnJi4xjmeEU5pe9KQMoZQzn2h8K
+ qnJ5pEjB/Zq9C7VmMLGOGGC4qwNve1PzAW3G2O4/tgril9dBE/1vp3Y/ZHplEuW29iBO
+ jHgHQvySl0AsIYBVSsp1Ku2q8orvzd5b6GAmF3eOPN3FF3RUH8wRgthXEpbbfqx8Ny7K Qw== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33gnrqsy2n-1
+        by userp2130.oracle.com with ESMTP id 33gnrqsxxa-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Sep 2020 01:46:59 +0000
+        Tue, 15 Sep 2020 01:45:05 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1fP1V109475;
-        Tue, 15 Sep 2020 01:44:59 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33h88381v1-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1fPfR109437;
+        Tue, 15 Sep 2020 01:45:04 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 33h883824p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Sep 2020 01:44:58 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08F1iv3s020784;
-        Tue, 15 Sep 2020 01:44:57 GMT
+        Tue, 15 Sep 2020 01:45:04 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08F1j3HT001660;
+        Tue, 15 Sep 2020 01:45:03 GMT
 Received: from localhost (/10.159.147.241)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Sep 2020 01:44:57 +0000
-Subject: [PATCH 19/24] xfs/424: disable external devices
+        with ESMTP ; Tue, 15 Sep 2020 01:45:03 +0000
+Subject: [PATCH 20/24] xfs/449: fix xfs info report output if realtime device
+ specified
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Mon, 14 Sep 2020 18:44:56 -0700
-Message-ID: <160013429643.2923511.17476130717295164051.stgit@magnolia>
+Date:   Mon, 14 Sep 2020 18:45:02 -0700
+Message-ID: <160013430267.2923511.8202421356162568130.stgit@magnolia>
 In-Reply-To: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -70,34 +71,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This test uses an open-coded call to mkfs, so we need to disable the
-external devices so that _scratch_xfs_db doesn't get confused.  We also
-disable the post-check fsck because it's run by the parent ./check
-program, which won't know that we didn't use the external devices.
+Modify the mkfs.xfs output so that "realtime =/dev/XXX" becomes
+"realtime =external" so that the output will match xfs_db, which doesn't
+take a rt device argument and thus does not know.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/xfs/424 |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tests/xfs/449 |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/xfs/424 b/tests/xfs/424
-index 66d79458..4907cf0f 100755
---- a/tests/xfs/424
-+++ b/tests/xfs/424
-@@ -47,7 +47,13 @@ rm -f $seqres.full
- # Modify as appropriate
- _supported_os Linux
- _supported_fs xfs
--_require_scratch
-+
-+# Since we have an open-coded mkfs call, disable the external devices and
-+# don't let the post-check fsck actually run since it'll trip over us not
-+# using the external devices.
-+_require_scratch_nocheck
-+export SCRATCH_LOGDEV=
-+export SCRATCH_RTDEV=
+diff --git a/tests/xfs/449 b/tests/xfs/449
+index 83c3c493..938dbe28 100755
+--- a/tests/xfs/449
++++ b/tests/xfs/449
+@@ -46,7 +46,9 @@ cat $tmp.mkfs >> $seqres.full
+ _scratch_xfs_db -c "info" > $tmp.dbinfo
+ echo DB >> $seqres.full
+ cat $tmp.dbinfo >> $seqres.full
+-diff -u $tmp.mkfs $tmp.dbinfo
++# xfs_db doesn't take a rtdev argument, so it reports "realtime=external".
++# mkfs does, so make a quick substitution
++diff -u <(cat $tmp.mkfs | sed -e 's/realtime =\/.*extsz=/realtime =external               extsz=/g') $tmp.dbinfo
  
- echo "Silence is golden."
+ _scratch_mount
  
 
