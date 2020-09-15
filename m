@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A935269B88
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79813269B65
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:44:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726267AbgIOBqE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 14 Sep 2020 21:46:04 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51858 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726135AbgIOBqD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:46:03 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1irtF031281;
-        Tue, 15 Sep 2020 01:46:01 GMT
+        id S1726089AbgIOBoM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 14 Sep 2020 21:44:12 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45324 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726019AbgIOBoJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:44:09 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1hYkB147225;
+        Tue, 15 Sep 2020 01:44:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=BnJSZN8DIoLR3+BnhQP8IlL54jmgq8FGkBsMbcLnh2I=;
- b=JAKTgZv4C9XZwjJ6x7zMcYndt6iQbxW7H3qbwNu1CGMvxnMgW0+xLtOMzgXe0dDat08j
- 6w2+z0tVBTBOoxpU1AKYPBI7Rn/GA/ma+zoyJyan98PHzAzeNUMZmwzW/v3yvzAEtq+f
- 3N8lKNgCHERPqBgvm1zbXoLdSoxTlAvSLIo/z9+mS+nP4/T1/PLAQUfI+aSx90xdKlEs
- 8TOFCM4aSk0IxLNo+9QO0jMlpKMyN7ZEFl4zDY2OpbNIB0J5Eu7iSMODGDg3iHNl1EVE
- PDGhTHadtKuPvAW2fRoTFzZgooBu5aRg+iuwuKzTx4fFOlWpN6aHfwlPqX3zGtCfuTaU zg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 33gp9m1wx2-1
+ bh=eZKy1mv5hVN1JNBYemKOsswtMGqgnrBbnzQ3/iigUBo=;
+ b=UsMxCrhljCsEiU9DTxX7cAJgxmGV+2gaE0As3bUZB9t3POPcFvUl2r4l3UwRbPaQr2vI
+ Jr8UkTz6j8eThO4dKFPTLy2rwQpREK+ubloKIkOVvEMUe60QPfajyv6X6u67kXr8ixkc
+ b0EQ5+PZSnt0Qc2eiFPAHgzuPdos6U7wVP1qT0EdV8erkey98PaER3Vr06lm/5PPkUJG
+ rb5T6/5pDlwfhM3X+0RcN763oykIfX7exkPSy9evBEqHN71uXW8wQIkQh8dURFJX2Ea5
+ HDyK241Ivs/XKPtZHAb4kOYjdheyO471SS2Y15S0SfCBtLQTUsSeaZRiAa5NNIPO/Ec5 kQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 33gnrqsxv1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Sep 2020 01:46:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1dscM076003;
-        Tue, 15 Sep 2020 01:44:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 33h7wn6h21-1
+        Tue, 15 Sep 2020 01:44:08 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1dm8t111649;
+        Tue, 15 Sep 2020 01:44:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 33hm2ycecp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Sep 2020 01:44:01 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08F1i05R001220;
-        Tue, 15 Sep 2020 01:44:00 GMT
+        Tue, 15 Sep 2020 01:44:07 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08F1i7Ff020419;
+        Tue, 15 Sep 2020 01:44:07 GMT
 Received: from localhost (/10.159.147.241)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Sep 2020 01:44:00 +0000
-Subject: [PATCH 10/24] xfs: add a _require_xfs_copy helper
+        with ESMTP ; Tue, 15 Sep 2020 01:44:06 +0000
+Subject: [PATCH 11/24] overlay/{069,071}: fix undefined variables
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Mon, 14 Sep 2020 18:43:59 -0700
-Message-ID: <160013423963.2923511.3348023490177095472.stgit@magnolia>
+Date:   Mon, 14 Sep 2020 18:44:05 -0700
+Message-ID: <160013424591.2923511.7236445306723372509.stgit@magnolia>
 In-Reply-To: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,16 +53,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- adultscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009150011
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 impostorscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=829
+ malwarescore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009150012
+ definitions=main-2009150011
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=849 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009150012
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -70,104 +70,40 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Add a _require helper so that tests can ensure that they're running in
-the correct environment for xfs_copy to work (no external devices).
+Change OVL_BASE_TEST_MNT -> OVL_BASE_TEST_DIR, since the former is not
+actually defined anywhere.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- common/xfs    |    7 +++++++
- tests/xfs/032 |    4 +---
- tests/xfs/073 |    5 +----
- tests/xfs/077 |    3 +--
- tests/xfs/284 |    3 +--
- tests/xfs/503 |    1 +
- 6 files changed, 12 insertions(+), 11 deletions(-)
+ tests/overlay/069 |    2 +-
+ tests/overlay/071 |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 
-diff --git a/common/xfs b/common/xfs
-index eab5e292..f4a47dfb 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -945,3 +945,10 @@ _try_wipe_scratch_xfs()
- 	fi
- 	rm -f $tmp.mkfs
- }
-+
-+_require_xfs_copy()
-+{
-+	[ -n "$XFS_COPY_PROG" ] || _notrun "xfs_copy binary not yet installed"
-+	[ "$USE_EXTERNAL" = yes ] && \
-+		_notrun "Cannot xfs_copy with external devices"
-+}
-diff --git a/tests/xfs/032 b/tests/xfs/032
-index af18f755..8ece957d 100755
---- a/tests/xfs/032
-+++ b/tests/xfs/032
-@@ -25,9 +25,7 @@ _supported_os Linux
+diff --git a/tests/overlay/069 b/tests/overlay/069
+index 77dfce63..f7eaec2d 100755
+--- a/tests/overlay/069
++++ b/tests/overlay/069
+@@ -53,7 +53,7 @@ _require_test_program "open_by_handle"
+ _require_scratch_overlay_features index nfs_export redirect_dir
  
- _require_scratch
- _require_test_program "feature"
--
--[ "$USE_EXTERNAL" = yes ] && _notrun "Cannot xfs_copy with external devices"
--[ -n "$XFS_COPY_PROG" ] || _notrun "xfs_copy binary not yet installed"
-+_require_xfs_copy
+ # Lower overlay lower layer is on test fs, upper is on scratch fs
+-lower=$OVL_BASE_TEST_MNT/$OVL_LOWER-$seq
++lower=$OVL_BASE_TEST_DIR/$OVL_LOWER-$seq
+ upper=$OVL_BASE_SCRATCH_MNT/$OVL_UPPER
+ work=$OVL_BASE_SCRATCH_MNT/$OVL_WORK
  
- rm -f $seqres.full
- 
-diff --git a/tests/xfs/073 b/tests/xfs/073
-index 6939e102..dc0cde4f 100755
---- a/tests/xfs/073
-+++ b/tests/xfs/073
-@@ -113,10 +113,7 @@ _supported_fs xfs
- _supported_os Linux
- _require_test
- _require_attrs
--
--[ "$USE_EXTERNAL" = yes ] && _notrun "Cannot xfs_copy with external devices"
--[ -n "$XFS_COPY_PROG" ] || _notrun "xfs_copy binary not yet installed"
--
-+_require_xfs_copy
- _require_scratch
+diff --git a/tests/overlay/071 b/tests/overlay/071
+index e083c29d..043fc4d3 100755
+--- a/tests/overlay/071
++++ b/tests/overlay/071
+@@ -56,7 +56,7 @@ _require_scratch_overlay_features index nfs_export redirect_dir
  _require_loop
  
-diff --git a/tests/xfs/077 b/tests/xfs/077
-index 02bcc9f7..b11b2c07 100755
---- a/tests/xfs/077
-+++ b/tests/xfs/077
-@@ -35,8 +35,7 @@ _cleanup()
- 
- _supported_fs xfs
- _supported_os Linux
--# xfs_copy does not support realtime devices
--_require_no_realtime
-+_require_xfs_copy
- _require_scratch
- _require_no_large_scratch_dev
- _require_xfs_crc
-diff --git a/tests/xfs/284 b/tests/xfs/284
-index 7af77634..8f997e17 100755
---- a/tests/xfs/284
-+++ b/tests/xfs/284
-@@ -34,8 +34,7 @@ rm -f $seqres.full
- # real QA test starts here
- _supported_fs xfs
- _supported_os Linux
--# xfs_copy does not support realtime devices
--_require_no_realtime
-+_require_xfs_copy
- _require_test
- _require_scratch
- _require_no_large_scratch_dev
-diff --git a/tests/xfs/503 b/tests/xfs/503
-index 41754353..756bcda3 100755
---- a/tests/xfs/503
-+++ b/tests/xfs/503
-@@ -33,6 +33,7 @@ testdir=$TEST_DIR/test-$seq
- _supported_os Linux
- _supported_fs xfs
- 
-+_require_xfs_copy
- _require_scratch_nocheck
- _require_populate_commands
- 
+ # Lower overlay lower layer is on test fs, upper is on scratch fs
+-lower=$OVL_BASE_TEST_MNT/$OVL_LOWER-$seq
++lower=$OVL_BASE_TEST_DIR/$OVL_LOWER-$seq
+ upper=$OVL_BASE_SCRATCH_MNT/$OVL_UPPER
+ work=$OVL_BASE_SCRATCH_MNT/$OVL_WORK
+ # Lower dir of nested overlay is the scratch overlay mount at SCRATCH_MNT
 
