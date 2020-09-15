@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC2DA269B5C
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2475F269B7A
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbgIOBnR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 14 Sep 2020 21:43:17 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44628 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgIOBnO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:43:14 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1e4AM130181;
-        Tue, 15 Sep 2020 01:43:11 GMT
+        id S1726198AbgIOBp1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 14 Sep 2020 21:45:27 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51342 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgIOBpT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:45:19 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1ikxu031207;
+        Tue, 15 Sep 2020 01:45:18 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=bWBUly2K0qKxLUN+6aY35OLs88s8LUxqAZOZ7fdG0Xg=;
- b=DWV55jGVAnnJ99gt31HcK9JsaJtzzGF3DATd5ZvcMYGxHinFiVNo2MV3u5atEdqQy5SF
- Mjc4UKx6pWBw5nLSIiHKJlYGfRuZoMrXdxTVsU8lLj3h759IFb2l6wFJ6vPhVKB+sGxu
- s69G1VRvaVnul/BU4Eh58NSTd4JJa+DuWS6iCwrycCM0SAoCcn50WWtAd9/Z4wKpcs4k
- ZOkPAPEwmH5M2SVWp0+ABo/sv0QeJ6TTfvLlVjliYbCFuTBfZgaWJ59VTP6VhDF3kz3x
- +wh+kEqSsqY14xYJqaBEB3x+8b0oqnEYmODeX3PtdCFUdUbXfOQbe1Ko3hwB0PzZuT6K ug== 
+ bh=S0nratNUDmAVWn1HogoEh+M2+urRpGz99fmYteFZIlg=;
+ b=OxfCc8ZghxyzFzkEiC9ugp3qiodc9cWPznWc10G1vRhSCC6ZBhavIESins72//qMBbqC
+ QosOttqMuVvhT1apjrSFAlsVDgLm2xa6niwCAC/Erl1tOT8YNlsgXAyTI1dfUFOpHaNC
+ 8Q2hz6IC5DUUXj9OsWd9XreyUxI5/iAfgkYew5nsUyyJVgF7np14Chpc7fmmIHalEdfu
+ iRP36MdvZY+Y9uyXatAeigSdCtZNK+J+y1eJGqgRHN62czubaGCcKp9aYIzyqKNZEsZX
+ Ukz1w6qXYkBWnEw3b0GyJWUadV83o6c+2dKulHcN/rGLm1gR9l443XjJr+YULInKOLUp SQ== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 33gnrqsxsp-1
+        by aserp2120.oracle.com with ESMTP id 33gp9m1wv2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Sep 2020 01:43:11 +0000
+        Tue, 15 Sep 2020 01:45:18 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1dmP3111657;
-        Tue, 15 Sep 2020 01:43:11 GMT
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1dloZ111547;
+        Tue, 15 Sep 2020 01:43:17 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 33hm2ycc3v-1
+        by userp3020.oracle.com with ESMTP id 33hm2yccd5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Sep 2020 01:43:11 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08F1hAQk004006;
-        Tue, 15 Sep 2020 01:43:10 GMT
+        Tue, 15 Sep 2020 01:43:17 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08F1hGSG004017;
+        Tue, 15 Sep 2020 01:43:16 GMT
 Received: from localhost (/10.159.147.241)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Sep 2020 01:43:09 +0000
-Subject: [PATCH 02/24] generic/60[01]: fix test failure when setting new grace
- limit
+        with ESMTP ; Tue, 15 Sep 2020 01:43:16 +0000
+Subject: [PATCH 03/24] generic/607: don't break on filesystems that don't
+ support FSGETXATTR on dirs
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Mon, 14 Sep 2020 18:43:08 -0700
-Message-ID: <160013418837.2923511.12713913160160876814.stgit@magnolia>
+Date:   Mon, 14 Sep 2020 18:43:15 -0700
+Message-ID: <160013419510.2923511.4577521065964693699.stgit@magnolia>
 In-Reply-To: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -59,11 +59,11 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulks
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009150011
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=999 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009150011
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 suspectscore=0 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009150012
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,48 +71,67 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The setquota command can extend a quota grace period by a certain number
-of seconds.  The extension is provided as a number of seconds relative
-to right now.  However, if the system clock increments the seconds count
-after this test assigns $now but before setquota gets called, the test
-will fail because $get and $set will be off by that 1 second.  Allow for
-that.
+This test requires that the filesystem support calling FSGETXATTR on
+regular files and directories to make sure the FS_XFLAG_DAX flag works.
+The _require_xfs_io_command tests a regular file but doesn't check
+directories, so generic/607 should do that itself.  Also fix some typos.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/generic/600 |    4 +++-
- tests/generic/601 |    4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ common/rc         |   10 ++++++++--
+ tests/generic/607 |    5 +++++
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
 
-diff --git a/tests/generic/600 b/tests/generic/600
-index 7ea0d6c2..42e4ee55 100755
---- a/tests/generic/600
-+++ b/tests/generic/600
-@@ -60,7 +60,9 @@ let set=now+100
- setquota -T -u $qa_user 0 100 $SCRATCH_MNT 2>&1 | grep -v "^setquota"
- get=`repquota -up $SCRATCH_MNT | grep  "^$qa_user" | awk '{print $NF}'`
+diff --git a/common/rc b/common/rc
+index aa5a7409..f78b1cfc 100644
+--- a/common/rc
++++ b/common/rc
+@@ -2162,6 +2162,12 @@ _require_xfs_io_command()
+ 	local testfile=$TEST_DIR/$$.xfs_io
+ 	local testio
+ 	case $command in
++	"lsattr")
++		# Test xfs_io lsattr support and filesystem FS_IOC_FSSETXATTR
++		# support.
++		testio=`$XFS_IO_PROG -F -f -c "lsattr $param" $testfile 2>&1`
++		param_checked="$param"
++		;;
+ 	"chattr")
+ 		if [ -z "$param" ]; then
+ 			param=s
+@@ -3205,7 +3211,7 @@ _check_s_dax()
+ 	if [ $exp_s_dax -eq 0 ]; then
+ 		(( attributes & 0x2000 )) && echo "$target has unexpected S_DAX flag"
+ 	else
+-		(( attributes & 0x2000 )) || echo "$target doen't have expected S_DAX flag"
++		(( attributes & 0x2000 )) || echo "$target doesn't have expected S_DAX flag"
+ 	fi
+ }
  
--if [ "$get" != "$set" ]; then
-+# Either the new expiry must match; or be one second after the set time, to
-+# deal with the seconds counter incrementing.
-+if [ "$get" != "$set" ] && [ "$get" -ne "$((set + 1))" ]; then
- 	echo "set grace to $set but got grace $get"
- fi
+@@ -3217,7 +3223,7 @@ _check_xflag()
+ 	if [ $exp_xflag -eq 0 ]; then
+ 		_test_inode_flag dax $target && echo "$target has unexpected FS_XFLAG_DAX flag"
+ 	else
+-		_test_inode_flag dax $target || echo "$target doen't have expected FS_XFLAG_DAX flag"
++		_test_inode_flag dax $target || echo "$target doesn't have expected FS_XFLAG_DAX flag"
+ 	fi
+ }
  
-diff --git a/tests/generic/601 b/tests/generic/601
-index 1baa6a90..b412ee8a 100755
---- a/tests/generic/601
-+++ b/tests/generic/601
-@@ -71,7 +71,9 @@ $XFS_QUOTA_PROG -x -c "timer -u -i 100 $qa_user" $SCRATCH_MNT
- # raw ("since epoch") grace expiry
- get=`repquota -up $SCRATCH_MNT | grep  "^$qa_user" | awk '{print $NF}'`
+diff --git a/tests/generic/607 b/tests/generic/607
+index b15085ea..14d2c05f 100755
+--- a/tests/generic/607
++++ b/tests/generic/607
+@@ -38,6 +38,11 @@ _require_scratch
+ _require_dax_iflag
+ _require_xfs_io_command "lsattr" "-v"
  
--if [ "$get" != "$set" ]; then
-+# Either the new expiry must match; or be one second after the set time, to
-+# deal with the seconds counter incrementing.
-+if [ "$get" != "$set" ] && [ "$get" -ne "$((set + 1))" ]; then
- 	echo "set grace to $set but got grace $get"
- fi
- 
++# Make sure we can call FSGETXATTR on a directory...
++output="$($XFS_IO_PROG -c "lsattr -v" $TEST_DIR 2>&1)"
++echo "$output" | grep -q "Inappropriate ioctl for device" && \
++	_notrun "$FSTYP: FSGETXATTR not supported on directories."
++
+ # If a/ is +x, check that a's new children
+ # inherit +x from a/.
+ test_xflag_inheritance1()
 
