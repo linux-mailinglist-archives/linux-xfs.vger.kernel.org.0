@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CDE3269B6B
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A42D269B8C
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 03:47:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbgIOBo4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 14 Sep 2020 21:44:56 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45844 "EHLO
+        id S1726066AbgIOBrD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 14 Sep 2020 21:47:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:47144 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726068AbgIOBoz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:44:55 -0400
+        with ESMTP id S1726057AbgIOBrC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Sep 2020 21:47:02 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1ier2147835;
-        Tue, 15 Sep 2020 01:44:53 GMT
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1i5Uo147445;
+        Tue, 15 Sep 2020 01:46:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=330miZwVEX4Rpugn8t8zKpEMqqoSKmffYc/nOOKEac8=;
- b=BKVRv7Uc/POfehjWJfGPDbFpmcbj2UqN1CMe1Stk6R3wTKwzdXb32CVXaoO2EPfQ5j3Z
- gUf6eYxkGbYni+416wFQ05Qr2AvVCiu8GVXZ1VeWcY6xKZfsP7myfgxK2fFxXU5aoLeR
- F0hvithQ3KL+M+nYjfbW2pZPBnRbWDr3UDLTbkJf0EteWBruDaJep3pHDqDLO7Wt0F7M
- 3Q7Qe3vi4rYLtidNlCZnS2LXBTrIYabD1RY9UMMdHPgxd/JXqoRZczMvlb24LEeb7Xg9
- x5PHNVIxaMjiQ9pNV8it4ovnaDmXd/JHlPS8FyRw4Gmj+OfNqMT+38kxj030obOzJG5k OA== 
+ bh=76hQgMbEEeHLaojm+wBPtYPe43PNt6BTtsupBb5F3j8=;
+ b=HRWfYpMdZthkPj8pl1GqkhYl91XIPLLEPL2nyKgY1VvSYXMVTJvFg9dN68HLjGzPJVe/
+ 324zz+YeNlZYibTLpE02eSA+cNXkKA7ITuslU2Nh26Two6BAPKIKA99c+SdJb5tDA+o+
+ VE/GR9bdHldnH38iPK/jKx7YWZjlntO0wnV5DFSG3tROF8awzhCPSDiD1gQ8glzCJvJ1
+ wQQLr3FBI7ltGx77mC4GRzNWQwsVpiDedK6MLroYkn06fOy+fV5MujGNedvVwYvwPRES
+ 89RBkewgm0SCDEelG0bsti9m3j0YfNFuo7oxjfRd2fzKWnN7cI26qMsgOLQh5JJETmP9 Rg== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33gnrqsxwn-1
+        by userp2130.oracle.com with ESMTP id 33gnrqsy2n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Sep 2020 01:44:53 +0000
+        Tue, 15 Sep 2020 01:46:59 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1fPfM109437;
-        Tue, 15 Sep 2020 01:44:52 GMT
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08F1fP1V109475;
+        Tue, 15 Sep 2020 01:44:59 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 33h88381mv-1
+        by aserp3020.oracle.com with ESMTP id 33h88381v1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Sep 2020 01:44:52 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08F1ipOX020679;
-        Tue, 15 Sep 2020 01:44:51 GMT
+        Tue, 15 Sep 2020 01:44:58 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08F1iv3s020784;
+        Tue, 15 Sep 2020 01:44:57 GMT
 Received: from localhost (/10.159.147.241)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Sep 2020 01:44:51 +0000
-Subject: [PATCH 18/24] xfs/291: fix open-coded repair call to mdrestore'd fs
- image
+        with ESMTP ; Tue, 15 Sep 2020 01:44:57 +0000
+Subject: [PATCH 19/24] xfs/424: disable external devices
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Mon, 14 Sep 2020 18:44:50 -0700
-Message-ID: <160013429012.2923511.7187414322832672163.stgit@magnolia>
+Date:   Mon, 14 Sep 2020 18:44:56 -0700
+Message-ID: <160013429643.2923511.17476130717295164051.stgit@magnolia>
 In-Reply-To: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,13 +54,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=975
+ suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009150011
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9744 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
  lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=0
- clxscore=1015 mlxlogscore=982 adultscore=0 priorityscore=1501
+ clxscore=1015 mlxlogscore=999 adultscore=0 priorityscore=1501
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009150012
 Sender: linux-xfs-owner@vger.kernel.org
@@ -71,27 +70,34 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Attach any external log devices to the open-coded repair call.
+This test uses an open-coded call to mkfs, so we need to disable the
+external devices so that _scratch_xfs_db doesn't get confused.  We also
+disable the post-check fsck because it's run by the parent ./check
+program, which won't know that we didn't use the external devices.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/xfs/291 |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tests/xfs/424 |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/xfs/291 b/tests/xfs/291
-index adef2536..5d4f1ac4 100755
---- a/tests/xfs/291
-+++ b/tests/xfs/291
-@@ -110,7 +110,9 @@ _scratch_metadump $tmp.metadump || _fail "xfs_metadump failed"
- xfs_mdrestore $tmp.metadump $tmp.img || _fail "xfs_mdrestore failed"
- [ "$USE_EXTERNAL" = yes ] && [ -n "$SCRATCH_RTDEV" ] && \
- 	rt_repair_opts="-r $SCRATCH_RTDEV"
--$XFS_REPAIR_PROG $rt_repair_opts -f $tmp.img >> $seqres.full 2>&1 || \
-+[ "$USE_EXTERNAL" = yes ] && [ -n "$SCRATCH_LOGDEV" ] && \
-+	log_repair_opts="-l $SCRATCH_LOGDEV"
-+$XFS_REPAIR_PROG $rt_repair_opts $log_repair_opts -f $tmp.img >> $seqres.full 2>&1 || \
- 	_fail "xfs_repair of metadump failed"
+diff --git a/tests/xfs/424 b/tests/xfs/424
+index 66d79458..4907cf0f 100755
+--- a/tests/xfs/424
++++ b/tests/xfs/424
+@@ -47,7 +47,13 @@ rm -f $seqres.full
+ # Modify as appropriate
+ _supported_os Linux
+ _supported_fs xfs
+-_require_scratch
++
++# Since we have an open-coded mkfs call, disable the external devices and
++# don't let the post-check fsck actually run since it'll trip over us not
++# using the external devices.
++_require_scratch_nocheck
++export SCRATCH_LOGDEV=
++export SCRATCH_RTDEV=
  
- # Yes it can; success, all done
+ echo "Silence is golden."
+ 
 
