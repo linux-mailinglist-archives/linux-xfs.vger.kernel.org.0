@@ -2,195 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4598426AD67
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Sep 2020 21:21:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A856A26B2C8
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 00:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbgIOTVp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Sep 2020 15:21:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45606 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbgIOTVk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Sep 2020 15:21:40 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08FG3ZHe133880;
-        Tue, 15 Sep 2020 16:05:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=lyvU4v7amMXQTFyOYZMnZH3TZTiX7S3hG+kfb9JFSgU=;
- b=U5rRpS8PE1TuN6+blvddhUbrJs7HQpdBy815o/B+snlYUHiqiIxFmC5YZ1JjV9p2h26f
- fKOjcwPtCQ1h7VW+l0H3kV2fthFvyVMdMQjWnTcLmtl/zAlIeOLVRgm7EBVq6T+Qa3N8
- 6aL2X0yO5gMlVuZ/XRFjlzZBk+xqmpueuv8AORRL+3QERGvDnOE2JFv207aptNMEpEYO
- /Dv8ZtZewmoiZ8GleTF8Y5D+0zVxGoee88ofFOxX8KnCRbkqawOTYXpaNQ2aygdedfb9
- tlZBaLdt5I8iACaFEJWbURZeJlpE//1Dja4SKOLKvjfjM52oZuj3BW631XE6qlAFQQUP ZA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 33gnrqx37m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 15 Sep 2020 16:05:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08FFjpvX091003;
-        Tue, 15 Sep 2020 16:05:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 33hm30tdbd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Sep 2020 16:05:34 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08FG5X3p029431;
-        Tue, 15 Sep 2020 16:05:33 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 15 Sep 2020 16:05:33 +0000
-Date:   Tue, 15 Sep 2020 09:05:32 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Chandan Babu R <chandanrlinux@gmail.com>
-Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        guaneryu@gmail.com, zlang@redhat.com
-Subject: Re: [PATCH V2] xfs: Check if rt summary/bitmap buffers are logged
- with correct xfs_buf type
-Message-ID: <20200915160532.GC7955@magnolia>
-References: <20200915054748.1765-1-chandanrlinux@gmail.com>
+        id S1727406AbgIOWxE convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Tue, 15 Sep 2020 18:53:04 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:59525 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727414AbgIOPk5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Sep 2020 11:40:57 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-53-W38LQ2b8OBS5NKJlBcK7FA-1; Tue, 15 Sep 2020 16:40:53 +0100
+X-MC-Unique: W38LQ2b8OBS5NKJlBcK7FA-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 15 Sep 2020 16:40:52 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 15 Sep 2020 16:40:52 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "'Matthew Wilcox (Oracle)'" <willy@infradead.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+CC:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        "jfs-discussion@lists.sourceforge.net" 
+        <jfs-discussion@lists.sourceforge.net>,
+        Christoph Hellwig <hch@lst.de>,
+        "Dave Chinner" <dchinner@redhat.com>
+Subject: RE: [PATCH v2 2/9] fs: Introduce i_blocks_per_page
+Thread-Topic: [PATCH v2 2/9] fs: Introduce i_blocks_per_page
+Thread-Index: AQHWh8zSUX5EB+iAm0+PkXaO9U0VzKlp3UwQ
+Date:   Tue, 15 Sep 2020 15:40:52 +0000
+Message-ID: <0c874f14499c4d819f3e8e09f5086d77@AcuMS.aculab.com>
+References: <20200910234707.5504-1-willy@infradead.org>
+ <20200910234707.5504-3-willy@infradead.org>
+In-Reply-To: <20200910234707.5504-3-willy@infradead.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200915054748.1765-1-chandanrlinux@gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9745 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009150129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9745 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=1
- clxscore=1011 mlxlogscore=999 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009150130
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 11:17:48AM +0530, Chandan Babu R wrote:
-> This commit adds a test to check if growing a real-time device can end
-> up logging an xfs_buf with the "type" subfield of
-> bip->bli_formats->blf_flags set to XFS_BLFT_UNKNOWN_BUF. When this
-> occurs the following call trace is printed on the console,
+From: Matthew Wilcox (Oracle)
+> Sent: 11 September 2020 00:47
+> This helper is useful for both THPs and for supporting block size larger
+> than page size.  Convert all users that I could find (we have a few
+> different ways of writing this idiom, and I may have missed some).
 > 
-> XFS: Assertion failed: (bip->bli_flags & XFS_BLI_STALE) || (xfs_blft_from_flags(&bip->__bli_format) > XFS_BLFT_UNKNOWN_BUF && xfs_blft_from_flags(&bip->__bli_format) < XFS_BLFT_MAX_BUF), file: fs/xfs/xfs_buf_item.c, line: 331
-> Call Trace:
->  xfs_buf_item_format+0x632/0x680
->  ? kmem_alloc_large+0x29/0x90
->  ? kmem_alloc+0x70/0x120
->  ? xfs_log_commit_cil+0x132/0x940
->  xfs_log_commit_cil+0x26f/0x940
->  ? xfs_buf_item_init+0x1ad/0x240
->  ? xfs_growfs_rt_alloc+0x1fc/0x280
->  __xfs_trans_commit+0xac/0x370
->  xfs_growfs_rt_alloc+0x1fc/0x280
->  xfs_growfs_rt+0x1a0/0x5e0
->  xfs_file_ioctl+0x3fd/0xc70
->  ? selinux_file_ioctl+0x174/0x220
->  ksys_ioctl+0x87/0xc0
->  __x64_sys_ioctl+0x16/0x20
->  do_syscall_64+0x3e/0x70
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+...
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index d81a9a86c5aa..330f86b825d7 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -46,7 +46,7 @@ iomap_page_create(struct inode *inode, struct page *page)
+>  {
+>  	struct iomap_page *iop = to_iomap_page(page);
 > 
-> The kernel patch "xfs: Set xfs_buf type flag when growing summary/bitmap
-> files" is required to fix this issue.
+> -	if (iop || i_blocksize(inode) == PAGE_SIZE)
+> +	if (iop || i_blocks_per_page(inode, page) <= 1)
+>  		return iop;
 > 
-> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+>  	iop = kmalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
+> @@ -147,7 +147,7 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
+>  	unsigned int i;
+> 
+>  	spin_lock_irqsave(&iop->uptodate_lock, flags);
+> -	for (i = 0; i < PAGE_SIZE / i_blocksize(inode); i++) {
+> +	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
 
-Looks good to me
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+You probably don't want to call the helper every time
+around the loop.
 
---D
+	David
 
-> ---
->  tests/xfs/260     | 53 +++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/260.out |  2 ++
->  tests/xfs/group   |  1 +
->  3 files changed, 56 insertions(+)
->  create mode 100755 tests/xfs/260
->  create mode 100644 tests/xfs/260.out
-> 
-> diff --git a/tests/xfs/260 b/tests/xfs/260
-> new file mode 100755
-> index 00000000..078d4a11
-> --- /dev/null
-> +++ b/tests/xfs/260
-> @@ -0,0 +1,53 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
-> +#
-> +# FS QA Test 260
-> +#
-> +# Test to check if growing a real-time device can end up logging an xfs_buf with
-> +# the "type" subfield of bip->bli_formats->blf_flags set to
-> +# XFS_BLFT_UNKNOWN_BUF.
-> +#
-> +# This is a regression test for the kernel patch "xfs: Set xfs_buf type flag
-> +# when growing summary/bitmap files".
-> +
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1	# failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	rm -f $tmp.*
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +. ./common/filter
-> +
-> +# remove previous $seqres.full before test
-> +rm -f $seqres.full
-> +
-> +# real QA test starts here
-> +_supported_fs xfs
-> +_supported_os Linux
-> +_require_realtime
-> +
-> +_scratch_mkfs -r size=10M  >> $seqres.full
-> +
-> +_scratch_mount >> $seqres.full
-> +
-> +$XFS_GROWFS_PROG $SCRATCH_MNT >> $seqres.full
-> +
-> +_scratch_unmount
-> +
-> +echo "Silence is golden"
-> +
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/260.out b/tests/xfs/260.out
-> new file mode 100644
-> index 00000000..18ca517c
-> --- /dev/null
-> +++ b/tests/xfs/260.out
-> @@ -0,0 +1,2 @@
-> +QA output created by 260
-> +Silence is golden
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index ed0d389e..68676064 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -257,6 +257,7 @@
->  257 auto quick clone
->  258 auto quick clone
->  259 auto quick
-> +260 auto quick growfs realtime
->  261 auto quick quota
->  262 dangerous_fuzzers dangerous_scrub dangerous_online_repair
->  263 auto quick quota
-> -- 
-> 2.28.0
-> 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
