@@ -2,107 +2,151 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0166126C785
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 20:29:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 659A926C6D9
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 20:06:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgIPS3P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 14:29:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727817AbgIPS2t (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 14:28:49 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F445C014DC9;
-        Wed, 16 Sep 2020 06:12:01 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id bg9so3169893plb.2;
-        Wed, 16 Sep 2020 06:12:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lN1y5ZTbcI1+0bV+O1/fXyIzONA1l1uRaxiHigfQAzc=;
-        b=FReByZttRw5q+oiP4c3s1yT3kiNpuVOSF/U1uHq56d4clZhv3DeBcB+BLcJkn2gIaO
-         xNTDVJZ+Zuzeb4KcTz0Lf1rbvHwZ47ibuseKWo5AqgrqZC80WxXZs3zkTc5mlRc5c14M
-         ADUJKuoC0ORb4sQTJRTReVharmNxmgqxwUy6lOXP4hUNHqBegpCxsLahzxuQZmFYthPQ
-         WtsCE9cV5n0zIIJeIbbRUUnFvZcMr38rMj1+7YRTxo3YntPgxWrFa/cbB0c9u4LlJIS0
-         dHiIiG+4QJXhkA1n+dxWNVqDz+Z4OFx3ktVqTwbchbKNgVH8I0UqpoZ9FgEwpstEePG/
-         5sCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lN1y5ZTbcI1+0bV+O1/fXyIzONA1l1uRaxiHigfQAzc=;
-        b=bKZywDb5fBx6VlEKPy53yJUDAh5Drymjg2FZny7RtAvJQLRZRshIv6756jQozw/LjZ
-         bTyEvo2Gw5kT45aidFUeCFSUNpyJBq8H0rpS/4XoiCF7Mzd1E+GxSL6rHjHmNmtmnTqf
-         TBksW7vwMnWCSGXiilIRfolE0ucS17TyuSQaITkwcuYGf8heVReVwtLRK4v6Pusvq8CR
-         Z/2JnabQHdE3y4CEdj/OpRcPiUjHQUlvMx/QqaBzydD5Yfi6DvtItk3OHlUKhjZ1edim
-         IpvX73QzrW3uA3r8QHZ4CbkdVH7cqE8/F0IsLk5bxvx8PNWnNOZJkIXwr27qA0MYbFSZ
-         4MdQ==
-X-Gm-Message-State: AOAM533784u66z1+zxaggGQ5AmTOrOydoZSIgJgTURuE8wHdlF1oSeTH
-        YSXWBBEjnw542AGBaidr4n4=
-X-Google-Smtp-Source: ABdhPJxurqrYk6oFjBlW+DX8ptvO0wC1UXx7GcJ5j5j/1VYxwVNRM5mq7wV6lHfUxI4+uesGRDJSXw==
-X-Received: by 2002:a17:90a:8981:: with SMTP id v1mr4096218pjn.54.1600261920629;
-        Wed, 16 Sep 2020 06:12:00 -0700 (PDT)
-Received: from garuda.localnet ([171.48.17.146])
-        by smtp.gmail.com with ESMTPSA id d77sm17084222pfd.121.2020.09.16.06.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 06:11:59 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     guaneryu@gmail.com
-Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        darrick.wong@oracle.com, zlang@redhat.com
-Subject: Re: [PATCH V2 2/2] xfs: Check if rt summary/bitmap buffers are logged with correct xfs_buf type
-Date:   Wed, 16 Sep 2020 18:41:55 +0530
-Message-ID: <2438001.59BAfK7u84@garuda>
-In-Reply-To: <20200916053407.2036-2-chandanrlinux@gmail.com>
-References: <20200916053407.2036-1-chandanrlinux@gmail.com> <20200916053407.2036-2-chandanrlinux@gmail.com>
+        id S1727732AbgIPSGD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 14:06:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35517 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727684AbgIPSFv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 14:05:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600279545;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mSX8NWEQwLVtBx+6CA+ZWPEVTtU3nzmZO5InOTBMRDE=;
+        b=TUffHCmyESjoLPORMDfGaG0S2iN7OmAXQXXSGT3yvAMtWq58I7vcI53h57HoKAVvpndDOF
+        AtF5RAQY1lMBj+of/fWlzBsCZ2NpYIwbVWDz+yWjzSBamBON/ihDr5iY1o7BzCipd3LzlY
+        Kb+H2W4XnH1alQF+oU4W2VvxCcKMU/8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-IC4D0smMPziuWIqul-yy_A-1; Wed, 16 Sep 2020 14:05:43 -0400
+X-MC-Unique: IC4D0smMPziuWIqul-yy_A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DA11186DD2F;
+        Wed, 16 Sep 2020 18:05:42 +0000 (UTC)
+Received: from bfoster (ovpn-113-130.rdu2.redhat.com [10.10.113.130])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A25CA60CC0;
+        Wed, 16 Sep 2020 18:05:41 +0000 (UTC)
+Date:   Wed, 16 Sep 2020 14:05:39 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-xfs@vger.kernel.org, io-uring@vger.kernel.org
+Subject: Re: occasional metadata I/O errors (-EOPNOTSUPP) on XFS + io_uring
+Message-ID: <20200916180539.GC1681377@bfoster>
+References: <20200915113327.GA1554921@bfoster>
+ <20200916131957.GB1681377@bfoster>
+ <0b6da658-54b1-32ea-b172-981c67aaf29e@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b6da658-54b1-32ea-b172-981c67aaf29e@kernel.dk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wednesday 16 September 2020 11:04:07 AM IST Chandan Babu R wrote:
-> This commit adds a test to check if growing a real-time device can end
-> up logging an xfs_buf with the "type" subfield of
-> bip->bli_formats->blf_flags set to XFS_BLFT_UNKNOWN_BUF. When this
-> occurs the following call trace is printed on the console,
+On Wed, Sep 16, 2020 at 10:55:08AM -0600, Jens Axboe wrote:
+> On 9/16/20 7:19 AM, Brian Foster wrote:
+> > On Tue, Sep 15, 2020 at 07:33:27AM -0400, Brian Foster wrote:
+> >> Hi Jens,
+> >>
+> >> I'm seeing an occasional metadata (read) I/O error (EOPNOTSUPP) when
+> >> running Zorro's recent io_uring enabled fsstress on XFS (fsstress -d
+> >> <mnt> -n 99999999 -p 8). The storage is a 50GB dm-linear device on a
+> >> virtio disk (within a KVM guest). The full callstack of the I/O
+> >> submission path is appended below [2], acquired via inserting a
+> >> WARN_ON() in my local tree.
+> >>
+> >> From tracing around a bit, it looks like what happens is that fsstress
+> >> calls into io_uring, the latter starts a plug and sets plug.nowait =
+> >> true (via io_submit_sqes() -> io_submit_state_start()) and eventually
+> >> XFS needs to read an inode cluster buffer in the context of this task.
+> >> That buffer read ultimately fails due to submit_bio_checks() setting
+> >> REQ_NOWAIT on the bio and the following logic in the same function
+> >> causing a BLK_STS_NOTSUPP status:
+> >>
+> >> 	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q))
+> >> 		goto not_supported;
+> >>
+> >> In turn, this leads to the following behavior in XFS:
+> >>
+> >> [ 3839.273519] XFS (dm-2): metadata I/O error in "xfs_imap_to_bp+0x116/0x2c0 [xfs]" at daddr 0x323a5a0 len 32 error 95
+> >> [ 3839.303283] XFS (dm-2): log I/O error -95
+> >> [ 3839.321437] XFS (dm-2): xfs_do_force_shutdown(0x2) called from line 1196 of file fs/xfs/xfs_log.c. Return address = ffffffffc12dea8a
+> >> [ 3839.323554] XFS (dm-2): Log I/O Error Detected. Shutting down filesystem
+> >> [ 3839.324773] XFS (dm-2): Please unmount the filesystem and rectify the problem(s)
+> >>
+> >> I suppose it's possible fsstress is making an invalid request based on
+> >> my setup, but I find it a little strange that this state appears to leak
+> >> into filesystem I/O requests. What's more concerning is that this also
+> >> seems to impact an immediately subsequent log write submission, which is
+> >> a fatal error and causes the filesystem to shutdown.
+> >>
+> >> Finally, note that I've seen your patch associated with Zorro's recent
+> >> bug report [1] and that does seem to prevent the problem. I'm still
+> >> sending this report because the connection between the plug and that
+> >> change is not obvious to me, so I wanted to 1.) confirm this is intended
+> >> to fix this problem and 2.) try to understand whether this plugging
+> >> behavior introduces any constraints on the fs when invoked in io_uring
+> >> context. Thoughts? Thanks.
+> >>
+> > 
+> > To expand on this a bit, I was playing more with the aforementioned fix
+> > yesterday while waiting for this email's several hour trip to the
+> > mailing list to complete and eventually realized that I don't think the
+> > plug.nowait thing properly accommodates XFS' use of multiple devices. A
+> > simple example is XFS on a data device with mq support and an external
+> > log device without mq support. Presumably io_uring requests could thus
+> > enter XFS with plug.nowait set to true, and then any log bio submission
+> > that happens to occur in that context is doomed to fail and shutdown the
+> > fs.
 > 
-> XFS: Assertion failed: (bip->bli_flags & XFS_BLI_STALE) || (xfs_blft_from_flags(&bip->__bli_format) > XFS_BLFT_UNKNOWN_BUF && xfs_blft_from_flags(&bip->__bli_format) < XFS_BLFT_MAX_BUF), file: fs/xfs/xfs_buf_item.c, line: 331
-> Call Trace:
->  xfs_buf_item_format+0x632/0x680
->  ? kmem_alloc_large+0x29/0x90
->  ? kmem_alloc+0x70/0x120
->  ? xfs_log_commit_cil+0x132/0x940
->  xfs_log_commit_cil+0x26f/0x940
->  ? xfs_buf_item_init+0x1ad/0x240
->  ? xfs_growfs_rt_alloc+0x1fc/0x280
->  __xfs_trans_commit+0xac/0x370
->  xfs_growfs_rt_alloc+0x1fc/0x280
->  xfs_growfs_rt+0x1a0/0x5e0
->  xfs_file_ioctl+0x3fd/0xc70
->  ? selinux_file_ioctl+0x174/0x220
->  ksys_ioctl+0x87/0xc0
->  __x64_sys_ioctl+0x16/0x20
->  do_syscall_64+0x3e/0x70
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Do we ever read from the logdev? It'll only be a concern on the read
+> side. And even from there, you'd need nested reads from the log device.
 > 
-> The kernel patch "xfs: Set xfs_buf type flag when growing summary/bitmap
-> files" is required to fix this issue.
->
 
-Eryu,
+We only read from the log device on log recovery (during filesystem
+mount), but I don't follow why that matters since log writes originate
+within XFS (not userspace). Do you mean to ask whether we access the log
+in the context of userspace reads.. ?
 
-Sorry, I forgot to add Darrick's RVB tag. Please let me know if I have to
-resend the patch with the missing RVB.
+We currently write to the log from various runtime contexts. I don't
+_think_ that we currently ever do so during a file read, but log forces
+can be async and buried under layers of indirection which makes it
+difficult to reason about (and prevent in the future, if necessary). For
+example, attempting to lock a stale buffer can issue an async log force.
 
-> Reviewed-by: Zorro Lang <zlang@redhat.com>
-> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+FWIW and to confirm the above, a simple experiment to issue a log force
+in XFS' read_iter() does reproduce the same shutdown condition described
+above when XFS is mounted with a mq data device and !mq external log
+device. That may or may not be a theoretical condition at the moment,
+but it kind of looks like a landmine to me. Perhaps we'll need to come
+up with a more explicit way of ensuring we never submit log bios from a
+context where we know the block subsystem will swat them away...
 
--- 
-chandan
+> In general, the 'can async' check should be advisory, the -EAGAIN
+> or -EOPNOTSUPP should be caught and reissued. The failure path was
+> just related to this happening off the retry path on arming for the
+> async buffered callback.
+> 
 
+I think the issue here is that io_uring is not in the path between XFS
+and the log device. Therefore, XFS receives the log I/O error directly
+and shuts down. I do think it's fair to argue that io_uring should not
+be setting task level context that enforces strict device specific
+requirements on I/O submission and then call into subsystems that can
+submit I/O to disparate/unrelated devices. That said, I'm not intimately
+familiar with the problem this is trying to solve...
 
+Brian
+
+> -- 
+> Jens Axboe
+> 
 
