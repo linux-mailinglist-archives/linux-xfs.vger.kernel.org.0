@@ -2,64 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 334A526CACF
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C291326CD5C
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbgIPUPS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 16:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58372 "EHLO
+        id S1726891AbgIPU63 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728325AbgIPUNL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 16:13:11 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4B9C06174A
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 13:13:10 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id y194so4805280vsc.4
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 13:13:10 -0700 (PDT)
+        with ESMTP id S1726326AbgIPQdO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 12:33:14 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3322CC061BD1
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:20 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id jw11so1379076pjb.0
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=GcbBDc3F14nB5fItkaCR8bNi/7szL/0DDXdKpHCyoVg=;
-        b=WdOkItQh65coZKHtbLtCry05LIlLS/47JKxIFd5oHs6A7Luo37AFBUWhJGKmiHg2Kc
-         3lhisA2LapqsXclKHkpUt/m0EhzXQla8tSj9wUtUlwkCTqzQmj6zCCqc2V02xvF1Atya
-         2xsQm+aC1YGiYs1zK3BscTTaL7swsr8Vikd1jpxJhT/VOlZqFcjqrENNApxWjziVkfWL
-         HWjDTUBHH4USrOcn4I/vZDaywNTIaBubN2QoaWlhinD4oCycqiP5P7dmIcJCbIlvmvGC
-         Iv+fHlUz+hyH0hE6v2xSvt9SPQnkOYDD4XiXZrrHCvaCPae51rT3DBBjlpFB8dNDM3Nb
-         Ij4w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=cDkNG7qGEFEdGfIX86bLfEQSrd/OICaC75I6vXNRaN8=;
+        b=sY2/6I85jaAKkWq7JtlRlnmjvgOI+XDC8Kz6OZrzFzIjqC5i2a1MRs2QlV4u0SdkbE
+         0RGYYStNmxQpqbm7sMSVZn+Qx0eOC6m1TsuYci2HVTQdQTppSrlFRQJzhl6oOUtp9GFL
+         YJw5mUmU68yhnDflCewrKWHkKkjprJViN6TFIrPFdEkWWMXmzEozR8IpcZKJJnfUHV+6
+         ua8zFUjQzwXuSF4hFVAjr1L0rUhJInT/D0fqCNAlAD2QO41lgzOxuLzVnZNqFz+LZOhX
+         a7MPpadubfBoQ5a+zVR8Q/gjudWNry0UKNOO7NuyFgwK77C93WAexPt2v/07iiIYUXqx
+         wVMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=GcbBDc3F14nB5fItkaCR8bNi/7szL/0DDXdKpHCyoVg=;
-        b=bmuXYJ7wOXY3298yLh68BuL69aVTjtxJcX+d0hqCSFSBdviiVmjvQSCgqLiQNy/U1J
-         m2jaHm16eEy6wdwA8kNzlKlfrzElx1YgS2Kw2s/AdaVglnEHSm2HsdWS/EVL8TzKtS48
-         GH1BCy18ca0ajXDKPqpsqbTXsEVrE8gdGqPZG2ESKb27uARqhuYschXmw8bdmQ8jR7Cn
-         TmxAtqASl5yEJCQEYgGXWZRQEP0swAG5VY0tBkzgAkVrLKB3cJnhMBdW0ZmmI7RfjTXe
-         Mv8XsHedRDouxZDNOLif0gJ9cdxZBd0lvnpHGsPszu1zB7B3ISqVhjXV0LqUxyNM/zN3
-         v3SA==
-X-Gm-Message-State: AOAM533Tj1bGnTFCHcpnSnYPLjqLERT4kWMdV2t/MrwTbOQddcTjK6IL
-        5+VMMlo1RdyKcs1dHj5ELXTeYwRp8BoPX1Ejr2A=
-X-Google-Smtp-Source: ABdhPJxy1gxkUt72kPzIznZooaLfdaI+EfieVI+ftdsKxLlXkLj8DSbhlQHXpspMiWRODAFl9uCV0L87nI/k2vn4anY=
-X-Received: by 2002:a05:6102:101a:: with SMTP id q26mr6140643vsp.57.1600287189878;
- Wed, 16 Sep 2020 13:13:09 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:ab0:3412:0:0:0:0:0 with HTTP; Wed, 16 Sep 2020 13:13:09
- -0700 (PDT)
-Reply-To: aalihelp5@gmail.com
-From:   "Mr.Hui Ka Yan" <jacobmoore.moores41@gmail.com>
-Date:   Wed, 16 Sep 2020 13:13:09 -0700
-Message-ID: <CAEedSLdw9cQpdDgoAQWHTA9VDtMRsPUVn_VFAmSDuzGEiS==Sw@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=cDkNG7qGEFEdGfIX86bLfEQSrd/OICaC75I6vXNRaN8=;
+        b=K+GjnFjSiKObNBA+wOOtTn4D91Qp0WfkyT3mpDW42BdcB1HRGK/J+ZZkFwTLLbIiAa
+         uE5+hz2pLs4gySvAMiMmR552TVz95FSUGpsNbmVYcJ5DrohUcpEmn8PqJlHkcbc7+ch4
+         nl2AGPjB9jlkB7Gu07lAcIcB43kF8Usw+FQzhY8ZDVc5A6caHxc2o4HjB8j0yR2tlTAg
+         iq39FX4fKKsKq8MRVo9j5dX8OqnAOe4jKCTZqWweG3q5i8xHk7BxBFTq3VeF0gFsQXAd
+         lnxxPXFM2Xu1DoD33L18B3i0ogYlO1IEQ0c6XssGfFUE4ioWXXMngVb0eCnLB8SV2zpD
+         VgTQ==
+X-Gm-Message-State: AOAM530D+wUojmCdAfDH9k6UHGksbD3PN45KuEw8Yox9iJLfS/dnA0hP
+        hBCbBgCNkDAPiJBeYTjMabxuH8LQFQ==
+X-Google-Smtp-Source: ABdhPJxCDy/38KD2UbScMR4Ww4uvQJizkv3DJz4mCr9Is4wSza1J8KyuwDVirzuYKMBYl5hJRDYvBA==
+X-Received: by 2002:a17:902:c1d5:b029:d1:f2ab:cf6e with SMTP id c21-20020a170902c1d5b02900d1f2abcf6emr1214960plc.67.1600255159388;
+        Wed, 16 Sep 2020 04:19:19 -0700 (PDT)
+Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
+        by smtp.gmail.com with ESMTPSA id v204sm3492195pfc.10.2020.09.16.04.19.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Sep 2020 04:19:18 -0700 (PDT)
+From:   xiakaixu1987@gmail.com
+X-Google-Original-From: kaixuxia@tencent.com
+To:     linux-xfs@vger.kernel.org
+Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
+Subject: [PATCH] xfs: remove the unused SYNCHRONIZE macro
+Date:   Wed, 16 Sep 2020 19:19:04 +0800
+Message-Id: <1600255152-16086-2-git-send-email-kaixuxia@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
+References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Bin Herr Hui Ka Yan. Ich spende Ihnen einen Zuschuss von 10.500.000
-USD. Kontaktieren Sie mich (aalihelp5@gmail.com) f=C3=BCr weitere Details.
+From: Kaixu Xia <kaixuxia@tencent.com>
 
-Danke und Gott segne dich.
+There are no callers of the SYNCHRONIZE() macro, so remove it.
+
+Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
+---
+ fs/xfs/xfs_linux.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+index ab737fed7b12..ad1009778d33 100644
+--- a/fs/xfs/xfs_linux.h
++++ b/fs/xfs/xfs_linux.h
+@@ -123,7 +123,6 @@ typedef __u32			xfs_nlink_t;
+ #define EFSCORRUPTED	EUCLEAN		/* Filesystem is corrupted */
+ #define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+ 
+-#define SYNCHRONIZE()	barrier()
+ #define __return_address __builtin_return_address(0)
+ 
+ /*
+-- 
+2.20.0
+
