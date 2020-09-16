@@ -2,189 +2,204 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1FA26CB7F
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:28:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0070026CAF7
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:20:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgIPU2K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 16:28:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58030 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726943AbgIPRYS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:24:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600277043;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=irct7vujmUcquC13qEKTnUPmLuMwT+Z6y4QXkSflZzU=;
-        b=ZChbVoB5j6p72xegVAXq3u7pwcKXJoB8yBgbh0IqH3Pu+8CVIe5nOz/BIrsiXSsMfHSi7G
-        L9/kgP2koFrPozTOSMPYprWxF15BJ9OiIqzPmv7me5gpWcLIm/yf2cG1rzFFtcQe8zZkRn
-        Wu78h8WDJFLVQ9dzLf6duhyO+YIEnUo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-128-jlX2KyA8M66w8alSwSddJw-1; Wed, 16 Sep 2020 09:07:19 -0400
-X-MC-Unique: jlX2KyA8M66w8alSwSddJw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 88894AD682;
-        Wed, 16 Sep 2020 13:07:17 +0000 (UTC)
-Received: from bfoster (ovpn-113-130.rdu2.redhat.com [10.10.113.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51D5519728;
-        Wed, 16 Sep 2020 13:07:16 +0000 (UTC)
-Date:   Wed, 16 Sep 2020 09:07:14 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        minlei@redhat.com
-Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-Message-ID: <20200916130714.GA1681377@bfoster>
-References: <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
- <20200821215358.GG7941@dread.disaster.area>
- <20200822131312.GA17997@infradead.org>
- <20200824142823.GA295033@bfoster>
- <20200824150417.GA12258@infradead.org>
- <20200824154841.GB295033@bfoster>
- <20200825004203.GJ12131@dread.disaster.area>
- <20200825144917.GA321765@bfoster>
- <20200916001242.GE7955@magnolia>
- <20200916084510.GA30815@infradead.org>
+        id S1728260AbgIPUUD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:20:03 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48944 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728380AbgIPUT4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 16:19:56 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GGOk6i051386
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 16:30:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=lMfgt0LgO8i9k+t7+chPj8qq4fEJmAicBkD+zMhl3xk=;
+ b=qxyYI7BIT+SX7OZz0c9xHumudjrR/5jU9ZrWAUf40boCV5ZUjylkcdc6cv/kElc+/z7Q
+ j/OUPY0cDYmCtQXgSUsKfUYZ590ah+jMrAVKQjeWIdtKZ3bSDWOETyaQAEFahH4tONNL
+ JNRGJNStBCqMpxDRuAzAI0EliYBzMi+SSEWwggZ6JKl7Y9OjlqX2yZPffd+po8+4oGkF
+ 3FRYyngLaQ5xkI1DTDCx6RcokNQeeqUdH6jMm9luU+I7nVaeoijqZL3P21pgqf2tXs0C
+ 7+cFeEQpq5ppkYLv1DBWN+rl8Maw03bTIjJsWw6eAvxA8TaX3eTbFa+HsLRInQrTaNih 2Q== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33j91dntk4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 16:30:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GGQ1kX007761
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 16:30:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 33khpkpspy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 16:30:38 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08GGUbNn007206
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 16:30:38 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Sep 2020 16:30:37 +0000
+Date:   Wed, 16 Sep 2020 09:30:36 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next REBASED to fe341eb151ec
+Message-ID: <20200916163036.GG7955@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200916084510.GA30815@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009160118
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=2 mlxlogscore=999
+ clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009160118
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 09:45:10AM +0100, Christoph Hellwig wrote:
-> On Tue, Sep 15, 2020 at 05:12:42PM -0700, Darrick J. Wong wrote:
-> > On Tue, Aug 25, 2020 at 10:49:17AM -0400, Brian Foster wrote:
-> > > cc Ming
-> > > 
-> > > On Tue, Aug 25, 2020 at 10:42:03AM +1000, Dave Chinner wrote:
-> > > > On Mon, Aug 24, 2020 at 11:48:41AM -0400, Brian Foster wrote:
-> > > > > On Mon, Aug 24, 2020 at 04:04:17PM +0100, Christoph Hellwig wrote:
-> > > > > > On Mon, Aug 24, 2020 at 10:28:23AM -0400, Brian Foster wrote:
-> > > > > > > Do I understand the current code (__bio_try_merge_page() ->
-> > > > > > > page_is_mergeable()) correctly in that we're checking for physical page
-> > > > > > > contiguity and not necessarily requiring a new bio_vec per physical
-> > > > > > > page?
-> > > > > > 
-> > > > > > 
-> > > > > > Yes.
-> > > > > > 
-> > > > > 
-> > > > > Ok. I also realize now that this occurs on a kernel without commit
-> > > > > 07173c3ec276 ("block: enable multipage bvecs"). That is probably a
-> > > > > contributing factor, but it's not clear to me whether it's feasible to
-> > > > > backport whatever supporting infrastructure is required for that
-> > > > > mechanism to work (I suspect not).
-> > > > > 
-> > > > > > > With regard to Dave's earlier point around seeing excessively sized bio
-> > > > > > > chains.. If I set up a large memory box with high dirty mem ratios and
-> > > > > > > do contiguous buffered overwrites over a 32GB range followed by fsync, I
-> > > > > > > can see upwards of 1GB per bio and thus chains on the order of 32+ bios
-> > > > > > > for the entire write. If I play games with how the buffered overwrite is
-> > > > > > > submitted (i.e., in reverse) however, then I can occasionally reproduce
-> > > > > > > a ~32GB chain of ~32k bios, which I think is what leads to problems in
-> > > > > > > I/O completion on some systems. Granted, I don't reproduce soft lockup
-> > > > > > > issues on my system with that behavior, so perhaps there's more to that
-> > > > > > > particular issue.
-> > > > > > > 
-> > > > > > > Regardless, it seems reasonable to me to at least have a conservative
-> > > > > > > limit on the length of an ioend bio chain. Would anybody object to
-> > > > > > > iomap_ioend growing a chain counter and perhaps forcing into a new ioend
-> > > > > > > if we chain something like more than 1k bios at once?
-> > > > > > 
-> > > > > > So what exactly is the problem of processing a long chain in the
-> > > > > > workqueue vs multiple small chains?  Maybe we need a cond_resched()
-> > > > > > here and there, but I don't see how we'd substantially change behavior.
-> > > > > > 
-> > > > > 
-> > > > > The immediate problem is a watchdog lockup detection in bio completion:
-> > > > > 
-> > > > >   NMI watchdog: Watchdog detected hard LOCKUP on cpu 25
-> > > > > 
-> > > > > This effectively lands at the following segment of iomap_finish_ioend():
-> > > > > 
-> > > > > 		...
-> > > > >                /* walk each page on bio, ending page IO on them */
-> > > > >                 bio_for_each_segment_all(bv, bio, iter_all)
-> > > > >                         iomap_finish_page_writeback(inode, bv->bv_page, error);
-> > > > > 
-> > > > > I suppose we could add a cond_resched(), but is that safe directly
-> > > > > inside of a ->bi_end_io() handler? Another option could be to dump large
-> > > > > chains into the completion workqueue, but we may still need to track the
-> > > > > length to do that. Thoughts?
-> > > > 
-> > > > We have ioend completion merging that will run the compeltion once
-> > > > for all the pending ioend completions on that inode. IOWs, we do not
-> > > > need to build huge chains at submission time to batch up completions
-> > > > efficiently. However, huge bio chains at submission time do cause
-> > > > issues with writeback fairness, pinning GBs of ram as unreclaimable
-> > > > for seconds because they are queued for completion while we are
-> > > > still submitting the bio chain and submission is being throttled by
-> > > > the block layer writeback throttle, etc. Not to mention the latency
-> > > > of stable pages in a situation like this - a mmap() write fault
-> > > > could stall for many seconds waiting for a huge bio chain to finish
-> > > > submission and run completion processing even when the IO for the
-> > > > given page we faulted on was completed before the page fault
-> > > > occurred...
-> > > > 
-> > > > Hence I think we really do need to cap the length of the bio
-> > > > chains here so that we start completing and ending page writeback on
-> > > > large writeback ranges long before the writeback code finishes
-> > > > submitting the range it was asked to write back.
-> > > > 
-> > > 
-> > > Ming pointed out separately that limiting the bio chain itself might not
-> > > be enough because with multipage bvecs, we can effectively capture the
-> > > same number of pages in much fewer bios. Given that, what do you think
-> > > about something like the patch below to limit ioend size? This
-> > > effectively limits the number of pages per ioend regardless of whether
-> > > in-core state results in a small chain of dense bios or a large chain of
-> > > smaller bios, without requiring any new explicit page count tracking.
-> > > 
-> > > Brian
-> > 
-> > Dave was asking on IRC if I was going to pull this patch in.  I'm unsure
-> > of its status (other than it hasn't been sent as a proper [PATCH]) so I
-> > wonder, is this necessary, and if so, can it be cleaned up and
-> > submitted?
-> 
+Hi folks,
 
-I was waiting on some feedback from a few different angles before
-posting a proper patch..
+The for-next branch of the xfs-linux repository at:
 
-> Maybe it is lost somewhere, but what is the point of this patch?
-> What does the magic number try to represent?
-> 
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-Dave described the main purpose earlier in this thread [1]. The initial
-motivation is that we've had downstream reports of soft lockup problems
-in writeback bio completion down in the bio -> bvec loop of
-iomap_finish_ioend() that has to finish writeback on each individual
-page of insanely large bios and/or chains. We've also had an upstream
-reports of a similar problem on linux-xfs [2].
+has just been updated.
 
-The magic number itself was just pulled out of a hat. I picked it
-because it seemed conservative enough to still allow large contiguous
-bios (1GB w/ 4k pages) while hopefully preventing I/O completion
-problems, but was hoping for some feedback on that bit if the general
-approach was acceptable. I was also waiting for some feedback on either
-of the two users who reported the problem but I don't think I've heard
-back on that yet...
+In my fevered rush to put out a 5.10-merge branch last week, I
+mistakenly pulled in dave's iunlink series, forgetting that it
+introduces an incompat log change and wasn't ready for upstream.  Hence
+rebasing to remove that series.  Sorry about that, I'll try to be more
+careful in the future, particularly with the post -rc6 update next week.
 
-Brian
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
 
-[1] https://lore.kernel.org/linux-fsdevel/20200821215358.GG7941@dread.disaster.area/
-[2] https://lore.kernel.org/linux-xfs/alpine.LRH.2.02.2008311513150.7870@file01.intranet.prod.int.rdu2.redhat.com/
+The new head of the for-next branch is commit:
 
+fe341eb151ec xfs: ensure that fpunch, fcollapse, and finsert operations are aligned to rt extent size
+
+New Commits:
+
+Carlos Maiolino (6):
+      [771915c4f688] xfs: remove kmem_realloc()
+      [8ca79df85b7f] xfs: Remove kmem_zalloc_large()
+      [6337c84466c2] xfs: remove typedef xfs_attr_sf_entry_t
+      [47e6cc100054] xfs: Remove typedef xfs_attr_shortform_t
+      [c418dbc9805d] xfs: Use variable-size array for nameval in xfs_attr_sf_entry
+      [e01b7eed5d0a] xfs: Convert xfs_attr_sf macros to inline functions
+
+Christoph Hellwig (15):
+      [12e164aa1f9d] xfs: refactor the buf ioend disposition code
+      [76b2d3234611] xfs: mark xfs_buf_ioend static
+      [23fb5a93c21f] xfs: refactor xfs_buf_ioend
+      [664ffb8a429a] xfs: move the buffer retry logic to xfs_buf.c
+      [6a7584b1d82b] xfs: fold xfs_buf_ioend_finish into xfs_ioend
+      [f58d0ea95611] xfs: refactor xfs_buf_ioerror_fail_without_retry
+      [3cc498845a0c] xfs: remove xfs_buf_ioerror_retry
+      [844c9358dfda] xfs: lift the XBF_IOEND_FAIL handling into xfs_buf_ioend_disposition
+      [70796c6b74c2] xfs: simplify the xfs_buf_ioend_disposition calling convention
+      [b840e2ada8af] xfs: use xfs_buf_item_relse in xfs_buf_item_done
+      [55b7d7115fcd] xfs: clear the read/write flags later in xfs_buf_ioend
+      [22c10589a10b] xfs: remove xlog_recover_iodone
+      [cead0b10f557] xfs: simplify xfs_trans_getsb
+      [b3f8e08ca815] xfs: remove xfs_getsb
+      [26e328759b9b] xfs: reuse _xfs_buf_read for re-reading the superblock
+
+Darrick J. Wong (19):
+      [2a39946c9844] xfs: store inode btree block counts in AGI header
+      [1ac35f061af0] xfs: use the finobt block counts to speed up mount times
+      [1dbbff029f93] xfs: support inode btree blockcounts in online scrub
+      [11f744234f05] xfs: support inode btree blockcounts in online repair
+      [b896a39faa5a] xfs: enable new inode btree counters feature
+      [876fdc7c4f36] xfs: explicitly define inode timestamp range
+      [11d8a9190275] xfs: refactor quota expiration timer modification
+      [ccc8e771aa7a] xfs: refactor default quota grace period setting code
+      [9f99c8fe551a] xfs: refactor quota timestamp coding
+      [88947ea0ba71] xfs: move xfs_log_dinode_to_disk to the log recovery code
+      [5a0bb066f60f] xfs: redefine xfs_timestamp_t
+      [30e05599219f] xfs: redefine xfs_ictimestamp_t
+      [f93e5436f0ee] xfs: widen ondisk inode timestamps to deal with y2038+
+      [4ea1ff3b4968] xfs: widen ondisk quota expiration timestamps to handle y2038+
+      [06dbf82b044c] xfs: trace timestamp limits
+      [29887a227131] xfs: enable big timestamps
+      [5ffce3cc22a0] xfs: force the log after remapping a synchronous-writes file
+      [2a6ca4baed62] xfs: make sure the rt allocator doesn't run off the end
+      [fe341eb151ec] xfs: ensure that fpunch, fcollapse, and finsert operations are aligned to rt extent size
+
+Dave Chinner (1):
+      [718ecc50359e] xfs: xfs_iflock is no longer a completion
+
+Zheng Bin (1):
+      [0f4ec0f15746] xfs: Remove unneeded semicolon
+
+
+Code Diffstat:
+
+ fs/xfs/kmem.c                    |  22 ----
+ fs/xfs/kmem.h                    |   7 --
+ fs/xfs/libxfs/xfs_ag.c           |   5 +
+ fs/xfs/libxfs/xfs_attr.c         |  14 ++-
+ fs/xfs/libxfs/xfs_attr_leaf.c    |  43 ++++---
+ fs/xfs/libxfs/xfs_attr_sf.h      |  29 +++--
+ fs/xfs/libxfs/xfs_da_format.h    |   6 +-
+ fs/xfs/libxfs/xfs_dquot_buf.c    |  35 ++++++
+ fs/xfs/libxfs/xfs_format.h       | 211 +++++++++++++++++++++++++++++--
+ fs/xfs/libxfs/xfs_fs.h           |   1 +
+ fs/xfs/libxfs/xfs_ialloc.c       |   5 +
+ fs/xfs/libxfs/xfs_ialloc_btree.c |  65 +++++++++-
+ fs/xfs/libxfs/xfs_iext_tree.c    |   2 +-
+ fs/xfs/libxfs/xfs_inode_buf.c    | 130 +++++++++----------
+ fs/xfs/libxfs/xfs_inode_buf.h    |  15 ++-
+ fs/xfs/libxfs/xfs_inode_fork.c   |   8 +-
+ fs/xfs/libxfs/xfs_log_format.h   |   7 +-
+ fs/xfs/libxfs/xfs_log_recover.h  |   1 -
+ fs/xfs/libxfs/xfs_quota_defs.h   |   8 +-
+ fs/xfs/libxfs/xfs_sb.c           |   6 +-
+ fs/xfs/libxfs/xfs_shared.h       |   3 +
+ fs/xfs/libxfs/xfs_trans_inode.c  |  17 ++-
+ fs/xfs/scrub/agheader.c          |  30 +++++
+ fs/xfs/scrub/agheader_repair.c   |  24 ++++
+ fs/xfs/scrub/inode.c             |  31 +++--
+ fs/xfs/scrub/symlink.c           |   2 +-
+ fs/xfs/xfs_acl.c                 |   2 +-
+ fs/xfs/xfs_attr_list.c           |   6 +-
+ fs/xfs/xfs_bmap_util.c           |  16 +++
+ fs/xfs/xfs_buf.c                 | 208 +++++++++++++++++++++++++-----
+ fs/xfs/xfs_buf.h                 |  17 +--
+ fs/xfs/xfs_buf_item.c            | 264 ++-------------------------------------
+ fs/xfs/xfs_buf_item.h            |  12 ++
+ fs/xfs/xfs_buf_item_recover.c    |   2 +-
+ fs/xfs/xfs_dquot.c               |  66 ++++++++--
+ fs/xfs/xfs_dquot.h               |   3 +
+ fs/xfs/xfs_file.c                |  17 ++-
+ fs/xfs/xfs_icache.c              |  19 ++-
+ fs/xfs/xfs_inode.c               |  83 +++++-------
+ fs/xfs/xfs_inode.h               |  38 +-----
+ fs/xfs/xfs_inode_item.c          |  61 ++++++---
+ fs/xfs/xfs_inode_item.h          |   5 +-
+ fs/xfs/xfs_inode_item_recover.c  |  76 +++++++++++
+ fs/xfs/xfs_ioctl.c               |   7 +-
+ fs/xfs/xfs_log_recover.c         |  60 +++------
+ fs/xfs/xfs_mount.c               |  32 ++---
+ fs/xfs/xfs_mount.h               |   1 -
+ fs/xfs/xfs_ondisk.h              |  38 ++++--
+ fs/xfs/xfs_qm.c                  |  13 ++
+ fs/xfs/xfs_qm.h                  |   4 +
+ fs/xfs/xfs_qm_syscalls.c         |  18 ++-
+ fs/xfs/xfs_quota.h               |   8 --
+ fs/xfs/xfs_rtalloc.c             |  13 +-
+ fs/xfs/xfs_super.c               |  28 +++--
+ fs/xfs/xfs_trace.h               |  29 ++++-
+ fs/xfs/xfs_trans.c               |   2 +-
+ fs/xfs/xfs_trans.h               |   2 +-
+ fs/xfs/xfs_trans_buf.c           |  46 +++----
+ fs/xfs/xfs_trans_dquot.c         |   6 +
+ 59 files changed, 1183 insertions(+), 746 deletions(-)
