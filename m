@@ -2,135 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 126E626D2D9
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 06:59:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 389C226D30F
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 07:28:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbgIQE7F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 00:59:05 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47193 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725267AbgIQE7F (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 00:59:05 -0400
-Received: from dread.disaster.area (pa49-195-191-192.pa.nsw.optusnet.com.au [49.195.191.192])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8EEE7825D26;
-        Thu, 17 Sep 2020 14:58:57 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kIm0W-0001Qv-TX; Thu, 17 Sep 2020 14:58:56 +1000
-Date:   Thu, 17 Sep 2020 14:58:56 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] xfs: log new intent items created as part of
- finishing recovered intent items
-Message-ID: <20200917045856.GD12131@dread.disaster.area>
-References: <160031332353.3624373.16349101558356065522.stgit@magnolia>
- <160031332982.3624373.6230830770363563010.stgit@magnolia>
+        id S1726135AbgIQF25 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 01:28:57 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:53090 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgIQF25 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 01:28:57 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GLP5pa189918;
+        Wed, 16 Sep 2020 21:30:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=vkeP0fpc6pnjp5/dkneZcYB+ekM+SUTJyvdjjsUzTaA=;
+ b=YNVqNBugnauPHB77Eem8/wvwhSZXDzv6QuLFYe+WrOj5GKCX32Sl4V7Hn1yI3ZKU4wUl
+ yJNVcQMMLuAV84g+m2GKPXX00we/FKMcrR346+xyxQ5KzW5zstmhwZBajcU+Ccqne21Q
+ Ocfdl2TNL2Rhw2MfLJz6tv8PoFKnhgRTqTBYc/bZjr2zS8GYgXU5NMDaWVQHJIgrT2na
+ b/R7S1Zp/PbzOWQYtd0WHYIWruJC7Pc4REs7wW8Kf6Ic6Xer1RGN/B8t/yC+njFMot/l
+ ZFtrNnKngOCSgReXt1kU6SpxOv5KdGm9JpS/XGqlpZrJrU9tKPyZiVUvM4Z0yeqmfxmL Lw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 33gp9mdkut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Sep 2020 21:30:14 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GLPWmU037249;
+        Wed, 16 Sep 2020 21:30:13 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 33h889bpg1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Sep 2020 21:30:13 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08GLUDsl003264;
+        Wed, 16 Sep 2020 21:30:13 GMT
+Received: from localhost (/10.159.158.133)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Sep 2020 21:30:12 +0000
+Date:   Wed, 16 Sep 2020 14:30:11 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xiakaixu1987@gmail.com
+Cc:     linux-xfs@vger.kernel.org, Kaixu Xia <kaixuxia@tencent.com>
+Subject: Re: [PATCH] xfs: remove the unnecessary xfs_dqid_t type cast
+Message-ID: <20200916213011.GM7955@magnolia>
+References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
+ <1600255152-16086-4-git-send-email-kaixuxia@tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160031332982.3624373.6230830770363563010.stgit@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=KcmsTjQD c=1 sm=1 tr=0 cx=a_idp_d
-        a=vvDRHhr1aDYKXl+H6jx2TA==:117 a=vvDRHhr1aDYKXl+H6jx2TA==:17
-        a=kj9zAlcOel0A:10 a=reM5J-MqmosA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8
-        a=7-415B0cAAAA:8 a=5flnDyzRKi93cCsh7YIA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <1600255152-16086-4-git-send-email-kaixuxia@tencent.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=3 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009160156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 suspectscore=3 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009160156
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 08:28:49PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+n Wed, Sep 16, 2020 at 07:19:06PM +0800, xiakaixu1987@gmail.com wrote:
+> From: Kaixu Xia <kaixuxia@tencent.com>
 > 
-> During a code inspection, I found a serious bug in the log intent item
-> recovery code when an intent item cannot complete all the work and
-> decides to requeue itself to get that done.  When this happens, the
-> item recovery creates a new incore deferred op representing the
-> remaining work and attaches it to the transaction that it allocated.  At
-> the end of _item_recover, it moves the entire chain of deferred ops to
-> the dummy parent_tp that xlog_recover_process_intents passed to it, but
-> fail to log a new intent item for the remaining work before committing
-> the transaction for the single unit of work.
+> Since the type prid_t and xfs_dqid_t both are uint32_t, seems the
+> type cast is unnecessary, so remove it.
 > 
-> xlog_finish_defer_ops logs those new intent items once recovery has
-> finished dealing with the intent items that it recovered, but this isn't
-> sufficient.  If the log is forced to disk after a recovered log item
-> decides to requeue itself and the system goes down before we call
-> xlog_finish_defer_ops, the second log recovery will never see the new
-> intent item and therefore has no idea that there was more work to do.
-> It will finish recovery leaving the filesystem in a corrupted state.
-> 
-> The same logic applies to /any/ deferred ops added during intent item
-> recovery, not just the one handling the remaining work.
+> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
 
-Yup, that looks like a problem.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+--D
+
 > ---
->  fs/xfs/libxfs/xfs_defer.c  |   26 ++++++++++++++++++++++++--
->  fs/xfs/libxfs/xfs_defer.h  |    6 ++++++
->  fs/xfs/xfs_bmap_item.c     |    2 +-
->  fs/xfs/xfs_refcount_item.c |    2 +-
->  4 files changed, 32 insertions(+), 4 deletions(-)
+>  fs/xfs/xfs_qm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+> index 3f82e0c92c2d..41a459ffd1f2 100644
+> --- a/fs/xfs/xfs_qm.c
+> +++ b/fs/xfs/xfs_qm.c
+> @@ -1715,7 +1715,7 @@ xfs_qm_vop_dqalloc(
+>  	if ((flags & XFS_QMOPT_PQUOTA) && XFS_IS_PQUOTA_ON(mp)) {
+>  		if (ip->i_d.di_projid != prid) {
+>  			xfs_iunlock(ip, lockflags);
+> -			error = xfs_qm_dqget(mp, (xfs_dqid_t)prid,
+> +			error = xfs_qm_dqget(mp, prid,
+>  					XFS_DQTYPE_PROJ, true, &pq);
+>  			if (error) {
+>  				ASSERT(error != -ENOENT);
+> -- 
+> 2.20.0
 > 
-> diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-> index d8f586256add..29e9762f3b77 100644
-> --- a/fs/xfs/libxfs/xfs_defer.c
-> +++ b/fs/xfs/libxfs/xfs_defer.c
-> @@ -186,8 +186,9 @@ xfs_defer_create_intent(
->  {
->  	const struct xfs_defer_op_type	*ops = defer_op_types[dfp->dfp_type];
->  
-> -	dfp->dfp_intent = ops->create_intent(tp, &dfp->dfp_work,
-> -			dfp->dfp_count, sort);
-> +	if (!dfp->dfp_intent)
-> +		dfp->dfp_intent = ops->create_intent(tp, &dfp->dfp_work,
-> +						     dfp->dfp_count, sort);
->  }
->  
->  /*
-> @@ -390,6 +391,7 @@ xfs_defer_finish_one(
->  			list_add(li, &dfp->dfp_work);
->  			dfp->dfp_count++;
->  			dfp->dfp_done = NULL;
-> +			dfp->dfp_intent = NULL;
->  			xfs_defer_create_intent(tp, dfp, false);
->  		}
->  
-> @@ -552,3 +554,23 @@ xfs_defer_move(
->  
->  	xfs_defer_reset(stp);
->  }
-> +
-> +/*
-> + * Prepare a chain of fresh deferred ops work items to be completed later.  Log
-> + * recovery requires the ability to put off until later the actual finishing
-> + * work so that it can process unfinished items recovered from the log in
-> + * correct order.
-> + *
-> + * Create and log intent items for all the work that we're capturing so that we
-> + * can be assured that the items will get replayed if the system goes down
-> + * before log recovery gets a chance to finish the work it put off.  Then we
-> + * move the chain from stp to dtp.
-> + */
-> +void
-> +xfs_defer_capture(
-> +	struct xfs_trans	*dtp,
-> +	struct xfs_trans	*stp)
-> +{
-> +	xfs_defer_create_intents(stp);
-> +	xfs_defer_move(dtp, stp);
-> +}
-
-Not sold on the "capture" name, but it'll do for now.
-
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
