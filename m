@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B45A726CB3A
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:24:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3102326CB30
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:23:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgIPUYg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 16:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
+        id S1727093AbgIPUXc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgIPR2V (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:28:21 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892BBC061D73
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:21 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id c3so3016241plz.5
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:21 -0700 (PDT)
+        with ESMTP id S1727029AbgIPR2i (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:28:38 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E94C061D7C
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:22 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 7so3686956pgm.11
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=25Qu3x5lzGSDyBIq5GIBobnE3XDXys+vqFJvr83nC/Y=;
-        b=MJQfyHa8zFxPqcCd7MySKEsGwWl+FGbtiE/nemBk2wEyHgNChQRe/ujlfcH9p3dEty
-         XKbfjgTgUgYN3mF549f9jV7ob5FoQ9tx06HroT0Wy7Htnxkf/GV/kb9j+g2KS9NV4o7h
-         gUx038U7dHOl0zCLUlPgCS/Knoo/gJm6FTcK4s1SETO+NXiulA+lZshxaIDcUp56/Jkq
-         fBhfVNetJg6NS89mCuzgjOoonEc/6S7yk5PzD0aql9FPPz8iQBIE0bFXl19PJdjyyY6R
-         0t1KaJeMAfj4Z1doQgiWXAZRd1mtuQws2PRCr7nC6XLsmmGjXx0liQMempL0esa+H4Iy
-         h5sQ==
+        bh=qFUDpBU26Mp2CZ1pN86YJ8N41WIECKRcFl6Y6ElKLLU=;
+        b=Xmck3jhO7rt8LgnTjHMsYTsjWmEhXZqFFXEZKdpkg5cvyHjJ79pYgC8DP+AzSiJCPZ
+         sypbXTa2/c++MfjEJ18VIHHCP0DJtCAMxHRCg3nTXuJb4S+qyTAG92us0C2WF7z15zJd
+         geolwD8u4bpIPidmG/7r29hVuY74DtuMEVguvkmGSGEN086/UEcDxQMt0EemeNBgG/N/
+         Gsawh5xFNMwV+ypRnRto8ak7B/D76b7maOgdbUFIFu1xxNeMTSBzCzFNCELYoTEswlyb
+         aerSrk91+XFTEV7Vp0Ihbm3INsEBgRPT2bm4ny7Hia2JhZSBK3Ypm630bOVUH4YYP1e0
+         yz9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=25Qu3x5lzGSDyBIq5GIBobnE3XDXys+vqFJvr83nC/Y=;
-        b=Gz+GF+YcXpdzEMfV5VQ8vvVRq1REYeN4EKrARN8spGvl350kelM7ngB3DSEEIs3/Re
-         tnhWZlD8lSaUewIphJgew2s3JcL64XKyZULBwOiVzj11NPN/zfDguZnfwjG6xdh21n1f
-         8BP4H4G5eQGMChCEiad11TngjpxpcXNcZ+k6asxfAlSlWAhGUeScB1ERnRhkzOAZ3YHO
-         mFSSdMvqCf2bw2rqstw7m3FvOGQ2efT1oNReBnQUi3I4P+CSm/K/q0at0k37JAr5omCu
-         DHV1k96SOX7dmRTlXF+3gMIplrv9+W1T5UuZcp18kIn0glaxPsqBZyelDbKmdjTroUW2
-         R6VQ==
-X-Gm-Message-State: AOAM533CkcWfeZM3cVRkun2dawF2qGRP2F3l38q6pauC8c4UJ2aNo519
-        Dm38EW1MKtSNYY2Yz+Z8oeCgDZ8wvg==
-X-Google-Smtp-Source: ABdhPJzUnzSMnPkLCGhBE/2jWdkOE5JuPz4/3qLoV9r3FHXX6+FZE61F37npYGMvAd04wyEDlHvN0Q==
-X-Received: by 2002:a17:902:758b:b029:d1:bb0f:25fc with SMTP id j11-20020a170902758bb02900d1bb0f25fcmr19632300pll.40.1600255160677;
-        Wed, 16 Sep 2020 04:19:20 -0700 (PDT)
+        bh=qFUDpBU26Mp2CZ1pN86YJ8N41WIECKRcFl6Y6ElKLLU=;
+        b=C+iVAd11wa9LGp+7kbiwiJ/VRDOdKsika1l251dp7adETd4CKtBRMF9ea1ofaV3arg
+         I2zWCYnZmUWY4fi+g/pNLWdwBYVgLSotLmYSqZ5QVQr8Qe0YO+9kwtBe0VhlMWt/gF2V
+         1y7GVFy59/hGdtbMM+YCLJgGlNm/c1KoMr/cIhwp+uiRyHcKXTuv/s5cKoJ5n4/cX6q7
+         1vbEQ08XqnC+FhnrRedq/iygyXCD5gK17C2I0wLhoXofj6+h/Q1w9T44o9B2MBzYC2IH
+         q0rq5Lctn9WIJrNNrq7+bPscR0FmUCRL5RRk18gOuyz9Q6wRyzv7KLDE/zYtSM5LjYOb
+         u9sQ==
+X-Gm-Message-State: AOAM530HXhGHljmiEgOE/XYY7QAlt4WaZCE1tROHTVv9tYhf25ULnrHO
+        zAFGpNTK3MwGHJA2Wqde4V+hz6hFXQ==
+X-Google-Smtp-Source: ABdhPJxI5DKJBPYkgYuYbx5YfPKdNvJqSeI9/BAjnFxlrZDq6YB2KPVFAjhhu/IEh/8Fr2csInkdGA==
+X-Received: by 2002:a63:4656:: with SMTP id v22mr2107958pgk.116.1600255161759;
+        Wed, 16 Sep 2020 04:19:21 -0700 (PDT)
 Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id v204sm3492195pfc.10.2020.09.16.04.19.19
+        by smtp.gmail.com with ESMTPSA id v204sm3492195pfc.10.2020.09.16.04.19.20
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Sep 2020 04:19:20 -0700 (PDT)
+        Wed, 16 Sep 2020 04:19:21 -0700 (PDT)
 From:   xiakaixu1987@gmail.com
 X-Google-Original-From: kaixuxia@tencent.com
 To:     linux-xfs@vger.kernel.org
 Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH] xfs: use the existing type definition for di_projid
-Date:   Wed, 16 Sep 2020 19:19:05 +0800
-Message-Id: <1600255152-16086-3-git-send-email-kaixuxia@tencent.com>
+Subject: [PATCH] xfs: remove the unnecessary xfs_dqid_t type cast
+Date:   Wed, 16 Sep 2020 19:19:06 +0800
+Message-Id: <1600255152-16086-4-git-send-email-kaixuxia@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
 References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
@@ -63,27 +63,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-We have already defined the project ID type prid_t, so maybe should
-use it here.
+Since the type prid_t and xfs_dqid_t both are uint32_t, seems the
+type cast is unnecessary, so remove it.
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
 ---
- fs/xfs/libxfs/xfs_inode_buf.h | 2 +-
+ fs/xfs/xfs_qm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-index 536666143fe7..ef5eaf33d146 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.h
-+++ b/fs/xfs/libxfs/xfs_inode_buf.h
-@@ -17,7 +17,7 @@ struct xfs_dinode;
-  */
- struct xfs_icdinode {
- 	uint16_t	di_flushiter;	/* incremented on flush */
--	uint32_t	di_projid;	/* owner's project id */
-+	prid_t		di_projid;	/* owner's project id */
- 	xfs_fsize_t	di_size;	/* number of bytes in file */
- 	xfs_rfsblock_t	di_nblocks;	/* # of direct & btree blocks used */
- 	xfs_extlen_t	di_extsize;	/* basic/minimum extent size for file */
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index 3f82e0c92c2d..41a459ffd1f2 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -1715,7 +1715,7 @@ xfs_qm_vop_dqalloc(
+ 	if ((flags & XFS_QMOPT_PQUOTA) && XFS_IS_PQUOTA_ON(mp)) {
+ 		if (ip->i_d.di_projid != prid) {
+ 			xfs_iunlock(ip, lockflags);
+-			error = xfs_qm_dqget(mp, (xfs_dqid_t)prid,
++			error = xfs_qm_dqget(mp, prid,
+ 					XFS_DQTYPE_PROJ, true, &pq);
+ 			if (error) {
+ 				ASSERT(error != -ENOENT);
 -- 
 2.20.0
 
