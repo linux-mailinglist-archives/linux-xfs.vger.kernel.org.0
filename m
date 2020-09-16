@@ -2,106 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 001C826C8D3
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 20:58:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30B5826C859
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 20:47:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgIPRwC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 13:52:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58945 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727611AbgIPRvX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:51:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600278671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8ppAddFWBY5GKELxLK2gBWTu6Ghql/eVZT5FuPia91Y=;
-        b=M4BZhENeg19q1jAETNHBrRfPB7reAipgGw1cXS9o+WnsXTDF8duKz67VB8+HCdr/bkIXwH
-        Kp1XsN6N0ow7pKtc9h/Gs72NQiusY+AaLyWDYn649IROBQjzSuifN9cVBA6nOVqmv3hNDU
-        9Rg7O1rpsu3Qs4y+phfEZiqFp/wY4tI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-rK_dmSbDPQmfP_XhM-L4Sw-1; Wed, 16 Sep 2020 07:11:39 -0400
-X-MC-Unique: rK_dmSbDPQmfP_XhM-L4Sw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EAD4C8018A7;
-        Wed, 16 Sep 2020 11:11:37 +0000 (UTC)
-Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 649E619D61;
-        Wed, 16 Sep 2020 11:11:37 +0000 (UTC)
-Date:   Wed, 16 Sep 2020 19:25:36 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 09/24] xfs/070: add scratch log device options to direct
- repair invocation
-Message-ID: <20200916112536.GE2937@dhcp-12-102.nay.redhat.com>
-Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
- <160013423329.2923511.3252823001209034556.stgit@magnolia>
- <20200916024247.GA2937@dhcp-12-102.nay.redhat.com>
- <20200916034201.GC7954@magnolia>
+        id S1728039AbgIPSq6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 14:46:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53318 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgIPSqw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 14:46:52 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GIiMGh148610;
+        Wed, 16 Sep 2020 18:45:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=GhMQX75rzfTJNKi4qFl2SQu3eKwT2hLaUQi3s8hnejw=;
+ b=sF8vYYGU4pYOkgnfIdqXO6KFh4MlXaqkKkc9gV+kdR8NZGaV7fR29WReWz6lEu7DSYVF
+ nN/x+aM9n/6oJ4qEovilcTSYHq+hhXDXPRvCG34T7ycCQBQQlhmXS+pYFFItpX/VsnHi
+ 3JLDrkthl8bebctkUBfr8Bhj0ODhZZRqbqyEG5v69vpleU49xW1VGks7EmxuqVu9qatP
+ 0DnZjxb+ypZOiYnEMstGSPLKo5tO2N+wyXru2P8RJ5zG16QMDpS6IHyHbPKFwqdN76RE
+ 1VKhJq+1TRPKFYS/UI+S4Qg6TtgzCmDQBIjVDjArnGVlWDMhQfIgOjiIw3J+Mvv7JGSQ 4g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33j91dph13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Sep 2020 18:45:48 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GIjVkR121406;
+        Wed, 16 Sep 2020 18:45:48 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 33h8890ya1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Sep 2020 18:45:47 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08GIjkhG012978;
+        Wed, 16 Sep 2020 18:45:46 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Sep 2020 18:45:46 +0000
+Date:   Wed, 16 Sep 2020 11:45:45 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xiakaixu1987@gmail.com
+Cc:     linux-xfs@vger.kernel.org, Kaixu Xia <kaixuxia@tencent.com>
+Subject: Re: [PATCH] xfs: remove the repeated crc verification in
+ xfs_attr3_rmt_verify
+Message-ID: <20200916184545.GI7955@magnolia>
+References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
+ <1600255152-16086-8-git-send-email-kaixuxia@tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200916034201.GC7954@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <1600255152-16086-8-git-send-email-kaixuxia@tencent.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=3 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=946
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009160131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=3 mlxlogscore=934
+ clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009160131
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 15, 2020 at 08:42:01PM -0700, Darrick J. Wong wrote:
-> On Wed, Sep 16, 2020 at 10:42:47AM +0800, Zorro Lang wrote:
-> > On Mon, Sep 14, 2020 at 06:43:53PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > > 
-> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > >  tests/xfs/070 |    4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > 
-> > > 
-> > > diff --git a/tests/xfs/070 b/tests/xfs/070
-> > > index 5d52a830..313864b7 100755
-> > > --- a/tests/xfs/070
-> > > +++ b/tests/xfs/070
-> > > @@ -41,9 +41,11 @@ _cleanup()
-> > >  _xfs_repair_noscan()
-> > >  {
-> > >  	# invoke repair directly so we can kill the process if need be
-> > > +	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
-> > > +		log_repair_opts="-l $SCRATCH_LOGDEV"
-> > >  	[ "$USE_EXTERNAL" = yes ] && [ -n "$SCRATCH_RTDEV" ] && \
-> > >  		rt_repair_opts="-r $SCRATCH_RTDEV"
-> > > -	$XFS_REPAIR_PROG $rt_repair_opts $SCRATCH_DEV 2>&1 |
-> > > +	$XFS_REPAIR_PROG $log_repair_opts $rt_repair_opts $SCRATCH_DEV 2>&1 |
-> > >  		tee -a $seqres.full > $tmp.repair &
-> > 
-> > Why not use _scratch_xfs_repair at here?
-> > 
-> > Thanks,
-> > Zorro
-> > 
-> > >  	repair_pid=$!
+On Wed, Sep 16, 2020 at 07:19:10PM +0800, xiakaixu1987@gmail.com wrote:
+> From: Kaixu Xia <kaixuxia@tencent.com>
 > 
->         ^^^^^^^^^^^^^
+> We already do the crc verification before calling the xfs_attr3_rmt_verify()
 
-Oh, right! That's good to me now.
-Reviewed-by: Zorro Lang <zlang@redhat.com>
+Nit: The function call you're removing does not itself do crc
+verification; it merely checks that the *crc feature* is set.  This
+commit message needs to make this distinction, because at first I
+thought "Why would you remove crc verification?"
 
-> Because this test needs to hang on to the pid of the repair process in
-> order to kill it, which you can't do if do if you use the wrapper.
-> 
-> --D
-> 
-> > >  
-> > > 
-> > 
-> 
+IOWs...
 
+"We already check that the crc feature is enabled before calling
+xfs_attr3_rmt_verify(), so remove the redundant feature check in that
+function."
+
+--D
+
+> function, and just return directly for non-crc buffers, so don't need
+> to do the repeated crc verification in xfs_attr3_rmt_verify().
+> 
+> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
+> ---
+>  fs/xfs/libxfs/xfs_attr_remote.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+> index 3f80cede7406..48d8e9caf86f 100644
+> --- a/fs/xfs/libxfs/xfs_attr_remote.c
+> +++ b/fs/xfs/libxfs/xfs_attr_remote.c
+> @@ -96,8 +96,6 @@ xfs_attr3_rmt_verify(
+>  {
+>  	struct xfs_attr3_rmt_hdr *rmt = ptr;
+>  
+> -	if (!xfs_sb_version_hascrc(&mp->m_sb))
+> -		return __this_address;
+>  	if (!xfs_verify_magic(bp, rmt->rm_magic))
+>  		return __this_address;
+>  	if (!uuid_equal(&rmt->rm_uuid, &mp->m_sb.sb_meta_uuid))
+> -- 
+> 2.20.0
+> 
