@@ -2,89 +2,240 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E19A326CC2F
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:40:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D94826CD0F
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:53:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgIPUkF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 16:40:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54314 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726803AbgIPRGN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:06:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600275962;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sxawlgz87adndHvu34+9iWnaxmw0uAi2OWjOyCN0ATg=;
-        b=EPPtWrG63SHMLi76DlelLOtz7NluBM0mwOPXQzyhV9w+siV18Eyui2LcTT2Mkd/+PMWE1s
-        EPV7qGWDtsD9R0Ul9z7aU2RXX30Ccnq/39vdKkSKSyEctm7pXziJVT6+F5X9xc0ry3Z15q
-        mDdFH5oRzmyYp/gedzL7ngaOqBNEtnk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-swFOcsk0P1KrfmtfgL4amw-1; Wed, 16 Sep 2020 07:27:43 -0400
-X-MC-Unique: swFOcsk0P1KrfmtfgL4amw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFF158030BD;
-        Wed, 16 Sep 2020 11:27:42 +0000 (UTC)
-Received: from localhost (dhcp-12-102.nay.redhat.com [10.66.12.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 38C975FC36;
-        Wed, 16 Sep 2020 11:27:41 +0000 (UTC)
-Date:   Wed, 16 Sep 2020 19:41:41 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 18/24] xfs/291: fix open-coded repair call to mdrestore'd
- fs image
-Message-ID: <20200916114141.GI2937@dhcp-12-102.nay.redhat.com>
-Mail-Followup-To: "Darrick J. Wong" <darrick.wong@oracle.com>,
-        guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
- <160013429012.2923511.7187414322832672163.stgit@magnolia>
+        id S1726891AbgIPUxA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:53:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37018 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbgIPQyM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 12:54:12 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GGhpk2148956;
+        Wed, 16 Sep 2020 16:53:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=IsQdDLZ7YNB42cf3r8eCXzgw6ZHLRkDvD8VMZxnetPw=;
+ b=mWEX1+IXveiDDuCIeT5GYzFi8qf8o2zBujaCQylxsfPe6a33HCOD54WO67CL3bHIdPPE
+ t1lQUwAlT1/Uf7b0xv0GBbAO17ubhbM6RqBZTALDlHEd8C7GBZPC2HJR+THrFQTbEwId
+ Bev8G6VBWY3zmwelH8dC2vGGCCSvUgcnhXv6ewUSUMuAtBq5yCLbEYwMQO/joI+X5wz1
+ ypuTBEJMy54x/cfoRU3ZLklmmtCzuhTTvIMNjbUnYkrO4IXfZRnUcuRVzzm9f9QD136S
+ 4pC3sBSvU8vb/h4QM5+hLxn5glzUEM3ZN98Q/DsYMiP1t8xpilr3gLChT5nQNXc83iO0 CQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 33gnrr4bbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Sep 2020 16:53:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GGe7s3140608;
+        Wed, 16 Sep 2020 16:51:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 33hm334v6e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Sep 2020 16:51:45 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08GGpitK028737;
+        Wed, 16 Sep 2020 16:51:44 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 16 Sep 2020 16:51:43 +0000
+Date:   Wed, 16 Sep 2020 09:51:42 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
+        guaneryu@gmail.com, zlang@redhat.com
+Subject: Re: [PATCH 1/2] xfs: Add realtime group
+Message-ID: <20200916165142.GD7954@magnolia>
+References: <20200916053407.2036-1-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160013429012.2923511.7187414322832672163.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200916053407.2036-1-chandanrlinux@gmail.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009160119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=1
+ clxscore=1015 mlxlogscore=999 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009160119
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 06:44:50PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Sep 16, 2020 at 11:04:06AM +0530, Chandan Babu R wrote:
+> This commit adds a new group to classify tests that can work with
+> realtime devices.
 > 
-> Attach any external log devices to the open-coded repair call.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 > ---
-
-Good to me,
-Reviewed-by: Zorro Lang <zlang@redhat.com>
-
->  tests/xfs/291 |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  tests/xfs/group | 52 ++++++++++++++++++++++++-------------------------
+>  1 file changed, 26 insertions(+), 26 deletions(-)
 > 
-> 
-> diff --git a/tests/xfs/291 b/tests/xfs/291
-> index adef2536..5d4f1ac4 100755
-> --- a/tests/xfs/291
-> +++ b/tests/xfs/291
-> @@ -110,7 +110,9 @@ _scratch_metadump $tmp.metadump || _fail "xfs_metadump failed"
->  xfs_mdrestore $tmp.metadump $tmp.img || _fail "xfs_mdrestore failed"
->  [ "$USE_EXTERNAL" = yes ] && [ -n "$SCRATCH_RTDEV" ] && \
->  	rt_repair_opts="-r $SCRATCH_RTDEV"
-> -$XFS_REPAIR_PROG $rt_repair_opts -f $tmp.img >> $seqres.full 2>&1 || \
-> +[ "$USE_EXTERNAL" = yes ] && [ -n "$SCRATCH_LOGDEV" ] && \
-> +	log_repair_opts="-l $SCRATCH_LOGDEV"
-> +$XFS_REPAIR_PROG $rt_repair_opts $log_repair_opts -f $tmp.img >> $seqres.full 2>&1 || \
->  	_fail "xfs_repair of metadump failed"
->  
->  # Yes it can; success, all done
-> 
+> diff --git a/tests/xfs/group b/tests/xfs/group
+> index ed0d389e..3bb0f674 100644
+> --- a/tests/xfs/group
+> +++ b/tests/xfs/group
+> @@ -67,7 +67,7 @@
+>  067 acl attr auto quick
+>  068 auto stress dump
+>  069 ioctl auto quick
+> -070 auto quick repair
+> +070 auto quick repair realtime
 
+This test has an open-coded call to repair + rt volume, but is not
+itself a test of rt functionality.
+
+>  071 rw auto
+>  072 rw auto prealloc quick
+>  073 copy auto
+> @@ -87,11 +87,11 @@
+>  087 fuzzers
+>  088 fuzzers
+>  089 fuzzers
+> -090 rw auto
+> +090 rw auto realtime
+>  091 fuzzers
+>  092 other auto quick
+>  093 fuzzers
+> -094 metadata dir ioctl auto
+> +094 metadata dir ioctl auto realtime
+>  095 log v2log auto
+>  096 mkfs v2log auto quick
+>  097 fuzzers
+> @@ -119,7 +119,7 @@
+>  119 log v2log auto freeze
+>  120 fuzzers
+>  121 shutdown log auto quick
+> -122 other auto quick clone
+> +122 other auto quick clone realtime
+
+This is an ondisk structure size check.  It doesn't test rt
+functionality, but I guess it doesn't really harm things to throw it on
+the 'realtime' pile.  I'm not objecting to this; it's just a funny
+thought I had while reading this patch.
+
+(Not sure why it's in 'clone' either...)
+
+>  123 fuzzers
+>  124 fuzzers
+>  125 fuzzers
+> @@ -128,7 +128,7 @@
+>  128 auto quick clone fsr
+>  129 auto quick clone
+>  130 fuzzers clone
+> -131 auto quick clone
+> +131 auto quick clone realtime
+>  132 auto quick
+>  133 dangerous_fuzzers
+>  134 dangerous_fuzzers
+> @@ -188,7 +188,7 @@
+>  188 ci dir auto
+>  189 mount auto quick
+>  190 rw auto quick
+> -191-input-validation auto quick mkfs
+> +191-input-validation auto quick mkfs realtime
+>  192 auto quick clone
+>  193 auto quick clone
+>  194 rw auto
+> @@ -272,7 +272,7 @@
+>  273 auto rmap fsmap
+>  274 auto quick rmap fsmap
+>  275 auto quick rmap fsmap
+> -276 auto quick rmap fsmap
+> +276 auto quick rmap fsmap realtime
+>  277 auto quick rmap fsmap
+>  278 repair auto
+>  279 auto mkfs
+> @@ -287,7 +287,7 @@
+>  288 auto quick repair fuzzers
+>  289 growfs auto quick
+>  290 auto rw prealloc quick ioctl zero
+> -291 auto repair
+> +291 auto repair realtime
+
+This is a directory repair test, which doesn't exercise any rt volume
+functionality.
+
+...
+
+FWIW I checked all the other tests that you added to the realtime group,
+and the changes I don't have any comments about all look ok to me.
+
+--D
+
+>  292 auto mkfs quick
+>  293 auto quick
+>  294 auto dir metadata
+> @@ -329,17 +329,17 @@
+>  330 auto quick clone fsr quota
+>  331 auto quick rmap clone
+>  332 auto quick rmap clone collapse punch insert zero
+> -333 auto quick rmap
+> -334 auto quick rmap
+> -335 auto rmap
+> -336 auto rmap
+> -337 fuzzers rmap
+> -338 auto quick rmap
+> -339 auto quick rmap
+> -340 auto quick rmap
+> -341 auto quick rmap
+> -342 auto quick rmap
+> -343 auto quick rmap collapse punch insert zero
+> +333 auto quick rmap realtime
+> +334 auto quick rmap realtime
+> +335 auto rmap realtime
+> +336 auto rmap realtime
+> +337 fuzzers rmap realtime
+> +338 auto quick rmap realtime
+> +339 auto quick rmap realtime
+> +340 auto quick rmap realtime
+> +341 auto quick rmap realtime
+> +342 auto quick rmap realtime
+> +343 auto quick rmap collapse punch insert zero realtime
+>  344 auto quick clone
+>  345 auto quick clone
+>  346 auto quick clone
+> @@ -402,10 +402,10 @@
+>  403 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+>  404 dangerous_fuzzers dangerous_scrub dangerous_repair
+>  405 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+> -406 dangerous_fuzzers dangerous_scrub dangerous_repair
+> -407 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+> -408 dangerous_fuzzers dangerous_scrub dangerous_repair
+> -409 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+> +406 dangerous_fuzzers dangerous_scrub dangerous_repair realtime
+> +407 dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
+> +408 dangerous_fuzzers dangerous_scrub dangerous_repair realtime
+> +409 dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
+>  410 dangerous_fuzzers dangerous_scrub dangerous_repair
+>  411 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+>  412 dangerous_fuzzers dangerous_scrub dangerous_repair
+> @@ -415,7 +415,7 @@
+>  416 dangerous_fuzzers dangerous_scrub dangerous_repair
+>  417 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+>  418 dangerous_fuzzers dangerous_scrub dangerous_repair
+> -419 auto quick swap
+> +419 auto quick swap realtime
+>  420 auto quick clone punch seek
+>  421 auto quick clone punch seek
+>  422 dangerous_scrub dangerous_online_repair
+> @@ -477,8 +477,8 @@
+>  478 dangerous_fuzzers dangerous_norepair
+>  479 dangerous_fuzzers dangerous_norepair
+>  480 dangerous_fuzzers dangerous_norepair
+> -481 dangerous_fuzzers dangerous_norepair
+> -482 dangerous_fuzzers dangerous_norepair
+> +481 dangerous_fuzzers dangerous_norepair realtime
+> +482 dangerous_fuzzers dangerous_norepair realtime
+>  483 dangerous_fuzzers dangerous_norepair
+>  484 dangerous_fuzzers dangerous_norepair
+>  485 dangerous_fuzzers dangerous_norepair
+> -- 
+> 2.28.0
+> 
