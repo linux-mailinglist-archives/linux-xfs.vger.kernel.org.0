@@ -2,199 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9114926CD0C
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:53:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A76A326CC03
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgIPUxA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 16:53:00 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58718 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgIPQyM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 12:54:12 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GGj5JY043521;
-        Wed, 16 Sep 2020 16:53:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=7vIafq6JCscJh/oOD/0mLgIn0wYXacFHJDHFZROFiYY=;
- b=HewW44xR2EJQemONpz+dq4kEmp9bafkTxddcDiJcKtO1hCGNb3rFd3DQjbJlmuMYMeiX
- hF8FUtZMlezvLcftTPK7GV6LrB1hUNpqxKWubo5tBojvq4+vsxrWnKfZFx1WErgcY1vr
- 1V0JoxN2SZig1y3ZYED2MjiQ/7cox5xWLbj3Xge9bdW7hb18GFC2Wq9e20VBx0w/2bNL
- Wfl0J7J8PUpfN4kkluPKa5I47JhEPxS4AaxbeImUNUZRgXhZrcUAqePWxMeBx4HNH29e
- 2vryJsMgWLaovGWd67J5SLtjgPQDV6SzTeXSHZ9v7uWkvbacUrUOgl7SeToppZ+RuWxC qA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 33gp9mc988-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Sep 2020 16:53:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GGe9na143768;
-        Wed, 16 Sep 2020 16:53:36 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 33hm3351hk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Sep 2020 16:53:35 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08GGrZix029533;
-        Wed, 16 Sep 2020 16:53:35 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Sep 2020 16:53:34 +0000
-Date:   Wed, 16 Sep 2020 09:53:33 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Chandan Babu R <chandanrlinux@gmail.com>
-Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
-        guaneryu@gmail.com, zlang@redhat.com
-Subject: Re: [PATCH V2 2/2] xfs: Check if rt summary/bitmap buffers are
- logged with correct xfs_buf type
-Message-ID: <20200916165333.GE7954@magnolia>
-References: <20200916053407.2036-1-chandanrlinux@gmail.com>
- <20200916053407.2036-2-chandanrlinux@gmail.com>
+        id S1728476AbgIPUh7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57462 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726780AbgIPRJW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:09:22 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F845C02C2B1
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 09:55:13 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id w16so8920650oia.2
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 09:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qziD80+3yMPY6N3ieS9kUVQGUHrCR+TyhU1kuZRn8ug=;
+        b=OqoBjfs8rO7Af3t0ecA1nZZHf2+27mXKGfPMRthnBvIndRIA93qknLOob6r2PMsEph
+         EZl8grJlukA7b5bNpmLXTFTgMnAnVSsX6rE/Vm8h2/vZM1uAr5azOuxLVB/ERCrpEZEC
+         hHcakEIjSRWDy+2N9GTxiZsqK6cw2pFM9XGhh2n37/gxq37MEOahl1mj45geboHujWun
+         5DNdH9fDNeIDPDYBpn7+nmlHaZkc89ljoS+DEWHlQTCyLr0DODUrxm3FlewOEmDBqXdg
+         FP3GNLv90EBOt6QjXNNXH28RNo6uHpf8H5c81J584mRkk2bbd/hLUuSMYz7sZbRQGj2E
+         R0ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qziD80+3yMPY6N3ieS9kUVQGUHrCR+TyhU1kuZRn8ug=;
+        b=ClMbdy0QxZwxHXOzGP61QTD1UiURgEZLTzs+xcRpTe7xWg4DARbdHTV7jHXRMMu5ok
+         7KGAMRuYAXMH7DfFSv62v4lALC3Ghcl+tUhTWeWGxTO6A2DExOesoOC6DQC2BqG+NFuW
+         uy/s2xXJKRjd1w8UfUI1KpFSYF/CnsqEWoZGu/CEijicnO5BISRqw7PrD/y1dW7Yp0py
+         fkTBWnMEKQveGlfOCpEFOmhSEq/1dI5l95UFeyXG5U7Azp7LFv8tvS8MKzQWpVbQquP/
+         Yvv5tYN1ZFUkgk19HbVVe1FQ8U0jDuuxE7AbTaI4uVpyQ10eOYxRq5qbqh81pXQJTbQJ
+         Wxkg==
+X-Gm-Message-State: AOAM533iIfLL4TvQ8Sunm1kuBTmqUSDVh+K8h54a2w9Kta58iJ25g/Hz
+        FqD9lywEdojf2Y4ClXdNQjimCA==
+X-Google-Smtp-Source: ABdhPJwyy8X3oyKHbBasQ4BP9MBdAvvi77/SkAShqpXrzWESE810ovpS6kxTF4EhgRtRK6aGiaiZFQ==
+X-Received: by 2002:aca:48cc:: with SMTP id v195mr3941331oia.57.1600275310152;
+        Wed, 16 Sep 2020 09:55:10 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id r21sm9489292oie.15.2020.09.16.09.55.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Sep 2020 09:55:09 -0700 (PDT)
+Subject: Re: occasional metadata I/O errors (-EOPNOTSUPP) on XFS + io_uring
+To:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+Cc:     io-uring@vger.kernel.org
+References: <20200915113327.GA1554921@bfoster>
+ <20200916131957.GB1681377@bfoster>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0b6da658-54b1-32ea-b172-981c67aaf29e@kernel.dk>
+Date:   Wed, 16 Sep 2020 10:55:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200916053407.2036-2-chandanrlinux@gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009160119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- spamscore=0 priorityscore=1501 suspectscore=1 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009160119
+In-Reply-To: <20200916131957.GB1681377@bfoster>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 11:04:07AM +0530, Chandan Babu R wrote:
-> This commit adds a test to check if growing a real-time device can end
-> up logging an xfs_buf with the "type" subfield of
-> bip->bli_formats->blf_flags set to XFS_BLFT_UNKNOWN_BUF. When this
-> occurs the following call trace is printed on the console,
+On 9/16/20 7:19 AM, Brian Foster wrote:
+> On Tue, Sep 15, 2020 at 07:33:27AM -0400, Brian Foster wrote:
+>> Hi Jens,
+>>
+>> I'm seeing an occasional metadata (read) I/O error (EOPNOTSUPP) when
+>> running Zorro's recent io_uring enabled fsstress on XFS (fsstress -d
+>> <mnt> -n 99999999 -p 8). The storage is a 50GB dm-linear device on a
+>> virtio disk (within a KVM guest). The full callstack of the I/O
+>> submission path is appended below [2], acquired via inserting a
+>> WARN_ON() in my local tree.
+>>
+>> From tracing around a bit, it looks like what happens is that fsstress
+>> calls into io_uring, the latter starts a plug and sets plug.nowait =
+>> true (via io_submit_sqes() -> io_submit_state_start()) and eventually
+>> XFS needs to read an inode cluster buffer in the context of this task.
+>> That buffer read ultimately fails due to submit_bio_checks() setting
+>> REQ_NOWAIT on the bio and the following logic in the same function
+>> causing a BLK_STS_NOTSUPP status:
+>>
+>> 	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q))
+>> 		goto not_supported;
+>>
+>> In turn, this leads to the following behavior in XFS:
+>>
+>> [ 3839.273519] XFS (dm-2): metadata I/O error in "xfs_imap_to_bp+0x116/0x2c0 [xfs]" at daddr 0x323a5a0 len 32 error 95
+>> [ 3839.303283] XFS (dm-2): log I/O error -95
+>> [ 3839.321437] XFS (dm-2): xfs_do_force_shutdown(0x2) called from line 1196 of file fs/xfs/xfs_log.c. Return address = ffffffffc12dea8a
+>> [ 3839.323554] XFS (dm-2): Log I/O Error Detected. Shutting down filesystem
+>> [ 3839.324773] XFS (dm-2): Please unmount the filesystem and rectify the problem(s)
+>>
+>> I suppose it's possible fsstress is making an invalid request based on
+>> my setup, but I find it a little strange that this state appears to leak
+>> into filesystem I/O requests. What's more concerning is that this also
+>> seems to impact an immediately subsequent log write submission, which is
+>> a fatal error and causes the filesystem to shutdown.
+>>
+>> Finally, note that I've seen your patch associated with Zorro's recent
+>> bug report [1] and that does seem to prevent the problem. I'm still
+>> sending this report because the connection between the plug and that
+>> change is not obvious to me, so I wanted to 1.) confirm this is intended
+>> to fix this problem and 2.) try to understand whether this plugging
+>> behavior introduces any constraints on the fs when invoked in io_uring
+>> context. Thoughts? Thanks.
+>>
 > 
-> XFS: Assertion failed: (bip->bli_flags & XFS_BLI_STALE) || (xfs_blft_from_flags(&bip->__bli_format) > XFS_BLFT_UNKNOWN_BUF && xfs_blft_from_flags(&bip->__bli_format) < XFS_BLFT_MAX_BUF), file: fs/xfs/xfs_buf_item.c, line: 331
-> Call Trace:
->  xfs_buf_item_format+0x632/0x680
->  ? kmem_alloc_large+0x29/0x90
->  ? kmem_alloc+0x70/0x120
->  ? xfs_log_commit_cil+0x132/0x940
->  xfs_log_commit_cil+0x26f/0x940
->  ? xfs_buf_item_init+0x1ad/0x240
->  ? xfs_growfs_rt_alloc+0x1fc/0x280
->  __xfs_trans_commit+0xac/0x370
->  xfs_growfs_rt_alloc+0x1fc/0x280
->  xfs_growfs_rt+0x1a0/0x5e0
->  xfs_file_ioctl+0x3fd/0xc70
->  ? selinux_file_ioctl+0x174/0x220
->  ksys_ioctl+0x87/0xc0
->  __x64_sys_ioctl+0x16/0x20
->  do_syscall_64+0x3e/0x70
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> The kernel patch "xfs: Set xfs_buf type flag when growing summary/bitmap
-> files" is required to fix this issue.
-> 
-> Reviewed-by: Zorro Lang <zlang@redhat.com>
-> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
-> ---
->  tests/xfs/260     | 53 +++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/260.out |  2 ++
->  tests/xfs/group   |  1 +
->  3 files changed, 56 insertions(+)
->  create mode 100755 tests/xfs/260
->  create mode 100644 tests/xfs/260.out
-> 
-> diff --git a/tests/xfs/260 b/tests/xfs/260
-> new file mode 100755
-> index 00000000..078d4a11
-> --- /dev/null
-> +++ b/tests/xfs/260
-> @@ -0,0 +1,53 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
-> +#
-> +# FS QA Test 260
-> +#
-> +# Test to check if growing a real-time device can end up logging an xfs_buf with
-> +# the "type" subfield of bip->bli_formats->blf_flags set to
-> +# XFS_BLFT_UNKNOWN_BUF.
-> +#
-> +# This is a regression test for the kernel patch "xfs: Set xfs_buf type flag
-> +# when growing summary/bitmap files".
-> +
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1	# failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	rm -f $tmp.*
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +. ./common/filter
-> +
-> +# remove previous $seqres.full before test
-> +rm -f $seqres.full
-> +
-> +# real QA test starts here
-> +_supported_fs xfs
-> +_supported_os Linux
-> +_require_realtime
-> +
-> +_scratch_mkfs -r size=10M  >> $seqres.full
-> +
-> +_scratch_mount >> $seqres.full
-> +
-> +$XFS_GROWFS_PROG $SCRATCH_MNT >> $seqres.full
-> +
-> +_scratch_unmount
+> To expand on this a bit, I was playing more with the aforementioned fix
+> yesterday while waiting for this email's several hour trip to the
+> mailing list to complete and eventually realized that I don't think the
+> plug.nowait thing properly accommodates XFS' use of multiple devices. A
+> simple example is XFS on a data device with mq support and an external
+> log device without mq support. Presumably io_uring requests could thus
+> enter XFS with plug.nowait set to true, and then any log bio submission
+> that happens to occur in that context is doomed to fail and shutdown the
+> fs.
 
-Is this unmount crucial to exposing the bug?  Or does this post-test
-unmount and fsck suffice?
+Do we ever read from the logdev? It'll only be a concern on the read
+side. And even from there, you'd need nested reads from the log device.
 
-(The rest of the logic looks ok to me.)
+In general, the 'can async' check should be advisory, the -EAGAIN
+or -EOPNOTSUPP should be caught and reissued. The failure path was
+just related to this happening off the retry path on arming for the
+async buffered callback.
 
---D
+-- 
+Jens Axboe
 
-> +
-> +echo "Silence is golden"
-> +
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/260.out b/tests/xfs/260.out
-> new file mode 100644
-> index 00000000..18ca517c
-> --- /dev/null
-> +++ b/tests/xfs/260.out
-> @@ -0,0 +1,2 @@
-> +QA output created by 260
-> +Silence is golden
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index 3bb0f674..a3f5c81a 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -257,6 +257,7 @@
->  257 auto quick clone
->  258 auto quick clone
->  259 auto quick
-> +260 auto quick growfs realtime
->  261 auto quick quota
->  262 dangerous_fuzzers dangerous_scrub dangerous_online_repair
->  263 auto quick quota
-> -- 
-> 2.28.0
-> 
