@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8A026CA26
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 21:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B45A726CB3A
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:24:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgIPTsl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 15:48:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
+        id S1726361AbgIPUYg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbgIPRhz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:37:55 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 026FFC061D7E
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:24 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id fa1so1435549pjb.0
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:24 -0700 (PDT)
+        with ESMTP id S1726987AbgIPR2V (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:28:21 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892BBC061D73
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:21 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id c3so3016241plz.5
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Y9zkRLd0L0cttBLuXglZLeM62+SW72bWkugftszNajg=;
-        b=qnP2kKbyoXNtnwTyyKQeqgmBc86wK4IGgJ6BDv6qupP+dFOo0T4K+ypxnRvqMmzGA6
-         pihsIzScxuhjQJPuwqEYlaXogg3zUDuBdnpQ6Wzq7fCdIwjGZgdflv4VsRlBYWtx53BM
-         L1SOcCBeNqfZt5d2NH00Qgt9fmxJ53roBTIFU+g2mi9wBivAEUbh17emFK3twCnoUJvh
-         lhLVt94xXDtjxAgy7pnlmHVY1CiK96F1XBqvbPaVCJ4gzn+NVTFqk9Ze/wipCgP7sPO5
-         1Z81spnKvZOPqbR0SAdnWFnGwQJyXUUizC5R+OX6djH9XWdlb9I1+59BfhcsdVyJCwMC
-         A7aw==
+        bh=25Qu3x5lzGSDyBIq5GIBobnE3XDXys+vqFJvr83nC/Y=;
+        b=MJQfyHa8zFxPqcCd7MySKEsGwWl+FGbtiE/nemBk2wEyHgNChQRe/ujlfcH9p3dEty
+         XKbfjgTgUgYN3mF549f9jV7ob5FoQ9tx06HroT0Wy7Htnxkf/GV/kb9j+g2KS9NV4o7h
+         gUx038U7dHOl0zCLUlPgCS/Knoo/gJm6FTcK4s1SETO+NXiulA+lZshxaIDcUp56/Jkq
+         fBhfVNetJg6NS89mCuzgjOoonEc/6S7yk5PzD0aql9FPPz8iQBIE0bFXl19PJdjyyY6R
+         0t1KaJeMAfj4Z1doQgiWXAZRd1mtuQws2PRCr7nC6XLsmmGjXx0liQMempL0esa+H4Iy
+         h5sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Y9zkRLd0L0cttBLuXglZLeM62+SW72bWkugftszNajg=;
-        b=UBIC8IGhIWQ8xfsutm6z9ynQE65h0w3AQLtFC64iyIqENJzyp9ZPQmAg+ewqCW4bgs
-         q8ENhR+ZSlBLb+HRAbM+ILn9lbsYse+aQITe+KE5AT396hk3C6mMojKFdImEw9qE27vh
-         M5nGvQdYasVjVWFbAmxhsAKT0UAGJX9bYRi6qaPplBBx1FOsE2YUBA8tC9zZzW1OOKMB
-         nQ8AzAxWt9gFOrgiZdlsmJWmkizvXoMvrfKOeRbCxpxPaeVSdpcYx3PeuULqqqZIuXYA
-         GjOcblDB3Mmjjc2OfwqlS9yCyxDEdZEfMJhQ/WpskraZ2Ml3+UlS2VJVn3NG6JhyZnC2
-         0iIg==
-X-Gm-Message-State: AOAM532Jy4EQQREOfxGoXO75zPDIYLzK8trhXNesIszWachch4TWJAN0
-        lq+uaIpjEZAtTvtDvOOaKvICvmE691/5
-X-Google-Smtp-Source: ABdhPJyJv++JZS2E4odJAGdSnY6qUSVnJjsZfjIvOYWbDyV+GD7hIVqZAUpFHjrGUnufb8tQafa0lw==
-X-Received: by 2002:a17:902:8a93:b029:d1:e5e7:be7a with SMTP id p19-20020a1709028a93b02900d1e5e7be7amr5623042plo.84.1600255164054;
-        Wed, 16 Sep 2020 04:19:24 -0700 (PDT)
+        bh=25Qu3x5lzGSDyBIq5GIBobnE3XDXys+vqFJvr83nC/Y=;
+        b=Gz+GF+YcXpdzEMfV5VQ8vvVRq1REYeN4EKrARN8spGvl350kelM7ngB3DSEEIs3/Re
+         tnhWZlD8lSaUewIphJgew2s3JcL64XKyZULBwOiVzj11NPN/zfDguZnfwjG6xdh21n1f
+         8BP4H4G5eQGMChCEiad11TngjpxpcXNcZ+k6asxfAlSlWAhGUeScB1ERnRhkzOAZ3YHO
+         mFSSdMvqCf2bw2rqstw7m3FvOGQ2efT1oNReBnQUi3I4P+CSm/K/q0at0k37JAr5omCu
+         DHV1k96SOX7dmRTlXF+3gMIplrv9+W1T5UuZcp18kIn0glaxPsqBZyelDbKmdjTroUW2
+         R6VQ==
+X-Gm-Message-State: AOAM533CkcWfeZM3cVRkun2dawF2qGRP2F3l38q6pauC8c4UJ2aNo519
+        Dm38EW1MKtSNYY2Yz+Z8oeCgDZ8wvg==
+X-Google-Smtp-Source: ABdhPJzUnzSMnPkLCGhBE/2jWdkOE5JuPz4/3qLoV9r3FHXX6+FZE61F37npYGMvAd04wyEDlHvN0Q==
+X-Received: by 2002:a17:902:758b:b029:d1:bb0f:25fc with SMTP id j11-20020a170902758bb02900d1bb0f25fcmr19632300pll.40.1600255160677;
+        Wed, 16 Sep 2020 04:19:20 -0700 (PDT)
 Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id v204sm3492195pfc.10.2020.09.16.04.19.23
+        by smtp.gmail.com with ESMTPSA id v204sm3492195pfc.10.2020.09.16.04.19.19
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 16 Sep 2020 04:19:23 -0700 (PDT)
+        Wed, 16 Sep 2020 04:19:20 -0700 (PDT)
 From:   xiakaixu1987@gmail.com
 X-Google-Original-From: kaixuxia@tencent.com
 To:     linux-xfs@vger.kernel.org
 Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH] xfs: add the XFS_ITEM_LOG_INTENT flag to mark the log intent item
-Date:   Wed, 16 Sep 2020 19:19:08 +0800
-Message-Id: <1600255152-16086-6-git-send-email-kaixuxia@tencent.com>
+Subject: [PATCH] xfs: use the existing type definition for di_projid
+Date:   Wed, 16 Sep 2020 19:19:05 +0800
+Message-Id: <1600255152-16086-3-git-send-email-kaixuxia@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
 References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
@@ -63,125 +63,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-This patch add the XFS_ITEM_LOG_INTENT flag to mark the log intent
-item, so maybe we can simplify the judgement of log intent item.
+We have already defined the project ID type prid_t, so maybe should
+use it here.
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
 ---
- fs/xfs/xfs_bmap_item.c     |  1 +
- fs/xfs/xfs_extfree_item.c  |  1 +
- fs/xfs/xfs_log_recover.c   | 15 ++++-----------
- fs/xfs/xfs_refcount_item.c |  1 +
- fs/xfs/xfs_rmap_item.c     |  1 +
- fs/xfs/xfs_trans.h         |  3 ++-
- 6 files changed, 10 insertions(+), 12 deletions(-)
+ fs/xfs/libxfs/xfs_inode_buf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index 2e49f48666f1..86485dcc9813 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -560,6 +560,7 @@ xfs_bui_item_match(
- }
- 
- static const struct xfs_item_ops xfs_bui_item_ops = {
-+	.flags		= XFS_ITEM_LOG_INTENT,
- 	.iop_size	= xfs_bui_item_size,
- 	.iop_format	= xfs_bui_item_format,
- 	.iop_unpin	= xfs_bui_item_unpin,
-diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-index f2c6cb67262e..44242b2ac8c7 100644
---- a/fs/xfs/xfs_extfree_item.c
-+++ b/fs/xfs/xfs_extfree_item.c
-@@ -650,6 +650,7 @@ xfs_efi_item_match(
- }
- 
- static const struct xfs_item_ops xfs_efi_item_ops = {
-+	.flags		= XFS_ITEM_LOG_INTENT,
- 	.iop_size	= xfs_efi_item_size,
- 	.iop_format	= xfs_efi_item_format,
- 	.iop_unpin	= xfs_efi_item_unpin,
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 1ca35b53d3b9..32eeed4f8661 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2475,13 +2475,6 @@ xlog_finish_defer_ops(
- 	return xfs_trans_commit(tp);
- }
- 
--/* Is this log item a deferred action intent? */
--static inline bool xlog_item_is_intent(struct xfs_log_item *lip)
--{
--	return lip->li_ops->iop_recover != NULL &&
--	       lip->li_ops->iop_match != NULL;
--}
--
- /*
-  * When this is called, all of the log intent items which did not have
-  * corresponding log done items should be in the AIL.  What we do now
-@@ -2535,10 +2528,10 @@ xlog_recover_process_intents(
- 		 * We're done when we see something other than an intent.
- 		 * There should be no intents left in the AIL now.
- 		 */
--		if (!xlog_item_is_intent(lip)) {
-+		if (!(lip->li_ops->flags & XFS_ITEM_LOG_INTENT)) {
- #ifdef DEBUG
- 			for (; lip; lip = xfs_trans_ail_cursor_next(ailp, &cur))
--				ASSERT(!xlog_item_is_intent(lip));
-+				ASSERT(!(lip->li_ops->flags & XFS_ITEM_LOG_INTENT));
- #endif
- 			break;
- 		}
-@@ -2595,10 +2588,10 @@ xlog_recover_cancel_intents(
- 		 * We're done when we see something other than an intent.
- 		 * There should be no intents left in the AIL now.
- 		 */
--		if (!xlog_item_is_intent(lip)) {
-+		if (!(lip->li_ops->flags & XFS_ITEM_LOG_INTENT)) {
- #ifdef DEBUG
- 			for (; lip; lip = xfs_trans_ail_cursor_next(ailp, &cur))
--				ASSERT(!xlog_item_is_intent(lip));
-+				ASSERT(!(lip->li_ops->flags & XFS_ITEM_LOG_INTENT));
- #endif
- 			break;
- 		}
-diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-index 551bcc93acdd..a4d470af5f7b 100644
---- a/fs/xfs/xfs_refcount_item.c
-+++ b/fs/xfs/xfs_refcount_item.c
-@@ -575,6 +575,7 @@ xfs_cui_item_match(
- }
- 
- static const struct xfs_item_ops xfs_cui_item_ops = {
-+	.flags		= XFS_ITEM_LOG_INTENT,
- 	.iop_size	= xfs_cui_item_size,
- 	.iop_format	= xfs_cui_item_format,
- 	.iop_unpin	= xfs_cui_item_unpin,
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index 427f90ef4509..335c76307383 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
-@@ -591,6 +591,7 @@ xfs_rui_item_match(
- }
- 
- static const struct xfs_item_ops xfs_rui_item_ops = {
-+	.flags		= XFS_ITEM_LOG_INTENT,
- 	.iop_size	= xfs_rui_item_size,
- 	.iop_format	= xfs_rui_item_format,
- 	.iop_unpin	= xfs_rui_item_unpin,
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index b92138b13c40..53cb5c5eda02 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -85,7 +85,8 @@ struct xfs_item_ops {
-  * intents that never need to be written back in place.
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
+index 536666143fe7..ef5eaf33d146 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.h
++++ b/fs/xfs/libxfs/xfs_inode_buf.h
+@@ -17,7 +17,7 @@ struct xfs_dinode;
   */
- #define XFS_ITEM_RELEASE_WHEN_COMMITTED	(1 << 0)
--#define XFS_ITEM_LOG_DONE		(1 << 1)	/* log done item */
-+#define XFS_ITEM_LOG_INTENT		(1 << 1)	/* log intent item */
-+#define XFS_ITEM_LOG_DONE		(1 << 2)	/* log done item */
- 
- #define XFS_ITEM_LOG_DONE_FLAG	(XFS_ITEM_RELEASE_WHEN_COMMITTED | \
- 				 XFS_ITEM_LOG_DONE)
+ struct xfs_icdinode {
+ 	uint16_t	di_flushiter;	/* incremented on flush */
+-	uint32_t	di_projid;	/* owner's project id */
++	prid_t		di_projid;	/* owner's project id */
+ 	xfs_fsize_t	di_size;	/* number of bytes in file */
+ 	xfs_rfsblock_t	di_nblocks;	/* # of direct & btree blocks used */
+ 	xfs_extlen_t	di_extsize;	/* basic/minimum extent size for file */
 -- 
 2.20.0
 
