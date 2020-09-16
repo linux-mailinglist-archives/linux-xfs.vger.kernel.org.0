@@ -2,111 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DAD326C87F
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 20:51:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8390826C90D
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 21:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgIPSvb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 14:51:31 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:32892 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgIPSv2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 14:51:28 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GIhpBg191451;
-        Wed, 16 Sep 2020 18:50:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=FrODlDh9V06yapK3N6r+Qcf8VQcVRTY6kWE4Unxws10=;
- b=TmEGXLG4yGJKe8qi6K8hadCyRZbNiX90hzFjFsrVX2xJC1w3bfqM55tOdN5BSg6jmJiX
- IMA9G00D4VbabyiBRogKfwsypA21fUVBY+rOjYej9yuI6fWqTTwFaN3T4w/+wBl9wsKn
- b1qyN9lggsXzybih1pbUQdUsq5D2B5tw540RHHMdWrlzD98EoMGwrZ4YQJdkCCQbzNck
- DLjlOxg+gTpwDf89rhmgSYWcN08OxPZbtcnEAbsALfnP7MQdpvgxfH0wQpi68iAoBT5W
- VltIDBn279VezdjOW9qzbntp7ioE2ikoYGLt0LaukyS6hHDt7V5AThp3X1J2zcL+WsQH AA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 33gnrr4xt3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Sep 2020 18:50:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08GIjVGu121344;
-        Wed, 16 Sep 2020 18:50:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 33h88918uj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Sep 2020 18:50:30 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08GIoTq4018085;
-        Wed, 16 Sep 2020 18:50:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 16 Sep 2020 18:50:29 +0000
-Date:   Wed, 16 Sep 2020 11:50:28 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xiakaixu1987@gmail.com
-Cc:     linux-xfs@vger.kernel.org, Kaixu Xia <kaixuxia@tencent.com>
-Subject: Re: [PATCH] xfs: cleanup the useless backslash in
- xfs_attr_leaf_entsize_remote
-Message-ID: <20200916185028.GJ7955@magnolia>
-References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
- <1600255152-16086-9-git-send-email-kaixuxia@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1600255152-16086-9-git-send-email-kaixuxia@tencent.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=3 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=990
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009160131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=3
- clxscore=1015 mlxlogscore=973 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009160131
+        id S1727658AbgIPTC4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 15:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727478AbgIPRsf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:48:35 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5029EC061A86
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f1so3013143plo.13
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 04:19:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AALbruuPPraRLpDoXeJYoUkBqG+rKrUyiHS5RNr4WRg=;
+        b=GG+yeQdaU10Nj7/yBVuuCeVxns0MuG7tbN8JHzANMZ7oUrtEemv90gE94Mh6rkbvqq
+         2+saK/pOyJlxT6jU7uGvfD8C6yEL5XagaExs+udl5YLDYkaMleBIww/GghEec/IzZcEh
+         MHgW7IaYgKtjMQiWbg4h/bxGc//9vxHlLR3oswiROtHrgLCq885IrO/8ttBeNFu/U6n2
+         FTELcVQtYgFEYFViuPUZI8oZJw3sJ4l9BXzzn0VDcREOy9azir09/bA1EOYglmFmCCjl
+         4A9y5skGeHuv4Ap2asq2QFFMjF1GXrtCn5NTsitFCxyjDJutO5RbFKdj0+i7tvmiM/NV
+         xGcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AALbruuPPraRLpDoXeJYoUkBqG+rKrUyiHS5RNr4WRg=;
+        b=adtt+Pp1QaVWKBoD5rSwCb1VztF+D4iRjfizc957AJ6mF3HWh64KN90EkCfmvvl2KW
+         n7gb27+kLvmYK7dY2AkJ39GUBo7FwXTqmLuApveycM/riGCLDQURYLSSnX0ZUvQ0xf6q
+         ekjhz/C06GJlsd2mUEQnTYxAB1jhGH+q0X8H6UkebYoMJlAm09hFejA+k3Bx5UXMIWMK
+         L3Rjvg+Lglmp0rYwabk4tLOYeSX5PK7sgftJ2O3hVMGAZsi6ou1AmmRRzPIKne9evbhd
+         eWr/wSqkdbS/btcFkbFG5+6oxIeWPN4WdHfaXHCUXqgIaNgXnil66K3aNLAox5ppBUGd
+         cYbg==
+X-Gm-Message-State: AOAM531Gnc3E+nU+mNP2ilZcq5EZQw6J9US3MmAo/A40xdTLQH5e9vob
+        S8aGO7t9W5e0ibdCwOPC0OUXOE3E+w==
+X-Google-Smtp-Source: ABdhPJwBGs3ucpoGmmhUn5PqheOn9IWy7A5tqEuStT283aMoX+P7wHrrt77Pqt6aWMhMWBlqmLQjYg==
+X-Received: by 2002:a17:90a:71c9:: with SMTP id m9mr3450503pjs.146.1600255158347;
+        Wed, 16 Sep 2020 04:19:18 -0700 (PDT)
+Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
+        by smtp.gmail.com with ESMTPSA id v204sm3492195pfc.10.2020.09.16.04.19.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 16 Sep 2020 04:19:17 -0700 (PDT)
+From:   xiakaixu1987@gmail.com
+X-Google-Original-From: kaixuxia@tencent.com
+To:     linux-xfs@vger.kernel.org
+Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
+Subject: [RFC PATCH 0/9]xfs: random fixes and code cleanup
+Date:   Wed, 16 Sep 2020 19:19:03 +0800
+Message-Id: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 07:19:11PM +0800, xiakaixu1987@gmail.com wrote:
-> From: Kaixu Xia <kaixuxia@tencent.com>
-> 
-> The backslash is useless and remove it.
-> 
-> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-> ---
->  fs/xfs/libxfs/xfs_da_format.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
-> index b40a4e80f5ee..4fe974773d85 100644
-> --- a/fs/xfs/libxfs/xfs_da_format.h
-> +++ b/fs/xfs/libxfs/xfs_da_format.h
-> @@ -746,7 +746,7 @@ xfs_attr3_leaf_name_local(xfs_attr_leafblock_t *leafp, int idx)
->   */
->  static inline int xfs_attr_leaf_entsize_remote(int nlen)
->  {
-> -	return ((uint)sizeof(xfs_attr_leaf_name_remote_t) - 1 + (nlen) + \
-> +	return ((uint)sizeof(xfs_attr_leaf_name_remote_t) - 1 + (nlen) +
->  		XFS_ATTR_LEAF_NAME_ALIGN - 1) & ~(XFS_ATTR_LEAF_NAME_ALIGN - 1);
+From: Kaixu Xia <kaixuxia@tencent.com>
 
-If you're going to go mess with these, you might as well clean up the
-typedef usage, the unnecessary parentheses, and the open-coded round_up
-call:
+Hi all,
 
-static inline int xfs_attr_leaf_entsize_remote(int nlen)
-{
-	return round_up(sizeof(struct xfs_attr_leaf_name_remote) - 1 + nlen,
-			XFS_ATTR_LEAF_NAME_ALIGN);
-}
+This patchset include random fixes and code cleanups, and there are no
+connections among these patches. In order to make it easier to track,
+I bundle them up and put all the scattered patches into a single patchset.
 
-(and similar for xfs_attr_leaf_entsize_local().)
+Kaixu Xia (9):
+  xfs: remove the unused SYNCHRONIZE macro
+  xfs: use the existing type definition for di_projid
+  xfs: remove the unnecessary xfs_dqid_t type cast
+  xfs: do the assert for all the log done items in xfs_trans_cancel
+  xfs: add the XFS_ITEM_LOG_INTENT flag to mark the log intent item
+  xfs: remove the unnecessary variable error in
+    xfs_trans_unreserve_and_mod_sb
+  xfs: remove the repeated crc verification in xfs_attr3_rmt_verify
+  xfs: cleanup the useless backslash in xfs_attr_leaf_entsize_remote
+  xfs: fix some comments
 
---D
+ fs/xfs/libxfs/xfs_attr_remote.c |  2 --
+ fs/xfs/libxfs/xfs_da_format.h   |  6 +++---
+ fs/xfs/libxfs/xfs_inode_buf.h   |  2 +-
+ fs/xfs/xfs_bmap_item.c          |  3 ++-
+ fs/xfs/xfs_dquot.c              |  4 ++--
+ fs/xfs/xfs_extfree_item.c       |  3 ++-
+ fs/xfs/xfs_linux.h              |  1 -
+ fs/xfs/xfs_log_recover.c        | 15 ++++-----------
+ fs/xfs/xfs_qm.c                 |  2 +-
+ fs/xfs/xfs_refcount_item.c      |  3 ++-
+ fs/xfs/xfs_rmap_item.c          |  3 ++-
+ fs/xfs/xfs_trans.c              |  9 +++------
+ fs/xfs/xfs_trans.h              |  5 +++++
+ 13 files changed, 27 insertions(+), 31 deletions(-)
 
->  }
->  
-> -- 
-> 2.20.0
-> 
+-- 
+2.20.0
+
