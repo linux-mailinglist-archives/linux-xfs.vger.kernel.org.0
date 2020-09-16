@@ -2,135 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A76A326CC03
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7476A26CC46
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Sep 2020 22:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728476AbgIPUh7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 16:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57462 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726780AbgIPRJW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 13:09:22 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F845C02C2B1
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 09:55:13 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id w16so8920650oia.2
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 09:55:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qziD80+3yMPY6N3ieS9kUVQGUHrCR+TyhU1kuZRn8ug=;
-        b=OqoBjfs8rO7Af3t0ecA1nZZHf2+27mXKGfPMRthnBvIndRIA93qknLOob6r2PMsEph
-         EZl8grJlukA7b5bNpmLXTFTgMnAnVSsX6rE/Vm8h2/vZM1uAr5azOuxLVB/ERCrpEZEC
-         hHcakEIjSRWDy+2N9GTxiZsqK6cw2pFM9XGhh2n37/gxq37MEOahl1mj45geboHujWun
-         5DNdH9fDNeIDPDYBpn7+nmlHaZkc89ljoS+DEWHlQTCyLr0DODUrxm3FlewOEmDBqXdg
-         FP3GNLv90EBOt6QjXNNXH28RNo6uHpf8H5c81J584mRkk2bbd/hLUuSMYz7sZbRQGj2E
-         R0ag==
+        id S1728367AbgIPUlK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 16:41:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41577 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728429AbgIPUlD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 16:41:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600288862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=sXluQkp7GDO9J1LBvDUbwtuT0VKyszMXIQPNK9rO1gA=;
+        b=FbaVlpXjX3Ahs6iuTryNVJKB6QbWIcwh36WSW19DJqrUkG8vsw3vRA8k04z2IcPsyzVw0j
+        4OVzVPV2+iRTct2lJbd9PF1Dvix8GYHFI0ogtUc3UZetmExWD5pF6uhlRS0kt9OOQTl5/e
+        u0joe5vz8OJEfzaQx6GcXynSFWgWUII=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-LMLVSzd7OI2fssNRC703Hw-1; Wed, 16 Sep 2020 16:41:00 -0400
+X-MC-Unique: LMLVSzd7OI2fssNRC703Hw-1
+Received: by mail-wm1-f70.google.com with SMTP id q205so1590675wme.0
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 13:40:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=qziD80+3yMPY6N3ieS9kUVQGUHrCR+TyhU1kuZRn8ug=;
-        b=ClMbdy0QxZwxHXOzGP61QTD1UiURgEZLTzs+xcRpTe7xWg4DARbdHTV7jHXRMMu5ok
-         7KGAMRuYAXMH7DfFSv62v4lALC3Ghcl+tUhTWeWGxTO6A2DExOesoOC6DQC2BqG+NFuW
-         uy/s2xXJKRjd1w8UfUI1KpFSYF/CnsqEWoZGu/CEijicnO5BISRqw7PrD/y1dW7Yp0py
-         fkTBWnMEKQveGlfOCpEFOmhSEq/1dI5l95UFeyXG5U7Azp7LFv8tvS8MKzQWpVbQquP/
-         Yvv5tYN1ZFUkgk19HbVVe1FQ8U0jDuuxE7AbTaI4uVpyQ10eOYxRq5qbqh81pXQJTbQJ
-         Wxkg==
-X-Gm-Message-State: AOAM533iIfLL4TvQ8Sunm1kuBTmqUSDVh+K8h54a2w9Kta58iJ25g/Hz
-        FqD9lywEdojf2Y4ClXdNQjimCA==
-X-Google-Smtp-Source: ABdhPJwyy8X3oyKHbBasQ4BP9MBdAvvi77/SkAShqpXrzWESE810ovpS6kxTF4EhgRtRK6aGiaiZFQ==
-X-Received: by 2002:aca:48cc:: with SMTP id v195mr3941331oia.57.1600275310152;
-        Wed, 16 Sep 2020 09:55:10 -0700 (PDT)
-Received: from [192.168.1.10] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id r21sm9489292oie.15.2020.09.16.09.55.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Sep 2020 09:55:09 -0700 (PDT)
-Subject: Re: occasional metadata I/O errors (-EOPNOTSUPP) on XFS + io_uring
-To:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Cc:     io-uring@vger.kernel.org
-References: <20200915113327.GA1554921@bfoster>
- <20200916131957.GB1681377@bfoster>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0b6da658-54b1-32ea-b172-981c67aaf29e@kernel.dk>
-Date:   Wed, 16 Sep 2020 10:55:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        bh=sXluQkp7GDO9J1LBvDUbwtuT0VKyszMXIQPNK9rO1gA=;
+        b=ry3fkafrGCHpZgenWrsllilg9Bz7buvZHOWmeAvhQrsVCeSwsjNJSAx6fkOEvkwxAC
+         vB7cSFtjYP7vTIirF8YGO4dQqtUPyAigJl0QLOC6+8RKXRUd477F+x6Vu0cu6Qynjv+7
+         zFOyZiVySnMJ7Cdz2COERdxQykIV92ai2hm9f/Jm0bPzedXslAyv+ytM979BqkwfzIt8
+         NtFPAyYKa3mcWuFzX1etFk+fyaVS9ZZr23gAPIFXz1gBjCde8XkqysHQylFzuVcFMu1h
+         5efgZHFhTix8aHNgEKfxyCE4ZUerilPuiMuew8T2wzZBD3I9t+xdldVollDM65CQJyVf
+         nYTw==
+X-Gm-Message-State: AOAM532KBalKGpKAaVj+v3CyNIsgf7B3+cuTqErSSK6e7QqRt5Y0NL2C
+        9435VZMBcMtiKKNOsLyXyTKLEnRne8Bye1FTFwrsCd2II3esuBCzJVRRwvu4xkIuunuXy9EYPMW
+        2fvRVmgrKAAnNbeRw1VmW
+X-Received: by 2002:a5d:6406:: with SMTP id z6mr27559562wru.133.1600288858654;
+        Wed, 16 Sep 2020 13:40:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzV2Wb9+DWQ0GHSl0xnId5TWMcDVo5wKH3IzVbSa2+jYbt+gPQMrE/9LW65OkpKGWubBzDR6w==
+X-Received: by 2002:a5d:6406:: with SMTP id z6mr27559548wru.133.1600288858456;
+        Wed, 16 Sep 2020 13:40:58 -0700 (PDT)
+Received: from localhost.localdomain ([84.19.91.81])
+        by smtp.gmail.com with ESMTPSA id g8sm7257653wmd.12.2020.09.16.13.40.57
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Sep 2020 13:40:57 -0700 (PDT)
+From:   Pavel Reichl <preichl@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v2] mkfs.xfs: fix ASSERT on too-small device with stripe geometry
+Date:   Wed, 16 Sep 2020 22:40:56 +0200
+Message-Id: <20200916204056.29247-1-preichl@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200916131957.GB1681377@bfoster>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-xfs-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 9/16/20 7:19 AM, Brian Foster wrote:
-> On Tue, Sep 15, 2020 at 07:33:27AM -0400, Brian Foster wrote:
->> Hi Jens,
->>
->> I'm seeing an occasional metadata (read) I/O error (EOPNOTSUPP) when
->> running Zorro's recent io_uring enabled fsstress on XFS (fsstress -d
->> <mnt> -n 99999999 -p 8). The storage is a 50GB dm-linear device on a
->> virtio disk (within a KVM guest). The full callstack of the I/O
->> submission path is appended below [2], acquired via inserting a
->> WARN_ON() in my local tree.
->>
->> From tracing around a bit, it looks like what happens is that fsstress
->> calls into io_uring, the latter starts a plug and sets plug.nowait =
->> true (via io_submit_sqes() -> io_submit_state_start()) and eventually
->> XFS needs to read an inode cluster buffer in the context of this task.
->> That buffer read ultimately fails due to submit_bio_checks() setting
->> REQ_NOWAIT on the bio and the following logic in the same function
->> causing a BLK_STS_NOTSUPP status:
->>
->> 	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q))
->> 		goto not_supported;
->>
->> In turn, this leads to the following behavior in XFS:
->>
->> [ 3839.273519] XFS (dm-2): metadata I/O error in "xfs_imap_to_bp+0x116/0x2c0 [xfs]" at daddr 0x323a5a0 len 32 error 95
->> [ 3839.303283] XFS (dm-2): log I/O error -95
->> [ 3839.321437] XFS (dm-2): xfs_do_force_shutdown(0x2) called from line 1196 of file fs/xfs/xfs_log.c. Return address = ffffffffc12dea8a
->> [ 3839.323554] XFS (dm-2): Log I/O Error Detected. Shutting down filesystem
->> [ 3839.324773] XFS (dm-2): Please unmount the filesystem and rectify the problem(s)
->>
->> I suppose it's possible fsstress is making an invalid request based on
->> my setup, but I find it a little strange that this state appears to leak
->> into filesystem I/O requests. What's more concerning is that this also
->> seems to impact an immediately subsequent log write submission, which is
->> a fatal error and causes the filesystem to shutdown.
->>
->> Finally, note that I've seen your patch associated with Zorro's recent
->> bug report [1] and that does seem to prevent the problem. I'm still
->> sending this report because the connection between the plug and that
->> change is not obvious to me, so I wanted to 1.) confirm this is intended
->> to fix this problem and 2.) try to understand whether this plugging
->> behavior introduces any constraints on the fs when invoked in io_uring
->> context. Thoughts? Thanks.
->>
-> 
-> To expand on this a bit, I was playing more with the aforementioned fix
-> yesterday while waiting for this email's several hour trip to the
-> mailing list to complete and eventually realized that I don't think the
-> plug.nowait thing properly accommodates XFS' use of multiple devices. A
-> simple example is XFS on a data device with mq support and an external
-> log device without mq support. Presumably io_uring requests could thus
-> enter XFS with plug.nowait set to true, and then any log bio submission
-> that happens to occur in that context is doomed to fail and shutdown the
-> fs.
+When a too-small device is created with stripe geometry, we hit an
+assert in align_ag_geometry():
 
-Do we ever read from the logdev? It'll only be a concern on the read
-side. And even from there, you'd need nested reads from the log device.
+mkfs.xfs: xfs_mkfs.c:2834: align_ag_geometry: Assertion `cfg->agcount != 0' failed.
 
-In general, the 'can async' check should be advisory, the -EAGAIN
-or -EOPNOTSUPP should be caught and reissued. The failure path was
-just related to this happening off the retry path on arming for the
-async buffered callback.
+This is because align_ag_geometry() finds that the size of the last
+(only) AG is too small, and attempts to trim it off.  Obviously 0
+AGs is invalid, and we hit the ASSERT.
 
+Reported-by: Zdenek Kabelac <zkabelac@redhat.com>
+Suggested-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Pavel Reichl <preichl@redhat.com>
+---
+ include/xfs_multidisk.h | 14 +++++++-------
+ mkfs/xfs_mkfs.c         |  6 +++---
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/include/xfs_multidisk.h b/include/xfs_multidisk.h
+index 1b9936ec..abfb50ce 100644
+--- a/include/xfs_multidisk.h
++++ b/include/xfs_multidisk.h
+@@ -14,7 +14,6 @@
+ #define	XFS_DFL_BLOCKSIZE_LOG	12		/* 4096 byte blocks */
+ #define	XFS_DINODE_DFL_LOG	8		/* 256 byte inodes */
+ #define	XFS_DINODE_DFL_CRC_LOG	9		/* 512 byte inodes for CRCs */
+-#define	XFS_MIN_DATA_BLOCKS	100
+ #define	XFS_MIN_INODE_PERBLOCK	2		/* min inodes per block */
+ #define	XFS_DFL_IMAXIMUM_PCT	25		/* max % of space for inodes */
+ #define	XFS_MIN_REC_DIRSIZE	12		/* 4096 byte dirblocks (V2) */
+@@ -25,13 +24,14 @@
+ 						 * accept w/o warnings
+ 						 */
+ 
+-#define XFS_AG_BYTES(bblog)	((long long)BBSIZE << (bblog))
+-#define	XFS_AG_MIN_BYTES	((XFS_AG_BYTES(15)))	/* 16 MB */
+-#define	XFS_AG_MAX_BYTES	((XFS_AG_BYTES(31)))	/* 1 TB */
+-#define XFS_AG_MIN_BLOCKS(blog)	(XFS_AG_MIN_BYTES >> (blog))
+-#define XFS_AG_MAX_BLOCKS(blog)	((XFS_AG_MAX_BYTES - 1) >> (blog))
++#define XFS_AG_BYTES(bblog)		((long long)BBSIZE << (bblog))
++#define	XFS_MIN_DATA_BLOCKS(cfg)	(XFS_AG_MIN_BLOCKS((cfg)->blocklog))
++#define	XFS_AG_MIN_BYTES		((XFS_AG_BYTES(15)))	/* 16 MB */
++#define	XFS_AG_MAX_BYTES		((XFS_AG_BYTES(31)))	/* 1 TB */
++#define XFS_AG_MIN_BLOCKS(blog)		(XFS_AG_MIN_BYTES >> (blog))
++#define XFS_AG_MAX_BLOCKS(blog)		((XFS_AG_MAX_BYTES - 1) >> (blog))
+ 
+-#define XFS_MAX_AGNUMBER	((xfs_agnumber_t)(NULLAGNUMBER - 1))
++#define XFS_MAX_AGNUMBER		((xfs_agnumber_t)(NULLAGNUMBER - 1))
+ 
+ /*
+  * These values define what we consider a "multi-disk" filesystem. That is, a
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index a687f385..204dfff1 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -2530,10 +2530,10 @@ _("size %s specified for data subvolume is too large, maximum is %lld blocks\n")
+ 		cfg->dblocks = DTOBT(xi->dsize, cfg->blocklog);
+ 	}
+ 
+-	if (cfg->dblocks < XFS_MIN_DATA_BLOCKS) {
++	if (cfg->dblocks < XFS_MIN_DATA_BLOCKS(cfg)) {
+ 		fprintf(stderr,
+-_("size %lld of data subvolume is too small, minimum %d blocks\n"),
+-			(long long)cfg->dblocks, XFS_MIN_DATA_BLOCKS);
++_("size %lld of data subvolume is too small, minimum %lld blocks\n"),
++			(long long)cfg->dblocks, XFS_MIN_DATA_BLOCKS(cfg));
+ 		usage();
+ 	}
+ 
 -- 
-Jens Axboe
+2.26.2
 
