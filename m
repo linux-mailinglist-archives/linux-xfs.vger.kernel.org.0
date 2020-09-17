@@ -2,108 +2,92 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DCBB626D9A5
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 12:55:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F2726DA8E
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 13:43:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgIQKxf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 06:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53524 "EHLO
+        id S1726715AbgIQLnI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 07:43:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgIQKxX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 06:53:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A29DC061756
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 03:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=c0VMlAZUhQhDfQ4cwCsdV2zCuIH+pW80AStTpba5sDM=; b=A1Lf1K7zq47rzBZg8QkjbfGU2d
-        ageW4eEL6EmturaviZpzbMZeSUvtwAJWo09rWxMzeLiZiKRLd0963+2xjvCJfYSgqRL/OMXYhl7Ax
-        H7aYzUlLlNmi4qhxMQ7Ucoo6U47tgYKYEEAs26qUwClBCfObwUvemBF4W4Ze7DhUo1s2l3ZxIaq5G
-        DEj3XZ1fYrn3unsDL+19bKPikHZv88N5kwYFZ1RFPL/1zkzdxL+yoT+hD0Zcsb+nh57ivBgHuWyMA
-        neo5dcExvoZ0WZXWajcg9OXQQAt4VgWzehQBVaoYY2ZeWmbKuf9ddTgfzkEJPbJIuj7cwBFbPF8H6
-        3dWXL4gg==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kIrXU-00025n-9U; Thu, 17 Sep 2020 10:53:20 +0000
-Date:   Thu, 17 Sep 2020 11:53:20 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Chandan Babu R <chandanrlinux@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com
-Subject: Re: [PATCH] xfs: Set xfs_buf's b_ops member when zeroing
- bitmap/summary files
-Message-ID: <20200917105320.GA7954@infradead.org>
-References: <20200917094356.2858-1-chandanrlinux@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200917094356.2858-1-chandanrlinux@gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        with ESMTP id S1726855AbgIQLi4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 07:38:56 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0221C061756
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 04:38:54 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d9so1051624pfd.3
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 04:38:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=4ufCmlG0OIXvg8AR4mi/CXQ658A7yveBgWXLRlBhbX8=;
+        b=Gx5fu8MlnxF77OcIvnzzimJOhBjqISZiCctVzVyZaH7uCnjcJtway0uS7z1sAHDIMG
+         AH9+hyrEFXCg5g3pexf11S7EQ0iikLJ++IW14PLuuz0lzAr2HDGCnNTbAxcZ/usSN/8N
+         9hPssjJacDmJ6ilT3NPNoVi/MhUW9M/q12UcSysR3VDyesc6b+1AudcgW5uat/L0Eou2
+         02LvWd+fgNkJYi9Ust3/YNFt8sclyclQRBD7uPHnJQ3wLcciC4H6NuBn2sCjfI/HWqlr
+         8st6nTD8zxh02pxkEnNuGvgIAAgrrEbojNDCUopN6wh525LvpzUj9rr+iik9cSk7Ht7L
+         mngg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4ufCmlG0OIXvg8AR4mi/CXQ658A7yveBgWXLRlBhbX8=;
+        b=rw034KBda5SoRLEmd3kLRWYJhPlw0cMgb3OxUVO3QesAtoRQQUXtXlUAbStCC/N1gZ
+         GXK9BSc/U7HT5qWHlyj8duNyYnbvpRb6UJSOyNSkqxX0FjNz7/DkQeTE+f8LcSsTlaqT
+         lJW1rw14RrshYleRQbjTQSKQMXmtyJTx8GFPOgIk7VOqWgEutVZ6GV2Hog/jxLbYN8/w
+         Mu9fmE2kOuHtnxsUxZ2R+mV2iVhkMWsqtvx2NgUlfhl6hZcGtOuTsc0dGU9N8ZLsVZZE
+         ExO9suSw2rcPhtz6b3a1n07h0xA1HKo3PtDba5aQzTub5TtnBPkX0go/HZXLwkdKmtjO
+         JRgg==
+X-Gm-Message-State: AOAM533lLi+4Gbwg8cMJefiUuhXk/NDC5mwmq8EAZJ6uNKrvG5ZNJtVp
+        +DLiPUcHLuo3No40fV7F0NxpPg4+8A==
+X-Google-Smtp-Source: ABdhPJzcTaCN8X5x3R9Xvkn40swRYtBc8E8AIMLqLihNvjAurXDwPXnNSJeqMJDnu+I+mLaNYhnI+g==
+X-Received: by 2002:a62:301:0:b029:13c:1611:6528 with SMTP id 1-20020a6203010000b029013c16116528mr26543881pfd.8.1600342733709;
+        Thu, 17 Sep 2020 04:38:53 -0700 (PDT)
+Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
+        by smtp.gmail.com with ESMTPSA id 64sm18761147pgi.90.2020.09.17.04.38.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Sep 2020 04:38:52 -0700 (PDT)
+From:   xiakaixu1987@gmail.com
+X-Google-Original-From: kaixuxia@tencent.com
+To:     linux-xfs@vger.kernel.org
+Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
+Subject: [PATCH v2 0/7] xfs: random fixes and code cleanup
+Date:   Thu, 17 Sep 2020 19:38:41 +0800
+Message-Id: <1600342728-21149-1-git-send-email-kaixuxia@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 03:13:56PM +0530, Chandan Babu R wrote:
-> In xfs_growfs_rt(), we enlarge bitmap and summary files by allocating
-> new blocks for both files. For each of the new blocks allocated, we
-> allocate an xfs_buf, zero the payload, log the contents and commit the
-> transaction. Hence these buffers will eventually find themselves
-> appended to list at xfs_ail->ail_buf_list.
-> 
-> Later, xfs_growfs_rt() loops across all of the new blocks belonging to
-> the bitmap inode to set the bitmap values to 1. In doing so, it
-> allocates a new transaction and invokes the following sequence of
-> functions,
->   - xfs_rtfree_range()
->     - xfs_rtmodify_range()
->       - xfs_rtbuf_get()
->         We pass '&xfs_rtbuf_ops' as the ops pointer to xfs_trans_read_buf().
->         - xfs_trans_read_buf()
-> 	  We find the xfs_buf of interest in per-ag hash table, invoke
-> 	  xfs_buf_reverify() which ends up assigning '&xfs_rtbuf_ops' to
-> 	  xfs_buf->b_ops.
-> 
-> On the other hand, if xfs_growfs_rt_alloc() had allocated a few blocks
-> for the bitmap inode and returned with an error, all the xfs_bufs
-> corresponding to the new bitmap blocks that have been allocated would
-> continue to be on xfs_ail->ail_buf_list list without ever having a
-> non-NULL value assigned to their b_ops members. An AIL flush operation
-> would then trigger the following warning message to be printed on the
-> console,
-> 
->   XFS (loop0): _xfs_buf_ioapply: no buf ops on daddr 0x58 len 8
->   00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000030: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000040: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   00000070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   CPU: 3 PID: 449 Comm: xfsaild/loop0 Not tainted 5.8.0-rc4-chandan-00038-g4d8c2b9de9ab-dirty #37
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
->   Call Trace:
->    dump_stack+0x57/0x70
->    _xfs_buf_ioapply+0x37c/0x3b0
->    ? xfs_rw_bdev+0x1e0/0x1e0
->    ? xfs_buf_delwri_submit_buffers+0xd4/0x210
->    __xfs_buf_submit+0x6d/0x1f0
->    xfs_buf_delwri_submit_buffers+0xd4/0x210
->    xfsaild+0x2c8/0x9e0
->    ? __switch_to_asm+0x42/0x70
->    ? xfs_trans_ail_cursor_first+0x80/0x80
->    kthread+0xfe/0x140
->    ? kthread_park+0x90/0x90
->    ret_from_fork+0x22/0x30
-> 
-> This message indicates that the xfs_buf had its b_ops member set to
-> NULL.
-> 
-> This commit fixes the issue by assigning "&xfs_rtbuf_ops" to b_ops
-> member of each of the xfs_bufs logged by xfs_growfs_rt_alloc().
-> 
-> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+From: Kaixu Xia <kaixuxia@tencent.com>
 
-Looks good,
+Hi all,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+This patchset include random fixes and code cleanups, and there are no
+connections among these patches. In order to make it easier to track,
+I bundle them up and put all the scattered patches into a single patchset.
+
+Changes for v2: 
+ -detect intent-done items by their item ops.
+ -update the commit messages.
+ -code cleanup for xfs_attr_leaf_entsize_{remote,local}.
+
+Kaixu Xia (7):
+  xfs: remove the unused SYNCHRONIZE macro
+  xfs: use the existing type definition for di_projid
+  xfs: remove the unnecessary xfs_dqid_t type cast
+  xfs: do the assert for all the log done items in xfs_trans_cancel
+  xfs: remove the redundant crc feature check in xfs_attr3_rmt_verify
+  xfs: code cleanup in xfs_attr_leaf_entsize_{remote,local}
+  xfs: fix some comments
+
+ fs/xfs/libxfs/xfs_attr_remote.c |  2 --
+ fs/xfs/libxfs/xfs_da_format.h   | 12 ++++++------
+ fs/xfs/libxfs/xfs_inode_buf.h   |  2 +-
+ fs/xfs/xfs_dquot.c              |  4 ++--
+ fs/xfs/xfs_linux.h              |  1 -
+ fs/xfs/xfs_qm.c                 |  2 +-
+ fs/xfs/xfs_trans.c              |  9 ++++++++-
+ 7 files changed, 18 insertions(+), 14 deletions(-)
+
+-- 
+2.20.0
+
