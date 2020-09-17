@@ -2,54 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4596726D561
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 09:56:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3045E26D534
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 09:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbgIQH4Y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 03:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53370 "EHLO
+        id S1726291AbgIQHv2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 03:51:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbgIQHuv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 03:50:51 -0400
+        with ESMTP id S1726344AbgIQHvQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 03:51:16 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F40F6C061756;
-        Thu, 17 Sep 2020 00:50:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E23BC06174A;
+        Thu, 17 Sep 2020 00:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=UfiU318F9O1q0e7vo3h9PMlx+KUukSblMUMpcHv4dcY=; b=bd0gMtBKmvZjpFG/5lvn+U+Zqq
-        WbFwVPPbE+hRyLuEOV1ipmeGI9Jbue+6WACrhmFGFC0ZKUiw13QsWsOZHhjc3+3uB0q0FRIgRJroy
-        BvJ80e+fgepkjdazHm1LyXTDcj+OiDgnRkErQYZdNSxDKaHsL0VYtNqDADH0V4r+f6+Uy4NLhgWNs
-        l5GDukN2g7nNvJSFZPpNaF+DU7niMUrP44rDSnh+60ZQAsl/Vb+ti5BVG1WGmb8S+EjFBEpRSls44
-        keSmExpWw6H4BrRbbOiwECDmsINGnZEWY7bPRdMVD0Zg1LpHeYZ0B/ZotEo1oi/v/5TAPmrbjz/9l
-        7oDQimog==;
+        bh=K9roFyT/GUCIqKX6bgZhX3vhM2I5W7yauMk6g9dXP6E=; b=Olkdvh/CrD6wDf/W3xwai3da/O
+        09i2+G4P5loFnUQ3ULa6ue2NDHpUVy6gteeasrEJ9Aw+XEVLDhwQP4rmOF9aZ7xyGQ+cDnkMY+fcE
+        ZWTpvJKDLAc1MG23a/XuphtECVRaQcQSApjdc2P+ls6/ZJDmqdJurC/8kMoY/ckfwUd5oS79qvK39
+        5b88oTrn08++IM2iChROwdOAu8i+jdFQI89xmcbooio6TcsAxWafC66uUi7sUdExekaVoDFP5tzAM
+        TATwfxJxIwafbVU/cQWAS98T+7iw/8U71/0aGIY9IQON3evq8ax4ZarSvhYRwJ+Yuq7hDWR+hS9Ad
+        yN45fsoA==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kIogq-0006xc-GS; Thu, 17 Sep 2020 07:50:48 +0000
-Date:   Thu, 17 Sep 2020 08:50:48 +0100
+        id 1kIohE-0006z6-PR; Thu, 17 Sep 2020 07:51:12 +0000
+Date:   Thu, 17 Sep 2020 08:51:12 +0100
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
         fstests@vger.kernel.org
-Subject: Re: [PATCH 01/24] xfs/331: don't run this test if fallocate isn't
- supported
-Message-ID: <20200917075048.GA26262@infradead.org>
+Subject: Re: [PATCH 02/24] generic/60[01]: fix test failure when setting new
+ grace limit
+Message-ID: <20200917075112.GB26262@infradead.org>
 References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
- <160013418077.2923511.4423324916550074038.stgit@magnolia>
+ <160013418837.2923511.12713913160160876814.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160013418077.2923511.4423324916550074038.stgit@magnolia>
+In-Reply-To: <160013418837.2923511.12713913160160876814.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Sep 14, 2020 at 06:43:00PM -0700, Darrick J. Wong wrote:
+On Mon, Sep 14, 2020 at 06:43:08PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> This test requires fallocate, so make sure that actually works before
-> running it.
+> The setquota command can extend a quota grace period by a certain number
+> of seconds.  The extension is provided as a number of seconds relative
+> to right now.  However, if the system clock increments the seconds count
+> after this test assigns $now but before setquota gets called, the test
+> will fail because $get and $set will be off by that 1 second.  Allow for
+> that.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
