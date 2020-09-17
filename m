@@ -2,48 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3CF426D5C6
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 10:08:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9457E26D598
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 10:05:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgIQIGg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 04:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgIQIGe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 04:06:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C80C0611BC
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 01:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=owAzIdxZD2OhvYkm15PQyIKwlF
-        pL1QDRG9z2C6IvjmpA+WP8pTm2oepWeQVO0Rag4AKOR+KEp2locs8+W2VP0s9nytrqboDjZaDwjW7
-        a9sXDLn2cbQd3dDd3aK/RryRfa5Cqd+YKk9CfxH3Mi3JOE5PX0XDV6ghbMFsUUK8qI6ZM5Y2nz3dc
-        vNiIXhJmqdMb3w+iKI9gSV/kgiikGUc2GE594HkOGIlkbygKM1vHOez1IenuvZHQHPQT9GsYPK6mF
-        5mDKJQO0ff4nz2czXv2FYvBBAM6IJbQMQ+vMA3fSsEK5GGx8gKvxDsTeIcIeBURA6iTobzp1weBHj
-        HOdWUO+g==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kIotE-0007uZ-41; Thu, 17 Sep 2020 08:03:36 +0000
-Date:   Thu, 17 Sep 2020 09:03:36 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     xiakaixu1987@gmail.com
-Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
-        Kaixu Xia <kaixuxia@tencent.com>
-Subject: Re: [PATCH] xfs: remove the unused SYNCHRONIZE macro
-Message-ID: <20200917080336.GX26262@infradead.org>
-References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
- <1600255152-16086-2-git-send-email-kaixuxia@tencent.com>
+        id S1726449AbgIQIFe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 04:05:34 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:40948 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726373AbgIQIEh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 04:04:37 -0400
+Received: from dread.disaster.area (pa49-195-191-192.pa.nsw.optusnet.com.au [49.195.191.192])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D1B643ABB92;
+        Thu, 17 Sep 2020 18:03:51 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kIotS-0001vS-PP; Thu, 17 Sep 2020 18:03:50 +1000
+Date:   Thu, 17 Sep 2020 18:03:50 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] xfs: attach inode to dquot in xfs_bui_item_recover
+Message-ID: <20200917080350.GJ12131@dread.disaster.area>
+References: <160031332353.3624373.16349101558356065522.stgit@magnolia>
+ <160031333615.3624373.7775190767495604737.stgit@magnolia>
+ <20200917070103.GU7955@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1600255152-16086-2-git-send-email-kaixuxia@tencent.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200917070103.GU7955@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=XJ9OtjpE c=1 sm=1 tr=0 cx=a_idp_d
+        a=vvDRHhr1aDYKXl+H6jx2TA==:117 a=vvDRHhr1aDYKXl+H6jx2TA==:17
+        a=kj9zAlcOel0A:10 a=reM5J-MqmosA:10 a=yPCof4ZbAAAA:8 a=20KFwNOVAAAA:8
+        a=7-415B0cAAAA:8 a=DDAALGIGjT3U65XUBN4A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Looks good,
+On Thu, Sep 17, 2020 at 12:01:03AM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> In the bmap intent item recovery code, we must be careful to attach the
+> inode to its dquots (if quotas are enabled) so that a change in the
+> shape of the bmap btree doesn't cause the quota counters to be
+> incorrect.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+> v2: use dqattach_locked
+> ---
+>  fs/xfs/xfs_bmap_item.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+> index 815a0563288f..2b1cf3ed8172 100644
+> --- a/fs/xfs/xfs_bmap_item.c
+> +++ b/fs/xfs/xfs_bmap_item.c
+> @@ -24,6 +24,7 @@
+>  #include "xfs_error.h"
+>  #include "xfs_log_priv.h"
+>  #include "xfs_log_recover.h"
+> +#include "xfs_quota.h"
+>  
+>  kmem_zone_t	*xfs_bui_zone;
+>  kmem_zone_t	*xfs_bud_zone;
+> @@ -498,6 +499,10 @@ xfs_bui_item_recover(
+>  	if (error)
+>  		goto err_inode;
+>  
+> +	error = xfs_qm_dqattach_locked(ip, false);
+> +	if (error)
+> +		goto err_inode;
+> +
+>  	if (VFS_I(ip)->i_nlink == 0)
+>  		xfs_iflags_set(ip, XFS_IRECOVERY);
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Looks good now.
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+-- 
+Dave Chinner
+david@fromorbit.com
