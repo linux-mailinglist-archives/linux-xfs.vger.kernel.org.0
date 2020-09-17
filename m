@@ -2,182 +2,164 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6710C26D2F6
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 07:22:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF67C26D347
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 07:53:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgIQFWE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 01:22:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43690 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726129AbgIQFWE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 01:22:04 -0400
-X-Greylist: delayed 454 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Sep 2020 01:22:02 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600320122;
+        id S1726156AbgIQFxp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 01:53:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42622 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726112AbgIQFxp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 17 Sep 2020 01:53:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=cantorsusede;
+        t=1600321040;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=NLFMkHZx5n33AbXWV/APjBNFG0kStV2CEUxDMV3rff4=;
-        b=dPS35JsGEDYNjucgSSQ1surVncbVrd56eYzQYP+jO6tyUCDw6J3V5WVy0Iu9MyJ7UAG9KA
-        +laBgmW1535DkUBa2g1f9+dWZwmzfj6rIoxGUMhOq6IJVP19saUTTp6j0KN4SGTnqmInyA
-        zjYZUnyRQtUGEn2vLttiKySDLOfVnhM=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-579-RdBPc46bP228v52mVGNT5Q-1; Thu, 17 Sep 2020 01:14:40 -0400
-X-MC-Unique: RdBPc46bP228v52mVGNT5Q-1
-Received: by mail-pg1-f198.google.com with SMTP id y26so699012pga.22
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Sep 2020 22:14:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NLFMkHZx5n33AbXWV/APjBNFG0kStV2CEUxDMV3rff4=;
-        b=PZ3Y2GDGvoQ9AOQC9c2MozlO2A2RSXr6jsgJtGMHyJfA+KnYu/uzvU8vXdQ/xvXhsx
-         r2ctth/6YaxFtZ9SvFO4PpFzP9DCVKFZGk6NjLY/J9npfsto5PazLH6+MVTBi1vbm1dt
-         PtdAFPsqAg13aht8W3COYxFlCR2Ptk7VTcUA0agO2FvFQ+MiBNCyHJDAP8YVD63DEf+k
-         Ce/isAvQoouU0KCLNYURutV3Q8tSPVFhygzh4qR/a/FmhWqfHjs/DGZPZZ4U975WdUT5
-         7PtluYgFs5z2CkpwuELbQTHIP85CmQNDEUkH7jRSfybkxUFizqVnHa+O9nHmyhX+Q9GF
-         fjcQ==
-X-Gm-Message-State: AOAM531WxIMDk808zaFw/2xub9iSJnf3/UxTNhKZC+Boeu+umwk6SXYl
-        hDEFfFWMZeBdHrgXkg41D4CeoFDJFYwUR3S436iP3QAqkoVKVX7mubb6pU0g/QT0lmMlCpEM+vt
-        RDN85xg+Y5HDIGoA4fbmH
-X-Received: by 2002:a62:4ed6:0:b029:142:2501:35ec with SMTP id c205-20020a624ed60000b0290142250135ecmr9969178pfb.76.1600319678827;
-        Wed, 16 Sep 2020 22:14:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxhTOCoTWHqPk/t6gCcCr+78Ocx5MDbmXnOIaNWKoLT+tkgDq16OmvXoNwIniuOU7RERoNtKg==
-X-Received: by 2002:a62:4ed6:0:b029:142:2501:35ec with SMTP id c205-20020a624ed60000b0290142250135ecmr9969163pfb.76.1600319678592;
-        Wed, 16 Sep 2020 22:14:38 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id w2sm4269921pgb.43.2020.09.16.22.14.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Sep 2020 22:14:38 -0700 (PDT)
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v3 2/2] xfs: clean up calculation of LR header blocks
-Date:   Thu, 17 Sep 2020 13:13:41 +0800
-Message-Id: <20200917051341.9811-3-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.18.1
-In-Reply-To: <20200917051341.9811-1-hsiangkao@redhat.com>
-References: <20200917051341.9811-1-hsiangkao@redhat.com>
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=i/IF3vBhE0MNfDnpI+LKOtHPaAvDj1Zmh8eIZNNXgtE=;
+        b=qPN53akcCr37rpzIs5hg1+JmyVKf1Ol1vCTG2BvmW1dz7f7njSTwLFw4YKQ9gAt8ikBTkX
+        RXUs6tMfkMRD8RSgqKiLzw6Q2Y8oTnO+sgSYzt7g08sZWBo1Vi1nnQqXMIBiYVfV4gjinq
+        RgPILzW4OT5zdCKJhTxJP+/Rl+MvyRsDVwl7R6OV+dUH6dM/37yuX1MuKzoy9lNEEzYMKi
+        5Rh56KV0HrB7iWKSxPOkpFpZzBjLfLWdUDB1bVSvO2q8RGZU4/UxWFP+p8/R29J4qUteKX
+        8RPCr/2bIicziWa3Rjaj4PauiddI3Z7CbOG9Fz/5k7rWHUni6BghXhmCD/BJxw==
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 60E33AD12;
+        Thu, 17 Sep 2020 05:37:35 +0000 (UTC)
+Subject: Re: More filesystem need this fix (xfs: use MMAPLOCK around
+ filemap_map_pages())
+To:     Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Theodore Tso <tytso@mit.edu>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Qiuyang Sun <sunqiuyang@huawei.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, nborisov@suse.de
+References: <20200623052059.1893966-1-david@fromorbit.com>
+ <CAOQ4uxh0dnVXJ9g+5jb3q72RQYYqTLPW_uBqHPKn6AJZ2DNPOQ@mail.gmail.com>
+ <20200916155851.GA1572@quack2.suse.cz>
+ <20200917014454.GZ12131@dread.disaster.area>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <df9eb392-8b86-591a-b1be-535a13b874d9@suse.com>
+Date:   Thu, 17 Sep 2020 08:37:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200917014454.GZ12131@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Let's use DIV_ROUND_UP() to calculate log record header
-blocks as what did in xlog_get_iclog_buffer_size() and
-wrap up a common helper for log recovery.
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
-v2: https://lore.kernel.org/r/20200904082516.31205-3-hsiangkao@redhat.com
 
-changes since v2:
- - get rid of xlog_logrecv2_hblks() and use xlog_logrec_hblks()
-   entirely (Brian).
+On 17.09.20 г. 4:44 ч., Dave Chinner wrote:
+> On Wed, Sep 16, 2020 at 05:58:51PM +0200, Jan Kara wrote:
+>> On Sat 12-09-20 09:19:11, Amir Goldstein wrote:
+>>> On Tue, Jun 23, 2020 at 8:21 AM Dave Chinner <david@fromorbit.com> wrote:
 
- fs/xfs/xfs_log.c         |  4 +---
- fs/xfs/xfs_log_recover.c | 48 ++++++++++++++--------------------------
- 2 files changed, 17 insertions(+), 35 deletions(-)
+<snip>
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index ad0c69ee8947..7a4ba408a3a2 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1604,9 +1604,7 @@ xlog_cksum(
- 		int		i;
- 		int		xheads;
- 
--		xheads = size / XLOG_HEADER_CYCLE_SIZE;
--		if (size % XLOG_HEADER_CYCLE_SIZE)
--			xheads++;
-+		xheads = DIV_ROUND_UP(size, XLOG_HEADER_CYCLE_SIZE);
- 
- 		for (i = 1; i < xheads; i++) {
- 			crc = crc32c(crc, &xhdr[i].hic_xheader,
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 782ec3eeab4d..28dd98b5a703 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -371,6 +371,18 @@ xlog_find_verify_cycle(
- 	return error;
- }
- 
-+static inline int xlog_logrec_hblks(struct xlog *log, xlog_rec_header_t *rh)
-+{
-+	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb)) {
-+		int	h_size = be32_to_cpu(rh->h_size);
-+
-+		if ((be32_to_cpu(rh->h_version) & XLOG_VERSION_2) &&
-+		    h_size > XLOG_HEADER_CYCLE_SIZE)
-+			return DIV_ROUND_UP(h_size, XLOG_HEADER_CYCLE_SIZE);
-+	}
-+	return 1;
-+}
-+
- /*
-  * Potentially backup over partial log record write.
-  *
-@@ -463,15 +475,7 @@ xlog_find_verify_log_record(
- 	 * reset last_blk.  Only when last_blk points in the middle of a log
- 	 * record do we update last_blk.
- 	 */
--	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb)) {
--		uint	h_size = be32_to_cpu(head->h_size);
--
--		xhdrs = h_size / XLOG_HEADER_CYCLE_SIZE;
--		if (h_size % XLOG_HEADER_CYCLE_SIZE)
--			xhdrs++;
--	} else {
--		xhdrs = 1;
--	}
-+	xhdrs = xlog_logrec_hblks(log, head);
- 
- 	if (*last_blk - i + extra_bblks !=
- 	    BTOBB(be32_to_cpu(head->h_len)) + xhdrs)
-@@ -1158,22 +1162,7 @@ xlog_check_unmount_rec(
- 	 * below. We won't want to clear the unmount record if there is one, so
- 	 * we pass the lsn of the unmount record rather than the block after it.
- 	 */
--	if (xfs_sb_version_haslogv2(&log->l_mp->m_sb)) {
--		int	h_size = be32_to_cpu(rhead->h_size);
--		int	h_version = be32_to_cpu(rhead->h_version);
--
--		if ((h_version & XLOG_VERSION_2) &&
--		    (h_size > XLOG_HEADER_CYCLE_SIZE)) {
--			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
--			if (h_size % XLOG_HEADER_CYCLE_SIZE)
--				hblks++;
--		} else {
--			hblks = 1;
--		}
--	} else {
--		hblks = 1;
--	}
--
-+	hblks = xlog_logrec_hblks(log, rhead);
- 	after_umount_blk = xlog_wrap_logbno(log,
- 			rhead_blk + hblks + BTOBB(be32_to_cpu(rhead->h_len)));
- 
-@@ -2989,15 +2978,10 @@ xlog_do_recovery_pass(
- 		if (error)
- 			goto bread_err1;
- 
--		if ((be32_to_cpu(rhead->h_version) & XLOG_VERSION_2) &&
--		    (h_size > XLOG_HEADER_CYCLE_SIZE)) {
--			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
--			if (h_size % XLOG_HEADER_CYCLE_SIZE)
--				hblks++;
-+		hblks = xlog_logrec_hblks(log, rhead);
-+		if (hblks != 1) {
- 			kmem_free(hbp);
- 			hbp = xlog_alloc_buffer(log, hblks);
--		} else {
--			hblks = 1;
- 		}
- 	} else {
- 		ASSERT(log->l_sectBBsize == 1);
--- 
-2.18.1
+> 
+> So....
+> 
+> P0					p1
+> 
+> hole punch starts
+>   takes XFS_MMAPLOCK_EXCL
+>   truncate_pagecache_range()
+>     unmap_mapping_range(start, end)
+>       <clears ptes>
+> 					<read fault>
+> 					do_fault_around()
+> 					  ->map_pages
+> 					    filemap_map_pages()
+> 					      page mapping valid,
+> 					      page is up to date
+> 					      maps PTEs
+> 					<fault done>
+>     truncate_inode_pages_range()
+>       truncate_cleanup_page(page)
+>         invalidates page
+>       delete_from_page_cache_batch(page)
+>         frees page
+> 					<pte now points to a freed page>
+> 
+> That doesn't seem good to me.
+> 
+> Sure, maybe the page hasn't been freed back to the free lists
+> because of elevated refcounts. But it's been released by the
+> filesystem and not longer in the page cache so nothing good can come
+> of this situation...
+> 
+> AFAICT, this race condition exists for the truncate case as well
+> as filemap_map_pages() doesn't have a "page beyond inode size" check
+> in it. 
 
+(It's not relevant to the discussion at hand but for the sake of
+completeness):
+
+It does have a check:
+
+ max_idx = DIV_ROUND_UP(i_size_read(mapping->host), PAGE_SIZE);
+ if (page->index >= max_idx)
+      goto unlock;
+
+
+<snip>
