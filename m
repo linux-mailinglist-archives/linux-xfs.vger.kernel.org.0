@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7749A26DA81
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 13:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B063826DA7B
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 13:40:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgIQLkj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 07:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60578 "EHLO
+        id S1726883AbgIQLjQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 07:39:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbgIQLjI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 07:39:08 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167E0C06174A
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 04:39:02 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id kk9so1095238pjb.2
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 04:39:02 -0700 (PDT)
+        with ESMTP id S1726380AbgIQLjJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 07:39:09 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0E6C06178A
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 04:39:03 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so1087580pjb.5
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 04:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Zpg6Mldh85rUePceqkOwiS8YEw2R/XkJO/lJq6H8TsQ=;
-        b=Eb1lhUm7Vs/gRttZeSAhbfaLj8DwvA9cac9ot9VoNMN+d4W+SSrGdL6Db96rLdoYCE
-         jOKgDCL7eFNtOWBVimzDhT2zw3K/AmGquNBHx1/KaHiC4GOhvZss5v+wxK7cagnF9C4g
-         VBeL5vYuRb+Str6JSkTxG3SU/wrnmtCq0oPnYUxtgtaEv6HFVjp6MDN77HUhu9ThcSW8
-         J/MUD0omXvqKErZa+40VmHvqQHfGpkz4p56T84OVOXbW5kLj+xbrxDr4U1ATzAvMi+ZO
-         oCppTf6ppd72tsZ8oiFwJ13MJXHzurszmqwPWXqYqbn18lYubLv5UMzyWE5EqR8QDEzE
-         Pklg==
+        bh=OVf5a3IB2ZzBSVtvS513pC6i+oFF+t79O5LiUwvxX2A=;
+        b=GcTM9a6XYkmubrvTHqRbelNANNRmKiDjCfUlXbjt9Clnv626nm3m6RpnaGbMynXax4
+         HlhUCvjWY+hfBJP5SBgwfmxCr+7rwqntQi7WKOklyO0pO84BrEohZm6tjrXaE36cFgo5
+         VR9eX2k329ssiRPSujecGESsJE7Kr1hRaWESSuUNk38owP7xt4HrDzi2/7ab+zVdY75U
+         Tup6IujEBAH9KtRl1jII0iOPMg6hG0FxRw0jVgXtwuhd4Xg2ceKd70vJQTToaLsm7+gb
+         QFqsrpN62Ap2tAAm4599QE4MYUvC41/DxOCF5fmYy5xSUtcW0JvHquE99dcUWzTybfqL
+         N0Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=Zpg6Mldh85rUePceqkOwiS8YEw2R/XkJO/lJq6H8TsQ=;
-        b=RI+3YIqN1dmVnpoYYlAo++b2/EWE6IQ47ty+iAg0/2z7a1UrQlmGv3b/srgNaizGCC
-         Gn9EICnG7AkClT++FezF788IvoBjsCbMI5MMAIdO+2/XaQN0oGihMAzjElsNYZFv8W48
-         LwhQwhHCgTEYSgR4ylunaKFH9kNPeaOvV4tCJ4FTgANSXFbYygv2RwuOZ7UsTLdgJsz7
-         FsO3ko7wMCiZqtI2M8fWJtVabPdUsgZ1V2gSLr8KmxlnQmXds/cXlzOHxP2bkQKTmzQt
-         bzy2ktClP7KsX0J7vV9IgIvfO38YxXAiJ0ahfxdTFG3mhaQF4pQ8DndMY7IdY7hFb3LJ
-         q73A==
-X-Gm-Message-State: AOAM530fnB8oJ4cEcJY2rEOGbv6fCV9ZsXFMOJP3rXBE5FF4fob7ugQo
-        FnWXxJmEPrA0jHSZ95UMPPOGOsRS3eFz
-X-Google-Smtp-Source: ABdhPJxER8dKOtWN3PmsiZZssi3k3smlkAn9HkCh5XX870WYMGee5x7MhfkaBeAyNNVOEbIJlagBAg==
-X-Received: by 2002:a17:90a:6e45:: with SMTP id s5mr7946794pjm.12.1600342741243;
-        Thu, 17 Sep 2020 04:39:01 -0700 (PDT)
+        bh=OVf5a3IB2ZzBSVtvS513pC6i+oFF+t79O5LiUwvxX2A=;
+        b=q/umJX1Y4PfR1EB4lb9+9FbF1C6elSdgJDNjJRHi7EPXfaougun5EDP2bbuF1I8bXt
+         /beU5nWlAZqcZUbadClPqmnoLyeAsHMc6X9U7JSZAFVFB8LkuClRZW6qvCHuHArsdww3
+         LdIM0NT1hzjr8gYEo3LFE4l5MdwVL4zhLYj9FSM0v8dIzxux6en1E5O5jkYiZDM6YCO6
+         PeRSKQ01SkWXLS+zA3se0Mf7zp2QHvavZMZp89JGmgYSDCZyVXZUakANXzuaGjE7T53C
+         eWqrnnx/WciQUSmRPGCO9Vcg+ppVq/GyxzW+kL7kehLIeuW+dtaK/bxabqSzVXp851Xu
+         OgUQ==
+X-Gm-Message-State: AOAM5338drGa/2j7EFRopEdeEAFCdTBfCJ94wwhqv6tJQgwrzoivMxqK
+        o8iKdd+AVjEYtX8QOTZYkM6YHwbBjnsb
+X-Google-Smtp-Source: ABdhPJxy1WKwdV1duwG/xDZY/tYe+Om1uC01inLhj84Zu21ZAyoI2bHHAJ1YB/6aQKNQYkYR5ELk8g==
+X-Received: by 2002:a17:90b:4b82:: with SMTP id lr2mr8056716pjb.184.1600342742335;
+        Thu, 17 Sep 2020 04:39:02 -0700 (PDT)
 Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id 64sm18761147pgi.90.2020.09.17.04.39.00
+        by smtp.gmail.com with ESMTPSA id 64sm18761147pgi.90.2020.09.17.04.39.01
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 17 Sep 2020 04:39:00 -0700 (PDT)
+        Thu, 17 Sep 2020 04:39:01 -0700 (PDT)
 From:   xiakaixu1987@gmail.com
 X-Google-Original-From: kaixuxia@tencent.com
 To:     linux-xfs@vger.kernel.org
 Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH v2 6/7] xfs: code cleanup in xfs_attr_leaf_entsize_{remote,local}
-Date:   Thu, 17 Sep 2020 19:38:47 +0800
-Message-Id: <1600342728-21149-7-git-send-email-kaixuxia@tencent.com>
+Subject: [PATCH v2 7/7] xfs: fix some comments
+Date:   Thu, 17 Sep 2020 19:38:48 +0800
+Message-Id: <1600342728-21149-8-git-send-email-kaixuxia@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1600342728-21149-1-git-send-email-kaixuxia@tencent.com>
 References: <1600342728-21149-1-git-send-email-kaixuxia@tencent.com>
@@ -62,38 +62,45 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-Cleanup the typedef usage, the unnecessary parentheses, the unnecessary
-backslash and use the open-coded round_up call in
-xfs_attr_leaf_entsize_{remote,local}.
+Fix the comments to help people understand the code.
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_da_format.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_da_format.h | 4 ++--
+ fs/xfs/xfs_dquot.c            | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
-index b40a4e80f5ee..09f0f5d42728 100644
+index 09f0f5d42728..2a72f1760169 100644
 --- a/fs/xfs/libxfs/xfs_da_format.h
 +++ b/fs/xfs/libxfs/xfs_da_format.h
-@@ -746,14 +746,14 @@ xfs_attr3_leaf_name_local(xfs_attr_leafblock_t *leafp, int idx)
+@@ -35,8 +35,8 @@ typedef struct xfs_da_blkinfo {
   */
- static inline int xfs_attr_leaf_entsize_remote(int nlen)
- {
--	return ((uint)sizeof(xfs_attr_leaf_name_remote_t) - 1 + (nlen) + \
--		XFS_ATTR_LEAF_NAME_ALIGN - 1) & ~(XFS_ATTR_LEAF_NAME_ALIGN - 1);
-+	return round_up(sizeof(struct xfs_attr_leaf_name_remote) - 1 + nlen,
-+			XFS_ATTR_LEAF_NAME_ALIGN);
+ #define XFS_DA3_NODE_MAGIC	0x3ebe	/* magic number: non-leaf blocks */
+ #define XFS_ATTR3_LEAF_MAGIC	0x3bee	/* magic number: attribute leaf blks */
+-#define	XFS_DIR3_LEAF1_MAGIC	0x3df1	/* magic number: v2 dirlf single blks */
+-#define	XFS_DIR3_LEAFN_MAGIC	0x3dff	/* magic number: v2 dirlf multi blks */
++#define	XFS_DIR3_LEAF1_MAGIC	0x3df1	/* magic number: v3 dirlf single blks */
++#define	XFS_DIR3_LEAFN_MAGIC	0x3dff	/* magic number: v3 dirlf multi blks */
+ 
+ struct xfs_da3_blkinfo {
+ 	/*
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 3072814e407d..1d95ed387d66 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -831,8 +831,8 @@ xfs_qm_dqget_checks(
  }
  
- static inline int xfs_attr_leaf_entsize_local(int nlen, int vlen)
- {
--	return ((uint)sizeof(xfs_attr_leaf_name_local_t) - 1 + (nlen) + (vlen) +
--		XFS_ATTR_LEAF_NAME_ALIGN - 1) & ~(XFS_ATTR_LEAF_NAME_ALIGN - 1);
-+	return round_up(sizeof(struct xfs_attr_leaf_name_local) - 1 + nlen + vlen,
-+			XFS_ATTR_LEAF_NAME_ALIGN);
- }
- 
- static inline int xfs_attr_leaf_entsize_local_max(int bsize)
+ /*
+- * Given the file system, id, and type (UDQUOT/GDQUOT), return a locked
+- * dquot, doing an allocation (if requested) as needed.
++ * Given the file system, id, and type (UDQUOT/GDQUOT/PDQUOT), return a
++ * locked dquot, doing an allocation (if requested) as needed.
+  */
+ int
+ xfs_qm_dqget(
 -- 
 2.20.0
 
