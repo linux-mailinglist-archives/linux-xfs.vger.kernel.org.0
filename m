@@ -2,94 +2,192 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CC8526D1BB
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 05:29:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61C0B26D1BF
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 05:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgIQD3e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Sep 2020 23:29:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50226 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgIQD32 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 23:29:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08H3OSU7116002;
-        Thu, 17 Sep 2020 03:29:26 GMT
+        id S1726281AbgIQD3j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Sep 2020 23:29:39 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:50008 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgIQD3g (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Sep 2020 23:29:36 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08H3P1lx041059;
+        Thu, 17 Sep 2020 03:29:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=X5ZlgSQjqBWIsuqMttZCEFyPdgUsEzTUR7eY6sU/2gg=;
- b=zOXRO3JXJ1/GfpVhMBDfg5KscEgVb5Pnn19GnT7fcVx6waEp33pyKx7wffBg5OCO6Rsw
- bgRs5TtmdgsH9QpQAsMPV0Vj7T4/8Lc8nCAU4kbY2SnUOUselJsx9ho6Mzh+K1jH5zdx
- tPJBSKChhyF+pFj0leo6g5jP1oMyRYPGKqcNuRyqUWwN8/LKSOJCTbu8oixjqllfzSGL
- ybz1YzDCRGrorXuZE60UGpRzE8b2ugesLk4TZdPiaHVgHDZI9ef7zFrFisqwjrctL1nA
- 45VeuNVadEGb9wlSQXcAiTHIgQBTG4oqH6g/jILkXIcNBOaoPMt+zZ4PGns6iTUg2qBY Lw== 
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=KzmZmA0YtqvoPsWlhihchdlJ//HQRICscte2v0vck0w=;
+ b=VEtHq+m7+t3CdQVzHFW/YXE5tFTSVP1565BgqLuXGQ1mci60C4cfpC8gIIAB41KnKH23
+ TOQ5EbQGyrE3la73H9+9P8Q3X/P9VnUoSwZEgoRKvbxql1O5tEuTqn1qKif5VfNxW8VE
+ KPut3HDtqxEdM4IMbcROQg5/DVRMRrJ28BOLrFwh52Nt3vmZV8TwU2crAYaEinHSNuIv
+ mNBWcLjRAArvVNX1QPMr+gPQJXwRwREe7bdY5/TAq1uZK5M4IeEOS5TCpqVGZLH013n7
+ GsUSYPZbSmsEtoWsSSdRk2ByoZH3HJWkr4C6nVP/vqGL15LhmHCwwWEJVXZ/CQ2TP2Cr SQ== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 33j91dr5h6-1
+        by aserp2120.oracle.com with ESMTP id 33gp9meg7m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 17 Sep 2020 03:29:26 +0000
+        Thu, 17 Sep 2020 03:29:33 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08H3PWbg080061;
-        Thu, 17 Sep 2020 03:29:25 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33h88a268h-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08H3PVUq080011;
+        Thu, 17 Sep 2020 03:29:32 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 33h88a26em-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Sep 2020 03:29:25 +0000
+        Thu, 17 Sep 2020 03:29:32 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08H3TPsN007021;
-        Thu, 17 Sep 2020 03:29:25 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08H3TV1x030197;
+        Thu, 17 Sep 2020 03:29:31 GMT
 Received: from localhost (/10.159.158.133)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Sep 2020 03:29:25 +0000
-Subject: [PATCH 0/3] xfs: fix inode use-after-free during log recovery
+        with ESMTP ; Thu, 17 Sep 2020 03:29:31 +0000
+Subject: [PATCH 1/3] xfs: clean up bmap intent item recovery checking
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
-Date:   Wed, 16 Sep 2020 20:29:24 -0700
-Message-ID: <160031336397.3624582.9639363323333392474.stgit@magnolia>
+Date:   Wed, 16 Sep 2020 20:29:30 -0700
+Message-ID: <160031337029.3624582.3821482653073391016.stgit@magnolia>
+In-Reply-To: <160031336397.3624582.9639363323333392474.stgit@magnolia>
+References: <160031336397.3624582.9639363323333392474.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- suspectscore=0 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ suspectscore=3 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009170023
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9746 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009170023
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 suspectscore=3 impostorscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009170023
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-In this series, I try to fix a use-after-free that I discovered during
-development of the dfops freezer, where BUI recovery releases the inode
-even if it requeues itself.  If the inode gets reclaimed, the fs
-corrupts memory and explodes.  The fix is to make the dfops freezer take
-over ownership of the inodes if there's any more work to be done.
+The bmap intent item checking code in xfs_bui_item_recover is spread all
+over the function.  We should check the recovered log item at the top
+before we allocate any resources or do anything else, so do that.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-bmap-intent-recovery
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_defer.c       |   57 ++++++++++++++++++++++-
- fs/xfs/libxfs/xfs_defer.h       |   21 ++++++++-
- fs/xfs/libxfs/xfs_log_recover.h |   14 +++++-
- fs/xfs/xfs_bmap_item.c          |   95 +++++++++++++++------------------------
- fs/xfs/xfs_icache.c             |   41 +++++++++++++++++
- fs/xfs/xfs_log_recover.c        |   32 +++++++++++--
- fs/xfs/xfs_trans.h              |    6 --
- 7 files changed, 191 insertions(+), 75 deletions(-)
+ fs/xfs/xfs_bmap_item.c |   57 ++++++++++++++++--------------------------------
+ 1 file changed, 19 insertions(+), 38 deletions(-)
+
+
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index 0a0904a7650a..877afe76d76a 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -437,17 +437,13 @@ xfs_bui_item_recover(
+ 	xfs_fsblock_t			inode_fsb;
+ 	xfs_filblks_t			count;
+ 	xfs_exntst_t			state;
+-	enum xfs_bmap_intent_type	type;
+-	bool				op_ok;
+ 	unsigned int			bui_type;
+ 	int				whichfork;
+ 	int				error = 0;
+ 
+ 	/* Only one mapping operation per BUI... */
+-	if (buip->bui_format.bui_nextents != XFS_BUI_MAX_FAST_EXTENTS) {
+-		xfs_bui_release(buip);
+-		return -EFSCORRUPTED;
+-	}
++	if (buip->bui_format.bui_nextents != XFS_BUI_MAX_FAST_EXTENTS)
++		goto garbage;
+ 
+ 	/*
+ 	 * First check the validity of the extent described by the
+@@ -458,29 +454,26 @@ xfs_bui_item_recover(
+ 			   XFS_FSB_TO_DADDR(mp, bmap->me_startblock));
+ 	inode_fsb = XFS_BB_TO_FSB(mp, XFS_FSB_TO_DADDR(mp,
+ 			XFS_INO_TO_FSB(mp, bmap->me_owner)));
+-	switch (bmap->me_flags & XFS_BMAP_EXTENT_TYPE_MASK) {
++	state = (bmap->me_flags & XFS_BMAP_EXTENT_UNWRITTEN) ?
++			XFS_EXT_UNWRITTEN : XFS_EXT_NORM;
++	whichfork = (bmap->me_flags & XFS_BMAP_EXTENT_ATTR_FORK) ?
++			XFS_ATTR_FORK : XFS_DATA_FORK;
++	bui_type = bmap->me_flags & XFS_BMAP_EXTENT_TYPE_MASK;
++	switch (bui_type) {
+ 	case XFS_BMAP_MAP:
+ 	case XFS_BMAP_UNMAP:
+-		op_ok = true;
+ 		break;
+ 	default:
+-		op_ok = false;
+-		break;
++		goto garbage;
+ 	}
+-	if (!op_ok || startblock_fsb == 0 ||
++	if (startblock_fsb == 0 ||
+ 	    bmap->me_len == 0 ||
+ 	    inode_fsb == 0 ||
+ 	    startblock_fsb >= mp->m_sb.sb_dblocks ||
+ 	    bmap->me_len >= mp->m_sb.sb_agblocks ||
+ 	    inode_fsb >= mp->m_sb.sb_dblocks ||
+-	    (bmap->me_flags & ~XFS_BMAP_EXTENT_FLAGS)) {
+-		/*
+-		 * This will pull the BUI from the AIL and
+-		 * free the memory associated with it.
+-		 */
+-		xfs_bui_release(buip);
+-		return -EFSCORRUPTED;
+-	}
++	    (bmap->me_flags & ~XFS_BMAP_EXTENT_FLAGS))
++		goto garbage;
+ 
+ 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate,
+ 			XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK), 0, 0, &tp);
+@@ -501,32 +494,17 @@ xfs_bui_item_recover(
+ 	if (VFS_I(ip)->i_nlink == 0)
+ 		xfs_iflags_set(ip, XFS_IRECOVERY);
+ 
+-	/* Process deferred bmap item. */
+-	state = (bmap->me_flags & XFS_BMAP_EXTENT_UNWRITTEN) ?
+-			XFS_EXT_UNWRITTEN : XFS_EXT_NORM;
+-	whichfork = (bmap->me_flags & XFS_BMAP_EXTENT_ATTR_FORK) ?
+-			XFS_ATTR_FORK : XFS_DATA_FORK;
+-	bui_type = bmap->me_flags & XFS_BMAP_EXTENT_TYPE_MASK;
+-	switch (bui_type) {
+-	case XFS_BMAP_MAP:
+-	case XFS_BMAP_UNMAP:
+-		type = bui_type;
+-		break;
+-	default:
+-		XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, mp);
+-		error = -EFSCORRUPTED;
+-		goto err_inode;
+-	}
+ 	xfs_trans_ijoin(tp, ip, 0);
+ 
+ 	count = bmap->me_len;
+-	error = xfs_trans_log_finish_bmap_update(tp, budp, type, ip, whichfork,
+-			bmap->me_startoff, bmap->me_startblock, &count, state);
++	error = xfs_trans_log_finish_bmap_update(tp, budp, bui_type, ip,
++			whichfork, bmap->me_startoff, bmap->me_startblock,
++			&count, state);
+ 	if (error)
+ 		goto err_inode;
+ 
+ 	if (count > 0) {
+-		ASSERT(type == XFS_BMAP_UNMAP);
++		ASSERT(bui_type == XFS_BMAP_UNMAP);
+ 		irec.br_startblock = bmap->me_startblock;
+ 		irec.br_blockcount = count;
+ 		irec.br_startoff = bmap->me_startoff;
+@@ -546,6 +524,9 @@ xfs_bui_item_recover(
+ 		xfs_irele(ip);
+ 	}
+ 	return error;
++garbage:
++	xfs_bui_release(buip);
++	return -EFSCORRUPTED;
+ }
+ 
+ STATIC bool
 
