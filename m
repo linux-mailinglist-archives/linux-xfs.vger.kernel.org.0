@@ -2,54 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E43026D5AD
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 10:07:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4166B26D5C5
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 10:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbgIQIH3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 04:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
+        id S1726513AbgIQIIf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 04:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726474AbgIQIHS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 04:07:18 -0400
+        with ESMTP id S1726458AbgIQIIU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 04:08:20 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 194C4C061788
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 01:07:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D400C06174A
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Sep 2020 01:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+PQECES7cZuFaT5MRFnApndgufxF6VEPrb4LMW88uXw=; b=wLADQrWZouw02SbNgPXODof+VW
-        tHZfW0xyt6/7QG5JT4DmSmsPN2DpkUbxMibHoDRYxge6QygqEN8eItE+imA8HdMdlbSvS9Nop3KfJ
-        IiLDrgLPt2EOv1YXgHWRml/vLpR+8ylwhJh7R6nicEpToUwrhlFQKTntaJFYrxwX5TBc49rpGIrYr
-        GwWiy9mwwytgRPW/m/T/d4qchHijBXoJ6DhemqJxjVmPW20duLXbnSgd5HqBX9BzcJACyV2PT0duj
-        eS58KpWzsGhbC+lloLgupq86e5m4QOz6zaB3oXEVkFybx+DX/GiGqqxBxQwzvCRuHtlfBBSiCjsQM
-        2VRD2VpQ==;
+        bh=5noAswOBY9MEw8HN8NwuujGCR86OO7jFDmFPLsVxZW4=; b=t2uM9yCzgct9Z8Ku2OaZCOiq9m
+        Q4Q3aqM3ha9zjJRyUxG2MKkMhtEJruptyMij904TI/c9L2wFE8VpL8ElwOH2kAdZhKQifwOBSk6/J
+        BJSI/86rbuv4GbrcSOKzj1vBDyZbvSLL7CNBy8/aOal3R8QoWkahnU7WvHu3xFMv0aLUA079Di5qA
+        ts81oyct1hixcK+wuc/5oVqRigVEoh6XkcD2797KhIQGu/P4gXXf6mMPUG6cyNM4v2hy6F4ZH4mm8
+        V5czsebo7l5PgUfurjOsl/849RV/mWXGkT6yQ9fVcG6/SKoC9q4p3QYpIB2hiNc72kYqIwLSsyATv
+        UOYFVcog==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kIowZ-0008AC-M4; Thu, 17 Sep 2020 08:07:03 +0000
-Date:   Thu, 17 Sep 2020 09:07:03 +0100
+        id 1kIoxb-0008E6-4k; Thu, 17 Sep 2020 08:08:07 +0000
+Date:   Thu, 17 Sep 2020 09:08:07 +0100
 From:   Christoph Hellwig <hch@infradead.org>
-To:     xiakaixu1987@gmail.com
-Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     xiakaixu1987@gmail.com, linux-xfs@vger.kernel.org,
         Kaixu Xia <kaixuxia@tencent.com>
-Subject: Re: [PATCH] xfs: remove the unnecessary xfs_dqid_t type cast
-Message-ID: <20200917080703.GA26262@infradead.org>
+Subject: Re: [PATCH] xfs: do the assert for all the log done items in
+ xfs_trans_cancel
+Message-ID: <20200917080807.GB26262@infradead.org>
 References: <1600255152-16086-1-git-send-email-kaixuxia@tencent.com>
- <1600255152-16086-4-git-send-email-kaixuxia@tencent.com>
+ <1600255152-16086-5-git-send-email-kaixuxia@tencent.com>
+ <20200917001042.GP7955@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1600255152-16086-4-git-send-email-kaixuxia@tencent.com>
+In-Reply-To: <20200917001042.GP7955@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 16, 2020 at 07:19:06PM +0800, xiakaixu1987@gmail.com wrote:
-> From: Kaixu Xia <kaixuxia@tencent.com>
+On Wed, Sep 16, 2020 at 05:10:42PM -0700, Darrick J. Wong wrote:
+> Please don't go adding more flags for a debugging check.
 > 
-> Since the type prid_t and xfs_dqid_t both are uint32_t, seems the
-> type cast is unnecessary, so remove it.
+> You /could/ just detect intent-done items by the fact that their item
+> ops don't have unpin or push methods, kind of like what we do for
+> detecting intent items in log recovery.
+> 
+> Oh wait, you mowed /that/ down too.
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Yes, I'd much rather change based on method presence instead of creating
+redundant flags.
