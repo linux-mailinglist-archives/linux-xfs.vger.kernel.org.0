@@ -2,118 +2,112 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34FCA26E2BC
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 19:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 545D726E2C6
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Sep 2020 19:46:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726577AbgIQRor (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 13:44:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55526 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgIQRnY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 13:43:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08HFjBDc113795;
-        Thu, 17 Sep 2020 16:04:15 GMT
+        id S1726171AbgIQRp5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 13:45:57 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59812 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbgIQRoR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 13:44:17 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08HHf8vx076313;
+        Thu, 17 Sep 2020 17:44:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=d73m7uS8G6+jWeZJMZFeOQgtSU+yH+vD8bd+fqiBmUE=;
- b=DFowoCdKu9jamTuiAXvOiN/i9hgnob/0aKqjMCDubUwZeuLZExibvTCyuutmVbAyWvGN
- pcSQZMPi6nGwuHB1xtpWlrKvgOZX/cCacrw1nOZuMH18naZKuGx1E+wxq14YjUdnpxDU
- /zf6Gx5j3TqnCR1YdrBvVj4gF8CKOyrec41zzYEZtxCSzsCxlDxQRIKaKM3ynGkIawZ3
- wOGPm39m/MRy7eUykrDO1WB35Ls3C4STGi6LTPF1Tmd6VUMiAUoStdhV+CcwgAo9sP2Q
- ltoHgzv2ddgXJ52Eu6EXMLFMbD4SpepJDcVg6oenzgwb07NG4EekcmoQ77AU1HcQDszp vA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 33gp9mj76d-1
+ bh=Nfp6bGWsm7n7xpaGE+VpRYK3Xm6YnVp1/p0AbC9Hq6w=;
+ b=xl0x5AiJQlpaoZIROTjXDbhs94pRFkZCEGklS65RZMrYxjCFOWmVojmpMuvP9iAbc32c
+ +BSKfYMgKuzfND7lBGzvFTIZpIZZ3ypfmNUbhvxlHM1zxF8Whb5AUz51EMKP2KJGKRb5
+ 7wtZlAFDwRu/z1+Nq5QBcYoBcrNn6SMIgv1s0ihQdw1Ndx+QrdSfFotU+9jDsHDej2oR
+ iMKiKHvn9RBNw8buifjRkyuRyZCII/PMvrEnADoyANeR0XV5cDeapwmiB3SyAOcmgZX3
+ fVmsfvLAZeqHW5fO6MMjdTpS0KW8h2UNuYB7up53wYF8/+rwXkLpm2MIJseC8W4f+XPV 4A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 33j91dvf6u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 17 Sep 2020 16:04:15 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08HFkLgi067186;
-        Thu, 17 Sep 2020 16:04:14 GMT
+        Thu, 17 Sep 2020 17:44:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08HHeE84135781;
+        Thu, 17 Sep 2020 17:42:07 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 33khpn9m78-1
+        by userp3020.oracle.com with ESMTP id 33hm358s0r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Sep 2020 16:04:14 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08HG4E8P025968;
-        Thu, 17 Sep 2020 16:04:14 GMT
+        Thu, 17 Sep 2020 17:42:07 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08HHg6xI010906;
+        Thu, 17 Sep 2020 17:42:06 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Sep 2020 16:04:13 +0000
-Date:   Thu, 17 Sep 2020 09:04:12 -0700
+        with ESMTP ; Thu, 17 Sep 2020 17:42:06 +0000
+Date:   Thu, 17 Sep 2020 10:42:04 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Christoph Hellwig <hch@infradead.org>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 21/24] common/rc: teach _scratch_mkfs_sized to set a size
- on an xfs realtime volume
-Message-ID: <20200917160412.GC7955@magnolia>
-References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
- <160013430895.2923511.7033338053997588353.stgit@magnolia>
- <20200917080054.GQ26262@infradead.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs: don't free rt blocks when we're doing a REMAP
+ bunmapi call
+Message-ID: <20200917174204.GI7955@magnolia>
+References: <160031330694.3624286.7407913899137083972.stgit@magnolia>
+ <160031331319.3624286.3971628628820322437.stgit@magnolia>
+ <20200917081134.GD26262@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200917080054.GQ26262@infradead.org>
+In-Reply-To: <20200917081134.GD26262@infradead.org>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
- mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009170120
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- spamscore=0 priorityscore=1501 suspectscore=1 impostorscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=1
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009170120
+ definitions=main-2009170131
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=1 mlxlogscore=999
+ clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009170131
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 09:00:54AM +0100, Christoph Hellwig wrote:
-> On Mon, Sep 14, 2020 at 06:45:08PM -0700, Darrick J. Wong wrote:
+On Thu, Sep 17, 2020 at 09:11:34AM +0100, Christoph Hellwig wrote:
+> On Wed, Sep 16, 2020 at 08:28:33PM -0700, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <darrick.wong@oracle.com>
 > > 
-> > Generally speaking, tests that call _scratch_mkfs_sized are trying to
-> > constrain a test's run time by formatting a filesystem that's smaller
-> > than the device.  The current helper does this for the scratch device,
-> > but it doesn't do this for the xfs realtime volume.
-> > 
-> > If fstests has been configured to create files on the realtime device by
-> > default ("-d rtinherit=1) then those tests that want to run with a small
-> > volume size will instead be running with a huge realtime device.  This
-> > makes certain tests take forever to run, so apply the same sizing to the
-> > rt volume if one exists.
+> > When callers pass XFS_BMAPI_REMAP into xfs_bunmapi, they want the extent
+> > to be unmapped from the given file fork without the extent being freed.
+> > We do this for non-rt files, but we forgot to do this for realtime
+> > files.  So far this isn't a big deal since nobody makes a bunmapi call
+> > to a rt file with the REMAP flag set, but don't leave a logic bomb.
 > > 
 > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 > > ---
-> >  common/rc |   10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> >  fs/xfs/libxfs/xfs_bmap.c |    9 ++++++---
+> >  1 file changed, 6 insertions(+), 3 deletions(-)
 > > 
 > > 
-> > diff --git a/common/rc b/common/rc
-> > index f78b1cfc..b2d45fa2 100644
-> > --- a/common/rc
-> > +++ b/common/rc
-> > @@ -976,14 +976,20 @@ _scratch_mkfs_sized()
-> >  	[ "$fssize" -gt "$devsize" ] && _notrun "Scratch device too small"
-> >      fi
+> > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> > index 1b0a01b06a05..e8cd0012a017 100644
+> > --- a/fs/xfs/libxfs/xfs_bmap.c
+> > +++ b/fs/xfs/libxfs/xfs_bmap.c
+> > @@ -5057,9 +5057,12 @@ xfs_bmap_del_extent_real(
+> >  				  &mod);
+> >  		ASSERT(mod == 0);
 > >  
-> > +    if [ "$HOSTOS" == "Linux" ] && [ "$FSTYP" = "xfs" ] && [ -b "$SCRATCH_RTDEV" ]; then
-> > +	local rtdevsize=`blockdev --getsize64 $SCRATCH_RTDEV`
-> > +	[ "$fssize" -gt "$rtdevsize" ] && _notrun "Scratch rt device too small"
-> > +	rt_ops="-r size=$fssize"
-> > +    fi
+> > -		error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
+> > -		if (error)
+> > -			goto done;
+> > +		if (!(bflags & XFS_BMAPI_REMAP)) {
+> > +			error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
+> > +			if (error)
+> > +				goto done;
+> > +		}
+> > +
+> >  		do_fx = 0;
+> >  		nblks = len * mp->m_sb.sb_rextsize;
+> >  		qfield = XFS_TRANS_DQ_RTBCOUNT;
 > 
-> The indentation here looks rather weird.  I also don't think we need
-> the HOSTOS check.
+> We also don't need to calculate bno for this case.
 
-<nod> it's copy-pastaing the clause above it.  I guess I could just send
-an indentation cleanup for that, since it's a bit fugly.
+Fixed.
 
 --D
-
-> 
-> Otherwise looks good:
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
