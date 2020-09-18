@@ -2,299 +2,200 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CDC026F029
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Sep 2020 04:41:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F0FE26F4B7
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Sep 2020 05:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgIRClJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 22:41:09 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51846 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727807AbgIRCLW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 22:11:22 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08I2AQUR100536;
-        Fri, 18 Sep 2020 02:11:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=X1wYdPxklvpY0TUe/W3b2PxhiaH4nIQYooJnRGNGZu0=;
- b=RHeWMerwihdGbAABlVa4B7hdUS6iMLvasDvGbO/UgILiIf2zzQq+rFlOcY++iLVJQZ1H
- lLZprTQtVXYdOgyQHpS+U5OVUx9KgLVYyFiiMoK8M09BaUC6ZcufOCEGxjEr7WaRezth
- ZU7gQqAlMPNxx+b32HVLeXdVBBtTV/5HdPmc2muaEETLs7mgOn3AjSayNxgatRIVq6iO
- 2tcXL0G0JAPuYY2qnPaGR9iDvSWYL5KvKInNTK8jKnKKPLUQZn8J30aAY1bo+QwIChQg
- 255hMbG9h8MquMPPdOqIAQAo3MxcK5LpRsTyTy/vk5WXIjIvsa2Z2FSXthB/9hhUqC+S Kw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 33j91dx7ea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Sep 2020 02:11:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08I24pDD167163;
-        Fri, 18 Sep 2020 02:11:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 33megag5vc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Sep 2020 02:11:12 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08I2BBud018993;
-        Fri, 18 Sep 2020 02:11:11 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Sep 2020 02:11:10 +0000
-Date:   Thu, 17 Sep 2020 19:11:09 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     guaneryu@gmail.com, Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: [PATCH 27/24] common/rc: fix indentation in _scratch_mkfs_sized
-Message-ID: <20200918021109.GL7954@magnolia>
-References: <160013417420.2923511.6825722200699287884.stgit@magnolia>
+        id S1726273AbgIRDaY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 23:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgIRDaY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 23:30:24 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98577C06174A;
+        Thu, 17 Sep 2020 20:30:24 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id u3so2280740pjr.3;
+        Thu, 17 Sep 2020 20:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BkdXd7rhWa2AHDPr/fZYXzerJHd+2RKkZy2grOonv+E=;
+        b=MSCi5WOhDtn0nAYN1w5i7So0qSyQg5ZYRSdUBE95bhNdzrdebJ7X+G6uX2+hhe0eVZ
+         YXZwlwx7LWXrv67usCB/IheU6yC+fOxn/j4BDok+HQ81HrFRfME4cvQLZ0IJbNCTeOBm
+         6EgaVe2HO+aZGdcXSlvAHpZRVQF4s23CCASBW3P0uT753IetuhCsiLluMQ/Ap/Y0lLyS
+         UQDNvPGGrIipCP4aXiN29IM8pVnrf18W6pqlkVaDcckMRPixfmuE00DkDG9hjb3bepCy
+         3UE6lTQkqDqVjpGllwjtWvOLk2utU3XT4PIHKgGAA6+QRWp4/pmDTSYVzquZT8yOQ9Uw
+         pYEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BkdXd7rhWa2AHDPr/fZYXzerJHd+2RKkZy2grOonv+E=;
+        b=qLqW+70cidjWUUQxhXMoFfM8le7MXDnjtC9bxi2ZIvMBHWukjpGZNB7VoqT7NnOXoy
+         O1zkwyPNa6pwcpfKdg0HKjW7hHMf3PVmK/d+mXceR8k6d/JmQyd+0Bq2EOHau3Remgu5
+         zFwJDBKlM8Mfld8zx5fyomRvRj0VUjNMWcj1mdYFqBNvflk98UFZqTNq+L8tQPakGj+p
+         vF78D1wJCrcVQnxEdyUITOAF27XobLVB2xAokujanrbX1V2R1CWG+/phuktJRK67K7Vh
+         mhRfZNEQAe9bLmF2ocY9lI4i6nk/fdU9eh9O6WSf5VHvgH1sU9wb1Zxw4UIcDAkDWlBP
+         oVBQ==
+X-Gm-Message-State: AOAM5311G0kyXdZecN/vzOSR6yxaHY6skWf70SH0ivu7QDCala6Nl9/3
+        dTAYVmg5Hyxjj00xefuIYGMh0mLJMNs=
+X-Google-Smtp-Source: ABdhPJx5Oofme1x0cAr2x0A02EFukfsArQFvYA+e8me/O8q1GvxoserRcFbSuDixTSJOYXGeNJsZzA==
+X-Received: by 2002:a17:902:7103:b029:d1:e5e7:be75 with SMTP id a3-20020a1709027103b02900d1e5e7be75mr13502021pll.79.1600399823807;
+        Thu, 17 Sep 2020 20:30:23 -0700 (PDT)
+Received: from localhost.localdomain ([122.179.62.164])
+        by smtp.gmail.com with ESMTPSA id v21sm1111436pgl.39.2020.09.17.20.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Sep 2020 20:30:22 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     fstests@vger.kernel.org
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
+        linux-xfs@vger.kernel.org, guaneryu@gmail.com,
+        darrick.wong@oracle.com, zlang@redhat.com
+Subject: [PATCH V3 1/2] xfs: Add realtime group
+Date:   Fri, 18 Sep 2020 09:00:12 +0530
+Message-Id: <20200918033013.10640-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160013417420.2923511.6825722200699287884.stgit@magnolia>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 mlxscore=0 spamscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009180019
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- priorityscore=1501 malwarescore=0 suspectscore=5 mlxlogscore=999
- clxscore=1015 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009180019
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+This commit adds a new group to classify tests that can work with
+realtime devices.
 
-Fix the weird indentation in _scratch_mkfs_sized.
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- common/rc |  205 ++++++++++++++++++++++++++++++-------------------------------
- 1 file changed, 102 insertions(+), 103 deletions(-)
 
-diff --git a/common/rc b/common/rc
-index 3adeeefe..94936a8e 100644
---- a/common/rc
-+++ b/common/rc
-@@ -956,116 +956,115 @@ _available_memory_bytes()
- # _scratch_mkfs_sized <size in bytes> [optional blocksize]
- _scratch_mkfs_sized()
- {
--    local fssize=$1
--    local blocksize=$2
--    local def_blksz
-+	local fssize=$1
-+	local blocksize=$2
-+	local def_blksz
- 
--    case $FSTYP in
--    xfs)
--	def_blksz=`echo $MKFS_OPTIONS|sed -rn 's/.*-b ?size= ?+([0-9]+).*/\1/p'`
--	;;
--    ext2|ext3|ext4|ext4dev|udf|btrfs|reiser4|ocfs2|reiserfs)
--	def_blksz=`echo $MKFS_OPTIONS| sed -rn 's/.*-b ?+([0-9]+).*/\1/p'`
--	;;
--    jfs)
--	def_blksz=4096
--	;;
--    esac
-+	case $FSTYP in
-+	xfs)
-+		def_blksz=`echo $MKFS_OPTIONS | sed -rn 's/.*-b ?size= ?+([0-9]+).*/\1/p'`
-+		;;
-+	ext2|ext3|ext4|ext4dev|udf|btrfs|reiser4|ocfs2|reiserfs)
-+		def_blksz=`echo $MKFS_OPTIONS | sed -rn 's/.*-b ?+([0-9]+).*/\1/p'`
-+		;;
-+	jfs)
-+		def_blksz=4096
-+		;;
-+	esac
- 
--    [ -n "$def_blksz" ] && blocksize=$def_blksz
--    [ -z "$blocksize" ] && blocksize=4096
-+	[ -n "$def_blksz" ] && blocksize=$def_blksz
-+	[ -z "$blocksize" ] && blocksize=4096
- 
-+	local re='^[0-9]+$'
-+	if ! [[ $fssize =~ $re ]] ; then
-+		_notrun "error: _scratch_mkfs_sized: fs size \"$fssize\" not an integer."
-+	fi
-+	if ! [[ $blocksize =~ $re ]] ; then
-+		_notrun "error: _scratch_mkfs_sized: block size \"$blocksize\" not an integer."
-+	fi
- 
--    local re='^[0-9]+$'
--    if ! [[ $fssize =~ $re ]] ; then
--        _notrun "error: _scratch_mkfs_sized: fs size \"$fssize\" not an integer."
--    fi
--    if ! [[ $blocksize =~ $re ]] ; then
--        _notrun "error: _scratch_mkfs_sized: block size \"$blocksize\" not an integer."
--    fi
--
--    local blocks=`expr $fssize / $blocksize`
--
--    if [ -b "$SCRATCH_DEV" ]; then
--	local devsize=`blockdev --getsize64 $SCRATCH_DEV`
--	[ "$fssize" -gt "$devsize" ] && _notrun "Scratch device too small"
--    fi
--
--    if [ "$FSTYP" = "xfs" ] && [ -b "$SCRATCH_RTDEV" ]; then
--	local rtdevsize=`blockdev --getsize64 $SCRATCH_RTDEV`
--	[ "$fssize" -gt "$rtdevsize" ] && _notrun "Scratch rt device too small"
--	rt_ops="-r size=$fssize"
--    fi
-+	local blocks=`expr $fssize / $blocksize`
- 
--    case $FSTYP in
--    xfs)
--	# don't override MKFS_OPTIONS that set a block size.
--	echo $MKFS_OPTIONS |egrep -q "b?size="
--	if [ $? -eq 0 ]; then
--		_scratch_mkfs_xfs -d size=$fssize $rt_ops
--	else
--		_scratch_mkfs_xfs -d size=$fssize $rt_ops -b size=$blocksize
--	fi
--	;;
--    ext2|ext3|ext4|ext4dev)
--	${MKFS_PROG}.$FSTYP -F $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
--	;;
--    gfs2)
--	# mkfs.gfs2 doesn't automatically shrink journal files on small
--	# filesystems, so the journal files may end up being bigger than the
--	# filesystem, which will cause mkfs.gfs2 to fail.  Until that's fixed,
--	# shrink the journal size to at most one eigth of the filesystem and at
--	# least 8 MiB, the minimum size allowed.
--	local min_journal_size=8
--	local default_journal_size=128
--	if (( fssize/8 / (1024*1024) < default_journal_size )); then
--	    local journal_size=$(( fssize/8 / (1024*1024) ))
--	    (( journal_size >= min_journal_size )) || journal_size=$min_journal_size
--	    MKFS_OPTIONS="-J $journal_size $MKFS_OPTIONS"
-+	if [ -b "$SCRATCH_DEV" ]; then
-+		local devsize=`blockdev --getsize64 $SCRATCH_DEV`
-+		[ "$fssize" -gt "$devsize" ] && _notrun "Scratch device too small"
- 	fi
--	${MKFS_PROG}.$FSTYP $MKFS_OPTIONS -O -b $blocksize $SCRATCH_DEV $blocks
--	;;
--    ocfs2)
--	yes | ${MKFS_PROG}.$FSTYP -F $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
--	;;
--    udf)
--	$MKFS_UDF_PROG $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
--	;;
--    btrfs)
--	local mixed_opt=
--	# minimum size that's needed without the mixed option.
--	# Ref: btrfs-prog: btrfs_min_dev_size()
--	# Non mixed mode is also the default option.
--	(( fssize < $((256 * 1024 *1024)) )) && mixed_opt='--mixed'
--	$MKFS_BTRFS_PROG $MKFS_OPTIONS $mixed_opt -b $fssize $SCRATCH_DEV
--	;;
--    jfs)
--	${MKFS_PROG}.$FSTYP $MKFS_OPTIONS $SCRATCH_DEV $blocks
--	;;
--    reiserfs)
--	${MKFS_PROG}.$FSTYP $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
--	;;
--    reiser4)
--	# mkfs.resier4 requires size in KB as input for creating filesystem
--	$MKFS_REISER4_PROG $MKFS_OPTIONS -y -b $blocksize $SCRATCH_DEV \
--			   `expr $fssize / 1024`
--	;;
--    f2fs)
--	# mkfs.f2fs requires # of sectors as an input for the size
--	local sector_size=`blockdev --getss $SCRATCH_DEV`
--	$MKFS_F2FS_PROG $MKFS_OPTIONS $SCRATCH_DEV `expr $fssize / $sector_size`
--	;;
--    tmpfs)
--	local free_mem=`_free_memory_bytes`
--	if [ "$free_mem" -lt "$fssize" ] ; then
--	   _notrun "Not enough memory ($free_mem) for tmpfs with $fssize bytes"
-+
-+	if [ "$FSTYP" = "xfs" ] && [ -b "$SCRATCH_RTDEV" ]; then
-+		local rtdevsize=`blockdev --getsize64 $SCRATCH_RTDEV`
-+		[ "$fssize" -gt "$rtdevsize" ] && _notrun "Scratch rt device too small"
-+		rt_ops="-r size=$fssize"
- 	fi
--	export MOUNT_OPTIONS="-o size=$fssize $TMPFS_MOUNT_OPTIONS"
--	;;
--    *)
--	_notrun "Filesystem $FSTYP not supported in _scratch_mkfs_sized"
--	;;
--    esac
-+
-+	case $FSTYP in
-+	xfs)
-+		# don't override MKFS_OPTIONS that set a block size.
-+		echo $MKFS_OPTIONS |egrep -q "b?size="
-+		if [ $? -eq 0 ]; then
-+			_scratch_mkfs_xfs -d size=$fssize $rt_ops
-+		else
-+			_scratch_mkfs_xfs -d size=$fssize $rt_ops -b size=$blocksize
-+		fi
-+		;;
-+	ext2|ext3|ext4|ext4dev)
-+		${MKFS_PROG}.$FSTYP -F $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
-+		;;
-+	gfs2)
-+		# mkfs.gfs2 doesn't automatically shrink journal files on small
-+		# filesystems, so the journal files may end up being bigger than the
-+		# filesystem, which will cause mkfs.gfs2 to fail.  Until that's fixed,
-+		# shrink the journal size to at most one eigth of the filesystem and at
-+		# least 8 MiB, the minimum size allowed.
-+		local min_journal_size=8
-+		local default_journal_size=128
-+		if (( fssize/8 / (1024*1024) < default_journal_size )); then
-+			local journal_size=$(( fssize/8 / (1024*1024) ))
-+			(( journal_size >= min_journal_size )) || journal_size=$min_journal_size
-+			MKFS_OPTIONS="-J $journal_size $MKFS_OPTIONS"
-+		fi
-+		${MKFS_PROG}.$FSTYP $MKFS_OPTIONS -O -b $blocksize $SCRATCH_DEV $blocks
-+		;;
-+	ocfs2)
-+		yes | ${MKFS_PROG}.$FSTYP -F $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
-+		;;
-+	udf)
-+		$MKFS_UDF_PROG $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
-+		;;
-+	btrfs)
-+		local mixed_opt=
-+		# minimum size that's needed without the mixed option.
-+		# Ref: btrfs-prog: btrfs_min_dev_size()
-+		# Non mixed mode is also the default option.
-+		(( fssize < $((256 * 1024 *1024)) )) && mixed_opt='--mixed'
-+		$MKFS_BTRFS_PROG $MKFS_OPTIONS $mixed_opt -b $fssize $SCRATCH_DEV
-+		;;
-+	jfs)
-+		${MKFS_PROG}.$FSTYP $MKFS_OPTIONS $SCRATCH_DEV $blocks
-+		;;
-+	reiserfs)
-+		${MKFS_PROG}.$FSTYP $MKFS_OPTIONS -b $blocksize $SCRATCH_DEV $blocks
-+		;;
-+	reiser4)
-+		# mkfs.resier4 requires size in KB as input for creating filesystem
-+		$MKFS_REISER4_PROG $MKFS_OPTIONS -y -b $blocksize $SCRATCH_DEV \
-+				   `expr $fssize / 1024`
-+		;;
-+	f2fs)
-+		# mkfs.f2fs requires # of sectors as an input for the size
-+		local sector_size=`blockdev --getss $SCRATCH_DEV`
-+		$MKFS_F2FS_PROG $MKFS_OPTIONS $SCRATCH_DEV `expr $fssize / $sector_size`
-+		;;
-+	tmpfs)
-+		local free_mem=`_free_memory_bytes`
-+		if [ "$free_mem" -lt "$fssize" ] ; then
-+		   _notrun "Not enough memory ($free_mem) for tmpfs with $fssize bytes"
-+		fi
-+		export MOUNT_OPTIONS="-o size=$fssize $TMPFS_MOUNT_OPTIONS"
-+		;;
-+	*)
-+		_notrun "Filesystem $FSTYP not supported in _scratch_mkfs_sized"
-+		;;
-+	esac
- }
- 
- # Emulate an N-data-disk stripe w/ various stripe units
+Changelog:
+V2 -> V3:
+  Remove xfs/291 from realtime group. Darrick, sorry I missed this one
+  before sending V2.
+V1 -> V2:
+  Remove xfs/070 from realtime group.
+  
+ tests/xfs/group | 48 ++++++++++++++++++++++++------------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/tests/xfs/group b/tests/xfs/group
+index ed0d389e..b8374359 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -87,11 +87,11 @@
+ 087 fuzzers
+ 088 fuzzers
+ 089 fuzzers
+-090 rw auto
++090 rw auto realtime
+ 091 fuzzers
+ 092 other auto quick
+ 093 fuzzers
+-094 metadata dir ioctl auto
++094 metadata dir ioctl auto realtime
+ 095 log v2log auto
+ 096 mkfs v2log auto quick
+ 097 fuzzers
+@@ -119,7 +119,7 @@
+ 119 log v2log auto freeze
+ 120 fuzzers
+ 121 shutdown log auto quick
+-122 other auto quick clone
++122 other auto quick clone realtime
+ 123 fuzzers
+ 124 fuzzers
+ 125 fuzzers
+@@ -128,7 +128,7 @@
+ 128 auto quick clone fsr
+ 129 auto quick clone
+ 130 fuzzers clone
+-131 auto quick clone
++131 auto quick clone realtime
+ 132 auto quick
+ 133 dangerous_fuzzers
+ 134 dangerous_fuzzers
+@@ -188,7 +188,7 @@
+ 188 ci dir auto
+ 189 mount auto quick
+ 190 rw auto quick
+-191-input-validation auto quick mkfs
++191-input-validation auto quick mkfs realtime
+ 192 auto quick clone
+ 193 auto quick clone
+ 194 rw auto
+@@ -272,7 +272,7 @@
+ 273 auto rmap fsmap
+ 274 auto quick rmap fsmap
+ 275 auto quick rmap fsmap
+-276 auto quick rmap fsmap
++276 auto quick rmap fsmap realtime
+ 277 auto quick rmap fsmap
+ 278 repair auto
+ 279 auto mkfs
+@@ -329,17 +329,17 @@
+ 330 auto quick clone fsr quota
+ 331 auto quick rmap clone
+ 332 auto quick rmap clone collapse punch insert zero
+-333 auto quick rmap
+-334 auto quick rmap
+-335 auto rmap
+-336 auto rmap
+-337 fuzzers rmap
+-338 auto quick rmap
+-339 auto quick rmap
+-340 auto quick rmap
+-341 auto quick rmap
+-342 auto quick rmap
+-343 auto quick rmap collapse punch insert zero
++333 auto quick rmap realtime
++334 auto quick rmap realtime
++335 auto rmap realtime
++336 auto rmap realtime
++337 fuzzers rmap realtime
++338 auto quick rmap realtime
++339 auto quick rmap realtime
++340 auto quick rmap realtime
++341 auto quick rmap realtime
++342 auto quick rmap realtime
++343 auto quick rmap collapse punch insert zero realtime
+ 344 auto quick clone
+ 345 auto quick clone
+ 346 auto quick clone
+@@ -402,10 +402,10 @@
+ 403 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+ 404 dangerous_fuzzers dangerous_scrub dangerous_repair
+ 405 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+-406 dangerous_fuzzers dangerous_scrub dangerous_repair
+-407 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+-408 dangerous_fuzzers dangerous_scrub dangerous_repair
+-409 dangerous_fuzzers dangerous_scrub dangerous_online_repair
++406 dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++407 dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
++408 dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++409 dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
+ 410 dangerous_fuzzers dangerous_scrub dangerous_repair
+ 411 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+ 412 dangerous_fuzzers dangerous_scrub dangerous_repair
+@@ -415,7 +415,7 @@
+ 416 dangerous_fuzzers dangerous_scrub dangerous_repair
+ 417 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+ 418 dangerous_fuzzers dangerous_scrub dangerous_repair
+-419 auto quick swap
++419 auto quick swap realtime
+ 420 auto quick clone punch seek
+ 421 auto quick clone punch seek
+ 422 dangerous_scrub dangerous_online_repair
+@@ -477,8 +477,8 @@
+ 478 dangerous_fuzzers dangerous_norepair
+ 479 dangerous_fuzzers dangerous_norepair
+ 480 dangerous_fuzzers dangerous_norepair
+-481 dangerous_fuzzers dangerous_norepair
+-482 dangerous_fuzzers dangerous_norepair
++481 dangerous_fuzzers dangerous_norepair realtime
++482 dangerous_fuzzers dangerous_norepair realtime
+ 483 dangerous_fuzzers dangerous_norepair
+ 484 dangerous_fuzzers dangerous_norepair
+ 485 dangerous_fuzzers dangerous_norepair
+-- 
+2.28.0
+
