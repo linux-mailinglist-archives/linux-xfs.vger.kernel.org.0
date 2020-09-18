@@ -2,111 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E240E26EAAB
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Sep 2020 03:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D099426EE5E
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Sep 2020 04:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbgIRBtB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Sep 2020 21:49:01 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59658 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgIRBtB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 21:49:01 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08I1mthF122892;
-        Fri, 18 Sep 2020 01:48:55 GMT
+        id S1727806AbgIRC2A (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Sep 2020 22:28:00 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:60816 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729233AbgIRCP3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Sep 2020 22:15:29 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08I2E5Jw127495;
+        Fri, 18 Sep 2020 02:14:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=IvdLtyS6CDyiKxDsqMSc7D0FfOAh7hwnwCCi1dGtXyk=;
- b=QAZi0qkNBCHdhlg4cUJEwsGHftUR2gCzMJIo/7xN8WCQNXQSIVhM2W+hjiwZXnn/qzFk
- 79owcE8FVuGO8B3K/0daccUqN2lFJNk766Bud7x9MpEp2SJi3BZsBqMOwNIHgaUOSL3y
- JmvdrOR0tHNlOluoKDUoDbZGNnwd4JTA9KXkvgMAD1DKD3YPI3p4ifaL1MlHDkPyADzk
- W6AihvH1oVloZApBogRlwyFruKO+9G/98eIet4302TvydfXkAOPUklAnoKfIK4WLNLgn
- AixfBy1j/+XRdM1X5R+TvEc1AuaCd80fZDcTg3GbODv8qjUpRLnMpBELdsdEmb95QCdx AQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 33gp9mmfkc-1
+ bh=jKzds6bOxXvHdLUfA/ruoQVPofuBQhy72R0e6toYdC0=;
+ b=i3XHuunM42C1HwOJ35MbjSUbhT5hYYvUTLflUvgZv6WN5ShW7/fDreSppt4UykZNuM9V
+ WTXzTcFdAd81izyS9veimv+tFnttgZgOIRt9+RCpVqQ9Ok+C2e/XjOJuriF3t3NWrnx8
+ xoAc03ytQfUgS6RqZ+LOq+wL5iHuboHWCwDvqlqHy+nCpLlxAjpWvnv5nLoQHTL/hBgr
+ r5QxVzAXQhXai14VBIJS/MExFDCZRcLFv/Tv1NYCRco12Vn1VcH4hdyD8S6+DHU2QWjp
+ J22I6gDfhb6hYvoNe+dFwaamSiNEl6hx41ldPcD6P1B+2+T2qsu6OM81mwvnXI1swoaO WQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 33gnrrcmbt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Sep 2020 01:48:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08I1jvaO075810;
-        Fri, 18 Sep 2020 01:48:49 GMT
+        Fri, 18 Sep 2020 02:14:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08I25Zcq038605;
+        Fri, 18 Sep 2020 02:14:58 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 33hm35wft0-1
+        by aserp3020.oracle.com with ESMTP id 33h88d3jpq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Sep 2020 01:48:49 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08I1mmdv009445;
-        Fri, 18 Sep 2020 01:48:48 GMT
-Received: from localhost (/10.159.238.153)
+        Fri, 18 Sep 2020 02:14:58 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08I2EuM2020230;
+        Fri, 18 Sep 2020 02:14:56 GMT
+Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 18 Sep 2020 01:48:47 +0000
-Date:   Thu, 17 Sep 2020 18:48:46 -0700
+        with ESMTP ; Fri, 18 Sep 2020 02:14:52 +0000
+Date:   Thu, 17 Sep 2020 19:14:50 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
-Subject: Re: [PATCH 3/2] xfs: free the intent item when allocating recovery
- transaction fails
-Message-ID: <20200918014846.GT7955@magnolia>
-References: <160031332353.3624373.16349101558356065522.stgit@magnolia>
- <20200917070135.GV7955@magnolia>
- <20200917090645.GB13366@infradead.org>
+To:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>
+Subject: [PATCH v2 1/2] xfs: don't free rt blocks when we're doing a REMAP
+ bunmapi call
+Message-ID: <20200918021450.GU7955@magnolia>
+References: <160031330694.3624286.7407913899137083972.stgit@magnolia>
+ <160031331319.3624286.3971628628820322437.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200917090645.GB13366@infradead.org>
+In-Reply-To: <160031331319.3624286.3971628628820322437.stgit@magnolia>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 mlxscore=0 phishscore=0 adultscore=0 suspectscore=5
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ suspectscore=1 phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009180015
+ definitions=main-2009180019
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9747 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- adultscore=0 malwarescore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
- spamscore=0 priorityscore=1501 suspectscore=5 impostorscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009180016
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 bulkscore=0 suspectscore=1
+ clxscore=1015 mlxlogscore=999 adultscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009180020
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 17, 2020 at 10:06:45AM +0100, Christoph Hellwig wrote:
-> On Thu, Sep 17, 2020 at 12:01:35AM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > The recovery functions of all four log intent items fail to free the
-> > intent item if the transaction allocation fails.  Fix this.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  fs/xfs/xfs_bmap_item.c     |    5 ++++-
-> >  fs/xfs/xfs_extfree_item.c  |    5 ++++-
-> >  fs/xfs/xfs_refcount_item.c |    5 ++++-
-> >  fs/xfs/xfs_rmap_item.c     |    5 ++++-
-> >  4 files changed, 16 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-> > index 2b1cf3ed8172..85d18cd708ba 100644
-> > --- a/fs/xfs/xfs_bmap_item.c
-> > +++ b/fs/xfs/xfs_bmap_item.c
-> > @@ -484,8 +484,11 @@ xfs_bui_item_recover(
-> >  
-> >  	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate,
-> >  			XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK), 0, 0, &tp);
-> > -	if (error)
-> > +	if (error) {
-> > +		xfs_bui_release(buip);
-> >  		return error;
-> > +	}
-> 
-> This should probably use a common label instead of duplicating the
-> release three times.
-> 
-> That beind said I don't think we need either the existing or newly
-> added calls.  At the end of log recovery we always call
-> xlog_recover_cancel_intents, which will release all intents remaining
-> in the AIL.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-You know, that's right, recovery will clean up all the intents for us if
-we fail.  Ok, new patch. :)
+When callers pass XFS_BMAPI_REMAP into xfs_bunmapi, they want the extent
+to be unmapped from the given file fork without the extent being freed.
+We do this for non-rt files, but we forgot to do this for realtime
+files.  So far this isn't a big deal since nobody makes a bunmapi call
+to a rt file with the REMAP flag set, but don't leave a logic bomb.
 
---D
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v2: only compute bno if we're going to use it
+---
+ fs/xfs/libxfs/xfs_bmap.c |   19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 1b0a01b06a05..d9a692484eae 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -5046,20 +5046,25 @@ xfs_bmap_del_extent_real(
+ 
+ 	flags = XFS_ILOG_CORE;
+ 	if (whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip)) {
+-		xfs_fsblock_t	bno;
+ 		xfs_filblks_t	len;
+ 		xfs_extlen_t	mod;
+ 
+-		bno = div_u64_rem(del->br_startblock, mp->m_sb.sb_rextsize,
+-				  &mod);
+-		ASSERT(mod == 0);
+ 		len = div_u64_rem(del->br_blockcount, mp->m_sb.sb_rextsize,
+ 				  &mod);
+ 		ASSERT(mod == 0);
+ 
+-		error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
+-		if (error)
+-			goto done;
++		if (!(bflags & XFS_BMAPI_REMAP)) {
++			xfs_fsblock_t	bno;
++
++			bno = div_u64_rem(del->br_startblock,
++					mp->m_sb.sb_rextsize, &mod);
++			ASSERT(mod == 0);
++
++			error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
++			if (error)
++				goto done;
++		}
++
+ 		do_fx = 0;
+ 		nblks = len * mp->m_sb.sb_rextsize;
+ 		qfield = XFS_TRANS_DQ_RTBCOUNT;
