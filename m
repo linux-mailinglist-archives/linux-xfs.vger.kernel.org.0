@@ -2,87 +2,160 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20289270B98
-	for <lists+linux-xfs@lfdr.de>; Sat, 19 Sep 2020 09:54:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE77E270C3B
+	for <lists+linux-xfs@lfdr.de>; Sat, 19 Sep 2020 11:42:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbgISHy5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 19 Sep 2020 03:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48000 "EHLO
+        id S1726129AbgISJmf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 19 Sep 2020 05:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726041AbgISHy5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 19 Sep 2020 03:54:57 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D5AC0613CE
-        for <linux-xfs@vger.kernel.org>; Sat, 19 Sep 2020 00:54:57 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id md22so5114973pjb.0
-        for <linux-xfs@vger.kernel.org>; Sat, 19 Sep 2020 00:54:57 -0700 (PDT)
+        with ESMTP id S1726097AbgISJmf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 19 Sep 2020 05:42:35 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 129D3C0613CE
+        for <linux-xfs@vger.kernel.org>; Sat, 19 Sep 2020 02:42:35 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so4296421plk.3
+        for <linux-xfs@vger.kernel.org>; Sat, 19 Sep 2020 02:42:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=TjRMMhaGcmXlEZ6B77Hxdea4zyj/rL2OsZpjW61YLp4=;
-        b=kEF87GgFCSnIS8N/enPyb5Nmxjfx9zswFdgXhFjUpDzNiZ7F94LgsexbC5kk2badCf
-         2Kvw7/goXYQdGKXX5kDWfF3rKx3WabJeQADovRUuBQ3rZXZuovhlLvV1IOhuN/ytvfVX
-         83r/ydQ0BOwybdNFz+pWBQCo0ZHG897xR1LWU6hYD7DtZpbQVT9qvhcWEQ8/LdBtAn8A
-         zHl8Fu8zW/vnFvU1uSbjhmVnoBDKzPLIDBPV6Z1jAT1nv9OyURkM66YoEtFfQlNSEBPC
-         YSK9Fn6J7YPEW7x+gHqgc71ic9dLz+Ob3A+jvBcm8cUJf9uhMSq18NU5w3nABnqVqd0g
-         RyYA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=waiJ7FV3PCA0UkImNmrIs6NV9G1ZqtaeLIziSLsi5Dc=;
+        b=Qqbnp76FD36f90MRTdd57GGe3Ki041TsBlwpRA4mPU7tpQazXoG4MWjUvIpvpFyBCD
+         kobbKuUMfHTZ4zu3kQNskcOy3GKSf1Z0F+CAPRS4hQ4r6mSO1CF4bMimXBOU8hDli6pW
+         ppj4AlVR/+TF1hY/ux4cJHoUjtDF/0VA/CU+mOTnY+qUz/7NrAw/3PLqTQuiNPxuTkCO
+         2NJbAu5q6GzC/n2D5LXs00EW2JhauiN4zLqugD0bbKSiaIHprRZRH6tEk+yEhwtCWLr4
+         /OWE8Xk5thmyh5JBKhABFXO6qPDSnF2HVNRANSULjWm2qchQXPvEW6ffVnM25uckgX5E
+         zCng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=TjRMMhaGcmXlEZ6B77Hxdea4zyj/rL2OsZpjW61YLp4=;
-        b=WX8k74RXmFv7IK2I4gaYQPJE40oO4dHjog7muaYzQFnG0JddMb0XQJBEMGJRHZu2B0
-         GQwl3KesDggz3IqfRMHmy+vFJNVcehGXiLN9Z7kZ7X/BzRJGHA/SFjVFlWWEnorNwaQ7
-         hCx8ePcpT/avIBwu6oZJ684+RgQlX2vHE/iQ82o3St66l29KvVkYjYvDVSi4Le4d3Iu5
-         XUiayFSjwmQEN7ctuRG9TRQIiLrb0VMuTGDxp/BkhEHlVZcN1hc0VeGsH+9PJqGV012f
-         0IaJptsjA+BHGte1dC0dqC/9nJaNUJGj8X1ugmer6YgXfUBYXldH7HhYq7acr7v8WsZ/
-         gceQ==
-X-Gm-Message-State: AOAM533tTGZypZA5unpAminmkGhlUdHSRgvmfdWRYj0fM8iqkmyFv5Ri
-        ZEJQ4tSbdKfnwIrp76uBA96HMsUxQLKnpRtgL0w=
-X-Google-Smtp-Source: ABdhPJzqIVP9fKhH7k9XFW8+KA0i5vXQCYrXpRe3QARiRUrESgwnBPOZWb+IkeziC+k7SovYk7VAbL2lznb/MwnwIxk=
-X-Received: by 2002:a17:902:70c2:b029:d1:dea3:a4d6 with SMTP id
- l2-20020a17090270c2b02900d1dea3a4d6mr20711663plt.4.1600502096698; Sat, 19 Sep
- 2020 00:54:56 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=waiJ7FV3PCA0UkImNmrIs6NV9G1ZqtaeLIziSLsi5Dc=;
+        b=Y/RBT6BPMwILEzcoT6vqFOwQ+adiuHvPcDlDmNdUoCGYiBN1UPh48G5yFn2ivVNvDV
+         KmqbPjrDd6jsNFzDIhZKDIFp2/jn3gBo6ZtDNO+z1HUvhk6B6kT+i4uY9vw9SApuhaIa
+         yKj1clpUl7SPXHPuA6v6MOvwVkUCL1LPwvCQOLEcMrNRUkuwqK8VUsQOifJgBs/LEioY
+         YXxsHB0GHduXTfBK5VE1wT+q3T+cXQtoRquRsvrh3zLEwUojlMkSL/QO4QiiRL/gHHKb
+         V6T7iFbEDo3Whk2oDRNX5KQQ2XGmwllk/qyJqHnZAmTaPIsRsZdUQFgkxOG6hP4vNAuo
+         BaPQ==
+X-Gm-Message-State: AOAM532tk3FTuOSMBOSf4eTiQ9MJu1krGhRzKP9tLxUAI8CR5SUUItiF
+        JEB6hrZ3/iUO2z4m7YL5OUX9rDZMnwk=
+X-Google-Smtp-Source: ABdhPJw+RPc78w/jhr2dP05JVTlrbEkxk2195KpBwu+uTPPEiY5fG3tKuCREZ96EKmvCkjo5PjG87w==
+X-Received: by 2002:a17:902:59d7:b029:d1:e5e7:bdf9 with SMTP id d23-20020a17090259d7b02900d1e5e7bdf9mr19062642plj.44.1600508554559;
+        Sat, 19 Sep 2020 02:42:34 -0700 (PDT)
+Received: from garuda.localnet ([122.171.63.16])
+        by smtp.gmail.com with ESMTPSA id r15sm5794400pgg.17.2020.09.19.02.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Sep 2020 02:42:33 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
+Subject: Re: [PATCH V4 03/10] xfs: Check for extent overflow when punching a hole
+Date:   Sat, 19 Sep 2020 15:12:30 +0530
+Message-ID: <8943600.hOzF94syPF@garuda>
+In-Reply-To: <20200918155452.GA7955@magnolia>
+References: <20200918094759.2727564-1-chandanrlinux@gmail.com> <20200918094759.2727564-4-chandanrlinux@gmail.com> <20200918155452.GA7955@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a17:90a:d252:0:0:0:0 with HTTP; Sat, 19 Sep 2020 00:54:56
- -0700 (PDT)
-Reply-To: angelaugorji945@gmail.com
-From:   "Mr. Micheal Jones" <frankjoe724@gmail.com>
-Date:   Sat, 19 Sep 2020 08:54:56 +0100
-Message-ID: <CAOaJB5yWX6ckYKNRQHavsWsuqDtP_zJFJ4C_PbHkeDKAcQzjTA@mail.gmail.com>
-Subject: Contact my secretary Ms Angela Ugorji
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Friday 18 September 2020 9:24:52 PM IST Darrick J. Wong wrote:
+> On Fri, Sep 18, 2020 at 03:17:52PM +0530, Chandan Babu R wrote:
+> > The extent mapping the file offset at which a hole has to be
+> > inserted will be split into two extents causing extent count to
+> > increase by 1.
+> > 
+> > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> > ---
+> >  fs/xfs/libxfs/xfs_inode_fork.h |  7 +++++++
+> >  fs/xfs/xfs_bmap_item.c         |  5 +++++
+> >  fs/xfs/xfs_bmap_util.c         | 10 ++++++++++
+> >  3 files changed, 22 insertions(+)
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
+> > index 7fc2b129a2e7..bcac769a7df6 100644
+> > --- a/fs/xfs/libxfs/xfs_inode_fork.h
+> > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
+> > @@ -40,6 +40,13 @@ struct xfs_ifork {
+> >   */
+> >  #define XFS_IEXT_ADD_NOSPLIT_CNT	(1)
+> >  
+> > +/*
+> > + * Punching out an extent from the middle of an existing extent can cause the
+> > + * extent count to increase by 1.
+> > + * i.e. | Old extent | Hole | Old extent |
+> > + */
+> > +#define XFS_IEXT_PUNCH_HOLE_CNT		(1)
+> > +
+> >  /*
+> >   * Fork handling.
+> >   */
+> > diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+> > index ec3691372e7c..5c7d08da8ff1 100644
+> > --- a/fs/xfs/xfs_bmap_item.c
+> > +++ b/fs/xfs/xfs_bmap_item.c
+> > @@ -519,6 +519,11 @@ xfs_bui_item_recover(
+> >  	}
+> >  	xfs_trans_ijoin(tp, ip, 0);
+> >  
+> > +	error = xfs_iext_count_may_overflow(ip, whichfork,
+> > +			XFS_IEXT_PUNCH_HOLE_CNT);
+> 
+> I think this ought to be XFS_IEXT_ADD_NOSPLIT_CNT if bui_type is
+> XFS_BMAP_MAP and XFS_IEXT_PUNCH_HOLE_CNT if XFS_BMAP_UNMAP.
+
+You are right. I will include this change in the next version.
+
+> 
+> Whoever created the BUI should have called xfs_iext_count_may_overflow
+> before logging the BUI (and hence this should never occur) but it does
+> pay to be careful. :)
+> 
+> The rest of the logic in the patch looks ok.
+> 
+> --D
+> 
+> > +	if (error)
+> > +		goto err_inode;
+> > +
+> >  	count = bmap->me_len;
+> >  	error = xfs_trans_log_finish_bmap_update(tp, budp, type, ip, whichfork,
+> >  			bmap->me_startoff, bmap->me_startblock, &count, state);
+> > diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+> > index dcd6e61df711..0776abd0103c 100644
+> > --- a/fs/xfs/xfs_bmap_util.c
+> > +++ b/fs/xfs/xfs_bmap_util.c
+> > @@ -891,6 +891,11 @@ xfs_unmap_extent(
+> >  
+> >  	xfs_trans_ijoin(tp, ip, 0);
+> >  
+> > +	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+> > +			XFS_IEXT_PUNCH_HOLE_CNT);
+> > +	if (error)
+> > +		goto out_trans_cancel;
+> > +
+> >  	error = xfs_bunmapi(tp, ip, startoffset_fsb, len_fsb, 0, 2, done);
+> >  	if (error)
+> >  		goto out_trans_cancel;
+> > @@ -1176,6 +1181,11 @@ xfs_insert_file_space(
+> >  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> >  	xfs_trans_ijoin(tp, ip, 0);
+> >  
+> > +	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+> > +			XFS_IEXT_PUNCH_HOLE_CNT);
+> > +	if (error)
+> > +		goto out_trans_cancel;
+> > +
+> >  	/*
+> >  	 * The extent shifting code works on extent granularity. So, if stop_fsb
+> >  	 * is not the starting block of extent, we need to split the extent at
+> 
+
 -- 
-Hello Dear,
+chandan
 
-I'm happy to inform you about my success in getting that fund transferred
-under the cooperation of a new partner from Paraguay. Presently I'm in
-Paraguay for investment projects with my own share of the total sum.
-Meanwhile,I didn't forget your past efforts and attempts to assist me in
-transferring those funds despite that it failed us some how.
 
-Now, I want you to contact my secretary, her name is Ms Angela Ugorji and
-her email address is: (angelaugorji945@gmail.com), ask her to send to you a
-total sum of $2,500,000.00 (Two Million, Five Hundred Thousand United
-States Dollars) which I kept for your compensation for all the past efforts
-and attempts you did to assist me in the transaction. I appreciated all
-your efforts at that time, that was why i decided to compensate you now.
-Please contact Ms Angela Ugorji and instruct her on how to send the amount
-to you.
 
-Please do let me know immediately you receive the money so that we can
-share the joy after all the suffering we undergo at that time. In the
-moment, I am very busy here because of the investment projects which I and
-my new partner are having at hand. finally, remember that I had forwarded
-instruction to my secretary on your behalf in order for you to receive that
-money, so feel free to get in touch with Ms Angela Ugorji on her email:
-(angelaugorji945@gmail.com) and she will send the amount to you without any
-delay.
-
-Best Regards.
-Mr. Micheal Jones
