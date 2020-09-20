@@ -2,89 +2,167 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F4083271078
-	for <lists+linux-xfs@lfdr.de>; Sat, 19 Sep 2020 22:36:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 347C6271574
+	for <lists+linux-xfs@lfdr.de>; Sun, 20 Sep 2020 17:51:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgISUga (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 19 Sep 2020 16:36:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgISUga (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 19 Sep 2020 16:36:30 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D89C0613CE
-        for <linux-xfs@vger.kernel.org>; Sat, 19 Sep 2020 13:36:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w5so8926186wrp.8
-        for <linux-xfs@vger.kernel.org>; Sat, 19 Sep 2020 13:36:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=kt7VGzdoUz5BkGw6yt1afHKIvOGw9lurnL0gNLD5fIQ=;
-        b=FZofaxxFDnMcqR3TatrmDfuVt3gNp5ChP0HTASgtBfLqp4U83WWPlBFH1j6fDr+Hyo
-         bzqT+jxaI/Wc+dhWlSkO3UW9Z5aYW4DIwbpjA3Dbu8ZLVkz2EKNwi2vOnE9Sq0mlOD/l
-         nIOJbSrG8aucOMP3agKqvtqRDLX2knv40gYqnUdR/ktzL392XI64TVPzDzTRPeOuY3er
-         HlB0Y/C9gFgKhO08zW6Xo5s+t5bKJc+wJ1tomY6Hw+EdH8JbRFI/BeBOSRha4MoAs7p+
-         jQXvsioaK07BbSJMrB/vZL9ISXRqTzr4M8Ir+wjB4ZGz5RYsgu/uwIPAHP0Niivt83q/
-         XPBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=kt7VGzdoUz5BkGw6yt1afHKIvOGw9lurnL0gNLD5fIQ=;
-        b=BJWBreKVwbj1PeaMkHtVHJ+sPaA9MlXkta2lax0ncbcVyHkjoy+qvaMyq9SqKtDXJz
-         gn7DTJY+xiNDGama+ul4Npuu/r0Td67EzRjjs9XvWpzPrL21LchCL8gfnB25nUvhiARJ
-         adXhIYxRL1nD2WJsjeYpFQ7xaYSup9QIqhKceE/WaRKARXSIgNWn8EIRQB/79cSir9oW
-         e6hQaE6qWg7aasqSkq68AKD+M50cxlc1RxNGi+UZOxcjGLb8BG0F8i9ZdtTZSXiJhDnJ
-         jXUGW/3yY3ZdmRXzr3VgOp7mQXZMK2CNHVQzOpNvuIoKvm8nvvKXoexq1In623DkOpPj
-         3CDg==
-X-Gm-Message-State: AOAM530Kat+ji/+F6/QP1P92OUJt7TGHb9Y5w8HtFitQxJs2cS26oIS9
-        OGSJIqYSL2vJS4b2WprxrzA55M+avcGW1g/rPx4=
-X-Google-Smtp-Source: ABdhPJzYC7E4Zxjix9zwQUQLQ+WxKPsqxDofh8J7A1TE411tErUTIbkFUBVFvV6EbyQFqIyhNnEc2kX6uYMASMt0VDU=
-X-Received: by 2002:a5d:6406:: with SMTP id z6mr43009810wru.133.1600547788888;
- Sat, 19 Sep 2020 13:36:28 -0700 (PDT)
+        id S1726369AbgITPv0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 20 Sep 2020 11:51:26 -0400
+Received: from out20-49.mail.aliyun.com ([115.124.20.49]:48253 "EHLO
+        out20-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbgITPvZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 20 Sep 2020 11:51:25 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07454271|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0507663-0.00145358-0.94778;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07447;MF=guan@eryu.me;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.IZmLs-k_1600617078;
+Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.IZmLs-k_1600617078)
+          by smtp.aliyun-inc.com(10.147.41.178);
+          Sun, 20 Sep 2020 23:51:19 +0800
+Date:   Sun, 20 Sep 2020 23:51:18 +0800
+From:   Eryu Guan <guan@eryu.me>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
+        guaneryu@gmail.com, darrick.wong@oracle.com, zlang@redhat.com
+Subject: Re: [PATCH V2] xfs: Check if rt summary/bitmap buffers are logged
+ with correct xfs_buf type
+Message-ID: <20200920155118.GN3853@desktop>
+References: <20200915054748.1765-1-chandanrlinux@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:adf:a349:0:0:0:0:0 with HTTP; Sat, 19 Sep 2020 13:36:28
- -0700 (PDT)
-Reply-To: williamdonald841@gmail.com
-From:   "Mrs. Susan Wei" <patriciatailor2014@gmail.com>
-Date:   Sat, 19 Sep 2020 21:36:28 +0100
-Message-ID: <CAF7wfysYMKcGXFdSFTgr_Q8M2BTety32Re=2LwyojTfbLEz=yQ@mail.gmail.com>
-Subject: Attn: Beneficiary
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200915054748.1765-1-chandanrlinux@gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
--- 
-Attn: Beneficiary,
+On Tue, Sep 15, 2020 at 11:17:48AM +0530, Chandan Babu R wrote:
+> This commit adds a test to check if growing a real-time device can end
+> up logging an xfs_buf with the "type" subfield of
+> bip->bli_formats->blf_flags set to XFS_BLFT_UNKNOWN_BUF. When this
+> occurs the following call trace is printed on the console,
+> 
+> XFS: Assertion failed: (bip->bli_flags & XFS_BLI_STALE) || (xfs_blft_from_flags(&bip->__bli_format) > XFS_BLFT_UNKNOWN_BUF && xfs_blft_from_flags(&bip->__bli_format) < XFS_BLFT_MAX_BUF), file: fs/xfs/xfs_buf_item.c, line: 331
+> Call Trace:
+>  xfs_buf_item_format+0x632/0x680
+>  ? kmem_alloc_large+0x29/0x90
+>  ? kmem_alloc+0x70/0x120
+>  ? xfs_log_commit_cil+0x132/0x940
+>  xfs_log_commit_cil+0x26f/0x940
+>  ? xfs_buf_item_init+0x1ad/0x240
+>  ? xfs_growfs_rt_alloc+0x1fc/0x280
+>  __xfs_trans_commit+0xac/0x370
+>  xfs_growfs_rt_alloc+0x1fc/0x280
+>  xfs_growfs_rt+0x1a0/0x5e0
+>  xfs_file_ioctl+0x3fd/0xc70
+>  ? selinux_file_ioctl+0x174/0x220
+>  ksys_ioctl+0x87/0xc0
+>  __x64_sys_ioctl+0x16/0x20
+>  do_syscall_64+0x3e/0x70
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> The kernel patch "xfs: Set xfs_buf type flag when growing summary/bitmap
+> files" is required to fix this issue.
 
-Am happy to inform you today that I've successfully transferred that funds
-with the help of a new partner from Kuwait. Presently I'm in Kuwait at the
-moment for an oil investment projects with him, but I've kept an ATM DEBIT
-VISA CARD that contains USD $ 2,500,000.00. (Two Million, Five hundred
-Thousand United State Dollars), as a compensation to you for all you did
-for me during that time I was trying to transfer the funds some years ago.
+Thanks for the patch! Also thanks to Darrick and Zorro for reviewing!
 
-I did not forget your efforts that time,as you really tried for me, hence
-am sending you this fund as a compensation through a secure ATM Card which
-you can use to withdraw the Fund at any ATM Machine in any location
-Worldwide, with maximum daily limit amount of USD $ 15,000.00 (Fifteen
-Thousand United States Dollars). So, please quickly contact my secretary
-through the below information,so that he will send the ATM Card to you
-without delay.
+The test would crash kernel without above fix, so I'd merge it after the
+fix landing upstream.
 
-Name: Mr. Williams Donald
-Email address: (williamdonald841@gmail.com)
-Tel Phone: +22969385793
+Would you please remind me when the fix is merged by replying this
+thread? And perhaps with the correct commit ID updated :)
 
-At the moment, I may not have access to communicate fluently with my
-secretary or anyone due to the oil investment project I have at hand here
-in Kuwait which is consuming all my time, but I left him an instruction for
-your contact OK. This is your PIN CODE of the ATM DEBIT VISA CARD
-(Pin-6670) and so it is only the card that my secretary will be sending to
-you. Good luck and thank you so much for everything. I wish that you use
-the funds wisely.
+> 
+> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> ---
+>  tests/xfs/260     | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/260.out |  2 ++
+>  tests/xfs/group   |  1 +
+>  3 files changed, 56 insertions(+)
+>  create mode 100755 tests/xfs/260
+>  create mode 100644 tests/xfs/260.out
+> 
+> diff --git a/tests/xfs/260 b/tests/xfs/260
+> new file mode 100755
+> index 00000000..078d4a11
+> --- /dev/null
+> +++ b/tests/xfs/260
+> @@ -0,0 +1,53 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
+> +#
+> +# FS QA Test 260
+> +#
+> +# Test to check if growing a real-time device can end up logging an xfs_buf with
+> +# the "type" subfield of bip->bli_formats->blf_flags set to
+> +# XFS_BLFT_UNKNOWN_BUF.
+> +#
+> +# This is a regression test for the kernel patch "xfs: Set xfs_buf type flag
+> +# when growing summary/bitmap files".
+> +
+> +seq=`basename $0`
+> +seqres=$RESULT_DIR/$seq
+> +echo "QA output created by $seq"
+> +
+> +here=`pwd`
+> +tmp=/tmp/$$
+> +status=1	# failure is the default!
+> +trap "_cleanup; exit \$status" 0 1 2 3 15
+> +
+> +_cleanup()
+> +{
+> +	cd /
+> +	rm -f $tmp.*
+> +}
+> +
+> +# get standard environment, filters and checks
+> +. ./common/rc
+> +. ./common/filter
+> +
+> +# remove previous $seqres.full before test
+> +rm -f $seqres.full
+> +
+> +# real QA test starts here
+> +_supported_fs xfs
+> +_supported_os Linux
+> +_require_realtime
+> +
+> +_scratch_mkfs -r size=10M  >> $seqres.full
+> +
+> +_scratch_mount >> $seqres.full
+> +
+> +$XFS_GROWFS_PROG $SCRATCH_MNT >> $seqres.full
+> +
+> +_scratch_unmount
 
-Regards Best,
-Mrs. Susan Wei
+Any reason to do umount manually here? The test harness will umount it
+after test anyway.
+
+Thanks,
+Eryu
+
+> +
+> +echo "Silence is golden"
+> +
+> +# success, all done
+> +status=0
+> +exit
+> diff --git a/tests/xfs/260.out b/tests/xfs/260.out
+> new file mode 100644
+> index 00000000..18ca517c
+> --- /dev/null
+> +++ b/tests/xfs/260.out
+> @@ -0,0 +1,2 @@
+> +QA output created by 260
+> +Silence is golden
+> diff --git a/tests/xfs/group b/tests/xfs/group
+> index ed0d389e..68676064 100644
+> --- a/tests/xfs/group
+> +++ b/tests/xfs/group
+> @@ -257,6 +257,7 @@
+>  257 auto quick clone
+>  258 auto quick clone
+>  259 auto quick
+> +260 auto quick growfs realtime
+>  261 auto quick quota
+>  262 dangerous_fuzzers dangerous_scrub dangerous_online_repair
+>  263 auto quick quota
+> -- 
+> 2.28.0
