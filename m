@@ -2,72 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF244273829
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Sep 2020 03:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4552627387C
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Sep 2020 04:29:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgIVBpu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Sep 2020 21:45:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728840AbgIVBpu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Sep 2020 21:45:50 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 535B6C061755
-        for <linux-xfs@vger.kernel.org>; Mon, 21 Sep 2020 18:45:50 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id y11so16230380lfl.5
-        for <linux-xfs@vger.kernel.org>; Mon, 21 Sep 2020 18:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=guFM09Ucc2cAJj6RnR+M37iAoFq+rUo+1jEeyjVKVyc=;
-        b=syBJQhTcE34j6Rs2btaJHXGPibkSAQMT14vFzj3Z0tjdyfL7JbjUxR3V3rfkxr6SyX
-         v12a3c4mecj37ARsGz6vJ6HoQW2lJGj7rREkugOfIaYptyeDAxmqce4EAVTX9hwSZGnp
-         TpyqXQvzvJrnN8nMaDTAAF/JIwp+W67sc7E0/vChO2MuhYCTdYlfreKNFe/g0bCbY5cO
-         mCpw7sTd/1pZbye+uPNfePLHo+xI8nNo+UWYukHAtlKnmN7x+zeeferAIZcQCflkXtcf
-         eaMhquNqy3jS8ItqV25F2I8RvPDn0nM0dRqFWBSbRYZfWTQ+Q8IWtJLibaDxTjfNvQU/
-         KHZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=guFM09Ucc2cAJj6RnR+M37iAoFq+rUo+1jEeyjVKVyc=;
-        b=HvXzt+YcO/ewQb18Snw4z2f5h5tPU7mYLOJnUfmeMKsGKXwDthlLuazNg5yMFXbQot
-         tN025o0aZebgpy6Qo+dK0701Dqk/wO8NgLDi4oVseLFP9SrP+vJnWj7FQcjeWIQFQHgT
-         jgiBpWtlaBBmtM9EV/A1+LnsRb1Ui9tm0jXbyt3K6LYmy6TG9e3ErJbwJ8UwdUC/wPbi
-         QUFmxjxTZs2EwC+Dc0ssjmU7uJMNEwLGRzlrp+7AAP+65pFr9A/AexOFw1MTlqNMAnSL
-         fasXEMiLySCVl3bqc58+WMRshguEIEb/SSiP6H9h2COejy6jiN6ZKfWz6Q5NKwKdR+VO
-         PftQ==
-X-Gm-Message-State: AOAM532Xjoxs5GmqNumbPeoMbBLu/eCBgzeVv31wIa5ZgtFWpJTFwren
-        nFcCIgs4Fiu7ipmIkXVTG3O2Sj5G0cncAZFBX0w=
-X-Google-Smtp-Source: ABdhPJxft5+l8jsK7+Kn6clc/8TEyNWGr3A/mwAU/EuC9a2QCu3CR6C6C/ktCLqByLVRF26QapOiyvxMv1HDCRX2aEA=
-X-Received: by 2002:ac2:5f63:: with SMTP id c3mr752079lfc.283.1600739148730;
- Mon, 21 Sep 2020 18:45:48 -0700 (PDT)
+        id S1729630AbgIVC3q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Sep 2020 22:29:46 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:21398 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729617AbgIVC3q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Sep 2020 22:29:46 -0400
+X-Greylist: delayed 605 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 22:29:45 EDT
+X-IronPort-AV: E=Sophos;i="5.77,288,1596470400"; 
+   d="scan'208";a="99488774"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 22 Sep 2020 10:19:38 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 2C55948990E9;
+        Tue, 22 Sep 2020 10:19:38 +0800 (CST)
+Received: from G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 22 Sep 2020 10:19:36 +0800
+Received: from localhost.localdomain (10.167.225.206) by
+ G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2 via Frontend Transport; Tue, 22 Sep 2020 10:19:35 +0800
+Date:   Tue, 22 Sep 2020 10:19:35 +0800
+From:   Hao Li <lihao2018.fnst@cn.fujitsu.com>
+To:     Dave Chinner <david@fromorbit.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-xfs@vger.kernel.org>, <y-goto@fujitsu.com>
+Subject: Re: [PATCH v2] fs: Handle I_DONTCACHE in iput_final() instead of
+ generic_drop_inode()
+Message-ID: <20200922021935.GA56122@localhost.localdomain>
+References: <20200904075939.176366-1-lihao2018.fnst@cn.fujitsu.com>
+ <20200906214002.GI12131@dread.disaster.area>
 MIME-Version: 1.0
-Sender: cctorresgallegos29@gmail.com
-Received: by 2002:a19:520f:0:0:0:0:0 with HTTP; Mon, 21 Sep 2020 18:45:47
- -0700 (PDT)
-From:   Angelica Sepulveda <angelspvd1070@gmail.com>
-Date:   Mon, 21 Sep 2020 18:45:47 -0700
-X-Google-Sender-Auth: NB4O8zF6txcfT59KJIhH67pgB5k
-Message-ID: <CA+=-UgkMRL_saNUvT47QOgxgxGPC3XqOmYU5UHUTP-8eJ02Q8A@mail.gmail.com>
-Subject: Charity Project
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200906214002.GI12131@dread.disaster.area>
+X-yoursite-MailScanner-ID: 2C55948990E9.AC9F3
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello Dear,
-Greetings,
-Peace be unto you, I belief that you can help in setting up a charity
-foundation for the benefit of mankind, I wish to establish a charity
-foundation to help the poor, widows ,orphans and less privileged
-people in your country under your care, Can you help to build this
-project in your country? I'm willing to donate the sum of (four
-million, five hundred thousand US dollars) $4.500.000.00.All I want
-from you is sincerity to handle this project. to give them hope and
-support and to make them  feel the same like others. Together We can
-make the world a better place when we help one another. I'll be
-waiting to read from you today and know your opinion in doing this
-project. God Bless us all.
-Mrs. Angelica Sepulveda
+On Mon, Sep 07, 2020 at 07:40:02AM +1000, Dave Chinner wrote:
+> On Fri, Sep 04, 2020 at 03:59:39PM +0800, Hao Li wrote:
+> > If generic_drop_inode() returns true, it means iput_final() can evict
+> > this inode regardless of whether it is dirty or not. If we check
+> > I_DONTCACHE in generic_drop_inode(), any inode with this bit set will be
+> > evicted unconditionally. This is not the desired behavior because
+> > I_DONTCACHE only means the inode shouldn't be cached on the LRU list.
+> > As for whether we need to evict this inode, this is what
+> > generic_drop_inode() should do. This patch corrects the usage of
+> > I_DONTCACHE.
+> > 
+> > This patch was proposed in [1].
+> > 
+> > [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
+> > 
+> > Fixes: dae2f8ed7992 ("fs: Lift XFS_IDONTCACHE to the VFS layer")
+> > Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> > ---
+> > Changes in v2:
+> >  - Adjust code format
+> >  - Add Fixes tag in commit message
+> > 
+> >  fs/inode.c         | 4 +++-
+> >  include/linux/fs.h | 3 +--
+> >  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> Looks good.
+> 
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> 
+
+Hi,
+
+As discussed in [1], this patch is the basis of another one. Could I
+submit the second patch now to change the DCACHE_DONTCACHE behavior or I
+have to wait for this patch to be merged.
+
+[1]: https://lkml.org/lkml/2020/8/30/360
+
+Thanks,
+Hao Li
+
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
+> 
+
+
