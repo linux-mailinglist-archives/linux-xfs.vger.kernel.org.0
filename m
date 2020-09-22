@@ -2,95 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25850273646
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Sep 2020 01:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF244273829
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Sep 2020 03:45:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgIUXLd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Sep 2020 19:11:33 -0400
-Received: from mail.rusoil.net ([188.128.114.25]:57383 "EHLO mail.rusoil.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbgIUXLb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 21 Sep 2020 19:11:31 -0400
-X-Greylist: delayed 374 seconds by postgrey-1.27 at vger.kernel.org; Mon, 21 Sep 2020 19:11:22 EDT
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.rusoil.net (Postfix) with ESMTP id 3CFBD40D5B;
-        Tue, 22 Sep 2020 04:08:14 +0500 (YEKT)
-Received: from mail.rusoil.net ([127.0.0.1])
-        by localhost (mail.rusoil.net [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id EV4tl_rVLSS7; Tue, 22 Sep 2020 04:08:13 +0500 (YEKT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.rusoil.net (Postfix) with ESMTP id 2C0DD40CEA;
-        Tue, 22 Sep 2020 04:08:13 +0500 (YEKT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rusoil.net 2C0DD40CEA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rusoil.net;
-        s=maildkim; t=1600729693;
-        bh=6R3BgBYiA7fkqGiiNDuwPskBnpH9JXyNAW/l3ZEA+wY=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=Vnjy6nBVnSTcINEW6kER3ugTxQ4KBYKS36YiGFr6YA3B4INc+KiGVhbak8MS9Qjs4
-         d1hbAool1vpcT5tqzIahdEndE3qiAPgBOX6jsmCcvHSMZhz19GFDJ1aQySn107enqY
-         lwxWqbZRY2a+BQ8VxoJh3Rpje7MgA+/fhr9SupmU=
-X-Virus-Scanned: amavisd-new at mail.rusoil.net
-Received: from mail.rusoil.net ([127.0.0.1])
-        by localhost (mail.rusoil.net [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id K7O08Fi_YWVd; Tue, 22 Sep 2020 04:08:12 +0500 (YEKT)
-Received: from mail.rusoil.net (mail.rusoil.net [172.16.7.34])
-        by mail.rusoil.net (Postfix) with ESMTP id 6147940C07;
-        Tue, 22 Sep 2020 04:08:10 +0500 (YEKT)
-Date:   Tue, 22 Sep 2020 04:08:09 +0500 (YEKT)
-From:   Blue Oak Mortgage and Loans <em@rusoil.net>
-Reply-To: Blue Oak Mortgage and Loans <info@bluelmtg.net>
-Message-ID: <2020026523.907101.1600729689731.JavaMail.zimbra@rusoil.net>
-Subject: Wir finanzieren Projekte und Unternehmen
+        id S1728854AbgIVBpu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Sep 2020 21:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbgIVBpu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Sep 2020 21:45:50 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 535B6C061755
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Sep 2020 18:45:50 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id y11so16230380lfl.5
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Sep 2020 18:45:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=guFM09Ucc2cAJj6RnR+M37iAoFq+rUo+1jEeyjVKVyc=;
+        b=syBJQhTcE34j6Rs2btaJHXGPibkSAQMT14vFzj3Z0tjdyfL7JbjUxR3V3rfkxr6SyX
+         v12a3c4mecj37ARsGz6vJ6HoQW2lJGj7rREkugOfIaYptyeDAxmqce4EAVTX9hwSZGnp
+         TpyqXQvzvJrnN8nMaDTAAF/JIwp+W67sc7E0/vChO2MuhYCTdYlfreKNFe/g0bCbY5cO
+         mCpw7sTd/1pZbye+uPNfePLHo+xI8nNo+UWYukHAtlKnmN7x+zeeferAIZcQCflkXtcf
+         eaMhquNqy3jS8ItqV25F2I8RvPDn0nM0dRqFWBSbRYZfWTQ+Q8IWtJLibaDxTjfNvQU/
+         KHZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=guFM09Ucc2cAJj6RnR+M37iAoFq+rUo+1jEeyjVKVyc=;
+        b=HvXzt+YcO/ewQb18Snw4z2f5h5tPU7mYLOJnUfmeMKsGKXwDthlLuazNg5yMFXbQot
+         tN025o0aZebgpy6Qo+dK0701Dqk/wO8NgLDi4oVseLFP9SrP+vJnWj7FQcjeWIQFQHgT
+         jgiBpWtlaBBmtM9EV/A1+LnsRb1Ui9tm0jXbyt3K6LYmy6TG9e3ErJbwJ8UwdUC/wPbi
+         QUFmxjxTZs2EwC+Dc0ssjmU7uJMNEwLGRzlrp+7AAP+65pFr9A/AexOFw1MTlqNMAnSL
+         fasXEMiLySCVl3bqc58+WMRshguEIEb/SSiP6H9h2COejy6jiN6ZKfWz6Q5NKwKdR+VO
+         PftQ==
+X-Gm-Message-State: AOAM532Xjoxs5GmqNumbPeoMbBLu/eCBgzeVv31wIa5ZgtFWpJTFwren
+        nFcCIgs4Fiu7ipmIkXVTG3O2Sj5G0cncAZFBX0w=
+X-Google-Smtp-Source: ABdhPJxft5+l8jsK7+Kn6clc/8TEyNWGr3A/mwAU/EuC9a2QCu3CR6C6C/ktCLqByLVRF26QapOiyvxMv1HDCRX2aEA=
+X-Received: by 2002:ac2:5f63:: with SMTP id c3mr752079lfc.283.1600739148730;
+ Mon, 21 Sep 2020 18:45:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [192.210.183.69]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF79 (Win)/8.8.12_GA_3794)
-Thread-Index: IhGK+mMcCqn+S/Et9t28g8ApaUDaLg==
-Thread-Topic: Wir finanzieren Projekte und Unternehmen
-To:     unlisted-recipients:; (no To-header on input)
+Sender: cctorresgallegos29@gmail.com
+Received: by 2002:a19:520f:0:0:0:0:0 with HTTP; Mon, 21 Sep 2020 18:45:47
+ -0700 (PDT)
+From:   Angelica Sepulveda <angelspvd1070@gmail.com>
+Date:   Mon, 21 Sep 2020 18:45:47 -0700
+X-Google-Sender-Auth: NB4O8zF6txcfT59KJIhH67pgB5k
+Message-ID: <CA+=-UgkMRL_saNUvT47QOgxgxGPC3XqOmYU5UHUTP-8eJ02Q8A@mail.gmail.com>
+Subject: Charity Project
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-Dies ist ein Newsletter von Blue Oak Mortgage and Loans. Bitte melden Sie s=
-ich ab, wenn Sie keine E-Mail mehr von uns erhalten m=C3=B6chten.
-
-
-Eine kurze Einf=C3=BChrung.
-
-Wir sind ein f=C3=BChrendes Finanzierungsunternehmen in Europa. Wir finanzi=
-eren Startups / etablierte Unternehmen, finanzieren Gro=C3=9Fprojekte (Bau,=
- Landwirtschaft, Immobilien und dergleichen) zu einem niedrigen Zinssatz vo=
-n 2% pro Jahr.
-
-
-Darlehensverfahren
-
-1. Sie m=C3=BCssen das Online-Bewerbungsformular ausf=C3=BCllen und eine or=
-dnungsgem=C3=A4=C3=9F unterschriebene Kopie an uns zur=C3=BCcksenden.
-
-2. M=C3=B6glicherweise m=C3=BCssen Sie Finanzdokumente als unterst=C3=BCtze=
-nden Nachweis f=C3=BCr die F=C3=A4higkeit zur R=C3=BCckzahlung von Krediten=
- vorlegen.
-
-3. Wenn Ihr Darlehen genehmigt wurde, m=C3=BCssen Sie eine Versicherungsgar=
-antie f=C3=BCr die Darlehenssicherheit vorlegen. Wir empfehlen eine Versich=
-erungsgesellschaft. Sie sind allein verantwortlich f=C3=BCr die Zahlung und=
- den Erwerb der Anleihe, die als Sicherheit dienen. Die H=C3=B6he der Anlei=
-he h=C3=A4ngt von Ihrem Darlehensbetrag ab. Die Versicherungsgesellschaft w=
-ird Sie durch den Prozess f=C3=BChren. (F=C3=BCr Gro=C3=9Fprojekte)
-
-4. Ihr =C3=9Cberweisungsprozess wird eingeleitet, sobald die Versicherungsa=
-nleihe =C3=BCberpr=C3=BCft wurde. Ihr Darlehensr=C3=BCckzahlungsplan wird i=
-m NC-Darlehensvertragsformular aufgef=C3=BChrt.
-
-Wenn die Bedingungen Sie beruhigen, k=C3=B6nnen Sie uns =C3=BCber die Whats=
-App-Nummer / E-Mail kontaktieren und auch unsere Website besuchen, um weite=
-re Informationen zu erhalten. Wir freuen uns darauf, von Ihnen zu h=C3=B6re=
-n.
-
-WhatsApp: + 90-552-365-3483
-E-Mail: info@bluelmtg.net
+Hello Dear,
+Greetings,
+Peace be unto you, I belief that you can help in setting up a charity
+foundation for the benefit of mankind, I wish to establish a charity
+foundation to help the poor, widows ,orphans and less privileged
+people in your country under your care, Can you help to build this
+project in your country? I'm willing to donate the sum of (four
+million, five hundred thousand US dollars) $4.500.000.00.All I want
+from you is sincerity to handle this project. to give them hope and
+support and to make them  feel the same like others. Together We can
+make the world a better place when we help one another. I'll be
+waiting to read from you today and know your opinion in doing this
+project. God Bless us all.
+Mrs. Angelica Sepulveda
