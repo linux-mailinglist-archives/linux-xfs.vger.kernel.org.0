@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 135F0275207
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Sep 2020 08:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BDCF275209
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Sep 2020 08:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgIWG7b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 23 Sep 2020 02:59:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48930 "EHLO
+        id S1726682AbgIWG7c (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 23 Sep 2020 02:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgIWG7b (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 23 Sep 2020 02:59:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C03C061755
-        for <linux-xfs@vger.kernel.org>; Tue, 22 Sep 2020 23:59:31 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id z19so14444747pfn.8
-        for <linux-xfs@vger.kernel.org>; Tue, 22 Sep 2020 23:59:31 -0700 (PDT)
+        with ESMTP id S1726652AbgIWG7c (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 23 Sep 2020 02:59:32 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59528C061755
+        for <linux-xfs@vger.kernel.org>; Tue, 22 Sep 2020 23:59:32 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id u4so612522plr.4
+        for <linux-xfs@vger.kernel.org>; Tue, 22 Sep 2020 23:59:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=hkwSFp3OZ06QXGPaczCp4QW2hKeAs6v4EaN1CI9ricw=;
-        b=omdIszRcv8JW2ldTa73vP57fDq63BDbwL1cWvxg78yRN7FxFsY115ubZbGL7xgJo1K
-         1B54MuGDZbAM6/FxOV8WSOhAAHDK/t8PXG2PshCnStSOm/fX8jR4Oj+Gv5S51SZ0AKQg
-         n+wXlh2nfE5C1aClRhD5v+FfNJ9KSQaVIGE/DwUSOYTMnWEZpjjCfkhpW9UptOQ/K+gn
-         o3hMwuxxz4I5MG7GlIre8gt4bsSyvD8oi02Su+4qlt00LfpaURzb2gYCafIBAMAC1eL+
-         mRcbcfmgV0snex74Ex2qMOCszfz6O+yf3G7AHBPU2GyPM5AJlHBVNZ4EiJavEb0DwNjn
-         PEng==
+        bh=DoM58cBMly95vRrXSg4Nl9xCCYlU0fMPXEfNgDsWH5U=;
+        b=oA3Ic24LC8T2+ARPoZRjerz6LqW+hmeUjP5ML4+MDKDVHOtLcX0XMpblWZnuvf7F5P
+         ZX54dpluI7JjXkbxedrRoDXs6GXEdzlP0EGUV6SZie0ciH5EjXmSle3RrP8KjGNCSt2q
+         01RmBwtrhN/olv1ONVPcf+TMOtqMxcIlny36PY/rErd9Z9D+TeofUtD+Cdcku8nKe/KE
+         bEU/LHOSZGj0xRTKrqUhb2MInC20ZA+1FieQ5qKoti8Z5zlBVRWNDAHaKThFL2QbjLnz
+         3+PywaF89fPh+NrrJs++3uLO3Mr8cvOzZv8PT8FPyhuUJfMDhssBRNFFTq9zVUTHk2c0
+         EHiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=hkwSFp3OZ06QXGPaczCp4QW2hKeAs6v4EaN1CI9ricw=;
-        b=n67mZq6zKROlQY993TX9c0nEPWeJY0C7T0pTSDaS+lOGHBckTj1BqaE+q5ZBGP1S2K
-         3VOOsB222DG7VngWXN9TFqDThZUeCA5VCJpr569MO+hktiWOQhLMLJTNl6SlnPrSf49R
-         BTgMMQDVd2pGXT7oGVZgK105qez0glutInH2h2IWV5o9qeJIhdpHC0GFjroZ87fOc89Q
-         /N+G698a8kt3UmDMqT6uTP1cskUod/Xy7NO2Q3c2DqNqLamNYH3qtCf+rYoYeibm4rpL
-         2YrCDQJOu+eJrnzlkT+T8Y+mbE/+hvZRDZeagA9yE6iwQ+0bM9WAvR3i8aBhZYPYKRe8
-         zfwg==
-X-Gm-Message-State: AOAM530uSX20OM7YijHvYf5XG/l23wsE90hmfPD2BvgSttlKjBewEFBL
-        qR0YUrQQGPxM+PCI9x2g8Umhw8gyNNxc
-X-Google-Smtp-Source: ABdhPJxCFJg15gkMSLRIVaCeDRa5UVinHqvqxX9ZX/w+aoho6bjQGlmRpW0ECT1AKNCC1coVNNCJfw==
-X-Received: by 2002:a63:4d02:: with SMTP id a2mr6276836pgb.38.1600844370572;
-        Tue, 22 Sep 2020 23:59:30 -0700 (PDT)
+        bh=DoM58cBMly95vRrXSg4Nl9xCCYlU0fMPXEfNgDsWH5U=;
+        b=S6KoXgVjBybd+otdht+pNPefFTeZ1oU3cJ6liEwhSCS+5W5dxO1fD8fDALyYpxAS4n
+         dyJZiSa5Qp3O8rct4iPJYzzCZERWZy0v64BZ2VlJvWNrI05Wq6F5pjh41ioSIeidaGxe
+         jsFkb8ZIJCZCvGbEEPbOkkXvVp8gViKQfFTbC8FVuDvY6+IjbaBbYGiQvXe9kBMiesd+
+         h1JX4i5hHebEGbYjCvfshIAqKZuAxoA/8+AkzKWNDWOpPk935W/kBfQhIzh+iWm7wxQm
+         5bR2akgUHYGEG8c6n1RlobkHjezY+8gQ+gaeYvvPvq7R1a4iTFd+24lpiGGLfvH2cXRx
+         jpKg==
+X-Gm-Message-State: AOAM530UvV9ibKbbRb5itcX7akd8blMnXXTnJGiF3cZ61yARZP2gHBgL
+        WjFr4abQfIKfJQfpvCeepLICGPgymwvz
+X-Google-Smtp-Source: ABdhPJzAnv+x/aNWUHjoQGOzRkuBahJDGK81B34zjrWvhOdlb1hud2c8cbVbceAKqkOYbhnHq7CqlA==
+X-Received: by 2002:a17:90b:46c4:: with SMTP id jx4mr2262513pjb.190.1600844371620;
+        Tue, 22 Sep 2020 23:59:31 -0700 (PDT)
 Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id c68sm10685745pfc.31.2020.09.22.23.59.29
+        by smtp.gmail.com with ESMTPSA id c68sm10685745pfc.31.2020.09.22.23.59.30
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 22 Sep 2020 23:59:29 -0700 (PDT)
+        Tue, 22 Sep 2020 23:59:31 -0700 (PDT)
 From:   xiakaixu1987@gmail.com
 X-Google-Original-From: kaixuxia@tencent.com
 To:     linux-xfs@vger.kernel.org
 Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH v3 4/7] xfs: do the assert for all the log done items in xfs_trans_cancel
-Date:   Wed, 23 Sep 2020 14:59:15 +0800
-Message-Id: <1600844358-16601-5-git-send-email-kaixuxia@tencent.com>
+Subject: [PATCH v3 5/7] xfs: remove the redundant crc feature check in xfs_attr3_rmt_verify
+Date:   Wed, 23 Sep 2020 14:59:16 +0800
+Message-Id: <1600844358-16601-6-git-send-email-kaixuxia@tencent.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1600844358-16601-1-git-send-email-kaixuxia@tencent.com>
 References: <1600844358-16601-1-git-send-email-kaixuxia@tencent.com>
@@ -62,78 +62,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-We should do the assert for all the log intent-done items if they appear
-here. This patch detect intent-done items by the fact that their item ops
-don't have iop_unpin and iop_push methods and also move the helper
-xlog_item_is_intent to xfs_trans.h.
+We already check whether the crc feature is enabled before calling
+xfs_attr3_rmt_verify(), so remove the redundant feature check in that
+function.
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log_recover.c |  7 -------
- fs/xfs/xfs_trans.c       |  2 +-
- fs/xfs/xfs_trans.h       | 16 ++++++++++++++++
- 3 files changed, 17 insertions(+), 8 deletions(-)
+ fs/xfs/libxfs/xfs_attr_remote.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index a17d788921d6..8b437f2c0c35 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2475,13 +2475,6 @@ xlog_finish_defer_ops(
- 	return xfs_trans_commit(tp);
- }
+diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
+index 3f80cede7406..48d8e9caf86f 100644
+--- a/fs/xfs/libxfs/xfs_attr_remote.c
++++ b/fs/xfs/libxfs/xfs_attr_remote.c
+@@ -96,8 +96,6 @@ xfs_attr3_rmt_verify(
+ {
+ 	struct xfs_attr3_rmt_hdr *rmt = ptr;
  
--/* Is this log item a deferred action intent? */
--static inline bool xlog_item_is_intent(struct xfs_log_item *lip)
--{
--	return lip->li_ops->iop_recover != NULL &&
--	       lip->li_ops->iop_match != NULL;
--}
--
- /*
-  * When this is called, all of the log intent items which did not have
-  * corresponding log done items should be in the AIL.  What we do now
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index ca18a040336a..c94e71f741b6 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -959,7 +959,7 @@ xfs_trans_cancel(
- 		struct xfs_log_item *lip;
- 
- 		list_for_each_entry(lip, &tp->t_items, li_trans)
--			ASSERT(!(lip->li_type == XFS_LI_EFD));
-+			ASSERT(!xlog_item_is_intent_done(lip));
- 	}
- #endif
- 	xfs_trans_unreserve_and_mod_sb(tp);
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index f46534b75236..a71b4f443e39 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -78,6 +78,22 @@ struct xfs_item_ops {
- 	bool (*iop_match)(struct xfs_log_item *item, uint64_t id);
- };
- 
-+/* Is this log item a deferred action intent? */
-+static inline bool
-+xlog_item_is_intent(struct xfs_log_item *lip)
-+{
-+	return lip->li_ops->iop_recover != NULL &&
-+	       lip->li_ops->iop_match != NULL;
-+}
-+
-+/* Is this a log intent-done item? */
-+static inline bool
-+xlog_item_is_intent_done(struct xfs_log_item *lip)
-+{
-+	return lip->li_ops->iop_unpin == NULL &&
-+	       lip->li_ops->iop_push == NULL;
-+}
-+
- /*
-  * Release the log item as soon as committed.  This is for items just logging
-  * intents that never need to be written back in place.
+-	if (!xfs_sb_version_hascrc(&mp->m_sb))
+-		return __this_address;
+ 	if (!xfs_verify_magic(bp, rmt->rm_magic))
+ 		return __this_address;
+ 	if (!uuid_equal(&rmt->rm_uuid, &mp->m_sb.sb_meta_uuid))
 -- 
 2.20.0
 
