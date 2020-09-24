@@ -2,164 +2,152 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C82072777C6
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D30022777EF
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:39:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgIXR1r (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Sep 2020 13:27:47 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:50978 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727988AbgIXR1r (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 13:27:47 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08OHJmPv007865;
-        Thu, 24 Sep 2020 17:27:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=R7whcWu0FA80AFjaRsamP6ZMAKpsqJYQIJEjihbuE0o=;
- b=GK0unm4YPEAh9RB57UNI1zjiat2DPjoZ8lVmXpTw0z70G1jAr7rvJAlv1O+w7JHPzQcq
- INiSLt1+ieQv5r5MENdvY5DUxjm5wAZE6Zi7TOx6OpE1VCqS45zhRB53XeRdD7NXux79
- tul87Qofm4x+AHZYJsmrk4gmmD3s6h9aTSRx7LxurnfaAcgHfRb/UMLNkRNMFHu1DsC/
- oXuB042L9sm734e/4MYIpw+4zZIzJrxiSzGelLas8KckQrZFgq1IVbBOz/pBkDxRcePd
- eacphwYI2UHPzejk79J1aGijv1jYmBWSbFzm3rnVgJmJYuF8VM4HvghQn48s9fwl96VI Rw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 33qcpu6hwv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 24 Sep 2020 17:27:44 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08OHQUiq021493;
-        Thu, 24 Sep 2020 17:27:43 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 33nurwfsmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Sep 2020 17:27:43 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08OHRgiJ002864;
-        Thu, 24 Sep 2020 17:27:42 GMT
-Received: from localhost (/10.159.232.188)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 24 Sep 2020 10:27:42 -0700
-Date:   Thu, 24 Sep 2020 10:27:41 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Pavel Reichl <preichl@redhat.com>
+        id S1727823AbgIXRjI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Sep 2020 13:39:08 -0400
+Received: from sandeen.net ([63.231.237.45]:56138 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726477AbgIXRjI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 24 Sep 2020 13:39:08 -0400
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 7A3B9EF1;
+        Thu, 24 Sep 2020 12:38:31 -0500 (CDT)
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Pavel Reichl <preichl@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: remove deprecated sysctl options
-Message-ID: <20200924172741.GH7955@magnolia>
 References: <20200924170747.65876-1-preichl@redhat.com>
- <20200924170747.65876-3-preichl@redhat.com>
+ <20200924170747.65876-2-preichl@redhat.com> <20200924172600.GG7955@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: [PATCH 1/2] xfs: remove deprecated mount options
+Message-ID: <be017461-6ce9-1d64-51d6-7e85a3e45055@sandeen.net>
+Date:   Thu, 24 Sep 2020 12:39:07 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200924170747.65876-3-preichl@redhat.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9754 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=1
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009240129
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9754 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
- adultscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- phishscore=0 spamscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009240128
+In-Reply-To: <20200924172600.GG7955@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 07:07:47PM +0200, Pavel Reichl wrote:
-> These optionr were for Irix compatibility, probably for clustered XFS
-> clients in a heterogenous cluster which contained both Irix & Linux
-> machines, so that behavior would be consistent. That doesn't exist anymore
-> and it's no longer needed.
+On 9/24/20 12:26 PM, Darrick J. Wong wrote:
+> On Thu, Sep 24, 2020 at 07:07:46PM +0200, Pavel Reichl wrote:
+>> ikeep/noikeep was a workaround for old DMAPI code which is no longer
+>> relevant.
+>>
+>> attr2/noattr2 - is for controlling upgrade behaviour from fixed attribute
+>> fork sizes in the inode (attr1) and dynamic attribute fork sizes (attr2).
+>> mkfs has defaulted to setting attr2 since 2007, hence just about every
+>> XFS filesystem out there in production right now uses attr2.
+>>
+>> Signed-off-by: Pavel Reichl <preichl@redhat.com>
+>> ---
+>>  Documentation/admin-guide/xfs.rst |  2 ++
+>>  fs/xfs/xfs_super.c                | 30 +++++++++++++++++-------------
+>>  2 files changed, 19 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
+>> index f461d6c33534..413f68efccc0 100644
+>> --- a/Documentation/admin-guide/xfs.rst
+>> +++ b/Documentation/admin-guide/xfs.rst
+>> @@ -217,6 +217,8 @@ Deprecated Mount Options
+>>  ===========================     ================
+>>    Name				Removal Schedule
+>>  ===========================     ================
+>> +  ikeep/noikeep			TBD
+>> +  attr2/noattr2			TBD
 > 
-> Signed-off-by: Pavel Reichl <preichl@redhat.com>
-> ---
->  Documentation/admin-guide/xfs.rst |  3 ++-
->  fs/xfs/xfs_sysctl.c               | 36 +++++++++++++++++++++++++++++--
->  2 files changed, 36 insertions(+), 3 deletions(-)
+> Er... what date did you have in mind?
 > 
-> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-> index 413f68efccc0..208e17810459 100644
-> --- a/Documentation/admin-guide/xfs.rst
-> +++ b/Documentation/admin-guide/xfs.rst
-> @@ -333,7 +333,8 @@ The following sysctls are available for the XFS filesystem:
->  Deprecated Sysctls
->  ==================
->  
-> -None at present.
-> +fs.xfs.irix_sgid_inherit
-> +fs.xfs.irix_symlink_mode
-
-When will these be removed from sysctl?
-
->  Removed Sysctls
-> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
-> index 021ef96d0542..fac9de7ee6d0 100644
-> --- a/fs/xfs/xfs_sysctl.c
-> +++ b/fs/xfs/xfs_sysctl.c
-> @@ -50,13 +50,45 @@ xfs_panic_mask_proc_handler(
->  }
->  #endif /* CONFIG_PROC_FS */
->  
-> +STATIC int
-> +xfs_deprecate_irix_sgid_inherit_proc_handler(
-> +	struct ctl_table	*ctl,
-> +	int			write,
-> +	void			*buffer,
-> +	size_t			*lenp,
-> +	loff_t			*ppos)
-> +{
-> +	if (write) {
-> +		printk_once(KERN_WARNING
-> +				"XFS: " "%s sysctl option is deprecated.\n",
-> +				ctl->procname);
-> +	}
-> +	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
-> +}
-> +
-> +STATIC int
-> +xfs_deprecate_irix_symlink_mode_proc_handler(
-> +	struct ctl_table	*ctl,
-> +	int			write,
-> +	void			*buffer,
-> +	size_t			*lenp,
-> +	loff_t			*ppos)
-> +{
-> +	if (write) {
-> +		printk_once(KERN_WARNING
-> +				"XFS: " "%s sysctl option is deprecated.\n",
-> +				ctl->procname);
-> +	}
-> +	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
-> +}
-> +
->  static struct ctl_table xfs_table[] = {
->  	{
->  		.procname	= "irix_sgid_inherit",
->  		.data		= &xfs_params.sgid_inherit.val,
-
-Same comments as the last patch regarding a sysctl that spits out
-deprecation warnings but continues to actually change xfs' behavior...
-
---D
-
->  		.maxlen		= sizeof(int),
->  		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec_minmax,
-> +		.proc_handler	= xfs_deprecate_irix_sgid_inherit_proc_handler,
->  		.extra1		= &xfs_params.sgid_inherit.min,
->  		.extra2		= &xfs_params.sgid_inherit.max
->  	},
-> @@ -65,7 +97,7 @@ static struct ctl_table xfs_table[] = {
->  		.data		= &xfs_params.symlink_mode.val,
->  		.maxlen		= sizeof(int),
->  		.mode		= 0644,
-> -		.proc_handler	= proc_dointvec_minmax,
-> +		.proc_handler	= xfs_deprecate_irix_symlink_mode_proc_handler,
->  		.extra1		= &xfs_params.symlink_mode.min,
->  		.extra2		= &xfs_params.symlink_mode.max
->  	},
-> -- 
-> 2.26.2
+>>  ===========================     ================
+>>  
+>>  
+>> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+>> index 71ac6c1cdc36..4c26b283b7d8 100644
+>> --- a/fs/xfs/xfs_super.c
+>> +++ b/fs/xfs/xfs_super.c
+>> @@ -1234,25 +1234,12 @@ xfs_fc_parse_param(
+>>  	case Opt_nouuid:
+>>  		mp->m_flags |= XFS_MOUNT_NOUUID;
+>>  		return 0;
+>> -	case Opt_ikeep:
+>> -		mp->m_flags |= XFS_MOUNT_IKEEP;
+>> -		return 0;
+>> -	case Opt_noikeep:
+>> -		mp->m_flags &= ~XFS_MOUNT_IKEEP;
+>> -		return 0;
+>>  	case Opt_largeio:
+>>  		mp->m_flags |= XFS_MOUNT_LARGEIO;
+>>  		return 0;
+>>  	case Opt_nolargeio:
+>>  		mp->m_flags &= ~XFS_MOUNT_LARGEIO;
+>>  		return 0;
+>> -	case Opt_attr2:
+>> -		mp->m_flags |= XFS_MOUNT_ATTR2;
+>> -		return 0;
+>> -	case Opt_noattr2:
+>> -		mp->m_flags &= ~XFS_MOUNT_ATTR2;
+>> -		mp->m_flags |= XFS_MOUNT_NOATTR2;
+>> -		return 0;
+>>  	case Opt_filestreams:
+>>  		mp->m_flags |= XFS_MOUNT_FILESTREAMS;
+>>  		return 0;
+>> @@ -1304,6 +1291,23 @@ xfs_fc_parse_param(
+>>  		xfs_mount_set_dax_mode(mp, result.uint_32);
+>>  		return 0;
+>>  #endif
+>> +	case Opt_ikeep:
+>> +		xfs_warn(mp, "%s mount option is deprecated.", param->key);
+>> +		mp->m_flags |= XFS_MOUNT_IKEEP;
 > 
+> It's a little odd that you didn't then remove these XFS_MOUNT_ flags.
+> It's strange to declare a mount option deprecated but still have it
+> change behavior.
+
+but ... this doesn't change behavior, right?  The flag is still set.
+
+I think it makes sense to announce deprecation, with a date set for future
+removal, but keep all other behavior the same.  That gives people who still
+need it (if any exist) time to complain, right?
+
+> In this case, I guess we should keep ikeep/noikeep in the mount options
+> table so that scripts won't fail, but then we remove XFS_MOUNT_IKEEP and
+> change the codebase to always take the IKEEP behavior and delete the
+> code that handled the !IKEEP behavior.
+> 
+>> +		return 0;
+>> +	case Opt_noikeep:
+>> +		xfs_warn(mp, "%s mount option is deprecated.", param->key);
+>> +		mp->m_flags &= ~XFS_MOUNT_IKEEP;
+>> +		return 0;
+>> +	case Opt_attr2:
+>> +		xfs_warn(mp, "%s mount option is deprecated.", param->key);
+>> +		mp->m_flags |= XFS_MOUNT_ATTR2;
+> 
+> If the kernel /does/ encounter an attr1 filesystem, what will it do now?
+
+The same as it did yesterday; the flag is still set for now.
+
+> IIRC the default (if there is no attr2/noattr2 mount option) is to
+> auto-upgrade the fs, right?  So will we stop doing that, or are we
+> making the upgrade mandatory now?
+> 
+>> +		return 0;
+>> +	case Opt_noattr2:
+>> +		xfs_warn(mp, "%s mount option is deprecated.", param->key);
+>> +		mp->m_flags &= ~XFS_MOUNT_ATTR2;
+>> +		mp->m_flags |= XFS_MOUNT_NOATTR2;
+> 
+> Also, uh, why move these code hunks?
+
+That's my fault, I had suggested moving all the deprecated options to the end.
+
+Maybe with a comment, /* REMOVE ME 2089 */ or whatever we pick?
+
+-Eric
