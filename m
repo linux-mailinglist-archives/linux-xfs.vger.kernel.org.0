@@ -2,88 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12EA5277A72
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 22:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA9A277A9D
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 22:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgIXUaX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Sep 2020 16:30:23 -0400
-Received: from [125.140.134.231] ([125.140.134.231]:59260 "EHLO
-        WIN-DAONO245HJF" rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726500AbgIXUaL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 16:30:11 -0400
-Received: from User ([185.191.231.247]) by WIN-DAONO245HJF with Microsoft SMTPSVC(8.5.9600.16384);
-         Fri, 25 Sep 2020 05:26:42 +0900
-Reply-To: <samthong5555@yahoo.com>
-From:   "SAM THONG" <samthong5555@gmail.com>
-Subject: Business Acquisition 1
-Date:   Thu, 24 Sep 2020 13:26:43 -0700
+        id S1726183AbgIXUmF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Sep 2020 16:42:05 -0400
+Received: from sandeen.net ([63.231.237.45]:37172 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725208AbgIXUmF (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 24 Sep 2020 16:42:05 -0400
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id B79CEEF1;
+        Thu, 24 Sep 2020 15:41:27 -0500 (CDT)
+Subject: Re: [PATCH] generic: test reflinked file corruption after short COW
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Cc:     fstests@vger.kernel.org, xfs <linux-xfs@vger.kernel.org>
+References: <b63354c6-795d-78e2-4002-83c08a373171@redhat.com>
+ <20200924201739.GJ7955@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Message-ID: <2eac728e-99a0-bd64-ca6f-a62b4297708a@sandeen.net>
+Date:   Thu, 24 Sep 2020 15:42:03 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.2
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
+In-Reply-To: <20200924201739.GJ7955@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <WIN-DAONO245HJFIF1900e70a08@WIN-DAONO245HJF>
-X-OriginalArrivalTime: 24 Sep 2020 20:26:43.0241 (UTC) FILETIME=[04438990:01D692B1]
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On 9/24/20 3:17 PM, Darrick J. Wong wrote:
+> On Thu, Sep 24, 2020 at 01:19:49PM -0500, Eric Sandeen wrote:
+>> This test essentially creates an existing COW extent which
+>> covers the first 1M, and then does another IO that overlaps it,
+>> but extends beyond it.  The bug was that we did not trim the
+>> new IO to the end of the existing COW extent, and so the IO
+>> extended past the COW blocks and corrupted the reflinked files(s).
+>>
+>> The bug came and went upstream; it will be hopefully fixed in the
+>> 5.4.y stable series via:
+>>
+>> https://lore.kernel.org/stable/e7fe7225-4f2b-d13e-bb4b-c7db68f63124@redhat.com/
+>>
+>> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+>> ---
+>>
+>> diff --git a/tests/generic/612 b/tests/generic/612
+>> new file mode 100755
+>> index 00000000..5a765a0c
+>> --- /dev/null
+>> +++ b/tests/generic/612
+>> @@ -0,0 +1,83 @@
+>> +#! /bin/bash
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# Copyright (c) 2020 Red Hat, Inc.  All Rights Reserved.
+>> +#
+>> +# FS QA Test 612
+>> +#
+>> +# Regression test for reflink corruption present as of:
+>> +# 78f0cc9d55cb "xfs: don't use delalloc extents for COW on files with extsize hints"
+>> +# and (inadvertently) fixed as of:
+>> +# 36adcbace24e "xfs: fill out the srcmap in iomap_begin"
+> 
+> This probably should list the name of the patch that fixes it for 5.4.
+> 
+> With that added,
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
+Will have to wait for a merge for that, I guess.
 
-Dear sir
+Especially with the typo fixed (or not)
 
-Our underwriter company is seeking the attention of genuine and reliable persons, companies
-
-who are indeed in need of funds as investment capital or business expansion in form of a
-
-direct loan to partner with us and benefit in our new Loan and Project funding programs.
-
-
-
-We offer flexible loans and funding for various projects at very affordable low interest
-
-rate of 3% annually for a period of 1-15 years on Non collateral loan/funding . We offer
-
-loan/funding from a minimum of Euro ? / USD$ 1 Million to Euro ? / USD$ 1 Billion. Max,
-
-depending on the nature of business/project.
-
-We are currently funding for:-
-
-
-
-* Starting up a Franchise
-
-* Business Acquisition
-
-* Business Expansion
-
-* Commercial Real Estate purchase
-
-* Consultancy and Contract Execution, Marine , ETC.
-
-
-
-Kindly get in touch for further details and procedure. samthong5555@yahoo.com 
-
-
-
-Respectfully,
-
-
-SAM THONG
-
-
-
-
-
-
-
-	
-
-
-
+-Eric
