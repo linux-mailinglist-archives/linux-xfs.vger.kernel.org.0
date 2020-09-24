@@ -2,76 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56AB62776D0
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 18:36:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ACA4277779
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:08:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726516AbgIXQgh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Sep 2020 12:36:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgIXQgh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 12:36:37 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83230C0613CE;
-        Thu, 24 Sep 2020 09:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jfjkeIZEHhA3nRGodYuDZGJpWjSMB63Yuv7NgD+cErM=; b=WaZgps9xKsu6rbYiNvGx72oTrv
-        vVewECLFfimVgWA/2LFj/ydxsOkaeQI1Iym0nCniHXumNWyYBvXeodqg1wwPqcurBDUdCHIKPizYE
-        nNSxiq+MjuJhVql+7N87UscvrHzIRWMXFE77X6qxMmBuyl4mCJlBuvYQZgdf0Gv0saEdCIieeFfNQ
-        V93KHyAytumfQtyA7bW5M12T6K6PICZyacexU5w7lWmzVYzMoiXRapQtHZ0lyiad+Xp/x6/K/a/sq
-        KVNIyrC63edZp903p1YY56aiIf86lT4m85ZrI0eDFM1+IWGhD8FuMlg40ulCWzErXWZf6RMOLKGTe
-        BdZHBfAA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kLUEV-0005hf-Dd; Thu, 24 Sep 2020 16:36:35 +0000
-Date:   Thu, 24 Sep 2020 17:36:35 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Qian Cai <cai@redhat.com>, Brian Foster <bfoster@redhat.com>
-Subject: Re: [PATCH] iomap: Set all uptodate bits for an Uptodate page
-Message-ID: <20200924163635.GZ32101@casper.infradead.org>
-References: <20200924125608.31231-1-willy@infradead.org>
- <CA+icZUUQGmd3juNPv1sHTWdhzXwZzRv=p1i+Q=20z_WGcZOzbg@mail.gmail.com>
- <20200924151538.GW32101@casper.infradead.org>
- <CA+icZUX4bQf+pYsnOR0gHZLsX3NriL=617=RU0usDfx=idgZmA@mail.gmail.com>
- <20200924152755.GY32101@casper.infradead.org>
- <CA+icZUURRcCh1TYtLs=U_353bhv5_JhVFaGxVPL5Rydee0P1=Q@mail.gmail.com>
+        id S1728539AbgIXRHy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Sep 2020 13:07:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22756 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728352AbgIXRHy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 13:07:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1600967272;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=vEpGIKvGSrPd5fmr86kpXsGNXGtPJdUXwPWVZxt6ueU=;
+        b=HW4/ouq0k2BdiBn8VMnGNCT8TR8wl2AOPhYhpiCkYaaYEe/1jwOqa8qEU7RR/ekg99W9U7
+        BCaMxSAsoLqWIcvtKoEGQo2ZNk2rDxK53+ZLOR3X5M0DEWdKmDCJNuXlfUHi1BSBHFPh8p
+        S90RWH3u848VHfA13jvRR6VFh2zQF0c=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-553-MBcvxCHBNu-Z4FNt7ExZXA-1; Thu, 24 Sep 2020 13:07:50 -0400
+X-MC-Unique: MBcvxCHBNu-Z4FNt7ExZXA-1
+Received: by mail-wr1-f70.google.com with SMTP id v5so1470159wrs.17
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Sep 2020 10:07:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vEpGIKvGSrPd5fmr86kpXsGNXGtPJdUXwPWVZxt6ueU=;
+        b=nuqj4Rj3Peo5ZSGXpSB6NG09ExrWGRCvPUT+mZuK0WXornt7LxmA4wjxNTRpZJTMko
+         m71n1s3yCr/M9zto2+W89nl3ZlvjVCSAW5KJBq2WmuP1sXiVM0cqqThiU5SaJRKlmuUS
+         TYCnrwffiVnYstDpZYWOEe9xPH42BwYXFM7G04rioluJrwliHISktKnrL8jv+KltVKSd
+         9HQ+1qWeySyYR3k3XtX4I6gJ3tcyVZTQSz/F/SkggUVWSMBD7rDOosZTaCC7d1B4piBW
+         5kpfTdMQK1cdTrvIrh0hos4/TBhclkIerKdKR7oC47pmDx1ZP8GwzbSKim16/mmelgBb
+         iFbg==
+X-Gm-Message-State: AOAM531b+/dx/RNCpMjUae3OTXcdKiYaYyy64+iZX2ON2C43Pp+zP58c
+        ia4edLs53heqCjpb5eMQmThz8NnMRPXeYPv5GApwmw/EWEx1FBx+oJkb3+w5Qw3qkUa1NFSv9pq
+        IMg7nDcVR/ERnaHcLZsuV
+X-Received: by 2002:a1c:a593:: with SMTP id o141mr184157wme.88.1600967268878;
+        Thu, 24 Sep 2020 10:07:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwTlemz1F+inEgrbIERwVmOFBcbMP7E7dV6ySggiSokYN8gDSqEsCMhqzN/oHNyiagglLKCPw==
+X-Received: by 2002:a1c:a593:: with SMTP id o141mr184140wme.88.1600967268719;
+        Thu, 24 Sep 2020 10:07:48 -0700 (PDT)
+Received: from localhost.localdomain ([84.19.91.81])
+        by smtp.gmail.com with ESMTPSA id k8sm103838wma.16.2020.09.24.10.07.47
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Sep 2020 10:07:48 -0700 (PDT)
+From:   Pavel Reichl <preichl@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/2] xfs: remove deprecated mount and sysctl options
+Date:   Thu, 24 Sep 2020 19:07:45 +0200
+Message-Id: <20200924170747.65876-1-preichl@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+icZUURRcCh1TYtLs=U_353bhv5_JhVFaGxVPL5Rydee0P1=Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 06:19:03PM +0200, Sedat Dilek wrote:
-> On Thu, Sep 24, 2020 at 5:27 PM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Thu, Sep 24, 2020 at 05:21:00PM +0200, Sedat Dilek wrote:
-> > > Great and thanks.
-> > >
-> > > Can you send out a seperate patch and label it with "PATCH v5.9"?
-> > > I run:
-> > > $ git format-patch -1 --subject-prefix="PATCH v5.9" --signoff
-> > >
-> > > Normally, I catch patches from any patchwork URL in mbox format.
-> >
-> > Maybe wait a few hours for people to decide if they like the approach
-> > taken to fix the bug before diving into producing backports?
-> 
-> That make sense.
-> 
-> You have a test-case for me?
-> I have here Linux-Test-Project and FIO available.
+Hi,
 
-Qian reported preadv203.c could reproduce it easily on POWER and ARM.
-They have 64kB pages, so it's easier to hit.  You need to have a
-filesystem with block size < page size to hit the problem.
+by Eric and Dave's suggestion I prepared a patchset which adds warnings about
+using deprecated options. I tried to justify the changes in commit
+messages based on the info from Eric and Dave.
 
-If you want to check that your test case hits the problem, stick a printk
-in iomap_page_create().
+If this patchsed should be merged I need to know when the options are
+actually eliminated, so documentation can be properly updated.
+
+Thanks.
+
+Pavel Reichl (2):
+  xfs: remove deprecated mount options
+  xfs: remove deprecated sysctl options
+
+ Documentation/admin-guide/xfs.rst |  5 ++++-
+ fs/xfs/xfs_super.c                | 30 +++++++++++++++-----------
+ fs/xfs/xfs_sysctl.c               | 36 +++++++++++++++++++++++++++++--
+ 3 files changed, 55 insertions(+), 16 deletions(-)
+
+-- 
+2.26.2
+
