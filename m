@@ -2,117 +2,164 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 513162777CD
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:29:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C82072777C6
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:27:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgIXR3P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Sep 2020 13:29:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45998 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727555AbgIXR3P (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 13:29:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600968553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uOFRmlux1Q9wWSOyOrju/L0ylnL8q5CD+U+8dCkSiL8=;
-        b=XFqotzxZlToT4lRQiRLF9Huts/CcaIQI9hVkJJpq93yOvRt55H7iCxdkohQordLlZjKlT8
-        6N6y4NUWWKHn00A1+DlfoUUxONCsvqLMJ1CNM9Vv52a/p5MS0qDqFXj75yS3esA27i3uKg
-        weYGL04DkFdqZxBio042K6kYHp3ipSM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-286-9lA6ish4MVaQRGWqUcLISg-1; Thu, 24 Sep 2020 13:27:00 -0400
-X-MC-Unique: 9lA6ish4MVaQRGWqUcLISg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E9099802EA5;
-        Thu, 24 Sep 2020 17:26:58 +0000 (UTC)
-Received: from bfoster (ovpn-113-130.rdu2.redhat.com [10.10.113.130])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 647257B7A0;
-        Thu, 24 Sep 2020 17:26:55 +0000 (UTC)
-Date:   Thu, 24 Sep 2020 13:26:53 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Qian Cai <cai@redhat.com>
-Subject: Re: [PATCH] iomap: Set all uptodate bits for an Uptodate page
-Message-ID: <20200924172653.GC2603692@bfoster>
-References: <20200924125608.31231-1-willy@infradead.org>
- <20200924131235.GA2603692@bfoster>
- <20200924135900.GV32101@casper.infradead.org>
- <20200924151259.GB2603692@bfoster>
- <20200924152211.GX32101@casper.infradead.org>
+        id S1728519AbgIXR1r (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Sep 2020 13:27:47 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:50978 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727988AbgIXR1r (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 13:27:47 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08OHJmPv007865;
+        Thu, 24 Sep 2020 17:27:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=R7whcWu0FA80AFjaRsamP6ZMAKpsqJYQIJEjihbuE0o=;
+ b=GK0unm4YPEAh9RB57UNI1zjiat2DPjoZ8lVmXpTw0z70G1jAr7rvJAlv1O+w7JHPzQcq
+ INiSLt1+ieQv5r5MENdvY5DUxjm5wAZE6Zi7TOx6OpE1VCqS45zhRB53XeRdD7NXux79
+ tul87Qofm4x+AHZYJsmrk4gmmD3s6h9aTSRx7LxurnfaAcgHfRb/UMLNkRNMFHu1DsC/
+ oXuB042L9sm734e/4MYIpw+4zZIzJrxiSzGelLas8KckQrZFgq1IVbBOz/pBkDxRcePd
+ eacphwYI2UHPzejk79J1aGijv1jYmBWSbFzm3rnVgJmJYuF8VM4HvghQn48s9fwl96VI Rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 33qcpu6hwv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 24 Sep 2020 17:27:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08OHQUiq021493;
+        Thu, 24 Sep 2020 17:27:43 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 33nurwfsmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Sep 2020 17:27:43 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08OHRgiJ002864;
+        Thu, 24 Sep 2020 17:27:42 GMT
+Received: from localhost (/10.159.232.188)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 24 Sep 2020 10:27:42 -0700
+Date:   Thu, 24 Sep 2020 10:27:41 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Pavel Reichl <preichl@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] xfs: remove deprecated sysctl options
+Message-ID: <20200924172741.GH7955@magnolia>
+References: <20200924170747.65876-1-preichl@redhat.com>
+ <20200924170747.65876-3-preichl@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200924152211.GX32101@casper.infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200924170747.65876-3-preichl@redhat.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9754 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 suspectscore=1
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009240129
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9754 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
+ adultscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ phishscore=0 spamscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009240128
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 24, 2020 at 04:22:11PM +0100, Matthew Wilcox wrote:
-> On Thu, Sep 24, 2020 at 11:12:59AM -0400, Brian Foster wrote:
-> > On Thu, Sep 24, 2020 at 02:59:00PM +0100, Matthew Wilcox wrote:
-> > > On Thu, Sep 24, 2020 at 09:12:35AM -0400, Brian Foster wrote:
-> > > > On Thu, Sep 24, 2020 at 01:56:08PM +0100, Matthew Wilcox (Oracle) wrote:
-> > > > > For filesystems with block size < page size, we need to set all the
-> > > > > per-block uptodate bits if the page was already uptodate at the time
-> > > > > we create the per-block metadata.  This can happen if the page is
-> > > > > invalidated (eg by a write to drop_caches) but ultimately not removed
-> > > > > from the page cache.
-> > > > > 
-> > > > > This is a data corruption issue as page writeback skips blocks which
-> > > > > are marked !uptodate.
-> > > > 
-> > > > Thanks. Based on my testing of clearing PageUptodate here I suspect this
-> > > > will similarly prevent the problem, but I'll give this a test
-> > > > nonetheless. 
-> > > > 
-> > > > I am a little curious why we'd prefer to fill the iop here rather than
-> > > > just clear the page state if the iop data has been released. If the page
-> > > > is partially uptodate, then we end up having to re-read the page
-> > > > anyways, right? OTOH, I guess this behavior is more consistent with page
-> > > > size == block size filesystems where iop wouldn't exist and we just go
-> > > > by page state, so perhaps that makes more sense.
-> > > 
-> > > Well, it's _true_ ... the PageUptodate bit means that every byte in this
-> > > page is at least as new as every byte on storage.  There's no need to
-> > > re-read it, which is what we'll do if we ClearPageUptodate.
-> > 
-> > Yes, of course. I'm just noting the inconsistent behavior between a full
-> > and partially uptodate page.
+On Thu, Sep 24, 2020 at 07:07:47PM +0200, Pavel Reichl wrote:
+> These optionr were for Irix compatibility, probably for clustered XFS
+> clients in a heterogenous cluster which contained both Irix & Linux
+> machines, so that behavior would be consistent. That doesn't exist anymore
+> and it's no longer needed.
 > 
-> Heh, well, we have no way of knowing.  We literally just threw away
-> the information about which blocks are uptodate.  So the best we can
-> do is work with the single bit we have.  We do know that there are no
-> dirty blocks left on the page at this point (... maybe we should add a
-> VM_BUG_ON(!PageUptodate && PageDirty)).
+> Signed-off-by: Pavel Reichl <preichl@redhat.com>
+> ---
+>  Documentation/admin-guide/xfs.rst |  3 ++-
+>  fs/xfs/xfs_sysctl.c               | 36 +++++++++++++++++++++++++++++--
+>  2 files changed, 36 insertions(+), 3 deletions(-)
 > 
+> diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
+> index 413f68efccc0..208e17810459 100644
+> --- a/Documentation/admin-guide/xfs.rst
+> +++ b/Documentation/admin-guide/xfs.rst
+> @@ -333,7 +333,8 @@ The following sysctls are available for the XFS filesystem:
+>  Deprecated Sysctls
+>  ==================
+>  
+> -None at present.
+> +fs.xfs.irix_sgid_inherit
+> +fs.xfs.irix_symlink_mode
 
-Right..
+When will these be removed from sysctl?
 
-> Something we could do is summarise the block uptodate information in
-> the 32/64 bits of page_private without setting PagePrivate.  That would
-> cause us to still allocate an iop so we can track reads/writes, but we
-> might be able to avoid a few reads.
+>  Removed Sysctls
+> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
+> index 021ef96d0542..fac9de7ee6d0 100644
+> --- a/fs/xfs/xfs_sysctl.c
+> +++ b/fs/xfs/xfs_sysctl.c
+> @@ -50,13 +50,45 @@ xfs_panic_mask_proc_handler(
+>  }
+>  #endif /* CONFIG_PROC_FS */
+>  
+> +STATIC int
+> +xfs_deprecate_irix_sgid_inherit_proc_handler(
+> +	struct ctl_table	*ctl,
+> +	int			write,
+> +	void			*buffer,
+> +	size_t			*lenp,
+> +	loff_t			*ppos)
+> +{
+> +	if (write) {
+> +		printk_once(KERN_WARNING
+> +				"XFS: " "%s sysctl option is deprecated.\n",
+> +				ctl->procname);
+> +	}
+> +	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
+> +}
+> +
+> +STATIC int
+> +xfs_deprecate_irix_symlink_mode_proc_handler(
+> +	struct ctl_table	*ctl,
+> +	int			write,
+> +	void			*buffer,
+> +	size_t			*lenp,
+> +	loff_t			*ppos)
+> +{
+> +	if (write) {
+> +		printk_once(KERN_WARNING
+> +				"XFS: " "%s sysctl option is deprecated.\n",
+> +				ctl->procname);
+> +	}
+> +	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
+> +}
+> +
+>  static struct ctl_table xfs_table[] = {
+>  	{
+>  		.procname	= "irix_sgid_inherit",
+>  		.data		= &xfs_params.sgid_inherit.val,
+
+Same comments as the last patch regarding a sysctl that spits out
+deprecation warnings but continues to actually change xfs' behavior...
+
+--D
+
+>  		.maxlen		= sizeof(int),
+>  		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> +		.proc_handler	= xfs_deprecate_irix_sgid_inherit_proc_handler,
+>  		.extra1		= &xfs_params.sgid_inherit.min,
+>  		.extra2		= &xfs_params.sgid_inherit.max
+>  	},
+> @@ -65,7 +97,7 @@ static struct ctl_table xfs_table[] = {
+>  		.data		= &xfs_params.symlink_mode.val,
+>  		.maxlen		= sizeof(int),
+>  		.mode		= 0644,
+> -		.proc_handler	= proc_dointvec_minmax,
+> +		.proc_handler	= xfs_deprecate_irix_symlink_mode_proc_handler,
+>  		.extra1		= &xfs_params.symlink_mode.min,
+>  		.extra2		= &xfs_params.symlink_mode.max
+>  	},
+> -- 
+> 2.26.2
 > 
-> But I don't think it's worth it.  Partially uptodate pages are not what
-> we should be optimising for; we should try to get & keep pages uptodate.
-> After all, it's a page cache ;-)
-> 
-
-Fair enough. I was thinking about whether we could ensure the page is
-released if releasepage() effectively invalidated the page content (or
-avoid the release if we know the mapping won't be removed), but that
-appears to be nontrivial given the refcount interdependencies between
-page private and removing the mapping. I.e., the private data can hold a
-reference on the page and remove_mapping() wants to assume that the
-caller and page cache hold the last references on the page.
-
-Brian
-
