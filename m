@@ -2,60 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C89AB27777A
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:08:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABBAA27777D
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 19:08:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgIXRHy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Sep 2020 13:07:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:34955 "EHLO
+        id S1728633AbgIXRH5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Sep 2020 13:07:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58064 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728533AbgIXRHy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 13:07:54 -0400
+        by vger.kernel.org with ESMTP id S1728679AbgIXRH5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 13:07:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1600967273;
+        s=mimecast20190719; t=1600967275;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5Wtm/cLHvqYGKGlziELXDIpICdVz+nah6vXT6Osr7zg=;
-        b=H/OvEd0AVsa5H7wj6HWij3MiKh17/+MT+cgSTK4Vxrph28n8OOKzyqqJuYP/X8BFsjpZxC
-        VdQ59s5eNwRboqKxj/56q5uQDcMByQsfbQHCGLaGUn+A3NgOre8v5vvXe4wyqRBjRW3uDB
-        8DPZ8t2ENj7hPnt1O5JbpHEwI5TaOps=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-429-3DdnHPNmN_-ZUTw0IlGXWQ-1; Thu, 24 Sep 2020 13:07:51 -0400
-X-MC-Unique: 3DdnHPNmN_-ZUTw0IlGXWQ-1
-Received: by mail-wr1-f70.google.com with SMTP id s8so1482654wrb.15
+        bh=2CBo0GsrUjkDOtmc5DsoLMAwlQdWwNF1jtxrDDjt+s4=;
+        b=FgjgWBbhKYqDyvkZQGPh8s0q+fa6odKrMhHKqFhSdSqpWMqGOpOPxvUgk6Vpkg+kZZE+1w
+        LCHNERA3Sv3p+7RlDX84ZBWsoFd4CTpiWE50Ix4kuL6Nb5d+tLf5745OizzafFj5LOLpxV
+        NyVh6QccySEDI7aeLCRGZdkEK+EynK0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475-fJRe-8DPMHiAmzgng0bMig-1; Thu, 24 Sep 2020 13:07:51 -0400
+X-MC-Unique: fJRe-8DPMHiAmzgng0bMig-1
+Received: by mail-wr1-f72.google.com with SMTP id l17so1476472wrw.11
         for <linux-xfs@vger.kernel.org>; Thu, 24 Sep 2020 10:07:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5Wtm/cLHvqYGKGlziELXDIpICdVz+nah6vXT6Osr7zg=;
-        b=IvRAWLkx8xbGNJL1zSqh95dm3aVCBR3c6/vpbcpJVufdbEhALOgbEVVNyHJ5jdNTi6
-         bbkBhCrkCU7UPRWzAnDZDlxYo76IUonSMtLkinbOgkBNgQ6vY8nFUGlCQSZBTILxixBh
-         YzFXja1YSgq2PHeSRoD+XNIhcrNur1N3jT6Z8fp2oxDgrk99SCdh3zA3Q+Wpgjz4PCrz
-         Myc891pWiHvU53/uN4qz8NnUmmnQZWguGCeZwsDdUC8VeQAXXRM4ibMXUiAm2gzD1tqY
-         +eacoOf4L0ap7zaMdCOD8yqcMYFaViLLS8GcGB7V3co/KPnM9jXeG3GWL+XNIl8apufs
-         W96g==
-X-Gm-Message-State: AOAM5325zibgADv4cQpp9WxvxUBEVldQeQa0R0SfjbFvF7vUeMkrCfL3
-        f28hEDdNzek2HXgfiY5lGweeWsNm3OTfSHnwHE7VgaYKruU2lU0TH5OIofLZnj2NzG756uvxXqj
-        I/uEYGxtlvfUFIrbtibyF
-X-Received: by 2002:a1c:63c1:: with SMTP id x184mr174779wmb.138.1600967269754;
-        Thu, 24 Sep 2020 10:07:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwg8JzHhiDNF5ZLdUUkYcxzsmxwNgwwB89FvzFQ1GdgnsU//14AX9GE3KlltCLK8hXnkhTjw==
-X-Received: by 2002:a1c:63c1:: with SMTP id x184mr174763wmb.138.1600967269497;
-        Thu, 24 Sep 2020 10:07:49 -0700 (PDT)
+        bh=2CBo0GsrUjkDOtmc5DsoLMAwlQdWwNF1jtxrDDjt+s4=;
+        b=eULECwq1v64D0x1ir9KkBNTEzXdvNanfUuMAsticU6PEcrUOjz6fxnI6WyxT8prVO9
+         wSLV9vKTeHIBQFy/lkPIYaobNkPsIZnJ+r4HnXF4HPBWdLaHoYEhXiGzX2u0+A4jDi3u
+         2xL+z5FxASpWD3GEPMTWZV5DKz8RVNU2OuilU/L1lF9TzkG2dQOAXRKeUdM4pOCMFmQW
+         8L0L9g7US9hDYYfivmswnNMS5C8PL8PLu2Mv9S+Yp4xgR/zZR9nGlnSqJ3U+wNV4PUSx
+         4wPQR/irT5x361PzIVbsNizyJgDGF57RvHFpjY8H+u6CAmAzs/vGI0iTnqS4uiThfCK/
+         e7hA==
+X-Gm-Message-State: AOAM531KQJa8uTo2Wb8q0InHOJoMI10fV/NMYxj3b+CX5SQ/lRXQCOb2
+        xgQDde6BQJzSVvbPKuSbhyWgf7q9OPHhgw0XOepdt737KLPmirwNBaENWujJcKLDjpLN+uw2K7T
+        lVu513qUS9G0Q9i1a+TZV
+X-Received: by 2002:a7b:c215:: with SMTP id x21mr171653wmi.138.1600967270475;
+        Thu, 24 Sep 2020 10:07:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+f2LvG9Pm6BC8AiYFXZ1KEYAWUERq0aCGyux0kcSHbIdfkKouu6208yycAuAnOLUeUNXlNQ==
+X-Received: by 2002:a7b:c215:: with SMTP id x21mr171637wmi.138.1600967270292;
+        Thu, 24 Sep 2020 10:07:50 -0700 (PDT)
 Received: from localhost.localdomain ([84.19.91.81])
-        by smtp.gmail.com with ESMTPSA id k8sm103838wma.16.2020.09.24.10.07.48
+        by smtp.gmail.com with ESMTPSA id k8sm103838wma.16.2020.09.24.10.07.49
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Sep 2020 10:07:48 -0700 (PDT)
+        Thu, 24 Sep 2020 10:07:49 -0700 (PDT)
 From:   Pavel Reichl <preichl@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/2] xfs: remove deprecated mount options
-Date:   Thu, 24 Sep 2020 19:07:46 +0200
-Message-Id: <20200924170747.65876-2-preichl@redhat.com>
+Subject: [PATCH 2/2] xfs: remove deprecated sysctl options
+Date:   Thu, 24 Sep 2020 19:07:47 +0200
+Message-Id: <20200924170747.65876-3-preichl@redhat.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200924170747.65876-1-preichl@redhat.com>
 References: <20200924170747.65876-1-preichl@redhat.com>
@@ -65,87 +65,91 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-ikeep/noikeep was a workaround for old DMAPI code which is no longer
-relevant.
-
-attr2/noattr2 - is for controlling upgrade behaviour from fixed attribute
-fork sizes in the inode (attr1) and dynamic attribute fork sizes (attr2).
-mkfs has defaulted to setting attr2 since 2007, hence just about every
-XFS filesystem out there in production right now uses attr2.
+These optionr were for Irix compatibility, probably for clustered XFS
+clients in a heterogenous cluster which contained both Irix & Linux
+machines, so that behavior would be consistent. That doesn't exist anymore
+and it's no longer needed.
 
 Signed-off-by: Pavel Reichl <preichl@redhat.com>
 ---
- Documentation/admin-guide/xfs.rst |  2 ++
- fs/xfs/xfs_super.c                | 30 +++++++++++++++++-------------
- 2 files changed, 19 insertions(+), 13 deletions(-)
+ Documentation/admin-guide/xfs.rst |  3 ++-
+ fs/xfs/xfs_sysctl.c               | 36 +++++++++++++++++++++++++++++--
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/admin-guide/xfs.rst b/Documentation/admin-guide/xfs.rst
-index f461d6c33534..413f68efccc0 100644
+index 413f68efccc0..208e17810459 100644
 --- a/Documentation/admin-guide/xfs.rst
 +++ b/Documentation/admin-guide/xfs.rst
-@@ -217,6 +217,8 @@ Deprecated Mount Options
- ===========================     ================
-   Name				Removal Schedule
- ===========================     ================
-+  ikeep/noikeep			TBD
-+  attr2/noattr2			TBD
- ===========================     ================
+@@ -333,7 +333,8 @@ The following sysctls are available for the XFS filesystem:
+ Deprecated Sysctls
+ ==================
+ 
+-None at present.
++fs.xfs.irix_sgid_inherit
++fs.xfs.irix_symlink_mode
  
  
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 71ac6c1cdc36..4c26b283b7d8 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1234,25 +1234,12 @@ xfs_fc_parse_param(
- 	case Opt_nouuid:
- 		mp->m_flags |= XFS_MOUNT_NOUUID;
- 		return 0;
--	case Opt_ikeep:
--		mp->m_flags |= XFS_MOUNT_IKEEP;
--		return 0;
--	case Opt_noikeep:
--		mp->m_flags &= ~XFS_MOUNT_IKEEP;
--		return 0;
- 	case Opt_largeio:
- 		mp->m_flags |= XFS_MOUNT_LARGEIO;
- 		return 0;
- 	case Opt_nolargeio:
- 		mp->m_flags &= ~XFS_MOUNT_LARGEIO;
- 		return 0;
--	case Opt_attr2:
--		mp->m_flags |= XFS_MOUNT_ATTR2;
--		return 0;
--	case Opt_noattr2:
--		mp->m_flags &= ~XFS_MOUNT_ATTR2;
--		mp->m_flags |= XFS_MOUNT_NOATTR2;
--		return 0;
- 	case Opt_filestreams:
- 		mp->m_flags |= XFS_MOUNT_FILESTREAMS;
- 		return 0;
-@@ -1304,6 +1291,23 @@ xfs_fc_parse_param(
- 		xfs_mount_set_dax_mode(mp, result.uint_32);
- 		return 0;
- #endif
-+	case Opt_ikeep:
-+		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		mp->m_flags |= XFS_MOUNT_IKEEP;
-+		return 0;
-+	case Opt_noikeep:
-+		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		mp->m_flags &= ~XFS_MOUNT_IKEEP;
-+		return 0;
-+	case Opt_attr2:
-+		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		mp->m_flags |= XFS_MOUNT_ATTR2;
-+		return 0;
-+	case Opt_noattr2:
-+		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		mp->m_flags &= ~XFS_MOUNT_ATTR2;
-+		mp->m_flags |= XFS_MOUNT_NOATTR2;
-+		return 0;
- 	default:
- 		xfs_warn(mp, "unknown mount option [%s].", param->key);
- 		return -EINVAL;
+ Removed Sysctls
+diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
+index 021ef96d0542..fac9de7ee6d0 100644
+--- a/fs/xfs/xfs_sysctl.c
++++ b/fs/xfs/xfs_sysctl.c
+@@ -50,13 +50,45 @@ xfs_panic_mask_proc_handler(
+ }
+ #endif /* CONFIG_PROC_FS */
+ 
++STATIC int
++xfs_deprecate_irix_sgid_inherit_proc_handler(
++	struct ctl_table	*ctl,
++	int			write,
++	void			*buffer,
++	size_t			*lenp,
++	loff_t			*ppos)
++{
++	if (write) {
++		printk_once(KERN_WARNING
++				"XFS: " "%s sysctl option is deprecated.\n",
++				ctl->procname);
++	}
++	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
++}
++
++STATIC int
++xfs_deprecate_irix_symlink_mode_proc_handler(
++	struct ctl_table	*ctl,
++	int			write,
++	void			*buffer,
++	size_t			*lenp,
++	loff_t			*ppos)
++{
++	if (write) {
++		printk_once(KERN_WARNING
++				"XFS: " "%s sysctl option is deprecated.\n",
++				ctl->procname);
++	}
++	return proc_dointvec_minmax(ctl, write, buffer, lenp, ppos);
++}
++
+ static struct ctl_table xfs_table[] = {
+ 	{
+ 		.procname	= "irix_sgid_inherit",
+ 		.data		= &xfs_params.sgid_inherit.val,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
++		.proc_handler	= xfs_deprecate_irix_sgid_inherit_proc_handler,
+ 		.extra1		= &xfs_params.sgid_inherit.min,
+ 		.extra2		= &xfs_params.sgid_inherit.max
+ 	},
+@@ -65,7 +97,7 @@ static struct ctl_table xfs_table[] = {
+ 		.data		= &xfs_params.symlink_mode.val,
+ 		.maxlen		= sizeof(int),
+ 		.mode		= 0644,
+-		.proc_handler	= proc_dointvec_minmax,
++		.proc_handler	= xfs_deprecate_irix_symlink_mode_proc_handler,
+ 		.extra1		= &xfs_params.symlink_mode.min,
+ 		.extra2		= &xfs_params.symlink_mode.max
+ 	},
 -- 
 2.26.2
 
