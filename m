@@ -2,112 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6493F277490
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 16:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E97472774D5
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Sep 2020 17:09:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgIXO66 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Sep 2020 10:58:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52322 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728478AbgIXO65 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 24 Sep 2020 10:58:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5A17EB052;
-        Thu, 24 Sep 2020 14:58:56 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 071071E12DD; Thu, 24 Sep 2020 16:58:56 +0200 (CEST)
-Date:   Thu, 24 Sep 2020 16:58:56 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        david@fromorbit.com, ira.weiny@intel.com,
-        linux-xfs@vger.kernel.org, viro@zeniv.linux.org.uk,
-        y-goto@fujitsu.com
-Subject: Re: [PATCH v2] fs: Kill DCACHE_DONTCACHE dentry even if
- DCACHE_REFERENCED is set
-Message-ID: <20200924145856.GB3361@quack2.suse.cz>
-References: <20200924055958.825515-1-lihao2018.fnst@cn.fujitsu.com>
+        id S1728329AbgIXPJI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Sep 2020 11:09:08 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58148 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728292AbgIXPJH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Sep 2020 11:09:07 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08OF4pVU097419;
+        Thu, 24 Sep 2020 15:08:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=D48ry8q0Y64WL/YiVIYNAN4K/D5FGDHwOnnYqCWBl44=;
+ b=qH7+gcqz3gdOLTcMGHOQlEwx4cUDXsFKuRhYgOn6X7FgOMy+We1T0xFAmwWq3Xygl7Yu
+ DMZWi+MN+T5NuOiBojcCMKau2tYEWQgxUy6K7O4fUW0jnYHGfv3gBkRsuss7vg2OFDjm
+ iUfs5mrDhmxlgxa10hRODTUCm6QPe5lBuDlR0OMsp756uKdcGq+BHjXiFhgiR9WLTNOw
+ UzWbIhuQ4K5VT+jkeH7Mlmpy/+TYjsLHAKuhoJfGD0ULuuV9amno2ZMbOYETsVzz8GXc
+ h33SIgxblpRhie7hOn/B7oAFQiIKRGqeH8AQ4SoI8zCFtRivJ1jZE6QDa8XzuDkNznXy UA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 33ndnurwmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 24 Sep 2020 15:08:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08OF5TL2192119;
+        Thu, 24 Sep 2020 15:06:58 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 33nux2wavt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Sep 2020 15:06:57 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08OF6un1015349;
+        Thu, 24 Sep 2020 15:06:56 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 24 Sep 2020 08:06:56 -0700
+Date:   Thu, 24 Sep 2020 08:06:56 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Eric Sandeen <sandeen@redhat.com>, xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] xfs_repair: coordinate parallel updates to the rt bitmap
+Message-ID: <20200924150656.GE7955@magnolia>
+References: <20200923182437.GW7955@magnolia>
+ <20200924054041.GA21542@infradead.org>
+ <20200924060001.GZ7955@magnolia>
+ <20200924061911.GB27289@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200924055958.825515-1-lihao2018.fnst@cn.fujitsu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200924061911.GB27289@infradead.org>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9753 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 mlxlogscore=999 phishscore=0 suspectscore=1 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009240116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9753 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 suspectscore=1 bulkscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009240116
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu 24-09-20 13:59:58, Hao Li wrote:
-> If DCACHE_REFERENCED is set, fast_dput() will return true, and then
-> retain_dentry() have no chance to check DCACHE_DONTCACHE. As a result,
-> the dentry won't be killed and the corresponding inode can't be evicted.
-> In the following example, the DAX policy can't take effects unless we
-> do a drop_caches manually.
+On Thu, Sep 24, 2020 at 07:19:11AM +0100, Christoph Hellwig wrote:
+> On Wed, Sep 23, 2020 at 11:00:01PM -0700, Darrick J. Wong wrote:
+> > > > +	struct aglock		*lock = &ag_locks[(signed)NULLAGNUMBER];
+> > > 
+> > > Err, what is this weird cast doing here?
+> > 
+> > Well.... ag_locks is allocated with length ag_locks[agcount + 1], and
+> > then the pointer is incremented so that ag_locks[-1] is the rt lock.
 > 
->   # DCACHE_LRU_LIST will be set
->   echo abcdefg > test.txt
+> At least in the for-next branch it isn't:
 > 
->   # DCACHE_REFERENCED will be set and DCACHE_DONTCACHE can't do anything
->   xfs_io -c 'chattr +x' test.txt
+> 	ag_locks = calloc(mp->m_sb.sb_agcount, sizeof(struct aglock));
 > 
->   # Drop caches to make DAX changing take effects
->   echo 2 > /proc/sys/vm/drop_caches
-> 
-> What this patch does is preventing fast_dput() from returning true if
-> DCACHE_DONTCACHE is set. Then retain_dentry() will detect the
-> DCACHE_DONTCACHE and will return false. As a result, the dentry will be
-> killed and the inode will be evicted. In this way, if we change per-file
-> DAX policy, it will take effects automatically after this file is closed
-> by all processes.
-> 
-> I also add some comments to make the code more clear.
-> 
-> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> More importantly, I can't even find other uses of ag_locks for the
+> RT subvolume.  Is this hidden in one of your series?
 
-The patch looks good to me. You can add:
+Doh.  Yes, it is, in the realtime rmap series. :( :(
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+> Either way I think a separate lock for the RT subvolume would make a
+> whole lot more sense.
 
-								Honza
+Yes, let's do it that way.
 
-> ---
-> v1 is split into two standalone patch as discussed in [1], and the first
-> patch has been reviewed in [2]. This is the second patch.
-> 
-> [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
-> [2]: https://lore.kernel.org/linux-fsdevel/20200906214002.GI12131@dread.disaster.area/
-> 
->  fs/dcache.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index ea0485861d93..97e81a844a96 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -793,10 +793,17 @@ static inline bool fast_dput(struct dentry *dentry)
->  	 * a reference to the dentry and change that, but
->  	 * our work is done - we can leave the dentry
->  	 * around with a zero refcount.
-> +	 *
-> +	 * Nevertheless, there are two cases that we should kill
-> +	 * the dentry anyway.
-> +	 * 1. free disconnected dentries as soon as their refcount
-> +	 *    reached zero.
-> +	 * 2. free dentries if they should not be cached.
->  	 */
->  	smp_rmb();
->  	d_flags = READ_ONCE(dentry->d_flags);
-> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
-> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST |
-> +			DCACHE_DISCONNECTED | DCACHE_DONTCACHE;
->  
->  	/* Nothing to do? Dropping the reference was all we needed? */
->  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
-> -- 
-> 2.28.0
-> 
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+--D
