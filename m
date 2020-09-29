@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E699B27D4A9
-	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 19:43:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3710927D4C4
+	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 19:45:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgI2Rnc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Sep 2020 13:43:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39938 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgI2Rnb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 13:43:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THdWQF026444;
-        Tue, 29 Sep 2020 17:43:22 GMT
+        id S1728525AbgI2Rpf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Sep 2020 13:45:35 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:39306 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbgI2Rpe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 13:45:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THd3BY189278;
+        Tue, 29 Sep 2020 17:45:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=9LNn76gvaTVsWXdV6Yt3nu1CdLfJ/ABMgI35vik0DBw=;
- b=s3uSWcGkuoAjySH12X9gID0oDjZCbDQmlH8FAm/A5ARJEhIS0ENsWT5pxWYhtHONwBZc
- TGh9DoKpjgkJbaN9mxPDiaED0hhlPHOBV5n+t7rheKmmAKeACPsqzdn2+6mfcA7RJtSv
- dk424QG5bQW32wQ331j/zXyumCAilw4MGet19QPXUcsXJonXjZsFveaDSCtneI0vbmyl
- Ga9BV226TggeH1pACfQPZPMbHwOq/ifNm8TVMtfO9LgdvOAkFbM62eIR4HcIKYCxOp/6
- n9j0jazLOaEEHe0TmZ3iTV+YLoEjxc/A6vfKctTp8MA224M3tiOsTFuMObiXt4/xun1s 6w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 33swkkva4a-1
+ bh=6pQ34UlvcfmgtXdQFd4C5pf8fimecJUPKJnQJEjQlAU=;
+ b=CMa69exdz/QePNI3ok2gKfWo008I5PiI+OkTbaoR2+NR4EkBNokbuY8yqi69LAtOBMQy
+ Fg6kBU0BrbSDpA0bbG5gBLjPp1ic/qCEeWHSAWlczKWy8Y7jsLTbb/cMLwEcKT178G1N
+ DGHod3aM3jqBKrCYL2Cunr7K9E5Mhi6ehwEoJcUEWftqBf0B0UwvteiWa7b/gpElsr/m
+ L+xVeUuQdBRF1x6sGW/OnBBgd0J+Jvhxiuj7O9r1r4nPS/S+1P6Se4voNxAFOUdTcXE4
+ QmSfC7a1oJHNK/OhZ5tbJUZYrP3TNqPHqgFkIv2YWtjRGqXmrYPkqBa161jcU0ypOctM Sg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33sx9n481d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 29 Sep 2020 17:43:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THekGB111532;
-        Tue, 29 Sep 2020 17:43:21 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 33tfdsg000-1
+        Tue, 29 Sep 2020 17:45:28 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THeQdJ167285;
+        Tue, 29 Sep 2020 17:43:28 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 33tfhxywfy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Sep 2020 17:43:21 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08THhKrF027878;
-        Tue, 29 Sep 2020 17:43:20 GMT
+        Tue, 29 Sep 2020 17:43:27 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08THhQPJ006196;
+        Tue, 29 Sep 2020 17:43:26 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Sep 2020 10:43:20 -0700
-Subject: [PATCH 1/5] xfs: remove xfs_defer_reset
+        with ESMTP ; Tue, 29 Sep 2020 10:43:26 -0700
+Subject: [PATCH 2/5] xfs: remove XFS_LI_RECOVERED
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     Dave Chinner <dchinner@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        linux-xfs@vger.kernel.org, david@fromorbit.com, hch@lst.de,
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@lst.de,
         bfoster@redhat.com
-Date:   Tue, 29 Sep 2020 10:43:18 -0700
-Message-ID: <160140139874.830233.6882281372357115912.stgit@magnolia>
+Date:   Tue, 29 Sep 2020 10:43:25 -0700
+Message-ID: <160140140527.830233.8494766872686671838.stgit@magnolia>
 In-Reply-To: <160140139198.830233.3093053332257853111.stgit@magnolia>
 References: <160140139198.830233.3093053332257853111.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,14 +54,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009290149
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 malwarescore=0 adultscore=0 suspectscore=1 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009290149
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=3 mlxlogscore=999 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=1
+ phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009290149
 Precedence: bulk
@@ -71,64 +70,55 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Remove this one-line helper since the assert is trivially true in one
-call site and the rest obscures a bitmask operation.
+The ->iop_recover method of a log intent item removes the recovered
+intent item from the AIL by logging an intent done item and committing
+the transaction, so it's superfluous to have this flag check.  Nothing
+else uses it, so get rid of the flag entirely.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_defer.c |   24 +++++-------------------
- 1 file changed, 5 insertions(+), 19 deletions(-)
+ fs/xfs/xfs_log_recover.c |    8 +++-----
+ fs/xfs/xfs_trans.h       |    4 +---
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index 29e9762f3b77..36c103c14bc9 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -312,22 +312,6 @@ xfs_defer_trans_roll(
- 	return error;
- }
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index e0675071b39e..84f876c6d498 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -2539,11 +2539,9 @@ xlog_recover_process_intents(
+ 		 * this routine or else those subsequent intents will get
+ 		 * replayed in the wrong order!
+ 		 */
+-		if (!test_and_set_bit(XFS_LI_RECOVERED, &lip->li_flags)) {
+-			spin_unlock(&ailp->ail_lock);
+-			error = lip->li_ops->iop_recover(lip, parent_tp);
+-			spin_lock(&ailp->ail_lock);
+-		}
++		spin_unlock(&ailp->ail_lock);
++		error = lip->li_ops->iop_recover(lip, parent_tp);
++		spin_lock(&ailp->ail_lock);
+ 		if (error)
+ 			goto out;
+ 		lip = xfs_trans_ail_cursor_next(ailp, &cur);
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index a71b4f443e39..ced62a35a62b 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -55,14 +55,12 @@ struct xfs_log_item {
+ #define	XFS_LI_ABORTED	1
+ #define	XFS_LI_FAILED	2
+ #define	XFS_LI_DIRTY	3	/* log item dirty in transaction */
+-#define	XFS_LI_RECOVERED 4	/* log intent item has been recovered */
  
--/*
-- * Reset an already used dfops after finish.
-- */
--static void
--xfs_defer_reset(
--	struct xfs_trans	*tp)
--{
--	ASSERT(list_empty(&tp->t_dfops));
--
--	/*
--	 * Low mode state transfers across transaction rolls to mirror dfops
--	 * lifetime. Clear it now that dfops is reset.
--	 */
--	tp->t_flags &= ~XFS_TRANS_LOWMODE;
--}
--
- /*
-  * Free up any items left in the list.
-  */
-@@ -477,7 +461,10 @@ xfs_defer_finish(
- 			return error;
- 		}
- 	}
--	xfs_defer_reset(*tp);
-+
-+	/* Reset LOWMODE now that we've finished all the dfops. */
-+	ASSERT(list_empty(&(*tp)->t_dfops));
-+	(*tp)->t_flags &= ~XFS_TRANS_LOWMODE;
- 	return 0;
- }
+ #define XFS_LI_FLAGS \
+ 	{ (1 << XFS_LI_IN_AIL),		"IN_AIL" }, \
+ 	{ (1 << XFS_LI_ABORTED),	"ABORTED" }, \
+ 	{ (1 << XFS_LI_FAILED),		"FAILED" }, \
+-	{ (1 << XFS_LI_DIRTY),		"DIRTY" }, \
+-	{ (1 << XFS_LI_RECOVERED),	"RECOVERED" }
++	{ (1 << XFS_LI_DIRTY),		"DIRTY" }
  
-@@ -551,8 +538,7 @@ xfs_defer_move(
- 	 * that behavior.
- 	 */
- 	dtp->t_flags |= (stp->t_flags & XFS_TRANS_LOWMODE);
--
--	xfs_defer_reset(stp);
-+	stp->t_flags &= ~XFS_TRANS_LOWMODE;
- }
- 
- /*
+ struct xfs_item_ops {
+ 	unsigned flags;
 
