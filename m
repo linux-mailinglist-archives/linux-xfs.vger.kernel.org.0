@@ -2,54 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5927B27D4C6
-	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 19:45:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD02827D4AB
+	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 19:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgI2Rpy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Sep 2020 13:45:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39554 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgI2Rpx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 13:45:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THdAlC189457;
-        Tue, 29 Sep 2020 17:45:47 GMT
+        id S1728752AbgI2Rnz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Sep 2020 13:43:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40198 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbgI2Rnz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 13:43:55 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THdVLS026422;
+        Tue, 29 Sep 2020 17:43:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=YXvEFJpnAJ08fgbI2dYl/xB2e1B13WnweJqayUb4x8U=;
- b=YllELw4Yoganqyp5w9KGzaTfHwy2kBFJ0vSM6bjN8iJ2Bul0CTftBdXniU4Y7yR+VPIX
- a6sfoZIY4BscoEpaMtKrInIbokzxMrRBxECM4T26w5J5qw6ApYyJmnsNxStRYrTBv95m
- 6KsG0lFyk2iMqMS3as6xiwB8FUqGj7B7RAmMMIMYDbGe3AFUJCr7x3LSSsYcpRYlb4d7
- pFipFUU1FxWCSmLL+l2CixVmH1DlZALYCKzRoRD567C4RWbjPbEz13ehs24TxcuuMRo7
- lcSUJyPyEOEk7XS2YPmNbA8+D1PkW/3PoSTApx9Kfmfl62w5bBvxhJJR9oGK+79wb4c2 /g== 
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=LAW6JvsYc3+i3Ehl9llekMEhIc/e2KW9lMtOqG3Rk1Y=;
+ b=gxxJdgXsmBchSH8TreuYMfJSmaxmSpg4RoPRsFPjFRNUEN3V8vD9H9OjFI8yH6xa0ZRb
+ TszbG/9rnYk9vjXaeGRa6AnQR7ezpaaNS37Fg9DjChe65rU+aZPVxHE8Lr1Yynny3wUh
+ P1EQ8BCVVAKRa8DaLhTg76weYKlduM/h1b/ep7x8jFqNQ/gSXQWsGYBIPZ+txg80VMVp
+ uNOlWHQ7FQ/Bi+hR5ayYMdDJmi4r9/FWEOk/G6Ua2mhNDRDJ/PYzUvHBUAovsi7N6qCc
+ 0C9Vi5lmsIcn3QxKfbU7kUBaDcD/vv2iMnMiKcc7vjTbJTw6Z9iLgMOibexbchmjRQoy FQ== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 33sx9n482x-1
+        by aserp2120.oracle.com with ESMTP id 33swkkva6e-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 29 Sep 2020 17:45:47 +0000
+        Tue, 29 Sep 2020 17:43:50 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THekHP111512;
-        Tue, 29 Sep 2020 17:43:47 GMT
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08THekTB111488;
+        Tue, 29 Sep 2020 17:43:49 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 33tfdsg0f1-1
+        by userp3020.oracle.com with ESMTP id 33tfdsg0g9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Sep 2020 17:43:47 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08THhjTv018874;
-        Tue, 29 Sep 2020 17:43:46 GMT
+        Tue, 29 Sep 2020 17:43:49 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 08THhmeI018889;
+        Tue, 29 Sep 2020 17:43:48 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Sep 2020 10:43:45 -0700
-Subject: [PATCH 5/5] xfs: xfs_defer_capture should absorb remaining
- transaction reservation
+        with ESMTP ; Tue, 29 Sep 2020 10:43:48 -0700
+Subject: [PATCH v3 0/3] xfs: fix inode use-after-free during log recovery
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@lst.de,
-        bfoster@redhat.com
-Date:   Tue, 29 Sep 2020 10:43:44 -0700
-Message-ID: <160140142459.830233.7194402837807253154.stgit@magnolia>
-In-Reply-To: <160140139198.830233.3093053332257853111.stgit@magnolia>
-References: <160140139198.830233.3093053332257853111.stgit@magnolia>
+Cc:     Dave Chinner <dchinner@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        linux-xfs@vger.kernel.org, david@fromorbit.com, hch@lst.de
+Date:   Tue, 29 Sep 2020 10:43:47 -0700
+Message-ID: <160140142711.830434.5161910313856677767.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -57,82 +54,50 @@ Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
  adultscore=0 malwarescore=0 spamscore=0 mlxscore=0 bulkscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009290149
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=1
- phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009290149
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-When xfs_defer_capture extracts the deferred ops and transaction state
-from a transaction, it should record the transaction reservation type
-from the old transaction so that when we continue the dfops chain, we
-still use the same reservation parameters.
+In this second series, I try to fix a use-after-free that I discovered
+during development of the dfops freezer, where BUI recovery releases the
+inode even if it requeues itself.  If the inode gets reclaimed, the fs
+corrupts memory and explodes.  The fix is to make the dfops capture
+struct take over ownership of the inodes if there's any more work to be
+done.  This is a bit clunky, but it's a simpler mechanism than saving
+inode pointers and inode numbers and introducing tagged structures so
+that we can distinguish one from the other.
 
-Doing this means that the log item recovery functions get to determine
-the transaction reservation instead of abusing tr_itruncate in yet
-another part of xfs.
+v2: rebase atop the new defer capture code
+v3: only capture one inode, move as much of the defer capture code to
+xfs_defer.c as we can
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-bmap-intent-recovery-5.10
 ---
- fs/xfs/libxfs/xfs_defer.c |    9 +++++++++
- fs/xfs/libxfs/xfs_defer.h |    1 +
- fs/xfs/xfs_log_recover.c  |    4 ++--
- 3 files changed, 12 insertions(+), 2 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index 0cceebb390c4..4caaf5527403 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -579,6 +579,15 @@ xfs_defer_ops_capture(
- 	dfc->dfc_blkres = tp->t_blk_res - tp->t_blk_res_used;
- 	tp->t_blk_res = tp->t_blk_res_used;
- 
-+	/*
-+	 * Preserve the transaction reservation type.  The logcount is
-+	 * hardwired to 1 to so that we can make forward progress in recovery
-+	 * no matter how full the log might be, at a cost of more regrants.
-+	 */
-+	dfc->dfc_tres.tr_logres = tp->t_log_res;
-+	dfc->dfc_tres.tr_logcount = 1;
-+	dfc->dfc_tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
-+
- 	return dfc;
- }
- 
-diff --git a/fs/xfs/libxfs/xfs_defer.h b/fs/xfs/libxfs/xfs_defer.h
-index b1c7b761afd5..c447c79bbe74 100644
---- a/fs/xfs/libxfs/xfs_defer.h
-+++ b/fs/xfs/libxfs/xfs_defer.h
-@@ -76,6 +76,7 @@ struct xfs_defer_capture {
- 	struct list_head	dfc_dfops;
- 	unsigned int		dfc_tpflags;
- 	unsigned int		dfc_blkres;
-+	struct xfs_trans_res	dfc_tres;
- };
- 
- /*
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index b06c9881a13d..46e750279634 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2442,8 +2442,8 @@ xlog_finish_defer_ops(
- 	int			error = 0;
- 
- 	list_for_each_entry_safe(dfc, next, capture_list, dfc_list) {
--		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0,
--				0, XFS_TRANS_RESERVE, &tp);
-+		error = xfs_trans_alloc(mp, &dfc->dfc_tres, 0, 0,
-+				XFS_TRANS_RESERVE, &tp);
- 		if (error)
- 			return error;
- 
+ fs/xfs/libxfs/xfs_defer.c  |   55 +++++++++++++++++++++++++++----
+ fs/xfs/libxfs/xfs_defer.h  |   11 +++++-
+ fs/xfs/xfs_bmap_item.c     |   78 +++++++++++++++++---------------------------
+ fs/xfs/xfs_extfree_item.c  |    2 +
+ fs/xfs/xfs_log_recover.c   |    7 +++-
+ fs/xfs/xfs_refcount_item.c |    2 +
+ fs/xfs/xfs_rmap_item.c     |    2 +
+ 7 files changed, 96 insertions(+), 61 deletions(-)
 
