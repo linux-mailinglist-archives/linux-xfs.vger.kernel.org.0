@@ -2,188 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0380327D0B2
-	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 16:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26AEC27D2E5
+	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 17:36:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgI2OMf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Sep 2020 10:12:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33408 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728459AbgI2OMf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 10:12:35 -0400
-Dkim-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1601388753;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KsJpb/fB9N2tnTgMAPR+TrCcW7bOGwWvI1wZ4HLXGDc=;
-        b=dnHyDzAwKcU716ijaQB0jfPfqwHRIithjs7ye8vzH15WpO07/xdNRLOwqPwNJnq1XJprqq
-        gEyDfGM/J6LOjIQVaE4mI5VgRmTks4B0K5fJ4Z6dLhqSyIVPGtojbqsH2sTKRHZ2nbu0fr
-        mULO2bh+1MAhUbxKZW7UwuXlgs6Z1oc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-303-UJs102HHO_Gv0s39NTXVdg-1; Tue, 29 Sep 2020 10:12:31 -0400
-X-MC-Unique: UJs102HHO_Gv0s39NTXVdg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 520F51DE01
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Sep 2020 14:12:30 +0000 (UTC)
-Received: from bfoster.redhat.com (ovpn-113-202.rdu2.redhat.com [10.10.113.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14E7A19C4F
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Sep 2020 14:12:30 +0000 (UTC)
-From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH RFC 3/3] xfs: rework quotaoff logging to avoid log deadlock on active fs
-Date:   Tue, 29 Sep 2020 10:12:28 -0400
-Message-Id: <20200929141228.108688-4-bfoster@redhat.com>
-In-Reply-To: <20200929141228.108688-1-bfoster@redhat.com>
-References: <20200929141228.108688-1-bfoster@redhat.com>
+        id S1729301AbgI2PgW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Sep 2020 11:36:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44032 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgI2PgV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 11:36:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFT3Nd166389;
+        Tue, 29 Sep 2020 15:36:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=2U+rXkOKZKx4DNnghuybVR3BZMvSGGUkQq0ATSmZNWU=;
+ b=N/m1graijkd2i63+zOL9rG/mHTsAzR49gre5sc9g2TE2bhCrFSN8NWr8oH/cz1QIQW2N
+ vUdILVYUMUeUgsOsQjHu0wNtmgWLLHAlC4+1tgYhcUZCchIanXswMSWbZrldYrpRGJ6x
+ xeaKvVqHijWezf0fXx7YXpRmvMEIAyqsozg/G0e6X/QJif7U57B77HckxoluJmMvebib
+ S6QVdWtdYBDYdpD+vnmNLyBo2Yj6wsOGmVPqqe/OJwuXpd2Z11qFh5bwEPXoAnjmdJQw
+ xd+8eiKN4RUxa1TVBSAraMw9kY1Pp0qacVyYTUqDpvY+t0tOxq4d29YcdASLJ53gvJpN mg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 33sx9n3kbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 29 Sep 2020 15:36:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFUrAi176778;
+        Tue, 29 Sep 2020 15:34:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 33uv2e2kdq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Sep 2020 15:34:16 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08TFYE0Q009247;
+        Tue, 29 Sep 2020 15:34:15 GMT
+Received: from localhost (/10.159.140.96)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 29 Sep 2020 08:34:14 -0700
+Date:   Tue, 29 Sep 2020 08:34:14 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 6/7] xfs_repair: throw away totally bad clusters
+Message-ID: <20200929153414.GG49547@magnolia>
+References: <159950111751.567790.16914248540507629904.stgit@magnolia>
+ <159950115513.567790.16525509399719506379.stgit@magnolia>
+ <20200908151526.GA15797@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908151526.GA15797@infradead.org>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
+ suspectscore=5 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009290135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=5
+ phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009290135
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The quotaoff operation logs two log items. The start item is
-committed first, followed by the bulk of the in-core quotaoff
-processing, and then the quotaoff end item is committed to release
-the start item from the log. The problem with this mechanism is that
-quite a bit of processing can be required to release dquots from all
-in-core inodes and subsequently flush/purge all dquots in the
-system. This processing work doesn't generally generate much log
-traffic itself, but the start item pins the tail of the log. If an
-external workload consumes the remaining log space before the
-transaction for the end item is allocated, a log deadlock can occur.
+On Tue, Sep 08, 2020 at 04:15:26PM +0100, Christoph Hellwig wrote:
+> On Mon, Sep 07, 2020 at 10:52:35AM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > If the filesystem supports sparse inodes, we detect that an entire
+> > cluster buffer has no detectable inodes at all, and we can easily mark
+> > that part of the inode chunk sparse, just drop the cluster buffer and
+> > forget about it.  This makes repair less likely to go to great lengths
+> > to try to save something that's totally unsalvageable.
+> > 
+> > This manifested in recs[2].free=zeroes in xfs/364, wherein the root
+> > directory claimed to own block X and the inobt also claimed that X was
+> > inodes; repair tried to create rmaps for both owners, and then the whole
+> > mess blew up because the rmap code aborts on those kinds of anomalies.
+> 
+> How is the rmap.c chunk related to this?  The dino_chunks.c part looks
+> fine, and the rmap.c at least not bad, but I don't understand how it
+> fits here.
 
-The purpose of the separate start and end log items is primarily to
-ensure that log recovery does not incorrectly recover dquot data
-after an fs crash where a quotaoff was in progress. If we only
-logged a single quotaoff item, for example, it could fall behind the
-tail of the log before the last dquot modification was made and
-incorrectly replay dquot changes that might have occurred after the
-start item committed but before quotaoff deactivated the quota.
+I think that's a stray paste error; the chunk can be dropped.
 
-With that context, we can make some small changes to the quotaoff
-algorithm to provide the same general log ordering guarantee without
-such a large window to create a log deadlock vector. Rather than
-place a start item in the log for the duration of quotaoff
-processing, we can quiesce the transaction subsystem up front to
-guarantee that no further dquots are logged from that point forward.
-IOW, we freeze the transaction subsystem, commit the start item in a
-synchronous transaction that forces the log, deactivate the
-associated quota such that subsequent transactions no longer modify
-associated dquots, unfreeze the transaction subsystem and finally
-commit the quotaoff end item. The transaction freeze is somewhat of
-a heavy weight operation, but quotaoff is already a rare, slow and
-performance disruptive operation.
-
-Altogether, this means that the dquot rele/purge sequence occurs
-after the quotaoff end item has committed and thus can technically
-fall off the active range of the log. This is safe because the
-remaining processing is all in-core work that doesn't involve
-logging dquots and we've guaranteed that no further dquots can be
-modified by external transactions. This allows quotaoff to complete
-without risking log deadlock regardless of how much dquot processing
-is required.
-
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/xfs_qm_syscalls.c | 36 ++++++++++++++++--------------------
- fs/xfs/xfs_trans_dquot.c |  2 ++
- 2 files changed, 18 insertions(+), 20 deletions(-)
-
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index ca1b57d291dc..97844f33f70f 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -29,7 +29,8 @@ xfs_qm_log_quotaoff(
- 	int			error;
- 	struct xfs_qoff_logitem	*qoffi;
- 
--	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_quotaoff, 0, 0, 0, &tp);
-+	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_quotaoff, 0, 0,
-+				XFS_TRANS_NO_WRITECOUNT, &tp);
- 	if (error)
- 		goto out;
- 
-@@ -169,14 +170,18 @@ xfs_qm_scall_quotaoff(
- 	if ((mp->m_qflags & flags) == 0)
- 		goto out_unlock;
- 
-+	xfs_trans_freeze(mp);
-+
- 	/*
- 	 * Write the LI_QUOTAOFF log record, and do SB changes atomically,
- 	 * and synchronously. If we fail to write, we should abort the
- 	 * operation as it cannot be recovered safely if we crash.
- 	 */
- 	error = xfs_qm_log_quotaoff(mp, &qoffstart, flags);
--	if (error)
-+	if (error) {
-+		xfs_trans_unfreeze(mp);
- 		goto out_unlock;
-+	}
- 
- 	/*
- 	 * Next we clear the XFS_MOUNT_*DQ_ACTIVE bit(s) in the mount struct
-@@ -191,6 +196,15 @@ xfs_qm_scall_quotaoff(
- 	 */
- 	mp->m_qflags &= ~inactivate_flags;
- 
-+	xfs_trans_unfreeze(mp);
-+
-+	error = xfs_qm_log_quotaoff_end(mp, &qoffstart, flags);
-+	if (error) {
-+		/* We're screwed now. Shutdown is the only option. */
-+		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
-+		goto out_unlock;
-+	}
-+
- 	/*
- 	 * Give back all the dquot reference(s) held by inodes.
- 	 * Here we go thru every single incore inode in this file system, and
-@@ -216,24 +230,6 @@ xfs_qm_scall_quotaoff(
- 	 */
- 	xfs_qm_dqpurge_all(mp, dqtype);
- 
--	/*
--	 * Transactions that had started before ACTIVE state bit was cleared
--	 * could have logged many dquots, so they'd have higher LSNs than
--	 * the first QUOTAOFF log record does. If we happen to crash when
--	 * the tail of the log has gone past the QUOTAOFF record, but
--	 * before the last dquot modification, those dquots __will__
--	 * recover, and that's not good.
--	 *
--	 * So, we have QUOTAOFF start and end logitems; the start
--	 * logitem won't get overwritten until the end logitem appears...
--	 */
--	error = xfs_qm_log_quotaoff_end(mp, &qoffstart, flags);
--	if (error) {
--		/* We're screwed now. Shutdown is the only option. */
--		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
--		goto out_unlock;
--	}
--
- 	/*
- 	 * If all quotas are completely turned off, close shop.
- 	 */
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 547ba824542e..9839b83e732a 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -52,6 +52,8 @@ xfs_trans_log_dquot(
- 	struct xfs_dquot	*dqp)
- {
- 	ASSERT(XFS_DQ_IS_LOCKED(dqp));
-+	/* quotaoff expects no dquots logged after deactivation */
-+	ASSERT(xfs_this_quota_on(tp->t_mountp, xfs_dquot_type(dqp)));
- 
- 	/* Upgrade the dquot to bigtime format if possible. */
- 	if (dqp->q_id != 0 &&
--- 
-2.25.4
-
+--D
