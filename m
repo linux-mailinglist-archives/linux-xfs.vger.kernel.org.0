@@ -2,64 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26AEC27D2E5
-	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 17:36:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9839227D2DA
+	for <lists+linux-xfs@lfdr.de>; Tue, 29 Sep 2020 17:35:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgI2PgW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Sep 2020 11:36:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44032 "EHLO
+        id S1728396AbgI2PfM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Sep 2020 11:35:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42842 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgI2PgV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 11:36:21 -0400
+        with ESMTP id S1727864AbgI2PfM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Sep 2020 11:35:12 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFT3Nd166389;
-        Tue, 29 Sep 2020 15:36:17 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFT3NT166389;
+        Tue, 29 Sep 2020 15:35:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=2U+rXkOKZKx4DNnghuybVR3BZMvSGGUkQq0ATSmZNWU=;
- b=N/m1graijkd2i63+zOL9rG/mHTsAzR49gre5sc9g2TE2bhCrFSN8NWr8oH/cz1QIQW2N
- vUdILVYUMUeUgsOsQjHu0wNtmgWLLHAlC4+1tgYhcUZCchIanXswMSWbZrldYrpRGJ6x
- xeaKvVqHijWezf0fXx7YXpRmvMEIAyqsozg/G0e6X/QJif7U57B77HckxoluJmMvebib
- S6QVdWtdYBDYdpD+vnmNLyBo2Yj6wsOGmVPqqe/OJwuXpd2Z11qFh5bwEPXoAnjmdJQw
- xd+8eiKN4RUxa1TVBSAraMw9kY1Pp0qacVyYTUqDpvY+t0tOxq4d29YcdASLJ53gvJpN mg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 33sx9n3kbv-1
+ bh=6dc2RMuxVznNc6DR74+tU5ToZ4dHbTynagsYOzkXgHc=;
+ b=GwOrZff7O84EHX8194RTXtIJ6JSU8Ho0ZD7ZllIOsHZ+2eOElZOmVb5hWtEnXoOUUxx/
+ VeVOZJHerIdJHkt3uSr3co9xA6ka8svtr2gq7tDVuMeu0/3m2N9pRpqTNC8Sy6x4jHxE
+ yd1TztGK7kKgicFYGx2z4ld7jIemDVlNd/GkYfnKX55cAr/+4Ic8KaVA57Gmv8WgsUEt
+ cNeq/fJMrjFpb9HwqbygVNr+U1Wt79mXlx3dL59JG3P5ChQrszxYbPokcTjWYQVfBvJB
+ 2NFQFDVsnuBXRnYiv5kshbtVw6hN9gKnKlJjv1zr7VJxnYHwb/UhRa1nQdkqZ0dastU0 kg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33sx9n3k4c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 29 Sep 2020 15:36:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFUrAi176778;
-        Tue, 29 Sep 2020 15:34:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 33uv2e2kdq-1
+        Tue, 29 Sep 2020 15:35:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 08TFUQs9015136;
+        Tue, 29 Sep 2020 15:35:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 33tfhxtnp8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Sep 2020 15:34:16 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08TFYE0Q009247;
-        Tue, 29 Sep 2020 15:34:15 GMT
+        Tue, 29 Sep 2020 15:35:06 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 08TFZ5wF021045;
+        Tue, 29 Sep 2020 15:35:06 GMT
 Received: from localhost (/10.159.140.96)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 29 Sep 2020 08:34:14 -0700
-Date:   Tue, 29 Sep 2020 08:34:14 -0700
+        with ESMTP ; Tue, 29 Sep 2020 08:35:05 -0700
+Date:   Tue, 29 Sep 2020 08:35:05 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 6/7] xfs_repair: throw away totally bad clusters
-Message-ID: <20200929153414.GG49547@magnolia>
+To:     sandeen@sandeen.net
+Cc:     linux-xfs@vger.kernel.org, Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v2 6/7] xfs_repair: throw away totally bad clusters
+Message-ID: <20200929153505.GH49547@magnolia>
 References: <159950111751.567790.16914248540507629904.stgit@magnolia>
  <159950115513.567790.16525509399719506379.stgit@magnolia>
- <20200908151526.GA15797@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908151526.GA15797@infradead.org>
+In-Reply-To: <159950115513.567790.16525509399719506379.stgit@magnolia>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=5 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 malwarescore=0 adultscore=0 suspectscore=10 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2009290135
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9759 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=5
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=10
  phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
  spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
@@ -68,25 +67,110 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 04:15:26PM +0100, Christoph Hellwig wrote:
-> On Mon, Sep 07, 2020 at 10:52:35AM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > If the filesystem supports sparse inodes, we detect that an entire
-> > cluster buffer has no detectable inodes at all, and we can easily mark
-> > that part of the inode chunk sparse, just drop the cluster buffer and
-> > forget about it.  This makes repair less likely to go to great lengths
-> > to try to save something that's totally unsalvageable.
-> > 
-> > This manifested in recs[2].free=zeroes in xfs/364, wherein the root
-> > directory claimed to own block X and the inobt also claimed that X was
-> > inodes; repair tried to create rmaps for both owners, and then the whole
-> > mess blew up because the rmap code aborts on those kinds of anomalies.
-> 
-> How is the rmap.c chunk related to this?  The dino_chunks.c part looks
-> fine, and the rmap.c at least not bad, but I don't understand how it
-> fits here.
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-I think that's a stray paste error; the chunk can be dropped.
+If the filesystem supports sparse inodes, we detect that an entire
+cluster buffer has no detectable inodes at all, and we can easily mark
+that part of the inode chunk sparse, just drop the cluster buffer and
+forget about it.  This makes repair less likely to go to great lengths
+to try to save something that's totally unsalvageable.
 
---D
+This manifested in recs[2].free=zeroes in xfs/364, wherein the root
+directory claimed to own block X and the inobt also claimed that X was
+inodes; repair tried to create rmaps for both owners, and then the whole
+mess blew up because the rmap code aborts on those kinds of anomalies.
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v2: drop repair/rmap.c paste error
+---
+ repair/dino_chunks.c |   35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
+index 50a2003614df..e4a95ff635c8 100644
+--- a/repair/dino_chunks.c
++++ b/repair/dino_chunks.c
+@@ -601,6 +601,7 @@ process_inode_chunk(
+ 	xfs_dinode_t		*dino;
+ 	int			icnt;
+ 	int			status;
++	int			bp_found;
+ 	int			is_used;
+ 	int			ino_dirty;
+ 	int			irec_offset;
+@@ -614,6 +615,7 @@ process_inode_chunk(
+ 	int			bp_index;
+ 	int			cluster_offset;
+ 	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
++	bool			can_punch_sparse = false;
+ 	int			error;
+ 
+ 	ASSERT(first_irec != NULL);
+@@ -626,6 +628,10 @@ process_inode_chunk(
+ 	if (cluster_count == 0)
+ 		cluster_count = 1;
+ 
++	if (xfs_sb_version_hassparseinodes(&mp->m_sb) &&
++	    M_IGEO(mp)->inodes_per_cluster >= XFS_INODES_PER_HOLEMASK_BIT)
++		can_punch_sparse = true;
++
+ 	/*
+ 	 * get all blocks required to read in this chunk (may wind up
+ 	 * having to process more chunks in a multi-chunk per block fs)
+@@ -700,6 +706,7 @@ process_inode_chunk(
+ 	cluster_offset = 0;
+ 	icnt = 0;
+ 	status = 0;
++	bp_found = 0;
+ 	bp_index = 0;
+ 
+ 	/*
+@@ -725,8 +732,10 @@ process_inode_chunk(
+ 						(agno == 0 &&
+ 						(mp->m_sb.sb_rootino == agino ||
+ 						 mp->m_sb.sb_rsumino == agino ||
+-						 mp->m_sb.sb_rbmino == agino)))
++						 mp->m_sb.sb_rbmino == agino))) {
+ 					status++;
++					bp_found++;
++				}
+ 			}
+ 
+ 			irec_offset++;
+@@ -749,11 +758,35 @@ process_inode_chunk(
+ 				irec_offset = 0;
+ 			}
+ 			if (cluster_offset == M_IGEO(mp)->inodes_per_cluster) {
++				if (can_punch_sparse &&
++				    bplist[bp_index] != NULL &&
++				    bp_found == 0) {
++					/*
++					 * We didn't find any good inodes in
++					 * this cluster, blow it away before
++					 * moving on to the next one.
++					 */
++					libxfs_buf_relse(bplist[bp_index]);
++					bplist[bp_index] = NULL;
++				}
+ 				bp_index++;
+ 				cluster_offset = 0;
++				bp_found = 0;
+ 			}
+ 		}
+ 
++		if (can_punch_sparse &&
++		    bp_index < cluster_count &&
++		    bplist[bp_index] != NULL &&
++		    bp_found == 0) {
++			/*
++			 * We didn't find any good inodes in this cluster, blow
++			 * it away.
++			 */
++			libxfs_buf_relse(bplist[bp_index]);
++			bplist[bp_index] = NULL;
++		}
++
+ 		/*
+ 		 * if chunk/block is bad, blow it off.  the inode records
+ 		 * will be deleted by the caller if appropriate.
