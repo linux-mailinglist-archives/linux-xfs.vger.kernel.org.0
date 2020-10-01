@@ -2,138 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C555728095F
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Oct 2020 23:22:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E0902809A8
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Oct 2020 23:50:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbgJAVW5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Oct 2020 17:22:57 -0400
-Received: from sandeen.net ([63.231.237.45]:48116 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbgJAVW5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 1 Oct 2020 17:22:57 -0400
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 1C027483504;
-        Thu,  1 Oct 2020 16:22:07 -0500 (CDT)
-To:     Ian Kent <raven@themaw.net>, xfs <linux-xfs@vger.kernel.org>
-References: <160151439137.66595.8436234885474855194.stgit@mickey.themaw.net>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH] xfsprogs: ignore autofs mount table entries
-Message-ID: <974aaec3-17e4-ecc0-2220-f34ce19348c8@sandeen.net>
-Date:   Thu, 1 Oct 2020 16:22:55 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.3.1
+        id S1733192AbgJAVuo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Oct 2020 17:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727017AbgJAVun (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Oct 2020 17:50:43 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41EE0C0613D0
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Oct 2020 14:50:43 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id g72so7536035qke.8
+        for <linux-xfs@vger.kernel.org>; Thu, 01 Oct 2020 14:50:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Dgcw/NF72ZFQmLSSGxgKM6zIC/u/f5EVOBWt97eUA/8=;
+        b=ZkdTrFFdPaN4QGnXELsOUv5gGptEZ/C6gk0G+gXmNetVcm242GfdRmvPMnqhQjIP+/
+         mBCFfcaZAvYLBzkrw7FBdRnqIbx+gkSbU3MMGvjhLd1KpM4PMb3n/Lol4Eu3hRiyNThv
+         UPAWp0ls/qAxuYdRrJ8xnNXJ/ejgX4jHJt9rRNHKazIXaHu0ljZiGtur9iVSZueJ0fFp
+         vkJ4YZlWae2/Um/JzJ8tW/4893d4XUHKCnvLJoD1dDOkulPoCD4kaeHPb+DHltYt5n0B
+         A6+AdkmWOoCwaBXTqnjp2V7qKTD8qVLLDujY5HNV7uK7ncZE96/L7LaY+GewTranTGYG
+         lIZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Dgcw/NF72ZFQmLSSGxgKM6zIC/u/f5EVOBWt97eUA/8=;
+        b=aGrDUm7Is+gVWlhbJxZSFljlkfW3WbHx8Vct7LVHFDbssu6fBDiZahDk+f2g/dtcBW
+         4XGnGpUDDw4WuOfuaWckFC8UPtrv/tLWwb1TOrdGFiO74hs8PUuEXQTUs2IEo/Pg2a9l
+         AIKMzUhca0pVZb9aO49lmjmQgPHW5s2HAqu9/bPLNIG/ZrvSZ8Q85i/C+tM0ziyu3R5m
+         z/Upnc98xjgpxAotEp1CMKiycYi1LUl4hwKQeeh3t4+Ml1tWoVykSqHTNzc3QCdREgj7
+         nXZiW/+xP1+OPpccSgigsiVSrzCZ9/dvK07NdaYk2HVC7d2To47does/YlrPoFdeKM1Y
+         OGMA==
+X-Gm-Message-State: AOAM532649w0yyhQg2ahk0HgpXMmbg6xVvo8rvbHNek5HGEpxC7/J0Xk
+        +nB/QJTY1V5s3JZKCS0ul3mR3fST/yR84QUg1fs=
+X-Google-Smtp-Source: ABdhPJxaLvNYWshcLPE9LBd4KCbbcA/A8p640ixkbPbS3R8OUQai2u8792heTga+mmdwzKcF58BFcoTJ0oa2mgHTACQ=
+X-Received: by 2002:a37:8d87:: with SMTP id p129mr9917191qkd.500.1601589042515;
+ Thu, 01 Oct 2020 14:50:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <160151439137.66595.8436234885474855194.stgit@mickey.themaw.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6214:949:0:0:0:0 with HTTP; Thu, 1 Oct 2020 14:50:42
+ -0700 (PDT)
+Reply-To: angelaugorji945@gmail.com
+From:   "Mr. Micheal Jones" <lovelinugorji1@gmail.com>
+Date:   Thu, 1 Oct 2020 22:50:42 +0100
+Message-ID: <CAEhDnC0ngB8XY_aXJQ_4GnU_cgmC0HnjntXr1kwk6fo0pMit7Q@mail.gmail.com>
+Subject: Contact my secretary Ms Angela Ugorji
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 9/30/20 8:06 PM, Ian Kent wrote:
-> Some of the xfsprogs utilities read the mount table via. getmntent(3).
-> 
-> The mount table may contain (almost always these days since /etc/mtab is
-> symlinked to /proc/self/mounts) autofs mount entries. During processing
-> of the mount table entries statfs(2) can be called on mount point paths
-> which will trigger an automount if those entries are direct or offset
-> autofs mount triggers (indirect autofs mounts aren't affected).
-> 
-> This can be a problem when there are a lot of autofs direct or offset
-> mounts because real mounts will be triggered when statfs(2) is called.
-> This can be particularly bad if the triggered mounts are NFS mounts and
-> the server is unavailable leading to lengthy boot times or worse.
-> 
-> Simply ignoring autofs mount entries during getmentent(3) traversals
-> avoids the statfs() call that triggers these mounts. If there are
-> automounted mounts (real mounts) at the time of reading the mount table
-> these will still be seen in the list so they will be included if that
-> actually matters to the reader.
-> 
-> Recent glibc getmntent(3) can ignore autofs mounts but that requires the
-> autofs user to configure autofs to use the "ignore" pseudo mount option
-> for autofs mounts. But this isn't yet the autofs default (to prevent
-> unexpected side effects) so that can't be used.
-> 
-> The autofs direct and offset automount triggers are pseudo file system
-> mounts and are more or less useless in terms on file system information
-> so excluding them doesn't sacrifice useful file system information
-> either.
-> 
-> Consequently excluding autofs mounts shouldn't have any adverse side
-> effects.
-> 
-> Signed-off-by: Ian Kent <raven@themaw.net>
-> ---
->  fsr/xfs_fsr.c   |    3 +++
->  libfrog/linux.c |    2 ++
->  libfrog/paths.c |    2 ++
->  3 files changed, 7 insertions(+)
-> 
-> diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
-> index 77a10a1d..466ad9e4 100644
-> --- a/fsr/xfs_fsr.c
-> +++ b/fsr/xfs_fsr.c
-> @@ -323,6 +323,9 @@ initallfs(char *mtab)
->  	while ((mnt = platform_mntent_next(&cursor)) != NULL) {
->  		int rw = 0;
->  
-> +		if (!strcmp(mnt->mnt_type, "autofs"))
-> +			continue;
-> +
->  		if (strcmp(mnt->mnt_type, MNTTYPE_XFS ) != 0 ||
->  		    stat(mnt->mnt_fsname, &sb) == -1 ||
->  		    !S_ISBLK(sb.st_mode))
->			continue;
+-- 
+Hello Dear,
 
-Forgive me if I'm missing something obvious but isn't this added check redundant?
+I'm happy to inform you about my success in getting that fund transferred
+under the cooperation of a new partner from araguay. Presently I'm in
+Paraguay for investment projects with my own share of the total sum.
+Meanwhile,I didn't forget your past efforts and attempts to assist me in
+transferring those funds despite that it failed us some how.
 
-If mnt_type == "autofs" then mnt_type != MNTTYPE_XFS and we're ignoring it
-already in this loop, no?  In this case, the loop is for xfs_fsr so we are really
-only ever going to be looking for xfs mounts, as opposed to fs_table_initialise_mounts
-which may accept "foreign" (non-xfs) filesystems.
+Now, I want you to contact my secretary, her name is Ms Angela Ugorji and
+her email address is: (angelaugorji945@gmail.com), ask her to send to you a
+total sum of $2,500,000.00 (Two Million, Five Hundred Thousand United
+States Dollars) which I kept for your compensation for all the past efforts
+and attempts you did to assist me in the transaction. I appreciated all
+your efforts at that time, that was why i decided to compensate you now.
+Please contact Ms Angela Ugorji and instruct her on how to send the amount
+to you.
 
-> diff --git a/libfrog/linux.c b/libfrog/linux.c
-> index 40a839d1..a45d99ab 100644
-> --- a/libfrog/linux.c
-> +++ b/libfrog/linux.c
-> @@ -73,6 +73,8 @@ platform_check_mount(char *name, char *block, struct stat *s, int flags)
->  	 * servers.  So first, a simple check: does the "dev" start with "/" ?
->  	 */
->  	while ((mnt = getmntent(f)) != NULL) {
-> +		if (!strcmp(mnt->mnt_type, "autofs"))
-> +			continue;
->  		if (mnt->mnt_fsname[0] != '/')
->  			continue;
+Please do let me know immediately you receive the money so that we can
+share the joy after all the suffering we undergo at that time. In the
+moment, I am very busy here because of the investment projects which I and
+my new partner are having at hand. finally, remember that I had forwarded
+instruction to my secretary on your behalf in order for you to receive that
+money, so feel free to get in touch with Ms Angela Ugorji on her email:
+(angelaugorji945@gmail.com) and she will send the amount to you without any
+delay.
 
-Same sort of question here, but I don't know what these autofs entries look like.
-Can their "device" (mnt_fsname) begin with "/" ?
-
-Backing up a bit, which xfsprogs utility saw this behavior with autofs mounts?
-
-I'm mostly ok with just always and forever filtering out anything that matches
-"autofs" but if it's unnecessary (like the first case I think?) it may lead
-to confusion for future code readers.
-
-Thanks,
--Eric
-
->  		if (stat(mnt->mnt_dir, &mst) < 0)
-> diff --git a/libfrog/paths.c b/libfrog/paths.c
-> index 32737223..d6793764 100644
-> --- a/libfrog/paths.c
-> +++ b/libfrog/paths.c
-> @@ -389,6 +389,8 @@ fs_table_initialise_mounts(
->  			return errno;
->  
->  	while ((mnt = getmntent(mtp)) != NULL) {
-> +		if (!strcmp(mnt->mnt_type, "autofs"))
-> +			continue;
->  		if (!realpath(mnt->mnt_dir, rmnt_dir))
->  			continue;
->  		if (!realpath(mnt->mnt_fsname, rmnt_fsname))
-> 
-> 
+Best Regards.
+Mr. Micheal Jones
