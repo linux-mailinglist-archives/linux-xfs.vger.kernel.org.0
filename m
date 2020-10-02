@@ -2,64 +2,77 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC6C3281BE2
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 21:23:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B28DC281C1B
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 21:35:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388606AbgJBTXe convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 2 Oct 2020 15:23:34 -0400
-Received: from mx.metalurgs.lv ([81.198.125.103]:65054 "EHLO mx.metalurgs.lv"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388603AbgJBTXd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 2 Oct 2020 15:23:33 -0400
-X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:23:33 EDT
-Received: from mx.metalurgs.lv (localhost [127.0.0.1])
-        by mx.metalurgs.lv (Postfix) with ESMTP id F09E061FAF
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Oct 2020 22:16:11 +0300 (EEST)
-Received: from kas30pipe.localhost (localhost [127.0.0.1])
-        by mx.metalurgs.lv (Postfix) with ESMTP id CCBE762C1F
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Oct 2020 22:16:11 +0300 (EEST)
-Received: by mx.metalurgs.lv (Postfix, from userid 1005)
-        id 63F9462B7B; Fri,  2 Oct 2020 22:16:09 +0300 (EEST)
-Received: from [100.64.1.74] (unknown [190.15.125.50])
-        (Authenticated sender: admin)
-        by mx.metalurgs.lv (Postfix) with ESMTPA id EC96A621EF;
-        Fri,  2 Oct 2020 22:16:02 +0300 (EEST)
+        id S1726215AbgJBTfs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Oct 2020 15:35:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54735 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725991AbgJBTfs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Oct 2020 15:35:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601667347;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3LFTSJs+F2CPdyaU2XSlq3803HDET9W1JurRN5D4wGY=;
+        b=P8YBrwJ1ZGEFtuy9UgVL5Vx9ZzZjz4HXkBI3LRUxHOBMN3yFoy4KA1lXsiqp/ENfaoaPGq
+        VZv2tp9cVvjIEq9X+K/C48qtNgbHc4M/YCH/1xmwOMYJ8GXpYTYTKzkooRz3GkGYsh6nxf
+        BeBme2HHl3G9NLLG1u11iMJk2mkKg8M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-475--hw_WhxKOOaytIDSShyBuA-1; Fri, 02 Oct 2020 15:35:45 -0400
+X-MC-Unique: -hw_WhxKOOaytIDSShyBuA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF62710BBEE3;
+        Fri,  2 Oct 2020 19:35:44 +0000 (UTC)
+Received: from liberator.sandeen.net (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 75C1719C66;
+        Fri,  2 Oct 2020 19:35:44 +0000 (UTC)
+To:     xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH] xfsdump: don't try to generate .ltdep in inventory/
+Cc:     Thomas Deutschmann <whissi@gentoo.org>
+Message-ID: <15af018c-caf7-71e7-c353-96775d7173ba@redhat.com>
+Date:   Fri, 2 Oct 2020 14:35:44 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.3.1
 MIME-Version: 1.0
-Content-Description: Mail message body
-To:     Recipients <financialcapability6@gmail.com>
-From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
-Date:   Fri, 02 Oct 2020 16:15:55 -0300
-Reply-To: binmurrah@gmail.com
-X-SpamTest-Envelope-From: financialcapability6@gmail.com
-X-SpamTest-Group-ID: 00000000
-X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
-X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
-X-SpamTest-Info: {DATE: unreal year}
-X-SpamTest-Method: none
-X-SpamTest-Rate: 55
-X-SpamTest-Status: Not detected
-X-SpamTest-Status-Extended: not_detected
-X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
-Message-ID: <20201002191609.63F9462B7B@mx.metalurgs.lv>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Subject: Low Rate Loan.
-X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
-         bases: 20140401 #7726142, check: 20201002 notchecked
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello Dear,
+.ltdep gets generated from CFILES, and there are none in inventory/
+so trying to generate it in that dir leads to a non-fatal error:
 
-We are Investment Company offering Corporate and Personal
-Loan at 3% Interest Rate for a duration of 10Years.
+Building inventory
+    [LTDEP]
+gcc: fatal error: no input files
+compilation terminated.
 
-We also pay 1% commission to brokers, who introduce project
-owners for finance or other opportunities.
+inventory/ - like common/ - has files that get linked into other dirs,
+and .ltdep is generated there.  So, simply remove the .ltdep generation
+from the inventory/ dir.
 
-Please get back to me if you are interested for more
-details.
+Reported-by: Thomas Deutschmann <whissi@gentoo.org>
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+---
 
-Yours faithfully,
-Hashim Bin 
+diff --git a/inventory/Makefile b/inventory/Makefile
+index cda145e..6624fba 100644
+--- a/inventory/Makefile
++++ b/inventory/Makefile
+@@ -12,5 +12,3 @@ LSRCFILES = inv_api.c inv_core.c inv_fstab.c inv_idx.c inv_mgr.c \
+ default install install-dev:
+ 
+ include $(BUILDRULES)
+-
+--include .ltdep
+
