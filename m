@@ -2,98 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DADF6281A4A
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 19:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC6C3281BE2
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 21:23:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbgJBR6V (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 2 Oct 2020 13:58:21 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:54124 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgJBR6V (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Oct 2020 13:58:21 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092HtWuU118922;
-        Fri, 2 Oct 2020 17:58:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=wOW9FtpZhpdHP1UiRjUHifV8zxWmFXtvfXVkbXwwrFU=;
- b=V4Pny/PFeqL6ElO2RJfaPe7FsvMY1gYhMxQ/lQSfD7JD3Nr0ft8NyBR7S69djhiubnAN
- xz5aHBefMSY5Ylh7UI0/UVrad0VQPrzaNwC4tR25v+C9Gx3BqBv7aMCE5d30ka+fw9ik
- iLtUCVONOD7LMFBmtDJ3hCvxHrg2SKh9u3niw8oMG4yybY+JKdkfO/ficjkOFAJkKkRs
- QZLCgWGdIbrqzXdMTKiFF91W9r5swXma8OcEwrMYU+k+uKdUXNgkCB0vzobAcld6wEhu
- 2GAnRPMQs7/b/P0AFJc6eVbY9JNlT8/huj084dAPHpB8AhLTEoctrbaTEbFReYA/dr0E Iw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 33sx9nm5qv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 02 Oct 2020 17:58:14 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092Hp2bO144037;
-        Fri, 2 Oct 2020 17:58:13 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 33uv2jmvky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Oct 2020 17:58:13 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 092HwBeN023514;
-        Fri, 2 Oct 2020 17:58:11 GMT
-Received: from localhost (/10.159.250.66)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 02 Oct 2020 10:58:11 -0700
-Date:   Fri, 2 Oct 2020 10:58:08 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: streamline xfs_getfsmap performance
-Message-ID: <20201002175808.GZ49547@magnolia>
-References: <160161415855.1967459.13623226657245838117.stgit@magnolia>
- <160161417069.1967459.11222290374186255598.stgit@magnolia>
- <20201002071505.GB32516@infradead.org>
+        id S2388606AbgJBTXe convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 2 Oct 2020 15:23:34 -0400
+Received: from mx.metalurgs.lv ([81.198.125.103]:65054 "EHLO mx.metalurgs.lv"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388603AbgJBTXd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 2 Oct 2020 15:23:33 -0400
+X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Fri, 02 Oct 2020 15:23:33 EDT
+Received: from mx.metalurgs.lv (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id F09E061FAF
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Oct 2020 22:16:11 +0300 (EEST)
+Received: from kas30pipe.localhost (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id CCBE762C1F
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Oct 2020 22:16:11 +0300 (EEST)
+Received: by mx.metalurgs.lv (Postfix, from userid 1005)
+        id 63F9462B7B; Fri,  2 Oct 2020 22:16:09 +0300 (EEST)
+Received: from [100.64.1.74] (unknown [190.15.125.50])
+        (Authenticated sender: admin)
+        by mx.metalurgs.lv (Postfix) with ESMTPA id EC96A621EF;
+        Fri,  2 Oct 2020 22:16:02 +0300 (EEST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201002071505.GB32516@infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- suspectscore=1 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020131
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=1
- phishscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- spamscore=0 impostorscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020131
+Content-Description: Mail message body
+To:     Recipients <financialcapability6@gmail.com>
+From:   "Mr. Hashim Bin" <financialcapability6@gmail.com>
+Date:   Fri, 02 Oct 2020 16:15:55 -0300
+Reply-To: binmurrah@gmail.com
+X-SpamTest-Envelope-From: financialcapability6@gmail.com
+X-SpamTest-Group-ID: 00000000
+X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
+X-SpamTest-Info: {TO: forged address, i.e. recipient, investors, public, etc.}
+X-SpamTest-Info: {DATE: unreal year}
+X-SpamTest-Method: none
+X-SpamTest-Rate: 55
+X-SpamTest-Status: Not detected
+X-SpamTest-Status-Extended: not_detected
+X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
+Message-ID: <20201002191609.63F9462B7B@mx.metalurgs.lv>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Subject: Low Rate Loan.
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+         bases: 20140401 #7726142, check: 20201002 notchecked
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Oct 02, 2020 at 08:15:05AM +0100, Christoph Hellwig wrote:
-> On Thu, Oct 01, 2020 at 09:49:30PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > Refactor xfs_getfsmap to improve its performance: instead of indirectly
-> > calling a function that copies one record to userspace at a time, create
-> > a shadow buffer in the kernel and copy the whole array once at the end.
-> > This should speed it up significantly.
-> 
-> So we save an indirect call and uaccess_enable/disable per entry,
-> but pay for it with the cost of a memory allocation (and actually
-> using that memory).
-> 
-> Doesn't seem like an obvious win to me, do you have numbers?
+Hello Dear,
 
-On my 2TB /home partition, the runtime to retrieve 6.4 million fsmap
-records drops from 107s to 85s.
+We are Investment Company offering Corporate and Personal
+Loan at 3% Interest Rate for a duration of 10Years.
 
-It also occurs to me that the current code also copies to userspace
-while holding the AGF buffer lock (or the rt bitmap ilock) which we
-shouldn't be doing because the userspace buffer could very well be a
-mmap file on the same volume, in which case a page_mkwrite could cause
-allocation activity.
+We also pay 1% commission to brokers, who introduce project
+owners for finance or other opportunities.
 
-Hmm, maybe I should tamp down the allocation behavior too, since we
-could just do 64k or pagesize or whatever; userspace can call us back
-since we set it up for easy iteration.
+Please get back to me if you are interested for more
+details.
 
---D
+Yours faithfully,
+Hashim Bin 
