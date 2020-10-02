@@ -2,53 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 517DE28296A
-	for <lists+linux-xfs@lfdr.de>; Sun,  4 Oct 2020 09:30:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D41322816B5
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 17:34:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725825AbgJDHan (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 4 Oct 2020 03:30:43 -0400
-Received: from 162-241-140-239.unifiedlayer.com ([162.241.140.239]:39296 "EHLO
-        162-241-140-239.unifiedlayer.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725820AbgJDHan (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 4 Oct 2020 03:30:43 -0400
-X-Greylist: delayed 145329 seconds by postgrey-1.27 at vger.kernel.org; Sun, 04 Oct 2020 03:30:43 EDT
-Received: from [127.0.0.1] (port=57258 helo=alk.alkauthar.org)
-        by alk.alkauthar.org with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <info@barclays.com>)
-        id 1kOMdS-000600-Jf; Fri, 02 Oct 2020 10:06:14 -0500
-Received: from [41.58.231.143] ([41.58.231.143]) by jumuah.alkauthar.org
- (Horde Framework) with HTTPS; Fri, 02 Oct 2020 10:06:14 -0500
-Date:   Fri, 02 Oct 2020 10:06:14 -0500
-Message-ID: <20201002100614.Horde.areTm4zFJO5awnfQZRutlDt@jumuah.alkauthar.org>
-From:   Russell Branting <info@barclays.com>
-Subject: Final Notice
-Reply-to: andharryshaw@aol.com
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        id S2388279AbgJBPeH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Oct 2020 11:34:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:45592 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388115AbgJBPeG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Oct 2020 11:34:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1601652845;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QxfKPAyKMdfWuFWKZ0NG4toCJJfCMCwJHBKpGyYVAUY=;
+        b=XQT2mQl0QmwMtUruT6UHtineqsndqFoLwzH/ceGSZ3zj4fqKOriIDylZFqX0WfCjYqBVDg
+        QjL31E3OC+2GyQo07YCbnaMpcYh9UVceEOW/WiHPIDrpWIztph9Fm1SipqKgvsMgP4aYuo
+        +XeQiuybvHwMtPooKPSjtx5j8bPQMuk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-332-Q0_PZqOJOr2rd8oMtFP9FA-1; Fri, 02 Oct 2020 11:34:03 -0400
+X-MC-Unique: Q0_PZqOJOr2rd8oMtFP9FA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DD491921FC7;
+        Fri,  2 Oct 2020 15:33:58 +0000 (UTC)
+Received: from bfoster.redhat.com (ovpn-114-177.rdu2.redhat.com [10.10.114.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B907E78803;
+        Fri,  2 Oct 2020 15:33:57 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/2] iomap: avoid soft lockup warnings on large ioends
+Date:   Fri,  2 Oct 2020 11:33:55 -0400
+Message-Id: <20201002153357.56409-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - alk.alkauthar.org
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - barclays.com
-X-Get-Message-Sender-Via: alk.alkauthar.org: authenticated_id: admin@jumuah.alkauthar.org
-X-Authenticated-Sender: alk.alkauthar.org: admin@jumuah.alkauthar.org
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Hi all,
 
-I hereby confirmed the availability of your pending funds release;  
-Reconfirm your Full Name, Physical Address & Phone Number.
+My understanding is that there's still no real agreement on the proper
+approach to address this problem. The RFC I floated [1] intended to cap
+the size of ioends to avoid any latency issues with holding so many
+pages in writeback for effectively a single completion instance of a GB+
+sized I/O. Instead, Christoph preferred to dump those large bios onto
+the completion workqueue and use cond_resched() rather than cap the
+ioend size. This series implements the latter (for XFS) since it seems
+like incremental progress and should at least address the warning.
+Thoughts, reviews, flames appreciated.
 
+Brian
 
-Account Officer
-Barclays Bank UK
+[1] https://lore.kernel.org/linux-fsdevel/20200825144917.GA321765@bfoster/
 
+Brian Foster (2):
+  iomap: resched ioend completion when in non-atomic context
+  xfs: kick extra large ioends to completion workqueue
+
+ fs/iomap/buffered-io.c | 15 +++++++++------
+ fs/xfs/xfs_aops.c      | 12 ++++++++++--
+ include/linux/iomap.h  |  2 +-
+ 3 files changed, 20 insertions(+), 9 deletions(-)
+
+-- 
+2.25.4
 
