@@ -2,102 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AB11281CD0
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 22:18:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89EB0281EFA
+	for <lists+linux-xfs@lfdr.de>; Sat,  3 Oct 2020 01:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725536AbgJBUSk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 2 Oct 2020 16:18:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:59354 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbgJBUSk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Oct 2020 16:18:40 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092KE6bd039320;
-        Fri, 2 Oct 2020 20:18:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=/0woIICSglmVeiWz/dxuHgdmbFQB3EG7SRf6Ez1QwHw=;
- b=FrQo1SVswpiZA4feIuFyc1u/cqyzEcJd6yOwTYfQJzQ0Ybmmd9ukD8XsyYDhe97UHJcV
- 2Rb4dXbYngc9/rXv4jXh4wH1F/oZ/3VPB5ZLKkGlsqqW5Epy/yBpoLdKWXhAp3Pcek+Y
- O37jzyW8z+CUk/7ynZuqEG2mECXyVscttNhKP5fNAvhNTDBiKgeSSxy42L9eSglPl4Xc
- DsiSFYr8bPFwC2IQv+XjQiPlEicB96iAUKEzLfkeIDDfhzC0OqVeYHFs/JPZfaxDW26E
- xLGjhsfEmE83hNyIcJ3Vh3bhjCJnBDApeq7v8TTALgrrgzjtBhjPOi0SADd5pgsmHap/ Ig== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 33swkmcruq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 02 Oct 2020 20:18:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 092KEdOf132911;
-        Fri, 2 Oct 2020 20:18:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 33tfj3hekw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Oct 2020 20:18:37 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 092KIZO1024810;
-        Fri, 2 Oct 2020 20:18:36 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 02 Oct 2020 13:18:35 -0700
-Date:   Fri, 2 Oct 2020 13:18:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] xfs_scrub: don't use statvfs to collect data volume block
- counts
-Message-ID: <20201002201834.GC49524@magnolia>
+        id S1725497AbgJBXRU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Oct 2020 19:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725379AbgJBXRU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 2 Oct 2020 19:17:20 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79314206FA;
+        Fri,  2 Oct 2020 23:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1601680639;
+        bh=e2EUihFcD8lfBqiDBnxeKrMwnbUKgBWFYDZLug6WDsg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2fSPOtKxiG+B/8ulFUodUjN7kvSSIhJGKKRH0XKScqoZxEjRoSokMhBDL2aK0iP77
+         tHn4p+M/R1676cimtCUnJa9CD4EPkVNvIrDk0BhF39pfBYBw8cNrZb8i+ppuTDE97S
+         wAUVPwhulQ0nTBa8/0X5/PaFQYZSneJWz82E+4Co=
+Date:   Fri, 2 Oct 2020 19:17:18 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     xfs <linux-xfs@vger.kernel.org>, stable@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH STABLE V2] xfs: trim IO to found COW extent limit
+Message-ID: <20201002231718.GH2415204@sasha-vm>
+References: <5d2f4fc1-e498-c45e-3d57-9c2d7ac275e6@sandeen.net>
+ <20201002130740.GF2415204@sasha-vm>
+ <300427ae-6135-29cd-6cbe-8fa2c4efb8d5@sandeen.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 malwarescore=0 adultscore=0 suspectscore=5 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020147
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9762 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 phishscore=0
- suspectscore=5 mlxlogscore=999 clxscore=1015 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010020147
+In-Reply-To: <300427ae-6135-29cd-6cbe-8fa2c4efb8d5@sandeen.net>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Fri, Oct 02, 2020 at 08:19:43AM -0500, Eric Sandeen wrote:
+>On 10/2/20 8:07 AM, Sasha Levin wrote:
+>> On Thu, Oct 01, 2020 at 08:34:48AM -0500, Eric Sandeen wrote:
+>>> A bug existed in the XFS reflink code between v5.1 and v5.5 in which
+>>> the mapping for a COW IO was not trimmed to the mapping of the COW
+>>> extent that was found.  This resulted in a too-short copy, and
+>>> corruption of other files which shared the original extent.
+>>>
+>>> (This happened only when extent size hints were set, which bypasses
+>>> delalloc and led to this code path.)
+>>>
+>>> This was (inadvertently) fixed upstream with
+>>>
+>>> 36adcbace24e "xfs: fill out the srcmap in iomap_begin"
+>>>
+>>> and related patches which moved lots of this functionality to
+>>> the iomap subsystem.
+>>>
+>>> Hence, this is a -stable only patch, targeted to fix this
+>>> corruption vector without other major code changes.
+>>>
+>>> Fixes: 78f0cc9d55cb ("xfs: don't use delalloc extents for COW on files with extsize hints")
+>>> Cc: <stable@vger.kernel.org> # 5.4.x
+>>> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+>>> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>> ---
+>>>
+>>> V2: Fix typo in subject, add reviewers
+>>>
+>>> I've tested this with a targeted reproducer (in next email) as well as
+>>> with xfstests.
+>>>
+>>> There is also now a testcase for xfstests submitted upstream
+>>>
+>>> Stable folk, not sure how to send a "stable only" patch, or if that's even
+>>> valid.  Assuming you're willing to accept it, I would still like to have
+>>> some formal Reviewed-by's from the xfs developer community before it gets
+>>> merged.
+>>
+>> This is perfect stable-process-wise :) Will wait for reviews/acks before
+>> merging.
+>
+>Thansk Sasha - the reviews/acks were given for V1 (hch & darrick), V2 adds them to the
+>commit log (see above) and fixes a typo in the subject.
 
-The function scrub_scan_estimate_blocks naïvely uses the statvfs counts
-to estimate the size and free blocks on the data volume.  Unfortunately,
-it fails to account for the fact that statvfs can return the size and
-free counts for the realtime volume if the root directory has the
-rtinherit flag set, which leads to phase 7 reporting totally absurd
-quantities.
+Ah, I see. Queued up!
 
-The XFS_IOC_FSCOUNTS ioctl returns the size and free block count of both
-volumes correctly, so use that instead.
-
-Fixes: 604dd3345f35 ("xfs_scrub: filesystem counter collection functions")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- scrub/fscounters.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/scrub/fscounters.c b/scrub/fscounters.c
-index f9d64f8c008f..a2ca0b3f018c 100644
---- a/scrub/fscounters.c
-+++ b/scrub/fscounters.c
-@@ -154,10 +154,8 @@ scrub_scan_estimate_blocks(
- 
- 	sfs.f_bfree += rb.resblks_avail;
- 
--	*d_blocks = sfs.f_blocks;
--	if (ctx->mnt.fsgeom.logstart > 0)
--		*d_blocks += ctx->mnt.fsgeom.logblocks;
--	*d_bfree = sfs.f_bfree;
-+	*d_blocks = ctx->mnt.fsgeom.datablocks;
-+	*d_bfree = fc.freedata;
- 	*r_blocks = ctx->mnt.fsgeom.rtblocks;
- 	*r_bfree = fc.freertx;
- 	*f_files = sfs.f_files;
+-- 
+Thanks,
+Sasha
