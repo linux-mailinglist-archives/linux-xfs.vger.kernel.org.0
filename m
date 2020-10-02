@@ -2,38 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48F24280E0D
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 09:32:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A28E6280F4D
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Oct 2020 10:53:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726141AbgJBHco (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 2 Oct 2020 03:32:44 -0400
-Received: from verein.lst.de ([213.95.11.211]:51353 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725961AbgJBHco (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 2 Oct 2020 03:32:44 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 99A3C67357; Fri,  2 Oct 2020 09:32:41 +0200 (CEST)
-Date:   Fri, 2 Oct 2020 09:32:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
+        id S1726090AbgJBIxZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Oct 2020 04:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgJBIxZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Oct 2020 04:53:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F4DC0613D0
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Oct 2020 01:53:25 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t23so428611pji.0
+        for <linux-xfs@vger.kernel.org>; Fri, 02 Oct 2020 01:53:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XQF3jv1mnrYoDXvVuOir5WOLXN3C0c3UPYNpgx0sfbk=;
+        b=kjt52rX2aP/WC0rMb3XagTaFN2vDD5GrTl4yH0jEu5B+gzZaZp2X2FWgSxn9rv3ZSt
+         o4Tvcdyfe99UJWtHWLMKxX9tm9pjKMbXsxfAoKlhlDN8Ui30JePMiPYWGu6cPIMDTMnj
+         k49BQ3tlKm5hP6ZhkDdVMWiAFID0wtMbn4jTsdqdsJS8QkaxuyQz5/e7RPL2OxIRgUyK
+         pvuw0ng1lFMXifT7MUk0BpVTgRLCOCEpKJC5SuhmIMMV7J/uvN41em3P9YUppv/Is4hF
+         ULY9CajPnz/fPGB3m02KoI3R9clWTCf+SoFuLrvYxwbNudlRMU5hOeqHGgWYudZ9kMo1
+         GZ9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XQF3jv1mnrYoDXvVuOir5WOLXN3C0c3UPYNpgx0sfbk=;
+        b=VPuXhPaiHju3VBH/kQowjIIXHHYaghPZ8MtUfkN6RT72XBsxRfykePZQbboOAFeZdp
+         fm7aG8nIl3eBtw4o/Pnd27Ojyvf5JoVVqBeOfG5vyqGimhKIfn+NKjPLtLbcbF6d51nF
+         6bUI72s1NAacAbxVK/4pt7Jivoz02J+mMW9Wa8d2tQ6j3GvssppkXeH4Pqv3t3+P81wn
+         dgj+wKpr/FgQsB/GYZu2wHRSLHQhe+7SYVB4Ak6iHD2zhT7O6IJIbSBVcfUE82Ci94s4
+         5WU3nvvuHpY2SO4mIKg5ID1pkxVW7uWF+ulCq52fCKZYXhfRwVLF+09eKMDXwFZxUVgK
+         X04g==
+X-Gm-Message-State: AOAM530boh1EaHuR3imgI1uUJSkZelS5jSbFavewVMUnPxCBX1HqNJQl
+        6KKK13sNkkvoO6Vzi1c621M=
+X-Google-Smtp-Source: ABdhPJxG6q1weCaf4mFQbmCL6RbSSGqPGUBBKEa+FoazG/R1Mes1gYj6BSJfY1zWLyAkdtJLIhAdGA==
+X-Received: by 2002:a17:90a:db49:: with SMTP id u9mr1676275pjx.119.1601628804629;
+        Fri, 02 Oct 2020 01:53:24 -0700 (PDT)
+Received: from garuda.localnet ([122.172.184.91])
+        by smtp.gmail.com with ESMTPSA id 84sm1127628pfw.14.2020.10.02.01.53.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Oct 2020 01:53:24 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@lst.de,
-        bfoster@redhat.com
-Subject: Re: [PATCH v4.2 5/5] xfs: xfs_defer_capture should absorb
- remaining transaction reservation
-Message-ID: <20201002073241.GA10329@lst.de>
-References: <160140139198.830233.3093053332257853111.stgit@magnolia> <160140142459.830233.7194402837807253154.stgit@magnolia> <20201002042103.GU49547@magnolia> <20201002072416.GD9900@lst.de>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs: limit entries returned when counting fsmap records
+Date:   Fri, 02 Oct 2020 14:21:10 +0530
+Message-ID: <4857521.XMzPl6tNdl@garuda>
+In-Reply-To: <160161416467.1967459.10753396346204946090.stgit@magnolia>
+References: <160161415855.1967459.13623226657245838117.stgit@magnolia> <160161416467.1967459.10753396346204946090.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201002072416.GD9900@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Oct 02, 2020 at 09:24:16AM +0200, Christoph Hellwig wrote:
-> What about just embedding the struct xfs_trans_res into
-> struct xfs_defer_capture directly?  That probably also means merging
-> this and the previous patch.
+On Friday 2 October 2020 10:19:24 AM IST Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> If userspace asked fsmap to count the number of entries, we cannot
+> return more than UINT_MAX entries because fmh_entries is u32.
+> Therefore, stop counting if we hit this limit or else we will waste time
+> to return truncated results.
+> 
+> Fixes: e89c041338ed ("xfs: implement the GETFSMAP ioctl")
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Strike that as it doesn't make a whole lot of sense.  More coffee..
+The upper bound check is correct.
+
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+
+> ---
+>  fs/xfs/xfs_fsmap.c |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> 
+> diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+> index 4eebcec4aae6..aa36e7daf82c 100644
+> --- a/fs/xfs/xfs_fsmap.c
+> +++ b/fs/xfs/xfs_fsmap.c
+> @@ -256,6 +256,9 @@ xfs_getfsmap_helper(
+>  
+>  	/* Are we just counting mappings? */
+>  	if (info->head->fmh_count == 0) {
+> +		if (info->head->fmh_entries == UINT_MAX)
+> +			return -ECANCELED;
+> +
+>  		if (rec_daddr > info->next_daddr)
+>  			info->head->fmh_entries++;
+>  
+> 
+> 
+
+
+-- 
+chandan
+
+
+
