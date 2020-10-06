@@ -2,169 +2,162 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28A73284492
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Oct 2020 06:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C12284496
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Oct 2020 06:23:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgJFETC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Oct 2020 00:19:02 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50638 "EHLO
+        id S1726834AbgJFEXf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Oct 2020 00:23:35 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:53568 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbgJFETB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Oct 2020 00:19:01 -0400
+        with ESMTP id S1725874AbgJFEXf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Oct 2020 00:23:35 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0964Dwm9048628;
-        Tue, 6 Oct 2020 04:18:59 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0964JN0Q052205;
+        Tue, 6 Oct 2020 04:23:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=KHm2S0PHUDvgKVewvOIvHOzIjjfmN/zwK6otjVQnRkQ=;
- b=RwySzKR6QVQz3gmYKz9DfkI0Aa6X3AGuEm+tr2On3hNH1XXU+fAALid6QxrQfr8nxrBY
- 19rV/s+oToYK0DM5lwtbYUF4icgj8LzqQ5G7eiLSxECSVc9u6GkdEu3evpZPh6n7+ozv
- TxfrMO5b7PqbQl4JIWrf9kyqiKAwOAp7SX/CkcXD8s2d/JgTJwlLfP0PNydMk8+vnzyE
- xZMy74aetLkpwCnRIhJlcka9+prCVZ7b8XNIl08LZIRTPj6MCNBp6jD09ALq3JptIdDV
- 73jGqkbn3ap1ahHmAAoNp/D82E0gqtwSUuskKPRA29XPAxpMAXwd5UdYA2d3fr4m48kf 8A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 33xhxmsppu-1
+ bh=2iDDD3VZaEwSBYUy/M8gnKFpptYwJNgFcTnSq/njZZI=;
+ b=H591bM9pNsbzJZy78k8F83ZvujY3acPV1VdXtxut6c9hbMrOlgodl6fEaUGvhHVPk//R
+ gZ9BxpIzcSDwsDZmbqrNVX7UOliQconY1TYUb/s23wY2bCv8zvmUQvZ5wR32syJesxfM
+ w6GKlCx7yWYr5ps5h4tL5vh6BM4Qgx0PES7KJYPrGAgWMviN6Xmo3SejUWl2XQ20Fl1K
+ DYY+mYx02lCXTndTXyZHyOY9oKyhJ3fmWyM/sjBIeQ/lQy0wr0Tg5I69N7OTkjcOZ9tL
+ vmRMf3jNw0vfKxbcZHo/oRiQ8vx37RYV1jvf5JKSsjElpLgfn2myBHtz/4lsYfsMZQBr Iw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 33xhxmspxf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 06 Oct 2020 04:18:58 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0964A7HQ041338;
-        Tue, 6 Oct 2020 04:18:58 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 33y37wahu0-1
+        Tue, 06 Oct 2020 04:23:32 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0964L7Le182697;
+        Tue, 6 Oct 2020 04:23:32 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 33yyjex6ch-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 06 Oct 2020 04:18:58 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0964IvcV004256;
-        Tue, 6 Oct 2020 04:18:58 GMT
+        Tue, 06 Oct 2020 04:23:32 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0964NU9n013292;
+        Tue, 6 Oct 2020 04:23:30 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 05 Oct 2020 21:18:57 -0700
-Date:   Mon, 5 Oct 2020 21:18:56 -0700
+        with ESMTP ; Mon, 05 Oct 2020 21:23:30 -0700
+Date:   Mon, 5 Oct 2020 21:23:29 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Chandan Babu R <chandanrlinux@gmail.com>
 Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
-Subject: Re: [PATCH V5 03/12] xfs: Check for extent overflow when punching a
- hole
-Message-ID: <20201006041856.GM49547@magnolia>
+Subject: Re: [PATCH V5 04/12] xfs: Check for extent overflow when
+ adding/removing xattrs
+Message-ID: <20201006042329.GN49547@magnolia>
 References: <20201003055633.9379-1-chandanrlinux@gmail.com>
- <20201003055633.9379-4-chandanrlinux@gmail.com>
+ <20201003055633.9379-5-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201003055633.9379-4-chandanrlinux@gmail.com>
+In-Reply-To: <20201003055633.9379-5-chandanrlinux@gmail.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9765 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 spamscore=0
- mlxscore=0 malwarescore=0 suspectscore=1 adultscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010060023
+ definitions=main-2010060024
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9765 signatures=668680
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
  impostorscore=0 lowpriorityscore=0 suspectscore=1 phishscore=0
  mlxlogscore=999 adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010060023
+ definitions=main-2010060024
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Oct 03, 2020 at 11:26:24AM +0530, Chandan Babu R wrote:
-> The extent mapping the file offset at which a hole has to be
-> inserted will be split into two extents causing extent count to
-> increase by 1.
+On Sat, Oct 03, 2020 at 11:26:25AM +0530, Chandan Babu R wrote:
+> Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to be
+> added. One extra extent for dabtree in case a local attr is large enough
+> to cause a double split.  It can also cause extent count to increase
+> proportional to the size of a remote xattr's value.
 > 
 > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 
-Looks fine,
+Didn't I already review this?  AFAICT it hasn't changed much, but did
+something change enough to warrant dropping the old RVB tag?
+
+> ---
+>  fs/xfs/libxfs/xfs_attr.c       | 13 +++++++++++++
+>  fs/xfs/libxfs/xfs_inode_fork.h | 10 ++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+> index fd8e6418a0d3..be51e7068dcd 100644
+> --- a/fs/xfs/libxfs/xfs_attr.c
+> +++ b/fs/xfs/libxfs/xfs_attr.c
+> @@ -396,6 +396,7 @@ xfs_attr_set(
+>  	struct xfs_trans_res	tres;
+>  	bool			rsvd = (args->attr_filter & XFS_ATTR_ROOT);
+>  	int			error, local;
+> +	int			rmt_blks = 0;
+>  	unsigned int		total;
+>  
+>  	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
+> @@ -442,11 +443,15 @@ xfs_attr_set(
+>  		tres.tr_logcount = XFS_ATTRSET_LOG_COUNT;
+>  		tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
+>  		total = args->total;
+> +
+> +		if (!local)
+> +			rmt_blks = xfs_attr3_rmt_blocks(mp, args->valuelen);
+>  	} else {
+>  		XFS_STATS_INC(mp, xs_attr_remove);
+>  
+>  		tres = M_RES(mp)->tr_attrrm;
+>  		total = XFS_ATTRRM_SPACE_RES(mp);
+> +		rmt_blks = xfs_attr3_rmt_blocks(mp, XFS_XATTR_SIZE_MAX);
+>  	}
+>  
+>  	/*
+> @@ -460,6 +465,14 @@ xfs_attr_set(
+>  
+>  	xfs_ilock(dp, XFS_ILOCK_EXCL);
+>  	xfs_trans_ijoin(args->trans, dp, 0);
+> +
+> +	if (args->value || xfs_inode_hasattr(dp)) {
+> +		error = xfs_iext_count_may_overflow(dp, XFS_ATTR_FORK,
+> +				XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
+> +		if (error)
+> +			goto out_trans_cancel;
+
+Hmm.  If you hit this while trying to remove an xattr, what then?
+I suppose you really don't want to overflow naextents, but I suppose the
+only other option is to delete the file.  Oh well, attr forks with 65533
+extents should be vanishingly rare, right?  Right? :)
+
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
-> ---
->  fs/xfs/libxfs/xfs_inode_fork.h |  7 +++++++
->  fs/xfs/xfs_bmap_item.c         | 15 +++++++++------
->  fs/xfs/xfs_bmap_util.c         | 10 ++++++++++
->  3 files changed, 26 insertions(+), 6 deletions(-)
-> 
+> +	}
+> +
+>  	if (args->value) {
+>  		unsigned int	quota_flags = XFS_QMOPT_RES_REGBLKS;
+>  
 > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-> index 7fc2b129a2e7..bcac769a7df6 100644
+> index bcac769a7df6..5de2f07d0dd5 100644
 > --- a/fs/xfs/libxfs/xfs_inode_fork.h
 > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-> @@ -40,6 +40,13 @@ struct xfs_ifork {
+> @@ -47,6 +47,16 @@ struct xfs_ifork {
 >   */
->  #define XFS_IEXT_ADD_NOSPLIT_CNT	(1)
+>  #define XFS_IEXT_PUNCH_HOLE_CNT		(1)
 >  
 > +/*
-> + * Punching out an extent from the middle of an existing extent can cause the
-> + * extent count to increase by 1.
-> + * i.e. | Old extent | Hole | Old extent |
+> + * Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to
+> + * be added. One extra extent for dabtree in case a local attr is
+> + * large enough to cause a double split.  It can also cause extent
+> + * count to increase proportional to the size of a remote xattr's
+> + * value.
 > + */
-> +#define XFS_IEXT_PUNCH_HOLE_CNT		(1)
+> +#define XFS_IEXT_ATTR_MANIP_CNT(rmt_blks) \
+> +	(XFS_DA_NODE_MAXDEPTH + max(1, rmt_blks))
 > +
 >  /*
 >   * Fork handling.
 >   */
-> diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-> index 6a7dcea4ad40..323cee00bd45 100644
-> --- a/fs/xfs/xfs_bmap_item.c
-> +++ b/fs/xfs/xfs_bmap_item.c
-> @@ -440,6 +440,7 @@ xfs_bui_item_recover(
->  	bool				op_ok;
->  	unsigned int			bui_type;
->  	int				whichfork;
-> +	int				iext_delta;
->  	int				error = 0;
->  
->  	/* Only one mapping operation per BUI... */
-> @@ -519,12 +520,14 @@ xfs_bui_item_recover(
->  	}
->  	xfs_trans_ijoin(tp, ip, 0);
->  
-> -	if (bui_type == XFS_BMAP_MAP) {
-> -		error = xfs_iext_count_may_overflow(ip, whichfork,
-> -				XFS_IEXT_ADD_NOSPLIT_CNT);
-> -		if (error)
-> -			goto err_inode;
-> -	}
-> +	if (bui_type == XFS_BMAP_MAP)
-> +		iext_delta = XFS_IEXT_ADD_NOSPLIT_CNT;
-> +	else
-> +		iext_delta = XFS_IEXT_PUNCH_HOLE_CNT;
-> +
-> +	error = xfs_iext_count_may_overflow(ip, whichfork, iext_delta);
-> +	if (error)
-> +		goto err_inode;
->  
->  	count = bmap->me_len;
->  	error = xfs_trans_log_finish_bmap_update(tp, budp, type, ip, whichfork,
-> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> index dcd6e61df711..0776abd0103c 100644
-> --- a/fs/xfs/xfs_bmap_util.c
-> +++ b/fs/xfs/xfs_bmap_util.c
-> @@ -891,6 +891,11 @@ xfs_unmap_extent(
->  
->  	xfs_trans_ijoin(tp, ip, 0);
->  
-> +	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
-> +			XFS_IEXT_PUNCH_HOLE_CNT);
-> +	if (error)
-> +		goto out_trans_cancel;
-> +
->  	error = xfs_bunmapi(tp, ip, startoffset_fsb, len_fsb, 0, 2, done);
->  	if (error)
->  		goto out_trans_cancel;
-> @@ -1176,6 +1181,11 @@ xfs_insert_file_space(
->  	xfs_ilock(ip, XFS_ILOCK_EXCL);
->  	xfs_trans_ijoin(tp, ip, 0);
->  
-> +	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
-> +			XFS_IEXT_PUNCH_HOLE_CNT);
-> +	if (error)
-> +		goto out_trans_cancel;
-> +
->  	/*
->  	 * The extent shifting code works on extent granularity. So, if stop_fsb
->  	 * is not the starting block of extent, we need to split the extent at
 > -- 
 > 2.28.0
 > 
