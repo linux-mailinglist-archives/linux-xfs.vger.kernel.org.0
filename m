@@ -2,171 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 551EF28493E
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Oct 2020 11:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 936FF2849FB
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Oct 2020 12:01:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgJFJV1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Oct 2020 05:21:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725891AbgJFJV1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Oct 2020 05:21:27 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C6AC061755
-        for <linux-xfs@vger.kernel.org>; Tue,  6 Oct 2020 02:21:27 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id n14so8668313pff.6
-        for <linux-xfs@vger.kernel.org>; Tue, 06 Oct 2020 02:21:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XqJAFEuF7naGL6sPzTG25w+VDo+6sgoAOk/M0nmeXNs=;
-        b=tytYOb4neQnsMfPGwGwCNBtC7ayB0ESIAvmzf837WWQU08p7oktWquccvipyPoq1VG
-         2wZh9MD+jDUng9LdpwANG2I7ZfAZHuHbiaKASyEiSXVyYfjaVLGnvapW4LBeHBTSZ9GH
-         29ukepjYo2HOBwqgG7bowsBTM4Q3/QIQrQ6F6iL68NZaO7rgrCHts1DnLD/p+U8fEE6D
-         Cz6b6O+RmkMQkZEEnBqlTRiAd343nbHQZWA42QqRjF+5nQ/bJXMXAUXGyaAs0MAy8vyy
-         dEL4FWdn+4e1nwPDwsxB/OnFVryF+jyYFi7doPTs9PdGkJfigC6Pn12hkMJmeEK/5NPZ
-         E4Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XqJAFEuF7naGL6sPzTG25w+VDo+6sgoAOk/M0nmeXNs=;
-        b=l6KWjncDzvy6WDH9KOtG3CD6iaWPt0YBi8789bRYOZZ47m5i1Q6DyWGZzeEF8masCg
-         Q4bkJhvWoHOeQxAjekZZ85E4+kTNOG/k8SDaKZeYLpRUuajugmaXS2aoJwy8dGs6Zj1C
-         Ze19wC2n1MhmMaoEJs6CnL5Le0HM3RLt+ci+JQxybssSAnGlmZpypHHh2LQzm/+T1EGF
-         BlKRmu/p09mBG8bUXsYbyTHWfsFdgi2Z/IQTR99J5V9JUWM4V82kePId0qMBHUxY2Smw
-         B4txKBthDWnzqaR6H+aGf2bkxl5WQJCGpyN7noaCGwnW6PYP6pdeJ2zrHWBvLaDrr7QG
-         PIjQ==
-X-Gm-Message-State: AOAM532PUxyOm1m5yeDxpQ4IxYU0X8DoQyZXo1EqZ1KBTWIr5eFLOrtb
-        AcTdwWq+R0ZGTwoP+eMCH2P3Qnyqg64=
-X-Google-Smtp-Source: ABdhPJxdSXFeWysPhi3pk3sgCX7aSrkSdvevvAwBCmi59v2O4cCQViYm/ZpGHAQ88Y2fSJe2S7Zgrw==
-X-Received: by 2002:a65:5802:: with SMTP id g2mr3154120pgr.261.1601976087036;
-        Tue, 06 Oct 2020 02:21:27 -0700 (PDT)
-Received: from garuda.localnet ([122.167.153.52])
-        by smtp.gmail.com with ESMTPSA id o38sm2284354pgb.12.2020.10.06.02.21.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Oct 2020 02:21:26 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
-Subject: Re: [PATCH V5 04/12] xfs: Check for extent overflow when adding/removing xattrs
-Date:   Tue, 06 Oct 2020 14:51:15 +0530
-Message-ID: <3262882.2ycmhBttRE@garuda>
-In-Reply-To: <20201006042329.GN49547@magnolia>
-References: <20201003055633.9379-1-chandanrlinux@gmail.com> <20201003055633.9379-5-chandanrlinux@gmail.com> <20201006042329.GN49547@magnolia>
+        id S1726410AbgJFKBj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Oct 2020 06:01:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44050 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbgJFKBi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 6 Oct 2020 06:01:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1601978497;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=KDPcZMwJBAEJWwjXvAozHYWm583pWa4rz+STmD4L1yM=;
+        b=Q7iXjRq4P1eaaoqEFEZMscsRQT7hWSiDbJZGsthwH3xMzgrBofZRNOYDOrlsEAglEgcV0F
+        PdJ871V8Y6ZVq+khieSZ3SAi0oHwqwmz5s3CGbWmQct8EvAj5H2+o/lPHPdmzLq5Mr0pjX
+        r9Azaxv0bUpsfrhRT8s8PXY9d1/cGZc=
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1358EB214;
+        Tue,  6 Oct 2020 10:01:37 +0000 (UTC)
+From:   Anthony Iliopoulos <ailiop@suse.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     linux-xfs@vger.kernel.org
+Subject: [PATCH] xfs_repair: remove obsolete code for handling mountpoint inodes
+Date:   Tue,  6 Oct 2020 12:01:49 +0200
+Message-Id: <20201006100149.32740-1-ailiop@suse.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tuesday 6 October 2020 9:53:29 AM IST Darrick J. Wong wrote:
-> On Sat, Oct 03, 2020 at 11:26:25AM +0530, Chandan Babu R wrote:
-> > Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to be
-> > added. One extra extent for dabtree in case a local attr is large enough
-> > to cause a double split.  It can also cause extent count to increase
-> > proportional to the size of a remote xattr's value.
-> > 
-> > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
-> 
-> Didn't I already review this?  AFAICT it hasn't changed much, but did
-> something change enough to warrant dropping the old RVB tag?
+The S_IFMNT file type was never supported in Linux, remove the related
+code that was supposed to deal with it, along with the translation file
+entries.
 
-Yes, you had reviewed it earlier. Sorry, I missed out on adding the RVB before
-sending the patch.
+Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
+---
+ po/de.po        |  5 -----
+ po/pl.po        |  5 -----
+ repair/dinode.c | 12 ------------
+ repair/incore.h |  1 -
+ 4 files changed, 23 deletions(-)
 
-> 
-> > ---
-> >  fs/xfs/libxfs/xfs_attr.c       | 13 +++++++++++++
-> >  fs/xfs/libxfs/xfs_inode_fork.h | 10 ++++++++++
-> >  2 files changed, 23 insertions(+)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> > index fd8e6418a0d3..be51e7068dcd 100644
-> > --- a/fs/xfs/libxfs/xfs_attr.c
-> > +++ b/fs/xfs/libxfs/xfs_attr.c
-> > @@ -396,6 +396,7 @@ xfs_attr_set(
-> >  	struct xfs_trans_res	tres;
-> >  	bool			rsvd = (args->attr_filter & XFS_ATTR_ROOT);
-> >  	int			error, local;
-> > +	int			rmt_blks = 0;
-> >  	unsigned int		total;
-> >  
-> >  	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
-> > @@ -442,11 +443,15 @@ xfs_attr_set(
-> >  		tres.tr_logcount = XFS_ATTRSET_LOG_COUNT;
-> >  		tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
-> >  		total = args->total;
-> > +
-> > +		if (!local)
-> > +			rmt_blks = xfs_attr3_rmt_blocks(mp, args->valuelen);
-> >  	} else {
-> >  		XFS_STATS_INC(mp, xs_attr_remove);
-> >  
-> >  		tres = M_RES(mp)->tr_attrrm;
-> >  		total = XFS_ATTRRM_SPACE_RES(mp);
-> > +		rmt_blks = xfs_attr3_rmt_blocks(mp, XFS_XATTR_SIZE_MAX);
-> >  	}
-> >  
-> >  	/*
-> > @@ -460,6 +465,14 @@ xfs_attr_set(
-> >  
-> >  	xfs_ilock(dp, XFS_ILOCK_EXCL);
-> >  	xfs_trans_ijoin(args->trans, dp, 0);
-> > +
-> > +	if (args->value || xfs_inode_hasattr(dp)) {
-> > +		error = xfs_iext_count_may_overflow(dp, XFS_ATTR_FORK,
-> > +				XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
-> > +		if (error)
-> > +			goto out_trans_cancel;
-> 
-> Hmm.  If you hit this while trying to remove an xattr, what then?
-> I suppose you really don't want to overflow naextents, but I suppose the
-> only other option is to delete the file.  Oh well, attr forks with 65533
-> extents should be vanishingly rare, right?  Right? :)
-
-Yes, Deleting the corresponding file would be the only option. If we did allow
-this operation to succeed we would end up having a silent corruption of the
-attr extent counter.
-
-> 
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> --D
-> 
-> > +	}
-> > +
-> >  	if (args->value) {
-> >  		unsigned int	quota_flags = XFS_QMOPT_RES_REGBLKS;
-> >  
-> > diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-> > index bcac769a7df6..5de2f07d0dd5 100644
-> > --- a/fs/xfs/libxfs/xfs_inode_fork.h
-> > +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-> > @@ -47,6 +47,16 @@ struct xfs_ifork {
-> >   */
-> >  #define XFS_IEXT_PUNCH_HOLE_CNT		(1)
-> >  
-> > +/*
-> > + * Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to
-> > + * be added. One extra extent for dabtree in case a local attr is
-> > + * large enough to cause a double split.  It can also cause extent
-> > + * count to increase proportional to the size of a remote xattr's
-> > + * value.
-> > + */
-> > +#define XFS_IEXT_ATTR_MANIP_CNT(rmt_blks) \
-> > +	(XFS_DA_NODE_MAXDEPTH + max(1, rmt_blks))
-> > +
-> >  /*
-> >   * Fork handling.
-> >   */
-> 
-
-
+diff --git a/po/de.po b/po/de.po
+index fab26677e258..aa9af769ab89 100644
+--- a/po/de.po
++++ b/po/de.po
+@@ -11774,11 +11774,6 @@ msgstr ""
+ msgid "component of symlink in inode %llu too long\n"
+ msgstr "Bestandteil des symbolischen Verweises in Inode %llu zu lang\n"
+ 
+-#: .././repair/dinode.c:1611
+-#, c-format
+-msgid "inode %llu has bad inode type (IFMNT)\n"
+-msgstr "Inode %llu hat falschen Inode-Typ (IFMNT)\n"
+-
+ #: .././repair/dinode.c:1621
+ #, c-format
+ msgid "size of character device inode %llu != 0 (%lld bytes)\n"
+diff --git a/po/pl.po b/po/pl.po
+index 87109f6b41d2..0076e7a75b05 100644
+--- a/po/pl.po
++++ b/po/pl.po
+@@ -11712,11 +11712,6 @@ msgstr ""
+ "znaleziono niedozwolony znak null w i-węźle dowiązania symbolicznego "
+ "%<PRIu64>\n"
+ 
+-#: .././repair/dinode.c:1452
+-#, c-format
+-msgid "inode %<PRIu64> has bad inode type (IFMNT)\n"
+-msgstr "i-węzeł %<PRIu64> ma błędny typ i-węzła (IFMNT)\n"
+-
+ #: .././repair/dinode.c:1463
+ #, c-format
+ msgid "size of character device inode %<PRIu64> != 0 (%<PRId64> bytes)\n"
+diff --git a/repair/dinode.c b/repair/dinode.c
+index d552db2d5f1a..4abf83ec4173 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -1334,17 +1334,6 @@ process_misc_ino_types(xfs_mount_t	*mp,
+ 			xfs_ino_t	lino,
+ 			int		type)
+ {
+-	/*
+-	 * disallow mountpoint inodes until such time as the
+-	 * kernel actually allows them to be created (will
+-	 * probably require a superblock version rev, sigh).
+-	 */
+-	if (type == XR_INO_MOUNTPOINT)  {
+-		do_warn(
+-_("inode %" PRIu64 " has bad inode type (IFMNT)\n"), lino);
+-		return(1);
+-	}
+-
+ 	/*
+ 	 * must also have a zero size
+ 	 */
+@@ -1630,7 +1619,6 @@ _("directory inode %" PRIu64 " has bad size %" PRId64 "\n"),
+ 	case XR_INO_CHRDEV:	/* fall through to FIFO case ... */
+ 	case XR_INO_BLKDEV:	/* fall through to FIFO case ... */
+ 	case XR_INO_SOCK:	/* fall through to FIFO case ... */
+-	case XR_INO_MOUNTPOINT:	/* fall through to FIFO case ... */
+ 	case XR_INO_FIFO:
+ 		if (process_misc_ino_types(mp, dino, lino, type))
+ 			return 1;
+diff --git a/repair/incore.h b/repair/incore.h
+index 5b29d5d1efd8..074ca98a3989 100644
+--- a/repair/incore.h
++++ b/repair/incore.h
+@@ -214,7 +214,6 @@ int		count_bcnt_extents(xfs_agnumber_t);
+ #define XR_INO_BLKDEV	8		/* block device */
+ #define XR_INO_SOCK	9		/* socket */
+ #define XR_INO_FIFO	10		/* fifo */
+-#define XR_INO_MOUNTPOINT 11		/* mountpoint */
+ #define XR_INO_UQUOTA	12		/* user quota inode */
+ #define XR_INO_GQUOTA	13		/* group quota inode */
+ #define XR_INO_PQUOTA	14		/* project quota inode */
 -- 
-chandan
-
-
+2.28.0
 
