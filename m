@@ -2,249 +2,116 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F49E2844C4
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Oct 2020 06:25:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7042844C8
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Oct 2020 06:26:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgJFEZI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Oct 2020 00:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgJFEZI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Oct 2020 00:25:08 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1C8C0613CE
-        for <linux-xfs@vger.kernel.org>; Mon,  5 Oct 2020 21:25:08 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y20so590070pll.12
-        for <linux-xfs@vger.kernel.org>; Mon, 05 Oct 2020 21:25:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DniLSi3MwNi5KhwbRV9QeRi6gDS1XS0uft+AB+uYe1o=;
-        b=lctbKH6VPnn4Kf9snscDuhE/TQGIQl6HbPKZEsW11lto93WCgxk6/dTaNYIcJopyCx
-         uqHdCb7+y9gYk6vx9sKh/RwU/8IyWBxzBFycxtKimAPXD8BdRWaokS+WH4+UnYfdsM5G
-         BXzvpcNqpkZBT9RSSmQ3WdyNwN/2Qgai6lBIj6FeUbVc7zTw2QGAzolrczzhahpKVdQm
-         V0q6j7yiPVMTwscqki6dIIfXKIk1WCh6MuKhR1113zrawwJzZN/RynYPKHSVeC7RCa3m
-         yCoXHzKAVDOZC3D71rUaR8rFQmCxbzUPJU550Sw/RVI7u5f8ZUQ4rBxkfWYNg3a9Trjf
-         G5bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DniLSi3MwNi5KhwbRV9QeRi6gDS1XS0uft+AB+uYe1o=;
-        b=ZGmSa6nliqrT2iPja8sS45VSJNcGecpjFgfKNYkn4nm1eVIkiY9zK/o57iqsLWXVmO
-         aSy0pElkCG6Se4J7PXOHsgoZDiidGWtu7GRPtEmUqpOaQ3bwe4Zryn+yiNFLGecCcvjj
-         ieUl+R3dYVm3WLwLwO6XvOQJQKjPfygLGMl9jmIowzTFjTAX9j6ih6gooho/VXCfGBtR
-         YTVrDYlpZhUZxs3giUF33uvLcJqV0sKo8fmO2Z0pUyOyJriC6k9Htpe91i8r32CQQYxj
-         G1DDBloB5hcQSoYd4bQmGKbF6fL6UWJLVJ+RZUrCpFl0i29vwLeJ/dV+eCxnkribZFfa
-         GO3g==
-X-Gm-Message-State: AOAM531+J926OIMNmuZbSfcOgGB1ou6rep3fcdmBGESTMvMdvZfJu3s/
-        BupJrUOtgYE/LYzHC65ratHQ+P1EahQ=
-X-Google-Smtp-Source: ABdhPJwYQMVxQKdhV8nW/6dbogFQJx6ocBClutZfAV72iMoUoa4pOkScgRqxf6ZvcXyEHR/AFtIXgw==
-X-Received: by 2002:a17:90a:8e82:: with SMTP id f2mr2567222pjo.142.1601958307262;
-        Mon, 05 Oct 2020 21:25:07 -0700 (PDT)
-Received: from garuda.localnet ([122.167.153.52])
-        by smtp.gmail.com with ESMTPSA id c67sm1590162pfa.209.2020.10.05.21.25.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Oct 2020 21:25:06 -0700 (PDT)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     darrick.wong@oracle.com, david@fromorbit.com
-Subject: Re: [PATCH V5 12/12] xfs: Introduce error injection to allocate only minlen size extents for files
-Date:   Tue, 06 Oct 2020 09:55:03 +0530
-Message-ID: <2322881.G0kAUReszQ@garuda>
-In-Reply-To: <20201003055633.9379-13-chandanrlinux@gmail.com>
-References: <20201003055633.9379-1-chandanrlinux@gmail.com> <20201003055633.9379-13-chandanrlinux@gmail.com>
+        id S1725899AbgJFE0e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Oct 2020 00:26:34 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52286 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725945AbgJFE0e (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Oct 2020 00:26:34 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0964NqIG139513;
+        Tue, 6 Oct 2020 04:26:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=EnFCVr40GijYNBUBLuefIcCiCpw9Td8MNyvPxWP+qeo=;
+ b=FU34DMz/Fx/TTBWOywaPlqjT5o7jDlDM0H6qtBwGszATcj/g9erIBOtyLDj2kpOtZ8Co
+ U1kC24WAkeC1XY39sL41+6paL2t/Kxoz68wMXTRoFpmYJ3QjThzi4H66g8gUSLI5/0Lc
+ TH9mDtDQqTcvdJeAjuYHkQjyG3AixcNDZhZhxvrqpnw7Dp414VUrB4kwoFR167YQ+sdi
+ qf+y/6fzZcXM7L6/AjW6UpFd8nokjvVRWAFIGgTVSJDj4uXE5DgtSiNKAv51DXwJWkvC
+ olcCoVIrWPefeLPTLEkn6+8EGWnujcaKAK6a4oK3BvArJHqqpcMP/RmeYaN5aaZJGF5k EA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 33ym34ev4v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 06 Oct 2020 04:26:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0964P6SB190464;
+        Tue, 6 Oct 2020 04:26:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 33yyjexbay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 06 Oct 2020 04:26:31 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0964QU8P014355;
+        Tue, 6 Oct 2020 04:26:30 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 05 Oct 2020 21:26:29 -0700
+Date:   Mon, 5 Oct 2020 21:26:29 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
+Subject: Re: [PATCH V5 11/12] xfs: Set tp->t_firstblock only once during a
+ transaction's lifetime
+Message-ID: <20201006042629.GQ49547@magnolia>
+References: <20201003055633.9379-1-chandanrlinux@gmail.com>
+ <20201003055633.9379-12-chandanrlinux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201003055633.9379-12-chandanrlinux@gmail.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9765 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010060025
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9765 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 spamscore=0
+ malwarescore=0 phishscore=0 suspectscore=2 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010060025
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Saturday 3 October 2020 11:26:33 AM IST Chandan Babu R wrote:
-> This commit adds XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT error tag which
-> helps userspace test programs to get xfs_bmap_btalloc() to always
-> allocate minlen sized extents.
-> 
-> This is required for test programs which need a guarantee that minlen
-> extents allocated for a file do not get merged with their existing
-> neighbours in the inode's BMBT. "Inode fork extent overflow check" for
-> Directories, Xattrs and extension of realtime inodes need this since the
-> file offset at which the extents are being allocated cannot be
-> explicitly controlled from userspace.
-> 
-> One way to use this error tag is to,
-> 1. Consume all of the free space by sequentially writing to a file.
-> 2. Punch alternate blocks of the file. This causes CNTBT to contain
->    sufficient number of one block sized extent records.
-> 3. Inject XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT error tag.
-> After step 3, xfs_bmap_btalloc() will issue space allocation
-> requests for minlen sized extents only.
-> 
-> ENOSPC error code is returned to userspace when there aren't any "one
-> block sized" extents left in any of the AGs.
+On Sat, Oct 03, 2020 at 11:26:32AM +0530, Chandan Babu R wrote:
+> tp->t_firstblock is supposed to hold the first fs block allocated by the
+> transaction. There are two cases in the current code base where
+> tp->t_firstblock is assigned a value unconditionally. This commit makes
+> sure that we assign to tp->t_firstblock only if its current value is
+> NULLFSBLOCK.
+
+Do we hit this currently?  This seems like a regression fix, since I'm
+guessing you hit this fairly soon after adding the next patch and
+twisting the "shatter everything" debug knob it establishes?  And if
+you can hit it there, you could hit this on a severely fragmented fs?
+
+--D
+
 > 
 > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 > ---
->  fs/xfs/libxfs/xfs_alloc.c    | 46 ++++++++++++++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_alloc.h    |  1 +
->  fs/xfs/libxfs/xfs_bmap.c     | 26 ++++++++++++++------
->  fs/xfs/libxfs/xfs_errortag.h |  4 +++-
->  fs/xfs/xfs_error.c           |  3 +++
->  5 files changed, 72 insertions(+), 8 deletions(-)
+>  fs/xfs/libxfs/xfs_bmap.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-> index 852b536551b5..d8d8ab1478db 100644
-> --- a/fs/xfs/libxfs/xfs_alloc.c
-> +++ b/fs/xfs/libxfs/xfs_alloc.c
-> @@ -2473,6 +2473,45 @@ xfs_defer_agfl_block(
->  	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_AGFL_FREE, &new->xefi_list);
->  }
->  
-> +STATIC int
-> +minlen_freespace_available(
-> +	struct xfs_alloc_arg	*args,
-> +	struct xfs_buf		*agbp,
-> +	int			*stat)
-> +{
-> +	xfs_btree_cur_t		*cnt_cur;
-> +	xfs_agblock_t		fbno;
-> +	xfs_extlen_t		flen;
-> +	int			btree_error = XFS_BTREE_NOERROR;
-> +	int			error = 0;
-> +
-> +	cnt_cur = xfs_allocbt_init_cursor(args->mp, args->tp, agbp,
-> +			args->agno, XFS_BTNUM_CNT);
-> +	error = xfs_alloc_lookup_ge(cnt_cur, 0, args->minlen, stat);
-> +	if (error) {
-> +		btree_error = XFS_BTREE_ERROR;
-> +		goto out;
-> +	}
-> +
-> +	ASSERT(*stat == 1);
-> +
-> +	error = xfs_alloc_get_rec(cnt_cur, &fbno, &flen, stat);
-> +	if (error) {
-> +		btree_error = XFS_BTREE_ERROR;
-> +		goto out;
-> +	}
-> +
-> +	if (flen == args->minlen)
-> +		*stat = 1;
-> +	else
-> +		*stat = 0;
-> +
-> +out:
-> +	xfs_btree_del_cursor(cnt_cur, btree_error);
-> +
-> +	return error;
-> +}
-> +
->  /*
->   * Decide whether to use this allocation group for this allocation.
->   * If so, fix up the btree freelist's size.
-> @@ -2490,6 +2529,7 @@ xfs_alloc_fix_freelist(
->  	struct xfs_alloc_arg	targs;	/* local allocation arguments */
->  	xfs_agblock_t		bno;	/* freelist block */
->  	xfs_extlen_t		need;	/* total blocks needed in freelist */
-> +	int			i;
->  	int			error = 0;
->  
->  	/* deferred ops (AGFL block frees) require permanent transactions */
-> @@ -2544,6 +2584,12 @@ xfs_alloc_fix_freelist(
->  	if (!xfs_alloc_space_available(args, need, flags))
->  		goto out_agbp_relse;
->  
-> +	if (args->alloc_minlen_only) {
-> +		error = minlen_freespace_available(args, agbp, &i);
-> +		if (error || !i)
-> +			goto out_agbp_relse;
-> +	}
-> +
->  	/*
->  	 * Make the freelist shorter if it's too long.
->  	 *
-> diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-> index 6c22b12176b8..1d04089b7fb4 100644
-> --- a/fs/xfs/libxfs/xfs_alloc.h
-> +++ b/fs/xfs/libxfs/xfs_alloc.h
-> @@ -75,6 +75,7 @@ typedef struct xfs_alloc_arg {
->  	char		wasfromfl;	/* set if allocation is from freelist */
->  	struct xfs_owner_info	oinfo;	/* owner of blocks being allocated */
->  	enum xfs_ag_resv_type	resv;	/* block reservation to use */
-> +	bool		alloc_minlen_only;
->  } xfs_alloc_arg_t;
->  
->  /*
 > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-> index 5156cbd476f2..fab4097e7492 100644
+> index 51c2d2690f05..5156cbd476f2 100644
 > --- a/fs/xfs/libxfs/xfs_bmap.c
 > +++ b/fs/xfs/libxfs/xfs_bmap.c
-> @@ -3510,12 +3510,19 @@ xfs_bmap_btalloc(
->  		ASSERT(ap->length);
->  	}
->  
-> +	memset(&args, 0, sizeof(args));
-> +
-> +	args.alloc_minlen_only = XFS_TEST_ERROR(false, mp,
-> +					XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
->  
->  	nullfb = ap->tp->t_firstblock == NULLFSBLOCK;
->  	fb_agno = nullfb ? NULLAGNUMBER : XFS_FSB_TO_AGNO(mp,
->  							ap->tp->t_firstblock);
->  	if (nullfb) {
-> -		if ((ap->datatype & XFS_ALLOC_USERDATA) &&
-> +		if (args.alloc_minlen_only) {
-> +			ag = 0;
-> +			ap->blkno = XFS_AGB_TO_FSB(mp, ag, 0);
-> +		} else if ((ap->datatype & XFS_ALLOC_USERDATA) &&
->  		    xfs_inode_is_filestream(ap->ip)) {
->  			ag = xfs_filestream_lookup_ag(ap->ip);
->  			ag = (ag != NULLAGNUMBER) ? ag : 0;
-> @@ -3523,10 +3530,12 @@ xfs_bmap_btalloc(
->  		} else {
->  			ap->blkno = XFS_INO_TO_FSB(mp, ap->ip->i_ino);
->  		}
-> -	} else
-> +	} else {
->  		ap->blkno = ap->tp->t_firstblock;
-> +	}
->  
-> -	xfs_bmap_adjacent(ap);
-> +	if (!args.alloc_minlen_only)
-> +		xfs_bmap_adjacent(ap);
->  
->  	/*
->  	 * If allowed, use ap->blkno; otherwise must use firstblock since
-> @@ -3540,7 +3549,6 @@ xfs_bmap_btalloc(
->  	 * Normal allocation, done through xfs_alloc_vextent.
+> @@ -724,7 +724,8 @@ xfs_bmap_extents_to_btree(
 >  	 */
->  	tryagain = isaligned = 0;
-> -	memset(&args, 0, sizeof(args));
->  	args.tp = ap->tp;
->  	args.mp = mp;
->  	args.fsbno = ap->blkno;
-> @@ -3549,7 +3557,10 @@ xfs_bmap_btalloc(
->  	/* Trim the allocation back to the maximum an AG can fit. */
->  	args.maxlen = min(ap->length, mp->m_ag_max_usable);
->  	blen = 0;
-> -	if (nullfb) {
-> +	if (args.alloc_minlen_only) {
-> +		args.type = XFS_ALLOCTYPE_START_AG;
-
-The above should have been,
-
-args.type = XFS_ALLOCTYPE_FIRST_AG;
-
-In my experiments, I had introduced a new args.type value and had later
-realized that XFS_ALLOCTYPE_FIRST_AG would suffice for my requirements. I had
-tested the changed version (which was in my git stash) and forgot to apply
-that to this commit after testing was completed. Hence I ended up sending a
-slightly stale patch. I am sorry about this. I will resend the series.
-
--- 
-chandan
-
-
-
+>  	ASSERT(tp->t_firstblock == NULLFSBLOCK ||
+>  	       args.agno >= XFS_FSB_TO_AGNO(mp, tp->t_firstblock));
+> -	tp->t_firstblock = args.fsbno;
+> +	if (tp->t_firstblock == NULLFSBLOCK)
+> +		tp->t_firstblock = args.fsbno;
+>  	cur->bc_ino.allocated++;
+>  	ip->i_d.di_nblocks++;
+>  	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, 1L);
+> @@ -875,7 +876,8 @@ xfs_bmap_local_to_extents(
+>  	/* Can't fail, the space was reserved. */
+>  	ASSERT(args.fsbno != NULLFSBLOCK);
+>  	ASSERT(args.len == 1);
+> -	tp->t_firstblock = args.fsbno;
+> +	if (tp->t_firstblock == NULLFSBLOCK)
+> +		tp->t_firstblock = args.fsbno;
+>  	error = xfs_trans_get_buf(tp, args.mp->m_ddev_targp,
+>  			XFS_FSB_TO_DADDR(args.mp, args.fsbno),
+>  			args.mp->m_bsize, 0, &bp);
+> -- 
+> 2.28.0
+> 
