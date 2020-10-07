@@ -2,78 +2,282 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD760286481
-	for <lists+linux-xfs@lfdr.de>; Wed,  7 Oct 2020 18:34:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 258932864A2
+	for <lists+linux-xfs@lfdr.de>; Wed,  7 Oct 2020 18:38:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgJGQeh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 7 Oct 2020 12:34:37 -0400
-Received: from sonic307-9.consmr.mail.ne1.yahoo.com ([66.163.190.32]:43479
-        "EHLO sonic307-9.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727449AbgJGQeg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Oct 2020 12:34:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1602088475; bh=PxMwWzXvs+dqOoH0/FHvFmQpYH2JguaCUHYAVLLmaiw=; h=Date:From:Reply-To:Subject:References:From:Subject; b=om5tBXO1MUE4f6+f4xnFN9x5d2/5IYIAeIBMswjaEIwtW089yQDuSG/luF+tDoD+zd6Oi+rxTTe8mG6tSRMXscN5stxwJEP9yKEixmX5EqORKyM466AkyQa3/EzRxjvsu+OHn16DyB8ejdKdM3DDJnx0K0y6vReB07SmQ3mHKSaOyHtEptDDeP0gMBKEkLBxIMXT3pHpgYdMnyDt6VFqkd3xEUgYKPLJlyCN/EEsV8F5DvarMgisqtALGla8pfwuJJRnAsnrUxI/rO7bon0BITFvuaO2I16IxJ6VX1JVMgpwBNzskpj4HcduhiIKA5utm66RRMLtQ1v2MGJ5X4JXrg==
-X-YMail-OSG: jToXWE0VM1nzLfnAi.fh_JvlF083PZNrtGPwwm6dXilaodfraqrw2aNCX2v_k3_
- DK_O.X0e3tsrRqX3bLwtH7FUqOvAmQRZrkuXDkVU3i25inZj9YBMhLuUD8JfZuJ4RB5yS8K3lhC4
- .AOZny2akjMtg_D6ZfhJAfmdaRC3jyiiAF5nrbOskapSEWLCOeEVuh9VYHUCpGLSabcqmifT2C1y
- RSNqkMGtbHoOUqFs2NC.tGLppW2CuyuGcbZTP.kAriMyPAD_A_E7v91uErDEX5z6c3w_kImZLMmf
- .f0S4jiBdE4tr696RmlNImu8NvXT8xWmGaoca0GTeTploOXPYGuRAAtPLljjd4nInlEc3kg5DoXj
- Ff5DwMVrJXPDF.xrLbMi.cLxFdHFBZSylBPyR9ZbXPy1gZSVWojE7QZ5ooRy5ok7ECsc_0uA0V55
- O7.dBhhR8ZMiPETMLzWHjiOGQwMPIyBNfc.1LIxKssJMm_pKpM_g9_wTl4DMey5CKFMuFCqpmJpc
- cRoj7JtRLNVH0By0icyx_X9s.R5XeNdayNoMCU0_1zC42dz33K.z6e4JdCAUwebhxYPrWxLHe26z
- 7xbaYPEq2nLCu3FluX_8K9oe16K9q8_PWXA6LLmuPWefh_tPPZIlWGepIjZqvybV5Q2eugSO6hKW
- 7lPsLYt748eKlqpT321x03HM71Qda1MkyvAzqh.uCwtLhGBlYpvKs1_BEEbW2FRN.rD9hJqOAGho
- WEELp_AgSNArM_zpr3x0WiINWQguROCLDUtSE0bY4d1TgZJpiyT79akjcnghn8AZm5Rpa9T8.b1e
- 7TmNMpkj0RrCXMjmeZY5muGCnfYVaulaMsBvPiQ4NLQHCYWygOJmJs7kMXgx6gF0.z89lksCb4wa
- Y2RgymIt8P9pMZNHLspFXc70L8WREprbcZw6T4gPkxkLYOV33GQWSN6pb8o7t2TX8D9myQ4LIf7I
- fUBljmypUyAatjFr14vs2T18O.BVH3W.0AzOGIHRKpLhXEt5ltUaT2BQyMj7adPOeRi.VzjRbZLM
- UceRmcgUtnye.cs.qniwsyq0fI.73zsGI.F4ME3d6xTD1Gtk2PtkNlyiU87Q_AjzbTHnhr3MNQTU
- wURzQ2drltpwdLDlgBCV1yyiH_Ojj_UMBxce_e0FfuVG1xz0M1Rkq0.JPx.1Y.mQQ7oP4wIwfov5
- jdUB9ndPTwui2gpq87gzYt_nVrpatGagYD1ne3kwAve2EzBGNuriD3a6FM4L0IeKx1fWK.YFM1V8
- KauSQxtA6HechEs_UAVht3gpya7JFkX7Eskk456NCu9pXvficeZDZgdmimgGmyW0y8QuPbQa2OHN
- JgA8t7a2_Zse3FMTitlYRDelY0T3HW0sdQnRVTlwX_iCK6oSbKCYviDcOfNkOFH3vS.SQBjKE3n3
- 1Kj9pM18U_2Zqrm8FBiFeqftV3cJ.alZ2Tok9iQ--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Wed, 7 Oct 2020 16:34:35 +0000
-Date:   Wed, 7 Oct 2020 16:34:32 +0000 (UTC)
-From:   Marilyn Robert <fredodinga22@gmail.com>
-Reply-To: marilyobert@gmail.com
-Message-ID: <632062844.281145.1602088472450@mail.yahoo.com>
-Subject: =?UTF-8?B?0J3QsNGY0LzQuNC70LAg0LrQsNGYINCz0L7RgdC/0L7QtNCw0YDQvtGC?=
+        id S1727550AbgJGQin (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 7 Oct 2020 12:38:43 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39618 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbgJGQin (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Oct 2020 12:38:43 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097GXww5021610
+        for <linux-xfs@vger.kernel.org>; Wed, 7 Oct 2020 16:38:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=y2pEb7RrvWRoeYmcZL0n1vqdqzCofq9PkLE+tFWDnG0=;
+ b=uadOdjcq96hMHUlB7uLXCAh08vZjG6o1UCFYUZq4xqUdWcXTIcqRYQ8u1tZXtKPusibW
+ yjwTu1YO7Z1Efx7QYTsXiFo8ZJ3N/voQPHrXUdBZ9kGLGUNMKe59X6uswHhDrSDx4IEU
+ J/4AQL+EtqrOIbBVE1mTtF+HQ44jzQufmyyLewlFO5H7ZDUD1+i8KTVd57ij9kym0TTL
+ dk7xfXV4Zv053a3C1XXlXHqC5uNKMWDVv0FDyDkbSL/o1XnVs8YoBwQVP8c9S5m5uDtS
+ dWzvMnxvk+5I8dkfVPhfk0zMoIBaIg1x2xE6s4F7iLuJGUdO3TvbRactk58o1nUwn6tG 0w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 33ym34r1c2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Wed, 07 Oct 2020 16:38:41 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 097GZDh8002912
+        for <linux-xfs@vger.kernel.org>; Wed, 7 Oct 2020 16:38:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 33yyjhe0w7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 07 Oct 2020 16:38:40 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 097GcdmI018604
+        for <linux-xfs@vger.kernel.org>; Wed, 7 Oct 2020 16:38:39 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 07 Oct 2020 09:38:37 -0700
+Date:   Wed, 7 Oct 2020 09:38:37 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to e5b23740db9b
+Message-ID: <20201007163837.GE49524@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-References: <632062844.281145.1602088472450.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.16795 YMailNodin Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=7 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070104
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 spamscore=0
+ malwarescore=0 phishscore=0 suspectscore=7 adultscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010070104
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-DQoNCtCd0LDRmNC80LjQu9CwINC60LDRmCDQs9C+0YHQv9C+0LTQsNGA0L7Rgg0KDQrQiNCw0YEg
-0YHRg9C8IDY4LdCz0L7QtNC40YjQvdCwINC20LXQvdCwLCDQutC+0ZjQsCDRgdGC0YDQsNC00LAg
-0L7QtCDQv9GA0L7QtNC+0LvQttC10L0g0LrQsNGA0YbQuNC90L7QvCDQvdCwINC00L7RmNC60LAs
-INC+0LQg0YHQuNGC0LUg0LzQtdC00LjRhtC40L3RgdC60Lgg0LjQvdC00LjQutCw0YbQuNC4LCDQ
-vNC+0ZjQsNGC0LAg0YHQvtGB0YLQvtGY0LHQsCDQvdCw0LLQuNGB0YLQuNC90LAg0YHQtSDQstC7
-0L7RiNC4INC4INC+0YfQuNCz0LvQtdC00L3QviDQtSDQtNC10LrQsCDQvNC+0LbQtdCx0Lgg0L3Q
-tdC80LAg0LTQsCDQttC40LLQtdCw0Lwg0L/QvtCy0LXRnNC1INC+0LQg0YjQtdGB0YIg0LzQtdGB
-0LXRhtC4INC60LDQutC+INGA0LXQt9GD0LvRgtCw0YIg0L3QsCDQsdGA0LfQuNC+0YIg0YDQsNGB
-0YIg0Lgg0LHQvtC70LrQsNGC0LAg0YjRgtC+INGB0LUg0ZjQsNCy0YPQstCwINC60LDRmCDQvdC1
-0LAuINCc0L7RmNC+0YIg0YHQvtC/0YDRg9CzINC/0L7Rh9C40L3QsCDQvdC10LrQvtC70LrRgyDQ
-s9C+0LTQuNC90Lgg0L3QsNC90LDQt9Cw0LQg0Lgg0L3QsNGI0LjRgtC1INC00L7Qu9Cz0Lgg0LPQ
-vtC00LjQvdC4INCx0YDQsNC6INC90LUg0LHQtdCwINCx0LvQsNCz0L7RgdC70L7QstC10L3QuCDR
-gdC+INC90LjRgtGDINC10LTQvdC+INC00LXRgtC1LCDQv9C+INC90LXQs9C+0LLQsNGC0LAg0YHQ
-vNGA0YIg0LPQviDQvdCw0YHQu9C10LTQuNCyINGG0LXQu9C+0YLQviDQvdC10LPQvtCy0L4g0LHQ
-vtCz0LDRgtGB0YLQstC+Lg0KDQrQlNC+0LDRk9Cw0Lwg0LrQsNGYINCy0LDRgSDQvtGC0LrQsNC6
-0L4g0YHQtSDQv9C+0LzQvtC70LjQsiDQt9CwINGC0L7QsCwg0L/QvtC00LPQvtGC0LLQtdC9INGB
-0YPQvCDQtNCwINC00L7QvdC40YDQsNC8INGB0YPQvNCwINC+0LQgMiwgMzAwLCAwMDAg0LXQstGA
-0LAg0LfQsCDQv9C+0LzQvtGIINC90LAg0YHQuNGA0L7QvNCw0YjQvdC40YLQtSwg0YHQuNGA0L7Q
-vNCw0YjQvdC40YLQtSDQuCDQv9C+0LzQsNC70LrRgyDQv9GA0LjQstC40LvQtdCz0LjRgNCw0L3Q
-uNGC0LUg0LzQtdGT0YMg0LLQsNGI0LjRgtC1INGB0L7QsdGA0LDQvdC40ZjQsCAvINC+0L/RiNGC
-0LXRgdGC0LLQvi4g0JfQsNCx0LXQu9C10LbQtdGC0LUg0LTQtdC60LAg0L7QstC+0Zgg0YTQvtC9
-0LQg0LUg0LTQtdC/0L7QvdC40YDQsNC9INCy0L4g0LHQsNC90LrQsCDQutCw0LTQtSDRiNGC0L4g
-0YDQsNCx0L7RgtC10YjQtSDQvNC+0ZjQvtGCINGB0L7Qv9GA0YPQsy4gQXBwcmVjaWF0ZdC1INGG
-0LXQvdCw0Lwg0LDQutC+INC+0LHRgNC90LXRgtC1INCy0L3QuNC80LDQvdC40LUg0L3QsCDQvNC+
-0LXRgtC+INCx0LDRgNCw0ZrQtSDQt9CwINC/0YDQvtC/0LDQs9C40YDQsNGa0LUg0L3QsCDQvNCw
-0YHQsNC20LDRgtCwINC90LAg0LrRgNCw0LvRgdGC0LLQvtGC0L4sINGc0LUg0LLQuCDQtNCw0LTQ
-sNC8INC/0L7QstC10ZzQtSDQtNC10YLQsNC70Lgg0LfQsCDRgtC+0LAg0LrQsNC60L4g0LTQsCDQ
-v9C+0YHRgtCw0L/QuNGC0LUuDQoNCtCR0LvQsNCz0L7QtNCw0YDQsNC8DQrQky3Rk9CwINCc0LXR
-gNC40LvQuNC9INCg0L7QsdC10YDRgg==
+Hi folks,
+
+The for-next branch of the xfs-linux repository at:
+
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
+
+has just been updated.
+
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.  This is (barring rejections from the -next testers)
+what I plan to send to Linus during the second week of the merge window.
+Bug fixes are still ok, but new patches will have to wait for 5.11.
+
+This is a rather big push, so you might want to wait a few hours to see
+if Stephen Rothwell notices anything weird in the -next branch that I
+didn't catch.
+
+(This means that Pavel's mrlock removal, Chandan's extent count overflow
+detection, and the second half of Kaixu Xia's quota cleanups will be
+first in the review queue for 5.11...)
+
+The new head of the for-next branch is commit:
+
+e5b23740db9b xfs: fix the indent in xfs_trans_mod_dquot
+
+New Commits:
+
+Brian Foster (1):
+      [6dd379c7fa81] xfs: drop extra transaction roll from inode extent truncate
+
+Carlos Maiolino (6):
+      [771915c4f688] xfs: remove kmem_realloc()
+      [8ca79df85b7f] xfs: Remove kmem_zalloc_large()
+      [6337c84466c2] xfs: remove typedef xfs_attr_sf_entry_t
+      [47e6cc100054] xfs: Remove typedef xfs_attr_shortform_t
+      [c418dbc9805d] xfs: Use variable-size array for nameval in xfs_attr_sf_entry
+      [e01b7eed5d0a] xfs: Convert xfs_attr_sf macros to inline functions
+
+Chandan Babu R (2):
+      [72cc95132a93] xfs: Set xfs_buf type flag when growing summary/bitmap files
+      [c54e14d155f5] xfs: Set xfs_buf's b_ops member when zeroing bitmap/summary files
+
+Christoph Hellwig (15):
+      [12e164aa1f9d] xfs: refactor the buf ioend disposition code
+      [76b2d3234611] xfs: mark xfs_buf_ioend static
+      [23fb5a93c21f] xfs: refactor xfs_buf_ioend
+      [664ffb8a429a] xfs: move the buffer retry logic to xfs_buf.c
+      [6a7584b1d82b] xfs: fold xfs_buf_ioend_finish into xfs_ioend
+      [f58d0ea95611] xfs: refactor xfs_buf_ioerror_fail_without_retry
+      [3cc498845a0c] xfs: remove xfs_buf_ioerror_retry
+      [844c9358dfda] xfs: lift the XBF_IOEND_FAIL handling into xfs_buf_ioend_disposition
+      [70796c6b74c2] xfs: simplify the xfs_buf_ioend_disposition calling convention
+      [b840e2ada8af] xfs: use xfs_buf_item_relse in xfs_buf_item_done
+      [55b7d7115fcd] xfs: clear the read/write flags later in xfs_buf_ioend
+      [22c10589a10b] xfs: remove xlog_recover_iodone
+      [cead0b10f557] xfs: simplify xfs_trans_getsb
+      [b3f8e08ca815] xfs: remove xfs_getsb
+      [26e328759b9b] xfs: reuse _xfs_buf_read for re-reading the superblock
+
+Darrick J. Wong (42):
+      [2a39946c9844] xfs: store inode btree block counts in AGI header
+      [1ac35f061af0] xfs: use the finobt block counts to speed up mount times
+      [1dbbff029f93] xfs: support inode btree blockcounts in online scrub
+      [11f744234f05] xfs: support inode btree blockcounts in online repair
+      [b896a39faa5a] xfs: enable new inode btree counters feature
+      [876fdc7c4f36] xfs: explicitly define inode timestamp range
+      [11d8a9190275] xfs: refactor quota expiration timer modification
+      [ccc8e771aa7a] xfs: refactor default quota grace period setting code
+      [9f99c8fe551a] xfs: refactor quota timestamp coding
+      [88947ea0ba71] xfs: move xfs_log_dinode_to_disk to the log recovery code
+      [5a0bb066f60f] xfs: redefine xfs_timestamp_t
+      [30e05599219f] xfs: redefine xfs_ictimestamp_t
+      [f93e5436f0ee] xfs: widen ondisk inode timestamps to deal with y2038+
+      [4ea1ff3b4968] xfs: widen ondisk quota expiration timestamps to handle y2038+
+      [06dbf82b044c] xfs: trace timestamp limits
+      [29887a227131] xfs: enable big timestamps
+      [5ffce3cc22a0] xfs: force the log after remapping a synchronous-writes file
+      [2a6ca4baed62] xfs: make sure the rt allocator doesn't run off the end
+      [fe341eb151ec] xfs: ensure that fpunch, fcollapse, and finsert operations are aligned to rt extent size
+      [8a569d717ed0] xfs: refactor inode flags propagation code
+      [d4f2c14cc979] xfs: don't propagate RTINHERIT -> REALTIME when there is no rtdev
+      [b96cb835e37c] xfs: deprecate the V4 format
+      [8df0fa39bdd8] xfs: don't free rt blocks when we're doing a REMAP bunmapi call
+      [e581c9397a25] xfs: check dabtree node hash values when loading child blocks
+      [93293bcbde93] xfs: log new intent items created as part of finishing recovered intent items
+      [2dbf872c042e] xfs: attach inode to dquot in xfs_bui_item_recover
+      [384ff09ba2e5] xfs: don't release log intent items when recovery fails
+      [d7884e6e90da] xfs: avoid shared rmap operations for attr fork extents
+      [b80b29d602a8] xfs: remove xfs_defer_reset
+      [901219bb2507] xfs: remove XFS_LI_RECOVERED
+      [e6fff81e4870] xfs: proper replay of deferred ops queued during log recovery
+      [4f9a60c48078] xfs: xfs_defer_capture should absorb remaining block reservations
+      [929b92f64048] xfs: xfs_defer_capture should absorb remaining transaction reservation
+      [919522e89f8e] xfs: clean up bmap intent item recovery checking
+      [64a3f3315bc6] xfs: clean up xfs_bui_item_recover iget/trans_alloc/ilock ordering
+      [ff4ab5e02a04] xfs: fix an incore inode UAF in xfs_bui_recover
+      [27dada070d59] xfs: change the order in which child and parent defer ops are finished
+      [4e919af7827a] xfs: periodically relog deferred intent items
+      [ed1575daf71e] xfs: expose the log push threshold
+      [74f4d6a1e065] xfs: only relog deferred intent items if free space in the log gets low
+      [acd1ac3aa22f] xfs: limit entries returned when counting fsmap records
+      [8ffa90e1145c] xfs: fix deadlock and streamline xfs_getfsmap performance
+
+Dave Chinner (2):
+      [718ecc50359e] xfs: xfs_iflock is no longer a completion
+      [671459676ab0] xfs: fix finobt btree block recovery ordering
+
+Gao Xiang (3):
+      [f692d09e9c8f] xfs: avoid LR buffer overrun due to crafted h_len
+      [0c771b99d6c9] xfs: clean up calculation of LR header blocks
+      [b38e07401ec7] xfs: drop the obsolete comment on filestream locking
+
+Kaixu Xia (11):
+      [c63290e300c4] xfs: remove the unused SYNCHRONIZE macro
+      [9c0fce4c16fc] xfs: use the existing type definition for di_projid
+      [5aff6750d56d] xfs: remove the unnecessary xfs_dqid_t type cast
+      [a647d109e08a] xfs: fix some comments
+      [3feb4ffbf693] xfs: remove the redundant crc feature check in xfs_attr3_rmt_verify
+      [74af4c1770f9] xfs: remove the unused parameter id from xfs_qm_dqattach_one
+      [d6b8fc6c7afa] xfs: do the assert for all the log done items in xfs_trans_cancel
+      [61ef5230518a] xfs: code cleanup in xfs_attr_leaf_entsize_{remote,local}
+      [c9c626b354dc] xfs: directly call xfs_generic_create() for ->create() and ->mkdir()
+      [97611f936674] xfs: do the ASSERT for the arguments O_{u,g,p}dqpp
+      [e5b23740db9b] xfs: fix the indent in xfs_trans_mod_dquot
+
+Pavel Reichl (2):
+      [c23c393eaab5] xfs: remove deprecated mount options
+      [3442de9cc322] xfs: remove deprecated sysctl options
+
+Zheng Bin (1):
+      [0f4ec0f15746] xfs: Remove unneeded semicolon
+
+
+Code Diffstat:
+
+ Documentation/admin-guide/xfs.rst |  32 ++++-
+ fs/xfs/Kconfig                    |  24 ++++
+ fs/xfs/kmem.c                     |  22 ---
+ fs/xfs/kmem.h                     |   7 -
+ fs/xfs/libxfs/xfs_ag.c            |   5 +
+ fs/xfs/libxfs/xfs_attr.c          |  14 +-
+ fs/xfs/libxfs/xfs_attr_leaf.c     |  43 +++---
+ fs/xfs/libxfs/xfs_attr_remote.c   |   2 -
+ fs/xfs/libxfs/xfs_attr_sf.h       |  29 ++--
+ fs/xfs/libxfs/xfs_bmap.c          |  19 ++-
+ fs/xfs/libxfs/xfs_da_format.h     |  24 ++--
+ fs/xfs/libxfs/xfs_defer.c         | 232 ++++++++++++++++++++++++++++---
+ fs/xfs/libxfs/xfs_defer.h         |  37 +++++
+ fs/xfs/libxfs/xfs_dquot_buf.c     |  35 +++++
+ fs/xfs/libxfs/xfs_format.h        | 211 +++++++++++++++++++++++++++-
+ fs/xfs/libxfs/xfs_fs.h            |   1 +
+ fs/xfs/libxfs/xfs_ialloc.c        |   5 +
+ fs/xfs/libxfs/xfs_ialloc_btree.c  |  65 ++++++++-
+ fs/xfs/libxfs/xfs_iext_tree.c     |   2 +-
+ fs/xfs/libxfs/xfs_inode_buf.c     | 130 +++++++++---------
+ fs/xfs/libxfs/xfs_inode_buf.h     |  17 ++-
+ fs/xfs/libxfs/xfs_inode_fork.c    |   8 +-
+ fs/xfs/libxfs/xfs_log_format.h    |   7 +-
+ fs/xfs/libxfs/xfs_log_recover.h   |   1 -
+ fs/xfs/libxfs/xfs_quota_defs.h    |   8 +-
+ fs/xfs/libxfs/xfs_rmap.c          |  27 ++--
+ fs/xfs/libxfs/xfs_sb.c            |   6 +-
+ fs/xfs/libxfs/xfs_shared.h        |   3 +
+ fs/xfs/libxfs/xfs_trans_inode.c   |  17 ++-
+ fs/xfs/scrub/agheader.c           |  30 ++++
+ fs/xfs/scrub/agheader_repair.c    |  24 ++++
+ fs/xfs/scrub/dabtree.c            |  14 ++
+ fs/xfs/scrub/inode.c              |  31 +++--
+ fs/xfs/scrub/symlink.c            |   2 +-
+ fs/xfs/xfs_acl.c                  |   2 +-
+ fs/xfs/xfs_attr_list.c            |   6 +-
+ fs/xfs/xfs_bmap_item.c            | 136 +++++++++---------
+ fs/xfs/xfs_bmap_util.c            |  16 +++
+ fs/xfs/xfs_buf.c                  | 208 +++++++++++++++++++++++-----
+ fs/xfs/xfs_buf.h                  |  17 +--
+ fs/xfs/xfs_buf_item.c             | 264 ++---------------------------------
+ fs/xfs/xfs_buf_item.h             |  12 ++
+ fs/xfs/xfs_buf_item_recover.c     |   4 +-
+ fs/xfs/xfs_dquot.c                |  70 ++++++++--
+ fs/xfs/xfs_dquot.h                |   3 +
+ fs/xfs/xfs_extfree_item.c         |  44 ++++--
+ fs/xfs/xfs_file.c                 |  17 ++-
+ fs/xfs/xfs_filestream.c           |  34 +----
+ fs/xfs/xfs_fsmap.c                |  48 ++++---
+ fs/xfs/xfs_fsmap.h                |   6 +-
+ fs/xfs/xfs_icache.c               |  19 ++-
+ fs/xfs/xfs_inode.c                | 206 ++++++++++++++--------------
+ fs/xfs/xfs_inode.h                |  38 +-----
+ fs/xfs/xfs_inode_item.c           |  61 ++++++---
+ fs/xfs/xfs_inode_item.h           |   5 +-
+ fs/xfs/xfs_inode_item_recover.c   |  76 +++++++++++
+ fs/xfs/xfs_ioctl.c                | 153 ++++++++++++++-------
+ fs/xfs/xfs_iops.c                 |   4 +-
+ fs/xfs/xfs_linux.h                |   1 -
+ fs/xfs/xfs_log.c                  |  44 ++++--
+ fs/xfs/xfs_log.h                  |   2 +
+ fs/xfs/xfs_log_recover.c          | 281 +++++++++++++++++---------------------
+ fs/xfs/xfs_mount.c                |  32 ++---
+ fs/xfs/xfs_mount.h                |   1 -
+ fs/xfs/xfs_ondisk.h               |  38 ++++--
+ fs/xfs/xfs_qm.c                   |  29 +++-
+ fs/xfs/xfs_qm.h                   |   4 +
+ fs/xfs/xfs_qm_syscalls.c          |  18 ++-
+ fs/xfs/xfs_quota.h                |   8 --
+ fs/xfs/xfs_refcount_item.c        |  51 ++++---
+ fs/xfs/xfs_rmap_item.c            |  42 ++++--
+ fs/xfs/xfs_rtalloc.c              |  22 ++-
+ fs/xfs/xfs_stats.c                |   4 +
+ fs/xfs/xfs_stats.h                |   1 +
+ fs/xfs/xfs_super.c                |  72 +++++++---
+ fs/xfs/xfs_sysctl.c               |  36 ++++-
+ fs/xfs/xfs_trace.h                |  30 +++-
+ fs/xfs/xfs_trans.c                |   4 +-
+ fs/xfs/xfs_trans.h                |  35 ++++-
+ fs/xfs/xfs_trans_buf.c            |  46 ++-----
+ fs/xfs/xfs_trans_dquot.c          |  49 +++----
+ 81 files changed, 2187 insertions(+), 1246 deletions(-)
