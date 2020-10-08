@@ -2,205 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E543E286D71
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 06:00:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EEE3286D84
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 06:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726055AbgJHEAG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Oct 2020 00:00:06 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57510 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725858AbgJHEAG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 00:00:06 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0983q173022276;
-        Thu, 8 Oct 2020 04:00:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Axgp1WhcYaon0Tasz6siQqvnIgVaKo4ughqpt5Nd3J8=;
- b=X0/vo7LvTX8WZrb550OiWAXx3bfblvxDZOgpG88yyDq+VOdEZORZ/8boaHQNjk3uq0W0
- 1AMfU6kp4U/CxiNSjPcnLfkFo0RESe+8CaOmuzmpwSiZf46IhfzZchyp1AAQh6+5wCqL
- 8nJcz9cEamCgTPXd0NQpTqo4ZvQhSpGNcRNitN6WCJ+ezuf1TtyJgxHyVVorGhCEEnuj
- aVQC5B8r2lFGK9G39zPsyaw0Xh0BCAZB+xOyNBIX39GtU/+yZGlsdiBLLeLQLLwpXUJX
- hVkN5VlC7GaiPpu5DKz5aYnX2KyENBLLFpcX1cao8zKA2zzM0cfypkziJViHiLZv52fK gQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 33ym34tejs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 08 Oct 2020 04:00:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0983isZ4142445;
-        Thu, 8 Oct 2020 04:00:00 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 3410k0fjjr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Oct 2020 04:00:00 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0983xwWa024235;
-        Thu, 8 Oct 2020 03:59:58 GMT
-Received: from localhost (/10.159.134.247)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Oct 2020 20:59:58 -0700
-Date:   Wed, 7 Oct 2020 20:59:57 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     linux-xfs@vger.kernel.org, chandanrlinux@gmail.com,
-        sandeen@redhat.com
-Cc:     fstests <fstests@vger.kernel.org>
-Subject: [RFC PATCH 3/2] xfstest: test running growfs on the realtime volume
-Message-ID: <20201008035957.GJ6540@magnolia>
-References: <160212936001.248573.7813264584242634489.stgit@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160212936001.248573.7813264584242634489.stgit@magnolia>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
- adultscore=0 bulkscore=0 malwarescore=0 suspectscore=1 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010080030
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 priorityscore=1501
- mlxscore=0 mlxlogscore=999 clxscore=1015 bulkscore=0 spamscore=0
- malwarescore=0 phishscore=0 suspectscore=1 adultscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2010080030
+        id S1726105AbgJHETS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Oct 2020 00:19:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47042 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728218AbgJHETS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 00:19:18 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33E4C061755
+        for <linux-xfs@vger.kernel.org>; Wed,  7 Oct 2020 21:19:16 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id n9so3146966pgf.9
+        for <linux-xfs@vger.kernel.org>; Wed, 07 Oct 2020 21:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=wriYpJ3ItD5ofKWlPRmsrVlPXsP3g5EKwvP1tyIx0gQ=;
+        b=USNNLDeixe2znCO7tsupYh+3H6U+gvjPuxXX1NnaOC1djBau9oZYWa5KawlhqLOuqy
+         3tN5E8qr6wolFL+wJafN2qAi8b/sgtosPo/DxW2875Uk5311YOlNQ2k4B35fxhlrgRCB
+         Ybz0gJieS9gNm8beXHuw4HsTl83cTmW4uMJ25UJL+s833227AVmt8GtZYX31/VMxHFhA
+         k7j9lRiDZrG0qE7JbPENtO0M+ERhAyK4dHyjWHNYC+QQAdUUnpB9znlHNRF54pIsB3RG
+         m8zwABZeC7zpPWXqjFVb4VNbLTCdb6hYyGMq3Tr0cV0Pl/wuMB7sFZEKX/GqbW6DcgL7
+         twqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=wriYpJ3ItD5ofKWlPRmsrVlPXsP3g5EKwvP1tyIx0gQ=;
+        b=dw1MkVFWcctFNCe8NQf+UV6lqAwX3KAs7e9GO7GUTl9IfOpiW6H02k1Ah/TSSaK9TE
+         1tv9fHVd7lSKcN/97FgG72qcD3WuNLYWf39TeiLYODcKV5CAp0l+HKzAXlZxt7iRpDWo
+         CnV6mnhMdgKpwEZXwgikZFwXNf37l/D4zlsLEsoApI3q3yE3KdIcIVuHSOtjDZdjqKqj
+         TsEPbqRTSezCDlWCFRkLxQmoFJVWSr3SWuUW3dXKP/85PAFR2ns6o33NDVTZUCJPaTE2
+         N2nDFJ8rrs0UhzLrY4SV6ul90pzb+Ns+iF72+ViaVFCBeRHwUVoT7PIbXNXR/0gDHL9F
+         vD8g==
+X-Gm-Message-State: AOAM531KGG5XrD5UJlFbpSfIlbYw48taj1sVQfEmIxnFV8mGbzZOckD1
+        OBqBpF9rQUnl8qHxFaKDHiBrWcQQPn6s
+X-Google-Smtp-Source: ABdhPJwiqCeDDrJXVD8Job1aEs20dvdOZbFlfXYlYK9c80RSTg1XfH3CWD08/TcOCG/nopbrNS7WTg==
+X-Received: by 2002:a65:584a:: with SMTP id s10mr5651807pgr.89.1602130756046;
+        Wed, 07 Oct 2020 21:19:16 -0700 (PDT)
+Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
+        by smtp.gmail.com with ESMTPSA id q8sm5299970pff.18.2020.10.07.21.19.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 07 Oct 2020 21:19:14 -0700 (PDT)
+From:   xiakaixu1987@gmail.com
+X-Google-Original-From: kaixuxia@tencent.com
+To:     linux-xfs@vger.kernel.org
+Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
+Subject: [PATCH v4 0/3] xfs: random fixes for disk quota
+Date:   Thu,  8 Oct 2020 12:19:06 +0800
+Message-Id: <1602130749-23093-1-git-send-email-kaixuxia@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Kaixu Xia <kaixuxia@tencent.com>
 
-Make sure that we can run growfs to expand the realtime volume without
-it blowing up.  This is a regression test for the following patches:
+Hi all,
 
-xfs: Set xfs_buf type flag when growing summary/bitmap files
-xfs: Set xfs_buf's b_ops member when zeroing bitmap/summary files
-xfs: fix realtime bitmap/summary file truncation when growing rt volume
-xfs: make xfs_growfs_rt update secondary superblocks
+This patchset include random fixes and code cleanups for disk quota.
+In order to make it easier to track, I bundle them up and put all
+the scattered patches into a single patchset.
 
-Because the xfs maintainer realized that no, we have no tests for this
-particular piece of functionality.
+Changes for v4:
+ -delete duplicated tp->t_dqinfo null check and allocation in one
+  patch.
+ -drop the first two patches that have been applied.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- tests/xfs/916     |   81 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/916.out |   10 +++++++
- tests/xfs/group   |    1 +
- 3 files changed, 92 insertions(+)
- create mode 100755 tests/xfs/916
- create mode 100644 tests/xfs/916.out
+Changes for v3:
+ -add a separate patch to delete duplicated tp->t_dqinfo null check
+  and allocation.
 
-diff --git a/tests/xfs/916 b/tests/xfs/916
-new file mode 100755
-index 00000000..c2484376
---- /dev/null
-+++ b/tests/xfs/916
-@@ -0,0 +1,81 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 916
-+#
-+# Tests xfs_growfs on the realtime volume to make sure none of it blows up.
-+# This is a regression test for the following patches:
-+#
-+# xfs: Set xfs_buf type flag when growing summary/bitmap files
-+# xfs: Set xfs_buf's b_ops member when zeroing bitmap/summary files
-+# xfs: fix realtime bitmap/summary file truncation when growing rt volume
-+# xfs: make xfs_growfs_rt update secondary superblocks
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	_scratch_unmount >> $seqres.full 2>&1
-+	test -e "$rtdev" && losetup -d $rtdev >> $seqres.full 2>&1
-+	rm -f $tmp.* $TEST_DIR/$seq.rtvol
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_fs xfs
-+# Note that we don't _require_realtime because we synthesize a rt volume
-+# below.
-+_require_scratch_nocheck
-+_require_no_large_scratch_dev
-+
-+echo "Create fake rt volume"
-+truncate -s 400m $TEST_DIR/$seq.rtvol
-+rtdev=$(_create_loop_device $TEST_DIR/$seq.rtvol)
-+
-+echo "Format and mount 100m rt volume"
-+export USE_EXTERNAL=yes
-+export SCRATCH_RTDEV=$rtdev
-+_scratch_mkfs -r size=100m > $seqres.full
-+_scratch_mount || _notrun "Could not mount scratch with synthetic rt volume"
-+
-+testdir=$SCRATCH_MNT/test-$seq
-+mkdir $testdir
-+
-+echo "Check rt volume stats"
-+$XFS_IO_PROG -c 'chattr +t' $testdir
-+$XFS_INFO_PROG $SCRATCH_MNT >> $seqres.full
-+before=$(stat -f -c '%b' $testdir)
-+
-+echo "Create some files"
-+_pwrite_byte 0x61 0 1m $testdir/original >> $seqres.full
-+
-+echo "Grow fs"
-+$XFS_GROWFS_PROG $SCRATCH_MNT 2>&1 |  _filter_growfs >> $seqres.full
-+_scratch_cycle_mount
-+
-+echo "Recheck 400m rt volume stats"
-+$XFS_INFO_PROG $SCRATCH_MNT >> $seqres.full
-+after=$(stat -f -c '%b' $testdir)
-+_within_tolerance "rt volume size" $after $((before * 4)) 5% -v
-+
-+echo "Create more copies to make sure the bitmap really works"
-+cp -p $testdir/original $testdir/copy3
-+
-+echo "Check filesystem"
-+_check_xfs_filesystem $SCRATCH_DEV none $rtdev
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/916.out b/tests/xfs/916.out
-new file mode 100644
-index 00000000..55f2356a
---- /dev/null
-+++ b/tests/xfs/916.out
-@@ -0,0 +1,10 @@
-+QA output created by 916
-+Create fake rt volume
-+Format and mount 100m rt volume
-+Check rt volume stats
-+Create some files
-+Grow fs
-+Recheck 400m rt volume stats
-+rt volume size is in range
-+Create more copies to make sure the bitmap really works
-+Check filesystem
-diff --git a/tests/xfs/group b/tests/xfs/group
-index ef375397..4e58b5cc 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -549,6 +549,7 @@
- 910 auto quick inobtcount
- 911 auto quick bigtime
- 915 auto quick quota
-+916 auto quick realtime growfs
- 1202 auto quick swapext
- 1208 auto quick swapext
- 1500 dangerous_fuzzers dangerous_bothrepair
+Changes for v2: 
+ -add the ASSERT for the arguments O_{u,g,p}dqpp.
+ -fix the strange indent.
+ -remove the XFS_TRANS_DQ_DIRTY flag.
+ -add more commit log description for delta judgement.
+
+Kaixu Xia (3):
+  xfs: delete duplicated tp->t_dqinfo null check and allocation
+  xfs: check tp->t_dqinfo value instead of the XFS_TRANS_DQ_DIRTY flag
+  xfs: directly return if the delta equal to zero
+
+ fs/xfs/libxfs/xfs_shared.h |  1 -
+ fs/xfs/xfs_inode.c         |  8 +-------
+ fs/xfs/xfs_trans_dquot.c   | 32 ++++++++------------------------
+ 3 files changed, 9 insertions(+), 32 deletions(-)
+
+-- 
+2.20.0
+
