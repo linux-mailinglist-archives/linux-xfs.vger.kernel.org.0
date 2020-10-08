@@ -2,99 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5D728769C
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 17:02:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C346E2876A9
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 17:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbgJHPCM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Oct 2020 11:02:12 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:43642 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730819AbgJHPCL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 11:02:11 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 098F0PvF158351;
-        Thu, 8 Oct 2020 15:02:07 GMT
+        id S1730697AbgJHPET (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Oct 2020 11:04:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42394 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730685AbgJHPET (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 11:04:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 098ExnVp184583;
+        Thu, 8 Oct 2020 15:04:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=zYz/IYI0cqvBP2pah01wmT4u4QZZ5ATNufVbpZBOMzo=;
- b=wYa1U9wRR3PmKMvETmBz95G187N9Lw55KnMU9pWEKQxBnzayKEWDQEINBXF9DvSLefMa
- iPNcZQmtMrWEXfeeermY5qh8LfKnvN59v/4KCqF9jjzEXSQiRsODb5z56FPe8SDpj0bl
- JgSKKYqgCblDfQD/v02OXF+yvOtYvJQFvanSX4p8o8O40z1zYEyJx3Bja3vDRx9E5L6a
- WsVM/D3tWrxTw/GIhPggGK6xuLh/ScDZl7J5kzJjOQ65YMcUR6ARMnQHvIfCw4EEBUIK
- 7Q+sqGN6M/XBvhITO2CAo3i6VUNEiyz67mf8MjgGWRov33k6gg8d9naKFx13N11fFiXY HQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 33xetb8ce2-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=lYYy72dMYtyAC9+oC+yYYAvL0nf5a0gxergGOr8uvcE=;
+ b=vCq35kykJU28wXyqM4L5EvoGfTNAcLKNb4WkTvg17eJ6thWrLaO0hdnH6Lok1sVk+ERp
+ H8ScjVvBtOGHYFnFluhAdajiQMe+ill9Td+GVKponXhkVRAES/zizXKPmONh7iTDg6UW
+ szr6g9AkMpJbHAShAaPHIfNWc5eYsPIGAhFWdUoH6prq7Y0ehl9rMYJII7x2n+aTVbxu
+ m4X5b+o1CxhStguQ67/C1y6EDMRZqhqv+9/3YnM+937xmzAuXZMP++Ql1+97EXoDy7b/
+ OGspEFPyOk/qyfXfT3q5YNlEFl0OmPkDYqFuGUxUE8ubo60l31JsRYXb2Xaw1GNzvt2j lA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33xhxn850t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 08 Oct 2020 15:02:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 098F1GIB017170;
-        Thu, 8 Oct 2020 15:02:06 GMT
+        Thu, 08 Oct 2020 15:04:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 098F0w8x054247;
+        Thu, 8 Oct 2020 15:02:13 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 341xnbt3e4-1
+        by aserp3020.oracle.com with ESMTP id 3410k1923q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Oct 2020 15:02:06 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 098F25Io022350;
-        Thu, 8 Oct 2020 15:02:05 GMT
+        Thu, 08 Oct 2020 15:02:12 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 098F2Bjs022380;
+        Thu, 8 Oct 2020 15:02:11 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 08 Oct 2020 08:02:04 -0700
-Subject: [PATCH v2 0/3] xfs: a couple of realtime growfs fixes
+        with ESMTP ; Thu, 08 Oct 2020 08:02:11 -0700
+Subject: [PATCH 1/3] xfs: fix realtime bitmap/summary file truncation when
+ growing rt volume
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, chandanrlinux@gmail.com,
         sandeen@redhat.com
-Date:   Thu, 08 Oct 2020 08:02:04 -0700
-Message-ID: <160216932411.313389.9231180037053830573.stgit@magnolia>
+Date:   Thu, 08 Oct 2020 08:02:10 -0700
+Message-ID: <160216933049.313389.12083508204520272104.stgit@magnolia>
+In-Reply-To: <160216932411.313389.9231180037053830573.stgit@magnolia>
+References: <160216932411.313389.9231180037053830573.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9768 signatures=668681
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=921 spamscore=0
- malwarescore=0 adultscore=0 mlxscore=0 phishscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2010080115
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 mlxlogscore=940 phishscore=0
- impostorscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 suspectscore=1 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2010080115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9768 signatures=668681
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=1 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2010080115
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-While I was taking a closer look at Chandan's earlier fixes for the
-realtime growfs code, I realized that fstests doesn't actually have a
-test case for growing a realtime volume.  I wrote one for testing rmap
-expansions on the data device and kludged it to work for realtime, and
-watched the kernel trip over a ton of assertions and fail xfs_scrub.
+The realtime bitmap and summary files are regular files that are hidden
+away from the directory tree.  Since they're regular files, inode
+inactivation will try to purge what it thinks are speculative
+preallocations beyond the incore size of the file.  Unfortunately,
+xfs_growfs_rt forgets to update the incore size when it resizes the
+inodes, with the result that inactivating the rt inodes at unmount time
+will cause their contents to be truncated.
 
-The two patches in this series fix the two problems that I found.  The
-first is that inode inactivation will truncate the new bitmap blocks if
-we don't set the VFS inode size; and the second is that we don't update
-the secondary superblocks with the new rt geometry.
+Fix this by updating the incore size when we change the ondisk size as
+part of updating the superblock.  Note that we don't do this when we're
+allocating blocks to the rt inodes because we actually want those blocks
+to get purged if the growfs fails.
 
-I'll cough up a test case after this patch.
+This fixes corruption complaints from the online rtsummary checker when
+running xfs/233.  Since that test requires rmap, one can also trigger
+this by growing an rt volume, cycling the mount, and creating rt files.
 
-v2: fix some review comments, add a locking annotation fix
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=rt-growfs-fixes-5.10
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/xfs_rtalloc.c |   24 +++++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_rtalloc.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 9d4e33d70d2a..1c3969807fb9 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1027,10 +1027,13 @@ xfs_growfs_rt(
+ 		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL);
+ 		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
+ 		/*
+-		 * Update the bitmap inode's size.
++		 * Update the bitmap inode's size ondisk and incore.  We need
++		 * to update the incore size so that inode inactivation won't
++		 * punch what it thinks are "posteof" blocks.
+ 		 */
+ 		mp->m_rbmip->i_d.di_size =
+ 			nsbp->sb_rbmblocks * nsbp->sb_blocksize;
++		i_size_write(VFS_I(mp->m_rbmip), mp->m_rbmip->i_d.di_size);
+ 		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
+ 		/*
+ 		 * Get the summary inode into the transaction.
+@@ -1038,9 +1041,12 @@ xfs_growfs_rt(
+ 		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL);
+ 		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
+ 		/*
+-		 * Update the summary inode's size.
++		 * Update the summary inode's size.  We need to update the
++		 * incore size so that inode inactivation won't punch what it
++		 * thinks are "posteof" blocks.
+ 		 */
+ 		mp->m_rsumip->i_d.di_size = nmp->m_rsumsize;
++		i_size_write(VFS_I(mp->m_rsumip), mp->m_rsumip->i_d.di_size);
+ 		xfs_trans_log_inode(tp, mp->m_rsumip, XFS_ILOG_CORE);
+ 		/*
+ 		 * Copy summary data from old to new sizes.
 
