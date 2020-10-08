@@ -2,107 +2,191 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 181B1287560
+	by mail.lfdr.de (Postfix) with ESMTP id F1931287562
 	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 15:46:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbgJHNqM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Oct 2020 09:46:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:33412 "EHLO
+        id S1730361AbgJHNqO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Oct 2020 09:46:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21653 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730361AbgJHNqM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 09:46:12 -0400
+        by vger.kernel.org with ESMTP id S1730387AbgJHNqN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 09:46:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602164771;
+        s=mimecast20190719; t=1602164772;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+oz8yC6XAkSZi5rPXraOFXHTFfDgzi0mPy32WS2Lzss=;
-        b=UG0+u4JF5g5+8fVm6ZcNOMgYxhFuCO2tuuXVx86KL3Ov3GGaToNc8QjASBaTuGjAt/ULRT
-        6I9r/GKG17qL6jWCCVAemDFxwlsR6WeVE/i7bRSWxqwK2BggbzC4bgFR3BsS4G3Q08Ydxo
-        9q5DSFWlLTIKqToSftyufUFzIqRUhnk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-344-0WOgmKZTMXWB3hWvFG0Zfw-1; Thu, 08 Oct 2020 09:46:09 -0400
-X-MC-Unique: 0WOgmKZTMXWB3hWvFG0Zfw-1
-Received: by mail-wr1-f70.google.com with SMTP id l15so3918875wro.10
-        for <linux-xfs@vger.kernel.org>; Thu, 08 Oct 2020 06:46:09 -0700 (PDT)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cFGfkrRBjPPb/whN2KYzusQD8yRyWLH03wTWdOhqzfw=;
+        b=UtQB3/V6sIMI3oMQNkAM46S06qsffegaFi9qzolLkv8IyTyvXL7AQwVm+BiHO7YZAI4QRM
+        i+8kXUpYkYBP8/AgItV1D/Mu5/05JUPepvJCTlFxn4j1zx7gOwSFKNsszTnbs3fjH4m/Qb
+        OCaJaddlaLRDtLByuW0wNkwoHYZRdfA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-NXkh1bRLNYOqNgXXtPfeMA-1; Thu, 08 Oct 2020 09:46:10 -0400
+X-MC-Unique: NXkh1bRLNYOqNgXXtPfeMA-1
+Received: by mail-wr1-f72.google.com with SMTP id n14so424999wrp.1
+        for <linux-xfs@vger.kernel.org>; Thu, 08 Oct 2020 06:46:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+oz8yC6XAkSZi5rPXraOFXHTFfDgzi0mPy32WS2Lzss=;
-        b=mmrciXdRpg6k+qIhro0KEo6G4WsRgNbTyeCr6N1fS6499SoXIHr0kGkBXS01ZR/06G
-         0vbvdm7/f6PgWVCKPN1liUdO/3/Y+0a1KkFG8X3v6oF0wRJVBdd7LlsdiNPILSBzAyDV
-         Xz6vQ6YSQRAbSqU86AFY068IndO1dE6xKOy/W+xz4YvFBFmjegs4b9IWPyFeb8R1gFYh
-         LEicebkTP8I7d54xF+2aqhpM0Zf/cTkWy159r3ovV41L3834/3ikwEvVPJt2Nxl4qO8l
-         I6Hqk55Gq42l2ykRS6bRJQ9OCzfProFcvvNKALgUMQkQDihnEFtS2m+yZpGiQDaGWIWf
-         BF7g==
-X-Gm-Message-State: AOAM5318+2Fs+uRu7HNUS7OoVrfT0UjfJoEZ6US70ukYfQLzK/HWPf1A
-        UiLAZWrEQ/xXYaOncNyHE/vADF6e6yAnSYYCcCV07BT+EHgRGjGsmExsmiqPLblxG0wmmWtyqR5
-        HCGvemybUYhBmN3ykoI47
-X-Received: by 2002:adf:f50d:: with SMTP id q13mr9218135wro.215.1602164767865;
-        Thu, 08 Oct 2020 06:46:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwYC5ksA5k26lTH5KHfd7rcbOvZqqky8AFAr3NqSDgFxzTC8WGlUW0j7jhNSUn3JZhjzqNu4Q==
-X-Received: by 2002:adf:f50d:: with SMTP id q13mr9218122wro.215.1602164767687;
-        Thu, 08 Oct 2020 06:46:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cFGfkrRBjPPb/whN2KYzusQD8yRyWLH03wTWdOhqzfw=;
+        b=P2B0SkE/ABAMjuwJ8VchvF69/i/RHbAjPm2RbYcH6zdSdh1rgjklGVKfLZyozeLy7W
+         VUsF/50tooXhSkxZGw/WztS+sCdAg+eGy6VhWFKoGsgwP9dtHow6fwr33SWUjP8cyjv+
+         CR47zTvXrG54Va89M0o64ElkW15uFCqh4VE5uJUW4KmkkEiwyk37uG7/DuqtY4tdt2zh
+         9TjXibJXKyajsN0nD4wTKamX/Ba4+/h2UsHTfD1pb+xdEmAz0SRNK1l2aQxuhCJ6RDho
+         tQMdq6JJ44pJRi/fhx3SrXBtn4V9OAOvq06jKCROx0UbRo8KJ5vhcsfM9AArjsXqTYYg
+         BSNA==
+X-Gm-Message-State: AOAM532q2kNPO5CsFhXLKH2sJ3ErcFGc98yIBhlSVv7DUOrbCPW+evPk
+        T4vj5mWMpsEYAb6EG5DdsfGHkhdXR0Nu3DfFbSBeXhdP/w2hL9FIOdpC8/w1bySYniVmSvXX/p0
+        NEmOpSHkwMG1sxHofxsv/
+X-Received: by 2002:adf:f548:: with SMTP id j8mr9837182wrp.114.1602164768791;
+        Thu, 08 Oct 2020 06:46:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxu6oWpj6AvVHJzubXqt/JtR/aErHpzjPLnKn9aQIbGQeHQjhsQNmKtGFEKMulF3/cDmX/kKg==
+X-Received: by 2002:adf:f548:: with SMTP id j8mr9837166wrp.114.1602164768590;
+        Thu, 08 Oct 2020 06:46:08 -0700 (PDT)
 Received: from localhost.localdomain.com ([84.19.91.81])
-        by smtp.gmail.com with ESMTPSA id s19sm7069465wmc.41.2020.10.08.06.46.06
+        by smtp.gmail.com with ESMTPSA id s19sm7069465wmc.41.2020.10.08.06.46.07
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 08 Oct 2020 06:46:07 -0700 (PDT)
 From:   Pavel Reichl <preichl@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v10 0/4] xfs: Remove wrappers for some semaphores
-Date:   Thu,  8 Oct 2020 15:46:01 +0200
-Message-Id: <20201008134605.863269-1-preichl@redhat.com>
+Subject: [PATCH v10 1/4] xfs: Refactor xfs_isilocked()
+Date:   Thu,  8 Oct 2020 15:46:02 +0200
+Message-Id: <20201008134605.863269-2-preichl@redhat.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20201008134605.863269-1-preichl@redhat.com>
+References: <20201008134605.863269-1-preichl@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Remove some wrappers that we have in XFS around the read-write semaphore
-locks.
+Refactor xfs_isilocked() to use newly introduced __xfs_rwsem_islocked().
+__xfs_rwsem_islocked() is a helper function which encapsulates checking
+state of rw_semaphores hold by inode.
 
-The goal of this cleanup is to remove mrlock_t structure and its mr*()
-wrapper functions and replace it with native rw_semaphore type and its
-native calls.
+Signed-off-by: Pavel Reichl <preichl@redhat.com>
+Suggested-by: Dave Chinner <dchinner@redhat.com>
+Suggested-by: Eric Sandeen <sandeen@redhat.com>
+Suggested-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ fs/xfs/xfs_inode.c | 48 ++++++++++++++++++++++++++++++++++++++--------
+ fs/xfs/xfs_inode.h | 21 +++++++++++++-------
+ 2 files changed, 54 insertions(+), 15 deletions(-)
 
-Changes in version 8:
-* Patchset was rebased so it applies cleanly.
-* The patch 'xfs: replace mrlock_t with rw_semaphores' contains change in
-xfs_btree.c which transfers ownership of lock so lockdep won't assert
-(This was reported by Darrick and proposed change fixes this issue).
-
-Changes in version 9:
-*Fixed white space in patch 'xfs: Refactor xfs_isilocked()'
-*Updated code comments as suggested by djwong (thanks!) in patch: 'xfs: replace mrlock_t with rw_semaphores'
-
-Changes in version 10:
-* Fixed use-after-free in 'xfs: replace mrlock_t with rw_semaphores' (thanks Darrick)
-* Moved part of refactor of xfs_isilocked() from patch 'xfs: Refactor xfs_isilocked()' to patch 'xfs: replace mrlock_t with rw_semaphores' - to fix compilation error
-* Typo in comment in 'xfs: replace mrlock_t with rw_semaphores'
-
-Pavel Reichl (4):
-  xfs: Refactor xfs_isilocked()
-  xfs: clean up whitespace in xfs_isilocked() calls
-  xfs: xfs_isilocked() can only check a single lock type
-  xfs: replace mrlock_t with rw_semaphores
-
- fs/xfs/libxfs/xfs_bmap.c  |   8 +--
- fs/xfs/libxfs/xfs_btree.c |  24 +++++++++
- fs/xfs/mrlock.h           |  78 -----------------------------
- fs/xfs/xfs_file.c         |   3 +-
- fs/xfs/xfs_inode.c        | 102 +++++++++++++++++++++++++-------------
- fs/xfs/xfs_inode.h        |  25 ++++++----
- fs/xfs/xfs_iops.c         |   4 +-
- fs/xfs/xfs_linux.h        |   2 +-
- fs/xfs/xfs_qm.c           |   2 +-
- fs/xfs/xfs_super.c        |   6 +--
- 10 files changed, 121 insertions(+), 133 deletions(-)
- delete mode 100644 fs/xfs/mrlock.h
-
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index c06129cffba9..7c1ceb4df4ec 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -345,9 +345,43 @@ xfs_ilock_demote(
+ }
+ 
+ #if defined(DEBUG) || defined(XFS_WARN)
+-int
++static inline bool
++__xfs_rwsem_islocked(
++	struct rw_semaphore	*rwsem,
++	int			lock_flags)
++{
++	int			arg;
++
++	if (!debug_locks)
++		return rwsem_is_locked(rwsem);
++
++	if (lock_flags & (1 << XFS_SHARED_LOCK_SHIFT)) {
++		/*
++		 * The caller could be asking if we have (shared | excl)
++		 * access to the lock. Ask lockdep if the rwsem is
++		 * locked either for read or write access.
++		 *
++		 * The caller could also be asking if we have only
++		 * shared access to the lock. Holding a rwsem
++		 * write-locked implies read access as well, so the
++		 * request to lockdep is the same for this case.
++		 */
++		arg = -1;
++	} else {
++		/*
++		 * The caller is asking if we have only exclusive access
++		 * to the lock. Ask lockdep if the rwsem is locked for
++		 * write access.
++		 */
++		arg = 0;
++	}
++
++	return lockdep_is_held_type(rwsem, arg);
++}
++
++bool
+ xfs_isilocked(
+-	xfs_inode_t		*ip,
++	struct xfs_inode	*ip,
+ 	uint			lock_flags)
+ {
+ 	if (lock_flags & (XFS_ILOCK_EXCL|XFS_ILOCK_SHARED)) {
+@@ -362,15 +396,13 @@ xfs_isilocked(
+ 		return rwsem_is_locked(&ip->i_mmaplock.mr_lock);
+ 	}
+ 
+-	if (lock_flags & (XFS_IOLOCK_EXCL|XFS_IOLOCK_SHARED)) {
+-		if (!(lock_flags & XFS_IOLOCK_SHARED))
+-			return !debug_locks ||
+-				lockdep_is_held_type(&VFS_I(ip)->i_rwsem, 0);
+-		return rwsem_is_locked(&VFS_I(ip)->i_rwsem);
++	if (lock_flags & (XFS_IOLOCK_EXCL | XFS_IOLOCK_SHARED)) {
++		return __xfs_rwsem_islocked(&VFS_I(ip)->i_rwsem,
++				(lock_flags >> XFS_IOLOCK_FLAG_SHIFT));
+ 	}
+ 
+ 	ASSERT(0);
+-	return 0;
++	return false;
+ }
+ #endif
+ 
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index e9a8bb184d1f..77d5655191ab 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -268,12 +268,19 @@ static inline void xfs_ifunlock(struct xfs_inode *ip)
+  * Bit ranges:	1<<1  - 1<<16-1 -- iolock/ilock modes (bitfield)
+  *		1<<16 - 1<<32-1 -- lockdep annotation (integers)
+  */
+-#define	XFS_IOLOCK_EXCL		(1<<0)
+-#define	XFS_IOLOCK_SHARED	(1<<1)
+-#define	XFS_ILOCK_EXCL		(1<<2)
+-#define	XFS_ILOCK_SHARED	(1<<3)
+-#define	XFS_MMAPLOCK_EXCL	(1<<4)
+-#define	XFS_MMAPLOCK_SHARED	(1<<5)
++
++#define XFS_IOLOCK_FLAG_SHIFT	0
++#define XFS_ILOCK_FLAG_SHIFT	2
++#define XFS_MMAPLOCK_FLAG_SHIFT	4
++
++#define XFS_SHARED_LOCK_SHIFT	1
++
++#define XFS_IOLOCK_EXCL		(1 << (XFS_IOLOCK_FLAG_SHIFT))
++#define XFS_IOLOCK_SHARED	(XFS_IOLOCK_EXCL << (XFS_SHARED_LOCK_SHIFT))
++#define XFS_ILOCK_EXCL		(1 << (XFS_ILOCK_FLAG_SHIFT))
++#define XFS_ILOCK_SHARED	(XFS_ILOCK_EXCL << (XFS_SHARED_LOCK_SHIFT))
++#define XFS_MMAPLOCK_EXCL	(1 << (XFS_MMAPLOCK_FLAG_SHIFT))
++#define XFS_MMAPLOCK_SHARED	(XFS_MMAPLOCK_EXCL << (XFS_SHARED_LOCK_SHIFT))
+ 
+ #define XFS_LOCK_MASK		(XFS_IOLOCK_EXCL | XFS_IOLOCK_SHARED \
+ 				| XFS_ILOCK_EXCL | XFS_ILOCK_SHARED \
+@@ -412,7 +419,7 @@ void		xfs_ilock(xfs_inode_t *, uint);
+ int		xfs_ilock_nowait(xfs_inode_t *, uint);
+ void		xfs_iunlock(xfs_inode_t *, uint);
+ void		xfs_ilock_demote(xfs_inode_t *, uint);
+-int		xfs_isilocked(xfs_inode_t *, uint);
++bool		xfs_isilocked(xfs_inode_t *, uint);
+ uint		xfs_ilock_data_map_shared(struct xfs_inode *);
+ uint		xfs_ilock_attr_map_shared(struct xfs_inode *);
+ 
 -- 
 2.26.2
 
