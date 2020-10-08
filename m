@@ -2,116 +2,136 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7435286D86
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 06:19:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 971E9286F82
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 09:32:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgJHETU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Oct 2020 00:19:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47056 "EHLO
+        id S1727314AbgJHHce (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Oct 2020 03:32:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728218AbgJHETU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 00:19:20 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EF3C061755
-        for <linux-xfs@vger.kernel.org>; Wed,  7 Oct 2020 21:19:20 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id f19so2892670pfj.11
-        for <linux-xfs@vger.kernel.org>; Wed, 07 Oct 2020 21:19:20 -0700 (PDT)
+        with ESMTP id S1727140AbgJHHce (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 03:32:34 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4D0C061755
+        for <linux-xfs@vger.kernel.org>; Thu,  8 Oct 2020 00:32:33 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id o25so3558858pgm.0
+        for <linux-xfs@vger.kernel.org>; Thu, 08 Oct 2020 00:32:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=K6vf635eyYh36W4Zwz3bmb8gkQHJR7yqYDWmDSEmgBo=;
-        b=pwk3bko1dg3LI5L6R461RCw1QBIeD5SzeWk+UjA2YhqEyf9ITHC+cslP0Fu4IEr1kD
-         NYThf6lODD8+az6sZXfQNutjI+Dbm9MzzmjKrp/tNPhNO07RuQjRG0V1GrYbpuQ+Clay
-         8rJ611lKUurqHj1KHX0WEGTpvWsASHp+6ZqlixaI/qyYxKIxBUkVZKoB8ifOOtf0/jmY
-         SsLOfJp/xMdxzrqJf8xkZl98lNew89Jf0DNGL42Xbb+LvMXp9N3/TDBA8v9fl0MwuUqd
-         c3xzg6Uav/1jUIgJGDcvTlDwgajFPr36nOhnpKdzYpHdFFkX0+XqpNXnuckW1ZAF4BrN
-         CPlg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wT5ORfG3QXb9tTvt1D+dXHs8k6f9zLSjtV+mEONTRys=;
+        b=dZtTy5PSeQhxnLzfcBK7P20E5SuH/vd6NzE3h+p6DLqfOh/gIO/4zA5bIiT7F4eCUS
+         aT9JB3Kc+ZTSlYif18M0W3Zb109yq0S/VFu01ukRojKJSzIhlRYXliuzW/YoHUcVEVkX
+         a3JvhZ7hX+BI4lW5gb6p2nvBEVaYV3I4DAbLW2wYaD00vCWad2QcZJ6verK26M1S22A0
+         NJvjtw0XjOwn8GxJN28e/cLSlhDzRqJ7zUyklttAivFBcTrWZFojw6+0Qgu8/Od2K5Ix
+         7AXOB2k0RjrbmcTn3NJrrPZ5z+jS943CVDeelQk1qKl+woCsvz8eVFXceZtskKDZNlNA
+         K1lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=K6vf635eyYh36W4Zwz3bmb8gkQHJR7yqYDWmDSEmgBo=;
-        b=HOrJY3yyZPKN0W7xW4Ki1lfIx4dqKHy9JOS/CTE3b9+sWF0IF9zZBzN406HDz4Dj7e
-         6pHO25F8/bDrALr01WmrYdQ8yYRqp4L0g1EkE9O2qVnhYKr1EbK8e/KoDThDQLzU5yDQ
-         1pCXZ+2OVMEZX74HS0IJodltv3c7BHvSRGeXokSN0FnQo0RhRNrJJm1NLtXGDwEBgmGL
-         07Hy4FRdcvIE4/zn3W/uFaPKYJv8wkALI1hQWRaCGq7AVV4vtCsNM6K9u51MdrXkIF66
-         xscTglUmmvbHhOH2dZs2n2Zo6buCZ4c91lUb2z4/bo5xWuQIsqpt8H2xBdN2OIic7lkD
-         epeg==
-X-Gm-Message-State: AOAM532gVzyILQEB1L30zAT/rtGeAbgOS1+EsnFuC8OTK6goWdCbKLuf
-        8Dp4Lz00cfXnKaWmITCdlxrL9ZVZOjes
-X-Google-Smtp-Source: ABdhPJyIk1BUJvCYwljxbhnVPWGz4GXFT3zaq4Dwge4BGNEiz0GZP7d7bWbkifuz8iGH4SF8MdJ4PA==
-X-Received: by 2002:a17:90b:950:: with SMTP id dw16mr5784312pjb.200.1602130759590;
-        Wed, 07 Oct 2020 21:19:19 -0700 (PDT)
-Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id q8sm5299970pff.18.2020.10.07.21.19.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 07 Oct 2020 21:19:18 -0700 (PDT)
-From:   xiakaixu1987@gmail.com
-X-Google-Original-From: kaixuxia@tencent.com
-To:     linux-xfs@vger.kernel.org
-Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH v4 3/3] xfs: directly return if the delta equal to zero
-Date:   Thu,  8 Oct 2020 12:19:09 +0800
-Message-Id: <1602130749-23093-4-git-send-email-kaixuxia@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1602130749-23093-1-git-send-email-kaixuxia@tencent.com>
-References: <1602130749-23093-1-git-send-email-kaixuxia@tencent.com>
+         :references:mime-version:content-transfer-encoding;
+        bh=wT5ORfG3QXb9tTvt1D+dXHs8k6f9zLSjtV+mEONTRys=;
+        b=q+9IxDGFnROXKbOhE6wrfMfY9jMP5O9eX0r6+MU8b+I9qHV/MavHpbSLmbzQzx+ijj
+         uYEAf01riV8e+6heLIC5hYhP0eHTpJMEzJZWUB1csXJf1ViV9iGgi5NTwGkQUlfjTVlU
+         wMi0tiC5WDV33K2Mtyh8VBUrw5ZTiXVapta6wVhBQYp+uMTLP3u83tzUgUrvWguDR6SJ
+         AGamv02sGRJdj77cgmruWGuIZIKrKojItHa88O9Ev1dyMkWEW5rfXVbnE/7UrASgYFTa
+         6Jr4ak7Jp33KbOODaCyhNRiQSdNBQw6hk6KmqR7K3l20I7PLOM4ZGgXPO0ylm9GEn1PT
+         WETw==
+X-Gm-Message-State: AOAM532dyidcuSFz5x9HkxoYJiXGYjghWatmmV10jN0KhVqFjYTG3fS7
+        KvuOUqH1ooYkWZnbNTJkjkxQJg3e26rAEw==
+X-Google-Smtp-Source: ABdhPJzRh060VDI/4xBkXXTiahMWhm2l+eqlKZhhoo32Bv2uq1O/RzcQLphD4TwRnKrEhFysx4h66w==
+X-Received: by 2002:a65:5cc5:: with SMTP id b5mr6389292pgt.417.1602142352661;
+        Thu, 08 Oct 2020 00:32:32 -0700 (PDT)
+Received: from garuda.localnet ([122.171.164.182])
+        by smtp.gmail.com with ESMTPSA id y5sm361241pgo.5.2020.10.08.00.32.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Oct 2020 00:32:32 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, sandeen@redhat.com
+Subject: Re: [PATCH 1/2] xfs: fix realtime bitmap/summary file truncation when growing rt volume
+Date:   Thu, 08 Oct 2020 12:26:00 +0530
+Message-ID: <2066566.8zdsQT0tCQ@garuda>
+In-Reply-To: <160212936619.248573.5638028611780993013.stgit@magnolia>
+References: <160212936001.248573.7813264584242634489.stgit@magnolia> <160212936619.248573.5638028611780993013.stgit@magnolia>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Kaixu Xia <kaixuxia@tencent.com>
+On Thursday 8 October 2020 9:26:06 AM IST Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> The realtime bitmap and summary files are regular files that are hidden
+> away from the directory tree.  Since they're regular files, inode
+> inactivation will try to purge what it thinks are speculative
+> preallocations beyond the incore size of the file.  Unfortunately,
+> xfs_growfs_rt forgets to update the incore size when it resizes the
+> inodes, with the result that inactivating the rt inodes at unmount time
+> will cause their contents to be truncated.
+> 
+> Fix this by updating the incore size when we change the ondisk size as
+> part of updating the superblock.  Note that we don't do this when we're
+> allocating blocks to the rt inodes because we actually want those blocks
+> to get purged if the growfs fails.
+> 
+> This fixes corruption complaints from the online rtsummary checker when
+> running xfs/233.  Since that test requires rmap, one can also trigger
+> this by growing an rt volume, cycling the mount, and creating rt files.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  fs/xfs/xfs_rtalloc.c |   10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+>
 
-The xfs_trans_mod_dquot() function will allocate new tp->t_dqinfo if it is
-NULL and make the changes in the tp->t_dqinfo->dqs[XFS_QM_TRANS_{USR,GRP,PRJ}].
-Nowadays seems none of the callers want to join the dquots to the
-transaction and push them to device when the delta is zero. Actually,
-most of time the caller would check the delta and go on only when the
-delta value is not zero, so we should bail out when it is zero.
+Looks good to me.
 
-Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/xfs_trans_dquot.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 0ebfd7930382..3e37501791bf 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -194,6 +194,9 @@ xfs_trans_mod_dquot(
- 	ASSERT(XFS_IS_QUOTA_RUNNING(tp->t_mountp));
- 	qtrx = NULL;
- 
-+	if (!delta)
-+		return;
-+
- 	if (tp->t_dqinfo == NULL)
- 		xfs_trans_alloc_dqinfo(tp);
- 	/*
-@@ -205,10 +208,8 @@ xfs_trans_mod_dquot(
- 	if (qtrx->qt_dquot == NULL)
- 		qtrx->qt_dquot = dqp;
- 
--	if (delta) {
--		trace_xfs_trans_mod_dquot_before(qtrx);
--		trace_xfs_trans_mod_dquot(tp, dqp, field, delta);
--	}
-+	trace_xfs_trans_mod_dquot_before(qtrx);
-+	trace_xfs_trans_mod_dquot(tp, dqp, field, delta);
- 
- 	switch (field) {
- 	/* regular disk blk reservation */
-@@ -261,8 +262,7 @@ xfs_trans_mod_dquot(
- 		ASSERT(0);
- 	}
- 
--	if (delta)
--		trace_xfs_trans_mod_dquot_after(qtrx);
-+	trace_xfs_trans_mod_dquot_after(qtrx);
- }
- 
- 
+> diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+> index 9d4e33d70d2a..1c3969807fb9 100644
+> --- a/fs/xfs/xfs_rtalloc.c
+> +++ b/fs/xfs/xfs_rtalloc.c
+> @@ -1027,10 +1027,13 @@ xfs_growfs_rt(
+>  		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL);
+>  		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
+>  		/*
+> -		 * Update the bitmap inode's size.
+> +		 * Update the bitmap inode's size ondisk and incore.  We need
+> +		 * to update the incore size so that inode inactivation won't
+> +		 * punch what it thinks are "posteof" blocks.
+>  		 */
+>  		mp->m_rbmip->i_d.di_size =
+>  			nsbp->sb_rbmblocks * nsbp->sb_blocksize;
+> +		i_size_write(VFS_I(mp->m_rbmip), mp->m_rbmip->i_d.di_size);
+>  		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
+>  		/*
+>  		 * Get the summary inode into the transaction.
+> @@ -1038,9 +1041,12 @@ xfs_growfs_rt(
+>  		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL);
+>  		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
+>  		/*
+> -		 * Update the summary inode's size.
+> +		 * Update the summary inode's size.  We need to update the
+> +		 * incore size so that inode inactivation won't punch what it
+> +		 * thinks are "posteof" blocks.
+>  		 */
+>  		mp->m_rsumip->i_d.di_size = nmp->m_rsumsize;
+> +		i_size_write(VFS_I(mp->m_rsumip), mp->m_rsumip->i_d.di_size);
+>  		xfs_trans_log_inode(tp, mp->m_rsumip, XFS_ILOG_CORE);
+>  		/*
+>  		 * Copy summary data from old to new sizes.
+> 
+> 
+
+
 -- 
-2.20.0
+chandan
+
+
 
