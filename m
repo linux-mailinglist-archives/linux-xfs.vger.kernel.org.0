@@ -2,61 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23268286D6A
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 05:57:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D2DE286D72
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Oct 2020 06:00:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgJHD5i (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 7 Oct 2020 23:57:38 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:33134 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgJHD5h (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 7 Oct 2020 23:57:37 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0983mW5U124421;
-        Thu, 8 Oct 2020 03:57:35 GMT
+        id S1726109AbgJHEAm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Oct 2020 00:00:42 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:32994 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgJHEAm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Oct 2020 00:00:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0983nuhh143425;
+        Thu, 8 Oct 2020 04:00:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=LXHt+FcQzkEMEJ3ODohCrZK632uh2VWxVV7PgvxkUDY=;
- b=NXfsIe/NOhGUrgZYllLtibcglxG36rmUJ6IJuDcW/lxSR/17XbU+zprEAZTtIGbk/xyn
- Vzl/+TQ6ydlIzirseSYdmiTHql5rY1iFvyNFRiKO/uW9O0YuMRXqPp+LV3Lg4p3p35Ef
- wnE5UB1fF+tSUslXD6UxnEyseXQXqmpKEfcXqtz19Eq+igtnKpHRF/qOlZzrFlYJApnR
- xgRUXP2qqrgHqXg9rMfDcGDtp2ip2NZY4yI4yHbgqwtQrbcRyxdALiTvw3FSzKzPimjV
- iQhlIU0LnZgvJMbjSiqLYeZVGapteSKCPSgo/xBAzfyCycJGPT4miCJLNz6RWDPPdGzt og== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 33xetb5g75-1
+ bh=CaHIUi+hl/cri1p4rJsPKlqKt5XpWVzuRGi4YlY0Szw=;
+ b=KkURcHHVWW/P2dy2IrnolEu6GD3m1T+c+6m75UHiHBPDxSm41CH+NO24pxlpoXsX5Rzz
+ p6xRxrxoHDRpbj+p6nPFVCyeVpTzu6jGbxK8tBAzvqHFKTTcBh/VeXxtuOfPQj7drXxX
+ FDwPxGcoM2eu7rn39O7wqgRXj7fwOGhG7TC3ik81mMw1AAeTnZK2ZEbZfXcmInBrlj+O
+ lBXOtzfJU9y2oAtLeArRMoMczH6R31CpNfo2bOFSvgPot3QU7Q8oSSgQcVRTSKwn/Ug7
+ X+K9mHUhCKV6skEOLKJNHVEFVj2UbBL+Y0AXbnrJBL3LlBtI5vpZkQDC97pceHh+oKU/ IQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 33xhxn58sm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 08 Oct 2020 03:57:35 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0983kDnU018185;
-        Thu, 8 Oct 2020 03:57:34 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 33y380eq95-1
+        Thu, 08 Oct 2020 04:00:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0983is0J142483;
+        Thu, 8 Oct 2020 03:58:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 3410k0fheh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Oct 2020 03:57:34 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0983vX8r025676;
-        Thu, 8 Oct 2020 03:57:33 GMT
+        Thu, 08 Oct 2020 03:58:36 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0983wZ3D015641;
+        Thu, 8 Oct 2020 03:58:35 GMT
 Received: from localhost (/10.159.134.247)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 07 Oct 2020 20:57:33 -0700
-Date:   Wed, 7 Oct 2020 20:57:32 -0700
+        with ESMTP ; Wed, 07 Oct 2020 20:58:35 -0700
+Date:   Wed, 7 Oct 2020 20:58:34 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Eric Sandeen <sandeen@redhat.com>
 Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] libfrog: fix a potential null pointer dereference
-Message-ID: <20201008035732.GA6535@magnolia>
+Subject: [PATCH] libhandle: fix potential unterminated string problem
+Message-ID: <20201008035834.GB6535@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 spamscore=0
- mlxscore=0 malwarescore=0 suspectscore=1 adultscore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 suspectscore=1 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2010080030
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9767 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 mlxlogscore=999 phishscore=0
- impostorscore=0 malwarescore=0 suspectscore=1 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 bulkscore=0
+ impostorscore=0 lowpriorityscore=0 suspectscore=1 phishscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
  definitions=main-2010080030
 Precedence: bulk
@@ -65,29 +65,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Apparently, gcc 10.2 thinks that it's possible for either of the calloc
-arguments to be zero here, in which case it will return NULL with a zero
-errno.  I suppose it's possible to do that via integer overflow in the
-macro, though I find it unlikely unless someone passes in a yuuuge value.
-
-Nevertheless, just shut up the warning by hardcoding the error number
-so I can move on to nastier bugs.
+gcc 10.2 complains about the strncpy call here, since it's possible that
+the source string is so long that the fspath inside the fdhash structure
+will end up without a null terminator.  Work around strncpy braindamage
+yet again by forcing the string to be terminated properly.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libfrog/bulkstat.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Unless this is supposed to be a memcpy?  But it doesn't look like it.
+---
+ libhandle/handle.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/libfrog/bulkstat.c b/libfrog/bulkstat.c
-index c3e5c5f804e4..195f6ea053bd 100644
---- a/libfrog/bulkstat.c
-+++ b/libfrog/bulkstat.c
-@@ -428,7 +428,7 @@ xfrog_bulkstat_alloc_req(
+diff --git a/libhandle/handle.c b/libhandle/handle.c
+index eb099f43791e..5c1686b3968d 100644
+--- a/libhandle/handle.c
++++ b/libhandle/handle.c
+@@ -107,7 +107,8 @@ path_to_fshandle(
+ 		}
  
- 	breq = calloc(1, XFS_BULKSTAT_REQ_SIZE(nr));
- 	if (!breq)
--		return -errno;
-+		return -ENOMEM;
+ 		fdhp->fsfd = fd;
+-		strncpy(fdhp->fspath, fspath, sizeof(fdhp->fspath));
++		strncpy(fdhp->fspath, fspath, sizeof(fdhp->fspath) - 1);
++		fdhp->fspath[sizeof(fdhp->fspath) - 1] = 0;
+ 		memcpy(fdhp->fsh, *fshanp, FSIDSIZE);
  
- 	breq->hdr.icount = nr;
- 	breq->hdr.ino = startino;
+ 		fdhp->fnxt = fdhash_head;
