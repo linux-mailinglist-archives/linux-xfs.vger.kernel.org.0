@@ -2,197 +2,147 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E117288AFE
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 Oct 2020 16:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C547E288C78
+	for <lists+linux-xfs@lfdr.de>; Fri,  9 Oct 2020 17:21:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388906AbgJIObW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Oct 2020 10:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388879AbgJIObR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Oct 2020 10:31:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B84C0613D5;
-        Fri,  9 Oct 2020 07:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=XENkUyBYEqQdDJViwbkj3PXnyvtkG9pwyINW5T48dY0=; b=ekyZ0RqHciHT6w0FRtBIb74RNP
-        ATW28QGWmqsNnH/vLrqBZaFXuDhEx3ApS3w+jFzpx2X/taHl+6rpgUjut8ndwr5pqa+DLjv4Gx50+
-        6+70qpWiZ3+++j70k/q90ALYSczVw6/4PCbVL3Y2U2L6Y23KLl4a3w8gd03srsRFuXNg/GmrWwXYN
-        vTNgqiQtCBrX8BYOQuu/fsNDHXqjKDBLsVhD/vQ09kXf7CReTOSNh1XplEPkeYBls5zfzru3+gi4I
-        EhS0MsH/dvccHF4LZQeeilzTBaCqLN8cLE90npHEUozqFLYE3kkEPktZ4a+EFwfYQ8aTrZOR6RQUm
-        0EdAxQ2A==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kQtQN-0005wc-Vg; Fri, 09 Oct 2020 14:31:12 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, v9fs-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ecryptfs@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v2 16/16] iomap: Make readpage synchronous
-Date:   Fri,  9 Oct 2020 15:31:04 +0100
-Message-Id: <20201009143104.22673-17-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20201009143104.22673-1-willy@infradead.org>
-References: <20201009143104.22673-1-willy@infradead.org>
+        id S2389229AbgJIPVd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Oct 2020 11:21:33 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:51140 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388745AbgJIPVd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Oct 2020 11:21:33 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 099FKCvZ095901;
+        Fri, 9 Oct 2020 15:21:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=PVHKRQ3J4gMOqHuHGQGF2dTetDUrchuuMPi2MuW5MSM=;
+ b=hKkr3AoSCtiHaOmZ5FD8WuNvGUoJ9+ulJ4Au1JZI2nfLTshhzPmlOODn4cmIBMPWY2UI
+ aiIMTdCCnXu9rzdGOLMWCEeJuxLjrn+11yAVSP5E7ylSjGcOgoHlkPKCS2uhY1T0s9MC
+ FeIdqPyKfDMk1YtbSKiNo7hL9RMlktkWuNm9xMkhXgEvyGLb83m+tgt9eNQv3cqPpw61
+ +1NYLqD1c+nZ1uN72HFpglqMI9q4sdUL0kNmVxRYA3f9/YGF0IsNKBjE/2K0AMJ5AvKW
+ tSTY/q9dw+jwuf8X4lLwPy6UtwirKSVB8ilIaj1MXzWHgMjKjzuifNkExDx/ztrcALyE lg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 3429juv4s4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 09 Oct 2020 15:21:29 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 099FL3aJ181614;
+        Fri, 9 Oct 2020 15:21:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 3429kbe3pj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 09 Oct 2020 15:21:29 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 099FLSfN012159;
+        Fri, 9 Oct 2020 15:21:28 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 09 Oct 2020 08:21:28 -0700
+Date:   Fri, 9 Oct 2020 08:21:26 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     linux-xfs@vger.kernel.org, sandeen@redhat.com
+Subject: Re: [PATCH v2.2 2/3] xfs: make xfs_growfs_rt update secondary
+ superblocks
+Message-ID: <20201009152126.GS6540@magnolia>
+References: <160216932411.313389.9231180037053830573.stgit@magnolia>
+ <160216933700.313389.9746852330724569803.stgit@magnolia>
+ <20201008221905.GR6540@magnolia>
+ <2785429.vsROyPpyBe@garuda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2785429.vsROyPpyBe@garuda>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9768 signatures=668681
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=5 adultscore=0
+ phishscore=0 spamscore=0 mlxscore=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010090114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9768 signatures=668681
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ phishscore=0 bulkscore=0 suspectscore=5 lowpriorityscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010090114
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-A synchronous readpage lets us report the actual errno instead of
-ineffectively setting PageError.
+On Fri, Oct 09, 2020 at 03:21:38PM +0530, Chandan Babu R wrote:
+> On Friday 9 October 2020 3:49:05 AM IST Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > When we call growfs on the data device, we update the secondary
+> > superblocks to reflect the updated filesystem geometry.  We need to do
+> > this for growfs on the realtime volume too, because a future xfs_repair
+> > run could try to fix the filesystem using a backup superblock.
+> > 
+> > This was observed by the online superblock scrubbers while running
+> > xfs/233.  One can also trigger this by growing an rt volume, cycling the
+> > mount, and creating new rt files.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> > v2.2: don't update on error, don't fail to free memory on error
+> > ---
+> >  fs/xfs/xfs_rtalloc.c |    8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+> > index 1c3969807fb9..f9119ba3e9d0 100644
+> > --- a/fs/xfs/xfs_rtalloc.c
+> > +++ b/fs/xfs/xfs_rtalloc.c
+> > @@ -18,7 +18,7 @@
+> >  #include "xfs_trans_space.h"
+> >  #include "xfs_icache.h"
+> >  #include "xfs_rtalloc.h"
+> > -
+> > +#include "xfs_sb.h"
+> >  
+> >  /*
+> >   * Read and return the summary information for a given extent size,
+> > @@ -1102,7 +1102,13 @@ xfs_growfs_rt(
+> >  		if (error)
+> >  			break;
+> >  	}
+> > +	if (error)
+> > +		goto out_free;
+> >  
+> > +	/* Update secondary superblocks now the physical grow has completed */
+> > +	error = xfs_update_secondary_sbs(mp);
+> > +
+> > +out_free:
+> >  	/*
+> >  	 * Free the fake mp structure.
+> >  	 */
+> > 
+> 
+> How about ...
+> 
+> if (!error) {
+> 	/* Update secondary superblocks now the physical grow has completed */
+> 	error = xfs_update_secondary_sbs(mp);
+> }
+> 
+> /*
+>  * Free the fake mp structure.
+>  */
+> ...
+> ... 
+> 
+> With the above construct we can get rid of the goto label.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 74 ++++++++++++++++++++++++------------------
- 1 file changed, 42 insertions(+), 32 deletions(-)
+I'd rather not start doing that, because (a) we generally don't do that
+in xfs and (b) in a cycle or two I'm going to add more in-memory state
+changes between the secondary super update and freeing the fake mp, and
+I'd prefer to start all that by having the error case jump to out_free.
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index e60f572e1590..887bf871ca9b 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -150,9 +150,6 @@ static void iomap_set_range_uptodate(struct page *page, unsigned off,
- 	unsigned last = (off + len - 1) >> inode->i_blkbits;
- 	unsigned long flags;
- 
--	if (PageError(page))
--		return;
--
- 	if (!iop) {
- 		SetPageUptodate(page);
- 		return;
-@@ -165,42 +162,50 @@ static void iomap_set_range_uptodate(struct page *page, unsigned off,
- 	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
- }
- 
--static void
--iomap_read_page_end_io(struct bio_vec *bvec, int error)
-+static void iomap_read_page_end_io(struct bio_vec *bvec,
-+		struct completion *done, bool error)
- {
- 	struct page *page = bvec->bv_page;
- 	struct iomap_page *iop = to_iomap_page(page);
- 
--	if (unlikely(error)) {
--		ClearPageUptodate(page);
--		SetPageError(page);
--	} else {
-+	if (!error)
- 		iomap_set_range_uptodate(page, bvec->bv_offset, bvec->bv_len);
--	}
- 
--	if (!iop || atomic_sub_and_test(bvec->bv_len, &iop->read_bytes_pending))
--		unlock_page(page);
-+	if (!iop ||
-+	    atomic_sub_and_test(bvec->bv_len, &iop->read_bytes_pending)) {
-+		if (done)
-+			complete(done);
-+		else
-+			unlock_page(page);
-+	}
- }
- 
-+struct iomap_readpage_ctx {
-+	struct page		*cur_page;
-+	bool			cur_page_in_bio;
-+	blk_status_t		status;
-+	struct bio		*bio;
-+	struct readahead_control *rac;
-+	struct completion	done;
-+};
-+
- static void
- iomap_read_end_io(struct bio *bio)
- {
--	int error = blk_status_to_errno(bio->bi_status);
-+	struct iomap_readpage_ctx *ctx = bio->bi_private;
- 	struct bio_vec *bvec;
- 	struct bvec_iter_all iter_all;
- 
-+	/* Capture the first error */
-+	if (ctx && ctx->status == BLK_STS_OK)
-+		ctx->status = bio->bi_status;
-+
- 	bio_for_each_segment_all(bvec, bio, iter_all)
--		iomap_read_page_end_io(bvec, error);
-+		iomap_read_page_end_io(bvec, ctx ? &ctx->done : NULL,
-+				bio->bi_status != BLK_STS_OK);
- 	bio_put(bio);
- }
- 
--struct iomap_readpage_ctx {
--	struct page		*cur_page;
--	bool			cur_page_in_bio;
--	struct bio		*bio;
--	struct readahead_control *rac;
--};
--
- static void
- iomap_read_inline_data(struct inode *inode, struct page *page,
- 		struct iomap *iomap)
-@@ -292,6 +297,8 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		ctx->bio->bi_opf = REQ_OP_READ;
- 		if (ctx->rac)
- 			ctx->bio->bi_opf |= REQ_RAHEAD;
-+		else
-+			ctx->bio->bi_private = ctx;
- 		ctx->bio->bi_iter.bi_sector = sector;
- 		bio_set_dev(ctx->bio, iomap->bdev);
- 		ctx->bio->bi_end_io = iomap_read_end_io;
-@@ -318,15 +325,17 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
- 
- 	trace_iomap_readpage(page->mapping->host, 1);
- 
-+	ctx.status = BLK_STS_OK;
-+	init_completion(&ctx.done);
-+
- 	for (poff = 0; poff < PAGE_SIZE; poff += ret) {
- 		ret = iomap_apply(inode, page_offset(page) + poff,
- 				PAGE_SIZE - poff, 0, ops, &ctx,
- 				iomap_readpage_actor);
--		if (ret <= 0) {
--			WARN_ON_ONCE(ret == 0);
--			SetPageError(page);
-+		if (WARN_ON_ONCE(ret == 0))
-+			ret = -EIO;
-+		if (ret < 0)
- 			break;
--		}
- 	}
- 
- 	if (ctx.bio) {
-@@ -334,15 +343,16 @@ iomap_readpage(struct page *page, const struct iomap_ops *ops)
- 		WARN_ON_ONCE(!ctx.cur_page_in_bio);
- 	} else {
- 		WARN_ON_ONCE(ctx.cur_page_in_bio);
--		unlock_page(page);
-+		complete(&ctx.done);
- 	}
- 
--	/*
--	 * Just like mpage_readahead and block_read_full_page we always
--	 * return 0 and just mark the page as PageError on errors.  This
--	 * should be cleaned up all through the stack eventually.
--	 */
--	return 0;
-+	wait_for_completion(&ctx.done);
-+	if (ret >= 0)
-+		ret = blk_status_to_errno(ctx.status);
-+	if (ret == 0)
-+		return AOP_UPDATED_PAGE;
-+	unlock_page(page);
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(iomap_readpage);
- 
--- 
-2.28.0
+--D
 
+> -- 
+> chandan
+> 
+> 
+> 
