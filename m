@@ -2,105 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D144288A0B
-	for <lists+linux-xfs@lfdr.de>; Fri,  9 Oct 2020 15:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AB6E288B48
+	for <lists+linux-xfs@lfdr.de>; Fri,  9 Oct 2020 16:32:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732494AbgJINvD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Oct 2020 09:51:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43037 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732456AbgJINvD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Oct 2020 09:51:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602251462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sC9XgxigjqCfR++5uYtloEmUEB0wfUmZJyX91e953w0=;
-        b=dbn/FQcazSspY30bdMQENXahovW4dEDhRUpXfNDRVH+rNXx5C3JvJHZtv3A9D02F2yD36g
-        6ibVYmkxkF/CAhQR6kGHIalwinS5XlOPv7xfh6vcZ7cKkDJ45Wr15GGD2HnajwqGlZ22Bl
-        0hTuQkndP7KmkAY7sLJGSU18peSU+A4=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-539-J69AXmRkNjOBE8B3KcUK8w-1; Fri, 09 Oct 2020 09:50:59 -0400
-X-MC-Unique: J69AXmRkNjOBE8B3KcUK8w-1
-Received: by mail-pf1-f199.google.com with SMTP id y7so6746034pff.20
-        for <linux-xfs@vger.kernel.org>; Fri, 09 Oct 2020 06:50:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sC9XgxigjqCfR++5uYtloEmUEB0wfUmZJyX91e953w0=;
-        b=aLEnKMyMyBs0JZtdlacu9kLdy8aWuu77j3eX+QTFOqLjTS4zkQHgQUXQPAKlXtIRoo
-         XtwVY1LycSfIlfo0pRooGzFYR8Ss/J9umTzr4GIVbVEUekyC5evBtuL5dS+6ZZIelk9P
-         uyi/86gM7T2bWSROZQiQd2Ywa9zDv7YuqfxNYBlIOXCRESg31xk5X8LHU6ei3+D8OzfI
-         3NWubIukNozYJTAiGPJg85YhaVCDC4jC4F8L/1DEVDH6vS/j2oQ0BS7ETy7XPuJYIVeb
-         /e7M9Tqn55i9Dno0vBabBame4xUki/k1uFQh99rVvsY68vlIKMvfmfPzswUD53LBoaJ6
-         BdZw==
-X-Gm-Message-State: AOAM530a9JEV/o5nR9MtTAidH07h8ASUOvoas8V5NxOEyMj6FvD2UInf
-        XQFYVMOOUW7+cH650h4NfABroJQHyl998tViXfFanDwwoaKnG7snZ0M15dij2Vino6BlQb730nR
-        SUB5zG3wIy0tMmAfJRJpQ
-X-Received: by 2002:a17:90a:c90d:: with SMTP id v13mr3582316pjt.166.1602251458337;
-        Fri, 09 Oct 2020 06:50:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwrysGrt5RwBkz9mCQvt9bEHxstkQJ5NzQP1dbira0Bwyrl+S4R7HEuA08UGdMJqQFJzAAr/g==
-X-Received: by 2002:a17:90a:c90d:: with SMTP id v13mr3582289pjt.166.1602251458055;
-        Fri, 09 Oct 2020 06:50:58 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id x4sm4456047pfj.114.2020.10.09.06.50.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Oct 2020 06:50:57 -0700 (PDT)
-Date:   Fri, 9 Oct 2020 21:50:47 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Gao Xiang <hsiangkao@aol.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <david@fromorbit.com>
-Subject: Re: [PATCH v4 3/3] xfsprogs: make use of
- xfs_validate_stripe_factors()
-Message-ID: <20201009135047.GA8068@xiangao.remote.csb>
-References: <20201007140402.14295-1-hsiangkao@aol.com>
- <20201007140402.14295-4-hsiangkao@aol.com>
- <20201007223044.GI6540@magnolia>
- <20201009005847.GB10631@xiangao.remote.csb>
- <b00455fd-a017-8daf-2b15-d3062f0d6bef@redhat.com>
+        id S2389036AbgJIOcU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 9 Oct 2020 10:32:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388853AbgJIObL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Oct 2020 10:31:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8C4C0613D7;
+        Fri,  9 Oct 2020 07:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=GeyZChjU8Oj99Pp+9Mi0xQ6/HJ6pKkZb0kZT9pF9iBE=; b=Dq9QSGgeteBqpVdE+hBXk+LzdL
+        I4AVG5F9x8v0QGJ5MRwNuBqwfxHyMo/Io8eUCPuH8g6FiNs6SFWDDC/LaxdgLL9IRmO378buAs0Nd
+        /9fFuziR9D8ptZW2K48QSlR0cl+tAHJWxW9OWT6KzQpFo64yaxYXBs+NwGFwnEH1szT9X5UKIDv9a
+        I4IgyXpNyes45ny+RuOTSQ/+VIMqtrQ/O+Dt6tEE5DLIEE5Bys7Feal0RaDC9hjliaOa48W9e4I15
+        evQwTi1i6I1cP89eget5ZT673r2Hl0R5jp619lb54zyWDhXlpnWQV50yOUzipONAoMNyZ2lMu4spW
+        D5naUVtg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kQtQI-0005uQ-A9; Fri, 09 Oct 2020 14:31:06 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, v9fs-developer@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        ecryptfs@vger.kernel.org, linux-um@lists.infradead.org,
+        linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v2 00/16] Allow readpage to return a locked page
+Date:   Fri,  9 Oct 2020 15:30:48 +0100
+Message-Id: <20201009143104.22673-1-willy@infradead.org>
+X-Mailer: git-send-email 2.21.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b00455fd-a017-8daf-2b15-d3062f0d6bef@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Oct 09, 2020 at 08:02:02AM -0500, Eric Sandeen wrote:
-> On 10/8/20 7:58 PM, Gao Xiang wrote:
-> >> Unless we get rid of the weird libxfs macro thing, you're supposed to
-> >> use prefixes in userspace.
-> > I vaguely remembered Christoph sent out a patch intending to get
-> > rid of xfsprogs libxfs_ prefix months ago, so I assumed there was
-> > no need to introduce any new libxfs_ userspace API wrappers anymore.
-> 
-> He did, and it's on my (perpetual) TODO list to get that finally reviewed,
-> sorry.
-> 
-> For now we still have libxfs*
+Linus recently made the page lock more fair.  That means that the old
+pattern where we returned from ->readpage with the page unlocked and
+then attempted to re-lock it will send us to the back of the queue for
+this page's lock.
 
-Yeah, I've sent out the next version with libxfs_ prefix at
-https://lore.kernel.org/r/20201009052421.3328-4-hsiangkao@redhat.com
+A further benefit is that a synchronous readpage implementation allows
+us to return an error to someone who might actually care about it.
+There's no need to SetPageError, but I don't want to learn about how
+a dozen filesystems handle I/O errors (hint: they're all different),
+so I have not attempted to change that.  Except for iomap.
 
-Thanks for the information as well!
+Ideally all filesystems would return from ->readpage with the page
+Uptodate and Locked, but it's a bit painful to convert all the
+asynchronous readpage implementations to synchronous.  The first 14
+filesystems converted are already synchronous.  The last two patches
+convert iomap to synchronous readpage.
 
-Thanks,
-Gao Xiang
+This patchset is against iomap-for-next.  Andrew, it would make merging
+the THP patchset much easier if you could merge at least the first patch
+adding AOP_UPDATED_PAGE during the merge window which opens next week.
 
-> 
-> -Eric
-> 
-> > But yeah, will add such libxfs_ marco wrapper in the next version.
-> > 
-> > Thanks,
-> > Gao Xiang
-> > 
-> 
+Matthew Wilcox (Oracle) (16):
+  mm: Add AOP_UPDATED_PAGE return value
+  mm: Inline wait_on_page_read into its one caller
+  9p: Tell the VFS that readpage was synchronous
+  afs: Tell the VFS that readpage was synchronous
+  ceph: Tell the VFS that readpage was synchronous
+  cifs: Tell the VFS that readpage was synchronous
+  cramfs: Tell the VFS that readpage was synchronous
+  ecryptfs: Tell the VFS that readpage was synchronous
+  fuse: Tell the VFS that readpage was synchronous
+  hostfs: Tell the VFS that readpage was synchronous
+  jffs2: Tell the VFS that readpage was synchronous
+  ubifs: Tell the VFS that readpage was synchronous
+  udf: Tell the VFS that readpage was synchronous
+  vboxsf: Tell the VFS that readpage was synchronous
+  iomap: Inline iomap_iop_set_range_uptodate into its one caller
+  iomap: Make readpage synchronous
+
+ Documentation/filesystems/locking.rst |  7 +-
+ Documentation/filesystems/vfs.rst     | 21 ++++--
+ fs/9p/vfs_addr.c                      |  6 +-
+ fs/afs/file.c                         |  3 +-
+ fs/ceph/addr.c                        |  9 +--
+ fs/cifs/file.c                        |  8 ++-
+ fs/cramfs/inode.c                     |  5 +-
+ fs/ecryptfs/mmap.c                    | 11 ++--
+ fs/fuse/file.c                        |  2 +
+ fs/hostfs/hostfs_kern.c               |  2 +
+ fs/iomap/buffered-io.c                | 92 ++++++++++++++-------------
+ fs/jffs2/file.c                       |  6 +-
+ fs/ubifs/file.c                       | 16 +++--
+ fs/udf/file.c                         |  3 +-
+ fs/vboxsf/file.c                      |  2 +
+ include/linux/fs.h                    |  5 ++
+ mm/filemap.c                          | 33 +++++-----
+ 17 files changed, 135 insertions(+), 96 deletions(-)
+
+-- 
+2.28.0
 
