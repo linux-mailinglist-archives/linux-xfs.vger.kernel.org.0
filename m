@@ -2,138 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C003289DC6
-	for <lists+linux-xfs@lfdr.de>; Sat, 10 Oct 2020 05:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAF7C289E23
+	for <lists+linux-xfs@lfdr.de>; Sat, 10 Oct 2020 06:07:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgJJDKL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 9 Oct 2020 23:10:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55602 "EHLO
+        id S1726653AbgJJEG7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 10 Oct 2020 00:06:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730340AbgJJCye (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 9 Oct 2020 22:54:34 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD3AC0613D5
-        for <linux-xfs@vger.kernel.org>; Fri,  9 Oct 2020 19:54:31 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a200so8429336pfa.10
-        for <linux-xfs@vger.kernel.org>; Fri, 09 Oct 2020 19:54:31 -0700 (PDT)
+        with ESMTP id S1726047AbgJJEAf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 10 Oct 2020 00:00:35 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF2FC0613CF
+        for <linux-xfs@vger.kernel.org>; Fri,  9 Oct 2020 21:00:35 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id y14so8507436pfp.13
+        for <linux-xfs@vger.kernel.org>; Fri, 09 Oct 2020 21:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NhUIcrpfUdsQ53/FI9SQiw2l+fKsjZiF1Dyyw8MzMIk=;
-        b=pbBBEcwuvwARo4tW+WzErSiJUBKsyB4nstxPH94ZyBCs5BSoUDUl6CU6c+mj8/MWdF
-         lf0re6lFMWIVgGqnLNPSHd899hcvxVMaFw3LXXyBzvOAu3lGYE8Bb9+freJQMDoXkb0u
-         QZr25uC5xcPBY5SwpYVBCVRRbo4cJ6qV2TG4idfHKeCnT1nxgVG7l8rP5r09wt+l9sNV
-         Y+RPFj07BNoaO7DPl6ccyD2SENxw7nZyEOBgevHftifmwt1dhNmL+qrd+CxUDu+XaPza
-         tpndRtESHzfkNKFzkQN20Tug5qMp87MI9/+r7dubg2zmER5kN1W46xFtrocXE/z9Ht6M
-         gQ9w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+ZTH5rU00lTB6Ri60wl8Xkjo8tuJsg++/usZJk1lkzw=;
+        b=GzvYqqFkfZXdCY0bqaYdxNr+4/LkSQ0vEJRZsq69/LOnsebXT2akWEQCbwtUE2IV+2
+         4iSkDr3MBZL+yDih3/pdwbHK/LG5pUOYikph7n1dnCAp12U6ZHIH0ppT1QBUom8I7LoX
+         +d+ArDek+UtcJ+vkkDb27cITHa97YfYoUGo8D1lrKBIHLttakyBZ5AnzZE4JtRvnuptk
+         LP+KWTC+aVQbkdXbBnrmtX2324pZWLsyDGTXPNgaqGepoGDTaJEOcl7SpTe93DQXrPiF
+         HprNDmHhOkezSFnk3fBsrxZI9d4a1eSy8mvbCHnoSCNoj12qRb5SRi8HIGnHtdhHCGQj
+         E1Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NhUIcrpfUdsQ53/FI9SQiw2l+fKsjZiF1Dyyw8MzMIk=;
-        b=Dp5Stv10u3VEhHccqOlPnDrfWneeplgZjcWoa9Q1jguYk1R/xUGpqRdD1pIVIxVr2v
-         IGkA2I4tYBxDYwgtTnhfrm+5mIxdrZwkCBUmTKRPx/m33rUV+hrYLxzAqnEGo4e5J9QN
-         kXQXSUzylxvLrYa3lKXf+xc81RFpmyOyQmIkuYuew08s1cyeUbtzsKI+3zR+3zkvb1MQ
-         ADbvOVgRDznbToVo+XQOvu/MxlF5gtTWf9xdraQ+eDb8C0j6dN4UL2A9wfaCk6JeDfH7
-         sDQl3eYpJa7V/BXScOdZ/ekfl2ALz4maVLh7LbEWqsUz8gK2iHupucELP9tSa9W4wjoa
-         ahJg==
-X-Gm-Message-State: AOAM531zuGcQ72HvdAqkWCJWawefD5l9yRpBTZyZsptE5lZmaJF/08/P
-        9Nh772NuN8scnfy+XwCZVClPQ4WSYDbz
-X-Google-Smtp-Source: ABdhPJyaAIQik1XbC5TCOYoFV5pFlRbF0BaZZDlZYa/6jmFAMi6eMKTDfTCl6vc8IhdnAXOLxV0WXQ==
-X-Received: by 2002:a62:7952:0:b029:155:5705:ac76 with SMTP id u79-20020a6279520000b02901555705ac76mr9622390pfc.58.1602298470948;
-        Fri, 09 Oct 2020 19:54:30 -0700 (PDT)
-Received: from he-cluster.localdomain (67.216.221.250.16clouds.com. [67.216.221.250])
-        by smtp.gmail.com with ESMTPSA id kc21sm4800826pjb.36.2020.10.09.19.54.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 09 Oct 2020 19:54:30 -0700 (PDT)
-From:   xiakaixu1987@gmail.com
-X-Google-Original-From: kaixuxia@tencent.com
-To:     linux-xfs@vger.kernel.org
-Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
-Subject: [PATCH v5 3/3] xfs: directly return if the delta equal to zero
-Date:   Sat, 10 Oct 2020 10:54:21 +0800
-Message-Id: <1602298461-32576-4-git-send-email-kaixuxia@tencent.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1602298461-32576-1-git-send-email-kaixuxia@tencent.com>
-References: <1602298461-32576-1-git-send-email-kaixuxia@tencent.com>
+         :references:mime-version:content-transfer-encoding;
+        bh=+ZTH5rU00lTB6Ri60wl8Xkjo8tuJsg++/usZJk1lkzw=;
+        b=JyFzaZmKdtdinRza+8ZtyvnjbTaSWhcht3Xl/r6dKLVB0jaevy/QxGdcXGNizrUgHi
+         Ya6qO4GXI3L44jufjzH42ODSK+siRzgTVgWtl+06ctnvt3r+sGgR8qj+h06bpTo1ynTF
+         4UP+ifUEpA0/63KNWU/5O6ZcDKnB4EOY4Bgwfs7vbghc+a8HaxVn4MxeUfZOHunGQY9h
+         DVaS/ACOmTte5J6n3+6qitHlm4K/LphkncS+jYO9A7ktR2nKqaHWaB1qC4AXdur6c3L8
+         eqj3SYSeKgQ/Ahbc3QGdBSLbymwtuBNvmBHb1q+alv7Hx+e7XuMMdhpZq7lly4x3CibX
+         DnlQ==
+X-Gm-Message-State: AOAM530+3xRCHK4d7zmb02NIfH7xLmCYotNWJwN98ojRZDNKb49yZdii
+        VaiJcEd2fpgUKNEQY9w1Zw1nkPpSXuU=
+X-Google-Smtp-Source: ABdhPJzMwOpDa3hGRYvPDuwjaCY2gDkYc+llmqQgS5+LttKzMSV0Ac0SkdNP3TrMXoftd/jXaNh2LQ==
+X-Received: by 2002:a65:538e:: with SMTP id x14mr5701512pgq.136.1602302434498;
+        Fri, 09 Oct 2020 21:00:34 -0700 (PDT)
+Received: from garuda.localnet ([122.167.149.224])
+        by smtp.gmail.com with ESMTPSA id n24sm14373862pjq.14.2020.10.09.21.00.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Oct 2020 21:00:33 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, sandeen@redhat.com
+Subject: Re: [PATCH v2.2 2/3] xfs: make xfs_growfs_rt update secondary superblocks
+Date:   Sat, 10 Oct 2020 09:30:31 +0530
+Message-ID: <4017285.U2OhlY94U5@garuda>
+In-Reply-To: <20201009152126.GS6540@magnolia>
+References: <160216932411.313389.9231180037053830573.stgit@magnolia> <2785429.vsROyPpyBe@garuda> <20201009152126.GS6540@magnolia>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Kaixu Xia <kaixuxia@tencent.com>
+On Friday 9 October 2020 8:51:26 PM IST Darrick J. Wong wrote:
+> On Fri, Oct 09, 2020 at 03:21:38PM +0530, Chandan Babu R wrote:
+> > On Friday 9 October 2020 3:49:05 AM IST Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > When we call growfs on the data device, we update the secondary
+> > > superblocks to reflect the updated filesystem geometry.  We need to do
+> > > this for growfs on the realtime volume too, because a future xfs_repair
+> > > run could try to fix the filesystem using a backup superblock.
+> > > 
+> > > This was observed by the online superblock scrubbers while running
+> > > xfs/233.  One can also trigger this by growing an rt volume, cycling the
+> > > mount, and creating new rt files.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > > v2.2: don't update on error, don't fail to free memory on error
+> > > ---
+> > >  fs/xfs/xfs_rtalloc.c |    8 +++++++-
+> > >  1 file changed, 7 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+> > > index 1c3969807fb9..f9119ba3e9d0 100644
+> > > --- a/fs/xfs/xfs_rtalloc.c
+> > > +++ b/fs/xfs/xfs_rtalloc.c
+> > > @@ -18,7 +18,7 @@
+> > >  #include "xfs_trans_space.h"
+> > >  #include "xfs_icache.h"
+> > >  #include "xfs_rtalloc.h"
+> > > -
+> > > +#include "xfs_sb.h"
+> > >  
+> > >  /*
+> > >   * Read and return the summary information for a given extent size,
+> > > @@ -1102,7 +1102,13 @@ xfs_growfs_rt(
+> > >  		if (error)
+> > >  			break;
+> > >  	}
+> > > +	if (error)
+> > > +		goto out_free;
+> > >  
+> > > +	/* Update secondary superblocks now the physical grow has completed */
+> > > +	error = xfs_update_secondary_sbs(mp);
+> > > +
+> > > +out_free:
+> > >  	/*
+> > >  	 * Free the fake mp structure.
+> > >  	 */
+> > > 
+> > 
+> > How about ...
+> > 
+> > if (!error) {
+> > 	/* Update secondary superblocks now the physical grow has completed */
+> > 	error = xfs_update_secondary_sbs(mp);
+> > }
+> > 
+> > /*
+> >  * Free the fake mp structure.
+> >  */
+> > ...
+> > ... 
+> > 
+> > With the above construct we can get rid of the goto label.
+> 
+> I'd rather not start doing that, because (a) we generally don't do that
+> in xfs and (b) in a cycle or two I'm going to add more in-memory state
+> changes between the secondary super update and freeing the fake mp, and
+> I'd prefer to start all that by having the error case jump to out_free.
+>
 
-The xfs_trans_mod_dquot() function will allocate new tp->t_dqinfo if it is
-NULL and make the changes in the tp->t_dqinfo->dqs[XFS_QM_TRANS_{USR,GRP,PRJ}].
-Nowadays seems none of the callers want to join the dquots to the
-transaction and push them to device when the delta is zero. Actually,
-most of time the caller would check the delta and go on only when the
-delta value is not zero, so we should bail out when it is zero.
+Ok.
 
-Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
----
- fs/xfs/xfs_trans_dquot.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 0ebfd7930382..6e243e8b30ec 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -194,6 +194,9 @@ xfs_trans_mod_dquot(
- 	ASSERT(XFS_IS_QUOTA_RUNNING(tp->t_mountp));
- 	qtrx = NULL;
- 
-+	if (!delta)
-+		return;
-+
- 	if (tp->t_dqinfo == NULL)
- 		xfs_trans_alloc_dqinfo(tp);
- 	/*
-@@ -205,10 +208,8 @@ xfs_trans_mod_dquot(
- 	if (qtrx->qt_dquot == NULL)
- 		qtrx->qt_dquot = dqp;
- 
--	if (delta) {
--		trace_xfs_trans_mod_dquot_before(qtrx);
--		trace_xfs_trans_mod_dquot(tp, dqp, field, delta);
--	}
-+	trace_xfs_trans_mod_dquot_before(qtrx);
-+	trace_xfs_trans_mod_dquot(tp, dqp, field, delta);
- 
- 	switch (field) {
- 	/* regular disk blk reservation */
-@@ -261,8 +262,7 @@ xfs_trans_mod_dquot(
- 		ASSERT(0);
- 	}
- 
--	if (delta)
--		trace_xfs_trans_mod_dquot_after(qtrx);
-+	trace_xfs_trans_mod_dquot_after(qtrx);
- }
- 
- 
-@@ -687,14 +687,12 @@ xfs_trans_dqresv(
- 	 */
- 	if (tp) {
- 		ASSERT(flags & XFS_QMOPT_RESBLK_MASK);
--		if (nblks != 0)
--			xfs_trans_mod_dquot(tp, dqp,
--					    flags & XFS_QMOPT_RESBLK_MASK,
--					    nblks);
--		if (ninos != 0)
--			xfs_trans_mod_dquot(tp, dqp,
--					    XFS_TRANS_DQ_RES_INOS,
--					    ninos);
-+		xfs_trans_mod_dquot(tp, dqp,
-+				    flags & XFS_QMOPT_RESBLK_MASK,
-+				    nblks);
-+		xfs_trans_mod_dquot(tp, dqp,
-+				    XFS_TRANS_DQ_RES_INOS,
-+				    ninos);
- 	}
- 	ASSERT(dqp->q_blk.reserved >= dqp->q_blk.count);
- 	ASSERT(dqp->q_rtb.reserved >= dqp->q_rtb.count);
 -- 
-2.20.0
+chandan
+
+
 
