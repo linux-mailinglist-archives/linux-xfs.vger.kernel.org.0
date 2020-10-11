@@ -2,202 +2,189 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DCAA28A279
-	for <lists+linux-xfs@lfdr.de>; Sun, 11 Oct 2020 00:57:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8313928A5B4
+	for <lists+linux-xfs@lfdr.de>; Sun, 11 Oct 2020 07:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390472AbgJJW5W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 10 Oct 2020 18:57:22 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47324 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733270AbgJJUDg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 10 Oct 2020 16:03:36 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09AHp2Hb025399;
-        Sat, 10 Oct 2020 17:51:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=SYM9eV0LOzCr36j9sphzzPSWHU/CgzVsDSnxFo231Ig=;
- b=NubdKGpBkBPzORtPg6HFFiwg77uH5R2uBzvyoWyjXS5sE90A4vzsRrNifI+tuzHkZ8Vh
- GFSkxv4uamC1pOrd8m4qQyZ8GjWeGY90jAo7Vg2Qig/kMuQ+MAuDCqEIXRARM64X0E4t
- Xod/YL5wzUTvJA+lMHXLmV0weIc1kKqajd37EeJQM7PaG07rACeNoCNr8q1NN0kRVegM
- ngMbTAEw0+TYPPhzQygc6/y5W0pAMoMP4eAp6R2gOj6Q+FRKqbb1sc2DFkFKXFuKmWfW
- 0yvPQNAvSHFSDtIEDLLENGGhrRHFKrtItJ3Q/YbkcHbd/vfddYVucMJKhMnvGhQSkIdP rA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 3434wk9241-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 10 Oct 2020 17:51:02 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09AHjK4N095647;
-        Sat, 10 Oct 2020 17:51:01 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 34349jg5uu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 10 Oct 2020 17:51:01 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09AHp09w029355;
-        Sat, 10 Oct 2020 17:51:01 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 10 Oct 2020 10:51:00 -0700
-Date:   Sat, 10 Oct 2020 10:50:59 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     linux-xfs@vger.kernel.org, chandanrlinux@gmail.com, hch@lst.de
-Subject: [PATCH 4/2] xfs: test running growfs on the realtime volume
-Message-ID: <20201010175059.GC6559@magnolia>
-References: <160235126125.1384192.1096112127332769120.stgit@magnolia>
+        id S1726198AbgJKFB2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 11 Oct 2020 01:01:28 -0400
+Received: from out20-50.mail.aliyun.com ([115.124.20.50]:37425 "EHLO
+        out20-50.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbgJKFB1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 11 Oct 2020 01:01:27 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07454672|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.00752524-0.000230344-0.992244;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047187;MF=guan@eryu.me;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.Ihgkprc_1602392482;
+Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.Ihgkprc_1602392482)
+          by smtp.aliyun-inc.com(10.147.44.145);
+          Sun, 11 Oct 2020 13:01:22 +0800
+Date:   Sun, 11 Oct 2020 13:01:22 +0800
+From:   Eryu Guan <guan@eryu.me>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     fstests@vger.kernel.org, xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH V2] generic: test reflinked file corruption after short
+ COW
+Message-ID: <20201011050122.GU3853@desktop>
+References: <b63354c6-795d-78e2-4002-83c08a373171@redhat.com>
+ <72427003-febc-cc31-743d-41e25b314874@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160235126125.1384192.1096112127332769120.stgit@magnolia>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9770 signatures=668681
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010100167
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9770 signatures=668681
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxscore=0
- malwarescore=0 phishscore=0 suspectscore=1 impostorscore=0 clxscore=1015
- spamscore=0 priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010100168
+In-Reply-To: <72427003-febc-cc31-743d-41e25b314874@redhat.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Oct 08, 2020 at 04:22:13PM -0500, Eric Sandeen wrote:
+> This test essentially creates an existing COW extent which
+> covers the first 1M, and then does another IO that overlaps it,
+> but extends beyond it.  The bug was that we did not trim the
+> new IO to the end of the existing COW extent, and so the IO
+> extended past the COW blocks and corrupted the reflinked files(s).
+> 
+> The bug came and went upstream.  It was introduced by:
+> 
+> 78f0cc9d55cb "xfs: don't use delalloc extents for COW on files with extsize hints"
+> and (inadvertently) fixed as of:
+> 36adcbace24e "xfs: fill out the srcmap in iomap_begin"
+> upstream, and in the 5.4 stable tree with:
+> aee38af574a1 "xfs: trim IO to found COW extent limit"
+> 
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+> 
+> V2: Add stable tree fix commit in test description & commit log
+> 
+> diff --git a/tests/generic/612 b/tests/generic/612
+> new file mode 100755
+> index 00000000..5a765a0c
+> --- /dev/null
+> +++ b/tests/generic/612
+> @@ -0,0 +1,85 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2020 Red Hat, Inc.  All Rights Reserved.
+> +#
+> +# FS QA Test 612
+> +#
+> +# Regression test for reflink corruption present as of:
+> +# 78f0cc9d55cb "xfs: don't use delalloc extents for COW on files with extsize hints"
+> +# and (inadvertently) fixed as of:
+> +# 36adcbace24e "xfs: fill out the srcmap in iomap_begin"
+> +# upstream, and in the 5.4 stable tree with:
+> +# aee38af574a1 "xfs: trim IO to found COW extent limit"
+> +#
+> +seq=`basename $0`
+> +seqres=$RESULT_DIR/$seq
+> +echo "QA output created by $seq"
+> +
+> +here=`pwd`
+> +tmp=/tmp/$$
+> +status=1	# failure is the default!
+> +trap "_cleanup; exit \$status" 0 1 2 3 15
+> +
+> +_cleanup()
+> +{
+> +	cd /
+> +	rm -f $tmp.*
+> +}
+> +
+> +# get standard environment, filters and checks
+> +. ./common/rc
+> +. ./common/filter
+> +. ./common/reflink
+> +
+> +# remove previous $seqres.full before test
+> +rm -f $seqres.full
+> +
+> +# real QA test starts here
+> +
+> +# Modify as appropriate.
+> +_supported_fs generic
+> +_require_test
+> +_require_test_reflink
+> +
+> +DIR=$TEST_DIR/dir.$seq
+> +mkdir -p $DIR
+> +rm -f $DIR/a $DIR/b
+> +
+> +# This test essentially creates an existing COW extent which
+> +# covers the first 1M, and then does another IO that overlaps it,
+> +# but extends beyond it.  The bug was that we did not trim the
+> +# new IO to the end of the existing COW extent, and so the IO
+> +# extended past the COW blocks and corrupted the reflinked files(s).
+> +
+> +# Make all files w/ 1m hints; create original 2m file
+> +$XFS_IO_PROG -c "extsize 1048576" $DIR | _filter_xfs_io
+> +$XFS_IO_PROG -c "cowextsize 1048576" $DIR | _filter_xfs_io
 
-Make sure that we can run growfs to expand the realtime volume without
-it blowing up.  This is a regression test for the following patches:
+This only works on xfs, and prints extra message on btrfs like
 
-xfs: Set xfs_buf type flag when growing summary/bitmap files
-xfs: Set xfs_buf's b_ops member when zeroing bitmap/summary files
-xfs: fix realtime bitmap/summary file truncation when growing rt volume
-xfs: make xfs_growfs_rt update secondary superblocks
-xfs: annotate grabbing the realtime bitmap/summary locks in growfs
++foreign file active, extsize command is for XFS filesystems only                                     
++foreign file active, cowextsize command is for XFS filesystems only
 
-Because the xfs maintainer realized that no, we have no tests for this
-particular piece of functionality.
+So I discard outputs of above xfs_io commands.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- tests/xfs/916     |   82 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/916.out |   10 ++++++
- tests/xfs/group   |    1 +
- 3 files changed, 93 insertions(+)
- create mode 100755 tests/xfs/916
- create mode 100644 tests/xfs/916.out
+Thanks,
+Eryu
 
-diff --git a/tests/xfs/916 b/tests/xfs/916
-new file mode 100755
-index 00000000..cde00314
---- /dev/null
-+++ b/tests/xfs/916
-@@ -0,0 +1,82 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 916
-+#
-+# Tests xfs_growfs on the realtime volume to make sure none of it blows up.
-+# This is a regression test for the following patches:
-+#
-+# xfs: Set xfs_buf type flag when growing summary/bitmap files
-+# xfs: Set xfs_buf's b_ops member when zeroing bitmap/summary files
-+# xfs: fix realtime bitmap/summary file truncation when growing rt volume
-+# xfs: make xfs_growfs_rt update secondary superblocks
-+# xfs: annotate grabbing the realtime bitmap/summary locks in growfs
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	_scratch_unmount >> $seqres.full 2>&1
-+	test -e "$rtdev" && losetup -d $rtdev >> $seqres.full 2>&1
-+	rm -f $tmp.* $TEST_DIR/$seq.rtvol
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# real QA test starts here
-+_supported_fs xfs
-+# Note that we don't _require_realtime because we synthesize a rt volume
-+# below.
-+_require_scratch_nocheck
-+_require_no_large_scratch_dev
-+
-+echo "Create fake rt volume"
-+truncate -s 400m $TEST_DIR/$seq.rtvol
-+rtdev=$(_create_loop_device $TEST_DIR/$seq.rtvol)
-+
-+echo "Format and mount 100m rt volume"
-+export USE_EXTERNAL=yes
-+export SCRATCH_RTDEV=$rtdev
-+_scratch_mkfs -r size=100m > $seqres.full
-+_scratch_mount || _notrun "Could not mount scratch with synthetic rt volume"
-+
-+testdir=$SCRATCH_MNT/test-$seq
-+mkdir $testdir
-+
-+echo "Check rt volume stats"
-+$XFS_IO_PROG -c 'chattr +t' $testdir
-+$XFS_INFO_PROG $SCRATCH_MNT >> $seqres.full
-+before=$(stat -f -c '%b' $testdir)
-+
-+echo "Create some files"
-+_pwrite_byte 0x61 0 1m $testdir/original >> $seqres.full
-+
-+echo "Grow fs"
-+$XFS_GROWFS_PROG $SCRATCH_MNT 2>&1 |  _filter_growfs >> $seqres.full
-+_scratch_cycle_mount
-+
-+echo "Recheck 400m rt volume stats"
-+$XFS_INFO_PROG $SCRATCH_MNT >> $seqres.full
-+after=$(stat -f -c '%b' $testdir)
-+_within_tolerance "rt volume size" $after $((before * 4)) 5% -v
-+
-+echo "Create more copies to make sure the bitmap really works"
-+cp -p $testdir/original $testdir/copy3
-+
-+echo "Check filesystem"
-+_check_xfs_filesystem $SCRATCH_DEV none $rtdev
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/916.out b/tests/xfs/916.out
-new file mode 100644
-index 00000000..55f2356a
---- /dev/null
-+++ b/tests/xfs/916.out
-@@ -0,0 +1,10 @@
-+QA output created by 916
-+Create fake rt volume
-+Format and mount 100m rt volume
-+Check rt volume stats
-+Create some files
-+Grow fs
-+Recheck 400m rt volume stats
-+rt volume size is in range
-+Create more copies to make sure the bitmap really works
-+Check filesystem
-diff --git a/tests/xfs/group b/tests/xfs/group
-index c75d2b99..74a29bc0 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -528,3 +528,4 @@
- 910 auto quick inobtcount
- 911 auto quick bigtime
- 915 auto quick quota
-+916 auto quick realtime growfs
+> +
+> +echo "Create file b"
+> +$XFS_IO_PROG -f -c "pwrite -S 0x0 0 2m" -c fsync $DIR/b | _filter_xfs_io
+> +
+> +# Make a reflinked copy
+> +echo "Reflink copy from b to a"
+> +cp --reflink=always $DIR/b $DIR/a
+> +
+> +echo "Contents of b"
+> +hexdump -C $DIR/b
+> +
+> +# Cycle mount to get stuff out of cache
+> +_test_cycle_mount
+> +
+> +# Create a 1m-hinted IO at offset 0, then
+> +# do another IO that overlaps but extends past the 1m hint
+> +echo "Write to a"
+> +$XFS_IO_PROG -c "pwrite -S 0xa 0k -b 4k 4k" \
+> +       -c "pwrite -S 0xa 4k -b 1m 1m" \
+> +       $DIR/a | _filter_xfs_io
+> +
+> +$XFS_IO_PROG -c fsync $DIR/a
+> +
+> +echo "Contents of b now:"
+> +hexdump -C $DIR/b
+> +
+> +# success, all done
+> +status=0
+> +exit
+> diff --git a/tests/generic/612.out b/tests/generic/612.out
+> new file mode 100644
+> index 00000000..237a9638
+> --- /dev/null
+> +++ b/tests/generic/612.out
+> @@ -0,0 +1,18 @@
+> +QA output created by 612
+> +Create file b
+> +wrote 2097152/2097152 bytes at offset 0
+> +XXX Bytes, X ops; XX:XX:XX.X (XXX YYY/sec and XXX ops/sec)
+> +Reflink copy from b to a
+> +Contents of b
+> +00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> +*
+> +00200000
+> +Write to a
+> +wrote 4096/4096 bytes at offset 0
+> +XXX Bytes, X ops; XX:XX:XX.X (XXX YYY/sec and XXX ops/sec)
+> +wrote 1048576/1048576 bytes at offset 4096
+> +XXX Bytes, X ops; XX:XX:XX.X (XXX YYY/sec and XXX ops/sec)
+> +Contents of b now:
+> +00000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> +*
+> +00200000
+> diff --git a/tests/generic/group b/tests/generic/group
+> index 4af4b494..bc115f21 100644
+> --- a/tests/generic/group
+> +++ b/tests/generic/group
+> @@ -614,3 +614,4 @@
+>  609 auto quick rw
+>  610 auto quick prealloc zero
+>  611 auto quick attr
+> +612 auto quick clone
