@@ -2,171 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 872B528B901
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Oct 2020 15:57:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 769A428B9DE
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Oct 2020 16:04:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389387AbgJLN4x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Oct 2020 09:56:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30957 "EHLO
+        id S2390917AbgJLOEW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Oct 2020 10:04:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28084 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390066AbgJLNzv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Oct 2020 09:55:51 -0400
+        by vger.kernel.org with ESMTP id S2403773AbgJLODy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Oct 2020 10:03:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1602510949;
+        s=mimecast20190719; t=1602511433;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aGHS81cbs2sTXoTmYn48Pr8mPttYm6ZK9bri52ax/jc=;
-        b=VUaYUVfKHey0m7R2Iyc+du+5WPkim0PvDWcdvoVaIy/ULnHpZea5TIgyg80Jy+3aZkY5MH
-        CVNPfTxcUs1YnQuUjdIjPh0jR856bWbtLLqYVNx3vY3zqJ+cfz/WMz/CwZQ52pNR9bI7VK
-        jmGVthinogisaHcN3Op9KhOiDw+pq4s=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-SzlUVpICNlyo1Yt1T12_Yg-1; Mon, 12 Oct 2020 09:55:47 -0400
-X-MC-Unique: SzlUVpICNlyo1Yt1T12_Yg-1
-Received: by mail-pl1-f198.google.com with SMTP id d16so11909634pll.21
-        for <linux-xfs@vger.kernel.org>; Mon, 12 Oct 2020 06:55:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aGHS81cbs2sTXoTmYn48Pr8mPttYm6ZK9bri52ax/jc=;
-        b=kQAJEnkpl/SWHKT9J44mpbT3WDKh05tK8JcDhbq2hV1JKxCPbjVyZ4qvWvqqoiKM0i
-         dNWNNdgKdHGoN2PnFLFjbzZ3cCMUmFeHoiPUMgbAZxyKCepoH1vvtL4AMQVB7dYTh2fd
-         /w3Qg0HdC7JNh39r9mnUrHqbuhBwbyr358yl0iChbuCiottmOfOSbfF4/75tfBPUwGID
-         W//U5OT+4GrFar9EoT/fC/OVhEzT8RDIGIQBMxdHo2vGtUR/m6Ghxo+G0HjgXdJVVHFj
-         3FYTcDvAAIRPI3r04pB78rBPrZl8AKYyCCxpEEgyBM6u8EPJ7rZOMHU7AqjccegHZHsY
-         uNbw==
-X-Gm-Message-State: AOAM530JOlaJ0rwBxgCRIDfu32kHtm4KAMOu24FUnfbAdMjTU+a+PQae
-        nOf0G/dR1o/n3CyhXZKYTwvNYwckz0+Vp4LPHebyzJD9bIZ6PDoXvSUvDupUk4arXZvQQdg0i4E
-        5JNrEI9vzA2Vru5kvAlkq
-X-Received: by 2002:a05:6a00:22d5:b029:155:c72b:50ce with SMTP id f21-20020a056a0022d5b0290155c72b50cemr9196281pfj.65.1602510946834;
-        Mon, 12 Oct 2020 06:55:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw//IOyKVZO6EzhSmQadyCB0oCVZ6tXi7QX+y3CMTYR3x6l6vknoxins+qp8EpHj84wBcVJAg==
-X-Received: by 2002:a05:6a00:22d5:b029:155:c72b:50ce with SMTP id f21-20020a056a0022d5b0290155c72b50cemr9196260pfj.65.1602510946506;
-        Mon, 12 Oct 2020 06:55:46 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id a1sm24066816pjh.2.2020.10.12.06.55.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Oct 2020 06:55:45 -0700 (PDT)
-Date:   Mon, 12 Oct 2020 21:55:36 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>
-Subject: Re: [PATCH] xfs: introduce xfs_validate_stripe_factors()
-Message-ID: <20201012135536.GA614@xiangao.remote.csb>
-References: <20201009050546.32174-1-hsiangkao@redhat.com>
- <20201012130524.GD917726@bfoster>
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jtT8YVgg8rW+zJBwTtvzYMDWf/69tJh2n5OKKDjNoQw=;
+        b=eGbshoKqLnZIXHcJSuoZj00igvQlFg0MSM4bXuqFp6Wx0HLzaB5ViKVK9S+Qnqx1OeQW28
+        87Rvfy8MiruX6zZ1dplTLlvVm1BWOQQaj2pQ7S0lfVqhy7ayVl9EK+TnWl2uNxM+I7rLWc
+        9E6Jy32KjTjHB+sUDALzYyc6p/1hhqo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-KwfY8z8jMyGFvAwAMnuJbA-1; Mon, 12 Oct 2020 10:03:52 -0400
+X-MC-Unique: KwfY8z8jMyGFvAwAMnuJbA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10E7064085;
+        Mon, 12 Oct 2020 14:03:51 +0000 (UTC)
+Received: from bfoster.redhat.com (ovpn-112-249.rdu2.redhat.com [10.10.112.249])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A7A4260C07;
+        Mon, 12 Oct 2020 14:03:50 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/2] iomap: zero dirty pages over unwritten extents
+Date:   Mon, 12 Oct 2020 10:03:48 -0400
+Message-Id: <20201012140350.950064-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201012130524.GD917726@bfoster>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Brian,
+Hi all,
 
-On Mon, Oct 12, 2020 at 09:05:24AM -0400, Brian Foster wrote:
-> On Fri, Oct 09, 2020 at 01:05:46PM +0800, Gao Xiang wrote:
-> > Introduce a common helper to consolidate stripe validation process.
-> > Also make kernel code xfs_validate_sb_common() use it first.
-> > 
-> > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> > ---
+This is an alternate/iomap based variant of the XFS fix posted here:
 
-...
+https://lore.kernel.org/linux-xfs/20201007143509.669729-1-bfoster@redhat.com/
 
-> > diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-> > index 5aeafa59ed27..cb2a7aa0ad51 100644
-> > --- a/fs/xfs/libxfs/xfs_sb.c
-> > +++ b/fs/xfs/libxfs/xfs_sb.c
-> ...
-> > @@ -1233,3 +1230,49 @@ xfs_sb_get_secondary(
-> >  	*bpp = bp;
-> >  	return 0;
-> >  }
-> > +
-> > +/*
-> > + * sunit, swidth, sectorsize(optional with 0) should be all in bytes,
-> > + * so users won't be confused by values in error messages.
-> > + */
-> > +bool
-> > +xfs_validate_stripe_factors(
-> 
-> xfs_validate_stripe_geometry() perhaps?
+This addresses a post-eof stale data exposure problem that can occur
+when truncate down races with writeback of the new EOF page and the new
+EOF block happens to be unwritten. Instead of explicitly flushing the
+new EOF page in XFS, however, this variant updates iomap zero range to
+check for and zero preexisting dirty pages over unwritten extents. This
+reuses the dirty page checking that seek data/hole already implements
+for unwritten extents. Patch 1 is technically not required, but fixes an
+odd behavior I noticed when playing around with zero range. Without it,
+a zero range (with patch 2) over a large, cached (but clean), unwritten
+mapping would unnecessarily zero pages that aren't otherwise dirty. I
+don't think this is actually a problem in practice today as most large
+zero range requests are truncates over post-eof space (which shouldn't
+have page cache), but it seemed odd regardless.
 
-Thanks for the review!
+Thoughts, reviews, flames appreciated.
 
-Ok, I'm fine with the naming, since I had no better name
-about it at that time :)
+Brian
 
-> 
-> > +	struct xfs_mount	*mp,
-> > +	__s64			sunit,
-> > +	__s64			swidth,
-> > +	int			sectorsize)
-> > +{
-> > +	if (sectorsize && sunit % sectorsize) {
-> > +		xfs_notice(mp,
-> > +"stripe unit (%lld) must be a multiple of the sector size (%d)",
-> > +			   sunit, sectorsize);
-> > +		return false;
-> > +	}
-> > +
-> > +	if (sunit && !swidth) {
-> > +		xfs_notice(mp,
-> > +"invalid stripe unit (%lld) and stripe width of 0", sunit);
-> > +		return false;
-> > +	}
-> > +
-> > +	if (!sunit && swidth) {
-> > +		xfs_notice(mp,
-> > +"invalid stripe width (%lld) and stripe unit of 0", swidth);
-> > +		return false;
-> > +	}
-> 
-> Seems like these two could be combined into one check that prints
-> something like:
-> 
-> 	invalid stripe width (%lld) and stripe unit (%lld)
+Brian Foster (2):
+  iomap: use page dirty state to seek data over unwritten extents
+  iomap: zero cached pages over unwritten extents on zero range
 
-Hmm, that was in response to Darrick's previous review... see,
-https://lore.kernel.org/linux-xfs/20201007222942.GH6540@magnolia
+ fs/iomap/buffered-io.c | 39 +++++++++++++++++++++++++++++++++++++--
+ fs/iomap/seek.c        |  7 ++++---
+ include/linux/iomap.h  |  2 ++
+ 3 files changed, 43 insertions(+), 5 deletions(-)
 
-so I'd like to know further direction of this...
-
-> 
-> > +
-> > +	if (sunit > swidth) {
-> > +		xfs_notice(mp,
-> > +"stripe unit (%lld) is larger than the stripe width (%lld)", sunit, swidth);
-> > +		return false;
-> > +	}
-> > +
-> > +	if (sunit && (swidth % sunit)) {
-> > +		xfs_notice(mp,
-> > +"stripe width (%lld) must be a multiple of the stripe unit (%lld)",
-> > +			   swidth, sunit);
-> > +		return false;
-> > +	}
-> > +	return true;
-> > +}
-> > +
-> 
-> Trailing whitespace here.
-
-That is trailing newline (I personally prefer that),
-yeah, I will remove it in the next version.
-
-Thanks,
-Gao Xiang
-
-> 
-> Otherwise looks reasonable outside of those nits.
-> 
-> Brian
+-- 
+2.25.4
 
