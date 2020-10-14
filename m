@@ -2,79 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE1E628DD16
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Oct 2020 11:22:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACEF828D901
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Oct 2020 05:32:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgJNJWS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Oct 2020 05:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731148AbgJNJVw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Oct 2020 05:21:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EE4C0F26F7;
-        Tue, 13 Oct 2020 20:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=ucyxaJpq5naE3hSGBf22G2ayK5tvBlA2NbkHxseQKlE=; b=HPvt8zMzCQyt5wKS2Ww7Ob+sZW
-        E7D7PyVYARCgeOSDe8CmkA7OBFwi/FMzoqlYtKRbh/1CfzcOdjDdK7RXr3AomhCJZMmeejOGvTNv9
-        p3pKYIvE4cIRHLlZPBL6QxwI68394yopB3GtKEqoaITAe6ftDW+ZJJ1MhHF2w/AUPZzWgnytTZQdX
-        xC7H1Yw0zewTn/Xh+FG4Q23u5D6FKuhZrhjjLxs67dRwieGwRgCHco1O8HalCHuniPZGN0ifrgMas
-        KDOMUWhK8h8YGF3+OGu4+zZImILQte7C7e/SKoFD1YXLYd+Go30sw/2aikKIvkNdGfJSz5gJXrp+d
-        pCF1P8nw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kSX58-0005jc-Ry; Wed, 14 Oct 2020 03:04:02 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>, linux-mm@kvack.org
-Subject: [PATCH 14/14] xfs: Support THPs
-Date:   Wed, 14 Oct 2020 04:03:57 +0100
-Message-Id: <20201014030357.21898-15-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20201014030357.21898-1-willy@infradead.org>
-References: <20201014030357.21898-1-willy@infradead.org>
+        id S1729449AbgJNDcM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Oct 2020 23:32:12 -0400
+Received: from out20-110.mail.aliyun.com ([115.124.20.110]:47844 "EHLO
+        out20-110.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbgJNDcL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Oct 2020 23:32:11 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1063232|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0163685-0.00131857-0.982313;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047207;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.IiwWrR6_1602646328;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.IiwWrR6_1602646328)
+          by smtp.aliyun-inc.com(10.147.41.120);
+          Wed, 14 Oct 2020 11:32:09 +0800
+Date:   Wed, 14 Oct 2020 11:32:11 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     Dave Chinner <david@fromorbit.com>
+Subject: Re: dbench throughput on xfs over hardware limit(6Gb/s)
+Cc:     linux-xfs@vger.kernel.org
+In-Reply-To: <20201013230521.GB7391@dread.disaster.area>
+References: <20201013221113.F0A0.409509F4@e16-tech.com> <20201013230521.GB7391@dread.disaster.area>
+Message-Id: <20201014113211.2372.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.01 [en]
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-There is one place which assumes the size of a page; fix it.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/xfs/xfs_aops.c  | 2 +-
- fs/xfs/xfs_super.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> On Tue, Oct 13, 2020 at 10:11:13PM +0800, Wang Yugui wrote:
+> > Hi,
+> > 
+> > dbench throughput on xfs over hardware limit(6Gb/s=750MB/s).
+> > 
+> > Is this a bug or some feature of performance optimization?
+> 
+> dbench measures page cache throughput, not physical IO throughput.
+> This sort of results is expected.
 
-diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-index 55d126d4e096..20968842b2f0 100644
---- a/fs/xfs/xfs_aops.c
-+++ b/fs/xfs/xfs_aops.c
-@@ -548,7 +548,7 @@ xfs_discard_page(
- 	if (error && !XFS_FORCED_SHUTDOWN(mp))
- 		xfs_alert(mp, "page discard unable to remove delalloc mapping.");
- out_invalidate:
--	iomap_invalidatepage(page, 0, PAGE_SIZE);
-+	iomap_invalidatepage(page, 0, thp_size(page));
- }
- 
- static const struct iomap_writeback_ops xfs_writeback_ops = {
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 71ac6c1cdc36..4b6e1cfc57a8 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1840,7 +1840,7 @@ static struct file_system_type xfs_fs_type = {
- 	.init_fs_context	= xfs_init_fs_context,
- 	.parameters		= xfs_fs_parameters,
- 	.kill_sb		= kill_block_super,
--	.fs_flags		= FS_REQUIRES_DEV,
-+	.fs_flags		= FS_REQUIRES_DEV | FS_THP_SUPPORT,
- };
- MODULE_ALIAS_FS("xfs");
- 
--- 
-2.28.0
+We use 'dbench -s', so it should be physical IO.
+   -s     Use synchronous file IO on all file operations.
+
+we check 'dbench -s' with 'strace -ff -o s.log',
+we can see 'O_SYNC' in openat().
+
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2020/10/14
+
+
 
