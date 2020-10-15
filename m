@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CCD828ED92
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Oct 2020 09:22:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E6928ED98
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Oct 2020 09:22:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgJOHWJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Oct 2020 03:22:09 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:34910 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728911AbgJOHWE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Oct 2020 03:22:04 -0400
+        id S1729247AbgJOHWM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Oct 2020 03:22:12 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33398 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729073AbgJOHWL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Oct 2020 03:22:11 -0400
 Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 166D758C4D7
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 57D623AB15C
         for <linux-xfs@vger.kernel.org>; Thu, 15 Oct 2020 18:21:57 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1kSxaG-000hvS-Ji
+        id 1kSxaG-000hvV-Kc
         for linux-xfs@vger.kernel.org; Thu, 15 Oct 2020 18:21:56 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1kSxaG-006qLj-CG
+        id 1kSxaG-006qLm-D9
         for linux-xfs@vger.kernel.org; Thu, 15 Oct 2020 18:21:56 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 08/27] libxfs: add spinlock_t wrapper
-Date:   Thu, 15 Oct 2020 18:21:36 +1100
-Message-Id: <20201015072155.1631135-9-david@fromorbit.com>
+Subject: [PATCH 09/27] atomic: convert to uatomic
+Date:   Thu, 15 Oct 2020 18:21:37 +1100
+Message-Id: <20201015072155.1631135-10-david@fromorbit.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201015072155.1631135-1-david@fromorbit.com>
 References: <20201015072155.1631135-1-david@fromorbit.com>
@@ -36,187 +36,104 @@ Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
         a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
-        a=afefHYAZSVUA:10 a=20KFwNOVAAAA:8 a=Ab2Hbm8BP3q4J0kLDiQA:9
+        a=afefHYAZSVUA:10 a=20KFwNOVAAAA:8 a=9uXBr0ESAAAA:20
+        a=ypXRH1f5fNK_8avgJkMA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-These provide the kernel spinlock_t interface, but are *not*
-spinlocks. Spinlocks cannot be used by general purpose userspace
-processes due to the fact they cannot control task preemption and
-scheduling reliability. Hence these are implemented as a
-pthread_mutex_t, similar to the way the kernel RT build implements
-spinlock_t as a kernel mutex.
+Now we have liburcu, we can make use of it's atomic variable
+implementation. It is almost identical to the kernel API - it's just
+got a "uatomic" prefix. liburcu also provides all the same aomtic
+variable memory barriers as the kernel, so if we pull memory barrier
+dependent kernel code across, it will just work with the right
+barrier wrappers.
 
-Because the current libxfs spinlock "implementation" just makes
-spinlocks go away, we have to also add initialisation to spinlocks
-that libxfs uses that are missing from the userspace implementation.
+This is preparation the addition of more extensive atomic operations
+the that kernel buffer cache requires to function correctly.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- include/Makefile     |  1 +
- include/libxfs.h     |  1 +
- include/spinlock.h   | 25 +++++++++++++++++++++++++
- include/xfs_inode.h  |  1 +
- include/xfs_mount.h  |  2 ++
- include/xfs_trans.h  |  1 +
- libxfs/init.c        |  4 +++-
- libxfs/libxfs_priv.h |  4 +---
- libxfs/rdwr.c        |  2 ++
- 9 files changed, 37 insertions(+), 4 deletions(-)
- create mode 100644 include/spinlock.h
+ include/atomic.h | 60 +++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 52 insertions(+), 8 deletions(-)
 
-diff --git a/include/Makefile b/include/Makefile
-index 632b819fcded..f7c40a5ce1a1 100644
---- a/include/Makefile
-+++ b/include/Makefile
-@@ -16,6 +16,7 @@ LIBHFILES = libxfs.h \
- 	kmem.h \
- 	list.h \
- 	parent.h \
-+	spinlock.h \
- 	xfs_inode.h \
- 	xfs_log_recover.h \
- 	xfs_metadump.h \
-diff --git a/include/libxfs.h b/include/libxfs.h
-index eb2db7f9647d..caf4a5139469 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -18,6 +18,7 @@
- #include "kmem.h"
- #include "libfrog/radix-tree.h"
- #include "atomic.h"
+diff --git a/include/atomic.h b/include/atomic.h
+index 1aabecc3ae57..5860d7897ae5 100644
+--- a/include/atomic.h
++++ b/include/atomic.h
+@@ -7,18 +7,62 @@
+ #define __ATOMIC_H__
+ 
+ /*
+- * Warning: These are not really atomic at all. They are wrappers around the
+- * kernel atomic variable interface. If we do need these variables to be atomic
+- * (due to multithreading of the code that uses them) we need to add some
+- * pthreads magic here.
++ * Atomics are provided by liburcu.
++ *
++ * API and guidelines for which operations provide memory barriers is here:
++ *
++ * https://github.com/urcu/userspace-rcu/blob/master/doc/uatomic-api.md
++ *
++ * Unlike the kernel, the same interface supports 32 and 64 bit atomic integers.
+  */
++#include <urcu/uatomic.h>
 +#include "spinlock.h"
- 
- #include "xfs_types.h"
- #include "xfs_fs.h"
-diff --git a/include/spinlock.h b/include/spinlock.h
-new file mode 100644
-index 000000000000..8da2325cc8f5
---- /dev/null
-+++ b/include/spinlock.h
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019-20 RedHat, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef __LIBXFS_SPINLOCK_H__
-+#define __LIBXFS_SPINLOCK_H__
 +
-+/*
-+ * This implements kernel compatible spinlock exclusion semantics. These,
-+ * however, are not spinlocks, as spinlocks cannot be reliably implemented in
-+ * userspace without using realtime scheduling task contexts. Hence this
-+ * interface is implemented with pthread mutexes and so can block, but this is
-+ * no different to the kernel RT build which replaces spinlocks with mutexes.
-+ * Hence we know it works.
-+ */
+ typedef	int32_t	atomic_t;
+ typedef	int64_t	atomic64_t;
+ 
+-#define atomic_inc_return(x)	(++(*(x)))
+-#define atomic_dec_return(x)	(--(*(x)))
++#define atomic_read(a)		uatomic_read(a)
++#define atomic_set(a, v)	uatomic_set(a, v)
 +
-+typedef pthread_mutex_t	spinlock_t;
++#define atomic_inc_return(a)	uatomic_add_return(a, 1)
++#define atomic_dec_return(a)	uatomic_sub_return(a, 1)
 +
-+#define spin_lock_init(l)	pthread_mutex_init(l, NULL)
-+#define spin_lock(l)           pthread_mutex_lock(l)
-+#define spin_trylock(l)        (pthread_mutex_trylock(l) != EBUSY)
-+#define spin_unlock(l)         pthread_mutex_unlock(l)
++#define atomic_inc(a)		atomic_inc_return(a)
++#define atomic_dec(a)		atomic_inc_return(a)
 +
-+#endif /* __LIBXFS_SPINLOCK_H__ */
-diff --git a/include/xfs_inode.h b/include/xfs_inode.h
-index 588d8c7258f4..29086a7d5e2e 100644
---- a/include/xfs_inode.h
-+++ b/include/xfs_inode.h
-@@ -42,6 +42,7 @@ struct inode {
- 	struct timespec	i_atime;
- 	struct timespec	i_mtime;
- 	struct timespec	i_ctime;
-+	spinlock_t	i_lock;
- };
- 
- static inline uint32_t i_uid_read(struct inode *inode)
-diff --git a/include/xfs_mount.h b/include/xfs_mount.h
-index 20c8bfaf4fa8..d78c4cdc4f78 100644
---- a/include/xfs_mount.h
-+++ b/include/xfs_mount.h
-@@ -20,6 +20,7 @@ typedef struct xfs_mount {
- #define m_icount	m_sb.sb_icount
- #define m_ifree		m_sb.sb_ifree
- #define m_fdblocks	m_sb.sb_fdblocks
-+	spinlock_t		m_sb_lock;
- 
- 	/*
- 	 * Bitsets of per-fs metadata that have been checked and/or are sick.
-@@ -30,6 +31,7 @@ typedef struct xfs_mount {
- 
- 	char			*m_fsname;	/* filesystem name */
- 	int			m_bsize;	/* fs logical block size */
-+	spinlock_t		m_agirotor_lock;
- 	xfs_agnumber_t		m_agfrotor;	/* last ag where space found */
- 	xfs_agnumber_t		m_agirotor;	/* last ag dir inode alloced */
- 	xfs_agnumber_t		m_maxagi;	/* highest inode alloc group */
-diff --git a/include/xfs_trans.h b/include/xfs_trans.h
-index 1f087672a2a8..9e6eae9ff483 100644
---- a/include/xfs_trans.h
-+++ b/include/xfs_trans.h
-@@ -35,6 +35,7 @@ struct xfs_inode_log_item {
- 	unsigned int		ili_last_fields;	/* fields when flushed*/
- 	unsigned int		ili_fields;		/* fields to be logged */
- 	unsigned int		ili_fsync_fields;	/* ignored by userspace */
-+	spinlock_t		ili_lock;
- };
- 
- typedef struct xfs_buf_log_item {
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 477487e985c4..fe784940c299 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -683,7 +683,9 @@ libxfs_mount(
- 	mp->m_flags = (LIBXFS_MOUNT_32BITINODES|LIBXFS_MOUNT_32BITINOOPT);
- 	mp->m_sb = *sb;
- 	INIT_RADIX_TREE(&mp->m_perag_tree, GFP_KERNEL);
--	sbp = &(mp->m_sb);
-+	sbp = &mp->m_sb;
-+	spin_lock_init(&mp->m_sb_lock);
-+	spin_lock_init(&mp->m_agirotor_lock);
- 
- 	xfs_sb_mount_common(mp, sb);
- 
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 4cce1d680921..e134f65c5dd1 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -48,6 +48,7 @@
- #include "kmem.h"
- #include "libfrog/radix-tree.h"
- #include "atomic.h"
-+#include "spinlock.h"
- 
- #include "xfs_types.h"
- #include "xfs_arch.h"
-@@ -189,9 +190,6 @@ enum ce { CE_DEBUG, CE_CONT, CE_NOTE, CE_WARN, CE_ALERT, CE_PANIC };
- #endif
- 
- /* miscellaneous kernel routines not in user space */
--#define spin_lock_init(a)	((void) 0)
--#define spin_lock(a)		((void) 0)
--#define spin_unlock(a)		((void) 0)
- #define likely(x)		(x)
- #define unlikely(x)		(x)
- 
-diff --git a/libxfs/rdwr.c b/libxfs/rdwr.c
-index 174cbcac1250..5ab1987eb0fe 100644
---- a/libxfs/rdwr.c
-+++ b/libxfs/rdwr.c
-@@ -1062,6 +1062,8 @@ libxfs_iget(
- 
- 	ip->i_ino = ino;
- 	ip->i_mount = mp;
-+	spin_lock_init(&VFS_I(ip)->i_lock);
++#define atomic_dec_and_test(a)	(atomic_dec_return(a) == 0)
 +
- 	error = xfs_imap(mp, tp, ip->i_ino, &ip->i_imap, 0);
- 	if (error)
- 		goto out_destroy;
++#define cmpxchg(a, o, n)        uatomic_cmpxchg(a, o, n);
++
++static inline bool atomic_add_unless(atomic_t *a, int v, int u)
++{
++	int r = atomic_read(a);
++	int n, o;
++
++	do {
++		o = r;
++		if (o == u)
++			break;
++		n = o + v;
++		r = uatomic_cmpxchg(a, o, n);
++	} while (r != o);
++
++	return o != u;
++}
++
++static inline bool atomic_dec_and_lock(atomic_t *a, spinlock_t *lock)
++{
++	if (atomic_add_unless(a, -1, 1))
++		return 0;
++
++	spin_lock(lock);
++	if (atomic_dec_and_test(a))
++		return 1;
++	spin_unlock(lock);
++	return 0;
++}
+ 
+-#define atomic64_read(x)	*(x)
+-#define atomic64_set(x, v)	(*(x) = v)
++#define atomic64_read(x)	uatomic_read(x)
++#define atomic64_set(x, v)	uatomic_set(x, v)
+ 
+ #endif /* __ATOMIC_H__ */
 -- 
 2.28.0
 
