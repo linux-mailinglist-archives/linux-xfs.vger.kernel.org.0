@@ -2,141 +2,212 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 409D928ED91
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Oct 2020 09:22:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E81DC28ED97
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Oct 2020 09:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725923AbgJOHWI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Oct 2020 03:22:08 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:60709 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728949AbgJOHWE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Oct 2020 03:22:04 -0400
+        id S1729108AbgJOHWM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Oct 2020 03:22:12 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:35828 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729036AbgJOHWL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Oct 2020 03:22:11 -0400
 Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 3330E3AB090
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 47ADE58C540
         for <linux-xfs@vger.kernel.org>; Thu, 15 Oct 2020 18:21:57 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1kSxaG-000hvc-NK
+        id 1kSxaG-000hvf-OM
         for linux-xfs@vger.kernel.org; Thu, 15 Oct 2020 18:21:56 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1kSxaG-006qLs-FR
+        id 1kSxaG-006qLv-Gj
         for linux-xfs@vger.kernel.org; Thu, 15 Oct 2020 18:21:56 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 11/27] libxfs: add wrappers for kernel semaphores
-Date:   Thu, 15 Oct 2020 18:21:39 +1100
-Message-Id: <20201015072155.1631135-12-david@fromorbit.com>
+Subject: [PATCH 12/27] xfsprogs: convert use-once buffer reads to uncached IO
+Date:   Thu, 15 Oct 2020 18:21:40 +1100
+Message-Id: <20201015072155.1631135-13-david@fromorbit.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201015072155.1631135-1-david@fromorbit.com>
 References: <20201015072155.1631135-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
         a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
-        a=afefHYAZSVUA:10 a=20KFwNOVAAAA:8 a=y2uvV0bdPpqU0iTU31UA:9
+        a=afefHYAZSVUA:10 a=20KFwNOVAAAA:8 a=PHNv4jrtCEqC_9gO4-YA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Implemented vi pthread mutexes.
-
-On Linux, fast pthread mutexes don't actaully check which thread
-owns the lock on unlock, so can be used in situations where the
-unlock occurs in a different thread to the lock. This is
-non-portable behaviour, so if other platforms are supported, this
-may need to be converted to posix semaphores.
-
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- include/Makefile     |  1 +
- include/libxfs.h     |  1 +
- include/sema.h       | 35 +++++++++++++++++++++++++++++++++++
- libxfs/libxfs_priv.h |  1 +
- 4 files changed, 38 insertions(+)
- create mode 100644 include/sema.h
+ db/init.c     |  2 +-
+ libxfs/init.c | 93 ++++++++++++++++++++++++++++++---------------------
+ 2 files changed, 55 insertions(+), 40 deletions(-)
 
-diff --git a/include/Makefile b/include/Makefile
-index 98031e70fa0d..ce89d0237c19 100644
---- a/include/Makefile
-+++ b/include/Makefile
-@@ -17,6 +17,7 @@ LIBHFILES = libxfs.h \
- 	kmem.h \
- 	list.h \
- 	parent.h \
-+	sema.h \
- 	spinlock.h \
- 	xfs_inode.h \
- 	xfs_log_recover.h \
-diff --git a/include/libxfs.h b/include/libxfs.h
-index d03ec8aeaf5c..923a376bd71a 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -20,6 +20,7 @@
- #include "atomic.h"
- #include "spinlock.h"
- #include "completion.h"
-+#include "sema.h"
+diff --git a/db/init.c b/db/init.c
+index 19f0900a862b..f797df8a768b 100644
+--- a/db/init.c
++++ b/db/init.c
+@@ -153,7 +153,7 @@ init(
+ 	 */
+ 	if (sbp->sb_rootino != NULLFSINO &&
+ 	    xfs_sb_version_haslazysbcount(&mp->m_sb)) {
+-		int error = -libxfs_initialize_perag_data(mp, sbp->sb_agcount);
++		error = -libxfs_initialize_perag_data(mp, sbp->sb_agcount);
+ 		if (error) {
+ 			fprintf(stderr,
+ 	_("%s: cannot init perag data (%d). Continuing anyway.\n"),
+diff --git a/libxfs/init.c b/libxfs/init.c
+index fe784940c299..fc30f92d6fb2 100644
+--- a/libxfs/init.c
++++ b/libxfs/init.c
+@@ -419,7 +419,7 @@ done:
+  */
+ static int
+ rtmount_init(
+-	xfs_mount_t	*mp,	/* file system mount structure */
++	struct xfs_mount *mp,
+ 	int		flags)
+ {
+ 	struct xfs_buf	*bp;	/* buffer for last block of subvolume */
+@@ -473,8 +473,9 @@ rtmount_init(
+ 			(unsigned long long) mp->m_sb.sb_rblocks);
+ 		return -1;
+ 	}
+-	error = libxfs_buf_read(mp->m_rtdev, d - XFS_FSB_TO_BB(mp, 1),
+-			XFS_FSB_TO_BB(mp, 1), 0, &bp, NULL);
++	error = libxfs_buf_read_uncached(mp->m_rtdev_targp,
++					d - XFS_FSB_TO_BB(mp, 1),
++					XFS_FSB_TO_BB(mp, 1), 0, &bp, NULL);
+ 	if (error) {
+ 		fprintf(stderr, _("%s: realtime size check failed\n"),
+ 			progname);
+@@ -657,6 +658,52 @@ libxfs_buftarg_init(
+ 	mp->m_rtdev_targp = libxfs_buftarg_alloc(mp, rtdev);
+ }
  
- #include "xfs_types.h"
- #include "xfs_fs.h"
-diff --git a/include/sema.h b/include/sema.h
-new file mode 100644
-index 000000000000..bcccb156b0ea
---- /dev/null
-+++ b/include/sema.h
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Copyright (c) 2019-20 RedHat, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef __LIBXFS_SEMA_H__
-+#define __LIBXFS_SEMA_H__
-+
-+/*
-+ * This implements kernel compatible semaphore _exclusion_ semantics. It does
-+ * not implement counting semaphore behaviour.
++ * Check that the data (and log if separate) is an ok size.
 + *
-+ * This makes use of the fact that fast pthread mutexes on Linux don't check
-+ * that the unlocker is the same thread that locked the mutex, and hence can be
-+ * unlocked in a different thread safely.
-+ *
-+ * If this needs to be portable or we require counting semaphore behaviour in
-+ * libxfs code, this requires re-implementation based on posix semaphores.
++ * XXX: copied from kernel, needs to be moved to shared code
 + */
-+struct semaphore {
-+	pthread_mutex_t		lock;
-+};
++STATIC int
++xfs_check_sizes(
++        struct xfs_mount *mp)
++{
++	struct xfs_buf	*bp;
++	xfs_daddr_t	d;
++	int		error;
 +
-+#define sema_init(l, nolock)		\
-+do {					\
-+	pthread_mutex_init(&(l)->lock, NULL);	\
-+	if (!nolock)			\
-+		pthread_mutex_lock(&(l)->lock);	\
-+} while (0)
++	d = (xfs_daddr_t)XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks);
++	if (XFS_BB_TO_FSB(mp, d) != mp->m_sb.sb_dblocks) {
++		xfs_warn(mp, "filesystem size mismatch detected");
++		return -EFBIG;
++	}
++	error = libxfs_buf_read_uncached(mp->m_ddev_targp,
++					d - XFS_FSS_TO_BB(mp, 1),
++					XFS_FSS_TO_BB(mp, 1), 0, &bp, NULL);
++	if (error) {
++		xfs_warn(mp, "last sector read failed");
++		return error;
++	}
++	libxfs_buf_relse(bp);
 +
-+#define down(l)			pthread_mutex_lock(&(l)->lock)
-+#define down_trylock(l)		pthread_mutex_trylock(&(l)->lock)
-+#define up(l)			pthread_mutex_unlock(&(l)->lock)
++	if (mp->m_logdev_targp == mp->m_ddev_targp)
++		return 0;
 +
-+#endif /* __LIBXFS_SEMA_H__ */
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 5cbc4fe69732..7be3f7615fdd 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -50,6 +50,7 @@
- #include "atomic.h"
- #include "spinlock.h"
- #include "completion.h"
-+#include "sema.h"
++	d = (xfs_daddr_t)XFS_FSB_TO_BB(mp, mp->m_sb.sb_logblocks);
++	if (XFS_BB_TO_FSB(mp, d) != mp->m_sb.sb_logblocks) {
++		xfs_warn(mp, "log size mismatch detected");
++		return -EFBIG;
++	}
++	error = libxfs_buf_read_uncached(mp->m_logdev_targp,
++					d - XFS_FSB_TO_BB(mp, 1),
++					XFS_FSB_TO_BB(mp, 1), 0, &bp, NULL);
++	if (error) {
++		xfs_warn(mp, "log device read failed");
++		return error;
++	}
++	libxfs_buf_relse(bp);
++	return 0;
++}
++
+ /*
+  * Mount structure initialization, provides a filled-in xfs_mount_t
+  * such that the numerous XFS_* macros can be used.  If dev is zero,
+@@ -673,7 +720,6 @@ libxfs_mount(
+ {
+ 	struct xfs_buf		*bp;
+ 	struct xfs_sb		*sbp;
+-	xfs_daddr_t		d;
+ 	bool			debugger = (flags & LIBXFS_MOUNT_DEBUGGER);
+ 	int			error;
  
- #include "xfs_types.h"
- #include "xfs_arch.h"
+@@ -704,16 +750,6 @@ libxfs_mount(
+ 	xfs_rmapbt_compute_maxlevels(mp);
+ 	xfs_refcountbt_compute_maxlevels(mp);
+ 
+-	/*
+-	 * Check that the data (and log if separate) are an ok size.
+-	 */
+-	d = (xfs_daddr_t) XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks);
+-	if (XFS_BB_TO_FSB(mp, d) != mp->m_sb.sb_dblocks) {
+-		fprintf(stderr, _("%s: size check failed\n"), progname);
+-		if (!(flags & LIBXFS_MOUNT_DEBUGGER))
+-			return NULL;
+-	}
+-
+ 	/*
+ 	 * We automatically convert v1 inodes to v2 inodes now, so if
+ 	 * the NLINK bit is not set we can't operate on the filesystem.
+@@ -755,30 +791,9 @@ libxfs_mount(
+ 		return mp;
+ 
+ 	/* device size checks must pass unless we're a debugger. */
+-	error = libxfs_buf_read(mp->m_dev, d - XFS_FSS_TO_BB(mp, 1),
+-			XFS_FSS_TO_BB(mp, 1), 0, &bp, NULL);
+-	if (error) {
+-		fprintf(stderr, _("%s: data size check failed\n"), progname);
+-		if (!debugger)
+-			return NULL;
+-	} else
+-		libxfs_buf_relse(bp);
+-
+-	if (mp->m_logdev_targp->bt_bdev &&
+-	    mp->m_logdev_targp->bt_bdev != mp->m_ddev_targp->bt_bdev) {
+-		d = (xfs_daddr_t) XFS_FSB_TO_BB(mp, mp->m_sb.sb_logblocks);
+-		if (XFS_BB_TO_FSB(mp, d) != mp->m_sb.sb_logblocks ||
+-		    libxfs_buf_read(mp->m_logdev_targp,
+-				d - XFS_FSB_TO_BB(mp, 1), XFS_FSB_TO_BB(mp, 1),
+-				0, &bp, NULL)) {
+-			fprintf(stderr, _("%s: log size checks failed\n"),
+-					progname);
+-			if (!debugger)
+-				return NULL;
+-		}
+-		if (bp)
+-			libxfs_buf_relse(bp);
+-	}
++	error = xfs_check_sizes(mp);
++	if (error && !debugger)
++		return NULL;
+ 
+ 	/* Initialize realtime fields in the mount structure */
+ 	if (rtmount_init(mp, flags)) {
+@@ -795,7 +810,7 @@ libxfs_mount(
+ 	 * read the first one and let the user know to check the geometry.
+ 	 */
+ 	if (sbp->sb_agcount > 1000000) {
+-		error = libxfs_buf_read(mp->m_dev,
++		error = libxfs_buf_read_uncached(mp->m_ddev_targp,
+ 				XFS_AG_DADDR(mp, sbp->sb_agcount - 1, 0), 1,
+ 				0, &bp, NULL);
+ 		if (error) {
 -- 
 2.28.0
 
