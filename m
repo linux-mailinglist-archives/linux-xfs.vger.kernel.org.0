@@ -2,38 +2,38 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41E6B291F08
-	for <lists+linux-xfs@lfdr.de>; Sun, 18 Oct 2020 21:57:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C4B0291A22
+	for <lists+linux-xfs@lfdr.de>; Sun, 18 Oct 2020 21:23:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbgJRT46 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 18 Oct 2020 15:56:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
+        id S1729571AbgJRTVp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 18 Oct 2020 15:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgJRTTa (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 18 Oct 2020 15:19:30 -0400
+        id S1729564AbgJRTVp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 18 Oct 2020 15:21:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E0BC222B9;
-        Sun, 18 Oct 2020 19:19:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF90222E8;
+        Sun, 18 Oct 2020 19:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603048770;
+        s=default; t=1603048904;
         bh=OUR4xePPL/uT6nw4O/uyuUsxy+afCtN8euw1cYdPSTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ppfgbssk634WTaVw1RYASXsKTQZXSTaekPSxjdtHWewSB3s0ylll+tyKbcl+v+igK
-         sh68sOTc7OoKVA+kxYBQhXXS5Ie5Je6t8OUhWswd+D9W94rbp2uqNnXA0UA7EIkpY+
-         veluTnQDg8ft60/1bdNjH1x37byGh47zCGfYItwI=
+        b=E32TqPJBvU6LDZjgTVAhHZcF6/ClDMluLFPWhzi86I+//FBg0DeYaVNcPcVl/jbIz
+         ymcmOtGAl9OXklpSHn9OaIgugtrMpIwn94vBK2D8kZNGpDLmb2hzSid13d5bUUfIaK
+         80ZKBdJ+pKwyDtOAxXNpvF2VY7Y7G+qdBbMAtliQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
         Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 069/111] xfs: make sure the rt allocator doesn't run off the end
-Date:   Sun, 18 Oct 2020 15:17:25 -0400
-Message-Id: <20201018191807.4052726-69-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 065/101] xfs: make sure the rt allocator doesn't run off the end
+Date:   Sun, 18 Oct 2020 15:19:50 -0400
+Message-Id: <20201018192026.4053674-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201018191807.4052726-1-sashal@kernel.org>
-References: <20201018191807.4052726-1-sashal@kernel.org>
+In-Reply-To: <20201018192026.4053674-1-sashal@kernel.org>
+References: <20201018192026.4053674-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
