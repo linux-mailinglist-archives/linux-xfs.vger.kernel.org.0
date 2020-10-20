@@ -2,72 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68BD62932C6
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Oct 2020 03:44:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D98CD29335C
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Oct 2020 04:54:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390149AbgJTBoA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 19 Oct 2020 21:44:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
+        id S2390849AbgJTCyQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 19 Oct 2020 22:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390146AbgJTBoA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Oct 2020 21:44:00 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C57F6C0613D1;
-        Mon, 19 Oct 2020 18:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=xEnEQq4nhEt/2fPSUDq2nZHDfs7mNAitmj1S5VLZSMQ=; b=arOkUU5TY+O40I7N80zRWQ7QRE
-        ajSuiRELkQGbs6eHaqqV5F/WyGEB4H3JPVOXpSWgU6kUIE+bv3arCj1FpkhyxLdju6oRAInySSd9L
-        vkOSSJ9pv6Zz+JcOer6LBC+ZZnD4q1IFEaw8Xquomh1ophb7vr8WrfOcrs9Pze94KGaVCMoFMQXl2
-        NhV7WslroeNk+CrkVQLAG4aGFZ3OR64tDmEu38zS6hyqFuU8AvBV39pOlYvhjhZUF3KNFhVLJbVlP
-        5Mr2ksaT5XcV8daulnEHfFV5kFByINcWwznHKNr+uqvN+XI6DdYh1QbvaimVBsumhK+OOU3wqHeZv
-        LQTdq5Tw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kUggv-0002jF-Nt; Tue, 20 Oct 2020 01:43:57 +0000
-Date:   Tue, 20 Oct 2020 02:43:57 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Splitting a THP beyond EOF
-Message-ID: <20201020014357.GW20115@casper.infradead.org>
+        with ESMTP id S1728625AbgJTCyQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Oct 2020 22:54:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940A9C0613CE
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Oct 2020 19:54:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g29so164991pgl.2
+        for <linux-xfs@vger.kernel.org>; Mon, 19 Oct 2020 19:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0eChFyTsC9dzUp2pHPoLOoGrrAJSaHv3mcTYwnisLTo=;
+        b=fD8peGPN5mEVMxw6gmaZYM8NCNQdswkgw8A3yvPMT5nsoHRfixcjrRcumneRM9wFev
+         G2tWp15vMLRjyXISHGYhJF0a9q9pskjRdajaqU5kuIX/GzWWgIsOhRwWuSMuVhc/A2nf
+         dDjVfTag7ZEoKM+ndxDQjKxJxQViHDIadhGh+U85+KpKLeOea7sKFWkv5wG05Z+ssXJB
+         /tDeRsUpfdUd8r9rJIGf9xxFTcrAocqnDA1RFsgiyfMDwDr9qaSrzpDWO9c95BhVP+pM
+         HSoFdNJ5RPIW0OCy+xN5/sSOsrZahaEbs+m/YEHuOy4Y7rPPIr/XP/uUwi371vCf5BWd
+         +Afw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0eChFyTsC9dzUp2pHPoLOoGrrAJSaHv3mcTYwnisLTo=;
+        b=oZSsjxsxJEY2oDBXHVlXlSsc4wKuJ1ENfw8EFIokXFZrWIghVzguMxcW8MxMlQ9YbY
+         qKAh0650Hwe2XkdoB68hfKLSQhtERbIT9AG58OF3HUvwfudC3OtKqFVbjvaIH7eq5thB
+         NaL1PA0ICiGOjv2UDXXzCargBt/ubdvX9IOa8MQ0NmkYlSeiK3tbUNRib2IDPNi2q5+H
+         sDqAR2Nczgzs7gxskBGZl2vF9bcIRAoWIHPIegYzLWygNsDuvz4oSD7Z0PRbglh8tHeE
+         qyrOx2Y466U2J1TUGKi5chQG33UATrpdylCwOUoGhhyZYV+Q0Cg2OltIFW/Sm+XORSgR
+         NtGw==
+X-Gm-Message-State: AOAM532m4xa1co9AaQ72N8FzDkNRc3BK4eEvx4NRz/2ifS5iswR0mXdv
+        pCpY2G4K+uLuitfJBXHz/A==
+X-Google-Smtp-Source: ABdhPJxgWhFsKIcxjz2/dNLectDov/g1iX84IyHPqKhAQUNLg+Vz2TVpl/i5xCDwKs1AUzUJv9h69g==
+X-Received: by 2002:a63:f40a:: with SMTP id g10mr889029pgi.66.1603162456164;
+        Mon, 19 Oct 2020 19:54:16 -0700 (PDT)
+Received: from [10.76.92.41] ([103.7.29.7])
+        by smtp.gmail.com with ESMTPSA id f2sm298605pfk.187.2020.10.19.19.54.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Oct 2020 19:54:15 -0700 (PDT)
+Subject: Re: [PATCH] xfs: use the SECTOR_SHIFT macro instead of the magic
+ number
+To:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org
+Cc:     darrick.wong@oracle.com, Kaixu Xia <kaixuxia@tencent.com>
+References: <1603100845-12205-1-git-send-email-kaixuxia@tencent.com>
+ <1603100845-12205-2-git-send-email-kaixuxia@tencent.com>
+ <771644f3-99dd-bdad-ef34-60f65faecd1a@sandeen.net>
+From:   kaixuxia <xiakaixu1987@gmail.com>
+Message-ID: <162b310a-5d23-d380-8e55-7319f35773a9@gmail.com>
+Date:   Tue, 20 Oct 2020 10:54:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <771644f3-99dd-bdad-ef34-60f65faecd1a@sandeen.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is a weird one ... which is good because it means the obvious
-ones have been fixed and now I'm just tripping over the weird cases.
-And fortunately, xfstests exercises the weird cases.
 
-1. The file is 0x3d000 bytes long.
-2. A readahead allocates an order-2 THP for 0x3c000-0x3ffff
-3. We simulate a read error for 0x3c000-0x3cfff
-4. Userspace writes to 0x3d697 to 0x3dfaa
-5. iomap_write_begin() gets the 0x3c page, sees it's THP and !Uptodate
-   so it calls iomap_split_page() (passing page 0x3d)
-6. iomap_split_page() calls split_huge_page()
-7. split_huge_page() sees that page 0x3d is beyond EOF, so it removes it
-   from i_pages
-8. iomap_write_actor() copies the data into page 0x3d
-9. The write is lost.
 
-Trying to persuade XFS to update i_size before calling
-iomap_file_buffered_write() seems like a bad idea.
+On 2020/10/20 0:32, Eric Sandeen wrote:
+> On 10/19/20 4:47 AM, xiakaixu1987@gmail.com wrote:
+>> From: Kaixu Xia <kaixuxia@tencent.com>
+>>
+>> We use the SECTOR_SHIFT macro to define the sector size shift, so maybe
+>> it is more reasonable to use it than the magic number 9.
+>>
+>> Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
+> 
+> Hm ...  SECTOR_SHIFT is a block layer #define, really,
+> and blkdev_issue_zeroout is a block layer interface I guess.
+> 
+> We also have our own BBSHIFT in XFS which is used elsewhere, though.
+> 
+> And FWIW, /many/ other fs/* manipulations still use the "- 9" today when
+> converting s_blocksize_bits to sectors.  *shrug* this seems like something
+> that should change tree-wide, if it's to be changed at all.
+> 
 
-Changing split_huge_page() to disregard i_size() is something I kind
-of want to be able to do long-term in order to make hole-punch more
-efficient, but that seems like a lot of work right now.
+Yeah, I think the magic number 9 is insecure, maybe a patchset is needed to
+change them :)
 
-I think the easiest way to fix this is to decline to allocate readahead
-pages beyond EOF.  That is, if we have a file which is, say, 61 pages
-long, read the last 5 pages into an order-2 THP and an order-0 THP
-instead of allocating an order-3 THP and zeroing the last three pages.
+Thanks,
+Kaixu
 
-It's probably the right thing to do anyway -- we split THPs that overlap
-the EOF on a truncate.  I'll start implementing this in the morning,
-but I thought I'd share the problem & proposed solution in case anybody
-has a better idea.
+> -Eric
+> 
+>> ---
+>>  fs/xfs/xfs_bmap_util.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+>> index f2a8a0e75e1f..9f02c1824205 100644
+>> --- a/fs/xfs/xfs_bmap_util.c
+>> +++ b/fs/xfs/xfs_bmap_util.c
+>> @@ -63,8 +63,8 @@ xfs_zero_extent(
+>>  	sector_t		block = XFS_BB_TO_FSBT(mp, sector);
+>>  
+>>  	return blkdev_issue_zeroout(target->bt_bdev,
+>> -		block << (mp->m_super->s_blocksize_bits - 9),
+>> -		count_fsb << (mp->m_super->s_blocksize_bits - 9),
+>> +		block << (mp->m_super->s_blocksize_bits - SECTOR_SHIFT),
+>> +		count_fsb << (mp->m_super->s_blocksize_bits - SECTOR_SHIFT),
+>>  		GFP_NOFS, 0);
+>>  }
+>>  
+>>
+
+-- 
+kaixuxia
