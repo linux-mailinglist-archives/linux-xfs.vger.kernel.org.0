@@ -2,145 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 57D122957B9
-	for <lists+linux-xfs@lfdr.de>; Thu, 22 Oct 2020 07:15:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F712957BB
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Oct 2020 07:15:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2444256AbgJVFPm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Oct 2020 01:15:42 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59135 "EHLO
+        id S2444251AbgJVFPp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Oct 2020 01:15:45 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59673 "EHLO
         mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2444246AbgJVFPm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Oct 2020 01:15:42 -0400
+        by vger.kernel.org with ESMTP id S2444246AbgJVFPo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Oct 2020 01:15:44 -0400
 Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 98D2F3ABE3B
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 989B43ABDDB
         for <linux-xfs@vger.kernel.org>; Thu, 22 Oct 2020 16:15:38 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1kVSwr-0034Kl-OR
+        id 1kVSwr-0034Kn-Q7
         for linux-xfs@vger.kernel.org; Thu, 22 Oct 2020 16:15:37 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1kVSwr-009aoB-G6
+        id 1kVSwr-009aoG-IV
         for linux-xfs@vger.kernel.org; Thu, 22 Oct 2020 16:15:37 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 0/7] repair: Phase 6 performance improvements
-Date:   Thu, 22 Oct 2020 16:15:30 +1100
-Message-Id: <20201022051537.2286402-1-david@fromorbit.com>
+Subject: [PATCH 2/7] repair: Protect bad inode list with mutex
+Date:   Thu, 22 Oct 2020 16:15:32 +1100
+Message-Id: <20201022051537.2286402-3-david@fromorbit.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201022051537.2286402-1-david@fromorbit.com>
+References: <20201022051537.2286402-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
         a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
-        a=afefHYAZSVUA:10 a=l-sH4dQmTrt7G0A92foA:9 a=1T9b15BddVrSr8tc:21
-        a=ktkXJtHXQezyTPRX:21
+        a=afefHYAZSVUA:10 a=20KFwNOVAAAA:8 a=4vG5bgiOaNo-D7GZVj4A:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks
+From: Dave Chinner <dchinner@redhat.com>
 
-Phase 6 is single threaded, processing a single AG at a time and a
-single directory inode at a time.  Phase 6 if often IO latency bound
-despite the prefetching it does, resulting in low disk utilisation
-and high runtimes. The solution for this is the same as phase 3 and
-4 - scan multiple AGs at once for directory inodes to process. This
-patch set enables phase 6 to scan multiple AGS at once, and hence
-requires concurrent updates of inode records as tehy can be accessed
-and modified by multiple scanning threads now. We also need to
-protect the bad inodes list from concurrent access and then we can
-enable concurrent processing of directories.
+To enable phase 6 parallelisation, we need to protect the bad inode
+list from concurrent modification and/or access. Wrap it with a
+mutex and clean up the nasty typedefs.
 
-However, directory entry checking and reconstruction can also be CPU
-bound - large directories overwhelm the directory name hash
-structures because the algorithms have poor scalability - one is O(n
-+ n^2), another is O(n^2) when the number of dirents greatly
-outsizes the hash table sizes. Hence we need to more than just
-parallelise across AGs - we need to parallelise processing within
-AGs so that a single large directory doesn't completely serialise
-processing within an AG.  This is done by using bound-depth
-workqueues to allow inode records to be processed asynchronously as
-the inode records are fetched from disk.
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ repair/dir2.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-Further, we need to fix the bad alogrithmic scalability of the in
-memory directory tracking structures. This is done through a
-combination of better structures and more appropriate dynamic size
-choices.
-
-The results on a filesystem with a single 10 million entry directory
-containing 400MB of directory entry data is as follows:
-
-v5.6.0 (Baseline)
-
-       XFS_REPAIR Summary    Thu Oct 22 12:10:52 2020
-
-Phase           Start           End             Duration
-Phase 1:        10/22 12:06:41  10/22 12:06:41
-Phase 2:        10/22 12:06:41  10/22 12:06:41
-Phase 3:        10/22 12:06:41  10/22 12:07:00  19 seconds
-Phase 4:        10/22 12:07:00  10/22 12:07:12  12 seconds
-Phase 5:        10/22 12:07:12  10/22 12:07:13  1 second
-Phase 6:        10/22 12:07:13  10/22 12:10:51  3 minutes, 38 seconds
-Phase 7:        10/22 12:10:51  10/22 12:10:51
-
-Total run time: 4 minutes, 10 seconds
-
-real	4m11.151s
-user	4m20.083s
-sys	0m14.744s
-
-
-5.9.0-rc1 + patchset:
-
-        XFS_REPAIR Summary    Thu Oct 22 13:19:02 2020
-
-Phase           Start           End             Duration
-Phase 1:        10/22 13:18:09  10/22 13:18:09
-Phase 2:        10/22 13:18:09  10/22 13:18:09
-Phase 3:        10/22 13:18:09  10/22 13:18:31  22 seconds
-Phase 4:        10/22 13:18:31  10/22 13:18:45  14 seconds
-Phase 5:        10/22 13:18:45  10/22 13:18:45
-Phase 6:        10/22 13:18:45  10/22 13:19:00  15 seconds
-Phase 7:        10/22 13:19:00  10/22 13:19:00
-
-Total run time: 51 seconds
-
-real	0m52.375s
-user	1m3.739s
-sys	0m20.346s
-
-
-Performance improvements on filesystems with small directories and
-really fast storage are, at best, modest. The big improvements are
-seen with either really large directories and/or relatively slow
-devices that are IO latency bound and can benefit from having more
-IO in flight at once.
-
-Cheers,
-
-Dave.
-
-
-Dave Chinner (7):
-  workqueue: bound maximum queue depth
-  repair: Protect bad inode list with mutex
-  repair: protect inode chunk tree records with a mutex
-  repair: parallelise phase 6
-  repair: don't duplicate names in phase 6
-  repair: convert the dir byaddr hash to a radix tree
-  repair: scale duplicate name checking in phase 6.
-
- libfrog/radix-tree.c |  46 +++++
- libfrog/workqueue.c  |  42 ++++-
- libfrog/workqueue.h  |   4 +
- repair/dir2.c        |  32 ++--
- repair/incore.h      |  23 +++
- repair/incore_ino.c  |  15 ++
- repair/phase6.c      | 396 +++++++++++++++++++++----------------------
- 7 files changed, 338 insertions(+), 220 deletions(-)
-
+diff --git a/repair/dir2.c b/repair/dir2.c
+index eabdb4f2d497..23333e59a382 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -20,40 +20,50 @@
+  * Known bad inode list.  These are seen when the leaf and node
+  * block linkages are incorrect.
+  */
+-typedef struct dir2_bad {
++struct dir2_bad {
+ 	xfs_ino_t	ino;
+ 	struct dir2_bad	*next;
+-} dir2_bad_t;
++};
+ 
+-static dir2_bad_t *dir2_bad_list;
++static struct dir2_bad	*dir2_bad_list;
++pthread_mutex_t		dir2_bad_list_lock = PTHREAD_MUTEX_INITIALIZER;
+ 
+ static void
+ dir2_add_badlist(
+ 	xfs_ino_t	ino)
+ {
+-	dir2_bad_t	*l;
++	struct dir2_bad	*l;
+ 
+-	if ((l = malloc(sizeof(dir2_bad_t))) == NULL) {
++	l = malloc(sizeof(*l));
++	if (!l) {
+ 		do_error(
+ _("malloc failed (%zu bytes) dir2_add_badlist:ino %" PRIu64 "\n"),
+-			sizeof(dir2_bad_t), ino);
++			sizeof(*l), ino);
+ 		exit(1);
+ 	}
++	pthread_mutex_lock(&dir2_bad_list_lock);
+ 	l->next = dir2_bad_list;
+ 	dir2_bad_list = l;
+ 	l->ino = ino;
++	pthread_mutex_unlock(&dir2_bad_list_lock);
+ }
+ 
+ int
+ dir2_is_badino(
+ 	xfs_ino_t	ino)
+ {
+-	dir2_bad_t	*l;
++	struct dir2_bad	*l;
++	int		ret = 0;
+ 
+-	for (l = dir2_bad_list; l; l = l->next)
+-		if (l->ino == ino)
+-			return 1;
+-	return 0;
++	pthread_mutex_lock(&dir2_bad_list_lock);
++	for (l = dir2_bad_list; l; l = l->next) {
++		if (l->ino == ino) {
++			ret = 1;
++			break;
++		}
++	}
++	pthread_mutex_unlock(&dir2_bad_list_lock);
++	return ret;
+ }
+ 
+ /*
 -- 
 2.28.0
 
