@@ -2,161 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16A482969CB
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Oct 2020 08:34:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1095296A9B
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Oct 2020 09:50:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S375337AbgJWGer (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 23 Oct 2020 02:34:47 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:42600 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S375331AbgJWGeq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Oct 2020 02:34:46 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09N6PbTc106826
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:34:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=mSASECIr/aeDhgDiqrLGD+CWtUztzhAbQ3Wgyk+2IpY=;
- b=jDHsu2hXzN59fdnRxIwi4xIOmQeMMYZkEyh6qHfVt/jL6vxbIOcTZWFFXcyXhXPu9G19
- OsZVY/FwXGrGHmivMowNfO6bjqW8XdPEGPQtRuKpafWb51mJzDFQQWFnUW2HTjnEpEjt
- +rMlubFAALzBDmfAzhIi2novxCgjJ5sOgai7b2n8yiFHMJ6sc9y05kX/jKlPWXayekDO
- qH81lf7+ji9KTvhQovAfzSBHRtFhyXz7h93i/OhGrz2mXlk4+lohuaFAOJPMhcmKthFd
- 8hi64NILjqMzQ9oWYQdbQabvjs3bH3hFVkePVVfcR+8RhPj/x93B8GbJ86pvQpuiVMhU 4A== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 349jrq1eub-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:34:45 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09N6P570178182
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:34:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 348aj0na82-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:34:44 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09N6YhbU008960
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:34:43 GMT
-Received: from localhost.localdomain (/67.1.244.254)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 22 Oct 2020 23:34:43 -0700
-From:   Allison Henderson <allison.henderson@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v13 10/10] xfs: Add delayed attributes error tag
-Date:   Thu, 22 Oct 2020 23:34:35 -0700
-Message-Id: <20201023063435.7510-11-allison.henderson@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201023063435.7510-1-allison.henderson@oracle.com>
-References: <20201023063435.7510-1-allison.henderson@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9782 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 bulkscore=0
- malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010230045
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9782 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=1 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010230045
+        id S375912AbgJWHuJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 23 Oct 2020 03:50:09 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:8343 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S375898AbgJWHuI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Oct 2020 03:50:08 -0400
+X-IronPort-AV: E=Sophos;i="5.77,407,1596470400"; 
+   d="scan'208";a="100439341"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 23 Oct 2020 15:50:01 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 9C9E14CE1A07;
+        Fri, 23 Oct 2020 15:50:00 +0800 (CST)
+Received: from [10.167.225.206] (10.167.225.206) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 23 Oct 2020 15:50:00 +0800
+Subject: Re: [PATCH v2] fs: Handle I_DONTCACHE in iput_final() instead of
+ generic_drop_inode()
+To:     <viro@zeniv.linux.org.uk>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <david@fromorbit.com>, <linux-xfs@vger.kernel.org>,
+        <y-goto@fujitsu.com>, "Ira Weiny" <ira.weiny@intel.com>
+References: <20200904075939.176366-1-lihao2018.fnst@cn.fujitsu.com>
+ <20200908230331.GF1930795@iweiny-DESK2.sc.intel.com>
+From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
+Message-ID: <f1d1a56f-caec-3c68-6c70-1b6f995cab95@cn.fujitsu.com>
+Date:   Fri, 23 Oct 2020 15:49:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.2
+MIME-Version: 1.0
+In-Reply-To: <20200908230331.GF1930795@iweiny-DESK2.sc.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.167.225.206]
+X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
+X-yoursite-MailScanner-ID: 9C9E14CE1A07.AB7FC
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Allison Collins <allison.henderson@oracle.com>
+Hello,
 
-This patch adds an error tag that we can use to test delayed attribute
-recovery and replay
+Ping.
 
-Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_attr_item.c       | 8 ++++++++
- fs/xfs/xfs_error.c           | 3 +++
- 3 files changed, 14 insertions(+), 1 deletion(-)
+This patch need to be merged... Thanks.
 
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 53b305d..cb38cbf 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -56,7 +56,8 @@
- #define XFS_ERRTAG_FORCE_SUMMARY_RECALC			33
- #define XFS_ERRTAG_IUNLINK_FALLBACK			34
- #define XFS_ERRTAG_BUF_IOERROR				35
--#define XFS_ERRTAG_MAX					36
-+#define XFS_ERRTAG_DELAYED_ATTR				36
-+#define XFS_ERRTAG_MAX					37
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -97,5 +98,6 @@
- #define XFS_RANDOM_FORCE_SUMMARY_RECALC			1
- #define XFS_RANDOM_IUNLINK_FALLBACK			(XFS_RANDOM_DEFAULT/10)
- #define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
-+#define XFS_RANDOM_DELAYED_ATTR				1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index 3980066..3e75f2c 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -35,6 +35,8 @@
- #include "xfs_quota.h"
- #include "xfs_log_priv.h"
- #include "xfs_log_recover.h"
-+#include "xfs_error.h"
-+#include "xfs_errortag.h"
- 
- static const struct xfs_item_ops xfs_attri_item_ops;
- static const struct xfs_item_ops xfs_attrd_item_ops;
-@@ -310,6 +312,11 @@ xfs_trans_attr(
- 	if (error)
- 		return error;
- 
-+	if (XFS_TEST_ERROR(false, args->dp->i_mount, XFS_ERRTAG_DELAYED_ATTR)) {
-+		error = -EIO;
-+		goto out;
-+	}
-+
- 	switch (op_flags) {
- 	case XFS_ATTR_OP_FLAGS_SET:
- 		args->op_flags |= XFS_DA_OP_ADDNAME;
-@@ -324,6 +331,7 @@ xfs_trans_attr(
- 		break;
- 	}
- 
-+out:
- 	/*
- 	 * Mark the transaction dirty, even on error. This ensures the
- 	 * transaction is aborted, which:
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 7f6e208..fc551cb 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -54,6 +54,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_FORCE_SUMMARY_RECALC,
- 	XFS_RANDOM_IUNLINK_FALLBACK,
- 	XFS_RANDOM_BUF_IOERROR,
-+	XFS_RANDOM_DELAYED_ATTR,
- };
- 
- struct xfs_errortag_attr {
-@@ -164,6 +165,7 @@ XFS_ERRORTAG_ATTR_RW(force_repair,	XFS_ERRTAG_FORCE_SCRUB_REPAIR);
- XFS_ERRORTAG_ATTR_RW(bad_summary,	XFS_ERRTAG_FORCE_SUMMARY_RECALC);
- XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
-+XFS_ERRORTAG_ATTR_RW(delayed_attr,	XFS_ERRTAG_DELAYED_ATTR);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -202,6 +204,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(bad_summary),
- 	XFS_ERRORTAG_ATTR_LIST(iunlink_fallback),
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
-+	XFS_ERRORTAG_ATTR_LIST(delayed_attr),
- 	NULL,
- };
- 
--- 
-2.7.4
+On 2020/9/9 7:03, Ira Weiny wrote:
+> On Fri, Sep 04, 2020 at 03:59:39PM +0800, Hao Li wrote:
+>> If generic_drop_inode() returns true, it means iput_final() can evict
+>> this inode regardless of whether it is dirty or not. If we check
+>> I_DONTCACHE in generic_drop_inode(), any inode with this bit set will be
+>> evicted unconditionally. This is not the desired behavior because
+>> I_DONTCACHE only means the inode shouldn't be cached on the LRU list.
+>> As for whether we need to evict this inode, this is what
+>> generic_drop_inode() should do. This patch corrects the usage of
+>> I_DONTCACHE.
+>>
+>> This patch was proposed in [1].
+>>
+>> [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
+>>
+>> Fixes: dae2f8ed7992 ("fs: Lift XFS_IDONTCACHE to the VFS layer")
+>> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>
+>> ---
+>> Changes in v2:
+>>  - Adjust code format
+>>  - Add Fixes tag in commit message
+>>
+>>  fs/inode.c         | 4 +++-
+>>  include/linux/fs.h | 3 +--
+>>  2 files changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/inode.c b/fs/inode.c
+>> index 72c4c347afb7..19ad823f781c 100644
+>> --- a/fs/inode.c
+>> +++ b/fs/inode.c
+>> @@ -1625,7 +1625,9 @@ static void iput_final(struct inode *inode)
+>>  	else
+>>  		drop = generic_drop_inode(inode);
+>>  
+>> -	if (!drop && (sb->s_flags & SB_ACTIVE)) {
+>> +	if (!drop &&
+>> +	    !(inode->i_state & I_DONTCACHE) &&
+>> +	    (sb->s_flags & SB_ACTIVE)) {
+>>  		inode_add_lru(inode);
+>>  		spin_unlock(&inode->i_lock);
+>>  		return;
+>> diff --git a/include/linux/fs.h b/include/linux/fs.h
+>> index e019ea2f1347..93caee80ce47 100644
+>> --- a/include/linux/fs.h
+>> +++ b/include/linux/fs.h
+>> @@ -2922,8 +2922,7 @@ extern int inode_needs_sync(struct inode *inode);
+>>  extern int generic_delete_inode(struct inode *inode);
+>>  static inline int generic_drop_inode(struct inode *inode)
+>>  {
+>> -	return !inode->i_nlink || inode_unhashed(inode) ||
+>> -		(inode->i_state & I_DONTCACHE);
+>> +	return !inode->i_nlink || inode_unhashed(inode);
+>>  }
+>>  extern void d_mark_dontcache(struct inode *inode);
+>>  
+>> -- 
+>> 2.28.0
+>>
+>>
+>>
+>
+
 
