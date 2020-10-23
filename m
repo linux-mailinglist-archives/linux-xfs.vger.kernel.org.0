@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A09E32969BC
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Oct 2020 08:33:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E03E12969D1
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Oct 2020 08:35:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S372794AbgJWGdW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 23 Oct 2020 02:33:22 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43578 "EHLO
+        id S375338AbgJWGfW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 23 Oct 2020 02:35:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45180 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S372799AbgJWGdV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Oct 2020 02:33:21 -0400
+        with ESMTP id S372848AbgJWGfV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Oct 2020 02:35:21 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09N6OrNf025553
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:33:20 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09N6PHhY025926
+        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:35:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=oBx1M40JwgsZ9yNKcP4j3Ra5FqC14HT/RNoivCaIink=;
- b=vHmhY/7Mvz23IC1/RJo9pwo+mTh1ur92ec317kTT4iwKMNldZGTLyZks+N+6RDMhk/u9
- DR5wo0JYWwmGNmSN6NVXgCaoqDL4LoCmyR6rwo69gWhERLV1Hjm/nf4vXmitiNc+A0tW
- yIcDl7rCabfYTgLeO8wlmM7H04ZdQdOoXj+WLAJ7XODqzxK0wtuc8/oX1PR7w0Em37mr
- 4yWjt/ZNWER9lKONWHQsFEZm/zZy6d4M7jHw96BVuCnBBTEO58rJEV4bL5+E7QM7zWNf
- aI46bTg56Lp9ex5EGfFcoEIva1Y5suEEjQkJIYVwHCt+R8cq/LkS1RqjdQNonKT3PaZr Kg== 
+ bh=pG5l8DUz+HYlN1k7Goytm+5fB8gz5YLjZYwBvC94SoE=;
+ b=UIjHK3Nny9F5P3TzrlkyiM7ysKpOgt+So+ou+a6Rw4qmdb//kPa5n0PCoPODJccYVple
+ gaqxvPUfFrMk5AKQQ90FC3Yf/Cyph2orQ+rfGAM35MrFnxhVhENk3lvCcg4MLt/LfuGj
+ CFSMukU3Dzo494sazwSReRqpb2hSUEHONJyfTw/5bdTUDQfmWuKMo4KEReW+wXEWhbVA
+ 3cEAIsOi8t+H8dO6rcS6A6LzdcSEP673FuFf3qmejGvAi4uw3PhhAf20TjbPrxPXWH45
+ X9EnkzYtskQlwpgeVczc9Y4FF1PHEWYkedpT7bG1ooZNtWTLDMRmggk9yWZ/83m/RnOA xg== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 34ak16sngh-1
+        by userp2120.oracle.com with ESMTP id 34ak16snpy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:33:20 +0000
+        for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:35:20 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09N6Q1hL123276
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09N6Q16L123287
         for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:33:20 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 34ak1aqy99-1
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 34ak1aqy9c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:33:20 +0000
 Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09N6XJi2009395
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09N6XJ3f012225
         for <linux-xfs@vger.kernel.org>; Fri, 23 Oct 2020 06:33:19 GMT
 Received: from localhost.localdomain (/67.1.244.254)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Thu, 22 Oct 2020 23:33:19 -0700
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v13 10/14] xfsprogs: Enable delayed attributes
-Date:   Thu, 22 Oct 2020 23:33:02 -0700
-Message-Id: <20201023063306.7441-11-allison.henderson@oracle.com>
+Subject: [PATCH v13 11/14] xfsprogs: Remove unused xfs_attr_*_args
+Date:   Thu, 22 Oct 2020 23:33:03 -0700
+Message-Id: <20201023063306.7441-12-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201023063306.7441-1-allison.henderson@oracle.com>
 References: <20201023063306.7441-1-allison.henderson@oracle.com>
@@ -62,40 +62,196 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Allison Collins <allison.henderson@oracle.com>
-
-Finally enable delayed attributes in xfs_attr_set and xfs_attr_remove.
+Remove xfs_attr_set_args, xfs_attr_remove_args, and xfs_attr_trans_roll.
+These high level loops are now driven by the delayed operations code,
+and can be removed.
 
 Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
 ---
- libxfs/xfs_attr.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ libxfs/xfs_attr.c | 97 +------------------------------------------------------
+ libxfs/xfs_attr.h |  2 --
+ 2 files changed, 1 insertion(+), 98 deletions(-)
 
 diff --git a/libxfs/xfs_attr.c b/libxfs/xfs_attr.c
-index 775f16e..6267669 100644
+index 6267669..248e89e 100644
 --- a/libxfs/xfs_attr.c
 +++ b/libxfs/xfs_attr.c
-@@ -602,9 +602,10 @@ xfs_attr_set(
- 		if (error != -ENOATTR && error != -EEXIST)
- 			goto out_trans_cancel;
+@@ -261,65 +261,6 @@ xfs_attr_set_shortform(
+ }
  
--		error = xfs_attr_set_args(args);
-+		error = xfs_attr_set_deferred(args);
- 		if (error)
- 			goto out_trans_cancel;
-+
- 		/* shortform attribute has already been committed */
- 		if (!args->trans)
- 			goto out_unlock;
-@@ -613,7 +614,7 @@ xfs_attr_set(
- 		if (error != -EEXIST)
- 			goto out_trans_cancel;
- 
--		error = xfs_attr_remove_args(args);
-+		error = xfs_attr_remove_deferred(args);
- 		if (error)
- 			goto out_trans_cancel;
+ /*
+- * Checks to see if a delayed attribute transaction should be rolled.  If so,
+- * also checks for a defer finish.  Transaction is finished and rolled as
+- * needed, and returns true of false if the delayed operation should continue.
+- */
+-STATIC int
+-xfs_attr_trans_roll(
+-	struct xfs_delattr_context	*dac)
+-{
+-	struct xfs_da_args		*args = dac->da_args;
+-	int				error = 0;
+-
+-	if (dac->flags & XFS_DAC_DEFER_FINISH) {
+-		/*
+-		 * The caller wants us to finish all the deferred ops so that we
+-		 * avoid pinning the log tail with a large number of deferred
+-		 * ops.
+-		 */
+-		dac->flags &= ~XFS_DAC_DEFER_FINISH;
+-		error = xfs_defer_finish(&args->trans);
+-		if (error)
+-			return error;
+-	}
+-
+-	return xfs_trans_roll_inode(&args->trans, args->dp);
+-}
+-
+-/*
+- * Set the attribute specified in @args.
+- */
+-int
+-xfs_attr_set_args(
+-	struct xfs_da_args	*args)
+-{
+-	struct xfs_buf			*leaf_bp = NULL;
+-	int				error = 0;
+-	struct xfs_delattr_context	dac = {
+-		.da_args	= args,
+-	};
+-
+-	do {
+-		error = xfs_attr_set_iter(&dac, &leaf_bp);
+-		if (error != -EAGAIN)
+-			break;
+-
+-		error = xfs_attr_trans_roll(&dac);
+-		if (error)
+-			return error;
+-
+-		if (leaf_bp) {
+-			xfs_trans_bjoin(args->trans, leaf_bp);
+-			xfs_trans_bhold(args->trans, leaf_bp);
+-		}
+-
+-	} while (true);
+-
+-	return error;
+-}
+-
+-/*
+  * Set the attribute specified in @args.
+  * This routine is meant to function as a delayed operation, and may return
+  * -EAGAIN when the transaction needs to be rolled.  Calling functions will need
+@@ -362,11 +303,7 @@ xfs_attr_set_iter(
+ 		 * continue.  Otherwise, is it converted from shortform to leaf
+ 		 * and -EAGAIN is returned.
+ 		 */
+-		error = xfs_attr_set_shortform(args, leaf_bp);
+-		if (error == -EAGAIN)
+-			dac->flags |= XFS_DAC_DEFER_FINISH;
+-
+-		return error;
++		return xfs_attr_set_shortform(args, leaf_bp);
  	}
+ 
+ 	/*
+@@ -397,7 +334,6 @@ xfs_attr_set_iter(
+ 			 * same state (inode locked and joined, transaction
+ 			 * clean) no matter how we got to this step.
+ 			 */
+-			dac->flags |= XFS_DAC_DEFER_FINISH;
+ 			return -EAGAIN;
+ 		case 0:
+ 			dac->dela_state = XFS_DAS_FOUND_LBLK;
+@@ -454,32 +390,6 @@ xfs_has_attr(
+ 
+ /*
+  * Remove the attribute specified in @args.
+- */
+-int
+-xfs_attr_remove_args(
+-	struct xfs_da_args	*args)
+-{
+-	int				error = 0;
+-	struct xfs_delattr_context	dac = {
+-		.da_args	= args,
+-	};
+-
+-	do {
+-		error = xfs_attr_remove_iter(&dac);
+-		if (error != -EAGAIN)
+-			break;
+-
+-		error = xfs_attr_trans_roll(&dac);
+-		if (error)
+-			return error;
+-
+-	} while (true);
+-
+-	return error;
+-}
+-
+-/*
+- * Remove the attribute specified in @args.
+  *
+  * This function may return -EAGAIN to signal that the transaction needs to be
+  * rolled.  Callers should continue calling this function until they receive a
+@@ -886,7 +796,6 @@ xfs_attr_leaf_addname(
+ 		if (error)
+ 			return error;
+ 
+-		dac->flags |= XFS_DAC_DEFER_FINISH;
+ 		return -EAGAIN;
+ 	}
+ 
+@@ -1183,7 +1092,6 @@ xfs_attr_node_addname(
+ 			 * Restart routine from the top.  No need to set  the
+ 			 * state
+ 			 */
+-			dac->flags |= XFS_DAC_DEFER_FINISH;
+ 			return -EAGAIN;
+ 		}
+ 
+@@ -1196,7 +1104,6 @@ xfs_attr_node_addname(
+ 		error = xfs_da3_split(state);
+ 		if (error)
+ 			goto out;
+-		dac->flags |= XFS_DAC_DEFER_FINISH;
+ 	} else {
+ 		/*
+ 		 * Addition succeeded, update Btree hashvals.
+@@ -1237,7 +1144,6 @@ das_alloc_node:
+ 			if (error)
+ 				return error;
+ 
+-			dac->flags |= XFS_DAC_DEFER_FINISH;
+ 			dac->dela_state = XFS_DAS_ALLOC_NODE;
+ 			return -EAGAIN;
+ 		}
+@@ -1505,7 +1411,6 @@ xfs_attr_node_remove_step(
+ 	if (retval && (state->path.active > 1)) {
+ 		error = xfs_da3_join(state);
+ 		if (error)
+-		dac->flags |= XFS_DAC_DEFER_FINISH;
+ 		dac->dela_state = XFS_DAS_RM_SHRINK;
+ 		return -EAGAIN;
+ 	}
+diff --git a/libxfs/xfs_attr.h b/libxfs/xfs_attr.h
+index 8a08411..58f9660 100644
+--- a/libxfs/xfs_attr.h
++++ b/libxfs/xfs_attr.h
+@@ -297,11 +297,9 @@ int xfs_inode_hasattr(struct xfs_inode *ip);
+ int xfs_attr_get_ilocked(struct xfs_da_args *args);
+ int xfs_attr_get(struct xfs_da_args *args);
+ int xfs_attr_set(struct xfs_da_args *args);
+-int xfs_attr_set_args(struct xfs_da_args *args);
+ int xfs_attr_set_iter(struct xfs_delattr_context *dac,
+ 		      struct xfs_buf **leaf_bp);
+ int xfs_has_attr(struct xfs_da_args *args);
+-int xfs_attr_remove_args(struct xfs_da_args *args);
+ int xfs_attr_remove_iter(struct xfs_delattr_context *dac);
+ bool xfs_attr_namecheck(const void *name, size_t length);
+ void xfs_delattr_context_init(struct xfs_delattr_context *dac,
 -- 
 2.7.4
 
