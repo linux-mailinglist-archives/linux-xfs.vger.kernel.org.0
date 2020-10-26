@@ -2,63 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE275299ACD
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:39:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EA26299AD7
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:40:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407296AbgJZXjD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:39:03 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57550 "EHLO
+        id S2407409AbgJZXkC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:40:02 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:58348 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407243AbgJZXjC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:39:02 -0400
+        with ESMTP id S2407403AbgJZXkB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:40:01 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPTjP165174;
-        Mon, 26 Oct 2020 23:36:55 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOXtM164622;
+        Mon, 26 Oct 2020 23:37:00 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=kVUZD9DDtUG2sjMGl1oVmHBWbFGHmNIkQqdwRrWEL0Q=;
- b=KQNYvVN0i0zF7EKpi2KXtwk98qJEAa3OmpTt4BFz+s4Bp7dRGjfkaHDnPG8ontrubIGN
- kP+8/rIzHF/y2KUB6zGx1dyqMuCprt8QT4TPhQuAZImdQq6TVOq9+zYRaKJEXGBVnQe1
- rDGzRz/c9Xntep9GRJjmA8M0kkyNjIVvAl8Hc3/DZl2IUYT3dnV+iJGOOFoDs04pi5g0
- BWgebohwljGXR6xRW8O9PSRZEueHylqjr7ErP5+goP6qhJ8HV19LMXsG7NOAC9jy1F5d
- CMzUN9dXi5deNi6p4+dmXZrOMjamyLR5LePWOiUQ1J8jOS2xVggsL9JW7GRpbP7AT3Tt kA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 34dgm3vuv3-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=esPJcbr1PaAqdR2RFEyzhWMnwthj5aHmVmPZO1mi5GM=;
+ b=eN4GWsEwKYqOpugRYR1hM0ksek8Z34AaB8n+SV2TsVP4Oj7OBUF/Do+bK2nNvbBAEY+C
+ 9wycJ+aOMbTDl2h0+Xg262ziVn+Eg8fDaeWGpGD1hAt80y+9KPPU4Fp2L6ak8iHE+IvA
+ kZhvE0cJGNN0S5ux7QpwhWdiR+wjJOo0feK39pHykOVwObjN8AwevLaM1D5qUMH110uI
+ 5cjiIR97x6SlfZG2Y0cORlCaNp/kBw2gqpj/QGVbCgjsGSr+VqwD/kfD5Cz1+IBycGm8
+ CL31/QglXAmgr2/vh60QROmkyLG48tEZ2DhocxODzICo8v25v5WtXzGnEtAFipCNfhsN NQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 34dgm3vuva-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:36:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPGs3121018;
-        Mon, 26 Oct 2020 23:36:55 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 34cx6va715-1
+        Mon, 26 Oct 2020 23:37:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQN31058427;
+        Mon, 26 Oct 2020 23:36:59 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 34cwukr9qy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:36:55 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNas57006580;
-        Mon, 26 Oct 2020 23:36:54 GMT
+        Mon, 26 Oct 2020 23:36:59 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNawRL008356;
+        Mon, 26 Oct 2020 23:36:58 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:36:54 -0700
-Subject: [PATCH 26/26] xfs: enable big timestamps
+        with ESMTP ; Mon, 26 Oct 2020 16:36:58 -0700
+Subject: [PATCH 00/21] xfsprogs: sync with 5.10, part 2
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Allison Collins <allison.henderson@oracle.com>,
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         Christoph Hellwig <hch@lst.de>,
-        Gao Xiang <hsiangkao@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:36:53 -0700
-Message-ID: <160375541298.881414.10016258798360119628.stgit@magnolia>
-In-Reply-To: <160375524618.881414.16347303401529121282.stgit@magnolia>
-References: <160375524618.881414.16347303401529121282.stgit@magnolia>
+        Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Kaixu Xia <kaixuxia@tencent.com>, linux-xfs@vger.kernel.org
+Date:   Mon, 26 Oct 2020 16:36:57 -0700
+Message-ID: <160375541713.882906.11902959014062334120.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
@@ -71,36 +70,46 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Source kernel commit: 29887a22713192509cfc6068ea3b200cdb8856da
+The second part of syncing libxfs with 5.10.
 
-Enable the big timestamp feature.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=libxfs-5.10-sync-part2
 ---
- libxfs/xfs_format.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-
-diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
-index 0ab424cc25ca..e8e7e63455c6 100644
---- a/libxfs/xfs_format.h
-+++ b/libxfs/xfs_format.h
-@@ -471,7 +471,8 @@ xfs_sb_has_ro_compat_feature(
- #define XFS_SB_FEAT_INCOMPAT_ALL \
- 		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
- 		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
--		 XFS_SB_FEAT_INCOMPAT_META_UUID)
-+		 XFS_SB_FEAT_INCOMPAT_META_UUID| \
-+		 XFS_SB_FEAT_INCOMPAT_BIGTIME)
- 
- #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
- static inline bool
+ db/attrshort.c             |   46 ++++-----
+ db/check.c                 |    4 -
+ db/inode.c                 |    4 -
+ db/metadump.c              |   12 +-
+ include/platform_defs.h.in |   27 +++++
+ include/xfs_inode.h        |    6 +
+ include/xfs_trace.h        |    2 
+ include/xfs_trans.h        |   25 +++++
+ libxfs/libxfs_api_defs.h   |    1 
+ libxfs/rdwr.c              |   11 ++
+ libxfs/trans.c             |    1 
+ libxfs/xfs_alloc.c         |    1 
+ libxfs/xfs_attr.c          |   14 ++-
+ libxfs/xfs_attr_leaf.c     |   43 ++++----
+ libxfs/xfs_attr_remote.c   |    2 
+ libxfs/xfs_attr_sf.h       |   29 ++++--
+ libxfs/xfs_bmap.c          |   19 ++--
+ libxfs/xfs_bmap.h          |    2 
+ libxfs/xfs_da_format.h     |   24 ++---
+ libxfs/xfs_defer.c         |  230 ++++++++++++++++++++++++++++++++++++++++----
+ libxfs/xfs_defer.h         |   37 +++++++
+ libxfs/xfs_inode_buf.h     |    2 
+ libxfs/xfs_rmap.c          |   27 +++--
+ libxfs/xfs_rtbitmap.c      |   11 +-
+ repair/attr_repair.c       |   24 ++---
+ repair/dinode.c            |    6 +
+ 26 files changed, 464 insertions(+), 146 deletions(-)
 
