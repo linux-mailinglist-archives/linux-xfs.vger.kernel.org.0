@@ -2,52 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DAE8299AD4
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:39:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7673299AD8
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407406AbgJZXj5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:39:57 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39982 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407403AbgJZXj5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:39:57 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNP1Gn157959;
-        Mon, 26 Oct 2020 23:37:32 GMT
+        id S2407431AbgJZXkE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:40:04 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:46936 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407427AbgJZXkD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:40:03 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPwgW177218;
+        Mon, 26 Oct 2020 23:39:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=RKiQn/sY+/V64cJtJ1bWUNnNpor1XxGfDmc05KsDxHo=;
- b=QZjtLqPdGV3QLtwORHMV3cYF4HZmdLRV7GCGxDjyd5tZCqk5XZA4RZ0tA305ZLDbCXvh
- StNq132Z0V9i/i/wfalE2WIykRgWfi7fYgvMARZksrkfbC+wcj+qY+t8N673VUSh8Pmm
- n2wbmOyZsubxh1YrZ8+u5VzT4qzsljB4QnAOuyc+HuzHxC6K8goMPB1Hr/K1QsMXmu45
- Ltn7olAy7ndc9BtG5dZ+sLUfZuggwCT81Z167qEloCkOPDoOYQXXEuYuqALFybr7yf7b
- wA7O+Dy9WHo769eS94krMlu5XpC846L2eMv6FXG+EoLdgyof4Whsx6US2NaGmNtJQdiF gA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 34cc7kq8r6-1
+ bh=eZ1A/B9xQINSeZk2hjrYYzHbZKkvehtyqw/6dOvo1RQ=;
+ b=DfmchtibCJGTCW1bk5nUGnMEe7VUxT0KYNxzW1+IHhVDJltbaTQW7MoB5PXBz6lq2mTq
+ fHneyBUyOjYSMBVakZF9Dv7xL242reeogXWmAQhmImrHZflKFvD3bNACu0VwRNxhO5/8
+ W8Y3PyTjttf+DlerXzD+GKpG5ErYsFUCd7xFTfwqfyA2WYzyPWXwswO84Dezq26tt55M
+ cJmsl0EAiohhJlIZ7aDSjO59plDj1KY/IEGVmI7CpW6758vAMbtTwZNpDq1HUdsV3EvD
+ Jo79CBkW1ppwBEewy5yLeBslMRlbRMcgZPg8G4vp+7sd0HWt5Kz77xgvvbOPcnmD94kS dA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 34c9saqddq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:37:32 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPxTq110447;
-        Mon, 26 Oct 2020 23:37:31 GMT
+        Mon, 26 Oct 2020 23:39:38 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQEat032476;
+        Mon, 26 Oct 2020 23:37:37 GMT
 Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 34cx5wftg0-1
+        by userp3020.oracle.com with ESMTP id 34cx1q2cxu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:37:31 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNbUJM006777;
-        Mon, 26 Oct 2020 23:37:30 GMT
+        Mon, 26 Oct 2020 23:37:37 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNba6a006795;
+        Mon, 26 Oct 2020 23:37:36 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:37:30 -0700
-Subject: [PATCH 05/21] xfs: don't free rt blocks when we're doing a REMAP
- bunmapi call
+        with ESMTP ; Mon, 26 Oct 2020 16:37:36 -0700
+Subject: [PATCH 06/21] xfs: log new intent items created as part of finishing
+ recovered intent items
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>, Dave Chinner <dchinner@redhat.com>,
         linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:37:29 -0700
-Message-ID: <160375544921.882906.7374387046113127914.stgit@magnolia>
+Date:   Mon, 26 Oct 2020 16:37:35 -0700
+Message-ID: <160375545548.882906.16722362023139887455.stgit@magnolia>
 In-Reply-To: <160375541713.882906.11902959014062334120.stgit@magnolia>
 References: <160375541713.882906.11902959014062334120.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,15 +55,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=2
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -71,58 +71,100 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Source kernel commit: 8df0fa39bdd86ca81a8d706a6ed9d33cc65ca625
+Source kernel commit: 93293bcbde93567efaf4e6bcd58cad270e1fcbf5
 
-When callers pass XFS_BMAPI_REMAP into xfs_bunmapi, they want the extent
-to be unmapped from the given file fork without the extent being freed.
-We do this for non-rt files, but we forgot to do this for realtime
-files.  So far this isn't a big deal since nobody makes a bunmapi call
-to a rt file with the REMAP flag set, but don't leave a logic bomb.
+During a code inspection, I found a serious bug in the log intent item
+recovery code when an intent item cannot complete all the work and
+decides to requeue itself to get that done.  When this happens, the
+item recovery creates a new incore deferred op representing the
+remaining work and attaches it to the transaction that it allocated.  At
+the end of _item_recover, it moves the entire chain of deferred ops to
+the dummy parent_tp that xlog_recover_process_intents passed to it, but
+fail to log a new intent item for the remaining work before committing
+the transaction for the single unit of work.
+
+xlog_finish_defer_ops logs those new intent items once recovery has
+finished dealing with the intent items that it recovered, but this isn't
+sufficient.  If the log is forced to disk after a recovered log item
+decides to requeue itself and the system goes down before we call
+xlog_finish_defer_ops, the second log recovery will never see the new
+intent item and therefore has no idea that there was more work to do.
+It will finish recovery leaving the filesystem in a corrupted state.
+
+The same logic applies to /any/ deferred ops added during intent item
+recovery, not just the one handling the remaining work.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libxfs/xfs_bmap.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ libxfs/xfs_defer.c |   26 ++++++++++++++++++++++++--
+ libxfs/xfs_defer.h |    6 ++++++
+ 2 files changed, 30 insertions(+), 2 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index a9c1536718af..e0ca8b050c46 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -5039,20 +5039,25 @@ xfs_bmap_del_extent_real(
+diff --git a/libxfs/xfs_defer.c b/libxfs/xfs_defer.c
+index 34c10199dbac..1d1eac62d9cf 100644
+--- a/libxfs/xfs_defer.c
++++ b/libxfs/xfs_defer.c
+@@ -184,8 +184,9 @@ xfs_defer_create_intent(
+ {
+ 	const struct xfs_defer_op_type	*ops = defer_op_types[dfp->dfp_type];
  
- 	flags = XFS_ILOG_CORE;
- 	if (whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip)) {
--		xfs_fsblock_t	bno;
- 		xfs_filblks_t	len;
- 		xfs_extlen_t	mod;
+-	dfp->dfp_intent = ops->create_intent(tp, &dfp->dfp_work,
+-			dfp->dfp_count, sort);
++	if (!dfp->dfp_intent)
++		dfp->dfp_intent = ops->create_intent(tp, &dfp->dfp_work,
++						     dfp->dfp_count, sort);
+ }
  
--		bno = div_u64_rem(del->br_startblock, mp->m_sb.sb_rextsize,
--				  &mod);
--		ASSERT(mod == 0);
- 		len = div_u64_rem(del->br_blockcount, mp->m_sb.sb_rextsize,
- 				  &mod);
- 		ASSERT(mod == 0);
+ /*
+@@ -388,6 +389,7 @@ xfs_defer_finish_one(
+ 			list_add(li, &dfp->dfp_work);
+ 			dfp->dfp_count++;
+ 			dfp->dfp_done = NULL;
++			dfp->dfp_intent = NULL;
+ 			xfs_defer_create_intent(tp, dfp, false);
+ 		}
  
--		error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
--		if (error)
--			goto done;
-+		if (!(bflags & XFS_BMAPI_REMAP)) {
-+			xfs_fsblock_t	bno;
+@@ -550,3 +552,23 @@ xfs_defer_move(
+ 
+ 	xfs_defer_reset(stp);
+ }
 +
-+			bno = div_u64_rem(del->br_startblock,
-+					mp->m_sb.sb_rextsize, &mod);
-+			ASSERT(mod == 0);
++/*
++ * Prepare a chain of fresh deferred ops work items to be completed later.  Log
++ * recovery requires the ability to put off until later the actual finishing
++ * work so that it can process unfinished items recovered from the log in
++ * correct order.
++ *
++ * Create and log intent items for all the work that we're capturing so that we
++ * can be assured that the items will get replayed if the system goes down
++ * before log recovery gets a chance to finish the work it put off.  Then we
++ * move the chain from stp to dtp.
++ */
++void
++xfs_defer_capture(
++	struct xfs_trans	*dtp,
++	struct xfs_trans	*stp)
++{
++	xfs_defer_create_intents(stp);
++	xfs_defer_move(dtp, stp);
++}
+diff --git a/libxfs/xfs_defer.h b/libxfs/xfs_defer.h
+index 6b2ca580f2b0..3164199162b6 100644
+--- a/libxfs/xfs_defer.h
++++ b/libxfs/xfs_defer.h
+@@ -63,4 +63,10 @@ extern const struct xfs_defer_op_type xfs_rmap_update_defer_type;
+ extern const struct xfs_defer_op_type xfs_extent_free_defer_type;
+ extern const struct xfs_defer_op_type xfs_agfl_free_defer_type;
+ 
++/*
++ * Functions to capture a chain of deferred operations and continue them later.
++ * This doesn't normally happen except log recovery.
++ */
++void xfs_defer_capture(struct xfs_trans *dtp, struct xfs_trans *stp);
 +
-+			error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
-+			if (error)
-+				goto done;
-+		}
-+
- 		do_fx = 0;
- 		nblks = len * mp->m_sb.sb_rextsize;
- 		qfield = XFS_TRANS_DQ_RTBCOUNT;
+ #endif /* __XFS_DEFER_H__ */
 
