@@ -2,35 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 30ECC299F84
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 01:23:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 893CA299CF8
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 01:03:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391327AbgJ0AXA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 20:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33740 "EHLO mail.kernel.org"
+        id S2411074AbgJ0ACw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 20:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2410920AbgJZXzg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:55:36 -0400
+        id S2411054AbgJZX4N (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 19:56:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7CE720B1F;
-        Mon, 26 Oct 2020 23:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F0CD2151B;
+        Mon, 26 Oct 2020 23:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756535;
-        bh=ACYIHEfNgVHqI+C07BuMcJ2NoOu80l8jDu2L0GJUl8U=;
+        s=default; t=1603756571;
+        bh=VolI0NG8ZRfMBdojfYaKtxeTYyglur0QxGNK8tJCbK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vP9bmmzaIXQVFae2r+ZqnN3htfRm0m15CkTgB+spwd0GxPq6eKwGjAgDR8Ym6+RAL
-         ORIvyPH2iMe6go+MsUdV//7fTpbdYUFJmU/hJ+wBgzeQxcmT8InSUSIztDMlWGiUY0
-         Zj3RWwxGR2d52vVKksG/mVcBEXeGY6Bvv+4F78Cc=
+        b=B7rbDC83tUb3Q6bfS8odjx6fLWKeIdPUABgowbFFl698aFyTZ0JfIcgyB4Na3WAVT
+         QBT7xdLE/tdY1yLdDNY+hn2o3Igrbx5yz/+8p7AHU39Ydw1/nHL3RhYoyPezCIW+xy
+         m22PoQxW4LbvLN8kf3O8CFcgEYB48RSHVWvLF8sk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <dchinner@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/80] xfs: fix realtime bitmap/summary file truncation when growing rt volume
-Date:   Mon, 26 Oct 2020 19:54:11 -0400
-Message-Id: <20201026235516.1025100-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 45/80] xfs: don't free rt blocks when we're doing a REMAP bunmapi call
+Date:   Mon, 26 Oct 2020 19:54:41 -0400
+Message-Id: <20201026235516.1025100-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201026235516.1025100-1-sashal@kernel.org>
 References: <20201026235516.1025100-1-sashal@kernel.org>
@@ -44,65 +45,59 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit f4c32e87de7d66074d5612567c5eac7325024428 ]
+[ Upstream commit 8df0fa39bdd86ca81a8d706a6ed9d33cc65ca625 ]
 
-The realtime bitmap and summary files are regular files that are hidden
-away from the directory tree.  Since they're regular files, inode
-inactivation will try to purge what it thinks are speculative
-preallocations beyond the incore size of the file.  Unfortunately,
-xfs_growfs_rt forgets to update the incore size when it resizes the
-inodes, with the result that inactivating the rt inodes at unmount time
-will cause their contents to be truncated.
-
-Fix this by updating the incore size when we change the ondisk size as
-part of updating the superblock.  Note that we don't do this when we're
-allocating blocks to the rt inodes because we actually want those blocks
-to get purged if the growfs fails.
-
-This fixes corruption complaints from the online rtsummary checker when
-running xfs/233.  Since that test requires rmap, one can also trigger
-this by growing an rt volume, cycling the mount, and creating rt files.
+When callers pass XFS_BMAPI_REMAP into xfs_bunmapi, they want the extent
+to be unmapped from the given file fork without the extent being freed.
+We do this for non-rt files, but we forgot to do this for realtime
+files.  So far this isn't a big deal since nobody makes a bunmapi call
+to a rt file with the REMAP flag set, but don't leave a logic bomb.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 4a48a8c75b4f7..23ada3b3ea96c 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1010,10 +1010,13 @@ xfs_growfs_rt(
- 		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL);
- 		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
- 		/*
--		 * Update the bitmap inode's size.
-+		 * Update the bitmap inode's size ondisk and incore.  We need
-+		 * to update the incore size so that inode inactivation won't
-+		 * punch what it thinks are "posteof" blocks.
- 		 */
- 		mp->m_rbmip->i_d.di_size =
- 			nsbp->sb_rbmblocks * nsbp->sb_blocksize;
-+		i_size_write(VFS_I(mp->m_rbmip), mp->m_rbmip->i_d.di_size);
- 		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
- 		/*
- 		 * Get the summary inode into the transaction.
-@@ -1021,9 +1024,12 @@ xfs_growfs_rt(
- 		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL);
- 		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
- 		/*
--		 * Update the summary inode's size.
-+		 * Update the summary inode's size.  We need to update the
-+		 * incore size so that inode inactivation won't punch what it
-+		 * thinks are "posteof" blocks.
- 		 */
- 		mp->m_rsumip->i_d.di_size = nmp->m_rsumsize;
-+		i_size_write(VFS_I(mp->m_rsumip), mp->m_rsumip->i_d.di_size);
- 		xfs_trans_log_inode(tp, mp->m_rsumip, XFS_ILOG_CORE);
- 		/*
- 		 * Copy summary data from old to new sizes.
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index f8db3fe616df9..c114d24be6193 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4985,20 +4985,25 @@ xfs_bmap_del_extent_real(
+ 
+ 	flags = XFS_ILOG_CORE;
+ 	if (whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip)) {
+-		xfs_fsblock_t	bno;
+ 		xfs_filblks_t	len;
+ 		xfs_extlen_t	mod;
+ 
+-		bno = div_u64_rem(del->br_startblock, mp->m_sb.sb_rextsize,
+-				  &mod);
+-		ASSERT(mod == 0);
+ 		len = div_u64_rem(del->br_blockcount, mp->m_sb.sb_rextsize,
+ 				  &mod);
+ 		ASSERT(mod == 0);
+ 
+-		error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
+-		if (error)
+-			goto done;
++		if (!(bflags & XFS_BMAPI_REMAP)) {
++			xfs_fsblock_t	bno;
++
++			bno = div_u64_rem(del->br_startblock,
++					mp->m_sb.sb_rextsize, &mod);
++			ASSERT(mod == 0);
++
++			error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
++			if (error)
++				goto done;
++		}
++
+ 		do_fx = 0;
+ 		nblks = len * mp->m_sb.sb_rextsize;
+ 		qfield = XFS_TRANS_DQ_RTBCOUNT;
 -- 
 2.25.1
 
