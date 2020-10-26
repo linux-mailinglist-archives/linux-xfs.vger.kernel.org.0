@@ -2,141 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85190299A9D
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:35:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B9C8299A9F
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:35:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406882AbgJZXfO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:35:14 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37078 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406870AbgJZXfN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:35:13 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNP0Fa157923;
-        Mon, 26 Oct 2020 23:35:09 GMT
+        id S2406881AbgJZXfQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:35:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55184 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406870AbgJZXfP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:35:15 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOXEM164636;
+        Mon, 26 Oct 2020 23:35:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=/9/bOy4QxrzHvk18qhjkwoTNIYN97lfiTMPbc0EAzjw=;
- b=o4bvQfpPzyDHoYECKQ1FpT+vMruP/tIcQ7cf8QWWZ5deIuwn87NDGeZ4Ir5y9xVSnrsk
- uNfHlYilNcfvg9fGRlN/o1NCAob8y5Ssgq0KtoikdEDoferANiow/H/0JttkCuM7TnrX
- aQf9IXkGef6rft2OwA2bIa6mShKVYkOnm6RKHe+tgKl/h+/S6KEdYG44tjk7wfDf6Wd4
- IbgsZeAfpkwt7Jf6kZ8SgdlFVNa95GovMX10XCLfDZfkahQcQAR8T+EzaAqSBiesGQuu
- rOSZekEA9VHHxq4Ny68WbkdjNbRoKlI1jhBRCXrLd/FYUYRmcGfo3DF1p1mDviTbVNqd kQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 34cc7kq8ky-1
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=lbCe2r/Z47PF9sXWOIxzaMLAxV9ALAXmTGhXrL7mzHw=;
+ b=ErGTmMm5IpRnGrBE/SKX7yKu0qzJ4Z7Wu2wJg4aOF8wrHM3JVwbxqK5uBePpBw5wTheq
+ BTOB9qLx/deJoykM7jLCntxUDojhgMbBg1QGeO7i/lN8S0axVSiRuR5LK9r4fN+g1dDo
+ UpYzZyT+tPA8PwDhvCzdz77rGHtsmo1DSrEF1t2hZsE1DLnQRTnaqYXVwtlIWg9Niqui
+ KK5Np/Rcb6qtZbSDS0w/qwAPac1qU39gZF+h2NNmPbpID8XAVsFcahfQSj/hbLk6t7in
+ vKhXpIkG/mk4+UqPM/CMdhjZVJZobwPTnBCbw5jTnV0uHDb9d977S/HGRUN5qbvQeYG7 1A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 34dgm3vuru-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:35:09 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPx6M110501;
-        Mon, 26 Oct 2020 23:33:09 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 34cx5wfr8p-1
+        Mon, 26 Oct 2020 23:35:12 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQEQ9032465;
+        Mon, 26 Oct 2020 23:33:11 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 34cx1q2aq7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:33:09 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNX8Oi012110;
-        Mon, 26 Oct 2020 23:33:08 GMT
+        Mon, 26 Oct 2020 23:33:11 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNXBaT028419;
+        Mon, 26 Oct 2020 23:33:11 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:33:03 -0700
-Subject: [PATCH 3/3] xfs: simplify xfs_trans_getsb
+        with ESMTP ; Mon, 26 Oct 2020 16:33:06 -0700
+Subject: [PATCH v4 0/9] xfsprogs: add a inode btree blocks counts to the AGI
+ header
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:33:02 -0700
-Message-ID: <160375518271.880210.13520449755739439500.stgit@magnolia>
-In-Reply-To: <160375516392.880210.12781119775998925242.stgit@magnolia>
-References: <160375516392.880210.12781119775998925242.stgit@magnolia>
+To:     sandeen@sandeen.net, darrick.wong@oracle.com, bfoster@redhat.com
+Cc:     linux-xfs@vger.kernel.org
+Date:   Mon, 26 Oct 2020 16:33:05 -0700
+Message-ID: <160375518573.880355.12052697509237086329.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010260153
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+Hi all,
 
-Source kernel commit: cead0b10f557a2331e0e131ce52aaf7ed7f5355f
+Years ago, Christoph diagnosed a problem where freeing an inode on a
+totally full filesystem could fail due to finobt expansion not being
+able to allocate enough blocks.  He solved the problem by using the
+per-AG block reservation system to ensure that there are always enough
+blocks for finobt expansion, but that came at the cost of having to walk
+the entire finobt at mount time.  This new feature solves that
+performance regression by adding inode btree block counts to the AGI
+header.
 
-Remove the mp argument as this function is only called in transaction
-context, and open code xfs_getsb given that the function already accesses
-the buffer pointer in the mount point directly.
+v2: rebase kernel to 5.9
+v3: split logical changes into separate patches
+v4: support inobtcounts && !finobt properly
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=inobt-counters
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=inobt-counters
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=inobt-counters
 ---
- include/xfs_trans.h |    2 +-
- libxfs/trans.c      |    6 +++---
- libxfs/xfs_sb.c     |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
-
-
-diff --git a/include/xfs_trans.h b/include/xfs_trans.h
-index 1f087672a2a8..9292a4a54237 100644
---- a/include/xfs_trans.h
-+++ b/include/xfs_trans.h
-@@ -91,7 +91,7 @@ void	libxfs_trans_cancel(struct xfs_trans *);
- /* cancel dfops associated with a transaction */
- void xfs_defer_cancel(struct xfs_trans *);
- 
--struct xfs_buf *libxfs_trans_getsb(struct xfs_trans *, struct xfs_mount *);
-+struct xfs_buf *libxfs_trans_getsb(struct xfs_trans *);
- 
- void	libxfs_trans_ijoin(struct xfs_trans *, struct xfs_inode *, uint);
- void	libxfs_trans_log_inode (struct xfs_trans *, struct xfs_inode *,
-diff --git a/libxfs/trans.c b/libxfs/trans.c
-index 51ce83021e87..6838b727350b 100644
---- a/libxfs/trans.c
-+++ b/libxfs/trans.c
-@@ -463,10 +463,10 @@ libxfs_trans_get_buf_map(
- 
- xfs_buf_t *
- libxfs_trans_getsb(
--	xfs_trans_t		*tp,
--	struct xfs_mount	*mp)
-+	struct xfs_trans	*tp)
- {
--	xfs_buf_t		*bp;
-+	struct xfs_mount	*mp = tp->t_mountp;
-+	struct xfs_buf		*bp;
- 	struct xfs_buf_log_item	*bip;
- 	int			len = XFS_FSS_TO_BB(mp, 1);
- 	DEFINE_SINGLE_BUF_MAP(map, XFS_SB_DADDR, len);
-diff --git a/libxfs/xfs_sb.c b/libxfs/xfs_sb.c
-index 302eea167f4e..7c7e56a8979c 100644
---- a/libxfs/xfs_sb.c
-+++ b/libxfs/xfs_sb.c
-@@ -931,7 +931,7 @@ xfs_log_sb(
- 	struct xfs_trans	*tp)
- {
- 	struct xfs_mount	*mp = tp->t_mountp;
--	struct xfs_buf		*bp = xfs_trans_getsb(tp, mp);
-+	struct xfs_buf		*bp = xfs_trans_getsb(tp);
- 
- 	mp->m_sb.sb_icount = percpu_counter_sum(&mp->m_icount);
- 	mp->m_sb.sb_ifree = percpu_counter_sum(&mp->m_ifree);
-@@ -1061,7 +1061,7 @@ xfs_sync_sb_buf(
- 	if (error)
- 		return error;
- 
--	bp = xfs_trans_getsb(tp, mp);
-+	bp = xfs_trans_getsb(tp);
- 	xfs_log_sb(tp);
- 	xfs_trans_bhold(tp, bp);
- 	xfs_trans_set_sync(tp);
+ db/agi.c                  |    2 +
+ db/sb.c                   |   78 ++++++++++++++++++++++++++++++++++++++++++++-
+ db/xfs_admin.sh           |    4 ++
+ libxfs/xfs_ag.c           |    5 +++
+ libxfs/xfs_format.h       |   21 +++++++++++-
+ libxfs/xfs_ialloc.c       |    1 +
+ libxfs/xfs_ialloc_btree.c |   65 +++++++++++++++++++++++++++++++++++---
+ man/man8/mkfs.xfs.8       |   15 +++++++++
+ man/man8/xfs_admin.8      |   16 +++++++++
+ mkfs/xfs_mkfs.c           |   34 +++++++++++++++++++-
+ repair/phase5.c           |    5 +++
+ repair/scan.c             |   38 ++++++++++++++++++++--
+ 12 files changed, 272 insertions(+), 12 deletions(-)
 
