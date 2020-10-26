@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CBC0299ACC
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:38:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07447299AE0
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:41:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407277AbgJZXi5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:38:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57446 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407243AbgJZXi5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:38:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOYRr164646;
-        Mon, 26 Oct 2020 23:37:50 GMT
+        id S2407492AbgJZXlR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:41:17 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:47954 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407482AbgJZXlR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:41:17 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNP91k177061;
+        Mon, 26 Oct 2020 23:37:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=KohxyGNpGIf15wU0bwz0IhsENY/DAXMiVmFvWUVCHaM=;
- b=GQi7sYNAu1EjKblPUuBNIMAG4Hq5TxVDI5Dr7TcZJConaXkSqNLTd8tEG4aDDysfZgcu
- wCacrC+XHykUYBrdeSHTfncG54R2WCCGZ2f3ODooTMjIhfx3yOwLiHt0noyWX4SpCwq5
- DqQBky3j0qZQI/hdBQIdo9zsXHhJ3Kwjg44nuvWgwd3UnycrLprWftysSNhuaai86KRH
- qzzDf3mpvug+SxWitKOAYI2sQTrnkM72VrBozD7oWF9ZPdIbcJRau6AiRh7szZMkT7bR
- SiuflY18R7r/d5cEZNWF8DheZHP+jHKJYWgbJPMPtPeiEflu25+iU9wf1foDqwQWgMEl VA== 
+ bh=FKdY94Jdziv2eisugs5eZYGsRKzimwGXmHq6hBA7aHE=;
+ b=ytFls5MWJGuiwEhQ2ChrxorDnR3f1RssOv1Haf648zmC4EVqdBeQ6xP6qcC6nUQQ/raG
+ xrzlEbfC+Odn0Khs92mrskQ9ijWkJPSqbUvPOUjn8EWriAxB9SaoZa6l4fgqMcL6DExX
+ PJdsP2CaINSPBn98nVCD2fO1GnXI+nXX0JSFcmjE1AnhC2z6ACgHdoDLEXfflg84yNuf
+ FNXkBQLS4uhQn07BKOIg3r9IHTBORUezBWLEF3wxQzafKU6t9ik9NeY1sPkmt4oBJzVI
+ eGK+jdNFfz6eYL7Xu9VC295CHU/B73yfs66RBtC851r/fflFjlN90p8OzkKHHz6vgEu1 oA== 
 Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 34dgm3vuwt-1
+        by aserp2130.oracle.com with ESMTP id 34c9saqda3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:37:50 +0000
+        Mon, 26 Oct 2020 23:37:56 +0000
 Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPxqI110514;
-        Mon, 26 Oct 2020 23:37:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 34cx5wftju-1
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPxHK110443;
+        Mon, 26 Oct 2020 23:37:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 34cx5wftks-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:37:49 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNbnrL013763;
-        Mon, 26 Oct 2020 23:37:49 GMT
+        Mon, 26 Oct 2020 23:37:56 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNbtcx008835;
+        Mon, 26 Oct 2020 23:37:55 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:37:49 -0700
-Subject: [PATCH 08/21] xfs: fix some comments
+        with ESMTP ; Mon, 26 Oct 2020 16:37:55 -0700
+Subject: [PATCH 09/21] xfs: remove the redundant crc feature check in
+ xfs_attr3_rmt_verify
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Kaixu Xia <kaixuxia@tencent.com>, Christoph Hellwig <hch@lst.de>,
         linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:37:48 -0700
-Message-ID: <160375546810.882906.11162309682890581251.stgit@magnolia>
+Date:   Mon, 26 Oct 2020 16:37:54 -0700
+Message-ID: <160375547433.882906.6729958278035725503.stgit@magnolia>
 In-Reply-To: <160375541713.882906.11902959014062334120.stgit@magnolia>
 References: <160375541713.882906.11902959014062334120.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -59,65 +60,44 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxs
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010260153
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Kaixu Xia <kaixuxia@tencent.com>
 
-Source kernel commit: a647d109e08ac0961ca0fd511b013d962d256987
+Source kernel commit: 3feb4ffbf69321284dc78ac6ca43b4a2afadf243
 
-Fix the comments to help people understand the code.
+We already check whether the crc feature is enabled before calling
+xfs_attr3_rmt_verify(), so remove the redundant feature check in that
+function.
 
 Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-[darrick: fix the indenting problems too]
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libxfs/xfs_da_format.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ libxfs/xfs_attr_remote.c |    2 --
+ 1 file changed, 2 deletions(-)
 
 
-diff --git a/libxfs/xfs_da_format.h b/libxfs/xfs_da_format.h
-index b40a4e80f5ee..0af44c4e4fdf 100644
---- a/libxfs/xfs_da_format.h
-+++ b/libxfs/xfs_da_format.h
-@@ -15,8 +15,8 @@
-  */
- #define XFS_DA_NODE_MAGIC	0xfebe	/* magic number: non-leaf blocks */
- #define XFS_ATTR_LEAF_MAGIC	0xfbee	/* magic number: attribute leaf blks */
--#define	XFS_DIR2_LEAF1_MAGIC	0xd2f1	/* magic number: v2 dirlf single blks */
--#define	XFS_DIR2_LEAFN_MAGIC	0xd2ff	/* magic number: v2 dirlf multi blks */
-+#define XFS_DIR2_LEAF1_MAGIC	0xd2f1	/* magic number: v2 dirlf single blks */
-+#define XFS_DIR2_LEAFN_MAGIC	0xd2ff	/* magic number: v2 dirlf multi blks */
+diff --git a/libxfs/xfs_attr_remote.c b/libxfs/xfs_attr_remote.c
+index f09ea295e097..3807cd3de503 100644
+--- a/libxfs/xfs_attr_remote.c
++++ b/libxfs/xfs_attr_remote.c
+@@ -95,8 +95,6 @@ xfs_attr3_rmt_verify(
+ {
+ 	struct xfs_attr3_rmt_hdr *rmt = ptr;
  
- typedef struct xfs_da_blkinfo {
- 	__be32		forw;			/* previous block in list */
-@@ -35,8 +35,8 @@ typedef struct xfs_da_blkinfo {
-  */
- #define XFS_DA3_NODE_MAGIC	0x3ebe	/* magic number: non-leaf blocks */
- #define XFS_ATTR3_LEAF_MAGIC	0x3bee	/* magic number: attribute leaf blks */
--#define	XFS_DIR3_LEAF1_MAGIC	0x3df1	/* magic number: v2 dirlf single blks */
--#define	XFS_DIR3_LEAFN_MAGIC	0x3dff	/* magic number: v2 dirlf multi blks */
-+#define XFS_DIR3_LEAF1_MAGIC	0x3df1	/* magic number: v3 dirlf single blks */
-+#define XFS_DIR3_LEAFN_MAGIC	0x3dff	/* magic number: v3 dirlf multi blks */
- 
- struct xfs_da3_blkinfo {
- 	/*
-@@ -61,7 +61,7 @@ struct xfs_da3_blkinfo {
-  * Since we have duplicate keys, use a binary search but always follow
-  * all match in the block, not just the first match found.
-  */
--#define	XFS_DA_NODE_MAXDEPTH	5	/* max depth of Btree */
-+#define XFS_DA_NODE_MAXDEPTH	5	/* max depth of Btree */
- 
- typedef struct xfs_da_node_hdr {
- 	struct xfs_da_blkinfo	info;	/* block type, links, etc. */
+-	if (!xfs_sb_version_hascrc(&mp->m_sb))
+-		return __this_address;
+ 	if (!xfs_verify_magic(bp, rmt->rm_magic))
+ 		return __this_address;
+ 	if (!uuid_equal(&rmt->rm_uuid, &mp->m_sb.sb_meta_uuid))
 
