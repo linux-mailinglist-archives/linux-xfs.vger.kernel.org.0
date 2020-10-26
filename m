@@ -2,52 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C8D7299AD2
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:39:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A6B5299ABB
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:37:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407314AbgJZXjc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:39:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:57976 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407284AbgJZXjc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:39:32 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPmrZ165230;
-        Mon, 26 Oct 2020 23:37:06 GMT
+        id S2407209AbgJZXhV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:37:21 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38390 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407207AbgJZXhU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:37:20 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNP1Gm157959;
+        Mon, 26 Oct 2020 23:37:13 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=Zef20BADGBY2clK5XfONS5OynKV7USSssmbAhdLK5v0=;
- b=Zk4ZQchIiss8hXLM3PTuJrSavEUJ2Wk2AQndVztQmVWz+MyvzwlNbZ7E6XdY2n4Rr6CP
- /+tooT72GlWjyKQZWZOW1BK6VLr4/eZTcT6qhDGPoOHl4FOg0BNF6qUvPGMpQAdpwGjj
- a480+xDJrnztk24B58yJpb7F7lcaaWqObRrVRp02HR6X9f3NdwTUsRar/Vo1BSKGpC83
- NdhbsBqjIh0GQtYjhHPQybOnhOBfsi1UCnrXbEUDpIdvOSXOsUSRcWZQ7hLmiB/erYXV
- vDUwxmD7U5EuCqSvbUV7d+KlNKPS7X0EF2sQeIIRdKGma8Y10cjWwKQKXMfNWsc9ck2T OA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 34dgm3vuve-1
+ bh=o0rs+idSTeN/8vCzlAiJNr5sc7hhyJW0FeiqDHk8R7w=;
+ b=Sg+7X4bls+yToqm15051YtVhCQDjpYDPzdGov7yQ6wWKCvprMI+FRrzHd7YYnqds0whp
+ IFdWpb/AnBaDQJSONuRUKxGzqnIUbTKeDLlL22Bhqg+7dZ+7qkIoURyyvM1JNXcoXXM4
+ fLcprhG5cum3Zrv6nr4733WH+DmyFCbbU0uEUkktq+dyx6CSTgfWUtnGe69cVlE5r8qN
+ kOtRMhxlIGhQ3ybS9VzSSrHG/whBTtFwh4+UIl87bs0fku38Xwt15pMPkjZCG6oHF4H7
+ Vm8r/+K6wQi2l9OJNU+D2OLk8SR+Bl6LJSJwVrbwIxNbzA165Zlp8DL4v/6jS3fCHSRl tg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 34cc7kq8qu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:37:06 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPGKn120983;
-        Mon, 26 Oct 2020 23:37:06 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 34cx6va752-1
+        Mon, 26 Oct 2020 23:37:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQE3Z032468;
+        Mon, 26 Oct 2020 23:37:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 34cx1q2ctc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:37:05 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNb5Fc006599;
-        Mon, 26 Oct 2020 23:37:05 GMT
+        Mon, 26 Oct 2020 23:37:12 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNbBn8029882;
+        Mon, 26 Oct 2020 23:37:11 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:37:04 -0700
-Subject: [PATCH 01/21] xfs: remove typedef xfs_attr_sf_entry_t
+        with ESMTP ; Mon, 26 Oct 2020 16:37:11 -0700
+Subject: [PATCH 02/21] xfs: Remove typedef xfs_attr_shortform_t
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>,
         Carlos Maiolino <cmaiolino@redhat.com>,
         linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:37:03 -0700
-Message-ID: <160375542383.882906.11557101490927759593.stgit@magnolia>
+Date:   Mon, 26 Oct 2020 16:37:10 -0700
+Message-ID: <160375543016.882906.12015749733580450608.stgit@magnolia>
 In-Reply-To: <160375541713.882906.11902959014062334120.stgit@magnolia>
 References: <160375541713.882906.11902959014062334120.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,23 +55,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010260153
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=2
+ priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Carlos Maiolino <cmaiolino@redhat.com>
 
-Source kernel commit: 6337c84466c250d5da797bc5d6941c501d500e48
+Source kernel commit: 47e6cc100054c8c6b809e25c286a2fd82e82bcb7
 
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
@@ -79,210 +79,302 @@ Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- db/attrshort.c         |   20 ++++++++++----------
+ db/attrshort.c         |   18 +++++++++---------
+ db/check.c             |    4 ++--
+ db/inode.c             |    4 ++--
  db/metadump.c          |    4 ++--
- libxfs/xfs_attr_leaf.c |    4 ++--
- libxfs/xfs_attr_sf.h   |   11 ++++++-----
+ libxfs/xfs_attr_leaf.c |   16 ++++++++--------
+ libxfs/xfs_da_format.h |    4 ++--
  repair/attr_repair.c   |    8 ++++----
- 5 files changed, 24 insertions(+), 23 deletions(-)
+ repair/dinode.c        |    6 +++---
+ 8 files changed, 32 insertions(+), 32 deletions(-)
 
 
 diff --git a/db/attrshort.c b/db/attrshort.c
-index 90c95dd44128..15532a062caa 100644
+index 15532a062caa..5746c66a62e0 100644
 --- a/db/attrshort.c
 +++ b/db/attrshort.c
-@@ -33,7 +33,7 @@ const field_t	attr_sf_hdr_flds[] = {
- 	{ NULL }
- };
+@@ -18,7 +18,7 @@ static int	attr_sf_entry_value_offset(void *obj, int startoff, int idx);
+ static int	attr_shortform_list_count(void *obj, int startoff);
+ static int	attr_shortform_list_offset(void *obj, int startoff, int idx);
  
--#define	EOFF(f)	bitize(offsetof(xfs_attr_sf_entry_t, f))
-+#define	EOFF(f)	bitize(offsetof(struct xfs_attr_sf_entry, f))
- const field_t	attr_sf_entry_flds[] = {
- 	{ "namelen", FLDT_UINT8D, OI(EOFF(namelen)), C1, 0, TYP_NONE },
- 	{ "valuelen", FLDT_UINT8D, OI(EOFF(valuelen)), C1, 0, TYP_NONE },
-@@ -56,10 +56,10 @@ attr_sf_entry_name_count(
- 	void			*obj,
- 	int			startoff)
+-#define	OFF(f)	bitize(offsetof(xfs_attr_shortform_t, f))
++#define	OFF(f)	bitize(offsetof(struct xfs_attr_shortform, f))
+ const field_t	attr_shortform_flds[] = {
+ 	{ "hdr", FLDT_ATTR_SF_HDR, OI(OFF(hdr)), C1, 0, TYP_NONE },
+ 	{ "list", FLDT_ATTR_SF_ENTRY, attr_shortform_list_offset,
+@@ -71,10 +71,10 @@ attr_sf_entry_size(
  {
--	xfs_attr_sf_entry_t	*e;
-+	struct xfs_attr_sf_entry	*e;
- 
- 	ASSERT(bitoffs(startoff) == 0);
--	e = (xfs_attr_sf_entry_t *)((char *)obj + byteize(startoff));
-+	e = (struct xfs_attr_sf_entry *)((char *)obj + byteize(startoff));
- 	return e->namelen;
- }
- 
-@@ -69,7 +69,7 @@ attr_sf_entry_size(
- 	int			startoff,
- 	int			idx)
- {
--	xfs_attr_sf_entry_t	*e;
-+	struct xfs_attr_sf_entry	*e;
+ 	struct xfs_attr_sf_entry	*e;
  	int			i;
- 	xfs_attr_shortform_t	*sf;
+-	xfs_attr_shortform_t	*sf;
++	struct xfs_attr_shortform	*sf;
  
-@@ -86,10 +86,10 @@ attr_sf_entry_value_count(
+ 	ASSERT(bitoffs(startoff) == 0);
+-	sf = (xfs_attr_shortform_t *)((char *)obj + byteize(startoff));
++	sf = (struct xfs_attr_shortform *)((char *)obj + byteize(startoff));
+ 	e = &sf->list[0];
+ 	for (i = 0; i < idx; i++)
+ 		e = XFS_ATTR_SF_NEXTENTRY(e);
+@@ -113,10 +113,10 @@ attr_shortform_list_count(
  	void			*obj,
  	int			startoff)
  {
--	xfs_attr_sf_entry_t	*e;
-+	struct xfs_attr_sf_entry	*e;
+-	xfs_attr_shortform_t	*sf;
++	struct xfs_attr_shortform	*sf;
  
  	ASSERT(bitoffs(startoff) == 0);
--	e = (xfs_attr_sf_entry_t *)((char *)obj + byteize(startoff));
-+	e = (struct xfs_attr_sf_entry *)((char *)obj + byteize(startoff));
- 	return e->valuelen;
+-	sf = (xfs_attr_shortform_t *)((char *)obj + byteize(startoff));
++	sf = (struct xfs_attr_shortform *)((char *)obj + byteize(startoff));
+ 	return sf->hdr.count;
  }
  
-@@ -100,11 +100,11 @@ attr_sf_entry_value_offset(
- 	int			startoff,
- 	int			idx)
+@@ -128,10 +128,10 @@ attr_shortform_list_offset(
  {
--	xfs_attr_sf_entry_t	*e;
-+	struct xfs_attr_sf_entry	*e;
+ 	struct xfs_attr_sf_entry	*e;
+ 	int			i;
+-	xfs_attr_shortform_t	*sf;
++	struct xfs_attr_shortform	*sf;
+ 
+ 	ASSERT(bitoffs(startoff) == 0);
+-	sf = (xfs_attr_shortform_t *)((char *)obj + byteize(startoff));
++	sf = (struct xfs_attr_shortform *)((char *)obj + byteize(startoff));
+ 	e = &sf->list[0];
+ 	for (i = 0; i < idx; i++)
+ 		e = XFS_ATTR_SF_NEXTENTRY(e);
+@@ -147,11 +147,11 @@ attrshort_size(
+ {
+ 	struct xfs_attr_sf_entry	*e;
+ 	int			i;
+-	xfs_attr_shortform_t	*sf;
++	struct xfs_attr_shortform	*sf;
  
  	ASSERT(bitoffs(startoff) == 0);
  	ASSERT(idx == 0);
--	e = (xfs_attr_sf_entry_t *)((char *)obj + byteize(startoff));
-+	e = (struct xfs_attr_sf_entry *)((char *)obj + byteize(startoff));
- 	return bitize((int)((char *)&e->nameval[e->namelen] - (char *)e));
- }
+-	sf = (xfs_attr_shortform_t *)((char *)obj + byteize(startoff));
++	sf = (struct xfs_attr_shortform *)((char *)obj + byteize(startoff));
+ 	e = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count; i++)
+ 		e = XFS_ATTR_SF_NEXTENTRY(e);
+diff --git a/db/check.c b/db/check.c
+index 5aede6cca15c..0696542a60bb 100644
+--- a/db/check.c
++++ b/db/check.c
+@@ -3046,7 +3046,7 @@ process_lclinode(
+ 	blkmap_t		**blkmapp,
+ 	int			whichfork)
+ {
+-	xfs_attr_shortform_t	*asf;
++	struct xfs_attr_shortform	*asf;
+ 	xfs_fsblock_t		bno;
  
-@@ -126,7 +126,7 @@ attr_shortform_list_offset(
+ 	bno = XFS_INO_TO_FSB(mp, id->ino);
+@@ -3059,7 +3059,7 @@ process_lclinode(
+ 		error++;
+ 	}
+ 	else if (whichfork == XFS_ATTR_FORK) {
+-		asf = (xfs_attr_shortform_t *)XFS_DFORK_APTR(dip);
++		asf = (struct xfs_attr_shortform *)XFS_DFORK_APTR(dip);
+ 		if (be16_to_cpu(asf->hdr.totsize) > XFS_DFORK_ASIZE(dip, mp)) {
+ 			if (!sflag || id->ilist || CHECK_BLIST(bno))
+ 				dbprintf(_("local inode %lld attr is too large "
+diff --git a/db/inode.c b/db/inode.c
+index f0e08ebf5ad9..94eaa91d68af 100644
+--- a/db/inode.c
++++ b/db/inode.c
+@@ -327,7 +327,7 @@ inode_a_size(
  	int			startoff,
  	int			idx)
  {
--	xfs_attr_sf_entry_t	*e;
-+	struct xfs_attr_sf_entry	*e;
- 	int			i;
- 	xfs_attr_shortform_t	*sf;
+-	xfs_attr_shortform_t	*asf;
++	struct xfs_attr_shortform	*asf;
+ 	xfs_dinode_t		*dip;
  
-@@ -145,7 +145,7 @@ attrshort_size(
- 	int			startoff,
- 	int			idx)
- {
--	xfs_attr_sf_entry_t	*e;
-+	struct xfs_attr_sf_entry	*e;
- 	int			i;
- 	xfs_attr_shortform_t	*sf;
- 
+ 	ASSERT(startoff == 0);
+@@ -335,7 +335,7 @@ inode_a_size(
+ 	dip = obj;
+ 	switch (dip->di_aformat) {
+ 	case XFS_DINODE_FMT_LOCAL:
+-		asf = (xfs_attr_shortform_t *)XFS_DFORK_APTR(dip);
++		asf = (struct xfs_attr_shortform *)XFS_DFORK_APTR(dip);
+ 		return bitize(be16_to_cpu(asf->hdr.totsize));
+ 	case XFS_DINODE_FMT_EXTENTS:
+ 		return (int)be16_to_cpu(dip->di_anextents) *
 diff --git a/db/metadump.c b/db/metadump.c
-index e5cb3aa57ade..12a5cba7616d 100644
+index 12a5cba7616d..468235cc94b1 100644
 --- a/db/metadump.c
 +++ b/db/metadump.c
-@@ -1371,7 +1371,7 @@ process_sf_attr(
+@@ -1370,12 +1370,12 @@ process_sf_attr(
+ 	 * values with 'v' (to see a valid string length, as opposed to NULLs)
  	 */
  
- 	xfs_attr_shortform_t	*asfp;
--	xfs_attr_sf_entry_t	*asfep;
-+	struct xfs_attr_sf_entry	*asfep;
+-	xfs_attr_shortform_t	*asfp;
++	struct xfs_attr_shortform	*asfp;
+ 	struct xfs_attr_sf_entry	*asfep;
  	int			ino_attr_size;
  	int			i;
  
-@@ -1413,7 +1413,7 @@ process_sf_attr(
- 			       asfep->valuelen);
- 		}
- 
--		asfep = (xfs_attr_sf_entry_t *)((char *)asfep +
-+		asfep = (struct xfs_attr_sf_entry *)((char *)asfep +
- 				XFS_ATTR_SF_ENTSIZE(asfep));
- 	}
+-	asfp = (xfs_attr_shortform_t *)XFS_DFORK_APTR(dip);
++	asfp = (struct xfs_attr_shortform *)XFS_DFORK_APTR(dip);
+ 	if (asfp->hdr.count == 0)
+ 		return;
  
 diff --git a/libxfs/xfs_attr_leaf.c b/libxfs/xfs_attr_leaf.c
-index 269efb7a5a5c..0ed5297ed357 100644
+index 0ed5297ed357..a14cdbda1d70 100644
 --- a/libxfs/xfs_attr_leaf.c
 +++ b/libxfs/xfs_attr_leaf.c
-@@ -733,7 +733,7 @@ xfs_attr_shortform_add(
+@@ -725,14 +725,14 @@ xfs_attr_shortform_add(
+ 
+ 	ifp = dp->i_afp;
+ 	ASSERT(ifp->if_flags & XFS_IFINLINE);
+-	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
++	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
+ 	if (xfs_attr_sf_findname(args, &sfe, NULL) == -EEXIST)
+ 		ASSERT(0);
+ 
+ 	offset = (char *)sfe - (char *)sf;
  	size = XFS_ATTR_SF_ENTSIZE_BYNAME(args->namelen, args->valuelen);
  	xfs_idata_realloc(dp, size, XFS_ATTR_FORK);
- 	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
--	sfe = (xfs_attr_sf_entry_t *)((char *)sf + offset);
-+	sfe = (struct xfs_attr_sf_entry *)((char *)sf + offset);
+-	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
++	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
+ 	sfe = (struct xfs_attr_sf_entry *)((char *)sf + offset);
  
  	sfe->namelen = args->namelen;
- 	sfe->valuelen = args->valuelen;
-@@ -835,7 +835,7 @@ int
+@@ -784,7 +784,7 @@ xfs_attr_shortform_remove(
+ 
+ 	dp = args->dp;
+ 	mp = dp->i_mount;
+-	sf = (xfs_attr_shortform_t *)dp->i_afp->if_u1.if_data;
++	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
+ 
+ 	error = xfs_attr_sf_findname(args, &sfe, &base);
+ 	if (error != -EEXIST)
+@@ -834,7 +834,7 @@ xfs_attr_shortform_remove(
+ int
  xfs_attr_shortform_lookup(xfs_da_args_t *args)
  {
- 	xfs_attr_shortform_t *sf;
--	xfs_attr_sf_entry_t *sfe;
-+	struct xfs_attr_sf_entry *sfe;
+-	xfs_attr_shortform_t *sf;
++	struct xfs_attr_shortform *sf;
+ 	struct xfs_attr_sf_entry *sfe;
  	int i;
  	struct xfs_ifork *ifp;
+@@ -843,7 +843,7 @@ xfs_attr_shortform_lookup(xfs_da_args_t *args)
  
-diff --git a/libxfs/xfs_attr_sf.h b/libxfs/xfs_attr_sf.h
-index bb004fb7944a..c4afb3307918 100644
---- a/libxfs/xfs_attr_sf.h
-+++ b/libxfs/xfs_attr_sf.h
-@@ -13,7 +13,6 @@
-  * to fit into the literal area of the inode.
-  */
- typedef struct xfs_attr_sf_hdr xfs_attr_sf_hdr_t;
--typedef struct xfs_attr_sf_entry xfs_attr_sf_entry_t;
+ 	ifp = args->dp->i_afp;
+ 	ASSERT(ifp->if_flags & XFS_IFINLINE);
+-	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
++	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count;
+ 				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+@@ -870,7 +870,7 @@ xfs_attr_shortform_getvalue(
+ 	int			i;
  
+ 	ASSERT(args->dp->i_afp->if_flags == XFS_IFINLINE);
+-	sf = (xfs_attr_shortform_t *)args->dp->i_afp->if_u1.if_data;
++	sf = (struct xfs_attr_shortform *)args->dp->i_afp->if_u1.if_data;
+ 	sfe = &sf->list[0];
+ 	for (i = 0; i < sf->hdr.count;
+ 				sfe = XFS_ATTR_SF_NEXTENTRY(sfe), i++) {
+@@ -905,12 +905,12 @@ xfs_attr_shortform_to_leaf(
+ 
+ 	dp = args->dp;
+ 	ifp = dp->i_afp;
+-	sf = (xfs_attr_shortform_t *)ifp->if_u1.if_data;
++	sf = (struct xfs_attr_shortform *)ifp->if_u1.if_data;
+ 	size = be16_to_cpu(sf->hdr.totsize);
+ 	tmpbuffer = kmem_alloc(size, 0);
+ 	ASSERT(tmpbuffer != NULL);
+ 	memcpy(tmpbuffer, ifp->if_u1.if_data, size);
+-	sf = (xfs_attr_shortform_t *)tmpbuffer;
++	sf = (struct xfs_attr_shortform *)tmpbuffer;
+ 
+ 	xfs_idata_realloc(dp, -size, XFS_ATTR_FORK);
+ 	xfs_bmap_local_to_extents_empty(args->trans, dp, XFS_ATTR_FORK);
+diff --git a/libxfs/xfs_da_format.h b/libxfs/xfs_da_format.h
+index 059ac108b1b3..e708b714bf99 100644
+--- a/libxfs/xfs_da_format.h
++++ b/libxfs/xfs_da_format.h
+@@ -579,7 +579,7 @@ xfs_dir2_block_leaf_p(struct xfs_dir2_block_tail *btp)
  /*
-  * We generate this then sort it, attr_list() must return things in hash-order.
-@@ -28,15 +27,17 @@ typedef struct xfs_attr_sf_sort {
- } xfs_attr_sf_sort_t;
+  * Entries are packed toward the top as tight as possible.
+  */
+-typedef struct xfs_attr_shortform {
++struct xfs_attr_shortform {
+ 	struct xfs_attr_sf_hdr {	/* constant-structure header block */
+ 		__be16	totsize;	/* total bytes in shortform list */
+ 		__u8	count;	/* count of active entries */
+@@ -591,7 +591,7 @@ typedef struct xfs_attr_shortform {
+ 		uint8_t flags;	/* flags bits (see xfs_attr_leaf.h) */
+ 		uint8_t nameval[1];	/* name & value bytes concatenated */
+ 	} list[1];			/* variable sized array */
+-} xfs_attr_shortform_t;
++};
  
- #define XFS_ATTR_SF_ENTSIZE_BYNAME(nlen,vlen)	/* space name/value uses */ \
--	(((int)sizeof(xfs_attr_sf_entry_t)-1 + (nlen)+(vlen)))
-+	(((int)sizeof(struct xfs_attr_sf_entry)-1 + (nlen)+(vlen)))
- #define XFS_ATTR_SF_ENTSIZE_MAX			/* max space for name&value */ \
- 	((1 << (NBBY*(int)sizeof(uint8_t))) - 1)
- #define XFS_ATTR_SF_ENTSIZE(sfep)		/* space an entry uses */ \
--	((int)sizeof(xfs_attr_sf_entry_t)-1 + (sfep)->namelen+(sfep)->valuelen)
-+	((int)sizeof(struct xfs_attr_sf_entry)-1 + \
-+		(sfep)->namelen+(sfep)->valuelen)
- #define XFS_ATTR_SF_NEXTENTRY(sfep)		/* next entry in struct */ \
--	((xfs_attr_sf_entry_t *)((char *)(sfep) + XFS_ATTR_SF_ENTSIZE(sfep)))
-+	((struct xfs_attr_sf_entry *)((char *)(sfep) + \
-+		XFS_ATTR_SF_ENTSIZE(sfep)))
- #define XFS_ATTR_SF_TOTSIZE(dp)			/* total space in use */ \
--	(be16_to_cpu(((xfs_attr_shortform_t *)	\
-+	(be16_to_cpu(((struct xfs_attr_shortform *)	\
- 		((dp)->i_afp->if_u1.if_data))->hdr.totsize))
- 
- #endif	/* __XFS_ATTR_SF_H__ */
+ typedef struct xfs_attr_leaf_map {	/* RLE map of free bytes */
+ 	__be16	base;			  /* base of free region */
 diff --git a/repair/attr_repair.c b/repair/attr_repair.c
-index d92909e1c831..d2410c76c1fd 100644
+index d2410c76c1fd..e0580141c479 100644
 --- a/repair/attr_repair.c
 +++ b/repair/attr_repair.c
-@@ -211,7 +211,7 @@ process_shortform_attr(
+@@ -210,14 +210,14 @@ process_shortform_attr(
+ 	xfs_dinode_t	*dip,
  	int		*repair)
  {
- 	xfs_attr_shortform_t	*asf;
--	xfs_attr_sf_entry_t	*currententry, *nextentry, *tempentry;
-+	struct xfs_attr_sf_entry	*currententry, *nextentry, *tempentry;
+-	xfs_attr_shortform_t	*asf;
++	struct xfs_attr_shortform	*asf;
+ 	struct xfs_attr_sf_entry	*currententry, *nextentry, *tempentry;
  	int			i, junkit;
  	int			currentsize, remainingspace;
  
-@@ -250,7 +250,7 @@ process_shortform_attr(
- 		junkit = 0;
+ 	*repair = 0;
  
- 		/* don't go off the end if the hdr.count was off */
--		if ((currentsize + (sizeof(xfs_attr_sf_entry_t) - 1)) >
-+		if ((currentsize + (sizeof(struct xfs_attr_sf_entry) - 1)) >
- 						be16_to_cpu(asf->hdr.totsize))
- 			break; /* get out and reset count and totSize */
+-	asf = (xfs_attr_shortform_t *) XFS_DFORK_APTR(dip);
++	asf = (struct xfs_attr_shortform *) XFS_DFORK_APTR(dip);
  
-@@ -322,7 +322,7 @@ process_shortform_attr(
- 				do_warn(
- 	_("removing attribute entry %d for inode %" PRIu64 "\n"),
- 					i, ino);
--				tempentry = (xfs_attr_sf_entry_t *)
-+				tempentry = (struct xfs_attr_sf_entry *)
- 					((intptr_t) currententry +
- 					 XFS_ATTR_SF_ENTSIZE(currententry));
- 				memmove(currententry,tempentry,remainingspace);
-@@ -338,7 +338,7 @@ process_shortform_attr(
- 		}
+ 	/* Assumption: hdr.totsize is less than a leaf block and was checked
+ 	 * by lclinode for valid sizes. Check the count though.
+@@ -1212,9 +1212,9 @@ process_attributes(
+ 	int		err;
+ 	__u8		aformat = dip->di_aformat;
+ #ifdef DEBUG
+-	xfs_attr_shortform_t *asf;
++	struct xfs_attr_shortform *asf;
  
- 		/* Let's get ready for the next entry... */
--		nextentry = (xfs_attr_sf_entry_t *)((intptr_t) nextentry +
-+		nextentry = (struct xfs_attr_sf_entry *)((intptr_t) nextentry +
- 			 		XFS_ATTR_SF_ENTSIZE(currententry));
- 		currentsize = currentsize + XFS_ATTR_SF_ENTSIZE(currententry);
+-	asf = (xfs_attr_shortform_t *) XFS_DFORK_APTR(dip);
++	asf = (struct xfs_attr_shortform *) XFS_DFORK_APTR(dip);
+ #endif
  
+ 	if (aformat == XFS_DINODE_FMT_LOCAL) {
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 16f52c38a43a..076fc34bfb1c 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -92,7 +92,7 @@ _("would have cleared inode %" PRIu64 " attributes\n"), ino_num);
+ 	 */
+ 
+ 	if (!no_modify) {
+-		xfs_attr_shortform_t *asf = (xfs_attr_shortform_t *)
++		struct xfs_attr_shortform *asf = (struct xfs_attr_shortform *)
+ 				XFS_DFORK_APTR(dino);
+ 		asf->hdr.totsize = cpu_to_be16(sizeof(xfs_attr_sf_hdr_t));
+ 		asf->hdr.count = 0;
+@@ -977,7 +977,7 @@ process_lclinode(
+ 	xfs_dinode_t		*dip,
+ 	int			whichfork)
+ {
+-	xfs_attr_shortform_t	*asf;
++	struct xfs_attr_shortform	*asf;
+ 	xfs_ino_t		lino;
+ 
+ 	lino = XFS_AGINO_TO_INO(mp, agno, ino);
+@@ -989,7 +989,7 @@ process_lclinode(
+ 			XFS_DFORK_DSIZE(dip, mp));
+ 		return(1);
+ 	} else if (whichfork == XFS_ATTR_FORK) {
+-		asf = (xfs_attr_shortform_t *)XFS_DFORK_APTR(dip);
++		asf = (struct xfs_attr_shortform *)XFS_DFORK_APTR(dip);
+ 		if (be16_to_cpu(asf->hdr.totsize) > XFS_DFORK_ASIZE(dip, mp)) {
+ 			do_warn(
+ 	_("local inode %" PRIu64 " attr fork too large (size %d, max = %zu)\n"),
 
