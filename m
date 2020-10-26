@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72B8D299AE1
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:41:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7A05299ADD
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:40:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407495AbgJZXla (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:41:30 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:48088 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407494AbgJZXl3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:41:29 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPvTO177198;
-        Mon, 26 Oct 2020 23:38:03 GMT
+        id S2407477AbgJZXkd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:40:33 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40322 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2407476AbgJZXkc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:40:32 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOxxt157912;
+        Mon, 26 Oct 2020 23:38:09 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=oK7uugDbKgxQCsPORVJjJPQ68nvEOqKx8/I1+OpK2dE=;
- b=HbyegkbmY/BZfVHUNIbs9qNHBb//8MHxORUemb49nDvjGmchEB89wFWsTVv7Iz8vqEr3
- qta0FU++GY0NuAhRiCmTMBg2pxMRzo3XhueJsBMQIwiewo7JNY0/tRtRF8j7ypmSegF4
- VDQCa2+UG+W5atcnNxCQqF/ZPJeIqjp0y1AYFXigR+R85XoROOPsFv5nOPoQmVx5FJtt
- IlteaYEYNkdfep0nAAYLA2DzeAp+Dv26JyUmMw8Xko7XCShlXHCsF43n2B7aXYRMcMdB
- GexqFtYqU/Nn8hrTmM1p5JZnDglLsIOOZ1fDKvim1BrQIo84SWaP8YdLD2S3/CWAMaqp ng== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34c9saqdab-1
+ bh=D4tMEd1voaClIbHR62OAfMT161ZEa04IvT7K7UsTahg=;
+ b=hAUJ193l1gRLIkSbeS1lch67aahcaFcjM0DvlAWZlPWsyk2wlNui0Q8J0+uls3BN98l/
+ 6Or2uDSD9J+h+jM5eHRLC3Y1FxMNSEWxIrWK2L9fTobw/knPPPk1Pc3ZpxKMh0DbgYMZ
+ MUIbGsYCwZCUDdqKct6S0F1/U30d1wUWLSDVEgBOLHAJfpDCvWtiigBEQO9FWWkEndSB
+ m2BkjgN+us0+FfkQTH5R4w8Zm7JgLhANIOU9QMSJtzUSRWLzfdHD2QUQ2g3sOmLX44Po
+ goFbRrtVDxliNFfXPybqyODFRDnAvBDWIelwk99u5jizgMPmTc3hAsva0X04FcVcBuyo mw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 34cc7kq8s0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:38:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQEXR032530;
-        Mon, 26 Oct 2020 23:38:03 GMT
+        Mon, 26 Oct 2020 23:38:08 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPxck110486;
+        Mon, 26 Oct 2020 23:38:08 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 34cx1q2d3m-1
+        by aserp3020.oracle.com with ESMTP id 34cx5wftr7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:38:02 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNc1Rg013916;
-        Mon, 26 Oct 2020 23:38:01 GMT
+        Mon, 26 Oct 2020 23:38:08 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNc8Dq013939;
+        Mon, 26 Oct 2020 23:38:08 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:38:01 -0700
-Subject: [PATCH 10/21] xfs: code cleanup in
- xfs_attr_leaf_entsize_{remote,local}
+        with ESMTP ; Mon, 26 Oct 2020 16:38:07 -0700
+Subject: [PATCH 11/21] xfs: avoid shared rmap operations for attr fork extents
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     Kaixu Xia <kaixuxia@tencent.com>, Christoph Hellwig <hch@lst.de>,
-        linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:38:00 -0700
-Message-ID: <160375548057.882906.11351415911818488608.stgit@magnolia>
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Mon, 26 Oct 2020 16:38:06 -0700
+Message-ID: <160375548682.882906.8680884874833056428.stgit@magnolia>
 In-Reply-To: <160375541713.882906.11902959014062334120.stgit@magnolia>
 References: <160375541713.882906.11902959014062334120.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,59 +54,97 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 adultscore=0
+ malwarescore=0 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Kaixu Xia <kaixuxia@tencent.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Source kernel commit: 61ef5230518a3ad224549a50a01b73989acb94b9
+Source kernel commit: d7884e6e90da974b50dc2c3bf50e03b70750e5f1
 
-Cleanup the typedef usage, the unnecessary parentheses, the unnecessary
-backslash and use the open-coded round_up call in
-xfs_attr_leaf_entsize_{remote,local}.
+During code review, I noticed that the rmap code uses the (slower)
+shared mappings rmap functions for any extent of a reflinked file, even
+if those extents are for the attr fork, which doesn't support sharing.
+We can speed up rmap a tiny bit by optimizing out this case.
 
-Signed-off-by: Kaixu Xia <kaixuxia@tencent.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- libxfs/xfs_da_format.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ libxfs/xfs_rmap.c |   27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
 
-diff --git a/libxfs/xfs_da_format.h b/libxfs/xfs_da_format.h
-index 0af44c4e4fdf..b876b44c0204 100644
---- a/libxfs/xfs_da_format.h
-+++ b/libxfs/xfs_da_format.h
-@@ -746,14 +746,14 @@ xfs_attr3_leaf_name_local(xfs_attr_leafblock_t *leafp, int idx)
-  */
- static inline int xfs_attr_leaf_entsize_remote(int nlen)
+diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
+index 6fdaa04ff0d8..f02f38ac4565 100644
+--- a/libxfs/xfs_rmap.c
++++ b/libxfs/xfs_rmap.c
+@@ -2504,12 +2504,15 @@ xfs_rmap_map_extent(
+ 	int			whichfork,
+ 	struct xfs_bmbt_irec	*PREV)
  {
--	return ((uint)sizeof(xfs_attr_leaf_name_remote_t) - 1 + (nlen) + \
--		XFS_ATTR_LEAF_NAME_ALIGN - 1) & ~(XFS_ATTR_LEAF_NAME_ALIGN - 1);
-+	return round_up(sizeof(struct xfs_attr_leaf_name_remote) - 1 +
-+			nlen, XFS_ATTR_LEAF_NAME_ALIGN);
++	enum xfs_rmap_intent_type type = XFS_RMAP_MAP;
++
+ 	if (!xfs_rmap_update_is_needed(tp->t_mountp, whichfork))
+ 		return;
+ 
+-	__xfs_rmap_add(tp, xfs_is_reflink_inode(ip) ?
+-			XFS_RMAP_MAP_SHARED : XFS_RMAP_MAP, ip->i_ino,
+-			whichfork, PREV);
++	if (whichfork != XFS_ATTR_FORK && xfs_is_reflink_inode(ip))
++		type = XFS_RMAP_MAP_SHARED;
++
++	__xfs_rmap_add(tp, type, ip->i_ino, whichfork, PREV);
  }
  
- static inline int xfs_attr_leaf_entsize_local(int nlen, int vlen)
+ /* Unmap an extent out of a file. */
+@@ -2520,12 +2523,15 @@ xfs_rmap_unmap_extent(
+ 	int			whichfork,
+ 	struct xfs_bmbt_irec	*PREV)
  {
--	return ((uint)sizeof(xfs_attr_leaf_name_local_t) - 1 + (nlen) + (vlen) +
--		XFS_ATTR_LEAF_NAME_ALIGN - 1) & ~(XFS_ATTR_LEAF_NAME_ALIGN - 1);
-+	return round_up(sizeof(struct xfs_attr_leaf_name_local) - 1 +
-+			nlen + vlen, XFS_ATTR_LEAF_NAME_ALIGN);
++	enum xfs_rmap_intent_type type = XFS_RMAP_UNMAP;
++
+ 	if (!xfs_rmap_update_is_needed(tp->t_mountp, whichfork))
+ 		return;
+ 
+-	__xfs_rmap_add(tp, xfs_is_reflink_inode(ip) ?
+-			XFS_RMAP_UNMAP_SHARED : XFS_RMAP_UNMAP, ip->i_ino,
+-			whichfork, PREV);
++	if (whichfork != XFS_ATTR_FORK && xfs_is_reflink_inode(ip))
++		type = XFS_RMAP_UNMAP_SHARED;
++
++	__xfs_rmap_add(tp, type, ip->i_ino, whichfork, PREV);
  }
  
- static inline int xfs_attr_leaf_entsize_local_max(int bsize)
+ /*
+@@ -2542,12 +2548,15 @@ xfs_rmap_convert_extent(
+ 	int			whichfork,
+ 	struct xfs_bmbt_irec	*PREV)
+ {
++	enum xfs_rmap_intent_type type = XFS_RMAP_CONVERT;
++
+ 	if (!xfs_rmap_update_is_needed(mp, whichfork))
+ 		return;
+ 
+-	__xfs_rmap_add(tp, xfs_is_reflink_inode(ip) ?
+-			XFS_RMAP_CONVERT_SHARED : XFS_RMAP_CONVERT, ip->i_ino,
+-			whichfork, PREV);
++	if (whichfork != XFS_ATTR_FORK && xfs_is_reflink_inode(ip))
++		type = XFS_RMAP_CONVERT_SHARED;
++
++	__xfs_rmap_add(tp, type, ip->i_ino, whichfork, PREV);
+ }
+ 
+ /* Schedule the creation of an rmap for non-file data. */
 
