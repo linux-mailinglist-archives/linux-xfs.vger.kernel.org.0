@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DC3C299AB8
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:36:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33608299A99
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:34:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407166AbgJZXgo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:36:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37940 "EHLO
+        id S2406682AbgJZXet (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:34:49 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36754 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407169AbgJZXgn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:36:43 -0400
+        with ESMTP id S2406568AbgJZXet (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:34:49 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPvfk158460;
-        Mon, 26 Oct 2020 23:36:41 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNP0PG157924;
+        Mon, 26 Oct 2020 23:34:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=ZerwMX0Hxjn2gy1M5CRf1LP4nx0hAGtGVPshVu2nczA=;
- b=LodyuqdiXNWoMVVGuOe8vw/N997NgaErRkXWqBe8oPht3JY0Ps9SqRPFpitLkrJQiNq2
- XFCeYejSybD6UepnP+PxG7NNk4/WO63IIFfNpU3OVpkLpEkY0shv96C10MWeJP9qCBEz
- jHTvOyuzTomg5yXJpI2XqkOHqLIcRd37h+yDRX0WPjj3JFFgiTz3P+OgTf9bF4B1XjnO
- yG5PEbkLCeaGcfu9mrwieEqaoMpa4ZkdmwUMQV1qaQ/32389wBGGqfdGGOHSo5lxn8Xp
- z1QVdDDMjCUwu+D0nbtNP5gKGuw6tV91Cgci44xot8U8Z18xkn1DbJO2nf57xv15m87W Kg== 
+ bh=EwtoCEdhQaz5AJIq9l8EaCP+xv/bRJI8tQSLYf5AI7E=;
+ b=YV0W90+6GjEuP5Bz1NouEQ/H3J9YWrdN7/fIO4R8DGHKCoGHHW0YzRkkYcXTjEw8DVI5
+ P0XNIvkT9/ARdryO3lIKzO8Sp8AxyenELjDEkvK57xigh3rca4tFCr+cjF2L8Z8fcxdD
+ W8Lj5mqgtwkLamIoSg/G1ZB7VFQ2VdL/VrMnTkbgnOGkmX4jH3/HP2UZ73rORkG/mX7L
+ MHvGGAhyXuKKZDrBegt4iwnne7P9KiebTUg+QqTt4H/R/e1dWbKQvmNcZTRpcpxHvn4O
+ SZWviHBXiRqxoyFmdxjJ4eASnZLfXwKTD8XyZBWdEfhGHiSZ+dL/Ji/uFJuJIPEkH+fZ Sg== 
 Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 34cc7kq8p5-1
+        by aserp2120.oracle.com with ESMTP id 34cc7kq8js-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:36:41 +0000
+        Mon, 26 Oct 2020 23:34:47 +0000
 Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQE2a032449;
-        Mon, 26 Oct 2020 23:34:40 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 34cx1q2bec-1
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQE78032534;
+        Mon, 26 Oct 2020 23:34:46 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 34cx1q2bfe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:34:40 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNYd9L012578;
-        Mon, 26 Oct 2020 23:34:39 GMT
+        Mon, 26 Oct 2020 23:34:46 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNYjao007612;
+        Mon, 26 Oct 2020 23:34:45 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:34:39 -0700
-Subject: [PATCH 05/26] xfs_quota: convert time_to_string to use time64_t
+        with ESMTP ; Mon, 26 Oct 2020 16:34:45 -0700
+Subject: [PATCH 06/26] xfs_db: refactor timestamp printing
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:34:38 -0700
-Message-ID: <160375527834.881414.2581158648212089750.stgit@magnolia>
+Date:   Mon, 26 Oct 2020 16:34:44 -0700
+Message-ID: <160375528453.881414.12498523896617282388.stgit@magnolia>
 In-Reply-To: <160375524618.881414.16347303401529121282.stgit@magnolia>
 References: <160375524618.881414.16347303401529121282.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -69,202 +69,164 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Rework the time_to_string helper to be capable of dealing with 64-bit
-timestamps.
+Introduce type-specific printing functions to xfs_db to print an
+xfs_timestamp instead of open-coding the timestamp decoding.  This is
+needed to stay ahead of changes that we're going to make to
+xfs_timestamp_t in the following patches.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- quota/quota.c  |   16 ++++++++++------
- quota/quota.h  |    2 +-
- quota/report.c |   16 ++++++++++------
- quota/util.c   |    5 +++--
- 4 files changed, 24 insertions(+), 15 deletions(-)
+ db/field.c  |    8 ++++---
+ db/fprint.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++-------------
+ db/fprint.h |    2 ++
+ db/inode.c  |    5 ++--
+ 4 files changed, 60 insertions(+), 22 deletions(-)
 
 
-diff --git a/quota/quota.c b/quota/quota.c
-index 9545cc430a93..8ba0995d9174 100644
---- a/quota/quota.c
-+++ b/quota/quota.c
-@@ -48,6 +48,7 @@ quota_mount(
- 	uint		flags)
- {
- 	fs_disk_quota_t	d;
-+	time64_t	timer;
- 	char		*dev = mount->fs_name;
- 	char		c[8], h[8], s[8];
- 	uint		qflags;
-@@ -100,6 +101,7 @@ quota_mount(
- 	}
+diff --git a/db/field.c b/db/field.c
+index aa0154d82eb7..f0316aeb4a86 100644
+--- a/db/field.c
++++ b/db/field.c
+@@ -334,8 +334,8 @@ const ftattr_t	ftattrtab[] = {
+ 	  FTARG_SIGNED, NULL, NULL },
+ 	{ FLDT_INT8D, "int8d", fp_num, "%d", SI(bitsz(int8_t)), FTARG_SIGNED,
+ 	  NULL, NULL },
+-	{ FLDT_NSEC, "nsec", fp_num, "%09d", SI(bitsz(int32_t)), FTARG_SIGNED,
+-	  NULL, NULL },
++	{ FLDT_NSEC, "nsec", fp_nsec, NULL, SI(bitsz(xfs_timestamp_t)),
++	  FTARG_SIGNED, NULL, NULL },
+ 	{ FLDT_QCNT, "qcnt", fp_num, "%llu", SI(bitsz(xfs_qcnt_t)), 0, NULL,
+ 	  NULL },
+ 	{ FLDT_QWARNCNT, "qwarncnt", fp_num, "%u", SI(bitsz(xfs_qwarncnt_t)), 0,
+@@ -347,8 +347,8 @@ const ftattr_t	ftattrtab[] = {
+ 	{ FLDT_SYMLINK_CRC, "symlink", NULL, (char *)symlink_crc_flds,
+ 	  symlink_size, FTARG_SIZE, NULL, symlink_crc_flds },
  
- 	if (form & XFS_BLOCK_QUOTA) {
-+		timer = d.d_btimer;
- 		qflags = (flags & HUMAN_FLAG);
- 		if (d.d_blk_hardlimit && d.d_bcount > d.d_blk_hardlimit)
- 			qflags |= LIMIT_FLAG;
-@@ -111,16 +113,17 @@ quota_mount(
- 				bbs_to_string(d.d_blk_softlimit, s, sizeof(s)),
- 				bbs_to_string(d.d_blk_hardlimit, h, sizeof(h)),
- 				d.d_bwarns,
--				time_to_string(d.d_btimer, qflags));
-+				time_to_string(timer, qflags));
- 		else
- 			fprintf(fp, " %10llu %10llu %10llu   %02d %9s ",
- 				(unsigned long long)d.d_bcount >> 1,
- 				(unsigned long long)d.d_blk_softlimit >> 1,
- 				(unsigned long long)d.d_blk_hardlimit >> 1,
- 				d.d_bwarns,
--				time_to_string(d.d_btimer, qflags));
-+				time_to_string(timer, qflags));
- 	}
- 	if (form & XFS_INODE_QUOTA) {
-+		timer = d.d_itimer;
- 		qflags = (flags & HUMAN_FLAG);
- 		if (d.d_ino_hardlimit && d.d_icount > d.d_ino_hardlimit)
- 			qflags |= LIMIT_FLAG;
-@@ -132,16 +135,17 @@ quota_mount(
- 				num_to_string(d.d_ino_softlimit, s, sizeof(s)),
- 				num_to_string(d.d_ino_hardlimit, h, sizeof(h)),
- 				d.d_iwarns,
--				time_to_string(d.d_itimer, qflags));
-+				time_to_string(timer, qflags));
- 		else
- 			fprintf(fp, " %10llu %10llu %10llu   %02d %9s ",
- 				(unsigned long long)d.d_icount,
- 				(unsigned long long)d.d_ino_softlimit,
- 				(unsigned long long)d.d_ino_hardlimit,
- 				d.d_iwarns,
--				time_to_string(d.d_itimer, qflags));
-+				time_to_string(timer, qflags));
- 	}
- 	if (form & XFS_RTBLOCK_QUOTA) {
-+		timer = d.d_rtbtimer;
- 		qflags = (flags & HUMAN_FLAG);
- 		if (d.d_rtb_hardlimit && d.d_rtbcount > d.d_rtb_hardlimit)
- 			qflags |= LIMIT_FLAG;
-@@ -153,14 +157,14 @@ quota_mount(
- 				bbs_to_string(d.d_rtb_softlimit, s, sizeof(s)),
- 				bbs_to_string(d.d_rtb_hardlimit, h, sizeof(h)),
- 				d.d_rtbwarns,
--				time_to_string(d.d_rtbtimer, qflags));
-+				time_to_string(timer, qflags));
- 		else
- 			fprintf(fp, " %10llu %10llu %10llu   %02d %9s ",
- 				(unsigned long long)d.d_rtbcount >> 1,
- 				(unsigned long long)d.d_rtb_softlimit >> 1,
- 				(unsigned long long)d.d_rtb_hardlimit >> 1,
- 				d.d_rtbwarns,
--				time_to_string(d.d_rtbtimer, qflags));
-+				time_to_string(timer, qflags));
- 	}
- 	fprintf(fp, "%s\n", mount->fs_dir);
+-	{ FLDT_TIME, "time", fp_time, NULL, SI(bitsz(int32_t)), FTARG_SIGNED,
+-	  NULL, NULL },
++	{ FLDT_TIME, "time", fp_time, NULL, SI(bitsz(xfs_timestamp_t)),
++	  FTARG_SIGNED, NULL, NULL },
+ 	{ FLDT_TIMESTAMP, "timestamp", NULL, (char *)timestamp_flds,
+ 	  SI(bitsz(xfs_timestamp_t)), 0, NULL, timestamp_flds },
+ 	{ FLDT_UINT1, "uint1", fp_num, "%u", SI(1), 0, NULL, NULL },
+diff --git a/db/fprint.c b/db/fprint.c
+index c9d07e1bca7e..feec02c5de99 100644
+--- a/db/fprint.c
++++ b/db/fprint.c
+@@ -112,22 +112,22 @@ fp_sarray(
  	return 1;
-diff --git a/quota/quota.h b/quota/quota.h
-index 025d887726d8..11f62b208e6a 100644
---- a/quota/quota.h
-+++ b/quota/quota.h
-@@ -40,7 +40,7 @@ enum {
-  */
- extern char *type_to_string(uint __type);
- extern char *form_to_string(uint __form);
--extern char *time_to_string(time_t __time, uint __flags);
-+extern char *time_to_string(time64_t __time, uint __flags);
- extern char *bbs_to_string(uint64_t __v, char *__c, uint __size);
- extern char *num_to_string(uint64_t __v, char *__c, uint __size);
- extern char *pct_to_string(uint64_t __v, uint64_t __t, char *__c, uint __s);
-diff --git a/quota/report.c b/quota/report.c
-index e6def916b827..2d5024e95177 100644
---- a/quota/report.c
-+++ b/quota/report.c
-@@ -330,6 +330,7 @@ report_mount(
- 	uint		flags)
+ }
+ 
+-/*ARGSUSED*/
+ int
+ fp_time(
+-	void	*obj,
+-	int	bit,
+-	int	count,
+-	char	*fmtstr,
+-	int	size,
+-	int	arg,
+-	int	base,
+-	int	array)
++	void			*obj,
++	int			bit,
++	int			count,
++	char			*fmtstr,
++	int			size,
++	int			arg,
++	int			base,
++	int			array)
  {
- 	fs_disk_quota_t	d;
-+	time64_t	timer;
- 	char		*dev = mount->fs_name;
- 	char		c[8], h[8], s[8];
- 	uint		qflags;
-@@ -397,6 +398,7 @@ report_mount(
- 	}
+-	int	bitpos;
+-	char	*c;
+-	int	i;
+-	time_t  t;
++	xfs_timestamp_t		*ts;
++	int			bitpos;
++	char			*c;
++	int			i;
++	time_t			t;
  
- 	if (form & XFS_BLOCK_QUOTA) {
-+		timer = d.d_btimer;
- 		qflags = (flags & HUMAN_FLAG);
- 		if (d.d_blk_hardlimit && d.d_bcount > d.d_blk_hardlimit)
- 			qflags |= LIMIT_FLAG;
-@@ -408,16 +410,17 @@ report_mount(
- 				bbs_to_string(d.d_blk_softlimit, s, sizeof(s)),
- 				bbs_to_string(d.d_blk_hardlimit, h, sizeof(h)),
- 				d.d_bwarns,
--				time_to_string(d.d_btimer, qflags));
-+				time_to_string(timer, qflags));
- 		else
- 			fprintf(fp, " %10llu %10llu %10llu     %02d %9s",
- 				(unsigned long long)d.d_bcount >> 1,
- 				(unsigned long long)d.d_blk_softlimit >> 1,
- 				(unsigned long long)d.d_blk_hardlimit >> 1,
- 				d.d_bwarns,
--				time_to_string(d.d_btimer, qflags));
-+				time_to_string(timer, qflags));
+ 	ASSERT(bitoffs(bit) == 0);
+ 	for (i = 0, bitpos = bit;
+@@ -135,10 +135,47 @@ fp_time(
+ 	     i++, bitpos += size) {
+ 		if (array)
+ 			dbprintf("%d:", i + base);
+-		t = (time_t)getbitval((char *)obj + byteize(bitpos), 0,
+-				sizeof(int32_t) * 8, BVSIGNED);
++
++		ts = obj + byteize(bitpos);
++		t = (int)be32_to_cpu(ts->t_sec);
++
+ 		c = ctime(&t);
+ 		dbprintf("%24.24s", c);
++
++		if (i < count - 1)
++			dbprintf(" ");
++	}
++	return 1;
++}
++
++int
++fp_nsec(
++	void			*obj,
++	int			bit,
++	int			count,
++	char			*fmtstr,
++	int			size,
++	int			arg,
++	int			base,
++	int			array)
++{
++	xfs_timestamp_t		*ts;
++	unsigned int		nsec;
++	int			bitpos;
++	int			i;
++
++	ASSERT(bitoffs(bit) == 0);
++	for (i = 0, bitpos = bit;
++	     i < count && !seenint();
++	     i++, bitpos += size) {
++		if (array)
++			dbprintf("%d:", i + base);
++
++		ts = obj + byteize(bitpos);
++		nsec = (int)be32_to_cpu(ts->t_nsec);
++
++		dbprintf("%u", nsec);
++
+ 		if (i < count - 1)
+ 			dbprintf(" ");
  	}
- 	if (form & XFS_INODE_QUOTA) {
-+		timer = d.d_itimer;
- 		qflags = (flags & HUMAN_FLAG);
- 		if (d.d_ino_hardlimit && d.d_icount > d.d_ino_hardlimit)
- 			qflags |= LIMIT_FLAG;
-@@ -429,16 +432,17 @@ report_mount(
- 				num_to_string(d.d_ino_softlimit, s, sizeof(s)),
- 				num_to_string(d.d_ino_hardlimit, h, sizeof(h)),
- 				d.d_iwarns,
--				time_to_string(d.d_itimer, qflags));
-+				time_to_string(timer, qflags));
- 		else
- 			fprintf(fp, " %10llu %10llu %10llu     %02d %9s",
- 				(unsigned long long)d.d_icount,
- 				(unsigned long long)d.d_ino_softlimit,
- 				(unsigned long long)d.d_ino_hardlimit,
- 				d.d_iwarns,
--				time_to_string(d.d_itimer, qflags));
-+				time_to_string(timer, qflags));
- 	}
- 	if (form & XFS_RTBLOCK_QUOTA) {
-+		timer = d.d_rtbtimer;
- 		qflags = (flags & HUMAN_FLAG);
- 		if (d.d_rtb_hardlimit && d.d_rtbcount > d.d_rtb_hardlimit)
- 			qflags |= LIMIT_FLAG;
-@@ -450,14 +454,14 @@ report_mount(
- 				bbs_to_string(d.d_rtb_softlimit, s, sizeof(s)),
- 				bbs_to_string(d.d_rtb_hardlimit, h, sizeof(h)),
- 				d.d_rtbwarns,
--				time_to_string(d.d_rtbtimer, qflags));
-+				time_to_string(timer, qflags));
- 		else
- 			fprintf(fp, " %10llu %10llu %10llu     %02d %9s",
- 				(unsigned long long)d.d_rtbcount >> 1,
- 				(unsigned long long)d.d_rtb_softlimit >> 1,
- 				(unsigned long long)d.d_rtb_hardlimit >> 1,
- 				d.d_rtbwarns,
--				time_to_string(d.d_rtbtimer, qflags));
-+				time_to_string(timer, qflags));
- 	}
- 	fputc('\n', fp);
- 	return 1;
-diff --git a/quota/util.c b/quota/util.c
-index 50470aba7b05..361d2a8ef5c6 100644
---- a/quota/util.c
-+++ b/quota/util.c
-@@ -18,11 +18,12 @@
+diff --git a/db/fprint.h b/db/fprint.h
+index c958dca0ed92..bfeed15ca7c4 100644
+--- a/db/fprint.h
++++ b/db/fprint.h
+@@ -15,6 +15,8 @@ extern int	fp_sarray(void *obj, int bit, int count, char *fmtstr, int size,
+ 			  int arg, int base, int array);
+ extern int	fp_time(void *obj, int bit, int count, char *fmtstr, int size,
+ 			int arg, int base, int array);
++extern int	fp_nsec(void *obj, int bit, int count, char *fmtstr, int size,
++			int arg, int base, int array);
+ extern int	fp_uuid(void *obj, int bit, int count, char *fmtstr, int size,
+ 			int arg, int base, int array);
+ extern int	fp_crc(void *obj, int bit, int count, char *fmtstr, int size,
+diff --git a/db/inode.c b/db/inode.c
+index f13150c96aa9..cc0e680aadea 100644
+--- a/db/inode.c
++++ b/db/inode.c
+@@ -179,10 +179,9 @@ const field_t	inode_v3_flds[] = {
+ };
  
- char *
- time_to_string(
--	time_t		origin,
-+	time64_t	origin,
- 	uint		flags)
- {
- 	static char	timestamp[32];
--	time_t		now, timer;
-+	time64_t	timer;
-+	time_t		now;
- 	uint		days, hours, minutes, seconds;
  
- 	if (flags & ABSOLUTE_FLAG) {
+-#define	TOFF(f)	bitize(offsetof(xfs_timestamp_t, t_ ## f))
+ const field_t	timestamp_flds[] = {
+-	{ "sec", FLDT_TIME, OI(TOFF(sec)), C1, 0, TYP_NONE },
+-	{ "nsec", FLDT_NSEC, OI(TOFF(nsec)), C1, 0, TYP_NONE },
++	{ "sec", FLDT_TIME, OI(0), C1, 0, TYP_NONE },
++	{ "nsec", FLDT_NSEC, OI(0), C1, 0, TYP_NONE },
+ 	{ NULL }
+ };
+ 
 
