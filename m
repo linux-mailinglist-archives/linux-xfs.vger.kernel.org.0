@@ -2,113 +2,212 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9C8299A9F
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:35:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B02B8299AA1
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:35:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406881AbgJZXfQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:35:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55184 "EHLO
+        id S2406899AbgJZXfZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:35:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55278 "EHLO
         userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2406870AbgJZXfP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:35:15 -0400
+        with ESMTP id S2406870AbgJZXfY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:35:24 -0400
 Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOXEM164636;
-        Mon, 26 Oct 2020 23:35:12 GMT
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOqgc164732;
+        Mon, 26 Oct 2020 23:35:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=lbCe2r/Z47PF9sXWOIxzaMLAxV9ALAXmTGhXrL7mzHw=;
- b=ErGTmMm5IpRnGrBE/SKX7yKu0qzJ4Z7Wu2wJg4aOF8wrHM3JVwbxqK5uBePpBw5wTheq
- BTOB9qLx/deJoykM7jLCntxUDojhgMbBg1QGeO7i/lN8S0axVSiRuR5LK9r4fN+g1dDo
- UpYzZyT+tPA8PwDhvCzdz77rGHtsmo1DSrEF1t2hZsE1DLnQRTnaqYXVwtlIWg9Niqui
- KK5Np/Rcb6qtZbSDS0w/qwAPac1qU39gZF+h2NNmPbpID8XAVsFcahfQSj/hbLk6t7in
- vKhXpIkG/mk4+UqPM/CMdhjZVJZobwPTnBCbw5jTnV0uHDb9d977S/HGRUN5qbvQeYG7 1A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 34dgm3vuru-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=CirmuzRLP4XMykVGAKcESQs0ysv0rONPduAnIOIEBzQ=;
+ b=UoospNJceENSqJi1yKIJ22Nl4yfQpCjwGuQubtb+qKhb0LBAUDp1t6iVFvaF9+V/ZZ38
+ u1D8xCRpvqhiluRFvEl89VCx5qXJ5HMG4W2ceGJaB5R7YZaxpYkEQCiA/u0gwmR41OWN
+ DeMe42z/IY/OXC1uzuz8doZklI7IZvq+5ZkOcpkfiKYvFxMIYtLHiIKVEGVhQc0efiVA
+ 8lG+FgbXq/8Y2hRTPVvF8UHgjZBH/CEUiAeD8lvtO1VwcCvarRhm5w7vPvoxj1wlmZVi
+ yyVapqSy1NBlSOpjSFuys3TXAcABBP7A5N9fJo6eoegPkIxiDAG/88QjljJIj7mCnfFE KQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 34dgm3vus4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:35:12 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQEQ9032465;
-        Mon, 26 Oct 2020 23:33:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 34cx1q2aq7-1
+        Mon, 26 Oct 2020 23:35:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQN7i058358;
+        Mon, 26 Oct 2020 23:33:20 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 34cwukr7xb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:33:11 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNXBaT028419;
-        Mon, 26 Oct 2020 23:33:11 GMT
+        Mon, 26 Oct 2020 23:33:20 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNXJWd007042;
+        Mon, 26 Oct 2020 23:33:19 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:33:06 -0700
-Subject: [PATCH v4 0/9] xfsprogs: add a inode btree blocks counts to the AGI
- header
+        with ESMTP ; Mon, 26 Oct 2020 16:33:14 -0700
+Subject: [PATCH 1/9] xfs: store inode btree block counts in AGI header
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com, bfoster@redhat.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:33:05 -0700
-Message-ID: <160375518573.880355.12052697509237086329.stgit@magnolia>
+Date:   Mon, 26 Oct 2020 16:33:12 -0700
+Message-ID: <160375519217.880355.11973101156874824577.stgit@magnolia>
+In-Reply-To: <160375518573.880355.12052697509237086329.stgit@magnolia>
+References: <160375518573.880355.12052697509237086329.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=2
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
  adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
+ suspectscore=2 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Years ago, Christoph diagnosed a problem where freeing an inode on a
-totally full filesystem could fail due to finobt expansion not being
-able to allocate enough blocks.  He solved the problem by using the
-per-AG block reservation system to ensure that there are always enough
-blocks for finobt expansion, but that came at the cost of having to walk
-the entire finobt at mount time.  This new feature solves that
-performance regression by adding inode btree block counts to the AGI
-header.
+Source kernel commit: 2a39946c984464e4aac82c556ba9915589be7323
 
-v2: rebase kernel to 5.9
-v3: split logical changes into separate patches
-v4: support inobtcounts && !finobt properly
+Add a btree block usage counters for both inode btrees to the AGI header
+so that we don't have to walk the entire finobt at mount time to create
+the per-AG reservations.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=inobt-counters
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=inobt-counters
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=inobt-counters
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- db/agi.c                  |    2 +
- db/sb.c                   |   78 ++++++++++++++++++++++++++++++++++++++++++++-
- db/xfs_admin.sh           |    4 ++
- libxfs/xfs_ag.c           |    5 +++
- libxfs/xfs_format.h       |   21 +++++++++++-
+ libxfs/xfs_ag.c           |    5 +++++
+ libxfs/xfs_format.h       |   18 +++++++++++++++++-
  libxfs/xfs_ialloc.c       |    1 +
- libxfs/xfs_ialloc_btree.c |   65 +++++++++++++++++++++++++++++++++++---
- man/man8/mkfs.xfs.8       |   15 +++++++++
- man/man8/xfs_admin.8      |   16 +++++++++
- mkfs/xfs_mkfs.c           |   34 +++++++++++++++++++-
- repair/phase5.c           |    5 +++
- repair/scan.c             |   38 ++++++++++++++++++++--
- 12 files changed, 272 insertions(+), 12 deletions(-)
+ libxfs/xfs_ialloc_btree.c |   21 +++++++++++++++++++++
+ 4 files changed, 44 insertions(+), 1 deletion(-)
+
+
+diff --git a/libxfs/xfs_ag.c b/libxfs/xfs_ag.c
+index ceaa7e5e4640..af8a0afdda93 100644
+--- a/libxfs/xfs_ag.c
++++ b/libxfs/xfs_ag.c
+@@ -333,6 +333,11 @@ xfs_agiblock_init(
+ 	}
+ 	for (bucket = 0; bucket < XFS_AGI_UNLINKED_BUCKETS; bucket++)
+ 		agi->agi_unlinked[bucket] = cpu_to_be32(NULLAGINO);
++	if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
++		agi->agi_iblocks = cpu_to_be32(1);
++		if (xfs_sb_version_hasfinobt(&mp->m_sb))
++			agi->agi_fblocks = cpu_to_be32(1);
++	}
+ }
+ 
+ typedef void (*aghdr_init_work_f)(struct xfs_mount *mp, struct xfs_buf *bp,
+diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
+index f0ecd064ff14..01544f9d5a57 100644
+--- a/libxfs/xfs_format.h
++++ b/libxfs/xfs_format.h
+@@ -449,6 +449,7 @@ xfs_sb_has_compat_feature(
+ #define XFS_SB_FEAT_RO_COMPAT_FINOBT   (1 << 0)		/* free inode btree */
+ #define XFS_SB_FEAT_RO_COMPAT_RMAPBT   (1 << 1)		/* reverse map btree */
+ #define XFS_SB_FEAT_RO_COMPAT_REFLINK  (1 << 2)		/* reflinked files */
++#define XFS_SB_FEAT_RO_COMPAT_INOBTCNT (1 << 3)		/* inobt block counts */
+ #define XFS_SB_FEAT_RO_COMPAT_ALL \
+ 		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
+ 		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
+@@ -563,6 +564,17 @@ static inline bool xfs_sb_version_hasreflink(struct xfs_sb *sbp)
+ 		(sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_REFLINK);
+ }
+ 
++/*
++ * Inode btree block counter.  We record the number of inobt and finobt blocks
++ * in the AGI header so that we can skip the finobt walk at mount time when
++ * setting up per-AG reservations.
++ */
++static inline bool xfs_sb_version_hasinobtcounts(struct xfs_sb *sbp)
++{
++	return XFS_SB_VERSION_NUM(sbp) == XFS_SB_VERSION_5 &&
++		(sbp->sb_features_ro_compat & XFS_SB_FEAT_RO_COMPAT_INOBTCNT);
++}
++
+ /*
+  * end of superblock version macros
+  */
+@@ -765,6 +777,9 @@ typedef struct xfs_agi {
+ 	__be32		agi_free_root; /* root of the free inode btree */
+ 	__be32		agi_free_level;/* levels in free inode btree */
+ 
++	__be32		agi_iblocks;	/* inobt blocks used */
++	__be32		agi_fblocks;	/* finobt blocks used */
++
+ 	/* structure must be padded to 64 bit alignment */
+ } xfs_agi_t;
+ 
+@@ -785,7 +800,8 @@ typedef struct xfs_agi {
+ #define	XFS_AGI_ALL_BITS_R1	((1 << XFS_AGI_NUM_BITS_R1) - 1)
+ #define	XFS_AGI_FREE_ROOT	(1 << 11)
+ #define	XFS_AGI_FREE_LEVEL	(1 << 12)
+-#define	XFS_AGI_NUM_BITS_R2	13
++#define	XFS_AGI_IBLOCKS		(1 << 13) /* both inobt/finobt block counters */
++#define	XFS_AGI_NUM_BITS_R2	14
+ 
+ /* disk block (xfs_daddr_t) in the AG */
+ #define XFS_AGI_DADDR(mp)	((xfs_daddr_t)(2 << (mp)->m_sectbb_log))
+diff --git a/libxfs/xfs_ialloc.c b/libxfs/xfs_ialloc.c
+index ce73feed981c..8adeb10e5d2e 100644
+--- a/libxfs/xfs_ialloc.c
++++ b/libxfs/xfs_ialloc.c
+@@ -2468,6 +2468,7 @@ xfs_ialloc_log_agi(
+ 		offsetof(xfs_agi_t, agi_unlinked),
+ 		offsetof(xfs_agi_t, agi_free_root),
+ 		offsetof(xfs_agi_t, agi_free_level),
++		offsetof(xfs_agi_t, agi_iblocks),
+ 		sizeof(xfs_agi_t)
+ 	};
+ #ifdef DEBUG
+diff --git a/libxfs/xfs_ialloc_btree.c b/libxfs/xfs_ialloc_btree.c
+index 41c308c2e54c..3ed87d1c7251 100644
+--- a/libxfs/xfs_ialloc_btree.c
++++ b/libxfs/xfs_ialloc_btree.c
+@@ -66,6 +66,25 @@ xfs_finobt_set_root(
+ 			   XFS_AGI_FREE_ROOT | XFS_AGI_FREE_LEVEL);
+ }
+ 
++/* Update the inode btree block counter for this btree. */
++static inline void
++xfs_inobt_mod_blockcount(
++	struct xfs_btree_cur	*cur,
++	int			howmuch)
++{
++	struct xfs_buf		*agbp = cur->bc_ag.agbp;
++	struct xfs_agi		*agi = agbp->b_addr;
++
++	if (!xfs_sb_version_hasinobtcounts(&cur->bc_mp->m_sb))
++		return;
++
++	if (cur->bc_btnum == XFS_BTNUM_FINO)
++		be32_add_cpu(&agi->agi_fblocks, howmuch);
++	else if (cur->bc_btnum == XFS_BTNUM_INO)
++		be32_add_cpu(&agi->agi_iblocks, howmuch);
++	xfs_ialloc_log_agi(cur->bc_tp, agbp, XFS_AGI_IBLOCKS);
++}
++
+ STATIC int
+ __xfs_inobt_alloc_block(
+ 	struct xfs_btree_cur	*cur,
+@@ -101,6 +120,7 @@ __xfs_inobt_alloc_block(
+ 
+ 	new->s = cpu_to_be32(XFS_FSB_TO_AGBNO(args.mp, args.fsbno));
+ 	*stat = 1;
++	xfs_inobt_mod_blockcount(cur, 1);
+ 	return 0;
+ }
+ 
+@@ -133,6 +153,7 @@ __xfs_inobt_free_block(
+ 	struct xfs_buf		*bp,
+ 	enum xfs_ag_resv_type	resv)
+ {
++	xfs_inobt_mod_blockcount(cur, -1);
+ 	return xfs_free_extent(cur->bc_tp,
+ 			XFS_DADDR_TO_FSB(cur->bc_mp, XFS_BUF_ADDR(bp)), 1,
+ 			&XFS_RMAP_OINFO_INOBT, resv);
 
