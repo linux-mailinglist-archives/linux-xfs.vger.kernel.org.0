@@ -2,183 +2,160 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9EA7299AC3
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D967D299A93
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 00:34:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407233AbgJZXiQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 19:38:16 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:45578 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2407215AbgJZXiP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:38:15 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNPdtV177154;
-        Mon, 26 Oct 2020 23:36:09 GMT
+        id S2406525AbgJZXeS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:34:18 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54510 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406524AbgJZXeS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Oct 2020 19:34:18 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNOXtw164631;
+        Mon, 26 Oct 2020 23:34:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=2167jIt1WxoL+3qu1xlZpxf3uLGbR0qZnc1ZiNWJ7X0=;
- b=RUM4t4hTthDfQxDD+kMhM4SKU2/2pJy1S3ZpdrsXgqBeIO7CYAJYBKBbBsnDltjWhw6R
- +v5mw1d33Jj1B2xyxe1D5HFyq0n0dWLvbQ04mSvt3eOSdTulVMKBdutOfbzaRqH1E+eQ
- lMlr+58DQUk/DvKerCnzgCu4giq8MpYoOp+BEAfnLpBgyCqV9ckmU/cvAl6b8r730Yql
- qnS8KvuR4mpk7/OcXk64nViCrrNDYtOq72s/TC47S3CfDmg0JfI239T4N7ch77SYzo0N
- 39w/etzDYN4OynwSj7hUDmWACJCS2ewySh/Z+CaALxy6r30UwI3xK8Oml5sUcER3/DlR pQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 34c9saqd6v-1
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=if1DYqCY5KhI0Jb00e/NLuRHf6w26OFpObqSR27PkC0=;
+ b=QCcXm7/n2NCPq+GVuykbTHgq0cYQgdTQGVABtqIe3frWdmx+LSzUVolzIpIajYkZ4cRO
+ tKAUQHZ9XGJtq18ookZHpEug6mPjeAEpsV6y1j/kjo5GWF5FyUqAXUHPB20VusU60IHw
+ 5+ANasDDRUMMI/uzFO7f5fAismB37gppGMO3pVcE5bxLm9efgu40/2RjidyYVqzDghMp
+ AsTZcfSoJoRKGRYzzbcci0piBjQQ0LX0da/Dudy9/ndmHw0v0nqw4KY/KHAaTdTcykYB
+ ISvPYx/floHAKAK0GmjUDpnOSwFmhp9Y/UcpFY9hCQ0zrzQBqdqjZyWmY5teUo5+iS8a +w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 34dgm3vup9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 26 Oct 2020 23:36:09 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQNIq058381;
-        Mon, 26 Oct 2020 23:34:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 34cwukr8af-1
+        Mon, 26 Oct 2020 23:34:15 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09QNQFa3032559;
+        Mon, 26 Oct 2020 23:34:15 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 34cx1q2b8x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Oct 2020 23:34:08 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09QNY7j7007291;
-        Mon, 26 Oct 2020 23:34:07 GMT
+        Mon, 26 Oct 2020 23:34:14 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09QNYECX005480;
+        Mon, 26 Oct 2020 23:34:14 GMT
 Received: from localhost (/10.159.145.170)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 26 Oct 2020 16:34:07 -0700
-Subject: [PATCH v6 00/26] xfsprogs: widen timestamps to deal with y2038
+        with ESMTP ; Mon, 26 Oct 2020 16:34:13 -0700
+Subject: [PATCH 01/26] libxfs: create a real struct timespec64
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Gao Xiang <hsiangkao@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
-Date:   Mon, 26 Oct 2020 16:34:06 -0700
-Message-ID: <160375524618.881414.16347303401529121282.stgit@magnolia>
+Cc:     Amir Goldstein <amir73il@gmail.com>, linux-xfs@vger.kernel.org
+Date:   Mon, 26 Oct 2020 16:34:13 -0700
+Message-ID: <160375525297.881414.4918118774537695755.stgit@magnolia>
+In-Reply-To: <160375524618.881414.16347303401529121282.stgit@magnolia>
+References: <160375524618.881414.16347303401529121282.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010260153
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9786 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010260153
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010260153
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This series performs some refactoring of our timestamp and inode
-encoding functions, then retrofits the timestamp union to handle
-timestamps as a 64-bit nanosecond counter.  Next, it adds bit shifting
-to the non-root dquot timer fields to boost their effective size to 34
-bits.  These two changes enable correct time handling on XFS through the
-year 2486.
+Create a real struct timespec64 that supports 64-bit seconds counts.
+The C library struct timespec doesn't support this on 32-bit
+architectures and we cannot lose the upper bits in the incore inode.
 
-On a current V5 filesystem, inodes timestamps are a signed 32-bit
-seconds counter, with 0 being the Unix epoch.  Quota timers are an
-unsigned 32-bit seconds counter, with 0 also being the Unix epoch.
-
-This means that inode timestamps can range from:
--(2^31-1) (13 Dec 1901) through (2^31-1) (19 Jan 2038).
-
-And quota timers can range from:
-0 (1 Jan 1970) through (2^32-1) (7 Feb 2106).
-
-With the bigtime encoding turned on, inode timestamps are an unsigned
-64-bit nanoseconds counter, with 0 being the 1901 epoch.  Quota timers
-are a 34-bit unsigned second counter right shifted two bits, with 0
-being the Unix epoch, and capped at the maximum inode timestamp value.
-
-This means that inode timestamps can range from:
-0 (13 Dec 1901) through (2^64-1 / 1e9) (2 Jul 2486)
-
-Quota timers could theoretically range from:
-0 (1 Jan 1970) through (((2^34-1) + (2^31-1)) & ~3) (16 Jun 2582).
-
-But with the capping in place, the quota timers maximum is:
-max((2^64-1 / 1e9) - (2^31-1), (((2^34-1) + (2^31-1)) & ~3) (2 Jul 2486).
-
-v2: rebase to 5.9, having landed the quota refactoring
-v3: various suggestions by Amir and Dave
-v4: drop the timestamp unions, add "is bigtime?" predicates everywhere
-v5: reintroduce timestamp unions as *legacy* timestamp unions
-v6: minor stylistic changes
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=bigtime
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bigtime
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=bigtime
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 ---
- db/Makefile                |    3 -
- db/command.c               |    1 
- db/command.h               |    1 
- db/dquot.c                 |    6 +
- db/field.c                 |   10 +-
- db/field.h                 |    1 
- db/fprint.c                |  133 +++++++++++++++++++++++++++----
- db/fprint.h                |    4 +
- db/inode.c                 |    9 +-
- db/sb.c                    |   17 ++++
- db/timelimit.c             |  160 +++++++++++++++++++++++++++++++++++++
- include/libxfs.h           |    1 
- include/platform_defs.h.in |    3 +
- include/xfs.h              |    2 
- include/xfs_fs_compat.h    |   12 +++
- include/xfs_inode.h        |   27 ++++--
- include/xfs_mount.h        |    5 +
- include/xqm.h              |   20 ++++-
- libfrog/bulkstat.h         |    4 +
- libfrog/convert.c          |    6 +
- libfrog/convert.h          |    2 
- libfrog/fsgeom.c           |    6 +
- libxfs/libxfs_api_defs.h   |    2 
- libxfs/libxfs_priv.h       |    2 
- libxfs/util.c              |    7 +-
- libxfs/xfs_dquot_buf.c     |   35 ++++++++
- libxfs/xfs_format.h        |  190 +++++++++++++++++++++++++++++++++++++++++++-
- libxfs/xfs_fs.h            |    1 
- libxfs/xfs_ialloc.c        |    4 +
- libxfs/xfs_inode_buf.c     |  130 ++++++++++++++----------------
- libxfs/xfs_inode_buf.h     |   15 +++
- libxfs/xfs_log_format.h    |    7 +-
- libxfs/xfs_quota_defs.h    |    8 ++
- libxfs/xfs_sb.c            |    2 
- libxfs/xfs_shared.h        |    3 +
- libxfs/xfs_trans_inode.c   |   11 +++
- logprint/log_misc.c        |   29 ++++++-
- logprint/log_print_all.c   |    3 -
- logprint/logprint.h        |    2 
- man/man8/mkfs.xfs.8        |   16 ++++
- man/man8/xfs_admin.8       |    5 +
- man/man8/xfs_db.8          |   23 +++++
- mkfs/xfs_mkfs.c            |   24 +++++-
- quota/edit.c               |   79 +++++++++++++++---
- quota/quota.c              |   16 ++--
- quota/quota.h              |    9 ++
- quota/report.c             |   16 ++--
- quota/util.c               |    5 +
- repair/dinode.c            |   40 ++++++++-
- repair/quotacheck.c        |   11 ++-
- scrub/common.c             |    2 
- scrub/fscounters.c         |    1 
- scrub/inodes.c             |    5 -
- scrub/progress.c           |    1 
- 54 files changed, 959 insertions(+), 178 deletions(-)
- create mode 100644 db/timelimit.c
+ include/libxfs.h        |    1 -
+ include/xfs_fs_compat.h |    8 ++++++++
+ include/xfs_inode.h     |   22 +++++++++++-----------
+ libxfs/libxfs_priv.h    |    2 --
+ 4 files changed, 19 insertions(+), 14 deletions(-)
+
+
+diff --git a/include/libxfs.h b/include/libxfs.h
+index b9370139becc..2667d3b77084 100644
+--- a/include/libxfs.h
++++ b/include/libxfs.h
+@@ -41,7 +41,6 @@ struct iomap;
+ #define __round_mask(x, y) ((__typeof__(x))((y)-1))
+ #define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
+ #define unlikely(x) (x)
+-#define timespec64 timespec
+ 
+ /*
+  * This mirrors the kernel include for xfs_buf.h - it's implicitly included in
+diff --git a/include/xfs_fs_compat.h b/include/xfs_fs_compat.h
+index 154a802d9aed..d0ffc9775875 100644
+--- a/include/xfs_fs_compat.h
++++ b/include/xfs_fs_compat.h
+@@ -85,4 +85,12 @@ struct xfs_extent_data {
+ #define XFS_IOC_CLONE_RANGE	 _IOW (0x94, 13, struct xfs_clone_args)
+ #define XFS_IOC_FILE_EXTENT_SAME _IOWR(0x94, 54, struct xfs_extent_data)
+ 
++/* 64-bit seconds counter that works independently of the C library time_t. */
++typedef long long int time64_t;
++
++struct timespec64 {
++	time64_t	tv_sec;			/* seconds */
++	long		tv_nsec;		/* nanoseconds */
++};
++
+ #endif	/* __XFS_FS_COMPAT_H__ */
+diff --git a/include/xfs_inode.h b/include/xfs_inode.h
+index 588d8c7258f4..12676cb30bf2 100644
+--- a/include/xfs_inode.h
++++ b/include/xfs_inode.h
+@@ -31,17 +31,17 @@ struct xfs_inode_log_item;
+  * metadata.
+  */
+ struct inode {
+-	mode_t		i_mode;
+-	uint32_t	i_uid;
+-	uint32_t	i_gid;
+-	uint32_t	i_nlink;
+-	xfs_dev_t	i_rdev;		/* This actually holds xfs_dev_t */
+-	unsigned long	i_state;	/* Not actually used in userspace */
+-	uint32_t	i_generation;
+-	uint64_t	i_version;
+-	struct timespec	i_atime;
+-	struct timespec	i_mtime;
+-	struct timespec	i_ctime;
++	mode_t			i_mode;
++	uint32_t		i_uid;
++	uint32_t		i_gid;
++	uint32_t		i_nlink;
++	xfs_dev_t		i_rdev;	 /* This actually holds xfs_dev_t */
++	unsigned long		i_state; /* Not actually used in userspace */
++	uint32_t		i_generation;
++	uint64_t		i_version;
++	struct timespec64	i_atime;
++	struct timespec64	i_mtime;
++	struct timespec64	i_ctime;
+ };
+ 
+ static inline uint32_t i_uid_read(struct inode *inode)
+diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+index bd724c32c263..e92269f0bdae 100644
+--- a/libxfs/libxfs_priv.h
++++ b/libxfs/libxfs_priv.h
+@@ -64,8 +64,6 @@ extern kmem_zone_t *xfs_buf_zone;
+ extern kmem_zone_t *xfs_inode_zone;
+ extern kmem_zone_t *xfs_trans_zone;
+ 
+-#define timespec64 timespec
+-
+ /* fake up iomap, (not) used in xfs_bmap.[ch] */
+ #define IOMAP_F_SHARED			0x04
+ #define xfs_bmbt_to_iomap(a, b, c, d)	((void) 0)
 
