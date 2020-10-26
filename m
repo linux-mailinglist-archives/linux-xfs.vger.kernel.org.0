@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66C9F29A196
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 01:48:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C209929A06F
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 01:31:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502333AbgJ0AnF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 20:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50788 "EHLO mail.kernel.org"
+        id S2409768AbgJZXwc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 19:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409216AbgJZXuv (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 19:50:51 -0400
+        id S2409753AbgJZXwb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 19:52:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B53C21707;
-        Mon, 26 Oct 2020 23:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 998652222C;
+        Mon, 26 Oct 2020 23:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603756250;
-        bh=Pw7O8ZblEt7Bo8anqNCP7K7/gDR57mWfMojXgBHS0NI=;
+        s=default; t=1603756350;
+        bh=mPBuKbaS/hmJtHA4/4Z3Ltibrw3uuXcBuYlOE2nTEe4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXgXQFBW6IX6x/i2w0oHPLlEUWtlmJo+lXjtN5dJlvPITe4pmZpu8Euqo77Aj+yz9
-         MBlf0rAae8DED4VmM3py1uF6sozyc7c3t+u/UNBd37QdJvXzmVKJ3oTsWrn3KRaJBw
-         2SRBS+hrWvt/NX965GNM7cObb9D20X9+SY4FWWrc=
+        b=GEEj66RpvzbJAQ/gHVoEq564EZfFOnspGvE2yHwoiR4vsoAL8kcGBcNP0Kmpvb9A+
+         Opb7sCmKVtJQjw/maltbZD1W+Z3sbo1JhSHck+5aVNukgxfdTv7ZOFtQBPl6LOEVxM
+         ReoU0MdcSasGOVwbmtYJayi2VTokYejYHQ++EYWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gao Xiang <hsiangkao@redhat.com>,
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.9 085/147] xfs: avoid LR buffer overrun due to crafted h_len
-Date:   Mon, 26 Oct 2020 19:48:03 -0400
-Message-Id: <20201026234905.1022767-85-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 021/132] xfs: Set xfs_buf type flag when growing summary/bitmap files
+Date:   Mon, 26 Oct 2020 19:50:13 -0400
+Message-Id: <20201026235205.1023962-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201026234905.1022767-1-sashal@kernel.org>
-References: <20201026234905.1022767-1-sashal@kernel.org>
+In-Reply-To: <20201026235205.1023962-1-sashal@kernel.org>
+References: <20201026235205.1023962-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,117 +43,83 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Gao Xiang <hsiangkao@redhat.com>
+From: Chandan Babu R <chandanrlinux@gmail.com>
 
-[ Upstream commit f692d09e9c8fd0f5557c2e87f796a16dd95222b8 ]
+[ Upstream commit 72cc95132a93293dcd0b6f68353f4741591c9aeb ]
 
-Currently, crafted h_len has been blocked for the log
-header of the tail block in commit a70f9fe52daa ("xfs:
-detect and handle invalid iclog size set by mkfs").
+The following sequence of commands,
 
-However, each log record could still have crafted h_len
-and cause log record buffer overrun. So let's check
-h_len vs buffer size for each log record as well.
+  mkfs.xfs -f -m reflink=0 -r rtdev=/dev/loop1,size=10M /dev/loop0
+  mount -o rtdev=/dev/loop1 /dev/loop0 /mnt
+  xfs_growfs  /mnt
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+... causes the following call trace to be printed on the console,
+
+XFS: Assertion failed: (bip->bli_flags & XFS_BLI_STALE) || (xfs_blft_from_flags(&bip->__bli_format) > XFS_BLFT_UNKNOWN_BUF && xfs_blft_from_flags(&bip->__bli_format) < XFS_BLFT_MAX_BUF), file: fs/xfs/xfs_buf_item.c, line: 331
+Call Trace:
+ xfs_buf_item_format+0x632/0x680
+ ? kmem_alloc_large+0x29/0x90
+ ? kmem_alloc+0x70/0x120
+ ? xfs_log_commit_cil+0x132/0x940
+ xfs_log_commit_cil+0x26f/0x940
+ ? xfs_buf_item_init+0x1ad/0x240
+ ? xfs_growfs_rt_alloc+0x1fc/0x280
+ __xfs_trans_commit+0xac/0x370
+ xfs_growfs_rt_alloc+0x1fc/0x280
+ xfs_growfs_rt+0x1a0/0x5e0
+ xfs_file_ioctl+0x3fd/0xc70
+ ? selinux_file_ioctl+0x174/0x220
+ ksys_ioctl+0x87/0xc0
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x3e/0x70
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This occurs because the buffer being formatted has the value of
+XFS_BLFT_UNKNOWN_BUF assigned to the 'type' subfield of
+bip->bli_formats->blf_flags.
+
+This commit fixes the issue by assigning one of XFS_BLFT_RTSUMMARY_BUF
+and XFS_BLFT_RTBITMAP_BUF to the 'type' subfield of
+bip->bli_formats->blf_flags before committing the corresponding
+transaction.
+
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_log_recover.c | 39 +++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ fs/xfs/xfs_rtalloc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index e2ec91b2d0f46..9ceb67d0f2565 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2904,7 +2904,8 @@ STATIC int
- xlog_valid_rec_header(
- 	struct xlog		*log,
- 	struct xlog_rec_header	*rhead,
--	xfs_daddr_t		blkno)
-+	xfs_daddr_t		blkno,
-+	int			bufsize)
- {
- 	int			hlen;
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 6209e7b6b895b..04b953c3ffa75 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -767,8 +767,14 @@ xfs_growfs_rt_alloc(
+ 	struct xfs_bmbt_irec	map;		/* block map output */
+ 	int			nmap;		/* number of block maps */
+ 	int			resblks;	/* space reservation */
++	enum xfs_blft		buf_type;
+ 	struct xfs_trans	*tp;
  
-@@ -2920,10 +2921,14 @@ xlog_valid_rec_header(
- 		return -EFSCORRUPTED;
- 	}
- 
--	/* LR body must have data or it wouldn't have been written */
-+	/*
-+	 * LR body must have data (or it wouldn't have been written)
-+	 * and h_len must not be greater than LR buffer size.
-+	 */
- 	hlen = be32_to_cpu(rhead->h_len);
--	if (XFS_IS_CORRUPT(log->l_mp, hlen <= 0 || hlen > INT_MAX))
-+	if (XFS_IS_CORRUPT(log->l_mp, hlen <= 0 || hlen > bufsize))
- 		return -EFSCORRUPTED;
++	if (ip == mp->m_rsumip)
++		buf_type = XFS_BLFT_RTSUMMARY_BUF;
++	else
++		buf_type = XFS_BLFT_RTBITMAP_BUF;
 +
- 	if (XFS_IS_CORRUPT(log->l_mp,
- 			   blkno > log->l_logBBsize || blkno > INT_MAX))
- 		return -EFSCORRUPTED;
-@@ -2984,9 +2989,6 @@ xlog_do_recovery_pass(
- 			goto bread_err1;
- 
- 		rhead = (xlog_rec_header_t *)offset;
--		error = xlog_valid_rec_header(log, rhead, tail_blk);
--		if (error)
--			goto bread_err1;
- 
- 		/*
- 		 * xfsprogs has a bug where record length is based on lsunit but
-@@ -3001,21 +3003,18 @@ xlog_do_recovery_pass(
- 		 */
- 		h_size = be32_to_cpu(rhead->h_size);
- 		h_len = be32_to_cpu(rhead->h_len);
--		if (h_len > h_size) {
--			if (h_len <= log->l_mp->m_logbsize &&
--			    be32_to_cpu(rhead->h_num_logops) == 1) {
--				xfs_warn(log->l_mp,
-+		if (h_len > h_size && h_len <= log->l_mp->m_logbsize &&
-+		    rhead->h_num_logops == cpu_to_be32(1)) {
-+			xfs_warn(log->l_mp,
- 		"invalid iclog size (%d bytes), using lsunit (%d bytes)",
--					 h_size, log->l_mp->m_logbsize);
--				h_size = log->l_mp->m_logbsize;
--			} else {
--				XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW,
--						log->l_mp);
--				error = -EFSCORRUPTED;
--				goto bread_err1;
--			}
-+				 h_size, log->l_mp->m_logbsize);
-+			h_size = log->l_mp->m_logbsize;
- 		}
- 
-+		error = xlog_valid_rec_header(log, rhead, tail_blk, h_size);
-+		if (error)
-+			goto bread_err1;
-+
- 		if ((be32_to_cpu(rhead->h_version) & XLOG_VERSION_2) &&
- 		    (h_size > XLOG_HEADER_CYCLE_SIZE)) {
- 			hblks = h_size / XLOG_HEADER_CYCLE_SIZE;
-@@ -3096,7 +3095,7 @@ xlog_do_recovery_pass(
- 			}
- 			rhead = (xlog_rec_header_t *)offset;
- 			error = xlog_valid_rec_header(log, rhead,
--						split_hblks ? blk_no : 0);
-+					split_hblks ? blk_no : 0, h_size);
+ 	/*
+ 	 * Allocate space to the file, as necessary.
+ 	 */
+@@ -830,6 +836,8 @@ xfs_growfs_rt_alloc(
+ 					mp->m_bsize, 0, &bp);
  			if (error)
- 				goto bread_err2;
- 
-@@ -3177,7 +3176,7 @@ xlog_do_recovery_pass(
- 			goto bread_err2;
- 
- 		rhead = (xlog_rec_header_t *)offset;
--		error = xlog_valid_rec_header(log, rhead, blk_no);
-+		error = xlog_valid_rec_header(log, rhead, blk_no, h_size);
- 		if (error)
- 			goto bread_err2;
- 
+ 				goto out_trans_cancel;
++
++			xfs_trans_buf_set_type(tp, bp, buf_type);
+ 			memset(bp->b_addr, 0, mp->m_sb.sb_blocksize);
+ 			xfs_trans_log_buf(tp, bp, 0, mp->m_sb.sb_blocksize - 1);
+ 			/*
 -- 
 2.25.1
 
