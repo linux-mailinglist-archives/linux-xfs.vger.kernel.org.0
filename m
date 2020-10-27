@@ -2,38 +2,38 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87E04299DF0
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 01:11:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D61299E78
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 01:16:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2411636AbgJ0AKy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Oct 2020 20:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60142 "EHLO mail.kernel.org"
+        id S2439595AbgJ0AOX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Oct 2020 20:14:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2411626AbgJ0AKx (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 26 Oct 2020 20:10:53 -0400
+        id S2411750AbgJ0ALa (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 26 Oct 2020 20:11:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9123C216FD;
-        Tue, 27 Oct 2020 00:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FEF22087C;
+        Tue, 27 Oct 2020 00:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1603757453;
-        bh=iyIij0sUfHWqwtTR5tq68DkJ/medJihSopCzw4si2J8=;
+        s=default; t=1603757490;
+        bh=zowSaM2yXYleuKA3rxe7uKTPuSn6i1DqtdSgPtVliFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/n9vr1lLM+yPfUkcyaevnMeREu5XGBSHvc2tPIiiaV4Je7Fr5JUJ4ekt/sB8cb/w
-         DtXtpkLaypaPAnEIU5fyLTsMarDANsUqGrUMEhlgdVluKYAb9v3eVMhjRTlgeAS5S7
-         awOV13DgVdyj8EQgsMGBnrGDEi2Q4Mo3n6ftMXhk=
+        b=kT99U4w0l6qN/TfkaB+KpYHUdiuSt6mIuwbgSXeZWmC1YFT9K+bsW4dd/xHwtaok7
+         m04Hmt8XJdE9R3tY62mmn1+gmuuHepdqLXHE1tPxWr7M613wKtB+zu/qfnPe79amAR
+         2spsiF8ERoR7fSXhJt3+ZNHqqAt3e/phJ+C45N8E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
         Chandan Babu R <chandanrlinux@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 07/30] xfs: fix realtime bitmap/summary file truncation when growing rt volume
-Date:   Mon, 26 Oct 2020 20:10:21 -0400
-Message-Id: <20201027001044.1027349-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 05/25] xfs: fix realtime bitmap/summary file truncation when growing rt volume
+Date:   Mon, 26 Oct 2020 20:11:03 -0400
+Message-Id: <20201027001123.1027642-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201027001044.1027349-1-sashal@kernel.org>
-References: <20201027001044.1027349-1-sashal@kernel.org>
+In-Reply-To: <20201027001123.1027642-1-sashal@kernel.org>
+References: <20201027001123.1027642-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,10 +71,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 0d93d3c10fcc4..a2ff79856f853 100644
+index 919b6544b61a3..eb7a0e69dd0bd 100644
 --- a/fs/xfs/xfs_rtalloc.c
 +++ b/fs/xfs/xfs_rtalloc.c
-@@ -1003,10 +1003,13 @@ xfs_growfs_rt(
+@@ -1006,10 +1006,13 @@ xfs_growfs_rt(
  		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL);
  		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
  		/*
@@ -89,7 +89,7 @@ index 0d93d3c10fcc4..a2ff79856f853 100644
  		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
  		/*
  		 * Get the summary inode into the transaction.
-@@ -1014,9 +1017,12 @@ xfs_growfs_rt(
+@@ -1017,9 +1020,12 @@ xfs_growfs_rt(
  		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL);
  		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
  		/*
