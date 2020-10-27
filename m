@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4615C29C81D
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 20:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EC9B29C833
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 20:05:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1829242AbgJ0TBh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 27 Oct 2020 15:01:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48074 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1829232AbgJ0TBf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 15:01:35 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RIsWGA111607;
-        Tue, 27 Oct 2020 19:01:33 GMT
+        id S1829270AbgJ0TDj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 27 Oct 2020 15:03:39 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:56900 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2444462AbgJ0TDj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 15:03:39 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RItCDi021959;
+        Tue, 27 Oct 2020 19:03:38 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=corp-2020-01-29;
- bh=Xk+AyRCV0pZZzNovL9u8uITY8vGc6FI9GJmCX8C4rXM=;
- b=oK7qEhsjyzfEPg+mC8EXA1TFVxKIj69Gg23pE9sBZeK6CMwyfByRNC3bz9YH9wdxqwvY
- UsNJO6BnvaRluDvEQ7B31+krorMqTepM8JwDqiZkY07I+uYNROyxUY2O1Qi1VfwLsN02
- EithR3cB0Om2fM86V8xfBOpnsRpRgexS86hkfTvN1fpD7/t8qWtJWNGD+4HfP4b7TJ/i
- SeteXbCUJzccZb/3VVlqTML/3/0e5t1toVl1mQHObI92POMMixlNpKHy59XriibmVkqh
- cGZH4Ra/z9T5/A5TTGK1oVD7rrlqsVBIDtjRJlOgqTa95cla+rbHYHKWgaBTzCnzzbv/ Mg== 
+ cc : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=B3qEeDKmVr51/Bd/pfeSVgNTeOSAfwZxTiAY/OSV6Xc=;
+ b=WiWrjn2x9CBUK2BizzcvQU2uOSgETmfZZq3vRnOkVH5TPSaBzD5XBg8tnOXxdfsy1Kd3
+ qeepmf4hR9E7weo5osxdYRWaOLzBiCvZyAAByCV2rtAZ7hDA/CXOyRnnYMn/vDyAtEMe
+ uB6/ym2kWurN7oIeC4D88vau5drZinqqr5ovVEjEM9lM4RWhQw1QpncesVA2v2VaiS8E
+ 81COnCqfZ4tumhpxiXTk1xe47OXPxV3zbhhhaPb5UDKA5oDsdEQT+qatDz1BLzlyCxTg
+ iefnsxJ69eNG3LzD6ffUuLAaDpMLWTJsLRJDaiB6TZ/MFaRp1TbINcfRN8NUyyf7cjsO jg== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 34dgm41ew0-1
+        by aserp2130.oracle.com with ESMTP id 34c9sav0bk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Oct 2020 19:01:33 +0000
+        Tue, 27 Oct 2020 19:03:37 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RIsPSQ076504;
-        Tue, 27 Oct 2020 19:01:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 34cwumrhaa-1
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RIsRo3076905;
+        Tue, 27 Oct 2020 19:01:37 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 34cwumrhcs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 19:01:32 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09RJ1WUC005682;
-        Tue, 27 Oct 2020 19:01:32 GMT
+        Tue, 27 Oct 2020 19:01:37 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09RJ1b5I022896;
+        Tue, 27 Oct 2020 19:01:37 GMT
 Received: from localhost (/10.159.243.144)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 12:01:30 -0700
-Subject: [PATCH 0/9] xfstests: random fixes
+        with ESMTP ; Tue, 27 Oct 2020 12:01:36 -0700
+Subject: [PATCH 1/9] common: extract rt extent size for _get_file_block_size
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 27 Oct 2020 12:01:29 -0700
-Message-ID: <160382528936.1202316.2338876126552815991.stgit@magnolia>
+Date:   Tue, 27 Oct 2020 12:01:35 -0700
+Message-ID: <160382529579.1202316.931742119756545034.stgit@magnolia>
+In-Reply-To: <160382528936.1202316.2338876126552815991.stgit@magnolia>
+References: <160382528936.1202316.2338876126552815991.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,48 +58,85 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxs
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010270110
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010270110
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010270110
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This series contains random fixes to fstests.
+_get_file_block_size is intended to return the size (in bytes) of the
+fundamental allocation unit for a file.  This is required for remapping
+operations like fallocate and reflink, which can only operate on
+allocation units.  Since the XFS realtime volume can be configure for
+allocation units larger than 1 fs block, we need to factor that in here.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=random-fixes
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- check             |   21 ++++++++++++++++++++-
- common/populate   |    5 +++++
- common/rc         |   13 ++++++++++---
- common/repair     |    1 +
- common/xfs        |   20 ++++++++++++++++++++
- tests/xfs/030     |    1 +
- tests/xfs/272     |    3 +++
- tests/xfs/276     |    8 +++++++-
- tests/xfs/327     |   18 ++++++++++++++++--
- tests/xfs/327.out |   13 +++++++------
- tests/xfs/328     |    2 +-
- tests/xfs/341     |    8 +++++---
- tests/xfs/520     |    3 +++
- 13 files changed, 99 insertions(+), 17 deletions(-)
+ common/rc  |   13 ++++++++++---
+ common/xfs |   20 ++++++++++++++++++++
+ 2 files changed, 30 insertions(+), 3 deletions(-)
+
+
+diff --git a/common/rc b/common/rc
+index 27a27ea3..41f93047 100644
+--- a/common/rc
++++ b/common/rc
+@@ -3974,11 +3974,18 @@ _get_file_block_size()
+ 		echo "Missing mount point argument for _get_file_block_size"
+ 		exit 1
+ 	fi
+-	if [ "$FSTYP" = "ocfs2" ]; then
++
++	case "$FSTYP" in
++	"ocfs2")
+ 		stat -c '%o' $1
+-	else
++		;;
++	"xfs")
++		_xfs_get_file_block_size $1
++		;;
++	*)
+ 		_get_block_size $1
+-	fi
++		;;
++	esac
+ }
+ 
+ # Get the minimum block size of an fs.
+diff --git a/common/xfs b/common/xfs
+index 79dab058..3f5c14ba 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -174,6 +174,26 @@ _scratch_mkfs_xfs()
+ 	return $mkfs_status
+ }
+ 
++# Get the size of an allocation unit of a file.  Normally this is just the
++# block size of the file, but for realtime files, this is the realtime extent
++# size.
++_xfs_get_file_block_size()
++{
++	local path="$1"
++
++	if ! ($XFS_IO_PROG -c "stat -v" "$path" 2>&1 | egrep -q '(rt-inherit|realtime)'); then
++		_get_block_size "$path"
++		return
++	fi
++
++	# Otherwise, call xfs_info until we find a mount point or the root.
++	path="$(readlink -m "$path")"
++	while ! $XFS_INFO_PROG "$path" &>/dev/null && [ "$path" != "/" ]; do
++		path="$(dirname "$path")"
++	done
++	$XFS_INFO_PROG "$path" | grep realtime | sed -e 's/^.*extsz=\([0-9]*\).*$/\1/g'
++}
++
+ # xfs_check script is planned to be deprecated. But, we want to
+ # be able to invoke "xfs_check" behavior in xfstests in order to
+ # maintain the current verification levels.
 
