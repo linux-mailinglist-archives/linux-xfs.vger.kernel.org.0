@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D164F29C836
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 20:05:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3D229C852
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 20:07:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1829275AbgJ0TEA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 27 Oct 2020 15:04:00 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47590 "EHLO
+        id S2503718AbgJ0TGD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 27 Oct 2020 15:06:03 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:49268 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2502031AbgJ0TEA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 15:04:00 -0400
+        with ESMTP id S2503794AbgJ0TGD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 15:06:03 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RItFRB108131;
-        Tue, 27 Oct 2020 19:03:57 GMT
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RIt6wd108088;
+        Tue, 27 Oct 2020 19:06:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=aNzFQjUD0KUFfzzHEbVeuyAyb/ef8YzsjF3JDaGFDlI=;
- b=K4GKCSyNoOw+OE6tbvDb7zmIBdBzzayXeUI5H7RPMLeLpam7/yvujB0uP5ZUgwTNT4yO
- 1GRustMS+lUhyDCt9KBWZl6N74FLxFya3hY09/jMISrqQ/0M8Q7+bOO2w82D7Hh1wDjW
- IyL5w5AA9uLcLQzvZG8qtthKtM2jwTmJF1KEUSzj5ZClBKxskaH6/R8WebCagqb3u56c
- vDKSi8FZC/TAkLdYBKsn/RyIBeQvvIc6frJ7WJezNoLVJTncLbEgi7plM3dMg9QPPQSi
- V9+XTwISCt7IRaBdWCUC3uEn8eByycpUE0ooFBynlgLzHOp1L/p96fiJGSbrs0x2dMbC aw== 
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=F1eqUbYboSqXHRNYVDWUvPtnDvXpczmOTMrRhEMoYLQ=;
+ b=AKfrOsxi4u501n6X3Xuyolj0pJeHgYUhTPK7i+rPTKIq1RfGj+rS4oDPUODrNTWN3NXl
+ U6jYlvOZ78hNjP5x+eWBezkpu1VuRpswrPDaTm7qt9nelfeiivyFfpCSYSbYDH9ENblr
+ G7QbwIUY0QNd8IOhu6dgFUbS5E2fN+r3xhlbcdhtRdAqDlt3aVV0F10gl8pxtswHU8Je
+ u2ep5zNmf7AV89V6Wtve0firQWUq0bQaJUxGOcjqBBk2jYLyytvaDyzaIHL7FM1g6TIX
+ KdOut1Z4l7Dm/L4Wrv6iLn1Rwt/4MvTmj6eQnzKVOVqCYjVDL9OL2BKoHKfeb05rKFdF kw== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 34cc7kuuy8-1
+        by aserp2120.oracle.com with ESMTP id 34cc7kuv7w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Oct 2020 19:03:57 +0000
+        Tue, 27 Oct 2020 19:06:01 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RItJYs019776;
-        Tue, 27 Oct 2020 19:03:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 34cx6wbnuh-1
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RItK9e019886;
+        Tue, 27 Oct 2020 19:04:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 34cx6wbnwu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 19:03:56 +0000
+        Tue, 27 Oct 2020 19:04:00 +0000
 Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09RJ3ueJ025554;
-        Tue, 27 Oct 2020 19:03:56 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09RJ3x09028369;
+        Tue, 27 Oct 2020 19:03:59 GMT
 Received: from localhost (/10.159.243.144)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 12:03:51 -0700
-Subject: [PATCH 2/2] xfs: test inobtcount upgrade
+        with ESMTP ; Tue, 27 Oct 2020 12:03:55 -0700
+Subject: [PATCH RFC v6 0/4] xfstests: widen timestamps to deal with y2038+
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 27 Oct 2020 12:03:48 -0700
-Message-ID: <160382542877.1203756.11339393830951325848.stgit@magnolia>
-In-Reply-To: <160382541643.1203756.12015378093281554469.stgit@magnolia>
-References: <160382541643.1203756.12015378093281554469.stgit@magnolia>
+Date:   Tue, 27 Oct 2020 12:03:54 -0700
+Message-ID: <160382543472.1203848.8335854864075548402.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -67,142 +65,87 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Make sure we can actually upgrade filesystems to support inobtcounts.
+This series performs some refactoring of our timestamp and inode
+encoding functions, then retrofits the timestamp union to handle
+timestamps as a 64-bit nanosecond counter.  Next, it adds bit shifting
+to the non-root dquot timer fields to boost their effective size to 34
+bits.  These two changes enable correct time handling on XFS through the
+year 2486.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+On a current V5 filesystem, inodes timestamps are a signed 32-bit
+seconds counter, with 0 being the Unix epoch.  Quota timers are an
+unsigned 32-bit seconds counter, with 0 also being the Unix epoch.
+
+This means that inode timestamps can range from:
+-(2^31-1) (13 Dec 1901) through (2^31-1) (19 Jan 2038).
+
+And quota timers can range from:
+0 (1 Jan 1970) through (2^32-1) (7 Feb 2106).
+
+With the bigtime encoding turned on, inode timestamps are an unsigned
+64-bit nanoseconds counter, with 0 being the 1901 epoch.  Quota timers
+are a 34-bit unsigned second counter right shifted two bits, with 0
+being the Unix epoch, and capped at the maximum inode timestamp value.
+
+This means that inode timestamps can range from:
+0 (13 Dec 1901) through (2^64-1 / 1e9) (2 Jul 2486)
+
+Quota timers could theoretically range from:
+0 (1 Jan 1970) through (((2^34-1) + (2^31-1)) & ~3) (16 Jun 2582).
+
+But with the capping in place, the quota timers maximum is:
+max((2^64-1 / 1e9) - (2^31-1), (((2^34-1) + (2^31-1)) & ~3) (2 Jul 2486).
+
+v2: rebase to 5.9, having landed the quota refactoring
+v3: various suggestions by Amir and Dave
+v4: drop the timestamp unions, add "is bigtime?" predicates everywhere
+v5: reintroduce timestamp unions as *legacy* timestamp unions
+v6: minor stylistic changes
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=bigtime
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=bigtime
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=bigtime
 ---
- common/xfs        |   16 ++++++++++++
- tests/xfs/910     |   72 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/910.out |    3 ++
- tests/xfs/group   |    1 +
- 4 files changed, 92 insertions(+)
- create mode 100755 tests/xfs/910
- create mode 100644 tests/xfs/910.out
-
-
-diff --git a/common/xfs b/common/xfs
-index 3f5c14ba..e548a0a1 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -978,3 +978,19 @@ _require_xfs_copy()
- 	[ "$USE_EXTERNAL" = yes ] && \
- 		_notrun "Cannot xfs_copy with external devices"
- }
-+
-+_require_xfs_mkfs_inobtcount()
-+{
-+	_scratch_mkfs_xfs_supported -m inobtcount=1 >/dev/null 2>&1 \
-+	   || _notrun "mkfs.xfs doesn't have inobtcount feature"
-+}
-+
-+_require_xfs_scratch_inobtcount()
-+{
-+	_require_scratch
-+
-+	_scratch_mkfs -m inobtcount=1 > /dev/null
-+	_try_scratch_mount || \
-+		_notrun "inobtcount not supported by scratch filesystem type: $FSTYP"
-+	_scratch_unmount
-+}
-diff --git a/tests/xfs/910 b/tests/xfs/910
-new file mode 100755
-index 00000000..1924d9ea
---- /dev/null
-+++ b/tests/xfs/910
-@@ -0,0 +1,72 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2020, Oracle and/or its affiliates.  All Rights Reserved.
-+#
-+# FS QA Test No. 910
-+#
-+# Check that we can upgrade a filesystem to support inobtcount and that
-+# everything works properly after the upgrade.
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+
-+# We have very specific formatting parameters, so don't let things get complex
-+# with realtime devices and external logs.
-+unset USE_EXTERNAL
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_command "$XFS_ADMIN_PROG" "xfs_admin"
-+_require_xfs_mkfs_inobtcount
-+_require_xfs_scratch_inobtcount
-+
-+rm -f $seqres.full
-+
-+# Make sure we can't format a filesystem with inobtcount and not finobt.
-+_scratch_mkfs -m crc=1,inobtcount=1,finobt=0 &> $seqres.full && \
-+	echo "Should not be able to format with inobtcount but not finobt."
-+
-+# Make sure we can't upgrade a filesystem to inobtcount without finobt.
-+_scratch_mkfs -m crc=1,inobtcount=0,finobt=0 &> $seqres.full
-+_scratch_xfs_admin -O inobtcount >> $seqres.full && \
-+	echo "Should not be able to upgrade to inobtcount without finobt."
-+
-+# Format V5 filesystem without inode btree counter support and populate it
-+_scratch_mkfs -m crc=1,inobtcount=0 >> $seqres.full
-+_scratch_xfs_db -c 'version' -c 'sb 0' -c 'p' >> $seqres.full
-+_scratch_mount >> $seqres.full
-+
-+echo moo > $SCRATCH_MNT/urk
-+
-+_scratch_unmount
-+_check_scratch_fs
-+
-+# Now upgrade to inobtcount support
-+_scratch_xfs_admin -O inobtcount >> $seqres.full
-+_check_scratch_fs
-+_scratch_xfs_db -c 'version' -c 'sb 0' -c 'p' -c 'agi 0' -c 'p' >> $seqres.full
-+
-+# Mount again, look at our files
-+_scratch_mount >> $seqres.full
-+cat $SCRATCH_MNT/urk
-+
-+# success, all done
-+echo Silence is golden.
-+status=0
-+exit
-diff --git a/tests/xfs/910.out b/tests/xfs/910.out
-new file mode 100644
-index 00000000..83992f49
---- /dev/null
-+++ b/tests/xfs/910.out
-@@ -0,0 +1,3 @@
-+QA output created by 910
-+moo
-+Silence is golden.
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 4b0caea4..862df3be 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -524,6 +524,7 @@
- 760 auto quick rw collapse punch insert zero prealloc
- 761 auto quick realtime
- 763 auto quick rw realtime
-+910 auto quick inobtcount
- 915 auto quick quota
- 917 auto quick db
- 918 auto quick db
+ common/rc             |    2 -
+ common/xfs            |   30 ++++++++++
+ tests/generic/721     |  117 +++++++++++++++++++++++++++++++++++++
+ tests/generic/721.out |    1 
+ tests/generic/722     |  120 ++++++++++++++++++++++++++++++++++++++
+ tests/generic/722.out |    1 
+ tests/generic/group   |    2 +
+ tests/xfs/122         |    1 
+ tests/xfs/122.out     |    1 
+ tests/xfs/908         |   87 ++++++++++++++++++++++++++++
+ tests/xfs/908.out     |   10 +++
+ tests/xfs/909         |  153 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/909.out     |    4 +
+ tests/xfs/911         |   44 ++++++++++++++
+ tests/xfs/911.out     |   15 +++++
+ tests/xfs/group       |    3 +
+ 16 files changed, 590 insertions(+), 1 deletion(-)
+ create mode 100755 tests/generic/721
+ create mode 100644 tests/generic/721.out
+ create mode 100755 tests/generic/722
+ create mode 100644 tests/generic/722.out
+ create mode 100755 tests/xfs/908
+ create mode 100644 tests/xfs/908.out
+ create mode 100755 tests/xfs/909
+ create mode 100644 tests/xfs/909.out
+ create mode 100755 tests/xfs/911
+ create mode 100644 tests/xfs/911.out
 
