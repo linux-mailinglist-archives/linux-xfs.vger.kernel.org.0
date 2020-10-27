@@ -2,140 +2,129 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B8A629CAB2
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 21:53:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB2E929CAA5
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 21:53:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S373346AbgJ0UxE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 27 Oct 2020 16:53:04 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:48557 "EHLO
+        id S373345AbgJ0UxB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 27 Oct 2020 16:53:01 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:48311 "EHLO
         mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S373343AbgJ0UxD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 16:53:03 -0400
+        by vger.kernel.org with ESMTP id S373343AbgJ0UxB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 16:53:01 -0400
 Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E798C58C440
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E6B3658C43F
         for <linux-xfs@vger.kernel.org>; Wed, 28 Oct 2020 07:52:58 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1kXVxi-004zyB-9m
+        id 1kXVxi-004zyD-Az
         for linux-xfs@vger.kernel.org; Wed, 28 Oct 2020 07:52:58 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1kXVxi-00Bqlx-2B
+        id 1kXVxi-00Bqlz-38
         for linux-xfs@vger.kernel.org; Wed, 28 Oct 2020 07:52:58 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v3 0/5] mkfs: Configuration file defined options
-Date:   Wed, 28 Oct 2020 07:52:53 +1100
-Message-Id: <20201027205258.2824424-1-david@fromorbit.com>
+Subject: [PATCH v3 1/5] build: add support for libinih for mkfs
+Date:   Wed, 28 Oct 2020 07:52:54 +1100
+Message-Id: <20201027205258.2824424-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201027205258.2824424-1-david@fromorbit.com>
+References: <20201027205258.2824424-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
         a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
-        a=afefHYAZSVUA:10 a=VwQbUJbxAAAA:8 a=oiYcDx2ZSc9FvUAsWkkA:9
-        a=AjGcO6oz07-iQ99wixmX:22
+        a=afefHYAZSVUA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=NHsjDDs8AAAA:20
+        a=QwDmcnV3u2fYWEkn6UMA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Version 3:
+From: Dave Chinner <dchinner@redhat.com>
 
-- really do "-c file=xxx" > "-c options=xxx" everywhere
-- update libinih parser error handling to be more robust
-- ini_name -> ini_section and comment updates
-- man page layout and grammar improvements
-- Updated Darrick's old config file fstests to exercise the new
-  code.
+Need to make sure the library is present so we can build mkfs with
+config file support.
 
-Version 2:
-
-- "-c file=xxx" > "-c options=xxx"
-- split out constification into new patch
-- removed debug output
-- fixed some comments
-- added man page stuff
-
-Hi Folks,
-
-Because needing config files for mkfs came up yet again in
-discussion, here is a simple implementation of INI format config
-files. These config files behave identically to options specified on
-the command line - the do not change defaults, they do not override
-CLI options, they are not overridden by cli options.
-
-Example:
-
-$ echo -e "[metadata]\ncrc = 0" > foo
-$ mkfs/mkfs.xfs -N -c options=foo -d file=1,size=100m blah
-Parameters parsed from config file foo successfully
-meta-data=blah                   isize=256    agcount=4, agsize=6400 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=0        finobt=0, sparse=0, rmapbt=0
-         =                       reflink=0
-data     =                       bsize=4096   blocks=25600, imaxpct=25
-         =                       sunit=0      swidth=0 blks
-naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-log      =internal log           bsize=4096   blocks=853, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
-$
-
-And there's a V4 filesystem as specified by the option defined
-in the config file. If we do:
-
-$ mkfs/mkfs.xfs -N -c options=foo -m crc=1 -d file=1,size=100m blah
--m crc option respecified
-Usage: mkfs.xfs
-.....
-$
-
-You can see it errors out because the CRC option was specified in
-both the config file and on the CLI.
-
-There's lots of stuff we can do to make the conflict and respec
-error messages better, but that doesn't change the basic
-functionality of config file based mkfs options. To allow for future
-changes to the way we want to apply config files, I created a
-full option subtype for config files. That means we can add another
-option to say "apply config file as default values rather than as
-options" if we decide that is functionality that we want to support.
-
-However, policy decisions like that are completely separate to the
-mechanism, so these patches don't try to address desires to ship
-"tuned" configs, system wide option files, shipping distro specific
-defaults in config files, etc. This is purely a mechanism to allow
-users to specify options via files instead of on the CLI.  No more,
-no less.
-
-Git branch can be found here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/dgc/xfsprogs-dev.git mkfs-config-file
-
-Cheers,
-
-Dave.
-
-
-Dave Chinner (5):
-  build: add support for libinih for mkfs
-  mkfs: add initial ini format config file parsing support
-  mkfs: constify various strings
-  mkfs: hook up suboption parsing to ini files
-  mkfs: document config files in mkfs.xfs(8)
-
- configure.ac         |   3 +
- doc/INSTALL          |   5 +
- include/builddefs.in |   1 +
- include/linux.h      |   2 +-
- m4/package_inih.m4   |  20 ++++
- man/man8/mkfs.xfs.8  | 113 +++++++++++++++++++--
- mkfs/Makefile        |   2 +-
- mkfs/xfs_mkfs.c      | 231 ++++++++++++++++++++++++++++++++++++++-----
- 8 files changed, 343 insertions(+), 34 deletions(-)
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ configure.ac         |  3 +++
+ doc/INSTALL          |  5 +++++
+ include/builddefs.in |  1 +
+ m4/package_inih.m4   | 20 ++++++++++++++++++++
+ 4 files changed, 29 insertions(+)
  create mode 100644 m4/package_inih.m4
 
+diff --git a/configure.ac b/configure.ac
+index 345d90be8b8c..c419f16c39c2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -145,6 +145,9 @@ AC_PACKAGE_UTILITIES(xfsprogs)
+ AC_MULTILIB($enable_lib64)
+ AC_RT($enable_librt)
+ 
++AC_PACKAGE_NEED_INI_H
++AC_PACKAGE_NEED_LIBINIH
++
+ AC_PACKAGE_NEED_UUID_H
+ AC_PACKAGE_NEED_UUIDCOMPARE
+ 
+diff --git a/doc/INSTALL b/doc/INSTALL
+index d4395eefa834..2b04f9cfe108 100644
+--- a/doc/INSTALL
++++ b/doc/INSTALL
+@@ -28,6 +28,11 @@ Linux Instructions
+    (on an RPM based system) or the uuid-dev package (on a Debian system)
+    as some of the commands make use of the UUID library provided by these.
+ 
++   If your distro does not provide a libinih package, you can download and build
++   it from source from the upstream repository found at:
++
++	https://github.com/benhoyt/inih
++
+    To build the package and install it manually, use the following steps:
+ 
+ 	# make
+diff --git a/include/builddefs.in b/include/builddefs.in
+index 30b2727a8db4..e8f447f92baf 100644
+--- a/include/builddefs.in
++++ b/include/builddefs.in
+@@ -27,6 +27,7 @@ LIBTERMCAP = @libtermcap@
+ LIBEDITLINE = @libeditline@
+ LIBBLKID = @libblkid@
+ LIBDEVMAPPER = @libdevmapper@
++LIBINIH = @libinih@
+ LIBXFS = $(TOPDIR)/libxfs/libxfs.la
+ LIBFROG = $(TOPDIR)/libfrog/libfrog.la
+ LIBXCMD = $(TOPDIR)/libxcmd/libxcmd.la
+diff --git a/m4/package_inih.m4 b/m4/package_inih.m4
+new file mode 100644
+index 000000000000..a2775592e09d
+--- /dev/null
++++ b/m4/package_inih.m4
+@@ -0,0 +1,20 @@
++AC_DEFUN([AC_PACKAGE_NEED_INI_H],
++  [ AC_CHECK_HEADERS([ini.h])
++    if test $ac_cv_header_ini_h = no; then
++	echo
++	echo 'FATAL ERROR: could not find a valid ini.h header.'
++	echo 'Install the libinih development package.'
++	exit 1
++    fi
++  ])
++
++AC_DEFUN([AC_PACKAGE_NEED_LIBINIH],
++  [ AC_CHECK_LIB(inih, ini_parse,, [
++	echo
++	echo 'FATAL ERROR: could not find a valid inih library.'
++	echo 'Install the libinih library package.'
++	exit 1
++    ])
++    libinih=-linih
++    AC_SUBST(libinih)
++  ])
 -- 
 2.28.0
 
