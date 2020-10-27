@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F9AB29C839
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 20:05:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63F5B29C824
+	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 20:02:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502003AbgJ0TEG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 27 Oct 2020 15:04:06 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:57278 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2444462AbgJ0TEG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 15:04:06 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RItCvp021945;
-        Tue, 27 Oct 2020 19:04:04 GMT
+        id S2444348AbgJ0TCO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 27 Oct 2020 15:02:14 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48566 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2410146AbgJ0TCN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 15:02:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RIsV3R111549;
+        Tue, 27 Oct 2020 19:02:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=FcgvApeAFi2x+2hlgEZnzGcD/mrEAiH5VemFqtAvZNA=;
- b=pSFb3jvkPbiHb+LhicQIt+y/SABU6alx7vlwAWNWworZlRawH3a6T9s/oXYNPxQgKUW8
- 2deFTGGWni8t4CyQl+QEiGhiNYBHd0VYrFYTfciKbkf3JEfvP80eUsT9ndVokpJ9h047
- WgTLKGYwhnpFT41U2z9cQa4uC6LoU3qWSfWITMjqsT7zlVFJnQgHYwcvPH7q282NQlBV
- FzlbmzybPBf3p1YawVoVfWkOVWJmEmZZqPI+8nir52Rd+KASzN58uG6k6aROVKytf3f4
- mIDiOu8W6q38a8QAPLpfMkelgT6lQBCuWQ+CITcFpjL/CQUAvtP7HPv514ELvq6bz6tz Hw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 34c9sav0dn-1
+ bh=HFSJOxpdSK3VULYP+EBTOaRwcAJPvxYcslqGRwY1J08=;
+ b=uOnTliejaet6E9ttuk5mTWHbiiVQBE0Qg9WC6TDL6qF/7mgLjP6OUL3jmh1g+/TMEhgA
+ onNkHrXjX19HNkzKqkwQjz3mQLP/RPo++bi3cVeILj66qJzNdKKP5uEHO+pgMoZORF16
+ k61YXQZ6uP+fM0JEgOoiDfBJs1kD+kRqrq6LVcGfg/cUgTwDNhKek4jXPtS40gtU7oqt
+ TTk2fbsDYxqEHhs12cy/1Amp+9gZ9GK+Fq1FzWjCB0jhtGnnrZ0Kd8PntrbjJvbC1D93
+ vB0bhJj0bUKGWqxscDKM2Od1FGXHc84c6I+K9wiKFKBdm2pvw6H1Wi+MGlJUw8okVQKM Lw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 34dgm41eyp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Oct 2020 19:04:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RIsPA0076525;
-        Tue, 27 Oct 2020 19:02:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 34cwumrhsv-1
+        Tue, 27 Oct 2020 19:02:11 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RItLZL020077;
+        Tue, 27 Oct 2020 19:02:10 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 34cx6wbmdy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 19:02:04 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09RJ23pr023269;
-        Tue, 27 Oct 2020 19:02:03 GMT
+        Tue, 27 Oct 2020 19:02:10 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09RJ2ADI001084;
+        Tue, 27 Oct 2020 19:02:10 GMT
 Received: from localhost (/10.159.243.144)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 12:02:03 -0700
-Subject: [PATCH 5/9] xfs/327: fix inode reflink flag checking
+        with ESMTP ; Tue, 27 Oct 2020 12:02:09 -0700
+Subject: [PATCH 6/9] xfs/27[26]: force realtime on or off as needed
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 27 Oct 2020 12:02:02 -0700
-Message-ID: <160382532250.1202316.4733915561999380155.stgit@magnolia>
+Date:   Tue, 27 Oct 2020 12:02:08 -0700
+Message-ID: <160382532889.1202316.11271089772377137054.stgit@magnolia>
 In-Reply-To: <160382528936.1202316.2338876126552815991.stgit@magnolia>
 References: <160382528936.1202316.2338876126552815991.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,111 +53,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2010270110
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010270110
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010270110
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This is a regression test that tried to make sure that repair correctly
-clears the XFS inode reflink flag when it detects files that do not
-share any blocks.  However, it does this checking by looking at the
-(online) lsattr output.  This worked fine during development when we
-exposed the reflink state via the stat ioctls, but that has long since
-been removed.  Now the only way to check is via xfs_db, so switch it to
-use that.
+Certain tests have certain requirements where the realtime parameters
+are concerned.  Fix them all.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- tests/xfs/327     |   18 ++++++++++++++++--
- tests/xfs/327.out |   13 +++++++------
- 2 files changed, 23 insertions(+), 8 deletions(-)
+ tests/xfs/272 |    3 +++
+ tests/xfs/276 |    8 +++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/xfs/327 b/tests/xfs/327
-index 017e2a84..7a14798f 100755
---- a/tests/xfs/327
-+++ b/tests/xfs/327
-@@ -49,10 +49,21 @@ seq 1 $nr | while read i; do
- done
- sync
- 
-+ino_0=$(stat -c '%i' $SCRATCH_MNT/file.0)
-+ino_64=$(stat -c '%i' $SCRATCH_MNT/file.64)
-+ino_128=$(stat -c '%i' $SCRATCH_MNT/file.128)
-+
-+echo "Check filesystem"
-+_scratch_unmount
-+_scratch_xfs_db -c "inode $ino_0" -c print \
-+	-c "inode $ino_64" -c print \
-+	-c "inode $ino_128" -c print | grep reflink | sed -e 's/^v[0-9]*/vX/g'
-+_scratch_mount
-+
- echo "Check files"
- for i in 0 $((nr / 2)) $nr; do
- 	md5sum $SCRATCH_MNT/file.$i | _filter_scratch
--	$XFS_IO_PROG -c 'lsattr -v' $SCRATCH_MNT/file.$i | _filter_scratch
-+	$XFS_IO_PROG -c 'lsattr -v' $SCRATCH_MNT/file.$i >> $seqres.full
- done
- 
- echo "CoW all files"
-@@ -63,12 +74,15 @@ done
- echo "Repair filesystem"
- _scratch_unmount
- _repair_scratch_fs >> $seqres.full
-+_scratch_xfs_db -c "inode $ino_0" -c print \
-+	-c "inode $ino_64" -c print \
-+	-c "inode $ino_128" -c print | grep reflink | sed -e 's/^v[0-9]*/vX/g'
+diff --git a/tests/xfs/272 b/tests/xfs/272
+index a9baf2e7..6c0fede5 100755
+--- a/tests/xfs/272
++++ b/tests/xfs/272
+@@ -37,6 +37,9 @@ echo "Format and mount"
+ _scratch_mkfs > "$seqres.full" 2>&1
  _scratch_mount
  
- echo "Check files again"
- for i in 0 $((nr / 2)) $nr; do
- 	md5sum $SCRATCH_MNT/file.$i | _filter_scratch
--	$XFS_IO_PROG -c 'lsattr -v' $SCRATCH_MNT/file.$i | _filter_scratch
-+	$XFS_IO_PROG -c 'lsattr -v' $SCRATCH_MNT/file.$i >> $seqres.full
- done
++# Make sure everything is on the data device
++$XFS_IO_PROG -c 'chattr -t' $SCRATCH_MNT
++
+ _pwrite_byte 0x80 0 737373 $SCRATCH_MNT/urk >> $seqres.full
+ sync
+ $here/src/punch-alternating $SCRATCH_MNT/urk >> $seqres.full
+diff --git a/tests/xfs/276 b/tests/xfs/276
+index 8b7e1de5..6e2b2fb4 100755
+--- a/tests/xfs/276
++++ b/tests/xfs/276
+@@ -35,9 +35,15 @@ _require_test_program "punch-alternating"
+ rm -f "$seqres.full"
  
- echo "Done"
-diff --git a/tests/xfs/327.out b/tests/xfs/327.out
-index 5b3cba21..0e204205 100644
---- a/tests/xfs/327.out
-+++ b/tests/xfs/327.out
-@@ -1,20 +1,21 @@
- QA output created by 327
- Format filesystem
- Create files
-+Check filesystem
-+vX.reflink = 1
-+vX.reflink = 1
-+vX.reflink = 1
- Check files
- 8fa14cdd754f91cc6554c9e71929cce7  SCRATCH_MNT/file.0
--[] SCRATCH_MNT/file.0 
- 8fa14cdd754f91cc6554c9e71929cce7  SCRATCH_MNT/file.64
--[] SCRATCH_MNT/file.64 
- 8fa14cdd754f91cc6554c9e71929cce7  SCRATCH_MNT/file.128
--[] SCRATCH_MNT/file.128 
- CoW all files
- Repair filesystem
-+vX.reflink = 0
-+vX.reflink = 0
-+vX.reflink = 0
- Check files again
- 8fa14cdd754f91cc6554c9e71929cce7  SCRATCH_MNT/file.0
--[] SCRATCH_MNT/file.0 
- 0f17fd72b7bbf5bda0ff433e6d1fc118  SCRATCH_MNT/file.64
--[] SCRATCH_MNT/file.64 
- 0f17fd72b7bbf5bda0ff433e6d1fc118  SCRATCH_MNT/file.128
--[] SCRATCH_MNT/file.128 
- Done
+ echo "Format and mount"
+-_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mkfs | _filter_mkfs 2> "$tmp.mkfs"
++. $tmp.mkfs
++cat "$tmp.mkfs" > $seqres.full
+ _scratch_mount
+ 
++# Don't let the rt extent size perturb the fsmap output with unwritten
++# extents in places we don't expect them
++test $rtextsz -eq $dbsize || _notrun "Skipping test due to rtextsize > 1 fsb"
++
+ $XFS_IO_PROG -f -R -c 'pwrite -S 0x80 0 737373' $SCRATCH_MNT/urk >> $seqres.full
+ sync
+ $here/src/punch-alternating $SCRATCH_MNT/urk >> $seqres.full
 
