@@ -2,165 +2,257 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABDF929D79F
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Oct 2020 23:28:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA5FB29D869
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Oct 2020 23:32:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733028AbgJ1WYp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Oct 2020 18:24:45 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:44474 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732941AbgJ1WY0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 18:24:26 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09SMJFPM172285;
-        Wed, 28 Oct 2020 22:24:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=9z10xMVcuhTeCp1KBESvCxRUUhDSAblD5Dwcu8HA9ec=;
- b=mXIIOKjSezussF3BeD1gp1G+O/SEgu6uz2/dwynYj9ncwaSv8Is8EnoZfiub8i7rX1s1
- 7bAxgbUxejQp70aWJthwyuMiEu0IknJQAzTBOQhDY7mQr4HLzjBYihqQESP+PuFceNew
- mhGuu0EFHyyQqSJL/iEj24JvETHtJr4q+E9Bdfxta0CIl3G7lzbCf7vK9mFXXyqL/HO6
- jCgwBhzcu9bKgIz7XYW/krCkBBBFRcsonn9AFWRGCxzb1xmui+/c70qrty7s6ehFHshY
- RvgUjYID0EheJlwBtzjfecw5VrrqkfcDC1muiQBaYKq1hjbhGe4B3xgE+rwSh+SJ9mH0 Gw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34c9sb25xq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 28 Oct 2020 22:24:14 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09SMKLah180153;
-        Wed, 28 Oct 2020 22:24:14 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 34cx1shev4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 28 Oct 2020 22:24:13 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09SMODvk001220;
-        Wed, 28 Oct 2020 22:24:13 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Oct 2020 15:24:12 -0700
-Date:   Wed, 28 Oct 2020 15:24:11 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org, linux-ext4@vger.kernel.org
-Subject: Re: [PATCH 1/9] common: extract rt extent size for
- _get_file_block_size
-Message-ID: <20201028222411.GE1061252@magnolia>
-References: <160382528936.1202316.2338876126552815991.stgit@magnolia>
- <160382529579.1202316.931742119756545034.stgit@magnolia>
- <20201028074119.GA2750@infradead.org>
+        id S2388025AbgJ1WcF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Oct 2020 18:32:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40461 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388003AbgJ1WcE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 18:32:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1603924322;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hCUX4BfaC+vDuSkpYddYvwRTy0ejMeydmsHxClr4cOA=;
+        b=OJXLLC4jTWyKXzN7dE6njKdfLSiVq7Af99uRmiy3SUDAULXqGhi+PYemSeOKgw7qemtvim
+        AQBvvCALXVyKX+a089GKJewbtR5xuEBmx47wSEbCPQXqovf0M9x3kWnfc91eouf7mFShc8
+        61WsMiIGSNnHMirozWKRCe+Jjn0yZZI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-368-tknxo5IkO3OwsfLjgZpfsg-1; Wed, 28 Oct 2020 13:29:29 -0400
+X-MC-Unique: tknxo5IkO3OwsfLjgZpfsg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03D1E760C6;
+        Wed, 28 Oct 2020 17:29:28 +0000 (UTC)
+Received: from bfoster (ovpn-113-186.rdu2.redhat.com [10.10.113.186])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 50E6260BF1;
+        Wed, 28 Oct 2020 17:29:27 +0000 (UTC)
+Date:   Wed, 28 Oct 2020 13:29:25 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 5/9] xfs_db: add inobtcnt upgrade path
+Message-ID: <20201028172925.GD1611922@bfoster>
+References: <160375518573.880355.12052697509237086329.stgit@magnolia>
+ <160375521801.880355.2055596956122419535.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201028074119.GA2750@infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9788 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- suspectscore=1 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010280137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9788 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=1
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010280137
+In-Reply-To: <160375521801.880355.2055596956122419535.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Oct 28, 2020 at 07:41:19AM +0000, Christoph Hellwig wrote:
-> On Tue, Oct 27, 2020 at 12:01:35PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > _get_file_block_size is intended to return the size (in bytes) of the
-> > fundamental allocation unit for a file.  This is required for remapping
-> > operations like fallocate and reflink, which can only operate on
-> > allocation units.  Since the XFS realtime volume can be configure for
-> > allocation units larger than 1 fs block, we need to factor that in here.
+On Mon, Oct 26, 2020 at 04:33:38PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Should this also cover the ext4 bigalloc clusters?  Or do they not
-> matter for fallocate?
+> Enable users to upgrade their filesystems to support inode btree block
+> counters.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  db/sb.c              |   76 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  db/xfs_admin.sh      |    4 ++-
+>  man/man8/xfs_admin.8 |   16 +++++++++++
+>  3 files changed, 94 insertions(+), 2 deletions(-)
+> 
+> 
+> diff --git a/db/sb.c b/db/sb.c
+> index e3b1fe0b2e6e..b1033e5ef7f0 100644
+> --- a/db/sb.c
+> +++ b/db/sb.c
+> @@ -620,6 +620,44 @@ do_version(xfs_agnumber_t agno, uint16_t version, uint32_t features)
+>  	return 1;
+>  }
+>  
+> +/* Add new V5 features to the filesystem. */
+> +static bool
+> +add_v5_features(
+> +	struct xfs_mount	*mp,
+> +	uint32_t		compat,
+> +	uint32_t		ro_compat,
+> +	uint32_t		incompat,
+> +	uint32_t		log_incompat)
+> +{
+> +	struct xfs_sb		tsb;
+> +	xfs_agnumber_t		agno;
+> +
+> +	dbprintf(_("Upgrading V5 filesystem\n"));
+> +	for (agno = 0; agno < mp->m_sb.sb_agcount; agno++) {
+> +		if (!get_sb(agno, &tsb))
+> +			break;
+> +
+> +		tsb.sb_features_compat |= compat;
+> +		tsb.sb_features_ro_compat |= ro_compat;
+> +		tsb.sb_features_incompat |= incompat;
+> +		tsb.sb_features_log_incompat |= log_incompat;
+> +		libxfs_sb_to_disk(iocur_top->data, &tsb);
+> +		write_cur();
+> +	}
+> +
+> +	if (agno != mp->m_sb.sb_agcount) {
+> +		dbprintf(
+> +_("Failed to upgrade V5 filesystem AG %d\n"), agno);
+> +		return false;
 
-They don't matter for fallocate, because ext4 doesn't require clusters
-to be fully allocated like ocfs2 and xfs do.
+Do we need to undo changes if this somehow occurs?
 
-This means that all the bigalloc codepaths have this horrible "implied
-cluster allocation" thing sprinkled everywhere where to map in a single
-block you have to scan left and right in the extent map to see if anyone
-already mapped something.  And even more strangely, extent tree blocks
-don't do this, so it seems to waste the entire cluster past the first fs
-block.
+> +	}
+> +
+> +	mp->m_sb.sb_features_compat |= compat;
+> +	mp->m_sb.sb_features_ro_compat |= ro_compat;
+> +	mp->m_sb.sb_features_incompat |= incompat;
+> +	mp->m_sb.sb_features_log_incompat |= log_incompat;
+> +	return true;
+> +}
+> +
+>  static char *
+>  version_string(
+>  	xfs_sb_t	*sbp)
+> @@ -705,6 +743,10 @@ version_f(
 
-But I guess it /does/ mean that _get_file_block_size doesn't have to do
-anything special for ext*.
+The comment above version_f() needs an update if we start to support v5
+features.
 
---D
+>  {
+>  	uint16_t	version = 0;
+>  	uint32_t	features = 0;
+> +	uint32_t	upgrade_compat = 0;
+> +	uint32_t	upgrade_ro_compat = 0;
+> +	uint32_t	upgrade_incompat = 0;
+> +	uint32_t	upgrade_log_incompat = 0;
+>  	xfs_agnumber_t	ag;
+>  
+>  	if (argc == 2) {	/* WRITE VERSION */
+> @@ -716,7 +758,28 @@ version_f(
+>  		}
+>  
+>  		/* Logic here derived from the IRIX xfs_chver(1M) script. */
+> -		if (!strcasecmp(argv[1], "extflg")) {
+> +		if (!strcasecmp(argv[1], "inobtcount")) {
+> +			if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
+> +				dbprintf(
+> +		_("inode btree counter feature is already enabled\n"));
+> +				exitcode = 1;
+> +				return 1;
+> +			}
+> +			if (!xfs_sb_version_hasfinobt(&mp->m_sb)) {
+> +				dbprintf(
+> +		_("inode btree counter feature cannot be enabled on filesystems lacking free inode btrees\n"));
+> +				exitcode = 1;
+> +				return 1;
+> +			}
+> +			if (!xfs_sb_version_hascrc(&mp->m_sb)) {
+> +				dbprintf(
+> +		_("inode btree counter feature cannot be enabled on pre-V5 filesystems\n"));
+> +				exitcode = 1;
+> +				return 1;
+> +			}
+> +
+> +			upgrade_ro_compat |= XFS_SB_FEAT_RO_COMPAT_INOBTCNT;
+> +		} else if (!strcasecmp(argv[1], "extflg")) {
+>  			switch (XFS_SB_VERSION_NUM(&mp->m_sb)) {
+>  			case XFS_SB_VERSION_1:
+>  				version = 0x0004 | XFS_SB_VERSION_EXTFLGBIT;
+> @@ -807,6 +870,17 @@ version_f(
+>  			mp->m_sb.sb_versionnum = version;
+>  			mp->m_sb.sb_features2 = features;
+>  		}
+> +
+> +		if (upgrade_compat || upgrade_ro_compat || upgrade_incompat ||
+> +		    upgrade_log_incompat) {
+> +			if (!add_v5_features(mp, upgrade_compat,
+> +					upgrade_ro_compat,
+> +					upgrade_incompat,
+> +					upgrade_log_incompat)) {
+> +				exitcode = 1;
+> +				return 1;
+> +			}
+> +		}
 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  common/rc  |   13 ++++++++++---
-> >  common/xfs |   20 ++++++++++++++++++++
-> >  2 files changed, 30 insertions(+), 3 deletions(-)
-> > 
-> > 
-> > diff --git a/common/rc b/common/rc
-> > index 27a27ea3..41f93047 100644
-> > --- a/common/rc
-> > +++ b/common/rc
-> > @@ -3974,11 +3974,18 @@ _get_file_block_size()
-> >  		echo "Missing mount point argument for _get_file_block_size"
-> >  		exit 1
-> >  	fi
-> > -	if [ "$FSTYP" = "ocfs2" ]; then
-> > +
-> > +	case "$FSTYP" in
-> > +	"ocfs2")
-> >  		stat -c '%o' $1
-> > -	else
-> > +		;;
-> > +	"xfs")
-> > +		_xfs_get_file_block_size $1
-> > +		;;
-> > +	*)
-> >  		_get_block_size $1
-> > -	fi
-> > +		;;
-> > +	esac
-> >  }
-> >  
-> >  # Get the minimum block size of an fs.
-> > diff --git a/common/xfs b/common/xfs
-> > index 79dab058..3f5c14ba 100644
-> > --- a/common/xfs
-> > +++ b/common/xfs
-> > @@ -174,6 +174,26 @@ _scratch_mkfs_xfs()
-> >  	return $mkfs_status
-> >  }
-> >  
-> > +# Get the size of an allocation unit of a file.  Normally this is just the
-> > +# block size of the file, but for realtime files, this is the realtime extent
-> > +# size.
-> > +_xfs_get_file_block_size()
-> > +{
-> > +	local path="$1"
-> > +
-> > +	if ! ($XFS_IO_PROG -c "stat -v" "$path" 2>&1 | egrep -q '(rt-inherit|realtime)'); then
-> > +		_get_block_size "$path"
-> > +		return
-> > +	fi
-> > +
-> > +	# Otherwise, call xfs_info until we find a mount point or the root.
-> > +	path="$(readlink -m "$path")"
-> > +	while ! $XFS_INFO_PROG "$path" &>/dev/null && [ "$path" != "/" ]; do
-> > +		path="$(dirname "$path")"
-> > +	done
-> > +	$XFS_INFO_PROG "$path" | grep realtime | sed -e 's/^.*extsz=\([0-9]*\).*$/\1/g'
-> > +}
-> > +
-> >  # xfs_check script is planned to be deprecated. But, we want to
-> >  # be able to invoke "xfs_check" behavior in xfstests in order to
-> >  # maintain the current verification levels.
-> > 
-> ---end quoted text---
+What's the purpose of the unused upgrade variables?
+
+Also, it looks like we just update the feature bits here. What about the
+counters? Is the user expected to run xfs_repair?
+
+>  	}
+>  
+>  	if (argc == 3) {	/* VERSIONNUM + FEATURES2 */
+> diff --git a/db/xfs_admin.sh b/db/xfs_admin.sh
+> index bd325da2f776..0f0c8d18d6cb 100755
+> --- a/db/xfs_admin.sh
+> +++ b/db/xfs_admin.sh
+> @@ -9,7 +9,7 @@ DB_OPTS=""
+>  REPAIR_OPTS=""
+>  USAGE="Usage: xfs_admin [-efjlpuV] [-c 0|1] [-L label] [-U uuid] device [logdev]"
+>  
+> -while getopts "efjlpuc:L:U:V" c
+> +while getopts "efjlpuc:L:O:U:V" c
+>  do
+>  	case $c in
+>  	c)	REPAIR_OPTS=$REPAIR_OPTS" -c lazycount="$OPTARG;;
+> @@ -19,6 +19,8 @@ do
+>  	l)	DB_OPTS=$DB_OPTS" -r -c label";;
+>  	L)	DB_OPTS=$DB_OPTS" -c 'label "$OPTARG"'";;
+>  	p)	DB_OPTS=$DB_OPTS" -c 'version projid32bit'";;
+> +	O)	DB_OPTS=$DB_OPTS" -c 'version "$OPTARG"'";
+> +		REPAIR_OPTS="$REPAIR_OPTS ";;
+
+Ah, I see.. xfs_admin runs repair if options are specified, hence this
+little whitespace hack. It might be worth a comment here so somebody
+doesn't fly by and "clean" that up. ;)
+
+BTW, does this also address the error scenario I asked about above...?
+
+>  	u)	DB_OPTS=$DB_OPTS" -r -c uuid";;
+>  	U)	DB_OPTS=$DB_OPTS" -c 'uuid "$OPTARG"'";;
+>  	V)	xfs_db -p xfs_admin -V
+> diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
+> index 8afc873fb50a..65ca6afc1e12 100644
+> --- a/man/man8/xfs_admin.8
+> +++ b/man/man8/xfs_admin.8
+> @@ -6,6 +6,8 @@ xfs_admin \- change parameters of an XFS filesystem
+>  [
+>  .B \-eflpu
+>  ] [
+> +.BR \-O " feature"
+> +] [
+>  .BR "\-c 0" | 1
+>  ] [
+>  .B \-L
+> @@ -103,6 +105,20 @@ The filesystem label can be cleared using the special "\c
+>  " value for
+>  .IR label .
+>  .TP
+> +.BI \-O " feature"
+> +Add a new feature to the filesystem.
+> +Only one feature can be specified at a time.
+> +Features are as follows:
+> +.RS 0.7i
+> +.TP
+> +.B inobtcount
+> +Upgrade the filesystem to support the inode btree counters feature.
+> +This reduces mount time by caching the size of the inode btrees in the
+> +allocation group metadata.
+> +Once enabled, the filesystem will not be writable by older kernels.
+> +The filesystem cannot be downgraded after this feature is enabled.
+
+Any reason for not allowing the downgrade path? It seems like we're
+mostly there implementation wise and that might facilitate enabling the
+feature by default.
+
+Brian
+
+> +.RE
+> +.TP
+>  .BI \-U " uuid"
+>  Set the UUID of the filesystem to
+>  .IR uuid .
+> 
+
