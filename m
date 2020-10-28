@@ -2,103 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 924FC29CBF3
-	for <lists+linux-xfs@lfdr.de>; Tue, 27 Oct 2020 23:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC7BF29D507
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Oct 2020 22:56:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S374867AbgJ0W1h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 27 Oct 2020 18:27:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34998 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S374866AbgJ0W1g (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 27 Oct 2020 18:27:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RMOfhd106394;
-        Tue, 27 Oct 2020 22:27:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=kcb9W3zeaCIoNsWT49BqQUsoEERIAYXREJkj345T8R8=;
- b=GuU0BerFdVJGE2jr9qHdhbDLXj6OsITHaUkm4fXpp8pT12r6Hyv3ggbaTRgI9dlTOXqT
- KOsG25qCt/W5nW2BWXMJm1g5fyw9RN2j2Hq8yhJZMkML5Fzavru8FHc6EtXgUD8PhyWz
- Rf1boBQ1o0hkIgoqXdvQF/odr8P1U8/VXbHoIpr1jJB9clwnpfHAt/N/3Ds1zSNHvcz6
- wsP2F0vTW+tfkdVi6q1cgNJZ+5qhadbrK9nX2gGVNduwncXfo3f6umGGgr8renz4zBsb
- O+IA2sE1s2GceOV8slQ8rXyn9yiMQVR/VIWQWDW+T930GNV/Lpy8si1nS6i5s1XN0MHp jg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 34dgm427te-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 27 Oct 2020 22:27:32 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09RMPK9J016251;
-        Tue, 27 Oct 2020 22:27:32 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 34cx6wh2hb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 27 Oct 2020 22:27:31 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09RMRVYr002962;
-        Tue, 27 Oct 2020 22:27:31 GMT
+        id S1728624AbgJ1V4Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Oct 2020 17:56:25 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:50966 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728586AbgJ1V4O (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 17:56:14 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09S19PxT107416
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Oct 2020 01:10:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=mbRzKuE+dYQ6vBLbKEU2bCOsA9Ba128A1ITfYxyzyt0=;
+ b=c1ovJhbuvicir+IkIfPHeuTfyL73SpmSEPY86lCeP/qWSs9+C/2ANBIXuWgd++a2iIaX
+ egbzRq4/fGYvn07xBhW78gNg5f01osjUrFJDEgY07S8LfEMaLMnnoveChM//lTkqB8Mh
+ Evz7f67bFZdPvVhE6rdB4clTrWAIuW+yv7QaEh1dh6Wdu5nh7xPQjOuoEV3ff/5t+NIc
+ mUty5NLbL9GGmnJlJyGztUdP4w5TjRdVZ+HcU3FgKp9neqm7KKUYOirCAJBSy78v6HTn
+ wrQCMHuzQKLCphmAes9CTO/mrIlrH/0sNFQ6Xn/XwvNy9SGaLyi+w0sxSrB2gLUCUOKK 8A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 34c9saw2w7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Oct 2020 01:10:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09S16JUh062930
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Oct 2020 01:10:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 34cx1rcude-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Oct 2020 01:10:14 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09S1ADRk009505
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Oct 2020 01:10:13 GMT
 Received: from localhost (/10.159.243.144)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 15:27:30 -0700
-Date:   Tue, 27 Oct 2020 15:27:28 -0700
+        with ESMTP ; Tue, 27 Oct 2020 18:10:13 -0700
+Subject: [PATCH 0/2] xfs-documentation: format updates for 5.10
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 0/7] various: test xfs things fixed in 5.10
-Message-ID: <20201027222728.GB1061252@magnolia>
-References: <160382535113.1203387.16777876271740782481.stgit@magnolia>
- <20201027213231.GG5691@mit.edu>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org
+Date:   Tue, 27 Oct 2020 18:10:12 -0700
+Message-ID: <160384741244.1365004.6341029408891306870.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201027213231.GG5691@mit.edu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010270129
+ definitions=main-2010280002
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9787 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010270129
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010280002
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Oct 27, 2020 at 05:32:31PM -0400, Theodore Y. Ts'o wrote:
-> On Tue, Oct 27, 2020 at 12:02:31PM -0700, Darrick J. Wong wrote:
-> > Hi all,
-> > 
-> > Here are a bunch of new tests for problems that were fixed in 5.10.
-> > Er.... 5.10 and 5.9.  I have not been good at sending to fstests
-> > upstream lately. :( :(
-> > 
-> > If you're going to start using this mess, you probably ought to just
-> > pull from my git trees, which are linked below.
-> > 
-> > This is an extraordinary way to destroy everything.  Enjoy!
-> > Comments and questions are, as always, welcome.
-> 
-> Hey Darrick, on a slightly different topic, you had mentioned on last
-> week's ext4 video chat that you had been working on some patches to
-> allow specific blocks to be forced to return EIO, at specific times,
-> to test how a file system handles errors when writing to data blocks,
-> metadata blocks, journal, etc.
-> 
-> Are there early versions of those patches available for us to play
-> with?  I'm interesting in using that infrastructure for adding some
-> ext4 tests along those lines.
+Hi all,
 
-They're not even early versions; these have been in my fstests tree for
-years but I haven't had time to get them upstreamed. :(
+This quick series contains all the updates to the ondisk documentation that
+were applied in 5.10.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfstests-dev.git/commit/?h=scrub-media-error-reporting_2020-10-27&id=2cc930d7f0034879218efc2292b7e4eb2aaa3fea
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
 
-> Thanks!!
-> 
-> 					- Ted
+xfsdocs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-documentation.git/log/?h=xfsdocs-5.10
+---
+ .../allocation_groups.asciidoc                     |   27 ++++++++
+ design/XFS_Filesystem_Structure/docinfo.xml        |   14 ++++
+ .../internal_inodes.asciidoc                       |    5 ++
+ .../XFS_Filesystem_Structure/ondisk_inode.asciidoc |    4 +
+ .../XFS_Filesystem_Structure/timestamps.asciidoc   |   65 ++++++++++++++++++++
+ .../xfs_filesystem_structure.asciidoc              |    2 +
+ 6 files changed, 117 insertions(+)
+ create mode 100644 design/XFS_Filesystem_Structure/timestamps.asciidoc
+
