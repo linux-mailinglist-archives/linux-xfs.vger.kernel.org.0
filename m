@@ -2,135 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E9DB129DCB5
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 01:32:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0556529E045
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 02:17:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387913AbgJ1Wbc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Oct 2020 18:31:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30300 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387905AbgJ1Wbb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 18:31:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1603924290;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TQGrqXAUmlrtRtkH/30yLYIDSS640VbA/u3zdICZ6T0=;
-        b=VIFVpxxD/s9v+kLyFdxSIheZaLw7aHveqD8H8wY6ByYQ46i8l0RvF0stwVHUOz0qkRbAKK
-        L+if5D5M92AKnju9st+0mB6lkwj5JB+wGWEAp1vvHsbo5yEnEs19ZmzaFpR8ciTgcKDzGP
-        OzcJ1VvBNjsxIK1q+p+0VTmupMNEviA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-436-wzc739XLMNClsWmeeTkZeQ-1; Wed, 28 Oct 2020 13:30:41 -0400
-X-MC-Unique: wzc739XLMNClsWmeeTkZeQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65907805EFD;
-        Wed, 28 Oct 2020 17:30:40 +0000 (UTC)
-Received: from bfoster (ovpn-113-186.rdu2.redhat.com [10.10.113.186])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D8EAB100238E;
-        Wed, 28 Oct 2020 17:30:39 +0000 (UTC)
-Date:   Wed, 28 Oct 2020 13:30:38 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 8/9] mkfs: enable the inode btree counter feature
-Message-ID: <20201028173038.GG1611922@bfoster>
-References: <160375518573.880355.12052697509237086329.stgit@magnolia>
- <160375523682.880355.16796358046529188083.stgit@magnolia>
+        id S1730028AbgJ2BR3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Oct 2020 21:17:29 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:47518 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730069AbgJ2BQG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 21:16:06 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09T1FiZJ095280
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:16:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=resent-from :
+ resent-date : resent-message-id : resent-to : subject : from : to : cc :
+ date : message-id : in-reply-to : references : mime-version : content-type
+ : content-transfer-encoding; s=corp-2020-01-29;
+ bh=dMEyMUSIW2K+KlaaW8RYL84IRpYtJbo0iljZ2E8Y72s=;
+ b=psvWXmx/GJJ9iyFOks3ymEUV6zPodWPWm1xyETAo+psgoO+R434v4TN911ses7DATVTm
+ jpYgQkEgNwWwbDjDWLVtBEVHVAgQ8yHnqzoATQbfaz4ParmLaS7NoBO8MSRhsCF7lCDv
+ xIY/UW/Buy7Uk2vVZKawHrXv531UdRbbYZvPZaAALcokbWBfUgm9HiS2CcA0Y9dGL6lK
+ Azjb1OuhacXs5ob8bMCB6wkoU/4VErNKH/MUh9/UiuGXHEW3Ixo6iNmSwqHb5a78mp7W
+ +J4DaVTN2n/Wmt47PorapgE9iQmjUQYt81Ge/XdI6CBewt8ZOHt+kzjzSAUnoPrtBWZ5 JA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 34c9sb2gre-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:16:05 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09T1BN2D112625
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:14:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 34cx6xw6g7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:14:04 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09T1E3o6032099
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:14:03 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 28 Oct 2020 18:14:03 -0700
+Received: from stbeehive.pdgtm.oraclecorp.com [141.146.118.10]
+        by magnolia with IMAP (fetchmail-6.4.2)
+        for <djwong@localhost> (single-drop); Tue, 27 Oct 2020 18:10:59 -0700 (PDT)
+Received: from localhost (/10.159.243.144)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 27 Oct 2020 18:10:19 -0700
+Subject: [PATCH 1/2] design: document the new inode btree counter feature
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org
+Date:   Tue, 27 Oct 2020 18:10:18 -0700
+Message-ID: <160384741848.1365004.5354796889293226533.stgit@magnolia>
+In-Reply-To: <160384741244.1365004.6341029408891306870.stgit@magnolia>
+References: <160384741244.1365004.6341029408891306870.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <160375523682.880355.16796358046529188083.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9788 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
+ bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=3
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010290003
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9788 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=3
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2010290004
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 04:33:56PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Teach mkfs how to enable the inode btree counter feature.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  man/man8/mkfs.xfs.8 |   15 +++++++++++++++
->  mkfs/xfs_mkfs.c     |   34 +++++++++++++++++++++++++++++++++-
->  2 files changed, 48 insertions(+), 1 deletion(-)
-> 
-> 
-> diff --git a/man/man8/mkfs.xfs.8 b/man/man8/mkfs.xfs.8
-> index 0a7858748457..1a6a5f93f0ea 100644
-> --- a/man/man8/mkfs.xfs.8
-> +++ b/man/man8/mkfs.xfs.8
-...
-> @@ -862,7 +871,8 @@ usage( void )
->  {
->  	fprintf(stderr, _("Usage: %s\n\
->  /* blocksize */		[-b size=num]\n\
-> -/* metadata */		[-m crc=0|1,finobt=0|1,uuid=xxx,rmapbt=0|1,reflink=0|1]\n\
-> +/* metadata */		[-m crc=0|1,finobt=0|1,uuid=xxx,rmapbt=0|1,reflink=0|1,\n\
-> +			    inobtcnt=0|1]\n\
->  /* data subvol */	[-d agcount=n,agsize=n,file,name=xxx,size=num,\n\
->  			    (sunit=value,swidth=value|su=num,sw=num|noalign),\n\
->  			    sectsize=num\n\
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Any plans to add a geometry flag so the feature state is reported on
-success? Otherwise LGTM:
+Update the ondisk format documentation to discuss the inode btree
+counter feature.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+ .../allocation_groups.asciidoc                     |   21 ++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-> @@ -1565,6 +1575,9 @@ meta_opts_parser(
->  	case M_REFLINK:
->  		cli->sb_feat.reflink = getnum(value, opts, subopt);
->  		break;
-> +	case M_INOBTCNT:
-> +		cli->sb_feat.inobtcnt = getnum(value, opts, subopt);
-> +		break;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -1988,6 +2001,22 @@ _("reflink not supported without CRC support\n"));
->  			usage();
->  		}
->  		cli->sb_feat.reflink = false;
-> +
-> +		if (cli->sb_feat.inobtcnt && cli_opt_set(&mopts, M_INOBTCNT)) {
-> +			fprintf(stderr,
-> +_("inode btree counters not supported without CRC support\n"));
-> +			usage();
-> +		}
-> +		cli->sb_feat.inobtcnt = false;
-> +	}
-> +
-> +	if (!cli->sb_feat.finobt) {
-> +		if (cli->sb_feat.inobtcnt && cli_opt_set(&mopts, M_INOBTCNT)) {
-> +			fprintf(stderr,
-> +_("inode btree counters not supported without finobt support\n"));
-> +			usage();
-> +		}
-> +		cli->sb_feat.inobtcnt = false;
->  	}
->  
->  	if ((cli->fsx.fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
-> @@ -2955,6 +2984,8 @@ sb_set_features(
->  		sbp->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_RMAPBT;
->  	if (fp->reflink)
->  		sbp->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_REFLINK;
-> +	if (fp->inobtcnt)
-> +		sbp->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_INOBTCNT;
->  
->  	/*
->  	 * Sparse inode chunk support has two main inode alignment requirements.
-> @@ -3617,6 +3648,7 @@ main(
->  			.spinodes = true,
->  			.rmapbt = false,
->  			.reflink = true,
-> +			.inobtcnt = false,
->  			.parent_pointers = false,
->  			.nodalign = false,
->  			.nortalign = false,
-> 
+
+diff --git a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
+index 992615d..2e78f56 100644
+--- a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
++++ b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
+@@ -405,6 +405,13 @@ reference counts of AG blocks.  This enables files to share data blocks safely.
+ See the section about xref:Reflink_Deduplication[reflink and deduplication] for
+ more details.
+ 
++| +XFS_SB_FEAT_RO_COMPAT_INOBTCNT+ |
++Inode B+tree block counters.  Each allocation group's inode (AGI) header
++tracks the number of blocks in each of the inode B+trees.  This allows us
++to have a slightly higher level of redundancy over the shape of the inode
++btrees, and decreases the amount of time to compute the metadata B+tree
++preallocations at mount time.
++
+ |=====
+ 
+ *sb_features_incompat*::
+@@ -928,6 +935,10 @@ struct xfs_agi {
+ 
+      __be32              agi_free_root;
+      __be32              agi_free_level;
++
++     __be32              agi_iblocks;
++     __be32              agi_fblocks;
++
+ }
+ ----
+ *agi_magicnum*::
+@@ -984,6 +995,16 @@ B+tree.
+ *agi_free_level*::
+ Specifies the number of levels in the free inode B+tree.
+ 
++*agi_iblocks*::
++The number of blocks in the inode B+tree, including the root.
++This field is zero if the +XFS_SB_FEAT_RO_COMPAT_INOBTCNT+ feature is not
++enabled.
++
++*agi_fblocks*::
++The number of blocks in the free inode B+tree, including the root.
++This field is zero if the +XFS_SB_FEAT_RO_COMPAT_INOBTCNT+ feature is not
++enabled.
++
+ [[Inode_Btrees]]
+ == Inode B+trees
+ 
 
