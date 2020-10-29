@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F103729E794
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 10:43:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ADFD029E799
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 10:44:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgJ2JnE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 29 Oct 2020 05:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48858 "EHLO
+        id S1726162AbgJ2JoL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 29 Oct 2020 05:44:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725929AbgJ2JnD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Oct 2020 05:43:03 -0400
+        with ESMTP id S1725929AbgJ2JoL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Oct 2020 05:44:11 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A27C0613CF
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 02:43:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0970C0613CF
+        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 02:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/jSj1q6SsWK734893fXGXGWHuwefMvikuSYBRQ46yRA=; b=S+mmh2oda8EmqBiCeusbi4/2a5
-        k2YXjUH0s2n39fDmFb0kbPtz+CL18H8RsZ1/ik7IM0Q78uFG/gpXo9TxYwjxdIX+ZvhzG8pVxv6+w
-        EU2n4vx5/XFGcDV6nCirdVgBEdtAnldiAmtI3cEibFk+qUq1/G4yvN10Hyx4qiM874ao06uFoLmXU
-        mizD/fv50rjAaFKGl/I1GuKdpKVFmSsqx7ouUMT//PR+sQe36Qae0zClW2c2zAfCo6HB7JeJuaFAy
-        iNXKnJGuUqrKmzdonDLcO412c+7ihzPLTJW5OMjHUdjTF/q+VMz6w0eDi7RYUygWdCnW9xj2BF/qE
-        9GMicZlg==;
+        bh=GgyOTM41H5yfwWE5ApKNHMOeF+4L1AidiprfC8DQzTQ=; b=mZhGEu8cv29tf1fl/GQJmVKtCt
+        trg+w6QF/mTMfsmwGfTRKDZYYAQOcM3MS/OSQ2AKpaXW/nFi+133AXBu/CaZeqbPmSjLXt/VLBpsw
+        RwX94c1ArU/HqNNpfsrMBvfkKkkKFopwA59MyEjEvuBUA+IGKKRDY0pqkJEz4B5pSMJfhbgO407FX
+        YK9A8skkmXU4SsoMHvXnM+nYzomYbVEqMM7PddugyX4afckaV0Ove+IgOdbUS+XGcMWG2cHldyvvm
+        /c1U8qk83ohmS/hcZZMH0sLLwK2yM36AHy2/DxujpQDUDo1KYAXyzXuLJN9qTw753g32zd5fXf15O
+        H4PJBgVw==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kY4SJ-0001Bz-RL; Thu, 29 Oct 2020 09:42:51 +0000
-Date:   Thu, 29 Oct 2020 09:42:51 +0000
+        id 1kY4TV-0001Gt-CL; Thu, 29 Oct 2020 09:44:05 +0000
+Date:   Thu, 29 Oct 2020 09:44:05 +0000
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     sandeen@sandeen.net, Carlos Maiolino <cmaiolino@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 0/3] xfsprogs: sync with 5.10, part 1
-Message-ID: <20201029094251.GC2091@infradead.org>
-References: <160375516392.880210.12781119775998925242.stgit@magnolia>
+Cc:     sandeen@sandeen.net, Amir Goldstein <amir73il@gmail.com>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/26] libxfs: create a real struct timespec64
+Message-ID: <20201029094405.GD2091@infradead.org>
+References: <160375524618.881414.16347303401529121282.stgit@magnolia>
+ <160375525297.881414.4918118774537695755.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160375516392.880210.12781119775998925242.stgit@magnolia>
+In-Reply-To: <160375525297.881414.4918118774537695755.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Oct 26, 2020 at 04:32:43PM -0700, Darrick J. Wong wrote:
-> Hi all,
+On Mon, Oct 26, 2020 at 04:34:13PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> The first part of syncing libxfs with 5.10.
+> Create a real struct timespec64 that supports 64-bit seconds counts.
+> The C library struct timespec doesn't support this on 32-bit
+> architectures and we cannot lose the upper bits in the incore inode.
 > 
-> If you're going to start using this mess, you probably ought to just
-> pull from my git trees, which are linked below.
-> 
-> This is an extraordinary way to destroy everything.  Enjoy!
-> Comments and questions are, as always, welcome.
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-This all looks good to me:
+Looks good,
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
