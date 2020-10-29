@@ -2,133 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0556529E045
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 02:17:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE06629DFA4
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 02:03:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgJ2BR3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Oct 2020 21:17:29 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:47518 "EHLO
+        id S1728376AbgJ2BDY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Oct 2020 21:03:24 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:39236 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730069AbgJ2BQG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 21:16:06 -0400
+        with ESMTP id S1729951AbgJ2BDW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Oct 2020 21:03:22 -0400
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09T1FiZJ095280
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:16:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=resent-from :
- resent-date : resent-message-id : resent-to : subject : from : to : cc :
- date : message-id : in-reply-to : references : mime-version : content-type
- : content-transfer-encoding; s=corp-2020-01-29;
- bh=dMEyMUSIW2K+KlaaW8RYL84IRpYtJbo0iljZ2E8Y72s=;
- b=psvWXmx/GJJ9iyFOks3ymEUV6zPodWPWm1xyETAo+psgoO+R434v4TN911ses7DATVTm
- jpYgQkEgNwWwbDjDWLVtBEVHVAgQ8yHnqzoATQbfaz4ParmLaS7NoBO8MSRhsCF7lCDv
- xIY/UW/Buy7Uk2vVZKawHrXv531UdRbbYZvPZaAALcokbWBfUgm9HiS2CcA0Y9dGL6lK
- Azjb1OuhacXs5ob8bMCB6wkoU/4VErNKH/MUh9/UiuGXHEW3Ixo6iNmSwqHb5a78mp7W
- +J4DaVTN2n/Wmt47PorapgE9iQmjUQYt81Ge/XdI6CBewt8ZOHt+kzjzSAUnoPrtBWZ5 JA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 34c9sb2gre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:16:05 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09T1BN2D112625
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:14:04 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 34cx6xw6g7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:14:04 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09T1E3o6032099
-        for <linux-xfs@vger.kernel.org>; Thu, 29 Oct 2020 01:14:03 GMT
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09T0jxJY044625;
+        Thu, 29 Oct 2020 01:03:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=8131klkizT4jC62dBxTgIhn3i3ABvASoY+tMsR1o6QY=;
+ b=hF4Pf3b+5spdUWxMVm0VEvSSknKAN/bjhRSaeBn1aLjKBLS9m0VIe0YvGpxX1IKjWYRn
+ iHcQwBEobbtkprJtRudIYEQ5jRIBXTQOBQw4Zot8Hi+kRRK0hrx1H1prJ534gOdzzctl
+ BZAysf5MQE+hhhHE9Gr9Vq8Z7Dz9QQ0xjVsJRSEhAXEDT9IFwCnqpGcODznd/5p0D5zp
+ UcmbnN7Ff+lI+8j8dUYMjz3vZIG4cqpTioBXN6G7fbVRIBfC3Hl6CF2k0vfCdEEIfuui
+ nTU/Q5uCk1LzvTCrEovrLE1575BWf2hvdpPhx3i/KUdp0GPy0rsJXizxVHEjgp5F7l4s bg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 34c9sb2g3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 29 Oct 2020 01:03:18 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09T0kNgV192967;
+        Thu, 29 Oct 2020 01:01:17 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 34cx1smy8w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Oct 2020 01:01:17 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 09T11GG4020933;
+        Thu, 29 Oct 2020 01:01:16 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 28 Oct 2020 18:14:03 -0700
-Received: from stbeehive.pdgtm.oraclecorp.com [141.146.118.10]
-        by magnolia with IMAP (fetchmail-6.4.2)
-        for <djwong@localhost> (single-drop); Tue, 27 Oct 2020 18:10:59 -0700 (PDT)
-Received: from localhost (/10.159.243.144)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 27 Oct 2020 18:10:19 -0700
-Subject: [PATCH 1/2] design: document the new inode btree counter feature
+        with ESMTP ; Wed, 28 Oct 2020 18:01:16 -0700
+Date:   Wed, 28 Oct 2020 18:01:15 -0700
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 27 Oct 2020 18:10:18 -0700
-Message-ID: <160384741848.1365004.5354796889293226533.stgit@magnolia>
-In-Reply-To: <160384741244.1365004.6341029408891306870.stgit@magnolia>
-References: <160384741244.1365004.6341029408891306870.stgit@magnolia>
-User-Agent: StGit/0.19
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 6/9] xfs_repair: check inode btree block counters in AGI
+Message-ID: <20201029010115.GH1061252@magnolia>
+References: <160375518573.880355.12052697509237086329.stgit@magnolia>
+ <160375522427.880355.15446960142376313542.stgit@magnolia>
+ <20201028172959.GE1611922@bfoster>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201028172959.GE1611922@bfoster>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9788 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 spamscore=0
- bulkscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=3
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=5 malwarescore=0 mlxlogscore=999 mlxscore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2010290003
+ definitions=main-2010290001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9788 signatures=668682
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 malwarescore=0 lowpriorityscore=0 bulkscore=0
- priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=3
+ priorityscore=1501 spamscore=0 phishscore=0 clxscore=1015 suspectscore=5
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010290004
+ engine=8.12.0-2009150000 definitions=main-2010290001
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+On Wed, Oct 28, 2020 at 01:29:59PM -0400, Brian Foster wrote:
+> On Mon, Oct 26, 2020 at 04:33:44PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Make sure that both inode btree block counters in the AGI are correct.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  repair/scan.c |   38 +++++++++++++++++++++++++++++++++++---
+> >  1 file changed, 35 insertions(+), 3 deletions(-)
+> > 
+> > 
+> > diff --git a/repair/scan.c b/repair/scan.c
+> > index 2a38ae5197c6..c826af7dee86 100644
+> > --- a/repair/scan.c
+> > +++ b/repair/scan.c
+> ...
+> > @@ -2022,6 +2029,17 @@ scan_inobt(
+> >  			return;
+> >  	}
+> >  
+> > +	switch (magic) {
+> > +	case XFS_FIBT_MAGIC:
+> > +	case XFS_FIBT_CRC_MAGIC:
+> > +		ipriv->fino_blocks++;
+> > +		break;
+> > +	case XFS_IBT_MAGIC:
+> > +	case XFS_IBT_CRC_MAGIC:
+> > +		ipriv->ino_blocks++;
+> > +		break;
+> > +	}
+> > +
+> 
+> Is this intentionally not folded into the earlier magic switch
+> statement?
 
-Update the ondisk format documentation to discuss the inode btree
-counter feature.
+I'd originally thought that we wouldn't want to count the block if it's
+obviously bad, but the tree and the agi counter are supposed to be
+consistent with each other, so yes, we should always bump the counter
+when we are pointed towards a block.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- .../allocation_groups.asciidoc                     |   21 ++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+> >  	/*
+> >  	 * check for btree blocks multiply claimed, any unknown/free state
+> >  	 * is ok in the bitmap block.
+> ...
+> > @@ -2393,6 +2414,17 @@ validate_agi(
+> >  		}
+> >  	}
+> >  
+> > +	if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
+> > +		if (be32_to_cpu(agi->agi_iblocks) != priv.ino_blocks)
+> > +			do_warn(_("bad inobt block count %u, saw %u\n"),
+> > +					priv.ino_blocks,
+> > +					be32_to_cpu(agi->agi_iblocks));
+> 
+> These two params are backwards (here and below), no?
 
+Oops.  Good catch!
 
-diff --git a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-index 992615d..2e78f56 100644
---- a/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-+++ b/design/XFS_Filesystem_Structure/allocation_groups.asciidoc
-@@ -405,6 +405,13 @@ reference counts of AG blocks.  This enables files to share data blocks safely.
- See the section about xref:Reflink_Deduplication[reflink and deduplication] for
- more details.
- 
-+| +XFS_SB_FEAT_RO_COMPAT_INOBTCNT+ |
-+Inode B+tree block counters.  Each allocation group's inode (AGI) header
-+tracks the number of blocks in each of the inode B+trees.  This allows us
-+to have a slightly higher level of redundancy over the shape of the inode
-+btrees, and decreases the amount of time to compute the metadata B+tree
-+preallocations at mount time.
-+
- |=====
- 
- *sb_features_incompat*::
-@@ -928,6 +935,10 @@ struct xfs_agi {
- 
-      __be32              agi_free_root;
-      __be32              agi_free_level;
-+
-+     __be32              agi_iblocks;
-+     __be32              agi_fblocks;
-+
- }
- ----
- *agi_magicnum*::
-@@ -984,6 +995,16 @@ B+tree.
- *agi_free_level*::
- Specifies the number of levels in the free inode B+tree.
- 
-+*agi_iblocks*::
-+The number of blocks in the inode B+tree, including the root.
-+This field is zero if the +XFS_SB_FEAT_RO_COMPAT_INOBTCNT+ feature is not
-+enabled.
-+
-+*agi_fblocks*::
-+The number of blocks in the free inode B+tree, including the root.
-+This field is zero if the +XFS_SB_FEAT_RO_COMPAT_INOBTCNT+ feature is not
-+enabled.
-+
- [[Inode_Btrees]]
- == Inode B+trees
- 
+--D
 
+> Brian
+> 
+> > +		if (be32_to_cpu(agi->agi_fblocks) != priv.fino_blocks)
+> > +			do_warn(_("bad finobt block count %u, saw %u\n"),
+> > +					priv.fino_blocks,
+> > +					be32_to_cpu(agi->agi_fblocks));
+> > +	}
+> > +
+> >  	if (be32_to_cpu(agi->agi_count) != agcnts->agicount) {
+> >  		do_warn(_("agi_count %u, counted %u in ag %u\n"),
+> >  			 be32_to_cpu(agi->agi_count), agcnts->agicount, agno);
+> > 
+> 
