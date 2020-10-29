@@ -2,107 +2,84 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED59A29F59B
-	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 20:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E84CC29F625
+	for <lists+linux-xfs@lfdr.de>; Thu, 29 Oct 2020 21:26:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbgJ2TxX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 29 Oct 2020 15:53:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725980AbgJ2TxW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Oct 2020 15:53:22 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 09TJYOm9127339;
-        Thu, 29 Oct 2020 15:53:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=wqX6CLeoDapKERTcG3S0RVEmkQlKUlM+bdp1Fmhqzzo=;
- b=CFPhX2LiDdF4tCEGJoku8Y3x1Kdt0DosIumVMqHTO0VQxXguSbnrGLY3XGdnB5GsK6QK
- sB09s/uU2VNRsvegvTE025MKS/D8mkyob5tJnn/TOV+6+c9fifrOO9FAkH/3W06wGnnX
- 3vrq4pQmeq81tlu/bBnrvky3Xvkp0gcXveV8W4UlBFqrTgSv29htxpq8rIenXASWspjf
- L86iQPTPrdJOcjsbkrg310OS16UcRYETR27Rf8IGNuTw8CXgu5oO+Ej9+oganYmiTnhi
- 9CZe38QMh+s9FcoVzWhTKaTxClcjtSdzO3er99ktbzfZ0NDcuUkiDEJYFMCGf7ImtvJ+ EA== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 34fwvewh0a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Oct 2020 15:53:18 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 09TJkhTe022987;
-        Thu, 29 Oct 2020 19:53:16 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03ams.nl.ibm.com with ESMTP id 34e56quavj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Oct 2020 19:53:16 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 09TJrEpO30933382
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Oct 2020 19:53:14 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E7B24C059;
-        Thu, 29 Oct 2020 19:53:14 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF3E54C040;
-        Thu, 29 Oct 2020 19:53:12 +0000 (GMT)
-Received: from riteshh-domain.ibmuc.com (unknown [9.199.33.247])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 29 Oct 2020 19:53:12 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     fstests@vger.kernel.org
-Cc:     anju@linux.vnet.ibm.com, Eryu Guan <guan@eryu.me>,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org, Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: [PATCH 3/3] common/rc: source common/xfs and common/btrfs
-Date:   Fri, 30 Oct 2020 01:22:53 +0530
-Message-Id: <8d7db41971a227c5bd83677464d139399607e720.1604000570.git.riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1604000570.git.riteshh@linux.ibm.com>
-References: <cover.1604000570.git.riteshh@linux.ibm.com>
+        id S1725820AbgJ2U0c (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 29 Oct 2020 16:26:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33328 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgJ2U0c (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 29 Oct 2020 16:26:32 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09THOrdT108587;
+        Thu, 29 Oct 2020 17:28:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=DKLUiTjQen64u4sJLu/9kFXbGzaKajgFaBZ06kd7Cno=;
+ b=NyTvhBKqrO8AAydL/c1T5QaVrdyuuHOcg4a+pIUeQSVerzZkPS0sNEyyrR7Bezzbpv29
+ w4TsVL+JtP+Jdh06tWWZZLyAB0c6E/8a0kz3aAHYDe/wtJhXLLAelZMsZv3oKHgm1zV4
+ syE+WvgRGLSN8IxBprswEfSxQkZoHNT+o9ylDCdQRVwqZNFT/L8vv9dweSwc/LWURSV6
+ OfYjb+3KIbYcV5H0fcS6i57f2xKmzYQ8pcwaIY2+NsEmozmRy6yK+MMeiwOS9QzT1kD5
+ sMpMsZLDKiYDjGX78oJ2wouG2yMJnM51uGbiU8qe/19oXGI4VYLNyQX1v6c0pzbwTlUn lg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 34dgm4bqej-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 29 Oct 2020 17:28:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 09THOXtw063132;
+        Thu, 29 Oct 2020 17:26:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 34cwuq1j3n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Oct 2020 17:26:00 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 09THPxbD010426;
+        Thu, 29 Oct 2020 17:25:59 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 29 Oct 2020 10:25:58 -0700
+Date:   Thu, 29 Oct 2020 10:25:57 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 03/26] libfrog: define LIBFROG_BULKSTAT_CHUNKSIZE to
+ remove dependence on XFS_INODES_PER_CHUNK
+Message-ID: <20201029172557.GQ1061252@magnolia>
+References: <160375524618.881414.16347303401529121282.stgit@magnolia>
+ <160375526530.881414.1004347326416234607.stgit@magnolia>
+ <20201029094504.GF2091@infradead.org>
+ <20201029094549.GH2091@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
- definitions=2020-10-29_12:2020-10-29,2020-10-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=1
- mlxlogscore=940 bulkscore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2010290131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201029094549.GH2091@infradead.org>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9789 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 adultscore=0 malwarescore=0 mlxlogscore=980 suspectscore=1
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010290121
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9789 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=1 clxscore=1015 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2010290121
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Without this patch I am unable to test for multiple different
-filesystem sections for the same tests. Since we anyway have only
-function definitions in these files, so it should be ok to source it
-by default too.
-e.g. when I run ./check -s btrfs tests/generic/613 with 3 different [***_fs]
-sections from local.config file, I see below failures.
+On Thu, Oct 29, 2020 at 09:45:49AM +0000, Christoph Hellwig wrote:
+> On Thu, Oct 29, 2020 at 09:45:04AM +0000, Christoph Hellwig wrote:
+> > Looks good,
+> > 
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> And no good reason to use struct timespec64 here, right?
 
-./common/rc: line 2801: _check_btrfs_filesystem: command not found
+Huh?  There's no mention of a timespec in this patch at all...?
 
-./check -s xfs_4k -g swap (for XFS this fails like below)
-./common/rc: line 749: _scratch_mkfs_xfs: command not found
-check: failed to mkfs $SCRATCH_DEV using specified options
+<confused>
 
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
----
- common/rc | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/common/rc b/common/rc
-index 4c59968a6bd3..e9ba1b6e8265 100644
---- a/common/rc
-+++ b/common/rc
-@@ -3,6 +3,8 @@
- # Copyright (c) 2000-2006 Silicon Graphics, Inc.  All Rights Reserved.
- 
- . common/config
-+. ./common/xfs
-+. ./common/btrfs
- 
- BC=$(which bc 2> /dev/null) || BC=
- 
--- 
-2.26.2
-
+--D
