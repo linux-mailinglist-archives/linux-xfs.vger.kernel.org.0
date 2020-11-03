@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E965F2A48F8
-	for <lists+linux-xfs@lfdr.de>; Tue,  3 Nov 2020 16:07:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EEDF2A48F9
+	for <lists+linux-xfs@lfdr.de>; Tue,  3 Nov 2020 16:07:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgKCPHl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 3 Nov 2020 10:07:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53096 "EHLO
+        id S1728264AbgKCPHk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 3 Nov 2020 10:07:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgKCPHH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Nov 2020 10:07:07 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE81C0613D1
-        for <linux-xfs@vger.kernel.org>; Tue,  3 Nov 2020 07:07:07 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id u4so2077364pgr.9
-        for <linux-xfs@vger.kernel.org>; Tue, 03 Nov 2020 07:07:07 -0800 (PST)
+        with ESMTP id S1728184AbgKCPHK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Nov 2020 10:07:10 -0500
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23ABDC0613D1
+        for <linux-xfs@vger.kernel.org>; Tue,  3 Nov 2020 07:07:10 -0800 (PST)
+Received: by mail-pf1-x442.google.com with SMTP id w65so14447892pfd.3
+        for <linux-xfs@vger.kernel.org>; Tue, 03 Nov 2020 07:07:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BnzW6ZRTk6jYpEdb9hSauPeHwb+Af98DVjIElOxlMOU=;
-        b=WtD4ZdBTgLyxurH+ujaLpTY8aWkKLQW9ujQRzb4XO13p3RY6161xUP1ezep2Vyrgrd
-         0+SU1LO6K12LcibREAyMHuoCJzJ7ZAt9cpRgFKBb6lfdxkScp7oCgyH2Vq2hFhy+5zXI
-         PQFQ8YTv6zINmyuouwHqzQrsiWwlbE9asDevrImSipnoL4BkEPXZZ0mtdk+/SVv+573k
-         ppThLh/JdFdVVR78REkU4SuUSRo0c8tU0L0jatr82ZXOaU+2qwCmgpjpbC5VaUU9W5Pv
-         3kleETG69pd0WECXEMXV5bugrUtFwATu673xySrXqq9dMMyOsltweKFfyMGOXlV7F3ky
-         c6Ig==
+        bh=4jR8INSWSC6ttwbiQgR4/JGrIIg0yQz4NSER0DYDRnc=;
+        b=FoSYf0Q21qP/d8SX1IynluCtpAwoVz5Bx5/4nf4xPrlejdXUztoK2ijWiiR58bRXpT
+         dbp8gENADiOUe/dAoE9EEoaU0sKONRGa/7xMk/o0Z6tm1gba7XjUeUorw8vPKjamlLYN
+         ZXrn0d8xnbB6STc5QWyZV3ryzXHTTkUmqvsMHK8+EhdRpkFDCtJoFQmOQAOANsvSpbRF
+         6+iD86eQvLJZK5lceS/82I5mwpg2HJUYxhhmkex0h/B9HWHpzeCmpeWA8hfmnq2VboKx
+         FgA9B4JY0OmkiLuxwL1pe2hR3/vw1XxExkM0OVzMJNm4UDo5vZeyPzcnMmG02HoDfOoL
+         fSKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BnzW6ZRTk6jYpEdb9hSauPeHwb+Af98DVjIElOxlMOU=;
-        b=DhwY/crN+5S5z+pXUpv9yFCs1d9iadoUS1Ip8QT7MQnA8gtWyK8ACmfzcbXaS1JozW
-         LBCJ4vMuRjxFnxB/d+WXed2aiRNIwuMEchfk8wdiZHfPBewX/pzPq6Irh2cA6IJHd8t8
-         8SnoCXeUwiB9n7D0qgbKRJZsRr0f4UkHkPa1mOF4I/d0LnlMBuONjFj2tkb9KJRSQBYa
-         ZdVCuSlPF8LM7rrDvl3D31/SkeoWxwC1nEBmAQmmCgu3E+UR7yEJRa6kLb+NetF4JD09
-         s23mxzNBH9vDSpYTMChVT74+x8dSXTCXvOwt/RcuyemP41dcZ1a1kZ52OUMKLBZ89i5M
-         4vwg==
-X-Gm-Message-State: AOAM533FzPrOiQNue3GpITktAdXerR2qWZhtVpk9vLLgZ4DtwES6sG1f
-        I9ipQChp7VSoNOWVkkClcYDs0vgorKrwKw==
-X-Google-Smtp-Source: ABdhPJzocrrxL0Bq9DA0izBtpDs3k2rhAfT948pagpBuKqPhcgTOwVL51aZeQAQ3ZC+BSvZkfoOlFA==
-X-Received: by 2002:aa7:9e03:0:b029:164:427a:8f94 with SMTP id y3-20020aa79e030000b0290164427a8f94mr25362598pfq.5.1604416026403;
-        Tue, 03 Nov 2020 07:07:06 -0800 (PST)
+        bh=4jR8INSWSC6ttwbiQgR4/JGrIIg0yQz4NSER0DYDRnc=;
+        b=G3k+AelZhML3Coeoj05iK9+EWGFoSqKt9cYhnHk7t6evZV7TST0RsgDn5c6wYazU+c
+         wB3dVyJt6RiwxWInCJRDrvHaMkTFB8PoTWUCUSxf9hTC2dLgYEaCwfUZgzPe5JSmRmK9
+         sshl9GO4i6yztoJXlQIrJV2S2HH3zKwgkiYSPk3DAGh3Pw9OxUIsqbw/Rga4wUdrbPAc
+         2ECj8pWz8Dw7JhXqgcg1EQAS2zPwVWKLgYX1BUh2dNgOLbvOkNzAWs61ldlv1U9Jkc3k
+         kqNUz3tc2Bct95B7Ngc2JP0m2mLDZnW2KCE9FEuoEltkniTlF9hQuCrONWwA7WYf44l7
+         ey9w==
+X-Gm-Message-State: AOAM533SaBGu3q8l1b3RCKGMT8gIQMCtHzq7HQYVkKvVy8oHnksWBlF/
+        9/kFQTNWKot0jqdFSLvLVLH2GYNeDtqm/Q==
+X-Google-Smtp-Source: ABdhPJzj2QvyqfW5LAEVKoSd6kg9gaHSFXPtemLYsMgwfydaWD6kzzilTMd1Re5S83HxDHRKDN3axA==
+X-Received: by 2002:a63:8149:: with SMTP id t70mr12157672pgd.80.1604416029410;
+        Tue, 03 Nov 2020 07:07:09 -0800 (PST)
 Received: from localhost.localdomain ([122.179.48.228])
-        by smtp.gmail.com with ESMTPSA id 15sm15936955pgs.52.2020.11.03.07.07.03
+        by smtp.gmail.com with ESMTPSA id 15sm15936955pgs.52.2020.11.03.07.07.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2020 07:07:05 -0800 (PST)
+        Tue, 03 Nov 2020 07:07:08 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com,
         david@fromorbit.com, hch@infradead.org,
         allison.henderson@oracle.com, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH V10 04/14] xfs: Check for extent overflow when adding/removing xattrs
-Date:   Tue,  3 Nov 2020 20:36:32 +0530
-Message-Id: <20201103150642.2032284-5-chandanrlinux@gmail.com>
+Subject: [PATCH V10 05/14] xfs: Check for extent overflow when adding/removing dir entries
+Date:   Tue,  3 Nov 2020 20:36:33 +0530
+Message-Id: <20201103150642.2032284-6-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201103150642.2032284-1-chandanrlinux@gmail.com>
 References: <20201103150642.2032284-1-chandanrlinux@gmail.com>
@@ -64,84 +64,125 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to be
-added. One extra extent for dabtree in case a local attr is large enough
-to cause a double split.  It can also cause extent count to increase
-proportional to the size of a remote xattr's value.
+Directory entry addition/removal can cause the following,
+1. Data block can be added/removed.
+   A new extent can cause extent count to increase by 1.
+2. Free disk block can be added/removed.
+   Same behaviour as described above for Data block.
+3. Dabtree blocks.
+   XFS_DA_NODE_MAXDEPTH blocks can be added. Each of these
+   can be new extents. Hence extent count can increase by
+   XFS_DA_NODE_MAXDEPTH.
 
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_attr.c       | 13 +++++++++++++
- fs/xfs/libxfs/xfs_inode_fork.h | 10 ++++++++++
- 2 files changed, 23 insertions(+)
+ fs/xfs/libxfs/xfs_inode_fork.h | 13 +++++++++++++
+ fs/xfs/xfs_inode.c             | 27 +++++++++++++++++++++++++++
+ fs/xfs/xfs_symlink.c           |  5 +++++
+ 3 files changed, 45 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index fd8e6418a0d3..be51e7068dcd 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -396,6 +396,7 @@ xfs_attr_set(
- 	struct xfs_trans_res	tres;
- 	bool			rsvd = (args->attr_filter & XFS_ATTR_ROOT);
- 	int			error, local;
-+	int			rmt_blks = 0;
- 	unsigned int		total;
- 
- 	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
-@@ -442,11 +443,15 @@ xfs_attr_set(
- 		tres.tr_logcount = XFS_ATTRSET_LOG_COUNT;
- 		tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
- 		total = args->total;
-+
-+		if (!local)
-+			rmt_blks = xfs_attr3_rmt_blocks(mp, args->valuelen);
- 	} else {
- 		XFS_STATS_INC(mp, xs_attr_remove);
- 
- 		tres = M_RES(mp)->tr_attrrm;
- 		total = XFS_ATTRRM_SPACE_RES(mp);
-+		rmt_blks = xfs_attr3_rmt_blocks(mp, XFS_XATTR_SIZE_MAX);
- 	}
- 
- 	/*
-@@ -460,6 +465,14 @@ xfs_attr_set(
- 
- 	xfs_ilock(dp, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(args->trans, dp, 0);
-+
-+	if (args->value || xfs_inode_hasattr(dp)) {
-+		error = xfs_iext_count_may_overflow(dp, XFS_ATTR_FORK,
-+				XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
-+		if (error)
-+			goto out_trans_cancel;
-+	}
-+
- 	if (args->value) {
- 		unsigned int	quota_flags = XFS_QMOPT_RES_REGBLKS;
- 
 diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index bcac769a7df6..5de2f07d0dd5 100644
+index 5de2f07d0dd5..fd93fdc67ee4 100644
 --- a/fs/xfs/libxfs/xfs_inode_fork.h
 +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -47,6 +47,16 @@ struct xfs_ifork {
-  */
- #define XFS_IEXT_PUNCH_HOLE_CNT		(1)
+@@ -57,6 +57,19 @@ struct xfs_ifork {
+ #define XFS_IEXT_ATTR_MANIP_CNT(rmt_blks) \
+ 	(XFS_DA_NODE_MAXDEPTH + max(1, rmt_blks))
  
 +/*
-+ * Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to
-+ * be added. One extra extent for dabtree in case a local attr is
-+ * large enough to cause a double split.  It can also cause extent
-+ * count to increase proportional to the size of a remote xattr's
-+ * value.
++ * Directory entry addition/removal can cause the following,
++ * 1. Data block can be added/removed.
++ *    A new extent can cause extent count to increase by 1.
++ * 2. Free disk block can be added/removed.
++ *    Same behaviour as described above for Data block.
++ * 3. Dabtree blocks.
++ *    XFS_DA_NODE_MAXDEPTH blocks can be added. Each of these can be new
++ *    extents. Hence extent count can increase by XFS_DA_NODE_MAXDEPTH.
 + */
-+#define XFS_IEXT_ATTR_MANIP_CNT(rmt_blks) \
-+	(XFS_DA_NODE_MAXDEPTH + max(1, rmt_blks))
++#define XFS_IEXT_DIR_MANIP_CNT(mp) \
++	((XFS_DA_NODE_MAXDEPTH + 1 + 1) * (mp)->m_dir_geo->fsbcount)
 +
  /*
   * Fork handling.
   */
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 2bfbcf28b1bd..5b41ffaf04d7 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1177,6 +1177,11 @@ xfs_create(
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
++	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto out_trans_cancel;
++
+ 	/*
+ 	 * A newly created regular or special file just has one directory
+ 	 * entry pointing to them, but a directory also the "." entry
+@@ -1393,6 +1398,11 @@ xfs_link(
+ 	xfs_trans_ijoin(tp, sip, XFS_ILOCK_EXCL);
+ 	xfs_trans_ijoin(tp, tdp, XFS_ILOCK_EXCL);
+ 
++	error = xfs_iext_count_may_overflow(tdp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto error_return;
++
+ 	/*
+ 	 * If we are using project inheritance, we only allow hard link
+ 	 * creation in our tree when the project IDs are the same; else
+@@ -2861,6 +2871,11 @@ xfs_remove(
+ 	xfs_trans_ijoin(tp, dp, XFS_ILOCK_EXCL);
+ 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+ 
++	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto out_trans_cancel;
++
+ 	/*
+ 	 * If we're removing a directory perform some additional validation.
+ 	 */
+@@ -3221,6 +3236,18 @@ xfs_rename(
+ 	if (wip)
+ 		xfs_trans_ijoin(tp, wip, XFS_ILOCK_EXCL);
+ 
++	error = xfs_iext_count_may_overflow(src_dp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto out_trans_cancel;
++
++	if (target_ip == NULL) {
++		error = xfs_iext_count_may_overflow(target_dp, XFS_DATA_FORK,
++				XFS_IEXT_DIR_MANIP_CNT(mp));
++		if (error)
++			goto out_trans_cancel;
++	}
++
+ 	/*
+ 	 * If we are using project inheritance, we only allow renames
+ 	 * into our tree when the project IDs are the same; else the
+diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
+index 8e88a7ca387e..581a4032a817 100644
+--- a/fs/xfs/xfs_symlink.c
++++ b/fs/xfs/xfs_symlink.c
+@@ -220,6 +220,11 @@ xfs_symlink(
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
++	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto out_trans_cancel;
++
+ 	/*
+ 	 * Allocate an inode for the symlink.
+ 	 */
 -- 
 2.28.0
 
