@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D131D2A48FC
+	by mail.lfdr.de (Postfix) with ESMTP id 617CF2A48FB
 	for <lists+linux-xfs@lfdr.de>; Tue,  3 Nov 2020 16:07:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgKCPHm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1728180AbgKCPHm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 3 Nov 2020 10:07:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53070 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbgKCPG6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Nov 2020 10:06:58 -0500
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED56C0613D1
-        for <linux-xfs@vger.kernel.org>; Tue,  3 Nov 2020 07:06:58 -0800 (PST)
-Received: by mail-pg1-x544.google.com with SMTP id g12so13888772pgm.8
-        for <linux-xfs@vger.kernel.org>; Tue, 03 Nov 2020 07:06:58 -0800 (PST)
+        with ESMTP id S1727742AbgKCPHB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 3 Nov 2020 10:07:01 -0500
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A6FC0613D1
+        for <linux-xfs@vger.kernel.org>; Tue,  3 Nov 2020 07:07:01 -0800 (PST)
+Received: by mail-pl1-x641.google.com with SMTP id r10so8692104plx.3
+        for <linux-xfs@vger.kernel.org>; Tue, 03 Nov 2020 07:07:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XmdKpghfLeanbz+IwL0BYKqdxi1X0QN/uaPdOmARGkM=;
-        b=TteGliNLrGJSEYX5GyBB/K9nWZArrfxIwXaMYRMeYy7k+NGdZGC3Z8wAnF9RzcIePh
-         EqJLoOCzKd+gg/iX5lUqclx7QdjpdjVwGFEXnkxdORJmFfhYv4ncqaZYjTRNrtANZyq+
-         O9aXqdblhBYO73up9D7bSA6UkxvppXx3f/y1ql3LG8Pn73uGq+4+ljSYC0uiaKHngVSh
-         fPYI5hXO6mebgEgYgZb8wUL1f2l01mr28Mlz1h/gHXCYPUbPuJLDqQHijdWwEG52Db2b
-         vCL+vdKoCcpq7UCgDOaA3Es4bXj4ox4/6KicPcIJCn4ghp086G8bOU+FWlBTUguvN7yE
-         IBtg==
+        bh=GhuaEjtbG0//r4IvHlnEcQuD/mUoLWUJcwfcoO/yi10=;
+        b=tO5/aBe/xiHXa5rhMMKNP318gkWwWO9MwD0Zqu6RnTktc3TgHNBEMGb0Rto7l6f4+e
+         6cxYc1AoB/iqrNWM+lc0O7T/fmpiLnMRiDK+C3x0S+zKMeJYbNjXjZm0auoWC5kJiLwX
+         GcjbzFrmE3xoJt6p/WWMkBQNcjMepoMdhn8joQk4Iro4q3pBVIBkXWt5MM9X/dYHMYde
+         +2mwaAgJ2tFXX2TfZ/d5IO2kiTgOOzu3JMM91DO5QdimQgJ4o3CjxJTIiSbjSXaKquLw
+         htVu1xR+bSfGykk/Knf9NZavGwi38lfqfp3C1dkCtsxXRbRuPJUzwEvM6OgKBHolkQLQ
+         KAzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XmdKpghfLeanbz+IwL0BYKqdxi1X0QN/uaPdOmARGkM=;
-        b=Ty/WQ/toKEVU8Ifp/uyhsnmdfNgHjUrhOXooTl1WQs8EKuimTWbdLWFbpyZ0UoL51s
-         6t/UW8r6zAPkIQaKfMMuO3w6C/BwM0BO875xbYo/8rX0Vb5r98y4+P8eAHlG7cY2lisn
-         cdK4l/FVM98PtOn7dvK1lzCDRqGca7qd6H5YB3XJ9JMlWJHW1v54/t3vJQAdPBYF0MTo
-         i/USy5HwRgRuKy4H9JO7N2TPJCcpgpGfdpOFR4jzotp9yFeK2J6mjv+nZV5AVDUjYAx+
-         9cKuK2yDi0Je8huRr2tNbkfhqNUwGsWNUPUCBvtMISydO26N8JmOLLTtNlnArobCGZOI
-         /oeg==
-X-Gm-Message-State: AOAM532dAFZRSZf5x2MD4tJRobIb61zJ056aNnRDK7PY+padh+4GoJXv
-        WWIQAnaJ42KusRiI4LFJ/BftIvvEZTvHfw==
-X-Google-Smtp-Source: ABdhPJwTBh+YKIpeqpemzNITtF7PypnMnYm5zSKJoZN+iVJjIgf2KGmId2TSw6zAleXrmRm1mn0raw==
-X-Received: by 2002:a62:92c5:0:b029:156:6a7f:ccff with SMTP id o188-20020a6292c50000b02901566a7fccffmr25889003pfd.39.1604416017427;
-        Tue, 03 Nov 2020 07:06:57 -0800 (PST)
+        bh=GhuaEjtbG0//r4IvHlnEcQuD/mUoLWUJcwfcoO/yi10=;
+        b=myoAra9l2pER3SX4aIzUtUeDdcdnnEzbakcUnDksi1i/ZYJ/d7oE4+T1vl+ml71sna
+         cX3iUZV4TwbDgA46XK5UtudtJPLzlJcXEyLdi2SCCfmiakquZbAeG4VmASXj4eA56y1K
+         jYuy9dEE/nNVTAC5tvRA/Mo6tHLWs35BgPd4qYWGKTANK6IQr0Tvx35rI7SrVszCN14R
+         biAllBsOg7YNh7VuWjtx6DO2a7e3AJzm3WGHYVCI1RorrvZw96Ti9DAHvq56hIRndT0O
+         6bCQdrrIzSsTDBfSDOYaAycf5rSlx5As/iUDY5/7F4zk0IYY9o5AAaVZMRYyRnXCblaD
+         +fhw==
+X-Gm-Message-State: AOAM531zJ1YqukZveEU7oZlFeEH/cgzh2nuhXzSwl/U/Oeq1MvH87082
+        Yu4TSJXlO7FAWxrE47EfiIL3QZkwZNaHtw==
+X-Google-Smtp-Source: ABdhPJzDpcZDMz3s8IJmMMMkYOfzPgnE9pY3Z22Pam17EOh7Wml74SMLWLkQY9WRX+UDxz+vASMXcA==
+X-Received: by 2002:a17:902:9b93:b029:d6:d0e3:10c6 with SMTP id y19-20020a1709029b93b02900d6d0e310c6mr8494929plp.41.1604416020440;
+        Tue, 03 Nov 2020 07:07:00 -0800 (PST)
 Received: from localhost.localdomain ([122.179.48.228])
-        by smtp.gmail.com with ESMTPSA id 15sm15936955pgs.52.2020.11.03.07.06.54
+        by smtp.gmail.com with ESMTPSA id 15sm15936955pgs.52.2020.11.03.07.06.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Nov 2020 07:06:56 -0800 (PST)
+        Tue, 03 Nov 2020 07:06:59 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com,
         david@fromorbit.com, hch@infradead.org,
         allison.henderson@oracle.com, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH V10 01/14] xfs: Add helper for checking per-inode extent count overflow
-Date:   Tue,  3 Nov 2020 20:36:29 +0530
-Message-Id: <20201103150642.2032284-2-chandanrlinux@gmail.com>
+Subject: [PATCH V10 02/14] xfs: Check for extent overflow when trivally adding a new extent
+Date:   Tue,  3 Nov 2020 20:36:30 +0530
+Message-Id: <20201103150642.2032284-3-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201103150642.2032284-1-chandanrlinux@gmail.com>
 References: <20201103150642.2032284-1-chandanrlinux@gmail.com>
@@ -64,92 +64,144 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-XFS does not check for possible overflow of per-inode extent counter
-fields when adding extents to either data or attr fork.
+When adding a new data extent (without modifying an inode's existing
+extents) the extent count increases only by 1. This commit checks for
+extent count overflow in such cases.
 
-For e.g.
-1. Insert 5 million xattrs (each having a value size of 255 bytes) and
-   then delete 50% of them in an alternating manner.
-
-2. On a 4k block sized XFS filesystem instance, the above causes 98511
-   extents to be created in the attr fork of the inode.
-
-   xfsaild/loop0  2008 [003]  1475.127209: probe:xfs_inode_to_disk: (ffffffffa43fb6b0) if_nextents=98511 i_ino=131
-
-3. The incore inode fork extent counter is a signed 32-bit
-   quantity. However the on-disk extent counter is an unsigned 16-bit
-   quantity and hence cannot hold 98511 extents.
-
-4. The following incorrect value is stored in the attr extent counter,
-   # xfs_db -f -c 'inode 131' -c 'print core.naextents' /dev/loop0
-   core.naextents = -32561
-
-This commit adds a new helper function (i.e.
-xfs_iext_count_may_overflow()) to check for overflow of the per-inode
-data and xattr extent counters. Future patches will use this function to
-make sure that an FS operation won't cause the extent counter to
-overflow.
-
-Suggested-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_inode_fork.c | 23 +++++++++++++++++++++++
- fs/xfs/libxfs/xfs_inode_fork.h |  2 ++
- 2 files changed, 25 insertions(+)
+ fs/xfs/libxfs/xfs_bmap.c       | 6 ++++++
+ fs/xfs/libxfs/xfs_inode_fork.h | 6 ++++++
+ fs/xfs/xfs_bmap_item.c         | 7 +++++++
+ fs/xfs/xfs_bmap_util.c         | 5 +++++
+ fs/xfs/xfs_dquot.c             | 8 +++++++-
+ fs/xfs/xfs_iomap.c             | 5 +++++
+ fs/xfs/xfs_rtalloc.c           | 5 +++++
+ 7 files changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 7575de5cecb1..8d48716547e5 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -23,6 +23,7 @@
- #include "xfs_da_btree.h"
- #include "xfs_dir2_priv.h"
- #include "xfs_attr_leaf.h"
-+#include "xfs_types.h"
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index d9a692484eae..505358839d2f 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4527,6 +4527,12 @@ xfs_bmapi_convert_delalloc(
+ 		return error;
  
- kmem_zone_t *xfs_ifork_zone;
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
++
++	error = xfs_iext_count_may_overflow(ip, whichfork,
++			XFS_IEXT_ADD_NOSPLIT_CNT);
++	if (error)
++		goto out_trans_cancel;
++
+ 	xfs_trans_ijoin(tp, ip, 0);
  
-@@ -728,3 +729,25 @@ xfs_ifork_verify_local_attr(
- 
- 	return 0;
- }
-+
-+int
-+xfs_iext_count_may_overflow(
-+	struct xfs_inode	*ip,
-+	int			whichfork,
-+	int			nr_to_add)
-+{
-+	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, whichfork);
-+	uint64_t		max_exts;
-+	uint64_t		nr_exts;
-+
-+	if (whichfork == XFS_COW_FORK)
-+		return 0;
-+
-+	max_exts = (whichfork == XFS_ATTR_FORK) ? MAXAEXTNUM : MAXEXTNUM;
-+
-+	nr_exts = ifp->if_nextents + nr_to_add;
-+	if (nr_exts < ifp->if_nextents || nr_exts > max_exts)
-+		return -EFBIG;
-+
-+	return 0;
-+}
+ 	if (!xfs_iext_lookup_extent(ip, ifp, offset_fsb, &bma.icur, &bma.got) ||
 diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index a4953e95c4f3..0beb8e2a00be 100644
+index 0beb8e2a00be..7fc2b129a2e7 100644
 --- a/fs/xfs/libxfs/xfs_inode_fork.h
 +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -172,5 +172,7 @@ extern void xfs_ifork_init_cow(struct xfs_inode *ip);
+@@ -34,6 +34,12 @@ struct xfs_ifork {
+ #define	XFS_IFEXTENTS	0x02	/* All extent pointers are read in */
+ #define	XFS_IFBROOT	0x04	/* i_broot points to the bmap b-tree root */
  
- int xfs_ifork_verify_local_data(struct xfs_inode *ip);
- int xfs_ifork_verify_local_attr(struct xfs_inode *ip);
-+int xfs_iext_count_may_overflow(struct xfs_inode *ip, int whichfork,
-+		int nr_to_add);
++/*
++ * Worst-case increase in the fork extent count when we're adding a single
++ * extent to a fork and there's no possibility of splitting an existing mapping.
++ */
++#define XFS_IEXT_ADD_NOSPLIT_CNT	(1)
++
+ /*
+  * Fork handling.
+  */
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index 9e16a4d0f97c..1610d6ad089b 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -497,6 +497,13 @@ xfs_bui_item_recover(
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 	xfs_trans_ijoin(tp, ip, 0);
  
- #endif	/* __XFS_INODE_FORK_H__ */
++	if (bui_type == XFS_BMAP_MAP) {
++		error = xfs_iext_count_may_overflow(ip, whichfork,
++				XFS_IEXT_ADD_NOSPLIT_CNT);
++		if (error)
++			goto err_cancel;
++	}
++
+ 	count = bmap->me_len;
+ 	error = xfs_trans_log_finish_bmap_update(tp, budp, bui_type, ip,
+ 			whichfork, bmap->me_startoff, bmap->me_startblock,
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index f2a8a0e75e1f..dcd6e61df711 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -822,6 +822,11 @@ xfs_alloc_file_space(
+ 		if (error)
+ 			goto error1;
+ 
++		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
++				XFS_IEXT_ADD_NOSPLIT_CNT);
++		if (error)
++			goto error0;
++
+ 		xfs_trans_ijoin(tp, ip, 0);
+ 
+ 		error = xfs_bmapi_write(tp, ip, startoffset_fsb,
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 1d95ed387d66..175f544f7c45 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -314,8 +314,14 @@ xfs_dquot_disk_alloc(
+ 		return -ESRCH;
+ 	}
+ 
+-	/* Create the block mapping. */
+ 	xfs_trans_ijoin(tp, quotip, XFS_ILOCK_EXCL);
++
++	error = xfs_iext_count_may_overflow(quotip, XFS_DATA_FORK,
++			XFS_IEXT_ADD_NOSPLIT_CNT);
++	if (error)
++		return error;
++
++	/* Create the block mapping. */
+ 	error = xfs_bmapi_write(tp, quotip, dqp->q_fileoffset,
+ 			XFS_DQUOT_CLUSTER_SIZE_FSB, XFS_BMAPI_METADATA, 0, &map,
+ 			&nmaps);
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index 3abb8b9d6f4c..a302a96823b8 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -250,6 +250,11 @@ xfs_iomap_write_direct(
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
++	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
++			XFS_IEXT_ADD_NOSPLIT_CNT);
++	if (error)
++		goto out_trans_cancel;
++
+ 	xfs_trans_ijoin(tp, ip, 0);
+ 
+ 	/*
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 1c3969807fb9..45ef7fa69e1d 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -804,6 +804,11 @@ xfs_growfs_rt_alloc(
+ 		xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 		xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+ 
++		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
++				XFS_IEXT_ADD_NOSPLIT_CNT);
++		if (error)
++			goto out_trans_cancel;
++
+ 		/*
+ 		 * Allocate blocks to the bitmap file.
+ 		 */
 -- 
 2.28.0
 
