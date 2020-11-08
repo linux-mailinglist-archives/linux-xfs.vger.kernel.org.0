@@ -2,80 +2,93 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC272AAA79
-	for <lists+linux-xfs@lfdr.de>; Sun,  8 Nov 2020 11:05:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A37F2AAC97
+	for <lists+linux-xfs@lfdr.de>; Sun,  8 Nov 2020 18:22:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgKHKFh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 8 Nov 2020 05:05:37 -0500
-Received: from out20-111.mail.aliyun.com ([115.124.20.111]:56885 "EHLO
-        out20-111.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbgKHKFh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 Nov 2020 05:05:37 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09129193|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0182243-0.0046172-0.977159;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047212;MF=guan@eryu.me;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Iu3W0ke_1604829932;
-Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.Iu3W0ke_1604829932)
-          by smtp.aliyun-inc.com(10.147.40.233);
-          Sun, 08 Nov 2020 18:05:32 +0800
-Date:   Sun, 8 Nov 2020 18:05:32 +0800
-From:   Eryu Guan <guan@eryu.me>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 0/9] xfstests: random fixes
-Message-ID: <20201108100532.GI3853@desktop>
-References: <160382528936.1202316.2338876126552815991.stgit@magnolia>
+        id S1727844AbgKHRWg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 8 Nov 2020 12:22:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727570AbgKHRWg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 8 Nov 2020 12:22:36 -0500
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5344C206DC;
+        Sun,  8 Nov 2020 17:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1604856155;
+        bh=hrkhzcP3WDPHy+13jA46SqQwjXo+5SKZT44YOaZ5TLM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VibmF4UIghi1HeGGzpdVzM9gW4bv/FgUw2rwq7XdJIrmXNLq9Z4NFANIsFpATtNpV
+         bF39u58EL1Fu8kQHq7gPhcxkOM/NZgYDESrkCEEfYIJXXHjUAanp5Yo723TlSmotWw
+         l+LhBQOIHdbJd3f0BfFdPsaunVAn4ngFiiOSyMJ8=
+Date:   Sun, 8 Nov 2020 09:22:35 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
+Subject: [GIT PULL] xfs: fixes for 5.10-rc3
+Message-ID: <20201108172235.GA9695@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <160382528936.1202316.2338876126552815991.stgit@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Darric,
+Hi Linus,
 
-On Tue, Oct 27, 2020 at 12:01:29PM -0700, Darrick J. Wong wrote:
-> Hi all,
-> 
-> This series contains random fixes to fstests.
+Please pull this branch containing bug fixes for 5.10.
 
-I applied patch 2-7 in this patchset, which were reviewed by Christoph,
-and seems other patches need rework.
+The branch merges cleanly with upstream as of a few minutes ago, so
+please let me know if anything strange happens.
 
-And regarding to your other patchsets, I'm a bit lost, it seems some of
-them need rework as well. So I'd wait for your refresh version :)
+--D
 
-Thanks,
-Eryu
+The following changes since commit 3650b228f83adda7e5ee532e2b90429c03f7b9ec:
 
-> 
-> If you're going to start using this mess, you probably ought to just
-> pull from my git trees, which are linked below.
-> 
-> This is an extraordinary way to destroy everything.  Enjoy!
-> Comments and questions are, as always, welcome.
-> 
-> --D
-> 
-> kernel git tree:
-> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes
-> 
-> xfsprogs git tree:
-> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=random-fixes
-> 
-> fstests git tree:
-> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
-> ---
->  check             |   21 ++++++++++++++++++++-
->  common/populate   |    5 +++++
->  common/rc         |   13 ++++++++++---
->  common/repair     |    1 +
->  common/xfs        |   20 ++++++++++++++++++++
->  tests/xfs/030     |    1 +
->  tests/xfs/272     |    3 +++
->  tests/xfs/276     |    8 +++++++-
->  tests/xfs/327     |   18 ++++++++++++++++--
->  tests/xfs/327.out |   13 +++++++------
->  tests/xfs/328     |    2 +-
->  tests/xfs/341     |    8 +++++---
->  tests/xfs/520     |    3 +++
->  13 files changed, 99 insertions(+), 17 deletions(-)
+  Linux 5.10-rc1 (2020-10-25 15:14:11 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.10-fixes-3
+
+for you to fetch changes up to 46afb0628b86347933b16ac966655f74eab65c8c:
+
+  xfs: only flush the unshared range in xfs_reflink_unshare (2020-11-04 17:41:56 -0800)
+
+----------------------------------------------------------------
+Fixes for 5.10-rc3:
+- Fix an uninitialized struct problem.
+- Fix an iomap problem zeroing unwritten EOF blocks.
+- Fix some clumsy error handling when writeback fails on
+  blocksize < pagesize filesystems.
+- Fix a retry loop not resetting loop variables properly.
+- Fix scrub flagging rtinherit inodes on a non-rt fs, since the kernel
+  actually does permit that combination.
+- Fix excessive page cache flushing when unsharing part of a file.
+
+----------------------------------------------------------------
+Brian Foster (3):
+      xfs: flush new eof page on truncate to avoid post-eof corruption
+      iomap: support partial page discard on writeback block mapping failure
+      iomap: clean up writeback state logic on writepage error
+
+Darrick J. Wong (4):
+      xfs: set xefi_discard when creating a deferred agfl free log intent item
+      xfs: fix missing CoW blocks writeback conversion retry
+      xfs: fix scrub flagging rtinherit even if there is no rt device
+      xfs: only flush the unshared range in xfs_reflink_unshare
+
+ fs/iomap/buffered-io.c    | 30 ++++++++++--------------------
+ fs/xfs/libxfs/xfs_alloc.c |  1 +
+ fs/xfs/libxfs/xfs_bmap.h  |  2 +-
+ fs/xfs/scrub/inode.c      |  3 +--
+ fs/xfs/xfs_aops.c         | 20 ++++++++++++--------
+ fs/xfs/xfs_iops.c         | 10 ++++++++++
+ fs/xfs/xfs_reflink.c      |  3 ++-
+ include/linux/iomap.h     |  2 +-
+ 8 files changed, 38 insertions(+), 33 deletions(-)
