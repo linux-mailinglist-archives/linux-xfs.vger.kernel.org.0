@@ -2,120 +2,76 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EB192AC3C4
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Nov 2020 19:24:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DC5C2AC4B4
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Nov 2020 20:10:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgKISYk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 9 Nov 2020 13:24:40 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:33732 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729119AbgKISYi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 9 Nov 2020 13:24:38 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9IOBA7149678;
-        Mon, 9 Nov 2020 18:24:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=ZczM8jT2pX5OudjOCcgeUpVPt7vuG9fPdj0uqHUzPtU=;
- b=kSddjMmEUPZixXpEtEIclJS4Y+BfmJ3sX1cv2jnHzMIVGygGbCcYK7gwUf3Fd2tcXmQO
- rGxXzNkY5V5fx+V1HE5PWb0n4OWg6WR87o35qozKGNW3ijVYHrQ4d9Z5n38H+kDF8+KO
- 0FbkKDu9LTHwiIh654r/qQOwsZeWPebIUzSyebUc/dBG/UT4J2y42KSytLK/wUk2Hd42
- klQa+4NJov85p3sXsYZUnz6Zv+TsLbwVZ9fFZSLThMqF7GshAtDNGQMEei9Rz/AsMUrZ
- NtwQG51KBh4hjhPG6myBeQLtgRo/Z4U1vbtUb19tryTVOMX/LgJ56bj2PzQNkgVS8IL6 dw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 34nh3aqpmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 09 Nov 2020 18:24:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0A9IB19E136667;
-        Mon, 9 Nov 2020 18:22:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 34p5bqv7vw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 09 Nov 2020 18:22:33 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0A9IMWps029884;
-        Mon, 9 Nov 2020 18:22:32 GMT
-Received: from localhost (/10.159.239.129)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 09 Nov 2020 10:22:32 -0800
-Date:   Mon, 9 Nov 2020 10:22:31 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Sasha Levin <sashal@kernel.org>, Eryu Guan <guaneryu@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>
-Subject: Re: Random xfs_check errors
-Message-ID: <20201109182231.GB9699@magnolia>
-References: <CAOQ4uxjia_L5mzEa=R9221sdO9KrsmvyGyKGcrmYKc47msJ=bg@mail.gmail.com>
+        id S1729320AbgKITKT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 9 Nov 2020 14:10:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51126 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbgKITKT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 9 Nov 2020 14:10:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EED8FAB95;
+        Mon,  9 Nov 2020 19:10:17 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Tristate moount option comatibility fixup
+Date:   Mon,  9 Nov 2020 20:10:07 +0100
+Message-Id: <cover.1604948373.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjia_L5mzEa=R9221sdO9KrsmvyGyKGcrmYKc47msJ=bg@mail.gmail.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=1
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2011090126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9800 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=1
- mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011090127
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Oct 30, 2020 at 01:36:30PM +0200, Amir Goldstein wrote:
-> Hi guys,
-> 
-> I've been running the latest xfstests with xfsprogs v5.9 and stable
-> kernel v5.9.y past week (including v5.9.2 today) and I'm getting
-> reports like below after random tests.
-> 
-> This one was after generic/466, but already got similar reports
-> (with more blocks) after generic/511,518,519 on different test runs.
-> 
-> Is anyone else seeing this?
-> Any advice on what to look for?
-> 
-> Did not get to test v5.10-rc1 yet. I thought I would ask here first
-> in case it's a known issue.
-> 
-> Sasha, I am wondering which xfsprogs version are you using
-> when verifying stable kernel patches, because I have just recently
-> upgraded xfsprogs to v5.9 in my stable test environment.
+Hello,
 
-FWIW I patched xfs_check out of fstests years ago.
+after the tristate dax option change some applications fail to detect
+pmem devices because the dax option no longer shows in mtab when device
+is mounted with -o dax.
 
-Once Eric merges the large(ish) pile of xfs_repair patches I sent him
-for 5.10 I think we'll be at the point where there aren't any
-corruptions caught by xfs_check but not by xfs_repair.
+At first it might seem stupid to detect pmem by looking at the mount
+options.
 
-Soon I'll also submit my rewrite of the fstests fuzzer code to Eryu, and
-when that lands upstream then the rest of you will be able to check my
-assertion.
+However, if the application actually wants a mount point properly
+configured for dax rather than just backed by pmem I do not see any
+other easy way.
 
-Assuming none of you find new coverage holes that I didn't, we will
-finally be able to drop xfs_check (which is bitrotting) from fstests
-entirely.
+Also this happens during early installtion steps when the mounted
+filesystem is typically empty and you want to perform non-destructive
+detection.
 
---D
+If there are better ways to detect dax enabled mount poins I want to
+hear all about it. In the meantime we have legacy applications to
+support.
 
-> Thanks,
-> Amir.
-> 
-> 
-> _check_xfs_filesystem: filesystem on
-> /dev/mapper/0fce4d2d--779b--44e8--91d0--2cb1b252f68e-xfs_scratch is
-> inconsistent (c)
-> *** xfs_check output ***
-> block 0/10 expected type unknown got free1
-> agf_freeblks 1310702, counted 1310701 in ag 0
-> agi_freecount 61, counted 58 in ag 0
-> sb_ifree 61, counted 58
-> sb_fdblocks 5240288, counted 5240287
-> sb_fdblocks 5240288, aggregate AGF count 5240287
-> *** end xfs_check output
+It also makes sense that when you mount a device with -o dax it actually
+shows dax in the mount options. Not doind so is confusing for humans as
+well.
+
+Thanks
+
+Michal
+
+Michal Suchanek (2):
+  xfs: show the dax option in mount options.
+  ext4: show the dax option in mount options
+
+References: bsc#1178366
+
+ fs/ext4/super.c    | 2 +-
+ fs/xfs/xfs_super.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.26.2
+
