@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAE5D2ADDB6
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Nov 2020 19:03:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DF702ADDBD
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Nov 2020 19:06:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgKJSD6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 Nov 2020 13:03:58 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:57770 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgKJSD6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Nov 2020 13:03:58 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AAHxGHo018036;
-        Tue, 10 Nov 2020 18:03:56 GMT
+        id S1730833AbgKJSGF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 Nov 2020 13:06:05 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:46106 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730805AbgKJSGF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Nov 2020 13:06:05 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AAHxoxf119596;
+        Tue, 10 Nov 2020 18:06:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=E8jgLWq7yjXaMTZ8Vl8v3fCYOhF6ayx0xinO/KWHRgI=;
- b=VfhiZhHea9OQnEg12QhRDAwBzTL8R/aSdOZEjBK7h7mB6mD8X8E5XHqreTDkKdAJl91v
- zZeeobG4Na4VszphQS+h2zcuItDpDp15EvpdLUgTWpE3tpvmmVaXIOBdG6Nw9NNhee5Z
- dUDXbP/vl63CNd1IsEdx3TaQ2UTqW2qogxj1ngV0D6cO5ElvrjZ91zZanUEp3UTFoqIW
- Ugp1o8n8ej2hFHBPo+Tphs2e1ycA2qRRBsxgejcd6w1IZgaupun0mmJCoxHLAXe9RJXp
- fQX7azJ+wyMce5Ox41uT+2/kyLXoc/vz10c3vWCU3IWyw3txJhS4me3e1yDewheTC5bN Ew== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 34p72ek8p4-1
+ bh=fDoXWcSJMPZIsqi7t8fb4TJkxNxeWLUck/vrCWHVz1s=;
+ b=k1mQJlWS+3Zp0hfJR2Y4Zi8zlY7jW+HU1xiomjrob3Tjseq/0VvOkJNA6HSS0ag7KJfe
+ C3t9FT5HaA3hYjYOKpCJ6HO++fp6E1xNenAovtpW4tRDFrbcZR+zoK4XtZZ3FcAJhbHH
+ VufHqAQfnIIMXSK46ZqWF+T2gJM1Ppg+12L4qLPkiAdRjcCvCm5kXKIASVAVTMNqf/3S
+ 4P+lR78OCLG6S+xS7UI4Q2o9jYbpTRvtCrxViZ/WZOmvk+4GS3lftzO+Urg8E1TY0M9M
+ d2kA5CGajwkMNJ67NLDbq/EEaxOy+Vx/iJDfzrPyU6jO3ucwHex830fr/Akb3Xzsu2/q vQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 34nkhkw275-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 10 Nov 2020 18:03:56 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AAI0ss5081611;
-        Tue, 10 Nov 2020 18:03:55 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 34p5g0p2sf-1
+        Tue, 10 Nov 2020 18:06:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AAI178d092870;
+        Tue, 10 Nov 2020 18:04:02 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 34qgp76mrp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Nov 2020 18:03:55 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AAI3tCF012779;
-        Tue, 10 Nov 2020 18:03:55 GMT
+        Tue, 10 Nov 2020 18:04:02 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AAI41Sj021944;
+        Tue, 10 Nov 2020 18:04:01 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Nov 2020 10:03:55 -0800
-Subject: [PATCH 8/9] xfs_repair: directly compare refcount records
+        with ESMTP ; Tue, 10 Nov 2020 10:04:01 -0800
+Subject: [PATCH 9/9] libxfs-apply: don't add duplicate headers
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 10 Nov 2020 10:03:54 -0800
-Message-ID: <160503143411.1201232.10096865635977108103.stgit@magnolia>
+Date:   Tue, 10 Nov 2020 10:04:00 -0800
+Message-ID: <160503144025.1201232.11112616423278752638.stgit@magnolia>
 In-Reply-To: <160503138275.1201232.927488386999483691.stgit@magnolia>
 References: <160503138275.1201232.927488386999483691.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,14 +53,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9801 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 malwarescore=0
- adultscore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011100126
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011100126
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9801 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 priorityscore=1501
+ mlxscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
+ malwarescore=0 adultscore=0 clxscore=1015 bulkscore=0 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2011100126
 Precedence: bulk
@@ -69,28 +69,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Check that our observed refcount records have exact matches for what's
-in the ondisk refcount btree, since they're supposed to match exactly.
+When we're backporting patches from libxfs, don't add a S-o-b header if
+there's already one in the patch being ported.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- repair/rmap.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/libxfs-apply |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 
-diff --git a/repair/rmap.c b/repair/rmap.c
-index a4cc6a4937c9..54451a7e262d 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -1402,8 +1402,8 @@ _("Missing reference count record for (%u/%u) len %u count %u\n"),
+diff --git a/tools/libxfs-apply b/tools/libxfs-apply
+index 3258272d6189..35cdb9c3449b 100755
+--- a/tools/libxfs-apply
++++ b/tools/libxfs-apply
+@@ -193,6 +193,14 @@ filter_xfsprogs_patch()
+ 	rm -f $_libxfs_files
+ }
  
- 		/* Compare each refcount observation against the btree's */
- 		if (tmp.rc_startblock != rl_rec->rc_startblock ||
--		    tmp.rc_blockcount < rl_rec->rc_blockcount ||
--		    tmp.rc_refcount < rl_rec->rc_refcount)
-+		    tmp.rc_blockcount != rl_rec->rc_blockcount ||
-+		    tmp.rc_refcount != rl_rec->rc_refcount)
- 			do_warn(
- _("Incorrect reference count: saw (%u/%u) len %u nlinks %u; should be (%u/%u) len %u nlinks %u\n"),
- 				agno, tmp.rc_startblock, tmp.rc_blockcount,
++add_header()
++{
++	local hdr="$1"
++	local hdrfile="$2"
++
++	grep -q "^${hdr}$" "$hdrfile" || echo "$hdr" >> "$hdrfile"
++}
++
+ fixup_header_format()
+ {
+ 	local _source=$1
+@@ -280,13 +288,13 @@ fixup_header_format()
+ 	sed -i '${/^[[:space:]]*$/d;}' $_hdr.new
+ 
+ 	# Add Signed-off-by: header if specified
+-	if [ ! -z ${SIGNED_OFF_BY+x} ]; then 
+-		echo "Signed-off-by: $SIGNED_OFF_BY" >> $_hdr.new
++	if [ ! -z ${SIGNED_OFF_BY+x} ]; then
++		add_header "Signed-off-by: $SIGNED_OFF_BY" $_hdr.new
+ 	else	# get it from git config if present
+ 		SOB_NAME=`git config --get user.name`
+ 		SOB_EMAIL=`git config --get user.email`
+ 		if [ ! -z ${SOB_NAME+x} ]; then
+-			echo "Signed-off-by: $SOB_NAME <$SOB_EMAIL>" >> $_hdr.new
++			add_header "Signed-off-by: $SOB_NAME <$SOB_EMAIL>" $_hdr.new
+ 		fi
+ 	fi
+ 
 
