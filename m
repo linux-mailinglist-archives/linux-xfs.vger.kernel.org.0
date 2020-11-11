@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA192AE50A
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Nov 2020 01:44:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E61E2AE516
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Nov 2020 01:46:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbgKKAoH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 Nov 2020 19:44:07 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:55624 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731982AbgKKAoH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Nov 2020 19:44:07 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AB0XriW040620;
-        Wed, 11 Nov 2020 00:44:05 GMT
+        id S1732086AbgKKAqP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 Nov 2020 19:46:15 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36110 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731234AbgKKAqP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Nov 2020 19:46:15 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AB0ZaiW016919;
+        Wed, 11 Nov 2020 00:46:12 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=q2eArdOE80pDMk36TdUAOWKFQkhyQHT7TnZusOAno0c=;
- b=Fp3WGBHKuk3JIIRe9kODrPwqpT+1WrUADlV23aJwly3baBK9DZyriwBi77DsPqYRuoJs
- +DEoF25kty0/Sv+DJX2EftkIMiwDadhsdhM9xbIsaP9DBZCHYw+LWVCaY8+gq84SNXnO
- wlA7Me1RKqLt9D7d0x232MS4zlnkeNAlzPtmyu9oBexSWTgEmNi1XV3+GNlHDnbbYJo6
- VHVettweLywyYbj2cMwAhmzv859sPbsTKxQDcwl4kEcw0vYLnQThrlUXj7yxY4nUourq
- CuC5OgurX2bGWBYY8eidgcHairM9L2R0N+vi50V3F6md2gg02McLwsEf/z6bU0iZ2opQ HQ== 
+ bh=v1IAZkiAF3NM9o24W9oT6qepmKmulpIzg/r4pzdzeh4=;
+ b=s0hbJZUjEJeJ2NCO2iuLk4ZdyGKXXFowjBMIgrF1MqG0E6nYGTzglfTFECzoeo5RgbGK
+ WVsDAZR5QzMervxZklyPDsQDL4BX85jto12/IjGv+hRBSbtfUPXwsiYTRusKYsEhJSRf
+ /lHDN+3YbnqHiIeThXvvqyZDOZO5A5hPH8XLwl74tkNs5uFxMlmSaCz85D/qZGIbtEZK
+ EG5s+lNe7yHheVpjKF0GzeXyF2HHOFC6mtUPwSFwodoJWZc8LvLcKkV6Y36eqCB8K6+N
+ x09bVKicTWlFgKKJsbCkyqxnWGWhpd8Ga59XfdubwFhX2wYJqSYAl9UZl9t0yRm7tU8W 1Q== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 34nh3axw3e-1
+        by userp2120.oracle.com with ESMTP id 34p72emv8q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 11 Nov 2020 00:44:05 +0000
+        Wed, 11 Nov 2020 00:46:11 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AB0VEIb095369;
-        Wed, 11 Nov 2020 00:44:04 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 34p55pau1v-1
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AB0VEth095433;
+        Wed, 11 Nov 2020 00:44:11 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 34p55pau3t-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Nov 2020 00:44:04 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0AB0i34r029020;
-        Wed, 11 Nov 2020 00:44:03 GMT
+        Wed, 11 Nov 2020 00:44:11 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AB0iAOm018286;
+        Wed, 11 Nov 2020 00:44:10 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 10 Nov 2020 16:44:03 -0800
-Subject: [PATCH 2/7] xfs: test regression in xfs_bmap_validate_extent
+        with ESMTP ; Tue, 10 Nov 2020 16:44:09 -0800
+Subject: [PATCH 3/7] generic: test reflink and copy_file_range behavior with
+ O_SYNC and FS_XFLAG_SYNC files
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com, guaneryu@gmail.com
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Date:   Tue, 10 Nov 2020 16:44:00 -0800
-Message-ID: <160505544097.1388823.12979233028549388010.stgit@magnolia>
+Date:   Tue, 10 Nov 2020 16:44:08 -0800
+Message-ID: <160505544844.1388823.7727157246785406013.stgit@magnolia>
 In-Reply-To: <160505542802.1388823.10368384826199448253.stgit@magnolia>
 References: <160505542802.1388823.10368384826199448253.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -59,9 +60,9 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spam
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2011110001
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9801 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2011110001
 Precedence: bulk
@@ -70,36 +71,41 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-This is a regression test to make sure that we can have realtime files
-with xattr blocks and not trip the verifiers.
+Add two regression tests to make sure that FICLONERANGE and the splice
+based copy_file_range actually flush all data and metadata to disk
+before the call ends.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- tests/xfs/758     |   59 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/758.out |    2 ++
- tests/xfs/group   |    1 +
- 3 files changed, 62 insertions(+)
- create mode 100755 tests/xfs/758
- create mode 100644 tests/xfs/758.out
+ tests/generic/947     |  117 +++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/947.out |   15 ++++++
+ tests/generic/948     |   90 ++++++++++++++++++++++++++++++++++++++
+ tests/generic/948.out |    9 ++++
+ tests/generic/group   |    2 +
+ 5 files changed, 233 insertions(+)
+ create mode 100755 tests/generic/947
+ create mode 100644 tests/generic/947.out
+ create mode 100755 tests/generic/948
+ create mode 100644 tests/generic/948.out
 
 
-diff --git a/tests/xfs/758 b/tests/xfs/758
+diff --git a/tests/generic/947 b/tests/generic/947
 new file mode 100755
-index 00000000..e522ae28
+index 00000000..d2adf745
 --- /dev/null
-+++ b/tests/xfs/758
-@@ -0,0 +1,59 @@
++++ b/tests/generic/947
+@@ -0,0 +1,117 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2020, Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 758
++# FS QA Test No. 947
 +#
-+# This is a regression test for "xfs: fix xfs_bmap_validate_extent_raw when
-+# checking attr fork of rt files", which fixes the bmap record validator so
-+# that it will not check the attr fork extent mappings of a realtime file
-+# against the size of the realtime volume.
++# Make sure that reflink forces the log out if we open the file with O_SYNC or
++# set FS_XFLAG_SYNC on the file.  We test that it actually forced the log by
++# using dm-error to shut down the fs without flushing the log and then
++# remounting to check file contents.
 +
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
@@ -114,57 +120,239 @@ index 00000000..e522ae28
 +{
 +	cd /
 +	rm -f $tmp.*
++	_dmerror_unmount
++	_dmerror_cleanup
 +}
 +
 +# get standard environment, filters and checks
 +. ./common/rc
 +. ./common/filter
++. ./common/reflink
++. ./common/dmerror
 +
 +# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_realtime
++_supported_fs generic
++_require_dm_target error
++_require_scratch_reflink
++_require_xfs_io_command "chattr" "s"
++_require_cp_reflink
 +
 +rm -f $seqres.full
 +
-+# Format filesystem with very tiny realtime volume
-+_scratch_mkfs -r size=256k > $seqres.full
-+_scratch_mount >> $seqres.full
++# Format filesystem and set up quota limits
++_scratch_mkfs > $seqres.full
++_require_metadata_journaling $SCRATCH_DEV
++_dmerror_init
++_dmerror_mount
 +
-+# Create a realtime file
-+$XFS_IO_PROG -f -R -c 'pwrite 0 64k' -c stat $SCRATCH_MNT/v >> $seqres.full
++# Test that O_SYNC actually results in file data being written even if the
++# fs immediately dies
++echo "test o_sync write"
++$XFS_IO_PROG -x -f -s -c "pwrite -S 0x58 0 1m -b 1m" $SCRATCH_MNT/0 >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/0 | _filter_scratch
 +
-+# Add enough xattr data to force creation of xattr blocks at a higher address
-+# on the data device than the size of the realtime volume
-+for i in `seq 0 16`; do
-+	$ATTR_PROG -s user.test$i $SCRATCH_MNT/v < $SCRATCH_MNT/v >> $seqres.full
-+done
++# Set up initial files for reflink test
++$XFS_IO_PROG -f -c 'pwrite -S 0x58 0 1m -b 1m' $SCRATCH_MNT/a >> $seqres.full
++$XFS_IO_PROG -f -c 'pwrite -S 0x59 0 1m -b 1m' $SCRATCH_MNT/c >> $seqres.full
++_cp_reflink $SCRATCH_MNT/a $SCRATCH_MNT/e
++_cp_reflink $SCRATCH_MNT/c $SCRATCH_MNT/d
++touch $SCRATCH_MNT/b
++sync
 +
-+# Force flushing extent maps to disk to trip the verifier
-+_scratch_cycle_mount
++# Test that reflink forces dirty data/metadata to disk when destination file
++# opened with O_SYNC
++echo "test reflink flag not set o_sync"
++$XFS_IO_PROG -x -s -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
 +
-+# Now let that unmount
-+echo Silence is golden.
++# Test that reflink to a shared file forces dirty data/metadata to disk when
++# destination is opened with O_SYNC
++echo "test reflink flag already set o_sync"
++$XFS_IO_PROG -x -s -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/d >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/a $SCRATCH_MNT/d | _filter_scratch
++
++# Set up the two files with chattr +S
++rm -f $SCRATCH_MNT/b $SCRATCH_MNT/d
++_cp_reflink $SCRATCH_MNT/c $SCRATCH_MNT/d
++touch $SCRATCH_MNT/b
++chattr +S $SCRATCH_MNT/b $SCRATCH_MNT/d
++sync
++
++# Test that reflink forces dirty data/metadata to disk when destination file
++# has the sync iflag set
++echo "test reflink flag not set iflag"
++$XFS_IO_PROG -x -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
++
++# Test that reflink to a shared file forces dirty data/metadata to disk when
++# destination file has the sync iflag set
++echo "test reflink flag already set iflag"
++$XFS_IO_PROG -x -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/d >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/a $SCRATCH_MNT/d | _filter_scratch
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/758.out b/tests/xfs/758.out
+diff --git a/tests/generic/947.out b/tests/generic/947.out
 new file mode 100644
-index 00000000..6d219f8e
+index 00000000..05ba10d1
 --- /dev/null
-+++ b/tests/xfs/758.out
-@@ -0,0 +1,2 @@
-+QA output created by 758
-+Silence is golden.
-diff --git a/tests/xfs/group b/tests/xfs/group
-index ffd18166..771680cf 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -519,4 +519,5 @@
- 519 auto quick reflink
- 520 auto quick reflink
- 521 auto quick realtime growfs
-+758 auto quick rw attr realtime
- 763 auto quick rw realtime
++++ b/tests/generic/947.out
+@@ -0,0 +1,15 @@
++QA output created by 947
++test o_sync write
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/0
++test reflink flag not set o_sync
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/b
++test reflink flag already set o_sync
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/d
++test reflink flag not set iflag
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/b
++test reflink flag already set iflag
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/d
+diff --git a/tests/generic/948 b/tests/generic/948
+new file mode 100755
+index 00000000..83fe414b
+--- /dev/null
++++ b/tests/generic/948
+@@ -0,0 +1,90 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2020, Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 948
++#
++# Make sure that copy_file_range forces the log out if we open the file with
++# O_SYNC or set FS_XFLAG_SYNC on the file.  We test that it actually forced the
++# log by using dm-error to shut down the fs without flushing the log and then
++# remounting to check file contents.
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1    # failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++	rm -f $tmp.*
++	_dmerror_unmount
++	_dmerror_cleanup
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
++. ./common/dmerror
++
++# real QA test starts here
++_supported_fs generic
++_require_dm_target error
++_require_xfs_io_command "chattr" "s"
++
++rm -f $seqres.full
++
++# Format filesystem and set up quota limits
++_scratch_mkfs > $seqres.full
++_require_metadata_journaling $SCRATCH_DEV
++_dmerror_init
++_dmerror_mount
++
++# Test that O_SYNC actually results in file data being written even if the
++# fs immediately dies
++echo "test o_sync write"
++$XFS_IO_PROG -x -f -s -c "pwrite -S 0x58 0 1m -b 1m" $SCRATCH_MNT/0 >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/0 | _filter_scratch
++
++# Set up initial files for copy test
++$XFS_IO_PROG -f -c 'pwrite -S 0x58 0 1m -b 1m' $SCRATCH_MNT/a >> $seqres.full
++touch $SCRATCH_MNT/b
++sync
++
++# Test that unaligned copy file range forces dirty data/metadata to disk when
++# destination file opened with O_SYNC
++echo "test unaligned copy range o_sync"
++$XFS_IO_PROG -x -s -c "copy_range -s 13 -d 13 -l 1048550 $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
++
++# Set up dest file with chattr +S
++rm -f $SCRATCH_MNT/b
++touch $SCRATCH_MNT/b
++chattr +S $SCRATCH_MNT/b
++sync
++
++# Test that unaligned copy file range forces dirty data/metadata to disk when
++# destination file has the sync iflag set
++echo "test unaligned copy range iflag"
++$XFS_IO_PROG -x -c "copy_range -s 13 -d 13 -l 1048550 $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
++_dmerror_load_error_table
++_dmerror_unmount
++_dmerror_load_working_table
++_dmerror_mount
++md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
++
++# success, all done
++status=0
++exit
+diff --git a/tests/generic/948.out b/tests/generic/948.out
+new file mode 100644
+index 00000000..eec6c0dc
+--- /dev/null
++++ b/tests/generic/948.out
+@@ -0,0 +1,9 @@
++QA output created by 948
++test o_sync write
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/0
++test unaligned copy range o_sync
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++2a715d2093b5aca82783a0c5943ac0b8  SCRATCH_MNT/b
++test unaligned copy range iflag
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++2a715d2093b5aca82783a0c5943ac0b8  SCRATCH_MNT/b
+diff --git a/tests/generic/group b/tests/generic/group
+index ab8ae74e..4300158e 100644
+--- a/tests/generic/group
++++ b/tests/generic/group
+@@ -617,3 +617,5 @@
+ 612 auto quick clone
+ 613 auto quick encrypt
+ 614 auto quick rw
++947 auto quick rw clone
++948 auto quick rw copy_range
 
