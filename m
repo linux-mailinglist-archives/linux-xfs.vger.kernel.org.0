@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51C2B2B1AC5
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Nov 2020 13:05:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 369372B1AC7
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Nov 2020 13:05:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbgKMMFO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Nov 2020 07:05:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58130 "EHLO
+        id S1727104AbgKMMFN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Nov 2020 07:05:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbgKML1n (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Nov 2020 06:27:43 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CC52C0613D1;
-        Fri, 13 Nov 2020 03:27:41 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id b63so3770211pfg.12;
-        Fri, 13 Nov 2020 03:27:41 -0800 (PST)
+        with ESMTP id S1726184AbgKML1o (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Nov 2020 06:27:44 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8841C061A49;
+        Fri, 13 Nov 2020 03:27:43 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id a18so7390466pfl.3;
+        Fri, 13 Nov 2020 03:27:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pot8Kf6jgb7e4v+fUhEDLSV5g2CFkO2k7KfvRf+68oY=;
-        b=kxgFGxq/1u37Jm/TVHSs0lWzdVdbnY+FMjyo/eXi02lymZktLpLXXbTD+PEsk12i4z
-         vHDoynGr3iuZjCOcDCZ+eSdCdeNm5tsWvTw3pjPrcWiTIPtG1743c9jx20x8Uqc2Nqrv
-         9AxKYnxkMx/GaXPh7W8wOLXXieMJZLt9HrmyueHCsApryO7ghRcLqeSFS8JRgiEIC39p
-         lOjc1t9+tedVJzIiC9NZ8uOmS3WJomeHva9coDWShsuFlR76qyL1eEI0Xi9IVLBTJ3S7
-         ghlPNmzvHqbr5Vrqby0sPOUFoms2tRSvuNP4Ozxu31ALSkZjGBc5XYs214wHgcOcAD0Q
-         NI3Q==
+        bh=z7HROPP4p0WyFli+42wxjrz7OGx+y1FoxAU7QHFJXTg=;
+        b=NzpboTfJEMzgZyXR3Cja3DvZ0/2FZmyxj+A7CLGoKlE9ICYKAU7jiBZiX9NNT5LzZL
+         UQaXbXiOxZth4VpNwYWP4jqjKOCJNXc8CtpmYYI8wVmFaFXVcOA66AY41hMu/Jcx4j/j
+         J2GrahHtkEGCrpFxsj6kqZureJKh5OlmOqF04nu7XpvSqOblxNlBqmlw5xt0b8rsGWaU
+         JnqH0/J/LSJ0PxpFMh7meWxBAgD27kqsbOKrhBIpfk/uymC+fBv1pNRkpw+z3+1TGB5Z
+         nwv6wvHcJUjMN4eUhhKG0kgE+vmi+uGCso7TYKNbRopkpClC1Q0vcwPCFqZv58epk2By
+         +ryw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pot8Kf6jgb7e4v+fUhEDLSV5g2CFkO2k7KfvRf+68oY=;
-        b=Rw77QNWbiqt3ZIuORA//+Mb9RfrYivxlSFcubejKG57m0HZfk673YSl7apOixcFzPY
-         j+A7B7CNNWM9dmZqEd2d4AkL/wNCAznN0kEk5ZOS8iuy1Dfuk5VIbej/0cXV+UoQUaUL
-         qrAFg4zQLjia+7GCz8ZBSPp1tHwNAcCVuQc2zb6WyIEL2y6LhN7ZqADBbubad9uf0Wev
-         Xt5klMmNF3+GruS8GB6D93+ALwv94yzYwzDgDaOxxAfBODRLvIMDjG8Pudgi86Y6n1Z1
-         U6FEzbWPC7wWDI+ZXqLcB4/+Ij/hc7dZVyLAV0vOopwTzXaw7ddF/FjXWZmJ6oDwsnFG
-         cinw==
-X-Gm-Message-State: AOAM532yMMIbEyUcjo8aKaAmS///6mM/xNFLkUBdCWbtze94grLJCUdU
-        QPEasa6JuqpG7SeRtIRg1/CtEKX1Jf4=
-X-Google-Smtp-Source: ABdhPJxLyJmeXCIHXWdOv+m8H6wH29UFH+rZHE8snEnDn2a5RvpYTuH1+X6y7F/bRuh+Wc+TCL6rOA==
-X-Received: by 2002:a17:90a:d997:: with SMTP id d23mr814367pjv.218.1605266860492;
-        Fri, 13 Nov 2020 03:27:40 -0800 (PST)
+        bh=z7HROPP4p0WyFli+42wxjrz7OGx+y1FoxAU7QHFJXTg=;
+        b=bS23mKUjdxPa5ZGHmVa0ehwWrMj8luCCSe58wpBhnyt4k40Kj3BGfrq8sE/yXbwTv9
+         zjEjvHkNe53Fa2HSey8lfbpJDAllJ0stfotP78wkWlt59/m67fgMejV01LwD47D8C6Al
+         wNKLgCnwdq81vT4LG0hyY2FcW+UPrt/lEAnv21GNHAyf0y1i7Zt+JNqaK5IzvQy3CIug
+         OdeNtc/VTZD5G6YBtXWAZxZtzMdHYEQRGtU2CovHggzSrZ1prnPX98uAUKu1ul0M7uK6
+         Hx0rnTAnPxGJXIkftOv6F0OYRU1pDJHx1kHv/HjO5gSBRv5Sy+af51cQ5AIIyrVR9b6f
+         OAUg==
+X-Gm-Message-State: AOAM5320rJ3sYMsKupywrG3wdqV3YeVGkvjmC2lNrnECkc8sNVA4HbCj
+        0bauUxuUnxQXf/ItEi+TpJJybZlWleU=
+X-Google-Smtp-Source: ABdhPJzOxTKSVyJY2TXe21Qo9TbXfT6uQbmmEyrcISXRJdsMR+sBuHmpe9tFGejs45dChb1mzsRXiA==
+X-Received: by 2002:a17:90b:180f:: with SMTP id lw15mr2452378pjb.119.1605266862983;
+        Fri, 13 Nov 2020 03:27:42 -0800 (PST)
 Received: from localhost.localdomain ([122.172.185.167])
-        by smtp.gmail.com with ESMTPSA id w131sm9410857pfd.14.2020.11.13.03.27.38
+        by smtp.gmail.com with ESMTPSA id w131sm9410857pfd.14.2020.11.13.03.27.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 03:27:39 -0800 (PST)
+        Fri, 13 Nov 2020 03:27:42 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, darrick.wong@oracle.com
-Subject: [PATCH 04/11] xfs: Check for extent overflow when punching a hole
-Date:   Fri, 13 Nov 2020 16:56:56 +0530
-Message-Id: <20201113112704.28798-5-chandanrlinux@gmail.com>
+Subject: [PATCH 05/11] xfs: Check for extent overflow when adding/removing xattrs
+Date:   Fri, 13 Nov 2020 16:56:57 +0530
+Message-Id: <20201113112704.28798-6-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201113112704.28798-1-chandanrlinux@gmail.com>
 References: <20201113112704.28798-1-chandanrlinux@gmail.com>
@@ -64,31 +64,31 @@ List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 This test verifies that XFS does not cause inode fork's extent count to
-overflow when punching out an extent.
+overflow when adding/removing xattrs.
 
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- tests/xfs/524     | 210 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/524.out |  25 ++++++
+ tests/xfs/525     | 154 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/525.out |  16 +++++
  tests/xfs/group   |   1 +
- 3 files changed, 236 insertions(+)
- create mode 100755 tests/xfs/524
- create mode 100644 tests/xfs/524.out
+ 3 files changed, 171 insertions(+)
+ create mode 100755 tests/xfs/525
+ create mode 100644 tests/xfs/525.out
 
-diff --git a/tests/xfs/524 b/tests/xfs/524
+diff --git a/tests/xfs/525 b/tests/xfs/525
 new file mode 100755
-index 00000000..9e140c99
+index 00000000..1d5d6e7c
 --- /dev/null
-+++ b/tests/xfs/524
-@@ -0,0 +1,210 @@
++++ b/tests/xfs/525
+@@ -0,0 +1,154 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
 +#
-+# FS QA Test 524
++# FS QA Test 525
 +#
 +# Verify that XFS does not cause inode fork's extent count to overflow when
-+# punching out an extent.
++# Adding/removing xattrs.
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
 +echo "QA output created by $seq"
@@ -107,6 +107,7 @@ index 00000000..9e140c99
 +# get standard environment, filters and checks
 +. ./common/rc
 +. ./common/filter
++. ./common/attr
 +. ./common/inject
 +
 +# remove previous $seqres.full before test
@@ -116,43 +117,55 @@ index 00000000..9e140c99
 +
 +_supported_fs xfs
 +_require_scratch
++_require_attrs
 +_require_xfs_debug
-+_require_xfs_io_command "finsert"
-+_require_xfs_io_command "fcollapse"
-+_require_xfs_io_command "fzero"
 +_require_test_program "punch-alternating"
 +_require_xfs_io_error_injection "reduce_max_iextents"
++_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
 +
-+punch_range()
++attr_set()
 +{
-+	echo "* Fpunch regular file"
++	echo "* Set xattrs"
 +
 +	echo "Format and mount fs"
-+	_scratch_mkfs >> $seqres.full
++	_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
 +	_scratch_mount >> $seqres.full
 +
-+	testfile=$SCRATCH_MNT/testfile
 +	bsize=$(_get_block_size $SCRATCH_MNT)
 +
-+	nr_blks=30
++	testfile=$SCRATCH_MNT/testfile
 +
-+	echo "Create \$testfile"
-+	xfs_io -f -c "pwrite -b $((nr_blks * bsize)) 0 $((nr_blks * bsize))" \
-+	       -c sync $testfile  >> $seqres.full
++	echo "Consume free space"
++	dd if=/dev/zero of=${testfile} bs=${bsize} >> $seqres.full 2>&1
++	sync
++
++	echo "Create fragmented filesystem"
++	$here/src/punch-alternating $testfile >> $seqres.full
++	sync
 +
 +	echo "Inject reduce_max_iextents error tag"
 +	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
 +
-+	echo "fpunch alternating blocks"
-+	$here/src/punch-alternating $testfile >> $seqres.full 2>&1
++	echo "Inject bmap_alloc_minlen_extent error tag"
++	xfs_io -x -c 'inject bmap_alloc_minlen_extent' $SCRATCH_MNT
++
++	echo "Create xattrs"
++
++	attr_len=$(uuidgen | wc -c)
++	nr_attrs=$((bsize * 20 / attr_len))
++	for i in $(seq 1 $nr_attrs); do
++		$SETFATTR_PROG -n "trusted.""$(uuidgen)" $testfile \
++			 >> $seqres.full 2>&1
++		[[ $? != 0 ]] && break
++	done
 +
 +	testino=$(stat -c "%i" $testfile)
 +
 +	_scratch_unmount >> $seqres.full
 +
-+	echo "Verify \$testfile's extent count"
++	echo "Verify uquota inode's extent count"
 +
-+	nextents=$(_scratch_get_iext_count $testino data ||
++	nextents=$(_scratch_get_iext_count $testino attr || \
 +			_fail "Unable to obtain inode fork's extent count")
 +	if (( $nextents > 10 )); then
 +		echo "Extent count overflow check failed: nextents = $nextents"
@@ -160,177 +173,99 @@ index 00000000..9e140c99
 +	fi
 +}
 +
-+finsert_range()
++attr_remove()
 +{
-+	echo "* Finsert regular file"
++	echo "* Remove xattrs"
 +
 +	echo "Format and mount fs"
-+	_scratch_mkfs >> $seqres.full
++	_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
 +	_scratch_mount >> $seqres.full
 +
++	bsize=$(_get_block_size $SCRATCH_MNT)
++
 +	testfile=$SCRATCH_MNT/testfile
-+	bsize=$(_get_block_size $SCRATCH_MNT)	
 +
-+	nr_blks=30
++	echo "Consume free space"
++	dd if=/dev/zero of=${testfile} bs=${bsize} >> $seqres.full 2>&1
++	sync
 +
-+	echo "Create \$testfile"
-+	xfs_io -f -c "pwrite -b $((nr_blks * bsize)) 0 $((nr_blks * bsize))" \
-+	       -c sync $testfile  >> $seqres.full
++	echo "Create fragmented filesystem"
++	$here/src/punch-alternating $testfile >> $seqres.full
++	sync
++
++	testino=$(stat -c "%i" $testfile)
++
++	naextents=0
++	last=""
++
++	attr_len=$(uuidgen | wc -c)
++	nr_attrs=$((bsize / attr_len))
++
++	echo "Create initial xattr extents"
++	while (( $naextents < 4 )); do
++		xfs_io -x -c 'inject bmap_alloc_minlen_extent' $SCRATCH_MNT
++
++		for i in $(seq 1 $nr_attrs); do
++			last="trusted.""$(uuidgen)"
++			$SETFATTR_PROG -n $last $testfile
++		done
++
++		_scratch_unmount >> $seqres.full
++
++		naextents=$(_scratch_get_iext_count $testino attr || \
++				_fail "Unable to obtain inode fork's extent count")
++
++		_scratch_mount >> $seqres.full
++	done
 +
 +	echo "Inject reduce_max_iextents error tag"
 +	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
 +
-+	echo "Finsert at every other block offset"
-+	for i in $(seq 1 2 $((nr_blks - 1))); do
-+		xfs_io -f -c "finsert $((i * bsize)) $bsize" $testfile \
-+		       >> $seqres.full 2>&1
-+		[[ $? != 0 ]] && break
-+	done
-+
-+	testino=$(stat -c "%i" $testfile)
-+
-+	_scratch_unmount >> $seqres.full
-+
-+	echo "Verify \$testfile's extent count"
-+
-+	nextents=$(_scratch_get_iext_count $testino data || \
-+			_fail "Unable to obtain inode fork's extent count")
-+	if (( $nextents > 10 )); then
-+		echo "Extent count overflow check failed: nextents = ${nextents}"
++	echo "Remove xattr to trigger -EFBIG"
++	$SETFATTR_PROG -x "$last" $testfile >> $seqres.full 2>&1
++	if [[ $? == 0 ]]; then
++		echo "Xattr removal succeeded; Should have failed "
 +		exit 1
 +	fi
 +}
 +
-+fcollapse_range()
-+{
-+	echo "* Fcollapse regular file"
-+
-+	echo "Format and mount fs"
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount >> $seqres.full
-+
-+	testfile=$SCRATCH_MNT/testfile
-+	bsize=$(_get_block_size $SCRATCH_MNT)	
-+
-+	nr_blks=30
-+
-+	echo "Create \$testfile"
-+	xfs_io -f -c "pwrite -b $((nr_blks * bsize)) 0 $((nr_blks * bsize))" \
-+	       -c sync $testfile  >> $seqres.full
-+
-+	echo "Inject reduce_max_iextents error tag"
-+	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
-+
-+	echo "Fcollapse at every other block offset"
-+	for i in $(seq 1 $((nr_blks / 2 - 1))); do
-+		xfs_io -f -c "fcollapse $((i * bsize)) $bsize" $testfile \
-+		       >> $seqres.full 2>&1
-+		[[ $? != 0 ]] && break
-+	done
-+
-+	testino=$(stat -c "%i" $testfile)
-+
-+	_scratch_unmount >> $seqres.full
-+
-+	echo "Verify \$testfile's extent count"
-+
-+	nextents=$(_scratch_get_iext_count $testino data || \
-+			_fail "Unable to obtain inode fork's extent count")
-+	if (( $nextents > 10 )); then
-+		echo "Extent count overflow check failed: nextents = ${nextents}"
-+		exit 1
-+	fi
-+}
-+
-+fzero_range()
-+{
-+	echo "* Fzero regular file"
-+
-+	echo "Format and mount fs"
-+	_scratch_mkfs >> $seqres.full
-+	_scratch_mount >> $seqres.full
-+
-+	testfile=$SCRATCH_MNT/testfile
-+	bsize=$(_get_block_size $SCRATCH_MNT)	
-+
-+	nr_blks=30
-+
-+	echo "Create \$testfile"
-+	xfs_io -f -c "pwrite -b $((nr_blks * bsize)) 0 $((nr_blks * bsize))" \
-+	       -c sync $testfile  >> $seqres.full
-+
-+	echo "Inject reduce_max_iextents error tag"
-+	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
-+
-+	echo "Fzero at every other block offset"
-+	for i in $(seq 1 2 $((nr_blks - 1))); do
-+		xfs_io -f -c "fzero $((i * bsize)) $bsize" $testfile \
-+		       >> $seqres.full 2>&1
-+		[[ $? != 0 ]] && break
-+	done
-+
-+	testino=$(stat -c "%i" $testfile)
-+
-+	_scratch_unmount >> $seqres.full
-+
-+	echo "Verify \$testfile's extent count"
-+
-+	nextents=$(_scratch_get_iext_count $testino data || \
-+			_fail "Unable to obtain inode fork's extent count")
-+	if (( $nextents > 10 )); then
-+		echo "Extent count overflow check failed: nextents = ${nextents}"
-+		exit 1
-+	fi
-+}
-+
-+punch_range
-+finsert_range
-+fcollapse_range
-+fzero_range
++attr_set
++attr_remove
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/524.out b/tests/xfs/524.out
+diff --git a/tests/xfs/525.out b/tests/xfs/525.out
 new file mode 100644
-index 00000000..58f7d7ae
+index 00000000..cc40e6e2
 --- /dev/null
-+++ b/tests/xfs/524.out
-@@ -0,0 +1,25 @@
-+QA output created by 524
-+* Fpunch regular file
++++ b/tests/xfs/525.out
+@@ -0,0 +1,16 @@
++QA output created by 525
++* Set xattrs
 +Format and mount fs
-+Create $testfile
++Consume free space
++Create fragmented filesystem
 +Inject reduce_max_iextents error tag
-+fpunch alternating blocks
-+Verify $testfile's extent count
-+* Finsert regular file
++Inject bmap_alloc_minlen_extent error tag
++Create xattrs
++Verify uquota inode's extent count
++* Remove xattrs
 +Format and mount fs
-+Create $testfile
++Consume free space
++Create fragmented filesystem
++Create initial xattr extents
 +Inject reduce_max_iextents error tag
-+Finsert at every other block offset
-+Verify $testfile's extent count
-+* Fcollapse regular file
-+Format and mount fs
-+Create $testfile
-+Inject reduce_max_iextents error tag
-+Fcollapse at every other block offset
-+Verify $testfile's extent count
-+* Fzero regular file
-+Format and mount fs
-+Create $testfile
-+Inject reduce_max_iextents error tag
-+Fzero at every other block offset
-+Verify $testfile's extent count
++Remove xattr to trigger -EFBIG
 diff --git a/tests/xfs/group b/tests/xfs/group
-index 018c70ef..3fa38c36 100644
+index 3fa38c36..bd38aff0 100644
 --- a/tests/xfs/group
 +++ b/tests/xfs/group
-@@ -521,3 +521,4 @@
- 521 auto quick realtime growfs
+@@ -522,3 +522,4 @@
  522 auto quick quota
  523 auto quick realtime growfs
-+524 auto quick punch zero insert collapse
+ 524 auto quick punch zero insert collapse
++525 auto quick attr
 -- 
 2.28.0
 
