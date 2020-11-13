@@ -2,228 +2,142 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D51562B1A14
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Nov 2020 12:30:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68B1B2B1AC3
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Nov 2020 13:05:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726456AbgKML24 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Nov 2020 06:28:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58130 "EHLO
+        id S1727121AbgKMMFP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Nov 2020 07:05:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbgKML2H (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Nov 2020 06:28:07 -0500
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 105F6C061A4B;
-        Fri, 13 Nov 2020 03:27:56 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id r186so6886693pgr.0;
-        Fri, 13 Nov 2020 03:27:56 -0800 (PST)
+        with ESMTP id S1726496AbgKML1n (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Nov 2020 06:27:43 -0500
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4CBC0617A6;
+        Fri, 13 Nov 2020 03:27:31 -0800 (PST)
+Received: by mail-pl1-x641.google.com with SMTP id k7so4424967plk.3;
+        Fri, 13 Nov 2020 03:27:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Rfh6r8h4r1l5e9rz2uPEKmppi0Azq2EOi1A6KcIRpTM=;
-        b=U9NrPQ4cTUgytfjmgn56s0mIbMqZuup0oblQM2gSH03T+K4Sz8Exjgy7S/JC6lxiwy
-         aF3jDSGdm7lAAhLOz0tXwEPqSSi3iiHop+Bj2KuCp5wYlnoJWcFSuCsAY3ChguOi7VnX
-         GmXv5ZMBVjPzL4cGkkVZPsRpCMMGw4Klu2/0w643WDlqRnshUFslDURvTFVSwv0V+vp8
-         eXEjsL4ZvFxZooynNHRBLU+/uA72ke4RPD1BCiFa8h604MWCjUohLWUyZMjjHTnC3Ys4
-         +nfKEwQIvFAmGbUjegUszTnhQ20d4Z7vfYPwv6FExsaCGL1p1OyxBOB2YmUyaGGX4Gjt
-         kZsA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wk24sFTpITneolZ7W0PLgni+mXlk+++AB9quPVkpd20=;
+        b=TG8qrYzvWRHM7siOoCJH4fsXuTShxU4cV5Q6A3F/LCkhihxzPWReVsXoEfGUifl4ew
+         V1E3uz2Atg8cnMWNMWuTriXQ70Ak6VB0K1BigTE1/SowMupffeUCcSGtyaU0m+3DCcK0
+         1arhvHMWlWkykn7XpnM3LiQ+9Dz5ir8d5j0tzgDTtKJDzFEuRsRZ+x0vY7bJpex3lrPu
+         jQY5pRvNzBnbBn9LEO1fRGZOu18CURZdw55ntn8DHNKmYZj3GaLvFY7Nm/XQFiGFZkc8
+         AW7AmUOb972mNUq0e0asSn+Vz3QUgHctn7i21cbRc54C+6aw45diaFAoZKGAUocM5lYc
+         cCuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Rfh6r8h4r1l5e9rz2uPEKmppi0Azq2EOi1A6KcIRpTM=;
-        b=oRb41vnSt1wg1Um9zcEZdRTb1i5WHnMWtwkhzg4NZLgqs1j0qDZawQn3Wg0P1i4LNG
-         NmKgrAclWbBd3Cnlh8Q2aJUHFvGgbXs/JIKqMcMG486FrEUb/fvjLiLPm9H2Wwy4fbMn
-         CulXVdEP8DDXSDCAGjaooMQpGGBBCsnnJbzdAigIBGdkH+4oIhniWpxgHIJ/Ce2GlaHI
-         sbCENAWHZwRHt7dhu6OYhomKfst0e7z+NuNBsfCFZczr1GRX6URV3QN9xZlK8rVlHbud
-         H3b/0ePlJNsyIJWQ1edfEujnv12hnfYMp3LWx4qnU71hcKxHEexETB/NFTgxTFX9SqJR
-         ZPlg==
-X-Gm-Message-State: AOAM5300dWHBg3sTXROqKFJuK/cQAdIELv2fANFbdNRapmxa0CCN3DY+
-        I3ZFYduBnKI3fm8FP8X5RgLJLnkW4KE=
-X-Google-Smtp-Source: ABdhPJxFvUTwceo2pjzxFAVWUSXhbPZqQ3i6fGfKZMNQ/vL/9kTzPCdE3jAXwly2chlwrw9ckMZYaQ==
-X-Received: by 2002:a63:5754:: with SMTP id h20mr1683521pgm.378.1605266875344;
-        Fri, 13 Nov 2020 03:27:55 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wk24sFTpITneolZ7W0PLgni+mXlk+++AB9quPVkpd20=;
+        b=JVJ8Z6o0E9IIoQvdE3LjUYGNhoz5u+e+nyzIfyKnc+2dSxjuF0uTrTTcDcnv5oTUBl
+         DhkUrTZ04ZEWESLlxAJw10/S734U2IqCa3zbZ3w4XDPIaVRc1RwnZNjOez9p1FCJ+CaU
+         /4mLdl1/RHoQ0rnHEnBLIWAbuBlL7cBBDAxpY52WRdhmUAAU8M/hOPeXJM0sGHtE9rBg
+         oV2aLvfeC9ZpQqqmvB1gWez4z8/MKD4alCwmaPVHggWhDR3ezI14RwN0nn8w6/tqA4qX
+         1zQ/4/SxHNRE/frtXqyITiPsH9cE0IL5hOZieOnSP8JPHz+bIeZavMNCR6UykjdMa2Ux
+         UA/g==
+X-Gm-Message-State: AOAM531al2Pxtfo7rlsG6ou/9onI4GZWYXWhHJUv5NVwG6imZ0KPrA0T
+        cFSjbnKss1iHVnLUKgu2eIft1Nm8mG4=
+X-Google-Smtp-Source: ABdhPJzX9PD4+2hhnyk8yaAZHebBTeYM1ryCxZnE5IEtO4BMRVl8YbAOo0NPL8DKXsIBDSpjNDzMZQ==
+X-Received: by 2002:a17:902:6b04:b029:d8:d392:7791 with SMTP id o4-20020a1709026b04b02900d8d3927791mr1867000plk.47.1605266850428;
+        Fri, 13 Nov 2020 03:27:30 -0800 (PST)
 Received: from localhost.localdomain ([122.172.185.167])
-        by smtp.gmail.com with ESMTPSA id w131sm9410857pfd.14.2020.11.13.03.27.53
+        by smtp.gmail.com with ESMTPSA id w131sm9410857pfd.14.2020.11.13.03.27.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 03:27:54 -0800 (PST)
+        Fri, 13 Nov 2020 03:27:29 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, darrick.wong@oracle.com
-Subject: [PATCH 10/11] xfs: Check for extent overflow when swapping extents
-Date:   Fri, 13 Nov 2020 16:57:02 +0530
-Message-Id: <20201113112704.28798-11-chandanrlinux@gmail.com>
+Subject: [PATCH 00/11] xfs: Tests to check for inode fork extent count overflow detection
+Date:   Fri, 13 Nov 2020 16:56:52 +0530
+Message-Id: <20201113112704.28798-1-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201113112704.28798-1-chandanrlinux@gmail.com>
-References: <20201113112704.28798-1-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This test verifies that XFS does not cause inode fork's extent count to
-overflow when swapping forks across two files.
+The patchset at
+https://lore.kernel.org/linux-xfs/20201103150642.2032284-1-chandanrlinux@gmail.com/T/#m90a8754df516bbd0c36830904a2e31c37983792c  
+added support to XFS to detect inode extent count overflow when
+performing various filesystem operations. The patchset also added
+new error injection tags for,
+1. Reducing maximum extent count to 10.
+2. Allocating only single block sized extents.
 
-Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- tests/xfs/530     | 115 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/530.out |  13 ++++++
- tests/xfs/group   |   1 +
- 3 files changed, 129 insertions(+)
+The corresponding code for xfsprogs can be obtained from
+https://lore.kernel.org/linux-xfs/20201104114900.172147-1-chandanrlinux@gmail.com/.
+
+The patches posted along with this cover letter add tests to verify if
+the in-kernel inode extent count overflow detection mechanism works
+correctly.
+
+These patches can also be obtained from
+https://github.com/chandanr/xfsprogs-dev.git at branch
+extent-overflow-tests.
+
+Chandan Babu R (11):
+  common/xfs: Add a helper to get an inode fork's extent count
+  xfs: Check for extent overflow when trivally adding a new extent
+  xfs: Check for extent overflow when trivally adding a new extent
+  xfs: Check for extent overflow when punching a hole
+  xfs: Check for extent overflow when adding/removing xattrs
+  xfs: Check for extent overflow when adding/removing dir entries
+  xfs: Check for extent overflow when writing to unwritten extent
+  xfs: Check for extent overflow when moving extent from cow to data
+    fork
+  xfs: Check for extent overflow when remapping an extent
+  xfs: Check for extent overflow when swapping extents
+  xfs: Stress test with with bmap_alloc_minlen_extent error tag enabled
+
+ common/xfs        |  22 +++
+ tests/xfs/522     | 214 +++++++++++++++++++++++++++
+ tests/xfs/522.out |  24 ++++
+ tests/xfs/523     | 176 +++++++++++++++++++++++
+ tests/xfs/523.out |  18 +++
+ tests/xfs/524     | 210 +++++++++++++++++++++++++++
+ tests/xfs/524.out |  25 ++++
+ tests/xfs/525     | 154 ++++++++++++++++++++
+ tests/xfs/525.out |  16 +++
+ tests/xfs/526     | 360 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/526.out |  47 ++++++
+ tests/xfs/527     | 125 ++++++++++++++++
+ tests/xfs/527.out |  13 ++
+ tests/xfs/528     |  87 +++++++++++
+ tests/xfs/528.out |   8 ++
+ tests/xfs/529     |  86 +++++++++++
+ tests/xfs/529.out |   8 ++
+ tests/xfs/530     | 115 +++++++++++++++
+ tests/xfs/530.out |  13 ++
+ tests/xfs/531     |  85 +++++++++++
+ tests/xfs/531.out |   6 +
+ tests/xfs/group   |  10 ++
+ 22 files changed, 1822 insertions(+)
+ create mode 100755 tests/xfs/522
+ create mode 100644 tests/xfs/522.out
+ create mode 100755 tests/xfs/523
+ create mode 100644 tests/xfs/523.out
+ create mode 100755 tests/xfs/524
+ create mode 100644 tests/xfs/524.out
+ create mode 100755 tests/xfs/525
+ create mode 100644 tests/xfs/525.out
+ create mode 100755 tests/xfs/526
+ create mode 100644 tests/xfs/526.out
+ create mode 100755 tests/xfs/527
+ create mode 100644 tests/xfs/527.out
+ create mode 100755 tests/xfs/528
+ create mode 100644 tests/xfs/528.out
+ create mode 100755 tests/xfs/529
+ create mode 100644 tests/xfs/529.out
  create mode 100755 tests/xfs/530
  create mode 100644 tests/xfs/530.out
+ create mode 100755 tests/xfs/531
+ create mode 100644 tests/xfs/531.out
 
-diff --git a/tests/xfs/530 b/tests/xfs/530
-new file mode 100755
-index 00000000..fccc6de7
---- /dev/null
-+++ b/tests/xfs/530
-@@ -0,0 +1,115 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
-+#
-+# FS QA Test 530
-+#
-+# Verify that XFS does not cause inode fork's extent count to overflow when
-+# swapping forks between files
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+. ./common/inject
-+
-+# remove previous $seqres.full before test
-+rm -f $seqres.full
-+
-+# real QA test starts here
-+
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_debug
-+_require_xfs_scratch_rmapbt
-+_require_xfs_io_command "fcollapse"
-+_require_xfs_io_command "swapext"
-+_require_xfs_io_error_injection "reduce_max_iextents"
-+
-+echo "* Swap extent forks"
-+
-+echo "Format and mount fs"
-+_scratch_mkfs >> $seqres.full
-+_scratch_mount >> $seqres.full
-+
-+bsize=$(_get_block_size $SCRATCH_MNT)
-+
-+srcfile=${SCRATCH_MNT}/srcfile
-+donorfile=${SCRATCH_MNT}/donorfile
-+
-+echo "Create \$donorfile having an extent of length 17 blocks"
-+xfs_io -f -c "pwrite -b $((17 * bsize)) 0 $((17 * bsize))" -c fsync $donorfile \
-+       >> $seqres.full
-+
-+# After the for loop the donor file will have the following extent layout
-+# | 0-4 | 5 | 6 | 7 | 8 | 9 | 10 |
-+echo "Fragment \$donorfile"
-+for i in $(seq 5 10); do
-+	start_offset=$((i * bsize))
-+	xfs_io -f -c "fcollapse $start_offset $bsize" $donorfile >> $seqres.full
-+done
-+donorino=$(stat -c "%i" $donorfile)
-+
-+echo "Create \$srcfile having an extent of length 18 blocks"
-+xfs_io -f -c "pwrite -b $((18 * bsize)) 0 $((18 * bsize))" -c fsync $srcfile \
-+       >> $seqres.full
-+
-+echo "Fragment \$srcfile"
-+# After the for loop the src file will have the following extent layout
-+# | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7-10 |
-+for i in $(seq 1 7); do
-+	start_offset=$((i * bsize))
-+	xfs_io -f -c "fcollapse $start_offset $bsize" $srcfile >> $seqres.full
-+done
-+srcino=$(stat -c "%i" $srcfile)
-+
-+_scratch_unmount >> $seqres.full
-+
-+echo "Collect \$donorfile's extent count"
-+donor_nr_exts=$(_scratch_get_iext_count $donorino data || \
-+		_fail "Unable to obtain inode fork's extent count")
-+
-+echo "Collect \$srcfile's extent count"
-+src_nr_exts=$(_scratch_get_iext_count $srcino data || \
-+		_fail "Unable to obtain inode fork's extent count")
-+
-+_scratch_mount >> $seqres.full
-+
-+echo "Inject reduce_max_iextents error tag"
-+xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
-+
-+echo "Swap \$srcfile's and \$donorfile's extent forks"
-+xfs_io -f -c "swapext $donorfile" $srcfile >> $seqres.full 2>&1
-+
-+_scratch_unmount >> $seqres.full
-+
-+echo "Check for \$donorfile's extent count overflow"
-+nextents=$(_scratch_get_iext_count $donorino data || \
-+		_fail "Unable to obtain inode fork's extent count")
-+if (( $nextents == $src_nr_exts )); then
-+	echo "\$donorfile: Extent count overflow check failed"
-+fi
-+
-+echo "Check for \$srcfile's extent count overflow"
-+nextents=$(_scratch_get_iext_count $srcino data || \
-+		_fail "Unable to obtain inode fork's extent count")
-+if (( $nextents == $donor_nr_exts )); then
-+	echo "\$srcfile: Extent count overflow check failed"
-+fi
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/530.out b/tests/xfs/530.out
-new file mode 100644
-index 00000000..996af959
---- /dev/null
-+++ b/tests/xfs/530.out
-@@ -0,0 +1,13 @@
-+QA output created by 530
-+* Swap extent forks
-+Format and mount fs
-+Create $donorfile having an extent of length 17 blocks
-+Fragment $donorfile
-+Create $srcfile having an extent of length 18 blocks
-+Fragment $srcfile
-+Collect $donorfile's extent count
-+Collect $srcfile's extent count
-+Inject reduce_max_iextents error tag
-+Swap $srcfile's and $donorfile's extent forks
-+Check for $donorfile's extent count overflow
-+Check for $srcfile's extent count overflow
-diff --git a/tests/xfs/group b/tests/xfs/group
-index bc3958b3..81a15582 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -527,3 +527,4 @@
- 527 auto quick
- 528 auto quick reflink
- 529 auto quick reflink
-+530 auto quick
 -- 
 2.28.0
 
