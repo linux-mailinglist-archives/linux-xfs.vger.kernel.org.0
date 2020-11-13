@@ -2,153 +2,253 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90B072B1AB1
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Nov 2020 13:05:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9356D2B1B60
+	for <lists+linux-xfs@lfdr.de>; Fri, 13 Nov 2020 13:52:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgKMLce (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Nov 2020 06:32:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgKML3y (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Nov 2020 06:29:54 -0500
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19D9C061A47;
-        Fri, 13 Nov 2020 03:29:22 -0800 (PST)
-Received: by mail-pf1-x444.google.com with SMTP id w6so7414042pfu.1;
-        Fri, 13 Nov 2020 03:29:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t9ZTduprDwuKupa2O2bRQn5mVCQGyLWGKFkLP3hQnLs=;
-        b=bsAKk9H2h+3/YDr7cTQ7i7c9GgD/PEjb38Hx+PVD0Fo1Dw9egD02AAJTGxEun1T/ll
-         8iJJdyCGONZjau42CtzpFBL3ZK31CjFOtwYFaBOvEY9kESIHQuFfRf4z+PdZT7V4yp2Z
-         hGWwPN9tKyKTt+Xy6qVFH+Xu6GtRxRgXkCFBB0DR6tXXySXzf2RDknWb246c7dHNLF2m
-         PqFoRIaj4X1CMeiSquTmMIMNS1ADg6ws6xR4YydtWcAIKVwaSG7inTazhobIc6MTZHuZ
-         eJNmlgM5zZFoMZ8W0qqNffmYx32vjjW8a1SY5hyi+2sMhfT/glZVx4JQI3YoIoIadzgB
-         vLig==
+        id S1726502AbgKMMwU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Nov 2020 07:52:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21029 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726503AbgKMMwT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Nov 2020 07:52:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1605271937;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=XgL7zI/5MSmwSP2d//GGOj//IZej1qaYOsLhbH56krY=;
+        b=bykB0LWYd8gERGyqvWzTN4MDL3JTHi0Df1J+S7WvSvYU0o9QtsgmjsHbiYoBWprseR1Jpy
+        5fXhsyZEMBDufSQwRRxwIrgkSJxCIjcbCeAZr1G2LwZchN3RktvpmuVNGfk11R/dCLnYZ5
+        /nOLGVbhNmS1zWn4SMZrQ3xhDC9g55I=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-489--Dn_LrgCMuGlh4lyQH6y3Q-1; Fri, 13 Nov 2020 07:52:15 -0500
+X-MC-Unique: -Dn_LrgCMuGlh4lyQH6y3Q-1
+Received: by mail-pf1-f199.google.com with SMTP id u3so5262483pfm.22
+        for <linux-xfs@vger.kernel.org>; Fri, 13 Nov 2020 04:52:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t9ZTduprDwuKupa2O2bRQn5mVCQGyLWGKFkLP3hQnLs=;
-        b=XLwidEj+9zwRAMGQg6ypORWf5yZaL9aeQiuWScWD5pDWx1V9Oi6ogfKSjzbnWANna+
-         GDvH9cFeyq00Lh+jaZWXDRNoZIyXmdXa7pYUQx96lAZ0q8E36Mx6lFZGLXv9ssDxffSG
-         m7fzuieZ/vSb4iij7sV0+T7JQG2PNuUzRhbP+/jb7FY2uEF0kbmG5VcPjnVy3Csnslrs
-         SEzLA9grd8fwdcIR8YK/yNlpcjPKyUSdewX8r9Qo6aqEoUYZnkoO3Dzm5XJYUtvroWRY
-         amAu77giIrG3qfssmiWBm6yccVywQg252FSylHnU2/zL0Kbq4AV01fiL1k6EuCS3+rsv
-         WpEA==
-X-Gm-Message-State: AOAM533TNk9z4eB8AN97dPkSYZyBiIFVAly8jFXSCC7fZ1dK9NA9vB3g
-        SaDjlKew/RiR0gELrxdjULnY5PMfqT8=
-X-Google-Smtp-Source: ABdhPJwxbjEio2w84y9Zf0gQxX3wzzheiw6uIAj47FADQbCkAbh0QSX4JngX+vt2rWSvBkSzcRPAwg==
-X-Received: by 2002:a05:6a00:c8:b029:18b:b0e:e51 with SMTP id e8-20020a056a0000c8b029018b0b0e0e51mr1594976pfj.37.1605266961964;
-        Fri, 13 Nov 2020 03:29:21 -0800 (PST)
-Received: from garuda.localnet ([122.172.185.167])
-        by smtp.gmail.com with ESMTPSA id j12sm8894058pga.78.2020.11.13.03.29.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XgL7zI/5MSmwSP2d//GGOj//IZej1qaYOsLhbH56krY=;
+        b=q2Hf1FcWcz6a2v9aSKVoQjUeRRG5YxBNQPQmhyXDQeBLkL95sX0RxANS4wuvtKUtiy
+         AVa85Rc7DS6mTa5O/JPcmkH9EP+PojrzwHgnz+foSO0F+HRy58AX2zlLoamJaPHQOnaP
+         xxr9FdXVbxjrgjrYn7bvr/KVv2cx86NI/fb/gevwQxvvnsRG8hgtZKQNnWpzdp3C7Rzu
+         6sY7tqzQEta2M6+/KThmeZrO3EMHI3ulPM7MeKzimeMxHl+gC8LWrSVlYK7DvVGjsltL
+         7ucycH7ssaF9s3c7wss/AQKeklDRfBihXmDzub0aIGv6GsWougZeGKrHTzuFyze8z1gn
+         u58w==
+X-Gm-Message-State: AOAM530kKMWSXr3VNbhMpYfv9ILFRXjm4YQHm0OBgYSKpbBoDnC9U1MX
+        RpxloMscGwJq6IhNFsz1M91PFlSEYm/cV6nmpwCvAGt9uqK7ilNuYZBEOzOmOCg1VRpcYUVuJ3i
+        xvtBMQeKVcM6kqcYIvo+ygHNzB8q2HQUE7RSqOYcOtBu0+lyF3TXtmoaoOox3DaaEbKrC0tYkYQ
+        ==
+X-Received: by 2002:a17:90a:af81:: with SMTP id w1mr2928710pjq.180.1605271934533;
+        Fri, 13 Nov 2020 04:52:14 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyc36V6tRE6pQuMv/BONt2Li1XFl44Ab8DP3dIx6aPrgY255UWS7Ok7SUYY86Obq4vXK46gAw==
+X-Received: by 2002:a17:90a:af81:: with SMTP id w1mr2928670pjq.180.1605271934060;
+        Fri, 13 Nov 2020 04:52:14 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id e8sm9816268pfn.175.2020.11.13.04.52.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Nov 2020 03:29:21 -0800 (PST)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     fstests@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, darrick.wong@oracle.com
-Subject: Re: [PATCH 00/11] xfs: Tests to check for inode fork extent count overflow detection
-Date:   Fri, 13 Nov 2020 16:59:18 +0530
-Message-ID: <15437715.NU04MGavY6@garuda>
-In-Reply-To: <20201113112704.28798-1-chandanrlinux@gmail.com>
-References: <20201113112704.28798-1-chandanrlinux@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Fri, 13 Nov 2020 04:52:13 -0800 (PST)
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Gao Xiang <hsiangkao@redhat.com>
+Subject: [RFC PATCH] xfsrestore: fix rootdir due to xfsdump bulkstat misuse
+Date:   Fri, 13 Nov 2020 20:51:27 +0800
+Message-Id: <20201113125127.966243-1-hsiangkao@redhat.com>
+X-Mailer: git-send-email 2.18.4
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Friday 13 November 2020 4:56:52 PM IST Chandan Babu R wrote:
-> The patchset at
-> https://lore.kernel.org/linux-xfs/20201103150642.2032284-1-chandanrlinux@gmail.com/T/#m90a8754df516bbd0c36830904a2e31c37983792c  
-> added support to XFS to detect inode extent count overflow when
-> performing various filesystem operations. The patchset also added
-> new error injection tags for,
-> 1. Reducing maximum extent count to 10.
-> 2. Allocating only single block sized extents.
-> 
-> The corresponding code for xfsprogs can be obtained from
-> https://lore.kernel.org/linux-xfs/20201104114900.172147-1-chandanrlinux@gmail.com/.
-> 
-> The patches posted along with this cover letter add tests to verify if
-> the in-kernel inode extent count overflow detection mechanism works
-> correctly.
-> 
-> These patches can also be obtained from
-> https://github.com/chandanr/xfsprogs-dev.git at branch
-> extent-overflow-tests.
+If rootino is wrong and misspecified to a subdir inode #,
+the following assertion could be triggered:
+  assert(ino != persp->p_rootino || hardh == persp->p_rooth);
 
-Sorry, the correct git repository URL is
-https://github.com/chandanr/xfstests.git.
+This patch adds a '-x' option (another awkward thing is that
+the codebase doesn't support long options) to address
+problamatic images by searching for the real dir, the reason
+that I don't enable it by default is that I'm not very confident
+with the xfsrestore codebase and xfsdump bulkstat issue will
+also be fixed immediately as well, so this function might be
+optional and only useful for pre-exist corrupted dumps.
 
-> 
-> Chandan Babu R (11):
->   common/xfs: Add a helper to get an inode fork's extent count
->   xfs: Check for extent overflow when trivally adding a new extent
->   xfs: Check for extent overflow when trivally adding a new extent
->   xfs: Check for extent overflow when punching a hole
->   xfs: Check for extent overflow when adding/removing xattrs
->   xfs: Check for extent overflow when adding/removing dir entries
->   xfs: Check for extent overflow when writing to unwritten extent
->   xfs: Check for extent overflow when moving extent from cow to data
->     fork
->   xfs: Check for extent overflow when remapping an extent
->   xfs: Check for extent overflow when swapping extents
->   xfs: Stress test with with bmap_alloc_minlen_extent error tag enabled
-> 
->  common/xfs        |  22 +++
->  tests/xfs/522     | 214 +++++++++++++++++++++++++++
->  tests/xfs/522.out |  24 ++++
->  tests/xfs/523     | 176 +++++++++++++++++++++++
->  tests/xfs/523.out |  18 +++
->  tests/xfs/524     | 210 +++++++++++++++++++++++++++
->  tests/xfs/524.out |  25 ++++
->  tests/xfs/525     | 154 ++++++++++++++++++++
->  tests/xfs/525.out |  16 +++
->  tests/xfs/526     | 360 ++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/526.out |  47 ++++++
->  tests/xfs/527     | 125 ++++++++++++++++
->  tests/xfs/527.out |  13 ++
->  tests/xfs/528     |  87 +++++++++++
->  tests/xfs/528.out |   8 ++
->  tests/xfs/529     |  86 +++++++++++
->  tests/xfs/529.out |   8 ++
->  tests/xfs/530     | 115 +++++++++++++++
->  tests/xfs/530.out |  13 ++
->  tests/xfs/531     |  85 +++++++++++
->  tests/xfs/531.out |   6 +
->  tests/xfs/group   |  10 ++
->  22 files changed, 1822 insertions(+)
->  create mode 100755 tests/xfs/522
->  create mode 100644 tests/xfs/522.out
->  create mode 100755 tests/xfs/523
->  create mode 100644 tests/xfs/523.out
->  create mode 100755 tests/xfs/524
->  create mode 100644 tests/xfs/524.out
->  create mode 100755 tests/xfs/525
->  create mode 100644 tests/xfs/525.out
->  create mode 100755 tests/xfs/526
->  create mode 100644 tests/xfs/526.out
->  create mode 100755 tests/xfs/527
->  create mode 100644 tests/xfs/527.out
->  create mode 100755 tests/xfs/528
->  create mode 100644 tests/xfs/528.out
->  create mode 100755 tests/xfs/529
->  create mode 100644 tests/xfs/529.out
->  create mode 100755 tests/xfs/530
->  create mode 100644 tests/xfs/530.out
->  create mode 100755 tests/xfs/531
->  create mode 100644 tests/xfs/531.out
-> 
-> 
+In details, my understanding of the original logic is
+ 1) xfsrestore will create a rootdir node_t (p_rooth);
+ 2) it will build the tree hierarchy from inomap and adopt
+    the parent if needed (so inodes whose parent ino hasn't
+    been detected will be in the orphan dir, p_orphh);
+ 3) during this period, if ino == rootino and
+    hardh != persp->p_rooth (IOWs, another node_t with
+    the same ino # is created), that'd be definitely wrong.
 
+So the proposal fix is that
+ - considering the xfsdump root ino # is a subdir inode, it'll
+   trigger ino == rootino && hardh != persp->p_rooth condition;
+ - so we log this node_t as persp->p_rooth rather than the
+   initial rootdir node_t created in 1);
+ - we also know that this node is actually a subdir, and after
+   the whole inomap is scanned (IOWs, the tree is built),
+   the real root dir will have the orphan dir parent p_orphh;
+ - therefore, we walk up by the parent until some node_t has
+   the p_orphh, so that's it.
 
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ restore/content.c |  7 +++++++
+ restore/getopt.h  |  4 ++--
+ restore/tree.c    | 44 +++++++++++++++++++++++++++++++++++++++++++-
+ restore/tree.h    |  2 ++
+ 4 files changed, 54 insertions(+), 3 deletions(-)
+
+diff --git a/restore/content.c b/restore/content.c
+index 6b22965..e807a83 100644
+--- a/restore/content.c
++++ b/restore/content.c
+@@ -865,6 +865,7 @@ static int quotafilecheck(char *type, char *dstdir, char *quotafile);
+ 
+ bool_t content_media_change_needed;
+ bool_t restore_rootdir_permissions;
++bool_t need_fixrootdir;
+ char *media_change_alert_program = NULL;
+ size_t perssz;
+ 
+@@ -964,6 +965,7 @@ content_init(int argc, char *argv[], size64_t vmsz)
+ 	stsz = 0;
+ 	interpr = BOOL_FALSE;
+ 	restore_rootdir_permissions = BOOL_FALSE;
++	need_fixrootdir = BOOL_FALSE;
+ 	optind = 1;
+ 	opterr = 0;
+ 	while ((c = getopt(argc, argv, GETOPT_CMDSTRING)) != EOF) {
+@@ -1189,6 +1191,9 @@ content_init(int argc, char *argv[], size64_t vmsz)
+ 		case GETOPT_FMT2COMPAT:
+ 			tranp->t_truncategenpr = BOOL_TRUE;
+ 			break;
++		case GETOPT_FIXROOTDIR:
++			need_fixrootdir = BOOL_TRUE;
++			break;
+ 		}
+ 	}
+ 
+@@ -3140,6 +3145,8 @@ applydirdump(drive_t *drivep,
+ 			return rv;
+ 		}
+ 
++		if (need_fixrootdir)
++			tree_fixroot();
+ 		persp->s.dirdonepr = BOOL_TRUE;
+ 	}
+ 
+diff --git a/restore/getopt.h b/restore/getopt.h
+index b5bc004..b0c0c7d 100644
+--- a/restore/getopt.h
++++ b/restore/getopt.h
+@@ -26,7 +26,7 @@
+  * purpose is to contain that command string.
+  */
+ 
+-#define GETOPT_CMDSTRING	"a:b:c:def:himn:op:qrs:tv:wABCDEFG:H:I:JKL:M:NO:PQRS:TUVWX:Y:"
++#define GETOPT_CMDSTRING	"a:b:c:def:himn:op:qrs:tv:wxABCDEFG:H:I:JKL:M:NO:PQRS:TUVWX:Y:"
+ 
+ #define GETOPT_WORKSPACE	'a'	/* workspace dir (content.c) */
+ #define GETOPT_BLOCKSIZE        'b'     /* blocksize for rmt */
+@@ -51,7 +51,7 @@
+ /*				'u' */
+ #define	GETOPT_VERBOSITY	'v'	/* verbosity level (0 to 4) */
+ #define	GETOPT_SMALLWINDOW	'w'	/* use a small window for dir entries */
+-/*				'x' */
++#define GETOPT_FIXROOTDIR	'x'	/* try to fix rootdir due to bulkstat misuse */
+ /*				'y' */
+ /*				'z' */
+ #define	GETOPT_NOEXTATTR	'A'	/* do not restore ext. file attr. */
+diff --git a/restore/tree.c b/restore/tree.c
+index 0670318..c1e0461 100644
+--- a/restore/tree.c
++++ b/restore/tree.c
+@@ -265,6 +265,7 @@ extern void usage(void);
+ extern size_t pgsz;
+ extern size_t pgmask;
+ extern bool_t restore_rootdir_permissions;
++extern bool_t need_fixrootdir;
+ 
+ /* forward declarations of locally defined static functions ******************/
+ 
+@@ -335,6 +336,36 @@ static xfs_ino_t orphino = ORPH_INO;
+ 
+ /* definition of locally defined global functions ****************************/
+ 
++void
++tree_fixroot(void)
++{
++	nh_t		rooth = persp->p_rooth;
++	xfs_ino_t 	rootino;
++
++	while (1) {
++		nh_t	parh;
++		node_t *rootp = Node_map(rooth);
++
++		rootino = rootp->n_ino;
++		parh = rootp->n_parh;
++		Node_unmap(rooth, &rootp);
++
++		if (parh == rooth ||
++		/* since all new node (including non-parent) would be adopted into orphh */
++		    parh == persp->p_orphh ||
++		    parh == NH_NULL)
++			break;
++		rooth = parh;
++	}
++
++	if (rooth != persp->p_rooth) {
++		persp->p_rooth = rooth;
++		persp->p_rootino = rootino;
++
++		mlog(MLOG_NORMAL, "fix root # to %llu (bind mount?)\n", rootino);
++	}
++}
++
+ /* ARGSUSED */
+ bool_t
+ tree_init(char *hkdir,
+@@ -753,8 +784,13 @@ tree_begindir(filehdr_t *fhdrp, dah_t *dahp)
+ 
+ 	/* lookup head of hardlink list
+ 	 */
++	/* do not use the old fake root node to prevent potential loop */
++	if (need_fixrootdir == BOOL_TRUE && ino == persp->p_rootino && !gen)
++		gen = -1;
++
+ 	hardh = link_hardh(ino, gen);
+-	assert(ino != persp->p_rootino || hardh == persp->p_rooth);
++	if (need_fixrootdir == BOOL_FALSE)
++		assert(ino != persp->p_rootino || hardh == persp->p_rooth);
+ 
+ 	/* already present
+ 	 */
+@@ -824,6 +860,12 @@ tree_begindir(filehdr_t *fhdrp, dah_t *dahp)
+ 		*dahp = dah;
+ 	}
+ 
++	/* found the fake rootino from subdir, need fix p_rooth. */
++	if (need_fixrootdir == BOOL_TRUE &&
++	    persp->p_rootino == ino && hardh != persp->p_rooth) {
++		mlog(MLOG_NORMAL, "found fake rootino #%llu, will fix.\n", ino);
++		persp->p_rooth = hardh;
++	}
+ 	return hardh;
+ }
+ 
+diff --git a/restore/tree.h b/restore/tree.h
+index 4f9ffe8..5d0c346 100644
+--- a/restore/tree.h
++++ b/restore/tree.h
+@@ -18,6 +18,8 @@
+ #ifndef TREE_H
+ #define TREE_H
+ 
++void tree_fixroot(void);
++
+ /* tree_init - creates a new tree abstraction.
+  */
+ extern bool_t tree_init(char *hkdir,
 -- 
-chandan
-
-
+2.18.4
 
