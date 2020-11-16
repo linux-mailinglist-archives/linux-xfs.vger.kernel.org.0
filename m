@@ -2,51 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 508E22B5398
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 Nov 2020 22:16:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EA2B2B53D6
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 Nov 2020 22:30:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgKPVQS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 16 Nov 2020 16:16:18 -0500
-Received: from sandeen.net ([63.231.237.45]:56974 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbgKPVQS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 16 Nov 2020 16:16:18 -0500
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 41D062A96;
-        Mon, 16 Nov 2020 15:15:54 -0600 (CST)
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1726357AbgKPVaN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 16 Nov 2020 16:30:13 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44197 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726035AbgKPVaM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 Nov 2020 16:30:12 -0500
+Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 98FB53CC6EC;
+        Tue, 17 Nov 2020 08:30:06 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kem4b-00Bsu7-ER; Tue, 17 Nov 2020 08:30:05 +1100
+Date:   Tue, 17 Nov 2020 08:30:05 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Alex Lyakas <alex@zadara.com>
 Cc:     linux-xfs@vger.kernel.org
-References: <160375524618.881414.16347303401529121282.stgit@magnolia>
- <160375537615.881414.8162037930017365466.stgit@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH 20/26] xfs_db: report bigtime format timestamps
-Message-ID: <c0460761-65ba-0dbf-4b61-f262e19a16bb@sandeen.net>
-Date:   Mon, 16 Nov 2020 15:16:17 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.4.3
+Subject: Re: RCU stall in xfs_reclaim_inodes_ag
+Message-ID: <20201116213005.GM7391@dread.disaster.area>
+References: <5582F682900B483C89460123ABE79292@alyakaslap>
 MIME-Version: 1.0
-In-Reply-To: <160375537615.881414.8162037930017365466.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5582F682900B483C89460123ABE79292@alyakaslap>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
+        a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
+        a=kj9zAlcOel0A:10 a=nNwsprhYR40A:10 a=7-415B0cAAAA:8
+        a=TYRcA6hzCu4B8dq9IVIA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 10/26/20 6:36 PM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Mon, Nov 16, 2020 at 07:45:46PM +0200, Alex Lyakas wrote:
+> Greetings XFS community,
 > 
-> Report the large format timestamps.
+> We had an RCU stall [1]. According to the code, it happened in
+> radix_tree_gang_lookup_tag():
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> rcu_read_lock();
+> nr_found = radix_tree_gang_lookup_tag(
+>        &pag->pag_ici_root,
+>        (void **)batch, first_index,
+>        XFS_LOOKUP_BATCH,
+>        XFS_ICI_RECLAIM_TAG);
+> 
+> 
+> This XFS system has over 100M files. So perhaps looping inside the radix
+> tree took too long, and it was happening in RCU read-side critical seciton.
+> This is one of the possible causes for RCU stall.
 
-hch had some concerns about this, but we didn't seem to reach a
-resolution... I'd like to get the bigtime stuff done this release
-and not navel-gaze too much about weird abis etc, so I'm inclined
-to just take this and we can fix it later in the release and/or
-when somebody hits that BUG_ON...
+Doubt it. According to the trace it was stalled for 60s, and a
+radix tree walk of 100M entries only takes a second or two.
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Further, unless you are using inode32, the inodes will be spread
+across multiple radix trees and that makes the radix trees much
+smaller and even less likely to take this long to run a traversal.
 
+This could be made a little more efficient by adding a "last index"
+parameter to tell the search where to stop (i.e. if the batch count
+has not yet been reached), but in general that makes little
+difference to the search because the radix tree walk finds the next
+inodes in a few pointer chases...
+
+> This happened in kernel 4.14.99, but looking at latest mainline code, code
+> is still the same.
+
+These inode radix trees have been used in XFS since 2008, and this
+is the first time anyone has reported a stall like this, so I'm
+doubtful that there is actually a general bug. My suspicion for such
+a rare occurrence would be memory corruption of some kind or a
+leaked atomic/rcu state in some other code on that CPU....
+
+> Can anyone please advise how to address that? It is not possible to put
+> cond_resched() inside the radix tree code, because it can be used with
+> spinlocks, and perhaps other contexts where sleeping is not allowed.
+
+I don't think there is a solution to this problem - it just
+shouldn't happen in when everything is operating normally as it's
+just a tag search on an indexed tree.
+
+Hence even if there was a hack to stop stall warnings, it won't fix
+whatever problem is leading to the rcu stall. The system will then
+just spin burning CPU, and eventually something else will fail.
+
+IOWs, unless you can reproduce this stall and find out what is wrong
+in the radix tree that is leading to it looping forever, there's
+likely nothing we can do to avoid this.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
