@@ -2,386 +2,176 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F76D2B6449
-	for <lists+linux-xfs@lfdr.de>; Tue, 17 Nov 2020 14:47:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A15C2B66D3
+	for <lists+linux-xfs@lfdr.de>; Tue, 17 Nov 2020 15:11:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732809AbgKQNpZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 17 Nov 2020 08:45:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        id S1729624AbgKQOHP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 17 Nov 2020 09:07:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732722AbgKQNpY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Nov 2020 08:45:24 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27EEC0613CF
-        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 05:45:24 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id i13so16104533pgm.9
-        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 05:45:24 -0800 (PST)
+        with ESMTP id S1729585AbgKQOHN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Nov 2020 09:07:13 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E38C061A04
+        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 06:07:13 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id h9so25371786ybj.10
+        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 06:07:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=olhR5HB1EgorMwTXCqPaj+ypVe6b565JiLE0znLzIhI=;
-        b=fZSpy1gXdjml8ew3wgojPlV9+WYpE+9FOfRgJ9h79iWyNzpVfQIyYMHYpJXcsy29UE
-         HKvJDMqXzYgRLwLhfxFkc0L4eQDROxCCd5bXIh8YjMUXPcMj2CJYdI3sM3cw26IfFLHp
-         5A56FePnqWVkJzryBFWEy/emsLGUxUAE/zdgd6zVpPOMC49zZm19yoURmo7Zglf/1hFj
-         W/GdkNIae69GdN1C/DTbdCut5BjYsjX8A7YLwWkixUNnPKLhgliyX4FEbAzVlwaeLyQU
-         YednPKhpBVXlfT/xXrofp7pL3KES8voRmZWlfccLoXWhRYds5k3QjWlZ/lxIPgm/anZK
-         CAZA==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=rw0Ed4Q8S7/0UOAJg6i7kX2tfO017R1DvnxFGE4XW9w=;
+        b=NReczbaHu9/CFRDb3rdYVrym1fzuELIgzmiF/MaA0LhP6McoqXUvIt1+GWqRBSHUSW
+         J+G5smAoIdIdorgeztNhxc5Hp2jzPwElnUVFEdjQWy+kWJt6EELV2uvDNshbwBt0Y7wo
+         LtGflc9sQoffO21+ojbgkgjZQAzhLGMLASs/yfSH2FQsAesHOqWhKAggyXq2gxHlz+SE
+         DQFI5bwzpRHkJ7tf99gWDfp+YGwCb0H3BN0BLLL5HTmVcQ8PQN+kuBK4ssD0De5hmqHp
+         yUWCQOUr6+QhXISYNLA6ABu/QiSqy7Dyg2eEiDxT1w50/HuguMcbm2Rsbp2un5DTcsJl
+         jNpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=olhR5HB1EgorMwTXCqPaj+ypVe6b565JiLE0znLzIhI=;
-        b=WpwrRtxj0SYzl2A1K8vuq1xvwIWOkJDFVb6bV6AyUM5akANWvWE1Y0bTWosZ+AsIV/
-         qtkYF2FZydXsq0VGDXyog2JkvmHOjpD1iXnwYcFvZFr1Qv0+iJCTAtHMAr29Tz27qCZX
-         S6cPbGP69y8SiNanx+VOivhdwN4W7sEIj0yNjzhwDCrV0Ps+izTYoSxnTYcPRNFGNm+a
-         rHZa83/lG+QptOD0F/R8oVQKmAJVmYOoJ5Qw/PbwmfwlttahJQ3uBiPv2rj4BKlYbJkt
-         WiTwWH7/Wq/MuP2MFrpf24ozyeWLrRgX1v/Nk863MSp0v3szJca7caA61xRjSZi7HjV3
-         e6jg==
-X-Gm-Message-State: AOAM533OGsyhue5DmXjiYbF58xbQgsy4NEKCDSUaUwmw7CobU8heaFFJ
-        ehtUXTCDLb0kcz5sAFnNkqQmenLRP14=
-X-Google-Smtp-Source: ABdhPJy4xaloClHI5vItRX3V5PVbUNCQzDDA3ngyzZfdbKSwWDXwZmbsNQ9dcLPDXqoGZ8G3L1T6ew==
-X-Received: by 2002:a62:64c1:0:b029:18a:d791:8162 with SMTP id y184-20020a6264c10000b029018ad7918162mr19151646pfb.24.1605620723837;
-        Tue, 17 Nov 2020 05:45:23 -0800 (PST)
-Received: from localhost.localdomain ([122.179.49.210])
-        by smtp.gmail.com with ESMTPSA id y3sm3669399pjb.18.2020.11.17.05.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Nov 2020 05:45:23 -0800 (PST)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com
-Subject: [PATCH V11 14/14] xfs: Introduce error injection to allocate only minlen size extents for files
-Date:   Tue, 17 Nov 2020 19:14:16 +0530
-Message-Id: <20201117134416.207945-15-chandanrlinux@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201117134416.207945-1-chandanrlinux@gmail.com>
-References: <20201117134416.207945-1-chandanrlinux@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=rw0Ed4Q8S7/0UOAJg6i7kX2tfO017R1DvnxFGE4XW9w=;
+        b=AY3rj3p9JVSDnLjFr2vhG8uNMKNNTj/4gcpG+vEgOK2+XNKWQozunuolzxZ8W84osM
+         U+nYkQ7qOYGoNVaVlX4bKlxLz0P0awEdp3d9gZj6bDeD22Jh1uAeFV4ANXAoIWJvclHA
+         +g7xvPwCnuBcNuhO5WbPURDLuyQT1SONDGuXOrUANxA8KW35UTuBKLjftEkB57l5FmGk
+         UNXs5eummR4EjoabQcxirO3kW4f7/cOf4+GMsXcRbWre0DrfDC1TuWV0k0g3CLWEjd6O
+         pyvxjL2z2Wn2rcwNEPL8W4u6Mka4W0ZtJdSBpZqKj30UaVDcdt+HTwSsUMmMciV+FfhX
+         nimA==
+X-Gm-Message-State: AOAM532uZwjeikKoNgJIh3Z295AUz9Xwl7lceUN5hwQaAi5nMCI+FLDz
+        Ci4f6y1Nh/GstXMZLC7gwAREfipXZQA=
+X-Google-Smtp-Source: ABdhPJxLL4xzfVKkB1iKAtBTgSADDClJLbPI3B9hR6JxqH7x/hZVCG3inPAnhmWtUy9asa1KCHNhTeqJtX8=
+Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
+X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
+ (user=satyat job=sendgmr) by 2002:a25:7083:: with SMTP id l125mr35483953ybc.250.1605622032485;
+ Tue, 17 Nov 2020 06:07:12 -0800 (PST)
+Date:   Tue, 17 Nov 2020 14:07:00 +0000
+Message-Id: <20201117140708.1068688-1-satyat@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.29.2.299.gdc1121823c-goog
+Subject: [PATCH v7 0/8] add support for direct I/O with fscrypt using blk-crypto
+From:   Satya Tangirala <satyat@google.com>
+To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>, Chao Yu <chao@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Satya Tangirala <satyat@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit adds XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT error tag which
-helps userspace test programs to get xfs_bmap_btalloc() to always
-allocate minlen sized extents.
+This patch series adds support for direct I/O with fscrypt using
+blk-crypto. It has been rebased on fscrypt/master (i.e. the "master"
+branch of the fscrypt tree at
+https://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git)
 
-This is required for test programs which need a guarantee that minlen
-extents allocated for a file do not get merged with their existing
-neighbours in the inode's BMBT. "Inode fork extent overflow check" for
-Directories, Xattrs and extension of realtime inodes need this since the
-file offset at which the extents are being allocated cannot be
-explicitly controlled from userspace.
+Patch 1 ensures that bios are not split in the middle of a crypto data
+unit.
 
-One way to use this error tag is to,
-1. Consume all of the free space by sequentially writing to a file.
-2. Punch alternate blocks of the file. This causes CNTBT to contain
-   sufficient number of one block sized extent records.
-3. Inject XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT error tag.
-After step 3, xfs_bmap_btalloc() will issue space allocation
-requests for minlen sized extents only.
+Till now, blk-crypto expected the offset and length of each bvec in a bio
+to be aligned to the crypto data unit size. Patch 2 enables
+blk-crypto-fallback to work without this requirement. It also relaxes the
+alignment requirement that blk-crypto checks for - now, blk-crypto only
+requires that the length of the I/O is aligned to the crypto data unit
+size.
 
-ENOSPC error code is returned to userspace when there aren't any "one
-block sized" extents left in any of the AGs.
+Patch 3 adds two functions to fscrypt that need to be called to determine
+if direct I/O is supported for a request.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- fs/xfs/libxfs/xfs_alloc.c    |  50 ++++++++++++++
- fs/xfs/libxfs/xfs_alloc.h    |   3 +
- fs/xfs/libxfs/xfs_bmap.c     | 124 ++++++++++++++++++++++++++++-------
- fs/xfs/libxfs/xfs_errortag.h |   4 +-
- fs/xfs/xfs_error.c           |   3 +
- 5 files changed, 159 insertions(+), 25 deletions(-)
+Patches 4 and 5 modify direct-io and iomap respectively to set bio crypt
+contexts on bios when appropriate by calling into fscrypt.
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 852b536551b5..a7c4eb1d71d5 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2473,6 +2473,47 @@ xfs_defer_agfl_block(
- 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_AGFL_FREE, &new->xefi_list);
- }
- 
-+#ifdef DEBUG
-+/*
-+ * Check if an AGF has a free extent record whose length is equal to
-+ * args->minlen.
-+ */
-+STATIC int
-+xfs_exact_minlen_extent_available(
-+	struct xfs_alloc_arg	*args,
-+	struct xfs_buf		*agbp,
-+	int			*stat)
-+{
-+	struct xfs_btree_cur	*cnt_cur;
-+	xfs_agblock_t		fbno;
-+	xfs_extlen_t		flen;
-+	int			error = 0;
-+
-+	cnt_cur = xfs_allocbt_init_cursor(args->mp, args->tp, agbp,
-+			args->agno, XFS_BTNUM_CNT);
-+	error = xfs_alloc_lookup_ge(cnt_cur, 0, args->minlen, stat);
-+	if (error)
-+		goto out;
-+
-+	if (*stat == 0) {
-+		error = -EFSCORRUPTED;
-+		goto out;
-+	}
-+
-+	error = xfs_alloc_get_rec(cnt_cur, &fbno, &flen, stat);
-+	if (error)
-+		goto out;
-+
-+	if (*stat == 1 && flen != args->minlen)
-+		*stat = 0;
-+
-+out:
-+	xfs_btree_del_cursor(cnt_cur, error);
-+
-+	return error;
-+}
-+#endif
-+
- /*
-  * Decide whether to use this allocation group for this allocation.
-  * If so, fix up the btree freelist's size.
-@@ -2544,6 +2585,15 @@ xfs_alloc_fix_freelist(
- 	if (!xfs_alloc_space_available(args, need, flags))
- 		goto out_agbp_relse;
- 
-+#ifdef DEBUG
-+	if (args->alloc_minlen_only) {
-+		int stat;
-+
-+		error = xfs_exact_minlen_extent_available(args, agbp, &stat);
-+		if (error || !stat)
-+			goto out_agbp_relse;
-+	}
-+#endif
- 	/*
- 	 * Make the freelist shorter if it's too long.
- 	 *
-diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index 6c22b12176b8..a4427c5775c2 100644
---- a/fs/xfs/libxfs/xfs_alloc.h
-+++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -75,6 +75,9 @@ typedef struct xfs_alloc_arg {
- 	char		wasfromfl;	/* set if allocation is from freelist */
- 	struct xfs_owner_info	oinfo;	/* owner of blocks being allocated */
- 	enum xfs_ag_resv_type	resv;	/* block reservation to use */
-+#ifdef DEBUG
-+	bool		alloc_minlen_only; /* allocate exact minlen extent */
-+#endif
- } xfs_alloc_arg_t;
- 
- /*
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index f6cd33684571..c57dcd3f46bc 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3552,34 +3552,101 @@ xfs_bmap_process_allocated_extent(
- 	xfs_bmap_btalloc_accounting(ap, args);
- }
- 
--STATIC int
--xfs_bmap_btalloc(
--	struct xfs_bmalloca	*ap)	/* bmap alloc argument struct */
-+#ifdef DEBUG
-+static int
-+xfs_bmap_exact_minlen_extent_alloc(
-+	struct xfs_bmalloca	*ap)
- {
--	xfs_mount_t	*mp;		/* mount point structure */
--	xfs_alloctype_t	atype = 0;	/* type for allocation routines */
--	xfs_agnumber_t	fb_agno;	/* ag number of ap->firstblock */
--	xfs_agnumber_t	ag;
--	xfs_alloc_arg_t	args;
--	xfs_fileoff_t	orig_offset;
--	xfs_extlen_t	orig_length;
--	xfs_extlen_t	blen;
--	xfs_extlen_t	nextminlen = 0;
--	int		nullfb;		/* true if ap->firstblock isn't set */
--	int		isaligned;
--	int		tryagain;
--	int		error;
--	int		stripe_align;
-+	struct xfs_mount	*mp = ap->ip->i_mount;
-+	struct xfs_alloc_arg	args = { .tp = ap->tp, .mp = mp };
-+	xfs_fileoff_t		orig_offset;
-+	xfs_extlen_t		orig_length;
-+	int			error;
- 
- 	ASSERT(ap->length);
-+
-+	if (ap->minlen != 1) {
-+		ap->blkno = NULLFSBLOCK;
-+		ap->length = 0;
-+		return 0;
-+	}
-+
- 	orig_offset = ap->offset;
- 	orig_length = ap->length;
- 
--	mp = ap->ip->i_mount;
-+	args.alloc_minlen_only = 1;
- 
--	memset(&args, 0, sizeof(args));
--	args.tp = ap->tp;
--	args.mp = mp;
-+	xfs_bmap_compute_alignments(ap, &args);
-+
-+	if (ap->tp->t_firstblock == NULLFSBLOCK) {
-+		/*
-+		 * Unlike the longest extent available in an AG, we don't track
-+		 * the length of an AG's shortest extent.
-+		 * XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT is a debug only knob and
-+		 * hence we can afford to start traversing from the 0th AG since
-+		 * we need not be concerned about a drop in performance in
-+		 * "debug only" code paths.
-+		 */
-+		ap->blkno = XFS_AGB_TO_FSB(mp, 0, 0);
-+	} else {
-+		ap->blkno = ap->tp->t_firstblock;
-+	}
-+
-+	args.fsbno = ap->blkno;
-+	args.oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
-+	args.type = XFS_ALLOCTYPE_FIRST_AG;
-+	args.total = args.minlen = args.maxlen = ap->minlen;
-+
-+	args.alignment = 1;
-+	args.minalignslop = 0;
-+
-+	args.minleft = ap->minleft;
-+	args.wasdel = ap->wasdel;
-+	args.resv = XFS_AG_RESV_NONE;
-+	args.datatype = ap->datatype;
-+
-+	error = xfs_alloc_vextent(&args);
-+	if (error)
-+		return error;
-+
-+	if (args.fsbno != NULLFSBLOCK) {
-+		xfs_bmap_process_allocated_extent(ap, &args, orig_offset,
-+			orig_length);
-+	} else {
-+		ap->blkno = NULLFSBLOCK;
-+		ap->length = 0;
-+	}
-+
-+	return 0;
-+}
-+#else
-+
-+#define xfs_bmap_exact_minlen_extent_alloc(bma) (-EFSCORRUPTED)
-+
-+#endif
-+
-+STATIC int
-+xfs_bmap_btalloc(
-+	struct xfs_bmalloca	*ap)
-+{
-+	struct xfs_mount	*mp = ap->ip->i_mount;
-+	struct xfs_alloc_arg	args = { .tp = ap->tp, .mp = mp };
-+	xfs_alloctype_t		atype = 0;
-+	xfs_agnumber_t		fb_agno;	/* ag number of ap->firstblock */
-+	xfs_agnumber_t		ag;
-+	xfs_fileoff_t		orig_offset;
-+	xfs_extlen_t		orig_length;
-+	xfs_extlen_t		blen;
-+	xfs_extlen_t		nextminlen = 0;
-+	int			nullfb; /* true if ap->firstblock isn't set */
-+	int			isaligned;
-+	int			tryagain;
-+	int			error;
-+	int			stripe_align;
-+
-+	ASSERT(ap->length);
-+	orig_offset = ap->offset;
-+	orig_length = ap->length;
- 
- 	stripe_align = xfs_bmap_compute_alignments(ap, &args);
- 
-@@ -4113,6 +4180,10 @@ xfs_bmap_alloc_userdata(
- 			return xfs_bmap_rtalloc(bma);
- 	}
- 
-+	if (unlikely(XFS_TEST_ERROR(false, mp,
-+			XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT)))
-+		return xfs_bmap_exact_minlen_extent_alloc(bma);
-+
- 	return xfs_bmap_btalloc(bma);
- }
- 
-@@ -4149,10 +4220,15 @@ xfs_bmapi_allocate(
- 	else
- 		bma->minlen = 1;
- 
--	if (bma->flags & XFS_BMAPI_METADATA)
--		error = xfs_bmap_btalloc(bma);
--	else
-+	if (bma->flags & XFS_BMAPI_METADATA) {
-+		if (unlikely(XFS_TEST_ERROR(false, mp,
-+				XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT)))
-+			error = xfs_bmap_exact_minlen_extent_alloc(bma);
-+		else
-+			error = xfs_bmap_btalloc(bma);
-+	} else {
- 		error = xfs_bmap_alloc_userdata(bma);
-+	}
- 	if (error || bma->blkno == NULLFSBLOCK)
- 		return error;
- 
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 1c56fcceeea6..6ca9084b6934 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -57,7 +57,8 @@
- #define XFS_ERRTAG_IUNLINK_FALLBACK			34
- #define XFS_ERRTAG_BUF_IOERROR				35
- #define XFS_ERRTAG_REDUCE_MAX_IEXTENTS			36
--#define XFS_ERRTAG_MAX					37
-+#define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
-+#define XFS_ERRTAG_MAX					38
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -99,5 +100,6 @@
- #define XFS_RANDOM_IUNLINK_FALLBACK			(XFS_RANDOM_DEFAULT/10)
- #define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
- #define XFS_RANDOM_REDUCE_MAX_IEXTENTS			1
-+#define XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT		1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 3780b118cc47..185b4915b7bf 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -55,6 +55,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_IUNLINK_FALLBACK,
- 	XFS_RANDOM_BUF_IOERROR,
- 	XFS_RANDOM_REDUCE_MAX_IEXTENTS,
-+	XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT,
- };
- 
- struct xfs_errortag_attr {
-@@ -166,6 +167,7 @@ XFS_ERRORTAG_ATTR_RW(bad_summary,	XFS_ERRTAG_FORCE_SUMMARY_RECALC);
- XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
- XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
-+XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -205,6 +207,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(iunlink_fallback),
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
- 	XFS_ERRORTAG_ATTR_LIST(reduce_max_iextents),
-+	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
- 	NULL,
- };
- 
+Patches 6 and 7 allow ext4 and f2fs direct I/O to support fscrypt without
+falling back to buffered I/O.
+
+Patch 8 updates the fscrypt documentation for direct I/O support.
+The documentation now notes the required conditions for inline encryption
+and direct I/O on encrypted files.
+
+This patch series was tested by running xfstests with test_dummy_encryption
+with and without the 'inlinecrypt' mount option, and there were no
+meaningful regressions. One regression was for generic/587 on ext4,
+but that test isn't compatible with test_dummy_encryption in the first
+place, and the test "incorrectly" passes without the 'inlinecrypt' mount
+option - a patch will be sent out to exclude that test when
+test_dummy_encryption is turned on with ext4 (like the other quota related
+tests that use user visible quota files).
+
+Changes v6 => v7:
+ - add patches 1 and 2 to allow blk-crypto to work with user buffers not
+   aligned to crypto data unit size, so that direct I/O doesn't require
+   that alignment either.
+ - some cleanups
+
+Changes v5 => v6:
+ - fix bug with fscrypt_limit_io_blocks() and make it ready for 64 bit
+   block numbers.
+ - remove Reviewed-by for Patch 1 due to significant changes from when
+   the Reviewed-by was given.
+
+Changes v4 => v5:
+ - replace fscrypt_limit_io_pages() with fscrypt_limit_io_block(), which
+   is now called by individual filesystems (currently only ext4) instead
+   of the iomap code. This new function serves the same end purpose as
+   the one it replaces (ensuring that DUNs within a bio are contiguous)
+   but operates purely with blocks instead of with pages.
+ - make iomap_dio_zero() set bio_crypt_ctx's again, instead of just a
+   WARN_ON() since some folks prefer that instead.
+ - add Reviewed-by's
+
+Changes v3 => v4:
+ - Fix bug in iomap_dio_bio_actor() where fscrypt_limit_io_pages() was
+   being called too early (thanks Eric!)
+ - Improve comments and fix formatting in documentation
+ - iomap_dio_zero() is only called to zero out partial blocks, but
+   direct I/O is only supported on encrypted files when I/O is
+   blocksize aligned, so it doesn't need to set encryption contexts on
+   bios. Replace setting the encryption context with a WARN_ON(). (Eric)
+
+Changes v2 => v3:
+ - add changelog to coverletter
+
+Changes v1 => v2:
+ - Fix bug in f2fs caused by replacing f2fs_post_read_required() with
+   !fscrypt_dio_supported() since the latter doesn't check for
+   compressed inodes unlike the former.
+ - Add patches 6 and 7 for fscrypt documentation
+ - cleanups and comments
+
+Eric Biggers (5):
+  fscrypt: add functions for direct I/O support
+  direct-io: add support for fscrypt using blk-crypto
+  iomap: support direct I/O with fscrypt using blk-crypto
+  ext4: support direct I/O with fscrypt using blk-crypto
+  f2fs: support direct I/O with fscrypt using blk-crypto
+
+Satya Tangirala (3):
+  block: ensure bios are not split in middle of crypto data unit
+  blk-crypto: don't require user buffer alignment
+  fscrypt: update documentation for direct I/O support
+
+ Documentation/filesystems/fscrypt.rst |  21 ++-
+ block/bio.c                           |   1 +
+ block/blk-crypto-fallback.c           | 212 +++++++++++++++++++-------
+ block/blk-crypto-internal.h           |  18 +++
+ block/blk-crypto.c                    |  19 +--
+ block/blk-merge.c                     |  96 ++++++++++--
+ block/blk-mq.c                        |   3 +
+ block/bounce.c                        |   4 +
+ fs/crypto/crypto.c                    |   8 +
+ fs/crypto/inline_crypt.c              |  74 +++++++++
+ fs/direct-io.c                        |  15 +-
+ fs/ext4/file.c                        |  10 +-
+ fs/ext4/inode.c                       |   7 +
+ fs/f2fs/f2fs.h                        |   6 +-
+ fs/iomap/direct-io.c                  |   6 +
+ include/linux/fscrypt.h               |  18 +++
+ 16 files changed, 431 insertions(+), 87 deletions(-)
+
 -- 
-2.28.0
+2.29.2.299.gdc1121823c-goog
 
