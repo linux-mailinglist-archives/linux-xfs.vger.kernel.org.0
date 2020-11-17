@@ -2,121 +2,396 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B5B32B66EF
-	for <lists+linux-xfs@lfdr.de>; Tue, 17 Nov 2020 15:11:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01C282B672A
+	for <lists+linux-xfs@lfdr.de>; Tue, 17 Nov 2020 15:13:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387945AbgKQOHo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 17 Nov 2020 09:07:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
+        id S1728736AbgKQOMt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 17 Nov 2020 09:12:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387942AbgKQOHn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Nov 2020 09:07:43 -0500
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26859C061A49
-        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 06:07:42 -0800 (PST)
-Received: by mail-qt1-x84a.google.com with SMTP id z14so12442156qto.8
-        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 06:07:42 -0800 (PST)
+        with ESMTP id S1728593AbgKQOMt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 17 Nov 2020 09:12:49 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E9AC0613CF;
+        Tue, 17 Nov 2020 06:12:49 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id d3so10294276plo.4;
+        Tue, 17 Nov 2020 06:12:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=yJkkPo7d0J6NtmBv7rzIbrBkhqskC5NsYDTAoyAGSwU=;
-        b=CRCbMwpu14Qny/Fey+w65l3KTXcgMu/wKgUqWyt7la+sSuhY3Qh3bSLfvbmNmy2ohN
-         d6CLetvPjrxg9HdcLQrwcUJI/t7E3dhAItIG3xDBSGqno0iPXS+Up8TqksLE2sx9De7b
-         RnDWU7ZU+TwovEWzFLtOxWOaWhir5AxQO2FAkbTw00c9UXWqh58duX34o1osKQfPEqVH
-         kKqjD9fQyxlm+X97TMmYjnC8FTr0DpcoshYQpZMqrkZkd8QOZGD/NcSiuteoNG9hyOLX
-         0VnfOnPnKTkbYUbPzPkiA75vd3hEs8SLeW/KWNERv36yx+7UQx03bI8wWQFRjgua6eps
-         yiDg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MH8fSRL5bJGRjidI/eAD+b9im03gd+V8l/nYDMqI3Xg=;
+        b=sPqW5Se0Yh2cjZmIJnXpnOjlE6JR4n3L55kZUitYPgYlUUtKCLqVwc7N1PsfT3DxQy
+         M5cMmgCl0tDs8zHaNr/PbqSGrBLdBVxl92EU1zp1BOME7PO2t+/4xtVoXtoOxe0ukdKV
+         5u+ZKL6XYj21bBnSbMREDYnB2x1zUWvQq13C4NE368wGdF7VTfrReFEXqRxdnK5vY7bR
+         kkzz3AqGfEz68Or6tnHEhWAiO19S7eGTXI/S08eiKydNuuGTSb9FO5YvBH7v3hbSPgmB
+         BkJK/9CJMSYRnPHCbKGZL0NPstXBL4DN9DAzZaGv82VFNPybyDxsihj5cMkf1DcEErGW
+         FULA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=yJkkPo7d0J6NtmBv7rzIbrBkhqskC5NsYDTAoyAGSwU=;
-        b=dkKF3dCrZXGc66z+GFwUwxVGfdQu0zcwO5+rdPPtSWxNIidPjNQnS5NbV0jPyYZRTG
-         K6mIlBoEYgVcr6h1sJ8jH3XXPUIHm5WU4EuViZckFrLYInaIR9wf6FTiruGqPqlB2lVq
-         cczTfXkWjYpX4+ppoTooY425be2WuyHzGZ/4Ere9Ar5HCy5ToP41k/6ADq3XsX2r1rS+
-         nBbP8HeZylENBrj1gXDZDFsAu+r58a3qHpHjQUuDb0ToJuPfpI5yvttS/6PTTz88QF/R
-         BIBjhiW7DgGarzuz1aLS8XqBbCFQL4pvdpkixC/HW2xm6zDWS9sDV1DNM41Q1oAG3w7M
-         s5pA==
-X-Gm-Message-State: AOAM533iAqPt6Licgsc8YdBNKzOAAHjmj9zNMPfhcZv6LyjacDrLefxL
-        1qiRGV1iFZlGHHTWz33d+jLVtCCUE2E=
-X-Google-Smtp-Source: ABdhPJxEG4c+F9yJyuTls+kfuLbDaGW8pmeOfu1t4VEHHtaVEi94dVbJaunxNyEQ37dnM4o0k+oO8Td4NSk=
-Sender: "satyat via sendgmr" <satyat@satyaprateek.c.googlers.com>
-X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a05:6214:386:: with SMTP id
- l6mr21357187qvy.49.1605622061201; Tue, 17 Nov 2020 06:07:41 -0800 (PST)
-Date:   Tue, 17 Nov 2020 14:07:08 +0000
-In-Reply-To: <20201117140708.1068688-1-satyat@google.com>
-Message-Id: <20201117140708.1068688-9-satyat@google.com>
-Mime-Version: 1.0
-References: <20201117140708.1068688-1-satyat@google.com>
-X-Mailer: git-send-email 2.29.2.299.gdc1121823c-goog
-Subject: [PATCH v7 8/8] fscrypt: update documentation for direct I/O support
-From:   Satya Tangirala <satyat@google.com>
-To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>, Chao Yu <chao@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Satya Tangirala <satyat@google.com>,
-        Eric Biggers <ebiggers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MH8fSRL5bJGRjidI/eAD+b9im03gd+V8l/nYDMqI3Xg=;
+        b=B9ZC+cm/oy4n+QGjbk+CQgC4yz9Gh4X1HmuNQ0AM9HDR2d/Pd5X3+nzChaB/WoImVY
+         IJLWv+G56o/7qK5MinYQ8ZTtpYwQ914OzUG8yUAPizo7svn1jjNaTQ6d3DmKcJpnJHAQ
+         Sii1bMSoQJsttFHVTvUu1N6DJV1HLeKZG0FmfcwIw3DdoK77npRh1R9qoySWHn761vGV
+         gxanXPSZxrL+++RXNd8ROxhl9ozqB+8m15eW4OvK4Fe+91KcQI9JwA9zJZRngBfC1r9l
+         qpkvQitsxtm9aDKcjlrbK2g6yRSyCXLb9MueDZ7//TFZoSPxU7qkCj1rIVS1rDg7IoNB
+         MKqg==
+X-Gm-Message-State: AOAM532ki6xCKRImtIE1F+dDE8p4xb4Q76pPU5Qli1ctGrYg14sD0Atg
+        dtR5mzDG85o1CByx5FYtjIC0qRQ48Is=
+X-Google-Smtp-Source: ABdhPJxZIwbE3MLb0wICCGsKdhnGtW/UmlOIORNXVhypbtoqZXZLrVhSp4FVlnSNtNsy7IolbWUg5g==
+X-Received: by 2002:a17:90a:7341:: with SMTP id j1mr4615112pjs.78.1605622369205;
+        Tue, 17 Nov 2020 06:12:49 -0800 (PST)
+Received: from garuda.localnet ([122.179.49.210])
+        by smtp.gmail.com with ESMTPSA id t21sm3150862pjr.42.2020.11.17.06.12.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Nov 2020 06:12:48 -0800 (PST)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 02/11] xfs: Check for extent overflow when trivally adding a new extent
+Date:   Tue, 17 Nov 2020 19:42:45 +0530
+Message-ID: <3700185.tfMkUDfmLI@garuda>
+In-Reply-To: <20201114002420.GD9695@magnolia>
+References: <20201113112704.28798-1-chandanrlinux@gmail.com> <20201113112704.28798-3-chandanrlinux@gmail.com> <20201114002420.GD9695@magnolia>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Update fscrypt documentation to reflect the addition of direct I/O support
-and document the necessary conditions for direct I/O on encrypted files.
+On Saturday 14 November 2020 5:54:20 AM IST Darrick J. Wong wrote:
+> On Fri, Nov 13, 2020 at 04:56:54PM +0530, Chandan Babu R wrote:
+> > This test verifies that XFS does not cause inode fork's extent count to
+> > overflow when adding a single extent while there's no possibility of
+> > splitting an existing mapping (limited to non-realtime files).
+> > 
+> > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> > ---
+> >  tests/xfs/522     | 214 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  tests/xfs/522.out |  24 ++++++
+> >  tests/xfs/group   |   1 +
+> >  3 files changed, 239 insertions(+)
+> >  create mode 100755 tests/xfs/522
+> >  create mode 100644 tests/xfs/522.out
+> > 
+> > diff --git a/tests/xfs/522 b/tests/xfs/522
+> > new file mode 100755
+> > index 00000000..a54fe136
+> > --- /dev/null
+> > +++ b/tests/xfs/522
+> > @@ -0,0 +1,214 @@
+> > +#! /bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
+> > +#
+> > +# FS QA Test 522
+> > +#
+> > +# Verify that XFS does not cause inode fork's extent count to overflow when
+> > +# adding a single extent while there's no possibility of splitting an existing
+> > +# mapping (limited to non-realtime files).
+> > +
+> > +seq=`basename $0`
+> > +seqres=$RESULT_DIR/$seq
+> > +echo "QA output created by $seq"
+> > +
+> > +here=`pwd`
+> > +tmp=/tmp/$$
+> > +status=1	# failure is the default!
+> > +trap "_cleanup; exit \$status" 0 1 2 3 15
+> > +
+> > +_cleanup()
+> > +{
+> > +	cd /
+> > +	rm -f $tmp.*
+> > +}
+> > +
+> > +# get standard environment, filters and checks
+> > +. ./common/rc
+> > +. ./common/filter
+> > +. ./common/quota
+> > +. ./common/inject
+> > +
+> > +# remove previous $seqres.full before test
+> > +rm -f $seqres.full
+> > +
+> > +# real QA test starts here
+> > +
+> > +_supported_fs xfs
+> > +_require_scratch
+> > +_require_xfs_quota
+> > +_require_xfs_debug
+> > +_require_xfs_io_command "falloc"
+> > +_require_xfs_io_error_injection "reduce_max_iextents"
+> > +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
+> > +
+> > +delalloc_to_written_extent()
+> > +{
+> > +	echo "* Delalloc to written extent conversion"
+> > +
+> > +	echo "Format and mount fs"
+> > +	_scratch_mkfs >> $seqres.full
+> > +	_scratch_mount >> $seqres.full
+> > +
+> > +	testfile=$SCRATCH_MNT/testfile
+> > +	bsize=$(_get_block_size $SCRATCH_MNT)
+> > +
+> > +	echo "Inject reduce_max_iextents error tag"
+> > +	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
+> > +
+> > +	nr_blks=$((15 * 2))
+> > +
+> > +	echo "Create fragmented file"
+> > +	for i in $(seq 0 2 $((nr_blks - 1))); do
+> > +		xfs_io -f -c "pwrite $((i * bsize)) $bsize" -c fsync $testfile >> $seqres.full 2>&1
+> > +		[[ $? != 0 ]] && break
+> > +	done
+> > +
+> > +	testino=$(stat -c "%i" $testfile)
+> > +
+> > +	_scratch_unmount >> $seqres.full
+> > +
+> > +	echo "Verify \$testfile's extent count"
+> > +
+> > +	nextents=$(_scratch_get_iext_count $testino data || \
+> > +			   _fail "Unable to obtain inode fork's extent count")
+> > +	if (( $nextents > 10 )); then
+> > +		echo "Extent count overflow check failed: nextents = $nextents"
+> > +		exit 1
+> > +	fi
+> > +}
+> > +
+> > +falloc_unwritten_extent()
+> > +{
+> > +	echo "* Fallocate of unwritten extents"
+> > +
+> > +	echo "Format and mount fs"
+> > +	_scratch_mkfs >> $seqres.full
+> > +	_scratch_mount >> $seqres.full
+> > +
+> > +	testfile=$SCRATCH_MNT/testfile
+> > +	bsize=$(_get_block_size $SCRATCH_MNT)
+> > +
+> > +	echo "Inject reduce_max_iextents error tag"
+> > +	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
+> > +
+> > +	nr_blks=$((15 * 2))
+> > +
+> > +	echo "Fallocate fragmented file"
+> > +	for i in $(seq 0 2 $((nr_blks - 1))); do
+> > +		xfs_io -f -c "falloc $((i * bsize)) $bsize" $testfile >> $seqres.full 2>&1
+> > +		[[ $? != 0 ]] && break
+> > +	done
+> > +
+> > +	testino=$(stat -c "%i" $testfile)
+> > +
+> > +	_scratch_unmount >> $seqres.full
+> > +
+> > +	echo "Verify \$testfile's extent count"
+> > +
+> > +	nextents=$(_scratch_get_iext_count $testino data || \
+> > +			   _fail "Unable to obtain inode fork's extent count")
+> > +	if (( $nextents > 10 )); then
+> > +		echo "Extent count overflow check failed: nextents = $nextents"
+> > +		exit 1
+> > +	fi
+> > +}
+> > +
+> > +quota_inode_extend()
+> > +{
+> > +	echo "* Extend quota inodes"
+> > +
+> > +	echo "Format and mount fs"
+> > +	_scratch_mkfs_sized $((512 * 1024 * 1024)) >> $seqres.full
+> > +	_scratch_mount -o uquota >> $seqres.full
+> > +
+> > +	testfile=$SCRATCH_MNT/testfile
+> > +	bsize=$(_get_block_size $SCRATCH_MNT)
+> > +
+> > +	echo "Consume free space"
+> > +	dd if=/dev/zero of=${testfile} bs=${bsize} >> $seqres.full 2>&1
+> > +	sync
+> > +
+> > +	echo "Create fragmented filesystem"
+> > +	$here/src/punch-alternating $testfile >> $seqres.full
+> > +	sync
+> > +
+> > +	echo "Inject reduce_max_iextents error tag"
+> > +	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
+> > +
+> > +	echo "Inject bmap_alloc_minlen_extent error tag"
+> > +	xfs_io -x -c 'inject bmap_alloc_minlen_extent' $SCRATCH_MNT
+> > +
+> > +	nr_blks=20
+> > +
+> > +	# This is a rough calculation; It doesn't take block headers into
+> > +	# consideration.
+> > +	# gdb -batch vmlinux -ex 'print sizeof(struct xfs_disk_dquot)'
+> > +	# $1 = 104
+> > +	nr_quotas_per_block=$((bsize / 104))
+> 
+> That's sizeof(xfs_dqblk_t) you want, and it's 136 bytes long.
 
-Signed-off-by: Satya Tangirala <satyat@google.com>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Reviewed-by: Jaegeuk Kim <jaegeuk@kernel.org>
----
- Documentation/filesystems/fscrypt.rst | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+Ah ok. I had missed that. Thanks for pointing that out.
 
-diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
-index 44b67ebd6e40..757b8aa2af9b 100644
---- a/Documentation/filesystems/fscrypt.rst
-+++ b/Documentation/filesystems/fscrypt.rst
-@@ -1047,8 +1047,10 @@ astute users may notice some differences in behavior:
-   may be used to overwrite the source files but isn't guaranteed to be
-   effective on all filesystems and storage devices.
+> 
+> > +	nr_quotas=$((nr_quotas_per_block * nr_blks))
+> > +
+> > +	echo "Extend uquota file"
+> > +	for i in $(seq 0 $nr_quotas); do
+> 
+> You only have to initialize the first dquot in a dquot file block in
+> order to allocate the whole block, so you could speed this up with
+> "seq 0 $nr_quotas_per_block $nr_quotas".
+
+Ok. Thanks for the suggestion.
+
+> 
+> > +		chown $i $testfile >> $seqres.full 2>&1
+> > +		[[ $? != 0 ]] && break
+> > +	done
+> > +
+> > +	_scratch_unmount >> $seqres.full
+> > +
+> > +	echo "Verify uquota inode's extent count"
+> > +	uquotino=$(_scratch_xfs_db -c sb -c "print uquotino")
+> > +	uquotino=${uquotino##uquotino = }
+> > +
+> > +	nextents=$(_scratch_get_iext_count $uquotino data || \
+> > +			   _fail "Unable to obtain inode fork's extent count")
+> > +	if (( $nextents > 10 )); then
+> > +		echo "Extent count overflow check failed: nextents = $nextents"
+> > +		exit 1
+> > +	fi
+> > +}
+> > +
+> > +directio_write()
+> > +{
+> > +	echo "* Directio write"
+> > +
+> > +	echo "Format and mount fs"
+> > +	_scratch_mkfs >> $seqres.full
+> > +	_scratch_mount >> $seqres.full
+> > +
+> > +	testfile=$SCRATCH_MNT/testfile
+> > +	bsize=$(_get_block_size $SCRATCH_MNT)
+> > +
+> > +	echo "Inject reduce_max_iextents error tag"
+> > +	xfs_io -x -c 'inject reduce_max_iextents' $SCRATCH_MNT
+> > +
+> > +	nr_blks=$((15 * 2))
+> > +
+> > +	echo "Create fragmented file via directio writes"
+> > +	for i in $(seq 0 2 $((nr_blks - 1))); do
+> > +		xfs_io -d -f -c "pwrite $((i * bsize)) $bsize" -c fsync $testfile >> $seqres.full 2>&1
+> 
+> $XFS_IO_PROG -d -f -s -c "pwrite ..." $testfile
+> 
+> "-s" is an undocumented flag that makes the writes synchronous.
+
+Ok. I will fix that.
+
+> 
+> > +		[[ $? != 0 ]] && break
+> > +	done
+> > +
+> > +	testino=$(stat -c "%i" $testfile)
+> > +
+> > +	_scratch_unmount >> $seqres.full
+> > +
+> > +	echo "Verify \$testfile's extent count"
+> > +
+> > +	nextents=$(_scratch_get_iext_count $testino data || \
+> 
+> $XFS_IO_PROG -c 'stat' $testfile | grep nextents ?
+
+I agree. I will replace the above with xfs_io's stat command. But for special
+inodes like quota and realtime bitmap and summary inodes we would still
+require the helper function to obtain the extent count.
+
+> 
+> > +			   _fail "Unable to obtain inode fork's extent count")
+> > +	if (( $nextents > 10 )); then
+> > +		echo "Extent count overflow check failed: nextents = $nextents"
+> > +		exit 1
+> > +	fi
+> > +}
+> > +
+> > +delalloc_to_written_extent
+> > +falloc_unwritten_extent
+> > +quota_inode_extend
+> > +directio_write
+> 
+> I wonder if these should be separate tests, since they each format the
+> scratch fs?  Or could you format the scratch fs once and test four
+> different files?
+
+Quota inode test is the only one which requires bmap_alloc_minlen_extent
+ error tag. Other tests here have the following pattern,
+ - mkfs and mount fs
+ - Fragment fs space
+ - Inject reduce_max_iextents error tag
+ - Work on a test file
+   Here we allocate individual blocks.
+ - Umount
+ - Check inode fork extent count.
+So we can have just one mkfs/mount overall by removing the testfile created by
+each test and also quota inode test can be moved to the last so that
+bmap_alloc_minlen_extent error tag can be applied only to that test.
  
--- Direct I/O is not supported on encrypted files.  Attempts to use
--  direct I/O on such files will fall back to buffered I/O.
-+- Direct I/O is supported on encrypted files only under some
-+  circumstances (see `Direct I/O support`_ for details). When these
-+  circumstances are not met, attempts to use direct I/O on encrypted
-+  files will fall back to buffered I/O.
- 
- - The fallocate operations FALLOC_FL_COLLAPSE_RANGE and
-   FALLOC_FL_INSERT_RANGE are not supported on encrypted files and will
-@@ -1121,6 +1123,21 @@ It is not currently possible to backup and restore encrypted files
- without the encryption key.  This would require special APIs which
- have not yet been implemented.
- 
-+Direct I/O support
-+==================
-+
-+Direct I/O on encrypted files is supported through blk-crypto. In
-+particular, this means the kernel must have CONFIG_BLK_INLINE_ENCRYPTION
-+enabled, the filesystem must have had the 'inlinecrypt' mount option
-+specified, and either hardware inline encryption must be present, or
-+CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK must have been enabled. Further,
-+the length of any I/O must be aligned to the filesystem block size
-+(*not* necessarily the same as the block device's block size). If any of
-+these conditions isn't met, attempts to do direct I/O on an encrypted file
-+will fall back to buffered I/O. However, there aren't any additional
-+requirements on user buffer alignment (apart from those already present
-+when using direct I/O on unencrypted files).
-+
- Encryption policy enforcement
- =============================
- 
+> 
+> --D
+> 
+> > +
+> > +# success, all done
+> > +status=0
+> > +exit
+> > diff --git a/tests/xfs/522.out b/tests/xfs/522.out
+> > new file mode 100644
+> > index 00000000..98791aae
+> > --- /dev/null
+> > +++ b/tests/xfs/522.out
+> > @@ -0,0 +1,24 @@
+> > +QA output created by 522
+> > +* Delalloc to written extent conversion
+> > +Format and mount fs
+> > +Inject reduce_max_iextents error tag
+> > +Create fragmented file
+> > +Verify $testfile's extent count
+> > +* Fallocate of unwritten extents
+> > +Format and mount fs
+> > +Inject reduce_max_iextents error tag
+> > +Fallocate fragmented file
+> > +Verify $testfile's extent count
+> > +* Extend quota inodes
+> > +Format and mount fs
+> > +Consume free space
+> > +Create fragmented filesystem
+> > +Inject reduce_max_iextents error tag
+> > +Inject bmap_alloc_minlen_extent error tag
+> > +Extend uquota file
+> > +Verify uquota inode's extent count
+> > +* Directio write
+> > +Format and mount fs
+> > +Inject reduce_max_iextents error tag
+> > +Create fragmented file via directio writes
+> > +Verify $testfile's extent count
+> > diff --git a/tests/xfs/group b/tests/xfs/group
+> > index b89c0a4e..1831f0b5 100644
+> > --- a/tests/xfs/group
+> > +++ b/tests/xfs/group
+> > @@ -519,3 +519,4 @@
+> >  519 auto quick reflink
+> >  520 auto quick reflink
+> >  521 auto quick realtime growfs
+> > +522 auto quick quota
+> 
+
+
 -- 
-2.29.2.299.gdc1121823c-goog
+chandan
+
+
 
