@@ -2,56 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FF9E2B7CB6
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Nov 2020 12:33:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E0AC2B821A
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Nov 2020 17:45:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgKRLaW convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 18 Nov 2020 06:30:22 -0500
-Received: from tigeramira.ro ([88.158.78.30]:42555 "EHLO mail.tigeramira.ro"
-        rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgKRLaW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 18 Nov 2020 06:30:22 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id D836ECB2F05
-        for <linux-xfs@vger.kernel.org>; Tue, 17 Nov 2020 06:54:28 +0200 (EET)
-Received: from mail.tigeramira.ro ([127.0.0.1])
-        by localhost (mail.tigeramira.ro [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id zO4Rzbp0NwJW for <linux-xfs@vger.kernel.org>;
-        Tue, 17 Nov 2020 06:54:13 +0200 (EET)
-Received: from mail.tigeramira.ro (localhost [127.0.0.1])
-        by mail.tigeramira.ro (Postfix) with ESMTP id DFC7DC7FB8E
-        for <linux-xfs@vger.kernel.org>; Mon, 16 Nov 2020 10:08:50 +0200 (EET)
-Received: from [156.96.44.214] (unknown [192.168.12.254])
-        by mail.tigeramira.ro (Postfix) with ESMTP id EA88D998E97
-        for <linux-xfs@vger.kernel.org>; Fri, 13 Nov 2020 19:08:25 +0200 (EET)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1725772AbgKRQon (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Nov 2020 11:44:43 -0500
+Received: from sandeen.net ([63.231.237.45]:41504 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbgKRQom (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 18 Nov 2020 11:44:42 -0500
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 48E78D70;
+        Wed, 18 Nov 2020 10:44:15 -0600 (CST)
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>, guaneryu@gmail.com
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+References: <160382541643.1203756.12015378093281554469.stgit@magnolia>
+ <160382542877.1203756.11339393830951325848.stgit@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: [PATCH 2/2] xfs: test inobtcount upgrade
+Message-ID: <de3588f9-e80a-b9ba-cb03-16d538060675@sandeen.net>
+Date:   Wed, 18 Nov 2020 10:44:40 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.4.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Corporate and Personal Loan::,
-To:     linux-xfs@vger.kernel.org
-From:   "Investment  Corporate" <financialcapability6@gmail.com>
-Date:   Fri, 13 Nov 2020 08:08:38 -0800
-Reply-To: hmurrah39@gmail.com
-Message-Id: <20201113170826.EA88D998E97@mail.tigeramira.ro>
+In-Reply-To: <160382542877.1203756.11339393830951325848.stgit@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello linux-xfs@vger.kernel.org
+On 10/27/20 2:03 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Make sure we can actually upgrade filesystems to support inobtcounts.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> ---
+>  common/xfs        |   16 ++++++++++++
+>  tests/xfs/910     |   72 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/910.out |    3 ++
+>  tests/xfs/group   |    1 +
+>  4 files changed, 92 insertions(+)
+>  create mode 100755 tests/xfs/910
+>  create mode 100644 tests/xfs/910.out
+> 
+> 
+> diff --git a/common/xfs b/common/xfs
+> index 3f5c14ba..e548a0a1 100644
+> --- a/common/xfs
+> +++ b/common/xfs
+> @@ -978,3 +978,19 @@ _require_xfs_copy()
+>  	[ "$USE_EXTERNAL" = yes ] && \
+>  		_notrun "Cannot xfs_copy with external devices"
+>  }
+> +
+> +_require_xfs_mkfs_inobtcount()
+> +{
+> +	_scratch_mkfs_xfs_supported -m inobtcount=1 >/dev/null 2>&1 \
+> +	   || _notrun "mkfs.xfs doesn't have inobtcount feature"
+> +}
 
+I'd like to also add:
 
-We are Base Investment Company offering Corporate and Personal Loan at 3% Interest Rate for a duration of 10Years.
++_require_xfs_admin_upgrade()
++{
++	local feature="$1"
++
++	_require_scratch
++	# Catch missing "-O" or missing feature handling
++	_scratch_xfs_admin -O $feature 2>&1 | grep "illegal option\|Cannot change" \
++		&& _notrun "xfs_admin does not support upgrading $1"
++}
 
+and then:
 
-We also pay 1% commission to brokers, who introduce project owners for finance or other opportunities.
+...
 
+> +# real QA test starts here
+> +_supported_fs xfs
+> +_require_command "$XFS_ADMIN_PROG" "xfs_admin"
+> +_require_xfs_mkfs_inobtcount
+> +_require_xfs_scratch_inobtcount
 
-Please get back to me if you are interested for more
++_require_xfs_admin_upgrade "inobtcount"
 
-details.
+to be sure that the upgrade command is also supported by xfs_admin.  By the time
+we get to release, both mkfs & xfs_admin should both support it, but I'm hedging
+my bets on the upgrade path just a little,and it seems best to explicitly test
+both requirements.
 
+that helper can be re-used on the bigtime upgrade test as well and anything else
+that requires an xfs_admin upgrade path ...
 
-Yours faithfully,
-
-Hashim Murrah
+Thanks,
+-Eric
