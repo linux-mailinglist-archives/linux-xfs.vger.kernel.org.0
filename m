@@ -2,112 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4A302BB0FB
-	for <lists+linux-xfs@lfdr.de>; Fri, 20 Nov 2020 17:58:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7A8A2BB12A
+	for <lists+linux-xfs@lfdr.de>; Fri, 20 Nov 2020 18:07:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbgKTQzo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 20 Nov 2020 11:55:44 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38102 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729569AbgKTQzo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 20 Nov 2020 11:55:44 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKGoJnC166425
-        for <linux-xfs@vger.kernel.org>; Fri, 20 Nov 2020 16:55:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : mime-version : content-type; s=corp-2020-01-29;
- bh=JRMVX3l3Nm8xvrz2Ti2Q8fh+cBbvFtncSHMJP0zwt3k=;
- b=DXTdou+RlXo+hWavTWvnina0vMcxFx4bXMkt7J94Ci4rneTeuxDcHwcXk+2FxZTtN+u2
- XN3yefXUxiEOUUO534U6oZrP7d5GkfDW/IwB4xxKc6RukM26LuaJUwnrUn6ozRnMljbv
- griYcQK+W/bsX8T2UHmtbzwvg4jIWCi/hKCxrttuzC48SClUpPcM1vKtL8s0TFkJD34E
- HGU3DuqjuVT0dq+/DwTvAxB6i6MiUAEQ8+ZS7KIrOnMLkRMfyPdqCRc21GaWHWWp8dpg
- iqgOFcreFPcV8ETjvs195bkJ94WH7JqMwzcIb7hibSs9gt+DIzDCWIo+SkxwHD+TqA3w rw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 34t76mbmp7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Fri, 20 Nov 2020 16:55:43 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AKGohC5020399
-        for <linux-xfs@vger.kernel.org>; Fri, 20 Nov 2020 16:55:42 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 34ts61st2x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 20 Nov 2020 16:55:42 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AKGtfHb021725
-        for <linux-xfs@vger.kernel.org>; Fri, 20 Nov 2020 16:55:41 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 20 Nov 2020 08:55:41 -0800
-Date:   Fri, 20 Nov 2020 08:55:40 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [ANNOUNCE] xfs-linux: for-next updated to eb8409071a1d
-Message-ID: <20201120165540.GI9695@magnolia>
+        id S1728223AbgKTRGT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 20 Nov 2020 12:06:19 -0500
+Received: from sv301.sixcore.ne.jp ([183.90.248.50]:57420 "EHLO
+        sv301.sixcore.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgKTRGS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 20 Nov 2020 12:06:18 -0500
+X-Greylist: delayed 724 seconds by postgrey-1.27 at vger.kernel.org; Fri, 20 Nov 2020 12:06:18 EST
+Received: from virusgw301.sixcore.ne.jp (virusgw301.sixcore.ne.jp [183.90.248.243])
+        by sv301.sixcore.ne.jp (Postfix) with ESMTP id 0E2EF350F5C7B;
+        Sat, 21 Nov 2020 01:47:18 +0900 (JST)
+Received: from sv301.sixcore.ne.jp (183.90.248.50)
+ by virusgw301.sixcore.ne.jp (F-Secure/fsigk_smtp/521/virusgw301.sixcore.ne.jp);
+ Sat, 21 Nov 2020 01:47:18 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/521/virusgw301.sixcore.ne.jp)
+Received: from NAMVPS-COM.members.linode.com (li1603-22.members.linode.com [139.162.119.22])
+        by sv301.sixcore.ne.jp (Postfix) with ESMTPSA id 125E634C4E044;
+        Sat, 21 Nov 2020 01:47:11 +0900 (JST)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9810 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 phishscore=0
- suspectscore=2 mlxscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011200115
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9810 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 phishscore=0
- adultscore=0 priorityscore=1501 bulkscore=0 clxscore=1015 mlxlogscore=999
- malwarescore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2011200115
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Greetings My Beloved One
+To:     Recipients <sinoue@e-welcom.com>
+From:   "Mrs. Julianna Stefan Ndoi" <sinoue@e-welcom.com>
+Date:   Fri, 20 Nov 2020 23:47:07 +0700
+Reply-To: maryp1799_8335@yahoo.co.jp
+Message-Id: <20201120164712.125E634C4E044@sv301.sixcore.ne.jp>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
-
-The for-next branch of the xfs-linux repository at:
-
-	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
-
-has just been updated.
-
-Patches often get missed, so please check if your outstanding patches
-were in this update. If they have not been in this update, please
-resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
-the next update.  I wasn't planning to advance the branch twice in as
-many days, but Eric found regressions with one of last week's patches
-and that needed to get reverted asap.
-
-The new head of the for-next branch is commit:
-
-eb8409071a1d xfs: revert "xfs: fix rmap key and record comparison functions"
-
-New Commits:
-
-Darrick J. Wong (5):
-      [e95b6c3ef131] xfs: fix the minrecs logic when dealing with inode root child blocks
-      [498fe261f0d6] xfs: strengthen rmap record flags checking
-      [6b48e5b8a20f] xfs: directory scrub should check the null bestfree entries too
-      [27c14b5daa82] xfs: ensure inobt record walks always make forward progress
-      [eb8409071a1d] xfs: revert "xfs: fix rmap key and record comparison functions"
-
-Dave Chinner (1):
-      [883a790a8440] xfs: don't allow NOWAIT DIO across extent boundaries
-
-Gao Xiang (1):
-      [ada49d64fb35] xfs: fix forkoff miscalculation related to XFS_LITINO(mp)
-
-Yu Kuai (1):
-      [595189c25c28] xfs: return corresponding errcode if xfs_initialize_perag() fail
-
-
-Code Diffstat:
-
- fs/xfs/libxfs/xfs_attr_leaf.c  |  8 +++++++-
- fs/xfs/libxfs/xfs_rmap_btree.c | 16 +++++++--------
- fs/xfs/scrub/bmap.c            |  8 ++++----
- fs/xfs/scrub/btree.c           | 45 +++++++++++++++++++++++++-----------------
- fs/xfs/scrub/dir.c             | 27 ++++++++++++++++++-------
- fs/xfs/xfs_iomap.c             | 29 +++++++++++++++++++++++++++
- fs/xfs/xfs_iwalk.c             | 27 ++++++++++++++++++++++---
- fs/xfs/xfs_mount.c             | 11 ++++++++---
- 8 files changed, 127 insertions(+), 44 deletions(-)
+Greetings my beloved,
+My name is Mrs.Julianna Stefan Ndoi,I am a deaf woman and also a cancer
+patient who had decided to donate what I have to you for God's works. I
+want to donate $8.5 million to you so that you will use part of the this
+fund to help the poor ones,while you use the rest for your family.If you
+are interested,Respond now for more details on how to receive this fund.
+Regards
