@@ -2,143 +2,186 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 132D52BFDB3
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Nov 2020 01:42:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 713292C0166
+	for <lists+linux-xfs@lfdr.de>; Mon, 23 Nov 2020 09:29:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgKWAlx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 22 Nov 2020 19:41:53 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:44490 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726928AbgKWAlw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 22 Nov 2020 19:41:52 -0500
-X-IronPort-AV: E=Sophos;i="5.78,361,1599494400"; 
-   d="scan'208";a="101635247"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 23 Nov 2020 08:41:47 +0800
-Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
-        by cn.fujitsu.com (Postfix) with ESMTP id 5CC4F4CE5475;
-        Mon, 23 Nov 2020 08:41:46 +0800 (CST)
-Received: from G08CNEXJMPEKD02.g08.fujitsu.local (10.167.33.202) by
- G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 23 Nov 2020 08:41:44 +0800
-Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
- G08CNEXJMPEKD02.g08.fujitsu.local (10.167.33.202) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 23 Nov 2020 08:41:47 +0800
-Received: from localhost.localdomain (10.167.225.141) by
- G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Mon, 23 Nov 2020 08:41:46 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <song@kernel.org>,
-        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
-Subject: [RFC PATCH v2 6/6] fsdax: remove useless (dis)associate functions
-Date:   Mon, 23 Nov 2020 08:41:16 +0800
-Message-ID: <20201123004116.2453-7-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20201123004116.2453-1-ruansy.fnst@cn.fujitsu.com>
-References: <20201123004116.2453-1-ruansy.fnst@cn.fujitsu.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 5CC4F4CE5475.ACCAE
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+        id S1728046AbgKWIVk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 23 Nov 2020 03:21:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47793 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbgKWIVk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 23 Nov 2020 03:21:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606119698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
+        bh=QUQiy85GJjP0eouI6Gu5Tczh5zKuKGXXxvT492WzoOU=;
+        b=gAORvJsIVb5VtTr/XuyUDP14xNdxvuswi5rSJMdRKJ9R1s+w/+XZkM/USFswnJDrYzvDuL
+        G13RMxwAZjuDCXWW1YwZ0Fqm4Hj76FG+PxuedhhOrZEtsq3n6VAqphxLkl7rZnLnWuSDFE
+        p8bI1x/wrt+lhMqbBXJcy9DH1x5KxSI=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-99-QIjRHdbeMOi96R_eCM_JDA-1; Mon, 23 Nov 2020 03:21:36 -0500
+X-MC-Unique: QIjRHdbeMOi96R_eCM_JDA-1
+Received: by mail-pf1-f199.google.com with SMTP id 185so6618585pfw.18
+        for <linux-xfs@vger.kernel.org>; Mon, 23 Nov 2020 00:21:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=QUQiy85GJjP0eouI6Gu5Tczh5zKuKGXXxvT492WzoOU=;
+        b=daQMnYg0iq+OaRL0v8tz8ZbMEibzPoBnGnrN3zFFuKW8eZ8VfSuaZQOJutRl1J02B3
+         3vM2TH3CaQ1E+1I2ll3xQdEuxjfD8q2oyNqak6wN3lM30oOg+ri0ITH9TfKfDds2hN9F
+         YMk7eo7mx09RIyVM/m8IHFiePVGxZ3Ir4tT3dhWd5L5OYUtZO/Z1CgET+dllFB/bzF9U
+         ELC1WhoQkSTRT7pb6/IkvvScbCiZVE/KGAWsIzwALj1Zc76w6nW4FCgpn6QZb0HJc4sk
+         MgMFgZ1s5+IxB529O1A+mi1fhPxIzAnSKoHXTJS5z5yGcBY+UCuSoPuwBj5mMQeLeVve
+         zCbg==
+X-Gm-Message-State: AOAM532AGzcFY9V4lyxlOIq5WNAXbW0272mUeibj2RBpB0psnVmy6JT5
+        h9azujuZRJJSjzNwxgmsGqO2nvryhunGN1eEX31GWrTQpItGNngwgPFUvIIEF0bIYI07W0CRN24
+        htZfjR0M1LEAie9CbpyIN
+X-Received: by 2002:a17:90a:7ac2:: with SMTP id b2mr24250018pjl.226.1606119695248;
+        Mon, 23 Nov 2020 00:21:35 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkjMSUcDsM4b0Yz/qnejvRBIYjSUKk1CzuqVfpchCSkv1OTX84MXzlKAXKA8tBHpBW9jtIMQ==
+X-Received: by 2002:a17:90a:7ac2:: with SMTP id b2mr24250002pjl.226.1606119695028;
+        Mon, 23 Nov 2020 00:21:35 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id k4sm5802840pfg.174.2020.11.23.00.21.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Nov 2020 00:21:34 -0800 (PST)
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     fstests@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Gao Xiang <hsiangkao@redhat.com>
+Subject: [PATCH v2] generic: add test for XFS forkoff miscalcution on 32-bit platform
+Date:   Mon, 23 Nov 2020 16:20:47 +0800
+Message-Id: <20201123082047.2991878-1-hsiangkao@redhat.com>
+X-Mailer: git-send-email 2.18.4
+In-Reply-To: <20201118060258.1939824-1-hsiangkao@redhat.com>
+References: <20201118060258.1939824-1-hsiangkao@redhat.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Since owner tarcking is triggerred by pmem device, these functions are
-useless.  So remove it.
+There is a regression that recent XFS_LITINO(mp) update causes
+xfs_attr_shortform_bytesfit() returns maxforkoff rather than 0.
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+Therefore, one result is
+  "ASSERT(new_size <= XFS_IFORK_SIZE(ip, whichfork));"
+
+Add a regression test in fstests generic to look after that since
+the testcase itself isn't xfs-specific.
+
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/dax.c | 46 ----------------------------------------------
- 1 file changed, 46 deletions(-)
+changes since v1:
+ - update commit id since the fix has been upstreamed (Eryu);
+ - switch to use scratch_mkfs instead since fixed inode size is
+   prefered to keep XFS_LITINO value can trigger the issue for
+   v4 (412) and v5 (336); and no need to use TEST_DIR
+   "rm localfile" way
+ - refine some inlined comments.
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 34471acde683..6c037287cb04 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -323,48 +323,6 @@ static unsigned long dax_end_pfn(void *entry)
- 	for (pfn = dax_to_pfn(entry); \
- 			pfn < dax_end_pfn(entry); pfn++)
- 
--/*
-- * TODO: for reflink+dax we need a way to associate a single page with
-- * multiple address_space instances at different linear_page_index()
-- * offsets.
-- */
--static void dax_associate_entry(void *entry, struct address_space *mapping,
--		struct vm_area_struct *vma, unsigned long address)
--{
--	unsigned long size = dax_entry_size(entry), pfn, index;
--	int i = 0;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	index = linear_page_index(vma, address & ~(size - 1));
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(page->mapping);
--		page->mapping = mapping;
--		page->index = index + i++;
--	}
--}
--
--static void dax_disassociate_entry(void *entry, struct address_space *mapping,
--		bool trunc)
--{
--	unsigned long pfn;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
--		WARN_ON_ONCE(page->mapping && page->mapping != mapping);
--		page->mapping = NULL;
--		page->index = 0;
--	}
--}
--
- static struct page *dax_busy_page(void *entry)
- {
- 	unsigned long pfn;
-@@ -516,7 +474,6 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 			xas_lock_irq(xas);
- 		}
- 
--		dax_disassociate_entry(entry, mapping, false);
- 		xas_store(xas, NULL);	/* undo the PMD join */
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
-@@ -653,7 +610,6 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	    (xas_get_mark(&xas, PAGECACHE_TAG_DIRTY) ||
- 	     xas_get_mark(&xas, PAGECACHE_TAG_TOWRITE)))
- 		goto out;
--	dax_disassociate_entry(entry, mapping, trunc);
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
- 	ret = 1;
-@@ -747,8 +703,6 @@ static void *dax_insert_entry(struct xa_state *xas,
- 	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
- 		void *old;
- 
--		dax_disassociate_entry(entry, mapping, false);
--		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
+ tests/generic/618     | 67 +++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/618.out |  4 +++
+ tests/generic/group   |  1 +
+ 3 files changed, 72 insertions(+)
+ create mode 100755 tests/generic/618
+ create mode 100644 tests/generic/618.out
+
+diff --git a/tests/generic/618 b/tests/generic/618
+new file mode 100755
+index 00000000..bdaa3874
+--- /dev/null
++++ b/tests/generic/618
+@@ -0,0 +1,67 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2020 Red Hat, Inc. All Rights Reserved.
++#
++# FS QA Test 618
++#
++# Verify that forkoff can be returned as 0 properly if it isn't
++# able to fit inline for XFS.
++# However, this test is fs-neutral and can be done quickly so
++# leave it in generic
++# This test verifies the problem fixed in kernel with commit
++# ada49d64fb35 ("xfs: fix forkoff miscalculation related to XFS_LITINO(mp)")
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1	# failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++	rm -f $tmp.*
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
++. ./common/attr
++
++# remove previous $seqres.full before test
++rm -f $seqres.full
++
++# real QA test starts here
++
++_supported_fs generic
++_require_scratch
++_require_attrs user
++
++# Use fixed inode size 512, so both v4 and v5 can be tested,
++# and also make sure the issue can be triggered if the default
++# inode size is changed later.
++[ $FSTYP = "xfs" ] && MKFS_OPTIONS="$MKFS_OPTIONS -i size=512"
++_scratch_mkfs > $seqres.full 2>&1
++_scratch_mount
++
++localfile="${SCRATCH_MNT}/testfile"
++touch $localfile
++
++# value cannot exceed XFS_ATTR_SF_ENTSIZE_MAX (256) or it will turn into
++# leaf form directly; the following combination can trigger the issue for
++# both v4 (XFS_LITINO = 412) & v5 (XFS_LITINO = 336) fses.
++"${SETFATTR_PROG}" -n user.0 -v "`seq 0 80`" "${localfile}"
++"${SETFATTR_PROG}" -n user.1 -v "`seq 0 80`" "${localfile}"
++
++# Make sure that changes are written to disk
++_scratch_cycle_mount
++
++# getfattr won't succeed with the expected result if fails
++_getfattr --absolute-names -ebase64 -d $localfile | tail -n +2 | sort
++
++_scratch_unmount
++status=0
++exit
+diff --git a/tests/generic/618.out b/tests/generic/618.out
+new file mode 100644
+index 00000000..848fdc58
+--- /dev/null
++++ b/tests/generic/618.out
+@@ -0,0 +1,4 @@
++QA output created by 618
++
++user.0=0sMAoxCjIKMwo0CjUKNgo3CjgKOQoxMAoxMQoxMgoxMwoxNAoxNQoxNgoxNwoxOAoxOQoyMAoyMQoyMgoyMwoyNAoyNQoyNgoyNwoyOAoyOQozMAozMQozMgozMwozNAozNQozNgozNwozOAozOQo0MAo0MQo0Mgo0Mwo0NAo0NQo0Ngo0Nwo0OAo0OQo1MAo1MQo1Mgo1Mwo1NAo1NQo1Ngo1Nwo1OAo1OQo2MAo2MQo2Mgo2Mwo2NAo2NQo2Ngo2Nwo2OAo2OQo3MAo3MQo3Mgo3Mwo3NAo3NQo3Ngo3Nwo3OAo3OQo4MA==
++user.1=0sMAoxCjIKMwo0CjUKNgo3CjgKOQoxMAoxMQoxMgoxMwoxNAoxNQoxNgoxNwoxOAoxOQoyMAoyMQoyMgoyMwoyNAoyNQoyNgoyNwoyOAoyOQozMAozMQozMgozMwozNAozNQozNgozNwozOAozOQo0MAo0MQo0Mgo0Mwo0NAo0NQo0Ngo0Nwo0OAo0OQo1MAo1MQo1Mgo1Mwo1NAo1NQo1Ngo1Nwo1OAo1OQo2MAo2MQo2Mgo2Mwo2NAo2NQo2Ngo2Nwo2OAo2OQo3MAo3MQo3Mgo3Mwo3NAo3NQo3Ngo3Nwo3OAo3OQo4MA==
+diff --git a/tests/generic/group b/tests/generic/group
+index 94e860b8..eca9d619 100644
+--- a/tests/generic/group
++++ b/tests/generic/group
+@@ -620,3 +620,4 @@
+ 615 auto rw
+ 616 auto rw io_uring stress
+ 617 auto rw io_uring stress
++618 auto quick attr
 -- 
-2.29.2
-
-
+2.18.4
 
