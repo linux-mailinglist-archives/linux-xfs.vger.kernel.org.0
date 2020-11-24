@@ -2,99 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 689532C16C6
-	for <lists+linux-xfs@lfdr.de>; Mon, 23 Nov 2020 21:50:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 689202C1A20
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Nov 2020 01:35:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728166AbgKWUbD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 23 Nov 2020 15:31:03 -0500
-Received: from sandeen.net ([63.231.237.45]:36716 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727461AbgKWUbA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 23 Nov 2020 15:31:00 -0500
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 4D217EDD;
-        Mon, 23 Nov 2020 14:30:56 -0600 (CST)
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+        id S1729740AbgKXAfK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 23 Nov 2020 19:35:10 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35026 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728339AbgKXAfJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 23 Nov 2020 19:35:09 -0500
+X-Greylist: delayed 631 seconds by postgrey-1.27 at vger.kernel.org; Mon, 23 Nov 2020 19:35:08 EST
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AO0FOn3059161;
+        Tue, 24 Nov 2020 00:25:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=iVBq0hiyY4s1Y9vKkB54kExkXAnt6i5Se5UGScodWr4=;
+ b=JfH5rbzUTGT28JsltbSl7Qt69wkn1R0CHeLYWSoHifgXNHxC5I1w4AS9QxgkVYd4I3zj
+ URUqZoQQwkFSJB4DZuT2JPJUoIZRiORMMA/aLQ1kwUgKiIrVY0YbXPwC+X16qFHwQIhr
+ 3yI6kq9Pqf4sIDEekIWfprX/RxnTH3Y4rcCJDkyRGMYtFxDTWkNgheS8tgHNFa3UhcFB
+ YiqSoPazxfFdV40GWv6+gsRHD9g9VrEPUijS8Du/VER1rVrx9EevjzSILq8xTxmTBslZ
+ aD7OlpnYn0ngyIGhuiDwfSVT/+ehfTOCY3HOm7Ayf92G3TrJ0sR1x87bVwO0R/5ELQhI Tg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 34xtaqkj0t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Nov 2020 00:25:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0AO0G2gG059968;
+        Tue, 24 Nov 2020 00:25:28 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 34ycfmk00r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Nov 2020 00:25:28 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0AO0PSR3011536;
+        Tue, 24 Nov 2020 00:25:28 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 23 Nov 2020 16:25:27 -0800
+Date:   Mon, 23 Nov 2020 16:25:27 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
 Cc:     linux-xfs@vger.kernel.org
-References: <160503138275.1201232.927488386999483691.stgit@magnolia>
- <160503144025.1201232.11112616423278752638.stgit@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH 9/9] libxfs-apply: don't add duplicate headers
-Message-ID: <8adce075-983b-2b3f-eb3c-10eb72bccf0c@sandeen.net>
-Date:   Mon, 23 Nov 2020 14:30:58 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.5.0
+Subject: Re: [PATCH 08/26] xfs_logprint: refactor timestamp printing
+Message-ID: <20201124002527.GE7880@magnolia>
+References: <160375524618.881414.16347303401529121282.stgit@magnolia>
+ <160375529676.881414.3983778876306819986.stgit@magnolia>
+ <3922d9ed-4ced-a92f-1b0c-749b44d79c1f@sandeen.net>
 MIME-Version: 1.0
-In-Reply-To: <160503144025.1201232.11112616423278752638.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3922d9ed-4ced-a92f-1b0c-749b44d79c1f@sandeen.net>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 bulkscore=0 suspectscore=1 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011240000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9814 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=1 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011240000
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 11/10/20 12:04 PM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+On Mon, Nov 23, 2020 at 02:14:27PM -0600, Eric Sandeen wrote:
+> On 10/26/20 6:34 PM, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > Introduce type-specific printing functions to xfs_logprint to print an
+> > xfs_timestamp instead of open-coding the timestamp decoding.  This is
+> > needed to stay ahead of changes that we're going to make to
+> > xfs_timestamp_t in the following patches.
+> > 
+> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > ---
+> >  logprint/log_misc.c      |   18 ++++++++++++++++--
+> >  logprint/log_print_all.c |    3 +--
+> >  logprint/logprint.h      |    2 ++
+> >  3 files changed, 19 insertions(+), 4 deletions(-)
+> > 
 > 
-> When we're backporting patches from libxfs, don't add a S-o-b header if
-> there's already one in the patch being ported.
+> Just for the record, I decided to not take this one; the helper function
+> with the somewhat vague "compact" arg at the callers doesnt' really seem
+> worth it, I just open-coded this at the 2 callsites when I did the merge.
 
-I guess the goal here is to not add 2 identical sign offs in a row.
+<nod> it was kind of questionable from the start :)
 
-But when I do the libxfs-application, I do feel like it should add
-my SOB as sort of a chain of custody record before I commit it to a
-new tree/project, no?
+--D
 
-So could this be modified to simply not add 2 identical SOBs in a row?
-
-Maybe we can just run "uniq" on the $_hdr.new file?
-
-Thanks,
--Eric
-
-
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  tools/libxfs-apply |   14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> 
-> diff --git a/tools/libxfs-apply b/tools/libxfs-apply
-> index 3258272d6189..35cdb9c3449b 100755
-> --- a/tools/libxfs-apply
-> +++ b/tools/libxfs-apply
-> @@ -193,6 +193,14 @@ filter_xfsprogs_patch()
->  	rm -f $_libxfs_files
->  }
->  
-> +add_header()
-> +{
-> +	local hdr="$1"
-> +	local hdrfile="$2"
-> +
-> +	grep -q "^${hdr}$" "$hdrfile" || echo "$hdr" >> "$hdrfile"
-> +}
-> +
->  fixup_header_format()
->  {
->  	local _source=$1
-> @@ -280,13 +288,13 @@ fixup_header_format()
->  	sed -i '${/^[[:space:]]*$/d;}' $_hdr.new
->  
->  	# Add Signed-off-by: header if specified
-> -	if [ ! -z ${SIGNED_OFF_BY+x} ]; then 
-> -		echo "Signed-off-by: $SIGNED_OFF_BY" >> $_hdr.new
-> +	if [ ! -z ${SIGNED_OFF_BY+x} ]; then
-> +		add_header "Signed-off-by: $SIGNED_OFF_BY" $_hdr.new
->  	else	# get it from git config if present
->  		SOB_NAME=`git config --get user.name`
->  		SOB_EMAIL=`git config --get user.email`
->  		if [ ! -z ${SOB_NAME+x} ]; then
-> -			echo "Signed-off-by: $SOB_NAME <$SOB_EMAIL>" >> $_hdr.new
-> +			add_header "Signed-off-by: $SOB_NAME <$SOB_EMAIL>" $_hdr.new
->  		fi
->  	fi
->  
-> 
+> Thanks,
+> -Eric
