@@ -2,79 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C61C62C2334
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 Nov 2020 11:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BEA72C24FE
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 Nov 2020 12:53:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbgKXKp7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 Nov 2020 05:45:59 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8021 "EHLO
-        szxga05-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbgKXKp7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Nov 2020 05:45:59 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4CgLJy2H6xzhYYk;
-        Tue, 24 Nov 2020 18:45:38 +0800 (CST)
-Received: from thunder-town.china.huawei.com (10.174.178.208) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 24 Nov 2020 18:45:48 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        id S1733085AbgKXLvq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 Nov 2020 06:51:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733083AbgKXLvq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 Nov 2020 06:51:46 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF501C0613D6;
+        Tue, 24 Nov 2020 03:51:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=UX8cRRymouOvZ6Oa32+nXpuTvbitXtsyLjlmpwjgQyY=; b=FpLKZmgaaCAalC16+8nlAMLvVw
+        j6btFCUG2nmLwR5z5JLJ6c42vN+ZN0PnPTMo6BaDZ9M0yMp4Y2uwKU/13xvXslHdgok4GUygocuC3
+        kwckLtL1ZTSMerdVE0vJsHxRM8j8t58fo4fc3zElLK0yaQC/jFoQTOxy+n215WiApv/b1Ox1ehPvp
+        SY+Ly5qt3nINcWaXaMumWp1xspANkJDqgIsyez7mcIZZWplK2M+y7yqpQ5uKgSzh2thNt7ZbbwXPl
+        FZlc5GeMP5mZPdjRpgXeOx6lmEMDCemHqEnRaQVAGvuvTR/aMEhzsuL5ldnqnKRuFq65fkcySk4O+
+        uKaz0WMA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1khWr6-0000Oh-06; Tue, 24 Nov 2020 11:51:32 +0000
+Date:   Tue, 24 Nov 2020 11:51:31 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
         Brian Foster <bfoster@redhat.com>,
         linux-xfs <linux-xfs@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 2/2] xfs: remove the extra processing of zero size in xfs_idata_realloc()
-Date:   Tue, 24 Nov 2020 18:45:31 +0800
-Message-ID: <20201124104531.561-3-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20201124104531.561-1-thunder.leizhen@huawei.com>
+Subject: Re: [PATCH 1/2] xfs: check the return value of krealloc()
+Message-ID: <20201124115131.GB32060@infradead.org>
 References: <20201124104531.561-1-thunder.leizhen@huawei.com>
+ <20201124104531.561-2-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.178.208]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201124104531.561-2-thunder.leizhen@huawei.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-krealloc() does the free operation when the parameter new_size is 0, with
-ZERO_SIZE_PTR returned. Because all other places use NULL to check whether
-if_data is available or not, so covert it from ZERO_SIZE_PTR to NULL.
+On Tue, Nov 24, 2020 at 06:45:30PM +0800, Zhen Lei wrote:
+> krealloc() may fail to expand the memory space. Add sanity checks to it,
+> and WARN() if that really happened.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- fs/xfs/libxfs/xfs_inode_fork.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 4e457aea8493..518af4088e79 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -492,13 +492,6 @@ xfs_idata_realloc(
- 	if (byte_diff == 0)
- 		return;
- 
--	if (new_size == 0) {
--		kmem_free(ifp->if_u1.if_data);
--		ifp->if_u1.if_data = NULL;
--		ifp->if_bytes = 0;
--		return;
--	}
--
- 	/*
- 	 * For inline data, the underlying buffer must be a multiple of 4 bytes
- 	 * in size so that it can be logged and stay on word boundaries.
-@@ -510,7 +503,7 @@ xfs_idata_realloc(
- 		WARN(1, "if_data realloc failed\n");
- 		return;
- 	}
--	ifp->if_u1.if_data = if_data;
-+	ifp->if_u1.if_data = ZERO_OR_NULL_PTR(if_data) ? NULL : if_data;
- 	ifp->if_bytes = new_size;
- }
- 
--- 
-2.26.0.106.g9fadedd
-
-
+What part of the __GFP_NOFAIL semantics isn't clear enough?
