@@ -2,65 +2,53 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F21C2C4F41
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Nov 2020 08:22:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 307D62C6BB5
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Nov 2020 19:49:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388285AbgKZHVP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 Nov 2020 02:21:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730786AbgKZHVO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Nov 2020 02:21:14 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95DEDC0613D4;
-        Wed, 25 Nov 2020 23:21:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SZR0GsSdbfjBui5Wk4EHWw9OSPLPRtpE0HYG9GmPIUI=; b=Jhxn/jtf9uxD1lSCrVk5FVgQSu
-        NOlyvNStYP9XzDhPWeJzEETQCAdVqezYOpUkxJWXSnEm86Mk89+8lTEmb3+BrNYwF62gYEKoB8vKC
-        hvx9Zj1uy0++ELp8zg36GpZ1hiN7cdKD2mK1lPRqBqIl5/7qu/6m/90RjVxdkYbg+JwAEGXvFxX00
-        /Xm+rpVXJntmATI7+2EwhEVx7WAncvUDikE/3Xff/+N9tM7rq3TS0cOkumygttnblYNxunSjQcX6g
-        Fbg0VxO7Hav5CzJWXReGWEUHTOFI0GiLVL1CZfUh/sxj5CXhw+HqoEN9Tsms8HIUiyd1j9dBMihs/
-        c2Rhf8Iw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kiBZf-0007qP-K7; Thu, 26 Nov 2020 07:20:16 +0000
-Date:   Thu, 26 Nov 2020 07:20:15 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Brian Paul <brianp@vmware.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>
-Subject: Re: [PATCH] drm/ttm: don't set page->mapping
-Message-ID: <20201126072015.GA29730@infradead.org>
-References: <20201125162532.1299794-1-daniel.vetter@ffwll.ch>
- <20201125162532.1299794-5-daniel.vetter@ffwll.ch>
- <CAKMK7uGXfqaPUtnX=VgA3tFn3S+Gt9GV+kPguakZ6FF_n8LKuA@mail.gmail.com>
- <20201125180606.GQ5487@ziepe.ca>
- <20201125181129.GA1858@infradead.org>
- <20201125235720.GR5487@ziepe.ca>
+        id S1729127AbgK0Sqg convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 27 Nov 2020 13:46:36 -0500
+Received: from 138.219.247.6.static.softdados.net ([138.219.247.6]:45501 "EHLO
+        srv01.softservnet.com.br" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728252AbgK0SqB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 27 Nov 2020 13:46:01 -0500
+X-Greylist: delayed 22543 seconds by postgrey-1.27 at vger.kernel.org; Fri, 27 Nov 2020 13:46:00 EST
+Received: from [45.35.196.155]
+        by srv01.softservnet.com.br with esmtpa (Exim 4.92.2)
+        (envelope-from <danilo@softservnet.com.br>)
+        id 1kicsG-00029r-VL; Fri, 27 Nov 2020 10:29:17 -0200
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201125235720.GR5487@ziepe.ca>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: my subject
+To:     Recipients <danilo@softservnet.com.br>
+From:   danilo@softservnet.com.br
+Date:   Fri, 27 Nov 2020 04:24:10 -0800
+Reply-To: majormonguno03@gmail.com
+Message-Id: <E1kicsG-00029r-VL@srv01.softservnet.com.br>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Nov 25, 2020 at 07:57:20PM -0400, Jason Gunthorpe wrote:
-> annotate is OK, I used that for a long time..
-> 
-> My main gripe was it didn't setup the to/cc until after the annotate
-> editor closes.
-
-I put the To/Cc into the cover letter text file.
+Attn:Sir/Madam
+ 
+I am Major-General Babagana Monguno  National Adviser to President Muhammadu Buhari the president Federal Republic of Nigeria. I decided to contact you because of the prevailing security report reaching my office and the intense nature of polity in Nigeria. I Determined To Make Contact With You As Of The Widespread Refuge Information Reaching My Office And The Severe Nature Of Guidelines In My Country.
+ 
+This Is To Enlighten You About Our Arrangement To Send Fund To You Via Cash Release As It Is The Only System That Will Be Easier For You And Us, We Are Going To Send Your Contract/ inheritance Part Payment Of 20 Million United States Dollars By Way Of Diplomatic Cash Delivery.
+ 
+Note:The Money Is Coming On 2 Security Proof Boxes. The Boxes Are Sealed With Synthetic Nylon That Was Sealed And Padded With Machine.
+ 
+This Fund Was Brought To Us For Our Local A.F.E.M. Market, But Since The Money Was Not Used, I Will Use My Position As The National Adviser to President To Send This Fund To You.
+ 
+All You Need To Do Now Is To Send To Me Your Full House Address And Your Identity Such As, International Passport Or Drivers License Including Your Contact Phone & Fax Numbers For Easy Communication, The Diplomatic Attached Will Travel With It. He Will Call You Immediately Arrives in Your Country Airport. Hope This Is All Right By You? I Will Enlighten You When The Special Grace Of God Will Airlift The Boxes.
+ 
+Note: The Diplomats Do Not Know The Original Contents Of The Boxes. What I Acknowledged To Them As The Contents Is Sensitive Photographic Film Material. I Did Not Declare Money To Them Please. If They Call You And Ask You The Contents Please Tell Them The Same Thing. Send Me An Email And I?ll Let You Know How Far I Have Gone With The Arrangement.
+ 
+Please I Need Urgent Reply Because The Boxes Are Scheduled To Be As Soon As We Hear From you also call me for more information Tel: +234-909-387-5383
+ 
+Best Regards,
+ 
+Major-General Babagana Monguno 
+National Security Adviser to the President
+Federal Republic of Nigeria
+Tel: +234-909-387-5383
