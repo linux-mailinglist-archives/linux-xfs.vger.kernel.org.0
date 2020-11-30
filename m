@@ -2,83 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31F732C7D18
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Nov 2020 04:06:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 631C92C7EBA
+	for <lists+linux-xfs@lfdr.de>; Mon, 30 Nov 2020 08:31:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgK3DGG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 29 Nov 2020 22:06:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55090 "EHLO
+        id S1726929AbgK3HbN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 02:31:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgK3DGF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 29 Nov 2020 22:06:05 -0500
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735DFC0613CF
-        for <linux-xfs@vger.kernel.org>; Sun, 29 Nov 2020 19:05:19 -0800 (PST)
-Received: by mail-qt1-x841.google.com with SMTP id u21so1426046qtw.11
-        for <linux-xfs@vger.kernel.org>; Sun, 29 Nov 2020 19:05:19 -0800 (PST)
+        with ESMTP id S1725860AbgK3HbN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 02:31:13 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19754C0613CF;
+        Sun, 29 Nov 2020 23:30:33 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id iq13so798275pjb.3;
+        Sun, 29 Nov 2020 23:30:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=XQegFpFKRuCX2r2SqWRxBsZuWTf9ShNUcT3nooV/cqE=;
-        b=PABIbQOh5+pjyNXik4flFqIOgb55cdowtzB1jKFZkKddM21WGKLAG7QnhaBwNQ/FmO
-         AQLmNWjgqblwSBP67EKxgUsCQtI3m3xFGXWCZeEiRkRBh1QnMrMDkxdSA8mLDGXqUc3u
-         P016RbSPdq/7JEgC0B54YTp2CqYFa7lWAtaVrtpmkM/FBqy4ALZoUBOVuKBOfoubGL6J
-         57kEou3UOv6A4f/QPGS3GHZ+wXMuU3/lOe3nPhvrII7B3M18BZ/y4IprazA2T3qEBFfR
-         xiZi1zlzWJUh+XBoko8Brta5PxQ+UCNBbE0yL1jBc34QTXKUZPnU88ZtVtPVWkV3ytda
-         0Xdg==
+        h=from:to:cc:subject:date:message-id;
+        bh=EsNXvlnoUKD2pZSzgAC0fLx5VDJnXOdVhqeYF4VM7gs=;
+        b=JOEzDc6okElYcSppns7/WVjH1la6U1Bw5p7qhSK0IJqmEaHqwuh9tFG2B5MMVggN0H
+         AmTQrBI2OitGu8CMagBVTdT2EPudPSyFSGN+VrG0gJUCJnUk9vmEIDwEAyMuFFCzGbAa
+         hhC/Y0udAf5zmNB+72YR2M6Ul+0mq9nvGjd/kRL0aV8fMaLGkH6j1s+lEKYnASjexezc
+         mP8PAoia/TsrQ6EU45f/rLpdoQehPJCTbfIXrqH1qG49XXlpKUa55ya/my27DwkVwcSi
+         0hRhl8ZOkziZrkaYb9DGb/2/oGVvWD9I7tgvY9cY7ucO3d03TOhOpqc0A2zdPdZlcfCr
+         iweg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=XQegFpFKRuCX2r2SqWRxBsZuWTf9ShNUcT3nooV/cqE=;
-        b=JYJnZ7I09CwgQDOTV/tlEcOYTtWh/A9/6GEGVfGyt9DvOTdIH7piSOWl6iA2Nzsrzd
-         wV9iGzDgxsE3GVqO7z1r0CarAlfsuATf3gfmc00QBVXsIyPIa0CWrLehzN4QRF1Qekb4
-         Fnq4A9W/BfwiicLvCPvaYHfe1UPS4dfdQVC9C41AQFQbywKImwd8+qca/DMBXxb/9tow
-         mrvP4WemItxQuG3pZH3v6PNS4t2LxvpkMG1HZU2mhixvIils4Y5YM9umf/Rka2tx0l9W
-         JCgQ31kQX749/sxYAetJdhJPl4bJpLPG7u65nkCELFMBqHtbzrnVsX8Y6PmXzoQM3Xj1
-         +8zg==
-X-Gm-Message-State: AOAM530kNfJELWksyH34GF9b6JVAv/BFCEvW7Z4bgjxOV1Be890q1YQJ
-        nqGdMZTndZAl+9zKAjC8ESdN57gyQkvM0iyAXEk=
-X-Google-Smtp-Source: ABdhPJwZcGqilH8U6jlblwLBcZM1RL8SJOsNcSdY/mv9Tto2hESX7S4GjfxhWWG2isa3wHGSGLWlwHf9+lH3MY1XUfM=
-X-Received: by 2002:ac8:5412:: with SMTP id b18mr20051604qtq.220.1606705518638;
- Sun, 29 Nov 2020 19:05:18 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a0c:f20d:0:0:0:0:0 with HTTP; Sun, 29 Nov 2020 19:05:18
- -0800 (PST)
-Reply-To: mrs.chantala2055@gmail.com
-From:   mrs chantal <stgmonica.brownl@gmail.com>
-Date:   Mon, 30 Nov 2020 03:05:18 +0000
-Message-ID: <CANV37CKcT=nUZYBGT27==nZk4g=5qwJjjYEgGAx8CRtSZQ-drg@mail.gmail.com>
-Subject: Dear Friend
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EsNXvlnoUKD2pZSzgAC0fLx5VDJnXOdVhqeYF4VM7gs=;
+        b=oROou3c4jPd3r80MAZrj71YA+3bj1Ea4SC2Xp7jeZK6mwwt5iFtRCbeAICjk/3lwSu
+         iELH9pDcyg8dYeiNdvvlSGfOtrU6lJHV7nhadJu/wGx9ehVZiEBfAafsVh/Xwug/0g5L
+         o7JxlPpJuabhB+DYtnp8pRWKqD0rbv5JkiBqjQ7Ozx9ThN+zZ5NIYihUIKNr0FTFbqgP
+         kq2VdQrFoxuLDkKALMVo45R6tq3/LlNc6JqkMQQTdqm4VovpouhrRdER6XQJaRONtG8N
+         epH249n66WOj5uS7u9RzklnyzQp0/27m0yCcg4bEectYql2EgQ8TCQ8d3IvM4BUJNDfc
+         8k0Q==
+X-Gm-Message-State: AOAM530kzZIq0gzMwA+VO9F6aJfYesR1fofOtHVxx404rKL2LpJXXOnC
+        ft4MKIFfNT/+wIh8/TqRCH4=
+X-Google-Smtp-Source: ABdhPJzmeWSfnybsAR3n/WvwFdQBAK5VqwyTCok3n0nJ50h0iqqlR5YIDKGqPhzhritbLkwzXAAP4Q==
+X-Received: by 2002:a17:90a:7f93:: with SMTP id m19mr45747pjl.61.1606721432729;
+        Sun, 29 Nov 2020 23:30:32 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id l76sm16006710pfd.82.2020.11.29.23.30.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 29 Nov 2020 23:30:32 -0800 (PST)
+From:   chenlei0x@gmail.com
+X-Google-Original-From: lennychen@tencent.com
+To:     hch@infradead.org, darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Lei Chen <lennychen@tencent.com>
+Subject: [PATCH] fs: iomap: Replace bio_add_page with __bio_add_page in iomap_add_to_ioend
+Date:   Mon, 30 Nov 2020 15:28:51 +0800
+Message-Id: <1606721331-4211-1-git-send-email-lennychen@tencent.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-We bring greetings to you in the name of the lord. This message is
-sent to you as a notification that you have been chosen to benefit
-from our charity project aimed at touching lives and helping those
-that we can across the world as God has blessed us. I won the
-Powerball lottery of $150Million on November 2, 2019 and I have
-voluntarily decided to donate the sum of $75Million to charity, I try
-to reach people randomly from different sources and modes so as to
-touch lives from different angles, Hence you are getting a message
-here.
+From: Lei Chen <lennychen@tencent.com>
 
-You have been listed as one of the lucky recipients to receive $9.6 M
-This donation is made out to you so to enable you strengthen your
-personal issues and mostly to generously help us extend hands of
-giving to the less privileged, orphans and charity organizations
-within your locality To verify
-https://www.powerball.com/winner-story/150-million-powerball-ticket-claimed
+iomap_add_to_ioend append page on wpc->ioend->io_bio. If io_bio is full,
+iomap_chain_bio will allocate a new bio. So when bio_add_page is called,
+pages is guaranteed to be appended into wpc->ioend->io_bio. So we do not
+need to check if page can be merged. Thus it's a faster way to directly
+call __bio_add_page.
 
-Get back to me on how to receive the donation through our official
-email address below You can also contact us via our
-my Whatsapp number +1 971 24 581 39  and email address
-(mrs0chantal0o4@gmail.com) The earlier you contact our email the earlier
-you receieve your donation
+Signed-off-by: Lei Chen <lennychen@tencent.com>
+---
+ fs/iomap/buffered-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 10cc797..7a0631a 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -1310,7 +1310,7 @@ static void iomap_writepage_end_bio(struct bio *bio)
+ 			wpc->ioend->io_bio =
+ 				iomap_chain_bio(wpc->ioend->io_bio);
+ 		}
+-		bio_add_page(wpc->ioend->io_bio, page, len, poff);
++		__bio_add_page(wpc->ioend->io_bio, page, len, poff);
+ 	}
+ 
+ 	wpc->ioend->io_size += len;
+-- 
+1.8.3.1
 
-Bill.Chantal Lawrence
