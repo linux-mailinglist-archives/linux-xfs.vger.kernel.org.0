@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 325D42C95F0
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:42:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B9082C95E7
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727737AbgLADlG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Nov 2020 22:41:06 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40974 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbgLADlG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:41:06 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13d4CL168697
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:40:25 GMT
+        id S1727229AbgLADjM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 22:39:12 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:60648 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727728AbgLADjM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:39:12 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13Uqt5067235
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=TtrmEHUzGYQcEwbGkfMYDFixoq/k4ASQcf6RBJhQgyQ=;
- b=nMFqCmt0mO8d0yrBfjuJMMxGzr8UUvjqiyY3iDf6PS0vTLCPBrHwtcma/f/zRJJH7tv6
- Km6pRwOurP+q6XkObiP8brJFg9PGbB8Q/Pe4kpnT+ZczmVEl2Mys6M3RdBpITs4F5a2l
- jUEMTyTID/mjRg9N7Xm3etOUdZ+Wr3f0jovdAWQsK+PF/4N5W71F7fPON0Kj38mro4vc
- uNqFIlJZHe8Qkp9GFMN+q5DRVnie7HamHiZjjcevu/0HlY/thFpPW+6gPlCohUqVRZjn
- XuVTwz+v+dQjp1XGPd974Wl3SdOnhQbTte+kztZbyaulggB855xGwRA2nEudhvteVY6c cg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 353egkgcw4-1
+ bh=ingpWCL0/mtojmX4ZQnCBR+d9mIl8d9MWscgGejuhjI=;
+ b=Vs5FiG5XN3qYGSgtHZW6i+B47P25YFDH9QQIATJ4NPKyvp+zTRj0vPAII9o23+OReH6A
+ 6PZG25mrDbteDqrFGvqktHaS6SAqUhTKjZ59wFwlpAjDSkMi4v8MMbVIs6RDX5WBNuND
+ 7ztS/30SkjFtfdHI31fFQONWQLvWaMnwh2pueZF0WHUgqP8F5P07FiUwNiDcAaCHcUXL
+ yvnAOfa+b7MwNWkqtjSZbbGQczPb8cvecL6uKu9FoMrOcRkqEM5N6AF/WJeVZyTL9Ky+
+ IgPnaztZM6d9ngN8KCpIcAXFtbD9h1mstB3UNddp+CFGVX4wm/QD8V2ANptBzT5ObiDh KQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 353c2arhmp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:40:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13VIvR071428
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:24 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 3540fw826f-1
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:31 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13UJvq181486
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:30 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 3540arh85n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:24 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13cNLB012286
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:23 GMT
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:30 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B13cTom018652
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:29 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Nov 2020 19:38:23 -0800
-Subject: [PATCH 07/10] xfs: hoist recovered extent-free intent checks out of
- xfs_efi_item_recover
+        with ESMTP ; Mon, 30 Nov 2020 19:38:29 -0800
+Subject: [PATCH 08/10] xfs: improve the code that checks recovered extent-free
+ intent items
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 30 Nov 2020 19:38:22 -0800
-Message-ID: <160679390266.447963.18406641317021209964.stgit@magnolia>
+Date:   Mon, 30 Nov 2020 19:38:28 -0800
+Message-ID: <160679390871.447963.15070829026899571950.stgit@magnolia>
 In-Reply-To: <160679385987.447963.9630288535682256882.stgit@magnolia>
 References: <160679385987.447963.9630288535682256882.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,88 +54,57 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=3
- phishscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 mlxscore=0 adultscore=0 malwarescore=0 suspectscore=3
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2012010023
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=3
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012010024
+ definitions=main-2012010023
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When we recover a extent-free intent from the log, we need to validate
-its contents before we try to replay them.  Hoist the checking code into
-a separate function in preparation to refactor this code to use
-validation helpers.
+The code that validates recovered extent-free intent items is kind of a
+mess -- it doesn't use the standard xfs type validators, and it doesn't
+check for things that it should.  Fix the validator function to use the
+standard validation helpers and look for more types of obvious errors.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_extfree_item.c |   31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+ fs/xfs/xfs_extfree_item.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-index 6c11bfc3d452..b5710b7fc263 100644
+index b5710b7fc263..b1c004016709 100644
 --- a/fs/xfs/xfs_extfree_item.c
 +++ b/fs/xfs/xfs_extfree_item.c
-@@ -578,6 +578,25 @@ const struct xfs_defer_op_type xfs_agfl_free_defer_type = {
- 	.cancel_item	= xfs_extent_free_cancel_item,
- };
+@@ -584,14 +584,14 @@ xfs_efi_validate_ext(
+ 	struct xfs_mount		*mp,
+ 	struct xfs_extent		*extp)
+ {
+-	xfs_fsblock_t			startblock_fsb;
++	xfs_fsblock_t			end;
  
-+/* Is this recovered EFI ok? */
-+static inline bool
-+xfs_efi_validate_ext(
-+	struct xfs_mount		*mp,
-+	struct xfs_extent		*extp)
-+{
-+	xfs_fsblock_t			startblock_fsb;
-+
-+	startblock_fsb = XFS_BB_TO_FSB(mp,
-+			   XFS_FSB_TO_DADDR(mp, extp->ext_start));
-+	if (startblock_fsb == 0 ||
-+	    extp->ext_len == 0 ||
-+	    startblock_fsb >= mp->m_sb.sb_dblocks ||
-+	    extp->ext_len >= mp->m_sb.sb_agblocks)
+-	startblock_fsb = XFS_BB_TO_FSB(mp,
+-			   XFS_FSB_TO_DADDR(mp, extp->ext_start));
+-	if (startblock_fsb == 0 ||
+-	    extp->ext_len == 0 ||
+-	    startblock_fsb >= mp->m_sb.sb_dblocks ||
+-	    extp->ext_len >= mp->m_sb.sb_agblocks)
++	if (extp->ext_start + extp->ext_len <= extp->ext_start)
 +		return false;
 +
-+	return true;
-+}
-+
- /*
-  * Process an extent free intent item that was recovered from
-  * the log.  We need to free the extents that it describes.
-@@ -592,7 +611,6 @@ xfs_efi_item_recover(
- 	struct xfs_efd_log_item		*efdp;
- 	struct xfs_trans		*tp;
- 	struct xfs_extent		*extp;
--	xfs_fsblock_t			startblock_fsb;
- 	int				i;
- 	int				error = 0;
++	end = extp->ext_start + extp->ext_len - 1;
++	if (!xfs_verify_fsbno(mp, extp->ext_start) ||
++	    !xfs_verify_fsbno(mp, end))
+ 		return false;
  
-@@ -601,16 +619,9 @@ xfs_efi_item_recover(
- 	 * EFI.  If any are bad, then assume that all are bad and
- 	 * just toss the EFI.
- 	 */
--	for (i = 0; i < efip->efi_format.efi_nextents; i++) {
--		extp = &efip->efi_format.efi_extents[i];
--		startblock_fsb = XFS_BB_TO_FSB(mp,
--				   XFS_FSB_TO_DADDR(mp, extp->ext_start));
--		if (startblock_fsb == 0 ||
--		    extp->ext_len == 0 ||
--		    startblock_fsb >= mp->m_sb.sb_dblocks ||
--		    extp->ext_len >= mp->m_sb.sb_agblocks)
-+	for (i = 0; i < efip->efi_format.efi_nextents; i++)
-+		if (!xfs_efi_validate_ext(mp, &efip->efi_format.efi_extents[i]))
- 			return -EFSCORRUPTED;
--	}
- 
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
- 	if (error)
+ 	return true;
 
