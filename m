@@ -2,65 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 176392C95E6
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31C1E2C95E3
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgLADjM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Nov 2020 22:39:12 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39680 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727229AbgLADjM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:39:12 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13ThWH147106
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
- message-id : date : from : to : cc : subject : references : in-reply-to :
+        id S1727786AbgLADiy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 22:38:54 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:60452 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727719AbgLADiy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:38:54 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13TZrR065987
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=7Y/26q8YG2W4v+mr1e063NkErd8DkNqaNhvSFQaKSqU=;
- b=QDt37LnmoXfGTAEQjk/JTf/A90eUfNJRNCiSE3s5X+hVxMypNKLmtbn4hHEgczKJUr4r
- Fx4N3sOzwZBWrhiXvVfSWZglhYwpWLvGGEOix88+LvGnUgcTOBGN1H/to/ki1xfmem+B
- 26UaGdRe8iWFs8/K9wLHqeIT6UDTfQmBn2oeS7kSFDIV7sBTDKeEaXE+r9HGnqHnzEor
- 9fM/Yf9mFUVRr7RPtVmbCGe0P2QpmPNIylpN59kOQXjhp9GvbjMr44pscsmQatVLbB1L
- dXnrbS1KEdzLv5UVOybnnpZslbLCeFAnlgbbPOnfLRw6odgl8t2Hv7yspU9HXBbBHgxe SQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 353egkgcs1-1
+ bh=2T4SLMEEbEI+3lmfYSVfs3KbG9LWCHN9ZKNPuneSdGc=;
+ b=X3iJ8hf7mv7kj9tpIUilYILwXTTchi+kGNtQvfbdMCqJJ/O7QKOhRfIMBvhqn24Y7N2c
+ RW4wiHYJNO1ExUoWVN2vPPoLB/DrSh9SZBoxyjLegPTnoI4Bjlr9DlTe4O4NyGW9m1ot
+ O2W5Onmk70N35nMZPfu4sfZ91QQhnfg1tUM/88760DE5TbbzKO+XSQWCsKmR6ZjEZ4jn
+ Zb4gdS4wVSrpiVCH3VSef5H937N3XUafvLkk7T5DrkELlyQOCXrdO7qKIQp7dcf8RzAD
+ 75oCf7sPTzSj9cLcwpuup4BYRbo+CcVq5LNhjsCIS4uhtN9KD4aaFydqWiOyZ/TWlNFK 9w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 353c2arhm9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:30 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13U3dg134177
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:30 GMT
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:13 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13VHb9071335
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:12 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 3540exd345-1
+        by userp3030.oracle.com with ESMTP id 3540fw81qq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:30 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13cTS6005363
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:29 GMT
-Received: from localhost (/67.169.218.210) by default (Oracle Beehive Gateway
- v4.0) with ESMTP ; Mon, 30 Nov 2020 19:38:05 -0800
-USER-AGENT: StGit/0.19
-MIME-Version: 1.0
-Message-ID: <160679388445.447963.9471776418395898485.stgit@magnolia>
-Date:   Mon, 30 Nov 2020 19:38:04 -0800 (PST)
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:12 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13cBFf005171
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:11 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Nov 2020 19:38:11 -0800
+Subject: [PATCH 05/10] xfs: hoist recovered refcount intent checks out of
+ xfs_cui_item_recover
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Subject: [PATCH 04/10] xfs: improve the code that checks recovered rmap intent
- items
-References: <160679385987.447963.9630288535682256882.stgit@magnolia>
+Date:   Mon, 30 Nov 2020 19:38:10 -0800
+Message-ID: <160679389048.447963.5353838196502010594.stgit@magnolia>
 In-Reply-To: <160679385987.447963.9630288535682256882.stgit@magnolia>
-Content-Type: text/plain; charset=utf-8
+References: <160679385987.447963.9630288535682256882.stgit@magnolia>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
- suspectscore=3 bulkscore=0 spamscore=0 adultscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012010023
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=3
+ phishscore=0 mlxlogscore=999 adultscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012010023
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=3
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2012010023
 Precedence: bulk
@@ -69,68 +70,102 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The code that validates recovered rmap intent items is kind of a mess --
-it doesn't use the standard xfs type validators, and it doesn't check
-for things that it should.  Fix the validator function to use the
-standard validation helpers and look for more types of obvious errors.
+When we recover a refcount intent from the log, we need to validate its
+contents before we try to replay them.  Hoist the checking code into a
+separate function in preparation to refactor this code to use validation
+helpers.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_rmap_item.c |   31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_refcount_item.c |   58 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 23 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index 871ed7fc43ee..2779cbee8fa8 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
-@@ -466,11 +466,11 @@ xfs_rui_validate_map(
- 	struct xfs_mount		*mp,
- 	struct xfs_map_extent		*rmap)
- {
+diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+index 7529eb63ce94..de344bd7e73c 100644
+--- a/fs/xfs/xfs_refcount_item.c
++++ b/fs/xfs/xfs_refcount_item.c
+@@ -417,6 +417,38 @@ const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
+ 	.cancel_item	= xfs_refcount_update_cancel_item,
+ };
+ 
++/* Is this recovered CUI ok? */
++static inline bool
++xfs_cui_validate_phys(
++	struct xfs_mount		*mp,
++	struct xfs_phys_extent		*refc)
++{
++	xfs_fsblock_t			startblock_fsb;
++	bool				op_ok;
++
++	startblock_fsb = XFS_BB_TO_FSB(mp,
++			   XFS_FSB_TO_DADDR(mp, refc->pe_startblock));
++	switch (refc->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK) {
++	case XFS_REFCOUNT_INCREASE:
++	case XFS_REFCOUNT_DECREASE:
++	case XFS_REFCOUNT_ALLOC_COW:
++	case XFS_REFCOUNT_FREE_COW:
++		op_ok = true;
++		break;
++	default:
++		op_ok = false;
++		break;
++	}
++	if (!op_ok || startblock_fsb == 0 ||
++	    refc->pe_len == 0 ||
++	    startblock_fsb >= mp->m_sb.sb_dblocks ||
++	    refc->pe_len >= mp->m_sb.sb_agblocks ||
++	    (refc->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS))
++		return false;
++
++	return true;
++}
++
+ /*
+  * Process a refcount update intent item that was recovered from the log.
+  * We need to update the refcountbt.
+@@ -433,11 +465,9 @@ xfs_cui_item_recover(
+ 	struct xfs_trans		*tp;
+ 	struct xfs_btree_cur		*rcur = NULL;
+ 	struct xfs_mount		*mp = lip->li_mountp;
 -	xfs_fsblock_t			startblock_fsb;
+ 	xfs_fsblock_t			new_fsb;
+ 	xfs_extlen_t			new_len;
+ 	unsigned int			refc_type;
 -	bool				op_ok;
-+	xfs_fsblock_t			end;
-+
-+	if (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS)
-+		return false;
+ 	bool				requeue_only = false;
+ 	enum xfs_refcount_intent_type	type;
+ 	int				i;
+@@ -448,28 +478,10 @@ xfs_cui_item_recover(
+ 	 * CUI.  If any are bad, then assume that all are bad and
+ 	 * just toss the CUI.
+ 	 */
+-	for (i = 0; i < cuip->cui_format.cui_nextents; i++) {
+-		refc = &cuip->cui_format.cui_extents[i];
+-		startblock_fsb = XFS_BB_TO_FSB(mp,
+-				   XFS_FSB_TO_DADDR(mp, refc->pe_startblock));
+-		switch (refc->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK) {
+-		case XFS_REFCOUNT_INCREASE:
+-		case XFS_REFCOUNT_DECREASE:
+-		case XFS_REFCOUNT_ALLOC_COW:
+-		case XFS_REFCOUNT_FREE_COW:
+-			op_ok = true;
+-			break;
+-		default:
+-			op_ok = false;
+-			break;
+-		}
+-		if (!op_ok || startblock_fsb == 0 ||
+-		    refc->pe_len == 0 ||
+-		    startblock_fsb >= mp->m_sb.sb_dblocks ||
+-		    refc->pe_len >= mp->m_sb.sb_agblocks ||
+-		    (refc->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS))
++	for (i = 0; i < cuip->cui_format.cui_nextents; i++)
++		if (!xfs_cui_validate_phys(mp,
++					   &cuip->cui_format.cui_extents[i]))
+ 			return -EFSCORRUPTED;
+-	}
  
--	startblock_fsb = XFS_BB_TO_FSB(mp,
--			   XFS_FSB_TO_DADDR(mp, rmap->me_startblock));
- 	switch (rmap->me_flags & XFS_RMAP_EXTENT_TYPE_MASK) {
- 	case XFS_RMAP_EXTENT_MAP:
- 	case XFS_RMAP_EXTENT_MAP_SHARED:
-@@ -480,17 +480,24 @@ xfs_rui_validate_map(
- 	case XFS_RMAP_EXTENT_CONVERT_SHARED:
- 	case XFS_RMAP_EXTENT_ALLOC:
- 	case XFS_RMAP_EXTENT_FREE:
--		op_ok = true;
- 		break;
- 	default:
--		op_ok = false;
--		break;
-+		return false;
- 	}
--	if (!op_ok || startblock_fsb == 0 ||
--	    rmap->me_len == 0 ||
--	    startblock_fsb >= mp->m_sb.sb_dblocks ||
--	    rmap->me_len >= mp->m_sb.sb_agblocks ||
--	    (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS))
-+
-+	if (!xfs_verify_ino(mp, rmap->me_owner) &&
-+	    !XFS_RMAP_NON_INODE_OWNER(rmap->me_owner))
-+		return false;
-+
-+	if (rmap->me_startoff + rmap->me_len <= rmap->me_startoff)
-+		return false;
-+
-+	if (rmap->me_startblock + rmap->me_len <= rmap->me_startblock)
-+		return false;
-+
-+	end = rmap->me_startblock + rmap->me_len - 1;
-+	if (!xfs_verify_fsbno(mp, rmap->me_startblock) ||
-+	    !xfs_verify_fsbno(mp, end))
- 		return false;
- 
- 	return true;
+ 	/*
+ 	 * Under normal operation, refcount updates are deferred, so we
 
