@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D7422C95E4
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 325D42C95F0
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:42:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgLADjA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Nov 2020 22:39:00 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:60530 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727719AbgLADjA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:39:00 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13TZrS065987
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:19 GMT
+        id S1727737AbgLADlG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 22:41:06 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:40974 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727531AbgLADlG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:41:06 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13d4CL168697
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:40:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=CVhYkDWvjQ49+0bmUTnHbQo4VVLLwjeowkivN3yfVKg=;
- b=J5pV7IOTYuo5ulm0jEoK6VNf9vQ7Uck0fz92/rsVUikbR29A5fDrwmS2YWZT8Dif3A1b
- 9qaECZ47O+X0eBFXS4HNF0j4HXGlK7+STIQa0lfLfr0jy4xhxp7bbjXwN5h9y6oPt1xP
- gLDqhYvRs2a/jkjXyXJGZ2rYI9QisHVOBA9HV9hXZ7xtJTFl0b+Bhl/Kgja8RMfwwSkF
- Qe042FLgnRVCeG4SWj1al02oJsXCgus9iWp+EnkgcDX3btL+MGA91kIctieBdr6vR8iS
- ac1Etm/SQjSOs6XVaMEtLWFzWHVTkfaW/ZK/+oS5CjXrhmA+CkZZSNaXxt9Hdc1HlNs9 qA== 
+ bh=TtrmEHUzGYQcEwbGkfMYDFixoq/k4ASQcf6RBJhQgyQ=;
+ b=nMFqCmt0mO8d0yrBfjuJMMxGzr8UUvjqiyY3iDf6PS0vTLCPBrHwtcma/f/zRJJH7tv6
+ Km6pRwOurP+q6XkObiP8brJFg9PGbB8Q/Pe4kpnT+ZczmVEl2Mys6M3RdBpITs4F5a2l
+ jUEMTyTID/mjRg9N7Xm3etOUdZ+Wr3f0jovdAWQsK+PF/4N5W71F7fPON0Kj38mro4vc
+ uNqFIlJZHe8Qkp9GFMN+q5DRVnie7HamHiZjjcevu/0HlY/thFpPW+6gPlCohUqVRZjn
+ XuVTwz+v+dQjp1XGPd974Wl3SdOnhQbTte+kztZbyaulggB855xGwRA2nEudhvteVY6c cg== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 353c2arhmf-1
+        by aserp2120.oracle.com with ESMTP id 353egkgcw4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:19 +0000
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:40:25 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13VHOg071324
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:18 GMT
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13VIvR071428
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:24 GMT
 Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 3540fw820e-1
+        by userp3030.oracle.com with ESMTP id 3540fw826f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:18 +0000
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:24 +0000
 Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13cHb6012183
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:17 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13cNLB012286
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:23 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Nov 2020 19:38:17 -0800
-Subject: [PATCH 06/10] xfs: improve the code that checks recovered refcount
- intent items
+        with ESMTP ; Mon, 30 Nov 2020 19:38:23 -0800
+Subject: [PATCH 07/10] xfs: hoist recovered extent-free intent checks out of
+ xfs_efi_item_recover
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 30 Nov 2020 19:38:16 -0800
-Message-ID: <160679389653.447963.16793899927769871684.stgit@magnolia>
+Date:   Mon, 30 Nov 2020 19:38:22 -0800
+Message-ID: <160679390266.447963.18406641317021209964.stgit@magnolia>
 In-Reply-To: <160679385987.447963.9630288535682256882.stgit@magnolia>
 References: <160679385987.447963.9630288535682256882.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -59,70 +59,83 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 su
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2012010023
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 lowpriorityscore=0
- clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=3
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012010023
+ definitions=main-2012010024
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The code that validates recovered refcount intent items is kind of a
-mess -- it doesn't use the standard xfs type validators, and it doesn't
-check for things that it should.  Fix the validator function to use the
-standard validation helpers and look for more types of obvious errors.
+When we recover a extent-free intent from the log, we need to validate
+its contents before we try to replay them.  Hoist the checking code into
+a separate function in preparation to refactor this code to use
+validation helpers.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_refcount_item.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_extfree_item.c |   31 +++++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 10 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-index de344bd7e73c..20e5c22bb754 100644
---- a/fs/xfs/xfs_refcount_item.c
-+++ b/fs/xfs/xfs_refcount_item.c
-@@ -423,27 +423,27 @@ xfs_cui_validate_phys(
- 	struct xfs_mount		*mp,
- 	struct xfs_phys_extent		*refc)
- {
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index 6c11bfc3d452..b5710b7fc263 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -578,6 +578,25 @@ const struct xfs_defer_op_type xfs_agfl_free_defer_type = {
+ 	.cancel_item	= xfs_extent_free_cancel_item,
+ };
+ 
++/* Is this recovered EFI ok? */
++static inline bool
++xfs_efi_validate_ext(
++	struct xfs_mount		*mp,
++	struct xfs_extent		*extp)
++{
++	xfs_fsblock_t			startblock_fsb;
++
++	startblock_fsb = XFS_BB_TO_FSB(mp,
++			   XFS_FSB_TO_DADDR(mp, extp->ext_start));
++	if (startblock_fsb == 0 ||
++	    extp->ext_len == 0 ||
++	    startblock_fsb >= mp->m_sb.sb_dblocks ||
++	    extp->ext_len >= mp->m_sb.sb_agblocks)
++		return false;
++
++	return true;
++}
++
+ /*
+  * Process an extent free intent item that was recovered from
+  * the log.  We need to free the extents that it describes.
+@@ -592,7 +611,6 @@ xfs_efi_item_recover(
+ 	struct xfs_efd_log_item		*efdp;
+ 	struct xfs_trans		*tp;
+ 	struct xfs_extent		*extp;
 -	xfs_fsblock_t			startblock_fsb;
--	bool				op_ok;
-+	xfs_fsblock_t			end;
-+
-+	if (refc->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS)
-+		return false;
+ 	int				i;
+ 	int				error = 0;
  
--	startblock_fsb = XFS_BB_TO_FSB(mp,
--			   XFS_FSB_TO_DADDR(mp, refc->pe_startblock));
- 	switch (refc->pe_flags & XFS_REFCOUNT_EXTENT_TYPE_MASK) {
- 	case XFS_REFCOUNT_INCREASE:
- 	case XFS_REFCOUNT_DECREASE:
- 	case XFS_REFCOUNT_ALLOC_COW:
- 	case XFS_REFCOUNT_FREE_COW:
--		op_ok = true;
- 		break;
- 	default:
--		op_ok = false;
--		break;
-+		return false;
- 	}
--	if (!op_ok || startblock_fsb == 0 ||
--	    refc->pe_len == 0 ||
--	    startblock_fsb >= mp->m_sb.sb_dblocks ||
--	    refc->pe_len >= mp->m_sb.sb_agblocks ||
--	    (refc->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS))
-+
-+	if (refc->pe_startblock + refc->pe_len <= refc->pe_startblock)
-+		return false;
-+
-+	end = refc->pe_startblock + refc->pe_len - 1;
-+	if (!xfs_verify_fsbno(mp, refc->pe_startblock) ||
-+	    !xfs_verify_fsbno(mp, end))
- 		return false;
+@@ -601,16 +619,9 @@ xfs_efi_item_recover(
+ 	 * EFI.  If any are bad, then assume that all are bad and
+ 	 * just toss the EFI.
+ 	 */
+-	for (i = 0; i < efip->efi_format.efi_nextents; i++) {
+-		extp = &efip->efi_format.efi_extents[i];
+-		startblock_fsb = XFS_BB_TO_FSB(mp,
+-				   XFS_FSB_TO_DADDR(mp, extp->ext_start));
+-		if (startblock_fsb == 0 ||
+-		    extp->ext_len == 0 ||
+-		    startblock_fsb >= mp->m_sb.sb_dblocks ||
+-		    extp->ext_len >= mp->m_sb.sb_agblocks)
++	for (i = 0; i < efip->efi_format.efi_nextents; i++)
++		if (!xfs_efi_validate_ext(mp, &efip->efi_format.efi_extents[i]))
+ 			return -EFSCORRUPTED;
+-	}
  
- 	return true;
+ 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
+ 	if (error)
 
