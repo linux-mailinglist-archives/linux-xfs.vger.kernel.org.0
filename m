@@ -2,89 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87F1D2C9080
-	for <lists+linux-xfs@lfdr.de>; Mon, 30 Nov 2020 23:05:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B07CD2C95D9
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbgK3WEb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Nov 2020 17:04:31 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:43894 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbgK3WEb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 17:04:31 -0500
-Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BE2C15855F9;
-        Tue,  1 Dec 2020 09:03:48 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kjrGt-00GkEh-QY; Tue, 01 Dec 2020 09:03:47 +1100
-Date:   Tue, 1 Dec 2020 09:03:47 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>, linux-xfs@vger.kernel.org
-Subject: Re: Maximum height of rmapbt when reflink feature is enabled
-Message-ID: <20201130220347.GI2842436@dread.disaster.area>
-References: <3275346.ciGmp8L3Sz@garuda>
- <20201130192605.GB143049@magnolia>
+        id S1727763AbgLADhz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 22:37:55 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:42018 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727719AbgLADhy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:37:54 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13TE6j169886
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=tZmNztK1djFh9Q+c+h19pHxAXZnUiFIx6mEp3nwfSQE=;
+ b=IVoILhnWF1XL0vIp104fWWkOS3hJn7KOkfNFOuXm1I9vBsvbSVKBoTZTBf2OmpqvdsPD
+ taB3AiUYV+qIK9ZQomj5zlvFc0I0QNQP3zOoofhVNkyR4LuhDlK+CosGFykxBwOByKH/
+ 4/AuTWz20vgszhOG9w7qctyE+rcSduseivkccwJGKvCiU+OiokAtwoII6KCXFGL4AY74
+ SRAUxzFGdMLcm5sRSZevyTfNyljYlLOn8S6SlvB1halMoFguh5qSmngOfJOE9kWCduvo
+ 0r7C+QBe9eRw/Ipy+QMWZAEdarWqaHn3IA5VFPlw3TXc9mGfQzBRiyMKN6liLroSgMvC EQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 353dyqgdya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:37:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13U37R134049
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 3540exd2hw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:37:12 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13bBEM011372
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:11 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 30 Nov 2020 19:37:11 -0800
+Subject: [PATCH 0/1] xfs: faster unaligned copy_file_range
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     darrick.wong@oracle.com
+Cc:     linux-xfs@vger.kernel.org
+Date:   Mon, 30 Nov 2020 19:37:10 -0800
+Message-ID: <160679383048.447787.12488361211673312070.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201130192605.GB143049@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
-        a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
-        a=kj9zAlcOel0A:10 a=zTNgK-yGK50A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=VXzDNDuzsZRX6bCEoKIA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012010023
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ clxscore=1015 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012010023
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Nov 30, 2020 at 11:26:05AM -0800, Darrick J. Wong wrote:
-> On Mon, Nov 30, 2020 at 02:35:21PM +0530, Chandan Babu R wrote:
-> > I have come across a "log reservation" calculation issue when
-> > increasing XFS_BTREE_MAXLEVELS to 10 which is in turn required for
-> 
-> Hmm.  That will increase the size of the btree cursor structure even
-> farther.  It's already gotten pretty bad with the realtime rmap and
-> reflink patchsets since the realtime volume can have 2^63 blocks, which
-> implies a theoretical maximum rtrmapbt height of 21 levels and a maximum
-> rtrefcountbt height of 13 levels.
+Hi all,
 
-The cursor is dynamically allocated, yes? So what we need to do is
-drop the idea that the btree is a fixed size and base it's size on
-the actual number of levels iwe calculated for that the btree it is
-being allocated for, right?
+Here's a quick patch to speed up copy_file_range on unaligned ranges by
+using reflink when possible to reduce the amount of pagecache copying.
 
-> (These heights are absurd, since they imply a data device of 2^63
-> blocks...)
-> 
-> I suspect that we need to split MAXLEVELS into two values -- one for
-> per-AG btrees, and one for per-file btrees,
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-We already do that. XFS_BTREE_MAXLEVELS is supposed to only be for
-per-AG btrees.  It is not used for BMBTs at all, they use
-mp->m_bm_maxlevels[] which have max height calculations done at
-mount time.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-The problem is the cursor, because right now max mp->m_bm_maxlevels
-fits within the XFS_BTREE_MAXLEVELS limit for the per-AG trees as
-well, because everything is limited to less than 2^32 records...
+--D
 
-> and then refactor the btree
-> cursor so that the level data are a single VLA at the end.  I started a
-> patchset to do all that[1], but it's incomplete.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/commit/?h=btree-dynamic-depth&id=692f761838dd821cd8cc5b3d1c66d6b1ac8ec05b
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=copy-range-faster-5.11
+---
+ fs/xfs/xfs_file.c |   99 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 99 insertions(+)
 
-Yeah, this, along with dynamic sizing of the rmapbt based
-on the physical AG size when refcount is enabled...
-
-And then we just don't have to care about the 1kB block size case at
-all....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
