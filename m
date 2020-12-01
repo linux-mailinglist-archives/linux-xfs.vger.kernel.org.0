@@ -2,176 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC0292C95EC
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:40:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 176392C95E6
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgLADkm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Nov 2020 22:40:42 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:46244 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbgLADkm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:40:42 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13e0nG193362
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:40:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
+        id S1727787AbgLADjM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 22:39:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:39680 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbgLADjM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:39:12 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13ThWH147106
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
+ message-id : date : from : to : cc : subject : references : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=zzrW+9vNV3jfnia2w+Klp6GHwH3y3O+TnatASYMB+dk=;
- b=vbqbHTAnYV3b0evRTLiKyVtAPgB7BC/ftVxUY5vlWVURGaV0tdUmDmeLmbU9Ffmpq6FO
- HxHxzEEVSFrj/CJ2hZVI1jpOsDNRvIcYFA7er31Bb4C33Sp3gFtLCr7H2DeP75tiDGBV
- XBW8p/BuDhHXQZD18J+ohK120lG6LKuKxxyHX4T5lYaS8l00bNyILINKUAfl8lOuLmG+
- DCGrMuGtShqEz61UzCphg7ECs52E/IuXCCwzbwf0hxD3baTTfeFVk+R862GK4PkdmXvg
- vKa+FF7o3DPQFK40f+nOV6dd3SxoNoEr9Ow9XkWcouM6mxYNPsUjsAZmvsF6lCMtuM9h lQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 353dyqge39-1
+ bh=7Y/26q8YG2W4v+mr1e063NkErd8DkNqaNhvSFQaKSqU=;
+ b=QDt37LnmoXfGTAEQjk/JTf/A90eUfNJRNCiSE3s5X+hVxMypNKLmtbn4hHEgczKJUr4r
+ Fx4N3sOzwZBWrhiXvVfSWZglhYwpWLvGGEOix88+LvGnUgcTOBGN1H/to/ki1xfmem+B
+ 26UaGdRe8iWFs8/K9wLHqeIT6UDTfQmBn2oeS7kSFDIV7sBTDKeEaXE+r9HGnqHnzEor
+ 9fM/Yf9mFUVRr7RPtVmbCGe0P2QpmPNIylpN59kOQXjhp9GvbjMr44pscsmQatVLbB1L
+ dXnrbS1KEdzLv5UVOybnnpZslbLCeFAnlgbbPOnfLRw6odgl8t2Hv7yspU9HXBbBHgxe SQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 353egkgcs1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:40:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13UJjI181479
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:00 GMT
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:30 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13U3dg134177
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:30 GMT
 Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 3540arh7x2-1
+        by aserp3020.oracle.com with ESMTP id 3540exd345-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:00 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13bxcV005143
-        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:59 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Nov 2020 19:37:59 -0800
-Subject: [PATCH 03/10] xfs: hoist recovered rmap intent checks out of
- xfs_rui_item_recover
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:38:30 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13cTS6005363
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:38:29 GMT
+Received: from localhost (/67.169.218.210) by default (Oracle Beehive Gateway
+ v4.0) with ESMTP ; Mon, 30 Nov 2020 19:38:05 -0800
+USER-AGENT: StGit/0.19
+MIME-Version: 1.0
+Message-ID: <160679388445.447963.9471776418395898485.stgit@magnolia>
+Date:   Mon, 30 Nov 2020 19:38:04 -0800 (PST)
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 30 Nov 2020 19:37:58 -0800
-Message-ID: <160679387832.447963.10771235215002135416.stgit@magnolia>
-In-Reply-To: <160679385987.447963.9630288535682256882.stgit@magnolia>
+Subject: [PATCH 04/10] xfs: improve the code that checks recovered rmap intent
+ items
 References: <160679385987.447963.9630288535682256882.stgit@magnolia>
-User-Agent: StGit/0.19
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <160679385987.447963.9630288535682256882.stgit@magnolia>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- phishscore=0 mlxscore=0 adultscore=0 malwarescore=0 suspectscore=3
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012010023
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ suspectscore=3 bulkscore=0 spamscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012010023
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- clxscore=1015 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
- suspectscore=3 lowpriorityscore=0 phishscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012010024
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=3
+ phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012010023
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-When we recover a rmap intent from the log, we need to validate its
-contents before we try to replay them.  Hoist the checking code into a
-separate function in preparation to refactor this code to use validation
-helpers.
+The code that validates recovered rmap intent items is kind of a mess --
+it doesn't use the standard xfs type validators, and it doesn't check
+for things that it should.  Fix the validator function to use the
+standard validation helpers and look for more types of obvious errors.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_rmap_item.c |   65 ++++++++++++++++++++++++++++--------------------
- 1 file changed, 38 insertions(+), 27 deletions(-)
+ fs/xfs/xfs_rmap_item.c |   31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index 7adc996ca6e3..871ed7fc43ee 100644
+index 871ed7fc43ee..2779cbee8fa8 100644
 --- a/fs/xfs/xfs_rmap_item.c
 +++ b/fs/xfs/xfs_rmap_item.c
-@@ -460,6 +460,42 @@ const struct xfs_defer_op_type xfs_rmap_update_defer_type = {
- 	.cancel_item	= xfs_rmap_update_cancel_item,
- };
- 
-+/* Is this recovered RUI ok? */
-+static inline bool
-+xfs_rui_validate_map(
-+	struct xfs_mount		*mp,
-+	struct xfs_map_extent		*rmap)
-+{
-+	xfs_fsblock_t			startblock_fsb;
-+	bool				op_ok;
+@@ -466,11 +466,11 @@ xfs_rui_validate_map(
+ 	struct xfs_mount		*mp,
+ 	struct xfs_map_extent		*rmap)
+ {
+-	xfs_fsblock_t			startblock_fsb;
+-	bool				op_ok;
++	xfs_fsblock_t			end;
 +
-+	startblock_fsb = XFS_BB_TO_FSB(mp,
-+			   XFS_FSB_TO_DADDR(mp, rmap->me_startblock));
-+	switch (rmap->me_flags & XFS_RMAP_EXTENT_TYPE_MASK) {
-+	case XFS_RMAP_EXTENT_MAP:
-+	case XFS_RMAP_EXTENT_MAP_SHARED:
-+	case XFS_RMAP_EXTENT_UNMAP:
-+	case XFS_RMAP_EXTENT_UNMAP_SHARED:
-+	case XFS_RMAP_EXTENT_CONVERT:
-+	case XFS_RMAP_EXTENT_CONVERT_SHARED:
-+	case XFS_RMAP_EXTENT_ALLOC:
-+	case XFS_RMAP_EXTENT_FREE:
-+		op_ok = true;
-+		break;
-+	default:
-+		op_ok = false;
-+		break;
-+	}
-+	if (!op_ok || startblock_fsb == 0 ||
-+	    rmap->me_len == 0 ||
-+	    startblock_fsb >= mp->m_sb.sb_dblocks ||
-+	    rmap->me_len >= mp->m_sb.sb_agblocks ||
-+	    (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS))
++	if (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS)
++		return false;
+ 
+-	startblock_fsb = XFS_BB_TO_FSB(mp,
+-			   XFS_FSB_TO_DADDR(mp, rmap->me_startblock));
+ 	switch (rmap->me_flags & XFS_RMAP_EXTENT_TYPE_MASK) {
+ 	case XFS_RMAP_EXTENT_MAP:
+ 	case XFS_RMAP_EXTENT_MAP_SHARED:
+@@ -480,17 +480,24 @@ xfs_rui_validate_map(
+ 	case XFS_RMAP_EXTENT_CONVERT_SHARED:
+ 	case XFS_RMAP_EXTENT_ALLOC:
+ 	case XFS_RMAP_EXTENT_FREE:
+-		op_ok = true;
+ 		break;
+ 	default:
+-		op_ok = false;
+-		break;
++		return false;
+ 	}
+-	if (!op_ok || startblock_fsb == 0 ||
+-	    rmap->me_len == 0 ||
+-	    startblock_fsb >= mp->m_sb.sb_dblocks ||
+-	    rmap->me_len >= mp->m_sb.sb_agblocks ||
+-	    (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS))
++
++	if (!xfs_verify_ino(mp, rmap->me_owner) &&
++	    !XFS_RMAP_NON_INODE_OWNER(rmap->me_owner))
 +		return false;
 +
-+	return true;
-+}
++	if (rmap->me_startoff + rmap->me_len <= rmap->me_startoff)
++		return false;
 +
- /*
-  * Process an rmap update intent item that was recovered from the log.
-  * We need to update the rmapbt.
-@@ -475,10 +511,8 @@ xfs_rui_item_recover(
- 	struct xfs_trans		*tp;
- 	struct xfs_btree_cur		*rcur = NULL;
- 	struct xfs_mount		*mp = lip->li_mountp;
--	xfs_fsblock_t			startblock_fsb;
- 	enum xfs_rmap_intent_type	type;
- 	xfs_exntst_t			state;
--	bool				op_ok;
- 	int				i;
- 	int				whichfork;
- 	int				error = 0;
-@@ -488,32 +522,9 @@ xfs_rui_item_recover(
- 	 * RUI.  If any are bad, then assume that all are bad and
- 	 * just toss the RUI.
- 	 */
--	for (i = 0; i < ruip->rui_format.rui_nextents; i++) {
--		rmap = &ruip->rui_format.rui_extents[i];
--		startblock_fsb = XFS_BB_TO_FSB(mp,
--				   XFS_FSB_TO_DADDR(mp, rmap->me_startblock));
--		switch (rmap->me_flags & XFS_RMAP_EXTENT_TYPE_MASK) {
--		case XFS_RMAP_EXTENT_MAP:
--		case XFS_RMAP_EXTENT_MAP_SHARED:
--		case XFS_RMAP_EXTENT_UNMAP:
--		case XFS_RMAP_EXTENT_UNMAP_SHARED:
--		case XFS_RMAP_EXTENT_CONVERT:
--		case XFS_RMAP_EXTENT_CONVERT_SHARED:
--		case XFS_RMAP_EXTENT_ALLOC:
--		case XFS_RMAP_EXTENT_FREE:
--			op_ok = true;
--			break;
--		default:
--			op_ok = false;
--			break;
--		}
--		if (!op_ok || startblock_fsb == 0 ||
--		    rmap->me_len == 0 ||
--		    startblock_fsb >= mp->m_sb.sb_dblocks ||
--		    rmap->me_len >= mp->m_sb.sb_agblocks ||
--		    (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS))
-+	for (i = 0; i < ruip->rui_format.rui_nextents; i++)
-+		if (!xfs_rui_validate_map(mp, &ruip->rui_format.rui_extents[i]))
- 			return -EFSCORRUPTED;
--	}
++	if (rmap->me_startblock + rmap->me_len <= rmap->me_startblock)
++		return false;
++
++	end = rmap->me_startblock + rmap->me_len - 1;
++	if (!xfs_verify_fsbno(mp, rmap->me_startblock) ||
++	    !xfs_verify_fsbno(mp, end))
+ 		return false;
  
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate,
- 			mp->m_rmap_maxlevels, 0, XFS_TRANS_RESERVE, &tp);
+ 	return true;
 
