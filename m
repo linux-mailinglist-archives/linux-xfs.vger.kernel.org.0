@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A7542C95DF
+	by mail.lfdr.de (Postfix) with ESMTP id D5E852C95E0
 	for <lists+linux-xfs@lfdr.de>; Tue,  1 Dec 2020 04:39:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgLADiV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 30 Nov 2020 22:38:21 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39176 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727719AbgLADiV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:38:21 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13TnfP147426;
-        Tue, 1 Dec 2020 03:37:39 GMT
+        id S1727774AbgLADiY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 30 Nov 2020 22:38:24 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:60186 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727719AbgLADiX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 30 Nov 2020 22:38:23 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13TYlA065982
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=eBhwj7IBc6uVXCtwWcVcrmh0CBWahvtDgw8dO33diQQ=;
- b=P72HQJXZHIrWCwpPXAXiTw2KFggy59+pFquOeWnf0DPgoEKdik5d7ABEgUhLNMO0evPh
- RIRql8bG3fZ25Aa2FMEAyiyFNEg+c9k5seYLDq5tos0NxhjP0sxwRK0KozM7tdPT3PeO
- LjT1CNGQ5OipjrcxyuQ3gQgycPkEE9EmjpCihNQStt7iuunaIel7uxkpCb1HnAZkhj4T
- XrIUiN4z+Z2k5COM51JWLRlBIjcLdMT5gfkhslryqz/um0hMeN1NVa9EjmKFmVZCuggn
- onN7Cp/PSOca8WYe1Y99HHXl+Ig4onlUSy1s38nYJ+bVgsZZ+fO28XaoAoAOegOSXjir CA== 
+ cc : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=tprUG7YbUIPsV1BT0TypUBtJ4gxUjr6gxvhqiIMdmRg=;
+ b=ofxGQNHG0ifsOUL7Vu58DQZnGd7MD+8b9fP4waICHW8dRs7gYDpzAHvaxOhLm+9j9No+
+ JvHuoco7ql/4AuZ1XQAbeVG8dHd15mUnG4YXZf0XYyu0drYOe7dDehjD0bdKbj7NwKcW
+ 9zyzah5y0yXa4OCYsMLV+qPoYVCj+T4p6ah4KGnArc35SDOy4ptTugGqimd0CX8URac/
+ T3UTWHbcIDIt9GTZjfBIQGuFwIfHTjEXdsf9gKag1zlBQ/lyP8F7Jndp8kPz9rxv7LzK
+ qLpnl58qiwxNbiWg0BDgWzj2XDKvdI+DcfrkgfvcYfu5umu45rd0J72ZLPzpeif4vsa9 jw== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 353egkgcqu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 01 Dec 2020 03:37:39 +0000
+        by aserp2130.oracle.com with ESMTP id 353c2arhkj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:37:42 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13UNHx160699;
-        Tue, 1 Dec 2020 03:37:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 35404mbvqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Dec 2020 03:37:38 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B13bcHI013729;
-        Tue, 1 Dec 2020 03:37:38 GMT
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B13UPL6161245
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 35404mbvs3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Tue, 01 Dec 2020 03:37:42 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B13bfg7011999
+        for <linux-xfs@vger.kernel.org>; Tue, 1 Dec 2020 03:37:41 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 30 Nov 2020 19:37:38 -0800
-Subject: [PATCH 3/3] xfs: enable the needsrepair feature
+        with ESMTP ; Mon, 30 Nov 2020 19:37:40 -0800
+Subject: [PATCH 00/10] xfs: strengthen log intent validation
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     darrick.wong@oracle.com, sandeen@sandeen.net
+To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 30 Nov 2020 19:37:37 -0800
-Message-ID: <160679385732.447856.1039349578089907881.stgit@magnolia>
-In-Reply-To: <160679383892.447856.12907477074923729733.stgit@magnolia>
-References: <160679383892.447856.12907477074923729733.stgit@magnolia>
+Date:   Mon, 30 Nov 2020 19:37:40 -0800
+Message-ID: <160679385987.447963.9630288535682256882.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -58,38 +56,38 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bu
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2012010023
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9821 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 suspectscore=0
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 impostorscore=0 clxscore=1015 adultscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2012010023
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+Hi all,
 
-Make it so that libxfs recognizes the needsrepair feature.  Note that
-the kernel will still refuse to mount these.
+This patchset hoists the code that checks log intent record validation
+into separate functions, and reworks them to use the standard field
+validation predicates instead of open-coding them.  This strengthens log
+recovery against (some) fuzzed log items.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-recovered-log-intent-validation-5.11
 ---
- fs/xfs/libxfs/xfs_format.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 5d8ba609ac0b..f64eed3ccfed 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -473,7 +473,8 @@ xfs_sb_has_ro_compat_feature(
- 		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
- 		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
- 		 XFS_SB_FEAT_INCOMPAT_META_UUID| \
--		 XFS_SB_FEAT_INCOMPAT_BIGTIME)
-+		 XFS_SB_FEAT_INCOMPAT_BIGTIME| \
-+		 XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR)
- 
- #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
- static inline bool
+ fs/xfs/xfs_bmap_item.c     |   75 ++++++++++++++++++++++++++++----------------
+ fs/xfs/xfs_extfree_item.c  |   31 ++++++++++++------
+ fs/xfs/xfs_log_recover.c   |    5 ++-
+ fs/xfs/xfs_refcount_item.c |   61 ++++++++++++++++++++++--------------
+ fs/xfs/xfs_rmap_item.c     |   75 ++++++++++++++++++++++++++++----------------
+ fs/xfs/xfs_trace.h         |   19 +++++++++++
+ 6 files changed, 178 insertions(+), 88 deletions(-)
 
