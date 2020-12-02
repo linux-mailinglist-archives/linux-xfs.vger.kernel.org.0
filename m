@@ -2,55 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50DC22CC336
-	for <lists+linux-xfs@lfdr.de>; Wed,  2 Dec 2020 18:16:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20DFA2CC33A
+	for <lists+linux-xfs@lfdr.de>; Wed,  2 Dec 2020 18:16:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgLBRPA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 2 Dec 2020 12:15:00 -0500
-Received: from verein.lst.de ([213.95.11.211]:55144 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgLBRPA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 2 Dec 2020 12:15:00 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 47B9067373; Wed,  2 Dec 2020 18:14:16 +0100 (CET)
-Date:   Wed, 2 Dec 2020 18:14:16 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     ira.weiny@intel.com, fstests@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        Jeff Moyer <jmoyer@redhat.com>, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Eric Sandeen <sandeen@redhat.com>,
-        David Howells <dhowells@redhat.com>
-Subject: Re: [RFC PATCH] common/rc: Fix _check_s_dax() for kernel 5.10
-Message-ID: <20201202171416.GA4268@lst.de>
-References: <20201202160701.1458658-1-ira.weiny@intel.com> <b131a2a6-f02f-9a91-4de1-01a77b76577a@sandeen.net>
+        id S1726810AbgLBRQM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 2 Dec 2020 12:16:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgLBRQM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 2 Dec 2020 12:16:12 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F1A5C0613CF
+        for <linux-xfs@vger.kernel.org>; Wed,  2 Dec 2020 09:15:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=JLJ36IUJ/0qXDv8U8aJT3olouSPocivye1VMOOz0/Gg=; b=iLuYdijIMmS6X9hT0qa52mMKSU
+        +BOI1mjmMbagjS6odJN6qXn9TPvEjD/QQqE/jkM1hzGZ3IYcnxG1f3CJdjpxVaVTEXUnZlckavheL
+        icm5nKhYR2/3MnTGD97rQLlBjYrruFvxGGpAI5frIOR96vmRIRfRtr5Be+J8OTcQe9p2ASijLLnS6
+        dJ8Rf4geh8Et65kH71qHRmjKHTsOhHoT3JgtcPgbuE1Tas9cpVhgP7tDy+Vy/4dPLK59UFQMBbDSD
+        dogF5hbDK/njFnnjHKruuTwrzdvRgbPBE6P1ijhTUTX3qYWLz4siS8duBqli9IN2RqXauBdVuGaar
+        /yBq75YA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kkVj0-0006P3-8k; Wed, 02 Dec 2020 17:15:30 +0000
+Date:   Wed, 2 Dec 2020 17:15:30 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Eric Sandeen <sandeen@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [RFC PATCH 2/2] xfs: do not allow reflinking inodes with the dax
+ flag set
+Message-ID: <20201202171530.GA24200@infradead.org>
+References: <1d87a83e-ba03-b735-f19a-955a09bcdcf7@redhat.com>
+ <07c41ba8-ecb7-5042-fa6c-dd8c9754b824@redhat.com>
+ <20201202102221.GB19762@infradead.org>
+ <49e44513-2f52-b221-6c33-e5e7119eb8b9@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b131a2a6-f02f-9a91-4de1-01a77b76577a@sandeen.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <49e44513-2f52-b221-6c33-e5e7119eb8b9@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 11:10:50AM -0600, Eric Sandeen wrote:
-> xfstests gets used on distro kernels too, so relying on kernel version isn't
-> really something we can use to make determinations like this, unfortunately.
+On Wed, Dec 02, 2020 at 08:44:24AM -0600, Eric Sandeen wrote:
+> Would it be correct to restate your last sentence as "Disallowing reflink
+> when XFS_DIFLAG2_DAX is set and dax=inode is set makes sense?"
 > 
-> Probably the best we can do is hope that the change makes it to stable and
-> distro kernels quickly, and the old flag fades into obscurity.
-> 
-> Maybe worth a comment in the test mentioning the SNAFU, though, for anyone
-> investigating it when it fails on older kernels?
+> If so, then the only change you're suggesting to this patch is to /allow/
+> reflinking if dax=never is set?
 
-I think we should explicitly check for the "old" or mixed up flag and
-error out.  Given that the other meaning of the bit value should only
-be set on mount points it should be easy to test.  That means we will
-reliably fail on old and distro kernels, but I think that is the right
-thing to do in this case.
+Yes, I think we should.
+
+> I just figured a very clear statementa bout incompatible flags was simplest,
+> but I get it that it's overly restrictive, functionally.
+
+The simplest in terms of semantics is to make sure reflink+DAX works,
+and while we are on the way we'll still need a workaround until that
+happen.
+
