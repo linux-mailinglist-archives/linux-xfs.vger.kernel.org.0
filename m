@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D5442CE4D5
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Dec 2020 02:16:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0D6A2CE4CD
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Dec 2020 02:14:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgLDBPd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Dec 2020 20:15:33 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:54268 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgLDBPd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Dec 2020 20:15:33 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B419k9s068074
-        for <linux-xfs@vger.kernel.org>; Fri, 4 Dec 2020 01:14:51 GMT
+        id S1728564AbgLDBNj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Dec 2020 20:13:39 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:58394 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbgLDBNj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Dec 2020 20:13:39 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B419jm3187991
+        for <linux-xfs@vger.kernel.org>; Fri, 4 Dec 2020 01:12:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=IApmRNFLf8E7OWKbmy3AHqTyNNrow7mea4MCJaBBtyk=;
- b=G2q2WEL0DuIOdX+RM+HjvCVpYzoZxXrM3rJtM2F5vPk8jeRFLm3O7V4KgGqWybG0ReD1
- gf7vze1074Key3cPZ0uoXIoudefuLy+NWvYc1oDz6MIsadDmZKT8vK2bNVGtOFiN3tEK
- rNhjPcAHZulMzJp+airDVt1/m7ZJMxFM+RsR3SOW965uiAlEaskzA0D3LL+Eyy/sc5QL
- mzS2CJMkgjS1KHmbDrYflWxKX6gD4qkze1US+E+7DbxVFlaIyVoq+F5+mSTWkytt/ZXi
- 8jET+gG5l/sigOAg9WS9bi0ntSDv2H4sRbu+Nh08d9yordm+vugdo5mOntqg2P56ZxPC iw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 353dyr126p-1
+ bh=GaDjGPt9X0/ZJFNGcg7D288jWW74Mcy7Ppy6860QgaA=;
+ b=Ol/y+BEZfYTacdlNK3nUPzwZIFSqCqz4n207lDqx/JO+td0d48gfOdRb4RzdfveSjbCT
+ v1se11PbjwyU0isCcTIXtX5Ve6QqrNtfVPD2tct1WuSUB+LjB84AvC/1CK6YfD8GkHtF
+ +m1A203GGrQZpkxAv/kpwdxxTN4YDtuUU34v0g4xhDtWVC6kSulcyksGAnXaWDr9igVy
+ wq5es6V9PyBRtkcN5tU92KV072YAAb2kuGz65QN1HLwgNOrpZMqsFXPfDlRjp2BOH7F7
+ RVV2OtyDbrWl5+7i84902t1MGS4SFLM4x3+E75vhhx42OO1gzmjJUMHKt4R10us8UMFk fQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 353c2b937q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Fri, 04 Dec 2020 01:14:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B41APNb099316
-        for <linux-xfs@vger.kernel.org>; Fri, 4 Dec 2020 01:12:51 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 3540ax541e-1
+        for <linux-xfs@vger.kernel.org>; Fri, 04 Dec 2020 01:12:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B41AWDk093308
+        for <linux-xfs@vger.kernel.org>; Fri, 4 Dec 2020 01:12:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 35404rn7av-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 04 Dec 2020 01:12:51 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B41Co6r016578
-        for <linux-xfs@vger.kernel.org>; Fri, 4 Dec 2020 01:12:51 GMT
+        for <linux-xfs@vger.kernel.org>; Fri, 04 Dec 2020 01:12:57 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B41CvpK013124
+        for <linux-xfs@vger.kernel.org>; Fri, 4 Dec 2020 01:12:57 GMT
 Received: from localhost (/10.159.242.140)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Dec 2020 17:12:50 -0800
-Subject: [PATCH 1/3] xfs: detect overflows in bmbt records
+        with ESMTP ; Thu, 03 Dec 2020 17:12:57 -0800
+Subject: [PATCH 2/3] xfs: fix parent pointer scrubber bailing out on
+ unallocated inodes
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 03 Dec 2020 17:12:50 -0800
-Message-ID: <160704437017.736504.13199098088562847416.stgit@magnolia>
+Date:   Thu, 03 Dec 2020 17:12:56 -0800
+Message-ID: <160704437622.736504.16651484693320221547.stgit@magnolia>
 In-Reply-To: <160704436050.736504.11280764290946254498.stgit@magnolia>
 References: <160704436050.736504.11280764290946254498.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,52 +54,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9824 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- phishscore=0 mlxscore=0 adultscore=0 malwarescore=0 suspectscore=1
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 bulkscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2012040003
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9824 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- clxscore=1015 mlxscore=0 spamscore=0 priorityscore=1501 mlxlogscore=999
- suspectscore=1 lowpriorityscore=0 phishscore=0 adultscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012040003
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ spamscore=0 adultscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012040003
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Detect file block mappings with a blockcount that's either so large that
-integer overflows occur or are zero, because neither are valid in the
-filesystem.  Worse yet, attempting directory modifications causes the
-iext code to trip over the bmbt key handling and takes the filesystem
-down.  We can fix most of this by preventing the bad metadata from
-entering the incore structures in the first place.
+xfs_iget can return -ENOENT for a file that the inobt thinks is
+allocated but has zeroed mode.  This currently causes scrub to exit
+with an operational error instead of flagging this as a corruption.  The
+end result is that scrub mistakenly reports the ENOENT to the user
+instead of "directory parent pointer corrupt" like we do for EINVAL.
 
-Found by setting blockcount=0 in a directory data fork mapping and
-watching the fireworks.
-
+Fixes: 5927268f5a04 ("xfs: flag inode corruption if parent ptr doesn't get us a real inode")
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ fs/xfs/scrub/parent.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index d9a692484eae..de9c27ef68d8 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -6229,6 +6229,11 @@ xfs_bmap_validate_extent(
- 	xfs_fsblock_t		endfsb;
- 	bool			isrt;
- 
-+	if (irec->br_startblock + irec->br_blockcount <= irec->br_startblock)
-+		return __this_address;
-+	if (irec->br_startoff + irec->br_blockcount <= irec->br_startoff)
-+		return __this_address;
-+
- 	isrt = XFS_IS_REALTIME_INODE(ip);
- 	endfsb = irec->br_startblock + irec->br_blockcount - 1;
- 	if (isrt && whichfork == XFS_DATA_FORK) {
+diff --git a/fs/xfs/scrub/parent.c b/fs/xfs/scrub/parent.c
+index 855aa8bcab64..66c35f6dfc24 100644
+--- a/fs/xfs/scrub/parent.c
++++ b/fs/xfs/scrub/parent.c
+@@ -164,13 +164,13 @@ xchk_parent_validate(
+ 	 * can't use DONTCACHE here because DONTCACHE inodes can trigger
+ 	 * immediate inactive cleanup of the inode.
+ 	 *
+-	 * If _iget returns -EINVAL then the parent inode number is garbage
+-	 * and the directory is corrupt.  If the _iget returns -EFSCORRUPTED
+-	 * or -EFSBADCRC then the parent is corrupt which is a cross
+-	 * referencing error.  Any other error is an operational error.
++	 * If _iget returns -EINVAL or -ENOENT then the parent inode number is
++	 * garbage and the directory is corrupt.  If the _iget returns
++	 * -EFSCORRUPTED or -EFSBADCRC then the parent is corrupt which is a
++	 *  cross referencing error.  Any other error is an operational error.
+ 	 */
+ 	error = xfs_iget(mp, sc->tp, dnum, XFS_IGET_UNTRUSTED, 0, &dp);
+-	if (error == -EINVAL) {
++	if (error == -EINVAL || error == -ENOENT) {
+ 		error = -EFSCORRUPTED;
+ 		xchk_fblock_process_error(sc, XFS_DATA_FORK, 0, &error);
+ 		goto out;
 
