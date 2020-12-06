@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA52F2D07F7
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Dec 2020 00:13:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F6902D07F1
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Dec 2020 00:12:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgLFXN3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 6 Dec 2020 18:13:29 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:58422 "EHLO
+        id S1726400AbgLFXLf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 6 Dec 2020 18:11:35 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:57030 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727350AbgLFXN3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 6 Dec 2020 18:13:29 -0500
+        with ESMTP id S1728209AbgLFXLf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 6 Dec 2020 18:11:35 -0500
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6N5LkA020633;
-        Sun, 6 Dec 2020 23:12:45 GMT
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6N66dQ020862;
+        Sun, 6 Dec 2020 23:10:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=vCMk2jy3llWe3iYS4Tk7q/0sOnInqAyRZRM6SdNEeD8=;
- b=demJTUwZjmGZqRX4zd4DPp5Mh77VryUfZ34B4qNOP2ZhyoRyED9Ghg2eqB5VeoDXWQuM
- azKddnQyW2JfB7WUl0NLm8dxm4JUTlNNdK3A9yoxwPz3G3RPx2xMd6CRBwmvk8KP8qN/
- SelP6vKRf4zHomVX9xu0iyp6h8Iq7xEkFq13dAubsWwvDnBpwczsNLfcNa+QNbIDwG6T
- fGv6KaC0Wp0Xc3l24/zKs/rDdCk447c55V774AWLMlriMtCGzxs9Mc0u0CT4O7c09E0a
- +7k5l0fdWPiqtjBip4dHdZ5fCU7sRA5wG5lxxhq8g5AqzW4V5JybEAlN/BrCvmzP7i4+ 9g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 357yqbk0ye-1
+ bh=4IhH1Ucoq/Cx3lanYx9oYb3hSbLg6W0uo8eaLtBPiCA=;
+ b=TdoY6/mpozSIEhqVO3zKRX4AAkN2byQI6ieDW5/8RjcYCOVAc9xQwZbjrArutU2L8Bmo
+ noG7ln6RAgt5xMPh9uYfq4dYedjOCdvDyfwciH8nM5AiebijXVRlpRmZImuBrL6ji8LW
+ vnnoIfsR/vWgQh6gLyEekTsqXAGf6Q6NaqFAKWyU+TNUNcOEGbvXM1mxCxiIK5uErCPc
+ nSoPFTTvHT6TNWcnDZy9rEHEwHfeBbQwPpZOihjGXd38koJDIK1tIC/ZY/l0pPL5gIQ8
+ dJr+1S4HBUALAliXDt+rxAT9TtHgXoGXZ2qPLTtICsP6/CopQJgHXhO5lBPN2nVkny5F 3w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 357yqbk0wb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 06 Dec 2020 23:12:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6NAfqF138592;
-        Sun, 6 Dec 2020 23:10:44 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 358kyq6s2r-1
+        Sun, 06 Dec 2020 23:10:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6NAenW177314;
+        Sun, 6 Dec 2020 23:10:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 358kskgb4b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 06 Dec 2020 23:10:43 +0000
+        Sun, 06 Dec 2020 23:10:49 +0000
 Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B6NAh08021383;
-        Sun, 6 Dec 2020 23:10:43 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B6NAnk0031543;
+        Sun, 6 Dec 2020 23:10:49 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 06 Dec 2020 15:10:42 -0800
-Subject: [PATCH 09/10] xfs: validate feature support when recovering
- rmap/refcount/bmap intents
+        with ESMTP ; Sun, 06 Dec 2020 15:10:49 -0800
+Subject: [PATCH 10/10] xfs: trace log intent item recovery failures
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         bfoster@redhat.com
-Date:   Sun, 06 Dec 2020 15:10:41 -0800
-Message-ID: <160729624155.1607103.14703148264133630631.stgit@magnolia>
+Date:   Sun, 06 Dec 2020 15:10:48 -0800
+Message-ID: <160729624812.1607103.14927905190925127101.stgit@magnolia>
 In-Reply-To: <160729618252.1607103.863261260798043728.stgit@magnolia>
 References: <160729618252.1607103.863261260798043728.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,10 +54,10 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9827 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
- malwarescore=0 suspectscore=1 mlxlogscore=999 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012060152
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=1
+ bulkscore=0 malwarescore=0 phishscore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012060152
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9827 signatures=668682
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
  clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0 adultscore=0
@@ -71,66 +70,61 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-The bmap, rmap, and refcount log intent items were added to support the
-rmap and reflink features.  Because these features come with changes to
-the ondisk format, the log items aren't tied to a log incompat flag.
-
-However, the log recovery routines don't actually check for those
-feature flags.  The kernel has no business replayng an intent item for a
-feature that isn't enabled, so check that as part of recovered log item
-validation.  (Note that kernels pre-dating rmap and reflink will fail
-the mount on the unknown log item type code.)
+Add a trace point so that we can capture when a recovered log intent
+item fails to recover.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_bmap_item.c     |    4 ++++
- fs/xfs/xfs_refcount_item.c |    3 +++
- fs/xfs/xfs_rmap_item.c     |    3 +++
- 3 files changed, 10 insertions(+)
+ fs/xfs/xfs_log_recover.c |    5 ++++-
+ fs/xfs/xfs_trace.h       |   18 ++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index a21a9f71c0c0..8d3ed07800f6 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -425,6 +425,10 @@ xfs_bui_validate(
- {
- 	struct xfs_map_extent		*bmap;
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 87886b7f77da..1152c4b3ba96 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -2559,8 +2559,11 @@ xlog_recover_process_intents(
+ 		spin_unlock(&ailp->ail_lock);
+ 		error = lip->li_ops->iop_recover(lip, &capture_list);
+ 		spin_lock(&ailp->ail_lock);
+-		if (error)
++		if (error) {
++			trace_xlog_intent_recovery_failed(log->l_mp, error,
++					lip->li_ops->iop_recover);
+ 			break;
++		}
+ 	}
  
-+	if (!xfs_sb_version_hasrmapbt(&mp->m_sb) &&
-+	    !xfs_sb_version_hasreflink(&mp->m_sb))
-+		return false;
-+
- 	/* Only one mapping operation per BUI... */
- 	if (buip->bui_format.bui_nextents != XFS_BUI_MAX_FAST_EXTENTS)
- 		return false;
-diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-index c24f2da0f795..937d482c9be4 100644
---- a/fs/xfs/xfs_refcount_item.c
-+++ b/fs/xfs/xfs_refcount_item.c
-@@ -423,6 +423,9 @@ xfs_cui_validate_phys(
- 	struct xfs_mount		*mp,
- 	struct xfs_phys_extent		*refc)
- {
-+	if (!xfs_sb_version_hasreflink(&mp->m_sb))
-+		return false;
-+
- 	if (refc->pe_flags & ~XFS_REFCOUNT_EXTENT_FLAGS)
- 		return false;
+ 	xfs_trans_ail_cursor_done(&cur);
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 86951652d3ed..8fdb51eac1af 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -103,6 +103,24 @@ DEFINE_ATTR_LIST_EVENT(xfs_attr_list_notfound);
+ DEFINE_ATTR_LIST_EVENT(xfs_attr_leaf_list);
+ DEFINE_ATTR_LIST_EVENT(xfs_attr_node_list);
  
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index 6f3250a22093..9b84017184d9 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
-@@ -466,6 +466,9 @@ xfs_rui_validate_map(
- 	struct xfs_mount		*mp,
- 	struct xfs_map_extent		*rmap)
- {
-+	if (!xfs_sb_version_hasrmapbt(&mp->m_sb))
-+		return false;
++TRACE_EVENT(xlog_intent_recovery_failed,
++	TP_PROTO(struct xfs_mount *mp, int error, void *caller_ip),
++	TP_ARGS(mp, error, caller_ip),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(int, error)
++		__field(void *, caller_ip)
++	),
++	TP_fast_assign(
++		__entry->dev = mp->m_super->s_dev;
++		__entry->error = error;
++		__entry->caller_ip = caller_ip;
++	),
++	TP_printk("dev %d:%d error %d function %pS",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->error, __entry->caller_ip)
++);
 +
- 	if (rmap->me_flags & ~XFS_RMAP_EXTENT_FLAGS)
- 		return false;
- 
+ DECLARE_EVENT_CLASS(xfs_perag_class,
+ 	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int refcount,
+ 		 unsigned long caller_ip),
 
