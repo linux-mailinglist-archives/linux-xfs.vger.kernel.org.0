@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 131EF2D07F0
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Dec 2020 00:11:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0E402D07FC
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Dec 2020 00:14:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgLFXLr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 6 Dec 2020 18:11:47 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:43432 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgLFXLq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 6 Dec 2020 18:11:46 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6NB5bW189070
-        for <linux-xfs@vger.kernel.org>; Sun, 6 Dec 2020 23:11:05 GMT
+        id S1727659AbgLFXNy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 6 Dec 2020 18:13:54 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58092 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728471AbgLFXNw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 6 Dec 2020 18:13:52 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6N6YSw182481
+        for <linux-xfs@vger.kernel.org>; Sun, 6 Dec 2020 23:13:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=v4R6BiCVCbOxiYLN4AI8rQNMRBZI9geFI1L2pd2d72E=;
- b=LLP5kc660e0VPiEcCbmGzWcFteESnV7ikH2UrsslAsaw3qlC7F9AMv1nQ3eyZSBSKIzS
- U1JrLlv5WVu/2n2r1zW2vSLw3kq0i46DzaFFrl77oE18SSrPQNlRyohPGEpaEkvl0o8g
- FN00FFwFTY8OfeyhHBhSCbrxLL1tnX6THZpNYca69D8MXflkBiy3TZs6A9PAb4T9vkQ+
- iveUPcbydbVrkCGHaXRRMi5sFtBQSfj79vj3e57e4y3yzL4kiOJzLT/Jr+0BbwI9Lz+s
- 6cg9bFP+1UdSKHoxCGarFuzRfOogOTzZdtsezUzYQr6DzPd5gWyqjIV0MrDSJ/cQ+Cy+ KA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 3581mqjvjf-1
+ bh=EVHFx3B23oECeeh/6hykWPXtq2XyOvqALbN7shfya1A=;
+ b=Sx/cWZzUf8v4+adTQWk0g9bWF+7PUpT8zlHmLp+OXERPrrkUXuLE4DMZTGYla8vgqSO6
+ BcCm5FYMw/FJ3Oc2oTaA1z7QM3AJcf/ofzMV4roQ5l0oinwNnRNwT8nW7W1qM0TIaxbu
+ uQOljzhvhmWcIVJl9f92jnYa1BBNr9rYlnDYlz6bJd31SLXHa/A/8d3iibS23a2uaQ1t
+ rHTX5lS/mgu9LO+GDrNQ0DVzwafb6N/+z98ksbTP26jUnfGYZEJYegrFBaC3C8fkfi30
+ LumcpVNiF+l+HlZD7dLqEmNqZqAMUgdaSOVHxVFGJKi7MuunWFslNlNEb2kp5mQ5/zKe hQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 35825ktukd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Sun, 06 Dec 2020 23:11:05 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6NAXLY138386
-        for <linux-xfs@vger.kernel.org>; Sun, 6 Dec 2020 23:11:05 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 358kyq6s7c-1
+        for <linux-xfs@vger.kernel.org>; Sun, 06 Dec 2020 23:13:11 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0B6NAMCi005640
+        for <linux-xfs@vger.kernel.org>; Sun, 6 Dec 2020 23:11:10 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 358m3vpe4q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Sun, 06 Dec 2020 23:11:05 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0B6NB4ZW031631
-        for <linux-xfs@vger.kernel.org>; Sun, 6 Dec 2020 23:11:04 GMT
+        for <linux-xfs@vger.kernel.org>; Sun, 06 Dec 2020 23:11:10 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0B6NBAMb012491
+        for <linux-xfs@vger.kernel.org>; Sun, 6 Dec 2020 23:11:10 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 06 Dec 2020 15:11:04 -0800
-Subject: [PATCH 2/4] xfs: refactor realtime volume extent validation
+        with ESMTP ; Sun, 06 Dec 2020 15:11:10 -0800
+Subject: [PATCH 3/4] xfs: refactor file range validation
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sun, 06 Dec 2020 15:11:03 -0800
-Message-ID: <160729626316.1608297.11622795343009336589.stgit@magnolia>
+Date:   Sun, 06 Dec 2020 15:11:09 -0800
+Message-ID: <160729626928.1608297.12355625902682243490.stgit@magnolia>
 In-Reply-To: <160729625074.1608297.13414859761208067117.stgit@magnolia>
 References: <160729625074.1608297.13414859761208067117.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -53,143 +53,134 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9827 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 mlxscore=0
- malwarescore=0 suspectscore=1 mlxlogscore=999 bulkscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 phishscore=0 suspectscore=1 mlxscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2012060152
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9827 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 mlxlogscore=999
- clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 spamscore=0 impostorscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012060151
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 clxscore=1015 priorityscore=1501 mlxscore=0
+ spamscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012060151
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <darrick.wong@oracle.com>
 
-Refactor all the open-coded validation of realtime device extents into a
-single helper.
+Refactor all the open-coded validation of file block ranges into a
+single helper, and teach the bmap scrubber to check the ranges.
 
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c  |   13 +++----------
- fs/xfs/libxfs/xfs_types.c |   16 ++++++++++++++++
- fs/xfs/libxfs/xfs_types.h |    2 ++
- fs/xfs/scrub/bmap.c       |    8 +-------
- fs/xfs/scrub/rtbitmap.c   |    4 +---
- 5 files changed, 23 insertions(+), 20 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c  |    2 +-
+ fs/xfs/libxfs/xfs_types.c |   25 +++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_types.h |    3 +++
+ fs/xfs/scrub/bmap.c       |    4 ++++
+ fs/xfs/xfs_bmap_item.c    |    2 +-
+ fs/xfs/xfs_rmap_item.c    |    2 +-
+ 6 files changed, 35 insertions(+), 3 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 7f1b6ad570a9..7bcf498ef6b2 100644
+index 7bcf498ef6b2..dcf56bcafb8f 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -6226,20 +6226,13 @@ xfs_bmap_validate_extent(
- 	struct xfs_bmbt_irec	*irec)
+@@ -6227,7 +6227,7 @@ xfs_bmap_validate_extent(
  {
  	struct xfs_mount	*mp = ip->i_mount;
--	xfs_fsblock_t		endfsb;
--	bool			isrt;
  
--	if (irec->br_startblock + irec->br_blockcount <= irec->br_startblock)
--		return __this_address;
- 	if (irec->br_startoff + irec->br_blockcount <= irec->br_startoff)
+-	if (irec->br_startoff + irec->br_blockcount <= irec->br_startoff)
++	if (!xfs_verify_fileext(mp, irec->br_startoff, irec->br_blockcount))
  		return __this_address;
  
--	isrt = XFS_IS_REALTIME_INODE(ip);
--	endfsb = irec->br_startblock + irec->br_blockcount - 1;
--	if (isrt && whichfork == XFS_DATA_FORK) {
--		if (!xfs_verify_rtbno(mp, irec->br_startblock))
--			return __this_address;
--		if (!xfs_verify_rtbno(mp, endfsb))
-+	if (XFS_IS_REALTIME_INODE(ip) && whichfork == XFS_DATA_FORK) {
-+		if (!xfs_verify_rtext(mp, irec->br_startblock,
-+					  irec->br_blockcount))
- 			return __this_address;
- 	} else {
- 		if (!xfs_verify_fsbext(mp, irec->br_startblock,
+ 	if (XFS_IS_REALTIME_INODE(ip) && whichfork == XFS_DATA_FORK) {
 diff --git a/fs/xfs/libxfs/xfs_types.c b/fs/xfs/libxfs/xfs_types.c
-index b74866dbea94..7b310eb296b7 100644
+index 7b310eb296b7..b254fbeaaa50 100644
 --- a/fs/xfs/libxfs/xfs_types.c
 +++ b/fs/xfs/libxfs/xfs_types.c
-@@ -198,6 +198,22 @@ xfs_verify_rtbno(
- 	return rtbno < mp->m_sb.sb_rblocks;
- }
+@@ -258,3 +258,28 @@ xfs_verify_dablk(
  
-+/* Verify that a realtime device extent is fully contained inside the volume. */
+ 	return dabno <= max_dablk;
+ }
++
++/* Check that a file block offset does not exceed the maximum. */
 +bool
-+xfs_verify_rtext(
++xfs_verify_fileoff(
 +	struct xfs_mount	*mp,
-+	xfs_rtblock_t		rtbno,
-+	xfs_rtblock_t		len)
++	xfs_fileoff_t		off)
 +{
-+	if (rtbno + len <= rtbno)
-+		return false;
-+
-+	if (!xfs_verify_rtbno(mp, rtbno))
-+		return false;
-+
-+	return xfs_verify_rtbno(mp, rtbno + len - 1);
++	return off <= XFS_MAX_FILEOFF;
 +}
 +
- /* Calculate the range of valid icount values. */
- void
- xfs_icount_range(
++/* Check that a range of file block offsets do not exceed the maximum. */
++bool
++xfs_verify_fileext(
++	struct xfs_mount	*mp,
++	xfs_fileoff_t		off,
++	xfs_fileoff_t		len)
++{
++	if (off + len <= off)
++		return false;
++
++	if (!xfs_verify_fileoff(mp, off))
++		return false;
++
++	return xfs_verify_fileoff(mp, off + len - 1);
++}
 diff --git a/fs/xfs/libxfs/xfs_types.h b/fs/xfs/libxfs/xfs_types.h
-index 7feaaac25b3d..18e83ce46568 100644
+index 18e83ce46568..064bd6e8c922 100644
 --- a/fs/xfs/libxfs/xfs_types.h
 +++ b/fs/xfs/libxfs/xfs_types.h
-@@ -197,6 +197,8 @@ bool xfs_verify_ino(struct xfs_mount *mp, xfs_ino_t ino);
- bool xfs_internal_inum(struct xfs_mount *mp, xfs_ino_t ino);
- bool xfs_verify_dir_ino(struct xfs_mount *mp, xfs_ino_t ino);
- bool xfs_verify_rtbno(struct xfs_mount *mp, xfs_rtblock_t rtbno);
-+bool xfs_verify_rtext(struct xfs_mount *mp, xfs_rtblock_t rtbno,
-+		xfs_rtblock_t len);
- bool xfs_verify_icount(struct xfs_mount *mp, unsigned long long icount);
+@@ -203,5 +203,8 @@ bool xfs_verify_icount(struct xfs_mount *mp, unsigned long long icount);
  bool xfs_verify_dablk(struct xfs_mount *mp, xfs_fileoff_t off);
  void xfs_icount_range(struct xfs_mount *mp, unsigned long long *min,
+ 		unsigned long long *max);
++bool xfs_verify_fileoff(struct xfs_mount *mp, xfs_fileoff_t off);
++bool xfs_verify_fileext(struct xfs_mount *mp, xfs_fileoff_t off,
++		xfs_fileoff_t len);
+ 
+ #endif	/* __XFS_TYPES_H__ */
 diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index 3e2ba7875059..cce8ac7d3973 100644
+index cce8ac7d3973..bce4421acdb9 100644
 --- a/fs/xfs/scrub/bmap.c
 +++ b/fs/xfs/scrub/bmap.c
-@@ -319,7 +319,6 @@ xchk_bmap_iextent(
- 	struct xfs_bmbt_irec	*irec)
- {
- 	struct xfs_mount	*mp = info->sc->mp;
--	xfs_filblks_t		end;
- 	int			error = 0;
- 
- 	/*
-@@ -349,13 +348,8 @@ xchk_bmap_iextent(
- 	if (irec->br_blockcount > MAXEXTLEN)
+@@ -329,6 +329,10 @@ xchk_bmap_iextent(
  		xchk_fblock_set_corrupt(info->sc, info->whichfork,
  				irec->br_startoff);
--	if (irec->br_startblock + irec->br_blockcount <= irec->br_startblock)
--		xchk_fblock_set_corrupt(info->sc, info->whichfork,
--				irec->br_startoff);
--	end = irec->br_startblock + irec->br_blockcount - 1;
- 	if (info->is_rt &&
--	    (!xfs_verify_rtbno(mp, irec->br_startblock) ||
--	     !xfs_verify_rtbno(mp, end)))
-+	    !xfs_verify_rtext(mp, irec->br_startblock, irec->br_blockcount))
- 		xchk_fblock_set_corrupt(info->sc, info->whichfork,
- 				irec->br_startoff);
- 	if (!info->is_rt &&
-diff --git a/fs/xfs/scrub/rtbitmap.c b/fs/xfs/scrub/rtbitmap.c
-index 76e4ffe0315b..d409ca592178 100644
---- a/fs/xfs/scrub/rtbitmap.c
-+++ b/fs/xfs/scrub/rtbitmap.c
-@@ -52,9 +52,7 @@ xchk_rtbitmap_rec(
- 	startblock = rec->ar_startext * tp->t_mountp->m_sb.sb_rextsize;
- 	blockcount = rec->ar_extcount * tp->t_mountp->m_sb.sb_rextsize;
  
--	if (startblock + blockcount <= startblock ||
--	    !xfs_verify_rtbno(sc->mp, startblock) ||
--	    !xfs_verify_rtbno(sc->mp, startblock + blockcount - 1))
-+	if (!xfs_verify_rtext(sc->mp, startblock, blockcount))
- 		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, 0);
- 	return 0;
- }
++	if (!xfs_verify_fileext(mp, irec->br_startoff, irec->br_blockcount))
++		xchk_fblock_set_corrupt(info->sc, info->whichfork,
++				irec->br_startoff);
++
+ 	xchk_bmap_dirattr_extent(ip, info, irec);
+ 
+ 	/* There should never be a "hole" extent in either extent list. */
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index 5c9706760e68..9a2e54b7ccb9 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -449,7 +449,7 @@ xfs_bui_validate(
+ 	if (!xfs_verify_ino(mp, bmap->me_owner))
+ 		return false;
+ 
+-	if (bmap->me_startoff + bmap->me_len <= bmap->me_startoff)
++	if (!xfs_verify_fileext(mp, bmap->me_startoff, bmap->me_len))
+ 		return false;
+ 
+ 	return xfs_verify_fsbext(mp, bmap->me_startblock, bmap->me_len);
+diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
+index 4fa875237422..49cebd68b672 100644
+--- a/fs/xfs/xfs_rmap_item.c
++++ b/fs/xfs/xfs_rmap_item.c
+@@ -490,7 +490,7 @@ xfs_rui_validate_map(
+ 	    !xfs_verify_ino(mp, rmap->me_owner))
+ 		return false;
+ 
+-	if (rmap->me_startoff + rmap->me_len <= rmap->me_startoff)
++	if (!xfs_verify_fileext(mp, rmap->me_startoff, rmap->me_len))
+ 		return false;
+ 
+ 	return xfs_verify_fsbext(mp, rmap->me_startblock, rmap->me_len);
 
