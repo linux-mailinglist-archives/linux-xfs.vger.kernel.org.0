@@ -2,120 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 377BA2D1CB9
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Dec 2020 23:07:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA1772D1F65
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Dec 2020 01:51:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726231AbgLGWFG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Dec 2020 17:05:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23322 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725799AbgLGWFG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Dec 2020 17:05:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607378620;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n3f55idUWef+oM3UWt0470km4aqSTP3XgPC4MJZJUA4=;
-        b=CyXOAc2tL3nO83KED+n6OWYGc/ixbeLL6NGqtxze6vWyTEKvR6A0uXDCZu3IB+TXrYux+J
-        RDx3F9GJTRfz5UX8f6XXsYEXZkIHRTPer5gaBkRApuSgLrBaW1nNlDnVByUndLI8HDR+Xu
-        RBRJwNMEhG7z31KZQwWP/mzISY6f3QU=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-377-qCliwE8JOpOE7ylkqop5iQ-1; Mon, 07 Dec 2020 17:03:38 -0500
-X-MC-Unique: qCliwE8JOpOE7ylkqop5iQ-1
-Received: by mail-pf1-f197.google.com with SMTP id b11so10857971pfi.7
-        for <linux-xfs@vger.kernel.org>; Mon, 07 Dec 2020 14:03:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n3f55idUWef+oM3UWt0470km4aqSTP3XgPC4MJZJUA4=;
-        b=bB9kZ8Er3WGhcedvDbFfsIKMnS2RBO1ZC+NHHG1ey8HYYtVD0l2N6j9bAjcXDp+53u
-         15xze6JqQnq50+zLqiFRpTOvikjWfF4eSUHv1Wnlfw5sCnagYv9qjTVXeqfwg7Ud+6Z9
-         k1cTsUnx4ueT0VgZ/VAAVbtkh/iZyniYoH6afVMRyp2LBjvHcbus3JVAx0WYEz3lYBIq
-         VloPX5Wc8A1o3CpZ2zrENyR/rSEd4+q1ZhHyV/TVuYdmHslRspMGp0sM2YbFUIdYtg3V
-         hlRfuDY+quLNWzzK2exZ3nJDhRESJtjLUhYMKGZNZbXm732kiJ1ruNcnKIxFJ9teioSz
-         SZYg==
-X-Gm-Message-State: AOAM533GbG5bAtR6lCsi7fJICQoBKPtjxPDJc/6idG7lkLm7Lbve64RO
-        V9s544/52NntPS9w85vp27WTOs1S+Vzi52Q8KGSZQbD/Ho9JLEk+B6vJ0KkXKEOZMIPRLPZI+gF
-        GEqSHdfH5bGdVd+1ZShhn
-X-Received: by 2002:a17:902:9341:b029:da:13f5:302a with SMTP id g1-20020a1709029341b02900da13f5302amr18440980plp.9.1607378617156;
-        Mon, 07 Dec 2020 14:03:37 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyxR+ilWhm0ZcRsvCaV110ch/SbgOshOqAX8WzMjWCya8h0M2desd56+4xUR/rZdZNJFI9QQw==
-X-Received: by 2002:a17:902:9341:b029:da:13f5:302a with SMTP id g1-20020a1709029341b02900da13f5302amr18440964plp.9.1607378616963;
-        Mon, 07 Dec 2020 14:03:36 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d20sm754088pjz.3.2020.12.07.14.03.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Dec 2020 14:03:36 -0800 (PST)
-Date:   Tue, 8 Dec 2020 06:03:25 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH v3 6/6] xfs: kill ialloced in xfs_dialloc()
-Message-ID: <20201207220325.GA2886611@xiangao.remote.csb>
-References: <20201207001533.2702719-1-hsiangkao@redhat.com>
- <20201207001533.2702719-7-hsiangkao@redhat.com>
- <20201207135719.GG29249@lst.de>
- <20201207142448.GD2817641@xiangao.remote.csb>
- <20201207202345.GT3913616@dread.disaster.area>
+        id S1728933AbgLHAvm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Dec 2020 19:51:42 -0500
+Received: from vsm-gw.hyogo-dai.ac.jp ([202.244.76.12]:35013 "EHLO
+        vsm-gw.hyogo-dai.ac.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbgLHAvk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Dec 2020 19:51:40 -0500
+X-Greylist: delayed 16991 seconds by postgrey-1.27 at vger.kernel.org; Mon, 07 Dec 2020 19:51:35 EST
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [202.244.77.11])
+        by vsm-gw.hyogo-dai.ac.jp (Postfix) with ESMTP id DE24F1A606F;
+        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
+Received: from humans-kc.hyogo-dai.ac.jp (humans-kc.hyogo-dai.ac.jp [127.0.0.1])
+        by postfix.imss71 (Postfix) with ESMTP id BC3D8382029;
+        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
+Received: from hyogo-dai.ac.jp (unknown [202.244.77.11])
+        by humans-kc.hyogo-dai.ac.jp (Postfix) with SMTP id 426EA83825B;
+        Tue,  8 Dec 2020 04:09:26 +0900 (JST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20201207202345.GT3913616@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <20201207190926.000057A2.0664@hyogo-dai.ac.jp>
+Date:   Tue, 08 Dec 2020 04:09:26 +0900
+From:   "Raymond " <hozumi@hyogo-dai.ac.jp>
+To:     <infocarferw1@aim.com>
+Reply-To: <infocarfer@aim.com>
+Subject: I am Vice Chairman of Hang Seng Bank, Dr. Raymond Chien
+         Kuo Fung I have Important Matter to Discuss with you concerning
+         my late client. Died without a NEXT OF KIN. Send me your private
+         email for full details information.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MAILER: Active! mail
+X-TM-AS-MML: disable
+X-TM-AS-Product-Ver: IMSS-7.1.0.1808-8.2.0.1013-25446.007
+X-TM-AS-Result: No--2.951-5.0-31-10
+X-imss-scan-details: No--2.951-5.0-31-10
+X-TM-AS-User-Approved-Sender: No
+X-TMASE-MatchedRID: X41QhRrT5f5ITndh1lLRASsOycAMAhSTkCM77ifYafsBLhz6t76Ce6P0
+        clhHAFPyJA6GJqxAEzL554DD9nXlqqPFjJEFr+olfeZdJ1XsoriOub3SYcq1hJf7eAx/Ae/AbQo
+        eraIcZBRw7u01FqNA2K1Ia4IbeAdLm9ukrtqhno/rIUidklntLAP5zT0d393cymsk/wUE4hoZaR
+        NzIP3XI5u3uLPgwbAMH5RdHnhWfwyq9gpuf+A6coDeeVSgzszVDx5n520Z3eZyT7DDRtYlKaWBy
+        ZE9nSaC/rhfyjvqkZu/pNa4BidtZEMMprcbiest
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Dec 08, 2020 at 07:23:45AM +1100, Dave Chinner wrote:
-> On Mon, Dec 07, 2020 at 10:24:48PM +0800, Gao Xiang wrote:
-> > On Mon, Dec 07, 2020 at 02:57:19PM +0100, Christoph Hellwig wrote:
-> > > > +		error = xfs_ialloc_ag_alloc(*tpp, agbp);
-> > > > +		if (error < 0) {
-> > > >  			xfs_trans_brelse(*tpp, agbp);
-> > > >  
-> > > >  			if (error == -ENOSPC)
-> > > >  				error = 0;
-> > > >  			break;
-> > > > +		} else if (error == 0) {
-> > > 
-> > > No need for the else after the break.
-> > 
-> > Personally, I'd like to save a line by using "} else if {"
-> > for such case (and tell readers about these two judgments),
-> > and for any cases, compilers will do their best.
-> 
-> And extra line is not an issue, and the convention we use everywhere
-> is to elide the "else" whereever possible. e.g. we do:
-> 
-> 	if (foo)
-> 		return false;
-> 	if (!bar)
-> 		return true;
-> 	if (baz)
-> 		return false;
-> 	return true;
-> 
-> Rather than if() {} else if() {} else if() {} else {}. The elses in
-> these cases mainly obfuscate the actual logic flow...
+email:kraymond75@aol.com
 
-(I mean no need to to use else if on irrelevant relationship as well)
-Anyway, let me update it later...
 
-Thanks,
-Gao Xiang
-
-> 
-> Cheers,
-> 
-> Dave.
-> 
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
 
