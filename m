@@ -2,152 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9352D2AA4
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Dec 2020 13:23:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98BD72D2ACD
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Dec 2020 13:30:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgLHMXa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Dec 2020 07:23:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41664 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729485AbgLHMX3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Dec 2020 07:23:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1607430122;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=G5zHoFl4vQEdOQtxHPJtiOs+Z6vqtbTnbc4CAVi7q6A=;
-        b=WKgpbSjw+m4f9nnCnLCiB9rFzVYf4a+kHOWk7BnqqsFbhK2zF7CCbJCaRA9firvrfQXeYi
-        S32vLeKATbAyVi2vKcRG+S64YbbMFmx4OmdyPujcr3nZTFsDfUW/DMhO9kWSuGa+Oa5DJb
-        5tgPwDRk42ausv/BdE0myCQ2jx9JrDM=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-xX1UXkLSOMqQ1gHJDMV_4A-1; Tue, 08 Dec 2020 07:22:01 -0500
-X-MC-Unique: xX1UXkLSOMqQ1gHJDMV_4A-1
-Received: by mail-pg1-f197.google.com with SMTP id a27so11751649pga.6
-        for <linux-xfs@vger.kernel.org>; Tue, 08 Dec 2020 04:22:00 -0800 (PST)
+        id S1727554AbgLHM3f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Dec 2020 07:29:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbgLHM3f (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Dec 2020 07:29:35 -0500
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D9AC0613D6;
+        Tue,  8 Dec 2020 04:28:48 -0800 (PST)
+Received: by mail-ua1-x942.google.com with SMTP id p2so830683uac.3;
+        Tue, 08 Dec 2020 04:28:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ggW586a4wUXgxsMLIE+kWjuZOeFFSfzFi9tuTrNvuLA=;
+        b=mXihHLRx+k1GUWlpHXN+BctZxk/fxPMq7eOdtSSe4QsgFqcrNtDlnPFq896ihJahxa
+         1jLb1Y63s9RYJeqOBdDzwxGddSdL0oaWFHJUlVSnL7YIM0QZIV/n+fNkHzeTmSn0TlYV
+         HeSM8DwNCuTinmzF+YEFnySuMtPlbOt/xzWdnX9F9LZGClzdTcbWNcrKkohGxkoT3HX7
+         tUWtiMDIGf6DuIz2VBNAD983pD+N5h25gCDliJwXooJz2EKwqLq6G9TO1IEiiK52VLwG
+         FF2g7grvKvIlFNIMWa+wQ9vUocC3jfXT9KC0AnYryum6QuJfVMbQpTPujGNtADbld5k+
+         p+RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=G5zHoFl4vQEdOQtxHPJtiOs+Z6vqtbTnbc4CAVi7q6A=;
-        b=FEe35UCn2j8RbsDEB0cGmdCPf5fydgg9TB9QrIQF6w9QAZm5Y2osvi5hk+FgAS/X6U
-         c4ZzMDYhRPzHCj4zOiDk7TRaoQT0fac2G32xDgQzx/tf7fllEIcHkfRtaRYA0WQ5WSf2
-         2UQQHB2MWhlHArkhCxtmNyRppkQ5pe9HaS2m2BjW/E2yPGH+UvBcCnUzL469YZCnS5mq
-         ye1SWUuLNOEokEmnJ25MOgmBeKUHaeNSLzmSKfsOop7xBJkQ8MpV6evOPtmkax6O5x10
-         Wl5mp4rrpoQDX/o2lHDlkQFmPCtJmUz6ZDL5iSpYxIvvsm+zqIdlue5wFg30PJU6nW0H
-         U5Tg==
-X-Gm-Message-State: AOAM530SYQe7e2sCWWCkKLWBXw/+6lYnG31gX9tW9JbHOo0tnCBThIql
-        +wfw4lY2DDbUlWECVLInNBooE48ET+NSdZXF4sqtZjSZGmp3iT+hZu0GpXw1h6X+VcoC3piMT1J
-        8WN6dlsT3M8rlh5h8MFtURZswR6A4x0Yf6xBjGeov+sIWj7AUGwqZPhy1GEU5P0V/Dx6N9nhbiQ
-        ==
-X-Received: by 2002:a17:902:b192:b029:d7:ca4a:4ec1 with SMTP id s18-20020a170902b192b02900d7ca4a4ec1mr20952202plr.76.1607430119824;
-        Tue, 08 Dec 2020 04:21:59 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxcfa5QXZEbzzdXuLVGSTt+BxQXkEOOiP4M5OfpF8u2Q04N+i/9D9OErXQn2wOvsRDzIwwtzg==
-X-Received: by 2002:a17:902:b192:b029:d7:ca4a:4ec1 with SMTP id s18-20020a170902b192b02900d7ca4a4ec1mr20952179plr.76.1607430119533;
-        Tue, 08 Dec 2020 04:21:59 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id a29sm1156926pfr.73.2020.12.08.04.21.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Dec 2020 04:21:59 -0800 (PST)
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v4 6/6] xfs: kill ialloced in xfs_dialloc()
-Date:   Tue,  8 Dec 2020 20:20:03 +0800
-Message-Id: <20201208122003.3158922-7-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20201208122003.3158922-1-hsiangkao@redhat.com>
-References: <20201208122003.3158922-1-hsiangkao@redhat.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ggW586a4wUXgxsMLIE+kWjuZOeFFSfzFi9tuTrNvuLA=;
+        b=imIC3aJnrrVfLtVElrfG+j4cvBgYsAGP2GaDDH6DzYerrcOUiruEPuyrsfyHQKDnVJ
+         03d8b++gMLMZhkTTgc3Z9agCp2y6pIvaMTWdpq84uSh9jZSSPvapDnhngsR0sirUtAjB
+         /1rAOKiMcgmKPGIlnGPU+Al2xOlfJ/ijh/+ldrNlVztmnQXpXJ7tblb6LZPYe084PXBi
+         H4MHnjzyPUCQGHLbU15Ome415zQtJXus+JMqmN3UCDwsyqbP25cH/MVAiX+EBjh0VriQ
+         enAmz/C4Czm3LwbSEXxsmWhoYmQbRo8laACs/tt2U1aNj0qdj7JtAcZq48/XmglaLRnw
+         lVvg==
+X-Gm-Message-State: AOAM532qp3Rjfo1E0CcdQSlAswqMzlEYwngwLV0Y2/562oas1/5+SeJh
+        qtVcMtElzEvSBwAMBH6o0EskDVm3X2UqOg==
+X-Google-Smtp-Source: ABdhPJyxuVcP3EAAfgDF0k0PlxjPW5b2sr3eVAqYL2ivJdprEi8LWozDz8k8uYq2GIccXIuIm4krlA==
+X-Received: by 2002:ab0:26a:: with SMTP id 97mr13411872uas.110.1607430528055;
+        Tue, 08 Dec 2020 04:28:48 -0800 (PST)
+Received: from localhost.localdomain ([50.236.19.102])
+        by smtp.gmail.com with ESMTPSA id w202sm2001106vkd.25.2020.12.08.04.28.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Dec 2020 04:28:47 -0800 (PST)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     darrick.wong@oracle.com, willy@infradead.org, david@fromorbit.com,
+        hch@infradead.org, mhocko@kernel.org, akpm@linux-foundation.org,
+        dhowells@redhat.com, jlayton@redhat.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v11 0/4] xfs: avoid transaction reservation recursion 
+Date:   Tue,  8 Dec 2020 20:28:20 +0800
+Message-Id: <20201208122824.16118-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-It's enough to just use return code, and get rid of an argument.
+PF_FSTRANS which is used to avoid transaction reservation recursion, is
+dropped since commit 9070733b4efa ("xfs: abstract PF_FSTRANS to
+PF_MEMALLOC_NOFS") and commit 7dea19f9ee63 ("mm: introduce
+memalloc_nofs_{save,restore} API"), and replaced by PF_MEMALLOC_NOFS which
+means to avoid filesystem reclaim recursion.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
- fs/xfs/libxfs/xfs_ialloc.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+As these two flags have different meanings, we'd better reintroduce
+PF_FSTRANS back. To avoid wasting the space of PF_* flags in task_struct,
+we can reuse the current->journal_info to do that, per Willy. As the 
+check of transaction reservation recursion is used by XFS only, we can 
+move the check into xfs_vm_writepage(s), per Dave.
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index dcb076d5c390..063a1a543890 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -607,13 +607,13 @@ xfs_inobt_insert_sprec(
- 
- /*
-  * Allocate new inodes in the allocation group specified by agbp.
-- * Return 0 for success, else error code.
-+ * Returns 0 if inodes were allocated in this AG; 1 if there was no space
-+ * in this AG; or the usual negative error code.
-  */
- STATIC int
- xfs_ialloc_ag_alloc(
- 	struct xfs_trans	*tp,
--	struct xfs_buf		*agbp,
--	int			*alloc)
-+	struct xfs_buf		*agbp)
- {
- 	struct xfs_agi		*agi;
- 	struct xfs_alloc_arg	args;
-@@ -795,10 +795,9 @@ xfs_ialloc_ag_alloc(
- 		allocmask = (1 << (newlen / XFS_INODES_PER_HOLEMASK_BIT)) - 1;
- 	}
- 
--	if (args.fsbno == NULLFSBLOCK) {
--		*alloc = 0;
--		return 0;
--	}
-+	if (args.fsbno == NULLFSBLOCK)
-+		return 1;
-+
- 	ASSERT(args.len == args.minlen);
- 
- 	/*
-@@ -903,7 +902,6 @@ xfs_ialloc_ag_alloc(
- 	 */
- 	xfs_trans_mod_sb(tp, XFS_TRANS_SB_ICOUNT, (long)newlen);
- 	xfs_trans_mod_sb(tp, XFS_TRANS_SB_IFREE, (long)newlen);
--	*alloc = 1;
- 	return 0;
- }
- 
-@@ -1747,7 +1745,6 @@ xfs_dialloc_select_ag(
- 	struct xfs_buf		*agbp;
- 	xfs_agnumber_t		agno;
- 	int			error;
--	int			ialloced;
- 	bool			noroom = false;
- 	xfs_agnumber_t		start_agno;
- 	struct xfs_perag	*pag;
-@@ -1820,9 +1817,8 @@ xfs_dialloc_select_ag(
- 		if (!okalloc)
- 			goto nextag_relse_buffer;
- 
--
--		error = xfs_ialloc_ag_alloc(*tpp, agbp, &ialloced);
--		if (error) {
-+		error = xfs_ialloc_ag_alloc(*tpp, agbp);
-+		if (error < 0) {
- 			xfs_trans_brelse(*tpp, agbp);
- 
- 			if (error == -ENOSPC)
-@@ -1830,7 +1826,7 @@ xfs_dialloc_select_ag(
- 			break;
- 		}
- 
--		if (ialloced) {
-+		if (error == 0) {
- 			/*
- 			 * We successfully allocated space for an inode cluster
- 			 * in this AG.  Roll the transaction so that we can
+Patch #1 and #2 are to use the memalloc_nofs_{save,restore} API
+Patch #1 is picked form Willy's patchset "Overhaul memalloc_no*"[1]
+
+Patch #3 is the refactor of xfs_trans context, which is activated when
+xfs_trans is allocated and deactivated when xfs_trans is freed.
+
+Patch #4 is the implementation of reussing current->journal_info to
+avoid transaction reservation recursion.
+
+No obvious error occurred after running xfstests.
+
+[1]. https://lore.kernel.org/linux-mm/20200625113122.7540-1-willy@infradead.org
+
+v11:
+- add the warning at the callsite of xfs_trans_context_active()
+- improve the commit log of patch #2
+
+v10:
+- refactor the code, per Dave.
+
+v9:
+- rebase it on xfs tree.
+- Darrick fixed an error occurred in xfs/141
+- run xfstests, and no obvious error occurred.
+
+v8:
+- check xfs_trans_context_active() in xfs_vm_writepage(s), per Dave.
+
+v7:
+- check fstrans recursion for XFS only, by introducing a new member in
+  struct writeback_control.
+
+v6:
+- add Michal's ack and comment in patch #1. 
+
+v5:
+- pick one of Willy's patch
+- introduce four new helpers, per Dave
+
+v4:
+- retitle from "xfs: introduce task->in_fstrans for transaction reservation
+  recursion protection"
+- reuse current->journal_info, per Willy
+
+Matthew Wilcox (Oracle) (1):
+  mm: Add become_kswapd and restore_kswapd
+
+Yafang Shao (3):
+  xfs: use memalloc_nofs_{save,restore} in xfs transaction
+  xfs: refactor the usage around xfs_trans_context_{set,clear}
+  xfs: use current->journal_info to avoid transaction reservation
+    recursion
+
+ fs/iomap/buffered-io.c    |  7 -------
+ fs/xfs/libxfs/xfs_btree.c | 14 ++++++++------
+ fs/xfs/xfs_aops.c         | 21 +++++++++++++++++++--
+ fs/xfs/xfs_linux.h        |  4 ----
+ fs/xfs/xfs_trans.c        | 24 +++++++++++-------------
+ fs/xfs/xfs_trans.h        | 34 ++++++++++++++++++++++++++++++++++
+ include/linux/sched/mm.h  | 23 +++++++++++++++++++++++
+ mm/vmscan.c               | 16 +---------------
+ 8 files changed, 96 insertions(+), 47 deletions(-)
+
 -- 
 2.18.4
 
