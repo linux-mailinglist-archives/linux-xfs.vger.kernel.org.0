@@ -2,51 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE16B2D809C
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Dec 2020 22:14:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7852D8207
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Dec 2020 23:28:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405096AbgLKVNS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 11 Dec 2020 16:13:18 -0500
-Received: from server.kenspensetc.com ([185.148.128.76]:60744 "EHLO
-        server.kenspensetc.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2395162AbgLKVMY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 11 Dec 2020 16:12:24 -0500
-Received: from localhost ([127.0.0.1]:48514 helo=server.kenspensetc.com)
-        by server.kenspensetc.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <sender@ridecals.com>)
-        id 1knLnA-0002CX-4B; Thu, 10 Dec 2020 08:15:32 -0500
-Received: from [70.32.0.46] ([70.32.0.46]) by ridecals.com (Horde Framework)
- with HTTPS; Thu, 10 Dec 2020 08:15:32 -0500
-Date:   Thu, 10 Dec 2020 08:15:32 -0500
-Message-ID: <20201210081532.Horde.8qYOU3VVNsL5wjy1lylWpdy@ridecals.com>
-From:   Russell Branting <sender@ridecals.com>
-Subject: Vital
-Reply-to: Goodagent01@gmail.com
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+        id S2406883AbgLKW02 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 11 Dec 2020 17:26:28 -0500
+Received: from sandeen.net ([63.231.237.45]:55428 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406918AbgLKW0V (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 11 Dec 2020 17:26:21 -0500
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id B7CC411662
+        for <linux-xfs@vger.kernel.org>; Fri, 11 Dec 2020 16:24:54 -0600 (CST)
+To:     xfs <linux-xfs@vger.kernel.org>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs v5.10.0 released, master branch updated to
+ 25d27711
+Message-ID: <a4de41d3-6751-7227-0d20-e54aca182758@sandeen.net>
+Date:   Fri, 11 Dec 2020 16:25:39 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Disposition: inline
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.kenspensetc.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - ridecals.com
-X-Get-Message-Sender-Via: server.kenspensetc.com: authenticated_id: sender9@ridecals.com
-X-Authenticated-Sender: server.kenspensetc.com: sender9@ridecals.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="JcXmxIVERjbnLIbwXj8IO5zlnQR1WHJl6"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--JcXmxIVERjbnLIbwXj8IO5zlnQR1WHJl6
+Content-Type: multipart/mixed; boundary="cfIncVSYdgIQZ6hzpRo3Mq8rnvllVDYD4";
+ protected-headers="v1"
+From: Eric Sandeen <sandeen@sandeen.net>
+To: xfs <linux-xfs@vger.kernel.org>
+Message-ID: <a4de41d3-6751-7227-0d20-e54aca182758@sandeen.net>
+Subject: [ANNOUNCE] xfsprogs v5.10.0 released, master branch updated to
+ 25d27711
 
-I am instructed to inform you of your appointment as the next of kin  
-to your deceased relative estate. Kindly indicate your acceptance by  
-reconfirming your Full Name, Address & Phone Number for immediate  
-processing of the funds release to your control OR the deceased  
-deposited funds will be declared unclaimed.
+--cfIncVSYdgIQZ6hzpRo3Mq8rnvllVDYD4
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Hi folks,
+
+The master branch of the xfsprogs repository at:
+
+	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
+
+has just been updated and taggeged with v5.10.0
+
+Patches often get missed, so please check if your outstanding
+patches were in this update. If they have not been in this update,
+please resubmit them to linux-xfs@vger.kernel.org so they can be
+picked up in the next update.
+
+Condensed changelog follows:
+
+xfsprogs-5.10.0 (11 Dec 2020)
+        - xfs_repair: remove old code for mountpoint inodes (Anthony Ilio=
+poulos)
+
+xfsprogs-5.10.0-rc1 (04 Dec 2020)
+        - xfsprogs: Add inode btree counter feature (Darrick Wong)
+        - xfsprogs: Add bigtime feature for Y2038 (Darrick Wong)
+        - xfsprogs: Polish translation update (Jakub Bogusz)
+        - mkfs.xfs: Add config file feature (Dave Chinner)
+        - mkfs.xfs: allow users to specify rtinherit=3D0 (Darrick Wong)
+        - xfs_repair: simplify bmap_next_offset (Christoph Hellwig)
+        - man: various manpage updates (Eric Sandeen)
+        - libxfs: remove some old dead code (Dave Chinner)
+        - libxfs: add realtime extent tracking (Darrick Wong)
+
+xfsprogs-5.10.0-rc0 (17 Nov 2020)
+        - libxfs changes merged from kernel 5.10
+
+The new head of the master branch is commit:
+
+25d27711 (HEAD -> for-next, tag: v5.10.0, korg/master, korg/for-next, ref=
+s/patches/for-next/5.10.0-rinal) xfsprogs: Release v5.10.0
+
+New Commits:
+
+Anthony Iliopoulos (1):
+      [92065bfd] xfs_repair: remove obsolete code for handling mountpoint=
+ inodes
+
+Eric Sandeen (1):
+      [25d27711] xfsprogs: Release v5.10.0
 
 
+Code Diffstat:
+
+ VERSION          |  2 +-
+ configure.ac     |  2 +-
+ debian/changelog |  8 +++++++-
+ doc/CHANGES      |  3 +++
+ po/de.po         |  5 -----
+ po/pl.po         |  5 -----
+ repair/dinode.c  | 12 ------------
+ repair/incore.h  |  1 -
+ 8 files changed, 12 insertions(+), 26 deletions(-)
+
+
+--cfIncVSYdgIQZ6hzpRo3Mq8rnvllVDYD4--
+
+--JcXmxIVERjbnLIbwXj8IO5zlnQR1WHJl6
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAl/T8eMFAwAAAAAACgkQIK4WkuE93uCY
+AQ/+MULOUCuxGT20JAeAPG+Xk3IBPvu8CcQcbT6Dt4Vmu/HXRY4SWbQ55yomWL/yWF6Zc07nGHnB
+6lkNALT+rmFJ6Z7KaTS+SKfJJE5WvGs8exA+q5h38gXB7iFDfAUwfBPBDEqFpEVpg+KIHEocndG0
+wMXf55WkWRPd5/swL8dEsrLJi7EqrZ1KCb4X2qZKV12thEASNxOX0+bgd3wAZk/4nzTRaZtNa0oU
+dF6bcvr5JYEEgNExPmmHCemUYX+RAlAMIY6jyT+C1RIcdE2iaoksghd4trDyTNXKmEwJDKXpj2V3
+GfLYSd+NxFyn5B7yCHsco+n5zBZNncp3K7nkOPKFpXls2LGcJ1ilJCR+jTG7PQs3nz810+/tVbx3
+biDTHywG+gUgLmKO+nLc0DJdbSkaA2JYsWngUSN69lAcfMi7xXnZUVmg9K8cwCjNtirhDWIpG5Gn
+F33SbS+naxV3uCPKhEOsCwKqSffbbPWf1xSu9OQCD39+CCg7iUs43vWU9bkMcX1yJcw1zNiY1ySP
+BLrkr8rizHM9DO6bCN64jGZRNljf4wkpwEjhqTieH6fVV8lS5akMGAYVqZZQWSqpRldOc2j2Yxi2
+o6mI2LhtFVzTWvAa/GJRIMcFVej/wYrVPpiTJSZfRrh6mtX5Fg+Oud38hr112MoxKD4RcfHWvXmH
+/E0=
+=1FcA
+-----END PGP SIGNATURE-----
+
+--JcXmxIVERjbnLIbwXj8IO5zlnQR1WHJl6--
