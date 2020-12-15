@@ -2,69 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7122C2DAF96
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Dec 2020 16:00:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 734072DB322
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Dec 2020 18:58:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgLOO5X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Dec 2020 09:57:23 -0500
-Received: from sandeen.net ([63.231.237.45]:38386 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbgLOO5X (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 15 Dec 2020 09:57:23 -0500
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 0B6B14CDD41;
-        Tue, 15 Dec 2020 08:55:47 -0600 (CST)
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Allison Henderson <allison.henderson@oracle.com>,
-        xfs <linux-xfs@vger.kernel.org>
-References: <20201208181027.GB1943235@magnolia>
- <20201208191913.GB1685621@bfoster> <20201209032624.GH1943235@magnolia>
- <20201209041950.GY3913616@dread.disaster.area>
- <20201209155211.GB1860561@bfoster> <20201209170428.GC1860561@bfoster>
- <20201209205132.GA3913616@dread.disaster.area>
- <20201210142358.GB1912831@bfoster>
- <20201210215004.GC3913616@dread.disaster.area>
- <20201211133901.GA2032335@bfoster> <20201211233507.GP1943235@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [RFC[RAP] PATCH] xfs: allow setting and clearing of log incompat
- feature flags
-Message-ID: <eeab4862-e41f-d32c-24a7-4de336ca0c3c@sandeen.net>
-Date:   Tue, 15 Dec 2020 08:56:38 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.5.1
+        id S1730636AbgLOR55 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Dec 2020 12:57:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730668AbgLOR5s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Dec 2020 12:57:48 -0500
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F22C0617A7
+        for <linux-xfs@vger.kernel.org>; Tue, 15 Dec 2020 09:57:08 -0800 (PST)
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1kpEZO-0002Wo-9M; Tue, 15 Dec 2020 17:57:06 +0000
+X-Loop: owner@bugs.debian.org
+Subject: Bug#976683: xfsprogs: Import new upstream version
+Reply-To: Bastian Germann <bastiangermann@fishpost.de>,
+          976683@bugs.debian.org
+X-Loop: owner@bugs.debian.org
+X-Debian-PR-Message: followup 976683
+X-Debian-PR-Package: src:xfsprogs
+X-Debian-PR-Keywords: 
+References: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de> <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de> <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
+X-Debian-PR-Source: xfsprogs
+Received: via spool by 976683-submit@bugs.debian.org id=B976683.16080549249102
+          (code B ref 976683); Tue, 15 Dec 2020 17:57:05 +0000
+Received: (at 976683) by bugs.debian.org; 15 Dec 2020 17:55:24 +0000
+X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
+        (2018-09-13) on buxtehude.debian.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-12.6 required=4.0 tests=BAYES_00,DIGITS_LETTERS,
+        DKIM_SIGNED,DKIM_VALID,MD5_SHA1_SUM,MURPHY_DRUGS_REL8,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,TXREP autolearn=ham
+        autolearn_force=no version=3.4.2-bugs.debian.org_2005_01_02
+X-Spam-Bayes: score:0.0000 Tokens: new, 22; hammy, 150; neutral, 44; spammy,
+        0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3,
+        0.000-+--UD:kernel.org, 0.000-+--UD:gappssmtp.com,
+        0.000-+--UD:20150623.gappssmtp.com, 0.000-+--UD:git.kernel.org
+Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635]:45434)
+        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <bastiangermann@fishpost.de>)
+        id 1kpEXj-0002M8-E1
+        for 976683@bugs.debian.org; Tue, 15 Dec 2020 17:55:24 +0000
+Received: by mail-ej1-x635.google.com with SMTP id qw4so28921807ejb.12
+        for <976683@bugs.debian.org>; Tue, 15 Dec 2020 09:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
+        h=to:references:subject:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=IJfdwBLjNgbsuZFk8AcNGR9vHpYUJIMPhwMH7V49+Vk=;
+        b=IH+jM7dJLPX2IyIl/8QkAt+oARqWrXvDQJQGimpd589vTXMO8TECE/k/t1t9fF49GC
+         IfnVfL+3jneRRCPbg07XAN7cigkf4id32NDQqa7tbvdWlxxBW5KTag2in3rpBTNWnZAN
+         e8Eztv9b8W065XkWWBpDrjFCKESgwI8laExP7VuKLxlsaGUqmmL6nuizeyi4w2MMrM9a
+         bCdqa/hdWNXz8Z5tWsOzxsAeaEBgxngSiq4s6xBf1T0ZV1j+7ym/zaz+rEZXOPmTkWN7
+         JkEZUhdgpTfkduReaOazkhFoyLFkmRD51A13ywnvnUQGFXph9JLWiSCkiWrxAdStpKcI
+         zKog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IJfdwBLjNgbsuZFk8AcNGR9vHpYUJIMPhwMH7V49+Vk=;
+        b=l2khYVU1jnbB3eLwpgWcEuIFIm/X99vDRqsb5W4XoQkiFMXwG5/Cw+1KVv/5LSO41z
+         Ak9tCr6/JBPnqLKZE0v7RNpkwBMJ6BcfNLF4uofRZqtqmc9q36y0/FAOMc4TrgTyyiKQ
+         8YU/+rK7DKWFi28LXJxr9fix5HK4k9iGKGNba4/SNoJxOKk35qcUUKNY3tm3JwwEE6vP
+         6JD/j3XcdgQnnJQIqtjr6PFvtIQ+1goWqMqZdAAkh6QTAfUa4rxKt603s9cCP3IoqhGg
+         0GuST35JUov4MPnVrVhsR9ameVULUIxmbNCOtUKVVOHrlotg+Y1j7IOFB+/hn3yGV+dt
+         kJ/g==
+X-Gm-Message-State: AOAM532eyaY5mO0xvu2PKYBQgVeMGB2jvWBTzMMyUEz+2P3Vn5y37kJO
+        /1aaI8NuqewmjPp2n08ofxLY4pctpo5+uQ==
+X-Google-Smtp-Source: ABdhPJzp5IkSDDHsEnF12xsGDwpWB39kWAowl1vtSC7hoRUuwJHaBghBrNy/1rYZXHt+gv0Vkbqc8Q==
+X-Received: by 2002:a17:906:7f11:: with SMTP id d17mr27906890ejr.534.1608054918848;
+        Tue, 15 Dec 2020 09:55:18 -0800 (PST)
+Received: from ?IPv6:2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27? (p200300d06f3554009d4aa26f7cc66e27.dip0.t-ipconnect.de. [2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27])
+        by smtp.gmail.com with ESMTPSA id d13sm5118727edx.27.2020.12.15.09.55.17
+        for <976683@bugs.debian.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Dec 2020 09:55:18 -0800 (PST)
+To:     976683@bugs.debian.org
+From:   Bastian Germann <bastiangermann@fishpost.de>
+Message-ID: <0580a107-275d-3e5f-6818-65d6da583385@fishpost.de>
+Date:   Tue, 15 Dec 2020 18:55:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <20201211233507.GP1943235@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE-frami
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 12/11/20 5:35 PM, Darrick J. Wong wrote:
->>> Finally, no, we can't have a truly empty log while the filesystem is
->>> mounted because log transaction records must not be empty. Further,
->>> we can only bring the log down to an "empty but not quite clean"
->>> state while mounted, because if the log is actually marked clean and
->>> we crash then log recovery will not run and so we will not clean up
->>> files that were open-but-unlinked when the system crashed.
+On Sun, 6 Dec 2020 23:13:38 +0100 Bastian Germann 
+<bastiangermann@fishpost.de> wrote:
+> Source: xfsprogs
+> Version: xfsprogs/5.6.0-1
+> Severity: important
+> 
+> Hi,
+> 
+> Please update the package to a new upstream version, preferrably the 
+> latest 5.9.0. As 5.7.0 removed libreadline support, this will imply 
+> building with libedit as filed in #695875.
+> 
+> Thanks,
+> Bastian
 
-> Whatever happened to Eric's patchset to make us process unlinked inodes
-> at mount time so that freeze images wouldn't require recovery?
-
-It suffered a fate typical of my patches.  You observed an issue in a test,
-Dave did some brief triage, and I haven't gotten back to it.
-
-I'd still like to do that if we can, the requirement to run recovery and/or
-use xfs-specific mount options to get a snapshot mounted is still a weird wart.
-Pretty sure I've seen at least one user who thought we completely failed
-to generate consistent snapshots because "the log was dirty" and
-"I had to run repair."
-
-So it'd still be nice to get rid of that behavior IMHO.
-
--Eric
+Now, 5.10.0 is available. The only change that is needed in addition to 
+the patch given in #695875 to build it is adding libinih-dev to the 
+Build-Dependencies: 
+https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git/commit/?id=fe4a31eae2b514de94e84a8f84a263471b6c71a3
