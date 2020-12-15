@@ -2,152 +2,123 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 223E02DA25D
-	for <lists+linux-xfs@lfdr.de>; Mon, 14 Dec 2020 22:10:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 866C22DA4E4
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Dec 2020 01:30:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503694AbgLNVJj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 14 Dec 2020 16:09:39 -0500
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:39672 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2503647AbgLNVJU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Dec 2020 16:09:20 -0500
-Received: from dread.disaster.area (pa49-179-6-140.pa.nsw.optusnet.com.au [49.179.6.140])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id B9B5749952;
-        Tue, 15 Dec 2020 08:08:33 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kov57-003zjp-3R; Tue, 15 Dec 2020 08:08:33 +1100
-Date:   Tue, 15 Dec 2020 08:08:33 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
+        id S1727102AbgLOAYo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 14 Dec 2020 19:24:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgLOAYo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Dec 2020 19:24:44 -0500
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 961A6C061793;
+        Mon, 14 Dec 2020 16:24:03 -0800 (PST)
+Received: by mail-wm1-x341.google.com with SMTP id q75so16855449wme.2;
+        Mon, 14 Dec 2020 16:24:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8jc3AIzkIPReSThseVXRAPm4odmJMoGYu8KGcGUo5xA=;
+        b=UdWHcglApp9RdDZeyVfl7LsJgdxW48tzLbgNRju6ud80NwZdq8pS6rNA48XayxnD2y
+         gxp99ju2U22s0IgeHpYxNkwEmEsSWmjKvkDVgboRjCL0u2BjvWzJuRm3fQuna6NzrVJX
+         tY83rFJle/+8UqxI4cOpq7ZEPwQanA4rNBX48zfg4PVtL5ODTFYQfgYr+oKNqJ85Y/gd
+         599roSuL8vkZuUsB+DMvesJq5/Qay+HaVljVBmkn57M9MaFlDCjvpgkaWPWHAqXbqbH5
+         awkn32y9RHX7Bg8npAuH4ig4MoKopNAyVbodgQEudUlOhmPl/5BfCRzLw7S/Tb6KT7TR
+         Av8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8jc3AIzkIPReSThseVXRAPm4odmJMoGYu8KGcGUo5xA=;
+        b=JjH7Xp3ZjrUPqt0bm0f52mOdf+VEv41WWJNFd5zZmerIWueDZ4ud/4wCS4AHQn//KP
+         yz7xTY1dr+tIjnd+qTmFJ3C8nmB3UamvlZyBkQqVebySh2wZ7ewMbhPSKjjTN2EbMXMm
+         pkC+c6B1isPYgjQ+jgRfaH7J1mErUMrdZm4DAm6L3PzHI5i73sKrY0tNM94kJ21aQudX
+         2X8qjebGo3JUPuKZCgEGC7yLidNoK82iGc5aof7gyDw7T7mtssCSujCHcaBFbXw5zbef
+         DS0ix2m5rk6/U7dFwwfw66FJlxh4HHAiJlOkZrAUc6Rnyv0gvC0RpdiRGewsAWPI9Ett
+         +nVQ==
+X-Gm-Message-State: AOAM531NvqE4EFF++ZUDnUIa/hgiy0BnypCXAdurAe2lnojwulERxGBs
+        wUMdrDWQkqSSQVRaFCw/5r8V+SagMKvQzKLc
+X-Google-Smtp-Source: ABdhPJwGNnrKGp65JFv4dDtyk0FguiKKzh1xTxkYj/G+sMLant4a7Rnm4MCbD8CKdIpwjoDGsmxiog==
+X-Received: by 2002:a05:600c:258:: with SMTP id 24mr30918877wmj.16.1607991842015;
+        Mon, 14 Dec 2020 16:24:02 -0800 (PST)
+Received: from localhost.localdomain ([85.255.232.163])
+        by smtp.gmail.com with ESMTPSA id b19sm5362012wmj.37.2020.12.14.16.24.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Dec 2020 16:24:01 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     linux-block@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>,
         Christoph Hellwig <hch@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>, jlayton@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-xfs@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v12 3/4] xfs: refactor the usage around
- xfs_trans_context_{set,clear}
-Message-ID: <20201214210833.GE632069@dread.disaster.area>
-References: <20201209131146.67289-1-laoar.shao@gmail.com>
- <20201209131146.67289-4-laoar.shao@gmail.com>
- <20201209195235.GN1943235@magnolia>
- <CALOAHbD_DK9w=s9RDsVBNaYwgeRi4UUEGDHFb3zEsqh_V8gLMA@mail.gmail.com>
+        Matthew Wilcox <willy@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH v1 0/6] no-copy bvec
+Date:   Tue, 15 Dec 2020 00:20:19 +0000
+Message-Id: <cover.1607976425.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbD_DK9w=s9RDsVBNaYwgeRi4UUEGDHFb3zEsqh_V8gLMA@mail.gmail.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
-        a=uDU3YIYVKEaHT0eX+MXYOQ==:117 a=uDU3YIYVKEaHT0eX+MXYOQ==:17
-        a=kj9zAlcOel0A:10 a=zTNgK-yGK50A:10 a=yPCof4ZbAAAA:8 a=VwQbUJbxAAAA:8
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=pGLkceISAAAA:8 a=rA-29Kngl8b7e2x1wjEA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=1CNFftbPRP8L7MoqJWF3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Dec 13, 2020 at 05:09:02PM +0800, Yafang Shao wrote:
-> On Thu, Dec 10, 2020 at 3:52 AM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> >
-> > On Wed, Dec 09, 2020 at 09:11:45PM +0800, Yafang Shao wrote:
-> > > The xfs_trans context should be active after it is allocated, and
-> > > deactive when it is freed.
-> > >
-> > > So these two helpers are refactored as,
-> > > - xfs_trans_context_set()
-> > >   Used in xfs_trans_alloc()
-> > > - xfs_trans_context_clear()
-> > >   Used in xfs_trans_free()
-> > >
-> > > This patch is based on Darrick's work to fix the issue in xfs/141 in the
-> > > earlier version. [1]
-> > >
-> > > 1. https://lore.kernel.org/linux-xfs/20201104001649.GN7123@magnolia
-> > >
-> > > Cc: Darrick J. Wong <darrick.wong@oracle.com>
-> > > Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > > Cc: Christoph Hellwig <hch@lst.de>
-> > > Cc: Dave Chinner <david@fromorbit.com>
-> > > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > > ---
-> > >  fs/xfs/xfs_trans.c | 28 +++++++++++++++-------------
-> > >  1 file changed, 15 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-> > > index 11d390f0d3f2..4f4645329bb2 100644
-> > > --- a/fs/xfs/xfs_trans.c
-> > > +++ b/fs/xfs/xfs_trans.c
-> > > @@ -67,6 +67,17 @@ xfs_trans_free(
-> > >       xfs_extent_busy_sort(&tp->t_busy);
-> > >       xfs_extent_busy_clear(tp->t_mountp, &tp->t_busy, false);
-> > >
-> > > +
-> > > +     /* Detach the transaction from this thread. */
-> > > +     ASSERT(current->journal_info != NULL);
-> > > +     /*
-> > > +      * The PF_MEMALLOC_NOFS is bound to the transaction itself instead
-> > > +      * of the reservation, so we need to check if tp is still the
-> > > +      * current transaction before clearing the flag.
-> > > +      */
-> > > +     if (current->journal_info == tp)
-> >
-> > Um, you don't start setting journal_info until the next patch, so this
-> > means that someone who lands on this commit with git bisect will have a
-> > xfs with broken logic.
-> >
-> > Because this is the patch that changes where we set and restore NOFS
-> > context, I think you have to introduce xfs_trans_context_swap here,
-> > and not in the next patch.
-> >
-> 
-> Thanks for the review. I will change it in the next version.
-> 
-> > I also think the _swap routine has to move the old NOFS state to the
-> > new transaction's t_pflags,
-> 
-> Sure
-> 
-> > and then set NOFS in the old transaction's
-> > t_pflags so that when we clear the context on the old transaction we
-> > don't actually change the thread's NOFS state.
-> >
-> 
-> Both thread's NOFS state and thead's journal_info state can't be
-> changed in that case, right ?
-> So should it better be,
-> 
->     __xfs_trans_commit(tp, regrant)
->         xfs_trans_free(tp, regrant)
->             if (!regrant). // don't clear the xfs_trans_context if
-> regrant is true.
->                 xfs_trans_context_clear()
+Instead of creating a full copy of iter->bvec into bio in direct I/O,
+the patchset makes use of the one provided. It changes semantics and
+obliges users of asynchronous kiocb to track bvec lifetime, and [1/6]
+converts the only place that doesn't.
 
-No. You are trying to make this way more complex than it needs to be.
-The logic in the core XFS code is *already correct* and all we need
-to do is move that logic to wrapper functions, then slightly modify
-the implementation inside the wrapper functions.
+bio_iov_iter_get_pages() is still does iov_iter_advance(), which is
+not great, but neccessary for revert to work. It's desirable to have
+a fast version of iov_iter_advance(i, i->count), so we may want to
+hack something up for that. E.g. allow to not keep it consistent
+in some cases when i->count==0. Also we can add a separate bio pool
+without inlined bvec. Very easy to do and shrinks bios from 3 to 2
+cachelines.
 
-That is, xfs_trans_context_clear() should end up like this:
+Also as suggested it removes BIO_WORKINGSET from direct paths: blkdev,
+iomap, fs/direct-io. Even though the last one is not very important as
+more filesystems are converted to iomap, but still looks hacky. Maybe,
+as Johannes mentioned in another thread, moving it to the writeback
+code (or other option) would be better in the end. Afterwards?
 
-static inline void
-xfs_trans_context_clear(struct xfs_trans *tp)
-{
-	/*
-	 * If xfs_trans_context_swap() handed the NOFS context to a
-	 * new transaction we do not clear the context here.
-	 */
-	if (current->journal_info != tp)
-		return;
-	current->journal_info = NULL;
-	memalloc_nofs_restore(tp->t_pflags);
-}
+since RFC:
+- add target_core_file patch by Christoph
+- make no-copy default behaviour, remove iter flag
+- iter_advance() instead of hacks to revert to work
+- add bvec iter_advance() optimisation patch
+- remove PSI annotations from direct IO (iomap, block and fs/direct)
+- note in d/f/porting
 
--Dave.
+Christoph Hellwig (1):
+  target/file: allocate the bvec array as part of struct
+    target_core_file_cmd
+
+Pavel Begunkov (5):
+  iov_iter: optimise bvec iov_iter_advance()
+  bio: deduplicate adding a page into bio
+  block/psi: remove PSI annotations from direct IO
+  bio: add a helper calculating nr segments to alloc
+  block/iomap: don't copy bvec for direct IO
+
+ Documentation/filesystems/porting.rst |   9 +++
+ block/bio.c                           | 103 ++++++++++++--------------
+ drivers/target/target_core_file.c     |  20 ++---
+ fs/block_dev.c                        |   7 +-
+ fs/direct-io.c                        |   2 +
+ fs/iomap/direct-io.c                  |   9 +--
+ include/linux/bio.h                   |   9 +++
+ lib/iov_iter.c                        |  19 +++++
+ 8 files changed, 102 insertions(+), 76 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.24.0
+
