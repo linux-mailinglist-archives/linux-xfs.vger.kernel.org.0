@@ -2,117 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 734072DB322
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Dec 2020 18:58:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 676F32DB443
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Dec 2020 20:08:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730636AbgLOR55 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Dec 2020 12:57:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730668AbgLOR5s (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Dec 2020 12:57:48 -0500
-Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F22C0617A7
-        for <linux-xfs@vger.kernel.org>; Tue, 15 Dec 2020 09:57:08 -0800 (PST)
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1kpEZO-0002Wo-9M; Tue, 15 Dec 2020 17:57:06 +0000
-X-Loop: owner@bugs.debian.org
-Subject: Bug#976683: xfsprogs: Import new upstream version
-Reply-To: Bastian Germann <bastiangermann@fishpost.de>,
-          976683@bugs.debian.org
-X-Loop: owner@bugs.debian.org
-X-Debian-PR-Message: followup 976683
-X-Debian-PR-Package: src:xfsprogs
-X-Debian-PR-Keywords: 
-References: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de> <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de> <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
-X-Debian-PR-Source: xfsprogs
-Received: via spool by 976683-submit@bugs.debian.org id=B976683.16080549249102
-          (code B ref 976683); Tue, 15 Dec 2020 17:57:05 +0000
-Received: (at 976683) by bugs.debian.org; 15 Dec 2020 17:55:24 +0000
-X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
-        (2018-09-13) on buxtehude.debian.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=4.0 tests=BAYES_00,DIGITS_LETTERS,
-        DKIM_SIGNED,DKIM_VALID,MD5_SHA1_SUM,MURPHY_DRUGS_REL8,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,TXREP autolearn=ham
-        autolearn_force=no version=3.4.2-bugs.debian.org_2005_01_02
-X-Spam-Bayes: score:0.0000 Tokens: new, 22; hammy, 150; neutral, 44; spammy,
-        0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3,
-        0.000-+--UD:kernel.org, 0.000-+--UD:gappssmtp.com,
-        0.000-+--UD:20150623.gappssmtp.com, 0.000-+--UD:git.kernel.org
-Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635]:45434)
-        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <bastiangermann@fishpost.de>)
-        id 1kpEXj-0002M8-E1
-        for 976683@bugs.debian.org; Tue, 15 Dec 2020 17:55:24 +0000
-Received: by mail-ej1-x635.google.com with SMTP id qw4so28921807ejb.12
-        for <976683@bugs.debian.org>; Tue, 15 Dec 2020 09:55:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=to:references:subject:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=IJfdwBLjNgbsuZFk8AcNGR9vHpYUJIMPhwMH7V49+Vk=;
-        b=IH+jM7dJLPX2IyIl/8QkAt+oARqWrXvDQJQGimpd589vTXMO8TECE/k/t1t9fF49GC
-         IfnVfL+3jneRRCPbg07XAN7cigkf4id32NDQqa7tbvdWlxxBW5KTag2in3rpBTNWnZAN
-         e8Eztv9b8W065XkWWBpDrjFCKESgwI8laExP7VuKLxlsaGUqmmL6nuizeyi4w2MMrM9a
-         bCdqa/hdWNXz8Z5tWsOzxsAeaEBgxngSiq4s6xBf1T0ZV1j+7ym/zaz+rEZXOPmTkWN7
-         JkEZUhdgpTfkduReaOazkhFoyLFkmRD51A13ywnvnUQGFXph9JLWiSCkiWrxAdStpKcI
-         zKog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IJfdwBLjNgbsuZFk8AcNGR9vHpYUJIMPhwMH7V49+Vk=;
-        b=l2khYVU1jnbB3eLwpgWcEuIFIm/X99vDRqsb5W4XoQkiFMXwG5/Cw+1KVv/5LSO41z
-         Ak9tCr6/JBPnqLKZE0v7RNpkwBMJ6BcfNLF4uofRZqtqmc9q36y0/FAOMc4TrgTyyiKQ
-         8YU/+rK7DKWFi28LXJxr9fix5HK4k9iGKGNba4/SNoJxOKk35qcUUKNY3tm3JwwEE6vP
-         6JD/j3XcdgQnnJQIqtjr6PFvtIQ+1goWqMqZdAAkh6QTAfUa4rxKt603s9cCP3IoqhGg
-         0GuST35JUov4MPnVrVhsR9ameVULUIxmbNCOtUKVVOHrlotg+Y1j7IOFB+/hn3yGV+dt
-         kJ/g==
-X-Gm-Message-State: AOAM532eyaY5mO0xvu2PKYBQgVeMGB2jvWBTzMMyUEz+2P3Vn5y37kJO
-        /1aaI8NuqewmjPp2n08ofxLY4pctpo5+uQ==
-X-Google-Smtp-Source: ABdhPJzp5IkSDDHsEnF12xsGDwpWB39kWAowl1vtSC7hoRUuwJHaBghBrNy/1rYZXHt+gv0Vkbqc8Q==
-X-Received: by 2002:a17:906:7f11:: with SMTP id d17mr27906890ejr.534.1608054918848;
-        Tue, 15 Dec 2020 09:55:18 -0800 (PST)
-Received: from ?IPv6:2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27? (p200300d06f3554009d4aa26f7cc66e27.dip0.t-ipconnect.de. [2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27])
-        by smtp.gmail.com with ESMTPSA id d13sm5118727edx.27.2020.12.15.09.55.17
-        for <976683@bugs.debian.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Dec 2020 09:55:18 -0800 (PST)
-To:     976683@bugs.debian.org
-From:   Bastian Germann <bastiangermann@fishpost.de>
-Message-ID: <0580a107-275d-3e5f-6818-65d6da583385@fishpost.de>
-Date:   Tue, 15 Dec 2020 18:55:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+        id S1731846AbgLOTGb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Dec 2020 14:06:31 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:56668 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731778AbgLOTGU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Dec 2020 14:06:20 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BFJ05Nn166879;
+        Tue, 15 Dec 2020 19:05:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=rPaA1lXHtSIrJnQXSfEHzf/QB0dDoI9KLHNNF9d2vyk=;
+ b=XxG8yezhuwhvdL/NoipNesCnm3sm5cjA8YlgvbvW1HHxEITZTP0ZyhE82MIDP+GN9/5j
+ /UZJZ7hWT3uni1b4nkheEECeEBHEr1L2SnshTtQVU/iqLCgyI7D+ORP5ghWepy3TfEgC
+ 0m6V/K1enEiivJ1Jiiiq2UvfS1meyUKLdtShxrbkD0aSPeyF2GLlG0llWmfavR8YciAQ
+ ar+LEZmRhmWrMOrGwGdcmluYiQ74ngB7eLg1+QbsEWoR4Hl88lMeQ9Zgq5zyTg3P69Ti
+ /1zZpwj5XBbTcCQjYQY80V+mav+tk0T+ALeAhgWPt2AA+kYasicfoyT8hMUB07BJOemq 7g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 35ckcbcgye-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Dec 2020 19:05:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BFJ1C3e048331;
+        Tue, 15 Dec 2020 19:05:14 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 35d7enf2hf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Dec 2020 19:05:14 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BFJ5AuJ024299;
+        Tue, 15 Dec 2020 19:05:10 GMT
+Received: from [10.159.136.92] (/10.159.136.92)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 15 Dec 2020 11:05:09 -0800
+Subject: Re: [RFC PATCH v2 0/6] fsdax: introduce fs query to support reflink
+To:     Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
+        darrick.wong@oracle.com, dan.j.williams@intel.com,
+        david@fromorbit.com, hch@lst.de, song@kernel.org, rgoldwyn@suse.de,
+        qi.fuli@fujitsu.com, y-goto@fujitsu.com
+References: <20201123004116.2453-1-ruansy.fnst@cn.fujitsu.com>
+ <89ab4ec4-e4f0-7c17-6982-4f55bb40f574@oracle.com>
+ <bb699996-ddc8-8f3a-dc8f-2422bf990b06@cn.fujitsu.com>
+From:   Jane Chu <jane.chu@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <3b35604c-57e2-8cb5-da69-53508c998540@oracle.com>
+Date:   Tue, 15 Dec 2020 11:05:07 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
+In-Reply-To: <bb699996-ddc8-8f3a-dc8f-2422bf990b06@cn.fujitsu.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE-frami
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9836 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012150126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9836 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012150126
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, 6 Dec 2020 23:13:38 +0100 Bastian Germann 
-<bastiangermann@fishpost.de> wrote:
-> Source: xfsprogs
-> Version: xfsprogs/5.6.0-1
-> Severity: important
+On 12/15/2020 3:58 AM, Ruan Shiyang wrote:
+> Hi Jane
 > 
-> Hi,
+> On 2020/12/15 上午4:58, Jane Chu wrote:
+>> Hi, Shiyang,
+>>
+>> On 11/22/2020 4:41 PM, Shiyang Ruan wrote:
+>>> This patchset is a try to resolve the problem of tracking shared page
+>>> for fsdax.
+>>>
+>>> Change from v1:
+>>>    - Intorduce ->block_lost() for block device
+>>>    - Support mapped device
+>>>    - Add 'not available' warning for realtime device in XFS
+>>>    - Rebased to v5.10-rc1
+>>>
+>>> This patchset moves owner tracking from dax_assocaite_entry() to pmem
+>>> device, by introducing an interface ->memory_failure() of struct
+>>> pagemap.  The interface is called by memory_failure() in mm, and
+>>> implemented by pmem device.  Then pmem device calls its ->block_lost()
+>>> to find the filesystem which the damaged page located in, and call
+>>> ->storage_lost() to track files or metadata assocaited with this page.
+>>> Finally we are able to try to fix the damaged data in filesystem and do
+>>
+>> Does that mean clearing poison? if so, would you mind to elaborate 
+>> specifically which change does that?
 > 
-> Please update the package to a new upstream version, preferrably the 
-> latest 5.9.0. As 5.7.0 removed libreadline support, this will imply 
-> building with libedit as filed in #695875.
-> 
-> Thanks,
-> Bastian
+> Recovering data for filesystem (or pmem device) has not been done in 
+> this patchset...  I just triggered the handler for the files sharing the 
+> corrupted page here.
 
-Now, 5.10.0 is available. The only change that is needed in addition to 
-the patch given in #695875 to build it is adding libinih-dev to the 
-Build-Dependencies: 
-https://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git/commit/?id=fe4a31eae2b514de94e84a8f84a263471b6c71a3
+Thanks! That confirms my understanding.
+
+With the framework provided by the patchset, how do you envision it to
+ease/simplify poison recovery from the user's perspective?
+
+And how does it help in dealing with page faults upon poisoned
+dax page?
+
+thanks!
+-jane
+
