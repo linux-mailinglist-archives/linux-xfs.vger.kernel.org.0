@@ -2,48 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 341902DDF1B
+	by mail.lfdr.de (Postfix) with ESMTP id AB7092DDF1C
 	for <lists+linux-xfs@lfdr.de>; Fri, 18 Dec 2020 08:30:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732967AbgLRHaH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1732863AbgLRHaH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Fri, 18 Dec 2020 02:30:07 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58102 "EHLO
+Received: from aserp2120.oracle.com ([141.146.126.78]:58104 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732863AbgLRHaH (ORCPT
+        with ESMTP id S1732889AbgLRHaH (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Dec 2020 02:30:07 -0500
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7JoQd122063
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7K4sr122338
         for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=/c0Ud/JzP2lVFcpU+JheKYZ42XCd/RfGcjJ1kXXUc98=;
- b=bzAok3nOo4oFJyUA42bJsmUt71lKIoqeRi4TQdZluu7AZrfAdRn8VdTQxKcTN/UzLN3b
- /TGzZKMoS4BFcQi/Hp4U9xF+BCHXYmTMDz2+CmdBKtRknF9zNz8oVRVV1cbpI6Kydsfw
- 6yMqbW5dRy/rUZJaDVGnLBiqfy4Y63BWdmLCkEvNW0JctCfSicKqIpTVsjMeK9o155+W
- 3v3o29X6Vs2HZLShy5S8izqwF6T619C8X+Vxkyd/Oax1M3C8U9fcbbueHxvuAS7FS5j2
- yD0nwvjgKJWoxpo2Rgwigt24c8s+oAMVNLpdBUmmXHTMZEwRSqVHj5vadTlydFolNhWF kQ== 
+ bh=dG6AOM+chetuBZIFc8pMd/fBoO3g52XeNvqJn2yQCDw=;
+ b=SL8+1tkat1u326vlps5f2O0Pv+kpr7zWhooFHGuKftmJZ5+od/Ka59LT9nkXEDCp2gJZ
+ u4Jg9xIeZIAtMHO0vQKdT7jDcRj83J9kmoI4Bp5kmCZijvonqU++OWU1wiA7WcqBPTZP
+ DKiOeZMa0Ts59CnoZc8UQDdhhEGUz/20dmyfc+aY/3zM5kbdfGtuYaOEepMu3hjy2L6L
+ d9jDHweEGRl0VWiwlEMorC+WQq1aEBfrgL9jKOYJVj+YgBujW/3Dr2eIJ4DC2ZBk1yM/
+ pDbeLukYROo6GQFDU5vDYUt2BkvcFDcfy6eszWBKpklZrZ16K0CN24iUAQ2Ylmz2Zy2j bw== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 35cntmgyaj-1
+        by aserp2120.oracle.com with ESMTP id 35cntmgyak-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
         for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:26 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7LLdP044583
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7LLkB044447
         for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:25 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 35d7eryv17-1
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 35d7eryv1c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:25 +0000
 Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BI7TOLd020734
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BI7TO1w022280
         for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:24 GMT
 Received: from localhost.localdomain (/67.1.214.41)
         by default (Oracle Beehive Gateway v4.0)
         with ESMTP ; Thu, 17 Dec 2020 23:29:24 -0800
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v14 07/15] xfs: Rename __xfs_attr_rmtval_remove
-Date:   Fri, 18 Dec 2020 00:29:09 -0700
-Message-Id: <20201218072917.16805-8-allison.henderson@oracle.com>
+Subject: [PATCH v14 08/15] xfs: Handle krealloc errors in xlog_recover_add_to_cont_trans
+Date:   Fri, 18 Dec 2020 00:29:10 -0700
+Message-Id: <20201218072917.16805-9-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201218072917.16805-1-allison.henderson@oracle.com>
 References: <20201218072917.16805-1-allison.henderson@oracle.com>
@@ -62,74 +62,30 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that xfs_attr_rmtval_remove is gone, rename __xfs_attr_rmtval_remove
-to xfs_attr_rmtval_remove
+Because xattrs can be over a page in size, we need to handle possible
+krealloc errors to avoid warnings
 
 Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/libxfs/xfs_attr.c        | 6 +++---
- fs/xfs/libxfs/xfs_attr_remote.c | 2 +-
- fs/xfs/libxfs/xfs_attr_remote.h | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_log_recover.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 8ed00bc..47261a3 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -895,7 +895,7 @@ xfs_attr_leaf_addname(
- 	dac->dela_state = XFS_DAS_RM_LBLK;
- das_rm_lblk:
- 	if (args->rmtblkno) {
--		error = __xfs_attr_rmtval_remove(dac);
-+		error = xfs_attr_rmtval_remove(dac);
- 		if (error == -EAGAIN)
- 			trace_xfs_das_state_return(dac->dela_state);
- 		if (error)
-@@ -1263,7 +1263,7 @@ xfs_attr_node_addname(
- 	dac->dela_state = XFS_DAS_RM_NBLK;
- das_rm_nblk:
- 	if (args->rmtblkno) {
--		error = __xfs_attr_rmtval_remove(dac);
-+		error = xfs_attr_rmtval_remove(dac);
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 97f3130..295a5c6 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -2061,7 +2061,10 @@ xlog_recover_add_to_cont_trans(
+ 	old_ptr = item->ri_buf[item->ri_cnt-1].i_addr;
+ 	old_len = item->ri_buf[item->ri_cnt-1].i_len;
  
- 		if (error == -EAGAIN)
- 			trace_xfs_das_state_return(dac->dela_state);
-@@ -1410,7 +1410,7 @@ xfs_attr_node_remove_rmt (
- 	/*
- 	 * May return -EAGAIN to request that the caller recall this function
- 	 */
--	error = __xfs_attr_rmtval_remove(dac);
-+	error = xfs_attr_rmtval_remove(dac);
- 	if (error == -EAGAIN)
- 		trace_xfs_das_state_return(dac->dela_state);
- 	if (error)
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index 4840de9..25639c0 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -737,7 +737,7 @@ xfs_attr_rmtval_invalidate(
-  * transaction and re-call the function
-  */
- int
--__xfs_attr_rmtval_remove(
-+xfs_attr_rmtval_remove(
- 	struct xfs_delattr_context	*dac)
- {
- 	struct xfs_da_args		*args = dac->da_args;
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.h b/fs/xfs/libxfs/xfs_attr_remote.h
-index 8ad68d5..6ae91af 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.h
-+++ b/fs/xfs/libxfs/xfs_attr_remote.h
-@@ -13,7 +13,7 @@ int xfs_attr_rmtval_set(struct xfs_da_args *args);
- int xfs_attr_rmtval_stale(struct xfs_inode *ip, struct xfs_bmbt_irec *map,
- 		xfs_buf_flags_t incore_flags);
- int xfs_attr_rmtval_invalidate(struct xfs_da_args *args);
--int __xfs_attr_rmtval_remove(struct xfs_delattr_context *dac);
-+int xfs_attr_rmtval_remove(struct xfs_delattr_context *dac);
- int xfs_attr_rmt_find_hole(struct xfs_da_args *args);
- int xfs_attr_rmtval_set_value(struct xfs_da_args *args);
- int xfs_attr_rmtval_set_blk(struct xfs_delattr_context *dac);
+-	ptr = krealloc(old_ptr, len + old_len, GFP_KERNEL | __GFP_NOFAIL);
++	ptr = krealloc(old_ptr, len + old_len, GFP_KERNEL);
++	if (ptr == NULL)
++		return -ENOMEM;
++
+ 	memcpy(&ptr[old_len], dp, len);
+ 	item->ri_buf[item->ri_cnt-1].i_len += len;
+ 	item->ri_buf[item->ri_cnt-1].i_addr = ptr;
 -- 
 2.7.4
 
