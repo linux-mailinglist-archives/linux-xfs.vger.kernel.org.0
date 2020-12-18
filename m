@@ -2,426 +2,305 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ED022DDF13
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Dec 2020 08:29:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A95C2DDF19
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Dec 2020 08:30:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732915AbgLRH2z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 18 Dec 2020 02:28:55 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:57026 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732686AbgLRH2y (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Dec 2020 02:28:54 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7K0uk122157
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:28:11 GMT
+        id S1732891AbgLRHaG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 18 Dec 2020 02:30:06 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:36404 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732853AbgLRHaG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Dec 2020 02:30:06 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7KJRW001557
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=YDXZ4rNB/xEsw5s+AgL6HrhFem2mrzrxBrGGkvzlJvU=;
- b=n7senyT/qpmIjJr5d1eNuoS73h6As5hKGbbf0Is2VnqFMbpFEeGSfFba30RQxoctvuNP
- Aevy0yxKc0JfJ3wMeFG2mhryfbAmJRZCcv9nh6yYuI6KjfaR636rEBxiPOJTrchzbzJa
- BAR3IZd6m1cESxeQOF3HRfj4Za9ERboWmBlXK7PmIVkglA6h90mVnqeP8gbJbj9ccWrL
- s1i9tHeGj+ryWHxHmc57jg3OsL/uip03m8KlC1hcFc63qWpC2/J+DSHCXf70RYn13uVR
- ke5HP6Ob4EB7aOIVbqRrDwGivxz2K0gnbDIEkziytMdNqCdov6OdzT6vJXUUHHko4k7N rA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 35cntmgy7g-1
+ date : message-id; s=corp-2020-01-29;
+ bh=sy84ZxFf/fb2B5pjpdm4kXgjreApHKCmh/JY5miWPIU=;
+ b=zPgmbg3lEUlCKowcb1nn+w/cX4V/h7OeeyId6t9vxKVD7/rnLsb+HvabO0i2Ox/IU+C/
+ yqG+n+1rkUOnWKOcANuawnynMpUxDYwaZAv74gdm2Y5V12E2tzyf2WVTg4KTTRO4a/yF
+ Zb6ALgXkZptycozDBNX/vwM+W2NcdVT7I7vc8mSxPnr4N7UDu0XBgMy3ZRlGZpApwi0o
+ VN3A6snsEtUTYeQZIX8BOZZSO+VdHol0evDe2RfmLo/9jkppHyuBbwt0/BbwQIqjPqcN
+ HWhLRotXm5dXHIo7wUG1di4turkQQa2mxIFbQYsdAwixjql6r5XGhcQwC26eIuH5EgGI 7g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 35ckcbs6q0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:28:11 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7LKXv120974
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:11 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 35e6eud6xy-1
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7KIss038267
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 35d7t1hc2f-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:11 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BI7QATt002848
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:10 GMT
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:23 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BI7TMxf003405
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:29:22 GMT
 Received: from localhost.localdomain (/67.1.214.41)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 17 Dec 2020 23:26:10 -0800
+        with ESMTP ; Thu, 17 Dec 2020 23:29:22 -0800
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v14 14/14] xfsprogs: Add log item printing for ATTRI and ATTRD
-Date:   Fri, 18 Dec 2020 00:25:55 -0700
-Message-Id: <20201218072555.16694-15-allison.henderson@oracle.com>
+Subject: [PATCH v14 00/15] xfs: Delayed Attributes
+Date:   Fri, 18 Dec 2020 00:29:02 -0700
+Message-Id: <20201218072917.16805-1-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201218072555.16694-1-allison.henderson@oracle.com>
-References: <20201218072555.16694-1-allison.henderson@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9838 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 phishscore=0
- bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012180052
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 suspectscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012180052
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9838 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 impostorscore=0 priorityscore=1501 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012180052
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 mlxscore=0 suspectscore=0 adultscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012180052
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch implements a new set of log printing functions to print the
-ATTRI and ATTRD items and vectors in the log.  These will be used during
-log dump and log recover operations.
+Hi all,
 
-RFC: Though most attributes are strings, the attribute operations accept
-any binary payload, so we cannot assume them printable.  This was done
-intentionally in preparation for parent pointers.  And until parent
-pointers get here, attributes have no discernible format.  So the print
-routines are just a simple hex dump for now.  It's not pretty, but works
-for now.
+This set is a subset of a larger series for parent pointers. Delayed attributes
+allow attribute operations (set and remove) to be logged and committed in the same
+way that other delayed operations do. This allows more complex operations (like
+parent pointers) to be broken up into multiple smaller transactions. To do
+this, the existing attr operations must be modified to operate as a delayed
+operation.  This means that they cannot roll, commit, or finish transactions.  
+Instead, they return -EAGAIN to allow the calling function to handle the transaction.
+In this series, we focus on only the delayed attribute portion. We will introduce
+parent pointers in a later set.
 
-Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
----
- logprint/log_misc.c      |  48 +++++++++++-
- logprint/log_print_all.c |  12 +++
- logprint/log_redo.c      | 198 +++++++++++++++++++++++++++++++++++++++++++++++
- logprint/logprint.h      |  12 +++
- 4 files changed, 269 insertions(+), 1 deletion(-)
+At the moment, I would like people to focus their review efforts on just this
+"delayed attribute" sub series, as I think that is a more conservative use of peoples
+review time.  I also think the set is a bit much to manage all at once, and we
+need to get the infrastructure ironed out before we focus too much anything
+that depends on it. But I do have the extended series for folks that want to
+see the bigger picture of where this is going.
 
-diff --git a/logprint/log_misc.c b/logprint/log_misc.c
-index afcd2ce..88087f0 100644
---- a/logprint/log_misc.c
-+++ b/logprint/log_misc.c
-@@ -54,11 +54,46 @@ print_stars(void)
- 	   "***********************************\n");
- }	/* print_stars */
- 
-+void
-+print_hex_dump(char *ptr, int len) {
-+	int i = 0;
-+
-+	for (i = 0; i < len; i++) {
-+		if (i % 16 == 0)
-+			printf("%08x ", i);
-+
-+		printf("%02x", ptr[i]);
-+
-+		if ((i+1)%16 == 0)
-+			printf("\n");
-+		else if ((i+1)%2 == 0)
-+			printf(" ");
-+	}
-+	printf("\n");
-+}
-+
-+bool
-+is_printable(char *ptr, int len) {
-+	int i = 0;
-+
-+	for (i = 0; i < len; i++)
-+		if (!isprint(ptr[i]) )
-+			return false;
-+	return true;
-+}
-+
-+void print_or_dump(char *ptr, int len) {
-+	if (is_printable(ptr, len))
-+		printf("%.*s\n", len, ptr);
-+	else
-+		print_hex_dump(ptr, len);
-+}
-+
- /*
-  * Given a pointer to a data segment, print out the data as if it were
-  * a log operation header.
-  */
--static void
-+void
- xlog_print_op_header(xlog_op_header_t	*op_head,
- 		     int		i,
- 		     char		**ptr)
-@@ -961,6 +996,17 @@ xlog_print_record(
- 					be32_to_cpu(op_head->oh_len));
- 			break;
- 		    }
-+		    case XFS_LI_ATTRI: {
-+			skip = xlog_print_trans_attri(&ptr,
-+					be32_to_cpu(op_head->oh_len),
-+					&i);
-+			break;
-+		    }
-+		    case XFS_LI_ATTRD: {
-+			skip = xlog_print_trans_attrd(&ptr,
-+					be32_to_cpu(op_head->oh_len));
-+			break;
-+		    }
- 		    case XFS_LI_RUI: {
- 			skip = xlog_print_trans_rui(&ptr,
- 					be32_to_cpu(op_head->oh_len),
-diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
-index f32c932..579f470 100644
---- a/logprint/log_print_all.c
-+++ b/logprint/log_print_all.c
-@@ -404,6 +404,12 @@ xlog_recover_print_logitem(
- 	case XFS_LI_EFI:
- 		xlog_recover_print_efi(item);
- 		break;
-+	case XFS_LI_ATTRD:
-+		xlog_recover_print_attrd(item);
-+		break;
-+	case XFS_LI_ATTRI:
-+		xlog_recover_print_attri(item);
-+		break;
- 	case XFS_LI_RUD:
- 		xlog_recover_print_rud(item);
- 		break;
-@@ -456,6 +462,12 @@ xlog_recover_print_item(
- 	case XFS_LI_EFI:
- 		printf("EFI");
- 		break;
-+	case XFS_LI_ATTRD:
-+		printf("ATTRD");
-+		break;
-+	case XFS_LI_ATTRI:
-+		printf("ATTRI");
-+		break;
- 	case XFS_LI_RUD:
- 		printf("RUD");
- 		break;
-diff --git a/logprint/log_redo.c b/logprint/log_redo.c
-index 297e203..601a2d7 100644
---- a/logprint/log_redo.c
-+++ b/logprint/log_redo.c
-@@ -8,6 +8,7 @@
- #include "libxlog.h"
- 
- #include "logprint.h"
-+#include "xfs_attr_item.h"
- 
- /* Extent Free Items */
- 
-@@ -653,3 +654,200 @@ xlog_recover_print_bud(
- 	f = item->ri_buf[0].i_addr;
- 	xlog_print_trans_bud(&f, sizeof(struct xfs_bud_log_format));
- }
-+
-+/* Attr Items */
-+
-+static int
-+xfs_attri_copy_log_format(
-+	char				*buf,
-+	uint				len,
-+	struct xfs_attri_log_format	*dst_attri_fmt)
-+{
-+	uint dst_len = sizeof(struct xfs_attri_log_format);
-+
-+	if (len == dst_len) {
-+		memcpy((char *)dst_attri_fmt, buf, len);
-+		return 0;
-+	}
-+
-+	fprintf(stderr, _("%s: bad size of attri format: %u; expected %u\n"),
-+		progname, len, dst_len);
-+	return 1;
-+}
-+
-+int
-+xlog_print_trans_attri(
-+	char				**ptr,
-+	uint				src_len,
-+	int				*i)
-+{
-+	struct xfs_attri_log_format	*src_f = NULL;
-+	xlog_op_header_t		*head = NULL;
-+	uint				dst_len;
-+	int				error = 0;
-+
-+	dst_len = sizeof(struct xfs_attri_log_format);
-+	if (src_len != dst_len) {
-+		fprintf(stderr, _("%s: bad size of attri format: %u; expected %u\n"),
-+				progname, src_len, dst_len);
-+		return 1;
-+	}
-+
-+	/*
-+	 * memmove to ensure 8-byte alignment for the long longs in
-+	 * xfs_attri_log_format_t structure
-+	 */
-+	src_f = malloc(src_len);
-+	if (!src_f) {
-+		fprintf(stderr, _("%s: xlog_print_trans_attri: malloc failed\n"),
-+				progname);
-+		exit(1);
-+	}
-+	memmove((char*)src_f, *ptr, src_len);
-+	*ptr += src_len;
-+
-+	printf(_("ATTRI:  #regs: %d	name_len: %d, value_len: %d  id: 0x%llx\n"),
-+		src_f->alfi_size, src_f->alfi_name_len, src_f->alfi_value_len,
-+				(unsigned long long)src_f->alfi_id);
-+
-+	if (src_f->alfi_name_len > 0) {
-+		printf(_("\n"));
-+		(*i)++;
-+		head = (xlog_op_header_t *)*ptr;
-+		xlog_print_op_header(head, *i, ptr);
-+		error = xlog_print_trans_attri_name(ptr, be32_to_cpu(head->oh_len));
-+		if (error)
-+			goto error;
-+	}
-+
-+	if (src_f->alfi_value_len > 0) {
-+		printf(_("\n"));
-+		(*i)++;
-+		head = (xlog_op_header_t *)*ptr;
-+		xlog_print_op_header(head, *i, ptr);
-+		error = xlog_print_trans_attri_value(ptr, be32_to_cpu(head->oh_len),
-+				src_f->alfi_value_len);
-+	}
-+error:
-+	free(src_f);
-+
-+	return error;
-+}	/* xlog_print_trans_attri */
-+
-+int
-+xlog_print_trans_attri_name(
-+	char				**ptr,
-+	uint				src_len)
-+{
-+	printf(_("ATTRI:  name len:%u\n"), src_len);
-+	print_or_dump(*ptr, src_len);
-+
-+	*ptr += src_len;
-+
-+	return 0;
-+}	/* xlog_print_trans_attri */
-+
-+int
-+xlog_print_trans_attri_value(
-+	char				**ptr,
-+	uint				src_len,
-+	int				value_len)
-+{
-+	int len = value_len;
-+
-+	if (len > MAX_ATTR_VAL_PRINT)
-+		len = MAX_ATTR_VAL_PRINT;
-+
-+	printf(_("ATTRI:  value len:%u\n"), value_len);
-+	print_or_dump(*ptr, len);
-+
-+	*ptr += src_len;
-+
-+	return 0;
-+}	/* xlog_print_trans_attri_value */
-+
-+void
-+xlog_recover_print_attri(
-+	struct xlog_recover_item	*item)
-+{
-+	struct xfs_attri_log_format	*f, *src_f = NULL;
-+	uint				src_len, dst_len;
-+
-+	int				region = 0;
-+
-+	src_f = (struct xfs_attri_log_format *)item->ri_buf[0].i_addr;
-+	src_len = item->ri_buf[region].i_len;
-+
-+	/*
-+	 * An xfs_attri_log_format structure contains a attribute name and
-+	 * variable length value  as the last field.
-+	 */
-+	dst_len = sizeof(struct xfs_attri_log_format);
-+
-+	if ((f = ((struct xfs_attri_log_format *)malloc(dst_len))) == NULL) {
-+		fprintf(stderr, _("%s: xlog_recover_print_attri: malloc failed\n"),
-+			progname);
-+		exit(1);
-+	}
-+	if (xfs_attri_copy_log_format((char*)src_f, src_len, f))
-+		goto out;
-+
-+	printf(_("ATTRI:  #regs: %d	name_len: %d, value_len: %d  id: 0x%llx\n"),
-+		f->alfi_size, f->alfi_name_len, f->alfi_value_len, (unsigned long long)f->alfi_id);
-+
-+	if (f->alfi_name_len > 0) {
-+		region++;
-+		printf(_("ATTRI:  name len:%u\n"), f->alfi_name_len);
-+		print_or_dump((char *)item->ri_buf[region].i_addr,
-+			       f->alfi_name_len);
-+	}
-+
-+	if (f->alfi_value_len > 0) {
-+		int len = f->alfi_value_len;
-+
-+		if (len > MAX_ATTR_VAL_PRINT)
-+			len = MAX_ATTR_VAL_PRINT;
-+
-+		region++;
-+		printf(_("ATTRI:  value len:%u\n"), f->alfi_value_len);
-+		print_or_dump((char *)item->ri_buf[region].i_addr, len);
-+	}
-+
-+out:
-+	free(f);
-+
-+}
-+
-+int
-+xlog_print_trans_attrd(char **ptr, uint len)
-+{
-+	struct xfs_attrd_log_format *f;
-+	struct xfs_attrd_log_format lbuf;
-+	uint core_size = sizeof(struct xfs_attrd_log_format);
-+
-+	memcpy(&lbuf, *ptr, MIN(core_size, len));
-+	f = &lbuf;
-+	*ptr += len;
-+	if (len >= core_size) {
-+		printf(_("ATTRD:  #regs: %d	id: 0x%llx\n"),
-+			f->alfd_size,
-+			(unsigned long long)f->alfd_alf_id);
-+		return 0;
-+	} else {
-+		printf(_("ATTRD: Not enough data to decode further\n"));
-+		return 1;
-+	}
-+}	/* xlog_print_trans_attrd */
-+
-+void
-+xlog_recover_print_attrd(
-+	struct xlog_recover_item		*item)
-+{
-+	struct xfs_attrd_log_format	*f;
-+
-+	f = (struct xfs_attrd_log_format *)item->ri_buf[0].i_addr;
-+
-+	printf(_("	ATTRD:  #regs: %d	id: 0x%llx\n"),
-+		f->alfd_size,
-+		(unsigned long long)f->alfd_alf_id);
-+}
-diff --git a/logprint/logprint.h b/logprint/logprint.h
-index 248fe7b..7b5df8c 100644
---- a/logprint/logprint.h
-+++ b/logprint/logprint.h
-@@ -29,6 +29,9 @@ extern void xfs_log_print_trans(struct xlog *, int);
- extern void print_xlog_record_line(void);
- extern void print_xlog_op_line(void);
- extern void print_stars(void);
-+extern void print_hex_dump(char* ptr, int len);
-+extern bool is_printable(char* ptr, int len);
-+extern void print_or_dump(char* ptr, int len);
- 
- extern struct xfs_inode_log_format *
- 	xfs_inode_item_format_convert(char *, uint, struct xfs_inode_log_format *);
-@@ -53,4 +56,13 @@ extern void xlog_recover_print_bui(struct xlog_recover_item *item);
- extern int xlog_print_trans_bud(char **ptr, uint len);
- extern void xlog_recover_print_bud(struct xlog_recover_item *item);
- 
-+#define MAX_ATTR_VAL_PRINT	128
-+
-+extern int xlog_print_trans_attri(char **ptr, uint src_len, int *i);
-+extern int xlog_print_trans_attri_name(char **ptr, uint src_len);
-+extern int xlog_print_trans_attri_value(char **ptr, uint src_len, int value_len);
-+extern void xlog_recover_print_attri(struct xlog_recover_item *item);
-+extern int xlog_print_trans_attrd(char **ptr, uint len);
-+extern void xlog_recover_print_attrd(struct xlog_recover_item *item);
-+extern void xlog_print_op_header(xlog_op_header_t *op_head, int i, char **ptr);
- #endif	/* LOGPRINT_H */
+To help organize the set, I've arranged the patches to make sort of mini sets.
+I thought it would help reviewers break down the reviewing some. For reviewing
+purposes, the set could be broken up into 2 phases:
+
+Delay Ready Attributes: (patches 1-8)
+These are the remaining patches belonging to the "Delay Ready" series that
+we've been working with.  In these patches, transaction handling is removed
+from the attr routines, and replaced with a state machine that allows a high
+level function to roll the transaction and repeatedly recall the attr routines
+until they are finished.  The behavior of the attr set/remove routines
+are now also compatible as a .finish_item callback
+  xfs: Add helper xfs_attr_node_remove_step
+  xfs: Hoist transaction handling in xfs_attr_node_remove_step
+  xfs: Add xfs_attr_node_remove_cleanup
+  xfs: Add delay ready attr remove routines
+  xfs: Add delay ready attr set routines
+  xfs: Add statemachine tracepoints
+  xfs: Rename __xfs_attr_rmtval_remove
+  xfs: Handle krealloc errors in xlog_recover_add_to_cont_trans
+
+Delayed Attributes: (patches 9 - 15)
+These patches go on to fully implement delayed attributes.  New attr intent and
+done items are introduced for use in the existing logging infrastructure.  A
+mount option is added to toggle the feature on and off, and an error tag is added
+to test the log replay
+  xfs: Set up infastructure for deferred attribute operations
+  xfs: Skip flip flags for delayed attrs
+  xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+  xfs: Remove unused xfs_attr_*_args
+  xfs: Add delayed attributes error tag
+  xfs: Add delattr mount option
+  xfs: Merge xfs_delattr_context into xfs_attr_item
+
+Updates since v13: Mostly integrating review feed back, which involved quite
+a few changes.  Most significant being the removal of the incompat flag which
+has been replaced with a mount option.  Though we do need to set an incompat
+flag, we cannot use it to enable/disable the feature.  It needs to be set when
+ever a new log item is written to disk.  ATM, writing the flag to the super
+block on the fly currently not supported, but overlaps with another work effort
+that needs it for other reasons.  For now, writing new log entries to the disk
+is simply disabled unless specified at mount time.
+
+xfs: Add helper xfs_attr_node_remove_step
+   Initialized state to null in xfs_attr_node_removename
+   Fixed typo "shirnk"
+
+xfs: Add xfs_attr_node_remove_cleanup
+   NEW
+
+xfs: Hoist transaction handling in xfs_attr_node_remove_step
+   NEW
+
+xfs: Add delay ready attr remove routines
+   Removed uneeded error = 0; initialization in xfs_attr_remove_args
+   Simplified if/else logic in xfs_attr_remove_iter.  Added some commentary
+   Collapsed extra state arg in xfs_attr_node_removename_setup
+   Moved up state init in xfs_attr_node_removename_setup
+   Fixed variable alignment in xfs_attr_node_remove_step
+   Removed XFS_DAC_NODE_RMVNAME_INIT
+   Modified default switch case in xfs_attr_node_removename_iter to goto out instead of return
+   Updated /* fallthrough */ comment in xfs_attr_node_removename_iter
+   Updated commentary for xfs_attr_node_remove_step in xfs_attr_node_removename_iter
+   Updated xfs_attr_trans_roll to skip roll if defer_finish is called
+   Expanded state machine diagram in b/fs/xfs/libxfs/xfs_attr.h
+   Fixed typo in xfs_attr_rmtval_remove comment 
+   Added explanation to stateless -EAGAIN return
+   
+xfs: Add delay ready attr set routines
+   Rebase adjustments
+   Removed uneeded bhold/join from xfs_attr_set_args
+   Removed xfs_attr_rmtval_remove prototype from xfs_attr_remote.h.
+   Added comments to EAGAIN returns that dont needs states
+   Added XFS_DAS_RM_LBLK and XFS_DAS_UNINIT to switch in xfs_attr_set_iter
+   Assert on states that belong to remove path 
+   Expanded comments in xfs_attr_set_iter
+   Fixed ENSPC handler for xfs_attr_leaf_try_add
+   Expanded state machine diagram in b/fs/xfs/libxfs/xfs_attr.h
+   Fix a bug found with generic/449
+      Do no return EAGAIN on sucessfull leaf add if theres nothing left to do
+   Moved state set to before xfs_attr_rmtval_remove call
+
+xfs: Add statemachine tracepoints
+  NEW
+
+xfs: Rename __xfs_attr_rmtval_remove
+   Rebase adjustments
+
+xfs: Handle krealloc errors in xlog_recover_add_to_cont_trans
+   NEW
+
+xfs: Set up infastructure for deferred attribute operations
+  Added extra buffer_size parameter to xfs_attri_log_item
+    This allows a trailing buffer to be allocated allong with the intent
+    Simplifies having to realloc the intent during the log commit
+  Misc white space cleanups
+  Removed unused xfs_attrlen_t
+  Removed wrapper function xfs_attri_item_sizeof and xfs_attrd_item_sizeof
+  Added inline helper ATTR_NVEC_SIZE.  Simplified with roundup function
+  Rephrased comment for xfs_trans_attr
+  Moved attrip cleanup in xfs_attr_finish_item to xfs_attri_item_committed
+  Removed unused xfs_attri_item_committing  and xfs_attrd_item_committing
+  Merged xfs_attrd_init into xfs_trans_get_attrd
+  Added XFS_ITEM_RELEASE_WHEN_COMMITTED to xfs_attrd_item_ops
+  Reworked xfs_attri_item_recover to preseerve log replay order
+  Expanded xfs_attri_item_recover validate check
+  Added xfs_attri_item_relog
+  Added validate check to xfs_attr_leaf_try_add
+  Trimmed down xfs_attri_log_item commentary
+  Reordered xfs_attri_log_item members to remove holes
+  Renamed xfs_sb_version_hasdelattr to xfs_hasdelattr, and moved to xfs_attr.h
+    This will be used for a mount option later instead of an incompat flag
+
+xfs: Skip flip flags for delayed attrs
+  NEW
+
+xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+  Merged with patch xfs: Enable delayed attributes
+  Manged kmem_alloc_large to kmem_zalloc 
+  Merged with previous "Enable delayed attributes" patch
+
+xfs: Enable delayed attributes
+  REMOVED
+
+xfs: Remove unused xfs_attr_*_args
+  Collapsed in leaf_bp parameter in xfs_attr_set_iter
+
+xfs: Add delayed attributes error tag
+   No change
+
+xfs: Add feature bit XFS_SB_FEAT_INCOMPAT_LOG_DELATTR
+   REMOVED
+
+xfs: Add delattr mount option
+   NEW
+
+b54c08d xfsprogs: Merge xfs_delattr_context into xfs_attr_item
+   NEW
+
+This series can be viewed on github here:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_v14
+
+As well as the extended delayed attribute and parent pointer series:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_v14_extended
+
+And the test cases:
+https://github.com/allisonhenderson/xfs_work/tree/pptr_xfstestsv2
+
+In order to run the test cases, you will need have the corresponding xfsprogs
+changes as well.  Which can be found here:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v14
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v14_extended
+
+To run the xfs attributes tests run:
+check -g attr
+
+To run as delayed attributes run:
+export MOUNT_OPTIONS="-o delattr"
+check -g attr
+
+To run parent pointer tests:
+check -g parent
+
+I've also made the corresponding updates to the user space side as well, and ported anything
+they need to seat correctly.
+
+Questions, comment and feedback appreciated! 
+
+Thanks all!
+Allison 
+
+
+Allison Collins (3):
+  xfs: Add helper xfs_attr_node_remove_step
+  xfs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+  xfs: Add delayed attributes error tag
+
+Allison Henderson (12):
+  xfs: Add xfs_attr_node_remove_cleanup
+  xfs: Hoist transaction handling in xfs_attr_node_remove_step
+  xfs: Add delay ready attr remove routines
+  xfs: Add delay ready attr set routines
+  xfs: Add state machine tracepoints
+  xfs: Rename __xfs_attr_rmtval_remove
+  xfs: Handle krealloc errors in xlog_recover_add_to_cont_trans
+  xfs: Set up infastructure for deferred attribute operations
+  xfs: Skip flip flags for delayed attrs
+  xfs: Remove unused xfs_attr_*_args
+  xfs: Add delattr mount option
+  xfs: Merge xfs_delattr_context into xfs_attr_item
+
+ fs/xfs/Makefile                 |   1 +
+ fs/xfs/libxfs/xfs_attr.c        | 633 ++++++++++++++++++++----------
+ fs/xfs/libxfs/xfs_attr.h        | 360 ++++++++++++++++-
+ fs/xfs/libxfs/xfs_attr_leaf.c   |   5 +-
+ fs/xfs/libxfs/xfs_attr_remote.c | 126 +++---
+ fs/xfs/libxfs/xfs_attr_remote.h |   7 +-
+ fs/xfs/libxfs/xfs_defer.c       |   1 +
+ fs/xfs/libxfs/xfs_defer.h       |   3 +
+ fs/xfs/libxfs/xfs_errortag.h    |   4 +-
+ fs/xfs/libxfs/xfs_log_format.h  |  44 ++-
+ fs/xfs/libxfs/xfs_log_recover.h |   2 +
+ fs/xfs/scrub/common.c           |   2 +
+ fs/xfs/xfs_acl.c                |   2 +
+ fs/xfs/xfs_attr_inactive.c      |   2 +-
+ fs/xfs/xfs_attr_item.c          | 830 ++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_attr_item.h          |  52 +++
+ fs/xfs/xfs_attr_list.c          |   1 +
+ fs/xfs/xfs_error.c              |   3 +
+ fs/xfs/xfs_ioctl.c              |   2 +
+ fs/xfs/xfs_ioctl32.c            |   2 +
+ fs/xfs/xfs_iops.c               |   2 +
+ fs/xfs/xfs_log.c                |   4 +
+ fs/xfs/xfs_log_recover.c        |   7 +-
+ fs/xfs/xfs_mount.h              |   1 +
+ fs/xfs/xfs_ondisk.h             |   2 +
+ fs/xfs/xfs_super.c              |   6 +-
+ fs/xfs/xfs_trace.h              |  21 +-
+ fs/xfs/xfs_xattr.c              |   3 +
+ 28 files changed, 1874 insertions(+), 254 deletions(-)
+ create mode 100644 fs/xfs/xfs_attr_item.c
+ create mode 100644 fs/xfs/xfs_attr_item.h
+
 -- 
 2.7.4
 
