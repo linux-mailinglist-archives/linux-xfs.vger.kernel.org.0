@@ -2,190 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29DF22DDF01
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Dec 2020 08:27:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE4A2DDF04
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Dec 2020 08:27:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725908AbgLRH0R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 18 Dec 2020 02:26:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbgLRH0R (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Dec 2020 02:26:17 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0569AC0617A7;
-        Thu, 17 Dec 2020 23:25:37 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id f14so829311pju.4;
-        Thu, 17 Dec 2020 23:25:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ejK+psMjgjWzzhovwASKUe2Krr91CvmuAB0bsrQ/1vw=;
-        b=SCO413SzDFN5S/1I8WiRVIHYoUSHN9+Zj0Nrxg6qq/PR1STSunrAl14VrJRnbyPR8p
-         Ljy4Kg9sJv8PAqy7z+QVgT04ZxJJXGmoeMTjU8dN/a00zW2k8x+Ay+R/ODaQiOvSIMUv
-         +6R+5SO0YIBwey3Yj5ac+7sctFX4jq16e3FRzDAHFT9Ecycx5fWmjDnRp7ECaJB8LzRp
-         zevxgc8i6GNKHPZxRfA7xDZIrQ/b26EiGto624rZrf9mIQvYBhDgItJ2j4pRd4q33yvG
-         /djLlcgRHu0sidRvVVup20igmnHxPxOmw0QCRm6wpWhoLrDO3A/UVGODFxglyw+wMGGy
-         1a3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ejK+psMjgjWzzhovwASKUe2Krr91CvmuAB0bsrQ/1vw=;
-        b=LXw3SpjDni6wAFrVDc83s8j0lQLPW2SDYib1ZNdv/iTVK5/TNB71fSKL6u7kTSuysv
-         82ZyFiJIZWbquQ81clVMDjmFhcEPyNS8Euca3+iCkf0hvSStlFBHy7P+r1aVEJGDh351
-         J1yLUDG3VDj9Tz+G+ZSzjd/5vNtEsv79hY9zb0giOBail98XHP3No9Gk56UPd0Kj3rsE
-         1R88HYlfHFO23rIApIO37v6o77BxZjYhiWuRB/s8AYP1AO6Tfrn4TVbacjyCJ0aLg6FT
-         smKy5ThRj+zWrv64CgioJDGjTdOSTX66XJB7AuwsJWhJNfitMBY5km0mOaiZQvYgybxS
-         cMUw==
-X-Gm-Message-State: AOAM531y201ofzmqhAnWlmHlG14Ou2ahh73wFg2yLJhPPKUrnVg8k9Z2
-        2sg60UWjbpUnlzGewaUoaQ==
-X-Google-Smtp-Source: ABdhPJziFk04N1cmakBhKh7h5Yc+KiG+dQxrkQvIA8X5f1ROA98zew+2414v03Tt8n0J9qvY2Xj8Uw==
-X-Received: by 2002:a17:90a:d90e:: with SMTP id c14mr3043464pjv.85.1608276336574;
-        Thu, 17 Dec 2020 23:25:36 -0800 (PST)
-Received: from [10.76.131.47] ([103.7.29.7])
-        by smtp.gmail.com with ESMTPSA id y1sm8355350pff.17.2020.12.17.23.25.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Dec 2020 23:25:35 -0800 (PST)
-Subject: Re: [xfs] 237d7887ae: xfstests.xfs.513.fail
-To:     kernel test robot <oliver.sang@intel.com>,
-        Kaixu Xia <kaixuxia@tencent.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-xfs@vger.kernel.org,
-        lkp@lists.01.org, lkp@intel.com
-References: <20201218055819.GA12524@xsang-OptiPlex-9020>
-From:   kaixuxia <xiakaixu1987@gmail.com>
-Message-ID: <5cc27796-00b7-aa4c-95a4-5c8c6f8c7c00@gmail.com>
-Date:   Fri, 18 Dec 2020 15:25:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
-MIME-Version: 1.0
-In-Reply-To: <20201218055819.GA12524@xsang-OptiPlex-9020>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1732935AbgLRH0s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 18 Dec 2020 02:26:48 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37602 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgLRH0s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Dec 2020 02:26:48 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7KYgU003295
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id; s=corp-2020-01-29;
+ bh=q0Q8/0tChNSbUYlqvMePHuqJewVQH1LQ+zaZklvi/BM=;
+ b=oE7QLmBp027LTXOm60u2yxGoLl6NHC11hYTvVY1F+4Plz/au7uXk7CeTDE8RVx5mO+49
+ 7RhkcqObfT6yFV9vtdzp04ZJdO3XmMSX3V7XPuki/AJiCMLjomhSmz8z7JJKRS23SO0R
+ rclekg9T713tS0a03UE16R3CiDrkRcGH68hltyJeKMV+tnC0ieG8aCyEpQhsQDC00ntf
+ xi7HlVPEX4IdV/Fur8ijg9SZa5wqhML2cCvGC6m0aM23FRyBu7wEuxKH3iPnP94Nhj9g
+ CFadO4gLjQHBC3wjTtt2p0kNp5HZp+yymNSEnvqirPjPJFVZzJ7PljbcW3mJ6aPg8Aad QA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 35cn9rs17y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:07 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BI7KIIV038336
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 35d7t1h98t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:06 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BI7Q58R002041
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Dec 2020 07:26:05 GMT
+Received: from localhost.localdomain (/67.1.214.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 17 Dec 2020 23:26:05 -0800
+From:   Allison Henderson <allison.henderson@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v14 00/14] xfsprogs: Delayed Attributes
+Date:   Fri, 18 Dec 2020 00:25:41 -0700
+Message-Id: <20201218072555.16694-1-allison.henderson@oracle.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9838 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 suspectscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012180052
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9838 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 lowpriorityscore=0 clxscore=1011 spamscore=0
+ malwarescore=0 priorityscore=1501 phishscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012180052
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi，
+Hi all,
 
-The patch https://www.spinics.net/lists/linux-xfs/msg47389.html for xfstests
-will fix this regression.
+This set applies the corresponding changes for delayed attributes to
+xfsprogs. I will pick up the reviews from the kernel side series and mirror
+them here.  This set also includes some patches from the kernel side that have
+not yet been ported. This set also includes patches needed for the user space
+cli and log printing routines
 
-Thanks,
-Kaixu
+Additionally, the following updates have been made since v13:
 
-On 2020/12/18 13:58, kernel test robot wrote:
-> 
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 237d7887ae723af7d978e8b9a385fdff416f357b ("xfs: show the proper user quota options")
-> https://git.kernel.org/cgit/fs/xfs/xfs-linux.git xfs-5.11-merge
-> 
-> 
-> in testcase: xfstests
-> version: xfstests-x86_64-d41dcbd-1_20201215
-> with following parameters:
-> 
-> 	disk: 4HDD
-> 	fs: xfs
-> 	test: xfs-group-51
-> 	ucode: 0x21
-> 
-> test-description: xfstests is a regression test suite for xfs and other files ystems.
-> test-url: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-> 
-> 
-> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> 
-> 2020-12-18 01:24:14 export TEST_DIR=/fs/sdb1
-> 2020-12-18 01:24:14 export TEST_DEV=/dev/sdb1
-> 2020-12-18 01:24:14 export FSTYP=xfs
-> 2020-12-18 01:24:14 export SCRATCH_MNT=/fs/scratch
-> 2020-12-18 01:24:14 mkdir /fs/scratch -p
-> 2020-12-18 01:24:14 export SCRATCH_DEV=/dev/sdb4
-> 2020-12-18 01:24:14 export SCRATCH_LOGDEV=/dev/sdb2
-> 2020-12-18 01:24:14 export SCRATCH_XFS_LIST_METADATA_FIELDS=u3.sfdir3.hdr.parent.i4
-> 2020-12-18 01:24:14 export SCRATCH_XFS_LIST_FUZZ_VERBS=random
-> 2020-12-18 01:24:14 sed "s:^:xfs/:" //lkp/benchmarks/xfstests/tests/xfs-group-51
-> 2020-12-18 01:24:14 ./check xfs/510 xfs/511 xfs/512 xfs/513 xfs/514 xfs/515 xfs/516 xfs/517 xfs/518 xfs/519
-> FSTYP         -- xfs (debug)
-> PLATFORM      -- Linux/x86_64 lkp-ivb-d05 5.10.0-rc5-00026-g237d7887ae72 #1 SMP Fri Dec 18 08:12:46 CST 2020
-> MKFS_OPTIONS  -- -f -bsize=4096 /dev/sdb4
-> MOUNT_OPTIONS -- /dev/sdb4 /fs/scratch
-> 
-> xfs/510	 1s
-> xfs/511	 2s
-> xfs/512	 2s
-> xfs/513	- output mismatch (see /lkp/benchmarks/xfstests/results//xfs/513.out.bad)
->     --- tests/xfs/513.out	2020-12-15 12:31:26.000000000 +0000
->     +++ /lkp/benchmarks/xfstests/results//xfs/513.out.bad	2020-12-18 01:24:44.695412845 +0000
->     @@ -77,7 +77,11 @@
->      TEST: "-o usrquota" "pass" "usrquota" "true"
->      TEST: "-o quota" "pass" "usrquota" "true"
->      TEST: "-o uqnoenforce" "pass" "usrquota" "true"
->     +[FAILED]: mount /dev/loop0 /fs/sdb1/513.mnt -o uqnoenforce
->     +ERROR: did not expect to find "usrquota" in "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,uqnoenforce"
->      TEST: "-o qnoenforce" "pass" "usrquota" "true"
->     +[FAILED]: mount /dev/loop0 /fs/sdb1/513.mnt -o qnoenforce
->     ...
->     (Run 'diff -u /lkp/benchmarks/xfstests/tests/xfs/513.out /lkp/benchmarks/xfstests/results//xfs/513.out.bad'  to see the entire diff)
-> xfs/514	- output mismatch (see /lkp/benchmarks/xfstests/results//xfs/514.out.bad)
->     --- tests/xfs/514.out	2020-12-15 12:31:26.000000000 +0000
->     +++ /lkp/benchmarks/xfstests/results//xfs/514.out.bad	2020-12-18 01:24:46.007412903 +0000
->     @@ -1,2 +1,5 @@
->      QA output created by 514
->      Silence is golden
->     +attr_remove not documented in the xfs_db manpage
->     +attr_set not documented in the xfs_db manpage
->     +logformat not documented in the xfs_db manpage
->     ...
->     (Run 'diff -u /lkp/benchmarks/xfstests/tests/xfs/514.out /lkp/benchmarks/xfstests/results//xfs/514.out.bad'  to see the entire diff)
-> xfs/515	- output mismatch (see /lkp/benchmarks/xfstests/results//xfs/515.out.bad)
->     --- tests/xfs/515.out	2020-12-15 12:31:26.000000000 +0000
->     +++ /lkp/benchmarks/xfstests/results//xfs/515.out.bad	2020-12-18 01:24:47.082412951 +0000
->     @@ -1,2 +1,3 @@
->      QA output created by 515
->      Silence is golden
->     +limit not documented in the xfs_quota manpage
->     ...
->     (Run 'diff -u /lkp/benchmarks/xfstests/tests/xfs/515.out /lkp/benchmarks/xfstests/results//xfs/515.out.bad'  to see the entire diff)
-> xfs/516	 32s
-> xfs/517	[not run] rmapbt not supported by scratch filesystem type: xfs
-> xfs/518	 3s
-> xfs/519	[not run] Reflink not supported by scratch filesystem type: xfs
-> Ran: xfs/510 xfs/511 xfs/512 xfs/513 xfs/514 xfs/515 xfs/516 xfs/517 xfs/518 xfs/519
-> Not run: xfs/517 xfs/519
-> Failures: xfs/513 xfs/514 xfs/515
-> Failed 3 of 10 tests
-> 
-> 
-> 
-> 
-> To reproduce:
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp install job.yaml  # job file is attached in this email
->         bin/lkp run     job.yaml
-> 
-> 
-> 
-> Thanks,
-> Oliver Sang
-> 
+xfsprogs: Add log item printing for ATTRI and ATTRD
+   Modified print routines to print names and values as strings 
+      if they are printable, or hexdump if they are not
+   Added helper function is_printable
+   Added helper function print_or_dump
+   Misc alignment fixes in xlog_print_record
+
+This series can also be viewed on github here:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v14
+
+And also the extended delayed attribute and parent pointer series:
+https://github.com/allisonhenderson/xfs_work/tree/delay_ready_attrs_xfsprogs_v14_extended
+
+Thanks all!
+Allison
+
+Allison Collins (3):
+  xfsprogs: Add helper xfs_attr_node_remove_step
+  xfsprogs: Add xfs_attr_set_deferred and xfs_attr_remove_deferred
+  xfsprogs: Add delayed attributes error tag
+
+Allison Henderson (11):
+  xfsprogs: Add xfs_attr_node_remove_cleanup
+  xfsprogs: Hoist transaction handling in xfs_attr_node_remove_step
+  xfsprogs: Add delay ready attr remove routines
+  xfsprogs: Add delay ready attr set routines
+  xfsprogs: Add state machine tracepoints
+  xfsprogs: Rename __xfs_attr_rmtval_remove
+  xfsprogs: Set up infastructure for deferred attribute operations
+  xfsprogs: Skip flip flags for delayed attrs
+  xfsprogs: Remove unused xfs_attr_*_args
+  xfsprogs: Merge xfs_delattr_context into xfs_attr_item
+  xfsprogs: Add log item printing for ATTRI and ATTRD
+
+ include/libxfs.h         |   1 +
+ include/xfs_trace.h      |   1 +
+ io/inject.c              |   1 +
+ libxfs/defer_item.c      | 128 ++++++++++
+ libxfs/libxfs_priv.h     |   1 +
+ libxfs/xfs_attr.c        | 632 ++++++++++++++++++++++++++++++++---------------
+ libxfs/xfs_attr.h        | 360 ++++++++++++++++++++++++++-
+ libxfs/xfs_attr_leaf.c   |   5 +-
+ libxfs/xfs_attr_remote.c | 126 ++++++----
+ libxfs/xfs_attr_remote.h |   7 +-
+ libxfs/xfs_defer.c       |   1 +
+ libxfs/xfs_defer.h       |   2 +
+ libxfs/xfs_errortag.h    |   4 +-
+ libxfs/xfs_log_format.h  |  43 +++-
+ logprint/log_misc.c      |  48 +++-
+ logprint/log_print_all.c |  12 +
+ logprint/log_redo.c      | 198 +++++++++++++++
+ logprint/logprint.h      |  12 +
+ 18 files changed, 1331 insertions(+), 251 deletions(-)
 
 -- 
-kaixuxia
+2.7.4
+
