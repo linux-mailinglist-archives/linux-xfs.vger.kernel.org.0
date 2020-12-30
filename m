@@ -2,75 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78E342E7680
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Dec 2020 07:29:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE5E2E7B2E
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Dec 2020 17:56:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgL3G3W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Dec 2020 01:29:22 -0500
-Received: from smtp1.onthe.net.au ([203.22.196.249]:43139 "EHLO
-        smtp1.onthe.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgL3G3W (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Dec 2020 01:29:22 -0500
-Received: from localhost (smtp2.private.onthe.net.au [10.200.63.13])
-        by smtp1.onthe.net.au (Postfix) with ESMTP id 436FF6191C;
-        Wed, 30 Dec 2020 17:28:38 +1100 (EST)
-Received: from smtp1.onthe.net.au ([10.200.63.11])
-        by localhost (smtp.onthe.net.au [10.200.63.13]) (amavisd-new, port 10028)
-        with ESMTP id y9ahFjfxspKE; Wed, 30 Dec 2020 17:28:38 +1100 (AEDT)
-Received: from athena.private.onthe.net.au (chris-gw2-vpn.private.onthe.net.au [10.9.3.2])
-        by smtp1.onthe.net.au (Postfix) with ESMTP id CD6886189B;
-        Wed, 30 Dec 2020 17:28:36 +1100 (EST)
-Received: by athena.private.onthe.net.au (Postfix, from userid 1026)
-        id 7459F682C8F; Wed, 30 Dec 2020 17:28:36 +1100 (AEDT)
-Date:   Wed, 30 Dec 2020 17:28:36 +1100
-From:   Chris Dunlop <chris@onthe.net.au>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: Extreme fragmentation ho!
-Message-ID: <20201230062836.GA2695485@onthe.net.au>
-References: <20201221215453.GA1886598@onthe.net.au>
- <20201228220622.GA164134@dread.disaster.area>
+        id S1726277AbgL3Qy5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Dec 2020 11:54:57 -0500
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:34983 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726214AbgL3Qy5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 30 Dec 2020 11:54:57 -0500
+Received: from [192.168.0.8] (ip5f5aef2f.dynamic.kabel-deutschland.de [95.90.239.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: buczek)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 285FC20646219;
+        Wed, 30 Dec 2020 17:54:14 +0100 (CET)
+Subject: Re: [PATCH] xfs: Wake CIL push waiters more reliably
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        LKML <linux-kernel@vger.kernel.org>, it+linux-xfs@molgen.mpg.de
+References: <1705b481-16db-391e-48a8-a932d1f137e7@molgen.mpg.de>
+ <20201230024642.2171-1-hdanton@sina.com>
+From:   Donald Buczek <buczek@molgen.mpg.de>
+Message-ID: <f2933207-a48e-11a6-7dad-0081cae84e06@molgen.mpg.de>
+Date:   Wed, 30 Dec 2020 17:54:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20201228220622.GA164134@dread.disaster.area>
+In-Reply-To: <20201230024642.2171-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Dec 29, 2020 at 09:06:22AM +1100, Dave Chinner wrote:
-> On Tue, Dec 22, 2020 at 08:54:53AM +1100, Chris Dunlop wrote:
->> The file is sitting on XFS on LV on a raid6 comprising 6 x 5400 RPM HDD:
->
-> ... probably not that unreasonable for pretty much the slowest
-> storage configuration you can possibly come up with for small,
-> metadata write intensive workloads.
+On 30.12.20 03:46, Hillf Danton wrote:
+> On Wed, 30 Dec 2020 00:56:27 +0100
+>> Threads, which committed items to the CIL, wait in the xc_push_wait
+>> waitqueue when used_space in the push context goes over a limit. These
+>> threads need to be woken when the CIL is pushed.
+>>
+>> The CIL push worker tries to avoid the overhead of calling wake_all()
+>> when there are no waiters waiting. It does so by checking the same
+>> condition which caused the waits to happen. This, however, is
+>> unreliable, because ctx->space_used can actually decrease when items are
+>> recommitted. If the value goes below the limit while some threads are
+>> already waiting but before the push worker gets to it, these threads are
+>> not woken.
+> 
+> Looks like you are fixing a typo in c7f87f3984cf ("xfs: fix
+> use-after-free on CIL context on shutdown") in mainline, and
+> it may mean
+> 
+> 	/*
+> 	 * Wake up any background push waiters now this context is being pushed
+> 	 * if we are no longer over the space limit
+> 	 */
+> 
+> given waiters throttled for comsuming more space than limit in
+> xlog_cil_push_background().
 
-[ Chris grimaces and glances over at the 8+3 erasure-encoded ceph rbd 
-   sitting like a pitch drop experiment in the corner. ]
+I'm not sure, I understand you correctly. Do you suggest to update the comment to "...if we are no longer over the space limit"  and change the code to `if (ctx->space_used < XLOG_CIL_BLOCKING_SPACE_LIMIT(log))` ?
 
-Speaking of slow storage and metadata write intensive workloads, what's 
-the reason reflinks with a realtime device isn't supported? That was one 
-approach I wanted to try, to get the metadata ops running on a small fast 
-storage with the bulk data sitting on big slow bulk storage. But:
+I don't think, that would be correct.
 
-# mkfs.xfs -m reflink=1 -d rtinherit=1 -r rtdev=/dev/fast /dev/slow
-reflink not supported with realtime devices
+The current push context is most probably still over the limit if it ever was. It is exceptional, that the few bytes, which might be returned to ctx->space_used, bring us back below the limit. The new context, on the other hand, will have space_used=0.
 
-My naive thought was a reflink was probably "just" a block range 
-referenced from multiple places, and probably a refcount somewhere. It 
-seems like it should be possible to have the range, references and 
-refcount sitting on the fast storage pointing to the actual data blocks on 
-the slow storage.
+We need to resume any thread which is waiting for the push.
 
->> What is the easiest way to recreate a similarly (or even better,
->> identically) fragmented file?
->
-> Just script xfs_io to reflink random bits and bobs from other files
-> into a larger file?
+Best
+   Donald
 
-Thanks - that did it.
-
-Cheers,
-
-Chris
+>> Always wake all CIL push waiters. Test with waitqueue_active() as an
+>> optimization. This is possible, because we hold the xc_push_lock
+>> spinlock, which prevents additions to the waitqueue.
+>>
+>> Signed-off-by: Donald Buczek <buczek@molgen.mpg.de>
+>> ---
+>>   fs/xfs/xfs_log_cil.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+>> index b0ef071b3cb5..d620de8e217c 100644
+>> --- a/fs/xfs/xfs_log_cil.c
+>> +++ b/fs/xfs/xfs_log_cil.c
+>> @@ -670,7 +670,7 @@ xlog_cil_push_work(
+>>   	/*
+>>   	 * Wake up any background push waiters now this context is being pushed.
+>>   	 */
+>> -	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
+>> +	if (waitqueue_active(&cil->xc_push_wait))
+>>   		wake_up_all(&cil->xc_push_wait);
+>>   
+>>   	/*
+>> -- 
+>> 2.26.2
