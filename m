@@ -2,100 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE5E2E7B2E
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Dec 2020 17:56:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27FDD2E7B48
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Dec 2020 18:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726277AbgL3Qy5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Dec 2020 11:54:57 -0500
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:34983 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726214AbgL3Qy5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 30 Dec 2020 11:54:57 -0500
-Received: from [192.168.0.8] (ip5f5aef2f.dynamic.kabel-deutschland.de [95.90.239.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: buczek)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 285FC20646219;
-        Wed, 30 Dec 2020 17:54:14 +0100 (CET)
-Subject: Re: [PATCH] xfs: Wake CIL push waiters more reliably
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        LKML <linux-kernel@vger.kernel.org>, it+linux-xfs@molgen.mpg.de
-References: <1705b481-16db-391e-48a8-a932d1f137e7@molgen.mpg.de>
- <20201230024642.2171-1-hdanton@sina.com>
-From:   Donald Buczek <buczek@molgen.mpg.de>
-Message-ID: <f2933207-a48e-11a6-7dad-0081cae84e06@molgen.mpg.de>
-Date:   Wed, 30 Dec 2020 17:54:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1726524AbgL3Q7t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Dec 2020 11:59:49 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:50482 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726594AbgL3Q7t (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Dec 2020 11:59:49 -0500
+X-IronPort-AV: E=Sophos;i="5.78,461,1599494400"; 
+   d="scan'208";a="103085830"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 31 Dec 2020 00:58:39 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
+        by cn.fujitsu.com (Postfix) with ESMTP id CCD554CE6018;
+        Thu, 31 Dec 2020 00:58:32 +0800 (CST)
+Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Thu, 31 Dec 2020 00:58:32 +0800
+Received: from irides.mr (10.167.225.141) by G08CNEXCHPEKD04.g08.fujitsu.local
+ (10.167.33.209) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 31 Dec 2020 00:58:32 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@lst.de>, <song@kernel.org>,
+        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
+Subject: [PATCH 00/10] fsdax: introduce fs query to support reflink
+Date:   Thu, 31 Dec 2020 00:55:51 +0800
+Message-ID: <20201230165601.845024-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20201230024642.2171-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: CCD554CE6018.ACD3C
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 30.12.20 03:46, Hillf Danton wrote:
-> On Wed, 30 Dec 2020 00:56:27 +0100
->> Threads, which committed items to the CIL, wait in the xc_push_wait
->> waitqueue when used_space in the push context goes over a limit. These
->> threads need to be woken when the CIL is pushed.
->>
->> The CIL push worker tries to avoid the overhead of calling wake_all()
->> when there are no waiters waiting. It does so by checking the same
->> condition which caused the waits to happen. This, however, is
->> unreliable, because ctx->space_used can actually decrease when items are
->> recommitted. If the value goes below the limit while some threads are
->> already waiting but before the push worker gets to it, these threads are
->> not woken.
-> 
-> Looks like you are fixing a typo in c7f87f3984cf ("xfs: fix
-> use-after-free on CIL context on shutdown") in mainline, and
-> it may mean
-> 
-> 	/*
-> 	 * Wake up any background push waiters now this context is being pushed
-> 	 * if we are no longer over the space limit
-> 	 */
-> 
-> given waiters throttled for comsuming more space than limit in
-> xlog_cil_push_background().
+This patchset is aimed to support shared pages tracking for fsdax.
 
-I'm not sure, I understand you correctly. Do you suggest to update the comment to "...if we are no longer over the space limit"  and change the code to `if (ctx->space_used < XLOG_CIL_BLOCKING_SPACE_LIMIT(log))` ?
+Change from RFC v3:
+  - Do not lock dax entry in memory failure handler
+  - Add a helper function for corrupted_range
+  - Add restrictions in xfs code
+  - Fix code style
+  - remove the useless association and lock in fsdax
 
-I don't think, that would be correct.
+Change from RFC v2:
+  - Adjust the order of patches
+  - Divide the infrastructure and the drivers that use it
+  - Rebased to v5.10
 
-The current push context is most probably still over the limit if it ever was. It is exceptional, that the few bytes, which might be returned to ctx->space_used, bring us back below the limit. The new context, on the other hand, will have space_used=0.
+Change from RFC v1:
+  - Introduce ->block_lost() for block device
+  - Support mapped device
+  - Add 'not available' warning for realtime device in XFS
+  - Rebased to v5.10-rc1
 
-We need to resume any thread which is waiting for the push.
+This patchset moves owner tracking from dax_assocaite_entry() to pmem
+device driver, by introducing an interface ->memory_failure() of struct
+pagemap.  This interface is called by memory_failure() in mm, and
+implemented by pmem device.  Then pmem device calls its ->corrupted_range()
+to find the filesystem which the corrupted data located in, and call
+filesystem handler to track files or metadata assocaited with this page.
+Finally we are able to try to fix the corrupted data in filesystem and do
+other necessary processing, such as killing processes who are using the
+files affected.
 
-Best
-   Donald
+The call trace is like this:
+memory_failure()
+ pgmap->ops->memory_failure()      => pmem_pgmap_memory_failure()
+  gendisk->fops->corrupted_range() => - pmem_corrupted_range()
+                                      - md_blk_corrupted_range()
+   sb->s_ops->currupted_range()    => xfs_fs_corrupted_range()
+    xfs_rmap_query_range()
+     xfs_currupt_helper()
+      * corrupted on metadata
+          try to recover data, call xfs_force_shutdown()
+      * corrupted on file data 
+          try to recover data, call mf_dax_mapping_kill_procs()
 
->> Always wake all CIL push waiters. Test with waitqueue_active() as an
->> optimization. This is possible, because we hold the xc_push_lock
->> spinlock, which prevents additions to the waitqueue.
->>
->> Signed-off-by: Donald Buczek <buczek@molgen.mpg.de>
->> ---
->>   fs/xfs/xfs_log_cil.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
->> index b0ef071b3cb5..d620de8e217c 100644
->> --- a/fs/xfs/xfs_log_cil.c
->> +++ b/fs/xfs/xfs_log_cil.c
->> @@ -670,7 +670,7 @@ xlog_cil_push_work(
->>   	/*
->>   	 * Wake up any background push waiters now this context is being pushed.
->>   	 */
->> -	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
->> +	if (waitqueue_active(&cil->xc_push_wait))
->>   		wake_up_all(&cil->xc_push_wait);
->>   
->>   	/*
->> -- 
->> 2.26.2
+The fsdax & reflink support for XFS is not contained in this patchset.
+
+(Rebased on v5.10)
+--
+
+Shiyang Ruan (10):
+  pagemap: Introduce ->memory_failure()
+  blk: Introduce ->corrupted_range() for block device
+  fs: Introduce ->corrupted_range() for superblock
+  mm, fsdax: Refactor memory-failure handler for dax mapping
+  mm, pmem: Implement ->memory_failure() in pmem driver
+  pmem: Implement ->corrupted_range() for pmem driver
+  dm: Introduce ->rmap() to find bdev offset
+  md: Implement ->corrupted_range()
+  xfs: Implement ->corrupted_range() for XFS
+  fs/dax: remove useless functions
+
+ block/genhd.c                 |  12 ++++
+ drivers/md/dm-linear.c        |   8 +++
+ drivers/md/dm.c               |  54 ++++++++++++++
+ drivers/nvdimm/pmem.c         |  43 +++++++++++
+ fs/block_dev.c                |  37 ++++++++++
+ fs/dax.c                      | 115 ++++-------------------------
+ fs/xfs/xfs_fsops.c            |   5 ++
+ fs/xfs/xfs_mount.h            |   1 +
+ fs/xfs/xfs_super.c            | 107 +++++++++++++++++++++++++++
+ include/linux/blkdev.h        |   2 +
+ include/linux/dax.h           |   3 +-
+ include/linux/device-mapper.h |   2 +
+ include/linux/fs.h            |   2 +
+ include/linux/genhd.h         |   3 +
+ include/linux/memremap.h      |   8 +++
+ include/linux/mm.h            |   9 +++
+ mm/memory-failure.c           | 131 ++++++++++++++++++----------------
+ 17 files changed, 375 insertions(+), 167 deletions(-)
+
+-- 
+2.29.2
+
+
+
