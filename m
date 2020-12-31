@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FADC2E825E
-	for <lists+linux-xfs@lfdr.de>; Thu, 31 Dec 2020 23:47:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BC9B2E824F
+	for <lists+linux-xfs@lfdr.de>; Thu, 31 Dec 2020 23:45:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbgLaWqw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 31 Dec 2020 17:46:52 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:56528 "EHLO
+        id S1727047AbgLaWpA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 31 Dec 2020 17:45:00 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:55542 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgLaWqw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 31 Dec 2020 17:46:52 -0500
+        with ESMTP id S1726883AbgLaWpA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 31 Dec 2020 17:45:00 -0500
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMkBFN155379
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:46:11 GMT
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMgDg4152896
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=0GdUOOP16zU2pgrBv6VGGTELN6KALd/T7x1o4gdML2k=;
- b=GT5EkpGXnfYlyqKmz7XgVYRjWVo8cKUy6ht/ZvmzIbKPtorJD9B6HZaihoNT8WjAlKhN
- dPWKMA+Urm69gKUEJgiCqmeb1oNhiLXBgd8oOX8u3h6LSAjPeJg7jaqQS1WXWn092dGx
- 9wytSkNDBRuBUEPIxYbhMvICbeFHROTZSDr4jjfELvOK2QdIWXurqgEOH+smqxYgIfSo
- zP9L5ns1rpZvkfYPtxlxnzEE0h65Wx7zYOvQrnRpCQOUf4MgKWGPtoviZollkG1umUhH
- V0Zf387YaYG/PAtVMCy1C8l1N4yaJrCE3RpW29kgvzGrIj2dDWrh0h+Hh4KUJq3tWSri bg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 35rk3bv3pv-1
+ bh=FyvdzrZqjSARXZ5TiEqy3AH5GnO4W3r944sL3Z0hlDw=;
+ b=a3sWU8d11LfJm9ufndNGDt/Huz3cnUphdpx1Y5koA0SbMqR5oOLaVIebydaPqV9PI34u
+ 8Cj0P6MOYPFuDvxbtWsLkUv8me/tuVoIgg4YARaJ4Yw0jcJNVy4lIvZTLK/kouPS7/OM
+ Wiq0lywOgGNzKtyaYdnVdNwLZg2t7l/CgN+wCmlYjj1lA0mLFvuzFUV8BKPvAeaqntNS
+ /DwnUnl2H4szp5Sk1iDJryzuyR7A96HFmZY/Fb4x3Bc0Wql2GExvXs38n0NYeF0NQxb8
+ 3PRoLDv/qkbmGVRG/brG3uA/v6/BON44S4CqB+yKVOEqQz84u7IDgb13wvgxwrjbdVwW OA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 35rk3bv3ny-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:46:11 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMe5W9143819
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:10 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 35pexuktkb-1
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMf5P7008217
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 35pf40p8fy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:10 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BVMi9ON008434
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:10 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:18 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BVMiHLq024857
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:44:17 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 31 Dec 2020 14:44:09 -0800
-Subject: [PATCHSET v22 0/5] xfs: online repair hard problems
+        with ESMTP ; Thu, 31 Dec 2020 14:44:17 -0800
+Subject: [PATCHSET 0/4] xfs: widen BUI formats to support rt
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 31 Dec 2020 14:44:08 -0800
-Message-ID: <160945464874.2830632.6081935213178010313.stgit@magnolia>
+Date:   Thu, 31 Dec 2020 14:44:16 -0800
+Message-ID: <160945465632.2830720.7866409885544682111.stgit@magnolia>
 In-Reply-To: <20201231223847.GI6918@magnolia>
 References: <20201231223847.GI6918@magnolia>
 User-Agent: StGit/0.19
@@ -53,8 +53,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9851 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
+ mlxlogscore=999 suspectscore=0 spamscore=0 phishscore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2012310134
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9851 signatures=668683
@@ -62,21 +62,18 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 cl
  impostorscore=0 mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0
  bulkscore=0 priorityscore=1501 lowpriorityscore=0 phishscore=0
  suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012310135
+ engine=8.12.0-2009150000 definitions=main-2012310134
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-This series tackles hard problems for online repair to solve.  Hard
-problems are defined as ones that cannot be done without running afoul
-of the regular xfs locking and synchronization rules.
-
-We solve these problems by adding ability to freeze the filesystem to
-perform a scrub operation, and then we add a couple more repair
-functions to deal with incorrect fs summary counters and rebuild reverse
-mapping btrees.
+Atomic extent swapping (and later, reverse mapping and reflink) on the
+realtime device needs to be able to defer file mapping and extent
+freeing work in much the same manner as is required on the data volume.
+Make the BUI log items operate on rt extents in preparation for atomic
+swapping and realtime rmap.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -87,37 +84,18 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-hard-problems
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-bmap-intents
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-hard-problems
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-hard-problems
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-bmap-intents
 ---
- fs/xfs/Makefile                  |    2 
- fs/xfs/libxfs/xfs_bmap.c         |   34 +
- fs/xfs/libxfs/xfs_bmap.h         |    8 
- fs/xfs/libxfs/xfs_fs.h           |    6 
- fs/xfs/scrub/bitmap.c            |   14 
- fs/xfs/scrub/bitmap.h            |    1 
- fs/xfs/scrub/common.c            |   91 +++
- fs/xfs/scrub/common.h            |    2 
- fs/xfs/scrub/fscounters.c        |   90 ++-
- fs/xfs/scrub/fscounters_repair.c |   63 ++
- fs/xfs/scrub/repair.c            |   27 +
- fs/xfs/scrub/repair.h            |   17 
- fs/xfs/scrub/rmap.c              |    6 
- fs/xfs/scrub/rmap_repair.c       | 1344 ++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/scrub.c             |   14 
- fs/xfs/scrub/scrub.h             |    1 
- fs/xfs/scrub/trace.h             |   51 +
- fs/xfs/xfs_icache.c              |    3 
- fs/xfs/xfs_icache.h              |    6 
- fs/xfs/xfs_mount.h               |    7 
- fs/xfs/xfs_super.c               |   47 +
- fs/xfs/xfs_trans.c               |    5 
- 22 files changed, 1796 insertions(+), 43 deletions(-)
- create mode 100644 fs/xfs/scrub/fscounters_repair.c
- create mode 100644 fs/xfs/scrub/rmap_repair.c
+ fs/xfs/libxfs/xfs_bmap.c       |   63 ++++++++++++++++++++++++----------------
+ fs/xfs/libxfs/xfs_inode_fork.c |    9 ++++++
+ fs/xfs/libxfs/xfs_inode_fork.h |    1 +
+ fs/xfs/libxfs/xfs_log_format.h |    4 ++-
+ fs/xfs/scrub/bmap.c            |    4 +--
+ fs/xfs/scrub/rmap_repair.c     |   12 +-------
+ fs/xfs/xfs_bmap_item.c         |   17 ++++++++++-
+ fs/xfs/xfs_trace.h             |    8 +++--
+ 8 files changed, 74 insertions(+), 44 deletions(-)
 
