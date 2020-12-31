@@ -2,50 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E93C52E826C
+	by mail.lfdr.de (Postfix) with ESMTP id 059492E826A
 	for <lists+linux-xfs@lfdr.de>; Thu, 31 Dec 2020 23:48:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726848AbgLaWsE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726830AbgLaWsE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Thu, 31 Dec 2020 17:48:04 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:57172 "EHLO
+Received: from aserp2130.oracle.com ([141.146.126.79]:57166 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgLaWsE (ORCPT
+        with ESMTP id S1726630AbgLaWsE (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Thu, 31 Dec 2020 17:48:04 -0500
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMkRTX155714;
-        Thu, 31 Dec 2020 22:47:20 GMT
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMkXrv155735;
+        Thu, 31 Dec 2020 22:47:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=n412d0/qjaoMCxsU22B2OlK5pCvkNFeAl8qlEae0BNs=;
- b=GfZ9BRMFO/y687Wt8oT75gj3Z3q7zz1sqapRePo7WQ3dk4IO2cPra/DQRHVlXIl4UE7r
- JjYB7OihJUk5rROyKMOKoFMUGwC6YfLPJ5JAzRYXe5RpLbHuOfGzYsPOajtAqeAOl0Xc
- EL3guDVew+6DeZnuid9ToH4JykguFspV6lDanFbtlnhMNknXNK+rAFn1Ws+EhXsdLYwM
- OIKMKEDwlne500QHtGDi3IrItNXGEmDUTA/tTuLb+vI9xMp8hN9oYHUtH5RkYurYTlfk
- jEzWGbJL7PW6yZ1HIrOIrg3/K9VWLOMVSkgy6iYo59iFxHdGznbFK156fcwy8k6Ls5pv fg== 
+ bh=scD0TkbNMgUIvxA1sRRu4iEqFRCx3BVJhb7X4RkNPGo=;
+ b=jJ25mNxJGxW4D3zaB8R9qS9UvVK0t/nAGH4/mxYXv8Ar2DrR0eyWxdqQG4Yr/a5Izft8
+ JMFIP+TbeUZXwaCPhalWyY/eBZ8yjKdxwDOqHIECidr3Y9P6PLiAOqE6b8sOz8RGsga3
+ agN+IGO1nxn+gsJZ/4YuSvaKbXjPRVQ2g7AUxVOetVWLKlLxPRU6FOhyYK3FmacFlYrG
+ HM7ccFeD6/bAgdNGrLpoD/1PVIbFCSWSiklAzPzCRcPtDgwXB3gZjye9OxO8ICsrafPW
+ 5TSY7MdjFfYPDOWsv1EoktesxEM3kC92YUia2rkPuCXTWzUwx1CppcHNbclOgkydaY6A lQ== 
 Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 35rk3bv3qt-1
+        by aserp2130.oracle.com with ESMTP id 35rk3bv3qu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 31 Dec 2020 22:47:20 +0000
+        Thu, 31 Dec 2020 22:47:22 +0000
 Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMj5iB015906;
-        Thu, 31 Dec 2020 22:47:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 35pf40pdgt-1
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMj5g3015902;
+        Thu, 31 Dec 2020 22:47:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 35pf40pdjw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Dec 2020 22:47:19 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0BVMlDlV003839;
-        Thu, 31 Dec 2020 22:47:13 GMT
+        Thu, 31 Dec 2020 22:47:21 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BVMlKtC025836;
+        Thu, 31 Dec 2020 22:47:20 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 31 Dec 2020 14:47:13 -0800
-Subject: [PATCHSET 0/2] xfs_admin: support upgrading v5 filesystems
+        with ESMTP ; Thu, 31 Dec 2020 14:47:20 -0800
+Subject: [PATCHSET v2 0/2] xfs_repair: rebuild inode fork mappings
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Date:   Thu, 31 Dec 2020 14:47:12 -0800
-Message-ID: <160945483209.2835113.1168762329292387769.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org
+Date:   Thu, 31 Dec 2020 14:47:19 -0800
+Message-ID: <160945483936.2835207.12689065362254992134.stgit@magnolia>
 In-Reply-To: <20201231223847.GI6918@magnolia>
 References: <20201231223847.GI6918@magnolia>
 User-Agent: StGit/0.19
@@ -69,8 +69,8 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-Extend xfs_db and xfs_admin to support adding the inode btree counter and
-bigtime features to an existing v5 filesystem.
+Add the ability to regenerate inode fork mappings if the rmapbt
+otherwise looks ok.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -81,10 +81,23 @@ Comments and questions are, as always, welcome.
 --D
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=fs-upgrades
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-rebuild-forks
 ---
- db/sb.c              |   38 ++++++++++++++++++++++++++++++++++++++
- man/man8/xfs_admin.8 |   12 ++++++++++++
- man/man8/xfs_db.8    |    7 +++++++
- 3 files changed, 57 insertions(+)
+ include/xfs_trans.h      |    3 
+ libxfs/libxfs_api_defs.h |   12 +
+ libxfs/trans.c           |   48 ++++
+ repair/Makefile          |    2 
+ repair/agbtree.c         |    2 
+ repair/bmap_repair.c     |  602 ++++++++++++++++++++++++++++++++++++++++++++++
+ repair/bmap_repair.h     |   13 +
+ repair/bulkload.c        |  167 +++++++++++++
+ repair/bulkload.h        |   17 +
+ repair/dino_chunks.c     |    5 
+ repair/dinode.c          |  206 ++++++++++------
+ repair/dinode.h          |    7 -
+ repair/rmap.c            |    2 
+ repair/rmap.h            |    1 
+ 14 files changed, 1006 insertions(+), 81 deletions(-)
+ create mode 100644 repair/bmap_repair.c
+ create mode 100644 repair/bmap_repair.h
 
