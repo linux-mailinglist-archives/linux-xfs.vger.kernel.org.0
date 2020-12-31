@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 834D22E8269
-	for <lists+linux-xfs@lfdr.de>; Thu, 31 Dec 2020 23:48:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 724E52E826B
+	for <lists+linux-xfs@lfdr.de>; Thu, 31 Dec 2020 23:48:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgLaWr4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 31 Dec 2020 17:47:56 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:35086 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726630AbgLaWr4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 31 Dec 2020 17:47:56 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMlFou148543
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:47:15 GMT
+        id S1726630AbgLaWsE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 31 Dec 2020 17:48:04 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59132 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726848AbgLaWsE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 31 Dec 2020 17:48:04 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMj7jQ018873
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:47:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
  cc : date : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=GQ9M1dbIAFmpCQVF1OWhHpoDsWW0UJLNV6mo6SMzPhw=;
- b=VPxZttLqqQ/uOFmvUwcntz1Akq71GWt90QkP0H6aTXx3p4MLLTmOs+mcvee/Aql2SqKi
- grpf1XRaMNiHdWU02WPdlBrM0KXhVgv6j3IFcDEbhb3zKa6Gp0Wx1eMP7/EEmjO14ObJ
- cb6K7GRYfi0fw5kNV3CEljpvDrB0/duoKuZ7RsbS9VbSe1GjiFL2g1oyzf6zV0cQsJgQ
- t0jHNCPCHQDJ+PXoNrdenWObaiBM6oihML+op8fTv6y9y+pevYKAQoIK5YhTUegETTby
- iJ51rFBLREG7wr6jhTWUOy1S8ZBiS0I97v3NccuapkidYX2Vw8NFArzvrJZ40GIqeqI7 4g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 35phm1jt4g-1
+ bh=vqLlyzMAgotfp9nTsmE9f9dIKUQB4fQmrc9YAHdYp3I=;
+ b=jKVWYGVIAf+RsIoFHdEdqsl/rIL4BIjp9GIfN0rui7KgRwX6/Ve85fBWEFBwIYGtsxwo
+ rvnNPYC/dE3VMpxzoSNOlagariPMq2UKPmTltzf92x42gu0r8h3PC0xOR1QH9ZxgUWuE
+ qvKzjsw3eWUDEWZpp0T5D2hOZXq6BCGMjqHq2ZJxCSMDG6HUtgWXIC8iHslZ4y5Wpz2r
+ 6gqSB+gVgDYZBZouZifoRs7+rGChjfKjYri9ZqPvMa1oiBtal85iETE8zHS9heTSdQdQ
+ aWqNXUcKfUu7hDfIkIWTB4Cbb52Y1EY5zbfhqI0Ypnx9UGD0Y4h3BpKQwnrFoq7d5cSv 7A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 35nvkquwbd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:47:15 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMe5eb143878
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:45:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 35pexuktyf-1
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:47:23 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0BVMe8Bn015241
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:45:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 35perpndpn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:45:14 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BVMjDN4008813
-        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:45:13 GMT
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:45:22 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0BVMjLC7025193
+        for <linux-xfs@vger.kernel.org>; Thu, 31 Dec 2020 22:45:21 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 31 Dec 2020 14:45:13 -0800
-Subject: [PATCHSET v2 00/15] xfs: metadata inode directories
+        with ESMTP ; Thu, 31 Dec 2020 14:45:21 -0800
+Subject: [PATCHSET 00/14] xfs: refactor btrees to support records in inode
+ root
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 31 Dec 2020 14:45:12 -0800
-Message-ID: <160945471235.2831517.11575699953142645925.stgit@magnolia>
+Date:   Thu, 31 Dec 2020 14:45:20 -0800
+Message-ID: <160945472041.2831685.11898007701914419132.stgit@magnolia>
 In-Reply-To: <20201231223847.GI6918@magnolia>
 References: <20201231223847.GI6918@magnolia>
 User-Agent: StGit/0.19
@@ -53,14 +54,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9851 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012310134
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012310134
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9851 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 priorityscore=1501
- mlxscore=0 mlxlogscore=999 adultscore=0 bulkscore=0 malwarescore=0
- spamscore=0 impostorscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 impostorscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2012310135
 Precedence: bulk
@@ -69,28 +70,12 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-This series delivers a new feature -- metadata inode directories.  This
-is a separate directory tree (rooted in the superblock) that contains
-only inodes that contain filesystem metadata.  Different metadata
-objects can be looked up with regular paths.
-
-We start by creating xfs_imeta_* functions to mediate access to metadata
-inode pointers.  This enables the imeta code to abstract inode pointers,
-whether they're the classic five in the superblock, or the much more
-complex directory tree.  All current users of metadata inodes (rt+quota)
-are converted to use the boilerplate code.
-
-Next, we define the metadir on-disk format, which consists of marking
-inodes with a new iflag that says they're metadata.  This we use to
-prevent bulkstat and friends from ever getting their hands on fs
-metadata.
-
-Finally, we implement metadir operations so that clients can create,
-delete, zap, and look up metadata inodes by path.  Beware that much of
-this code is only lightly used, because the five current users of
-metadata inodes don't tend to change them very often.  This is likely to
-change if and when the subvolume and multiple-rt-volume features get
-written/merged/etc.
+This series prepares the btree code to support realtime reverse mapping
+btrees by refactoring xfs_ifork_realloc to be fed a per-btree ops
+structure so that it can handle multiple types of inode-rooted btrees.
+It moves on to refactoring the btree code to use the new realloc
+routines and to support storing btree rcords in the inode root, because
+the current bmbt code does not support this.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -101,46 +86,33 @@ Comments and questions are, as always, welcome.
 --D
 
 kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=metadir
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=btree-ifork-records
 
 xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=metadir
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=metadir
-
-xfsdocs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-documentation.git/log/?h=metadir
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=btree-ifork-records
 ---
- fs/xfs/Makefile                |    1 
- fs/xfs/libxfs/xfs_dir2.c       |    1 
- fs/xfs/libxfs/xfs_format.h     |   55 ++
- fs/xfs/libxfs/xfs_ialloc.c     |   47 +-
- fs/xfs/libxfs/xfs_ialloc.h     |    2 
- fs/xfs/libxfs/xfs_imeta.c      |  959 ++++++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_imeta.h      |   73 +++
- fs/xfs/libxfs/xfs_inode_buf.c  |   69 +++
- fs/xfs/libxfs/xfs_inode_buf.h  |    3 
- fs/xfs/libxfs/xfs_inode_util.c |    4 
- fs/xfs/libxfs/xfs_sb.c         |   31 +
- fs/xfs/libxfs/xfs_trans_resv.c |   83 +++
- fs/xfs/libxfs/xfs_trans_resv.h |    2 
- fs/xfs/libxfs/xfs_types.c      |    7 
- fs/xfs/scrub/common.c          |    3 
- fs/xfs/scrub/inode_repair.c    |    6 
- fs/xfs/scrub/scrub.c           |    1 
- fs/xfs/xfs_icache.c            |   38 ++
- fs/xfs/xfs_inode.c             |  132 ++++++
- fs/xfs/xfs_inode.h             |    5 
- fs/xfs/xfs_iops.c              |   34 +
- fs/xfs/xfs_mount.c             |   39 ++
- fs/xfs/xfs_mount.h             |    1 
- fs/xfs/xfs_qm.c                |  192 +++++---
- fs/xfs/xfs_qm_syscalls.c       |    4 
- fs/xfs/xfs_rtalloc.c           |   14 -
- fs/xfs/xfs_super.c             |    4 
- fs/xfs/xfs_trace.h             |   81 +++
- 28 files changed, 1786 insertions(+), 105 deletions(-)
- create mode 100644 fs/xfs/libxfs/xfs_imeta.c
- create mode 100644 fs/xfs/libxfs/xfs_imeta.h
+ fs/xfs/libxfs/xfs_alloc_btree.c    |    6 -
+ fs/xfs/libxfs/xfs_alloc_btree.h    |    3 
+ fs/xfs/libxfs/xfs_attr_leaf.c      |    8 -
+ fs/xfs/libxfs/xfs_bmap.c           |   60 ++----
+ fs/xfs/libxfs/xfs_bmap_btree.c     |   94 ++++++++-
+ fs/xfs/libxfs/xfs_bmap_btree.h     |  219 +++++++++++++++------
+ fs/xfs/libxfs/xfs_btree.c          |  382 ++++++++++++++++++++++++++++--------
+ fs/xfs/libxfs/xfs_btree.h          |    4 
+ fs/xfs/libxfs/xfs_btree_staging.c  |    4 
+ fs/xfs/libxfs/xfs_ialloc.c         |    4 
+ fs/xfs/libxfs/xfs_ialloc_btree.c   |    6 -
+ fs/xfs/libxfs/xfs_ialloc_btree.h   |    3 
+ fs/xfs/libxfs/xfs_inode_fork.c     |  168 +++++++---------
+ fs/xfs/libxfs/xfs_inode_fork.h     |   27 ++-
+ fs/xfs/libxfs/xfs_refcount_btree.c |    5 
+ fs/xfs/libxfs/xfs_refcount_btree.h |    3 
+ fs/xfs/libxfs/xfs_rmap_btree.c     |    7 -
+ fs/xfs/libxfs/xfs_rmap_btree.h     |    3 
+ fs/xfs/libxfs/xfs_sb.c             |   16 +-
+ fs/xfs/libxfs/xfs_trans_resv.c     |    2 
+ fs/xfs/scrub/bmap_repair.c         |    4 
+ fs/xfs/scrub/inode_repair.c        |    2 
+ fs/xfs/xfs_xchgrange.c             |    4 
+ 23 files changed, 705 insertions(+), 329 deletions(-)
 
