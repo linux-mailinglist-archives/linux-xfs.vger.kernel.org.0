@@ -2,122 +2,136 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDF972E85C9
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 Jan 2021 22:57:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F0A82E87CA
+	for <lists+linux-xfs@lfdr.de>; Sat,  2 Jan 2021 16:25:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbhAAVyk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Jan 2021 16:54:40 -0500
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:33908 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727173AbhAAVyj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 Jan 2021 16:54:39 -0500
-Received: from dread.disaster.area (pa49-179-167-107.pa.nsw.optusnet.com.au [49.179.167.107])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 0D56D8BF5;
-        Sat,  2 Jan 2021 08:53:54 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kvSMr-00244f-HB; Sat, 02 Jan 2021 08:53:53 +1100
-Date:   Sat, 2 Jan 2021 08:53:53 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     kernel test robot <oliver.sang@intel.com>,
-        0day robot <lkp@intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        id S1726670AbhABPWF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 2 Jan 2021 10:22:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726599AbhABPWD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 2 Jan 2021 10:22:03 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C5E5C061573;
+        Sat,  2 Jan 2021 07:21:23 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id 3so13738288wmg.4;
+        Sat, 02 Jan 2021 07:21:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OJBITHaQqc5xps2gqOqR24Tyr4hGdZImALfk9kxilUw=;
+        b=NvGUGxltRkygnkWt8il2VY/VOJmppE+yq+zgwo8hmdFcFZfjYtKFZ/rhfCOQnBc+Zk
+         8xThlikKe45cXimJXDIexKr7ayg3lOvYuqlm7LgZ+jrDz+Caf5N0QJE0y2dlCjD+xd5b
+         sZMQP1sfAQPp+AM5Lig7wFNbxAechxk7ODSAJUgidqhfDVnAMOEFrXTIBGx+mFecPof/
+         RDRBMGsxVZmpKew2I0jLuZP/b9FqovcagcOCF3EuI1HhVpskaO+cUtenCizeHbbVp9KI
+         51z/mVU+s2eorqGFff/E7J47uV8DTSNJnYfBx8YnDhAPSiT9kSXtkQj0iJkYru2Hw4Zk
+         VRAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OJBITHaQqc5xps2gqOqR24Tyr4hGdZImALfk9kxilUw=;
+        b=rpMIAIeirbUfTJ56EvS5BvodnXqMozM4plCagANpQ4XaDpxq1XmqmOMZwWUokqr4JN
+         4QRg/sHIzrrJ9O5gFDQ0eh1zdho+r7ttOrZb8dA2dMK9MpK5/VAKj9bZpCOsIfzZPY83
+         JlwuvtkhjnaVne7VbXG/7GDDDxwrmNQgECFHKafgevYVLUhxfSmhGbCiKqmFx9sp11Dl
+         9RN4S5m3cv5pTjh9iF7RNtgKFUjKpBG/BH7DnbAAx/w/8kU8t6v7DcfxuAFWzPcFMueP
+         eXCGLsBUVeb2jAWQSCgUSieprF8FiD1GyOW/6jAdEKTMxj0hZ+VNrvZMoL8b3RP2Mkc1
+         oyvA==
+X-Gm-Message-State: AOAM533oIgF18UiNDvLB0e7NC2RavlPdNakp5Ahbe1BlgAT03rXnc+fA
+        VIsyaJ97NNnf1NMBFO/yK2our1I/8s55QQ==
+X-Google-Smtp-Source: ABdhPJz1HKKwKxVCoTsKOjB/MYoTeJtGzrGeOEkTWLP+7WGm6nET026PZQx1ZUd9bCXYV2kgxNirfg==
+X-Received: by 2002:a1c:87:: with SMTP id 129mr19523015wma.183.1609600881470;
+        Sat, 02 Jan 2021 07:21:21 -0800 (PST)
+Received: from localhost.localdomain ([85.255.236.0])
+        by smtp.gmail.com with ESMTPSA id h13sm78671243wrm.28.2021.01.02.07.21.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 02 Jan 2021 07:21:20 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     linux-block@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>,
         Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-xfs@vger.kernel.org, Linux MM <linux-mm@kvack.org>
-Subject: Re: [xfs] db962cd266: Assertion_failed
-Message-ID: <20210101215353.GB331610@dread.disaster.area>
-References: <20201222012131.47020-5-laoar.shao@gmail.com>
- <20201231030158.GB379@xsang-OptiPlex-9020>
- <CALOAHbD+mLMJSizToKPsx0iUd5Z71sJBOyMaV2enVvUHfHwLzg@mail.gmail.com>
+        Matthew Wilcox <willy@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: [PATCH v2 0/7] no-copy bvec
+Date:   Sat,  2 Jan 2021 15:17:32 +0000
+Message-Id: <cover.1609461359.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALOAHbD+mLMJSizToKPsx0iUd5Z71sJBOyMaV2enVvUHfHwLzg@mail.gmail.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
-        a=+wqVUQIkAh0lLYI+QRsciw==:117 a=+wqVUQIkAh0lLYI+QRsciw==:17
-        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8
-        a=XA52iYJiZECpFeylV-IA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 01, 2021 at 05:10:49PM +0800, Yafang Shao wrote:
-> On Thu, Dec 31, 2020 at 10:46 AM kernel test robot
-> <oliver.sang@intel.com> wrote:
-.....
-> > [  552.905799] XFS: Assertion failed: !current->journal_info, file: fs/xfs/xfs_trans.h, line: 280
-> > [  553.104459]  xfs_trans_reserve+0x225/0x320 [xfs]
-> > [  553.110556]  xfs_trans_roll+0x6e/0xe0 [xfs]
-> > [  553.116134]  xfs_defer_trans_roll+0x104/0x2a0 [xfs]
-> > [  553.122489]  ? xfs_extent_free_create_intent+0x62/0xc0 [xfs]
-> > [  553.129780]  xfs_defer_finish_noroll+0xb8/0x620 [xfs]
-> > [  553.136299]  xfs_defer_finish+0x11/0xa0 [xfs]
-> > [  553.142017]  xfs_itruncate_extents_flags+0x141/0x440 [xfs]
-> > [  553.149053]  xfs_setattr_size+0x3da/0x480 [xfs]
-> > [  553.154939]  ? setattr_prepare+0x6a/0x1e0
-> > [  553.160250]  xfs_vn_setattr+0x70/0x120 [xfs]
-> > [  553.165833]  notify_change+0x364/0x500
-> > [  553.170820]  ? do_truncate+0x76/0xe0
-> > [  553.175673]  do_truncate+0x76/0xe0
-> > [  553.180184]  path_openat+0xe6c/0x10a0
-> > [  553.184981]  do_filp_open+0x91/0x100
-> > [  553.189707]  ? __check_object_size+0x136/0x160
-> > [  553.195493]  do_sys_openat2+0x20d/0x2e0
-> > [  553.200481]  do_sys_open+0x44/0x80
-> > [  553.204926]  do_syscall_64+0x33/0x40
-> > [  553.209588]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Thanks for the report.
-> 
-> At a first glance, it seems we should make a similar change as we did
-> in xfs_trans_context_clear().
-> 
-> static inline void
-> xfs_trans_context_set(struct xfs_trans *tp)
-> {
->     /*
->      * We have already handed over the context via xfs_trans_context_swap().
->      */
->     if (current->journal_info)
->         return;
->     current->journal_info = tp;
->     tp->t_pflags = memalloc_nofs_save();
-> }
+Currently, when iomap and block direct IO gets a bvec based iterator
+the bvec will be copied, with all other accounting that takes much
+CPU time and causes additional allocation for larger bvecs. The
+patchset makes it to reuse the passed in iter bvec.
 
-Ah, no.
+[1,2] are forbidding zero-length bvec segments to not pile special
+cases, [3] skip/fix PSI tracking to not iterate over bvecs extra
+time.
 
-Remember how I said "split out the wrapping of transaction
-context setup in xfs_trans_reserve() from
-the lifting of the context setting into xfs_trans_alloc()"?
 
-Well, you did the former and dropped the latter out of the patch
-set.
+nullblk completion_nsec=0 submit_queues=NR_CORES, no merges, no stats
+fio/t/io_uring /dev/nullb0 -d 128 -s 32 -c 32 -p 0 -B 1 -F 1 -b BLOCK_SIZE
 
-Now when a transaction rolls after xfs_trans_context_swap(), it
-calls xfs_trans_reserve() and tries to do transaction context setup
-work inside a transaction context that already exists.  IOWs, you
-need to put the patch that lifts of the context setting up into
-xfs_trans_alloc() back into the patchset before adding the
-current->journal functionality patch.
+BLOCK_SIZE             512     4K      8K      16K     32K     64K
+===================================================================
+old (KIOPS)            1208    1208    1131    1039    863     699
+new (KIOPS)            1222    1222    1170    1137    1083    982
 
-Also, you need to test XFS code with CONFIG_XFS_DEBUG=y so that
-asserts are actually built into the code and exercised, because this
-ASSERT should have fired on the first rolling transaction that the
-kernel executes...
+Previously, Jens got before 10% difference for polling real HW and small
+block sizes, but that was for an older version that had one
+iov_iter_advance() less
 
-Cheers,
 
-Dave.
+since RFC:
+- add target_core_file patch by Christoph
+- make no-copy default behaviour, remove iter flag
+- iter_advance() instead of hacks to revert to work
+- add bvec iter_advance() optimisation patch
+- remove PSI annotations from direct IO (iomap, block and fs/direct)
+- note in d/f/porting
+
+since v1:
+- don't allow zero-length bvec segments (Ming)
+- don't add a BIO_WORKINGSET-less version of bio_add_page(), just clear
+  the flag at the end and leave it for further cleanups (Christoph)
+- commit message and comments rewording (Dave)
+- other nits by Christoph
+
+Christoph Hellwig (1):
+  target/file: allocate the bvec array as part of struct
+    target_core_file_cmd
+
+Pavel Begunkov (6):
+  splice: don't generate zero-len segement bvecs
+  bvec/iter: disallow zero-length segment bvecs
+  block/psi: remove PSI annotations from direct IO
+  iov_iter: optimise bvec iov_iter_advance()
+  bio: add a helper calculating nr segments to alloc
+  bio: don't copy bvec for direct IO
+
+ Documentation/filesystems/porting.rst | 16 ++++++
+ block/bio.c                           | 71 +++++++++++++--------------
+ drivers/target/target_core_file.c     | 20 +++-----
+ fs/block_dev.c                        |  7 +--
+ fs/direct-io.c                        |  2 +
+ fs/iomap/direct-io.c                  |  9 ++--
+ fs/splice.c                           |  9 ++--
+ include/linux/bio.h                   | 13 +++++
+ lib/iov_iter.c                        | 21 +++++++-
+ 9 files changed, 103 insertions(+), 65 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.24.0
+
