@@ -2,87 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EAA092E9D43
-	for <lists+linux-xfs@lfdr.de>; Mon,  4 Jan 2021 19:43:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E07B2E9DFC
+	for <lists+linux-xfs@lfdr.de>; Mon,  4 Jan 2021 20:12:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbhADSnS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 Jan 2021 13:43:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32656 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726148AbhADSnS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 Jan 2021 13:43:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1609785712;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xnUFVPjyd5FDbZ2bJQABDl3KLZk7AdP09C8L9pyeYN4=;
-        b=ayZLQ51OazsVGF2y7fSgr3Pw09VR306MM6y2SOwtVYcZ40ql1g5yzdTqJE+g0w/vYvZd5X
-        KeHufHjYaNIbDkgngULbwU3wjrDWdEdxXWZddvgyCopz1G+VaJoKh43lQ4Kq/cRhJoYEbc
-        0+KQBvuoEj1EuyUBR2H0f5UZHTS2YDQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-B_dDdIGUMAyFEP1QTR-JjA-1; Mon, 04 Jan 2021 13:41:50 -0500
-X-MC-Unique: B_dDdIGUMAyFEP1QTR-JjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 733E0107ACE4;
-        Mon,  4 Jan 2021 18:41:49 +0000 (UTC)
-Received: from localhost (unknown [10.66.61.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C8FAF100AE2E;
-        Mon,  4 Jan 2021 18:41:48 +0000 (UTC)
-Date:   Tue, 5 Jan 2021 02:57:54 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] mkfs: make inobtcount visible
-Message-ID: <20210104185754.GI14354@localhost.localdomain>
-Mail-Followup-To: Eric Sandeen <sandeen@sandeen.net>,
-        linux-xfs@vger.kernel.org
-References: <20210104113006.328274-1-zlang@redhat.com>
- <3c682608-3ba8-83bb-8d16-49c798e7258c@sandeen.net>
- <3194df4e-267f-8fb1-c183-ead1d4080c85@sandeen.net>
+        id S1727660AbhADTLq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 Jan 2021 14:11:46 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:53535 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726680AbhADTLq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 Jan 2021 14:11:46 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0D2925C0126;
+        Mon,  4 Jan 2021 14:11:00 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 04 Jan 2021 14:11:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=pZXhUZxCSADzBVQ9ofdJtQeBBSe
+        xqsAm8Eg19RhO6cI=; b=agiscWQ98ZDuMJN0olfAXH6/OU4LfJ24tbHICetHAC2
+        nYx4EZXVTSQ2E2t2AxOYCUAkBuEEpwMjAZA1hG/JLI6E+4pQ7uVmymHY92jaVsXm
+        0BqMIBILJiEYUwQ3m5KIqfb/3JXeVsI3d48/Ei7Y8Llv3uF/Xzd5EMO0ylY+F06X
+        ccH453M0ISZImILbZHSCV99Wq7A4t+xjeiP85iwf9znW+2Mz/HkjoTN/shrv5ri+
+        Ro8AnK+iya1ZTqgvaNdNZloEA+4yW+GbXvD5SicIkkopqUPATMIYsvAAsb5GDkt6
+        SuMu/AnCirpfwdRjvfQ/jdhhnb0wzGwOKhibJHFrLuQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=pZXhUZ
+        xCSADzBVQ9ofdJtQeBBSexqsAm8Eg19RhO6cI=; b=NOehI7clTvaRQUcobnnJuU
+        JIS01ZYV2qpr7LkfSG0pgRuWTaf8ZEjoxY/+Nu3NIoRenwkkED6AG3wbVIA3h6C8
+        6EzHv4XRdHYSZy7RThzuM9gT8u83QBXMxXZ/2sd1MFUUNa+qqFeOP3CmgYov/n4i
+        o5lW4eof7DB/4HQOomUFQ1R8Qo3pYe2wtrcIKYD2EWrxPjjGVuzyj1djpCXfAPCl
+        qJ2qtHJwwkS55pzufZlDK+yXGHiFEIFCHvxwxJ07pWMil+2ITgXQUappRtFxYJaV
+        xI6dSLoijMfXJ+5S6aWRzguUZo5kQnkkG4+KvRvgqcYBoQ9g/x3yQcfgdAKgtoUg
+        ==
+X-ME-Sender: <xms:Q2jzX7TMbCsmPAy47o265epCU8kG7dHJS3XwH6LgM1lAmO49GdjBxQ>
+    <xme:Q2jzX8thonNni7mhli0HvCFfNERxeRJtf4DCD455qtsjxCLsE61abAxX_UdIF3eVg
+    q0m4fto2xipiB9dJQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedujedrvdeffedguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehnughr
+    vghsucfhrhgvuhhnugcuoegrnhgurhgvshesrghnrghrrgiivghlrdguvgeqnecuggftrf
+    grthhtvghrnhepudekhfekleeugeevteehleffffejgeelueduleeffeeutdelffeujeff
+    hfeuffdunecukfhppeeijedrudeitddrvddujedrvdehtdenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvshesrghnrghrrgiivghl
+    rdguvg
+X-ME-Proxy: <xmx:Q2jzX9v6SPLtIj6qaGqMkCDKAJRcmCnLoBQp20AWgDVqfhNj-m2SJA>
+    <xmx:Q2jzXyx-AqhbjXoWiiNFevYXyoIHW7Ja31-VA4PMHqfjhHY-5oCYOg>
+    <xmx:Q2jzXzhK-k3azrJOxdWkLG_2yDqVOU_vkss3UYwhfHEevAnb_McXSQ>
+    <xmx:RGjzXzdT8WAgLl3Q6NeiyOO0YiW_qQhlQkwGVCuLRZnhW6E6KadpMQ>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7CF531080064;
+        Mon,  4 Jan 2021 14:10:59 -0500 (EST)
+Date:   Mon, 4 Jan 2021 11:10:58 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-block@vger.kernel.org
+Subject: Re: fallocate(FALLOC_FL_ZERO_RANGE_BUT_REALLY) to avoid unwritten
+ extents?
+Message-ID: <20210104191058.sryksqjnjjnn5raa@alap3.anarazel.de>
+References: <20201230062819.yinrrp6uwfegsqo3@alap3.anarazel.de>
+ <20210104181958.GE6908@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3194df4e-267f-8fb1-c183-ead1d4080c85@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20210104181958.GE6908@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 04, 2021 at 10:29:21AM -0600, Eric Sandeen wrote:
-> 
-> 
-> On 1/4/21 9:28 AM, Eric Sandeen wrote:
-> > On 1/4/21 5:30 AM, Zorro Lang wrote:
-> >> When set inobtcount=1/0, we can't see it from xfs geometry report.
-> >> So make it visible.
-> >>
-> >> Signed-off-by: Zorro Lang <zlang@redhat.com>
-> > Hi Zorro - thanks for spotting this.
+Hi,
+
+On 2021-01-04 10:19:58 -0800, Darrick J. Wong wrote:
+> On Tue, Dec 29, 2020 at 10:28:19PM -0800, Andres Freund wrote:
+> > Would it make sense to add a variant of FALLOC_FL_ZERO_RANGE that
+> > doesn't convert extents into unwritten extents, but instead uses
+> > blkdev_issue_zeroout() if supported?  Mostly interested in xfs/ext4
+> > myself, but ...
 > > 
-> > I think the libxfs changes need to hit the kernel first, then we can
-> > pull it in and fix up the report_geom function.  Nothing calls
-> > xfs_fs_geometry directly in userspace, FWIW.
-> 
-> Hah, of course I forgot about libxfs_fs_geometry. o_O
-> 
-> In any case, I think this should hit the kernel first, want to send
-> that patch if it's not already on the list?
-
-I can give it a try, if Darrick haven't had one in his developing list :)
-
-Thanks,
-Zorro
-
-> 
-> -Eric
-> 
-> > Thanks,
-> > -Eric
+> > Doing so as a variant of FALLOC_FL_ZERO_RANGE seems to make the most
+> > sense, as that'd work reasonably efficiently to initialize newly
+> > allocated space as well as for zeroing out previously used file space.
 > > 
+> > 
+> > As blkdev_issue_zeroout() already has a fallback path it seems this
+> > should be doable without too much concern for which devices have write
+> > zeroes, and which do not?
 > 
+> Question: do you want the kernel to write zeroes even for devices that
+> don't support accelerated zeroing?
 
+I don't have a strong opinion on it. A complex userland application can
+do a bit better job managing queue depth etc, but otherwise I suspect
+doing the IO from kernel will win by a small bit. And the queue-depth
+issue presumably would be relevant for write-zeroes as well, making me
+lean towards just using the fallback.
+
+
+> Since I assume that if the fallocate fails you'll fall back to writing
+> zeroes from userspace anyway...
+
+And there's non-linux platforms as well, at least that's the rumor I hear.
+
+
+> Second question: Would it help to have a FALLOC_FL_DRY_RUN flag that
+> could be used to probe if a file supports fallocate without actually
+> changing anything?  I'm (separately) pursuing a fix for the loop device
+> not being able to figure out if a file actually supports a particular
+> fallocate mode.
+
+Hm. I can see some potential uses of such a flag, but I haven't really
+wished for it so far.
+
+Greetings,
+
+Andres Freund
