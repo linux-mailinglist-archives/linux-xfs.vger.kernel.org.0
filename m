@@ -2,121 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A46692EA147
-	for <lists+linux-xfs@lfdr.de>; Tue,  5 Jan 2021 01:09:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DACA52EA1C3
+	for <lists+linux-xfs@lfdr.de>; Tue,  5 Jan 2021 01:58:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbhAEAFg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 4 Jan 2021 19:05:36 -0500
-Received: from ishtar.tlinx.org ([173.164.175.65]:50792 "EHLO
-        Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbhAEAFg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 4 Jan 2021 19:05:36 -0500
-Received: from [192.168.3.12] (Athenae [192.168.3.12])
-        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 10504ieV071258;
-        Mon, 4 Jan 2021 16:04:46 -0800
-Message-ID: <5FF3ACCB.3030909@tlinx.org>
-Date:   Mon, 04 Jan 2021 16:03:23 -0800
-From:   L A Walsh <xfs@tlinx.org>
-User-Agent: Thunderbird 2.0.0.24 (Windows/20100228)
+        id S1726929AbhAEAzr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 4 Jan 2021 19:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726258AbhAEAzr (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 4 Jan 2021 19:55:47 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 86D102253A;
+        Tue,  5 Jan 2021 00:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1609808106;
+        bh=vW1bfeQdX9BhgUQwC/CMk7URLM4cDiT6xtDR+MDGdnQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=a/rhmmA4Es5Lzendc5wuI1ciHBAOd3gT6tF/EzCaBjP2l0zF5PZ9pojAY3DnXJva0
+         DlZuSQHH92CNOdm1BG+JTmpCMMX4k0kVkV1FHaAQk/vjdhcJwrLg/4WvEw5nF8CE/U
+         um4gEedPsGkVB7BgrbxccekFmgV24iTBeM7WkWN2/V0eYeepsznEHuToM9UU3qNMEo
+         zp+L2h0LtaCb5rS31RmumwRxoe9N7xVg47WtRrCC7USmlmuDxPXAUIelxMCwACy0GR
+         xsyQce5EFxzNpw0gczY5F3PhY2Oy33072x40R1SSLLjFCjTaX0tKIkGfigfe/iOgel
+         irKjq6A7uNQiw==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 00/13] lazytime fixes and cleanups
+Date:   Mon,  4 Jan 2021 16:54:39 -0800
+Message-Id: <20210105005452.92521-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-CC:     bfoster@redhat.com, xfs <linux-xfs@vger.kernel.org>
-Subject: Re: suggested patch to allow user to access their own file...
-References: <5FEB204B.9090109@tlinx.org> <20210104170815.GB254939@bfoster> <20210104184442.GM6918@magnolia> <5FF3796E.5050409@tlinx.org> <20210104231508.GP6918@magnolia>
-In-Reply-To: <20210104231508.GP6918@magnolia>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+Hello,
+
+This patchset fixes the lazytime bug which I reported last year
+(https://lore.kernel.org/r/20200306004555.GB225345@gmail.com).  This bug
+causes inodes with dirty timestamps to remain dirty after a sync, which
+causes the inodes to be unnecessarily written again, and also causes the
+FS_IOC_REMOVE_ENCRYPTION_KEY ioctl to not work properly.  This bug is
+causing xfstest generic/580 to fail when lazytime is enabled.
+
+Ted and Christoph proposed fixes for this.  Ted's fix
+(https://lore.kernel.org/r/20200307020043.60118-1-tytso@mit.edu) changed
+the call to mark_inode_dirty_sync(inode) in __writeback_single_inode()
+to ->dirty_inode(inode, I_DIRTY_TIME_EXPIRED).  However this would have
+broken XFS, which wants an I_DIRTY_SYNC notification.  Also, people
+preferred a larger rework involving adding a ->lazytime_expired method.
+
+Christoph's fix
+(https://lore.kernel.org/r/20200325122825.1086872-3-hch@lst.de)
+introduced ->lazytime_expired, but it wasn't correct because it didn't
+consider cases in which timestamps are force-expired.
+
+To resolve this, I propose that we first fix the bug by making
+__writeback_single_inode() do an I_DIRTY_SYNC notification if the
+timestamps expired (patch #1).
+
+Then, the remaining patches introduce ->lazytime_expired and make XFS
+use it.  They also clean up various things, such as improving comments.
+
+Also, it turns out that lazytime on XFS is broken because it doesn't
+actually write timestamps to disk after a sync() or after 24 hours.
+This is fixed by the patch to switch XFS to use ->lazytime_expired.
+I've written an xfstest which reproduces this bug.
+
+This patchset applies to v5.11-rc2.
+
+Eric Biggers (13):
+  fs: avoid double-writing inodes on lazytime expiration
+  gfs2: don't worry about I_DIRTY_TIME in gfs2_fsync()
+  fs: only specify I_DIRTY_TIME when needed in generic_update_time()
+  fat: only specify I_DIRTY_TIME when needed in fat_update_time()
+  fs: don't call ->dirty_inode for lazytime timestamp updates
+  fs: pass only I_DIRTY_INODE flags to ->dirty_inode
+  fs: correctly document the inode dirty flags
+  ext4: simplify i_state checks in __ext4_update_other_inode_time()
+  fs: drop redundant checks from __writeback_single_inode()
+  fs: clean up __mark_inode_dirty() a bit
+  fs: add a lazytime_expired method
+  xfs: remove a stale comment from xfs_file_aio_write_checks()
+  xfs: implement lazytime_expired
+
+ Documentation/filesystems/locking.rst |  2 +
+ Documentation/filesystems/vfs.rst     | 15 ++++-
+ fs/ext4/inode.c                       | 20 ++----
+ fs/f2fs/super.c                       |  3 -
+ fs/fat/misc.c                         | 21 +++---
+ fs/fs-writeback.c                     | 94 +++++++++++++++++++--------
+ fs/gfs2/file.c                        |  4 +-
+ fs/gfs2/super.c                       |  2 -
+ fs/inode.c                            | 40 ++++++------
+ fs/sync.c                             |  2 +-
+ fs/xfs/xfs_file.c                     |  6 --
+ fs/xfs/xfs_super.c                    | 12 +---
+ include/linux/fs.h                    | 25 +++++--
+ 13 files changed, 143 insertions(+), 103 deletions(-)
 
 
-On 2021/01/04 15:15, Darrick J. Wong wrote:
->> Cc: bfoster@redhat.com, xfs-oss <xfs@e29208.dscx.akamaiedge.net>
-> 
-> akamaiedge.net ??
----
-First I've seen that...
+base-commit: e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
+-- 
+2.30.0
 
-> 
-> Er, did my mailer do that, or did yours?
-> 
-> [re-adding linux-xfs to cc]
-> 
-> On Mon, Jan 04, 2021 at 12:24:14PM -0800, L A Walsh wrote:
->>
->> On 2021/01/04 10:44, Darrick J. Wong wrote:
->>> This would open a huge security hole because users can use it to bypass
->>> directory access checks.
->> ---
->> 	Can't say I entirely disagree.  Though given the prevalence of that
->> behavior being "normal" on NT due to the "Bypass Traverse Checking" "right"
->> being on by default in a standard Windows setup,
-> 
-> That might be true on Windows, but CAP_DAC_* isn't given out by default
-> on Linux.
-----
-	Not quite the same as I understand it -- it allows ignoring 
-an 'X' permission of directories above the target, I believe, but not other
-DAC permissions.  I'd have to experiment to be sure.  In their security
-settings dialogue, they warn you against changing it away from the default
-as it might cause compatibility problems.
-
-
-> 
->> I would question it being a 'huge' security hole, though it would be
->> an unwanted change in behavior.
-> 
-> I think people would consider it a hole of /some/ kind, since this patch
-> wouldn't even require the process to hold CAP_DAC_* privilege.
----
-	Yeah, though it doesn't allow overriding DAC settings on files
-or directories that have them when trying to access them, just bypassing
-directory traversal permissions for items lower in the hierarchy.
-
-
-> 
-> Yeah.  As far as I can tell, CAP_DAC_OVERRIDE actually /does/ give you
-> the security permissions that you want.  The sysadmin can then decide
-> who gets to have that permission, so you /could/ propose doing that.
-----
-	Except that it does more than just allowing directory traversal
-to a set of files you own.  Like I think it might not be uncommon to have
-some common home dir set restrictively, so you couldn't read who else had
-home directories on the system, perhaps, but you could still cd through
-it to your own directory.  It may be more like allowing you to 'x' through
-parent directories without being able to read/write to them.  CAP_DAC_OVERRIDE
-would allow you to override any DAC permissions on any file -- not just
-ignore lack of 'X' on a directory.
-
-
-> 
->> 	If it isn't possible already, I'm sure it soon will be
->> the case that users will be on systems that have different file
->> systems mounted.  If an xfs file system is mounted under an NT
->> file system and the user is running Windows, wouldn't NT-rights
->> (like ignoring traversal issues) apply by default, as NT would
->> be in charge of enforcing security as it walked through a locally
->> mounted XFS file system?
-> 
-> When would NT be walking through a locally mounted XFS filesystem?
- 
-Well, at least when it is mounted in a linux subsystem -- I haven't checked
-out what's possible, but am told explorer can then be used to move through 
-file systems that are locally mounted through the linux drivers.
-
-The other possibility -- is a stretch of locally mounted, in having
-an XFS drive mounted via CIFS as a "local" drive.  I'd think it would
-allow bypassing traverse checking in the same way that having
-NT-admin privileges can give you root access to exported drives, but
-you have to set it up so that your login has those privs on the target server,
-but less drastic privs, like bypassing traverse checking and having
-a read/write access for a user that has the backup+restore privs are likely
-also supported.  
-
-As an example, a Domain administrator on my NT workstation has root access
-to my server (not by accident, but because it is meant to be that way).
-
-I use Win as a desktop, but lin as my diskspace+server.  My Win desktop barely
-has enough diskspace for the OS + programs I have installed.
