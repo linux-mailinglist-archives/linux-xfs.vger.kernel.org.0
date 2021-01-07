@@ -2,103 +2,150 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E93E2EE650
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Jan 2021 20:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66D792EE64A
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Jan 2021 20:40:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbhAGTlW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 7 Jan 2021 14:41:22 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:51054 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbhAGTlW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Jan 2021 14:41:22 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 107JZvQL156476;
-        Thu, 7 Jan 2021 19:40:39 GMT
+        id S1726650AbhAGTkB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 7 Jan 2021 14:40:01 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:44718 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbhAGTkB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 7 Jan 2021 14:40:01 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 107JYxmt114833;
+        Thu, 7 Jan 2021 19:39:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=corp-2020-01-29;
- bh=QenP+tBOGcZZ0lGV/kOtU0cWGKM3YjcSE1dn+bvo7NM=;
- b=vV40rcNF1utyL8X8mdqhFGwls+EiY4IyBUT+zxQeLqb0fTLr4mwmXO+dxTzfNNLzqt+P
- yo6E6qmDx8KF3y0FML7Y718HCjjtMgSdZW/qmSoA9d5vu3QZ9OxpzIMtXxIYgu9ZSGYg
- FQC/FsFwQoDaMDBiLAmOTipORusAjG+Cez9zAwhM6rDFDSPAYNFrl/KD7xoJc38YDYsY
- 1p+VLLMsc9MMx7rCKUtJCuy1Xsm4et43aZLbjHt+SZjw6bMb7lgE7+9nAAW6Xo91dDqC
- EAqegNTWfuTpRItsYiGwVM1BK3LounU92zNXeaZCrLDP2YZJf7fPZSCe4gxx45/X1S28 MQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 35wftxdkgw-1
+ bh=qn9Z+IbWEhKkdgZn/V2fh4nmEvyDWuTPUDH6rkAzjko=;
+ b=CkYWZPB8mlKGCSxjkZi25hixiRE9dRuVGxg89qf715Gqi/WPF+1W+kzOZmN7rMS4lv+M
+ V478Smy3yRZlS7gOMOunGVc9H38sqI0TWYLkN5a7Wger9eRuWG0kGKiaMuqkT3nzRzQS
+ IwXWnBIS3sM3OyXsE6NsJqxReMRsY1p+QGfh0fMp06r9zA/Ro1Frnp4KIdkIWzVpP1LV
+ O89ybiZopoq0yhVvK2HY1dDE/gxWXrFVrmwzOV0DkIIUSWkYJT4yUsP4V8/FJy5WbLnX
+ JiWTb2ZExF6s50eDK4U0mlSsAY35UCwPTVRaTAa9t8kM+8Rm6A7XlTqlX3CzkAygKeWN 6A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2130.oracle.com with ESMTP id 35wcuxxcp7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 07 Jan 2021 19:40:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 107JadDV136271;
-        Thu, 7 Jan 2021 19:38:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 35w3qu5q6b-1
+        Thu, 07 Jan 2021 19:39:19 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 107JaWie024079;
+        Thu, 7 Jan 2021 19:39:19 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 35v4redqyb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Jan 2021 19:38:39 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 107Jcc39025201;
-        Thu, 7 Jan 2021 19:38:38 GMT
+        Thu, 07 Jan 2021 19:39:19 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 107JdIxb007380;
+        Thu, 7 Jan 2021 19:39:18 GMT
 Received: from localhost (/10.159.138.126)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Jan 2021 11:38:38 -0800
-Date:   Thu, 7 Jan 2021 11:38:37 -0800
+        with ESMTP ; Thu, 07 Jan 2021 19:39:17 +0000
+Date:   Thu, 7 Jan 2021 11:39:16 -0800
 From:   "Darrick J. Wong" <darrick.wong@oracle.com>
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 7/9] xfs: remove duplicate wq cancel and log force from
- attr quiesce
-Message-ID: <20210107193837.GJ6918@magnolia>
+Subject: Re: [PATCH 8/9] xfs: remove xfs_quiesce_attr()
+Message-ID: <20210107193916.GK6918@magnolia>
 References: <20210106174127.805660-1-bfoster@redhat.com>
- <20210106174127.805660-8-bfoster@redhat.com>
+ <20210106174127.805660-9-bfoster@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210106174127.805660-8-bfoster@redhat.com>
+In-Reply-To: <20210106174127.805660-9-bfoster@redhat.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9857 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 adultscore=0 malwarescore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2101070114
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9857 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2101070114
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 spamscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101070114
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 06, 2021 at 12:41:25PM -0500, Brian Foster wrote:
-> These two calls are repeated at the beginning of xfs_log_quiesce().
-> Drop them from xfs_quiesce_attr().
+On Wed, Jan 06, 2021 at 12:41:26PM -0500, Brian Foster wrote:
+> xfs_quiesce_attr() is now a wrapper for xfs_log_clean(). Remove it
+> and call xfs_log_clean() directly.
 > 
 > Signed-off-by: Brian Foster <bfoster@redhat.com>
 
-Makes sense,
+Yay, I always found "quiesce attr" confusing...
+
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 --D
 
 > ---
->  fs/xfs/xfs_super.c | 5 -----
->  1 file changed, 5 deletions(-)
+>  fs/xfs/xfs_mount.c |  2 +-
+>  fs/xfs/xfs_super.c | 24 ++----------------------
+>  2 files changed, 3 insertions(+), 23 deletions(-)
 > 
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index f97b82d0e30f..4a26b48b18e4 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -946,7 +946,7 @@ xfs_mountfs(
+>  	 */
+>  	if ((mp->m_flags & (XFS_MOUNT_RDONLY|XFS_MOUNT_NORECOVERY)) ==
+>  							XFS_MOUNT_RDONLY) {
+> -		xfs_quiesce_attr(mp);
+> +		xfs_log_clean(mp);
+>  	}
+>  
+>  	/*
 > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 75ada867c665..8fc9044131fc 100644
+> index 8fc9044131fc..aedf622d221b 100644
 > --- a/fs/xfs/xfs_super.c
 > +++ b/fs/xfs/xfs_super.c
-> @@ -884,11 +884,6 @@ void
->  xfs_quiesce_attr(
->  	struct xfs_mount	*mp)
->  {
-> -	cancel_delayed_work_sync(&mp->m_log->l_work);
-> -
-> -	/* force the log to unpin objects from the now complete transactions */
-> -	xfs_log_force(mp, XFS_LOG_SYNC);
-> -
->  	xfs_log_clean(mp);
+> @@ -867,26 +867,6 @@ xfs_restore_resvblks(struct xfs_mount *mp)
+>  	xfs_reserve_blocks(mp, &resblks, NULL);
 >  }
 >  
+> -/*
+> - * Trigger writeback of all the dirty metadata in the file system.
+> - *
+> - * This ensures that the metadata is written to their location on disk rather
+> - * than just existing in transactions in the log. This means after a quiesce
+> - * there is no log replay required to write the inodes to disk - this is the
+> - * primary difference between a sync and a quiesce.
+> - *
+> - * We cancel log work early here to ensure all transactions the log worker may
+> - * run have finished before we clean up and log the superblock and write an
+> - * unmount record. The unfreeze process is responsible for restarting the log
+> - * worker correctly.
+> - */
+> -void
+> -xfs_quiesce_attr(
+> -	struct xfs_mount	*mp)
+> -{
+> -	xfs_log_clean(mp);
+> -}
+> -
+>  /*
+>   * Second stage of a freeze. The data is already frozen so we only
+>   * need to take care of the metadata. Once that's done sync the superblock
+> @@ -909,7 +889,7 @@ xfs_fs_freeze(
+>  	flags = memalloc_nofs_save();
+>  	xfs_stop_block_reaping(mp);
+>  	xfs_save_resvblks(mp);
+> -	xfs_quiesce_attr(mp);
+> +	xfs_log_clean(mp);
+>  	ret = xfs_sync_sb(mp, true);
+>  	memalloc_nofs_restore(flags);
+>  	return ret;
+> @@ -1752,7 +1732,7 @@ xfs_remount_ro(
+>  	 */
+>  	xfs_save_resvblks(mp);
+>  
+> -	xfs_quiesce_attr(mp);
+> +	xfs_log_clean(mp);
+>  	mp->m_flags |= XFS_MOUNT_RDONLY;
+>  
+>  	return 0;
 > -- 
 > 2.26.2
 > 
