@@ -2,151 +2,345 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A38332EF9CE
-	for <lists+linux-xfs@lfdr.de>; Fri,  8 Jan 2021 22:01:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 820E52EFA54
+	for <lists+linux-xfs@lfdr.de>; Fri,  8 Jan 2021 22:22:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbhAHVBE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 8 Jan 2021 16:01:04 -0500
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:60828 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728511AbhAHVBD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 Jan 2021 16:01:03 -0500
-Received: from dread.disaster.area (pa49-179-167-107.pa.nsw.optusnet.com.au [49.179.167.107])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 3438676566F;
-        Sat,  9 Jan 2021 08:00:17 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kxyrp-004RRw-51; Sat, 09 Jan 2021 08:00:17 +1100
-Date:   Sat, 9 Jan 2021 08:00:17 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH] fs: block_dev: compute nr_vecs hint for improving
- writeback bvecs allocation
-Message-ID: <20210108210017.GK331610@dread.disaster.area>
-References: <20210105132647.3818503-1-ming.lei@redhat.com>
- <20210105183938.GA3878@lst.de>
- <20210106084548.GA3845805@T590>
- <20210106222111.GE331610@dread.disaster.area>
- <20210108075922.GB3982620@T590>
+        id S1729423AbhAHVWb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 8 Jan 2021 16:22:31 -0500
+Received: from aserp2130.oracle.com ([141.146.126.79]:33806 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbhAHVWb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 8 Jan 2021 16:22:31 -0500
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 108L8uUX158985;
+        Fri, 8 Jan 2021 21:21:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=OhPDsbJCnljXSoCM5i6+ql+fCLzbaJmO4zPAHZCAKMk=;
+ b=MU38aijZ96yBMFa++6TpJDe0NInAXI8z4nPEARpn/9VmK2X3OTgF+7sRemUjtfmYyzLe
+ cKdy+ibng+GB+qnmLQc5PozWwbkkzYJp91ADshwV/GS/IbehbAh8uaRkO+Q51nZwcaoO
+ qdnrhhtdOddSsUFDi6F1IFoWzv5OJpbAhDcP8jupuF76gWYFDDiKzlWDsfsd0G9BqLWQ
+ IrtUxWrq1gDwcS6uDR61yXoqK9P53q6jWl0Va9USjzmCwD3a5BRACyp8cm5lBsE3O1X8
+ njBP48N3kZPdhn2KcU82B6WFQ7T6HRViySVVrSWatgbH4DHZ9UCeL/Z1TgKGV5UEsSA8 bA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 35wcuy3bup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 08 Jan 2021 21:21:46 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 108LAXhA180263;
+        Fri, 8 Jan 2021 21:19:45 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 35w3qvxf25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Jan 2021 21:19:45 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 108LJhDR013391;
+        Fri, 8 Jan 2021 21:19:43 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 08 Jan 2021 21:19:43 +0000
+Date:   Fri, 8 Jan 2021 13:19:42 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
+        Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: [PATCH v3 4/4] xfs: support shrinking unused space in the last AG
+Message-ID: <20210108211942.GQ38809@magnolia>
+References: <20210108190919.623672-1-hsiangkao@redhat.com>
+ <20210108190919.623672-5-hsiangkao@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210108075922.GB3982620@T590>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
-        a=+wqVUQIkAh0lLYI+QRsciw==:117 a=+wqVUQIkAh0lLYI+QRsciw==:17
-        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8
-        a=0TDAt5E3tB6VCO8953IA:9 a=qZgZfBh61L_KZ1-l:21 a=JzxU2LrYxQ7o857g:21
-        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20210108190919.623672-5-hsiangkao@redhat.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2101080110
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
+ clxscore=1015 spamscore=0 impostorscore=0 priorityscore=1501 mlxscore=0
+ adultscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101080110
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 08, 2021 at 03:59:22PM +0800, Ming Lei wrote:
-> On Thu, Jan 07, 2021 at 09:21:11AM +1100, Dave Chinner wrote:
-> > On Wed, Jan 06, 2021 at 04:45:48PM +0800, Ming Lei wrote:
-> > > On Tue, Jan 05, 2021 at 07:39:38PM +0100, Christoph Hellwig wrote:
-> > > > At least for iomap I think this is the wrong approach.  Between the
-> > > > iomap and writeback_control we know the maximum size of the writeback
-> > > > request and can just use that.
-> > > 
-> > > I think writeback_control can tell us nothing about max pages in single
-> > > bio:
-> > 
-> > By definition, the iomap tells us exactly how big the IO is going to
-> > be. i.e. an iomap spans a single contiguous range that we are going
-> > to issue IO on. Hence we can use that to size the bio exactly
-> > right for direct IO.
+On Sat, Jan 09, 2021 at 03:09:19AM +0800, Gao Xiang wrote:
+> As the first step of shrinking, this attempts to enable shrinking
+> unused space in the last allocation group by fixing up freespace
+> btree, agi, agf and adjusting super block and introduce a helper
+> xfs_ag_shrink_space() to fixup the last AG.
 > 
-> When I trace wpc->iomap.length in iomap_add_to_ioend() on the following fio
-> randwrite/write, the length is 1GB most of times, maybe because it is
-> one fresh XFS.
-
-Yes, that's exactly what I said it would do.
-
-> Another reason is that pages in the range may be contiguous physically,
-> so lots of pages may share one single bvec.
-
-The iomap layer does not care about this, and there's no way this
-can be detected ahead of time, anyway, because we are only passed a
-single page at a time. When we get large pages from the page cache,
-we'll still only get one page at a time, but we'll get physically
-contiguous pages and so it will still be a 1 page : 1 bvec
-relationship at the iomap layer.
-
-> > > - wbc->nr_to_write controls how many pages to writeback, this pages
-> > >   usually don't belong to same bio. Also this number is often much
-> > >   bigger than BIO_MAX_PAGES.
-> > > 
-> > > - wbc->range_start/range_end is similar too, which is often much more
-> > >   bigger than BIO_MAX_PAGES.
-> > > 
-> > > Also page/blocks_in_page can be mapped to different extent too, which is
-> > > only available when wpc->ops->map_blocks() is returned,
-> > 
-> > We only allocate the bio -after- calling ->map_blocks() to obtain
-> > the iomap for the given writeback range request. Hence we
-> > already know how large the BIO could be before we allocate it.
-> > 
-> > > which looks not
-> > > different with mpage_writepages(), in which bio is allocated with
-> > > BIO_MAX_PAGES vecs too.
-> > 
-> > __mpage_writepage() only maps a page at a time, so it can't tell
-> > ahead of time how big the bio is going to need to be as it doesn't
-> > return/cache a contiguous extent range. So it's actually very
-> > different to the iomap writeback code, and effectively does require
-> > a BIO_MAX_PAGES vecs allocation all the time...
-> > 
-> > > Or you mean we can use iomap->length for this purpose? But iomap->length
-> > > still is still too big in case of xfs.
-> > 
-> > if we are doing small random writeback into large extents (i.e.
-> > iomap->length is large), then it is trivial to detect that we are
-> > doing random writes rather than sequential writes by checking if the
-> > current page is sequential to the last sector in the current bio.
-> > We already do this non-sequential IO checking to determine if a new
-> > bio needs to be allocated in iomap_can_add_to_ioend(), and we also
-> > know how large the current contiguous range mapped into the current
-> > bio chain is (ioend->io_size). Hence we've got everything we need to
-> > determine whether we should do a large or small bio vec allocation
-> > in the iomap writeback path...
+> This can be all done in one transaction for now, so I think no
+> additional protection is needed.
 > 
-> page->index should tell us if the workload is random or sequential, however
-> still not easy to decide how many pages there will be in the next bio
-> when iomap->length is large.
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> ---
+>  fs/xfs/libxfs/xfs_ag.c | 72 ++++++++++++++++++++++++++++++++++++++++++
+>  fs/xfs/libxfs/xfs_ag.h |  2 ++
+>  fs/xfs/xfs_fsops.c     | 69 ++++++++++++++++++++++++++++++----------
+>  fs/xfs/xfs_trans.c     |  1 -
+>  4 files changed, 126 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
+> index 9331f3516afa..bec10c85e2a9 100644
+> --- a/fs/xfs/libxfs/xfs_ag.c
+> +++ b/fs/xfs/libxfs/xfs_ag.c
+> @@ -485,6 +485,78 @@ xfs_ag_init_headers(
+>  	return error;
+>  }
+>  
+> +int
+> +xfs_ag_shrink_space(
+> +	struct xfs_mount	*mp,
+> +	struct xfs_trans	*tp,
+> +	struct aghdr_init_data	*id,
+> +	xfs_extlen_t		len)
+> +{
+> +	struct xfs_buf		*agibp, *agfbp;
+> +	struct xfs_agi		*agi;
+> +	struct xfs_agf		*agf;
+> +	int			error, err2;
+> +	struct xfs_alloc_arg	args = {
+> +		.tp	= tp,
+> +		.mp	= mp,
+> +		.type	= XFS_ALLOCTYPE_THIS_BNO,
+> +		.minlen = len,
+> +		.maxlen = len,
+> +		.oinfo	= XFS_RMAP_OINFO_SKIP_UPDATE,
+> +		.resv	= XFS_AG_RESV_NONE,
+> +		.prod	= 1
+> +	};
+> +
+> +	ASSERT(id->agno == mp->m_sb.sb_agcount - 1);
+> +	error = xfs_ialloc_read_agi(mp, tp, id->agno, &agibp);
+> +	if (error)
+> +		return error;
+> +
+> +	agi = agibp->b_addr;
+> +
+> +	error = xfs_alloc_read_agf(mp, tp, id->agno, 0, &agfbp);
+> +	if (error)
+> +		return error;
+> +
+> +	args.fsbno = XFS_AGB_TO_FSB(mp, id->agno,
+> +				    be32_to_cpu(agi->agi_length) - len);
+> +
+> +	/* remove the preallocations before allocation and re-establish then */
+> +	error = xfs_ag_resv_free(agibp->b_pag);
+> +	if (error)
+> +		return error;
+> +
+> +	/* internal log shouldn't also show up in the free space btrees */
+> +	error = xfs_alloc_vextent(&args);
+> +	if (error)
+> +		goto out;
+> +
+> +	if (args.agbno == NULLAGBLOCK) {
+> +		error = -ENOSPC;
+> +		goto out;
+> +	}
+> +
+> +	/* Change the agi length */
+> +	be32_add_cpu(&agi->agi_length, -len);
+> +	xfs_ialloc_log_agi(tp, agibp, XFS_AGI_LENGTH);
+> +
+> +	/* Change agf length */
+> +	agf = agfbp->b_addr;
+> +	be32_add_cpu(&agf->agf_length, -len);
+> +	ASSERT(agf->agf_length == agi->agi_length);
+> +	xfs_alloc_log_agf(tp, agfbp, XFS_AGF_LENGTH);
+> +
+> +out:
+> +	err2 = xfs_ag_resv_init(agibp->b_pag, tp);
+> +	if (err2 && err2 != -ENOSPC) {
+> +		xfs_warn(mp,
+> +"Error %d reserving per-AG metadata reserve pool.", err2);
+> +		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+> +		return err2;
+> +	}
+> +	return error;
+> +}
+> +
+>  /*
+>   * Extent the AG indicated by the @id by the length passed in
+>   */
+> diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
+> index 5166322807e7..f3b5bbfeadce 100644
+> --- a/fs/xfs/libxfs/xfs_ag.h
+> +++ b/fs/xfs/libxfs/xfs_ag.h
+> @@ -24,6 +24,8 @@ struct aghdr_init_data {
+>  };
+>  
+>  int xfs_ag_init_headers(struct xfs_mount *mp, struct aghdr_init_data *id);
+> +int xfs_ag_shrink_space(struct xfs_mount *mp, struct xfs_trans *tp,
+> +			struct aghdr_init_data *id, xfs_extlen_t len);
+>  int xfs_ag_extend_space(struct xfs_mount *mp, struct xfs_trans *tp,
+>  			struct aghdr_init_data *id, xfs_extlen_t len);
+>  int xfs_ag_get_geometry(struct xfs_mount *mp, xfs_agnumber_t agno,
+> diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+> index a792d1f0ac55..eea38395e804 100644
+> --- a/fs/xfs/xfs_fsops.c
+> +++ b/fs/xfs/xfs_fsops.c
+> @@ -79,19 +79,22 @@ xfs_growfs_data_private(
+>  	xfs_rfsblock_t		delta;
+>  	xfs_agnumber_t		oagcount;
+>  	struct xfs_trans	*tp;
+> +	bool			extend;
+>  	struct aghdr_init_data	id = {};
+>  
+>  	nb = in->newblocks;
+> -	if (nb < mp->m_sb.sb_dblocks)
+> -		return -EINVAL;
+> -	if ((error = xfs_sb_validate_fsb_count(&mp->m_sb, nb)))
+> +	error = xfs_sb_validate_fsb_count(&mp->m_sb, nb);
+> +	if (error)
+>  		return error;
+> -	error = xfs_buf_read_uncached(mp->m_ddev_targp,
+> +
+> +	if (nb > mp->m_sb.sb_dblocks) {
+> +		error = xfs_buf_read_uncached(mp->m_ddev_targp,
+>  				XFS_FSB_TO_BB(mp, nb) - XFS_FSS_TO_BB(mp, 1),
+>  				XFS_FSS_TO_BB(mp, 1), 0, &bp, NULL);
+> -	if (error)
+> -		return error;
+> -	xfs_buf_relse(bp);
+> +		if (error)
+> +			return error;
+> +		xfs_buf_relse(bp);
+> +	}
+>  
+>  	delta = nb;	/* use delta as a temporary here */
 
-page->index doesn't tell us anything about what type of IO is being
-done - it just tells us where in the file we need to map to find the
-physical block we need to write it to. OTOH, the iomap writeback
-context contains all the information about current IO being build -
-offset, size, current bio, etc - and the page->index gets compared
-against the state in the iomap writepage context.
+Yikes, can this become a separate variable please?
 
-So, if the wpc->iomap.length is large, current page->index does not
-map sequentially to the end of wpc->ioend->io_bio (or
-wpc->io_end->io_offset + wpc->ioend->io_size) and
-wpc->io_end->io_size == page_size(page) for the currently held bio,
-then we are clearly doing random single page writeback into a large
-allocated extent. Hence in that case we can do small bvec
-allocations for the new bio.
+>  	nb_mod = do_div(delta, mp->m_sb.sb_agblocks);
+> @@ -99,10 +102,18 @@ xfs_growfs_data_private(
+>  	if (nb_mod && nb_mod < XFS_MIN_AG_BLOCKS) {
+>  		nagcount--;
+>  		nb = (xfs_rfsblock_t)nagcount * mp->m_sb.sb_agblocks;
+> -		if (nb < mp->m_sb.sb_dblocks)
+> +		if (nagcount < 2)
+>  			return -EINVAL;
+>  	}
+> -	delta = nb - mp->m_sb.sb_dblocks;
+> +
+> +	if (nb > mp->m_sb.sb_dblocks) {
+> +		delta = nb - mp->m_sb.sb_dblocks;
+> +		extend = true;
+> +	} else {
+> +		delta = mp->m_sb.sb_dblocks - nb;
+> +		extend = false;
 
-Sure, the first bio in a ->writepages invocation doesn't have this
-information, so we've going to have to assume BIO_MAX_PAGES for the
-first bio. But for every bio after that in the ->writepages
-invocation we have the state of the previous contiguous writeback
-range held in the wpc structure and can use that info to optimise
-the thousands of random single pages that are written after then
-first one...
+/me wonders why delta isn't simply int64_t, and then you can do things
+like:
 
-Cheers,
+if (delta > 0)
+	growfs
+else if (delta < 0)
+	shrinkfs
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+?
+
+> +	}
+> +
+>  	oagcount = mp->m_sb.sb_agcount;
+>  
+>  	/* allocate the new per-ag structures */
+> @@ -110,22 +121,34 @@ xfs_growfs_data_private(
+>  		error = xfs_initialize_perag(mp, nagcount, &nagimax);
+>  		if (error)
+>  			return error;
+> +	} else if (nagcount != oagcount) {
+> +		/* TODO: shrinking the entire AGs hasn't yet completed */
+> +		return -EINVAL;
+>  	}
+>  
+>  	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_growdata,
+> -			XFS_GROWFS_SPACE_RES(mp), 0, XFS_TRANS_RESERVE, &tp);
+> +			(extend ? XFS_GROWFS_SPACE_RES(mp) : delta), 0,
+> +			XFS_TRANS_RESERVE, &tp);
+>  	if (error)
+>  		return error;
+>  
+> -	error = xfs_resizefs_init_new_ags(mp, &id, oagcount, nagcount, &delta);
+> -	if (error)
+> -		goto out_trans_cancel;
+> -
+> +	if (extend) {
+> +		error = xfs_resizefs_init_new_ags(mp, &id, oagcount,
+> +						  nagcount, &delta);
+> +		if (error)
+> +			goto out_trans_cancel;
+> +	}
+>  	xfs_trans_agblocks_delta(tp, id.nfree);
+>  
+> -	/* If there are new blocks in the old last AG, extend it. */
+> +	/* If there are some blocks in the last AG, resize it. */
+>  	if (delta) {
+> -		error = xfs_ag_extend_space(mp, tp, &id, delta);
+> +		if (extend) {
+> +			error = xfs_ag_extend_space(mp, tp, &id, delta);
+> +		} else {
+> +			id.agno = nagcount - 1;
+> +			error = xfs_ag_shrink_space(mp, tp, &id, delta);
+> +		}
+> +
+>  		if (error)
+>  			goto out_trans_cancel;
+>  	}
+> @@ -137,11 +160,19 @@ xfs_growfs_data_private(
+>  	 */
+>  	if (nagcount > oagcount)
+>  		xfs_trans_mod_sb(tp, XFS_TRANS_SB_AGCOUNT, nagcount - oagcount);
+> -	if (nb > mp->m_sb.sb_dblocks)
+> +	if (nb != mp->m_sb.sb_dblocks)
+>  		xfs_trans_mod_sb(tp, XFS_TRANS_SB_DBLOCKS,
+>  				 nb - mp->m_sb.sb_dblocks);
+>  	if (id.nfree)
+>  		xfs_trans_mod_sb(tp, XFS_TRANS_SB_FDBLOCKS, id.nfree);
+> +
+> +	/*
+> +	 * update in-core counters (especially sb_fdblocks) now
+> +	 * so xfs_validate_sb_write() can pass.
+> +	 */
+> +	if (xfs_sb_version_haslazysbcount(&mp->m_sb))
+> +		xfs_log_sb(tp);
+> +
+>  	xfs_trans_set_sync(tp);
+>  	error = xfs_trans_commit(tp);
+>  	if (error)
+> @@ -178,6 +209,10 @@ xfs_growfs_data_private(
+>  	return error;
+>  
+>  out_trans_cancel:
+> +	if (!extend && (tp->t_flags & XFS_TRANS_DIRTY)) {
+> +		xfs_trans_commit(tp);
+> +		return error;
+
+When do we encounter the (!extend && DIRTY && cancelled) state?
+
+--D
+
+> +	}
+>  	xfs_trans_cancel(tp);
+>  	return error;
+>  }
+> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+> index e72730f85af1..fd2cbf414b80 100644
+> --- a/fs/xfs/xfs_trans.c
+> +++ b/fs/xfs/xfs_trans.c
+> @@ -419,7 +419,6 @@ xfs_trans_mod_sb(
+>  		tp->t_res_frextents_delta += delta;
+>  		break;
+>  	case XFS_TRANS_SB_DBLOCKS:
+> -		ASSERT(delta > 0);
+>  		tp->t_dblocks_delta += delta;
+>  		break;
+>  	case XFS_TRANS_SB_AGCOUNT:
+> -- 
+> 2.27.0
+> 
