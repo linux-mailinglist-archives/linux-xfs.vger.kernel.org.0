@@ -2,91 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA0792EFE2A
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 07:29:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0438B2EFE29
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 07:29:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbhAIG3T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 Jan 2021 01:29:19 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:56826 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbhAIG3T (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 01:29:19 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096900Q039492;
-        Sat, 9 Jan 2021 06:28:37 GMT
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 35y20age9q-1
+        id S1726332AbhAIG3Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 Jan 2021 01:29:25 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:40304 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbhAIG3Z (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 01:29:25 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10969EBX110756;
+        Sat, 9 Jan 2021 06:28:43 GMT
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 35y4ekg8j3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 09 Jan 2021 06:28:37 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096BXbn011568;
-        Sat, 9 Jan 2021 06:28:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 35y1ksucb2-1
+        Sat, 09 Jan 2021 06:28:43 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096Aa2Y033295;
+        Sat, 9 Jan 2021 06:28:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 35y2h9nhyd-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 Jan 2021 06:28:36 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 1096SaR2026265;
-        Sat, 9 Jan 2021 06:28:36 GMT
+        Sat, 09 Jan 2021 06:28:43 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 1096Sg02028023;
+        Sat, 9 Jan 2021 06:28:42 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 Jan 2021 06:28:35 +0000
-Subject: [PATCHSET 0/3] various: random fixes
+        with ESMTP ; Sat, 09 Jan 2021 06:28:41 +0000
+Subject: [PATCH 1/3] misc: fix valgrind complaints
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 08 Jan 2021 22:28:34 -0800
-Message-ID: <161017371478.1142776.6610535704942901172.stgit@magnolia>
+Date:   Fri, 08 Jan 2021 22:28:40 -0800
+Message-ID: <161017372088.1142776.17470250928392025583.stgit@magnolia>
+In-Reply-To: <161017371478.1142776.6610535704942901172.stgit@magnolia>
+References: <161017371478.1142776.6610535704942901172.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
+ mlxscore=0 spamscore=0 malwarescore=0 mlxlogscore=999 adultscore=1
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2101090040
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1034 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1034
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2101090040
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Here are some random fixes to the utilities: the first shuts up valgrind
-warnings about uninitialized userspace memory being passed into kernel
-ioctls; the second fixes warnings about libicu not being released at the
-end of scrub; and the third fixes false collision reports during scrub
-phase 5 if someone is replacing directory items while the scanner is
-running.
+Zero the memory that we pass to the kernel via ioctls so that we never
+pass userspace heap/stack garbage around.  This silences valgrind
+complaints about uninitialized padding areas.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=random-fixes
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
  libhandle/handle.c |    7 ++++++-
  scrub/inodes.c     |    1 +
  scrub/spacemap.c   |    2 +-
- scrub/unicrash.c   |   33 ++++++++++++++++++++++++++++++++-
- scrub/unicrash.h   |    4 ++++
- scrub/xfs_scrub.c  |    6 ++++++
- 6 files changed, 50 insertions(+), 3 deletions(-)
+ 3 files changed, 8 insertions(+), 2 deletions(-)
+
+
+diff --git a/libhandle/handle.c b/libhandle/handle.c
+index 5c1686b3..a6b35b09 100644
+--- a/libhandle/handle.c
++++ b/libhandle/handle.c
+@@ -235,9 +235,12 @@ obj_to_handle(
+ {
+ 	char		hbuf [MAXHANSIZ];
+ 	int		ret;
+-	uint32_t	handlen;
++	uint32_t	handlen = 0;
+ 	xfs_fsop_handlereq_t hreq;
+ 
++	memset(&hreq, 0, sizeof(hreq));
++	memset(hbuf, 0, MAXHANSIZ);
++
+ 	if (opcode == XFS_IOC_FD_TO_HANDLE) {
+ 		hreq.fd      = obj.fd;
+ 		hreq.path    = NULL;
+@@ -280,6 +283,7 @@ open_by_fshandle(
+ 	if ((fsfd = handle_to_fsfd(fshanp, &path)) < 0)
+ 		return -1;
+ 
++	memset(&hreq, 0, sizeof(hreq));
+ 	hreq.fd       = 0;
+ 	hreq.path     = NULL;
+ 	hreq.oflags   = rw | O_LARGEFILE;
+@@ -387,6 +391,7 @@ attr_list_by_handle(
+ 	if ((fd = handle_to_fsfd(hanp, &path)) < 0)
+ 		return -1;
+ 
++	memset(&alhreq, 0, sizeof(alhreq));
+ 	alhreq.hreq.fd       = 0;
+ 	alhreq.hreq.path     = NULL;
+ 	alhreq.hreq.oflags   = O_LARGEFILE;
+diff --git a/scrub/inodes.c b/scrub/inodes.c
+index 4550db83..f2bce16f 100644
+--- a/scrub/inodes.c
++++ b/scrub/inodes.c
+@@ -129,6 +129,7 @@ scan_ag_inodes(
+ 				minor(ctx->fsinfo.fs_datadev),
+ 				agno);
+ 
++	memset(&handle, 0, sizeof(handle));
+ 	memcpy(&handle.ha_fsid, ctx->fshandle, sizeof(handle.ha_fsid));
+ 	handle.ha_fid.fid_len = sizeof(xfs_fid_t) -
+ 			sizeof(handle.ha_fid.fid_len);
+diff --git a/scrub/spacemap.c b/scrub/spacemap.c
+index 9653916d..9362710e 100644
+--- a/scrub/spacemap.c
++++ b/scrub/spacemap.c
+@@ -47,7 +47,7 @@ scrub_iterate_fsmap(
+ 	int			i;
+ 	int			error;
+ 
+-	head = malloc(fsmap_sizeof(FSMAP_NR));
++	head = calloc(1, fsmap_sizeof(FSMAP_NR));
+ 	if (!head)
+ 		return errno;
+ 
 
