@@ -2,57 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CD8B2EFE2E
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 07:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7BAD2EFE30
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 07:31:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbhAIGbK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 Jan 2021 01:31:10 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:57962 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbhAIGbK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 01:31:10 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10968v2E039445;
-        Sat, 9 Jan 2021 06:30:28 GMT
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 35y20ageb8-1
+        id S1726374AbhAIGbi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 Jan 2021 01:31:38 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:41744 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbhAIGbh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 01:31:37 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 109694Vj110553;
+        Sat, 9 Jan 2021 06:30:56 GMT
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 35y4ekg8mc-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 09 Jan 2021 06:30:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096BXPa011435;
-        Sat, 9 Jan 2021 06:28:27 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 35y1ksuc9q-1
+        Sat, 09 Jan 2021 06:30:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096AWfw048062;
+        Sat, 9 Jan 2021 06:28:55 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 35y3tgvvwj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 Jan 2021 06:28:27 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 1096SQcG025158;
-        Sat, 9 Jan 2021 06:28:26 GMT
+        Sat, 09 Jan 2021 06:28:55 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 1096Sso3028213;
+        Sat, 9 Jan 2021 06:28:54 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 09 Jan 2021 06:28:26 +0000
-Subject: [PATCH 1/2] xfs_db: add inobtcnt upgrade path
+        with ESMTP ; Sat, 09 Jan 2021 06:28:54 +0000
+Subject: [PATCH 3/3] xfs_scrub: handle concurrent directory updates during
+ name scan
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 08 Jan 2021 22:28:25 -0800
-Message-ID: <161017370529.1142690.11100691491331155224.stgit@magnolia>
-In-Reply-To: <161017369911.1142690.8979186737828708317.stgit@magnolia>
-References: <161017369911.1142690.8979186737828708317.stgit@magnolia>
+Date:   Fri, 08 Jan 2021 22:28:53 -0800
+Message-ID: <161017373322.1142776.5174880606166253807.stgit@magnolia>
+In-Reply-To: <161017371478.1142776.6610535704942901172.stgit@magnolia>
+References: <161017371478.1142776.6610535704942901172.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 phishscore=0
+ mlxscore=0 adultscore=0 mlxlogscore=971 suspectscore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2101090040
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 mlxscore=0 adultscore=0 spamscore=0
- lowpriorityscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
- clxscore=1034 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=978 suspectscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1034
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2009150000 definitions=main-2101090040
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
@@ -60,87 +61,50 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Enable users to upgrade their filesystems to support inode btree block
-counters.
+The name scanner in xfs_scrub cannot lock a namespace (dirent or xattr)
+and the kernel does not provide a stable cursor interface, which means
+that we can see the same byte sequence multiple times during a scan.
+This isn't a confusing name error since the kernel enforces uniqueness
+on the byte sequence, so all we need to do here is update the old entry.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/sb.c              |   22 ++++++++++++++++++++++
- man/man8/xfs_admin.8 |    7 +++++++
- man/man8/xfs_db.8    |    3 +++
- 3 files changed, 32 insertions(+)
+ scrub/unicrash.c |   16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 
-diff --git a/db/sb.c b/db/sb.c
-index 93e4c405..b89ccdbe 100644
---- a/db/sb.c
-+++ b/db/sb.c
-@@ -597,6 +597,7 @@ version_help(void)
- " 'version attr2'    - enable v2 inline extended attributes\n"
- " 'version log2'     - enable v2 log format\n"
- " 'version needsrepair' - flag filesystem as requiring repair\n"
-+" 'version inobtcount' - enable inode btree counters\n"
- "\n"
- "The version function prints currently enabled features for a filesystem\n"
- "according to the version field of its primary superblock.\n"
-@@ -857,6 +858,27 @@ version_f(
- 			}
+diff --git a/scrub/unicrash.c b/scrub/unicrash.c
+index de3217c2..f5407b5e 100644
+--- a/scrub/unicrash.c
++++ b/scrub/unicrash.c
+@@ -68,7 +68,7 @@ struct name_entry {
  
- 			v5features.incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
-+		} else if (!strcasecmp(argv[1], "inobtcount")) {
-+			if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
-+				dbprintf(
-+		_("inode btree counter feature is already enabled\n"));
-+				exitcode = 1;
-+				return 1;
-+			}
-+			if (!xfs_sb_version_hasfinobt(&mp->m_sb)) {
-+				dbprintf(
-+		_("inode btree counter feature cannot be enabled on filesystems lacking free inode btrees\n"));
-+				exitcode = 1;
-+				return 1;
-+			}
-+			if (!xfs_sb_version_hascrc(&mp->m_sb)) {
-+				dbprintf(
-+		_("inode btree counter feature cannot be enabled on pre-V5 filesystems\n"));
-+				exitcode = 1;
-+				return 1;
-+			}
+ 	xfs_ino_t		ino;
+ 
+-	/* Raw UTF8 name */
++	/* Raw dirent name */
+ 	size_t			namelen;
+ 	char			name[0];
+ };
+@@ -627,6 +627,20 @@ unicrash_add(
+ 	uc->buckets[bucket] = new_entry;
+ 
+ 	while (entry != NULL) {
++		/*
++		 * If we see the same byte sequence then someone's modifying
++		 * the namespace while we're scanning it.  Update the existing
++		 * entry's inode mapping and erase the new entry from existence.
++		 */
++		if (new_entry->namelen == entry->namelen &&
++		    !memcmp(new_entry->name, entry->name, entry->namelen)) {
++			entry->ino = new_entry->ino;
++			uc->buckets[bucket] = new_entry->next;
++			name_entry_free(new_entry);
++			*badflags = 0;
++			continue;
++		}
 +
-+			v5features.ro_compat |= XFS_SB_FEAT_RO_COMPAT_INOBTCNT;
- 		} else if (!strcasecmp(argv[1], "extflg")) {
- 			switch (XFS_SB_VERSION_NUM(&mp->m_sb)) {
- 			case XFS_SB_VERSION_1:
-diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
-index b423981d..a776b375 100644
---- a/man/man8/xfs_admin.8
-+++ b/man/man8/xfs_admin.8
-@@ -116,6 +116,13 @@ If this is a V5 filesystem, flag the filesystem as needing repairs.
- Until
- .BR xfs_repair (8)
- is run, the filesystem will not be mountable.
-+.TP
-+.B inobtcount
-+Upgrade a V5 filesystem to support the inode btree counters feature.
-+This reduces mount time by caching the size of the inode btrees in the
-+allocation group metadata.
-+Once enabled, the filesystem will not be writable by older kernels.
-+The filesystem cannot be downgraded after this feature is enabled.
- .RE
- .TP
- .BI \-U " uuid"
-diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index 7331cf19..1b826e5d 100644
---- a/man/man8/xfs_db.8
-+++ b/man/man8/xfs_db.8
-@@ -976,6 +976,9 @@ The filesystem can be flagged as requiring a run through
- if the
- .B needsrepair
- option is specified and the filesystem is formatted with the V5 format.
-+Support for the inode btree counters feature can be enabled by using the
-+.B inobtcount
-+option if the filesystem is formatted with the V5 format.
- .IP
- If no argument is given, the current version and feature bits are printed.
- With one argument, this command will write the updated version number
+ 		/* Same normalization? */
+ 		if (new_entry->normstrlen == entry->normstrlen &&
+ 		    !u_strcmp(new_entry->normstr, entry->normstr) &&
 
