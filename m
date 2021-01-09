@@ -2,107 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CB4232EFE2D
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 07:30:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F9D2EFE2F
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 07:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725850AbhAIGat (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 Jan 2021 01:30:49 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:41228 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbhAIGat (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 01:30:49 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096940F110580;
-        Sat, 9 Jan 2021 06:30:07 GMT
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 35y4ekg8ke-1
+        id S1725847AbhAIGbL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 Jan 2021 01:31:11 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38126 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbhAIGbL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 01:31:11 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 10969Wxw042353;
+        Sat, 9 Jan 2021 06:30:26 GMT
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 35y3wqr9gh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 09 Jan 2021 06:30:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096AVkm047918;
-        Sat, 9 Jan 2021 06:28:06 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 35y3tgvvmw-1
+        Sat, 09 Jan 2021 06:30:26 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1096B0rR030927;
+        Sat, 9 Jan 2021 06:28:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 35y49yuk50-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 09 Jan 2021 06:28:06 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 1096S5eQ025063;
-        Sat, 9 Jan 2021 06:28:05 GMT
+        Sat, 09 Jan 2021 06:28:25 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 1096SKfm027958;
+        Sat, 9 Jan 2021 06:28:20 GMT
 Received: from localhost (/67.169.218.210)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 08 Jan 2021 22:28:05 -0800
-Subject: [PATCH 1/3] xfs_scrub: detect infinite loops when scanning inodes
+        with ESMTP ; Sat, 09 Jan 2021 06:28:20 +0000
+Subject: [PATCHSET v2 0/2] xfs_admin: support upgrading v5 filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 08 Jan 2021 22:28:04 -0800
-Message-ID: <161017368431.1141483.1015560955108076159.stgit@magnolia>
-In-Reply-To: <161017367756.1141483.3709627869982359451.stgit@magnolia>
-References: <161017367756.1141483.3709627869982359451.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Fri, 08 Jan 2021 22:28:19 -0800
+Message-ID: <161017369911.1142690.8979186737828708317.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 phishscore=0
- mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=999
+ phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2101090040
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 mlxlogscore=999
+ mlxscore=0 phishscore=0 impostorscore=0 spamscore=0 priorityscore=1501
+ adultscore=0 bulkscore=0 malwarescore=0 suspectscore=0 clxscore=1034
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
  definitions=main-2101090040
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9858 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 phishscore=0
- priorityscore=1501 spamscore=0 lowpriorityscore=0 clxscore=1034
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2101090040
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-During an inode scan (aka phase 3) when we're scanning the inode btree
-to find files to check, make sure that each invocation of inumbers
-actually gives us an inobt record with a startino that's at least as
-large as what we asked for so that we always make forward progress.
+This submission extends xfs_db and xfs_admin to support adding the inode
+btree counter and bigtime features to an existing v5 filesystem.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+v2: Rebase to 5.10-rc0
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=fs-upgrades
 ---
- scrub/inodes.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-
-diff --git a/scrub/inodes.c b/scrub/inodes.c
-index bdc12df3..4550db83 100644
---- a/scrub/inodes.c
-+++ b/scrub/inodes.c
-@@ -119,6 +119,7 @@ scan_ag_inodes(
- 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct xfs_bulkstat	*bs;
- 	struct xfs_inumbers	*inumbers;
-+	uint64_t		nextino = cvt_agino_to_ino(&ctx->mnt, agno, 0);
- 	int			i;
- 	int			error;
- 	int			stale_count = 0;
-@@ -153,6 +154,21 @@ scan_ag_inodes(
- 	/* Find the inode chunk & alloc mask */
- 	error = -xfrog_inumbers(&ctx->mnt, ireq);
- 	while (!error && !si->aborted && ireq->hdr.ocount > 0) {
-+		/*
-+		 * Make sure that we always make forward progress while we
-+		 * scan the inode btree.
-+		 */
-+		if (nextino > inumbers->xi_startino) {
-+			str_corrupt(ctx, descr,
-+	_("AG %u inode btree is corrupt near agino %lu, got %lu"), agno,
-+				cvt_ino_to_agino(&ctx->mnt, nextino),
-+				cvt_ino_to_agino(&ctx->mnt,
-+						ireq->inumbers[0].xi_startino));
-+			si->aborted = true;
-+			break;
-+		}
-+		nextino = ireq->hdr.ino;
-+
- 		/*
- 		 * We can have totally empty inode chunks on filesystems where
- 		 * there are more than 64 inodes per block.  Skip these.
+ db/sb.c              |   38 ++++++++++++++++++++++++++++++++++++++
+ man/man8/xfs_admin.8 |   12 ++++++++++++
+ man/man8/xfs_db.8    |    7 +++++++
+ 3 files changed, 57 insertions(+)
 
