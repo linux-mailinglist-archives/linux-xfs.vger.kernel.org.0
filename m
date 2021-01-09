@@ -2,143 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 882842F03AD
-	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 22:04:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 977422F03BF
+	for <lists+linux-xfs@lfdr.de>; Sat,  9 Jan 2021 22:15:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbhAIVDr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 9 Jan 2021 16:03:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbhAIVDq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 16:03:46 -0500
-Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80241C061786
-        for <linux-xfs@vger.kernel.org>; Sat,  9 Jan 2021 13:03:06 -0800 (PST)
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1kyLO5-0000i3-6D; Sat, 09 Jan 2021 21:03:05 +0000
-X-Loop: owner@bugs.debian.org
-Subject: Bug#976683: RFS: xfsprogs/5.10.0-0.1 [NMU] -- Utilities for managing the XFS filesystem
-Reply-To: Bastian Germann <bastiangermann@fishpost.de>,
-          976683@bugs.debian.org
-X-Loop: owner@bugs.debian.org
-X-Debian-PR-Message: followup 976683
-X-Debian-PR-Package: src:xfsprogs
-X-Debian-PR-Keywords: 
-References: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
-X-Debian-PR-Source: xfsprogs
-Received: via spool by 976683-submit@bugs.debian.org id=B976683.16102261242334
-          (code B ref 976683); Sat, 09 Jan 2021 21:03:03 +0000
-Received: (at 976683) by bugs.debian.org; 9 Jan 2021 21:02:04 +0000
-X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
-        (2018-09-13) on buxtehude.debian.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=4.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FOURLA,HAS_PACKAGE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_NONE,TXREP autolearn=ham autolearn_force=no
-        version=3.4.2-bugs.debian.org_2005_01_02
-X-Spam-Bayes: score:0.0000 Tokens: new, 33; hammy, 150; neutral, 102; spammy,
-        0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3, 0.000-+--dget,
-        0.000-+--UD:kernel.org, 0.000-+--H*u:78.0,
-        0.000-+--UD:20150623.gappssmtp.com
-Received: from mail-ej1-x631.google.com ([2a00:1450:4864:20::631]:32861)
-        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <bastiangermann@fishpost.de>)
-        id 1kyLN6-0000ah-HS
-        for 976683@bugs.debian.org; Sat, 09 Jan 2021 21:02:04 +0000
-Received: by mail-ej1-x631.google.com with SMTP id b9so19385994ejy.0
-        for <976683@bugs.debian.org>; Sat, 09 Jan 2021 13:02:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=to:subject:from:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=q9qg1UTc90GXClfkl6BD+4416sM00brFEnYEZ2SxuDw=;
-        b=xKl+x24MOJKdN8df8CsFmwdWJzhu5mExA2WKZs4sRtgvUKzCVVuNkQggK55UJ4vWAs
-         GCcr7fwex29WIXzrOSf50PdH+U0N/3p8sxP0Elx6ed268QdwyU9hG3sDnTDsE5M4GDU9
-         T0Q0iQPgJT7KGSe0aoNcnlBfrBEgdw/IyM86TXiVbd/n7kVcvw0gHhz2LSQGFGjZkHlY
-         4HZaGwdz4YEkwHIPxrJGGHcYG2CyUljigVdIuqhN26rQ6OI9R8Vwgtgfbf8FiaN4UYj8
-         zgiDqEb/9IuRhsBDOPRDNUken59DF0N9BCgtEh1Q8sodkLNbvjjKxU5/z3VxXj2g8RGs
-         IXQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:subject:from:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=q9qg1UTc90GXClfkl6BD+4416sM00brFEnYEZ2SxuDw=;
-        b=aBPCpOmBIllVrTlPj+2myR5TUM9ppufqb2eYv2ZIyMq0zcPBUt6Ixj9ty/J7YA2X76
-         o38ft2rtvU2xTEPWtfIWHTPSv6ptLaedO86Bf+2LXBtIljOon9zsnuSqkUJOmKVE2icU
-         JLHZG8EcDJhKBeERjcHXYFWV2JwgdqbtGyWQyQrBx31aDQ6eL5KU8vNISbzBpTez7pjC
-         v8/g9D43ncYJzyxi4OXiFdimuBhj/wyYoX70gc7ThexUNcqjv2fqmCGDy6/USqgameiJ
-         MnwlPG1MRuWuhmruDoIKH7ntAUHRTUQ7vOJXzPkcL8307piS4hvBnoXFdGAFRXbVpWjX
-         4u8w==
-X-Gm-Message-State: AOAM5308ZF0iYkDqK1t0ErCVt7FtE1ryY//wsg8KKhPkEj5yQITqTe2W
-        R76px0CKJpmWmcx2tzJc8iRte5ZquslZ+uZw
-X-Google-Smtp-Source: ABdhPJyRhgTflq79aIdx073p650Pn7XXWjAs4Ti2+5oTALBamm1xocZRBPdWfQ8mHYzQitmyCTOSpg==
-X-Received: by 2002:a17:906:fa12:: with SMTP id lo18mr6705029ejb.354.1610226120110;
-        Sat, 09 Jan 2021 13:02:00 -0800 (PST)
-Received: from ?IPv6:2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27? (p200300d06f3554009d4aa26f7cc66e27.dip0.t-ipconnect.de. [2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27])
-        by smtp.gmail.com with ESMTPSA id i24sm5004788ejx.31.2021.01.09.13.01.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Jan 2021 13:01:59 -0800 (PST)
-To:     submit@bugs.debian.org, 976683@bugs.debian.org
-From:   Bastian Germann <bastiangermann@fishpost.de>
-Message-ID: <fff77770-2496-0c1e-3849-bc1acc492725@fishpost.de>
-Date:   Sat, 9 Jan 2021 22:01:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        id S1726001AbhAIVOb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 9 Jan 2021 16:14:31 -0500
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:34269 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726005AbhAIVOb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 9 Jan 2021 16:14:31 -0500
+Received: from dread.disaster.area (pa49-179-167-107.pa.nsw.optusnet.com.au [49.179.167.107])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id E5A4BE69760;
+        Sun, 10 Jan 2021 08:13:48 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kyLYR-004mhq-4Y; Sun, 10 Jan 2021 08:13:47 +1100
+Date:   Sun, 10 Jan 2021 08:13:47 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "L.A. Walsh" <xfs@tlinx.org>
+Cc:     xfs-oss <linux-xfs@vger.kernel.org>
+Subject: Re: suggested patch to allow user to access their own file...
+Message-ID: <20210109211347.GL331610@dread.disaster.area>
+References: <5FEB204B.9090109@tlinx.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE-frami
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5FEB204B.9090109@tlinx.org>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_d
+        a=+wqVUQIkAh0lLYI+QRsciw==:117 a=+wqVUQIkAh0lLYI+QRsciw==:17
+        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8
+        a=Zh8UF6euKYRQSDcZ9McA:9 a=CjuIK1q_8ugA:10 a=nxFJi58FgSUA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Package: sponsorship-requests
-Severity: normal
+On Tue, Dec 29, 2020 at 04:25:47AM -0800, L.A. Walsh wrote:
+> xfs_io checks for CAP_SYS_ADMIN in order to open a
+> file_by_inode -- however, if the file one is opening
+> is owned by the user performing the call, the call should
+> not fail.
 
-Dear mentors,
+No. xfs_open_by_handle() requires root permissions because it
+bypasses lots of security checks, such as parent directory
+permissions, ACLs and security labels.
 
-I am looking for a sponsor for the package "xfsprogs" which was not 
-updated for several major releases:
+e.g. backups under a root-only directory heirarchy should not be
+accessible to users because users are not allowed to traverse into
+those root:root 0700 backup directories because permissions on the 
+directory inodes do not allow non-root users to enter them.
 
-  * Package name    : xfsprogs
-    Version         : 5.10.0-0.1
-  * URL             : https://xfs.wiki.kernel.org/
-  * License         : GPL-2, LGPL-2.1
-    Section         : admin
+Hence ...
 
-It builds those binary packages:
+> (i.e. it opens the user's own file).
 
-   xfsprogs-udeb - A stripped-down version of xfsprogs
-   xfslibs-dev - XFS filesystem-specific static libraries and headers
-   xfsprogs - Utilities for managing the XFS filesystem
+... the user doesn't actually own that file, even though it has
+their own UID in it...
 
-To access further information about this package, please visit the 
-following URL:
+> It gets rid of some unnecessary error messages if you
+> run xfs_restore to restore one of your own files.
 
-   https://mentors.debian.net/package/xfsprogs/
+That's not really a user case xfs_restore is intended to support.
+It's an admin tool to be run by admins, not end users....
 
-Alternatively, one can download the package with dget using this command:
+Cheers,
 
-   dget -x 
-https://mentors.debian.net/debian/pool/main/x/xfsprogs/xfsprogs_5.10.0-0.1.dsc
-
-Changes since the last upload:
-
-  xfsprogs (5.10.0-0.1) unstable; urgency=medium
-  .
-    [ Bastian Germann ]
-    * Non-maintainer upload.
-    * Cryptographically verify upstream tarball (Closes: #979644)
-    * New upstream version 5.10.0 (Closes: #976683)
-    * Remove dependency on essential util-linux
-    * d/copyright: Add missing info to machine-readable format (Closes: 
-#979653)
-  .
-    [ Darrick J. Wong ]
-    * Replace libreadline with libedit (Closes: #695875)
-    * Add build dependency on libinih-dev
-
-Regards,
-Bastian
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
