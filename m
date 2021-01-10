@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4939C2F0841
+	by mail.lfdr.de (Postfix) with ESMTP id BFB122F0842
 	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:10:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbhAJQKX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Jan 2021 11:10:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34360 "EHLO
+        id S1726265AbhAJQK0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Jan 2021 11:10:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726069AbhAJQKX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Jan 2021 11:10:23 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22CCCC0617A2
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:43 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id f14so6287738pju.4
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:43 -0800 (PST)
+        with ESMTP id S1726069AbhAJQKZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Jan 2021 11:10:25 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D827C0617A3
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:45 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id e2so8186183plt.12
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=hfxy4dQ7UU+MA/AWL+J4vikfJv/jhTTSkVAkRx6cF/Y=;
-        b=ftbXsqC3/8ngFvJLGXQNN/mpDhK9pC15SDIRhccwRr9G1VmWwE4E5v+MrV3tMSUydk
-         hUvbC6SaeEbnACACq7rFW4UH/33ORYxjCbBh2OjzcZb+sRZ0Q1q4IKe+9y+cCzvRLvmu
-         s1Z6YbPRIh9kjPxxsPUX0xTQWMynYrmSWR7GuFszqZYsEZTqSPpsp2mjID3Gl0I6LkXR
-         yoAxR4s/W6Uu2V2l1t75L8eH0Z69debAD6DPA7xyESwJivieNXb4yzMbYN8UKPq8WBFP
-         f+azAupEC6aFVCBzHcD38pps0x0LuNielkyNNzP9iGTslq0HlqceiO5d0UPP2JxeXDrU
-         Ye1g==
+        bh=CaaIKtEA+QkHkbNZmc4x83WOODezXN2Z3yH7D8rxDjE=;
+        b=KJMwGF5wOcQSxkZPDsn/Nft1s8pJe5tL8kr1nq5pTGZIiIPTh7A/UVNvrHTsgCSrns
+         nqhUgzAHwYSvjD78ksQcyN6go5pLXsC9kkYSRdFsHVOgJVy4xpkwnOlWTVttnH1TH9nf
+         Xyjmnkk6UhOA5/QvQEcd21MAstXh6fBFtkyZ7v6/KbRV5geZ1DbUsrFcQWrSF3hrnj42
+         KE+CLh8jnWo3trdXFDm9b5I1w59SaozEpQfTsa4PacY4ALy3aOfDV0b51lxhXCKQPzfl
+         i9kWyoJvCH0YfGbbyOoVvbwFj7X7SEWle/QkdGGjfoWDcoeivRr3IE3qeIHFioU37AlX
+         ZBPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hfxy4dQ7UU+MA/AWL+J4vikfJv/jhTTSkVAkRx6cF/Y=;
-        b=Pi0gk238b9HBEJMRNbtj2L5uInWrnuPEOAqzNct/ZAzSjpnCiX1GR8vb0E0YALAOKY
-         YlhavUZ/CE69Vh/Nw5MmbcddZ3FH560J66S3jnyvvUPyYtPdMNFWBbiDNaY4K/g/wfgh
-         EO/ecHr028yUIn26kmXAfkHyYtvwmSNheMWnBTvZrJOvrvy+/YaIb1XEmNvEwmtUQTHi
-         2cUss96gwDO+SvYtYtaAaRkx9ZEzigAeA30/KeuUfGVEZcMzoana0Ji1g997CmHk2B5z
-         P7Hi2sz9Pa7UCiYHIQNogB/L0+pDmgbD0ZI/nkMqqL1CffRZHpM6+YG+bMf6hyws+BIY
-         Xj4g==
-X-Gm-Message-State: AOAM530rHzKqxu06xh9I+XMncagc1746x+ghSJpKoNSaE2gcP9Y1Q9H1
-        3ji3ZTraJcn6Rqn54w2jCxOz/dcB3SI=
-X-Google-Smtp-Source: ABdhPJzCNBUVE997/lsiuNNGIZteBYnDUp/DtCOkNns/dRHVUZDNB3AsOGykwBKnu1q+im4rqpvxhg==
-X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr14002868pjb.89.1610294982554;
-        Sun, 10 Jan 2021 08:09:42 -0800 (PST)
+        bh=CaaIKtEA+QkHkbNZmc4x83WOODezXN2Z3yH7D8rxDjE=;
+        b=VUCZJ4jRvSX41vL+9/8v0ADnVu0YkkpPA4WLTSc8zqD2Ycvwctu6KxkUwQv+HHn+A9
+         hm6VhTjfzCbolqJPOJGk8S17PhPYZI30ZV6cip3HB+IK2EKYYD1Q1jvpLU+ccQLI6WQR
+         RrGgVXl7CT9j+pYYFlgCtFekEhQ7/XSF6f29tApdBPqVtu3yqhmqbn1F5GMqz2ko7XGW
+         JMbhbSyUAHdqwT6lm3BOnc6aIW4PQvAbvQR0YP9BXpSReLFnq5HbuxCNhqoP6KJyJA8O
+         umjUn2YSG/l/W5/6XEigI0U4YTRQ2qNR7ARZfYcsU4V4LW7HUhzwDmkUy7/OE79z2pbg
+         8uiw==
+X-Gm-Message-State: AOAM531rYykeAExLKuiLh8gwoUevOIsEa8wmVXu/YxuG+grEeQfOmSOa
+        1/9snS+szbqQGOzUhzvIx8j4J85UbqY=
+X-Google-Smtp-Source: ABdhPJwhrajEjns0hvzMZcXqt6OdwFY2V1qs1RxLx62g8WRy6RY9VcnqCYeY+HC7/ahQKIURxUviQQ==
+X-Received: by 2002:a17:90a:6708:: with SMTP id n8mr13778183pjj.35.1610294985002;
+        Sun, 10 Jan 2021 08:09:45 -0800 (PST)
 Received: from localhost.localdomain ([122.179.92.100])
-        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.09.40
+        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.09.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 08:09:42 -0800 (PST)
+        Sun, 10 Jan 2021 08:09:44 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com,
         djwong@kernel.org, hch@lst.de, allison.henderson@oracle.com
-Subject: [PATCH V14 03/16] xfs: Check for extent overflow when punching a hole
-Date:   Sun, 10 Jan 2021 21:37:07 +0530
-Message-Id: <20210110160720.3922965-4-chandanrlinux@gmail.com>
+Subject: [PATCH V14 04/16] xfs: Check for extent overflow when adding dir entries
+Date:   Sun, 10 Jan 2021 21:37:08 +0530
+Message-Id: <20210110160720.3922965-5-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210110160720.3922965-1-chandanrlinux@gmail.com>
 References: <20210110160720.3922965-1-chandanrlinux@gmail.com>
@@ -63,99 +63,91 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The extent mapping the file offset at which a hole has to be
-inserted will be split into two extents causing extent count to
-increase by 1.
+Directory entry addition can cause the following,
+1. Data block can be added/removed.
+   A new extent can cause extent count to increase by 1.
+2. Free disk block can be added/removed.
+   Same behaviour as described above for Data block.
+3. Dabtree blocks.
+   XFS_DA_NODE_MAXDEPTH blocks can be added. Each of these
+   can be new extents. Hence extent count can increase by
+   XFS_DA_NODE_MAXDEPTH.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_inode_fork.h |  7 +++++++
- fs/xfs/xfs_bmap_item.c         | 15 +++++++++------
- fs/xfs/xfs_bmap_util.c         | 10 ++++++++++
- 3 files changed, 26 insertions(+), 6 deletions(-)
+ fs/xfs/libxfs/xfs_inode_fork.h | 13 +++++++++++++
+ fs/xfs/xfs_inode.c             | 10 ++++++++++
+ fs/xfs/xfs_symlink.c           |  5 +++++
+ 3 files changed, 28 insertions(+)
 
 diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index 7fc2b129a2e7..bcac769a7df6 100644
+index bcac769a7df6..ea1a9dd8a763 100644
 --- a/fs/xfs/libxfs/xfs_inode_fork.h
 +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -40,6 +40,13 @@ struct xfs_ifork {
+@@ -47,6 +47,19 @@ struct xfs_ifork {
   */
- #define XFS_IEXT_ADD_NOSPLIT_CNT	(1)
+ #define XFS_IEXT_PUNCH_HOLE_CNT		(1)
  
 +/*
-+ * Punching out an extent from the middle of an existing extent can cause the
-+ * extent count to increase by 1.
-+ * i.e. | Old extent | Hole | Old extent |
++ * Directory entry addition can cause the following,
++ * 1. Data block can be added/removed.
++ *    A new extent can cause extent count to increase by 1.
++ * 2. Free disk block can be added/removed.
++ *    Same behaviour as described above for Data block.
++ * 3. Dabtree blocks.
++ *    XFS_DA_NODE_MAXDEPTH blocks can be added. Each of these can be new
++ *    extents. Hence extent count can increase by XFS_DA_NODE_MAXDEPTH.
 + */
-+#define XFS_IEXT_PUNCH_HOLE_CNT		(1)
++#define XFS_IEXT_DIR_MANIP_CNT(mp) \
++	((XFS_DA_NODE_MAXDEPTH + 1 + 1) * (mp)->m_dir_geo->fsbcount)
 +
  /*
   * Fork handling.
   */
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index 0534304ed0a7..2344757ede63 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -471,6 +471,7 @@ xfs_bui_item_recover(
- 	xfs_exntst_t			state;
- 	unsigned int			bui_type;
- 	int				whichfork;
-+	int				iext_delta;
- 	int				error = 0;
- 
- 	if (!xfs_bui_validate(mp, buip)) {
-@@ -508,12 +509,14 @@ xfs_bui_item_recover(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, ip, 0);
- 
--	if (bui_type == XFS_BMAP_MAP) {
--		error = xfs_iext_count_may_overflow(ip, whichfork,
--				XFS_IEXT_ADD_NOSPLIT_CNT);
--		if (error)
--			goto err_cancel;
--	}
-+	if (bui_type == XFS_BMAP_MAP)
-+		iext_delta = XFS_IEXT_ADD_NOSPLIT_CNT;
-+	else
-+		iext_delta = XFS_IEXT_PUNCH_HOLE_CNT;
-+
-+	error = xfs_iext_count_may_overflow(ip, whichfork, iext_delta);
-+	if (error)
-+		goto err_cancel;
- 
- 	count = bmap->me_len;
- 	error = xfs_trans_log_finish_bmap_update(tp, budp, bui_type, ip,
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index db44bfaabe88..6ac7a6ac2658 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -891,6 +891,11 @@ xfs_unmap_extent(
- 
- 	xfs_trans_ijoin(tp, ip, 0);
- 
-+	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
-+			XFS_IEXT_PUNCH_HOLE_CNT);
-+	if (error)
-+		goto out_trans_cancel;
-+
- 	error = xfs_bunmapi(tp, ip, startoffset_fsb, len_fsb, 0, 2, done);
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index b7352bc4c815..4cc787cc4eee 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1042,6 +1042,11 @@ xfs_create(
  	if (error)
  		goto out_trans_cancel;
-@@ -1168,6 +1173,11 @@ xfs_insert_file_space(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, ip, 0);
  
-+	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
-+			XFS_IEXT_PUNCH_HOLE_CNT);
++	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
 +	if (error)
 +		goto out_trans_cancel;
 +
  	/*
- 	 * The extent shifting code works on extent granularity. So, if stop_fsb
- 	 * is not the starting block of extent, we need to split the extent at
+ 	 * A newly created regular or special file just has one directory
+ 	 * entry pointing to them, but a directory also the "." entry
+@@ -1258,6 +1263,11 @@ xfs_link(
+ 	xfs_trans_ijoin(tp, sip, XFS_ILOCK_EXCL);
+ 	xfs_trans_ijoin(tp, tdp, XFS_ILOCK_EXCL);
+ 
++	error = xfs_iext_count_may_overflow(tdp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto error_return;
++
+ 	/*
+ 	 * If we are using project inheritance, we only allow hard link
+ 	 * creation in our tree when the project IDs are the same; else
+diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
+index 1f43fd7f3209..0b8136a32484 100644
+--- a/fs/xfs/xfs_symlink.c
++++ b/fs/xfs/xfs_symlink.c
+@@ -220,6 +220,11 @@ xfs_symlink(
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
++	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
++			XFS_IEXT_DIR_MANIP_CNT(mp));
++	if (error)
++		goto out_trans_cancel;
++
+ 	/*
+ 	 * Allocate an inode for the symlink.
+ 	 */
 -- 
 2.29.2
 
