@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42C8C2F084B
-	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:11:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 748662F084C
+	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:11:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbhAJQK7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Jan 2021 11:10:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
+        id S1726267AbhAJQLA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Jan 2021 11:11:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbhAJQK7 (ORCPT
+        with ESMTP id S1726303AbhAJQK7 (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Jan 2021 11:10:59 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9848C0617A6
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:52 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id b5so8958547pjk.2
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:52 -0800 (PST)
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D86BC0617A7
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:55 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id be12so8214136plb.4
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ubOW171teC9ubdwQpqHiQv4fYIYHgh/wHn9tXIiatU4=;
-        b=oLUyEsUbLmKW947jVpdy6vBMF7/IX++X6I30rW2gFN9TQeg1HCXbBI+CSvCFik55+8
-         20sk9oU+2LY2XNQrprg6KfpIBPUE/MJyfVWzoro/BW6M+kbI78Q9mcwK42qaaG9tLbbf
-         KemkH3ip6oxsjIbRpWlIJq4sgEK/Zg9mEJz3F+hbg59uYyRixdRw+pWoHnVqYZSrbaei
-         fnN1LZHf/fQb8AM0zCF/8FtrQXzeCm0aYEzi4SQXxnQu4TycoTIJ1MTt875vXbFs5D2x
-         xMdnUVzAcH0Pjfo0dRhXtGoWAVUX0XtqAw5G36tPoHETTahlFJurMnQHACQG+HSUwlgt
-         4zyQ==
+        bh=z+k0Pox3xLg6g4VRM1QJf7emz8PSzx7P6FqqWv5XY+g=;
+        b=B+/cuhaAzj8xpCL27K6baBQeWUm/b46hgi+nG8j4nTFInWUBQSs5ZqsrAy+yQCL0BF
+         bPZuyCxK8x7aLvd9XuUTPrO7JctVTaQCGTGBXBVZYZcse0gclc78xrfh8TOmCOgrGA6k
+         2n1lKmrran2Gx478iAu1P01R3zlWJrVB6jaPO0geCLIGMYke39x5ofxO2YSWvUCj1JcQ
+         CRLR2h7Jf/zF9muQuRLpRbT2skCrYwb4sI1y6ERhelP8/UiYQzYkNS9V5HveUHT4eX7f
+         beaC2w27XhT85R5prXu3SrrmxEC7uH4yDxM6MWOhSVKp4mNUWGGYxMhWiY58lM0mHe6x
+         B2pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ubOW171teC9ubdwQpqHiQv4fYIYHgh/wHn9tXIiatU4=;
-        b=IDatNuH75j+8yRMrrjUVlqyjxiL/KrQixQRmMQjodb+swsmq/cje9zIpQNltTwvxcC
-         NueCKRbZO6k6sR7aMjEnOrjtCifgkcDi2E/I5sQhSp5VBD6pLBmtTp3vUufPCyPSUeJN
-         EXyWHukq5B7M9yoXfegkC7TZwR60seaSwQfpRDj2RaNjvTtZTyddOPIeXRkCVfPPQuLN
-         r8/IZNyqseOnPGQx9Fdh7fUGLPXxa3Yn7tNG08ERNEGBEn5vgn7YAFC2NdZ59pr0+vNq
-         u9IWTkZ/ljYjyziRIJEo29vcommwnI742U1hsoN8dP6OMt9a/YAbfSZfO4YGkllNhHE6
-         fXMQ==
-X-Gm-Message-State: AOAM5325t2WJMfZoZgc2To68IcPCELuX4T3KyghIuO95EYf8HIJ4/NZ9
-        djKCh+PvEy1ws2DnuMX6A0HKejgdPLw=
-X-Google-Smtp-Source: ABdhPJx1vx3kML2RVb+za0eC0Re3FXJHyd1k5N2lvqRFbmmRDbA2cspd14p2AP3OnxbE9Ji933RnRw==
-X-Received: by 2002:a17:90a:9d88:: with SMTP id k8mr13748417pjp.141.1610294992396;
-        Sun, 10 Jan 2021 08:09:52 -0800 (PST)
+        bh=z+k0Pox3xLg6g4VRM1QJf7emz8PSzx7P6FqqWv5XY+g=;
+        b=g4GouV1Ay2htUoFcpcSdEzw0dzV4qpH1uESHASsP+xkjlQGK7cEvTu6DlnYFblJR4r
+         Uj2poTe+XHnWma12JdVQE/JgIZ812blldaCcXQTGdlE99Fko4AFcxDuPpGXRpUbVjgPI
+         nNgl+2Yufp0q5Vbg9x5A9h56d2IsuG6fr2ZmnG6t6Sud1m4zJZtjvXU85VQ4miPdS/D9
+         2+g4AAxHQidl8n/vAoURySSOHsF2s32JyYdY23ZIVNDLtXNnR88v+vr99o5WatOnMK29
+         B5Vn/isS3862ttsC2zFbww5VlHuqTERTTG8fhRLbbH2IwupiK+bQUBuyiHa3u62HO2A1
+         Ymag==
+X-Gm-Message-State: AOAM531tIhG4OZScyG2n9P+11OIhc3+mrNy+xxD97r/5mk9MOZLMRBVN
+        0aPWW4/I/LCsqKRcDMIwD/VwU6o91cE=
+X-Google-Smtp-Source: ABdhPJx0BuZrDFH2Dz21Ctz7VAVa7zNbinj6BNRJSxfZ23/XGHr01nqwVTx06ndsc9RQzd28SNAtUw==
+X-Received: by 2002:a17:902:ac90:b029:da:fd0c:53ba with SMTP id h16-20020a170902ac90b02900dafd0c53bamr12795841plr.23.1610294994829;
+        Sun, 10 Jan 2021 08:09:54 -0800 (PST)
 Received: from localhost.localdomain ([122.179.92.100])
-        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.09.50
+        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.09.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 08:09:52 -0800 (PST)
+        Sun, 10 Jan 2021 08:09:54 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com,
         djwong@kernel.org, hch@lst.de, allison.henderson@oracle.com
-Subject: [PATCH V14 07/16] xfs: Check for extent overflow when adding/removing xattrs
-Date:   Sun, 10 Jan 2021 21:37:11 +0530
-Message-Id: <20210110160720.3922965-8-chandanrlinux@gmail.com>
+Subject: [PATCH V14 08/16] xfs: Check for extent overflow when writing to unwritten extent
+Date:   Sun, 10 Jan 2021 21:37:12 +0530
+Message-Id: <20210110160720.3922965-9-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210110160720.3922965-1-chandanrlinux@gmail.com>
 References: <20210110160720.3922965-1-chandanrlinux@gmail.com>
@@ -63,84 +63,56 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to be
-added. One extra extent for dabtree in case a local attr is large enough
-to cause a double split.  It can also cause extent count to increase
-proportional to the size of a remote xattr's value.
+A write to a sub-interval of an existing unwritten extent causes
+the original extent to be split into 3 extents
+i.e. | Unwritten | Real | Unwritten |
+Hence extent count can increase by 2.
 
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_attr.c       | 13 +++++++++++++
- fs/xfs/libxfs/xfs_inode_fork.h | 10 ++++++++++
- 2 files changed, 23 insertions(+)
+ fs/xfs/libxfs/xfs_inode_fork.h | 9 +++++++++
+ fs/xfs/xfs_iomap.c             | 5 +++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index fd8e6418a0d3..be51e7068dcd 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -396,6 +396,7 @@ xfs_attr_set(
- 	struct xfs_trans_res	tres;
- 	bool			rsvd = (args->attr_filter & XFS_ATTR_ROOT);
- 	int			error, local;
-+	int			rmt_blks = 0;
- 	unsigned int		total;
- 
- 	if (XFS_FORCED_SHUTDOWN(dp->i_mount))
-@@ -442,11 +443,15 @@ xfs_attr_set(
- 		tres.tr_logcount = XFS_ATTRSET_LOG_COUNT;
- 		tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
- 		total = args->total;
-+
-+		if (!local)
-+			rmt_blks = xfs_attr3_rmt_blocks(mp, args->valuelen);
- 	} else {
- 		XFS_STATS_INC(mp, xs_attr_remove);
- 
- 		tres = M_RES(mp)->tr_attrrm;
- 		total = XFS_ATTRRM_SPACE_RES(mp);
-+		rmt_blks = xfs_attr3_rmt_blocks(mp, XFS_XATTR_SIZE_MAX);
- 	}
- 
- 	/*
-@@ -460,6 +465,14 @@ xfs_attr_set(
- 
- 	xfs_ilock(dp, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(args->trans, dp, 0);
-+
-+	if (args->value || xfs_inode_hasattr(dp)) {
-+		error = xfs_iext_count_may_overflow(dp, XFS_ATTR_FORK,
-+				XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
-+		if (error)
-+			goto out_trans_cancel;
-+	}
-+
- 	if (args->value) {
- 		unsigned int	quota_flags = XFS_QMOPT_RES_REGBLKS;
- 
 diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index ea1a9dd8a763..8d89838e23f8 100644
+index 8d89838e23f8..917e289ad962 100644
 --- a/fs/xfs/libxfs/xfs_inode_fork.h
 +++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -60,6 +60,16 @@ struct xfs_ifork {
- #define XFS_IEXT_DIR_MANIP_CNT(mp) \
- 	((XFS_DA_NODE_MAXDEPTH + 1 + 1) * (mp)->m_dir_geo->fsbcount)
+@@ -70,6 +70,15 @@ struct xfs_ifork {
+ #define XFS_IEXT_ATTR_MANIP_CNT(rmt_blks) \
+ 	(XFS_DA_NODE_MAXDEPTH + max(1, rmt_blks))
  
 +/*
-+ * Adding/removing an xattr can cause XFS_DA_NODE_MAXDEPTH extents to
-+ * be added. One extra extent for dabtree in case a local attr is
-+ * large enough to cause a double split.  It can also cause extent
-+ * count to increase proportional to the size of a remote xattr's
-+ * value.
++ * A write to a sub-interval of an existing unwritten extent causes the original
++ * extent to be split into 3 extents
++ * i.e. | Unwritten | Real | Unwritten |
++ * Hence extent count can increase by 2.
 + */
-+#define XFS_IEXT_ATTR_MANIP_CNT(rmt_blks) \
-+	(XFS_DA_NODE_MAXDEPTH + max(1, rmt_blks))
++#define XFS_IEXT_WRITE_UNWRITTEN_CNT	(2)
++
 +
  /*
   * Fork handling.
   */
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index f53690febb22..5bf84622421d 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -566,6 +566,11 @@ xfs_iomap_write_unwritten(
+ 		if (error)
+ 			goto error_on_bmapi_transaction;
+ 
++		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
++				XFS_IEXT_WRITE_UNWRITTEN_CNT);
++		if (error)
++			goto error_on_bmapi_transaction;
++
+ 		/*
+ 		 * Modify the unwritten extent state of the buffer.
+ 		 */
 -- 
 2.29.2
 
