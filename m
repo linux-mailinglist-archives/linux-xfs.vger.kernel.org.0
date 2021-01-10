@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B72612F084D
-	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:11:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 179342F084E
+	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:11:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbhAJQLC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1726303AbhAJQLC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Sun, 10 Jan 2021 11:11:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34506 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbhAJQLB (ORCPT
+        with ESMTP id S1726341AbhAJQLB (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Jan 2021 11:11:01 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F78C0617A9
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:57 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id q20so6208539pfu.8
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:09:57 -0800 (PST)
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DD32C0617AA
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:10:00 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id y8so8203714plp.8
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:10:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZflUbONAaK9/L9BOxfPqTzOfgjlgC/1JMj3JWXw1dMQ=;
-        b=mS5FHYsM2krsMZUgpQE0s2ZTLIJx9hNFlIRRuH6FEWY4z4U3yNJbTsaX/IS4YVzD8G
-         janl0PPjPM3bBK762XpxeKQOIVxf4BBaQig5r/9FQim1Wervf+aHlwymI0JYHf7nL9+k
-         2p5nwvMDfDMQfYNzX//H2BvgXaZ+4ACyhTX/DUhTMN1eSgxa26UO8nr5LeHEx4/HwCU5
-         t3gGM8HTku0DC7d1hSetbeaWdj0zHw/5G0b02GoiGtSMFSEBqqxJsJTl2wjAClIVEWXA
-         wzhAdm8g94OIwqZLRQCzyGk8JHKZbzaKZIV/9vPFOTk8I0XSOBk58BFlq3XOnjj4UJCE
-         bl+Q==
+        bh=BZXvtq1IJJ8A9t02QtWduGxtYXovGQz5DbuSLAdCy3M=;
+        b=jLgiSRgeojCaUjU3dTKSm1uPj2S3BEBVW3LrVFJD9Mkq1SM/+bnR8RL1vqMSH564Bn
+         DVKeRsVLRLOTYCXJ29QczCbaBiPvlER2Dw1fNdEZ2zODQr0efkJ/b/b+whC5rnifkxCa
+         XeWKInYjWJedNUg5q4uJFCxBNQRd3rGA/1CtvQ8I2eaNa/SBclM0M6oW/yn+Kkq8BE+H
+         oziAZwvGRNu0UfW6xxLyIWMjwCfZ5sinFoAn+DJMpNlKkBPn7tunttOW1fIp/rxztZdN
+         sVcNTFMW5B9GQQMwzXByvEHxNw4G/AOQzd/3jlEUATXe4YEd3dnqUa6LGyOiJAn4rx36
+         738A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZflUbONAaK9/L9BOxfPqTzOfgjlgC/1JMj3JWXw1dMQ=;
-        b=GHQXKMtxgFG/z98ZV2LS9ZEnao8mhhbuLkIvh40xjWU/TR6JuPBGRlJKEMm4AJdWne
-         vuaC8S5f+e/kbjucNB9qvcbscVj62pjuopteArSg5/ozW3QTneO6QuBwhRQ+TT2LaiNi
-         iUhmJG4nAUCC9BCl7sUDcvrgqzqUUBdNkmocT1BGjhcjCSMAN6e+MgUZOZMqK4VZTbzI
-         niCT6EsRBenh6Jjhy1cnh7/CI1YM5SQ42+UWaNNNfaQbubM28UScotjyGJZH9CBcuGCf
-         2OhuFiBZdHOpqkKQC6Buf+FmZJQGZqBWXexWJQYH7tvUM4V/hle1KSrT7CdhzFth2F0Q
-         yK6w==
-X-Gm-Message-State: AOAM531pAqtVeIy5aYP6SXDDsx4OBYaJDGtPwAkH5bce9W9bxIu7XCOf
-        YTjdnR5EWMwSasd4c8QFs9VbQCJk6wU=
-X-Google-Smtp-Source: ABdhPJzZLe2uPXPR+FZS1so78ZbZvznlz+OhYgrjZ6MdRXrjgJoEwGPXqxgm8pJx/3RGJZTcpBN6AA==
-X-Received: by 2002:a05:6a00:7c5:b029:19e:2965:7a6 with SMTP id n5-20020a056a0007c5b029019e296507a6mr12712667pfu.60.1610294997241;
-        Sun, 10 Jan 2021 08:09:57 -0800 (PST)
+        bh=BZXvtq1IJJ8A9t02QtWduGxtYXovGQz5DbuSLAdCy3M=;
+        b=JKo+QiSKZtYklzfnTXp4XDY1UEDscaBmFRsLntwJHdZKRg2of/zAL4eB10X1iO+IsH
+         W2eS06hsDI2wuGY1VMAtlFyqti0a/BUWiTTgXhydeKwtIvNW7AF2qeBkRwE93WVxtOKE
+         uPeTo+q3diTLKv9ZI9bU1RGXoV1A1blHVlM9jfvfzMjE3Ea9fGFRWZaSha7vrISmv5G2
+         DX0eplal32w6qZuxrIkZZmBBJOJFLY1xJMW8C0Fvg9Z+ibU8qp2lCEQe/aRLndD/tQuq
+         /724Fg/bhJiCXGRTscQBQwJNJBAY94d87mWl6tUnUH6PVcafoGn8v7W5ORCKTgSwsAve
+         7bUQ==
+X-Gm-Message-State: AOAM530CqP09xcEw2w1eEvkrAhEt573cMI8YpbmKd5hcQlAmlPyZ1WrZ
+        Ty7Z6cqqCYpWbOrspq+XV7TY+AGSUkg=
+X-Google-Smtp-Source: ABdhPJzS3gVWuCouJM073uXO3IE0Pha+WRAFnvSH36Ms41Oj3KIQn2OeHdL0oVhJz6PU7KZw4XXbGA==
+X-Received: by 2002:a17:90a:380c:: with SMTP id w12mr13282977pjb.117.1610294999658;
+        Sun, 10 Jan 2021 08:09:59 -0800 (PST)
 Received: from localhost.localdomain ([122.179.92.100])
-        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.09.55
+        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.09.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 08:09:56 -0800 (PST)
+        Sun, 10 Jan 2021 08:09:59 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com,
         djwong@kernel.org, hch@lst.de, allison.henderson@oracle.com
-Subject: [PATCH V14 09/16] xfs: Check for extent overflow when moving extent from cow to data fork
-Date:   Sun, 10 Jan 2021 21:37:13 +0530
-Message-Id: <20210110160720.3922965-10-chandanrlinux@gmail.com>
+Subject: [PATCH V14 10/16] xfs: Check for extent overflow when remapping an extent
+Date:   Sun, 10 Jan 2021 21:37:14 +0530
+Message-Id: <20210110160720.3922965-11-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210110160720.3922965-1-chandanrlinux@gmail.com>
 References: <20210110160720.3922965-1-chandanrlinux@gmail.com>
@@ -63,57 +63,51 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Moving an extent to data fork can cause a sub-interval of an existing
-extent to be unmapped. This will increase extent count by 1. Mapping in
-the new extent can increase the extent count by 1 again i.e.
- | Old extent | New extent | Old extent |
-Hence number of extents increases by 2.
+Remapping an extent involves unmapping the existing extent and mapping
+in the new extent. When unmapping, an extent containing the entire unmap
+range can be split into two extents,
+i.e. | Old extent | hole | Old extent |
+Hence extent count increases by 1.
 
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Mapping in the new extent into the destination file can increase the
+extent count by 1.
+
 Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_inode_fork.h | 9 +++++++++
- fs/xfs/xfs_reflink.c           | 5 +++++
- 2 files changed, 14 insertions(+)
+ fs/xfs/xfs_reflink.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index 917e289ad962..c8f279edc5c1 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.h
-+++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -79,6 +79,15 @@ struct xfs_ifork {
- #define XFS_IEXT_WRITE_UNWRITTEN_CNT	(2)
- 
- 
-+/*
-+ * Moving an extent to data fork can cause a sub-interval of an existing extent
-+ * to be unmapped. This will increase extent count by 1. Mapping in the new
-+ * extent can increase the extent count by 1 again i.e.
-+ * | Old extent | New extent | Old extent |
-+ * Hence number of extents increases by 2.
-+ */
-+#define XFS_IEXT_REFLINK_END_COW_CNT	(2)
-+
- /*
-  * Fork handling.
-  */
 diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 6fa05fb78189..ca0ac1426d74 100644
+index ca0ac1426d74..e1c98dbf79e4 100644
 --- a/fs/xfs/xfs_reflink.c
 +++ b/fs/xfs/xfs_reflink.c
-@@ -628,6 +628,11 @@ xfs_reflink_end_cow_extent(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, ip, 0);
+@@ -1006,6 +1006,7 @@ xfs_reflink_remap_extent(
+ 	unsigned int		resblks;
+ 	bool			smap_real;
+ 	bool			dmap_written = xfs_bmap_is_written_extent(dmap);
++	int			iext_delta = 0;
+ 	int			nimaps;
+ 	int			error;
  
-+	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
-+			XFS_IEXT_REFLINK_END_COW_CNT);
+@@ -1099,6 +1100,16 @@ xfs_reflink_remap_extent(
+ 			goto out_cancel;
+ 	}
+ 
++	if (smap_real)
++		++iext_delta;
++
++	if (dmap_written)
++		++iext_delta;
++
++	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK, iext_delta);
 +	if (error)
 +		goto out_cancel;
 +
- 	/*
- 	 * In case of racing, overlapping AIO writes no COW extents might be
- 	 * left by the time I/O completes for the loser of the race.  In that
+ 	if (smap_real) {
+ 		/*
+ 		 * If the extent we're unmapping is backed by storage (written
 -- 
 2.29.2
 
