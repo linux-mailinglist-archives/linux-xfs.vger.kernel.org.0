@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6EB92F0847
-	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:11:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EB902F0849
+	for <lists+linux-xfs@lfdr.de>; Sun, 10 Jan 2021 17:11:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbhAJQLH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Jan 2021 11:11:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34528 "EHLO
+        id S1726394AbhAJQLI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Jan 2021 11:11:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbhAJQLG (ORCPT
+        with ESMTP id S1726415AbhAJQLG (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Jan 2021 11:11:06 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C77FC0617B1
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:10:07 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id u4so7249149pjn.4
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:10:07 -0800 (PST)
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4B8C0617B9
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:10:09 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id x18so8209419pln.6
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Jan 2021 08:10:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=qL5piTAh1aSsUUaP1sY2S+E5lRi3K6MY3JGZu20fr+0=;
-        b=hs8XJNB0CCyUaE932CYIhZb+0X+G8kK/WBIECZ9CX4QNYNzo9KlQj4GBnjKQKZHnVs
-         Ul/N9xybfXH47HYicFU24kc7S4BHNcwXDiFhJJUUuJtx+v1+dfgK1PYhxHWjw3DTzWLP
-         pociBO37Oe0+NfdyfCyRvzk/+5sMMuBTcnhOk0HnuxIVVg2v4+Ygy61PpOA9wscHdcUL
-         LEIgCMo7X3mjlDTOXdhKHk2lCGkfTgV6oPllSkmv69kNUGzGIrYq7Cm4reCnRZP8QjWY
-         oU5Z0GhxP2K7q5NN3hIy9iIhRicoJj1ItvR4A4Mna+riNpPwoQixVdcjz2hXkKEEWY2/
-         C5wA==
+        bh=jw0B2g9g3rbrg1IyEQa89IWyyj4zbNdIUqbVg9wx8z8=;
+        b=BqnNuH5A2Scq2gM+MJpNcDo/camKwQJoytqBoFHZwk3KqLNoxiN73WIuAVo84Cj9gq
+         NspOuIiemfbYpWeK+KRmiwhvcmeVLicG+dyhqzxTr55dXmgXdWT0j/M4Eys4XvdyCz56
+         +pVriObj/mVkuiMXrkaDMGOS+TSjjIlPwDQ38JdrBsAby8Ap9QCl72G/MRYzhBADPEjC
+         rkg5LPl+IqAVv9CAj+RG2D02w9bJIj075v+SiS1w3OtCzApXegJSkAPdWnGmgYyiDHuh
+         Pz5DCkc+pmDC+o1IYAvNOLIIHzjAbHJ7SEA49dF2v2NzBRw1i1etN8FTtfAdeuuOZ5b6
+         r7gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=qL5piTAh1aSsUUaP1sY2S+E5lRi3K6MY3JGZu20fr+0=;
-        b=p1X1IESNNNmwtFMsIPUcBhIeheaJEjfkdV5HBCZvMWbsq3IkFUFdWQn/6Tr0oe5WAx
-         iRVIx8EtMt0w6U0Z3/kcLOcjWNddrAa2olQ2ntJYtBhWtI/mHtllnTsql1o49b5CaJt/
-         zuCGLv2Fem1SSYcI9WxN0z2e34bjBYrZ1VVepBsC8G8AgksXH8ihbdH4HTdQHRcBUtCX
-         tipqKlRz8EevPIcGuG8lgSnAvyXj2/U74VOfg48DeuCpULhlSvKb6xQlMnGe50PmQwXe
-         wx/8cdbXMzXjhBVVYkSXj8K34Pl7XKO1ws/bzwwl5/8ap4fKgsPfNsm5YbGivrAIfwhU
-         EKTQ==
-X-Gm-Message-State: AOAM5301jrVyoC3T3sSPaiaPgHk/EuCMa6WBJ0p1oJ/VqkBUocKmQyRk
-        qxafQfsq7Fhfr7R5BNKgU0NJ0p/7oro=
-X-Google-Smtp-Source: ABdhPJyWqYyCbdk++yG4ZJO8H87CQPJsLbtPnXKZuIteroLz0GletjcpLczLUe5g9nnAJg2OoXUF+A==
-X-Received: by 2002:a17:902:6b01:b029:da:d295:2582 with SMTP id o1-20020a1709026b01b02900dad2952582mr12916007plk.14.1610295006812;
-        Sun, 10 Jan 2021 08:10:06 -0800 (PST)
+        bh=jw0B2g9g3rbrg1IyEQa89IWyyj4zbNdIUqbVg9wx8z8=;
+        b=pY5Lh9uyCZp4HhpRCq3VOsfLeB6r0BFCQr7rNKRcX2sJZINYw6/4dirceF/x3eeArN
+         gg67ynVN41al/rm7UfDCLaqdOez7k/ua6F3uaQObkrooYDbNRPW7RR9hWTvM0x6aGWeV
+         ZciPg3Lo3AZAzfGcx198Cgj/OhNc3hWJZGNacqH/+cTSIJcXlJSx+ayD6Ru279eHI/wn
+         bSbtLam5C+abYq+pAvrOh8fxHefZdM8R1kXYZme1yRx0BhXfrC+uhJ1jH64X/makcAHO
+         sZt4HsNYl/ebi9KIi0s91Oh+aisQ0/KPQuvVM1dsME3UPqnMP5TznkVugsgQ3fet2Svd
+         Rb4w==
+X-Gm-Message-State: AOAM533ODnf8Lqco1W97VE64GGfC9rVaXAEd4ApaaXuNMceINvrnIBU4
+        +pMLc7cN+1nBLwIzuUWR/57u8EAPwRQ=
+X-Google-Smtp-Source: ABdhPJw6jraLZqNII1iKQVZjM8c4QIGKz8TneMEk3IBk2HXa8KWx+4NKllZ+Amh5n47cnIrK7+b3EQ==
+X-Received: by 2002:a17:902:7e85:b029:da:726a:3a4f with SMTP id z5-20020a1709027e85b02900da726a3a4fmr15915201pla.65.1610295009276;
+        Sun, 10 Jan 2021 08:10:09 -0800 (PST)
 Received: from localhost.localdomain ([122.179.92.100])
-        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.10.04
+        by smtp.gmail.com with ESMTPSA id d6sm15525896pfo.199.2021.01.10.08.10.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Jan 2021 08:10:06 -0800 (PST)
+        Sun, 10 Jan 2021 08:10:08 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, darrick.wong@oracle.com,
         djwong@kernel.org, hch@lst.de, allison.henderson@oracle.com
-Subject: [PATCH V14 13/16] xfs: Remove duplicate assert statement in xfs_bmap_btalloc()
-Date:   Sun, 10 Jan 2021 21:37:17 +0530
-Message-Id: <20210110160720.3922965-14-chandanrlinux@gmail.com>
+Subject: [PATCH V14 14/16] xfs: Compute bmap extent alignments in a separate function
+Date:   Sun, 10 Jan 2021 21:37:18 +0530
+Message-Id: <20210110160720.3922965-15-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210110160720.3922965-1-chandanrlinux@gmail.com>
 References: <20210110160720.3922965-1-chandanrlinux@gmail.com>
@@ -63,30 +63,145 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The check for verifying if the allocated extent is from an AG whose
-index is greater than or equal to that of tp->t_firstblock is already
-done a couple of statements earlier in the same function. Hence this
-commit removes the redundant assert statement.
+This commit moves over the code which computes stripe alignment and
+extent size hint alignment into a separate function. Apart from
+xfs_bmap_btalloc(), the new function will be used by another function
+introduced in a future commit.
 
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/xfs/libxfs/xfs_bmap.c | 89 +++++++++++++++++++++++-----------------
+ 1 file changed, 52 insertions(+), 37 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 8ebe5f13279c..0b15b1ff4bdd 100644
+index 0b15b1ff4bdd..8955a0a938d5 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -3699,7 +3699,6 @@ xfs_bmap_btalloc(
- 		ap->blkno = args.fsbno;
- 		if (ap->tp->t_firstblock == NULLFSBLOCK)
- 			ap->tp->t_firstblock = args.fsbno;
--		ASSERT(nullfb || fb_agno <= args.agno);
- 		ap->length = args.len;
- 		/*
- 		 * If the extent size hint is active, we tried to round the
+@@ -3463,13 +3463,59 @@ xfs_bmap_btalloc_accounting(
+ 		args->len);
+ }
+ 
++static int
++xfs_bmap_compute_alignments(
++	struct xfs_bmalloca	*ap,
++	struct xfs_alloc_arg	*args)
++{
++	struct xfs_mount	*mp = args->mp;
++	xfs_extlen_t		align = 0; /* minimum allocation alignment */
++	int			stripe_align = 0;
++	int			error;
++
++	/* stripe alignment for allocation is determined by mount parameters */
++	if (mp->m_swidth && (mp->m_flags & XFS_MOUNT_SWALLOC))
++		stripe_align = mp->m_swidth;
++	else if (mp->m_dalign)
++		stripe_align = mp->m_dalign;
++
++	if (ap->flags & XFS_BMAPI_COWFORK)
++		align = xfs_get_cowextsz_hint(ap->ip);
++	else if (ap->datatype & XFS_ALLOC_USERDATA)
++		align = xfs_get_extsz_hint(ap->ip);
++	if (align) {
++		error = xfs_bmap_extsize_align(mp, &ap->got, &ap->prev,
++						align, 0, ap->eof, 0, ap->conv,
++						&ap->offset, &ap->length);
++		ASSERT(!error);
++		ASSERT(ap->length);
++	}
++
++	/* apply extent size hints if obtained earlier */
++	if (align) {
++		args->prod = align;
++		div_u64_rem(ap->offset, args->prod, &args->mod);
++		if (args->mod)
++			args->mod = args->prod - args->mod;
++	} else if (mp->m_sb.sb_blocksize >= PAGE_SIZE) {
++		args->prod = 1;
++		args->mod = 0;
++	} else {
++		args->prod = PAGE_SIZE >> mp->m_sb.sb_blocklog;
++		div_u64_rem(ap->offset, args->prod, &args->mod);
++		if (args->mod)
++			args->mod = args->prod - args->mod;
++	}
++
++	return stripe_align;
++}
++
+ STATIC int
+ xfs_bmap_btalloc(
+ 	struct xfs_bmalloca	*ap)	/* bmap alloc argument struct */
+ {
+ 	xfs_mount_t	*mp;		/* mount point structure */
+ 	xfs_alloctype_t	atype = 0;	/* type for allocation routines */
+-	xfs_extlen_t	align = 0;	/* minimum allocation alignment */
+ 	xfs_agnumber_t	fb_agno;	/* ag number of ap->firstblock */
+ 	xfs_agnumber_t	ag;
+ 	xfs_alloc_arg_t	args;
+@@ -3489,25 +3535,11 @@ xfs_bmap_btalloc(
+ 
+ 	mp = ap->ip->i_mount;
+ 
+-	/* stripe alignment for allocation is determined by mount parameters */
+-	stripe_align = 0;
+-	if (mp->m_swidth && (mp->m_flags & XFS_MOUNT_SWALLOC))
+-		stripe_align = mp->m_swidth;
+-	else if (mp->m_dalign)
+-		stripe_align = mp->m_dalign;
+-
+-	if (ap->flags & XFS_BMAPI_COWFORK)
+-		align = xfs_get_cowextsz_hint(ap->ip);
+-	else if (ap->datatype & XFS_ALLOC_USERDATA)
+-		align = xfs_get_extsz_hint(ap->ip);
+-	if (align) {
+-		error = xfs_bmap_extsize_align(mp, &ap->got, &ap->prev,
+-						align, 0, ap->eof, 0, ap->conv,
+-						&ap->offset, &ap->length);
+-		ASSERT(!error);
+-		ASSERT(ap->length);
+-	}
++	memset(&args, 0, sizeof(args));
++	args.tp = ap->tp;
++	args.mp = mp;
+ 
++	stripe_align = xfs_bmap_compute_alignments(ap, &args);
+ 
+ 	nullfb = ap->tp->t_firstblock == NULLFSBLOCK;
+ 	fb_agno = nullfb ? NULLAGNUMBER : XFS_FSB_TO_AGNO(mp,
+@@ -3538,9 +3570,6 @@ xfs_bmap_btalloc(
+ 	 * Normal allocation, done through xfs_alloc_vextent.
+ 	 */
+ 	tryagain = isaligned = 0;
+-	memset(&args, 0, sizeof(args));
+-	args.tp = ap->tp;
+-	args.mp = mp;
+ 	args.fsbno = ap->blkno;
+ 	args.oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
+ 
+@@ -3571,21 +3600,7 @@ xfs_bmap_btalloc(
+ 		args.total = ap->total;
+ 		args.minlen = ap->minlen;
+ 	}
+-	/* apply extent size hints if obtained earlier */
+-	if (align) {
+-		args.prod = align;
+-		div_u64_rem(ap->offset, args.prod, &args.mod);
+-		if (args.mod)
+-			args.mod = args.prod - args.mod;
+-	} else if (mp->m_sb.sb_blocksize >= PAGE_SIZE) {
+-		args.prod = 1;
+-		args.mod = 0;
+-	} else {
+-		args.prod = PAGE_SIZE >> mp->m_sb.sb_blocklog;
+-		div_u64_rem(ap->offset, args.prod, &args.mod);
+-		if (args.mod)
+-			args.mod = args.prod - args.mod;
+-	}
++
+ 	/*
+ 	 * If we are not low on available data blocks, and the underlying
+ 	 * logical volume manager is a stripe, and the file offset is zero then
 -- 
 2.29.2
 
