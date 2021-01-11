@@ -2,139 +2,163 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5532F212C
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Jan 2021 21:53:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29A1E2F2395
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jan 2021 01:33:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbhAKUxe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Jan 2021 15:53:34 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:40726 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727448AbhAKUxd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jan 2021 15:53:33 -0500
-Received: from dread.disaster.area (pa49-179-167-107.pa.nsw.optusnet.com.au [49.179.167.107])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 0B181828B1A;
-        Tue, 12 Jan 2021 07:52:51 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kz4BE-005Sll-SL; Tue, 12 Jan 2021 07:52:48 +1100
-Date:   Tue, 12 Jan 2021 07:52:48 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, Avi Kivity <avi@scylladb.com>,
-        Brian Foster <bfoster@redhat.com>
-Subject: Re: [PATCH 3/3] xfs: try to avoid the iolock exclusive for
- non-aligned direct writes
-Message-ID: <20210111205248.GO331610@dread.disaster.area>
-References: <20210111161212.1414034-1-hch@lst.de>
- <20210111161212.1414034-4-hch@lst.de>
+        id S2391780AbhALAZy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Jan 2021 19:25:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390778AbhAKWve (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 11 Jan 2021 17:51:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F885225AC;
+        Mon, 11 Jan 2021 22:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610405453;
+        bh=nbP8Q2goDJ8opPn6HG695zwMypFWJsgwvkCqXzt0PQ0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GU3MwxEAOzWaK5jxtbpCE9dTEfvwh+cvHY/k6iQKYAnI8md2bGS05AgxngDFS713M
+         PZrPF4Mj2n9J9gQfbgLyuCG3dnyARJTitYpt4i3Olk4gVVkAzgf6Ps2bT9biy84YCe
+         ZiE7dolXQgzkI16ekyNAdVRr4fSljkDJBufwu+zA149BPfkwggVpa3Oxm+gUKCVvn6
+         Z0tgk4fhRUqfnUn7UYPzTPZVDAO4DDiYMCWAGdhgciMYTwqu5VYH2QS0mKfU0KjlQd
+         6tFor29clcmChDpa6uj1WwvUte/fAoj8cd185ecc6AfvDpT408/SHNEOySTtOKN2Tv
+         0ezPlTQ+FMkFw==
+Date:   Mon, 11 Jan 2021 14:50:53 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     wenli xie <wlxie7296@gmail.com>, xfs <linux-xfs@vger.kernel.org>,
+        chiluk@ubuntu.com, Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCH v3] xfs: fix an ABBA deadlock in xfs_rename
+Message-ID: <20210111225053.GE1164246@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210111161212.1414034-4-hch@lst.de>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_d
-        a=+wqVUQIkAh0lLYI+QRsciw==:117 a=+wqVUQIkAh0lLYI+QRsciw==:17
-        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=Eg5pMCMCAAAA:8 a=20KFwNOVAAAA:8
-        a=7-415B0cAAAA:8 a=MQ8e_jTYQEvP-IBnO0UA:9 a=CjuIK1q_8ugA:10
-        a=0UDKrKjV3BTaI6JRjsAj:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 11, 2021 at 05:12:12PM +0100, Christoph Hellwig wrote:
-> We only need the exclusive iolock for direct writes to protect sub-block
-> zeroing after an allocation or conversion of unwritten extents, and the
-> synchronous execution of these writes is also only needed because the
-> iolock is dropped early for the dodgy i_dio_count synchronisation.
-> 
-> Always start out with the shared iolock in xfs_file_dio_aio_write for
-> non-appending writes and only upgrade it to exclusive if the start and
-> end of the write range are not already allocated and in written
-> state.  This means one or two extra lookups in the in-core extent tree,
-> but with our btree data structure those lookups are very cheap and do
-> not show up in profiles on NVMe hardware for me.  On the other hand
-> avoiding the lock allows for a high concurrency using aio or io_uring.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reported-by: Avi Kivity <avi@scylladb.com>
-> Suggested-by: Brian Foster <bfoster@redhat.com>
-> ---
->  fs/xfs/xfs_file.c | 127 +++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 96 insertions(+), 31 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index 1470fc4f2e0255..59d4c6e90f06c1 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -521,6 +521,57 @@ static const struct iomap_dio_ops xfs_dio_write_ops = {
->  	.end_io		= xfs_dio_write_end_io,
->  };
->  
-> +static int
-> +xfs_dio_write_exclusive(
-> +	struct kiocb		*iocb,
-> +	size_t			count,
-> +	bool			*exclusive_io)
-> +{
-> +	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	struct xfs_ifork	*ifp = &ip->i_df;
-> +	loff_t			offset = iocb->ki_pos;
-> +	loff_t			end = offset + count;
-> +	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
-> +	xfs_fileoff_t		end_fsb = XFS_B_TO_FSB(mp, end);
-> +	struct xfs_bmbt_irec	got = { };
-> +	struct xfs_iext_cursor	icur;
-> +	int			ret;
-> +
-> +	*exclusive_io = true;
-> +
-> +	/*
-> +	 * Bmap information not read in yet or no blocks allocated at all?
-> +	 */
-> +	if (!(ifp->if_flags & XFS_IFEXTENTS) || !ip->i_d.di_nblocks)
-> +		return 0;
-> +
-> +	ret = xfs_ilock_iocb(iocb, XFS_ILOCK_SHARED);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (offset & mp->m_blockmask) {
-> +		if (!xfs_iext_lookup_extent(ip, ifp, offset_fsb, &icur, &got) ||
-> +		    got.br_startoff > offset_fsb ||
-> +		    got.br_state == XFS_EXT_UNWRITTEN)
-> +		    	goto out_unlock;
-> +	}
-> +
-> +	if ((end & mp->m_blockmask) &&
-> +	    got.br_startoff + got.br_blockcount <= end_fsb) {
-> +		if (!xfs_iext_lookup_extent(ip, ifp, end_fsb, &icur, &got) ||
-> +		    got.br_startoff > end_fsb ||
-> +		    got.br_state == XFS_EXT_UNWRITTEN)
-> +		    	goto out_unlock;
-> +	}
-> +
-> +	*exclusive_io = false;
-> +
-> +out_unlock:
-> +	xfs_iunlock(ip, XFS_ILOCK_SHARED);
-> +	return ret;
-> +}
+From: Darrick J. Wong <djwong@kernel.org>
+Subject: [PATCH] xfs: fix an ABBA deadlock in xfs_rename
 
-OK, this has a bug in it. We have to do exclusive sub-block IO when
-the end of the IO is >= i_size_read(inode) because in this situation
-iomap_dio_rw_actor() will issue an extra bio to zero the portion of
-the filesystem block that lies beyond EOF. generic/418 hammers this
-case, and randomly ends up with zeroes where there should be data.
+When overlayfs is running on top of xfs and the user unlinks a file in
+the overlay, overlayfs will create a whiteout inode and ask xfs to
+"rename" the whiteout file atop the one being unlinked.  If the file
+being unlinked loses its one nlink, we then have to put the inode on the
+unlinked list.
 
-Otherwise, it largely makes a similar mess of
-xfs_file_dio_aio_write() as my initial patchset does. We should just
-move the unaligned IO out of the main path, regardless of whether it
-is exclusive or not.
+This requires us to grab the AGI buffer of the whiteout inode to take it
+off the unlinked list (which is where whiteouts are created) and to grab
+the AGI buffer of the file being deleted.  If the whiteout was created
+in a higher numbered AG than the file being deleted, we'll lock the AGIs
+in the wrong order and deadlock.
 
-Cheers,
+Therefore, grab all the AGI locks we think we'll need ahead of time, and
+in order of increasing AG number per the locking rules.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Reported-by: wenli xie <wlxie7296@gmail.com>
+Fixes: 93597ae8dac0 ("xfs: Fix deadlock between AGI and AGF when target_ip exists in xfs_rename()")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+---
+v2: Make it more obvious that we're grabbing all the AGI locks ahead of
+the AGFs, and hide functions that we don't need to export anymore.
+v3: condense the predicate code even further
+---
+ fs/xfs/libxfs/xfs_dir2.h    |    2 --
+ fs/xfs/libxfs/xfs_dir2_sf.c |    2 +-
+ fs/xfs/xfs_inode.c          |   42 +++++++++++++++++++++++++-----------------
+ 3 files changed, 26 insertions(+), 20 deletions(-)
+
+diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+index e55378640b05..d03e6098ded9 100644
+--- a/fs/xfs/libxfs/xfs_dir2.h
++++ b/fs/xfs/libxfs/xfs_dir2.h
+@@ -47,8 +47,6 @@ extern int xfs_dir_lookup(struct xfs_trans *tp, struct xfs_inode *dp,
+ extern int xfs_dir_removename(struct xfs_trans *tp, struct xfs_inode *dp,
+ 				struct xfs_name *name, xfs_ino_t ino,
+ 				xfs_extlen_t tot);
+-extern bool xfs_dir2_sf_replace_needblock(struct xfs_inode *dp,
+-				xfs_ino_t inum);
+ extern int xfs_dir_replace(struct xfs_trans *tp, struct xfs_inode *dp,
+ 				struct xfs_name *name, xfs_ino_t inum,
+ 				xfs_extlen_t tot);
+diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
+index 2463b5d73447..8c4f76bba88b 100644
+--- a/fs/xfs/libxfs/xfs_dir2_sf.c
++++ b/fs/xfs/libxfs/xfs_dir2_sf.c
+@@ -1018,7 +1018,7 @@ xfs_dir2_sf_removename(
+ /*
+  * Check whether the sf dir replace operation need more blocks.
+  */
+-bool
++static bool
+ xfs_dir2_sf_replace_needblock(
+ 	struct xfs_inode	*dp,
+ 	xfs_ino_t		inum)
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index b7352bc4c815..e5dc41b10ebb 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -3017,7 +3017,7 @@ xfs_rename(
+ 	struct xfs_trans	*tp;
+ 	struct xfs_inode	*wip = NULL;		/* whiteout inode */
+ 	struct xfs_inode	*inodes[__XFS_SORT_INODES];
+-	struct xfs_buf		*agibp;
++	int			i;
+ 	int			num_inodes = __XFS_SORT_INODES;
+ 	bool			new_parent = (src_dp != target_dp);
+ 	bool			src_is_directory = S_ISDIR(VFS_I(src_ip)->i_mode);
+@@ -3130,6 +3130,30 @@ xfs_rename(
+ 		}
+ 	}
+ 
++	/*
++	 * Lock the AGI buffers we need to handle bumping the nlink of the
++	 * whiteout inode off the unlinked list and to handle dropping the
++	 * nlink of the target inode.  Per locking order rules, do this in
++	 * increasing AG order and before directory block allocation tries to
++	 * grab AGFs because we grab AGIs before AGFs.
++	 *
++	 * The (vfs) caller must ensure that if src is a directory then
++	 * target_ip is either null or an empty directory.
++	 */
++	for (i = 0; i < num_inodes && inodes[i] != NULL; i++) {
++		if (inodes[i] == wip ||
++		    (inodes[i] == target_ip &&
++		     (VFS_I(target_ip)->i_nlink == 1 || src_is_directory))) {
++			struct xfs_buf	*bp;
++			xfs_agnumber_t	agno;
++
++			agno = XFS_INO_TO_AGNO(mp, inodes[i]->i_ino);
++			error = xfs_read_agi(mp, tp, agno, &bp);
++			if (error)
++				goto out_trans_cancel;
++		}
++	}
++
+ 	/*
+ 	 * Directory entry creation below may acquire the AGF. Remove
+ 	 * the whiteout from the unlinked list first to preserve correct
+@@ -3182,22 +3206,6 @@ xfs_rename(
+ 		 * In case there is already an entry with the same
+ 		 * name at the destination directory, remove it first.
+ 		 */
+-
+-		/*
+-		 * Check whether the replace operation will need to allocate
+-		 * blocks.  This happens when the shortform directory lacks
+-		 * space and we have to convert it to a block format directory.
+-		 * When more blocks are necessary, we must lock the AGI first
+-		 * to preserve locking order (AGI -> AGF).
+-		 */
+-		if (xfs_dir2_sf_replace_needblock(target_dp, src_ip->i_ino)) {
+-			error = xfs_read_agi(mp, tp,
+-					XFS_INO_TO_AGNO(mp, target_ip->i_ino),
+-					&agibp);
+-			if (error)
+-				goto out_trans_cancel;
+-		}
+-
+ 		error = xfs_dir_replace(tp, target_dp, target_name,
+ 					src_ip->i_ino, spaceres);
+ 		if (error)
