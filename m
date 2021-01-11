@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 885222F1AA7
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Jan 2021 17:14:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02B4C2F1AA8
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Jan 2021 17:14:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733087AbhAKQNc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Jan 2021 11:13:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59900 "EHLO
+        id S1731095AbhAKQNm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Jan 2021 11:13:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbhAKQNc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jan 2021 11:13:32 -0500
+        with ESMTP id S1730596AbhAKQNm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jan 2021 11:13:42 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C10FC061794
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Jan 2021 08:12:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8F3C061795
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Jan 2021 08:13:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=gGxNK/h9Y1/j4uvmF24gRfmGfmqL9pBLMkdHLK9GWwY=; b=NSkKnjXY0606fFw8JYqUQYZ4En
-        l067bFiSi6ZOTgfz/WM/+YOBbP0pyPInc/XY1HjXBRTDmyLW9WjudaaL6qLfzUjwWmRevfAREy2B0
-        I+P0Ccdj2sgxrmmQHVeSJLxCohoT9BeJq+xIZEUvPSzux6aQ0gsUf04Zj52MK6KyflZ2404vRb4g/
-        /ZzvUbwGPgkAZD6wTH14XNFZXk+otzNtw2nPf+X9YTcyFyEIqflmTKBopeA95BZb4A45rfTELInth
-        15fwDfkYRzSd+0kO0nVUR97MfKWzTcBhGbeH1A9CH7fQZtg1hhKh67kEYgnnaJqze9wJPjEJpEj6/
-        U+xDof3Q==;
+        bh=REpi5jI9hKWckQo2Y2mGJRHn0muXtF1IqG/p3I1yNoY=; b=HRqd45nO6ujxdE+Z0S2GXHkBrE
+        76BL0EGFYaQx4afgXxktfNXzwILFm6UVw+WHVXguP2UNNh3Gzri6bZIQHxXcm58OD6PQQoASbZtxZ
+        p+xp3L6J03kQmZkQll/8Oyhb94PFS67m+mrLvW3ggUJgqZB7g1XbEbjR+fGkGQOll9aicUMxwfEvR
+        vEP01tn9YPOjW4PRnEuwSx+Be42isDbHlMo9Ya6DTYa0z7YLnKzJGisJLRuSUvSt168oIAObwxYbk
+        9H/0xTebiMWRhoKb9l5AtuKjQubl77K1XJjgoczHIcwL9G5kJ7gxjHeF8UjKq+4DJAmTWcUZikJU/
+        rTtM5Q3g==;
 Received: from [2001:4bb8:19b:e528:814e:4181:3d37:5818] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1kyzo3-003TV9-3F; Mon, 11 Jan 2021 16:12:39 +0000
+        id 1kyzoJ-003TVS-3m; Mon, 11 Jan 2021 16:12:56 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
 Cc:     Avi Kivity <avi@scylladb.com>
-Subject: [PATCH 1/3] xfs: factor out a xfs_ilock_iocb helper
-Date:   Mon, 11 Jan 2021 17:12:10 +0100
-Message-Id: <20210111161212.1414034-2-hch@lst.de>
+Subject: [PATCH 2/3] xfs: make xfs_file_aio_write_checks IOCB_NOWAIT-aware
+Date:   Mon, 11 Jan 2021 17:12:11 +0100
+Message-Id: <20210111161212.1414034-3-hch@lst.de>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210111161212.1414034-1-hch@lst.de>
 References: <20210111161212.1414034-1-hch@lst.de>
@@ -43,108 +43,79 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Add a helper to factor out the nowait locking logical for the read/write
-helpers.
+Ensure we don't block on the iolock, or waiting for I/O in
+xfs_file_aio_write_checks if the caller asked to avoid that.
 
+Fixes: 29a5d29ec181 ("xfs: nowait aio support")
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_file.c | 55 +++++++++++++++++++++++++----------------------
- 1 file changed, 29 insertions(+), 26 deletions(-)
+ fs/xfs/xfs_file.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
 diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index ba02780dee6439..aa3fe89628f0f1 100644
+index aa3fe89628f0f1..1470fc4f2e0255 100644
 --- a/fs/xfs/xfs_file.c
 +++ b/fs/xfs/xfs_file.c
-@@ -217,6 +217,23 @@ xfs_file_fsync(
- 	return error;
- }
+@@ -355,7 +355,14 @@ xfs_file_aio_write_checks(
+ 	if (error <= 0)
+ 		return error;
  
-+static int
-+xfs_ilock_iocb(
-+	struct kiocb		*iocb,
-+	unsigned int		lock_mode)
-+{
-+	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
-+
+-	error = xfs_break_layouts(inode, iolock, BREAK_WRITE);
 +	if (iocb->ki_flags & IOCB_NOWAIT) {
-+		if (!xfs_ilock_nowait(ip, lock_mode))
-+			return -EAGAIN;
++		error = break_layout(inode, false);
++		if (error == -EWOULDBLOCK)
++			error = -EAGAIN;
 +	} else {
-+		xfs_ilock(ip, lock_mode);
++		error = xfs_break_layouts(inode, iolock, BREAK_WRITE);
 +	}
 +
-+	return 0;
-+}
+ 	if (error)
+ 		return error;
+ 
+@@ -366,7 +373,11 @@ xfs_file_aio_write_checks(
+ 	if (*iolock == XFS_IOLOCK_SHARED && !IS_NOSEC(inode)) {
+ 		xfs_iunlock(ip, *iolock);
+ 		*iolock = XFS_IOLOCK_EXCL;
+-		xfs_ilock(ip, *iolock);
++		error = xfs_ilock_iocb(iocb, *iolock);
++		if (error) {
++			*iolock = 0;
++			return error;
++		}
+ 		goto restart;
+ 	}
+ 	/*
+@@ -388,6 +399,10 @@ xfs_file_aio_write_checks(
+ 	isize = i_size_read(inode);
+ 	if (iocb->ki_pos > isize) {
+ 		spin_unlock(&ip->i_flags_lock);
 +
- STATIC ssize_t
- xfs_file_dio_aio_read(
- 	struct kiocb		*iocb,
-@@ -233,12 +250,9 @@ xfs_file_dio_aio_read(
++		if (iocb->ki_flags & IOCB_NOWAIT)
++			return -EAGAIN;
++
+ 		if (!drained_dio) {
+ 			if (*iolock == XFS_IOLOCK_SHARED) {
+ 				xfs_iunlock(ip, *iolock);
+@@ -613,7 +628,8 @@ xfs_file_dio_aio_write(
+ 			   &xfs_dio_write_ops,
+ 			   is_sync_kiocb(iocb) || unaligned_io);
+ out:
+-	xfs_iunlock(ip, iolock);
++	if (iolock)
++		xfs_iunlock(ip, iolock);
  
- 	file_accessed(iocb->ki_filp);
+ 	/*
+ 	 * No fallback to buffered IO after short writes for XFS, direct I/O
+@@ -652,7 +668,8 @@ xfs_file_dax_write(
+ 		error = xfs_setfilesize(ip, pos, ret);
+ 	}
+ out:
+-	xfs_iunlock(ip, iolock);
++	if (iolock)
++		xfs_iunlock(ip, iolock);
+ 	if (error)
+ 		return error;
  
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, XFS_IOLOCK_SHARED);
--	}
-+	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
-+	if (ret)
-+		return ret;
- 	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL,
- 			is_sync_kiocb(iocb));
- 	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
-@@ -260,13 +274,9 @@ xfs_file_dax_read(
- 	if (!count)
- 		return 0; /* skip atime */
- 
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, XFS_IOLOCK_SHARED);
--	}
--
-+	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
-+	if (ret)
-+		return ret;
- 	ret = dax_iomap_rw(iocb, to, &xfs_read_iomap_ops);
- 	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
- 
-@@ -284,12 +294,9 @@ xfs_file_buffered_aio_read(
- 
- 	trace_xfs_file_buffered_read(ip, iov_iter_count(to), iocb->ki_pos);
- 
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, XFS_IOLOCK_SHARED);
--	}
-+	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
-+	if (ret)
-+		return ret;
- 	ret = generic_file_read_iter(iocb, to);
- 	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
- 
-@@ -628,13 +635,9 @@ xfs_file_dax_write(
- 	size_t			count;
- 	loff_t			pos;
- 
--	if (iocb->ki_flags & IOCB_NOWAIT) {
--		if (!xfs_ilock_nowait(ip, iolock))
--			return -EAGAIN;
--	} else {
--		xfs_ilock(ip, iolock);
--	}
--
-+	ret = xfs_ilock_iocb(iocb, iolock);
-+	if (ret)
-+		return ret;
- 	ret = xfs_file_aio_write_checks(iocb, from, &iolock);
- 	if (ret)
- 		goto out;
 -- 
 2.29.2
 
