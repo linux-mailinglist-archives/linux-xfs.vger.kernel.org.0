@@ -2,145 +2,256 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 12F132F1562
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Jan 2021 14:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33BF22F177C
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Jan 2021 15:07:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbhAKNjN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Jan 2021 08:39:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731665AbhAKNjM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jan 2021 08:39:12 -0500
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72BBFC061786
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Jan 2021 05:38:32 -0800 (PST)
-Received: by mail-pf1-x436.google.com with SMTP id c13so8282999pfi.12
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Jan 2021 05:38:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=lf/IbMVfoSrJlsKiti3SIsC8UJKVFgLkYBaJyhmYIi0=;
-        b=WeJaHcgO4IG1oBiORkAfLoNyNtGm9InJsqbFLI/webOw70r6PxnU0ZV03reFDc2qtk
-         K7Nt88FgqhTWky/mM3ZoT4HHp/9gsWsVj6jsgaDPoCO9sXEZmuaQSx986y4wHzAPvZl4
-         cUXJyOAuWzYaQz/cEB3yz1FzRmurPXrdyif4Akh11jrYVk3fhUUXGjdLREJPz40klJFq
-         PDhkJ5jdlWWi9WHaVdwgICqfO2WEmfRYkBeqvBifudVmp+rMPHTmdcCA3fdZ/olF6YJp
-         0LGVArtFePHZ1uxNX7h+8rrdkCAeQDzaK4Is0kmMZuO9V223xCa7es4Ght6jFl28Ip62
-         tU2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=lf/IbMVfoSrJlsKiti3SIsC8UJKVFgLkYBaJyhmYIi0=;
-        b=fYAGrURbdhq4Uq2RNy/7TkbBXZc98Wypjjb7AHbGCAdLrif6A5ncyPhTOUf3UetpSS
-         NXVRL6J2hk8Fv2bNf1VLL25OZChicP8nfMfQ3J4JEo5h5lDgcjCQcXJSFjJK2X2D/At3
-         LzxvsDXzTfJ4EIdzq0VFlA3VyHbLuTOlnMxqH4Cs3YorGVPngG5pySiqjzbXD6lcYf/v
-         xGp6yJFgi2fiCaVcWOR0y352yprIO55TqbhHfCDCuWCUlVnS2OkCt2V8Fh+QDU1sUp+Y
-         ZmEFQPWgMeywqbOq/DtD3t8FzLldDKWIbL28kfFgPg+ai7s7DaxGyMA725q3khKmcmOl
-         zGrw==
-X-Gm-Message-State: AOAM533gKMbcWXK1WD2wE8Rsf0CRWIvY/PA3/XLw02qrL+cpkdvx+YsS
-        mxKvqu3KDzywT3Cv34HskNVy3J/I7To=
-X-Google-Smtp-Source: ABdhPJyl1nUEIlEbcsPf128UCWB595hWBOqH/5AgfWTlDLudrF5nEuTB2wG06Vo0OqQUnr9f2nfYvA==
-X-Received: by 2002:a63:dc44:: with SMTP id f4mr19550894pgj.261.1610372311848;
-        Mon, 11 Jan 2021 05:38:31 -0800 (PST)
-Received: from garuda ([122.179.76.16])
-        by smtp.gmail.com with ESMTPSA id p187sm19000520pfp.60.2021.01.11.05.38.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Jan 2021 05:38:31 -0800 (PST)
-References: <161017371478.1142776.6610535704942901172.stgit@magnolia> <161017372088.1142776.17470250928392025583.stgit@magnolia>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     sandeen@sandeen.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] misc: fix valgrind complaints
-In-reply-to: <161017372088.1142776.17470250928392025583.stgit@magnolia>
-Date:   Mon, 11 Jan 2021 19:08:27 +0530
-Message-ID: <871rerpp9o.fsf@garuda>
+        id S2388497AbhAKOHR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Jan 2021 09:07:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51788 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388221AbhAKOHQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jan 2021 09:07:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1610373949;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5hFv1LWqqfHjoCLbS04F7E0ZHmLfIiOuAIRYH48xgL0=;
+        b=Q4tdPkEA9G5FI5ttFMw0yjYaR5f0iiiD/SBZNP6dlJINusJvU0NXybleVmjx/2CsTMsB9z
+        FqpaRLimdZoCq5VEkupnqm0pC80svAjG1oyLwRZsawiY/7iJYX71Tz5lGQ5XUgv+YomDDv
+        e2dP4S3oQI3tr4zexktRYl+gvtSitNE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-p7o3Y5oVNc6yTASxisGxNw-1; Mon, 11 Jan 2021 09:05:45 -0500
+X-MC-Unique: p7o3Y5oVNc6yTASxisGxNw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22CEB1927801;
+        Mon, 11 Jan 2021 14:05:44 +0000 (UTC)
+Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 483035B4A6;
+        Mon, 11 Jan 2021 14:05:43 +0000 (UTC)
+Date:   Mon, 11 Jan 2021 09:05:41 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     wenli xie <wlxie7296@gmail.com>, xfs <linux-xfs@vger.kernel.org>,
+        chiluk@ubuntu.com, Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH v2] xfs: fix an ABBA deadlock in xfs_rename
+Message-ID: <20210111140541.GA1091932@bfoster>
+References: <20210108015648.GP6918@magnolia>
+ <20210108151858.GB893097@bfoster>
+ <20210109013948.GT6918@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210109013948.GT6918@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Fri, Jan 08, 2021 at 05:39:48PM -0800, Darrick J. Wong wrote:
+> On Fri, Jan 08, 2021 at 10:18:58AM -0500, Brian Foster wrote:
+> > On Thu, Jan 07, 2021 at 05:56:48PM -0800, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <darrick.wong@oracle.com>
+> > > 
+> > > When overlayfs is running on top of xfs and the user unlinks a file in
+> > > the overlay, overlayfs will create a whiteout inode and ask xfs to
+> > > "rename" the whiteout file atop the one being unlinked.  If the file
+> > > being unlinked loses its one nlink, we then have to put the inode on the
+> > > unlinked list.
+> > > 
+> > > This requires us to grab the AGI buffer of the whiteout inode to take it
+> > > off the unlinked list (which is where whiteouts are created) and to grab
+> > > the AGI buffer of the file being deleted.  If the whiteout was created
+> > > in a higher numbered AG than the file being deleted, we'll lock the AGIs
+> > > in the wrong order and deadlock.
+> > > 
+> > > Therefore, grab all the AGI locks we think we'll need ahead of time, and
+> > > in order of increasing AG number per the locking rules.  Set
+> > > t_firstblock so that a subsequent directory block allocation never tries
+> > > to grab a lower-numbered AGF than the AGIs we grabbed.
+> > > 
+> > 
+> > I don't see this patch do anything with t_firstblock... Even so, is that
+> > necessary? I thought we had to lock AGIs before AGFs and always in agno
+> > order, but not necessarily lock an AGF >= previously locked AGIs. Hm?
+> 
+> Oops, heh.  Yeah, I'd added chunks to prevent block allocation, but on
+> further analysis I don't think that was necessary.
+> 
+> > > Reduce the likelihood that a directory expansion will ENOSPC by starting
+> > > with AG 0 when allocating whiteout files.
+> > > 
+> > > Reported-by: wenli xie <wlxie7296@gmail.com>
+> > > Fixes: 93597ae8dac0 ("xfs: Fix deadlock between AGI and AGF when target_ip exists in xfs_rename()")
+> > > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > > ---
+> > > v2: Make it more obvious that we're grabbing all the AGI locks ahead of
+> > > the AGFs, and hide functions that we don't need to export anymore.
+> > > ---
+> > >  fs/xfs/libxfs/xfs_dir2.h    |    2 --
+> > >  fs/xfs/libxfs/xfs_dir2_sf.c |    2 +-
+> > >  fs/xfs/xfs_inode.c          |   57 ++++++++++++++++++++++++++++++-------------
+> > >  3 files changed, 41 insertions(+), 20 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+> > > index e55378640b05..d03e6098ded9 100644
+> > > --- a/fs/xfs/libxfs/xfs_dir2.h
+> > > +++ b/fs/xfs/libxfs/xfs_dir2.h
+> > > @@ -47,8 +47,6 @@ extern int xfs_dir_lookup(struct xfs_trans *tp, struct xfs_inode *dp,
+> > >  extern int xfs_dir_removename(struct xfs_trans *tp, struct xfs_inode *dp,
+> > >  				struct xfs_name *name, xfs_ino_t ino,
+> > >  				xfs_extlen_t tot);
+> > > -extern bool xfs_dir2_sf_replace_needblock(struct xfs_inode *dp,
+> > > -				xfs_ino_t inum);
+> > >  extern int xfs_dir_replace(struct xfs_trans *tp, struct xfs_inode *dp,
+> > >  				struct xfs_name *name, xfs_ino_t inum,
+> > >  				xfs_extlen_t tot);
+> > > diff --git a/fs/xfs/libxfs/xfs_dir2_sf.c b/fs/xfs/libxfs/xfs_dir2_sf.c
+> > > index 2463b5d73447..8c4f76bba88b 100644
+> > > --- a/fs/xfs/libxfs/xfs_dir2_sf.c
+> > > +++ b/fs/xfs/libxfs/xfs_dir2_sf.c
+> > > @@ -1018,7 +1018,7 @@ xfs_dir2_sf_removename(
+> > >  /*
+> > >   * Check whether the sf dir replace operation need more blocks.
+> > >   */
+> > > -bool
+> > > +static bool
+> > >  xfs_dir2_sf_replace_needblock(
+> > >  	struct xfs_inode	*dp,
+> > >  	xfs_ino_t		inum)
+> > > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > > index b7352bc4c815..528152770dc9 100644
+> > > --- a/fs/xfs/xfs_inode.c
+> > > +++ b/fs/xfs/xfs_inode.c
+> > > @@ -3000,6 +3000,24 @@ xfs_rename_alloc_whiteout(
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +/* Decide if we need to lock the target IP's AGI as part of a rename. */
+> > > +static inline bool
+> > > +xfs_rename_lock_target_ip(
+> > > +	struct xfs_inode	*src_ip,
+> > > +	struct xfs_inode	*target_ip)
+> > > +{
+> > > +	unsigned int		tgt_nlink = VFS_I(target_ip)->i_nlink;
+> > > +	bool			src_is_dir = S_ISDIR(VFS_I(src_ip)->i_mode);
+> > > +
+> > > +	/*
+> > > +	 * We only need to lock the AGI if the target ip will end up on the
+> > > +	 * unlinked list.
+> > > +	 */
+> > > +	if (src_is_dir)
+> > > +		return tgt_nlink == 2;
+> > 
+> > IIUC, we can't rename dirs over nondirs and vice versa. I.e.:
+> > 
+> > # mv dir file
+> > mv: overwrite 'file'? y
+> > mv: cannot overwrite non-directory 'file' with directory 'dir'
+> > # mv -T file dir
+> > mv: overwrite 'dir'? y
+> > mv: cannot overwrite directory 'dir' with non-directory
+> > 
+> > That means that if src_is_dir is true, target must either be NULL or an
+> > empty directory for the rename to succeed, right? If so, have we already
+> > enforced that by this point? I'm wondering if we need to check the link
+> > count == 2 in this case or could possibly just reduce the logic to
+> > (tgt_nlink == 1 || src_is_dir) And if so, whether that still warrants an
+> > inline helper (where I suppose we could still assert that nlink == 2).
+> 
+> Hm.  I /think/ it's true that we can't ever rename atop an existing
+> directory, so I think this cna go away:
+> 
+> $ mkdir /tmp/xx
+> $ touch /tmp/yy
+> $ strace -s99 -e renameat ./src/renameat2 /tmp/yy /tmp/xx
+> renameat(AT_FDCWD, "/tmp/yy", AT_FDCWD, "/tmp/xx") = -1 EISDIR (Is a directory)
+> 
 
-On 09 Jan 2021 at 11:58, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
->
-> Zero the memory that we pass to the kernel via ioctls so that we never
-> pass userspace heap/stack garbage around.  This silences valgrind
-> complaints about uninitialized padding areas.
->
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  libhandle/handle.c |    7 ++++++-
->  scrub/inodes.c     |    1 +
->  scrub/spacemap.c   |    2 +-
->  3 files changed, 8 insertions(+), 2 deletions(-)
->
->
-> diff --git a/libhandle/handle.c b/libhandle/handle.c
-> index 5c1686b3..a6b35b09 100644
-> --- a/libhandle/handle.c
-> +++ b/libhandle/handle.c
-> @@ -235,9 +235,12 @@ obj_to_handle(
->  {
->  	char		hbuf [MAXHANSIZ];
->  	int		ret;
-> -	uint32_t	handlen;
-> +	uint32_t	handlen = 0;
->  	xfs_fsop_handlereq_t hreq;
->
-> +	memset(&hreq, 0, sizeof(hreq));
-> +	memset(hbuf, 0, MAXHANSIZ);
-> +
->  	if (opcode == XFS_IOC_FD_TO_HANDLE) {
->  		hreq.fd      = obj.fd;
->  		hreq.path    = NULL;
-> @@ -280,6 +283,7 @@ open_by_fshandle(
->  	if ((fsfd = handle_to_fsfd(fshanp, &path)) < 0)
->  		return -1;
->
-> +	memset(&hreq, 0, sizeof(hreq));
->  	hreq.fd       = 0;
->  	hreq.path     = NULL;
->  	hreq.oflags   = rw | O_LARGEFILE;
-> @@ -387,6 +391,7 @@ attr_list_by_handle(
->  	if ((fd = handle_to_fsfd(hanp, &path)) < 0)
->  		return -1;
->
-> +	memset(&alhreq, 0, sizeof(alhreq));
->  	alhreq.hreq.fd       = 0;
->  	alhreq.hreq.path     = NULL;
->  	alhreq.hreq.oflags   = O_LARGEFILE;
-> diff --git a/scrub/inodes.c b/scrub/inodes.c
-> index 4550db83..f2bce16f 100644
-> --- a/scrub/inodes.c
-> +++ b/scrub/inodes.c
-> @@ -129,6 +129,7 @@ scan_ag_inodes(
->  				minor(ctx->fsinfo.fs_datadev),
->  				agno);
->
-> +	memset(&handle, 0, sizeof(handle));
->  	memcpy(&handle.ha_fsid, ctx->fshandle, sizeof(handle.ha_fsid));
->  	handle.ha_fid.fid_len = sizeof(xfs_fid_t) -
->  			sizeof(handle.ha_fid.fid_len);
-> diff --git a/scrub/spacemap.c b/scrub/spacemap.c
-> index 9653916d..9362710e 100644
-> --- a/scrub/spacemap.c
-> +++ b/scrub/spacemap.c
-> @@ -47,7 +47,7 @@ scrub_iterate_fsmap(
->  	int			i;
->  	int			error;
->
-> -	head = malloc(fsmap_sizeof(FSMAP_NR));
-> +	head = calloc(1, fsmap_sizeof(FSMAP_NR));
->  	if (!head)
->  		return errno;
->
+Not sure if you mean to qualify that as "with another nondir" or not,
+but fwiw we can rename over an empty dir if the source is a dir:
 
-Minor nit: The "memset(head, 0, sizeof(*head))" statement following the above
-call to calloc() can now be removed.
+# mkdir d1
+# mkdir d2
+# ~/xfstests-dev/src/renameat2 d1 d2
+#
 
---
-chandan
+Brian
+
+> --D
+> 
+> > Brian
+> > 
+> > > +	return tgt_nlink == 1;
+> > > +}
+> > > +
+> > >  /*
+> > >   * xfs_rename
+> > >   */
+> > > @@ -3017,7 +3035,7 @@ xfs_rename(
+> > >  	struct xfs_trans	*tp;
+> > >  	struct xfs_inode	*wip = NULL;		/* whiteout inode */
+> > >  	struct xfs_inode	*inodes[__XFS_SORT_INODES];
+> > > -	struct xfs_buf		*agibp;
+> > > +	int			i;
+> > >  	int			num_inodes = __XFS_SORT_INODES;
+> > >  	bool			new_parent = (src_dp != target_dp);
+> > >  	bool			src_is_directory = S_ISDIR(VFS_I(src_ip)->i_mode);
+> > > @@ -3130,6 +3148,27 @@ xfs_rename(
+> > >  		}
+> > >  	}
+> > >  
+> > > +	/*
+> > > +	 * Lock the AGI buffers we need to handle bumping the nlink of the
+> > > +	 * whiteout inode off the unlinked list and to handle dropping the
+> > > +	 * nlink of the target inode.  We have to do this in increasing AG
+> > > +	 * order to avoid deadlocks, and before directory block allocation
+> > > +	 * tries to grab AGFs.
+> > > +	 */
+> > > +	for (i = 0; i < num_inodes && inodes[i] != NULL; i++) {
+> > > +		if (inodes[i] == wip ||
+> > > +		    (inodes[i] == target_ip &&
+> > > +		     xfs_rename_lock_target_ip(src_ip, target_ip))) {
+> > > +			struct xfs_buf	*bp;
+> > > +			xfs_agnumber_t	agno;
+> > > +
+> > > +			agno = XFS_INO_TO_AGNO(mp, inodes[i]->i_ino);
+> > > +			error = xfs_read_agi(mp, tp, agno, &bp);
+> > > +			if (error)
+> > > +				goto out_trans_cancel;
+> > > +		}
+> > > +	}
+> > > +
+> > >  	/*
+> > >  	 * Directory entry creation below may acquire the AGF. Remove
+> > >  	 * the whiteout from the unlinked list first to preserve correct
+> > > @@ -3182,22 +3221,6 @@ xfs_rename(
+> > >  		 * In case there is already an entry with the same
+> > >  		 * name at the destination directory, remove it first.
+> > >  		 */
+> > > -
+> > > -		/*
+> > > -		 * Check whether the replace operation will need to allocate
+> > > -		 * blocks.  This happens when the shortform directory lacks
+> > > -		 * space and we have to convert it to a block format directory.
+> > > -		 * When more blocks are necessary, we must lock the AGI first
+> > > -		 * to preserve locking order (AGI -> AGF).
+> > > -		 */
+> > > -		if (xfs_dir2_sf_replace_needblock(target_dp, src_ip->i_ino)) {
+> > > -			error = xfs_read_agi(mp, tp,
+> > > -					XFS_INO_TO_AGNO(mp, target_ip->i_ino),
+> > > -					&agibp);
+> > > -			if (error)
+> > > -				goto out_trans_cancel;
+> > > -		}
+> > > -
+> > >  		error = xfs_dir_replace(tp, target_dp, target_name,
+> > >  					src_ip->i_ino, spaceres);
+> > >  		if (error)
+> > > 
+> > 
+> 
+
