@@ -2,34 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C44CC2F239D
+	by mail.lfdr.de (Postfix) with ESMTP id 555AB2F239C
 	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jan 2021 01:33:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390860AbhALAZz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S2391785AbhALAZz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 11 Jan 2021 19:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33650 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404072AbhAKXYE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 11 Jan 2021 18:24:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DAF3C22D07;
-        Mon, 11 Jan 2021 23:23:21 +0000 (UTC)
+        id S2404081AbhAKXYJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 11 Jan 2021 18:24:09 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2106D22D08;
+        Mon, 11 Jan 2021 23:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610407402;
-        bh=t+wDV2VIL7vJ6zAIiM2viMBgcSKyHr3NHpCQitJ4q5E=;
+        s=k20201202; t=1610407408;
+        bh=5KeL5GVjaVaEquUqKkRUoSPgJuTg/XqAuXW+Q1m/cNw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rXPPjp4Iba882rNRR9bfZpkXr5YGhgEE9pk5YYfw9dcnshB8ZCv52uiQgZnF+P+Ce
-         0BcRyFME+Db0eQHBMPMaVD6xjelQcvcN+b3os8Izx84oUeW+fp3tAJeKhYTFwpT4hH
-         4W971NoeJyt0NwSKVmRKL3jejRh+DilCpNZ41oiEYxGOms7NgHlOjc/RN4HRaXAulv
-         KxzcX8KLRz0WX5JxU/q2ghIaVO6hSfdTxArr0ritjIcv10yXQJoL3/0EGtmpm9wrw7
-         jFLTZhDWKzokeJ88nBHbzCFFTrQTLXTQlBaCbyRuFphj+Rgbpj8RG8d7E9i5UbDTjp
-         4cSEHppfC3+7w==
-Subject: [PATCH 1/7] xfs: increase the default parallelism levels of pwork
- clients
+        b=q9hB4Jww+284Po46tfx3Kf1vsNTxENFMrhQmRAZjHfih2gJhncJFZbOOq9fMUwBCT
+         tBBuGJlqlG84+Qg6+jJ07gC9mXx+wDj8HtqJMUy/QoPymOY/3J3nVytccN6YljkUev
+         MUo/vMkEFuL2I3vneimD7Nh36m7cXeqyLH3loRkrGRK4fFP4JhADYAmRxt3DviyChD
+         wyoH8ByU56rCzxWNRq+mUc8BFHLr2cXt3Ji1Q16lEVuNuj+rbuCw0Dh7Cs603JI/TG
+         CNYjDPG8/QM5j4EikGlDQiUS92dk991t0D9ypKhJIp78leUZs75nb7549JM9uUJTDe
+         z4hyD+SulEyYQ==
+Subject: [PATCH 2/7] xfs: refactor the predicate part of xfs_free_eofblocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 11 Jan 2021 15:23:21 -0800
-Message-ID: <161040740189.1582286.17385075679159461086.stgit@magnolia>
+Date:   Mon, 11 Jan 2021 15:23:28 -0800
+Message-ID: <161040740813.1582286.3253329052236449810.stgit@magnolia>
 In-Reply-To: <161040739544.1582286.11068012972712089066.stgit@magnolia>
 References: <161040739544.1582286.11068012972712089066.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,189 +41,204 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Increase the default parallelism level for pwork clients so that we can
-take advantage of computers with a lot of CPUs and a lot of hardware.
-The posteof/cowblocks cleanup series will use the functionality
-presented in this patch to constrain the number of background per-ag gc
-threads to our best estimate of the amount of parallelism that the
-filesystem can sustain.
+Refactor the part of _free_eofblocks that decides if it's really going
+to truncate post-EOF blocks into a separate helper function.  The
+upcoming deferred inode inactivation patch requires us to be able to
+decide this prior to actual inactivation.  No functionality changes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_buf.c   |   34 ++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_buf.h   |    1 +
- fs/xfs/xfs_iwalk.c |    2 +-
- fs/xfs/xfs_mount.c |   39 +++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_mount.h |    1 +
- fs/xfs/xfs_pwork.c |   17 +++++------------
- fs/xfs/xfs_pwork.h |    2 +-
- 7 files changed, 82 insertions(+), 14 deletions(-)
+ fs/xfs/xfs_bmap_util.c |  109 +++++++++++++++++++++---------------------------
+ fs/xfs/xfs_inode.c     |   36 ++++++++++++++++
+ fs/xfs/xfs_inode.h     |    2 +
+ 3 files changed, 85 insertions(+), 62 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index f8400bbd6473..10d05c4522c9 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -2384,3 +2384,37 @@ xfs_verify_magic16(
- 		return false;
- 	return dmagic == bp->b_ops->magic16[idx];
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 602011f06fb6..16e996ae0ff3 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -637,78 +637,63 @@ xfs_free_eofblocks(
+ 	struct xfs_inode	*ip)
+ {
+ 	struct xfs_trans	*tp;
+-	int			error;
+-	xfs_fileoff_t		end_fsb;
+-	xfs_fileoff_t		last_fsb;
+-	xfs_filblks_t		map_len;
+-	int			nimaps;
+-	struct xfs_bmbt_irec	imap;
+ 	struct xfs_mount	*mp = ip->i_mount;
+-
+-	/*
+-	 * Figure out if there are any blocks beyond the end
+-	 * of the file.  If not, then there is nothing to do.
+-	 */
+-	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
+-	last_fsb = XFS_B_TO_FSB(mp, mp->m_super->s_maxbytes);
+-	if (last_fsb <= end_fsb)
+-		return 0;
+-	map_len = last_fsb - end_fsb;
+-
+-	nimaps = 1;
+-	xfs_ilock(ip, XFS_ILOCK_SHARED);
+-	error = xfs_bmapi_read(ip, end_fsb, map_len, &imap, &nimaps, 0);
+-	xfs_iunlock(ip, XFS_ILOCK_SHARED);
++	bool			has;
++	int			error;
+ 
+ 	/*
+ 	 * If there are blocks after the end of file, truncate the file to its
+ 	 * current size to free them up.
+ 	 */
+-	if (!error && (nimaps != 0) &&
+-	    (imap.br_startblock != HOLESTARTBLOCK ||
+-	     ip->i_delayed_blks)) {
+-		/*
+-		 * Attach the dquots to the inode up front.
+-		 */
+-		error = xfs_qm_dqattach(ip);
+-		if (error)
+-			return error;
++	error = xfs_has_eofblocks(ip, &has);
++	if (error || !has)
++		return error;
+ 
+-		/* wait on dio to ensure i_size has settled */
+-		inode_dio_wait(VFS_I(ip));
++	/*
++	 * Attach the dquots to the inode up front.
++	 */
++	error = xfs_qm_dqattach(ip);
++	if (error)
++		return error;
+ 
+-		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0,
+-				&tp);
+-		if (error) {
+-			ASSERT(XFS_FORCED_SHUTDOWN(mp));
+-			return error;
+-		}
++	/* wait on dio to ensure i_size has settled */
++	inode_dio_wait(VFS_I(ip));
+ 
+-		xfs_ilock(ip, XFS_ILOCK_EXCL);
+-		xfs_trans_ijoin(tp, ip, 0);
+-
+-		/*
+-		 * Do not update the on-disk file size.  If we update the
+-		 * on-disk file size and then the system crashes before the
+-		 * contents of the file are flushed to disk then the files
+-		 * may be full of holes (ie NULL files bug).
+-		 */
+-		error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
+-					XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
+-		if (error) {
+-			/*
+-			 * If we get an error at this point we simply don't
+-			 * bother truncating the file.
+-			 */
+-			xfs_trans_cancel(tp);
+-		} else {
+-			error = xfs_trans_commit(tp);
+-			if (!error)
+-				xfs_inode_clear_eofblocks_tag(ip);
+-		}
+-
+-		xfs_iunlock(ip, XFS_ILOCK_EXCL);
++	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
++	if (error) {
++		ASSERT(XFS_FORCED_SHUTDOWN(mp));
++		return error;
+ 	}
++
++	xfs_ilock(ip, XFS_ILOCK_EXCL);
++	xfs_trans_ijoin(tp, ip, 0);
++
++	/*
++	 * Do not update the on-disk file size.  If we update the
++	 * on-disk file size and then the system crashes before the
++	 * contents of the file are flushed to disk then the files
++	 * may be full of holes (ie NULL files bug).
++	 */
++	error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
++				XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
++	if (error)
++		goto err_cancel;
++
++	error = xfs_trans_commit(tp);
++	if (error)
++		goto out_unlock;
++
++	xfs_inode_clear_eofblocks_tag(ip);
++	goto out_unlock;
++
++err_cancel:
++	/*
++	 * If we get an error at this point we simply don't
++	 * bother truncating the file.
++	 */
++	xfs_trans_cancel(tp);
++out_unlock:
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return error;
  }
-+
-+/* Estimate the amount of parallelism available for a given device. */
-+unsigned int
-+xfs_buftarg_guess_threads(
-+	struct xfs_buftarg	*btp)
-+{
-+	int			iomin;
-+	int			ioopt;
-+
-+	/*
-+	 * The device tells us that it is non-rotational, and we take that to
-+	 * mean there are no moving parts and that the device can handle all
-+	 * the CPUs throwing IO requests at it.
-+	 */
-+	if (blk_queue_nonrot(btp->bt_bdev->bd_disk->queue))
-+		return num_online_cpus();
-+
-+	/*
-+	 * The device has a preferred and minimum IO size that suggest a RAID
-+	 * setup, so infer the number of disks and assume that the parallelism
-+	 * is equal to the disk count.
-+	 */
-+	iomin = bdev_io_min(btp->bt_bdev);
-+	ioopt = bdev_io_opt(btp->bt_bdev);
-+	if (iomin > 0 && ioopt > iomin)
-+		return ioopt / iomin;
-+
-+	/*
-+	 * The device did not indicate that it has any capabilities beyond that
-+	 * of a rotating disk with a single drive head, so we estimate no
-+	 * parallelism at all.
-+	 */
-+	return 1;
-+}
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 5d91a31298a4..fb0e0d89962c 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -349,6 +349,7 @@ extern xfs_buftarg_t *xfs_alloc_buftarg(struct xfs_mount *,
- extern void xfs_free_buftarg(struct xfs_buftarg *);
- extern void xfs_wait_buftarg(xfs_buftarg_t *);
- extern int xfs_setsize_buftarg(xfs_buftarg_t *, unsigned int);
-+unsigned int xfs_buftarg_guess_threads(struct xfs_buftarg *btp);
  
- #define xfs_getsize_buftarg(buftarg)	block_size((buftarg)->bt_bdev)
- #define xfs_readonly_buftarg(buftarg)	bdev_read_only((buftarg)->bt_bdev)
-diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-index eae3aff9bc97..2ab07d58c901 100644
---- a/fs/xfs/xfs_iwalk.c
-+++ b/fs/xfs/xfs_iwalk.c
-@@ -624,7 +624,7 @@ xfs_iwalk_threaded(
- 	ASSERT(agno < mp->m_sb.sb_agcount);
- 	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
- 
--	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
-+	nr_threads = xfs_pwork_guess_threads(mp);
- 	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
- 			nr_threads);
- 	if (error)
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 7110507a2b6b..1e974106e58c 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -1358,3 +1358,42 @@ xfs_mod_delalloc(
- 	percpu_counter_add_batch(&mp->m_delalloc_blks, delta,
- 			XFS_DELALLOC_BATCH);
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 0e6cc33a33ad..d30b49cd60d7 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -3711,3 +3711,39 @@ xfs_iunlock2_io_mmap(
+ 	if (!same_inode)
+ 		inode_unlock(VFS_I(ip1));
  }
 +
 +/*
-+ * Estimate the amount of parallelism that is available for metadata operations
-+ * on this filesystem.
++ * Decide if this inode have post-EOF blocks.  The caller is responsible
++ * for knowing / caring about the PREALLOC/APPEND flags.
 + */
-+unsigned int
-+xfs_guess_metadata_threads(
-+	struct xfs_mount	*mp)
++int
++xfs_has_eofblocks(
++	struct xfs_inode	*ip,
++	bool			*has)
 +{
-+	unsigned int		threads;
++	struct xfs_bmbt_irec	imap;
++	struct xfs_mount	*mp = ip->i_mount;
++	xfs_fileoff_t		end_fsb;
++	xfs_fileoff_t		last_fsb;
++	xfs_filblks_t		map_len;
++	int			nimaps;
++	int			error;
 +
-+	/*
-+	 * Estimate the amount of parallelism for metadata operations from the
-+	 * least capable of the two devices that handle metadata.  Cap that
-+	 * estimate to the number of AGs to avoid unnecessary lock contention.
-+	 */
-+	threads = xfs_buftarg_guess_threads(mp->m_ddev_targp);
-+	if (mp->m_logdev_targp != mp->m_ddev_targp)
-+		threads = min(xfs_buftarg_guess_threads(mp->m_logdev_targp),
-+			      threads);
-+	threads = min(mp->m_sb.sb_agcount, threads);
++	*has = false;
++	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
++	last_fsb = XFS_B_TO_FSB(mp, mp->m_super->s_maxbytes);
++	if (last_fsb <= end_fsb)
++		return 0;
++	map_len = last_fsb - end_fsb;
 +
-+	/* If the storage told us it has fancy capabilities, we're done. */
-+	if (threads > 1)
-+		goto clamp;
++	nimaps = 1;
++	xfs_ilock(ip, XFS_ILOCK_SHARED);
++	error = xfs_bmapi_read(ip, end_fsb, map_len, &imap, &nimaps, 0);
++	xfs_iunlock(ip, XFS_ILOCK_SHARED);
 +
-+	/*
-+	 * Metadata storage did not even hint that it has any parallel
-+	 * capability.  If the filesystem was formatted with a stripe unit and
-+	 * width, we'll treat that as evidence of a RAID setup and estimate
-+	 * the number of disks.
-+	 */
-+	if (mp->m_sb.sb_unit > 0 && mp->m_sb.sb_width > mp->m_sb.sb_unit)
-+		threads = mp->m_sb.sb_width / mp->m_sb.sb_unit;
++	if (error || nimaps == 0)
++		return error;
 +
-+clamp:
-+	/* Don't return an estimate larger than the CPU count. */
-+	return min(num_online_cpus(), threads);
++	*has = imap.br_startblock != HOLESTARTBLOCK || ip->i_delayed_blks;
++	return 0;
 +}
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index dfa429b77ee2..70f6c68c795f 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -426,5 +426,6 @@ struct xfs_error_cfg * xfs_error_get_cfg(struct xfs_mount *mp,
- 		int error_class, int error);
- void xfs_force_summary_recalc(struct xfs_mount *mp);
- void xfs_mod_delalloc(struct xfs_mount *mp, int64_t delta);
-+unsigned int xfs_guess_metadata_threads(struct xfs_mount *mp);
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index eca333f5f715..5295791be4e2 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -468,6 +468,8 @@ extern struct kmem_zone	*xfs_inode_zone;
+ /* The default CoW extent size hint. */
+ #define XFS_DEFAULT_COWEXTSZ_HINT 32
  
- #endif	/* __XFS_MOUNT_H__ */
-diff --git a/fs/xfs/xfs_pwork.c b/fs/xfs/xfs_pwork.c
-index b03333f1c84a..5f1a5e575a48 100644
---- a/fs/xfs/xfs_pwork.c
-+++ b/fs/xfs/xfs_pwork.c
-@@ -118,19 +118,12 @@ xfs_pwork_poll(
- 		touch_softlockup_watchdog();
- }
++int xfs_has_eofblocks(struct xfs_inode *ip, bool *has);
++
+ int xfs_iunlink_init(struct xfs_perag *pag);
+ void xfs_iunlink_destroy(struct xfs_perag *pag);
  
--/*
-- * Return the amount of parallelism that the data device can handle, or 0 for
-- * no limit.
-- */
-+/* Estimate how many threads we need for a parallel work queue. */
- unsigned int
--xfs_pwork_guess_datadev_parallelism(
-+xfs_pwork_guess_threads(
- 	struct xfs_mount	*mp)
- {
--	struct xfs_buftarg	*btp = mp->m_ddev_targp;
--
--	/*
--	 * For now we'll go with the most conservative setting possible,
--	 * which is two threads for an SSD and 1 thread everywhere else.
--	 */
--	return blk_queue_nonrot(btp->bt_bdev->bd_disk->queue) ? 2 : 1;
-+	/* pwork queues are not unbounded, so we have to abide WQ_MAX_ACTIVE. */
-+	return min_t(unsigned int, xfs_guess_metadata_threads(mp),
-+			WQ_MAX_ACTIVE);
- }
-diff --git a/fs/xfs/xfs_pwork.h b/fs/xfs/xfs_pwork.h
-index 8133124cf3bb..f402920f7061 100644
---- a/fs/xfs/xfs_pwork.h
-+++ b/fs/xfs/xfs_pwork.h
-@@ -56,6 +56,6 @@ int xfs_pwork_init(struct xfs_mount *mp, struct xfs_pwork_ctl *pctl,
- void xfs_pwork_queue(struct xfs_pwork_ctl *pctl, struct xfs_pwork *pwork);
- int xfs_pwork_destroy(struct xfs_pwork_ctl *pctl);
- void xfs_pwork_poll(struct xfs_pwork_ctl *pctl);
--unsigned int xfs_pwork_guess_datadev_parallelism(struct xfs_mount *mp);
-+unsigned int xfs_pwork_guess_threads(struct xfs_mount *mp);
- 
- #endif /* __XFS_PWORK_H__ */
 
