@@ -2,34 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3BFA2F23A9
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jan 2021 01:33:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C06A32F23AB
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jan 2021 01:33:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbhALAZ4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1729925AbhALAZ4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 11 Jan 2021 19:25:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33730 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:33764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404099AbhAKXY1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 11 Jan 2021 18:24:27 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A619D22D3E;
-        Mon, 11 Jan 2021 23:23:46 +0000 (UTC)
+        id S2404100AbhAKXYd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 11 Jan 2021 18:24:33 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E509122D49;
+        Mon, 11 Jan 2021 23:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610407426;
-        bh=Ve7iXhoKb07lvaGRPBL4HwAKDOudC2jx5OsRkT7x5FQ=;
+        s=k20201202; t=1610407433;
+        bh=/5fV5sYChufGBjTo3sip0G1ok6NTElT+pdnvRy7Dsxc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HjDuS7X+/ZQ6GR9AFWrlRtON3MOciHLRiowzX7vvJVXj3HHeyBR/fFXWEkEMrWxKY
-         FwakNe/xX9VFEI5a61v3JPGjp6aqtABcd+JYp6snnl0xFWcROFCEB7D3qsb+I8dzLV
-         0HTWXQ2MdPlDdefXlJs2TLUXEr7BOzuH6Zqa5VFtIUdftsDhaJKxXhdZ8p/r11x9mo
-         Ykppj/98mVUrYQFSRlMK1g38IM2984g2uPllKC7aAmVPWFA0hrdqP9iKC/RoZyemr4
-         cxCKszs8SsBuH8wGyFLMMT60Do0zkcEq5kESGL6CkgwPxB4KnTjFlcXYXKsHauIA2E
-         6qWs6VpJxt5/Q==
-Subject: [PATCH 5/7] xfs: only walk the incore inode tree once per blockgc
- scan
+        b=ECJ33UMpj0mZwLMY7Uzz1VZrt6Z61vCPF7Xjmb2xpioNF5AW305xiXxp4rIAWOTh0
+         T1VWd9AraTeVm9KlHvm0l8lgWHuXNjIcpJpiLqQvzmgAY4kie+xt/yVnzjb+/12l6z
+         Gb5ASETQykn4GHqQecqtxwF4Z2E19SVyKpZdq6y7h5Z3T6bmdt3SOl7Cqb8+osf0Wa
+         o5hCrjmROx1t7W+lMW9L8CeCNvQLmSz38YM2XMn9cb4pLxZE/ef1fczr5D56jnCJF0
+         4UOqdMVEJmSTHluil9ogZAybceViLW94SLVYLrWqoWSzfiGW/CSuA8had2e2KK+ope
+         Edjpur7+nf7vA==
+Subject: [PATCH 6/7] xfs: rename block gc start and stop functions
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 11 Jan 2021 15:23:46 -0800
-Message-ID: <161040742666.1582286.3910636058356753098.stgit@magnolia>
+Date:   Mon, 11 Jan 2021 15:23:52 -0800
+Message-ID: <161040743287.1582286.3961995540471736727.stgit@magnolia>
 In-Reply-To: <161040739544.1582286.11068012972712089066.stgit@magnolia>
 References: <161040739544.1582286.11068012972712089066.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,64 +41,153 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Perform background block preallocation gc scans more efficiently by
-walking the incore inode tree once.
+Shorten the names of the two functions that start and stop block
+preallocation garbage collection and move them up to the other blockgc
+functions.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_icache.c |   27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ fs/xfs/scrub/common.c |    4 ++--
+ fs/xfs/xfs_icache.c   |   32 ++++++++++++++++----------------
+ fs/xfs/xfs_icache.h   |    4 ++--
+ fs/xfs/xfs_mount.c    |    2 +-
+ fs/xfs/xfs_super.c    |    8 ++++----
+ 5 files changed, 25 insertions(+), 25 deletions(-)
 
 
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 8ea6d4aa3f55..53456f3de881 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -888,7 +888,7 @@ xchk_stop_reaping(
+ 	struct xfs_scrub	*sc)
+ {
+ 	sc->flags |= XCHK_REAPING_DISABLED;
+-	xfs_stop_block_reaping(sc->mp);
++	xfs_blockgc_stop(sc->mp);
+ }
+ 
+ /* Restart background reaping of resources. */
+@@ -896,6 +896,6 @@ void
+ xchk_start_reaping(
+ 	struct xfs_scrub	*sc)
+ {
+-	xfs_start_block_reaping(sc->mp);
++	xfs_blockgc_start(sc->mp);
+ 	sc->flags &= ~XCHK_REAPING_DISABLED;
+ }
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 92fcec349054..4f68375cf873 100644
+index 4f68375cf873..d1179f3e9d1f 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -31,6 +31,9 @@
-  */
- #define XFS_INODE_WALK_INEW_WAIT	0x1	/* wait on new inodes */
- 
-+STATIC int xfs_inode_free_eofblocks(struct xfs_inode *ip, void *args);
-+STATIC int xfs_inode_free_cowblocks(struct xfs_inode *ip, void *args);
-+
- /*
-  * Allocate and initialise an xfs_inode.
-  */
-@@ -950,19 +953,29 @@ xfs_queue_blockgc(
- 	rcu_read_unlock();
+@@ -996,6 +996,22 @@ xfs_blockgc_worker(
+ 	xfs_queue_blockgc(mp);
  }
  
-+/* Scan one incore inode for block preallocations that we can remove. */
-+static int
-+xfs_blockgc_scan_inode(
-+	struct xfs_inode	*ip,
-+	void			*args)
++/* Disable post-EOF and CoW block auto-reclamation. */
++void
++xfs_blockgc_stop(
++	struct xfs_mount	*mp)
 +{
-+	int			error;
-+
-+	error = xfs_inode_free_eofblocks(ip, args);
-+	if (error && error != -EAGAIN)
-+		return error;
-+
-+	return xfs_inode_free_cowblocks(ip, args);
++	cancel_delayed_work_sync(&mp->m_blockgc_work);
 +}
 +
- /* Scan all incore inodes for block preallocations that we can remove. */
- static inline int
- xfs_blockgc_scan(
- 	struct xfs_mount	*mp,
- 	struct xfs_eofblocks	*eofb)
- {
--	int			error;
++/* Enable post-EOF and CoW block auto-reclamation. */
++void
++xfs_blockgc_start(
++	struct xfs_mount	*mp)
++{
++	xfs_queue_blockgc(mp);
++}
++
+ /*
+  * Grab the inode for reclaim exclusively.
+  *
+@@ -1713,19 +1729,3 @@ xfs_inode_clear_cowblocks_tag(
+ 	trace_xfs_inode_clear_cowblocks_tag(ip);
+ 	return __xfs_inode_clear_blocks_tag(ip, XFS_ICOWBLOCKS);
+ }
 -
--	error = xfs_icache_free_eofblocks(mp, eofb);
--	if (error && error != -EAGAIN)
--		return error;
+-/* Disable post-EOF and CoW block auto-reclamation. */
+-void
+-xfs_stop_block_reaping(
+-	struct xfs_mount	*mp)
+-{
+-	cancel_delayed_work_sync(&mp->m_blockgc_work);
+-}
 -
--	return xfs_icache_free_cowblocks(mp, eofb);
-+	return __xfs_inode_walk(mp, 0, xfs_blockgc_scan_inode, eofb,
-+			XFS_ICI_BLOCK_GC_TAG);
+-/* Enable post-EOF and CoW block auto-reclamation. */
+-void
+-xfs_start_block_reaping(
+-	struct xfs_mount	*mp)
+-{
+-	xfs_queue_blockgc(mp);
+-}
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index 4ddb2c6de18b..5bcea900bc30 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -68,7 +68,7 @@ int xfs_inode_walk(struct xfs_mount *mp,
+ int xfs_icache_inode_is_allocated(struct xfs_mount *mp, struct xfs_trans *tp,
+ 				  xfs_ino_t ino, bool *inuse);
+ 
+-void xfs_stop_block_reaping(struct xfs_mount *mp);
+-void xfs_start_block_reaping(struct xfs_mount *mp);
++void xfs_blockgc_stop(struct xfs_mount *mp);
++void xfs_blockgc_start(struct xfs_mount *mp);
+ 
+ #endif
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 1e974106e58c..c3144cf5febe 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1054,7 +1054,7 @@ xfs_unmountfs(
+ 	uint64_t		resblks;
+ 	int			error;
+ 
+-	xfs_stop_block_reaping(mp);
++	xfs_blockgc_stop(mp);
+ 	xfs_fs_unreserve_ag_blocks(mp);
+ 	xfs_qm_unmount_quotas(mp);
+ 	xfs_rtunmount_inodes(mp);
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 7fb024f96964..f72c1f473025 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -920,7 +920,7 @@ xfs_fs_freeze(
+ 	 * set a GFP_NOFS context here to avoid recursion deadlocks.
+ 	 */
+ 	flags = memalloc_nofs_save();
+-	xfs_stop_block_reaping(mp);
++	xfs_blockgc_stop(mp);
+ 	xfs_save_resvblks(mp);
+ 	xfs_quiesce_attr(mp);
+ 	ret = xfs_sync_sb(mp, true);
+@@ -936,7 +936,7 @@ xfs_fs_unfreeze(
+ 
+ 	xfs_restore_resvblks(mp);
+ 	xfs_log_work_queue(mp);
+-	xfs_start_block_reaping(mp);
++	xfs_blockgc_start(mp);
+ 	return 0;
  }
  
- /* Background worker that trims preallocated space. */
+@@ -1720,7 +1720,7 @@ xfs_remount_rw(
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+ 		return error;
+ 	}
+-	xfs_start_block_reaping(mp);
++	xfs_blockgc_start(mp);
+ 
+ 	/* Create the per-AG metadata reservation pool .*/
+ 	error = xfs_fs_reserve_ag_blocks(mp);
+@@ -1740,7 +1740,7 @@ xfs_remount_ro(
+ 	 * Cancel background eofb scanning so it cannot race with the final
+ 	 * log force+buftarg wait and deadlock the remount.
+ 	 */
+-	xfs_stop_block_reaping(mp);
++	xfs_blockgc_stop(mp);
+ 
+ 	/* Get rid of any leftover CoW reservations... */
+ 	error = xfs_icache_free_cowblocks(mp, NULL);
 
