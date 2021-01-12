@@ -2,81 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 273382F4049
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Jan 2021 01:47:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91B382F40A1
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Jan 2021 01:57:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391639AbhALXaH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 12 Jan 2021 18:30:07 -0500
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:56436 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391531AbhALXaH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Jan 2021 18:30:07 -0500
+        id S2404848AbhAMAnA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 12 Jan 2021 19:43:00 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:37036 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390214AbhALXo0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Jan 2021 18:44:26 -0500
 Received: from dread.disaster.area (pa49-179-167-107.pa.nsw.optusnet.com.au [49.179.167.107])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 4B879D34B;
-        Wed, 13 Jan 2021 10:29:24 +1100 (AEDT)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 465DC5358E2;
+        Wed, 13 Jan 2021 10:43:44 +1100 (AEDT)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1kzT6J-005qcX-HX; Wed, 13 Jan 2021 10:29:23 +1100
-Date:   Wed, 13 Jan 2021 10:29:23 +1100
+        id 1kzTKB-005qm3-Nu; Wed, 13 Jan 2021 10:43:43 +1100
+Date:   Wed, 13 Jan 2021 10:43:43 +1100
 From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        avi@scylladb.com
-Subject: Re: [PATCH 09/10] iomap: add a IOMAP_DIO_NOALLOC flag
-Message-ID: <20210112232923.GD331610@dread.disaster.area>
-References: <20210112162616.2003366-1-hch@lst.de>
- <20210112162616.2003366-10-hch@lst.de>
+To:     Bastien Traverse <bastien@esrevart.net>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [BUG] xfs_corruption_error after creating a swap file
+Message-ID: <20210112234343.GE331610@dread.disaster.area>
+References: <TMAUMQ.RILVCKL2FQ501@esrevart.net>
+ <20210112222558.GV331610@dread.disaster.area>
+ <VFFUMQ.9RG39DGXEE5F@esrevart.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210112162616.2003366-10-hch@lst.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <VFFUMQ.9RG39DGXEE5F@esrevart.net>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
         a=+wqVUQIkAh0lLYI+QRsciw==:117 a=+wqVUQIkAh0lLYI+QRsciw==:17
-        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8
-        a=CEeBnLg5Jiu_aP6BM1AA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=8nJEP1OIZ-IA:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8 a=Br9LfDWDAAAA:8
+        a=TV3IVOb-i5mnMEjndI0A:9 a=wPNLvfGTeEIA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=gR_RJRYUad_6_ruzA8cR:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jan 12, 2021 at 05:26:15PM +0100, Christoph Hellwig wrote:
-> Add a flag to request that the iomap instances do not allocate blocks
-> by translating it to another new IOMAP_NOALLOC flag.
+On Tue, Jan 12, 2021 at 11:50:19PM +0100, Bastien Traverse wrote:
+> Le mer. 13 janv. 2021 à 9:25, Dave Chinner <david@fromorbit.com> a
+> écrit :
+> 
+> > But I thought that was fixed in 5.9-rc7 so should be in your
+> > kernel.  Can you confirm that your kernel has this fix?
+> 
+> This commit does appear in Arch kernel repo, so I can only suppose
+> it's in:
+> https://git.archlinux.org/linux.git/commit/?id=41663430588c737dd735bad5a0d1ba325dcabd59
+> 
+> Arch tends to stay close to upstream and I am using the standard
+> kernel.
 
-Except "no allocation" that is not what XFS needs for concurrent
-sub-block DIO.
-
-We are trying to avoid external sub-block IO outside the range of
-the user data IO (COW, sub-block zeroing, etc) so that we don't
-trash adjacent sub-block IO in flight. This means we can't do
-sub-block zeroing and that then means we can't map unwritten extents
-or allocate new extents for the sub-block IO.  It also means the IO
-range cannot span EOF because that triggers unconditional sub-block
-zeroing in iomap_dio_rw_actor().
-
-And because we may have to map multiple extents to fully span an IO
-range, we have to guarantee that subsequent extents for the IO are
-also written otherwise we have a partial write abort case. Hence we
-have single extent limitations as well.
-
-So "no allocation" really doesn't describe what we want this flag to
-at all.
-
-If we're going to use a flag for this specific functionality, let's
-call it what it is: IOMAP_DIO_UNALIGNED/IOMAP_UNALIGNED and do two
-things with it.
-
-	1. Make unaligned IO a formal part of the iomap_dio_rw()
-	behaviour so it can do the common checks to for things that
-	need exclusive serialisation for unaligned IO (i.e. avoid IO
-	spanning EOF, abort if there are cached pages over the
-	range, etc).
-
-	2. require the filesystem mapping callback do only allow
-	unaligned IO into ranges that are contiguous and don't
-	require mapping state changes or sub-block zeroing to be
-	performed during the sub-block IO.
-
+Ok. Given that xfs_repair apparently found and corrected some
+corruption and it hasn't happened since, I'm not sure that there is
+much we can go on here. It may have been a pre-existing corruption,
+and the swapfile thing is a red herring. If it happens again, let us
+know and we can see if we can get more information out of your
+system about it.
 
 Cheers,
 
