@@ -2,38 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D5A2F399C
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jan 2021 20:06:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CBE52F39BB
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jan 2021 20:12:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406056AbhALTFb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 12 Jan 2021 14:05:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42284 "EHLO mail.kernel.org"
+        id S2406743AbhALTLU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 12 Jan 2021 14:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406589AbhALTF3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 12 Jan 2021 14:05:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 44D8F23134;
-        Tue, 12 Jan 2021 19:04:12 +0000 (UTC)
+        id S2406050AbhALTLT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 12 Jan 2021 14:11:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 434C923107;
+        Tue, 12 Jan 2021 19:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610478252;
-        bh=6FqWuQrXV+HGHkzTR42Ape3on4H7NKo1rahsTeQDI4c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZNZ7JkkNHWRoE3L2XHIBFGDbwLmXQ+WYmrSQ2HH5mrAH3MtFyOQ0LJ3XzuG+BY4y
-         Ji+rdyAJ/Veytz+4dA94ERGnUigqHy0UnTkMBHX3hMM1lpgpo62tkwB8hq57YCbBS2
-         mSpxDL4QT3QnH5GgvYEHuAvdrKqC/sWHNDwlpy7hlUjEyBW/VUJPoonFZt7omR5ygJ
-         u+3VdJWj6zeBFzD0LHf+ThYBySvpcxA7LHRs2EujZ9L/va74iZnRNhyVvauDdUf+To
-         kefvDtvLXHBcCaVR/JzpiX8n8OVbP6jRDf4CZ8F0mW0jGMkcAqjwaEqOQF2vg/QhvM
-         gWcEr3/JZZHjA==
+        s=k20201202; t=1610478639;
+        bh=s0XI6BAJMx2DjAAxOccZB3WiQrh3FRss4X/fyLFfd0U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pUTyrKNf9TtCtxbPJ9j0yDLCdUSPuop8j3zJvg/gqKwPiNNZ8HEdnnfAtFs5LKNfD
+         uB7YRY6nIfZtChQ01Y0cJZT1zm9HBVp36J8motzrWtnKcLmvr9x2dvVYFl5rwmy8EY
+         3vbWVEteD5spS8UlphUu0Ia4niS0/4uFXU11JUjh+H1ic128/5fvHeV8hx5ZbblVcG
+         1BNtfIMN5t0vhvlxe+AFVlb25ftiEtsyihktUdO3PxlzC/I/B2SfULlT7gxaBVfmOr
+         Mb+mDq3urJzqNL+k/iCC+D8he5wmxQlFhBLaz++Zb+kDG0sgUQi482wNMh34jQmYzu
+         8yW5AxtmQjnQw==
 From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Theodore Ts'o <tytso@mit.edu>, Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v3 11/11] ext4: simplify i_state checks in __ext4_update_other_inode_time()
-Date:   Tue, 12 Jan 2021 11:02:53 -0800
-Message-Id: <20210112190253.64307-12-ebiggers@kernel.org>
+To:     linux-xfs@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH v3] xfs: remove a stale comment from xfs_file_aio_write_checks()
+Date:   Tue, 12 Jan 2021 11:10:24 -0800
+Message-Id: <20210112191024.65206-1-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210112190253.64307-1-ebiggers@kernel.org>
-References: <20210112190253.64307-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -42,66 +39,43 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-Since I_DIRTY_TIME and I_DIRTY_INODE are mutually exclusive in i_state,
-there's no need to check for I_DIRTY_TIME && !I_DIRTY_INODE.  Just check
-for I_DIRTY_TIME.
+The comment in xfs_file_aio_write_checks() about calling file_modified()
+after dropping the ilock doesn't make sense, because the code that
+unconditionally acquires and drops the ilock was removed by
+commit 467f78992a07 ("xfs: reduce ilock hold times in
+xfs_file_aio_write_checks").
 
-Also introduce a helper function in include/linux/fs.h to do this check.
+Remove this outdated comment.
 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- fs/ext4/inode.c    |  8 ++------
- include/linux/fs.h | 15 +++++++++++++++
- 2 files changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 4cc6c7834312f..d809a06b6ef7f 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4961,15 +4961,11 @@ static void __ext4_update_other_inode_time(struct super_block *sb,
- 	if (!inode)
- 		return;
+v3: resent as standalone patch and added a Reviewed-by.
+
+ fs/xfs/xfs_file.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 5b0f93f738372..4927c6653f15d 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -389,12 +389,6 @@ xfs_file_aio_write_checks(
+ 	} else
+ 		spin_unlock(&ip->i_flags_lock);
  
--	if ((inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
--			       I_DIRTY_INODE)) ||
--	    ((inode->i_state & I_DIRTY_TIME) == 0))
-+	if (!inode_is_dirtytime_only(inode))
- 		return;
- 
- 	spin_lock(&inode->i_lock);
--	if (((inode->i_state & (I_FREEING | I_WILL_FREE | I_NEW |
--				I_DIRTY_INODE)) == 0) &&
--	    (inode->i_state & I_DIRTY_TIME)) {
-+	if (inode_is_dirtytime_only(inode)) {
- 		struct ext4_inode_info	*ei = EXT4_I(inode);
- 
- 		inode->i_state &= ~I_DIRTY_TIME;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 45a0303b2aeb6..de0c789104c26 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2194,6 +2194,21 @@ static inline void mark_inode_dirty_sync(struct inode *inode)
- 	__mark_inode_dirty(inode, I_DIRTY_SYNC);
+-	/*
+-	 * Updating the timestamps will grab the ilock again from
+-	 * xfs_fs_dirty_inode, so we have to call it after dropping the
+-	 * lock above.  Eventually we should look into a way to avoid
+-	 * the pointless lock roundtrip.
+-	 */
+ 	return file_modified(file);
  }
  
-+/*
-+ * Returns true if the given inode itself only has dirty timestamps (its pages
-+ * may still be dirty) and isn't currently being allocated or freed.
-+ * Filesystems should call this if when writing an inode when lazytime is
-+ * enabled, they want to opportunistically write the timestamps of other inodes
-+ * located very nearby on-disk, e.g. in the same inode block.  This returns true
-+ * if the given inode is in need of such an opportunistic update.  Requires
-+ * i_lock, or at least later re-checking under i_lock.
-+ */
-+static inline bool inode_is_dirtytime_only(struct inode *inode)
-+{
-+	return (inode->i_state & (I_DIRTY_TIME | I_NEW |
-+				  I_FREEING | I_WILL_FREE)) == I_DIRTY_TIME;
-+}
-+
- extern void inc_nlink(struct inode *inode);
- extern void drop_nlink(struct inode *inode);
- extern void clear_nlink(struct inode *inode);
+
+base-commit: e71ba9452f0b5b2e8dc8aa5445198cd9214a6a62
 -- 
 2.30.0
 
