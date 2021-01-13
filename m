@@ -2,165 +2,160 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D1F12F55B9
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 02:11:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF2EF2F570B
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 02:59:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbhANBKO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 13 Jan 2021 20:10:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727051AbhANBJz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 13 Jan 2021 20:09:55 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0ABB423370;
-        Thu, 14 Jan 2021 01:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610586516;
-        bh=wxig7LQqnrX4waHh7G9uJFtZlURotXXE9diWiccso+4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KfDCSdxaRetC4jBtC3eQT70rVEWIB6d/nw5g5aSMNOczvIfPG2XtXn+9ts0RWPzXc
-         5hPk1q8M8qV4X3Rv1Pyc5UqWO+/JeF11coED3QX8IEIgsyK5VYoPrfeez3cbIesOAz
-         xKECFJpskPYDMH59Iy2Az7f74s2bOmuiou8pAKtunF26gADf5+6jD/2BdUDqLuzN0T
-         56AeYwPXHs7jYi6OtWGUmi5Rwub8oVoKOd0Ym3IwHEAVv8hLxtcfQUiTPKlXcByZxr
-         sMzirgUD+6/aHRFyKIka1IUrGoZjSJAuKt5mB/hQE4N9zIJIZgxusovVkOnP+/foKz
-         JrrxXLI3PlLEQ==
-Date:   Wed, 13 Jan 2021 17:08:35 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
+        id S1728315AbhANB6N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 13 Jan 2021 20:58:13 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33679 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729559AbhAMXm4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 13 Jan 2021 18:42:56 -0500
+Received: from dread.disaster.area (pa49-179-167-107.pa.nsw.optusnet.com.au [49.179.167.107])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2E0603E9D56;
+        Thu, 14 Jan 2021 09:49:39 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kzoxL-006B9A-JF; Thu, 14 Jan 2021 09:49:35 +1100
+Date:   Thu, 14 Jan 2021 09:49:35 +1100
+From:   Dave Chinner <david@fromorbit.com>
 To:     Brian Foster <bfoster@redhat.com>
-Cc:     sandeen@sandeen.net, darrick.wong@oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/2] xfs_db: add inobtcnt upgrade path
-Message-ID: <20210114010835.GW1164246@magnolia>
-References: <161017369911.1142690.8979186737828708317.stgit@magnolia>
- <161017370529.1142690.11100691491331155224.stgit@magnolia>
- <20210113183505.GD1284163@bfoster>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, avi@scylladb.com
+Subject: Re: [PATCH 09/10] iomap: add a IOMAP_DIO_NOALLOC flag
+Message-ID: <20210113224935.GJ331610@dread.disaster.area>
+References: <20210112162616.2003366-1-hch@lst.de>
+ <20210112162616.2003366-10-hch@lst.de>
+ <20210112232923.GD331610@dread.disaster.area>
+ <20210113153215.GA1284163@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210113183505.GD1284163@bfoster>
+In-Reply-To: <20210113153215.GA1284163@bfoster>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
+        a=+wqVUQIkAh0lLYI+QRsciw==:117 a=+wqVUQIkAh0lLYI+QRsciw==:17
+        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8
+        a=JDRsW_cnHUdvuFr_4FIA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 01:35:05PM -0500, Brian Foster wrote:
-> On Fri, Jan 08, 2021 at 10:28:25PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
+On Wed, Jan 13, 2021 at 10:32:15AM -0500, Brian Foster wrote:
+> On Wed, Jan 13, 2021 at 10:29:23AM +1100, Dave Chinner wrote:
+> > On Tue, Jan 12, 2021 at 05:26:15PM +0100, Christoph Hellwig wrote:
+> > > Add a flag to request that the iomap instances do not allocate blocks
+> > > by translating it to another new IOMAP_NOALLOC flag.
 > > 
-> > Enable users to upgrade their filesystems to support inode btree block
-> > counters.
+> > Except "no allocation" that is not what XFS needs for concurrent
+> > sub-block DIO.
 > > 
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> 
-> These two look Ok to me, but I noticed that both commands have weird
-> error semantics when run through xfs_admin and the associated features
-> are already set. E.g.:
-> 
-> # xfs_admin -O inobtcount /dev/test/tmp 
-> Upgrading V5 filesystem
-> Upgraded V5 filesystem.  Please run xfs_repair.
-> versionnum [0xb4a5+0x18a] = V5,NLINK,DIRV2,ALIGN,LOGV2,EXTFLG,MOREBITS,ATTR2,LAZYSBCOUNT,PROJID32BIT,CRC,FTYPE,FINOBT,SPARSE_INODES,REFLINK,INOBTCNT
-> Running xfs_repair to ensure filesystem consistency.
-> # xfs_admin -O inobtcount /dev/test/tmp 
-> inode btree counter feature is already enabled
-> Running xfs_repair to ensure filesystem consistency.
-> Conversion failed, is the filesystem unmounted?
-> # mount /dev/test/tmp /mnt/
-> # umount /mnt/
-> 
-> So it looks like we run repair again the second time around even though
-> the bit was already set, which is probably unnecessary, but then also
-> for some reason report the result as failed.
-
-Hm.  I guess I could define a second exitcode that means "no action
-taken", and have xfs_admin exit.
-
-> (I also realized that repair is fixing up some agi metadata in this
-> case, so my previous thought around a special repair verify mode is
-> probably not relevant..).
-
-<nod>
-
---D
-
-> Brian
-> 
-> >  db/sb.c              |   22 ++++++++++++++++++++++
-> >  man/man8/xfs_admin.8 |    7 +++++++
-> >  man/man8/xfs_db.8    |    3 +++
-> >  3 files changed, 32 insertions(+)
+> > We are trying to avoid external sub-block IO outside the range of
+> > the user data IO (COW, sub-block zeroing, etc) so that we don't
+> > trash adjacent sub-block IO in flight. This means we can't do
+> > sub-block zeroing and that then means we can't map unwritten extents
+> > or allocate new extents for the sub-block IO.  It also means the IO
+> > range cannot span EOF because that triggers unconditional sub-block
+> > zeroing in iomap_dio_rw_actor().
+> > 
+> > And because we may have to map multiple extents to fully span an IO
+> > range, we have to guarantee that subsequent extents for the IO are
+> > also written otherwise we have a partial write abort case. Hence we
+> > have single extent limitations as well.
+> > 
+> > So "no allocation" really doesn't describe what we want this flag to
+> > at all.
+> > 
+> > If we're going to use a flag for this specific functionality, let's
+> > call it what it is: IOMAP_DIO_UNALIGNED/IOMAP_UNALIGNED and do two
+> > things with it.
+> > 
+> > 	1. Make unaligned IO a formal part of the iomap_dio_rw()
+> > 	behaviour so it can do the common checks to for things that
+> > 	need exclusive serialisation for unaligned IO (i.e. avoid IO
+> > 	spanning EOF, abort if there are cached pages over the
+> > 	range, etc).
+> > 
+> > 	2. require the filesystem mapping callback do only allow
+> > 	unaligned IO into ranges that are contiguous and don't
+> > 	require mapping state changes or sub-block zeroing to be
+> > 	performed during the sub-block IO.
 > > 
 > > 
-> > diff --git a/db/sb.c b/db/sb.c
-> > index 93e4c405..b89ccdbe 100644
-> > --- a/db/sb.c
-> > +++ b/db/sb.c
-> > @@ -597,6 +597,7 @@ version_help(void)
-> >  " 'version attr2'    - enable v2 inline extended attributes\n"
-> >  " 'version log2'     - enable v2 log format\n"
-> >  " 'version needsrepair' - flag filesystem as requiring repair\n"
-> > +" 'version inobtcount' - enable inode btree counters\n"
-> >  "\n"
-> >  "The version function prints currently enabled features for a filesystem\n"
-> >  "according to the version field of its primary superblock.\n"
-> > @@ -857,6 +858,27 @@ version_f(
-> >  			}
-> >  
-> >  			v5features.incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
-> > +		} else if (!strcasecmp(argv[1], "inobtcount")) {
-> > +			if (xfs_sb_version_hasinobtcounts(&mp->m_sb)) {
-> > +				dbprintf(
-> > +		_("inode btree counter feature is already enabled\n"));
-> > +				exitcode = 1;
-> > +				return 1;
-> > +			}
-> > +			if (!xfs_sb_version_hasfinobt(&mp->m_sb)) {
-> > +				dbprintf(
-> > +		_("inode btree counter feature cannot be enabled on filesystems lacking free inode btrees\n"));
-> > +				exitcode = 1;
-> > +				return 1;
-> > +			}
-> > +			if (!xfs_sb_version_hascrc(&mp->m_sb)) {
-> > +				dbprintf(
-> > +		_("inode btree counter feature cannot be enabled on pre-V5 filesystems\n"));
-> > +				exitcode = 1;
-> > +				return 1;
-> > +			}
-> > +
-> > +			v5features.ro_compat |= XFS_SB_FEAT_RO_COMPAT_INOBTCNT;
-> >  		} else if (!strcasecmp(argv[1], "extflg")) {
-> >  			switch (XFS_SB_VERSION_NUM(&mp->m_sb)) {
-> >  			case XFS_SB_VERSION_1:
-> > diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
-> > index b423981d..a776b375 100644
-> > --- a/man/man8/xfs_admin.8
-> > +++ b/man/man8/xfs_admin.8
-> > @@ -116,6 +116,13 @@ If this is a V5 filesystem, flag the filesystem as needing repairs.
-> >  Until
-> >  .BR xfs_repair (8)
-> >  is run, the filesystem will not be mountable.
-> > +.TP
-> > +.B inobtcount
-> > +Upgrade a V5 filesystem to support the inode btree counters feature.
-> > +This reduces mount time by caching the size of the inode btrees in the
-> > +allocation group metadata.
-> > +Once enabled, the filesystem will not be writable by older kernels.
-> > +The filesystem cannot be downgraded after this feature is enabled.
-> >  .RE
-> >  .TP
-> >  .BI \-U " uuid"
-> > diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-> > index 7331cf19..1b826e5d 100644
-> > --- a/man/man8/xfs_db.8
-> > +++ b/man/man8/xfs_db.8
-> > @@ -976,6 +976,9 @@ The filesystem can be flagged as requiring a run through
-> >  if the
-> >  .B needsrepair
-> >  option is specified and the filesystem is formatted with the V5 format.
-> > +Support for the inode btree counters feature can be enabled by using the
-> > +.B inobtcount
-> > +option if the filesystem is formatted with the V5 format.
-> >  .IP
-> >  If no argument is given, the current version and feature bits are printed.
-> >  With one argument, this command will write the updated version number
-> > 
 > 
+> Something I hadn't thought about before is whether applications might
+> depend on current unaligned dio serialization for coherency and thus
+> break if the kernel suddenly allows concurrent unaligned dio to pass
+> through. Should this be something that is explicitly requested by
+> userspace?
+
+If applications are relying on an undocumented, implementation
+specific behaviour of a filesystem that only occurs for IOs of a
+certain size for implicit data coherency between independent,
+non-overlapping DIOs and/or page cache IO, then they are already
+broken and need fixing because that behaviour is not guaranteed to
+occur. e.g. 512 byte block size filesystem does not provide such
+serialisation, so if the app depends on 512 byte DIOs being
+serialised completely by the filesytem then it already fails on 512
+byte block size filesystems.
+
+So, no, we simply don't care about breaking broken applications that
+are already broken.
+
+> That aside, I agree that the DIO_UNALIGNED approach seems a bit more
+> clear than NOALLOC, but TBH the more I look at this the more Christoph's
+> first approach seems cleanest to me. It is a bit unfortunate to
+> duplicate the mapping lookups and have the extra ILOCK cycle, but the
+> lock is shared and only taken when I/O is unaligned. I don't really see
+> why that is a show stopper yet it's acceptable to fall back to exclusive
+> dio if the target range happens to be discontiguous (but otherwise
+> mapped/written).
+
+Unnecessary lock cycles in the fast path are always bad. The whole
+reason this change is being done is for performance to bring it up
+to par with block aligned IO. Adding an extra lock cycle to the
+ILOCK on every IO will halve the performance on high IOPs hardware
+because the ILOCK will be directly exposed to userspace IO
+submission and hence become the contention point instead of the
+IOLOCK.
+
+IOWs, the fact taht we take the ILOCK 2x per IO instead of once
+means that the ILOCK becomes the performance limiting lock (because
+even shared locking causes cacheline contention) and changes the
+entire lock profile for the IO path when unaligned IO is being done.
+
+This is also ignoring the fact that the ILOCK is held in exclusive
+mode during IO completion while doing file size and extent
+manipulation transactions. IOWs we can block waiting on IO
+completion before we even decide if we can do the IO with shared
+locking. Hence there are new IO submission serialisation points in
+the fast path that will also slow down the cases where we have to do
+exclusive locking....
+
+So, yeah, I can only see bad things occurring by lifting the ILOCK
+up into the high level IO path. And, of course, once it's taken
+there, people will find new reasons to expand it's scope and the
+problems will only get worse...
+
+> So I dunno... to me, I would start with that approach and then as the
+> implementation soaks, perhaps see if we can find a way to optimize away
+> the extra cycle and lookup.
+
+I don't see how we can determine if we can do the unlaigned IO
+holding a shared lock without doing an extent lookup. It's the
+underlying extent state that makes shared locking possible, and I
+can't think of any other state we can look at to make this decision.
+
+Hence I think this path is simply a dead end with no possibility of
+further optimisation. Of course, if you can solve the problem
+without needing an extent lookup, then we can talk about how to
+avoid racing with actual extent mapping changes done under the
+ILOCK... :)
+
+Cheers,
+
+Dave.
+
+-- 
+Dave Chinner
+david@fromorbit.com
