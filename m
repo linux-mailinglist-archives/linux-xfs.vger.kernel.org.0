@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59E3E2F49E3
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Jan 2021 12:21:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 735112F49E1
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Jan 2021 12:21:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbhAMLR5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S1727817AbhAMLR5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 13 Jan 2021 06:17:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35982 "EHLO mx2.suse.de"
+Received: from mx2.suse.de ([195.135.220.15]:36002 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbhAMLR4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 13 Jan 2021 06:17:56 -0500
+        id S1728295AbhAMLR5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 13 Jan 2021 06:17:57 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1610536629; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1610536630; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
         bh=Ta8F9DK/E7LHk0svuM8JucRGusGyLYjiAvfH++BYFzs=;
-        b=C3BjtHWPP3Xb3ReeK8ZlbaF7qN/TKL1nDvRq7+d6FzrU0LHD//39rtRPq37T1I3BUztYlT
-        4JG0lJFLAKVbx6soZAOr51VTT6Gl+1cXFr8Ea4jXx77af3Cuh6+25k0ROPrYl8RBjVZPEW
-        J7PrhHUMeSiqW5RmDSICwSoN+QjIC3c=
+        b=BBvrmrRxJBRBpuGtU633J5JPX7rR+uZMtE7tpGEB2TORUdwX1D7nQg5LaK+EAJIUofAUjc
+        zhAL2FY8EWMqLDgCj3z6pSUttbuz96fjyVldrReXa/gKuvXEoKDbBZxXdNIgB9u/Mb/1Oq
+        vGHiNkHaawikbovJuKWeMDzn3wtxHAs=
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id CFD9BAF24;
-        Wed, 13 Jan 2021 11:17:09 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 1B34CAF2D;
+        Wed, 13 Jan 2021 11:17:10 +0000 (UTC)
 From:   Nikolay Borisov <nborisov@suse.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     david@fromorbit.com, Nikolay Borisov <nborisov@suse.com>
 Subject: [RFC PATCH 3/3] xfs: Remove mrlock
-Date:   Wed, 13 Jan 2021 13:17:06 +0200
-Message-Id: <20210113111707.756662-4-nborisov@suse.com>
+Date:   Wed, 13 Jan 2021 13:17:07 +0200
+Message-Id: <20210113111707.756662-5-nborisov@suse.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210113111707.756662-1-nborisov@suse.com>
 References: <20210113111707.756662-1-nborisov@suse.com>
