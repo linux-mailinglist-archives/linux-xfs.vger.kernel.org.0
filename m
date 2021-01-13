@@ -2,70 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 060952F49E0
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Jan 2021 12:21:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D1372F49DF
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Jan 2021 12:21:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbhAMLR5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 13 Jan 2021 06:17:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35936 "EHLO mx2.suse.de"
+        id S1727180AbhAMLR4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 13 Jan 2021 06:17:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35950 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbhAMLRz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S1728293AbhAMLRz (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Wed, 13 Jan 2021 06:17:55 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
         t=1610536629; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=0nNaV3obvOumkdgqRVADfJ6GaX2ZgBCDIqKd1ZNzEF4=;
-        b=mV8pcGw74DEB8+8zeTmfbY9sTxaBuOvtkuPuJxzwvSShL4m5CyIoRtKMxuxs/U7zxn//tW
-        wKFJFZbjU1m5WyWEPSfHtvjyIApy3vH3yLW5AhxR+nbU/wGxmko3tqTzH0oGzI3c0A66H9
-        XBsDCFM5WOdmoab5xvx1CIkcvJJUPJY=
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FZdTwyKkf0cyWEtrVipKEpgR3vbT1AfRNaFwxyyVy74=;
+        b=QNA2b1hpDM6QbEu3KrMs1jg1TIaaoFuzwcA2neOLiaA3xBRIgXwE4+5HgjvVa0bLBgFCwF
+        N3Ike1VCdE+yNsW3Tmrg3M8oNUs36tYSuezeScNbvKLtUrqHFWhnE2EVcMRyn4CVLBQ0Zn
+        QLEoOtTDwKKelfdz+cyC51HmsjSeEy0=
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 13EA9AB92;
+        by mx2.suse.de (Postfix) with ESMTP id 4F953AEE0;
         Wed, 13 Jan 2021 11:17:09 +0000 (UTC)
 From:   Nikolay Borisov <nborisov@suse.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     david@fromorbit.com, Nikolay Borisov <nborisov@suse.com>
-Subject: [RFC PATCH 0/3] Remove mrlock
-Date:   Wed, 13 Jan 2021 13:17:03 +0200
-Message-Id: <20210113111707.756662-1-nborisov@suse.com>
+Subject: [RFC PATCH 1/3] xfs: Add is_rwsem_write_locked function
+Date:   Wed, 13 Jan 2021 13:17:04 +0200
+Message-Id: <20210113111707.756662-2-nborisov@suse.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210113111707.756662-1-nborisov@suse.com>
+References: <20210113111707.756662-1-nborisov@suse.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This series removes mrlock_t and directly replaces i_lock and i_mmaplock with
-rw_semaphore in xfs_inode. My end game with this is to eventually lift i_mmaplock
-in VFS and use it from there. The necessity for the latter came up since BTRFS
-is also about to get its own private version of i_mmaplock for the same use case.
-This  will mean that all 3 major filesystems on linux (ext4/xfs/btrfs) wil share
-the same lock. Christoph naturally suggested for the lock to be lifted to VFS.
+This is going to be used to check if an rwsem is held for write.
+Mimicking what current mrlock->mr_writer variable provides but using
+the generic rwsem infrastructure. One might argue that redefining the
+locked bit is a layering violation since RWSEM_WRITE_LOCKED is not
+exposed, however I'd argue back that this is only used in a debugging
+scenario and the physical layout of the rwsem is unlikely to change.
 
-Before proceeding with this work I'd like to get the opinion of XFS developers
-whether doing that is acceptable for them. I've heard that Dave wants to eventually
-convert the mmapsem to a range lock for XFS and implement a callback mechanism
-for VFS to call into every filesystem...
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+---
+ fs/xfs/xfs_inode.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-I've only compile tested this and also the way the rwsem is checked for write
-is admittedly a bit hackish but it can easily be changed to utilize lockdep.
-I'm aware of https://lore.kernel.org/linux-xfs/20201102194135.174806-1-preichl@redhat.com/
-but frankly that series went too far up to rev 10 which is a bit mind boggling...
-
-Nikolay Borisov (3):
-  xfs: Add is_rwsem_write_locked function
-  xfs: Convert i_lock/i_mmaplock to  rw_semaphore
-  xfs: Remove mrlock
-
- fs/xfs/mrlock.h          | 78 ----------------------------------------
- fs/xfs/xfs_inode.c       | 48 ++++++++++++++-----------
- fs/xfs/xfs_inode.h       |  6 ++--
- fs/xfs/xfs_linux.h       |  1 -
- fs/xfs/xfs_qm_syscalls.c |  2 +-
- fs/xfs/xfs_super.c       |  7 ++--
- 6 files changed, 34 insertions(+), 108 deletions(-)
- delete mode 100644 fs/xfs/mrlock.h
-
---
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index b7352bc4c815..499e63da935c 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -345,6 +345,13 @@ xfs_ilock_demote(
+ }
+ 
+ #if defined(DEBUG) || defined(XFS_WARN)
++static bool is_rwsem_write_locked(struct rw_semaphore *rwsem)
++{
++	/* Copy of RWSEM_WRITE_LOCKED from rwsem.c */
++#define LOCK_BIT (1UL << 0)
++	return atomic_long_read(&rwsem->count) & LOCK_BIT;
++}
++
+ int
+ xfs_isilocked(
+ 	xfs_inode_t		*ip,
+-- 
 2.25.1
 
