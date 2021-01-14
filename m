@@ -2,90 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9609B2F69BE
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 19:40:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1242F6B0C
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 20:36:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbhANSiz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Jan 2021 13:38:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbhANSiz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 13:38:55 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3529C061793
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 10:38:05 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id ke15so2013090ejc.12
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 10:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LkWosuir/GP6qomSqhRhsMKBDpwtYCz5V/XuQvvfqSI=;
-        b=im6lSXtwt0KheWA9Ql4xdJ1/mw1FkTo0BojtTxHsW81aPtDtFB5flwV2fTtFh7x84U
-         RAhQo/25Pvvfv15ShE6McrZkImQqRhNKwDa6VW0qO42RsdR7nl9G/4+GUjj5RX82kg+9
-         IfazecLxJEM6wN12nFn5nTpCv6Vkb+7Ke63kEjDx7ooo+ttdZ/6SvV+eqvYxyE3l7708
-         cnibIcwqW1Wv4ktLnmDxFwyLu6BUUWETVeMGMV/CBJxyvl6JJFhR04FJcSPEyeZ/08zM
-         6isWF1gs7oDMbcG/fWTzfWYSn/28SCjCUe5SOOWqhXO9vloPl3Jb4MU12N4Hh0Ii9hp9
-         COlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LkWosuir/GP6qomSqhRhsMKBDpwtYCz5V/XuQvvfqSI=;
-        b=fn60NHWZKh25xVxZTjjt+wiIPNAt24FR3PbUrP45svzAHrsht1KgVvap37CH7lbAtL
-         VZAhk8ntMmbH+G6JwfAYf+IisVkg4lOK7MtcBR1FpdYVzp5oI5i/E/dqZcxaeMJAZdFe
-         ZWv88idxX2pZSOH1HlBEwQflJ/hioJkvG5WzLaaJpZsABZ/s6Lu9bi7miN5JCvpXl4tp
-         ViI/Qo3oITfkSxbI+Ei6mgQSs9CNjEonyFM6/e75XWvzz3ep+GANbPENXD1nXTNYChGc
-         hfO7ElLoKy+QJpYdKidYLt88mrYV1jz1UKXazzy6seblfJx7XtEdqF66o9+n6PxU/QXO
-         9bXg==
-X-Gm-Message-State: AOAM531WwaD1f3c31gMORXKlSIk77kedzEL2L0com0U6d2VKX3VuMqui
-        2A0iAnYZ7d4I3+qqkZontNIDq7McPT2BK1Af
-X-Google-Smtp-Source: ABdhPJz9MMg00ZBLdf3QuCXzWBaPBnfM23N4YjgC/nRbNjGwjJ8y6kdvNd6ru2jxkhft/t60q24KfQ==
-X-Received: by 2002:a17:906:22d4:: with SMTP id q20mr5970855eja.259.1610649484294;
-        Thu, 14 Jan 2021 10:38:04 -0800 (PST)
-Received: from thinkbage.fritz.box (p200300d06f355400ebbce7b10bde1433.dip0.t-ipconnect.de. [2003:d0:6f35:5400:ebbc:e7b1:bde:1433])
-        by smtp.gmail.com with ESMTPSA id s19sm2540876edx.7.2021.01.14.10.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jan 2021 10:38:03 -0800 (PST)
-From:   Bastian Germann <bastiangermann@fishpost.de>
-To:     linux-xfs@vger.kernel.org
-Cc:     Bastian Germann <bastiangermann@fishpost.de>
-Subject: [PATCH 6/6] debian: new changelog entry
-Date:   Thu, 14 Jan 2021 19:37:47 +0100
-Message-Id: <20210114183747.2507-7-bastiangermann@fishpost.de>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210114183747.2507-1-bastiangermann@fishpost.de>
-References: <20210114183747.2507-1-bastiangermann@fishpost.de>
+        id S1726997AbhANTeY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Jan 2021 14:34:24 -0500
+Received: from sandeen.net ([63.231.237.45]:55250 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726198AbhANTeY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 14 Jan 2021 14:34:24 -0500
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 40D51479AFE;
+        Thu, 14 Jan 2021 13:32:06 -0600 (CST)
+To:     Brian Foster <bfoster@redhat.com>, Yumei Huang <yuhuang@redhat.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <1599642077.64707510.1610619249861.JavaMail.zimbra@redhat.com>
+ <487974076.64709077.1610619629992.JavaMail.zimbra@redhat.com>
+ <20210114172928.GA1351833@bfoster> <20210114182414.GB1351833@bfoster>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: XFS: Assertion failed
+Message-ID: <fe6e1cf9-6678-1329-ef58-9fa2eac75ad0@sandeen.net>
+Date:   Thu, 14 Jan 2021 13:33:42 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.6.1
 MIME-Version: 1.0
+In-Reply-To: <20210114182414.GB1351833@bfoster>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Signed-off-by: Bastian Germann <bastiangermann@fishpost.de>
----
- debian/changelog | 11 +++++++++++
- 1 file changed, 11 insertions(+)
 
-diff --git a/debian/changelog b/debian/changelog
-index 5d46f0a3..ce4a224d 100644
---- a/debian/changelog
-+++ b/debian/changelog
-@@ -1,3 +1,14 @@
-+xfsprogs (5.10.0-2) unstable; urgency=low
-+
-+  * Team upload
-+  * debian: cryptographically verify upstream tarball (Closes: #979644)
-+  * debian: remove dependency on essential util-linux
-+  * debian: remove "Priority: extra"
-+  * debian: use Package-Type over its predecessor
-+  * debian: add missing copyright info (Closes: #979653)
-+
-+ -- Bastian Germann <bastiangermann@fishpost.de>  Thu, 14 Jan 2021 18:59:14 +0100
-+
- xfsprogs (5.10.0-1) unstable; urgency=low
- 
-   * New upstream release
--- 
-2.30.0
 
+On 1/14/21 12:24 PM, Brian Foster wrote:
+> On Thu, Jan 14, 2021 at 12:29:28PM -0500, Brian Foster wrote:
+>> On Thu, Jan 14, 2021 at 05:20:29AM -0500, Yumei Huang wrote:
+>>> Hit the issue when doing syzkaller test with kernel 5.11.0-rc3(65f0d241). The C reproducer is attached.
+>>>
+>>> Steps to Reproduce:
+>>> 1. # gcc -pthread -o reproducer reproducer.c 
+>>> 2. # ./reproducer 
+>>>
+>>>
+>>> Test results:
+>>> [  131.726790] XFS: Assertion failed: (iattr->ia_valid & (ATTR_UID|ATTR_GID|ATTR_ATIME|ATTR_ATIME_SET| ATTR_MTIME_SET|ATTR_KILL_PRIV|ATTR_TIMES_SET)) == 0, file: fs/xfs/xfs_iops.c, line: 849
+>>> [  131.743687] ------------[ cut here ]------------
+>>
+>> Some quick initial analysis from a run of the reproducer... It looks
+>> like it calls into xfs_setattr_size() with ATTR_KILL_PRIV set in
+>> ->ia_valid. This appears to originate in the VFS via handle_truncate()
+>> -> do_truncate() -> dentry_needs_remove_privs().
+>>
+>> An strace of the reproducer shows the following calls:
+>>
+>> ...
+>> [pid  1524] creat("./file0", 010)       = 3
+>> ...
+>> [pid  1524] fsetxattr(3, "security.capability", "\0\0\0\3b\27\0\0\10\0\0\0\2\0\0\0\377\377\377\377\0\356\0", 24, 0 <unfinished ...>
+>> ...
+>> [pid  1524] creat("./file0", 010 <unfinished ...>
+>> ...
+>>
+>> So I'm guessing there's an attempt to open this file with O_TRUNC with
+>> this particular xattr set (unexpectedly?). Indeed, after the reproducer
+>> leaves file01 around with the xattr, a subsequent xfs_io -c "open -t
+>> ..." attempt triggers the assert again, and then the xattr disappears.
+>> I'd have to dig more into the associated vfs code to grok the expected
+>> behavior and whether there's a problem here..
+>>
+> 
+> The reproducer seems to boil down to this:
+> 
+> touch <file>
+> setfattr -n security.capability -v 0sAAAAA2IXAAAIAAAAAgAAAP////8A7gAA <file>
+> xfs_io -c "open -t <file>"
+> 
+> ... and afaict, the behavior is as expected. do_truncate() sets
+> ATTR_KILL_PRIV via dentry_needs_remove_privs() and calls into
+> notify_change(). That eventually gets to xfs_vn_setattr_size(), which
+> calls xfs_vn_change_ok() -> setattr_prepare(). setattr_prepare() handles
+> ATTR_KILL_PRIV (which remains set in ->ia_valid), and then we return,
+> fall into xfs_setattr_size() and that triggers the assert failure. ISTM
+> we should probably just drop ATTR_KILL_PRIV from the assert.
+
+I dumped the ia_valid value, and it's got these bits set:
+
+3       ATTR_SIZE
+5       ATTR_MTIME
+6       ATTR_CTIME
+9       ATTR_FORCE
+13      ATTR_FILE
+14      ATTR_KILL_PRIV
+15      ATTR_OPEN
+
+so you are right about ATTR_KILL_PRIV
+
+It's been in the assert forever, though, which is interesting?
+
+-Eric
