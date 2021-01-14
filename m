@@ -2,207 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD032F5EC5
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 11:33:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C45532F5F15
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 11:43:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbhANKcV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Jan 2021 05:32:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42877 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726518AbhANKcU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 05:32:20 -0500
+        id S1728921AbhANKkT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Jan 2021 05:40:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728975AbhANKj4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 05:39:56 -0500
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F9FC061574
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 02:39:05 -0800 (PST)
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1l001v-0002S0-0e; Thu, 14 Jan 2021 10:39:03 +0000
+X-Loop: owner@bugs.debian.org
+Subject: Bug#976683: RFS: xfsprogs/5.10.0-0.1 [NMU] -- Utilities for managing the XFS filesystem
+Reply-To: nathans@redhat.com, 976683@bugs.debian.org
+X-Loop: owner@bugs.debian.org
+X-Debian-PR-Message: followup 976683
+X-Debian-PR-Package: src:xfsprogs
+X-Debian-PR-Keywords: 
+References: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de> <fff77770-2496-0c1e-3849-bc1acc492725@fishpost.de> <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
+X-Debian-PR-Source: xfsprogs
+Received: via spool by 976683-submit@bugs.debian.org id=B976683.16106206517955
+          (code B ref 976683); Thu, 14 Jan 2021 10:39:02 +0000
+Received: (at 976683) by bugs.debian.org; 14 Jan 2021 10:37:31 +0000
+X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
+        (2018-09-13) on buxtehude.debian.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-22.9 required=4.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HAS_BUG_NUMBER,
+        MURPHY_DRUGS_REL8,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,TXREP autolearn=ham
+        autolearn_force=no version=3.4.2-bugs.debian.org_2005_01_02
+X-Spam-Bayes: score:0.0000 Tokens: new, 12; hammy, 111; neutral, 27; spammy,
+        0. spammytokens: hammytokens:0.000-+--H*r:209.85.208,
+        0.000-+--uploaders, 0.000-+--Uploaders, 0.000-+--NMU, 0.000-+--germann
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37563)
+        by buxtehude.debian.org with esmtp (Exim 4.92)
+        (envelope-from <nathans@redhat.com>)
+        id 1l000Q-000245-Hh
+        for 976683@bugs.debian.org; Thu, 14 Jan 2021 10:37:30 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610620252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o597FpWZTLk/+NWS/FEAxctfbFnFMD4/zicOs6RTJUI=;
-        b=QDUaAyrCixuqHva1YR2u9goJ75QsAOeXF0T11XG9XV1mFu0Fcv1Osq1Cmyhm364XC/r1zK
-        6ytDiExBU1MJzcNGgctak3acp7tMVoU+M5GyubL1N7r+8HKwKriixvQIlrRdivIYlUvCLq
-        wEQWcdYyG88KR7B6DpkNDtPoWlGM28o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-577-1YzMzocHNxGMJJbdif578g-1; Thu, 14 Jan 2021 05:30:50 -0500
-X-MC-Unique: 1YzMzocHNxGMJJbdif578g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97792107ACF7;
-        Thu, 14 Jan 2021 10:30:49 +0000 (UTC)
-Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E016B669EC;
-        Thu, 14 Jan 2021 10:30:48 +0000 (UTC)
-Date:   Thu, 14 Jan 2021 05:30:47 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Allison Henderson <allison.henderson@oracle.com>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [RFC[RAP] PATCH] xfs: allow setting and clearing of log incompat
- feature flags
-Message-ID: <20210114103047.GE1333929@bfoster>
-References: <20201210142358.GB1912831@bfoster>
- <20201210215004.GC3913616@dread.disaster.area>
- <20201211133901.GA2032335@bfoster>
- <20201212211439.GC632069@dread.disaster.area>
- <20201214155831.GB2244296@bfoster>
- <20201214205456.GD632069@dread.disaster.area>
- <20201215135003.GA2346012@bfoster>
- <20210107232821.GN6918@magnolia>
- <20210113213105.GG331610@dread.disaster.area>
- <20210114022547.GX1164246@magnolia>
+        s=mimecast20190719; t=1610620646;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:in-reply-to:in-reply-to:  references:references;
+        bh=lrl3snCKTPFhAsPMUvZGD9SHnOdpH2NPG0sUZtRJmdM=;
+        b=Y/kMqqToydMdFKBS3J2dACEjNKhqM8O6evJzytsCx1UQU/GT+BcMaPC4KNeeshPTl31xqT
+        +xgl3CIqANpneENZSzEp+4wjtK9KCWf3aGgchEBX62O1Gh6qPHhCPbzSd/HWdP0rh9kp2t
+        /LaGk5C+MwiMgo3XtmtxnGVR+Hvpd/U=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-AKU7D-7HPySVcfwIyHVsyg-1; Thu, 14 Jan 2021 05:37:24 -0500
+X-MC-Unique: AKU7D-7HPySVcfwIyHVsyg-1
+Received: by mail-ed1-f70.google.com with SMTP id y19so2198678edw.16
+        for <976683@bugs.debian.org>; Thu, 14 Jan 2021 02:37:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to;
+        bh=lrl3snCKTPFhAsPMUvZGD9SHnOdpH2NPG0sUZtRJmdM=;
+        b=LyJsbMnehd1vLxIDWRhyt6v/WtLXZUkJ/JQezf1O27eIZzHDMWWPEBssQ8+U6Xq0zY
+         8HsnljZsHPKRb2GVJS1vIXuN62n+6y31jFprBLmbFzxrk64cCjzpXLbdVAuQz+2nYJi9
+         f9M8QRpN1OiM3EV5m50gfbySvUKxF4/FwFCZ5ZdZKcMe3LHMmzBtETLGgAyzDLgUzpuV
+         nuEML4McvxiH2yb5enM5fCS+gbcL5AcP0iFz8ljv5PdiHn7JO72qaAmLttvFWyWwKdDI
+         ePgjqXEG02boNKOuMHYt7JoHBUwN8qTYci/6TuJFyrR1vuN6NXvlAahB+9k3y6KoB2gz
+         6BJA==
+X-Gm-Message-State: AOAM532zKhAabl4WePIWvggRbHJXfwHNAwrz+N8O1QjWZSLlqxrqxCZs
+        0Dubg4tnX6R8QIeQfrdv5fCoodGpYC1DQROlYz10/XpwPq8eQtYJl1z4SvzdIXUz2HB3STxKNm2
+        cE0cjwY1vsUwLWieWOG8b0V8JvDvdI8D4
+X-Received: by 2002:a17:906:3b82:: with SMTP id u2mr4623504ejf.66.1610620642870;
+        Thu, 14 Jan 2021 02:37:22 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz1yBB7H9H6owqbJn+4nR7g701xAFAg3nCygaFAo6ORdC4wqHzw9P/wuVxw3YN/e1gQwarLZSjtgqxNqJZrP/A=
+X-Received: by 2002:a17:906:3b82:: with SMTP id u2mr4623497ejf.66.1610620642681;
+ Thu, 14 Jan 2021 02:37:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210114022547.GX1164246@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <fff77770-2496-0c1e-3849-bc1acc492725@fishpost.de>
+From:   Nathan Scott <nathans@redhat.com>
+Date:   Thu, 14 Jan 2021 21:37:11 +1100
+Message-ID: <CAFMei7NNM3FLngqn9rhOTk9a_ebspBmfg9a==3ZkxKp-hhAOFw@mail.gmail.com>
+To:     Bastian Germann <bastiangermann@fishpost.de>,
+        976683@bugs.debian.org
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nathans@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 06:25:47PM -0800, Darrick J. Wong wrote:
-> On Thu, Jan 14, 2021 at 08:31:05AM +1100, Dave Chinner wrote:
-> > On Thu, Jan 07, 2021 at 03:28:21PM -0800, Darrick J. Wong wrote:
-> > > On Tue, Dec 15, 2020 at 08:50:03AM -0500, Brian Foster wrote:
-> > > > On Tue, Dec 15, 2020 at 07:54:56AM +1100, Dave Chinner wrote:
-> > > > > On Mon, Dec 14, 2020 at 10:58:31AM -0500, Brian Foster wrote:
-> > > > > > On Sun, Dec 13, 2020 at 08:14:39AM +1100, Dave Chinner wrote:
-> > > > > > > On Fri, Dec 11, 2020 at 08:39:01AM -0500, Brian Foster wrote:
-> > > > > > > > On Fri, Dec 11, 2020 at 08:50:04AM +1100, Dave Chinner wrote:
-> > > > > > > > > As for a mechanism for dynamically adding log incompat flags?
-> > > > > > > > > Perhaps we just do that in xfs_trans_alloc() - add an log incompat
-> > > > > > > > > flags field into the transaction reservation structure, and if
-> > > > > > > > > xfs_trans_alloc() sees an incompat field set and the superblock
-> > > > > > > > > doesn't have it set, the first thing it does is run a "set log
-> > > > > > > > > incompat flag" transaction before then doing it's normal work...
-> > > > > > > > > 
-> > > > > > > > > This should be rare enough it doesn't have any measurable
-> > > > > > > > > performance overhead, and it's flexible enough to support any log
-> > > > > > > > > incompat feature we might need to implement...
-> > > > > > > > > 
-> > > > > > > > 
-> > > > > > > > But I don't think that is sufficient. As Darrick pointed out up-thread,
-> > > > > > > > the updated superblock has to be written back before we're allowed to
-> > > > > > > > commit transactions with incompatible items. Otherwise, an older kernel
-> > > > > > > > can attempt log recovery with incompatible items present if the
-> > > > > > > > filesystem crashes before the superblock is written back.
-> > > > > > > 
-> > > > > > > Sure, that's what the hook in xfs_trans_alloc() would do. It can do
-> > > > > > > the work in the context that is going to need it, and set a wait
-> > > > > > > flag for all incoming transactions that need a log incompat flag to
-> > > > > > > wait for it do it's work.  Once it's done and the flag is set, it
-> > > > > > > can continue and wake all the waiters now that the log incompat flag
-> > > > > > > has been set. Anything that doesn't need a log incompat flag can
-> > > > > > > just keep going and doesn't ever get blocked....
-> > > > > > > 
-> > > > > > 
-> > > > > > It would have to be a sync transaction plus sync AIL force in
-> > > > > > transaction allocation context if we were to log the superblock change,
-> > > > > > which sounds a bit hairy...
-> > > > > 
-> > > > > Well, we already do sync AIL forces in transaction reservation when
-> > > > > we run out of log space, so there's no technical reason for this
-> > > > > being a problem at all. xfs_trans_alloc() is expected to block
-> > > > > waiting on AIL tail pushing....
-> > > > > 
-> > > > > > > I suspect this is one of the rare occasions where an unlogged
-> > > > > > > modification makes an awful lot of sense: we don't even log that we
-> > > > > > > are adding a log incompat flag, we just do an atomic synchronous
-> > > > > > > write straight to the superblock to set the incompat flag(s). The
-> > > > > > > entire modification can be done under the superblock buffer lock to
-> > > > > > > serialise multiple transactions all trying to set incompat bits, and
-> > > > > > > we don't set the in-memory superblock incompat bit until after it
-> > > > > > > has been set and written to disk. Hence multiple waits can check the
-> > > > > > > flag after they've got the sb buffer lock, and they'll see that it's
-> > > > > > > already been set and just continue...
-> > > > > > > 
-> > > > > > 
-> > > > > > Agreed. That is a notable simplification and I think much more
-> > > > > > preferable than the above for the dynamic approach.
-> > > > > > 
-> > > > > > That said, note that dynamic feature bits might introduce complexity in
-> > > > > > more subtle ways. For example, nothing that I can see currently
-> > > > > > serializes idle log covering with an active transaction (that may have
-> > > > > > just set an incompat bit via some hook yet not committed anything to the
-> > > > > > log subsystem), so it might not be as simple as just adding a hook
-> > > > > > somewhere.
-> > > > > 
-> > > > > Right, we had to make log covering away of the CIL to prevent it
-> > > > > from idling while there were multiple active committed transactions
-> > > > > in memory. So the state machine only progresses if both the CIL and
-> > > > > AIL are empty. If we had some way of knowing that a transaction is
-> > > > > in progress, we could check that in xfs_log_need_covered() and we'd
-> > > > > stop the state machine progress at that point. But we got rid of the
-> > > > > active transaction counter that we could use for that....
-> > > > > 
-> > > > > [Hmmm, didn't I recently have a patch that re-introduced that
-> > > > > counter to fix some other "we need to know if there's an active
-> > > > > transaction running" issue? Can't remember what that was now...]
-> > > > > 
-> > > > 
-> > > > I think you removed it, actually, via commit b41b46c20c0bd ("xfs: remove
-> > > > the m_active_trans counter"). We subsequently discussed reintroducing
-> > > > the same concept for the quotaoff rework [1], which might be what you're
-> > > > thinking of. That uses a percpu rwsem since we don't really need a
-> > > > counter, but I suspect could be reused for serialization in this use
-> > > > case as well (assuming I can get some reviews on it.. ;).
-> > > > 
-> > > > FWIW, I was considering putting those quotaoff patches ahead of the log
-> > > > covering work so we could reuse that code again in attr quiesce, but I
-> > > > think I'm pretty close to being able to remove that particular usage
-> > > > entirely.
-> > > 
-> > > I was thinking about using a rwsem to protect the log incompat flags --
-> > > code that thinks it might use a protected feature takes the lock in
-> > > read mode until commit; and the log covering code only clears the
-> > > flags if down_write_trylock succeeds.  That constrains the overhead to
-> > > threads that are trying to use the feature, instead of making all
-> > > threads pay the cost of bumping the counter.
-> > 
-> > If you are going to do that, make it a per-cpu rwsem, because we
-> > really only care about the global shared read overhead in the hot
-> > paths and not the overhead of taking it in write mode if
-> > it is only the log covering code that does that...
-> > 
-> > > > I'm more approaching this from a "what are the requirements and how/why
-> > > > do they justify the associated complexity?" angle. That's why I'm asking
-> > > > things like how much difference does a dynamic bit really make for
-> > > > something like xattrs. But I agree that's less of a concern when
-> > > > associated with more obscure or rarely used operations, so on balance I
-> > > > think that's a fair approach to this mechanism provided we consider
-> > > > suitability on a per feature basis.
-> > > 
-> > > Hm.  If I had to peer into my crystal ball I'd guess that the current
-> > > xattr logging scheme works fine for most xattr users, so I wouldn't
-> > > worry much about the dynamic bit.
-> > > 
-> > > However, I could see things like atomic range exchange being more
-> > > popular, in which case people might notice the overhead of tracking when
-> > > we can turn off the feature bit...
-> > 
-> > Hence a per-cpu rwsem... :)
-> 
-> Yup, it seems to work fine, though now I'm distracted over the posteof
-> cleanup serieses... :)
-> 
+Hi Bastian,
 
-FWIW, I have a patch on the list from a few months ago that introduces a
-transaction percpu rwsem for the quotaoff rework:
+On Sun, Jan 10, 2021 at 8:04 AM Bastian Germann
+<bastiangermann@fishpost.de> wrote:
+> [...]
+>
+> Changes since the last upload:
+>
+>   xfsprogs (5.10.0-0.1) unstable; urgency=medium
 
-https://lore.kernel.org/linux-xfs/20201001150310.141467-3-bfoster@redhat.com/
+Please get your changes merged in the upstream xfsprogs git repo (via linux-xfs
+mailing list patches), and add yourself to the Uploaders line.
 
-Perhaps I should repost?
+Thanks.
 
-Brian
-
-> --D
-> 
-> > Cheers,
-> > 
-> > Dave.
-> > -- 
-> > Dave Chinner
-> > david@fromorbit.com
-> 
-
+--
+Nathan
