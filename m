@@ -2,79 +2,96 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D272F5F2B
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 11:46:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC2B02F656A
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 17:08:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbhANKqB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Jan 2021 05:46:01 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50201 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbhANKqB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 05:46:01 -0500
-Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1l007v-00065N-2G; Thu, 14 Jan 2021 10:45:19 +0000
-Date:   Thu, 14 Jan 2021 11:45:11 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org
+        id S1727838AbhANQHM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Jan 2021 11:07:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725950AbhANQHM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 14 Jan 2021 11:07:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1687223B27;
+        Thu, 14 Jan 2021 16:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610640404;
+        bh=loQbUafl9WauR4qJqYIS4xpIGA8lROJ8Lt1vtJmd8qE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KgG5UpR32XGL6mhfeG0SmjQ6QoTlLVTO7FLpOe0ijuEzV7tK33tjTgrt8sekKFj7e
+         /T/VzfmzLpHHRhASF+k5eKGjHzZRARLHKO9wN+XdPVAD8JE4aeDj6gpSEEEnEElPWx
+         mFsonXDVfb7WhfGQzxN08lyX8OUsqBZvxR1A9gLMF8sXFOcFRaV1sKvJpmE0wg1Wm8
+         iCVz0wBXIyn0yv8d7M54+HOz9ZHPBENQfMvusoKPdzb3VdLuVKKN4rfiPT7YXwuWbV
+         4AqwBR1yhFnG6j43pQ6Yf+9QgqfpcVUYymPaNmC5cp1UU+W6ieur93C+Zd4Ot9nixZ
+         uYyTiKoWJXarw==
+Date:   Thu, 14 Jan 2021 08:06:44 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
 Subject: Re: [PATCH] xfs: fix up non-directory creation in SGID directories
-Message-ID: <20210114104511.kekdiqumjvo2lo7v@wittgenstein>
+Message-ID: <20210114160644.GY1164246@magnolia>
 References: <20210113184630.2285768-1-hch@lst.de>
+ <20210114104511.kekdiqumjvo2lo7v@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210113184630.2285768-1-hch@lst.de>
+In-Reply-To: <20210114104511.kekdiqumjvo2lo7v@wittgenstein>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 13, 2021 at 07:46:30PM +0100, Christoph Hellwig wrote:
-> XFS always inherits the SGID bit if it is set on the parent inode, while
-> the generic inode_init_owner does not do this in a few cases where it can
-> create a possible security problem, see commit 0fa3ecd87848
-> ("Fix up non-directory creation in SGID directories") for details.
+On Thu, Jan 14, 2021 at 11:45:11AM +0100, Christian Brauner wrote:
+> On Wed, Jan 13, 2021 at 07:46:30PM +0100, Christoph Hellwig wrote:
+> > XFS always inherits the SGID bit if it is set on the parent inode, while
+> > the generic inode_init_owner does not do this in a few cases where it can
+> > create a possible security problem, see commit 0fa3ecd87848
+> > ("Fix up non-directory creation in SGID directories") for details.
+> > 
+> > Switch XFS to use the generic helper for the normal path to fix this,
+> > just keeping the simple field inheritance open coded for the case of the
+> > non-sgid case with the bsdgrpid mount option.
+> > 
+> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
 > 
-> Switch XFS to use the generic helper for the normal path to fix this,
-> just keeping the simple field inheritance open coded for the case of the
-> non-sgid case with the bsdgrpid mount option.
+> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
 > 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+> I ran the idmapped mounts xfstests on this patchset. With this patch
+> applied I was able to remove the special casing for xfs (apart from the
+> irix compatibility check) and got clean test runs:
+> 
+> 
+> 1. with regular setgid inheritance rules
+> root@f2-vm:/xfstests# ./check generic/622
 
-Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+Is this test posted to fstests somewhere?
 
-I ran the idmapped mounts xfstests on this patchset. With this patch
-applied I was able to remove the special casing for xfs (apart from the
-irix compatibility check) and got clean test runs:
+FWIW the code change looks reasonable to me, but I wanted to see the
+functionality exercise test first. :)
 
+--D
 
-1. with regular setgid inheritance rules
-root@f2-vm:/xfstests# ./check generic/622
-FSTYP         -- xfs (non-debug)
-PLATFORM      -- Linux/x86_64 f2-vm 5.11.0-rc3-brauner-idmapped-mounts-xfs #311 SMP Thu Jan 14 09:55:14 UTC 2021
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop7
-MOUNT_OPTIONS -- /dev/loop7 /mnt/scratch
-
-generic/622 1s ...  2s
-Ran: generic/622
-Passed all 1 tests
-
-2. with irix_sgid_inherit setgid inheritance rules
-root@f2-vm:/xfstests# echo 1 > /proc/sys/fs/xfs/irix_sgid_inherit
-root@f2-vm:/xfstests# ./check generic/622
-FSTYP         -- xfs (non-debug)
-PLATFORM      -- Linux/x86_64 f2-vm 5.11.0-rc3-brauner-idmapped-mounts-xfs #311 SMP Thu Jan 14 09:55:14 UTC 2021
-MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop7
-MOUNT_OPTIONS -- /dev/loop7 /mnt/scratch
-
-generic/622 2s ...  1s
-Ran: generic/622
-Passed all 1 tests
-
-Thanks!
-Christian
+> FSTYP         -- xfs (non-debug)
+> PLATFORM      -- Linux/x86_64 f2-vm 5.11.0-rc3-brauner-idmapped-mounts-xfs #311 SMP Thu Jan 14 09:55:14 UTC 2021
+> MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop7
+> MOUNT_OPTIONS -- /dev/loop7 /mnt/scratch
+> 
+> generic/622 1s ...  2s
+> Ran: generic/622
+> Passed all 1 tests
+> 
+> 2. with irix_sgid_inherit setgid inheritance rules
+> root@f2-vm:/xfstests# echo 1 > /proc/sys/fs/xfs/irix_sgid_inherit
+> root@f2-vm:/xfstests# ./check generic/622
+> FSTYP         -- xfs (non-debug)
+> PLATFORM      -- Linux/x86_64 f2-vm 5.11.0-rc3-brauner-idmapped-mounts-xfs #311 SMP Thu Jan 14 09:55:14 UTC 2021
+> MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop7
+> MOUNT_OPTIONS -- /dev/loop7 /mnt/scratch
+> 
+> generic/622 2s ...  1s
+> Ran: generic/622
+> Passed all 1 tests
+> 
+> Thanks!
+> Christian
