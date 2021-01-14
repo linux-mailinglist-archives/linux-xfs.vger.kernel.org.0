@@ -2,113 +2,160 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C45532F5F15
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 11:43:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DC682F5F24
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 11:46:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbhANKkT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Jan 2021 05:40:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
+        id S1727292AbhANKoW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Jan 2021 05:44:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbhANKj4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 05:39:56 -0500
-Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F9FC061574
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 02:39:05 -0800 (PST)
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1l001v-0002S0-0e; Thu, 14 Jan 2021 10:39:03 +0000
-X-Loop: owner@bugs.debian.org
-Subject: Bug#976683: RFS: xfsprogs/5.10.0-0.1 [NMU] -- Utilities for managing the XFS filesystem
-Reply-To: nathans@redhat.com, 976683@bugs.debian.org
-X-Loop: owner@bugs.debian.org
-X-Debian-PR-Message: followup 976683
-X-Debian-PR-Package: src:xfsprogs
-X-Debian-PR-Keywords: 
-References: <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de> <fff77770-2496-0c1e-3849-bc1acc492725@fishpost.de> <8b769e38-3ffd-5e8c-7a57-d451daa30e67@fishpost.de>
-X-Debian-PR-Source: xfsprogs
-Received: via spool by 976683-submit@bugs.debian.org id=B976683.16106206517955
-          (code B ref 976683); Thu, 14 Jan 2021 10:39:02 +0000
-Received: (at 976683) by bugs.debian.org; 14 Jan 2021 10:37:31 +0000
-X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
-        (2018-09-13) on buxtehude.debian.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-22.9 required=4.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HAS_BUG_NUMBER,
-        MURPHY_DRUGS_REL8,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,TXREP autolearn=ham
-        autolearn_force=no version=3.4.2-bugs.debian.org_2005_01_02
-X-Spam-Bayes: score:0.0000 Tokens: new, 12; hammy, 111; neutral, 27; spammy,
-        0. spammytokens: hammytokens:0.000-+--H*r:209.85.208,
-        0.000-+--uploaders, 0.000-+--Uploaders, 0.000-+--NMU, 0.000-+--germann
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37563)
-        by buxtehude.debian.org with esmtp (Exim 4.92)
-        (envelope-from <nathans@redhat.com>)
-        id 1l000Q-000245-Hh
-        for 976683@bugs.debian.org; Thu, 14 Jan 2021 10:37:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1610620646;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:mime-version:mime-version:
-         content-type:content-type:in-reply-to:in-reply-to:  references:references;
-        bh=lrl3snCKTPFhAsPMUvZGD9SHnOdpH2NPG0sUZtRJmdM=;
-        b=Y/kMqqToydMdFKBS3J2dACEjNKhqM8O6evJzytsCx1UQU/GT+BcMaPC4KNeeshPTl31xqT
-        +xgl3CIqANpneENZSzEp+4wjtK9KCWf3aGgchEBX62O1Gh6qPHhCPbzSd/HWdP0rh9kp2t
-        /LaGk5C+MwiMgo3XtmtxnGVR+Hvpd/U=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-AKU7D-7HPySVcfwIyHVsyg-1; Thu, 14 Jan 2021 05:37:24 -0500
-X-MC-Unique: AKU7D-7HPySVcfwIyHVsyg-1
-Received: by mail-ed1-f70.google.com with SMTP id y19so2198678edw.16
-        for <976683@bugs.debian.org>; Thu, 14 Jan 2021 02:37:23 -0800 (PST)
+        with ESMTP id S1727207AbhANKoV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 05:44:21 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8022EC061573
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 02:43:41 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id g10so4242353wmh.2
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 02:43:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=scylladb-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=EY/OBeJen7sdgCW1BZgBQtPwEY/HgrmWptbvaLexLNI=;
+        b=ljRJP4KqAApPR4HSu8r4oFmFSwyLGkMy5UZ896nNaRgzci+1TvF6+2tuDYX26a5ff2
+         oqJCw4HXaVjUK9oo6O6SR3Deqba+vJV35y1nx4mQXMBo04WydEKP1EniQ9bB65EAIMu0
+         OvFexBS/TPpOKvB6Ei1vH889X3Ai1bqamjy2jz5Y2LvGYmBRynQztBnC/LH3yc5Sq6+I
+         UClRZ9IuMWG6qJjVEcqNHOOZK1ehCJCZALm5hhitUML80apZPx4izhpajWH+1581+q+j
+         8eFBioCHPAEXpE4GUH27cRS1JDpcOYMKIvfVQbaPWkvG1DhHxtxuqFWkQJvCW88yeHzB
+         MX1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to;
-        bh=lrl3snCKTPFhAsPMUvZGD9SHnOdpH2NPG0sUZtRJmdM=;
-        b=LyJsbMnehd1vLxIDWRhyt6v/WtLXZUkJ/JQezf1O27eIZzHDMWWPEBssQ8+U6Xq0zY
-         8HsnljZsHPKRb2GVJS1vIXuN62n+6y31jFprBLmbFzxrk64cCjzpXLbdVAuQz+2nYJi9
-         f9M8QRpN1OiM3EV5m50gfbySvUKxF4/FwFCZ5ZdZKcMe3LHMmzBtETLGgAyzDLgUzpuV
-         nuEML4McvxiH2yb5enM5fCS+gbcL5AcP0iFz8ljv5PdiHn7JO72qaAmLttvFWyWwKdDI
-         ePgjqXEG02boNKOuMHYt7JoHBUwN8qTYci/6TuJFyrR1vuN6NXvlAahB+9k3y6KoB2gz
-         6BJA==
-X-Gm-Message-State: AOAM532zKhAabl4WePIWvggRbHJXfwHNAwrz+N8O1QjWZSLlqxrqxCZs
-        0Dubg4tnX6R8QIeQfrdv5fCoodGpYC1DQROlYz10/XpwPq8eQtYJl1z4SvzdIXUz2HB3STxKNm2
-        cE0cjwY1vsUwLWieWOG8b0V8JvDvdI8D4
-X-Received: by 2002:a17:906:3b82:: with SMTP id u2mr4623504ejf.66.1610620642870;
-        Thu, 14 Jan 2021 02:37:22 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz1yBB7H9H6owqbJn+4nR7g701xAFAg3nCygaFAo6ORdC4wqHzw9P/wuVxw3YN/e1gQwarLZSjtgqxNqJZrP/A=
-X-Received: by 2002:a17:906:3b82:: with SMTP id u2mr4623497ejf.66.1610620642681;
- Thu, 14 Jan 2021 02:37:22 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=EY/OBeJen7sdgCW1BZgBQtPwEY/HgrmWptbvaLexLNI=;
+        b=b6MpZc1F5b8riaR1ibzD0dn+JJHv+iYDB1XO0pK2duPFVCLcovJ8XVx73S3E22Bwt/
+         mssQZe2u1MMWbOwwFIbnJboAZe/Q4r7fQRn80aqvl7wVuoqt7mqxUMWnChHz9lMgMyAZ
+         egRpehrte37aRyLHQ1CfUMGjalitQYUCURm8boppkvEpsxB8psTNLPHoTK+4kZAL+CU4
+         80IejBl57biGWwobXMFozM6b0f1eOrT1taG0VbPQiVneog5UftPdnsj2x7iw2gumsjn9
+         q41BV4LZHqqg4OF7M4rUhMnnXs1xdixIMue5wgaDGnsEmffMk5LmlW04gJYP8NCGlEkK
+         r6FA==
+X-Gm-Message-State: AOAM530b20XZWBO9WjWNPNaVBEUuy7MbL+guXsb7xZIkk83WVSVmSGkV
+        pbC89AEGnF1hhXrlwcRwTNXfZQ==
+X-Google-Smtp-Source: ABdhPJyzyXFqFrH6mL1HYTp2X0sHFK6uOtvOrwN12p732Z1aOSYGSuYZMXgT7lB0JekGUYfdVqagdg==
+X-Received: by 2002:a7b:c415:: with SMTP id k21mr1239903wmi.96.1610621020123;
+        Thu, 14 Jan 2021 02:43:40 -0800 (PST)
+Received: from tmp.scylladb.com (bzq-79-182-3-66.red.bezeqint.net. [79.182.3.66])
+        by smtp.googlemail.com with ESMTPSA id l11sm8467243wrt.23.2021.01.14.02.43.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Jan 2021 02:43:39 -0800 (PST)
+Subject: Re: [PATCH 09/10] iomap: add a IOMAP_DIO_NOALLOC flag
+To:     Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20210112162616.2003366-1-hch@lst.de>
+ <20210112162616.2003366-10-hch@lst.de>
+ <20210112232923.GD331610@dread.disaster.area>
+ <20210113153215.GA1284163@bfoster>
+ <20210113224935.GJ331610@dread.disaster.area>
+ <20210114102347.GD1333929@bfoster>
+From:   Avi Kivity <avi@scylladb.com>
+Message-ID: <8ed44546-e5bd-dd60-a16b-ab185de3d5b9@scylladb.com>
+Date:   Thu, 14 Jan 2021 12:43:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <fff77770-2496-0c1e-3849-bc1acc492725@fishpost.de>
-From:   Nathan Scott <nathans@redhat.com>
-Date:   Thu, 14 Jan 2021 21:37:11 +1100
-Message-ID: <CAFMei7NNM3FLngqn9rhOTk9a_ebspBmfg9a==3ZkxKp-hhAOFw@mail.gmail.com>
-To:     Bastian Germann <bastiangermann@fishpost.de>,
-        976683@bugs.debian.org
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=nathans@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210114102347.GD1333929@bfoster>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Bastian,
-
-On Sun, Jan 10, 2021 at 8:04 AM Bastian Germann
-<bastiangermann@fishpost.de> wrote:
-> [...]
+On 1/14/21 12:23 PM, Brian Foster wrote:
+> On Thu, Jan 14, 2021 at 09:49:35AM +1100, Dave Chinner wrote:
+>> On Wed, Jan 13, 2021 at 10:32:15AM -0500, Brian Foster wrote:
+>>> On Wed, Jan 13, 2021 at 10:29:23AM +1100, Dave Chinner wrote:
+>>>> On Tue, Jan 12, 2021 at 05:26:15PM +0100, Christoph Hellwig wrote:
+>>>>> Add a flag to request that the iomap instances do not allocate blocks
+>>>>> by translating it to another new IOMAP_NOALLOC flag.
+>>>> Except "no allocation" that is not what XFS needs for concurrent
+>>>> sub-block DIO.
+>>>>
+>>>> We are trying to avoid external sub-block IO outside the range of
+>>>> the user data IO (COW, sub-block zeroing, etc) so that we don't
+>>>> trash adjacent sub-block IO in flight. This means we can't do
+>>>> sub-block zeroing and that then means we can't map unwritten extents
+>>>> or allocate new extents for the sub-block IO.  It also means the IO
+>>>> range cannot span EOF because that triggers unconditional sub-block
+>>>> zeroing in iomap_dio_rw_actor().
+>>>>
+>>>> And because we may have to map multiple extents to fully span an IO
+>>>> range, we have to guarantee that subsequent extents for the IO are
+>>>> also written otherwise we have a partial write abort case. Hence we
+>>>> have single extent limitations as well.
+>>>>
+>>>> So "no allocation" really doesn't describe what we want this flag to
+>>>> at all.
+>>>>
+>>>> If we're going to use a flag for this specific functionality, let's
+>>>> call it what it is: IOMAP_DIO_UNALIGNED/IOMAP_UNALIGNED and do two
+>>>> things with it.
+>>>>
+>>>> 	1. Make unaligned IO a formal part of the iomap_dio_rw()
+>>>> 	behaviour so it can do the common checks to for things that
+>>>> 	need exclusive serialisation for unaligned IO (i.e. avoid IO
+>>>> 	spanning EOF, abort if there are cached pages over the
+>>>> 	range, etc).
+>>>>
+>>>> 	2. require the filesystem mapping callback do only allow
+>>>> 	unaligned IO into ranges that are contiguous and don't
+>>>> 	require mapping state changes or sub-block zeroing to be
+>>>> 	performed during the sub-block IO.
+>>>>
+>>>>
+>>> Something I hadn't thought about before is whether applications might
+>>> depend on current unaligned dio serialization for coherency and thus
+>>> break if the kernel suddenly allows concurrent unaligned dio to pass
+>>> through. Should this be something that is explicitly requested by
+>>> userspace?
+>> If applications are relying on an undocumented, implementation
+>> specific behaviour of a filesystem that only occurs for IOs of a
+>> certain size for implicit data coherency between independent,
+>> non-overlapping DIOs and/or page cache IO, then they are already
+>> broken and need fixing because that behaviour is not guaranteed to
+>> occur. e.g. 512 byte block size filesystem does not provide such
+>> serialisation, so if the app depends on 512 byte DIOs being
+>> serialised completely by the filesytem then it already fails on 512
+>> byte block size filesystems.
+>>
+> I'm not sure how the block size relates beyond just changing the
+> alignment requirements..?
 >
-> Changes since the last upload:
->
->   xfsprogs (5.10.0-0.1) unstable; urgency=medium
+>> So, no, we simply don't care about breaking broken applications that
+>> are already broken.
+>>
+> I agree in general, but I'm not sure that helps us on the "don't break
+> userspace" front. We can call userspace broken all we want, but if some
+> application has such a workload that historically functions correctly
+> due to this serialization and all of a sudden starts to cause data
+> corruption because we decide to remove it, I fear we'd end up taking the
+> blame regardless. :/
 
-Please get your changes merged in the upstream xfsprogs git repo (via linux-xfs
-mailing list patches), and add yourself to the Uploaders line.
 
-Thanks.
+I think it's unlikely. Application writers rarely know about such 
+issues, so they can't knowingly depend on them. The sub-sub-genre of 
+application writers who rely on dio/aio will be a lot more careful and 
+wary of the filesystem.
 
---
-Nathan
+
+In this particular case, triggering serialization also triggers blocking 
+in io_submit, which is the aio/dio user's worst nightmare, by several 
+orders of magnitude than the runner up. I have code to detect these 
+cases and try to prevent serialization, or, when serialization is 
+inevitable, do the serialization in userspace so my io_submits don't get 
+blocked.
+
+
+
