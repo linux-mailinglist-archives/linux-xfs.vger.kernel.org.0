@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B13422F69BC
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 19:40:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E7C22F69BF
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Jan 2021 19:40:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbhANSin (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Jan 2021 13:38:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
+        id S1727637AbhANSjK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Jan 2021 13:39:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727622AbhANSim (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 13:38:42 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6681FC0613D6
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 10:38:02 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id hs11so7338188ejc.1
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 10:38:02 -0800 (PST)
+        with ESMTP id S1727323AbhANSjK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Jan 2021 13:39:10 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A34AC0613ED
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 10:38:03 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id 6so9685064ejz.5
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Jan 2021 10:38:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fishpost-de.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SIvhgSiEwvXsUw1+Vr3445ssogV0LpFGNLT9ayjSu2c=;
-        b=BPO4JTUteD/JZnaaJ414eHHHW4grcycX70JlnuCF5Yl3f3fMT5QO9w4o1Cm3Fe0KU5
-         vzKEsxiqTJMJb7UyfN+c4aSI24rETh82YsSN6jni9t4qI82P859UHcDTzWjLyiZsZ6rG
-         zACtVKrOvrnHh9EyT4YNUNi6gj37YQr763S76luVtsze+M/8S3hXE/+fHfMS1aZPFKup
-         R6Ge6uromfoZS7B15IShDHO19J3RBIKw/yYDDPF3R8P3mLdkj9+E2RZxh6mlEokkx98t
-         luS/tzX0YpAnPQVj8cSR+oe9acupmfxtylk2EZN62AEQIm3TOQvs3iReGo+fbBRwoBuC
-         YNxg==
+        bh=uiWFF1WXxbuqatW55z1tGAg8+yFundsWs96AERqoFsw=;
+        b=cN8EqZC0jutsoBp7u6OioSE0An31GtZe3FKX5QQgaJsn8vPf3z3UbUVuswXjYgk8v7
+         ER6U0LlAnrV5D7/7r4s6ougX154NoEVAJ4WDAoyfkJKIj5tjGVz30vOepaoz7Irq/swm
+         6N8AE/jFTDJOiOyXlQ9hp+DJ94Zff7Vz6Mj7bNu8CCgrvpJmrH/D92N2K01cqGmu2o/G
+         Yaocovww9O8OqUeCB+aV1Ktz7EdxJoIPs0IXxfInLsrk2GVaeLIxJlOw/UbGMLwIxbV1
+         H/3zRSt3c0caTCect4JDAn0+yRsiLJmjuNjODVwt4NaqYci9UewsM6nWC86GLRZHVIKt
+         5IeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SIvhgSiEwvXsUw1+Vr3445ssogV0LpFGNLT9ayjSu2c=;
-        b=Hxce2xWkkAvCPdFyVOTP58AqBQHgR3BanvfREBx0b6hNFmeHmi/hMW95BC0GX/MF8N
-         4FvCByeCTISHdPdAn9Nq7YL0RGkivRZO7w6L47E+/BX4XKCom7jDF0gTXC4ocpvplej2
-         i/3VN4LHZW0p0DrswM1ewtbjG19QQRiApipSOdmVbEQId+yP9TNWYmW29bT1JHJbh8Yg
-         oQEN6glAyBNgu6IEAJSGriemOFlm1EUTV2aOla1A3cdtKzUoIwtddpqTXstJr/s7ykFY
-         vEMwQkgKRr9EbAFLtaV61Sue85rKFvsMdybNhRygWhz0AG4nrL9PF4xWYtEV6n1LQCxI
-         tdpQ==
-X-Gm-Message-State: AOAM5317wrLow9h+rG0plulhs2GxzcbT/9IW4D2/h6zc23c7rraSyRsc
-        9AtwDyU0I8PurhakcniNp5RvxLbCqYvrSBfS
-X-Google-Smtp-Source: ABdhPJxgnFx/p493JOJjDNQHwgOocCm3+fyojw/tU+S0olmJ2f/v5yTB8oC99SXoTicjxXYWDf4UmQ==
-X-Received: by 2002:a17:906:c349:: with SMTP id ci9mr5036239ejb.198.1610649480829;
-        Thu, 14 Jan 2021 10:38:00 -0800 (PST)
+        bh=uiWFF1WXxbuqatW55z1tGAg8+yFundsWs96AERqoFsw=;
+        b=AM4DS7YxmLyocJkFSnb/+Cwp02GsQ4H/zMyKpTyO66iEYm+39CEY+/9aLgLmkC8zQe
+         hzM1SV21DK8J4WN/az4QhDxOLesuubvFx7PEKJpZUrYHS1ePdvzMq9yKrOr4OIKkYlqS
+         +PeVn9Pmp7iNRFjEBPKeEBwvuW2YOUhTdxmYXY9/PRcZKuekJ76s2LtHoprslQ/vX4W3
+         FNeofZWHL3OHYXOUyO5XHsSlrmJNplgPc/u2ZW760PlTR7AB2lCeKwIr2jWB5HyoUQH7
+         yjmvsbIQHeU7Fe/NxYqmzLxWjYe5uIU4+1DsxrI5FCDnWb/4ZboFcc0YzBYZV30lE2Jr
+         NURA==
+X-Gm-Message-State: AOAM531UDsf0eBWXf9SouJFDXW7UPsW3xolXyY0O2ucpUnwKM9sm87Xm
+        xyEznurkPTyJMlLX0RZpDK+BiKQuQe64vIyg
+X-Google-Smtp-Source: ABdhPJyEKnlZwpHelbhQQHXFuZnPIj2pKX0vtOCaA5R1XrbfpVugtsGfSQwLaU3jKFs/r0l3Qd89yg==
+X-Received: by 2002:a17:907:1701:: with SMTP id le1mr6380970ejc.68.1610649481723;
+        Thu, 14 Jan 2021 10:38:01 -0800 (PST)
 Received: from thinkbage.fritz.box (p200300d06f355400ebbce7b10bde1433.dip0.t-ipconnect.de. [2003:d0:6f35:5400:ebbc:e7b1:bde:1433])
-        by smtp.gmail.com with ESMTPSA id s19sm2540876edx.7.2021.01.14.10.37.59
+        by smtp.gmail.com with ESMTPSA id s19sm2540876edx.7.2021.01.14.10.38.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jan 2021 10:38:00 -0800 (PST)
+        Thu, 14 Jan 2021 10:38:01 -0800 (PST)
 From:   Bastian Germann <bastiangermann@fishpost.de>
 To:     linux-xfs@vger.kernel.org
 Cc:     Bastian Germann <bastiangermann@fishpost.de>
-Subject: [PATCH 3/6] debian: remove "Priority: extra"
-Date:   Thu, 14 Jan 2021 19:37:44 +0100
-Message-Id: <20210114183747.2507-4-bastiangermann@fishpost.de>
+Subject: [PATCH 4/6] debian: use Package-Type over its predecessor
+Date:   Thu, 14 Jan 2021 19:37:45 +0100
+Message-Id: <20210114183747.2507-5-bastiangermann@fishpost.de>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210114183747.2507-1-bastiangermann@fishpost.de>
 References: <20210114183747.2507-1-bastiangermann@fishpost.de>
@@ -62,26 +62,28 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Priority "extra" was replaced by "optional" which is already used by the
-package in general. There is one Priority extra left, so remove it.
+The debian/control file contains an XC-Package-Type field.
+As of dpkg-dev 1.15.7, the dpkg development utilities recognize
+Package-Type as an official field name.
 
 Signed-off-by: Bastian Germann <bastiangermann@fishpost.de>
 ---
- debian/control | 1 -
- 1 file changed, 1 deletion(-)
+ debian/control | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/debian/control b/debian/control
-index 34dce4d5..64e01f93 100644
+index 64e01f93..ceda0241 100644
 --- a/debian/control
 +++ b/debian/control
-@@ -29,7 +29,6 @@ Description: Utilities for managing the XFS filesystem
+@@ -47,7 +47,7 @@ Description: XFS filesystem-specific static libraries and headers
+  for complete details.
  
- Package: xfslibs-dev
- Section: libdevel
--Priority: extra
- Depends: libc6-dev | libc-dev, uuid-dev, xfsprogs (>= 3.0.0), ${misc:Depends}
- Breaks: xfsprogs (<< 3.0.0)
+ Package: xfsprogs-udeb
+-XC-Package-Type: udeb
++Package-Type: udeb
+ Section: debian-installer
  Architecture: any
+ Depends: ${shlibs:Depends}, ${misc:Depends}
 -- 
 2.30.0
 
