@@ -2,36 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 171252FAD2B
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58CD22FAD36
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387956AbhARWN2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 17:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34072 "EHLO mail.kernel.org"
+        id S1732974AbhARWOO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 17:14:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387807AbhARWNR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:13:17 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 498E022E01;
-        Mon, 18 Jan 2021 22:12:59 +0000 (UTC)
+        id S2388009AbhARWNn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 17:13:43 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 88E8E22E02;
+        Mon, 18 Jan 2021 22:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611007979;
-        bh=EsVW9I/Z1RASz1E0NSCfC62YI+ixBZ0eYhG9lFyw2T8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=mfpSc16ugjtmC++VCKF/KIzAwdiZ8wLI3Ncmz1unuSx9uvtZ0PYFafp3r3vEfcTOD
-         E1w7b3abbRNHcDSvH0qDg/ub412TBcyuY7W1VQbsRnVQp/qxVEz/HfbplwoXMBmoRU
-         AeW7PKH1xX0AiAQszGDn0J4+YWsmYo0fmsuwrjWKZGsCOMiz9wcYeleCPg/tSya1ih
-         7DdPif4p+gkISvV3QSgsVHtdsk8Fyo5YVUqHPS7+DEd/ZNvx/4T+J0v/vHOmR9f4+7
-         yB0goOKLQ908PhPXDhXlZT9Ey1cMn2XqI0MYcYMJw1AkpGRa5eBd8A4lrAxc5udeEn
-         DZ1i9FvOyNVIg==
-Subject: [PATCH 11/11] xfs: flush speculative space allocations when we run
- out of space
+        s=k20201202; t=1611007981;
+        bh=RxzAwvRKdPDlMKds7LXRjTfk5oiUebk0zYsZi5j4qXw=;
+        h=Subject:From:To:Cc:Date:From;
+        b=aBwy6/f5OpxyOklQUS8oFPB9syfJKbOO51+23z4y0P9I13XJprMZ6T/nTvZ2nfuI9
+         oUAWIRwbxuMwSZB4Q0WACmYJpht2EoK/adtIeww6JBTqvz/YQvwQK+tEitisAZZXKh
+         dUZUS9th6VxHv3TsStxEdpVVh7gUtcRCYvOlxeIOcQ4Bw6+NadxHVpP/z8jSDuZnQH
+         y2//CUa4dLOTg2IQY5+ojye0po4O0fXgm4la1LMN6QVjZPH+Z8ITxrUYRst04uWP2X
+         A7IHK1hElvBJfQlLi33jzen7sRePqqlbDtZYqOyr99ho1+AFUiFClZXFOJAdNDFTLv
+         y5IHuj8vAEcLA==
+Subject: [PATCHSET v3 00/10] xfs: consolidate posteof and cowblocks cleanup
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 18 Jan 2021 14:12:59 -0800
-Message-ID: <161100797896.88816.8665571739298768051.stgit@magnolia>
-In-Reply-To: <161100791789.88816.10902093186807310995.stgit@magnolia>
-References: <161100791789.88816.10902093186807310995.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Mon, 18 Jan 2021 14:13:01 -0800
+Message-ID: <161100798100.90204.7839064495063223590.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -40,67 +37,49 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-If a fs modification (creation, file write, reflink, etc.) is unable to
-reserve enough space to handle the modification, try clearing whatever
-space the filesystem might have been hanging onto in the hopes of
-speeding up the filesystem.  The flushing behavior will become
-particularly important when we add deferred inode inactivation because
-that will increase the amount of space that isn't actively tied to user
-data.
+Currently, we treat the garbage collection of post-EOF preallocations
+and copy-on-write preallocations as totally separate tasks -- different
+incore inode tags, different workqueues, etc.  This is wasteful of radix
+tree tags and workqueue resources since we effectively have parallel
+code paths to do the same thing.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Therefore, consolidate both functions under one radix tree bit and one
+workqueue function that scans an inode for both things at the same time.
+At the end of the series we make the scanning per-AG instead of per-fs
+so that the scanning can run in parallel.  This reduces locking
+contention from background threads and will free up a radix tree bit for
+the deferred inode inactivation series.
+
+v2: clean up and rebase against 5.11.
+v3: various streamlining as part of restructuring the space reclaim series
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=eofblocks-consolidation-5.12
 ---
- fs/xfs/xfs_trans.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index e72730f85af1..2b92a4084bb8 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -20,6 +20,8 @@
- #include "xfs_trace.h"
- #include "xfs_error.h"
- #include "xfs_defer.h"
-+#include "xfs_inode.h"
-+#include "xfs_icache.h"
- 
- kmem_zone_t	*xfs_trans_zone;
- 
-@@ -256,8 +258,10 @@ xfs_trans_alloc(
- 	struct xfs_trans	**tpp)
- {
- 	struct xfs_trans	*tp;
-+	unsigned int		tries = 1;
- 	int			error;
- 
-+retry:
- 	/*
- 	 * Allocate the handle before we do our freeze accounting and setting up
- 	 * GFP_NOFS allocation context so that we avoid lockdep false positives
-@@ -285,6 +289,22 @@ xfs_trans_alloc(
- 	tp->t_firstblock = NULLFSBLOCK;
- 
- 	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-+	if (error == -ENOSPC && tries > 0) {
-+		xfs_trans_cancel(tp);
-+
-+		/*
-+		 * We weren't able to reserve enough space for the transaction.
-+		 * Flush the other speculative space allocations to free space.
-+		 * Do not perform a synchronous scan because callers can hold
-+		 * other locks.
-+		 */
-+		error = xfs_blockgc_free_space(mp, NULL);
-+		if (error)
-+			return error;
-+
-+		tries--;
-+		goto retry;
-+	}
- 	if (error) {
- 		xfs_trans_cancel(tp);
- 		return error;
+ fs/xfs/scrub/common.c |    4 -
+ fs/xfs/xfs_globals.c  |    7 +
+ fs/xfs/xfs_icache.c   |  258 +++++++++++++++++++++----------------------------
+ fs/xfs/xfs_icache.h   |   16 +--
+ fs/xfs/xfs_ioctl.c    |    2 
+ fs/xfs/xfs_iwalk.c    |    2 
+ fs/xfs/xfs_linux.h    |    3 -
+ fs/xfs/xfs_mount.c    |    5 +
+ fs/xfs/xfs_mount.h    |    9 +-
+ fs/xfs/xfs_pwork.c    |   80 ++++++++++++++-
+ fs/xfs/xfs_pwork.h    |    3 -
+ fs/xfs/xfs_super.c    |   51 +++++++---
+ fs/xfs/xfs_sysctl.c   |   15 +--
+ fs/xfs/xfs_sysctl.h   |    3 -
+ fs/xfs/xfs_trace.h    |    6 -
+ 15 files changed, 253 insertions(+), 211 deletions(-)
 
