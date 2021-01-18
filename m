@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AD6042FAD28
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 171252FAD2B
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387841AbhARWNU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 17:13:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34074 "EHLO mail.kernel.org"
+        id S2387956AbhARWN2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 17:13:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387862AbhARWNN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:13:13 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BADB5230FA;
-        Mon, 18 Jan 2021 22:12:53 +0000 (UTC)
+        id S2387807AbhARWNR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 17:13:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 498E022E01;
+        Mon, 18 Jan 2021 22:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611007973;
-        bh=UoY73ZJqQ1IITBljWSZJGLYOOgjLpBaK2KgLBEeJkf0=;
+        s=k20201202; t=1611007979;
+        bh=EsVW9I/Z1RASz1E0NSCfC62YI+ixBZ0eYhG9lFyw2T8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=OSGzvVdcegZGU9CrdPJVQg4JMmSImOUUpeZ0revpGOhXDNaj0gEQU3bHh/x590gOa
-         sFL6k9hOLEaa4N7btYCF8Ryep3xrXWnlESokG4dFDxh1dWinRTsx7gb2JkcmNWjZS+
-         4rjNigR6asZG8MWwM/bYychdNJYmJFyn46Y5bAVOpoRm44l9MW15tXac7xKXM6NLg1
-         Y34y592hJ4buTcYjl674EBQl9lqtYCEPvI+RvrY1M3z8J1U+sWMk5dU7/ho9Q/Lh4n
-         F4VVLrGS2Q82ZE6MmZAQRYB1wk1uvy/rQZAt39cUBaXNrFdgQDz/39/s+JGub90GKY
-         agTLfEDOaN3cw==
-Subject: [PATCH 10/11] xfs: refactor xfs_icache_free_{eof,cow}blocks call
- sites
+        b=mfpSc16ugjtmC++VCKF/KIzAwdiZ8wLI3Ncmz1unuSx9uvtZ0PYFafp3r3vEfcTOD
+         E1w7b3abbRNHcDSvH0qDg/ub412TBcyuY7W1VQbsRnVQp/qxVEz/HfbplwoXMBmoRU
+         AeW7PKH1xX0AiAQszGDn0J4+YWsmYo0fmsuwrjWKZGsCOMiz9wcYeleCPg/tSya1ih
+         7DdPif4p+gkISvV3QSgsVHtdsk8Fyo5YVUqHPS7+DEd/ZNvx/4T+J0v/vHOmR9f4+7
+         yB0goOKLQ908PhPXDhXlZT9Ey1cMn2XqI0MYcYMJw1AkpGRa5eBd8A4lrAxc5udeEn
+         DZ1i9FvOyNVIg==
+Subject: [PATCH 11/11] xfs: flush speculative space allocations when we run
+ out of space
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 18 Jan 2021 14:12:53 -0800
-Message-ID: <161100797342.88816.14893475136673260706.stgit@magnolia>
+Date:   Mon, 18 Jan 2021 14:12:59 -0800
+Message-ID: <161100797896.88816.8665571739298768051.stgit@magnolia>
 In-Reply-To: <161100791789.88816.10902093186807310995.stgit@magnolia>
 References: <161100791789.88816.10902093186807310995.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,138 +42,65 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In anticipation of more restructuring of the eof/cowblocks gc code,
-refactor calling of those two functions into a single internal helper
-function, then present a new standard interface to purge speculative
-block preallocations and start shifting higher level code to use that.
+If a fs modification (creation, file write, reflink, etc.) is unable to
+reserve enough space to handle the modification, try clearing whatever
+space the filesystem might have been hanging onto in the hopes of
+speeding up the filesystem.  The flushing behavior will become
+particularly important when we add deferred inode inactivation because
+that will increase the amount of space that isn't actively tied to user
+data.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_file.c   |    6 ++++--
- fs/xfs/xfs_icache.c |   45 +++++++++++++++++++++++++++++++++++----------
- fs/xfs/xfs_icache.h |    1 +
- fs/xfs/xfs_trace.h  |    1 +
- 4 files changed, 41 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_trans.c |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index a318a4749b59..40b12db17a20 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -697,14 +697,16 @@ xfs_file_buffered_aio_write(
- 		iolock = 0;
- 	} else if (ret == -ENOSPC && !cleared_space) {
- 		struct xfs_eofblocks eofb = {0};
-+		int	ret2;
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index e72730f85af1..2b92a4084bb8 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -20,6 +20,8 @@
+ #include "xfs_trace.h"
+ #include "xfs_error.h"
+ #include "xfs_defer.h"
++#include "xfs_inode.h"
++#include "xfs_icache.h"
  
- 		cleared_space = true;
- 		xfs_flush_inodes(ip->i_mount);
+ kmem_zone_t	*xfs_trans_zone;
  
- 		xfs_iunlock(ip, iolock);
- 		eofb.eof_flags = XFS_EOF_FLAGS_SYNC;
--		xfs_icache_free_eofblocks(ip->i_mount, &eofb);
--		xfs_icache_free_cowblocks(ip->i_mount, &eofb);
-+		ret2 = xfs_blockgc_free_space(ip->i_mount, &eofb);
-+		if (ret2)
-+			return ret2;
- 		goto write_retry;
- 	}
- 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 9ba1ad69abb7..acf67384e52f 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1645,6 +1645,38 @@ xfs_start_block_reaping(
- 	xfs_queue_cowblocks(mp);
- }
- 
-+/* Scan all incore inodes for block preallocations that we can remove. */
-+static inline int
-+xfs_blockgc_scan(
-+	struct xfs_mount	*mp,
-+	struct xfs_eofblocks	*eofb)
-+{
-+	int			error;
-+
-+	error = xfs_icache_free_eofblocks(mp, eofb);
-+	if (error)
-+		return error;
-+
-+	error = xfs_icache_free_cowblocks(mp, eofb);
-+	if (error)
-+		return error;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Try to free space in the filesystem by purging eofblocks and cowblocks.
-+ */
-+int
-+xfs_blockgc_free_space(
-+	struct xfs_mount	*mp,
-+	struct xfs_eofblocks	*eofb)
-+{
-+	trace_xfs_blockgc_free_space(mp, eofb, _RET_IP_);
-+
-+	return xfs_blockgc_scan(mp, eofb);
-+}
-+
- /*
-  * Run cow/eofblocks scans on the supplied dquots.  We don't know exactly which
-  * quota caused an allocation failure, so we make a best effort by including
-@@ -1661,7 +1693,6 @@ xfs_blockgc_free_dquots(
+@@ -256,8 +258,10 @@ xfs_trans_alloc(
+ 	struct xfs_trans	**tpp)
  {
- 	struct xfs_eofblocks	eofb = {0};
- 	struct xfs_mount	*mp = NULL;
--	int			error;
+ 	struct xfs_trans	*tp;
++	unsigned int		tries = 1;
+ 	int			error;
  
- 	*found_work = false;
++retry:
+ 	/*
+ 	 * Allocate the handle before we do our freeze accounting and setting up
+ 	 * GFP_NOFS allocation context so that we avoid lockdep false positives
+@@ -285,6 +289,22 @@ xfs_trans_alloc(
+ 	tp->t_firstblock = NULLFSBLOCK;
  
-@@ -1698,18 +1729,12 @@ xfs_blockgc_free_dquots(
- 		*found_work = true;
- 	}
- 
--	if (*found_work) {
--		error = xfs_icache_free_eofblocks(mp, &eofb);
--		if (error)
--			return error;
--
--		error = xfs_icache_free_cowblocks(mp, &eofb);
--		if (error)
--			return error;
--	}
-+	if (*found_work)
-+		return xfs_blockgc_free_space(mp, &eofb);
- 
- 	return 0;
- }
+ 	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
++	if (error == -ENOSPC && tries > 0) {
++		xfs_trans_cancel(tp);
 +
- /*
-  * Run cow/eofblocks scans on the quotas applicable to the inode. For inodes
-  * with multiple quotas, we don't know exactly which quota caused an allocation
-diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index 8d8e7cabc27f..56ae668dcdcf 100644
---- a/fs/xfs/xfs_icache.h
-+++ b/fs/xfs/xfs_icache.h
-@@ -59,6 +59,7 @@ int xfs_blockgc_free_dquots(struct xfs_dquot *udqp, struct xfs_dquot *gdqp,
- 		bool *found_work);
- int xfs_blockgc_free_quota(struct xfs_inode *ip, unsigned int eof_flags,
- 		bool *found_work);
-+int xfs_blockgc_free_space(struct xfs_mount *mp, struct xfs_eofblocks *eofb);
- 
- void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
- void xfs_inode_clear_eofblocks_tag(struct xfs_inode *ip);
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 3f761f33099b..7ec9d4d703a6 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -3926,6 +3926,7 @@ DEFINE_EVENT(xfs_eofblocks_class, name,	\
- 		 unsigned long caller_ip), \
- 	TP_ARGS(mp, eofb, caller_ip))
- DEFINE_EOFBLOCKS_EVENT(xfs_ioc_free_eofblocks);
-+DEFINE_EOFBLOCKS_EVENT(xfs_blockgc_free_space);
- 
- #endif /* _TRACE_XFS_H */
- 
++		/*
++		 * We weren't able to reserve enough space for the transaction.
++		 * Flush the other speculative space allocations to free space.
++		 * Do not perform a synchronous scan because callers can hold
++		 * other locks.
++		 */
++		error = xfs_blockgc_free_space(mp, NULL);
++		if (error)
++			return error;
++
++		tries--;
++		goto retry;
++	}
+ 	if (error) {
+ 		xfs_trans_cancel(tp);
+ 		return error;
 
