@@ -2,34 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE1D2FAD2A
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E0732FAD2D
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387899AbhARWNZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 17:13:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34198 "EHLO mail.kernel.org"
+        id S2387998AbhARWNh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 17:13:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbhARWNX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:13:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A8AE822DFB;
-        Mon, 18 Jan 2021 22:12:42 +0000 (UTC)
+        id S2387977AbhARWNa (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 17:13:30 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 377AB22E00;
+        Mon, 18 Jan 2021 22:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611007962;
-        bh=F3vmksUxWhQCJ1czwm3FdsYNA7Mq1zc0uQp8Z3lKxbw=;
+        s=k20201202; t=1611007968;
+        bh=0KS4Iftf7vCQRcEmNbB7OYT+CdPqJJrpWBcELw26W78=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MCxr0SqTsoxc8GuBIVJoygDdM+EWvVttGB/85nLE2BYo3DQEDamM8Fdugc7ImpKpX
-         DKIP65KQjmuqotF/4BtzS/UXMGfGssaaK0+GyKxTE/zqq2d/ssY14Oi8RhJIlF6ZPR
-         ddLnI+hTg7ei1sRv8W9L/l8zY9ZaTHtH0o7grLt8iMEI2Qugm64z3HGhwFkfWABnJf
-         FymWSgnar5T73v33qu4IvM5gm118NHQiGFw9fIxLtfidmnKkcLXqf3UNnOQxFfPGz/
-         19dgvpqevve8v8c6hdORseYwEPWvScmkxcSW+IrrT+PftC+PbweaeOjPGxHohA0bFj
-         GeIWvOCPY6jmA==
-Subject: [PATCH 08/11] xfs: flush eof/cowblocks if we can't reserve quota for
- chown
+        b=rhcwwlmYDuhLReN/bm+PVcsh2BxN7FDDUVBefKdbdNwpqeKKMBqj1Aie8mQ2DF3QZ
+         gLqZ72Eg5tJMjF9yRxaMO0TH7cmARvIXgX4r3nKEetBwVUqdnVZ4ZAooJSwVLMHMQN
+         +XlszIvCoGgzBjpJMXY0Y4re6lZyLmndmGD0QglfO3NMx9DEa0tuEnFcalQi2RKRfg
+         uvXRPxBmPHwOljwzfFNPwWH8gZAZQuJkf/WUHW9X9ZAMc1TKHB87RXlaUe3ivyxu7p
+         RGoLgReauh3ynCHN+zmeK1P1QrMXAoqF3ni86jcSnsBapnW6sEWT3sg6sSb0XXhbgZ
+         8RQcNz4nDCX+A==
+Subject: [PATCH 09/11] xfs: add a tracepoint for blockgc scans
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 18 Jan 2021 14:12:42 -0800
-Message-ID: <161100796237.88816.11226881762830433992.stgit@magnolia>
+Date:   Mon, 18 Jan 2021 14:12:47 -0800
+Message-ID: <161100796788.88816.11790817696681055920.stgit@magnolia>
 In-Reply-To: <161100791789.88816.10902093186807310995.stgit@magnolia>
 References: <161100791789.88816.10902093186807310995.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,225 +41,97 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If a file user, group, or project change is unable to reserve enough
-quota to handle the modification, try clearing whatever space the
-filesystem might have been hanging onto in the hopes of speeding up the
-filesystem.  The flushing behavior will become particularly important
-when we add deferred inode inactivation because that will increase the
-amount of space that isn't actively tied to user data.
+Add some tracepoints so that we can observe when the speculative
+preallocation garbage collector runs.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_ioctl.c |   16 ++++++++++++----
- fs/xfs/xfs_iops.c  |   20 ++++++++++++--------
- fs/xfs/xfs_qm.c    |   36 +++++++++++++++++++++++++++---------
- fs/xfs/xfs_quota.h |    8 ++++----
- 4 files changed, 55 insertions(+), 25 deletions(-)
+ fs/xfs/xfs_ioctl.c |    2 ++
+ fs/xfs/xfs_trace.c |    1 +
+ fs/xfs/xfs_trace.h |   39 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
 
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 3fbd98f61ea5..70d9637b7806 100644
+index 70d9637b7806..ccff1f9ca6e9 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -1436,6 +1436,7 @@ xfs_ioctl_setattr(
- 	struct xfs_trans	*tp;
- 	struct xfs_dquot	*pdqp = NULL;
- 	struct xfs_dquot	*olddquot = NULL;
-+	bool			quota_retry = false;
- 	int			code;
- 
- 	trace_xfs_ioctl_setattr(ip);
-@@ -1462,6 +1463,7 @@ xfs_ioctl_setattr(
- 
- 	xfs_ioctl_setattr_prepare_dax(ip, fa);
- 
-+retry:
- 	tp = xfs_ioctl_setattr_get_trans(ip);
- 	if (IS_ERR(tp)) {
- 		code = PTR_ERR(tp);
-@@ -1470,10 +1472,16 @@ xfs_ioctl_setattr(
- 
- 	if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_PQUOTA_ON(mp) &&
- 	    ip->i_d.di_projid != fa->fsx_projid) {
--		code = xfs_qm_vop_chown_reserve(tp, ip, NULL, NULL, pdqp,
--				capable(CAP_FOWNER) ?  XFS_QMOPT_FORCE_RES : 0);
--		if (code)	/* out of quota */
--			goto error_trans_cancel;
-+		unsigned int	flags = 0;
-+
-+		if (capable(CAP_FOWNER))
-+			flags |= XFS_QMOPT_FORCE_RES;
-+		code = xfs_qm_vop_chown_reserve(&tp, ip, NULL, NULL, pdqp,
-+				flags, &quota_retry);
-+		if (code)
-+			goto error_free_dquots;
-+		if (quota_retry)
-+			goto retry;
- 	}
- 
- 	xfs_fill_fsxattr(ip, false, &old_fa);
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 67c8dc9de8aa..3cc6c4aa01c3 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -660,6 +660,7 @@ xfs_setattr_nonsize(
- 	kgid_t			gid = GLOBAL_ROOT_GID, igid = GLOBAL_ROOT_GID;
- 	struct xfs_dquot	*udqp = NULL, *gdqp = NULL;
- 	struct xfs_dquot	*olddquot1 = NULL, *olddquot2 = NULL;
-+	bool			quota_retry = false;
- 
- 	ASSERT((mask & ATTR_SIZE) == 0);
- 
-@@ -700,6 +701,7 @@ xfs_setattr_nonsize(
+@@ -2356,6 +2356,8 @@ xfs_file_ioctl(
+ 		if (error)
  			return error;
- 	}
  
-+retry:
- 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_ichange, 0, 0, 0, &tp);
- 	if (error)
- 		goto out_dqrele;
-@@ -729,12 +731,17 @@ xfs_setattr_nonsize(
- 		if (XFS_IS_QUOTA_RUNNING(mp) &&
- 		    ((XFS_IS_UQUOTA_ON(mp) && !uid_eq(iuid, uid)) ||
- 		     (XFS_IS_GQUOTA_ON(mp) && !gid_eq(igid, gid)))) {
-+			unsigned int	flags = 0;
++		trace_xfs_ioc_free_eofblocks(mp, &keofb, _RET_IP_);
 +
-+			if (capable(CAP_FOWNER))
-+				flags |= XFS_QMOPT_FORCE_RES;
- 			ASSERT(tp);
--			error = xfs_qm_vop_chown_reserve(tp, ip, udqp, gdqp,
--						NULL, capable(CAP_FOWNER) ?
--						XFS_QMOPT_FORCE_RES : 0);
--			if (error)	/* out of quota */
--				goto out_cancel;
-+			error = xfs_qm_vop_chown_reserve(&tp, ip, udqp, gdqp,
-+					NULL, flags, &quota_retry);
-+			if (error)
-+				goto out_dqrele;
-+			if (quota_retry)
-+				goto retry;
- 		}
- 
- 		/*
-@@ -814,9 +821,6 @@ xfs_setattr_nonsize(
- 
- 	return 0;
- 
--out_cancel:
--	xfs_trans_cancel(tp);
--	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- out_dqrele:
- 	xfs_qm_dqrele(udqp);
- 	xfs_qm_dqrele(gdqp);
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index c134eb4aeaa8..4c095526aaed 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -1795,27 +1795,29 @@ xfs_qm_vop_chown(
- }
+ 		sb_start_write(mp->m_super);
+ 		error = xfs_icache_free_eofblocks(mp, &keofb);
+ 		sb_end_write(mp->m_super);
+diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
+index 120398a37c2a..9b8d703dc9fd 100644
+--- a/fs/xfs/xfs_trace.c
++++ b/fs/xfs/xfs_trace.c
+@@ -29,6 +29,7 @@
+ #include "xfs_filestream.h"
+ #include "xfs_fsmap.h"
+ #include "xfs_btree_staging.h"
++#include "xfs_icache.h"
  
  /*
-- * Quota reservations for setattr(AT_UID|AT_GID|AT_PROJID).
-+ * Quota reservations for setattr(AT_UID|AT_GID|AT_PROJID).  This function has
-+ * the same return behavior as xfs_trans_reserve_quota_nblks.
-  */
- int
- xfs_qm_vop_chown_reserve(
--	struct xfs_trans	*tp,
-+	struct xfs_trans	**tpp,
- 	struct xfs_inode	*ip,
- 	struct xfs_dquot	*udqp,
- 	struct xfs_dquot	*gdqp,
- 	struct xfs_dquot	*pdqp,
--	uint			flags)
-+	unsigned int		flags,
-+	bool			*retry)
- {
- 	struct xfs_mount	*mp = ip->i_mount;
- 	uint64_t		delblks;
- 	unsigned int		blkflags;
--	struct xfs_dquot	*udq_unres = NULL;
-+	struct xfs_dquot	*udq_unres = NULL; /* old dquots */
- 	struct xfs_dquot	*gdq_unres = NULL;
- 	struct xfs_dquot	*pdq_unres = NULL;
--	struct xfs_dquot	*udq_delblks = NULL;
-+	struct xfs_dquot	*udq_delblks = NULL; /* new dquots */
- 	struct xfs_dquot	*gdq_delblks = NULL;
- 	struct xfs_dquot	*pdq_delblks = NULL;
--	int			error;
-+	int			error, err2;
+  * We include this last to have the helpers above available for the trace
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 5a263ae3d4f0..3f761f33099b 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -37,6 +37,7 @@ struct xfs_trans_res;
+ struct xfs_inobt_rec_incore;
+ union xfs_btree_ptr;
+ struct xfs_dqtrx;
++struct xfs_eofblocks;
  
+ #define XFS_ATTR_FILTER_FLAGS \
+ 	{ XFS_ATTR_ROOT,	"ROOT" }, \
+@@ -3888,6 +3889,44 @@ DEFINE_EVENT(xfs_timestamp_range_class, name, \
+ DEFINE_TIMESTAMP_RANGE_EVENT(xfs_inode_timestamp_range);
+ DEFINE_TIMESTAMP_RANGE_EVENT(xfs_quota_expiry_range);
  
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL|XFS_ILOCK_SHARED));
-@@ -1856,11 +1858,11 @@ xfs_qm_vop_chown_reserve(
- 		}
- 	}
- 
--	error = xfs_trans_reserve_quota_bydquots(tp, ip->i_mount,
-+	error = xfs_trans_reserve_quota_bydquots(*tpp, ip->i_mount,
- 				udq_delblks, gdq_delblks, pdq_delblks,
- 				ip->i_d.di_nblocks, 1, flags | blkflags);
- 	if (error)
--		return error;
-+		goto err;
- 
- 	/*
- 	 * Do the delayed blks reservations/unreservations now. Since, these
-@@ -1878,13 +1880,29 @@ xfs_qm_vop_chown_reserve(
- 			    udq_delblks, gdq_delblks, pdq_delblks,
- 			    (xfs_qcnt_t)delblks, 0, flags | blkflags);
- 		if (error)
--			return error;
-+			goto err;
- 		xfs_trans_reserve_quota_bydquots(NULL, ip->i_mount,
- 				udq_unres, gdq_unres, pdq_unres,
- 				-((xfs_qcnt_t)delblks), 0, blkflags);
- 	}
- 
- 	return 0;
-+err:
-+	xfs_trans_cancel(*tpp);
-+	*tpp = NULL;
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
-+	/* We only allow one retry for EDQUOT/ENOSPC. */
-+	if (*retry || (error != -EDQUOT && error != -ENOSPC)) {
-+		*retry = false;
-+		return error;
-+	}
++DECLARE_EVENT_CLASS(xfs_eofblocks_class,
++	TP_PROTO(struct xfs_mount *mp, struct xfs_eofblocks *eofb,
++		 unsigned long caller_ip),
++	TP_ARGS(mp, eofb, caller_ip),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(__u32, flags)
++		__field(uint32_t, uid)
++		__field(uint32_t, gid)
++		__field(prid_t, prid)
++		__field(__u64, min_file_size)
++		__field(unsigned long, caller_ip)
++	),
++	TP_fast_assign(
++		__entry->dev = mp->m_super->s_dev;
++		__entry->flags = eofb->eof_flags;
++		__entry->uid = from_kuid(mp->m_super->s_user_ns, eofb->eof_uid);
++		__entry->gid = from_kgid(mp->m_super->s_user_ns, eofb->eof_gid);
++		__entry->prid = eofb->eof_prid;
++		__entry->min_file_size = eofb->eof_min_file_size;
++		__entry->caller_ip = caller_ip;
++	),
++	TP_printk("dev %d:%d flags 0x%x uid %u gid %u prid %u minsize %llu caller %pS",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->flags,
++		  __entry->uid,
++		  __entry->gid,
++		  __entry->prid,
++		  __entry->min_file_size,
++		  (char *)__entry->caller_ip)
++);
++#define DEFINE_EOFBLOCKS_EVENT(name)	\
++DEFINE_EVENT(xfs_eofblocks_class, name,	\
++	TP_PROTO(struct xfs_mount *mp, struct xfs_eofblocks *eofb, \
++		 unsigned long caller_ip), \
++	TP_ARGS(mp, eofb, caller_ip))
++DEFINE_EOFBLOCKS_EVENT(xfs_ioc_free_eofblocks);
 +
-+	/* Try to free some quota in the new dquots. */
-+	err2 = xfs_blockgc_free_dquots(udq_delblks, gdq_delblks, pdq_delblks,
-+			0, retry);
-+	if (err2)
-+		return err2;
-+	return *retry ? 0 : error;
- }
+ #endif /* _TRACE_XFS_H */
  
- int
-diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-index ec09b38a9687..2ec57a65b1db 100644
---- a/fs/xfs/xfs_quota.h
-+++ b/fs/xfs/xfs_quota.h
-@@ -100,9 +100,9 @@ extern void xfs_qm_vop_create_dqattach(struct xfs_trans *, struct xfs_inode *,
- extern int xfs_qm_vop_rename_dqattach(struct xfs_inode **);
- extern struct xfs_dquot *xfs_qm_vop_chown(struct xfs_trans *,
- 		struct xfs_inode *, struct xfs_dquot **, struct xfs_dquot *);
--extern int xfs_qm_vop_chown_reserve(struct xfs_trans *, struct xfs_inode *,
--		struct xfs_dquot *, struct xfs_dquot *,
--		struct xfs_dquot *, uint);
-+int xfs_qm_vop_chown_reserve(struct xfs_trans **tpp, struct xfs_inode *ip,
-+		struct xfs_dquot *udqp, struct xfs_dquot *gdqp,
-+		struct xfs_dquot *pdqp, unsigned int flags, bool *retry);
- extern int xfs_qm_dqattach(struct xfs_inode *);
- extern int xfs_qm_dqattach_locked(struct xfs_inode *ip, bool doalloc);
- extern void xfs_qm_dqdetach(struct xfs_inode *);
-@@ -157,7 +157,7 @@ xfs_trans_reserve_quota_icreate(struct xfs_trans **tpp, struct xfs_inode *dp,
- #define xfs_qm_vop_create_dqattach(tp, ip, u, g, p)
- #define xfs_qm_vop_rename_dqattach(it)					(0)
- #define xfs_qm_vop_chown(tp, ip, old, new)				(NULL)
--#define xfs_qm_vop_chown_reserve(tp, ip, u, g, p, fl)			(0)
-+#define xfs_qm_vop_chown_reserve(tpp, ip, u, g, p, fl, retry)		(0)
- #define xfs_qm_dqattach(ip)						(0)
- #define xfs_qm_dqattach_locked(ip, fl)					(0)
- #define xfs_qm_dqdetach(ip)
+ #undef TRACE_INCLUDE_PATH
 
