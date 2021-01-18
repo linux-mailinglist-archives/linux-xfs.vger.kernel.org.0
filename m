@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC382FAD35
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F3602FAD38
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388191AbhARWOO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 17:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
+        id S1732635AbhARWOY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 17:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732974AbhARWOK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:14:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 218B722DFB;
-        Mon, 18 Jan 2021 22:13:29 +0000 (UTC)
+        id S2388409AbhARWOP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 17:14:15 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E6A322CB1;
+        Mon, 18 Jan 2021 22:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611008009;
-        bh=hcBSPhB9+wDzT8ljDn3G4d5RWDDaMMWxm0ktf+185Ck=;
+        s=k20201202; t=1611008014;
+        bh=0Goao9Ew6xlrf3qTp3wQGkVFSlaIg3hHLqrzjvrrA/s=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TVpoBKbaMvkMZHd9z/WW5Ts45/KiLqKMLfrPpWQoXE5tHLfK045zgcxLg82relZDW
-         RFCBkeMMaA7qYAFSDIP172rIwcrKxX66t5cy5/DIH7HqAl5T1CC3AvhX0miosHT7Y2
-         bYUxDEc/NdbRhWyIMSdsHZpGXQxVu5390HQAfSl6o5r4nNgFt1AfJbKYY2uZ9RAPMn
-         pMnoDw/p9oxQLpzdxjCxsvJ09NW6b9S6pQZ3B1CDfQhSvZURX5cFstQMK/JofAYwmg
-         q87XstuidPKstvVUV9CrJLwkV2SONf9/KNknrSa2irNn9hC1f8iabfwDdIJ24+5VIs
-         frAvtTZj5FY0A==
-Subject: [PATCH 05/10] xfs: increase the default parallelism levels of pwork
- clients
+        b=CjraM4mqFm0Q9182CRtmWogVZJ0kB9cLHZFzGpKExvl5ONFyvAFa0+zZQgba34L7I
+         2LDRZE2xKX1iU6tidPgun2MPYpL4dqcUs3z9DxJc/PqMHFWXjMhPsp0XBFnW8jxk0f
+         zj4MUGvKlOzkTqyBP8veoCaZKmeMp2bdj0wINntqYVt7zrajomR04zspGb9lYSacuK
+         TWmU8uk+EgS9dCkKeMigMaIrKvQk+XHGz+RLPdF8BIwvn6yLzowFe/4EhMzM/NhSzI
+         Rg8BiY2X6KTRMnZreZee6U5YzDaCYlQDrPbZfx2eaxtpdAnmYNLUcMtHdjzye0aP7n
+         ctsGVR7UA/JRg==
+Subject: [PATCH 06/10] xfs: consolidate incore inode radix tree
+ posteof/cowblocks tags
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 18 Jan 2021 14:13:28 -0800
-Message-ID: <161100800882.90204.6003697594198832699.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Mon, 18 Jan 2021 14:13:34 -0800
+Message-ID: <161100801432.90204.7455040190450914889.stgit@magnolia>
 In-Reply-To: <161100798100.90204.7839064495063223590.stgit@magnolia>
 References: <161100798100.90204.7839064495063223590.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,142 +42,293 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Increase the default parallelism level for pwork clients so that we can
-take advantage of computers with a lot of CPUs and a lot of hardware.
-The posteof/cowblocks cleanup series will use the functionality
-presented in this patch to constrain the number of background per-ag gc
-threads to our best estimate of the amount of parallelism that the
-filesystem can sustain.
+The clearing of posteof blocks and cowblocks serve the same purpose:
+removing speculative block preallocations from inactive files.  We don't
+need to burn two radix tree tags on this, so combine them into one.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_iwalk.c |    2 +
- fs/xfs/xfs_pwork.c |   80 +++++++++++++++++++++++++++++++++++++++++++++++-----
- fs/xfs/xfs_pwork.h |    3 +-
- 3 files changed, 76 insertions(+), 9 deletions(-)
+ fs/xfs/xfs_icache.c |  114 ++++++++++++++++++++++++---------------------------
+ fs/xfs/xfs_icache.h |    4 +-
+ fs/xfs/xfs_trace.h  |    6 +--
+ 3 files changed, 58 insertions(+), 66 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
-index eae3aff9bc97..bb31ef870cdc 100644
---- a/fs/xfs/xfs_iwalk.c
-+++ b/fs/xfs/xfs_iwalk.c
-@@ -624,7 +624,7 @@ xfs_iwalk_threaded(
- 	ASSERT(agno < mp->m_sb.sb_agcount);
- 	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 1d06dcc4339e..8b7d73121739 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -1291,6 +1291,9 @@ xfs_inode_free_eofblocks(
  
--	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
-+	nr_threads = xfs_pwork_guess_workqueue_threads(mp);
- 	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
- 			nr_threads);
- 	if (error)
-diff --git a/fs/xfs/xfs_pwork.c b/fs/xfs/xfs_pwork.c
-index b03333f1c84a..53606397ff54 100644
---- a/fs/xfs/xfs_pwork.c
-+++ b/fs/xfs/xfs_pwork.c
-@@ -118,19 +118,85 @@ xfs_pwork_poll(
- 		touch_softlockup_watchdog();
+ 	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
+ 
++	if (!xfs_iflags_test(ip, XFS_IEOFBLOCKS))
++		return 0;
++
+ 	if (!xfs_can_free_eofblocks(ip, false)) {
+ 		/* inode could be preallocated or append-only */
+ 		trace_xfs_inode_free_eofblocks_invalid(ip);
+@@ -1333,7 +1336,7 @@ xfs_queue_eofblocks(
+ 	struct xfs_mount *mp)
+ {
+ 	rcu_read_lock();
+-	if (radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_EOFBLOCKS_TAG))
++	if (radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_BLOCKGC_TAG))
+ 		queue_delayed_work(mp->m_eofblocks_workqueue,
+ 				   &mp->m_eofblocks_work,
+ 				   msecs_to_jiffies(xfs_eofb_secs * 1000));
+@@ -1350,67 +1353,54 @@ xfs_eofblocks_worker(
+ 	if (!sb_start_write_trylock(mp->m_super))
+ 		return;
+ 	xfs_inode_walk(mp, 0, xfs_inode_free_eofblocks, NULL,
+-			XFS_ICI_EOFBLOCKS_TAG);
++			XFS_ICI_BLOCKGC_TAG);
+ 	sb_end_write(mp->m_super);
+ 
+ 	xfs_queue_eofblocks(mp);
  }
  
-+/* Estimate the amount of parallelism available for a storage device. */
-+static unsigned int
-+xfs_guess_buftarg_parallelism(
-+	struct xfs_buftarg	*btp)
-+{
-+	int			iomin;
-+	int			ioopt;
-+
-+	/*
-+	 * The device tells us that it is non-rotational, and we take that to
-+	 * mean there are no moving parts and that the device can handle all
-+	 * the CPUs throwing IO requests at it.
-+	 */
-+	if (blk_queue_nonrot(btp->bt_bdev->bd_disk->queue))
-+		return num_online_cpus();
-+
-+	/*
-+	 * The device has a preferred and minimum IO size that suggest a RAID
-+	 * setup, so infer the number of disks and assume that the parallelism
-+	 * is equal to the disk count.
-+	 */
-+	iomin = bdev_io_min(btp->bt_bdev);
-+	ioopt = bdev_io_opt(btp->bt_bdev);
-+	if (iomin > 0 && ioopt > iomin)
-+		return ioopt / iomin;
-+
-+	/*
-+	 * The device did not indicate that it has any capabilities beyond that
-+	 * of a rotating disk with a single drive head, so we estimate no
-+	 * parallelism at all.
-+	 */
-+	return 1;
-+}
-+
- /*
-- * Return the amount of parallelism that the data device can handle, or 0 for
-- * no limit.
-+ * Estimate the amount of parallelism that is available for metadata operations
-+ * on this filesystem.
-  */
- unsigned int
--xfs_pwork_guess_datadev_parallelism(
-+xfs_pwork_guess_metadata_threads(
- 	struct xfs_mount	*mp)
+-static inline unsigned long
+-xfs_iflag_for_tag(
+-	int		tag)
+-{
+-	switch (tag) {
+-	case XFS_ICI_EOFBLOCKS_TAG:
+-		return XFS_IEOFBLOCKS;
+-	case XFS_ICI_COWBLOCKS_TAG:
+-		return XFS_ICOWBLOCKS;
+-	default:
+-		ASSERT(0);
+-		return 0;
+-	}
+-}
+-
+ static void
+-__xfs_inode_set_blocks_tag(
+-	xfs_inode_t	*ip,
+-	void		(*execute)(struct xfs_mount *mp),
+-	void		(*set_tp)(struct xfs_mount *mp, xfs_agnumber_t agno,
+-				  int error, unsigned long caller_ip),
+-	int		tag)
++xfs_blockgc_set_iflag(
++	struct xfs_inode	*ip,
++	void			(*execute)(struct xfs_mount *mp),
++	unsigned long		iflag)
  {
--	struct xfs_buftarg	*btp = mp->m_ddev_targp;
-+	unsigned int		threads;
+-	struct xfs_mount *mp = ip->i_mount;
+-	struct xfs_perag *pag;
+-	int tagged;
++	struct xfs_mount	*mp = ip->i_mount;
++	struct xfs_perag	*pag;
++	int			tagged;
++
++	ASSERT((iflag & ~(XFS_IEOFBLOCKS | XFS_ICOWBLOCKS)) == 0);
  
  	/*
--	 * For now we'll go with the most conservative setting possible,
--	 * which is two threads for an SSD and 1 thread everywhere else.
-+	 * Estimate the amount of parallelism for metadata operations from the
-+	 * least capable of the two devices that handle metadata.  Cap that
-+	 * estimate to the number of AGs to avoid unnecessary lock contention.
+ 	 * Don't bother locking the AG and looking up in the radix trees
+ 	 * if we already know that we have the tag set.
  	 */
--	return blk_queue_nonrot(btp->bt_bdev->bd_disk->queue) ? 2 : 1;
-+	threads = xfs_guess_buftarg_parallelism(mp->m_ddev_targp);
-+	if (mp->m_logdev_targp != mp->m_ddev_targp)
-+		threads = min(xfs_guess_buftarg_parallelism(mp->m_logdev_targp),
-+			      threads);
-+	threads = min(mp->m_sb.sb_agcount, threads);
-+
-+	/* If the storage told us it has fancy capabilities, we're done. */
-+	if (threads > 1)
-+		goto clamp;
-+
-+	/*
-+	 * Metadata storage did not even hint that it has any parallel
-+	 * capability.  If the filesystem was formatted with a stripe unit and
-+	 * width, we'll treat that as evidence of a RAID setup and estimate
-+	 * the number of disks.
-+	 */
-+	if (mp->m_sb.sb_unit > 0 && mp->m_sb.sb_width > mp->m_sb.sb_unit)
-+		threads = mp->m_sb.sb_width / mp->m_sb.sb_unit;
-+
-+clamp:
-+	/* Don't return an estimate larger than the CPU count. */
-+	return min(num_online_cpus(), threads);
-+}
-+
-+/* Estimate how many threads we need for a parallel work queue. */
-+unsigned int
-+xfs_pwork_guess_workqueue_threads(
-+	struct xfs_mount	*mp)
-+{
-+	/* pwork queues are not unbounded, so we have to abide WQ_MAX_ACTIVE. */
-+	return min_t(unsigned int, xfs_pwork_guess_metadata_threads(mp),
-+			WQ_MAX_ACTIVE);
- }
-diff --git a/fs/xfs/xfs_pwork.h b/fs/xfs/xfs_pwork.h
-index 8133124cf3bb..6320bca9c554 100644
---- a/fs/xfs/xfs_pwork.h
-+++ b/fs/xfs/xfs_pwork.h
-@@ -56,6 +56,7 @@ int xfs_pwork_init(struct xfs_mount *mp, struct xfs_pwork_ctl *pctl,
- void xfs_pwork_queue(struct xfs_pwork_ctl *pctl, struct xfs_pwork *pwork);
- int xfs_pwork_destroy(struct xfs_pwork_ctl *pctl);
- void xfs_pwork_poll(struct xfs_pwork_ctl *pctl);
--unsigned int xfs_pwork_guess_datadev_parallelism(struct xfs_mount *mp);
-+unsigned int xfs_pwork_guess_metadata_threads(struct xfs_mount *mp);
-+unsigned int xfs_pwork_guess_workqueue_threads(struct xfs_mount *mp);
+-	if (ip->i_flags & xfs_iflag_for_tag(tag))
++	if (ip->i_flags & iflag)
+ 		return;
+ 	spin_lock(&ip->i_flags_lock);
+-	ip->i_flags |= xfs_iflag_for_tag(tag);
++	ip->i_flags |= iflag;
+ 	spin_unlock(&ip->i_flags_lock);
  
- #endif /* __XFS_PWORK_H__ */
+ 	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
+ 	spin_lock(&pag->pag_ici_lock);
+ 
+-	tagged = radix_tree_tagged(&pag->pag_ici_root, tag);
++	tagged = radix_tree_tagged(&pag->pag_ici_root, XFS_ICI_BLOCKGC_TAG);
+ 	radix_tree_tag_set(&pag->pag_ici_root,
+-			   XFS_INO_TO_AGINO(ip->i_mount, ip->i_ino), tag);
++			   XFS_INO_TO_AGINO(ip->i_mount, ip->i_ino),
++			   XFS_ICI_BLOCKGC_TAG);
+ 	if (!tagged) {
+-		/* propagate the eofblocks tag up into the perag radix tree */
++		/* propagate the blockgc tag up into the perag radix tree */
+ 		spin_lock(&ip->i_mount->m_perag_lock);
+ 		radix_tree_tag_set(&ip->i_mount->m_perag_tree,
+ 				   XFS_INO_TO_AGNO(ip->i_mount, ip->i_ino),
+-				   tag);
++				   XFS_ICI_BLOCKGC_TAG);
+ 		spin_unlock(&ip->i_mount->m_perag_lock);
+ 
+ 		/* kick off background trimming */
+ 		execute(ip->i_mount);
+ 
+-		set_tp(ip->i_mount, pag->pag_agno, -1, _RET_IP_);
++		trace_xfs_perag_set_blockgc(ip->i_mount, pag->pag_agno, -1,
++				_RET_IP_);
+ 	}
+ 
+ 	spin_unlock(&pag->pag_ici_lock);
+@@ -1422,38 +1412,43 @@ xfs_inode_set_eofblocks_tag(
+ 	xfs_inode_t	*ip)
+ {
+ 	trace_xfs_inode_set_eofblocks_tag(ip);
+-	return __xfs_inode_set_blocks_tag(ip, xfs_queue_eofblocks,
+-			trace_xfs_perag_set_eofblocks,
+-			XFS_ICI_EOFBLOCKS_TAG);
++	return xfs_blockgc_set_iflag(ip, xfs_queue_eofblocks, XFS_IEOFBLOCKS);
+ }
+ 
+ static void
+-__xfs_inode_clear_blocks_tag(
+-	xfs_inode_t	*ip,
+-	void		(*clear_tp)(struct xfs_mount *mp, xfs_agnumber_t agno,
+-				    int error, unsigned long caller_ip),
+-	int		tag)
++xfs_blockgc_clear_iflag(
++	struct xfs_inode	*ip,
++	unsigned long		iflag)
+ {
+-	struct xfs_mount *mp = ip->i_mount;
+-	struct xfs_perag *pag;
++	struct xfs_mount	*mp = ip->i_mount;
++	struct xfs_perag	*pag;
++	bool			clear_tag;
++
++	ASSERT((iflag & ~(XFS_IEOFBLOCKS | XFS_ICOWBLOCKS)) == 0);
+ 
+ 	spin_lock(&ip->i_flags_lock);
+-	ip->i_flags &= ~xfs_iflag_for_tag(tag);
++	ip->i_flags &= ~iflag;
++	clear_tag = (ip->i_flags & (XFS_IEOFBLOCKS | XFS_ICOWBLOCKS)) == 0;
+ 	spin_unlock(&ip->i_flags_lock);
+ 
++	if (!clear_tag)
++		return;
++
+ 	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
+ 	spin_lock(&pag->pag_ici_lock);
+ 
+ 	radix_tree_tag_clear(&pag->pag_ici_root,
+-			     XFS_INO_TO_AGINO(ip->i_mount, ip->i_ino), tag);
+-	if (!radix_tree_tagged(&pag->pag_ici_root, tag)) {
+-		/* clear the eofblocks tag from the perag radix tree */
++			     XFS_INO_TO_AGINO(ip->i_mount, ip->i_ino),
++			     XFS_ICI_BLOCKGC_TAG);
++	if (!radix_tree_tagged(&pag->pag_ici_root, XFS_ICI_BLOCKGC_TAG)) {
++		/* clear the blockgc tag from the perag radix tree */
+ 		spin_lock(&ip->i_mount->m_perag_lock);
+ 		radix_tree_tag_clear(&ip->i_mount->m_perag_tree,
+ 				     XFS_INO_TO_AGNO(ip->i_mount, ip->i_ino),
+-				     tag);
++				     XFS_ICI_BLOCKGC_TAG);
+ 		spin_unlock(&ip->i_mount->m_perag_lock);
+-		clear_tp(ip->i_mount, pag->pag_agno, -1, _RET_IP_);
++		trace_xfs_perag_clear_blockgc(ip->i_mount, pag->pag_agno, -1,
++				_RET_IP_);
+ 	}
+ 
+ 	spin_unlock(&pag->pag_ici_lock);
+@@ -1465,8 +1460,7 @@ xfs_inode_clear_eofblocks_tag(
+ 	xfs_inode_t	*ip)
+ {
+ 	trace_xfs_inode_clear_eofblocks_tag(ip);
+-	return __xfs_inode_clear_blocks_tag(ip,
+-			trace_xfs_perag_clear_eofblocks, XFS_ICI_EOFBLOCKS_TAG);
++	return xfs_blockgc_clear_iflag(ip, XFS_IEOFBLOCKS);
+ }
+ 
+ /*
+@@ -1524,6 +1518,9 @@ xfs_inode_free_cowblocks(
+ 
+ 	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
+ 
++	if (!xfs_iflags_test(ip, XFS_ICOWBLOCKS))
++		return 0;
++
+ 	if (!xfs_prep_free_cowblocks(ip))
+ 		return 0;
+ 
+@@ -1569,7 +1566,7 @@ xfs_queue_cowblocks(
+ 	struct xfs_mount *mp)
+ {
+ 	rcu_read_lock();
+-	if (radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_COWBLOCKS_TAG))
++	if (radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_BLOCKGC_TAG))
+ 		queue_delayed_work(mp->m_eofblocks_workqueue,
+ 				   &mp->m_cowblocks_work,
+ 				   msecs_to_jiffies(xfs_cowb_secs * 1000));
+@@ -1586,7 +1583,7 @@ xfs_cowblocks_worker(
+ 	if (!sb_start_write_trylock(mp->m_super))
+ 		return;
+ 	xfs_inode_walk(mp, 0, xfs_inode_free_cowblocks, NULL,
+-			XFS_ICI_COWBLOCKS_TAG);
++			XFS_ICI_BLOCKGC_TAG);
+ 	sb_end_write(mp->m_super);
+ 
+ 	xfs_queue_cowblocks(mp);
+@@ -1597,9 +1594,7 @@ xfs_inode_set_cowblocks_tag(
+ 	xfs_inode_t	*ip)
+ {
+ 	trace_xfs_inode_set_cowblocks_tag(ip);
+-	return __xfs_inode_set_blocks_tag(ip, xfs_queue_cowblocks,
+-			trace_xfs_perag_set_cowblocks,
+-			XFS_ICI_COWBLOCKS_TAG);
++	return xfs_blockgc_set_iflag(ip, xfs_queue_cowblocks, XFS_ICOWBLOCKS);
+ }
+ 
+ void
+@@ -1607,8 +1602,7 @@ xfs_inode_clear_cowblocks_tag(
+ 	xfs_inode_t	*ip)
+ {
+ 	trace_xfs_inode_clear_cowblocks_tag(ip);
+-	return __xfs_inode_clear_blocks_tag(ip,
+-			trace_xfs_perag_clear_cowblocks, XFS_ICI_COWBLOCKS_TAG);
++	return xfs_blockgc_clear_iflag(ip, XFS_ICOWBLOCKS);
+ }
+ 
+ /* Disable post-EOF and CoW block auto-reclamation. */
+@@ -1638,12 +1632,12 @@ xfs_blockgc_scan(
+ 	int			error;
+ 
+ 	error = xfs_inode_walk(mp, 0, xfs_inode_free_eofblocks, eofb,
+-			XFS_ICI_EOFBLOCKS_TAG);
++			XFS_ICI_BLOCKGC_TAG);
+ 	if (error)
+ 		return error;
+ 
+ 	error = xfs_inode_walk(mp, 0, xfs_inode_free_cowblocks, eofb,
+-			XFS_ICI_COWBLOCKS_TAG);
++			XFS_ICI_BLOCKGC_TAG);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index a48c70008e5c..df22bf4b65bb 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -23,8 +23,8 @@ struct xfs_eofblocks {
+ #define XFS_ICI_NO_TAG		(-1)	/* special flag for an untagged lookup
+ 					   in xfs_inode_walk */
+ #define XFS_ICI_RECLAIM_TAG	0	/* inode is to be reclaimed */
+-#define XFS_ICI_EOFBLOCKS_TAG	1	/* inode has blocks beyond EOF */
+-#define XFS_ICI_COWBLOCKS_TAG	2	/* inode can have cow blocks to gc */
++/* Inode has speculative preallocations (posteof or cow) to clean. */
++#define XFS_ICI_BLOCKGC_TAG	1
+ 
+ /*
+  * Flags for xfs_iget()
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 7ec9d4d703a6..2ffe55f36b47 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -155,10 +155,8 @@ DEFINE_PERAG_REF_EVENT(xfs_perag_get_tag);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_put);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_set_reclaim);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_clear_reclaim);
+-DEFINE_PERAG_REF_EVENT(xfs_perag_set_eofblocks);
+-DEFINE_PERAG_REF_EVENT(xfs_perag_clear_eofblocks);
+-DEFINE_PERAG_REF_EVENT(xfs_perag_set_cowblocks);
+-DEFINE_PERAG_REF_EVENT(xfs_perag_clear_cowblocks);
++DEFINE_PERAG_REF_EVENT(xfs_perag_set_blockgc);
++DEFINE_PERAG_REF_EVENT(xfs_perag_clear_blockgc);
+ 
+ DECLARE_EVENT_CLASS(xfs_ag_class,
+ 	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno),
 
