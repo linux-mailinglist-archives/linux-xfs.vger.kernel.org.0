@@ -2,68 +2,55 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BA12FA7FB
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 18:55:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3932FA7A8
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 18:39:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407074AbhARRgU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 12:36:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37474 "EHLO
+        id S2436594AbhARRhW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 12:37:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2436550AbhARRe4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 12:34:56 -0500
+        with ESMTP id S2436603AbhARRhM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 12:37:12 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F347C061573
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jan 2021 09:34:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CE04C061573
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jan 2021 09:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QtDfHpPOYXJmzOJD78mNKA8VY9r1amAbaaODmIjU0Kw=; b=kmwEWe7ieIWsvF+1kksVqmdmPj
-        4Xs1CjcyFAHvoW8OkEQp/TywTz6DiplV+JgYs0qy0GKISHSKPLQR+jmE19Y3VhWA+6eHcAfKYnY7Y
-        W9ToQRCoVvCl75jhN4bvvskk/wRb2XQqktLyB0ZwU8/w/j/pEffX+EbA6VdQotPdBKaIBFz07gcIS
-        VuZwFjKjA3lb3foxMOwssi5121g5IVlWSU3gqvfCndRW/hkozlAe94B+TIhPLOpR/84o49PVht8NU
-        hDQF/40ikQ3QjEvGOLOwo1NGuy4bT/hV/59PP4Zwq1ooCZSMjmj4BTWt9AvnBQw5gOg4IoIR4eSvF
-        tHHPgdLw==;
+        bh=jdoJIv/lnB5Cs6DtF/pHTjYP84lUOpa20Tsa9Bprz10=; b=ad+j5Jpqo6bFzm8NDVo2N+l9is
+        bZsSa5Qsw+a6W/ONW1JJEaPezhZxKSXFEcPHyw3vb2GsY4T78O5SziWdz5tmEUXqCe/DBKgjhl1hA
+        eve0DxsQME3O/mJmOqjAv6lIGJqPlTDvgGaVieSK1pnJ9v4Zxcz4Y3w3u06jn4hlG75f0VgXHZxI5
+        WyjW/wlrPyffcdMiSyCFvqM/JJKikKHrbRUDXbb+FAVcZ0JAGEKFHnoLvsb3dGbJDYuZR5mPgARKp
+        eyD88LTeIbO1L8Uhn5hrtk8HLxiY1c2KV+wZzyBqIMpFIi9L7+Fr2QBkYAg4kQPnMROUkT93RD2UL
+        iCCS/hhQ==;
 Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l1YPs-00D9i6-Dh; Mon, 18 Jan 2021 17:34:13 +0000
-Date:   Mon, 18 Jan 2021 17:34:12 +0000
+        id 1l1YS4-00D9st-1g; Mon, 18 Jan 2021 17:36:28 +0000
+Date:   Mon, 18 Jan 2021 17:36:28 +0000
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/6] xfs: don't stall cowblocks scan if we can't take
- locks
-Message-ID: <20210118173412.GA3134885@infradead.org>
-References: <161040735389.1582114.15084485390769234805.stgit@magnolia>
- <161040737263.1582114.4973977520111925461.stgit@magnolia>
- <X/8HLQGzXSbC2IIn@infradead.org>
- <20210114215453.GG1164246@magnolia>
+Subject: Re: [PATCH 1/7] xfs: increase the default parallelism levels of
+ pwork clients
+Message-ID: <20210118173628.GB3134885@infradead.org>
+References: <161040739544.1582286.11068012972712089066.stgit@magnolia>
+ <161040740189.1582286.17385075679159461086.stgit@magnolia>
+ <X/8IfJj+qgnl303O@infradead.org>
+ <20210114213259.GF1164246@magnolia>
+ <20210114223849.GI1164246@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210114215453.GG1164246@magnolia>
+In-Reply-To: <20210114223849.GI1164246@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jan 14, 2021 at 01:54:53PM -0800, Darrick J. Wong wrote:
-> On Wed, Jan 13, 2021 at 03:43:57PM +0100, Christoph Hellwig wrote:
-> > On Mon, Jan 11, 2021 at 03:22:52PM -0800, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <djwong@kernel.org>
-> > > 
-> > > Don't stall the cowblocks scan on a locked inode if we possibly can.
-> > > We'd much rather the background scanner keep moving.
-> > 
-> > Wouldn't it make more sense to move the logic to ignore the -EAGAIN
-> > for not-sync calls into xfs_inode_walk_ag?
-> 
-> I'm not sure what you're asking here?  _free_cowblocks only returns
-> EAGAIN for sync calls.  Locking failure for a not-sync call results in a
-> return 0, which means that _walk_ag just moves on to the next inode.
+On Thu, Jan 14, 2021 at 02:38:49PM -0800, Darrick J. Wong wrote:
+> There already /is/ a pwork_threads sysctl knob for controlling
+> quotacheck parallelism; and for the block gc workqueue I add WQ_SYSFS so
+> that you can set /sys/bus/workqueue/devices/xfs-*/max_active.
 
-What I mean is:
-
- - always return -EAGAIN when taking the locks fails
- - don't exit early on -EAGAIN in xfs_inode_walk at least for sync
-   calls, although thinking loud I see no good reason to exit early
-   even for non-sync invocations
+Hmm.  A single know that is named to describe that it deals with the
+expected device parallelism might be easier to understand for users.
