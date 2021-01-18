@@ -2,33 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E68D42FAD22
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5B7C2FAD37
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732689AbhARWNJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 17:13:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
+        id S2388009AbhARWOY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 17:14:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733204AbhARWNG (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:13:06 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 77F2922E03;
-        Mon, 18 Jan 2021 22:12:09 +0000 (UTC)
+        id S2387793AbhARWNH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 17:13:07 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0223A22CB1;
+        Mon, 18 Jan 2021 22:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611007929;
-        bh=yZP2GdN1+8Yarj1+uEOCP7GukMy0vFjVOSi2EpeZPpo=;
+        s=k20201202; t=1611007935;
+        bh=HkV+v1+M13RtbXFKFshv0TMII3eJb5vlu+TTekC5Bqc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=A6qNmKqIYknS1OgjAruvDUwJ7gD/tsTw6rfyncwn8UMvZRSVZAvWDz7VuDPzzBWdk
-         f9iW/22Y3jflt6QpR74SVfe+80n2W+rihFYAfv80OzYS0CTgH822LO2I4zyuUhzZmB
-         S64Rf0HMeT1B04aRR6uJTcl2dDerZAC4JVzsxEemK9tZWpJugKREM4uzvNRUT/r4nd
-         uu04JZRMkSuEtBmQqxH/GgR962L8797MtYSfu5fPzP8+D/D43kfizsKEjeNt0Lhrjt
-         jNVzVZfjByxvyKlFrGA/YvLyqH4xUD/80EOZWOB3722nMlu5SkQkTM4J+jRmXTiYUb
-         E67PE2RzC0Z3w==
-Subject: [PATCH 02/11] xfs: don't stall cowblocks scan if we can't take locks
+        b=LASmKIZkEmVUSxs48dAYG4tCZyrcNa+/SHIhzv72f4WygAnXjtgMk9J73CZsS+1pB
+         Ih6RoYmaTGwtTSg3493a2yLjRPRTE65QkdDonOvvuVQrPiL4q/nJ0sNH9tI2E5mxT6
+         38Lzgsdqh/AYyQfl0BJKU6o919F70kUlzGPppAFSmLB6FNEs1gCYGbdPDL7XKNCsEd
+         xqh/ANCBYiM8nwnDC67+TlOZpTGCLpHHd8nR9YnqjSvcUAvhA11MaTX4vPNHJpdyAI
+         gfXmNy9PalOUGVSpYdEiAiPE0U1l16VEGBIdBqsIrphFcOeSEEAeUGjzLYFSYVdEsa
+         aLdc5B6jPE8Wg==
+Subject: [PATCH 03/11] xfs: xfs_inode_free_quota_blocks should scan project
+ quota
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 18 Jan 2021 14:12:09 -0800
-Message-ID: <161100792917.88816.7369361459458348804.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
+Date:   Mon, 18 Jan 2021 14:12:14 -0800
+Message-ID: <161100793468.88816.9429092187041160477.stgit@magnolia>
 In-Reply-To: <161100791789.88816.10902093186807310995.stgit@magnolia>
 References: <161100791789.88816.10902093186807310995.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,60 +42,41 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't stall the cowblocks scan on a locked inode if we possibly can.
-We'd much rather the background scanner keep moving.
+Buffered writers who have run out of quota reservation call
+xfs_inode_free_quota_blocks to try to free any space reservations that
+might reduce the quota usage.  Unfortunately, the buffered write path
+treats "out of project quota" the same as "out of overall space" so this
+function has never supported scanning for space that might ease an "out
+of project quota" condition.
+
+We're about to start using this function for cases where we actually
+/can/ tell if we're out of project quota, so add in this functionality.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_icache.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_icache.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index c71eb15e3835..89f9e692fde7 100644
+index 89f9e692fde7..10c1a0dee17d 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -1605,17 +1605,31 @@ xfs_inode_free_cowblocks(
- 	void			*args)
- {
- 	struct xfs_eofblocks	*eofb = args;
-+	bool			wait;
- 	int			ret = 0;
+@@ -1434,6 +1434,15 @@ xfs_inode_free_quota_blocks(
+ 		}
+ 	}
  
-+	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
++	if (XFS_IS_PQUOTA_ENFORCED(ip->i_mount)) {
++		dq = xfs_inode_dquot(ip, XFS_DQTYPE_PROJ);
++		if (dq && xfs_dquot_lowsp(dq)) {
++			eofb.eof_prid = ip->i_d.di_projid;
++			eofb.eof_flags |= XFS_EOF_FLAGS_PRID;
++			do_work = true;
++		}
++	}
 +
- 	if (!xfs_prep_free_cowblocks(ip))
- 		return 0;
+ 	if (!do_work)
+ 		return false;
  
- 	if (!xfs_inode_matches_eofb(ip, eofb))
- 		return 0;
- 
--	/* Free the CoW blocks */
--	xfs_ilock(ip, XFS_IOLOCK_EXCL);
--	xfs_ilock(ip, XFS_MMAPLOCK_EXCL);
-+	/*
-+	 * If the caller is waiting, return -EAGAIN to keep the background
-+	 * scanner moving and revisit the inode in a subsequent pass.
-+	 */
-+	if (!xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL)) {
-+		if (wait)
-+			return -EAGAIN;
-+		return 0;
-+	}
-+	if (!xfs_ilock_nowait(ip, XFS_MMAPLOCK_EXCL)) {
-+		if (wait)
-+			ret = -EAGAIN;
-+		goto out_iolock;
-+	}
- 
- 	/*
- 	 * Check again, nobody else should be able to dirty blocks or change
-@@ -1625,6 +1639,7 @@ xfs_inode_free_cowblocks(
- 		ret = xfs_reflink_cancel_cow_range(ip, 0, NULLFILEOFF, false);
- 
- 	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
-+out_iolock:
- 	xfs_iunlock(ip, XFS_IOLOCK_EXCL);
- 
- 	return ret;
 
