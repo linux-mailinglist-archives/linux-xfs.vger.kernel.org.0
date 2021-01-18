@@ -2,192 +2,162 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CED42F99D8
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 07:24:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAC122F9AB8
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 08:44:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732328AbhARGWc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 01:22:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34002 "EHLO
+        id S1732378AbhARHmk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 02:42:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732262AbhARGWX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 01:22:23 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A56C061794;
-        Sun, 17 Jan 2021 22:21:09 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id t6so8084163plq.1;
-        Sun, 17 Jan 2021 22:21:09 -0800 (PST)
+        with ESMTP id S1732980AbhARHme (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 02:42:34 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD11EC061573
+        for <linux-xfs@vger.kernel.org>; Sun, 17 Jan 2021 23:41:53 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id v184so8663256wma.1
+        for <linux-xfs@vger.kernel.org>; Sun, 17 Jan 2021 23:41:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AGBhOkzc7abONTpUtgMEjxirIhOapL82Xzhyg1JPP1A=;
-        b=GLokwA88TdhpVog/ezxJvyH90S9sQPOJ5I0BdKpXgBwwgq/b8W0REafwp+PS6RE3L1
-         8VnOD1wDT1fn7IDMSjf7b35J5Y6wfjmkBrZweFMY1oMrVIGEKzE+JNlySiKf5TiXX5MP
-         qEXznRFke1lSYzRWZ3wUewDJTCW3YAGuG7WPdQ5TcbhR5f3vj+0ClyCt9K1vJx5ZlHgs
-         xKyk2fwMS0gFqIpJW6gAkXYi+YbcNww4AaA9zWFE/lyrlFJO3S7/DcpfJ+QQTO36Bh4j
-         YUScdA13eG+6jQsFs6CIh3SrJFiDkfCeOV+SrFT5mkOVMeVFfCak8nh2/AukumC/Tv5B
-         /ZJg==
+        d=scylladb-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=84dQpBdUvbIU1uNKQMOyaKOFiyJs/52YsIkFh9uvJ+Y=;
+        b=O5BFpyPzwQd7fsJtJNdf2tQRv/ZVUh/UBwqTnQAv3z6TZHvO5vA+fZfmOapJzhyn7t
+         cXUL0RoPzEEKD+gh0AQ9QcnkU5Spk+Gmgny/9qv0KbZ+rc+NI8XEJb1IH/1wEIWnvIzH
+         EaHIe4Mvn2lPczFbod3V+WmyT/z/GHK0PNkBYjIXXXBcZnEShmSMHiCA3iS1Mb4+U9uM
+         s6msVYYfzwQZq/CEGcRxWwuu2Rmi7dRIHAMv9zorZkzXxl9i+rHCcTssKJoHAdM5mXyz
+         EKgMgl66cBuhKs0nVHZv5E0hVwsUhF97NBbORZcpFX2DuwbSAF/ade0VmzPSJnlpfjHY
+         IFaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AGBhOkzc7abONTpUtgMEjxirIhOapL82Xzhyg1JPP1A=;
-        b=iFn9VOZuTG8aLpp7hBpTNfahvjAOliKZP+2apQ9q27XyaQ3tIT8lIGuvbdOjMiQvAS
-         QFUbRNbiNuG4vU39S/ChHBdxrQEJGuFzSCAORKo0Xoipk8ndVKICgLfD+1tKCJl3sdOF
-         qDi3R6hdOit8JAp1tNLtEplq5zg/e562H2ktczvHXk8f1XcPucod0B2fU2jtd/0vf8sQ
-         jLMmT4XKWJ9QgXO50egBRX28Oc8l/vpZED65MKkYzE33NmQexcwjBM9t8/Byv/+XADcC
-         j/aDwEukiiWMxGSFaK+3hgsD5XcGwf9+3Fn+D7r1HSlvKMJ809+k8NBjYBbvOeEiaXVw
-         eEvw==
-X-Gm-Message-State: AOAM531c3HV72SpcJfCfXocAIFD6YxeRU3JZ67gov3xqm70goVXY6dUE
-        slTAyVf7AbqjogVzQRwjxuZ+41FShg0=
-X-Google-Smtp-Source: ABdhPJzoi8sBcRNyLJ5p/V4vdIHKmpIvfEFvejHWc3xfxzNIQ0XbPOvNcDX+nRtHhGpLDPnYV/fsQg==
-X-Received: by 2002:a17:90a:a60d:: with SMTP id c13mr25067886pjq.11.1610950868686;
-        Sun, 17 Jan 2021 22:21:08 -0800 (PST)
-Received: from localhost.localdomain ([122.179.96.31])
-        by smtp.gmail.com with ESMTPSA id t1sm14608423pfq.154.2021.01.17.22.21.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jan 2021 22:21:08 -0800 (PST)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     fstests@vger.kernel.org
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
-        linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
-        djwong@kernel.org
-Subject: [PATCH V4 11/11] xfs: Stress test with bmap_alloc_minlen_extent error tag enabled
-Date:   Mon, 18 Jan 2021 11:50:22 +0530
-Message-Id: <20210118062022.15069-12-chandanrlinux@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210118062022.15069-1-chandanrlinux@gmail.com>
-References: <20210118062022.15069-1-chandanrlinux@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=84dQpBdUvbIU1uNKQMOyaKOFiyJs/52YsIkFh9uvJ+Y=;
+        b=M3YiBIiZnhHQNCtPdJz0WzS5/xOcyl2LjSx6TzMoq9HBADkV2ATxQtsT7b7oGTfqFi
+         krQjvNEDBTuA4immT1tOJxs14ZEneCbVkMQm0JGTjft5V/SPz6rsetrMVc1mmxzfcsZI
+         CraqXwu9O9dcuM1RO35qMIFvD8Nlx/i88MJ4QX74VKFK260F2OfxsP1BQULZ8dQQgUeq
+         gWFfzG3gsSYk4l1nR4I8DvsCiYSSojBG0H48fcQMJEUj7zvmtQKw+i1H839aAFm8B3rW
+         5Q+mxJMmYIvvYwCqVtgdW/ocTsjPRCIK5dDgL2SifbzhqaJj6CCYN0kDoZ8vWioCINfE
+         Fv2A==
+X-Gm-Message-State: AOAM530FSb0IAm29ZKMY0/kPM5inpMagvIMhWnm2ifKrdrOvLr2hkSht
+        pZi0I0CkNuJq8ptTtCXxZ0do5w==
+X-Google-Smtp-Source: ABdhPJz4WbmpfxQu29FsmDFc4bQeHOvi1sibHHrLgyfJ3N5TghOxZtvsv3pOyjJRpCr80KVyt/UbZw==
+X-Received: by 2002:a7b:c5d6:: with SMTP id n22mr18784934wmk.70.1610955712600;
+        Sun, 17 Jan 2021 23:41:52 -0800 (PST)
+Received: from tmp.scylladb.com (bzq-79-182-3-66.red.bezeqint.net. [79.182.3.66])
+        by smtp.googlemail.com with ESMTPSA id w4sm23953270wmc.13.2021.01.17.23.41.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 17 Jan 2021 23:41:51 -0800 (PST)
+Subject: Re: [RFC] xfs: reduce sub-block DIO serialisation
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        andres@anarazel.de
+References: <20210112010746.1154363-1-david@fromorbit.com>
+ <32f99253-fe56-9198-e47c-7eb0e24fdf73@scylladb.com>
+ <20210112221324.GU331610@dread.disaster.area>
+ <0f0706f9-92ab-6b38-f3ab-b91aaf4343d1@scylladb.com>
+ <20210113203809.GF331610@dread.disaster.area>
+ <50362fc8-3d5e-cd93-4e55-f3ecddc21780@scylladb.com>
+ <20210117213401.GB78941@dread.disaster.area>
+From:   Avi Kivity <avi@scylladb.com>
+Message-ID: <c6f25213-233e-3f0e-a6c9-f5e2d5122c34@scylladb.com>
+Date:   Mon, 18 Jan 2021 09:41:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210117213401.GB78941@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit adds a stress test that executes fsstress with
-bmap_alloc_minlen_extent error tag enabled.
+On 1/17/21 11:34 PM, Dave Chinner wrote:
+> On Thu, Jan 14, 2021 at 08:48:36AM +0200, Avi Kivity wrote:
+>> On 1/13/21 10:38 PM, Dave Chinner wrote:
+>>> On Wed, Jan 13, 2021 at 10:00:37AM +0200, Avi Kivity wrote:
+>>>> On 1/13/21 12:13 AM, Dave Chinner wrote:
+>>>>> On Tue, Jan 12, 2021 at 10:01:35AM +0200, Avi Kivity wrote:
+>>>>>> On 1/12/21 3:07 AM, Dave Chinner wrote:
+>>>>>>> Hi folks,
+>>>>>>>
+>>>>>>> This is the XFS implementation on the sub-block DIO optimisations
+>>>>>>> for written extents that I've mentioned on #xfs and a couple of
+>>>>>>> times now on the XFS mailing list.
+>>>>>>>
+>>>>>>> It takes the approach of using the IOMAP_NOWAIT non-blocking
+>>>>>>> IO submission infrastructure to optimistically dispatch sub-block
+>>>>>>> DIO without exclusive locking. If the extent mapping callback
+>>>>>>> decides that it can't do the unaligned IO without extent
+>>>>>>> manipulation, sub-block zeroing, blocking or splitting the IO into
+>>>>>>> multiple parts, it aborts the IO with -EAGAIN. This allows the high
+>>>>>>> level filesystem code to then take exclusive locks and resubmit the
+>>>>>>> IO once it has guaranteed no other IO is in progress on the inode
+>>>>>>> (the current implementation).
+>>>>>> Can you expand on the no-splitting requirement? Does it involve only
+>>>>>> splitting by XFS (IO spans >1 extents) or lower layers (RAID)?
+>>>>> XFS only.
+>>>> Ok, that is somewhat under control as I can provide an extent hint, and wish
+>>>> really hard that the filesystem isn't fragmented.
+>>>>
+>>>>
+>>>>>> The reason I'm concerned is that it's the constraint that the application
+>>>>>> has least control over. I guess I could use RWF_NOWAIT to avoid blocking my
+>>>>>> main thread (but last time I tried I'd get occasional EIOs that frightened
+>>>>>> me off that).
+>>>>> Spurious EIO from RWF_NOWAIT is a bug that needs to be fixed. DO you
+>>>>> have any details?
+>>>>>
+>>>> I reported it in [1]. It's long since gone since I disabled RWF_NOWAIT. It
+>>>> was relatively rare, sometimes happening in continuous integration runs that
+>>>> take hours, and sometimes not.
+>>>>
+>>>>
+>>>> I expect it's fixed by now since io_uring relies on it. Maybe I should turn
+>>>> it on for kernels > some_random_version.
+>>>>
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/9bab0f40-5748-f147-efeb-5aac4fd44533@scylladb.com/t/#u
+>>> Yeah, as I thought. Usage of REQ_NOWAIT with filesystem based IO is
+>>> simply broken - it causes spurious IO failures to be reported to IO
+>>> completion callbacks and so are very difficult to track and/or
+>>> retry. iomap does not use REQ_NOWAIT at all, so you should not ever
+>>> see this from XFS or ext4 DIO anymore...
+>> What kernel version would be good?
+> For ext4? >= 5.5 was when it was converted to the iomap DIO path
+> should be safe.  Before taht it would use the old DIO path which
+> sets REQ_NOWAIT when IOCB_NOWAIT (i.e. RWF_NOWAIT) was set for the
+> IO.
+>
+> Btrfs is an even more recent convert to iomap-based dio (5.9?).
+>
+> The REQ_NOWAIT behaviour was introduced into the old DIO path back
+> in 4.13 by commit 03a07c92a9ed ("block: return on congested block
+> device") and was intended to support RWF_NOWAIT on raw block
+> devices.  Hence it was not added to the iomap path as block devices
+> don't use that path.
+>
+> Other examples of how REQ_NOWAIT breaks filesystems was a io_uring
+> hack to force REQ_NOWAIT IO behaviour through filesystems via
+> "nowait block plugs" resulted in XFS filesystem shutdowns because
+> of unexpected IO errors during journal writes:
+>
+> https://lore.kernel.org/linux-xfs/20200915113327.GA1554921@bfoster/
+>
+> There have been patches proposed to add REQ_NOWAIT to the iomap DIO
+> code proporsed, but they've all been NACKed because of the fact it
+> will break filesystem-based RWF_NOWAIT DIO.
+>
+> So, long story short: On XFS you are fine on all kernels. On all
+> other block based filesystems you need <4.13, except for ext4 where
+>> = 5.5 and btrfs where >=5.9 will work correctly.
 
-Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- tests/xfs/531     | 84 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/531.out |  7 ++++
- tests/xfs/group   |  1 +
- 3 files changed, 92 insertions(+)
- create mode 100755 tests/xfs/531
- create mode 100644 tests/xfs/531.out
 
-diff --git a/tests/xfs/531 b/tests/xfs/531
-new file mode 100755
-index 00000000..fd92c3ea
---- /dev/null
-+++ b/tests/xfs/531
-@@ -0,0 +1,84 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
-+#
-+# FS QA Test 531
-+#
-+# Execute fsstress with bmap_alloc_minlen_extent error tag enabled.
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+. ./common/inject
-+. ./common/populate
-+
-+# remove previous $seqres.full before test
-+rm -f $seqres.full
-+
-+# real QA test starts here
-+
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_debug
-+_require_test_program "punch-alternating"
-+_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-+
-+echo "Format and mount fs"
-+_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
-+_scratch_mount >> $seqres.full
-+
-+bsize=$(_get_file_block_size $SCRATCH_MNT)
-+
-+echo "Consume free space"
-+fillerdir=$SCRATCH_MNT/fillerdir
-+nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-+nr_free_blks=$((nr_free_blks * 90 / 100))
-+
-+_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 >> $seqres.full 2>&1
-+
-+echo "Create fragmented filesystem"
-+for dentry in $(ls -1 $fillerdir/); do
-+	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
-+done
-+
-+echo "Inject bmap_alloc_minlen_extent error tag"
-+_scratch_inject_error bmap_alloc_minlen_extent 1
-+
-+echo "Scale fsstress args"
-+args=$(_scale_fsstress_args -p $((LOAD_FACTOR * 75)) -n $((TIME_FACTOR * 1000)))
-+
-+echo "Execute fsstress in background"
-+$FSSTRESS_PROG -d $SCRATCH_MNT $args \
-+		 -f bulkstat=0 \
-+		 -f bulkstat1=0 \
-+		 -f fiemap=0 \
-+		 -f getattr=0 \
-+		 -f getdents=0 \
-+		 -f getfattr=0 \
-+		 -f listfattr=0 \
-+		 -f mread=0 \
-+		 -f read=0 \
-+		 -f readlink=0 \
-+		 -f readv=0 \
-+		 -f stat=0 \
-+		 -f aread=0 \
-+		 -f dread=0 > /dev/null 2>&1
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/531.out b/tests/xfs/531.out
-new file mode 100644
-index 00000000..67f40654
---- /dev/null
-+++ b/tests/xfs/531.out
-@@ -0,0 +1,7 @@
-+QA output created by 531
-+Format and mount fs
-+Consume free space
-+Create fragmented filesystem
-+Inject bmap_alloc_minlen_extent error tag
-+Scale fsstress args
-+Execute fsstress in background
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 81a15582..f4cb5af6 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -528,3 +528,4 @@
- 528 auto quick reflink
- 529 auto quick reflink
- 530 auto quick
-+531 auto stress
--- 
-2.29.2
+My report mentions XFS though it was so long ago I'm willing to treat it 
+as measurement error. I'll incorporate these numbers into the code, and 
+we'll see. Luckily I was already forced to have filesystem specific code 
+so the ugliness is already there.
+
+
 
