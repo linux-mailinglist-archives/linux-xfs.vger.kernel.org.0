@@ -2,94 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACF9E2FAABA
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 20:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D51FF2FAA55
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 20:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394010AbhART5X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 14:57:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390223AbhART5N (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 14:57:13 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAFFC061573;
-        Mon, 18 Jan 2021 11:56:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=CMLhf7QfjVVPxYqPIGZc4GL8WQClfgTC8bfupQgTGuM=; b=Hun+MHQAleUvzf4Xb/Ehiy4uPU
-        07BFH3dPhi+RyWtte58V7mThzljjBAZD43ixFvzb1V5lIphds18kcEY1vxQc3OXwWc8VDq+uZuhjJ
-        mGIcHZ5YFhRR+Xy1k1yMax1ZO+a52ufEmSWoovjmB5ReXoQ570oZLgzCGJpG+3hP38E3qb6jkwFag
-        W6APySu5REbOmqPHKV+Ju8jfg/BiAPzJmPdRSPR2eBut211hda7pHTWDiokovWifGvuD6reLCPOEK
-        YB++o1Y48om0JbzHw9a+TzJVq6z2BrzZJsOnZczAZBdGqWcSA9BVOnAZBa7xeSDfKzNOXvdS8cS6c
-        VSZUKSDQ==;
-Received: from 089144206130.atnat0015.highway.bob.at ([89.144.206.130] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1l1adR-00DKKY-Rn; Mon, 18 Jan 2021 19:56:27 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, avi@scylladb.com
-Subject: [PATCH 08/11] iomap: rename the flags variable in __iomap_dio_rw
-Date:   Mon, 18 Jan 2021 20:35:13 +0100
-Message-Id: <20210118193516.2915706-9-hch@lst.de>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210118193516.2915706-1-hch@lst.de>
-References: <20210118193516.2915706-1-hch@lst.de>
+        id S2437445AbhARTiI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 14:38:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437585AbhARTh7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 14:37:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2E5C2206BE;
+        Mon, 18 Jan 2021 19:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1610998639;
+        bh=ZPPagwuHY/Ki42R+NTEm/Tv7Ytrx5xOKgX//QIyXw30=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ArgC4gh3/qM6OWzQfXr1tDvbcmmtBWdSBZcK20UAbkeyhR7bcPjqQh/s2+vwBdBR2
+         1Ptv0oV/ZuzzjqpnEQ3QHNptIuEALuGlsMOrYNJ3USqn0WcDgwzu1HpnkoyaC2od5/
+         tYT04q2vHkNHAfcPRtS/+wspulbAHSREox95ho5M9ssS59coAzjkyYrhWhGf5v2jdd
+         JovEiizWuX2eXX27arMojwOjSTOKjSv4SG4RqdHhMR8cFh/7NsiKQ0wPymFBQHQTnP
+         DZWH10XU9y/PtQ7hXQXutvmvDSb2biV0CcnvuMtxASFARVIHfyzcEBz+Yjhim8pldr
+         TIZMyIAP1eXlw==
+Date:   Mon, 18 Jan 2021 11:37:18 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 3/6] xfs: don't stall cowblocks scan if we can't take
+ locks
+Message-ID: <20210118193718.GI3134581@magnolia>
+References: <161040735389.1582114.15084485390769234805.stgit@magnolia>
+ <161040737263.1582114.4973977520111925461.stgit@magnolia>
+ <X/8HLQGzXSbC2IIn@infradead.org>
+ <20210114215453.GG1164246@magnolia>
+ <20210118173412.GA3134885@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210118173412.GA3134885@infradead.org>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Rename flags to iomap_flags to make the usage a little more clear.
+On Mon, Jan 18, 2021 at 05:34:12PM +0000, Christoph Hellwig wrote:
+> On Thu, Jan 14, 2021 at 01:54:53PM -0800, Darrick J. Wong wrote:
+> > On Wed, Jan 13, 2021 at 03:43:57PM +0100, Christoph Hellwig wrote:
+> > > On Mon, Jan 11, 2021 at 03:22:52PM -0800, Darrick J. Wong wrote:
+> > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > > 
+> > > > Don't stall the cowblocks scan on a locked inode if we possibly can.
+> > > > We'd much rather the background scanner keep moving.
+> > > 
+> > > Wouldn't it make more sense to move the logic to ignore the -EAGAIN
+> > > for not-sync calls into xfs_inode_walk_ag?
+> > 
+> > I'm not sure what you're asking here?  _free_cowblocks only returns
+> > EAGAIN for sync calls.  Locking failure for a not-sync call results in a
+> > return 0, which means that _walk_ag just moves on to the next inode.
+> 
+> What I mean is:
+> 
+>  - always return -EAGAIN when taking the locks fails
+>  - don't exit early on -EAGAIN in xfs_inode_walk at least for sync
+>    calls, although thinking loud I see no good reason to exit early
+>    even for non-sync invocations
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/iomap/direct-io.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Ah, I see, you're asking why don't I make xfs_inode_walk responsible for
+deciding what to do about EAGAIN, instead of open-coding that in the
+->execute function.  That would be a nice cleanup since the walk
+function already has special casing for EFSCORRUPTED.
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 933f234d5becd0..604103ab76f9c5 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -427,7 +427,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	size_t count = iov_iter_count(iter);
- 	loff_t pos = iocb->ki_pos;
- 	loff_t end = iocb->ki_pos + count - 1, ret = 0;
--	unsigned int flags = IOMAP_DIRECT;
-+	unsigned int iomap_flags = IOMAP_DIRECT;
- 	struct blk_plug plug;
- 	struct iomap_dio *dio;
- 
-@@ -461,7 +461,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		if (iter_is_iovec(iter))
- 			dio->flags |= IOMAP_DIO_DIRTY;
- 	} else {
--		flags |= IOMAP_WRITE;
-+		iomap_flags |= IOMAP_WRITE;
- 		dio->flags |= IOMAP_DIO_WRITE;
- 
- 		/* for data sync or sync, we need sync completion processing */
-@@ -483,7 +483,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 			ret = -EAGAIN;
- 			goto out_free_dio;
- 		}
--		flags |= IOMAP_NOWAIT;
-+		iomap_flags |= IOMAP_NOWAIT;
- 	}
- 
- 	ret = filemap_write_and_wait_range(mapping, pos, end);
-@@ -514,7 +514,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 
- 	blk_start_plug(&plug);
- 	do {
--		ret = iomap_apply(inode, pos, count, flags, ops, dio,
-+		ret = iomap_apply(inode, pos, count, iomap_flags, ops, dio,
- 				iomap_dio_actor);
- 		if (ret <= 0) {
- 			/* magic error code to fall back to buffered I/O */
--- 
-2.29.2
+If I read you correctly, the relevant part of xfs_inode_walk becomes:
 
+	error = execute(batch[i]...);
+	xfs_irele(batch[i]);
+	if (error == -EAGAIN) {
+		if (args->flags & EOF_SYNC)
+			skipped++;
+		continue;
+	}
+
+and the relevant part of xfs_inode_free_eofblocks becomes:
+
+	if (!xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL))
+		return -EAGAIN;
+
+I think that would work, and afaict it won't cause any serious problems
+with the deferred inactivation series.
+
+--D
