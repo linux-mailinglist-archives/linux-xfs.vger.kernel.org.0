@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 557862F99D1
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 07:22:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09EFD2F99D0
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 07:22:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731683AbhARGVv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 01:21:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
+        id S1731928AbhARGVu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 01:21:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731648AbhARGVb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 01:21:31 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3882CC061757;
-        Sun, 17 Jan 2021 22:20:51 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id o20so1194408pfu.0;
-        Sun, 17 Jan 2021 22:20:51 -0800 (PST)
+        with ESMTP id S1731683AbhARGVd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 01:21:33 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B60CC0613C1;
+        Sun, 17 Jan 2021 22:20:53 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id md11so8812383pjb.0;
+        Sun, 17 Jan 2021 22:20:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dXh8gdoNbv/TtTkdd1We3ZVSTXnfbEKXi6TBqGYv5vk=;
-        b=WSRSwP4wMT4B8DyoOm2I3d4yRsPDYPeuPTAnVdLJK/cPKz/GaORSSQxuL9fgXR5Pcj
-         PuloPYApHXnmF/9PxvHC3/i3JoRK9QY/9VKD/niRg6wFov8k/C0YdBMqNR1b7skxvNRq
-         GgQqtPPFdI97AYjqzkk/NFviwjotk1RuG0AxpEzNw2xEVup5RTd6/o6AdcrUon9wpboD
-         ZMQi+NhHzaVXJYIQ6cDlaYarxEo92m1OfbYFlea4lb8LBHwxEnNm0DNnY8Z/qoZLo53G
-         yDx8XsusHaQLsSogGHVHEe2tUIFpxkrRm7SI/MzvvBb0+nYAp0WR/VKaJp0GY+a3twm0
-         2FqQ==
+        bh=JlURlfQZpNNMmIPVRCThz8X9YsyM5LYX1Ylt4W4EDyQ=;
+        b=pcFugMYS3wNtzR95ji4Zbv5ID49y8ttQgdD58gB8DuACr04d0SecAk36ed4OhaSEEc
+         D34mndn+ZSCFQi/rZtJi2c2e5TG3LK1PGHnSVp/gIs1IFgBxCLqnb6pYOzdHLrqPYkSa
+         KCVBwKpN+pJFyJWsIDB47fuq59AEI7AduOle1ZL3tVVSyG0Hq9GE/mTh0q+gZo18ahHW
+         VarL9Lui16le7izjmikSpRRCoqIxV04MfQE4s2fEUx5SAdiTWGw6Zv85GmtJ2AxyM44g
+         wilT7J7bwd6MZBJo9M9tTyc6qf5fdVPdKIDrbJ1Js2GpxFt4LGeXhezm2pZtAjxdADQe
+         E6bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dXh8gdoNbv/TtTkdd1We3ZVSTXnfbEKXi6TBqGYv5vk=;
-        b=RxTGxqFBOxxLdmvM0bvR1mX7NEaohV2Uwoomp5Bf02JS1WHtBFeCNHYhCxBMdiIT5l
-         sOZXAbLvJs0wnVDuA/IgevlJ+95pQV8pLy5B7LR7ao83HJiMl5p+kQoW0+AqD7ZuXIyl
-         kbG9XtbX+pFDMc7Q60vhkK0QPIGZR8uovGuBN1qo3Gc5iGyddCef5IiSARS7LFc456IJ
-         pVgD+DglGyRLWFEu6+8leVBi1JpTXBf7JRguaXNPnwQK5gcPwTgTkHNGlMIo49n3WuMv
-         6Xjv/2v0HeYlP8/yBVs61dTocnSP28HYFsxUTKtlhIXlIUCZaP7e5i4Pp9gYIfUGoKNG
-         MDZQ==
-X-Gm-Message-State: AOAM530fQfQRDOPu7kmrSUPMJLVsCWQ/0btLVvtfOPSjfGNUKewa/nLS
-        0/waCmmdspqqbBmNYsv2a13Q/4V64GU=
-X-Google-Smtp-Source: ABdhPJyySGJm195v14QJk2p1j2zjuQb+BDsXugK7xGSkcweqv0Z6nGP04peAkAMU/K1rBM8qr/dogw==
-X-Received: by 2002:a63:4b5c:: with SMTP id k28mr24207244pgl.294.1610950850641;
-        Sun, 17 Jan 2021 22:20:50 -0800 (PST)
+        bh=JlURlfQZpNNMmIPVRCThz8X9YsyM5LYX1Ylt4W4EDyQ=;
+        b=TrJxUAeVdPMrDl7iaXpJVLgsJ5FxUKQeNUKXKi3o46n89IIGktfZv7zzQRirjqlmsU
+         Btex/Ng/U3GYQFwYAJWdP95vqEJAj3RMEy2U8n2krP8ISHwTnfu7vd1W72oT5JCinLvV
+         wxbJHl5t3Da/b0nq0jy8RqR74CRBXwjdNvYDXXcxkaxwdydNjTIZ5hFsDdCi5kmViNbA
+         7eYY3K17AALRoxar7P6PyzZ1O5IgKN40it25F4ZYNJlSg+mu63QDcApcW+ZhKwnoXHzO
+         R0kBQowE+w48dOUSsSTyPG8mghj0efUhV9sqTzXBwQbtpvs51OHyjtge79p2XRnQFUSD
+         nBiA==
+X-Gm-Message-State: AOAM533eyYcOuLnpxgI5kcVYPIN4d88l9qwxFw5W1iZmp7tbc0rmuXBt
+        O9eZuOlKwacKjL6yBHJNV7jpLkbw1+I=
+X-Google-Smtp-Source: ABdhPJxWDp5OK8xYKlQR2XMtaDMmErLCZeRB/0eMc43rM7eV7TKL859Y1R67PgZeoXJsLlXjk3lkQw==
+X-Received: by 2002:a17:90b:e15:: with SMTP id ge21mr23777305pjb.185.1610950852914;
+        Sun, 17 Jan 2021 22:20:52 -0800 (PST)
 Received: from localhost.localdomain ([122.179.96.31])
-        by smtp.gmail.com with ESMTPSA id t1sm14608423pfq.154.2021.01.17.22.20.48
+        by smtp.gmail.com with ESMTPSA id t1sm14608423pfq.154.2021.01.17.22.20.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jan 2021 22:20:50 -0800 (PST)
+        Sun, 17 Jan 2021 22:20:52 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
         djwong@kernel.org
-Subject: [PATCH V4 03/11] xfs: Check for extent overflow when growing realtime bitmap/summary inodes
-Date:   Mon, 18 Jan 2021 11:50:14 +0530
-Message-Id: <20210118062022.15069-4-chandanrlinux@gmail.com>
+Subject: [PATCH V4 04/11] xfs: Check for extent overflow when punching a hole
+Date:   Mon, 18 Jan 2021 11:50:15 +0530
+Message-Id: <20210118062022.15069-5-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210118062022.15069-1-chandanrlinux@gmail.com>
 References: <20210118062022.15069-1-chandanrlinux@gmail.com>
@@ -64,34 +64,32 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Verify that XFS does not cause realtime bitmap/summary inode fork's
-extent count to overflow when growing the realtime volume associated
-with a filesystem.
+This test verifies that XFS does not cause inode fork's extent count to
+overflow when punching out an extent.
 
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- tests/xfs/523     | 119 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/523.out |  11 +++++
- tests/xfs/group   |   1 +
- 3 files changed, 131 insertions(+)
- create mode 100755 tests/xfs/523
- create mode 100644 tests/xfs/523.out
+ tests/xfs/524     | 84 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/524.out | 19 +++++++++++
+ tests/xfs/group   |  1 +
+ 3 files changed, 104 insertions(+)
+ create mode 100755 tests/xfs/524
+ create mode 100644 tests/xfs/524.out
 
-diff --git a/tests/xfs/523 b/tests/xfs/523
+diff --git a/tests/xfs/524 b/tests/xfs/524
 new file mode 100755
-index 00000000..145f0ff6
+index 00000000..79fa31d8
 --- /dev/null
-+++ b/tests/xfs/523
-@@ -0,0 +1,119 @@
++++ b/tests/xfs/524
+@@ -0,0 +1,84 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
 +#
-+# FS QA Test 523
++# FS QA Test 524
 +#
-+# Verify that XFS does not cause bitmap/summary inode fork's extent count to
-+# overflow when growing an the realtime volume of the filesystem.
-+#
++# Verify that XFS does not cause inode fork's extent count to overflow when
++# punching out an extent.
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
 +echo "QA output created by $seq"
@@ -104,16 +102,13 @@ index 00000000..145f0ff6
 +_cleanup()
 +{
 +	cd /
-+	_scratch_unmount >> $seqres.full 2>&1
-+	test -e "$rtdev" && losetup -d $rtdev >> $seqres.full 2>&1
-+	rm -f $tmp.* $TEST_DIR/$seq.rtvol
++	rm -f $tmp.*
 +}
 +
 +# get standard environment, filters and checks
 +. ./common/rc
 +. ./common/filter
 +. ./common/inject
-+. ./common/populate
 +
 +# remove previous $seqres.full before test
 +rm -f $seqres.full
@@ -121,113 +116,90 @@ index 00000000..145f0ff6
 +# real QA test starts here
 +
 +_supported_fs xfs
-+_require_test
++_require_scratch
 +_require_xfs_debug
-+_require_test_program "punch-alternating"
++_require_xfs_io_command "fpunch"
++_require_xfs_io_command "finsert"
++_require_xfs_io_command "fcollapse"
++_require_xfs_io_command "fzero"
 +_require_xfs_io_error_injection "reduce_max_iextents"
-+_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-+_require_scratch_nocheck
 +
-+echo "* Test extending rt inodes"
-+
-+_scratch_mkfs | _filter_mkfs >> $seqres.full 2> $tmp.mkfs
-+. $tmp.mkfs
-+
-+echo "Create fake rt volume"
-+nr_bitmap_blks=25
-+nr_bits=$((nr_bitmap_blks * dbsize * 8))
-+rtextsz=$dbsize
-+rtdevsz=$((nr_bits * rtextsz))
-+truncate -s $rtdevsz $TEST_DIR/$seq.rtvol
-+rtdev=$(_create_loop_device $TEST_DIR/$seq.rtvol)
-+
-+echo "Format and mount rt volume"
-+
-+export USE_EXTERNAL=yes
-+export SCRATCH_RTDEV=$rtdev
-+_scratch_mkfs -d size=$((1024 * 1024 * 1024)) \
-+	      -r size=2M,extsize=${rtextsz} >> $seqres.full
++echo "Format and mount fs"
++_scratch_mkfs >> $seqres.full
 +_scratch_mount >> $seqres.full
 +
-+echo "Consume free space"
-+fillerdir=$SCRATCH_MNT/fillerdir
-+nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-+nr_free_blks=$((nr_free_blks * 90 / 100))
++bsize=$(_get_file_block_size $SCRATCH_MNT)
++nr_blks=30
 +
-+_fill_fs $((dbsize * nr_free_blks)) $fillerdir $dbsize 0 >> $seqres.full 2>&1
-+
-+echo "Create fragmented filesystem"
-+for dentry in $(ls -1 $fillerdir/); do
-+	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
-+done
++testfile=$SCRATCH_MNT/testfile
 +
 +echo "Inject reduce_max_iextents error tag"
 +_scratch_inject_error reduce_max_iextents 1
 +
-+echo "Inject bmap_alloc_minlen_extent error tag"
-+_scratch_inject_error bmap_alloc_minlen_extent 1
++for op in fpunch finsert fcollapse fzero; do
++	echo "* $op regular file"
 +
-+echo "Grow realtime volume"
-+$XFS_GROWFS_PROG -r $SCRATCH_MNT >> $seqres.full 2>&1
-+if [[ $? == 0 ]]; then
-+	echo "Growfs succeeded; should have failed."
-+	exit 1
-+fi
++	echo "Create \$testfile"
++	$XFS_IO_PROG -f -s \
++		     -c "pwrite -b $((nr_blks * bsize)) 0 $((nr_blks * bsize))" \
++		     $testfile  >> $seqres.full
 +
-+_scratch_unmount >> $seqres.full
++	echo "$op alternating blocks"
++	for i in $(seq 1 2 $((nr_blks - 1))); do
++		$XFS_IO_PROG -f -c "$op $((i * bsize)) $bsize" $testfile \
++		       >> $seqres.full 2>&1
++		[[ $? != 0 ]] && break
++	done
 +
-+echo "Verify rbmino's and rsumino's extent count"
-+for rtino in rbmino rsumino; do
-+	ino=$(_scratch_xfs_db -c sb -c "print $rtino")
-+	ino=${ino##${rtino} = }
-+	echo "$rtino = $ino" >> $seqres.full
++	echo "Verify \$testfile's extent count"
 +
-+	nextents=$(_scratch_get_iext_count $ino data || \
-+			_fail "Unable to obtain inode fork's extent count")
++	nextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep -i nextents)
++	nextents=${nextents##fsxattr.nextents = }
 +	if (( $nextents > 10 )); then
 +		echo "Extent count overflow check failed: nextents = $nextents"
 +		exit 1
 +	fi
++
++	rm $testfile
 +done
-+
-+echo "Check filesystem"
-+_check_xfs_filesystem $SCRATCH_DEV none $rtdev
-+
-+losetup -d $rtdev
-+rm -f $TEST_DIR/$seq.rtvol
-+
-+export USE_EXTERNAL=""
-+export SCRATCH_RTDEV=""
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/523.out b/tests/xfs/523.out
+diff --git a/tests/xfs/524.out b/tests/xfs/524.out
 new file mode 100644
-index 00000000..7df02970
+index 00000000..a957f9c7
 --- /dev/null
-+++ b/tests/xfs/523.out
-@@ -0,0 +1,11 @@
-+QA output created by 523
-+* Test extending rt inodes
-+Create fake rt volume
-+Format and mount rt volume
-+Consume free space
-+Create fragmented filesystem
++++ b/tests/xfs/524.out
+@@ -0,0 +1,19 @@
++QA output created by 524
++Format and mount fs
 +Inject reduce_max_iextents error tag
-+Inject bmap_alloc_minlen_extent error tag
-+Grow realtime volume
-+Verify rbmino's and rsumino's extent count
-+Check filesystem
++* fpunch regular file
++Create $testfile
++fpunch alternating blocks
++Verify $testfile's extent count
++* finsert regular file
++Create $testfile
++finsert alternating blocks
++Verify $testfile's extent count
++* fcollapse regular file
++Create $testfile
++fcollapse alternating blocks
++Verify $testfile's extent count
++* fzero regular file
++Create $testfile
++fzero alternating blocks
++Verify $testfile's extent count
 diff --git a/tests/xfs/group b/tests/xfs/group
-index 1831f0b5..018c70ef 100644
+index 018c70ef..3fa38c36 100644
 --- a/tests/xfs/group
 +++ b/tests/xfs/group
-@@ -520,3 +520,4 @@
- 520 auto quick reflink
+@@ -521,3 +521,4 @@
  521 auto quick realtime growfs
  522 auto quick quota
-+523 auto quick realtime growfs
+ 523 auto quick realtime growfs
++524 auto quick punch zero insert collapse
 -- 
 2.29.2
 
