@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51D492F99DA
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 07:24:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CED42F99D8
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 07:24:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732390AbhARGWu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 01:22:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33992 "EHLO
+        id S1732328AbhARGWc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 01:22:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732203AbhARGWU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 01:22:20 -0500
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 008DAC061793;
-        Sun, 17 Jan 2021 22:21:06 -0800 (PST)
-Received: by mail-pg1-x529.google.com with SMTP id i7so10304031pgc.8;
-        Sun, 17 Jan 2021 22:21:06 -0800 (PST)
+        with ESMTP id S1732262AbhARGWX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jan 2021 01:22:23 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A56C061794;
+        Sun, 17 Jan 2021 22:21:09 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id t6so8084163plq.1;
+        Sun, 17 Jan 2021 22:21:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MIvnJ0VsDhNnrp8Hs5gLG61IFY55F0VThKgOo2dcDHI=;
-        b=a3OxbXxQSDDnBU5kEuXvEzm6TGCO7E2XuFasNdiIibXP+iIekCCHwv7Jh1uQULOWXU
-         87e15c4pDuZKdi13TWWcNWE4VOvvE3kVZwvVuYvT8CfbPPEqiv0e8q6Hr/Y6hWA8Z/74
-         IXlDEfJgya2g5R24tEZdMgMICgu98emxQSWGSrCwGCa4taMYGcKAQ/46Y0tzubA4Lc2h
-         SFnA7hGuJxtKAknCz/MeWUQtDPwTInKc5IowXxkz+0dJJVc+00rkGXUC3qKjG+4YXG5v
-         yemrmyl3rGPqB4wIPiCnwcN31R/6/J2cDUT4pp+7Z3kovS7VYZA6t50i0oW3agq4C09k
-         WwJA==
+        bh=AGBhOkzc7abONTpUtgMEjxirIhOapL82Xzhyg1JPP1A=;
+        b=GLokwA88TdhpVog/ezxJvyH90S9sQPOJ5I0BdKpXgBwwgq/b8W0REafwp+PS6RE3L1
+         8VnOD1wDT1fn7IDMSjf7b35J5Y6wfjmkBrZweFMY1oMrVIGEKzE+JNlySiKf5TiXX5MP
+         qEXznRFke1lSYzRWZ3wUewDJTCW3YAGuG7WPdQ5TcbhR5f3vj+0ClyCt9K1vJx5ZlHgs
+         xKyk2fwMS0gFqIpJW6gAkXYi+YbcNww4AaA9zWFE/lyrlFJO3S7/DcpfJ+QQTO36Bh4j
+         YUScdA13eG+6jQsFs6CIh3SrJFiDkfCeOV+SrFT5mkOVMeVFfCak8nh2/AukumC/Tv5B
+         /ZJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MIvnJ0VsDhNnrp8Hs5gLG61IFY55F0VThKgOo2dcDHI=;
-        b=HtzrlZ/kNrtoAoNYwQDQFEajn/cdYXPvAt8cudvEktLLBmPQj8MNcEoJuu4GbkO+tg
-         nXkfbmxq6dYu8Br3g00r4L2oa18g6jyqvxoy9JqrnAb8r3TVi9f0uTRb3G82CfE0gaBr
-         mkKOxqIgtOK4GfBrLciBavmB75rnqy7Vsl3rzTX7G3pfhIpZ/sP1xK9LAxqIwqHCZ/+9
-         3VaCwTdwFPNreGq7u2WGmKoTOUZXmlz8bfp/aJcAutbfLeGFoi9pQSYNr/gNV5PQ1VHx
-         kFv7PAhk8/goNOxRX6ulj0jxWhIFy0+WLhoqErl6J/idcVSUjffSw6MBRgZl8nC0HZ3J
-         zz5g==
-X-Gm-Message-State: AOAM532PLk0GGL4G8YWo3ABhhChVnyIst9dq8ww6WfxlFluV5ifD+lP7
-        w7BdMGmcYB2Vq/D4SrJ1nnONVit/jQ4=
-X-Google-Smtp-Source: ABdhPJzuQjUwpL//jMBAmj96Z7oGNxLReANFeOXllzPK//EiPgKBchwQ/GGMVDl9mi9b7pmSUjStRQ==
-X-Received: by 2002:a63:585a:: with SMTP id i26mr24425570pgm.330.1610950866463;
-        Sun, 17 Jan 2021 22:21:06 -0800 (PST)
+        bh=AGBhOkzc7abONTpUtgMEjxirIhOapL82Xzhyg1JPP1A=;
+        b=iFn9VOZuTG8aLpp7hBpTNfahvjAOliKZP+2apQ9q27XyaQ3tIT8lIGuvbdOjMiQvAS
+         QFUbRNbiNuG4vU39S/ChHBdxrQEJGuFzSCAORKo0Xoipk8ndVKICgLfD+1tKCJl3sdOF
+         qDi3R6hdOit8JAp1tNLtEplq5zg/e562H2ktczvHXk8f1XcPucod0B2fU2jtd/0vf8sQ
+         jLMmT4XKWJ9QgXO50egBRX28Oc8l/vpZED65MKkYzE33NmQexcwjBM9t8/Byv/+XADcC
+         j/aDwEukiiWMxGSFaK+3hgsD5XcGwf9+3Fn+D7r1HSlvKMJ809+k8NBjYBbvOeEiaXVw
+         eEvw==
+X-Gm-Message-State: AOAM531c3HV72SpcJfCfXocAIFD6YxeRU3JZ67gov3xqm70goVXY6dUE
+        slTAyVf7AbqjogVzQRwjxuZ+41FShg0=
+X-Google-Smtp-Source: ABdhPJzoi8sBcRNyLJ5p/V4vdIHKmpIvfEFvejHWc3xfxzNIQ0XbPOvNcDX+nRtHhGpLDPnYV/fsQg==
+X-Received: by 2002:a17:90a:a60d:: with SMTP id c13mr25067886pjq.11.1610950868686;
+        Sun, 17 Jan 2021 22:21:08 -0800 (PST)
 Received: from localhost.localdomain ([122.179.96.31])
-        by smtp.gmail.com with ESMTPSA id t1sm14608423pfq.154.2021.01.17.22.21.04
+        by smtp.gmail.com with ESMTPSA id t1sm14608423pfq.154.2021.01.17.22.21.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Jan 2021 22:21:06 -0800 (PST)
+        Sun, 17 Jan 2021 22:21:08 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, darrick.wong@oracle.com,
         djwong@kernel.org
-Subject: [PATCH V4 10/11] xfs: Check for extent overflow when swapping extents
-Date:   Mon, 18 Jan 2021 11:50:21 +0530
-Message-Id: <20210118062022.15069-11-chandanrlinux@gmail.com>
+Subject: [PATCH V4 11/11] xfs: Stress test with bmap_alloc_minlen_extent error tag enabled
+Date:   Mon, 18 Jan 2021 11:50:22 +0530
+Message-Id: <20210118062022.15069-12-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210118062022.15069-1-chandanrlinux@gmail.com>
 References: <20210118062022.15069-1-chandanrlinux@gmail.com>
@@ -64,32 +64,32 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This test verifies that XFS does not cause inode fork's extent count to
-overflow when swapping forks across two files.
+This commit adds a stress test that executes fsstress with
+bmap_alloc_minlen_extent error tag enabled.
 
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- tests/xfs/530     | 109 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/530.out |  13 ++++++
- tests/xfs/group   |   1 +
- 3 files changed, 123 insertions(+)
- create mode 100755 tests/xfs/530
- create mode 100644 tests/xfs/530.out
+ tests/xfs/531     | 84 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/531.out |  7 ++++
+ tests/xfs/group   |  1 +
+ 3 files changed, 92 insertions(+)
+ create mode 100755 tests/xfs/531
+ create mode 100644 tests/xfs/531.out
 
-diff --git a/tests/xfs/530 b/tests/xfs/530
+diff --git a/tests/xfs/531 b/tests/xfs/531
 new file mode 100755
-index 00000000..0986d8bf
+index 00000000..fd92c3ea
 --- /dev/null
-+++ b/tests/xfs/530
-@@ -0,0 +1,109 @@
++++ b/tests/xfs/531
+@@ -0,0 +1,84 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
 +#
-+# FS QA Test 530
++# FS QA Test 531
 +#
-+# Verify that XFS does not cause inode fork's extent count to overflow when
-+# swapping forks between files
++# Execute fsstress with bmap_alloc_minlen_extent error tag enabled.
++#
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
 +echo "QA output created by $seq"
@@ -109,6 +109,7 @@ index 00000000..0986d8bf
 +. ./common/rc
 +. ./common/filter
 +. ./common/inject
++. ./common/populate
 +
 +# remove previous $seqres.full before test
 +rm -f $seqres.full
@@ -118,107 +119,75 @@ index 00000000..0986d8bf
 +_supported_fs xfs
 +_require_scratch
 +_require_xfs_debug
-+_require_xfs_scratch_rmapbt
-+_require_xfs_io_command "fcollapse"
-+_require_xfs_io_command "swapext"
-+_require_xfs_io_error_injection "reduce_max_iextents"
-+
-+echo "* Swap extent forks"
++_require_test_program "punch-alternating"
++_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
 +
 +echo "Format and mount fs"
-+_scratch_mkfs >> $seqres.full
++_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
 +_scratch_mount >> $seqres.full
 +
-+bsize=$(_get_block_size $SCRATCH_MNT)
++bsize=$(_get_file_block_size $SCRATCH_MNT)
 +
-+srcfile=${SCRATCH_MNT}/srcfile
-+donorfile=${SCRATCH_MNT}/donorfile
++echo "Consume free space"
++fillerdir=$SCRATCH_MNT/fillerdir
++nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
++nr_free_blks=$((nr_free_blks * 90 / 100))
 +
-+echo "Create \$donorfile having an extent of length 67 blocks"
-+$XFS_IO_PROG -f -s -c "pwrite -b $((17 * bsize)) 0 $((17 * bsize))" $donorfile \
-+       >> $seqres.full
++_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 >> $seqres.full 2>&1
 +
-+# After the for loop the donor file will have the following extent layout
-+# | 0-4 | 5 | 6 | 7 | 8 | 9 | 10 |
-+echo "Fragment \$donorfile"
-+for i in $(seq 5 10); do
-+	start_offset=$((i * bsize))
-+	$XFS_IO_PROG -f -c "fcollapse $start_offset $bsize" $donorfile >> $seqres.full
++echo "Create fragmented filesystem"
++for dentry in $(ls -1 $fillerdir/); do
++	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
 +done
 +
-+echo "Create \$srcfile having an extent of length 18 blocks"
-+$XFS_IO_PROG -f -s -c "pwrite -b $((18 * bsize)) 0 $((18 * bsize))" $srcfile \
-+       >> $seqres.full
++echo "Inject bmap_alloc_minlen_extent error tag"
++_scratch_inject_error bmap_alloc_minlen_extent 1
 +
-+echo "Fragment \$srcfile"
-+# After the for loop the src file will have the following extent layout
-+# | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7-10 |
-+for i in $(seq 1 7); do
-+	start_offset=$((i * bsize))
-+	$XFS_IO_PROG -f -c "fcollapse $start_offset $bsize" $srcfile >> $seqres.full
-+done
++echo "Scale fsstress args"
++args=$(_scale_fsstress_args -p $((LOAD_FACTOR * 75)) -n $((TIME_FACTOR * 1000)))
 +
-+echo "Collect \$donorfile's extent count"
-+donor_nr_exts=$($XFS_IO_PROG -c 'stat' $donorfile | grep nextents)
-+donor_nr_exts=${donor_nr_exts##fsxattr.nextents = }
-+
-+echo "Collect \$srcfile's extent count"
-+src_nr_exts=$($XFS_IO_PROG -c 'stat' $srcfile | grep nextents)
-+src_nr_exts=${src_nr_exts##fsxattr.nextents = }
-+
-+echo "Inject reduce_max_iextents error tag"
-+_scratch_inject_error reduce_max_iextents 1
-+
-+echo "Swap \$srcfile's and \$donorfile's extent forks"
-+$XFS_IO_PROG -f -c "swapext $donorfile" $srcfile >> $seqres.full 2>&1
-+
-+echo "Check for \$donorfile's extent count overflow"
-+nextents=$($XFS_IO_PROG -c 'stat' $donorfile | grep nextents)
-+nextents=${nextents##fsxattr.nextents = }
-+
-+if (( $nextents == $src_nr_exts )); then
-+	echo "\$donorfile: Extent count overflow check failed"
-+fi
-+
-+echo "Check for \$srcfile's extent count overflow"
-+nextents=$($XFS_IO_PROG -c 'stat' $srcfile | grep nextents)
-+nextents=${nextents##fsxattr.nextents = }
-+
-+if (( $nextents == $donor_nr_exts )); then
-+	echo "\$srcfile: Extent count overflow check failed"
-+fi
++echo "Execute fsstress in background"
++$FSSTRESS_PROG -d $SCRATCH_MNT $args \
++		 -f bulkstat=0 \
++		 -f bulkstat1=0 \
++		 -f fiemap=0 \
++		 -f getattr=0 \
++		 -f getdents=0 \
++		 -f getfattr=0 \
++		 -f listfattr=0 \
++		 -f mread=0 \
++		 -f read=0 \
++		 -f readlink=0 \
++		 -f readv=0 \
++		 -f stat=0 \
++		 -f aread=0 \
++		 -f dread=0 > /dev/null 2>&1
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/530.out b/tests/xfs/530.out
+diff --git a/tests/xfs/531.out b/tests/xfs/531.out
 new file mode 100644
-index 00000000..9f55608b
+index 00000000..67f40654
 --- /dev/null
-+++ b/tests/xfs/530.out
-@@ -0,0 +1,13 @@
-+QA output created by 530
-+* Swap extent forks
++++ b/tests/xfs/531.out
+@@ -0,0 +1,7 @@
++QA output created by 531
 +Format and mount fs
-+Create $donorfile having an extent of length 67 blocks
-+Fragment $donorfile
-+Create $srcfile having an extent of length 18 blocks
-+Fragment $srcfile
-+Collect $donorfile's extent count
-+Collect $srcfile's extent count
-+Inject reduce_max_iextents error tag
-+Swap $srcfile's and $donorfile's extent forks
-+Check for $donorfile's extent count overflow
-+Check for $srcfile's extent count overflow
++Consume free space
++Create fragmented filesystem
++Inject bmap_alloc_minlen_extent error tag
++Scale fsstress args
++Execute fsstress in background
 diff --git a/tests/xfs/group b/tests/xfs/group
-index bc3958b3..81a15582 100644
+index 81a15582..f4cb5af6 100644
 --- a/tests/xfs/group
 +++ b/tests/xfs/group
-@@ -527,3 +527,4 @@
- 527 auto quick
+@@ -528,3 +528,4 @@
  528 auto quick reflink
  529 auto quick reflink
-+530 auto quick
+ 530 auto quick
++531 auto stress
 -- 
 2.29.2
 
