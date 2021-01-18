@@ -2,33 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A87F2FAD31
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC382FAD35
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jan 2021 23:14:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbhARWOF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jan 2021 17:14:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34380 "EHLO mail.kernel.org"
+        id S2388191AbhARWOO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jan 2021 17:14:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388385AbhARWOE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 18 Jan 2021 17:14:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 999CC22DD3;
-        Mon, 18 Jan 2021 22:13:23 +0000 (UTC)
+        id S1732974AbhARWOK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 18 Jan 2021 17:14:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 218B722DFB;
+        Mon, 18 Jan 2021 22:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611008003;
-        bh=GYndIRUE5HUNFstT9X5Mojm5wZ7DhH8MoiiK10bvbMM=;
+        s=k20201202; t=1611008009;
+        bh=hcBSPhB9+wDzT8ljDn3G4d5RWDDaMMWxm0ktf+185Ck=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=e2p6yVl6gSop3IrZ6yTgteaT7J7hQq8LDZR6iL24LHmxx4g0ObcNBis9ZGLjlUPUn
-         mfrcZ277tCEwUJe4yx0jf63LrLv5/nxZGRf3MqucwAhfcqC6tCZHdNTwgOkNIpML6s
-         5ka4tRbFruN4EsDF5r01MqfpKIP6tMSE0K/Ay6rJ67LF31kY4d5NPw3pxI3h9/6qzm
-         gtLmgNwEmzC//UjCezhRqWLvir895Zy6c04MwfwGroxrQCOnYTiwBoe7kLT7J1NOK7
-         05em8KR/zHNw9HTe4ZUJuCKJlW8kNMQ81f4s14xZccHRLVo7FEGbhlbM2HsD/uDsCu
-         ya32QX7K//uhQ==
-Subject: [PATCH 04/10] xfs: remove trivial eof/cowblocks functions
+        b=TVpoBKbaMvkMZHd9z/WW5Ts45/KiLqKMLfrPpWQoXE5tHLfK045zgcxLg82relZDW
+         RFCBkeMMaA7qYAFSDIP172rIwcrKxX66t5cy5/DIH7HqAl5T1CC3AvhX0miosHT7Y2
+         bYUxDEc/NdbRhWyIMSdsHZpGXQxVu5390HQAfSl6o5r4nNgFt1AfJbKYY2uZ9RAPMn
+         pMnoDw/p9oxQLpzdxjCxsvJ09NW6b9S6pQZ3B1CDfQhSvZURX5cFstQMK/JofAYwmg
+         q87XstuidPKstvVUV9CrJLwkV2SONf9/KNknrSa2irNn9hC1f8iabfwDdIJ24+5VIs
+         frAvtTZj5FY0A==
+Subject: [PATCH 05/10] xfs: increase the default parallelism levels of pwork
+ clients
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 18 Jan 2021 14:13:23 -0800
-Message-ID: <161100800330.90204.7868136774892860968.stgit@magnolia>
+Date:   Mon, 18 Jan 2021 14:13:28 -0800
+Message-ID: <161100800882.90204.6003697594198832699.stgit@magnolia>
 In-Reply-To: <161100798100.90204.7839064495063223590.stgit@magnolia>
 References: <161100798100.90204.7839064495063223590.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,84 +42,142 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Get rid of these trivial helpers.
+Increase the default parallelism level for pwork clients so that we can
+take advantage of computers with a lot of CPUs and a lot of hardware.
+The posteof/cowblocks cleanup series will use the functionality
+presented in this patch to constrain the number of background per-ag gc
+threads to our best estimate of the amount of parallelism that the
+filesystem can sustain.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_icache.c |   30 ++++++++----------------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
+ fs/xfs/xfs_iwalk.c |    2 +
+ fs/xfs/xfs_pwork.c |   80 +++++++++++++++++++++++++++++++++++++++++++++++-----
+ fs/xfs/xfs_pwork.h |    3 +-
+ 3 files changed, 76 insertions(+), 9 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 097dd979e182..1d06dcc4339e 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1324,15 +1324,6 @@ xfs_inode_free_eofblocks(
- 	return ret;
+diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+index eae3aff9bc97..bb31ef870cdc 100644
+--- a/fs/xfs/xfs_iwalk.c
++++ b/fs/xfs/xfs_iwalk.c
+@@ -624,7 +624,7 @@ xfs_iwalk_threaded(
+ 	ASSERT(agno < mp->m_sb.sb_agcount);
+ 	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
+ 
+-	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
++	nr_threads = xfs_pwork_guess_workqueue_threads(mp);
+ 	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
+ 			nr_threads);
+ 	if (error)
+diff --git a/fs/xfs/xfs_pwork.c b/fs/xfs/xfs_pwork.c
+index b03333f1c84a..53606397ff54 100644
+--- a/fs/xfs/xfs_pwork.c
++++ b/fs/xfs/xfs_pwork.c
+@@ -118,19 +118,85 @@ xfs_pwork_poll(
+ 		touch_softlockup_watchdog();
  }
  
--static int
--xfs_icache_free_eofblocks(
--	struct xfs_mount	*mp,
--	struct xfs_eofblocks	*eofb)
--{
--	return xfs_inode_walk(mp, 0, xfs_inode_free_eofblocks, eofb,
--			XFS_ICI_EOFBLOCKS_TAG);
--}
--
++/* Estimate the amount of parallelism available for a storage device. */
++static unsigned int
++xfs_guess_buftarg_parallelism(
++	struct xfs_buftarg	*btp)
++{
++	int			iomin;
++	int			ioopt;
++
++	/*
++	 * The device tells us that it is non-rotational, and we take that to
++	 * mean there are no moving parts and that the device can handle all
++	 * the CPUs throwing IO requests at it.
++	 */
++	if (blk_queue_nonrot(btp->bt_bdev->bd_disk->queue))
++		return num_online_cpus();
++
++	/*
++	 * The device has a preferred and minimum IO size that suggest a RAID
++	 * setup, so infer the number of disks and assume that the parallelism
++	 * is equal to the disk count.
++	 */
++	iomin = bdev_io_min(btp->bt_bdev);
++	ioopt = bdev_io_opt(btp->bt_bdev);
++	if (iomin > 0 && ioopt > iomin)
++		return ioopt / iomin;
++
++	/*
++	 * The device did not indicate that it has any capabilities beyond that
++	 * of a rotating disk with a single drive head, so we estimate no
++	 * parallelism at all.
++	 */
++	return 1;
++}
++
  /*
-  * Background scanning to trim post-EOF preallocated space. This is queued
-  * based on the 'speculative_prealloc_lifetime' tunable (5m by default).
-@@ -1358,7 +1349,8 @@ xfs_eofblocks_worker(
- 
- 	if (!sb_start_write_trylock(mp->m_super))
- 		return;
--	xfs_icache_free_eofblocks(mp, NULL);
-+	xfs_inode_walk(mp, 0, xfs_inode_free_eofblocks, NULL,
-+			XFS_ICI_EOFBLOCKS_TAG);
- 	sb_end_write(mp->m_super);
- 
- 	xfs_queue_eofblocks(mp);
-@@ -1567,15 +1559,6 @@ xfs_inode_free_cowblocks(
- 	return ret;
- }
- 
--static int
--xfs_icache_free_cowblocks(
--	struct xfs_mount	*mp,
--	struct xfs_eofblocks	*eofb)
--{
--	return xfs_inode_walk(mp, 0, xfs_inode_free_cowblocks, eofb,
--			XFS_ICI_COWBLOCKS_TAG);
--}
--
- /*
-  * Background scanning to trim preallocated CoW space. This is queued
-  * based on the 'speculative_cow_prealloc_lifetime' tunable (5m by default).
-@@ -1602,7 +1585,8 @@ xfs_cowblocks_worker(
- 
- 	if (!sb_start_write_trylock(mp->m_super))
- 		return;
--	xfs_icache_free_cowblocks(mp, NULL);
-+	xfs_inode_walk(mp, 0, xfs_inode_free_cowblocks, NULL,
-+			XFS_ICI_COWBLOCKS_TAG);
- 	sb_end_write(mp->m_super);
- 
- 	xfs_queue_cowblocks(mp);
-@@ -1653,11 +1637,13 @@ xfs_blockgc_scan(
+- * Return the amount of parallelism that the data device can handle, or 0 for
+- * no limit.
++ * Estimate the amount of parallelism that is available for metadata operations
++ * on this filesystem.
+  */
+ unsigned int
+-xfs_pwork_guess_datadev_parallelism(
++xfs_pwork_guess_metadata_threads(
+ 	struct xfs_mount	*mp)
  {
- 	int			error;
+-	struct xfs_buftarg	*btp = mp->m_ddev_targp;
++	unsigned int		threads;
  
--	error = xfs_icache_free_eofblocks(mp, eofb);
-+	error = xfs_inode_walk(mp, 0, xfs_inode_free_eofblocks, eofb,
-+			XFS_ICI_EOFBLOCKS_TAG);
- 	if (error)
- 		return error;
+ 	/*
+-	 * For now we'll go with the most conservative setting possible,
+-	 * which is two threads for an SSD and 1 thread everywhere else.
++	 * Estimate the amount of parallelism for metadata operations from the
++	 * least capable of the two devices that handle metadata.  Cap that
++	 * estimate to the number of AGs to avoid unnecessary lock contention.
+ 	 */
+-	return blk_queue_nonrot(btp->bt_bdev->bd_disk->queue) ? 2 : 1;
++	threads = xfs_guess_buftarg_parallelism(mp->m_ddev_targp);
++	if (mp->m_logdev_targp != mp->m_ddev_targp)
++		threads = min(xfs_guess_buftarg_parallelism(mp->m_logdev_targp),
++			      threads);
++	threads = min(mp->m_sb.sb_agcount, threads);
++
++	/* If the storage told us it has fancy capabilities, we're done. */
++	if (threads > 1)
++		goto clamp;
++
++	/*
++	 * Metadata storage did not even hint that it has any parallel
++	 * capability.  If the filesystem was formatted with a stripe unit and
++	 * width, we'll treat that as evidence of a RAID setup and estimate
++	 * the number of disks.
++	 */
++	if (mp->m_sb.sb_unit > 0 && mp->m_sb.sb_width > mp->m_sb.sb_unit)
++		threads = mp->m_sb.sb_width / mp->m_sb.sb_unit;
++
++clamp:
++	/* Don't return an estimate larger than the CPU count. */
++	return min(num_online_cpus(), threads);
++}
++
++/* Estimate how many threads we need for a parallel work queue. */
++unsigned int
++xfs_pwork_guess_workqueue_threads(
++	struct xfs_mount	*mp)
++{
++	/* pwork queues are not unbounded, so we have to abide WQ_MAX_ACTIVE. */
++	return min_t(unsigned int, xfs_pwork_guess_metadata_threads(mp),
++			WQ_MAX_ACTIVE);
+ }
+diff --git a/fs/xfs/xfs_pwork.h b/fs/xfs/xfs_pwork.h
+index 8133124cf3bb..6320bca9c554 100644
+--- a/fs/xfs/xfs_pwork.h
++++ b/fs/xfs/xfs_pwork.h
+@@ -56,6 +56,7 @@ int xfs_pwork_init(struct xfs_mount *mp, struct xfs_pwork_ctl *pctl,
+ void xfs_pwork_queue(struct xfs_pwork_ctl *pctl, struct xfs_pwork *pwork);
+ int xfs_pwork_destroy(struct xfs_pwork_ctl *pctl);
+ void xfs_pwork_poll(struct xfs_pwork_ctl *pctl);
+-unsigned int xfs_pwork_guess_datadev_parallelism(struct xfs_mount *mp);
++unsigned int xfs_pwork_guess_metadata_threads(struct xfs_mount *mp);
++unsigned int xfs_pwork_guess_workqueue_threads(struct xfs_mount *mp);
  
--	error = xfs_icache_free_cowblocks(mp, eofb);
-+	error = xfs_inode_walk(mp, 0, xfs_inode_free_cowblocks, eofb,
-+			XFS_ICI_COWBLOCKS_TAG);
- 	if (error)
- 		return error;
- 
+ #endif /* __XFS_PWORK_H__ */
 
