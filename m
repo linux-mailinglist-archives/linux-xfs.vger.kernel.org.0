@@ -2,99 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DB3A2FBAB2
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 16:05:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D32E2FBB1F
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 16:27:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbhASPDw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 19 Jan 2021 10:03:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:50698 "EHLO
+        id S2389567AbhASPZj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 Jan 2021 10:25:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41080 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390548AbhASOj0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Jan 2021 09:39:26 -0500
+        by vger.kernel.org with ESMTP id S2391480AbhASPYu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Jan 2021 10:24:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611067079;
+        s=mimecast20190719; t=1611069804;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=4X0aSRcZWHASUcoiod1Bmt8ZeZURe34BJDJA1CdM9Ho=;
-        b=ItRBXqhyxySvoQ7gAjKAYKacLR1tHrMElPxhaEJmAEL+BhPIqulzrlJ4pKc0d19S9UBM6G
-        S9M7GbNo5sjXrCH9lKLf5wCXl6lK7arvX0jfsv+8cmCT4T/rN2GHY7rbOwoDKuYi6kat1l
-        8R16yaFZ3J+gST+iwmUlYjSkQNGIKEU=
+        bh=cMfoMfj22BY1KKl54jQ/V7G1fwpSus/XU7Im4QVgTno=;
+        b=FibEfAoFPxmqzhcgR88xEmxXHUcYtv9qbGd3H8IMusI7eeqX7fD55IwDTc9X5mdnoGn+8d
+        JWeH3tFospnbW49QSs/dy9LhAnf+ahGeHmAVvkOuNkaupF7Wx46GzOO/M6y/MBf7hXtnid
+        tF2itE9m+iKzH9na2EpBxf0Yk495jGc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-1LxMpFeSM4OsuV1J6Msi7w-1; Tue, 19 Jan 2021 09:37:57 -0500
-X-MC-Unique: 1LxMpFeSM4OsuV1J6Msi7w-1
+ us-mta-209-RIXTcbs-MVm5fnHrFtQVRg-1; Tue, 19 Jan 2021 10:23:20 -0500
+X-MC-Unique: RIXTcbs-MVm5fnHrFtQVRg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 825C3801817;
-        Tue, 19 Jan 2021 14:37:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73C87107ACE6;
+        Tue, 19 Jan 2021 15:23:19 +0000 (UTC)
 Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0844062A25;
-        Tue, 19 Jan 2021 14:37:55 +0000 (UTC)
-Date:   Tue, 19 Jan 2021 09:37:54 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C656B6A914;
+        Tue, 19 Jan 2021 15:23:18 +0000 (UTC)
+Date:   Tue, 19 Jan 2021 10:23:17 -0500
 From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs_repair: clear the needsrepair flag
-Message-ID: <20210119143754.GB1646807@bfoster>
-References: <161076028124.3386490.8050189989277321393.stgit@magnolia>
- <161076029319.3386490.2011901341184065451.stgit@magnolia>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        avi@scylladb.com, Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 04/11] xfs: remove the buffered I/O fallback assert
+Message-ID: <20210119152317.GD1646807@bfoster>
+References: <20210118193516.2915706-1-hch@lst.de>
+ <20210118193516.2915706-5-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161076029319.3386490.2011901341184065451.stgit@magnolia>
+In-Reply-To: <20210118193516.2915706-5-hch@lst.de>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 05:24:53PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Mon, Jan 18, 2021 at 08:35:09PM +0100, Christoph Hellwig wrote:
+> The iomap code has been designed from the start not to do magic fallback,
+> so remove the assert in preparation for further code cleanups.
 > 
-> Clear the needsrepair flag, since it's used to prevent mounting of an
-> inconsistent filesystem.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
 > ---
 
-Code/errors look much cleaner. Though looking at the repair code again,
-I wonder... if we clear the needsrepair bit and dirty/write the sb in
-phase 2 and then xfs_repair happens to crash, do we risk clearing the
-bit and thus allowing a potential mount before whatever requisite
-metadata updates have been made?
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-Brian
-
->  repair/agheader.c |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  fs/xfs/xfs_file.c | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
-> 
-> diff --git a/repair/agheader.c b/repair/agheader.c
-> index 8bb99489..d9b72d3a 100644
-> --- a/repair/agheader.c
-> +++ b/repair/agheader.c
-> @@ -452,6 +452,21 @@ secondary_sb_whack(
->  			rval |= XR_AG_SB_SEC;
->  	}
->  
-> +	if (xfs_sb_version_needsrepair(sb)) {
-> +		if (!no_modify)
-> +			sb->sb_features_incompat &=
-> +					~XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
-> +		if (i == 0) {
-> +			if (!no_modify)
-> +				do_warn(
-> +	_("clearing needsrepair flag and regenerating metadata\n"));
-> +			else
-> +				do_warn(
-> +	_("would clear needsrepair flag and regenerate metadata\n"));
-> +		}
-> +		rval |= XR_AG_SB_SEC;
-> +	}
-> +
->  	return(rval);
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index ae7313ccaa11ed..97836ec53397d4 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -610,12 +610,6 @@ xfs_file_dio_write(
+>  out:
+>  	if (iolock)
+>  		xfs_iunlock(ip, iolock);
+> -
+> -	/*
+> -	 * No fallback to buffered IO after short writes for XFS, direct I/O
+> -	 * will either complete fully or return an error.
+> -	 */
+> -	ASSERT(ret < 0 || ret == count);
+>  	return ret;
 >  }
 >  
+> -- 
+> 2.29.2
 > 
 
