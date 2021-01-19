@@ -2,145 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FB02FC09A
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 21:08:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B54252FC11B
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 21:35:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390516AbhASTqE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 19 Jan 2021 14:46:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38597 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729360AbhASTpj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Jan 2021 14:45:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611085452;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2dVKrYYx1pvlMGXNDtreQcY0OEeX98/bN1choIxBHNM=;
-        b=UbNSvOJ7KoM9srELOyXThs+rf5iko8G8uz2pwB4xLnovdni8vUUENtiy2U6sw5WDFX0Zau
-        thvjDevK6/AcKiUF8jTVTrJ34WwOGA20A9fCaqJeujFKLnyrD+E0qJqXCaRrHagyEP9f0F
-        lIn5KQ+IESiOTyqPeNPcdc9PUUgH51M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-72-DTL3jiHbOXO4VhS6xBMiKg-1; Tue, 19 Jan 2021 14:44:10 -0500
-X-MC-Unique: DTL3jiHbOXO4VhS6xBMiKg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF51C107ACE3;
-        Tue, 19 Jan 2021 19:44:08 +0000 (UTC)
-Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6311660D06;
-        Tue, 19 Jan 2021 19:44:08 +0000 (UTC)
-Date:   Tue, 19 Jan 2021 14:44:06 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs_repair: clear the needsrepair flag
-Message-ID: <20210119194406.GJ1646807@bfoster>
-References: <161076028124.3386490.8050189989277321393.stgit@magnolia>
- <161076029319.3386490.2011901341184065451.stgit@magnolia>
- <20210119143754.GB1646807@bfoster>
- <20210119180318.GP3134581@magnolia>
+        id S1727348AbhASUdC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 Jan 2021 15:33:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57184 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728640AbhASU1R (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 19 Jan 2021 15:27:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9F82923104;
+        Tue, 19 Jan 2021 20:26:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611087995;
+        bh=ITD6CUcTvdkBN1IOqSUac9ZB+htxgKMcj3VO7hD/+jE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vPozWOSrMWXui7+6aAJFzlGCEt0NjcrxAgj1lWcEW1N/B4X9lEZJixD6/fYUbXizR
+         VcCCJM3YsZtX/UdepeU3umiE9LQtPkUlbOPPKNeknmWByNRMZCx2jRncVdPwK3bUAM
+         OLncFOtvB1ntsB9mwR/diIwH7gphBOHftunqva71c2f7DVMgOidIS0PlwND/vrQHRD
+         M9IXzU4mXAbusW6hXbdTg77k0qfvunksQfP6HsvONOEcTMLPt3LSYrzSr7jD9ViFH7
+         Y6i8U5M/0EvvMqfpcDKqV/XvHMi4fbkioB607pMGNPnlFDGCHQru9Sb1UePaGVTqMo
+         B5bsX405AHitw==
+Date:   Tue, 19 Jan 2021 12:26:34 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 3/4] xfs: create convenience wrappers for incore quota
+ block reservations
+Message-ID: <20210119202634.GS3134581@magnolia>
+References: <161100789347.88678.17195697099723545426.stgit@magnolia>
+ <161100791039.88678.6897577495997060048.stgit@magnolia>
+ <YAZ/s1a0c7drWZv3@infradead.org>
+ <20210119194719.GR3134581@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210119180318.GP3134581@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20210119194719.GR3134581@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 10:15:49AM -0800, Darrick J. Wong wrote:
-> On Tue, Jan 19, 2021 at 09:37:54AM -0500, Brian Foster wrote:
-> > On Fri, Jan 15, 2021 at 05:24:53PM -0800, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <djwong@kernel.org>
-> > > 
-> > > Clear the needsrepair flag, since it's used to prevent mounting of an
-> > > inconsistent filesystem.
-> > > 
-> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > > ---
+On Tue, Jan 19, 2021 at 11:47:19AM -0800, Darrick J. Wong wrote:
+> On Tue, Jan 19, 2021 at 07:44:03AM +0100, Christoph Hellwig wrote:
+> > > -	error = xfs_trans_reserve_quota_nblks(NULL, ip, (long)alen, 0,
+> > > -						XFS_QMOPT_RES_REGBLKS);
+> > > +	error = xfs_quota_reserve_blkres(ip, alen, XFS_QMOPT_RES_REGBLKS);
 > > 
-> > Code/errors look much cleaner. Though looking at the repair code again,
-> > I wonder... if we clear the needsrepair bit and dirty/write the sb in
-> > phase 2 and then xfs_repair happens to crash, do we risk clearing the
-> > bit and thus allowing a potential mount before whatever requisite
-> > metadata updates have been made?
+> > This is the only callsite outside of xfs_quota_unreserve_blkres,
+> > so I'm not sure how useful the wrapper is.  Also even on the unreserved
+> > side we always pass XFS_QMOPT_RES_REGBLKS except for one case that
+> > conditionally passes XFS_QMOPT_RES_RTBLKS.  So if we think these helpers
+> > are useful enough I'd at least just pass a bool is_rt argument and hide
+> > the flags entirely.
 > 
-> [Oh good, now mail.kernel.org is having problems...]
-> 
-> Yes, though I think that falls into the realm of "sysadmins should be
-> sufficiently self-aware not to expect mount to work after repair
-> fails/system crashes during an upgrade".
-> 
-> I've thought about how to solve the general problem of preventing people
-> from mounting filesystems if repair doesn't run to completion.  I think
-> xfs_repair could be modified so that once it finds the primary super, it
-> writes it back out with NEEDSREPAIR set (V5) or inprogress set (V4).
-> Once we've finished the buffer cache flush at the end of repair, we
-> clear needsrepair/inprogress and write the primary super again.
-> 
+> Seeing as XFS doesn't even let you mount with quota and rt, I elect to
+> get rid of the third parameter entirely.  Whoever decides to make them
+> work together will have a lot of work to do beyond fixing that one
+> unreserve call.
 
-That's kind of what I was thinking.. set a global flag if/when we come
-across the bit set on disk and clear it as a final step.
+And having said that, I reverse myself, because looking at the rt
+reflink patchset I'll have to add that switch to the reserve/unreserve
+callers anyway.  I'll change the last arg to 'bool isrt'.
 
-> An optimization on that would be to find a way to avoid that first super
-> write until we flush the first dirty buffer.
-> 
-> Another way to make repair more "transactional" would be to do it would
-> be to fiddle with the buffer manager so that writes are sent to a
-> metadump file which could be mdrestore'd if repair completes
-> successfully.  But that's a short-circuit around the even bigger project
-> of porting the kernel logging code to userspace and use that in repair.
-> 
-
-Yeah, I wouldn't want to have clearing a feature bit depend on such a
-significant rework of core functionality. The bit is not going to be set
-in most cases, so I'd suspect an extra superblock write at the end of
-repair wouldn't be much of a problem. In fact, it looks like main()
-already has an unconditional sb write before the final libxfs_unmount()
-call. Perhaps we could just hitch onto that for the primary super
-update (and continue to clear the secondaries earlier as the current
-patch does)..?
-
-Brian
+--D
 
 > --D
-> 
-> > Brian
-> > 
-> > >  repair/agheader.c |   15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > 
-> > > diff --git a/repair/agheader.c b/repair/agheader.c
-> > > index 8bb99489..d9b72d3a 100644
-> > > --- a/repair/agheader.c
-> > > +++ b/repair/agheader.c
-> > > @@ -452,6 +452,21 @@ secondary_sb_whack(
-> > >  			rval |= XR_AG_SB_SEC;
-> > >  	}
-> > >  
-> > > +	if (xfs_sb_version_needsrepair(sb)) {
-> > > +		if (!no_modify)
-> > > +			sb->sb_features_incompat &=
-> > > +					~XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
-> > > +		if (i == 0) {
-> > > +			if (!no_modify)
-> > > +				do_warn(
-> > > +	_("clearing needsrepair flag and regenerating metadata\n"));
-> > > +			else
-> > > +				do_warn(
-> > > +	_("would clear needsrepair flag and regenerate metadata\n"));
-> > > +		}
-> > > +		rval |= XR_AG_SB_SEC;
-> > > +	}
-> > > +
-> > >  	return(rval);
-> > >  }
-> > >  
-> > > 
-> > 
-> 
-
