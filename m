@@ -2,239 +2,336 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B3CF2FC225
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 22:23:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D95B2FC27A
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 22:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbhASSrT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 19 Jan 2021 13:47:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730676AbhASS23 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 19 Jan 2021 13:28:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E130C238EA;
-        Tue, 19 Jan 2021 17:51:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611078719;
-        bh=7zFbjtkYU8nqYVGoeD3pZSlqNF4FbUJSbJ7IThcX/EM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RdBP6DR3hCirEe5R5H0fvUWjGmkak8auEyyJDc54QAkWA5PCPqnVa/ayg6tCZwuPE
-         XYDa1Gnh95zerRLdQx+mMCK7+s5NEARmj/l9vH1eqJrwtXJYo9+WVWysQlgcqgM9BU
-         DtogbQsdlGrSnYO9Rb5AR/4S9FZVyWxGN/VqAT6Zv7PQnPHlU2TfQ6Rtoh56ZrKsge
-         3GpeKZtXblWX0XXn/Avf1vw4s+qDXv6S+29mKD5MbQUyV7RijDUsCrf1EkuqDi+FAe
-         UHcDj5D0HkmM3hdIjdX6RgTLfB5TgWSB7KSIXJII6nUlqBQWnAtRtKmnK7QrWVev0E
-         uAvo2dozD9Dqg==
-Date:   Tue, 19 Jan 2021 09:51:54 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 4/9] xfs: cover the log during log quiesce
-Message-ID: <20210119175154.GO3134581@magnolia>
-References: <20210106174127.805660-1-bfoster@redhat.com>
- <20210106174127.805660-5-bfoster@redhat.com>
- <20210107190408.GD6918@magnolia>
- <20210107195336.GB845369@bfoster>
+        id S1728756AbhASRte (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 Jan 2021 12:49:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55444 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387717AbhASOis (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Jan 2021 09:38:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611067040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cel4P24jJk1LhjDJ2ktR3p6SpmGauQm7G2RyicyET+0=;
+        b=hK/2BKMxDcPnkNxZTOWsLiti8PY5+I62swPzAHTIhCG6TKt0c/jg76UTIIS6QjqUFwZiOL
+        +Ql6CJ0XH/BwZu4zcClHzIIK6AJoGzfRy6wGPoxmeynCXhWxDGyfYL/x3mOSYg2M/DTF+E
+        Jlu8Xsd9OiLgqH4dAhmECD8FC+JHhtQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-P5bmoFRENVqqphyCmDfyig-1; Tue, 19 Jan 2021 09:37:18 -0500
+X-MC-Unique: P5bmoFRENVqqphyCmDfyig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2DB7B107ACE4;
+        Tue, 19 Jan 2021 14:37:17 +0000 (UTC)
+Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E91860C74;
+        Tue, 19 Jan 2021 14:37:16 +0000 (UTC)
+Date:   Tue, 19 Jan 2021 09:37:14 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs_db: support the needsrepair feature flag in the
+ version command
+Message-ID: <20210119143714.GA1646807@bfoster>
+References: <161076028124.3386490.8050189989277321393.stgit@magnolia>
+ <161076028723.3386490.10074737936252642930.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210107195336.GB845369@bfoster>
+In-Reply-To: <161076028723.3386490.10074737936252642930.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jan 07, 2021 at 02:53:36PM -0500, Brian Foster wrote:
-> On Thu, Jan 07, 2021 at 11:04:08AM -0800, Darrick J. Wong wrote:
-> > On Wed, Jan 06, 2021 at 12:41:22PM -0500, Brian Foster wrote:
-> > > The log quiesce mechanism historically terminates by marking the log
-> > > clean with an unmount record. The primary objective is to indicate
-> > > that log recovery is no longer required after the quiesce has
-> > > flushed all in-core changes and written back filesystem metadata.
-> > > While this is perfectly fine, it is somewhat hacky as currently used
-> > > in certain contexts. For example, filesystem freeze quiesces (i.e.
-> > > cleans) the log and immediately redirties it with a dummy superblock
-> > > transaction to ensure that log recovery runs in the event of a
-> > > crash.
-> > > 
-> > > While this functions correctly, cleaning the log from freeze context
-> > > is clearly superfluous given the current redirtying behavior.
-> > > Instead, the desired behavior can be achieved by simply covering the
-> > > log. This effectively retires all on-disk log items from the active
-> > > range of the log by issuing two synchronous and sequential dummy
-> > > superblock update transactions that serve to update the on-disk log
-> > > head and tail. The subtle difference is that the log technically
-> > > remains dirty due to the lack of an unmount record, though recovery
-> > > is effectively a no-op due to the content of the checkpoints being
-> > > clean (i.e. the unmodified on-disk superblock).
-> > > 
-> > > Log covering currently runs in the background and only triggers once
-> > > the filesystem and log has idled. The purpose of the background
-> > > mechanism is to prevent log recovery from replaying the most
-> > > recently logged items long after those items may have been written
-> > > back. In the quiesce path, the log has been deliberately idled by
-> > > forcing the log and pushing the AIL until empty in a context where
-> > > no further mutable filesystem operations are allowed. Therefore, we
-> > > can cover the log as the final step in the log quiesce codepath to
-> > > reflect that all previously active items have been successfully
-> > > written back.
-> > > 
-> > > This facilitates selective log covering from certain contexts (i.e.
-> > > freeze) that only seek to quiesce, but not necessarily clean the
-> > > log. Note that as a side effect of this change, log covering now
-> > > occurs when cleaning the log as well. This is harmless, facilitates
-> > > subsequent cleanups, and is mostly temporary as various operations
-> > > switch to use explicit log covering.
-> > > 
-> > > Signed-off-by: Brian Foster <bfoster@redhat.com>
-> > > ---
-> > >  fs/xfs/xfs_log.c | 49 +++++++++++++++++++++++++++++++++++++++++++++---
-> > >  fs/xfs/xfs_log.h |  2 +-
-> > >  2 files changed, 47 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> > > index 1b3227a033ad..f7b23044723d 100644
-> > > --- a/fs/xfs/xfs_log.c
-> > > +++ b/fs/xfs/xfs_log.c
-> > > @@ -91,6 +91,9 @@ STATIC int
-> > >  xlog_iclogs_empty(
-> > >  	struct xlog		*log);
-> > >  
-> > > +static int
-> > > +xfs_log_cover(struct xfs_mount *);
-> > > +
-> > >  static void
-> > >  xlog_grant_sub_space(
-> > >  	struct xlog		*log,
-> > > @@ -936,10 +939,9 @@ xfs_log_unmount_write(
-> > >   * To do this, we first need to shut down the background log work so it is not
-> > >   * trying to cover the log as we clean up. We then need to unpin all objects in
-> > >   * the log so we can then flush them out. Once they have completed their IO and
-> > > - * run the callbacks removing themselves from the AIL, we can write the unmount
-> > > - * record.
-> > > + * run the callbacks removing themselves from the AIL, we can cover the log.
-> > >   */
-> > > -void
-> > > +int
-> > >  xfs_log_quiesce(
-> > >  	struct xfs_mount	*mp)
-> > >  {
-> > > @@ -957,6 +959,8 @@ xfs_log_quiesce(
-> > >  	xfs_wait_buftarg(mp->m_ddev_targp);
-> > >  	xfs_buf_lock(mp->m_sb_bp);
-> > >  	xfs_buf_unlock(mp->m_sb_bp);
-> > > +
-> > > +	return xfs_log_cover(mp);
-> > >  }
-> > >  
-> > >  void
-> > > @@ -1092,6 +1096,45 @@ xfs_log_need_covered(
-> > >  	return needed;
-> > >  }
-> > >  
-> > > +/*
-> > > + * Explicitly cover the log. This is similar to background log covering but
-> > > + * intended for usage in quiesce codepaths. The caller is responsible to ensure
-> > > + * the log is idle and suitable for covering. The CIL, iclog buffers and AIL
-> > > + * must all be empty.
-> > > + */
-> > > +static int
-> > > +xfs_log_cover(
-> > > +	struct xfs_mount	*mp)
-> > > +{
-> > > +	struct xlog		*log = mp->m_log;
-> > > +	int			error = 0;
-> > > +
-> > > +	ASSERT((xlog_cil_empty(log) && xlog_iclogs_empty(log) &&
-> > > +	        !xfs_ail_min_lsn(log->l_ailp)) ||
-> > > +	       XFS_FORCED_SHUTDOWN(mp));
-> > > +
-> > > +	if (!xfs_log_writable(mp))
-> > > +		return 0;
-> > > +
-> > > +	/*
-> > > +	 * To cover the log, commit the superblock twice (at most) in
-> > > +	 * independent checkpoints. The first serves as a reference for the
-> > > +	 * tail pointer. The sync transaction and AIL push empties the AIL and
-> > > +	 * updates the in-core tail to the LSN of the first checkpoint. The
-> > > +	 * second commit updates the on-disk tail with the in-core LSN,
-> > > +	 * covering the log. Push the AIL one more time to leave it empty, as
-> > > +	 * we found it.
-> > > +	 */
-> > 
-> > Hm.  At first I looked at _need_covered and wondered how this could work
-> > properly if we are in state DONE or DONE2, because this not-quite
-> > predicate returns zero in that case.
-> > 
-> > I think it's the case that the only way the log can end up in DONE state
-> > is if the background log worker had previously been in NEED, written the
-> > first of the dummy transactions, moved the state to DONE, and waited for
-> > xlog_covered_state to move the log from DONE to NEED2.  Similarly, the
-> > log can only be in DONE2 state if the background worker wrote the second
-> > dummy and is now waiting for xlog_covered_state to move the log from
-> > DONE2 to IDLE.
-> > 
-> > Since xfs_log_quiesce cancelled the log worker and waited for it to
-> > finish before calling xfs_log_cover, the covering state here can only be
-> > IDLE, NEED, or NEED2, right?  And hence the while loop pushes the log to
-> > IDLE no matter where it is now, right?
-> > 
+On Fri, Jan 15, 2021 at 05:24:47PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Yeah, we're in a quiescent context at this point where no other
-> transactions are running, the in-core structures should be drained and
-> the background log worker cancelled, etc. With regard to the background
-> log worker, I don't think it should ever actually see the DONE or DONE2
-> states as it sets those states and immediately issues the synchronous sb
-> transaction. Therefore, the commit should have changed the state from
-> DONE to NEED2 or NEED (if other items happened to land in the log)
-> before it returns.
+> Teach the xfs_db version command about the 'needsrepair' flag, which can
+> be used to force the system administrator to repair the filesystem with
+> xfs_repair.
 > 
-> That said, I suppose it wouldn't be that surprising if some odd timing
-> scenario or combination of external superblock commits could cause the
-> background log worker to see a DONE state. I haven't fully audited for
-> that, but regardless it would appropriately do nothing and that
-> shouldn't be an issue from the quiesce context due to the runtime being
-> pretty much shut down by this point.
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  db/check.c           |    5 ++
+>  db/sb.c              |  153 ++++++++++++++++++++++++++++++++++++++++++++++++--
+>  db/xfs_admin.sh      |   10 ++-
+>  man/man8/xfs_admin.8 |   15 +++++
+>  man/man8/xfs_db.8    |    5 ++
+>  5 files changed, 178 insertions(+), 10 deletions(-)
+> 
+> 
+> diff --git a/db/check.c b/db/check.c
+> index 33736e33..485e855e 100644
+> --- a/db/check.c
+> +++ b/db/check.c
+> @@ -3970,6 +3970,11 @@ scan_ag(
+>  			dbprintf(_("mkfs not completed successfully\n"));
+>  		error++;
+>  	}
+> +	if (xfs_sb_version_needsrepair(sb)) {
+> +		if (!sflag)
+> +			dbprintf(_("filesystem needs xfs_repair\n"));
+> +		error++;
+> +	}
+>  	set_dbmap(agno, XFS_SB_BLOCK(mp), 1, DBM_SB, agno, XFS_SB_BLOCK(mp));
+>  	if (sb->sb_logstart && XFS_FSB_TO_AGNO(mp, sb->sb_logstart) == agno)
+>  		set_dbmap(agno, XFS_FSB_TO_AGBNO(mp, sb->sb_logstart),
+> diff --git a/db/sb.c b/db/sb.c
+> index d09f653d..fcc2a0ed 100644
+> --- a/db/sb.c
+> +++ b/db/sb.c
+...
+> @@ -620,6 +633,112 @@ do_version(xfs_agnumber_t agno, uint16_t version, uint32_t features)
+>  	return 1;
+>  }
+>  
+...
+> +static bool
+> +upgrade_v5_features(
+> +	struct xfs_mount	*mp,
+> +	const struct v5feat	*upgrade)
+> +{
+> +	struct xfs_sb		tsb;
+> +	struct v5feat		old;
+> +	xfs_agnumber_t		agno = 0;
+> +	xfs_agnumber_t		revert_agno = 0;
+> +
+> +	if (upgrade->compat == mp->m_sb.sb_features_compat &&
+> +	    upgrade->ro_compat == mp->m_sb.sb_features_ro_compat &&
+> +	    upgrade->incompat == mp->m_sb.sb_features_incompat &&
+> +	    upgrade->log_incompat == mp->m_sb.sb_features_log_incompat)
+> +		return true;
+> +
+> +	/* Upgrade primary superblock. */
+> +	if (!get_sb(agno, &tsb))
+> +		goto fail;
+> +
+> +	dbprintf(_("Upgrading V5 filesystem\n"));
+> +
+> +	/* Save the old primary super features in case we revert. */
+> +	get_v5_features(&old, &tsb);
+> +
+> +	/* Update features and force user to run repair before mounting. */
+> +	set_v5_features(&tsb, upgrade);
+> +	tsb.sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
+> +
 
-<nod> I think that makes sense.  :)
+So we explicitly update the primary sb with NEEDSREPAIR...
 
---D
+> +	/* Write new primary superblock */
+> +	libxfs_sb_to_disk(iocur_top->data, &tsb);
+> +	write_cur();
+> +	if (!iocur_top->bp || iocur_top->bp->b_error)
+> +		goto fail;
+> +
+> +	/* Update the secondary superblocks, or revert. */
+> +	for (agno = 1; agno < mp->m_sb.sb_agcount; agno++) {
+> +		if (!get_sb(agno, &tsb)) {
+> +			agno--;
+> +			goto revert;
+> +		}
+> +
+> +		/* Set features and write secondary super. */
+> +		set_v5_features(&tsb, upgrade);
+> +		libxfs_sb_to_disk(iocur_top->data, &tsb);
+> +		write_cur();
 
-> > (I also wondered why this isn't a do-while loop but patch 6 addresses
-> > that.)
-> > 
+... but only set NEEDSREPAIR on secondaries if it was set in upgrade by
+the caller?
+
+> +
+> +		/* Write or abort. */
+> +		if (!iocur_top->bp || iocur_top->bp->b_error)
+> +			goto revert;
+> +	}
+> +
+> +	/* All superblocks updated, update the incore values. */
+> +	set_v5_features(&mp->m_sb, upgrade);
+
+This also looks like it has the same behavior. I.e., on a 'version
+bigtime' upgrade wouldn't have NEEDSREPAIR set.
+
+> +	dbprintf(_("Upgraded V5 filesystem.  Please run xfs_repair.\n"));
+> +	return true;
+> +
+> +revert:
+> +	/*
+> +	 * Try to revert feature flag changes, and don't worry if we fail.
+> +	 * We're probably in a mess anyhow, and the admin will have to run
+> +	 * repair anyways.
+> +	 */
+> +	for (revert_agno = 0; revert_agno <= agno; revert_agno++) {
+> +		if (!get_sb(revert_agno, &tsb))
+> +			continue;
+> +
+> +		set_v5_features(&tsb, &old);
+> +		libxfs_sb_to_disk(iocur_top->data, &tsb);
+> +		write_cur();
+> +	}
+> +fail:
+> +	dbprintf(
+> +_("Failed to upgrade V5 filesystem at AG %d, please run xfs_repair.\n"), agno);
+> +	return false;
+> +}
+> +
+>  static char *
+>  version_string(
+>  	xfs_sb_t	*sbp)
+...
+> @@ -717,8 +836,23 @@ version_f(
+>  			return 0;
+>  		}
+>  
+> +		if (xfs_sb_version_needsrepair(&mp->m_sb)) {
+> +			dbprintf(_("%s: filesystem needs xfs_repair\n"),
+> +				progname);
+> +			return 0;
+> +		}
+> +
+>  		/* Logic here derived from the IRIX xfs_chver(1M) script. */
+> -		if (!strcasecmp(argv[1], "extflg")) {
+> +		if (!strcasecmp(argv[1], "needsrepair")) {
+> +			if (!xfs_sb_version_hascrc(&mp->m_sb)) {
+> +				dbprintf(
+> +		_("needsrepair flag cannot be enabled on pre-V5 filesystems\n"));
+> +				exitcode = 2;
+> +				return 1;
+
+Hmm.. I see that exitcode 1 means error && xfs_repair while exitcode 2
+means error && !xfs_repair, but I'm still not sure I follow the high
+level error semantics, particularly if we happen to fail updating
+secondary supers. I wonder if it would be more straightforward to have
+xfs_db only return an error when an update attempt occurs and fails and
+then let xfs_admin run xfs_repair if status == 0 && NEEDSREPAIR is set.
+I suppose the various other ".. bit already set" or "v5 super required"
+conditions don't really need to be errors and thus repair would only run
+in those cases if NEEDSREPAIR was still set on the fs. Otherwise if
+xfs_db fails we dump an error message and encourage the user to run
+xfs_repair themselves.
+
+There are still corner cases I guess, but that does _seem_ a bit more
+elegant to me. Otherwise I suppose a comment somewhere that explains
+when/why to use which error code would be helpful.
+
+Brian
+
+> +			}
+> +
+> +			v5features.incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
+> +		} else if (!strcasecmp(argv[1], "extflg")) {
+>  			switch (XFS_SB_VERSION_NUM(&mp->m_sb)) {
+>  			case XFS_SB_VERSION_1:
+>  				version = 0x0004 | XFS_SB_VERSION_EXTFLGBIT;
+> @@ -809,6 +943,11 @@ version_f(
+>  			mp->m_sb.sb_versionnum = version;
+>  			mp->m_sb.sb_features2 = features;
+>  		}
+> +
+> +		if (!upgrade_v5_features(mp, &v5features)) {
+> +			exitcode = 1;
+> +			return 1;
+> +		}
+>  	}
+>  
+>  	if (argc == 3) {	/* VERSIONNUM + FEATURES2 */
+> diff --git a/db/xfs_admin.sh b/db/xfs_admin.sh
+> index bd325da2..0e79bbf9 100755
+> --- a/db/xfs_admin.sh
+> +++ b/db/xfs_admin.sh
+> @@ -7,9 +7,9 @@
+>  status=0
+>  DB_OPTS=""
+>  REPAIR_OPTS=""
+> -USAGE="Usage: xfs_admin [-efjlpuV] [-c 0|1] [-L label] [-U uuid] device [logdev]"
+> +USAGE="Usage: xfs_admin [-efjlpuV] [-c 0|1] [-L label] [-U uuid] [-O v5_feature] device [logdev]"
+>  
+> -while getopts "efjlpuc:L:U:V" c
+> +while getopts "efjlpuc:L:O:U:V" c
+>  do
+>  	case $c in
+>  	c)	REPAIR_OPTS=$REPAIR_OPTS" -c lazycount="$OPTARG;;
+> @@ -19,6 +19,9 @@ do
+>  	l)	DB_OPTS=$DB_OPTS" -r -c label";;
+>  	L)	DB_OPTS=$DB_OPTS" -c 'label "$OPTARG"'";;
+>  	p)	DB_OPTS=$DB_OPTS" -c 'version projid32bit'";;
+> +	O)	DB_OPTS=$DB_OPTS" -c 'version "$OPTARG"'";
+> +		# Force repair to run by adding a single space to REPAIR_OPTS
+> +		REPAIR_OPTS="$REPAIR_OPTS ";;
+>  	u)	DB_OPTS=$DB_OPTS" -r -c uuid";;
+>  	U)	DB_OPTS=$DB_OPTS" -c 'uuid "$OPTARG"'";;
+>  	V)	xfs_db -p xfs_admin -V
+> @@ -34,6 +37,7 @@ set -- extra $@
+>  shift $OPTIND
+>  case $# in
+>  	1|2)
+> +		status=0
+>  		# Pick up the log device, if present
+>  		if [ -n "$2" ]; then
+>  			DB_OPTS=$DB_OPTS" -l '$2'"
+> @@ -46,7 +50,7 @@ case $# in
+>  			eval xfs_db -x -p xfs_admin $DB_OPTS $1
+>  			status=$?
+>  		fi
+> -		if [ -n "$REPAIR_OPTS" ]
+> +		if [ -n "$REPAIR_OPTS" ] && [ $status -ne 2 ]
+>  		then
+>  			# Hide normal repair output which is sent to stderr
+>  			# assuming the filesystem is fine when a user is
+> diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
+> index 8afc873f..b423981d 100644
+> --- a/man/man8/xfs_admin.8
+> +++ b/man/man8/xfs_admin.8
+> @@ -6,6 +6,8 @@ xfs_admin \- change parameters of an XFS filesystem
+>  [
+>  .B \-eflpu
+>  ] [
+> +.BI \-O " feature"
+> +] [
+>  .BR "\-c 0" | 1
+>  ] [
+>  .B \-L
+> @@ -103,6 +105,19 @@ The filesystem label can be cleared using the special "\c
+>  " value for
+>  .IR label .
+>  .TP
+> +.BI \-O " feature"
+> +Add a new feature to the filesystem.
+> +Only one feature can be specified at a time.
+> +Features are as follows:
+> +.RS 0.7i
+> +.TP
+> +.B needsrepair
+> +If this is a V5 filesystem, flag the filesystem as needing repairs.
+> +Until
+> +.BR xfs_repair (8)
+> +is run, the filesystem will not be mountable.
+> +.RE
+> +.TP
+>  .BI \-U " uuid"
+>  Set the UUID of the filesystem to
+>  .IR uuid .
+> diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
+> index 58727495..7331cf19 100644
+> --- a/man/man8/xfs_db.8
+> +++ b/man/man8/xfs_db.8
+> @@ -971,6 +971,11 @@ may toggle between
+>  and
+>  .B attr2
+>  at will (older kernels may not support the newer version).
+> +The filesystem can be flagged as requiring a run through
+> +.BR xfs_repair (8)
+> +if the
+> +.B needsrepair
+> +option is specified and the filesystem is formatted with the V5 format.
+>  .IP
+>  If no argument is given, the current version and feature bits are printed.
+>  With one argument, this command will write the updated version number
 > 
-> Right, that changes due to the lazy sb counter logic..
-> 
-> Brian
-> 
-> > --D
-> > 
-> > > +	while (xfs_log_need_covered(mp)) {
-> > > +		error = xfs_sync_sb(mp, true);
-> > > +		if (error)
-> > > +			break;
-> > > +		xfs_ail_push_all_sync(mp->m_ail);
-> > > +	}
-> > > +
-> > > +	return error;
-> > > +}
-> > > +
-> > >  /*
-> > >   * We may be holding the log iclog lock upon entering this routine.
-> > >   */
-> > > diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
-> > > index b0400589f824..044e02cb8921 100644
-> > > --- a/fs/xfs/xfs_log.h
-> > > +++ b/fs/xfs/xfs_log.h
-> > > @@ -138,7 +138,7 @@ void	xlog_cil_process_committed(struct list_head *list);
-> > >  bool	xfs_log_item_in_current_chkpt(struct xfs_log_item *lip);
-> > >  
-> > >  void	xfs_log_work_queue(struct xfs_mount *mp);
-> > > -void	xfs_log_quiesce(struct xfs_mount *mp);
-> > > +int	xfs_log_quiesce(struct xfs_mount *mp);
-> > >  void	xfs_log_clean(struct xfs_mount *mp);
-> > >  bool	xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
-> > >  bool	xfs_log_in_recovery(struct xfs_mount *);
-> > > -- 
-> > > 2.26.2
-> > > 
-> > 
-> 
+
