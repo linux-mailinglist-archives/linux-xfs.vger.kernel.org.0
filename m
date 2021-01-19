@@ -2,67 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AEF2FBD83
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 18:26:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F5BB2FBE48
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Jan 2021 18:57:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbhASR0C (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 19 Jan 2021 12:26:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60498 "EHLO
+        id S2389453AbhASRtr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 Jan 2021 12:49:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389476AbhASRRC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Jan 2021 12:17:02 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC43C0613C1
-        for <linux-xfs@vger.kernel.org>; Tue, 19 Jan 2021 09:16:21 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id gx5so10348689ejb.7
-        for <linux-xfs@vger.kernel.org>; Tue, 19 Jan 2021 09:16:21 -0800 (PST)
+        with ESMTP id S2387536AbhASPFA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Jan 2021 10:05:00 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4ACC061794
+        for <linux-xfs@vger.kernel.org>; Tue, 19 Jan 2021 07:02:45 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id dj23so19315261edb.13
+        for <linux-xfs@vger.kernel.org>; Tue, 19 Jan 2021 07:02:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gVOq8xOh9tvYSMKp76cFsBGe5YHJ9Vg5lNq411HWSmA=;
-        b=BZGbvgbM7espOkyL6HqxmA1r25Tj9IrZrF7XwFLq5AENPg/AUTYPHobPMnS56+Sfpe
-         Xl48Ja1D5z+6ZL5v1j28TnTxTpGAfvp4G2U3C563xly2MloXAeOvfjfiz7pLiNAN0EVE
-         7B5MFzW6Vdsnfzaz6mdSPuAJVafv6fX+TgXj4vnbxAJZicGubnDjyRI5A0TO2XL5nU96
-         Vlf1FqeLi2CY4KsZGVhvqRgMqi8WBUxtkg7XQkQDtYVOEuJ1Hn90gVHHCEcLHIYdOfmj
-         Jenn23xjm1qwv3pstgGI2czRwRVOZdpjuL7LI7YHDJqhIM36ZMmzYn8g1GoWVaZpAqHr
-         +ftg==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=fDuqpJkn5GspgDWRB1BYrRy2qAbRAjHizmo2HBhR7pQ=;
+        b=oojxFdEJj3cNOmrUEg91evcb+azGkjEvGTDw85IcPGrxnnNfAX36al7kBtqyy351u1
+         EXceWK1H+jpe5lreYf/tfOloss7eGj5XdybYlfYGHMzkJTlOVmUARmqm1yhMaOFgvf6T
+         HZ/YAUIO8Gu1rlKV3AJKLwS55cGAQx/YUfuY7GNaXZlwxC5TklBPGOxdea2N2bb66rEb
+         H2I4aWWaXwPaOO8J3voh8b6G+8iB/9PIdl2+BJpxtiSxv1AY9Dq+3LJJFW2HukVSXIk1
+         FD0DvTQfe+YI0ZA3TzpEpO8JgHIbdDVVkAoisn1DB6cHghLaZ2QzfqJR1U/5uhszp1oY
+         QJzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=gVOq8xOh9tvYSMKp76cFsBGe5YHJ9Vg5lNq411HWSmA=;
-        b=mi3dzuBSlRi6O8xBLTciHU98DGUwbvxddkuGgoBaoXyekESV5JlVax906oIzc49iIf
-         BXzOHMA5T+RigNSubXQMn/YMjXOoltHjt21+LrCry0/5GCbI4w4CZEjRYgHKUOA6scpk
-         m7qa8txtxGyU/5GLyRNBRp7sc6G1VMY4+nx/Wn72wlbWXOKhCgYTJtqEpET64OjtR1aZ
-         CMlEacPdaLgLRxe/d1XDrP8eR1yS+B0QLobS4CPnb/72jea/SAfxvWykyERPl/iTHTjL
-         0SkD7m6bTtp3SOz1jSWspSbJQCQ68wDkH94NuMualg6ZRQreV3d2YDlp2uaGnCsCMOBb
-         dFxg==
-X-Gm-Message-State: AOAM530s6jYapSwyTX5AowEI44KpydqpB2GlKPQSMAPb/sNFtITYXH+B
-        RuVZ2LntovSgZSG0FnFD2OVVqP9tvtlY1Q==
-X-Google-Smtp-Source: ABdhPJzbTNee+ppyeBNKIcostqSUESA1h1AKuw6XtdOiIVAtLqp584udbF5x9q+k2yqxgmAP1Bf4ZA==
-X-Received: by 2002:a17:906:6d44:: with SMTP id a4mr3895737ejt.453.1611076580757;
-        Tue, 19 Jan 2021 09:16:20 -0800 (PST)
+        bh=fDuqpJkn5GspgDWRB1BYrRy2qAbRAjHizmo2HBhR7pQ=;
+        b=O6J/updzipljJUpQSEQY3yf1yYrgoD8mPLN621Ypc1ZnxKxAbEGpLriVXboQZJ8sq3
+         djlPXPoWpFWMzYO7EmBCaNlY3M7Z8hWzgTgM7ATMNnVToHEhjiUeXhmRIJokonWdSw5a
+         BIBBdgXUfYbLDzv+EMgi2im1AOW7iFOXu9s2qgYwqqFCizbfsPmmAJAW/Os/RpcotMYj
+         1ysztxOZkNw1LxuBztmAZbdyb3HOKRtChPz/ShahApbuYENP3hwhntXo3X7lPLaAGpEv
+         en7hgjddH/76UD5ptN3FTBPtcrjNuBtiLpyw2njFsRdjl4MtvW930gSA5fpPl+belAAM
+         Ny/A==
+X-Gm-Message-State: AOAM530qnJ9luAu0frlYRL9tZX8UOiqW+V5j607NCO9X662l/M9458vJ
+        y37X3PJzk5SvUoh1ODPIxc8vrsV21SsvIw==
+X-Google-Smtp-Source: ABdhPJxqqsM5Cy++n/sVzIq35WJdFsUjMBlEFVb3fAwz7r+M18onZL+9OUMMEJylnM2h7rilXl4GHA==
+X-Received: by 2002:a05:6402:510f:: with SMTP id m15mr3755840edd.267.1611068563062;
+        Tue, 19 Jan 2021 07:02:43 -0800 (PST)
 Received: from [10.100.31.37] ([109.90.143.203])
-        by smtp.gmail.com with ESMTPSA id c24sm10369979edt.74.2021.01.19.09.16.19
+        by smtp.gmail.com with ESMTPSA id w17sm10891241ejk.124.2021.01.19.07.02.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Jan 2021 09:16:20 -0800 (PST)
+        Tue, 19 Jan 2021 07:02:41 -0800 (PST)
 Subject: Re: [PATCH v2 0/6] debian: xfsprogs package clean-up
-To:     linux-xfs@vger.kernel.org, nathans@debian.org
+To:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org
 References: <20210114183747.2507-1-bastiangermann@fishpost.de>
  <20210116092328.2667-1-bastiangermann@fishpost.de>
  <49ecc92b-6f67-5938-af41-209a0e303e8e@sandeen.net>
- <522af0f2-8485-148f-1ec2-96576925f88e@fishpost.de>
- <e96dc035-ba4b-1a50-bc2d-fba2d3e552d8@sandeen.net>
-Cc:     Eric Sandeen <sandeen@sandeen.net>
 From:   Bastian Germann <bastiangermann@fishpost.de>
-Message-ID: <3a1bd0e4-a4b2-5822-ed1a-d9a443b8ace7@fishpost.de>
-Date:   Tue, 19 Jan 2021 18:16:18 +0100
+Message-ID: <522af0f2-8485-148f-1ec2-96576925f88e@fishpost.de>
+Date:   Tue, 19 Jan 2021 16:02:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.0
 MIME-Version: 1.0
-In-Reply-To: <e96dc035-ba4b-1a50-bc2d-fba2d3e552d8@sandeen.net>
+In-Reply-To: <49ecc92b-6f67-5938-af41-209a0e303e8e@sandeen.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: de-DE-frami
 Content-Transfer-Encoding: 7bit
@@ -70,16 +67,38 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Am 19.01.21 um 18:07 schrieb Eric Sandeen:
-> On 1/19/21 9:02 AM, Bastian Germann wrote:
->> Thanks! It would be great to have a 5.10.0 version available in Debian bullseye. Currently, it has 5.6.0. The freeze is in three weeks, so to give the package time to migrate it should be uploaded in January.
+Am 18.01.21 um 22:33 schrieb Eric Sandeen:
+> On 1/16/21 3:23 AM, Bastian Germann wrote:
+>> Apply some minor changes to the xfsprogs debian packages, including
+>> missing copyright notices that are required by Debian Policy.
+>>
+>> v2:
+>>    resend with Reviewed-by annotations applied, Nathan actually sent:
+>>    "Signed-off-by: Nathan Scott <nathans@debian.org>"
 > 
-> It's not clear to me who you're asking to do this, but I'm
-> afraid it's not my role (or my ability). :)
+> I've pushed these, plus Nathan's patch to add you to Uploaders
+
+Thanks! It would be great to have a 5.10.0 version available in Debian 
+bullseye. Currently, it has 5.6.0. The freeze is in three weeks, so to 
+give the package time to migrate it should be uploaded in January.
+
 > 
+> Thanks,
 > -Eric
 > 
-
-Nathan uploaded most of the versions, so I guess he can upload.
-The Debian package is "team maintained" though with this list address as 
-recorded maintainer.
+>> Bastian Germann (6):
+>>    debian: cryptographically verify upstream tarball
+>>    debian: remove dependency on essential util-linux
+>>    debian: remove "Priority: extra"
+>>    debian: use Package-Type over its predecessor
+>>    debian: add missing copyright info
+>>    debian: new changelog entry
+>>
+>>   debian/changelog                |  11 ++++
+>>   debian/control                  |   5 +-
+>>   debian/copyright                | 111 ++++++++++++++++++++++++++++----
+>>   debian/upstream/signing-key.asc |  63 ++++++++++++++++++
+>>   debian/watch                    |   2 +-
+>>   5 files changed, 175 insertions(+), 17 deletions(-)
+>>   create mode 100644 debian/upstream/signing-key.asc
+>>
