@@ -2,52 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE0142FD5A8
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 17:30:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F06D52FD636
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 17:58:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391398AbhATQ2x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Jan 2021 11:28:53 -0500
-Received: from verein.lst.de ([213.95.11.211]:56613 "EHLO verein.lst.de"
+        id S1731332AbhATQ4B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Jan 2021 11:56:01 -0500
+Received: from verein.lst.de ([213.95.11.211]:56647 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404036AbhATQ2v (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 20 Jan 2021 11:28:51 -0500
+        id S2391250AbhATQhY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 20 Jan 2021 11:37:24 -0500
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id F2B6768B02; Wed, 20 Jan 2021 17:28:06 +0100 (CET)
-Date:   Wed, 20 Jan 2021 17:28:06 +0100
+        id 91B8868B02; Wed, 20 Jan 2021 17:36:33 +0100 (CET)
+Date:   Wed, 20 Jan 2021 17:36:33 +0100
 From:   Christoph Hellwig <hch@lst.de>
-To:     Raphael Carvalho <raphael.scarv@gmail.com>
+To:     Dave Chinner <david@fromorbit.com>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, avi@scylladb.com,
-        Dave Chinner <dchinner@redhat.com>,
-        Brian Foster <bfoster@redhat.com>
-Subject: Re: [PATCH 02/11] xfs: make xfs_file_aio_write_checks
- IOCB_NOWAIT-aware
-Message-ID: <20210120162806.GA20331@lst.de>
-References: <20210118193516.2915706-1-hch@lst.de> <20210118193516.2915706-3-hch@lst.de> <CACz=WeeaqMrGM53pJF0C_Wt2JuavTOnOV26-osPviYLUpqUmFw@mail.gmail.com>
+        Dave Chinner <dchinner@redhat.com>
+Subject: Re: [PATCH 11/11] xfs: reduce exclusive locking on unaligned dio
+Message-ID: <20210120163633.GB20331@lst.de>
+References: <20210118193516.2915706-1-hch@lst.de> <20210118193516.2915706-12-hch@lst.de> <20210118205521.GF78941@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACz=WeeaqMrGM53pJF0C_Wt2JuavTOnOV26-osPviYLUpqUmFw@mail.gmail.com>
+In-Reply-To: <20210118205521.GF78941@dread.disaster.area>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jan 19, 2021 at 09:33:37AM -0300, Raphael Carvalho wrote:
-> >          * No fallback to buffered IO after short writes for XFS, direct
-> > I/O
-> > @@ -632,7 +648,8 @@ xfs_file_dax_write(
-> >                 error = xfs_setfilesize(ip, pos, ret);
-> >         }
-> >  out:
-> > -       xfs_iunlock(ip, iolock);
-> > +       if (iolock)
-> > +               xfs_iunlock(ip, iolock);
-> >
+On Tue, Jan 19, 2021 at 07:55:21AM +1100, Dave Chinner wrote:
+> > +			   &xfs_dio_write_ops, flags);
+> > +	/*
+> > +	 * Retry unaligned IO with exclusive blocking semantics if the DIO
+> > +	 * layer rejected it for mapping or locking reasons. If we are doing
+> > +	 * nonblocking user IO, propagate the error.
+> > +	 */
+> > +	if (ret == -EAGAIN && !(iocb->ki_flags & IOCB_NOWAIT)) {
+> > +		ASSERT(flags & IOMAP_DIO_UNALIGNED);
+> > +		xfs_iunlock(ip, iolock);
+> > +		goto retry_exclusive;
+> > +	}
+> > +
+> >  out_unlock:
+> >  	if (iolock)
+> >  		xfs_iunlock(ip, iolock);
 > 
-> Not familiar with the code but looks like you're setting *iolock to zero on
-> error and perhaps you want to dereference it here instead
+> Do we ever get here without holding the iolock anymore?
 
-In this function iolock is a scalar value, not a pointer.
-xfs_file_aio_write_checks gets it passed by reference and clears it,
-and here we check that the iolock is locked at all.
+Yes, if xfs_ilock_iocb as called from xfs_file_write_checks fails.
