@@ -2,76 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6357F2FDA52
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 21:02:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 452EF2FDA99
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 21:17:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392771AbhATUA3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Jan 2021 15:00:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37740 "EHLO mail.kernel.org"
+        id S2391813AbhATUQO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Jan 2021 15:16:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392728AbhATUAW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 20 Jan 2021 15:00:22 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3396C23619;
-        Wed, 20 Jan 2021 19:58:42 +0000 (UTC)
+        id S2387621AbhATUPi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 20 Jan 2021 15:15:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C8A3E233FC;
+        Wed, 20 Jan 2021 20:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611172722;
-        bh=j8JpqhwtoTOZTpgoop1v0PZroNRy10eomIoOhcs0mj8=;
+        s=k20201202; t=1611173697;
+        bh=EhaEG5wCecB0SLkhEcmsEoS/zqbQ6eHluqPm8OJwQ0k=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AkMi5TdzkhGGJ/NISs1HpUAhtC0lSwtFQZCDrVcJD4hYq899F2powWWCXFJ+yLHC5
-         9DSpd2wDw/Mq88ftFMtzlDvxKQVoTBqA2QD9/TJemRVfv7L3qxluv+SQMLiNN0CIDo
-         13kcSQlAnbguVvwE23LaCgvRvF7JeYuyeSUbxsvtOoRVvUEVFF5jkJ3l5QeCyhH83h
-         Hdip8gcKA6QLHwSJPEp0+ypk+6VFN/4a4m06YbAy6IKe1Hb1jvdpgNfCodm1WKo6cX
-         hJzut+qjE6B9HV8ZoIXlx6EgTuSeBcYNn0u/qRC/CDRjyIEMQPD8LgmP2EZ3Ruxvqh
-         xQZwmFs8a4ETw==
-Date:   Wed, 20 Jan 2021 11:58:42 -0800
+        b=PP+AU1FaBlyI9SiVQ3sbAsL3r/21UZ8tonNfNYJ1iKOcSxWQPf+2SrGRmdwzxQntU
+         KQ+kHF0wgzIGOPzsf4Ou7eyM2HqJ3n2pvMlXP8oEs+VNDp/5FXLfzpvO8Q360dH7oE
+         gJx/E6cub0lLagmGZUiuCrN6evAtsbweJuuuiJgU9MgT5jSwoO4SxTSFKYuM2SCrkv
+         nryNE4jWFLwO0DgVaj1kgz9N4dedpxu+i92D3bynmOXLYpYc/+69ugzpP/BBLrA8Cs
+         wlJJRqqXRLqmCoJrhF5S/97N1EP2gX2iKDpsarMYxUtjNRIOn/TjcYr8wFefWaIPD4
+         VDwjzXC6Q6x8Q==
+Date:   Wed, 20 Jan 2021 12:14:57 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        avi@scylladb.com, Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 11/11] xfs: reduce exclusive locking on unaligned dio
-Message-ID: <20210120195842.GR3134581@magnolia>
-References: <20210118193516.2915706-1-hch@lst.de>
- <20210118193516.2915706-12-hch@lst.de>
- <20210120184056.GC3133414@magnolia>
- <20210120184400.GA29173@lst.de>
+To:     Nikolay Borisov <nborisov@suse.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Pavel Reichl <preichl@redhat.com>, linux-xfs@vger.kernel.org,
+        david@fromorbit.com
+Subject: Re: [RFC PATCH 0/3] Remove mrlock
+Message-ID: <20210120201457.GS3134581@magnolia>
+References: <20210113111707.756662-1-nborisov@suse.com>
+ <20210113112744.GA1474691@infradead.org>
+ <3b68fb68-f11f-1c50-a350-28159c003afe@suse.com>
+ <20210113120914.GA1482951@infradead.org>
+ <bc16a831-8d5d-c2e7-6065-3cbb7a1f92e5@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210120184400.GA29173@lst.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc16a831-8d5d-c2e7-6065-3cbb7a1f92e5@suse.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 20, 2021 at 07:44:00PM +0100, Christoph Hellwig wrote:
-> [another full quote removed, guys please send properly formatted email]
+On Wed, Jan 13, 2021 at 02:17:29PM +0200, Nikolay Borisov wrote:
 > 
-> On Wed, Jan 20, 2021 at 10:40:56AM -0800, Darrick J. Wong wrote:
-> > > +	if (!(flags & IOMAP_DIO_UNALIGNED))
-> > > +		inode_dio_wait(VFS_I(ip));
-> > 
-> > Er... this really confused me when I read it -- my first thought was
-> > "How can we be in the unaligned direct write function but DIO_UNALIGNED
-> > isn't set?  Wouldn't we be in some other function if we're doing an
-> > aligned direct write?"
-> > 
-> > Then I looked upthread to where Christph said he'd renamed it
-> > IOMAP_DIO_SUBBLOCK, but I didn't think that was sufficiently better:
-> > 
-> > 	if (!(flags & IOMAP_DIO_SUBBLOCK))
-> > 		iomap_dio_wait(...);
-> > 
-> > This flag doesn't have a 1:1 relationship with the iocb asking for an
-> > (fsblock-)unaligned write or the iocb saying that the write involves
-> > sub-block io -- this flag really means "I require a stable written
-> > mapping, no post-processing (of the disk block) allowed".
 > 
-> Would:
+> On 13.01.21 г. 14:09 ч., Christoph Hellwig wrote:
+> > On Wed, Jan 13, 2021 at 01:41:09PM +0200, Nikolay Borisov wrote:
+> >>
+> >>
+> >> On 13.01.21 ??. 13:27 ??., Christoph Hellwig wrote:
+> >>> Pavel has looked into this before and got stuck on the allocator
+> >>> workqueue offloads:
+> >>>
+> >>> [PATCH v13 0/4] xfs: Remove wrappers for some semaphores
+> >>
+> >> I haven't looked into his series but I fail to see how lifting
+> >> rwsemaphore out of the nested structure can change the behavior ? It
+> >> just removes a level of indirection. My patches are semantically
+> >> identical to the original code.
+> > 
+> > mrlocks have the mr_writer field that annotate that the is a writer
+> > locking the lock.  The XFS asserts use it to assert that the lock that
+> > the current thread holds it for exclusive protection, which isn't
+> > actually what the field says, and this breaks when XFS uses synchronous
+> > execution of work_struct as basically an extension of the kernel stack.
 > 
-> 	if (flags & IOMAP_DIO_FORCE_WAIT)
-> 		inode_dio_wait(VFS_I(ip));
-> 
-> look any better to you?  Behavior would be the same.
+> I'm still failing to see what's the problem of checking the last bit of
+> the rwsem ->count field. It is set when the sem is held for writing
+> (identical to what mr_write does). As I mention in the cover letter this
+> might be considered a bit hacky because it exposes an internal detail of
+> the rwsem i.e that the bit of interest is bit 0.
 
-Looks fine to me.
+I don't want to tear into the implementation details of rwsems if I can
+avoid it.  Just because we all have one big happy address space doesn't
+mean shortcuts won't hose everyone.
+
+> But I believe the same
+> can be achieved using lockdep_is_held_type(xx, 0/1) and making XFS's
+> debug routines depend on lockdep being on.
+
+Pavel Reichl tried that two months ago in:
+https://lore.kernel.org/linux-xfs/20201102194135.174806-2-preichl@redhat.com/
+
+which resulted in fstests regressions:
+https://lore.kernel.org/linux-xfs/20201104005345.GC7115@magnolia/
+
+TLDR: the ILOCK semaphore is data-centric, but lockdep's debugging
+chains are task-centric, which causes incorrect lock validation reports.
+
+The solutions as I see them are: (a) figure out if we really still need
+to defer bmbt splits to workers to avoid overflowing the kernel stack;
+or (b) making it possible to transfer rwsem ownership to shut up
+lockdep; or (c) fix the is_held predicate to ignore ownership.
 
 --D
+
+> 
+> > 
