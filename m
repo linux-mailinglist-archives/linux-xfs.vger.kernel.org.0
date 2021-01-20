@@ -2,105 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A21BA2FD8C5
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 19:50:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36D672FD8E2
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 19:58:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390953AbhATSsy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Jan 2021 13:48:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390089AbhATSsR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 20 Jan 2021 13:48:17 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C40E206FA;
-        Wed, 20 Jan 2021 18:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611168456;
-        bh=uKH9o6h1e+z801UsuzTij2Y7mpQx/UJmcChVgkZfWnA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nv9BKKChNeDxmg4bqcVy+4lB22JTCv4c7rFXxBDGa+3WNc4KTipKGs7yB8IZTOeg9
-         1HwuaSaPUI5EfktqOJrLr85zI+sWHOI7JHu4+DZhv+hsE+ImMdgrvOka+j+QNXUlRF
-         6+OLNwWCc96LX9NOXQGhqjRtmRDBKoZXqyHNE3GNYF/QItcv7UfwCOtrjFARV4Hjyu
-         kPeAgu9NqDuUS/R6thbWkI8s51VL96TCMYLGM5RfR63Efqs38pC2qTK+g736A7FSki
-         Bpr92Q3D+iKjClKQbxem2HslxAYM+9EhneF5kUJS72+gIVIb2TlXLqVbUnC0uWp1X3
-         cVAa3YvCSSx/g==
-Date:   Wed, 20 Jan 2021 10:47:35 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        avi@scylladb.com
-Subject: Re: [PATCH 10/11] iomap: add a IOMAP_DIO_UNALIGNED flag
-Message-ID: <20210120184735.GK3134581@magnolia>
-References: <20210118193516.2915706-1-hch@lst.de>
- <20210118193516.2915706-11-hch@lst.de>
+        id S1731075AbhATSzB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Jan 2021 13:55:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391908AbhATSyU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 Jan 2021 13:54:20 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7537C061757
+        for <linux-xfs@vger.kernel.org>; Wed, 20 Jan 2021 10:53:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1yh4choBOJVXGyp29sKvMDgBCQIuSDq7Ilxv56fOFtI=; b=q+bP8K07+WZfMTPKnrRFzQnh1i
+        50HZG0jEKn0JWaHM8upj8VT5SnLwa/Cen1V2s1GfKOZixrXll+6nUeQp50u91Fdfak4kozAJsWuSo
+        FSR2GHUERROuqSc16YBIVDXExj1Cy9vQYpmJM5iX+oh3Aj2h0sErJvzoAtaVfmNQJQ2agT6PfKHHV
+        ledtZDgOCtFRX+YKIBLNjpGG2C1BcQAfcDr/UOcQpKoCbUthAQnuIhvFtM03j3+54SfdDdewvQhFR
+        ssU4eCjkNEmeD6PjhBSztMdwdVkIfXBbDegn/nvARvyB8opMobZr5BC8xGiIAL+0PakUM1Fuy8mBB
+        2sebFCLA==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l2Ibi-00G5Hh-Iz; Wed, 20 Jan 2021 18:53:32 +0000
+Date:   Wed, 20 Jan 2021 18:53:30 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yumei Huang <yuhuang@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
+        sandeen@sandeen.net, bfoster@redhat.com
+Subject: Re: [PATCH] xfs: Fix assert failure in xfs_setattr_size()
+Message-ID: <20210120185330.GA3832968@infradead.org>
+References: <316142100.64829455.1610706461022.JavaMail.zimbra@redhat.com>
+ <1492355130.64829487.1610706535069.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210118193516.2915706-11-hch@lst.de>
+In-Reply-To: <1492355130.64829487.1610706535069.JavaMail.zimbra@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 08:35:15PM +0100, Christoph Hellwig wrote:
-> Add a flag to signal an I/O that is not file system block aligned.
+On Fri, Jan 15, 2021 at 05:28:55AM -0500, Yumei Huang wrote:
+> An assert failure is triggered by syzkaller test due to
+> ATTR_KILL_PRIV is not cleared before xfs_setattr_size.
+> As ATTR_KILL_PRIV is not checked/used by xfs_setattr_size,
+> just remove it from the assert.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/iomap/direct-io.c  | 7 +++++++
->  include/linux/iomap.h | 8 ++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index 32dbbf7dd4aadb..d93019ee4c9e3e 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -485,6 +485,13 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  		iomap_flags |= IOMAP_NOWAIT;
->  	}
->  
-> +	if (dio_flags & IOMAP_DIO_UNALIGNED) {
-> +		ret = -EAGAIN;
-> +		if (pos >= dio->i_size)
-> +			goto out_free_dio;
-> +		iomap_flags |= IOMAP_UNALIGNED;
-> +	}
-> +
->  	ret = filemap_write_and_wait_range(mapping, pos, end);
->  	if (ret)
->  		goto out_free_dio;
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index b322598dc10ec0..2fa94ec9583d0a 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -122,6 +122,7 @@ struct iomap_page_ops {
->  #define IOMAP_FAULT		(1 << 3) /* mapping for page fault */
->  #define IOMAP_DIRECT		(1 << 4) /* direct I/O */
->  #define IOMAP_NOWAIT		(1 << 5) /* do not block */
-> +#define IOMAP_UNALIGNED		(1 << 6) /* do not allocate blocks */
->  
->  struct iomap_ops {
->  	/*
-> @@ -262,6 +263,13 @@ struct iomap_dio_ops {
->   */
->  #define IOMAP_DIO_FORCE_WAIT	(1 << 0)
->  
-> +/*
-> + * Direct I/O that is not aligned to the file system block.  Do not allocate
-> + * blocks and do not zero partial blocks, fall back to the caller by returning
-> + * -EAGAIN instead.
-> + */
-> +#define IOMAP_DIO_UNALIGNED	(1 << 1)
+> Signed-off-by: Yumei Huang <yuhuang@redhat.com>
 
-The code changes look fine, but as for the name, I found it a little
-confusing even after changing it to IOMAP_DIO_SUBBLOCK.
+Looks good,
 
-See my reply to patch 11 for more details.
-
---D
-
-> +
->  ssize_t iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  		const struct iomap_ops *ops, const struct iomap_dio_ops *dops,
->  		unsigned int flags);
-> -- 
-> 2.29.2
-> 
+Reviewed-by: Christoph Hellwig <hch@lst.de>
