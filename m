@@ -2,74 +2,156 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 738502FD9A2
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 20:29:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB652FDA47
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Jan 2021 20:59:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388386AbhATT23 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Jan 2021 14:28:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
+        id S2388168AbhATT4e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Jan 2021 14:56:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392527AbhATT2O (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 20 Jan 2021 14:28:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8B9AC23406;
-        Wed, 20 Jan 2021 19:27:33 +0000 (UTC)
+        id S1729050AbhATSn5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 20 Jan 2021 13:43:57 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 82A0220575;
+        Wed, 20 Jan 2021 18:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611170853;
-        bh=0G1nGHOD1ysau5uXBtct75nAxC9GvAfiSdG3zX1sibU=;
+        s=k20201202; t=1611168119;
+        bh=e4bbHWEnKxiFttJ49RuoAstviJoZaF5D6DRfcaP2NwY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B2LAMz2FJKAUc7o3gQ9IGpF3OMEuhVytc16Fum50M8ufQyb8znrOd/J/oUl/j9gkA
-         nwvMUyEiH9LZUDdENvMcb5ITLyMa6y+rHhppgHm9gmhHEA+Q0JZvzaTPsyjxu8iqMY
-         DZ/aKmxWozzGtiCjqBR3hFxe3MjKyngi821NH15zcr0/uVSzIBV/F7N9sQdX0L5wNZ
-         NPCtwwuxMBFELWDS8iJt4G6rtQaJZLrGhy+goM8iXndlbZ7MbEdC0BC8K4W9ou/+gy
-         Ca9u4hwNkWQflYIbapgFha5zQFkJtlFfC1MHjPdh8R/E/8409CeMcCtQJXxJr+NC4a
-         E7UbAqXzyoOuA==
-Date:   Wed, 20 Jan 2021 11:27:33 -0800
+        b=n5LCWhLp+65kkIhMR8LRsWAXvr2jQAzUsP7rLZTIi0Kv7MFhCt0WoMYEQYlcf68FY
+         am2igzb1iT0yDpEvfp93InsrWS5YxTaIDfoF+6WBr813d5I7ZNDDQCsahd8CGeULCH
+         X7PJaZeshVT2GBgaWj307mcZbOYxnMSXvhuzbIzSGCippiheWUw0BvXSTDc1enDYVj
+         WaQGzb7le5fQwrCkVjjoYe3TWJcNLrfABxbtq3oGmNNvHVKkPaO0QdgHGFxIuXBAPT
+         05VdAb7soQG8QW0juEXOJvuVFMCYg65SwMzPYN/e9+1I7OnCw1T7xsk8HDTZDUe9WW
+         Etb82qJ+OZSHA==
+Date:   Wed, 20 Jan 2021 10:41:59 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Yumei Huang <yuhuang@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
-        sandeen@sandeen.net, bfoster@redhat.com
-Subject: Re: [PATCH] xfs: Fix assert failure in xfs_setattr_size()
-Message-ID: <20210120192733.GN3134581@magnolia>
-References: <316142100.64829455.1610706461022.JavaMail.zimbra@redhat.com>
- <1492355130.64829487.1610706535069.JavaMail.zimbra@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        avi@scylladb.com, Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>
+Subject: Re: [PATCH 01/11] xfs: factor out a xfs_ilock_iocb helper
+Message-ID: <20210120184159.GC3134581@magnolia>
+References: <20210118193516.2915706-1-hch@lst.de>
+ <20210118193516.2915706-2-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1492355130.64829487.1610706535069.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20210118193516.2915706-2-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jan 15, 2021 at 05:28:55AM -0500, Yumei Huang wrote:
-> An assert failure is triggered by syzkaller test due to
-> ATTR_KILL_PRIV is not cleared before xfs_setattr_size.
-> As ATTR_KILL_PRIV is not checked/used by xfs_setattr_size,
-> just remove it from the assert.
+On Mon, Jan 18, 2021 at 08:35:06PM +0100, Christoph Hellwig wrote:
+> Add a helper to factor out the nowait locking logical for the read/write
+> helpers.
 > 
-> Signed-off-by: Yumei Huang <yuhuang@redhat.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-Looks ok,
+Looks pretty straightforward,
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
 --D
 
 > ---
->  fs/xfs/xfs_iops.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/xfs/xfs_file.c | 55 +++++++++++++++++++++++++----------------------
+>  1 file changed, 29 insertions(+), 26 deletions(-)
 > 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 67c8dc9..f1e21b6 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -846,7 +846,7 @@
->          ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
->          ASSERT(S_ISREG(inode->i_mode));
->          ASSERT((iattr->ia_valid & (ATTR_UID|ATTR_GID|ATTR_ATIME|ATTR_ATIME_SET|
-> -                ATTR_MTIME_SET|ATTR_KILL_PRIV|ATTR_TIMES_SET)) == 0);
-> +                ATTR_MTIME_SET|ATTR_TIMES_SET)) == 0);
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 5b0f93f738372d..c441cddfa4acbc 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -197,6 +197,23 @@ xfs_file_fsync(
+>  	return error;
+>  }
 >  
->          oldsize = inode->i_size;
->          newsize = iattr->ia_size;
+> +static int
+> +xfs_ilock_iocb(
+> +	struct kiocb		*iocb,
+> +	unsigned int		lock_mode)
+> +{
+> +	struct xfs_inode	*ip = XFS_I(file_inode(iocb->ki_filp));
+> +
+> +	if (iocb->ki_flags & IOCB_NOWAIT) {
+> +		if (!xfs_ilock_nowait(ip, lock_mode))
+> +			return -EAGAIN;
+> +	} else {
+> +		xfs_ilock(ip, lock_mode);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  STATIC ssize_t
+>  xfs_file_dio_aio_read(
+>  	struct kiocb		*iocb,
+> @@ -213,12 +230,9 @@ xfs_file_dio_aio_read(
+>  
+>  	file_accessed(iocb->ki_filp);
+>  
+> -	if (iocb->ki_flags & IOCB_NOWAIT) {
+> -		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
+> -			return -EAGAIN;
+> -	} else {
+> -		xfs_ilock(ip, XFS_IOLOCK_SHARED);
+> -	}
+> +	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
+> +	if (ret)
+> +		return ret;
+>  	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL,
+>  			is_sync_kiocb(iocb));
+>  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
+> @@ -240,13 +254,9 @@ xfs_file_dax_read(
+>  	if (!count)
+>  		return 0; /* skip atime */
+>  
+> -	if (iocb->ki_flags & IOCB_NOWAIT) {
+> -		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
+> -			return -EAGAIN;
+> -	} else {
+> -		xfs_ilock(ip, XFS_IOLOCK_SHARED);
+> -	}
+> -
+> +	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
+> +	if (ret)
+> +		return ret;
+>  	ret = dax_iomap_rw(iocb, to, &xfs_read_iomap_ops);
+>  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
+>  
+> @@ -264,12 +274,9 @@ xfs_file_buffered_aio_read(
+>  
+>  	trace_xfs_file_buffered_read(ip, iov_iter_count(to), iocb->ki_pos);
+>  
+> -	if (iocb->ki_flags & IOCB_NOWAIT) {
+> -		if (!xfs_ilock_nowait(ip, XFS_IOLOCK_SHARED))
+> -			return -EAGAIN;
+> -	} else {
+> -		xfs_ilock(ip, XFS_IOLOCK_SHARED);
+> -	}
+> +	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
+> +	if (ret)
+> +		return ret;
+>  	ret = generic_file_read_iter(iocb, to);
+>  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
+>  
+> @@ -608,13 +615,9 @@ xfs_file_dax_write(
+>  	size_t			count;
+>  	loff_t			pos;
+>  
+> -	if (iocb->ki_flags & IOCB_NOWAIT) {
+> -		if (!xfs_ilock_nowait(ip, iolock))
+> -			return -EAGAIN;
+> -	} else {
+> -		xfs_ilock(ip, iolock);
+> -	}
+> -
+> +	ret = xfs_ilock_iocb(iocb, iolock);
+> +	if (ret)
+> +		return ret;
+>  	ret = xfs_file_aio_write_checks(iocb, from, &iolock);
+>  	if (ret)
+>  		goto out;
 > -- 
-> 1.8.3.1
+> 2.29.2
 > 
