@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FCAA2FEF73
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 16:51:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73AD42FEF79
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 16:51:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387493AbhAUPt0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Jan 2021 10:49:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58313 "EHLO
+        id S2387538AbhAUPuL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Jan 2021 10:50:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22074 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387528AbhAUPq6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 10:46:58 -0500
+        by vger.kernel.org with ESMTP id S2387537AbhAUPq7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 10:46:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611243931;
+        s=mimecast20190719; t=1611243933;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JAcda2MIcRzmuyN1ufwNqmKEIjvwQ7hE06b3PJ8NfqM=;
-        b=dR7oi8FNqTx5h+6xrBRjzJTkwGCdWg2N62VxiEaLR3nykHhDMWVbVax+Sb5Plw75qn3O6v
-        Mhm1V/ccocaBVrlR7zRPAuSJQuV//zV5meQ6o/LP7Ix7QytIYkpajebbXlAToX4qoKiqgv
-        SHQKtFKl4VcczIuSbkwRSl8gCyUo1OQ=
+        bh=Fv7jQQxjdjzToF25OI4PbimF9JtPTQ8Q8yiprj/ZhcY=;
+        b=U21WL5Tbj5grfLw3jh4rTWJtJWJ6c2Lq/RE7xU3k1iT/uSxvUujxofJdHi09t6NfZlR0J6
+        RP4JLVPyUd+223foH5S03MRHdI5+YPSCU8YkE+B+pr75w6zO9UcnI6qNKrIZSzf7yIxii1
+        fKQobXGzj4ogkAMN+D8F2PdSAi7PeCc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-eGA82Ja4NhG8IDwDxMK0dg-1; Thu, 21 Jan 2021 10:45:29 -0500
-X-MC-Unique: eGA82Ja4NhG8IDwDxMK0dg-1
+ us-mta-595-HYB_7WYCNBKvmvcuIbwVnQ-1; Thu, 21 Jan 2021 10:45:30 -0500
+X-MC-Unique: HYB_7WYCNBKvmvcuIbwVnQ-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1F50192CC4E
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73C5451DF
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:29 +0000 (UTC)
 Received: from bfoster.redhat.com (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 652851A919
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:28 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3203B46
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:29 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 3/9] xfs: separate log cleaning from log quiesce
-Date:   Thu, 21 Jan 2021 10:45:20 -0500
-Message-Id: <20210121154526.1852176-4-bfoster@redhat.com>
+Subject: [PATCH v2 5/9] xfs: don't reset log idle state on covering checkpoints
+Date:   Thu, 21 Jan 2021 10:45:22 -0500
+Message-Id: <20210121154526.1852176-6-bfoster@redhat.com>
 In-Reply-To: <20210121154526.1852176-1-bfoster@redhat.com>
 References: <20210121154526.1852176-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -47,77 +47,67 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Log quiesce is currently associated with cleaning the log, which is
-accomplished by writing an unmount record as the last step of the
-quiesce sequence. The quiesce codepath is a bit convoluted in this
-regard due to how it is reused from various contexts. In preparation
-to create separate log cleaning and log covering interfaces, lift
-the write of the unmount record into a new cleaning helper and call
-that wherever xfs_log_quiesce() is currently invoked. No functional
-changes.
+Now that log covering occurs on quiesce, we'd like to reuse the
+underlying superblock sync for final superblock updates. This
+includes things like lazy superblock counter updates, log feature
+incompat bits in the future, etc. One quirk to this approach is that
+once the log is in the IDLE (i.e. already covered) state, any
+subsequent log write resets the state back to NEED. This means that
+a final superblock sync to an already covered log requires two more
+sb syncs to return the log back to IDLE again.
+
+For example, if a lazy superblock enabled filesystem is mount cycled
+without any modifications, the unmount path syncs the superblock
+once and writes an unmount record. With the desired log quiesce
+covering behavior, we sync the superblock three times at unmount
+time: once for the lazy superblock counter update and twice more to
+cover the log. By contrast, if the log is active or only partially
+covered at unmount time, a final superblock sync would doubly serve
+as the one or two remaining syncs required to cover the log.
+
+This duplicate covering sequence is unnecessary because the
+filesystem remains consistent if a crash occurs at any point. The
+superblock will either be recovered in the event of a crash or
+written back before the log is quiesced and potentially cleaned with
+an unmount record.
+
+Update the log covering state machine to remain in the IDLE state if
+additional covering checkpoints pass through the log. This
+facilitates final superblock updates (such as lazy superblock
+counters) via a single sb sync without losing covered status. This
+provides some consistency with the active and partially covered
+cases and also avoids harmless, but spurious checkpoints when
+quiescing the log.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log.c   | 8 +++++++-
- fs/xfs/xfs_log.h   | 1 +
- fs/xfs/xfs_super.c | 2 +-
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_log.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 7280d99aa19c..0fb26b05edc9 100644
+index 7c31b046e790..6db65a4513a6 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -957,7 +957,13 @@ xfs_log_quiesce(
- 	xfs_wait_buftarg(mp->m_ddev_targp);
- 	xfs_buf_lock(mp->m_sb_bp);
- 	xfs_buf_unlock(mp->m_sb_bp);
-+}
- 
-+void
-+xfs_log_clean(
-+	struct xfs_mount	*mp)
-+{
-+	xfs_log_quiesce(mp);
- 	xfs_log_unmount_write(mp);
- }
- 
-@@ -972,7 +978,7 @@ void
- xfs_log_unmount(
- 	struct xfs_mount	*mp)
+@@ -2597,12 +2597,15 @@ xlog_covered_state(
+ 	int			iclogs_changed)
  {
--	xfs_log_quiesce(mp);
-+	xfs_log_clean(mp);
- 
- 	xfs_trans_ail_destroy(mp);
- 
-diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
-index 98c913da7587..b0400589f824 100644
---- a/fs/xfs/xfs_log.h
-+++ b/fs/xfs/xfs_log.h
-@@ -139,6 +139,7 @@ bool	xfs_log_item_in_current_chkpt(struct xfs_log_item *lip);
- 
- void	xfs_log_work_queue(struct xfs_mount *mp);
- void	xfs_log_quiesce(struct xfs_mount *mp);
-+void	xfs_log_clean(struct xfs_mount *mp);
- bool	xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
- bool	xfs_log_in_recovery(struct xfs_mount *);
- 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 813be879a5e5..09d956e30fd8 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -897,7 +897,7 @@ xfs_quiesce_attr(
- 	if (error)
- 		xfs_warn(mp, "xfs_attr_quiesce: failed to log sb changes. "
- 				"Frozen image may not be consistent.");
--	xfs_log_quiesce(mp);
-+	xfs_log_clean(mp);
- }
- 
- /*
+ 	/*
+-	 * We usually go to NEED. But we go to NEED2 if the changed indicates we
+-	 * are done writing the dummy record.  If we are done with the second
+-	 * dummy recored (DONE2), then we go to IDLE.
++	 * We go to NEED for any non-covering writes. We go to NEED2 if we just
++	 * wrote the first covering record (DONE). We go to IDLE if we just
++	 * wrote the second covering record (DONE2) and remain in IDLE until a
++	 * non-covering write occurs.
+ 	 */
+ 	switch (prev_state) {
+ 	case XLOG_STATE_COVER_IDLE:
++		if (iclogs_changed == 1)
++			return XLOG_STATE_COVER_IDLE;
+ 	case XLOG_STATE_COVER_NEED:
+ 	case XLOG_STATE_COVER_NEED2:
+ 		break;
 -- 
 2.26.2
 
