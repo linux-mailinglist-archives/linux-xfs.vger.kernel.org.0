@@ -2,20 +2,20 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 437432FEBD1
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 14:29:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E8942FEBD9
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 14:30:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730739AbhAUN2O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Jan 2021 08:28:14 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:54757 "EHLO
+        id S1729451AbhAUN3w (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Jan 2021 08:29:52 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54813 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730332AbhAUN1u (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 08:27:50 -0500
+        with ESMTP id S1731290AbhAUN2s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 08:28:48 -0500
 Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1l2Zuf-0005g7-IE; Thu, 21 Jan 2021 13:22:13 +0000
+        id 1l2Zuk-0005g7-A7; Thu, 21 Jan 2021 13:22:18 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
@@ -51,25 +51,25 @@ Cc:     John Johansen <john.johansen@canonical.com>,
         linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v6 27/40] ecryptfs: do not mount on top of idmapped mounts
-Date:   Thu, 21 Jan 2021 14:19:46 +0100
-Message-Id: <20210121131959.646623-28-christian.brauner@ubuntu.com>
+Subject: [PATCH v6 28/40] overlayfs: do not mount on top of idmapped mounts
+Date:   Thu, 21 Jan 2021 14:19:47 +0100
+Message-Id: <20210121131959.646623-29-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20210121131959.646623-1-christian.brauner@ubuntu.com>
 References: <20210121131959.646623-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; i=ghv/kMxBjWVz72L+xFuQBh/xSmPaVl07FCNHzoGv4Rk=; m=NFmehRD0KNcILFBxE6aGR1OjIupR+5WFeLoiP5ShJC4=; p=y+aaA7asfnKesPwKpXtBf+Gzv/rdSr5LpwUc8kyT8VY=; g=c814c6483a8755fc91bca27ebabaa2b2beaaec75
-X-Patch-Sig: m=pgp; i=christian.brauner@ubuntu.com; s=0x0x91C61BC06578DCA2; b=iHUEABYKAB0WIQRAhzRXHqcMeLMyaSiRxhvAZXjcogUCYAl9pgAKCRCRxhvAZXjcosHXAQC9eu2 YlnUeZViKQgWoqQtKdNJ5+dgu/eVlDpuwEWnwqwD9Eh8WEYpaxdL1+PELrTM+92+OxqtiAKKXSCAU ul1tOw4=
+X-Patch-Hashes: v=1; h=sha256; i=NKxYXgYXk9li+XoJbSjFMyv4GqDFR/v23AHTzF/JMUU=; m=ypgpaladR0B+T529H8++Mq9zCwr5KRu9f1XcKEdCto8=; p=zW+2p8lkcLUR7GoIjNSpvniO3IeSXEpL+zsJSI4ISsA=; g=020ad20f9fcdeb9417e00e21c4b4fe526c9f39ef
+X-Patch-Sig: m=pgp; i=christian.brauner@ubuntu.com; s=0x0x91C61BC06578DCA2; b=iHUEABYKAB0WIQRAhzRXHqcMeLMyaSiRxhvAZXjcogUCYAl9pgAKCRCRxhvAZXjcotk/AP93/cy xQTf8sN9k+skVh5513VCqiuPVYRe+4d52LVJKewEAiwgcDIygERxios0PkXXmd8u0IhgfSRGUtmAg fJQ4+AI=
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Prevent ecryptfs from being mounted on top of idmapped mounts.
+Prevent overlayfs from being mounted on top of idmapped mounts.
 Stacking filesystems need to be prevented from being mounted on top of
 idmapped mounts until they have have been converted to handle this.
 
-Link: https://lore.kernel.org/r/20210112220124.837960-39-christian.brauner@ubuntu.com
+Link: https://lore.kernel.org/r/20210112220124.837960-40-christian.brauner@ubuntu.com
 Cc: Christoph Hellwig <hch@lst.de>
 Cc: David Howells <dhowells@redhat.com>
 Cc: Al Viro <viro@zeniv.linux.org.uk>
@@ -80,6 +80,8 @@ Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 patch introduced
 
 /* v3 */
+- Amir Goldstein <amir73il@gmail.com>:
+  - Move check for idmapped lower layers into ovl_mount_dir_noesc().
 - David Howells <dhowells@redhat.com>:
   - Adapt check after removing mnt_idmapped() helper.
 
@@ -94,26 +96,24 @@ base-commit: 7c53f6b671f4aba70ff15e1b05148b10d58c2837
 unchanged
 base-commit: 19c329f6808995b142b3966301f217c831e7cf31
 ---
- fs/ecryptfs/main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/overlayfs/super.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/ecryptfs/main.c b/fs/ecryptfs/main.c
-index e63259fdef28..cdf40a54a35d 100644
---- a/fs/ecryptfs/main.c
-+++ b/fs/ecryptfs/main.c
-@@ -531,6 +531,12 @@ static struct dentry *ecryptfs_mount(struct file_system_type *fs_type, int flags
- 		goto out_free;
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index c04612b19054..b702c576e783 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -858,6 +858,10 @@ static int ovl_mount_dir_noesc(const char *name, struct path *path)
+ 		pr_err("filesystem on '%s' not supported\n", name);
+ 		goto out_put;
  	}
- 
-+	if (mnt_user_ns(path.mnt) != &init_user_ns) {
-+		rc = -EINVAL;
-+		printk(KERN_ERR "Mounting on idmapped mounts currently disallowed\n");
-+		goto out_free;
++	if (mnt_user_ns(path->mnt) != &init_user_ns) {
++		pr_err("idmapped layers are currently not supported\n");
++		goto out_put;
 +	}
-+
- 	if (check_ruid && !uid_eq(d_inode(path.dentry)->i_uid, current_uid())) {
- 		rc = -EPERM;
- 		printk(KERN_ERR "Mount of device (uid: %d) not owned by "
+ 	if (!d_is_dir(path->dentry)) {
+ 		pr_err("'%s' not a directory\n", name);
+ 		goto out_put;
 -- 
 2.30.0
 
