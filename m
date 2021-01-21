@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C1422FEF7B
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 16:51:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FCAA2FEF73
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 16:51:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387520AbhAUPu2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Jan 2021 10:50:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25888 "EHLO
+        id S2387493AbhAUPt0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Jan 2021 10:49:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58313 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387525AbhAUPq7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 10:46:59 -0500
+        by vger.kernel.org with ESMTP id S2387528AbhAUPq6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 10:46:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1611243931;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fFYYArRQ7zRGjgF5XCb4/AnkSM2O+auYOKo/MdsqwRU=;
-        b=VcdZ8K81IvGOYaKus/DtuD4q6b0B8p7Udj7faIILu1otzG0gCv+kb6VMVLChO+StMEqqEN
-        RGI1i3ToaT4Qq8e0y8B4qvy2uI/5Ne9oBVJkJ0qj0PS2TtStczNK13D4fa2/M62kQIXklO
-        d//kFNLxIHkKSX6KN6DflVWJg4U5xNI=
+        bh=JAcda2MIcRzmuyN1ufwNqmKEIjvwQ7hE06b3PJ8NfqM=;
+        b=dR7oi8FNqTx5h+6xrBRjzJTkwGCdWg2N62VxiEaLR3nykHhDMWVbVax+Sb5Plw75qn3O6v
+        Mhm1V/ccocaBVrlR7zRPAuSJQuV//zV5meQ6o/LP7Ix7QytIYkpajebbXlAToX4qoKiqgv
+        SHQKtFKl4VcczIuSbkwRSl8gCyUo1OQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108--kvHrUXdNq6EYY-Brmuk2w-1; Thu, 21 Jan 2021 10:45:29 -0500
-X-MC-Unique: -kvHrUXdNq6EYY-Brmuk2w-1
+ us-mta-205-eGA82Ja4NhG8IDwDxMK0dg-1; Thu, 21 Jan 2021 10:45:29 -0500
+X-MC-Unique: eGA82Ja4NhG8IDwDxMK0dg-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42CAA107ACE4
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1F50192CC4E
         for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:28 +0000 (UTC)
 Received: from bfoster.redhat.com (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 062CB1A3D8
-        for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:27 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 652851A919
+        for <linux-xfs@vger.kernel.org>; Thu, 21 Jan 2021 15:45:28 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 2/9] xfs: lift writable fs check up into log worker task
-Date:   Thu, 21 Jan 2021 10:45:19 -0500
-Message-Id: <20210121154526.1852176-3-bfoster@redhat.com>
+Subject: [PATCH v2 3/9] xfs: separate log cleaning from log quiesce
+Date:   Thu, 21 Jan 2021 10:45:20 -0500
+Message-Id: <20210121154526.1852176-4-bfoster@redhat.com>
 In-Reply-To: <20210121154526.1852176-1-bfoster@redhat.com>
 References: <20210121154526.1852176-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -47,68 +47,77 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The log covering helper checks whether the filesystem is writable to
-determine whether to cover the log. The helper is currently only
-called from the background log worker. In preparation to reuse the
-helper from freezing contexts, lift the check into xfs_log_worker().
+Log quiesce is currently associated with cleaning the log, which is
+accomplished by writing an unmount record as the last step of the
+quiesce sequence. The quiesce codepath is a bit convoluted in this
+regard due to how it is reused from various contexts. In preparation
+to create separate log cleaning and log covering interfaces, lift
+the write of the unmount record into a new cleaning helper and call
+that wherever xfs_log_quiesce() is currently invoked. No functional
+changes.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ fs/xfs/xfs_log.c   | 8 +++++++-
+ fs/xfs/xfs_log.h   | 1 +
+ fs/xfs/xfs_super.c | 2 +-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index b445e63cbc3c..7280d99aa19c 100644
+index 7280d99aa19c..0fb26b05edc9 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -1049,14 +1049,12 @@ xfs_log_space_wake(
-  * there's no point in running a dummy transaction at this point because we
-  * can't start trying to idle the log until both the CIL and AIL are empty.
-  */
--static int
--xfs_log_need_covered(xfs_mount_t *mp)
-+static bool
-+xfs_log_need_covered(
+@@ -957,7 +957,13 @@ xfs_log_quiesce(
+ 	xfs_wait_buftarg(mp->m_ddev_targp);
+ 	xfs_buf_lock(mp->m_sb_bp);
+ 	xfs_buf_unlock(mp->m_sb_bp);
++}
+ 
++void
++xfs_log_clean(
 +	struct xfs_mount	*mp)
++{
++	xfs_log_quiesce(mp);
+ 	xfs_log_unmount_write(mp);
+ }
+ 
+@@ -972,7 +978,7 @@ void
+ xfs_log_unmount(
+ 	struct xfs_mount	*mp)
  {
--	struct xlog	*log = mp->m_log;
--	int		needed = 0;
--
--	if (!xfs_fs_writable(mp, SB_FREEZE_WRITE))
--		return 0;
-+	struct xlog		*log = mp->m_log;
-+	bool			needed = false;
+-	xfs_log_quiesce(mp);
++	xfs_log_clean(mp);
  
- 	if (!xlog_cil_empty(log))
- 		return 0;
-@@ -1074,14 +1072,14 @@ xfs_log_need_covered(xfs_mount_t *mp)
- 		if (!xlog_iclogs_empty(log))
- 			break;
+ 	xfs_trans_ail_destroy(mp);
  
--		needed = 1;
-+		needed = true;
- 		if (log->l_covered_state == XLOG_STATE_COVER_NEED)
- 			log->l_covered_state = XLOG_STATE_COVER_DONE;
- 		else
- 			log->l_covered_state = XLOG_STATE_COVER_DONE2;
- 		break;
- 	default:
--		needed = 1;
-+		needed = true;
- 		break;
- 	}
- 	spin_unlock(&log->l_icloglock);
-@@ -1271,7 +1269,7 @@ xfs_log_worker(
- 	struct xfs_mount	*mp = log->l_mp;
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index 98c913da7587..b0400589f824 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -139,6 +139,7 @@ bool	xfs_log_item_in_current_chkpt(struct xfs_log_item *lip);
  
- 	/* dgc: errors ignored - not fatal and nowhere to report them */
--	if (xfs_log_need_covered(mp)) {
-+	if (xfs_fs_writable(mp, SB_FREEZE_WRITE) && xfs_log_need_covered(mp)) {
- 		/*
- 		 * Dump a transaction into the log that contains no real change.
- 		 * This is needed to stamp the current tail LSN into the log
+ void	xfs_log_work_queue(struct xfs_mount *mp);
+ void	xfs_log_quiesce(struct xfs_mount *mp);
++void	xfs_log_clean(struct xfs_mount *mp);
+ bool	xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
+ bool	xfs_log_in_recovery(struct xfs_mount *);
+ 
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 813be879a5e5..09d956e30fd8 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -897,7 +897,7 @@ xfs_quiesce_attr(
+ 	if (error)
+ 		xfs_warn(mp, "xfs_attr_quiesce: failed to log sb changes. "
+ 				"Frozen image may not be consistent.");
+-	xfs_log_quiesce(mp);
++	xfs_log_clean(mp);
+ }
+ 
+ /*
 -- 
 2.26.2
 
