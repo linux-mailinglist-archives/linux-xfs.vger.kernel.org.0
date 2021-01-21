@@ -2,285 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D28FD2FF3F4
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 20:12:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A822D2FF443
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 20:24:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbhAUTMY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Jan 2021 14:12:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726576AbhAUTMU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 21 Jan 2021 14:12:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CDF9723A5E;
-        Thu, 21 Jan 2021 19:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611255698;
-        bh=ddH61A7+enAHtNbwBP89IPjITRYDat/cDncWCEptzO0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ur7QdmIPow1LEEw7wuJF00G+0sLhAYWmr2I3UTToXWNiap7JMQHJaj871zIPncFPV
-         ImvhTu9tgsFsQ+APRILQqC9JQK6SImreE5GD3i3LB3NWAX/iFX3UmvkoDZw7ZgfnNx
-         21x3/gzN6PuNhxETCzOTL/ybS1vNGofoZSCEYINQMkumDAwcvHfT/h7P+VeAX1Ztuj
-         QpA2pOF0DEtcQUIJBDu0V/iR8TI72FgckwSEpZIsvrFrgB1WPlEibjCYqQ7KPLtM++
-         OILdfvBVgh6KDrBauXCQ5PrrknGP0VZrG8AEe+BEwViNHk+YDWSVvZUkLrIzIAGExn
-         TW3BNFkT/khiw==
-Date:   Thu, 21 Jan 2021 11:01:38 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, avi@scylladb.com,
-        Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 11/11] xfs: reduce exclusive locking on unaligned dio
-Message-ID: <20210121190138.GE1282159@magnolia>
-References: <20210121085906.322712-1-hch@lst.de>
- <20210121085906.322712-12-hch@lst.de>
- <20210121133334.GB1793795@bfoster>
-MIME-Version: 1.0
+        id S1726587AbhAUTWm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Jan 2021 14:22:42 -0500
+Received: from mail-dm3gcc02on2139.outbound.protection.outlook.com ([40.107.91.139]:39489
+        "EHLO GCC02-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727302AbhAUTW2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 21 Jan 2021 14:22:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mzUeAkAtY5v7gAlI+DTgD4RIqt7BkgPxztOpV8EuAT55xsYGf37xVMzJ6DZcOOk/z5DN+YFj2JABHuOOMXxm9jd5xW6af0GygKeptDLwEsnQixJCPozPHCeE1bjt+R1h5IsoAZJITaDG72i4FozWZ7DV141ugYAdmol6S4E8bu6UhcWrU1L2yTkP6JnM9JHTocAH6DZls5TD0ULxfb2xJ9Gs3HbXVeT7KswsnqCvVIHWhabduFHs4G+8P85LiwEJi/tLP1LLaloeco81YZWzDSiMbqLFZ0CYe0Ffa2lLkurxdXLdMFYr2bTxIijWRgrCSN5egUU49KeKNGzkXNiYWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hc4i/5yYx/4QNu8x5zpc+jp150xKitrKlxVwMHdzcBI=;
+ b=gpLBSthLNKcImf/sMDnIaZHRGlPDiie/eEH3MlXl+TR1Gx4bk2nNuK+w4RA4/m2at7wrwGnf9CqaZmpHjkUB/WP/1AQlyzTTz7UdmD9A/CM+kAYWO83ps5SCAgAjdj2ZZpDDgIiBfwmY8LlGOazE3zt0go5/gNaCaRuAQvNgQQxrbJlsRG5i9wthZzmgvd2wouWaLW3sG6OP5d7+iPr7xrZIkNRlOHE/srzrTxKUND/iqEFzUsoDj3RZ+j4p0hk2bhvp9mXYVjnwVEkQS2PxkrI0wnK5bhuMRDmTjQ658ViYIHJqDqWi8Qwvu8W4PotQth5aOfyTCgJKwFqdT08sEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starlab.io; dmarc=pass action=none header.from=starlab.io;
+ dkim=pass header.d=starlab.io; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=starlab.io;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hc4i/5yYx/4QNu8x5zpc+jp150xKitrKlxVwMHdzcBI=;
+ b=kGZ69Nly93w/yYqRTRncQrwoeYaFzGCS4WYtCLw/Jj3ECoA13i2fNjVMnxxPXNTTMJfo9uGznBdt1E4zup4NZxrV/qERQuXkXyD4vn5DQj8s6P6ZjumJ5loBogwkxaGUnzegew4lYh4v1S+ZLp4tLQG74WkfDaXGPpBo2NbX3cU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=starlab.io;
+Received: from DM8PR09MB6997.namprd09.prod.outlook.com (2603:10b6:5:2e0::10)
+ by DM6PR09MB5973.namprd09.prod.outlook.com (2603:10b6:5:269::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.10; Thu, 21 Jan
+ 2021 19:21:35 +0000
+Received: from DM8PR09MB6997.namprd09.prod.outlook.com
+ ([fe80::d16d:8c95:983d:28f9]) by DM8PR09MB6997.namprd09.prod.outlook.com
+ ([fe80::d16d:8c95:983d:28f9%5]) with mapi id 15.20.3784.014; Thu, 21 Jan 2021
+ 19:21:35 +0000
+Date:   Thu, 21 Jan 2021 13:21:33 -0600
+From:   Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] xfs: set inode size after creating symlink
+Message-ID: <20210121192133.GA9807@jeffrey-work-20.04>
+References: <20210121151912.4429-1-jeffrey.mitchell@starlab.io>
+ <20210121184137.GB1282159@magnolia>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210121133334.GB1793795@bfoster>
+In-Reply-To: <20210121184137.GB1282159@magnolia>
+X-Originating-IP: [47.218.202.86]
+X-ClientProxiedBy: SN7PR04CA0154.namprd04.prod.outlook.com
+ (2603:10b6:806:125::9) To DM8PR09MB6997.namprd09.prod.outlook.com
+ (2603:10b6:5:2e0::10)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jeffrey-work-20 (47.218.202.86) by SN7PR04CA0154.namprd04.prod.outlook.com (2603:10b6:806:125::9) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3784.11 via Frontend Transport; Thu, 21 Jan 2021 19:21:35 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7575242c-e691-4f3a-e911-08d8be41c483
+X-MS-TrafficTypeDiagnostic: DM6PR09MB5973:
+X-Microsoft-Antispam-PRVS: <DM6PR09MB5973A3B04D9A79C1A314FF01F8A10@DM6PR09MB5973.namprd09.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2201;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f441okwDE0htOSxz9WzMavTIxhFLK+Gh3ecIMgSdsaK0na6oSCjMp0may9F1NX6nOoAZ5zWFyY1qiLy4d6o4bcB/0N8vz8HDHHrDahCPIIXhZEihbodojvPF+mbsriSIRzewKbfdfE+7PTls0XTIA48AseiCeray7+f07VkTD/c4zVoEkADW7d6rFxsl3kIy4zXka2tQ8kikGzYNPByjH1zTI2RSkgvqPs/jZU/94HNCJzG3o5qkX/Ky0sv1kP9jcC2+cuFJrWHWgU2Q1JZ9UBVFflOweCjdpmoNvbc2hKdjpTR9SoVaAYIh5tLPz8UdTaquDKMny0e1uxOQhORL0cmEgP1UmzUByY+x981des3feUvndmcPym9b+uAKCb2vXoVRW0cVtx3rQj+QUc8xhw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR09MB6997.namprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39830400003)(346002)(376002)(136003)(366004)(478600001)(1076003)(26005)(6916009)(316002)(5660300002)(16526019)(14286002)(2906002)(6496006)(66556008)(8676002)(4744005)(66946007)(9686003)(83380400001)(6486002)(4326008)(66476007)(186003)(956004)(44832011)(33656002)(52116002)(86362001)(8936002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?XquzyA3D2RYAemjD7RZsyeKp8io8h9nqt4Z0dal59OX8nY79Byex9IOZIvft?=
+ =?us-ascii?Q?rZthngqu9h8u8mWP4H11lzmXuPxvsHMBY9jYXzBRw9ZM3+sYfDFt4THGjuXD?=
+ =?us-ascii?Q?vqS96k0TwXzuBi+7VXSTSL9+t7m2FAEV1Q6hVOJAdQ+IqSVSHm2pxx6xXMMK?=
+ =?us-ascii?Q?U6jK7GEsOvLZ/fo0b/9aZiECQqazAXwnFkxiDhm9DNW4gcHuD+0xIUPSXzci?=
+ =?us-ascii?Q?plTq0xaL61hVbW3Lw9UqGnE0uB04nusza+4jGxZmHRqiCUxW3UP7RdTsfjzQ?=
+ =?us-ascii?Q?dDxEVa86//IWYKIRF1q0HvkI3hfT+7z+7iI9QWJmIPSKpb6Z2RhSKZFCorFG?=
+ =?us-ascii?Q?u+5FZ1HPVrVYem2r/Am3CzcT2TWAxo5/v+A/dFWTMohqaeZ50+vcGwwoIKKa?=
+ =?us-ascii?Q?KeEKy9Ocu9w73N5Wfg3XKwl0HMjoDypFxY9CJd9EQ4EcH04brHLAWmnmHMIi?=
+ =?us-ascii?Q?qOnH0fNi/9/eMTZZDRMiEcj4JUM2hzPwL+cLSPXla1wJ3HpcwkmW42IGn//h?=
+ =?us-ascii?Q?tAaKdMsW5Vr5v1bMaZKoDzs4Sm+nUdaM4+JGArDanyb8ZdRiAczB+6Hs/O5T?=
+ =?us-ascii?Q?m6mtSJlhD43y3D0nzW5hU0xKMKWX9DatvZykg+Hjz3fjkcuvYGZaRfncjtJh?=
+ =?us-ascii?Q?lmHnb/mb5C0Z/n4fH513FzCt/tzdnSQp2F2hqWDONvndz5SUiRWBZPo+BFyc?=
+ =?us-ascii?Q?FjOiLJlfkoG9mC8+W/6vCcBkxeUdlS1VOas8IKyKSnLcq2CKDE5Z/Js3pjrm?=
+ =?us-ascii?Q?yLkWBdWOah3QevJmA3SlXo6xwgVeksYlF6R+avxGLx7ZCQqckEiWfh/oHGJD?=
+ =?us-ascii?Q?3hxn8elpJhYcSqhrtvwGP7sEbj9mTAAoXNZNFg6p3ksYJO6FQcn8s/Nf4taO?=
+ =?us-ascii?Q?kVk5WMhQx+VaBGFdKjvu8fTi1toEX5hwIGggEbKyYednDAlQnDr349uJ92hh?=
+ =?us-ascii?Q?dv9eb7d0fMQasG6EUG9m5AP036WRv2IMTFn/ABPrlXZNNRQFfR3UTmSsCXQE?=
+ =?us-ascii?Q?LurZ?=
+X-OriginatorOrg: starlab.io
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7575242c-e691-4f3a-e911-08d8be41c483
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR09MB6997.namprd09.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2021 19:21:35.2991
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e611933-986f-4838-a403-4acb432ce224
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: T+mxlKSCWbOc1dWTXBbgBEeks9lwJVXdkeyO1A86xu7qeZHpR13KBcBG8GQwZqMvdWj12S2gw18UDwc8TGswCxVgbPjIE4VY1mODb9xDzF8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR09MB5973
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 08:33:34AM -0500, Brian Foster wrote:
-> On Thu, Jan 21, 2021 at 09:59:06AM +0100, Christoph Hellwig wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > Attempt shared locking for unaligned DIO, but only if the the
-> > underlying extent is already allocated and in written state. On
-> > failure, retry with the existing exclusive locking.
-> > 
-> > Test case is fio randrw of 512 byte IOs using AIO and an iodepth of
-> > 32 IOs.
-> > 
-> > Vanilla:
-> > 
-> >   READ: bw=4560KiB/s (4670kB/s), 4560KiB/s-4560KiB/s (4670kB/s-4670kB/s), io=134MiB (140MB), run=30001-30001msec
-> >   WRITE: bw=4567KiB/s (4676kB/s), 4567KiB/s-4567KiB/s (4676kB/s-4676kB/s), io=134MiB (140MB), run=30001-30001msec
-> > 
-> > Patched:
-> >    READ: bw=37.6MiB/s (39.4MB/s), 37.6MiB/s-37.6MiB/s (39.4MB/s-39.4MB/s), io=1127MiB (1182MB), run=30002-30002msec
-> >   WRITE: bw=37.6MiB/s (39.4MB/s), 37.6MiB/s-37.6MiB/s (39.4MB/s-39.4MB/s), io=1128MiB (1183MB), run=30002-30002msec
-> > 
-> > That's an improvement from ~18k IOPS to a ~150k IOPS, which is
-> > about the IOPS limit of the VM block device setup I'm testing on.
-> > 
-> > 4kB block IO comparison:
-> > 
-> >    READ: bw=296MiB/s (310MB/s), 296MiB/s-296MiB/s (310MB/s-310MB/s), io=8868MiB (9299MB), run=30002-30002msec
-> >   WRITE: bw=296MiB/s (310MB/s), 296MiB/s-296MiB/s (310MB/s-310MB/s), io=8878MiB (9309MB), run=30002-30002msec
-> > 
-> > Which is ~150k IOPS, same as what the test gets for sub-block
-> > AIO+DIO writes with this patch.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > [hch: rebased, split unaligned from nowait]
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  fs/xfs/xfs_file.c  | 87 ++++++++++++++++++++++++++++++++--------------
-> >  fs/xfs/xfs_iomap.c | 30 +++++++++++-----
-> >  2 files changed, 83 insertions(+), 34 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> > index b181db42f2f32f..33899a5cca53f9 100644
-> > --- a/fs/xfs/xfs_file.c
-> > +++ b/fs/xfs/xfs_file.c
-> > @@ -544,22 +544,35 @@ xfs_file_dio_write_aligned(
-> >  /*
-> >   * Handle block unaligned direct IO writes
-> >   *
-> > - * In most cases direct IO writes will be done holding IOLOCK_SHARED, allowing
-> > - * them to be done in parallel with reads and other direct IO writes.  However,
-> > - * if the I/O is not aligned to filesystem blocks, the direct I/O layer may
-> > - * need to do sub-block zeroing and that requires serialisation against other
-> > - * direct I/Os to the same block. In this case we need to serialise the
-> > - * submission of the unaligned I/Os so that we don't get racing block zeroing in
-> > - * the dio layer.
-> > + * In most cases direct IO writes will be done holding IOLOCK_SHARED
-> > + * allowing them to be done in parallel with reads and other direct IO writes.
-> > + * However, if the IO is not aligned to filesystem blocks, the direct IO layer
-> > + * may need to do sub-block zeroing and that requires serialisation against other
-> > + * direct IOs to the same block. In the case where sub-block zeroing is not
-> > + * required, we can do concurrent sub-block dios to the same block successfully.
-> >   *
-> > - * To provide the same serialisation for AIO, we also need to wait for
-> > + * Hence we have two cases here - the shared, optimisitic fast path for written
+On Thu, Jan 21, 2021 at 10:41:37AM -0800, Darrick J. Wong wrote:
+> Do directories have the same problem?
 
-"optimistic"
+Yes, I just checked in a VM. While ecryptfs does call vfs_getattr(), it
+only uses the "blocks" value to supplement the data from an identical
+generic_fillattr() call to what ecryptfs_getattr_link() uses. The reported
+size still comes from i_size_read().
 
-> > + * extents, and everything else that needs exclusive IO path access across the
-> > + * entire IO.
-> > + *
-> > + * For the first case, we do all the checks we need at the mapping layer in the
-> > + * DIO code as part of the existing NOWAIT infrastructure. Hence all we need to
-> > + * do to support concurrent subblock dio is first try a non-blocking submission.
-> > + * If that returns -EAGAIN, then we simply repeat the IO submission with full
-> > + * IO exclusivity guaranteed so that we avoid racing sub-block zeroing.
-> > + *
-> 
-> The above paragraph still implicitly refers to the original NOWAIT based
-> implementation. I'd suggest to tweak it to something like:
-> 
-> "The mapping layer of the dio code performs all the checks required to
-> distinguish between the shared (overwrite) and exclusive cases. Hence to
-> support concurrent unaligned dio, first submit the request in overwrite
-> only mode. If that returns -EAGAIN, sub-block zeroing is required.
-> Repeat the submission with full IO exclusivity to avoid races."
-
-FWIW I like this version better, because the fact that we reuse the
-existing 'nowait' switching to handle unaligned direct writes is a minor
-implementation detail here.
-
-I think I'm about ready to RVB this, but there are enough small loose
-ends that I'll wait for the next version. :)
-
---D
-
-> That aside, I still find the single mapping requirement a bit
-> unfortunate, but otherwise the code LGTM:
-> 
-> Reviewed-by: Brian Foster <bfoster@redhat.com>
-> 
-> > + * The only wrinkle in this case is that the iomap DIO code always does
-> > + * partial tail sub-block zeroing for post-EOF writes. Hence for any IO that
-> > + * _ends_ past the current EOF we need to run with full exclusivity. Note that
-> > + * we also check for the start of IO being beyond EOF because then zeroing
-> > + * between the old EOF and the start of the IO is required and that also
-> > + * requires exclusivity. Hence we avoid lock cycles and blocking under
-> > + * IOCB_NOWAIT for this situation, too.
-> > + *
-> > + * To provide the exclusivity required when using AIO, we also need to wait for
-> >   * outstanding IOs to complete so that unwritten extent conversion is completed
-> >   * before we try to map the overlapping block. This is currently implemented by
-> >   * hitting it with a big hammer (i.e. inode_dio_wait()).
-> > - *
-> > - * This means that unaligned dio writes always block. There is no "nowait" fast
-> > - * path in this code - if IOCB_NOWAIT is set we simply return -EAGAIN up front
-> > - * and we don't have to worry about that anymore.
-> >   */
-> >  static noinline ssize_t
-> >  xfs_file_dio_write_unaligned(
-> > @@ -567,13 +580,27 @@ xfs_file_dio_write_unaligned(
-> >  	struct kiocb		*iocb,
-> >  	struct iov_iter		*from)
-> >  {
-> > -	int			iolock = XFS_IOLOCK_EXCL;
-> > +	size_t			isize = i_size_read(VFS_I(ip));
-> > +	size_t			count = iov_iter_count(from);
-> > +	int			iolock = XFS_IOLOCK_SHARED;
-> > +	unsigned int		flags = IOMAP_DIO_OVERWRITE_ONLY;
-> >  	ssize_t			ret;
-> >  
-> > -	/* unaligned dio always waits, bail */
-> > -	if (iocb->ki_flags & IOCB_NOWAIT)
-> > -		return -EAGAIN;
-> > -	xfs_ilock(ip, iolock);
-> > +	/*
-> > +	 * Extending writes need exclusivity because of the sub-block zeroing
-> > +	 * that the DIO code always does for partial tail blocks beyond EOF.
-> > +	 */
-> > +	if (iocb->ki_pos > isize || iocb->ki_pos + count >= isize) {
-> > +retry_exclusive:
-> > +		if (iocb->ki_flags & IOCB_NOWAIT)
-> > +			return -EAGAIN;
-> > +		iolock = XFS_IOLOCK_EXCL;
-> > +		flags = IOMAP_DIO_FORCE_WAIT;
-> > +	}
-> > +
-> > +	ret = xfs_ilock_iocb(iocb, iolock);
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	/*
-> >  	 * We can't properly handle unaligned direct I/O to reflink files yet,
-> > @@ -590,19 +617,27 @@ xfs_file_dio_write_unaligned(
-> >  		goto out_unlock;
-> >  
-> >  	/*
-> > -	 * If we are doing unaligned I/O, we can't allow any other overlapping
-> > -	 * I/O in-flight at the same time or we risk data corruption. Wait for
-> > -	 * all other I/O to drain before we submit.
-> > +	 * If we are doing exclusive unaligned IO, we can't allow any other
-> > +	 * overlapping IO in-flight at the same time or we risk data corruption.
-> > +	 * Wait for all other IO to drain before we submit.
-> >  	 */
-> > -	inode_dio_wait(VFS_I(ip));
-> > +	if (flags & IOMAP_DIO_FORCE_WAIT)
-> > +		inode_dio_wait(VFS_I(ip));
-> >  
-> > -	/*
-> > -	 * This must be the only I/O in-flight. Wait on it before we release the
-> > -	 * iolock to prevent subsequent overlapping I/O.
-> > -	 */
-> >  	trace_xfs_file_direct_write(iocb, from);
-> >  	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
-> > -			   &xfs_dio_write_ops, IOMAP_DIO_FORCE_WAIT);
-> > +			   &xfs_dio_write_ops, flags);
-> > +	/*
-> > +	 * Retry unaligned IO with exclusive blocking semantics if the DIO
-> > +	 * layer rejected it for mapping or locking reasons. If we are doing
-> > +	 * nonblocking user IO, propagate the error.
-> > +	 */
-> > +	if (ret == -EAGAIN && !(iocb->ki_flags & IOCB_NOWAIT)) {
-> > +		ASSERT(flags & IOMAP_DIO_OVERWRITE_ONLY);
-> > +		xfs_iunlock(ip, iolock);
-> > +		goto retry_exclusive;
-> > +	}
-> > +
-> >  out_unlock:
-> >  	if (iolock)
-> >  		xfs_iunlock(ip, iolock);
-> > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> > index 7b9ff824e82d48..596af78f910596 100644
-> > --- a/fs/xfs/xfs_iomap.c
-> > +++ b/fs/xfs/xfs_iomap.c
-> > @@ -784,15 +784,29 @@ xfs_direct_write_iomap_begin(
-> >  		goto allocate_blocks;
-> >  
-> >  	/*
-> > -	 * NOWAIT IO needs to span the entire requested IO with a single map so
-> > -	 * that we avoid partial IO failures due to the rest of the IO range not
-> > -	 * covered by this map triggering an EAGAIN condition when it is
-> > -	 * subsequently mapped and aborting the IO.
-> > +	 * NOWAIT and OVERWRITE needs to span the entire requested IO with a
-> > +	 * single map so that we avoid partial IO failures due to the rest of
-> > +	 * the IO range not covered by this map triggering an EAGAIN condition
-> > +	 * when it is subsequently mapped and aborting the IO.
-> >  	 */
-> > -	if ((flags & IOMAP_NOWAIT) &&
-> > -	    !imap_spans_range(&imap, offset_fsb, end_fsb)) {
-> > +	if (flags & (IOMAP_NOWAIT | IOMAP_OVERWRITE_ONLY)) {
-> >  		error = -EAGAIN;
-> > -		goto out_unlock;
-> > +		if (!imap_spans_range(&imap, offset_fsb, end_fsb))
-> > +			goto out_unlock;
-> > +	}
-> > +
-> > +	/*
-> > +	 * For overwrite only I/O, we cannot convert unwritten extents without
-> > +	 * requiring sub-block zeroing.  This can only be done under an
-> > +	 * exclusive IOLOCK, hence return -EAGAIN if this is not a written
-> > +	 * extent to tell the caller to try again.
-> > +	 */
-> > +	if (flags & IOMAP_OVERWRITE_ONLY) {
-> > +		error = -EAGAIN;
-> > +		if (imap.br_state != XFS_EXT_NORM &&
-> > +		    ((offset & mp->m_blockmask) ||
-> > +		     ((offset + length) & mp->m_blockmask)))
-> > +			goto out_unlock;
-> >  	}
-> >  
-> >  	xfs_iunlock(ip, lockmode);
-> > @@ -801,7 +815,7 @@ xfs_direct_write_iomap_begin(
-> >  
-> >  allocate_blocks:
-> >  	error = -EAGAIN;
-> > -	if (flags & IOMAP_NOWAIT)
-> > +	if (flags & (IOMAP_NOWAIT | IOMAP_OVERWRITE_ONLY))
-> >  		goto out_unlock;
-> >  
-> >  	/*
-> > -- 
-> > 2.29.2
-> > 
-> 
+V/R,
+Jeffrey Mitchell
