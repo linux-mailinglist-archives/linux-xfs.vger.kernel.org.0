@@ -2,280 +2,280 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05C182FED16
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 15:41:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A65D2FEEC1
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Jan 2021 16:30:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbhAUOkP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 21 Jan 2021 09:40:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:27447 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732447AbhAUNfI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 08:35:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611236020;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=osaOkMQC5TBliM3TcAepWHeIDX6eGu5zaKc4yWEOYyM=;
-        b=d5ZYvt7iBoXXyEjmPsACPbv6oGp0lNv0ufGRlvhojntXDy3sRieOrS7Qi6XiRVtNYF/q5T
-        CRoOh2l/+nJwP7B95weu3hqXXd8T88Phw7aqwoRaKRmWOfqUc8Ae82rOSzaeeeUnRYK9He
-        99uj0haX4C/OxCpC++JYDRC9uNNIMiM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-573-3oMWyCF2N2SJgyQN1fMVDw-1; Thu, 21 Jan 2021 08:33:38 -0500
-X-MC-Unique: 3oMWyCF2N2SJgyQN1fMVDw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE0EE879500;
-        Thu, 21 Jan 2021 13:33:36 +0000 (UTC)
-Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D73935D9C6;
-        Thu, 21 Jan 2021 13:33:35 +0000 (UTC)
-Date:   Thu, 21 Jan 2021 08:33:34 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        avi@scylladb.com, Dave Chinner <dchinner@redhat.com>
-Subject: Re: [PATCH 11/11] xfs: reduce exclusive locking on unaligned dio
-Message-ID: <20210121133334.GB1793795@bfoster>
-References: <20210121085906.322712-1-hch@lst.de>
- <20210121085906.322712-12-hch@lst.de>
+        id S1732914AbhAUPaA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 21 Jan 2021 10:30:00 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54068 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730048AbhAUNWN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 21 Jan 2021 08:22:13 -0500
+Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1l2Ztp-0005g7-Iy; Thu, 21 Jan 2021 13:21:21 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
+Cc:     John Johansen <john.johansen@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Geoffrey Thomas <geofft@ldpreload.com>,
+        Mrunal Patel <mpatel@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Theodore Tso <tytso@mit.edu>, Alban Crequy <alban@kinvolk.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Howells <dhowells@redhat.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Seth Forshee <seth.forshee@canonical.com>,
+        =?UTF-8?q?St=C3=A9phane=20Graber?= <stgraber@ubuntu.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>, smbarber@chromium.org,
+        Phil Estes <estesp@gmail.com>, Serge Hallyn <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Todd Kjos <tkjos@google.com>, Paul Moore <paul@paul-moore.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v6 15/40] open: handle idmapped mounts in do_truncate()
+Date:   Thu, 21 Jan 2021 14:19:34 +0100
+Message-Id: <20210121131959.646623-16-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20210121131959.646623-1-christian.brauner@ubuntu.com>
+References: <20210121131959.646623-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210121085906.322712-12-hch@lst.de>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Patch-Hashes: v=1; h=sha256; i=luWr+VA/K8XJzgT4gX4nqMzEuQJylBRV32CcnmZlQJ8=; m=XJu4Sx96Qgw5F+dLWfwKUfgcuJm55dwwUprxzq2rY3M=; p=RlnmoKapstAZLJe1gLcqaUTCPfjFgeMKYnLu+MXn0JY=; g=dc5ad43796544c09b03298270d4c6bfc5aba8333
+X-Patch-Sig: m=pgp; i=christian.brauner@ubuntu.com; s=0x0x91C61BC06578DCA2; b=iHUEABYKAB0WIQRAhzRXHqcMeLMyaSiRxhvAZXjcogUCYAl9pAAKCRCRxhvAZXjcorJkAP9a62J J2k8eV2GeBOzU+3th+V7gqNipGLUMyUlEa/9OrQD/QqERsALVXZ/lkmI6jvBjiJeBhmRMd7zToPe2 VZ19nAc=
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jan 21, 2021 at 09:59:06AM +0100, Christoph Hellwig wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Attempt shared locking for unaligned DIO, but only if the the
-> underlying extent is already allocated and in written state. On
-> failure, retry with the existing exclusive locking.
-> 
-> Test case is fio randrw of 512 byte IOs using AIO and an iodepth of
-> 32 IOs.
-> 
-> Vanilla:
-> 
->   READ: bw=4560KiB/s (4670kB/s), 4560KiB/s-4560KiB/s (4670kB/s-4670kB/s), io=134MiB (140MB), run=30001-30001msec
->   WRITE: bw=4567KiB/s (4676kB/s), 4567KiB/s-4567KiB/s (4676kB/s-4676kB/s), io=134MiB (140MB), run=30001-30001msec
-> 
-> Patched:
->    READ: bw=37.6MiB/s (39.4MB/s), 37.6MiB/s-37.6MiB/s (39.4MB/s-39.4MB/s), io=1127MiB (1182MB), run=30002-30002msec
->   WRITE: bw=37.6MiB/s (39.4MB/s), 37.6MiB/s-37.6MiB/s (39.4MB/s-39.4MB/s), io=1128MiB (1183MB), run=30002-30002msec
-> 
-> That's an improvement from ~18k IOPS to a ~150k IOPS, which is
-> about the IOPS limit of the VM block device setup I'm testing on.
-> 
-> 4kB block IO comparison:
-> 
->    READ: bw=296MiB/s (310MB/s), 296MiB/s-296MiB/s (310MB/s-310MB/s), io=8868MiB (9299MB), run=30002-30002msec
->   WRITE: bw=296MiB/s (310MB/s), 296MiB/s-296MiB/s (310MB/s-310MB/s), io=8878MiB (9309MB), run=30002-30002msec
-> 
-> Which is ~150k IOPS, same as what the test gets for sub-block
-> AIO+DIO writes with this patch.
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> [hch: rebased, split unaligned from nowait]
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_file.c  | 87 ++++++++++++++++++++++++++++++++--------------
->  fs/xfs/xfs_iomap.c | 30 +++++++++++-----
->  2 files changed, 83 insertions(+), 34 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index b181db42f2f32f..33899a5cca53f9 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -544,22 +544,35 @@ xfs_file_dio_write_aligned(
->  /*
->   * Handle block unaligned direct IO writes
->   *
-> - * In most cases direct IO writes will be done holding IOLOCK_SHARED, allowing
-> - * them to be done in parallel with reads and other direct IO writes.  However,
-> - * if the I/O is not aligned to filesystem blocks, the direct I/O layer may
-> - * need to do sub-block zeroing and that requires serialisation against other
-> - * direct I/Os to the same block. In this case we need to serialise the
-> - * submission of the unaligned I/Os so that we don't get racing block zeroing in
-> - * the dio layer.
-> + * In most cases direct IO writes will be done holding IOLOCK_SHARED
-> + * allowing them to be done in parallel with reads and other direct IO writes.
-> + * However, if the IO is not aligned to filesystem blocks, the direct IO layer
-> + * may need to do sub-block zeroing and that requires serialisation against other
-> + * direct IOs to the same block. In the case where sub-block zeroing is not
-> + * required, we can do concurrent sub-block dios to the same block successfully.
->   *
-> - * To provide the same serialisation for AIO, we also need to wait for
-> + * Hence we have two cases here - the shared, optimisitic fast path for written
-> + * extents, and everything else that needs exclusive IO path access across the
-> + * entire IO.
-> + *
-> + * For the first case, we do all the checks we need at the mapping layer in the
-> + * DIO code as part of the existing NOWAIT infrastructure. Hence all we need to
-> + * do to support concurrent subblock dio is first try a non-blocking submission.
-> + * If that returns -EAGAIN, then we simply repeat the IO submission with full
-> + * IO exclusivity guaranteed so that we avoid racing sub-block zeroing.
-> + *
+When truncating files the vfs will verify that the caller is privileged
+over the inode. Extend it to handle idmapped mounts. If the inode is
+accessed through an idmapped mount it is mapped according to the mount's
+user namespace. Afterwards the permissions checks are identical to
+non-idmapped mounts. If the initial user namespace is passed nothing
+changes so non-idmapped mounts will see identical behavior as before.
 
-The above paragraph still implicitly refers to the original NOWAIT based
-implementation. I'd suggest to tweak it to something like:
+Link: https://lore.kernel.org/r/20210112220124.837960-23-christian.brauner@ubuntu.com
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+unchanged
 
-"The mapping layer of the dio code performs all the checks required to
-distinguish between the shared (overwrite) and exclusive cases. Hence to
-support concurrent unaligned dio, first submit the request in overwrite
-only mode. If that returns -EAGAIN, sub-block zeroing is required.
-Repeat the submission with full IO exclusivity to avoid races."
+/* v3 */
+unchanged
 
-That aside, I still find the single mapping requirement a bit
-unfortunate, but otherwise the code LGTM:
+/* v4 */
+- Serge Hallyn <serge@hallyn.com>:
+  - Use "mnt_userns" to refer to a vfsmount's userns everywhere to make
+    terminology consistent.
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+/* v5 */
+base-commit: 7c53f6b671f4aba70ff15e1b05148b10d58c2837
 
-> + * The only wrinkle in this case is that the iomap DIO code always does
-> + * partial tail sub-block zeroing for post-EOF writes. Hence for any IO that
-> + * _ends_ past the current EOF we need to run with full exclusivity. Note that
-> + * we also check for the start of IO being beyond EOF because then zeroing
-> + * between the old EOF and the start of the IO is required and that also
-> + * requires exclusivity. Hence we avoid lock cycles and blocking under
-> + * IOCB_NOWAIT for this situation, too.
-> + *
-> + * To provide the exclusivity required when using AIO, we also need to wait for
->   * outstanding IOs to complete so that unwritten extent conversion is completed
->   * before we try to map the overlapping block. This is currently implemented by
->   * hitting it with a big hammer (i.e. inode_dio_wait()).
-> - *
-> - * This means that unaligned dio writes always block. There is no "nowait" fast
-> - * path in this code - if IOCB_NOWAIT is set we simply return -EAGAIN up front
-> - * and we don't have to worry about that anymore.
->   */
->  static noinline ssize_t
->  xfs_file_dio_write_unaligned(
-> @@ -567,13 +580,27 @@ xfs_file_dio_write_unaligned(
->  	struct kiocb		*iocb,
->  	struct iov_iter		*from)
->  {
-> -	int			iolock = XFS_IOLOCK_EXCL;
-> +	size_t			isize = i_size_read(VFS_I(ip));
-> +	size_t			count = iov_iter_count(from);
-> +	int			iolock = XFS_IOLOCK_SHARED;
-> +	unsigned int		flags = IOMAP_DIO_OVERWRITE_ONLY;
->  	ssize_t			ret;
->  
-> -	/* unaligned dio always waits, bail */
-> -	if (iocb->ki_flags & IOCB_NOWAIT)
-> -		return -EAGAIN;
-> -	xfs_ilock(ip, iolock);
-> +	/*
-> +	 * Extending writes need exclusivity because of the sub-block zeroing
-> +	 * that the DIO code always does for partial tail blocks beyond EOF.
-> +	 */
-> +	if (iocb->ki_pos > isize || iocb->ki_pos + count >= isize) {
-> +retry_exclusive:
-> +		if (iocb->ki_flags & IOCB_NOWAIT)
-> +			return -EAGAIN;
-> +		iolock = XFS_IOLOCK_EXCL;
-> +		flags = IOMAP_DIO_FORCE_WAIT;
-> +	}
-> +
-> +	ret = xfs_ilock_iocb(iocb, iolock);
-> +	if (ret)
-> +		return ret;
->  
->  	/*
->  	 * We can't properly handle unaligned direct I/O to reflink files yet,
-> @@ -590,19 +617,27 @@ xfs_file_dio_write_unaligned(
->  		goto out_unlock;
->  
->  	/*
-> -	 * If we are doing unaligned I/O, we can't allow any other overlapping
-> -	 * I/O in-flight at the same time or we risk data corruption. Wait for
-> -	 * all other I/O to drain before we submit.
-> +	 * If we are doing exclusive unaligned IO, we can't allow any other
-> +	 * overlapping IO in-flight at the same time or we risk data corruption.
-> +	 * Wait for all other IO to drain before we submit.
->  	 */
-> -	inode_dio_wait(VFS_I(ip));
-> +	if (flags & IOMAP_DIO_FORCE_WAIT)
-> +		inode_dio_wait(VFS_I(ip));
->  
-> -	/*
-> -	 * This must be the only I/O in-flight. Wait on it before we release the
-> -	 * iolock to prevent subsequent overlapping I/O.
-> -	 */
->  	trace_xfs_file_direct_write(iocb, from);
->  	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
-> -			   &xfs_dio_write_ops, IOMAP_DIO_FORCE_WAIT);
-> +			   &xfs_dio_write_ops, flags);
-> +	/*
-> +	 * Retry unaligned IO with exclusive blocking semantics if the DIO
-> +	 * layer rejected it for mapping or locking reasons. If we are doing
-> +	 * nonblocking user IO, propagate the error.
-> +	 */
-> +	if (ret == -EAGAIN && !(iocb->ki_flags & IOCB_NOWAIT)) {
-> +		ASSERT(flags & IOMAP_DIO_OVERWRITE_ONLY);
-> +		xfs_iunlock(ip, iolock);
-> +		goto retry_exclusive;
-> +	}
-> +
->  out_unlock:
->  	if (iolock)
->  		xfs_iunlock(ip, iolock);
-> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> index 7b9ff824e82d48..596af78f910596 100644
-> --- a/fs/xfs/xfs_iomap.c
-> +++ b/fs/xfs/xfs_iomap.c
-> @@ -784,15 +784,29 @@ xfs_direct_write_iomap_begin(
->  		goto allocate_blocks;
->  
->  	/*
-> -	 * NOWAIT IO needs to span the entire requested IO with a single map so
-> -	 * that we avoid partial IO failures due to the rest of the IO range not
-> -	 * covered by this map triggering an EAGAIN condition when it is
-> -	 * subsequently mapped and aborting the IO.
-> +	 * NOWAIT and OVERWRITE needs to span the entire requested IO with a
-> +	 * single map so that we avoid partial IO failures due to the rest of
-> +	 * the IO range not covered by this map triggering an EAGAIN condition
-> +	 * when it is subsequently mapped and aborting the IO.
->  	 */
-> -	if ((flags & IOMAP_NOWAIT) &&
-> -	    !imap_spans_range(&imap, offset_fsb, end_fsb)) {
-> +	if (flags & (IOMAP_NOWAIT | IOMAP_OVERWRITE_ONLY)) {
->  		error = -EAGAIN;
-> -		goto out_unlock;
-> +		if (!imap_spans_range(&imap, offset_fsb, end_fsb))
-> +			goto out_unlock;
-> +	}
-> +
-> +	/*
-> +	 * For overwrite only I/O, we cannot convert unwritten extents without
-> +	 * requiring sub-block zeroing.  This can only be done under an
-> +	 * exclusive IOLOCK, hence return -EAGAIN if this is not a written
-> +	 * extent to tell the caller to try again.
-> +	 */
-> +	if (flags & IOMAP_OVERWRITE_ONLY) {
-> +		error = -EAGAIN;
-> +		if (imap.br_state != XFS_EXT_NORM &&
-> +		    ((offset & mp->m_blockmask) ||
-> +		     ((offset + length) & mp->m_blockmask)))
-> +			goto out_unlock;
->  	}
->  
->  	xfs_iunlock(ip, lockmode);
-> @@ -801,7 +815,7 @@ xfs_direct_write_iomap_begin(
->  
->  allocate_blocks:
->  	error = -EAGAIN;
-> -	if (flags & IOMAP_NOWAIT)
-> +	if (flags & (IOMAP_NOWAIT | IOMAP_OVERWRITE_ONLY))
->  		goto out_unlock;
->  
->  	/*
-> -- 
-> 2.29.2
-> 
+- Christoph Hellwig <hch@lst.de>:
+  - Use new file_mnt_user_ns() helper.
+
+/* v6 */
+base-commit: 19c329f6808995b142b3966301f217c831e7cf31
+
+- Christoph Hellwig <hch@lst.de>:
+  - Remove local mnt_userns variable in favor of calling
+    file_mnt_user_ns() directly.
+---
+ fs/coredump.c      | 10 +++++++---
+ fs/inode.c         |  7 ++++---
+ fs/namei.c         |  2 +-
+ fs/open.c          | 16 +++++++++-------
+ include/linux/fs.h |  4 ++--
+ 5 files changed, 23 insertions(+), 16 deletions(-)
+
+diff --git a/fs/coredump.c b/fs/coredump.c
+index a2f6ecc8e345..ae778937a1ff 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -703,6 +703,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 			goto close_fail;
+ 		}
+ 	} else {
++		struct user_namespace *mnt_userns;
+ 		struct inode *inode;
+ 		int open_flags = O_CREAT | O_RDWR | O_NOFOLLOW |
+ 				 O_LARGEFILE | O_EXCL;
+@@ -780,13 +781,15 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+ 		 * a process dumps core while its cwd is e.g. on a vfat
+ 		 * filesystem.
+ 		 */
+-		if (!uid_eq(inode->i_uid, current_fsuid()))
++		mnt_userns = file_mnt_user_ns(cprm.file);
++		if (!uid_eq(i_uid_into_mnt(mnt_userns, inode), current_fsuid()))
+ 			goto close_fail;
+ 		if ((inode->i_mode & 0677) != 0600)
+ 			goto close_fail;
+ 		if (!(cprm.file->f_mode & FMODE_CAN_WRITE))
+ 			goto close_fail;
+-		if (do_truncate(cprm.file->f_path.dentry, 0, 0, cprm.file))
++		if (do_truncate(mnt_userns, cprm.file->f_path.dentry,
++				0, 0, cprm.file))
+ 			goto close_fail;
+ 	}
+ 
+@@ -931,7 +934,8 @@ void dump_truncate(struct coredump_params *cprm)
+ 	if (file->f_op->llseek && file->f_op->llseek != no_llseek) {
+ 		offset = file->f_op->llseek(file, 0, SEEK_CUR);
+ 		if (i_size_read(file->f_mapping->host) < offset)
+-			do_truncate(file->f_path.dentry, offset, 0, file);
++			do_truncate(file_mnt_user_ns(file), file->f_path.dentry,
++				    offset, 0, file);
+ 	}
+ }
+ EXPORT_SYMBOL(dump_truncate);
+diff --git a/fs/inode.c b/fs/inode.c
+index 46116ef44c9f..08151968c9ef 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1903,7 +1903,8 @@ int dentry_needs_remove_privs(struct dentry *dentry)
+ 	return mask;
+ }
+ 
+-static int __remove_privs(struct dentry *dentry, int kill)
++static int __remove_privs(struct user_namespace *mnt_userns,
++			  struct dentry *dentry, int kill)
+ {
+ 	struct iattr newattrs;
+ 
+@@ -1912,7 +1913,7 @@ static int __remove_privs(struct dentry *dentry, int kill)
+ 	 * Note we call this on write, so notify_change will not
+ 	 * encounter any conflicting delegations:
+ 	 */
+-	return notify_change(&init_user_ns, dentry, &newattrs, NULL);
++	return notify_change(mnt_userns, dentry, &newattrs, NULL);
+ }
+ 
+ /*
+@@ -1939,7 +1940,7 @@ int file_remove_privs(struct file *file)
+ 	if (kill < 0)
+ 		return kill;
+ 	if (kill)
+-		error = __remove_privs(dentry, kill);
++		error = __remove_privs(file_mnt_user_ns(file), dentry, kill);
+ 	if (!error)
+ 		inode_has_no_xattr(inode);
+ 
+diff --git a/fs/namei.c b/fs/namei.c
+index 5c9f6f8e90c4..c8c083daf368 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -3009,7 +3009,7 @@ static int handle_truncate(struct file *filp)
+ 	if (!error)
+ 		error = security_path_truncate(path);
+ 	if (!error) {
+-		error = do_truncate(path->dentry, 0,
++		error = do_truncate(&init_user_ns, path->dentry, 0,
+ 				    ATTR_MTIME|ATTR_CTIME|ATTR_OPEN,
+ 				    filp);
+ 	}
+diff --git a/fs/open.c b/fs/open.c
+index c3e4dc43dd8d..8b3f3eb652d0 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -35,8 +35,8 @@
+ 
+ #include "internal.h"
+ 
+-int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
+-	struct file *filp)
++int do_truncate(struct user_namespace *mnt_userns, struct dentry *dentry,
++		loff_t length, unsigned int time_attrs, struct file *filp)
+ {
+ 	int ret;
+ 	struct iattr newattrs;
+@@ -61,13 +61,14 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
+ 
+ 	inode_lock(dentry->d_inode);
+ 	/* Note any delegations or leases have already been broken: */
+-	ret = notify_change(&init_user_ns, dentry, &newattrs, NULL);
++	ret = notify_change(mnt_userns, dentry, &newattrs, NULL);
+ 	inode_unlock(dentry->d_inode);
+ 	return ret;
+ }
+ 
+ long vfs_truncate(const struct path *path, loff_t length)
+ {
++	struct user_namespace *mnt_userns;
+ 	struct inode *inode;
+ 	long error;
+ 
+@@ -83,7 +84,8 @@ long vfs_truncate(const struct path *path, loff_t length)
+ 	if (error)
+ 		goto out;
+ 
+-	error = inode_permission(&init_user_ns, inode, MAY_WRITE);
++	mnt_userns = mnt_user_ns(path->mnt);
++	error = inode_permission(mnt_userns, inode, MAY_WRITE);
+ 	if (error)
+ 		goto mnt_drop_write_and_out;
+ 
+@@ -107,7 +109,7 @@ long vfs_truncate(const struct path *path, loff_t length)
+ 	if (!error)
+ 		error = security_path_truncate(path);
+ 	if (!error)
+-		error = do_truncate(path->dentry, length, 0, NULL);
++		error = do_truncate(mnt_userns, path->dentry, length, 0, NULL);
+ 
+ put_write_and_out:
+ 	put_write_access(inode);
+@@ -186,13 +188,13 @@ long do_sys_ftruncate(unsigned int fd, loff_t length, int small)
+ 	/* Check IS_APPEND on real upper inode */
+ 	if (IS_APPEND(file_inode(f.file)))
+ 		goto out_putf;
+-
+ 	sb_start_write(inode->i_sb);
+ 	error = locks_verify_truncate(inode, f.file, length);
+ 	if (!error)
+ 		error = security_path_truncate(&f.file->f_path);
+ 	if (!error)
+-		error = do_truncate(dentry, length, ATTR_MTIME|ATTR_CTIME, f.file);
++		error = do_truncate(file_mnt_user_ns(f.file), dentry, length,
++				    ATTR_MTIME | ATTR_CTIME, f.file);
+ 	sb_end_write(inode->i_sb);
+ out_putf:
+ 	fdput(f);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 29d7b2fe7de4..f0601cca1930 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2593,8 +2593,8 @@ static inline struct user_namespace *file_mnt_user_ns(struct file *file)
+ 	return mnt_user_ns(file->f_path.mnt);
+ }
+ extern long vfs_truncate(const struct path *, loff_t);
+-extern int do_truncate(struct dentry *, loff_t start, unsigned int time_attrs,
+-		       struct file *filp);
++int do_truncate(struct user_namespace *, struct dentry *, loff_t start,
++		unsigned int time_attrs, struct file *filp);
+ extern int vfs_fallocate(struct file *file, int mode, loff_t offset,
+ 			loff_t len);
+ extern long do_sys_open(int dfd, const char __user *filename, int flags,
+-- 
+2.30.0
 
