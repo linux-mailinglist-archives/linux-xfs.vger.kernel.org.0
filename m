@@ -2,34 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 400783017C3
+	by mail.lfdr.de (Postfix) with ESMTP id ACEC33017C4
 	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:53:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbhAWSwP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 Jan 2021 13:52:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
+        id S1726021AbhAWSwU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 Jan 2021 13:52:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbhAWSwO (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 23 Jan 2021 13:52:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B2BD224DE;
-        Sat, 23 Jan 2021 18:51:33 +0000 (UTC)
+        id S1725765AbhAWSwT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 23 Jan 2021 13:52:19 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2483E22D2B;
+        Sat, 23 Jan 2021 18:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611427893;
-        bh=qIQdHADMvOygeMWtA66i0gCmTQ+uYQ4mVuBIx17LJpc=;
-        h=Subject:From:To:Cc:Date:From;
-        b=mFLUxYhuHLjJn34btgwCyGr1r/Sp2KbalSGtjjZntdA32FMokhjS4y+kfJUoTOPBd
-         CvixzPeR4DtKY4CS0PQTz7jaku3aooz9SYXdbeTGWv7SRRH/7Oas1ESv9RhXstO2SO
-         uqIBfiV4U/WEZE4gEEuex3BN0QiwprOq4uBNiW+1kRbY6FxsoZT/ANXWa4eBEZnqmQ
-         7DO3CbXXmR+WGVbX6C/3EqyAeCWC8lIXdBpUuq1uVLN4emeCamJQvco3VQb8j0W63b
-         fBrT8S8vpVszX8gcKUOEfqhXZWPOf3BXJF/cf2GlZEvLvMai8Rt4pkggAy4dPmx+lT
-         tlTKKfyPaXB5A==
-Subject: [PATCHSET v2 0/4] xfs: minor cleanups of the quota functions
+        s=k20201202; t=1611427899;
+        bh=B0yXme5QCx/90B5R7AzLaX9Y6j2dq9GE1iNP/0zhHtk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=CZ7R6hKZ6SQ2WS0zulngQVfw/5sKhS6dQzEPwp3OcPCBu8EmKKg12YSAlNrb/jtp6
+         6Ud12ZXmIqWXOCj+DCUzhYnsn8hcOV6gUNBIStBccJNwu42uR6TIS/nHV0QwQGWw1N
+         Tb5/hOHVP6yykxnBvenh3lrMkP/RRHhRgaFEgHWH9wO4UeOjmmPdHpoZQgkxADpz4m
+         qmiz+WyNpPy7hLlPft8nJ8CRd+3F723lAf3geZI06kjQ8eAU3S8E+3O42PcQ1HZuzc
+         4avLEdaXTc6Az2Y7GMQ6N83QqsRO8ROaXBi444Gk7PUwh338u0ThWDouMlsxQPw+Ad
+         CWacbkQMjZ+Sg==
+Subject: [PATCH 1/4] xfs: clean up quota reservation callsites
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         hch@infradead.org, david@fromorbit.com
-Date:   Sat, 23 Jan 2021 10:51:35 -0800
-Message-ID: <161142789504.2170981.1372317837643770452.stgit@magnolia>
+Date:   Sat, 23 Jan 2021 10:51:40 -0800
+Message-ID: <161142790077.2170981.3836953907583983452.stgit@magnolia>
+In-Reply-To: <161142789504.2170981.1372317837643770452.stgit@magnolia>
+References: <161142789504.2170981.1372317837643770452.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -38,32 +40,62 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series reworks some of the internal quota APIs and cleans up some
-of the function calls so that we have a clean(er) place to start the
-space reclamation patchset.  There should be no behavioral changes in
-this series.
+Convert a few xfs_trans_*reserve* callsites that are open-coding other
+convenience functions.
 
-v2: rework the xfs_quota_reserve_blkres calling conventions per hch
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=quota-function-cleanups-5.12
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_bmap.c |   13 ++++++-------
+ fs/xfs/libxfs/xfs_bmap.c |    3 +--
  fs/xfs/xfs_bmap_util.c   |    4 ++--
- fs/xfs/xfs_inode.c       |    8 ++++----
- fs/xfs/xfs_quota.h       |   41 ++++++++++++++++++++++++++++++++++++-----
- fs/xfs/xfs_reflink.c     |    6 +++---
- fs/xfs/xfs_symlink.c     |    4 ++--
- fs/xfs/xfs_trans_dquot.c |   21 +++++++++++++++++++++
- 7 files changed, 74 insertions(+), 23 deletions(-)
+ fs/xfs/xfs_reflink.c     |    4 ++--
+ 3 files changed, 5 insertions(+), 6 deletions(-)
+
+
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 2cd24bb06040..aea179212946 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4938,8 +4938,7 @@ xfs_bmap_del_extent_delay(
+ 	 * sb counters as we might have to borrow some blocks for the
+ 	 * indirect block accounting.
+ 	 */
+-	error = xfs_trans_reserve_quota_nblks(NULL, ip,
+-			-((long)del->br_blockcount), 0,
++	error = xfs_trans_unreserve_quota_nblks(NULL, ip, del->br_blockcount, 0,
+ 			isrt ? XFS_QMOPT_RES_RTBLKS : XFS_QMOPT_RES_REGBLKS);
+ 	if (error)
+ 		return error;
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index f3f8c48ff5bf..792809debaaa 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -884,8 +884,8 @@ xfs_unmap_extent(
+ 	}
+ 
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+-	error = xfs_trans_reserve_quota(tp, mp, ip->i_udquot, ip->i_gdquot,
+-			ip->i_pdquot, resblks, 0, XFS_QMOPT_RES_REGBLKS);
++	error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0,
++			XFS_QMOPT_RES_REGBLKS);
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index e1c98dbf79e4..183142fd0961 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -508,8 +508,8 @@ xfs_reflink_cancel_cow_blocks(
+ 			xfs_bmap_del_extent_cow(ip, &icur, &got, &del);
+ 
+ 			/* Remove the quota reservation */
+-			error = xfs_trans_reserve_quota_nblks(NULL, ip,
+-					-(long)del.br_blockcount, 0,
++			error = xfs_trans_unreserve_quota_nblks(NULL, ip,
++					del.br_blockcount, 0,
+ 					XFS_QMOPT_RES_REGBLKS);
+ 			if (error)
+ 				break;
 
