@@ -2,35 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 281083017D6
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:54:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDF273017E0
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:54:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbhAWSxm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 Jan 2021 13:53:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35350 "EHLO mail.kernel.org"
+        id S1726362AbhAWSyE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 Jan 2021 13:54:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbhAWSxd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 23 Jan 2021 13:53:33 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 10E19224DE;
-        Sat, 23 Jan 2021 18:53:18 +0000 (UTC)
+        id S1726363AbhAWSyB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 23 Jan 2021 13:54:01 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6809B23331;
+        Sat, 23 Jan 2021 18:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611427998;
-        bh=NO+acRY+wd7em++6fsSTHt27mum69gxSZpLrxsxP1/w=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qGyVkkVN83yOs5XsZ/I2bOIXPT3C3e48KCPA3qbCitIV061pTlYN/+zWRMIgBWpLS
-         oSw47+h4kbVSXwHV0Par7LRSYitppqOISzkYyJQSPiGkzxQqo5WMIH9niCvDpWmoP7
-         Sd4ZbRPI3+dZXX6uTFjHE3hHdrwlNyPnF/szCXnJoTCCb8Lydp7wCMtbDClvS4fJt+
-         OSnGztlDIF9D2QFkGPTVJAix7DdwmoEzEkOhxW9Gq2QJUAp4cg4MM1BZUZMbqJuhwd
-         UZ5TjfnmMvsgJFCzXE+1T9AGI3w1cGxe2R/vfPFX5e3lvV1q90ymOOUj1bk4yHOcMp
-         UAEnwaC3fUzPg==
-Subject: [PATCH 3/3] xfs: set WQ_SYSFS on all workqueues
+        s=k20201202; t=1611428000;
+        bh=nEWnkS4lI84TuJVdyYBWnPgaifAbasNv1s9xWcD18XY=;
+        h=Subject:From:To:Cc:Date:From;
+        b=YQWgSxC4R6y5I/5Sqtdq28dQ+7Afz5ao98u67mddjdxYCWU4gF3vwSMTMafasCWsZ
+         1pX6TGv2s4fNMwQWiud+C9GHM603lHzFiuBB3eqYVyeMBcmv8G5D9zKnu8qu8/7RO+
+         aPLyXvTwXp01ae7HplxFvgjRKixek0C2z1ITg+cmKkTT53nHp5ZaKIWBSaynKLZBx0
+         942nLB+VyLwO7Pe6bkMIwZsYIAqnCVybQcxxLJRvDaaECcbvYd2GDvBNVKjYZeNcv9
+         fQyX07auucR9U9+GIu/w2uhhEufwjDRB9oHe0Jm95dXJHGoqL88o03cl68CcWiU8Do
+         4KlbpjuXX40nQ==
+Subject: [PATCHSET v4 0/9] xfs: consolidate posteof and cowblocks cleanup
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Date:   Sat, 23 Jan 2021 10:53:19 -0800
-Message-ID: <161142799960.2173328.12558377173737512680.stgit@magnolia>
-In-Reply-To: <161142798284.2173328.11591192629841647898.stgit@magnolia>
-References: <161142798284.2173328.11591192629841647898.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Date:   Sat, 23 Jan 2021 10:53:22 -0800
+Message-ID: <161142800187.2173480.17415824680111946713.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,109 +38,47 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Set WQ_SYSFS on all workqueues that we create so that we have a means to
-monitor cpu affinity and whatnot for background workers.
+Currently, we treat the garbage collection of post-EOF preallocations
+and copy-on-write preallocations as totally separate tasks -- different
+incore inode tags, different workqueues, etc.  This is wasteful of radix
+tree tags and workqueue resources since we effectively have parallel
+code paths to do the same thing.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Therefore, consolidate both functions under one radix tree bit and one
+workqueue function that scans an inode for both things at the same time.
+At the end of the series we make the scanning per-AG instead of per-fs
+so that the scanning can run in parallel.  This reduces locking
+contention from background threads and will free up a radix tree bit for
+the deferred inode inactivation series.
+
+v2: clean up and rebase against 5.11.
+v3: various streamlining as part of restructuring the space reclaim series
+v4: move the workqueue parallelism bits to their own series
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=eofblocks-consolidation-5.12
 ---
- fs/xfs/xfs_log.c       |    4 ++--
- fs/xfs/xfs_mru_cache.c |    2 +-
- fs/xfs/xfs_super.c     |   23 ++++++++++++++---------
- 3 files changed, 17 insertions(+), 12 deletions(-)
-
-
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 58699881c100..edb16843dff7 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1493,8 +1493,8 @@ xlog_alloc_log(
- 	log->l_iclog->ic_prev = prev_iclog;	/* re-write 1st prev ptr */
- 
- 	log->l_ioend_workqueue = alloc_workqueue("xfs-log/%s",
--			WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI, 0,
--			mp->m_super->s_id);
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI,
-+			0, mp->m_super->s_id);
- 	if (!log->l_ioend_workqueue)
- 		goto out_free_iclog;
- 
-diff --git a/fs/xfs/xfs_mru_cache.c b/fs/xfs/xfs_mru_cache.c
-index a06661dac5be..b6dab34e361d 100644
---- a/fs/xfs/xfs_mru_cache.c
-+++ b/fs/xfs/xfs_mru_cache.c
-@@ -294,7 +294,7 @@ int
- xfs_mru_cache_init(void)
- {
- 	xfs_mru_reap_wq = alloc_workqueue("xfs_mru_cache",
--				WQ_MEM_RECLAIM|WQ_FREEZABLE, 1);
-+				WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 1);
- 	if (!xfs_mru_reap_wq)
- 		return -ENOMEM;
- 	return 0;
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index aed74a3fc787..ebe3eba2cbbc 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -495,33 +495,37 @@ xfs_init_mount_workqueues(
- 	struct xfs_mount	*mp)
- {
- 	mp->m_buf_workqueue = alloc_workqueue("xfs-buf/%s",
--			WQ_MEM_RECLAIM|WQ_FREEZABLE, 1, mp->m_super->s_id);
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 1,
-+			mp->m_super->s_id);
- 	if (!mp->m_buf_workqueue)
- 		goto out;
- 
- 	mp->m_unwritten_workqueue = alloc_workqueue("xfs-conv/%s",
--			WQ_MEM_RECLAIM|WQ_FREEZABLE, 0, mp->m_super->s_id);
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 0,
-+			mp->m_super->s_id);
- 	if (!mp->m_unwritten_workqueue)
- 		goto out_destroy_buf;
- 
- 	mp->m_cil_workqueue = alloc_workqueue("xfs-cil/%s",
--			WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_UNBOUND,
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_UNBOUND,
- 			0, mp->m_super->s_id);
- 	if (!mp->m_cil_workqueue)
- 		goto out_destroy_unwritten;
- 
- 	mp->m_reclaim_workqueue = alloc_workqueue("xfs-reclaim/%s",
--			WQ_MEM_RECLAIM|WQ_FREEZABLE, 0, mp->m_super->s_id);
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 0,
-+			mp->m_super->s_id);
- 	if (!mp->m_reclaim_workqueue)
- 		goto out_destroy_cil;
- 
- 	mp->m_eofblocks_workqueue = alloc_workqueue("xfs-eofblocks/%s",
--			WQ_MEM_RECLAIM|WQ_FREEZABLE, 0, mp->m_super->s_id);
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 0,
-+			mp->m_super->s_id);
- 	if (!mp->m_eofblocks_workqueue)
- 		goto out_destroy_reclaim;
- 
--	mp->m_sync_workqueue = alloc_workqueue("xfs-sync/%s", WQ_FREEZABLE, 0,
--					       mp->m_super->s_id);
-+	mp->m_sync_workqueue = alloc_workqueue("xfs-sync/%s",
-+			WQ_SYSFS | WQ_FREEZABLE, 0, mp->m_super->s_id);
- 	if (!mp->m_sync_workqueue)
- 		goto out_destroy_eofb;
- 
-@@ -2085,11 +2089,12 @@ xfs_init_workqueues(void)
- 	 * max_active value for this workqueue.
- 	 */
- 	xfs_alloc_wq = alloc_workqueue("xfsalloc",
--			WQ_MEM_RECLAIM|WQ_FREEZABLE, 0);
-+			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 0);
- 	if (!xfs_alloc_wq)
- 		return -ENOMEM;
- 
--	xfs_discard_wq = alloc_workqueue("xfsdiscard", WQ_UNBOUND, 0);
-+	xfs_discard_wq = alloc_workqueue("xfsdiscard",
-+			WQ_SYSFS | WQ_UNBOUND, 0);
- 	if (!xfs_discard_wq)
- 		goto out_free_alloc_wq;
- 
+ fs/xfs/scrub/common.c |    4 -
+ fs/xfs/xfs_globals.c  |    7 +
+ fs/xfs/xfs_icache.c   |  258 +++++++++++++++++++++----------------------------
+ fs/xfs/xfs_icache.h   |   16 +--
+ fs/xfs/xfs_ioctl.c    |    2 
+ fs/xfs/xfs_linux.h    |    3 -
+ fs/xfs/xfs_mount.c    |    5 +
+ fs/xfs/xfs_mount.h    |    9 +-
+ fs/xfs/xfs_super.c    |   25 ++---
+ fs/xfs/xfs_sysctl.c   |   15 +--
+ fs/xfs/xfs_sysctl.h   |    3 -
+ fs/xfs/xfs_trace.h    |    6 -
+ 12 files changed, 150 insertions(+), 203 deletions(-)
 
