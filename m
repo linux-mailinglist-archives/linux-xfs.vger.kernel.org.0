@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF2063017D5
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:54:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D643A3017D1
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:54:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726232AbhAWSxi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 Jan 2021 13:53:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
+        id S1726291AbhAWSxT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 Jan 2021 13:53:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726315AbhAWSxa (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 23 Jan 2021 13:53:30 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E7D4622D57;
-        Sat, 23 Jan 2021 18:52:47 +0000 (UTC)
+        id S1726232AbhAWSxM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 23 Jan 2021 13:53:12 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8009122DBF;
+        Sat, 23 Jan 2021 18:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611427968;
-        bh=EfoxJg0PLIHVAdCt5QHuZeGuq37WQSQ53hfcypS3fU4=;
+        s=k20201202; t=1611427973;
+        bh=4I9YvxI6NwO7tm4WxT8v3pPRkckY9yYDphLA/GpSjLs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=E4Lz3JETleSNTp3xskUMy0BlPo3M6qZ8527Jzbngn+nAe6hXZmAza3eWyN3gpm+Ph
-         TcSXn35ibygKOH6m/0WljYPXk8hN8JNaDDrxbSR8wajb6EFUiig1xsqobIgE/JzH0V
-         4BV/28uUnnp/Rfd249Yg6orRdfIxomOVx8l5K4HNXAYI3KGtm7YYe4WOr6aqMiuZMl
-         IDu1sDreIBOeg3RtTpUWrmfmGGvxrRjdnvKm11q9E+8yqyqUpI5670CrvJCO6OYDvC
-         FLgdtQ8e2EAcKCswLVw/4i7xoikw2TGPfuHZ+nGahYM2xED79D59tEWv9x72BBn4Gu
-         OYNIRT4bQ8CYw==
-Subject: [PATCH 09/11] xfs: add a tracepoint for blockgc scans
+        b=MIihBoSFPwuKDDxqunELfqnIlWR84Km5lkVL/p266s8iUgn6HrDNylnNZCyutgmtd
+         wiKPlVNnczqysWe3vDgSC9/qbfQOagqShyt1xf86pgwDit9/gc0VPUZ3lSYqZ0enBc
+         V69wpyiCJAa/KUbubDTjOwHt5gGwfZPZHYtwEKoMqiFWZ7bsnxIwom1uCe5EAamrb4
+         tHNNowP7dQQh4rflaS22OAGRcYPxdigeA7n2hCKP2BqyC9p8rlzedshNEVm5telUe8
+         6vTE1Lf2MK+dg2gHEG8vZgbCWXNy7eVC9Hu/OmQj8QKOu1PixUkRwle1hyxJsV9zEK
+         k/lZo0JdDG7dQ==
+Subject: [PATCH 10/11] xfs: refactor xfs_icache_free_{eof,cow}blocks call
+ sites
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        hch@infradead.org, david@fromorbit.com
-Date:   Sat, 23 Jan 2021 10:52:49 -0800
-Message-ID: <161142796954.2171939.15250362023143903757.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
+Date:   Sat, 23 Jan 2021 10:52:55 -0800
+Message-ID: <161142797509.2171939.4924852652653930954.stgit@magnolia>
 In-Reply-To: <161142791950.2171939.3320927557987463636.stgit@magnolia>
 References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,98 +42,120 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add some tracepoints so that we can observe when the speculative
-preallocation garbage collector runs.
+In anticipation of more restructuring of the eof/cowblocks gc code,
+refactor calling of those two functions into a single internal helper
+function, then present a new standard interface to purge speculative
+block preallocations and start shifting higher level code to use that.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_ioctl.c |    2 ++
- fs/xfs/xfs_trace.c |    1 +
- fs/xfs/xfs_trace.h |   39 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 42 insertions(+)
+ fs/xfs/xfs_file.c   |    3 +--
+ fs/xfs/xfs_icache.c |   39 +++++++++++++++++++++++++++++++++------
+ fs/xfs/xfs_icache.h |    1 +
+ fs/xfs/xfs_trace.h  |    1 +
+ 4 files changed, 36 insertions(+), 8 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 952eca338807..da407934364c 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -2356,6 +2356,8 @@ xfs_file_ioctl(
- 		if (error)
- 			return error;
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 57086838a676..a766ad4477c5 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -758,8 +758,7 @@ xfs_file_buffered_write(
  
-+		trace_xfs_ioc_free_eofblocks(mp, &keofb, _RET_IP_);
+ 		xfs_iunlock(ip, iolock);
+ 		eofb.eof_flags = XFS_EOF_FLAGS_SYNC;
+-		xfs_icache_free_eofblocks(ip->i_mount, &eofb);
+-		xfs_icache_free_cowblocks(ip->i_mount, &eofb);
++		xfs_blockgc_free_space(ip->i_mount, &eofb);
+ 		goto write_retry;
+ 	}
+ 
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 7f999f9dd80a..0d228a5e879f 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -1645,6 +1645,38 @@ xfs_start_block_reaping(
+ 	xfs_queue_cowblocks(mp);
+ }
+ 
++/* Scan all incore inodes for block preallocations that we can remove. */
++static inline int
++xfs_blockgc_scan(
++	struct xfs_mount	*mp,
++	struct xfs_eofblocks	*eofb)
++{
++	int			error;
 +
- 		sb_start_write(mp->m_super);
- 		error = xfs_icache_free_eofblocks(mp, &keofb);
- 		sb_end_write(mp->m_super);
-diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
-index 120398a37c2a..9b8d703dc9fd 100644
---- a/fs/xfs/xfs_trace.c
-+++ b/fs/xfs/xfs_trace.c
-@@ -29,6 +29,7 @@
- #include "xfs_filestream.h"
- #include "xfs_fsmap.h"
- #include "xfs_btree_staging.h"
-+#include "xfs_icache.h"
++	error = xfs_icache_free_eofblocks(mp, eofb);
++	if (error)
++		return error;
++
++	error = xfs_icache_free_cowblocks(mp, eofb);
++	if (error)
++		return error;
++
++	return 0;
++}
++
++/*
++ * Try to free space in the filesystem by purging eofblocks and cowblocks.
++ */
++int
++xfs_blockgc_free_space(
++	struct xfs_mount	*mp,
++	struct xfs_eofblocks	*eofb)
++{
++	trace_xfs_blockgc_free_space(mp, eofb, _RET_IP_);
++
++	return xfs_blockgc_scan(mp, eofb);
++}
++
+ /*
+  * Run cow/eofblocks scans on the supplied dquots.  We don't know exactly which
+  * quota caused an allocation failure, so we make a best effort by including
+@@ -1661,7 +1693,6 @@ xfs_blockgc_free_dquots(
+ 	struct xfs_eofblocks	eofb = {0};
+ 	struct xfs_mount	*mp = NULL;
+ 	bool			do_work = false;
+-	int			error;
+ 
+ 	if (!udqp && !gdqp && !pdqp)
+ 		return 0;
+@@ -1699,11 +1730,7 @@ xfs_blockgc_free_dquots(
+ 	if (!do_work)
+ 		return 0;
+ 
+-	error = xfs_icache_free_eofblocks(mp, &eofb);
+-	if (error)
+-		return error;
+-
+-	return xfs_icache_free_cowblocks(mp, &eofb);
++	return xfs_blockgc_free_space(mp, &eofb);
+ }
  
  /*
-  * We include this last to have the helpers above available for the trace
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index 5f520de637f6..583c132ae0fb 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -57,6 +57,7 @@ void xfs_inode_set_reclaim_tag(struct xfs_inode *ip);
+ int xfs_blockgc_free_dquots(struct xfs_dquot *udqp, struct xfs_dquot *gdqp,
+ 		struct xfs_dquot *pdqp, unsigned int eof_flags);
+ int xfs_blockgc_free_quota(struct xfs_inode *ip, unsigned int eof_flags);
++int xfs_blockgc_free_space(struct xfs_mount *mp, struct xfs_eofblocks *eofb);
+ 
+ void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
+ void xfs_inode_clear_eofblocks_tag(struct xfs_inode *ip);
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 407c3a5208ab..4cbf446bae9a 100644
+index 4cbf446bae9a..c3fd344aaf5b 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -37,6 +37,7 @@ struct xfs_trans_res;
- struct xfs_inobt_rec_incore;
- union xfs_btree_ptr;
- struct xfs_dqtrx;
-+struct xfs_eofblocks;
+@@ -3926,6 +3926,7 @@ DEFINE_EVENT(xfs_eofblocks_class, name,	\
+ 		 unsigned long caller_ip), \
+ 	TP_ARGS(mp, eofb, caller_ip))
+ DEFINE_EOFBLOCKS_EVENT(xfs_ioc_free_eofblocks);
++DEFINE_EOFBLOCKS_EVENT(xfs_blockgc_free_space);
  
- #define XFS_ATTR_FILTER_FLAGS \
- 	{ XFS_ATTR_ROOT,	"ROOT" }, \
-@@ -3888,6 +3889,44 @@ DEFINE_EVENT(xfs_timestamp_range_class, name, \
- DEFINE_TIMESTAMP_RANGE_EVENT(xfs_inode_timestamp_range);
- DEFINE_TIMESTAMP_RANGE_EVENT(xfs_quota_expiry_range);
- 
-+DECLARE_EVENT_CLASS(xfs_eofblocks_class,
-+	TP_PROTO(struct xfs_mount *mp, struct xfs_eofblocks *eofb,
-+		 unsigned long caller_ip),
-+	TP_ARGS(mp, eofb, caller_ip),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(__u32, flags)
-+		__field(uint32_t, uid)
-+		__field(uint32_t, gid)
-+		__field(prid_t, prid)
-+		__field(__u64, min_file_size)
-+		__field(unsigned long, caller_ip)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = mp->m_super->s_dev;
-+		__entry->flags = eofb->eof_flags;
-+		__entry->uid = from_kuid(mp->m_super->s_user_ns, eofb->eof_uid);
-+		__entry->gid = from_kgid(mp->m_super->s_user_ns, eofb->eof_gid);
-+		__entry->prid = eofb->eof_prid;
-+		__entry->min_file_size = eofb->eof_min_file_size;
-+		__entry->caller_ip = caller_ip;
-+	),
-+	TP_printk("dev %d:%d flags 0x%x uid %u gid %u prid %u minsize %llu caller %pS",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->flags,
-+		  __entry->uid,
-+		  __entry->gid,
-+		  __entry->prid,
-+		  __entry->min_file_size,
-+		  (char *)__entry->caller_ip)
-+);
-+#define DEFINE_EOFBLOCKS_EVENT(name)	\
-+DEFINE_EVENT(xfs_eofblocks_class, name,	\
-+	TP_PROTO(struct xfs_mount *mp, struct xfs_eofblocks *eofb, \
-+		 unsigned long caller_ip), \
-+	TP_ARGS(mp, eofb, caller_ip))
-+DEFINE_EOFBLOCKS_EVENT(xfs_ioc_free_eofblocks);
-+
  #endif /* _TRACE_XFS_H */
  
- #undef TRACE_INCLUDE_PATH
 
