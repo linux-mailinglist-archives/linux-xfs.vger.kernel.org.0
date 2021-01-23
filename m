@@ -2,33 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F06883017DC
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:54:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EE143017D2
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Jan 2021 19:54:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbhAWSxu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 23 Jan 2021 13:53:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35622 "EHLO mail.kernel.org"
+        id S1726310AbhAWSxY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 23 Jan 2021 13:53:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726361AbhAWSxn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 23 Jan 2021 13:53:43 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3FC55230FC;
-        Sat, 23 Jan 2021 18:53:01 +0000 (UTC)
+        id S1726232AbhAWSxW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 23 Jan 2021 13:53:22 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF3552312F;
+        Sat, 23 Jan 2021 18:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611427981;
-        bh=HOzr9CGOWABANpGhJJOeYoSsS3TD5zuvLFcPw8G4o1k=;
-        h=Subject:From:To:Cc:Date:From;
-        b=Ey1iM8MWQdqM6Y87sJRzFDA4dYzl1bAzYmqY5yROROMNgUF0BGGQ8stVXTnoCo0Vh
-         oNCXl8fap+KOiXpniaNoQKUCBp8kd+d2/hGaHvbs3oHOkxh62nBXWjKfHvmqIIuUzT
-         J4vCkwPIrf/P5XN2u04oMrYK8o3RWEwo4YR+/UwXunxNr+MQGBhJs3fGcs2MEcPqNb
-         houjmyEnfG2oDYx8P3kkUWxrwR7iWIbyE/nSilJWs1bio2lD01d+lDfOxuRTCLPNjO
-         86bsrPk73wUC2h9udIwyotJY8TN1ilfs5Ri2SGk95tRlU0pxk2XiEXnL2g8OdMr7Ta
-         oaA3TQ2MEjQFw==
-Subject: [PATCHSET 0/3] xfs: speed up parallel workqueues
+        s=k20201202; t=1611427986;
+        bh=eCfcAOWo8xyU/sFfF9L06WxBfmZWpwoZblGwwnFk73o=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=XhRofj7wKNl/V7K6sDVzjve3OmuKc7WPDqeig1DwJEWwbYaJ/9UJwhs1Shh9vo3AN
+         uvteScFXiaoBqU1vF37kFeYeWYEW23Hu53EWGUfK8VKh1Wv2ffKeBMNKz7nAGf4Wdv
+         eauzLk+3tkv4CRyIEnByBLfzgdONLY+oFBOlbMeBlnnFvPS+V0+zul225vRQ8jxvWg
+         vFIcqCktFruKEh/MxTTg3hzRY2cLAZeYT3Ii/8eGAVUX3pEf1sWR47Y6oOQfR4DhSn
+         Ko89FfD9m+vkJRhxQCs3TvApvnzCM1gv+AWrj5EgVlL7JKgunEvnIRA+vlxR658snD
+         q2/w/U93qQgmQ==
+Subject: [PATCH 1/3] xfs: increase the default parallelism levels of pwork
+ clients
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Date:   Sat, 23 Jan 2021 10:53:02 -0800
-Message-ID: <161142798284.2173328.11591192629841647898.stgit@magnolia>
+Date:   Sat, 23 Jan 2021 10:53:08 -0800
+Message-ID: <161142798840.2173328.10025204233532508235.stgit@magnolia>
+In-Reply-To: <161142798284.2173328.11591192629841647898.stgit@magnolia>
+References: <161142798284.2173328.11591192629841647898.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -37,41 +40,78 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-After some discussion on IRC with Dave, we came to the conclusion that
-our background workqueue behavior could use some tweaking.  Kernel
-worker threads that scan the filesystem and/or run their own
-transactions more closely fit the definition of an unbound workqueue --
-the work items can take a long time, they don't have much in common with
-the submitter thread, the submitter isn't waiting hotly for a response,
-and we the process scheduler should deal with scheduling them.
-Furthermore, we don't want to place artificial limits on workqueue
-scaling because that can leave unused capacity while we're blocking
-(pwork is currently used for mount time quotacheck).
+Increase the parallelism level for pwork clients to the workqueue
+defaults so that we can take advantage of computers with a lot of CPUs
+and a lot of hardware.  On fast systems this will speed up quotacheck by
+a large factor, and the following posteof/cowblocks cleanup series will
+use the functionality presented in this patch to run garbage collection
+as quickly as possible.
 
-Therefore, we switch pwork to use an unbound workqueue, and now we let
-the workqueue code figure out the relevant concurrency.
-
-The final tweak is to enable WQ_SYSFS on all workqueues so that we can
-monitor their concurrency management (or lack thereof) via sysfs.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=workqueue-speedups-5.12
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_iwalk.c     |    5 +----
- fs/xfs/xfs_log.c       |    4 ++--
- fs/xfs/xfs_mru_cache.c |    2 +-
- fs/xfs/xfs_pwork.c     |   21 ++-------------------
- fs/xfs/xfs_pwork.h     |    1 -
- fs/xfs/xfs_super.c     |   23 ++++++++++++++---------
- 6 files changed, 20 insertions(+), 36 deletions(-)
+ fs/xfs/xfs_iwalk.c |    5 +----
+ fs/xfs/xfs_pwork.c |   17 -----------------
+ fs/xfs/xfs_pwork.h |    1 -
+ 3 files changed, 1 insertion(+), 22 deletions(-)
+
+
+diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+index eae3aff9bc97..fc5ea8eb701f 100644
+--- a/fs/xfs/xfs_iwalk.c
++++ b/fs/xfs/xfs_iwalk.c
+@@ -618,15 +618,12 @@ xfs_iwalk_threaded(
+ {
+ 	struct xfs_pwork_ctl	pctl;
+ 	xfs_agnumber_t		agno = XFS_INO_TO_AGNO(mp, startino);
+-	unsigned int		nr_threads;
+ 	int			error;
+ 
+ 	ASSERT(agno < mp->m_sb.sb_agcount);
+ 	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
+ 
+-	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
+-	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
+-			nr_threads);
++	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk", 0);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/xfs/xfs_pwork.c b/fs/xfs/xfs_pwork.c
+index b03333f1c84a..33fe952cdaf8 100644
+--- a/fs/xfs/xfs_pwork.c
++++ b/fs/xfs/xfs_pwork.c
+@@ -117,20 +117,3 @@ xfs_pwork_poll(
+ 				atomic_read(&pctl->nr_work) == 0, HZ) == 0)
+ 		touch_softlockup_watchdog();
+ }
+-
+-/*
+- * Return the amount of parallelism that the data device can handle, or 0 for
+- * no limit.
+- */
+-unsigned int
+-xfs_pwork_guess_datadev_parallelism(
+-	struct xfs_mount	*mp)
+-{
+-	struct xfs_buftarg	*btp = mp->m_ddev_targp;
+-
+-	/*
+-	 * For now we'll go with the most conservative setting possible,
+-	 * which is two threads for an SSD and 1 thread everywhere else.
+-	 */
+-	return blk_queue_nonrot(btp->bt_bdev->bd_disk->queue) ? 2 : 1;
+-}
+diff --git a/fs/xfs/xfs_pwork.h b/fs/xfs/xfs_pwork.h
+index 8133124cf3bb..e72676c0c285 100644
+--- a/fs/xfs/xfs_pwork.h
++++ b/fs/xfs/xfs_pwork.h
+@@ -56,6 +56,5 @@ int xfs_pwork_init(struct xfs_mount *mp, struct xfs_pwork_ctl *pctl,
+ void xfs_pwork_queue(struct xfs_pwork_ctl *pctl, struct xfs_pwork *pwork);
+ int xfs_pwork_destroy(struct xfs_pwork_ctl *pctl);
+ void xfs_pwork_poll(struct xfs_pwork_ctl *pctl);
+-unsigned int xfs_pwork_guess_datadev_parallelism(struct xfs_mount *mp);
+ 
+ #endif /* __XFS_PWORK_H__ */
 
