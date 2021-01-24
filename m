@@ -2,78 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47B83301AF1
-	for <lists+linux-xfs@lfdr.de>; Sun, 24 Jan 2021 10:56:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77A27301AF8
+	for <lists+linux-xfs@lfdr.de>; Sun, 24 Jan 2021 10:59:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbhAXJzu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 24 Jan 2021 04:55:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45408 "EHLO
+        id S1726703AbhAXJ6z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 24 Jan 2021 04:58:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbhAXJzr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 24 Jan 2021 04:55:47 -0500
+        with ESMTP id S1726730AbhAXJ6w (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 24 Jan 2021 04:58:52 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175B3C061573
-        for <linux-xfs@vger.kernel.org>; Sun, 24 Jan 2021 01:55:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7338AC061573
+        for <linux-xfs@vger.kernel.org>; Sun, 24 Jan 2021 01:58:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0J1BfzxmC9FRxtYKPYpcbCeimtbPN9Zj1ANvFsMO2SI=; b=AVFuXny/TuDMvNwBIe9aWB/dUW
-        am0MrwLP3REsN+A4cTs2bwkfeKxYr1hB8PYJJbUHxQAQ2waGwWtm4IjoUGgbwYTuE+qrHad7fng8Z
-        gtwFhMLj4AdWBvk3URQ+sbh150PHmO1dU7nPCG53xnAse9yhBcln64HaLPgfKMqls+sDz9eiNLiS8
-        2c3QMtHf/AF5+vEbzSvxrFHcWrMLGywM6CbBK1uVA74kynuepJ7YzI3/nT7xEYcg8ZPtzy27befWi
-        VLfXv+FnTVjX5HbdEeHDtDNz0gybgDbkkK6T1tUE0j3GFoGzEQZzm14hLDgvoDwHe8DHN0ccc2MMU
-        xomtxhuQ==;
+        bh=BFDVwAhCCfnjn66kLmK6CnVcM8Z/lXThM40g03sNG+0=; b=OMrAKUBUIl/cBkyfwmHLwKV4RW
+        gPkycNVJeoRoYbfkfZFE0hgKguQj+ReuxEVmWjKl++mhTxiHLZx3jygpBbWje92NSzu0/hRevJ5KK
+        XM6l3CWdWuqkazHE+FaDAtNrzzf3Lvg58bqENMyr3MaC/3LmZtb1A4WwWcO02Ma7j/fA5rmAEA8pY
+        iQWEtDo6MtjNLnPevQW/vk4QIgyoXTJ1aHIUXSzHN4n/aFG6KjEuCnkvy2TtWZ3eXuhrMLGJ4ew40
+        TQapldx+/t4D40UQu3p0KQF0UFbwWEkfCisDU98Ziz4oQ7D6m7g8No/R+WApiEArHh7xdb/r7tpWu
+        qGIK6tuw==;
 Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l3c6g-002pYJ-4r; Sun, 24 Jan 2021 09:54:59 +0000
-Date:   Sun, 24 Jan 2021 09:54:54 +0000
+        id 1l3c8z-002phQ-EQ; Sun, 24 Jan 2021 09:57:29 +0000
+Date:   Sun, 24 Jan 2021 09:57:17 +0000
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Subject: Re: [PATCH 3/3] xfs: set WQ_SYSFS on all workqueues
-Message-ID: <20210124095454.GG670331@infradead.org>
+Subject: Re: [PATCH 1/3] xfs: increase the default parallelism levels of
+ pwork clients
+Message-ID: <20210124095717.GH670331@infradead.org>
 References: <161142798284.2173328.11591192629841647898.stgit@magnolia>
- <161142799960.2173328.12558377173737512680.stgit@magnolia>
+ <161142798840.2173328.10025204233532508235.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161142799960.2173328.12558377173737512680.stgit@magnolia>
+In-Reply-To: <161142798840.2173328.10025204233532508235.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
->  	log->l_ioend_workqueue = alloc_workqueue("xfs-log/%s",
-> -			WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI, 0,
-> -			mp->m_super->s_id);
-> +			WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE | WQ_HIGHPRI,
-> +			0, mp->m_super->s_id);
-
-This is just used for log I/O completions which are effectlively single
-thread.  I don't see any reason to adjust the parameters here.
-
->  	if (!log->l_ioend_workqueue)
->  		goto out_free_iclog;
+On Sat, Jan 23, 2021 at 10:53:08AM -0800, Darrick J. Wong wrote:
+>  	ASSERT(agno < mp->m_sb.sb_agcount);
+>  	ASSERT(!(flags & ~XFS_IWALK_FLAGS_ALL));
 >  
-> diff --git a/fs/xfs/xfs_mru_cache.c b/fs/xfs/xfs_mru_cache.c
-> index a06661dac5be..b6dab34e361d 100644
-> --- a/fs/xfs/xfs_mru_cache.c
-> +++ b/fs/xfs/xfs_mru_cache.c
-> @@ -294,7 +294,7 @@ int
->  xfs_mru_cache_init(void)
->  {
->  	xfs_mru_reap_wq = alloc_workqueue("xfs_mru_cache",
-> -				WQ_MEM_RECLAIM|WQ_FREEZABLE, 1);
-> +				WQ_SYSFS | WQ_MEM_RECLAIM | WQ_FREEZABLE, 1);
->  	if (!xfs_mru_reap_wq)
->  		return -ENOMEM;
+> -	nr_threads = xfs_pwork_guess_datadev_parallelism(mp);
+> -	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk",
+> -			nr_threads);
+> +	error = xfs_pwork_init(mp, &pctl, xfs_iwalk_ag_work, "xfs_iwalk", 0);
 
-This one also hasn't ever been something we tune, so I don't think there
-is a good case for enabling WQ_SYSFS.
 
-I've stopped here.  I think we should have a good use case for making
-workqueues show up in sysfs based on that we:
-
- a) have resons to adjust them ever
- b) actually having them easily discoverable and documented for adminds
-    to tune
+Why not drop the last argument to xfs_pwork_init as well?  Also I don't
+think this makes sense as a standalone step without the changes in the
+next patch.
