@@ -2,101 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A45302C27
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 21:05:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EC93302C34
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 21:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731745AbhAYUDF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 25 Jan 2021 15:03:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36464 "EHLO mail.kernel.org"
+        id S1731401AbhAYUGd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 25 Jan 2021 15:06:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbhAYUC6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 25 Jan 2021 15:02:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1BE0D224F9;
-        Mon, 25 Jan 2021 20:02:17 +0000 (UTC)
+        id S1731647AbhAYUGN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 25 Jan 2021 15:06:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 792BA224F9;
+        Mon, 25 Jan 2021 20:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611604937;
-        bh=i52u3YbdnDP+ktgFox9DJTuLW9KZskyQqKKsPQmXjY4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nwGLNHWpeZRBbO7oUuoYzHzTSwX24Jj/TwKfClgin68yuGNqRC2Cd8+XXbAm4T2UL
-         48qIEHYomRRZTbuc/rhnWJF65yTVh9EzJ+p4GXq+2Mcvty8UscoFIpThREnvQ9g7Ee
-         YSXP2zpDGQwhhjVSmJYf7/YtL9+OKOKf58FyiCFkKETuzSabpYFOtZmAvnOHNJJHbc
-         2ENfLqVOWN5r2DdUgcjYbLOBFQPQpDyeUod2kmnMZdSDTEKKMerPikahsGZvLYBArG
-         vfPtFdj02eE0chKJfCnd947Mrx4VQPRERq7/2F1ISC3m33MR2THEbqvvEsB3O4WH8S
-         2lVcBkr34oL5g==
-Date:   Mon, 25 Jan 2021 12:02:16 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
-Subject: Re: [PATCH 11/11] xfs: flush speculative space allocations when we
- run out of space
-Message-ID: <20210125200216.GE7698@magnolia>
-References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
- <161142798066.2171939.9311024588681972086.stgit@magnolia>
- <20210124094816.GE670331@infradead.org>
+        s=k20201202; t=1611605132;
+        bh=S1Vb4+jiVc09lYRuMnR8egvP0fyMYo1EXgluj8O3eHs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V3CfXN+G/m0igcnq7YU5W1NyN7/nWAtChoMfY7YW5JqEFrSzLPlErgq7lnNXifdQD
+         3nY8WFnZUmlndtMM+Ho7HmLxWRd+HlCKWxu3hTeeITsQyRTmasMEzVQr37eTUK66D/
+         O1YTrbH2C0lJy9NH7QtEK2EBAPLPMsy1uRK1C5Ji0tmuyICDaVr7chW+KggVIo9aWV
+         uMutqCODkROCvNu2WI4xWAEkiRRuP463L4uns0PV6xXld2sisdvi2fYkZHU3j2N9W7
+         4hBfdAz1a2zPsk1R2KI2MLvnZJMF6X7OzXo2OVv1fYt7a3VqCQVp4sUXEjHJQWxCPU
+         9iE6QjwJqBL4A==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     stable@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.19 0/2] backport lazytime fix to 4.19
+Date:   Mon, 25 Jan 2021 12:05:07 -0800
+Message-Id: <20210125200509.261295-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210124094816.GE670331@infradead.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Jan 24, 2021 at 09:48:16AM +0000, Christoph Hellwig wrote:
-> > +retry:
-> >  	/*
-> >  	 * Allocate the handle before we do our freeze accounting and setting up
-> >  	 * GFP_NOFS allocation context so that we avoid lockdep false positives
-> > @@ -285,6 +289,22 @@ xfs_trans_alloc(
-> >  	tp->t_firstblock = NULLFSBLOCK;
-> >  
-> >  	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-> > +	if (error == -ENOSPC && tries > 0) {
-> > +		xfs_trans_cancel(tp);
-> > +
-> > +		/*
-> > +		 * We weren't able to reserve enough space for the transaction.
-> > +		 * Flush the other speculative space allocations to free space.
-> > +		 * Do not perform a synchronous scan because callers can hold
-> > +		 * other locks.
-> > +		 */
-> > +		error = xfs_blockgc_free_space(mp, NULL);
-> > +		if (error)
-> > +			return error;
-> > +
-> > +		tries--;
-> > +		goto retry;
-> > +	}
-> >  	if (error) {
-> >  		xfs_trans_cancel(tp);
-> >  		return error;
-> 
-> Why do we need to restart the whole function?  A failing
-> xfs_trans_reserve should restore tp to its initial state, and keeping
-> the SB_FREEZE_FS counter increased also doesn't look harmful as far as
-> I can tell.  So why not:
-> 
-> 	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-> 	if (error == -ENOSPC) {
-> 		/*
-> 		 * We weren't able to reserve enough space for the transaction.
-> 		 * Flush the other speculative space allocations to free space.
-> 		 * Do not perform a synchronous scan because callers can hold
-> 		 * other locks.
-> 		 */
-> 		error = xfs_blockgc_free_space(mp, NULL);
+Backport a lazytime fix from upstream to 4.19-stable.  The first commit
+had a trivial conflict in fs/xfs/ due to a file being renamed.
+Following that, the second commit is a clean cherry-pick.
 
-xfs_blockgc_free_space runs the blockgc scan directly, which means that
-it creates transactions to free blocks.  Since we can't have nested
-transactions, we have to drop tp here.
+Eric Biggers (1):
+  fs: fix lazytime expiration handling in __writeback_single_inode()
 
---D
+Jan Kara (1):
+  writeback: Drop I_DIRTY_TIME_EXPIRE
 
-> 		if (error)
-> 			return error;
-> 		error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-> 	}
->  	if (error) {
->   		xfs_trans_cancel(tp);
->   		return error;
-> 
-> ?
+ fs/ext4/inode.c                  |  2 +-
+ fs/fs-writeback.c                | 36 ++++++++++++++------------------
+ fs/xfs/xfs_trans_inode.c         |  4 ++--
+ include/linux/fs.h               |  1 -
+ include/trace/events/writeback.h |  1 -
+ 5 files changed, 19 insertions(+), 25 deletions(-)
+
+-- 
+2.30.0
+
