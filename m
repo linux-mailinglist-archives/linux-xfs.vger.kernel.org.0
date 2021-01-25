@@ -2,89 +2,111 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BBEB303429
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:18:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A80D30342C
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbhAZFSQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 00:18:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20584 "EHLO
+        id S1730186AbhAZFSa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 00:18:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46014 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730069AbhAYPij (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 10:38:39 -0500
+        by vger.kernel.org with ESMTP id S1730306AbhAYPn1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 10:43:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611589031;
+        s=mimecast20190719; t=1611589321;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=cfGGj8BGBOiClxwtSoFcfv8TZ4J5WZpGO4xb9jloAog=;
-        b=gEeB7DAGlyjkNDSQuPfUzu14x/FSnAs1NJMJ1JF3G4SBfKWTN16AqXV4n/iMQQraVHYrk3
-        848DhjW/PHH+Ri8FG9d1h1jAABnLUYL+PC+ATX8Yzio6iVyYJJfPQVwj0odgKiDIcPEzAq
-        5bAku9qUXkuRc7m2rSBQJ4cTkkCPUTA=
+        bh=J6SR6h1sVJ4bXZHQwx2cYLljAFZKIfdHR5aeC3nMlsQ=;
+        b=TTQYqAcNrGtB0G1EDi5Ybo4IS1FzV/s1UYDmNYBr72xVC/q3RfYXRCKxj86zCAVM4ovWOQ
+        mvzuVDwJdjGgHJlhgfThNsTeO8ISItxnhzhS59auXBeaasoxhohFkk/coX9CJz3oq9LhbK
+        hakrnvWgpWZYVVcAM8mFgs2RNvk8g+s=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-54-SN49PsToP-ybjwtYZ1VW0w-1; Mon, 25 Jan 2021 10:13:56 -0500
-X-MC-Unique: SN49PsToP-ybjwtYZ1VW0w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-161-h4pi8v9hPfK-HWPK2BIrdg-1; Mon, 25 Jan 2021 10:17:25 -0500
+X-MC-Unique: h4pi8v9hPfK-HWPK2BIrdg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C5C291009446;
-        Mon, 25 Jan 2021 15:13:54 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AAB7803620;
+        Mon, 25 Jan 2021 15:17:24 +0000 (UTC)
 Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B2D960C0F;
-        Mon, 25 Jan 2021 15:13:54 +0000 (UTC)
-Date:   Mon, 25 Jan 2021 10:13:52 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3D9C10013BD;
+        Mon, 25 Jan 2021 15:17:23 +0000 (UTC)
+Date:   Mon, 25 Jan 2021 10:17:22 -0500
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         hch@infradead.org, david@fromorbit.com
-Subject: Re: [PATCH 2/4] xfs: clean up quota reservation wrappers
-Message-ID: <20210125151352.GD2047559@bfoster>
+Subject: Re: [PATCH 4/4] xfs: clean up icreate quota reservation calls
+Message-ID: <20210125151722.GF2047559@bfoster>
 References: <161142789504.2170981.1372317837643770452.stgit@magnolia>
- <161142790628.2170981.7372348604132126587.stgit@magnolia>
+ <161142791730.2170981.16295389347749875438.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161142790628.2170981.7372348604132126587.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <161142791730.2170981.16295389347749875438.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jan 23, 2021 at 10:51:46AM -0800, Darrick J. Wong wrote:
+On Sat, Jan 23, 2021 at 10:51:57AM -0800, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Replace a couple of quota reservation macros with properly typechecked
-> static inline functions ahead of more restructuring in the next patches.
+> Create a proper helper so that inode creation calls can reserve quota
+> with a dedicated function.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
-
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-
->  fs/xfs/xfs_quota.h |    9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  fs/xfs/xfs_inode.c       |    8 ++++----
+>  fs/xfs/xfs_quota.h       |   15 +++++++++++----
+>  fs/xfs/xfs_symlink.c     |    4 ++--
+>  fs/xfs/xfs_trans_dquot.c |   21 +++++++++++++++++++++
+>  4 files changed, 38 insertions(+), 10 deletions(-)
 > 
 > 
-> diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-> index 5a62398940d0..bd28d17941e7 100644
-> --- a/fs/xfs/xfs_quota.h
-> +++ b/fs/xfs/xfs_quota.h
-> @@ -151,8 +151,13 @@ static inline int xfs_trans_reserve_quota_bydquots(struct xfs_trans *tp,
->  #define xfs_qm_unmount_quotas(mp)
->  #endif /* CONFIG_XFS_QUOTA */
+...
+> diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+> index 28b8ac701919..3315498a6fa1 100644
+> --- a/fs/xfs/xfs_trans_dquot.c
+> +++ b/fs/xfs/xfs_trans_dquot.c
+> @@ -804,6 +804,27 @@ xfs_trans_reserve_quota_nblks(
+>  						nblks, ninos, flags);
+>  }
 >  
-> -#define xfs_trans_unreserve_quota_nblks(tp, ip, nblks, ninos, flags) \
-> -	xfs_trans_reserve_quota_nblks(tp, ip, -(nblks), -(ninos), flags)
-> +static inline int
-> +xfs_trans_unreserve_quota_nblks(struct xfs_trans *tp, struct xfs_inode *ip,
-> +		int64_t nblks, long ninos, unsigned int flags)
+> +/* Change the quota reservations for an inode creation activity. */
+> +int
+> +xfs_trans_reserve_quota_icreate(
+> +	struct xfs_trans	*tp,
+> +	struct xfs_inode	*dp,
+> +	struct xfs_dquot	*udqp,
+> +	struct xfs_dquot	*gdqp,
+> +	struct xfs_dquot	*pdqp,
+> +	int64_t			nblks)
 > +{
-> +	return xfs_trans_reserve_quota_nblks(tp, ip, -nblks, -ninos, flags);
+> +	struct xfs_mount	*mp = dp->i_mount;
+> +
+> +	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +		return 0;
+> +
+> +	ASSERT(!xfs_is_quota_inode(&mp->m_sb, dp->i_ino));
+> +
+> +	return xfs_trans_reserve_quota_bydquots(tp, dp->i_mount, udqp, gdqp,
+> +			pdqp, nblks, 1, XFS_QMOPT_RES_REGBLKS);
+
+Considering we can get mp from tp (and it looks like we always pass tp),
+is it worth even passing in dp for an (unlikely) assert? That seems a
+little odd anyways since nothing down in this path actually uses or
+cares about the parent inode. Also, no need to pass dp->i_mount above if
+we've already defined mp, at least.
+
+Brian
+
 > +}
 > +
->  #define xfs_trans_reserve_quota(tp, mp, ud, gd, pd, nb, ni, f) \
->  	xfs_trans_reserve_quota_bydquots(tp, mp, ud, gd, pd, nb, ni, \
->  				f | XFS_QMOPT_RES_REGBLKS)
+>  /*
+>   * This routine is called to allocate a quotaoff log item.
+>   */
 > 
 
