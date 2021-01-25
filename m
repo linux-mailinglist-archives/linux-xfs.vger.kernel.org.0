@@ -2,93 +2,111 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A88530342F
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34B79303434
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbhAZFSp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 00:18:45 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52059 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728867AbhAYRHd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 12:07:33 -0500
-Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1l45K7-0006lj-0h; Mon, 25 Jan 2021 17:06:43 +0000
-Date:   Mon, 25 Jan 2021 18:06:40 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Geoffrey Thomas <geofft@ldpreload.com>,
-        Mrunal Patel <mpatel@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Theodore Tso <tytso@mit.edu>, Alban Crequy <alban@kinvolk.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Howells <dhowells@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        smbarber@chromium.org, Phil Estes <estesp@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Todd Kjos <tkjos@google.com>, Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v6 23/40] exec: handle idmapped mounts
-Message-ID: <20210125170640.6ycsyod2ftxnzjzy@wittgenstein>
-References: <20210121131959.646623-1-christian.brauner@ubuntu.com>
- <20210121131959.646623-24-christian.brauner@ubuntu.com>
- <875z3l0y56.fsf@x220.int.ebiederm.org>
- <20210125164404.aullgl3vlajgkef3@wittgenstein>
- <20210125170316.GA8345@mail.hallyn.com>
+        id S1731811AbhAZFTM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 00:19:12 -0500
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:58203 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731667AbhAZC03 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 21:26:29 -0500
+Received: from dread.disaster.area (pa49-180-243-77.pa.nsw.optusnet.com.au [49.180.243.77])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 918CC106B88
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Jan 2021 10:58:57 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1l4Bl2-002PKu-Ml
+        for linux-xfs@vger.kernel.org; Tue, 26 Jan 2021 10:58:56 +1100
+Date:   Tue, 26 Jan 2021 10:58:56 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: Re: Musings over REQ_PREFLUSH and REQ_FUA in journal IO
+Message-ID: <20210125235856.GH4662@dread.disaster.area>
+References: <20210125061422.GF4662@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125170316.GA8345@mail.hallyn.com>
+In-Reply-To: <20210125061422.GF4662@dread.disaster.area>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
+        a=juxvdbeFDU67v5YkIhU0sw==:117 a=juxvdbeFDU67v5YkIhU0sw==:17
+        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8
+        a=AHKhnjCwuecWepyCLLsA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 11:03:16AM -0600, Serge Hallyn wrote:
-> On Mon, Jan 25, 2021 at 05:44:04PM +0100, Christian Brauner wrote:
-> > On Mon, Jan 25, 2021 at 10:39:01AM -0600, Eric W. Biederman wrote:
-> > > Christian Brauner <christian.brauner@ubuntu.com> writes:
-> > > 
-> > > > When executing a setuid binary the kernel will verify in bprm_fill_uid()
-> > > > that the inode has a mapping in the caller's user namespace before
-> > > > setting the callers uid and gid. Let bprm_fill_uid() handle idmapped
-> > > > mounts. If the inode is accessed through an idmapped mount it is mapped
-> > > > according to the mount's user namespace. Afterwards the checks are
-> > > > identical to non-idmapped mounts. If the initial user namespace is
-> > > > passed nothing changes so non-idmapped mounts will see identical
-> > > > behavior as before.
-> > > 
-> > > This does not handle the v3 capabilites xattr with embeds a uid.
-> > > So at least at that level you are missing some critical conversions.
-> > 
-> > Thanks for looking. Vfs v3 caps are handled earlier in the series. I'm
-> > not sure what you're referring to here. There are tests in xfstests that
-> > verify vfs3 capability behavior.
+On Mon, Jan 25, 2021 at 05:14:22PM +1100, Dave Chinner wrote:
+> Hi folks,
 > 
-> *just* to make sure i'm not misunderstanding - s/vfs3/v3/ right?
+> I've been thinking a little about the way we write use cache flushes
+> recently and I was thinking about how we do journal writes and
+> whether we need to issue as many cache flushes as we currently do.
 
-Yes, in my mind it's always as "vfs v3 caps -> vfs3 caps". Sorry for the
-confusion.
+....
+
+> And then I woundered if we could apply the same logic to
+> post-journal write cache flushes (REQ_FUA) that guarantee that the
+> journal writes are stable before we allow writeback of the metadata
+> in that LSN range (i.e. once they are unpinned). Again, we have a
+> completion to submission ordering requirement here, only this time
+> it is journal IO completion to metadata IO submission.
+> 
+> IOWs, I think the same observation about the log head and the AIL
+> writeback mechanism can be made here: we only need to ensure a cache
+> flush occurs before we start writing back metadata at an LSN higher
+> than the journal head at the time of the last cache flush. The first
+> iclog write of last CIL checkpoint will have ensured all
+> metadata lower than the LSN of the CIL checkpoint is stable, hence
+> we only need to concern ourselves about metadata at the same LSN as
+> that checkpoint. checkpoint completion will unpin that metadata, but
+> we still need a cache flush to guarantee ordering at the stable
+> storage level.
+> 
+> Hence we can use an on-demand AIL traversal cache flush to ensure
+> we have journal-to-metadata ordering. This will be much rarer than
+> every using FUA for every iclog write, and should be of similar
+> order of gains to the REQ_PREFLUSH optimisation.
+> 
+> FWIW, because we use checksums to detect complete checkpoints in
+> the journal now, we don't actually need to use FUA writes to
+> guarantee they hit stable storage. We don't have a guarantee in what
+> order they will hit the disk (even with FUA), so the only thing that
+> the FUA write gains us is that on some hardware it elides the need
+> for a post-write cache flush. Hence I don't think we need REQ_FUA,
+> either.
+
+I think that this can be greatly simplified. We simply us
+REQ_PREFLUSH | REQ_FUA on all commit records that close off a
+transaction. The pre-flush can be used to guarantee that all the
+preceeding log writes have completed to the journal, then the commit
+record is written w/ FUA, guaranteeing the entire checkpoint is on
+stable storage before we run the checkpoint completion callbacks
+that unpin the dirty items and insert them into the AIL. This means
+we don't need to modify the AIL at all, and all the metadata vs
+journal ordering is still maintained entirely within the journal.
+
+The only additional complexity is that we have to separate the
+commit record into a new iclog from the rest of the checkpoint,
+unless the checkpoint fits entirely inside a single iclog. I don't
+think this is hard to do - we can probably do it once we've written
+the commit record and hold a reference to the iclog the commit
+record was written to that prevents it from being flushed until
+we release the reference to it.
+
+> The only explicit ordering we really have are log forces. As long as
+> log forces issue a cache flush when they are left pending by CIL
+> transaction completion, we shouldn't require anything more here. The
+> situation is similar to the AIL requirement...
+
+This won't a concern with the above change, because the commit
+mechanism provides the same guarantees about stable journal contents
+as it does now...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
