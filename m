@@ -2,261 +2,280 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 167E6302D20
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 22:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1074302D7D
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 22:22:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732182AbhAYVAA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 25 Jan 2021 16:00:00 -0500
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:39491 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732128AbhAYU7x (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 15:59:53 -0500
-Received: from dread.disaster.area (pa49-180-243-77.pa.nsw.optusnet.com.au [49.180.243.77])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 1370BD5EB9B;
-        Tue, 26 Jan 2021 07:58:57 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1l48wq-002MG2-GP; Tue, 26 Jan 2021 07:58:56 +1100
-Date:   Tue, 26 Jan 2021 07:58:56 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Rick Warner <rick@microway.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: Huge reduction in write bandwidth with filesystem vs direct
- block device
-Message-ID: <20210125205856.GG4662@dread.disaster.area>
-References: <fdc3fca3-f6e9-d484-b0c5-9e7c8b71dfc4@microway.com>
+        id S1732600AbhAYVWP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 25 Jan 2021 16:22:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732535AbhAYVVq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 16:21:46 -0500
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C21C06174A
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 13:21:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=bugs.debian.org; s=smtpauto.buxtehude; h=Content-Type:Date:Reply-To:
+        References:Message-ID:Subject:To:From:MIME-Version:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To;
+        bh=FDdE9xmGjfZjWTJnpC9cnK2GS51MFrtA1GE0HzXnFNg=; b=IdQxoTTWSCLWfg56ZP6Z2o+w+D
+        RsKdqm6OXdHHLbowkCJoJp+fpdKncTjei8drKehldV+vBJjnrrvRdp7dP/MA3KD3fQWBsov5IEMPD
+        L85D2NKdMpPSYyZQlfc/W5pJ3WGwmYXuiS4KOjWUoZTOHgtzvbuqGJ6rY+DDs8EXWJ0/qbdQVpjA3
+        cp/6qKqfXXlYVV1B/xKKncU4vUjxdYgc2Fci7DhwAyL9PNMNM6bOil3b4TvOqjSeB6cUNOR+luYAM
+        WWss4ZU2trFQU2iOu3aC9aaBUDldiCakfU5LOgleTxWX9XDnCaF2gElisdbDC2tFGz97yKiIzagck
+        1nXmoq8A==;
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1l49IG-00067U-LK; Mon, 25 Jan 2021 21:21:04 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fdc3fca3-f6e9-d484-b0c5-9e7c8b71dfc4@microway.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
-        a=juxvdbeFDU67v5YkIhU0sw==:117 a=juxvdbeFDU67v5YkIhU0sw==:17
-        a=8nJEP1OIZ-IA:10 a=EmqxpYm9HcoA:10 a=nt1UNTH2AAAA:8 a=7-415B0cAAAA:8
-        a=7HJZp2KAovuVgaKeN-QA:9 a=wPNLvfGTeEIA:10 a=1jnEqRSf4vEA:10
-        a=7AW3Uk2BEroXwU7YnAE8:22 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Mailer: MIME-tools 5.509 (Entity 5.509)
+X-Loop: owner@bugs.debian.org
+From:   "Debian Bug Tracking System" <owner@bugs.debian.org>
+To:     Bastian Germann <bastiangermann@fishpost.de>
+Subject: Bug#890716: marked as done (xfsprogs: FTBFS with glibc 2.27:
+ error: conflicting types for 'copy_file_range')
+Message-ID: <handler.890716.D890716.161160960623343.ackdone@bugs.debian.org>
+References: <312cb50d-30d2-4df3-b21b-92ca41807a9a@fishpost.de>
+ <151890404770.12817.14651101800594863948.reportbug@ohm.local>
+X-Debian-PR-Message: closed 890716
+X-Debian-PR-Package: src:xfsprogs
+X-Debian-PR-Keywords: ftbfs patch upstream
+X-Debian-PR-Source: xfsprogs
+Reply-To: 890716@bugs.debian.org
+Date:   Mon, 25 Jan 2021 21:21:04 +0000
+Content-Type: multipart/mixed; boundary="----------=_1611609664-23523-0"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 12:23:57PM -0500, Rick Warner wrote:
-> Hi all,
-> 
-> We're working with NVME storage systems and are seeing a significant
-> reduction in write speed with an XFS filesystem vs direct access to the
-> block device.
-> 
-> Using a 5 disk software RAID5, we're able to get ~16GB/s write speed direct
-> to the device.  If we put an XFS filesystem on the software RAID and run the
-> same fio command (except --directory /xfs instead of --filename /dev/md11)
-> we only get ~2.5GB/s write speed.
+This is a multi-part message in MIME format...
 
-What kernel? What's the RAID configuration? What's the mkfs.xfs output?
+------------=_1611609664-23523-0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-https://xfs.org/index.php/XFS_FAQ#Q:_What_information_should_I_include_when_reporting_a_problem.3F
+Your message dated Mon, 25 Jan 2021 22:20:01 +0100
+with message-id <312cb50d-30d2-4df3-b21b-92ca41807a9a@fishpost.de>
+and subject line xfsprogs: FTBFS with glibc 2.27: error: conflicting types =
+for 'copy_file_range'
+has caused the Debian Bug report #890716,
+regarding xfsprogs: FTBFS with glibc 2.27: error: conflicting types for 'co=
+py_file_range'
+to be marked as done.
+
+This means that you claim that the problem has been dealt with.
+If this is not the case it is now your responsibility to reopen the
+Bug report if necessary, and/or fix the problem forthwith.
+
+(NB: If you are a system administrator and have no idea what this
+message is talking about, this may indicate a serious mail system
+misconfiguration somewhere. Please contact owner@bugs.debian.org
+immediately.)
 
 
-> Are there any tunables that could improve this? Is performance degradation
-> this big considered a bug?
+--=20
+890716: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D890716
+Debian Bug Tracking System
+Contact owner@bugs.debian.org with problems
 
-No evidence that there's a bug yet. You're not testing apples to
-apples.
+------------=_1611609664-23523-0
+Content-Type: message/rfc822
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 
-> 
-> The fio runs showing this are below:
-> 
-> *******Direct to /dev/md11 block device
-> [root@flashstore ~]# fio --filename=/dev/md11 --rw=write --numjobs=32
-> --size=12G --bs=1M --name=1m --group_reporting
-> 1m: (g=0): rw=write, bs=(R) 1024KiB-1024KiB, (W) 1024KiB-1024KiB, (T)
-> 1024KiB-1024KiB, ioengine=psync, iodepth=1
+Received: (at submit) by bugs.debian.org; 17 Feb 2018 21:47:30 +0000
+X-Spam-Checker-Version: SpamAssassin 3.4.1-bugs.debian.org_2005_01_02
+	(2015-04-28) on buxtehude.debian.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-18.2 required=4.0 tests=BAYES_00,FROMDEVELOPER,
+	MURPHY_DRUGS_REL8,RCVD_IN_DNSWL_MED,TXREP,XMAILER_REPORTBUG autolearn=ham
+	autolearn_force=no version=3.4.1-bugs.debian.org_2005_01_02
+X-Spam-Bayes: score:0.0000 Tokens: new, 31; hammy, 150; neutral, 93; spammy,
+	0. spammytokens: hammytokens:0.000-+--H*M:reportbug, 0.000-+--H*MI:reportbug,
+	0.000-+--H*x:reportbug, 0.000-+--H*UA:reportbug, 0.000-+--H*r:aurel32
+Return-path: <aurel32@debian.org>
+Received: from hall.aurel32.net ([2001:bc8:30d7:100::1])
+	by buxtehude.debian.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.89)
+	(envelope-from <aurel32@debian.org>)
+	id 1enAKQ-0003xO-7U
+	for submit@bugs.debian.org; Sat, 17 Feb 2018 21:47:30 +0000
+Received: from [2001:bc8:30d7:120:9bb5:8936:7e6a:9e36] (helo=ohm.rr44.fr)
+	by hall.aurel32.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.89)
+	(envelope-from <aurel32@debian.org>)
+	id 1enAKO-0001wW-EK; Sat, 17 Feb 2018 22:47:28 +0100
+Received: from aurel32 by ohm.rr44.fr with local (Exim 4.90)
+	(envelope-from <aurel32@debian.org>)
+	id 1enAKN-00064s-Nn; Sat, 17 Feb 2018 22:47:27 +0100
+Content-Type: multipart/mixed; boundary="===============0926290008785666133=="
+MIME-Version: 1.0
+From: Aurelien Jarno <aurel32@debian.org>
+To: Debian Bug Tracking System <submit@bugs.debian.org>
+Subject: xfsprogs: FTBFS with glibc 2.27: error: conflicting types for 'copy_file_range'
+Message-ID: <151890404770.12817.14651101800594863948.reportbug@ohm.local>
+X-Mailer: reportbug 7.1.8
+Date: Sat, 17 Feb 2018 22:47:27 +0100
+Delivered-To: submit@bugs.debian.org
 
-This is writing 32 concurrent jobs all running from offset 0 in the
-block device doing single, synchronous IOs. IOWs, 32 IOs from offset
-0, 32 IOs from offset 1MB, etc all the way through the block device.
+This is a multi-part MIME message sent by reportbug.
 
-It's not the same thing as doing 32 concurrent IOs to 32 different
-files, all of which will be located in different physical offsets in
-the RAID device. You've got a 32x increase in dirty LBAs for the
-filesystem test, and no overlap between any of the jobs. So the RAID
-device and all the storage devices are doing 32x as much work as the
-block device job...
 
-To replicate the same IO on the block device, each job writing to
-the block device needs to be allocated it's own 12GB region in the
-block device (i.e. job 0 at offset 0, job 1 at offset 12GB, etc) so
-there is no overlapping, concurrent IO to the same device offset....
+--===============0926290008785666133==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Also, synchronous IO is the key here: individual job throughput is
-IO latency bound for synchronous IO and device queue depths are
-greatly limited. Hence any submission or completion delay is going
-to greatly impact test throughput. Nobody uses synchronous IO for
-high throughput applications these days...
+Source: xfsprogs
+Version: 4.9.0+nmu1
+Severity: important
+Tags: upstream patch
+User: debian-glibc@lists.debian.org
+Usertags: 2.27
 
-> Starting 32 processes
-> Jobs: 26 (f=26): [f(1),_(1),f(16),_(1),f(3),_(2),f(3),_(1),f(2),_(1),f(1)][100.0%][r=0KiB/s,w=0KiB/s][r=0,w=0
-> IOPS][eta 00m:00s]
-> 1m: (groupid=0, jobs=32): err= 0: pid=74592: Mon Jan 25 12:13:28 2021
->   write: IOPS=15.4k, BW=15.0GiB/s (16.1GB/s)(384GiB/25551msec)
->     clat (usec): min=230, max=31691, avg=2044.43, stdev=778.36
->      lat (usec): min=245, max=31710, avg=2067.97, stdev=783.21
->     clat percentiles (usec):
->      |  1.00th=[  420],  5.00th=[ 1745], 10.00th=[ 1811], 20.00th=[ 1860],
->      | 30.00th=[ 1893], 40.00th=[ 1926], 50.00th=[ 1942], 60.00th=[ 1975],
->      | 70.00th=[ 2024], 80.00th=[ 2089], 90.00th=[ 2180], 95.00th=[ 2900],
->      | 99.00th=[ 4490], 99.50th=[ 4883], 99.90th=[13829], 99.95th=[14746],
->      | 99.99th=[20841]
+xfsprogs 4.9.0+nmu1 fails to build with glibc 2.27 (2.27-0experimental0 from
+experimental):
 
-Note the IO latencies....
+|     [CC]     copy_file_range.o
+| copy_file_range.c:46:1: error: conflicting types for 'copy_file_range'
+|  copy_file_range(int fd, loff_t *src, loff_t *dst, size_t len)
+|  ^~~~~~~~~~~~~~~
+| In file included from ../include/platform_defs.h:33:0,
+|                  from ../include/project.h:21,
+|                  from ../include/input.h:24,
+|                  from copy_file_range.c:23:
+| /usr/include/unistd.h:1110:9: note: previous declaration of 'copy_file_range' was here
+|  ssize_t copy_file_range (int __infd, __off64_t *__pinoff,
+|          ^~~~~~~~~~~~~~~
+| ../include/buildrules:59: recipe for target 'copy_file_range.o' failed
+| make[3]: *** [copy_file_range.o] Error 1
+| include/buildrules:35: recipe for target 'io' failed
+| make[2]: *** [io] Error 2
+| Makefile:74: recipe for target 'default' failed
+| make[1]: *** [default] Error 2
+| make[1]: Leaving directory '/<<BUILDDIR>>/xfsprogs-4.9.0+nmu1'
+| debian/rules:30: recipe for target 'built' failed
+| make: *** [built] Error 2
+| dpkg-buildpackage: error: debian/rules build subprocess returned exit status 2
 
->    bw (  KiB/s): min=400606, max=679936, per=3.13%, avg=492489.85,
-> stdev=53436.36, samples=1632
->    iops        : min=  391, max=  664, avg=480.90, stdev=52.18, samples=1632
->   lat (usec)   : 250=0.01%, 500=1.72%, 750=0.80%, 1000=0.09%
->   lat (msec)   : 2=62.47%, 4=32.77%, 10=1.94%, 20=0.20%, 50=0.01%
->   cpu          : usr=1.37%, sys=62.91%, ctx=38028757, majf=0, minf=60496
->   IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%,
-> >=64=0.0%
->      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%,
-> >=64=0.0%
->      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%,
-> >=64=0.0%
->      issued rwts: total=0,393216,0,0 short=0,0,0,0 dropped=0,0,0,0
->      latency   : target=0, window=0, percentile=100.00%, depth=1
-> 
-> Run status group 0 (all jobs):
->   WRITE: bw=15.0GiB/s (16.1GB/s), 15.0GiB/s-15.0GiB/s (16.1GB/s-16.1GB/s),
-> io=384GiB (412GB), run=25551-25551msec
-> 
-> Disk stats (read/write):
->     md11: ios=98/2237881, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=10252/73455, aggrmerge=20863/582117, aggrticks=4425/138224,
-> aggrin_queue=130116, aggrutil=17.71%
->   nvme2n1: ios=12427/88141, merge=25370/698549, ticks=5030/163534,
-> in_queue=153382, util=16.71%
->   nvme3n1: ios=12210/88148, merge=24728/698544, ticks=4979/162745,
-> in_queue=152592, util=16.84%
->   nvme4n1: ios=12246/88150, merge=24861/698524, ticks=4875/165703,
-> in_queue=156034, util=16.81%
->   nvme5n1: ios=12289/88146, merge=25200/698533, ticks=5013/164900,
-> in_queue=154398, util=16.96%
->   nvme6n1: ios=12343/88149, merge=25021/698553, ticks=6655/172464,
-> in_queue=164291, util=17.71%
+A full build logs is available there:
+http://aws-logs.debian.net/2018/02/07/glibc-exp/xfsprogs_4.9.0+nmu1_unstable_glibc-exp.log
 
-Note the IOs reaching the disks here - ~90k writes each disk for the
-entire test, so ~450,000 1MB IOs gives ~450GB which roughly matches
-with the amount written when parity overhead is taken into account.
 
->   nvme22n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=0.00%
-> 
-> ******* mkfs.xfs on /dev/md11 (w/ no flags) and fio run on that mount
-> [root@flashstore ~]# fio --directory=/xfs --rw=write --numjobs=32 --size=12G
-> --bs=1M --name=1m --group_reporting
+glibc 2.27 added support for copy_file_range. Unfortunately xfsprogs
+also have such a function to wrap the corresponding syscall.
 
---fallocate=none is needed to make the filesystem workload a pure
-overwrite workload the same as the block device. Otherwise
-preallocation is used to lay out the files, and that then requires
-unwritten conversion of the IO range during IO completion. Unwritten
-conversion increases IO completion latency, which reduces bandwidth
-for synchronous IO submission/completion.
+The problem has been fixed in upstream commit 8041435d. I have
+backported it and attached it as a patch to this bug.
 
-> 1m: (g=0): rw=write, bs=(R) 1024KiB-1024KiB, (W) 1024KiB-1024KiB, (T)
-> 1024KiB-1024KiB, ioengine=psync, iodepth=1
-> ...
-> fio-3.7
-> Starting 32 processes
-> 1m: Laying out IO file (1 file / 12288MiB)
-.....
-> 1m: Laying out IO file (1 file / 12288MiB)
-> Jobs: 11 (f=11): [_(6),W(1),_(4),W(1),_(8),W(1),_(3),W(8)][99.4%][r=0KiB/s,w=1213MiB/s][r=0,w=1213
-> IOPS][eta 00m:01s]
-> 1m: (groupid=0, jobs=32): err= 0: pid=74782: Mon Jan 25 12:20:32 2021
->   write: IOPS=2431, BW=2432MiB/s (2550MB/s)(384GiB/161704msec)
->     clat (usec): min=251, max=117777, avg=13006.54, stdev=23856.18
->      lat (usec): min=270, max=117787, avg=13027.39, stdev=23851.96
->     clat percentiles (usec):
->      |  1.00th=[  359],  5.00th=[  371], 10.00th=[  383], 20.00th=[ 408],
->      | 30.00th=[  424], 40.00th=[  453], 50.00th=[  537], 60.00th=[ 578],
->      | 70.00th=[  619], 80.00th=[55313], 90.00th=[58459], 95.00th=[60556],
->      | 99.00th=[63177], 99.50th=[64226], 99.90th=[66323], 99.95th=[68682],
->      | 99.99th=[80217]
+--===============0926290008785666133==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="xfsprogs.diff"
 
-Compare the IO latencies with the block device. Average is 13ms per
-1MB IO for XFS vs 2ms for the block device. There's the entire
-performance difference right there - 6x longer IO latency on XFS
-means it will only acheive 1/6th the bandwidth of the block device
-because synchronous IO.
+diff -Nru xfsprogs-4.9.0+nmu1/io/copy_file_range.c xfsprogs-4.9.0+nmu2/io/copy_file_range.c
+--- xfsprogs-4.9.0+nmu1/io/copy_file_range.c
++++ xfsprogs-4.9.0+nmu2/io/copy_file_range.c
+@@ -42,8 +42,12 @@
+ "));
+ }
+ 
++/*
++ * Issue a raw copy_file_range syscall; for our test program we don't want the
++ * glibc buffered copy fallback.
++ */
+ static loff_t
+-copy_file_range(int fd, loff_t *src, loff_t *dst, size_t len)
++copy_file_range_cmd(int fd, loff_t *src, loff_t *dst, size_t len)
+ {
+ 	loff_t ret;
+ 
+@@ -127,7 +131,7 @@
+ 		copy_dst_truncate();
+ 	}
+ 
+-	ret = copy_file_range(fd, &src, &dst, len);
++	ret = copy_file_range_cmd(fd, &src, &dst, len);
+ 	close(fd);
+ 	return ret;
+ }
 
-It could just be that the filesystem isn't aligned to the underlying
-RAID geometry, and so every 1MB IO the filesystem issues to the md
-device is misaligned to the RAID stripe and so MD is doing huge
-numbers of partial stripe writes and that's what is killing
-performance....
+--===============0926290008785666133==--
 
-That said, 13ms latency for a single 1MB IO on a device that should
-take 2ms is potentially indicative of a scheduler bug: we've had
-bugs in completion workqueue task scheduling that have caused
-exactly this issue (10ms delays in IO completion task scheduling) in
-recent times. This scheduler commit fixed multiple performance
-regressions in XFS:
+------------=_1611609664-23523-0
+Content-Type: message/rfc822
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 
-52262ee567ad ("sched/fair: Allow a per-CPU kthread waking a task to
-stack on the same CPU, to fix XFS performance regression")
+Received: (at 890716-done) by bugs.debian.org; 25 Jan 2021 21:20:06 +0000
+X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
+	(2018-09-13) on buxtehude.debian.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-12.9 required=4.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,TXREP
+	autolearn=ham autolearn_force=no
+	version=3.4.2-bugs.debian.org_2005_01_02
+X-Spam-Bayes: score:0.0000 Tokens: new, 17; hammy, 119; neutral, 16; spammy,
+	0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3, 0.000-+--H*u:78.0,
+	0.000-+--UD:gappssmtp.com, 0.000-+--UD:20150623.gappssmtp.com,
+	0.000-+--H*RU:2003
+Return-path: <bastiangermann@fishpost.de>
+Received: from mail-ed1-x52e.google.com ([2a00:1450:4864:20::52e]:46406)
+	by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	(Exim 4.92)
+	(envelope-from <bastiangermann@fishpost.de>)
+	id 1l49HK-00064F-0T
+	for 890716-done@bugs.debian.org; Mon, 25 Jan 2021 21:20:06 +0000
+Received: by mail-ed1-x52e.google.com with SMTP id dj23so17259104edb.13
+        for <890716-done@bugs.debian.org>; Mon, 25 Jan 2021 13:20:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=OCz7keoKYLz0fLBPut1cY9e6lNBWAjQOwopyMsIKAKc=;
+        b=1s/2AGlb/3oxYdBlNQAL4w2BJiTMaHpStdCPd7cn8Pekwxoc1YV9gLMjxDGqZudAOn
+         myueeW4j36niKykZ7GXYjpxuJCKyYpxQR5cRUJ4oqBS788V0h+BcSa9doG8AW8q1Hm/v
+         dSktrW5rdyR3L1z/mQPKjElVZtHqEdr/vBqFKTba+QG8BW1JV9TK/tt3hlCetMtSFSxj
+         NVE2DxVjunjXfL4COhs1YQY1pf8mGfFfANzADqig7Lby/gJcPDwiwR03/0/TxRTZW5vY
+         uhGwNyEG+iWMZI0YkPpjd2ek8dqiJXh1gXVXLh4MRld7e4x/gZXaAnA/CqcHij/q3Ga8
+         8a5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=OCz7keoKYLz0fLBPut1cY9e6lNBWAjQOwopyMsIKAKc=;
+        b=lIAXNJrmTmn8Vq9YrY2HkRXA/z0l/Qi977FIpw7YUvT5TYYvrNKdGIFp7egefOLC63
+         olkgngjlbSBzb7zLA/qvPxLIiCbCiCalFLdlVsVqCGQbJyOU2ZrNkuA1fkBXFOWfP6t4
+         ZiU5CoCYcm6H1+uDH3Aj+dfPMKORW9sLMICp0xUGJZX5/WYFhM35fQdjPo8ZOPDRsuMf
+         G5QgFnMqxcO3U8zNZchwiZMZi5ZBmLAmI9chwmOquEFTncOsGIv0z8SdHKDvqjDoKNXg
+         SEU8ndMshwetsNXHYp2Zrk8VQLrOoItuVfKnhtQV4voy5hc2Bdjdofbo5PFvsJ1YZvTU
+         ETkg==
+X-Gm-Message-State: AOAM533fOi+CA1XEnRkWL9GKGGDydfeLWeWaeg2EAuCHYl5P2K0dwiod
+	VXI2zEJoHbUfcyIXZBO7S/t9oLbtt062hb/C
+X-Google-Smtp-Source: ABdhPJzwwY7c4oHlkkqnkAt/3jPtMl/tx9SjUYcq++8iQG95MqecZ6UtnMAJpxesbuzjzwSbLBm+Bg==
+X-Received: by 2002:a50:8a90:: with SMTP id j16mr1997374edj.334.1611609602595;
+        Mon, 25 Jan 2021 13:20:02 -0800 (PST)
+Received: from ?IPv6:2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27? (p200300d06f3554009d4aa26f7cc66e27.dip0.t-ipconnect.de. [2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27])
+        by smtp.gmail.com with ESMTPSA id u2sm8882595ejb.65.2021.01.25.13.20.01
+        for <890716-done@bugs.debian.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Jan 2021 13:20:02 -0800 (PST)
+To: 890716-done@bugs.debian.org
+From: Bastian Germann <bastiangermann@fishpost.de>
+Subject: xfsprogs: FTBFS with glibc 2.27: error: conflicting types for
+ 'copy_file_range'
+Message-ID: <312cb50d-30d2-4df3-b21b-92ca41807a9a@fishpost.de>
+Date: Mon, 25 Jan 2021 22:20:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE-frami
+Content-Transfer-Encoding: 7bit
 
-Which brings me back to "what kernel and platform are you
-testing?"...
-
->    bw (  KiB/s): min=55296, max=1054720, per=3.15%, avg=78557.24,
-> stdev=41896.99, samples=10233
->    iops        : min=   54, max= 1030, avg=76.67, stdev=40.92, samples=10233
-
-Note that the per-job throughput peaked at over 1GB/s for a specific
-job - that's what I'd expect to see on XFS for all jobs, not just an
-occasional sample....
-
->   lat (usec)   : 500=46.14%, 750=31.31%, 1000=0.78%
->   lat (msec)   : 2=0.03%, 4=0.01%, 10=0.01%, 20=0.01%, 50=0.59%
->   lat (msec)   : 100=21.13%, 250=0.01%
->   cpu          : usr=0.12%, sys=3.83%, ctx=86515, majf=0, minf=22227
->   IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%,
-> >=64=0.0%
->      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%,
-> >=64=0.0%
->      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%,
-> >=64=0.0%
->      issued rwts: total=0,393216,0,0 short=0,0,0,0 dropped=0,0,0,0
->      latency   : target=0, window=0, percentile=100.00%, depth=1
-> 
-> Run status group 0 (all jobs):
->   WRITE: bw=2432MiB/s (2550MB/s), 2432MiB/s-2432MiB/s (2550MB/s-2550MB/s),
-> io=384GiB (412GB), run=161704-161704msec
-> 
-> Disk stats (read/write):
->     md11: ios=1/6097731, merge=0/0, ticks=0/0, in_queue=0, util=0.00%,
-> aggrios=23774/2849499, aggrmerge=34232/17493878, aggrticks=28040/18125298,
-> aggrin_queue=18363574, aggrutil=80.03%
->   nvme2n1: ios=28860/3419298, merge=41127/20992122, ticks=39496/23053174,
-> in_queue=23421586, util=75.76%
->   nvme3n1: ios=28440/3419396, merge=41081/20992524, ticks=34881/23067448,
-> in_queue=23411872, util=80.03%
->   nvme4n1: ios=28457/3419413, merge=41361/20992713, ticks=30990/21139316,
-> in_queue=21420720, util=78.03%
->   nvme5n1: ios=28131/3419446, merge=40331/20992920, ticks=29288/20184431,
-> in_queue=20418749, util=77.00%
->   nvme6n1: ios=28759/3419446, merge=41496/20992991, ticks=33587/21307424,
-> in_queue=21508518, util=77.04%
-
-That's not pretty. That looks like partial stripe writes - 3.4
-million write IOs per device (instead of ~90,000) and 20m merges per
-device is indicative of MD slicing and dicing the IO it is receiving
-from the higher level up into a huge number of tiny IOs. i.e. the
-devices are not getting well formed/well aligned IO so working out
-why this is happening is probably the first thing to look at.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+The problem is fixed in all versions in the archive that have glibc >= 
+2.27, which are buster, bullseye, and sid.
+------------=_1611609664-23523-0--
