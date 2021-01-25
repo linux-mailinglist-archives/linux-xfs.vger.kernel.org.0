@@ -2,63 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 431E9302F79
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 23:54:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA2C302F96
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 23:59:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbhAYWx1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 25 Jan 2021 17:53:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
+        id S1732185AbhAYW5u (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 25 Jan 2021 17:57:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732708AbhAYWvu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 17:51:50 -0500
+        with ESMTP id S1732154AbhAYW5o (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 17:57:44 -0500
 Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9DF6C061573
-        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 14:51:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=bugs.debian.org; s=smtpauto.buxtehude; h=Date:References:Message-ID:Subject
-        :CC:To:From:Content-Type:MIME-Version:Content-Transfer-Encoding:Reply-To:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=V8gcDOrvmtFxdgcNe4LUbf271c5/+i3ADGG3l48B7tA=; b=E5CCnZ2iA/nX7S9GxGQTds1Dvw
-        r/dgLZ8wp0PnP8BjCy50I9nVWuW3lV3CU1nDqO+JHa60cjLGt97KjRj9VU6ILraEYkNWu3xiVnIaJ
-        iGvZLt/n48PTWsBnKQMEHJS++ipTYpwjy4CMLgv/VPVkDUg2ddptw9fPayJrfF6wi0D/gVsPqRhwq
-        FJAK4C6u+dvCUlvbeDXHnJ9u67/4wWQvUISNcvrg+4oWKJ6Dg+MZjKhjwGC979I0O0wrj12hdw847
-        A5y2lCFq7Q95X/aV6NenVSUnoucbjqdShG8mPpuR9Zw+yKMrMgzvSf8vh6uWdw/YrZseqLL4ZtPq4
-        B64HHhdQ==;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D3FC061573
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 14:57:03 -0800 (PST)
 Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
         (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1l4AhL-0008Hn-QN; Mon, 25 Jan 2021 22:51:04 +0000
+        id 1l4An8-0000eI-Ma; Mon, 25 Jan 2021 22:57:02 +0000
 X-Loop: owner@bugs.debian.org
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-Mailer: MIME-tools 5.509 (Entity 5.509)
-Content-Type: text/plain; charset=utf-8
-From:   "Debian Bug Tracking System" <owner@bugs.debian.org>
-To:     Bastian Germann <bastiangermann@fishpost.de>
-CC:     debian-bugs-closed@lists.debian.org, linux-xfs@vger.kernel.org
-Subject: Processed: Close very old bug
-Message-ID: <handler.s.C.161161484229960.transcript@bugs.debian.org>
-References: <5fad00c8-daf7-af00-6e8e-8054e3ca5087@fishpost.de>
-X-Debian-PR-Package: xfsprogs
+Subject: Bug#897387: xfslibs-dev needs to include .la files
+Reply-To: Bastian Germann <bastiangermann@fishpost.de>,
+          897387@bugs.debian.org
+X-Loop: owner@bugs.debian.org
+X-Debian-PR-Message: followup 897387
+X-Debian-PR-Package: xfslibs-dev
+X-Debian-PR-Keywords: 
+References: <20180501190311.GA30840@bombadil.infradead.org> <20180501190311.GA30840@bombadil.infradead.org> <20180501190311.GA30840@bombadil.infradead.org>
 X-Debian-PR-Source: xfsprogs
-X-Debian-PR-Message: transcript
-X-Loop: owner@bugs.debian.org
-Date:   Mon, 25 Jan 2021 22:51:03 +0000
+Received: via spool by 897387-submit@bugs.debian.org id=B897387.16116152941680
+          (code B ref 897387); Mon, 25 Jan 2021 22:57:01 +0000
+Received: (at 897387) by bugs.debian.org; 25 Jan 2021 22:54:54 +0000
+X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
+        (2018-09-13) on buxtehude.debian.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-13.0 required=4.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        TXREP autolearn=ham autolearn_force=no
+        version=3.4.2-bugs.debian.org_2005_01_02
+X-Spam-Bayes: score:0.0000 Tokens: new, 36; hammy, 150; neutral, 69; spammy,
+        0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3,
+        0.000-+--UD:kernel.org, 0.000-+--H*u:78.0, 0.000-+--lpthread,
+        0.000-+--sk:fnostr
+Received: from mail-wr1-x444.google.com ([2a00:1450:4864:20::444]:33056)
+        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <bastiangermann@fishpost.de>)
+        id 1l4Al4-0000Qt-GM
+        for 897387@bugs.debian.org; Mon, 25 Jan 2021 22:54:54 +0000
+Received: by mail-wr1-x444.google.com with SMTP id 7so14607274wrz.0
+        for <897387@bugs.debian.org>; Mon, 25 Jan 2021 14:54:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
+        h=to:references:subject:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=RIYXj9oc6TApFxTYKjM0hi7AgQEg20CChJmWQ9GCFYs=;
+        b=fJgLeDSXhVM4y8mib9HQL2P+DNd2HRjXE4apQyAo5qbgarwQooD5uCLIQoToRT5eBO
+         FaCv7M3RTOUs4gYdC2DHjlm2b1JLpDeKuJy085CkB1d2r+Fv4MySA/xMa5jomnCz9R+5
+         27/fsdZek1ppjl/uE1fJF+M2PU39H6S2bpHsnzsoXsO3Jo1BecprjRXPsnUr7F6ybuY8
+         fv99XTsii3Toc/f7oIWhaJJ5wUJlQRyDvFKe+HHHL6Uh4ZN0c5QhmRgKRu38jEhsfpG+
+         Zf9udb66zsOzwE49aQfp7Se/nCMZrwIBP5G4g3ELkQ0bYjtSNONPPxMlhwmGdbijr6Nf
+         Naxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:subject:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RIYXj9oc6TApFxTYKjM0hi7AgQEg20CChJmWQ9GCFYs=;
+        b=sS64xmL9FS1pFgGDvH/OEvkD7iN5cJUulB3dLNk5o5obvIXxpKNCCt79ty+Rk99Hje
+         +Ho/LjU9QtKAzFLaMVC11mntxgR4nnvSBzW0tvRFJN6foAEBQ9mf/iGvjToIsNkB2D0t
+         vlWCskEzZBLQFlNcs0Ce9D0w8RLQc1iDy7YOdVcA0Ya/rCOg4mi4iFCyncVzioA2y5HE
+         sN3209dNwU5purXdsopTwKNV79jk9ymGAfe+xj3bIJzYK0WlYMJ7E6z7zdtGP2pjPmM1
+         yoz2EQf5714ux9HyTENgO479zZLAJldho0+dageFkgaZjIL8JB2eTasb3bWbEzBsC9LX
+         pagA==
+X-Gm-Message-State: AOAM533q4BgQxLqJ2iKd8v7C8SbzFGFosTokxNAS3ExYMTaRNy/JzAXQ
+        CC5MVpXKPVk4vQ4uJGdKziojCNtHChSAm2UR
+X-Google-Smtp-Source: ABdhPJxnl64wI/kYLGmmk7Roe7bGEnXPwlQiqk7GW5decOxhlq5LNT7HJuFgPnp+fJqjQyHvDUTDvg==
+X-Received: by 2002:adf:ec52:: with SMTP id w18mr3159220wrn.65.1611615291743;
+        Mon, 25 Jan 2021 14:54:51 -0800 (PST)
+Received: from ?IPv6:2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27? (p200300d06f3554009d4aa26f7cc66e27.dip0.t-ipconnect.de. [2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27])
+        by smtp.gmail.com with ESMTPSA id m8sm21840434wrv.37.2021.01.25.14.54.51
+        for <897387@bugs.debian.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Jan 2021 14:54:51 -0800 (PST)
+To:     897387@bugs.debian.org
+From:   Bastian Germann <bastiangermann@fishpost.de>
+Message-ID: <4c267c5f-df65-3c67-0f52-08bbe95928bf@fishpost.de>
+Date:   Mon, 25 Jan 2021 23:54:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <20180501190311.GA30840@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE-frami
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Processing commands for control@bugs.debian.org:
+Tags: wontfix
 
-> close 347561
-Bug #347561 [xfsprogs] xfsprogs: xfs_growfs should give a more useful error=
- message when filesystem is full
-Marked Bug as done
->
-End of message, stopping processing here.
+On Tue, 1 May 2018 12:03:11 -0700 Matthew Wilcox <willy@infradead.org> 
+wrote:
+> Package: xfslibs-dev
+> Version: 4.15.1-1
+> 
+> trying to build the latest from
+> git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+> 
+>     [CC]    t_truncate_self
+> /bin/bash ../libtool --quiet --tag=CC --mode=link gcc t_truncate_self.c -o t_truncate_self -g -O2 -g -O2 -DDEBUG  -I../include -DVERSION=\"1.1.1\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -funsigned-char -fno-strict-aliasing -Wall -DHAVE_FALLOCATE   -lattr /usr/lib/libhandle.la -lacl -lpthread   ../lib/libtest.la
+> libtool:   error: cannot find the library '/usr/lib/libhandle.la' or unhandled argument '/usr/lib/libhandle.la'
+> 
+> I downloaded the debian package of xfslibs-dev, built it, then
+> manually copied libhandle/libhandle.la into /lib and then I could build
+> xfstests-dev.
 
-Please contact me if you need assistance.
---=20
-347561: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D347561
-Debian Bug Tracking System
-Contact owner@bugs.debian.org with problems
+Please see https://wiki.debian.org/ReleaseGoals/LAFileRemoval for a 
+reason not to include the .la file. In fact, it is explicitly removed 
+during the Debian package build. Most probably, you can configure 
+xfstests-dev not to require a libhandle.la file.
