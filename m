@@ -2,120 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FA2C302F96
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 23:59:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78FE0302F90
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Jan 2021 23:57:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbhAYW5u (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 25 Jan 2021 17:57:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42354 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732154AbhAYW5o (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 17:57:44 -0500
-Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D3FC061573
-        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 14:57:03 -0800 (PST)
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1l4An8-0000eI-Ma; Mon, 25 Jan 2021 22:57:02 +0000
-X-Loop: owner@bugs.debian.org
-Subject: Bug#897387: xfslibs-dev needs to include .la files
-Reply-To: Bastian Germann <bastiangermann@fishpost.de>,
-          897387@bugs.debian.org
-X-Loop: owner@bugs.debian.org
-X-Debian-PR-Message: followup 897387
-X-Debian-PR-Package: xfslibs-dev
-X-Debian-PR-Keywords: 
-References: <20180501190311.GA30840@bombadil.infradead.org> <20180501190311.GA30840@bombadil.infradead.org> <20180501190311.GA30840@bombadil.infradead.org>
-X-Debian-PR-Source: xfsprogs
-Received: via spool by 897387-submit@bugs.debian.org id=B897387.16116152941680
-          (code B ref 897387); Mon, 25 Jan 2021 22:57:01 +0000
-Received: (at 897387) by bugs.debian.org; 25 Jan 2021 22:54:54 +0000
-X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
-        (2018-09-13) on buxtehude.debian.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=4.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        TXREP autolearn=ham autolearn_force=no
-        version=3.4.2-bugs.debian.org_2005_01_02
-X-Spam-Bayes: score:0.0000 Tokens: new, 36; hammy, 150; neutral, 69; spammy,
-        0. spammytokens: hammytokens:0.000-+--H*r:TLS1_3,
-        0.000-+--UD:kernel.org, 0.000-+--H*u:78.0, 0.000-+--lpthread,
-        0.000-+--sk:fnostr
-Received: from mail-wr1-x444.google.com ([2a00:1450:4864:20::444]:33056)
-        by buxtehude.debian.org with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <bastiangermann@fishpost.de>)
-        id 1l4Al4-0000Qt-GM
-        for 897387@bugs.debian.org; Mon, 25 Jan 2021 22:54:54 +0000
-Received: by mail-wr1-x444.google.com with SMTP id 7so14607274wrz.0
-        for <897387@bugs.debian.org>; Mon, 25 Jan 2021 14:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=to:references:subject:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=RIYXj9oc6TApFxTYKjM0hi7AgQEg20CChJmWQ9GCFYs=;
-        b=fJgLeDSXhVM4y8mib9HQL2P+DNd2HRjXE4apQyAo5qbgarwQooD5uCLIQoToRT5eBO
-         FaCv7M3RTOUs4gYdC2DHjlm2b1JLpDeKuJy085CkB1d2r+Fv4MySA/xMa5jomnCz9R+5
-         27/fsdZek1ppjl/uE1fJF+M2PU39H6S2bpHsnzsoXsO3Jo1BecprjRXPsnUr7F6ybuY8
-         fv99XTsii3Toc/f7oIWhaJJ5wUJlQRyDvFKe+HHHL6Uh4ZN0c5QhmRgKRu38jEhsfpG+
-         Zf9udb66zsOzwE49aQfp7Se/nCMZrwIBP5G4g3ELkQ0bYjtSNONPPxMlhwmGdbijr6Nf
-         Naxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:references:subject:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RIYXj9oc6TApFxTYKjM0hi7AgQEg20CChJmWQ9GCFYs=;
-        b=sS64xmL9FS1pFgGDvH/OEvkD7iN5cJUulB3dLNk5o5obvIXxpKNCCt79ty+Rk99Hje
-         +Ho/LjU9QtKAzFLaMVC11mntxgR4nnvSBzW0tvRFJN6foAEBQ9mf/iGvjToIsNkB2D0t
-         vlWCskEzZBLQFlNcs0Ce9D0w8RLQc1iDy7YOdVcA0Ya/rCOg4mi4iFCyncVzioA2y5HE
-         sN3209dNwU5purXdsopTwKNV79jk9ymGAfe+xj3bIJzYK0WlYMJ7E6z7zdtGP2pjPmM1
-         yoz2EQf5714ux9HyTENgO479zZLAJldho0+dageFkgaZjIL8JB2eTasb3bWbEzBsC9LX
-         pagA==
-X-Gm-Message-State: AOAM533q4BgQxLqJ2iKd8v7C8SbzFGFosTokxNAS3ExYMTaRNy/JzAXQ
-        CC5MVpXKPVk4vQ4uJGdKziojCNtHChSAm2UR
-X-Google-Smtp-Source: ABdhPJxnl64wI/kYLGmmk7Roe7bGEnXPwlQiqk7GW5decOxhlq5LNT7HJuFgPnp+fJqjQyHvDUTDvg==
-X-Received: by 2002:adf:ec52:: with SMTP id w18mr3159220wrn.65.1611615291743;
-        Mon, 25 Jan 2021 14:54:51 -0800 (PST)
-Received: from ?IPv6:2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27? (p200300d06f3554009d4aa26f7cc66e27.dip0.t-ipconnect.de. [2003:d0:6f35:5400:9d4a:a26f:7cc6:6e27])
-        by smtp.gmail.com with ESMTPSA id m8sm21840434wrv.37.2021.01.25.14.54.51
-        for <897387@bugs.debian.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Jan 2021 14:54:51 -0800 (PST)
-To:     897387@bugs.debian.org
-From:   Bastian Germann <bastiangermann@fishpost.de>
-Message-ID: <4c267c5f-df65-3c67-0f52-08bbe95928bf@fishpost.de>
-Date:   Mon, 25 Jan 2021 23:54:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        id S1732613AbhAYW4c (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 25 Jan 2021 17:56:32 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:41443 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732351AbhAYW4X (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 17:56:23 -0500
+X-IronPort-AV: E=Sophos;i="5.79,374,1602518400"; 
+   d="scan'208";a="103820568"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 26 Jan 2021 06:55:32 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 7D9D04CE6031;
+        Tue, 26 Jan 2021 06:55:30 +0800 (CST)
+Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Tue, 26 Jan 2021 06:55:29 +0800
+Received: from irides.mr.mr.mr (10.167.225.141) by
+ G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Tue, 26 Jan 2021 06:55:28 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@lst.de>, <song@kernel.org>,
+        <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>, <y-goto@fujitsu.com>
+Subject: [PATCH v2 00/10] fsdax: introduce fs query to support reflink
+Date:   Tue, 26 Jan 2021 06:55:16 +0800
+Message-ID: <20210125225526.1048877-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-In-Reply-To: <20180501190311.GA30840@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE-frami
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 7D9D04CE6031.AAC22
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Tags: wontfix
+This patchset is aimed to support shared pages tracking for fsdax.
 
-On Tue, 1 May 2018 12:03:11 -0700 Matthew Wilcox <willy@infradead.org> 
-wrote:
-> Package: xfslibs-dev
-> Version: 4.15.1-1
-> 
-> trying to build the latest from
-> git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-> 
->     [CC]    t_truncate_self
-> /bin/bash ../libtool --quiet --tag=CC --mode=link gcc t_truncate_self.c -o t_truncate_self -g -O2 -g -O2 -DDEBUG  -I../include -DVERSION=\"1.1.1\" -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -funsigned-char -fno-strict-aliasing -Wall -DHAVE_FALLOCATE   -lattr /usr/lib/libhandle.la -lacl -lpthread   ../lib/libtest.la
-> libtool:   error: cannot find the library '/usr/lib/libhandle.la' or unhandled argument '/usr/lib/libhandle.la'
-> 
-> I downloaded the debian package of xfslibs-dev, built it, then
-> manually copied libhandle/libhandle.la into /lib and then I could build
-> xfstests-dev.
+Change from V1:
+  - Add the old memory-failure handler back for rolling back
+  - Add callback in MD's ->rmap() to support multiple mapping of dm device
+  - Add judgement for CONFIG_SYSFS
+  - Add pfn_valid() judgement in hwpoison_filter()
+  - Rebased to v5.11-rc5
 
-Please see https://wiki.debian.org/ReleaseGoals/LAFileRemoval for a 
-reason not to include the .la file. In fact, it is explicitly removed 
-during the Debian package build. Most probably, you can configure 
-xfstests-dev not to require a libhandle.la file.
+Change from RFC v3:
+  - Do not lock dax entry in memory failure handler
+  - Add a helper function for corrupted_range
+  - Add restrictions in xfs code
+  - Fix code style
+  - remove the useless association and lock in fsdax
+
+Change from RFC v2:
+  - Adjust the order of patches
+  - Divide the infrastructure and the drivers that use it
+  - Rebased to v5.10
+
+Change from RFC v1:
+  - Introduce ->block_lost() for block device
+  - Support mapped device
+  - Add 'not available' warning for realtime device in XFS
+  - Rebased to v5.10-rc1
+
+This patchset moves owner tracking from dax_assocaite_entry() to pmem
+device driver, by introducing an interface ->memory_failure() of struct
+pagemap.  This interface is called by memory_failure() in mm, and
+implemented by pmem device.  Then pmem device calls its ->corrupted_range()
+to find the filesystem which the corrupted data located in, and call
+filesystem handler to track files or metadata assocaited with this page.
+Finally we are able to try to fix the corrupted data in filesystem and do
+other necessary processing, such as killing processes who are using the
+files affected.
+
+The call trace is like this:
+memory_failure()
+ pgmap->ops->memory_failure()      => pmem_pgmap_memory_failure()
+  gendisk->fops->corrupted_range() => - pmem_corrupted_range()
+                                      - md_blk_corrupted_range()
+   sb->s_ops->currupted_range()    => xfs_fs_corrupted_range()
+    xfs_rmap_query_range()
+     xfs_currupt_helper()
+      * corrupted on metadata
+          try to recover data, call xfs_force_shutdown()
+      * corrupted on file data 
+          try to recover data, call mf_dax_mapping_kill_procs()
+
+The fsdax & reflink support for XFS is not contained in this patchset.
+
+(Rebased on v5.11-rc5)
+
+Shiyang Ruan (10):
+  pagemap: Introduce ->memory_failure()
+  blk: Introduce ->corrupted_range() for block device
+  fs: Introduce ->corrupted_range() for superblock
+  mm, fsdax: Refactor memory-failure handler for dax mapping
+  mm, pmem: Implement ->memory_failure() in pmem driver
+  pmem: Implement ->corrupted_range() for pmem driver
+  dm: Introduce ->rmap() to find bdev offset
+  md: Implement ->corrupted_range()
+  xfs: Implement ->corrupted_range() for XFS
+  fs/dax: Remove useless functions
+
+ block/genhd.c                 |   6 ++
+ drivers/md/dm-linear.c        |  20 ++++
+ drivers/md/dm.c               |  61 +++++++++++
+ drivers/nvdimm/pmem.c         |  44 ++++++++
+ fs/block_dev.c                |  42 +++++++-
+ fs/dax.c                      |  63 ++++-------
+ fs/xfs/xfs_fsops.c            |   5 +
+ fs/xfs/xfs_mount.h            |   1 +
+ fs/xfs/xfs_super.c            | 109 +++++++++++++++++++
+ include/linux/blkdev.h        |   2 +
+ include/linux/dax.h           |   1 +
+ include/linux/device-mapper.h |   5 +
+ include/linux/fs.h            |   2 +
+ include/linux/genhd.h         |   3 +
+ include/linux/memremap.h      |   8 ++
+ include/linux/mm.h            |   9 ++
+ mm/memory-failure.c           | 190 +++++++++++++++++++++++-----------
+ 17 files changed, 466 insertions(+), 105 deletions(-)
+
+-- 
+2.30.0
+
+
+
