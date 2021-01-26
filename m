@@ -2,186 +2,304 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58019303EC0
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 14:32:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36768304529
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 18:26:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404356AbhAZNbv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 08:31:51 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:35550 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404367AbhAZN1d (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Jan 2021 08:27:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611667566;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4DxTYwltXo6SOHgCTUbVMWGCeoebM3A8z7epLTPRlgs=;
-        b=THYKGPJWPV7xiFaqYNIiVbexj1kQMzx5psZkvAfXaStz/PqWqV9kzIwdqwlwHoxfOGfrxk
-        /wtCA5UFsx1B/JKefvmmXsbilX+jr0gxB+TqYIXhRaAjLIUyrPw3lRA271Fn+uyHlIRP7P
-        b4PVNwfCKTPFOAQWsNehBTOi0y9mal0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-OxWTpTvoM_mGLaGvz4Vgkw-1; Tue, 26 Jan 2021 08:26:04 -0500
-X-MC-Unique: OxWTpTvoM_mGLaGvz4Vgkw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F3681005513;
-        Tue, 26 Jan 2021 13:26:03 +0000 (UTC)
-Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7AB3A60C6A;
-        Tue, 26 Jan 2021 13:26:02 +0000 (UTC)
-Date:   Tue, 26 Jan 2021 08:26:00 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-        david@fromorbit.com
-Subject: Re: [PATCH 06/11] xfs: flush eof/cowblocks if we can't reserve quota
- for file blocks
-Message-ID: <20210126132600.GB2158252@bfoster>
-References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
- <161142795294.2171939.2305516748220731694.stgit@magnolia>
- <20210124093953.GC670331@infradead.org>
- <20210125181623.GL2047559@bfoster>
- <20210125185735.GB7698@magnolia>
+        id S1727029AbhAZRYS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 12:24:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731776AbhAZGdc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Jan 2021 01:33:32 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E988C061574
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 22:32:51 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id s24so118180pjp.5
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 22:32:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NY1iwEy2hFTddgRGLrghiE49tuozvqZoMiUy0Nk12cc=;
+        b=VWwhx5TAQAGFhU55l9UzuhzPIOstzUtBDqrlYYqq15/3KYEqi/3XFbjNzGu1jKilWY
+         brM5lW4eGD55+oC9hhye+phxI877oyagLiHrQTq0r2w85F8/T+KD+41BuG2aVC+Avvyx
+         yOXttgU8+JF75DCyaO2jWsCIm7q9K8K2XB8gtnpGRsN/cNUOYUmmeM30ncVreR5zv7ir
+         Nin7tnAYxMxCAWO6hMZApwGQiH/5LaNqEd/36gUf8kAXfz3QKyPqXwdGIaH+YElgw1KK
+         VyuXdg8WZ+DMpxNsp2+5XHR4DQ1ah2CtMoOok64nd0xCAhK9hW30+hLfXmyL0yRgqoAS
+         75pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NY1iwEy2hFTddgRGLrghiE49tuozvqZoMiUy0Nk12cc=;
+        b=dnlbqbMC5Tmii3tvbzRMZZZJ9Enm/nN7K0n8pMDAwZZJRkm/N6nzRgtEmZYzY9Pjc4
+         7Bs62ndvDzYZaAHa6nq96xcSDTRymPrW4CdNb35xvHZ31agZCDwixYqkNGdL+OUQoTdP
+         3epkTyLfTNMO1EjdUqxxonV+XLyeoSz/TKGhmCcZ7+Sab4UsG+k8Ck1YXfb3di/9JrbV
+         DqPbHFIdLGu6v5qO0ea6po56Nd+0opQN0VppS7JjfXAwgKCRec51tYUq714slPRjuNbJ
+         0Z/F7jgMwh25A7kcDnFdJlW33YW3b9iEUvLzGR+8Y4BPR+jP2bO/Wb07XXAcaB+auz8t
+         spIA==
+X-Gm-Message-State: AOAM533hcxvycGomVgDQynJKXERbfmAe+Uvtt5AYwH65LnUG2muFdlmQ
+        VwraAy3excGN3LDbjZTvmAVPHPQqj6o=
+X-Google-Smtp-Source: ABdhPJzE1zVAhAQcugicB2LO8i/YbxY87ZT2/csB018/eqNFO8rinE3mhQwiDQ+p8r1Yhx9iRvbnDA==
+X-Received: by 2002:a17:90a:5209:: with SMTP id v9mr4536457pjh.8.1611642770850;
+        Mon, 25 Jan 2021 22:32:50 -0800 (PST)
+Received: from localhost.localdomain ([122.167.33.191])
+        by smtp.gmail.com with ESMTPSA id w21sm17296578pff.220.2021.01.25.22.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jan 2021 22:32:50 -0800 (PST)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>, djwong@kernel.org,
+        hch@lst.de, allison.henderson@oracle.com
+Subject: [PATCH V15 00/16] Bail out if transaction can cause extent count to overflow
+Date:   Tue, 26 Jan 2021 12:02:16 +0530
+Message-Id: <20210126063232.3648053-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210125185735.GB7698@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 10:57:35AM -0800, Darrick J. Wong wrote:
-> On Mon, Jan 25, 2021 at 01:16:23PM -0500, Brian Foster wrote:
-> > On Sun, Jan 24, 2021 at 09:39:53AM +0000, Christoph Hellwig wrote:
-> > > > +	/* We only allow one retry for EDQUOT/ENOSPC. */
-> > > > +	if (*retry || (error != -EDQUOT && error != -ENOSPC)) {
-> > > > +		*retry = false;
-> > > > +		return error;
-> > > > +	}
-> > > 
-> > > > +	/* Release resources, prepare for scan. */
-> > > > +	xfs_trans_cancel(*tpp);
-> > > > +	*tpp = NULL;
-> > > > +	xfs_iunlock(ip, XFS_ILOCK_EXCL);
-> > > > +
-> > > > +	/* Try to free some quota for this file's dquots. */
-> > > > +	*retry = true;
-> > > > +	xfs_blockgc_free_quota(ip, 0);
-> > > > +	return 0;
-> > > 
-> > > I till have grave reservations about this calling conventions.  And if
-> > > you just remove the unlock and th call to xfs_blockgc_free_quota here
-> > > we don't equire a whole lot of boilerplate code in the callers while
-> > > making the code possible to reason about for a mere human.
-> > > 
-> > 
-> > I agree that the retry pattern is rather odd. I'm curious, is there a
-> > specific reason this scanning task has to execute outside of transaction
-> > context in the first place?
-> 
-> Dave didn't like the open-coded retry and told me to shrink the call
-> sites to:
-> 
-> 	error = xfs_trans_reserve_quota(...);
-> 	if (error)
-> 		goto out_trans_cancel;
-> 	if (quota_retry)
-> 		goto retry;
-> 
-> So here we are, slowly putting things almost all the way back to where
-> they were originally.  Now I have a little utility function:
-> 
-> /*
->  * Cancel a transaction and try to clear some space so that we can
->  * reserve some quota.  The caller must hold the ILOCK; when this
->  * function returns, the transaction will be cancelled and the ILOCK
->  * will have been released.
->  */
-> int
-> xfs_trans_cancel_qretry(
-> 	struct xfs_trans	*tp,
-> 	struct xfs_inode	*ip)
-> {
-> 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-> 
-> 	xfs_trans_cancel(tp);
-> 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
-> 
-> 	return xfs_blockgc_free_quota(ip, 0);
-> }
-> 
-> Which I guess reduces the amount of call site boilerplate from 4 lines
-> to two, only now I've spent half of last week on this.
-> 
-> > Assuming it does because the underlying work
-> > may involve more transactions or whatnot, I'm wondering if this logic
-> > could be buried further down in the transaction allocation path.
-> > 
-> > For example, if we passed the quota reservation and inode down into a
-> > new variant of xfs_trans_alloc(), it could acquire the ilock and attempt
-> > the quota reservation as a final step (to avoid adding an extra
-> > unconditional ilock cycle). If quota res fails, iunlock and release the
-> > log res internally and perform the scan. From there, perhaps we could
-> > retry the quota reservation immediately without logres or the ilock by
-> > saving references to the dquots, and then only reacquire logres/ilock on
-> > success..? Just thinking out loud so that might require further
-> > thought...
-> 
-> Yes, that's certainly possible, and probably a good design goal to have
-> a xfs_trans_alloc_quota(tres, ip, whichfork, nblks, &tp) that one could
-> call to reserve a transaction, lock the inode, and reserve the
-> appropriate amounts of quota to handle mapping nblks into an inode fork.
-> 
-> However, there are complications that don't make this a trivial switch:
-> 
-> 1. Reflink and (new) swapext don't actually know how many blocks they
-> need to reserve until after they've grabbed the two ILOCKs, which means
-> that the wrapper is of no use here.
-> 
+XFS does not check for possible overflow of per-inode extent counter
+fields when adding extents to either data or attr fork.
 
-IMO, it's preferable to define a clean/usable interface if we can find
-one that covers the majority of use cases and have to open code a
-handful of outliers than define a cumbersome interface that must be used
-everywhere to accommodate the outliers. Perhaps we'll find cleaner ways
-to deal with open coded outliers over time..? Perhaps (at least in the
-reflink case) we could attempt a worst case quota reservation with the
-helper, knowing that it will have invoked the scan on -EDQUOT, and then
-fall back to a more accurate open-coded xfs_trans_reserve_() call (that
-will no longer fall into retry loops on failure)..?
+For e.g.
+1. Insert 5 million xattrs (each having a value size of 255 bytes) and
+   then delete 50% of them in an alternating manner.
 
-> 2. For the remaining quota reservation callsites, you have to deal with
-> the bmap code that computes qblocks for reservation against the realtime
-> device.  This is opening a huge can of worms because:
-> 
-> 3. Realtime and quota are not supported, which means that none of that
-> code ever gets properly QA'd.  It would be totally stupid to rework most
-> of the quota reservation callsites and still leave that logic bomb.
-> This gigantic piece of technical debt needs to be paid off, either by
-> fixing the functionality and getting it under test, or by dropping rt
-> quota support completely and officially.
-> 
+2. On a 4k block sized XFS filesystem instance, the above causes 98511
+   extents to be created in the attr fork of the inode.
 
-I'm not following what you're referring to here. Can you point to
-examples in the code for reference, please?
+   xfsaild/loop0  2008 [003]  1475.127209: probe:xfs_inode_to_disk: (ffffffffa43fb6b0) if_nextents=98511 i_ino=131
 
-Brian
+3. The incore inode fork extent counter is a signed 32-bit
+   quantity. However, the on-disk extent counter is an unsigned 16-bit
+   quantity and hence cannot hold 98511 extents.
 
-> My guess is that fixing rt quota is probably going to take 10-15
-> patches, and doing more small cleanups to convert the callsites will be
-> another 10 or so.
-> 
-> 4. We're already past -rc5, and what started as two cleanup patchsets of
-> 13 is now four patchsets of 27 patches, and I /really/ would just like
-> to get these patches merged without expanding the scope of work even
-> further.
-> 
-> --D
-> 
-> > Brian
-> > 
-> 
+4. The following incorrect value is stored in the xattr extent counter,
+   # xfs_db -f -c 'inode 131' -c 'print core.naextents' /dev/loop0
+   core.naextents = -32561
+
+This patchset adds a new helper function
+(i.e. xfs_iext_count_may_overflow()) to check for overflow of the
+per-inode data and xattr extent counters and invokes it before
+starting an fs operation (e.g. creating a new directory entry). With
+this patchset applied, XFS detects counter overflows and returns with
+an error rather than causing a silent corruption.
+
+The patchset has been tested by executing xfstests with the following
+mkfs.xfs options,
+1. -m crc=0 -b size=1k
+2. -m crc=0 -b size=4k
+3. -m crc=0 -b size=512
+4. -m rmapbt=1,reflink=1 -b size=1k
+5. -m rmapbt=1,reflink=1 -b size=4k
+
+The patches can also be obtained from
+https://github.com/chandanr/linux.git at branch xfs-reserve-extent-count-v15.
+
+I have two patches that define the newly introduced error injection
+tags in xfsprogs
+(https://lore.kernel.org/linux-xfs/20201104114900.172147-1-chandanrlinux@gmail.com/).
+
+I have also written tests
+(https://lore.kernel.org/linux-xfs/20210118062022.15069-1-chandanrlinux@gmail.com/)
+for verifying the checks introduced in the kernel.
+
+Changelog:
+V14 -> V15:
+  1. Fix a trivial "Unused variable" warning reported by Kernel test robot.
+     The only patch that was modified is "[PATCH V15 14/16] xfs:
+     Compute bmap extent alignments in a separate function".
+
+V13 -> V14:
+  1. Fix incorrect comparison of xfs_iext_count_may_overflow()'s
+     return value with -ENOSPC in xfs_bmap_del_extent_real().
+  Also, for quick reference, the following are the patches that
+  need to be reviewed,
+  - [PATCH V14 04/16] xfs: Check for extent overflow when adding dir entries
+  - [PATCH V14 05/16] xfs: Check for extent overflow when removing dir entries
+  - [PATCH V14 06/16] xfs: Check for extent overflow when renaming dir entries
+
+V12 -> V13:
+  1. xfs_rename():
+     - Add comment explaining why we do not check for extent count
+       overflow for the source directory entry of a rename operation.
+     - Fix grammatical nit in a comment.
+  2. xfs_bmap_del_extent_real():
+     Replace explicit checks for inode's mode and fork with an
+     assert() call since extent count overflow check here is
+     applicable only to directory entry remove/rename operation.
+  
+V11 -> V12:
+  1. Rebase patches on top of Linux v5.11-rc1.
+  2. Revert back to using using a pseudo max inode extent count of 10.
+     Hence the patches
+     - [PATCH V12 05/14] xfs: Check for extent overflow when adding/removing xattrs
+     - [PATCH V12 10/14] xfs: Introduce error injection to reduce maximum
+     have been reverted back (including retaining of corresponding RVB
+     tags) to how it was under V10 of the patchset.
+
+     V11 of the patchset had increased the max pseudo extent count to
+     35 to allow for "directory entry remove" operation to always
+     succeed. However the corresponding logic was incorrect. Please
+     refer to "[PATCH V12 04/14] xfs: Check for extent overflow when
+     adding/removing dir entries" to find logic and explaination of
+     the newer logic.
+
+     "[PATCH V12 04/14] xfs: Check for extent overflow when
+     adding/removing dir entries" is the only patch yet to be reviewed.
+
+V10 -> V11:
+  1. For directory/xattr insert operations we now reserve sufficient
+     number of "extent count" so as to guarantee a future
+     directory/xattr remove operation.
+  2. The pseudo max extent count value has been increased to 35.
+
+V9 -> V10:
+  1. Pull back changes which cause xfs_bmap_compute_alignments() to
+     return "stripe alignment" into 12th patch i.e. "xfs: Compute bmap
+     extent alignments in a separate function".
+
+V8 -> V9:
+  1. Enabling XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT error tag will
+     always allocate single block sized free extents (if
+     available).
+  2. xfs_bmap_compute_alignments() now returns stripe alignment as its
+     return value.
+  3. Dropped Allison's RVB tag for "xfs: Compute bmap extent
+     alignments in a separate function" and "xfs: Introduce error
+     injection to allocate only minlen size extents for files".
+
+V7 -> V8:
+  1. Rename local variable in xfs_alloc_fix_freelist() from "i" to "stat".
+
+V6 -> V7:
+  1. Create new function xfs_bmap_exact_minlen_extent_alloc() (enabled
+     only when CONFIG_XFS_DEBUG is set to y) which issues allocation
+     requests for minlen sized extents only. In order to achieve this,
+     common code from xfs_bmap_btalloc() have been refactored into new
+     functions.
+  2. All major functions implementing logic associated with
+     XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT error tag are compiled only
+     when CONFIG_XFS_DEBUG is set to y.
+  3. Remove XFS_IEXT_REFLINK_REMAP_CNT macro and replace it with an
+     integer which holds the number of new extents to be
+     added to the data fork.
+
+V5 -> V6:
+  1. Rebased the patchset on xfs-linux/for-next branch.
+  2. Drop "xfs: Set tp->t_firstblock only once during a transaction's
+     lifetime" patch from the patchset.
+  3. Add a comment to xfs_bmap_btalloc() describing why it was chosen
+     to start "free space extent search" from AG 0 when
+     XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT is enabled and when the
+     transaction is allocating its first extent.
+  4. Fix review comments associated with coding style.
+
+V4 -> V5:
+  1. Introduce new error tag XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT to
+     let user space programs to be able to guarantee that free space
+     requests for files are satisfied by allocating minlen sized
+     extents.
+  2. Change xfs_bmap_btalloc() and xfs_alloc_vextent() to allocate
+     minlen sized extents when XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT is
+     enabled.
+  3. Introduce a new patch that causes tp->t_firstblock to be assigned
+     to a value only when its previous value is NULLFSBLOCK.
+  4. Replace the previously introduced MAXERRTAGEXTNUM (maximum inode
+     fork extent count) with the hardcoded value of 10.
+  5. xfs_bui_item_recover(): Use XFS_IEXT_ADD_NOSPLIT_CNT when mapping
+     an extent.
+  6. xfs_swap_extent_rmap(): Use xfs_bmap_is_real_extent() instead of
+     xfs_bmap_is_update_needed() to assess if the extent really needs
+     to be swapped.
+
+V3 -> V4:
+  1. Introduce new patch which lets userspace programs to test "extent
+     count overflow detection" by injecting an error tag. The new
+     error tag reduces the maximum allowed extent count to 10.
+  2. Injecting the newly defined error tag prevents
+     xfs_bmap_add_extent_hole_real() from merging a new extent with
+     its neighbours to allow writing deterministic tests for testing
+     extent count overflow for Directories, Xattr and growing realtime
+     devices. This is required because the new extent being allocated
+     can be contiguous with its neighbours (w.r.t both file and disk
+     offsets).
+  3. Injecting the newly defined error tag forces block sized extents
+     to be allocated for summary/bitmap files when growing a realtime
+     device. This is required because xfs_growfs_rt_alloc() allocates
+     as large an extent as possible for summary/bitmap files and hence
+     it would be impossible to write deterministic tests.
+  4. Rename XFS_IEXT_REMOVE_CNT to XFS_IEXT_PUNCH_HOLE_CNT to reflect
+     the actual meaning of the fs operation.
+  5. Fold XFS_IEXT_INSERT_HOLE_CNT code into that associated with
+     XFS_IEXT_PUNCH_HOLE_CNT since both perform the same job.
+  6. xfs_swap_extent_rmap(): Check for extent overflow should be made
+     on the source file only if the donor file extent has a valid
+     on-disk mapping and vice versa.
+
+V2 -> V3:
+  1. Move the definition of xfs_iext_count_may_overflow() from
+     libxfs/xfs_trans_resv.c to libxfs/xfs_inode_fork.c. Also, I tried
+     to make xfs_iext_count_may_overflow() an inline function by
+     placing the definition in libxfs/xfs_inode_fork.h. However this
+     required that the definition of 'struct xfs_inode' be available,
+     since xfs_iext_count_may_overflow() uses a 'struct xfs_inode *'
+     type variable.
+  2. Handle XFS_COW_FORK within xfs_iext_count_may_overflow() by
+     returning a success value.
+  3. Rename XFS_IEXT_ADD_CNT to XFS_IEXT_ADD_NOSPLIT_CNT. Thanks to
+     Darrick for the suggesting the new name.
+  4. Expand comments to make use of 80 columns.
+
+V1 -> V2:
+  1. Rename helper function from xfs_trans_resv_ext_cnt() to
+     xfs_iext_count_may_overflow().
+  2. Define and use macros to represent fs operations and the
+     corresponding increase in extent count.
+  3. Split the patches based on the fs operation being performed.
+
+Chandan Babu R (16):
+  xfs: Add helper for checking per-inode extent count overflow
+  xfs: Check for extent overflow when trivally adding a new extent
+  xfs: Check for extent overflow when punching a hole
+  xfs: Check for extent overflow when adding dir entries
+  xfs: Check for extent overflow when removing dir entries
+  xfs: Check for extent overflow when renaming dir entries
+  xfs: Check for extent overflow when adding/removing xattrs
+  xfs: Check for extent overflow when writing to unwritten extent
+  xfs: Check for extent overflow when moving extent from cow to data
+    fork
+  xfs: Check for extent overflow when remapping an extent
+  xfs: Check for extent overflow when swapping extents
+  xfs: Introduce error injection to reduce maximum inode fork extent
+    count
+  xfs: Remove duplicate assert statement in xfs_bmap_btalloc()
+  xfs: Compute bmap extent alignments in a separate function
+  xfs: Process allocated extent in a separate function
+  xfs: Introduce error injection to allocate only minlen size extents
+    for files
+
+ fs/xfs/libxfs/xfs_alloc.c      |  50 ++++++
+ fs/xfs/libxfs/xfs_alloc.h      |   3 +
+ fs/xfs/libxfs/xfs_attr.c       |  13 ++
+ fs/xfs/libxfs/xfs_bmap.c       | 293 ++++++++++++++++++++++++---------
+ fs/xfs/libxfs/xfs_errortag.h   |   6 +-
+ fs/xfs/libxfs/xfs_inode_fork.c |  27 +++
+ fs/xfs/libxfs/xfs_inode_fork.h |  63 +++++++
+ fs/xfs/xfs_bmap_item.c         |  10 ++
+ fs/xfs/xfs_bmap_util.c         |  31 ++++
+ fs/xfs/xfs_dquot.c             |   8 +-
+ fs/xfs/xfs_error.c             |   6 +
+ fs/xfs/xfs_inode.c             |  54 +++++-
+ fs/xfs/xfs_iomap.c             |  10 ++
+ fs/xfs/xfs_reflink.c           |  16 ++
+ fs/xfs/xfs_rtalloc.c           |   5 +
+ fs/xfs/xfs_symlink.c           |   5 +
+ 16 files changed, 517 insertions(+), 83 deletions(-)
+
+-- 
+2.29.2
 
