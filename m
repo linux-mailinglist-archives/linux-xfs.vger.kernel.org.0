@@ -2,136 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AAFBF304A02
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 21:23:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99CA7304D1C
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Jan 2021 00:03:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbhAZFTC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 00:19:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730810AbhAZBpL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 25 Jan 2021 20:45:11 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E1AEA230FF;
-        Tue, 26 Jan 2021 00:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611620943;
-        bh=umEP6264tJiQQq+8Lg6Cx26qTba/MjF85eUxJ11rzhI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Kf4L7TSHQMXI4qdbmGty7v/eeQ4Y7Nv7HH/SiVh59KB1Ir/+/dH5uWlrx2zxUQNjd
-         yv4v4/b63bkx95LAg19jZCfY0itir8lgKxERI7zA9CBF4maeVSgsPBNXaW87vg2xqp
-         Tt46O9XXCHRlt6zO52wCwFht6N3JXNhH4Ir++38rXT9CcTF4T/4bzEIMF+Qjyy7Mck
-         bBcF0gpCS8hFPV4a0iZRU6yKOoLWdPmoR7DxScdDM7UkQT2fOjqW+LcfuYE7sncdrb
-         mxuKB6euJGFZnfGv0Uw3kbD3ftUxhJeQCY3FU5ANWJnh0B8RHlpEkPeydo2g7mpUOF
-         vzCDkW9Ne1OIg==
-Date:   Mon, 25 Jan 2021 16:29:01 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-        david@fromorbit.com
-Subject: Re: [PATCH 11/11] xfs: flush speculative space allocations when we
- run out of space
-Message-ID: <20210126002901.GI7698@magnolia>
-References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
- <161142798066.2171939.9311024588681972086.stgit@magnolia>
- <20210124094816.GE670331@infradead.org>
- <20210125200216.GE7698@magnolia>
- <20210125210628.GP2047559@bfoster>
+        id S1727249AbhAZXCj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 18:02:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbhAZEnM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 23:43:12 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE61C061574
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 20:42:30 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id a20so1317924pjs.1
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 20:42:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zK+Yus/H/KQ8mPXL2NFdDyAQre6Cuae1VDxVQMZwHV4=;
+        b=UNhREswgSUU7IWpmldgMrKkMcUKoq+tMCsiQGUBmodfPUrtPcMykX77XjWkIGhIcUd
+         SCLaaDC5ARY8VHjcdMrwyegjb22tYyDp9KrEweJ9FUIPmfbFljOGizeEHKVgU0/tBp4V
+         Yst08XdW8MpQ5LvM5EQGRz9AQzLP0+9rLL7EejsQlGSD9vc2gBwBAOUaHDFB5xI/9cQT
+         PBijNQNWTNJgp0AqgPrzeZ2hmG2uqET6iUm9cUUdyCel+nT0bSvp+BC+CzONzL3u9HJL
+         DKpPjqSNQBd8yNhjXfvVhDq8yT4kdJdIzAVCF9ThmGzqljZcmvpMn1Xx0U7RPuHZopya
+         syyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zK+Yus/H/KQ8mPXL2NFdDyAQre6Cuae1VDxVQMZwHV4=;
+        b=m8t47yFmG+cMUtp8/rMWyVSqwF2mL77+cP/Eqy5iCrqCRyio+hlG5qVgZwy3GQ2qXC
+         WIH3b22rbX/ipiNmwqdLAuh0HfDA+CD54R/DsrCTwkraTlPcuKxSxcs3Xv/43+JKe+/f
+         ZQFMJAgSUKptxpjvNL21/hunHjc5VQKhJrZI8Eb5aqL72YafS1SJdJVfcWkN1DFbVAS3
+         dfftNsxg9izlDToe6tGNkhgb4EJeJbxwayI/ab1pxmqlIqOEigOjm0kXIbEMyo8WBcN7
+         PsHOIie8u9qhPg63Oe4P7RFqAvkA/HTrPNgyPPXmthDtrYG2Lw3Sc8475zCmlSJ2TYLU
+         YMVA==
+X-Gm-Message-State: AOAM531dU4JoFzuI/opGDPg8iL+CCJ66ZHL5RG6DS4PHHj047WmeM9g5
+        pabakLsarygSbdXmHTw1iIxD22Nuj3U=
+X-Google-Smtp-Source: ABdhPJxyc5UQFQr4p7yEjMn6hX8J3rSzbob+aQC9ESKZAVY2JwdssbQEMTopIICc8JKIOFMplD0hpQ==
+X-Received: by 2002:a17:90a:6c26:: with SMTP id x35mr4033242pjj.52.1611636150416;
+        Mon, 25 Jan 2021 20:42:30 -0800 (PST)
+Received: from localhost.localdomain ([122.167.33.191])
+        by smtp.gmail.com with ESMTPSA id j3sm832581pjs.50.2021.01.25.20.42.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jan 2021 20:42:29 -0800 (PST)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>, sandeen@sandeen.net
+Subject: [PATCH V1.1] xfsprogs: xfs_fsr: Limit the scope of cmp()
+Date:   Tue, 26 Jan 2021 10:12:22 +0530
+Message-Id: <20210126044222.2676922-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.29.2
+In-Reply-To: <eec86b5f-7a4c-c6e6-e8a0-1e4e9a7e042e@sandeen.net>
+References: <eec86b5f-7a4c-c6e6-e8a0-1e4e9a7e042e@sandeen.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210125210628.GP2047559@bfoster>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 04:06:28PM -0500, Brian Foster wrote:
-> On Mon, Jan 25, 2021 at 12:02:16PM -0800, Darrick J. Wong wrote:
-> > On Sun, Jan 24, 2021 at 09:48:16AM +0000, Christoph Hellwig wrote:
-> > > > +retry:
-> > > >  	/*
-> > > >  	 * Allocate the handle before we do our freeze accounting and setting up
-> > > >  	 * GFP_NOFS allocation context so that we avoid lockdep false positives
-> > > > @@ -285,6 +289,22 @@ xfs_trans_alloc(
-> > > >  	tp->t_firstblock = NULLFSBLOCK;
-> > > >  
-> > > >  	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-> > > > +	if (error == -ENOSPC && tries > 0) {
-> > > > +		xfs_trans_cancel(tp);
-> > > > +
-> > > > +		/*
-> > > > +		 * We weren't able to reserve enough space for the transaction.
-> > > > +		 * Flush the other speculative space allocations to free space.
-> > > > +		 * Do not perform a synchronous scan because callers can hold
-> > > > +		 * other locks.
-> > > > +		 */
-> > > > +		error = xfs_blockgc_free_space(mp, NULL);
-> > > > +		if (error)
-> > > > +			return error;
-> > > > +
-> > > > +		tries--;
-> > > > +		goto retry;
-> > > > +	}
-> > > >  	if (error) {
-> > > >  		xfs_trans_cancel(tp);
-> > > >  		return error;
-> > > 
-> > > Why do we need to restart the whole function?  A failing
-> > > xfs_trans_reserve should restore tp to its initial state, and keeping
-> > > the SB_FREEZE_FS counter increased also doesn't look harmful as far as
+cmp() function is being referred to from within fsr/xfs_fsr.c. Hence
+this commit limits its scope to the current file.
 
-I'm curious about your motivation for letting transaction nest here.
-Seeing as the ENOSPC return should be infrequent, are you simply not
-wanting to cycle the memory allocators and the FREEZE_FS counters?
+Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+---
+ fsr/xfs_fsr.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-Hm.  I guess at this point the only resources we hold are the FREEZE_FS
-counter and *tp itself.  The transaction doesn't have any log space
-grants or block reservation associated with it, and I guess we're not in
-PF_MEMALLOC_NOFS mode either.  So I guess this is ok, except...
+diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
+index 635e4c70..b885395e 100644
+--- a/fsr/xfs_fsr.c
++++ b/fsr/xfs_fsr.c
+@@ -81,7 +81,6 @@ char * gettmpname(char *fname);
+ char * getparent(char *fname);
+ int fsrprintf(const char *fmt, ...);
+ int read_fd_bmap(int, struct xfs_bstat *, int *);
+-int cmp(const void *, const void *);
+ static void tmp_init(char *mnt);
+ static char * tmp_next(char *mnt);
+ static void tmp_close(char *mnt);
+@@ -577,6 +576,16 @@ fsrall_cleanup(int timeout)
+ 	}
+ }
+ 
++/*
++ * To compare bstat structs for qsort.
++ */
++static int
++cmp(const void *s1, const void *s2)
++{
++	return( ((struct xfs_bulkstat *)s2)->bs_extents -
++	        ((struct xfs_bulkstat *)s1)->bs_extents);
++}
++
+ /*
+  * fsrfs -- reorganize a file system
+  */
+@@ -696,16 +705,6 @@ out0:
+ 	return 0;
+ }
+ 
+-/*
+- * To compare bstat structs for qsort.
+- */
+-int
+-cmp(const void *s1, const void *s2)
+-{
+-	return( ((struct xfs_bulkstat *)s2)->bs_extents -
+-	        ((struct xfs_bulkstat *)s1)->bs_extents);
+-}
+-
+ /*
+  * reorganize by directory hierarchy.
+  * Stay in dev (a restriction based on structure of this program -- either
+-- 
+2.29.2
 
-> > > I can tell.  So why not:
-> > > 
-> > > 	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-> > > 	if (error == -ENOSPC) {
-> > > 		/*
-> > > 		 * We weren't able to reserve enough space for the transaction.
-> > > 		 * Flush the other speculative space allocations to free space.
-> > > 		 * Do not perform a synchronous scan because callers can hold
-> > > 		 * other locks.
-> > > 		 */
-> > > 		error = xfs_blockgc_free_space(mp, NULL);
-> > 
-> > xfs_blockgc_free_space runs the blockgc scan directly, which means that
-> > it creates transactions to free blocks.  Since we can't have nested
-> > transactions, we have to drop tp here.
-> > 
-> 
-> Technically, I don't think it's a problem to hold a transaction memory
-> allocation (and superblock write access?) while diving into the scanning
-> mechanism.
-
-...except that doing so will collide with what we've been telling Yafang
-(as part of his series to detect nested transactions) as far as when is
-the appropriate time to set current->journal_info/PF_MEMALLOC_NOFS.
-
-> BTW, this also looks like a landmine passing a NULL eofb into
-> the xfs_blockgc_free_space() tracepoint.
-
-Errk, will fix that.
-
---D
-
-> Brian
-> 
-> > --D
-> > 
-> > > 		if (error)
-> > > 			return error;
-> > > 		error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-> > > 	}
-> > >  	if (error) {
-> > >   		xfs_trans_cancel(tp);
-> > >   		return error;
-> > > 
-> > > ?
-> > 
-> 
