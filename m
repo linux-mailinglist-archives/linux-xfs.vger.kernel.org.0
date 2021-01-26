@@ -2,94 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F5113056E4
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Jan 2021 10:28:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F9A1305836
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Jan 2021 11:22:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235325AbhA0J1U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 27 Jan 2021 04:27:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235239AbhA0JZW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 27 Jan 2021 04:25:22 -0500
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76DAC061797
-        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 01:24:14 -0800 (PST)
-Received: by mail-pf1-x434.google.com with SMTP id e19so809465pfh.6
-        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 01:24:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y/bDdpwyp0JJWA0eALmj8c/lGgHCPq0h8LS7iO8aTdg=;
-        b=sanfl//3doixkEwzH93cdsBDZwBTmB51kH+f7NCmqW26nv44vYn5zvNuJuzhu+KXW7
-         WwRY1HFQSk19XP4L4GGghfOjQopCSGu48A37bS6W2KMQ+5gEETbX127gWVBaF4A71jMr
-         d3iUfIcmIS/UQNchnYnvJtTUTeThlsK6htxHfBQZ0ZnObHLiA0t91N5WNhbopiW3c8eZ
-         uKRrIzzR7JS9j1+p/bmTTfEHG8+I0FZbKoNXonx//KVBA0j9KclBpYCMl4MZg4Wie/hn
-         Q90M6zUVJZ5whC/BVITvMMM17YbvMhBRUffjP09wIcNRlXro6+wnzxSnCkNuEBbeFDDm
-         +dTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y/bDdpwyp0JJWA0eALmj8c/lGgHCPq0h8LS7iO8aTdg=;
-        b=Mqny7nmz07TXa70Nn4kujR/G9CnHv9yVssJ/WyfP8D46dyKwBYM7RJhghoS2nbLy/Z
-         NHvZonScr4QfSe+2+D61uBjOcaxMAFtZHm5z6xRaHCvhQTz0QSgPneTgBY3u9qIk35BM
-         IaItAE52moDO9F9bs0B9S1b5SDqSzHNapUPjajoTQ2oJYgtn+OLSQZtOc+RFkOTeKmNP
-         1HnbcAtUeczflgkFzEALfr8VcLQ0jJumjO7RHhT+ZVXTJTzZpQqVhNLD2VFZKuS0M5/h
-         UvvSAm4O8Gz3J+WAlINkjL4Dw41OVQjk0u86ng1T+e2oJ3HxSmie2u3Zajkj4t8uS6yq
-         QWaw==
-X-Gm-Message-State: AOAM533Xcuyr8xQVZEcSTaWpjofarXLiisSvjcMIVURGnqYEH7fPOoA2
-        TCz0zLn5yZ3x9/g5QVKLTx2QDS/lp/Y=
-X-Google-Smtp-Source: ABdhPJynZYDhWvFu6G3qKJHwgoVG9+9RurUOCqdxo07FRjPjFOYtnM3xjW3f/ooiJiqCZ39u8JFSWA==
-X-Received: by 2002:aa7:8698:0:b029:1be:aef7:449d with SMTP id d24-20020aa786980000b02901beaef7449dmr9736292pfo.60.1611739454305;
-        Wed, 27 Jan 2021 01:24:14 -0800 (PST)
-Received: from localhost.localdomain ([122.171.171.5])
-        by smtp.gmail.com with ESMTPSA id i62sm1700234pfc.150.2021.01.27.01.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jan 2021 01:24:13 -0800 (PST)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>, sandeen@sandeen.net,
-        "Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH] xfsprogs: xfs_fsr: Verify bulkstat version information in qsort's cmp()
-Date:   Wed, 27 Jan 2021 14:54:05 +0530
-Message-Id: <20210127092405.2841857-1-chandanrlinux@gmail.com>
-X-Mailer: git-send-email 2.29.2
+        id S313957AbhAZXC5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 18:02:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730497AbhAZFAL (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 26 Jan 2021 00:00:11 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EF57222B2C;
+        Tue, 26 Jan 2021 04:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611636689;
+        bh=H5Bd24pqMbMofDbBIoiTClFy4h+2Zy2uKRkMvNh8H1o=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=Tt4d7urCW102j+6wKVfF7c8tnMR5P2Dq6ytmYwkkOa/H6xassqPfJ8oYDoRcf4pDy
+         8ifJ+sIt8ElMZhFWButtZo3TZGzBPf/VrWnNxcabZ71JPOUlSFVa9JnBw/dEkSnYGr
+         0GPXQSNtDQdzhSVdlfTjEr57MzyXUlAAuNMhs4Rnvlkj+G292Ry4VIXahUe0MKXyR6
+         MW5WjrBUBIN6oMOXCTURmIGSZ5ztBDE5FocnUKCnR8IsrP9cRsOQcmjIrf3c9lv7sI
+         XSbWCDFDJ+8+AamJV1kexNXeV47i3vNs0Sp6+duYil3oz5c4x9RCSoh1l4e1uElLUq
+         olVuUZuQ+pYLQ==
+Date:   Mon, 25 Jan 2021 20:51:28 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Subject: [PATCH 5/4] xfs: fix up build warnings when quotas are disabled
+Message-ID: <20210126045128.GL7698@magnolia>
+References: <161142789504.2170981.1372317837643770452.stgit@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161142789504.2170981.1372317837643770452.stgit@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit introduces a check to verify that correct bulkstat structures are
-being processed by qsort's cmp() function.
+From: Darrick J. Wong <djwong@kernel.org>
 
-Suggested-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+Fix some build warnings on gcc 10.2 when quotas are disabled.
+
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fsr/xfs_fsr.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_quota.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
-index b885395e..de7e8190 100644
---- a/fsr/xfs_fsr.c
-+++ b/fsr/xfs_fsr.c
-@@ -582,8 +582,13 @@ fsrall_cleanup(int timeout)
- static int
- cmp(const void *s1, const void *s2)
- {
--	return( ((struct xfs_bulkstat *)s2)->bs_extents -
--	        ((struct xfs_bulkstat *)s1)->bs_extents);
-+	const struct xfs_bulkstat	*bs1 = s1;
-+	const struct xfs_bulkstat	*bs2 = s2;
-+
-+	ASSERT(bs1->bs_version == XFS_BULKSTAT_VERSION_V5
-+		&& bs2->bs_version == XFS_BULKSTAT_VERSION_V5);
-+
-+	return (bs2->bs_extents - bs1->bs_extents);
+diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
+index 16a2e7adf4da..4cafc1c78879 100644
+--- a/fs/xfs/xfs_quota.h
++++ b/fs/xfs/xfs_quota.h
+@@ -130,7 +130,7 @@ xfs_qm_vop_dqalloc(struct xfs_inode *ip, kuid_t kuid, kgid_t kgid,
  }
- 
- /*
--- 
-2.29.2
-
+ #define xfs_trans_dup_dqinfo(tp, tp2)
+ #define xfs_trans_free_dqinfo(tp)
+-#define xfs_trans_mod_dquot_byino(tp, ip, fields, delta)
++#define xfs_trans_mod_dquot_byino(tp, ip, fields, delta) do { } while (0)
+ #define xfs_trans_apply_dquot_deltas(tp)
+ #define xfs_trans_unreserve_and_mod_dquots(tp)
+ static inline int xfs_trans_reserve_quota_nblks(struct xfs_trans *tp,
+@@ -167,8 +167,8 @@ xfs_trans_reserve_quota_icreate(struct xfs_trans *tp, struct xfs_inode *dp,
+ #define xfs_qm_dqattach(ip)						(0)
+ #define xfs_qm_dqattach_locked(ip, fl)					(0)
+ #define xfs_qm_dqdetach(ip)
+-#define xfs_qm_dqrele(d)
+-#define xfs_qm_statvfs(ip, s)
++#define xfs_qm_dqrele(d)			do { (d) = (d); } while(0)
++#define xfs_qm_statvfs(ip, s)			do { } while(0)
+ #define xfs_qm_newmount(mp, a, b)					(0)
+ #define xfs_qm_mount_quotas(mp)
+ #define xfs_qm_unmount(mp)
