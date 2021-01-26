@@ -2,111 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34B79303434
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE9F303431
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731811AbhAZFTM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 00:19:12 -0500
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:58203 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731667AbhAZC03 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 21:26:29 -0500
-Received: from dread.disaster.area (pa49-180-243-77.pa.nsw.optusnet.com.au [49.180.243.77])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 918CC106B88
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Jan 2021 10:58:57 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1l4Bl2-002PKu-Ml
-        for linux-xfs@vger.kernel.org; Tue, 26 Jan 2021 10:58:56 +1100
-Date:   Tue, 26 Jan 2021 10:58:56 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: Re: Musings over REQ_PREFLUSH and REQ_FUA in journal IO
-Message-ID: <20210125235856.GH4662@dread.disaster.area>
-References: <20210125061422.GF4662@dread.disaster.area>
+        id S1730607AbhAZFS7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 00:18:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730214AbhAZBcY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 20:32:24 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8762C061223
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 16:51:07 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id d13so2975786plg.0
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 16:51:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.ionos.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uPJlUchjV+OaTIftOWbXEjVwG0d/bApny8LKz3OH9do=;
+        b=Fn4EVg48BXJQ0XVCGo4P1/CcZQYyaUjR593N0Mrt0Pa+QokgKItCP+8Jqv/2LG0i6e
+         ZOE+o7Kp6TSk5kE5z/p+B9iYW/TEKeeUZ38hHU2REBudTZapniqQIgruui5UYR2CX3jM
+         XMAbvuY6JHqMBPOAxvGF/pd+dD2JXyjuQuYgOdpBoKEe5OkwN21A1Oz9evbFfBDmAQvY
+         7WFdRbpEZ2liR9Ig+qsbIiWSj+GDDvognZEVlwuSJJV6ndniZaVtaxhiGOys5MNoWytQ
+         gQ7Z3yycyJCcMckSCcJGV82qUswKaz/f7sRYaD0P22YuS9ZNrnmyYgBqU8O8EcKu5dJk
+         dg7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uPJlUchjV+OaTIftOWbXEjVwG0d/bApny8LKz3OH9do=;
+        b=VjwZHJlF9BHgg/uwJJWECF+DILnPeRFuNSSG0+K2YjkFlKPF9bP9GuQm4Qyu1BQug1
+         4EKx6EjsE/L2muRGmVFzwruqQl11ot304n7vyYD6KhlMoYvRBsfibKhsBg0ak8GBxfEd
+         3QnL702DPNKl6xzGZBWYiaHPLsibZJZ6gC3C9Sbr77FUq/WbUKv82av/HNKYJ6qYaQuj
+         nTVb4rEw21u9pHIKNr9PSGJVr43r90UPOiZveF2m6neMPKldEPfBspdgEtybRgElRevu
+         EnUvnfgi7KM9oeZy54oS5FZBF5Y0niCLIOc4vFsq6eQ3vIsKlCTAU/JAGrwhZMiTD3S4
+         Cobg==
+X-Gm-Message-State: AOAM530XkEMiVmMipWEYdkzsoUOURooqfJ2i6eDoGmX9cpI+CGVwbTeG
+        YBD2aY1FDNKErQCyytiwxeVoAA==
+X-Google-Smtp-Source: ABdhPJzzs4C/lNGU5gJfjXLgueQ6h//2HOCs2JEgJn8fHs+SjPK/bp53wfdpI/yc0gqOKDwXYe/jwg==
+X-Received: by 2002:a17:902:c284:b029:df:c0d8:6b7 with SMTP id i4-20020a170902c284b02900dfc0d806b7mr3120918pld.34.1611622266246;
+        Mon, 25 Jan 2021 16:51:06 -0800 (PST)
+Received: from [10.8.1.5] ([185.125.207.232])
+        by smtp.gmail.com with ESMTPSA id r7sm3940119pfc.26.2021.01.25.16.50.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 25 Jan 2021 16:51:05 -0800 (PST)
+Subject: Re: [PATCH v2 08/10] md: Implement ->corrupted_range()
+To:     Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-raid@vger.kernel.org,
+        darrick.wong@oracle.com, dan.j.williams@intel.com,
+        david@fromorbit.com, hch@lst.de, song@kernel.org, rgoldwyn@suse.de,
+        qi.fuli@fujitsu.com, y-goto@fujitsu.com
+References: <20210125225526.1048877-1-ruansy.fnst@cn.fujitsu.com>
+ <20210125225526.1048877-9-ruansy.fnst@cn.fujitsu.com>
+From:   Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Message-ID: <6100b7ca-7968-e1ea-84b8-074dc216a453@cloud.ionos.com>
+Date:   Tue, 26 Jan 2021 01:50:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210125061422.GF4662@dread.disaster.area>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
-        a=juxvdbeFDU67v5YkIhU0sw==:117 a=juxvdbeFDU67v5YkIhU0sw==:17
-        a=kj9zAlcOel0A:10 a=EmqxpYm9HcoA:10 a=7-415B0cAAAA:8
-        a=AHKhnjCwuecWepyCLLsA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20210125225526.1048877-9-ruansy.fnst@cn.fujitsu.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 05:14:22PM +1100, Dave Chinner wrote:
-> Hi folks,
+
+
+On 1/25/21 23:55, Shiyang Ruan wrote:
+> With the support of ->rmap(), it is possible to obtain the superblock on
+> a mapped device.
 > 
-> I've been thinking a little about the way we write use cache flushes
-> recently and I was thinking about how we do journal writes and
-> whether we need to issue as many cache flushes as we currently do.
-
-....
-
-> And then I woundered if we could apply the same logic to
-> post-journal write cache flushes (REQ_FUA) that guarantee that the
-> journal writes are stable before we allow writeback of the metadata
-> in that LSN range (i.e. once they are unpinned). Again, we have a
-> completion to submission ordering requirement here, only this time
-> it is journal IO completion to metadata IO submission.
+> If a pmem device is used as one target of mapped device, we cannot
+> obtain its superblock directly.  With the help of SYSFS, the mapped
+> device can be found on the target devices.  So, we iterate the
+> bdev->bd_holder_disks to obtain its mapped device.
 > 
-> IOWs, I think the same observation about the log head and the AIL
-> writeback mechanism can be made here: we only need to ensure a cache
-> flush occurs before we start writing back metadata at an LSN higher
-> than the journal head at the time of the last cache flush. The first
-> iclog write of last CIL checkpoint will have ensured all
-> metadata lower than the LSN of the CIL checkpoint is stable, hence
-> we only need to concern ourselves about metadata at the same LSN as
-> that checkpoint. checkpoint completion will unpin that metadata, but
-> we still need a cache flush to guarantee ordering at the stable
-> storage level.
-> 
-> Hence we can use an on-demand AIL traversal cache flush to ensure
-> we have journal-to-metadata ordering. This will be much rarer than
-> every using FUA for every iclog write, and should be of similar
-> order of gains to the REQ_PREFLUSH optimisation.
-> 
-> FWIW, because we use checksums to detect complete checkpoints in
-> the journal now, we don't actually need to use FUA writes to
-> guarantee they hit stable storage. We don't have a guarantee in what
-> order they will hit the disk (even with FUA), so the only thing that
-> the FUA write gains us is that on some hardware it elides the need
-> for a post-write cache flush. Hence I don't think we need REQ_FUA,
-> either.
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+> ---
+>   drivers/md/dm.c       | 61 +++++++++++++++++++++++++++++++++++++++++++
+>   drivers/nvdimm/pmem.c | 11 +++-----
+>   fs/block_dev.c        | 42 ++++++++++++++++++++++++++++-
+>   include/linux/genhd.h |  2 ++
+>   4 files changed, 107 insertions(+), 9 deletions(-)
 
-I think that this can be greatly simplified. We simply us
-REQ_PREFLUSH | REQ_FUA on all commit records that close off a
-transaction. The pre-flush can be used to guarantee that all the
-preceeding log writes have completed to the journal, then the commit
-record is written w/ FUA, guaranteeing the entire checkpoint is on
-stable storage before we run the checkpoint completion callbacks
-that unpin the dirty items and insert them into the AIL. This means
-we don't need to modify the AIL at all, and all the metadata vs
-journal ordering is still maintained entirely within the journal.
+I can't see md raid is involved here, perhaps dm-devel need to be cced 
+instead of raid list. And the subject need to be changed as well.
 
-The only additional complexity is that we have to separate the
-commit record into a new iclog from the rest of the checkpoint,
-unless the checkpoint fits entirely inside a single iclog. I don't
-think this is hard to do - we can probably do it once we've written
-the commit record and hold a reference to the iclog the commit
-record was written to that prevents it from being flushed until
-we release the reference to it.
-
-> The only explicit ordering we really have are log forces. As long as
-> log forces issue a cache flush when they are left pending by CIL
-> transaction completion, we shouldn't require anything more here. The
-> situation is similar to the AIL requirement...
-
-This won't a concern with the above change, because the commit
-mechanism provides the same guarantees about stable journal contents
-as it does now...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks,
+Guoqing
