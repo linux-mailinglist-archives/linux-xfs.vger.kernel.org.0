@@ -2,153 +2,173 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9777D303E0F
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 14:06:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83AF7303E85
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 14:23:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391194AbhAZNFg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 08:05:36 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49877 "EHLO
+        id S2404319AbhAZNVi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 08:21:38 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43933 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392492AbhAZM7D (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Jan 2021 07:59:03 -0500
+        by vger.kernel.org with ESMTP id S2391901AbhAZNQ0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Jan 2021 08:16:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611665856;
+        s=mimecast20190719; t=1611666899;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=WTmI/iJHg+iWRF7uhfiVy+in9fQkKOO9n6nRdiWg7Pk=;
-        b=KBZZe7BClAe5Exrw3+vSQi8XFd6OGbBroJHSx29NVz9yPuD7F7Mxw3KcJQUV5pLJuOgOQ4
-        ydjnAq/SiB1wGfZd9A14Nr4MM8T3V5eBuOgkzc7I/2+PsJ/X0lLp/jiKwBdubSNejHsDan
-        Vg0P7vYse0/aLvOLwWX7rRwPDpk6/LI=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-s81tXfhmNQu8abDwwPHQCg-1; Tue, 26 Jan 2021 07:57:35 -0500
-X-MC-Unique: s81tXfhmNQu8abDwwPHQCg-1
-Received: by mail-pf1-f200.google.com with SMTP id 143so5722900pfx.5
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Jan 2021 04:57:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WTmI/iJHg+iWRF7uhfiVy+in9fQkKOO9n6nRdiWg7Pk=;
-        b=Wu/+r8GpgvEoq6OYuI+akk1OnbqGlcNOU5WLRnk6ZYsuDTPUXR/Lm1xkMAxChsLAUy
-         I+LjJYF9BCMXUaaog9wX1Gst5ldqzjsll2hF6mo0zygfs+fGMj+PKAar+ACAjRxoSp1Y
-         mLUwrjhvEjNuuD1rWoPaJ85iRQmhRfoqmfmSWRJNJzcU+/jVusyYetkZCXso/ZzpuQ7h
-         /63TVdwv0DxgOED1eiFs++37l3CHotOsaKHQ6Tp0flspShIb7vRaHXVEhJZpGuCCgmhC
-         XgpCMvNoOSqseKTU9oWy3Buhv6WS7a7TlIw03hWODiDPb4P85XYeUibcRL0Yb0817SzT
-         6EOw==
-X-Gm-Message-State: AOAM532pHpcZDsAFptd6Sa1B6tqdQVycfppjBLV7vZFIb09fy0xbQU10
-        Ght+TVUqIVHqC3GvjrOk6zlNgfGpWrKwiVvF8WBZQ6JTqQVMEZGVvvtapW0U4sHNt8N6Zaqckxh
-        y+DmM3BWS0ZIBSM4Kap9xS2rX1YawehU2S6pKRCfUdszBfCPn100SUmwc6b0wm/wcJWhv9mn0lw
-        ==
-X-Received: by 2002:a63:db03:: with SMTP id e3mr5541517pgg.225.1611665853906;
-        Tue, 26 Jan 2021 04:57:33 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzEFIGFLyOlTtDIGNiSHy3ps4wWI7VXYA0wsgmv7GJ7ojU0DGZl8PVbSmv0wUdN9l7YVb16Tg==
-X-Received: by 2002:a63:db03:: with SMTP id e3mr5541492pgg.225.1611665853533;
-        Tue, 26 Jan 2021 04:57:33 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id b203sm19243174pfb.11.2021.01.26.04.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 04:57:33 -0800 (PST)
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <hsiangkao@redhat.com>,
-        "Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH v6 7/7] xfs: add error injection for per-AG resv failure when shrinkfs
-Date:   Tue, 26 Jan 2021 20:56:21 +0800
-Message-Id: <20210126125621.3846735-8-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210126125621.3846735-1-hsiangkao@redhat.com>
-References: <20210126125621.3846735-1-hsiangkao@redhat.com>
+        bh=hRlZMPcXtzfEQWmuwcgJq8lw4ru/KpyexEpH93IRT24=;
+        b=W5VuZmzRyYclchoBTW1N9Zbq8Xa5rPa24M7rZ0sIWYC3Ay9SD1VPDJHcjsgkL5WAmKMDox
+        6aaPyRM+3t+91apLbu3RuOtnKi4s2DM7bZbODKC7+twRl6XXvDhaPhOYVIEgbazpd24Cdh
+        zyVYA05L9o84jtlLfSbUQSFPGnAeSwY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-FkKREM0ZN1ybPj3GFmQDpQ-1; Tue, 26 Jan 2021 08:14:55 -0500
+X-MC-Unique: FkKREM0ZN1ybPj3GFmQDpQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0D4051005D4C;
+        Tue, 26 Jan 2021 13:14:54 +0000 (UTC)
+Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C87B6B8DD;
+        Tue, 26 Jan 2021 13:14:53 +0000 (UTC)
+Date:   Tue, 26 Jan 2021 08:14:51 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Subject: Re: [PATCH 02/11] xfs: don't stall cowblocks scan if we can't take
+ locks
+Message-ID: <20210126131451.GA2158252@bfoster>
+References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
+ <161142793080.2171939.11486862758521454210.stgit@magnolia>
+ <20210125181406.GH2047559@bfoster>
+ <20210125195446.GD7698@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210125195446.GD7698@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-per-AG resv failure after fixing up freespace is hard to test in an
-effective way, so directly add an error injection path to observe
-such error handling path works as expected.
+On Mon, Jan 25, 2021 at 11:54:46AM -0800, Darrick J. Wong wrote:
+> On Mon, Jan 25, 2021 at 01:14:06PM -0500, Brian Foster wrote:
+> > On Sat, Jan 23, 2021 at 10:52:10AM -0800, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <djwong@kernel.org>
+> > > 
+> > > Don't stall the cowblocks scan on a locked inode if we possibly can.
+> > > We'd much rather the background scanner keep moving.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > ---
+> > >  fs/xfs/xfs_icache.c |   21 ++++++++++++++++++---
+> > >  1 file changed, 18 insertions(+), 3 deletions(-)
+> > > 
+> > > 
+> > > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> > > index c71eb15e3835..89f9e692fde7 100644
+> > > --- a/fs/xfs/xfs_icache.c
+> > > +++ b/fs/xfs/xfs_icache.c
+> > > @@ -1605,17 +1605,31 @@ xfs_inode_free_cowblocks(
+> > >  	void			*args)
+> > >  {
+> > >  	struct xfs_eofblocks	*eofb = args;
+> > > +	bool			wait;
+> > >  	int			ret = 0;
+> > >  
+> > > +	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
+> > > +
+> > >  	if (!xfs_prep_free_cowblocks(ip))
+> > >  		return 0;
+> > >  
+> > >  	if (!xfs_inode_matches_eofb(ip, eofb))
+> > >  		return 0;
+> > >  
+> > > -	/* Free the CoW blocks */
+> > > -	xfs_ilock(ip, XFS_IOLOCK_EXCL);
+> > > -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL);
+> > > +	/*
+> > > +	 * If the caller is waiting, return -EAGAIN to keep the background
+> > > +	 * scanner moving and revisit the inode in a subsequent pass.
+> > > +	 */
+> > > +	if (!xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL)) {
+> > > +		if (wait)
+> > > +			return -EAGAIN;
+> > > +		return 0;
+> > > +	}
+> > > +	if (!xfs_ilock_nowait(ip, XFS_MMAPLOCK_EXCL)) {
+> > > +		if (wait)
+> > > +			ret = -EAGAIN;
+> > > +		goto out_iolock;
+> > > +	}
+> > 
+> > Hmm.. I'd be a little concerned over this allowing a scan to repeat
+> > indefinitely with a competing workload because a restart doesn't carry
+> > over any state from the previous scan. I suppose the
+> > xfs_prep_free_cowblocks() checks make that slightly less likely on a
+> > given file, but I more wonder about a scenario with a large set of
+> > inodes in a particular AG with a sufficient amount of concurrent
+> > activity. All it takes is one trylock failure per scan to have to start
+> > the whole thing over again... hm?
+> 
+> I'm not quite sure what to do here -- xfs_inode_free_eofblocks already
+> has the ability to return EAGAIN, which (I think) means that it's
+> already possible for the low-quota scan to stall indefinitely if the
+> scan can't lock the inode.
+> 
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
- fs/xfs/libxfs/xfs_ag.c       | 5 +++++
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_error.c           | 2 ++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+Indeed, that is true.
 
-diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index c6e68e265269..5076913c153f 100644
---- a/fs/xfs/libxfs/xfs_ag.c
-+++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -23,6 +23,7 @@
- #include "xfs_ag_resv.h"
- #include "xfs_health.h"
- #include "xfs_error.h"
-+#include "xfs_errortag.h"
- #include "xfs_bmap.h"
- #include "xfs_defer.h"
- #include "xfs_log_format.h"
-@@ -559,6 +560,10 @@ xfs_ag_shrink_space(
- 	be32_add_cpu(&agf->agf_length, -len);
- 
- 	err2 = xfs_ag_resv_init(agibp->b_pag, *tpp);
-+
-+	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_SHRINKFS_AG_RESV_FAIL))
-+		err2 = -ENOSPC;
-+
- 	if (err2) {
- 		be32_add_cpu(&agi->agi_length, len);
- 		be32_add_cpu(&agf->agf_length, len);
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 6ca9084b6934..5fd71a930b68 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -40,6 +40,7 @@
- #define XFS_ERRTAG_REFCOUNT_FINISH_ONE			25
- #define XFS_ERRTAG_BMAP_FINISH_ONE			26
- #define XFS_ERRTAG_AG_RESV_CRITICAL			27
-+
- /*
-  * DEBUG mode instrumentation to test and/or trigger delayed allocation
-  * block killing in the event of failed writes. When enabled, all
-@@ -58,7 +59,8 @@
- #define XFS_ERRTAG_BUF_IOERROR				35
- #define XFS_ERRTAG_REDUCE_MAX_IEXTENTS			36
- #define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
--#define XFS_ERRTAG_MAX					38
-+#define XFS_ERRTAG_SHRINKFS_AG_RESV_FAIL		38
-+#define XFS_ERRTAG_MAX					39
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 185b4915b7bf..7bae34bfddd2 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -168,6 +168,7 @@ XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
- XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
- XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
-+XFS_ERRORTAG_ATTR_RW(shrinkfs_ag_resv_fail, XFS_ERRTAG_SHRINKFS_AG_RESV_FAIL);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -208,6 +209,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
- 	XFS_ERRORTAG_ATTR_LIST(reduce_max_iextents),
- 	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
-+	XFS_ERRORTAG_ATTR_LIST(shrinkfs_ag_resv_fail),
- 	NULL,
- };
- 
--- 
-2.27.0
+> I think we already had a stall limiting factor here in that all the
+> other threads in the system that hit EDQUOT will drop their IOLOCKs to
+> scan the fs, which means that while they loop around the scanner they
+> can only be releasing quota and driving us towards having fewer inodes
+> with the same dquots and either blockgc tag set.
+> 
+
+Yeah, that makes sense for the current use case. There's a broader
+sequence involved there that provides some throttling and serialization,
+along with the fact that the workload is imminently driving into
+-ENOSPC.
+
+I think what had me a little concerned upon seeing this is whether the
+scanning mechanism is currently suitable for the broader usage
+introduced in this series. We've had related issues in the past with
+concurrent sync eofblocks scans and iolock (see [1], for example).
+Having made it through the rest of the series however, it looks like all
+of the new scan invocations are async, so perhaps this is not really an
+immediate problem.
+
+I think it would be nice if we could somehow assert that the task that
+invokes a sync scan doesn't hold an iolock, but I'm not sure there's a
+clean way to do that. We'd probably have to define the interface to
+require an inode just for that purpose. It may not be worth that
+weirdness, and I suppose if code is tested it should be pretty obvious
+that such a scan will never complete..
+
+Brian
+
+[1] c3155097ad89 ("xfs: sync eofblocks scans under iolock are livelock prone")
+
+> --D
+> 
+> > Brian
+> > 
+> > >  
+> > >  	/*
+> > >  	 * Check again, nobody else should be able to dirty blocks or change
+> > > @@ -1625,6 +1639,7 @@ xfs_inode_free_cowblocks(
+> > >  		ret = xfs_reflink_cancel_cow_range(ip, 0, NULLFILEOFF, false);
+> > >  
+> > >  	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
+> > > +out_iolock:
+> > >  	xfs_iunlock(ip, XFS_IOLOCK_EXCL);
+> > >  
+> > >  	return ret;
+> > > 
+> > 
+> 
 
