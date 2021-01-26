@@ -2,55 +2,55 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54CD0303DF1
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 13:59:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7FD303E0A
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 14:06:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404060AbhAZM7c (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 07:59:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48392 "EHLO
+        id S1727964AbhAZNFN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 08:05:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:56415 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392458AbhAZM6u (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Jan 2021 07:58:50 -0500
+        by vger.kernel.org with ESMTP id S2392452AbhAZM6m (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Jan 2021 07:58:42 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611665843;
+        s=mimecast20190719; t=1611665835;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=sDTzhpSeJaPZiyMCJtzCnkLWVqNEgtet32jXfgUpbis=;
-        b=ApMO2/kt3ngEp+DEyHwo2w5xGRMsn+/y60x7Wv2pVFlrv99iMYe9uaBI36z8zV7AfZC4jU
-        860PlZeFgUVH097bGpF/BawFfEzIpUO7DvJuLrxrXCWtBfA3s7eHzYpYgRjbc7HD7rG7ZM
-        nw0Lj8EXQ+0CV98oza3plN7yfj6j0lU=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-571-5RVeXsDaPvej8gyRlER05A-1; Tue, 26 Jan 2021 07:57:21 -0500
-X-MC-Unique: 5RVeXsDaPvej8gyRlER05A-1
-Received: by mail-pl1-f198.google.com with SMTP id q12so9634722plr.9
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Jan 2021 04:57:21 -0800 (PST)
+        bh=KJdGSnBzSu18VjehFOROpG0iRoxMea584ylyyu64ZCg=;
+        b=XHGr+HDTa6hNB3IpGThv9jlBHvIJeBF1zEjZopfUoSP5GpPOlPg4sYtdP8DAY2uadlJj2s
+        dMhGCulVqlSgDWL24TfmMr5RdQhd/ApYBp6Thd4tXZWigac9Axhp4RFps6Uj076IpljthH
+        oFeHV8fAyioiQauvTEw5Cxm5z4Sr7P8=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-276-ff22R4nFPpeqPF4iAwFKGA-1; Tue, 26 Jan 2021 07:57:14 -0500
+X-MC-Unique: ff22R4nFPpeqPF4iAwFKGA-1
+Received: by mail-pf1-f198.google.com with SMTP id x206so8009240pfc.16
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Jan 2021 04:57:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=sDTzhpSeJaPZiyMCJtzCnkLWVqNEgtet32jXfgUpbis=;
-        b=CukdJrF+Awaw+oGZgF2geqhzrwMNJuYeMqgh7yMUZloWqt5PTiX1Rwxe2R6ttQ/ORg
-         9MMVrHHgDhVPW7NogoPhgVyXxQWBfbiYSRO7KN3/QDTxIejcwonWWek3BXOjjOV/O66i
-         ai7AGsvVltJAQ/J4R9eMbbE0pMYXWX0gIqC2L5I7vxOY/HTcWO4q5eLXtkeg5bzvgKjp
-         X95vksr+p2XNG7PUQm48OsstGqTLlhU66VFjIRlOmbPO8brrSjQmHNMoBb+tcManSPUg
-         PIFBN7jexeQqeMcLp6z6VUZtcK4w2YiUhHbc7jsw3/vXU5HRU5UcQj+54wWF9phVI2yI
-         18QA==
-X-Gm-Message-State: AOAM5302pV8GrgNv8Y4aCgKHPobyVfZdprCalxe0ym0P3b5lzwcnGY5W
-        tOhm9PCEkBFu2qMmmwkX/RKBXBYSiR57QiPU/PU6FDDUmmvs7J0WADtHgXMn1QYKEJYWAYHhBIn
-        vFUrddG71mYmz1FUGl7lMbuVxoRvNYl+nX0aYOfF1YzIi7G5cZxQpH9XPfQUHc3j1NaIbZo5WMQ
+        bh=KJdGSnBzSu18VjehFOROpG0iRoxMea584ylyyu64ZCg=;
+        b=qYj4fc+JQbNusc7Wm6fm8v6avYBDKJInqu9c4oFuTNJhlVoElhIwC08o32eOZD37hJ
+         DUvpTm3ExeN2EEtgldvi2FO/2N8bRwJlAWasUuWo1N4LPS9jwtG5ZoNpOzaT1WzmSBDx
+         iNjqccieIZ8NT4DZmYEY9/OHBtzNqWBGMRFpZuxbTWcb8sWZCrLAn7nzsZkztm+XJWhF
+         DOf3yzloEBfoZzE1TnORegeJYdqay8/aloAKUZqP0VXtOn0sX3lohTMv+sPgZHgGX9D3
+         LcS4bcVv3hgxStaOLWClMWBbybql/L9AUBv/Z9z81T5PPCZKwHzIHmb+SHET4NYVcKyA
+         ztPA==
+X-Gm-Message-State: AOAM533u+94SbRK1eU85t9q4gPjr/tp9vwaRYFMgYkprFBjoHoQyCNBq
+        E90iZlvc4vfaCXzdieoutApzd4VsOen1OYjPezdNqHVInYMcR1vL7BGUkHbMfXzf4J+CtJ9Jnf9
+        X3gIiLDXJgoJv53REUjgNEOgmv8g4NGZ3cZRIjz3TwmqQhGX5980OxddiE75AiUbCWAs9FzXBsg
         ==
-X-Received: by 2002:a17:902:ecca:b029:de:b5bc:c852 with SMTP id a10-20020a170902eccab02900deb5bcc852mr6058289plh.59.1611665840643;
-        Tue, 26 Jan 2021 04:57:20 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzDCGMxxRL0D6F10dx61vgDNWokSAdVV7h6HxqhkiJKXohPr19Nus94vI+QG7RopG1yTk96mg==
-X-Received: by 2002:a17:902:ecca:b029:de:b5bc:c852 with SMTP id a10-20020a170902eccab02900deb5bcc852mr6058258plh.59.1611665840258;
-        Tue, 26 Jan 2021 04:57:20 -0800 (PST)
+X-Received: by 2002:a65:6119:: with SMTP id z25mr5528669pgu.17.1611665831775;
+        Tue, 26 Jan 2021 04:57:11 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwdagUpQeiZlFQ7p3wAM5hWMfm2adzsyMkrKi3BY9LG/pxJwTi0HIhpBL11ImWzbk0GZZbhYQ==
+X-Received: by 2002:a65:6119:: with SMTP id z25mr5528645pgu.17.1611665831465;
+        Tue, 26 Jan 2021 04:57:11 -0800 (PST)
 Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id b203sm19243174pfb.11.2021.01.26.04.57.16
+        by smtp.gmail.com with ESMTPSA id b203sm19243174pfb.11.2021.01.26.04.57.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jan 2021 04:57:19 -0800 (PST)
+        Tue, 26 Jan 2021 04:57:11 -0800 (PST)
 From:   Gao Xiang <hsiangkao@redhat.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
@@ -58,10 +58,11 @@ Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
         Eric Sandeen <sandeen@sandeen.net>,
         Dave Chinner <david@fromorbit.com>,
         Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v6 4/7] xfs: hoist out xfs_resizefs_init_new_ags()
-Date:   Tue, 26 Jan 2021 20:56:18 +0800
-Message-Id: <20210126125621.3846735-5-hsiangkao@redhat.com>
+        Gao Xiang <hsiangkao@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: [PATCH v6 2/7] xfs: get rid of xfs_growfs_{data,log}_t
+Date:   Tue, 26 Jan 2021 20:56:16 +0800
+Message-Id: <20210126125621.3846735-3-hsiangkao@redhat.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210126125621.3846735-1-hsiangkao@redhat.com>
 References: <20210126125621.3846735-1-hsiangkao@redhat.com>
@@ -71,107 +72,99 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Move out related logic for initializing new added AGs to a new helper
-in preparation for shrinking. No logic changes.
+Such usage isn't encouraged by the kernel coding style. Leave the
+definitions alone in case of userspace users.
 
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- fs/xfs/xfs_fsops.c | 74 +++++++++++++++++++++++++++-------------------
- 1 file changed, 44 insertions(+), 30 deletions(-)
+ fs/xfs/xfs_fsops.c | 12 ++++++------
+ fs/xfs/xfs_fsops.h |  4 ++--
+ fs/xfs/xfs_ioctl.c |  4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
-index 2e490fb75832..6c4ab5e31054 100644
+index 62600d78bbf1..a2a407039227 100644
 --- a/fs/xfs/xfs_fsops.c
 +++ b/fs/xfs/xfs_fsops.c
-@@ -20,6 +20,49 @@
- #include "xfs_ag.h"
- #include "xfs_ag_resv.h"
- 
-+/*
-+ * Write new AG headers to disk. Non-transactional, but need to be
-+ * written and completed prior to the growfs transaction being logged.
-+ * To do this, we use a delayed write buffer list and wait for
-+ * submission and IO completion of the list as a whole. This allows the
-+ * IO subsystem to merge all the AG headers in a single AG into a single
-+ * IO and hide most of the latency of the IO from us.
-+ *
-+ * This also means that if we get an error whilst building the buffer
-+ * list to write, we can cancel the entire list without having written
-+ * anything.
-+ */
-+static int
-+xfs_resizefs_init_new_ags(
-+	struct xfs_mount	*mp,
-+	struct aghdr_init_data	*id,
-+	xfs_agnumber_t		oagcount,
-+	xfs_agnumber_t		nagcount,
-+	xfs_rfsblock_t		*delta)
-+{
-+	xfs_rfsblock_t		nb = mp->m_sb.sb_dblocks + *delta;
-+	int			error;
-+
-+	INIT_LIST_HEAD(&id->buffer_list);
-+	for (id->agno = nagcount - 1;
-+	     id->agno >= oagcount;
-+	     id->agno--, *delta -= id->agsize) {
-+
-+		if (id->agno == nagcount - 1)
-+			id->agsize = nb - (id->agno *
-+					(xfs_rfsblock_t)mp->m_sb.sb_agblocks);
-+		else
-+			id->agsize = mp->m_sb.sb_agblocks;
-+
-+		error = xfs_ag_init_headers(mp, id);
-+		if (error) {
-+			xfs_buf_delwri_cancel(&id->buffer_list);
-+			return error;
-+		}
-+	}
-+	return xfs_buf_delwri_submit(&id->buffer_list);
-+}
-+
- /*
-  * growfs operations
+@@ -25,8 +25,8 @@
   */
-@@ -74,36 +117,7 @@ xfs_growfs_data_private(
- 	if (error)
- 		return error;
+ static int
+ xfs_growfs_data_private(
+-	xfs_mount_t		*mp,		/* mount point for filesystem */
+-	xfs_growfs_data_t	*in)		/* growfs data input struct */
++	struct xfs_mount	*mp,		/* mount point for filesystem */
++	struct xfs_growfs_data	*in)		/* growfs data input struct */
+ {
+ 	struct xfs_buf		*bp;
+ 	int			error;
+@@ -35,7 +35,7 @@ xfs_growfs_data_private(
+ 	xfs_rfsblock_t		nb, nb_div, nb_mod;
+ 	xfs_rfsblock_t		delta;
+ 	xfs_agnumber_t		oagcount;
+-	xfs_trans_t		*tp;
++	struct xfs_trans	*tp;
+ 	struct aghdr_init_data	id = {};
  
--	/*
--	 * Write new AG headers to disk. Non-transactional, but need to be
--	 * written and completed prior to the growfs transaction being logged.
--	 * To do this, we use a delayed write buffer list and wait for
--	 * submission and IO completion of the list as a whole. This allows the
--	 * IO subsystem to merge all the AG headers in a single AG into a single
--	 * IO and hide most of the latency of the IO from us.
--	 *
--	 * This also means that if we get an error whilst building the buffer
--	 * list to write, we can cancel the entire list without having written
--	 * anything.
--	 */
--	INIT_LIST_HEAD(&id.buffer_list);
--	for (id.agno = nagcount - 1;
--	     id.agno >= oagcount;
--	     id.agno--, delta -= id.agsize) {
--
--		if (id.agno == nagcount - 1)
--			id.agsize = nb -
--				(id.agno * (xfs_rfsblock_t)mp->m_sb.sb_agblocks);
--		else
--			id.agsize = mp->m_sb.sb_agblocks;
--
--		error = xfs_ag_init_headers(mp, &id);
--		if (error) {
--			xfs_buf_delwri_cancel(&id.buffer_list);
--			goto out_trans_cancel;
--		}
--	}
--	error = xfs_buf_delwri_submit(&id.buffer_list);
-+	error = xfs_resizefs_init_new_ags(mp, &id, oagcount, nagcount, &delta);
- 	if (error)
- 		goto out_trans_cancel;
+ 	nb = in->newblocks;
+@@ -170,8 +170,8 @@ xfs_growfs_data_private(
  
+ static int
+ xfs_growfs_log_private(
+-	xfs_mount_t		*mp,	/* mount point for filesystem */
+-	xfs_growfs_log_t	*in)	/* growfs log input struct */
++	struct xfs_mount	*mp,	/* mount point for filesystem */
++	struct xfs_growfs_log	*in)	/* growfs log input struct */
+ {
+ 	xfs_extlen_t		nb;
+ 
+@@ -268,7 +268,7 @@ xfs_growfs_data(
+ int
+ xfs_growfs_log(
+ 	xfs_mount_t		*mp,
+-	xfs_growfs_log_t	*in)
++	struct xfs_growfs_log	*in)
+ {
+ 	int error;
+ 
+diff --git a/fs/xfs/xfs_fsops.h b/fs/xfs/xfs_fsops.h
+index 92869f6ec8d3..2cffe51a31e8 100644
+--- a/fs/xfs/xfs_fsops.h
++++ b/fs/xfs/xfs_fsops.h
+@@ -6,8 +6,8 @@
+ #ifndef __XFS_FSOPS_H__
+ #define	__XFS_FSOPS_H__
+ 
+-extern int xfs_growfs_data(xfs_mount_t *mp, xfs_growfs_data_t *in);
+-extern int xfs_growfs_log(xfs_mount_t *mp, xfs_growfs_log_t *in);
++extern int xfs_growfs_data(struct xfs_mount *mp, struct xfs_growfs_data *in);
++extern int xfs_growfs_log(struct xfs_mount *mp, struct xfs_growfs_log *in);
+ extern void xfs_fs_counts(xfs_mount_t *mp, xfs_fsop_counts_t *cnt);
+ extern int xfs_reserve_blocks(xfs_mount_t *mp, uint64_t *inval,
+ 				xfs_fsop_resblks_t *outval);
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 3fbd98f61ea5..a62520f49ec5 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -2260,7 +2260,7 @@ xfs_file_ioctl(
+ 	}
+ 
+ 	case XFS_IOC_FSGROWFSDATA: {
+-		xfs_growfs_data_t in;
++		struct xfs_growfs_data in;
+ 
+ 		if (copy_from_user(&in, arg, sizeof(in)))
+ 			return -EFAULT;
+@@ -2274,7 +2274,7 @@ xfs_file_ioctl(
+ 	}
+ 
+ 	case XFS_IOC_FSGROWFSLOG: {
+-		xfs_growfs_log_t in;
++		struct xfs_growfs_log in;
+ 
+ 		if (copy_from_user(&in, arg, sizeof(in)))
+ 			return -EFAULT;
 -- 
 2.27.0
 
