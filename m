@@ -2,167 +2,75 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A183F303435
-	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 482B1303436
+	for <lists+linux-xfs@lfdr.de>; Tue, 26 Jan 2021 06:21:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbhAZFT1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Jan 2021 00:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40166 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731923AbhAZCeK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 25 Jan 2021 21:34:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C6F1A22D58;
-        Tue, 26 Jan 2021 02:33:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611628409;
-        bh=ePdhuxKJxmU0fxnzWnm49AvD7zbY2ULe/2nZQccEEBg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eul8+ATyZbo+LXK3E4n7BsBioPsan8kfLt7vRlIsC2g+p9LJ4jJlFyQRbBOAXGZYl
-         rEgR3USaP0JFmCvP4oyxb3jFzM+9OAPSKT17psNnJF4Hs5xslag5PtCN+Jo5hrhqY8
-         NMgD+svrpg67EkhmwDao00tY3okqHjCuAJi29F3gF1/Q2z7vGQk+lWI53Za3EGjmOm
-         GEj9wmq2tcorvXilrOGFjGuEewPCQyFGpP+5Mf4Bu0sGQRRADttpVLEPYzOYHcCZHh
-         YTV1a065AbKM1qpsZ3dmB83LVTsWpcYE9jbG663nGomFbiseDbnlecrT+Mw+IoYRAD
-         CyzX0wpynp4PQ==
-Date:   Mon, 25 Jan 2021 18:33:27 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Subject: Re: [PATCH 10/11] xfs: refactor xfs_icache_free_{eof,cow}blocks call
- sites
-Message-ID: <20210126023327.GK7698@magnolia>
-References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
- <161142797509.2171939.4924852652653930954.stgit@magnolia>
- <20210125184601.GN2047559@bfoster>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        id S1731837AbhAZFTb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Jan 2021 00:19:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbhAZDMt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Jan 2021 22:12:49 -0500
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4B0C06174A
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Jan 2021 19:12:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=bugs.debian.org; s=smtpauto.buxtehude; h=Date:References:Message-ID:Subject
+        :CC:To:From:Content-Type:MIME-Version:Content-Transfer-Encoding:Reply-To:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=UT1gHfmBINRvRQwnbKGJDhS/ItnkExDczpWe7GNFNoc=; b=dAsWA2/DpmWIFJ0O4NRom5A6Z1
+        48nidtD0I0q+X9yGXRd8LB8V9xLfxt6swI0KvfRbto+dkwkhACz4G/sytrrr3756PP1QRJwimW2p+
+        kTfCFuMOzkPwQ2LMaJ/W/Z3SLE4pbFj+HxrlxhyvDlUFlTbsMsOgAHVSE6hcOPr3Fe1WRYtSo4/IQ
+        Yg+LqFL5tuBPvKnn0MV5v34OQC1tmHzUl5r1Tb2gghGq/hZOqCWXTzxxPGZqHO+W+kZ0fcM0fiarD
+        E5GP0rfjTd+eHsjXTLpotsJQkaMKZTc5Et4jph8XHOjlqK2w3DnOJioW8EjTdu5DkYRf8cHfCPRWi
+        NItYDl2Q==;
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1l4Elw-0004kz-0F; Tue, 26 Jan 2021 03:12:04 +0000
+X-Loop: owner@bugs.debian.org
 Content-Disposition: inline
-In-Reply-To: <20210125184601.GN2047559@bfoster>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-Mailer: MIME-tools 5.509 (Entity 5.509)
+Content-Type: text/plain; charset=utf-8
+From:   "Debian Bug Tracking System" <owner@bugs.debian.org>
+To:     Andreas Beckmann <anbe@debian.org>
+CC:     anarcat@debian.org, linux-xfs@vger.kernel.org,
+        pkg-fonts-devel@lists.alioth.debian.org
+Subject: Processed: tagging 973061, found 981009 in 4.1.2-1, tagging 890716
+Message-ID: <handler.s.C.161163051216392.transcript@bugs.debian.org>
+References: <1611630509-462-bts-anbe@debian.org>
+X-Debian-PR-Package: charybdis src:xfsprogs src:nototools
+X-Debian-PR-Source: charybdis nototools xfsprogs
+X-Debian-PR-Message: transcript
+X-Loop: owner@bugs.debian.org
+Date:   Tue, 26 Jan 2021 03:12:03 +0000
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 01:46:01PM -0500, Brian Foster wrote:
-> On Sat, Jan 23, 2021 at 10:52:55AM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > In anticipation of more restructuring of the eof/cowblocks gc code,
-> > refactor calling of those two functions into a single internal helper
-> > function, then present a new standard interface to purge speculative
-> > block preallocations and start shifting higher level code to use that.
-> > 
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  fs/xfs/xfs_file.c   |    3 +--
-> >  fs/xfs/xfs_icache.c |   39 +++++++++++++++++++++++++++++++++------
-> >  fs/xfs/xfs_icache.h |    1 +
-> >  fs/xfs/xfs_trace.h  |    1 +
-> >  4 files changed, 36 insertions(+), 8 deletions(-)
-> > 
-> > 
-> ...
-> > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> > index 7f999f9dd80a..0d228a5e879f 100644
-> > --- a/fs/xfs/xfs_icache.c
-> > +++ b/fs/xfs/xfs_icache.c
-> > @@ -1645,6 +1645,38 @@ xfs_start_block_reaping(
-> >  	xfs_queue_cowblocks(mp);
-> >  }
-> >  
-> > +/* Scan all incore inodes for block preallocations that we can remove. */
-> > +static inline int
-> > +xfs_blockgc_scan(
-> > +	struct xfs_mount	*mp,
-> > +	struct xfs_eofblocks	*eofb)
-> > +{
-> > +	int			error;
-> > +
-> > +	error = xfs_icache_free_eofblocks(mp, eofb);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	error = xfs_icache_free_cowblocks(mp, eofb);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/*
-> > + * Try to free space in the filesystem by purging eofblocks and cowblocks.
-> > + */
-> > +int
-> > +xfs_blockgc_free_space(
-> > +	struct xfs_mount	*mp,
-> > +	struct xfs_eofblocks	*eofb)
-> > +{
-> > +	trace_xfs_blockgc_free_space(mp, eofb, _RET_IP_);
-> > +
-> > +	return xfs_blockgc_scan(mp, eofb);
-> > +}
-> > +
-> 
-> What's the need for two helpers instead of just
-> xfs_blockgc_free_space()? Otherwise seems fine.
+Processing commands for control@bugs.debian.org:
 
-The whole mess of helpers are combined in interesting ways in the "xfs:
-consolidate posteof and cowblocks cleanup" patchset that follows this
-one.  The xfs_iwalk_ag loops under xfs_icache_free_{eof,cow}blocks get
-hoisted to xfs_blockgc_free_space so we only do the iteration once.
+> tags 973061 + patch
+Bug #973061 [src:nototools] nototools: FTBFS: dpkg-buildpackage: error: dpk=
+g-source -b . subprocess returned exit status 2
+Added tag(s) patch.
+> found 981009 4.1.2-1
+Bug #981009 [charybdis] charybdis abandoned upstream, do not ship in bullse=
+ye
+Marked as found in versions charybdis/4.1.2-1.
+> tags 890716 + buster bullseye sid
+Bug #890716 {Done: Bastian Germann <bastiangermann@fishpost.de>} [src:xfspr=
+ogs] xfsprogs: FTBFS with glibc 2.27: error: conflicting types for 'copy_fi=
+le_range'
+Added tag(s) bullseye, sid, and buster.
+> thanks
+Stopping processing here.
 
-Hm, I guess an additional optimization would be to combine them in the
-final product as a patch 10/9.
-
---D
-
-> Brian
-> 
-> >  /*
-> >   * Run cow/eofblocks scans on the supplied dquots.  We don't know exactly which
-> >   * quota caused an allocation failure, so we make a best effort by including
-> > @@ -1661,7 +1693,6 @@ xfs_blockgc_free_dquots(
-> >  	struct xfs_eofblocks	eofb = {0};
-> >  	struct xfs_mount	*mp = NULL;
-> >  	bool			do_work = false;
-> > -	int			error;
-> >  
-> >  	if (!udqp && !gdqp && !pdqp)
-> >  		return 0;
-> > @@ -1699,11 +1730,7 @@ xfs_blockgc_free_dquots(
-> >  	if (!do_work)
-> >  		return 0;
-> >  
-> > -	error = xfs_icache_free_eofblocks(mp, &eofb);
-> > -	if (error)
-> > -		return error;
-> > -
-> > -	return xfs_icache_free_cowblocks(mp, &eofb);
-> > +	return xfs_blockgc_free_space(mp, &eofb);
-> >  }
-> >  
-> >  /*
-> > diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-> > index 5f520de637f6..583c132ae0fb 100644
-> > --- a/fs/xfs/xfs_icache.h
-> > +++ b/fs/xfs/xfs_icache.h
-> > @@ -57,6 +57,7 @@ void xfs_inode_set_reclaim_tag(struct xfs_inode *ip);
-> >  int xfs_blockgc_free_dquots(struct xfs_dquot *udqp, struct xfs_dquot *gdqp,
-> >  		struct xfs_dquot *pdqp, unsigned int eof_flags);
-> >  int xfs_blockgc_free_quota(struct xfs_inode *ip, unsigned int eof_flags);
-> > +int xfs_blockgc_free_space(struct xfs_mount *mp, struct xfs_eofblocks *eofb);
-> >  
-> >  void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
-> >  void xfs_inode_clear_eofblocks_tag(struct xfs_inode *ip);
-> > diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> > index 4cbf446bae9a..c3fd344aaf5b 100644
-> > --- a/fs/xfs/xfs_trace.h
-> > +++ b/fs/xfs/xfs_trace.h
-> > @@ -3926,6 +3926,7 @@ DEFINE_EVENT(xfs_eofblocks_class, name,	\
-> >  		 unsigned long caller_ip), \
-> >  	TP_ARGS(mp, eofb, caller_ip))
-> >  DEFINE_EOFBLOCKS_EVENT(xfs_ioc_free_eofblocks);
-> > +DEFINE_EOFBLOCKS_EVENT(xfs_blockgc_free_space);
-> >  
-> >  #endif /* _TRACE_XFS_H */
-> >  
-> > 
-> 
+Please contact me if you need assistance.
+--=20
+890716: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D890716
+973061: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D973061
+981009: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D981009
+Debian Bug Tracking System
+Contact owner@bugs.debian.org with problems
