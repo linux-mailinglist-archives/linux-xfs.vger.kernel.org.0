@@ -2,104 +2,198 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37BE43052C3
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Jan 2021 07:04:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F6F0305340
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Jan 2021 07:33:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234999AbhA0GDa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 27 Jan 2021 01:03:30 -0500
-Received: from mail.hallyn.com ([178.63.66.53]:60370 "EHLO mail.hallyn.com"
+        id S232029AbhA0Gcm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 27 Jan 2021 01:32:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233843AbhA0FwB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 27 Jan 2021 00:52:01 -0500
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 55466864; Tue, 26 Jan 2021 23:50:12 -0600 (CST)
-Date:   Tue, 26 Jan 2021 23:50:12 -0600
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Geoffrey Thomas <geofft@ldpreload.com>,
-        Mrunal Patel <mpatel@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Theodore Tso <tytso@mit.edu>, Alban Crequy <alban@kinvolk.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Howells <dhowells@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        smbarber@chromium.org, Phil Estes <estesp@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Todd Kjos <tkjos@google.com>, Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v6 23/40] exec: handle idmapped mounts
-Message-ID: <20210127055012.GA32153@mail.hallyn.com>
-References: <20210121131959.646623-1-christian.brauner@ubuntu.com>
- <20210121131959.646623-24-christian.brauner@ubuntu.com>
- <875z3l0y56.fsf@x220.int.ebiederm.org>
- <20210125164404.aullgl3vlajgkef3@wittgenstein>
+        id S233514AbhA0DJv (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 26 Jan 2021 22:09:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E4747205F4;
+        Wed, 27 Jan 2021 03:09:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611716950;
+        bh=1GsdYjcMFbKLBHIKhoUaESHfPOMyJrRTdFk5njDsJq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DTnHmh+luEPCvdFxdLeCuNAH9jFv+ZMYdecU+I5jOWvkebd32RHsYaHZw9eOC4/93
+         whNK4+6HWkUKOprLimrOPbh66S9lRqtwJp7IIoNlhLLQklN0As+2xxgvbdt3qH8Z9O
+         rtnvlWv+f3t9p22I1qItcm06hWu0ndaSZumFOy0MncIQoRX1uMTXZQAlynhGWniWdQ
+         LZCJNovuLGNp5eWyxD97CZT67DPHQ4/q6Bo74PtY6gv3h5R265rj2M7c1s5sclzliB
+         UJsW7bBgyshIccUNWCBXbsi52qrzvo9NWJZXZgS8Ftv5UiSSjyku5jHaSDiER7pE9Z
+         CAGvFoEGyMy5Q==
+Date:   Tue, 26 Jan 2021 19:09:09 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Subject: Re: [PATCH 02/11] xfs: don't stall cowblocks scan if we can't take
+ locks
+Message-ID: <20210127030909.GD7698@magnolia>
+References: <161142791950.2171939.3320927557987463636.stgit@magnolia>
+ <161142793080.2171939.11486862758521454210.stgit@magnolia>
+ <20210125181406.GH2047559@bfoster>
+ <20210125195446.GD7698@magnolia>
+ <20210126131451.GA2158252@bfoster>
+ <20210126183452.GZ7698@magnolia>
+ <20210126200309.GA2515451@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125164404.aullgl3vlajgkef3@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20210126200309.GA2515451@bfoster>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 05:44:04PM +0100, Christian Brauner wrote:
-> On Mon, Jan 25, 2021 at 10:39:01AM -0600, Eric W. Biederman wrote:
-> > Christian Brauner <christian.brauner@ubuntu.com> writes:
+On Tue, Jan 26, 2021 at 03:03:09PM -0500, Brian Foster wrote:
+> On Tue, Jan 26, 2021 at 10:34:52AM -0800, Darrick J. Wong wrote:
+> > On Tue, Jan 26, 2021 at 08:14:51AM -0500, Brian Foster wrote:
+> > > On Mon, Jan 25, 2021 at 11:54:46AM -0800, Darrick J. Wong wrote:
+> > > > On Mon, Jan 25, 2021 at 01:14:06PM -0500, Brian Foster wrote:
+> > > > > On Sat, Jan 23, 2021 at 10:52:10AM -0800, Darrick J. Wong wrote:
+> > > > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > > > > 
+> > > > > > Don't stall the cowblocks scan on a locked inode if we possibly can.
+> > > > > > We'd much rather the background scanner keep moving.
+> > > > > > 
+> > > > > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > > > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > > > > ---
+> > > > > >  fs/xfs/xfs_icache.c |   21 ++++++++++++++++++---
+> > > > > >  1 file changed, 18 insertions(+), 3 deletions(-)
+> > > > > > 
+> > > > > > 
+> > > > > > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> > > > > > index c71eb15e3835..89f9e692fde7 100644
+> > > > > > --- a/fs/xfs/xfs_icache.c
+> > > > > > +++ b/fs/xfs/xfs_icache.c
+> > > > > > @@ -1605,17 +1605,31 @@ xfs_inode_free_cowblocks(
+> > > > > >  	void			*args)
+> > > > > >  {
+> > > > > >  	struct xfs_eofblocks	*eofb = args;
+> > > > > > +	bool			wait;
+> > > > > >  	int			ret = 0;
+> > > > > >  
+> > > > > > +	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
+> > > > > > +
+> > > > > >  	if (!xfs_prep_free_cowblocks(ip))
+> > > > > >  		return 0;
+> > > > > >  
+> > > > > >  	if (!xfs_inode_matches_eofb(ip, eofb))
+> > > > > >  		return 0;
+> > > > > >  
+> > > > > > -	/* Free the CoW blocks */
+> > > > > > -	xfs_ilock(ip, XFS_IOLOCK_EXCL);
+> > > > > > -	xfs_ilock(ip, XFS_MMAPLOCK_EXCL);
+> > > > > > +	/*
+> > > > > > +	 * If the caller is waiting, return -EAGAIN to keep the background
+> > > > > > +	 * scanner moving and revisit the inode in a subsequent pass.
+> > > > > > +	 */
+> > > > > > +	if (!xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL)) {
+> > > > > > +		if (wait)
+> > > > > > +			return -EAGAIN;
+> > > > > > +		return 0;
+> > > > > > +	}
+> > > > > > +	if (!xfs_ilock_nowait(ip, XFS_MMAPLOCK_EXCL)) {
+> > > > > > +		if (wait)
+> > > > > > +			ret = -EAGAIN;
+> > > > > > +		goto out_iolock;
+> > > > > > +	}
+> > > > > 
+> > > > > Hmm.. I'd be a little concerned over this allowing a scan to repeat
+> > > > > indefinitely with a competing workload because a restart doesn't carry
+> > > > > over any state from the previous scan. I suppose the
+> > > > > xfs_prep_free_cowblocks() checks make that slightly less likely on a
+> > > > > given file, but I more wonder about a scenario with a large set of
+> > > > > inodes in a particular AG with a sufficient amount of concurrent
+> > > > > activity. All it takes is one trylock failure per scan to have to start
+> > > > > the whole thing over again... hm?
+> > > > 
+> > > > I'm not quite sure what to do here -- xfs_inode_free_eofblocks already
+> > > > has the ability to return EAGAIN, which (I think) means that it's
+> > > > already possible for the low-quota scan to stall indefinitely if the
+> > > > scan can't lock the inode.
+> > > > 
+> > > 
+> > > Indeed, that is true.
+> > > 
+> > > > I think we already had a stall limiting factor here in that all the
+> > > > other threads in the system that hit EDQUOT will drop their IOLOCKs to
+> > > > scan the fs, which means that while they loop around the scanner they
+> > > > can only be releasing quota and driving us towards having fewer inodes
+> > > > with the same dquots and either blockgc tag set.
+> > > > 
+> > > 
+> > > Yeah, that makes sense for the current use case. There's a broader
+> > > sequence involved there that provides some throttling and serialization,
+> > > along with the fact that the workload is imminently driving into
+> > > -ENOSPC.
+> > > 
+> > > I think what had me a little concerned upon seeing this is whether the
+> > > scanning mechanism is currently suitable for the broader usage
+> > > introduced in this series. We've had related issues in the past with
+> > > concurrent sync eofblocks scans and iolock (see [1], for example).
+> > > Having made it through the rest of the series however, it looks like all
+> > > of the new scan invocations are async, so perhaps this is not really an
+> > > immediate problem.
+> > > 
+> > > I think it would be nice if we could somehow assert that the task that
+> > > invokes a sync scan doesn't hold an iolock, but I'm not sure there's a
+> > > clean way to do that. We'd probably have to define the interface to
+> > > require an inode just for that purpose. It may not be worth that
+> > > weirdness, and I suppose if code is tested it should be pretty obvious
+> > > that such a scan will never complete..
 > > 
-> > > When executing a setuid binary the kernel will verify in bprm_fill_uid()
-> > > that the inode has a mapping in the caller's user namespace before
-> > > setting the callers uid and gid. Let bprm_fill_uid() handle idmapped
-> > > mounts. If the inode is accessed through an idmapped mount it is mapped
-> > > according to the mount's user namespace. Afterwards the checks are
-> > > identical to non-idmapped mounts. If the initial user namespace is
-> > > passed nothing changes so non-idmapped mounts will see identical
-> > > behavior as before.
+> > Well... in theory it would be possible to deal with stalls (A->A
+> > livelock or otherwise) if we had that IWALK_NORETRY flag I was talking
+> > about that would cause xfs_iwalk to exit with EAGAIN instead of
+> > restarting the scan at inode 0.  The caller could detect that a
+> > synchronous scan didn't complete, and then decide if it wants to call
+> > back to try again.
 > > 
-> > This does not handle the v3 capabilites xattr with embeds a uid.
-> > So at least at that level you are missing some critical conversions.
+> > But, that might be a lot of extra code to deal with a requirement that
+> > xfs_blockgc_free_* callers cannot hold an iolock or an mmaplock.  Maybe
+> > that's the simpler course of action?
+> > 
 > 
-> Thanks for looking. Vfs v3 caps are handled earlier in the series. I'm
-> not sure what you're referring to here. There are tests in xfstests that
-> verify vfs3 capability behavior.
+> Yeah, I think we should require that callers drop all such locks before
+> invoking a sync scan, since that may livelock against the lock held by
+> the current task (or cause similar weirdness against concurrent sync
+> scans, as the code prior to the commit below[1] had demonstrated).  The
+> async scans used throughout this series seem reasonable to me..
+
+Ok, will update the code comment for xfs_blockgc_free_quota to say that
+callers cannot hold any inode IO/MMAP/ILOCKs for sync scans.
+
+--D
+
+> Brian
 > 
-> Christian
-
-So fwiw I just tested it manually as well.  Scenario:
-
-uid 1000 user ubuntu
-uid 1001 user u2
-sudo ./mount-idmapped --map-mount b:1000:1001:1 /home/ubuntu/ /mnt
-su - u2
-  cp /usr/bin/id /mnt/
-  unshare -Urm
-    setcap cap_setuid=pe /mnt/id
-At this point, from init_user_ns,
-ubuntu@fscaps:~/mount-idmapped$ /home/u2/rcap /mnt/id
-v3, rootid is 1001
-ubuntu@fscaps:~/mount-idmapped$ /home/u2/rcap //home/ubuntu/id
-v3, rootid is 1000
-
--serge
+> > --D
+> > 
+> > > Brian
+> > > 
+> > > [1] c3155097ad89 ("xfs: sync eofblocks scans under iolock are livelock prone")
+> > > 
+> > > > --D
+> > > > 
+> > > > > Brian
+> > > > > 
+> > > > > >  
+> > > > > >  	/*
+> > > > > >  	 * Check again, nobody else should be able to dirty blocks or change
+> > > > > > @@ -1625,6 +1639,7 @@ xfs_inode_free_cowblocks(
+> > > > > >  		ret = xfs_reflink_cancel_cow_range(ip, 0, NULLFILEOFF, false);
+> > > > > >  
+> > > > > >  	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
+> > > > > > +out_iolock:
+> > > > > >  	xfs_iunlock(ip, XFS_IOLOCK_EXCL);
+> > > > > >  
+> > > > > >  	return ret;
+> > > > > > 
+> > > > > 
+> > > > 
+> > > 
+> > 
+> 
