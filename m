@@ -2,60 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A68A306FE8
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 08:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14A26306FE0
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 08:42:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbhA1HmK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 02:42:10 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:38327 "EHLO
+        id S232108AbhA1HmG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 02:42:06 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46657 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231351AbhA1HjI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 02:39:08 -0500
+        by vger.kernel.org with ESMTP id S231737AbhA1HjL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 02:39:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611819461;
+        s=mimecast20190719; t=1611819464;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YJ0jL9GMWHp751fy3UmKrB3at0MAUtoimJXOag7+nSA=;
-        b=B2H2FgyRZeYU9PZtmeG7Lk9jpK+Dc5TArEeUrsOcCtP4yU7wA01L1DjTvdGhiTlAYUTvh6
-        PoHrlysWMTyG43UQYu9bMvRncaBlhCNvecWwduq1Wdp3lWAs6of+56tykwLCZBaH8FPLO1
-        054bK7Hy7svlS5O6zW0wVRvkOD9J+/o=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-550-XtNQeC2yMAG9aNSTBwIDdQ-1; Thu, 28 Jan 2021 02:37:40 -0500
-X-MC-Unique: XtNQeC2yMAG9aNSTBwIDdQ-1
-Received: by mail-pg1-f198.google.com with SMTP id w4so3332674pgc.7
-        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 23:37:39 -0800 (PST)
+        bh=BlFD86y0yUzbeJS0kSnp6QMi/kHvGDUkqdpZY2XhPCs=;
+        b=WX+I1KVuJIjA2+/u4EMhigFQw0105p4Ba+V0Ow75eabtuJ83gt87X6wie1641Em00fjmvD
+        2DnqBs82q0cNYdxP27aR7aly+N9E3q5GnkjI0NQ9VLRJgZ/X70dATLvR86NV83fF0SoUsh
+        xKn3lmDyzq8NRJweCjKSBeuUTFrsyoc=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-x2IVYMBFMmmO5CK0-iusyg-1; Thu, 28 Jan 2021 02:37:42 -0500
+X-MC-Unique: x2IVYMBFMmmO5CK0-iusyg-1
+Received: by mail-pj1-f70.google.com with SMTP id ds4so2866585pjb.8
+        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 23:37:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YJ0jL9GMWHp751fy3UmKrB3at0MAUtoimJXOag7+nSA=;
-        b=C0Rq9Xraf924hTCtcyr74DRfyWvCXIS6fjk3fefrEwllQ/+CHUbziduPpvi6MzX+19
-         s64ec7jW+UGlhD7Q37u8X9n+Mi2HJwYhmP7/PmTiBT3hh0UsIyxTKcBEw19b0KJRK9ey
-         SY8HWOYspYa4OxJD0AQsO4s3X48jwEF+3qAQPR9BmZx0iw3Ls8+nvg4CUoL9NLnl9Bxw
-         yRbYl4VNmNvDcwUeWQ1CULKD5OEAucZZawHBn0rRalBL11GvHNG4DUIvXsiTT1tQ5ZEU
-         iXldG214V1PFRWe6xfgY8XP7zCrZvlPO+mcQsCnXyLbGueLRZ34T/krbZ+xofG3NTEax
-         xQVQ==
-X-Gm-Message-State: AOAM533cBaqArRBXtW7en95IbHJnQP92/jE0fRD4jFx4VgOsMGmKRw0A
-        W5NFn4uIfynUgQhH9sh89DEsvqcScewY1G7epYRA4k4p+0R5BMMs5a65NGhXOX/88+S3SbPpGjl
-        NqlfQg0DH/6iRWB3tmlBAajGtX6iNGVvkGSJ5fCR2FaUlsM7fu1fiSOe9JrVzZx0VAwWAVdTt
-X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr10118743pjq.92.1611819458624;
-        Wed, 27 Jan 2021 23:37:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw61m3eTQVdWZrZgVNkdFllbck5iRcGIPruolac0+5P4CYoOhFoGE7vwrABsrfLt0zB/eFZXQ==
-X-Received: by 2002:a17:90a:ae12:: with SMTP id t18mr10118722pjq.92.1611819458404;
-        Wed, 27 Jan 2021 23:37:38 -0800 (PST)
+        bh=BlFD86y0yUzbeJS0kSnp6QMi/kHvGDUkqdpZY2XhPCs=;
+        b=b9v8P7EVblmTrDhcHckN7YaLU9Efih+LK6N8vStbUhiGSsoMTwg2Sm/gqBRqUrMH4k
+         w6PuXjPpadfXkvyAiAkOrqvfxPeAq/Rc2Q5/DIjtLF4Er+m49jxQPHIqXDWyd9Lk7qnd
+         lLHaj5GW2GAilRIqDgLIF/r6u3N+fjk6XSBic6I7IUUcS3aB+mpXpzx7X844gYFE2UJa
+         GMq9krmgGQBJ3PmbFZOLK4yxsFzapwnL6td3iLqM684m4YJIaHtiXfXhIWs6XZ1J+Z4f
+         OpJzhPyBst7w6BGypKE83EWQZcmdO//X/L74SUoyIp8apTH9FPeka4vQssFSQjX3rxc0
+         /sKA==
+X-Gm-Message-State: AOAM5310pEJVxt7LYiWt3IogilpaF/y2iGiqyYt7/TGfPBLRNT7Om5SX
+        QyrfRAbE6LwtspprTGFqiwFFER6O7NhWLZIM2wT1qJdhbWDGZVf5wdi39c6oiOLljHRhuvFcBOv
+        KZJaB503lEXsgSCSgMzNTpUwQlT5QD1GwRJXLwzvB97ilp+jXIygctyDADzrkBQmJMM1/0WkI
+X-Received: by 2002:a17:90a:886:: with SMTP id v6mr9883458pjc.143.1611819461077;
+        Wed, 27 Jan 2021 23:37:41 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxPoGCFiZvOX/ncfNI5rRoJ5T4WfJJANHQFFjrZzwA7mBr4hNxij746Dfbj/6KXg452rBuSDQ==
+X-Received: by 2002:a17:90a:886:: with SMTP id v6mr9883444pjc.143.1611819460782;
+        Wed, 27 Jan 2021 23:37:40 -0800 (PST)
 Received: from snowcrash.redhat.com ([2001:8003:4800:1b00:4c4a:1757:c744:923])
-        by smtp.gmail.com with ESMTPSA id n12sm4734897pff.29.2021.01.27.23.37.36
+        by smtp.gmail.com with ESMTPSA id n12sm4734897pff.29.2021.01.27.23.37.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jan 2021 23:37:37 -0800 (PST)
+        Wed, 27 Jan 2021 23:37:40 -0800 (PST)
 From:   Donald Douwsma <ddouwsma@redhat.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Donald Douwsma <ddouwsma@redhat.com>
-Subject: [PATCH 1/2] xfs_logprint: print misc buffers when using -o
-Date:   Thu, 28 Jan 2021 18:37:07 +1100
-Message-Id: <20210128073708.25572-2-ddouwsma@redhat.com>
+Subject: [PATCH 2/2] xfs_logprint: decode superblock updates correctly
+Date:   Thu, 28 Jan 2021 18:37:08 +1100
+Message-Id: <20210128073708.25572-3-ddouwsma@redhat.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210128073708.25572-1-ddouwsma@redhat.com>
 References: <20210128073708.25572-1-ddouwsma@redhat.com>
@@ -65,63 +65,104 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Logprint only dumps raw buffers for unhandled misc buffer types, but
-this information is generally useful when debugging logprint issues so
-allow it to print whenever -o is used.
+Back when the way superblocks are logged changed, logprint wasnt
+updated updated. Currently logprint displays incorrect accounting
+information.
 
-Switch to using the common xlog_print_data function to dump the buffer.
+ SUPER BLOCK Buffer:
+ icount: 6360863066640355328  ifree: 262144  fdblks: 0  frext: 0
+
+ $ printf "0x%x\n" 6360863066640355328
+ 0x5846534200001000
+
+Part of this decodes as 'XFSB', the xfs superblock magic number and not
+the free space accounting.
+
+Fix this by looking at the entire superblock buffer and using the format
+structure as is done for the other allocation group headers.
 
 Signed-off-by: Donald Douwsma <ddouwsma@redhat.com>
 ---
- logprint/log_misc.c      | 19 +++----------------
- logprint/log_print_all.c |  2 +-
- 2 files changed, 4 insertions(+), 17 deletions(-)
+ logprint/log_misc.c      | 22 +++++++++-------------
+ logprint/log_print_all.c | 23 ++++++++++-------------
+ 2 files changed, 19 insertions(+), 26 deletions(-)
 
 diff --git a/logprint/log_misc.c b/logprint/log_misc.c
-index c325f046..d44e9ff7 100644
+index d44e9ff7..929842d0 100644
 --- a/logprint/log_misc.c
 +++ b/logprint/log_misc.c
-@@ -392,23 +392,10 @@ xlog_print_trans_buffer(char **ptr, int len, int *i, int num_ops)
+@@ -243,25 +243,21 @@ xlog_print_trans_buffer(char **ptr, int len, int *i, int num_ops)
+ 	xlog_print_op_header(head, *i, ptr);
+ 	if (super_block) {
+ 		printf(_("SUPER BLOCK Buffer: "));
+-		if (be32_to_cpu(head->oh_len) < 4*8) {
++		if (be32_to_cpu(head->oh_len) < sizeof(struct xfs_sb)) {
+ 			printf(_("Out of space\n"));
+ 		} else {
+-			__be64		 a, b;
++			struct xfs_sb *sb, sb_s;
+ 
+ 			printf("\n");
+-			/*
+-			 * memmove because *ptr may not be 8-byte aligned
+-			 */
+-			memmove(&a, *ptr, sizeof(__be64));
+-			memmove(&b, *ptr+8, sizeof(__be64));
++			/* memmove because *ptr may not be 8-byte aligned */
++			sb = &sb_s;
++			memmove(sb, *ptr, sizeof(struct xfs_sb));
+ 			printf(_("icount: %llu  ifree: %llu  "),
+-			       (unsigned long long) be64_to_cpu(a),
+-			       (unsigned long long) be64_to_cpu(b));
+-			memmove(&a, *ptr+16, sizeof(__be64));
+-			memmove(&b, *ptr+24, sizeof(__be64));
++				be64_to_cpu(sb->sb_icount),
++				be64_to_cpu(sb->sb_ifree) );
+ 			printf(_("fdblks: %llu  frext: %llu\n"),
+-			       (unsigned long long) be64_to_cpu(a),
+-			       (unsigned long long) be64_to_cpu(b));
++				be64_to_cpu(sb->sb_fdblocks),
++				be64_to_cpu(sb->sb_frextents));
  		}
- 	} else {
- 		printf(_("BUF DATA\n"));
--		if (print_data) {
--			uint *dp  = (uint *)*ptr;
--			int  nums = be32_to_cpu(head->oh_len) >> 2;
--			int  byte = 0;
--
--			while (byte < nums) {
--				if ((byte % 8) == 0)
--					printf("%2x ", byte);
--				printf("%8x ", *dp);
--				dp++;
--				byte++;
--				if ((byte % 8) == 0)
--					printf("\n");
--			}
--			printf("\n");
--		}
- 	}
-+
-+	xlog_recover_print_data(*ptr, be32_to_cpu(head->oh_len));
-+
- 	*ptr += be32_to_cpu(head->oh_len);
-     }
-     if (head && head->oh_flags & XLOG_CONTINUE_TRANS)
+ 		super_block = 0;
+ 	} else if (be32_to_cpu(*(__be32 *)(*ptr)) == XFS_AGI_MAGIC) {
 diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
-index eafffe28..2b9e810d 100644
+index 2b9e810d..8ff87068 100644
 --- a/logprint/log_print_all.c
 +++ b/logprint/log_print_all.c
-@@ -176,8 +176,8 @@ xlog_recover_print_buffer(
- 		} else {
- 			printf(_("	BUF DATA\n"));
- 			if (!print_buffer) continue;
--			xlog_recover_print_data(p, len);
- 		}
-+		xlog_recover_print_data(p, len);
- 	}
- }
- 
+@@ -91,22 +91,19 @@ xlog_recover_print_buffer(
+ 		len = item->ri_buf[i].i_len;
+ 		i++;
+ 		if (blkno == 0) { /* super block */
+-			printf(_("	SUPER Block Buffer:\n"));
++                        struct xfs_sb *sb = (struct xfs_sb *)p;
++			printf(_("	Super Block Buffer: (XFSB)\n"));
+ 			if (!print_buffer)
+ 				continue;
+-		       printf(_("              icount:%llu ifree:%llu  "),
+-			       (unsigned long long)
+-				       be64_to_cpu(*(__be64 *)(p)),
+-			       (unsigned long long)
+-				       be64_to_cpu(*(__be64 *)(p+8)));
+-		       printf(_("fdblks:%llu  frext:%llu\n"),
+-			       (unsigned long long)
+-				       be64_to_cpu(*(__be64 *)(p+16)),
+-			       (unsigned long long)
+-				       be64_to_cpu(*(__be64 *)(p+24)));
++			printf(_("		icount:%llu  ifree:%llu  "),
++					be64_to_cpu(sb->sb_icount),
++					be64_to_cpu(sb->sb_ifree));
++			printf(_("fdblks:%llu  frext:%llu\n"),
++					be64_to_cpu(sb->sb_fdblocks),
++					be64_to_cpu(sb->sb_frextents));
+ 			printf(_("		sunit:%u  swidth:%u\n"),
+-			       be32_to_cpu(*(__be32 *)(p+56)),
+-			       be32_to_cpu(*(__be32 *)(p+60)));
++			       be32_to_cpu(sb->sb_unit),
++			       be32_to_cpu(sb->sb_width));
+ 		} else if (be32_to_cpu(*(__be32 *)p) == XFS_AGI_MAGIC) {
+ 			int bucket, buckets;
+ 			agi = (xfs_agi_t *)p;
 -- 
 2.27.0
 
