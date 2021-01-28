@@ -2,37 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFE11306D4B
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 07:05:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27FD6306D50
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 07:05:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbhA1GDq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 01:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
+        id S231222AbhA1GER (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 01:04:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229785AbhA1GDm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 28 Jan 2021 01:03:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 109A664DD1;
-        Thu, 28 Jan 2021 06:03:27 +0000 (UTC)
+        id S229774AbhA1GEJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 28 Jan 2021 01:04:09 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2814364DD9;
+        Thu, 28 Jan 2021 06:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611813807;
-        bh=iuSKfG8UcwV1wQRUXgpbO2dT/zGO+QkuMO5NxHvGvp4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lnVvmr3TvWsxkzrgvg7fp4OEPMdBRCEEoCdZlvWZi7NYdQp2H4vQ8m4ci7fuYEJTo
-         A86XIH6YO+VAuRvT1UuNcf8h2/Ml0jYegEB3L6OfQIo2Se1dUjZSGEK0jzgb+wioV4
-         hYmEJ0laCZHb39V1CGIaMweTWNhVnRqfmEEXlM3nHL+rdMj8EX7hCmdXBKLGo7E1/b
-         WCpRoNiVVHpaj4I8f5471C73RgLe9mlAqr9VZooq/mu4c4YJUxJiWO5fIM87W4Nf/w
-         U+rjTNo5Q+P1TYZdluq0tMSK+4giSND+mnrZ+d7kYXy4CX44PPdMns06jPR54uIask
-         lmT6CSXpu7TZQ==
-Subject: [PATCH 11/11] xfs: flush speculative space allocations when we run
- out of space
+        s=k20201202; t=1611813809;
+        bh=Mw/lhGem4OTcbs7PZIIAUnBSSgcZDc40YJ+NJGJP2h4=;
+        h=Subject:From:To:Cc:Date:From;
+        b=K6Tw2LnQfOjGIwAC3was6vBxcrU0p8bO+oCl3bJKXBbfETvnHeBE5mM4F9nq3GUMA
+         LwPcDrcgGMcQ0E2LFk7vpd7wrTPlOx1BRE5k1ncjiqOkfPXnUNifGXM0riN24Qqh/O
+         SzU02lt3AH6I+6sQqQmDCh/9h9CZvc4sRnlUfnrHXUasNGzwqoiuFZ7qI/Nr3rimi9
+         XqDfU3clL2kIJQn+1r4FDaAB4b5kzAFTylQTJw+nN5oAmQdAtN2ZIJNc+22ffk2YyW
+         XzDfW0pBf8gnVKgEl7G63xmL7v7Rov4tNCuheA016DzpsM96ridM1uNjJnQ8CPRwmH
+         JNKWiCY2N0HZg==
+Subject: [PATCHSET v3 0/2] xfs: speed up parallel workqueues
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
-        bfoster@redhat.com
-Date:   Wed, 27 Jan 2021 22:03:23 -0800
-Message-ID: <161181380328.1525026.14172897140148764735.stgit@magnolia>
-In-Reply-To: <161181374062.1525026.14717838769921652940.stgit@magnolia>
-References: <161181374062.1525026.14717838769921652940.stgit@magnolia>
+Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com, bfoster@redhat.com
+Date:   Wed, 27 Jan 2021 22:03:25 -0800
+Message-ID: <161181380539.1525344.442839530784024643.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -41,51 +38,46 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-If a fs modification (creation, file write, reflink, etc.) is unable to
-reserve enough space to handle the modification, try clearing whatever
-space the filesystem might have been hanging onto in the hopes of
-speeding up the filesystem.  The flushing behavior will become
-particularly important when we add deferred inode inactivation because
-that will increase the amount of space that isn't actively tied to user
-data.
+After some discussion on IRC with Dave, we came to the conclusion that
+our background workqueue behavior could use some tweaking.  Kernel
+worker threads that scan the filesystem and/or run their own
+transactions more closely fit the definition of an unbound workqueue --
+the work items can take a long time, they don't have much in common with
+the submitter thread, the submitter isn't waiting hotly for a response,
+and we the process scheduler should deal with scheduling them.
+Furthermore, we don't want to place artificial limits on workqueue
+scaling because that can leave unused capacity while we're blocking
+(pwork is currently used for mount time quotacheck).
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Therefore, we switch pwork to use an unbound workqueue, and now we let
+the workqueue code figure out the relevant concurrency.  We expose the
+pwork workqueue via sysfs, and document the interesting knobs in the
+administrator's guide.
+
+v2: expose all the workqueues via sysfs
+v3: only expose those workqueues that exist for kernel threads that
+    create their own transactions, and update the admin guide.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=workqueue-speedups-5.12
 ---
- fs/xfs/xfs_trans.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index 7d4823cbd7c0..eb39baddff35 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -23,6 +23,7 @@
- #include "xfs_inode.h"
- #include "xfs_dquot_item.h"
- #include "xfs_dquot.h"
-+#include "xfs_icache.h"
- 
- kmem_zone_t	*xfs_trans_zone;
- 
-@@ -288,6 +289,18 @@ xfs_trans_alloc(
- 	tp->t_firstblock = NULLFSBLOCK;
- 
- 	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-+	if (error == -ENOSPC) {
-+		/*
-+		 * We weren't able to reserve enough space for the transaction.
-+		 * Flush the other speculative space allocations to free space.
-+		 * Do not perform a synchronous scan because callers can hold
-+		 * other locks.
-+		 */
-+		error = xfs_blockgc_free_space(mp, NULL);
-+		if (error)
-+			return error;
-+		error = xfs_trans_reserve(tp, resp, blocks, rtextents);
-+	}
- 	if (error) {
- 		xfs_trans_cancel(tp);
- 		return error;
+ Documentation/admin-guide/xfs.rst |   38 +++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_iwalk.c                |    5 +----
+ fs/xfs/xfs_log.c                  |    5 +++--
+ fs/xfs/xfs_mru_cache.c            |    2 +-
+ fs/xfs/xfs_pwork.c                |   25 +++++-------------------
+ fs/xfs/xfs_pwork.h                |    4 +---
+ fs/xfs/xfs_super.c                |   23 ++++++++++++++--------
+ fs/xfs/xfs_super.h                |    6 ++++++
+ 8 files changed, 69 insertions(+), 39 deletions(-)
 
