@@ -2,167 +2,170 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14A26306FE0
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 08:42:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 439E030709D
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 09:09:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbhA1HmG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 02:42:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46657 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231737AbhA1HjL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 02:39:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1611819464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BlFD86y0yUzbeJS0kSnp6QMi/kHvGDUkqdpZY2XhPCs=;
-        b=WX+I1KVuJIjA2+/u4EMhigFQw0105p4Ba+V0Ow75eabtuJ83gt87X6wie1641Em00fjmvD
-        2DnqBs82q0cNYdxP27aR7aly+N9E3q5GnkjI0NQ9VLRJgZ/X70dATLvR86NV83fF0SoUsh
-        xKn3lmDyzq8NRJweCjKSBeuUTFrsyoc=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-x2IVYMBFMmmO5CK0-iusyg-1; Thu, 28 Jan 2021 02:37:42 -0500
-X-MC-Unique: x2IVYMBFMmmO5CK0-iusyg-1
-Received: by mail-pj1-f70.google.com with SMTP id ds4so2866585pjb.8
-        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 23:37:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BlFD86y0yUzbeJS0kSnp6QMi/kHvGDUkqdpZY2XhPCs=;
-        b=b9v8P7EVblmTrDhcHckN7YaLU9Efih+LK6N8vStbUhiGSsoMTwg2Sm/gqBRqUrMH4k
-         w6PuXjPpadfXkvyAiAkOrqvfxPeAq/Rc2Q5/DIjtLF4Er+m49jxQPHIqXDWyd9Lk7qnd
-         lLHaj5GW2GAilRIqDgLIF/r6u3N+fjk6XSBic6I7IUUcS3aB+mpXpzx7X844gYFE2UJa
-         GMq9krmgGQBJ3PmbFZOLK4yxsFzapwnL6td3iLqM684m4YJIaHtiXfXhIWs6XZ1J+Z4f
-         OpJzhPyBst7w6BGypKE83EWQZcmdO//X/L74SUoyIp8apTH9FPeka4vQssFSQjX3rxc0
-         /sKA==
-X-Gm-Message-State: AOAM5310pEJVxt7LYiWt3IogilpaF/y2iGiqyYt7/TGfPBLRNT7Om5SX
-        QyrfRAbE6LwtspprTGFqiwFFER6O7NhWLZIM2wT1qJdhbWDGZVf5wdi39c6oiOLljHRhuvFcBOv
-        KZJaB503lEXsgSCSgMzNTpUwQlT5QD1GwRJXLwzvB97ilp+jXIygctyDADzrkBQmJMM1/0WkI
-X-Received: by 2002:a17:90a:886:: with SMTP id v6mr9883458pjc.143.1611819461077;
-        Wed, 27 Jan 2021 23:37:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxPoGCFiZvOX/ncfNI5rRoJ5T4WfJJANHQFFjrZzwA7mBr4hNxij746Dfbj/6KXg452rBuSDQ==
-X-Received: by 2002:a17:90a:886:: with SMTP id v6mr9883444pjc.143.1611819460782;
-        Wed, 27 Jan 2021 23:37:40 -0800 (PST)
-Received: from snowcrash.redhat.com ([2001:8003:4800:1b00:4c4a:1757:c744:923])
-        by smtp.gmail.com with ESMTPSA id n12sm4734897pff.29.2021.01.27.23.37.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Jan 2021 23:37:40 -0800 (PST)
-From:   Donald Douwsma <ddouwsma@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Donald Douwsma <ddouwsma@redhat.com>
-Subject: [PATCH 2/2] xfs_logprint: decode superblock updates correctly
-Date:   Thu, 28 Jan 2021 18:37:08 +1100
-Message-Id: <20210128073708.25572-3-ddouwsma@redhat.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210128073708.25572-1-ddouwsma@redhat.com>
-References: <20210128073708.25572-1-ddouwsma@redhat.com>
+        id S232303AbhA1H5G (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 02:57:06 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:22235 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231630AbhA1HM5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 02:12:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1611817976; x=1643353976;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BWhCtPmFmY8SRwjALXcTfESKnsKfTCmOrzddkgcZe24=;
+  b=faLGKvi9FFV57Q0dVYgonwYrSTczxE9mFzdDUiyH3A743tinm8FHpmYz
+   E84KWYZzllaXLzXqmEQ3vDkz3D8fsHBtSi4Hmv/1R+AeQBknTP0ot2Svv
+   rnDYlpCWtEJ2+q1R44DxVzeuA5GnmFibXE1B6D+5DQso/hdAwQoFVa5pT
+   CLQn2gu7AeGLEYqMTzcoV59mbnaInDk5X20SLVrY6g8oA6DjKhe5i6x2+
+   WTW7Ce2WfoH/L9CLkjXMJ2Ixf1nQnpqJivqFH3mN0W6kUljS2DJh2UW3A
+   Q25yxzK7UVPZBNsUgpZo4nVvY5QMoYY170OhpNR7KneK5MlK1nUkKKU7H
+   A==;
+IronPort-SDR: VT21les7nQG03JqHJ+I6EARWf5lMn66DxTi2QYbOMs2YfDOw2AniSPT+pjejA5tq7xp1aaI8NN
+ IJyHOrnvEj1JtURy8HGmu0MgaB3qFyIEUADD5Ek4rL9/qSDzGRwHO6xyMdhO+CtZpDm/nh3433
+ uqgijKjcu6L3970RM639kqqPrmUmIl7WoTjb0NNVH7bhLYWGI4IDe794zDrJ4IASxPghSaTjLe
+ TOkBT9TLksFi3mVkIqXo6YzEuM9Kaiezl7crmDupPQhL0bBL9PWXidnupZGcR3WjWU0VGSuTZw
+ LNA=
+X-IronPort-AV: E=Sophos;i="5.79,381,1602518400"; 
+   d="scan'208";a="158517186"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 28 Jan 2021 15:11:38 +0800
+IronPort-SDR: w5IsHUigPS/mWpQBf9qBrfSIaakaFZLRWoHP6+aNWprDyks+eKEz/GYBDl9uDW4vjngYTV/B2D
+ IFvxlHDM6q/6/9nde34O8UYBh6I0uIn3r+BtZNG8Q1Tp2UBHT91nGmc+bRVSX0vH6wYM+9iszA
+ F/KYhmG/TW8AEVRLeQEnipOU8wNqnajsU2fYF/lAkiJR/GA7ObRI9w0PiHGbcZOSAzOETqvDL8
+ hpZV/LAw9Bj86sme5bSbMQqxe65yf8vYoskZfjC3ApT6ZscD9accTAHZbY6UsQpC8kRLHHWojB
+ s+1/3Wcsa3O5HFCg61j2s/8m
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2021 22:55:58 -0800
+IronPort-SDR: 61Jf/0E9AfrbFBR+VL+aX9SYCVB0aW8ut/7/jLtTqvhkleWzu7b9JjkuOaGgMYwgMXw5C5Sybl
+ VeNQs3LEjTqxDsR0ZyK8GA/cVYEZNMX2maaVF3ljBoeSQOO/ApbWgebfLMlSCkYd12pl+6neKj
+ zn8nHOcIOMnNA2IBKV67KMXVLkXTllokNu+jCcdgoa5YFwfQecWL2vYSP5hgldmlqCiXple2ew
+ fybG/wLzJMKvqPxvYQ59ATt+ZGQv1DjVDDtxXyNp0NJ+IswNbwLOu8d1uiq12NaSa1/W79MYTO
+ wq8=
+WDCIronportException: Internal
+Received: from vm.labspan.wdc.com (HELO vm.sc.wdc.com) ([10.6.137.102])
+  by uls-op-cesaip02.wdc.com with ESMTP; 27 Jan 2021 23:11:38 -0800
+From:   Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        dm-devel@redhat.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        xen-devel@lists.xenproject.org, linux-nvme@lists.infradead.org,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org,
+        jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org,
+        ocfs2-devel@oss.oracle.com, linux-pm@vger.kernel.org,
+        linux-mm@kvack.org
+Cc:     axboe@kernel.dk, philipp.reisner@linbit.com,
+        lars.ellenberg@linbit.com, konrad.wilk@oracle.com,
+        roger.pau@citrix.com, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, agk@redhat.com,
+        snitzer@redhat.com, hch@lst.de, sagi@grimberg.me,
+        chaitanya.kulkarni@wdc.com, martin.petersen@oracle.com,
+        viro@zeniv.linux.org.uk, tytso@mit.edu, jaegeuk@kernel.org,
+        ebiggers@kernel.org, djwong@kernel.org, shaggy@kernel.org,
+        konishi.ryusuke@gmail.com, mark@fasheh.com, jlbec@evilplan.org,
+        joseph.qi@linux.alibaba.com, damien.lemoal@wdc.com,
+        naohiro.aota@wdc.com, jth@kernel.org, rjw@rjwysocki.net,
+        len.brown@intel.com, pavel@ucw.cz, akpm@linux-foundation.org,
+        hare@suse.de, gustavoars@kernel.org, tiwai@suse.de,
+        alex.shi@linux.alibaba.com, asml.silence@gmail.com,
+        ming.lei@redhat.com, tj@kernel.org, osandov@fb.com,
+        bvanassche@acm.org, jefflexu@linux.alibaba.com
+Subject: [RFC PATCH 00/34] block: introduce bio_new()
+Date:   Wed, 27 Jan 2021 23:10:59 -0800
+Message-Id: <20210128071133.60335-1-chaitanya.kulkarni@wdc.com>
+X-Mailer: git-send-email 2.22.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Back when the way superblocks are logged changed, logprint wasnt
-updated updated. Currently logprint displays incorrect accounting
-information.
+Hi,
 
- SUPER BLOCK Buffer:
- icount: 6360863066640355328  ifree: 262144  fdblks: 0  frext: 0
+This is a *compile only RFC* which adds a generic helper to initialize
+the various fields of the bio that is repeated all the places in
+file-systems, block layer, and drivers.
 
- $ printf "0x%x\n" 6360863066640355328
- 0x5846534200001000
+The new helper allows callers to initialize non-optional members of bio
+such as bdev, sector, op, opflags, max_bvecs and gfp_mask by
+encapsulating new bio allocation with bio alloc with initialization
+at one place.
 
-Part of this decodes as 'XFSB', the xfs superblock magic number and not
-the free space accounting.
+The objective of this RFC is to only start a discussion, this it not 
+completely tested at all.
 
-Fix this by looking at the entire superblock buffer and using the format
-structure as is done for the other allocation group headers.
+-ck                         
 
-Signed-off-by: Donald Douwsma <ddouwsma@redhat.com>
----
- logprint/log_misc.c      | 22 +++++++++-------------
- logprint/log_print_all.c | 23 ++++++++++-------------
- 2 files changed, 19 insertions(+), 26 deletions(-)
+Chaitanya Kulkarni (34):
+  block: move common code into blk_next_bio()
+  block: introduce and use bio_new
+  drdb: use bio_new in drdb
+  drdb: use bio_new() in submit_one_flush
+  xen-blkback: use bio_new
+  zram: use bio_new
+  dm: use bio_new in dm-log-writes
+  dm-zoned: use bio_new in get_mblock_slow
+  dm-zoned: use bio_new in dmz_write_mblock
+  dm-zoned: use bio_new in dmz_rdwr_block
+  nvmet: use bio_new in nvmet_bdev_execute_rw
+  scsi: target/iblock: use bio_new
+  block: use bio_new in __blkdev_direct_IO
+  fs/buffer: use bio_new in submit_bh_wbc
+  fscrypt: use bio_new in fscrypt_zeroout_range
+  fs/direct-io: use bio_new in dio_bio_alloc
+  iomap: use bio_new in iomap_dio_zero
+  iomap: use bio_new in iomap_dio_bio_actor
+  fs/jfs/jfs_logmgr.c: use bio_new in lbmRead
+  fs/jfs/jfs_logmgr.c: use bio_new in lbmStartIO
+  fs/jfs/jfs_metapage.c: use bio_new in metapage_writepage
+  fs/jfs/jfs_metapage.c: use bio_new in metapage_readpage
+  fs/mpage.c: use bio_new mpage_alloc
+  fs/nilfs: use bio_new nilfs_alloc_seg_bio
+  ocfs/cluster: use bio_new in dm-log-writes
+  xfs: use bio_new in xfs_rw_bdev
+  xfs: use bio_new in xfs_buf_ioapply_map
+  zonefs: use bio_new
+  power/swap: use bio_new in hib_submit_io
+  hfsplus: use bio_new in hfsplus_submit_bio()
+  iomap: use bio_new in iomap_readpage_actor
+  mm: use bio_new in __swap_writepage
+  mm: use bio_new in swap_readpage
+  mm: add swap_bio_new common bio helper
 
-diff --git a/logprint/log_misc.c b/logprint/log_misc.c
-index d44e9ff7..929842d0 100644
---- a/logprint/log_misc.c
-+++ b/logprint/log_misc.c
-@@ -243,25 +243,21 @@ xlog_print_trans_buffer(char **ptr, int len, int *i, int num_ops)
- 	xlog_print_op_header(head, *i, ptr);
- 	if (super_block) {
- 		printf(_("SUPER BLOCK Buffer: "));
--		if (be32_to_cpu(head->oh_len) < 4*8) {
-+		if (be32_to_cpu(head->oh_len) < sizeof(struct xfs_sb)) {
- 			printf(_("Out of space\n"));
- 		} else {
--			__be64		 a, b;
-+			struct xfs_sb *sb, sb_s;
- 
- 			printf("\n");
--			/*
--			 * memmove because *ptr may not be 8-byte aligned
--			 */
--			memmove(&a, *ptr, sizeof(__be64));
--			memmove(&b, *ptr+8, sizeof(__be64));
-+			/* memmove because *ptr may not be 8-byte aligned */
-+			sb = &sb_s;
-+			memmove(sb, *ptr, sizeof(struct xfs_sb));
- 			printf(_("icount: %llu  ifree: %llu  "),
--			       (unsigned long long) be64_to_cpu(a),
--			       (unsigned long long) be64_to_cpu(b));
--			memmove(&a, *ptr+16, sizeof(__be64));
--			memmove(&b, *ptr+24, sizeof(__be64));
-+				be64_to_cpu(sb->sb_icount),
-+				be64_to_cpu(sb->sb_ifree) );
- 			printf(_("fdblks: %llu  frext: %llu\n"),
--			       (unsigned long long) be64_to_cpu(a),
--			       (unsigned long long) be64_to_cpu(b));
-+				be64_to_cpu(sb->sb_fdblocks),
-+				be64_to_cpu(sb->sb_frextents));
- 		}
- 		super_block = 0;
- 	} else if (be32_to_cpu(*(__be32 *)(*ptr)) == XFS_AGI_MAGIC) {
-diff --git a/logprint/log_print_all.c b/logprint/log_print_all.c
-index 2b9e810d..8ff87068 100644
---- a/logprint/log_print_all.c
-+++ b/logprint/log_print_all.c
-@@ -91,22 +91,19 @@ xlog_recover_print_buffer(
- 		len = item->ri_buf[i].i_len;
- 		i++;
- 		if (blkno == 0) { /* super block */
--			printf(_("	SUPER Block Buffer:\n"));
-+                        struct xfs_sb *sb = (struct xfs_sb *)p;
-+			printf(_("	Super Block Buffer: (XFSB)\n"));
- 			if (!print_buffer)
- 				continue;
--		       printf(_("              icount:%llu ifree:%llu  "),
--			       (unsigned long long)
--				       be64_to_cpu(*(__be64 *)(p)),
--			       (unsigned long long)
--				       be64_to_cpu(*(__be64 *)(p+8)));
--		       printf(_("fdblks:%llu  frext:%llu\n"),
--			       (unsigned long long)
--				       be64_to_cpu(*(__be64 *)(p+16)),
--			       (unsigned long long)
--				       be64_to_cpu(*(__be64 *)(p+24)));
-+			printf(_("		icount:%llu  ifree:%llu  "),
-+					be64_to_cpu(sb->sb_icount),
-+					be64_to_cpu(sb->sb_ifree));
-+			printf(_("fdblks:%llu  frext:%llu\n"),
-+					be64_to_cpu(sb->sb_fdblocks),
-+					be64_to_cpu(sb->sb_frextents));
- 			printf(_("		sunit:%u  swidth:%u\n"),
--			       be32_to_cpu(*(__be32 *)(p+56)),
--			       be32_to_cpu(*(__be32 *)(p+60)));
-+			       be32_to_cpu(sb->sb_unit),
-+			       be32_to_cpu(sb->sb_width));
- 		} else if (be32_to_cpu(*(__be32 *)p) == XFS_AGI_MAGIC) {
- 			int bucket, buckets;
- 			agi = (xfs_agi_t *)p;
+ block/blk-lib.c                     | 34 ++++++++++-------------------
+ block/blk-zoned.c                   |  4 +---
+ block/blk.h                         |  5 +++--
+ drivers/block/drbd/drbd_receiver.c  | 12 +++++-----
+ drivers/block/xen-blkback/blkback.c | 20 +++++++++++------
+ drivers/block/zram/zram_drv.c       |  5 ++---
+ drivers/md/dm-log-writes.c          | 30 +++++++++----------------
+ drivers/md/dm-zoned-metadata.c      | 18 +++++----------
+ drivers/nvme/target/io-cmd-bdev.c   |  9 +++-----
+ drivers/target/target_core_iblock.c |  5 ++---
+ fs/block_dev.c                      |  6 ++---
+ fs/buffer.c                         | 16 ++++++--------
+ fs/crypto/bio.c                     |  5 ++---
+ fs/direct-io.c                      |  6 ++---
+ fs/hfsplus/wrapper.c                |  5 +----
+ fs/iomap/buffered-io.c              | 12 +++++-----
+ fs/iomap/direct-io.c                | 11 ++++------
+ fs/jfs/jfs_logmgr.c                 | 13 ++++-------
+ fs/jfs/jfs_metapage.c               | 15 +++++--------
+ fs/mpage.c                          | 18 +++++----------
+ fs/nilfs2/segbuf.c                  | 10 ++-------
+ fs/ocfs2/cluster/heartbeat.c        |  6 ++---
+ fs/xfs/xfs_bio_io.c                 |  7 ++----
+ fs/xfs/xfs_buf.c                    |  6 ++---
+ fs/zonefs/super.c                   |  6 ++---
+ include/linux/bio.h                 | 25 +++++++++++++++++++++
+ kernel/power/swap.c                 |  7 +++---
+ mm/page_io.c                        | 30 +++++++++++++------------
+ 28 files changed, 151 insertions(+), 195 deletions(-)
+
 -- 
-2.27.0
+2.22.1
 
