@@ -2,99 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42358307E36
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 19:39:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 214AD307E06
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 19:32:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232376AbhA1Sih (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 13:38:37 -0500
-Received: from spe8-2.ucebox.co.za ([197.242.156.207]:33013 "EHLO
-        spe8-2.ucebox.co.za" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231730AbhA1ShI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 13:37:08 -0500
-X-Greylist: delayed 1090 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Jan 2021 13:36:34 EST
-Received: from cornucopia.aserv.co.za ([154.0.175.203])
-        by spe8.ucebox.co.za with esmtps (TLSv1.2:AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <manornutgrovemanor@gmail.com>)
-        id 1l5Bpi-0007LJ-Au; Thu, 28 Jan 2021 20:16:15 +0200
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by cornucopia.aserv.co.za (Postfix) with ESMTPA id CF403C1250;
-        Thu, 28 Jan 2021 20:14:51 +0200 (SAST)
+        id S231459AbhA1ScC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 13:32:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232136AbhA1S31 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 28 Jan 2021 13:29:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 409BB64E20;
+        Thu, 28 Jan 2021 18:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611857931;
+        bh=+kZ/VHie6tlM/PHbWmbYwbNkn/6EtbWaoP9CUH0j62s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jhht+c+dFVa42PWOu5rAcmRin7ABEMM6JN77VBW6NT4Xg4uCY+tWXyIcCZTfu/Bra
+         eGh+rCSSIYUoPZY5JdPv0MDF0xJJ89RhIHBPomjBPXjWIYTsPbkXet9AavLDajivw1
+         cKu8MfERZx/U8/H6V4q8EXKiIn0xC2g/AUJI5y1mnZpZ9yAcreD17/A9DGU4ggJo6p
+         DelEx9E2EGfezLyNyg/GSgSBkMdWAfjS5UaxyHqt0ZhL56GlHpj+/iugaEyqpK/ECI
+         6xtEdOi2aDsvxzZbq+vgZIKR9CexhLkEMSe5nnUzUfWi5ybkFFidpJsplWDTGM6Frf
+         JKZRR08RgmUTw==
+Date:   Thu, 28 Jan 2021 10:18:50 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, bfoster@redhat.com
+Subject: Re: [PATCH 11/13] xfs: refactor inode creation
+ transaction/inode/quota allocation idiom
+Message-ID: <20210128181850.GV7698@magnolia>
+References: <161181366379.1523592.9213241916555622577.stgit@magnolia>
+ <161181372686.1523592.6379270446924577363.stgit@magnolia>
+ <20210128095737.GG1973802@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 28 Jan 2021 20:14:51 +0200
-From:   Nut Grove Manor <manornutgrovemanor@gmail.com>
-To:     undisclosed-recipients:;
-Subject: Invitation To Quote
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <f4df241716ca77b03e15c5275364cf84@gmail.com>
-X-Sender: manornutgrovemanor@gmail.com
-X-Originating-IP: 154.0.175.203
-X-Afrihost-Domain: pesci.aserv.co.za
-X-Afrihost-Username: 154.0.175.203
-Authentication-Results: ucebox.co.za; auth=pass smtp.auth=154.0.175.203@pesci.aserv.co.za
-X-Afrihost-Outgoing-Class: unsure
-X-Afrihost-Outgoing-Evidence: Combined (0.71)
-X-Recommended-Action: accept
-X-Filter-ID: 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
-X-Report-Abuse-To: spam@spe1.ucebox.co.za
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210128095737.GG1973802@infradead.org>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Good Day Sir
+On Thu, Jan 28, 2021 at 09:57:37AM +0000, Christoph Hellwig wrote:
+> On Wed, Jan 27, 2021 at 10:02:06PM -0800, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > For file creation, create a new helper xfs_trans_alloc_icreate that
+> > allocates a transaction and reserves the appropriate amount of quota
+> > against that transction.  Replace all the open-coded idioms with a
+> > single call to this helper so that we can contain the retry loops in the
+> > next patchset.
+> 
+> For most callers this moves the call to xfs_trans_reserve_quota_icreate
+> out of the ilock criticial section.  Which seems fine and actually
+> mildly desirable.  But please document it.
 
-We are please to invite you/your company to quote the following item
-listed
-below:
+Ok, done.  Add this as a second paragraph:
 
-Product/Model No: TM9653 PRESSURE REGULATOR
-Product Name:MEKO
-Qty. 30 units
+"This changes the locking behavior for non-tempfile creation slightly,
+in that we now make the quota reservation without holding the directory
+ILOCK.  While the dquots chosen for inode creation are based on the
+directory state at a given point in time, the directory ILOCK was
+released as soon as the dquot references are picked up.  Hence it was
+never necessary to hold the directory ILOCK for the quota reservation."
 
-Compulsory,Kindly send your quotation
-for immediate approval.
-
-Kind Regards,
-Albert Bourla
-PFIZER B.V Supply Chain Manager
-Tel: +31(0)208080 880
-ADDRESS: Rivium Westlaan 142, 2909 LD
-Capelle aan den IJssel, Netherlands
+--D
