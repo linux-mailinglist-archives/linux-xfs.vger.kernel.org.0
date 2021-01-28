@@ -2,137 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED182306C5D
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 05:44:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61DE3306CB5
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 06:22:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231147AbhA1Eml (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 27 Jan 2021 23:42:41 -0500
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:39221 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231148AbhA1Emk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 27 Jan 2021 23:42:40 -0500
-Received: from dread.disaster.area (pa49-181-52-82.pa.nsw.optusnet.com.au [49.181.52.82])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 7A6461AD6C1
-        for <linux-xfs@vger.kernel.org>; Thu, 28 Jan 2021 15:41:57 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1l4z80-003F5O-Jx
-        for linux-xfs@vger.kernel.org; Thu, 28 Jan 2021 15:41:56 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1l4z80-003NuJ-CG
-        for linux-xfs@vger.kernel.org; Thu, 28 Jan 2021 15:41:56 +1100
-From:   Dave Chinner <david@fromorbit.com>
+        id S229462AbhA1FWM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 00:22:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229448AbhA1FWL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 00:22:11 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484FEC061573
+        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 21:21:31 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id o7so3551053pgl.1
+        for <linux-xfs@vger.kernel.org>; Wed, 27 Jan 2021 21:21:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JYnbTUahMV9XJ/cK0m8mFmo4pJLhH2KktC702ivrF9Q=;
+        b=cCqeJmbVKllvfHpjw0Ap71oZuqdLi9ar1WOGQ/qwl3dX0yanbuuEFMcL7hJVV0l0pe
+         vYqotpnlIcTbe3fgMPtv1PswCQqhM/wlILcNReYUEVeillV2pLHsgqi8S+rd0gG/s0GA
+         dEnCX+4OOfZ6CJdllRuP7wxtOm0fE7wfRV4JKtnoyAdx1UCtLSDH+/ypx7QQg6zEiLEN
+         blXMJQA328UDl30F+/UyfiV0XjyEZ7RsUB6VTO1fDT/Xzc4iojF1QmlPt6eXpxZL17Rk
+         k8SBtkVhr/xK/lOI3mIRvHt6QKUtOOWYZcZWRSDc+9n5H5vcQOJtm+O9MO7R65gxrhFh
+         nyJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JYnbTUahMV9XJ/cK0m8mFmo4pJLhH2KktC702ivrF9Q=;
+        b=ol3P7bjmCgsommAt78WKGUUuzW9po6w8l8KVON2L8s9OYFzQ1R5n3unXzfWGHrCGLx
+         nBxjj5H+vObl10AKW8fOfhaPwsOQQcGxwLuKG/NfQSZUq73GIw9WUVikbQcqTnOnZyud
+         VwteEDfpOB5MJfwlYzuzg0Y/UTd9DjW2heYWI07tpkv0zuyyNBnnZjt4GuQlBTNzc2ea
+         gpQU7jcmsEueRnOpqj9Up/eKqiSDCLvvyoWoiRyEztlOR1AoMGdQZmZOqJyNPWW6W92P
+         udtVY+fktjPGkzF2LDWLpl2AdEQX6hI3yo0KC4R2M3Kuc3S4bSxK1C/HKp/NLddLdRGC
+         Pv9A==
+X-Gm-Message-State: AOAM531DNhc/KR8yyP5n+NMQG0C62BO7Nt8/whpFK3iwtY3H8INtIAro
+        tuAaI6lpvG5y3hnzSzCK11xRrC+inoE=
+X-Google-Smtp-Source: ABdhPJyuM21LWgytM/iXGYsT92Gk/NyMEQEml69I7JwGu/rdLWSwDZj/k2d4565cEY6Zxidq14lr1w==
+X-Received: by 2002:a62:2f07:0:b029:1bb:5f75:f985 with SMTP id v7-20020a622f070000b02901bb5f75f985mr13794275pfv.76.1611811290628;
+        Wed, 27 Jan 2021 21:21:30 -0800 (PST)
+Received: from localhost.localdomain ([171.61.79.186])
+        by smtp.gmail.com with ESMTPSA id k32sm3551406pjc.36.2021.01.27.21.21.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Jan 2021 21:21:30 -0800 (PST)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 5/5] xfs: reduce buffer log item shadow allocations
-Date:   Thu, 28 Jan 2021 15:41:54 +1100
-Message-Id: <20210128044154.806715-6-david@fromorbit.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210128044154.806715-1-david@fromorbit.com>
-References: <20210128044154.806715-1-david@fromorbit.com>
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>, sandeen@sandeen.net,
+        "Darrick J . Wong" <djwong@kernel.org>
+Subject: [PATCH V2] xfsprogs: xfs_fsr: Verify bulkstat version information in qsort's cmp()
+Date:   Thu, 28 Jan 2021 10:50:58 +0530
+Message-Id: <20210128052058.30328-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Ubgvt5aN c=1 sm=1 tr=0 cx=a_idp_d
-        a=7pwokN52O8ERr2y46pWGmQ==:117 a=7pwokN52O8ERr2y46pWGmQ==:17
-        a=IkcTkHD0fZMA:10 a=EmqxpYm9HcoA:10 a=20KFwNOVAAAA:8
-        a=fG2ZNbid02WDS2EagfEA:9 a=QEXdDO2ut3YA:10
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+This commit introduces a check to verify that correct bulkstat structures are
+being processed by qsort's cmp() function.
 
-When we modify btrees repeatedly, we regularly increase the size of
-the logged region by a single chunk at a time (per transaction
-commit). This results in the CIL formatting code having to
-reallocate the log vector buffer every time the buffer dirty region
-grows. Hence over a typical 4kB btree buffer, we might grow the log
-vector 4096/128 = 32x over a short period where we repeatedly add
-or remove records to/from the buffer over a series of running
-transaction. This means we are doing 32 memory allocations and frees
-over this time during a performance critical path in the journal.
-
-The amount of space tracked in the CIL for the object is calculated
-during the ->iop_format() call for the buffer log item, but the
-buffer memory allocated for it is calculated by the ->iop_size()
-call. The size callout determines the size of the buffer, the format
-call determines the space used in the buffer.
-
-Hence we can oversize the buffer space required in the size
-calculation without impacting the amount of space used and accounted
-to the CIL for the changes being logged. This allows us to reduce
-the number of allocations by rounding up the buffer size to allow
-for future growth. This can safe a substantial amount of CPU time in
-this path:
-
--   46.52%     2.02%  [kernel]                  [k] xfs_log_commit_cil
-   - 44.49% xfs_log_commit_cil
-      - 30.78% _raw_spin_lock
-         - 30.75% do_raw_spin_lock
-              30.27% __pv_queued_spin_lock_slowpath
-
-(oh, ouch!)
-....
-      - 1.05% kmem_alloc_large
-         - 1.02% kmem_alloc
-              0.94% __kmalloc
-
-This overhead here us what this patch is aimed at. After:
-
-      - 0.76% kmem_alloc_large                                                                                                                                      ▒
-         - 0.75% kmem_alloc                                                                                                                                         ▒
-              0.70% __kmalloc                                                                                                                                       ▒
-
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Suggested-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/xfs_buf_item.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+V1 -> V2:
+   1. Include XFS_BULKSTAT_VERSION_V1 as a possible bulkstat version
+      number. 
+   2. Fix coding style issue.
+   
+ fsr/xfs_fsr.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 17960b1ce5ef..0628a65d9c55 100644
---- a/fs/xfs/xfs_buf_item.c
-+++ b/fs/xfs/xfs_buf_item.c
-@@ -142,6 +142,7 @@ xfs_buf_item_size(
+diff --git a/fsr/xfs_fsr.c b/fsr/xfs_fsr.c
+index b885395e..6cf8bfb7 100644
+--- a/fsr/xfs_fsr.c
++++ b/fsr/xfs_fsr.c
+@@ -582,8 +582,15 @@ fsrall_cleanup(int timeout)
+ static int
+ cmp(const void *s1, const void *s2)
  {
- 	struct xfs_buf_log_item	*bip = BUF_ITEM(lip);
- 	int			i;
-+	int			bytes;
- 
- 	ASSERT(atomic_read(&bip->bli_refcount) > 0);
- 	if (bip->bli_flags & XFS_BLI_STALE) {
-@@ -173,7 +174,7 @@ xfs_buf_item_size(
- 	}
- 
- 	/*
--	 * the vector count is based on the number of buffer vectors we have
-+	 * The vector count is based on the number of buffer vectors we have
- 	 * dirty bits in. This will only be greater than one when we have a
- 	 * compound buffer with more than one segment dirty. Hence for compound
- 	 * buffers we need to track which segment the dirty bits correspond to,
-@@ -181,10 +182,18 @@ xfs_buf_item_size(
- 	 * count for the extra buf log format structure that will need to be
- 	 * written.
- 	 */
-+	bytes = 0;
- 	for (i = 0; i < bip->bli_format_count; i++) {
- 		xfs_buf_item_size_segment(bip, &bip->bli_formats[i],
--					  nvecs, nbytes);
-+					  nvecs, &bytes);
- 	}
+-	return( ((struct xfs_bulkstat *)s2)->bs_extents -
+-	        ((struct xfs_bulkstat *)s1)->bs_extents);
++	const struct xfs_bulkstat	*bs1 = s1;
++	const struct xfs_bulkstat	*bs2 = s2;
 +
-+	/*
-+	 * Round up the buffer size required to minimise the number of memory
-+	 * allocations that need to be done as this item grows when relogged by
-+	 * repeated modifications.
-+	 */
-+	*nbytes = round_up(bytes, 512);
- 	trace_xfs_buf_item_size(bip);
++	ASSERT((bs1->bs_version == XFS_BULKSTAT_VERSION_V1 &&
++		bs2->bs_version == XFS_BULKSTAT_VERSION_V1) ||
++		(bs1->bs_version == XFS_BULKSTAT_VERSION_V5 &&
++		bs2->bs_version == XFS_BULKSTAT_VERSION_V5));
++
++	return (bs2->bs_extents - bs1->bs_extents);
  }
  
+ /*
 -- 
-2.28.0
+2.29.2
 
