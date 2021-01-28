@@ -2,281 +2,294 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68E25306C5E
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 05:44:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55511306C60
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 05:44:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbhA1Emn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 27 Jan 2021 23:42:43 -0500
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:45176 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231133AbhA1Eml (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 27 Jan 2021 23:42:41 -0500
+        id S231191AbhA1Emr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 27 Jan 2021 23:42:47 -0500
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:38112 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231148AbhA1Emo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 27 Jan 2021 23:42:44 -0500
 Received: from dread.disaster.area (pa49-181-52-82.pa.nsw.optusnet.com.au [49.181.52.82])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 7BBF51090EB
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 81C42765D4E
         for <linux-xfs@vger.kernel.org>; Thu, 28 Jan 2021 15:41:57 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1l4z80-003F5K-Hs
+        id 1l4z80-003F5M-It
         for linux-xfs@vger.kernel.org; Thu, 28 Jan 2021 15:41:56 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1l4z80-003NuD-A1
+        id 1l4z80-003NuG-BB
         for linux-xfs@vger.kernel.org; Thu, 28 Jan 2021 15:41:56 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 3/5] xfs: journal IO cache flush reductions
-Date:   Thu, 28 Jan 2021 15:41:52 +1100
-Message-Id: <20210128044154.806715-4-david@fromorbit.com>
+Subject: [PATCH 4/5] xfs: Fix CIL throttle hang when CIL space used going backwards
+Date:   Thu, 28 Jan 2021 15:41:53 +1100
+Message-Id: <20210128044154.806715-5-david@fromorbit.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20210128044154.806715-1-david@fromorbit.com>
 References: <20210128044154.806715-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_d
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
         a=7pwokN52O8ERr2y46pWGmQ==:117 a=7pwokN52O8ERr2y46pWGmQ==:17
-        a=EmqxpYm9HcoA:10 a=eJfxgxciAAAA:8 a=20KFwNOVAAAA:8
-        a=0LWfYOzzDOX-mpcduGgA:9 a=xM9caqqi1sUkTy8OJ5Uh:22
+        a=EmqxpYm9HcoA:10 a=20KFwNOVAAAA:8 a=pbPJX3KNAAAA:8
+        a=jMqSS0pQBfBzRtNEyY0A:9 a=oq68ferKVpmdzqj7Fr_q:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Steve Lord <lord@sgi.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-Currently every journal IO is issued as REQ_PREFLUSH | REQ_FUA to
-guarantee the ordering requirements the journal has w.r.t. metadata
-writeback. THe two ordering constraints are:
+A hang with tasks stuck on the CIL hard throttle was reported and
+largely diagnosed by Donald Buczek, who discovered that it was a
+result of the CIL context space usage decrementing in committed
+transactions once the hard throttle limit had been hit and processes
+were already blocked.  This resulted in the CIL push not waking up
+those waiters because the CIL context was no longer over the hard
+throttle limit.
 
-1. we cannot overwrite metadata in the journal until we guarantee
-that the dirty metadata has been written back in place and is
-stable.
+The surprising aspect of this was the CIL space usage going
+backwards regularly enough to trigger this situation. Assumptions
+had been made in design that the relogging process would only
+increase the size of the objects in the CIL, and so that space would
+only increase.
 
-2. we cannot write back dirty metadata until it has been written to
-the journal and guaranteed to be stable (and hence recoverable) in
-the journal.
+This change and commit message fixes the issue and documents the
+result of an audit of the triggers that can cause the CIL space to
+go backwards, how large the backwards steps tend to be, the
+frequency in which they occur, and what the impact on the CIL
+accounting code is.
 
-THe ordering guarantees of #1 are provided by REQ_PREFLUSH. This
-causes the journal IO to issue a cache flush and wait for it to
-complete before issuing the write IO to the journal. Hence all
-completed metadata IO is guaranteed to be stable before the journal
-overwrites the old metadata.
+Even though the CIL ctx->space_used can go backwards, it will only
+do so if the log item is already logged to the CIL and contains a
+space reservation for it's entire logged state. This is tracked by
+the shadow buffer state on the log item. If the item is not
+previously logged in the CIL it has no shadow buffer nor log vector,
+and hence the entire size of the logged item copied to the log
+vector is accounted to the CIL space usage. i.e.  it will always go
+up in this case.
 
-THe ordering guarantees of #2 are provided by the REQ_FUA, which
-ensures the journal writes do not complete until they are on stable
-storage. Hence by the time the last journal IO in a checkpoint
-completes, we know that the entire checkpoint is on stable storage
-and we can unpin the dirty metadata and allow it to be written back.
+If the item has a log vector (i.e. already in the CIL) and the size
+decreases, then the existing log vector will be overwritten and the
+space usage will go down. This is the only condition where the space
+usage reduces, and it can only occur when an item is already tracked
+in the CIL. Hence we are safe from CIL space usage underruns as a
+result of log items decreasing in size when they are relogged.
 
-This is the mechanism by which ordering was first implemented in XFS
-way back in 2002 by this commit:
+Typically this reduction in CIL usage occurs from metadta blocks
+being free, such as when a btree block merge
+occurs or a directory enter/xattr entry is removed and the da-tree
+is reduced in size. This generally results in a reduction in size of
+around a single block in the CIL, but also tends to increase the
+number of log vectors because the parent and sibling nodes in the
+tree needs to be updated when a btree block is removed. If a
+multi-level merge occurs, then we see reduction in size of 2+
+blocks, but again the log vector count goes up.
 
-commit 95d97c36e5155075ba2eb22b17562cfcc53fcf96
-Author: Steve Lord <lord@sgi.com>
-Date:   Fri May 24 14:30:21 2002 +0000
+The other vector is inode fork size changes, which only log the
+current size of the fork and ignore the previously logged size when
+the fork is relogged. Hence if we are removing items from the inode
+fork (dir/xattr removal in shortform, extent record removal in
+extent form, etc) the relogged size of the inode for can decrease.
 
-    Add support for drive write cache flushing - should the kernel
-    have the infrastructure
+No other log items can decrease in size either because they are a
+fixed size (e.g. dquots) or they cannot be relogged (e.g. relogging
+an intent actually creates a new intent log item and doesn't relog
+the old item at all.) Hence the only two vectors for CIL context
+size reduction are relogging inode forks and marking buffers active
+in the CIL as stale.
 
-A lot has changed since then, most notably we now use delayed
-logging to checkpoint the filesystem to the journal rather than
-write each individual transaction to the journal. Cache flushes on
-journal IO are necessary when individual transactions are wholly
-contained within a single iclog. However, CIL checkpoints are single
-transactions that typically span hundreds to thousands of individual
-journal writes, and so the requirements for device cache flushing
-have changed.
+Long story short: the majority of the code does the right thing and
+handles the reduction in log item size correctly, and only the CIL
+hard throttle implementation is problematic and needs fixing. This
+patch makes that fix, as well as adds comments in the log item code
+that result in items shrinking in size when they are relogged as a
+clear reminder that this can and does happen frequently.
 
-That is, the ordering rules I state above apply to ordering of
-atomic transactions recorded in the journal, not to the journal IO
-itself. Hence we need to ensure metadata is stable before we start
-writing a new transaction to the journal (guarantee #1), and we need
-to ensure the entire transaction is stable in the journal before we
-start metadata writeback (guarantee #2).
+The throttle fix is based upon the change Donald proposed, though it
+goes further to ensure that once the throttle is activated, it
+captures all tasks until the CIL push issues a wakeup, regardless of
+whether the CIL space used has gone back under the throttle
+threshold.
 
-Hence we only need a REQ_PREFLUSH on the journal IO that starts a
-new journal transaction to provide #1, and it is not on any other
-journal IO done within the context of that journal transaction.
+This ensures that we prevent tasks reducing the CIL slightly under
+the throttle threshold and then making more changes that push it
+well over the throttle limit. This is acheived by checking if the
+throttle wait queue is already active as a condition of throttling.
+Hence once we start throttling, we continue to apply the throttle
+until the CIL context push wakes everything on the wait queue.
 
-To ensure that the entire journal transaction is on stable storage
-before we run the completion code that unpins all the dirty metadata
-recorded in the journal transaction, the last write of the
-transaction must also ensure that the entire journal transaction is
-stable. We already know what IO that will be, thanks to the commit
-record we explicitly write to complete the transaction. We can order
-all the previous journal IO for this transaction by waiting for all
-the previous iclogs containing the transaction data to complete
-their IO, then issuing the commit record IO using REQ_PREFLUSH
-| REQ_FUA. The preflush ensures all the previous journal IO is
-stable before the commit record hits the log, and the REQ_FUA
-ensures that the commit record is stable before completion is
-signalled to the filesystem.
+We can use waitqueue_active() for the waitqueue manipulations and
+checks as they are all done under the ctx->xc_push_lock. Hence the
+waitqueue has external serialisation and we can safely peek inside
+the wait queue without holding the internal waitqueue locks.
 
-Hence using REQ_PREFLUSH on the first IO of a journal transaction,
-and then ordering the journal IO before issuing the commit record
-with REQ_PREFLUSH | REQ_FUA, we get all the same ordering guarantees
-that we currently achieve by issuing all journal IO with cache
-flushes.
+Many thanks to Donald for his diagnostic and analysis work to
+isolate the cause of this hang.
 
-As an optimisation, when the commit record lands in the same iclog
-as the journal transaction starts, we don't need to wait for
-anything and can simply issue the journal IO with REQ_PREFLUSH |
-REQ_FUA as we do right now. This means that for fsync() heavy
-workloads, the cache flush behaviour is completely unchanged and
-there is no degradation in performance as a result of optimise the
-multi-IO transaction case.
-
-To further simplify the implementation, we also issue the initial IO
-in a journal transaction with REQ_FUA. THis ensures the journal is
-dirtied by the first IO in a long running transaction as quickly as
-possible. This helps ensure that log recovery will at least have a
-transaction header for the incomplete transaction in the log similar
-to the stable journal write behaviour we have now.
-
-The most notable sign that there is less IO latency on my test
-machine (nvme SSDs) is that the "noiclogs" rate has dropped
-substantially. This metric indicates that the CIL push is blocking
-in xlog_get_iclog_space() waiting for iclog IO completion to occur.
-With 8 iclogs of 256kB, the rate is appoximately 1 noiclog event to
-every 4 iclog writes. IOWs, every 4th call to xlog_get_iclog_space()
-is blocking waiting for log IO. With the changes in this patch, this
-drops to 1 noiclog event for every 100 iclog writes. Hence it is
-clear that log IO is completing much faster than it was previously,
-but it is also clear that for large iclog sizes, this isn't the
-performance limiting factor on this hardware.
-
-With smaller iclogs (32kB), however, there is a sustantial
-difference. With the cache flush modifications, the journal is now
-running at over 4000 write IOPS, and the journal throughput is
-largely identical to the 256kB iclogs and the noiclog event rate
-stays low at about 1:50 iclog writes. The existing code tops out at
-about 2500 IOPS as the number of cache flushes dominate performance
-and latency. The noiclog event rate is about 1:4, and the
-performance variance is quite large as the journal throughput can
-fall to less than half the peak sustained rate when the cache flush
-rate prevents metadata writeback from keeping up and the log runs
-out of space and throttles reservations.
-
-As a result:
-
-	logbsize	fsmark create rate	rm -rf
-before	32kb		152851+/-5.3e+04	5m28s
-patched	32kb		221533+/-1.1e+04	5m24s
-
-before	256kb		220239+/-6.2e+03	4m58s
-patched	256kb		228286+/-9.2e+03	5m06s
-
-The rm -rf times are included because I ran them, but the
-differences are largely noise. This workload is largely metadata
-read IO latency bound and the changes to the journal cache flushing
-doesn't really make any noticable difference to behaviour apart from
-a reduction in noiclog events from background CIL pushing.
-
+Reported-by: Donald Buczek <buczek@molgen.mpg.de>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c      | 34 ++++++++++++++++++++++------------
- fs/xfs/xfs_log_priv.h |  3 +++
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ fs/xfs/xfs_buf_item.c   | 37 ++++++++++++++++++-------------------
+ fs/xfs/xfs_inode_item.c | 14 ++++++++++++++
+ fs/xfs/xfs_log_cil.c    | 22 +++++++++++++++++-----
+ 3 files changed, 49 insertions(+), 24 deletions(-)
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index c5e3da23961c..8de93893e0e6 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1804,8 +1804,7 @@ xlog_write_iclog(
- 	struct xlog		*log,
- 	struct xlog_in_core	*iclog,
- 	uint64_t		bno,
--	unsigned int		count,
--	bool			need_flush)
-+	unsigned int		count)
- {
- 	ASSERT(bno < log->l_logBBsize);
- 
-@@ -1843,10 +1842,11 @@ xlog_write_iclog(
- 	 * writeback throttle from throttling log writes behind background
- 	 * metadata writeback and causing priority inversions.
- 	 */
--	iclog->ic_bio.bi_opf = REQ_OP_WRITE | REQ_META | REQ_SYNC |
--				REQ_IDLE | REQ_FUA;
--	if (need_flush)
--		iclog->ic_bio.bi_opf |= REQ_PREFLUSH;
-+	iclog->ic_bio.bi_opf = REQ_OP_WRITE | REQ_META | REQ_SYNC | REQ_IDLE;
-+	if (iclog->ic_flags & XLOG_ICL_NEED_FLUSH) {
-+		iclog->ic_bio.bi_opf |= REQ_PREFLUSH | REQ_FUA;
-+		iclog->ic_flags &= ~XLOG_ICL_NEED_FLUSH;
-+	}
- 
- 	if (xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, count)) {
- 		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-@@ -1949,7 +1949,7 @@ xlog_sync(
- 	unsigned int		roundoff;       /* roundoff to BB or stripe */
- 	uint64_t		bno;
- 	unsigned int		size;
--	bool			need_flush = true, split = false;
-+	bool			split = false;
- 
- 	ASSERT(atomic_read(&iclog->ic_refcnt) == 0);
- 
-@@ -2007,13 +2007,14 @@ xlog_sync(
- 	 * synchronously here; for an internal log we can simply use the block
- 	 * layer state machine for preflushes.
- 	 */
--	if (log->l_targ != log->l_mp->m_ddev_targp || split) {
-+	if (log->l_targ != log->l_mp->m_ddev_targp ||
-+	    (split && (iclog->ic_flags & XLOG_ICL_NEED_FLUSH))) {
- 		xfs_blkdev_issue_flush(log->l_mp->m_ddev_targp);
--		need_flush = false;
-+		iclog->ic_flags &= ~XLOG_ICL_NEED_FLUSH;
- 	}
- 
- 	xlog_verify_iclog(log, iclog, count);
--	xlog_write_iclog(log, iclog, bno, count, need_flush);
-+	xlog_write_iclog(log, iclog, bno, count);
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index dc0be2a639cc..17960b1ce5ef 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -56,14 +56,12 @@ xfs_buf_log_format_size(
  }
  
  /*
-@@ -2464,9 +2465,18 @@ xlog_write(
- 		ASSERT(log_offset <= iclog->ic_size - 1);
- 		ptr = iclog->ic_datap + log_offset;
+- * This returns the number of log iovecs needed to log the
+- * given buf log item.
++ * Return the number of log iovecs and space needed to log the given buf log
++ * item segment.
+  *
+- * It calculates this as 1 iovec for the buf log format structure
+- * and 1 for each stretch of non-contiguous chunks to be logged.
+- * Contiguous chunks are logged in a single iovec.
+- *
+- * If the XFS_BLI_STALE flag has been set, then log nothing.
++ * It calculates this as 1 iovec for the buf log format structure and 1 for each
++ * stretch of non-contiguous chunks to be logged.  Contiguous chunks are logged
++ * in a single iovec.
+  */
+ STATIC void
+ xfs_buf_item_size_segment(
+@@ -119,11 +117,8 @@ xfs_buf_item_size_segment(
+ }
  
--		/* start_lsn is the first lsn written to. That's all we need. */
--		if (!*start_lsn)
-+		/*
-+		 * Start_lsn is the first lsn written to. That's all the caller
-+		 * needs to have returned. Setting it indicates the first iclog
-+		 * of a new checkpoint or the commit record for a checkpoint, so
-+		 * also mark the iclog as requiring a pre-flush to ensure all
-+		 * metadata writeback or journal IO in the checkpoint is
-+		 * correctly ordered against this new log write.
-+		 */
-+		if (!*start_lsn) {
- 			*start_lsn = be64_to_cpu(iclog->ic_header.h_lsn);
-+			iclog->ic_flags |= XLOG_ICL_NEED_FLUSH;
-+		}
- 
+ /*
+- * This returns the number of log iovecs needed to log the given buf log item.
+- *
+- * It calculates this as 1 iovec for the buf log format structure and 1 for each
+- * stretch of non-contiguous chunks to be logged.  Contiguous chunks are logged
+- * in a single iovec.
++ * Return the number of log iovecs and space needed to log the given buf log
++ * item.
+  *
+  * Discontiguous buffers need a format structure per region that is being
+  * logged. This makes the changes in the buffer appear to log recovery as though
+@@ -133,7 +128,11 @@ xfs_buf_item_size_segment(
+  * what ends up on disk.
+  *
+  * If the XFS_BLI_STALE flag has been set, then log nothing but the buf log
+- * format structures.
++ * format structures. If the item has previously been logged and has dirty
++ * regions, we do not relog them in stale buffers. This has the effect of
++ * reducing the size of the relogged item by the amount of dirty data tracked
++ * by the log item. This can result in the committing transaction reducing the
++ * amount of space being consumed by the CIL.
+  */
+ STATIC void
+ xfs_buf_item_size(
+@@ -147,9 +146,9 @@ xfs_buf_item_size(
+ 	ASSERT(atomic_read(&bip->bli_refcount) > 0);
+ 	if (bip->bli_flags & XFS_BLI_STALE) {
  		/*
- 		 * This loop writes out as many regions as can fit in the amount
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index a7ac85aaff4e..9f1e627ccb74 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -133,6 +133,8 @@ enum xlog_iclog_state {
+-		 * The buffer is stale, so all we need to log
+-		 * is the buf log format structure with the
+-		 * cancel flag in it.
++		 * The buffer is stale, so all we need to log is the buf log
++		 * format structure with the cancel flag in it as we are never
++		 * going to replay the changes tracked in the log item.
+ 		 */
+ 		trace_xfs_buf_item_size_stale(bip);
+ 		ASSERT(bip->__bli_format.blf_flags & XFS_BLF_CANCEL);
+@@ -164,9 +163,9 @@ xfs_buf_item_size(
  
- #define XLOG_COVER_OPS		5
+ 	if (bip->bli_flags & XFS_BLI_ORDERED) {
+ 		/*
+-		 * The buffer has been logged just to order it.
+-		 * It is not being included in the transaction
+-		 * commit, so no vectors are used at all.
++		 * The buffer has been logged just to order it. It is not being
++		 * included in the transaction commit, so no vectors are used at
++		 * all.
+ 		 */
+ 		trace_xfs_buf_item_size_ordered(bip);
+ 		*nvecs = XFS_LOG_VEC_ORDERED;
+diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
+index 17e20a6d8b4e..6ff91e5bf3cd 100644
+--- a/fs/xfs/xfs_inode_item.c
++++ b/fs/xfs/xfs_inode_item.c
+@@ -28,6 +28,20 @@ static inline struct xfs_inode_log_item *INODE_ITEM(struct xfs_log_item *lip)
+ 	return container_of(lip, struct xfs_inode_log_item, ili_item);
+ }
  
-+#define XLOG_ICL_NEED_FLUSH     (1 << 0)        /* iclog needs REQ_PREFLUSH */
-+
- /* Ticket reservation region accounting */ 
- #define XLOG_TIC_LEN_MAX	15
++/*
++ * The logged size of an inode fork is always the current size of the inode
++ * fork. This means that when an inode fork is relogged, the size of the logged
++ * region is determined by the current state, not the combination of the
++ * previously logged state + the current state. This is different relogging
++ * behaviour to most other log items which will retain the size of the
++ * previously logged changes when smaller regions are relogged.
++ *
++ * Hence operations that remove data from the inode fork (e.g. shortform
++ * dir/attr remove, extent form extent removal, etc), the size of the relogged
++ * inode gets -smaller- rather than stays the same size as the previously logged
++ * size and this can result in the committing transaction reducing the amount of
++ * space being consumed by the CIL.
++ */
+ STATIC void
+ xfs_inode_item_data_fork_size(
+ 	struct xfs_inode_log_item *iip,
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index c5cc1b7ad25e..daf1f3eb24a8 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -668,9 +668,14 @@ xlog_cil_push_work(
+ 	ASSERT(push_seq <= ctx->sequence);
  
-@@ -201,6 +203,7 @@ typedef struct xlog_in_core {
- 	u32			ic_size;
- 	u32			ic_offset;
- 	enum xlog_iclog_state	ic_state;
-+	unsigned int		ic_flags;
- 	char			*ic_datap;	/* pointer to iclog data */
+ 	/*
+-	 * Wake up any background push waiters now this context is being pushed.
++	 * As we are about to switch to a new CILi, empty context, we no longer
++	 * need to throttle tasks on CIL space overruns. Wake any waiters that
++	 * the hard push throttle may have caught so they can start committing
++	 * to the new context. The ctx->xc_push_lock provides the serialisation
++	 * necessary for safely using the lockless waitqueue_active() check in
++	 * this context.
+ 	 */
+-	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
++	if (waitqueue_active(&cil->xc_push_wait))
+ 		wake_up_all(&cil->xc_push_wait);
  
- 	/* Callback structures need their own cacheline */
+ 	/*
+@@ -914,7 +919,7 @@ xlog_cil_push_background(
+ 	ASSERT(!list_empty(&cil->xc_cil));
+ 
+ 	/*
+-	 * don't do a background push if we haven't used up all the
++	 * Don't do a background push if we haven't used up all the
+ 	 * space available yet.
+ 	 */
+ 	if (cil->xc_ctx->space_used < XLOG_CIL_SPACE_LIMIT(log)) {
+@@ -938,9 +943,16 @@ xlog_cil_push_background(
+ 
+ 	/*
+ 	 * If we are well over the space limit, throttle the work that is being
+-	 * done until the push work on this context has begun.
++	 * done until the push work on this context has begun. Enforce the hard
++	 * throttle on all transaction commits once it has been activated, even
++	 * if the committing transactions have resulted in the space usage
++	 * dipping back down under the hard limit.
++	 *
++	 * The ctx->xc_push_lock provides the serialisation necessary for safely
++	 * using the lockless waitqueue_active() check in this context.
+ 	 */
+-	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
++	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log) ||
++	    waitqueue_active(&cil->xc_push_wait)) {
+ 		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
+ 		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
+ 		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
 -- 
 2.28.0
 
