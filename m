@@ -2,40 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 119EB307096
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 09:03:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E59B23072BF
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 10:35:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232409AbhA1IDM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 03:03:12 -0500
-Received: from verein.lst.de ([213.95.11.211]:56327 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232218AbhA1IB1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 28 Jan 2021 03:01:27 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id A26EB68AFE; Thu, 28 Jan 2021 09:00:34 +0100 (CET)
-Date:   Thu, 28 Jan 2021 09:00:34 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: reduce ilock acquisitions in xfs_file_fsync
-Message-ID: <20210128080034.GA29023@lst.de>
-References: <20210122164643.620257-1-hch@lst.de> <20210122164643.620257-3-hch@lst.de> <20210125131618.GA2047559@bfoster>
+        id S232406AbhA1JaL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 04:30:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232539AbhA1J0q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Jan 2021 04:26:46 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A5D1C061574
+        for <linux-xfs@vger.kernel.org>; Thu, 28 Jan 2021 01:26:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4ZedBZGyO5u3bkmeOkfghV7+kv+l7F+9SJqxyIPEtdQ=; b=pToaKlxnCWrKKbOwbgfRkblv/i
+        jr+I0Kvf6DJgwQqV9/MFfQf12N+y1oZB31zDZe2jQI0Fc6pEc7DIt7vI8B5yWQXOuaRwbFo031uZd
+        10wlIsinKCB+KpsH5NyzE3kymE4DMZ+gwvNZhs10cJTaJz15iuYAjMpurXmJj88HjBcsy+vAnCAyX
+        Pb71hnrQKbxFJZWuwN8K2GBk5mWfEwGgJSjN1cDaa8yewM5xSvrCNsZTTEsvJMNC1zkmpm7mPb8AP
+        LYvblMd6zS9NgSzoNh9Pd+qX2pygJIc4xBfubzF5jZuISHyhYZPHaEGQKWPPaNR8t2rpwuDzw1GoG
+        WgNhyccg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l53Yv-008G45-Jr; Thu, 28 Jan 2021 09:26:02 +0000
+Date:   Thu, 28 Jan 2021 09:26:01 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
+        bfoster@redhat.com
+Subject: Re: [PATCH 06/11] xfs: flush eof/cowblocks if we can't reserve quota
+ for file blocks
+Message-ID: <20210128092601.GA1967319@infradead.org>
+References: <161181374062.1525026.14717838769921652940.stgit@magnolia>
+ <161181377500.1525026.4807452419379444724.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210125131618.GA2047559@bfoster>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <161181377500.1525026.4807452419379444724.stgit@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 25, 2021 at 08:16:18AM -0500, Brian Foster wrote:
-> > -	error = xfs_fsync_flush_log(ip, datasync, &log_flushed);
-> > +	/*
-> > +	 * Any inode that has dirty modifications in the log is pinned.  The
-> > +	 * racy check here for a pinned inode while not catch modifications
-> 
-> s/while/will/ ?
+> +void
+> +xfs_trans_cancel_qretry_nblks(
+> +	struct xfs_trans	*tp,
+> +	struct xfs_inode	*ip)
+> +{
+> +	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> +
+> +	xfs_trans_cancel(tp);
+> +	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> +	xfs_blockgc_free_quota(ip, 0);
+> +}
 
-Yes.  Darrick, can you fix this up when applying the patch, or do you
-want me to resend?
+I still find this helper a little weird.  Why not cancel the transaction
+in xfs_trans_reserve_quota_nblks, and then just open code the calls to
+xfs_iunlock and xfs_blockgc_free_quota in the callers?
