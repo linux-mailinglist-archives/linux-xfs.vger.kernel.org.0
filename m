@@ -2,34 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C0B306D3A
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 07:02:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A9EE306D3C
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Jan 2021 07:02:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbhA1GCh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 01:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37782 "EHLO mail.kernel.org"
+        id S231211AbhA1GCk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 01:02:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229847AbhA1GCc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S231146AbhA1GCc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Thu, 28 Jan 2021 01:02:32 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2874761492;
-        Thu, 28 Jan 2021 06:01:42 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D9F5564DDC;
+        Thu, 28 Jan 2021 06:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611813702;
-        bh=jYd+JbAP34XHZDUVi00uvStLd9BuNdUAjxUxLgBwhg4=;
+        s=k20201202; t=1611813708;
+        bh=WCvLnrGDcwhtNoFpl9QXobabmnxeq3Qy8D+IODRVBE4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nB6zFvNvgHPkJC3sn1alFS/6TCHYDEds22J9NwM25aMm/Ltu4Q02AdcUsBd5Qn8oV
-         8jHtYfeucqJIurPFUYOY9ludbYj1e1GnNL3S+9YZr+G+OaSuUU4PsOxkzhsx76ONky
-         VCXq7tbXKAhGSILrfk05qpvaszuVo4dIQwqm7IQCugoYw6UUZIxVkjTyI0nP6/E8TJ
-         7N4T1zZiBhYJlIwj3wPZ655EEGrBbrHUskHIroDM2YyjY+n76BIf4QCN34n4w8tHNi
-         W33vVz3pj4KGys7Urqpn+BaRb8MZJJ2Q/hkVfswTz52wTNAICSi/NPho/DaZpn0cv+
-         BhLpZrTY2vJ3A==
-Subject: [PATCH 06/13] xfs: reserve data and rt quota at the same time
+        b=py9K/SaYUZgRJspE17/H1QZJgl/eGpJDn3Kc06H/3BgsHJ1BeHtQMhKifPiMXuZcp
+         e8BqQ7VWtbxhJtWKnlJkZqtaHa/78HJG0G3qkOoOzPPVeCdSPLFyY9+gZ1Cpe05URr
+         9MtgwVdeEibcGj8RhHxA8KTqRcPJ79sRNUAsh7daWWZ2vPyk1TNP7S+j+9zsjlNXJg
+         jDQIh9tjuEl02QM314qwmVEfy96tHtmuJOyx4hVwm9njTYvdv3kK59Cbhw/v9TNqJA
+         5ymWrP3x6nBGlOuBpSg+qbaKVobXXUD5kJgsTCUh4CqytltuDNaS2P2Q0ANr783bnT
+         lUzsAY+Cca5iw==
+Subject: [PATCH 07/13] xfs: refactor common transaction/inode/quota allocation
+ idiom
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
         bfoster@redhat.com
-Date:   Wed, 27 Jan 2021 22:01:38 -0800
-Message-ID: <161181369834.1523592.7003018155732921879.stgit@magnolia>
+Date:   Wed, 27 Jan 2021 22:01:44 -0800
+Message-ID: <161181370409.1523592.1925953061702139800.stgit@magnolia>
 In-Reply-To: <161181366379.1523592.9213241916555622577.stgit@magnolia>
 References: <161181366379.1523592.9213241916555622577.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,317 +43,204 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Modify xfs_trans_reserve_quota_nblks so that we can reserve data and
-realtime blocks from the dquot at the same time.  This change has the
-theoretical side effect that for allocations to realtime files we will
-reserve from the dquot both the number of rtblocks being allocated and
-the number of bmbt blocks that might be needed to add the mapping.
-However, since the mount code disables quota if it finds a realtime
-device, this should not result in any behavior changes.
-
-This also replaces the flags argument with a force? boolean since we
-don't need to distinguish between data and rt quota reservations any
-more, and the only other flag being passed in was FORCE_RES.
+Create a new helper xfs_trans_alloc_inode that allocates a transaction,
+locks and joins an inode to it, and then reserves the appropriate amount
+of quota against that transction.  Then replace all the open-coded
+idioms with a single call to this helper.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr.c |    6 +-----
- fs/xfs/libxfs/xfs_bmap.c |    4 +---
- fs/xfs/xfs_bmap_util.c   |   20 +++++++++-----------
- fs/xfs/xfs_iomap.c       |   26 +++++++++++++-------------
- fs/xfs/xfs_quota.h       |   10 +++++-----
- fs/xfs/xfs_reflink.c     |    6 ++----
- fs/xfs/xfs_trans_dquot.c |   42 ++++++++++++++++++++++++++++--------------
- 7 files changed, 59 insertions(+), 55 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c |   11 +----------
+ fs/xfs/libxfs/xfs_bmap.c |   10 ++--------
+ fs/xfs/xfs_bmap_util.c   |   14 +++----------
+ fs/xfs/xfs_iomap.c       |   11 ++---------
+ fs/xfs/xfs_trans.c       |   48 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_trans.h       |    3 +++
+ 6 files changed, 59 insertions(+), 38 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index be51e7068dcd..e05dc0bc4a8f 100644
+index e05dc0bc4a8f..cb95bc77fe59 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -474,12 +474,8 @@ xfs_attr_set(
+@@ -458,14 +458,10 @@ xfs_attr_set(
+ 	 * Root fork attributes can use reserved data blocks for this
+ 	 * operation if necessary
+ 	 */
+-	error = xfs_trans_alloc(mp, &tres, total, 0,
+-			rsvd ? XFS_TRANS_RESERVE : 0, &args->trans);
++	error = xfs_trans_alloc_inode(dp, &tres, total, rsvd, &args->trans);
+ 	if (error)
+ 		return error;
+ 
+-	xfs_ilock(dp, XFS_ILOCK_EXCL);
+-	xfs_trans_ijoin(args->trans, dp, 0);
+-
+ 	if (args->value || xfs_inode_hasattr(dp)) {
+ 		error = xfs_iext_count_may_overflow(dp, XFS_ATTR_FORK,
+ 				XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
+@@ -474,11 +470,6 @@ xfs_attr_set(
  	}
  
  	if (args->value) {
--		unsigned int	quota_flags = XFS_QMOPT_RES_REGBLKS;
+-		error = xfs_trans_reserve_quota_nblks(args->trans, dp,
+-				args->total, 0, rsvd);
+-		if (error)
+-			goto out_trans_cancel;
 -
--		if (rsvd)
--			quota_flags |= XFS_QMOPT_FORCE_RES;
- 		error = xfs_trans_reserve_quota_nblks(args->trans, dp,
--				args->total, 0, quota_flags);
-+				args->total, 0, rsvd);
- 		if (error)
+ 		error = xfs_has_attr(args);
+ 		if (error == -EEXIST && (args->attr_flags & XATTR_CREATE))
  			goto out_trans_cancel;
- 
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 6edf1b5711c8..043bb8c634b0 100644
+index 043bb8c634b0..f78fa694f3c2 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -1085,9 +1085,7 @@ xfs_bmap_add_attrfork(
- 		return error;
+@@ -1079,19 +1079,13 @@ xfs_bmap_add_attrfork(
  
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
--	error = xfs_trans_reserve_quota_nblks(tp, ip, blks, 0, rsvd ?
--			XFS_QMOPT_RES_REGBLKS | XFS_QMOPT_FORCE_RES :
--			XFS_QMOPT_RES_REGBLKS);
-+	error = xfs_trans_reserve_quota_nblks(tp, ip, blks, 0, rsvd);
+ 	blks = XFS_ADDAFORK_SPACE_RES(mp);
+ 
+-	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_addafork, blks, 0,
+-			rsvd ? XFS_TRANS_RESERVE : 0, &tp);
++	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_addafork, blks,
++			rsvd, &tp);
  	if (error)
- 		goto trans_cancel;
+ 		return error;
+-
+-	xfs_ilock(ip, XFS_ILOCK_EXCL);
+-	error = xfs_trans_reserve_quota_nblks(tp, ip, blks, 0, rsvd);
+-	if (error)
+-		goto trans_cancel;
  	if (XFS_IFORK_Q(ip))
+ 		goto trans_cancel;
+ 
+-	xfs_trans_ijoin(tp, ip, 0);
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 	error = xfs_bmap_set_attrforkoff(ip, size, &version);
+ 	if (error)
 diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index f0a8f3377281..d54d9f02d3dd 100644
+index d54d9f02d3dd..94ffdeb2dd73 100644
 --- a/fs/xfs/xfs_bmap_util.c
 +++ b/fs/xfs/xfs_bmap_util.c
-@@ -727,7 +727,6 @@ xfs_alloc_file_space(
- 	xfs_fileoff_t		startoffset_fsb;
- 	xfs_fileoff_t		endoffset_fsb;
- 	int			nimaps;
--	int			quota_flag;
- 	int			rt;
- 	xfs_trans_t		*tp;
- 	xfs_bmbt_irec_t		imaps[1], *imapp;
-@@ -761,6 +760,7 @@ xfs_alloc_file_space(
- 	 */
- 	while (allocatesize_fsb && !error) {
- 		xfs_fileoff_t	s, e;
-+		unsigned int	dblocks, rblocks;
+@@ -873,18 +873,10 @@ xfs_unmap_extent(
+ 	uint			resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
+ 	int			error;
  
- 		/*
- 		 * Determine space reservations for data/realtime.
-@@ -792,18 +792,17 @@ xfs_alloc_file_space(
- 		if (unlikely(rt)) {
- 			resrtextents = qblocks = resblks;
- 			resrtextents /= mp->m_sb.sb_rextsize;
--			resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
--			quota_flag = XFS_QMOPT_RES_RTBLKS;
-+			dblocks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
-+			rblocks = resblks;
- 		} else {
--			resrtextents = 0;
--			resblks = qblocks = XFS_DIOSTRAT_SPACE_RES(mp, resblks);
--			quota_flag = XFS_QMOPT_RES_REGBLKS;
-+			dblocks = XFS_DIOSTRAT_SPACE_RES(mp, resblks);
-+			rblocks = 0;
- 		}
- 
- 		/*
- 		 * Allocate and setup the transaction.
- 		 */
--		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks,
-+		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, dblocks,
- 				resrtextents, 0, &tp);
- 
- 		/*
-@@ -817,8 +816,8 @@ xfs_alloc_file_space(
- 			break;
- 		}
- 		xfs_ilock(ip, XFS_ILOCK_EXCL);
--		error = xfs_trans_reserve_quota_nblks(tp, ip, qblocks,
--						      0, quota_flag);
-+		error = xfs_trans_reserve_quota_nblks(tp, ip, dblocks, rblocks,
-+				false);
- 		if (error)
- 			goto error1;
- 
-@@ -881,8 +880,7 @@ xfs_unmap_extent(
- 	}
- 
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
--	error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0,
--			XFS_QMOPT_RES_REGBLKS);
-+	error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0, false);
+-	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0, 0, &tp);
+-	if (error) {
+-		ASSERT(error == -ENOSPC || XFS_FORCED_SHUTDOWN(mp));
+-		return error;
+-	}
+-
+-	xfs_ilock(ip, XFS_ILOCK_EXCL);
+-	error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0, false);
++	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write, resblks,
++			false, &tp);
  	if (error)
- 		goto out_trans_cancel;
+-		goto out_trans_cancel;
+-
+-	xfs_trans_ijoin(tp, ip, 0);
++		return error;
  
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 			XFS_IEXT_PUNCH_HOLE_CNT);
 diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index de0e371ba4dd..ef29d44c656a 100644
+index ef29d44c656a..05de1be20426 100644
 --- a/fs/xfs/xfs_iomap.c
 +++ b/fs/xfs/xfs_iomap.c
-@@ -194,25 +194,25 @@ xfs_iomap_write_direct(
- 	struct xfs_trans	*tp;
- 	xfs_filblks_t		resaligned;
- 	int			nimaps;
--	int			quota_flag;
--	uint			qblocks, resblks;
-+	unsigned int		dblocks, rblocks;
- 	unsigned int		resrtextents = 0;
- 	int			error;
- 	int			bmapi_flags = XFS_BMAPI_PREALLOC;
--	uint			tflags = 0;
-+	int			tflags = 0;
-+	bool			force = false;
- 
- 	ASSERT(count_fsb > 0);
- 
- 	resaligned = xfs_aligned_fsb_count(offset_fsb, count_fsb,
- 					   xfs_get_extsz_hint(ip));
- 	if (unlikely(XFS_IS_REALTIME_INODE(ip))) {
--		resrtextents = qblocks = resaligned;
-+		resrtextents = resaligned;
- 		resrtextents /= mp->m_sb.sb_rextsize;
--		resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
--		quota_flag = XFS_QMOPT_RES_RTBLKS;
-+		dblocks = XFS_DIOSTRAT_SPACE_RES(mp, 0);
-+		rblocks = resaligned;
- 	} else {
--		resblks = qblocks = XFS_DIOSTRAT_SPACE_RES(mp, resaligned);
--		quota_flag = XFS_QMOPT_RES_REGBLKS;
-+		dblocks = XFS_DIOSTRAT_SPACE_RES(mp, resaligned);
-+		rblocks = 0;
- 	}
- 
- 	error = xfs_qm_dqattach(ip);
-@@ -235,18 +235,19 @@ xfs_iomap_write_direct(
- 	if (IS_DAX(VFS_I(ip))) {
- 		bmapi_flags = XFS_BMAPI_CONVERT | XFS_BMAPI_ZERO;
- 		if (imap->br_state == XFS_EXT_UNWRITTEN) {
-+			force = true;
- 			tflags |= XFS_TRANS_RESERVE;
--			resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0) << 1;
-+			dblocks = XFS_DIOSTRAT_SPACE_RES(mp, 0) << 1;
- 		}
- 	}
--	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, resrtextents,
-+	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, dblocks, resrtextents,
- 			tflags, &tp);
- 	if (error)
- 		return error;
- 
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 
--	error = xfs_trans_reserve_quota_nblks(tp, ip, qblocks, 0, quota_flag);
-+	error = xfs_trans_reserve_quota_nblks(tp, ip, dblocks, rblocks, force);
- 	if (error)
- 		goto out_trans_cancel;
- 
-@@ -559,8 +560,7 @@ xfs_iomap_write_unwritten(
- 		xfs_ilock(ip, XFS_ILOCK_EXCL);
- 		xfs_trans_ijoin(tp, ip, 0);
- 
--		error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0,
--				XFS_QMOPT_RES_REGBLKS | XFS_QMOPT_FORCE_RES);
-+		error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0, true);
+@@ -552,18 +552,11 @@ xfs_iomap_write_unwritten(
+ 		 * here as we might be asked to write out the same inode that we
+ 		 * complete here and might deadlock on the iolock.
+ 		 */
+-		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
+-				XFS_TRANS_RESERVE, &tp);
++		error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write, resblks,
++				true, &tp);
  		if (error)
- 			goto error_on_bmapi_transaction;
+ 			return error;
  
-diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-index 72f4cfc49048..efd04f84d9b4 100644
---- a/fs/xfs/xfs_quota.h
-+++ b/fs/xfs/xfs_quota.h
-@@ -81,8 +81,8 @@ extern void xfs_trans_mod_dquot_byino(struct xfs_trans *, struct xfs_inode *,
- 		uint, int64_t);
- extern void xfs_trans_apply_dquot_deltas(struct xfs_trans *);
- extern void xfs_trans_unreserve_and_mod_dquots(struct xfs_trans *);
--extern int xfs_trans_reserve_quota_nblks(struct xfs_trans *,
--		struct xfs_inode *, int64_t, long, uint);
-+int xfs_trans_reserve_quota_nblks(struct xfs_trans *tp, struct xfs_inode *ip,
-+		int64_t dblocks, int64_t rblocks, bool force);
- extern int xfs_trans_reserve_quota_bydquots(struct xfs_trans *,
- 		struct xfs_mount *, struct xfs_dquot *,
- 		struct xfs_dquot *, struct xfs_dquot *, int64_t, long, uint);
-@@ -114,8 +114,7 @@ extern void xfs_qm_unmount_quotas(struct xfs_mount *);
- static inline int
- xfs_quota_reserve_blkres(struct xfs_inode *ip, int64_t dblocks)
- {
--	return xfs_trans_reserve_quota_nblks(NULL, ip, dblocks, 0,
--			XFS_QMOPT_RES_REGBLKS);
-+	return xfs_trans_reserve_quota_nblks(NULL, ip, dblocks, 0, false);
- }
- #else
- static inline int
-@@ -134,7 +133,8 @@ xfs_qm_vop_dqalloc(struct xfs_inode *ip, kuid_t kuid, kgid_t kgid,
- #define xfs_trans_apply_dquot_deltas(tp)
- #define xfs_trans_unreserve_and_mod_dquots(tp)
- static inline int xfs_trans_reserve_quota_nblks(struct xfs_trans *tp,
--		struct xfs_inode *ip, int64_t nblks, long ninos, uint flags)
-+		struct xfs_inode *ip, int64_t dblocks, int64_t rblocks,
-+		bool force)
- {
- 	return 0;
- }
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 15435229bc1f..0778b5810c26 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -398,8 +398,7 @@ xfs_reflink_allocate_cow(
- 		goto convert;
- 	}
- 
--	error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0,
--			XFS_QMOPT_RES_REGBLKS);
-+	error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0, false);
- 	if (error)
- 		goto out_trans_cancel;
- 
-@@ -1090,8 +1089,7 @@ xfs_reflink_remap_extent(
- 	if (!smap_real && dmap_written)
- 		qres += dmap->br_blockcount;
- 	if (qres > 0) {
--		error = xfs_trans_reserve_quota_nblks(tp, ip, qres, 0,
--				XFS_QMOPT_RES_REGBLKS);
-+		error = xfs_trans_reserve_quota_nblks(tp, ip, qres, 0, false);
+-		xfs_ilock(ip, XFS_ILOCK_EXCL);
+-		xfs_trans_ijoin(tp, ip, 0);
+-
+-		error = xfs_trans_reserve_quota_nblks(tp, ip, resblks, 0, true);
+-		if (error)
+-			goto error_on_bmapi_transaction;
+-
+ 		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 				XFS_IEXT_WRITE_UNWRITTEN_CNT);
  		if (error)
- 			goto out_cancel;
- 	}
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 22aa875b84f7..a1a72b7900c5 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -780,28 +780,42 @@ int
- xfs_trans_reserve_quota_nblks(
- 	struct xfs_trans	*tp,
- 	struct xfs_inode	*ip,
--	int64_t			nblks,
--	long			ninos,
--	uint			flags)
-+	int64_t			dblocks,
-+	int64_t			rblocks,
-+	bool			force)
- {
- 	struct xfs_mount	*mp = ip->i_mount;
-+	unsigned int		qflags = 0;
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index e72730f85af1..156b9ed8534f 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -20,6 +20,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_error.h"
+ #include "xfs_defer.h"
++#include "xfs_inode.h"
+ 
+ kmem_zone_t	*xfs_trans_zone;
+ 
+@@ -1024,3 +1025,50 @@ xfs_trans_roll(
+ 	tres.tr_logflags = XFS_TRANS_PERM_LOG_RES;
+ 	return xfs_trans_reserve(*tpp, &tres, 0, 0);
+ }
++
++/*
++ * Allocate an transaction, lock and join the inode to it, and reserve quota.
++ *
++ * The caller must ensure that the on-disk dquots attached to this inode have
++ * already been allocated and initialized.  The caller is responsible for
++ * releasing ILOCK_EXCL if a new transaction is returned.
++ */
++int
++xfs_trans_alloc_inode(
++	struct xfs_inode	*ip,
++	struct xfs_trans_res	*resv,
++	unsigned int		dblocks,
++	bool			force,
++	struct xfs_trans	**tpp)
++{
++	struct xfs_trans	*tp;
++	struct xfs_mount	*mp = ip->i_mount;
 +	int			error;
- 
- 	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
- 		return 0;
- 
- 	ASSERT(!xfs_is_quota_inode(&mp->m_sb, ip->i_ino));
--
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
--	ASSERT((flags & ~(XFS_QMOPT_FORCE_RES)) == XFS_TRANS_DQ_RES_RTBLKS ||
--	       (flags & ~(XFS_QMOPT_FORCE_RES)) == XFS_TRANS_DQ_RES_BLKS);
--
--	/*
--	 * Reserve nblks against these dquots, with trans as the mediator.
--	 */
--	return xfs_trans_reserve_quota_bydquots(tp, mp,
--						ip->i_udquot, ip->i_gdquot,
--						ip->i_pdquot,
--						nblks, ninos, flags);
 +
-+	if (force)
-+		qflags |= XFS_QMOPT_FORCE_RES;
-+
-+	/* Reserve data device quota against the inode's dquots. */
-+	error = xfs_trans_reserve_quota_bydquots(tp, mp, ip->i_udquot,
-+			ip->i_gdquot, ip->i_pdquot, dblocks, 0,
-+			XFS_QMOPT_RES_REGBLKS | qflags);
++	error = xfs_trans_alloc(mp, resv, dblocks, 0,
++			force ? XFS_TRANS_RESERVE : 0, &tp);
 +	if (error)
 +		return error;
 +
-+	/* Do the same but for realtime blocks. */
-+	error = xfs_trans_reserve_quota_bydquots(tp, mp, ip->i_udquot,
-+			ip->i_gdquot, ip->i_pdquot, rblocks, 0,
-+			XFS_QMOPT_RES_RTBLKS | qflags);
++	xfs_ilock(ip, XFS_ILOCK_EXCL);
++	xfs_trans_ijoin(tp, ip, 0);
++
++	error = xfs_qm_dqattach_locked(ip, false);
 +	if (error) {
-+		xfs_trans_reserve_quota_bydquots(tp, mp, ip->i_udquot,
-+				ip->i_gdquot, ip->i_pdquot, -dblocks, 0,
-+				XFS_QMOPT_RES_REGBLKS);
-+		return error;
++		/* Caller should have allocated the dquots! */
++		ASSERT(error != -ENOENT);
++		goto out_cancel;
 +	}
 +
++	error = xfs_trans_reserve_quota_nblks(tp, ip, dblocks, 0, force);
++	if (error)
++		goto out_cancel;
++
++	*tpp = tp;
 +	return 0;
++
++out_cancel:
++	xfs_trans_cancel(tp);
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
++	return error;
++}
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index 084658946cc8..aa50be244432 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -268,4 +268,7 @@ xfs_trans_item_relog(
+ 	return lip->li_ops->iop_relog(lip, tp);
  }
  
- /* Change the quota reservations for an inode creation activity. */
++int xfs_trans_alloc_inode(struct xfs_inode *ip, struct xfs_trans_res *resv,
++		unsigned int dblocks, bool force, struct xfs_trans **tpp);
++
+ #endif	/* __XFS_TRANS_H__ */
 
