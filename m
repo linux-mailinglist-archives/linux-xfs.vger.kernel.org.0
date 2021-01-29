@@ -2,35 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34A883083AB
+	by mail.lfdr.de (Postfix) with ESMTP id A63673083AC
 	for <lists+linux-xfs@lfdr.de>; Fri, 29 Jan 2021 03:20:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231237AbhA2CSP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 21:18:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        id S231450AbhA2CSQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 21:18:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231450AbhA2CSI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 28 Jan 2021 21:18:08 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D3E864E07;
-        Fri, 29 Jan 2021 02:17:52 +0000 (UTC)
+        id S231556AbhA2CSN (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 28 Jan 2021 21:18:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2FC6164E05;
+        Fri, 29 Jan 2021 02:17:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611886672;
-        bh=Si8vMX+OQoXDakQd/gkDqMFJIdBapgrQcjGopok50C8=;
+        s=k20201202; t=1611886678;
+        bh=lj5ly+kqPX3/icV0ZJlW+tlNZgyAPlY0iUkOkNPCU1A=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cghn1hHJGWaCnAIObtGkZ3u7/yWQbJbszt8YnXrUO37jvwcOwAyo6oyNy5SYweu4y
-         nJc2H+sbHJxdOkmr3E0P+imEANeZ98KqD8y90LTpV36hzMwZZz47OKvvoiHI/DAY09
-         rcB8trWqoivXVdpyNVOJieSP8L0HTUpEeSx3joR4MUPPgcC7k/+hTLqsHx7C9d/oVf
-         hSl3SHWbK8plFYSoppKLC7Zu+484jzcqjmF4SdusXlwUziYUtFpib7yWtCtQ40TE+0
-         DYIHoWsgAGTlQUCVmcLNrnuPdqiJPaMOqTQn0diIOQs7nU4065KIbUe2PJoHrdFegz
-         /JffP+3WiooGA==
-Subject: [PATCH 01/12] xfs: trigger all block gc scans when low on quota space
+        b=YAsQhcrV0zaKiUPFFUje2b3NfL8SAllO2GwxrXBvRhcMQjXEmKmhI4dxGyBDU927P
+         Emres/sC3ClR2hyywBx9SGdqok4N8XmOtSdVojkYewNBbfp6xeThygVXzTAULcOj8f
+         PGO2LelNI5OubsCxjw/SFaZR/dJi1vCQK66lgs4xp59MLi7IGOAKEejz9nEDkGiQmt
+         gPSsuzxxprbJbgefa3jsWWONai9/IMb0rEFkTbkf/yD4K4MqkxgWdSnTQ1zwSTXRhv
+         LnGHxe0mHxPXWypyeeQAjyeV1NBe37+wJbSutu21VfklYVDASzwFc1ymr3hNgKMbfj
+         APWS4T/hKlJqQ==
+Subject: [PATCH 02/12] xfs: don't stall cowblocks scan if we can't take locks
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
-        linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
-        bfoster@redhat.com
-Date:   Thu, 28 Jan 2021 18:17:52 -0800
-Message-ID: <161188667210.1943978.14517115689976313523.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com, bfoster@redhat.com
+Date:   Thu, 28 Jan 2021 18:17:57 -0800
+Message-ID: <161188667779.1943978.6876657507534054316.stgit@magnolia>
 In-Reply-To: <161188666613.1943978.971196931920996596.stgit@magnolia>
 References: <161188666613.1943978.971196931920996596.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,174 +42,61 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The functions to run an eof/cowblocks scan to try to reduce quota usage
-are kind of a mess -- the logic repeatedly initializes an eofb structure
-and there are logic bugs in the code that result in the cowblocks scan
-never actually happening.
-
-Replace all three functions with a single function that fills out an
-eofb and runs both eof and cowblocks scans.
+Don't stall the cowblocks scan on a locked inode if we possibly can.
+We'd much rather the background scanner keep moving.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_file.c   |   15 ++++++---------
- fs/xfs/xfs_icache.c |   46 ++++++++++++++++------------------------------
- fs/xfs/xfs_icache.h |    4 ++--
- 3 files changed, 24 insertions(+), 41 deletions(-)
+ fs/xfs/xfs_icache.c |   21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 5d4a66c72c78..69879237533b 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -713,7 +713,7 @@ xfs_file_buffered_write(
- 	struct inode		*inode = mapping->host;
- 	struct xfs_inode	*ip = XFS_I(inode);
- 	ssize_t			ret;
--	int			enospc = 0;
-+	bool			cleared_space = false;
- 	int			iolock;
- 
- 	if (iocb->ki_flags & IOCB_NOWAIT)
-@@ -745,19 +745,16 @@ xfs_file_buffered_write(
- 	 * also behaves as a filter to prevent too many eofblocks scans from
- 	 * running at the same time.
- 	 */
--	if (ret == -EDQUOT && !enospc) {
-+	if (ret == -EDQUOT && !cleared_space) {
- 		xfs_iunlock(ip, iolock);
--		enospc = xfs_inode_free_quota_eofblocks(ip);
--		if (enospc)
--			goto write_retry;
--		enospc = xfs_inode_free_quota_cowblocks(ip);
--		if (enospc)
-+		cleared_space = xfs_inode_free_quota_blocks(ip);
-+		if (cleared_space)
- 			goto write_retry;
- 		iolock = 0;
--	} else if (ret == -ENOSPC && !enospc) {
-+	} else if (ret == -ENOSPC && !cleared_space) {
- 		struct xfs_eofblocks eofb = {0};
- 
--		enospc = 1;
-+		cleared_space = true;
- 		xfs_flush_inodes(ip->i_mount);
- 
- 		xfs_iunlock(ip, iolock);
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index deb99300d171..c71eb15e3835 100644
+index c71eb15e3835..89f9e692fde7 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -1397,33 +1397,31 @@ xfs_icache_free_eofblocks(
- }
- 
- /*
-- * Run eofblocks scans on the quotas applicable to the inode. For inodes with
-- * multiple quotas, we don't know exactly which quota caused an allocation
-+ * Run cow/eofblocks scans on the quotas applicable to the inode. For inodes
-+ * with multiple quotas, we don't know exactly which quota caused an allocation
-  * failure. We make a best effort by including each quota under low free space
-  * conditions (less than 1% free space) in the scan.
-  */
--static int
--__xfs_inode_free_quota_eofblocks(
--	struct xfs_inode	*ip,
--	int			(*execute)(struct xfs_mount *mp,
--					   struct xfs_eofblocks	*eofb))
-+bool
-+xfs_inode_free_quota_blocks(
-+	struct xfs_inode	*ip)
+@@ -1605,17 +1605,31 @@ xfs_inode_free_cowblocks(
+ 	void			*args)
  {
--	int scan = 0;
--	struct xfs_eofblocks eofb = {0};
--	struct xfs_dquot *dq;
-+	struct xfs_eofblocks	eofb = {0};
-+	struct xfs_dquot	*dq;
-+	bool			do_work = false;
+ 	struct xfs_eofblocks	*eofb = args;
++	bool			wait;
+ 	int			ret = 0;
+ 
++	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
++
+ 	if (!xfs_prep_free_cowblocks(ip))
+ 		return 0;
+ 
+ 	if (!xfs_inode_matches_eofb(ip, eofb))
+ 		return 0;
+ 
+-	/* Free the CoW blocks */
+-	xfs_ilock(ip, XFS_IOLOCK_EXCL);
+-	xfs_ilock(ip, XFS_MMAPLOCK_EXCL);
++	/*
++	 * If the caller is waiting, return -EAGAIN to keep the background
++	 * scanner moving and revisit the inode in a subsequent pass.
++	 */
++	if (!xfs_ilock_nowait(ip, XFS_IOLOCK_EXCL)) {
++		if (wait)
++			return -EAGAIN;
++		return 0;
++	}
++	if (!xfs_ilock_nowait(ip, XFS_MMAPLOCK_EXCL)) {
++		if (wait)
++			ret = -EAGAIN;
++		goto out_iolock;
++	}
  
  	/*
- 	 * Run a sync scan to increase effectiveness and use the union filter to
- 	 * cover all applicable quotas in a single scan.
- 	 */
--	eofb.eof_flags = XFS_EOF_FLAGS_UNION|XFS_EOF_FLAGS_SYNC;
-+	eofb.eof_flags = XFS_EOF_FLAGS_UNION | XFS_EOF_FLAGS_SYNC;
+ 	 * Check again, nobody else should be able to dirty blocks or change
+@@ -1625,6 +1639,7 @@ xfs_inode_free_cowblocks(
+ 		ret = xfs_reflink_cancel_cow_range(ip, 0, NULLFILEOFF, false);
  
- 	if (XFS_IS_UQUOTA_ENFORCED(ip->i_mount)) {
- 		dq = xfs_inode_dquot(ip, XFS_DQTYPE_USER);
- 		if (dq && xfs_dquot_lowsp(dq)) {
- 			eofb.eof_uid = VFS_I(ip)->i_uid;
- 			eofb.eof_flags |= XFS_EOF_FLAGS_UID;
--			scan = 1;
-+			do_work = true;
- 		}
- 	}
+ 	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL);
++out_iolock:
+ 	xfs_iunlock(ip, XFS_IOLOCK_EXCL);
  
-@@ -1432,21 +1430,16 @@ __xfs_inode_free_quota_eofblocks(
- 		if (dq && xfs_dquot_lowsp(dq)) {
- 			eofb.eof_gid = VFS_I(ip)->i_gid;
- 			eofb.eof_flags |= XFS_EOF_FLAGS_GID;
--			scan = 1;
-+			do_work = true;
- 		}
- 	}
- 
--	if (scan)
--		execute(ip->i_mount, &eofb);
-+	if (!do_work)
-+		return false;
- 
--	return scan;
--}
--
--int
--xfs_inode_free_quota_eofblocks(
--	struct xfs_inode *ip)
--{
--	return __xfs_inode_free_quota_eofblocks(ip, xfs_icache_free_eofblocks);
-+	xfs_icache_free_eofblocks(ip->i_mount, &eofb);
-+	xfs_icache_free_cowblocks(ip->i_mount, &eofb);
-+	return true;
- }
- 
- static inline unsigned long
-@@ -1646,13 +1639,6 @@ xfs_icache_free_cowblocks(
- 			XFS_ICI_COWBLOCKS_TAG);
- }
- 
--int
--xfs_inode_free_quota_cowblocks(
--	struct xfs_inode *ip)
--{
--	return __xfs_inode_free_quota_eofblocks(ip, xfs_icache_free_cowblocks);
--}
--
- void
- xfs_inode_set_cowblocks_tag(
- 	xfs_inode_t	*ip)
-diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index 3a4c8b382cd0..3f7ddbca8638 100644
---- a/fs/xfs/xfs_icache.h
-+++ b/fs/xfs/xfs_icache.h
-@@ -54,17 +54,17 @@ long xfs_reclaim_inodes_nr(struct xfs_mount *mp, int nr_to_scan);
- 
- void xfs_inode_set_reclaim_tag(struct xfs_inode *ip);
- 
-+bool xfs_inode_free_quota_blocks(struct xfs_inode *ip);
-+
- void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
- void xfs_inode_clear_eofblocks_tag(struct xfs_inode *ip);
- int xfs_icache_free_eofblocks(struct xfs_mount *, struct xfs_eofblocks *);
--int xfs_inode_free_quota_eofblocks(struct xfs_inode *ip);
- void xfs_eofblocks_worker(struct work_struct *);
- void xfs_queue_eofblocks(struct xfs_mount *);
- 
- void xfs_inode_set_cowblocks_tag(struct xfs_inode *ip);
- void xfs_inode_clear_cowblocks_tag(struct xfs_inode *ip);
- int xfs_icache_free_cowblocks(struct xfs_mount *, struct xfs_eofblocks *);
--int xfs_inode_free_quota_cowblocks(struct xfs_inode *ip);
- void xfs_cowblocks_worker(struct work_struct *);
- void xfs_queue_cowblocks(struct xfs_mount *);
- 
+ 	return ret;
 
