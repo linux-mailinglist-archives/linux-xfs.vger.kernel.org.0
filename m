@@ -2,141 +2,124 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0B983085D6
-	for <lists+linux-xfs@lfdr.de>; Fri, 29 Jan 2021 07:33:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10B1C3086A5
+	for <lists+linux-xfs@lfdr.de>; Fri, 29 Jan 2021 08:43:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232224AbhA2Gae (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 29 Jan 2021 01:30:34 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:32276 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232218AbhA2GaL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Jan 2021 01:30:11 -0500
-X-IronPort-AV: E=Sophos;i="5.79,384,1602518400"; 
-   d="scan'208";a="103973638"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 29 Jan 2021 14:28:18 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 14C804CE6791;
-        Fri, 29 Jan 2021 14:28:15 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 29 Jan 2021 14:28:15 +0800
-Received: from irides.mr.mr.mr (10.167.225.141) by
- G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Fri, 29 Jan 2021 14:28:15 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <dm-devel@redhat.com>
-CC:     <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <agk@redhat.com>,
-        <snitzer@redhat.com>, <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>,
-        <y-goto@fujitsu.com>
-Subject: [PATCH RESEND v2 10/10] fs/dax: Remove useless functions
-Date:   Fri, 29 Jan 2021 14:27:57 +0800
-Message-ID: <20210129062757.1594130-11-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210129062757.1594130-1-ruansy.fnst@cn.fujitsu.com>
-References: <20210129062757.1594130-1-ruansy.fnst@cn.fujitsu.com>
+        id S232369AbhA2HlF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 29 Jan 2021 02:41:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232311AbhA2Hko (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 29 Jan 2021 02:40:44 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8058BC061574
+        for <linux-xfs@vger.kernel.org>; Thu, 28 Jan 2021 23:40:04 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id b8so4772092plh.12
+        for <linux-xfs@vger.kernel.org>; Thu, 28 Jan 2021 23:40:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=pYYybBG2C9S7p4z+n/PiwccRT9EQZ6w2jFMutEaSBrI=;
+        b=Fg+0xDbYs1Jtis/+zcjo4Wb1hV3TC3ON7E0aq2F8oRIzPkl6CuSXaTFcXn7wMQq/0H
+         9KW+TiQ5eD8lD16dmYJlcgN69mE4fHNvdKlV6kvNJeeQlvrRiWhUNHr0CDF8gbSIsbLM
+         kjgDGxU53zKSvU5KE2xCs2+kMCRWqI3EfC3B0OJoTNm24W20dqs4/NMLUnQgFB0q7liM
+         eIqq1iI9VUx6QW21hMoCigcEf4HEqLXKE2EgKdsLj6UgllVwQM3tVNvuxRdPC9ysmr9G
+         LvH4cl6MFaC/jKktl+P0HO9ZDJhnyz6mk7tCh+9dN9q98oBFC/pvn016Z9MFXQkBDfJ/
+         dRVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=pYYybBG2C9S7p4z+n/PiwccRT9EQZ6w2jFMutEaSBrI=;
+        b=Btf7qIvEYb31Y/7fumjv7xqWqnfaaALgAz21G8u8Lu+yrBNMao/vjQmw7w7cOd8rE7
+         ATlY+AepJWZnOi+iO9as2fnIu6ZcdImKPWLSNOaYmvAPEwkxESL/fQUoloH7kGq0+Meg
+         odC9UXwXkVxgvvpEq35vOboZCaajiovy8NIk/iIxpNwklFf6CB7hRlOYTl9vUihKMQiT
+         AJQwpYPe9VQe0AWNyEkzQ1sfxkpmkdCDnZPiZJsN7KxBxbQ422ucfzR953pJnOljpFcW
+         0xv91Fbhja24ZjAVhyIMyQI3mIPsYHdn8U1rDNgspVJaayM0NhY3it8f7cWLKs3bgEyb
+         rHbA==
+X-Gm-Message-State: AOAM532EjpUr7vwv9UQsVYr6DkT8ol5zybeK2zC6GQiU2K8+i/fJR9q4
+        jDbO9sgRv1OIxDt1MxhSkLY=
+X-Google-Smtp-Source: ABdhPJzLvwBUdfSSb+RG755RRa3/xzPmOOCV+nY6kqKjByuRNNtsNZ3CuiuYySHt2CmVAcQDd2zf8Q==
+X-Received: by 2002:a17:90b:4d06:: with SMTP id mw6mr3363699pjb.24.1611906004087;
+        Thu, 28 Jan 2021 23:40:04 -0800 (PST)
+Received: from garuda ([122.179.112.28])
+        by smtp.gmail.com with ESMTPSA id z13sm7891451pgf.89.2021.01.28.23.40.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 28 Jan 2021 23:40:03 -0800 (PST)
+References: <20210127090537.2640164-1-chandanrlinux@gmail.com> <20210128153412.GD2599027@bfoster> <20210128174447.GS7698@magnolia>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        allison.henderson@oracle.com, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] xfs: Fix 'set but not used' warning in xfs_bmap_compute_alignments()
+In-reply-to: <20210128174447.GS7698@magnolia>
+Date:   Fri, 29 Jan 2021 13:10:00 +0530
+Message-ID: <87k0rwi433.fsf@garuda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 14C804CE6791.AECA7
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Since owner tarcking is triggerred by pmem device, these functions are
-useless.  So remove it.
+On 28 Jan 2021 at 23:14, Darrick J. Wong wrote:
+> On Thu, Jan 28, 2021 at 10:34:12AM -0500, Brian Foster wrote:
+>> On Wed, Jan 27, 2021 at 02:35:37PM +0530, Chandan Babu R wrote:
+>> > With both CONFIG_XFS_DEBUG and CONFIG_XFS_WARN disabled, the only reference to
+>> > local variable "error" in xfs_bmap_compute_alignments() gets eliminated during
+>> > pre-processing stage of the compilation process. This causes the compiler to
+>> > generate a "set but not used" warning.
+>> >
+>> > Reported-by: kernel test robot <lkp@intel.com>
+>> > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+>> > ---
+>> > This patch is applicable on top of current xfs-linux/for-next branch.
+>> >
+>> >  fs/xfs/libxfs/xfs_bmap.c | 9 ++++-----
+>> >  1 file changed, 4 insertions(+), 5 deletions(-)
+>> >
+>> > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+>> > index 2cd24bb06040..ba56554e8c05 100644
+>> > --- a/fs/xfs/libxfs/xfs_bmap.c
+>> > +++ b/fs/xfs/libxfs/xfs_bmap.c
+>> > @@ -3471,7 +3471,6 @@ xfs_bmap_compute_alignments(
+>> >  	struct xfs_mount	*mp = args->mp;
+>> >  	xfs_extlen_t		align = 0; /* minimum allocation alignment */
+>> >  	int			stripe_align = 0;
+>> > -	int			error;
+>> >
+>> >  	/* stripe alignment for allocation is determined by mount parameters */
+>> >  	if (mp->m_swidth && (mp->m_flags & XFS_MOUNT_SWALLOC))
+>> > @@ -3484,10 +3483,10 @@ xfs_bmap_compute_alignments(
+>> >  	else if (ap->datatype & XFS_ALLOC_USERDATA)
+>> >  		align = xfs_get_extsz_hint(ap->ip);
+>> >  	if (align) {
+>> > -		error = xfs_bmap_extsize_align(mp, &ap->got, &ap->prev,
+>> > -						align, 0, ap->eof, 0, ap->conv,
+>> > -						&ap->offset, &ap->length);
+>> > -		ASSERT(!error);
+>> > +		if (xfs_bmap_extsize_align(mp, &ap->got, &ap->prev,
+>> > +			align, 0, ap->eof, 0, ap->conv, &ap->offset,
+>> > +			&ap->length))
+>> > +			ASSERT(0);
+>>
+>> I was wondering if we should just make xfs_bmap_extsize_align() return
+>> void and push the asserts down into the function itself, but it looks
+>> like xfs_bmap_rtalloc() actually handles the error. Any idea on why we
+>> might have that inconsistency?
+>
+> It only returns nonzero if isrt (the fifth parameter) is nonzero, and
+> only if the requested range is still not aligned to the rt extent size
+> after aligning it and eliminating any overlaps with existing extents.
+>
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- fs/dax.c | 46 ----------------------------------------------
- 1 file changed, 46 deletions(-)
+Adding to what Darrick has mentioned above ...
 
-diff --git a/fs/dax.c b/fs/dax.c
-index c64c3a0e76a6..e20a5df03eec 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -323,48 +323,6 @@ static unsigned long dax_end_pfn(void *entry)
- 	for (pfn = dax_to_pfn(entry); \
- 			pfn < dax_end_pfn(entry); pfn++)
- 
--/*
-- * TODO: for reflink+dax we need a way to associate a single page with
-- * multiple address_space instances at different linear_page_index()
-- * offsets.
-- */
--static void dax_associate_entry(void *entry, struct address_space *mapping,
--		struct vm_area_struct *vma, unsigned long address)
--{
--	unsigned long size = dax_entry_size(entry), pfn, index;
--	int i = 0;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	index = linear_page_index(vma, address & ~(size - 1));
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(page->mapping);
--		page->mapping = mapping;
--		page->index = index + i++;
--	}
--}
--
--static void dax_disassociate_entry(void *entry, struct address_space *mapping,
--		bool trunc)
--{
--	unsigned long pfn;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
--		WARN_ON_ONCE(page->mapping && page->mapping != mapping);
--		page->mapping = NULL;
--		page->index = 0;
--	}
--}
--
- static struct page *dax_busy_page(void *entry)
- {
- 	unsigned long pfn;
-@@ -543,7 +501,6 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 			xas_lock_irq(xas);
- 		}
- 
--		dax_disassociate_entry(entry, mapping, false);
- 		xas_store(xas, NULL);	/* undo the PMD join */
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
-@@ -680,7 +637,6 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	    (xas_get_mark(&xas, PAGECACHE_TAG_DIRTY) ||
- 	     xas_get_mark(&xas, PAGECACHE_TAG_TOWRITE)))
- 		goto out;
--	dax_disassociate_entry(entry, mapping, trunc);
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
- 	ret = 1;
-@@ -774,8 +730,6 @@ static void *dax_insert_entry(struct xa_state *xas,
- 	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
- 		void *old;
- 
--		dax_disassociate_entry(entry, mapping, false);
--		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
--- 
-2.30.0
+Space on realtime devices are tracked at a granularity of "rextsize"
+bytes. Each bit held in the data blocks of xfs_mount->m_rbmip represents usage
+status of a single rextsized block. Most likely this seems to be underlying
+reason for strict allocation alignment requirements for realtime files.
 
-
-
+--
+chandan
