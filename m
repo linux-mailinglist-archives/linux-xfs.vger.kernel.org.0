@@ -2,36 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B3B730839F
-	for <lists+linux-xfs@lfdr.de>; Fri, 29 Jan 2021 03:17:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 826333083A1
+	for <lists+linux-xfs@lfdr.de>; Fri, 29 Jan 2021 03:17:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbhA2CRW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Jan 2021 21:17:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57326 "EHLO mail.kernel.org"
+        id S231267AbhA2CRf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Jan 2021 21:17:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229885AbhA2CRW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 28 Jan 2021 21:17:22 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 13FC664DFF;
-        Fri, 29 Jan 2021 02:16:41 +0000 (UTC)
+        id S229885AbhA2CR1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 28 Jan 2021 21:17:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D048364E01;
+        Fri, 29 Jan 2021 02:16:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611886601;
-        bh=+jHiDoEKbkF93coRyyuduiXisHBVXtQU/fZn2yOYzd4=;
+        s=k20201202; t=1611886607;
+        bh=uLc5pK5LO7wEQz18AhHMhVq5QSHYJCHF+kMynuACPK8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SmAjhlm6ttnYROYy9rz7X2gZG3qALfpSE6ndXuW5dOn9BWC8GB8xKDHHwVmM7EcUe
-         xr0u8q28Ed8jxYv0xa9E899tq0gCdIba8YTWBvNhXcOnPlwjsMjOrI0zoegoiKbhQH
-         cgaw+AW7wnvBoxe/kXgHtMZkJoqCBppZKDvUdsz0dSRQ+ktZMLXbN4pe5xKSff8wt1
-         7iNnUBxW54kFnBmB+p9T2ms/IqoUplSidHl1JGJH99vaEPyQOuNjllMNODMh9v1YPh
-         xP1tZBR3146RNFQ26ONbM3uXV2/pv7BBGxjk9iDjyGfGH2BWKqAOawRx0LLU1G93QA
-         oyU6UVnzhdXNg==
-Subject: [PATCH 02/13] xfs: create convenience wrappers for incore quota block
- reservations
+        b=rtaf84sGRQB5oa1Al2RyxTXH/V5J1/D1Xg/EGSa9Ay8rRWQztV0xqbYER7+fAptsy
+         rGEqhhd9mTK41K0N955zaU3U/AEnxwoceeqzS21LzxB8XLxwQjlFrZeJZLlbZBKa7y
+         QSRf0ylMkc6dv88b/2W2TIao0EMEgthPsVsLYZg5RWSxvRjS/hdbsaATSHdbOGnMyF
+         KTpw5R4gyBHF4hv5i85uU3WwlRVQCrNE40d/IGqmNcva3HfcKDBrQSwYXNNOnOCBBv
+         v3ZY45ZVSFd3h+NydBpYvAOQ3EBDAqhsbxPjEBwfUXs7biewycGGkcOPZP/6kzfYMV
+         aXe4G6cAtClfg==
+Subject: [PATCH 03/13] xfs: remove xfs_trans_unreserve_quota_nblks completely
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
         linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
         bfoster@redhat.com
-Date:   Thu, 28 Jan 2021 18:16:40 -0800
-Message-ID: <161188660067.1943645.6942971156169563520.stgit@magnolia>
+Date:   Thu, 28 Jan 2021 18:16:46 -0800
+Message-ID: <161188660638.1943645.15371102918551333248.stgit@magnolia>
 In-Reply-To: <161188658869.1943645.4527151504893870676.stgit@magnolia>
 References: <161188658869.1943645.4527151504893870676.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -44,112 +43,125 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a couple of convenience wrappers for creating and deleting quota
-block reservations against future changes.
+xfs_trans_cancel will release all the quota resources that were reserved
+on behalf of the transaction, so get rid of the explicit unreserve step.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c |   10 ++++------
- fs/xfs/xfs_quota.h       |   19 +++++++++++++++++++
- fs/xfs/xfs_reflink.c     |    5 ++---
- 3 files changed, 25 insertions(+), 9 deletions(-)
+ fs/xfs/xfs_bmap_util.c |   11 ++++-------
+ fs/xfs/xfs_iomap.c     |    6 ++----
+ fs/xfs/xfs_quota.h     |    2 --
+ fs/xfs/xfs_reflink.c   |    5 +----
+ 4 files changed, 7 insertions(+), 17 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index c730288b5981..94d582a9587d 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -4097,8 +4097,7 @@ xfs_bmapi_reserve_delalloc(
- 	 * blocks.  This number gets adjusted later.  We return if we haven't
- 	 * allocated blocks already inside this loop.
- 	 */
--	error = xfs_trans_reserve_quota_nblks(NULL, ip, (long)alen, 0,
--						XFS_QMOPT_RES_REGBLKS);
-+	error = xfs_quota_reserve_blkres(ip, alen);
- 	if (error)
- 		return error;
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 792809debaaa..ae2d98af693c 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -820,12 +820,12 @@ xfs_alloc_file_space(
+ 		error = xfs_trans_reserve_quota_nblks(tp, ip, qblocks,
+ 						      0, quota_flag);
+ 		if (error)
+-			goto error1;
++			goto error;
  
-@@ -4144,8 +4143,7 @@ xfs_bmapi_reserve_delalloc(
- 	xfs_mod_fdblocks(mp, alen, false);
- out_unreserve_quota:
- 	if (XFS_IS_QUOTA_ON(mp))
--		xfs_trans_unreserve_quota_nblks(NULL, ip, (long)alen, 0,
--						XFS_QMOPT_RES_REGBLKS);
-+		xfs_quota_unreserve_blkres(ip, alen);
+ 		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 				XFS_IEXT_ADD_NOSPLIT_CNT);
+ 		if (error)
+-			goto error0;
++			goto error;
+ 
+ 		xfs_trans_ijoin(tp, ip, 0);
+ 
+@@ -833,7 +833,7 @@ xfs_alloc_file_space(
+ 					allocatesize_fsb, alloc_type, 0, imapp,
+ 					&nimaps);
+ 		if (error)
+-			goto error0;
++			goto error;
+ 
+ 		/*
+ 		 * Complete the transaction
+@@ -856,10 +856,7 @@ xfs_alloc_file_space(
+ 
  	return error;
- }
  
-@@ -4937,8 +4935,8 @@ xfs_bmap_del_extent_delay(
- 	 * sb counters as we might have to borrow some blocks for the
- 	 * indirect block accounting.
- 	 */
--	error = xfs_trans_unreserve_quota_nblks(NULL, ip, del->br_blockcount, 0,
--			isrt ? XFS_QMOPT_RES_RTBLKS : XFS_QMOPT_RES_REGBLKS);
-+	ASSERT(!isrt);
-+	error = xfs_quota_unreserve_blkres(ip, del->br_blockcount);
+-error0:	/* unlock inode, unreserve quota blocks, cancel trans */
+-	xfs_trans_unreserve_quota_nblks(tp, ip, (long)qblocks, 0, quota_flag);
+-
+-error1:	/* Just cancel transaction */
++error:
+ 	xfs_trans_cancel(tp);
+ 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return error;
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index 514e6ae010e0..de0e371ba4dd 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -253,7 +253,7 @@ xfs_iomap_write_direct(
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 			XFS_IEXT_ADD_NOSPLIT_CNT);
  	if (error)
- 		return error;
- 	ip->i_delayed_blks -= del->br_blockcount;
+-		goto out_res_cancel;
++		goto out_trans_cancel;
+ 
+ 	xfs_trans_ijoin(tp, ip, 0);
+ 
+@@ -265,7 +265,7 @@ xfs_iomap_write_direct(
+ 	error = xfs_bmapi_write(tp, ip, offset_fsb, count_fsb, bmapi_flags, 0,
+ 				imap, &nimaps);
+ 	if (error)
+-		goto out_res_cancel;
++		goto out_trans_cancel;
+ 
+ 	/*
+ 	 * Complete the transaction
+@@ -289,8 +289,6 @@ xfs_iomap_write_direct(
+ 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return error;
+ 
+-out_res_cancel:
+-	xfs_trans_unreserve_quota_nblks(tp, ip, (long)qblocks, 0, quota_flag);
+ out_trans_cancel:
+ 	xfs_trans_cancel(tp);
+ 	goto out_unlock;
 diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-index 5a62398940d0..1d1a1634ea29 100644
+index 1d1a1634ea29..31d0de899cc4 100644
 --- a/fs/xfs/xfs_quota.h
 +++ b/fs/xfs/xfs_quota.h
-@@ -108,6 +108,12 @@ extern void xfs_qm_mount_quotas(struct xfs_mount *);
- extern void xfs_qm_unmount(struct xfs_mount *);
- extern void xfs_qm_unmount_quotas(struct xfs_mount *);
+@@ -164,8 +164,6 @@ xfs_quota_reserve_blkres(struct xfs_inode *ip, int64_t blocks)
+ #define xfs_qm_unmount_quotas(mp)
+ #endif /* CONFIG_XFS_QUOTA */
  
-+static inline int
-+xfs_quota_reserve_blkres(struct xfs_inode *ip, int64_t blocks)
-+{
-+	return xfs_trans_reserve_quota_nblks(NULL, ip, blocks, 0,
-+			XFS_QMOPT_RES_REGBLKS);
-+}
- #else
- static inline int
- xfs_qm_vop_dqalloc(struct xfs_inode *ip, kuid_t kuid, kgid_t kgid,
-@@ -136,6 +142,13 @@ static inline int xfs_trans_reserve_quota_bydquots(struct xfs_trans *tp,
- {
- 	return 0;
- }
-+
-+static inline int
-+xfs_quota_reserve_blkres(struct xfs_inode *ip, int64_t blocks)
-+{
-+	return 0;
-+}
-+
- #define xfs_qm_vop_create_dqattach(tp, ip, u, g, p)
- #define xfs_qm_vop_rename_dqattach(it)					(0)
- #define xfs_qm_vop_chown(tp, ip, old, new)				(NULL)
-@@ -157,6 +170,12 @@ static inline int xfs_trans_reserve_quota_bydquots(struct xfs_trans *tp,
+-#define xfs_trans_unreserve_quota_nblks(tp, ip, nblks, ninos, flags) \
+-	xfs_trans_reserve_quota_nblks(tp, ip, -(nblks), -(ninos), flags)
+ #define xfs_trans_reserve_quota(tp, mp, ud, gd, pd, nb, ni, f) \
  	xfs_trans_reserve_quota_bydquots(tp, mp, ud, gd, pd, nb, ni, \
  				f | XFS_QMOPT_RES_REGBLKS)
- 
-+static inline int
-+xfs_quota_unreserve_blkres(struct xfs_inode *ip, int64_t blocks)
-+{
-+	return xfs_quota_reserve_blkres(ip, -blocks);
-+}
-+
- extern int xfs_mount_reset_sbqflags(struct xfs_mount *);
- 
- #endif	/* __XFS_QUOTA_H__ */
 diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 183142fd0961..bea64ed5a57f 100644
+index bea64ed5a57f..15435229bc1f 100644
 --- a/fs/xfs/xfs_reflink.c
 +++ b/fs/xfs/xfs_reflink.c
-@@ -508,9 +508,8 @@ xfs_reflink_cancel_cow_blocks(
- 			xfs_bmap_del_extent_cow(ip, &icur, &got, &del);
+@@ -411,7 +411,7 @@ xfs_reflink_allocate_cow(
+ 			XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC, 0, cmap,
+ 			&nimaps);
+ 	if (error)
+-		goto out_unreserve;
++		goto out_trans_cancel;
  
- 			/* Remove the quota reservation */
--			error = xfs_trans_unreserve_quota_nblks(NULL, ip,
--					del.br_blockcount, 0,
--					XFS_QMOPT_RES_REGBLKS);
-+			error = xfs_quota_unreserve_blkres(ip,
-+					del.br_blockcount);
- 			if (error)
- 				break;
- 		} else {
+ 	xfs_inode_set_cowblocks_tag(ip);
+ 	error = xfs_trans_commit(tp);
+@@ -436,9 +436,6 @@ xfs_reflink_allocate_cow(
+ 	trace_xfs_reflink_convert_cow(ip, cmap);
+ 	return xfs_reflink_convert_cow_locked(ip, offset_fsb, count_fsb);
+ 
+-out_unreserve:
+-	xfs_trans_unreserve_quota_nblks(tp, ip, (long)resblks, 0,
+-			XFS_QMOPT_RES_REGBLKS);
+ out_trans_cancel:
+ 	xfs_trans_cancel(tp);
+ 	return error;
 
