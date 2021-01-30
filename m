@@ -2,79 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D540B309ADC
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Jan 2021 07:49:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FEC330CF16
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 23:37:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229474AbhAaGrX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 31 Jan 2021 01:47:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229471AbhAaGqE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 31 Jan 2021 01:46:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 26BFF64E29
-        for <linux-xfs@vger.kernel.org>; Sun, 31 Jan 2021 06:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612075476;
-        bh=5Sc0O8tDQ/00SbaEa04AZu69Jze0n5PS63/qWshlxd0=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=NZbv9GUWJ9Hb12pnxEAVcCUkyy6rIbdt76/lD6QerTOAK0jjaUinPjmbmDod4pEc4
-         ++06TptyoF/5/oIi0TrxbtgBlLEREhWfpCA+60er3dHaibHu/CJx3V3JyXstsxSQt5
-         GM3MG/1y038OOygO2yaHgzNX+THdRxgJOKsWz7tZwkYs7VMUDvnhaD656E06bofv+M
-         zPYCREk/KVU4WI11MU/Lk5tkf5lIbZ8XqZmYQ2hGAzq75AB5wtAd5BHASkjdNmkCeS
-         MPCL8w29HD5Vv/02+niZqHe3Am8wIcZy69wc2BMEliF0uMDYd+j4Qh0LwbqApOYf/C
-         MIB9TKRqW2F3A==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 1D4646531E; Sun, 31 Jan 2021 06:44:36 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 211329] blkg_alloc memory leak on ppc64le
-Date:   Sun, 31 Jan 2021 06:44:35 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: IO/Storage
-X-Bugzilla-Component: Block Layer
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: kch@kernel.org
-X-Bugzilla-Status: RESOLVED
-X-Bugzilla-Resolution: CODE_FIX
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-211329-201763-q1Q0GSWUnE@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-211329-201763@https.bugzilla.kernel.org/>
-References: <bug-211329-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S235921AbhBBWee (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Feb 2021 17:34:34 -0500
+Received: from [20.39.40.203] ([20.39.40.203]:61037 "EHLO optinix.in"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S230091AbhBBWeU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Feb 2021 17:34:20 -0500
+dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
+        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
+        b=Z/qoYR5e93G/1E5Uh8tLreepyziGYShILI7fcXozE97A3DqZKBadv9kcBZBcmHZnqAUcLkt0g+COxgI6WqJ5gdfKqksQSW540KJaAE4DNiZ+EZYtErJhsiZnZCgjfp9yI8W2dpgN2EsH5zUvgVY6Bl2MWU8ziaGqy1DCXSk4DXXi+2CTtkJX9uQrf2ohPvP7bhav6zr4dJxTQjQYoopWjV3h9j7RqQq/UIXqX3VBjVDZARoXQTZUB0KN0A
+        F7X8DeijiSCFEdYkkdQwasjHi3K0B6KloKBXegK0TgQ39PHt5t2MVnmtmeZadY0DbdImfujjk25mqjLTG700JJRoTl9A==
+Received: from User (Unknown [52.231.31.5])
+        by optinix.in with ESMTP
+        ; Sat, 30 Jan 2021 02:14:15 +0000
+Message-ID: <B0CC978E-0149-4652-A2D0-17DE1F49BCC1@optinix.in>
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <support@digitalsol.in>
+Subject: Re:read
+Date:   Sat, 30 Jan 2021 02:14:13 -0000
 MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D211329
+Hello,
 
-kch@kernel.org changed:
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-           What    |Removed                     |Added
-----------------------------------------------------------------------------
-                 CC|                            |kch@kernel.org
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
---- Comment #7 from kch@kernel.org ---
-Is also seems to me that you are using bacache. Did you try to bisect the
-problem?
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
-Or did you try to reproduce it on the membacked null_blk with xfs to make s=
-ure
-it is not the device before coming to the conclusion that xfs is the proble=
-m?
+Regards,
+Ms. Reem.
 
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
