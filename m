@@ -2,64 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FEC330CF16
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 23:37:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA3DC30A020
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:04:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235921AbhBBWee (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Feb 2021 17:34:34 -0500
-Received: from [20.39.40.203] ([20.39.40.203]:61037 "EHLO optinix.in"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S230091AbhBBWeU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Feb 2021 17:34:20 -0500
-dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
-        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
-        b=Z/qoYR5e93G/1E5Uh8tLreepyziGYShILI7fcXozE97A3DqZKBadv9kcBZBcmHZnqAUcLkt0g+COxgI6WqJ5gdfKqksQSW540KJaAE4DNiZ+EZYtErJhsiZnZCgjfp9yI8W2dpgN2EsH5zUvgVY6Bl2MWU8ziaGqy1DCXSk4DXXi+2CTtkJX9uQrf2ohPvP7bhav6zr4dJxTQjQYoopWjV3h9j7RqQq/UIXqX3VBjVDZARoXQTZUB0KN0A
-        F7X8DeijiSCFEdYkkdQwasjHi3K0B6KloKBXegK0TgQ39PHt5t2MVnmtmeZadY0DbdImfujjk25mqjLTG700JJRoTl9A==
-Received: from User (Unknown [52.231.31.5])
-        by optinix.in with ESMTP
-        ; Sat, 30 Jan 2021 02:14:15 +0000
-Message-ID: <B0CC978E-0149-4652-A2D0-17DE1F49BCC1@optinix.in>
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <support@digitalsol.in>
-Subject: Re:read
-Date:   Sat, 30 Jan 2021 02:14:13 -0000
+        id S229813AbhBACEb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 31 Jan 2021 21:04:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229535AbhBACE3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 31 Jan 2021 21:04:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A4AD164DDD;
+        Mon,  1 Feb 2021 02:03:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612145028;
+        bh=69/xGe7TwEaORbbW5P1tlTMMaTKt83sJLtnSza9JMBM=;
+        h=Subject:From:To:Cc:Date:From;
+        b=Wvo6gAtQhlPxus/r24RIJ4LdkC4+aIE6MNzANRDed5kciuXTAr6ads+u7Xj+ebPO5
+         66IZ5eYKAPlsk6ma5OQ8c7h3h+dmuHdvvkRyLg1fIfLWHJpbvrswMaaeaEtFfWU7yg
+         JoYgDB8x5JOp6Ev4wNWlLQjPjWzpWNyPRDKpRhYi7byPgxBB1stvL70bkmRPwk1Lda
+         OO+HIEcd9IOrhkzifuaBFQB21wbaSFyjJuShySjealt6hVAO39hgnbtbeWpzEVYBHc
+         j33RKm+tLCTKy8v3woU4hkET2vt/LkcD4Hx0ph3GySpA01O+p2SSsthkgrjJGIXX70
+         +XCf6yhWkT90w==
+Subject: [PATCHSET v5 00/17] xfs: minor cleanups of the quota functions
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     djwong@kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
+        linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
+        bfoster@redhat.com
+Date:   Sun, 31 Jan 2021 18:03:48 -0800
+Message-ID: <161214502818.139387.7678025647736002500.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello,
+Hi all,
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+This series reworks some of the internal quota APIs and cleans up some
+of the function calls so that we have a clean(er) place to start the
+space reclamation patchset.  The first five patches clean up the
+existing quota transaction helpers.  The next five patches create a
+common helper to allocate space, quota, and transaction to handle a file
+modification.  The final three patches of the series create common
+helpers to do more or less the same thing for file creation and chown
+operations.  The goal of these changes is to reduce open-coded idioms,
+which makes the job of the space reclamation patchset easier since we
+can now (mostly) hide the retry loops within single functions.
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+v2: rework the xfs_quota_reserve_blkres calling conventions per hch
+v3: create new xfs_trans_alloc* helpers that will take care of free
+    space and quota reservation all at once for block allocations, inode
+    creation, and chown operations, to simplify the subsequent patches.
+v4: fix some jump labels, improve commit messages, call out a quota
+    accounting fix on dax files, fix some locking conventions with
+    reflink
+v5: refactor the chown transaction allocation into a helper function,
+    fix a longstanding quota bug where incore delalloc reservations were
+    lost if fssetxattr failed, other cleanups
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Regards,
-Ms. Reem.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=quota-function-cleanups-5.12
+---
+ fs/xfs/libxfs/xfs_attr.c |   15 -----
+ fs/xfs/libxfs/xfs_bmap.c |   23 ++-----
+ fs/xfs/xfs_bmap_util.c   |   60 ++++---------------
+ fs/xfs/xfs_inode.c       |   30 +++-------
+ fs/xfs/xfs_ioctl.c       |   67 +++++++++------------
+ fs/xfs/xfs_iomap.c       |   54 +++++------------
+ fs/xfs/xfs_iops.c        |   26 +-------
+ fs/xfs/xfs_qm.c          |  115 +++++++------------------------------
+ fs/xfs/xfs_quota.h       |   59 ++++++++++++++-----
+ fs/xfs/xfs_reflink.c     |   71 +++++++++--------------
+ fs/xfs/xfs_symlink.c     |   15 +----
+ fs/xfs/xfs_trans.c       |  144 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_trans.h       |   13 ++++
+ fs/xfs/xfs_trans_dquot.c |  116 +++++++++++++++++++++++++++++++++----
+ 14 files changed, 436 insertions(+), 372 deletions(-)
 
