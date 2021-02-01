@@ -2,36 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4071B30A03E
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:07:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D1DB30A03B
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:07:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231211AbhBACHh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 31 Jan 2021 21:07:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
+        id S231296AbhBACGx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 31 Jan 2021 21:06:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231309AbhBACGg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 31 Jan 2021 21:06:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D97064E2F;
-        Mon,  1 Feb 2021 02:05:55 +0000 (UTC)
+        id S231265AbhBACGQ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 31 Jan 2021 21:06:16 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B462464E34;
+        Mon,  1 Feb 2021 02:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612145155;
-        bh=ClBONMnDsnLPgrBMvRzHjzGSGUDWD+5ec74bFVP200s=;
+        s=k20201202; t=1612145160;
+        bh=O7Vyr5Zym1YbEihMTe7dZfD8eoSIcgpINz5eCD4/Z4Y=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=s2+m2hET05yAiAMkp9mB71bSiZGtByc1SSgOfYlMmz6cdPAF0mo7FRg2jKNUb3Mej
-         +odPV1/g4ag0glIlc2DmjfvruMrKW1N2yTYz1F7NnpkxPfpytwetE5+dQjIXH6zxgH
-         YuVk/WDxRayW4D/4WksUqKEiDNnsJhG8BnhPAqPwmuIusRL9UCDxDUGmRVrxcMZNsd
-         2Wx3QZeG3jPCFanKmzF2jrABy0UDXsRwqxVdr+8+05tbhjKxV5zCiaHv4HLUgElGpT
-         tYKQOPIbsGLlT4kqf9I0xwbuJH97lKsdmAGMo+BgV5ZkskXoqfesfG+sbJ+foTn/PK
-         qc/STP3dkN9zw==
-Subject: [PATCH 05/12] xfs: pass flags and return gc errors from
- xfs_blockgc_free_quota
+        b=pLdrzC+nh+DEL+0JV25CQaLs3cuZFi8XC8NY2DadSYRcKJrFbgJQP26bC65nXgOHe
+         ThPhpFXtqQVgmtU/tzJyH9SULPzByYOdNnah6v1QuylAZ4mBGBVG9o1PSLHiGeSz77
+         564f3oLiZeJneo8KBTuPPJHyNIJSxJFnl/cEdR1KGvY8FwiMWQsNSIJkxLx7i3LJWA
+         2UdxNwK2jlaZIAujKsAp8seD8w+O5iuZ7J67kJizby7r9sGhsXgAVh91cecdg4/mHG
+         OiUs9jGLgjDpMTAN+AbEy3fcKLX2pDIEuOyd9Df8586o6tiB+7B3NR1zJgS03qdTbq
+         0Heklvsc1IXOw==
+Subject: [PATCH 06/12] xfs: try worst case space reservation upfront in
+ xfs_reflink_remap_extent
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
-        linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
-        bfoster@redhat.com
-Date:   Sun, 31 Jan 2021 18:05:54 -0800
-Message-ID: <161214515467.140945.3619758551060932899.stgit@magnolia>
+Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com, bfoster@redhat.com
+Date:   Sun, 31 Jan 2021 18:06:00 -0800
+Message-ID: <161214516033.140945.16191685638325519980.stgit@magnolia>
 In-Reply-To: <161214512641.140945.11651856181122264773.stgit@magnolia>
 References: <161214512641.140945.11651856181122264773.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -44,109 +43,85 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Change the signature of xfs_blockgc_free_quota in preparation for the
-next few patches.  Callers can now pass EOF_FLAGS into the function to
-control scan parameters; and the function will now pass back any
-corruption errors seen while scanning, though for our retry loops we'll
-just try again unconditionally.
+Now that we've converted xfs_reflink_remap_extent to use the new
+xfs_trans_alloc_inode API, we can focus on its slightly unusual behavior
+with regard to quota reservations.
+
+Since it's valid to remap written blocks into a hole, we must be able to
+increase the quota count by the number of blocks in the mapping.
+However, the incore space reservation process requires us to supply an
+asymptotic guess before we can gain exclusive access to resources.  We'd
+like to reserve all the quota we need up front, but we also don't want
+to fail a written -> allocated remap operation unnecessarily.
+
+The solution is to make the remap_extents function call the transaction
+allocation function twice.  The first time we ask to reserve enough
+space and quota to handle the absolute worst case situation, but if that
+fails, we can fall back to the old strategy: ask for the bare minimum
+space reservation upfront and increase the quota reservation later if we
+need to.
+
+Later in this patchset we change the transaction and quota code to try
+to reclaim space if we cannot reserve free space or quota.
+Restructuring the remap_extent function in this manner means that if the
+fallback increase fails, we can pass that back to the caller knowing
+that the transaction allocation already tried freeing space.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_file.c   |   10 +++++-----
- fs/xfs/xfs_icache.c |   26 +++++++++++++++++---------
- fs/xfs/xfs_icache.h |    2 +-
- 3 files changed, 23 insertions(+), 15 deletions(-)
+ fs/xfs/xfs_reflink.c |   23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index d69e5abcc1b4..3be0b1d81325 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -743,14 +743,14 @@ xfs_file_buffered_write(
- 	 * metadata space. This reduces the chances that the eofblocks scan
- 	 * waits on dirty mappings. Since xfs_flush_inodes() is serialized, this
- 	 * also behaves as a filter to prevent too many eofblocks scans from
--	 * running at the same time.
-+	 * running at the same time.  Use a synchronous scan to increase the
-+	 * effectiveness of the scan.
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 27f875fa7a0d..086866f6e71f 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -991,6 +991,7 @@ xfs_reflink_remap_extent(
+ 	xfs_off_t		newlen;
+ 	int64_t			qdelta = 0;
+ 	unsigned int		resblks;
++	bool			quota_reserved = true;
+ 	bool			smap_real;
+ 	bool			dmap_written = xfs_bmap_is_written_extent(dmap);
+ 	int			iext_delta = 0;
+@@ -1006,10 +1007,26 @@ xfs_reflink_remap_extent(
+ 	 * the same index in the bmap btree, so we only need a reservation for
+ 	 * one bmbt split if either thing is happening.  However, we haven't
+ 	 * locked the inode yet, so we reserve assuming this is the case.
++	 *
++	 * The first allocation call tries to reserve enough space to handle
++	 * mapping dmap into a sparse part of the file plus the bmbt split.  We
++	 * haven't locked the inode or read the existing mapping yet, so we do
++	 * not know for sure that we need the space.  This should succeed most
++	 * of the time.
++	 *
++	 * If the first attempt fails, try again but reserving only enough
++	 * space to handle a bmbt split.  This is the hard minimum requirement,
++	 * and we revisit quota reservations later when we know more about what
++	 * we're remapping.
  	 */
- 	if (ret == -EDQUOT && !cleared_space) {
- 		xfs_iunlock(ip, iolock);
--		cleared_space = xfs_blockgc_free_quota(ip);
--		if (cleared_space)
--			goto write_retry;
--		iolock = 0;
-+		xfs_blockgc_free_quota(ip, XFS_EOF_FLAGS_SYNC);
-+		cleared_space = true;
-+		goto write_retry;
- 	} else if (ret == -ENOSPC && !cleared_space) {
- 		struct xfs_eofblocks eofb = {0};
+ 	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
+-	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write, resblks, 0,
+-			false, &tp);
++	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write,
++			resblks + dmap->br_blockcount, 0, false, &tp);
++	if (error == -EDQUOT || error == -ENOSPC) {
++		quota_reserved = false;
++		error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write,
++				resblks, 0, false, &tp);
++	}
+ 	if (error)
+ 		goto out;
  
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index aba901d5637b..4a074aa12b52 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1650,20 +1650,26 @@ xfs_start_block_reaping(
-  * with multiple quotas, we don't know exactly which quota caused an allocation
-  * failure. We make a best effort by including each quota under low free space
-  * conditions (less than 1% free space) in the scan.
-+ *
-+ * Callers must not hold any inode's ILOCK.  If requesting a synchronous scan
-+ * (XFS_EOF_FLAGS_SYNC), the caller also must not hold any inode's IOLOCK or
-+ * MMAPLOCK.
-  */
--bool
-+int
- xfs_blockgc_free_quota(
--	struct xfs_inode	*ip)
-+	struct xfs_inode	*ip,
-+	unsigned int		eof_flags)
- {
- 	struct xfs_eofblocks	eofb = {0};
- 	struct xfs_dquot	*dq;
- 	bool			do_work = false;
-+	int			error;
- 
- 	/*
--	 * Run a sync scan to increase effectiveness and use the union filter to
--	 * cover all applicable quotas in a single scan.
-+	 * Run a scan to free blocks using the union filter to cover all
-+	 * applicable quotas in a single scan.
+@@ -1076,7 +1093,7 @@ xfs_reflink_remap_extent(
+ 	 * before we started.  That should have removed all the delalloc
+ 	 * reservations, but we code defensively.
  	 */
--	eofb.eof_flags = XFS_EOF_FLAGS_UNION | XFS_EOF_FLAGS_SYNC;
-+	eofb.eof_flags = XFS_EOF_FLAGS_UNION | eof_flags;
- 
- 	if (XFS_IS_UQUOTA_ENFORCED(ip->i_mount)) {
- 		dq = xfs_inode_dquot(ip, XFS_DQTYPE_USER);
-@@ -1693,9 +1699,11 @@ xfs_blockgc_free_quota(
- 	}
- 
- 	if (!do_work)
--		return false;
-+		return 0;
- 
--	xfs_icache_free_eofblocks(ip->i_mount, &eofb);
--	xfs_icache_free_cowblocks(ip->i_mount, &eofb);
--	return true;
-+	error = xfs_icache_free_eofblocks(ip->i_mount, &eofb);
-+	if (error)
-+		return error;
-+
-+	return xfs_icache_free_cowblocks(ip->i_mount, &eofb);
- }
-diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index 21b726a05b0d..d64ea8f5c589 100644
---- a/fs/xfs/xfs_icache.h
-+++ b/fs/xfs/xfs_icache.h
-@@ -54,7 +54,7 @@ long xfs_reclaim_inodes_nr(struct xfs_mount *mp, int nr_to_scan);
- 
- void xfs_inode_set_reclaim_tag(struct xfs_inode *ip);
- 
--bool xfs_blockgc_free_quota(struct xfs_inode *ip);
-+int xfs_blockgc_free_quota(struct xfs_inode *ip, unsigned int eof_flags);
- 
- void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
- void xfs_inode_clear_eofblocks_tag(struct xfs_inode *ip);
+-	if (!smap_real && dmap_written) {
++	if (!quota_reserved && !smap_real && dmap_written) {
+ 		error = xfs_trans_reserve_quota_nblks(tp, ip,
+ 				dmap->br_blockcount, 0, false);
+ 		if (error)
 
