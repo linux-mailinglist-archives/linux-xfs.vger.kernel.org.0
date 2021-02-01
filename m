@@ -2,35 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50CA130A026
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:05:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9407D30A029
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:06:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbhBACFR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 31 Jan 2021 21:05:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
+        id S231271AbhBACFa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 31 Jan 2021 21:05:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231216AbhBACFM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 31 Jan 2021 21:05:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AF81E64E2E;
-        Mon,  1 Feb 2021 02:04:22 +0000 (UTC)
+        id S231136AbhBACF3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 31 Jan 2021 21:05:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4381564E2F;
+        Mon,  1 Feb 2021 02:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612145062;
-        bh=SsqUqhG6Svj1cde74lLtqYlxr8pBclWG9TNh8/Dn/qo=;
+        s=k20201202; t=1612145068;
+        bh=Ng6tAo1MOkD2NgjlSi8P8tX+Da26MPdyu74FgjuU5jU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YgchOYsqEDQ/5TG/JoEFk0D170kGdqYvS5rNjT3Xi+QkdLijxnha5nOww+tRPjZnZ
-         rZanuf3myWp/5pc7lSol7+i2Qg/XbLoiWlqvYAfjmWAGnVeTiG1nD7qywtufIJZXsE
-         5eL6Hzfk4oisIpQOveDygh2deOM5tZ91AGT1VNk8TB6jDlGhy+MAlSbvmhceU3k5Ep
-         dPavp2WYnR9QjlUn05QMrTFDjLEoBUI+OrkrbbD/B8LYX7lm8IXdBu+/Mg8byzFVFX
-         Ficau34YyTTy/8xYn02zx+THOq0YXwEuLjdRBQFQQ+ShKicxS3BccFmM9zBsnRnil9
-         NQimBt1h6gPvg==
-Subject: [PATCH 06/17] xfs: fix up build warnings when quotas are disabled
+        b=KAk1W58RufzwHNQ8JgXQ6DdMoOlWn/cpLcThE3wJ0RBeXu6NMVqlnSQXhp5U1mnZS
+         +B2OqR3wDdI+N7lLbQeQhJeqcC598BWV3SixYDIwZnqmYttlBRyD8ZDqa98c/Kz/gM
+         fqpBrf/0L3yyICv+7xAHqQtxrKOsMce1kfHLMCxhzAkG/NRTMQmrzyqh+zdrenwRJL
+         pTChJh7baWDeTvdLIlxaM20H+ckzE2oodGpGLFoTcOKO5VCufe+R/eSn2sizpuWf0a
+         jbnopoyAoUYuvJuY8ifLUrYYrvS4BokTjTaerGwLe3eOaoegD1jkmAGM3DlIt3XLXn
+         zaOsEVN8H45YQ==
+Subject: [PATCH 07/17] xfs: reduce quota reservation when doing a dax
+ unwritten extent conversion
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
         linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
         bfoster@redhat.com
-Date:   Sun, 31 Jan 2021 18:04:23 -0800
-Message-ID: <161214506286.139387.6251495520293682389.stgit@magnolia>
+Date:   Sun, 31 Jan 2021 18:04:27 -0800
+Message-ID: <161214506850.139387.4865345219813591818.stgit@magnolia>
 In-Reply-To: <161214502818.139387.7678025647736002500.stgit@magnolia>
 References: <161214502818.139387.7678025647736002500.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,38 +44,35 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fix some build warnings on gcc 10.2 when quotas are disabled.
+In commit 3b0fe47805802, we reduced the free space requirement to
+perform a pre-write unwritten extent conversion on an S_DAX file.  Since
+we're not actually allocating any space, the logic goes, we only need
+enough reservation to handle shape changes in the bmbt.
 
+The same logic should have been applied to quota -- we're not allocating
+any space, so we only need to reserve enough quota to handle the bmbt
+shape changes.
+
+Fixes: 3b0fe4780580 ("xfs: Don't use reserved blocks for data blocks with DAX")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_quota.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_iomap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-index 919c3a924821..03235c184aab 100644
---- a/fs/xfs/xfs_quota.h
-+++ b/fs/xfs/xfs_quota.h
-@@ -130,7 +130,7 @@ xfs_qm_vop_dqalloc(struct xfs_inode *ip, kuid_t kuid, kgid_t kgid,
- }
- #define xfs_trans_dup_dqinfo(tp, tp2)
- #define xfs_trans_free_dqinfo(tp)
--#define xfs_trans_mod_dquot_byino(tp, ip, fields, delta)
-+#define xfs_trans_mod_dquot_byino(tp, ip, fields, delta) do { } while (0)
- #define xfs_trans_apply_dquot_deltas(tp)
- #define xfs_trans_unreserve_and_mod_dquots(tp)
- static inline int xfs_trans_reserve_quota_nblks(struct xfs_trans *tp,
-@@ -166,8 +166,8 @@ xfs_trans_reserve_quota_icreate(struct xfs_trans *tp, struct xfs_dquot *udqp,
- #define xfs_qm_dqattach(ip)						(0)
- #define xfs_qm_dqattach_locked(ip, fl)					(0)
- #define xfs_qm_dqdetach(ip)
--#define xfs_qm_dqrele(d)
--#define xfs_qm_statvfs(ip, s)
-+#define xfs_qm_dqrele(d)			do { (d) = (d); } while(0)
-+#define xfs_qm_statvfs(ip, s)			do { } while(0)
- #define xfs_qm_newmount(mp, a, b)					(0)
- #define xfs_qm_mount_quotas(mp)
- #define xfs_qm_unmount(mp)
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index de0e371ba4dd..6dfb8d19b540 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -236,7 +236,7 @@ xfs_iomap_write_direct(
+ 		bmapi_flags = XFS_BMAPI_CONVERT | XFS_BMAPI_ZERO;
+ 		if (imap->br_state == XFS_EXT_UNWRITTEN) {
+ 			tflags |= XFS_TRANS_RESERVE;
+-			resblks = XFS_DIOSTRAT_SPACE_RES(mp, 0) << 1;
++			resblks = qblocks = XFS_DIOSTRAT_SPACE_RES(mp, 0) << 1;
+ 		}
+ 	}
+ 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, resrtextents,
 
