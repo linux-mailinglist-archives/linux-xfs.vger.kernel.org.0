@@ -2,35 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A358530A037
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:07:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6E9230A03C
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:07:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231327AbhBACHL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 31 Jan 2021 21:07:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
+        id S231329AbhBACHU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 31 Jan 2021 21:07:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231305AbhBACGX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 31 Jan 2021 21:06:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 58D7464E27;
-        Mon,  1 Feb 2021 02:06:06 +0000 (UTC)
+        id S230399AbhBACG1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 31 Jan 2021 21:06:27 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id DFFF764E28;
+        Mon,  1 Feb 2021 02:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612145166;
-        bh=Wz9irf4CKJxCMnu15KxIJHbnjBfJYW5tF/0QseheH5o=;
+        s=k20201202; t=1612145172;
+        bh=/edrHFc8dB4r9agzulgo97fufFQCT2XbV3hVOZlewGg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=eGZ0NEjKHHfKWVtrR9IQZNJV0vwles4Nvb0/SpCc8d4n/kNfdeAPb4FuUjbKUrQh6
-         5Mrj5Lhk4smUCBq9Fk8Q8mD0rptlSx2HpYclUukean8/6Lb/oLyxiTTLMce7r5Dayf
-         DM/6btRT7UoKBwKeLyf5Bc16Qen/hquDTJ0aVoZ8xsik5sU4Xcagds2vTTH+7Su839
-         TIqrYwRf7YrZdx5g9xZ1eZbcf/UlmhBIWmnlVsD2TZ34UAfRhnYIdUTsQ7lFnVpKpI
-         It0HOQAoAg9uYaPoubCKfwajgpZjnnEnw7FCkiEZ/stHj3Lv75O3rJU1DOfZ1Xumm8
-         9vTwlQF105BMA==
-Subject: [PATCH 07/12] xfs: flush eof/cowblocks if we can't reserve quota for
- file blocks
+        b=NPulHJoCj7ELOYHQKvJuND4RlP2LA8+3WnqQNkGZZ0h7Opudq6o39sbZ2cUL+EiRv
+         /sDMFD7ln6cp+BZgwlYxGQADo36sCBysqiYtHqdXGlxrxQISqfdxzj6IfFKnt0DdEZ
+         A0aTf0wxbF4I6g/pEnGAHGq4fJvyboKZA2mGgBGKbASExJhn45WvfRE6kjpUDVBumU
+         0fTL6rS4kOgW3+VVR9WoySelhGw6I2TqGmrtem4xchu0dtGd2rkCngSdHCiC93KpIK
+         P/jwuB12DVKO60qKvJP9Z0R6K3Vs3qyiZvrKJs3xiwZ+UaGCk/x2jE6K8ER62rW4Sz
+         srWOUk+3f8fLw==
+Subject: [PATCH 08/12] xfs: flush eof/cowblocks if we can't reserve quota for
+ inode creation
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
         bfoster@redhat.com
-Date:   Sun, 31 Jan 2021 18:06:06 -0800
-Message-ID: <161214516600.140945.4401509001858536727.stgit@magnolia>
+Date:   Sun, 31 Jan 2021 18:06:11 -0800
+Message-ID: <161214517156.140945.6151197680730753044.stgit@magnolia>
 In-Reply-To: <161214512641.140945.11651856181122264773.stgit@magnolia>
 References: <161214512641.140945.11651856181122264773.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,72 +43,170 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If a fs modification (data write, reflink, xattr set, fallocate, etc.)
-is unable to reserve enough quota to handle the modification, try
-clearing whatever space the filesystem might have been hanging onto in
-the hopes of speeding up the filesystem.  The flushing behavior will
-become particularly important when we add deferred inode inactivation
-because that will increase the amount of space that isn't actively tied
-to user data.
+If an inode creation is unable to reserve enough quota to handle the
+modification, try clearing whatever space the filesystem might have been
+hanging onto in the hopes of speeding up the filesystem.  The flushing
+behavior will become particularly important when we add deferred inode
+inactivation because that will increase the amount of space that isn't
+actively tied to user data.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_reflink.c |    5 +++++
- fs/xfs/xfs_trans.c   |   10 ++++++++++
- 2 files changed, 15 insertions(+)
+ fs/xfs/xfs_icache.c |   73 ++++++++++++++++++++++++++++++---------------------
+ fs/xfs/xfs_icache.h |    2 +
+ fs/xfs/xfs_trans.c  |    8 ++++++
+ 3 files changed, 53 insertions(+), 30 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 086866f6e71f..725c7d8e4438 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1092,6 +1092,11 @@ xfs_reflink_remap_extent(
- 	 * count.  This is suboptimal, but the VFS flushed the dest range
- 	 * before we started.  That should have removed all the delalloc
- 	 * reservations, but we code defensively.
-+	 *
-+	 * xfs_trans_alloc_inode above already tried to grab an even larger
-+	 * quota reservation, and kicked off a blockgc scan if it couldn't.
-+	 * If we can't get a potentially smaller quota reservation now, we're
-+	 * done.
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 4a074aa12b52..cd369dd48818 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -1646,64 +1646,77 @@ xfs_start_block_reaping(
+ }
+ 
+ /*
+- * Run cow/eofblocks scans on the quotas applicable to the inode. For inodes
+- * with multiple quotas, we don't know exactly which quota caused an allocation
+- * failure. We make a best effort by including each quota under low free space
+- * conditions (less than 1% free space) in the scan.
++ * Run cow/eofblocks scans on the supplied dquots.  We don't know exactly which
++ * quota caused an allocation failure, so we make a best effort by including
++ * each quota under low free space conditions (less than 1% free space) in the
++ * scan.
+  *
+  * Callers must not hold any inode's ILOCK.  If requesting a synchronous scan
+  * (XFS_EOF_FLAGS_SYNC), the caller also must not hold any inode's IOLOCK or
+  * MMAPLOCK.
+  */
+ int
+-xfs_blockgc_free_quota(
+-	struct xfs_inode	*ip,
++xfs_blockgc_free_dquots(
++	struct xfs_dquot	*udqp,
++	struct xfs_dquot	*gdqp,
++	struct xfs_dquot	*pdqp,
+ 	unsigned int		eof_flags)
+ {
+ 	struct xfs_eofblocks	eofb = {0};
+-	struct xfs_dquot	*dq;
++	struct xfs_mount	*mp = NULL;
+ 	bool			do_work = false;
+ 	int			error;
+ 
++	if (!udqp && !gdqp && !pdqp)
++		return 0;
++	if (udqp)
++		mp = udqp->q_mount;
++	if (!mp && gdqp)
++		mp = gdqp->q_mount;
++	if (!mp && pdqp)
++		mp = pdqp->q_mount;
++
+ 	/*
+ 	 * Run a scan to free blocks using the union filter to cover all
+ 	 * applicable quotas in a single scan.
  	 */
- 	if (!quota_reserved && !smap_real && dmap_written) {
- 		error = xfs_trans_reserve_quota_nblks(tp, ip,
+ 	eofb.eof_flags = XFS_EOF_FLAGS_UNION | eof_flags;
+ 
+-	if (XFS_IS_UQUOTA_ENFORCED(ip->i_mount)) {
+-		dq = xfs_inode_dquot(ip, XFS_DQTYPE_USER);
+-		if (dq && xfs_dquot_lowsp(dq)) {
+-			eofb.eof_uid = VFS_I(ip)->i_uid;
+-			eofb.eof_flags |= XFS_EOF_FLAGS_UID;
+-			do_work = true;
+-		}
++	if (XFS_IS_UQUOTA_ENFORCED(mp) && udqp && xfs_dquot_lowsp(udqp)) {
++		eofb.eof_uid = make_kuid(mp->m_super->s_user_ns, udqp->q_id);
++		eofb.eof_flags |= XFS_EOF_FLAGS_UID;
++		do_work = true;
+ 	}
+ 
+-	if (XFS_IS_GQUOTA_ENFORCED(ip->i_mount)) {
+-		dq = xfs_inode_dquot(ip, XFS_DQTYPE_GROUP);
+-		if (dq && xfs_dquot_lowsp(dq)) {
+-			eofb.eof_gid = VFS_I(ip)->i_gid;
+-			eofb.eof_flags |= XFS_EOF_FLAGS_GID;
+-			do_work = true;
+-		}
++	if (XFS_IS_UQUOTA_ENFORCED(mp) && gdqp && xfs_dquot_lowsp(gdqp)) {
++		eofb.eof_gid = make_kgid(mp->m_super->s_user_ns, gdqp->q_id);
++		eofb.eof_flags |= XFS_EOF_FLAGS_GID;
++		do_work = true;
+ 	}
+ 
+-	if (XFS_IS_PQUOTA_ENFORCED(ip->i_mount)) {
+-		dq = xfs_inode_dquot(ip, XFS_DQTYPE_PROJ);
+-		if (dq && xfs_dquot_lowsp(dq)) {
+-			eofb.eof_prid = ip->i_d.di_projid;
+-			eofb.eof_flags |= XFS_EOF_FLAGS_PRID;
+-			do_work = true;
+-		}
++	if (XFS_IS_PQUOTA_ENFORCED(mp) && pdqp && xfs_dquot_lowsp(pdqp)) {
++		eofb.eof_prid = pdqp->q_id;
++		eofb.eof_flags |= XFS_EOF_FLAGS_PRID;
++		do_work = true;
+ 	}
+ 
+ 	if (!do_work)
+ 		return 0;
+ 
+-	error = xfs_icache_free_eofblocks(ip->i_mount, &eofb);
++	error = xfs_icache_free_eofblocks(mp, &eofb);
+ 	if (error)
+ 		return error;
+ 
+-	return xfs_icache_free_cowblocks(ip->i_mount, &eofb);
++	return xfs_icache_free_cowblocks(mp, &eofb);
++}
++
++/* Run cow/eofblocks scans on the quotas attached to the inode. */
++int
++xfs_blockgc_free_quota(
++	struct xfs_inode	*ip,
++	unsigned int		eof_flags)
++{
++	return xfs_blockgc_free_dquots(xfs_inode_dquot(ip, XFS_DQTYPE_USER),
++			xfs_inode_dquot(ip, XFS_DQTYPE_GROUP),
++			xfs_inode_dquot(ip, XFS_DQTYPE_PROJ), eof_flags);
+ }
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index d64ea8f5c589..5f520de637f6 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -54,6 +54,8 @@ long xfs_reclaim_inodes_nr(struct xfs_mount *mp, int nr_to_scan);
+ 
+ void xfs_inode_set_reclaim_tag(struct xfs_inode *ip);
+ 
++int xfs_blockgc_free_dquots(struct xfs_dquot *udqp, struct xfs_dquot *gdqp,
++		struct xfs_dquot *pdqp, unsigned int eof_flags);
+ int xfs_blockgc_free_quota(struct xfs_inode *ip, unsigned int eof_flags);
+ 
+ void xfs_inode_set_eofblocks_tag(struct xfs_inode *ip);
 diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index 466e1c86767f..f62c1c5f210f 100644
+index f62c1c5f210f..ee3cb916c5c9 100644
 --- a/fs/xfs/xfs_trans.c
 +++ b/fs/xfs/xfs_trans.c
-@@ -23,6 +23,7 @@
- #include "xfs_inode.h"
- #include "xfs_dquot_item.h"
- #include "xfs_dquot.h"
-+#include "xfs_icache.h"
- 
- kmem_zone_t	*xfs_trans_zone;
- 
-@@ -1046,8 +1047,10 @@ xfs_trans_alloc_inode(
+@@ -1102,13 +1102,21 @@ xfs_trans_alloc_icreate(
+ 	struct xfs_trans	**tpp)
  {
  	struct xfs_trans	*tp;
- 	struct xfs_mount	*mp = ip->i_mount;
 +	bool			retried = false;
  	int			error;
  
 +retry:
- 	error = xfs_trans_alloc(mp, resv, dblocks,
- 			rblocks / mp->m_sb.sb_rextsize,
- 			force ? XFS_TRANS_RESERVE : 0, &tp);
-@@ -1065,6 +1068,13 @@ xfs_trans_alloc_inode(
- 	}
+ 	error = xfs_trans_alloc(mp, resv, dblocks, 0, 0, &tp);
+ 	if (error)
+ 		return error;
  
- 	error = xfs_trans_reserve_quota_nblks(tp, ip, dblocks, rblocks, force);
+ 	error = xfs_trans_reserve_quota_icreate(tp, udqp, gdqp, pdqp, dblocks);
 +	if (!retried && (error == -EDQUOT || error == -ENOSPC)) {
 +		xfs_trans_cancel(tp);
-+		xfs_iunlock(ip, XFS_ILOCK_EXCL);
-+		xfs_blockgc_free_quota(ip, 0);
++		xfs_blockgc_free_dquots(udqp, gdqp, pdqp, 0);
 +		retried = true;
 +		goto retry;
 +	}
- 	if (error)
- 		goto out_cancel;
- 
+ 	if (error) {
+ 		xfs_trans_cancel(tp);
+ 		return error;
 
