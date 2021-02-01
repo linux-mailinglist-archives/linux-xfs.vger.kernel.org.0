@@ -2,35 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D1DB30A03B
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:07:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A358530A037
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Feb 2021 03:07:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231296AbhBACGx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 31 Jan 2021 21:06:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33992 "EHLO mail.kernel.org"
+        id S231327AbhBACHL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 31 Jan 2021 21:07:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231265AbhBACGQ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 31 Jan 2021 21:06:16 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B462464E34;
-        Mon,  1 Feb 2021 02:06:00 +0000 (UTC)
+        id S231305AbhBACGX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 31 Jan 2021 21:06:23 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 58D7464E27;
+        Mon,  1 Feb 2021 02:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612145160;
-        bh=O7Vyr5Zym1YbEihMTe7dZfD8eoSIcgpINz5eCD4/Z4Y=;
+        s=k20201202; t=1612145166;
+        bh=Wz9irf4CKJxCMnu15KxIJHbnjBfJYW5tF/0QseheH5o=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pLdrzC+nh+DEL+0JV25CQaLs3cuZFi8XC8NY2DadSYRcKJrFbgJQP26bC65nXgOHe
-         ThPhpFXtqQVgmtU/tzJyH9SULPzByYOdNnah6v1QuylAZ4mBGBVG9o1PSLHiGeSz77
-         564f3oLiZeJneo8KBTuPPJHyNIJSxJFnl/cEdR1KGvY8FwiMWQsNSIJkxLx7i3LJWA
-         2UdxNwK2jlaZIAujKsAp8seD8w+O5iuZ7J67kJizby7r9sGhsXgAVh91cecdg4/mHG
-         OiUs9jGLgjDpMTAN+AbEy3fcKLX2pDIEuOyd9Df8586o6tiB+7B3NR1zJgS03qdTbq
-         0Heklvsc1IXOw==
-Subject: [PATCH 06/12] xfs: try worst case space reservation upfront in
- xfs_reflink_remap_extent
+        b=eGZ0NEjKHHfKWVtrR9IQZNJV0vwles4Nvb0/SpCc8d4n/kNfdeAPb4FuUjbKUrQh6
+         5Mrj5Lhk4smUCBq9Fk8Q8mD0rptlSx2HpYclUukean8/6Lb/oLyxiTTLMce7r5Dayf
+         DM/6btRT7UoKBwKeLyf5Bc16Qen/hquDTJ0aVoZ8xsik5sU4Xcagds2vTTH+7Su839
+         TIqrYwRf7YrZdx5g9xZ1eZbcf/UlmhBIWmnlVsD2TZ34UAfRhnYIdUTsQ7lFnVpKpI
+         It0HOQAoAg9uYaPoubCKfwajgpZjnnEnw7FCkiEZ/stHj3Lv75O3rJU1DOfZ1Xumm8
+         9vTwlQF105BMA==
+Subject: [PATCH 07/12] xfs: flush eof/cowblocks if we can't reserve quota for
+ file blocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
-        hch@infradead.org, david@fromorbit.com, bfoster@redhat.com
-Date:   Sun, 31 Jan 2021 18:06:00 -0800
-Message-ID: <161214516033.140945.16191685638325519980.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com,
+        bfoster@redhat.com
+Date:   Sun, 31 Jan 2021 18:06:06 -0800
+Message-ID: <161214516600.140945.4401509001858536727.stgit@magnolia>
 In-Reply-To: <161214512641.140945.11651856181122264773.stgit@magnolia>
 References: <161214512641.140945.11651856181122264773.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,85 +43,72 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've converted xfs_reflink_remap_extent to use the new
-xfs_trans_alloc_inode API, we can focus on its slightly unusual behavior
-with regard to quota reservations.
-
-Since it's valid to remap written blocks into a hole, we must be able to
-increase the quota count by the number of blocks in the mapping.
-However, the incore space reservation process requires us to supply an
-asymptotic guess before we can gain exclusive access to resources.  We'd
-like to reserve all the quota we need up front, but we also don't want
-to fail a written -> allocated remap operation unnecessarily.
-
-The solution is to make the remap_extents function call the transaction
-allocation function twice.  The first time we ask to reserve enough
-space and quota to handle the absolute worst case situation, but if that
-fails, we can fall back to the old strategy: ask for the bare minimum
-space reservation upfront and increase the quota reservation later if we
-need to.
-
-Later in this patchset we change the transaction and quota code to try
-to reclaim space if we cannot reserve free space or quota.
-Restructuring the remap_extent function in this manner means that if the
-fallback increase fails, we can pass that back to the caller knowing
-that the transaction allocation already tried freeing space.
+If a fs modification (data write, reflink, xattr set, fallocate, etc.)
+is unable to reserve enough quota to handle the modification, try
+clearing whatever space the filesystem might have been hanging onto in
+the hopes of speeding up the filesystem.  The flushing behavior will
+become particularly important when we add deferred inode inactivation
+because that will increase the amount of space that isn't actively tied
+to user data.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_reflink.c |   23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_reflink.c |    5 +++++
+ fs/xfs/xfs_trans.c   |   10 ++++++++++
+ 2 files changed, 15 insertions(+)
 
 
 diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 27f875fa7a0d..086866f6e71f 100644
+index 086866f6e71f..725c7d8e4438 100644
 --- a/fs/xfs/xfs_reflink.c
 +++ b/fs/xfs/xfs_reflink.c
-@@ -991,6 +991,7 @@ xfs_reflink_remap_extent(
- 	xfs_off_t		newlen;
- 	int64_t			qdelta = 0;
- 	unsigned int		resblks;
-+	bool			quota_reserved = true;
- 	bool			smap_real;
- 	bool			dmap_written = xfs_bmap_is_written_extent(dmap);
- 	int			iext_delta = 0;
-@@ -1006,10 +1007,26 @@ xfs_reflink_remap_extent(
- 	 * the same index in the bmap btree, so we only need a reservation for
- 	 * one bmbt split if either thing is happening.  However, we haven't
- 	 * locked the inode yet, so we reserve assuming this is the case.
-+	 *
-+	 * The first allocation call tries to reserve enough space to handle
-+	 * mapping dmap into a sparse part of the file plus the bmbt split.  We
-+	 * haven't locked the inode or read the existing mapping yet, so we do
-+	 * not know for sure that we need the space.  This should succeed most
-+	 * of the time.
-+	 *
-+	 * If the first attempt fails, try again but reserving only enough
-+	 * space to handle a bmbt split.  This is the hard minimum requirement,
-+	 * and we revisit quota reservations later when we know more about what
-+	 * we're remapping.
- 	 */
- 	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
--	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write, resblks, 0,
--			false, &tp);
-+	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write,
-+			resblks + dmap->br_blockcount, 0, false, &tp);
-+	if (error == -EDQUOT || error == -ENOSPC) {
-+		quota_reserved = false;
-+		error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write,
-+				resblks, 0, false, &tp);
-+	}
- 	if (error)
- 		goto out;
- 
-@@ -1076,7 +1093,7 @@ xfs_reflink_remap_extent(
+@@ -1092,6 +1092,11 @@ xfs_reflink_remap_extent(
+ 	 * count.  This is suboptimal, but the VFS flushed the dest range
  	 * before we started.  That should have removed all the delalloc
  	 * reservations, but we code defensively.
++	 *
++	 * xfs_trans_alloc_inode above already tried to grab an even larger
++	 * quota reservation, and kicked off a blockgc scan if it couldn't.
++	 * If we can't get a potentially smaller quota reservation now, we're
++	 * done.
  	 */
--	if (!smap_real && dmap_written) {
-+	if (!quota_reserved && !smap_real && dmap_written) {
+ 	if (!quota_reserved && !smap_real && dmap_written) {
  		error = xfs_trans_reserve_quota_nblks(tp, ip,
- 				dmap->br_blockcount, 0, false);
- 		if (error)
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 466e1c86767f..f62c1c5f210f 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -23,6 +23,7 @@
+ #include "xfs_inode.h"
+ #include "xfs_dquot_item.h"
+ #include "xfs_dquot.h"
++#include "xfs_icache.h"
+ 
+ kmem_zone_t	*xfs_trans_zone;
+ 
+@@ -1046,8 +1047,10 @@ xfs_trans_alloc_inode(
+ {
+ 	struct xfs_trans	*tp;
+ 	struct xfs_mount	*mp = ip->i_mount;
++	bool			retried = false;
+ 	int			error;
+ 
++retry:
+ 	error = xfs_trans_alloc(mp, resv, dblocks,
+ 			rblocks / mp->m_sb.sb_rextsize,
+ 			force ? XFS_TRANS_RESERVE : 0, &tp);
+@@ -1065,6 +1068,13 @@ xfs_trans_alloc_inode(
+ 	}
+ 
+ 	error = xfs_trans_reserve_quota_nblks(tp, ip, dblocks, rblocks, force);
++	if (!retried && (error == -EDQUOT || error == -ENOSPC)) {
++		xfs_trans_cancel(tp);
++		xfs_iunlock(ip, XFS_ILOCK_EXCL);
++		xfs_blockgc_free_quota(ip, 0);
++		retried = true;
++		goto retry;
++	}
+ 	if (error)
+ 		goto out_cancel;
+ 
 
