@@ -2,78 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0023310FD1
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Feb 2021 19:24:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43C6A3111BC
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Feb 2021 21:01:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233348AbhBEQlb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Feb 2021 11:41:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233520AbhBEQj2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Feb 2021 11:39:28 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1BD2364DA1;
-        Fri,  5 Feb 2021 18:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612549098;
-        bh=av8TtBM78wBa3cvQLQkwsf4OdWMwtWSV4kOV20Z73tg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uVjDiTTk88bE8ctQmOoWZX5cnU3PwayEWeXXReUaYmN6PT7aZ5y/jDtjV9+RtotAp
-         J2wg3eguNNXj39KWuHsG1arK9lciKN3PdU1OC8ASpacwMMkB73rBbzG8dHWcsy4+eu
-         Ml2bBd2B+SfLbabnUmnzsRqKnlNOOMvh/az4UpTgzyzUFSRnSmlFojjPVZ+ZKar5Dg
-         UObuIfZQK7l01M4nDFmG7HqMEr3vOImBEFIW910FEB/h7fmd7x9NNE8pdnuc6Z2WmU
-         KJ6otakgkj2vwaDd71oQiG6ZRInMnANaESx5TKiUNpAdNYWjkfEWBXEnyQgAoZN+Un
-         mycJOBRTXxR9Q==
-Date:   Fri, 5 Feb 2021 10:18:17 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Bastian Germann <bastiangermann@fishpost.de>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/3] debian: Drop unused dh-python from Build-Depends
-Message-ID: <20210205181817.GN7193@magnolia>
-References: <20210205003125.24463-1-bastiangermann@fishpost.de>
- <20210205003125.24463-2-bastiangermann@fishpost.de>
- <20210205005100.GK7193@magnolia>
- <ca46724d-dce6-ac8c-65a7-99beb6bfc27c@fishpost.de>
+        id S233646AbhBESR6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Feb 2021 13:17:58 -0500
+Received: from [20.39.40.203] ([20.39.40.203]:55697 "EHLO optinix.in"
+        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
+        id S233183AbhBEPTk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Feb 2021 10:19:40 -0500
+dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
+        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
+        b=JFt3cjfr2gf0oZFNAIkKMxcz4dJD/YGkc0fGvOoSd3DydZ6om7JzTU837vBFVq1NIPU0D2QA5BLHZXE1+7cBmkJlbZjYCUFmJkkaBVbP88e4KHnDVRcctmBLIZ1pL5VerRqjcciKkL4DSuyXFJlGk3Z0CRoskvUoLBM7ZhpxLeqIU2BKsbHQXJZ1h2qHQhaHiD+VrGx+bGKjZzbhmRvwLDQIByq6jRcjht5MzYCcxpzOzp/k+Dev9dQj7B
+        WId68CyP4XonlI4wIMRo1xiGfUtKZ+P3cZo2ejPWBjr+ynq3dK3OxibTTEKfmOc5W1zmJFMAPQ+ZKxsa3M4d1PiYxHmg==
+Received: from User (Unknown [52.231.31.5])
+        by optinix.in with ESMTP
+        ; Mon, 1 Feb 2021 08:50:14 +0000
+Message-ID: <D474448D-A325-42CC-A881-8334C6C84BA7@optinix.in>
+Reply-To: <ms.reem@yandex.com>
+From:   "Ms. Reem" <support@digitalsol.in>
+Subject: Re:read
+Date:   Mon, 1 Feb 2021 08:50:13 -0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca46724d-dce6-ac8c-65a7-99beb6bfc27c@fishpost.de>
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Feb 05, 2021 at 07:05:12PM +0100, Bastian Germann wrote:
-> Am 05.02.21 um 01:51 schrieb Darrick J. Wong:
-> > On Fri, Feb 05, 2021 at 01:31:23AM +0100, Bastian Germann wrote:
-> > > xfsprogs participates in dependency loops relevant to architecture
-> > > bootstrap. Identifying easily droppable dependencies, it was found
-> > > that xfsprogs does not use dh-python in any way.
-> > 
-> > scrub/xfs_scrub_all.in and tools/xfsbuflock.py are the only python
-> > scripts in xfsprogs.  We ship the first one as-is in the xfsprogs
-> > package and we don't ship the second one at all (it's a debugger tool).
-> > 
-> > AFAICT neither of them really use dh-python, right?
-> 
-> That is right. dh-python is generally used at build time to generate
-> packages with Python modules, i.e., with files in
-> /usr/lib/python3/dist-packages. That is not the case in xfsprogs.
-> 
-> For xfsprogs, python3 is only a runtime dependency and that is defined in
-> the control file as well.
+Hello,
 
-<nod> /me finally figures out exactly what dh_python does--I thought it
-was required for any package shipping any python anything, but I guess
-it's only for building and prepping library code and hence not needed
-for our single python script in /usr/sbin, so:
+My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
+and Petroleum" also "Minister of State for International Cooperation"
+in UAE. I write to you on behalf of my other "three (3) colleagues"
+who has approved me to solicit for your "partnership in claiming of
+{us$47=Million}" from a Financial Home in Cambodia on their behalf and
+for our "Mutual Benefits".
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
+deal with Cambodian/Vietnam Government within 2013/2014, however, we
+don't want our government to know about the fund. If this proposal
+interests you, let me know, by sending me an email and I will send to
+you detailed information on how this business would be successfully
+transacted. Be informed that nobody knows about the secret of this
+fund except us, and we know how to carry out the entire transaction.
+So I am compelled to ask, that you will stand on our behalf and
+receive this fund into any account that is solely controlled by you.
 
---D
+We will compensate you with 15% of the total amount involved as
+gratification for being our partner in this transaction. Reply to:
+ms.reem@yandex.com
 
+Regards,
+Ms. Reem.
 
-> 
-> > --D
-> > 
-> > > 
-> > > Reported-by: Helmut Grohne <helmut@subdivi.de>
-> > > Signed-off-by: Bastian Germann <bastiangermann@fishpost.de>
