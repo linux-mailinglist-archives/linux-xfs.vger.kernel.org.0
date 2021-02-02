@@ -2,35 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 447E630B503
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 03:05:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4560930B508
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 03:06:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbhBBCE7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Feb 2021 21:04:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55284 "EHLO mail.kernel.org"
+        id S231211AbhBBCFb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Feb 2021 21:05:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231168AbhBBCE6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 1 Feb 2021 21:04:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A24C64EDF;
-        Tue,  2 Feb 2021 02:04:43 +0000 (UTC)
+        id S231209AbhBBCF3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 1 Feb 2021 21:05:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0C30D64ED9;
+        Tue,  2 Feb 2021 02:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612231483;
-        bh=xYdAMKL3sI/3pyb+Pv5isSaHkjxuUo2cSzs3rUikjzQ=;
+        s=k20201202; t=1612231489;
+        bh=eLUB5G6G34erkbbwFGCmj1KMwItfA/oxO0iOQbR0Z2Y=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rivXvjAyWA8+5XJda2xsK3VzAU9zqE/8XwIQ/1P10vlEXRDxgqqgjAcTJg3UjNC6u
-         YoD9P18B6ey018gpz3qcEETvKorCHScBX9ZSMFgkFURrKqjHqVbII38EtBj1vgZ1j6
-         3APebU/c9bgwmtN4FvB3l3YzaEoUQ1sEqbZJXvO2nGvKs21zI5wm25e/QIPETXvNTV
-         YIoX9+JZYLyj68Wdbm8snbdnOhuQyJn0SQ7Mq2UEYIzEUVPpl/rGa2CowgZSHNLKRd
-         edeENfSYMsOLOv3CHSPtsKYAjFaunMPuOSULxqDt11ot6zTzMQ5JTprZ4JAfKIBv9s
-         yZzMeAk8m09Eg==
-Subject: [PATCH 15/16] xfs: rename code to error in xfs_ioctl_setattr
+        b=qnswkn5SbPq/3QVOd4ZpVQNhm1i57r1nIFgIIynLwjESNtkgCZH92aAn4MdFjEaaj
+         rFth27MujvjOFo6UWpHlrGC01vOOH2i44Eq0ObA0zRWGtYIkh7UltZn1sOvP0WH61Z
+         TsGQA/3+Dts7iagk9SYTumIImOJNz78XOoQAkUlAXMWDmGl7S4GpXuNjj9KXVDogD9
+         xoB6wG4sqTcNmWD6vC7hYwMsx/fXMdMg7WiK2irb/oCgbjwdSJHuwpnUqxLmQGkmyW
+         vXPxRBFKjGUXxZq0LvqVn4Alkop0rIN9Js/HZnuYPSZcC8G8jWioTF5K8tPon5C5nL
+         IJuLo6qnuA7cw==
+Subject: [PATCH 16/16] xfs: shut down the filesystem if we screw up quota
+ errors
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         hch@infradead.org, david@fromorbit.com, bfoster@redhat.com
-Date:   Mon, 01 Feb 2021 18:04:43 -0800
-Message-ID: <161223148300.491593.4733623201150889540.stgit@magnolia>
+Date:   Mon, 01 Feb 2021 18:04:48 -0800
+Message-ID: <161223148857.491593.12074155866887169690.stgit@magnolia>
 In-Reply-To: <161223139756.491593.10895138838199018804.stgit@magnolia>
 References: <161223139756.491593.10895138838199018804.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,111 +43,53 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Rename the 'code' variable to 'error' to follow the naming convention of
-most other functions in xfs.
+If we ever screw up the quota reservations enough to trip the
+assertions, something's wrong with the quota code.  Shut down the
+filesystem when this happens, because this is corruption.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_ioctl.c |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
+ fs/xfs/xfs_trans_dquot.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 78ee201eb7cb..38ee66d999d8 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1435,13 +1435,13 @@ xfs_ioctl_setattr(
- 	struct xfs_trans	*tp;
- 	struct xfs_dquot	*pdqp = NULL;
- 	struct xfs_dquot	*olddquot = NULL;
--	int			code;
-+	int			error;
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index a1a72b7900c5..48e09ea30ee5 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -16,6 +16,7 @@
+ #include "xfs_quota.h"
+ #include "xfs_qm.h"
+ #include "xfs_trace.h"
++#include "xfs_error.h"
  
- 	trace_xfs_ioctl_setattr(ip);
+ STATIC void	xfs_trans_alloc_dqinfo(xfs_trans_t *);
  
--	code = xfs_ioctl_setattr_check_projid(ip, fa);
--	if (code)
--		return code;
-+	error = xfs_ioctl_setattr_check_projid(ip, fa);
-+	if (error)
-+		return error;
- 
- 	/*
- 	 * If disk quotas is on, we make sure that the dquots do exist on disk,
-@@ -1452,36 +1452,36 @@ xfs_ioctl_setattr(
- 	 * because the i_*dquot fields will get updated anyway.
- 	 */
- 	if (XFS_IS_QUOTA_ON(mp)) {
--		code = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
-+		error = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
- 				VFS_I(ip)->i_gid, fa->fsx_projid,
- 				XFS_QMOPT_PQUOTA, NULL, NULL, &pdqp);
--		if (code)
--			return code;
-+		if (error)
-+			return error;
+@@ -691,9 +692,11 @@ xfs_trans_dqresv(
+ 				    nblks);
+ 		xfs_trans_mod_dquot(tp, dqp, XFS_TRANS_DQ_RES_INOS, ninos);
  	}
+-	ASSERT(dqp->q_blk.reserved >= dqp->q_blk.count);
+-	ASSERT(dqp->q_rtb.reserved >= dqp->q_rtb.count);
+-	ASSERT(dqp->q_ino.reserved >= dqp->q_ino.count);
++
++	if (XFS_IS_CORRUPT(mp, dqp->q_blk.reserved < dqp->q_blk.count) ||
++	    XFS_IS_CORRUPT(mp, dqp->q_rtb.reserved < dqp->q_rtb.count) ||
++	    XFS_IS_CORRUPT(mp, dqp->q_ino.reserved < dqp->q_ino.count))
++		goto error_corrupt;
  
- 	xfs_ioctl_setattr_prepare_dax(ip, fa);
- 
- 	tp = xfs_ioctl_setattr_get_trans(ip, pdqp);
- 	if (IS_ERR(tp)) {
--		code = PTR_ERR(tp);
-+		error = PTR_ERR(tp);
- 		goto error_free_dquots;
- 	}
- 
- 	xfs_fill_fsxattr(ip, false, &old_fa);
--	code = vfs_ioc_fssetxattr_check(VFS_I(ip), &old_fa, fa);
--	if (code)
-+	error = vfs_ioc_fssetxattr_check(VFS_I(ip), &old_fa, fa);
-+	if (error)
- 		goto error_trans_cancel;
- 
--	code = xfs_ioctl_setattr_check_extsize(ip, fa);
--	if (code)
-+	error = xfs_ioctl_setattr_check_extsize(ip, fa);
-+	if (error)
- 		goto error_trans_cancel;
- 
--	code = xfs_ioctl_setattr_check_cowextsize(ip, fa);
--	if (code)
-+	error = xfs_ioctl_setattr_check_cowextsize(ip, fa);
-+	if (error)
- 		goto error_trans_cancel;
- 
--	code = xfs_ioctl_setattr_xflags(tp, ip, fa);
--	if (code)
-+	error = xfs_ioctl_setattr_xflags(tp, ip, fa);
-+	if (error)
- 		goto error_trans_cancel;
- 
- 	/*
-@@ -1521,7 +1521,7 @@ xfs_ioctl_setattr(
- 	else
- 		ip->i_d.di_cowextsize = 0;
- 
--	code = xfs_trans_commit(tp);
-+	error = xfs_trans_commit(tp);
- 
- 	/*
- 	 * Release any dquot(s) the inode had kept before chown.
-@@ -1529,13 +1529,13 @@ xfs_ioctl_setattr(
- 	xfs_qm_dqrele(olddquot);
- 	xfs_qm_dqrele(pdqp);
- 
--	return code;
-+	return error;
- 
- error_trans_cancel:
- 	xfs_trans_cancel(tp);
- error_free_dquots:
- 	xfs_qm_dqrele(pdqp);
--	return code;
-+	return error;
+ 	xfs_dqunlock(dqp);
+ 	return 0;
+@@ -703,6 +706,10 @@ xfs_trans_dqresv(
+ 	if (xfs_dquot_type(dqp) == XFS_DQTYPE_PROJ)
+ 		return -ENOSPC;
+ 	return -EDQUOT;
++error_corrupt:
++	xfs_dqunlock(dqp);
++	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
++	return -EFSCORRUPTED;
  }
  
- STATIC int
+ 
 
