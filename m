@@ -2,138 +2,155 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A78330CBEC
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 20:41:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A28330CBEF
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 20:41:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239984AbhBBTj0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Feb 2021 14:39:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42115 "EHLO
+        id S233357AbhBBTjr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Feb 2021 14:39:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54217 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239978AbhBBTjP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Feb 2021 14:39:15 -0500
+        by vger.kernel.org with ESMTP id S233576AbhBBTj0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Feb 2021 14:39:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612294668;
+        s=mimecast20190719; t=1612294680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=bWgvU9XR3tM2Gnq6kF5oXfxShMGY31rdjEdCrv/EIbw=;
-        b=SAnxtb6dEzoHh5LDjvl7MQmu1h0BLpoEEtkyQYOei2N5/jPmWy7FYvoi/PI0MlePVzQaGM
-        cQ2Q/84kYUrDgTe4yUntkk7pAwj03jE2LUb31bGKxTMiToNs9T9/hOB2VVb0p+tGPpiU8q
-        xdL3Pxzziln2lq0m9HEhRFIHvDvcueU=
+        bh=PLhH3UO/C9sVU+Gk6ErHSHU1/zgxhDPylJpuUvFxKts=;
+        b=JUmOOA80eDSsd9/aPb4LhCFlxUBQk0HFrgiIutblwvrAPue8+wMxE9yxsZ+4wQ1JQT0IT1
+        mH0/qZ4zDztDkWYcZaDYKvz4rFfKvUVRmNx8PaI4RCZFWvvhfCjAJGX25K5iblrf6yxymO
+        dUbbwTSIPrzV+1vw3tAdR7N7FhGy2v0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-VlqwKLx8MOq9i1irnaSyKQ-1; Tue, 02 Feb 2021 14:37:44 -0500
-X-MC-Unique: VlqwKLx8MOq9i1irnaSyKQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-147-_0zSGNpeNl-xOTr7A3GHrw-1; Tue, 02 Feb 2021 14:37:58 -0500
+X-MC-Unique: _0zSGNpeNl-xOTr7A3GHrw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D5E3189CD23;
-        Tue,  2 Feb 2021 19:37:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 39D43134C44;
+        Tue,  2 Feb 2021 19:37:57 +0000 (UTC)
 Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E26460C66;
-        Tue,  2 Feb 2021 19:37:39 +0000 (UTC)
-Date:   Tue, 2 Feb 2021 14:37:37 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A266B1F0;
+        Tue,  2 Feb 2021 19:37:50 +0000 (UTC)
+Date:   Tue, 2 Feb 2021 14:37:48 -0500
 From:   Brian Foster <bfoster@redhat.com>
 To:     Gao Xiang <hsiangkao@redhat.com>
 Cc:     linux-xfs@vger.kernel.org,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Eric Sandeen <sandeen@sandeen.net>,
         Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v6 1/7] xfs: rename `new' to `delta' in
- xfs_growfs_data_private()
-Message-ID: <20210202193737.GL3336100@bfoster>
+        Christoph Hellwig <hch@infradead.org>,
+        Eric Sandeen <sandeen@redhat.com>
+Subject: Re: [PATCH v6 2/7] xfs: get rid of xfs_growfs_{data,log}_t
+Message-ID: <20210202193748.GM3336100@bfoster>
 References: <20210126125621.3846735-1-hsiangkao@redhat.com>
- <20210126125621.3846735-2-hsiangkao@redhat.com>
+ <20210126125621.3846735-3-hsiangkao@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210126125621.3846735-2-hsiangkao@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20210126125621.3846735-3-hsiangkao@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jan 26, 2021 at 08:56:15PM +0800, Gao Xiang wrote:
-> It actually means the delta block count of growfs. Rename it in order
-> to make it clear. Also introduce nb_div to avoid reusing `delta`.
+On Tue, Jan 26, 2021 at 08:56:16PM +0800, Gao Xiang wrote:
+> Such usage isn't encouraged by the kernel coding style. Leave the
+> definitions alone in case of userspace users.
 > 
 > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Eric Sandeen <sandeen@redhat.com>
 > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 > ---
 
-Looks reasonable:
-
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/xfs_fsops.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  fs/xfs/xfs_fsops.c | 12 ++++++------
+>  fs/xfs/xfs_fsops.h |  4 ++--
+>  fs/xfs/xfs_ioctl.c |  4 ++--
+>  3 files changed, 10 insertions(+), 10 deletions(-)
 > 
 > diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
-> index 959ce91a3755..62600d78bbf1 100644
+> index 62600d78bbf1..a2a407039227 100644
 > --- a/fs/xfs/xfs_fsops.c
 > +++ b/fs/xfs/xfs_fsops.c
-> @@ -32,8 +32,8 @@ xfs_growfs_data_private(
+> @@ -25,8 +25,8 @@
+>   */
+>  static int
+>  xfs_growfs_data_private(
+> -	xfs_mount_t		*mp,		/* mount point for filesystem */
+> -	xfs_growfs_data_t	*in)		/* growfs data input struct */
+> +	struct xfs_mount	*mp,		/* mount point for filesystem */
+> +	struct xfs_growfs_data	*in)		/* growfs data input struct */
+>  {
+>  	struct xfs_buf		*bp;
 >  	int			error;
->  	xfs_agnumber_t		nagcount;
->  	xfs_agnumber_t		nagimax = 0;
-> -	xfs_rfsblock_t		nb, nb_mod;
-> -	xfs_rfsblock_t		new;
-> +	xfs_rfsblock_t		nb, nb_div, nb_mod;
-> +	xfs_rfsblock_t		delta;
+> @@ -35,7 +35,7 @@ xfs_growfs_data_private(
+>  	xfs_rfsblock_t		nb, nb_div, nb_mod;
+>  	xfs_rfsblock_t		delta;
 >  	xfs_agnumber_t		oagcount;
->  	xfs_trans_t		*tp;
+> -	xfs_trans_t		*tp;
+> +	struct xfs_trans	*tp;
 >  	struct aghdr_init_data	id = {};
-> @@ -50,16 +50,16 @@ xfs_growfs_data_private(
->  		return error;
->  	xfs_buf_relse(bp);
 >  
-> -	new = nb;	/* use new as a temporary here */
-> -	nb_mod = do_div(new, mp->m_sb.sb_agblocks);
-> -	nagcount = new + (nb_mod != 0);
-> +	nb_div = nb;
-> +	nb_mod = do_div(nb_div, mp->m_sb.sb_agblocks);
-> +	nagcount = nb_div + (nb_mod != 0);
->  	if (nb_mod && nb_mod < XFS_MIN_AG_BLOCKS) {
->  		nagcount--;
->  		nb = (xfs_rfsblock_t)nagcount * mp->m_sb.sb_agblocks;
->  		if (nb < mp->m_sb.sb_dblocks)
->  			return -EINVAL;
+>  	nb = in->newblocks;
+> @@ -170,8 +170,8 @@ xfs_growfs_data_private(
+>  
+>  static int
+>  xfs_growfs_log_private(
+> -	xfs_mount_t		*mp,	/* mount point for filesystem */
+> -	xfs_growfs_log_t	*in)	/* growfs log input struct */
+> +	struct xfs_mount	*mp,	/* mount point for filesystem */
+> +	struct xfs_growfs_log	*in)	/* growfs log input struct */
+>  {
+>  	xfs_extlen_t		nb;
+>  
+> @@ -268,7 +268,7 @@ xfs_growfs_data(
+>  int
+>  xfs_growfs_log(
+>  	xfs_mount_t		*mp,
+> -	xfs_growfs_log_t	*in)
+> +	struct xfs_growfs_log	*in)
+>  {
+>  	int error;
+>  
+> diff --git a/fs/xfs/xfs_fsops.h b/fs/xfs/xfs_fsops.h
+> index 92869f6ec8d3..2cffe51a31e8 100644
+> --- a/fs/xfs/xfs_fsops.h
+> +++ b/fs/xfs/xfs_fsops.h
+> @@ -6,8 +6,8 @@
+>  #ifndef __XFS_FSOPS_H__
+>  #define	__XFS_FSOPS_H__
+>  
+> -extern int xfs_growfs_data(xfs_mount_t *mp, xfs_growfs_data_t *in);
+> -extern int xfs_growfs_log(xfs_mount_t *mp, xfs_growfs_log_t *in);
+> +extern int xfs_growfs_data(struct xfs_mount *mp, struct xfs_growfs_data *in);
+> +extern int xfs_growfs_log(struct xfs_mount *mp, struct xfs_growfs_log *in);
+>  extern void xfs_fs_counts(xfs_mount_t *mp, xfs_fsop_counts_t *cnt);
+>  extern int xfs_reserve_blocks(xfs_mount_t *mp, uint64_t *inval,
+>  				xfs_fsop_resblks_t *outval);
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 3fbd98f61ea5..a62520f49ec5 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -2260,7 +2260,7 @@ xfs_file_ioctl(
 >  	}
-> -	new = nb - mp->m_sb.sb_dblocks;
-> +	delta = nb - mp->m_sb.sb_dblocks;
->  	oagcount = mp->m_sb.sb_agcount;
 >  
->  	/* allocate the new per-ag structures */
-> @@ -89,7 +89,7 @@ xfs_growfs_data_private(
->  	INIT_LIST_HEAD(&id.buffer_list);
->  	for (id.agno = nagcount - 1;
->  	     id.agno >= oagcount;
-> -	     id.agno--, new -= id.agsize) {
-> +	     id.agno--, delta -= id.agsize) {
+>  	case XFS_IOC_FSGROWFSDATA: {
+> -		xfs_growfs_data_t in;
+> +		struct xfs_growfs_data in;
 >  
->  		if (id.agno == nagcount - 1)
->  			id.agsize = nb -
-> @@ -110,8 +110,8 @@ xfs_growfs_data_private(
->  	xfs_trans_agblocks_delta(tp, id.nfree);
->  
->  	/* If there are new blocks in the old last AG, extend it. */
-> -	if (new) {
-> -		error = xfs_ag_extend_space(mp, tp, &id, new);
-> +	if (delta) {
-> +		error = xfs_ag_extend_space(mp, tp, &id, delta);
->  		if (error)
->  			goto out_trans_cancel;
+>  		if (copy_from_user(&in, arg, sizeof(in)))
+>  			return -EFAULT;
+> @@ -2274,7 +2274,7 @@ xfs_file_ioctl(
 >  	}
-> @@ -143,7 +143,7 @@ xfs_growfs_data_private(
->  	 * If we expanded the last AG, free the per-AG reservation
->  	 * so we can reinitialize it with the new size.
->  	 */
-> -	if (new) {
-> +	if (delta) {
->  		struct xfs_perag	*pag;
 >  
->  		pag = xfs_perag_get(mp, id.agno);
+>  	case XFS_IOC_FSGROWFSLOG: {
+> -		xfs_growfs_log_t in;
+> +		struct xfs_growfs_log in;
+>  
+>  		if (copy_from_user(&in, arg, sizeof(in)))
+>  			return -EFAULT;
 > -- 
 > 2.27.0
 > 
