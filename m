@@ -2,179 +2,167 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B90A30BF25
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 14:20:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 065F730BF3D
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 14:20:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232270AbhBBNSA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Feb 2021 08:18:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59580 "EHLO
+        id S232249AbhBBNTz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Feb 2021 08:19:55 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52227 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232227AbhBBNRw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Feb 2021 08:17:52 -0500
+        by vger.kernel.org with ESMTP id S231220AbhBBNTw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Feb 2021 08:19:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612271615;
+        s=mimecast20190719; t=1612271905;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=d7hbg3SWDlhA+rSgtA4AiIh7PougpNqRqMdZUGg6j2k=;
-        b=FKYKMECXpoNEXNg/xn48AY5VlGAD/+kBHMOerCTJ+NOyHTjbqsCTbpvBGg+yLjZaczeH8n
-        fnyE+B+Lb7xX4pF6BUCvRCFgPpxS7taJS5B8QN/Z3VnS+0OK+EVDyfeI8OdxAXtGel4eAu
-        DrhJ1GNyUN1Ra9U/cULf4oJfsRc4/U0=
+        bh=1pjU10uRigMeOgmBaF0haJZINH9sDUk+AMaAUolbIrM=;
+        b=UvN7SRpnoofy80JQ8HoN31kY4XYqkO2+0OT9l2uASDmbGa6jdmVhGKXLXijJdno/32QcB/
+        eRYrhaMNwz9iRB96lMl28HNcrmmjjn8Tg4wBc1TfAWj2+64wzdidCArSJuC1hMGvr+59WH
+        u7EPTcHVpLlrnaz2n17HKrV2oZ2BObE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-liBPKJ2JMy-3--k9Ak7JBQ-1; Tue, 02 Feb 2021 08:13:33 -0500
-X-MC-Unique: liBPKJ2JMy-3--k9Ak7JBQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-531-yu76t3WUOnCGi--1pnArzg-1; Tue, 02 Feb 2021 08:13:47 -0500
+X-MC-Unique: yu76t3WUOnCGi--1pnArzg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 573B38799E0;
-        Tue,  2 Feb 2021 13:13:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF506196632C;
+        Tue,  2 Feb 2021 13:13:44 +0000 (UTC)
 Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C49FA5C1D1;
-        Tue,  2 Feb 2021 13:13:31 +0000 (UTC)
-Date:   Tue, 2 Feb 2021 08:13:30 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 09EB75D9C6;
+        Tue,  2 Feb 2021 13:13:43 +0000 (UTC)
+Date:   Tue, 2 Feb 2021 08:13:37 -0500
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Subject: Re: [PATCH 14/16] xfs: remove xfs_qm_vop_chown_reserve
-Message-ID: <20210202131330.GD3336100@bfoster>
+Cc:     Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Subject: Re: [PATCH 15/16] xfs: rename code to error in xfs_ioctl_setattr
+Message-ID: <20210202131337.GE3336100@bfoster>
 References: <161223139756.491593.10895138838199018804.stgit@magnolia>
- <161223147738.491593.3959130426904738389.stgit@magnolia>
+ <161223148300.491593.4733623201150889540.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161223147738.491593.3959130426904738389.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <161223148300.491593.4733623201150889540.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 01, 2021 at 06:04:37PM -0800, Darrick J. Wong wrote:
+On Mon, Feb 01, 2021 at 06:04:43PM -0800, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Now that the only caller of this function is xfs_trans_alloc_ichange,
-> just open-code the meat of _chown_reserve in that caller.  Drop the
-> (redundant) [ugp]id checks because xfs has a 1:1 relationship between
-> quota ids and incore dquots.
+> Rename the 'code' variable to 'error' to follow the naming convention of
+> most other functions in xfs.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
 
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/xfs_qm.c    |   48 ------------------------------------------------
->  fs/xfs/xfs_quota.h |    4 ----
->  fs/xfs/xfs_trans.c |   16 ++++++++++++++--
->  3 files changed, 14 insertions(+), 54 deletions(-)
+>  fs/xfs/xfs_ioctl.c |   38 +++++++++++++++++++-------------------
+>  1 file changed, 19 insertions(+), 19 deletions(-)
 > 
 > 
-> diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index 322d337b5dca..275cf5d7a178 100644
-> --- a/fs/xfs/xfs_qm.c
-> +++ b/fs/xfs/xfs_qm.c
-> @@ -1816,54 +1816,6 @@ xfs_qm_vop_chown(
->  	return prevdq;
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 78ee201eb7cb..38ee66d999d8 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1435,13 +1435,13 @@ xfs_ioctl_setattr(
+>  	struct xfs_trans	*tp;
+>  	struct xfs_dquot	*pdqp = NULL;
+>  	struct xfs_dquot	*olddquot = NULL;
+> -	int			code;
+> +	int			error;
+>  
+>  	trace_xfs_ioctl_setattr(ip);
+>  
+> -	code = xfs_ioctl_setattr_check_projid(ip, fa);
+> -	if (code)
+> -		return code;
+> +	error = xfs_ioctl_setattr_check_projid(ip, fa);
+> +	if (error)
+> +		return error;
+>  
+>  	/*
+>  	 * If disk quotas is on, we make sure that the dquots do exist on disk,
+> @@ -1452,36 +1452,36 @@ xfs_ioctl_setattr(
+>  	 * because the i_*dquot fields will get updated anyway.
+>  	 */
+>  	if (XFS_IS_QUOTA_ON(mp)) {
+> -		code = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
+> +		error = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
+>  				VFS_I(ip)->i_gid, fa->fsx_projid,
+>  				XFS_QMOPT_PQUOTA, NULL, NULL, &pdqp);
+> -		if (code)
+> -			return code;
+> +		if (error)
+> +			return error;
+>  	}
+>  
+>  	xfs_ioctl_setattr_prepare_dax(ip, fa);
+>  
+>  	tp = xfs_ioctl_setattr_get_trans(ip, pdqp);
+>  	if (IS_ERR(tp)) {
+> -		code = PTR_ERR(tp);
+> +		error = PTR_ERR(tp);
+>  		goto error_free_dquots;
+>  	}
+>  
+>  	xfs_fill_fsxattr(ip, false, &old_fa);
+> -	code = vfs_ioc_fssetxattr_check(VFS_I(ip), &old_fa, fa);
+> -	if (code)
+> +	error = vfs_ioc_fssetxattr_check(VFS_I(ip), &old_fa, fa);
+> +	if (error)
+>  		goto error_trans_cancel;
+>  
+> -	code = xfs_ioctl_setattr_check_extsize(ip, fa);
+> -	if (code)
+> +	error = xfs_ioctl_setattr_check_extsize(ip, fa);
+> +	if (error)
+>  		goto error_trans_cancel;
+>  
+> -	code = xfs_ioctl_setattr_check_cowextsize(ip, fa);
+> -	if (code)
+> +	error = xfs_ioctl_setattr_check_cowextsize(ip, fa);
+> +	if (error)
+>  		goto error_trans_cancel;
+>  
+> -	code = xfs_ioctl_setattr_xflags(tp, ip, fa);
+> -	if (code)
+> +	error = xfs_ioctl_setattr_xflags(tp, ip, fa);
+> +	if (error)
+>  		goto error_trans_cancel;
+>  
+>  	/*
+> @@ -1521,7 +1521,7 @@ xfs_ioctl_setattr(
+>  	else
+>  		ip->i_d.di_cowextsize = 0;
+>  
+> -	code = xfs_trans_commit(tp);
+> +	error = xfs_trans_commit(tp);
+>  
+>  	/*
+>  	 * Release any dquot(s) the inode had kept before chown.
+> @@ -1529,13 +1529,13 @@ xfs_ioctl_setattr(
+>  	xfs_qm_dqrele(olddquot);
+>  	xfs_qm_dqrele(pdqp);
+>  
+> -	return code;
+> +	return error;
+>  
+>  error_trans_cancel:
+>  	xfs_trans_cancel(tp);
+>  error_free_dquots:
+>  	xfs_qm_dqrele(pdqp);
+> -	return code;
+> +	return error;
 >  }
 >  
-> -/*
-> - * Quota reservations for setattr(AT_UID|AT_GID|AT_PROJID).
-> - */
-> -int
-> -xfs_qm_vop_chown_reserve(
-> -	struct xfs_trans	*tp,
-> -	struct xfs_inode	*ip,
-> -	struct xfs_dquot	*udqp,
-> -	struct xfs_dquot	*gdqp,
-> -	struct xfs_dquot	*pdqp,
-> -	uint			flags)
-> -{
-> -	struct xfs_mount	*mp = ip->i_mount;
-> -	unsigned int		blkflags;
-> -	struct xfs_dquot	*udq_delblks = NULL;
-> -	struct xfs_dquot	*gdq_delblks = NULL;
-> -	struct xfs_dquot	*pdq_delblks = NULL;
-> -
-> -	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL|XFS_ILOCK_SHARED));
-> -	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
-> -
-> -	blkflags = XFS_IS_REALTIME_INODE(ip) ?
-> -			XFS_QMOPT_RES_RTBLKS : XFS_QMOPT_RES_REGBLKS;
-> -
-> -	if (XFS_IS_UQUOTA_ON(mp) && udqp &&
-> -	    i_uid_read(VFS_I(ip)) != udqp->q_id)
-> -		udq_delblks = udqp;
-> -
-> -	if (XFS_IS_GQUOTA_ON(ip->i_mount) && gdqp &&
-> -	    i_gid_read(VFS_I(ip)) != gdqp->q_id)
-> -		gdq_delblks = gdqp;
-> -
-> -	if (XFS_IS_PQUOTA_ON(ip->i_mount) && pdqp &&
-> -	    ip->i_d.di_projid != pdqp->q_id)
-> -		pdq_delblks = pdqp;
-> -
-> -	/*
-> -	 * Reserve enough quota to handle blocks on disk and reserved for a
-> -	 * delayed allocation.  We'll actually transfer the delalloc
-> -	 * reservation between dquots at chown time, even though that part is
-> -	 * only semi-transactional.
-> -	 */
-> -	return xfs_trans_reserve_quota_bydquots(tp, ip->i_mount, udq_delblks,
-> -			gdq_delblks, pdq_delblks,
-> -			ip->i_d.di_nblocks + ip->i_delayed_blks,
-> -			1, blkflags | flags);
-> -}
-> -
->  int
->  xfs_qm_vop_rename_dqattach(
->  	struct xfs_inode	**i_tab)
-> diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
-> index 6ddc4b358ede..d00d01302545 100644
-> --- a/fs/xfs/xfs_quota.h
-> +++ b/fs/xfs/xfs_quota.h
-> @@ -98,9 +98,6 @@ extern void xfs_qm_vop_create_dqattach(struct xfs_trans *, struct xfs_inode *,
->  extern int xfs_qm_vop_rename_dqattach(struct xfs_inode **);
->  extern struct xfs_dquot *xfs_qm_vop_chown(struct xfs_trans *,
->  		struct xfs_inode *, struct xfs_dquot **, struct xfs_dquot *);
-> -extern int xfs_qm_vop_chown_reserve(struct xfs_trans *, struct xfs_inode *,
-> -		struct xfs_dquot *, struct xfs_dquot *,
-> -		struct xfs_dquot *, uint);
->  extern int xfs_qm_dqattach(struct xfs_inode *);
->  extern int xfs_qm_dqattach_locked(struct xfs_inode *ip, bool doalloc);
->  extern void xfs_qm_dqdetach(struct xfs_inode *);
-> @@ -162,7 +159,6 @@ xfs_trans_reserve_quota_icreate(struct xfs_trans *tp, struct xfs_dquot *udqp,
->  #define xfs_qm_vop_create_dqattach(tp, ip, u, g, p)
->  #define xfs_qm_vop_rename_dqattach(it)					(0)
->  #define xfs_qm_vop_chown(tp, ip, old, new)				(NULL)
-> -#define xfs_qm_vop_chown_reserve(tp, ip, u, g, p, fl)			(0)
->  #define xfs_qm_dqattach(ip)						(0)
->  #define xfs_qm_dqattach_locked(ip, fl)					(0)
->  #define xfs_qm_dqdetach(ip)
-> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-> index 60672b5545c9..29dca1bc4c1a 100644
-> --- a/fs/xfs/xfs_trans.c
-> +++ b/fs/xfs/xfs_trans.c
-> @@ -1156,8 +1156,20 @@ xfs_trans_alloc_ichange(
->  	if (pdqp == ip->i_pdquot)
->  		pdqp = NULL;
->  	if (udqp || gdqp || pdqp) {
-> -		error = xfs_qm_vop_chown_reserve(tp, ip, udqp, gdqp, pdqp,
-> -				force ? XFS_QMOPT_FORCE_RES : 0);
-> +		unsigned int	qflags = XFS_QMOPT_RES_REGBLKS;
-> +
-> +		if (force)
-> +			qflags |= XFS_QMOPT_FORCE_RES;
-> +
-> +		/*
-> +		 * Reserve enough quota to handle blocks on disk and reserved
-> +		 * for a delayed allocation.  We'll actually transfer the
-> +		 * delalloc reservation between dquots at chown time, even
-> +		 * though that part is only semi-transactional.
-> +		 */
-> +		error = xfs_trans_reserve_quota_bydquots(tp, mp, udqp, gdqp,
-> +				pdqp, ip->i_d.di_nblocks + ip->i_delayed_blks,
-> +				1, qflags);
->  		if (error)
->  			goto out_cancel;
->  	}
+>  STATIC int
 > 
 
