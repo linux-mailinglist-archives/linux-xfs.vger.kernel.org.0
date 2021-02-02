@@ -2,101 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EE2E30C434
+	by mail.lfdr.de (Postfix) with ESMTP id EA3F330C435
 	for <lists+linux-xfs@lfdr.de>; Tue,  2 Feb 2021 16:46:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235078AbhBBPoH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Feb 2021 10:44:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:29663 "EHLO
+        id S235246AbhBBPoK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Feb 2021 10:44:10 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30049 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235646AbhBBPkr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Feb 2021 10:40:47 -0500
+        by vger.kernel.org with ESMTP id S235107AbhBBPk4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Feb 2021 10:40:56 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1612280360;
+        s=mimecast20190719; t=1612280370;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=MMXYTdY8iIuKkMG0Vj6wxoJk0ZXFlBA+vZDUH9RfddM=;
-        b=RtC8uAgu56HhucfRoLauC0/jGBaAdOaTcitTxopSElBPFS3V2i7SXqi5hJnXhMh7yk/PpV
-        xOvrns5wwHXNDM2CVvhqT4YUij+PBIIIJBKvlp3iORQMgPdQ2G2NLAEaqxKYZvhtv9w7xY
-        C4GVdSszxao8mLprK1i+y/3UHCcLr+c=
+        bh=GZSGInIZpMS+pE4zUnSiXU7R6wPWpSm3gP0pj7ylNys=;
+        b=ejdQIubBluGZuC+DT+ns+zCDlBNhe9L6btBzjwcCI/71kl5o1PRuoF6UWbIfh1ltjAI+a/
+        rfI7zBWJsAuDmdPKQf7+rOBSMLE4hZSQySPWcpfGlwtMPlNYI8Umkil+Pi7rQhP/R/ODlj
+        /dntJBWclyElGJQcKMFEKNcAxHj98K0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-Nb3RrnOrOMS4TdEw-SR8YQ-1; Tue, 02 Feb 2021 10:39:19 -0500
-X-MC-Unique: Nb3RrnOrOMS4TdEw-SR8YQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-226-l4LaM6b0NGygdutcyqJJdw-1; Tue, 02 Feb 2021 10:39:26 -0500
+X-MC-Unique: l4LaM6b0NGygdutcyqJJdw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 049B71936B66;
-        Tue,  2 Feb 2021 15:39:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6B448049C9;
+        Tue,  2 Feb 2021 15:39:24 +0000 (UTC)
 Received: from bfoster (ovpn-114-23.rdu2.redhat.com [10.10.114.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 756925C1CF;
-        Tue,  2 Feb 2021 15:39:17 +0000 (UTC)
-Date:   Tue, 2 Feb 2021 10:39:15 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 444DE50A80;
+        Tue,  2 Feb 2021 15:39:24 +0000 (UTC)
+Date:   Tue, 2 Feb 2021 10:39:22 -0500
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org, david@fromorbit.com
-Subject: Re: [PATCH 09/12] xfs: flush eof/cowblocks if we can't reserve quota
- for chown
-Message-ID: <20210202153915.GI3336100@bfoster>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        hch@infradead.org, david@fromorbit.com
+Subject: Re: [PATCH 12/12] xfs: flush speculative space allocations when we
+ run out of space
+Message-ID: <20210202153922.GJ3336100@bfoster>
 References: <161214512641.140945.11651856181122264773.stgit@magnolia>
- <161214517714.140945.1957722027452288290.stgit@magnolia>
+ <161214519414.140945.335722903527111632.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161214517714.140945.1957722027452288290.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <161214519414.140945.335722903527111632.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Jan 31, 2021 at 06:06:17PM -0800, Darrick J. Wong wrote:
+On Sun, Jan 31, 2021 at 06:06:34PM -0800, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> If a file user, group, or project change is unable to reserve enough
-> quota to handle the modification, try clearing whatever space the
-> filesystem might have been hanging onto in the hopes of speeding up the
-> filesystem.  The flushing behavior will become particularly important
-> when we add deferred inode inactivation because that will increase the
-> amount of space that isn't actively tied to user data.
+> If a fs modification (creation, file write, reflink, etc.) is unable to
+> reserve enough space to handle the modification, try clearing whatever
+> space the filesystem might have been hanging onto in the hopes of
+> speeding up the filesystem.  The flushing behavior will become
+> particularly important when we add deferred inode inactivation because
+> that will increase the amount of space that isn't actively tied to user
+> data.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
 
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/xfs_trans.c |    9 +++++++++
->  1 file changed, 9 insertions(+)
+>  fs/xfs/xfs_trans.c |   11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
 > 
 > diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-> index ee3cb916c5c9..3203841ab19b 100644
+> index 3203841ab19b..973354647298 100644
 > --- a/fs/xfs/xfs_trans.c
 > +++ b/fs/xfs/xfs_trans.c
-> @@ -1149,8 +1149,10 @@ xfs_trans_alloc_ichange(
->  	struct xfs_dquot	*new_udqp;
->  	struct xfs_dquot	*new_gdqp;
->  	struct xfs_dquot	*new_pdqp;
-> +	bool			retried = false;
->  	int			error;
+> @@ -289,6 +289,17 @@ xfs_trans_alloc(
+>  	tp->t_firstblock = NULLFSBLOCK;
 >  
-> +retry:
->  	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_ichange, 0, 0, 0, &tp);
->  	if (error)
+>  	error = xfs_trans_reserve(tp, resp, blocks, rtextents);
+> +	if (error == -ENOSPC) {
+> +		/*
+> +		 * We weren't able to reserve enough space for the transaction.
+> +		 * Flush the other speculative space allocations to free space.
+> +		 * Do not perform a synchronous scan because callers can hold
+> +		 * other locks.
+> +		 */
+> +		error = xfs_blockgc_free_space(mp, NULL);
+> +		if (!error)
+> +			error = xfs_trans_reserve(tp, resp, blocks, rtextents);
+> +	}
+>  	if (error) {
+>  		xfs_trans_cancel(tp);
 >  		return error;
-> @@ -1175,6 +1177,13 @@ xfs_trans_alloc_ichange(
->  	if (new_udqp || new_gdqp || new_pdqp) {
->  		error = xfs_trans_reserve_quota_chown(tp, ip, new_udqp,
->  				new_gdqp, new_pdqp, force);
-> +		if (!retried && (error == -EDQUOT || error == -ENOSPC)) {
-> +			xfs_trans_cancel(tp);
-> +			xfs_blockgc_free_dquots(new_udqp, new_gdqp, new_pdqp,
-> +					0);
-> +			retried = true;
-> +			goto retry;
-> +		}
->  		if (error)
->  			goto out_cancel;
->  	}
 > 
 
