@@ -2,93 +2,191 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D680310F88
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Feb 2021 19:10:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EFB4310FD6
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Feb 2021 19:26:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233706AbhBEQZi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Feb 2021 11:25:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231250AbhBEQXe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Feb 2021 11:23:34 -0500
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81995C06178A
-        for <linux-xfs@vger.kernel.org>; Fri,  5 Feb 2021 10:05:16 -0800 (PST)
-Received: by mail-wm1-x343.google.com with SMTP id t142so4546977wmt.1
-        for <linux-xfs@vger.kernel.org>; Fri, 05 Feb 2021 10:05:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:references:from:subject:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P600uqHJCEN9ATilhvtzyCmd2fL+4331TVKLXFIhroY=;
-        b=B+tDrd36UYxa57cHnhcwzYkn4jpc1+kRl5+eJH6uOyvecq/4/yLNJpGWpTX86tA1eA
-         qGfqihoQMLZ4roX8i0F+QP15UxpQxd89Nu8t53HLtOUYAm9Nx2Tx2sk1b37dde2FB7xm
-         WfObHVZAtwkbFXg3NcBN3r/rxT5ubyG/LNV3Vu7psh5Mt6rigtToP4WcNlLfph15B399
-         s8F/64yAnNfx8ARco0DBfIkR/n5vf2SSyhONeSqf/GVMgIQC+s8Ges4b8/iVz9UFPbNq
-         8Bxuk85ZuXph7SrwKJbyzREZgusePkZxYMzGV0i9hAsPNp5de/EenxyzszsvpNbIqS6G
-         hTWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P600uqHJCEN9ATilhvtzyCmd2fL+4331TVKLXFIhroY=;
-        b=J98yBd4plot+2F5uryNq/Gwpdswo6YwvXL842va/lq+tz7Vv9YXmNI6x44RI73k5Ca
-         XeqVrYuTEO88gPjisMz9UAzgJIsr2QvaDb1k+vItvxBoCrNMT4KudMuXYtYfry1ck9bh
-         RLS4v772rfL2NXUYL+Q0809UcxZdkpALzlz5ObXy6ZcX2/1a5NX+qP0GhdzcxG9Jq8O5
-         j6wrT6kTz3jDO0uWDPbPM6GvsZwnJ9DFaoivvA45qpKXXssbmXZBwgIH6GhHQDKhQkc3
-         7IwlGpW2YDBBcSGN7pq7ht7mWT93veSBevmJvB8bYRVfJLxWgNtgXr4w/qIqUEvPklha
-         V+PQ==
-X-Gm-Message-State: AOAM530apyAXiDnrrx11s5LPUN0RjEiZs/MhR3MvFRgmi/yC8yxISAHb
-        fH0tHlZiuwqmcsqOg2wDHq2gbfDhX0BWoV3w
-X-Google-Smtp-Source: ABdhPJzNX6YzcSJ9hHRHmaBOZ5VY6fEnYPkHo6uygIvIhxMajymd5epGOeFwY3JeQxNwisYcdH4ufg==
-X-Received: by 2002:a7b:c842:: with SMTP id c2mr4601319wml.100.1612548315301;
-        Fri, 05 Feb 2021 10:05:15 -0800 (PST)
-Received: from ?IPv6:2003:d0:6f35:5400:ebbc:e7b1:bde:1433? (p200300d06f355400ebbce7b10bde1433.dip0.t-ipconnect.de. [2003:d0:6f35:5400:ebbc:e7b1:bde:1433])
-        by smtp.gmail.com with ESMTPSA id n187sm9491830wmf.29.2021.02.05.10.05.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Feb 2021 10:05:14 -0800 (PST)
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-References: <20210205003125.24463-1-bastiangermann@fishpost.de>
- <20210205003125.24463-2-bastiangermann@fishpost.de>
- <20210205005100.GK7193@magnolia>
-From:   Bastian Germann <bastiangermann@fishpost.de>
-Subject: Re: [PATCH 1/3] debian: Drop unused dh-python from Build-Depends
-Message-ID: <ca46724d-dce6-ac8c-65a7-99beb6bfc27c@fishpost.de>
-Date:   Fri, 5 Feb 2021 19:05:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S233391AbhBEQmZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Feb 2021 11:42:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233387AbhBEQjA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 5 Feb 2021 11:39:00 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 93ACD64FCB
+        for <linux-xfs@vger.kernel.org>; Fri,  5 Feb 2021 18:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612548887;
+        bh=Z9yhw8DQg+gON8KMcnC2D9KE9mAHw0cmOHwYuGAZgLo=;
+        h=From:To:Subject:Date:From;
+        b=Az67nuhIUngfZirS7AENkx6/C3/ThbXLW9ut+28iArtxpyoP4l3v4tqO7plEIAxbQ
+         hQVxBTGaHGBoXV8BBQfVnVxuOCPNNyYOvZyWnF6yZR8auQLCziin2VNa0TZuhR6oT8
+         Bn3/Q6+up2GEMsI+1v3YpIyfm3Rm6xXeVkLaxywa4fLbt44EQxiEggRj8nuCIKxKnB
+         LWg5Bmq9np2zbHVPRKrjh8KWH5Ke9kfNnatStbfQQT7YAD3R+NZfFWWfBWvtRpAusu
+         XchDyur8Uf05tPbZ2WvS5VwLAaRaXfBSQb+uSoZKgD6SvtMxY8a0VSPVuEnrGtvePF
+         /HhIG72OfRBoA==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 8BA0665341; Fri,  5 Feb 2021 18:14:47 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 211577] New: [generic/475] WARNING: CPU: 1 PID: 11596 at
+ fs/iomap/buffered-io.c:79 iomap_page_release+0x220/0x290
+Date:   Fri, 05 Feb 2021 18:14:47 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: zlang@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression
+Message-ID: <bug-211577-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-In-Reply-To: <20210205005100.GK7193@magnolia>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Am 05.02.21 um 01:51 schrieb Darrick J. Wong:
-> On Fri, Feb 05, 2021 at 01:31:23AM +0100, Bastian Germann wrote:
->> xfsprogs participates in dependency loops relevant to architecture
->> bootstrap. Identifying easily droppable dependencies, it was found
->> that xfsprogs does not use dh-python in any way.
-> 
-> scrub/xfs_scrub_all.in and tools/xfsbuflock.py are the only python
-> scripts in xfsprogs.  We ship the first one as-is in the xfsprogs
-> package and we don't ship the second one at all (it's a debugger tool).
-> 
-> AFAICT neither of them really use dh-python, right?
+https://bugzilla.kernel.org/show_bug.cgi?id=3D211577
 
-That is right. dh-python is generally used at build time to generate 
-packages with Python modules, i.e., with files in 
-/usr/lib/python3/dist-packages. That is not the case in xfsprogs.
+            Bug ID: 211577
+           Summary: [generic/475] WARNING: CPU: 1 PID: 11596 at
+                    fs/iomap/buffered-io.c:79
+                    iomap_page_release+0x220/0x290
+           Product: File System
+           Version: 2.5
+    Kernel Version: linux 5.11.0-rc6+
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: XFS
+          Assignee: filesystem_xfs@kernel-bugs.kernel.org
+          Reporter: zlang@redhat.com
+        Regression: No
 
-For xfsprogs, python3 is only a runtime dependency and that is defined 
-in the control file as well.
+xfstests generic/475 hit a kernel warning as below
+# ./check generic/475
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/ppc64le ibm-p9z-xx-xxx 5.11.0-rc6+ #4 SMP Fri Feb 5
+10:22:14 EST 2021
+MKFS_OPTIONS  -- -f -m crc=3D1,finobt=3D1,rmapbt=3D1,reflink=3D1,inobtcount=
+=3D1,bigtime=3D1
+/dev/sda3
+MOUNT_OPTIONS -- -o context=3Dsystem_u:object_r:root_t:s0 /dev/sda3
+/mnt/xfstests/scratch
 
-> --D
-> 
->>
->> Reported-by: Helmut Grohne <helmut@subdivi.de>
->> Signed-off-by: Bastian Germann <bastiangermann@fishpost.de>
+generic/475     _check_dmesg: something found in dmesg (see
+/var/lib/xfstests/results//generic/475.dmesg)
+
+Ran: generic/475
+Failures: generic/475
+Failed 1 of 1 tests
+
+[ 1026.319574] XFS (dm-0): xfs_imap_lookup: xfs_ialloc_read_agi() returned
+error -5, agno 2
+[ 1026.319704] XFS (dm-0): xfs_do_force_shutdown(0x2) called from line 1196=
+ of
+file fs/xfs/xfs_log.c. Return address =3D c0080000019a801c
+[ 1026.319715] XFS (dm-0): Log I/O Error Detected. Shutting down filesystem
+[ 1026.319721] XFS (dm-0): Please unmount the filesystem and rectify the
+problem(s)
+[ 1026.320282] XFS (dm-0): xfs_imap_lookup: xfs_ialloc_read_agi() returned
+error -5, agno 0
+[ 1026.822032] ------------[ cut here ]------------
+[ 1026.822053] WARNING: CPU: 1 PID: 11596 at fs/iomap/buffered-io.c:79
+iomap_page_release+0x220/0x290
+[ 1026.822069] Modules linked in: dm_mod bonding rfkill sunrpc uio_pdrv_gen=
+irq
+uio pseries_rng drm fuse drm_panel_orientation_quirks ip_tables xfs libcrc3=
+2c
+sd_mod t10_pi ibmvscsi ibmveth scs
+i_transport_srp xts vmx_crypto
+[ 1026.822151] CPU: 1 PID: 11596 Comm: umount Not tainted 5.11.0-rc6+ #4
+[ 1026.822162] NIP:  c0000000006a0f20 LR: c0000000006a0df4 CTR:
+c0000000006a1230
+[ 1026.822172] REGS: c00000002b847590 TRAP: 0700   Not tainted  (5.11.0-rc6=
++)
+[ 1026.822181] MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR:
+44004882  XER: 20040123
+[ 1026.822231] CFAR: c0000000006a0e28 IRQMASK: 0
+               GPR00: c000000000475028 c00000002b847830 c000000002127000
+0000000000000010
+               GPR04: 0000000000000000 0000000000000010 0000000000000000
+ffffffffffffffff
+               GPR08: ffffffffffff0000 0000000000000000 0000000000000000
+0000000000000000
+               GPR12: c0000000006a1230 c00000001ec9ee00 0000000000000000
+00007fffe03f6b64
+               GPR16: 000000000ee6b280 00007fffe03f6ad0 0000000000000000
+0000000000000000
+               GPR20: 0000000000000000 0000000000000000 0000000000000000
+c0000000012c4a40
+               GPR24: 0000000000000000 0000000000000001 ffffffffffffffff
+c000000021aacf40
+               GPR28: c00000002b847968 c00000000c027440 0000000000000001
+c00c00000015c240
+[ 1026.822390] NIP [c0000000006a0f20] iomap_page_release+0x220/0x290
+[ 1026.822400] LR [c0000000006a0df4] iomap_page_release+0xf4/0x290
+[ 1026.822410] Call Trace:
+[ 1026.822416] [c00000002b847830] [c0000000006a1484]
+iomap_invalidatepage+0x254/0x2c0 (unreliable)=20=20=20=20=20=20=20=20=20=20=
+=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20
+[ 1026.822434] [c00000002b847880] [c000000000475028]
+truncate_cleanup_page+0xa8/0x1d0
+[ 1026.822449] [c00000002b8478b0] [c000000000475e7c]
+truncate_inode_pages_range+0x22c/0x9d0
+[ 1026.822464] [c00000002b847ac0] [c0000000005e2818] evict+0x218/0x230
+[ 1026.822478] [c00000002b847b00] [c0000000005e28c0] dispose_list+0x90/0xe0
+[ 1026.822491] [c00000002b847b40] [c0000000005e2ab4] evict_inodes+0x1a4/0x2=
+70
+[ 1026.822504] [c00000002b847be0] [c0000000005b1af0]
+generic_shutdown_super+0x70/0x170
+[ 1026.822518] [c00000002b847c60] [c0000000005b1f08] kill_block_super+0x38/=
+0xb0
+[ 1026.822531] [c00000002b847c90] [c0000000005b3380]
+deactivate_locked_super+0x80/0x140
+[ 1026.822545] [c00000002b847cd0] [c0000000005ee64c] cleanup_mnt+0x15c/0x240
+[ 1026.822559] [c00000002b847d20] [c00000000019a3a4] task_work_run+0xb4/0x1=
+20
+[ 1026.822573] [c00000002b847d70] [c000000000024ca4]
+do_notify_resume+0x164/0x170
+[ 1026.822588] [c00000002b847da0] [c00000000003b51c]
+syscall_exit_prepare+0x24c/0x390
+[ 1026.822603] [c00000002b847e10] [c00000000000d380]
+system_call_vectored_common+0x100/0x26c
+[ 1026.822617] Instruction dump:
+[ 1026.822626] 4bf01109 60000000 2c3e0000 e8610028 4082fea0 4bdce3d5 600000=
+00
+4bfffe94
+[ 1026.822658] 3869ffff 60000000 4bfffe50 60420000 <0fe00000> 4bffff08 6000=
+0000
+60420000
+[ 1026.822690] irq event stamp: 4666
+[ 1026.822697] hardirqs last  enabled at (4665): [<c000000000542b04>]
+__slab_free+0x414/0x610
+[ 1026.822709] hardirqs last disabled at (4666): [<c0000000000098f4>]
+program_check_common_virt+0x304/0x360
+[ 1026.822720] softirqs last  enabled at (4618): [<c00000000060889c>]
+wb_queue_work+0x11c/0x300
+[ 1026.822731] softirqs last disabled at (4614): [<c000000000608824>]
+wb_queue_work+0xa4/0x300
+[ 1026.822742] ---[ end trace 2285fc94a41146ef ]---
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
