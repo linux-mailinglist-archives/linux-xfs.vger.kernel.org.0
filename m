@@ -2,64 +2,78 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43C6A3111BC
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Feb 2021 21:01:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 885E5311297
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Feb 2021 21:37:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233646AbhBESR6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 5 Feb 2021 13:17:58 -0500
-Received: from [20.39.40.203] ([20.39.40.203]:55697 "EHLO optinix.in"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S233183AbhBEPTk (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 5 Feb 2021 10:19:40 -0500
-dkim-signature: v=1; a=rsa-sha256; d=digitalsol.in; s=dkim;
-        c=relaxed/relaxed; q=dns/txt; h=From:Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=wK2neTcOXNiSQ+RBxrnFed+mRrGUU/ndLGEgvo8IMCc=;
-        b=JFt3cjfr2gf0oZFNAIkKMxcz4dJD/YGkc0fGvOoSd3DydZ6om7JzTU837vBFVq1NIPU0D2QA5BLHZXE1+7cBmkJlbZjYCUFmJkkaBVbP88e4KHnDVRcctmBLIZ1pL5VerRqjcciKkL4DSuyXFJlGk3Z0CRoskvUoLBM7ZhpxLeqIU2BKsbHQXJZ1h2qHQhaHiD+VrGx+bGKjZzbhmRvwLDQIByq6jRcjht5MzYCcxpzOzp/k+Dev9dQj7B
-        WId68CyP4XonlI4wIMRo1xiGfUtKZ+P3cZo2ejPWBjr+ynq3dK3OxibTTEKfmOc5W1zmJFMAPQ+ZKxsa3M4d1PiYxHmg==
-Received: from User (Unknown [52.231.31.5])
-        by optinix.in with ESMTP
-        ; Mon, 1 Feb 2021 08:50:14 +0000
-Message-ID: <D474448D-A325-42CC-A881-8334C6C84BA7@optinix.in>
-Reply-To: <ms.reem@yandex.com>
-From:   "Ms. Reem" <support@digitalsol.in>
-Subject: Re:read
-Date:   Mon, 1 Feb 2021 08:50:13 -0000
+        id S230307AbhBESwt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Feb 2021 13:52:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233231AbhBESwd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Feb 2021 13:52:33 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE4C0C06174A
+        for <linux-xfs@vger.kernel.org>; Fri,  5 Feb 2021 12:34:16 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id c127so6898466wmf.5
+        for <linux-xfs@vger.kernel.org>; Fri, 05 Feb 2021 12:34:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v6nlP1w1UDl73559MvBbgFYy6HvG/HEBs2Gz7EQUBD4=;
+        b=dbkfREIgrBwG/ke9Um1CnwTX3PhTK/9YWTT8GntYc52T2DPx3Q6PvRQiB262rTtPpx
+         LwoaKdbpF+3x7NKH/J9ixEXece8U4BqVpz2MhtsiySjtSVtT0JtydGV8MKO2VU3U6iZb
+         avYQLlVpbmXKk1wIW2JvHFbHhM0VxUMnsncm+bspDgIt2RmQJa7r5YV1xW3iAt04A173
+         V0ceBexjU1zfYuqCkgJS4XfFXPfAH7pdSuwj2k0ED3u9g9wMvXjCBiLupwilph4iRi3G
+         DJ7XSZq7d6msHzF7ODS/FgCW1jZNZ5aitccnnlmabR2qospy0uyzkMFjAi6LF7x4G0wT
+         1IjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v6nlP1w1UDl73559MvBbgFYy6HvG/HEBs2Gz7EQUBD4=;
+        b=DS/MjFd6shB1mR5FB1Zf8igE0bVFaowQiT1ZITLxU4skSyiQcYRXqBBFyNsFaRU+3n
+         K7ZWpBdG4zLkLZMg7n7CZBSusNRvTXLtNqApNljMe+Zr/v6bHkWNUVxT7b7HStUSoVOo
+         zm2K4PWK5tjsvowPfiYmQ/w3Uuk+FptLTG3vkFnvpi1I4OgNnhW5P/QRuazol7v890oz
+         6fd+COFFBFk0ntCs1oQta7zVc1+QumgEixDJoXOAfk7O8a+kbEp1WKf+0t5CviJix2oa
+         MQ4CiBW95dMfQFKH0E0NFCq3VO4O5B6sX5pCigTW5Jl5Cv0jsDoW4Ln/Yb/kspPVa99N
+         n0QQ==
+X-Gm-Message-State: AOAM531IAHkKnqlVonPWUu+X8kzYpuITpgeNdxzLAN4oAe6FAxczZ/PR
+        1wl0GalccTVbAvi+uxBj/jjymChGtmPbOwrXpDI=
+X-Google-Smtp-Source: ABdhPJwUzPYbgL6SHXuczbiw2+GBonFsYiZ1wqmxk5CUpprWSzYH0p5ulfLaRnhyvX8QsFZmwyxXAw==
+X-Received: by 2002:a1c:3286:: with SMTP id y128mr4975336wmy.104.1612557255569;
+        Fri, 05 Feb 2021 12:34:15 -0800 (PST)
+Received: from thinkbage.fritz.box (p200300d06f2cdf002a7b928337dce408.dip0.t-ipconnect.de. [2003:d0:6f2c:df00:2a7b:9283:37dc:e408])
+        by smtp.gmail.com with ESMTPSA id j14sm15664985wrd.36.2021.02.05.12.34.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Feb 2021 12:34:15 -0800 (PST)
+From:   Bastian Germann <bastiangermann@fishpost.de>
+To:     linux-xfs@vger.kernel.org
+Cc:     Bastian Germann <bastiangermann@fishpost.de>
+Subject: [PATCH v2 0/3] debian: minor fixes
+Date:   Fri,  5 Feb 2021 21:34:02 +0100
+Message-Id: <20210205203405.1955-1-bastiangermann@fishpost.de>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello,
+This series contains unrelated changes for the xfsprogs Debian package.
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (3) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home in Cambodia on their behalf and
-for our "Mutual Benefits".
+v2: Resend with Reviewed-bys applied.
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Cambodian/Vietnam Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+Bastian Germann (3):
+  debian: Drop unused dh-python from Build-Depends
+  debian: Only build for Linux
+  debian: Prevent installing duplicate changelog
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-ms.reem@yandex.com
+ debian/changelog | 8 ++++++++
+ debian/control   | 8 ++++----
+ debian/rules     | 2 +-
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
-Regards,
-Ms. Reem.
+-- 
+2.30.0
 
