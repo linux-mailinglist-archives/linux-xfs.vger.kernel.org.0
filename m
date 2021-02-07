@@ -2,69 +2,119 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5EE7311E21
-	for <lists+linux-xfs@lfdr.de>; Sat,  6 Feb 2021 15:57:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E7FC312167
+	for <lists+linux-xfs@lfdr.de>; Sun,  7 Feb 2021 06:08:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbhBFO4q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 6 Feb 2021 09:56:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230086AbhBFO4n (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 6 Feb 2021 09:56:43 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA2B3C061224
-        for <linux-xfs@vger.kernel.org>; Sat,  6 Feb 2021 06:56:03 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id df22so12957205edb.1
-        for <linux-xfs@vger.kernel.org>; Sat, 06 Feb 2021 06:56:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
-        b=LKTydslwkBHjRBD/0U/iTEH4rnbV3bQM+PEGCYVnKRWqCpBuxiyyJWlH+XxoDVh2b/
-         HFZWTfmHMpqHsMdZMtB/2gIQb6SrU7HNNg4Pbg6aDUnwTTYa4ErmhrI4rReQ/aAXsVVq
-         wwdcwN/6PaD+QIBMSCrJ3tjlNWUWWctCNR4ZtJFT9jJA61Cvt48scMGk7sXyE5r6ccDR
-         P3Y4T1+1qudMtHcSBxbPHr6TwKJ2cZ6qwDAUiEhK7eJUvy9B8fetIBZUma+T+Fz/B+MD
-         X/a9+Uu3zKZgMCYnPeP2cVIikCY3zOffZKfAVZgicLkOAYPws+uBFNEJqRYUVgffaWvv
-         FXrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=sY4fgq/DSyThalwU7QX+pWYKs/8sGH7ZznMUn5qQ1EY=;
-        b=nEQempFfEVrqTi9ZhXi5pp9Ac6dfhnPNgYEUctFKOVwjhW+2B86ZvjxA2/ZLVtYj6v
-         7j1AG4DkHLZ6pzAsuo58JraBMHrMHMczI+Ghq99Rt5K1AxUBY10V811xUHH00FObs1Jg
-         vh63ShElzcBRNQNKxH0dM8oP+P21gH19k4zCxvRcn/emwme8Fi3ldP8ZBQUbenmr57cQ
-         NGe2cnElEWFzNXJ+/SFqVbXHeDXN5ZlNH+XxMvfc0AwOCEjzX7zDDfjVsFq30PVBLzyi
-         DUSjGIfPY8xJkklFJjLGHkxmR1M0DVj6ykWBb9T9S93/CqnvtsRqS8WPrVIokrUnZX2B
-         YikQ==
-X-Gm-Message-State: AOAM5334wjBIDO6/EMd5a1AGSpdZcomMfHMM6ZwNgxD0DwlY/0qFeMse
-        Uki5PLdLeCdcVeaqCbe64VdPCJz+5M5HqVlThq0=
-X-Google-Smtp-Source: ABdhPJzHuK3LvHqbpz7y7FkmfdCO+mLpCyAcQI6UI8feOQjxzQakBQkfzu17R8y2ODfxQ2tLrHWIUKNuNGqsXo7YnO0=
-X-Received: by 2002:a05:6402:3508:: with SMTP id b8mr8823036edd.341.1612623362722;
- Sat, 06 Feb 2021 06:56:02 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a17:906:25d0:0:0:0:0 with HTTP; Sat, 6 Feb 2021 06:56:02
- -0800 (PST)
-Reply-To: lawyer.nba@gmail.com
-From:   Barrister Daven Bango <stephennbada9@gmail.com>
-Date:   Sat, 6 Feb 2021 15:56:02 +0100
-Message-ID: <CAGSHw-BTtjFX0_eZQxh6ESq0ccY53ZvhP0ukJTUOzzjPJEQARQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
+        id S229491AbhBGFHS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 7 Feb 2021 00:07:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229445AbhBGFHR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 7 Feb 2021 00:07:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 0B09564E34
+        for <linux-xfs@vger.kernel.org>; Sun,  7 Feb 2021 05:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1612674397;
+        bh=I23KbEI6BE8Hp86bAsZ5D1wDKQPpftNAyaD0wSahb+4=;
+        h=From:To:Subject:Date:From;
+        b=pbPvSDSCPXuS7zhxqqibZFpgnwQDAO/dzFoprf1D20PB7UdATF0x6pXfhBLBambOl
+         f38cVZeHxWRPWjzURyKbQTy6ZqwppX32o4Fe803dn75AsHHG4c29w6dkkE2ckRn0bc
+         VcAJI/rCmLsnrx2UaHezqElifWK6UtzLQN0g1tVIlyBsKHDrr7zogG8d4SR52CS+Ig
+         SfwfQkCwr0GFskWw+IeYrvRnAOKClvjBif4YGuKtFUEg9khPGmrmb5+c0nfu+KkltQ
+         h8gwOB1Wnnnj9C6GBOSO6IZJG9i0rsquJJUgvdU10B10VCmDQWnDa+E2Y6RPUv7ai9
+         RZMmixuUxcSWA==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 00EE865358; Sun,  7 Feb 2021 05:06:37 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 211605] New: Re-mount XFS causes "noattr2 mount option is
+ deprecated" warning
+Date:   Sun, 07 Feb 2021 05:06:36 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: low
+X-Bugzilla-Who: cuihao.leo@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression attachments.created
+Message-ID: <bug-211605-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
---=20
-Korisnik fonda =C4=8Destitanja, Va=C5=A1a sredstva za naknadu od 850.000,00
-ameri=C4=8Dkih dolara odobrila je Me=C4=91unarodna monetarna organizacija (=
-MMF)
-u suradnji s (FBI) nakon mnogo istraga. =C4=8Cekamo da se obratimo za
-dodatne informacije
+https://bugzilla.kernel.org/show_bug.cgi?id=3D211605
 
-Advokat: Daven Bango
-Telefon: +22891667276
-(URED MMF-a LOME TOGO)
+            Bug ID: 211605
+           Summary: Re-mount XFS causes "noattr2 mount option is
+                    deprecated" warning
+           Product: File System
+           Version: 2.5
+    Kernel Version: 5.10.13
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: low
+          Priority: P1
+         Component: XFS
+          Assignee: filesystem_xfs@kernel-bugs.kernel.org
+          Reporter: cuihao.leo@gmail.com
+        Regression: No
+
+Created attachment 295103
+  --> https://bugzilla.kernel.org/attachment.cgi?id=3D295103&action=3Dedit
+proposed fix
+
+After recent kernel update, I notice "XFS: noattr2 mount option is deprecat=
+ed."
+kernel message every time I shutdown the system. It turns out that remounti=
+ng a
+XFS causes the warning.
+
+Steps to Reproduce:
+1) Mount a XFS and remount it with different options:
+> $ mount some_xfs.img /mnt/test
+> $ mount -o remount,ro /mnt/test
+2) Check kernel message. Remounting causes a line of warning:
+> XFS: noattr2 mount option is deprecated.
+
+I had checked my fstab and kernel params and didn't found any use of "attr2"
+option. It doesn't break things, but is a little confusing.
+
+Build Information:
+Arch Linux stock kernel.
+Linux cvhc-tomato 5.10.13-arch1-1 #1 SMP PREEMPT Wed, 03 Feb 2021 23:44:07
++0000 x86_64 GNU/Linux
+
+Additional Information:
+The warning is introduced in commit c23c393e. I guess remounting triggers it
+because XFS driver still writes attr2 option to /proc/mounts:
+> $ grep attr2 /proc/mounts
+> /dev/nvme0n1p3 / xfs rw,noatime,attr2,inode64,logbufs=3D8,logbsize=3D32k,=
+noquota
+> 0 0
+
+"attr2" is default so it should be omitted in mount options. A potential fix
+(attached, untested) is to hide it and make "noattr2" explicit in
+xfs_fs_show_options.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
