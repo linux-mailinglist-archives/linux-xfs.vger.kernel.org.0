@@ -2,67 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37404312E7B
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Feb 2021 11:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8EA8313034
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Feb 2021 12:11:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbhBHKCS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Feb 2021 05:02:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232000AbhBHJ51 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Feb 2021 04:57:27 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2D2C03C050
-        for <linux-xfs@vger.kernel.org>; Mon,  8 Feb 2021 01:46:48 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id q72so7947587pjq.2
-        for <linux-xfs@vger.kernel.org>; Mon, 08 Feb 2021 01:46:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
-        b=Ky1giLXIhrehOc8aY2MQm/k2Y3UC3JSFGtKwBNIXX45tRpEb8JWb/ZvgyPVmXaPxqm
-         BAfNBaVcFrd55k9ZigtT6qUpKWWCJJapaxnIePeZdIIqg9OqGDW18kZQ0WYsvb09kp0t
-         l41AMsZCpszFb3Lfzy9oZl+JV2IUXThohx8em3i1teF4LIduvuluNP8WwXhhLqXoFiRN
-         LHpmMsllRIbplSnvl1eRMPy+GjG8GP1k3aUPGN+mPhbXo4G1v1SuQ5XzmQOicNY7HN2B
-         82M2H3OVdu+6rrSjfmI47pyfalTe4A+FxptPdT7ufXuumx0vhHzH5DyPKFPetdL1yHiU
-         DA0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
-        b=PVN4iApkrrw12Fd00eCCJzv5hLuxFgv2mCGaZ4IxxO3zshYej7ur8m0Szr99fqNfsi
-         y5AjDvlPMdDjbujjRF5kya7b9MwopmLQi/osOtIAnIXKVQugg0Pu43zco70lysileHtE
-         dEqymWi0r0O3cp24K6gUXVSuqwTfNX1V3V+21UrVnEA3wXCAE7QIcIGvv2mL0G1OwJyT
-         PHCyNRC3n9BwpOBiU0Y5UZFTpCfVCan29O9CKLVcR5gGMY0k7mlWQVRbh51zPcTMFnCl
-         R7rPm3VprRU/7irtEPQhg0JINC8fAonjq0sNgmlX5ZBB6QBBLo7EfCKDjUTaN7G4YhGx
-         gcRA==
-X-Gm-Message-State: AOAM532IBw0+F7cI2OWYTMnTXqUdt9n5YiNOQEox7ULgHPs8IE+1VUiU
-        Su1a0gK83bxqPVEcBcv9p7dBMaCYwrVgLPxxItw=
-X-Google-Smtp-Source: ABdhPJzS/+5EfBXyljDSscIrnRAbE864WGXvJDPpbdbonA7hX/0y1YXXbB+dNUNOxdkEf+4lt6BP3yVHsw+Nkh7xgyE=
-X-Received: by 2002:a17:902:988e:b029:e1:2c5b:321c with SMTP id
- s14-20020a170902988eb02900e12c5b321cmr15666317plp.54.1612777607820; Mon, 08
- Feb 2021 01:46:47 -0800 (PST)
+        id S232630AbhBHLKZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Feb 2021 06:10:25 -0500
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:54426 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S232973AbhBHLD3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Feb 2021 06:03:29 -0500
+X-IronPort-AV: E=Sophos;i="5.81,161,1610380800"; 
+   d="scan'208";a="104328056"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 08 Feb 2021 18:55:34 +0800
+Received: from G08CNEXMBPEKD06.g08.fujitsu.local (unknown [10.167.33.206])
+        by cn.fujitsu.com (Postfix) with ESMTP id 869654CE6F7F;
+        Mon,  8 Feb 2021 18:55:32 +0800 (CST)
+Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
+ G08CNEXMBPEKD06.g08.fujitsu.local (10.167.33.206) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Mon, 8 Feb 2021 18:55:33 +0800
+Received: from irides.mr.mr.mr (10.167.225.141) by
+ G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Mon, 8 Feb 2021 18:55:34 +0800
+From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <dm-devel@redhat.com>
+CC:     <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@lst.de>, <agk@redhat.com>,
+        <snitzer@redhat.com>, <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>,
+        <y-goto@fujitsu.com>
+Subject: [PATCH v3 00/11] fsdax: introduce fs query to support reflink
+Date:   Mon, 8 Feb 2021 18:55:19 +0800
+Message-ID: <20210208105530.3072869-1-ruansy.fnst@cn.fujitsu.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-Received: by 2002:a17:90a:5d0a:0:0:0:0 with HTTP; Mon, 8 Feb 2021 01:46:47
- -0800 (PST)
-Reply-To: richadtomm@qq.com
-From:   "Mr.Richard Thomas" <tommiirrrch@gmail.com>
-Date:   Mon, 8 Feb 2021 01:46:47 -0800
-Message-ID: <CAGbSTZNCbyUb_AKpr0YcwpYhAU-4fxYUb=tru4zpMs3O=qFGGA@mail.gmail.com>
-Subject: Re Thanks.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 869654CE6F7F.ACD1D
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear Friend,
-I will be pleased if you can allow me to invest $104M Dollars in
-Estate Management,in your company or any area you best that will be
-of good profit to both of us
+This patchset is aimed to support shared pages tracking for fsdax.
 
-Please do well to respond including your information for more details.
+Change from V2:
+  - Split 8th patch into other related to make it easy to review
+  - Other small fixes
 
-Thanks.
-Mr.Richard Thomas
+Change from V1:
+  - Add the old memory-failure handler back for rolling back
+  - Add callback in MD's ->rmap() to support multiple mapping of dm device
+  - Add judgement for CONFIG_SYSFS
+  - Add pfn_valid() judgement in hwpoison_filter()
+  - Rebased to v5.11-rc5
+
+This patchset moves owner tracking from dax_assocaite_entry() to pmem
+device driver, by introducing an interface ->memory_failure() of struct
+pagemap.  This interface is called by memory_failure() in mm, and
+implemented by pmem device.  Then pmem device calls its ->corrupted_range()
+to find the filesystem which the corrupted data located in, and call
+filesystem handler to track files or metadata assocaited with this page.
+Finally we are able to try to fix the corrupted data in filesystem and do
+other necessary processing, such as killing processes who are using the
+files affected.
+
+The call trace is like this:
+memory_failure()
+ pgmap->ops->memory_failure()      => pmem_pgmap_memory_failure()
+  gendisk->fops->corrupted_range() => - pmem_corrupted_range()
+                                      - md_blk_corrupted_range()
+   sb->s_ops->currupted_range()    => xfs_fs_corrupted_range()
+    xfs_rmap_query_range()
+     xfs_currupt_helper()
+      * corrupted on metadata
+          try to recover data, call xfs_force_shutdown()
+      * corrupted on file data 
+          try to recover data, call mf_dax_mapping_kill_procs()
+
+The fsdax & reflink support for XFS is not contained in this patchset.
+
+(Rebased on v5.11-rc5)
+==
+
+Shiyang Ruan (11):
+  pagemap: Introduce ->memory_failure()
+  blk: Introduce ->corrupted_range() for block device
+  fs: Introduce ->corrupted_range() for superblock
+  block_dev: Introduce bd_corrupted_range()
+  mm, fsdax: Refactor memory-failure handler for dax mapping
+  mm, pmem: Implement ->memory_failure() in pmem driver
+  pmem: Implement ->corrupted_range() for pmem driver
+  dm: Introduce ->rmap() to find bdev offset
+  md: Implement ->corrupted_range()
+  xfs: Implement ->corrupted_range() for XFS
+  fs/dax: Remove useless functions
+
+ block/genhd.c                 |   6 ++
+ drivers/md/dm-linear.c        |  20 ++++
+ drivers/md/dm.c               |  61 +++++++++++
+ drivers/nvdimm/pmem.c         |  45 ++++++++
+ fs/block_dev.c                |  47 ++++++++-
+ fs/dax.c                      |  63 ++++-------
+ fs/xfs/xfs_fsops.c            |   5 +
+ fs/xfs/xfs_mount.h            |   1 +
+ fs/xfs/xfs_super.c            | 112 ++++++++++++++++++++
+ include/linux/blkdev.h        |   2 +
+ include/linux/dax.h           |   1 +
+ include/linux/device-mapper.h |   5 +
+ include/linux/fs.h            |   2 +
+ include/linux/genhd.h         |   3 +
+ include/linux/memremap.h      |   8 ++
+ include/linux/mm.h            |   9 ++
+ mm/memory-failure.c           | 190 +++++++++++++++++++++++-----------
+ 17 files changed, 475 insertions(+), 105 deletions(-)
+
+-- 
+2.30.0
+
+
+
