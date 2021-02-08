@@ -2,141 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1EA4313040
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Feb 2021 12:11:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 835E73132AD
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Feb 2021 13:45:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233010AbhBHLLA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Feb 2021 06:11:00 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:54424 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232845AbhBHLHC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Feb 2021 06:07:02 -0500
-X-IronPort-AV: E=Sophos;i="5.81,161,1610380800"; 
-   d="scan'208";a="104328074"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 08 Feb 2021 18:55:47 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id 39E964CE6F87;
-        Mon,  8 Feb 2021 18:55:46 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 8 Feb 2021 18:55:48 +0800
-Received: from irides.mr.mr.mr (10.167.225.141) by
- G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Mon, 8 Feb 2021 18:55:47 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>,
-        <linux-fsdevel@vger.kernel.org>, <dm-devel@redhat.com>
-CC:     <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <agk@redhat.com>,
-        <snitzer@redhat.com>, <rgoldwyn@suse.de>, <qi.fuli@fujitsu.com>,
-        <y-goto@fujitsu.com>
-Subject: [PATCH v3 11/11] fs/dax: Remove useless functions
-Date:   Mon, 8 Feb 2021 18:55:30 +0800
-Message-ID: <20210208105530.3072869-12-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20210208105530.3072869-1-ruansy.fnst@cn.fujitsu.com>
-References: <20210208105530.3072869-1-ruansy.fnst@cn.fujitsu.com>
+        id S232670AbhBHMp2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Feb 2021 07:45:28 -0500
+Received: from ozlabs.org ([203.11.71.1]:34091 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232599AbhBHMpP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Feb 2021 07:45:15 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4DZ5M471Lgz9sS8;
+        Mon,  8 Feb 2021 23:44:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1612788273;
+        bh=wuccNvh4clTwslzNj7DcFPyJwndj//XGY2JKmfFh2lM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=m9WCofIuWbYmSfCJTYUfb22pwChHr0vl+c5VaWVYXboDPjOzaRRr4IPLUVn40bjZg
+         fF7TLq8Lu+VQLZ/ufgHuaAVq8BmiMqs7zA+vhfCYB8tNyOeK8zJdzQvfr8unO+VKoK
+         nqi4tVjdUUWHfcmMjx0gTLiJHiN/UwZWdPcn5s4zg+8RW+IEAA3/MqXneWn1x9+rCv
+         HHhZ+7dMNWJOfEXquXWN7mIv71rJDVcjsC2nspCzENpgkWPLhhANoKuJj4bwtxdTCo
+         wTe8lvyHkJA3x6cV6mmqdcDgMXt4LAgcViXgDr7JAQess0JeviU7IhU5ldi/wTaEvs
+         12wx2eV8eR9aw==
+Date:   Mon, 8 Feb 2021 23:44:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Darrick J. Wong" <djwong@kernel.org>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the xfs tree
+Message-ID: <20210208234431.54e51b57@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 39E964CE6F87.AE17F
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+Content-Type: multipart/signed; boundary="Sig_/MSUL0f/DYybToo1iaLTiAjm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Since owner tarcking is triggerred by pmem device, these functions are
-useless.  So remove them.
+--Sig_/MSUL0f/DYybToo1iaLTiAjm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
----
- fs/dax.c | 46 ----------------------------------------------
- 1 file changed, 46 deletions(-)
+Hi all,
 
-diff --git a/fs/dax.c b/fs/dax.c
-index c64c3a0e76a6..e20a5df03eec 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -323,48 +323,6 @@ static unsigned long dax_end_pfn(void *entry)
- 	for (pfn = dax_to_pfn(entry); \
- 			pfn < dax_end_pfn(entry); pfn++)
- 
--/*
-- * TODO: for reflink+dax we need a way to associate a single page with
-- * multiple address_space instances at different linear_page_index()
-- * offsets.
-- */
--static void dax_associate_entry(void *entry, struct address_space *mapping,
--		struct vm_area_struct *vma, unsigned long address)
--{
--	unsigned long size = dax_entry_size(entry), pfn, index;
--	int i = 0;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	index = linear_page_index(vma, address & ~(size - 1));
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(page->mapping);
--		page->mapping = mapping;
--		page->index = index + i++;
--	}
--}
--
--static void dax_disassociate_entry(void *entry, struct address_space *mapping,
--		bool trunc)
--{
--	unsigned long pfn;
--
--	if (IS_ENABLED(CONFIG_FS_DAX_LIMITED))
--		return;
--
--	for_each_mapped_pfn(entry, pfn) {
--		struct page *page = pfn_to_page(pfn);
--
--		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
--		WARN_ON_ONCE(page->mapping && page->mapping != mapping);
--		page->mapping = NULL;
--		page->index = 0;
--	}
--}
--
- static struct page *dax_busy_page(void *entry)
- {
- 	unsigned long pfn;
-@@ -543,7 +501,6 @@ static void *grab_mapping_entry(struct xa_state *xas,
- 			xas_lock_irq(xas);
- 		}
- 
--		dax_disassociate_entry(entry, mapping, false);
- 		xas_store(xas, NULL);	/* undo the PMD join */
- 		dax_wake_entry(xas, entry, true);
- 		mapping->nrexceptional--;
-@@ -680,7 +637,6 @@ static int __dax_invalidate_entry(struct address_space *mapping,
- 	    (xas_get_mark(&xas, PAGECACHE_TAG_DIRTY) ||
- 	     xas_get_mark(&xas, PAGECACHE_TAG_TOWRITE)))
- 		goto out;
--	dax_disassociate_entry(entry, mapping, trunc);
- 	xas_store(&xas, NULL);
- 	mapping->nrexceptional--;
- 	ret = 1;
-@@ -774,8 +730,6 @@ static void *dax_insert_entry(struct xa_state *xas,
- 	if (dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
- 		void *old;
- 
--		dax_disassociate_entry(entry, mapping, false);
--		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
--- 
-2.30.0
+After merging the xfs tree, today's linux-next build (htmldocs) produced
+this warning:
 
+Documentation/admin-guide/xfs.rst:531: WARNING: Malformed table.
+No bottom table border found or no blank line after table bottom.
 
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+  Knob           Description
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Documentation/admin-guide/xfs.rst:534: WARNING: Blank line required after t=
+able.
+Documentation/admin-guide/xfs.rst:536: WARNING: Definition list ends withou=
+t a blank line; unexpected unindent.
+Documentation/admin-guide/xfs.rst:538: WARNING: Unexpected indentation.
 
+Introduced by commit
+
+  f83d436aef5d ("xfs: increase the default parallelism levels of pwork clie=
+nts")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/MSUL0f/DYybToo1iaLTiAjm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmAhMi8ACgkQAVBC80lX
+0Gx4Xwf/WAhwaaci/wegNCsb6SWGikaurVcWQYE4VWOvOu2M5BY/a7GQRGsfbYfA
+rZCYiqfc8Ozxyc1Py3M2mpu17FMhQnrQvmmf8PK2PhEBK0IInUqr2ZlEosaLPnGS
+VlB1eRFb615WXckSb3hO7U2ugNKb0Cy8k5GUuZy3ix9L/KzWzw9A1e+iqr233ozg
+ZoJy8AaucWUN9pXKzr0bc3F8P99fEDYM8LiUVQzqX33xhIReqLkJ+7L7UXMJDZdC
+ExQilsCFGG553sRZDtt2pNtD0fsMWCL1dNKNQybyuaC4GJQMCevIkuy7YbZuj+FT
+r5gM7iBlX/I2b9RXse7RpUPF6aZlUw==
+=MxB1
+-----END PGP SIGNATURE-----
+
+--Sig_/MSUL0f/DYybToo1iaLTiAjm--
