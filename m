@@ -2,83 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01B63312866
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Feb 2021 00:37:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37404312E7B
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Feb 2021 11:06:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbhBGXhC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 7 Feb 2021 18:37:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229537AbhBGXhB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 7 Feb 2021 18:37:01 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 036B964E3A
-        for <linux-xfs@vger.kernel.org>; Sun,  7 Feb 2021 23:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612740981;
-        bh=nIflwO8ys5MPPDrXbHc9kra0fO9lE5cfAg9LOKPqFLM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Ik2gham6EWYyhm0PrV3eSVluaMq7ZsTw3o1R0Z0lf+MatbFaKn0J8NAV+p3SdtJ3t
-         R4aiE5Rrfk5N32MLCbPfIaOHLvG7+Ws457DgvJdVPr2qReWSrik8IpfdRADfjUv8+N
-         9f1wBT+odWupQGI2VB0LItt998zhju5oClNuXsk8ubGAcWuB7vG2ytsii3p8+e5J+B
-         jXIpWzEW+xesciELlqcKdYy6fBCsIa6MhoIdV5U5AJ0eFD954SZ5zlAhc8QxOeJFQ7
-         U+901Oo6vK05AOwwjM3Hm/0w6W8ilgOqoUiOELc/L6y2pkGhKH1ZJt78ieiGpHk0C2
-         Wjf8tUD0izSwg==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id ED0D46535A; Sun,  7 Feb 2021 23:36:20 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 211605] Re-mount XFS causes "attr2 mount option is deprecated"
- warning
-Date:   Sun, 07 Feb 2021 23:36:20 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: low
-X-Bugzilla-Who: sandeen@sandeen.net
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-211605-201763-xkwFOStpFO@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-211605-201763@https.bugzilla.kernel.org/>
-References: <bug-211605-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S231894AbhBHKCS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Feb 2021 05:02:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232000AbhBHJ51 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Feb 2021 04:57:27 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F2D2C03C050
+        for <linux-xfs@vger.kernel.org>; Mon,  8 Feb 2021 01:46:48 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id q72so7947587pjq.2
+        for <linux-xfs@vger.kernel.org>; Mon, 08 Feb 2021 01:46:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
+        b=Ky1giLXIhrehOc8aY2MQm/k2Y3UC3JSFGtKwBNIXX45tRpEb8JWb/ZvgyPVmXaPxqm
+         BAfNBaVcFrd55k9ZigtT6qUpKWWCJJapaxnIePeZdIIqg9OqGDW18kZQ0WYsvb09kp0t
+         l41AMsZCpszFb3Lfzy9oZl+JV2IUXThohx8em3i1teF4LIduvuluNP8WwXhhLqXoFiRN
+         LHpmMsllRIbplSnvl1eRMPy+GjG8GP1k3aUPGN+mPhbXo4G1v1SuQ5XzmQOicNY7HN2B
+         82M2H3OVdu+6rrSjfmI47pyfalTe4A+FxptPdT7ufXuumx0vhHzH5DyPKFPetdL1yHiU
+         DA0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=z7Z/JdX0RhrlgqchmamXWMY47TIIKUp5Zm0+e0J1lMs=;
+        b=PVN4iApkrrw12Fd00eCCJzv5hLuxFgv2mCGaZ4IxxO3zshYej7ur8m0Szr99fqNfsi
+         y5AjDvlPMdDjbujjRF5kya7b9MwopmLQi/osOtIAnIXKVQugg0Pu43zco70lysileHtE
+         dEqymWi0r0O3cp24K6gUXVSuqwTfNX1V3V+21UrVnEA3wXCAE7QIcIGvv2mL0G1OwJyT
+         PHCyNRC3n9BwpOBiU0Y5UZFTpCfVCan29O9CKLVcR5gGMY0k7mlWQVRbh51zPcTMFnCl
+         R7rPm3VprRU/7irtEPQhg0JINC8fAonjq0sNgmlX5ZBB6QBBLo7EfCKDjUTaN7G4YhGx
+         gcRA==
+X-Gm-Message-State: AOAM532IBw0+F7cI2OWYTMnTXqUdt9n5YiNOQEox7ULgHPs8IE+1VUiU
+        Su1a0gK83bxqPVEcBcv9p7dBMaCYwrVgLPxxItw=
+X-Google-Smtp-Source: ABdhPJzS/+5EfBXyljDSscIrnRAbE864WGXvJDPpbdbonA7hX/0y1YXXbB+dNUNOxdkEf+4lt6BP3yVHsw+Nkh7xgyE=
+X-Received: by 2002:a17:902:988e:b029:e1:2c5b:321c with SMTP id
+ s14-20020a170902988eb02900e12c5b321cmr15666317plp.54.1612777607820; Mon, 08
+ Feb 2021 01:46:47 -0800 (PST)
 MIME-Version: 1.0
+Received: by 2002:a17:90a:5d0a:0:0:0:0 with HTTP; Mon, 8 Feb 2021 01:46:47
+ -0800 (PST)
+Reply-To: richadtomm@qq.com
+From:   "Mr.Richard Thomas" <tommiirrrch@gmail.com>
+Date:   Mon, 8 Feb 2021 01:46:47 -0800
+Message-ID: <CAGbSTZNCbyUb_AKpr0YcwpYhAU-4fxYUb=tru4zpMs3O=qFGGA@mail.gmail.com>
+Subject: Re Thanks.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D211605
+Dear Friend,
+I will be pleased if you can allow me to invest $104M Dollars in
+Estate Management,in your company or any area you best that will be
+of good profit to both of us
 
---- Comment #7 from Eric Sandeen (sandeen@sandeen.net) ---
-On 2/7/21 4:53 PM, Eric Sandeen wrote:
->=20
-> Pavel, can you fix this up, since your patch did the deprecations? I gues=
-s we
-> missed this on review.
+Please do well to respond including your information for more details.
 
-Scratch that, Dave points out that they need to stay until they are removed.
-
-> Ideally the xfs(5) man page in xfsprogs should be updated as well to refl=
-ect
-> the
-> deprecated items.
-
-man page probably should still be updated tho (unless I missed a patch...)
-
--Eric
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Thanks.
+Mr.Richard Thomas
