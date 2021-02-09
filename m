@@ -2,125 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EEDA314B76
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 10:26:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF5C314B58
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 10:22:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230251AbhBIJYA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Feb 2021 04:24:00 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:8547 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229894AbhBIJTA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Feb 2021 04:19:00 -0500
-X-IronPort-AV: E=Sophos;i="5.81,164,1610380800"; 
-   d="scan'208";a="104367244"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 09 Feb 2021 17:15:20 +0800
-Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
-        by cn.fujitsu.com (Postfix) with ESMTP id A2C304CE6F86;
-        Tue,  9 Feb 2021 17:15:13 +0800 (CST)
-Received: from irides.mr (10.167.225.141) by G08CNEXMBPEKD05.g08.fujitsu.local
- (10.167.33.204) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 9 Feb
- 2021 17:15:12 +0800
-Subject: Re: [PATCH 5/7] fsdax: Dedup file range to use a compare function
-To:     Christoph Hellwig <hch@lst.de>
-CC:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-fsdevel@vger.kernel.org>,
-        <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <willy@infradead.org>, <jack@suse.cz>, <viro@zeniv.linux.org.uk>,
-        <linux-btrfs@vger.kernel.org>, <ocfs2-devel@oss.oracle.com>,
-        <david@fromorbit.com>, <rgoldwyn@suse.de>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>
-References: <20210207170924.2933035-1-ruansy.fnst@cn.fujitsu.com>
- <20210207170924.2933035-6-ruansy.fnst@cn.fujitsu.com>
- <20210208151920.GE12872@lst.de>
-From:   Ruan Shiyang <ruansy.fnst@cn.fujitsu.com>
-Message-ID: <9193e305-22a1-3928-0675-af1cecd28942@cn.fujitsu.com>
-Date:   Tue, 9 Feb 2021 17:15:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        id S229636AbhBIJUw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Feb 2021 04:20:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230228AbhBIJQY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Feb 2021 04:16:24 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1693C061788
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Feb 2021 01:15:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=LUaBSs0Krz4zTy59jKUuPtQR4MXLd4zHjihTWau1f6I=; b=dRf+xLD7p5VVA/PsVcvKruvqKY
+        p8ZDgxR4TmhG1qk0zukQJHQkB3nrsJnRB9E37lodQ+MAHzQrX+KFBz7R0g4mzN2MrSTG+Fq3pjJoG
+        AFaLYS/5MxZcZyWOy6wgEqH8YWvcw0M6EYItkxDvGN/0VqlIkG+S53yQtk8oFsmGaa1qlkDk3uelV
+        KlMv2/0dMyKCXNQnPp8sUmxUEeuPYjlnNyejBe12tORsOuYhzDOK62qiZazZB10zY/++iHpGKadGd
+        vyNTTohVQYSYQcMR1DmrQNyDj/F1esMZSZ0v1soEnFhgqUisOFAsPB/5lUBhmuRFBOvHR9bHc49pt
+        raqank7A==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l9P7O-007DZo-O8; Tue, 09 Feb 2021 09:15:35 +0000
+Date:   Tue, 9 Feb 2021 09:15:34 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org, bfoster@redhat.com
+Subject: Re: [PATCH 08/10] xfs_repair: allow setting the needsrepair flag
+Message-ID: <20210209091534.GH1718132@infradead.org>
+References: <161284380403.3057868.11153586180065627226.stgit@magnolia>
+ <161284384955.3057868.8076509276356847362.stgit@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20210208151920.GE12872@lst.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.167.225.141]
-X-ClientProxiedBy: G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) To
- G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204)
-X-yoursite-MailScanner-ID: A2C304CE6F86.ACFE6
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
-X-Spam-Status: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161284384955.3057868.8076509276356847362.stgit@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 2021/2/8 下午11:19, Christoph Hellwig wrote:
-> On Mon, Feb 08, 2021 at 01:09:22AM +0800, Shiyang Ruan wrote:
->> With dax we cannot deal with readpage() etc. So, we create a
->> funciton callback to perform the file data comparison and pass
+On Mon, Feb 08, 2021 at 08:10:49PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
 > 
-> s/funciton/function/g
-> 
->> +#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-> 
-> This should use the existing min or min_t helpers.
-> 
-> 
->>   int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
->>   				  struct file *file_out, loff_t pos_out,
->> -				  loff_t *len, unsigned int remap_flags)
->> +				  loff_t *len, unsigned int remap_flags,
->> +				  compare_range_t compare_range_fn)
-> 
-> Can we keep generic_remap_file_range_prep as-is, and add a new
-> dax_remap_file_range_prep, both sharing a low-level
-> __generic_remap_file_range_prep implementation?  And for that
-> implementation I'd also go for classic if/else instead of the function
-> pointer.
+> Quietly set up the ability to tell xfs_repair to set NEEDSREPAIR at
+> program start and (presumably) clear it by the end of the run.  This
+> code isn't terribly useful to users; it's mainly here so that fstests
+> can exercise the functionality.
 
-The dax dedupe comparison need the iomap_ops pointer as argument, so my 
-understanding is that we don't modify the argument list of 
-generic_remap_file_range_prep(), but move its code into 
-__generic_remap_file_range_prep() whose argument list can be modified to 
-accepts the iomap_ops pointer.  Then it looks like this:
+What does the quietly above mean?
 
-```
-int dax_remap_file_range_prep(struct file *file_in, loff_t pos_in,
-				  struct file *file_out, loff_t pos_out,
-				  loff_t *len, unsigned int remap_flags,
-				  const struct iomap_ops *ops)
-{
-	return __generic_remap_file_range_prep(file_in, pos_in, file_out,
-			pos_out, len, remap_flags, ops);
-}
-EXPORT_SYMBOL(dax_remap_file_range_prep);
+Otherwise this looks good:
 
-int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
-				  struct file *file_out, loff_t pos_out,
-				  loff_t *len, unsigned int remap_flags)
-{
-	return __generic_remap_file_range_prep(file_in, pos_in, file_out,
-			pos_out, len, remap_flags, NULL);
-}
-EXPORT_SYMBOL(generic_remap_file_range_prep);
-```
-
-Am i right?
-
-
---
-Thanks,
-Ruan Shiyang.
-
-> 
->> +extern int vfs_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
->> +					 struct inode *dest, loff_t destoff,
->> +					 loff_t len, bool *is_same);
-> 
-> no need for the extern.
-> 
-> 
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
