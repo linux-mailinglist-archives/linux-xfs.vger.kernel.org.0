@@ -2,62 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9553D314B4D
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 10:19:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 117B4314B4E
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 10:19:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbhBIJRb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Feb 2021 04:17:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57982 "EHLO
+        id S229558AbhBIJRi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Feb 2021 04:17:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbhBIJNM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Feb 2021 04:13:12 -0500
+        with ESMTP id S230409AbhBIJOe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Feb 2021 04:14:34 -0500
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B5EC061794
-        for <linux-xfs@vger.kernel.org>; Tue,  9 Feb 2021 01:12:28 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9869BC0617A7
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Feb 2021 01:13:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=URErjoVyfSzT9rTQ/hNesIKOctv86XKQCvvnNR0suGQ=; b=Hn1Bq4X9Uc5O3lnvSwLbN4AlZB
-        za8FM2JkMXLqcRSWWyATG1qJhcXpY5hbxrR5WlDH0kvPedUWwyTiKLy4q78RDTT37lXSi2JLnw8zS
-        jWwNQKHZ39U2p4y4D5Ujy5+W11w/+s6eEV/pm18jl7C0xKVsynfoPrthsE5O6OEiChEyXZ0/MSeW1
-        G+8ZKM2gmCv5WtYkOQ1kSpPhpcsipa6dgRMItXOIMQfFk9u4YeR/hz8ikl4YTzOAJs1fVJgh42+kx
-        1QA7+bPPGi1irt4yFRkG8LCGR1bfR+kbADjb87S8cHWMJN2FUi3+1hUrfQWoWUAOt7VOaRPENaTqW
-        zIgTFl4w==;
+        bh=v37Eh/hUdy7p0aAfBkj6MrfTDHhQ8zXmk8o/sETvHMk=; b=UdROyrdM6gGfvhGc0dTEHJJxVV
+        i7ZDmAaU0tpvnCpho4WaU7sCmnxFBTl1KsLvG4WI2/Gta2hVZSOQG5KOu5Aa4Nga02B0Kh/WiL9Na
+        2zl91zi7dMPAy3P5MqjWEhNKkQkjanufgkAmJFLD17t1WjqC/9Og4m7JeSpPj2p8cz1wWhCZzRhAD
+        PfHxq4YgPmX3Ben3nWRo3j2NrapWRZBnx+aYIHfdCuC6FG07crdJ8GtcXJAHzWQwCW+6eLxLiNh3x
+        Qepq4Qk+s6vWhR9z6n2naX03JN1XPQ8veuOSIE23whFyEiGwRy+T6cyUk1mlHDncpT8OaPy2X1PG4
+        7UPHXZ5g==;
 Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1l9P4J-007DLF-O3; Tue, 09 Feb 2021 09:12:24 +0000
-Date:   Tue, 9 Feb 2021 09:12:23 +0000
+        id 1l9P5U-007DPp-Gb; Tue, 09 Feb 2021 09:13:36 +0000
+Date:   Tue, 9 Feb 2021 09:13:36 +0000
 From:   Christoph Hellwig <hch@infradead.org>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org, bfoster@redhat.com
-Subject: Re: [PATCH 06/10] xfs_repair: clear the needsrepair flag
-Message-ID: <20210209091223.GF1718132@infradead.org>
+Subject: Re: [PATCH 07/10] xfs_repair: set NEEDSREPAIR when we deliberately
+ corrupt directories
+Message-ID: <20210209091336.GG1718132@infradead.org>
 References: <161284380403.3057868.11153586180065627226.stgit@magnolia>
- <161284383828.3057868.1762356472271947821.stgit@magnolia>
+ <161284384405.3057868.8114203697655713495.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161284383828.3057868.1762356472271947821.stgit@magnolia>
+In-Reply-To: <161284384405.3057868.8114203697655713495.stgit@magnolia>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 08, 2021 at 08:10:38PM -0800, Darrick J. Wong wrote:
+On Mon, Feb 08, 2021 at 08:10:44PM -0800, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Clear the needsrepair flag, since it's used to prevent mounting of an
-> inconsistent filesystem.  We only do this if we make it to the end of
-> repair with a non-zero error code, and all the rebuilt indices and
-> corrected metadata are persisted correctly.
-> 
-> Note that we cannot combine clearing needsrepair with clearing the quota
-> checked flags because we need to clear the quota flags even if
-> reformatting the log fails, whereas we can't clear needsrepair if the
-> log reformat fails.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> There are a few places in xfs_repair's directory checking code where we
+> deliberately corrupt a directory entry as a sentinel to trigger a
+> correction in later repair phase.  In the mean time, the filesystem is
+> inconsistent, so set the needsrepair flag to force a re-run of repair if
+> the system goes down.
 
-Looks good,
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+I guess this is an improvement over what we have no, but I suspect an
+in-core side band way to notify the later phases would be much better
+than these corrupt sentinel values..
