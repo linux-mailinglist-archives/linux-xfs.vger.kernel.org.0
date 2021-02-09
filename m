@@ -2,98 +2,143 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0610315588
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 19:01:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 540ED3155D5
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 19:27:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233204AbhBIR5O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Feb 2021 12:57:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60916 "EHLO mail.kernel.org"
+        id S233267AbhBISYQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Feb 2021 13:24:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232879AbhBIRrY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 9 Feb 2021 12:47:24 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 70AAA64E2F;
-        Tue,  9 Feb 2021 17:46:43 +0000 (UTC)
+        id S233308AbhBISV4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 9 Feb 2021 13:21:56 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BD3CE64EC8;
+        Tue,  9 Feb 2021 18:10:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612892803;
-        bh=AY91+AiyhR9+rAv4ZeuYOztQyVne23NId8HLV42jfxI=;
+        s=k20201202; t=1612894201;
+        bh=TBFMhu13t7ubOIbrMsnWDvixdoVYp0esbt1RtnOBwUE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AU61t7hKCPsmbU/QeCCOKegBIB4xriX8ckOrYybRlDNc0mmBX1oaLyp/4dq0dfyld
-         YZR0eSLMfb2D9P/ulluFUAv1c4zlQ+VlbM0CokUuIMfE4MhSiRJJba7O6fjXP/D/i5
-         DIy/RHrBxosW4XVSnGz0O7IqsirlK/bZPFw78FGpdtD3as/EsMS2Ii7Z1NIjsKQ/AM
-         OYmD1Z0b0xMqNGwxFNqoiMAFuN+4LQELXWwyi6535QJkhHZVMa6bHWEzIxDiQlSXgD
-         CcoloDQ+gSkpbpoc9RdlSg6DSIDxmGtC2giCnNkaA4XvlJPyQ3KN4Sh//zu/Rm1Zgn
-         nByMLrN8F41xA==
-Date:   Tue, 9 Feb 2021 09:46:42 -0800
+        b=VSN9s7Cni9yKR732Xm/vZK+XLcIxfE6V4ZWewcr5qaKKDEidVNS7rmUHsMv3ImoBI
+         uXSqpBZILHGLgkG1zeqsT5t8hlehfKT8qqB+Y7CsBqM3stzDiZYybBH5Vsl+QeVr5R
+         eUygpw9fjf9wqU8dEroZXN7q50vAu9hpe8rPxzMRDFnujdpHAL903MbQf6PdX3kovO
+         /gM5sHwVEANjJv4OfGdz3IFm5lPm2mdRD98tD2jeW48/9WsLqkzQFab0rNZFf76R33
+         MZA5MWIlEABJ6gi2U+BdFmDX1kEfLYq33Z5rHVJlzm/7xmvAjA0q6zj/u96s3YczQ6
+         IhR5Q1zZwkqjQ==
+Date:   Tue, 9 Feb 2021 10:10:01 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 05/10] xfs_repair: clear quota CHKD flags on the incore
- superblock too
-Message-ID: <20210209174642.GR7193@magnolia>
+Subject: Re: [PATCH 08/10] xfs_repair: allow setting the needsrepair flag
+Message-ID: <20210209181001.GT7193@magnolia>
 References: <161284380403.3057868.11153586180065627226.stgit@magnolia>
- <161284383258.3057868.6167060787728229726.stgit@magnolia>
- <20210209172011.GC14273@bfoster>
+ <161284384955.3057868.8076509276356847362.stgit@magnolia>
+ <20210209172121.GF14273@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210209172011.GC14273@bfoster>
+In-Reply-To: <20210209172121.GF14273@bfoster>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Feb 09, 2021 at 12:20:11PM -0500, Brian Foster wrote:
-> On Mon, Feb 08, 2021 at 08:10:32PM -0800, Darrick J. Wong wrote:
+On Tue, Feb 09, 2021 at 12:21:21PM -0500, Brian Foster wrote:
+> On Mon, Feb 08, 2021 at 08:10:49PM -0800, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <djwong@kernel.org>
 > > 
-> > At the end of a repair run, xfs_repair clears the superblock's quota
-> > checked flags if it found mistakes in the quota accounting to force a
-> > quotacheck at the next mount.  This is currently the last time repair
-> > modifies the primary superblock, so it is sufficient to update the
-> > ondisk buffer and not the incore mount structure.
-> > 
-> > However, we're about to introduce code to clear the needsrepair feature
-> > at the very end of repair, after all metadata blocks have been written
-> > to disk and all disk caches flush.  Since the convention everywhere else
-> > in xfs is to update the incore superblock, call libxfs_sb_to_disk to
-> > translate that into the ondisk buffer, and then write the buffer to
-> > disk, switch the quota CHKD code to use this mechanism too.
+> > Quietly set up the ability to tell xfs_repair to set NEEDSREPAIR at
+> > program start and (presumably) clear it by the end of the run.  This
+> > code isn't terribly useful to users; it's mainly here so that fstests
+> > can exercise the functionality.
 > > 
 > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > > ---
-> >  repair/xfs_repair.c |    7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
+> >  repair/globals.c    |    2 ++
+> >  repair/globals.h    |    2 ++
+> >  repair/phase1.c     |   23 +++++++++++++++++++++++
+> >  repair/xfs_repair.c |    9 +++++++++
+> >  4 files changed, 36 insertions(+)
 > > 
 > > 
-> > diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-> > index 9409f0d8..32755821 100644
-> > --- a/repair/xfs_repair.c
-> > +++ b/repair/xfs_repair.c
-> > @@ -1108,10 +1108,9 @@ _("Warning:  project quota information would be cleared.\n"
-> >  	if ((mp->m_sb.sb_qflags & XFS_ALL_QUOTA_CHKD) != quotacheck_results()) {
-> >  		do_warn(_("Note - quota info will be regenerated on next "
-> >  			"quota mount.\n"));
-> > -		dsb->sb_qflags &= cpu_to_be16(~(XFS_UQUOTA_CHKD |
-> > -						XFS_GQUOTA_CHKD |
-> > -						XFS_PQUOTA_CHKD |
-> > -						XFS_OQUOTA_CHKD));
-> > +		mp->m_sb.sb_qflags &= ~(XFS_UQUOTA_CHKD | XFS_GQUOTA_CHKD |
-> > +					XFS_PQUOTA_CHKD | XFS_OQUOTA_CHKD);
-> > +		libxfs_sb_to_disk(sbp->b_addr, &mp->m_sb);
+> ...
+> > diff --git a/repair/phase1.c b/repair/phase1.c
+> > index 00b98584..b26d25f8 100644
+> > --- a/repair/phase1.c
+> > +++ b/repair/phase1.c
+> > @@ -30,6 +30,26 @@ alloc_ag_buf(int size)
+> >  	return(bp);
+> >  }
+> >  
+> > +static void
+> > +set_needsrepair(
+> > +	struct xfs_sb	*sb)
+> > +{
+> > +	if (!xfs_sb_version_hascrc(sb)) {
+> > +		printf(
+> > +	_("needsrepair flag only supported on V5 filesystems.\n"));
+> > +		exit(0);
+> > +	}
+> > +
+> > +	if (xfs_sb_version_needsrepair(sb)) {
+> > +		printf(_("Filesystem already marked as needing repair.\n"));
+> > +		return;
+> > +	}
 > 
-> Nit: we can still use dsb here instead of open-coding the buffer
-> address. Otherwise:
+> Any reason this doesn't exit the repair like the lazy counter logic
+> does? Otherwise seems fine:
 
-Or I could remove dsb entirely, since the xfs_mount's sb_unit/sb_width
-should reflect the values copied from the backup super during phase 1
-(aka before we actually libxfs_mount) when we set copied_sunit=1.
+No particular reason.  Will fix for consistency's sake.
 
---D
-
-> 
 > Reviewed-by: Brian Foster <bfoster@redhat.com>
 > 
+> > +
+> > +	printf(_("Marking filesystem in need of repair.\n"));
+> > +	primary_sb_modified = 1;
+> > +	sb->sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
+> > +}
+> > +
+> >  /*
+> >   * this has got to be big enough to hold 4 sectors
+> >   */
+> > @@ -126,6 +146,9 @@ _("Cannot disable lazy-counters on V5 fs\n"));
+> >  		}
 > >  	}
 > >  
-> >  	if (copied_sunit) {
+> > +	if (add_needsrepair)
+> > +		set_needsrepair(sb);
+> > +
+> >  	/* shared_vn should be zero */
+> >  	if (sb->sb_shared_vn) {
+> >  		do_warn(_("resetting shared_vn to zero\n"));
+> > diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
+> > index 9dc73854..ee377e8a 100644
+> > --- a/repair/xfs_repair.c
+> > +++ b/repair/xfs_repair.c
+> > @@ -65,11 +65,13 @@ static char *o_opts[] = {
+> >   */
+> >  enum c_opt_nums {
+> >  	CONVERT_LAZY_COUNT = 0,
+> > +	CONVERT_NEEDSREPAIR,
+> >  	C_MAX_OPTS,
+> >  };
+> >  
+> >  static char *c_opts[] = {
+> >  	[CONVERT_LAZY_COUNT]	= "lazycount",
+> > +	[CONVERT_NEEDSREPAIR]	= "needsrepair",
+> >  	[C_MAX_OPTS]		= NULL,
+> >  };
+> >  
+> > @@ -302,6 +304,13 @@ process_args(int argc, char **argv)
+> >  					lazy_count = (int)strtol(val, NULL, 0);
+> >  					convert_lazy_count = 1;
+> >  					break;
+> > +				case CONVERT_NEEDSREPAIR:
+> > +					if (!val)
+> > +						do_abort(
+> > +		_("-c needsrepair requires a parameter\n"));
+> > +					if (strtol(val, NULL, 0) == 1)
+> > +						add_needsrepair = true;
+> > +					break;
+> >  				default:
+> >  					unknown('c', val);
+> >  					break;
 > > 
 > 
