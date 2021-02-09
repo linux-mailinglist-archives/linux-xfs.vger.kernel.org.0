@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFF39314775
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:20:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 801BF314771
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:19:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230166AbhBIETL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Feb 2021 23:19:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48744 "EHLO mail.kernel.org"
+        id S229862AbhBIESh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Feb 2021 23:18:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229959AbhBIEQS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Feb 2021 23:16:18 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A5A5D64ED0;
-        Tue,  9 Feb 2021 04:11:44 +0000 (UTC)
+        id S230231AbhBIEPq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Feb 2021 23:15:46 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5316D64ED1;
+        Tue,  9 Feb 2021 04:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612843904;
-        bh=GnlZY/3mOVfmPQ9biLLARdwZSTWcxVryyl9AoJoG+lk=;
+        s=k20201202; t=1612843910;
+        bh=BMNuSXxFHaU1RWlxw5KUtZejymyyRxkRwaNaeuuoLO4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=kGXuajRv2/XTA9vXPos9o+43cIOJ/FBBtJ5hSVQAjwcngt50XpK7MdQ9XUOhgapve
-         2YJIzuKSkT3aaUPvyQftH9bvMgdNOG7rB42KvIDQ0ZjAURxpzbA8QqlDdwGThWRu3L
-         Be9Tqd2igJmS2eVruRWgmIedXdojvUszp3Ee4wlwcTre71jcz9pzcyb6Q1sAC9rFw9
-         MBcsa6REXbnQou4MHoVqYjun6EyZ8jocMqu8/nfj6pgleJ1076DU/o8ZIefSWjmAZJ
-         sQVJ2B4gnx3xnQXa8CputpPwnGh9d8TKNvSMwD/gXJbs8DmZGh+EqNNqEBpaznlfNA
-         UTY5FTZUs16fA==
-Subject: [PATCH 5/6] xfs_repair: check dquot id and type
+        b=Okf+TXse3omaAmLb15fHooZhwWKDrKmPYaQSh+ICcmonZvW/GjgyhnxVhNwyCTUUI
+         AjXv1FyxZPYuhmc8fIDq5FqqYs5o6gioM79NIuwRekbFPwoOTQXp7gvRG8FB5vIGuH
+         0/f5JM7kUF7PB3e11VYuE88XPrvzF97xJEWEifPtYO+U5e5h7Kbi7EgQMkmpYhs0s5
+         r43g5oYGlJC2ts/9d6OF40s4htG6FiZUYORC6NkKD24Ip6wBG4WO2XmLDpAr/NyRQY
+         71skvI/PSchWMVwt1C0cNhHBaI1f6gZ+VfnyjuQhK9E/3w3By6CQiXyTkL4wvE+/fJ
+         eG0y+44rkpW9w==
+Subject: [PATCH 6/6] xfs_scrub: fix weirdness in directory name check code
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, chandanrlinux@gmail.com,
         Chaitanya.Kulkarni@wdc.com
-Date:   Mon, 08 Feb 2021 20:11:44 -0800
-Message-ID: <161284390433.3058224.6853671538193339438.stgit@magnolia>
+Date:   Mon, 08 Feb 2021 20:11:49 -0800
+Message-ID: <161284390991.3058224.12921304382202456726.stgit@magnolia>
 In-Reply-To: <161284387610.3058224.6236053293202575597.stgit@magnolia>
 References: <161284387610.3058224.6236053293202575597.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,103 +42,43 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that we actually check the type and id of an ondisk dquot.
+Remove the redundant second check of fd and ISDIR in check_inode_names,
+and rework the comment to describe why we can't run phase 5 if we found
+other corruptions in the filesystem.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/quotacheck.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 55 insertions(+), 3 deletions(-)
+ scrub/phase5.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 
-diff --git a/repair/quotacheck.c b/repair/quotacheck.c
-index 55bcc048..0ea2deb5 100644
---- a/repair/quotacheck.c
-+++ b/repair/quotacheck.c
-@@ -234,12 +234,48 @@ quotacheck_adjust(
- 	libxfs_irele(ip);
- }
- 
-+/* Check the ondisk dquot's id and type match what the incore dquot expects. */
-+static bool
-+qc_dquot_check_type(
-+	struct xfs_mount	*mp,
-+	xfs_dqtype_t		type,
-+	xfs_dqid_t		id,
-+	struct xfs_disk_dquot	*ddq)
-+{
-+	uint8_t			ddq_type;
-+
-+	ddq_type = ddq->d_type & XFS_DQTYPE_REC_MASK;
-+
-+	if (be32_to_cpu(ddq->d_id) != id)
-+		return false;
-+
-+	/*
-+	 * V5 filesystems always expect an exact type match.  V4 filesystems
-+	 * expect an exact match for user dquots and for non-root group and
-+	 * project dquots.
-+	 */
-+	if (xfs_sb_version_hascrc(&mp->m_sb) || type == XFS_DQTYPE_USER || !id)
-+		return ddq_type == type;
-+
-+	/*
-+	 * V4 filesystems support either group or project quotas, but not both
-+	 * at the same time.  The non-user quota file can be switched between
-+	 * group and project quota uses depending on the mount options, which
-+	 * means that we can encounter the other type when we try to load quota
-+	 * defaults.  Quotacheck will soon reset the the entire quota file
-+	 * (including the root dquot) anyway, but don't log scary corruption
-+	 * reports to dmesg.
-+	 */
-+	return ddq_type == XFS_DQTYPE_GROUP || ddq_type == XFS_DQTYPE_PROJ;
-+}
-+
- /* Compare this on-disk dquot against whatever we observed. */
- static void
- qc_check_dquot(
- 	struct xfs_mount	*mp,
- 	struct xfs_disk_dquot	*ddq,
--	struct qc_dquots	*dquots)
-+	struct qc_dquots	*dquots,
-+	xfs_dqid_t		dqid)
- {
- 	struct qc_rec		*qrec;
- 	struct qc_rec		empty = {
-@@ -253,6 +289,22 @@ qc_check_dquot(
- 	if (!qrec)
- 		qrec = &empty;
- 
-+	if (!qc_dquot_check_type(mp, dquots->type, dqid, ddq)) {
-+		const char	*dqtypestr;
-+
-+		dqtypestr = qflags_typestr(ddq->d_type & XFS_DQTYPE_REC_MASK);
-+		if (dqtypestr)
-+			do_warn(_("%s id %u saw type %s id %u\n"),
-+					qflags_typestr(dquots->type), dqid,
-+					dqtypestr, be32_to_cpu(ddq->d_id));
-+		else
-+			do_warn(_("%s id %u saw type %x id %u\n"),
-+					qflags_typestr(dquots->type), dqid,
-+					ddq->d_type & XFS_DQTYPE_REC_MASK,
-+					be32_to_cpu(ddq->d_id));
-+		chkd_flags = 0;
-+	}
-+
- 	if (be64_to_cpu(ddq->d_bcount) != qrec->bcount) {
- 		do_warn(_("%s id %u has bcount %llu, expected %"PRIu64"\n"),
- 				qflags_typestr(dquots->type), id,
-@@ -327,11 +379,11 @@ _("cannot read %s inode %"PRIu64", block %"PRIu64", disk block %"PRIu64", err=%d
- 		}
- 
- 		dqb = bp->b_addr;
--		dqid = map->br_startoff * dqperchunk;
-+		dqid = (map->br_startoff + bno) * dqperchunk;
- 		for (dqnr = 0;
- 		     dqnr < dqperchunk && dqid <= UINT_MAX;
- 		     dqnr++, dqb++, dqid++)
--			qc_check_dquot(mp, &dqb->dd_diskdq, dquots);
-+			qc_check_dquot(mp, &dqb->dd_diskdq, dquots, dqid);
- 		libxfs_buf_relse(bp);
+diff --git a/scrub/phase5.c b/scrub/phase5.c
+index ee1e5d6c..1ef234bf 100644
+--- a/scrub/phase5.c
++++ b/scrub/phase5.c
+@@ -278,7 +278,12 @@ check_inode_names(
+ 			goto out;
  	}
  
+-	/* Open the dir, let the kernel try to reconnect it to the root. */
++	/*
++	 * Warn about naming problems in the directory entries.  Opening the
++	 * dir by handle means the kernel will try to reconnect it to the root.
++	 * If the reconnection fails due to corruption in the parents we get
++	 * ESTALE, which is why we skip phase 5 if we found corruption.
++	 */
+ 	if (S_ISDIR(bstat->bs_mode)) {
+ 		fd = scrub_open_handle(handle);
+ 		if (fd < 0) {
+@@ -288,10 +293,7 @@ check_inode_names(
+ 			str_errno(ctx, descr_render(&dsc));
+ 			goto out;
+ 		}
+-	}
+ 
+-	/* Warn about naming problems in the directory entries. */
+-	if (fd >= 0 && S_ISDIR(bstat->bs_mode)) {
+ 		error = check_dirent_names(ctx, &dsc, &fd, bstat);
+ 		if (error)
+ 			goto out;
 
