@@ -2,35 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1346431476F
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:19:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C3BC314778
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:20:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbhBIERv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Feb 2021 23:17:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48454 "EHLO mail.kernel.org"
+        id S229959AbhBIETj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Feb 2021 23:19:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230192AbhBIEPj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Feb 2021 23:15:39 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D5D9464ECD;
-        Tue,  9 Feb 2021 04:11:27 +0000 (UTC)
+        id S230088AbhBIEQR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Feb 2021 23:16:17 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 81CFB64ECE;
+        Tue,  9 Feb 2021 04:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612843888;
-        bh=t893qcb9jWSkUlEZugOvpZt1CG6f3kLN3tpCFmmeBNc=;
+        s=k20201202; t=1612843893;
+        bh=7gTwqibLFyk45k9HtBOPPnfeZjkEv7vyLWCVVnXOcIc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GH4d+Nu/5O83Deu7bph02oh1GwaDDjisT3R7bCqQaDPl+llVpDKgTJqDSxPblMSNl
-         LNXyyyWIQ+8BS+WCpG4tA7L0lOy0WSFwM9+TIyMQxV8NEoGvwaYb8wl+5P54XT8ocu
-         P41yzFFT+8erd2/ItWds/KB0snKBt2Yd0ZZBowgYjkjQr4z3BEP3q+PCSQcfnyGK+f
-         z93fQigErhWmYthFafQYizd25Bw/M7cQ10WCPzpCrmIDe7pMfwRZGQIga2Kxy0AClR
-         Ox7WDEfu48Y6woadp6RLc+Y9JNpGjxD4+bG7aW+4FkMXJGKLOCCJMk+56RGUcTABrB
-         51Si/kfjMCXKA==
-Subject: [PATCH 2/6] xfs_scrub: detect infinite loops when scanning inodes
+        b=D+IdcTPJd/myeKzbmaTPMB6Q7bzr0FWtLqkhQ0qCYCj0sIdC+6dO0GOn5Po5/5SMG
+         AlV3MKLA3UOuorpLkdaTluO3sGA/MJyKTX383H7aYZmh1KFUB9eM9QBOK77qpxoo8P
+         r+NqpOwWMdaCZ29r5B9KaLjvvp70yafGsW6rBJf8Yb2PXhUTXwrmj7n2IKSWNUH49k
+         5sGS1Sd5raA01gWSBsznqaxVQ/areDhge1j1CZ8WypJMbVSIzp+cm2R0TelbJMjyUa
+         UUSPHcWVCf6jRStLSFdMWzJnsrd5a/Iw6sYPT5TnCb/fS/tWA72NUSYvAsVVY4J0/4
+         SsxybzlHSjS7w==
+Subject: [PATCH 3/6] xfs_scrub: load and unload libicu properly
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, chandanrlinux@gmail.com,
         Chaitanya.Kulkarni@wdc.com
-Date:   Mon, 08 Feb 2021 20:11:27 -0800
-Message-ID: <161284388746.3058224.2675575511596158478.stgit@magnolia>
+Date:   Mon, 08 Feb 2021 20:11:33 -0800
+Message-ID: <161284389311.3058224.3454694766420244067.stgit@magnolia>
 In-Reply-To: <161284387610.3058224.6236053293202575597.stgit@magnolia>
 References: <161284387610.3058224.6236053293202575597.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,50 +43,89 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-During an inode scan (aka phase 3) when we're scanning the inode btree
-to find files to check, make sure that each invocation of inumbers
-actually gives us an inobt record with a startino that's at least as
-large as what we asked for so that we always make forward progress.
+Make sure we actually load and unload libicu properly.  This isn't
+strictly required since the library can bootstrap itself, but unloading
+means fewer things for valgrind to complain about.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- scrub/inodes.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ scrub/unicrash.c  |   17 +++++++++++++++++
+ scrub/unicrash.h  |    4 ++++
+ scrub/xfs_scrub.c |    7 +++++++
+ 3 files changed, 28 insertions(+)
 
 
-diff --git a/scrub/inodes.c b/scrub/inodes.c
-index 63865113..cc73da7f 100644
---- a/scrub/inodes.c
-+++ b/scrub/inodes.c
-@@ -119,6 +119,7 @@ scan_ag_inodes(
- 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct xfs_bulkstat	*bs;
- 	struct xfs_inumbers	*inumbers;
-+	uint64_t		nextino = cvt_agino_to_ino(&ctx->mnt, agno, 0);
- 	int			i;
- 	int			error;
- 	int			stale_count = 0;
-@@ -153,6 +154,21 @@ scan_ag_inodes(
- 	/* Find the inode chunk & alloc mask */
- 	error = -xfrog_inumbers(&ctx->mnt, ireq);
- 	while (!error && !si->aborted && ireq->hdr.ocount > 0) {
-+		/*
-+		 * Make sure that we always make forward progress while we
-+		 * scan the inode btree.
-+		 */
-+		if (nextino > inumbers->xi_startino) {
-+			str_corrupt(ctx, descr,
-+	_("AG %u inode btree is corrupt near agino %lu, got %lu"), agno,
-+				cvt_ino_to_agino(&ctx->mnt, nextino),
-+				cvt_ino_to_agino(&ctx->mnt,
-+						ireq->inumbers[0].xi_startino));
-+			si->aborted = true;
-+			break;
-+		}
-+		nextino = ireq->hdr.ino;
+diff --git a/scrub/unicrash.c b/scrub/unicrash.c
+index d5d2cf20..de3217c2 100644
+--- a/scrub/unicrash.c
++++ b/scrub/unicrash.c
+@@ -722,3 +722,20 @@ unicrash_check_fs_label(
+ 	return __unicrash_check_name(uc, dsc, _("filesystem label"),
+ 			label, 0);
+ }
 +
- 		/*
- 		 * We can have totally empty inode chunks on filesystems where
- 		 * there are more than 64 inodes per block.  Skip these.
++/* Load libicu and initialize it. */
++bool
++unicrash_load(void)
++{
++	UErrorCode		uerr = U_ZERO_ERROR;
++
++	u_init(&uerr);
++	return U_FAILURE(uerr);
++}
++
++/* Unload libicu once we're done with it. */
++void
++unicrash_unload(void)
++{
++	u_cleanup();
++}
+diff --git a/scrub/unicrash.h b/scrub/unicrash.h
+index c3a7f385..755afaef 100644
+--- a/scrub/unicrash.h
++++ b/scrub/unicrash.h
+@@ -25,6 +25,8 @@ int unicrash_check_xattr_name(struct unicrash *uc, struct descr *dsc,
+ 		const char *attrname);
+ int unicrash_check_fs_label(struct unicrash *uc, struct descr *dsc,
+ 		const char *label);
++bool unicrash_load(void);
++void unicrash_unload(void);
+ #else
+ # define unicrash_dir_init(u, c, b)		(0)
+ # define unicrash_xattr_init(u, c, b)		(0)
+@@ -33,6 +35,8 @@ int unicrash_check_fs_label(struct unicrash *uc, struct descr *dsc,
+ # define unicrash_check_dir_name(u, d, n)	(0)
+ # define unicrash_check_xattr_name(u, d, n)	(0)
+ # define unicrash_check_fs_label(u, d, n)	(0)
++# define unicrash_load()			(0)
++# define unicrash_unload()			do { } while (0)
+ #endif /* HAVE_LIBICU */
+ 
+ #endif /* XFS_SCRUB_UNICRASH_H_ */
+diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
+index 1edeb150..bc2e84a7 100644
+--- a/scrub/xfs_scrub.c
++++ b/scrub/xfs_scrub.c
+@@ -603,6 +603,12 @@ main(
+ 	setlocale(LC_ALL, "");
+ 	bindtextdomain(PACKAGE, LOCALEDIR);
+ 	textdomain(PACKAGE);
++	if (unicrash_load()) {
++		fprintf(stderr,
++	_("%s: couldn't initialize Unicode library.\n"),
++				progname);
++		goto out;
++	}
+ 
+ 	pthread_mutex_init(&ctx.lock, NULL);
+ 	ctx.mode = SCRUB_MODE_REPAIR;
+@@ -788,6 +794,7 @@ main(
+ 	phase_end(&all_pi, 0);
+ 	if (progress_fp)
+ 		fclose(progress_fp);
++	unicrash_unload();
+ 
+ 	/*
+ 	 * If we're being run as a service, the return code must fit the LSB
 
