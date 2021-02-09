@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D318831476B
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:18:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DAD3314766
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:18:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbhBIERl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Feb 2021 23:17:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48452 "EHLO mail.kernel.org"
+        id S230340AbhBIERr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Feb 2021 23:17:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229822AbhBIEOM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Feb 2021 23:14:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B422864EC7;
-        Tue,  9 Feb 2021 04:11:08 +0000 (UTC)
+        id S229843AbhBIEO5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Feb 2021 23:14:57 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6D61B64EC9;
+        Tue,  9 Feb 2021 04:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612843868;
-        bh=/e2iKxYC4P1lueIUO6R71gz6ZY9iZ2vTmnUWwD6VAHs=;
+        s=k20201202; t=1612843874;
+        bh=zMbn7XOkMktKuXzrMJ/e/WoGZx6IuhPx3/3wvAs8kSk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=o5bexsX7kVHHtIBJ8uybJv0Kk5FJUJRNyRqxQNGhCXLH9A6pduyUlOHMHHty7mpaE
-         hhOHYplTFNVyt4y4F5HQau36SEDsNfKYweuHeLkQC7x2yAbqRBxO/ivctJ7Yg2p9yo
-         XOmd8DRxy/nmSbJZ0UO/YKNtq6jF4x+3pgfImJ1m2YGhpH16RXWSDJi/UUA3c5pEb4
-         HfQCO9To53W491X+mIQ6JOKc7DGHkHAEobGkDlqR4YA4fiwDKLiJPwG2o0iKVZuRoh
-         cRduwfeBxwUlbHcVzh7FHROusMlcMQ+N9emSHdhEWsh1Jp6hNlZVHA8JyMLRLLTLbi
-         hM5DlaHEQ+xow==
-Subject: [PATCH 1/2] xfs_repair: enable inobtcount upgrade via repair
+        b=VDKoMWQO4vxXV2gSk8cTTNf3xdM8bfpiX0nxrArG1RqJDlIuTAqADjkF/CM2lcT3x
+         gqQ6YOCZKEv9JGZgsz5svulw2yIkaOEz4g273fvUxkHApzA1jOUdXyA8WOV4B84w0W
+         4XiwjzOUlhSWEihDJt3EdAHhIw0MzB56d95pa11HNbXL0/LTLVBtuzCzqasZjnXkvd
+         7JmhA3rOFEeyvBLVnqRM4FsOBvFKkbIbv81Z6O9e6/b1UwRyHGK+6X7wqNBKyVtrwM
+         j4UJtTkE4AbtYBvCZ9obnloAiLbkGRbMhqo+H/Wc/7kREx2AmkDHLqk6psaIhSpNhE
+         FVvW1a1DtXp1g==
+Subject: [PATCH 2/2] xfs_repair: enable bigtime upgrade via repair
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, hch@lst.de, bfoster@redhat.com
-Date:   Mon, 08 Feb 2021 20:11:08 -0800
-Message-ID: <161284386826.3058138.11503745885795466104.stgit@magnolia>
+Date:   Mon, 08 Feb 2021 20:11:14 -0800
+Message-ID: <161284387398.3058138.5317754248430984165.stgit@magnolia>
 In-Reply-To: <161284386265.3058138.14199712814454514885.stgit@magnolia>
 References: <161284386265.3058138.14199712814454514885.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,142 +41,132 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use xfs_repair to add the inode btree counter feature to a filesystem.
+Upgrade existing V5 filesystems to support large timestamps up to 2486.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- man/man8/xfs_admin.8 |   11 ++++++++++-
+ man/man8/xfs_admin.8 |    6 ++++++
  repair/globals.c     |    1 +
  repair/globals.h     |    1 +
- repair/phase1.c      |   29 +++++++++++++++++++++++++++++
+ repair/phase1.c      |   23 +++++++++++++++++++++++
  repair/xfs_repair.c  |   11 +++++++++++
- 5 files changed, 52 insertions(+), 1 deletion(-)
+ 5 files changed, 42 insertions(+)
 
 
 diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
-index 3f3aeea8..da05171d 100644
+index da05171d..13d71643 100644
 --- a/man/man8/xfs_admin.8
 +++ b/man/man8/xfs_admin.8
-@@ -126,7 +126,16 @@ without the
- .BR -n )
- must be followed to clean the filesystem.
- .IP
--There are currently no feature options.
-+Supported features are as follows:
-+.RS 0.7i
+@@ -135,6 +135,12 @@ This reduces mount time by speeding up metadata space reservation calculations.
+ The filesystem cannot be downgraded after this feature is enabled.
+ Once enabled, the filesystem will not be writable by older kernels.
+ This feature was added to Linux 5.10.
 +.TP 0.4i
-+.B inobtcount
-+Keep a count the number of blocks in each inode btree in the AGI.
-+This reduces mount time by speeding up metadata space reservation calculations.
++.B bigtime
++Upgrade a filesystem to support larger timestamps up to the year 2486.
 +The filesystem cannot be downgraded after this feature is enabled.
-+Once enabled, the filesystem will not be writable by older kernels.
++Once enabled, the filesystem will not be mountable by older kernels.
 +This feature was added to Linux 5.10.
-+.RE
+ .RE
  .TP
  .BI \-U " uuid"
- Set the UUID of the filesystem to
 diff --git a/repair/globals.c b/repair/globals.c
-index b0e23864..89063b10 100644
+index 89063b10..28f0b6a0 100644
 --- a/repair/globals.c
 +++ b/repair/globals.c
-@@ -51,6 +51,7 @@ int	convert_lazy_count;	/* Convert lazy-count mode on/off */
- int	lazy_count;		/* What to set if to if converting */
+@@ -52,6 +52,7 @@ int	lazy_count;		/* What to set if to if converting */
  
  bool	add_needsrepair;	/* forcibly set needsrepair while repairing */
-+bool	add_inobtcount;		/* add inode btree counts to AGI */
+ bool	add_inobtcount;		/* add inode btree counts to AGI */
++bool	add_bigtime;		/* add support for timestamps up to 2486 */
  
  /* misc status variables */
  
 diff --git a/repair/globals.h b/repair/globals.h
-index 9fa73b2c..a0051794 100644
+index a0051794..be784cf6 100644
 --- a/repair/globals.h
 +++ b/repair/globals.h
-@@ -93,6 +93,7 @@ extern int	convert_lazy_count;	/* Convert lazy-count mode on/off */
- extern int	lazy_count;		/* What to set if to if converting */
+@@ -94,6 +94,7 @@ extern int	lazy_count;		/* What to set if to if converting */
  
  extern bool	add_needsrepair;
-+extern bool	add_inobtcount;
+ extern bool	add_inobtcount;
++extern bool	add_bigtime;
  
  /* misc status variables */
  
 diff --git a/repair/phase1.c b/repair/phase1.c
-index 57f72cd0..96661c6b 100644
+index 96661c6b..89056215 100644
 --- a/repair/phase1.c
 +++ b/repair/phase1.c
-@@ -50,6 +50,33 @@ set_needsrepair(
+@@ -77,6 +77,27 @@ set_inobtcount(
  	sb->sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
  }
  
 +static void
-+set_inobtcount(
++set_bigtime(
 +	struct xfs_sb	*sb)
 +{
 +	if (!xfs_sb_version_hascrc(sb)) {
 +		printf(
-+	_("Inode btree count feature only supported on V5 filesystems.\n"));
++	_("Large timestamp feature only supported on V5 filesystems.\n"));
 +		exit(0);
 +	}
 +
-+	if (!xfs_sb_version_hasfinobt(sb)) {
-+		printf(
-+	_("Inode btree count feature requires free inode btree.\n"));
-+		exit(0);
-+	}
-+
-+	if (xfs_sb_version_hasinobtcounts(sb)) {
-+		printf(_("Filesystem already has inode btree counts.\n"));
++	if (xfs_sb_version_hasbigtime(sb)) {
++		printf(_("Filesystem already supports large timestamps.\n"));
 +		return;
 +	}
 +
-+	printf(_("Adding inode btree counts to filesystem.\n"));
++	printf(_("Adding large timestamp support to filesystem.\n"));
 +	primary_sb_modified = 1;
-+	sb->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_INOBTCNT;
-+	sb->sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
++	sb->sb_features_incompat |= (XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR |
++				     XFS_SB_FEAT_INCOMPAT_BIGTIME);
 +}
 +
  /*
   * this has got to be big enough to hold 4 sectors
   */
-@@ -148,6 +175,8 @@ _("Cannot disable lazy-counters on V5 fs\n"));
- 
- 	if (add_needsrepair)
+@@ -177,6 +198,8 @@ _("Cannot disable lazy-counters on V5 fs\n"));
  		set_needsrepair(sb);
-+	if (add_inobtcount)
-+		set_inobtcount(sb);
+ 	if (add_inobtcount)
+ 		set_inobtcount(sb);
++	if (add_bigtime)
++		set_bigtime(sb);
  
  	/* shared_vn should be zero */
  	if (sb->sb_shared_vn) {
 diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index ae7106a6..0ff2e2bc 100644
+index 0ff2e2bc..60f97e8c 100644
 --- a/repair/xfs_repair.c
 +++ b/repair/xfs_repair.c
-@@ -68,12 +68,14 @@ static char *o_opts[] = {
- enum c_opt_nums {
+@@ -69,6 +69,7 @@ enum c_opt_nums {
  	CONVERT_LAZY_COUNT = 0,
  	CONVERT_NEEDSREPAIR,
-+	CONVERT_INOBTCOUNT,
+ 	CONVERT_INOBTCOUNT,
++	CONVERT_BIGTIME,
  	C_MAX_OPTS,
  };
  
- static char *c_opts[] = {
+@@ -76,6 +77,7 @@ static char *c_opts[] = {
  	[CONVERT_LAZY_COUNT]	= "lazycount",
  	[CONVERT_NEEDSREPAIR]	= "needsrepair",
-+	[CONVERT_INOBTCOUNT]	= "inobtcount",
+ 	[CONVERT_INOBTCOUNT]	= "inobtcount",
++	[CONVERT_BIGTIME]	= "bigtime",
  	[C_MAX_OPTS]		= NULL,
  };
  
-@@ -316,6 +318,15 @@ process_args(int argc, char **argv)
- 					if (strtol(val, NULL, 0) == 1)
- 						add_needsrepair = true;
+@@ -327,6 +329,15 @@ process_args(int argc, char **argv)
+ 		_("-c inobtcount only supports upgrades\n"));
+ 					add_inobtcount = true;
  					break;
-+				case CONVERT_INOBTCOUNT:
++				case CONVERT_BIGTIME:
 +					if (!val)
 +						do_abort(
-+		_("-c inobtcount requires a parameter\n"));
++		_("-c bigtime requires a parameter\n"));
 +					if (strtol(val, NULL, 0) != 1)
 +						do_abort(
-+		_("-c inobtcount only supports upgrades\n"));
-+					add_inobtcount = true;
++		_("-c bigtime only supports upgrades\n"));
++					add_bigtime = true;
 +					break;
  				default:
  					unknown('c', val);
