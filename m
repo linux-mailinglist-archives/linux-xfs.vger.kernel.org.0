@@ -2,83 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 801BF314771
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 05:19:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D52A314B31
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 10:12:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbhBIESh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Feb 2021 23:18:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230231AbhBIEPq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Feb 2021 23:15:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5316D64ED1;
-        Tue,  9 Feb 2021 04:11:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612843910;
-        bh=BMNuSXxFHaU1RWlxw5KUtZejymyyRxkRwaNaeuuoLO4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Okf+TXse3omaAmLb15fHooZhwWKDrKmPYaQSh+ICcmonZvW/GjgyhnxVhNwyCTUUI
-         AjXv1FyxZPYuhmc8fIDq5FqqYs5o6gioM79NIuwRekbFPwoOTQXp7gvRG8FB5vIGuH
-         0/f5JM7kUF7PB3e11VYuE88XPrvzF97xJEWEifPtYO+U5e5h7Kbi7EgQMkmpYhs0s5
-         r43g5oYGlJC2ts/9d6OF40s4htG6FiZUYORC6NkKD24Ip6wBG4WO2XmLDpAr/NyRQY
-         71skvI/PSchWMVwt1C0cNhHBaI1f6gZ+VfnyjuQhK9E/3w3By6CQiXyTkL4wvE+/fJ
-         eG0y+44rkpW9w==
-Subject: [PATCH 6/6] xfs_scrub: fix weirdness in directory name check code
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     sandeen@sandeen.net, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, chandanrlinux@gmail.com,
-        Chaitanya.Kulkarni@wdc.com
-Date:   Mon, 08 Feb 2021 20:11:49 -0800
-Message-ID: <161284390991.3058224.12921304382202456726.stgit@magnolia>
-In-Reply-To: <161284387610.3058224.6236053293202575597.stgit@magnolia>
-References: <161284387610.3058224.6236053293202575597.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S229930AbhBIJMe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Feb 2021 04:12:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231142AbhBIJIr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Feb 2021 04:08:47 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C25AC061786
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Feb 2021 01:08:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=iTHKPZjfmcbXW5sq4gCpwq450Z
+        xtDlrJuc2GFvEh5Hl3j+Yt11m47nN/EdTjWRIINxfyIBbhr4OCN6wAS8dPVEJAxVYY6HBa19TCOGU
+        kCTkKLSeqRcfXsvW2po1TYrp2PTvuGkmvFhiANLiLm99WS4ZXUqjA/dWkwmetK/Oscs/Qn/m6HgcF
+        yTrj3OIr37ERkjQezfnqWchMSmoBIU0dcsezs1/WXg4+uL7Ht0L+/GTiByUID3Ai/GcBlgUp4XnZf
+        trbZ8vvT9g2JHP+ciKfRFcnw09NFdSgk4zIh+jNaMDNO0iJOsjf3U0ozXmdnPlYa04gQ91lkBhEca
+        VbKOPkAQ==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1l9Ozz-007D0X-LQ; Tue, 09 Feb 2021 09:07:55 +0000
+Date:   Tue, 9 Feb 2021 09:07:55 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     sandeen@sandeen.net, Brian Foster <bfoster@redhat.com>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 01/10] xfs_admin: clean up string quoting
+Message-ID: <20210209090755.GA1718132@infradead.org>
+References: <161284380403.3057868.11153586180065627226.stgit@magnolia>
+ <161284380981.3057868.13051897080577307586.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161284380981.3057868.13051897080577307586.stgit@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Looks good,
 
-Remove the redundant second check of fd and ISDIR in check_inode_names,
-and rework the comment to describe why we can't run phase 5 if we found
-other corruptions in the filesystem.
-
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- scrub/phase5.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-
-diff --git a/scrub/phase5.c b/scrub/phase5.c
-index ee1e5d6c..1ef234bf 100644
---- a/scrub/phase5.c
-+++ b/scrub/phase5.c
-@@ -278,7 +278,12 @@ check_inode_names(
- 			goto out;
- 	}
- 
--	/* Open the dir, let the kernel try to reconnect it to the root. */
-+	/*
-+	 * Warn about naming problems in the directory entries.  Opening the
-+	 * dir by handle means the kernel will try to reconnect it to the root.
-+	 * If the reconnection fails due to corruption in the parents we get
-+	 * ESTALE, which is why we skip phase 5 if we found corruption.
-+	 */
- 	if (S_ISDIR(bstat->bs_mode)) {
- 		fd = scrub_open_handle(handle);
- 		if (fd < 0) {
-@@ -288,10 +293,7 @@ check_inode_names(
- 			str_errno(ctx, descr_render(&dsc));
- 			goto out;
- 		}
--	}
- 
--	/* Warn about naming problems in the directory entries. */
--	if (fd >= 0 && S_ISDIR(bstat->bs_mode)) {
- 		error = check_dirent_names(ctx, &dsc, &fd, bstat);
- 		if (error)
- 			goto out;
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
