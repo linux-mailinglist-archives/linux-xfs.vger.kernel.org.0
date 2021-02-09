@@ -2,163 +2,78 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 418DC315DA2
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Feb 2021 03:58:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C6D93160B7
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Feb 2021 09:14:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233732AbhBJC5y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Feb 2021 21:57:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233689AbhBJC5x (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 9 Feb 2021 21:57:53 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7759764E2F;
-        Wed, 10 Feb 2021 02:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612925826;
-        bh=fnidSCwyHYpkmrjKIOFgQsFly1KLTEmN/tNMdNdz6dY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qy2CJapuBYANVwdQEIA+t3YywT+4RVnd0RI8EbzAnCuf07Q6ySnwLlDMSDevFQNZA
-         GKaQ6eVweE/W/jfWdmaYfV4jJv7jINt5Hn/dSbhN2mLQvxHmrizhbeW7i5pn1uk0Ke
-         dshGz5Z8T/g+9LGpDzPPKsl2SzFWapoQ+j9BJtdKmnnAtHV2vUT+aOA5cx9kU6KNCA
-         GtwTmvLWmpQ2dcz+LU7uBJX+x82uGoNd7ZQROkBg//69710DAx0y+AiA4bKqYN6dFU
-         FKx0rfyqQZJHXA/8rAN439Y6Vgo7+VPyxs7Lwaq2k80j1N60q1qn4UoAapmlu7bm9A
-         esURI/VQ42+pA==
-Subject: [PATCH 2/2] common: remove _require_no_rtinherit
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 09 Feb 2021 18:57:06 -0800
-Message-ID: <161292582611.3504701.17311358222740363123.stgit@magnolia>
-In-Reply-To: <161292581498.3504701.4053663562108530233.stgit@magnolia>
-References: <161292581498.3504701.4053663562108530233.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S233897AbhBJINi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 10 Feb 2021 03:13:38 -0500
+Received: from spam.auroraoh.com ([24.56.89.101]:55918 "EHLO
+        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S233796AbhBJIN1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Feb 2021 03:13:27 -0500
+X-ASG-Debug-ID: 1612944670-112c0d6a799cb90001-7j46Zh
+Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id jJ81a9DkExpcgPkc; Wed, 10 Feb 2021 03:11:10 -0500 (EST)
+X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
+Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
+ (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
+ 02:45:33 -0500
+Content-Type: text/plain; charset="iso-8859-1"
+X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+To:     Recipients <januskad@auroraoh.com>
+X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
+ we also registered with the Turkish British Chamber of Commerce and Industry
+ (TBCCI) we have operations in Europe and Asia.
+From:   <januskad@auroraoh.com>
+Date:   Tue, 9 Feb 2021 15:44:47 +0800
+Reply-To: <cfolimiited@gmail.com>
+X-Priority: 1 (High)
+X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
+X-Antivirus-Status: Clean
+Message-ID: <04dad0e2-2f3b-46a3-bb30-cab23ca007d4@COASRV-MAIL2.auroraoh.loc>
+X-Originating-IP: [197.210.29.8]
+X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
+ COASRV-MAIL2.auroraoh.loc (10.3.1.15)
+X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
+X-Barracuda-Start-Time: 1612944670
+X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at auroraoh.com
+X-Barracuda-Scan-Msg-Size: 755
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Spam-Score: 1.61
+X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87880
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+        0.00 NO_REAL_NAME           From: does not include a real name
+        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
+        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
+                                   Address
+        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
 
-All the remaining tests that use _require_no_rtinherit can be adapted to
-ignore SCRATCH_RTDEV or to force files to be created on the data device.
-This makes the helper unnecessary and increases test coverage, so remove
-this helper.
+We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- common/rc     |   10 ----------
- tests/xfs/205 |    5 ++++-
- tests/xfs/306 |    5 ++++-
- tests/xfs/318 |    5 ++++-
- tests/xfs/444 |    6 +++++-
- 5 files changed, 17 insertions(+), 14 deletions(-)
+Please contact us for more details;
 
 
-diff --git a/common/rc b/common/rc
-index ad54b3de..25cbac0b 100644
---- a/common/rc
-+++ b/common/rc
-@@ -6,16 +6,6 @@
- 
- BC=$(which bc 2> /dev/null) || BC=
- 
--# Some tests are not relevant or functional when testing XFS realtime
--# subvolumes along with the rtinherit=1 mkfs option.  In these cases,
--# this test will opt-out of the test.
--_require_no_rtinherit()
--{
--	[ "$FSTYP" = "xfs" ] && echo "$MKFS_OPTIONS" |
--		egrep -q "rtinherit([^=]|=1|$)" && \
--		_notrun "rtinherit mkfs option is not supported by this test."
--}
--
- _require_math()
- {
- 	if [ -z "$BC" ]; then
-diff --git a/tests/xfs/205 b/tests/xfs/205
-index da022f19..1f7ce3d8 100755
---- a/tests/xfs/205
-+++ b/tests/xfs/205
-@@ -23,10 +23,13 @@ _supported_fs xfs
- 
- # single AG will cause xfs_repair to fail checks.
- _require_scratch_nocheck
--_require_no_rtinherit
- 
- rm -f $seqres.full
- 
-+# Disable the scratch rt device to avoid test failures relating to the rt
-+# bitmap consuming all the free space in our small data device.
-+unset SCRATCH_RTDEV
-+
- fsblksz=1024
- _scratch_mkfs_xfs -d size=$((32768*fsblksz)) -b size=$fsblksz >> $seqres.full 2>&1
- _scratch_mount
-diff --git a/tests/xfs/306 b/tests/xfs/306
-index e1993c08..e98eda4b 100755
---- a/tests/xfs/306
-+++ b/tests/xfs/306
-@@ -34,12 +34,15 @@ _cleanup()
- _supported_fs xfs
- 
- _require_scratch_nocheck	# check complains about single AG fs
--_require_no_rtinherit
- _require_xfs_io_command "fpunch"
- _require_command $UUIDGEN_PROG uuidgen
- 
- rm -f $seqres.full
- 
-+# Disable the scratch rt device to avoid test failures relating to the rt
-+# bitmap consuming all the free space in our small data device.
-+unset SCRATCH_RTDEV
-+
- # Create a small fs with a large directory block size. We want to fill up the fs
- # quickly and then create multi-fsb dirblocks over fragmented free space.
- _scratch_mkfs_xfs -d size=20m -n size=64k >> $seqres.full 2>&1
-diff --git a/tests/xfs/318 b/tests/xfs/318
-index 90771ade..07375b1f 100755
---- a/tests/xfs/318
-+++ b/tests/xfs/318
-@@ -32,7 +32,6 @@ _supported_fs xfs
- _require_scratch
- _require_error_injection
- _require_xfs_io_error_injection "rmap_finish_one"
--_require_no_rtinherit
- 
- rm -f $seqres.full
- 
-@@ -43,6 +42,10 @@ echo "Format filesystem"
- _scratch_mkfs >/dev/null 2>&1
- _scratch_mount >> $seqres.full
- 
-+# This test depends on specific behaviors of the data device, so create all
-+# files on it.
-+$XFS_IO_PROG -c 'chattr -t' $SCRATCH_MNT
-+
- echo "Create files"
- touch $SCRATCH_MNT/file1
- 
-diff --git a/tests/xfs/444 b/tests/xfs/444
-index f103b793..e4c987f8 100755
---- a/tests/xfs/444
-+++ b/tests/xfs/444
-@@ -39,11 +39,15 @@ _require_scratch
- _require_test_program "punch-alternating"
- _require_xfs_io_command "falloc"
- _require_xfs_db_write_array
--_require_no_rtinherit
- 
- # This is only a v5 filesystem problem
- _require_scratch_xfs_crc
- 
-+# Disable the scratch rt device to avoid test failures relating to the rt
-+# bitmap consuming free space in our small data device and throwing off the
-+# filestreams allocator.
-+unset SCRATCH_RTDEV
-+
- mount_loop() {
- 	if ! _try_scratch_mount >> $seqres.full 2>&1; then
- 		echo "scratch mount failed" >> $seqres.full
+Kind regards,
+
+Paul McCann
+
+-- 
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
 
