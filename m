@@ -2,174 +2,227 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2841E3155C3
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 19:23:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3268D315619
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Feb 2021 19:38:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233293AbhBISUq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Feb 2021 13:20:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41810 "EHLO mail.kernel.org"
+        id S233137AbhBIShJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Feb 2021 13:37:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233214AbhBISSi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 9 Feb 2021 13:18:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 518AE64E3F;
-        Tue,  9 Feb 2021 18:17:39 +0000 (UTC)
+        id S233440AbhBIS1k (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 9 Feb 2021 13:27:40 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 40D9064EC4;
+        Tue,  9 Feb 2021 18:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1612894659;
-        bh=0fnqd3rGcBFr/ipr8xqKJAXANXGwidNqaPPuxjuEkZ0=;
+        s=k20201202; t=1612893671;
+        bh=pp+Qh4JGxaG2nivfx1zsPeYoa05JEl5NG23/FJ5Y6Jc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=irqtHppp3OMgjq4gLq9DOIH8j9QRj6qjOimE0iFzvKTpw1B1X2Xn67A83SkT8NONg
-         4mJOo62wFjsF36J4uXU1ewwPXImjaAINKWuG2qac/wKrLyC9LjVe6uvA7QZQxehDHy
-         Oh4Koq4k5KnDZxdPJnoeN/E0FVuq0T1B6dTNzucP7ipuIH5jn6zjDpccnQ607NTyf8
-         U3UkfD4f3AHx5SNYCxWEbkaJNbjz6MeiuNFY1MaF+IZJW4RKfOQ187o2ciOSgcBBqK
-         dUN7boJ/ZYYfG/AucZnYuJTeS0eGjvTyS4VoLVVb/yz2E2+pzPFswOX77XgnSuDla8
-         IV3HFdh/ua0hw==
-Date:   Tue, 9 Feb 2021 10:17:38 -0800
+        b=Ht3qFD9iARNKgsJ/Re3A3qC9Jnh55FSvLUVYNQarfq+3V4d1BZsItj+VqJa0eQmYE
+         S33o2JqF5PHZ88XwSxQvJWZ7pt8JFW5WfobZ6LELYTLhUmPZ2/n2i0PtDeSRa8T1ur
+         EFQCmvbshnIlAFqIJIXwzQFZ3BWSXB9J0Kn1W/POtqIe+mr5hUSMXfeQP3AgNchqcc
+         0XADPUh8xFF9ooWByYlb13/pfGYEOLTBFg3pePPfknRc39vjpEBXfPjmkT68ISYRYL
+         zh/hewsn5/hru6PO3Fy+5unP4oJgIKzFtWokLFWlZJmC/4y7n096hsrrK3UzyInjOx
+         7H5DfojprNgVQ==
+Date:   Tue, 9 Feb 2021 10:01:10 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Brian Foster <bfoster@redhat.com>
 Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 09/10] xfs_repair: add a testing hook for NEEDSREPAIR
-Message-ID: <20210209181738.GU7193@magnolia>
+Subject: Re: [PATCH 06/10] xfs_repair: clear the needsrepair flag
+Message-ID: <20210209180110.GS7193@magnolia>
 References: <161284380403.3057868.11153586180065627226.stgit@magnolia>
- <161284385516.3057868.355176047687079022.stgit@magnolia>
- <20210209172131.GG14273@bfoster>
+ <161284383828.3057868.1762356472271947821.stgit@magnolia>
+ <20210209172029.GD14273@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210209172131.GG14273@bfoster>
+In-Reply-To: <20210209172029.GD14273@bfoster>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Feb 09, 2021 at 12:21:31PM -0500, Brian Foster wrote:
-> On Mon, Feb 08, 2021 at 08:10:55PM -0800, Darrick J. Wong wrote:
+On Tue, Feb 09, 2021 at 12:20:29PM -0500, Brian Foster wrote:
+> On Mon, Feb 08, 2021 at 08:10:38PM -0800, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <djwong@kernel.org>
 > > 
-> > Simulate a crash when anyone calls force_needsrepair.  This is a debug
-> > knob so that we can test that the kernel won't mount after setting
-> > needsrepair and that a re-run of xfs_repair will clear the flag.
+> > Clear the needsrepair flag, since it's used to prevent mounting of an
+> > inconsistent filesystem.  We only do this if we make it to the end of
+> > repair with a non-zero error code, and all the rebuilt indices and
+> > corrected metadata are persisted correctly.
+> > 
+> > Note that we cannot combine clearing needsrepair with clearing the quota
+> > checked flags because we need to clear the quota flags even if
+> > reformatting the log fails, whereas we can't clear needsrepair if the
+> > log reformat fails.
 > > 
 > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > > ---
+> >  include/xfs_mount.h |    1 +
+> >  libxfs/init.c       |   25 +++++++++++++------------
+> >  repair/agheader.c   |   21 +++++++++++++++++++++
+> >  repair/xfs_repair.c |   45 +++++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 80 insertions(+), 12 deletions(-)
+> > 
+> > 
+> ...
+> > diff --git a/libxfs/init.c b/libxfs/init.c
+> > index 9fe13b8d..98057b78 100644
+> > --- a/libxfs/init.c
+> > +++ b/libxfs/init.c
+> > @@ -867,25 +867,17 @@ _("%s: Flushing the %s failed, err=%d!\n"),
+> >  }
+> >  
+> >  /*
+> > - * Flush all dirty buffers to stable storage and report on writes that didn't
+> > - * make it to stable storage.
+> > + * Persist all disk write caches and report on writes that didn't make it to
+> > + * stable storage.  Callers should flush (or purge) the libxfs buffer caches
+> > + * before calling this function.
+> >   */
+> > -static int
+> > +int
+> >  libxfs_flush_mount(
+> >  	struct xfs_mount	*mp)
+> >  {
+> >  	int			error = 0;
+> >  	int			err2;
+> >  
+> > -	/*
+> > -	 * Purge the buffer cache to write all dirty buffers to disk and free
+> > -	 * all incore buffers.  Buffers that fail write verification will cause
+> > -	 * the CORRUPT_WRITE flag to be set in the buftarg.  Buffers that
+> > -	 * cannot be written will cause the LOST_WRITE flag to be set in the
+> > -	 * buftarg.
+> > -	 */
+> > -	libxfs_bcache_purge();
+> > -
 > 
-> Can't we just use db to manually set the bit on the superblock?
+> FWIW, my comment on the previous version was that I think it's
+> reasonable to call libxfs_bcache_flush() here instead of the purge so
+> callers don't necessarily have to do anything special. The one caller
+> that does the purge is free to do so before calling
+> libxfs_flush_mount(), as that essentially supercedes the flush that
+> would otherwise occur here. Either way, the patch looks fine to me:
 
-No, because the fstest uses this debug knob to simulate the following:
-
-1) sysadmin issues 'xfs_admin -O inobtcount /dev/sda1'
-2) xfs_repair flips on INOBTCOUNT and NEEDSREPAIR
-3) system goes down and repair never completes
-4) verify that we can't mount
-5) verify that repair clears NEEDSREPAIR and gives us a clean fs
-6) verify that mount works again
-
-and the other scenario is:
-
-1) fuzz a directory entry in such a way that repair will decide to
-   blow out the dirent and rebuild the directory later
-2) sysadmin issues 'xfs_repair /dev/sda1'
-2) xfs_repair flips on NEEDSREPAIR at the same time it corrupts the
-   dirent to trigger the rebuild later
-3) system goes down and repair never completes
-4) verify that we can't mount
-5) verify that repair clears NEEDSREPAIR and gives us a clean fs
-6) verify that mount works again
-
-Both cases reflect what I think are the most likely failure scenarios,
-hence the knob needs to be in xfs_repair to prevent it from running to
-completion.
-
-(And yes, I've been recently very bad at sending fstests out for review
-the past few months; I will get that done by this afternoon.)
+Ah, yeah.  That's a pretty simple change to make.  Thanks for the
+review.
 
 --D
 
-> Brian
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 > 
-> >  repair/globals.c    |    1 +
-> >  repair/globals.h    |    2 ++
-> >  repair/phase1.c     |    5 +++++
-> >  repair/xfs_repair.c |    7 +++++++
-> >  4 files changed, 15 insertions(+)
-> > 
-> > 
-> > diff --git a/repair/globals.c b/repair/globals.c
-> > index 699a96ee..b0e23864 100644
-> > --- a/repair/globals.c
-> > +++ b/repair/globals.c
-> > @@ -40,6 +40,7 @@ int	dangerously;		/* live dangerously ... fix ro mount */
-> >  int	isa_file;
-> >  int	zap_log;
-> >  int	dumpcore;		/* abort, not exit on fatal errs */
-> > +bool	abort_after_force_needsrepair;
-> >  int	force_geo;		/* can set geo on low confidence info */
-> >  int	assume_xfs;		/* assume we have an xfs fs */
-> >  char	*log_name;		/* Name of log device */
-> > diff --git a/repair/globals.h b/repair/globals.h
-> > index 043b3e8e..9fa73b2c 100644
-> > --- a/repair/globals.h
-> > +++ b/repair/globals.h
-> > @@ -82,6 +82,8 @@ extern int	isa_file;
-> >  extern int	zap_log;
-> >  extern int	dumpcore;		/* abort, not exit on fatal errs */
-> >  extern int	force_geo;		/* can set geo on low confidence info */
-> > +/* Abort after forcing NEEDSREPAIR to test its functionality */
-> > +extern bool	abort_after_force_needsrepair;
-> >  extern int	assume_xfs;		/* assume we have an xfs fs */
-> >  extern char	*log_name;		/* Name of log device */
-> >  extern int	log_spec;		/* Log dev specified as option */
-> > diff --git a/repair/phase1.c b/repair/phase1.c
-> > index b26d25f8..57f72cd0 100644
-> > --- a/repair/phase1.c
-> > +++ b/repair/phase1.c
-> > @@ -170,5 +170,10 @@ _("Cannot disable lazy-counters on V5 fs\n"));
-> >  	 */
-> >  	sb_ifree = sb_icount = sb_fdblocks = sb_frextents = 0;
+> >  	/* Flush all kernel and disk write caches, and report failures. */
+> >  	if (mp->m_ddev_targp) {
+> >  		err2 = libxfs_flush_buftarg(mp->m_ddev_targp, _("data device"));
+> > @@ -923,6 +915,15 @@ libxfs_umount(
 > >  
-> > +	/* Simulate a crash after setting needsrepair. */
-> > +	if (primary_sb_modified && add_needsrepair &&
-> > +	    abort_after_force_needsrepair)
-> > +		exit(55);
+> >  	libxfs_rtmount_destroy(mp);
+> >  
+> > +	/*
+> > +	 * Purge the buffer cache to write all dirty buffers to disk and free
+> > +	 * all incore buffers.  Buffers that fail write verification will cause
+> > +	 * the CORRUPT_WRITE flag to be set in the buftarg.  Buffers that
+> > +	 * cannot be written will cause the LOST_WRITE flag to be set in the
+> > +	 * buftarg.  Once that's done, instruct the disks to persist their
+> > +	 * write caches.
+> > +	 */
+> > +	libxfs_bcache_purge();
+> >  	error = libxfs_flush_mount(mp);
+> >  
+> >  	for (agno = 0; agno < mp->m_maxagi; agno++) {
+> > diff --git a/repair/agheader.c b/repair/agheader.c
+> > index 8bb99489..2af24106 100644
+> > --- a/repair/agheader.c
+> > +++ b/repair/agheader.c
+> > @@ -452,6 +452,27 @@ secondary_sb_whack(
+> >  			rval |= XR_AG_SB_SEC;
+> >  	}
+> >  
+> > +	if (xfs_sb_version_needsrepair(sb)) {
+> > +		if (i == 0) {
+> > +			if (!no_modify)
+> > +				do_warn(
+> > +	_("clearing needsrepair flag and regenerating metadata\n"));
+> > +			else
+> > +				do_warn(
+> > +	_("would clear needsrepair flag and regenerate metadata\n"));
+> > +		} else {
+> > +			/*
+> > +			 * Quietly clear needsrepair on the secondary supers as
+> > +			 * part of ensuring them.  If needsrepair is set on the
+> > +			 * primary, it will be cleared at the end of repair
+> > +			 * once we've flushed all other dirty blocks to disk.
+> > +			 */
+> > +			sb->sb_features_incompat &=
+> > +					~XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
+> > +			rval |= XR_AG_SB_SEC;
+> > +		}
+> > +	}
 > > +
-> >  	free(sb);
+> >  	return(rval);
 > >  }
+> >  
 > > diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-> > index ee377e8a..ae7106a6 100644
+> > index 32755821..f607afcb 100644
 > > --- a/repair/xfs_repair.c
 > > +++ b/repair/xfs_repair.c
-> > @@ -44,6 +44,7 @@ enum o_opt_nums {
-> >  	BLOAD_LEAF_SLACK,
-> >  	BLOAD_NODE_SLACK,
-> >  	NOQUOTA,
-> > +	FORCE_NEEDSREPAIR_ABORT,
-> >  	O_MAX_OPTS,
-> >  };
-> >  
-> > @@ -57,6 +58,7 @@ static char *o_opts[] = {
-> >  	[BLOAD_LEAF_SLACK]	= "debug_bload_leaf_slack",
-> >  	[BLOAD_NODE_SLACK]	= "debug_bload_node_slack",
-> >  	[NOQUOTA]		= "noquota",
-> > +	[FORCE_NEEDSREPAIR_ABORT] = "debug_force_needsrepair_abort",
-> >  	[O_MAX_OPTS]		= NULL,
-> >  };
-> >  
-> > @@ -282,6 +284,9 @@ process_args(int argc, char **argv)
-> >  		_("-o debug_bload_node_slack requires a parameter\n"));
-> >  					bload_node_slack = (int)strtol(val, NULL, 0);
-> >  					break;
-> > +				case FORCE_NEEDSREPAIR_ABORT:
-> > +					abort_after_force_needsrepair = true;
-> > +					break;
-> >  				case NOQUOTA:
-> >  					quotacheck_skip();
-> >  					break;
-> > @@ -795,6 +800,8 @@ force_needsrepair(
-> >  		error = -libxfs_bwrite(bp);
-> >  		if (error)
-> >  			do_log(_("couldn't force needsrepair, err=%d\n"), error);
-> > +		if (abort_after_force_needsrepair)
-> > +			exit(55);
+> > @@ -712,6 +712,48 @@ check_fs_vs_host_sectsize(
 > >  	}
-> >  	if (bp)
-> >  		libxfs_buf_relse(bp);
+> >  }
+> >  
+> > +/* Clear needsrepair after a successful repair run. */
+> > +void
+> > +clear_needsrepair(
+> > +	struct xfs_mount	*mp)
+> > +{
+> > +	struct xfs_buf		*bp;
+> > +	int			error;
+> > +
+> > +	/*
+> > +	 * If we're going to clear NEEDSREPAIR, we need to make absolutely sure
+> > +	 * that everything is ok with the ondisk filesystem.  At this point
+> > +	 * we've flushed the filesystem metadata out of the buffer cache and
+> > +	 * possibly rewrote the log, but we haven't forced the disks to persist
+> > +	 * the writes to stable storage.  Do that now, and if anything goes
+> > +	 * wrong, leave NEEDSREPAIR in place.  Don't purge the buffer cache
+> > +	 * here since we're not done yet.
+> > +	 */
+> > +	libxfs_bcache_flush();
+> > +	error = -libxfs_flush_mount(mp);
+> > +	if (error) {
+> > +		do_warn(
+> > +	_("Cannot clear needsrepair due to flush failure, err=%d.\n"),
+> > +			error);
+> > +		return;
+> > +	}
+> > +
+> > +	/* Clear needsrepair from the superblock. */
+> > +	bp = libxfs_getsb(mp);
+> > +	if (!bp || bp->b_error) {
+> > +		do_warn(
+> > +	_("Cannot clear needsrepair from primary super, err=%d.\n"),
+> > +			bp ? bp->b_error : ENOMEM);
+> > +	} else {
+> > +		mp->m_sb.sb_features_incompat &=
+> > +				~XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
+> > +		libxfs_sb_to_disk(bp->b_addr, &mp->m_sb);
+> > +		libxfs_buf_mark_dirty(bp);
+> > +	}
+> > +	if (bp)
+> > +		libxfs_buf_relse(bp);
+> > +}
+> > +
+> >  int
+> >  main(int argc, char **argv)
+> >  {
+> > @@ -1131,6 +1173,9 @@ _("Note - stripe unit (%d) and width (%d) were copied from a backup superblock.\
+> >  	libxfs_bcache_flush();
+> >  	format_log_max_lsn(mp);
+> >  
+> > +	if (xfs_sb_version_needsrepair(&mp->m_sb))
+> > +		clear_needsrepair(mp);
+> > +
+> >  	/* Report failure if anything failed to get written to our fs. */
+> >  	error = -libxfs_umount(mp);
+> >  	if (error)
 > > 
 > 
