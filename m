@@ -2,78 +2,172 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C6D93160B7
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Feb 2021 09:14:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4358B3162AB
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Feb 2021 10:51:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233897AbhBJINi convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 10 Feb 2021 03:13:38 -0500
-Received: from spam.auroraoh.com ([24.56.89.101]:55918 "EHLO
-        barracuda.auroraoh.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S233796AbhBJIN1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Feb 2021 03:13:27 -0500
-X-ASG-Debug-ID: 1612944670-112c0d6a799cb90001-7j46Zh
-Received: from COASRV-MAIL2.auroraoh.loc (coasrv-mail2.auroraoh.loc [10.3.1.15]) by barracuda.auroraoh.com with ESMTP id jJ81a9DkExpcgPkc; Wed, 10 Feb 2021 03:11:10 -0500 (EST)
-X-Barracuda-Envelope-From: JanuskaD@auroraoh.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.3.1.15
-Received: from [172.20.10.5] (197.210.29.8) by COASRV-MAIL2.auroraoh.loc
- (10.3.1.15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 9 Feb 2021
- 02:45:33 -0500
-Content-Type: text/plain; charset="iso-8859-1"
-X-Barracuda-RBL-Trusted-Forwarder: 172.20.10.5
+        id S229598AbhBJJub (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Feb 2021 04:50:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229646AbhBJJtM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Feb 2021 04:49:12 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0018C0613D6
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Feb 2021 01:48:31 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id nm1so806312pjb.3
+        for <linux-xfs@vger.kernel.org>; Wed, 10 Feb 2021 01:48:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=QvShEvKKvyf/xvra8Wgmbysam4FYNOmffc4DlrcOl6o=;
+        b=PxkX4OZZNQI2mZ/0A+hqQ8WYmtevO32Li9RCyA9g0o3DXGUooscEOw8pxDH1N5akNP
+         75USk/OJYrKWGaIV/A6IoTogxvKEn4pU9oKohEbhFq2w01H6uQNrU3w7o6vnP/isrITF
+         hithn3CJtv8r/ZMPwsoC+tZEbFhlvA34pAYHHRhdfSlkJSdBAwE4iQ1IItu/p7LOs+/T
+         hEmZUmzrZ5aP5urARSXWoKp/BuHP2k9NSdF5ygvhcvNbbwjibstREMHjbIVh3S5dyM8V
+         176+l01TW+VJL7SurDtZiAXHCd29kr4z/FdA4g6FkkM87cDTXR2WPdOAyxRggcgObLSP
+         nxSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=QvShEvKKvyf/xvra8Wgmbysam4FYNOmffc4DlrcOl6o=;
+        b=FVMzLAMTgaICKCsda7KnnqESSnTL8ib40A1La9BlqZ5BbnOcB+ooQZgYqIGFbGurpe
+         HtdUTzJcN9Fb14zWfUJo47FCl7JwyiUlo8veu9N9Q2i0xbV1kv0l4gHSYa1uXufAJB29
+         GHdx/16V4E41t0WbYFCwlKg7UQ/+wyj52P+diyT6oWSF/RG+WDT8vA+hjfvU+ijK0RtR
+         +j4AAdGFPzCS7j9Xu4npJh7mQU3usZzRCeyUZwYxGav/oOg5bnOcjL2VQdTRCcq9yEwS
+         bqTGvAXTbFgkUYQjPuWKJ3mz9DpIR6T1illLKe1FKgeLbcE/SWYgrp/reAco9lEqemXF
+         ldNg==
+X-Gm-Message-State: AOAM533SWgcsgK9v3YJn3onZVk4Y3Tr9FpErRkfiHlEJLXufHSDGVjh+
+        l09ci9RB+x4wLSn6qohiZ+k=
+X-Google-Smtp-Source: ABdhPJy2mrUNIWhSMzRrjTrucz1Bs9q1TLXUfF9jANkr7Vt3DN06vCAWpLJYCoLD2ksYwMv70EJsoQ==
+X-Received: by 2002:a17:902:eccf:b029:de:72a2:f1f8 with SMTP id a15-20020a170902eccfb02900de72a2f1f8mr2465977plh.17.1612950511514;
+        Wed, 10 Feb 2021 01:48:31 -0800 (PST)
+Received: from garuda ([122.182.225.93])
+        by smtp.gmail.com with ESMTPSA id 9sm1790537pgw.61.2021.02.10.01.48.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 10 Feb 2021 01:48:31 -0800 (PST)
+References: <161284387610.3058224.6236053293202575597.stgit@magnolia> <161284390433.3058224.6853671538193339438.stgit@magnolia>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org,
+        Chaitanya.Kulkarni@wdc.com
+Subject: Re: [PATCH 5/6] xfs_repair: check dquot id and type
+In-reply-to: <161284390433.3058224.6853671538193339438.stgit@magnolia>
+Date:   Wed, 10 Feb 2021 15:18:28 +0530
+Message-ID: <877dngp82b.fsf@garuda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-To:     Recipients <januskad@auroraoh.com>
-X-ASG-Orig-Subj: We are a registered Private Loan Investment Company in the United Kingdom,
- we also registered with the Turkish British Chamber of Commerce and Industry
- (TBCCI) we have operations in Europe and Asia.
-From:   <januskad@auroraoh.com>
-Date:   Tue, 9 Feb 2021 15:44:47 +0800
-Reply-To: <cfolimiited@gmail.com>
-X-Priority: 1 (High)
-X-Antivirus: Avast (VPS 210207-2, 02/07/2021), Outbound message
-X-Antivirus-Status: Clean
-Message-ID: <04dad0e2-2f3b-46a3-bb30-cab23ca007d4@COASRV-MAIL2.auroraoh.loc>
-X-Originating-IP: [197.210.29.8]
-X-ClientProxiedBy: COASRV-MAIL3.auroraoh.loc (10.3.1.13) To
- COASRV-MAIL2.auroraoh.loc (10.3.1.15)
-X-Barracuda-Connect: coasrv-mail2.auroraoh.loc[10.3.1.15]
-X-Barracuda-Start-Time: 1612944670
-X-Barracuda-URL: https://10.3.1.12:443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at auroraoh.com
-X-Barracuda-Scan-Msg-Size: 755
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Spam-Score: 1.61
-X-Barracuda-Spam-Status: No, SCORE=1.61 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=5.0 tests=BSF_SC0_SA609_NRN, BSF_SC0_SA912_RP_FR, BSF_SC0_SA_TO_FROM_ADDR_MATCH, NO_REAL_NAME
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.87880
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-        0.00 NO_REAL_NAME           From: does not include a real name
-        0.01 BSF_SC0_SA912_RP_FR    Custom Rule BSF_SC0_SA912_RP_FR
-        0.50 BSF_SC0_SA_TO_FROM_ADDR_MATCH Sender Address Matches Recipient
-                                   Address
-        1.10 BSF_SC0_SA609_NRN      Custom Rule SA609_NRN
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-We are seeking for beneficiaries who source for fund to expand/relocating their business interest abroad. We are ready to fund projects outside Turkey and United Kingdom in the form of Soft Loan. We grant loans to both corporate and private entities at a low interest rate of 2% R.O.I per annul.
+On 09 Feb 2021 at 09:41, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+>
+> Make sure that we actually check the type and id of an ondisk dquot.
+>
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  repair/quotacheck.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 55 insertions(+), 3 deletions(-)
+>
+>
+> diff --git a/repair/quotacheck.c b/repair/quotacheck.c
+> index 55bcc048..0ea2deb5 100644
+> --- a/repair/quotacheck.c
+> +++ b/repair/quotacheck.c
+> @@ -234,12 +234,48 @@ quotacheck_adjust(
+>  	libxfs_irele(ip);
+>  }
+>  
+> +/* Check the ondisk dquot's id and type match what the incore dquot expects. */
+> +static bool
+> +qc_dquot_check_type(
+> +	struct xfs_mount	*mp,
+> +	xfs_dqtype_t		type,
+> +	xfs_dqid_t		id,
+> +	struct xfs_disk_dquot	*ddq)
+> +{
+> +	uint8_t			ddq_type;
+> +
+> +	ddq_type = ddq->d_type & XFS_DQTYPE_REC_MASK;
+> +
+> +	if (be32_to_cpu(ddq->d_id) != id)
+> +		return false;
+> +
+> +	/*
+> +	 * V5 filesystems always expect an exact type match.  V4 filesystems
+> +	 * expect an exact match for user dquots and for non-root group and
+> +	 * project dquots.
+> +	 */
+> +	if (xfs_sb_version_hascrc(&mp->m_sb) || type == XFS_DQTYPE_USER || !id)
 
-We like to grant loan in the following sectors: oil/Gas, banking, real estate, stock speculation and mining, transportation, health sector and tobacco, Communication Services, Agriculture Forestry & Fishing, thus any sector. The terms are very flexible and interesting.
+The above check should have been "id" instead of "!id".
 
-Please contact us for more details;
-
-
-Kind regards,
-
-Paul McCann
+> +		return ddq_type == type;
+> +
+> +	/*
+> +	 * V4 filesystems support either group or project quotas, but not both
+> +	 * at the same time.  The non-user quota file can be switched between
+> +	 * group and project quota uses depending on the mount options, which
+> +	 * means that we can encounter the other type when we try to load quota
+> +	 * defaults.  Quotacheck will soon reset the the entire quota file
+> +	 * (including the root dquot) anyway, but don't log scary corruption
+> +	 * reports to dmesg.
+> +	 */
+> +	return ddq_type == XFS_DQTYPE_GROUP || ddq_type == XFS_DQTYPE_PROJ;
+> +}
+> +
+>  /* Compare this on-disk dquot against whatever we observed. */
+>  static void
+>  qc_check_dquot(
+>  	struct xfs_mount	*mp,
+>  	struct xfs_disk_dquot	*ddq,
+> -	struct qc_dquots	*dquots)
+> +	struct qc_dquots	*dquots,
+> +	xfs_dqid_t		dqid)
+>  {
+>  	struct qc_rec		*qrec;
+>  	struct qc_rec		empty = {
+> @@ -253,6 +289,22 @@ qc_check_dquot(
+>  	if (!qrec)
+>  		qrec = &empty;
+>  
+> +	if (!qc_dquot_check_type(mp, dquots->type, dqid, ddq)) {
+> +		const char	*dqtypestr;
+> +
+> +		dqtypestr = qflags_typestr(ddq->d_type & XFS_DQTYPE_REC_MASK);
+> +		if (dqtypestr)
+> +			do_warn(_("%s id %u saw type %s id %u\n"),
+> +					qflags_typestr(dquots->type), dqid,
+> +					dqtypestr, be32_to_cpu(ddq->d_id));
+> +		else
+> +			do_warn(_("%s id %u saw type %x id %u\n"),
+> +					qflags_typestr(dquots->type), dqid,
+> +					ddq->d_type & XFS_DQTYPE_REC_MASK,
+> +					be32_to_cpu(ddq->d_id));
+> +		chkd_flags = 0;
+> +	}
+> +
+>  	if (be64_to_cpu(ddq->d_bcount) != qrec->bcount) {
+>  		do_warn(_("%s id %u has bcount %llu, expected %"PRIu64"\n"),
+>  				qflags_typestr(dquots->type), id,
+> @@ -327,11 +379,11 @@ _("cannot read %s inode %"PRIu64", block %"PRIu64", disk block %"PRIu64", err=%d
+>  		}
+>  
+>  		dqb = bp->b_addr;
+> -		dqid = map->br_startoff * dqperchunk;
+> +		dqid = (map->br_startoff + bno) * dqperchunk;
+>  		for (dqnr = 0;
+>  		     dqnr < dqperchunk && dqid <= UINT_MAX;
+>  		     dqnr++, dqb++, dqid++)
+> -			qc_check_dquot(mp, &dqb->dd_diskdq, dquots);
+> +			qc_check_dquot(mp, &dqb->dd_diskdq, dquots, dqid);
+>  		libxfs_buf_relse(bp);
+>  	}
+>  
 
 -- 
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
-
+chandan
