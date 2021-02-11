@@ -2,34 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 23C6431962D
+	by mail.lfdr.de (Postfix) with ESMTP id 9B29F31962E
 	for <lists+linux-xfs@lfdr.de>; Fri, 12 Feb 2021 00:00:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229794AbhBKW7p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 11 Feb 2021 17:59:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45836 "EHLO mail.kernel.org"
+        id S229997AbhBKW7u (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 11 Feb 2021 17:59:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229997AbhBKW7m (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 11 Feb 2021 17:59:42 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0471564E3E;
-        Thu, 11 Feb 2021 22:59:01 +0000 (UTC)
+        id S229994AbhBKW7t (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 11 Feb 2021 17:59:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A8DE064E3D;
+        Thu, 11 Feb 2021 22:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613084342;
-        bh=1ApqKkY5oLx8DidviOqfPqz2zuozGHD3fJ5shfXMtg4=;
-        h=Subject:From:To:Cc:Date:From;
-        b=ApI/87ijvf3tAeOxErjWVJmjB42SOwns47rM8+bYiFXNlBVmbARP3dfKA+MhhHYE3
-         s4H3DA+KnIn/ZJqFNYFOBEwFNiGk2fI2KtQod4SnFC1l8Kz6cFOr46YREXG2UL2CCq
-         39L+w9ZVAAj5TJA5ayeeH5j4zDBLaTs7N+xE+AW8qoC+k02kq2fOHzVEp/+Qok60r2
-         CF/yOa0RCQb/PLsrqI5/pSxGxKU0vry0uOI+EhV6Fo88o+hCiA7ouAow5JNEqSCn0k
-         MHo74PpSW+T4Mm1d3f3DarBaN6ZS94nYmBYgaHmowUep/dKDA9Lmh7pfOrOC0A8fQz
-         ZPEHGwIxRRX/g==
-Subject: [PATCHSET v5 00/11] xfs: add the ability to flag a fs for repair
+        s=k20201202; t=1613084347;
+        bh=2nYHqGMPl3YRJRiNgor3zNMGRLLt0XUwPh3DeanmAgs=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=poPDdEyC59fd/oPu8voVeyI/eZvyyAyMwiAPS5xxVqQ7gikr7Vlt67IaCMAkkvesk
+         1T8iF+LoXpPY3tBmcCGcnnwsdWZ//d6udAo4/Wue2tfS+ZNHB27DRE8DFK/AhzbK8U
+         Kums+DXxq92g1QwoXK7MFqBy1TMrClaZXg4lkQ92/58QJLZjLX01cKMuukEox1htw6
+         e/y00spOWFXH+Ti3c0a3ouco6veykscTmL33ChVy0c0ldhAhb1Dgt2iSNzi18XJHdB
+         MuRrWxy9sXOVmV2oSxNCSyUn5QnijWMWPqq+hUBMSxb0pVZpQFlOpjA5r6h27wcnkE
+         wp1OnETNSfreg==
+Subject: [PATCH 01/11] xfs_admin: clean up string quoting
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
+Cc:     Brian Foster <bfoster@redhat.com>, Christoph Hellwig <hch@lst.de>,
         linux-xfs@vger.kernel.org, bfoster@redhat.com
-Date:   Thu, 11 Feb 2021 14:59:01 -0800
-Message-ID: <161308434132.3850286.13801623440532587184.stgit@magnolia>
+Date:   Thu, 11 Feb 2021 14:59:07 -0800
+Message-ID: <161308434707.3850286.16561299406740612589.stgit@magnolia>
+In-Reply-To: <161308434132.3850286.13801623440532587184.stgit@magnolia>
+References: <161308434132.3850286.13801623440532587184.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -38,46 +40,39 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series adds a new incompat feature flag so that we can force a
-sysadmin to run xfs_repair on a filesystem before mounting.  This will
-be used in conjunction with v5 feature upgrades.
+Clean up the string quoting in this script so that we don't trip over
+users feeding us arguments like "/dev/sd ha ha ha lol".
 
-v2: tweak the "can't upgrade" behavior and repair messages
-v3: improve documentation, define error codes for the upgrade process, and
-    only force repair if NEEDSREPAIR is set
-v4: move all the upgrader code to xfs_repair per Eric suggestion
-v5: various fixes suggested by reviewers, and document deprecated V4 options
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=needsrepair
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=needsrepair
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=needsrepair
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- db/check.c           |    5 ++++
- db/sb.c              |   13 +++++++++
- db/xfs_admin.sh      |   15 ++++++-----
- include/xfs_mount.h  |    1 +
- libxfs/init.c        |   20 +++++++++-----
- man/man8/mkfs.xfs.8  |   16 +++++++++++
- man/man8/xfs_admin.8 |   40 +++++++++++++++++++++++++++++
- repair/agheader.c    |   21 +++++++++++++++
- repair/globals.c     |    3 ++
- repair/globals.h     |    4 +++
- repair/phase2.c      |   67 ++++++++++++++++++++++++++++++++++++++++++++++++
- repair/xfs_repair.c  |   70 ++++++++++++++++++++++++++++++++++++++++++++------
- 12 files changed, 253 insertions(+), 22 deletions(-)
+ db/xfs_admin.sh |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+
+diff --git a/db/xfs_admin.sh b/db/xfs_admin.sh
+index bd325da2..71a9aa98 100755
+--- a/db/xfs_admin.sh
++++ b/db/xfs_admin.sh
+@@ -43,7 +43,7 @@ case $# in
+ 
+ 		if [ -n "$DB_OPTS" ]
+ 		then
+-			eval xfs_db -x -p xfs_admin $DB_OPTS $1
++			eval xfs_db -x -p xfs_admin $DB_OPTS "$1"
+ 			status=$?
+ 		fi
+ 		if [ -n "$REPAIR_OPTS" ]
+@@ -53,7 +53,7 @@ case $# in
+ 			# running xfs_admin.
+ 			# Ideally, we need to improve the output behaviour
+ 			# of repair for this purpose (say a "quiet" mode).
+-			eval xfs_repair $REPAIR_OPTS $1 2> /dev/null
++			eval xfs_repair $REPAIR_OPTS "$1" 2> /dev/null
+ 			status=`expr $? + $status`
+ 			if [ $status -ne 0 ]
+ 			then
 
