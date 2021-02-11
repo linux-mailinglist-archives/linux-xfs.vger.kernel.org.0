@@ -2,134 +2,93 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09BDD318CE4
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Feb 2021 15:06:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73279318CE7
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Feb 2021 15:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231755AbhBKODi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 11 Feb 2021 09:03:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29721 "EHLO
+        id S231773AbhBKOEl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 11 Feb 2021 09:04:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41440 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231293AbhBKOBo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 11 Feb 2021 09:01:44 -0500
+        by vger.kernel.org with ESMTP id S231701AbhBKOB7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 11 Feb 2021 09:01:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613052006;
+        s=mimecast20190719; t=1613052015;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=7hjjFxJO1NIl9P5s05of4Buxt1YHeAXMctK7wzzPMyM=;
-        b=dW8yUsbUfc0jpglyZlLou6rhi4NkPuGIHKn2rr1Dxm7XYd0OyBL8Xd7kxxAn8AVeBYJ4qQ
-        sUoK4i2kBH3i6vqzt5Fi9A5imcDrDNfCwe+YDXO3zD7MNh/B1ivG4rmr9svYbg1zXqMixt
-        la4cnrzLVrxVr1RWvMWMMwM8Sofb9Ig=
+        bh=zYHzjPbevDFoTvsUsVZajP2priDExCfynXOtTBde3wQ=;
+        b=fAKtiNMTZnAsQmdrevd4r+LKK57ruj3autxTczB1ZPUgj2lmZC17AcmlHL0K6EGJ905Kcv
+        zOqbuGAJkwfzGkV56fC/rMOgmQw7FfR5mMGLCLIW9PJcS/HTraQFqKRlrIeSsR5cvaCxVE
+        sb5EqLUcne1mqkHzC1O8SdvLUnAoIzc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-603-fafYZwOuN8qNiC_XwvK2Xw-1; Thu, 11 Feb 2021 09:00:02 -0500
-X-MC-Unique: fafYZwOuN8qNiC_XwvK2Xw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-374-lAAQVLbWO-KYI6Aid-dhIw-1; Thu, 11 Feb 2021 09:00:11 -0500
+X-MC-Unique: lAAQVLbWO-KYI6Aid-dhIw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92CB7107ACF2;
-        Thu, 11 Feb 2021 14:00:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1F39107ACF5;
+        Thu, 11 Feb 2021 14:00:09 +0000 (UTC)
 Received: from bfoster (ovpn-113-234.rdu2.redhat.com [10.10.113.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EB304E177;
-        Thu, 11 Feb 2021 13:59:59 +0000 (UTC)
-Date:   Thu, 11 Feb 2021 08:59:58 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0EC6760657;
+        Thu, 11 Feb 2021 14:00:08 +0000 (UTC)
+Date:   Thu, 11 Feb 2021 09:00:07 -0500
 From:   Brian Foster <bfoster@redhat.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
         fstests@vger.kernel.org, guan@eryu.me
-Subject: Re: [PATCH 2/6] common: capture metadump output if xfs filesystem
- check fails
-Message-ID: <20210211135958.GB222065@bfoster>
+Subject: Re: [PATCH 3/6] check: allow '-e testid' to exclude a single test
+Message-ID: <20210211140007.GC222065@bfoster>
 References: <161292577956.3504537.3260962158197387248.stgit@magnolia>
- <161292579087.3504537.10519481439481869013.stgit@magnolia>
+ <161292579650.3504537.2704583548318437413.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161292579087.3504537.10519481439481869013.stgit@magnolia>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <161292579650.3504537.2704583548318437413.stgit@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Feb 09, 2021 at 06:56:30PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@djwong.org>
+On Tue, Feb 09, 2021 at 06:56:36PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Capture metadump output when various userspace repair and checker tools
-> fail or indicate corruption, to aid in debugging.  We don't bother to
-> annotate xfs_check because it's bitrotting.
+> This enables us to mask off specific tests.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
->  README     |    2 ++
->  common/xfs |   26 ++++++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
+
+Seems reasonable:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  check |    6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 > 
-> diff --git a/README b/README
-> index 43bb0cee..36f72088 100644
-> --- a/README
-> +++ b/README
-> @@ -109,6 +109,8 @@ Preparing system for tests:
->               - Set TEST_FS_MODULE_RELOAD=1 to unload the module and reload
->                 it between test invocations.  This assumes that the name of
->                 the module is the same as FSTYP.
-> +	     - Set SNAPSHOT_CORRUPT_XFS=1 to record compressed metadumps of XFS
-> +	       filesystems if the various stages of _check_xfs_filesystem fail.
+> diff --git a/check b/check
+> index c6ad1d6c..e51cbede 100755
+> --- a/check
+> +++ b/check
+> @@ -79,6 +79,7 @@ testlist options
+>      -g group[,group...]	include tests from these groups
+>      -x group[,group...]	exclude tests from these groups
+>      -X exclude_file	exclude individual tests
+> +    -e testlist         exclude a specific list of tests
+>      -E external_file	exclude individual tests
+>      [testlist]		include tests matching names in testlist
 >  
->          - or add a case to the switch in common/config assigning
->            these variables based on the hostname of your test
-> diff --git a/common/xfs b/common/xfs
-> index 2156749d..ad1eb6ee 100644
-> --- a/common/xfs
-> +++ b/common/xfs
-> @@ -432,6 +432,21 @@ _supports_xfs_scrub()
->  	return 0
->  }
+> @@ -287,6 +288,11 @@ while [ $# -gt 0 ]; do
 >  
-> +# Save a compressed snapshot of a corrupt xfs filesystem for later debugging.
-> +_snapshot_xfs() {
-
-The term snapshot has a well known meaning. Can we just call this
-_metadump_xfs()?
-
-> +	local metadump="$1"
-> +	local device="$2"
-> +	local logdev="$3"
-> +	local options="-a -o"
+>  	-X)	subdir_xfile=$2; shift ;
+>  		;;
+> +	-e)
+> +		xfile=$2; shift ;
+> +		echo "$xfile" | tr ', ' '\n\n' >> $tmp.xlist
+> +		;;
 > +
-> +	if [ "$logdev" != "none" ]; then
-> +		options="$options -l $logdev"
-> +	fi
-> +
-> +	$XFS_METADUMP_PROG $options "$device" "$metadump" >> "$seqres.full" 2>&1
-> +	gzip -f "$metadump" >> "$seqres.full" 2>&1 &
-
-Why compress in the background? I wonder if we should just skip the
-compression step since this requires an option to enable in the first
-place..
-
-> +}
-> +
->  # run xfs_check and friends on a FS.
->  _check_xfs_filesystem()
->  {
-...
-> @@ -540,6 +564,8 @@ _check_xfs_filesystem()
->  			cat $tmp.repair				>>$seqres.full
->  			echo "*** end xfs_repair output"	>>$seqres.full
->  
-> +			test "$SNAPSHOT_CORRUPT_XFS" = "1" && \
-> +				_snapshot_xfs "$seqres.rebuildrepair.md" "$device" "$2"
-
-Why do we collect so many metadump images? Shouldn't all but the last
-TEST_XFS_REPAIR_REBUILD thing not modify the fs? If so, it seems like we
-should be able to collect one image (and perhaps just call it
-"$seqres.$device.md") if any of the first several checks flag a problem.
-
-Brian
-
->  			ok=0
->  		fi
->  		rm -f $tmp.repair
+>  	-E)	xfile=$2; shift ;
+>  		if [ -f $xfile ]; then
+>  			sed "s/#.*$//" "$xfile" >> $tmp.xlist
 > 
 
