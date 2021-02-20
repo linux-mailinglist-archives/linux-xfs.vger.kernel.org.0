@@ -2,104 +2,38 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 781C6320539
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Feb 2021 13:17:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0484320587
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Feb 2021 14:20:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229543AbhBTMRK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 20 Feb 2021 07:17:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbhBTMRH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Feb 2021 07:17:07 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F75BC06178C
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Feb 2021 04:16:27 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id 7so13595915wrz.0
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Feb 2021 04:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=F2DRvrSRjAyLCa6AsAsNK6ud//X8DK/YA2y+MiIgJvU=;
-        b=OWqCz1nU9khnzof/08xZgQPIB+96Gjj6ofT88ZUYqjYGolPROxCJHxyTGixPFU0TbO
-         FbVb2P7qWevak9pZ2GzktKORlEsJJoQ0IkSwlf0UZLoObDQV4bsmK3b440yeQsVt0eeR
-         WfyfKY2qvqhjcDl+yq1BCpWaRBkHD9hB/8gDWEoG5U8N5gbK3QSKQ++zTjVebr2AHUDz
-         b/Cnk4dvFmsTyYIzsF15rlbQ/nN3hxrDZMgih5kTsiFNqM4TuPr0lIg+wQG/iCckLcG2
-         AGiJVKbQysbnebryXf3hXskqQpzlC6IjnBHcBVKGmCt9VhQ73fLOktdf803P0s6HGHCs
-         9EMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=F2DRvrSRjAyLCa6AsAsNK6ud//X8DK/YA2y+MiIgJvU=;
-        b=uPluAPelU9Pop5kuI/dKUxF3gdxYyyWHGr5QMaIbhpWvadieijxNZ2qzXke9a4fRKB
-         cA7XiNvXxdNX/KHck+sH6OMImi698CW5lyNzm93c8QD8UuSMolJ0RBWO8TfdCmPJqurf
-         dMc+wA94U8Jn+V7QQZBVDpr4kyqB0y3qMzGzF4/3tr5bDlVdCa2OLDOp6jrY5gtFmMZ6
-         pXmgT5jskZ1BJXA8WbLE+p1d/+GkmRC1FnGRim+3+6kY2mcn2aq1IDYeKewYcjkvix+t
-         TG7el4h8ED0Nv76PUxFIenQIYLuyxbTlb8V+z4DkzqtlhZ6cPeti8VwpWouTaYVTMawG
-         f9mQ==
-X-Gm-Message-State: AOAM530r41At5uy/ZsfOUvnSpc863kpcJUoOIuMAZ775xuY7ST41y79j
-        km/0o/LMVPaFqol0C2WfqK2X0MGPMjT6Eg==
-X-Google-Smtp-Source: ABdhPJzmFSZhctPlhsg9MaUkE8KWD75EIbtcWHc9wvPNk5MFcJ99TjYemfcpadI3gD793M0ygJBYHA==
-X-Received: by 2002:adf:f54a:: with SMTP id j10mr13379595wrp.55.1613823386208;
-        Sat, 20 Feb 2021 04:16:26 -0800 (PST)
-Received: from thinkbage.fritz.box (p200300d06f2cdf002a7b928337dce408.dip0.t-ipconnect.de. [2003:d0:6f2c:df00:2a7b:9283:37dc:e408])
-        by smtp.gmail.com with ESMTPSA id h13sm18708286wrv.20.2021.02.20.04.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Feb 2021 04:16:25 -0800 (PST)
-From:   Bastian Germann <bastiangermann@fishpost.de>
-To:     linux-xfs@vger.kernel.org
-Cc:     Bastian Germann <bastiangermann@fishpost.de>
-Subject: [PATCH 4/4] debian: Build-depend on libinih-dev with udeb package
-Date:   Sat, 20 Feb 2021 13:16:09 +0100
-Message-Id: <20210220121610.3982-5-bastiangermann@fishpost.de>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210220121610.3982-1-bastiangermann@fishpost.de>
-References: <20210220121610.3982-1-bastiangermann@fishpost.de>
+        id S229525AbhBTNTq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Sat, 20 Feb 2021 08:19:46 -0500
+Received: from mail.cnc.gob.ve ([200.11.213.180]:45045 "EHLO mail.cnc.gob.ve"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229490AbhBTNTq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 20 Feb 2021 08:19:46 -0500
+X-Greylist: delayed 10736 seconds by postgrey-1.27 at vger.kernel.org; Sat, 20 Feb 2021 08:19:45 EST
+Received: from mail.cnc.gob.ve (mail.cnc.gob.ve [172.16.100.235])
+        by mail.cnc.gob.ve (Postfix) with ESMTP id CD3A5341FD;
+        Sat, 20 Feb 2021 03:03:11 -0400 (VET)
+Date:   Sat, 20 Feb 2021 02:33:11 -0430 (VET)
+From:   =?utf-8?Q?Fran=C3=A7ois?= Pinault <accouncet01@cnc.gob.ve>
+Reply-To: Pedro Hill <pedrohills003@gmail.com>
+Subject: (DONATION) $2 Million Has Been Donated
+Message-ID: <71c891b0-303b-495b-a09d-d5116a1e81c3@mail.cnc.gob.ve>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mailer: Zimbra 7.0.1_GA_3105 (zclient/7.0.1_GA_3105)
+To:     undisclosed-recipients:;
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The first libinih Debian package version with udeb binary package is 53-1.
-Debian bug #981662 documents the need for it:
-xfsprogs-udeb depends on libinih1, not libinih1-udeb
 
-Link: https://bugs.debian.org/981662
-Signed-off-by: Bastian Germann <bastiangermann@fishpost.de>
----
- debian/changelog | 3 +++
- debian/control   | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/debian/changelog b/debian/changelog
-index 6cc9926b..1879485d 100644
---- a/debian/changelog
-+++ b/debian/changelog
-@@ -7,6 +7,9 @@ xfsprogs (5.11.0-rc0-1) experimental; urgency=medium
-   [ Steve Langasek ]
-   * Regenerate config.guess using debhelper
- 
-+  [ Bastian Germann ]
-+  * Build-depend on libinih-dev with udeb package
-+
-  -- Bastian Germann <bastiangermann@fishpost.de>  Sat, 20 Feb 2021 11:57:31 +0100
- 
- xfsprogs (5.10.0-3) unstable; urgency=medium
-diff --git a/debian/control b/debian/control
-index 1da8093d..e4ec897c 100644
---- a/debian/control
-+++ b/debian/control
-@@ -3,7 +3,7 @@ Section: admin
- Priority: optional
- Maintainer: XFS Development Team <linux-xfs@vger.kernel.org>
- Uploaders: Nathan Scott <nathans@debian.org>, Anibal Monsalve Salazar <anibal@debian.org>, Bastian Germann <bastiangermann@fishpost.de>
--Build-Depends: libinih-dev, uuid-dev, dh-autoreconf, debhelper (>= 5), gettext, libtool, libedit-dev, libblkid-dev (>= 2.17), linux-libc-dev, libdevmapper-dev, libattr1-dev, libicu-dev, pkg-config
-+Build-Depends: libinih-dev (>= 53), uuid-dev, dh-autoreconf, debhelper (>= 5), gettext, libtool, libedit-dev, libblkid-dev (>= 2.17), linux-libc-dev, libdevmapper-dev, libattr1-dev, libicu-dev, pkg-config
- Standards-Version: 4.0.0
- Homepage: https://xfs.wiki.kernel.org/
- 
--- 
-2.30.1
+$2 Million Has Been Donated To You,By PEDRO due to the covid-19 pandemia this is Real For More Info Contact PEDRO immediately for your clame This Email: pedrohills003@gmail.com  Send Your Response To: pedrohills003@gmail.com
 
+________________________________________________________________________________________________________
+
+
+Aufgrund der Covid-19-Pandämie wurden Ihnen von PEDRO 2 Millionen US-Dollar gespendet. Dies ist Real For More Info Wenden Sie sich umgehend an PEDRO. pedrohills003@gmail.com Kontakt Senden Sie Ihre Antwort an: pedrohills003@gmail.com
