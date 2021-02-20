@@ -2,88 +2,194 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F37C332077C
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Feb 2021 23:17:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0004732077E
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Feb 2021 23:17:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbhBTWRU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 20 Feb 2021 17:17:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40210 "EHLO
+        id S229809AbhBTWRX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 20 Feb 2021 17:17:23 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:22271 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229675AbhBTWRU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Feb 2021 17:17:20 -0500
+        by vger.kernel.org with ESMTP id S229675AbhBTWRW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Feb 2021 17:17:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613859354;
+        s=mimecast20190719; t=1613859355;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Fa9mh455BpvRTXtT5bs9qI5kLRr38ZtxN4SDhPrz10Q=;
-        b=KoGg3wqaf98TXwyhdwY7qV6EdU5qyawxkWrPuJ75OCKB/kbrAtbtDbEir7pbWFGr3gFwF/
-        F1u2y1e2l6UHW8+IyfdVVp5L8a2CxaXbpmlBYprxWilrOSZyiD9IL24UdkJgQrR7Q1wEMD
-        Y1TDINvjobxHPFZuHpBeuNL8mrqnrg8=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-k8JoR9QBMLyXEg3G9e0U7Q-1; Sat, 20 Feb 2021 17:15:52 -0500
-X-MC-Unique: k8JoR9QBMLyXEg3G9e0U7Q-1
-Received: by mail-ed1-f72.google.com with SMTP id j10so4897431edv.5
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Feb 2021 14:15:51 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gt25dl1aBg0tAqBBTwvlbMp0nsmIiyYScgWt915aRHM=;
+        b=eRvG2n4QA4Lhrnj/5d4FST0oiNRpO+zNKHL9mZ439a/xEM7gfi3eBwEGcFWqkvkpAlxRb7
+        h8Fcwe1jYt9LgTdIVIX4U5PJchCUmf9VP4WwuDztHK+3ZYLuF7tJZ8nPJKkgwV1iJ6GI9x
+        Gzk0GHi5iIBzokzxIMTRZjhPG1RXHJM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-260-mQJlvk-HPsGtmL0WalKAuQ-1; Sat, 20 Feb 2021 17:15:53 -0500
+X-MC-Unique: mQJlvk-HPsGtmL0WalKAuQ-1
+Received: by mail-ed1-f71.google.com with SMTP id p12so4907501edw.9
+        for <linux-xfs@vger.kernel.org>; Sat, 20 Feb 2021 14:15:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fa9mh455BpvRTXtT5bs9qI5kLRr38ZtxN4SDhPrz10Q=;
-        b=sz+BQr6DyzHLNuevd3qOm4t2dxN0yc9Mc19Ac+2g3km5X6p+Nqa9ftbgjQ2xg8PAY/
-         +xkNL7QGNhw4DgUueWPqyaJXMBvdLq70KBtEB/4gNs2CNAbRXcE/QcYQSOI6dWtFBben
-         gIjUOz0jNE/mtMtGPaHBUXFLcaaLYjdn+1u6XcEITHsimF3ijzfMI3rSPyWZdkya0Vdg
-         99PuXo3f6q91URM2GJXKTQQ8AwqDLAVZaOcXTBPXz/OJCFEnCehP0XWIrlDXpxJAoYVV
-         YZD1dGcQyyu/PIEauVAvvuzBiFXcqgsSQI9mgNtRZk4lcMKaj45K9hW4XcthyGCM6f6t
-         g06Q==
-X-Gm-Message-State: AOAM5338dyG3xhgWSVdtEeN8kZply9iUxQcf9UHOddR5JoT6jl+3gJjH
-        cH8/iWIubuiH2Fwb5sIX/1/ByQN8vbqmZfc1WGRl0xUqVM1AKk9z5oxdtwSV2UFeZDM3gM9VIrP
-        9TlgrUTnYe+jfUDiqbJ6UqJyVWHaV8yEu0CoZj1h7jH168xEZECwtj2lw8OPPLTnOITIPgBk=
-X-Received: by 2002:a05:6402:3508:: with SMTP id b8mr15621808edd.341.1613859350771;
-        Sat, 20 Feb 2021 14:15:50 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxfhl2TmuI+xrH4+k3nSHTkgIz72daAssr+kMDf5Fk7/66bFcKcqhN80bnFfAvCyAKAUnMYpw==
-X-Received: by 2002:a05:6402:3508:: with SMTP id b8mr15621798edd.341.1613859350531;
-        Sat, 20 Feb 2021 14:15:50 -0800 (PST)
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gt25dl1aBg0tAqBBTwvlbMp0nsmIiyYScgWt915aRHM=;
+        b=k0lS5CLih/WIUnfmBgPyBezv+8sxn4T6wr4pN+wLVSNwEe3CFIRYrUaDXBmNQ/a4dr
+         hR9cBRSXXGWp03TIz2DLQDSBGIbg9FLadufvxzQzVw4T37gkttfkRx4zeXXTWr5/Ytb2
+         ei6KfXi2M0Mo9xuCFoTc8smFFvfm+xzVB9jwWEaGsREQmHBCV1CdGskNF8WSKMflf6Ga
+         yUVj9V5j2EAgWFY7ZonntNA/cUItViWkbMiTOFqGIwV7VweOUwpRNYcaTVu1+g2R6OZ8
+         jj/5TtAQTBmPmFUgpHoFcgJMHm4RR12Gjc90RhXoOw9sqP+OsuhWPFebqR8/IviwycBm
+         mepw==
+X-Gm-Message-State: AOAM532cdEuM9A1Nddy90gjl6pzDi3QzS8wYBP4Ev1hrF2+8Y99VMpJp
+        YTQyIruv1rLv8KGQ2yOAr0fPBTwn8x/aFfQW4PFGHvn/PED71eicteTyS7bPg4GQoFmgWtxKtpJ
+        r37aqM/BPGezHClxtTg1IGdDF4IOTwFG44iXK1NaL0QrrBfCwc9t5aa2aXz8J/4PbiAUPY+I=
+X-Received: by 2002:a17:906:9bd2:: with SMTP id de18mr13269625ejc.191.1613859351823;
+        Sat, 20 Feb 2021 14:15:51 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyTdnBfCjTpVNJ7gkwC2hoBUd9ij+9CwCk8JrT61i+puqxZjKblUZ2+7zLzCAdi1XRftgktOQ==
+X-Received: by 2002:a17:906:9bd2:: with SMTP id de18mr13269611ejc.191.1613859351549;
+        Sat, 20 Feb 2021 14:15:51 -0800 (PST)
 Received: from localhost.localdomain.com ([84.19.91.9])
         by smtp.gmail.com with ESMTPSA id k6sm7020286ejb.84.2021.02.20.14.15.50
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Feb 2021 14:15:50 -0800 (PST)
+        Sat, 20 Feb 2021 14:15:51 -0800 (PST)
 From:   Pavel Reichl <preichl@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: xfs: Skip repetitive warnings about mount options
-Date:   Sat, 20 Feb 2021 23:15:47 +0100
-Message-Id: <20210220221549.290538-1-preichl@redhat.com>
+Subject: [PATCH] xfs: Add test for printing deprec. mount options
+Date:   Sat, 20 Feb 2021 23:15:48 +0100
+Message-Id: <20210220221549.290538-2-preichl@redhat.com>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20210220221549.290538-1-preichl@redhat.com>
+References: <20210220221549.290538-1-preichl@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-At least some version of mount will look in /proc/mounts and send in all of the 
-options that it finds as part of a remount command. We also /do/ still emit
-"attr2" in /proc/mounts (as we probably should), so remount passes that back
-in, and we emit a warning, which is not great.
+Verify that warnings about deprecated mount options are properly
+printed.
 
-In other words mount passes in "attr2" and the kernel emits a deprecation
-warning for attr2, even though the user/admin never explicitly asked for the
-option.
+Verify that no excessive warnings are printed during remounts.
 
-So, lets skip the warning if (we are remounting && deprecated option
-state is not changing).
+Signed-off-by: Pavel Reichl <preichl@redhat.com>
+---
+ tests/xfs/528     | 88 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/528.out |  2 ++
+ tests/xfs/group   |  1 +
+ 3 files changed, 91 insertions(+)
+ create mode 100755 tests/xfs/528
+ create mode 100644 tests/xfs/528.out
 
-I also attached test for xfstests that I used for testing (the test
-will be proposed on xfstests-list after/if this patch is merged).
-
-
-Pavel Reichl (1):
-  xfs: Skip repetitive warnings about mount options
-
- fs/xfs/xfs_super.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
+diff --git a/tests/xfs/528 b/tests/xfs/528
+new file mode 100755
+index 00000000..0fc57cef
+--- /dev/null
++++ b/tests/xfs/528
+@@ -0,0 +1,88 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2020 Red Hat, Inc.. All Rights Reserved.
++#
++# FS QA Test 528
++#
++# Verify that warnings about deprecated mount options are properly printed.
++#  
++# Verify that no excessive warnings are printed during remounts.
++#
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1	# failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++	rm -f $tmp.*
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++
++# remove previous $seqres.full before test
++rm -f $seqres.full
++
++_require_check_dmesg
++_supported_fs xfs
++_require_scratch
++
++log_tag()
++{
++	echo "fstests $seqnum [tag]" > /dev/kmsg
++}
++
++dmesg_since_test_tag()
++{
++        dmesg | tac | sed -ne "0,\#fstests $seqnum \[tag\]#p" | \
++                tac
++}
++
++check_dmesg_for_since_tag()
++{
++        dmesg_since_test_tag | egrep -q "$1"
++}
++
++echo "Silence is golden."
++
++log_tag
++
++# Test mount
++for VAR in {attr2,ikeep,noikeep}; do
++	_scratch_mkfs > $seqres.full 2>&1
++	_scratch_mount -o $VAR
++	check_dmesg_for_since_tag "XFS: $VAR mount option is deprecated" || \
++		echo "Could not find deprecation warning for $VAR"
++	umount $SCRATCH_MNT
++done
++
++# Test mount with default options (attr2 and noikeep) and remount with
++# 2 groups of options
++# 1) the defaults (attr2, noikeep)
++# 2) non defaults (noattr2, ikeep)
++_scratch_mount
++for VAR in {attr2,noikeep}; do
++	log_tag
++	mount -o $VAR,remount $SCRATCH_MNT
++	check_dmesg_for_since_tag "XFS: $VAR mount option is deprecated." && \
++		echo "Should not be able to find deprecation warning for $VAR"
++done
++for VAR in {noattr2,ikeep}; do
++	log_tag
++	mount -o $VAR,remount $SCRATCH_MNT
++	check_dmesg_for_since_tag "XFS: $VAR mount option is deprecated" || \
++		echo "Could not find deprecation warning for $VAR"
++done
++umount $SCRATCH_MNT
++
++# success, all done
++status=0
++exit
++
+diff --git a/tests/xfs/528.out b/tests/xfs/528.out
+new file mode 100644
+index 00000000..762dccc0
+--- /dev/null
++++ b/tests/xfs/528.out
+@@ -0,0 +1,2 @@
++QA output created by 528
++Silence is golden.
+diff --git a/tests/xfs/group b/tests/xfs/group
+index e861cec9..ad3bd223 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -525,3 +525,4 @@
+ 525 auto quick mkfs
+ 526 auto quick mkfs
+ 527 auto quick quota
++528 auto quick mount
 -- 
 2.29.2
 
