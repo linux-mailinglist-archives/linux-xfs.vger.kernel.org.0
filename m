@@ -2,129 +2,99 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82A6A32077D
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Feb 2021 23:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D509F320832
+	for <lists+linux-xfs@lfdr.de>; Sun, 21 Feb 2021 05:01:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbhBTWRW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 20 Feb 2021 17:17:22 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53525 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229809AbhBTWRW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Feb 2021 17:17:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1613859355;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ADR/TCdDD1QP3os65dvP9xilkbophNhLxE1UZqNJG2I=;
-        b=gbwwvLMnmALCcfHPcXWT7r/02ZP/NHntXHjUH7MeT3c6cVITCg6Nnpvg5T/d3xyCICQVeO
-        1rsFzKiBc959n+jyKhaZKCqDoDFYkpynGQIQaYAYASyaAhTAooqyDMHGDzjldzZ715/LIG
-        98knupIBUSviK1UfBA6OTWAcXzwdPUs=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-566-6fg1JlXWM9SllAETmEw0xQ-1; Sat, 20 Feb 2021 17:15:54 -0500
-X-MC-Unique: 6fg1JlXWM9SllAETmEw0xQ-1
-Received: by mail-ed1-f71.google.com with SMTP id c14so2990061eds.4
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Feb 2021 14:15:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ADR/TCdDD1QP3os65dvP9xilkbophNhLxE1UZqNJG2I=;
-        b=t1B53kwKn5rff1z+w62fwu/7Ao35HAyrYxa006WzTpalWDybCIBHvv4d6tGy6ac5LP
-         ghvpsQGHLC+O60xltWZZC68+/dfI5TA2kljoiHzDI1Zs84Z6MhdHVDepK/tSQjXtHJb8
-         yNV2IjYctcVUWgcE4FLw9azz2tw8tdao5rlEXFrPCrDMmlEOCgDogEajs6qsRLIGxcRn
-         kzMQkw2jlRJ9aMndaNgXhbmmzrpsu8fbvdLQXTlLY75Pwot8kv1N39OmVwSTzRKDN/6e
-         xTEEoUl9SS4KSyLtXJGZLrk08rSh2WmQq9jgyPxsSMt7vPoFoMoSi4SIPEGLIfW4zoSG
-         aORg==
-X-Gm-Message-State: AOAM5306TE8LcoPnLSDTkEGWTNJYJceZN1bfwq79glPKsfAA4vrGYy+E
-        uJeVZQAesgzmN2H1uUOpLI8Ao8ACRY1gWC9/EtlHkq89zRnUIWoPuiiyHcNWv8EKfprrhra05Pg
-        vbujfUMSNJd4y+m+RJOLpp0Z0d/hL7RRWxQNB0csRK9yBiyNMyJIopdjOPUhrzybhm/KiZP4=
-X-Received: by 2002:a50:cc0c:: with SMTP id m12mr14184555edi.154.1613859352723;
-        Sat, 20 Feb 2021 14:15:52 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyv/o4S98vSnXkumtWP6RZZxYd3+PKJbwOOd725gdc8YI+WOga45mCzJAelu7LLq09Kt65BAg==
-X-Received: by 2002:a50:cc0c:: with SMTP id m12mr14184544edi.154.1613859352571;
-        Sat, 20 Feb 2021 14:15:52 -0800 (PST)
-Received: from localhost.localdomain.com ([84.19.91.9])
-        by smtp.gmail.com with ESMTPSA id k6sm7020286ejb.84.2021.02.20.14.15.51
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Feb 2021 14:15:51 -0800 (PST)
-From:   Pavel Reichl <preichl@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/1] xfs: Skip repetitive warnings about mount options
-Date:   Sat, 20 Feb 2021 23:15:49 +0100
-Message-Id: <20210220221549.290538-3-preichl@redhat.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210220221549.290538-1-preichl@redhat.com>
-References: <20210220221549.290538-1-preichl@redhat.com>
+        id S229983AbhBUEAb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 20 Feb 2021 23:00:31 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50066 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230162AbhBUEAb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Feb 2021 23:00:31 -0500
+Received: from dread.disaster.area (pa49-179-130-210.pa.nsw.optusnet.com.au [49.179.130.210])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 623411040C67;
+        Sun, 21 Feb 2021 14:59:44 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lDfuJ-00EYZb-Hu; Sun, 21 Feb 2021 14:59:43 +1100
+Date:   Sun, 21 Feb 2021 14:59:43 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Bastian Germann <bastiangermann@fishpost.de>
+Cc:     linux-xfs@vger.kernel.org, Dimitri John Ledkov <xnox@ubuntu.com>
+Subject: Re: [PATCH 2/4] debian: Enable CET on amd64
+Message-ID: <20210221035943.GJ4662@dread.disaster.area>
+References: <20210220121610.3982-1-bastiangermann@fishpost.de>
+ <20210220121610.3982-3-bastiangermann@fishpost.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210220121610.3982-3-bastiangermann@fishpost.de>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_d
+        a=JD06eNgDs9tuHP7JIKoLzw==:117 a=JD06eNgDs9tuHP7JIKoLzw==:17
+        a=kj9zAlcOel0A:10 a=qa6Q16uM49sA:10 a=fxJcL_dCAAAA:8 a=7-415B0cAAAA:8
+        a=ljfmuPdE62EP-0x0UAoA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Skip the warnings about mount option being deprecated if we are
-remounting and deprecated option state is not changing.
+On Sat, Feb 20, 2021 at 01:16:07PM +0100, Bastian Germann wrote:
+> This is a change introduced in 5.6.0-1ubuntu3.
+> 
+> Reported-by: Dimitri John Ledkov <xnox@ubuntu.com>
+> Signed-off-by: Bastian Germann <bastiangermann@fishpost.de>
+> ---
+>  debian/changelog | 1 +
+>  debian/rules     | 8 +++++++-
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/debian/changelog b/debian/changelog
+> index 8320a2e8..c77f04ab 100644
+> --- a/debian/changelog
+> +++ b/debian/changelog
+> @@ -2,6 +2,7 @@ xfsprogs (5.11.0-rc0-1) experimental; urgency=medium
+>  
+>    [ Dimitri John Ledkov ]
+>    * Drop trying to create upstream distribution
+> +  * Enable CET on amd64
+>  
+>   -- Bastian Germann <bastiangermann@fishpost.de>  Sat, 20 Feb 2021 11:57:31 +0100
+>  
+> diff --git a/debian/rules b/debian/rules
+> index 8a3345b6..dd093f2c 100755
+> --- a/debian/rules
+> +++ b/debian/rules
+> @@ -23,8 +23,14 @@ pkgdev = DIST_ROOT=`pwd`/$(dirdev); export DIST_ROOT;
+>  pkgdi  = DIST_ROOT=`pwd`/$(dirdi); export DIST_ROOT;
+>  stdenv = @GZIP=-q; export GZIP;
+>  
+> +ifeq ($(target),amd64)
+> +export DEB_CFLAGS_MAINT_APPEND=-fcf-protection
+> +export DEB_LDFLAGS_MAINT_APPEND=-fcf-protection
+> +endif
+> +include /usr/share/dpkg/default.mk
+> +
+>  options = export DEBUG=-DNDEBUG DISTRIBUTION=debian \
+> -	  INSTALL_USER=root INSTALL_GROUP=root \
+> +	  INSTALL_USER=root INSTALL_GROUP=root LDFLAGS='$(LDFLAGS)' \
+>  	  LOCAL_CONFIGURE_OPTIONS="--enable-editline=yes --enable-blkid=yes --disable-ubsan --disable-addrsan --disable-threadsan --enable-lto" ;
+>  diopts  = $(options) \
+>  	  export OPTIMIZER=-Os LOCAL_CONFIGURE_OPTIONS="--enable-gettext=no --disable-ubsan --disable-addrsan --disable-threadsan --enable-lto" ;
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=211605
-Fix-suggested-by: Eric Sandeen <sandeen@redhat.com>
-Signed-off-by: Pavel Reichl <preichl@redhat.com>
----
- fs/xfs/xfs_super.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+No. This is not the way to turn on build wide compiler/linker
+options/protections.
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 813be879a5e5..6724a7018d1f 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1169,6 +1169,13 @@ xfs_fs_parse_param(
- 	struct fs_parse_result	result;
- 	int			size = 0;
- 	int			opt;
-+	uint64_t                prev_m_flags = 0; /* Mount flags of prev. mount */
-+	bool			remounting = fc->purpose & FS_CONTEXT_FOR_RECONFIGURE;
-+
-+	/* if reconfiguring then get mount flags of previous flags */
-+	if (remounting) {
-+		prev_m_flags  = XFS_M(fc->root->d_sb)->m_flags;
-+	}
- 
- 	opt = fs_parse(fc, xfs_fs_parameters, param, &result);
- 	if (opt < 0)
-@@ -1294,19 +1301,27 @@ xfs_fs_parse_param(
- #endif
- 	/* Following mount options will be removed in September 2025 */
- 	case Opt_ikeep:
--		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		if (!remounting ||  !(prev_m_flags & XFS_MOUNT_IKEEP)) {
-+			xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		}
- 		mp->m_flags |= XFS_MOUNT_IKEEP;
- 		return 0;
- 	case Opt_noikeep:
--		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		if (!remounting || prev_m_flags & XFS_MOUNT_IKEEP) {
-+			xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		}
- 		mp->m_flags &= ~XFS_MOUNT_IKEEP;
- 		return 0;
- 	case Opt_attr2:
--		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		if (!remounting || !(prev_m_flags & XFS_MOUNT_ATTR2)) {
-+			xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		}
- 		mp->m_flags |= XFS_MOUNT_ATTR2;
- 		return 0;
- 	case Opt_noattr2:
--		xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		if (!remounting || !(prev_m_flags & XFS_MOUNT_NOATTR2)) {
-+			xfs_warn(mp, "%s mount option is deprecated.", param->key);
-+		}
- 		mp->m_flags &= ~XFS_MOUNT_ATTR2;
- 		mp->m_flags |= XFS_MOUNT_NOATTR2;
- 		return 0;
+IOWs, if you want to turn on control flow protections to make ROP
+exploits harder (why that actually matters for xfsprogs is beyond
+me), then it you need to add a configure option similar to
+--enable-lto. Then it can actually be enabled and used by other
+distros, not just Ubuntu, and it will also ensure that builds will
+fail at configure time if the compiler/linker does not support this
+functionality.
+
+Cheers,
+
+Dave.
 -- 
-2.29.2
-
+Dave Chinner
+david@fromorbit.com
