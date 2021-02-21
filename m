@@ -2,62 +2,121 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4FA7320CC5
-	for <lists+linux-xfs@lfdr.de>; Sun, 21 Feb 2021 19:42:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62D1B320E05
+	for <lists+linux-xfs@lfdr.de>; Sun, 21 Feb 2021 22:38:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230148AbhBUSl0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 21 Feb 2021 13:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230291AbhBUSlE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 21 Feb 2021 13:41:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 9FE6C64F04;
-        Sun, 21 Feb 2021 18:39:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1613932783;
-        bh=ExY7nMX+kg5cIN1bkc58jHVWbsM7wSFpFLshZoRf7Hk=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=EfWE7MhqVXzQ6BBnQ/+/+b5S5csaQuAb1Cn63lHYtsT6fIuKAW57lxepBEqk0NOI2
-         7/IHtpTDVhokHt6ESrf02D5qXjxPlZDZai9gB9XLiEiEEwtWyhD+P3rslD8/YVuFAF
-         6wAYUfR6iVfionXDXzYkmebaGsvNZJgo6TbT7IVeFV+UvRU41pfpA9TbLPVGW8lFpx
-         1A0nIqXRfm8BxZqn89tvaE5OwOmvCzUUUDlgdFkDU3o2Pu7Tdf3Cem709zc/ZFL2vq
-         EB0Ah/M4oMuSIecoSOCj4WUnIPGTTHyud/gypTpK81R1lApitkaJiwya9SBB+bXaAo
-         vNt9mO3iCRRKA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 9B1F460191;
-        Sun, 21 Feb 2021 18:39:43 +0000 (UTC)
-Subject: Re: [GIT PULL] iomap: new code for 5.12-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210219033302.GY7193@magnolia>
-References: <20210219033302.GY7193@magnolia>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210219033302.GY7193@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.12-merge-2
-X-PR-Tracked-Commit-Id: ed1128c2d0c87e5ff49c40f5529f06bc35f4251b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4f016a316f2243efb0d1c0e7259f07817eb99e67
-Message-Id: <161393278362.20435.17293846078865363205.pr-tracker-bot@kernel.org>
-Date:   Sun, 21 Feb 2021 18:39:43 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de, linux-btrfs@vger.kernel.org,
-        naohiro.aota@wdc.com
+        id S230391AbhBUViN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 21 Feb 2021 16:38:13 -0500
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:49482 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230356AbhBUViM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 21 Feb 2021 16:38:12 -0500
+Received: from dread.disaster.area (pa49-179-130-210.pa.nsw.optusnet.com.au [49.179.130.210])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 77C9778AB24;
+        Mon, 22 Feb 2021 08:37:28 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lDwPv-00Fh8z-Ga; Mon, 22 Feb 2021 08:37:27 +1100
+Date:   Mon, 22 Feb 2021 08:37:27 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Dimitri John Ledkov <dimitri.ledkov@canonical.com>
+Cc:     Bastian Germann <bastiangermann@fishpost.de>,
+        linux-xfs@vger.kernel.org
+Subject: Re: NACK Re: [PATCH 2/4] debian: Enable CET on amd64
+Message-ID: <20210221213727.GN4662@dread.disaster.area>
+References: <20210220121610.3982-1-bastiangermann@fishpost.de>
+ <20210220121610.3982-3-bastiangermann@fishpost.de>
+ <20210221035943.GJ4662@dread.disaster.area>
+ <CADWks+Y93MB=fO42K4oQ2kKt=82bz9m=KDVHWeZmqxLV40-PdA@mail.gmail.com>
+ <20210221042809.GM4662@dread.disaster.area>
+ <CADWks+Yf_Vg7fTPH_BoXEmxUoo_XnyCLj4oeBme5fRTqoy+o4g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADWks+Yf_Vg7fTPH_BoXEmxUoo_XnyCLj4oeBme5fRTqoy+o4g@mail.gmail.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0 cx=a_idp_d
+        a=JD06eNgDs9tuHP7JIKoLzw==:117 a=JD06eNgDs9tuHP7JIKoLzw==:17
+        a=kj9zAlcOel0A:10 a=qa6Q16uM49sA:10 a=7-415B0cAAAA:8
+        a=TJDqitv73KFGkjakVWAA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pull request you sent on Thu, 18 Feb 2021 19:33:02 -0800:
+On Sun, Feb 21, 2021 at 04:32:46AM +0000, Dimitri John Ledkov wrote:
+> On Sun, Feb 21, 2021 at 4:28 AM Dave Chinner <david@fromorbit.com> wrote:
+> >
+> > On Sun, Feb 21, 2021 at 04:02:55AM +0000, Dimitri John Ledkov wrote:
+> > > The patch in question is specific to Ubuntu and was not submitted by
+> > > me to neither Debian or Upstream.
+> > >
+> > > Indeed, this is very distro specific, because of all the other things
+> > > that we turn on by default in our toolchain, dpkg build flags, and all
+> > > other packages.
+> > >
+> > > This patch if taken at face value, will not enable CET. And will make
+> > > the package start failing to build from source, when using older
+> > > toolchains that don't support said flag.
+> >
+> > Yes, that is exactly what I said when pointing out how to *support
+> > this properly* so it doesn't break builds in environments that do
+> > not support such functionality.
+> >
+> > Having it as a configure option allows the configure script to -test
+> > whether the toolchain supports it- and then either fail (enable=yes)
+> > or not use it (enable=probe) and continue the build without it.
+> >
+> > > It should not go upstream nor into debian.
+> >
+> > There is no reason it cannot be implemented as a build option in the
+> > upstream package. Then you can get rid of all your nasty hacks and
+> > simply add --enable-cf-protections to your distro's configure
+> > options.
+> >
+> > And other distros that also support all this functionality can use
+> > it to. Please play nice with others and do things the right way
+> > instead of making silly claims about how "nobody else can use this"
+> > when it's clear that they can if they also tick all the necessary
+> > boxes.
+> 
+> debian will probably will not want --enable-cf-protections as a
+> configure option, and will enable CET via dpkg-buildflags as a
+> hardening option, which will then be turned on by default for relevant
+> architectures and series as of when debian kernel starts to support
+> it.
+> 
+> as that way, debian will be able to affect that change across the whole distro.
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.12-merge-2
+Except now you've got the problem that dpkg-buildflags is not used
+by various packages such as xfsprogs, so the flags it sets up,
+even with overrides like DEB_BUILD_MAINT_OPTIONS are completely
+ignored by the debian package build because debian/rules is not set
+up to source the buildflags at all.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4f016a316f2243efb0d1c0e7259f07817eb99e67
+e.g. if you run 'make Q= deb' you won't see any of the compiler or
+linker options emitted by dpkg-buildflags being used during the
+debian package build. You will, OTOH, see it emit stuff like LTO
+options because those get turned on via configure.
 
-Thank you!
+> once CET is actually merged into kernel, I do not expect configure
+> options or debian/rules changes to enable CET. At most `export
+> DEB_BUILD_MAINT_OPTIONS=hardening` should be enough in debian/rules.
 
+The default dpkg-buildflags output already includes "hardening"
+options, and as I said above, they aren't actually included in the
+build rules. Hence what you suggest just won't work like you think
+it should.
+
+Again, if you want build option stuff to work correctly, don't rely
+on distro specific magic to turn stuff on because it just doesn't
+work for everyone. Use configure options to enable, probe and detect
+support and enable the feature in the build, then upstream and other
+distros can actually build with it and test it outside the magical
+unicorn distro build environment you are running in...
+
+Cheers,
+
+Dave.
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Dave Chinner
+david@fromorbit.com
