@@ -2,37 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03F6E322464
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Feb 2021 04:03:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8D1A32246E
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Feb 2021 04:03:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231296AbhBWDBs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Feb 2021 22:01:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47518 "EHLO mail.kernel.org"
+        id S230411AbhBWDCV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Feb 2021 22:02:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231266AbhBWDBp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 22 Feb 2021 22:01:45 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC4FD64E6B;
-        Tue, 23 Feb 2021 03:01:23 +0000 (UTC)
+        id S231185AbhBWDCK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 22 Feb 2021 22:02:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E60764E77;
+        Tue, 23 Feb 2021 03:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614049283;
-        bh=Wz3jet6NHTd4J1ElhB+e4JYbaZ3lZSHVVdk54ETTl24=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QQU2N2jlTC3bMRw2hqwN0XRGeIOmsDdsQg0JGPtdBqK4SxV/0u7qUxBV3s5eNPhL3
-         z3p0yK8S1UQn5luj/dFwPeyFf++9JFea+hHXCUKCWyghGMB0LRZ1PB5HM9DV0xaKb9
-         gIG8CaHnW/tGLoOhUkNxe6pv2Ca+CMbbP2eIF3+Ze2gk8jo2ieeKw6HAodJPlgNA7Z
-         rHPrQynqInItaFH1fWsXIGMSgQmRyBP7l5cIM6u2kfIqKezt/ljbD7o8fZBxLLGgls
-         cqSd/bQjK5ub/k7ZVGYGnVSfpiAjQJNURkH64bC/kdSGAMxVNvlOopOqNgLNRpB+2V
-         BEuTVbr7kusmA==
-Subject: [PATCH 4/4] xfs_repair: add post-phase error injection points
+        s=k20201202; t=1614049285;
+        bh=Z7yAS51Eh3Y/ByY9Y4sTAfFCpTBQ9D7sFjr+kx18lBQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=Q+7PxK5SGrjaMa1bm88TGrI1fn11J6/v7d6ZfTQHFKz5tFf1ygtB/uW0z7Yuudf5P
+         NOpArJNAnaHlrgi0QU8wnJQsednyqYdmyC+J0aLda11NYSMLltzraacwM4DotHP5V2
+         dOcVgsC1dsjHioNGrpvKssCaprSI2kVebtDJviQETwnjOF3QyTPf5NOFL8C6dHqsEh
+         nox9RDVgUkQaFQ+j4NQxZok1ahaMeovklKNzB0HCoh+l5jrFKPZl0nUrI2SuxyhUTF
+         cOW7ROoYpAYR1Wd/p/mqRuz2UyXrFT18tdSSeSMIMhQNMtzfcB8GoN8DVCQZEBBGka
+         zpJu/pGOExXHw==
+Subject: [PATCHSET v6.1 0/5] xfs_admin: support upgrading v5 filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
-        bfoster@redhat.com
-Date:   Mon, 22 Feb 2021 19:01:23 -0800
-Message-ID: <161404928343.425602.4302650863642276667.stgit@magnolia>
-In-Reply-To: <161404926046.425602.766097344183886137.stgit@magnolia>
-References: <161404926046.425602.766097344183886137.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
+        linux-xfs@vger.kernel.org, hch@lst.de, bfoster@redhat.com
+Date:   Mon, 22 Feb 2021 19:01:25 -0800
+Message-ID: <161404928523.425731.7157248967184496592.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -41,68 +38,39 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Create an error injection point so that we can simulate repair failing
-after a certain phase.
+This submission extends xfs_repair and xfs_admin to support adding the
+inode btree counter and bigtime features to an existing v5 filesystem.
+The first three patches lay the groundwork in both tools for performing
+upgrades, and the last two patches add the ability to add features.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+v2: Rebase to 5.10-rc0
+v3: respond to reviewer comments
+v4: document which kernel version these new features showed up in
+v5: move all the upgrader code to xfs_repair per Eric suggestion, which
+    eliminates a bunch of fragile db/admin/repair coordination.
+v6: update mkfs/admin/repair manpages to identify CLI options that apply
+    only to V4 fses and are therefore deprecated
+v6.1: repost after rebasing the previous two series
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=fs-upgrades
 ---
- repair/globals.c    |    3 +++
- repair/globals.h    |    3 +++
- repair/xfs_repair.c |    8 ++++++++
- 3 files changed, 14 insertions(+)
-
-
-diff --git a/repair/globals.c b/repair/globals.c
-index 110d98b6..537d068b 100644
---- a/repair/globals.c
-+++ b/repair/globals.c
-@@ -117,3 +117,6 @@ uint64_t	*prog_rpt_done;
- 
- int		ag_stride;
- int		thread_count;
-+
-+/* If nonzero, simulate failure after this phase. */
-+int		fail_after_phase;
-diff --git a/repair/globals.h b/repair/globals.h
-index 1d397b35..a9287320 100644
---- a/repair/globals.h
-+++ b/repair/globals.h
-@@ -162,4 +162,7 @@ extern uint64_t		*prog_rpt_done;
- extern int		ag_stride;
- extern int		thread_count;
- 
-+/* If nonzero, simulate failure after this phase. */
-+extern int		fail_after_phase;
-+
- #endif /* _XFS_REPAIR_GLOBAL_H */
-diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index a9236bb7..64d7607f 100644
---- a/repair/xfs_repair.c
-+++ b/repair/xfs_repair.c
-@@ -362,6 +362,10 @@ process_args(int argc, char **argv)
- 
- 	if (report_corrected && no_modify)
- 		usage();
-+
-+	p = getenv("XFS_REPAIR_FAIL_AFTER_PHASE");
-+	if (p)
-+		fail_after_phase = (int)strtol(p, NULL, 0);
- }
- 
- void __attribute__((noreturn))
-@@ -853,6 +857,10 @@ static inline void
- phase_end(int phase)
- {
- 	timestamp(PHASE_END, phase, NULL);
-+
-+	/* Fail if someone injected an post-phase error. */
-+	if (fail_after_phase && phase == fail_after_phase)
-+		platform_crash();
- }
- 
- int
+ db/xfs_admin.sh      |    6 ++-
+ man/man8/mkfs.xfs.8  |   16 +++++++++
+ man/man8/xfs_admin.8 |   47 +++++++++++++++++++++++++
+ repair/globals.c     |    2 +
+ repair/globals.h     |    2 +
+ repair/phase2.c      |   93 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ repair/xfs_repair.c  |   22 ++++++++++++
+ 7 files changed, 186 insertions(+), 2 deletions(-)
 
