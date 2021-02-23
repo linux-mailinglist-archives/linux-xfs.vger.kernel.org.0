@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 346D632246F
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Feb 2021 04:03:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E16C32246B
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Feb 2021 04:03:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231284AbhBWDCW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Feb 2021 22:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47854 "EHLO mail.kernel.org"
+        id S231286AbhBWDCS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Feb 2021 22:02:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229967AbhBWDCR (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 22 Feb 2021 22:02:17 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0DA1864DF3;
-        Tue, 23 Feb 2021 03:01:37 +0000 (UTC)
+        id S230400AbhBWDB6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 22 Feb 2021 22:01:58 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BD20F64E02;
+        Tue, 23 Feb 2021 03:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614049297;
-        bh=yeiuzjpAXFgdL80GF15iQpaXcjaySaU80aUI0GCOf3k=;
+        s=k20201202; t=1614049302;
+        bh=ob7Pm07fS8v/Xgevnx8Fzacgh+AxqJ9PGNz6d6P9v9c=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WTPgeaqEtIjq2P2lohSNjNka2Paxy0STys1XYVI6rZU7ZDUeimqyLRRbbGE6p1ZmT
-         eOwVxPYrdfmjdoKnsCY6wekjW86ofJvwFnSFKZtCESMOu+LDyMsf0jXqXRSnmPzLTG
-         yQymemVhIOCLg93Fmf4VTmKU9KxJ8dmvDM82uWIpKuowY+JaFYKdgVX7s23eLT0qP+
-         ihyhwhm1x7x6yeCcT8pbrk0oMSwROzhoahigc3y6TN5TWS/YtNQSSKFr2z8U5A2Ibb
-         lkU/n4KDuDIDj053K6lYaCCMyB5ByR11ZYuwYzKRmPcfWMPwbx8uLTrfrkxzav+95p
-         Xe7xGis2cJkuA==
-Subject: [PATCH 2/5] xfs_repair: allow upgrades to v5 filesystems
+        b=cA9twMdwuAyWUinX4sH1e86ARSucC8p/SkkjCQQS+i7MulmlMq/DBgltcCgUb9yKq
+         vZGYF0ybtgL/oWj/cFvf+wAGOhjVMTlRCoFV+jzwT6q3Zp0aldp6Q40gzNalg/chKq
+         Gijoevqov4ANjsjawMI6ct0j0I/tsyvj6HEXTbHDNPIStxIBHA9UGPIb3iwARATjDS
+         +n/eHiwQfckg2CE3ec2BPGGciQL4DNQi997CbM16lGY68WqutOeUczCa/PwZIy56VH
+         FZ+da/3udZzBLGu87j+WvHnuU7IaAY3WKrcXqp2Rf+kqPN4BTai4lRav9ayIAg3Ear
+         YS4JzMYGwPjQQ==
+Subject: [PATCH 3/5] xfs_admin: support adding features to V5 filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         hch@lst.de, bfoster@redhat.com
-Date:   Mon, 22 Feb 2021 19:01:36 -0800
-Message-ID: <161404929660.425731.17886982949516193444.stgit@magnolia>
+Date:   Mon, 22 Feb 2021 19:01:42 -0800
+Message-ID: <161404930230.425731.17349113846789217272.stgit@magnolia>
 In-Reply-To: <161404928523.425731.7157248967184496592.stgit@magnolia>
 References: <161404928523.425731.7157248967184496592.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,71 +42,81 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add some helper functions so that we can allow users to upgrade V5
-filesystems in a sane manner.  This just lands the boilerplate; the
-actual feature validation and whatnot will land in the next patches.
+Teach the xfs_admin script how to add features to V5 filesystems.
+Technically speaking we could add lazycount to the list, but that option
+is only useful for the V4 format which is deprecated.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- repair/phase2.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ db/xfs_admin.sh      |    6 ++++--
+ man/man8/xfs_admin.8 |   22 ++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
 
-diff --git a/repair/phase2.c b/repair/phase2.c
-index 952ac4a5..f654edcc 100644
---- a/repair/phase2.c
-+++ b/repair/phase2.c
-@@ -131,6 +131,40 @@ zero_log(
- 		libxfs_max_lsn = log->l_last_sync_lsn;
- }
+diff --git a/db/xfs_admin.sh b/db/xfs_admin.sh
+index 430872ef..7a467dbe 100755
+--- a/db/xfs_admin.sh
++++ b/db/xfs_admin.sh
+@@ -8,9 +8,10 @@ status=0
+ DB_OPTS=""
+ REPAIR_OPTS=""
+ REPAIR_DEV_OPTS=""
+-USAGE="Usage: xfs_admin [-efjlpuV] [-c 0|1] [-L label] [-r rtdev] [-U uuid] device [logdev]"
++DB_LOG_OPTS=""
++USAGE="Usage: xfs_admin [-efjlpuV] [-c 0|1] [-L label] [-O v5_feature] [-r rtdev] [-U uuid] device [logdev]"
  
-+/* Perform the user's requested upgrades on filesystem. */
-+static void
-+upgrade_filesystem(
-+	struct xfs_mount	*mp)
-+{
-+	struct xfs_buf		*bp;
-+	bool			dirty = false;
-+	int			error;
-+
-+        if (no_modify || !dirty)
-+                return;
-+
-+        bp = libxfs_getsb(mp);
-+        if (!bp || bp->b_error) {
-+                do_error(
-+	_("couldn't get superblock for feature upgrade, err=%d\n"),
-+                                bp ? bp->b_error : ENOMEM);
-+        } else {
-+                libxfs_sb_to_disk(bp->b_addr, &mp->m_sb);
-+
-+                /*
-+		 * Write the primary super to disk immediately so that
-+		 * needsrepair will be set if repair doesn't complete.
-+		 */
-+                error = -libxfs_bwrite(bp);
-+                if (error)
-+                        do_error(
-+	_("filesystem feature upgrade failed, err=%d\n"),
-+                                        error);
-+        }
-+        if (bp)
-+                libxfs_buf_relse(bp);
-+}
-+
- /*
-  * ok, at this point, the fs is mounted but the root inode may be
-  * trashed and the ag headers haven't been checked.  So we have
-@@ -235,4 +269,10 @@ phase2(
- 				do_warn(_("would correct\n"));
- 		}
- 	}
-+
-+	/*
-+	 * Upgrade the filesystem now that we've done a preliminary check of
-+	 * the superblocks, the AGs, the log, and the metadata inodes.
-+	 */
-+	upgrade_filesystem(mp);
- }
+-while getopts "c:efjlL:pr:uU:V" c
++while getopts "c:efjlL:O:pr:uU:V" c
+ do
+ 	case $c in
+ 	c)	REPAIR_OPTS=$REPAIR_OPTS" -c lazycount="$OPTARG;;
+@@ -19,6 +20,7 @@ do
+ 	j)	DB_OPTS=$DB_OPTS" -c 'version log2'";;
+ 	l)	DB_OPTS=$DB_OPTS" -r -c label";;
+ 	L)	DB_OPTS=$DB_OPTS" -c 'label "$OPTARG"'";;
++	O)	REPAIR_OPTS=$REPAIR_OPTS" -c $OPTARG=1";;
+ 	p)	DB_OPTS=$DB_OPTS" -c 'version projid32bit'";;
+ 	r)	REPAIR_DEV_OPTS=" -r '$OPTARG'";;
+ 	u)	DB_OPTS=$DB_OPTS" -r -c uuid";;
+diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
+index 5ef99316..ae661648 100644
+--- a/man/man8/xfs_admin.8
++++ b/man/man8/xfs_admin.8
+@@ -6,6 +6,8 @@ xfs_admin \- change parameters of an XFS filesystem
+ [
+ .B \-eflpu
+ ] [
++.BI \-O " featurelist"
++] [
+ .BR "\-c 0" | 1
+ ] [
+ .B \-L
+@@ -116,6 +118,26 @@ The filesystem label can be cleared using the special "\c
+ " value for
+ .IR label .
+ .TP
++.BI \-O " feature1" = "status" , "feature2" = "status..."
++Add or remove features on an existing V5 filesystem.
++The features should be specified as a comma-separated list.
++.I status
++should be either 0 to disable the feature or 1 to enable the feature.
++Note, however, that most features cannot be disabled.
++.IP
++.B NOTE:
++Administrators must ensure the filesystem is clean by running
++.B xfs_repair -n
++to inspect the filesystem before performing the upgrade.
++If corruption is found, recovery procedures (e.g. reformat followed by
++restoration from backup; or running
++.B xfs_repair
++without the
++.BR -n )
++must be followed to clean the filesystem.
++.IP
++There are no feature options currently.
++.TP
+ .BI \-U " uuid"
+ Set the UUID of the filesystem to
+ .IR uuid .
 
