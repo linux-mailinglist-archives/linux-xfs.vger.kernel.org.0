@@ -2,35 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62467322461
+	by mail.lfdr.de (Postfix) with ESMTP id D2B8B322462
 	for <lists+linux-xfs@lfdr.de>; Tue, 23 Feb 2021 04:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230434AbhBWDBj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Feb 2021 22:01:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47524 "EHLO mail.kernel.org"
+        id S230493AbhBWDBk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Feb 2021 22:01:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230493AbhBWDB3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 22 Feb 2021 22:01:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A43664E5B;
-        Tue, 23 Feb 2021 03:00:47 +0000 (UTC)
+        id S231267AbhBWDBe (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 22 Feb 2021 22:01:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5526764E4A;
+        Tue, 23 Feb 2021 03:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614049247;
-        bh=wLjx/zdHCYBAr+Pp5wO9gpMk6qorZlHu3+whzYhq3GY=;
+        s=k20201202; t=1614049253;
+        bh=E+nr4GUSFhrROrwtzLXtQkq0fOas518cxwYs4EPNyX8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WodlmoBEfN1/7blrT2TGs3IOm31NhD+3NtRkGNv/bPA/MwC1IAKTZ2vbjmtiu2DjP
-         JVtRNmsxmUvOnv2cRXnuQRov88eFiEWI703Nyq7Rq2y/6b7cOjc2gBLb9IA4VaakIb
-         Mf8kSBo5vGG/oXySMigzv+N6QDhDzEeKMSTbx8i6eLF7PXdvio4AjWt9xoqX+RmbjP
-         q63LZNKp0hSHJSgr7u4VsKJ+JSnEMNZhqyi/HYbswD5bjXhRUOuJrwUEIPx4AiSVWh
-         oZKupBwww8NmUatt+maQRVDg32ceB1cOHTo/0TjQR+Cg/A2JL5ktCc1L9PI4K1JcZl
-         ZlLppm2vg5uhg==
-Subject: [PATCH 5/7] xfs_repair: fix unmount error message to have a newline
+        b=gLV3QYdZpzQLasqexM9HfBqCd3f1ko/uj3HqjdRnMJhbo9cpi8/PiG+88pUsekzo4
+         839RWMzPcbx8VzUeBMXUwp4v3j9ORFSp/adhJ28pa0Jqg9qpEtmlePuhFBiHofFz7U
+         ZPa39tif1XYg6OlcjvxVL4OB6+E674z7bTcdimC6UvRCQcj0Xzp/f6XEMf2/lO4OP7
+         6zeOJhw5XHTojgR/CNAry4hlk9IIm1fP27e6pGybcpaZqskRN88wbRVOUFpwOn9s+T
+         011WCwFYOqPZQCzxW2JV5ArhNAW1uYcEsHyIlh6gkBe1qgHD14sPbWOWsyDcskFkbE
+         XCh+ziRaV4Fiw==
+Subject: [PATCH 6/7] xfs_repair: clear quota CHKD flags on the incore
+ superblock too
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
-Cc:     Brian Foster <bfoster@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+Cc:     Christoph Hellwig <hch@lst.de>, Brian Foster <bfoster@redhat.com>,
         linux-xfs@vger.kernel.org, bfoster@redhat.com
-Date:   Mon, 22 Feb 2021 19:00:47 -0800
-Message-ID: <161404924715.425352.7240443385329836467.stgit@magnolia>
+Date:   Mon, 22 Feb 2021 19:00:52 -0800
+Message-ID: <161404925290.425352.17614643483707405953.stgit@magnolia>
 In-Reply-To: <161404921827.425352.18151735716678009691.stgit@magnolia>
 References: <161404921827.425352.18151735716678009691.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,28 +43,67 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a newline so that this is consistent with the other error messages.
+At the end of a repair run, xfs_repair clears the superblock's quota
+checked flags if it found mistakes in the quota accounting to force a
+quotacheck at the next mount.  This is currently the last time repair
+modifies the primary superblock, so it is sufficient to update the
+ondisk buffer and not the incore mount structure.
+
+However, we're about to introduce code to clear the needsrepair feature
+at the very end of repair, after all metadata blocks have been written
+to disk and all disk caches flush.  Since the convention everywhere else
+in xfs is to update the incore superblock, call libxfs_sb_to_disk to
+translate that into the ondisk buffer, and then write the buffer to
+disk, switch the quota CHKD code to use this mechanism too.
+
+(Get rid of dsb too, since the incore super should be in sync with the
+ondisk super.)
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- repair/xfs_repair.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ repair/xfs_repair.c |   12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 
 diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index 724661d8..9409f0d8 100644
+index 9409f0d8..40352458 100644
 --- a/repair/xfs_repair.c
 +++ b/repair/xfs_repair.c
-@@ -1136,7 +1136,7 @@ _("Note - stripe unit (%d) and width (%d) were copied from a backup superblock.\
- 	error = -libxfs_umount(mp);
- 	if (error)
- 		do_error(
--	_("File system metadata writeout failed, err=%d.  Re-run xfs_repair."),
-+	_("File system metadata writeout failed, err=%d.  Re-run xfs_repair.\n"),
- 				error);
+@@ -717,7 +717,6 @@ main(int argc, char **argv)
+ {
+ 	xfs_mount_t	*temp_mp;
+ 	xfs_mount_t	*mp;
+-	xfs_dsb_t	*dsb;
+ 	struct xfs_buf	*sbp;
+ 	xfs_mount_t	xfs_m;
+ 	struct xlog	log = {0};
+@@ -1103,22 +1102,19 @@ _("Warning:  project quota information would be cleared.\n"
+ 	if (!sbp)
+ 		do_error(_("couldn't get superblock\n"));
  
- 	libxfs_destroy(&x);
+-	dsb = sbp->b_addr;
+-
+ 	if ((mp->m_sb.sb_qflags & XFS_ALL_QUOTA_CHKD) != quotacheck_results()) {
+ 		do_warn(_("Note - quota info will be regenerated on next "
+ 			"quota mount.\n"));
+-		dsb->sb_qflags &= cpu_to_be16(~(XFS_UQUOTA_CHKD |
+-						XFS_GQUOTA_CHKD |
+-						XFS_PQUOTA_CHKD |
+-						XFS_OQUOTA_CHKD));
++		mp->m_sb.sb_qflags &= ~(XFS_UQUOTA_CHKD | XFS_GQUOTA_CHKD |
++					XFS_PQUOTA_CHKD | XFS_OQUOTA_CHKD);
++		libxfs_sb_to_disk(sbp->b_addr, &mp->m_sb);
+ 	}
+ 
+ 	if (copied_sunit) {
+ 		do_warn(
+ _("Note - stripe unit (%d) and width (%d) were copied from a backup superblock.\n"
+   "Please reset with mount -o sunit=<value>,swidth=<value> if necessary\n"),
+-			be32_to_cpu(dsb->sb_unit), be32_to_cpu(dsb->sb_width));
++			mp->m_sb.sb_unit, mp->m_sb.sb_width);
+ 	}
+ 
+ 	libxfs_buf_mark_dirty(sbp);
 
