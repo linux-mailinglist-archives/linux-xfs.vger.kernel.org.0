@@ -2,35 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 60A6E32245F
+	by mail.lfdr.de (Postfix) with ESMTP id DB459322460
 	for <lists+linux-xfs@lfdr.de>; Tue, 23 Feb 2021 04:01:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231262AbhBWDBc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Feb 2021 22:01:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47518 "EHLO mail.kernel.org"
+        id S230459AbhBWDBe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Feb 2021 22:01:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230053AbhBWDB3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S230434AbhBWDB3 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Mon, 22 Feb 2021 22:01:29 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 14D6764E57;
-        Tue, 23 Feb 2021 03:00:36 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D22B364DF3;
+        Tue, 23 Feb 2021 03:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614049236;
-        bh=EQyv+2tV702VcR7DfyihyF5UejBebc12Ks4An41ZuP4=;
+        s=k20201202; t=1614049242;
+        bh=eYTE8MxWR0l0+sBxedArH65I5fhuR0B+OsSJpCSB5iU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MIzJ9GhfqX/x8s7PRRD3FYeuwAz7LZRff+JA1yRlgazfIrC18tZuMxnlINysOaqKE
-         hUzlJcI9nMr4rDyN4JULKqmwu/vqZ9zRTN9BweNOeAyQaxDkAm7YkoUNKJKL4JjgYs
-         tQE05xWg+d7p3N/ebMtjYpK/VK7/+JNlkBKOY2f35r9qiEm555E7u+2Cof7iASHfMK
-         E2O7Wza0/D0qgI3RkPtAMQ9DihdABfNkK+UdzHXmQIg/CRyNcslJw1ji+ooUxuxsdz
-         COPfe/vhKONb7rEJoV6N58sXfyU0HrM1zNMbCHg5Lyf6hJFAgxb69arU+ZGOozUaKR
-         4wuc/0dUMkm6Q==
-Subject: [PATCH 3/7] xfs_db: report the needsrepair flag in check and version
- commands
+        b=b4cgvIgX3995Lccvaye2VTYFXKYh6i6dV5qmwIT1WOYAayhPbbuOTHa6MOPaN8wLY
+         GMLVKNSPBvJd2E6tRQoWLA5JIaBtauKrXLRwEAEjgYqllcQ44h2fDJuqQSYVFXT2w9
+         fJZq0g/bRyrz5lqFsjNCGjQZmnGRB5acZoArinWPVPlzviTy2waJwY37IMD0xRpYRq
+         /iqjCu2q8Q0SNGJsvD/qfMLW+1+iHenyMcbaf8KJPNpOCLxYE3T64qvp9qJ+4bh0us
+         2+Wjja6K8eyJaJ50g3Dc9A3A4TQ4uKifOx/jokR0OezOqkzRG4IWwmtUN7//YZbN+4
+         hxkFIgdFMgWuQ==
+Subject: [PATCH 4/7] xfs_db: don't allow label/uuid setting if the needsrepair
+ flag is set
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
 Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org,
         bfoster@redhat.com
-Date:   Mon, 22 Feb 2021 19:00:35 -0800
-Message-ID: <161404923555.425352.13688646688421406378.stgit@magnolia>
+Date:   Mon, 22 Feb 2021 19:00:41 -0800
+Message-ID: <161404924136.425352.783422563005701204.stgit@magnolia>
 In-Reply-To: <161404921827.425352.18151735716678009691.stgit@magnolia>
 References: <161404921827.425352.18151735716678009691.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,44 +43,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach the version and check commands to report the presence of the
-NEEDSREPAIR flag.
+The NEEDSREPAIR flag can be set on filesystems where we /know/ that
+there's something wrong with the metadata and want to force the sysadmin
+to run xfs_repair before the next mount.  The goal here is to prevent
+non-repair changes to a filesystem when we are confident of its
+instability.  Normally we wouldn't bother with such safety checks for
+the debugger, but the label and uuid functions can be called from
+xfs_admin, so we should prevent these administrative tasks until the
+filesystem can be repaired.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- db/check.c |    5 +++++
- db/sb.c    |    2 ++
- 2 files changed, 7 insertions(+)
+ db/sb.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 
-diff --git a/db/check.c b/db/check.c
-index 33736e33..485e855e 100644
---- a/db/check.c
-+++ b/db/check.c
-@@ -3970,6 +3970,11 @@ scan_ag(
- 			dbprintf(_("mkfs not completed successfully\n"));
- 		error++;
- 	}
-+	if (xfs_sb_version_needsrepair(sb)) {
-+		if (!sflag)
-+			dbprintf(_("filesystem needs xfs_repair\n"));
-+		error++;
-+	}
- 	set_dbmap(agno, XFS_SB_BLOCK(mp), 1, DBM_SB, agno, XFS_SB_BLOCK(mp));
- 	if (sb->sb_logstart && XFS_FSB_TO_AGNO(mp, sb->sb_logstart) == agno)
- 		set_dbmap(agno, XFS_FSB_TO_AGBNO(mp, sb->sb_logstart),
 diff --git a/db/sb.c b/db/sb.c
-index d09f653d..d7111e92 100644
+index d7111e92..cec7dce9 100644
 --- a/db/sb.c
 +++ b/db/sb.c
-@@ -691,6 +691,8 @@ version_string(
- 		strcat(s, ",INOBTCNT");
- 	if (xfs_sb_version_hasbigtime(sbp))
- 		strcat(s, ",BIGTIME");
-+	if (xfs_sb_version_needsrepair(sbp))
-+		strcat(s, ",NEEDSREPAIR");
- 	return s;
- }
+@@ -379,6 +379,11 @@ uuid_f(
+ 				progname);
+ 			return 0;
+ 		}
++		if (xfs_sb_version_needsrepair(&mp->m_sb)) {
++			dbprintf(_("%s: filesystem needs xfs_repair\n"),
++				progname);
++			return 0;
++		}
  
+ 		if (!strcasecmp(argv[1], "generate")) {
+ 			platform_uuid_generate(&uu);
+@@ -543,6 +548,12 @@ label_f(
+ 			return 0;
+ 		}
+ 
++		if (xfs_sb_version_needsrepair(&mp->m_sb)) {
++			dbprintf(_("%s: filesystem needs xfs_repair\n"),
++				progname);
++			return 0;
++		}
++
+ 		dbprintf(_("writing all SBs\n"));
+ 		for (ag = 0; ag < mp->m_sb.sb_agcount; ag++)
+ 			if ((p = do_label(ag, argv[1])) == NULL) {
 
