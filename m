@@ -2,134 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 080063234E6
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Feb 2021 02:20:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A03683234F0
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Feb 2021 02:20:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233538AbhBXBHS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Feb 2021 20:07:18 -0500
-Received: from sandeen.net ([63.231.237.45]:59728 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234241AbhBXALj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 23 Feb 2021 19:11:39 -0500
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 49CA25A10B8;
-        Tue, 23 Feb 2021 18:10:32 -0600 (CST)
-Subject: Re: [PATCH v7 3/3] mkfs: make use of xfs_validate_stripe_geometry()
-To:     Gao Xiang <hsiangkao@redhat.com>, linux-xfs@vger.kernel.org,
-        Eric Sandeen <sandeen@redhat.com>
-Cc:     Brian Foster <bfoster@redhat.com>,
+        id S232616AbhBXBIU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Feb 2021 20:08:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:32125 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233951AbhBXBBJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Feb 2021 20:01:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614128353;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jqos34HouoQI/ZPmTsvuld+fqWEA0Uyq9pVz25+GE8Y=;
+        b=XmYwFvSlZxya5T0P10vBn+b2tw2DQj7Tvrn2EGRlN2/MB2GYMqo4FWOU3Hj6UtAvicgFoh
+        0ENlkISPQ8BY9wIuZ55Zmyvx5iHhiWnw/3VfAmb2rbLpHpDmO9iyTia+VND9FOXQK9rMZ9
+        DKKk/4PlQ7QYNu5XWlQwBFju2gaGCPw=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-402-Bx2JzHqAMraJ_-fD7brSLQ-1; Tue, 23 Feb 2021 19:55:34 -0500
+X-MC-Unique: Bx2JzHqAMraJ_-fD7brSLQ-1
+Received: by mail-pf1-f198.google.com with SMTP id t13so371287pfg.13
+        for <linux-xfs@vger.kernel.org>; Tue, 23 Feb 2021 16:55:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jqos34HouoQI/ZPmTsvuld+fqWEA0Uyq9pVz25+GE8Y=;
+        b=JuthzeZJX1wnFMRmD1wOszL3VByJsjQ20447O4yGS0Ao5QufFCd5PjstOt1yij88Ip
+         qTqCoXfWFLLTvfbflY+iaeebCgLaV/A/I4Hy8ymISf/4hIIK8DF7dFHJ98OjrkEUDQwv
+         0oTaXBcA/m0ZqajJGuUw4VgyH1NZjTPcmDiCKwFkOOc3evqYtb4Dc1OC0yzaJ1hRUdIk
+         PlzXLIArdxc9A/pP9CoeWRoE9SMlDDbmlsNrPAWYBYsUC03r6eCRNA0OReWBEhlUdno9
+         /cqticQ4B6LW5wQpwqAQaF9c5XeOSn/XNthA9sssZzm+lX3ZBkvZmxPpGdyTw1I5Fj/6
+         4UuQ==
+X-Gm-Message-State: AOAM530JKzzx7dlRUy28Dd7buIq0/PcYgmIA4up7aV/+kiA3ngd9iXyP
+        khiDbw1uVHzfoZWa111LOvRuKIWUq6Vuo17J0PZa/n6p8FSZYghmYavmSvNn8E0kOns8G6O5meD
+        H7rFXvRtTItTzVV+Aut7k
+X-Received: by 2002:a63:d20a:: with SMTP id a10mr25966270pgg.451.1614128133533;
+        Tue, 23 Feb 2021 16:55:33 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwQKx3AYZYLoMMmrLOFVgA2NnvRPRfaC5096C+pqWUZjWid6qejgjAgATTuCN9UpI4gHefXTw==
+X-Received: by 2002:a63:d20a:: with SMTP id a10mr25966258pgg.451.1614128133331;
+        Tue, 23 Feb 2021 16:55:33 -0800 (PST)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id y7sm370591pfc.162.2021.02.23.16.55.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Feb 2021 16:55:32 -0800 (PST)
+Date:   Wed, 24 Feb 2021 08:55:21 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     linux-xfs@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Dave Chinner <david@fromorbit.com>
+Subject: Re: [PATCH v7 3/3] mkfs: make use of xfs_validate_stripe_geometry()
+Message-ID: <20210224005521.GA1424840@xiangao.remote.csb>
 References: <20201013040627.13932-4-hsiangkao@redhat.com>
  <20210219013734.428396-1-hsiangkao@redhat.com>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Message-ID: <e703b458-63a5-e68c-aec3-5a28c5c0d27f@sandeen.net>
-Date:   Tue, 23 Feb 2021 18:10:45 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.7.1
+ <e703b458-63a5-e68c-aec3-5a28c5c0d27f@sandeen.net>
 MIME-Version: 1.0
-In-Reply-To: <20210219013734.428396-1-hsiangkao@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <e703b458-63a5-e68c-aec3-5a28c5c0d27f@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 2/18/21 7:37 PM, Gao Xiang wrote:
-> Check stripe numbers in calc_stripe_factors() by using
-> xfs_validate_stripe_geometry().
+On Tue, Feb 23, 2021 at 06:10:45PM -0600, Eric Sandeen wrote:
+> On 2/18/21 7:37 PM, Gao Xiang wrote:
+> > Check stripe numbers in calc_stripe_factors() by using
+> > xfs_validate_stripe_geometry().
+> > 
+> > Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 > 
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> I think this is good to go now, thank you.
+>
 
-I think this is good to go now, thank you.
+Sorry for my careless mistake at that time and
+thanks for your review!
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Thanks,
+Gao Xiang
 
--Eric
-
-> ---
-> changes since v6:
->  - fix dsu round-down issue (the related print message has also
->    been turned into bytes to avoid round-down issue);
->  - rebase on for-next.
-> 
->  libxfs/libxfs_api_defs.h |  1 +
->  mkfs/xfs_mkfs.c          | 35 +++++++++++++++--------------------
->  2 files changed, 16 insertions(+), 20 deletions(-)
-> 
-> diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-> index 9a00ce66..e4192e1b 100644
-> --- a/libxfs/libxfs_api_defs.h
-> +++ b/libxfs/libxfs_api_defs.h
-> @@ -192,6 +192,7 @@
->  #define xfs_trans_roll			libxfs_trans_roll
->  #define xfs_trim_extent			libxfs_trim_extent
->  
-> +#define xfs_validate_stripe_geometry	libxfs_validate_stripe_geometry
->  #define xfs_verify_agbno		libxfs_verify_agbno
->  #define xfs_verify_agino		libxfs_verify_agino
->  #define xfs_verify_cksum		libxfs_verify_cksum
-> diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-> index d72d21ef..dcdd5262 100644
-> --- a/mkfs/xfs_mkfs.c
-> +++ b/mkfs/xfs_mkfs.c
-> @@ -2361,28 +2361,22 @@ _("both data su and data sw options must be specified\n"));
->  			usage();
->  		}
->  
-> -		if (dsu % cfg->sectorsize) {
-> +		big_dswidth = (long long int)dsu * dsw;
-> +		if (BTOBBT(big_dswidth) > INT_MAX) {
->  			fprintf(stderr,
-> -_("data su must be a multiple of the sector size (%d)\n"), cfg->sectorsize);
-> +_("data stripe width (%lld) is too large of a multiple of the data stripe unit (%d)\n"),
-> +				big_dswidth, dsu);
->  			usage();
->  		}
->  
-> -		dsunit  = (int)BTOBBT(dsu);
-> -		big_dswidth = (long long int)dsunit * dsw;
-> -		if (big_dswidth > INT_MAX) {
-> -			fprintf(stderr,
-> -_("data stripe width (%lld) is too large of a multiple of the data stripe unit (%d)\n"),
-> -				big_dswidth, dsunit);
-> +		if (!libxfs_validate_stripe_geometry(NULL, dsu, big_dswidth,
-> +						     cfg->sectorsize, false))
->  			usage();
-> -		}
-> -		dswidth = big_dswidth;
-> -	}
->  
-> -	if ((dsunit && !dswidth) || (!dsunit && dswidth) ||
-> -	    (dsunit && (dswidth % dsunit != 0))) {
-> -		fprintf(stderr,
-> -_("data stripe width (%d) must be a multiple of the data stripe unit (%d)\n"),
-> -			dswidth, dsunit);
-> +		dsunit = BTOBBT(dsu);
-> +		dswidth = BTOBBT(big_dswidth);
-> +	} else if (!libxfs_validate_stripe_geometry(NULL, BBTOB(dsunit),
-> +			BBTOB(dswidth), cfg->sectorsize, false)) {
->  		usage();
->  	}
->  
-> @@ -2400,11 +2394,12 @@ _("data stripe width (%d) must be a multiple of the data stripe unit (%d)\n"),
->  
->  	/* if no stripe config set, use the device default */
->  	if (!dsunit) {
-> -		/* Ignore nonsense from device.  XXX add more validation */
-> -		if (ft->dsunit && ft->dswidth == 0) {
-> +		/* Ignore nonsense from device report. */
-> +		if (!libxfs_validate_stripe_geometry(NULL, BBTOB(ft->dsunit),
-> +				BBTOB(ft->dswidth), 0, true)) {
->  			fprintf(stderr,
-> -_("%s: Volume reports stripe unit of %d bytes and stripe width of 0, ignoring.\n"),
-> -				progname, BBTOB(ft->dsunit));
-> +_("%s: Volume reports invalid stripe unit (%d) and stripe width (%d), ignoring.\n"),
-> +				progname, BBTOB(ft->dsunit), BBTOB(ft->dswidth));
->  			ft->dsunit = 0;
->  			ft->dswidth = 0;
->  		} else {
-> 
