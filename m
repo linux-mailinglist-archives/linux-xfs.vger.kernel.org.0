@@ -2,179 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA7EC324191
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Feb 2021 17:07:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A639324196
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Feb 2021 17:07:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233845AbhBXQBk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Feb 2021 11:01:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30421 "EHLO
+        id S234194AbhBXQCM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Feb 2021 11:02:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54748 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233365AbhBXPh2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Feb 2021 10:37:28 -0500
+        by vger.kernel.org with ESMTP id S233743AbhBXPiM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Feb 2021 10:38:12 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614180960;
+        s=mimecast20190719; t=1614180988;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=hsxiaFojL0jsVsikxfEZvSAD9aVQLbjrmQBT0h+qGdU=;
-        b=bck2R4iToT3KBE2HBUZeNqPM2A67vdAJ/T5HZpNhos7sLz3q6+Sj01/A42dHZszcIbKyRr
-        3qm+Cv+4iGzuRob1zyD9zQYCCHA9LJ42OpGMopWWO+L1VNRSfrTnKpY5dWJ/8CHkVa7smL
-        BN/gk/4nOOSpDK/wbcfIikqAhmhNhN0=
+        bh=DaPlY8CRStDpRVkwZGVjanHZ5sTYYNfmYMIlJ+kU7tc=;
+        b=NRb4CcNu03FedbUj0/PvQ7Sz4jpnaFOZO9oH8SlF5jbK/w0ZxaWtUvfesxl7gFliC0cXJI
+        yZb9Weoap/Pr1srFBftusqh18Yp7hipHdJbxEkbsgSzywP4cWEdt3OdSK2pZDysPai8HrP
+        Jc3k6phzkQ4ZC+yzukuUOAEqB75QIQM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-557-Ue5sGqfwNS64wbK42d5zkA-1; Wed, 24 Feb 2021 10:35:58 -0500
-X-MC-Unique: Ue5sGqfwNS64wbK42d5zkA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-93-xs6ZkqFiNHuVSY38sxADEw-1; Wed, 24 Feb 2021 10:35:40 -0500
+X-MC-Unique: xs6ZkqFiNHuVSY38sxADEw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CB45DBC5E9F;
-        Wed, 24 Feb 2021 15:04:21 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 467921856A72;
+        Wed, 24 Feb 2021 15:04:30 +0000 (UTC)
 Received: from bfoster (ovpn-119-92.rdu2.redhat.com [10.10.119.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 703625D9D3;
-        Wed, 24 Feb 2021 15:04:21 +0000 (UTC)
-Date:   Wed, 24 Feb 2021 10:04:19 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D58D360BF3;
+        Wed, 24 Feb 2021 15:04:29 +0000 (UTC)
+Date:   Wed, 24 Feb 2021 10:04:27 -0500
 From:   Brian Foster <bfoster@redhat.com>
 To:     Allison Henderson <allison.henderson@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v15 05/22] xfs: Add helper xfs_attr_set_fmt
-Message-ID: <20210224150419.GF981777@bfoster>
+Subject: Re: [PATCH v15 06/22] xfs: Separate xfs_attr_node_addname and
+ xfs_attr_node_addname_work
+Message-ID: <20210224150427.GG981777@bfoster>
 References: <20210218165348.4754-1-allison.henderson@oracle.com>
- <20210218165348.4754-6-allison.henderson@oracle.com>
+ <20210218165348.4754-7-allison.henderson@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210218165348.4754-6-allison.henderson@oracle.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20210218165348.4754-7-allison.henderson@oracle.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Feb 18, 2021 at 09:53:31AM -0700, Allison Henderson wrote:
-> This patch adds a helper function xfs_attr_set_fmt.  This will help
-> isolate the code that will require state management from the portions
-> that do not.  xfs_attr_set_fmt returns 0 when the attr has been set and
-> no further action is needed.  It returns -EAGAIN when shortform has been
-> transformed to leaf, and the calling function should proceed the set the
-> attr in leaf form.
+On Thu, Feb 18, 2021 at 09:53:32AM -0700, Allison Henderson wrote:
+> This patch separate xfs_attr_node_addname into two functions.  This will
+> help to make it easier to hoist parts of xfs_attr_node_addname that need
+> state management
 > 
 > Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
 > ---
 
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 
->  fs/xfs/libxfs/xfs_attr.c | 77 +++++++++++++++++++++++++++---------------------
->  1 file changed, 44 insertions(+), 33 deletions(-)
+>  fs/xfs/libxfs/xfs_attr.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
 > diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index a064c5b..205ad26 100644
+> index 205ad26..bee8d3fb 100644
 > --- a/fs/xfs/libxfs/xfs_attr.c
 > +++ b/fs/xfs/libxfs/xfs_attr.c
-> @@ -216,6 +216,46 @@ xfs_attr_is_shortform(
->  		ip->i_afp->if_nextents == 0);
->  }
+> @@ -54,6 +54,7 @@ STATIC int xfs_attr_leaf_hasname(struct xfs_da_args *args, struct xfs_buf **bp);
+>  STATIC int xfs_attr_node_get(xfs_da_args_t *args);
+>  STATIC int xfs_attr_node_addname(xfs_da_args_t *args);
+>  STATIC int xfs_attr_node_removename(xfs_da_args_t *args);
+> +STATIC int xfs_attr_node_addname_work(struct xfs_da_args *args);
+>  STATIC int xfs_attr_node_hasname(xfs_da_args_t *args,
+>  				 struct xfs_da_state **state);
+>  STATIC int xfs_attr_fillstate(xfs_da_state_t *state);
+> @@ -1059,6 +1060,25 @@ xfs_attr_node_addname(
+>  			return error;
+>  	}
 >  
-> +STATIC int
-> +xfs_attr_set_fmt(
-> +	struct xfs_da_args	*args)
-> +{
-> +	struct xfs_buf          *leaf_bp = NULL;
-> +	struct xfs_inode	*dp = args->dp;
-> +	int			error2, error = 0;
-> +
-> +	/*
-> +	 * Try to add the attr to the attribute list in the inode.
-> +	 */
-> +	error = xfs_attr_try_sf_addname(dp, args);
-> +	if (error != -ENOSPC) {
-> +		error2 = xfs_trans_commit(args->trans);
-> +		args->trans = NULL;
-> +		return error ? error : error2;
-> +	}
-> +
-> +	/*
-> +	 * It won't fit in the shortform, transform to a leaf block.
-> +	 * GROT: another possible req'mt for a double-split btree op.
-> +	 */
-> +	error = xfs_attr_shortform_to_leaf(args, &leaf_bp);
+> +	error = xfs_attr_node_addname_work(args);
+> +out:
+> +	if (state)
+> +		xfs_da_state_free(state);
 > +	if (error)
 > +		return error;
-> +
-> +	/*
-> +	 * Prevent the leaf buffer from being unlocked so that a
-> +	 * concurrent AIL push cannot grab the half-baked leaf buffer
-> +	 * and run into problems with the write verifier.
-> +	 */
-> +	xfs_trans_bhold(args->trans, leaf_bp);
-> +	error = xfs_defer_finish(&args->trans);
-> +	xfs_trans_bhold_release(args->trans, leaf_bp);
-> +	if (error)
-> +		xfs_trans_brelse(args->trans, leaf_bp);
-> +
-> +	return -EAGAIN;
+> +	return retval;
 > +}
 > +
->  /*
->   * Set the attribute specified in @args.
->   */
-> @@ -224,8 +264,7 @@ xfs_attr_set_args(
->  	struct xfs_da_args	*args)
->  {
->  	struct xfs_inode	*dp = args->dp;
-> -	struct xfs_buf          *leaf_bp = NULL;
-> -	int			error2, error = 0;
-> +	int			error;
->  
+> +
+> +STATIC
+> +int xfs_attr_node_addname_work(
+> +	struct xfs_da_args		*args)
+> +{
+> +	struct xfs_da_state		*state = NULL;
+> +	struct xfs_da_state_blk		*blk;
+> +	int				retval = 0;
+> +	int				error = 0;
+> +
 >  	/*
->  	 * If the attribute list is already in leaf format, jump straight to
-> @@ -234,36 +273,9 @@ xfs_attr_set_args(
->  	 * again.
->  	 */
->  	if (xfs_attr_is_shortform(dp)) {
-> -		/*
-> -		 * Try to add the attr to the attribute list in the inode.
-> -		 */
-> -		error = xfs_attr_try_sf_addname(dp, args);
-> -		if (error != -ENOSPC) {
-> -			error2 = xfs_trans_commit(args->trans);
-> -			args->trans = NULL;
-> -			return error ? error : error2;
-> -		}
-> -
-> -		/*
-> -		 * It won't fit in the shortform, transform to a leaf block.
-> -		 * GROT: another possible req'mt for a double-split btree op.
-> -		 */
-> -		error = xfs_attr_shortform_to_leaf(args, &leaf_bp);
-> -		if (error)
-> +		error = xfs_attr_set_fmt(args);
-> +		if (error != -EAGAIN)
->  			return error;
-> -
-> -		/*
-> -		 * Prevent the leaf buffer from being unlocked so that a
-> -		 * concurrent AIL push cannot grab the half-baked leaf buffer
-> -		 * and run into problems with the write verifier.
-> -		 */
-> -		xfs_trans_bhold(args->trans, leaf_bp);
-> -		error = xfs_defer_finish(&args->trans);
-> -		xfs_trans_bhold_release(args->trans, leaf_bp);
-> -		if (error) {
-> -			xfs_trans_brelse(args->trans, leaf_bp);
-> -			return error;
-> -		}
->  	}
->  
->  	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK)) {
-> @@ -297,8 +309,7 @@ xfs_attr_set_args(
->  			return error;
->  	}
->  
-> -	error = xfs_attr_node_addname(args);
-> -	return error;
-> +	return xfs_attr_node_addname(args);
->  }
->  
->  /*
+>  	 * Re-find the "old" attribute entry after any split ops. The INCOMPLETE
+>  	 * flag means that we will find the "old" attr, not the "new" one.
 > -- 
 > 2.7.4
 > 
