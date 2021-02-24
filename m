@@ -2,130 +2,136 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3C1C3245EB
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Feb 2021 22:45:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA5B83245ED
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Feb 2021 22:45:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232718AbhBXVo4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Feb 2021 16:44:56 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29970 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230330AbhBXVoz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Feb 2021 16:44:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614203009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=f9E2w9Ae7LQxP8TZkaC9ADGsYZEtWSIuJE7kynqG2lI=;
-        b=MPHJciNoZkA8fH8jwzQvmi2rqE2pKmoGvHx/ruE9YFagqMydItmPyb6DVROlt0PRs7fHXT
-        Mx0GUvm54f+NqNwQE4GFN9tFO4/Pw7MAo6O09rZp83eh+W5f1IjvdqpRf6yFQzIufmDesy
-        vRjaJIF7VRyz694KVtiuQqxTg/FA5kw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-385S2XrqNx2njj7mbf9Fdg-1; Wed, 24 Feb 2021 16:43:27 -0500
-X-MC-Unique: 385S2XrqNx2njj7mbf9Fdg-1
-Received: by mail-wr1-f70.google.com with SMTP id p15so1628422wro.11
-        for <linux-xfs@vger.kernel.org>; Wed, 24 Feb 2021 13:43:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f9E2w9Ae7LQxP8TZkaC9ADGsYZEtWSIuJE7kynqG2lI=;
-        b=Bgwd+jLxQmDPQu+EGO7a+WJIfwNQA5Xn2raU0tQhmn/D7hY/K3RXxBlFRnZ7LL4TEW
-         5Gcqm0J/dHpMu+seZmX1t4xKU3A56ikEdPmcaTrcp5hme/MmeccFcFZylGRpTB1nzdOr
-         E+o5ILuocXu78/okeCwej9u5peJ/CdzQRm11ez3UXcERVcnzClPHRAo/klTfZ45RUmZX
-         OXI7VGspLxpyN+lN6X1PNfPWH6fOYmGc3FN0zA13ANJGK8f3xC0dpYgrta2NUwk5YKMI
-         9Yol+JWMrPHICRhr2NxYnOBysVFBedbmIw82SBBXUm7Rwc0/NEnZRMTRRp2qhmYiyBgC
-         7nWw==
-X-Gm-Message-State: AOAM531WJkqYmPVZupGxS108+0twR+PclUmRSc1uT4pShi2wgvvWeTDx
-        7ZiGr5sXJ6lz5bboH9XUy9EfSpdprefGgssjgZWVcwSHHsaeMFB0UCP4zYaF2LL2aCRWTJu0n0U
-        A1pH5uO3COvtjMA4WXErVLhAYHHJUzVFmzOhgQof4upp1MSmXseiSdWK3vJZz3bmR1vJQlKI=
-X-Received: by 2002:a5d:420d:: with SMTP id n13mr92266wrq.312.1614203006500;
-        Wed, 24 Feb 2021 13:43:26 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyMu0r8TouYFzq6fN4Qs6osGDp8h/1Fy8Ayv1dbg5Ra71bvlKWMdf0E1qQupcw1PNgqnyb17Q==
-X-Received: by 2002:a5d:420d:: with SMTP id n13mr92257wrq.312.1614203006363;
-        Wed, 24 Feb 2021 13:43:26 -0800 (PST)
-Received: from localhost.localdomain.com ([84.19.91.9])
-        by smtp.gmail.com with ESMTPSA id x13sm4477251wrt.75.2021.02.24.13.43.25
-        for <linux-xfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Feb 2021 13:43:26 -0800 (PST)
-From:   Pavel Reichl <preichl@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 2/2] xfs: Skip repetitive warnings about mount options
-Date:   Wed, 24 Feb 2021 22:43:23 +0100
-Message-Id: <20210224214323.394286-4-preichl@redhat.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210224214323.394286-1-preichl@redhat.com>
-References: <20210224214323.394286-1-preichl@redhat.com>
+        id S232941AbhBXVpA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Feb 2021 16:45:00 -0500
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:41300 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230330AbhBXVo7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Feb 2021 16:44:59 -0500
+Received: from dread.disaster.area (pa49-179-130-210.pa.nsw.optusnet.com.au [49.179.130.210])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id C361D4ABFE4;
+        Thu, 25 Feb 2021 08:44:17 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lF1xB-002kUn-4n; Thu, 25 Feb 2021 08:44:17 +1100
+Date:   Thu, 25 Feb 2021 08:44:17 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/8] xfs: separate CIL commit record IO
+Message-ID: <20210224214417.GB4662@dread.disaster.area>
+References: <20210223033442.3267258-1-david@fromorbit.com>
+ <20210223033442.3267258-3-david@fromorbit.com>
+ <20210224203429.GR7272@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210224203429.GR7272@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_d
+        a=JD06eNgDs9tuHP7JIKoLzw==:117 a=JD06eNgDs9tuHP7JIKoLzw==:17
+        a=kj9zAlcOel0A:10 a=qa6Q16uM49sA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=k4gU2gVVm8cocxQ7w5EA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Skip the warnings about mount option being deprecated if we are
-remounting and deprecated option state is not changing.
+On Wed, Feb 24, 2021 at 12:34:29PM -0800, Darrick J. Wong wrote:
+> On Tue, Feb 23, 2021 at 02:34:36PM +1100, Dave Chinner wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > To allow for iclog IO device cache flush behaviour to be optimised,
+> > we first need to separate out the commit record iclog IO from the
+> > rest of the checkpoint so we can wait for the checkpoint IO to
+> > complete before we issue the commit record.
+> > 
+> > This separation is only necessary if the commit record is being
+> > written into a different iclog to the start of the checkpoint as the
+> > upcoming cache flushing changes requires completion ordering against
+> > the other iclogs submitted by the checkpoint.
+> > 
+> > If the entire checkpoint and commit is in the one iclog, then they
+> > are both covered by the one set of cache flush primitives on the
+> > iclog and hence there is no need to separate them for ordering.
+> > 
+> > Otherwise, we need to wait for all the previous iclogs to complete
+> > so they are ordered correctly and made stable by the REQ_PREFLUSH
+> > that the commit record iclog IO issues. This guarantees that if a
+> > reader sees the commit record in the journal, they will also see the
+> > entire checkpoint that commit record closes off.
+> > 
+> > This also provides the guarantee that when the commit record IO
+> > completes, we can safely unpin all the log items in the checkpoint
+> > so they can be written back because the entire checkpoint is stable
+> > in the journal.
+> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > ---
+> >  fs/xfs/xfs_log.c      | 55 +++++++++++++++++++++++++++++++++++++++++++
+> >  fs/xfs/xfs_log_cil.c  |  7 ++++++
+> >  fs/xfs/xfs_log_priv.h |  2 ++
+> >  3 files changed, 64 insertions(+)
+> > 
+> > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> > index fa284f26d10e..ff26fb46d70f 100644
+> > --- a/fs/xfs/xfs_log.c
+> > +++ b/fs/xfs/xfs_log.c
+> > @@ -808,6 +808,61 @@ xlog_wait_on_iclog(
+> >  	return 0;
+> >  }
+> >  
+> > +/*
+> > + * Wait on any iclogs that are still flushing in the range of start_lsn to the
+> > + * current iclog's lsn. The caller holds a reference to the iclog, but otherwise
+> > + * holds no log locks.
+> > + *
+> > + * We walk backwards through the iclogs to find the iclog with the highest lsn
+> > + * in the range that we need to wait for and then wait for it to complete.
+> > + * Completion ordering of iclog IOs ensures that all prior iclogs to the
+> > + * candidate iclog we need to sleep on have been complete by the time our
+> > + * candidate has completed it's IO.
+> 
+> Hmm, I guess this means that iclog header lsns are supposed to increase
+> as one walks forwards through the list?
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=211605
-Fix-suggested-by: Eric Sandeen <sandeen@redhat.com>
-Signed-off-by: Pavel Reichl <preichl@redhat.com>
----
- fs/xfs/xfs_super.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+yes, the iclogs are written sequentially to the log - we don't
+switch the log->l_iclog pointer to the current active iclog until we
+switch it out, and then the next iclog in the loop is physically
+located at a higher lsn to the one we just switched out.
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 7e281d1139dc..ba113a28b631 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1155,6 +1155,22 @@ suffix_kstrtoint(
- 	return ret;
- }
- 
-+static inline void
-+xfs_fs_warn_deprecated(
-+	struct fs_context	*fc,
-+	struct fs_parameter	*param,
-+	uint64_t		flag,
-+	bool			value)
-+{
-+	/* Don't print the warning if reconfiguring and current mount point
-+	 * already had the flag set
-+	 */
-+	if ((fc->purpose & FS_CONTEXT_FOR_RECONFIGURE) &&
-+			!!(XFS_M(fc->root->d_sb)->m_flags & flag) == value)
-+		return;
-+	xfs_warn(fc->s_fs_info, "%s mount option is deprecated.", param->key);
-+}
-+
- /*
-  * Set mount state from a mount option.
-  *
-@@ -1294,19 +1310,19 @@ xfs_fs_parse_param(
- #endif
- 	/* Following mount options will be removed in September 2025 */
- 	case Opt_ikeep:
--		xfs_warn(parsing_mp, "%s mount option is deprecated.", param->key);
-+		xfs_fs_warn_deprecated(fc, param, XFS_MOUNT_IKEEP, true);
- 		parsing_mp->m_flags |= XFS_MOUNT_IKEEP;
- 		return 0;
- 	case Opt_noikeep:
--		xfs_warn(parsing_mp, "%s mount option is deprecated.", param->key);
-+		xfs_fs_warn_deprecated(fc, param, XFS_MOUNT_IKEEP, false);
- 		parsing_mp->m_flags &= ~XFS_MOUNT_IKEEP;
- 		return 0;
- 	case Opt_attr2:
--		xfs_warn(parsing_mp, "%s mount option is deprecated.", param->key);
-+		xfs_fs_warn_deprecated(fc, param, XFS_MOUNT_ATTR2, true);
- 		parsing_mp->m_flags |= XFS_MOUNT_ATTR2;
- 		return 0;
- 	case Opt_noattr2:
--		xfs_warn(parsing_mp, "%s mount option is deprecated.", param->key);
-+		xfs_fs_warn_deprecated(fc, param, XFS_MOUNT_NOATTR2, true);
- 		parsing_mp->m_flags &= ~XFS_MOUNT_ATTR2;
- 		parsing_mp->m_flags |= XFS_MOUNT_NOATTR2;
- 		return 0;
+> > + *
+> > + * Therefore we only need to find the first iclog that isn't clean within the
+> > + * span of our flush range. If we come across a clean, newly activated iclog
+> > + * with a lsn of 0, it means IO has completed on this iclog and all previous
+> > + * iclogs will be have been completed prior to this one. Hence finding a newly
+> > + * activated iclog indicates that there are no iclogs in the range we need to
+> > + * wait on and we are done searching.
+> 
+> I don't see an explicit check for an iclog with a zero lsn?  Is that
+> implied by XLOG_STATE_ACTIVE?
+
+It's handled by the XFS_LSN_CMP(prev_lsn, start_lsn) < 0 check.  if
+the prev_lsn is zero because the iclog is clean, then this check
+will always be true.
+
+> Also, do you have any idea what was Christoph talking about wrt devices
+> with no-op flushes the last time this patch was posted?  This change
+> seems straightforward to me (assuming the answers to my two question are
+> 'yes') but I didn't grok what subtlety he was alluding to...?
+
+He was wondering what devices benefited from this. It has no impact
+on highspeed devices that do not require flushes/FUA (e.g. high end
+intel optane SSDs) but those are not the devices this change is
+aimed at. There are no regressions on these high end devices,
+either, so they are largely irrelevant to the patch and what it
+targets...
+
+Cheers,
+
+Dave.
 -- 
-2.29.2
-
+Dave Chinner
+david@fromorbit.com
