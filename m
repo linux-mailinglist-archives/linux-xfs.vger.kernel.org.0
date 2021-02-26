@@ -2,158 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAC01325AF0
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 Feb 2021 01:30:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D95D325BBC
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 Feb 2021 03:50:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232412AbhBZA23 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Feb 2021 19:28:29 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:12518 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232601AbhBZA20 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Feb 2021 19:28:26 -0500
-X-IronPort-AV: E=Sophos;i="5.81,207,1610380800"; 
-   d="scan'208";a="104882848"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 26 Feb 2021 08:21:36 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 5D38D4CE76EF;
-        Fri, 26 Feb 2021 08:21:32 +0800 (CST)
-Received: from G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.200) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Fri, 26 Feb 2021 08:21:33 +0800
-Received: from irides.mr.mr.mr (10.167.225.141) by
- G08CNEXCHPEKD04.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Fri, 26 Feb 2021 08:21:32 +0800
-From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
-        <linux-nvdimm@lists.01.org>, <linux-fsdevel@vger.kernel.org>
-CC:     <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
-        <willy@infradead.org>, <jack@suse.cz>, <viro@zeniv.linux.org.uk>,
-        <linux-btrfs@vger.kernel.org>, <ocfs2-devel@oss.oracle.com>,
-        <david@fromorbit.com>, <hch@lst.de>, <rgoldwyn@suse.de>
-Subject: [PATCH v2 10/10] fs/xfs: Add dedupe support for fsdax
-Date:   Fri, 26 Feb 2021 08:20:30 +0800
-Message-ID: <20210226002030.653855-11-ruansy.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210226002030.653855-1-ruansy.fnst@fujitsu.com>
-References: <20210226002030.653855-1-ruansy.fnst@fujitsu.com>
+        id S229894AbhBZCtL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Feb 2021 21:49:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229491AbhBZCtK (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 25 Feb 2021 21:49:10 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4FA1D64E60;
+        Fri, 26 Feb 2021 02:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614307709;
+        bh=NCMAiAOhZGyyyUmhbWEx/1L1b/cxIJ5QxH/BC0rGYWY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kNk3qGbFlp3YOg7jC43Ze0pB2NnCpzYpHDxIIbzioYPFrOLCV51ZJE5oT9knzvgqL
+         JfsVFg+S7UnbOaCw/fKM6ye3UXWH6OOpJfb6wTvgg55L/vW40ZVtCS6R+Aeje2JybT
+         0Mn8HsAt/6crNFZrgUgu1ts4aGEnFs5WWANupJKSBpakRpdVkRCx3clMecK41og3fX
+         IR7ZRCRIcBgP6NxcCKVExD8KTYJrjVDtHVDnI7Nqm4ATDmUscxStz4mkO8KTC76EgX
+         UqVkvYrlSqyRT+nAvFY3rZvOKJsUH30zbL0JecbR1gJoTffQlHIcf/WsjF+sffrCJM
+         22r3ZrAKecdog==
+Date:   Thu, 25 Feb 2021 18:48:28 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/8] xfs: separate CIL commit record IO
+Message-ID: <20210226024828.GN7272@magnolia>
+References: <20210223033442.3267258-1-david@fromorbit.com>
+ <20210223033442.3267258-3-david@fromorbit.com>
+ <20210224203429.GR7272@magnolia>
+ <20210224214417.GB4662@dread.disaster.area>
+ <YDdhJ0Oe6R+UXqDU@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 5D38D4CE76EF.A5A74
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@fujitsu.com
-X-Spam-Status: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YDdhJ0Oe6R+UXqDU@infradead.org>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Add xfs_break_two_dax_layouts() to break layout for tow dax files.  Then
-call compare range function only when files are both DAX or not.
+On Thu, Feb 25, 2021 at 09:34:47AM +0100, Christoph Hellwig wrote:
+> On Thu, Feb 25, 2021 at 08:44:17AM +1100, Dave Chinner wrote:
+> > > Also, do you have any idea what was Christoph talking about wrt devices
+> > > with no-op flushes the last time this patch was posted?  This change
+> > > seems straightforward to me (assuming the answers to my two question are
+> > > 'yes') but I didn't grok what subtlety he was alluding to...?
+> > 
+> > He was wondering what devices benefited from this. It has no impact
+> > on highspeed devices that do not require flushes/FUA (e.g. high end
+> > intel optane SSDs) but those are not the devices this change is
+> > aimed at. There are no regressions on these high end devices,
+> > either, so they are largely irrelevant to the patch and what it
+> > targets...
+> 
+> I don't think it is that simple.  Pretty much every device aimed at
+> enterprise use does not enable a volatile write cache by default.  That
+> also includes hard drives, arrays and NAND based SSDs.
+> 
+> Especially for hard drives (or slower arrays) the actual I/O wait might
+> matter.  What is the argument against making this conditional?
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
----
- fs/xfs/xfs_file.c    | 20 ++++++++++++++++++++
- fs/xfs/xfs_inode.c   |  8 +++++++-
- fs/xfs/xfs_inode.h   |  1 +
- fs/xfs/xfs_reflink.c |  5 +++--
- 4 files changed, 31 insertions(+), 3 deletions(-)
+I still don't understand what you're asking about here --
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 1987d15eab61..82467d08e3ce 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -784,6 +784,26 @@ xfs_break_dax_layouts(
- 			0, 0, xfs_wait_dax_page(inode));
- }
- 
-+int
-+xfs_break_two_dax_layouts(
-+	struct inode		*src,
-+	struct inode		*dest)
-+{
-+	int			error;
-+	bool			retry = false;
-+
-+retry:
-+	error = xfs_break_dax_layouts(src, &retry);
-+	if (error || retry)
-+		goto retry;
-+
-+	error = xfs_break_dax_layouts(dest, &retry);
-+	if (error || retry)
-+		goto retry;
-+
-+	return error;
-+}
-+
- int
- xfs_break_layouts(
- 	struct inode		*inode,
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index b7352bc4c815..c11b11e59a83 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -3651,8 +3651,10 @@ xfs_ilock2_io_mmap(
- 	struct xfs_inode	*ip2)
- {
- 	int			ret;
-+	struct inode		*inode1 = VFS_I(ip1);
-+	struct inode		*inode2 = VFS_I(ip2);
- 
--	ret = xfs_iolock_two_inodes_and_break_layout(VFS_I(ip1), VFS_I(ip2));
-+	ret = xfs_iolock_two_inodes_and_break_layout(inode1, inode2);
- 	if (ret)
- 		return ret;
- 	if (ip1 == ip2)
-@@ -3660,6 +3662,10 @@ xfs_ilock2_io_mmap(
- 	else
- 		xfs_lock_two_inodes(ip1, XFS_MMAPLOCK_EXCL,
- 				    ip2, XFS_MMAPLOCK_EXCL);
-+
-+	if (IS_DAX(inode1) && IS_DAX(inode2))
-+		ret = xfs_break_two_dax_layouts(inode1, inode2);
-+
- 	return 0;
- }
- 
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index eca333f5f715..9ed7a2895602 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -431,6 +431,7 @@ enum xfs_prealloc_flags {
- 
- int	xfs_update_prealloc_flags(struct xfs_inode *ip,
- 				  enum xfs_prealloc_flags flags);
-+int	xfs_break_two_dax_layouts(struct inode *inode1, struct inode *inode2);
- int	xfs_break_layouts(struct inode *inode, uint *iolock,
- 		enum layout_break_reason reason);
- 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index dfe4e1912ff9..9a6374550560 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -29,6 +29,7 @@
- #include "xfs_iomap.h"
- #include "xfs_sb.h"
- #include "xfs_ag_resv.h"
-+#include <linux/dax.h>
- 
- /*
-  * Copy on Write of Shared Blocks
-@@ -1306,8 +1307,8 @@ xfs_reflink_remap_prep(
- 	if (XFS_IS_REALTIME_INODE(src) || XFS_IS_REALTIME_INODE(dest))
- 		goto out_unlock;
- 
--	/* Don't share DAX file data for now. */
--	if (IS_DAX(inode_in) || IS_DAX(inode_out))
-+	/* Don't share DAX file data with non-DAX file. */
-+	if (IS_DAX(inode_in) != IS_DAX(inode_out))
- 		goto out_unlock;
- 
- 	if (IS_DAX(inode_in))
--- 
-2.30.1
+AFAICT the net effect of this patchset is that it reduces the number of
+preflushes and FUA log writes.  To my knowledge, on a high end device
+with no volatile write cache, flushes are a no-op (because all writes
+are persisted somewhere immediately) and a FUA write should be the exact
+same thing as a non-FUA write.  Because XFS will now issue fewer no-op
+persistence commands to the device, there should be no effect at all.
 
+In contrast, a dumb stone tablet with a write cache hooked up to SATA
+will have agonizingly slow cache flushes.  XFS will issue fewer
+persistence commands to the rock, which in turn makes things faster
+because we're calling the engravers less often.
 
+What am I missing here?  Are you saying that the cost of a cache flush
+goes up much faster than the amount of data that has to be flushed?
 
+--D
