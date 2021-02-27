@@ -2,180 +2,252 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 283A6326A21
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 Feb 2021 23:42:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F171326AD1
+	for <lists+linux-xfs@lfdr.de>; Sat, 27 Feb 2021 01:49:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbhBZWm2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 26 Feb 2021 17:42:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbhBZWm1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 26 Feb 2021 17:42:27 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC67C061756
-        for <linux-xfs@vger.kernel.org>; Fri, 26 Feb 2021 14:41:47 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id c6so12906211ede.0
-        for <linux-xfs@vger.kernel.org>; Fri, 26 Feb 2021 14:41:47 -0800 (PST)
+        id S229698AbhB0AtV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 26 Feb 2021 19:49:21 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36708 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229622AbhB0AtU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 26 Feb 2021 19:49:20 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11R0jBd6100412;
+        Sat, 27 Feb 2021 00:48:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=jwNUDGnmVBoDhwev9Th9NiPvVLvmm/iGYMlKjBYSQYw=;
+ b=lkNaLvuBhH5+t58FYtTh4P0KCPDEM/vtHVyfh8N8EU3q0qyrQ/vnLlmuKU8iDCc2ikls
+ tO0Sf535VQhp3y17H8zX0w+yzQEb0iO1/6neQkOsDwk2Hb1QPzgyrFvrmIeNhSlY+mFY
+ HXqh63xW50yq1YZzvDGdzh57clelx+eQWZwyrpYNDHwo1qwBaorkGbng33an4nCiOwjs
+ lsj66Fq3EJDcc9CVLwg2SWCrFKCWVNZ/KtoIBS8nfY5rh4BF+Mx0B+iAzWR/NYyTPbMs
+ Rd+h0klDpGdKP8uoXBkVUC6WiB9E7aIO2YYK1QDG90x+MdqjCK2MCQo+kvkkrScToev6 vQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 36ugq3thu2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 27 Feb 2021 00:48:35 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 11R0irlG174797;
+        Sat, 27 Feb 2021 00:48:35 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
+        by userp3030.oracle.com with ESMTP id 36yb6rrx3e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 27 Feb 2021 00:48:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=In/zk7P57qlaWjQgWXx2CbIanNu3viEzlHMw9FZzbItp1N6JGqgjP5QY76fPdStGyYpp13A2Vfs0VdeWv3Fkyzeiuf2Uo6sW5VlFULe1uQErbV+c8LrGoT1eZK0NiitBY5Qa9xVDiuOr07fR7JHtUiHUextlKY1nf0x/T0pWJrabxqXQIc6T72r08nTg6NouRT9SdMUCILL7CV48zoW4wH7En0r42r4oKHbJe1YkMd2n/E6LYhE7sRwuwGA8w0wpaZw3StiXnQcOM4QC3XyCZHH2neEMnWbbVX1geDCkSb9TZt4mM1EILZLi9x332UKgesJEOpQkq1VKurRgK/9GMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jwNUDGnmVBoDhwev9Th9NiPvVLvmm/iGYMlKjBYSQYw=;
+ b=SbgaF4hFrohncvqCmm+jUrtEkoxu4v1TT63tSqLX340GdgPQFbl/Xot87LpnEyPxbFOq23HRZ8vJf+GgMyBVckZGSO+v6R2kTZYZYs/5RqeDGG4ekm6GDtJKufH2KLvcNd21GxO94Gvalt6DtnP2Vm5ayc8fncpi3Q2FDZ2gyDli/Jvn1ZqWj0CG4yBcdq3V+Ni6BzSengOPen8zGrrfGBOXMiRw+4u2hHd6FFyRoUnVfZLK1gZILcSqUBnpGXtPfO49opFX4QmiRb9d6oZUCrpfEHEB0zsxufVL0BsEJfWn4fSzD89Fpj/cukVmuH3+qhcHFGtluucvxQ9FXUEPlg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fHpk7bX3cDWOBW490ZT0/lz5t0wLMJKj3dSlv6bBAAo=;
-        b=1yPeE5A9fp2f1ejfpTgfXOETxBjJbBT1SW14Chud06HLDzIPNmCmEsBOwUKfXdN3gG
-         vJaneShjlCuuLtVWoYUcKIDMup8b2L1ipSyCLygvfOdhGe92XWeSyMfTu3qfKefqBXHV
-         KMLUvZTGTvbA42+8ifrpPE2dZBXOL0gAQy9jhaV9OnK/sGFHAD8aBWOBYrjNVcWNAESs
-         UBhGp1C8ai2SH/diDzk7qVVRiEWSsBjvBKIdzhrmhhVfDd4zoXVI/HXEe2k23sGGfAE2
-         duzT9FLKldvV8YstP9kViwPaBBH+jJGT/gEcK/nbRdXMijcNQt9b9YiuJ7Wl/23jK6Cv
-         BYow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fHpk7bX3cDWOBW490ZT0/lz5t0wLMJKj3dSlv6bBAAo=;
-        b=o3qAOhbnCY4vCrLaig3zYjRw5foVh434gKKzw92Gcry68pnEN50HU5ltGNxpu9jHhj
-         q1CyH1NZ19506Bdqe/h0GsdWaJ9Fp+rcCt4ucmZYUI4casuqBLZqHM0LF8dipe4Qtokf
-         u1hwoezH/NS3RciOwdd5nYfhPUCHtlpjFsLEbPi95G/F0FrxsCvBvSirJ2jx1nc4Yp+G
-         g5ck8Mof0u6BlFrvArnUnNblA0mWAKAwgp/6lwD3vAi3ppA22I7kjpsofixnVkzG+lDN
-         OaJ5IjiGGtHfzvSdqXlB8/FV9JvjG3vFywSyKdWwdE56IoJBKk33VnvLcdiMQT9oFYC2
-         6ozA==
-X-Gm-Message-State: AOAM533C0UBBo0beFOuAZa0RJVMOya3RTfH9I4Qc54wtXQOa76pUKPm5
-        zUYPthFowIs5Wt/2hwVFZexiTFXa+0KbMheT8wXK6A==
-X-Google-Smtp-Source: ABdhPJzRqB7Th9975KKwZVp3f4l2p1uq8ensA0GvES+o8Z3FVF9VoQw9apOJIKwlD0LzIcC2XhrsXeFRdf3KO98ibv0=
-X-Received: by 2002:a05:6402:3585:: with SMTP id y5mr5689417edc.97.1614379305912;
- Fri, 26 Feb 2021 14:41:45 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jwNUDGnmVBoDhwev9Th9NiPvVLvmm/iGYMlKjBYSQYw=;
+ b=QF/Ntkl2oNEsxHCno9EoD3ffTLKEv7PNen2j5nzAptkaAKmGPeMqG06n9VdX2cIDsFgblxzEXwtYeTTDMRxcscTlCSHxAYXt8TzVxbKdyBL3m3lMSkFqE4sxyVRyfBKT4S739pkuYgnJoYN5Xtzay60yLNrO8jWBRM6SEs/XcLM=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
+ by BYAPR10MB3335.namprd10.prod.outlook.com (2603:10b6:a03:15d::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.19; Sat, 27 Feb
+ 2021 00:48:33 +0000
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::f4a1:6643:4c93:2a9f]) by BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::f4a1:6643:4c93:2a9f%3]) with mapi id 15.20.3890.020; Sat, 27 Feb 2021
+ 00:48:33 +0000
+Subject: Re: [PATCH v15 03/22] xfs: Hoist transaction handling in
+ xfs_attr_node_remove_step
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+References: <20210218165348.4754-1-allison.henderson@oracle.com>
+ <20210218165348.4754-4-allison.henderson@oracle.com>
+ <20210226030227.GQ7272@magnolia>
+From:   Allison Henderson <allison.henderson@oracle.com>
+Message-ID: <ba4e335c-9e37-1359-8407-8c8f2b002f57@oracle.com>
+Date:   Fri, 26 Feb 2021 17:48:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
+In-Reply-To: <20210226030227.GQ7272@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [67.1.223.248]
+X-ClientProxiedBy: SJ0PR13CA0151.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c7::6) To BY5PR10MB4306.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::7)
 MIME-Version: 1.0
-References: <20210226002030.653855-1-ruansy.fnst@fujitsu.com>
- <OSBPR01MB2920899F1D71E7B054A04E39F49D9@OSBPR01MB2920.jpnprd01.prod.outlook.com>
- <20210226190454.GD7272@magnolia> <CAPcyv4iJiYsM5FQdpMvCi24aCi7RqUnnxC6sM0umFqiN+Q59cg@mail.gmail.com>
- <20210226205126.GX4662@dread.disaster.area> <CAPcyv4iDefA3Y0wUW=p080SYAsM_2TPJba-V-sxdK_BeJMkmsw@mail.gmail.com>
- <20210226212748.GY4662@dread.disaster.area>
-In-Reply-To: <20210226212748.GY4662@dread.disaster.area>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 26 Feb 2021 14:41:34 -0800
-Message-ID: <CAPcyv4jryJ32R5vOwwEdoU3V8C0B7zu_pCt=7f6A3Gk-9h6Dfg@mail.gmail.com>
-Subject: Re: Question about the "EXPERIMENTAL" tag for dax in XFS
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        "ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
-        "y-goto@fujitsu.com" <y-goto@fujitsu.com>,
-        "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
-        "fnstml-iaas@cn.fujitsu.com" <fnstml-iaas@cn.fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.226] (67.1.223.248) by SJ0PR13CA0151.namprd13.prod.outlook.com (2603:10b6:a03:2c7::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.9 via Frontend Transport; Sat, 27 Feb 2021 00:48:32 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 36aaea6a-06ed-4ad8-0d64-08d8dab9688f
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3335:
+X-Microsoft-Antispam-PRVS: <BYAPR10MB3335ACB6EBB6E4AC25E64960959C9@BYAPR10MB3335.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GoYCT9zyf97Mw6hJyVRR6wxnPhsvK+OYgLDx7lBH+O/lYTSdl0CzN5sRPye22Hh6MFP/nbktg0lyb/5ZOQoaFhbh1zhvBbbpnbzjhTlI9VtFlsEyOYPLQ/uqqYiVah7bd7RsbLvacFgj/ZCIK7p9scfeykWd/a1z0uwJuBNgp3YcolZCXjefc/raECR7rPCYUjxAYMOuBAF8TrmxpsOhJPPEp0nPILLTFEH45D6IWn9aOEYujvUjj3oSVhWJv3PAfiW74CnW1mWzGAbdtwXfRPPOktjOVQsf6ebJzHTVA0sbk1I4J+iAglHXq3mBXNG5sI4RAdUg85RyLIK3p1UJq1EEojEQGdL7g5A7uo0SfjP/BDQAM/nN3ickFKFRyDoLW/i281nv5m80MUkUq6DbLfomCEPTlrfhKuwmB+0cPjWJwnSnqPZ+S33WAEfRb5aGCnBYZFNX6lbngecc1QesvGmV9A23lDbKtiWXOtbqHtgkszEvkUOW9oed9Jdpx38o/OelSaSIfEdSk7IVO3b0jmOI/3IkkkQ3yH1xnqT3stsAYyjcEq94yzg6LZ+MSg/VyrU/ZPDEvyki0zlARbKnaAzp/iB0NChK05RRltYXH/g=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(136003)(346002)(39860400002)(396003)(8676002)(31696002)(26005)(8936002)(52116002)(66946007)(2906002)(66476007)(36756003)(5660300002)(6486002)(44832011)(83380400001)(186003)(16526019)(53546011)(6916009)(16576012)(316002)(66556008)(31686004)(86362001)(4326008)(956004)(478600001)(2616005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?Q0MxUWZ4T2VmcUdaZGQvQWh2aXRXcmdndWNGSGZZWERPRFFMQVRYUW4yY3JO?=
+ =?utf-8?B?enF5YkVSdUlpRFErYnlGVFByZ3ZrTHhiOTY0OVZzb09hRDFLSGIxWWJQZXFD?=
+ =?utf-8?B?cm9wQ0lhd1YyaFFVeVcwNFV2Ny9MMEVIVkQzODNwbUpocllwa2VHVGRVZEg0?=
+ =?utf-8?B?NHdkNldZakQxdmFZMk03ZGFUenREbUxmZnJTZS9icG9FL2w3Z0xRSVdrdFQz?=
+ =?utf-8?B?KzZBTXdnZ2cwRzJOOUdVb3praHo3OGw1WWpOMEVTVmdqa0ZiMzVrQjlBN2V3?=
+ =?utf-8?B?N3NvMzdndXVlK2xMWTZZYTIvZ2JsR2t5SWFsTHlrTFhrZCtzZHNiRXBXUlYr?=
+ =?utf-8?B?bGxTMlJUZm1uR1VKTDR4YWY2V3F3bklTQlJWS3VlSjgya0ZKb2ZFRXB1WEFW?=
+ =?utf-8?B?WHROQ0hQTnNqQW5kM1pJOFVvN3NHMEJKOVVpWmhRU0xxUGxySFJ1RUFxTHZH?=
+ =?utf-8?B?ODZJTS9KRjNCZThMZkZVMU51c04wYVg1RUkrSkp4M1ViN0x1eHo4Nk1xUnBG?=
+ =?utf-8?B?NUFDcUREZDVGSW92V1FZeVZBejlRbFBnV2ZIV1hWd2JKaHlBZENZdktvUjBT?=
+ =?utf-8?B?TitWTVZHV283NDZZVnJXZ2FnNlRJMHBBakRNNExLdnVNNnVZckJlcmZEM3hD?=
+ =?utf-8?B?SHh1Si9menR1L1paOUFmVjFFRTVMa3RhdXJUWmh6UFVtRDFBOFB3STBMc0Vn?=
+ =?utf-8?B?bEo3NzI2TlFOSFc5bEZFTmNkN3ZFa0tSWUU0RkV0VzNObHRNdE96NVh3MTJX?=
+ =?utf-8?B?SHA3NlgyeU1SaXc3anIyRjZXQzludjZKTytFdmMvL1Joc2cyQWFmYjI0aE5j?=
+ =?utf-8?B?NVVLQ3N6U2U3VzA2M0pVYW1BVnhhdks3cTJoM0ZKeHQ0M3A0ZHdXVUVuOGc3?=
+ =?utf-8?B?RWlxRzhSWUFlS3RZcnNCZkpVVEJ1cWtCM1RwZnJSMHhhZHZ6TmFvd3lhWXhs?=
+ =?utf-8?B?bGpzSUxheHZaTGNLcDdFYXJFSW9idThHYjNYTTBFZWxtZ1hnaTJyV2RmUU1l?=
+ =?utf-8?B?dzNzWEpZK2lxaXRmYTZ0ZUU5QXVUOUpSL0dLM3hoRm5vNDFnYVNDa2RONURZ?=
+ =?utf-8?B?clNsZ3kxM2dWN1pYdFNVbkNMcUJsbzFnWEtVYXRzL1B3VWxFd3p5MSt5Q1Vp?=
+ =?utf-8?B?ODBHZGU5UTZvVlhvdlE2Sk1nQUZUZWM0czF0RlpxVlErYkdhRStlTG1mUERX?=
+ =?utf-8?B?dC90Y1hpZ2ZNMVJ3OVVVK05ieDZqWFZUZ3dad1hTQ0VsUm5qYXZ5R0lJWStq?=
+ =?utf-8?B?OFRrcVFqQXVVanpjSUR2VkhhOFpwcU9neDVKdkh1Qm9rTXFZcVd1WldOeVNI?=
+ =?utf-8?B?UWIvZEdzZ3pNazRYNUVqaVpVYWMybGlKTkovNkZHbXM2M0ZpeDIzU0pTZWpt?=
+ =?utf-8?B?WUVvSEJGUHlyWmRvYmlHL0pBVzFZaWNOU0RydmpCQk5nVFU2RG11MVdwZWJk?=
+ =?utf-8?B?VnFUbVN2NzR0MWFXdk5ha1FXU1pTQXVJeHRCMGZMQXhFdDdZWXBWYmIyelA4?=
+ =?utf-8?B?cDdKQ0xLV0NDN01MaEVhNm1kVG5mY1R4QlpZYmdhdDF5QTlDWnlzbW9PdWJv?=
+ =?utf-8?B?ZThZbm5tSWtQbkFFTXo0TVpqdFJsMGxWTHNEL1NZTWdwTktoRm8zM0xPK3li?=
+ =?utf-8?B?VHZNY0JyeUdaQzNIcVJqaVBqWmloZWFhOEE1Vkp5RzNpTjg3ckdPRmF0eU14?=
+ =?utf-8?B?MUJwZHVHeHg5RkhwM3I0RmNuQzhzYUIxRXBsZ0RNUmtjbzlrSW1BK2QwcGl5?=
+ =?utf-8?Q?EgW1zveUSr8TBJZOiVwBPwOErW+prS8E4vuqlG7?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36aaea6a-06ed-4ad8-0d64-08d8dab9688f
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2021 00:48:33.2976
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ONPMYFVyA9zKDpkShmhqSILeGx42R1AiWT3cUW2DXc1gVcJWp5bzE0hhN0wxJDbWIINUE7hK2p1kYEohsVyYNRAiSd7yzAceTT4LHmRfzGk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3335
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9907 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 bulkscore=0 malwarescore=0 mlxscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102270001
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9907 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ malwarescore=0 spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 lowpriorityscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102270001
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Feb 26, 2021 at 1:28 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Fri, Feb 26, 2021 at 12:59:53PM -0800, Dan Williams wrote:
-> > On Fri, Feb 26, 2021 at 12:51 PM Dave Chinner <david@fromorbit.com> wrote:
-> > >
-> > > On Fri, Feb 26, 2021 at 11:24:53AM -0800, Dan Williams wrote:
-> > > > On Fri, Feb 26, 2021 at 11:05 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> > > > >
-> > > > > On Fri, Feb 26, 2021 at 09:45:45AM +0000, ruansy.fnst@fujitsu.com wrote:
-> > > > > > Hi, guys
-> > > > > >
-> > > > > > Beside this patchset, I'd like to confirm something about the
-> > > > > > "EXPERIMENTAL" tag for dax in XFS.
-> > > > > >
-> > > > > > In XFS, the "EXPERIMENTAL" tag, which is reported in waring message
-> > > > > > when we mount a pmem device with dax option, has been existed for a
-> > > > > > while.  It's a bit annoying when using fsdax feature.  So, my initial
-> > > > > > intention was to remove this tag.  And I started to find out and solve
-> > > > > > the problems which prevent it from being removed.
-> > > > > >
-> > > > > > As is talked before, there are 3 main problems.  The first one is "dax
-> > > > > > semantics", which has been resolved.  The rest two are "RMAP for
-> > > > > > fsdax" and "support dax reflink for filesystem", which I have been
-> > > > > > working on.
-> > > > >
-> > > > > <nod>
-> > > > >
-> > > > > > So, what I want to confirm is: does it means that we can remove the
-> > > > > > "EXPERIMENTAL" tag when the rest two problem are solved?
-> > > > >
-> > > > > Yes.  I'd keep the experimental tag for a cycle or two to make sure that
-> > > > > nothing new pops up, but otherwise the two patchsets you've sent close
-> > > > > those two big remaining gaps.  Thank you for working on this!
-> > > > >
-> > > > > > Or maybe there are other important problems need to be fixed before
-> > > > > > removing it?  If there are, could you please show me that?
-> > > > >
-> > > > > That remains to be seen through QA/validation, but I think that's it.
-> > > > >
-> > > > > Granted, I still have to read through the two patchsets...
-> > > >
-> > > > I've been meaning to circle back here as well.
-> > > >
-> > > > My immediate concern is the issue Jason recently highlighted [1] with
-> > > > respect to invalidating all dax mappings when / if the device is
-> > > > ripped out from underneath the fs. I don't think that will collide
-> > > > with Ruan's implementation, but it does need new communication from
-> > > > driver to fs about removal events.
-> > > >
-> > > > [1]: http://lore.kernel.org/r/CAPcyv4i+PZhYZiePf2PaH0dT5jDfkmkDX-3usQy1fAhf6LPyfw@mail.gmail.com
-> > >
-> > > Oh, yay.
-> > >
-> > > The XFS shutdown code is centred around preventing new IO from being
-> > > issued - we don't actually do anything about DAX mappings because,
-> > > well, I don't think anyone on the filesystem side thought they had
-> > > to do anything special if pmem went away from under it.
-> > >
-> > > My understanding -was- that the pmem removal invalidates
-> > > all the ptes currently mapped into CPU page tables that point at
-> > > the dax device across the system. THe vmas that manage these
-> > > mappings are not really something the filesystem really manages,
-> > > but a function of the mm subsystem. What the filesystem cares about
-> > > is that it gets page faults triggered when a change of state occurs
-> > > so that it can remap the page to it's backing store correctly.
-> > >
-> > > IOWs, all the mm subsystem needs to when pmem goes away is clear the
-> > > CPU ptes, because then when then when userspace tries to access the
-> > > mapped DAX pages we get a new page fault. In processing the fault, the
-> > > filesystem will try to get direct access to the pmem from the block
-> > > device. This will get an ENODEV error from the block device because
-> > > because the backing store (pmem) has been unplugged and is no longer
-> > > there...
-> > >
-> > > AFAICT, as long as pmem removal invalidates all the active ptes that
-> > > point at the pmem being removed, the filesystem doesn't need to
-> > > care about device removal at all, DAX or no DAX...
-> >
-> > How would the pmem removal do that without walking all the active
-> > inodes in the fs at the time of shutdown and call
-> > unmap_mapping_range(inode->i_mapping, 0, 0, 1)?
->
-> Which then immediately ends up back at the vmas that manage the ptes
-> to unmap them.
->
-> Isn't finding the vma(s) that map a specific memory range exactly
-> what the rmap code in the mm subsystem is supposed to address?
 
-rmap can lookup only vmas from a virt address relative to a given
-mm_struct. The driver has neither the list of mm_struct objects nor
-virt addresses to do a lookup. All it knows is that someone might have
-mapped pages through the fsdax interface.
 
-To me this looks like a notifier that fires from memunmap_pages()
-after dev_pagemap_kill() to notify any block_device associated with
-that dev_pagemap() to say that any dax mappings arranged through this
-block_device are now invalid. The reason to do this after
-dev_pagemap_kill() is so that any new mapping attempts that are racing
-the removal will be blocked.
+On 2/25/21 8:02 PM, Darrick J. Wong wrote:
+> On Thu, Feb 18, 2021 at 09:53:29AM -0700, Allison Henderson wrote:
+>> This patch hoists transaction handling in xfs_attr_node_removename to
+>> xfs_attr_node_remove_step.  This will help keep transaction handling in
+>> higher level functions instead of buried in subfunctions when we
+>> introduce delay attributes
+>>
+>> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+> 
+> Looks ok,
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Great, thank you!
+Allison
 
-The receiver of that notification needs to go from a block_device to a
-superblock that has mapped inodes and walk ->sb_inodes triggering the
-unmap/invalidation.
+> 
+> --D
+> 
+>> ---
+>>   fs/xfs/libxfs/xfs_attr.c | 45 ++++++++++++++++++++++-----------------------
+>>   1 file changed, 22 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+>> index 4e6c89d..3cf76e2 100644
+>> --- a/fs/xfs/libxfs/xfs_attr.c
+>> +++ b/fs/xfs/libxfs/xfs_attr.c
+>> @@ -1251,9 +1251,7 @@ xfs_attr_node_remove_step(
+>>   	struct xfs_da_args	*args,
+>>   	struct xfs_da_state	*state)
+>>   {
+>> -	int			retval, error;
+>> -	struct xfs_inode	*dp = args->dp;
+>> -
+>> +	int			error = 0;
+>>   
+>>   	/*
+>>   	 * If there is an out-of-line value, de-allocate the blocks.
+>> @@ -1265,25 +1263,6 @@ xfs_attr_node_remove_step(
+>>   		if (error)
+>>   			return error;
+>>   	}
+>> -	retval = xfs_attr_node_remove_cleanup(args, state);
+>> -
+>> -	/*
+>> -	 * Check to see if the tree needs to be collapsed.
+>> -	 */
+>> -	if (retval && (state->path.active > 1)) {
+>> -		error = xfs_da3_join(state);
+>> -		if (error)
+>> -			return error;
+>> -		error = xfs_defer_finish(&args->trans);
+>> -		if (error)
+>> -			return error;
+>> -		/*
+>> -		 * Commit the Btree join operation and start a new trans.
+>> -		 */
+>> -		error = xfs_trans_roll_inode(&args->trans, dp);
+>> -		if (error)
+>> -			return error;
+>> -	}
+>>   
+>>   	return error;
+>>   }
+>> @@ -1299,7 +1278,7 @@ xfs_attr_node_removename(
+>>   	struct xfs_da_args	*args)
+>>   {
+>>   	struct xfs_da_state	*state = NULL;
+>> -	int			error;
+>> +	int			retval, error;
+>>   	struct xfs_inode	*dp = args->dp;
+>>   
+>>   	trace_xfs_attr_node_removename(args);
+>> @@ -1312,6 +1291,26 @@ xfs_attr_node_removename(
+>>   	if (error)
+>>   		goto out;
+>>   
+>> +	retval = xfs_attr_node_remove_cleanup(args, state);
+>> +
+>> +	/*
+>> +	 * Check to see if the tree needs to be collapsed.
+>> +	 */
+>> +	if (retval && (state->path.active > 1)) {
+>> +		error = xfs_da3_join(state);
+>> +		if (error)
+>> +			goto out;
+>> +		error = xfs_defer_finish(&args->trans);
+>> +		if (error)
+>> +			goto out;
+>> +		/*
+>> +		 * Commit the Btree join operation and start a new trans.
+>> +		 */
+>> +		error = xfs_trans_roll_inode(&args->trans, dp);
+>> +		if (error)
+>> +			goto out;
+>> +	}
+>> +
+>>   	/*
+>>   	 * If the result is small enough, push it all into the inode.
+>>   	 */
+>> -- 
+>> 2.7.4
+>>
