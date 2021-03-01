@@ -2,201 +2,179 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 075523292B0
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Mar 2021 21:52:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6714329313
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Mar 2021 22:01:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239891AbhCAUtm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Mar 2021 15:49:42 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:56669 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243656AbhCAUrZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Mar 2021 15:47:25 -0500
-Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1lGpQg-000669-3l; Mon, 01 Mar 2021 20:46:10 +0000
-Date:   Mon, 1 Mar 2021 21:46:08 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        John Johansen <john.johansen@canonical.com>,
-        James Morris <jmorris@namei.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Geoffrey Thomas <geofft@ldpreload.com>,
-        Mrunal Patel <mpatel@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Theodore Tso <tytso@mit.edu>, Alban Crequy <alban@kinvolk.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Howells <dhowells@redhat.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Lennart Poettering <lennart@poettering.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, smbarber@chromium.org,
-        Phil Estes <estesp@gmail.com>, Serge Hallyn <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Todd Kjos <tkjos@google.com>, Paul Moore <paul@paul-moore.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v6 39/40] xfs: support idmapped mounts
-Message-ID: <20210301204608.ip7nowqh6fpztkhr@wittgenstein>
-References: <20210121131959.646623-1-christian.brauner@ubuntu.com>
- <20210121131959.646623-40-christian.brauner@ubuntu.com>
- <20210301200520.GK7272@magnolia>
+        id S239583AbhCAU7J (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Mar 2021 15:59:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243685AbhCAU4r (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Mar 2021 15:56:47 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F9DC061794
+        for <linux-xfs@vger.kernel.org>; Mon,  1 Mar 2021 12:56:03 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id f6so6823629edd.12
+        for <linux-xfs@vger.kernel.org>; Mon, 01 Mar 2021 12:56:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uf7JqQFHPCXtVt6OE3ndJLn8tz0ITkjzN5ljfjxdIhk=;
+        b=LsUxVPo7UlbfyojprFB1jf/rKDEY5l1bLqSBqTvGf9XMx0WBQVwMKTlkmnc8L2SxOQ
+         CQVHrea9eSOecxf54/iF/vdL/K8FbOVPW9KBl4US9kraCLKPGcb8Zy87mpx2ALTioUUi
+         I3u0SK3g+sKzDaob/ol6gZFxAQylheAV+/IIn35GbikR2zQgDwQWXktUXD9ULoL+PzQx
+         pr97W32SC56CXIMupsYveBfr4YnEHV3ekVFIoIK0dIk72+g1vb0gS6NvBqVEpVagMIPu
+         0o2DeAiSUb4YzXlIswECNdeyiZKT86n3F+CjMKrQnKtykVj6ngmicpeLHNZKdX23vnF5
+         orlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uf7JqQFHPCXtVt6OE3ndJLn8tz0ITkjzN5ljfjxdIhk=;
+        b=Iw+SPaRbFmJwxqYUj2gwc2TCx7Na4QGplY2duhwSSciEdemcNMI9IqLl+m+FtYbSSm
+         95baLQwcJqkpO1B3Zn7E/YHp75g18zt8MIaSVlDDHQnosNvmV88wz7Dz4k+M91TcvZFB
+         9k0GppSEAJqdSkqDOdsqEu153W3JRpA/jVt1iOkDi4Inplfxu9DfhA2pWPgbnrgZRJsI
+         TpvD6tF6WJHUqR210Z101nA0deTctvtzDv7SRo44WQ26kRzg/3wRA87ibv2W79MfUV1S
+         CoSmkKzeS59JrurqoUOVOg0+rXkdT5bImVIbhzX6B7cSWIaZ3t4DS4rSuZyQ8vJqZsEf
+         u3Xw==
+X-Gm-Message-State: AOAM532l426hJD8Mq3P5z8G6klumy7vgWlozKyipiINxZjsJXLaDZ1pD
+        2dODVfzdaMX7/ML/Zj90DvQ6MyO+4HRA4EO/5fiPhw==
+X-Google-Smtp-Source: ABdhPJxBwKnueL85Spjb8OhqRdQvSAhEOhjHLo+ym/acf8R+C2DQPXIFH/M6CoSbCOsavo9bD3fi05mLAmEjhXAU4gc=
+X-Received: by 2002:a05:6402:3585:: with SMTP id y5mr17766218edc.97.1614632162323;
+ Mon, 01 Mar 2021 12:56:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210301200520.GK7272@magnolia>
+References: <20210226002030.653855-1-ruansy.fnst@fujitsu.com>
+ <OSBPR01MB2920899F1D71E7B054A04E39F49D9@OSBPR01MB2920.jpnprd01.prod.outlook.com>
+ <20210226190454.GD7272@magnolia> <CAPcyv4iJiYsM5FQdpMvCi24aCi7RqUnnxC6sM0umFqiN+Q59cg@mail.gmail.com>
+ <20210226205126.GX4662@dread.disaster.area> <CAPcyv4iDefA3Y0wUW=p080SYAsM_2TPJba-V-sxdK_BeJMkmsw@mail.gmail.com>
+ <20210226212748.GY4662@dread.disaster.area> <CAPcyv4jryJ32R5vOwwEdoU3V8C0B7zu_pCt=7f6A3Gk-9h6Dfg@mail.gmail.com>
+ <20210227223611.GZ4662@dread.disaster.area> <CAPcyv4h7XA3Jorcy_J+t9scw0A4KdT2WEwAhE-Nbjc=C2qmkMw@mail.gmail.com>
+ <20210228223846.GA4662@dread.disaster.area>
+In-Reply-To: <20210228223846.GA4662@dread.disaster.area>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 1 Mar 2021 12:55:53 -0800
+Message-ID: <CAPcyv4jzV2RUij2BEvDJLLiK_67Nf1v3M6-jRLKf32x4iOzqng@mail.gmail.com>
+Subject: Re: Question about the "EXPERIMENTAL" tag for dax in XFS
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        "ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
+        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
+        "y-goto@fujitsu.com" <y-goto@fujitsu.com>,
+        "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
+        "fnstml-iaas@cn.fujitsu.com" <fnstml-iaas@cn.fujitsu.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Mar 01, 2021 at 12:05:20PM -0800, Darrick J. Wong wrote:
-> On Thu, Jan 21, 2021 at 02:19:58PM +0100, Christian Brauner wrote:
-> > From: Christoph Hellwig <hch@lst.de>
-> > 
-> > Enable idmapped mounts for xfs. This basically just means passing down
-> > the user_namespace argument from the VFS methods down to where it is
-> > passed to the relevant helpers.
-> > 
-> > Note that full-filesystem bulkstat is not supported from inside idmapped
-> > mounts as it is an administrative operation that acts on the whole file
-> > system. The limitation is not applied to the bulkstat single operation
-> > that just operates on a single inode.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > 
-> > /* v3 */
-> > 
-> > /* v4 */
-> > 
-> > /* v5 */
-> > base-commit: 7c53f6b671f4aba70ff15e1b05148b10d58c2837
-> > 
-> > /* v6 */
-> > unchanged
-> > base-commit: 19c329f6808995b142b3966301f217c831e7cf31
-> > ---
-> >  fs/xfs/xfs_acl.c     |  3 +--
-> >  fs/xfs/xfs_file.c    |  4 +++-
-> >  fs/xfs/xfs_inode.c   | 26 +++++++++++++++--------
-> >  fs/xfs/xfs_inode.h   | 16 +++++++++------
-> >  fs/xfs/xfs_ioctl.c   | 35 ++++++++++++++++++-------------
-> >  fs/xfs/xfs_ioctl32.c |  6 ++++--
-> >  fs/xfs/xfs_iops.c    | 49 +++++++++++++++++++++++++-------------------
-> >  fs/xfs/xfs_iops.h    |  3 ++-
-> >  fs/xfs/xfs_itable.c  | 17 +++++++++++----
-> >  fs/xfs/xfs_itable.h  |  1 +
-> >  fs/xfs/xfs_qm.c      |  3 ++-
-> >  fs/xfs/xfs_super.c   |  2 +-
-> >  fs/xfs/xfs_symlink.c |  5 +++--
-> >  fs/xfs/xfs_symlink.h |  5 +++--
-> >  14 files changed, 110 insertions(+), 65 deletions(-)
-> 
-> <snip> Sorry for not noticing until after this went upstream, but...
+On Sun, Feb 28, 2021 at 2:39 PM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Sat, Feb 27, 2021 at 03:40:24PM -0800, Dan Williams wrote:
+> > On Sat, Feb 27, 2021 at 2:36 PM Dave Chinner <david@fromorbit.com> wrote:
+> > > On Fri, Feb 26, 2021 at 02:41:34PM -0800, Dan Williams wrote:
+> > > > On Fri, Feb 26, 2021 at 1:28 PM Dave Chinner <david@fromorbit.com> wrote:
+> > > > > On Fri, Feb 26, 2021 at 12:59:53PM -0800, Dan Williams wrote:
+> > > it points to, check if it points to the PMEM that is being removed,
+> > > grab the page it points to, map that to the relevant struct page,
+> > > run collect_procs() on that page, then kill the user processes that
+> > > map that page.
+> > >
+> > > So why can't we walk the ptescheck the physical pages that they
+> > > map to and if they map to a pmem page we go poison that
+> > > page and that kills any user process that maps it.
+> > >
+> > > i.e. I can't see how unexpected pmem device unplug is any different
+> > > to an MCE delivering a hwpoison event to a DAX mapped page.
+> >
+> > I guess the tradeoff is walking a long list of inodes vs walking a
+> > large array of pages.
+>
+> Not really. You're assuming all a filesystem has to do is invalidate
+> everything if a device goes away, and that's not true. Finding if an
+> inode has a mapping that spans a specific device in a multi-device
+> filesystem can be a lot more complex than that. Just walking inodes
+> is easy - determining whihc inodes need invalidation is the hard
+> part.
 
-No problem at all.
+That inode-to-device level of specificity is not needed for the same
+reason that drop_caches does not need to be specific. If the wrong
+page is unmapped a re-fault will bring it back, and re-fault will fail
+for the pages that are successfully removed.
 
-> 
-> > diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-> > index 16ca97a7ff00..ca310a125d1e 100644
-> > --- a/fs/xfs/xfs_itable.c
-> > +++ b/fs/xfs/xfs_itable.c
-> > @@ -54,10 +54,12 @@ struct xfs_bstat_chunk {
-> >  STATIC int
-> >  xfs_bulkstat_one_int(
-> >  	struct xfs_mount	*mp,
-> > +	struct user_namespace	*mnt_userns,
-> >  	struct xfs_trans	*tp,
-> >  	xfs_ino_t		ino,
-> >  	struct xfs_bstat_chunk	*bc)
-> >  {
-> > +	struct user_namespace	*sb_userns = mp->m_super->s_user_ns;
-> >  	struct xfs_icdinode	*dic;		/* dinode core info pointer */
-> >  	struct xfs_inode	*ip;		/* incore inode pointer */
-> >  	struct inode		*inode;
-> > @@ -86,8 +88,8 @@ xfs_bulkstat_one_int(
-> >  	 */
-> >  	buf->bs_projectid = ip->i_d.di_projid;
-> >  	buf->bs_ino = ino;
-> > -	buf->bs_uid = i_uid_read(inode);
-> > -	buf->bs_gid = i_gid_read(inode);
-> > +	buf->bs_uid = from_kuid(sb_userns, i_uid_into_mnt(mnt_userns, inode));
-> > +	buf->bs_gid = from_kgid(sb_userns, i_gid_into_mnt(mnt_userns, inode));
-> >  	buf->bs_size = dic->di_size;
-> >  
-> >  	buf->bs_nlink = inode->i_nlink;
-> > @@ -173,7 +175,8 @@ xfs_bulkstat_one(
-> >  	if (!bc.buf)
-> >  		return -ENOMEM;
-> >  
-> > -	error = xfs_bulkstat_one_int(breq->mp, NULL, breq->startino, &bc);
-> > +	error = xfs_bulkstat_one_int(breq->mp, breq->mnt_userns, NULL,
-> > +				     breq->startino, &bc);
-> >  
-> >  	kmem_free(bc.buf);
-> >  
-> > @@ -194,9 +197,10 @@ xfs_bulkstat_iwalk(
-> >  	xfs_ino_t		ino,
-> >  	void			*data)
-> >  {
-> > +	struct xfs_bstat_chunk	*bc = data;
-> >  	int			error;
-> >  
-> > -	error = xfs_bulkstat_one_int(mp, tp, ino, data);
-> > +	error = xfs_bulkstat_one_int(mp, bc->breq->mnt_userns, tp, ino, data);
-> >  	/* bulkstat just skips over missing inodes */
-> >  	if (error == -ENOENT || error == -EINVAL)
-> >  		return 0;
-> > @@ -239,6 +243,11 @@ xfs_bulkstat(
-> >  	};
-> >  	int			error;
-> >  
-> > +	if (breq->mnt_userns != &init_user_ns) {
-> > +		xfs_warn_ratelimited(breq->mp,
-> > +			"bulkstat not supported inside of idmapped mounts.");
-> > +		return -EINVAL;
-> 
-> Shouldn't this be -EPERM?
-> 
-> Or -EOPNOTSUPP?
+> That's where ->corrupt_range() comes in - the filesystem is already
+> set up to do reverse mapping from physical range to inode(s)
+> offsets...
 
-EOPNOTSUPP seems a good choice. Whether or not it's better than EINVAL I
-don't know. With my userspace maintainer hat on I would probably say
-that EOPNOTSUPP feels a bit more natural and might have the advantage
-that it is less overloaded then EINVAL.
+Sure, but what is the need to get to that level of specificity with
+the filesystem for something that should rarely happen in the course
+of normal operation outside of a mistake?
 
-> 
-> Also, I'm not sure why bulkstat won't work in an idmapped mount but
-> bulkstat_single does?  You can use the singleton version to stat inodes
-> that aren't inside the submount.
+>
+> > There's likely always more pages than inodes, but perhaps it's more
+> > efficient to walk the 'struct page' array than sb->s_inodes?
+>
+> I really don't see you seem to be telling us that invalidation is an
+> either/or choice. There's more ways to convert physical block
+> address -> inode file offset and mapping index than brute force
+> inode cache walks....
 
-Christoph will very likely have a better informed opinion than I have
-but as long as bulkstat is able to discern inodes that need to be
-reported idmapped and inodes that don't then I see no reason why this
-shouldn't work (at least for privileged users on the host which I think
-is the case already).
+Yes, but I was trying to map it to an existing mechanism and the
+internals of drop_pagecache_sb() are, in coarse terms, close to what
+needs to happen here.
 
-In any case these changes, if any, aren't vfs changes and so you can
-just take them as bugfixes through the xfs tree anyway. So no harm done
-in you not spotting it earlier. :)
+>
+> .....
+>
+> > > IOWs, what needs to happen at this point is very filesystem
+> > > specific. Assuming that "device unplug == filesystem dead" is not
+> > > correct, nor is specifying a generic action that assumes the
+> > > filesystem is dead because a device it is using went away.
+> >
+> > Ok, I think I set this discussion in the wrong direction implying any
+> > mapping of this action to a "filesystem dead" event. It's just a "zap
+> > all ptes" event and upper layers recover from there.
+>
+> Yes, that's exactly what ->corrupt_range() is intended for. It
+> allows the filesystem to lock out access to the bad range
+> and then recover the data. Or metadata, if that's where the bad
+> range lands. If that recovery fails, it can then report a data
+> loss/filesystem shutdown event to userspace and kill user procs that
+> span the bad range...
+>
+> FWIW, is this notification going to occur before or after the device
+> has been physically unplugged?
 
-Thanks for taking another look!
-Christian
+Before. This will be operations that happen in the pmem driver
+->remove() callback.
+
+> i.e. what do we do about the
+> time-of-unplug-to-time-of-invalidation window where userspace can
+> still attempt to access the missing pmem though the
+> not-yet-invalidated ptes? It may not be likely that people just yank
+> pmem nvdimms out of machines, but with NVMe persistent memory
+> spaces, there's every chance that someone pulls the wrong device...
+
+The physical removal aspect is only theoretical today. While the pmem
+driver has a ->remove() path that's purely a software unbind
+operation. That said the vulnerability window today is if a process
+acquires a dax mapping, the pmem device hosting that filesystem goes
+through an unbind / bind cycle, and then a new filesystem is created /
+mounted. That old pte may be able to access data that is outside its
+intended protection domain.
+
+Going forward, for buses like CXL, there will be a managed physical
+remove operation via PCIE native hotplug. The flow there is that the
+PCIE hotplug driver will notify the OS of a pending removal, trigger
+->remove() on the pmem driver, and then notify the technician (slot
+status LED) that the card is safe to pull.
