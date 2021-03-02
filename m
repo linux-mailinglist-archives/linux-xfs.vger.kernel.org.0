@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90A6E32B119
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C14732B11D
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350396AbhCCDQV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38614 "EHLO mail.kernel.org"
+        id S1351089AbhCCDQW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2361111AbhCBXXb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 18:23:31 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1167A64F3B;
-        Tue,  2 Mar 2021 23:22:51 +0000 (UTC)
+        id S2361112AbhCBXXh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Mar 2021 18:23:37 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 895B264F3C;
+        Tue,  2 Mar 2021 23:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614727371;
-        bh=+5fbK8L4V4hl8wvHYx0hPrG7RpEAU7/C0udYIcd6tDc=;
+        s=k20201202; t=1614727376;
+        bh=697Nb2di+BUNIoecDPwRGI5l1BRr1zPGoqYUfZiiDag=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=NEHk1gaO5o8ncOl3hG/59z3RaS9DyWHQbQS8pUbq4PTlSK5ZCxbI6UnNA23l3XIDY
-         DBoInsp2AR9Kc5He0alB5bwBcavpKOwoSS5Cku5q1YKZlbgotUbS9Ilszpb/EH0oDy
-         aU0/WrP/RhCowKClHkPTEWZh+m6vcVg2QF8UmvTrVhPVgj5iBLSnePPdxoLgHrbDZY
-         yQNbaUw1DvV5QXgz2TVdpNiCSc2tz+2D4yxVnuuYJUVgrqrKQB2HmxUwrmO+0K09eu
-         eYVx/1wClN6jj6MujI1Ycy+VXi9a8ass/704t2rC5GM2jEUBSX6rb0ggE4s+gsHB1h
-         HzQr9j0tug+3g==
-Subject: [PATCH 3/4] common/rc: fix detection of device-mapper/persistent
- memory incompatibility
+        b=rz1rISzIZI9+2jEpsw2jt7jJPbMHtOJSeuXONj6chUHAZnGed09ps+bSMjQ6l4raf
+         S/MnOES1JOUEOc4mhKJA8vIIWPUYkBYiVreBTNdnoTsJCgKnzHjRRT6Z4OThXaUWPc
+         g7wdGGW08g2xKGFpGwQMotYhS4CsYJxQagOgDIZX/AqCze3FKT3ywehjzz6BGvbWvh
+         eFaSjZO04Ne+pIRuCP8VszFZKECMThMmKTh3Tc6FtIkNxEaow47/TKbiy4XMAv4qCv
+         +HIkQD7vIZK2mkJcmlUuIUIsjTonkGYCSsI45piCbKbDXDMV6MBqNX5gk7XDmd2STB
+         Ou5TeBWufV6bA==
+Subject: [PATCH 4/4] generic/60[78]: ensure the initial DAX file flag state
+ before test
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 02 Mar 2021 15:22:50 -0800
-Message-ID: <161472737079.3478298.2584850499235911991.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 15:22:56 -0800
+Message-ID: <161472737624.3478298.18322455058303982173.stgit@magnolia>
 In-Reply-To: <161472735404.3478298.8179031068431918520.stgit@magnolia>
 References: <161472735404.3478298.8179031068431918520.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,36 +42,48 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In commit fc7b3903, we tried to make _require_dm_target smart enough to
-_notrun tests that require a device mapper target that isn't compatible
-with "DAX".  However, as of this writing, the incompatibility stems from
-device mapper's unwillingness to switch access modes when running atop
-DAX (persistent memory) devices, and has nothing to do with the
-filesystem mount options.
+Since this test checks the behaviors of both the in-core S_DAX flag and
+the ondisk FS_XFLAG_DAX inode flags, it must be careful about the
+initial state of the filesystem w.r.t. the inode flag.
 
-Since filesystems supporting DAX don't universally require "dax" in the
-mount options to enable that functionality, switch the test to query
-sysfs to see if the scratch device supports DAX.
+Make sure that the root directory does /not/ have the inode flag set
+before we begin testing, so that the initial state doesn't throw off
+inheritance testing.
 
-Fixes: fc7b3903 ("dax/dm: disable testing on devices that don't support dax")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/rc |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tests/generic/607 |    4 ++++
+ tests/generic/608 |    3 +++
+ 2 files changed, 7 insertions(+)
 
 
-diff --git a/common/rc b/common/rc
-index 7254130f..10e5f40b 100644
---- a/common/rc
-+++ b/common/rc
-@@ -1889,7 +1889,8 @@ _require_dm_target()
- 	_require_sane_bdev_flush $SCRATCH_DEV
- 	_require_command "$DMSETUP_PROG" dmsetup
+diff --git a/tests/generic/607 b/tests/generic/607
+index dd6dbd65..ba7da11b 100755
+--- a/tests/generic/607
++++ b/tests/generic/607
+@@ -156,6 +156,10 @@ do_xflag_tests()
+ 	local option=$1
  
--	_normalize_mount_options | egrep -q "dax(=always| |$)"
-+	_normalize_mount_options | egrep -q "dax(=always| |$)" || \
-+			test -e "/sys/block/$(_short_dev $SCRATCH_DEV)/dax"
- 	if [ $? -eq 0 ]; then
- 		case $target in
- 		stripe|linear|log-writes)
+ 	_scratch_mount "$option"
++
++	# Make sure the root dir doesn't have FS_XFLAG_DAX set before we start.
++	chattr -x $SCRATCH_MNT &>> $seqres.full
++
+ 	cd $SCRATCH_MNT
+ 
+ 	for i in $(seq 1 5); do
+diff --git a/tests/generic/608 b/tests/generic/608
+index dd89d91c..13a751d7 100755
+--- a/tests/generic/608
++++ b/tests/generic/608
+@@ -98,6 +98,9 @@ do_tests()
+ 
+ 	_scratch_mount "$mount_option"
+ 
++	# Make sure the root dir doesn't have FS_XFLAG_DAX set before we start.
++	chattr -x $SCRATCH_MNT &>> $seqres.full
++
+ 	test_drop_caches
+ 
+ 	test_cycle_mount "$cycle_mount_option"
 
