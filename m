@@ -2,54 +2,55 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DF8232A194
-	for <lists+linux-xfs@lfdr.de>; Tue,  2 Mar 2021 14:51:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B130A32A193
+	for <lists+linux-xfs@lfdr.de>; Tue,  2 Mar 2021 14:51:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245713AbhCBGjX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 01:39:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:33375 "EHLO
+        id S245590AbhCBGjA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 01:39:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:26023 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242574AbhCBCy1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Mar 2021 21:54:27 -0500
+        by vger.kernel.org with ESMTP id S242529AbhCBCyV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Mar 2021 21:54:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614653580;
+        s=mimecast20190719; t=1614653575;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=B8jzMEbuN1OPhRSTE9ecggwOYOH+0mj7cuae+E0KEsg=;
-        b=cB/vi4Nfo6mlgAMx2ba3BZy/FSbAUROeRvP5LRIPxKt2zufaZxcy3OzJrL4YDNEWN9wAI/
-        ub3ispXNq4YKefKlF2d31thahdvCp9mbGZp4iCINp81VTUb85IWuR8VTRubmY9LHDxcSb/
-        Lqx3IUJC52SutrNp7OE4oYXt8m2iLls=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-594-uhDqKQZhPSOHkWlcMNO6AA-1; Mon, 01 Mar 2021 21:49:04 -0500
-X-MC-Unique: uhDqKQZhPSOHkWlcMNO6AA-1
-Received: by mail-pj1-f72.google.com with SMTP id s3so869821pjn.2
-        for <linux-xfs@vger.kernel.org>; Mon, 01 Mar 2021 18:49:04 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dZFfZ874yaa8YKtxQkyzrYvtn9qlPDx16b5j7MmxPC0=;
+        b=WQimdoK0agPTKrjFNZk05fZvKpEOYvoY5+8z5jLvC7upSFd5rJFsqQ/687CK+POa+a7NAD
+        ddKB7j//H2OHOqvPojOfWLfMim78s4WWaDYBfYfYHvANppl1/kWLiYUjamyitVoC4mTV6y
+        f6MTa22+jPMBJZ5tz58xvlUEkQk+w0o=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-425-ozQUfZzHOdmd0rmP27WI8g-1; Mon, 01 Mar 2021 21:49:14 -0500
+X-MC-Unique: ozQUfZzHOdmd0rmP27WI8g-1
+Received: by mail-pl1-f199.google.com with SMTP id t14so10356659plr.15
+        for <linux-xfs@vger.kernel.org>; Mon, 01 Mar 2021 18:49:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=B8jzMEbuN1OPhRSTE9ecggwOYOH+0mj7cuae+E0KEsg=;
-        b=gH1cDdB5pTMostE9Vg1kbEvxsto/G24xsRtpPo2qH0FSIkxGa9aep6K3Rak9HtBqKO
-         FitE2KTIbuYFe0Puh3JhCxEr5cJHpw67gA4g4E5tUV7vRvwdT77iUWFvJURl1dZ+fUhp
-         l/tgFusMBow7LJg79BA8N7oq5irtX5NIi5NYd+XqzqhQK4vzMhAO9G94lYbbblyM0CUO
-         QJTHGN97AUGNSLejITDGnl/6XqrUNdrvuH6njhrO0ah8Rg/9ewEkm5fq1OE4k1ig0zq1
-         wqO/rrv2CeB61YcMI+Lp9UYQzUrxQiVBvbXRcOcG/1Sg1obYd6cy0ntCv0FOagnkpyzl
-         yjCA==
-X-Gm-Message-State: AOAM531SLIUHXmgIKUngeCjm8GN+zqEYY8Lwi1dsC4GDbuBft9to7g00
-        aOYGgFWkz4ZCxVXA1tKWcjWtJ8wuIsiVPvoRjMdWs9PeE4cgFTPOdTyPaZdLt+UJdll9uG2eRd7
-        7QyHoFAZMILhQoVnZEOUU+SZWTWBj0HL4y4CalZspRIVgEdMDr2tgEoV4ZotHFmXuPEnLGKSOAQ
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dZFfZ874yaa8YKtxQkyzrYvtn9qlPDx16b5j7MmxPC0=;
+        b=b3Ea2ex89dxnk/8/8zlR6AMLd7XLiJyGUQNm01NvhlAKet9wHUTrM/Kz0Se/xKMViR
+         jWJlWt36ym+1kJvNF9pD1YZjqVuHI6MEgFycoO5i3BTSeafe2pa//dS3bB6jAtFQavqT
+         OfZ+vPx1RnFCmrQYhLMc9diW5BCtwB0cITQQqCBsISoMM17AD6cV5Er3nWpipxCp0SD+
+         jyUfTvYpIN/oSysfejRpYlAdkwqZjG6/UGI2ew+T5UKP1FGfUwVoNwtXt6nFVUgAD9xh
+         NEGHgnz2/2sRIyKQJle6aJHCQqxjYdgwuifNkRt2UWy2+TW1gDlku1IbbN9/7ijJixpV
+         o27g==
+X-Gm-Message-State: AOAM531c7KCy6S/5CgDhvyXSA2pfV32s3OssJv+vGaNIr0OXesxHldSp
+        KTHEgEaLaDNMlNMBJQoFSw5vwjRbz+QJdS0drcSJROin6jkRD6OgasPsIMkOo8bjWaIpca4/8Ks
+        BhXIdHZ4fGM2RCF6SINrEU0+noLTJplD4wKSl6wqxbxkWjSJFK3cVmgNmcZECGrr5YKnQGWfaIQ
         ==
-X-Received: by 2002:a65:50c8:: with SMTP id s8mr16423900pgp.68.1614653343403;
-        Mon, 01 Mar 2021 18:49:03 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxF2uOfTMfcbkdMVPy1UWBEXLWitAiZBaF6XSqVE8uUa/t8dyPHQUIDln9/Ph0mieGvVowkxA==
-X-Received: by 2002:a65:50c8:: with SMTP id s8mr16423886pgp.68.1614653343128;
-        Mon, 01 Mar 2021 18:49:03 -0800 (PST)
+X-Received: by 2002:a17:903:22cf:b029:e5:b66c:5903 with SMTP id y15-20020a17090322cfb02900e5b66c5903mr655830plg.68.1614653353174;
+        Mon, 01 Mar 2021 18:49:13 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzyvfcrEJ8soQpoNHGgHOdDTbbLfaI/tJ56A41gYLWVAV+2h0P68B8s2/yHeMRDzqXYnqJ6HA==
+X-Received: by 2002:a17:903:22cf:b029:e5:b66c:5903 with SMTP id y15-20020a17090322cfb02900e5b66c5903mr655800plg.68.1614653352904;
+        Mon, 01 Mar 2021 18:49:12 -0800 (PST)
 Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id d24sm18451031pfr.139.2021.03.01.18.48.59
+        by smtp.gmail.com with ESMTPSA id d24sm18451031pfr.139.2021.03.01.18.49.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Mar 2021 18:49:02 -0800 (PST)
+        Mon, 01 Mar 2021 18:49:12 -0800 (PST)
 From:   Gao Xiang <hsiangkao@redhat.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     "Darrick J. Wong" <djwong@kernel.org>,
@@ -58,64 +59,50 @@ Cc:     "Darrick J. Wong" <djwong@kernel.org>,
         Christoph Hellwig <hch@lst.de>,
         Eric Sandeen <sandeen@sandeen.net>,
         Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v7 0/5] xfs: support shrinking free space in the last AG
-Date:   Tue,  2 Mar 2021 10:48:11 +0800
-Message-Id: <20210302024816.2525095-1-hsiangkao@redhat.com>
+Subject: [PATCH v7 1/5] xfs: update lazy sb counters immediately for resizefs
+Date:   Tue,  2 Mar 2021 10:48:12 +0800
+Message-Id: <20210302024816.2525095-2-hsiangkao@redhat.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20210302024816.2525095-1-hsiangkao@redhat.com>
+References: <20210302024816.2525095-1-hsiangkao@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+sb_fdblocks will be updated lazily if lazysbcount is enabled,
+therefore when shrinking the filesystem sb_fdblocks could be
+larger than sb_dblocks and xfs_validate_sb_write() would fail.
 
-v6: https://lore.kernel.org/linux-xfs/20210126125621.3846735-1-hsiangkao@redhat.com/
+Even for growfs case, it'd be better to update lazy sb counters
+immediately to reflect the real sb counters.
 
-This patchset attempts to support shrinking free space in the last AG.
-This version mainly addresses previous review of v6. hope I don't miss
-any previous comments. Details in the changelog.
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+ fs/xfs/xfs_fsops.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-gitweb:
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/ tags/xfs/shrink_lastag_v7
-
-changes since v6:
- - rebase on the latest for-next;
- - [1/5] refine the comment (Brian);
- - [2/5] keep `delta' constant as nb - mp->m_sb.sb_dblocks, avoid
-         `extent' boolean but introduce `lastag_resetagres' for growfs
-         per-AG reservation judgement (Brian, Darrick);
- - [3/5] pass in agno directly for xfs_ag_shrink_space() (Brian);
- - [4/5] fix growfs 1 agcount case (Brian);
- - [4/5] refine xfs_fs_reserve_ag_blocks() in the end only for growfs
-         due to mp->m_finobt_nores == false (Brian);
- - [5/5] broadened error tag (Brian, although I think xfs_mod_fdblocks
-         shouldn't be triggered then.)
-
-Thanks for the time!
-
-Thanks,
-Gao Xiang
-
-xfsprogs: https://lore.kernel.org/r/20201028114010.545331-1-hsiangkao@redhat.com
-xfstests: https://lore.kernel.org/r/20201028230909.639698-1-hsiangkao@redhat.com
-
-Gao Xiang (5):
-  xfs: update lazy sb counters immediately for resizefs
-  xfs: hoist out xfs_resizefs_init_new_ags()
-  xfs: introduce xfs_ag_shrink_space()
-  xfs: support shrinking unused space in the last AG
-  xfs: add error injection for per-AG resv failure
-
- fs/xfs/libxfs/xfs_ag.c       | 108 +++++++++++++++++++
- fs/xfs/libxfs/xfs_ag.h       |   2 +
- fs/xfs/libxfs/xfs_ag_resv.c  |   6 +-
- fs/xfs/libxfs/xfs_errortag.h |   4 +-
- fs/xfs/xfs_error.c           |   2 +
- fs/xfs/xfs_fsops.c           | 195 ++++++++++++++++++++++-------------
- fs/xfs/xfs_trans.c           |   1 -
- 7 files changed, 242 insertions(+), 76 deletions(-)
-
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index a2a407039227..9f9ba8bd0213 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -128,6 +128,15 @@ xfs_growfs_data_private(
+ 				 nb - mp->m_sb.sb_dblocks);
+ 	if (id.nfree)
+ 		xfs_trans_mod_sb(tp, XFS_TRANS_SB_FDBLOCKS, id.nfree);
++
++	/*
++	 * Sync sb counters now to reflect the updated values. This is
++	 * particularly important for shrink because the write verifier
++	 * will fail if sb_fdblocks is ever larger than sb_dblocks.
++	 */
++	if (xfs_sb_version_haslazysbcount(&mp->m_sb))
++		xfs_log_sb(tp);
++
+ 	xfs_trans_set_sync(tp);
+ 	error = xfs_trans_commit(tp);
+ 	if (error)
 -- 
 2.27.0
 
