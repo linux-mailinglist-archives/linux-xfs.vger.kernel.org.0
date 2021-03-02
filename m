@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5726732B101
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF08132B0FB
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245678AbhCCDQD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45026 "EHLO mail.kernel.org"
+        id S245681AbhCCDQG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2360800AbhCBW3w (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S2360799AbhCBW3w (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Tue, 2 Mar 2021 17:29:52 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D3A664F35;
-        Tue,  2 Mar 2021 22:29:05 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D4DA964F16;
+        Tue,  2 Mar 2021 22:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614724145;
-        bh=tShhxszLZHSRa7LAtlaYBEFBalkhk7W2Veu/Af6sKYc=;
+        s=k20201202; t=1614724150;
+        bh=VdaL3LjLF3r26CVf9OcE7c5V7tl0Z16sleWqeL5lvbk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jmz/WFPa0tbO81IT9jtx2IONjPiWpNZvZsHmybfYBOpHg88GWndxXZs4iPyBdda0g
-         U/sFja91Bj4SpMIjDyfyYDCkUAX5/poXakEpfA6R2pznCrn+Ok/ljScbl33OJgdDst
-         xcV0k2rbvcWzAQrOKrMvYzt+sFZp7fIMBUIDuuViBvi5p9qDF61QvNDo27j+MuAz4O
-         seDdTIpfPGrJuOrY4P5qUnmSVKOS3Fq1LPaOJmNnvOVBOhBgAXlA35KX0z+QxDTpCs
-         j3nqgOYOyZy2gDFn7HWIaFT+aZPYFkg1LmxNt2V9L7rdqG8jKVOg7/5Sat8nnhkyI0
-         P37hxtx0v/hcw==
-Subject: [PATCH 5/7] xfs: set the scrub AG number in xchk_ag_read_headers
+        b=sA2BxfYI3dv226u+YVhza1oW0PGcrjDlelbLmdTIG7kP+7F+VqMgcMQ7NW7Mpu4LT
+         HBYwGaLdXmJUwjXHZzfVXZXnRPIUD9indqim2a6WN1rp+YBJvXNVxDXwmx3VXO0iWN
+         VztkdkQfggMcqD6YJLJMYX/ctRV4zWyxu1Uoi9gsONNJyhCKt/n98ZbXKhpB/HyYvv
+         94QdwjNK1tF1OzFkn/VSwDTchlKEltWcKliFFpwVATzLb23Gcbgq6RELhbAhuf3+tU
+         j+YaiG9mv40XQVMJM27cUhgDfJbV//1powDlbO56RlJXFAKi5KD/v7qQkJRQw+sgHe
+         f5+fQVnuGM0hg==
+Subject: [PATCH 6/7] xfs: remove return value from xchk_ag_btcur_init
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 02 Mar 2021 14:29:04 -0800
-Message-ID: <161472414479.3421582.13278274089212153461.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 14:29:10 -0800
+Message-ID: <161472415044.3421582.2179320230294749858.stgit@magnolia>
 In-Reply-To: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 References: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,134 +41,118 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Since xchk_ag_read_headers initializes fields in struct xchk_ag, we
-might as well set the AG number and save the callers the trouble.
+Functions called by this function cannot fail, so get rid of the return
+and error checking.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/agheader.c |   18 ++++++------------
- fs/xfs/scrub/common.c   |   16 +++++++---------
- fs/xfs/scrub/common.h   |    3 +--
- 3 files changed, 14 insertions(+), 23 deletions(-)
+ fs/xfs/scrub/agheader.c |   15 +++------------
+ fs/xfs/scrub/common.c   |    7 +++----
+ fs/xfs/scrub/common.h   |    2 +-
+ 3 files changed, 7 insertions(+), 17 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/agheader.c b/fs/xfs/scrub/agheader.c
-index ae8e2e0ac64a..afe60a9ca93f 100644
+index afe60a9ca93f..749faa17f8e2 100644
 --- a/fs/xfs/scrub/agheader.c
 +++ b/fs/xfs/scrub/agheader.c
-@@ -508,7 +508,7 @@ xchk_agf(
- 	struct xfs_mount	*mp = sc->mp;
- 	struct xfs_agf		*agf;
- 	struct xfs_perag	*pag;
--	xfs_agnumber_t		agno;
-+	xfs_agnumber_t		agno = sc->sm->sm_agno;
- 	xfs_agblock_t		agbno;
- 	xfs_agblock_t		eoag;
- 	xfs_agblock_t		agfl_first;
-@@ -518,9 +518,7 @@ xchk_agf(
- 	int			level;
- 	int			error = 0;
- 
--	agno = sc->sa.agno = sc->sm->sm_agno;
--	error = xchk_ag_read_headers(sc, agno, &sc->sa.agi_bp,
--			&sc->sa.agf_bp, &sc->sa.agfl_bp);
-+	error = xchk_ag_read_headers(sc, agno, &sc->sa);
- 	if (!xchk_process_error(sc, agno, XFS_AGF_BLOCK(sc->mp), &error))
- 		goto out;
- 	xchk_buffer_recheck(sc, sc->sa.agf_bp);
-@@ -691,14 +689,12 @@ xchk_agfl(
+@@ -477,16 +477,13 @@ xchk_agf_xref(
  {
- 	struct xchk_agfl_info	sai;
- 	struct xfs_agf		*agf;
--	xfs_agnumber_t		agno;
-+	xfs_agnumber_t		agno = sc->sm->sm_agno;
- 	unsigned int		agflcount;
- 	unsigned int		i;
- 	int			error;
- 
--	agno = sc->sa.agno = sc->sm->sm_agno;
--	error = xchk_ag_read_headers(sc, agno, &sc->sa.agi_bp,
--			&sc->sa.agf_bp, &sc->sa.agfl_bp);
-+	error = xchk_ag_read_headers(sc, agno, &sc->sa);
- 	if (!xchk_process_error(sc, agno, XFS_AGFL_BLOCK(sc->mp), &error))
- 		goto out;
- 	if (!sc->sa.agf_bp)
-@@ -846,7 +842,7 @@ xchk_agi(
  	struct xfs_mount	*mp = sc->mp;
- 	struct xfs_agi		*agi;
- 	struct xfs_perag	*pag;
--	xfs_agnumber_t		agno;
-+	xfs_agnumber_t		agno = sc->sm->sm_agno;
  	xfs_agblock_t		agbno;
- 	xfs_agblock_t		eoag;
- 	xfs_agino_t		agino;
-@@ -857,9 +853,7 @@ xchk_agi(
- 	int			level;
- 	int			error = 0;
+-	int			error;
  
--	agno = sc->sa.agno = sc->sm->sm_agno;
--	error = xchk_ag_read_headers(sc, agno, &sc->sa.agi_bp,
--			&sc->sa.agf_bp, &sc->sa.agfl_bp);
-+	error = xchk_ag_read_headers(sc, agno, &sc->sa);
- 	if (!xchk_process_error(sc, agno, XFS_AGI_BLOCK(sc->mp), &error))
- 		goto out;
- 	xchk_buffer_recheck(sc, sc->sa.agi_bp);
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return;
+ 
+ 	agbno = XFS_AGF_BLOCK(mp);
+ 
+-	error = xchk_ag_btcur_init(sc, &sc->sa);
+-	if (error)
+-		return;
++	xchk_ag_btcur_init(sc, &sc->sa);
+ 
+ 	xchk_xref_is_used_space(sc, agbno, 1);
+ 	xchk_agf_xref_freeblks(sc);
+@@ -660,16 +657,13 @@ xchk_agfl_xref(
+ {
+ 	struct xfs_mount	*mp = sc->mp;
+ 	xfs_agblock_t		agbno;
+-	int			error;
+ 
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return;
+ 
+ 	agbno = XFS_AGFL_BLOCK(mp);
+ 
+-	error = xchk_ag_btcur_init(sc, &sc->sa);
+-	if (error)
+-		return;
++	xchk_ag_btcur_init(sc, &sc->sa);
+ 
+ 	xchk_xref_is_used_space(sc, agbno, 1);
+ 	xchk_xref_is_not_inode_chunk(sc, agbno, 1);
+@@ -813,16 +807,13 @@ xchk_agi_xref(
+ {
+ 	struct xfs_mount	*mp = sc->mp;
+ 	xfs_agblock_t		agbno;
+-	int			error;
+ 
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return;
+ 
+ 	agbno = XFS_AGI_BLOCK(mp);
+ 
+-	error = xchk_ag_btcur_init(sc, &sc->sa);
+-	if (error)
+-		return;
++	xchk_ag_btcur_init(sc, &sc->sa);
+ 
+ 	xchk_xref_is_used_space(sc, agbno, 1);
+ 	xchk_xref_is_not_inode_chunk(sc, agbno, 1);
 diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index 53456f3de881..45c5bf37daaa 100644
+index 45c5bf37daaa..da60e7d1f895 100644
 --- a/fs/xfs/scrub/common.c
 +++ b/fs/xfs/scrub/common.c
-@@ -402,22 +402,22 @@ int
- xchk_ag_read_headers(
+@@ -452,7 +452,7 @@ xchk_ag_btcur_free(
+ }
+ 
+ /* Initialize all the btree cursors for an AG. */
+-int
++void
+ xchk_ag_btcur_init(
  	struct xfs_scrub	*sc,
- 	xfs_agnumber_t		agno,
--	struct xfs_buf		**agi,
--	struct xfs_buf		**agf,
--	struct xfs_buf		**agfl)
-+	struct xchk_ag		*sa)
- {
- 	struct xfs_mount	*mp = sc->mp;
- 	int			error;
+ 	struct xchk_ag		*sa)
+@@ -502,8 +502,6 @@ xchk_ag_btcur_init(
+ 		sa->refc_cur = xfs_refcountbt_init_cursor(mp, sc->tp,
+ 				sa->agf_bp, agno);
+ 	}
+-
+-	return 0;
+ }
  
--	error = xfs_ialloc_read_agi(mp, sc->tp, agno, agi);
-+	sa->agno = agno;
-+
-+	error = xfs_ialloc_read_agi(mp, sc->tp, agno, &sa->agi_bp);
- 	if (error && want_ag_read_header_failure(sc, XFS_SCRUB_TYPE_AGI))
- 		goto out;
- 
--	error = xfs_alloc_read_agf(mp, sc->tp, agno, 0, agf);
-+	error = xfs_alloc_read_agf(mp, sc->tp, agno, 0, &sa->agf_bp);
- 	if (error && want_ag_read_header_failure(sc, XFS_SCRUB_TYPE_AGF))
- 		goto out;
- 
--	error = xfs_alloc_read_agfl(mp, sc->tp, agno, agfl);
-+	error = xfs_alloc_read_agfl(mp, sc->tp, agno, &sa->agfl_bp);
- 	if (error && want_ag_read_header_failure(sc, XFS_SCRUB_TYPE_AGFL))
- 		goto out;
- 	error = 0;
-@@ -547,9 +547,7 @@ xchk_ag_init(
- {
- 	int			error;
- 
--	sa->agno = agno;
--	error = xchk_ag_read_headers(sc, agno, &sa->agi_bp,
--			&sa->agf_bp, &sa->agfl_bp);
-+	error = xchk_ag_read_headers(sc, agno, sa);
+ /* Release the AG header context and btree cursors. */
+@@ -551,7 +549,8 @@ xchk_ag_init(
  	if (error)
  		return error;
  
+-	return xchk_ag_btcur_init(sc, sa);
++	xchk_ag_btcur_init(sc, sa);
++	return 0;
+ }
+ 
+ /*
 diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
-index 2e50d146105d..bf94b2db0b96 100644
+index bf94b2db0b96..5e2c6f693503 100644
 --- a/fs/xfs/scrub/common.h
 +++ b/fs/xfs/scrub/common.h
-@@ -120,8 +120,7 @@ int xchk_ag_init(struct xfs_scrub *sc, xfs_agnumber_t agno,
- 		struct xchk_ag *sa);
- void xchk_perag_get(struct xfs_mount *mp, struct xchk_ag *sa);
+@@ -122,7 +122,7 @@ void xchk_perag_get(struct xfs_mount *mp, struct xchk_ag *sa);
  int xchk_ag_read_headers(struct xfs_scrub *sc, xfs_agnumber_t agno,
--		struct xfs_buf **agi, struct xfs_buf **agf,
--		struct xfs_buf **agfl);
-+		struct xchk_ag *sa);
+ 		struct xchk_ag *sa);
  void xchk_ag_btcur_free(struct xchk_ag *sa);
- int xchk_ag_btcur_init(struct xfs_scrub *sc, struct xchk_ag *sa);
+-int xchk_ag_btcur_init(struct xfs_scrub *sc, struct xchk_ag *sa);
++void xchk_ag_btcur_init(struct xfs_scrub *sc, struct xchk_ag *sa);
  int xchk_count_rmap_ownedby_ag(struct xfs_scrub *sc, struct xfs_btree_cur *cur,
+ 		const struct xfs_owner_info *oinfo, xfs_filblks_t *blocks);
+ 
 
