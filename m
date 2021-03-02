@@ -2,85 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1FC732B10B
+	by mail.lfdr.de (Postfix) with ESMTP id 424BA32B106
 	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343602AbhCCDQJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
+        id S1343559AbhCCDQI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2361015AbhCBXLL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 18:11:11 -0500
-X-Greylist: delayed 88076 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 02 Mar 2021 15:00:25 PST
-Received: from vera.ghen.be (vera.ghen.be [IPv6:2a02:2308:20::3be:0:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9627CC06178B
-        for <linux-xfs@vger.kernel.org>; Tue,  2 Mar 2021 15:00:25 -0800 (PST)
-Received: by vera.ghen.be (Postfix, from userid 1000)
-        id 4Dqsw23GXyz2xBF; Tue,  2 Mar 2021 23:57:22 +0100 (CET)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hendrickx.be;
-        s=21e; t=1614725842;
-        bh=l1vW9JHsSOPKj8U7zv7CvTh8KRM1+FD5TUVhL3BnVmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=y+7CgVxOx8pS5Mj03WfCNlOZ8DsHTL3jaWjE1xDRidb9ST14l/JDAFdl6AI5uoNR/
-         wnP2e3qmBYbZ6ZSWWo0Ag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hendrickx.be; s=21r;
-        t=1614725842; bh=l1vW9JHsSOPKj8U7zv7CvTh8KRM1+FD5TUVhL3BnVmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=IhNL17XYUM6JT4QyOCC8L6FEQd1Cg9z7lpHOrlZHNxCWIiwy8Ky2HEbLhP/RfcBXf
-         uUG5hXB/KeNS+TOAgLH2VGsWaxR+J5qBML/VWzmZ3h985NXVNnQp1J8hpDzRciLkW/
-         xvrKiwLnJvznOrOU3854edAAnLV8B+RxNqDpMuVf/3zl0MxxtXFdxFAS5sq0gTTCoy
-         ysDlz+7rhPgEGhV0jMLQ6GLNvd47/l3wtM3idDVLk5JisKD1hsJQ5rMZczxsneOq2k
-         caiF1+L2KTs/yqVDmKnIuzrLuc+GAYgdT14mejax2nF7VCpmK99E8K5Y1jDZBU8fV5
-         QcHsDlFo1mjrQ==
-Date:   Tue, 2 Mar 2021 23:57:22 +0100
-From:   Geert Hendrickx <geert@hendrickx.be>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: xfs_admin -O feature upgrade feedback
-Message-ID: <YD7C0v5rKopCJvk2@vera.ghen.be>
-References: <YDy+OmsVCkTfiMPp@vera.ghen.be>
- <20210301191803.GE7269@magnolia>
- <YD4tWbfzmuXv1mKQ@bfoster>
+        with ESMTP id S2360967AbhCBXI2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 18:08:28 -0500
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB82DC061788
+        for <linux-xfs@vger.kernel.org>; Tue,  2 Mar 2021 15:07:47 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id r25so25190024ljk.11
+        for <linux-xfs@vger.kernel.org>; Tue, 02 Mar 2021 15:07:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5pZrjjEXxeGRqF4m3hpMHzH4jL5bRTSPjbV5MW0021o=;
+        b=EMKY2f0QC3SaZfHlEf4NoKPeSBayQgqo+7fZ2cHuv05qNY4wtPYwFhtJ1IR8qNHEeG
+         Ow3cowMzWPmHToA7o7UjD+Uog5aUwFWpOWFxgSjgbp/VEsypPGBB9WAHBvVPiD4rImSf
+         dqefdK+bYhI1vpP3FKuXvewW7vioUZbT8qICo3Rc6f9jufHlagRMdKSPHPDG9xUu6/vn
+         drhrpIaNC9gilfC0iBRrK6BhAHoHneNDz5IYOo1GPdEKCJU32vGXZHCr/URhA2skaSW3
+         u+ZZ+7SzqLuvkpc69htZh83zGJF4PYCnbq0nRWLiL49rX0HlSv1DXYO/OiUaUFgLH5W/
+         AiXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5pZrjjEXxeGRqF4m3hpMHzH4jL5bRTSPjbV5MW0021o=;
+        b=ndYJDqElNOR17ibqMcK5uVZSH/i460BV7guZxkb+00BGumjQ+Wyu2br1JwFA+YA7Al
+         F6Td6h/G54Xw1T5NoaRkwQT303Jdp6Sgh6EKA9kcZG6QsKKItm24R1uDJ0xtoEuy/Qzv
+         1RRXqVDGf/qROxrYUxm8UM1sMNmWMAfk+ha71eNeRsMLBaovxrUvzs2BDYlV7epX/1jC
+         BNmrPbGPEkVQEX01n6VX0lsY/jSY+j+4Xy8YTy2CnzyvQkdcYLwSo370ZBxD9Y9VE7UL
+         OoXczZ5ekyK1HWyLAvXeuZde82BWaH9u82lWItDc9gZTWvBcurY8m3rm6yYmc/ZfvdfK
+         7MxQ==
+X-Gm-Message-State: AOAM533vHwxg5fwYXRMmVmacAipOfdDDptgtRjh9LeH8mSWMuabc/3Jc
+        JNb+2YIXJ4soMFRFMyeh0CGmeqkgIRXrhsg1ze/SDWW6dF4=
+X-Google-Smtp-Source: ABdhPJyBxgS39jsQ+xMMNXaj8FF46l0fcsMuPVhHBTbeUwGUlvKhLf6Ltl5EGRkgjzMqSIxr3+rcTAtGuzCIqBMtMoI=
+X-Received: by 2002:a05:651c:2125:: with SMTP id a37mr13480659ljq.19.1614726466193;
+ Tue, 02 Mar 2021 15:07:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YD4tWbfzmuXv1mKQ@bfoster>
-X-PGP-Key: https://geert.hendrickx.be/pgpkey.asc
-X-PGP-Key-Id: C88C1D9ED3861005886BF44ACD718C1F95AD44EA
+References: <161472409643.3421449.2100229515469727212.stgit@magnolia>
+In-Reply-To: <161472409643.3421449.2100229515469727212.stgit@magnolia>
+From:   Christian Brauner <christian@brauner.io>
+Date:   Wed, 3 Mar 2021 00:07:35 +0100
+Message-ID: <CAHrFyr5saBTbVFSO4UGgH9z8Nxf3-OE=__jeUn9+6cfqGHSyHg@mail.gmail.com>
+Subject: Re: [PATCHSET 0/3] xfs: small fixes for 5.12
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, hch@lst.de, dchinner@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Mar 02, 2021 at 07:19:37 -0500, Brian Foster wrote:
-> It's not clear to me if you're reporting that feature upgrades spuriously
-> report this "Conversion failed ..." message (i.e., feature upgrade
-> succeeded, but repair found and fixed things expected to be problems due
-> to the feature upgrade), or that this error is reported if there is
-> something independently wrong with the fs. If the former, that seems like
-> a bug. If the latter, I think that's reasonable/expected behavior.
+On Tue, Mar 2, 2021 at 11:28 PM Darrick J. Wong <djwong@kernel.org> wrote:
+>
+> Hi all,
+>
+> Here's a handful of bug fixes for 5.12.  The first one fixes a bug in
+> quota accounting on idmapped mounts; the second avoids a buffer deadlock
+> in bulkstat/inumbers if the inobt is corrupt; and the third fixes a
+> mount hang if mount fails after creating (or otherwise dirtying) the
+> quota inodes.
+>
+> If you're going to start using this mess, you probably ought to just
+> pull from my git trees, which are linked below.
+>
+> This is an extraordinary way to destroy everything.  Enjoy!
+> Comments and questions are, as always, welcome.
 
+Thanks for doing this, Darrick.
+I haven't forgotten the xfstests addition for quotas I promised yesterday.
+While writing the tests I got bitten by the swapfile bug (Yes yes, I
+was insane enough
+to run -rc1 for the first time at that.) and now I'm in the process of
+recovering my
+development machine, emails and all. I'll try to review this tomorrow!
 
+Thanks again!
+Christian
 
-There are sillier scenarios, like simply incorrect arguments.  For example
-"xfs_admin -O bigtypo=1 /dev/foo" responds with: "Conversion failed, is the
-filesystem unmounted?"
-
-(where /dev/foo is the correct blockdevice, properly unmounted etc, but the
-options argument contains a typo)
-
-The proper xfs_repair error "unknown option -c bigtypo=1" gets thrown away.
-
-
-Other examples include "-O bigtime" => "bigtime requires a parameter" (with
-Darrick's patch for the other issue applied), or "bigtime=0" => "bigtime
-only supports upgrades", all dropped on the floor by xfs_admin and replaced
-with the one generic message that gives no indication of the actual problem.
-(the user keeps verifying whether the filesystem is unmounted and clean...)
-
-
-
-	Geert
-
-
+>
+> --D
+>
+> kernel git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes-5.12
+> ---
+>  fs/xfs/xfs_inode.c   |   14 ++++++++------
+>  fs/xfs/xfs_itable.c  |   46 ++++++++++++++++++++++++++++++++++++++++++----
+>  fs/xfs/xfs_mount.c   |   10 ++++++++++
+>  fs/xfs/xfs_symlink.c |    3 ++-
+>  4 files changed, 62 insertions(+), 11 deletions(-)
+>
