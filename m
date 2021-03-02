@@ -2,33 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F39632B0F7
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C01FD32B0F4
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245669AbhCCDQA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44962 "EHLO mail.kernel.org"
+        id S245664AbhCCDP7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:15:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2360791AbhCBW3q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S2360790AbhCBW3q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Tue, 2 Mar 2021 17:29:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DCD6864F3D;
-        Tue,  2 Mar 2021 22:28:53 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F7ED64F2D;
+        Tue,  2 Mar 2021 22:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614724134;
-        bh=ckMVRH/f45FhQX6mPzo1G8MhObesegtytNu1Uoq1nDs=;
+        s=k20201202; t=1614724139;
+        bh=gxJFqmZJEJNZBQcGOetI+GdSq+2KUnqCpSVCCQVquWA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jP0u7eD+j2kZdG5/Jfz00PLz2l2egSz+QOogVA9t6A7oYjP63YmRLlCY2z9kfEWq4
-         6N9dxIgBP7jqazjGeFH7Qmq8YB+kKfM47CjsgaMGlQIzHKWvHBgkUzaDTILwXlpsSZ
-         NpCvS2TNkj6j3EfrXVt2sS+XMf3Pk75fetMaf0UH3NM/UTbZj3lVtiSW94N0zatm7w
-         a2Dch9D+CvUvUZw6PtGM/r9gdriLGYEaZ8NWc/oq/d7peBjSKyt23/85kDLAxCyYfO
-         SkCh2ojj8tnY9HZwWyBrxp9cnMqLi/4IxkpalEUtcNGmt39+FMmx3TP4AEAh2hqkbQ
-         kllwR9K0LUU3Q==
-Subject: [PATCH 3/7] xfs: bail out of scrub immediately if scan incomplete
+        b=FJd8cJRxTIka1oOHGwE2CyQVRRk/NJJbRdLviqgBD0LWOKnEphGE+Alkz21J9+2C1
+         OWUF893sWuapsinSTGIxE1FdHhkmDELNUIBIZs2n8p5Hlo7eEjankWSm3cFsQ/QOmH
+         mJvEx599c+tR80lEN2uNMRMN5IMyYdilt3DYLwhWVDGvbBBhk25Cr71bOVSX5ummbZ
+         wZAJRm4qW8t2V1kZNAvkM/iR947DC8ePguIew/kQbVbgfO686L86hn0rc4nd/QZVQ3
+         DMSaGprL5c8VGqvBF2qjVGSrfQQSWSnzqs8Yd3uAjcJL++MutjMhdHgNZYxi5y1vxi
+         DqjVIvlok7CkQ==
+Subject: [PATCH 4/7] xfs: mark a data structure sick if there are
+ cross-referencing errors
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 02 Mar 2021 14:28:53 -0800
-Message-ID: <161472413358.3421582.1775111400550224556.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 14:28:59 -0800
+Message-ID: <161472413910.3421582.5713995044590901701.stgit@magnolia>
 In-Reply-To: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 References: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,28 +42,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If a scrubber cannot complete its check and signals an incomplete check,
-we must bail out immediately without updating health status, trying a
-repair, etc. because our scan is incomplete and we therefore do not know
-much more.
+If scrub observes cross-referencing errors while scanning a data
+structure, mark the data structure sick.  There's /something/
+inconsistent, even if we can't really tell what it is.
 
+Fixes: 4860a05d2475 ("xfs: scrub/repair should update filesystem metadata health")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/scrub.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/scrub/health.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
-index 8ebf35b115ce..47c68c72bcac 100644
---- a/fs/xfs/scrub/scrub.c
-+++ b/fs/xfs/scrub/scrub.c
-@@ -517,7 +517,7 @@ xfs_scrub_metadata(
- 			goto out;
- 		sc.flags |= XCHK_TRY_HARDER;
- 		goto retry_op;
--	} else if (error)
-+	} else if (error || (sm->sm_flags & XFS_SCRUB_OFLAG_INCOMPLETE))
- 		goto out_teardown;
+diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
+index 83d27cdf579b..3de59b5c2ce6 100644
+--- a/fs/xfs/scrub/health.c
++++ b/fs/xfs/scrub/health.c
+@@ -133,7 +133,8 @@ xchk_update_health(
+ 	if (!sc->sick_mask)
+ 		return;
  
- 	xchk_update_health(&sc);
+-	bad = (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT);
++	bad = (sc->sm->sm_flags & (XFS_SCRUB_OFLAG_CORRUPT |
++				   XFS_SCRUB_OFLAG_XCORRUPT));
+ 	switch (type_to_health_flag[sc->sm->sm_type].group) {
+ 	case XHG_AG:
+ 		pag = xfs_perag_get(sc->mp, sc->sm->sm_agno);
 
