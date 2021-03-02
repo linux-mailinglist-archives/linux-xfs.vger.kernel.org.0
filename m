@@ -2,33 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EA9832B10E
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F50032B116
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344137AbhCCDQO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38484 "EHLO mail.kernel.org"
+        id S1349460AbhCCDQS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2361108AbhCBXXO (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 18:23:14 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 718CA64F32;
-        Tue,  2 Mar 2021 23:22:34 +0000 (UTC)
+        id S2361109AbhCBXXU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Mar 2021 18:23:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0616E64F34;
+        Tue,  2 Mar 2021 23:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614727354;
-        bh=OpY2QF4qIvS810nU0YRIYfUf/Nay16u27jqFS8QMYfE=;
-        h=Subject:From:To:Cc:Date:From;
-        b=iK02zWVSDrTEhLE4O8Y8umtJq6y2Uo5/j0e41Om89yRWMC2/fG2KceEqq6WH/T3ZL
-         jvg/ndG6Nd/CbwVca+qLpy8BS2nYN2Yc1fft8jgbEB9h6m8igGyelB5lwd55+OKfy3
-         +9ygi/PM20XFU+XeFG/XDbmtGJKpfVKwAfWK1qNCOSmXwv4KD2WoZKv9jSabweCrXU
-         yTQudEu5fgz1cjWe75GIGm2X0dY1mObTeT48GrB/iovZ/P2jJVOFnvxQvRTBP07rdo
-         SaqlmHRBizV0DwlzI9PnfzfMCEmvkeBxxWH3jUnHk1r9zs8eDPDmPfYO1UZb1Fu0sL
-         AQpjO8Ph/EYOw==
-Subject: [PATCHSET 0/4] fstests: various fixes
+        s=k20201202; t=1614727360;
+        bh=WYpnpXEdkxLChyk2Ffg5+vuAPJHiTNT5oscrzIXJVzM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=EVb8oPSo7FnRDZwc2zlljYFtNOLgopwKXIY+yLYg/a53jvdzt/pZxex7V0mpWsEps
+         +MlAgXBJ5MU5j83PitzQ06WdjWEcx6A9u/DlihlZoWcaLStHbMWp9Y1ORkxSt7pIfu
+         d6b1Vr+Tu+ejyoGQ3oMjMcuEwX5wJfjETsYpAHvgmKUSIIAMeMyUFRE7/IjyxyHvpI
+         K7rpL6bVJoGv8yIcy7eFWS2v2d+OpyhrcH/f98SzLQbrs2y9T/H59Dlk8FvTBmuN72
+         ZjhFVbLai0XLwLoxtkKAuOx1IzoF2yumd2NgGP1HRrTKb8YIbYocNuLoSUHBmK7obL
+         i7Qr0Wzw5Btzg==
+Subject: [PATCH 1/4] generic/623: don't fail on core dumps
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 02 Mar 2021 15:22:34 -0800
-Message-ID: <161472735404.3478298.8179031068431918520.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 15:22:39 -0800
+Message-ID: <161472735969.3478298.17752955323122832118.stgit@magnolia>
+In-Reply-To: <161472735404.3478298.8179031068431918520.stgit@magnolia>
+References: <161472735404.3478298.8179031068431918520.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -37,33 +39,29 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Here's a few fixes for some false negatives on reflink filesystems, and
-fixes to make sure the dax tests work properly even when the filesystem
-is formatted with the dax iflag set everywhere.
+This test is designed to fail an mmap write and see what happens.
+Typically this is a segmentation fault.  If the user's computer is
+configured to capture core dumps, this will cause the test to fail, even
+though we got the reaction we wanted.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=random-fixes
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=random-fixes
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/rc         |    3 ++-
- tests/generic/607 |    4 ++++
- tests/generic/608 |    3 +++
  tests/generic/623 |    1 +
- tests/xfs/271     |   12 +++++++++++-
- 5 files changed, 21 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+)
+
+
+diff --git a/tests/generic/623 b/tests/generic/623
+index 7be38955..04411405 100755
+--- a/tests/generic/623
++++ b/tests/generic/623
+@@ -37,6 +37,7 @@ _scratch_mount
+ # status on the page.
+ file=$SCRATCH_MNT/file
+ $XFS_IO_PROG -fc "pwrite 0 4k" -c fsync $file | _filter_xfs_io
++ulimit -c 0
+ $XFS_IO_PROG -x -c "mmap 0 4k" -c "mwrite 0 4k" -c shutdown -c fsync \
+ 	-c "mwrite 0 4k" $file | _filter_xfs_io
+ 
 
