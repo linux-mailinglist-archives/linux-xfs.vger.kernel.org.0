@@ -2,285 +2,359 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0EC632B0A0
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:44:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5927B32B0A5
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:44:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245599AbhCCDPJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:15:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351880AbhCBRuV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 12:50:21 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E19C061A30
-        for <linux-xfs@vger.kernel.org>; Tue,  2 Mar 2021 09:49:41 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id b13so17157378edx.1
-        for <linux-xfs@vger.kernel.org>; Tue, 02 Mar 2021 09:49:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G1jNIbHrSTxAMgQLW8j2zNIaeCqH8C/pWqqPUiSjxU0=;
-        b=z61wMQoD4obDZYrGr5vzM7cXLqWh158yp1rO2r0bNbmecFgzWwYJLjBdFB+KZOzB/8
-         4l34RMuywLH3KvcaP8Y/94oUTRXpstJEB0MTvzKYApokwl6q+Scj/RH95PCwNcHlgfuO
-         4uMWFu2Az6g5yrcShaejYitRijoF64SIhA8j7cwSxFbm8qsSHEe6WYw3wB/Fvcy+NtiO
-         v89FFOds+2gWhrH698lt1JMZq0hbFy15fBUQLWBrTggXeb5CdojCkJBcEFU5QxJCSDV3
-         MwsSCQcRY8x14ZDzII/LSQ77Ge870b5ERbOKp3H0hJjXRS1rkW+tHCghwrP8tP0AvTHI
-         N7uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G1jNIbHrSTxAMgQLW8j2zNIaeCqH8C/pWqqPUiSjxU0=;
-        b=E/MUvOvCg/5RL0jXODMlU+nhjFdv9eHQ5yGF0GZFoTDeu0xqtrjnvXCjN9oFxZH0O8
-         z+vvdrhPSWBkRq3GD+wc7LgosYVqrLs3ZvDn8wzzju/rFCU6iT/VoOf0nqAWSZBELqx2
-         ZEo6ai1zlTZZhzxv16l+wlhJunYNKFzzMjrza2xOTIBHiBz1jT35fhTwmR33gN2OV6IJ
-         V0RxvF5T9kJXNOyZO7yk9dYuUigNi5bSJ5q6SJVSPHJOgVvN9c39DUkSRpHJcKUrrGN3
-         KQarX5wpcBwFzdrnmXOkl0xcD4EAYtgFGPN8LJ7VUtUg9/xZzkvnXdvpTcORqS02UY7D
-         63pw==
-X-Gm-Message-State: AOAM531MPP9y1cHZxGmN466hIKb8d6wXgLS8+0rg9bf2FauHhAhsdJXb
-        j7/8Z8z0+xNVS2O0kO+ah1jLp9WYJa5gjr14zztMOA==
-X-Google-Smtp-Source: ABdhPJw52xU2AAVDUM7fXxo6dph71Kc7Vf7xblc+YtWfct1Obn+c8f0OfGJHsyuuxwfVWHPK34k5EGOt8jCZ2PZVdvs=
-X-Received: by 2002:a05:6402:b1c:: with SMTP id bm28mr22090543edb.354.1614707379707;
- Tue, 02 Mar 2021 09:49:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20210226205126.GX4662@dread.disaster.area> <CAPcyv4iDefA3Y0wUW=p080SYAsM_2TPJba-V-sxdK_BeJMkmsw@mail.gmail.com>
- <20210226212748.GY4662@dread.disaster.area> <CAPcyv4jryJ32R5vOwwEdoU3V8C0B7zu_pCt=7f6A3Gk-9h6Dfg@mail.gmail.com>
- <20210227223611.GZ4662@dread.disaster.area> <CAPcyv4h7XA3Jorcy_J+t9scw0A4KdT2WEwAhE-Nbjc=C2qmkMw@mail.gmail.com>
- <20210228223846.GA4662@dread.disaster.area> <CAPcyv4jzV2RUij2BEvDJLLiK_67Nf1v3M6-jRLKf32x4iOzqng@mail.gmail.com>
- <20210302032805.GM7272@magnolia> <CAPcyv4jXH0F+aii6ZtYQ3=Rx-mOWM7NFHC9wVxacW-b1o_s20g@mail.gmail.com>
- <20210302075736.GJ4662@dread.disaster.area>
-In-Reply-To: <20210302075736.GJ4662@dread.disaster.area>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 2 Mar 2021 09:49:30 -0800
-Message-ID: <CAPcyv4iyTHVW51xocmLO7F6ATgq0rJtQ1nShB=rAmDfzx83EyA@mail.gmail.com>
-Subject: Re: Question about the "EXPERIMENTAL" tag for dax in XFS
+        id S245333AbhCCDPT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:15:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:37041 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1349608AbhCBS1w (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 13:27:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1614709502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=B1VrpTdqTfTzT6aALMZ6lH9DcDODoD5rH6mGWm6rnu0=;
+        b=blnkAZGZoXIaaDtF2mCDn73DuJR+tGuFlqWAPYqOwT0YLh/YQGWasPDsCLZovtr5Hd3Hrj
+        D5T3mF2WXHRnmFVqS4JMDN5vfaI5lEfihi2vQHHuSch5jaS+0RPnp5Qv9JB5UuKEYz/o1Y
+        KWrw3c6PCBQEsj0hYm9rJrDveZCCLzs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-76-LQqMW8o4OUK6eL1FE9Vr3A-1; Tue, 02 Mar 2021 13:12:45 -0500
+X-MC-Unique: LQqMW8o4OUK6eL1FE9Vr3A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8F9B219611D0;
+        Tue,  2 Mar 2021 18:12:38 +0000 (UTC)
+Received: from bfoster (ovpn-119-215.rdu2.redhat.com [10.10.119.215])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AC09E169;
+        Tue,  2 Mar 2021 18:12:38 +0000 (UTC)
+Date:   Tue, 2 Mar 2021 13:12:36 -0500
+From:   Brian Foster <bfoster@redhat.com>
 To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        "ruansy.fnst@fujitsu.com" <ruansy.fnst@fujitsu.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "darrick.wong@oracle.com" <darrick.wong@oracle.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
-        "hch@lst.de" <hch@lst.de>, "rgoldwyn@suse.de" <rgoldwyn@suse.de>,
-        "y-goto@fujitsu.com" <y-goto@fujitsu.com>,
-        "qi.fuli@fujitsu.com" <qi.fuli@fujitsu.com>,
-        "fnstml-iaas@cn.fujitsu.com" <fnstml-iaas@cn.fujitsu.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs: xfs_log_force_lsn isn't passed a LSN
+Message-ID: <YD6AFFjVkfF3Y/oo@bfoster>
+References: <20210223053212.3287398-1-david@fromorbit.com>
+ <20210223053212.3287398-2-david@fromorbit.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210223053212.3287398-2-david@fromorbit.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Mar 1, 2021 at 11:57 PM Dave Chinner <david@fromorbit.com> wrote:
->
-> On Mon, Mar 01, 2021 at 09:41:02PM -0800, Dan Williams wrote:
-> > On Mon, Mar 1, 2021 at 7:28 PM Darrick J. Wong <djwong@kernel.org> wrote:
-> > > > > I really don't see you seem to be telling us that invalidation is an
-> > > > > either/or choice. There's more ways to convert physical block
-> > > > > address -> inode file offset and mapping index than brute force
-> > > > > inode cache walks....
-> > > >
-> > > > Yes, but I was trying to map it to an existing mechanism and the
-> > > > internals of drop_pagecache_sb() are, in coarse terms, close to what
-> > > > needs to happen here.
-> > >
-> > > Yes.  XFS (with rmap enabled) can do all the iteration and walking in
-> > > that function except for the invalidate_mapping_* call itself.  The goal
-> > > of this series is first to wire up a callback within both the block and
-> > > pmem subsystems so that they can take notifications and reverse-map them
-> > > through the storage stack until they reach an fs superblock.
-> >
-> > I'm chuckling because this "reverse map all the way up the block
-> > layer" is the opposite of what Dave said at the first reaction to my
-> > proposal, "can't the mm map pfns to fs inode  address_spaces?".
->
-> Ah, no, I never said that the filesystem can't do reverse maps. I
-> was asking if the mm could directly (brute-force) invalidate PTEs
-> pointing at physical pmem ranges without needing walk the inode
-> mappings. That would be far more efficient if it could be done....
->
-> > Today whenever the pmem driver receives new corrupted range
-> > notification from the lower level nvdimm
-> > infrastructure(nd_pmem_notify) it updates the 'badblocks' instance
-> > associated with the pmem gendisk and then notifies userspace that
-> > there are new badblocks. This seems a perfect place to signal an upper
-> > level stacked block device that may also be watching disk->bb. Then
-> > each gendisk in a stacked topology is responsible for watching the
-> > badblock notifications of the next level and storing a remapped
-> > instance of those blocks until ultimately the filesystem mounted on
-> > the top-level block device is responsible for registering for those
-> > top-level disk->bb events.
-> >
-> > The device gone notification does not map cleanly onto 'struct badblocks'.
->
-> Filesystems are not allowed to interact with the gendisk
-> infrastructure - that's for supporting the device side of a block
-> device. It's a layering violation, and many a filesytem developer
-> has been shouted at for trying to do this. At most we can peek
-> through it to query functionality support from the request queue,
-> but otherwise filesystems do not interact with anything under
-> bdev->bd_disk.
+On Tue, Feb 23, 2021 at 04:32:10PM +1100, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> In doing an investigation into AIL push stalls, I was looking at the
+> log force code to see if an async CIL push could be done instead.
+> This lead me to xfs_log_force_lsn() and looking at how it works.
+> 
+> xfs_log_force_lsn() is only called from inode synchronisation
+> contexts such as fsync(), and it takes the ip->i_itemp->ili_last_lsn
+> value as the LSN to sync the log to. This gets passed to
+> xlog_cil_force_lsn() via xfs_log_force_lsn() to flush the CIL to the
+> journal, and then used by xfs_log_force_lsn() to flush the iclogs to
+> the journal.
+> 
 
-So lets add an api that allows the querying of badblocks by bdev and
-let the block core handle the bd_disk interaction. I see other block
-functionality like blk-integrity reaching through gendisk. The fs need
-not interact with the gendisk directly.
+As you point out just below, this ->ili_last_lsn value is not used by
+xfs_log_force_lsn(). It's passed to the CIL force and that potentially
+returns a LSN for the log force call.
 
->
-> As it is, badblocks are used by devices to manage internal state.
-> e.g. md for recording stripes that need recovery if the system
-> crashes while they are being written out.
+> The problem with is that ip->i_itemp->ili_last_lsn does not store a
+> log sequence number. What it stores is passed to it from the
+> ->iop_committing method, which is called by xfs_log_commit_cil().
+> The value this passes to the iop_committing method is the CIL
+> context sequence number that the item was committed to.
+> 
 
-I know, I was there when it was invented which is why it was
-top-of-mind when pmem had a need to communicate badblocks. Other block
-drivers have threatened to use it for badblocks tracking, but none of
-those have carried through on that initial interest.
+Ok, but what is the "problem?" It sounds like this patch is cleaning
+things up vs. fixing a problem...
 
->
-> > If an upper level agent really cared about knowing about ->remove()
-> > events before they happened it could maybe do something like:
-> >
-> > dev = disk_to_dev(bdev->bd_disk)->parent;
-> > bus_register_notifier(dev->bus. &disk_host_device_notifier_block)
->
-> Yeah, that's exactly the sort of thing that filesystems have been
-> aggressively discouraged from doing for years.
+> As it turns out, xlog_cil_force_lsn() converts the sequence to an
+> actual commit LSN for the related context and returns that to
+> xfs_log_force_lsn(). xfs_log_force_lsn() overwrites it's "lsn"
+> variable that contained a sequence with an actual LSN and then uses
+> that to sync the iclogs.
+> 
+> This caused me some confusion for a while, even though I originally
+> wrote all this code a decade ago. ->iop_committing is only used by
+> a couple of log item types, and only inode items use the sequence
+> number it is passed.
+> 
+> Let's clean up the API, CIL structures and inode log item to call it
+> a sequence number, and make it clear that the high level code is
+> using CIL sequence numbers and not on-disk LSNs for integrity
+> synchronisation purposes.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_buf_item.c   |  2 +-
+>  fs/xfs/xfs_dquot_item.c |  2 +-
+>  fs/xfs/xfs_file.c       | 14 +++++++-------
+>  fs/xfs/xfs_inode.c      | 10 +++++-----
+>  fs/xfs/xfs_inode_item.c |  4 ++--
+>  fs/xfs/xfs_inode_item.h |  2 +-
+>  fs/xfs/xfs_log.c        | 27 ++++++++++++++-------------
+>  fs/xfs/xfs_log.h        |  4 +---
+>  fs/xfs/xfs_log_cil.c    | 22 +++++++++-------------
+>  fs/xfs/xfs_log_priv.h   | 15 +++++++--------
+>  fs/xfs/xfs_trans.c      |  6 +++---
+>  fs/xfs/xfs_trans.h      |  4 ++--
+>  12 files changed, 53 insertions(+), 59 deletions(-)
+> 
+...
+> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> index 08d68a6161ae..84cd9b6c6d1f 100644
+> --- a/fs/xfs/xfs_log.c
+> +++ b/fs/xfs/xfs_log.c
+...
+> @@ -3415,25 +3412,29 @@ __xfs_log_force_lsn(
+>   * to disk, that thread will wake up all threads waiting on the queue.
+>   */
+>  int
+> -xfs_log_force_lsn(
+> +xfs_log_force_seq(
+>  	struct xfs_mount	*mp,
+> -	xfs_lsn_t		lsn,
+> +	uint64_t		seq,
+>  	uint			flags,
+>  	int			*log_flushed)
+>  {
+> +	struct xlog		*log = mp->m_log;
+> +	xfs_lsn_t		lsn;
+>  	int			ret;
+> -	ASSERT(lsn != 0);
+> +	ASSERT(seq != 0);
+>  
+>  	XFS_STATS_INC(mp, xs_log_force);
+> -	trace_xfs_log_force(mp, lsn, _RET_IP_);
+> +	trace_xfs_log_force(mp, seq, _RET_IP_);
+>  
+> -	lsn = xlog_cil_force_lsn(mp->m_log, lsn);
+> +	lsn = xlog_cil_force_seq(log, seq);
+>  	if (lsn == NULLCOMMITLSN)
+>  		return 0;
+>  
+> -	ret = __xfs_log_force_lsn(mp, lsn, flags, log_flushed, false);
+> -	if (ret == -EAGAIN)
+> -		ret = __xfs_log_force_lsn(mp, lsn, flags, log_flushed, true);
+> +	ret = xlog_force_lsn(log, lsn, flags, log_flushed, false);
+> +	if (ret == -EAGAIN) {
+> +		XFS_STATS_INC(mp, xs_log_force_sleep);
 
-Yup, it's a layering violation.
+This looks misplaced to me here. I'd just leave it where we do the sleep
+and pass log->l_mp. That nit and the slightly misleading commit log
+aside, the rest LGTM and seems like a nice cleanup:
 
-> Part of the reason for this is that gendisk based mechanisms are not
-> very good for stacked device error reporting. Part of the problem
-> here is that every layer of the stacked device has to hook the
-> notifier of the block devices underneath it, then translate the
-> event to match the upper block device map, then regenerate the
-> notification for the next layer up. This isn't an efficient way to
-> pass a notification through a series of stacked devices and it is
-> messy and cumbersome to maintain.
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-It's been messy and cumbersome to route new infrastructure through DM
-every time a new dax_operation arrives. The corrupted_range() routing
-has the same burden. The advantage of badblocks over corrupted_range()
-is that it solves the "what If I miss a notification" problem. Each
-layer of the stack maintains its sector translation of the next level
-errors.
-.
-> It can be effective for getting notifications to userspace about
-> something that happens to a specific block device.
+> +		ret = xlog_force_lsn(log, lsn, flags, log_flushed, true);
+> +	}
+>  	return ret;
+>  }
+>  
+> diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+> index 044e02cb8921..33ae53401060 100644
+> --- a/fs/xfs/xfs_log.h
+> +++ b/fs/xfs/xfs_log.h
+> @@ -106,7 +106,7 @@ struct xfs_item_ops;
+>  struct xfs_trans;
+>  
+>  int	  xfs_log_force(struct xfs_mount *mp, uint flags);
+> -int	  xfs_log_force_lsn(struct xfs_mount *mp, xfs_lsn_t lsn, uint flags,
+> +int	  xfs_log_force_seq(struct xfs_mount *mp, uint64_t seq, uint flags,
+>  		int *log_forced);
+>  int	  xfs_log_mount(struct xfs_mount	*mp,
+>  			struct xfs_buftarg	*log_target,
+> @@ -132,8 +132,6 @@ bool	xfs_log_writable(struct xfs_mount *mp);
+>  struct xlog_ticket *xfs_log_ticket_get(struct xlog_ticket *ticket);
+>  void	  xfs_log_ticket_put(struct xlog_ticket *ticket);
+>  
+> -void	xfs_log_commit_cil(struct xfs_mount *mp, struct xfs_trans *tp,
+> -				xfs_lsn_t *commit_lsn, bool regrant);
+>  void	xlog_cil_process_committed(struct list_head *list);
+>  bool	xfs_log_item_in_current_chkpt(struct xfs_log_item *lip);
+>  
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index 0a00c3c9610c..2fda8c4513b2 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+> @@ -792,7 +792,7 @@ xlog_cil_push_work(
+>  	 * that higher sequences will wait for us to write out a commit record
+>  	 * before they do.
+>  	 *
+> -	 * xfs_log_force_lsn requires us to mirror the new sequence into the cil
+> +	 * xfs_log_force_seq requires us to mirror the new sequence into the cil
+>  	 * structure atomically with the addition of this sequence to the
+>  	 * committing list. This also ensures that we can do unlocked checks
+>  	 * against the current sequence in log forces without risking
+> @@ -1054,16 +1054,14 @@ xlog_cil_empty(
+>   * allowed again.
+>   */
+>  void
+> -xfs_log_commit_cil(
+> -	struct xfs_mount	*mp,
+> +xlog_cil_commit(
+> +	struct xlog		*log,
+>  	struct xfs_trans	*tp,
+> -	xfs_lsn_t		*commit_lsn,
+> +	uint64_t		*commit_seq,
+>  	bool			regrant)
+>  {
+> -	struct xlog		*log = mp->m_log;
+>  	struct xfs_cil		*cil = log->l_cilp;
+>  	struct xfs_log_item	*lip, *next;
+> -	xfs_lsn_t		xc_commit_lsn;
+>  
+>  	/*
+>  	 * Do all necessary memory allocation before we lock the CIL.
+> @@ -1077,10 +1075,6 @@ xfs_log_commit_cil(
+>  
+>  	xlog_cil_insert_items(log, tp);
+>  
+> -	xc_commit_lsn = cil->xc_ctx->sequence;
+> -	if (commit_lsn)
+> -		*commit_lsn = xc_commit_lsn;
+> -
+>  	if (regrant && !XLOG_FORCED_SHUTDOWN(log))
+>  		xfs_log_ticket_regrant(log, tp->t_ticket);
+>  	else
+> @@ -1103,8 +1097,10 @@ xfs_log_commit_cil(
+>  	list_for_each_entry_safe(lip, next, &tp->t_items, li_trans) {
+>  		xfs_trans_del_item(lip);
+>  		if (lip->li_ops->iop_committing)
+> -			lip->li_ops->iop_committing(lip, xc_commit_lsn);
+> +			lip->li_ops->iop_committing(lip, cil->xc_ctx->sequence);
+>  	}
+> +	if (commit_seq)
+> +		*commit_seq = cil->xc_ctx->sequence;
+>  
+>  	/* xlog_cil_push_background() releases cil->xc_ctx_lock */
+>  	xlog_cil_push_background(log);
+> @@ -1121,9 +1117,9 @@ xfs_log_commit_cil(
+>   * iclog flush is necessary following this call.
+>   */
+>  xfs_lsn_t
+> -xlog_cil_force_lsn(
+> +xlog_cil_force_seq(
+>  	struct xlog	*log,
+> -	xfs_lsn_t	sequence)
+> +	uint64_t	sequence)
+>  {
+>  	struct xfs_cil		*cil = log->l_cilp;
+>  	struct xfs_cil_ctx	*ctx;
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index 24acdc54e44e..59778cd5ecdd 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -234,7 +234,7 @@ struct xfs_cil;
+>  
+>  struct xfs_cil_ctx {
+>  	struct xfs_cil		*cil;
+> -	xfs_lsn_t		sequence;	/* chkpt sequence # */
+> +	uint64_t		sequence;	/* chkpt sequence # */
+>  	xfs_lsn_t		start_lsn;	/* first LSN of chkpt commit */
+>  	xfs_lsn_t		commit_lsn;	/* chkpt commit record lsn */
+>  	struct xlog_ticket	*ticket;	/* chkpt ticket */
+> @@ -272,10 +272,10 @@ struct xfs_cil {
+>  	struct xfs_cil_ctx	*xc_ctx;
+>  
+>  	spinlock_t		xc_push_lock ____cacheline_aligned_in_smp;
+> -	xfs_lsn_t		xc_push_seq;
+> +	uint64_t		xc_push_seq;
+>  	struct list_head	xc_committing;
+>  	wait_queue_head_t	xc_commit_wait;
+> -	xfs_lsn_t		xc_current_sequence;
+> +	uint64_t		xc_current_sequence;
+>  	struct work_struct	xc_push_work;
+>  	wait_queue_head_t	xc_push_wait;	/* background push throttle */
+>  } ____cacheline_aligned_in_smp;
+> @@ -552,19 +552,18 @@ int	xlog_cil_init(struct xlog *log);
+>  void	xlog_cil_init_post_recovery(struct xlog *log);
+>  void	xlog_cil_destroy(struct xlog *log);
+>  bool	xlog_cil_empty(struct xlog *log);
+> +void	xlog_cil_commit(struct xlog *log, struct xfs_trans *tp,
+> +			uint64_t *commit_seq, bool regrant);
+>  
+>  /*
+>   * CIL force routines
+>   */
+> -xfs_lsn_t
+> -xlog_cil_force_lsn(
+> -	struct xlog *log,
+> -	xfs_lsn_t sequence);
+> +xfs_lsn_t xlog_cil_force_seq(struct xlog *log, uint64_t sequence);
+>  
+>  static inline void
+>  xlog_cil_force(struct xlog *log)
+>  {
+> -	xlog_cil_force_lsn(log, log->l_cilp->xc_current_sequence);
+> +	xlog_cil_force_seq(log, log->l_cilp->xc_current_sequence);
+>  }
+>  
+>  /*
+> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+> index 44f72c09c203..697703f3be48 100644
+> --- a/fs/xfs/xfs_trans.c
+> +++ b/fs/xfs/xfs_trans.c
+> @@ -849,7 +849,7 @@ __xfs_trans_commit(
+>  	bool			regrant)
+>  {
+>  	struct xfs_mount	*mp = tp->t_mountp;
+> -	xfs_lsn_t		commit_lsn = -1;
+> +	uint64_t		commit_seq = 0;
+>  	int			error = 0;
+>  	int			sync = tp->t_flags & XFS_TRANS_SYNC;
+>  
+> @@ -891,7 +891,7 @@ __xfs_trans_commit(
+>  		xfs_trans_apply_sb_deltas(tp);
+>  	xfs_trans_apply_dquot_deltas(tp);
+>  
+> -	xfs_log_commit_cil(mp, tp, &commit_lsn, regrant);
+> +	xlog_cil_commit(mp->m_log, tp, &commit_seq, regrant);
+>  
+>  	current_restore_flags_nested(&tp->t_pflags, PF_MEMALLOC_NOFS);
+>  	xfs_trans_free(tp);
+> @@ -901,7 +901,7 @@ __xfs_trans_commit(
+>  	 * log out now and wait for it.
+>  	 */
+>  	if (sync) {
+> -		error = xfs_log_force_lsn(mp, commit_lsn, XFS_LOG_SYNC, NULL);
+> +		error = xfs_log_force_seq(mp, commit_seq, XFS_LOG_SYNC, NULL);
+>  		XFS_STATS_INC(mp, xs_trans_sync);
+>  	} else {
+>  		XFS_STATS_INC(mp, xs_trans_async);
+> diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+> index 8b03fbfe9a1b..d223d4f4e429 100644
+> --- a/fs/xfs/xfs_trans.h
+> +++ b/fs/xfs/xfs_trans.h
+> @@ -43,7 +43,7 @@ struct xfs_log_item {
+>  	struct list_head		li_cil;		/* CIL pointers */
+>  	struct xfs_log_vec		*li_lv;		/* active log vector */
+>  	struct xfs_log_vec		*li_lv_shadow;	/* standby vector */
+> -	xfs_lsn_t			li_seq;		/* CIL commit seq */
+> +	uint64_t			li_seq;		/* CIL commit seq */
+>  };
+>  
+>  /*
+> @@ -69,7 +69,7 @@ struct xfs_item_ops {
+>  	void (*iop_pin)(struct xfs_log_item *);
+>  	void (*iop_unpin)(struct xfs_log_item *, int remove);
+>  	uint (*iop_push)(struct xfs_log_item *, struct list_head *);
+> -	void (*iop_committing)(struct xfs_log_item *, xfs_lsn_t commit_lsn);
+> +	void (*iop_committing)(struct xfs_log_item *lip, uint64_t seq);
+>  	void (*iop_release)(struct xfs_log_item *);
+>  	xfs_lsn_t (*iop_committed)(struct xfs_log_item *, xfs_lsn_t);
+>  	int (*iop_recover)(struct xfs_log_item *lip,
+> -- 
+> 2.28.0
+> 
 
-No, it's not block device specific, it's stuck at the disk level. The
-user notification aspect was added for pmem at the disk layer because
-IIRC it was NAKd to add it to the block_device itself.
-
->
-> But The userspace
-> still ends up having to solve the "what does this error resolve to"
-> problem. i.e. Userspace still needs to map that notification to a
-> filesystem, and for data loss events map it to objects within the
-> filesystem, which can be extremely expensive to do from userspace.
-
-Expensive and vulnerable to TOCTOU, this has been the motivation for
-filesystem native awareness of these errors from the beginning.
-
-> This is exactly the sort of userspace error reporting mess that
-> various projects have asked us to try to fix. Plumbing errors
-> internally through the kernel up to the filesystem where the
-> filesytem can point directly to the user data that is affected is a
-> simple, effective solution to the problem. Especially if we then
-> have a generic error notification mechanism for filesystems to emit
-> errors to registered userspace watchers...
-
-Agree, that's the dream worth pursuing.
-
->
-> > I still don't think that solves the need for a separate mechanism for
-> > global dax_device pte invalidation.
->
-> It's just another type of media error because.....
->
-> > I think that global dax_device invalidation needs new kernel
-> > infrastructure to allow internal users, like dm-writecache and future
-> > filesystems using dax for metadata, to take a fault when pmem is
-> > offlined.
->
-> .... if userspace has directly mapped into the cache, and the cache
-> storage goes away, the userspace app has to be killed because we
-> have no idea if the device going away has caused data loss or not.
-> IOWs, if userspace writes direct to the cache device and it hasn't
-> been written back to other storage when it gets yanked, we have just
-> caused data corruption to occur.
-
-If userspace has it direct mapped dirty in the cache when the remove
-fires, there is no opportunity to flush the cache. Just as there is no
-opportunity today with non-DAX and the page cache. The block-queue
-will be invalidated and any dirty in page cache is stranded.
-
-> At minimum, we now have to tell the filesystem that the dirty data
-> in the cache is now bad, and direct map applications that map those
-> dirty ranges need to be killed because their backing store is no
-> longer valid nor does the backup copy contain the data they last
-> wrote. Nor is it acessible by direct access, which is going to be
-> interesting because dynamically changing dax to non-dax access can't
-> be done without forcibly kicking the inode out of the cache. That
-> requires all references to the inode to go away. And that means the
-> event really has to go up to the filesystem.
->
-> But I think the biggest piece of the puzzle that you haven't grokked
-> here is that the dm cache device isn't a linear map - it's made up of
-> random ranges from the underlying devices. Hence the "remove" of a dm
-> cache device turns into a huge number of small, sparse corrupt
-> ranges, not a single linear device remove event.
-
-I am aware that DM is non-linear. The other non-linearity is sector-to-pfn.
-
-> IOWs, device unplug/remove events are not just simple "pass it on"
-> events in a stacked storage setup. There can be non-trivial mappings
-> through the layers, and device disappearance may in fact manifest to
-> the user as data corruption rather than causing data to be
-> inaccessible.
-
-Even MD does not rely on component device notifications for failure
-notifications, it waits for write-errors, and yes losing a component
-of a raid0 is more than a data offline event.
-
-> Hence "remove" notifications just don't work in the storage stack.
-> They need to be translated to block ranges going bad (i.e.  media
-> errors), and reported to higher layers as bad ranges, not as device
-> removal.
-
-Yes, the generic top-level remove event is pretty much useless for
-both the dax pte invalidation and lba range offline notification. I'm
-distinguishing that from knock on events that fire in response to
-->remove() triggering on the disk driver which seems to be where you
-are at as well with the idea to trigger ->corrupted_range(0, EOD) from
-->remove().
-
-There's 2 ways to view the "filesystems have wanted proactive
-notification of remove events from storage for a long time". There's
-either enough pent up demand to convince all parties to come to the
-table and get something done, or there's too much momentum with the
-status quo to overcome.
-
-I do not think it is fair to ask Ruan to solve a problem with brand
-new plumbing that the Linux storage community has not seen fit to
-address for a decade. Not when disk->bb is already plumbed without
-anyone complaining about it.
-
-> The same goes for DAX devices. The moment they can be placed in
-> storage stacks in non-trivial configurations and/or used as cache
-> devices that can be directly accessed over tranditional block
-> devices, we end up with error conditions that can only be mapped as
-> ranges of blocks that have gone bad.
-
-I see plumbing corrupted_range() and using it to communicate removal
-in addition to badblocks in addition to bad pfns as a revolutionary
-change. A reuse of disk->bb for communicating poison sector discovery
-events up the stack and a separate facility to invalidate dax devices
-as evolutionary. The evolutionary change does not preclude the
-eventual revolutionary change, but it has a better chance of making
-forward progress in the near term.
