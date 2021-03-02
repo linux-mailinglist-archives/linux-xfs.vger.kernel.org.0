@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F50032B116
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A14B932B112
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349460AbhCCDQS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38530 "EHLO mail.kernel.org"
+        id S1350385AbhCCDQU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2361109AbhCBXXU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 18:23:20 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0616E64F34;
-        Tue,  2 Mar 2021 23:22:39 +0000 (UTC)
+        id S2361110AbhCBXX0 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Mar 2021 18:23:26 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 90CDB64F39;
+        Tue,  2 Mar 2021 23:22:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614727360;
-        bh=WYpnpXEdkxLChyk2Ffg5+vuAPJHiTNT5oscrzIXJVzM=;
+        s=k20201202; t=1614727365;
+        bh=2oyFzPf7zo59T6UmCeDEbgc4XUptJkxuMlmAGUT1Vow=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=EVb8oPSo7FnRDZwc2zlljYFtNOLgopwKXIY+yLYg/a53jvdzt/pZxex7V0mpWsEps
-         +MlAgXBJ5MU5j83PitzQ06WdjWEcx6A9u/DlihlZoWcaLStHbMWp9Y1ORkxSt7pIfu
-         d6b1Vr+Tu+ejyoGQ3oMjMcuEwX5wJfjETsYpAHvgmKUSIIAMeMyUFRE7/IjyxyHvpI
-         K7rpL6bVJoGv8yIcy7eFWS2v2d+OpyhrcH/f98SzLQbrs2y9T/H59Dlk8FvTBmuN72
-         ZjhFVbLai0XLwLoxtkKAuOx1IzoF2yumd2NgGP1HRrTKb8YIbYocNuLoSUHBmK7obL
-         i7Qr0Wzw5Btzg==
-Subject: [PATCH 1/4] generic/623: don't fail on core dumps
+        b=WVSimCf0ZriWxsnfww0hdphD94mgkJPmqAzRKe75xKQBz+idQArhZ3Ul7LstTyzMa
+         BedsTZmh84tgE9LQRfvM2j+0Wvc7d6RjxuT183MzE1uEMro7NhTwW/T9dUJjVE8xEi
+         e/ZfbzCRfnuNtu1UuErP9/9DuCUjf3jEJE7I449Ox4fCIH/OgkL1a4vnVibBwAsUdr
+         7vl6RSUcrljJYwtou5hyyngrKFUM+K+csNmLB7klb2gXlzQaj+jFZhnLWOU/MsvZMO
+         yj/u+dfVcO4SalEe2bve+ucbcKhGbQHS9tGA1Z8AIMn5DqvHJEvf1W+VWquayJ4SLR
+         awXRMLKjGRPGA==
+Subject: [PATCH 2/4] xfs/271: fix test failure on non-reflink filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 02 Mar 2021 15:22:39 -0800
-Message-ID: <161472735969.3478298.17752955323122832118.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 15:22:45 -0800
+Message-ID: <161472736521.3478298.1405183245326186350.stgit@magnolia>
 In-Reply-To: <161472735404.3478298.8179031068431918520.stgit@magnolia>
 References: <161472735404.3478298.8179031068431918520.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,27 +41,51 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-This test is designed to fail an mmap write and see what happens.
-Typically this is a segmentation fault.  If the user's computer is
-configured to capture core dumps, this will cause the test to fail, even
-though we got the reaction we wanted.
+This test creates an empty filesystem with rmap btrees enabled, and then
+checks that GETFSMAP corresponds (roughly) with what we expect mkfs to
+have written to the filesystem.
+
+Unfortunately, the test's calculation for the number of "per-AG
+metadata" extents is not quite correct.  For a filesystem with a
+refcount btree, the rmapbt and agfl blocks will be reported separately,
+but for non-reflink filesystems, GETFSMAP merges the records.
+
+Since this test counts the number of records, fix the calculation.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/generic/623 |    1 +
- 1 file changed, 1 insertion(+)
+ tests/xfs/271 |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 
-diff --git a/tests/generic/623 b/tests/generic/623
-index 7be38955..04411405 100755
---- a/tests/generic/623
-+++ b/tests/generic/623
-@@ -37,6 +37,7 @@ _scratch_mount
- # status on the page.
- file=$SCRATCH_MNT/file
- $XFS_IO_PROG -fc "pwrite 0 4k" -c fsync $file | _filter_xfs_io
-+ulimit -c 0
- $XFS_IO_PROG -x -c "mmap 0 4k" -c "mwrite 0 4k" -c shutdown -c fsync \
- 	-c "mwrite 0 4k" $file | _filter_xfs_io
+diff --git a/tests/xfs/271 b/tests/xfs/271
+index 48a3eb8f..35c23b84 100755
+--- a/tests/xfs/271
++++ b/tests/xfs/271
+@@ -38,6 +38,16 @@ _scratch_mount
  
+ agcount=$(_xfs_mount_agcount $SCRATCH_MNT)
+ 
++# mkfs lays out btree root blocks in the order bnobt, cntbt, inobt, finobt,
++# rmapbt, refcountbt, and then allocates AGFL blocks.  Since GETFSMAP has the
++# same owner (per-AG metadata) for rmap btree blocks and blocks on the AGFL and
++# the reverse mapping index merges records, the number of per-AG extents
++# reported will vary depending on whether the refcount btree is enabled.
++$XFS_INFO_PROG $SCRATCH_MNT | grep -q reflink=1
++has_reflink=$(( 1 - $? ))
++perag_metadata_exts=2
++test $has_reflink -gt 0 && perag_metadata_exts=$((perag_metadata_exts + 1))
++
+ echo "Get fsmap" | tee -a $seqres.full
+ $XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT > $TEST_DIR/fsmap
+ cat $TEST_DIR/fsmap >> $seqres.full
+@@ -48,7 +58,7 @@ _within_tolerance "AG header count" $(wc -l < $TEST_DIR/testout) $agcount 0 -v
+ 
+ echo "Check freesp/rmap btrees" | tee -a $seqres.full
+ grep 'per-AG metadata[[:space:]]*[0-9]*[[:space:]]*([0-9]*\.\.' $TEST_DIR/fsmap | tee -a $seqres.full > $TEST_DIR/testout
+-_within_tolerance "freesp extent count" $(wc -l < $TEST_DIR/testout) $((agcount * 3)) 0 999999 -v
++_within_tolerance "freesp extent count" $(wc -l < $TEST_DIR/testout) $((agcount * perag_metadata_exts)) 0 999999 -v
+ 
+ echo "Check inode btrees" | tee -a $seqres.full
+ grep 'inode btree[[:space:]]*[0-9]*[[:space:]]*([0-9]*\.\.' $TEST_DIR/fsmap | tee -a $seqres.full > $TEST_DIR/testout
 
