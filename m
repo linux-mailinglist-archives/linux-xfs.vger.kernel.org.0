@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D13A032B0EC
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:45:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EC4E32B0EF
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245653AbhCCDPy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:15:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44888 "EHLO mail.kernel.org"
+        id S245659AbhCCDP4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:15:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2360769AbhCBW3i (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        id S2360768AbhCBW3i (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
         Tue, 2 Mar 2021 17:29:38 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A57B64F3B;
-        Tue,  2 Mar 2021 22:28:42 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F60164F3C;
+        Tue,  2 Mar 2021 22:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614724122;
-        bh=FzQo15NTC+T7NcqJ1hM13yI72Xy5AgEtFgTcS7zVafw=;
+        s=k20201202; t=1614724128;
+        bh=u/PZbnCVgqyAPpoXei0rDp5pzgZlOdXbA9oy/iIJnBQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=K+PRlGzTJ52+h0FEDIaqdg2KKuXdlno+e05ZO65hpySnrdJM7642zysli69Khnv8W
-         nsU+TAqCoXL7nw1WJQub86Kd5kB6KA6BrayiZsru6gFPZ25IAxMDvjKVW6uWeP0FXj
-         K3PtXgCnuN819XTlZHc6pOEbBIvzcLutzN29QYKlnd9iZAq4o2GauXUG6KHkxMOYTy
-         L9lgNwOnVqACWDCVw6ZvuHOEwTF5J+YfytLWiRC8l/YChmF6b7LXLmPc4PdLbeZ8Ds
-         US2XI7MUcWpFUBaXnxO7Rgra96U11tRKELacNOtn0a9dKe//F0TYcf+kMwVJgUmP+i
-         UMHx77YSEQ/8w==
-Subject: [PATCH 1/7] xfs: fix uninitialized variables in xrep_calc_ag_resblks
+        b=QEZZN9UdCMpLjyRyyFGCRJCTnAhU0Cw6/QVU11FJiVtv/YNsqMWgHeXzqgDToER+k
+         Y2d2l/e1laAeHF8ihlvZG2uIpnj5MoXDWQb4RpBgtQgrGN6VhARtHjXX1SWgEO+Wsz
+         W7vOzCJta80LlK8sb4j4XON8TUZU5FbE7W/CAIPLgCeDeYfzMesqqcxjG37Es+F3ed
+         kklANTZn0Jfor5tHHTnFLLteO8w+EY3ODueclCgf/NgwByaIZMKJKsG17MlFITEAGt
+         zZzL9K9MY2o3DRmcRRRvhLxU3hfYVITK/nESq+FvF4YWf5ITzqyggz6dY362Cgxd8w
+         4dJV55CC8P7DQ==
+Subject: [PATCH 2/7] xfs: fix dquot scrub loop cancellation
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 02 Mar 2021 14:28:42 -0800
-Message-ID: <161472412192.3421582.514508996639938538.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 14:28:47 -0800
+Message-ID: <161472412783.3421582.2613422908869140732.stgit@magnolia>
 In-Reply-To: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 References: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,32 +41,47 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If we can't read the AGF header, we never actually set a value for
-freelen and usedlen.  These two variables are used to make the worst
-case estimate of btree size, so it's safe to set them to the AG size as
-a fallback.
+When xchk_quota_item figures out that it needs to terminate the scrub
+operation, it needs to return some error code to abort the loop, but
+instead it returns zero and the loop keeps running.  Fix this by making
+it use ECANCELED, and fix the other loop bailout condition check at the
+bottom too.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/repair.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/xfs/scrub/quota.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index 25e86c71e7b9..61bc43418a2a 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -207,7 +207,11 @@ xrep_calc_ag_resblks(
+diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
+index e34ca20ae8e4..343f96f48b82 100644
+--- a/fs/xfs/scrub/quota.c
++++ b/fs/xfs/scrub/quota.c
+@@ -85,7 +85,7 @@ xchk_quota_item(
+ 	int			error = 0;
  
- 	/* Now grab the block counters from the AGF. */
- 	error = xfs_alloc_read_agf(mp, NULL, sm->sm_agno, 0, &bp);
--	if (!error) {
-+	if (error) {
-+		aglen = xfs_ag_block_count(mp, sm->sm_agno);
-+		freelen = aglen;
-+		usedlen = aglen;
-+	} else {
- 		struct xfs_agf	*agf = bp->b_addr;
+ 	if (xchk_should_terminate(sc, &error))
+-		return error;
++		return -ECANCELED;
  
- 		aglen = be32_to_cpu(agf->agf_length);
+ 	/*
+ 	 * Except for the root dquot, the actual dquot we got must either have
+@@ -162,7 +162,7 @@ xchk_quota_item(
+ 
+ out:
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+-		return -EFSCORRUPTED;
++		return -ECANCELED;
+ 
+ 	return 0;
+ }
+@@ -238,6 +238,8 @@ xchk_quota(
+ 	error = xfs_qm_dqiterate(mp, dqtype, xchk_quota_item, &sqi);
+ 	sc->ilock_flags = XFS_ILOCK_EXCL;
+ 	xfs_ilock(sc->ip, sc->ilock_flags);
++	if (error == -ECANCELED)
++		error = 0;
+ 	if (!xchk_fblock_process_error(sc, XFS_DATA_FORK,
+ 			sqi.last_id * qi->qi_dqperchunk, &error))
+ 		goto out;
 
