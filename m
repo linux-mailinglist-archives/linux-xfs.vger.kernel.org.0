@@ -2,33 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6061032B0E9
+	by mail.lfdr.de (Postfix) with ESMTP id D13A032B0EC
 	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:45:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245648AbhCCDPy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S245653AbhCCDPy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 2 Mar 2021 22:15:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:44888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2360761AbhCBW3R (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 17:29:17 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B208D64F3A;
-        Tue,  2 Mar 2021 22:28:36 +0000 (UTC)
+        id S2360769AbhCBW3i (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Mar 2021 17:29:38 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9A57B64F3B;
+        Tue,  2 Mar 2021 22:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614724116;
-        bh=B1ft+ivrqd+8kgSg+2IiqZZx0wt3RNLtnJzuThePmRw=;
-        h=Subject:From:To:Cc:Date:From;
-        b=L8hDwiab4kbqUtS5jMb5GeJHTkSBAu5hdzCsf7Rr1yXQ5QNrtu4M3RgVRyjFUy3a+
-         qfDiBthBGADWeWdJl+22vnByzrVyTY05RQFS6YzAH70BDB596Dk0WMVRiue/nszaMY
-         t44vuObcM2c3b5NHJ4PRJ8YI+w9E3eVARA8XUp5Lo9/kepTblOF5rFFDLivR4Wn0Tl
-         zYxui37RCmbjtwrYfYVRef8ITLeIkSF/k3tL98Y/W6GqgnCPqySxCyLs1Kv1iS/MjH
-         Sh17UX/OcxP8ypx1HyDXqV8aEOg078Na4uHcpKoZKIk9KCfpp6EkjvqsxUJBHKeJjP
-         n/ojCxqpXzR2Q==
-Subject: [PATCHSET 0/7] xfs: small fixes and cleanups
+        s=k20201202; t=1614724122;
+        bh=FzQo15NTC+T7NcqJ1hM13yI72Xy5AgEtFgTcS7zVafw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=K+PRlGzTJ52+h0FEDIaqdg2KKuXdlno+e05ZO65hpySnrdJM7642zysli69Khnv8W
+         nsU+TAqCoXL7nw1WJQub86Kd5kB6KA6BrayiZsru6gFPZ25IAxMDvjKVW6uWeP0FXj
+         K3PtXgCnuN819XTlZHc6pOEbBIvzcLutzN29QYKlnd9iZAq4o2GauXUG6KHkxMOYTy
+         L9lgNwOnVqACWDCVw6ZvuHOEwTF5J+YfytLWiRC8l/YChmF6b7LXLmPc4PdLbeZ8Ds
+         US2XI7MUcWpFUBaXnxO7Rgra96U11tRKELacNOtn0a9dKe//F0TYcf+kMwVJgUmP+i
+         UMHx77YSEQ/8w==
+Subject: [PATCH 1/7] xfs: fix uninitialized variables in xrep_calc_ag_resblks
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 02 Mar 2021 14:28:36 -0800
-Message-ID: <161472411627.3421582.2040330025988154363.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 14:28:42 -0800
+Message-ID: <161472412192.3421582.514508996639938538.stgit@magnolia>
+In-Reply-To: <161472411627.3421582.2040330025988154363.stgit@magnolia>
+References: <161472411627.3421582.2040330025988154363.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -37,38 +39,34 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This is an assortment of random patches that I'm submitting before I
-send the deferred inactivation series.
+If we can't read the AGF header, we never actually set a value for
+freelen and usedlen.  These two variables are used to make the worst
+case estimate of btree size, so it's safe to set them to the AG size as
+a fallback.
 
-The first six patches are small fixes and cleanups of the online fsck
-code.
-
-The last patch in the series switches the btree height validation code
-to use the computed max heights instead of the static XFS_BTREE_MAXLEVEL
-define.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes-5.13
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c      |    8 ++++----
- fs/xfs/libxfs/xfs_ialloc.c     |    4 ++--
- fs/xfs/libxfs/xfs_inode_fork.c |    2 +-
- fs/xfs/scrub/agheader.c        |   33 +++++++++------------------------
- fs/xfs/scrub/common.c          |   23 ++++++++++-------------
- fs/xfs/scrub/common.h          |    5 ++---
- fs/xfs/scrub/health.c          |    3 ++-
- fs/xfs/scrub/quota.c           |    6 ++++--
- fs/xfs/scrub/repair.c          |    6 +++++-
- fs/xfs/scrub/scrub.c           |    2 +-
- 10 files changed, 40 insertions(+), 52 deletions(-)
+ fs/xfs/scrub/repair.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+
+diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
+index 25e86c71e7b9..61bc43418a2a 100644
+--- a/fs/xfs/scrub/repair.c
++++ b/fs/xfs/scrub/repair.c
+@@ -207,7 +207,11 @@ xrep_calc_ag_resblks(
+ 
+ 	/* Now grab the block counters from the AGF. */
+ 	error = xfs_alloc_read_agf(mp, NULL, sm->sm_agno, 0, &bp);
+-	if (!error) {
++	if (error) {
++		aglen = xfs_ag_block_count(mp, sm->sm_agno);
++		freelen = aglen;
++		usedlen = aglen;
++	} else {
+ 		struct xfs_agf	*agf = bp->b_addr;
+ 
+ 		aglen = be32_to_cpu(agf->agf_length);
 
