@@ -2,117 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C6D1132B104
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1FC732B10B
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343550AbhCCDQH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2360825AbhCBW35 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 17:29:57 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 75EFB64F39;
-        Tue,  2 Mar 2021 22:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614724156;
-        bh=zIcU4r6u4b6L6Ldt0s8f+DVdv1Nw8eu9IRF/Ajcbe64=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FkR4W9YsGyLvsT3fJwWirs+yPU9B3ELGUXVj4+/ENq0klZXNGcbn1LvWDFiHf7q5e
-         0OkFeVSXGdqKsM8CUCLHTqPPE6TUEoZicwC9pIeK7P9gJTifFbAQwZLt+jjc3zrCBE
-         +R6Hrir6+rEWg6nnLsV6sT13BE8OjW4uDV+abLDU5+blS2HsQwpPrnZEiK4Ug9HuWc
-         cq6KyQhg4AZVUV4+IU5HcFR14WBII3df8DAkA1lMhsRUCAtDQHrIbg6GyRpPUzOaLn
-         /pBx1b0GTIYsXEghqgh3rIM2eKlWkKV5oL/UtJkAnwaG84vAKafsAjs2vnLDHE8EY3
-         ni8N167iL0LFw==
-Subject: [PATCH 7/7] xfs: validate ag btree levels using the precomputed
- values
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Tue, 02 Mar 2021 14:29:16 -0800
-Message-ID: <161472415607.3421582.13410103932115410995.stgit@magnolia>
-In-Reply-To: <161472411627.3421582.2040330025988154363.stgit@magnolia>
-References: <161472411627.3421582.2040330025988154363.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S1343602AbhCCDQJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2361015AbhCBXLL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 18:11:11 -0500
+X-Greylist: delayed 88076 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 02 Mar 2021 15:00:25 PST
+Received: from vera.ghen.be (vera.ghen.be [IPv6:2a02:2308:20::3be:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9627CC06178B
+        for <linux-xfs@vger.kernel.org>; Tue,  2 Mar 2021 15:00:25 -0800 (PST)
+Received: by vera.ghen.be (Postfix, from userid 1000)
+        id 4Dqsw23GXyz2xBF; Tue,  2 Mar 2021 23:57:22 +0100 (CET)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hendrickx.be;
+        s=21e; t=1614725842;
+        bh=l1vW9JHsSOPKj8U7zv7CvTh8KRM1+FD5TUVhL3BnVmw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=y+7CgVxOx8pS5Mj03WfCNlOZ8DsHTL3jaWjE1xDRidb9ST14l/JDAFdl6AI5uoNR/
+         wnP2e3qmBYbZ6ZSWWo0Ag==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hendrickx.be; s=21r;
+        t=1614725842; bh=l1vW9JHsSOPKj8U7zv7CvTh8KRM1+FD5TUVhL3BnVmw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=IhNL17XYUM6JT4QyOCC8L6FEQd1Cg9z7lpHOrlZHNxCWIiwy8Ky2HEbLhP/RfcBXf
+         uUG5hXB/KeNS+TOAgLH2VGsWaxR+J5qBML/VWzmZ3h985NXVNnQp1J8hpDzRciLkW/
+         xvrKiwLnJvznOrOU3854edAAnLV8B+RxNqDpMuVf/3zl0MxxtXFdxFAS5sq0gTTCoy
+         ysDlz+7rhPgEGhV0jMLQ6GLNvd47/l3wtM3idDVLk5JisKD1hsJQ5rMZczxsneOq2k
+         caiF1+L2KTs/yqVDmKnIuzrLuc+GAYgdT14mejax2nF7VCpmK99E8K5Y1jDZBU8fV5
+         QcHsDlFo1mjrQ==
+Date:   Tue, 2 Mar 2021 23:57:22 +0100
+From:   Geert Hendrickx <geert@hendrickx.be>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        xfs <linux-xfs@vger.kernel.org>
+Subject: Re: xfs_admin -O feature upgrade feedback
+Message-ID: <YD7C0v5rKopCJvk2@vera.ghen.be>
+References: <YDy+OmsVCkTfiMPp@vera.ghen.be>
+ <20210301191803.GE7269@magnolia>
+ <YD4tWbfzmuXv1mKQ@bfoster>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YD4tWbfzmuXv1mKQ@bfoster>
+X-PGP-Key: https://geert.hendrickx.be/pgpkey.asc
+X-PGP-Key-Id: C88C1D9ED3861005886BF44ACD718C1F95AD44EA
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
-
-Use the AG btree height limits that we precomputed into the xfs_mount to
-validate the AG headers instead of using XFS_BTREE_MAXLEVELS.
-
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/libxfs/xfs_alloc.c      |    8 ++++----
- fs/xfs/libxfs/xfs_ialloc.c     |    4 ++--
- fs/xfs/libxfs/xfs_inode_fork.c |    2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+On Tue, Mar 02, 2021 at 07:19:37 -0500, Brian Foster wrote:
+> It's not clear to me if you're reporting that feature upgrades spuriously
+> report this "Conversion failed ..." message (i.e., feature upgrade
+> succeeded, but repair found and fixed things expected to be problems due
+> to the feature upgrade), or that this error is reported if there is
+> something independently wrong with the fs. If the former, that seems like
+> a bug. If the latter, I think that's reasonable/expected behavior.
 
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 0c623d3c1036..aaa19101bb2a 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2906,13 +2906,13 @@ xfs_agf_verify(
- 
- 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
--	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
--	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) > XFS_BTREE_MAXLEVELS)
-+	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > mp->m_ag_maxlevels ||
-+	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) > mp->m_ag_maxlevels)
- 		return __this_address;
- 
- 	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
- 	    (be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) < 1 ||
--	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
-+	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > mp->m_rmap_maxlevels))
- 		return __this_address;
- 
- 	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
-@@ -2939,7 +2939,7 @@ xfs_agf_verify(
- 
- 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
- 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
--	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
-+	     be32_to_cpu(agf->agf_refcount_level) > mp->m_refc_maxlevels))
- 		return __this_address;
- 
- 	return NULL;
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 69b228fce81a..eefdb518fe64 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -2535,12 +2535,12 @@ xfs_agi_verify(
- 		return __this_address;
- 
- 	if (be32_to_cpu(agi->agi_level) < 1 ||
--	    be32_to_cpu(agi->agi_level) > XFS_BTREE_MAXLEVELS)
-+	    be32_to_cpu(agi->agi_level) > M_IGEO(mp)->inobt_maxlevels)
- 		return __this_address;
- 
- 	if (xfs_sb_version_hasfinobt(&mp->m_sb) &&
- 	    (be32_to_cpu(agi->agi_free_level) < 1 ||
--	     be32_to_cpu(agi->agi_free_level) > XFS_BTREE_MAXLEVELS))
-+	     be32_to_cpu(agi->agi_free_level) > M_IGEO(mp)->inobt_maxlevels))
- 		return __this_address;
- 
- 	/*
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index e080d7e07643..192bcf3e549d 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -195,7 +195,7 @@ xfs_iformat_btree(
- 		     XFS_BMDR_SPACE_CALC(nrecs) >
- 					XFS_DFORK_SIZE(dip, mp, whichfork) ||
- 		     ifp->if_nextents > ip->i_d.di_nblocks) ||
--		     level == 0 || level > XFS_BTREE_MAXLEVELS) {
-+		     level == 0 || level > XFS_BM_MAXLEVELS(mp, whichfork)) {
- 		xfs_warn(mp, "corrupt inode %Lu (btree).",
- 					(unsigned long long) ip->i_ino);
- 		xfs_inode_verifier_error(ip, -EFSCORRUPTED,
+
+There are sillier scenarios, like simply incorrect arguments.  For example
+"xfs_admin -O bigtypo=1 /dev/foo" responds with: "Conversion failed, is the
+filesystem unmounted?"
+
+(where /dev/foo is the correct blockdevice, properly unmounted etc, but the
+options argument contains a typo)
+
+The proper xfs_repair error "unknown option -c bigtypo=1" gets thrown away.
+
+
+Other examples include "-O bigtime" => "bigtime requires a parameter" (with
+Darrick's patch for the other issue applied), or "bigtime=0" => "bigtime
+only supports upgrades", all dropped on the floor by xfs_admin and replaced
+with the one generic message that gives no indication of the actual problem.
+(the user keeps verifying whether the filesystem is unmounted and clean...)
+
+
+
+	Geert
+
 
