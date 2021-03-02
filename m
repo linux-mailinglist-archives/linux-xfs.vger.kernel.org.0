@@ -2,34 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E099832B0E5
-	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:45:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E66C32B0D1
+	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:45:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245639AbhCCDPu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:15:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44578 "EHLO mail.kernel.org"
+        id S245643AbhCCDPw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:15:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2360758AbhCBW3K (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 2 Mar 2021 17:29:10 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A66BE64F37;
-        Tue,  2 Mar 2021 22:28:28 +0000 (UTC)
+        id S2360760AbhCBW3P (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 2 Mar 2021 17:29:15 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 76F2B64F39;
+        Tue,  2 Mar 2021 22:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614724108;
-        bh=Uqzhl1wtvEb4SICT89GlQCy142/M2LgqhcFSSJJB1qY=;
+        s=k20201202; t=1614724114;
+        bh=aoaVwXq+AcND03EGAMRHA0VdBUlzH/E0JEd3GGB9mhI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ptsTu9Qpo/jgcX4/Gcmv7OJn2u8CS4R6ym1M8TgbHpfNWaOl+ozPCI+uII2BxV2y7
-         YkKoC8JRP8F+cd+tb7waiXE8bKPezrgKhe7xmNW1/n1Lvbp9xnO1WmTwwO0k6z8IDd
-         t25qlrpb3QhPZwVsIgnpm9L6Oa6n8MYLCelrTzurKVEOj4QIpeZLuE4VHym5QGcuj6
-         /AbGZgusRluEMILMSpW/O5cOM7kiZ0tVqwUM88PAevYRpgMnd81UCzerj3U2QOhTtv
-         loCYQHQcIuUAHh2YNFjGdGp8nvUtXp+JL9JdTYvbgrD7Wt2Azg1jYMSIuxLa/2TEbs
-         2xqtrsfkndGZw==
-Subject: [PATCH 2/3] xfs: avoid buffer deadlocks in inumbers/bulkstat
+        b=uqMC3G7XmD7ORA2JRd4aYJpOGJuz2r1BE66HJtavAkFKXsskdwxCqjjjXdzjs4F6s
+         AbacSXmXUxEisBQzgePP4ady4JIsZfOvDSN8kgMwJ9FaXP5ry14wF/wB7waISNZPrq
+         69Z6ailNH50aVf9b/nl2qfeL00DvU6y0kppKApW0DrTLsDxCDHFOV/oYl03nx8n9i7
+         8Bkp+xWzef1VWfe9gF1eC0YC6ZdelnOqCvAwWSIr6A+fYPPLCkN6YiiE5lQq8xv/NO
+         boi9ZF3uGZXDd0OvWL1kTkfiMh51Dnc64HJV1+TEQxajTu1aLlwDUkOrAyxYHxgecA
+         IsIFb0cQoXm/g==
+Subject: [PATCH 3/3] xfs: force log and push AIL to clear pinned inodes when
+ aborting mount
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, hch@lst.de, dchinner@redhat.com,
         christian.brauner@ubuntu.com
-Date:   Tue, 02 Mar 2021 14:28:28 -0800
-Message-ID: <161472410813.3421449.1691962515820573818.stgit@magnolia>
+Date:   Tue, 02 Mar 2021 14:28:34 -0800
+Message-ID: <161472411392.3421449.548910053179741704.stgit@magnolia>
 In-Reply-To: <161472409643.3421449.2100229515469727212.stgit@magnolia>
 References: <161472409643.3421449.2100229515469727212.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,118 +43,42 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When we're servicing an INUMBERS or BULKSTAT request, grab an empty
-transaction so that we don't hit an ABBA buffer deadlock if the inode
-btree contains a cycle.
+If we allocate quota inodes in the process of mounting a filesystem but
+then decide to abort the mount, it's possible that the quota inodes are
+sitting around pinned by the log.  Now that inode reclaim relies on the
+AIL to flush inodes, we have to force the log and push the AIL in
+between releasing the quota inodes and kicking off reclaim to tear down
+all the incore inodes.
 
-Found by fuzzing an inode btree pointer to introduce a cycle into the
-tree (xfs/365).
+This was originally found during a fuzz test of metadata directories
+(xfs/1546), but the actual symptom was that reclaim hung up on the quota
+inodes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_itable.c |   46 ++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 42 insertions(+), 4 deletions(-)
+ fs/xfs/xfs_mount.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 
-diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index ca310a125d1e..2339a1874efa 100644
---- a/fs/xfs/xfs_itable.c
-+++ b/fs/xfs/xfs_itable.c
-@@ -19,6 +19,7 @@
- #include "xfs_error.h"
- #include "xfs_icache.h"
- #include "xfs_health.h"
-+#include "xfs_trans.h"
- 
- /*
-  * Bulk Stat
-@@ -166,6 +167,7 @@ xfs_bulkstat_one(
- 		.formatter	= formatter,
- 		.breq		= breq,
- 	};
-+	struct xfs_trans	*tp;
- 	int			error;
- 
- 	ASSERT(breq->icount == 1);
-@@ -175,9 +177,20 @@ xfs_bulkstat_one(
- 	if (!bc.buf)
- 		return -ENOMEM;
- 
-+	/*
-+	 * Grab freeze protection and allocate an empty transaction so that
-+	 * we avoid deadlocking if the inobt is corrupt.
-+	 */
-+	sb_start_write(breq->mp->m_super);
-+	error = xfs_trans_alloc_empty(breq->mp, &tp);
-+	if (error)
-+		goto out;
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 52370d0a3f43..6f445b611663 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1007,6 +1007,16 @@ xfs_mountfs(
+ 	xfs_irele(rip);
+ 	/* Clean out dquots that might be in memory after quotacheck. */
+ 	xfs_qm_unmount(mp);
 +
- 	error = xfs_bulkstat_one_int(breq->mp, breq->mnt_userns, NULL,
- 				     breq->startino, &bc);
--
-+	xfs_trans_cancel(tp);
-+out:
-+	sb_end_write(breq->mp->m_super);
- 	kmem_free(bc.buf);
- 
- 	/*
-@@ -241,6 +254,7 @@ xfs_bulkstat(
- 		.formatter	= formatter,
- 		.breq		= breq,
- 	};
-+	struct xfs_trans	*tp;
- 	int			error;
- 
- 	if (breq->mnt_userns != &init_user_ns) {
-@@ -256,9 +270,20 @@ xfs_bulkstat(
- 	if (!bc.buf)
- 		return -ENOMEM;
- 
--	error = xfs_iwalk(breq->mp, NULL, breq->startino, breq->flags,
 +	/*
-+	 * Grab freeze protection and allocate an empty transaction so that
-+	 * we avoid deadlocking if the inobt is corrupt.
++	 * It's possible that we modified some inodes as part of setting up
++	 * quotas or initializing filesystem metadata.  These inodes could be
++	 * pinned in the log, so force the log and push the AIL to unpin them
++	 * so that we can reclaim them.
 +	 */
-+	sb_start_write(breq->mp->m_super);
-+	error = xfs_trans_alloc_empty(breq->mp, &tp);
-+	if (error)
-+		goto out;
++	xfs_log_force(mp, XFS_LOG_SYNC);
++	xfs_ail_push_all_sync(mp->m_ail);
 +
-+	error = xfs_iwalk(breq->mp, tp, breq->startino, breq->flags,
- 			xfs_bulkstat_iwalk, breq->icount, &bc);
--
-+	xfs_trans_cancel(tp);
-+out:
-+	sb_end_write(breq->mp->m_super);
- 	kmem_free(bc.buf);
- 
  	/*
-@@ -371,13 +396,26 @@ xfs_inumbers(
- 		.formatter	= formatter,
- 		.breq		= breq,
- 	};
-+	struct xfs_trans	*tp;
- 	int			error = 0;
- 
- 	if (xfs_bulkstat_already_done(breq->mp, breq->startino))
- 		return 0;
- 
--	error = xfs_inobt_walk(breq->mp, NULL, breq->startino, breq->flags,
-+	/*
-+	 * Grab freeze protection and allocate an empty transaction so that
-+	 * we avoid deadlocking if the inobt is corrupt.
-+	 */
-+	sb_start_write(breq->mp->m_super);
-+	error = xfs_trans_alloc_empty(breq->mp, &tp);
-+	if (error)
-+		goto out;
-+
-+	error = xfs_inobt_walk(breq->mp, tp, breq->startino, breq->flags,
- 			xfs_inumbers_walk, breq->icount, &ic);
-+	xfs_trans_cancel(tp);
-+out:
-+	sb_end_write(breq->mp->m_super);
- 
- 	/*
- 	 * We found some inode groups, so clear the error status and return
+ 	 * Cancel all delayed reclaim work and reclaim the inodes directly.
+ 	 * We have to do this /after/ rtunmount and qm_unmount because those
 
