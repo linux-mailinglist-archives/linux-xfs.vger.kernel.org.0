@@ -2,155 +2,98 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BCDC32B122
+	by mail.lfdr.de (Postfix) with ESMTP id EBA6132B126
 	for <lists+linux-xfs@lfdr.de>; Wed,  3 Mar 2021 04:46:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351092AbhCCDQY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 2 Mar 2021 22:16:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:46019 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232923AbhCCAIL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 19:08:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614729991;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RVzH1CR+X3uXyOGfkKyHmF++KDWON3pWY4FjDoen3Qo=;
-        b=bNJ8Wu4/SqdxdHceAbvrp2dcFrIcUQYhi/VJ+/GZbiXNOVMA8+1NQnQDdWVYSlYEBw/hOB
-        CXxakDxfzKHt4JXJm0lOkBrk3m1kfFcGvS5k1OLshvzhgW3CvAbrSrZ4muTrvcaiJ0o+Fq
-        kcjkm2REjAbQgXTAA+5+jj/QGn+WQCc=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-150-SsohlIwmM-WEeLerk7Y-Yw-1; Tue, 02 Mar 2021 19:02:37 -0500
-X-MC-Unique: SsohlIwmM-WEeLerk7Y-Yw-1
-Received: by mail-pj1-f70.google.com with SMTP id ga13so3289885pjb.1
-        for <linux-xfs@vger.kernel.org>; Tue, 02 Mar 2021 16:02:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RVzH1CR+X3uXyOGfkKyHmF++KDWON3pWY4FjDoen3Qo=;
-        b=J5xQSaX5SijNf/e3csSIznNnfL8W0dUaCyutZuVwISqUhyhh5wv6xfIJtAU9ULiu54
-         qRtFv9H69jtTkrcgY1fDH57QL0TaRUDX7WnbBWaT9OiID+FQNNp3zfOQ/lDgIzc4z6Kc
-         u1qFbCc9h3IEcft8DwaUi2U55qHV/eA/ySKedSvJgDtBSi10HwisZOe6SUeHdEVGmcuM
-         iPB5bHfRfHBI/ZlJahVLOY3Lmv5Yl+7dmhhfNKiniWocQrkePOzgOWJwrah1Rt0umeRF
-         JVr4y84hVz1t9+eShui04pYSqBi6tKW3sD3p669n793ceFZHHNTgHcxG4NPrP5fj/yx3
-         x8mg==
-X-Gm-Message-State: AOAM5331nSG1D4xIZyb9ptWRr8mjRZCKZ0CQKm8TJ6TUdHT5gC+8xy5Z
-        ZVLEn7ScJrZ4PoFqZCxyXHNzfT9xS6XqgBLSGSKHkkIloufYLcyE5GakOclCuYTSjQQ0PcBIheX
-        Z9FHowNANh9Mx793kKBvkiqB91K1BH0ztUVoIXzdmcWolW1ruRov7H139BBOfuGiap95ecwofsw
-        ==
-X-Received: by 2002:a17:90a:c84:: with SMTP id v4mr6973062pja.228.1614729756093;
-        Tue, 02 Mar 2021 16:02:36 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxgXBMZbTST2qEDa7/USMrxGMVjzOXS9mImWs7RoVIQIK0dxXsgbcqiBKGvFPW4HoHaLNj/rQ==
-X-Received: by 2002:a17:90a:c84:: with SMTP id v4mr6973030pja.228.1614729755792;
-        Tue, 02 Mar 2021 16:02:35 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id h3sm20601723pgm.67.2021.03.02.16.02.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Mar 2021 16:02:35 -0800 (PST)
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v7.1 5/5] xfs: add error injection for per-AG resv failure
-Date:   Wed,  3 Mar 2021 08:02:02 +0800
-Message-Id: <20210303000202.2671220-1-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210302024816.2525095-6-hsiangkao@redhat.com>
-References: <20210302024816.2525095-6-hsiangkao@redhat.com>
+        id S1351106AbhCCDQZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 2 Mar 2021 22:16:25 -0500
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:46078 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231631AbhCCANS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 2 Mar 2021 19:13:18 -0500
+Received: from dread.disaster.area (pa49-179-130-210.pa.nsw.optusnet.com.au [49.179.130.210])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 54110E69F5E;
+        Wed,  3 Mar 2021 11:11:58 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lHF7N-00CBri-Hg; Wed, 03 Mar 2021 11:11:57 +1100
+Date:   Wed, 3 Mar 2021 11:11:57 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/8] xfs: separate CIL commit record IO
+Message-ID: <20210303001157.GK4662@dread.disaster.area>
+References: <20210223033442.3267258-1-david@fromorbit.com>
+ <20210223033442.3267258-3-david@fromorbit.com>
+ <20210224203429.GR7272@magnolia>
+ <20210224214417.GB4662@dread.disaster.area>
+ <YDdhJ0Oe6R+UXqDU@infradead.org>
+ <20210225204755.GK4662@dread.disaster.area>
+ <20210301090901.GA3698088@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210301090901.GA3698088@infradead.org>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0 cx=a_idp_d
+        a=JD06eNgDs9tuHP7JIKoLzw==:117 a=JD06eNgDs9tuHP7JIKoLzw==:17
+        a=kj9zAlcOel0A:10 a=dESyimp9J3IA:10 a=7-415B0cAAAA:8
+        a=PQXLQY_tdtPucPiFC38A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-per-AG resv failure after fixing up freespace is hard to test in an
-effective way, so directly add an error injection path to observe
-such error handling path works as expected.
+On Mon, Mar 01, 2021 at 09:09:01AM +0000, Christoph Hellwig wrote:
+> On Fri, Feb 26, 2021 at 07:47:55AM +1100, Dave Chinner wrote:
+> > Sorry, I/O wait might matter for what?
+> 
+> Think you have a SAS hard drive, WCE=0, typical queue depth of a few
+> dozend commands.
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
-changes since v7:
- - add missing random errortag reported by 0day CI and smatch.
+Yup, so typical IO latency of 2-3ms, assuming 10krpm, assuming we
+aren't doing metadata writeback which will blow this out.
 
- fs/xfs/libxfs/xfs_ag_resv.c  | 6 +++++-
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_error.c           | 3 +++
- 3 files changed, 11 insertions(+), 2 deletions(-)
+I've tested on slower iSCSI devices than this (7-8ms typical av.
+seek time), and it didn't show up any performance anomalies.
 
-diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-index fdfe6dc0d307..6c5f8d10589c 100644
---- a/fs/xfs/libxfs/xfs_ag_resv.c
-+++ b/fs/xfs/libxfs/xfs_ag_resv.c
-@@ -211,7 +211,11 @@ __xfs_ag_resv_init(
- 		ASSERT(0);
- 		return -EINVAL;
- 	}
--	error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
-+
-+	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_AG_RESV_FAIL))
-+		error = -ENOSPC;
-+	else
-+		error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
- 	if (error) {
- 		trace_xfs_ag_resv_init_error(pag->pag_mount, pag->pag_agno,
- 				error, _RET_IP_);
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 6ca9084b6934..a23a52e643ad 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -58,7 +58,8 @@
- #define XFS_ERRTAG_BUF_IOERROR				35
- #define XFS_ERRTAG_REDUCE_MAX_IEXTENTS			36
- #define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
--#define XFS_ERRTAG_MAX					38
-+#define XFS_ERRTAG_AG_RESV_FAIL				38
-+#define XFS_ERRTAG_MAX					39
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -101,5 +102,6 @@
- #define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
- #define XFS_RANDOM_REDUCE_MAX_IEXTENTS			1
- #define XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT		1
-+#define XFS_RANDOM_AG_RESV_FAIL				1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 185b4915b7bf..f70984f3174d 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -56,6 +56,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_BUF_IOERROR,
- 	XFS_RANDOM_REDUCE_MAX_IEXTENTS,
- 	XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT,
-+	XFS_RANDOM_AG_RESV_FAIL,
- };
- 
- struct xfs_errortag_attr {
-@@ -168,6 +169,7 @@ XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
- XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
- XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
-+XFS_ERRORTAG_ATTR_RW(ag_resv_fail, XFS_ERRTAG_AG_RESV_FAIL);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -208,6 +210,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
- 	XFS_ERRORTAG_ATTR_LIST(reduce_max_iextents),
- 	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
-+	XFS_ERRORTAG_ATTR_LIST(ag_resv_fail),
- 	NULL,
- };
- 
+> Before that we'd submit a bunch of iclogs, which are generally
+> sequential except of course for the log wrap around case.  The drive
+> can now easily take all the iclogs and write them in one rotation.
+
+Even if we take the best case for your example, this still means we
+block on every 8 iclogs waiting 2-3ms for the spindle to rotate and
+complete the IOs. Hence for a checkpoint of 32MB with 256kB iclogs,
+we're blocking for 2-3ms at least 16 times before we get to the
+commit iclog. With default iclog size of 32kB, we'll block a couple
+of hundred times waiting on iclog IO...
+
+IOWs, we're already talking about a best case checkpoint commit
+latency of 30-50ms here.
+
+[ And this isn't even considering media bandwidth there - 32MB on a
+drive that can do maybe 200MB/s in the middle of the spindle where
+the log is. That's another 150ms of data transfer time to physical
+media. So if the drive is actually writing to physical media because
+WCE=0, then we're taking *at least* 200ms per 32MB checkpoint. ]
+
+> Now if we wait for the previous iclogs before submitting the
+> commit_iclog we need at least one more additional full roundtrip.
+
+So we add an average of 2-3ms to what is already taking, in the best
+case, 30-50ms.
+
+And these are mostly async commits this overhead is added to, so
+there's rarely anything waiting on it and hence the extra small
+latency is almost always lost in the noise. Even if the extra delay
+is larger, there is rarely anything waiting on it so it's still
+noise...
+
+I just don't see anything relevant that stands out from the noise on
+my systems.
+
+Cheers,
+
+Dave.
 -- 
-2.27.0
-
+Dave Chinner
+david@fromorbit.com
