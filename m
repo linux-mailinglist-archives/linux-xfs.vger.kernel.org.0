@@ -2,227 +2,288 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97D8F32C4D5
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F16E32C4D7
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:57:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353666AbhCDARz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:17:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:52463 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1574776AbhCCReQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 3 Mar 2021 12:34:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614792766;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=M0WHp4c+jNjWQB9Xfy8pW6/PAaOqqS+k24y0t0MlGzY=;
-        b=XgVbzJ14eEVrjH3wAueSGrtZlQrB/oArH40R2lS/Pup1eT22XB7kiQNjOWKO0yeZgOjQz2
-        NHCh6PX6kSQLm5QUK4IhliYwcpFO4tAlKCkpLR+Ad5MGL0jUsSxXWLCHOtbM2SzhIg97nF
-        DT3HqGppNQYO/ffszbK4l1to602d6OM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-228-24y2L9l4P_S5qGwviZk90Q-1; Wed, 03 Mar 2021 12:32:42 -0500
-X-MC-Unique: 24y2L9l4P_S5qGwviZk90Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E47BB801993;
-        Wed,  3 Mar 2021 17:32:41 +0000 (UTC)
-Received: from bfoster (ovpn-119-215.rdu2.redhat.com [10.10.119.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6757910023AB;
-        Wed,  3 Mar 2021 17:32:41 +0000 (UTC)
-Date:   Wed, 3 Mar 2021 12:32:39 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/3 v2] xfs: AIL needs asynchronous CIL forcing
-Message-ID: <YD/IN66S3aM1lEQh@bfoster>
-References: <20210223053212.3287398-1-david@fromorbit.com>
- <20210223053212.3287398-3-david@fromorbit.com>
- <20210224211058.GA4662@dread.disaster.area>
- <20210224232600.GH4662@dread.disaster.area>
- <YD6xrJHgkkHi+7a3@bfoster>
- <20210303005752.GM4662@dread.disaster.area>
+        id S1354026AbhCDAR5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:17:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1386195AbhCCRrG (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 3 Mar 2021 12:47:06 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C51364EDB;
+        Wed,  3 Mar 2021 17:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614793104;
+        bh=eFrWIDgP/60oeCf7aD2PKsX9NXrln57dUOYK7CUj2XE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lr0wygCPSc1hbojEkPIcso9KgBMNCjTIdBTUeaS5N09ZASYygfjeMVH1icjUukdeV
+         I61M7gaLdMDLL8PAEakyCTipM4+RodiSM4lokBk1z/nvPd5tZ+f7W6AiMIU2DNYPcB
+         X2KI0koQ9yzXF28kIGZXh4uRBK66GiJPnyDrzybxeQMMsZ5eWrDk4eygQnuo/VelkK
+         ttjsJ6olElI7DGD+hdAXmD1OFrHonMxeKeVX0tSUMeu9hVWnv+jfJYYao8RQNM+wNP
+         bgPyC7RnntV695T+2jhVaVm+36lZB1MmpAJO7Pfm+micpNkPfbRnzVg+JaylB+3tuT
+         DwrGsS92HJ5dA==
+Date:   Wed, 3 Mar 2021 09:38:23 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
+        darrick.wong@oracle.com
+Subject: Re: [PATCH V4 02/11] xfs: Check for extent overflow when trivally
+ adding a new extent
+Message-ID: <20210303173823.GJ7269@magnolia>
+References: <20210118062022.15069-1-chandanrlinux@gmail.com>
+ <20210118062022.15069-3-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210303005752.GM4662@dread.disaster.area>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20210118062022.15069-3-chandanrlinux@gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Mar 03, 2021 at 11:57:52AM +1100, Dave Chinner wrote:
-> On Tue, Mar 02, 2021 at 04:44:12PM -0500, Brian Foster wrote:
-> > On Thu, Feb 25, 2021 at 10:26:00AM +1100, Dave Chinner wrote:
-> > > From: Dave Chinner <dchinner@redhat.com>
-> > > 
-> > > The AIL pushing is stalling on log forces when it comes across
-> > > pinned items. This is happening on removal workloads where the AIL
-> > > is dominated by stale items that are removed from AIL when the
-> > > checkpoint that marks the items stale is committed to the journal.
-> > > This results is relatively few items in the AIL, but those that are
-> > > are often pinned as directories items are being removed from are
-> > > still being logged.
-> > > 
-> > > As a result, many push cycles through the CIL will first issue a
-> > > blocking log force to unpin the items. This can take some time to
-> > > complete, with tracing regularly showing push delays of half a
-> > > second and sometimes up into the range of several seconds. Sequences
-> > > like this aren't uncommon:
-> > > 
-> > ...
-> > > 
-> > > In each of these cases, every AIL pass saw 101 log items stuck on
-> > > the AIL (pinned) with very few other items being found. Each pass, a
-> > > log force was issued, and delay between last/first is the sleep time
-> > > + the sync log force time.
-> > > 
-> > > Some of these 101 items pinned the tail of the log. The tail of the
-> > > log does slowly creep forward (first lsn), but the problem is that
-> > > the log is actually out of reservation space because it's been
-> > > running so many transactions that stale items that never reach the
-> > > AIL but consume log space. Hence we have a largely empty AIL, with
-> > > long term pins on items that pin the tail of the log that don't get
-> > > pushed frequently enough to keep log space available.
-> > > 
-> > > The problem is the hundreds of milliseconds that we block in the log
-> > > force pushing the CIL out to disk. The AIL should not be stalled
-> > > like this - it needs to run and flush items that are at the tail of
-> > > the log with minimal latency. What we really need to do is trigger a
-> > > log flush, but then not wait for it at all - we've already done our
-> > > waiting for stuff to complete when we backed off prior to the log
-> > > force being issued.
-> > > 
-> > > Even if we remove the XFS_LOG_SYNC from the xfs_log_force() call, we
-> > > still do a blocking flush of the CIL and that is what is causing the
-> > > issue. Hence we need a new interface for the CIL to trigger an
-> > > immediate background push of the CIL to get it moving faster but not
-> > > to wait on that to occur. While the CIL is pushing, the AIL can also
-> > > be pushing.
-> > > 
-> > 
-> > So I think I follow what you're describing wrt to the xfsaild delay, but
-> > what I'm not clear on is what changing this behavior actually fixes.
-> > IOW, if the xfsaild is cycling through and finding mostly stuck items,
-> > then we see a delay because of the time spent in a log force (because of
-> > those stuck items), what's the advantage to issue an async force over a
-> > sync force? Won't xfsaild effectively continue to spin on these stuck
-> > items until the log force completes, regardless?
+On Mon, Jan 18, 2021 at 11:50:13AM +0530, Chandan Babu R wrote:
+> This test verifies that XFS does not cause inode fork's extent count to
+> overflow when adding a single extent while there's no possibility of
+> splitting an existing mapping.
 > 
-> When buffers get flushed and then pinned and can't be written back,
-> we issue sync log forces from the AIL because the delwri list is not
-> empty and the force count is non-zero.
+> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> ---
+>  tests/xfs/522     | 173 ++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/522.out |  20 ++++++
+>  tests/xfs/group   |   1 +
+>  3 files changed, 194 insertions(+)
+>  create mode 100755 tests/xfs/522
+>  create mode 100644 tests/xfs/522.out
 > 
-> So it's not just pinned items in the AIL that trigger this - it's
-> stuff that gets pinned after it has been flushed but before it gets
-> written that causes problems, too.
-> 
-> And if it's pinned buffers in the delwri list that are the issue,
-> then we stop flushing other items from the list while we wait for
-> the log force. hence if the tail pinning items are not actually
-> pinned, but other buffers are, then we block on the log force when
-> we could have been flushing and writing the items that pin the tail
-> of the log.
-> 
-> > Is the issue not so much the throughput of xfsaild, but just the fact
-> > that the task stalls are large enough to cause other problems? I.e., the
-> > comment you add down in the xfsaild code refers to tail pinning causing
-> > reservation stalls.  IOW, the purpose of this patch is then to keep
-> > xfsaild sleeps to a predictable latency to ensure we come around again
-> > quickly enough to keep the tail moving forward (even though the AIL
-> > itself might remain in a state where the majority of items are stuck).
-> > Yes?
-> 
-> Yup, largely because there are multiple triggers for log forces. 
-> There's a difference between buffers that can't be flushed because
-> they are pinned and flushed buffers that can't be written because
-> they are pinned. The prior prevents the AIL from making push progress,
-> the latter doesn't.
-> 
-> > > +trace_printk("seq %llu, curseq %llu, ctxseq %llu pushseq %llu flags 0x%x",
-> > > +		sequence, cil->xc_current_sequence, cil->xc_ctx->sequence,
-> > > +		cil->xc_push_seq, flags);
-> > > +
-> > > +	trace_xfs_log_force(log->l_mp, sequence, _RET_IP_);
-> > >  	/*
-> > >  	 * check to see if we need to force out the current context.
-> > >  	 * xlog_cil_push() handles racing pushes for the same sequence,
-> > >  	 * so no need to deal with it here.
-> > >  	 */
-> > >  restart:
-> > > -	xlog_cil_push_now(log, sequence);
-> > > +	xlog_cil_push_now(log, sequence, flags & XFS_LOG_SYNC);
-> > > +	if (!(flags & XFS_LOG_SYNC))
-> > > +		return commit_lsn;
-> > 
-> > Hm, so now we have sync and async log force and sync and async CIL push.
-> > A log force always requires a sync CIL push and commit record submit;
-> > the difference is simply whether or not we wait on commit record I/O
-> > completion. The sync CIL push drains the CIL of log items but does not
-> > switch out the commit record iclog, while the async CIL push executes in
-> > the workqueue context so the drain is async, but it does switch out the
-> > commit record iclog before it completes. IOW, the async CIL push is
-> > basically a "more async" async log force.
-> 
-> Yes.
-> 
-> > I can see the need for the behavior of the async CIL push here, but that
-> > leaves a mess of interfaces and behavior matrix. Is there any reason we
-> > couldn't just make async log forces unconditionally behave equivalent to
-> > the async CIL push as defined by this patch? There's only a handful of
-> > existing users and I don't see any obvious reason why they might care
-> > whether the underlying CIL push is synchronous or not...
-> 
-> I'm not touching the rest of the log force code in this series - it
-> is out of scope of this bug fix and the rest of the series that it
-> is part of.
-> 
+> diff --git a/tests/xfs/522 b/tests/xfs/522
+> new file mode 100755
+> index 00000000..33f0591e
+> --- /dev/null
+> +++ b/tests/xfs/522
+> @@ -0,0 +1,173 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
+> +#
+> +# FS QA Test 522
+> +#
+> +# Verify that XFS does not cause inode fork's extent count to overflow when
+> +# adding a single extent while there's no possibility of splitting an existing
+> +# mapping.
+> +
+> +seq=`basename $0`
+> +seqres=$RESULT_DIR/$seq
+> +echo "QA output created by $seq"
+> +
+> +here=`pwd`
+> +tmp=/tmp/$$
+> +status=1	# failure is the default!
+> +trap "_cleanup; exit \$status" 0 1 2 3 15
+> +
+> +_cleanup()
+> +{
+> +	cd /
+> +	rm -f $tmp.*
+> +}
+> +
+> +# get standard environment, filters and checks
+> +. ./common/rc
+> +. ./common/filter
+> +. ./common/quota
+> +. ./common/inject
+> +. ./common/populate
+> +
+> +# remove previous $seqres.full before test
+> +rm -f $seqres.full
+> +
+> +# real QA test starts here
+> +
+> +_supported_fs xfs
+> +_require_scratch
+> +_require_xfs_quota
+> +_require_xfs_debug
+> +_require_test_program "punch-alternating"
+> +_require_xfs_io_command "falloc"
+> +_require_xfs_io_error_injection "reduce_max_iextents"
+> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
+> +
+> +echo "Format and mount fs"
+> +_scratch_mkfs_sized $((512 * 1024 * 1024)) >> $seqres.full
+> +_scratch_mount -o uquota >> $seqres.full
+> +
+> +bsize=$(_get_file_block_size $SCRATCH_MNT)
+> +
+> +echo "* Delalloc to written extent conversion"
 
-But you already have altered the log force code by changing
-xlog_cil_force_seq(), which implicitly changes how xfs_log_force_seq()
-behaves. So not only does this patch expose subsystem internals to
-external layers and create more log forcing interfaces/behaviors to
-maintain, it invokes one or the other from the preexisting async log
-force variants purely based on whether the caller had a target sequence
-number or not. This doesn't make a whole lot of sense to me.
+What happens if delalloc is disabled?  e.g. the mkfs parameters have
+extent size hints set on the root directory?
 
-> Cleaning up the mess that is the xfs_log_* and xlog_* interfaces and
-> changing things like log force behaviour and implementation is for
-> a future series.
-> 
+(I think it'll be fine since you write every other block...)
 
-TBH I think this patch is kind of a mess on its own. I think the
-mechanism it wants to provide is sane, but I've not even got to the
-point of reviewing _that_ yet because of the seeming dismissal of higher
-level feedback. I'd rather not go around in circles on this so I'll just
-offer my summarized feedback to this patch...
+> +testfile=$SCRATCH_MNT/testfile
+> +
+> +echo "Inject reduce_max_iextents error tag"
+> +_scratch_inject_error reduce_max_iextents 1
+> +
+> +nr_blks=$((15 * 2))
+> +
+> +echo "Create fragmented file"
+> +for i in $(seq 0 2 $((nr_blks - 1))); do
+> +	$XFS_IO_PROG -f -s -c "pwrite $((i * bsize)) $bsize" $testfile \
+> +	       >> $seqres.full 2>&1
+> +	[[ $? != 0 ]] && break
+> +done
+> +
+> +echo "Verify \$testfile's extent count"
+> +
+> +nextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep -i nextents)
+> +nextents=${nextents##fsxattr.nextents = }
 
-I think this patch should be broken down into two, possibly three
-sub-patches that generally do the following (not necessarily in this
-order):
+/me wonders if it's time for a helper to extract these fields...
 
-1. Implement the new underlying async CIL push mechanism (i.e. the
-   ->xc_push_async bits and new commit iclog switching behavior).
-2. Change the behavior of existing async log forces to use the new
-   mechanism consistently. Document the change in behavior for historical
-   reference.
-3. Switch xfsaild to use an async log force instead of the current sync
-   log force. Document why this might depend on the updated async
-   behavior.
+> +if (( $nextents > 10 )); then
+> +	echo "Extent count overflow check failed: nextents = $nextents"
+> +	exit 1
+> +fi
+> +
+> +rm $testfile
+> +
+> +echo "* Fallocate unwritten extents"
+> +
+> +echo "Fallocate fragmented file"
+> +for i in $(seq 0 2 $((nr_blks - 1))); do
+> +	$XFS_IO_PROG -f -c "falloc $((i * bsize)) $bsize" $testfile \
+> +	       >> $seqres.full 2>&1
+> +	[[ $? != 0 ]] && break
+> +done
+> +
+> +echo "Verify \$testfile's extent count"
+> +
+> +nextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep -i nextents)
+> +nextents=${nextents##fsxattr.nextents = }
+> +if (( $nextents > 10 )); then
+> +	echo "Extent count overflow check failed: nextents = $nextents"
+> +	exit 1
+> +fi
+> +
+> +rm $testfile
+> +
+> +echo "* Directio write"
+> +
+> +echo "Create fragmented file via directio writes"
+> +for i in $(seq 0 2 $((nr_blks - 1))); do
+> +	$XFS_IO_PROG -d -s -f -c "pwrite $((i * bsize)) $bsize" $testfile \
+> +	       >> $seqres.full 2>&1
+> +	[[ $? != 0 ]] && break
+> +done
+> +
+> +echo "Verify \$testfile's extent count"
+> +
+> +nextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep -i nextents)
+> +nextents=${nextents##fsxattr.nextents = }
+> +if (( $nextents > 10 )); then
+> +	echo "Extent count overflow check failed: nextents = $nextents"
+> +	exit 1
+> +fi
+> +
+> +rm $testfile
+> +
+> +echo "* Extend quota inodes"
+> +
+> +echo "Disable reduce_max_iextents error tag"
+> +_scratch_inject_error reduce_max_iextents 0
+> +
+> +echo "Consume free space"
+> +fillerdir=$SCRATCH_MNT/fillerdir
+> +nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
+> +nr_free_blks=$((nr_free_blks * 90 / 100))
+> +
+> +_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 >> $seqres.full 2>&1
+> +
+> +echo "Create fragmented filesystem"
+> +for dentry in $(ls -1 $fillerdir/); do
+> +	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
+> +done
+> +
+> +echo "Inject reduce_max_iextents error tag"
+> +_scratch_inject_error reduce_max_iextents 1
+> +
+> +echo "Inject bmap_alloc_minlen_extent error tag"
+> +_scratch_inject_error bmap_alloc_minlen_extent 1
 
-Further log subsystem cleanup or consolidation that this might
-facilitate between the historical async log force and the newer CIL
-based async log force can occur separately in future patches..
+Are we testing to see if the fs blows up when the quota inodes hit max
+iext count?  If so, please put that in the comments for this section.
 
-Brian
+> +
+> +nr_blks=20
+> +
+> +# This is a rough calculation; It doesn't take block headers into
+> +# consideration.
+> +# gdb -batch vmlinux -ex 'print sizeof(struct xfs_dqblk)'
+> +# $1 = 136
+> +nr_quotas_per_block=$((bsize / 136))
+> +nr_quotas=$((nr_quotas_per_block * nr_blks))
+> +
+> +echo "Extend uquota file"
+> +for i in $(seq 0 $nr_quotas_per_block $nr_quotas); do
+> +	chown $i $testfile >> $seqres.full 2>&1
+> +	[[ $? != 0 ]] && break
+> +done
+> +
+> +_scratch_unmount >> $seqres.full
+> +
+> +echo "Verify uquota inode's extent count"
+> +uquotino=$(_scratch_xfs_db -c sb -c "print uquotino")
+> +uquotino=${uquotino##uquotino = }
 
-> Cheers,
-> 
-> Dave.
+_scratch_xfs_get_metadata_field
+
+> +
+> +nextents=$(_scratch_get_iext_count $uquotino data || \
+> +		   _fail "Unable to obtain inode fork's extent count")
+> +if (( $nextents > 10 )); then
+> +	echo "Extent count overflow check failed: nextents = $nextents"
+> +	exit 1
+> +fi
+> +
+> +# success, all done
+> +status=0
+> +exit
+> diff --git a/tests/xfs/522.out b/tests/xfs/522.out
+> new file mode 100644
+> index 00000000..debeb004
+> --- /dev/null
+> +++ b/tests/xfs/522.out
+> @@ -0,0 +1,20 @@
+> +QA output created by 522
+> +Format and mount fs
+> +* Delalloc to written extent conversion
+> +Inject reduce_max_iextents error tag
+> +Create fragmented file
+> +Verify $testfile's extent count
+> +* Fallocate unwritten extents
+> +Fallocate fragmented file
+> +Verify $testfile's extent count
+> +* Directio write
+> +Create fragmented file via directio writes
+> +Verify $testfile's extent count
+> +* Extend quota inodes
+> +Disable reduce_max_iextents error tag
+> +Consume free space
+> +Create fragmented filesystem
+> +Inject reduce_max_iextents error tag
+> +Inject bmap_alloc_minlen_extent error tag
+> +Extend uquota file
+> +Verify uquota inode's extent count
+> diff --git a/tests/xfs/group b/tests/xfs/group
+> index b89c0a4e..1831f0b5 100644
+> --- a/tests/xfs/group
+> +++ b/tests/xfs/group
+> @@ -519,3 +519,4 @@
+>  519 auto quick reflink
+>  520 auto quick reflink
+>  521 auto quick realtime growfs
+> +522 auto quick quota
 > -- 
-> Dave Chinner
-> david@fromorbit.com
+> 2.29.2
 > 
-
