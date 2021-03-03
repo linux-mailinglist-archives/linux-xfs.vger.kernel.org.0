@@ -2,69 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0206532C4C9
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:55:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49AEC32C4CB
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:55:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238692AbhCDARY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:17:24 -0500
-Received: from vera.ghen.be ([178.21.118.64]:38416 "EHLO vera.ghen.be"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234754AbhCCNWn (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Mar 2021 08:22:43 -0500
-Received: by vera.ghen.be (Postfix, from userid 1000)
-        id 4DrF3q48ldz2xBF; Wed,  3 Mar 2021 14:20:23 +0100 (CET)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hendrickx.be;
-        s=21e; t=1614777623;
-        bh=HCQTUOaf0YHdzLeLL8W2rbeNZ/m/L1z7/P3NQIPHjgM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=T/82KoZem0kBWGMZb0j5aXA5l30V40LUDXSg7l0yTxPPK+LgwXr47KETxY8ayimVm
-         4d2Gi2txZw5A/yURR+WCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hendrickx.be; s=21r;
-        t=1614777623; bh=HCQTUOaf0YHdzLeLL8W2rbeNZ/m/L1z7/P3NQIPHjgM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=XtxNt5NcLp90cXkFAnZ2V7okLJHwLJJ9GFKYig/k5VIrUo8gljQfW8iFdGUyZsDeK
-         Vj01AA0pELIQbLXL3lfLdRFU0cM+GlkYJNOZ3NfG6GoA4JFkDP0viR49e5GFChfXrq
-         6YXmO+z9FaG84/pHgRLgxwJoCCOfBgx+8J5ikoSkZGr7jcDxVWHK2QRoZQ8ARb7HzU
-         SiHobsCIIDMO/UpqgYuZqIgQNHI3cUtVVlKPXyjUVi85oQxeTIh4hY/H9FPZqdMkUG
-         5eW561AqfpeczhqoouXm3Iikja+3LI81YJWt8JFEtgq3ADfeVGUqEBTQaE6Ys61EiZ
-         6Qism4ePx6q8w==
-Date:   Wed, 3 Mar 2021 14:20:23 +0100
-From:   Geert Hendrickx <geert@hendrickx.be>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        xfs <linux-xfs@vger.kernel.org>
-Subject: Re: xfs_admin -O feature upgrade feedback
-Message-ID: <YD+NF63sGji+OBtc@vera.ghen.be>
-References: <YDy+OmsVCkTfiMPp@vera.ghen.be>
- <20210301191803.GE7269@magnolia>
- <YD4tWbfzmuXv1mKQ@bfoster>
- <YD7C0v5rKopCJvk2@vera.ghen.be>
- <YD937HTr5Lq/YErv@bfoster>
+        id S241477AbhCDARe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:17:34 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:38624 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1447496AbhCCPDu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 3 Mar 2021 10:03:50 -0500
+Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1lHSjK-0004fB-FX; Wed, 03 Mar 2021 14:44:02 +0000
+Date:   Wed, 3 Mar 2021 14:44:01 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, hch@lst.de, dchinner@redhat.com
+Subject: Re: [PATCH 1/3] xfs: fix quota accounting when a mount is idmapped
+Message-ID: <20210303144401.eqmsqm7y232gn6mu@wittgenstein>
+References: <161472409643.3421449.2100229515469727212.stgit@magnolia>
+ <161472410230.3421449.11155796770029064636.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YD937HTr5Lq/YErv@bfoster>
-X-PGP-Key: https://geert.hendrickx.be/pgpkey.asc
-X-PGP-Key-Id: C88C1D9ED3861005886BF44ACD718C1F95AD44EA
+In-Reply-To: <161472410230.3421449.11155796770029064636.stgit@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Mar 03, 2021 at 06:50:04 -0500, Brian Foster wrote:
-> Maybe a simple compromise is a verbose option for xfs_admin itself..?
-> I.e., the normal use case operates as it does now, but the failure case
-> would print something like:
+On Tue, Mar 02, 2021 at 02:28:22PM -0800, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
 > 
->   "Feature conversion failed. Retry with -v for detailed error output."
+> Nowadays, we indirectly use the idmap-aware helper functions in the VFS
+> to set the initial uid and gid of a file being created.  Unfortunately,
+> we didn't convert the quota code, which means we attach the wrong dquots
+> to files created on an idmapped mount.
 > 
-> ... and then 'xfs_admin -v ...' would just pass through xfs_repair
-> output. Eh?
+> Fixes: f736d93d76d3 ("xfs: support idmapped mounts")
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
 
+This looks good but it misses one change, I think. The
+xfs_ioctl_setattr() needs to take the mapping into account as well:
 
-Good suggestion, that should cover it.
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 99dfe89a8d08..067366bf9a59 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1460,8 +1460,8 @@ xfs_ioctl_setattr(
+         * because the i_*dquot fields will get updated anyway.
+         */
+        if (XFS_IS_QUOTA_ON(mp)) {
+-               error = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
+-                               VFS_I(ip)->i_gid, fa->fsx_projid,
++               error = xfs_qm_vop_dqalloc(ip, i_uid_into_mnt(mnt_userns, VFS_I(ip)),
++                               i_gid_into_mnt(mnt_userns, VFS_I(ip)), fa->fsx_projid,
+                                XFS_QMOPT_PQUOTA, NULL, NULL, &pdqp);
+                if (error)
+                        return error;
 
+This should cover all callsites.
 
-	Geert
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-
+>  fs/xfs/xfs_inode.c   |   14 ++++++++------
+>  fs/xfs/xfs_symlink.c |    3 ++-
+>  2 files changed, 10 insertions(+), 7 deletions(-)
+> 
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 46a861d55e48..f93370bd7b1e 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -1007,9 +1007,10 @@ xfs_create(
+>  	/*
+>  	 * Make sure that we have allocated dquot(s) on disk.
+>  	 */
+> -	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
+> -					XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> -					&udqp, &gdqp, &pdqp);
+> +	error = xfs_qm_vop_dqalloc(dp, fsuid_into_mnt(mnt_userns),
+> +			fsgid_into_mnt(mnt_userns), prid,
+> +			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> +			&udqp, &gdqp, &pdqp);
+>  	if (error)
+>  		return error;
+>  
+> @@ -1157,9 +1158,10 @@ xfs_create_tmpfile(
+>  	/*
+>  	 * Make sure that we have allocated dquot(s) on disk.
+>  	 */
+> -	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
+> -				XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> -				&udqp, &gdqp, &pdqp);
+> +	error = xfs_qm_vop_dqalloc(dp, fsuid_into_mnt(mnt_userns),
+> +			fsgid_into_mnt(mnt_userns), prid,
+> +			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> +			&udqp, &gdqp, &pdqp);
+>  	if (error)
+>  		return error;
+>  
+> diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
+> index 1379013d74b8..7f368b10ded1 100644
+> --- a/fs/xfs/xfs_symlink.c
+> +++ b/fs/xfs/xfs_symlink.c
+> @@ -182,7 +182,8 @@ xfs_symlink(
+>  	/*
+>  	 * Make sure that we have allocated dquot(s) on disk.
+>  	 */
+> -	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
+> +	error = xfs_qm_vop_dqalloc(dp, fsuid_into_mnt(mnt_userns),
+> +			fsgid_into_mnt(mnt_userns), prid,
+>  			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+>  			&udqp, &gdqp, &pdqp);
+>  	if (error)
+> 
