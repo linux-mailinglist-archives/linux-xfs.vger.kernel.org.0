@@ -2,72 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E7AA32C4DC
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:57:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21D0432C4D9
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:57:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354993AbhCDASA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:18:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
+        id S1354917AbhCDAR6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:17:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235125AbhCCSHM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Mar 2021 13:07:12 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 75D0364EE8;
-        Wed,  3 Mar 2021 17:54:44 +0000 (UTC)
+        id S1344052AbhCCR6o (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 3 Mar 2021 12:58:44 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 72BEC64EED;
+        Wed,  3 Mar 2021 17:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614794084;
-        bh=pweVE7sRsvmpi/wnf92VkKu15qkfy8yGAeYAZvf5Ipw=;
+        s=k20201202; t=1614794177;
+        bh=kFvPNVdfCAFGkP+YzVdtONNHlqRTWslZjwwisWUKQts=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cfPc3FyJNdHvR+bX3JywyEpP01JeDKHkwHr/eKQEg4Js1sV4w2seWcN3y+5rkV+xJ
-         atatbRo0BDA7QetSNmytApH0STnW0AbNNqCsViGljdsZj8WV9C2DERHmy6K57MC0av
-         9JE5bG4BSGVyUeuCxLo/VH60/NQKREaRVZliv8L6Lxyoz+O3e/NJaZM3TFZIUSMjoK
-         aiTC6L95uhOhH5KCy/FkOQJBln3POk0YdxpW+9qqP2LzJrjkNLCvLQvhqMyQ5VskdE
-         HEPy3JfH7jtwwSwo8vj45/zte97ud3oT/L8oq5Pxp0/BKVth+v6k4Yiq5FIVl+baud
-         Pkag/BnQyEEmw==
-Date:   Wed, 3 Mar 2021 09:54:43 -0800
+        b=A98GtRj4dGSVlBofyBkpUWxfX3k1ix5aGcGekavpUCHF+hld8wtSHZZ+Cbfebn3VU
+         G8osdUtBcw2nCSkgzDBLT/RnG2SvkCxfoJYVUdwbGL/eBdBroN/ur7MYTa3oFw7V4+
+         Xlit+ybQEvguNA3O7MX09pP4bd2ugjUutmIA+NsXnwM6PRjytZjRsLF/5saQmadTo+
+         rGg8wkQb3Ua1qnwlY+MRrbO39RRk6syD2ojPOORgXAxQXTHC2LWZq4nBMeSGhhq04K
+         FJ5YYy1kGusf0AKwxCt87rNAejDydf40eXdItOwye44sTtxc//q4P2XPgdmx2BuKkB
+         /qUvDLUHAzLTA==
+Date:   Wed, 3 Mar 2021 09:56:16 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Chandan Babu R <chandanrlinux@gmail.com>
 Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
         darrick.wong@oracle.com
-Subject: Re: [PATCH V4 04/11] xfs: Check for extent overflow when punching a
- hole
-Message-ID: <20210303175443.GL7269@magnolia>
+Subject: Re: [PATCH V4 05/11] xfs: Check for extent overflow when
+ adding/removing xattrs
+Message-ID: <20210303175616.GM7269@magnolia>
 References: <20210118062022.15069-1-chandanrlinux@gmail.com>
- <20210118062022.15069-5-chandanrlinux@gmail.com>
+ <20210118062022.15069-6-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210118062022.15069-5-chandanrlinux@gmail.com>
+In-Reply-To: <20210118062022.15069-6-chandanrlinux@gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 11:50:15AM +0530, Chandan Babu R wrote:
+On Mon, Jan 18, 2021 at 11:50:16AM +0530, Chandan Babu R wrote:
 > This test verifies that XFS does not cause inode fork's extent count to
-> overflow when punching out an extent.
+> overflow when adding/removing xattrs.
 > 
 > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 > ---
->  tests/xfs/524     | 84 +++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/524.out | 19 +++++++++++
->  tests/xfs/group   |  1 +
->  3 files changed, 104 insertions(+)
->  create mode 100755 tests/xfs/524
->  create mode 100644 tests/xfs/524.out
+>  tests/xfs/525     | 141 ++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/525.out |  18 ++++++
+>  tests/xfs/group   |   1 +
+>  3 files changed, 160 insertions(+)
+>  create mode 100755 tests/xfs/525
+>  create mode 100644 tests/xfs/525.out
 > 
-> diff --git a/tests/xfs/524 b/tests/xfs/524
+> diff --git a/tests/xfs/525 b/tests/xfs/525
 > new file mode 100755
-> index 00000000..79fa31d8
+> index 00000000..bdca846d
 > --- /dev/null
-> +++ b/tests/xfs/524
-> @@ -0,0 +1,84 @@
+> +++ b/tests/xfs/525
+> @@ -0,0 +1,141 @@
 > +#! /bin/bash
 > +# SPDX-License-Identifier: GPL-2.0
 > +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
 > +#
-> +# FS QA Test 524
+> +# FS QA Test 525
 > +#
 > +# Verify that XFS does not cause inode fork's extent count to overflow when
-> +# punching out an extent.
+> +# Adding/removing xattrs.
+
+Nit: 'adding' (no need to capitalize)
+
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+
 > +seq=`basename $0`
 > +seqres=$RESULT_DIR/$seq
 > +echo "QA output created by $seq"
@@ -86,7 +94,9 @@ On Mon, Jan 18, 2021 at 11:50:15AM +0530, Chandan Babu R wrote:
 > +# get standard environment, filters and checks
 > +. ./common/rc
 > +. ./common/filter
+> +. ./common/attr
 > +. ./common/inject
+> +. ./common/populate
 > +
 > +# remove previous $seqres.full before test
 > +rm -f $seqres.full
@@ -95,97 +105,143 @@ On Mon, Jan 18, 2021 at 11:50:15AM +0530, Chandan Babu R wrote:
 > +
 > +_supported_fs xfs
 > +_require_scratch
+> +_require_attrs
 > +_require_xfs_debug
-> +_require_xfs_io_command "fpunch"
-> +_require_xfs_io_command "finsert"
-> +_require_xfs_io_command "fcollapse"
-> +_require_xfs_io_command "fzero"
+> +_require_test_program "punch-alternating"
 > +_require_xfs_io_error_injection "reduce_max_iextents"
+> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
 > +
 > +echo "Format and mount fs"
-> +_scratch_mkfs >> $seqres.full
+> +_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
 > +_scratch_mount >> $seqres.full
 > +
-> +bsize=$(_get_file_block_size $SCRATCH_MNT)
-> +nr_blks=30
+> +bsize=$(_get_block_size $SCRATCH_MNT)
+> +
+> +attr_len=255
 > +
 > +testfile=$SCRATCH_MNT/testfile
+> +
+> +echo "Consume free space"
+> +fillerdir=$SCRATCH_MNT/fillerdir
+> +nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
+> +nr_free_blks=$((nr_free_blks * 90 / 100))
+> +
+> +_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 >> $seqres.full 2>&1
+> +
+> +echo "Create fragmented filesystem"
+> +for dentry in $(ls -1 $fillerdir/); do
+> +	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
+> +done
 > +
 > +echo "Inject reduce_max_iextents error tag"
 > +_scratch_inject_error reduce_max_iextents 1
 > +
-> +for op in fpunch finsert fcollapse fzero; do
-> +	echo "* $op regular file"
+> +echo "Inject bmap_alloc_minlen_extent error tag"
+> +_scratch_inject_error bmap_alloc_minlen_extent 1
 > +
-> +	echo "Create \$testfile"
-> +	$XFS_IO_PROG -f -s \
-> +		     -c "pwrite -b $((nr_blks * bsize)) 0 $((nr_blks * bsize))" \
-> +		     $testfile  >> $seqres.full
+> +echo "* Set xattrs"
 > +
-> +	echo "$op alternating blocks"
-> +	for i in $(seq 1 2 $((nr_blks - 1))); do
-> +		$XFS_IO_PROG -f -c "$op $((i * bsize)) $bsize" $testfile \
-> +		       >> $seqres.full 2>&1
-> +		[[ $? != 0 ]] && break
+> +echo "Create \$testfile"
+> +touch $testfile
+> +
+> +echo "Create xattrs"
+> +nr_attrs=$((bsize * 20 / attr_len))
+> +for i in $(seq 1 $nr_attrs); do
+> +	attr="$(printf "trusted.%0247d" $i)"
+> +	$SETFATTR_PROG -n "$attr" $testfile >> $seqres.full 2>&1
+> +	[[ $? != 0 ]] && break
+> +done
+> +
+> +echo "Verify \$testfile's naextent count"
+> +
+> +naextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep naextents)
+> +naextents=${naextents##fsxattr.naextents = }
+> +if (( $naextents > 10 )); then
+> +	echo "Extent count overflow check failed: naextents = $naextents"
+> +	exit 1
+> +fi
+> +
+> +echo "Remove \$testfile"
+> +rm $testfile
+> +
+> +echo "* Remove xattrs"
+> +
+> +echo "Create \$testfile"
+> +touch $testfile
+> +
+> +echo "Disable reduce_max_iextents error tag"
+> +_scratch_inject_error reduce_max_iextents 0
+> +
+> +echo "Create initial xattr extents"
+> +
+> +naextents=0
+> +last=""
+> +start=1
+> +nr_attrs=$((bsize / attr_len))
+> +
+> +while (( $naextents < 4 )); do
+> +	end=$((start + nr_attrs - 1))
+> +
+> +	for i in $(seq $start $end); do
+> +		attr="$(printf "trusted.%0247d" $i)"
+> +		$SETFATTR_PROG -n $attr $testfile
 > +	done
 > +
-> +	echo "Verify \$testfile's extent count"
+> +	start=$((end + 1))
 > +
-> +	nextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep -i nextents)
-> +	nextents=${nextents##fsxattr.nextents = }
-
-Modulo my comment about refactoring fsgetxattr output into a common
-helper, the rest looks ok:
-
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-
---D
-
-> +	if (( $nextents > 10 )); then
-> +		echo "Extent count overflow check failed: nextents = $nextents"
-> +		exit 1
-> +	fi
-> +
-> +	rm $testfile
+> +	naextents=$($XFS_IO_PROG -f -c 'stat' $testfile | grep naextents)
+> +	naextents=${naextents##fsxattr.naextents = }
 > +done
+> +
+> +echo "Inject reduce_max_iextents error tag"
+> +_scratch_inject_error reduce_max_iextents 1
+> +
+> +echo "Remove xattr to trigger -EFBIG"
+> +attr="$(printf "trusted.%0247d" 1)"
+> +$SETFATTR_PROG -x "$attr" $testfile >> $seqres.full 2>&1
+> +if [[ $? == 0 ]]; then
+> +	echo "Xattr removal succeeded; Should have failed "
+> +	exit 1
+> +fi
+> +
+> +rm $testfile && echo "Successfully removed \$testfile"
 > +
 > +# success, all done
 > +status=0
 > +exit
-> diff --git a/tests/xfs/524.out b/tests/xfs/524.out
+> diff --git a/tests/xfs/525.out b/tests/xfs/525.out
 > new file mode 100644
-> index 00000000..a957f9c7
+> index 00000000..74b152d9
 > --- /dev/null
-> +++ b/tests/xfs/524.out
-> @@ -0,0 +1,19 @@
-> +QA output created by 524
+> +++ b/tests/xfs/525.out
+> @@ -0,0 +1,18 @@
+> +QA output created by 525
 > +Format and mount fs
+> +Consume free space
+> +Create fragmented filesystem
 > +Inject reduce_max_iextents error tag
-> +* fpunch regular file
+> +Inject bmap_alloc_minlen_extent error tag
+> +* Set xattrs
 > +Create $testfile
-> +fpunch alternating blocks
-> +Verify $testfile's extent count
-> +* finsert regular file
+> +Create xattrs
+> +Verify $testfile's naextent count
+> +Remove $testfile
+> +* Remove xattrs
 > +Create $testfile
-> +finsert alternating blocks
-> +Verify $testfile's extent count
-> +* fcollapse regular file
-> +Create $testfile
-> +fcollapse alternating blocks
-> +Verify $testfile's extent count
-> +* fzero regular file
-> +Create $testfile
-> +fzero alternating blocks
-> +Verify $testfile's extent count
+> +Disable reduce_max_iextents error tag
+> +Create initial xattr extents
+> +Inject reduce_max_iextents error tag
+> +Remove xattr to trigger -EFBIG
+> +Successfully removed $testfile
 > diff --git a/tests/xfs/group b/tests/xfs/group
-> index 018c70ef..3fa38c36 100644
+> index 3fa38c36..bd38aff0 100644
 > --- a/tests/xfs/group
 > +++ b/tests/xfs/group
-> @@ -521,3 +521,4 @@
->  521 auto quick realtime growfs
+> @@ -522,3 +522,4 @@
 >  522 auto quick quota
 >  523 auto quick realtime growfs
-> +524 auto quick punch zero insert collapse
+>  524 auto quick punch zero insert collapse
+> +525 auto quick attr
 > -- 
 > 2.29.2
 > 
