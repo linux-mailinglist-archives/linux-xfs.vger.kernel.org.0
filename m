@@ -2,130 +2,138 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4574032C4E6
+	by mail.lfdr.de (Postfix) with ESMTP id 9156332C4E7
 	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:57:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353109AbhCDASI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:18:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34486 "EHLO mail.kernel.org"
+        id S1345005AbhCDASJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:18:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1579511AbhCCSbZ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Mar 2021 13:31:25 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9ED0B64EBD;
-        Wed,  3 Mar 2021 18:30:43 +0000 (UTC)
+        id S1580627AbhCCSef (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 3 Mar 2021 13:34:35 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A200F64E25;
+        Wed,  3 Mar 2021 18:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614796243;
-        bh=F0e3L2Wm3uQfA6XE/nNAtnKnAk5UnNpxLpwHgvmK4gs=;
+        s=k20201202; t=1614796433;
+        bh=z3x3PdUGEMYobG+8f2Qy442nFo1d7UKVPAzaY8OUisE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qz1R6/NU/g6RF/rEGIgBv9g5bx10v6GQIRRUzvGcA9hJXYGRNYz1mN118r6ErDwf3
-         Ppeenpz6TByfv2otCTHUOAyVRlvu+/RtvpK6zbiQ1FXyOmqIV02HdEp5JEgsza3h06
-         XOSTsRfHhsV+X2C4mqTl5sRNco8nTS5bhOG9GjZKbyXphzt+DKxwbzk1CR/iYU76tU
-         QPACdYouqFiuFPt8QSX6JS/L/ejAqKnh2oXrL5IhxrSYFrdocBd5OXcv/PVMHVezMk
-         4i64JCDjV//dsozlOZ/yeVYgdwVdwXoO3QceVE+Cz1DQ+QRtYzSkOVhXj2baOjdlOR
-         Nq9+2X6WbadFQ==
-Date:   Wed, 3 Mar 2021 10:30:42 -0800
+        b=sOOeAMKOXAZGfGG1f/0PrzWKryNpX8oUIYZQeRkl6dqhvd56V5TwdLYBULvKP1aBL
+         C02buiiLqPtqSislm8a0IFLHv0R13yaB+KFxo69JcesdyJt1UAwnfXWBOjbQaVIVus
+         g+s/203UWOYrUkAlZkXBC7fMKHnq4vrNnBHSVav3FuDpQDcu6taDO1OAwo8KVuj0h8
+         aZ/LZTklYUeZHD5EET7F0mIeOi5CgHE4yse3bFAZI5VUWpyfsumZqxNR6yhPhjFQvB
+         gTQsG4XNnYHglZR8+IBiz8Q5pN15YgZhvlx0DS8OJR61jyDlsgbWVNs3CQx2J4Urwl
+         Uqt9WULaObBUA==
+Date:   Wed, 3 Mar 2021 10:33:52 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Gao Xiang <hsiangkao@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH v7 5/5] xfs: add error injection for per-AG resv failure
-Message-ID: <20210303183042.GD3419940@magnolia>
-References: <20210302024816.2525095-1-hsiangkao@redhat.com>
- <20210302024816.2525095-6-hsiangkao@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     linux-xfs@vger.kernel.org, hch@lst.de, dchinner@redhat.com
+Subject: Re: [PATCH 1/3] xfs: fix quota accounting when a mount is idmapped
+Message-ID: <20210303183352.GT7269@magnolia>
+References: <161472409643.3421449.2100229515469727212.stgit@magnolia>
+ <161472410230.3421449.11155796770029064636.stgit@magnolia>
+ <20210303144401.eqmsqm7y232gn6mu@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210302024816.2525095-6-hsiangkao@redhat.com>
+In-Reply-To: <20210303144401.eqmsqm7y232gn6mu@wittgenstein>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Mar 02, 2021 at 10:48:16AM +0800, Gao Xiang wrote:
-> per-AG resv failure after fixing up freespace is hard to test in an
-> effective way, so directly add an error injection path to observe
-> such error handling path works as expected.
+On Wed, Mar 03, 2021 at 02:44:01PM +0000, Christian Brauner wrote:
+> On Tue, Mar 02, 2021 at 02:28:22PM -0800, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > Nowadays, we indirectly use the idmap-aware helper functions in the VFS
+> > to set the initial uid and gid of a file being created.  Unfortunately,
+> > we didn't convert the quota code, which means we attach the wrong dquots
+> > to files created on an idmapped mount.
+> > 
+> > Fixes: f736d93d76d3 ("xfs: support idmapped mounts")
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > ---
 > 
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> ---
->  fs/xfs/libxfs/xfs_ag_resv.c  | 6 +++++-
->  fs/xfs/libxfs/xfs_errortag.h | 4 +++-
->  fs/xfs/xfs_error.c           | 2 ++
->  3 files changed, 10 insertions(+), 2 deletions(-)
+> This looks good but it misses one change, I think. The
+> xfs_ioctl_setattr() needs to take the mapping into account as well:
 > 
-> diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-> index fdfe6dc0d307..6c5f8d10589c 100644
-> --- a/fs/xfs/libxfs/xfs_ag_resv.c
-> +++ b/fs/xfs/libxfs/xfs_ag_resv.c
-> @@ -211,7 +211,11 @@ __xfs_ag_resv_init(
->  		ASSERT(0);
->  		return -EINVAL;
->  	}
-> -	error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
-> +
-> +	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_AG_RESV_FAIL))
-> +		error = -ENOSPC;
-> +	else
-> +		error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
->  	if (error) {
->  		trace_xfs_ag_resv_init_error(pag->pag_mount, pag->pag_agno,
->  				error, _RET_IP_);
-> diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-> index 6ca9084b6934..b433ef735217 100644
-> --- a/fs/xfs/libxfs/xfs_errortag.h
-> +++ b/fs/xfs/libxfs/xfs_errortag.h
-> @@ -40,6 +40,7 @@
->  #define XFS_ERRTAG_REFCOUNT_FINISH_ONE			25
->  #define XFS_ERRTAG_BMAP_FINISH_ONE			26
->  #define XFS_ERRTAG_AG_RESV_CRITICAL			27
-> +
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 99dfe89a8d08..067366bf9a59 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1460,8 +1460,8 @@ xfs_ioctl_setattr(
+>          * because the i_*dquot fields will get updated anyway.
+>          */
+>         if (XFS_IS_QUOTA_ON(mp)) {
+> -               error = xfs_qm_vop_dqalloc(ip, VFS_I(ip)->i_uid,
+> -                               VFS_I(ip)->i_gid, fa->fsx_projid,
+> +               error = xfs_qm_vop_dqalloc(ip, i_uid_into_mnt(mnt_userns, VFS_I(ip)),
+> +                               i_gid_into_mnt(mnt_userns, VFS_I(ip)), fa->fsx_projid,
+>                                 XFS_QMOPT_PQUOTA, NULL, NULL, &pdqp);
 
-Extra space?
+The uid/gid parameters here don't matter because the "XFS_QMOPT_PQUOTA"
+flag by itself here means that _dqalloc only looks at the project id
+argument.
 
->  /*
->   * DEBUG mode instrumentation to test and/or trigger delayed allocation
->   * block killing in the event of failed writes. When enabled, all
-> @@ -58,7 +59,8 @@
->  #define XFS_ERRTAG_BUF_IOERROR				35
->  #define XFS_ERRTAG_REDUCE_MAX_IEXTENTS			36
->  #define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
-> -#define XFS_ERRTAG_MAX					38
-> +#define XFS_ERRTAG_AG_RESV_FAIL				38
-> +#define XFS_ERRTAG_MAX					39
->  
->  /*
->   * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
+>                 if (error)
+>                         return error;
+> 
+> This should cover all callsites.
+> 
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-This needs to define XFS_RANDOM_AG_RESV_FAIL and put it in
-xfs_errortag_random_default in xfs_error.c to avoid running off the end
-of the array.
-
-Also... that _default array /really/ needs to have a BUILD_BUG_ON
-somewhere to scream loudly if it isn't XFS_ERRTAG_MAX elements long.
+Thanks!
 
 --D
 
-> diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-> index 185b4915b7bf..5192a7063d95 100644
-> --- a/fs/xfs/xfs_error.c
-> +++ b/fs/xfs/xfs_error.c
-> @@ -168,6 +168,7 @@ XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
->  XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
->  XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
->  XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
-> +XFS_ERRORTAG_ATTR_RW(ag_resv_fail, XFS_ERRTAG_AG_RESV_FAIL);
->  
->  static struct attribute *xfs_errortag_attrs[] = {
->  	XFS_ERRORTAG_ATTR_LIST(noerror),
-> @@ -208,6 +209,7 @@ static struct attribute *xfs_errortag_attrs[] = {
->  	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
->  	XFS_ERRORTAG_ATTR_LIST(reduce_max_iextents),
->  	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
-> +	XFS_ERRORTAG_ATTR_LIST(ag_resv_fail),
->  	NULL,
->  };
->  
-> -- 
-> 2.27.0
-> 
+> >  fs/xfs/xfs_inode.c   |   14 ++++++++------
+> >  fs/xfs/xfs_symlink.c |    3 ++-
+> >  2 files changed, 10 insertions(+), 7 deletions(-)
+> > 
+> > 
+> > diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> > index 46a861d55e48..f93370bd7b1e 100644
+> > --- a/fs/xfs/xfs_inode.c
+> > +++ b/fs/xfs/xfs_inode.c
+> > @@ -1007,9 +1007,10 @@ xfs_create(
+> >  	/*
+> >  	 * Make sure that we have allocated dquot(s) on disk.
+> >  	 */
+> > -	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
+> > -					XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> > -					&udqp, &gdqp, &pdqp);
+> > +	error = xfs_qm_vop_dqalloc(dp, fsuid_into_mnt(mnt_userns),
+> > +			fsgid_into_mnt(mnt_userns), prid,
+> > +			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> > +			&udqp, &gdqp, &pdqp);
+> >  	if (error)
+> >  		return error;
+> >  
+> > @@ -1157,9 +1158,10 @@ xfs_create_tmpfile(
+> >  	/*
+> >  	 * Make sure that we have allocated dquot(s) on disk.
+> >  	 */
+> > -	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
+> > -				XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> > -				&udqp, &gdqp, &pdqp);
+> > +	error = xfs_qm_vop_dqalloc(dp, fsuid_into_mnt(mnt_userns),
+> > +			fsgid_into_mnt(mnt_userns), prid,
+> > +			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> > +			&udqp, &gdqp, &pdqp);
+> >  	if (error)
+> >  		return error;
+> >  
+> > diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
+> > index 1379013d74b8..7f368b10ded1 100644
+> > --- a/fs/xfs/xfs_symlink.c
+> > +++ b/fs/xfs/xfs_symlink.c
+> > @@ -182,7 +182,8 @@ xfs_symlink(
+> >  	/*
+> >  	 * Make sure that we have allocated dquot(s) on disk.
+> >  	 */
+> > -	error = xfs_qm_vop_dqalloc(dp, current_fsuid(), current_fsgid(), prid,
+> > +	error = xfs_qm_vop_dqalloc(dp, fsuid_into_mnt(mnt_userns),
+> > +			fsgid_into_mnt(mnt_userns), prid,
+> >  			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
+> >  			&udqp, &gdqp, &pdqp);
+> >  	if (error)
+> > 
