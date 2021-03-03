@@ -2,72 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D00232C4DA
+	by mail.lfdr.de (Postfix) with ESMTP id 8DB6332C4DB
 	for <lists+linux-xfs@lfdr.de>; Thu,  4 Mar 2021 01:57:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354985AbhCDAR6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Mar 2021 19:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
+        id S1354990AbhCDAR7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Mar 2021 19:17:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1835209AbhCCSCg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Mar 2021 13:02:36 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C74F564DE8;
-        Wed,  3 Mar 2021 18:01:54 +0000 (UTC)
+        id S231989AbhCCSFw (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 3 Mar 2021 13:05:52 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A981864EBD;
+        Wed,  3 Mar 2021 18:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1614794514;
-        bh=Yzkb9ZueVGugzndRm8yE6bTt9dtFl1TrM3MbB2C6AgI=;
+        s=k20201202; t=1614794709;
+        bh=WDGSbBzTgy9G9AO/iUzjw+YdPBHUioTESYu2e9BbbaM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sgGxQrwfTb1JOY+XyGWfhBT3IPYhOPVYayZykbPt1T1hvb50BLmZ8OKkXer7wnW1p
-         tly2L1F/95MspdQoPOqAfs5DVm8SUPPHAVW84H8oEsZnoW10GKZvGTBCUg1IbqrgTG
-         KHxQJpsFO7Nj7/DMyh6zz+qGOM3ix1kDWhj8YJX7xr9DDieqnaXeMvow+j+2U9TT1d
-         hVNIE9HNbu5QMuHpBT+im5plnOmx188xumRV+uwYTGgXB66mgzTkj6Wa+6LkhCbHeI
-         fM6ZND/hLD8EDm5SmO9ohC4cZ7IFp7WuRwt1z4ugwU9w82JK9ilMBNj/CFC4E9o9yv
-         iI9E9LNqtHrZQ==
-Date:   Wed, 3 Mar 2021 10:01:54 -0800
+        b=I6biDLuBnIVHGkBtlHKCa1cnu5tGMAZN7FSgJcuqAjdD/fySNocV0acMr3Obsnn8T
+         wF9IvHfOzqWoe5dJ838Fw5O+C3Kv/s23+/KZTQzTuTOXJInwYlzccbB7iN+VbWAHs1
+         iYZ/fdAt+bXDLBxc7Cyg0j0lQ72oR8NW9X9QF8YeRnnLlp4avU24e755JFP4MDQXAh
+         H55Ud1+ZPiPgi9pTx9MuD0QHZbHXT/J5004c4j59BXq1HDbNjhoRWhcuVwBjtoh9EC
+         h6++7/8vgCMxcsqaAS0thRHZb3QfrWWs1GEazbcJFL2gpgUB6zaM3bKqvwjn5XSHaW
+         zfNUl0Z83oEWw==
+Date:   Wed, 3 Mar 2021 10:05:08 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Chandan Babu R <chandanrlinux@gmail.com>
 Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org,
         darrick.wong@oracle.com
-Subject: Re: [PATCH V4 06/11] xfs: Check for extent overflow when
- adding/removing dir entries
-Message-ID: <20210303180154.GN7269@magnolia>
+Subject: Re: [PATCH V4 07/11] xfs: Check for extent overflow when writing to
+ unwritten extent
+Message-ID: <20210303180508.GO7269@magnolia>
 References: <20210118062022.15069-1-chandanrlinux@gmail.com>
- <20210118062022.15069-7-chandanrlinux@gmail.com>
+ <20210118062022.15069-8-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210118062022.15069-7-chandanrlinux@gmail.com>
+In-Reply-To: <20210118062022.15069-8-chandanrlinux@gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 11:50:17AM +0530, Chandan Babu R wrote:
+On Mon, Jan 18, 2021 at 11:50:18AM +0530, Chandan Babu R wrote:
 > This test verifies that XFS does not cause inode fork's extent count to
-> overflow when adding/removing directory entries.
+> overflow when writing to an unwritten extent.
 > 
 > Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 > ---
->  tests/xfs/526     | 186 ++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/526.out |  17 +++++
->  tests/xfs/group   |   1 +
->  3 files changed, 204 insertions(+)
->  create mode 100755 tests/xfs/526
->  create mode 100644 tests/xfs/526.out
+>  tests/xfs/527     | 89 +++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/527.out | 11 ++++++
+>  tests/xfs/group   |  1 +
+>  3 files changed, 101 insertions(+)
+>  create mode 100755 tests/xfs/527
+>  create mode 100644 tests/xfs/527.out
 > 
-> diff --git a/tests/xfs/526 b/tests/xfs/526
+> diff --git a/tests/xfs/527 b/tests/xfs/527
 > new file mode 100755
-> index 00000000..5a789d61
+> index 00000000..cd67bce4
 > --- /dev/null
-> +++ b/tests/xfs/526
-> @@ -0,0 +1,186 @@
+> +++ b/tests/xfs/527
+> @@ -0,0 +1,89 @@
 > +#! /bin/bash
 > +# SPDX-License-Identifier: GPL-2.0
 > +# Copyright (c) 2020 Chandan Babu R.  All Rights Reserved.
 > +#
-> +# FS QA Test 526
+> +# FS QA Test 527
 > +#
 > +# Verify that XFS does not cause inode fork's extent count to overflow when
-> +# adding/removing directory entries.
+> +# writing to an unwritten extent.
 > +seq=`basename $0`
 > +seqres=$RESULT_DIR/$seq
 > +echo "QA output created by $seq"
@@ -87,7 +87,6 @@ On Mon, Jan 18, 2021 at 11:50:17AM +0530, Chandan Babu R wrote:
 > +. ./common/rc
 > +. ./common/filter
 > +. ./common/inject
-> +. ./common/populate
 > +
 > +# remove previous $seqres.full before test
 > +rm -f $seqres.full
@@ -97,198 +96,101 @@ On Mon, Jan 18, 2021 at 11:50:17AM +0530, Chandan Babu R wrote:
 > +_supported_fs xfs
 > +_require_scratch
 > +_require_xfs_debug
-> +_require_test_program "punch-alternating"
+> +_require_xfs_io_command "falloc"
 > +_require_xfs_io_error_injection "reduce_max_iextents"
-> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-> +
-> +_scratch_mkfs_sized $((1024 * 1024 * 1024)) | _filter_mkfs >> $seqres.full 2> $tmp.mkfs
-> +. $tmp.mkfs
-> +
-> +# Filesystems with directory block size greater than one FSB will not be tested,
-> +# since "7 (i.e. XFS_DA_NODE_MAXDEPTH + 1 data block + 1 free block) * 2 (fsb
-> +# count) = 14" is greater than the pseudo max extent count limit of 10.
-> +# Extending the pseudo max limit won't help either.  Consider the case where 1
-> +# FSB is 1k in size and 1 dir block is 64k in size (i.e. fsb count = 64). In
-> +# this case, the pseudo max limit has to be greater than 7 * 64 = 448 extents.
-> +if (( $dbsize != $dirbsize )); then
-> +	_notrun "FSB size ($dbsize) and directory block size ($dirbsize) do not match"
-> +fi
-
-But what about the case where fsb is 1k and dirblocks are 4k? :)
-
-I admit I'm reacting to my expectation that we would _notrun here based
-on the output of a more computation, not just fsb != dirblocksize.  But
-I dunno, maybe you've already worked that out?
-
-(The rest of the test looks good to me.)
-
---D
-
 > +
 > +echo "Format and mount fs"
 > +_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
 > +_scratch_mount >> $seqres.full
 > +
-> +echo "Consume free space"
-> +fillerdir=$SCRATCH_MNT/fillerdir
-> +nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-> +nr_free_blks=$((nr_free_blks * 90 / 100))
+> +bsize=$(_get_file_block_size $SCRATCH_MNT)
 > +
-> +_fill_fs $((dbsize * nr_free_blks)) $fillerdir $dbsize 0 >> $seqres.full 2>&1
-> +
-> +echo "Create fragmented filesystem"
-> +for dentry in $(ls -1 $fillerdir/); do
-> +	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
-> +done
+> +testfile=${SCRATCH_MNT}/testfile
 > +
 > +echo "Inject reduce_max_iextents error tag"
 > +_scratch_inject_error reduce_max_iextents 1
 > +
-> +echo "Inject bmap_alloc_minlen_extent error tag"
-> +_scratch_inject_error bmap_alloc_minlen_extent 1
+> +nr_blks=15
 > +
-> +dent_len=255
+> +for io in Buffered Direct; do
+
+# First test buffered writes, then direct writes.
+for $xfs_io_flag in "" "-d"; do ?
+
+> +	echo "* $io write to unwritten extent"
 > +
-> +echo "* Create directory entries"
+> +	echo "Fallocate $nr_blks blocks"
+> +	$XFS_IO_PROG -f -c "falloc 0 $((nr_blks * bsize))" $testfile >> $seqres.full
 > +
-> +testdir=$SCRATCH_MNT/testdir
-> +mkdir $testdir
+> +	if [[ $io == "Buffered" ]]; then
+> +		xfs_io_flag=""
+> +	else
+> +		xfs_io_flag="-d"
+> +	fi
+
+...because then you can skip this part.
+
 > +
-> +nr_dents=$((dbsize * 20 / dent_len))
-> +for i in $(seq 1 $nr_dents); do
-> +	dentry="$(printf "%0255d" $i)"
-> +	touch ${testdir}/$dentry >> $seqres.full 2>&1 || break
+> +	echo "$io write to every other block of fallocated space"
+> +	for i in $(seq 1 2 $((nr_blks - 1))); do
+> +		$XFS_IO_PROG -f -s $xfs_io_flag -c "pwrite $((i * bsize)) $bsize" \
+> +		       $testfile >> $seqres.full 2>&1
+> +		[[ $? != 0 ]] && break
+> +	done
+> +
+> +	echo "Verify \$testfile's extent count"
+> +	nextents=$($XFS_IO_PROG -c 'stat' $testfile | grep nextents)
+> +	nextents=${nextents##fsxattr.nextents = }
+> +	if (( $nextents > 10 )); then
+> +		echo "Extent count overflow check failed: nextents = $nextents"
+> +		exit 1
+> +	fi
+> +
+> +	rm $testfile
 > +done
 > +
-> +echo "Verify directory's extent count"
-> +nextents=$($XFS_IO_PROG -c 'stat' $testdir | grep nextents)
-> +nextents=${nextents##fsxattr.nextents = }
-> +if (( $nextents > 10 )); then
-> +	echo "Extent count overflow check failed: nextents = $nextents"
-> +	exit 1
-> +fi
-> +
-> +rm -rf $testdir
-> +
-> +echo "* Rename: Populate destination directory"
-> +
-> +dstdir=$SCRATCH_MNT/dstdir
-> +mkdir $dstdir
-> +
-> +nr_dents=$((dirbsize * 20 / dent_len))
-> +
-> +echo "Populate \$dstdir by moving new directory entries"
-> +for i in $(seq 1 $nr_dents); do
-> +	dentry="$(printf "%0255d" $i)"
-> +	dentry=${SCRATCH_MNT}/${dentry}
-> +	touch $dentry || break
-> +	mv $dentry $dstdir >> $seqres.full 2>&1 || break
-> +done
-> +
-> +rm $dentry
-> +
-> +echo "Verify \$dstdir's extent count"
-> +
-> +nextents=$($XFS_IO_PROG -c 'stat' $dstdir | grep nextents)
-> +nextents=${nextents##fsxattr.nextents = }
-> +if (( $nextents > 10 )); then
-> +	echo "Extent count overflow check failed: nextents = $nextents"
-> +	exit 1
-> +fi
-> +
-> +rm -rf $dstdir
-> +
-> +echo "* Create multiple hard links to a single file"
-> +
-> +testdir=$SCRATCH_MNT/testdir
-> +mkdir $testdir
-> +
-> +testfile=$SCRATCH_MNT/testfile
-> +touch $testfile
-> +
-> +nr_dents=$((dirbsize * 20 / dent_len))
-> +
-> +echo "Create multiple hardlinks"
-> +for i in $(seq 1 $nr_dents); do
-> +	dentry="$(printf "%0255d" $i)"
-> +	ln $testfile ${testdir}/${dentry} >> $seqres.full 2>&1 || break
-> +done
-> +
-> +rm $testfile
-> +
-> +echo "Verify directory's extent count"
-> +nextents=$($XFS_IO_PROG -c 'stat' $testdir | grep nextents)
-> +nextents=${nextents##fsxattr.nextents = }
-> +if (( $nextents > 10 )); then
-> +	echo "Extent count overflow check failed: nextents = $nextents"
-> +	exit 1
-> +fi
-> +
-> +rm -rf $testdir
-> +
-> +echo "* Create multiple symbolic links to a single file"
-> +
-> +testdir=$SCRATCH_MNT/testdir
-> +mkdir $testdir
-> +
-> +testfile=$SCRATCH_MNT/testfile
-> +touch $testfile
-> +
-> +nr_dents=$((dirbsize * 20 / dent_len))
-> +
-> +echo "Create multiple symbolic links"
-> +for i in $(seq 1 $nr_dents); do
-> +	dentry="$(printf "%0255d" $i)"
-> +	ln -s $testfile ${testdir}/${dentry} >> $seqres.full 2>&1 || break;
-> +done
-> +
-> +rm $testfile
-> +
-> +echo "Verify directory's extent count"
-> +nextents=$($XFS_IO_PROG -c 'stat' $testdir | grep nextents)
-> +nextents=${nextents##fsxattr.nextents = }
-> +if (( $nextents > 10 )); then
-> +	echo "Extent count overflow check failed: nextents = $nextents"
-> +	exit 1
-> +fi
-> +
-> +rm -rf $testdir
+> +# super_block->s_wb_err will have a newer seq value when compared to "/"'s
+> +# file->f_sb_err. Consume it here so that xfs_scrub can does not error out.
+> +$XFS_IO_PROG -c syncfs $SCRATCH_MNT >> $seqres.full 2>&1
+
+I wonder, should _check_xfs_filesystem should syncfs to clear old EIOs
+before running xfs_scrub?  I occasionally see this pop up on
+generic/204.
+
+(Everything else here looks ok.)
+
+--D
+
 > +
 > +# success, all done
 > +status=0
 > +exit
-> diff --git a/tests/xfs/526.out b/tests/xfs/526.out
+> diff --git a/tests/xfs/527.out b/tests/xfs/527.out
 > new file mode 100644
-> index 00000000..d055f56d
+> index 00000000..3597ad92
 > --- /dev/null
-> +++ b/tests/xfs/526.out
-> @@ -0,0 +1,17 @@
-> +QA output created by 526
+> +++ b/tests/xfs/527.out
+> @@ -0,0 +1,11 @@
+> +QA output created by 527
 > +Format and mount fs
-> +Consume free space
-> +Create fragmented filesystem
 > +Inject reduce_max_iextents error tag
-> +Inject bmap_alloc_minlen_extent error tag
-> +* Create directory entries
-> +Verify directory's extent count
-> +* Rename: Populate destination directory
-> +Populate $dstdir by moving new directory entries
-> +Verify $dstdir's extent count
-> +* Create multiple hard links to a single file
-> +Create multiple hardlinks
-> +Verify directory's extent count
-> +* Create multiple symbolic links to a single file
-> +Create multiple symbolic links
-> +Verify directory's extent count
+> +* Buffered write to unwritten extent
+> +Fallocate 15 blocks
+> +Buffered write to every other block of fallocated space
+> +Verify $testfile's extent count
+> +* Direct write to unwritten extent
+> +Fallocate 15 blocks
+> +Direct write to every other block of fallocated space
+> +Verify $testfile's extent count
 > diff --git a/tests/xfs/group b/tests/xfs/group
-> index bd38aff0..d089797b 100644
+> index d089797b..627813fe 100644
 > --- a/tests/xfs/group
 > +++ b/tests/xfs/group
-> @@ -523,3 +523,4 @@
->  523 auto quick realtime growfs
+> @@ -524,3 +524,4 @@
 >  524 auto quick punch zero insert collapse
 >  525 auto quick attr
-> +526 auto quick dir hardlink symlink
+>  526 auto quick dir hardlink symlink
+> +527 auto quick
 > -- 
 > 2.29.2
 > 
