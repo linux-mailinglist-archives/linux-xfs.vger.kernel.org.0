@@ -2,152 +2,125 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0256532DFD8
-	for <lists+linux-xfs@lfdr.de>; Fri,  5 Mar 2021 03:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B97332E157
+	for <lists+linux-xfs@lfdr.de>; Fri,  5 Mar 2021 06:18:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbhCEC6F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 4 Mar 2021 21:58:05 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:21165 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229528AbhCEC6F (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 4 Mar 2021 21:58:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1614913084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RDCUbE9ayuguhvHZLdqXgCCucvyzxuogayKdE4uOcvU=;
-        b=iBhRLLMdvu1HSZMDSsEPAkqjPRtxXkjCEOsIFGoCMR1QGMBpPgRbt3o4j6WWnG/mAirprS
-        +u2ouhRE2Q8I6XdPshn+B0V8+C/LIV56puVwNw1+mCe2MV6JHEDXgoVxCbLux2YmoAYSq2
-        MxbFMHthe7zXOAV524gAFDuk6dMwK5s=
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
- [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-Fssbe66gOAawIdsgpMLr6w-1; Thu, 04 Mar 2021 21:58:03 -0500
-X-MC-Unique: Fssbe66gOAawIdsgpMLr6w-1
-Received: by mail-pg1-f199.google.com with SMTP id x36so312485pgl.8
-        for <linux-xfs@vger.kernel.org>; Thu, 04 Mar 2021 18:58:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RDCUbE9ayuguhvHZLdqXgCCucvyzxuogayKdE4uOcvU=;
-        b=B5VrbES4hqLmjAAy0l/WkjR6zQPVQOcn8KXqqstIHYOjobvgNQqNaZzelU4dYEBJjH
-         KP6ZeHPLsqgvC7fSDHuzoH314LoYrqn4hFAHHh1ZP0nhJzLTZoL5e8+RgTrJYyWfCs1b
-         ykD2kka9pQG1k5bE3Q+ChZ36uQRZi6k4MTCeY4nccXHEJEIFdCVUV6M6XBfLccDBORnT
-         Ey5be1owDgi0/fIQKyNHng1sznO0p/i+lR4fnMh/Jbo5yOjHujhbFwhKsi3oM1LTi4TQ
-         Ly7AyxcuO9CKoSm2ntD3c6AJor8sY3Z5PeyyuyPtfydHOPUkRReB93pdFPaKmcfrW4l9
-         kySg==
-X-Gm-Message-State: AOAM530n4uteXBDuak9H1uNx2bx5bHyaY8cpfT+JXlrMMBFNmDgq/TZC
-        xKbvjx5fUJdRVfFv8Zwz3nFNZdgAhYt/qjJKbSnKwKJCM2sykgNy1czInopUq/u5AywKqfobAZa
-        lTJtqnlRuXlyBrrrfkAcLCebBlkLXhX2NJ8x7RRAK9TtmgFc/VTkMO+fsMYA5ZDGt+EqaTKIDnQ
-        ==
-X-Received: by 2002:a17:90a:4586:: with SMTP id v6mr6480714pjg.129.1614913082368;
-        Thu, 04 Mar 2021 18:58:02 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwczvjOaRpMGMoasA1x7+UJ9mMCUyMQs5t3UCWwipz6s/fD9hB0BFXDDW5NTJVfXC1TXdwFgQ==
-X-Received: by 2002:a17:90a:4586:: with SMTP id v6mr6480678pjg.129.1614913081967;
-        Thu, 04 Mar 2021 18:58:01 -0800 (PST)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id m19sm533414pjn.21.2021.03.04.18.57.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Mar 2021 18:58:01 -0800 (PST)
-From:   Gao Xiang <hsiangkao@redhat.com>
+        id S229648AbhCEFMA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 5 Mar 2021 00:12:00 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:58893 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229504AbhCEFLw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 5 Mar 2021 00:11:52 -0500
+Received: from dread.disaster.area (pa49-179-130-210.pa.nsw.optusnet.com.au [49.179.130.210])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D93E71041369
+        for <linux-xfs@vger.kernel.org>; Fri,  5 Mar 2021 16:11:50 +1100 (AEDT)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lI2kf-00Fbni-Vo
+        for linux-xfs@vger.kernel.org; Fri, 05 Mar 2021 16:11:50 +1100
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1lI2kf-000lYk-LN
+        for linux-xfs@vger.kernel.org; Fri, 05 Mar 2021 16:11:49 +1100
+From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v8 5/5] xfs: add error injection for per-AG resv failure
-Date:   Fri,  5 Mar 2021 10:57:03 +0800
-Message-Id: <20210305025703.3069469-6-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210305025703.3069469-1-hsiangkao@redhat.com>
-References: <20210305025703.3069469-1-hsiangkao@redhat.com>
+Subject: [PATCH 00/45 v3] xfs: consolidated log and optimisation changes
+Date:   Fri,  5 Mar 2021 16:10:58 +1100
+Message-Id: <20210305051143.182133-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0 cx=a_idp_d
+        a=JD06eNgDs9tuHP7JIKoLzw==:117 a=JD06eNgDs9tuHP7JIKoLzw==:17
+        a=dESyimp9J3IA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=7FDdtEjNmoGwzhnI5dgA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22 a=yLDStRjdRdRizzv_QTJ6:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-per-AG resv failure after fixing up freespace is hard to test in an
-effective way, so directly add an error injection path to observe
-such error handling path works as expected.
+Hi folks,
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
- fs/xfs/libxfs/xfs_ag_resv.c  | 6 +++++-
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_error.c           | 3 +++
- 3 files changed, 11 insertions(+), 2 deletions(-)
+This is a consolidated patchset of all the outstanding patches I've
+sent out recently. Previous versions and sub-series descriptions
+can be found here:
 
-diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-index fdfe6dc0d307..6c5f8d10589c 100644
---- a/fs/xfs/libxfs/xfs_ag_resv.c
-+++ b/fs/xfs/libxfs/xfs_ag_resv.c
-@@ -211,7 +211,11 @@ __xfs_ag_resv_init(
- 		ASSERT(0);
- 		return -EINVAL;
- 	}
--	error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
-+
-+	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_AG_RESV_FAIL))
-+		error = -ENOSPC;
-+	else
-+		error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
- 	if (error) {
- 		trace_xfs_ag_resv_init_error(pag->pag_mount, pag->pag_agno,
- 				error, _RET_IP_);
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 6ca9084b6934..a23a52e643ad 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -58,7 +58,8 @@
- #define XFS_ERRTAG_BUF_IOERROR				35
- #define XFS_ERRTAG_REDUCE_MAX_IEXTENTS			36
- #define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
--#define XFS_ERRTAG_MAX					38
-+#define XFS_ERRTAG_AG_RESV_FAIL				38
-+#define XFS_ERRTAG_MAX					39
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -101,5 +102,6 @@
- #define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
- #define XFS_RANDOM_REDUCE_MAX_IEXTENTS			1
- #define XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT		1
-+#define XFS_RANDOM_AG_RESV_FAIL				1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 185b4915b7bf..f70984f3174d 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -56,6 +56,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_BUF_IOERROR,
- 	XFS_RANDOM_REDUCE_MAX_IEXTENTS,
- 	XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT,
-+	XFS_RANDOM_AG_RESV_FAIL,
- };
- 
- struct xfs_errortag_attr {
-@@ -168,6 +169,7 @@ XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
- XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
- XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
-+XFS_ERRORTAG_ATTR_RW(ag_resv_fail, XFS_ERRTAG_AG_RESV_FAIL);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -208,6 +210,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
- 	XFS_ERRORTAG_ATTR_LIST(reduce_max_iextents),
- 	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
-+	XFS_ERRORTAG_ATTR_LIST(ag_resv_fail),
- 	NULL,
- };
- 
--- 
-2.27.0
+https://lore.kernel.org/linux-xfs/20210226050158.GW4662@dread.disaster.area/T/#mf72a4f6acc05d117adec3fea5f6fee83432ecfd4
+https://lore.kernel.org/linux-xfs/20210223033442.3267258-1-david@fromorbit.com/T/#m80819d7f7940e5f216f3219baf4f98ed35643d13
+https://lore.kernel.org/linux-xfs/20210223053212.3287398-1-david@fromorbit.com/T/#mad305a62ab3532493c83b4c615f21fbaf9a87ae0
+https://lore.kernel.org/linux-xfs/20210223044636.3280862-1-david@fromorbit.com/T/#m791941d515fd437bf07aa42d35df5ddb124cb80f
+https://lore.kernel.org/linux-xfs/20210224063459.3436852-1-david@fromorbit.com/T/#mcb037e1495e6bb4f3289e52d581e53efe2d29765
+https://lore.kernel.org/linux-xfs/20210223054748.3292734-1-david@fromorbit.com/T/#md88d8f88657f1e33008f864677921f54b4d64a2f
+https://lore.kernel.org/linux-xfs/20210225033725.3558450-1-david@fromorbit.com/T/#mb6a91780514d5abe4d8b04ed1d78a8f8d681f101
+
+The changes are largely just a rebase onto a current TOT kernel, bug
+fixes and modifications from review comments. These are itemised in
+the change log below. It runs though the fstests auto group fine on
+e multiple machines here and performance test numbers are largely
+unchanged from previous versions.
+
+I've added a couple of new patches to the end of the series, the
+most notable being an update to the delayed logging design document
+to include descriptions of transaction types, log space accounting
+and how we use relogging to ensure rolling transactions do not
+deadlock on log space.
+
+Cheers,
+
+Dave.
+
+Version 3:
+- rebase onto 5.12-rc1+
+- aggregate many small dependent patchsets in one large one.
+- simplify xlog_wait_on_iclog_lsn() back to just a call to xlog_wait_on_iclog()
+- remove xfs_blkdev_issue_flush() instead of moving and renaming it.
+- pass bio to xfs_flush_bdev_async() so it doesn't need allocation.
+- skip cache flush in xfs_flush_bdev_async() if the underlying queue does not
+  require it.
+- fixed whitespace in xfs_flush_bdev_async()
+- remove the implicit external log's data device cache flush code and replace it
+  with an explicit flush in the unmount record write so that it works the same
+  as the new CIL checkpoint cache pre-flush mechanism. This mechanism now
+  guarantees metadata vs journal ordering for both internal and external logs.
+- updated various commit messages
+- fixed incorrect/unintended changes to xfs_log_force() behaviour
+- typedef uint64_t xfs_csn_t; and conversion.
+- removed stray trace_printk()s that were used for debugging.
+- fixed minor formatting details.
+- uninlined xlog_prepare_iovec()
+- fixed up "lv chain vector and size calculation" commit message to reflect we
+  are only calculating and passin gin the vector byte count.
+- reworked the loop in xlog_write_single() based on Christoph's suggestion. Much
+  cleaner!
+- added patch to pass log ticket down to xlog_sync() so that it accounts the
+  roundoff to the log ticket rather than directly modifying grant heads. Grant
+  heads are hot, so every little bit helps.
+- added patch to update delayed logging design doc with background material on
+  how transactions and log space accounting works in XFS.
+
+Version 2:
+- fix ticket reservation roundoff to include 2 roundoffs
+- removed stale copied comment from roundoff initialisation.
+- clarified "separation" to mean "separation for ordering purposes" in commit
+  message.
+- added comment that newly activated, clean, empty iclogs have a LSN of 0 so are
+  captured by the "iclog lsn < start_lsn" case that avoids needing to wait
+  before releasing the commit iclog to be written.
+- added async cache flush infrastructure
+- convert CIL checkpoint push work it issue an unconditional metadata device
+  cache flush rather than asking the first iclog write to issue it via
+  REQ_PREFLUSH.
+- cleaned up xlog_write() to remove a redundant parameter and prepare the logic
+  for setting flags on the iclog based on the type of operational data is being
+  written to the log.
+- added XLOG_ICL_NEED_FUA flag to complement the NEED_FLUSH flag, allowing
+  callers to issue explicit flushes and clear the NEED_FLUSH flag before the
+  iclog is written without dropping the REQ_FUA requirement in /dev/null...
+- added CIL commit-in-start-iclog optimisation that clears the NEED_FLUSH flag
+  to avoid an unnecessary cache flush when issuing the iclog.
+- fixed typo in CIL throttle bugfix comment.
+- fixed trailing whitespace in commit message.
+
 
