@@ -2,95 +2,245 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CABE333047B
-	for <lists+linux-xfs@lfdr.de>; Sun,  7 Mar 2021 21:26:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80F5B33049B
+	for <lists+linux-xfs@lfdr.de>; Sun,  7 Mar 2021 21:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232849AbhCGU0H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 7 Mar 2021 15:26:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52804 "EHLO mail.kernel.org"
+        id S232894AbhCGUgw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 7 Mar 2021 15:36:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232869AbhCGU0D (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 7 Mar 2021 15:26:03 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1587065167;
-        Sun,  7 Mar 2021 20:26:03 +0000 (UTC)
+        id S231732AbhCGUgj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 7 Mar 2021 15:36:39 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 36E4C65165;
+        Sun,  7 Mar 2021 20:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615148763;
-        bh=ZS9NOBvBR9f8TybCq716fQ3WJNwDXvoCEpC/6WHW6ag=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=uK4yC9vXLplC0KryYY+WQ7+Y0z/klnvvfavPfbJksIYSOUNFGrI1cvHAEAo18y3sL
-         URz6ySCZkVewX5Nwhh3q4kcjJQuh5048Q+ou85UHZg3grYGBYqpnBn0bD15yCBY7r3
-         vs0sXPTOK2v9wxLcqZbF7RgJXMXsXiCtPVJTwN4RNP07Puzm01DAGDoiT0l9Zp8vxe
-         fxh5R1oHtgiI6UJoIjlYFtP7xc2Ec7ISD0bCbthn69e7ridUooB9sQU+jD0axnmwPY
-         VAd+FOuvVOV50q29gi9+zGBpgCdlDaBQHA5FB2VxQvcgf/zGStU/TNFnKw0eh3x6sN
-         3bpBog4ROYcdQ==
-Subject: [PATCH 4/4] xfs: drop freeze protection when running GETFSMAP
+        s=k20201202; t=1615149399;
+        bh=+FjKFSIHie783ImBTkqzC50V34MSJ6naN+ptDEI1L+Q=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=mURJAuAe3JHXc2vaz9MY22RwVkQS9FWXeSWlHhlcNhvO5IEX/6zb6EfXbEZLPx3OY
+         hTBRaJJrEzVpRhVrefj/0TWvbIzJkq0bRwLNTRx2CzTmeS2yAgyVTjzjWaapMYvbW8
+         vCovz+X+jeluIaBemmBGN0uEpDiEc6tT81N78lWciJHwG+2XpOBCLF1GrQ1bOGjDrh
+         VdsXZR3sr01hnHktGIwVB+HgiTzlAOXfD+Cj2fEFhQwb7QvHTgVIiSoT+tlBpX6aHm
+         2Gl2OehcF58lCxbGk6J2r+AqYphxs4N7txn5aY+/aF+iHx2An0kbFC3zHu+VaZnYx5
+         s47/AUFniwovg==
+Date:   Sun, 7 Mar 2021 12:36:38 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, hch@lst.de, dchinner@redhat.com,
+To:     linux-xfs@vger.kernel.org, hch@lst.de, dchinner@redhat.com,
         christian.brauner@ubuntu.com
-Date:   Sun, 07 Mar 2021 12:26:02 -0800
-Message-ID: <161514876275.698643.12226309352552265069.stgit@magnolia>
-In-Reply-To: <161514874040.698643.2749449122589431232.stgit@magnolia>
+Subject: [PATCH v2.1 2/4] xfs: avoid buffer deadlocks when walking fs inodes
+Message-ID: <20210307203638.GJ3419940@magnolia>
 References: <161514874040.698643.2749449122589431232.stgit@magnolia>
-User-Agent: StGit/0.19
+ <161514875165.698643.17020544838073213424.stgit@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161514875165.698643.17020544838073213424.stgit@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-A recent log refactoring patchset from Brian Foster relaxed fsfreeze
-behavior with regards to the buffer cache -- now freeze only waits for
-pending buffer IO to finish, and does not try to drain the buffer cache
-LRU.  As a result, fsfreeze should no longer stall indefinitely while
-fsmap runs.  Drop the sb_start_write calls around fsmap invocations.
+When we're servicing an INUMBERS or BULKSTAT request or running
+quotacheck, grab an empty transaction so that we can use its inherent
+recursive buffer locking abilities to detect inode btree cycles without
+hitting ABBA buffer deadlocks.
+
+Found by fuzzing an inode btree pointer to introduce a cycle into the
+tree (xfs/365).
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_fsmap.c |   14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+v2.1: actually pass tp in the bulkstat_single case
+---
+ fs/xfs/xfs_itable.c |   42 +++++++++++++++++++++++++++++++++++++-----
+ fs/xfs/xfs_iwalk.c  |   32 +++++++++++++++++++++++++++-----
+ 2 files changed, 64 insertions(+), 10 deletions(-)
 
-
-diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
-index 9ce5e7d5bf8f..34f2b971ce43 100644
---- a/fs/xfs/xfs_fsmap.c
-+++ b/fs/xfs/xfs_fsmap.c
-@@ -904,14 +904,6 @@ xfs_getfsmap(
- 	info.fsmap_recs = fsmap_recs;
- 	info.head = head;
+diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
+index ca310a125d1e..326495c8910e 100644
+--- a/fs/xfs/xfs_itable.c
++++ b/fs/xfs/xfs_itable.c
+@@ -19,6 +19,7 @@
+ #include "xfs_error.h"
+ #include "xfs_icache.h"
+ #include "xfs_health.h"
++#include "xfs_trans.h"
  
--	/*
--	 * If fsmap runs concurrently with a scrub, the freeze can be delayed
--	 * indefinitely as we walk the rmapbt and iterate over metadata
--	 * buffers.  Freeze quiesces the log (which waits for the buffer LRU to
--	 * be emptied) and that won't happen while we're reading buffers.
--	 */
--	sb_start_write(mp->m_super);
+ /*
+  * Bulk Stat
+@@ -166,6 +167,7 @@ xfs_bulkstat_one(
+ 		.formatter	= formatter,
+ 		.breq		= breq,
+ 	};
++	struct xfs_trans	*tp;
+ 	int			error;
+ 
+ 	ASSERT(breq->icount == 1);
+@@ -175,9 +177,18 @@ xfs_bulkstat_one(
+ 	if (!bc.buf)
+ 		return -ENOMEM;
+ 
+-	error = xfs_bulkstat_one_int(breq->mp, breq->mnt_userns, NULL,
+-				     breq->startino, &bc);
++	/*
++	 * Grab an empty transaction so that we can use its recursive buffer
++	 * locking abilities to detect cycles in the inobt without deadlocking.
++	 */
++	error = xfs_trans_alloc_empty(breq->mp, &tp);
++	if (error)
++		goto out;
+ 
++	error = xfs_bulkstat_one_int(breq->mp, breq->mnt_userns, tp,
++			breq->startino, &bc);
++	xfs_trans_cancel(tp);
++out:
+ 	kmem_free(bc.buf);
+ 
+ 	/*
+@@ -241,6 +252,7 @@ xfs_bulkstat(
+ 		.formatter	= formatter,
+ 		.breq		= breq,
+ 	};
++	struct xfs_trans	*tp;
+ 	int			error;
+ 
+ 	if (breq->mnt_userns != &init_user_ns) {
+@@ -256,9 +268,18 @@ xfs_bulkstat(
+ 	if (!bc.buf)
+ 		return -ENOMEM;
+ 
+-	error = xfs_iwalk(breq->mp, NULL, breq->startino, breq->flags,
++	/*
++	 * Grab an empty transaction so that we can use its recursive buffer
++	 * locking abilities to detect cycles in the inobt without deadlocking.
++	 */
++	error = xfs_trans_alloc_empty(breq->mp, &tp);
++	if (error)
++		goto out;
++
++	error = xfs_iwalk(breq->mp, tp, breq->startino, breq->flags,
+ 			xfs_bulkstat_iwalk, breq->icount, &bc);
 -
- 	/* For each device we support... */
- 	for (i = 0; i < XFS_GETFSMAP_DEVS; i++) {
- 		/* Is this device within the range the user asked for? */
-@@ -934,6 +926,11 @@ xfs_getfsmap(
- 		if (handlers[i].dev > head->fmh_keys[0].fmr_device)
- 			memset(&dkeys[0], 0, sizeof(struct xfs_fsmap));
++	xfs_trans_cancel(tp);
++out:
+ 	kmem_free(bc.buf);
  
-+		/*
-+		 * Grab an empty transaction so that we can use its recursive
-+		 * buffer locking abilities to detect cycles in the rmapbt
-+		 * without deadlocking.
-+		 */
- 		error = xfs_trans_alloc_empty(mp, &tp);
- 		if (error)
- 			break;
-@@ -951,7 +948,6 @@ xfs_getfsmap(
+ 	/*
+@@ -371,13 +392,24 @@ xfs_inumbers(
+ 		.formatter	= formatter,
+ 		.breq		= breq,
+ 	};
++	struct xfs_trans	*tp;
+ 	int			error = 0;
  
- 	if (tp)
- 		xfs_trans_cancel(tp);
--	sb_end_write(mp->m_super);
- 	head->fmh_oflags = FMH_OF_DEV_T;
+ 	if (xfs_bulkstat_already_done(breq->mp, breq->startino))
+ 		return 0;
+ 
+-	error = xfs_inobt_walk(breq->mp, NULL, breq->startino, breq->flags,
++	/*
++	 * Grab an empty transaction so that we can use its recursive buffer
++	 * locking abilities to detect cycles in the inobt without deadlocking.
++	 */
++	error = xfs_trans_alloc_empty(breq->mp, &tp);
++	if (error)
++		goto out;
++
++	error = xfs_inobt_walk(breq->mp, tp, breq->startino, breq->flags,
+ 			xfs_inumbers_walk, breq->icount, &ic);
++	xfs_trans_cancel(tp);
++out:
+ 
+ 	/*
+ 	 * We found some inode groups, so clear the error status and return
+diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+index c4a340f1f1e1..e1e889f3647f 100644
+--- a/fs/xfs/xfs_iwalk.c
++++ b/fs/xfs/xfs_iwalk.c
+@@ -81,6 +81,9 @@ struct xfs_iwalk_ag {
+ 
+ 	/* Skip empty inobt records? */
+ 	unsigned int			skip_empty:1;
++
++	/* Drop the (hopefully empty) transaction when calling iwalk_fn. */
++	unsigned int			drop_trans:1;
+ };
+ 
+ /*
+@@ -351,7 +354,6 @@ xfs_iwalk_run_callbacks(
+ 	int				*has_more)
+ {
+ 	struct xfs_mount		*mp = iwag->mp;
+-	struct xfs_trans		*tp = iwag->tp;
+ 	struct xfs_inobt_rec_incore	*irec;
+ 	xfs_agino_t			next_agino;
+ 	int				error;
+@@ -361,10 +363,15 @@ xfs_iwalk_run_callbacks(
+ 	ASSERT(iwag->nr_recs > 0);
+ 
+ 	/* Delete cursor but remember the last record we cached... */
+-	xfs_iwalk_del_inobt(tp, curpp, agi_bpp, 0);
++	xfs_iwalk_del_inobt(iwag->tp, curpp, agi_bpp, 0);
+ 	irec = &iwag->recs[iwag->nr_recs - 1];
+ 	ASSERT(next_agino >= irec->ir_startino + XFS_INODES_PER_CHUNK);
+ 
++	if (iwag->drop_trans) {
++		xfs_trans_cancel(iwag->tp);
++		iwag->tp = NULL;
++	}
++
+ 	error = xfs_iwalk_ag_recs(iwag);
+ 	if (error)
+ 		return error;
+@@ -375,8 +382,14 @@ xfs_iwalk_run_callbacks(
+ 	if (!has_more)
+ 		return 0;
+ 
++	if (iwag->drop_trans) {
++		error = xfs_trans_alloc_empty(mp, &iwag->tp);
++		if (error)
++			return error;
++	}
++
+ 	/* ...and recreate the cursor just past where we left off. */
+-	error = xfs_inobt_cur(mp, tp, agno, XFS_BTNUM_INO, curpp, agi_bpp);
++	error = xfs_inobt_cur(mp, iwag->tp, agno, XFS_BTNUM_INO, curpp, agi_bpp);
+ 	if (error)
+ 		return error;
+ 
+@@ -389,7 +402,6 @@ xfs_iwalk_ag(
+ 	struct xfs_iwalk_ag		*iwag)
+ {
+ 	struct xfs_mount		*mp = iwag->mp;
+-	struct xfs_trans		*tp = iwag->tp;
+ 	struct xfs_buf			*agi_bp = NULL;
+ 	struct xfs_btree_cur		*cur = NULL;
+ 	xfs_agnumber_t			agno;
+@@ -469,7 +481,7 @@ xfs_iwalk_ag(
+ 	error = xfs_iwalk_run_callbacks(iwag, agno, &cur, &agi_bp, &has_more);
+ 
+ out:
+-	xfs_iwalk_del_inobt(tp, &cur, &agi_bp, error);
++	xfs_iwalk_del_inobt(iwag->tp, &cur, &agi_bp, error);
  	return error;
  }
-
+ 
+@@ -594,8 +606,18 @@ xfs_iwalk_ag_work(
+ 	error = xfs_iwalk_alloc(iwag);
+ 	if (error)
+ 		goto out;
++	/*
++	 * Grab an empty transaction so that we can use its recursive buffer
++	 * locking abilities to detect cycles in the inobt without deadlocking.
++	 */
++	error = xfs_trans_alloc_empty(mp, &iwag->tp);
++	if (error)
++		goto out;
++	iwag->drop_trans = 1;
+ 
+ 	error = xfs_iwalk_ag(iwag);
++	if (iwag->tp)
++		xfs_trans_cancel(iwag->tp);
+ 	xfs_iwalk_free(iwag);
+ out:
+ 	kmem_free(iwag);
