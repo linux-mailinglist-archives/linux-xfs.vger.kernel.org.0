@@ -2,192 +2,78 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 243C6331299
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Mar 2021 16:52:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D771F331539
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Mar 2021 18:51:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbhCHPwE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Mar 2021 10:52:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230184AbhCHPvt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Mar 2021 10:51:49 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AA6C06174A;
-        Mon,  8 Mar 2021 07:51:49 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id i14so3246765pjz.4;
-        Mon, 08 Mar 2021 07:51:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=y0Z+s7Fjcy2Im2UyVPHCdibGR473jRuqO1r2vb39Jps=;
-        b=kmwh4hScomO48Ui0naYsF5TzL9y4isxsbvPGTXf4/HUQFj2Kj4otuAIBdrGXz55YCc
-         63TEOqB44ifmVlJA4v1ic/lewkfQqavAg87ZmR8H9Dp6t3Dg2KgHIAm+GyVfbMV+PN1t
-         WoXAxA9oV5P219iBrThB3vloqh9rs3awkiAOmfqGH1GNEiurkNSMfsroV15WKCuELop3
-         0izC+pKJBBcVHsJIZGxjwFZ2uw9se41tmDhhcPRo7cVbAY0RAhstHSvChfvLt4Eq2mFk
-         onNKLp/RfZ5+NqaAdT4Nj3WGxucGvA1m0JPfSP9aSpZcKaeANnVFR27eYWIyfYn3uzi2
-         UFkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=y0Z+s7Fjcy2Im2UyVPHCdibGR473jRuqO1r2vb39Jps=;
-        b=FHRgiqFzNXS5L8tGSkM6MGn/lL9O0TKQGQQ2646U0aKNf37VeKmWn1FCxyNEaN/Ca9
-         D3Xazx9fdrL4+QHhTBFwobuSg3hHD1USNq1AMdWx1w8pQKnX5l4cZdDLOXfsBvAo6SBV
-         lPJgr9bh55/0ehcBLqXwftJzGobhh1Cibfemg2UaIn7Dbv++Lyec7k9HHuz5POmiyrhW
-         Z0nL1ZokdNxkCl2CMNE2OpdlyNXc7IEpsnWwToPJg4ZyDjqR/KlQytntKKWKmWGPyZej
-         f5FjVYlCNoElgbaaDaRYHJLlEN8nkNwZz8RwPuK1HNRuipnSASvbBqgiNfQW715PB53H
-         z9zw==
-X-Gm-Message-State: AOAM5320aTaUZUlIW1ECdBUSWGRiynssMkqnZDv9409Q3GDdl8l7uj2O
-        ZPjZRXNoxFnofG51aGbXVAQhwubWwC8=
-X-Google-Smtp-Source: ABdhPJwJnoc0z0XgrK5Bq5d3gRq+HN/V/MNwluJZOoLbHNaHPSxiBT9tsujfmiBnEKYDT/whSPIbRg==
-X-Received: by 2002:a17:902:6b87:b029:dc:3402:18af with SMTP id p7-20020a1709026b87b02900dc340218afmr21922840plk.29.1615218708849;
-        Mon, 08 Mar 2021 07:51:48 -0800 (PST)
-Received: from localhost.localdomain ([122.182.238.13])
-        by smtp.gmail.com with ESMTPSA id s4sm11086378pji.2.2021.03.08.07.51.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 07:51:48 -0800 (PST)
-From:   Chandan Babu R <chandanrlinux@gmail.com>
-To:     fstests@vger.kernel.org
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
-        linux-xfs@vger.kernel.org, djwong@kernel.org
-Subject: [PATCH V5 13/13] xfs: Stress test with bmap_alloc_minlen_extent error tag enabled
-Date:   Mon,  8 Mar 2021 21:21:11 +0530
-Message-Id: <20210308155111.53874-14-chandanrlinux@gmail.com>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20210308155111.53874-1-chandanrlinux@gmail.com>
+        id S230301AbhCHRu5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Mar 2021 12:50:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230124AbhCHRuv (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 12:50:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9AD19652AC;
+        Mon,  8 Mar 2021 17:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615225850;
+        bh=m8XG6MwIvTCKI3P8BBTnFO4P3KGTQn2ZqjhTJOGU+UY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oM5ApqXw2Zo/iG34UvBtrASG4zOHgcGTuO+ld9UAKe7ql9J/v71FzI8d6B/QUg0Z2
+         m/25L4HYG/M6xGgA29G2qXmuhql/6HXkGBfuPF8igrpyJwQpdWo46nGLELEEFZ1rfT
+         5TaVd+9iDlHdJ5zhIwf4zfjLb2XlR45QLwwWQ2DFwzuVDT3e6wSMiXMnULQfi9GzW0
+         67CBg0EQHwjthXRNRrCVBBUc2g+xLu17ConNagz3SlZn2v09TfPKQEF8OtHX0k6Zvq
+         /2l8ueLVFVbBXda3CF8OpX4o+CkRJE4ZULTuI4054fhxbpNWpTPuEWlxaaMxvtooGi
+         7MSgLuVVY+jxA==
+Date:   Mon, 8 Mar 2021 09:50:48 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH V5 01/13] _check_xfs_filesystem: sync fs before running
+ scrub
+Message-ID: <20210308175048.GO3419940@magnolia>
 References: <20210308155111.53874-1-chandanrlinux@gmail.com>
+ <20210308155111.53874-2-chandanrlinux@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210308155111.53874-2-chandanrlinux@gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit adds a stress test that executes fsstress with
-bmap_alloc_minlen_extent error tag enabled.
+On Mon, Mar 08, 2021 at 09:20:59PM +0530, Chandan Babu R wrote:
+> Tests can create a scenario in which a call to syncfs() issued at the end of
+> the execution of the test script would return an error code. xfs_scrub
+> internally calls syncfs() before starting the actual online consistency check
+> operation. Since this call to syncfs() fails, xfs_scrub ends up returning
+> without performing consistency checks on the test filesystem. This can mask a
+> possible on-disk data structure corruption.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- tests/xfs/537     | 84 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/537.out |  7 ++++
- tests/xfs/group   |  1 +
- 3 files changed, 92 insertions(+)
- create mode 100755 tests/xfs/537
- create mode 100644 tests/xfs/537.out
+This explanation for why we're calling syncfs before invoking scrub
+ought to be captured in a comment preceeding the syncfs call.
 
-diff --git a/tests/xfs/537 b/tests/xfs/537
-new file mode 100755
-index 00000000..77fa60d9
---- /dev/null
-+++ b/tests/xfs/537
-@@ -0,0 +1,84 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2021 Chandan Babu R.  All Rights Reserved.
-+#
-+# FS QA Test 537
-+#
-+# Execute fsstress with bmap_alloc_minlen_extent error tag enabled.
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+. ./common/inject
-+. ./common/populate
-+
-+# remove previous $seqres.full before test
-+rm -f $seqres.full
-+
-+# real QA test starts here
-+
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_debug
-+_require_test_program "punch-alternating"
-+_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-+
-+echo "Format and mount fs"
-+_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
-+_scratch_mount >> $seqres.full
-+
-+bsize=$(_get_file_block_size $SCRATCH_MNT)
-+
-+echo "Consume free space"
-+fillerdir=$SCRATCH_MNT/fillerdir
-+nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-+nr_free_blks=$((nr_free_blks * 90 / 100))
-+
-+_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 >> $seqres.full 2>&1
-+
-+echo "Create fragmented filesystem"
-+for dentry in $(ls -1 $fillerdir/); do
-+	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
-+done
-+
-+echo "Inject bmap_alloc_minlen_extent error tag"
-+_scratch_inject_error bmap_alloc_minlen_extent 1
-+
-+echo "Scale fsstress args"
-+args=$(_scale_fsstress_args -p $((LOAD_FACTOR * 75)) -n $((TIME_FACTOR * 1000)))
-+
-+echo "Execute fsstress in background"
-+$FSSTRESS_PROG -d $SCRATCH_MNT $args \
-+		 -f bulkstat=0 \
-+		 -f bulkstat1=0 \
-+		 -f fiemap=0 \
-+		 -f getattr=0 \
-+		 -f getdents=0 \
-+		 -f getfattr=0 \
-+		 -f listfattr=0 \
-+		 -f mread=0 \
-+		 -f read=0 \
-+		 -f readlink=0 \
-+		 -f readv=0 \
-+		 -f stat=0 \
-+		 -f aread=0 \
-+		 -f dread=0 > /dev/null 2>&1
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/537.out b/tests/xfs/537.out
-new file mode 100644
-index 00000000..19633a07
---- /dev/null
-+++ b/tests/xfs/537.out
-@@ -0,0 +1,7 @@
-+QA output created by 537
-+Format and mount fs
-+Consume free space
-+Create fragmented filesystem
-+Inject bmap_alloc_minlen_extent error tag
-+Scale fsstress args
-+Execute fsstress in background
-diff --git a/tests/xfs/group b/tests/xfs/group
-index ba674a58..5c827727 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -534,3 +534,4 @@
- 534 auto quick reflink
- 535 auto quick reflink
- 536 auto quick
-+537 auto stress
--- 
-2.29.2
+--D
 
+> To fix the above stated problem, this commit invokes syncfs() prior to
+> executing xfs_scrub.
+> 
+> Suggested-by: Darrick J. Wong <djwong@kernel.org>
+> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> ---
+>  common/xfs | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/common/xfs b/common/xfs
+> index 2156749d..7ec89492 100644
+> --- a/common/xfs
+> +++ b/common/xfs
+> @@ -467,6 +467,7 @@ _check_xfs_filesystem()
+>  	# Run online scrub if we can.
+>  	mntpt="$(_is_dev_mounted $device)"
+>  	if [ -n "$mntpt" ] && _supports_xfs_scrub "$mntpt" "$device"; then
+> +		$XFS_IO_PROG -c syncfs $mntpt >> $seqres.full 2>&1
+>  		"$XFS_SCRUB_PROG" $scrubflag -v -d -n $mntpt > $tmp.scrub 2>&1
+>  		if [ $? -ne 0 ]; then
+>  			_log_err "_check_xfs_filesystem: filesystem on $device failed scrub"
+> -- 
+> 2.29.2
+> 
