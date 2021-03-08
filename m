@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F5B333128E
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Mar 2021 16:52:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A06AD331291
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Mar 2021 16:52:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230194AbhCHPv5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Mar 2021 10:51:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        id S229573AbhCHPv6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Mar 2021 10:51:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbhCHPvZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Mar 2021 10:51:25 -0500
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7B5C06174A;
-        Mon,  8 Mar 2021 07:51:25 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id e6so6659654pgk.5;
-        Mon, 08 Mar 2021 07:51:25 -0800 (PST)
+        with ESMTP id S229505AbhCHPv1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Mar 2021 10:51:27 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CB8C06174A;
+        Mon,  8 Mar 2021 07:51:27 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id kk2-20020a17090b4a02b02900c777aa746fso3357514pjb.3;
+        Mon, 08 Mar 2021 07:51:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a60rAA10+0aRj/BaRwZZKR5m5VDRjd9v9w0MF3LiagM=;
-        b=k606r/2QLpUbO4nlydC3IQyLzq5LFE6jASFnA/aGQo64GqfXBZLwtERibos6NeTl7a
-         zpuZy9B1duGOBMHjEuYmyMmiF4wrMd82cU7PHz2aZlEeDr+9a7Id5JHVUdvfJ3z44ZLn
-         E3ueqWLzk+G8xoPhC/Pifbd2VV6jXA9r63X3WL+/YpzmHW7/AY+laC/3QgWiQFFa/0D6
-         GTFGk29GbdTY+WYIF6B8gIqs8UQ0tut0Ms8aciTMz97gi4IGcokG7JOeIY7zzmpoJy1b
-         gb71XUy6I3Cv3RxN7d09F4UVh4OCrCdi8VBwtO2wVTU41hLXQsaAfTAJLk2z4dWWOVMi
-         p77g==
+        bh=EuvjnEG/FpNrBBt/9X3rBuaBuMlpS/vb3MZt/Qx6vlY=;
+        b=sXeV2VSCwrS2s1AUeFsCKsPggE7DGN2K67mgW5tAjZEtIi/tett8hi7xiDJrXjKep8
+         yvy+3mwnawoPXNRWXKs3veoBo9JhOKo4aFPXPyVESekHSdQJJFZmZGAO/uOQFxtQNgEE
+         XAFpeoPO0TDytM0P5mU119+CufVbl5ulbQ2ExGvkx8+QZ6HaAYIBGBkAqBr8Fnth5bXG
+         zWbdqEYyZjNS5yv7rWrWB8NbShwjyQKZYULUN/uFZYbI2ESFGOtZoptLNRSKfwYWz9eQ
+         BhgkrCE48HGKKfrmJ9g4QoF4bCx2GMV/qDEv3S6PpQzlOPWnzvC3XNOAXJEqtUFCH76c
+         hXfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=a60rAA10+0aRj/BaRwZZKR5m5VDRjd9v9w0MF3LiagM=;
-        b=HzCmg9KmO/txI9cEH49dQkRhnDPLIAX6YGSlAkt6gFzqkygKyIUx6xtYqndUXHcrUS
-         LayxtSfuxvZ0XCdEgjT5ovqeoBOsyPGRu/2RjpQmCwzf89oZsZIsf+U9tF/vNlcVkcSP
-         D+/BHIxEFvmS2x3/cR8B7+UzUEb1ChORjRGRBi1l4n0Q8k70Y6OPonWhwqK0THcjmABJ
-         SUSscOSYw+cNxD11JBPKvsv4Wd9Lu8kz+zmvk7fGE/wtXrrma0F9U6HtKtioovQgfNS/
-         /+xQMxEtmF1SOsIHoCyT7g3QffICEoOFgdcRLJPHuRDqo/NP8FbXFpm4y8qypIURVb5z
-         h01A==
-X-Gm-Message-State: AOAM530afpC+N2LLADYFkRb5UJULd4ieaeAKQov58MzmZXu9p/oPs16W
-        WyaXwDHOG9zJaUCdsX+wki21sG0N2pw=
-X-Google-Smtp-Source: ABdhPJwOZi/49KfYEBCq6rlDsIXyDGzoJ0DFPkR1xiWYp8Dkc1x3kOM4T7onZFQZ7gYFsKy9XC37sw==
-X-Received: by 2002:a62:8103:0:b029:1ef:26e4:494f with SMTP id t3-20020a6281030000b02901ef26e4494fmr19171525pfd.41.1615218684816;
-        Mon, 08 Mar 2021 07:51:24 -0800 (PST)
+        bh=EuvjnEG/FpNrBBt/9X3rBuaBuMlpS/vb3MZt/Qx6vlY=;
+        b=oLG1cbRFk0F69boIhD2kh0GMEuhMX0fArZzSfU92o7gkuEUFQRe1fqFh+cMaNMW/1I
+         EHg052ktdTMpR8EeuM+5c/gW96I/lg/ipVkufMTh5ectDzCTaQYH45fbR0/4PTO1KJyS
+         Yv0Tc4e9h7yId6WsbWpRyDMD19WzLGn5uyaZSYGZ7ZirQvs7nA7w6zPXoZqzVxGGL+Ph
+         kXOw1WNakkNCJpWf+eoLCed/cFSO5WvM0DGYQ16J9N7aH2KIH0+KXpl6k2pXXnjL3Ky1
+         qncklIA7yvDZ849E/XgnPcnLnQD/SAuRZ3giJhgnZwSNBuqrdPbHvZ+76P49PeuDbVKq
+         XDsQ==
+X-Gm-Message-State: AOAM531A4pKhs7WbAftUkZaS+341L7ZBsb07nuAMzyVKEFNc3sHsjC5v
+        AtI0xg3BvzTUpSD0w4zrN1obHRJTHGQ=
+X-Google-Smtp-Source: ABdhPJwiTKxIbGkgM8vgKGPG90sGyS/KWfOJd6kDVGXylqHFXIEj9d8imvQSgfJyOcI60pkgAVCOlw==
+X-Received: by 2002:a17:902:7002:b029:e5:e1fc:7e88 with SMTP id y2-20020a1709027002b02900e5e1fc7e88mr18672006plk.30.1615218686837;
+        Mon, 08 Mar 2021 07:51:26 -0800 (PST)
 Received: from localhost.localdomain ([122.182.238.13])
-        by smtp.gmail.com with ESMTPSA id s4sm11086378pji.2.2021.03.08.07.51.23
+        by smtp.gmail.com with ESMTPSA id s4sm11086378pji.2.2021.03.08.07.51.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 07:51:24 -0800 (PST)
+        Mon, 08 Mar 2021 07:51:26 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, djwong@kernel.org
-Subject: [PATCH V5 01/13] _check_xfs_filesystem: sync fs before running scrub
-Date:   Mon,  8 Mar 2021 21:20:59 +0530
-Message-Id: <20210308155111.53874-2-chandanrlinux@gmail.com>
+Subject: [PATCH V5 02/13] common/xfs: Add a helper to get an inode fork's extent count
+Date:   Mon,  8 Mar 2021 21:21:00 +0530
+Message-Id: <20210308155111.53874-3-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210308155111.53874-1-chandanrlinux@gmail.com>
 References: <20210308155111.53874-1-chandanrlinux@gmail.com>
@@ -63,34 +63,48 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Tests can create a scenario in which a call to syncfs() issued at the end of
-the execution of the test script would return an error code. xfs_scrub
-internally calls syncfs() before starting the actual online consistency check
-operation. Since this call to syncfs() fails, xfs_scrub ends up returning
-without performing consistency checks on the test filesystem. This can mask a
-possible on-disk data structure corruption.
+This commit adds the helper _scratch_get_iext_count() which returns an
+inode fork's extent count.
 
-To fix the above stated problem, this commit invokes syncfs() prior to
-executing xfs_scrub.
-
-Suggested-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- common/xfs | 1 +
- 1 file changed, 1 insertion(+)
+ common/xfs | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/common/xfs b/common/xfs
-index 2156749d..7ec89492 100644
+index 7ec89492..f0ae321e 100644
 --- a/common/xfs
 +++ b/common/xfs
-@@ -467,6 +467,7 @@ _check_xfs_filesystem()
- 	# Run online scrub if we can.
- 	mntpt="$(_is_dev_mounted $device)"
- 	if [ -n "$mntpt" ] && _supports_xfs_scrub "$mntpt" "$device"; then
-+		$XFS_IO_PROG -c syncfs $mntpt >> $seqres.full 2>&1
- 		"$XFS_SCRUB_PROG" $scrubflag -v -d -n $mntpt > $tmp.scrub 2>&1
- 		if [ $? -ne 0 ]; then
- 			_log_err "_check_xfs_filesystem: filesystem on $device failed scrub"
+@@ -914,6 +914,29 @@ _scratch_get_bmx_prefix() {
+ 	return 1
+ }
+ 
++_scratch_get_iext_count()
++{
++	local ino=$1
++	local whichfork=$2
++	local nextents=0
++	local field=""
++
++	case $whichfork in
++		"attr")
++			field=core.naextents
++			;;
++		"data")
++			field=core.nextents
++			;;
++		*)
++			return 1
++	esac
++
++	nextents=$(_scratch_xfs_get_metadata_field $field "inode $ino")
++
++	echo $nextents
++}
++
+ #
+ # Ensures that we don't pass any mount options incompatible with XFS v4
+ #
 -- 
 2.29.2
 
