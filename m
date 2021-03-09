@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 859A9331DF1
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:40:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36CFA331DF7
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:40:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbhCIEjh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Mar 2021 23:39:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60842 "EHLO mail.kernel.org"
+        id S230107AbhCIEkK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Mar 2021 23:40:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229837AbhCIEjf (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 23:39:35 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D69F665275;
-        Tue,  9 Mar 2021 04:39:34 +0000 (UTC)
+        id S230063AbhCIEjl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 23:39:41 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 58C4265275;
+        Tue,  9 Mar 2021 04:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615264774;
-        bh=/TdeTTMPrzpHzqenNLnOVX7tKgg8odoXiyJ+FC5FdNY=;
+        s=k20201202; t=1615264780;
+        bh=yDrpyfZ2wBB8HmqUgn5geBKJq0Lozcbb2KGNEe4NJzQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=CAZTCJTHteDWGlrxq5k6WJtiZN1k73b70S3k8vQEoXz58ZsT9DvccWyxl89dhIE64
-         E/ejOqhmbBUcpaVZ3ET6B7SiLn/1bsafS1WtPNllAeOv7R5/+uDnvbrixBoCvwiM1r
-         bor0LEBZyYNCm8TT7uU67pYeHKp+MXLtk1OaTc8aA8spmToEgFZtoYMgdwgTVYgWhf
-         W6JuetDoOia/ApG2TJvvB0UOILLIBPn7rcRJsP+Kuv/09on3OFJfyy6JW4M1g13u9K
-         krTlKuKt3v9EEYD+U17NKv8HbNYgSoxv5z1EfosgZMliN4DCnqFYLYnlvmv3+W5azl
-         +VKWgBn+UTnwg==
-Subject: [PATCH 1/2] fsstress: get rid of attr_list
+        b=tYEMu1kPZUzlRPMMwe6qkD7fFj5vcNaDsV7ka4obLo3utoo60D/9IF0a1A4aX1VM7
+         uzR0hC+cYa2QJOqtrvhxvM6VMM3IOqm7dRubzxx1eiPd6HqRygWEUYLbGhWCVp6LQv
+         5TnW6486e3DBgE/WcnRCCHDblARMRaJ4j7BjgFqw6a8ZgPT8GTVB5rgjvT4/lwGOu7
+         JcFqYH0WrSWmwJ34pMk4eAsC2nRblfK8/mbckkN3o9dRb97cn0mH38WErDQeF25TpP
+         tz/jLYsjy3onpKPtWkEBshj6R+oLnpe8W1JMGwSatz/1pm3Y6C9yPUr2bCCHUVMSi0
+         u0UFUYWBuU2yA==
+Subject: [PATCH 2/2] fstests: remove libattr dependencies
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 08 Mar 2021 20:39:34 -0800
-Message-ID: <161526477474.1212985.14857729520784229723.stgit@magnolia>
+Date:   Mon, 08 Mar 2021 20:39:40 -0800
+Message-ID: <161526478017.1212985.2364574454492357224.stgit@magnolia>
 In-Reply-To: <161526476928.1212985.15718497220408703599.stgit@magnolia>
 References: <161526476928.1212985.15718497220408703599.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,153 +41,199 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-attr_list is deprecated, so just call llistxattr directly.  This is a
-bit involved, since attr_remove_f was highly dependent on libattr
-structures.  Note that attr_list uses llistxattr internally and
-llistxattr is limited to XATTR_LIST_MAX, so this doesn't result in any
-loss of functionality.
+Now that we don't have any libattr dependencies anymore, get rid of all
+the build system hooks.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- ltp/fsstress.c |   80 ++++++++++++++++++++++++++------------------------------
- 1 file changed, 37 insertions(+), 43 deletions(-)
+ README                     |    4 ++-
+ build/rpm/xfstests.spec.in |    2 +-
+ configure.ac               |    4 ---
+ include/builddefs.in       |    2 --
+ ltp/Makefile               |    5 ----
+ ltp/fsstress.c             |    6 -----
+ m4/Makefile                |    1 -
+ m4/package_attrdev.m4      |   54 --------------------------------------------
+ 8 files changed, 3 insertions(+), 75 deletions(-)
+ delete mode 100644 m4/package_attrdev.m4
 
 
+diff --git a/README b/README
+index 7a2638af..f15363f6 100644
+--- a/README
++++ b/README
+@@ -6,14 +6,14 @@ _______________________
+ - install prerequisite packages
+   For example, for Ubuntu:
+ 	sudo apt-get install xfslibs-dev uuid-dev libtool-bin \
+-	e2fsprogs automake gcc libuuid1 quota attr libattr1-dev make \
++	e2fsprogs automake gcc libuuid1 quota attr make \
+ 	libacl1-dev libaio-dev xfsprogs libgdbm-dev gawk fio dbench \
+ 	uuid-runtime python sqlite3 liburing-dev
+   For Fedora, RHEL, or CentOS:
+ 	yum install acl attr automake bc dbench dump e2fsprogs fio \
+ 	gawk gcc indent libtool lvm2 make psmisc quota sed \
+ 	xfsdump xfsprogs \
+-	libacl-devel libattr-devel libaio-devel libuuid-devel \
++	libacl-devel libaio-devel libuuid-devel \
+ 	xfsprogs-devel btrfs-progs-devel python sqlite liburing-devel
+ 	(Older distributions may require xfsprogs-qa-devel as well.)
+ 	(Note that for RHEL and CentOS, you may need the EPEL repo.)
+diff --git a/build/rpm/xfstests.spec.in b/build/rpm/xfstests.spec.in
+index 338e8839..0a8c896b 100644
+--- a/build/rpm/xfstests.spec.in
++++ b/build/rpm/xfstests.spec.in
+@@ -6,7 +6,7 @@ Distribution: @pkg_distribution@
+ Packager: Silicon Graphics, Inc. <http://www.sgi.com/>
+ BuildRoot: @build_root@
+ BuildRequires:  autoconf, xfsprogs-devel, e2fsprogs-devel
+-BuildREquires:  libacl-devel, libattr-devel, libaio-devel
++BuildREquires:  libacl-devel, libaio-devel
+ Requires:       bash, xfsprogs, xfsdump, perl, acl, attr, bind-utils
+ Requires:       bc, indent, quota
+ Source: @pkg_name@-@pkg_version@.src.tar.gz
+diff --git a/configure.ac b/configure.ac
+index 8922c47e..e5771285 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -49,11 +49,7 @@ AC_PACKAGE_WANT_XLOG_ASSIGN_LSN
+ AC_PACKAGE_NEED_XFS_XQM_H
+ AC_PACKAGE_NEED_XFSCTL_MACRO
+ AC_PACKAGE_NEED_XFS_HANDLE_H
+-
+ AC_PACKAGE_NEED_ATTRLIST_LIBHANDLE
+-AC_PACKAGE_NEED_ATTRIBUTES_H
+-AC_PACKAGE_WANT_ATTRLIST_LIBATTR
+-AC_PACKAGE_NEED_ATTRSET_LIBATTR
+ 
+ AC_PACKAGE_NEED_SYS_ACL_H
+ AC_PACKAGE_NEED_ACL_LIBACL_H
+diff --git a/include/builddefs.in b/include/builddefs.in
+index fded3230..6893d598 100644
+--- a/include/builddefs.in
++++ b/include/builddefs.in
+@@ -20,7 +20,6 @@ HAVE_LIBXFS = @have_libxfs@
+ HAVE_XLOG_ASSIGN_LSN = @have_xlog_assign_lsn@
+ LIBXFS = @libxfs@
+ LIBACL = @libacl@
+-LIBATTR = @libattr@
+ LIBGDBM = @libgdbm@
+ LIBUUID = @libuuid@
+ LIBHANDLE = @libhdl@
+@@ -65,7 +64,6 @@ HAVE_URING = @have_uring@
+ HAVE_FALLOCATE = @have_fallocate@
+ HAVE_OPEN_BY_HANDLE_AT = @have_open_by_handle_at@
+ HAVE_DMAPI = @have_dmapi@
+-HAVE_ATTR_LIST = @have_attr_list@
+ HAVE_FIEMAP = @have_fiemap@
+ HAVE_FALLOCATE = @have_fallocate@
+ HAVE_COPY_FILE_RANGE = @have_copy_file_range@
+diff --git a/ltp/Makefile b/ltp/Makefile
+index 198d930f..85f63414 100644
+--- a/ltp/Makefile
++++ b/ltp/Makefile
+@@ -13,11 +13,6 @@ LDIRT = $(TARGETS)
+ LCFLAGS = -DXFS
+ LCFLAGS += -I$(TOPDIR)/src #Used for including $(TOPDIR)/src/global.h
+ 
+-ifeq ($(HAVE_ATTR_LIST), true)
+-LCFLAGS += -DHAVE_ATTR_LIST
+-LLDLIBS += $(LIBATTR)
+-endif
+-
+ ifeq ($(HAVE_AIO), true)
+ TARGETS += aio-stress
+ LCFLAGS += -DAIO
 diff --git a/ltp/fsstress.c b/ltp/fsstress.c
-index 73751935..10c27a7d 100644
+index 10c27a7d..e7cd0eae 100644
 --- a/ltp/fsstress.c
 +++ b/ltp/fsstress.c
-@@ -394,7 +394,7 @@ struct print_string	flag_str = {0};
- 
- void	add_to_flist(int, int, int, int);
- void	append_pathname(pathname_t *, char *);
--int	attr_list_path(pathname_t *, char *, const int, int, attrlist_cursor_t *);
-+int	attr_list_path(pathname_t *, char *, const int);
- int	attr_remove_path(pathname_t *, const char *);
- int	attr_set_path(pathname_t *, const char *, const char *, const int);
- void	check_cwd(void);
-@@ -868,28 +868,36 @@ append_pathname(pathname_t *name, char *str)
- 	name->len += len;
- }
- 
-+int
-+attr_list_count(char *buffer, int buffersize)
-+{
-+	char *p = buffer;
-+	char *end = buffer + buffersize;
-+	int count = 0;
-+
-+	while (p < end && *p != 0) {
-+		count++;
-+		p += strlen(p) + 1;
-+	}
-+
-+	return count;
-+}
-+
- int
- attr_list_path(pathname_t *name,
- 	       char *buffer,
--	       const int buffersize,
--	       int flags,
--	       attrlist_cursor_t *cursor)
-+	       const int buffersize)
- {
- 	char		buf[NAME_MAX + 1];
- 	pathname_t	newname;
- 	int		rval;
- 
--	if (flags != ATTR_DONTFOLLOW) {
--		errno = EINVAL;
--		return -1;
--	}
+@@ -14,15 +14,9 @@
+ #ifdef HAVE_BTRFSUTIL_H
+ #include <btrfsutil.h>
+ #endif
+-#ifdef HAVE_ATTR_ATTRIBUTES_H
+-#include <attr/attributes.h>
+-#endif
+ #ifdef HAVE_LINUX_FIEMAP_H
+ #include <linux/fiemap.h>
+ #endif
+-#ifndef HAVE_ATTR_LIST
+-#define attr_list(path, buf, size, flags, cursor) (errno = -ENOSYS, -1)
+-#endif
+ #ifdef HAVE_SYS_PRCTL_H
+ #include <sys/prctl.h>
+ #endif
+diff --git a/m4/Makefile b/m4/Makefile
+index 0352534d..5d9c5896 100644
+--- a/m4/Makefile
++++ b/m4/Makefile
+@@ -10,7 +10,6 @@ LSRCFILES = \
+ 	package_acldev.m4 \
+ 	package_aiodev.m4 \
+ 	package_gdbmdev.m4 \
+-	package_attrdev.m4 \
+ 	package_dmapidev.m4 \
+ 	package_globals.m4 \
+ 	package_libcdev.m4 \
+diff --git a/m4/package_attrdev.m4 b/m4/package_attrdev.m4
+deleted file mode 100644
+index d994cfc2..00000000
+--- a/m4/package_attrdev.m4
++++ /dev/null
+@@ -1,54 +0,0 @@
+-AC_DEFUN([AC_PACKAGE_NEED_ATTR_ERROR_H],
+-  [ AC_CHECK_HEADERS([attr/error_context.h])
+-    if test "$ac_cv_header_attr_error_context_h" != "yes"; then
+-        echo
+-        echo 'FATAL ERROR: attr/error_context.h does not exist.'
+-        echo 'Install the extended attributes (attr) development package.'
+-        echo 'Alternatively, run "make install-dev" from the attr source.'
+-        exit 1
+-    fi
+-  ])
 -
--	rval = attr_list(name->path, buffer, buffersize, flags, cursor);
-+	rval = llistxattr(name->path, buffer, buffersize);
- 	if (rval >= 0 || errno != ENAMETOOLONG)
- 		return rval;
- 	separate_pathname(name, buf, &newname);
- 	if (chdir(buf) == 0) {
--		rval = attr_list_path(&newname, buffer, buffersize, flags, cursor);
-+		rval = attr_list_path(&newname, buffer, buffersize);
- 		assert(chdir("..") == 0);
- 	}
- 	free_pathname(&newname);
-@@ -2313,32 +2321,24 @@ aread_f(int opno, long r)
- void
- attr_remove_f(int opno, long r)
- {
--	attrlist_ent_t		*aep;
--	attrlist_t		*alist;
--	char			*aname;
--	char			buf[4096];
--	attrlist_cursor_t	cursor;
-+	char			*bufname;
-+	char			*bufend;
-+	char			*aname = NULL;
-+	char			buf[XATTR_LIST_MAX];
- 	int			e;
- 	int			ent;
- 	pathname_t		f;
--	int			total;
-+	int			total = 0;
- 	int			v;
- 	int			which;
- 
- 	init_pathname(&f);
- 	if (!get_fname(FT_ANYm, r, &f, NULL, NULL, &v))
- 		append_pathname(&f, ".");
--	total = 0;
--	bzero(&cursor, sizeof(cursor));
--	do {
--		bzero(buf, sizeof(buf));
--		e = attr_list_path(&f, buf, sizeof(buf), ATTR_DONTFOLLOW, &cursor);
--		check_cwd();
--		if (e)
--			break;
--		alist = (attrlist_t *)buf;
--		total += alist->al_count;
--	} while (alist->al_more);
-+	e = attr_list_path(&f, buf, sizeof(buf));
-+	check_cwd();
-+	if (e > 0)
-+		total = attr_list_count(buf, e);
- 	if (total == 0) {
- 		if (v)
- 			printf("%d/%d: attr_remove - no attrs for %s\n",
-@@ -2346,25 +2346,19 @@ attr_remove_f(int opno, long r)
- 		free_pathname(&f);
- 		return;
- 	}
-+
- 	which = (int)(random() % total);
--	bzero(&cursor, sizeof(cursor));
-+	bufname = buf;
-+	bufend = buf + e;
- 	ent = 0;
--	aname = NULL;
--	do {
--		bzero(buf, sizeof(buf));
--		e = attr_list_path(&f, buf, sizeof(buf), ATTR_DONTFOLLOW, &cursor);
--		check_cwd();
--		if (e)
--			break;
--		alist = (attrlist_t *)buf;
--		if (which < ent + alist->al_count) {
--			aep = (attrlist_ent_t *)
--				&buf[alist->al_offset[which - ent]];
--			aname = aep->a_name;
-+	while (bufname < bufend) {
-+		if (which < ent) {
-+			aname = bufname;
- 			break;
- 		}
--		ent += alist->al_count;
--	} while (alist->al_more);
-+		ent++;
-+		bufname += strlen(bufname) + 1;
-+	}
- 	if (aname == NULL) {
- 		if (v)
- 			printf(
+-AC_DEFUN([AC_PACKAGE_NEED_ATTRIBUTES_H],
+-  [ have_attributes_h=false
+-    AC_CHECK_HEADERS([attr/attributes.h sys/attributes.h], [have_attributes_h=true], )
+-    if test "$have_attributes_h" = "false"; then
+-        echo
+-        echo 'FATAL ERROR: attributes.h does not exist.'
+-        echo 'Install the extended attributes (attr) development package.'
+-        echo 'Alternatively, run "make install-dev" from the attr source.'
+-        exit 1
+-    fi
+-  ])
+-
+-AC_DEFUN([AC_PACKAGE_WANT_ATTRLIST_LIBATTR],
+-  [ AC_CHECK_LIB(attr, attr_list, [have_attr_list=true], [have_attr_list=false])
+-    AC_SUBST(have_attr_list)
+-  ])
+-
+-AC_DEFUN([AC_PACKAGE_NEED_ATTRSET_LIBATTR],
+-  [ AC_CHECK_LIB(attr, attr_set,, [
+-        echo
+-        echo 'FATAL ERROR: could not find a valid Extended Attributes library.'
+-        echo 'Install the extended attributes (attr) development package.'
+-        echo 'Alternatively, run "make install-lib" from the attr source.'
+-        exit 1
+-    ])
+-    libattr="-lattr"
+-    test -f ${libexecdir}${libdirsuffix}/libattr.la && \
+-	libattr="${libexecdir}${libdirsuffix}/libattr.la"
+-    AC_SUBST(libattr)
+-  ])
+-
+-AC_DEFUN([AC_PACKAGE_NEED_ATTRIBUTES_MACROS],
+-  [ AC_MSG_CHECKING([macros in attr/attributes.h])
+-    AC_TRY_LINK([
+-#include <sys/types.h>
+-#include <attr/attributes.h>],
+-    [ int x = ATTR_SECURE; ], [ echo ok ], [
+-        echo
+-	echo 'FATAL ERROR: could not find a current attributes header.'
+-        echo 'Upgrade the extended attributes (attr) development package.'
+-        echo 'Alternatively, run "make install-dev" from the attr source.'
+-	exit 1 ])
+-  ])
 
