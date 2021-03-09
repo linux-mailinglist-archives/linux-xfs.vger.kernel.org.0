@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8879A331DED
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52B84331DF3
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:40:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbhCIEjg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229775AbhCIEjg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 8 Mar 2021 23:39:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:60804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229775AbhCIEjX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 23:39:23 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A36876523B;
-        Tue,  9 Mar 2021 04:39:22 +0000 (UTC)
+        id S229813AbhCIEj2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 23:39:28 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 19F7765275;
+        Tue,  9 Mar 2021 04:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615264762;
-        bh=ImKUwqcf+R5uzs/wFuEe9XzHY+rIk8zrOXG/BoP6/x0=;
+        s=k20201202; t=1615264768;
+        bh=9XRsAZ8FAxeuTStWvCNwZLRLqwqJnTLPKMn+T2un58c=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Y4oWJJZl480FkaRZjy5Vxk0Saff/ACPWhFOHshDPwoMYSlKGplLf9u4dXV77tFuxP
-         OjzgiZrS3m+iF+p04qo3KHPJwOK9KfuEeCEPXCAqtJXQlojda1telGzfOaHcJExQPz
-         CcK3rwgzFIFe2TazCKkEsCdpvGebcubhJBN759lJ8YcVLuK9k8yGLyuk3YUJG1ZkQn
-         +ZfSTwWyoW5+tqGKQLQIfXQJy7Nb0GHFKjVCoWmyjMHRHhW7ZJa6P46CvSkGNe0AQM
-         ZL7hjyF7q9LF0F3m1Mh0Mmd0zZ/xbb2i/jBabqvkW7gevK7p58r8EfBUIzFKGlO5/J
-         Mb2Wi/c48fy+w==
-Subject: [PATCH 3/4] populate: support compressing metadumps
+        b=CqWGaSnSdpBNOUwNaL0zT5MvgPSnl6oB/CN2BfAVqBWdqeuY2eWsxawaiptVoG32q
+         BvacSqR/BB4uL3obZY98CTgucR4R5g6NBNqNTxlTrH3/VIY64A7l1WUoOSq28xwUCG
+         goOpXO3kaZp1WMo50Syp5a+MJVcXrsCT6yqYc7FQi7ZFGPn60XPJM6Tidj8EWe4j80
+         URiz2yabpDPqmUvEXSGW4gD9gagSyguuePRQO2ebNT2knMXrVZYzzN+AoYsYJPKhgv
+         vaeeuLk0mYKL6go4cvYNZWzvgUXJJMDiIPv4rCgSYjaFcMCbN76Mh1i6fthmHRpukS
+         FAA4Ndizz2YAQ==
+Subject: [PATCH 4/4] common: capture qcow2 dumps of corrupt ext* filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 08 Mar 2021 20:39:22 -0800
-Message-ID: <161526476250.1212855.18197470277954527515.stgit@magnolia>
+Date:   Mon, 08 Mar 2021 20:39:27 -0800
+Message-ID: <161526476796.1212855.15194258148539741251.stgit@magnolia>
 In-Reply-To: <161526474588.1212855.9208390435676413014.stgit@magnolia>
 References: <161526474588.1212855.9208390435676413014.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,76 +41,94 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If the test runner passed in a DUMP_COMPRESSOR program, make it so that
-the metadumps we generate are also compressed.
+Create a new helper to use e2image to capture a qcow2 image of an ext*
+filesystem and make _check_generic_filesystem use it to dump corrupt ext
+images.  Refactor the single user of e2image to use the helper.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- README          |    5 +++++
- common/populate |   21 +++++++++++++++++++--
- 2 files changed, 24 insertions(+), 2 deletions(-)
+ README          |    2 +-
+ common/config   |    1 +
+ common/populate |    2 +-
+ common/rc       |   21 +++++++++++++++++++++
+ 4 files changed, 24 insertions(+), 2 deletions(-)
 
 
 diff --git a/README b/README
-index b00328ac..3d369438 100644
+index 3d369438..7a2638af 100644
 --- a/README
 +++ b/README
-@@ -111,6 +111,11 @@ Preparing system for tests:
+@@ -109,7 +109,7 @@ Preparing system for tests:
+              - Set TEST_FS_MODULE_RELOAD=1 to unload the module and reload
+                it between test invocations.  This assumes that the name of
                 the module is the same as FSTYP.
-              - Set DUMP_CORRUPT_FS=1 to record metadata dumps of XFS
+-             - Set DUMP_CORRUPT_FS=1 to record metadata dumps of XFS
++             - Set DUMP_CORRUPT_FS=1 to record metadata dumps of XFS or ext*
                 filesystems if a filesystem check fails.
-+             - Set DUMP_COMPRESSOR to a compression program to compress
-+               metadumps of filesystems.  This program must accept '-f' and the
-+               name of a file to compress; and it must accept '-d -f -k' and
-+               the name of a file to decompress.  In other words, it must
-+               emulate gzip.
+              - Set DUMP_COMPRESSOR to a compression program to compress
+                metadumps of filesystems.  This program must accept '-f' and the
+diff --git a/common/config b/common/config
+index d4cf8089..a47e462c 100644
+--- a/common/config
++++ b/common/config
+@@ -225,6 +225,7 @@ export CC_PROG="$(type -P cc)"
+ export FSVERITY_PROG="$(type -P fsverity)"
+ export OPENSSL_PROG="$(type -P openssl)"
+ export ACCTON_PROG="$(type -P accton)"
++export E2IMAGE_PROG="$(type -P e2image)"
  
-         - or add a case to the switch in common/config assigning
-           these variables based on the hostname of your test
+ # use 'udevadm settle' or 'udevsettle' to wait for lv to be settled.
+ # newer systems have udevadm command but older systems like RHEL5 don't.
 diff --git a/common/populate b/common/populate
-index 4e5b645f..b897922c 100644
+index b897922c..4135d89d 100644
 --- a/common/populate
 +++ b/common/populate
-@@ -824,6 +824,17 @@ _scratch_populate_cache_tag() {
- _scratch_populate_restore_cached() {
- 	local metadump="$1"
- 
-+	# If we're configured for compressed dumps and there isn't already an
-+	# uncompressed dump, see if we can use DUMP_COMPRESSOR to decompress
-+	# something.
-+	if [ -n "$DUMP_COMPRESSOR" ]; then
-+		for compr in "$metadump".*; do
-+			[ -e "$compr" ] && $DUMP_COMPRESSOR -d -f -k "$compr" && break
-+		done
-+	fi
-+
-+	test -r "$metadump" || return 1
-+
- 	case "${FSTYP}" in
- 	"xfs")
- 		xfs_mdrestore "${metadump}" "${SCRATCH_DEV}" && return 0
-@@ -855,8 +866,7 @@ _scratch_populate_cached() {
- 		rm -rf "${POPULATE_METADUMP}"
- 
- 	# Try to restore from the metadump
--	test -r "${POPULATE_METADUMP}" && \
--		_scratch_populate_restore_cached "${POPULATE_METADUMP}" && \
-+	_scratch_populate_restore_cached "${POPULATE_METADUMP}" && \
- 		return
- 
- 	# Oh well, just create one from scratch
-@@ -867,6 +877,13 @@ _scratch_populate_cached() {
- 		_scratch_xfs_populate $@
- 		_scratch_xfs_populate_check
- 		_scratch_xfs_metadump "${POPULATE_METADUMP}"
-+
-+		local logdev=
-+		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
-+			logdev=$SCRATCH_LOGDEV
-+
-+		_xfs_metadump "$POPULATE_METADUMP" "$SCRATCH_DEV" "$logdev" \
-+			compress
- 		;;
+@@ -888,7 +888,7 @@ _scratch_populate_cached() {
  	"ext2"|"ext3"|"ext4")
  		_scratch_ext4_populate $@
+ 		_scratch_ext4_populate_check
+-		e2image -Q "${SCRATCH_DEV}" "${POPULATE_METADUMP}"
++		_ext4_metadump "${SCRATCH_DEV}" "${POPULATE_METADUMP}" compress
+ 		;;
+ 	*)
+ 		_fail "Don't know how to populate a ${FSTYP} filesystem."
+diff --git a/common/rc b/common/rc
+index 835c3c24..a460ec9c 100644
+--- a/common/rc
++++ b/common/rc
+@@ -585,6 +585,18 @@ _scratch_mkfs_ext4()
+ 	return $mkfs_status
+ }
+ 
++_ext4_metadump()
++{
++	local device="$1"
++	local dumpfile="$2"
++	local compressopt="$3"
++
++	test -n "$E2IMAGE_PROG" || _fail "e2image not installed"
++	$E2IMAGE_PROG -Q "$device" "$dumpfile"
++	[ "$compressopt" = "compress" ] && [ -n "$DUMP_COMPRESSOR" ] &&
++		$DUMP_COMPRESSOR "$dumpfile" &>> "$seqres.full"
++}
++
+ _test_mkfs()
+ {
+     case $FSTYP in
+@@ -2730,6 +2742,15 @@ _check_generic_filesystem()
+     fi
+     rm -f $tmp.fsck
+ 
++    if [ $ok -eq 0 ] && [ -n "$DUMP_CORRUPT_FS" ]; then
++        case "$FSTYP" in
++        ext*)
++            local flatdev="$(basename "$device")"
++            _ext4_metadump "$seqres.$flatdev.check.qcow2" "$device" compress
++            ;;
++        esac
++    fi
++
+     if [ $ok -eq 0 ]
+     then
+         echo "*** mount output ***"		>>$seqres.full
 
