@@ -2,35 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 175E0331E00
+	by mail.lfdr.de (Postfix) with ESMTP id 8859E331E02
 	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:41:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbhCIElO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S230056AbhCIElO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 8 Mar 2021 23:41:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:33102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229854AbhCIEkx (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 23:40:53 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 61C9365275;
-        Tue,  9 Mar 2021 04:40:53 +0000 (UTC)
+        id S229875AbhCIEk7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 23:40:59 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D81CA6523B;
+        Tue,  9 Mar 2021 04:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615264853;
-        bh=O/8xPqrlVA31AQ13Ug1211UcQ/I3PFRPbN+ktCU8lnA=;
+        s=k20201202; t=1615264858;
+        bh=BRd+NOJXW3rif+YdB76MWtwYJY6rd4IdNc/vUZxoaYM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=X5sjV4Owp9wNDaWj3wvaU+5sJP1ReNw7zHNjErAla/dyulNZsVXUy8fvIimRV4gsJ
-         0dGoEdovTS5K3dzc+F8NGxNGySjnrbcIlZgYbYO3TjTfl5X+zT9Fpc3sQTo5doD314
-         kJz2hSvU2fG8E8AaGq0mVw7B5dewvv+GBKYBPNq76/8KJi2eibGD5yaIA4Mroyn/eF
-         U5lqA/c/ld3I3rEcuXdiCA19nyx3V8Ll3YVoHoTqmPbFuVyni1nSNdNmwrwSTD3zCK
-         XFn/DNuvCKJ3GAlQzJY1wP/gDqcIW4XpPVGKHPS9uA9vZyzbIRshf+LwySPcnJ5MIv
-         LtvmWeibSkVcA==
-Subject: [PATCH 09/10] generic: test a deadlock in xfs_rename when whiteing
- out files
+        b=HpORDagaSHsuYc/HT88bNCVXxV7T9QaqMEFu6bs+btiC6nqhynWuYPCaC6tn5hDp5
+         a357UwUuyrxFl7wnWPYbEc9KzGWmcO2/nf7MZhbAsYb6Y8NXyWCz5c1Mf978vGwL/g
+         K11PFe8/HMV47Of8OhaUfjIuFYkoSjhRk80sbNr2XsAgfEfTcn8zX+6fY4yw8vpQM6
+         LU0SdT8xH7ZauiWOhyt/M9Bs1qaEo2eY6ZC1CnpAkooeSjyjl/R8AWiqP/OCjJHmPN
+         UJw+LgYoVEo/ytNqsRB9e9vDBW+hxbP1keDpC31kX3G4/6cXPOgH9dQ7dwPlsMARKC
+         5+DE7KJ5t4kmw==
+Subject: [PATCH 10/10] xfs: test delalloc quota leak when chprojid fails
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     wenli xie <wlxie7296@gmail.com>, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 08 Mar 2021 20:40:53 -0800
-Message-ID: <161526485320.1214319.14486851135232825638.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+Date:   Mon, 08 Mar 2021 20:40:58 -0800
+Message-ID: <161526485870.1214319.7885928745714445687.stgit@magnolia>
 In-Reply-To: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 References: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,49 +41,167 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-wenli xie reported a buffer cache deadlock when an overlayfs is mounted
-atop xfs and overlayfs tries to replace a single-nlink file with a
-whiteout file.  This test reproduces that deadlock.
+This is a regression test for a bug in the XFS implementation of
+FSSETXATTR.  When we try to change a file's project id, the quota
+reservation code will update the incore quota reservations for delayed
+allocation blocks.  Unfortunately, it does this before we finish
+validating all the FSSETXATTR parameters, which means that if we decide
+to bail out, we also fail to undo the incore changes.
 
-Reported-by: wenli xie <wlxie7296@gmail.com>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/generic/1300     |  109 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/generic/1300.out |    2 +
- tests/generic/group    |    1 
- 3 files changed, 112 insertions(+)
- create mode 100755 tests/generic/1300
- create mode 100644 tests/generic/1300.out
+ .gitignore          |    1 +
+ src/Makefile        |    2 +
+ src/chprojid_fail.c |   92 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/765       |   71 +++++++++++++++++++++++++++++++++++++++
+ tests/xfs/765.out   |    4 ++
+ tests/xfs/group     |    1 +
+ 6 files changed, 170 insertions(+), 1 deletion(-)
+ create mode 100644 src/chprojid_fail.c
+ create mode 100755 tests/xfs/765
+ create mode 100644 tests/xfs/765.out
 
 
-diff --git a/tests/generic/1300 b/tests/generic/1300
-new file mode 100755
-index 00000000..10df44e3
+diff --git a/.gitignore b/.gitignore
+index 03c03be5..3af8e207 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -58,6 +58,7 @@
+ /src/bulkstat_null_ocount
+ /src/bulkstat_unlink_test
+ /src/bulkstat_unlink_test_modified
++/src/chprojid_fail
+ /src/cloner
+ /src/dbtest
+ /src/devzero
+diff --git a/src/Makefile b/src/Makefile
+index 38ee6718..3d729a34 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -29,7 +29,7 @@ LINUX_TARGETS = xfsctl bstat t_mtab getdevicesize preallo_rw_pattern_reader \
+ 	attr-list-by-handle-cursor-test listxattr dio-interleaved t_dir_type \
+ 	dio-invalidate-cache stat_test t_encrypted_d_revalidate \
+ 	attr_replace_test swapon mkswap t_attr_corruption t_open_tmpfiles \
+-	fscrypt-crypt-util bulkstat_null_ocount splice-test
++	fscrypt-crypt-util bulkstat_null_ocount splice-test chprojid_fail
+ 
+ SUBDIRS = log-writes perf
+ 
+diff --git a/src/chprojid_fail.c b/src/chprojid_fail.c
+new file mode 100644
+index 00000000..8c5b5fee
 --- /dev/null
-+++ b/tests/generic/1300
-@@ -0,0 +1,109 @@
++++ b/src/chprojid_fail.c
+@@ -0,0 +1,92 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (c) 2021 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <djwong@kernel.org>
++ *
++ * Regression test for failing to undo delalloc quota reservations when
++ * changing project id and we fail some other FSSETXATTR validation.
++ */
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <sys/ioctl.h>
++#include <stdio.h>
++#include <string.h>
++#include <errno.h>
++#include <linux/fs.h>
++
++static char zerobuf[65536];
++
++int
++main(
++	int		argc,
++	char		*argv[])
++{
++	struct fsxattr	fa;
++	ssize_t		sz;
++	int		fd, ret;
++
++	if (argc < 2) {
++		printf("Usage: %s filename\n", argv[0]);
++		return 1;
++	}
++
++	fd = open(argv[1], O_CREAT | O_TRUNC | O_RDWR, 0600);
++	if (fd < 0) {
++		perror(argv[1]);
++		return 2;
++	}
++
++	/* Zero the project id and the extent size hint. */
++	ret = ioctl(fd, FS_IOC_FSGETXATTR, &fa);
++	if (ret) {
++		perror("FSGETXATTR check file");
++		return 2;
++	}
++
++	if (fa.fsx_projid != 0 || fa.fsx_extsize != 0) {
++		fa.fsx_projid = 0;
++		fa.fsx_extsize = 0;
++		ret = ioctl(fd, FS_IOC_FSSETXATTR, &fa);
++		if (ret) {
++			perror("FSSETXATTR zeroing");
++			return 2;
++		}
++	}
++
++	/* Dirty a few kb of a file to create delalloc extents. */
++	sz = write(fd, zerobuf, sizeof(zerobuf));
++	if (sz != sizeof(zerobuf)) {
++		perror("delalloc write");
++		return 2;
++	}
++
++	/*
++	 * The regression we're trying to test happens when the fsxattr input
++	 * validation decides to bail out after the chown quota reservation has
++	 * been made on a file containing delalloc extents.  Extent size hints
++	 * can't be set on non-empty files and we can't check the value until
++	 * we've reserved resources and taken the file's ILOCK, so this is a
++	 * perfect vector for triggering this condition.  In this way we set up
++	 * a FSSETXATTR call that will fail.
++	 */
++	ret = ioctl(fd, FS_IOC_FSGETXATTR, &fa);
++	if (ret) {
++		perror("FSGETXATTR");
++		return 2;
++	}
++
++	fa.fsx_projid = 23652;
++	fa.fsx_extsize = 2;
++	fa.fsx_xflags |= FS_XFLAG_EXTSIZE;
++
++	ret = ioctl(fd, FS_IOC_FSSETXATTR, &fa);
++	if (ret) {
++		printf("FSSETXATTRR should fail: %s\n", strerror(errno));
++		return 0;
++	}
++
++	/* Uhoh, that FSSETXATTR call should have failed! */
++	return 3;
++}
+diff --git a/tests/xfs/765 b/tests/xfs/765
+new file mode 100755
+index 00000000..68b89ce3
+--- /dev/null
++++ b/tests/xfs/765
+@@ -0,0 +1,71 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2021 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1300
++# FS QA Test No. 765
 +#
-+# Reproducer for a deadlock in xfs_rename reported by Wenli Xie.
-+#
-+# When overlayfs is running on top of xfs and the user unlinks a file in the
-+# overlay, overlayfs will create a whiteout inode and ask us to "rename" the
-+# whiteout file atop the one being unlinked.  If the file being unlinked loses
-+# its one nlink, we then have to put the inode on the unlinked list.
-+#
-+# This requires us to grab the AGI buffer of the whiteout inode to take it
-+# off the unlinked list (which is where whiteouts are created) and to grab
-+# the AGI buffer of the file being deleted.  If the whiteout was created in
-+# a higher numbered AG than the file being deleted, we'll lock the AGIs in
-+# the wrong order and deadlock.
-+#
-+# Note that this test doesn't do anything xfs-specific so it's a generic test.
-+# This is a regression test for commit 6da1b4b1ab36 ("xfs: fix an ABBA deadlock
-+# in xfs_rename").
++# Regression test for failing to undo delalloc quota reservations when changing
++# project id but we fail some other part of FSSETXATTR validation.  If we fail
++# the test, we trip debugging assertions in dmesg.  This is a regression test
++# for commit 1aecf3734a95 ("xfs: fix chown leaking delalloc quota blocks when
++# fssetxattr fails").
 +
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
@@ -98,96 +214,72 @@ index 00000000..10df44e3
 +
 +_cleanup()
 +{
-+	stop_workers
 +	cd /
 +	rm -f $tmp.*
 +}
 +
 +# get standard environment, filters and checks
 +. ./common/rc
++. ./common/quota
 +
 +# real QA test starts here
-+_supported_fs generic
++_supported_fs xfs
++_require_command "$FILEFRAG_PROG" filefrag
++_require_test_program "chprojid_fail"
++_require_quota
 +_require_scratch
-+test "$FSTYP" = "overlay" && _notrun "Test does not apply to overlayfs."
-+
-+modprobe -q overlay
-+grep -q overlay /proc/filesystems || _notrun "Test requires overlayfs."
 +
 +rm -f $seqres.full
 +
-+_scratch_mkfs >> $seqres.full
-+_scratch_mount
++echo "Format filesystem" | tee -a $seqres.full
++_scratch_mkfs > $seqres.full
++_qmount_option 'prjquota'
++_qmount
++_require_prjquota $SCRATCH_DEV
 +
-+mkdir $SCRATCH_MNT/lowerdir
-+mkdir $SCRATCH_MNT/lowerdir1
-+mkdir $SCRATCH_MNT/lowerdir/etc
-+mkdir $SCRATCH_MNT/workers
-+echo salts > $SCRATCH_MNT/lowerdir/etc/access.conf
-+touch $SCRATCH_MNT/running
++# Make sure that a regular buffered write produces delalloc reservations.
++$XFS_IO_PROG -f -c 'pwrite 0 64k' $SCRATCH_MNT/testy &> /dev/null
++$FILEFRAG_PROG -v $SCRATCH_MNT/testy 2>&1 | grep -q delalloc || \
++	_notrun "test requires delayed allocation writes"
++rm -f $SCRATCH_MNT/testy
 +
-+stop_workers() {
-+	test -e $SCRATCH_MNT/running || return
-+	rm -f $SCRATCH_MNT/running
++echo "Run test program"
++$XFS_QUOTA_PROG -f -x -c 'report -ap' $SCRATCH_MNT >> $seqres.full
++$here/src/chprojid_fail $SCRATCH_MNT/blah
 +
-+	while [ "$(ls $SCRATCH_MNT/workers/ | wc -l)" -gt 0 ]; do
-+		wait
-+	done
-+}
++# The regression we're testing for is an accounting bug involving delalloc
++# reservations.  FSSETXATTR does not itself cause dirty data writeback, so we
++# assume that if the file still has delalloc extents, then it must have had
++# them when chprojid_fail was running, and therefore the test was set up
++# correctly.  There's a slight chance that background writeback can sneak in
++# and flush the file, but this should be a small enough gap.
++$FILEFRAG_PROG -v $SCRATCH_MNT/blah 2>&1 | grep -q delalloc || \
++	echo "file didn't get delalloc extents, test invalid?"
 +
-+worker() {
-+	local tag="$1"
-+	local mergedir="$SCRATCH_MNT/merged$tag"
-+	local l="lowerdir=$SCRATCH_MNT/lowerdir:$SCRATCH_MNT/lowerdir1"
-+	local u="upperdir=$SCRATCH_MNT/upperdir$tag"
-+	local w="workdir=$SCRATCH_MNT/workdir$tag"
-+	local i="index=off,nfs_export=off"
++# Make a note of current quota status for diagnostic purposes
++$XFS_QUOTA_PROG -f -x -c 'report -ap' $SCRATCH_MNT >> $seqres.full
 +
-+	touch $SCRATCH_MNT/workers/$tag
-+	while test -e $SCRATCH_MNT/running; do
-+		rm -rf $SCRATCH_MNT/merged$tag
-+		rm -rf $SCRATCH_MNT/upperdir$tag
-+		rm -rf $SCRATCH_MNT/workdir$tag
-+		mkdir $SCRATCH_MNT/merged$tag
-+		mkdir $SCRATCH_MNT/workdir$tag
-+		mkdir $SCRATCH_MNT/upperdir$tag
-+
-+		mount -t overlay overlay -o "$l,$u,$w,$i" $mergedir
-+		mv $mergedir/etc/access.conf $mergedir/etc/access.conf.bak
-+		touch $mergedir/etc/access.conf
-+		mv $mergedir/etc/access.conf $mergedir/etc/access.conf.bak
-+		touch $mergedir/etc/access.conf
-+		umount $mergedir
-+	done
-+	rm -f $SCRATCH_MNT/workers/$tag
-+}
-+
-+for i in $(seq 0 $((4 + LOAD_FACTOR)) ); do
-+	worker $i &
-+done
-+
-+sleep $((30 * TIME_FACTOR))
-+stop_workers
-+
-+echo Silence is golden.
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/generic/1300.out b/tests/generic/1300.out
+diff --git a/tests/xfs/765.out b/tests/xfs/765.out
 new file mode 100644
-index 00000000..5805d30d
+index 00000000..d5f8fc11
 --- /dev/null
-+++ b/tests/generic/1300.out
-@@ -0,0 +1,2 @@
-+QA output created by 1300
-+Silence is golden.
-diff --git a/tests/generic/group b/tests/generic/group
-index 778aa8c4..2233a59d 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -631,3 +631,4 @@
- 947 auto quick rw clone
- 948 auto quick rw copy_range
- 949 auto quick rw dedupe clone
-+1300 auto rw overlay
++++ b/tests/xfs/765.out
+@@ -0,0 +1,4 @@
++QA output created by 765
++Format filesystem
++Run test program
++FSSETXATTRR should fail: Invalid argument
+diff --git a/tests/xfs/group b/tests/xfs/group
+index d7aafc94..84468d10 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -505,4 +505,5 @@
+ 760 auto quick rw collapse punch insert zero prealloc
+ 761 auto quick realtime
+ 763 auto quick rw realtime
++765 auto quick quota
+ 915 auto quick quota
 
