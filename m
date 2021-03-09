@@ -2,35 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4F62331DF9
+	by mail.lfdr.de (Postfix) with ESMTP id 89311331DF8
 	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:40:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbhCIEkL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Mar 2021 23:40:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60968 "EHLO mail.kernel.org"
+        id S230139AbhCIEkM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Mar 2021 23:40:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229475AbhCIEkE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 23:40:04 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EC9A06528A;
-        Tue,  9 Mar 2021 04:40:03 +0000 (UTC)
+        id S229872AbhCIEkJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 23:40:09 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 684B86523B;
+        Tue,  9 Mar 2021 04:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615264804;
-        bh=1lTW4btLHoCvsw7JL+u880jhn+IvXtpF6XD7FRfa3fQ=;
-        h=Subject:From:To:Cc:Date:From;
-        b=tEn70pf7BYaUG/KAMsJSHYzxxTDv6HlA4xghoSjbWclZH69SsCFudP/8T3szCwEnj
-         P3YE8V5Jx7e81+lKxSKszkaVOBlh9u4bsAGN64IC3vYQgVgcVmXD4HLOhNSWTOemDw
-         AJE1xce6P054SOMFOYUiLTeMMkhzbjiwxec65w6P9cnvU9DdOrTEqXCoEDhlv8Kyh4
-         X//8cpoBBI8YcvzPyXy3+N9tn7AJg2NAj24q0lP3ueoMiPqv0TPzau44aCnKJlIdSu
-         d+1zPupqcGb5IIhqaEj+JXWF39fW8TOn6poWJSL+8WaDA6BF86J41TvxAj8YIJGbWz
-         XI7iJYQnjtl0Q==
-Subject: [PATCHSET 00/10] fstests: test kernel regressions fixed in 5.12
+        s=k20201202; t=1615264809;
+        bh=won8P26HD3UWLjx3SPmMJ0Gn5xM9EYpQhFiLLUgkBGQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=p9e0tImGdK0aoTQgmKIq43PpNocxVXDYHp0bCWusyjLbM5fsXUWT8DR7h4B9JLUKR
+         AwiP2wgXUCnnNTYtPdiLlsLw0gLndbCdKClFUF04UbFUTKhY6owIG3TxO3QCUPuSwW
+         DlAfrOZA5gZKuUmCF4kEsIe4xuBGvYg56VeuqbFRnh5V9o7vuu0V6cNgAd8cKu2GZZ
+         T0CpExWxdmrJ+UIH8ltbGc9urRN5IJmYMrPbpMTQxZ98ZjBgi/T1HpT7QRECDfAkHn
+         5WazVlRQfxKgk0rd8yKJ8icgHWwyW0YLVMXIfIBmkeMGmMsQ7MEODZs041oi0maFqK
+         Kuv9MAZfqYUsg==
+Subject: [PATCH 01/10] xfs: test regression in xfs_bmap_validate_extent
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     wenli xie <wlxie7296@gmail.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 08 Mar 2021 20:40:03 -0800
-Message-ID: <161526480371.1214319.3263690953532787783.stgit@magnolia>
+Date:   Mon, 08 Mar 2021 20:40:09 -0800
+Message-ID: <161526480925.1214319.17395174541667296356.stgit@magnolia>
+In-Reply-To: <161526480371.1214319.3263690953532787783.stgit@magnolia>
+References: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,74 +40,103 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Here are new tests for problems that were fixed in upstream Linux
-between 5.9 and 5.12.
+This is a regression test to make sure that we can have realtime files
+with xattr blocks and not trip the verifiers.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=kernel-regressions
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- .gitignore             |    1 
- common/filter          |   24 +++
- src/Makefile           |    4 -
- src/chprojid_fail.c    |   92 ++++++++++++
- src/deduperace.c       |  370 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/generic/1300     |  109 ++++++++++++++
- tests/generic/1300.out |    2 
- tests/generic/947      |  118 +++++++++++++++
- tests/generic/947.out  |   15 ++
- tests/generic/948      |   92 ++++++++++++
- tests/generic/948.out  |    9 +
- tests/generic/949      |   51 +++++++
- tests/generic/949.out  |    2 
- tests/generic/group    |    4 +
- tests/xfs/050          |   30 +---
- tests/xfs/122          |    1 
- tests/xfs/122.out      |    1 
- tests/xfs/299          |   30 +---
- tests/xfs/758          |   59 ++++++++
- tests/xfs/758.out      |    2 
- tests/xfs/759          |  100 +++++++++++++
- tests/xfs/759.out      |    2 
- tests/xfs/760          |   68 +++++++++
- tests/xfs/760.out      |    9 +
- tests/xfs/761          |   45 ++++++
- tests/xfs/761.out      |    1 
- tests/xfs/765          |   71 +++++++++
- tests/xfs/765.out      |    4 +
- tests/xfs/915          |  162 +++++++++++++++++++++
- tests/xfs/915.out      |  151 ++++++++++++++++++++
- tests/xfs/group        |    6 +
- 31 files changed, 1584 insertions(+), 51 deletions(-)
- create mode 100644 src/chprojid_fail.c
- create mode 100644 src/deduperace.c
- create mode 100755 tests/generic/1300
- create mode 100644 tests/generic/1300.out
- create mode 100755 tests/generic/947
- create mode 100644 tests/generic/947.out
- create mode 100755 tests/generic/948
- create mode 100644 tests/generic/948.out
- create mode 100755 tests/generic/949
- create mode 100644 tests/generic/949.out
+ tests/xfs/758     |   59 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/758.out |    2 ++
+ tests/xfs/group   |    1 +
+ 3 files changed, 62 insertions(+)
  create mode 100755 tests/xfs/758
  create mode 100644 tests/xfs/758.out
- create mode 100755 tests/xfs/759
- create mode 100644 tests/xfs/759.out
- create mode 100755 tests/xfs/760
- create mode 100644 tests/xfs/760.out
- create mode 100755 tests/xfs/761
- create mode 100644 tests/xfs/761.out
- create mode 100755 tests/xfs/765
- create mode 100644 tests/xfs/765.out
- create mode 100755 tests/xfs/915
- create mode 100644 tests/xfs/915.out
+
+
+diff --git a/tests/xfs/758 b/tests/xfs/758
+new file mode 100755
+index 00000000..a247701e
+--- /dev/null
++++ b/tests/xfs/758
+@@ -0,0 +1,59 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2021 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 758
++#
++# This is a regression test for commit d0c20d38af13 "xfs: fix
++# xfs_bmap_validate_extent_raw when checking attr fork of rt files", which
++# fixes the bmap record validator so that it will not check the attr fork
++# extent mappings of a realtime file against the size of the realtime volume.
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1    # failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++	rm -f $tmp.*
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_realtime
++
++rm -f $seqres.full
++
++# Format filesystem with very tiny realtime volume
++_scratch_mkfs -r size=256k > $seqres.full
++_scratch_mount >> $seqres.full
++
++# Create a realtime file
++$XFS_IO_PROG -f -R -c 'pwrite 0 64k' -c stat $SCRATCH_MNT/v >> $seqres.full
++
++# Add enough xattr data to force creation of xattr blocks at a higher address
++# on the data device than the size of the realtime volume
++for i in `seq 0 16`; do
++	$ATTR_PROG -s user.test$i $SCRATCH_MNT/v < $SCRATCH_MNT/v >> $seqres.full
++done
++
++# Force flushing extent maps to disk to trip the verifier
++_scratch_cycle_mount
++
++# Now let that unmount
++echo Silence is golden.
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/758.out b/tests/xfs/758.out
+new file mode 100644
+index 00000000..6d219f8e
+--- /dev/null
++++ b/tests/xfs/758.out
+@@ -0,0 +1,2 @@
++QA output created by 758
++Silence is golden.
+diff --git a/tests/xfs/group b/tests/xfs/group
+index 754fc7be..4dd9901f 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -500,4 +500,5 @@
+ 525 auto quick mkfs
+ 526 auto quick mkfs
+ 527 auto quick quota
++758 auto quick rw attr realtime
+ 763 auto quick rw realtime
 
