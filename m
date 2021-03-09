@@ -2,33 +2,35 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 733C6331E01
+	by mail.lfdr.de (Postfix) with ESMTP id 175E0331E00
 	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:41:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229948AbhCIElO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229992AbhCIElO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 8 Mar 2021 23:41:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33066 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229813AbhCIEks (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 23:40:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DA9F56523B;
-        Tue,  9 Mar 2021 04:40:47 +0000 (UTC)
+        id S229854AbhCIEkx (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 23:40:53 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 61C9365275;
+        Tue,  9 Mar 2021 04:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615264848;
-        bh=52XpmYjnOyESsgmNsto1erN8ehlo2ih2NhysKtNmy4g=;
+        s=k20201202; t=1615264853;
+        bh=O/8xPqrlVA31AQ13Ug1211UcQ/I3PFRPbN+ktCU8lnA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tbI3DlSObX2770VE+j0kqseh9hUrPgEySJRHsFLkpn3a7SvqNxS9GJbby/Kn7XBc0
-         O3VsGhZg4L8/aVIwbanO7+qxcXjgUAlEVdXmQkuNVOlOQtY7gWx9LtVK3KJ/ldInxm
-         Sjq55srLGHKrCYRcuwS1LU4yaosDabTpo5RTOBQuwzh+NuAP8yWOTJ9nFH8hFMXYd1
-         T8JKlT5jUo/m4PeWo3RqGAE6+9fxT3A4ZfwxSa+glq3ADyUyEaLSQLgt/7IXZDW3dL
-         +qEEgXcDmpqcuS3EV9fbieYmlQQgM6gTprRWw5LWZyhN8izRkL9CvaTkzXensMS2dU
-         1W/QK0C1+Bmvw==
-Subject: [PATCH 08/10] generic: test file writers racing with FIDEDUPERANGE
+        b=X5sjV4Owp9wNDaWj3wvaU+5sJP1ReNw7zHNjErAla/dyulNZsVXUy8fvIimRV4gsJ
+         0dGoEdovTS5K3dzc+F8NGxNGySjnrbcIlZgYbYO3TjTfl5X+zT9Fpc3sQTo5doD314
+         kJz2hSvU2fG8E8AaGq0mVw7B5dewvv+GBKYBPNq76/8KJi2eibGD5yaIA4Mroyn/eF
+         U5lqA/c/ld3I3rEcuXdiCA19nyx3V8Ll3YVoHoTqmPbFuVyni1nSNdNmwrwSTD3zCK
+         XFn/DNuvCKJ3GAlQzJY1wP/gDqcIW4XpPVGKHPS9uA9vZyzbIRshf+LwySPcnJ5MIv
+         LtvmWeibSkVcA==
+Subject: [PATCH 09/10] generic: test a deadlock in xfs_rename when whiteing
+ out files
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 08 Mar 2021 20:40:47 -0800
-Message-ID: <161526484769.1214319.11110389021630982078.stgit@magnolia>
+Cc:     wenli xie <wlxie7296@gmail.com>, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me
+Date:   Mon, 08 Mar 2021 20:40:53 -0800
+Message-ID: <161526485320.1214319.14486851135232825638.stgit@magnolia>
 In-Reply-To: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 References: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,427 +43,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a test to make sure that dedupe actually locks the file ranges
-correctly before starting the content comparison and keeps them locked
-until the operation completes.
+wenli xie reported a buffer cache deadlock when an overlayfs is mounted
+atop xfs and overlayfs tries to replace a single-nlink file with a
+whiteout file.  This test reproduces that deadlock.
 
+Reported-by: wenli xie <wlxie7296@gmail.com>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- src/Makefile          |    2 
- src/deduperace.c      |  370 +++++++++++++++++++++++++++++++++++++++++++++++++
- tests/generic/949     |   51 +++++++
- tests/generic/949.out |    2 
- tests/generic/group   |    1 
- 5 files changed, 425 insertions(+), 1 deletion(-)
- create mode 100644 src/deduperace.c
- create mode 100755 tests/generic/949
- create mode 100644 tests/generic/949.out
+ tests/generic/1300     |  109 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/1300.out |    2 +
+ tests/generic/group    |    1 
+ 3 files changed, 112 insertions(+)
+ create mode 100755 tests/generic/1300
+ create mode 100644 tests/generic/1300.out
 
 
-diff --git a/src/Makefile b/src/Makefile
-index 811b24e4..38ee6718 100644
---- a/src/Makefile
-+++ b/src/Makefile
-@@ -21,7 +21,7 @@ TARGETS = dirstress fill fill2 getpagesize holes lstat64 \
- 
- LINUX_TARGETS = xfsctl bstat t_mtab getdevicesize preallo_rw_pattern_reader \
- 	preallo_rw_pattern_writer ftrunc trunc fs_perms testx looptest \
--	locktest unwritten_mmap bulkstat_unlink_test \
-+	locktest unwritten_mmap bulkstat_unlink_test deduperace \
- 	bulkstat_unlink_test_modified t_dir_offset t_futimens t_immutable \
- 	stale_handle pwrite_mmap_blocked t_dir_offset2 seek_sanity_test \
- 	seek_copy_test t_readdir_1 t_readdir_2 fsync-tester nsexec cloner \
-diff --git a/src/deduperace.c b/src/deduperace.c
-new file mode 100644
-index 00000000..b252d436
---- /dev/null
-+++ b/src/deduperace.c
-@@ -0,0 +1,370 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (c) 2021 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <djwong@kernel.org>
-+ *
-+ * Race pwrite/mwrite with dedupe to see if we got the locking right.
-+ *
-+ * File writes and mmap writes should not be able to change the src_fd's
-+ * contents after dedupe prep has verified that the file contents are the same.
-+ */
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <sys/mman.h>
-+#include <sys/ioctl.h>
-+#include <linux/fs.h>
-+#include <string.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <pthread.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+
-+#define GOOD_BYTE		0x58
-+#define BAD_BYTE		0x66
-+
-+#ifndef FIDEDUPERANGE
-+/* extent-same (dedupe) ioctls; these MUST match the btrfs ioctl definitions */
-+#define FILE_DEDUPE_RANGE_SAME		0
-+#define FILE_DEDUPE_RANGE_DIFFERS	1
-+
-+/* from struct btrfs_ioctl_file_extent_same_info */
-+struct file_dedupe_range_info {
-+	__s64 dest_fd;		/* in - destination file */
-+	__u64 dest_offset;	/* in - start of extent in destination */
-+	__u64 bytes_deduped;	/* out - total # of bytes we were able
-+				 * to dedupe from this file. */
-+	/* status of this dedupe operation:
-+	 * < 0 for error
-+	 * == FILE_DEDUPE_RANGE_SAME if dedupe succeeds
-+	 * == FILE_DEDUPE_RANGE_DIFFERS if data differs
-+	 */
-+	__s32 status;		/* out - see above description */
-+	__u32 reserved;		/* must be zero */
-+};
-+
-+/* from struct btrfs_ioctl_file_extent_same_args */
-+struct file_dedupe_range {
-+	__u64 src_offset;	/* in - start of extent in source */
-+	__u64 src_length;	/* in - length of extent */
-+	__u16 dest_count;	/* in - total elements in info array */
-+	__u16 reserved1;	/* must be zero */
-+	__u32 reserved2;	/* must be zero */
-+	struct file_dedupe_range_info info[0];
-+};
-+#define FIDEDUPERANGE	_IOWR(0x94, 54, struct file_dedupe_range)
-+#endif /* FIDEDUPERANGE */
-+
-+static int fd1, fd2;
-+static loff_t offset = 37; /* Nice low offset to trick the compare */
-+static loff_t blksz;
-+
-+/* Continuously dirty the pagecache for the region being dupe-tested. */
-+void *
-+mwriter(
-+	void		*data)
-+{
-+	volatile char	*p;
-+
-+	p = mmap(NULL, blksz, PROT_WRITE, MAP_SHARED, fd1, 0);
-+	if (p == MAP_FAILED) {
-+		perror("mmap");
-+		exit(2);
-+	}
-+
-+	while (1) {
-+		*(p + offset) = BAD_BYTE;
-+		*(p + offset) = GOOD_BYTE;
-+	}
-+}
-+
-+/* Continuously write to the region being dupe-tested. */
-+void *
-+pwriter(
-+	void		*data)
-+{
-+	char		v;
-+	ssize_t		sz;
-+
-+	while (1) {
-+		v = BAD_BYTE;
-+		sz = pwrite(fd1, &v, sizeof(v), offset);
-+		if (sz != sizeof(v)) {
-+			perror("pwrite0");
-+			exit(2);
-+		}
-+
-+		v = GOOD_BYTE;
-+		sz = pwrite(fd1, &v, sizeof(v), offset);
-+		if (sz != sizeof(v)) {
-+			perror("pwrite1");
-+			exit(2);
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+static inline void
-+complain(
-+	loff_t	offset,
-+	char	bad)
-+{
-+	fprintf(stderr, "ASSERT: offset %llu should be 0x%x, got 0x%x!\n",
-+			(unsigned long long)offset, GOOD_BYTE, bad);
-+	abort();
-+}
-+
-+/* Make sure the destination file pagecache never changes. */
-+void *
-+mreader(
-+	void		*data)
-+{
-+	volatile char	*p;
-+
-+	p = mmap(NULL, blksz, PROT_READ, MAP_SHARED, fd2, 0);
-+	if (p == MAP_FAILED) {
-+		perror("mmap");
-+		exit(2);
-+	}
-+
-+	while (1) {
-+		if (*(p + offset) != GOOD_BYTE)
-+			complain(offset, *(p + offset));
-+	}
-+}
-+
-+/* Make sure the destination file never changes. */
-+void *
-+preader(
-+	void		*data)
-+{
-+	char		v;
-+	ssize_t		sz;
-+
-+	while (1) {
-+		sz = pread(fd2, &v, sizeof(v), offset);
-+		if (sz != sizeof(v)) {
-+			perror("pwrite0");
-+			exit(2);
-+		}
-+
-+		if (v != GOOD_BYTE)
-+			complain(offset, v);
-+	}
-+
-+	return NULL;
-+}
-+
-+void
-+print_help(const char *progname)
-+{
-+	printf("Usage: %s [-b blksz] [-c dir] [-n nr_ops] [-o offset] [-r] [-w] [-v]\n",
-+			progname);
-+	printf("-b sets the block size (default is autoconfigured)\n");
-+	printf("-c chdir to this path before starting\n");
-+	printf("-n controls the number of dedupe ops (default 10000)\n");
-+	printf("-o reads and writes to this offset (default 37)\n");
-+	printf("-r uses pread instead of mmap read.\n");
-+	printf("-v prints status updates.\n");
-+	printf("-w uses pwrite instead of mmap write.\n");
-+}
-+
-+int
-+main(
-+	int		argc,
-+	char		*argv[])
-+{
-+	struct file_dedupe_range *fdr;
-+	char		*Xbuf;
-+	void		*(*reader_fn)(void *) = mreader;
-+	void		*(*writer_fn)(void *) = mwriter;
-+	unsigned long	same = 0;
-+	unsigned long	differs = 0;
-+	unsigned long	i, nr_ops = 10000;
-+	ssize_t		sz;
-+	pthread_t	reader, writer;
-+	int		verbose = 0;
-+	int		c;
-+	int		ret;
-+
-+	while ((c = getopt(argc, argv, "b:c:n:o:rvw")) != -1) {
-+		switch (c) {
-+		case 'b':
-+			errno = 0;
-+			blksz = strtoul(optarg, NULL, 0);
-+			if (errno) {
-+				perror(optarg);
-+				exit(1);
-+			}
-+			break;
-+		case 'c':
-+			ret = chdir(optarg);
-+			if (ret) {
-+				perror("chdir");
-+				exit(1);
-+			}
-+			break;
-+		case 'n':
-+			errno = 0;
-+			nr_ops = strtoul(optarg, NULL, 0);
-+			if (errno) {
-+				perror(optarg);
-+				exit(1);
-+			}
-+			break;
-+		case 'o':
-+			errno = 0;
-+			offset = strtoul(optarg, NULL, 0);
-+			if (errno) {
-+				perror(optarg);
-+				exit(1);
-+			}
-+			break;
-+		case 'r':
-+			reader_fn = preader;
-+			break;
-+		case 'v':
-+			verbose = 1;
-+			break;
-+		case 'w':
-+			writer_fn = pwriter;
-+			break;
-+		default:
-+			print_help(argv[0]);
-+			exit(1);
-+			break;
-+		}
-+	}
-+
-+	fdr = malloc(sizeof(struct file_dedupe_range) +
-+			sizeof(struct file_dedupe_range_info));
-+	if (!fdr) {
-+		perror("malloc");
-+		exit(1);
-+	}
-+
-+	/* Initialize both files. */
-+	fd1 = open("file1", O_RDWR | O_CREAT | O_TRUNC | O_NOATIME, 0600);
-+	if (fd1 < 0) {
-+		perror("file1");
-+		exit(1);
-+	}
-+
-+	fd2 = open("file2", O_RDWR | O_CREAT | O_TRUNC | O_NOATIME, 0600);
-+	if (fd2 < 0) {
-+		perror("file2");
-+		exit(1);
-+	}
-+
-+	if (blksz <= 0) {
-+		struct stat	statbuf;
-+
-+		ret = fstat(fd1, &statbuf);
-+		if (ret) {
-+			perror("file1 stat");
-+			exit(1);
-+		}
-+		blksz = statbuf.st_blksize;
-+	}
-+
-+	if (offset >= blksz) {
-+		fprintf(stderr, "offset (%llu) < blksz (%llu)?\n",
-+				(unsigned long long)offset,
-+				(unsigned long long)blksz);
-+		exit(1);
-+	}
-+
-+	Xbuf = malloc(blksz);
-+	if (!Xbuf) {
-+		perror("malloc buffer");
-+		exit(1);
-+	}
-+	memset(Xbuf, GOOD_BYTE, blksz);
-+
-+	sz = pwrite(fd1, Xbuf, blksz, 0);
-+	if (sz != blksz) {
-+		perror("file1 write");
-+		exit(1);
-+	}
-+
-+	sz = pwrite(fd2, Xbuf, blksz, 0);
-+	if (sz != blksz) {
-+		perror("file2 write");
-+		exit(1);
-+	}
-+
-+	ret = fsync(fd1);
-+	if (ret) {
-+		perror("file1 fsync");
-+		exit(1);
-+	}
-+
-+	ret = fsync(fd2);
-+	if (ret) {
-+		perror("file2 fsync");
-+		exit(1);
-+	}
-+
-+	/* Start our reader and writer threads. */
-+	ret = pthread_create(&reader, NULL, reader_fn, NULL);
-+	if (ret) {
-+		fprintf(stderr, "rthread: %s\n", strerror(ret));
-+		exit(1);
-+	}
-+
-+	ret = pthread_create(&writer, NULL, writer_fn, NULL);
-+	if (ret) {
-+		fprintf(stderr, "wthread: %s\n", strerror(ret));
-+		exit(1);
-+	}
-+
-+	/*
-+	 * Now start deduping.  If the contents match, fd1's blocks will be
-+	 * remapped into fd2, which is why the writer thread targets fd1 and
-+	 * the reader checks fd2 to make sure that none of fd1's writes ever
-+	 * make it into fd2.
-+	 */
-+	for (i = 1; i <= nr_ops; i++) {
-+		fdr->src_offset = 0;
-+		fdr->src_length = blksz;
-+		fdr->dest_count = 1;
-+		fdr->reserved1 = 0;
-+		fdr->reserved2 = 0;
-+		fdr->info[0].dest_fd = fd2;
-+		fdr->info[0].dest_offset = 0;
-+		fdr->info[0].reserved = 0;
-+
-+		ret = ioctl(fd1, FIDEDUPERANGE, fdr);
-+		if (ret) {
-+			perror("dedupe");
-+			exit(2);
-+		}
-+
-+		switch (fdr->info[0].status) {
-+		case FILE_DEDUPE_RANGE_DIFFERS:
-+			differs++;
-+			break;
-+		case FILE_DEDUPE_RANGE_SAME:
-+			same++;
-+			break;
-+		default:
-+			fprintf(stderr, "deduperange: %s\n",
-+					strerror(-fdr->info[0].status));
-+			exit(2);
-+			break;
-+		}
-+
-+		if (verbose && (i % 337) == 0)
-+			printf("nr_ops: %lu; same: %lu; differs: %lu\n",
-+					i, same, differs);
-+	}
-+
-+	if (verbose)
-+		printf("nr_ops: %lu; same: %lu; differs: %lu\n", i - 1, same,
-+				differs);
-+
-+	/* Program termination will kill the threads and close the files. */
-+	return 0;
-+}
-diff --git a/tests/generic/949 b/tests/generic/949
+diff --git a/tests/generic/1300 b/tests/generic/1300
 new file mode 100755
-index 00000000..3951490b
+index 00000000..10df44e3
 --- /dev/null
-+++ b/tests/generic/949
-@@ -0,0 +1,51 @@
++++ b/tests/generic/1300
+@@ -0,0 +1,109 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2021 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 949
++# FS QA Test No. 1300
 +#
-+# Make sure that mmap and file writers racing with FIDEDUPERANGE cannot write
-+# to the file after the dedupe prep function has decided that the file contents
-+# are identical and we can therefore go ahead with the remapping.
++# Reproducer for a deadlock in xfs_rename reported by Wenli Xie.
++#
++# When overlayfs is running on top of xfs and the user unlinks a file in the
++# overlay, overlayfs will create a whiteout inode and ask us to "rename" the
++# whiteout file atop the one being unlinked.  If the file being unlinked loses
++# its one nlink, we then have to put the inode on the unlinked list.
++#
++# This requires us to grab the AGI buffer of the whiteout inode to take it
++# off the unlinked list (which is where whiteouts are created) and to grab
++# the AGI buffer of the file being deleted.  If the whiteout was created in
++# a higher numbered AG than the file being deleted, we'll lock the AGIs in
++# the wrong order and deadlock.
++#
++# Note that this test doesn't do anything xfs-specific so it's a generic test.
++# This is a regression test for commit 6da1b4b1ab36 ("xfs: fix an ABBA deadlock
++# in xfs_rename").
 +
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
@@ -474,51 +98,96 @@ index 00000000..3951490b
 +
 +_cleanup()
 +{
++	stop_workers
 +	cd /
 +	rm -f $tmp.*
 +}
 +
 +# get standard environment, filters and checks
 +. ./common/rc
-+. ./common/reflink
 +
 +# real QA test starts here
 +_supported_fs generic
-+_require_scratch_dedupe
++_require_scratch
++test "$FSTYP" = "overlay" && _notrun "Test does not apply to overlayfs."
++
++modprobe -q overlay
++grep -q overlay /proc/filesystems || _notrun "Test requires overlayfs."
 +
 +rm -f $seqres.full
 +
-+nr_ops=$((TIME_FACTOR * 10000))
-+
-+# Format filesystem
-+_scratch_mkfs > $seqres.full
++_scratch_mkfs >> $seqres.full
 +_scratch_mount
 +
-+# Test once with mmap writes
-+$here/src/deduperace -c $SCRATCH_MNT -n $nr_ops
++mkdir $SCRATCH_MNT/lowerdir
++mkdir $SCRATCH_MNT/lowerdir1
++mkdir $SCRATCH_MNT/lowerdir/etc
++mkdir $SCRATCH_MNT/workers
++echo salts > $SCRATCH_MNT/lowerdir/etc/access.conf
++touch $SCRATCH_MNT/running
 +
-+# Test again with pwrites for the lulz
-+$here/src/deduperace -c $SCRATCH_MNT -n $nr_ops -w
++stop_workers() {
++	test -e $SCRATCH_MNT/running || return
++	rm -f $SCRATCH_MNT/running
++
++	while [ "$(ls $SCRATCH_MNT/workers/ | wc -l)" -gt 0 ]; do
++		wait
++	done
++}
++
++worker() {
++	local tag="$1"
++	local mergedir="$SCRATCH_MNT/merged$tag"
++	local l="lowerdir=$SCRATCH_MNT/lowerdir:$SCRATCH_MNT/lowerdir1"
++	local u="upperdir=$SCRATCH_MNT/upperdir$tag"
++	local w="workdir=$SCRATCH_MNT/workdir$tag"
++	local i="index=off,nfs_export=off"
++
++	touch $SCRATCH_MNT/workers/$tag
++	while test -e $SCRATCH_MNT/running; do
++		rm -rf $SCRATCH_MNT/merged$tag
++		rm -rf $SCRATCH_MNT/upperdir$tag
++		rm -rf $SCRATCH_MNT/workdir$tag
++		mkdir $SCRATCH_MNT/merged$tag
++		mkdir $SCRATCH_MNT/workdir$tag
++		mkdir $SCRATCH_MNT/upperdir$tag
++
++		mount -t overlay overlay -o "$l,$u,$w,$i" $mergedir
++		mv $mergedir/etc/access.conf $mergedir/etc/access.conf.bak
++		touch $mergedir/etc/access.conf
++		mv $mergedir/etc/access.conf $mergedir/etc/access.conf.bak
++		touch $mergedir/etc/access.conf
++		umount $mergedir
++	done
++	rm -f $SCRATCH_MNT/workers/$tag
++}
++
++for i in $(seq 0 $((4 + LOAD_FACTOR)) ); do
++	worker $i &
++done
++
++sleep $((30 * TIME_FACTOR))
++stop_workers
 +
 +echo Silence is golden.
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/generic/949.out b/tests/generic/949.out
+diff --git a/tests/generic/1300.out b/tests/generic/1300.out
 new file mode 100644
-index 00000000..2998b46c
+index 00000000..5805d30d
 --- /dev/null
-+++ b/tests/generic/949.out
++++ b/tests/generic/1300.out
 @@ -0,0 +1,2 @@
-+QA output created by 949
++QA output created by 1300
 +Silence is golden.
 diff --git a/tests/generic/group b/tests/generic/group
-index d5cfdd51..778aa8c4 100644
+index 778aa8c4..2233a59d 100644
 --- a/tests/generic/group
 +++ b/tests/generic/group
-@@ -630,3 +630,4 @@
- 625 auto quick verity
+@@ -631,3 +631,4 @@
  947 auto quick rw clone
  948 auto quick rw copy_range
-+949 auto quick rw dedupe clone
+ 949 auto quick rw dedupe clone
++1300 auto rw overlay
 
