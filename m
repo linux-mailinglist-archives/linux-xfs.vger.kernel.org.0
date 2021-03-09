@@ -2,35 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C192331DFB
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:41:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F56331DFF
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 05:41:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbhCIEkm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229872AbhCIEkm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Mon, 8 Mar 2021 23:40:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:32878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229872AbhCIEkP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 8 Mar 2021 23:40:15 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D15B36523B;
-        Tue,  9 Mar 2021 04:40:14 +0000 (UTC)
+        id S230140AbhCIEkU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 8 Mar 2021 23:40:20 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5102065275;
+        Tue,  9 Mar 2021 04:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615264814;
-        bh=UrcceFFjmTQRogHNHnizLL7HLDHcmj2usP6zC065DlY=;
+        s=k20201202; t=1615264820;
+        bh=/34Q4K6Ae87lq3+BnoM2xICN4SUmvFlYJ9HGAm/kpHg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cV7C0E4k91au0OYExa9NaaogUcPqbyh7R9/D+bpa0Ogab7ZHT4hHFoBylbH99THNp
-         3vu/fUO2HSXjm8sUtMO8CAHIuEAtB/uFamMvohVoym82wb9+O58Sp+6EVWRkYUbwZv
-         eHMM9mDnHYBuiDnSl4A0AZmWpVOLcGowqgtFByMkVCimDmWXJW48JNbGcuj3WU8xHt
-         Jf6WStOoSuOqSAN+XZAhnJ68Z6HncdLF7TCR4kBAD2jx1XaEGEaDID7kgDOQ/YMjbk
-         KKmnGWtym9LVYVIIGtPaYWCQfsjkTTRYjDNC1NMTWsLL/FqxJ1rfOZXf2Lz7apcDLy
-         lQTKttKJFL7/g==
-Subject: [PATCH 02/10] generic: test reflink and copy_file_range behavior with
- O_SYNC and FS_XFLAG_SYNC files
+        b=FYvfkGSg0abVCGbbgl6DG5Uvi3UYCR8hzrJtfonQvdeGa+Ydd5T55+G8gIfbFicWn
+         gj+OXuXkJFqvFRACeNg1gRVqeOZzlt+xCllh7zV7QCMEYtV0Y5aosA/o1n6z2QAKAn
+         hYEd7dqXnz4oyIKtvgI9lVjRmFNG8wkA65YyZve+afG2t4wJp26eEiIEZ0hHfcRpIt
+         w1r0EsOY6ZBAAFMUVT5aq+aGzPQkU2RcKEVSlheX7ON5gCKf/3qIgTsgL1BWWfk17F
+         eh4lwZqcf1M37SPBlrlaolMtxEE6SLYkToUkT/fkYFtybYkXf5gShJOf49fiDXenpC
+         knWzlO8TlkaqQ==
+Subject: [PATCH 03/10] xfs: test rtalloc alignment and math errors
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 08 Mar 2021 20:40:14 -0800
-Message-ID: <161526481473.1214319.4844099354726360669.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+Date:   Mon, 08 Mar 2021 20:40:20 -0800
+Message-ID: <161526482015.1214319.6227125326960502859.stgit@magnolia>
 In-Reply-To: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 References: <161526480371.1214319.3263690953532787783.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -43,42 +41,45 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add two regression tests to make sure that FICLONERANGE and the splice
-based copy_file_range actually flush all data and metadata to disk
-before the call ends.
+Add a couple of regression tests for "xfs: make sure the rt allocator
+doesn't run off the end" and "xfs: ensure that fpunch, fcollapse, and
+finsert operations are aligned to rt extent size".
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- tests/generic/947     |  118 +++++++++++++++++++++++++++++++++++++++++++++++++
- tests/generic/947.out |   15 ++++++
- tests/generic/948     |   92 ++++++++++++++++++++++++++++++++++++++
- tests/generic/948.out |    9 ++++
- tests/generic/group   |    2 +
- 5 files changed, 236 insertions(+)
- create mode 100755 tests/generic/947
- create mode 100644 tests/generic/947.out
- create mode 100755 tests/generic/948
- create mode 100644 tests/generic/948.out
+ tests/xfs/759     |  100 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/759.out |    2 +
+ tests/xfs/760     |   68 ++++++++++++++++++++++++++++++++++++
+ tests/xfs/760.out |    9 +++++
+ tests/xfs/group   |    2 +
+ 5 files changed, 181 insertions(+)
+ create mode 100755 tests/xfs/759
+ create mode 100644 tests/xfs/759.out
+ create mode 100755 tests/xfs/760
+ create mode 100644 tests/xfs/760.out
 
 
-diff --git a/tests/generic/947 b/tests/generic/947
+diff --git a/tests/xfs/759 b/tests/xfs/759
 new file mode 100755
-index 00000000..d0edb876
+index 00000000..8558fe30
 --- /dev/null
-+++ b/tests/generic/947
-@@ -0,0 +1,118 @@
++++ b/tests/xfs/759
+@@ -0,0 +1,100 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2021 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 947
++# FS QA Test No. 759
 +#
-+# Make sure that reflink forces the log out if we open the file with O_SYNC or
-+# set FS_XFLAG_SYNC on the file.  We test that it actually forced the log by
-+# using dm-error to shut down the fs without flushing the log and then
-+# remounting to check file contents.  This is a regression test for commit
-+# 5ffce3cc22a0 ("xfs: force the log after remapping a synchronous-writes file")
++# This is a regression test for commit 2a6ca4baed62 ("xfs: make sure the rt
++# allocator doesn't run off the end") which fixes an overflow error in the
++# _near realtime allocator.  If the rt bitmap ends exactly at the end of a
++# block and the number of rt extents is large enough to allow an allocation
++# request larger than the maximum extent size, it's possible that during a
++# large allocation request, the allocator will fail to constrain maxlen on the
++# second run through the loop, and the rt bitmap range check will run right off
++# the end of the rtbitmap file.  When this happens, xfs triggers a verifier
++# error and returns EFSCORRUPTED.
 +
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
@@ -93,241 +94,183 @@ index 00000000..d0edb876
 +{
 +	cd /
 +	rm -f $tmp.*
-+	_dmerror_unmount
-+	_dmerror_cleanup
 +}
 +
 +# get standard environment, filters and checks
 +. ./common/rc
 +. ./common/filter
-+. ./common/reflink
-+. ./common/dmerror
 +
 +# real QA test starts here
-+_supported_fs generic
-+_require_dm_target error
-+_require_scratch_reflink
-+_require_xfs_io_command "chattr" "s"
-+_require_cp_reflink
-+
-+rm -f $seqres.full
-+
-+# Format filesystem and set up quota limits
-+_scratch_mkfs > $seqres.full
-+_require_metadata_journaling $SCRATCH_DEV
-+_dmerror_init
-+_dmerror_mount
-+
-+# Test that O_SYNC actually results in file data being written even if the
-+# fs immediately dies
-+echo "test o_sync write"
-+$XFS_IO_PROG -x -f -s -c "pwrite -S 0x58 0 1m -b 1m" $SCRATCH_MNT/0 >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/0 | _filter_scratch
-+
-+# Set up initial files for reflink test
-+$XFS_IO_PROG -f -c 'pwrite -S 0x58 0 1m -b 1m' $SCRATCH_MNT/a >> $seqres.full
-+$XFS_IO_PROG -f -c 'pwrite -S 0x59 0 1m -b 1m' $SCRATCH_MNT/c >> $seqres.full
-+_cp_reflink $SCRATCH_MNT/a $SCRATCH_MNT/e
-+_cp_reflink $SCRATCH_MNT/c $SCRATCH_MNT/d
-+touch $SCRATCH_MNT/b
-+sync
-+
-+# Test that reflink forces dirty data/metadata to disk when destination file
-+# opened with O_SYNC
-+echo "test reflink flag not set o_sync"
-+$XFS_IO_PROG -x -s -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
-+
-+# Test that reflink to a shared file forces dirty data/metadata to disk when
-+# destination is opened with O_SYNC
-+echo "test reflink flag already set o_sync"
-+$XFS_IO_PROG -x -s -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/d >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/a $SCRATCH_MNT/d | _filter_scratch
-+
-+# Set up the two files with chattr +S
-+rm -f $SCRATCH_MNT/b $SCRATCH_MNT/d
-+_cp_reflink $SCRATCH_MNT/c $SCRATCH_MNT/d
-+touch $SCRATCH_MNT/b
-+chattr +S $SCRATCH_MNT/b $SCRATCH_MNT/d
-+sync
-+
-+# Test that reflink forces dirty data/metadata to disk when destination file
-+# has the sync iflag set
-+echo "test reflink flag not set iflag"
-+$XFS_IO_PROG -x -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
-+
-+# Test that reflink to a shared file forces dirty data/metadata to disk when
-+# destination file has the sync iflag set
-+echo "test reflink flag already set iflag"
-+$XFS_IO_PROG -x -c "reflink $SCRATCH_MNT/a" $SCRATCH_MNT/d >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/a $SCRATCH_MNT/d | _filter_scratch
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/generic/947.out b/tests/generic/947.out
-new file mode 100644
-index 00000000..05ba10d1
---- /dev/null
-+++ b/tests/generic/947.out
-@@ -0,0 +1,15 @@
-+QA output created by 947
-+test o_sync write
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/0
-+test reflink flag not set o_sync
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/b
-+test reflink flag already set o_sync
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/d
-+test reflink flag not set iflag
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/b
-+test reflink flag already set iflag
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/d
-diff --git a/tests/generic/948 b/tests/generic/948
-new file mode 100755
-index 00000000..b79cd279
---- /dev/null
-+++ b/tests/generic/948
-@@ -0,0 +1,92 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2021 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 948
-+#
-+# Make sure that copy_file_range forces the log out if we open the file with
-+# O_SYNC or set FS_XFLAG_SYNC on the file.  We test that it actually forced the
-+# log by using dm-error to shut down the fs without flushing the log and then
-+# remounting to check file contents.  This is a regression test for commit
-+# 5ffce3cc22a0 ("xfs: force the log after remapping a synchronous-writes file")
-+
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1    # failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -f $tmp.*
-+	_dmerror_unmount
-+	_dmerror_cleanup
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+. ./common/dmerror
-+
-+# real QA test starts here
-+_supported_fs generic
-+_require_dm_target error
-+_require_xfs_io_command "chattr" "s"
++_supported_fs xfs
 +_require_scratch
++_require_realtime
++_require_test_program "punch-alternating"
 +
 +rm -f $seqres.full
 +
-+# Format filesystem and set up quota limits
++# Format filesystem to get the block size
 +_scratch_mkfs > $seqres.full
-+_require_metadata_journaling $SCRATCH_DEV
-+_dmerror_init
-+_dmerror_mount
++_scratch_mount >> $seqres.full
 +
-+# Test that O_SYNC actually results in file data being written even if the
-+# fs immediately dies
-+echo "test o_sync write"
-+$XFS_IO_PROG -x -f -s -c "pwrite -S 0x58 0 1m -b 1m" $SCRATCH_MNT/0 >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/0 | _filter_scratch
++blksz=$(_get_block_size $SCRATCH_MNT)
++rextsize=$($XFS_INFO_PROG $SCRATCH_MNT | grep realtime.*extsz | sed -e 's/^.*extsz=\([0-9]*\).*$/\1/g')
++rextblks=$((rextsize / blksz))
 +
-+# Set up initial files for copy test
-+$XFS_IO_PROG -f -c 'pwrite -S 0x58 0 1m -b 1m' $SCRATCH_MNT/a >> $seqres.full
-+touch $SCRATCH_MNT/b
-+sync
++echo "blksz $blksz rextsize $rextsize rextblks $rextblks" >> $seqres.full
 +
-+# Test that unaligned copy file range forces dirty data/metadata to disk when
-+# destination file opened with O_SYNC
-+echo "test unaligned copy range o_sync"
-+$XFS_IO_PROG -x -s -c "copy_range -s 13 -d 13 -l 1048550 $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
++_scratch_unmount
 +
-+# Set up dest file with chattr +S
-+rm -f $SCRATCH_MNT/b
-+touch $SCRATCH_MNT/b
-+chattr +S $SCRATCH_MNT/b
-+sync
++# Format filesystem with a realtime volume whose size fits the following:
++# 1. Longer than (XFS MAXEXTLEN * blocksize) bytes.
++# 2. Exactly a multiple of (NBBY * blksz * rextsize) bytes.
 +
-+# Test that unaligned copy file range forces dirty data/metadata to disk when
-+# destination file has the sync iflag set
-+echo "test unaligned copy range iflag"
-+$XFS_IO_PROG -x -c "copy_range -s 13 -d 13 -l 1048550 $SCRATCH_MNT/a" $SCRATCH_MNT/b >> $seqres.full
-+_dmerror_load_error_table
-+_dmerror_unmount
-+_dmerror_load_working_table
-+_dmerror_mount
-+md5sum $SCRATCH_MNT/a $SCRATCH_MNT/b | _filter_scratch
++rtsize1=$((2097151 * blksz))
++rtsize2=$((8 * blksz * rextsize))
++rtsize=$(( $(blockdev --getsz $SCRATCH_RTDEV) * 512 ))
++
++echo "rtsize1 $rtsize1 rtsize2 $rtsize2 rtsize $rtsize" >> $seqres.full
++
++test $rtsize -gt $rtsize1 || \
++	_notrun "scratch rt device too small, need $rtsize1 bytes"
++test $rtsize -gt $rtsize2 || \
++	_notrun "scratch rt device too small, need $rtsize2 bytes"
++
++rtsize=$((rtsize - (rtsize % rtsize2)))
++
++echo "rt size will be $rtsize" >> $seqres.full
++
++_scratch_mkfs -r size=$rtsize >> $seqres.full
++_scratch_mount >> $seqres.full
++
++# Make sure the root directory has rtinherit set so our test file will too
++$XFS_IO_PROG -c 'chattr +t' $SCRATCH_MNT
++
++# Allocate some stuff at the start, to force the first falloc of the ouch file
++# to happen somewhere in the middle of the rt volume
++$XFS_IO_PROG -f -c 'falloc 0 64m' "$SCRATCH_MNT/b"
++$here/src/punch-alternating -i $((rextblks * 2)) -s $((rextblks)) "$SCRATCH_MNT/b"
++
++avail="$(df -P "$SCRATCH_MNT" | awk 'END {print $4}')"1
++toobig="$((avail * 2))"
++
++# falloc the ouch file in the middle of the rt extent to exercise the near
++# allocator in the last step.
++$XFS_IO_PROG -f -c 'falloc 0 1g' "$SCRATCH_MNT/ouch"
++
++# Try to get the near allocator to overflow on an allocation that matches
++# exactly one of the rtsummary size levels.  This should return ENOSPC and
++# not EFSCORRUPTED.
++$XFS_IO_PROG -f -c "falloc 0 ${toobig}k" "$SCRATCH_MNT/ouch"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/generic/948.out b/tests/generic/948.out
+diff --git a/tests/xfs/759.out b/tests/xfs/759.out
 new file mode 100644
-index 00000000..eec6c0dc
+index 00000000..df693d50
 --- /dev/null
-+++ b/tests/generic/948.out
++++ b/tests/xfs/759.out
+@@ -0,0 +1,2 @@
++QA output created by 759
++fallocate: No space left on device
+diff --git a/tests/xfs/760 b/tests/xfs/760
+new file mode 100755
+index 00000000..7f2b52d4
+--- /dev/null
++++ b/tests/xfs/760
+@@ -0,0 +1,68 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2021 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 760
++#
++# Make sure we validate realtime extent size alignment for fallocate modes.
++# This is a regression test for fe341eb151ec ("xfs: ensure that fpunch,
++# fcollapse, and finsert operations are aligned to rt extent size")
++
++seq=`basename $0`
++seqres=$RESULT_DIR/$seq
++echo "QA output created by $seq"
++
++here=`pwd`
++tmp=/tmp/$$
++status=1    # failure is the default!
++trap "_cleanup; exit \$status" 0 1 2 3 15
++
++_cleanup()
++{
++	cd /
++	rm -f $tmp.*
++}
++
++# get standard environment, filters and checks
++. ./common/rc
++. ./common/filter
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_realtime
++_require_xfs_io_command "fcollapse"
++_require_xfs_io_command "finsert"
++_require_xfs_io_command "funshare"
++_require_xfs_io_command "fzero"
++_require_xfs_io_command "falloc"
++
++rm -f $seqres.full
++
++# Format filesystem with a 256k realtime extent size
++_scratch_mkfs -r extsize=256k > $seqres.full
++_scratch_mount >> $seqres.full
++
++blksz=$(_get_block_size $SCRATCH_MNT)
++rextsize=$($XFS_INFO_PROG $SCRATCH_MNT | grep realtime.*extsz | sed -e 's/^.*extsz=\([0-9]*\).*$/\1/g')
++rextblks=$((rextsize / blksz))
++
++echo "blksz $blksz rextsize $rextsize rextblks $rextblks" >> $seqres.full
++
++# Make sure the root directory has rtinherit set so our test file will too
++$XFS_IO_PROG -c 'chattr +t' $SCRATCH_MNT
++
++sz=$((rextsize * 100))
++range="$((blksz * 3)) $blksz"
++
++for verb in fpunch finsert fcollapse fzero funshare falloc; do
++	echo "test $verb"
++	$XFS_IO_PROG -f -c "falloc 0 $sz" "$SCRATCH_MNT/b"
++	$XFS_IO_PROG -f -c "$verb $range" "$SCRATCH_MNT/b"
++	rm -f "$SCRATCH_MNT/b"
++	_scratch_cycle_mount
++done
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/760.out b/tests/xfs/760.out
+new file mode 100644
+index 00000000..3d73c6fa
+--- /dev/null
++++ b/tests/xfs/760.out
 @@ -0,0 +1,9 @@
-+QA output created by 948
-+test o_sync write
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/0
-+test unaligned copy range o_sync
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-+2a715d2093b5aca82783a0c5943ac0b8  SCRATCH_MNT/b
-+test unaligned copy range iflag
-+310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-+2a715d2093b5aca82783a0c5943ac0b8  SCRATCH_MNT/b
-diff --git a/tests/generic/group b/tests/generic/group
-index 84db3789..d5cfdd51 100644
---- a/tests/generic/group
-+++ b/tests/generic/group
-@@ -628,3 +628,5 @@
- 623 auto quick shutdown
- 624 auto quick verity
- 625 auto quick verity
-+947 auto quick rw clone
-+948 auto quick rw copy_range
++QA output created by 760
++test fpunch
++test finsert
++fallocate: Invalid argument
++test fcollapse
++fallocate: Invalid argument
++test fzero
++test funshare
++test falloc
+diff --git a/tests/xfs/group b/tests/xfs/group
+index 4dd9901f..318468b5 100644
+--- a/tests/xfs/group
++++ b/tests/xfs/group
+@@ -501,4 +501,6 @@
+ 526 auto quick mkfs
+ 527 auto quick quota
+ 758 auto quick rw attr realtime
++759 auto quick rw realtime
++760 auto quick rw collapse punch insert zero prealloc
+ 763 auto quick rw realtime
 
