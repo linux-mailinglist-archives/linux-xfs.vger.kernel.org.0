@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A4F1331E20
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 06:02:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71747331E26
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 06:02:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229480AbhCIFB6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229495AbhCIFB6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 9 Mar 2021 00:01:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbhCIFBp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Mar 2021 00:01:45 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E09C06174A;
-        Mon,  8 Mar 2021 21:01:45 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id kk2-20020a17090b4a02b02900c777aa746fso4489900pjb.3;
-        Mon, 08 Mar 2021 21:01:45 -0800 (PST)
+        with ESMTP id S229515AbhCIFBr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Mar 2021 00:01:47 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06760C06174A;
+        Mon,  8 Mar 2021 21:01:47 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id kr3-20020a17090b4903b02900c096fc01deso4489636pjb.4;
+        Mon, 08 Mar 2021 21:01:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wiUX8hmDRkOSLriQemMNaU5Pv5stJo7j+X9UPcM9A8Y=;
-        b=daNfA6hA7U16n/5JORC/z427Q/oezpZ7cYo8P1Dwiq6ZJkt0mTF0xsIMY8MBZDSvRF
-         EK5WjRw+H34V0ZMDZ4t6RnwSI7hQ5Xc3y14KX/X9fH5l9ZzRx8cQbkAvjUZHwDoBA08q
-         SAVvAhvs1fgLqBkO4Xpl30f6jv+F/174OrJJ6ZbSQOYZ6whxZbyiSiLCQkzUWVmX2ari
-         XvtKVGpfopomg/vr7GDdxDgHDgF2/Txy6u7DToPIu1xc9/wyXe12sqpXRIRrQntCphLi
-         HjWkIdJMAGf2PbQPXz62pNoYY1b6KnDoQT2JlJbOC0YVZAnPfw3fzphOWj+zHwbJLecp
-         3Nbg==
+        bh=Uvm2ympaXZGfUsJPluQGSj18lMDG98QiIjgtePSKgW8=;
+        b=uNzN2wUUgVkZGV4OeyLB7jwIXju9bXbm6mYDZqGwcofDTnYMzssZjXtEzaKExz9oVt
+         SiyMNfmYrMyzC9GsbFISajBRbaaTlD3PfB+hsByReUj0inlmM6abvstGEShDTT7YQpCO
+         NltC6cH8inxUT02wFpRt+MCFSXjfJ0Tix5LyhTSNvHTddg/nJuXXXN029WvuQEq/gZlv
+         cU5nt+Jhi4/YEDNFd5pLYPFJxHmo6Nebhm46cfXwRkMw1tJjScEvtceYyL2pTP8vdRXv
+         fx/BDKPApzSjtEcPMyLk0OUGsTG4crokwvwMcvPc9bYKIeI0OMvW3tcTU43WZyLvONuK
+         45iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wiUX8hmDRkOSLriQemMNaU5Pv5stJo7j+X9UPcM9A8Y=;
-        b=Q4uRzOCm1bErAEd0qblwzO3xoGYHlAjU0jayeL9UvNVijn7jDDLoyzSC7lkMm6F0eE
-         y/FLnu652hZ5MIGdr9U+FqNrEJoQ0W60IkzG5yQXCnGK/SF6eo3mrLGFGZt29APU4Y5v
-         M9DGJWOiHdHFQM902vG/5kr1pmczz4omhLchhbU3izNGr1WklSCBB5QIALP0fkl4I2/1
-         iJQBBYnliN/Oyw+vGsVQp5kK8+0EfMcuGxFeblFPgLzlckHM8m61yce3yfmdsGiOfu/Z
-         bdTVQQzh0iup4HP6SAIELEOU2ew8xWTg2TJJDvQvv5r6Wp/YUU1fFkvcP20RPnEklgv7
-         3NcA==
-X-Gm-Message-State: AOAM531Xswh3kX2Au2CN/LG0hkjvzlOeO5bH7DEMrTutNgu3zXdRTPf7
-        dzNxmx0T8mQp3l0SMDm6KJAndppahYM=
-X-Google-Smtp-Source: ABdhPJzKLc04rxCGXcOPS0z00qb7hXidj9VxGgotIP/+kHKwEFKyLBdfR6CVzr4jHX23AkVUD+BrDw==
-X-Received: by 2002:a17:90a:8c08:: with SMTP id a8mr2751575pjo.136.1615266104601;
-        Mon, 08 Mar 2021 21:01:44 -0800 (PST)
+        bh=Uvm2ympaXZGfUsJPluQGSj18lMDG98QiIjgtePSKgW8=;
+        b=AhzVzC+bpy8+a/nGm/d0UpCy9dJR/O7Uhmp8FH5EFu+02F21+tXbjeCDIM5VnxizDu
+         fY+A0wrTRxh1ro7iZ499YQ9nbKtKAnCrJyh/t6kdj0j/QGE59fd4ewb77hM8wMzGXx+y
+         7K/nWG9T6M0QCFFH2a1bk3KqSs5GeTmjH11U8fL40qlu2GuNWrRyCyOs9qIv6/IsV0A3
+         VdTPyABlZ1ArloWeCDa2ua/0pQXKvnARYJe5AztXdV1C2DA6oIWtqNm2qpDoTfeKGbLd
+         x4sAlKMaV/nIUQ9D8QU7VUpO9fZRwqAYErPdEVI7dBNqsHUA/OTu7YYp8TljMG+zVuSU
+         OSZQ==
+X-Gm-Message-State: AOAM531p00okz1CdhvXc7jzztXY8RYduQ5gevLwGeDxjwtp+mtlxVB+E
+        hZHSk3XWt3LIv7zRu1ARbOjM66UZ+4o=
+X-Google-Smtp-Source: ABdhPJw1Im2UUJxxSLZkPMhu7RtuUGsCX8Q+YQ9kNENg47hDGF/iCfvpoMNRG/dpFTYNSFddUGYUBA==
+X-Received: by 2002:a17:902:d202:b029:e4:55cd:dde8 with SMTP id t2-20020a170902d202b02900e455cddde8mr2160481ply.51.1615266106517;
+        Mon, 08 Mar 2021 21:01:46 -0800 (PST)
 Received: from localhost.localdomain ([122.179.125.254])
-        by smtp.gmail.com with ESMTPSA id a21sm5849577pfh.31.2021.03.08.21.01.42
+        by smtp.gmail.com with ESMTPSA id a21sm5849577pfh.31.2021.03.08.21.01.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 21:01:44 -0800 (PST)
+        Mon, 08 Mar 2021 21:01:46 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, djwong@kernel.org
-Subject: [PATCH V6 02/13] common/xfs: Add a helper to get an inode fork's extent count
-Date:   Tue,  9 Mar 2021 10:31:13 +0530
-Message-Id: <20210309050124.23797-3-chandanrlinux@gmail.com>
+Subject: [PATCH V6 03/13] common/xfs: Add helper to obtain fsxattr field value
+Date:   Tue,  9 Mar 2021 10:31:14 +0530
+Message-Id: <20210309050124.23797-4-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210309050124.23797-1-chandanrlinux@gmail.com>
 References: <20210309050124.23797-1-chandanrlinux@gmail.com>
@@ -63,45 +63,34 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit adds the helper _scratch_get_iext_count() which returns an
-inode fork's extent count.
+This commit adds a helper function to obtain the value of a particular field
+of an inode's fsxattr fields.
 
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- common/xfs | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ common/xfs | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/common/xfs b/common/xfs
-index 41dd8676..26ae21b9 100644
+index 26ae21b9..130b3232 100644
 --- a/common/xfs
 +++ b/common/xfs
-@@ -924,6 +924,26 @@ _scratch_get_bmx_prefix() {
- 	return 1
+@@ -194,6 +194,15 @@ _xfs_get_file_block_size()
+ 	$XFS_INFO_PROG "$path" | grep realtime | sed -e 's/^.*extsz=\([0-9]*\).*$/\1/g'
  }
  
-+_scratch_get_iext_count()
++_xfs_get_fsxattr()
 +{
-+	local ino=$1
-+	local whichfork=$2
-+	local field=""
++	local field="$1"
++	local path="$2"
 +
-+	case $whichfork in
-+		"attr")
-+			field=core.naextents
-+			;;
-+		"data")
-+			field=core.nextents
-+			;;
-+		*)
-+			return 1
-+	esac
-+
-+	_scratch_xfs_get_metadata_field $field "inode $ino"
++	local value=$($XFS_IO_PROG -c "stat" "$path" | grep "$field")
++	echo ${value##fsxattr.${field} = }
 +}
 +
- #
- # Ensures that we don't pass any mount options incompatible with XFS v4
- #
+ # xfs_check script is planned to be deprecated. But, we want to
+ # be able to invoke "xfs_check" behavior in xfstests in order to
+ # maintain the current verification levels.
 -- 
 2.29.2
 
