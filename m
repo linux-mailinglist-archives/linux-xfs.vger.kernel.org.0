@@ -2,58 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2579331E27
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 06:02:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C803D331E2C
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Mar 2021 06:03:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbhCIFB7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Mar 2021 00:01:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
+        id S229599AbhCIFC3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Mar 2021 00:02:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbhCIFB5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Mar 2021 00:01:57 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16317C06174A;
-        Mon,  8 Mar 2021 21:01:57 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id fu20so234569pjb.2;
-        Mon, 08 Mar 2021 21:01:57 -0800 (PST)
+        with ESMTP id S229612AbhCIFB7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Mar 2021 00:01:59 -0500
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EC9DC06174A;
+        Mon,  8 Mar 2021 21:01:59 -0800 (PST)
+Received: by mail-pg1-x533.google.com with SMTP id o38so7946315pgm.9;
+        Mon, 08 Mar 2021 21:01:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uxvyne9W6+6fgT0VNxza+ydo9Q6Co5gs3i28V+THoQM=;
-        b=BcYZVnPZrM1Jww4so8OjegDZy9xsy6CzNSmziNRTQr1Ko0I06V7CVW6UZKoPjHRd9V
-         cxkxEZb8R50wkXSmz/by2KDzNKHNMu1bpiKsxWKigys0vwDOSvqZ5ZS5Wa1HsPYV7POJ
-         /1fCcG/w++QiO3NOg1yCylT17uXHsvtFawu5xauLRYuQbqDUd5RZa/QmPuDvVdi97do0
-         i7BWMWbJV6eZc5VFH/KBqmWScBcxf3fNwDM7uJ5l8TkOPCoq4ijHZHapLgHPm50UiGye
-         HWNwi83lKfHFC750Mpuy2HdADc+nl7QCqFzI0MXmjEEhal4rJe6x5sD4OSHicfa3sGSe
-         kWoQ==
+        bh=UoIgnUhVWthCqsPnEF2k+5Wvvq+hQl8O9VoT2BqJBss=;
+        b=RCDwapbH285aJvvPUS6c3Fv2Jehs9yjtOpcQVnk2lEartpQoOml6JwDgIWsWt6nMam
+         Hl0MX4SESsMyL4ukkEhdHCFj1fixoVdB2CdsVwEb44fU2o3EtgVJ2fLdI17Cz9l/6cIE
+         NDgy3ComOBEFdSjLJ52dgmqFfa8J/ppzbgpjlTSxZnURUrp2Sb6twlaupzuMB8m3+INa
+         a7IAI2l9ylyuR3IRr+TNkdqFwYVp7xe3HwnHaraXyS52QXlzE/GL3v0UAhDD7w63dXf9
+         iarbJ8ueIRafKKM40/Rw542IKniWAwaRbPFkRwl/oj9pnGm9KGdeYrpNAxuOnI7JrPvf
+         v1zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uxvyne9W6+6fgT0VNxza+ydo9Q6Co5gs3i28V+THoQM=;
-        b=YlffWbrM5oSFARkxb4e/EbL2ZSX6CRHAxpetbYrBBfp0jp1kzciaq0OPyVW4gl+eI1
-         k6YWxLzyQzrWbQXq/4BmQ+wOiKXY1bqFciCdbNkiyyfNhsOPYw/wcIl99Rw7uvCq2cgf
-         k6N9eNHBVqTdcj0ORImaFbDLx5ukc7kGUpSfe+6vgXVBwgXVYEELAiB1sdQK0Rv9g39G
-         8JGfSvbjh3ZEy2NIckB432V3sOsgBfsO8zf2+RPU3Q7bQ4tvJ6H/pgfz97Srz6kiQArq
-         cOps22mJ1S8ieQ9m9H+lJ69R4mIMENk2GSJhVMETQqPpXv7fU2t7RjRSJeyey1JQqxPY
-         oGzQ==
-X-Gm-Message-State: AOAM533M584rPUjM9szIsTHnuwUeHBzoGaJKRMQXeHBgOXoxWtHgp382
-        u4TsXm9dC3yd9vI2344CgyDDxpccuB8=
-X-Google-Smtp-Source: ABdhPJyfU//KsdYHO3lZdooi4iO25LfGY5qBN9NwSQFFtpkTYb9t3wt+osez0aVW1ODd3VKu6RHQlg==
-X-Received: by 2002:a17:90b:33c7:: with SMTP id lk7mr2708202pjb.95.1615266116487;
-        Mon, 08 Mar 2021 21:01:56 -0800 (PST)
+        bh=UoIgnUhVWthCqsPnEF2k+5Wvvq+hQl8O9VoT2BqJBss=;
+        b=np4dzECx/NGpTcaKAEjbstx4yE5JyBFYlczLiGYb+TMCoBTt+fYwfJlnWkLFB+HCD/
+         dC29hIOpBfRoqrhIqVfrrCMHIB2hxVto529/yoDmxce2e+ZtbbuslBwGOVxa5jvbp3FU
+         c4bducbYJ7Q6G/+vCv3KNhuJ0dThE2zDZLId/A2LoTLa1/LZFsWoBzkptBDNAqK2WsBg
+         e8jG/rfdDp2M1gSvc9zY1upH5utqU0oan24S9VYeubqxuDNhgEX9pgGF/+VMJO0sWMyh
+         SxeR1Cjh5wAggz/MyXbrwcq5jv6Yyj3igx5Sj9bqWzbWXBHWSI12k+JZO0k44OFoyRU5
+         bmXA==
+X-Gm-Message-State: AOAM533xeCdY13wq1dmjV5D7s+J42pVThgDhqUtNpDWElEf5NK2y1rQm
+        00l3zm90jE1KK71yNsbyzOs15qd75OQ=
+X-Google-Smtp-Source: ABdhPJwwMnWk9sbLUr+y86827Cg/9yTss8pdZj8pUlwcTNRP1gv8Ky+aG3rdhGSrdT/kotu4HvGo4g==
+X-Received: by 2002:a63:6f8a:: with SMTP id k132mr24406710pgc.59.1615266118622;
+        Mon, 08 Mar 2021 21:01:58 -0800 (PST)
 Received: from localhost.localdomain ([122.179.125.254])
-        by smtp.gmail.com with ESMTPSA id a21sm5849577pfh.31.2021.03.08.21.01.54
+        by smtp.gmail.com with ESMTPSA id a21sm5849577pfh.31.2021.03.08.21.01.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Mar 2021 21:01:56 -0800 (PST)
+        Mon, 08 Mar 2021 21:01:58 -0800 (PST)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     fstests@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
         linux-xfs@vger.kernel.org, djwong@kernel.org
-Subject: [PATCH V6 08/13] xfs: Check for extent overflow when adding/removing dir entries
-Date:   Tue,  9 Mar 2021 10:31:19 +0530
-Message-Id: <20210309050124.23797-9-chandanrlinux@gmail.com>
+Subject: [PATCH V6 09/13] xfs: Check for extent overflow when writing to unwritten extent
+Date:   Tue,  9 Mar 2021 10:31:20 +0530
+Message-Id: <20210309050124.23797-10-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210309050124.23797-1-chandanrlinux@gmail.com>
 References: <20210309050124.23797-1-chandanrlinux@gmail.com>
@@ -64,32 +64,32 @@ List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 This test verifies that XFS does not cause inode fork's extent count to
-overflow when adding/removing directory entries.
+overflow when writing to an unwritten extent.
 
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- tests/xfs/532     | 182 ++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/532.out |  17 +++++
- tests/xfs/group   |   1 +
- 3 files changed, 200 insertions(+)
- create mode 100755 tests/xfs/532
- create mode 100644 tests/xfs/532.out
+ tests/xfs/533     | 84 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/533.out | 11 +++++++
+ tests/xfs/group   |  1 +
+ 3 files changed, 96 insertions(+)
+ create mode 100755 tests/xfs/533
+ create mode 100644 tests/xfs/533.out
 
-diff --git a/tests/xfs/532 b/tests/xfs/532
+diff --git a/tests/xfs/533 b/tests/xfs/533
 new file mode 100755
-index 00000000..b241ddeb
+index 00000000..bb6f075e
 --- /dev/null
-+++ b/tests/xfs/532
-@@ -0,0 +1,182 @@
++++ b/tests/xfs/533
+@@ -0,0 +1,84 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0
 +# Copyright (c) 2021 Chandan Babu R.  All Rights Reserved.
 +#
-+# FS QA Test 532
++# FS QA Test 533
 +#
 +# Verify that XFS does not cause inode fork's extent count to overflow when
-+# adding/removing directory entries.
++# writing to an unwritten extent.
 +seq=`basename $0`
 +seqres=$RESULT_DIR/$seq
 +echo "QA output created by $seq"
@@ -109,7 +109,6 @@ index 00000000..b241ddeb
 +. ./common/rc
 +. ./common/filter
 +. ./common/inject
-+. ./common/populate
 +
 +# remove previous $seqres.full before test
 +rm -f $seqres.full
@@ -119,183 +118,80 @@ index 00000000..b241ddeb
 +_supported_fs xfs
 +_require_scratch
 +_require_xfs_debug
-+_require_test_program "punch-alternating"
++_require_xfs_io_command "falloc"
 +_require_xfs_io_error_injection "reduce_max_iextents"
-+_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-+
-+_scratch_mkfs_sized $((1024 * 1024 * 1024)) | _filter_mkfs >> $seqres.full 2> $tmp.mkfs
-+. $tmp.mkfs
-+
-+# Filesystems with directory block size greater than one FSB will not be tested,
-+# since "7 (i.e. XFS_DA_NODE_MAXDEPTH + 1 data block + 1 free block) * 2 (fsb
-+# count) = 14" is greater than the pseudo max extent count limit of 10.
-+# Extending the pseudo max limit won't help either.  Consider the case where 1
-+# FSB is 1k in size and 1 dir block is 64k in size (i.e. fsb count = 64). In
-+# this case, the pseudo max limit has to be greater than 7 * 64 = 448 extents.
-+if (( $dirbsize > $dbsize )); then
-+	_notrun "Directory block size ($dirbsize) is larger than FSB size ($dbsize)"
-+fi
 +
 +echo "Format and mount fs"
 +_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
 +_scratch_mount >> $seqres.full
 +
-+echo "Consume free space"
-+fillerdir=$SCRATCH_MNT/fillerdir
-+nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-+nr_free_blks=$((nr_free_blks * 90 / 100))
++bsize=$(_get_file_block_size $SCRATCH_MNT)
 +
-+_fill_fs $((dbsize * nr_free_blks)) $fillerdir $dbsize 0 >> $seqres.full 2>&1
-+
-+echo "Create fragmented filesystem"
-+for dentry in $(ls -1 $fillerdir/); do
-+	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
-+done
++testfile=${SCRATCH_MNT}/testfile
 +
 +echo "Inject reduce_max_iextents error tag"
 +_scratch_inject_error reduce_max_iextents 1
 +
-+echo "Inject bmap_alloc_minlen_extent error tag"
-+_scratch_inject_error bmap_alloc_minlen_extent 1
++nr_blks=15
 +
-+dent_len=255
++for io in Buffered Direct; do
++	echo "* $io write to unwritten extent"
 +
-+echo "* Create directory entries"
++	echo "Fallocate $nr_blks blocks"
++	$XFS_IO_PROG -f -c "falloc 0 $((nr_blks * bsize))" $testfile >> $seqres.full
 +
-+testdir=$SCRATCH_MNT/testdir
-+mkdir $testdir
++	if [[ $io == "Buffered" ]]; then
++		xfs_io_flag=""
++	else
++		xfs_io_flag="-d"
++	fi
 +
-+nr_dents=$((dbsize * 20 / dent_len))
-+for i in $(seq 1 $nr_dents); do
-+	dentry="$(printf "%0255d" $i)"
-+	touch ${testdir}/$dentry >> $seqres.full 2>&1 || break
++	echo "$io write to every other block of fallocated space"
++	for i in $(seq 1 2 $((nr_blks - 1))); do
++		$XFS_IO_PROG -f -s $xfs_io_flag -c "pwrite $((i * bsize)) $bsize" \
++		       $testfile >> $seqres.full 2>&1
++		[[ $? != 0 ]] && break
++	done
++
++	echo "Verify \$testfile's extent count"
++	nextents=$(_xfs_get_fsxattr nextents $testfile)
++	if (( $nextents > 10 )); then
++		echo "Extent count overflow check failed: nextents = $nextents"
++		exit 1
++	fi
++
++	rm $testfile
 +done
-+
-+echo "Verify directory's extent count"
-+nextents=$(_xfs_get_fsxattr nextents $testdir)
-+if (( $nextents > 10 )); then
-+	echo "Extent count overflow check failed: nextents = $nextents"
-+	exit 1
-+fi
-+
-+rm -rf $testdir
-+
-+echo "* Rename: Populate destination directory"
-+
-+dstdir=$SCRATCH_MNT/dstdir
-+mkdir $dstdir
-+
-+nr_dents=$((dirbsize * 20 / dent_len))
-+
-+echo "Populate \$dstdir by moving new directory entries"
-+for i in $(seq 1 $nr_dents); do
-+	dentry="$(printf "%0255d" $i)"
-+	dentry=${SCRATCH_MNT}/${dentry}
-+	touch $dentry || break
-+	mv $dentry $dstdir >> $seqres.full 2>&1 || break
-+done
-+
-+rm $dentry
-+
-+echo "Verify \$dstdir's extent count"
-+
-+nextents=$(_xfs_get_fsxattr nextents $dstdir)
-+if (( $nextents > 10 )); then
-+	echo "Extent count overflow check failed: nextents = $nextents"
-+	exit 1
-+fi
-+
-+rm -rf $dstdir
-+
-+echo "* Create multiple hard links to a single file"
-+
-+testdir=$SCRATCH_MNT/testdir
-+mkdir $testdir
-+
-+testfile=$SCRATCH_MNT/testfile
-+touch $testfile
-+
-+nr_dents=$((dirbsize * 20 / dent_len))
-+
-+echo "Create multiple hardlinks"
-+for i in $(seq 1 $nr_dents); do
-+	dentry="$(printf "%0255d" $i)"
-+	ln $testfile ${testdir}/${dentry} >> $seqres.full 2>&1 || break
-+done
-+
-+rm $testfile
-+
-+echo "Verify directory's extent count"
-+nextents=$(_xfs_get_fsxattr nextents $testdir)
-+if (( $nextents > 10 )); then
-+	echo "Extent count overflow check failed: nextents = $nextents"
-+	exit 1
-+fi
-+
-+rm -rf $testdir
-+
-+echo "* Create multiple symbolic links to a single file"
-+
-+testdir=$SCRATCH_MNT/testdir
-+mkdir $testdir
-+
-+testfile=$SCRATCH_MNT/testfile
-+touch $testfile
-+
-+nr_dents=$((dirbsize * 20 / dent_len))
-+
-+echo "Create multiple symbolic links"
-+for i in $(seq 1 $nr_dents); do
-+	dentry="$(printf "%0255d" $i)"
-+	ln -s $testfile ${testdir}/${dentry} >> $seqres.full 2>&1 || break;
-+done
-+
-+rm $testfile
-+
-+echo "Verify directory's extent count"
-+nextents=$(_xfs_get_fsxattr nextents $testdir)
-+if (( $nextents > 10 )); then
-+	echo "Extent count overflow check failed: nextents = $nextents"
-+	exit 1
-+fi
-+
-+rm -rf $testdir
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/532.out b/tests/xfs/532.out
+diff --git a/tests/xfs/533.out b/tests/xfs/533.out
 new file mode 100644
-index 00000000..2766c211
+index 00000000..5b93964a
 --- /dev/null
-+++ b/tests/xfs/532.out
-@@ -0,0 +1,17 @@
-+QA output created by 532
++++ b/tests/xfs/533.out
+@@ -0,0 +1,11 @@
++QA output created by 533
 +Format and mount fs
-+Consume free space
-+Create fragmented filesystem
 +Inject reduce_max_iextents error tag
-+Inject bmap_alloc_minlen_extent error tag
-+* Create directory entries
-+Verify directory's extent count
-+* Rename: Populate destination directory
-+Populate $dstdir by moving new directory entries
-+Verify $dstdir's extent count
-+* Create multiple hard links to a single file
-+Create multiple hardlinks
-+Verify directory's extent count
-+* Create multiple symbolic links to a single file
-+Create multiple symbolic links
-+Verify directory's extent count
++* Buffered write to unwritten extent
++Fallocate 15 blocks
++Buffered write to every other block of fallocated space
++Verify $testfile's extent count
++* Direct write to unwritten extent
++Fallocate 15 blocks
++Direct write to every other block of fallocated space
++Verify $testfile's extent count
 diff --git a/tests/xfs/group b/tests/xfs/group
-index 7e284841..77abeefa 100644
+index 77abeefa..3ad47d07 100644
 --- a/tests/xfs/group
 +++ b/tests/xfs/group
-@@ -529,3 +529,4 @@
- 529 auto quick realtime growfs
+@@ -530,3 +530,4 @@
  530 auto quick punch zero insert collapse
  531 auto quick attr
-+532 auto quick dir hardlink symlink
+ 532 auto quick dir hardlink symlink
++533 auto quick
 -- 
 2.29.2
 
