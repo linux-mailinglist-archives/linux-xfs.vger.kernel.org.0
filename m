@@ -2,345 +2,160 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 575E5334860
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Mar 2021 20:56:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAE1C33491E
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Mar 2021 21:50:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231432AbhCJT4A (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Mar 2021 14:56:00 -0500
-Received: from aserp2130.oracle.com ([141.146.126.79]:40018 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231822AbhCJTzc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Mar 2021 14:55:32 -0500
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12AJnkkU112247;
-        Wed, 10 Mar 2021 19:55:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=iecajRfa7U+XwZgc1ttF3Z3N9DCTxluzppd3IjBWCjk=;
- b=OpZZ8oAe7i5DXRZI6lNX++4HhQKiQlLNsnX6zXsA+t8JqAzv2QWOjiJmdFe5RnrppoBe
- LJraJMyjUbqPmMabtOrF05nSVB/XfwgXNa4JVNqpjMkMJ0cXTNrJSZlADMF5W39B+/kc
- vN2JrvgEKy5NQwOAbdlZvBJZdQhAR3CKx7XquNoLvx+1IKKTkMltEUg5xLlaURuzmz59
- vc7L9b+wr11Apqq2RbxrA5B6Ei3RU5+PHfj+qES+luPMePhkQkeNjCDVeanyxd+hFi4l
- WV+NeViSfXNXQhk5qbYB0mu9dX5Gom5aGO8sBz+z4sk88PEkC+NWbR76HoDjrB4d3CCj XQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 373y8bven4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Mar 2021 19:55:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12AJpTQo109284;
-        Wed, 10 Mar 2021 19:55:30 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
-        by userp3030.oracle.com with ESMTP id 374knyvgha-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Mar 2021 19:55:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mIEHvIRaPp4Ue39D0XdyFOnphWS3B9yXvEwQO3h4wI3nSI/jTEToE5dY6ee7fwmcWxC1kcTMDtWbEgDtsqlzKXwUUl5i9LMmt0uJzKscRt4pzaYJqnanntGXG9G1NX0z7dWzjdNQocEZlBXKP1nJG/9g72hbkWGFpWeZYRGxYgDqBWT91SThL/hByndZj/pGqjmZuuZlqpyOHR5bR+ZMYc5PJkTK2EQtB5sUGmKJX2smrYUZVqtyVls+bjd98CXWjTMT/e123jmJL1EDiupL4BI21DGf37uJP8276AVjJsE52cSYC1SLXVWPSP2NyB6tKbtYPid52asAToMoDLdGZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iecajRfa7U+XwZgc1ttF3Z3N9DCTxluzppd3IjBWCjk=;
- b=FnK27/90E12TpspIVek7+QkgT3pIgX6ZpK1UdW66mKeAxYk8nHpk4Vv4YhI0d7jTJxEc6yZWlK6veyT9wvjSuubIXJrQH/wtn+1u+D/xm5OqFAJVMZJ6gYj9vuUPwfpW/CoVDdXjIbGYlL1Aeshlz90ogBG2iofk+5z1yYpLiInMPs2l8JCT0R+sH1WAGC+pK01+Qr/ieDRSXKNO7JGOmsDj8IeP6nefmmbBa0eEdJsNzylARFRT/RwJ4W3Os0JHhlunfTk60GKu7B7njq1gR1tghEC+RfKXRF5gvuBkG9NXwYvjtQh6nYhbVqpT+ttuWNDRMxvv/uOveMciPUc6zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iecajRfa7U+XwZgc1ttF3Z3N9DCTxluzppd3IjBWCjk=;
- b=T9R+cQ0WTaQh2+2i5A6bU2sMBbGPxhwMMKOhdTdiY1YYOhXxUahINeLgSHS8j+IvBJIptK32cVkyMEQ1UntAp37N5NUl7YAdlMXiKVMY2VIymprNU5AJzVRTLxt4hER4ZEk5w/ZDAVAOCqO4OxisIdqbNylgnDavKURb7jtMnkk=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
- by BYAPR10MB3509.namprd10.prod.outlook.com (2603:10b6:a03:11f::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.29; Wed, 10 Mar
- 2021 19:55:28 +0000
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::f4a1:6643:4c93:2a9f]) by BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::f4a1:6643:4c93:2a9f%3]) with mapi id 15.20.3912.029; Wed, 10 Mar 2021
- 19:55:28 +0000
-Subject: Re: [PATCH V6 07/13] xfs: Check for extent overflow when
- adding/removing xattrs
-To:     Chandan Babu R <chandanrlinux@gmail.com>, fstests@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org
-References: <20210309050124.23797-1-chandanrlinux@gmail.com>
- <20210309050124.23797-8-chandanrlinux@gmail.com>
-From:   Allison Henderson <allison.henderson@oracle.com>
-Message-ID: <acbfcf6a-e9f8-cbc9-896b-803a026cfc84@oracle.com>
-Date:   Wed, 10 Mar 2021 12:55:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
-In-Reply-To: <20210309050124.23797-8-chandanrlinux@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [67.1.223.248]
-X-ClientProxiedBy: SJ0PR03CA0306.namprd03.prod.outlook.com
- (2603:10b6:a03:39d::11) To BY5PR10MB4306.namprd10.prod.outlook.com
- (2603:10b6:a03:211::7)
+        id S231543AbhCJUt5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Mar 2021 15:49:57 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:28410 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230491AbhCJUtf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Mar 2021 15:49:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1615409375;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=3TbQcWSWtA7INhEAxORmyq3SIe8zcaGg4KwBKK1E+LA=;
+        b=N6h+vHaskqk24/2YBiRe4hRNyZrMkFMgNqEEY50nn0JI+DEf4mQchaOtmKv9s3XkRVDJ2f
+        gzRjHUHnlV2x+w9Ov8aqjeUGsXRtm7t5Oe6eDaT5pXVddvb0y4aVA8NK6/mJub0TrYB/gL
+        WgQj5jrfg/+gW7FnMXJGmWDACvKWEZU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-205-y9uOyICQNDK4Nn968jYjFw-1; Wed, 10 Mar 2021 15:49:31 -0500
+X-MC-Unique: y9uOyICQNDK4Nn968jYjFw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33CDD80432D;
+        Wed, 10 Mar 2021 20:49:30 +0000 (UTC)
+Received: from bfoster (ovpn-112-124.rdu2.redhat.com [10.10.112.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CB1F818A9E;
+        Wed, 10 Mar 2021 20:49:29 +0000 (UTC)
+Date:   Wed, 10 Mar 2021 15:49:28 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 08/45] xfs: journal IO cache flush reductions
+Message-ID: <YEkw2CDpeC58iIey@bfoster>
+References: <20210305051143.182133-1-david@fromorbit.com>
+ <20210305051143.182133-9-david@fromorbit.com>
+ <YEYXtqb7L1zyAHyC@bfoster>
+ <20210309011352.GD74031@dread.disaster.area>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.226] (67.1.223.248) by SJ0PR03CA0306.namprd03.prod.outlook.com (2603:10b6:a03:39d::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3912.17 via Frontend Transport; Wed, 10 Mar 2021 19:55:27 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6b32fdbe-c7d8-4036-ab69-08d8e3fe73d8
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3509:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB350911127A9EDF844E86999895919@BYAPR10MB3509.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tpR8TNtkb/WNovuLmn9M1kTNjYiKbeYXnzSgf6G4gx6OzxFE8V45r8PWmiouDNRKWHxGFiDidb+bl0HYpPxbO5nYiab5c9JcEQiU2xh6I2KHHBddmhvjc4pCBv5vymSy1ASOJ9w9cDtryuP34+VD2xhASQdXShbdRcFysN79aKWqCdlIarTfFcYNBEDZAavm+q0+wXvnzLMTNPhYwO514ALAHl4FIGLnNNHjR26b2jqkNCkrwiW+sQa3Vhlwmf4QLs52q13AysyiWlAbQ4b+iT6gZjqTIetxp1Z712EMYj6qFInJZurDyvPKV3gxVDFFjqEDfiGsZ9r6HANXzerrq3UW0z857Ck8DI4aRb78sl+l23bMiW7RgnyA7OnsBxZkWJpV/HASrsqztwI7IJkZt48D7/LdurWDCYIX/EIJ/eRLvkKlKXqJLXzYDjCvNDgjwwIX+TTo9i1An1gFUW+zqoQQwEGIc3lAhBF+wq8kbkB6gVcblBGuHZwhbE2BM1GnLlMZGzTVhqpUQ25GGBSg0+qtkIAIwtqCvXD3KcCHMuH+SV/o3lz7xmdzXVasZgMPnTVfTzXLzDq+MM+MCh/cU595BQDORTcmZ0t54mK9X6o=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39860400002)(346002)(366004)(376002)(396003)(31686004)(4326008)(16576012)(316002)(44832011)(186003)(86362001)(31696002)(2906002)(36756003)(5660300002)(2616005)(956004)(26005)(478600001)(53546011)(83380400001)(66476007)(66946007)(66556008)(16526019)(52116002)(8676002)(6486002)(8936002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?NUhnaVZqSnlQMUs3RXJ1QVdpcS9QZml4eExHbEJRdVZQN3ZqYzJCNFkvbEtP?=
- =?utf-8?B?ZjEvZzZNK0E4TURUcVNPVnJ1VUtKVCtMQUFGdGp1cVdGcTVHeGphOUhmTHZY?=
- =?utf-8?B?ZjV3Tm5ZMk91RzZJZVFIbDNnMTU1NXl6NUFBQjhFT3Q4OENTMHo4UVZkTm5L?=
- =?utf-8?B?NWYwUy9aT0UwblZsS0hiUmFXMkJBWGgrQWVDSWk2Unl4ejdaT256ZVhwRklC?=
- =?utf-8?B?VGVVNUZBc0VEdW9pc1RGVFlBUk5hZllEbkUzaHJpazhmdFRPWnkxSHNkTmZK?=
- =?utf-8?B?SkNtWlVHSmt1akU0a2dsRy9pVlU3SkhiYVV5QlNJRnVFTHlkUWs4cU9DZzBO?=
- =?utf-8?B?QnhuTkxJcU02OUt0TXU0TjNUQXUveVlCai9sRHVTbjZzZ0E3Zk5IYnV4bDFL?=
- =?utf-8?B?a0lzeGltQ2lvNHM0MVVndGFqMXVmTDhSbnBtSmpWSTQrVXY2ZzlFa01ESWVP?=
- =?utf-8?B?LzBlUkFBd05BaVBZdDhCaGh2SnY3Y0RxUFhuNzM5YlR5UC9mQXlPWTc1d2pa?=
- =?utf-8?B?S0R5OFkwUytrVWQ3QzFIM2JvVDFQK052UVJYWXgxZ1RwWWdqMjZYRUdGb1BB?=
- =?utf-8?B?TW1selFBQXhMeXAzaFNoQmU1dXhRczIwczhSUFRRSHhyc01WZE4vTStRU1Zv?=
- =?utf-8?B?WFIyWm1hL2h5ZXdteVVNVmg3MjRoakgwMyt3Vk8xbDNqUHl3T29TWUkzaity?=
- =?utf-8?B?QlpKSFZ1azFaTmI3UGVBOXJDWWtPZ2hVVmZoS3pkbGQ2cVh2VWJWcGNqL2Zk?=
- =?utf-8?B?TXlJV3Qzc3VZdDBhdXp6ZDdUUmNYMjZEVzA2R0NLci8wRWM0bE9SUzBhb1RH?=
- =?utf-8?B?QWZ5QXF2bVFTVDc0Z3BjOVVoSnhKNit2Q1hLcjhCWklpdmFRK3M3cElYNHZu?=
- =?utf-8?B?NFE3UURYa25RRVRvQzFYcURrcGVibWZkcHNiSkU1c2JEbkNxN3BORGk5QzhZ?=
- =?utf-8?B?aHNEODhTRURqYmxEOGQvSVdUSG5mUGVmQ1NyMVBLMkV0N3B1a1JBYjVBeFVT?=
- =?utf-8?B?ZWk0N2l5cHAyalJLbjdUQkFVSnNOSzZydDV2Z0F1YWljK1ZRa1VkaU5DZk1t?=
- =?utf-8?B?V2g2UmpIRjdMSWcwR0orR1g5dWhvaWVzb0ZoTHRjM1VwSmswNHlIbWxyRHN0?=
- =?utf-8?B?d20weDFacHFLeXYyNzFIUjRHSThtM3Fzak9JZlFsMnF2eU1jbjhPajcrQ1px?=
- =?utf-8?B?T0FqdVZUQ0EwN21CNmI0WlcxaXBYdkJMamFqSmRIbWVncEYxTkYwSnJha3B1?=
- =?utf-8?B?MmJma25rRXlUZWVieFlEVWh5bUhzSi9WUWR4QnNsRWpKUHQ4bm5BcGFwM1FR?=
- =?utf-8?B?c2p5ZWZSTjRMRnVGOFVhcU5Fa0kzYlY5aURWL0M4cW5MRlBzM3JZeSsvOVlz?=
- =?utf-8?B?ayt5Mzk0NkQ4Rk1oTDRrT0s0eWsrVFlGeExVV0laRm5Sd0R1RlYvY2lQejBG?=
- =?utf-8?B?cmFJd2tDdHB0ZWoxUHZ6K1F1bGp6NWFReGxGZVQ3NXJYWkZ3VFNYOEh0VS9Q?=
- =?utf-8?B?TG5uU2cvNitlWHdHZSt0U0hVdXFOWjMzSWtodzlUd1BadjRxYmZZbTFCKy8y?=
- =?utf-8?B?aGNCQlBrTTFxczZDRHBxUDZIVXo1eFJObUlodTBFSVU0V2huK2lMeUhCWkpJ?=
- =?utf-8?B?OThrUHl5b0dPMnU1Uk1oRlFQbFZRVXh5UGF5eGlwVElIdXVqRTR6OXRRaWhZ?=
- =?utf-8?B?bTl0bCtHVVhrdVhQU1BGcWtoN2U2SnRjRkpLQmJLcGlKRDVxS0FYbCtZcUNm?=
- =?utf-8?Q?7XOxqfRS8C0Sh36wLaJTRTObHK/TKOPuGptoHT0?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b32fdbe-c7d8-4036-ab69-08d8e3fe73d8
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2021 19:55:28.1894
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oEdZowCL/UtP150YeoRGJpZinul1rr+KSVf38/duBgVsa6MAZs1G2qR0wVp1eK2HAU0eey3qqR4QvAZnv88yo+m8/nNK6BD+EJ6CIeZhB9M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3509
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9919 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103100094
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9919 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 mlxscore=0 phishscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 priorityscore=1501 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2103100094
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210309011352.GD74031@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Tue, Mar 09, 2021 at 12:13:52PM +1100, Dave Chinner wrote:
+> On Mon, Mar 08, 2021 at 07:25:26AM -0500, Brian Foster wrote:
+> > On Fri, Mar 05, 2021 at 04:11:06PM +1100, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > > 
+> > > Currently every journal IO is issued as REQ_PREFLUSH | REQ_FUA to
+> > > guarantee the ordering requirements the journal has w.r.t. metadata
+> > > writeback. THe two ordering constraints are:
+> ....
+> > > The rm -rf times are included because I ran them, but the
+> > > differences are largely noise. This workload is largely metadata
+> > > read IO latency bound and the changes to the journal cache flushing
+> > > doesn't really make any noticable difference to behaviour apart from
+> > > a reduction in noiclog events from background CIL pushing.
+> > > 
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > ---
+> > 
+> > Thoughts on my previous feedback to this patch, particularly the locking
+> > bits..? I thought I saw a subsequent patch somewhere that increased the
+> > parallelism of this code..
+> 
+> I seem to have missed that email, too.
+> 
 
+Seems this occurs more frequently than it should. :/ Mailer problems?
 
-On 3/8/21 10:01 PM, Chandan Babu R wrote:
-> This test verifies that XFS does not cause inode fork's extent count to
-> overflow when adding/removing xattrs.
+> I guess you are refering to these two hunks:
 > 
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
-Looks ok
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-> ---
->   tests/xfs/531     | 139 ++++++++++++++++++++++++++++++++++++++++++++++
->   tests/xfs/531.out |  18 ++++++
->   tests/xfs/group   |   1 +
->   3 files changed, 158 insertions(+)
->   create mode 100755 tests/xfs/531
->   create mode 100644 tests/xfs/531.out
+
+Yes.
+
+> > > @@ -2416,10 +2408,21 @@ xlog_write(
+> > >  		ASSERT(log_offset <= iclog->ic_size - 1);
+> > >  		ptr = iclog->ic_datap + log_offset;
+> > >  
+> > > -		/* start_lsn is the first lsn written to. That's all we need. */
+> > > +		/* Start_lsn is the first lsn written to. */
+> > >  		if (start_lsn && !*start_lsn)
+> > >  			*start_lsn = be64_to_cpu(iclog->ic_header.h_lsn);
+> > >  
+> > > +		/*
+> > > +		 * iclogs containing commit records or unmount records need
+> > > +		 * to issue ordering cache flushes and commit immediately
+> > > +		 * to stable storage to guarantee journal vs metadata ordering
+> > > +		 * is correctly maintained in the storage media.
+> > > +		 */
+> > > +		if (optype & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS)) {
+> > > +			iclog->ic_flags |= (XLOG_ICL_NEED_FLUSH |
+> > > +						XLOG_ICL_NEED_FUA);
+> > > +		}
+> > > +
+> > >  		/*
+> > >  		 * This loop writes out as many regions as can fit in the amount
+> > >  		 * of space which was allocated by xlog_state_get_iclog_space().
+> > > diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> > > index c04d5d37a3a2..263c8d907221 100644
+> > > --- a/fs/xfs/xfs_log_cil.c
+> > > +++ b/fs/xfs/xfs_log_cil.c
+> > > @@ -896,11 +896,16 @@ xlog_cil_push_work(
+> > >  
+> > >  	/*
+> > >  	 * If the checkpoint spans multiple iclogs, wait for all previous
+> > > -	 * iclogs to complete before we submit the commit_iclog.
+> > > +	 * iclogs to complete before we submit the commit_iclog. If it is in the
+> > > +	 * same iclog as the start of the checkpoint, then we can skip the iclog
+> > > +	 * cache flush because there are no other iclogs we need to order
+> > > +	 * against.
+> > >  	 */
+> > >  	if (ctx->start_lsn != commit_lsn) {
+> > >  		spin_lock(&log->l_icloglock);
+> > >  		xlog_wait_on_iclog(commit_iclog->ic_prev);
+> > > +	} else {
+> > > +		commit_iclog->ic_flags &= ~XLOG_ICL_NEED_FLUSH;
+> > >  	}
 > 
-> diff --git a/tests/xfs/531 b/tests/xfs/531
-> new file mode 100755
-> index 00000000..432c02cb
-> --- /dev/null
-> +++ b/tests/xfs/531
-> @@ -0,0 +1,139 @@
-> +#! /bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2021 Chandan Babu R.  All Rights Reserved.
-> +#
-> +# FS QA Test 531
-> +#
-> +# Verify that XFS does not cause inode fork's extent count to overflow when
-> +# adding/removing xattrs.
-> +seq=`basename $0`
-> +seqres=$RESULT_DIR/$seq
-> +echo "QA output created by $seq"
-> +
-> +here=`pwd`
-> +tmp=/tmp/$$
-> +status=1	# failure is the default!
-> +trap "_cleanup; exit \$status" 0 1 2 3 15
-> +
-> +_cleanup()
-> +{
-> +	cd /
-> +	rm -f $tmp.*
-> +}
-> +
-> +# get standard environment, filters and checks
-> +. ./common/rc
-> +. ./common/filter
-> +. ./common/attr
-> +. ./common/inject
-> +. ./common/populate
-> +
-> +# remove previous $seqres.full before test
-> +rm -f $seqres.full
-> +
-> +# real QA test starts here
-> +
-> +_supported_fs xfs
-> +_require_scratch
-> +_require_attrs
-> +_require_xfs_debug
-> +_require_test_program "punch-alternating"
-> +_require_xfs_io_error_injection "reduce_max_iextents"
-> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-> +
-> +echo "Format and mount fs"
-> +_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
-> +_scratch_mount >> $seqres.full
-> +
-> +bsize=$(_get_block_size $SCRATCH_MNT)
-> +
-> +attr_len=255
-> +
-> +testfile=$SCRATCH_MNT/testfile
-> +
-> +echo "Consume free space"
-> +fillerdir=$SCRATCH_MNT/fillerdir
-> +nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-> +nr_free_blks=$((nr_free_blks * 90 / 100))
-> +
-> +_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 >> $seqres.full 2>&1
-> +
-> +echo "Create fragmented filesystem"
-> +for dentry in $(ls -1 $fillerdir/); do
-> +	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
-> +done
-> +
-> +echo "Inject reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 1
-> +
-> +echo "Inject bmap_alloc_minlen_extent error tag"
-> +_scratch_inject_error bmap_alloc_minlen_extent 1
-> +
-> +echo "* Set xattrs"
-> +
-> +echo "Create \$testfile"
-> +touch $testfile
-> +
-> +echo "Create xattrs"
-> +nr_attrs=$((bsize * 20 / attr_len))
-> +for i in $(seq 1 $nr_attrs); do
-> +	attr="$(printf "trusted.%0247d" $i)"
-> +	$SETFATTR_PROG -n "$attr" $testfile >> $seqres.full 2>&1
-> +	[[ $? != 0 ]] && break
-> +done
-> +
-> +echo "Verify \$testfile's naextent count"
-> +
-> +naextents=$(_xfs_get_fsxattr naextents $testfile)
-> +if (( $naextents > 10 )); then
-> +	echo "Extent count overflow check failed: naextents = $naextents"
-> +	exit 1
-> +fi
-> +
-> +echo "Remove \$testfile"
-> +rm $testfile
-> +
-> +echo "* Remove xattrs"
-> +
-> +echo "Create \$testfile"
-> +touch $testfile
-> +
-> +echo "Disable reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 0
-> +
-> +echo "Create initial xattr extents"
-> +
-> +naextents=0
-> +last=""
-> +start=1
-> +nr_attrs=$((bsize / attr_len))
-> +
-> +while (( $naextents < 4 )); do
-> +	end=$((start + nr_attrs - 1))
-> +
-> +	for i in $(seq $start $end); do
-> +		attr="$(printf "trusted.%0247d" $i)"
-> +		$SETFATTR_PROG -n $attr $testfile
-> +	done
-> +
-> +	start=$((end + 1))
-> +
-> +	naextents=$(_xfs_get_fsxattr naextents $testfile)
-> +done
-> +
-> +echo "Inject reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 1
-> +
-> +echo "Remove xattr to trigger -EFBIG"
-> +attr="$(printf "trusted.%0247d" 1)"
-> +$SETFATTR_PROG -x "$attr" $testfile >> $seqres.full 2>&1
-> +if [[ $? == 0 ]]; then
-> +	echo "Xattr removal succeeded; Should have failed "
-> +	exit 1
-> +fi
-> +
-> +rm $testfile && echo "Successfully removed \$testfile"
-> +
-> +# success, all done
-> +status=0
-> +exit
-> diff --git a/tests/xfs/531.out b/tests/xfs/531.out
-> new file mode 100644
-> index 00000000..7b699b7a
-> --- /dev/null
-> +++ b/tests/xfs/531.out
-> @@ -0,0 +1,18 @@
-> +QA output created by 531
-> +Format and mount fs
-> +Consume free space
-> +Create fragmented filesystem
-> +Inject reduce_max_iextents error tag
-> +Inject bmap_alloc_minlen_extent error tag
-> +* Set xattrs
-> +Create $testfile
-> +Create xattrs
-> +Verify $testfile's naextent count
-> +Remove $testfile
-> +* Remove xattrs
-> +Create $testfile
-> +Disable reduce_max_iextents error tag
-> +Create initial xattr extents
-> +Inject reduce_max_iextents error tag
-> +Remove xattr to trigger -EFBIG
-> +Successfully removed $testfile
-> diff --git a/tests/xfs/group b/tests/xfs/group
-> index 463d810d..7e284841 100644
-> --- a/tests/xfs/group
-> +++ b/tests/xfs/group
-> @@ -528,3 +528,4 @@
->   528 auto quick quota
->   529 auto quick realtime growfs
->   530 auto quick punch zero insert collapse
-> +531 auto quick attr
+> .... that set/clear the flags on the iclog?  Yes, they probably
+> should be atomic.
 > 
+> On second thoughts, we can't just clear XLOG_ICL_NEED_FLUSH here
+> because there may be multiple commit records on this iclog and a
+> previous one might require the flush. I'll just remove this
+> optimisation from the patch right now, because it's more complex
+> than it initially seemed.
+> 
+
+Ok.
+
+> And looking at the aggregated code that I have now (including the
+> stuff I haven't sent out), the need for xlog_write() to set the
+> flush flags on the iclog is gone. THis is because the unmount record
+> flushes the iclog directly itself so it can add flags there, and
+> the iclog that the commit record is written to is returned to the
+> caller.
+> 
+
+Ok.
+
+Brian
+
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
+
