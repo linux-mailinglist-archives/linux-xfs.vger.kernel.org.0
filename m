@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CA39336A51
+	by mail.lfdr.de (Postfix) with ESMTP id 3016C336A53
 	for <lists+linux-xfs@lfdr.de>; Thu, 11 Mar 2021 04:06:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbhCKDGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229767AbhCKDGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 10 Mar 2021 22:06:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45694 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:45714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229767AbhCKDFw (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 10 Mar 2021 22:05:52 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E6BCE64EDB;
-        Thu, 11 Mar 2021 03:05:51 +0000 (UTC)
+        id S229778AbhCKDF5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 10 Mar 2021 22:05:57 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6F1D964EDB;
+        Thu, 11 Mar 2021 03:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615431952;
-        bh=6iiuLUwyjNk50xf94MQ7HUSs3rnb7OzMLuHg8ZF9tVY=;
+        s=k20201202; t=1615431957;
+        bh=WG+ja7N7H8Y/QGkwfK6rVDuuSZO88XfisSFbrls4Mgg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jJdm3wNHrxXU7iFYLaMjU7FwwDGo2h2ohqfL3XdspmTPxWZAGVCxOkdq7xfL0tPTG
-         fNsRzHUM8GXFxuFfkdEQC6UFXWnNre+y7Yon3f0+ezOb7oxf2aoLSsUOBHmBRre0ag
-         c6Lfn7GNyuwP3SsdtyQje6FETaBDHbhX2BnK/+oCMWLdwlmGIaNmSLIUcFS9V24JY3
-         HIJJRmK/4xbhiG3LXyLkvD//kkttpkMZSHh7aa2rc/zRpDDBjTWOuNHt8CnNezUPMP
-         k1W6ZKSMoqh386qX77Id5FWmKFwh3gDhigBT7dP68e/yPs2s2SWOLS3fTdxF5VKnyo
-         caexEymUnt0JA==
-Subject: [PATCH 02/11] xfs: refactor the predicate part of xfs_free_eofblocks
+        b=BgXruYdrnm1cqSI6u/FS3hc/1VsqANNk5Oh14+YSWpIBQXOrmirACLWYDIiq91Yp2
+         6cXVZcvOZ+1igG7VlpwHEwd02kXRfl09+B+oe1k6fjrXXL9s8rFKQhubsDcKITYKsP
+         1SwZbFedIoYaumR71WTBXEJuARwxGnJPtjz75gQYme21nhAd8Bz9hf0VxqxnenZiL7
+         S/++Gb7dQmp+i+P11xhXaVmNv3l2DSP5W1ox5k2dQrmFJlqkzqgyFIUS+gNSQPGIEG
+         IMNHBhxdvKziBPdE6KtP7WZ/atK8V0r3EUO96T+OY42cRZq85MHnQVsDdnJ418uCwY
+         EaHYFMPcOwIyQ==
+Subject: [PATCH 03/11] xfs: don't reclaim dquots with incore reservations
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 10 Mar 2021 19:05:51 -0800
-Message-ID: <161543195167.1947934.16237799936089844524.stgit@magnolia>
+Date:   Wed, 10 Mar 2021 19:05:57 -0800
+Message-ID: <161543195719.1947934.8218545606940173264.stgit@magnolia>
 In-Reply-To: <161543194009.1947934.9910987247994410125.stgit@magnolia>
 References: <161543194009.1947934.9910987247994410125.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,191 +41,115 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor the part of _free_eofblocks that decides if it's really going
-to truncate post-EOF blocks into a separate helper function.  The
-upcoming deferred inode inactivation patch requires us to be able to
-decide this prior to actual inactivation.  No functionality changes.
+If a dquot has an incore reservation that exceeds the ondisk count, it
+by definition has active incore state and must not be reclaimed.  Up to
+this point every inode with an incore dquot reservation has always
+retained a reference to the dquot so it was never possible for
+xfs_qm_dquot_isolate to be called on a dquot with active state and zero
+refcount, but this will soon change.
+
+Deferred inode inactivation is about to reorganize how inodes are
+inactivated by shunting all that work to a background workqueue.  In
+order to avoid deadlocks with the quotaoff inode scan and reduce overall
+memory requirements (since inodes can spend a lot of time waiting for
+inactivation), inactive inodes will drop their dquot references while
+they're waiting to be inactivated.
+
+However, inactive inodes can have delalloc extents in the data fork or
+any extents in the CoW fork.  Either of these contribute to the dquot's
+incore reservation being larger than the resource count (i.e. they're
+the reason the dquot still has active incore state), so we cannot allow
+the dquot to be reclaimed.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_bmap_util.c |  129 ++++++++++++++++++++++++++++--------------------
- fs/xfs/xfs_bmap_util.h |    1 
- 2 files changed, 76 insertions(+), 54 deletions(-)
+ fs/xfs/xfs_qm.c |   29 ++++++++++++++++++++++++-----
+ fs/xfs/xfs_qm.h |   17 +++++++++++++++++
+ 2 files changed, 41 insertions(+), 5 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index e7d68318e6a5..21aa38183ae9 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -628,27 +628,23 @@ xfs_can_free_eofblocks(struct xfs_inode *ip, bool force)
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index bfa4164990b1..b3ce04dec181 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -166,9 +166,14 @@ xfs_qm_dqpurge(
+ 
+ 	/*
+ 	 * We move dquots to the freelist as soon as their reference count
+-	 * hits zero, so it really should be on the freelist here.
++	 * hits zero, so it really should be on the freelist here.  If we're
++	 * running quotaoff, it's possible that we're purging a zero-refcount
++	 * dquot with active incore reservation because there are inodes
++	 * awaiting inactivation.  Dquots in this state will not be on the LRU
++	 * but it's quotaoff, so we don't care.
+ 	 */
+-	ASSERT(!list_empty(&dqp->q_lru));
++	ASSERT(!(mp->m_qflags & xfs_quota_active_flag(xfs_dquot_type(dqp))) ||
++	       !list_empty(&dqp->q_lru));
+ 	list_lru_del(&qi->qi_lru, &dqp->q_lru);
+ 	XFS_STATS_DEC(mp, xs_qm_dquot_unused);
+ 
+@@ -411,6 +416,15 @@ struct xfs_qm_isolate {
+ 	struct list_head	dispose;
+ };
+ 
++static inline bool
++xfs_dquot_has_incore_resv(
++	struct xfs_dquot	*dqp)
++{
++	return  dqp->q_blk.reserved > dqp->q_blk.count ||
++		dqp->q_ino.reserved > dqp->q_ino.count ||
++		dqp->q_rtb.reserved > dqp->q_rtb.count;
++}
++
+ static enum lru_status
+ xfs_qm_dquot_isolate(
+ 	struct list_head	*item,
+@@ -427,10 +441,15 @@ xfs_qm_dquot_isolate(
+ 		goto out_miss_busy;
+ 
+ 	/*
+-	 * This dquot has acquired a reference in the meantime remove it from
+-	 * the freelist and try again.
++	 * Either this dquot has incore reservations or it has acquired a
++	 * reference.  Remove it from the freelist and try again.
++	 *
++	 * Inodes tagged for inactivation drop their dquot references to avoid
++	 * deadlocks with quotaoff.  If these inodes have delalloc reservations
++	 * in the data fork or any extents in the CoW fork, these contribute
++	 * to the dquot's incore block reservation exceeding the count.
+ 	 */
+-	if (dqp->q_nrefs) {
++	if (xfs_dquot_has_incore_resv(dqp) || dqp->q_nrefs) {
+ 		xfs_dqunlock(dqp);
+ 		XFS_STATS_INC(dqp->q_mount, xs_qm_dqwants);
+ 
+diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
+index e3dabab44097..78f90935e91e 100644
+--- a/fs/xfs/xfs_qm.h
++++ b/fs/xfs/xfs_qm.h
+@@ -105,6 +105,23 @@ xfs_quota_inode(struct xfs_mount *mp, xfs_dqtype_t type)
+ 	return NULL;
  }
  
- /*
-- * This is called to free any blocks beyond eof. The caller must hold
-- * IOLOCK_EXCL unless we are in the inode reclaim path and have the only
-- * reference to the inode.
-+ * Decide if this inode have post-EOF blocks.  The caller is responsible
-+ * for knowing / caring about the PREALLOC/APPEND flags.
-  */
- int
--xfs_free_eofblocks(
--	struct xfs_inode	*ip)
-+xfs_has_eofblocks(
-+	struct xfs_inode	*ip,
-+	bool			*has)
- {
--	struct xfs_trans	*tp;
--	int			error;
-+	struct xfs_bmbt_irec	imap;
-+	struct xfs_mount	*mp = ip->i_mount;
- 	xfs_fileoff_t		end_fsb;
- 	xfs_fileoff_t		last_fsb;
- 	xfs_filblks_t		map_len;
- 	int			nimaps;
--	struct xfs_bmbt_irec	imap;
--	struct xfs_mount	*mp = ip->i_mount;
-+	int			error;
- 
--	/*
--	 * Figure out if there are any blocks beyond the end
--	 * of the file.  If not, then there is nothing to do.
--	 */
-+	*has = false;
- 	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
- 	last_fsb = XFS_B_TO_FSB(mp, mp->m_super->s_maxbytes);
- 	if (last_fsb <= end_fsb)
-@@ -660,55 +656,80 @@ xfs_free_eofblocks(
- 	error = xfs_bmapi_read(ip, end_fsb, map_len, &imap, &nimaps, 0);
- 	xfs_iunlock(ip, XFS_ILOCK_SHARED);
- 
-+	if (error || nimaps == 0)
-+		return error;
-+
-+	*has = imap.br_startblock != HOLESTARTBLOCK || ip->i_delayed_blks;
++static inline unsigned int
++xfs_quota_active_flag(
++	xfs_dqtype_t		type)
++{
++	switch (type) {
++	case XFS_DQTYPE_USER:
++		return XFS_UQUOTA_ACTIVE;
++	case XFS_DQTYPE_GROUP:
++		return XFS_GQUOTA_ACTIVE;
++	case XFS_DQTYPE_PROJ:
++		return XFS_PQUOTA_ACTIVE;
++	default:
++		ASSERT(0);
++	}
 +	return 0;
 +}
 +
-+/*
-+ * This is called to free any blocks beyond eof. The caller must hold
-+ * IOLOCK_EXCL unless we are in the inode reclaim path and have the only
-+ * reference to the inode.
-+ */
-+int
-+xfs_free_eofblocks(
-+	struct xfs_inode	*ip)
-+{
-+	struct xfs_trans	*tp;
-+	struct xfs_mount	*mp = ip->i_mount;
-+	bool			has;
-+	int			error;
-+
- 	/*
- 	 * If there are blocks after the end of file, truncate the file to its
- 	 * current size to free them up.
- 	 */
--	if (!error && (nimaps != 0) &&
--	    (imap.br_startblock != HOLESTARTBLOCK ||
--	     ip->i_delayed_blks)) {
--		/*
--		 * Attach the dquots to the inode up front.
--		 */
--		error = xfs_qm_dqattach(ip);
--		if (error)
--			return error;
-+	error = xfs_has_eofblocks(ip, &has);
-+	if (error || !has)
-+		return error;
- 
--		/* wait on dio to ensure i_size has settled */
--		inode_dio_wait(VFS_I(ip));
-+	/*
-+	 * Attach the dquots to the inode up front.
-+	 */
-+	error = xfs_qm_dqattach(ip);
-+	if (error)
-+		return error;
- 
--		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0,
--				&tp);
--		if (error) {
--			ASSERT(XFS_FORCED_SHUTDOWN(mp));
--			return error;
--		}
-+	/* wait on dio to ensure i_size has settled */
-+	inode_dio_wait(VFS_I(ip));
- 
--		xfs_ilock(ip, XFS_ILOCK_EXCL);
--		xfs_trans_ijoin(tp, ip, 0);
--
--		/*
--		 * Do not update the on-disk file size.  If we update the
--		 * on-disk file size and then the system crashes before the
--		 * contents of the file are flushed to disk then the files
--		 * may be full of holes (ie NULL files bug).
--		 */
--		error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
--					XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
--		if (error) {
--			/*
--			 * If we get an error at this point we simply don't
--			 * bother truncating the file.
--			 */
--			xfs_trans_cancel(tp);
--		} else {
--			error = xfs_trans_commit(tp);
--			if (!error)
--				xfs_inode_clear_eofblocks_tag(ip);
--		}
--
--		xfs_iunlock(ip, XFS_ILOCK_EXCL);
-+	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
-+	if (error) {
-+		ASSERT(XFS_FORCED_SHUTDOWN(mp));
-+		return error;
- 	}
-+
-+	xfs_ilock(ip, XFS_ILOCK_EXCL);
-+	xfs_trans_ijoin(tp, ip, 0);
-+
-+	/*
-+	 * Do not update the on-disk file size.  If we update the
-+	 * on-disk file size and then the system crashes before the
-+	 * contents of the file are flushed to disk then the files
-+	 * may be full of holes (ie NULL files bug).
-+	 */
-+	error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
-+				XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
-+	if (error)
-+		goto err_cancel;
-+
-+	error = xfs_trans_commit(tp);
-+	if (error)
-+		goto out_unlock;
-+
-+	xfs_inode_clear_eofblocks_tag(ip);
-+	goto out_unlock;
-+
-+err_cancel:
-+	/*
-+	 * If we get an error at this point we simply don't
-+	 * bother truncating the file.
-+	 */
-+	xfs_trans_cancel(tp);
-+out_unlock:
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_bmap_util.h b/fs/xfs/xfs_bmap_util.h
-index 9f993168b55b..af07a4a20d7c 100644
---- a/fs/xfs/xfs_bmap_util.h
-+++ b/fs/xfs/xfs_bmap_util.h
-@@ -63,6 +63,7 @@ int	xfs_insert_file_space(struct xfs_inode *, xfs_off_t offset,
- 				xfs_off_t len);
- 
- /* EOF block manipulation functions */
-+int	xfs_has_eofblocks(struct xfs_inode *ip, bool *has);
- bool	xfs_can_free_eofblocks(struct xfs_inode *ip, bool force);
- int	xfs_free_eofblocks(struct xfs_inode *ip);
- 
+ extern void	xfs_trans_mod_dquot(struct xfs_trans *tp, struct xfs_dquot *dqp,
+ 				    uint field, int64_t delta);
+ extern void	xfs_trans_dqjoin(struct xfs_trans *, struct xfs_dquot *);
 
