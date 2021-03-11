@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44AAD336A54
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA39336A51
 	for <lists+linux-xfs@lfdr.de>; Thu, 11 Mar 2021 04:06:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbhCKDGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229562AbhCKDGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 10 Mar 2021 22:06:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45672 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:45694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229562AbhCKDFq (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 10 Mar 2021 22:05:46 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5FC9E64FC4;
-        Thu, 11 Mar 2021 03:05:46 +0000 (UTC)
+        id S229767AbhCKDFw (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 10 Mar 2021 22:05:52 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E6BCE64EDB;
+        Thu, 11 Mar 2021 03:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615431946;
-        bh=HX6mTiI95u1DkubNHBK2b4P+74/gkNrjPnImsNVnKX8=;
+        s=k20201202; t=1615431952;
+        bh=6iiuLUwyjNk50xf94MQ7HUSs3rnb7OzMLuHg8ZF9tVY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WZNPqJmpirb9joXI7CxJVl1CA9g6/pCp99V7zHoQuz7iieDHCgnmOzthEmCjMsPvQ
-         G9Yza3wS3CZKKCg8tcYrbAsiVnDNLNtIeBh8TclOLXyGr+KfEp8cn6CCkyguGnJWWg
-         Jj++2RldWh+YE7hYyFDq5qxzBzQ3OnC49+2vptJ7fe4Ab9O9QHcP/pqEvhxJquMSgx
-         wdaapUHbBbOlFVHMMMZAsJXLX13Nr5DvPccYW+rWnAA5Uukm5UFNTV3n8vorh6RbdI
-         tB1IV0FUBYg0koQxRdn95jzd3w79lLXQcVbQRGhgRo5oZ1MmsarYJRa0cQAd02O1QO
-         4c2ddH4zhL/xg==
-Subject: [PATCH 01/11] xfs: prevent metadata files from being inactivated
+        b=jJdm3wNHrxXU7iFYLaMjU7FwwDGo2h2ohqfL3XdspmTPxWZAGVCxOkdq7xfL0tPTG
+         fNsRzHUM8GXFxuFfkdEQC6UFXWnNre+y7Yon3f0+ezOb7oxf2aoLSsUOBHmBRre0ag
+         c6Lfn7GNyuwP3SsdtyQje6FETaBDHbhX2BnK/+oCMWLdwlmGIaNmSLIUcFS9V24JY3
+         HIJJRmK/4xbhiG3LXyLkvD//kkttpkMZSHh7aa2rc/zRpDDBjTWOuNHt8CnNezUPMP
+         k1W6ZKSMoqh386qX77Id5FWmKFwh3gDhigBT7dP68e/yPs2s2SWOLS3fTdxF5VKnyo
+         caexEymUnt0JA==
+Subject: [PATCH 02/11] xfs: refactor the predicate part of xfs_free_eofblocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 10 Mar 2021 19:05:46 -0800
-Message-ID: <161543194600.1947934.584103655060069020.stgit@magnolia>
+Date:   Wed, 10 Mar 2021 19:05:51 -0800
+Message-ID: <161543195167.1947934.16237799936089844524.stgit@magnolia>
 In-Reply-To: <161543194009.1947934.9910987247994410125.stgit@magnolia>
 References: <161543194009.1947934.9910987247994410125.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,91 +41,191 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Files containing metadata (quota records, rt bitmap and summary info)
-are fully managed by the filesystem, which means that all resource
-cleanup must be explicit, not automatic.  This means that they should
-never be subjected automatic to post-eof truncation, nor should they be
-freed automatically even if the link count drops to zero.
+Refactor the part of _free_eofblocks that decides if it's really going
+to truncate post-EOF blocks into a separate helper function.  The
+upcoming deferred inode inactivation patch requires us to be able to
+decide this prior to actual inactivation.  No functionality changes.
 
-In other words, xfs_inactive() should leave these files alone.  Add the
-necessary predicate functions to make this happen.  This adds a second
-layer of prevention for the kinds of fs corruption that was fixed by
-commit f4c32e87de7d.  If we ever decide to support removing metadata
-files, we should make all those metadata updates explicit.
-
-Rearrange the order of #includes to fix compiler errors, since
-xfs_mount.h is supposed to be included before xfs_inode.h
-
-Followup-to: f4c32e87de7d ("xfs: fix realtime bitmap/summary file truncation when growing rt volume")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_iext_tree.c |    2 +-
- fs/xfs/xfs_inode.c            |    4 ++++
- fs/xfs/xfs_inode.h            |    8 ++++++++
- fs/xfs/xfs_xattr.c            |    2 ++
- 4 files changed, 15 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_bmap_util.c |  129 ++++++++++++++++++++++++++++--------------------
+ fs/xfs/xfs_bmap_util.h |    1 
+ 2 files changed, 76 insertions(+), 54 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_iext_tree.c b/fs/xfs/libxfs/xfs_iext_tree.c
-index b4164256993d..773cf4349428 100644
---- a/fs/xfs/libxfs/xfs_iext_tree.c
-+++ b/fs/xfs/libxfs/xfs_iext_tree.c
-@@ -8,9 +8,9 @@
- #include "xfs_format.h"
- #include "xfs_bit.h"
- #include "xfs_log_format.h"
--#include "xfs_inode.h"
- #include "xfs_trans_resv.h"
- #include "xfs_mount.h"
-+#include "xfs_inode.h"
- #include "xfs_trace.h"
- 
- /*
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index f93370bd7b1e..12c79962f8c3 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1697,6 +1697,10 @@ xfs_inactive(
- 	if (mp->m_flags & XFS_MOUNT_RDONLY)
- 		return;
- 
-+	/* Metadata inodes require explicit resource cleanup. */
-+	if (xfs_is_metadata_inode(ip))
-+		return;
-+
- 	/* Try to clean out the cow blocks if there are any. */
- 	if (xfs_inode_has_cow_data(ip))
- 		xfs_reflink_cancel_cow_range(ip, 0, NULLFILEOFF, true);
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 88ee4c3930ae..c2c26f8f4a81 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -185,6 +185,14 @@ static inline bool xfs_is_reflink_inode(struct xfs_inode *ip)
- 	return ip->i_d.di_flags2 & XFS_DIFLAG2_REFLINK;
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index e7d68318e6a5..21aa38183ae9 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -628,27 +628,23 @@ xfs_can_free_eofblocks(struct xfs_inode *ip, bool force)
  }
  
-+static inline bool xfs_is_metadata_inode(struct xfs_inode *ip)
-+{
+ /*
+- * This is called to free any blocks beyond eof. The caller must hold
+- * IOLOCK_EXCL unless we are in the inode reclaim path and have the only
+- * reference to the inode.
++ * Decide if this inode have post-EOF blocks.  The caller is responsible
++ * for knowing / caring about the PREALLOC/APPEND flags.
+  */
+ int
+-xfs_free_eofblocks(
+-	struct xfs_inode	*ip)
++xfs_has_eofblocks(
++	struct xfs_inode	*ip,
++	bool			*has)
+ {
+-	struct xfs_trans	*tp;
+-	int			error;
++	struct xfs_bmbt_irec	imap;
 +	struct xfs_mount	*mp = ip->i_mount;
+ 	xfs_fileoff_t		end_fsb;
+ 	xfs_fileoff_t		last_fsb;
+ 	xfs_filblks_t		map_len;
+ 	int			nimaps;
+-	struct xfs_bmbt_irec	imap;
+-	struct xfs_mount	*mp = ip->i_mount;
++	int			error;
+ 
+-	/*
+-	 * Figure out if there are any blocks beyond the end
+-	 * of the file.  If not, then there is nothing to do.
+-	 */
++	*has = false;
+ 	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
+ 	last_fsb = XFS_B_TO_FSB(mp, mp->m_super->s_maxbytes);
+ 	if (last_fsb <= end_fsb)
+@@ -660,55 +656,80 @@ xfs_free_eofblocks(
+ 	error = xfs_bmapi_read(ip, end_fsb, map_len, &imap, &nimaps, 0);
+ 	xfs_iunlock(ip, XFS_ILOCK_SHARED);
+ 
++	if (error || nimaps == 0)
++		return error;
 +
-+	return ip == mp->m_rbmip || ip == mp->m_rsumip ||
-+		xfs_is_quota_inode(&mp->m_sb, ip->i_ino);
++	*has = imap.br_startblock != HOLESTARTBLOCK || ip->i_delayed_blks;
++	return 0;
 +}
 +
- /*
-  * Check if an inode has any data in the COW fork.  This might be often false
-  * even for inodes with the reflink flag when there is no pending COW operation.
-diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
-index 12be32f66dc1..0d050f8829ef 100644
---- a/fs/xfs/xfs_xattr.c
-+++ b/fs/xfs/xfs_xattr.c
-@@ -9,6 +9,8 @@
- #include "xfs_format.h"
- #include "xfs_log_format.h"
- #include "xfs_da_format.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
- #include "xfs_inode.h"
- #include "xfs_attr.h"
- #include "xfs_acl.h"
++/*
++ * This is called to free any blocks beyond eof. The caller must hold
++ * IOLOCK_EXCL unless we are in the inode reclaim path and have the only
++ * reference to the inode.
++ */
++int
++xfs_free_eofblocks(
++	struct xfs_inode	*ip)
++{
++	struct xfs_trans	*tp;
++	struct xfs_mount	*mp = ip->i_mount;
++	bool			has;
++	int			error;
++
+ 	/*
+ 	 * If there are blocks after the end of file, truncate the file to its
+ 	 * current size to free them up.
+ 	 */
+-	if (!error && (nimaps != 0) &&
+-	    (imap.br_startblock != HOLESTARTBLOCK ||
+-	     ip->i_delayed_blks)) {
+-		/*
+-		 * Attach the dquots to the inode up front.
+-		 */
+-		error = xfs_qm_dqattach(ip);
+-		if (error)
+-			return error;
++	error = xfs_has_eofblocks(ip, &has);
++	if (error || !has)
++		return error;
+ 
+-		/* wait on dio to ensure i_size has settled */
+-		inode_dio_wait(VFS_I(ip));
++	/*
++	 * Attach the dquots to the inode up front.
++	 */
++	error = xfs_qm_dqattach(ip);
++	if (error)
++		return error;
+ 
+-		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0,
+-				&tp);
+-		if (error) {
+-			ASSERT(XFS_FORCED_SHUTDOWN(mp));
+-			return error;
+-		}
++	/* wait on dio to ensure i_size has settled */
++	inode_dio_wait(VFS_I(ip));
+ 
+-		xfs_ilock(ip, XFS_ILOCK_EXCL);
+-		xfs_trans_ijoin(tp, ip, 0);
+-
+-		/*
+-		 * Do not update the on-disk file size.  If we update the
+-		 * on-disk file size and then the system crashes before the
+-		 * contents of the file are flushed to disk then the files
+-		 * may be full of holes (ie NULL files bug).
+-		 */
+-		error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
+-					XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
+-		if (error) {
+-			/*
+-			 * If we get an error at this point we simply don't
+-			 * bother truncating the file.
+-			 */
+-			xfs_trans_cancel(tp);
+-		} else {
+-			error = xfs_trans_commit(tp);
+-			if (!error)
+-				xfs_inode_clear_eofblocks_tag(ip);
+-		}
+-
+-		xfs_iunlock(ip, XFS_ILOCK_EXCL);
++	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
++	if (error) {
++		ASSERT(XFS_FORCED_SHUTDOWN(mp));
++		return error;
+ 	}
++
++	xfs_ilock(ip, XFS_ILOCK_EXCL);
++	xfs_trans_ijoin(tp, ip, 0);
++
++	/*
++	 * Do not update the on-disk file size.  If we update the
++	 * on-disk file size and then the system crashes before the
++	 * contents of the file are flushed to disk then the files
++	 * may be full of holes (ie NULL files bug).
++	 */
++	error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
++				XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
++	if (error)
++		goto err_cancel;
++
++	error = xfs_trans_commit(tp);
++	if (error)
++		goto out_unlock;
++
++	xfs_inode_clear_eofblocks_tag(ip);
++	goto out_unlock;
++
++err_cancel:
++	/*
++	 * If we get an error at this point we simply don't
++	 * bother truncating the file.
++	 */
++	xfs_trans_cancel(tp);
++out_unlock:
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return error;
+ }
+ 
+diff --git a/fs/xfs/xfs_bmap_util.h b/fs/xfs/xfs_bmap_util.h
+index 9f993168b55b..af07a4a20d7c 100644
+--- a/fs/xfs/xfs_bmap_util.h
++++ b/fs/xfs/xfs_bmap_util.h
+@@ -63,6 +63,7 @@ int	xfs_insert_file_space(struct xfs_inode *, xfs_off_t offset,
+ 				xfs_off_t len);
+ 
+ /* EOF block manipulation functions */
++int	xfs_has_eofblocks(struct xfs_inode *ip, bool *has);
+ bool	xfs_can_free_eofblocks(struct xfs_inode *ip, bool force);
+ int	xfs_free_eofblocks(struct xfs_inode *ip);
+ 
 
