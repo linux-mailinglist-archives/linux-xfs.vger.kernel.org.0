@@ -2,120 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 024E4336B40
-	for <lists+linux-xfs@lfdr.de>; Thu, 11 Mar 2021 05:49:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F40D0336B2D
+	for <lists+linux-xfs@lfdr.de>; Thu, 11 Mar 2021 05:34:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231220AbhCKEtB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 10 Mar 2021 23:49:01 -0500
-Received: from gateway22.websitewelcome.com ([192.185.46.187]:26403 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230462AbhCKEsc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Mar 2021 23:48:32 -0500
-X-Greylist: delayed 1209 seconds by postgrey-1.27 at vger.kernel.org; Wed, 10 Mar 2021 23:48:32 EST
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id E4B693CDE
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Mar 2021 22:28:22 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id KCvulXhKHiQiZKCvulbK2F; Wed, 10 Mar 2021 22:28:22 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hGlSvfVilRdyjcxlHigRVXBapy983SK4zTZ5DVkCG4s=; b=pft6ycncLKFmg0KMj3fsFIn7rW
-        bWnd+RboW3SxSz09J5brSDZRt3ED+qM0oso0DQ2dT8nqUI/LmGxYCYr7vf0ytPLWVNkQXGumc6+7K
-        zanca0/r5zIWmxLbGDiBRvExFoHO57tEO73lQ49e7aah/gQOIOmFjm/YKFkBLh/G/9V88VAByyizW
-        bsuVLvs99FDjzGGCeWho3U2j4qdYc5lQahuowwRAenezYBTHfvnYNdb5eKhJpSukrbOugrAQ8kngE
-        8P1NjGReJTpPCwbTVs8bzs7OaS/Q85OyKsWFkEGjBewCnheiNAwAF8Eb0MfHgWcygXU8/uzIPBrh9
-        gIIDHWhQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:44512 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1lKCvu-003P6f-Ka; Wed, 10 Mar 2021 22:28:22 -0600
-Subject: Re: [PATCH v2][next] xfs: Replace one-element arrays with
- flexible-array members
-To:     "Darrick J. Wong" <djwong@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20210310020108.GA279881@embeddedor>
- <20210311031745.GT3419940@magnolia>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <b9e2c900-0852-fc5d-9696-835636b4219f@embeddedor.com>
-Date:   Wed, 10 Mar 2021 22:28:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.1
+        id S231146AbhCKEeQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 10 Mar 2021 23:34:16 -0500
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:44474 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230462AbhCKEeB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 10 Mar 2021 23:34:01 -0500
+Received: from dread.disaster.area (pa49-181-239-12.pa.nsw.optusnet.com.au [49.181.239.12])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id B6AD7D6C;
+        Thu, 11 Mar 2021 15:33:59 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lKD1L-0019Xw-6s; Thu, 11 Mar 2021 15:33:59 +1100
+Date:   Thu, 11 Mar 2021 15:33:59 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 29/45] xfs:_introduce xlog_write_partial()
+Message-ID: <20210311043359.GO74031@dread.disaster.area>
+References: <20210305051143.182133-1-david@fromorbit.com>
+ <20210305051143.182133-30-david@fromorbit.com>
+ <20210309025932.GQ3419940@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20210311031745.GT3419940@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1lKCvu-003P6f-Ka
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:44512
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210309025932.GQ3419940@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0 cx=a_idp_d
+        a=gO82wUwQTSpaJfP49aMSow==:117 a=gO82wUwQTSpaJfP49aMSow==:17
+        a=kj9zAlcOel0A:10 a=dESyimp9J3IA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=VpnQg93VVPwUGaG2zgMA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Mon, Mar 08, 2021 at 06:59:32PM -0800, Darrick J. Wong wrote:
+> On Fri, Mar 05, 2021 at 04:11:27PM +1100, Dave Chinner wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > Handle writing of a logvec chain into an iclog that doesn't have
+> > enough space to fit it all. The iclog has already been changed to
+> > WANT_SYNC by xlog_get_iclog_space(), so the entire remaining space
+> > in the iclog is exclusively owned by this logvec chain.
+> > 
+> > The difference between the single and partial cases is that
+> > we end up with partial iovec writes in the iclog and have to split
+> > a log vec regions across two iclogs. The state handling for this is
+> > currently awful and so we're building up the pieces needed to
+> > handle this more cleanly one at a time.
+> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > ---
+> >  fs/xfs/xfs_log.c | 525 ++++++++++++++++++++++-------------------------
+> >  1 file changed, 251 insertions(+), 274 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+> > index 590c1e6db475..10916b99bf0f 100644
+> > --- a/fs/xfs/xfs_log.c
+> > +++ b/fs/xfs/xfs_log.c
+> > @@ -2099,166 +2099,250 @@ xlog_print_trans(
+> >  	}
+> >  }
+> >  
+> > -static xlog_op_header_t *
+> > -xlog_write_setup_ophdr(
+> > -	struct xlog_op_header	*ophdr,
+> > -	struct xlog_ticket	*ticket)
+> > -{
+> > -	ophdr->oh_clientid = XFS_TRANSACTION;
+> > -	ophdr->oh_res2 = 0;
+> > -	ophdr->oh_flags = 0;
+> > -	return ophdr;
+> > -}
+> > -
+> >  /*
+> > - * Set up the parameters of the region copy into the log. This has
+> > - * to handle region write split across multiple log buffers - this
+> > - * state is kept external to this function so that this code can
+> > - * be written in an obvious, self documenting manner.
+> > + * Write whole log vectors into a single iclog which is guaranteed to have
+> > + * either sufficient space for the entire log vector chain to be written or
+> > + * exclusive access to the remaining space in the iclog.
+> > + *
+> > + * Return the number of iovecs and data written into the iclog, as well as
+> > + * a pointer to the logvec that doesn't fit in the log (or NULL if we hit the
+> > + * end of the chain.
+> >   */
+> > -static int
+> > -xlog_write_setup_copy(
+> > +static struct xfs_log_vec *
+> > +xlog_write_single(
+> 
+> Ouch.  Could you fix the previous patch to move this new function a
+> little higher in the file (like above xlog_write_setup_ophdr) so that it
+> doesn't get shredded like this?
 
+Not possible because xlog_write_setup_ophdr() is removed by this
+patch. I can't help it if the diffs are unreadable - I can't really
+control what git is doing here...
 
-On 3/10/21 21:17, Darrick J. Wong wrote:
+> > @@ -2930,7 +2906,7 @@ xlog_state_get_iclog_space(
+> >  	 * xlog_write() algorithm assumes that at least 2 xlog_op_header_t's
+> >  	 * can fit into remaining data section.
+> >  	 */
+> > -	if (iclog->ic_size - iclog->ic_offset < 2*sizeof(xlog_op_header_t)) {
+> > +	if (iclog->ic_size - iclog->ic_offset < 3*sizeof(xlog_op_header_t)) {
+> 
+> Why does this change to 3?  Does the comment need amending?
 
-> Why not use size_t instead of uint?  You converted the @len declaration
-> above.
-> 
->> +				 src_efi_fmt->efi_nextents);
->> +	uint len64 = struct_size((xfs_efi_log_format_64_t *)0, efi_extents,
-> 
-> Also, please don't use the struct typedefs, we're trying to get rid of
-> those slowly.
-> 
-> TBH I wonder if these could just be turned into static inline helpers to
-> decrapify the code:
-> 
-> static inline size_t
-> sizeof_efi_log_format32(unsigned int nr)
-> {
-> 	return struct_size((xfs_efi_log_format_32_t *)0, efi_extents, nr);
-> }
-> 
-> Then you only need:
-> 
-> 	size_t len = sizeof_efi_log_format(src_efi_fmt->efi_nextents);
-> 	size_t len32 = sizeof_efi_log_format32(src_efi_fmt->efi_nextents);
-> 	size_t len64 = sizeof_efi_log_format64(src_efi_fmt->efi_nextents);
-> 
-> 	if (len == len32) ...
-> 	else if (len == len64) ...
-> 
-> And down below you can clean up the asserts a bit:
-> 
-> 	ASSERT(item->ri_buf[0].i_len ==
-> 			sizeof_efi_log_format32(efd_formatp->efd_nextents) ||
-> 	       item->ri_buf[0].i_len ==
-> 			sizeof_efi_log_format64(efd_formatp->efd_nextents));
-> 
+Ah, that was to do with the avoiding the need to split the start
+record/transaction header of across two iclogs. That was because the
+partial copy loop didn't have special handling for start records
+and so that log vector had to be wholly handled by the
+xlog_write_single() loop to set the iclog flush flags.
 
-Done: https://lore.kernel.org/lkml/20210311042302.GA137676@embeddedor/
+However, with all the changes since then that have added explicit
+pre-flushes before the start record is formatted and the lifting of
+the iclog flush flags to the callers, we've removed all
+the special optype handling in xlog_write(). Hence we no longer need
+to guarantee the start record is handled by the single path, it now
+can be handled by this partial path just fine. So I can revert this
+hunk.
 
-Thanks for the feedback!
---
-Gustavo
+Did I mention that this code was full of all sorts of subtle corner
+cases? :/
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
