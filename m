@@ -2,111 +2,87 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FA68339FFB
-	for <lists+linux-xfs@lfdr.de>; Sat, 13 Mar 2021 19:36:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD60933A191
+	for <lists+linux-xfs@lfdr.de>; Sat, 13 Mar 2021 23:08:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234364AbhCMSgT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Sat, 13 Mar 2021 13:36:19 -0500
-Received: from smtp.econet.co.zw ([77.246.51.158]:65277 "EHLO
-        ironportDMZ.econet.co.zw" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S234286AbhCMSf6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 13 Mar 2021 13:35:58 -0500
-X-Greylist: delayed 472 seconds by postgrey-1.27 at vger.kernel.org; Sat, 13 Mar 2021 13:35:46 EST
-IronPort-SDR: 2VH7uDjPUxuRF84kGIuoHHaISSCuqZi+ufUVCFmh+/0u/DCFCtj5VFDT1b4h9dNnVvA6flspH+
- 3h9rw6M4gXRTOO/x00E/RP0IaZ5bJ/VFJjak29BaaBMRsZ8SomhBLF6NshxP1CgwykLJQtbFhT
- f57yb5yFlreJnhCu99okX5fHlhFOs37BIGqeR55agFxRF7WOiDsNKvGtFuzjle44yqE/60PUcB
- eSRuIQK9gCbtZaBXI6W4OKIxrnCmM+n1gcMJCNZUjbl9kcbsSMLo+94gqXFyBTYwkpasFfSfmL
- xM0=
-IronPort-HdrOrdr: A9a23:z3onBKxoaNoCa6u/wVCbKrPwgr1zdoIgy1knxilNYDZSddGVkN
- 3roe8S0gX6hC1UdHYrn92BP6foewK+ybde544NMbC+GDT3oWfAFuFfxKbr3jGIIUPD38FH06
- MIScRDIfnRKXQ/ssrg+gm/FL8boeWv1Kyzn+/RwzNMYGhRGsddxjx0AAqaDUF6LTMubfFSKL
- Om6tNDt36cfx0sA/iTPXUZQ/PF4+TCiZOOW29/Ozcc9AKMgTm0gYSULzGk2H4lIkpy6IZn1V
- Lgmwz9opy5s/ehygLNvlWjiqh+qZ/EwttHCNfksLlwFhzcziKpYIhGfpHqhkFTnMifrG8wkN
- /WowoxVv4DiU/sQg==
-X-IronPort-AV: E=Sophos;i="5.81,245,1610402400"; 
-   d="scan'208";a="3444522"
-Received: from unknown (HELO WVALE-MB-SVR-05.econetzw.local) ([192.168.101.173])
-  by ironportLAN.econet.co.zw with ESMTP; 13 Mar 2021 20:27:52 +0200
-Received: from WVALE-CAS-SVR-9.econetzw.local (192.168.101.184) by
- WVALE-MB-SVR-05.econetzw.local (192.168.101.173) with Microsoft SMTP Server
- (TLS) id 15.0.1473.3; Sat, 13 Mar 2021 20:27:48 +0200
-Received: from User (165.231.148.189) by WVALE-CAS-SVR-9.econetzw.local
- (10.10.11.230) with Microsoft SMTP Server id 15.0.1473.3 via Frontend
- Transport; Sat, 13 Mar 2021 20:27:59 +0200
-Reply-To: <r19772744@daum.net>
-From:   "Reem E. A" <chawora@econet.co.zw>
-Subject: Re:
-Date:   Sat, 13 Mar 2021 18:27:46 -0800
+        id S234182AbhCMWID (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 13 Mar 2021 17:08:03 -0500
+Received: from tartarus.angband.pl ([51.83.246.204]:41154 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234758AbhCMWHh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 13 Mar 2021 17:07:37 -0500
+Received: from kilobyte by tartarus.angband.pl with local (Exim 4.94)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1lLCJc-00GN3W-3k; Sat, 13 Mar 2021 23:00:56 +0100
+Date:   Sat, 13 Mar 2021 23:00:56 +0100
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Neal Gompa <ngompa13@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Goldwyn Rodrigues <rgoldwyn@suse.de>,
+        Shiyang Ruan <ruansy.fnst@fujitsu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Al Viro <viro@zeniv.linux.org.uk>,
+        Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+        ocfs2-devel@oss.oracle.com, david <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2 00/10] fsdax,xfs: Add reflink&dedupe support for fsdax
+Message-ID: <YE02GArtVnwEeJML@angband.pl>
+References: <20210226002030.653855-1-ruansy.fnst@fujitsu.com>
+ <CAEg-Je-OLidbfzHCJvY55x+-cOfiUxX8CJ1AeN8VxXAVuVyxKQ@mail.gmail.com>
+ <20210310130227.GN3479805@casper.infradead.org>
+ <20210310142159.kudk7q2ogp4yqn36@fiona>
+ <20210310142643.GQ3479805@casper.infradead.org>
+ <YEy4+SPUvQkL44PQ@angband.pl>
+ <CAEg-Je-JCW5xa6w5Z9n7+UNnLju251SmqnXiReA2v41fFaXAtw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="Windows-1251"
-Content-Transfer-Encoding: 8BIT
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-ID: <96f8ff6fe77b4507830ab5cf78a93340@WVALE-CAS-SVR-9.econetzw.local>
-To:     Undisclosed recipients:;
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEg-Je-JCW5xa6w5Z9n7+UNnLju251SmqnXiReA2v41fFaXAtw@mail.gmail.com>
+X-Junkbait: aaron@angband.pl, zzyx@angband.pl
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello,
+On Sat, Mar 13, 2021 at 11:24:00AM -0500, Neal Gompa wrote:
+> On Sat, Mar 13, 2021 at 8:09 AM Adam Borowski <kilobyte@angband.pl> wrote:
+> >
+> > On Wed, Mar 10, 2021 at 02:26:43PM +0000, Matthew Wilcox wrote:
+> > > On Wed, Mar 10, 2021 at 08:21:59AM -0600, Goldwyn Rodrigues wrote:
+> > > > DAX on btrfs has been attempted[1]. Of course, we could not
+> > >
+> > > But why?  A completeness fetish?  I don't understand why you decided
+> > > to do this work.
+> >
+> > * xfs can shapshot only single files, btrfs entire subvolumes
+> > * btrfs-send|receive
+> > * enumeration of changed parts of a file
+> 
+> XFS cannot do snapshots since it lacks metadata COW. XFS reflinking is
+> primarily for space efficiency.
 
-My name is Ms. Reem Ebrahim Al-Hashimi, I am the "Minister of state
-and Petroleum" also "Minister of State for International Cooperation"
-in UAE. I write to you on behalf of my other "three (2) colleagues"
-who has approved me to solicit for your "partnership in claiming of
-{us$47=Million}" from a Financial Home on their behalf and
-for our "Mutual Benefits".
+A reflink is a single-file snapshot.
 
-The Fund {us$47=Million} is our share from the (over-invoiced) Oil/Gas
-deal with Turkish Government within 2013/2014, however, we
-don't want our government to know about the fund. If this proposal
-interests you, let me know, by sending me an email and I will send to
-you detailed information on how this business would be successfully
-transacted. Be informed that nobody knows about the secret of this
-fund except us, and we know how to carry out the entire transaction.
-So I am compelled to ask, that you will stand on our behalf and
-receive this fund into any account that is solely controlled by you.
+My work team really wants this very patchset -- reflinks on DAX allow
+backups and/or checkpointing, without stopping the world (there's a single
+file, "pool", here).
 
-We will compensate you with 15% of the total amount involved as
-gratification for being our partner in this transaction. Reply to:
-reem.alhashimi@yandex.com
-
-Regards,
-Ms. Reem.
-This mail was sent through Econet Wireless, a Global telecoms leader.
-
-DISCLAIMER
-
-The information in this message is confidential and is legally privileged. It is intended solely for the addressee. Access to this message by anyone else is unauthorized. If received in error please accept our apologies and notify the sender immediately. You must also delete the original message from your machine. If you are not the intended recipient, any use, disclosure, copying, distribution or action taken in reliance of it, is prohibited and may be unlawful. The information, attachments, opinions or advice contained in this email are not the views or opinions of Econet Wireless, its subsidiaries or affiliates. Econet Wireless therefore accepts no liability for claims, losses, or damages arising from the inaccuracy, incorrectness, or lack of integrity of such information.
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/AgileBanner.png]
-WORK ISN'T A PLACE
-IT'S WHAT WE DO
-________________________________
+Besides, you can still get poor-man's whole-subvolume(/directory)
+snapshots by manually walking the tree and reflinking everything.
+That's not atomic -- but rsync isn't atomic either.  That's enough for
+eg. dnf/dpkg purposes.
 
 
-
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/telephone.png]
-
-
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/email.png]
-
-<mailto:>
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/location.png]
-
-
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/website.png]
-
-www.econet.co.zw<https://www.econet.co.zw>
-
-
-[https://mail.econet.co.zw/OWA/auth/current/themes/resources/Agile/inspired.jpg]
+Meow!
+-- 
+⢀⣴⠾⠻⢶⣦⠀
+⣾⠁⢰⠒⠀⣿⡁
+⢿⡄⠘⠷⠚⠋⠀ NADIE anticipa la inquisición de españa!
+⠈⠳⣄⠀⠀⠀⠀
