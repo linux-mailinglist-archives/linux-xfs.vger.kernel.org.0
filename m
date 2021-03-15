@@ -2,153 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6ED733BE00
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Mar 2021 15:50:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C8A633BE20
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Mar 2021 15:51:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237462AbhCOOlr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 15 Mar 2021 10:41:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:21399 "EHLO
+        id S234208AbhCOOm6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 15 Mar 2021 10:42:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:51837 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236991AbhCOOku (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Mar 2021 10:40:50 -0400
+        by vger.kernel.org with ESMTP id S237319AbhCOOlW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Mar 2021 10:41:22 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615819249;
+        s=mimecast20190719; t=1615819278;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=DImtT1osHw18COx2lmijh06i8lNPB4R7cwYBf3SBVDo=;
-        b=ULsosiPRPchK7TZd8bB5Vuv4KG4Axlm+LQTCT5e8ypvB2xRalx+9MKSNwFSHNxIfr6Ccbi
-        0cwM1JRALrSOu5UtaxqcoXoBx9pMxysffyVypSo82GVT0l8Jfcw7io7/B4nMyOkygAr451
-        HDEkjY4q9rBJ4EiDLxeRejIm/dh+enQ=
+        bh=iQo1Jv4ViIAHI9lZM3ec7THrNHx/FuVPnDACyUfkmJs=;
+        b=XaQrDWAqDgXGFVFAnrq/T9RfD5AnZHrBJ/OYRfwfUHxYdql5Cc8NITAz+d7BOurgQ/7Wu8
+        naJeGizH/97mPRoC6j/MwmLJVMFNJqArR+NNxVgBqrGaXq7gloEE/GqpelLC33DIMVvjAn
+        BOpYIryDNPu7N4n9BWmERk3lnMQ6E9Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-ADpj11c8P_-k5nl9L3dHwA-1; Mon, 15 Mar 2021 10:40:45 -0400
-X-MC-Unique: ADpj11c8P_-k5nl9L3dHwA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-372-EtUV3g-4MQiWWwQzeAK9yw-1; Mon, 15 Mar 2021 10:41:16 -0400
+X-MC-Unique: EtUV3g-4MQiWWwQzeAK9yw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BCF0983DD2B;
-        Mon, 15 Mar 2021 14:40:43 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F0D0101F004;
+        Mon, 15 Mar 2021 14:41:15 +0000 (UTC)
 Received: from bfoster (ovpn-112-124.rdu2.redhat.com [10.10.112.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5DD0219727;
-        Mon, 15 Mar 2021 14:40:43 +0000 (UTC)
-Date:   Mon, 15 Mar 2021 10:40:41 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C8C4D620DE;
+        Mon, 15 Mar 2021 14:41:14 +0000 (UTC)
+Date:   Mon, 15 Mar 2021 10:41:13 -0400
 From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 04/45] xfs: remove xfs_blkdev_issue_flush
-Message-ID: <YE9x6fwIQhJP5/ev@bfoster>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>,
+        Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 05/45] xfs: async blkdev cache flush
+Message-ID: <YE9yCbItv9Q8V0ic@bfoster>
 References: <20210305051143.182133-1-david@fromorbit.com>
- <20210305051143.182133-5-david@fromorbit.com>
+ <20210305051143.182133-6-david@fromorbit.com>
+ <87eegq3rja.fsf@garuda>
+ <20210308222407.GA3419940@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210305051143.182133-5-david@fromorbit.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20210308222407.GA3419940@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 05, 2021 at 04:11:02PM +1100, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
+On Mon, Mar 08, 2021 at 02:24:07PM -0800, Darrick J. Wong wrote:
+> On Mon, Mar 08, 2021 at 03:18:09PM +0530, Chandan Babu R wrote:
+> > On 05 Mar 2021 at 10:41, Dave Chinner wrote:
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > >
+> > > The new checkpoint caceh flush mechanism requires us to issue an
+> > > unconditional cache flush before we start a new checkpoint. We don't
+> > > want to block for this if we can help it, and we have a fair chunk
+> > > of CPU work to do between starting the checkpoint and issuing the
+> > > first journal IO.
+> > >
+> > > Hence it makes sense to amortise the latency cost of the cache flush
+> > > by issuing it asynchronously and then waiting for it only when we
+> > > need to issue the first IO in the transaction.
+> > >
+> > > TO do this, we need async cache flush primitives to submit the cache
+> > > flush bio and to wait on it. THe block layer has no such primitives
+> > > for filesystems, so roll our own for the moment.
+> > >
+> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > > ---
+> > >  fs/xfs/xfs_bio_io.c | 36 ++++++++++++++++++++++++++++++++++++
+> > >  fs/xfs/xfs_linux.h  |  2 ++
+> > >  2 files changed, 38 insertions(+)
+> > >
+> > > diff --git a/fs/xfs/xfs_bio_io.c b/fs/xfs/xfs_bio_io.c
+> > > index 17f36db2f792..668f8bd27b4a 100644
+> > > --- a/fs/xfs/xfs_bio_io.c
+> > > +++ b/fs/xfs/xfs_bio_io.c
+> > > @@ -9,6 +9,42 @@ static inline unsigned int bio_max_vecs(unsigned int count)
+> > >  	return bio_max_segs(howmany(count, PAGE_SIZE));
+> > >  }
+> > >  
+> > > +void
+> > > +xfs_flush_bdev_async_endio(
+> > > +	struct bio	*bio)
+> > > +{
+> > > +	if (bio->bi_private)
+> > > +		complete(bio->bi_private);
+> > > +}
+> > > +
+> > > +/*
+> > > + * Submit a request for an async cache flush to run. If the request queue does
+> > > + * not require flush operations, just skip it altogether. If the caller needsi
+> > > + * to wait for the flush completion at a later point in time, they must supply a
+> > > + * valid completion. This will be signalled when the flush completes.  The
+> > > + * caller never sees the bio that is issued here.
+> > > + */
+> > > +void
+> > > +xfs_flush_bdev_async(
+> > > +	struct bio		*bio,
+> > > +	struct block_device	*bdev,
+> > > +	struct completion	*done)
+> > > +{
+> > > +	struct request_queue	*q = bdev->bd_disk->queue;
+> > > +
+> > > +	if (!test_bit(QUEUE_FLAG_WC, &q->queue_flags)) {
+> > > +		complete(done);
+> > 
+> > complete() should be invoked only when "done" has a non-NULL value.
 > 
-> It's a one line wrapper around blkdev_issue_flush(). Just replace it
-> with direct calls to blkdev_issue_flush().
+> The only caller always provides a completion.
 > 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+IMO, if the mechanism (i.e. the helper) accommodates a NULL parameter,
+the underlying completion callback should as well..
 
->  fs/xfs/xfs_buf.c   | 2 +-
->  fs/xfs/xfs_file.c  | 6 +++---
->  fs/xfs/xfs_log.c   | 2 +-
->  fs/xfs/xfs_super.c | 7 -------
->  fs/xfs/xfs_super.h | 1 -
->  5 files changed, 5 insertions(+), 13 deletions(-)
+Brian
+
+> --D
 > 
-> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-> index 37a1d12762d8..7043546a04b8 100644
-> --- a/fs/xfs/xfs_buf.c
-> +++ b/fs/xfs/xfs_buf.c
-> @@ -1958,7 +1958,7 @@ xfs_free_buftarg(
->  	percpu_counter_destroy(&btp->bt_io_count);
->  	list_lru_destroy(&btp->bt_lru);
->  
-> -	xfs_blkdev_issue_flush(btp);
-> +	blkdev_issue_flush(btp->bt_bdev);
->  
->  	kmem_free(btp);
->  }
-> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> index a007ca0711d9..24c7f45fc4eb 100644
-> --- a/fs/xfs/xfs_file.c
-> +++ b/fs/xfs/xfs_file.c
-> @@ -197,9 +197,9 @@ xfs_file_fsync(
->  	 * inode size in case of an extending write.
->  	 */
->  	if (XFS_IS_REALTIME_INODE(ip))
-> -		xfs_blkdev_issue_flush(mp->m_rtdev_targp);
-> +		blkdev_issue_flush(mp->m_rtdev_targp->bt_bdev);
->  	else if (mp->m_logdev_targp != mp->m_ddev_targp)
-> -		xfs_blkdev_issue_flush(mp->m_ddev_targp);
-> +		blkdev_issue_flush(mp->m_ddev_targp->bt_bdev);
->  
->  	/*
->  	 * Any inode that has dirty modifications in the log is pinned.  The
-> @@ -219,7 +219,7 @@ xfs_file_fsync(
->  	 */
->  	if (!log_flushed && !XFS_IS_REALTIME_INODE(ip) &&
->  	    mp->m_logdev_targp == mp->m_ddev_targp)
-> -		xfs_blkdev_issue_flush(mp->m_ddev_targp);
-> +		blkdev_issue_flush(mp->m_ddev_targp->bt_bdev);
->  
->  	return error;
->  }
-> diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index 317c466232d4..fee76c485727 100644
-> --- a/fs/xfs/xfs_log.c
-> +++ b/fs/xfs/xfs_log.c
-> @@ -1962,7 +1962,7 @@ xlog_sync(
->  	 * layer state machine for preflushes.
->  	 */
->  	if (log->l_targ != log->l_mp->m_ddev_targp || split) {
-> -		xfs_blkdev_issue_flush(log->l_mp->m_ddev_targp);
-> +		blkdev_issue_flush(log->l_mp->m_ddev_targp->bt_bdev);
->  		need_flush = false;
->  	}
->  
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index e5e0713bebcd..ca2cb0448b5e 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -339,13 +339,6 @@ xfs_blkdev_put(
->  		blkdev_put(bdev, FMODE_READ|FMODE_WRITE|FMODE_EXCL);
->  }
->  
-> -void
-> -xfs_blkdev_issue_flush(
-> -	xfs_buftarg_t		*buftarg)
-> -{
-> -	blkdev_issue_flush(buftarg->bt_bdev);
-> -}
-> -
->  STATIC void
->  xfs_close_devices(
->  	struct xfs_mount	*mp)
-> diff --git a/fs/xfs/xfs_super.h b/fs/xfs/xfs_super.h
-> index 1ca484b8357f..79cb2dece811 100644
-> --- a/fs/xfs/xfs_super.h
-> +++ b/fs/xfs/xfs_super.h
-> @@ -88,7 +88,6 @@ struct block_device;
->  
->  extern void xfs_quiesce_attr(struct xfs_mount *mp);
->  extern void xfs_flush_inodes(struct xfs_mount *mp);
-> -extern void xfs_blkdev_issue_flush(struct xfs_buftarg *);
->  extern xfs_agnumber_t xfs_set_inode_alloc(struct xfs_mount *,
->  					   xfs_agnumber_t agcount);
->  
-> -- 
-> 2.28.0
+> > > +		return;
+> > > +	}
+> > 
+> > -- 
+> > chandan
 > 
 
