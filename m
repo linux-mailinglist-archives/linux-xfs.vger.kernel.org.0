@@ -2,216 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC3333C28F
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Mar 2021 17:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D56033C398
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Mar 2021 18:10:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbhCOQy0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 15 Mar 2021 12:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230034AbhCOQyT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 15 Mar 2021 12:54:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EAB5F64F33;
-        Mon, 15 Mar 2021 16:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1615827259;
-        bh=M9IzYyDIuGqykFZa8hLqMh1LVAvUJ7CNfg4HcifHTsM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xby26mFKJiwfarGLna122EgO6CLc6y+D/lPAiZ3+6X/n8sJlrgjNYP6ki7vF5K6RG
-         6toEat0LdO9wQa93gt48XmwncV+ny2vuGwqQARrqkJ6N7fUPAuwW2qXB0mKE/HnYVi
-         7lFOzCkLFLrpcKCme8DtGOCyH4kK4t/awRBxKe0qTnECojSsLVx///8sQE/wbi4L2i
-         seXc8mAWGDWoeMNDKZY5p9OqRxBUZdfHmNDeRD3iW4YzRtL3NisKR5eIK7g3i44ToX
-         Zp3j/TNY5xyChAWDprqKWTYbdX3ceSK+8TZXHesvNLUe9l9ibXVAHxi4QCUbmL33qH
-         aBWYD2xlrk8cw==
-Date:   Mon, 15 Mar 2021 09:54:18 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Eryu Guan <guan@eryu.me>
-Cc:     guaneryu@gmail.com, wenli xie <wlxie7296@gmail.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 09/10] generic: test a deadlock in xfs_rename when
- whiteing out files
-Message-ID: <20210315165418.GB22097@magnolia>
-References: <161526480371.1214319.3263690953532787783.stgit@magnolia>
- <161526485320.1214319.14486851135232825638.stgit@magnolia>
- <YE5Qq83n0Yki47yH@desktop>
+        id S233992AbhCORJ5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 15 Mar 2021 13:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235442AbhCORJw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Mar 2021 13:09:52 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAF0C06174A
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Mar 2021 10:09:52 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id g5so4426186uan.8
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Mar 2021 10:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
+        b=aXgMsfvJxS8rnPrkFXfXe2FXnX4z8Cqcu/QhnL5Qn1DjMCuOtoNVfGi4EBSS9Iknwn
+         vlNLqDk2YbQyiCk670OLjQr7loetNG1u4FZO8UCDQ2J04lVrlvZVYZ8kX/m2f/vpT8RG
+         ZS2Q72l+5VWjpF0FapEgmyk86Q2RyIYtBwW0g+Kv5gwmZmeSODXVZRu5TrncT2JBKVWl
+         0T4REScA9GLg4vUJnQBLz/6DT44uKbQMn8TCECFL0QnRbFsF40mm5TjkcPcIZSc0whXV
+         T2AgYFv8Od1V+OxvkOJjvUw7wQyrmJeMqbP2Cwhn97vz8cjryp78SHO5Uey9b3DA2nH3
+         +UTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
+        b=VBeZZPD1v0lOcpXBUG23tXDcWJkNU3ag+HGvzEwyPcMXCJj54m51yoZb/+Ais8vGcx
+         NhDMYmxidfJ/+CsAGyRfC32IOSWcidDb+yJ3wF+BCM6AFyGM6Qsuas0C9NDv6coJMGg8
+         Egy25MErOdhTosvgyShRtFUD5dcr5O8uima2Csd80SIla6JujcKV57dWibUzgwB//yvB
+         lXGbCGE3vwjuc0ABn6PSHUXUB2gZbhcVS4tn/wRQhGsirh9FKABqQNiORu9hrc8xfSM5
+         t+Gdzr/1iALqEyNZd6KcVfwEmDSzqXW1wYL/d6XWJX/7LzdVw5WibZpkie3flxXcpcbo
+         ImiA==
+X-Gm-Message-State: AOAM533nHkDPnbbLVWJoWiTvS4XJjiyowAxxDzFTk/ghFn1tZeOOAc+M
+        D7rC+ZDid2ucTOeZICmGpZcQxtjIrgumk84P9fM=
+X-Google-Smtp-Source: ABdhPJz279ChG9se2R56+CgC4LM1QaXLH3vfcRaBnVrWnTQpeUm6AYsXRAqStDe2E32gf/IZJ47H7xYnUK1rrffxr7c=
+X-Received: by 2002:ab0:4129:: with SMTP id j38mr5247512uad.39.1615828191432;
+ Mon, 15 Mar 2021 10:09:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YE5Qq83n0Yki47yH@desktop>
+Received: by 2002:ab0:2e8f:0:0:0:0:0 with HTTP; Mon, 15 Mar 2021 10:09:50
+ -0700 (PDT)
+Reply-To: ezbtg22@gmail.com
+From:   "Mrs.E.Glenn" <mrganuserge654@gmail.com>
+Date:   Mon, 15 Mar 2021 10:09:50 -0700
+Message-ID: <CAH16wSNYh7NNhzrypnhaAQBv8EfF3vGrQ=w1tsAkdJyEQZxf=A@mail.gmail.com>
+Subject: From Mrs.Glenn
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 02:06:35AM +0800, Eryu Guan wrote:
-> On Mon, Mar 08, 2021 at 08:40:53PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > wenli xie reported a buffer cache deadlock when an overlayfs is mounted
-> > atop xfs and overlayfs tries to replace a single-nlink file with a
-> > whiteout file.  This test reproduces that deadlock.
-> > 
-> > Reported-by: wenli xie <wlxie7296@gmail.com>
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  tests/generic/1300     |  109 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tests/generic/1300.out |    2 +
-> >  tests/generic/group    |    1 
-> >  3 files changed, 112 insertions(+)
-> >  create mode 100755 tests/generic/1300
-> >  create mode 100644 tests/generic/1300.out
-> > 
-> > 
-> > diff --git a/tests/generic/1300 b/tests/generic/1300
-> > new file mode 100755
-> > index 00000000..10df44e3
-> > --- /dev/null
-> > +++ b/tests/generic/1300
-> > @@ -0,0 +1,109 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# Copyright (c) 2021 Oracle.  All Rights Reserved.
-> > +#
-> > +# FS QA Test No. 1300
-> > +#
-> > +# Reproducer for a deadlock in xfs_rename reported by Wenli Xie.
-> > +#
-> > +# When overlayfs is running on top of xfs and the user unlinks a file in the
-> > +# overlay, overlayfs will create a whiteout inode and ask us to "rename" the
-> > +# whiteout file atop the one being unlinked.  If the file being unlinked loses
-> > +# its one nlink, we then have to put the inode on the unlinked list.
-> > +#
-> > +# This requires us to grab the AGI buffer of the whiteout inode to take it
-> > +# off the unlinked list (which is where whiteouts are created) and to grab
-> > +# the AGI buffer of the file being deleted.  If the whiteout was created in
-> > +# a higher numbered AG than the file being deleted, we'll lock the AGIs in
-> > +# the wrong order and deadlock.
-> > +#
-> > +# Note that this test doesn't do anything xfs-specific so it's a generic test.
-> > +# This is a regression test for commit 6da1b4b1ab36 ("xfs: fix an ABBA deadlock
-> > +# in xfs_rename").
-> > +
-> > +seq=`basename $0`
-> > +seqres=$RESULT_DIR/$seq
-> > +echo "QA output created by $seq"
-> > +
-> > +here=`pwd`
-> > +tmp=/tmp/$$
-> > +status=1    # failure is the default!
-> > +trap "_cleanup; exit \$status" 0 1 2 3 15
-> > +
-> > +_cleanup()
-> > +{
-> > +	stop_workers
-> > +	cd /
-> > +	rm -f $tmp.*
-> > +}
-> > +
-> > +# get standard environment, filters and checks
-> > +. ./common/rc
-> > +
-> > +# real QA test starts here
-> > +_supported_fs generic
-> > +_require_scratch
-> > +test "$FSTYP" = "overlay" && _notrun "Test does not apply to overlayfs."
-> > +
-> > +modprobe -q overlay
-> > +grep -q overlay /proc/filesystems || _notrun "Test requires overlayfs."
-> 
-> We have _require_ext2() and _require_tmpfs(), I think it's time to
-> refactor them into a new _require_filesystem() helper?
+-- 
+Dear Beloved,
 
-Yeah, I'll refactor them into a new _require_extra_fs helper.
+I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
+in a hospital bed in Israel. I am 59 years and childless; my husband
+is dead. I was diagnosed with terminal cancer. And my doctor just
+predicted that I have but very limited time to live due to damages in
+my system and as a result of that I decided to dispose my 10.5 million
+US dollars to a God-fearing one for the continuation of charitable
+work. This is why I located you.
 
-> > +
-> > +rm -f $seqres.full
-> > +
-> > +_scratch_mkfs >> $seqres.full
-> > +_scratch_mount
-> 
-> Also, doing overlay mount requires the underlying to export d_type,
-> perhaps we should do '_supports_filetype $SCRATCH_MNT' here, otherwise
-> filesystems like nfs would fail the test.
+My guess about you may not be accurate because I came across your
+contact at the humanitarian calendar event of the year but I believe
+in God who divinely directed me to you for this solemn proposal of
+charitable work.
 
-Oh!  Thank you for pointing that out.
-> 
-> > +
-> > +mkdir $SCRATCH_MNT/lowerdir
-> > +mkdir $SCRATCH_MNT/lowerdir1
-> > +mkdir $SCRATCH_MNT/lowerdir/etc
-> > +mkdir $SCRATCH_MNT/workers
-> > +echo salts > $SCRATCH_MNT/lowerdir/etc/access.conf
-> > +touch $SCRATCH_MNT/running
-> > +
-> > +stop_workers() {
-> > +	test -e $SCRATCH_MNT/running || return
-> > +	rm -f $SCRATCH_MNT/running
-> > +
-> > +	while [ "$(ls $SCRATCH_MNT/workers/ | wc -l)" -gt 0 ]; do
-> > +		wait
-> > +	done
-> > +}
-> > +
-> > +worker() {
-> > +	local tag="$1"
-> > +	local mergedir="$SCRATCH_MNT/merged$tag"
-> > +	local l="lowerdir=$SCRATCH_MNT/lowerdir:$SCRATCH_MNT/lowerdir1"
-> > +	local u="upperdir=$SCRATCH_MNT/upperdir$tag"
-> > +	local w="workdir=$SCRATCH_MNT/workdir$tag"
-> > +	local i="index=off,nfs_export=off"
-> > +
-> > +	touch $SCRATCH_MNT/workers/$tag
-> > +	while test -e $SCRATCH_MNT/running; do
-> > +		rm -rf $SCRATCH_MNT/merged$tag
-> > +		rm -rf $SCRATCH_MNT/upperdir$tag
-> > +		rm -rf $SCRATCH_MNT/workdir$tag
-> > +		mkdir $SCRATCH_MNT/merged$tag
-> > +		mkdir $SCRATCH_MNT/workdir$tag
-> > +		mkdir $SCRATCH_MNT/upperdir$tag
-> > +
-> > +		mount -t overlay overlay -o "$l,$u,$w,$i" $mergedir
-> > +		mv $mergedir/etc/access.conf $mergedir/etc/access.conf.bak
-> > +		touch $mergedir/etc/access.conf
-> > +		mv $mergedir/etc/access.conf $mergedir/etc/access.conf.bak
-> > +		touch $mergedir/etc/access.conf
-> > +		umount $mergedir
-> > +	done
-> > +	rm -f $SCRATCH_MNT/workers/$tag
-> > +}
-> > +
-> > +for i in $(seq 0 $((4 + LOAD_FACTOR)) ); do
-> > +	worker $i &
-> > +done
-> > +
-> > +sleep $((30 * TIME_FACTOR))
-> > +stop_workers
-> > +
-> > +echo Silence is golden.
-> > +# success, all done
-> > +status=0
-> > +exit
-> > diff --git a/tests/generic/1300.out b/tests/generic/1300.out
-> > new file mode 100644
-> > index 00000000..5805d30d
-> > --- /dev/null
-> > +++ b/tests/generic/1300.out
-> > @@ -0,0 +1,2 @@
-> > +QA output created by 1300
-> > +Silence is golden.
-> > diff --git a/tests/generic/group b/tests/generic/group
-> > index 778aa8c4..2233a59d 100644
-> > --- a/tests/generic/group
-> > +++ b/tests/generic/group
-> > @@ -631,3 +631,4 @@
-> >  947 auto quick rw clone
-> >  948 auto quick rw copy_range
-> >  949 auto quick rw dedupe clone
-> > +1300 auto rw overlay
-> 
-> Also add 'rename' group?
+Therefore I wholeheartedly wish to bequeath my fortune to you as a
+God-fearing person for the continuation of charitable work anywhere
+around the world.
 
-Done.
+I shall be going in for a surgery operations soonest and desire this
+money to be transferred to you as I do not wish to leave this money in
+the bank because bankers might misuse it for their own interest after
+my death.
 
---D
+As soon as I receive your quick reply assuring me that you will
+utilize the money as I instructed you for the benefit of the less
+privilege, I shall give you more details and also instruct my bank to
+release the money to you for the charity project. I hope you receive
+this mail in good health.
 
-> Thanks,
-> Eryu
+Please contact me on this E-mail (ezbtg22@gmail.com) because I don t
+know what will be my situation in next minute,
+
+I am waiting for your reply.
+
+Yours sincerely,
+Mrs Elizabet Glenn.
