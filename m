@@ -2,95 +2,47 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D56033C398
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Mar 2021 18:10:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A7E233C5A7
+	for <lists+linux-xfs@lfdr.de>; Mon, 15 Mar 2021 19:29:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233992AbhCORJ5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 15 Mar 2021 13:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58194 "EHLO
+        id S230299AbhCOS3M (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 15 Mar 2021 14:29:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235442AbhCORJw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Mar 2021 13:09:52 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAF0C06174A
-        for <linux-xfs@vger.kernel.org>; Mon, 15 Mar 2021 10:09:52 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id g5so4426186uan.8
-        for <linux-xfs@vger.kernel.org>; Mon, 15 Mar 2021 10:09:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
-        b=aXgMsfvJxS8rnPrkFXfXe2FXnX4z8Cqcu/QhnL5Qn1DjMCuOtoNVfGi4EBSS9Iknwn
-         vlNLqDk2YbQyiCk670OLjQr7loetNG1u4FZO8UCDQ2J04lVrlvZVYZ8kX/m2f/vpT8RG
-         ZS2Q72l+5VWjpF0FapEgmyk86Q2RyIYtBwW0g+Kv5gwmZmeSODXVZRu5TrncT2JBKVWl
-         0T4REScA9GLg4vUJnQBLz/6DT44uKbQMn8TCECFL0QnRbFsF40mm5TjkcPcIZSc0whXV
-         T2AgYFv8Od1V+OxvkOJjvUw7wQyrmJeMqbP2Cwhn97vz8cjryp78SHO5Uey9b3DA2nH3
-         +UTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=7Vrbe4gpVhb7cfcmpNanXi5E+OCzidx3VGMrGNR2bC4=;
-        b=VBeZZPD1v0lOcpXBUG23tXDcWJkNU3ag+HGvzEwyPcMXCJj54m51yoZb/+Ais8vGcx
-         NhDMYmxidfJ/+CsAGyRfC32IOSWcidDb+yJ3wF+BCM6AFyGM6Qsuas0C9NDv6coJMGg8
-         Egy25MErOdhTosvgyShRtFUD5dcr5O8uima2Csd80SIla6JujcKV57dWibUzgwB//yvB
-         lXGbCGE3vwjuc0ABn6PSHUXUB2gZbhcVS4tn/wRQhGsirh9FKABqQNiORu9hrc8xfSM5
-         t+Gdzr/1iALqEyNZd6KcVfwEmDSzqXW1wYL/d6XWJX/7LzdVw5WibZpkie3flxXcpcbo
-         ImiA==
-X-Gm-Message-State: AOAM533nHkDPnbbLVWJoWiTvS4XJjiyowAxxDzFTk/ghFn1tZeOOAc+M
-        D7rC+ZDid2ucTOeZICmGpZcQxtjIrgumk84P9fM=
-X-Google-Smtp-Source: ABdhPJz279ChG9se2R56+CgC4LM1QaXLH3vfcRaBnVrWnTQpeUm6AYsXRAqStDe2E32gf/IZJ47H7xYnUK1rrffxr7c=
-X-Received: by 2002:ab0:4129:: with SMTP id j38mr5247512uad.39.1615828191432;
- Mon, 15 Mar 2021 10:09:51 -0700 (PDT)
+        with ESMTP id S232601AbhCOS3L (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Mar 2021 14:29:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44F5C06174A
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Mar 2021 11:29:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=jz2QZljqKrDspjYXl0bB9Q7IkB
+        jyOROis9HWvk75LK6utC3i8AhaUhww4qmYylglyjMiTKnt/Mf5BvvXC5nl/x7+8CbqiXP9zCXsZ9B
+        srvG1/1mJaaxAGwyxnRndqYxM91MfEqUDC7MXia78f2/OqtBhQKR6qrLIdnliak956tNnI0vuwYyC
+        PtcC8rQifRL8b9NPVLu/C7MiJpPY2SnCLH7cbN1rpqtluo41V1agJxIWxag83BAAewnzyGV9Jw0Hp
+        oy+iEVGlKCvlDwnWjznjnsA+W07OizDLuCogSREgdUAq61tSlB7bmI0CGT/Xo33qaEAcurlP+yKgW
+        vYxYtnVg==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lLrxk-000aw6-P9; Mon, 15 Mar 2021 18:29:09 +0000
+Date:   Mon, 15 Mar 2021 18:29:08 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 03/11] xfs: don't reclaim dquots with incore reservations
+Message-ID: <20210315182908.GA140421@infradead.org>
+References: <161543194009.1947934.9910987247994410125.stgit@magnolia>
+ <161543195719.1947934.8218545606940173264.stgit@magnolia>
 MIME-Version: 1.0
-Received: by 2002:ab0:2e8f:0:0:0:0:0 with HTTP; Mon, 15 Mar 2021 10:09:50
- -0700 (PDT)
-Reply-To: ezbtg22@gmail.com
-From:   "Mrs.E.Glenn" <mrganuserge654@gmail.com>
-Date:   Mon, 15 Mar 2021 10:09:50 -0700
-Message-ID: <CAH16wSNYh7NNhzrypnhaAQBv8EfF3vGrQ=w1tsAkdJyEQZxf=A@mail.gmail.com>
-Subject: From Mrs.Glenn
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161543195719.1947934.8218545606940173264.stgit@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
--- 
-Dear Beloved,
+Looks good,
 
-I am Mrs Elizabet Glenn from Israel. I am a missionary but right now
-in a hospital bed in Israel. I am 59 years and childless; my husband
-is dead. I was diagnosed with terminal cancer. And my doctor just
-predicted that I have but very limited time to live due to damages in
-my system and as a result of that I decided to dispose my 10.5 million
-US dollars to a God-fearing one for the continuation of charitable
-work. This is why I located you.
-
-My guess about you may not be accurate because I came across your
-contact at the humanitarian calendar event of the year but I believe
-in God who divinely directed me to you for this solemn proposal of
-charitable work.
-
-Therefore I wholeheartedly wish to bequeath my fortune to you as a
-God-fearing person for the continuation of charitable work anywhere
-around the world.
-
-I shall be going in for a surgery operations soonest and desire this
-money to be transferred to you as I do not wish to leave this money in
-the bank because bankers might misuse it for their own interest after
-my death.
-
-As soon as I receive your quick reply assuring me that you will
-utilize the money as I instructed you for the benefit of the less
-privilege, I shall give you more details and also instruct my bank to
-release the money to you for the charity project. I hope you receive
-this mail in good health.
-
-Please contact me on this E-mail (ezbtg22@gmail.com) because I don t
-know what will be my situation in next minute,
-
-I am waiting for your reply.
-
-Yours sincerely,
-Mrs Elizabet Glenn.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
