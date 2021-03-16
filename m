@@ -2,227 +2,283 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC3CE33D629
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Mar 2021 15:51:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2C6F33D62C
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Mar 2021 15:52:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237517AbhCPOvN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 16 Mar 2021 10:51:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25924 "EHLO
+        id S237549AbhCPOvp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 16 Mar 2021 10:51:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37350 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235775AbhCPOvL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Mar 2021 10:51:11 -0400
+        by vger.kernel.org with ESMTP id S231553AbhCPOvV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Mar 2021 10:51:21 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615906270;
+        s=mimecast20190719; t=1615906280;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=yHk2/NBWq5V1+4WqQv4LhLLj88F94gLvCTbISzM/aDI=;
-        b=FhP92Tf2eEU+XJGA3aiuBgwRTJKS520AM29uge8WlZVDniXUNmoJIdPX1sjoSpFomtJxgv
-        pY7t7Bit7oJE9GfWPtzZTOkqB59FiWWMqsHw+92xVezzE6WKt2f7Ecv2zP4OcTvu99ooRz
-        xJdVTEqWNcS+Ai4yCrLHZG7u2Y1zkjo=
+        bh=M6qvxyNA6H/cts9BhZA2EWHObfsnDfIElB8Ikj53NcM=;
+        b=ADOnVuWZJTLhAbxzALzSz4Od4jPkgpvO1x5THAEL7tsx2hj7W0va92TBRT0VOEW+QHBn5e
+        rupX9l4m48v63328uxP8oIpaxKLQwgbay9CbvPc54o7jsnLibAq8dkd9rMRj5P7zJZuLVP
+        BOq2hPkvVu9meBynhVuTAK4Pybxm1AY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-391-9-wCjRjzN16E0-H8ouYfWA-1; Tue, 16 Mar 2021 10:51:08 -0400
-X-MC-Unique: 9-wCjRjzN16E0-H8ouYfWA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-547-VDNoX0mYOKm_Z6tU_OKAqA-1; Tue, 16 Mar 2021 10:51:18 -0400
+X-MC-Unique: VDNoX0mYOKm_Z6tU_OKAqA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 549A1101F017;
-        Tue, 16 Mar 2021 14:51:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B598814256;
+        Tue, 16 Mar 2021 14:51:17 +0000 (UTC)
 Received: from bfoster (ovpn-112-124.rdu2.redhat.com [10.10.112.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E5DF619D9F;
-        Tue, 16 Mar 2021 14:51:06 +0000 (UTC)
-Date:   Tue, 16 Mar 2021 10:51:05 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B4B6C5D9DE;
+        Tue, 16 Mar 2021 14:51:16 +0000 (UTC)
+Date:   Tue, 16 Mar 2021 10:51:15 -0400
 From:   Brian Foster <bfoster@redhat.com>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 20/45] xfs: only CIL pushes require a start record
-Message-ID: <YFDF2fNGM+smC8SK@bfoster>
+Subject: Re: [PATCH 23/45] xfs: log tickets don't need log client id
+Message-ID: <YFDF4zVE3VorGn5t@bfoster>
 References: <20210305051143.182133-1-david@fromorbit.com>
- <20210305051143.182133-21-david@fromorbit.com>
+ <20210305051143.182133-24-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210305051143.182133-21-david@fromorbit.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20210305051143.182133-24-david@fromorbit.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 05, 2021 at 04:11:18PM +1100, Dave Chinner wrote:
+On Fri, Mar 05, 2021 at 04:11:21PM +1100, Dave Chinner wrote:
 > From: Dave Chinner <dchinner@redhat.com>
 > 
-> So move the one-off start record writing in xlog_write() out into
-> the static header that the CIL push builds to write into the log
-> initially. This simplifes the xlog_write() logic a lot.
+> We currently set the log ticket client ID when we reserve a
+> transaction. This client ID is only ever written to the log by
+> a CIL checkpoint or unmount records, and so anything using a high
+> level transaction allocated through xfs_trans_alloc() does not need
+> a log ticket client ID to be set.
 > 
-> pahole on x86-64 confirms that the xlog_cil_trans_hdr is correctly
-> 32 bit aligned and packed for copying the log op and transaction
-> headers directly into the log as a single log region copy.
-> 
-> struct xlog_cil_trans_hdr {
-> 	struct xlog_op_header      oph[2];               /*     0    24 */
-> 	struct xfs_trans_header    thdr;                 /*    24    16 */
-> 	struct xfs_log_iovec       lhdr;                 /*    40    16 */
-> 
-> 	/* size: 56, cachelines: 1, members: 3 */
-> 	/* last cacheline: 56 bytes */
-> };
-
-FWIW, this doesn't match the structure defined in the code.
-
-> 
-> A wart is needed to handle the fact that length of the region the
-> opheader points to doesn't include the opheader length. hence if
-> we embed the opheader, we have to substract the opheader length from
-> the length written into the opheader by the generic copying code.
-> This will eventually go away when everything is converted to
-> embedded opheaders.
+> For the CIL checkpoint, the client ID written to the journal is
+> always XFS_TRANSACTION, and for the unmount record it is always
+> XFS_LOG, and nothing else writes to the log. All of these operations
+> tell xlog_write() exactly what they need to write to the log (the
+> optype) and build their own opheaders for start, commit and unmount
+> records. Hence we no longer need to set the client id in either the
+> log ticket or the xfs_trans.
 > 
 > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_log.c     | 90 ++++++++++++++++++++++----------------------
->  fs/xfs/xfs_log_cil.c | 44 ++++++++++++++++++----
->  2 files changed, 81 insertions(+), 53 deletions(-)
+
+LGTM with Darrick's suggested feedback:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/xfs_log.c      | 47 ++++++++-----------------------------------
+>  fs/xfs/xfs_log.h      | 16 ++++++---------
+>  fs/xfs/xfs_log_cil.c  |  2 +-
+>  fs/xfs/xfs_log_priv.h | 10 ++-------
+>  fs/xfs/xfs_trans.c    |  6 ++----
+>  5 files changed, 19 insertions(+), 62 deletions(-)
 > 
 > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> index f54d48f4584e..b2f9fb1b4fed 100644
+> index c2e69a1f5cad..429cb1e7cc67 100644
 > --- a/fs/xfs/xfs_log.c
 > +++ b/fs/xfs/xfs_log.c
-...
-> @@ -2425,25 +2420,24 @@ xlog_write(
->  			ASSERT((unsigned long)ptr % sizeof(int32_t) == 0);
+> @@ -431,10 +431,9 @@ xfs_log_regrant(
+>  int
+>  xfs_log_reserve(
+>  	struct xfs_mount	*mp,
+> -	int		 	unit_bytes,
+> -	int		 	cnt,
+> +	int			unit_bytes,
+> +	int			cnt,
+>  	struct xlog_ticket	**ticp,
+> -	uint8_t		 	client,
+>  	bool			permanent)
+>  {
+>  	struct xlog		*log = mp->m_log;
+> @@ -442,15 +441,13 @@ xfs_log_reserve(
+>  	int			need_bytes;
+>  	int			error = 0;
 >  
->  			/*
-> -			 * Before we start formatting log vectors, we need to
-> -			 * write a start record. Only do this for the first
-> -			 * iclog we write to.
-> +			 * The XLOG_START_TRANS has embedded ophdrs for the
-> +			 * start record and transaction header. They will always
-> +			 * be the first two regions in the lv chain.
->  			 */
->  			if (optype & XLOG_START_TRANS) {
-> -				xlog_write_start_rec(ptr, ticket);
-> -				xlog_write_adv_cnt(&ptr, &len, &log_offset,
-> -						sizeof(struct xlog_op_header));
-> -				optype &= ~XLOG_START_TRANS;
-> -				wrote_start_rec = true;
-> -			}
+> -	ASSERT(client == XFS_TRANSACTION || client == XFS_LOG);
 > -
-> -			ophdr = xlog_write_setup_ophdr(log, ptr, ticket, optype);
-> -			if (!ophdr)
-> -				return -EIO;
-> +				ophdr = reg->i_addr;
-> +				if (index)
-> +					optype &= ~XLOG_START_TRANS;
-
-So ophdr points to the lv memory in this case, but we're going to memcpy
-this into iclog anyways.
-
-Presumably the index check is intended to track processing the first lv
-in the chain (with the two embedded headers). That seems Ok, but flakey
-enough that I hope it doesn't survive the end of the series.
-
-> +			} else {
-> +				ophdr = xlog_write_setup_ophdr(log, ptr,
-> +							ticket, optype);
-> +				if (!ophdr)
-> +					return -EIO;
+>  	if (XLOG_FORCED_SHUTDOWN(log))
+>  		return -EIO;
 >  
-> -			xlog_write_adv_cnt(&ptr, &len, &log_offset,
-> +				xlog_write_adv_cnt(&ptr, &len, &log_offset,
->  					   sizeof(struct xlog_op_header));
+>  	XFS_STATS_INC(mp, xs_try_logspace);
+>  
+>  	ASSERT(*ticp == NULL);
+> -	tic = xlog_ticket_alloc(log, unit_bytes, cnt, client, permanent);
+> +	tic = xlog_ticket_alloc(log, unit_bytes, cnt, permanent);
+>  	*ticp = tic;
+>  
+>  	xlog_grant_push_ail(log, tic->t_cnt ? tic->t_unit_res * tic->t_cnt
+> @@ -847,7 +844,7 @@ xlog_unmount_write(
+>  	struct xlog_ticket	*tic = NULL;
+>  	int			error;
+>  
+> -	error = xfs_log_reserve(mp, 600, 1, &tic, XFS_LOG, 0);
+> +	error = xfs_log_reserve(mp, 600, 1, &tic, 0);
+>  	if (error)
+>  		goto out_err;
+>  
+> @@ -2170,35 +2167,13 @@ xlog_write_calc_vec_length(
+>  
+>  static xlog_op_header_t *
+>  xlog_write_setup_ophdr(
+> -	struct xlog		*log,
+>  	struct xlog_op_header	*ophdr,
+> -	struct xlog_ticket	*ticket,
+> -	uint			flags)
+> +	struct xlog_ticket	*ticket)
+>  {
+>  	ophdr->oh_tid = cpu_to_be32(ticket->t_tid);
+> -	ophdr->oh_clientid = ticket->t_clientid;
+> +	ophdr->oh_clientid = XFS_TRANSACTION;
+>  	ophdr->oh_res2 = 0;
 > -
-> +				added_ophdr = true;
-> +			}
->  			len += xlog_write_setup_copy(ticket, ophdr,
->  						     iclog->ic_size-log_offset,
->  						     reg->i_len,
-...
-> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-> index b515002e7959..e9da074ecd69 100644
-> --- a/fs/xfs/xfs_log_cil.c
-> +++ b/fs/xfs/xfs_log_cil.c
-> @@ -652,14 +652,22 @@ xlog_cil_process_committed(
+> -	/* are we copying a commit or unmount record? */
+> -	ophdr->oh_flags = flags;
+> -
+> -	/*
+> -	 * We've seen logs corrupted with bad transaction client ids.  This
+> -	 * makes sure that XFS doesn't generate them on.  Turn this into an EIO
+> -	 * and shut down the filesystem.
+> -	 */
+> -	switch (ophdr->oh_clientid)  {
+> -	case XFS_TRANSACTION:
+> -	case XFS_VOLUME:
+> -	case XFS_LOG:
+> -		break;
+> -	default:
+> -		xfs_warn(log->l_mp,
+> -			"Bad XFS transaction clientid 0x%x in ticket "PTR_FMT,
+> -			ophdr->oh_clientid, ticket);
+> -		return NULL;
+> -	}
+> -
+> +	ophdr->oh_flags = 0;
+>  	return ophdr;
 >  }
 >  
->  struct xlog_cil_trans_hdr {
-> +	struct xlog_op_header	oph[2];
->  	struct xfs_trans_header	thdr;
-> -	struct xfs_log_iovec	lhdr;
-> +	struct xfs_log_iovec	lhdr[2];
->  };
-...
-
-This is all hairy enough that I think it's helpful to at least separate
-the two vectors from crossing inside an array boundary. For example,
-something like the appended diff (untested).
-
-Brian
-
---- 8< ---
-
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index e9da074ecd69..76cb82f1142e 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -651,10 +651,16 @@ xlog_cil_process_committed(
- 	}
- }
- 
-+/*
-+ * Consolidated structure for the first two iovecs in a CIL checkpoint.
-+ */
- struct xlog_cil_trans_hdr {
--	struct xlog_op_header	oph[2];
--	struct xfs_trans_header	thdr;
--	struct xfs_log_iovec	lhdr[2];
-+	struct xlog_op_header	op;	/* log start record */
-+	struct {			/* trans header*/
-+		struct xlog_op_header	op;
-+		struct xfs_trans_header	thdr;
-+	} t;
-+	struct xfs_log_iovec	lhdr[2];/* region pointers for embedded hdrs */
- };
- 
- /*
-@@ -682,27 +688,27 @@ xlog_cil_build_trans_hdr(
- 	memset(hdr, 0, sizeof(*hdr));
- 
- 	/* Log start record */
--	hdr->oph[0].oh_tid = tid;
--	hdr->oph[0].oh_clientid = XFS_TRANSACTION;
--	hdr->oph[0].oh_flags = XLOG_START_TRANS;
-+	hdr->op.oh_tid = tid;
-+	hdr->op.oh_clientid = XFS_TRANSACTION;
-+	hdr->op.oh_flags = XLOG_START_TRANS;
- 
- 	/* log iovec region pointer */
--	hdr->lhdr[0].i_addr = &hdr->oph[0];
-+	hdr->lhdr[0].i_addr = &hdr->op;
- 	hdr->lhdr[0].i_len = sizeof(struct xlog_op_header);
- 	hdr->lhdr[0].i_type = XLOG_REG_TYPE_LRHEADER;
- 
- 	/* log opheader */
--	hdr->oph[1].oh_tid = tid;
--	hdr->oph[1].oh_clientid = XFS_TRANSACTION;
-+	hdr->t.op.oh_tid = tid;
-+	hdr->t.op.oh_clientid = XFS_TRANSACTION;
- 
- 	/* transaction header */
--	hdr->thdr.th_magic = XFS_TRANS_HEADER_MAGIC;
--	hdr->thdr.th_type = XFS_TRANS_CHECKPOINT;
--	hdr->thdr.th_tid = tid;
--	hdr->thdr.th_num_items = num_iovecs;
-+	hdr->t.thdr.th_magic = XFS_TRANS_HEADER_MAGIC;
-+	hdr->t.thdr.th_type = XFS_TRANS_CHECKPOINT;
-+	hdr->t.thdr.th_tid = tid;
-+	hdr->t.thdr.th_num_items = num_iovecs;
- 
- 	/* log iovec region pointer */
--	hdr->lhdr[1].i_addr = &hdr->oph[1];
-+	hdr->lhdr[1].i_addr = &hdr->t.op;
- 	hdr->lhdr[1].i_len = sizeof(struct xlog_op_header) +
- 				sizeof(struct xfs_trans_header);
- 	hdr->lhdr[1].i_type = XLOG_REG_TYPE_TRANSHDR;
+> @@ -2439,11 +2414,7 @@ xlog_write(
+>  				if (index)
+>  					optype &= ~XLOG_START_TRANS;
+>  			} else {
+> -				ophdr = xlog_write_setup_ophdr(log, ptr,
+> -							ticket, optype);
+> -				if (!ophdr)
+> -					return -EIO;
+> -
+> +                                ophdr = xlog_write_setup_ophdr(ptr, ticket);
+>  				xlog_write_adv_cnt(&ptr, &len, &log_offset,
+>  					   sizeof(struct xlog_op_header));
+>  				added_ophdr = true;
+> @@ -3499,7 +3470,6 @@ xlog_ticket_alloc(
+>  	struct xlog		*log,
+>  	int			unit_bytes,
+>  	int			cnt,
+> -	char			client,
+>  	bool			permanent)
+>  {
+>  	struct xlog_ticket	*tic;
+> @@ -3517,7 +3487,6 @@ xlog_ticket_alloc(
+>  	tic->t_cnt		= cnt;
+>  	tic->t_ocnt		= cnt;
+>  	tic->t_tid		= prandom_u32();
+> -	tic->t_clientid		= client;
+>  	if (permanent)
+>  		tic->t_flags |= XLOG_TIC_PERM_RESERV;
+>  
+> diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+> index 1bd080ce3a95..c0c3141944ea 100644
+> --- a/fs/xfs/xfs_log.h
+> +++ b/fs/xfs/xfs_log.h
+> @@ -117,16 +117,12 @@ int	  xfs_log_mount_finish(struct xfs_mount *mp);
+>  void	xfs_log_mount_cancel(struct xfs_mount *);
+>  xfs_lsn_t xlog_assign_tail_lsn(struct xfs_mount *mp);
+>  xfs_lsn_t xlog_assign_tail_lsn_locked(struct xfs_mount *mp);
+> -void	  xfs_log_space_wake(struct xfs_mount *mp);
+> -int	  xfs_log_reserve(struct xfs_mount *mp,
+> -			  int		   length,
+> -			  int		   count,
+> -			  struct xlog_ticket **ticket,
+> -			  uint8_t		   clientid,
+> -			  bool		   permanent);
+> -int	  xfs_log_regrant(struct xfs_mount *mp, struct xlog_ticket *tic);
+> -void      xfs_log_unmount(struct xfs_mount *mp);
+> -int	  xfs_log_force_umount(struct xfs_mount *mp, int logerror);
+> +void	xfs_log_space_wake(struct xfs_mount *mp);
+> +int	xfs_log_reserve(struct xfs_mount *mp, int length, int count,
+> +			struct xlog_ticket **ticket, bool permanent);
+> +int	xfs_log_regrant(struct xfs_mount *mp, struct xlog_ticket *tic);
+> +void	xfs_log_unmount(struct xfs_mount *mp);
+> +int	xfs_log_force_umount(struct xfs_mount *mp, int logerror);
+>  bool	xfs_log_writable(struct xfs_mount *mp);
+>  
+>  struct xlog_ticket *xfs_log_ticket_get(struct xlog_ticket *ticket);
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index e9da074ecd69..0c81c13e2cf6 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+> @@ -37,7 +37,7 @@ xlog_cil_ticket_alloc(
+>  {
+>  	struct xlog_ticket *tic;
+>  
+> -	tic = xlog_ticket_alloc(log, 0, 1, XFS_TRANSACTION, 0);
+> +	tic = xlog_ticket_alloc(log, 0, 1, 0);
+>  
+>  	/*
+>  	 * set the current reservation to zero so we know to steal the basic
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index bb5fa6b71114..7f601c1c9f45 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -158,7 +158,6 @@ typedef struct xlog_ticket {
+>  	int		   t_unit_res;	 /* unit reservation in bytes    : 4  */
+>  	char		   t_ocnt;	 /* original count		 : 1  */
+>  	char		   t_cnt;	 /* current count		 : 1  */
+> -	char		   t_clientid;	 /* who does this belong to;	 : 1  */
+>  	char		   t_flags;	 /* properties of reservation	 : 1  */
+>  
+>          /* reservation array fields */
+> @@ -465,13 +464,8 @@ extern __le32	 xlog_cksum(struct xlog *log, struct xlog_rec_header *rhead,
+>  			    char *dp, int size);
+>  
+>  extern kmem_zone_t *xfs_log_ticket_zone;
+> -struct xlog_ticket *
+> -xlog_ticket_alloc(
+> -	struct xlog	*log,
+> -	int		unit_bytes,
+> -	int		count,
+> -	char		client,
+> -	bool		permanent);
+> +struct xlog_ticket *xlog_ticket_alloc(struct xlog *log, int unit_bytes,
+> +		int count, bool permanent);
+>  
+>  static inline void
+>  xlog_write_adv_cnt(void **ptr, int *len, int *off, size_t bytes)
+> diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+> index 52f3fdf1e0de..83c2b7f22eb7 100644
+> --- a/fs/xfs/xfs_trans.c
+> +++ b/fs/xfs/xfs_trans.c
+> @@ -194,11 +194,9 @@ xfs_trans_reserve(
+>  			ASSERT(resp->tr_logflags & XFS_TRANS_PERM_LOG_RES);
+>  			error = xfs_log_regrant(mp, tp->t_ticket);
+>  		} else {
+> -			error = xfs_log_reserve(mp,
+> -						resp->tr_logres,
+> +			error = xfs_log_reserve(mp, resp->tr_logres,
+>  						resp->tr_logcount,
+> -						&tp->t_ticket, XFS_TRANSACTION,
+> -						permanent);
+> +						&tp->t_ticket, permanent);
+>  		}
+>  
+>  		if (error)
+> -- 
+> 2.28.0
+> 
 
