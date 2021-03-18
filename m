@@ -2,35 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B4AB341060
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Mar 2021 23:35:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0223E341063
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Mar 2021 23:35:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232710AbhCRWe2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Mar 2021 18:34:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55474 "EHLO mail.kernel.org"
+        id S230368AbhCRWe3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Mar 2021 18:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230368AbhCRWd5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 18 Mar 2021 18:33:57 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CDA7664E02;
-        Thu, 18 Mar 2021 22:33:56 +0000 (UTC)
+        id S231916AbhCRWd7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 18 Mar 2021 18:33:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2DCC064E0C;
+        Thu, 18 Mar 2021 22:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616106836;
-        bh=isMKDOucUAPZiYoxG6tViWiJFOxV9+N4TPVzqAsvgg8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Lk6nNN7BZumiXlvhxPL8eDVGWnFErL0tH82aMjfWM03i6UNLigE/rbRfM1Mn8zLlV
-         h7KnPdHLahOK9bu8nZgnvvVTu7WQKiVbKGQ1LrbBL4xPYo4TN9FI6LbzxlJrJ26QHR
-         tkpu6pktqPxfy8ZwyyTWzB5tWDMNQ+N7zc38JEk3SYjlcqqDVBGX/UQMNiOW/LawJ9
-         5fa4NHs9rY0W+vwUKymR3DhR90F+/tsvmNemcXymPMskkPaV+d/r4AEsYNJr76mSj0
-         xbADTH1MbEw1W2/XvYCoIzTzHzHCIV/qsXybD29S6fEOEIMryE69PUM0j9Tgj8JxsT
-         LjYC1NT/4eP+w==
-Subject: [PATCH 3/3] xfs: remove iter_flags parameter from xfs_inode_walk_*
+        s=k20201202; t=1616106839;
+        bh=SwsHJTA4kmkUQKa8WrU7knTgMstSraYvBdRyLrAEnXU=;
+        h=Subject:From:To:Cc:Date:From;
+        b=TqYVpuxQTZLWaEl1NwmDdysvZ5XzuWDZg3O5KqbQ9pKla/R3ptvYvoRXZtlV/ZqN2
+         jguh1ewnlBsfNfPwLXvDZdxA1hMx+JbVdE57ymCIltdvUOdSALVFXx21lfzRetj+pM
+         4qeh/jdP6VdlMTomKoLV3ruqCBRCS7zNmWYpCjn2lcQlOjd7ZJjgA9tQ2zBVvcZiZa
+         Q5cfAS0u4DROG1W1sXoqR29cKHviSnwLaq7MHrvB/HLyD/t10wO0j6BMeTJpjCjaBj
+         9GCl34SOfLp3HH5BVwmvsAOSFartLzpvyDUhjbNKCudzUHI1to00suxF8Ee8U9vGu9
+         wi726JXVuyeAg==
+Subject: [PATCHSET v4 0/7] xfs: deferred inode inactivation
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Date:   Thu, 18 Mar 2021 15:33:56 -0700
-Message-ID: <161610683632.1887634.9330923612964175378.stgit@magnolia>
-In-Reply-To: <161610681966.1887634.12780057277967410395.stgit@magnolia>
-References: <161610681966.1887634.12780057277967410395.stgit@magnolia>
+Cc:     Christoph Hellwig <hch@lst.de>, Dave Chinner <dchinner@redhat.com>,
+        linux-xfs@vger.kernel.org, hch@infradead.org
+Date:   Thu, 18 Mar 2021 15:33:58 -0700
+Message-ID: <161610683869.1887744.8863884017621115954.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,150 +38,105 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-The sole user of the INEW_WAIT flag to xfs_inode_walk is a caller that
-is external to the inode cache.  Since external callers have no business
-messing with INEW inodes or inode radix tree tags, we can get rid of the
-iter_flag entirely.
+This patch series implements deferred inode inactivation.  Inactivation
+is what happens when an open file loses its last incore reference: if
+the file has speculative preallocations, they must be freed, and if the
+file is unlinked, all forks must be truncated, and the inode marked
+freed in the inode chunk and the inode btrees.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Currently, all of this activity is performed in frontend threads when
+the last in-memory reference is lost and/or the vfs decides to drop the
+inode.  Three complaints stem from this behavior: first, that the time
+to unlink (in the worst case) depends on both the complexity of the
+directory as well as the the number of extents in that file; second,
+that deleting a directory tree is inefficient and seeky because we free
+the inodes in readdir order, not disk order; and third, the upcoming
+online repair feature needs to be able to xfs_irele while scanning a
+filesystem in transaction context.  It cannot perform inode inactivation
+in this context because xfs does not support nested transactions.
+
+The implementation will be familiar to those who have studied how XFS
+scans for reclaimable in-core inodes -- we create a couple more inode
+state flags to mark an inode as needing inactivation and being in the
+middle of inactivation.  When inodes need inactivation, we set
+NEED_INACTIVE in iflags, set the INACTIVE radix tree tag, and schedule a
+deferred work item.  The deferred worker runs in an unbounded workqueue,
+scanning the inode radix tree for tagged inodes to inactivate, and
+performing all the on-disk metadata updates.  Once the inode has been
+inactivated, it is left in the reclaim state and the background reclaim
+worker (or direct reclaim) will get to it eventually.
+
+Doing the inactivations from kernel threads solves the first problem by
+constraining the amount of work done by the unlink() call to removing
+the directory entry.  It solves the third problem by moving inactivation
+to a separate process.  Because the inactivations are done in order of
+inode number, we solve the second problem by performing updates in (we
+hope) disk order.  This also decreases the amount of time it takes to
+let go of an inode cluster if we're deleting entire directory trees.
+
+There are three big warts I can think of in this series: first, because
+the actual freeing of nlink==0 inodes is now done in the background,
+this means that the system will be busy making metadata updates for some
+time after the unlink() call returns.  This temporarily reduces
+available iops.  Second, in order to retain the behavior that deleting
+100TB of unshared data should result in a free space gain of 100TB, the
+statvfs and quota reporting ioctls wait for inactivation to finish,
+which increases the long tail latency of those calls.  This behavior is,
+unfortunately, key to not introducing regressions in fstests.  The third
+problem is that the deferrals keep memory usage higher for longer,
+reduce opportunities to throttle the frontend when metadata load is
+heavy, and the unbounded workqueues can create transaction storms.
+
+The first four patches that shift the inactivation call paths over to
+the background workqueue, and fix a few places where it was found to be
+advantageous to force frontend threads to push and wait for inactivation
+before making allocation decisions.
+
+The next two patches improve the performance of inactivation by
+enabling parallelization of the work and playing more nicely with vfs
+callers who hold locks.
+
+The last patch fixes a livelock vector that we can hit when walking the
+inode btree (if the inode btree contains a cycle) when servicing a
+BULKSTAT request.
+
+v1-v2: NYE patchbombs
+v3: rebase against 5.12-rc2 for submission.
+v4: combine the can/has eofblocks predicates, clean up incore inode tree
+    walks, fix inobt deadlock
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=deferred-inactivation-5.13
 ---
- fs/xfs/xfs_icache.c      |   20 ++++++++------------
- fs/xfs/xfs_icache.h      |    7 +------
- fs/xfs/xfs_qm_syscalls.c |    2 +-
- 3 files changed, 10 insertions(+), 19 deletions(-)
-
-
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 9198c7a7c3ca..563865140a99 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -732,10 +732,9 @@ xfs_icache_inode_is_allocated(
- STATIC bool
- xfs_inode_walk_ag_grab(
- 	struct xfs_inode	*ip,
--	int			flags)
-+	int			tag)
- {
- 	struct inode		*inode = VFS_I(ip);
--	bool			newinos = !!(flags & XFS_INODE_WALK_INEW_WAIT);
- 
- 	ASSERT(rcu_read_lock_held());
- 
-@@ -745,7 +744,7 @@ xfs_inode_walk_ag_grab(
- 		goto out_unlock_noent;
- 
- 	/* avoid new or reclaimable inodes. Leave for reclaim code to flush */
--	if ((!newinos && __xfs_iflags_test(ip, XFS_INEW)) ||
-+	if ((tag != XFS_ICI_NO_TAG && __xfs_iflags_test(ip, XFS_INEW)) ||
- 	    __xfs_iflags_test(ip, XFS_IRECLAIMABLE | XFS_IRECLAIM))
- 		goto out_unlock_noent;
- 	spin_unlock(&ip->i_flags_lock);
-@@ -781,7 +780,6 @@ inode_walk_fn_to_tag(int (*execute)(struct xfs_inode *ip, void *args))
- STATIC int
- xfs_inode_walk_ag(
- 	struct xfs_perag	*pag,
--	int			iter_flags,
- 	int			(*execute)(struct xfs_inode *ip, void *args),
- 	void			*args)
- {
-@@ -827,7 +825,7 @@ xfs_inode_walk_ag(
- 		for (i = 0; i < nr_found; i++) {
- 			struct xfs_inode *ip = batch[i];
- 
--			if (done || !xfs_inode_walk_ag_grab(ip, iter_flags))
-+			if (done || !xfs_inode_walk_ag_grab(ip, tag))
- 				batch[i] = NULL;
- 
- 			/*
-@@ -855,15 +853,14 @@ xfs_inode_walk_ag(
- 		for (i = 0; i < nr_found; i++) {
- 			if (!batch[i])
- 				continue;
--			if ((iter_flags & XFS_INODE_WALK_INEW_WAIT) &&
--			    xfs_iflags_test(batch[i], XFS_INEW))
--				xfs_inew_wait(batch[i]);
- 			switch (tag) {
- 			case XFS_ICI_BLOCKGC_TAG:
- 				error = xfs_blockgc_scan_inode(batch[i], args);
- 				xfs_irele(batch[i]);
- 				break;
- 			case XFS_ICI_NO_TAG:
-+				if (xfs_iflags_test(batch[i], XFS_INEW))
-+					xfs_inew_wait(batch[i]);
- 				error = execute(batch[i], args);
- 				xfs_irele(batch[i]);
- 				break;
-@@ -914,7 +911,6 @@ xfs_inode_walk_get_perag(
- int
- xfs_inode_walk(
- 	struct xfs_mount	*mp,
--	int			iter_flags,
- 	int			(*execute)(struct xfs_inode *ip, void *args),
- 	void			*args)
- {
-@@ -927,7 +923,7 @@ xfs_inode_walk(
- 	ag = 0;
- 	while ((pag = xfs_inode_walk_get_perag(mp, ag, tag))) {
- 		ag = pag->pag_agno + 1;
--		error = xfs_inode_walk_ag(pag, iter_flags, execute, args);
-+		error = xfs_inode_walk_ag(pag, execute, args);
- 		xfs_perag_put(pag);
- 		if (error) {
- 			last_error = error;
-@@ -1636,7 +1632,7 @@ xfs_blockgc_worker(
- 
- 	if (!sb_start_write_trylock(mp->m_super))
- 		return;
--	error = xfs_inode_walk_ag(pag, 0, xfs_blockgc_scan_inode, NULL);
-+	error = xfs_inode_walk_ag(pag, xfs_blockgc_scan_inode, NULL);
- 	if (error)
- 		xfs_info(mp, "AG %u preallocation gc worker failed, err=%d",
- 				pag->pag_agno, error);
-@@ -1654,7 +1650,7 @@ xfs_blockgc_free_space(
- {
- 	trace_xfs_blockgc_free_space(mp, eofb, _RET_IP_);
- 
--	return xfs_inode_walk(mp, 0, xfs_blockgc_scan_inode, eofb);
-+	return xfs_inode_walk(mp, xfs_blockgc_scan_inode, eofb);
- }
- 
- /*
-diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index a20bb89e3a38..04e59b775432 100644
---- a/fs/xfs/xfs_icache.h
-+++ b/fs/xfs/xfs_icache.h
-@@ -34,11 +34,6 @@ struct xfs_eofblocks {
- #define XFS_IGET_DONTCACHE	0x4
- #define XFS_IGET_INCORE		0x8	/* don't read from disk or reinit */
- 
--/*
-- * flags for AG inode iterator
-- */
--#define XFS_INODE_WALK_INEW_WAIT	0x1	/* wait on new inodes */
--
- int xfs_iget(struct xfs_mount *mp, struct xfs_trans *tp, xfs_ino_t ino,
- 	     uint flags, uint lock_flags, xfs_inode_t **ipp);
- 
-@@ -68,7 +63,7 @@ void xfs_inode_clear_cowblocks_tag(struct xfs_inode *ip);
- 
- void xfs_blockgc_worker(struct work_struct *work);
- 
--int xfs_inode_walk(struct xfs_mount *mp, int iter_flags,
-+int xfs_inode_walk(struct xfs_mount *mp,
- 	int (*execute)(struct xfs_inode *ip, void *args),
- 	void *args);
- 
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 2f42ea8a09ab..dad4d3fc3df3 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -795,5 +795,5 @@ xfs_qm_dqrele_all_inodes(
- 	uint			flags)
- {
- 	ASSERT(mp->m_quotainfo);
--	xfs_inode_walk(mp, XFS_INODE_WALK_INEW_WAIT, xfs_dqrele_inode, &flags);
-+	xfs_inode_walk(mp, xfs_dqrele_inode, &flags);
- }
+ Documentation/admin-guide/xfs.rst |   12 +
+ fs/xfs/scrub/common.c             |    2 
+ fs/xfs/xfs_bmap_util.c            |   44 +++
+ fs/xfs/xfs_fsops.c                |    9 +
+ fs/xfs/xfs_globals.c              |    3 
+ fs/xfs/xfs_icache.c               |  495 ++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_icache.h               |   10 +
+ fs/xfs/xfs_inode.c                |   93 +++++++
+ fs/xfs/xfs_inode.h                |   16 +
+ fs/xfs/xfs_itable.c               |   42 +++
+ fs/xfs/xfs_iwalk.c                |   32 ++
+ fs/xfs/xfs_linux.h                |    1 
+ fs/xfs/xfs_log_recover.c          |    7 +
+ fs/xfs/xfs_mount.c                |   16 +
+ fs/xfs/xfs_mount.h                |   11 +
+ fs/xfs/xfs_qm_syscalls.c          |   20 +
+ fs/xfs/xfs_super.c                |   53 +++-
+ fs/xfs/xfs_sysctl.c               |    9 +
+ fs/xfs/xfs_sysctl.h               |    1 
+ fs/xfs/xfs_trace.h                |   16 +
+ 20 files changed, 856 insertions(+), 36 deletions(-)
 
