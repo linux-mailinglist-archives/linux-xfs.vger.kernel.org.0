@@ -2,98 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E2BA341047
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Mar 2021 23:20:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96F59341059
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Mar 2021 23:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232103AbhCRWTb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Mar 2021 18:19:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
+        id S232096AbhCRWd5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Mar 2021 18:33:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231671AbhCRWTE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 18 Mar 2021 18:19:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8D01261574;
-        Thu, 18 Mar 2021 22:19:03 +0000 (UTC)
+        id S230368AbhCRWd1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 18 Mar 2021 18:33:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E52A264E02;
+        Thu, 18 Mar 2021 22:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616105943;
-        bh=YdUemmSHPPiic8wHVFYhEIKtIjaHgpyG0Vt3ilefaw0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tx89noOO1i7wNlqGQjbC8ezANUkg/hj/cc0cNNyf0GRVUh0x8xVl15fehABldy4yb
-         TkKwo0fNeiwKCq7RDRS8kyE9oEMPOPSGXdXwWPCnmQdhT5JzYx3FQpeh3Zbt1SMdpp
-         zKmQsrZnjvBIEu8B7z/7/T4hkw0PF9wu3j3lh3qjD+83cEvyJDaZJ6gQ3ek2PruKvH
-         xLfFJC5373iuRvnNzMfKMtj4gRJnRr2imgvq22q8EAYcdZ7tHJrhJtlvYyZM/xyvb8
-         2vKYebqZ5u5L8dar/zk746VegYU/F9XGERdoiLSeeATkJ4VEI5hZihaZaTgX6h887G
-         i5OSek+oEjq4A==
-Date:   Thu, 18 Mar 2021 15:19:01 -0700
+        s=k20201202; t=1616106807;
+        bh=LlRueU5VCiquaro3f0CgRpsD/Js/dRpHxVC2JaFCWXE=;
+        h=Subject:From:To:Cc:Date:From;
+        b=srFY+kfSlR9QUoJIZmS9YjB7EN+QDKuC6KwW99ufhbvFBFClG+svqO/k5rn+1GfCW
+         UKncASszLvTS4rW5p0/B3gKBXBdOnUrsRBEvUhGRKTC9r42bQhFdY4zzyf2Rg8OL0H
+         noUUVyC0bC3NiaTqVWX9g1X1wIh8UlOWgh7rS47n1M9kS7atng2Vxp8D+oeuwI15wI
+         bj7D1d/v4ogLJTky2AMxfrYdLoKZpPUJxy/iv+YIDSYxmoAkpiN9vaplKEMhHmBBgF
+         pOHm6IS0Jcj88TP+QPw9Yj5Ad1H6koqZmJI5M29nW/en+PAmxMcP06XrViCOywByNT
+         aBoF5SPKNeuIg==
+Subject: [PATCHSET 0/2] xfs: make xfs_can_free_eofblocks a predicate
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] xfs: set a mount flag when perag reservation is
- active
-Message-ID: <20210318221901.GN22100@magnolia>
-References: <20210318161707.723742-1-bfoster@redhat.com>
- <20210318161707.723742-2-bfoster@redhat.com>
- <20210318205536.GO63242@dread.disaster.area>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
+Date:   Thu, 18 Mar 2021 15:33:26 -0700
+Message-ID: <161610680641.1887542.10509468263256161712.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210318205536.GO63242@dread.disaster.area>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 07:55:36AM +1100, Dave Chinner wrote:
-> On Thu, Mar 18, 2021 at 12:17:06PM -0400, Brian Foster wrote:
-> > perag reservation is enabled at mount time on a per AG basis. The
-> > upcoming in-core allocation btree accounting mechanism needs to know
-> > when reservation is enabled and that all perag AGF contexts are
-> > initialized. As a preparation step, set a flag in the mount
-> > structure and unconditionally initialize the pagf on all mounts
-> > where at least one reservation is active.
-> 
-> I'm not sure this is a good idea. AFAICT, this means just about any
-> filesystem with finobt, reflink and/or rmap will now typically read
-> every AGF header in the filesystem at mount time. That means pretty
-> much every v5 filesystem in production...
+Hi all,
 
-They already do that, because the AG headers are where we store the
-btree block counts.
+The two patches in this set reorganize the responsibilities between
+xfs_can_free_eofblocks and xfs_free_eofblocks so that the first becomes
+a true predicate, and the second becomes a simple update function.  The
+goal is to be able to use the predicate to decide if a linked but
+unopened inode has speculative post-EOF preallocations and hence must go
+through the extra inactivation step.
 
-> We've always tried to avoid needing to reading all AG headers at
-> mount time because that does not scale when we have really large
-> filesystems (I'm talking petabytes here). We should only read AG
-> headers if there is something not fully recovered during the mount
-> (i.e. slow path) and not on every mount.
-> 
-> Needing to do a few thousand synchonous read IOs during mount makes
-> mount very slow, and as such we always try to do dynamic
-> instantiation of AG headers...  Testing I've done with exabyte scale
-> filesystems (>10^6 AGs) show that it can take minutes for mount to
-> run when each AG header needs to be read, and that's on SSDs where
-> the individual read latency is only a couple of hundred
-> microseconds. On spinning disks that can do 200 IOPS, we're
-> potentially talking hours just to mount really large filesystems...
+This requires a slight change in behavior of the background block gc
+workers, which will try to take the IOLOCK before calling the predicate.
 
-Is that with reflink enabled?  Reflink always scans the right edge of
-the refcount btree at mount to clean out stale COW staging extents, and
-(prior to the introduction of the inode btree counts feature last year)
-we also ahad to walk the entire finobt to find out how big it is.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-TBH I think the COW recovery and the AG block reservation pieces are
-prime candidates for throwing at an xfs_pwork workqueue so we can
-perform those scans in parallel.
-
-> Hence I don't think that any algorithm that requires reading every
-> AGF header in the filesystem at mount time on every v5 filesystem
-> already out there in production (because finobt triggers this) is a
-> particularly good idea...
-
-Perhaps not, but the horse bolted 5 years ago. :/
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
 --D
 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-has-eofblocks-5.13
+---
+ fs/xfs/xfs_bmap_util.c |  148 +++++++++++++++++++++++++-----------------------
+ fs/xfs/xfs_icache.c    |   12 +---
+ 2 files changed, 82 insertions(+), 78 deletions(-)
+
