@@ -2,33 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E63C2341062
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Mar 2021 23:35:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8A68341067
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Mar 2021 23:35:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232532AbhCRWea (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Mar 2021 18:34:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55586 "EHLO mail.kernel.org"
+        id S232764AbhCRWfB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Mar 2021 18:35:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232613AbhCRWe1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 18 Mar 2021 18:34:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 052D864E89;
-        Thu, 18 Mar 2021 22:34:26 +0000 (UTC)
+        id S232613AbhCRWec (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 18 Mar 2021 18:34:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8733264E0C;
+        Thu, 18 Mar 2021 22:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616106867;
-        bh=X6jKYiim1+dUm82hDi1wjdePpeUs6ZaRsUgdCYeCAYY=;
+        s=k20201202; t=1616106872;
+        bh=JggwjUwzt7xCuyKCsAymn3y9v+Q8R+uJPDxwOVZPVzI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AFXzqTD74D8anvvmJrdTKdLV16okUtTq9qU3dA8pA8k6DusAMMGJLUSZ4E69Ha5iN
-         9WVrQ3yCtB3BI85DBGskQhSezZGgjqOH4+xqRrOEpKYuSdJy3lJur5SXl090czH606
-         mCuVH3u8ksQ+ruayPzdQY1efeKKV5tCgfqAzebfdRPdW8uckUt+NXI8S0jZRYB5hTZ
-         A8ICBUzQOrDTsBvKtYEHx55+IgWhQN8sxinED5vAErt4+jt3FmFAKMEfte9RX+/Qbi
-         Z9eGmhdK8sugHhVoHmTwj0ymoHyduYG1TlrreMeqsHo86SXrlHrrX3NNt9H6TZJDgb
-         bUsZEEpFHnKKg==
-Subject: [PATCH 5/7] xfs: parallelize inode inactivation
+        b=eiB81Hyc2K2HoD7/4PhwgSCgVedgBTp4vyCl3fN2sNB+wzoWwP3YCcP+Zgzu/1U8i
+         FBZapeiP7UrHCnqrw7wxADsbAuaTZ0DCjcAGFo+frAnS0xFHFAZqHhUfw6gO4NjMJC
+         XQT+zv6aJyA+rsbn8Gn/4VpaK8FHh9vySNOyDUqpv3maK74zGZelypvcBrIJPMyA39
+         uNo3GcxdiDOc/LOhGv46KOiHLisiJ+o27pRdU4up4sQOsEpDdn1plTIb8JCnsW9b7V
+         P689MukLLle0/4nxDJtTbZ30Fv84XblAVIvMEvHbJwqrdV5Qry+vIQqd/A/9q3x0JI
+         M3xoNBerRDr8Q==
+Subject: [PATCH 6/7] xfs: create a polled function to force inode inactivation
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Date:   Thu, 18 Mar 2021 15:34:26 -0700
-Message-ID: <161610686666.1887744.12957913230179802761.stgit@magnolia>
+Date:   Thu, 18 Mar 2021 15:34:32 -0700
+Message-ID: <161610687219.1887744.12622367871348304784.stgit@magnolia>
 In-Reply-To: <161610683869.1887744.8863884017621115954.stgit@magnolia>
 References: <161610683869.1887744.8863884017621115954.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,102 +41,61 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Split the inode inactivation work into per-AG work items so that we can
-take advantage of parallelization.
+Create a polled version of xfs_inactive_force so that we can force
+inactivation while holding a lock (usually the umount lock) without
+tripping over the softlockup timer.  This is for callers that hold vfs
+locks while calling inactivation, which is currently unmount, iunlink
+processing during mount, and rw->ro remount.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_icache.c |   64 +++++++++++++++++++++++++++++++++++++--------------
- fs/xfs/xfs_mount.c  |    3 ++
- fs/xfs/xfs_mount.h  |    4 ++-
- fs/xfs/xfs_super.c  |    1 -
- 4 files changed, 52 insertions(+), 20 deletions(-)
+ fs/xfs/xfs_icache.c |   40 +++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_icache.h |    1 +
+ fs/xfs/xfs_mount.c  |    2 +-
+ fs/xfs/xfs_mount.h  |    5 +++++
+ fs/xfs/xfs_super.c  |    3 ++-
+ 5 files changed, 48 insertions(+), 3 deletions(-)
 
 
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 8c74e6f08d10..29d99e5edbdf 100644
+index 29d99e5edbdf..53104c463d0b 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -249,11 +249,13 @@ xfs_inode_clear_reclaim_tag(
- /* Queue a new inode gc pass if there are inodes needing inactivation. */
- static void
- xfs_inodegc_queue(
--	struct xfs_mount        *mp)
-+	struct xfs_perag	*pag)
+@@ -25,6 +25,7 @@
+ #include "xfs_ialloc.h"
+ 
+ #include <linux/iversion.h>
++#include <linux/nmi.h>
+ 
+ /* Forward declarations to reduce indirect calls in xfs_inode_walk_ag */
+ static int xfs_blockgc_scan_inode(struct xfs_inode *ip, void *args);
+@@ -2064,9 +2065,13 @@ xfs_inodegc_free_space(
+ 	struct xfs_mount	*mp,
+ 	struct xfs_eofblocks	*eofb)
  {
-+	struct xfs_mount	*mp = pag->pag_mount;
++	int			error;
 +
- 	rcu_read_lock();
- 	if (radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_INODEGC_TAG))
--		queue_delayed_work(mp->m_gc_workqueue, &mp->m_inodegc_work,
-+		queue_delayed_work(mp->m_gc_workqueue, &pag->pag_inodegc_work,
- 				msecs_to_jiffies(xfs_inodegc_centisecs * 10));
- 	rcu_read_unlock();
- }
-@@ -276,7 +278,7 @@ xfs_perag_set_inactive_tag(
- 	spin_unlock(&mp->m_perag_lock);
+ 	trace_xfs_inodegc_free_space(mp, eofb, _RET_IP_);
  
- 	/* schedule periodic background inode inactivation */
--	xfs_inodegc_queue(mp);
-+	xfs_inodegc_queue(pag);
- 
- 	trace_xfs_perag_set_inactive(mp, pag->pag_agno, -1, _RET_IP_);
- }
-@@ -2072,8 +2074,9 @@ void
- xfs_inodegc_worker(
- 	struct work_struct	*work)
- {
--	struct xfs_mount	*mp = container_of(to_delayed_work(work),
--					struct xfs_mount, m_inodegc_work);
-+	struct xfs_perag	*pag = container_of(to_delayed_work(work),
-+					struct xfs_perag, pag_inodegc_work);
-+	struct xfs_mount	*mp = pag->pag_mount;
- 	int			error;
- 
- 	/*
-@@ -2088,21 +2091,20 @@ xfs_inodegc_worker(
- 	if (!sb_start_write_trylock(mp->m_super))
- 		return;
- 
--	error = xfs_inodegc_free_space(mp, NULL);
-+	error = xfs_inode_walk_ag(pag, xfs_inodegc_inactivate, NULL);
- 	if (error && error != -EAGAIN)
- 		xfs_err(mp, "inode inactivation failed, error %d", error);
- 
- 	sb_end_write(mp->m_super);
--	xfs_inodegc_queue(mp);
-+	xfs_inodegc_queue(pag);
+-	return xfs_inode_walk(mp, xfs_inodegc_inactivate, eofb);
++	error = xfs_inode_walk(mp, xfs_inodegc_inactivate, eofb);
++	wake_up(&mp->m_inactive_wait);
++	return error;
  }
  
--/* Force all currently queued inode inactivation work to run immediately. */
--void
--xfs_inodegc_force(
--	struct xfs_mount	*mp)
-+/* Force all currently queued AG inode inactivation work to run immediately. */
-+static inline void
-+xfs_inodegc_force_pag(
-+	struct xfs_perag	*pag)
- {
--	if (!radix_tree_tagged(&mp->m_perag_tree, XFS_ICI_INODEGC_TAG))
--		return;
-+	struct xfs_mount	*mp = pag->pag_mount;
+ /* Background inode inactivation worker. */
+@@ -2136,6 +2141,39 @@ xfs_inodegc_force(
+ 	flush_workqueue(mp->m_gc_workqueue);
+ }
  
- 	/*
- 	 * In order to reset the delayed work to run immediately, we have to
-@@ -2111,9 +2113,27 @@ xfs_inodegc_force(
- 	 * will iterate the radix tree one extra time and find no inodes to
- 	 * inactivate.
- 	 */
--	cancel_delayed_work(&mp->m_inodegc_work);
--	queue_delayed_work(mp->m_gc_workqueue, &mp->m_inodegc_work, 0);
--	flush_delayed_work(&mp->m_inodegc_work);
-+	cancel_delayed_work(&pag->pag_inodegc_work);
-+	queue_delayed_work(mp->m_gc_workqueue, &pag->pag_inodegc_work, 0);
-+}
-+
-+/* Force all queued inode inactivation work to run immediately. */
++/*
++ * Force all inode inactivation work to run immediately, and poll until the
++ * work is complete.  Callers should only use this function if they must
++ * inactivate inodes while holding VFS locks, and must ensure that no new
++ * inodes will be queued for inactivation.
++ */
 +void
-+xfs_inodegc_force(
++xfs_inodegc_force_poll(
 +	struct xfs_mount	*mp)
 +{
 +	struct xfs_perag	*pag;
@@ -150,94 +109,81 @@ index 8c74e6f08d10..29d99e5edbdf 100644
 +	if (!queued)
 +		return;
 +
-+	flush_workqueue(mp->m_gc_workqueue);
- }
- 
++	/*
++	 * Touch the softlockup watchdog every 1/10th of a second while there
++	 * are still inactivation-tagged inodes in the filesystem.
++	 */
++	while (!wait_event_timeout(mp->m_inactive_wait,
++				   !radix_tree_tagged(&mp->m_perag_tree,
++						      XFS_ICI_INODEGC_TAG),
++				   HZ / 10)) {
++		touch_softlockup_watchdog();
++	}
++}
++
  /* Stop all queued inactivation work. */
-@@ -2121,7 +2141,11 @@ void
+ void
  xfs_inodegc_stop(
- 	struct xfs_mount	*mp)
- {
--	cancel_delayed_work_sync(&mp->m_inodegc_work);
-+	struct xfs_perag	*pag;
-+	xfs_agnumber_t		agno;
-+
-+	for_each_perag_tag(mp, agno, pag, XFS_ICI_INODEGC_TAG)
-+		cancel_delayed_work_sync(&pag->pag_inodegc_work);
- }
+diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
+index d4171998deef..371453028dc8 100644
+--- a/fs/xfs/xfs_icache.h
++++ b/fs/xfs/xfs_icache.h
+@@ -78,6 +78,7 @@ void xfs_blockgc_start(struct xfs_mount *mp);
  
- /* Schedule deferred inode inactivation work. */
-@@ -2129,5 +2153,9 @@ void
- xfs_inodegc_start(
- 	struct xfs_mount	*mp)
- {
--	xfs_inodegc_queue(mp);
-+	struct xfs_perag	*pag;
-+	xfs_agnumber_t		agno;
-+
-+	for_each_perag_tag(mp, agno, pag, XFS_ICI_INODEGC_TAG)
-+		xfs_inodegc_queue(pag);
- }
+ void xfs_inodegc_worker(struct work_struct *work);
+ void xfs_inodegc_force(struct xfs_mount *mp);
++void xfs_inodegc_force_poll(struct xfs_mount *mp);
+ void xfs_inodegc_stop(struct xfs_mount *mp);
+ void xfs_inodegc_start(struct xfs_mount *mp);
+ int xfs_inodegc_free_space(struct xfs_mount *mp, struct xfs_eofblocks *eofb);
 diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index cd015e3d72fc..a5963061485c 100644
+index a5963061485c..1012b1b361ba 100644
 --- a/fs/xfs/xfs_mount.c
 +++ b/fs/xfs/xfs_mount.c
-@@ -127,6 +127,7 @@ __xfs_free_perag(
- 	struct xfs_perag *pag = container_of(head, struct xfs_perag, rcu_head);
+@@ -1109,7 +1109,7 @@ xfs_unmountfs(
+ 	 * Since this can involve finobt updates, do it now before we lose the
+ 	 * per-AG space reservations.
+ 	 */
+-	xfs_inodegc_force(mp);
++	xfs_inodegc_force_poll(mp);
  
- 	ASSERT(!delayed_work_pending(&pag->pag_blockgc_work));
-+	ASSERT(!delayed_work_pending(&pag->pag_inodegc_work));
- 	ASSERT(atomic_read(&pag->pag_ref) == 0);
- 	kmem_free(pag);
- }
-@@ -148,6 +149,7 @@ xfs_free_perag(
- 		ASSERT(pag);
- 		ASSERT(atomic_read(&pag->pag_ref) == 0);
- 		cancel_delayed_work_sync(&pag->pag_blockgc_work);
-+		cancel_delayed_work_sync(&pag->pag_inodegc_work);
- 		xfs_iunlink_destroy(pag);
- 		xfs_buf_hash_destroy(pag);
- 		call_rcu(&pag->rcu_head, __xfs_free_perag);
-@@ -204,6 +206,7 @@ xfs_initialize_perag(
- 		pag->pag_mount = mp;
- 		spin_lock_init(&pag->pag_ici_lock);
- 		INIT_DELAYED_WORK(&pag->pag_blockgc_work, xfs_blockgc_worker);
-+		INIT_DELAYED_WORK(&pag->pag_inodegc_work, xfs_inodegc_worker);
- 		INIT_RADIX_TREE(&pag->pag_ici_root, GFP_ATOMIC);
- 
- 		error = xfs_buf_hash_init(pag);
+ 	xfs_blockgc_stop(mp);
+ 	xfs_fs_unreserve_ag_blocks(mp);
 diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index 987bb3cca9a7..ff765c73a542 100644
+index ff765c73a542..61dad1ba4dcf 100644
 --- a/fs/xfs/xfs_mount.h
 +++ b/fs/xfs/xfs_mount.h
-@@ -177,7 +177,6 @@ typedef struct xfs_mount {
- 	uint64_t		m_resblks_avail;/* available reserved blocks */
- 	uint64_t		m_resblks_save;	/* reserved blks @ remount,ro */
- 	struct delayed_work	m_reclaim_work;	/* background inode reclaim */
--	struct delayed_work	m_inodegc_work; /* background inode inactive */
- 	struct xfs_kobj		m_kobj;
- 	struct xfs_kobj		m_error_kobj;
- 	struct xfs_kobj		m_error_meta_kobj;
-@@ -370,6 +369,9 @@ typedef struct xfs_perag {
- 	/* background prealloc block trimming */
- 	struct delayed_work	pag_blockgc_work;
+@@ -213,6 +213,11 @@ typedef struct xfs_mount {
+ 	unsigned int		*m_errortag;
+ 	struct xfs_kobj		m_errortag_kobj;
+ #endif
++	/*
++	 * Use this to wait for the inode inactivation workqueue to finish
++	 * inactivating all the inodes.
++	 */
++	struct wait_queue_head	m_inactive_wait;
+ } xfs_mount_t;
  
-+	/* background inode inactivation */
-+	struct delayed_work	pag_inodegc_work;
-+
- 	/* reference count */
- 	uint8_t			pagf_refcount_level;
- 
+ #define M_IGEO(mp)		(&(mp)->m_ino_geo)
 diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 8d0142487fc7..566e5657c1b0 100644
+index 566e5657c1b0..8329a3efced7 100644
 --- a/fs/xfs/xfs_super.c
 +++ b/fs/xfs/xfs_super.c
-@@ -1879,7 +1879,6 @@ static int xfs_init_fs_context(
- 	mutex_init(&mp->m_growlock);
+@@ -1754,7 +1754,7 @@ xfs_remount_ro(
+ 	 * Since this can involve finobt updates, do it now before we lose the
+ 	 * per-AG space reservations.
+ 	 */
+-	xfs_inodegc_force(mp);
++	xfs_inodegc_force_poll(mp);
+ 
+ 	/* Free the per-AG metadata reservation pool. */
+ 	error = xfs_fs_unreserve_ag_blocks(mp);
+@@ -1880,6 +1880,7 @@ static int xfs_init_fs_context(
  	INIT_WORK(&mp->m_flush_inodes_work, xfs_flush_inodes_worker);
  	INIT_DELAYED_WORK(&mp->m_reclaim_work, xfs_reclaim_worker);
--	INIT_DELAYED_WORK(&mp->m_inodegc_work, xfs_inodegc_worker);
  	mp->m_kobj.kobject.kset = xfs_kset;
++	init_waitqueue_head(&mp->m_inactive_wait);
  	/*
  	 * We don't create the finobt per-ag space reservation until after log
+ 	 * recovery, so we must set this to true so that an ifree transaction
 
