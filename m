@@ -2,131 +2,250 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F4F342037
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Mar 2021 15:55:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BE99342063
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Mar 2021 16:01:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbhCSOyl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Mar 2021 10:54:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:25964 "EHLO
+        id S230289AbhCSPAl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Mar 2021 11:00:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39744 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230129AbhCSOyb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Mar 2021 10:54:31 -0400
+        by vger.kernel.org with ESMTP id S230429AbhCSPAf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Mar 2021 11:00:35 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616165670;
+        s=mimecast20190719; t=1616166035;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=B7Ccke4T7IKLKb3kxulBtUhWejgVv3HldvSq54k64nY=;
-        b=A1HSthryG9Fs32p8HdKzW2L+sVegxvz2A8vTFdBcQWTIjqs1S3YeJh7Z+XjigJpr0kKk+2
-        z94SCgewo7xV3e9M95opnBu+QlmGQ0rosdio1yhOCZOiuJecw7R3e3A5n5n8HhDoJIWvna
-        AsNOx2SRZMfNOuOPn/i8QxuVzIXVBAU=
+        bh=7QeO9iUqXIKe5giieHjMrrKzsyriKUPJvjcJgyy2tPU=;
+        b=KLvuAvsQXeCxl4ewIosvarIN2RR8h8AiLm9Uc5tXitEk3fSdE4LExXIf+5AMKJ59AbTomE
+        2JLZSrVBPVYqADz/u39T1JPMjVvNJbuBBdJAFEXST2VkvS1+A7BcvH5LiUqywpyRQxSu72
+        BvHIxFbSFpcmCRYGYQOtIFj2TCNXQn0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-416-y0--7Sp9NW-aYEVtWbTF6w-1; Fri, 19 Mar 2021 10:54:28 -0400
-X-MC-Unique: y0--7Sp9NW-aYEVtWbTF6w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-192-ybGtNLIsNYi4_JzbW76QRg-1; Fri, 19 Mar 2021 11:00:33 -0400
+X-MC-Unique: ybGtNLIsNYi4_JzbW76QRg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4B9719251A7;
-        Fri, 19 Mar 2021 14:54:27 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54F6010866A5;
+        Fri, 19 Mar 2021 15:00:32 +0000 (UTC)
 Received: from bfoster (ovpn-112-98.rdu2.redhat.com [10.10.112.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 504315D9C6;
-        Fri, 19 Mar 2021 14:54:27 +0000 (UTC)
-Date:   Fri, 19 Mar 2021 10:54:25 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CB63E60CEB;
+        Fri, 19 Mar 2021 15:00:31 +0000 (UTC)
+Date:   Fri, 19 Mar 2021 11:00:29 -0400
 From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] xfs: set a mount flag when perag reservation is
- active
-Message-ID: <YFS7IbGIyf4VqF59@bfoster>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] xfs: set aside allocation btree blocks from block
+ reservation
+Message-ID: <YFS8jXreUd8TL2nn@bfoster>
 References: <20210318161707.723742-1-bfoster@redhat.com>
- <20210318161707.723742-2-bfoster@redhat.com>
- <20210318205536.GO63242@dread.disaster.area>
- <20210318221901.GN22100@magnolia>
- <20210319010506.GP63242@dread.disaster.area>
- <20210319014303.GQ63242@dread.disaster.area>
+ <20210318161707.723742-3-bfoster@redhat.com>
+ <20210318203153.GM22100@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210319014303.GQ63242@dread.disaster.area>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20210318203153.GM22100@magnolia>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 12:43:03PM +1100, Dave Chinner wrote:
-> On Fri, Mar 19, 2021 at 12:05:06PM +1100, Dave Chinner wrote:
-> > On Thu, Mar 18, 2021 at 03:19:01PM -0700, Darrick J. Wong wrote:
-> > > TBH I think the COW recovery and the AG block reservation pieces are
-> > > prime candidates for throwing at an xfs_pwork workqueue so we can
-> > > perform those scans in parallel.
+On Thu, Mar 18, 2021 at 01:31:53PM -0700, Darrick J. Wong wrote:
+> On Thu, Mar 18, 2021 at 12:17:07PM -0400, Brian Foster wrote:
+> > The blocks used for allocation btrees (bnobt and countbt) are
+> > technically considered free space. This is because as free space is
+> > used, allocbt blocks are removed and naturally become available for
+> > traditional allocation. However, this means that a significant
+> > portion of free space may consist of in-use btree blocks if free
+> > space is severely fragmented.
 > > 
-> > As I mentioned on #xfs, I think we only need to do the AG read if we
-> > are near enospc. i.e. we can take the entire reservation at mount
-> > time (which is fixed per-ag) and only take away the used from the
-> > reservation (i.e. return to the free space pool) when we actually
-> > access the AGF/AGI the first time. Or when we get a ENOSPC
-> > event, which might occur when we try to take the fixed reservation
-> > at mount time...
+> > On large filesystems with large perag reservations, this can lead to
+> > a rare but nasty condition where a significant amount of physical
+> > free space is available, but the majority of actual usable blocks
+> > consist of in-use allocbt blocks. We have a record of a (~12TB, 32
+> > AG) filesystem with multiple AGs in a state with ~2.5GB or so free
+> > blocks tracked across ~300 total allocbt blocks, but effectively at
+> > 100% full because the the free space is entirely consumed by
+> > refcountbt perag reservation.
+> > 
+> > Such a large perag reservation is by design on large filesystems.
+> > The problem is that because the free space is so fragmented, this AG
+> > contributes the 300 or so allocbt blocks to the global counters as
+> > free space. If this pattern repeats across enough AGs, the
+> > filesystem lands in a state where global block reservation can
+> > outrun physical block availability. For example, a streaming
+> > buffered write on the affected filesystem continues to allow delayed
+> > allocation beyond the point where writeback starts to fail due to
+> > physical block allocation failures. The expected behavior is for the
+> > delalloc block reservation to fail gracefully with -ENOSPC before
+> > physical block allocation failure is a possibility.
+> > 
+> > To address this problem, introduce an in-core counter to track the
+> > sum of all allocbt blocks in use by the filesystem. Use the new
+> > counter to set these blocks aside at reservation time and thus
+> > ensure they cannot be reserved until truly available. Since this is
+> > only necessary when perag reservations are active and the counter
+> > requires a read of each AGF to fully populate, only enforce on perag
+> > res enabled filesystems. This allows initialization of the counter
+> > at ->pagf_init time because the perag reservation init code reads
+> > each AGF at mount time.
+> > 
+> > Signed-off-by: Brian Foster <bfoster@redhat.com>
+> > ---
+> >  fs/xfs/libxfs/xfs_alloc.c       | 12 ++++++++++++
+> >  fs/xfs/libxfs/xfs_alloc_btree.c |  2 ++
+> >  fs/xfs/xfs_mount.c              | 18 +++++++++++++++++-
+> >  fs/xfs/xfs_mount.h              |  6 ++++++
+> >  4 files changed, 37 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+> > index 0c623d3c1036..9fa378d2724e 100644
+> > --- a/fs/xfs/libxfs/xfs_alloc.c
+> > +++ b/fs/xfs/libxfs/xfs_alloc.c
+> > @@ -3036,6 +3036,7 @@ xfs_alloc_read_agf(
+> >  	struct xfs_agf		*agf;		/* ag freelist header */
+> >  	struct xfs_perag	*pag;		/* per allocation group data */
+> >  	int			error;
+> > +	uint32_t		allocbt_blks;
+> >  
+> >  	trace_xfs_alloc_read_agf(mp, agno);
+> >  
+> > @@ -3066,6 +3067,17 @@ xfs_alloc_read_agf(
+> >  		pag->pagf_refcount_level = be32_to_cpu(agf->agf_refcount_level);
+> >  		pag->pagf_init = 1;
+> >  		pag->pagf_agflreset = xfs_agfl_needs_reset(mp, agf);
+> > +
+> > +		/*
+> > +		 * Update the global in-core allocbt block counter. Filter
+> > +		 * rmapbt blocks from the on-disk counter because those are
+> > +		 * managed by perag reservation.
+> > +		 */
+> > +		if (pag->pagf_btreeblks > be32_to_cpu(agf->agf_rmap_blocks)) {
+> > +			allocbt_blks = pag->pagf_btreeblks -
+> > +					be32_to_cpu(agf->agf_rmap_blocks);
+> > +			atomic64_add(allocbt_blks, &mp->m_allocbt_blks);
 > 
-> Which leaves the question about when we need to actually do the
-> accounting needed to fix the bug Brian is trying to fix. Can that be
-> delayed until we read the AGFs or have an ENOSPC event occur? Or
-> maybe some other "we are near ENOSPC and haven't read all AGFs yet"
-> threshold/trigger?
+> Does growfs call xfs_alloc_read_agf to set pagf_init in the perag
+> structure when it adds AGs to the filesystem?  I don't /think/ that's
+> a problem for this use case (since allocbt_blks should be 0 on a freshly
+> initialized AG) but i was a little surprised to see block reservation
+> bits here.
 > 
 
-Technically there isn't a hard requirement to read in any AGFs at mount
-time. The tradeoff is that leaves a gap in effectiveness until at least
-the majority of allocbt blocks have been accounted for (via perag agf
-initialization). The in-core counter simply folds into the reservation
-set aside value, so it would just remain at 0 at reservation time and
-behave as if the mechanism didn't exist in the first place. The obvious
-risk is a user can mount the fs and immediately acquire reservation
-without having populated the counter from enough AGs to prevent the
-reservation overrun problem. For that reason, I didn't really consider
-the "lazy" init approach a suitable fix and hooked onto the (mostly)
-preexisting perag res behavior to initialize the appropriate structures
-at mount time.
+I'm not sure it matters who reads AGFs as long as the global counter
+remains consistent. For growing an existing AG, it looks like we "free"
+the new space into the AG so I think that should be tracked accordingly
+like any other alloc/free. For a new AG, it looks like ->agf_btreeblks
+starts at 0 and then the perags would likely init through the perag res
+call that runs as the final step before the growfs returns.
 
-If that underlying mount time behavior changes, it's not totally clear
-to me how that impacts this patch. If the perag res change relies on an
-overestimated mount time reservation and a fallback to a hard scan on
--ENOSPC, then I wonder whether the overestimated reservation might
-effectively subsume whatever the allocbt set aside might be for that AG.
-If so, and the perag init effectively transfers excess reservation back
-to free space at the same time allocbt blocks are accounted for (and set
-aside from subsequent reservations), perhaps that has a similar net
-effect as the current behavior (of initializing the allocbt count at
-mount time)..?
+> The other thing is that online repair (what little of it is in the
+> kernel currently) can set pagf_init = 0; is that a problem?
+> 
 
-One problem is that might be hard to reason about even with code in
-place, let alone right now when the targeted behavior is still
-vaporware. OTOH, I suppose that if we do know right now that the perag
-res scan will still fall back to mount time scans beyond some low free
-space threshold, perhaps it's just a matter of factoring allocbt set
-aside into the threshold somehow so that we know the counter will always
-be initialized before a user can over reserve blocks. As it is, I don't
-really have a strong opinion on whether we should try to make this fix
-now and preserve it, or otherwise table it and revisit once we know what
-the resulting perag res code will look like. Thoughts?
+Hmm.. if the AGF is corrupt, it seems likely that the in-core counter is
+busted as well. We could do something like account the delta from pre
+and post repair into the global counter, but I'd be weary of scenarios
+where the AGF might have become inconsistent with the counter somehow
+and the delta itself would throw it off. That might be unlikely, but
+what scares me about that is we could actually break the global counter
+by attempting to fix it so allocbt blocks become reservable again.
+
+I'm not sure there's a great answer here. Perhaps the safest thing would
+be to warn about an ->agf_btreeblks inconsistency that might result in
+some number of "unusable" blocks until a mount cycle occurs and
+resynchronizes the global counter..? That also seems to be consistent
+with how we handle the superblock counters after an agf repair.
+
+(All that said, I am somewhat hesitant to add to this unless we
+determine the approach is still viable after the expected perag res
+changes...).
 
 Brian
 
-> If that's the case, then I'm happy to have this patchset proceed as
-> it stands under the understanding that there will be follow up to
-> make the clean, lots of space free mount case avoid reading the the
-> AG headers.
+> --D
 > 
-> If it can't be made constrained, then I think we probably need to
-> come up with a different approach that doesn't require reading every
-> AG header on every mount...
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> > +		}
+> >  	}
+> >  #ifdef DEBUG
+> >  	else if (!XFS_FORCED_SHUTDOWN(mp)) {
+> > diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
+> > index 8e01231b308e..9f5a45f7baed 100644
+> > --- a/fs/xfs/libxfs/xfs_alloc_btree.c
+> > +++ b/fs/xfs/libxfs/xfs_alloc_btree.c
+> > @@ -71,6 +71,7 @@ xfs_allocbt_alloc_block(
+> >  		return 0;
+> >  	}
+> >  
+> > +	atomic64_inc(&cur->bc_mp->m_allocbt_blks);
+> >  	xfs_extent_busy_reuse(cur->bc_mp, cur->bc_ag.agno, bno, 1, false);
+> >  
+> >  	xfs_trans_agbtree_delta(cur->bc_tp, 1);
+> > @@ -95,6 +96,7 @@ xfs_allocbt_free_block(
+> >  	if (error)
+> >  		return error;
+> >  
+> > +	atomic64_dec(&cur->bc_mp->m_allocbt_blks);
+> >  	xfs_extent_busy_insert(cur->bc_tp, be32_to_cpu(agf->agf_seqno), bno, 1,
+> >  			      XFS_EXTENT_BUSY_SKIP_DISCARD);
+> >  	xfs_trans_agbtree_delta(cur->bc_tp, -1);
+> > diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> > index 1c97b155a8ee..29f97e909607 100644
+> > --- a/fs/xfs/xfs_mount.c
+> > +++ b/fs/xfs/xfs_mount.c
+> > @@ -1176,6 +1176,7 @@ xfs_mod_fdblocks(
+> >  	int64_t			lcounter;
+> >  	long long		res_used;
+> >  	s32			batch;
+> > +	uint64_t		set_aside;
+> >  
+> >  	if (delta > 0) {
+> >  		/*
+> > @@ -1215,8 +1216,23 @@ xfs_mod_fdblocks(
+> >  	else
+> >  		batch = XFS_FDBLOCKS_BATCH;
+> >  
+> > +	/*
+> > +	 * Set aside allocbt blocks because these blocks are tracked as free
+> > +	 * space but not available for allocation. Technically this means that a
+> > +	 * single reservation cannot consume all remaining free space, but the
+> > +	 * ratio of allocbt blocks to usable free blocks should be rather small.
+> > +	 * The tradeoff without this is that filesystems that maintain high
+> > +	 * perag block reservations can over reserve physical block availability
+> > +	 * and fail physical allocation, which leads to much more serious
+> > +	 * problems (i.e. transaction abort, pagecache discards, etc.) than
+> > +	 * slightly premature -ENOSPC.
+> > +	 */
+> > +	set_aside = mp->m_alloc_set_aside;
+> > +	if (mp->m_has_agresv)
+> > +		set_aside += atomic64_read(&mp->m_allocbt_blks);
+> > +
+> >  	percpu_counter_add_batch(&mp->m_fdblocks, delta, batch);
+> > -	if (__percpu_counter_compare(&mp->m_fdblocks, mp->m_alloc_set_aside,
+> > +	if (__percpu_counter_compare(&mp->m_fdblocks, set_aside,
+> >  				     XFS_FDBLOCKS_BATCH) >= 0) {
+> >  		/* we had space! */
+> >  		return 0;
+> > diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+> > index 489d9b2c53d9..041f437dc117 100644
+> > --- a/fs/xfs/xfs_mount.h
+> > +++ b/fs/xfs/xfs_mount.h
+> > @@ -171,6 +171,12 @@ typedef struct xfs_mount {
+> >  	 * extents or anything related to the rt device.
+> >  	 */
+> >  	struct percpu_counter	m_delalloc_blks;
+> > +	/*
+> > +	 * Global count of allocation btree blocks in use across all AGs. Only
+> > +	 * used when perag reservation is enabled. Helps prevent block
+> > +	 * reservation from attempting to reserve allocation btree blocks.
+> > +	 */
+> > +	atomic64_t		m_allocbt_blks;
+> >  
+> >  	struct radix_tree_root	m_perag_tree;	/* per-ag accounting info */
+> >  	spinlock_t		m_perag_lock;	/* lock for m_perag_tree */
+> > -- 
+> > 2.26.2
+> > 
 > 
 
