@@ -2,141 +2,173 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B67A341228
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Mar 2021 02:34:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE81C34122B
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Mar 2021 02:35:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbhCSBeV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Mar 2021 21:34:21 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:34869 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229948AbhCSBd6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Mar 2021 21:33:58 -0400
-Received: from dread.disaster.area (pa49-181-239-12.pa.nsw.optusnet.com.au [49.181.239.12])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id BAFA663EF9;
-        Fri, 19 Mar 2021 12:33:56 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1lN41U-0048oQ-7o; Fri, 19 Mar 2021 12:33:56 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1lN41U-003FtL-0D; Fri, 19 Mar 2021 12:33:56 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     hsiangkao@redhat.com
-Subject: [PATCH 7/7] repair: scale duplicate name checking in phase 6.
-Date:   Fri, 19 Mar 2021 12:33:55 +1100
-Message-Id: <20210319013355.776008-8-david@fromorbit.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210319013355.776008-1-david@fromorbit.com>
-References: <20210319013355.776008-1-david@fromorbit.com>
+        id S230056AbhCSBey (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Mar 2021 21:34:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230049AbhCSBee (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 18 Mar 2021 21:34:34 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8161A64E45;
+        Fri, 19 Mar 2021 01:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616117674;
+        bh=fxd5cPLKXMijFoty7ns+2iZQRnp4ElyuPcRkia0eK8w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u38dTFU5CS6p7E7+uA6XC0BxYrKqBktxaE6aiGI7OM2uKprEwDNe5fvXlnYsloi0/
+         To7TpfClaDKCQ00BUUjdj73aizsZjsTPZsKlFpjoSwz3b9wj3bFCKu5NOrrl2L0Czq
+         vF7e7PKgkrJOyTLQqPFqWBWqwlu9WUFxknArAvLQPkwrZJNbZ4mVsK1KAGztE+p/a7
+         ySLk1gZfMSDPgZeZkfZ6yUInl3RE4DLpkQRet3sjtbpVBFQDJ1RQY6tG0WK06uwlAC
+         bd0JfC5m9LehmXdw+yGqVkZOEVhEoQSawgHXLxFhuYGjbK44nU0OYvHdx8tbGwlzVB
+         HYNQxSdxi/jVA==
+Date:   Thu, 18 Mar 2021 18:34:30 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Brian Foster <bfoster@redhat.com>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] xfs: set a mount flag when perag reservation is
+ active
+Message-ID: <20210319013430.GO22100@magnolia>
+References: <20210318161707.723742-1-bfoster@redhat.com>
+ <20210318161707.723742-2-bfoster@redhat.com>
+ <20210318205536.GO63242@dread.disaster.area>
+ <20210318221901.GN22100@magnolia>
+ <20210319010506.GP63242@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
-        a=gO82wUwQTSpaJfP49aMSow==:117 a=gO82wUwQTSpaJfP49aMSow==:17
-        a=dESyimp9J3IA:10 a=20KFwNOVAAAA:8 a=3pgqu3-PYap36f93kZgA:9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210319010506.GP63242@dread.disaster.area>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Fri, Mar 19, 2021 at 12:05:06PM +1100, Dave Chinner wrote:
+> On Thu, Mar 18, 2021 at 03:19:01PM -0700, Darrick J. Wong wrote:
+> > On Fri, Mar 19, 2021 at 07:55:36AM +1100, Dave Chinner wrote:
+> > > On Thu, Mar 18, 2021 at 12:17:06PM -0400, Brian Foster wrote:
+> > > > perag reservation is enabled at mount time on a per AG basis. The
+> > > > upcoming in-core allocation btree accounting mechanism needs to know
+> > > > when reservation is enabled and that all perag AGF contexts are
+> > > > initialized. As a preparation step, set a flag in the mount
+> > > > structure and unconditionally initialize the pagf on all mounts
+> > > > where at least one reservation is active.
+> > > 
+> > > I'm not sure this is a good idea. AFAICT, this means just about any
+> > > filesystem with finobt, reflink and/or rmap will now typically read
+> > > every AGF header in the filesystem at mount time. That means pretty
+> > > much every v5 filesystem in production...
+> > 
+> > They already do that, because the AG headers are where we store the
+> > btree block counts.
+> 
+> Oh, we're brute forcing AG reservation space? I thought we were
+> doing something smarter than that, because I'm sure this isn't the
+> first time I've mentioned this problem....
 
-phase 6 on large directories is cpu bound on duplicate name checking
-due to the algorithm having effectively O(n^2) scalability. Hence
-when the duplicate name hash table  size is far smaller than the
-number of directory entries, we end up with long hash chains that
-are searched linearly on every new entry that is found in the
-directory to do duplicate detection.
+Probably not... :)
 
-The in-memory hash table size is limited to 64k entries. Hence when
-we have millions of entries in a directory, duplicate entry lookups
-on the hash table have substantial overhead. Scale this table out to
-larger sizes so that we keep the chain lengths short and hence the
-O(n^2) scalability impact is limited because N is always small.
+> > > We've always tried to avoid needing to reading all AG headers at
+> > > mount time because that does not scale when we have really large
+> > > filesystems (I'm talking petabytes here). We should only read AG
+> > > headers if there is something not fully recovered during the mount
+> > > (i.e. slow path) and not on every mount.
+> > > 
+> > > Needing to do a few thousand synchonous read IOs during mount makes
+> > > mount very slow, and as such we always try to do dynamic
+> > > instantiation of AG headers...  Testing I've done with exabyte scale
+> > > filesystems (>10^6 AGs) show that it can take minutes for mount to
+> > > run when each AG header needs to be read, and that's on SSDs where
+> > > the individual read latency is only a couple of hundred
+> > > microseconds. On spinning disks that can do 200 IOPS, we're
+> > > potentially talking hours just to mount really large filesystems...
+> > 
+> > Is that with reflink enabled?  Reflink always scans the right edge of
+> > the refcount btree at mount to clean out stale COW staging extents,
+> 
+> Aren't they cleaned up at unmount when the inode is inactivated?
 
-For a 10M entry directory consuming 400MB of directory data, the
-hash table now sizes at 6.4 million entries instead of ~64k - it is
-~100x larger. While the hash table now consumes ~50MB of RAM, the
-xfs_repair footprint barely changes as it's using already consuming
-~9GB of RAM at this point in time. IOWs, the incremental memory
-usage change is noise, but the directory checking time:
+Yes.  Or when the blockgc timeout expires, or when ENOSPC pushes
+blockgc...
 
-Unpatched:
+> i.e. isn't this something that should only be done on a unclean
+> mount?
 
-  97.11%  xfs_repair          [.] dir_hash_add
-   0.38%  xfs_repair          [.] longform_dir2_entry_check_data
-   0.34%  libc-2.31.so        [.] __libc_calloc
-   0.32%  xfs_repair          [.] avl_ino_start
+Years ago (back when reflink was experimental) we left it that way so
+that if there were any serious implementation bugs we wouldn't leak
+blocks everywhere.  I think we forgot to take it out.
 
-Phase 6:        10/22 12:11:40  10/22 12:14:28  2 minutes, 48 seconds
+> > and
+> > (prior to the introduction of the inode btree counts feature last year)
+> > we also ahad to walk the entire finobt to find out how big it is.
+> 
+> ugh, I forgot about the fact we had to add that wart because we
+> screwed up the space reservations for finobt operations...
 
-Patched:
+Yeah.
 
-  46.74%  xfs_repair          [.] radix_tree_lookup
-  32.13%  xfs_repair          [.] dir_hash_see_all
-   7.70%  xfs_repair          [.] radix_tree_tag_get
-   3.92%  xfs_repair          [.] dir_hash_add
-   3.52%  xfs_repair          [.] radix_tree_tag_clear
-   2.43%  xfs_repair          [.] crc32c_le
+> As for large scale testing, I suspect I turned everything optional
+> off when I last did this testing, because mkfs currently requires a
+> lot of per-AG IO to initialise structures. On an SSD, mkfs.xfs
+> -K -f -d agcount=10000 ... takes
+> 
+> 		mkfs time	mount time
+> -m crc=0	15s		1s
+> -m rmapbt=1	25s		6s
+> 
+> Multiply those times by at another 1000 to get to an 8EB
+> filesystem and the difference is several hours of mkfs time and
+> a couple of hours of mount time....
+> 
+> So from the numbers, it is pretty likely I didn't test anything that
+> actually required iterating 8 million AGs at mount time....
+> 
+> > TBH I think the COW recovery and the AG block reservation pieces are
+> > prime candidates for throwing at an xfs_pwork workqueue so we can
+> > perform those scans in parallel.
 
-Phase 6:        10/22 13:11:01  10/22 13:11:18  17 seconds
+[This didn't turn out to be difficult at all.]
 
-has been reduced by an order of magnitude.
+> As I mentioned on #xfs, I think we only need to do the AG read if we
+> are near enospc. i.e. we can take the entire reservation at mount
+> time (which is fixed per-ag) and only take away the used from the
+> reservation (i.e. return to the free space pool) when we actually
+> access the AGF/AGI the first time. Or when we get a ENOSPC
+> event, which might occur when we try to take the fixed reservation
+> at mount time...
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- repair/phase6.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+<nod> That's probably not hard.  Compute the theoretical maximum size of
+the finobt/rmapbt/refcountbt, multiply that by the number of AGs, try to
+reserve that much, and if we get it, we can trivially initialise the
+per-AG reservation structure.  If that fails, we fall back to the
+scanning thing we do now:
 
-diff --git a/repair/phase6.c b/repair/phase6.c
-index a432856cca52..f72c92032009 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -288,19 +288,37 @@ dir_hash_done(
- 	free(hashtab);
- }
- 
-+/*
-+ * Create a directory hash index structure based on the size of the directory we
-+ * are about to try to repair. The size passed in is the size of the data
-+ * segment of the directory in bytes, so we don't really know exactly how many
-+ * entries are in it. Hence assume an entry size of around 64 bytes - that's a
-+ * name length of 40+ bytes so should cover a most situations with large
-+ * really directories.
-+ */
- static struct dir_hash_tab *
- dir_hash_init(
- 	xfs_fsize_t		size)
- {
--	struct dir_hash_tab	*hashtab;
-+	struct dir_hash_tab	*hashtab = NULL;
- 	int			hsize;
- 
--	hsize = size / (16 * 4);
--	if (hsize > 65536)
--		hsize = 63336;
--	else if (hsize < 16)
-+	hsize = size / 64;
-+	if (hsize < 16)
- 		hsize = 16;
--	if ((hashtab = calloc(DIR_HASH_TAB_SIZE(hsize), 1)) == NULL)
-+
-+	/*
-+	 * Try to allocate as large a hash table as possible. Failure to
-+	 * allocate isn't fatal, it will just result in slower performance as we
-+	 * reduce the size of the table.
-+	 */
-+	while (hsize >= 16) {
-+		hashtab = calloc(DIR_HASH_TAB_SIZE(hsize), 1);
-+		if (hashtab)
-+			break;
-+		hsize /= 2;
-+	}
-+	if (!hashtab)
- 		do_error(_("calloc failed in dir_hash_init\n"));
- 	hashtab->size = hsize;
- 	hashtab->byhash = (struct dir_hash_ent **)((char *)hashtab +
--- 
-2.30.1
+When we set pag[if]_init in the per-AG structure, we can back off the
+space reservation by the number of blocks in the trees tracked by that
+AG header, which will add that quantity to fdblocks.  We can handle the
+ENOSPC case by modifying the per-AG blockgc worker to load the AGF/AGI
+if they aren't already.
 
+> > > Hence I don't think that any algorithm that requires reading every
+> > > AGF header in the filesystem at mount time on every v5 filesystem
+> > > already out there in production (because finobt triggers this) is a
+> > > particularly good idea...
+> > 
+> > Perhaps not, but the horse bolted 5 years ago. :/
+> 
+> Let's go catch it :P
+
+FWIW I previously fixed the rmapbt/reflink transaction reservations
+being unnecessarily large, so (provided deferred inode inactivation gets
+reviewed this cycle) I can try to put all these reflink cleanups
+together for the next cycle.
+
+--D
+
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
