@@ -2,96 +2,108 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA023341535
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Mar 2021 07:00:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7205D341537
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Mar 2021 07:01:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233828AbhCSF7h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Mar 2021 01:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233818AbhCSF7a (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Mar 2021 01:59:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF4E6C06174A
-        for <linux-xfs@vger.kernel.org>; Thu, 18 Mar 2021 22:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=NGWM77YjheC6XyIhVm1NW5GWOYqamHggoxBh77pDYNs=; b=P0S2TUtIamTnmULIkNVCXGV+yr
-        zytH4kADPEOceCQ4e0uSEXStEvpk3KqjTzDS0xI+rvwuQzcPg3foJtkv2mFjxjvt3kYFzSLtKVmq1
-        srSY9WG+YImeQe5o2gOXH6ZRFxZDIyojDp3XRbP7kGzPJ1ZUSL6KFiPh/Zox3ly/IJVn1jfCLi38S
-        4n6TLkUY4rcF65iLFCDNAbjBTngwU/MdOqbBg/6l17iHDX+OZjgmfEsdkq+L83y3WPZCMFo1x5P6x
-        GdyeaX/9dW01xBIcAWVgiPxvFMLgx+fzXOtuIN1A3/DoAonxaML0/TiLTGFKTvJ5nChff2Qu0xf7l
-        TAG/KgSw==;
-Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lN8A7-0041CP-Tw; Fri, 19 Mar 2021 05:59:10 +0000
-Date:   Fri, 19 Mar 2021 05:59:07 +0000
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, hch@infradead.org
-Subject: Re: [PATCH 2/2] xfs: move the check for post-EOF mappings into
- xfs_can_free_eofblocks
-Message-ID: <20210319055907.GB955126@infradead.org>
-References: <161610680641.1887542.10509468263256161712.stgit@magnolia>
- <161610681767.1887542.5197301352012661570.stgit@magnolia>
+        id S233864AbhCSGBP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 19 Mar 2021 02:01:15 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:59798 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233756AbhCSGAr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Mar 2021 02:00:47 -0400
+Received: from dread.disaster.area (pa49-181-239-12.pa.nsw.optusnet.com.au [49.181.239.12])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 8E22A6427B;
+        Fri, 19 Mar 2021 17:00:44 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lN8Be-004D95-VV; Fri, 19 Mar 2021 17:00:42 +1100
+Date:   Fri, 19 Mar 2021 17:00:42 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Subject: Re: [PATCH] xfs: use has_capability_noaudit() instead of capable()
+ where appropriate
+Message-ID: <20210319060042.GS63242@dread.disaster.area>
+References: <20210316173226.2220046-1-omosnace@redhat.com>
+ <20210316205010.GN63242@dread.disaster.area>
+ <CAFqZXNv5GPCU040gO3s-o2UTkXF3HExSkx2AjzE+4VC1REsQBg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <161610681767.1887542.5197301352012661570.stgit@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CAFqZXNv5GPCU040gO3s-o2UTkXF3HExSkx2AjzE+4VC1REsQBg@mail.gmail.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0 cx=a_idp_d
+        a=gO82wUwQTSpaJfP49aMSow==:117 a=gO82wUwQTSpaJfP49aMSow==:17
+        a=kj9zAlcOel0A:10 a=dESyimp9J3IA:10 a=7-415B0cAAAA:8
+        a=PBgVJ15w2z5VK2qaOZYA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 18, 2021 at 03:33:37PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Thu, Mar 18, 2021 at 10:51:29AM +0100, Ondrej Mosnacek wrote:
+> On Tue, Mar 16, 2021 at 10:09 PM Dave Chinner <david@fromorbit.com> wrote:
+> > On Tue, Mar 16, 2021 at 06:32:26PM +0100, Ondrej Mosnacek wrote:
+> > > diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+> > > index bca48b308c02..a99d19c2c11f 100644
+> > > --- a/fs/xfs/xfs_xattr.c
+> > > +++ b/fs/xfs/xfs_xattr.c
+> > > @@ -164,7 +164,7 @@ xfs_xattr_put_listent(
+> > >                * Only show root namespace entries if we are actually allowed to
+> > >                * see them.
+> > >                */
+> > > -             if (!capable(CAP_SYS_ADMIN))
+> > > +             if (!has_capability_noaudit(current, CAP_SYS_ADMIN))
+> > >                       return;
+> > >
+> > >               prefix = XATTR_TRUSTED_PREFIX;
+> >
+> > This one should absolutely report a denial - someone has tried to
+> > read the trusted xattr namespace without permission to do so. That's
+> > exactly the sort of thing I'd want to see in an audit log - just
+> > because we just elide the xattrs rather than return an error doesn't
+> > mean we should not leave an audit trail from the attempted access
+> > of kernel trusted attributes...
 > 
-> Fix the weird split of responsibilities between xfs_can_free_eofblocks
-> and xfs_free_eofblocks by moving the chunk of code that looks for any
-> actual post-EOF space mappings from the second function into the first.
-> 
-> This clears the way for deferred inode inactivation to be able to decide
-> if an inode needs inactivation work before committing the released inode
-> to the inactivation code paths (vs. marking it for reclaim).
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/xfs_bmap_util.c |  148 +++++++++++++++++++++++++-----------------------
->  1 file changed, 78 insertions(+), 70 deletions(-)
-> 
-> 
-> diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-> index e7d68318e6a5..d4ceba5370c7 100644
-> --- a/fs/xfs/xfs_bmap_util.c
-> +++ b/fs/xfs/xfs_bmap_util.c
-> @@ -597,8 +597,17 @@ xfs_bmap_punch_delalloc_range(
->   * regular files that are marked preallocated or append-only.
->   */
->  bool
-> -xfs_can_free_eofblocks(struct xfs_inode *ip, bool force)
-> +xfs_can_free_eofblocks(
-> +	struct xfs_inode	*ip,
-> +	bool			force)
->  {
-> +	struct xfs_bmbt_irec	imap;
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	xfs_fileoff_t		end_fsb;
-> +	xfs_fileoff_t		last_fsb;
-> +	int			nimaps = 1;
-> +	int			error;
+> I'm not sure about that... without CAP_SYS_ADMIN the caller would
+> still get the ACL xattrs, no?
 
-Should we have an assert here that this is called under the iolock?
-Or can't the reclaim be expressed nicely?
+Looks like it, but I have no idea if that's even correct behaviour
+or not - access to posix ACL is supposed to be controlled by
+the VFS.
 
-> +/*
-> + * This is called to free any blocks beyond eof. The caller must hold
-> + * IOLOCK_EXCL unless we are in the inode reclaim path and have the only
-> + * reference to the inode.
-> + */
+> IIUC, it's a filter to not show
+> restricted xattrs to unprivileged users via listxattr(2)**, where the
+> user is not saying "give me the trusted xattrs", just "give me
+> whatever I'm allowed to see", so logging the denial wouldn't make much
+> sense - the user may not even care about trusted xattrs when doing the
+> syscall (and in 99% of cases a user without CAP_SYS_ADMIN really
+> won't).
 
-Same thing here, usually asserts are better than comments..  That being
-said can_free_eofblocks would benefit from at least a comment if the
-assert doesn't work.
+Ok, I keep forgetting that only XFS has attr_list(3) interfaces
+(which predate Linux VFS/syscall xattr support, IIRC) and that
+interface requires userspace to pass ATTR_ROOT to retrieve trusted
+namespace xattrs...
 
-Otherwise this looks good.
+For while it's a silent content filter for one user interface, it's
+an explicit request from another user interface. Make of that what
+you will....
+
+> (**) But I don't understand how exactly that function is used and what
+> the XFS_ATTR_ROOT flag means, so I may be getting it wrong...
+
+It's the on-disk format flag that says the xattr is in the "root"
+namespace (i.e. requires "root" permissions to access). XFS came
+from Irix which had different xattr namespaces for system, security,
+etc, hence the stuff is stored on XFS is named somewhat differently
+compared to native linux filesystems....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
