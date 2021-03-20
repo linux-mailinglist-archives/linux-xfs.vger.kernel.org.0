@@ -2,109 +2,167 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 361B03429E8
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Mar 2021 03:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A48D342CC3
+	for <lists+linux-xfs@lfdr.de>; Sat, 20 Mar 2021 13:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbhCTCJ4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 19 Mar 2021 22:09:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31442 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229512AbhCTCJs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 19 Mar 2021 22:09:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616206186;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0C0oSk8sjoBBt4yGuT8zcKdxgJ4m7PJpplto9j1nBxc=;
-        b=dVq0XIsO1Po8Dj+Rl0drrwrnlRAR9ftwvOo2YKYfxE0MDACBzs73njH7E/C46MdpKZyQ/u
-        ZhQMbmw/MoxmjLjGJiHY6YDTJVp0eoNsAlV3C4JbO+3zSACit1ik2Jcdivp9H1nfQUhEBG
-        eIREkCbS/OtHsC/vi362oTT5rxJMcs0=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-400-WzYQb-OiO5qE86l1zuBxJA-1; Fri, 19 Mar 2021 22:09:44 -0400
-X-MC-Unique: WzYQb-OiO5qE86l1zuBxJA-1
-Received: by mail-pg1-f198.google.com with SMTP id p1so25608510pgi.16
-        for <linux-xfs@vger.kernel.org>; Fri, 19 Mar 2021 19:09:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0C0oSk8sjoBBt4yGuT8zcKdxgJ4m7PJpplto9j1nBxc=;
-        b=XWnVjdEMEndvWKC6oT05cpPLY4Juws9VBNlUPfzFal1dvCX9kp2LyZnBtTJ0ADPa9t
-         flddNPurND4fPPckbjmVYaC//2ds0sNDz9Dzv6NZWPuTZr40gZmjkNtLW738WIh2lfb9
-         1HDCPSuxU1P69uL67aJ1cI1jDtMTUYZT9ceqoxcxjsEfivNwLhvacHf71F4I/G0OObhA
-         Yog3S/gN+RZHUvDLkQXEGuJlTcrL92D9rOQKmZsisJ1S09MPWosiHJy1g/RT8YFhJkBN
-         0lI/Pth1/D9ti6hl5So4sBIu6iEvrQ2vP7Hm8rsE8foFySNkR1NqzzBYKoteAUzopqvE
-         g9Jg==
-X-Gm-Message-State: AOAM532eQO1JQQkNZbtALZjAJbL1wOH3xefL+79Hmw7tjVZIn+iOd5K9
-        2ZJq1mQD2LJfqEixQb9ZvTpF64xb4PQ1JrNYjG0+H6XJgWyqmmdJc46yheLU1m/a/Spzve25Prc
-        PF/KC23LMxAHG4drf0SrG
-X-Received: by 2002:a62:5e02:0:b029:1ed:8bee:6132 with SMTP id s2-20020a625e020000b02901ed8bee6132mr12071284pfb.48.1616206182995;
-        Fri, 19 Mar 2021 19:09:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyqgavdds5As5oDWZYzTK3oCYiyBcBnIzesbXU/vnBtLzKgXynrKG/ZGg7RoHsqNpBZ81HHKw==
-X-Received: by 2002:a62:5e02:0:b029:1ed:8bee:6132 with SMTP id s2-20020a625e020000b02901ed8bee6132mr12071272pfb.48.1616206182748;
-        Fri, 19 Mar 2021 19:09:42 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id l3sm6560134pfc.81.2021.03.19.19.09.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Mar 2021 19:09:42 -0700 (PDT)
-Date:   Sat, 20 Mar 2021 10:09:31 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 0/7] repair: Phase 6 performance improvements
-Message-ID: <20210320020931.GA1608555@xiangao.remote.csb>
-References: <20210319013355.776008-1-david@fromorbit.com>
- <20210319013845.GA1431129@xiangao.remote.csb>
- <20210319182221.GU22100@magnolia>
+        id S229544AbhCTM07 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 20 Mar 2021 08:26:59 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48186 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229505AbhCTM0p (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 20 Mar 2021 08:26:45 -0400
+Received: from ip5f5af0a0.dynamic.kabel-deutschland.de ([95.90.240.160] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1lNagg-0004Pf-6E; Sat, 20 Mar 2021 12:26:38 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Vivek Goyal <vgoyal@redhat.com>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2 0/4] tweak fs mapping helpers
+Date:   Sat, 20 Mar 2021 13:26:20 +0100
+Message-Id: <20210320122623.599086-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20210319182221.GU22100@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 19, 2021 at 11:22:21AM -0700, Darrick J. Wong wrote:
-> On Fri, Mar 19, 2021 at 09:38:45AM +0800, Gao Xiang wrote:
-> > On Fri, Mar 19, 2021 at 12:33:48PM +1100, Dave Chinner wrote:
-> > > Hi folks,
-> > > 
-> > > This is largely a repost of my current code so that Xiang can take
-> > > over and finish it off. It applies against 5.11.0 and the
-> > > performance numbers are still valid. I can't remember how much of
-> > > the review comments I addressed from the first time I posted it, so
-> > > the changelog is poor....
-> > 
-> > Yeah, I will catch what's missing (now looking the previous review),
-> > and follow up then...
-> 
-> :)
-> 
-> While you're revising the patches, you might as well convert:
-> 
-> Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> into:
-> 
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> 
-> because Exchange is so awful for inline replies that I don't use that
-> email address anymore.
+Hey,
 
-Yeah, I'm just starting sorting out all previous opinions
-and patches diff. Will update in the next version.
+/* v2 */
+Add some kernel docs to helpers as suggested by Christoph.
+Switch to Al's naming proposal for these helpers.
+(Added Acks.)
 
-Thanks,
-Gao Xiang
+This little series tries to improve naming and developer friendliness of
+fs idmapping helpers triggered by a request/comment from Vivek.
+Let's remove the two open-coded checks for whether there's a mapping for
+fsuid/fsgid in the s_user_ns of the underlying filesystem. Instead move them
+into a tiny helper, getting rid of redundancy and making sure that if we ever
+change something it's changed in all places. Also add two helpers to initialize
+and inode's i_uid and i_gid fields taking into account idmapped mounts making
+it easier for fs developers.
 
-> 
-> --D
-> 
-> > Thanks,
-> > Gao Xiang
-> > 
-> 
+The xfstests I sent out all pass for both xfs and ext4:
+
+#### xfs
+  1. Detached mount propagation
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check generic/631
+     FSTYP         -- xfs (non-debug)
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop1
+     MOUNT_OPTIONS -- /dev/loop1 /mnt/scratch
+     
+     generic/631 9s ...  11s
+     Ran: generic/631
+     Passed all 1 tests
+    
+  2. Idmapped mounts test-suite
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check generic/632
+     FSTYP         -- xfs (non-debug)
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop1
+     MOUNT_OPTIONS -- /dev/loop1 /mnt/scratch
+     
+     generic/632 13s ...  14s
+     Ran: generic/632
+     Passed all 1 tests
+    
+  3. Testing xfs quotas can't be exceeded/work correctly from idmapped mounts
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check xfs/529
+     FSTYP         -- xfs (non-debug)
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop1
+     MOUNT_OPTIONS -- /dev/loop1 /mnt/scratch
+     
+     xfs/529 42s ...  44s
+     Ran: xfs/529
+     Passed all 1 tests
+    
+  4. Testing xfs qutoas on idmapped mounts
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check xfs/530
+     hFSTYP         -- xfs (non-debug)
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop1
+     MOUNT_OPTIONS -- /dev/loop1 /mnt/scratch
+
+     xfs/530 20s ...  20s
+     Ran: xfs/530
+     Passed all 1 tests
+
+#### ext4
+  1. Detached mount propagation
+
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check generic/631
+     FSTYP         -- ext4
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- /dev/loop1
+     MOUNT_OPTIONS -- -o acl,user_xattr /dev/loop1 /mnt/scratch
+     
+     generic/631 11s ...  8s
+     Ran: generic/631
+     Passed all 1 tests
+
+  2. Idmapped mounts test-suite
+
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check generic/632
+     FSTYP         -- ext4
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- /dev/loop1
+     MOUNT_OPTIONS -- -o acl,user_xattr /dev/loop1 /mnt/scratch
+     
+     generic/632 14s ...  10s
+     Ran: generic/632
+     Passed all 1 tests
+
+  3. Testing xfs quotas can't be exceeded/work correctly from idmapped mounts
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check xfs/529
+     FSTYP         -- ext4
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- /dev/loop1
+     MOUNT_OPTIONS -- -o acl,user_xattr /dev/loop1 /mnt/scratch
+     
+     xfs/529 44s ... [not run] not suitable for this filesystem type: ext4
+     Ran: xfs/529
+     Not run: xfs/529
+     Passed all 1 tests
+
+  4. Testing xfs qutoas on idmapped mounts
+     ubuntu@f1-vm:~/src/git/xfstests$ sudo ./check xfs/530
+     FSTYP         -- ext4
+     PLATFORM      -- Linux/x86_64 f1-vm 5.12.0-rc3-idmapped-mounts-inode-helpers #351 SMP Sat Mar 20 10:32:48 UTC 2021
+     MKFS_OPTIONS  -- /dev/loop1
+     MOUNT_OPTIONS -- -o acl,user_xattr /dev/loop1 /mnt/scratch
+     
+     xfs/530 20s ... [not run] not suitable for this filesystem type: ext4
+     Ran: xfs/530
+     Not run: xfs/530
+     Passed all 1 tests
+
+Thanks!
+Christian
+
+Christian Brauner (4):
+  fs: document mapping helpers
+  fs: document and rename fsid helpers
+  fs: introduce fsuidgid_has_mapping() helper
+  fs: introduce two inode i_{u,g}id initialization helpers
+
+ fs/ext4/ialloc.c     |   2 +-
+ fs/inode.c           |   4 +-
+ fs/namei.c           |  11 ++--
+ fs/xfs/xfs_inode.c   |  10 ++--
+ fs/xfs/xfs_symlink.c |   4 +-
+ include/linux/fs.h   | 124 ++++++++++++++++++++++++++++++++++++++++++-
+ 6 files changed, 135 insertions(+), 20 deletions(-)
+
+
+base-commit: 8b12a62a4e3ed4ae99c715034f557eb391d6b196
+-- 
+2.27.0
 
