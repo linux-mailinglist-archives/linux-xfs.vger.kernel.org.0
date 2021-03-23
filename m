@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E7403456A7
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Mar 2021 05:20:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C3563456AA
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Mar 2021 05:21:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbhCWET5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Mar 2021 00:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46048 "EHLO mail.kernel.org"
+        id S229592AbhCWEU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Mar 2021 00:20:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229464AbhCWETy (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 23 Mar 2021 00:19:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D466461990;
-        Tue, 23 Mar 2021 04:19:53 +0000 (UTC)
+        id S229464AbhCWET7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 23 Mar 2021 00:19:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A11A6198E;
+        Tue, 23 Mar 2021 04:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616473193;
-        bh=5o3PRU4OvnC1W0sNVlX3XyQIhh7K8DWWmcpgWYJ/pvs=;
+        s=k20201202; t=1616473199;
+        bh=CZb3ZIvrFD4xXviq3uk8k4wTqG9BYGXiirhmTUr59jQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J+5jrkv7RavLHBPGkRNVK6Dh0JsH5L72hJ4+JpHZgydYlPSymjOeq4Nb+bnhUGkcE
-         BsaVtm050KqeDXsk3xdu5z9nh91WJQdIUlZWJJHZyN7vTNiObf14Ai6Rk1Mq3o8/XG
-         1bnJ7IyNNRA6S1sxuRGktcRQAzNJdHwfPKH5qesLseVZ9/jtEE/tgUb6Vpwt8bjY0n
-         Mofd9ihDGGoZyBw+0ouyU1AlOMytKZmDpQLShk7rIjFNKu3FRnmAoQ/ZVgnGCc81xB
-         eqgdfHHA2ULRgCpub20yt61kbp17Blc7qaoaPsUxTIZ8oFoGTSjX5Ns0lgT9BeksQd
-         gpSJSZK0Ae48g==
-Subject: [PATCH 2/3] common/populate: create fifos when pre-populating
- filesystems
+        b=o87J1y2aiRxPFYXOY20xhQrnnwA9W+g33aJYirOszpiuY7MxvCYdBZ13YEedgkvPM
+         EydMWc24SiJ11g819nP3k28oULF9n/znzv7agEPm0QLEwfZUSxh9iUAPNG1hyH3Dvb
+         Bj/kHUZ6SazIZa/wz0OS39VT/Q7WG/6NLacJKcESxuX1c8P46CHi02aDr0zdqF2tUf
+         PDFUtj6t7zm+U/LFEcxT5jAr2rOCXF+hB6aM2BY5TZ0ahLULCrD7JlkEfRWYcZCQ5O
+         h29wjKutBpt3IewY8KusmuPgFOyGmtXHCkyH6CRkOybeQNnR/qDgScwFp24+C33WVK
+         ktVpqhMWexDhg==
+Subject: [PATCH 3/3] common/populate: change how we describe cached populated
+ images
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 22 Mar 2021 21:19:53 -0700
-Message-ID: <161647319358.3429609.6818899550213439595.stgit@magnolia>
+Date:   Mon, 22 Mar 2021 21:19:59 -0700
+Message-ID: <161647319905.3429609.14862078528489327236.stgit@magnolia>
 In-Reply-To: <161647318241.3429609.1862044070327396092.stgit@magnolia>
 References: <161647318241.3429609.1862044070327396092.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,48 +42,43 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create fifos when populating the scratch filesystem for completeness.
+The device name of a secondary storage device isn't all that important,
+but the size is.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |    4 ++++
- 1 file changed, 4 insertions(+)
+ common/populate |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
 
 diff --git a/common/populate b/common/populate
-index 8f42a528..c01b7e0e 100644
+index c01b7e0e..94bf5ce9 100644
 --- a/common/populate
 +++ b/common/populate
-@@ -231,6 +231,7 @@ _scratch_xfs_populate() {
- 	echo "+ special"
- 	mknod "${SCRATCH_MNT}/S_IFCHR" c 1 1
- 	mknod "${SCRATCH_MNT}/S_IFBLK" b 1 1
-+	mknod "${SCRATCH_MNT}/S_IFIFO" p
+@@ -808,13 +808,23 @@ _fill_fs()
+ _scratch_populate_cache_tag() {
+ 	local extra_descr=""
+ 	local size="$(blockdev --getsz "${SCRATCH_DEV}")"
++	local logdev="none"
++	local rtdev="none"
++
++	if [ "${USE_EXTERNAL}" = "yes" ] && [ -n "${SCRATCH_LOGDEV}" ]; then
++		logdev="$(blockdev --getsz "${SCRATCH_LOGDEV}")"
++	fi
++
++	if [ "${USE_EXTERNAL}" = "yes" ] && [ -n "${SCRATCH_RTDEV}" ]; then
++		rtdev="$(blockdev --getsz "${SCRATCH_RTDEV}")"
++	fi
  
- 	# special file with an xattr
- 	setfacl -P -m u:nobody:r ${SCRATCH_MNT}/S_IFCHR
-@@ -403,6 +404,7 @@ _scratch_ext4_populate() {
- 	echo "+ special"
- 	mknod "${SCRATCH_MNT}/S_IFCHR" c 1 1
- 	mknod "${SCRATCH_MNT}/S_IFBLK" b 1 1
-+	mknod "${SCRATCH_MNT}/S_IFIFO" p
- 
- 	# special file with an xattr
- 	setfacl -P -m u:nobody:r ${SCRATCH_MNT}/S_IFCHR
-@@ -580,6 +582,7 @@ _scratch_xfs_populate_check() {
- 	extents_slink="$(__populate_find_inode "${SCRATCH_MNT}/S_IFLNK.FMT_EXTENTS")"
- 	bdev="$(__populate_find_inode "${SCRATCH_MNT}/S_IFBLK")"
- 	cdev="$(__populate_find_inode "${SCRATCH_MNT}/S_IFCHR")"
-+	fifo="$(__populate_find_inode "${SCRATCH_MNT}/S_IFIFO")"
- 	local_attr="$(__populate_find_inode "${SCRATCH_MNT}/ATTR.FMT_LOCAL")"
- 	leaf_attr="$(__populate_find_inode "${SCRATCH_MNT}/ATTR.FMT_LEAF")"
- 	node_attr="$(__populate_find_inode "${SCRATCH_MNT}/ATTR.FMT_NODE")"
-@@ -605,6 +608,7 @@ _scratch_xfs_populate_check() {
- 	__populate_check_xfs_dformat "${btree_dir}" "btree"
- 	__populate_check_xfs_dformat "${bdev}" "dev"
- 	__populate_check_xfs_dformat "${cdev}" "dev"
-+	__populate_check_xfs_dformat "${fifo}" "dev"
- 	__populate_check_xfs_attr "${local_attr}" "local"
- 	__populate_check_xfs_attr "${leaf_attr}" "leaf"
- 	__populate_check_xfs_attr "${node_attr}" "node"
+ 	case "${FSTYP}" in
+ 	"ext4")
+-		extra_descr="LOGDEV ${SCRATCH_LOGDEV} USE_EXTERNAL ${USE_EXTERNAL}"
++		extra_descr="LOGDEV_SIZE ${logdev}"
+ 		;;
+ 	"xfs")
+-		extra_descr="LOGDEV ${SCRATCH_LOGDEV} USE_EXTERNAL ${USE_EXTERNAL} RTDEV ${SCRATCH_RTDEV}"
++		extra_descr="LOGDEV_SIZE ${logdev} RTDEV_SIZE ${rtdev}"
+ 		_populate_xfs_qmount_option
+ 		if echo "${MOUNT_OPTIONS}" | grep -q 'usrquota'; then
+ 			extra_descr="${extra_descr} QUOTAS"
 
