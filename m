@@ -2,36 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C3563456AA
+	by mail.lfdr.de (Postfix) with ESMTP id 95CFE3456AD
 	for <lists+linux-xfs@lfdr.de>; Tue, 23 Mar 2021 05:21:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbhCWEU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229464AbhCWEU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 23 Mar 2021 00:20:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46144 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229464AbhCWET7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 23 Mar 2021 00:19:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5A11A6198E;
-        Tue, 23 Mar 2021 04:19:59 +0000 (UTC)
+        id S229482AbhCWEUB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 23 Mar 2021 00:20:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E944D61992;
+        Tue, 23 Mar 2021 04:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616473199;
-        bh=CZb3ZIvrFD4xXviq3uk8k4wTqG9BYGXiirhmTUr59jQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=o87J1y2aiRxPFYXOY20xhQrnnwA9W+g33aJYirOszpiuY7MxvCYdBZ13YEedgkvPM
-         EydMWc24SiJ11g819nP3k28oULF9n/znzv7agEPm0QLEwfZUSxh9iUAPNG1hyH3Dvb
-         Bj/kHUZ6SazIZa/wz0OS39VT/Q7WG/6NLacJKcESxuX1c8P46CHi02aDr0zdqF2tUf
-         PDFUtj6t7zm+U/LFEcxT5jAr2rOCXF+hB6aM2BY5TZ0ahLULCrD7JlkEfRWYcZCQ5O
-         h29wjKutBpt3IewY8KusmuPgFOyGmtXHCkyH6CRkOybeQNnR/qDgScwFp24+C33WVK
-         ktVpqhMWexDhg==
-Subject: [PATCH 3/3] common/populate: change how we describe cached populated
- images
+        s=k20201202; t=1616473201;
+        bh=KMEAwYnJs7mVAmFXct8NlHOkucnY3rpIzKHup8Z5d1s=;
+        h=Subject:From:To:Cc:Date:From;
+        b=Cp5BZo+f7Jk6EDQgFMhP2epP70LLx48O1qiwW+kFnammCrRovxWgZkWHLbXnAdoLp
+         YrNX6wtnPAZ5KIrSoHQq8cIETchN0Tsn8wCdhoh6zereE9AXMVWtdHtxNY+pbwK4PV
+         pQAAsPiBJieByiQAWMO/HBY54HQqmsxaQtHFcRe24M3uay+ShMuULcP7BQhcOtd6rs
+         baEOPz5B6DO1q3oXizl4ziNEFAv1zdWexq9vx9OzyBlKzquWf3NlcLwXBR9xyuh2hc
+         NcCWogiCR1zLuYHup+KUJPrDOsx5UsfZjaIT/fEWf/Zncin71WmAoT7Kwar/j/GJ9I
+         8ea0/4jp0hOtQ==
+Subject: [PATCHSET 0/3] fstests: test kernel regressions fixed in 5.12
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 22 Mar 2021 21:19:59 -0700
-Message-ID: <161647319905.3429609.14862078528489327236.stgit@magnolia>
-In-Reply-To: <161647318241.3429609.1862044070327396092.stgit@magnolia>
-References: <161647318241.3429609.1862044070327396092.stgit@magnolia>
+Cc:     wenli xie <wlxie7296@gmail.com>, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me
+Date:   Mon, 22 Mar 2021 21:20:00 -0700
+Message-ID: <161647320063.3430465.17720673716578854275.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -40,45 +38,42 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-The device name of a secondary storage device isn't all that important,
-but the size is.
+Here are new tests for problems that were fixed in upstream Linux
+between 5.9 and 5.12.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=kernel-regressions
 ---
- common/populate |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-
-diff --git a/common/populate b/common/populate
-index c01b7e0e..94bf5ce9 100644
---- a/common/populate
-+++ b/common/populate
-@@ -808,13 +808,23 @@ _fill_fs()
- _scratch_populate_cache_tag() {
- 	local extra_descr=""
- 	local size="$(blockdev --getsz "${SCRATCH_DEV}")"
-+	local logdev="none"
-+	local rtdev="none"
-+
-+	if [ "${USE_EXTERNAL}" = "yes" ] && [ -n "${SCRATCH_LOGDEV}" ]; then
-+		logdev="$(blockdev --getsz "${SCRATCH_LOGDEV}")"
-+	fi
-+
-+	if [ "${USE_EXTERNAL}" = "yes" ] && [ -n "${SCRATCH_RTDEV}" ]; then
-+		rtdev="$(blockdev --getsz "${SCRATCH_RTDEV}")"
-+	fi
- 
- 	case "${FSTYP}" in
- 	"ext4")
--		extra_descr="LOGDEV ${SCRATCH_LOGDEV} USE_EXTERNAL ${USE_EXTERNAL}"
-+		extra_descr="LOGDEV_SIZE ${logdev}"
- 		;;
- 	"xfs")
--		extra_descr="LOGDEV ${SCRATCH_LOGDEV} USE_EXTERNAL ${USE_EXTERNAL} RTDEV ${SCRATCH_RTDEV}"
-+		extra_descr="LOGDEV_SIZE ${logdev} RTDEV_SIZE ${rtdev}"
- 		_populate_xfs_qmount_option
- 		if echo "${MOUNT_OPTIONS}" | grep -q 'usrquota'; then
- 			extra_descr="${extra_descr} QUOTAS"
+ common/rc              |   23 ++--------
+ tests/generic/1300     |  108 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/1300.out |    2 +
+ tests/generic/group    |    1 
+ tests/overlay/025      |    2 -
+ tests/overlay/106      |    2 -
+ tests/overlay/107      |    2 -
+ tests/overlay/108      |    2 -
+ tests/overlay/109      |    2 -
+ tests/xfs/049          |    2 -
+ tests/xfs/759          |  102 +++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/759.out      |    2 +
+ tests/xfs/760          |   68 ++++++++++++++++++++++++++++++
+ tests/xfs/760.out      |    9 ++++
+ tests/xfs/group        |    2 +
+ 15 files changed, 305 insertions(+), 24 deletions(-)
+ create mode 100755 tests/generic/1300
+ create mode 100644 tests/generic/1300.out
+ create mode 100755 tests/xfs/759
+ create mode 100644 tests/xfs/759.out
+ create mode 100755 tests/xfs/760
+ create mode 100644 tests/xfs/760.out
 
