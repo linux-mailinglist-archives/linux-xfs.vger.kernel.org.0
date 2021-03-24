@@ -2,152 +2,140 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55E9A346E7D
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 02:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A6EF346EA8
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 02:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234056AbhCXBHo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Mar 2021 21:07:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42779 "EHLO
+        id S234301AbhCXB1v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Mar 2021 21:27:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:54687 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234223AbhCXBHd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Mar 2021 21:07:33 -0400
+        by vger.kernel.org with ESMTP id S231855AbhCXB1J (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Mar 2021 21:27:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1616548045;
+        s=mimecast20190719; t=1616549228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=RDCUbE9ayuguhvHZLdqXgCCucvyzxuogayKdE4uOcvU=;
-        b=J7a2BbSRi85+leazkmNY1Y0samrcwQDxVf34kO48lABWHkiyBHNMfpw5ih7R9tb80ZVwl/
-        XhxYSuV6l4+m+S7hhYsO7/nRRHZI72p/CgczN4F3OnJoZHiBMPFsvbQLyEtJR/xamm1zJJ
-        gjfucMstTg8RqcmnC9BnnGuGf3urcHc=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-12-m8JwEcQBOmeb2C_HwHJiGQ-1; Tue, 23 Mar 2021 21:07:24 -0400
-X-MC-Unique: m8JwEcQBOmeb2C_HwHJiGQ-1
-Received: by mail-pg1-f197.google.com with SMTP id j4so537206pgs.18
-        for <linux-xfs@vger.kernel.org>; Tue, 23 Mar 2021 18:07:23 -0700 (PDT)
+        bh=xIUAoKHrX02DWmVb4uBZzEIDmKz7PMTcr/9V1s8kDY8=;
+        b=dp21sLdUZFJ3lkVopuHPfgZwcrN0f6mpch1EptCY/9SIW0+d0ky/auSXYIwq6qSJ23Gx2f
+        swhjlbuD+uL15aK1vP3BBVPzDq2H3Rwa9ambJwMa0Jl0LGuNqglA9I9zcIjhdrS+RwpPQQ
+        M1r7ucZ/Gw2Z0wPG27V2ofMCUmyLR1c=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-506-SN3240FiPrWNLMV0h9KytQ-1; Tue, 23 Mar 2021 21:27:07 -0400
+X-MC-Unique: SN3240FiPrWNLMV0h9KytQ-1
+Received: by mail-pg1-f199.google.com with SMTP id q36so555343pgb.23
+        for <linux-xfs@vger.kernel.org>; Tue, 23 Mar 2021 18:27:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RDCUbE9ayuguhvHZLdqXgCCucvyzxuogayKdE4uOcvU=;
-        b=Ett+JODqzyr+gy6Jm+BAz5/cLYyvQzPvNn3JvjAwonwonHVWj0n6harbHd8PyGlLNQ
-         pQVvIyG4Of/Wv0SbUeGDm+PmoIdmo/5wYOFBKSsfR96BIlGT75Up58J+mRpubj2Jqufi
-         d1/1PxjmceldU/0v74US3pa7qu+9Dl2+l7ntKJESLSCIwO4c14pPDKpw3boXoQOt3wXW
-         oz8StyF8n448dE8JiMCK5HCTy+KAlfVVriqJvQ7RFooVbPwtfoaYvQAe9BsnNA9w/OOU
-         StFZs0vuCF8IOFBQklyAahIc8C3AhfOUfMdFZ3Zlnfuxrx7e1PMIFHOmr7+SUNMhOhob
-         kyBQ==
-X-Gm-Message-State: AOAM531k1rvzgMpaUFBvopb5T52R5XcG08jKzDPF2HRlbYuAzXt2k7ij
-        jIjI9p5wTwrvHPhO7SnHY1vnWanNhi97rdsr0sHF3YhxYPpTQsBQG/CFkzjWMYPIswkBcEB0X9l
-        jPZl74EM1jMzJPopmfMoJAGIedO1oVXTZ/WtfvUZNrvW/GzrhjWnCa2bzehM+bZmr7w1EUKBxHw
-        ==
-X-Received: by 2002:a17:902:7444:b029:e4:30bf:8184 with SMTP id e4-20020a1709027444b02900e430bf8184mr976802plt.45.1616548042844;
-        Tue, 23 Mar 2021 18:07:22 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwGM8Gae0NGOz2nm+5XkKsZ/mlmlbd46KK/4ndvdelYIab5eCWcSRJm3lDCp01LG+BxTyaUtw==
-X-Received: by 2002:a17:902:7444:b029:e4:30bf:8184 with SMTP id e4-20020a1709027444b02900e430bf8184mr976777plt.45.1616548042556;
-        Tue, 23 Mar 2021 18:07:22 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xIUAoKHrX02DWmVb4uBZzEIDmKz7PMTcr/9V1s8kDY8=;
+        b=BXvqF2ERdnDMHZLE1WfLh6SsERUhY5SlFA3YnbI7o74rVpnhkNm7NijjXQiS/szR91
+         l9hJ+x2V26Gw1/wx6+jb3KAzXB+y5Mhiz+6iJV5fNc8TN7ZodhAlzTKs9IdQdBX9YbzH
+         hDDc12TGS4S/7olhi/z1vqJdyUevFWBMfPeQkMtvpJ5rnO3bx3rqXJevwi6iVk1aX6Au
+         P7crFCDduvrkUcnrezlLTEcatdPWhmMd7Kn5AYF0OFoYXN7dhzqQz1QsWs91sGLFhX7P
+         udtij710XSV9h6m/lbM+eQ9cqIL5fPTqFSYyr+HuYOSHMTiIWn2fdSWG5R95/yRdzXcg
+         Vs8A==
+X-Gm-Message-State: AOAM532mIhY0nu0EGyiAlOdWfovTT7Bz+5aJWjk5K1tJ3f/rd6ez/rN/
+        duBaajZMFOTzKnnEX2rPneFETrTwSB6b8sDwwGAHgxQAGKY/uN1rZ/Uy5crWs8Vy/i5in06fG+j
+        LZLREhcg40WiVi8zlrczy
+X-Received: by 2002:a63:1820:: with SMTP id y32mr869635pgl.157.1616549225873;
+        Tue, 23 Mar 2021 18:27:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxzMaA0pwpvJrKtkJckcxMdamqjfeMrKuldvL3h3Ohbh3cSmuR/7WQOWpsyK9bwn6NJ+blunQ==
+X-Received: by 2002:a63:1820:: with SMTP id y32mr869625pgl.157.1616549225611;
+        Tue, 23 Mar 2021 18:27:05 -0700 (PDT)
 Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id t18sm379219pgg.33.2021.03.23.18.07.19
+        by smtp.gmail.com with ESMTPSA id v18sm420651pgo.0.2021.03.23.18.27.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Mar 2021 18:07:22 -0700 (PDT)
+        Tue, 23 Mar 2021 18:27:05 -0700 (PDT)
+Date:   Wed, 24 Mar 2021 09:26:55 +0800
 From:   Gao Xiang <hsiangkao@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v9 5/5] xfs: add error injection for per-AG resv failure
-Date:   Wed, 24 Mar 2021 09:06:21 +0800
-Message-Id: <20210324010621.2244671-6-hsiangkao@redhat.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20210324010621.2244671-1-hsiangkao@redhat.com>
-References: <20210324010621.2244671-1-hsiangkao@redhat.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 0/7] repair: Phase 6 performance improvements
+Message-ID: <20210324012655.GA2245176@xiangao.remote.csb>
+References: <20210319013355.776008-1-david@fromorbit.com>
+ <20210319013845.GA1431129@xiangao.remote.csb>
+ <20210319182221.GU22100@magnolia>
+ <20210320020931.GA1608555@xiangao.remote.csb>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20210320020931.GA1608555@xiangao.remote.csb>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-per-AG resv failure after fixing up freespace is hard to test in an
-effective way, so directly add an error injection path to observe
-such error handling path works as expected.
+Hi Dave and Darrick,
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
----
- fs/xfs/libxfs/xfs_ag_resv.c  | 6 +++++-
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_error.c           | 3 +++
- 3 files changed, 11 insertions(+), 2 deletions(-)
+On Sat, Mar 20, 2021 at 10:09:31AM +0800, Gao Xiang wrote:
+> On Fri, Mar 19, 2021 at 11:22:21AM -0700, Darrick J. Wong wrote:
+> > On Fri, Mar 19, 2021 at 09:38:45AM +0800, Gao Xiang wrote:
+> > > On Fri, Mar 19, 2021 at 12:33:48PM +1100, Dave Chinner wrote:
+> > > > Hi folks,
+> > > > 
+> > > > This is largely a repost of my current code so that Xiang can take
+> > > > over and finish it off. It applies against 5.11.0 and the
+> > > > performance numbers are still valid. I can't remember how much of
+> > > > the review comments I addressed from the first time I posted it, so
+> > > > the changelog is poor....
+> > > 
+> > > Yeah, I will catch what's missing (now looking the previous review),
+> > > and follow up then...
+> > 
+> > :)
+> > 
+> > While you're revising the patches, you might as well convert:
+> > 
+> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > 
+> > into:
+> > 
+> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > because Exchange is so awful for inline replies that I don't use that
+> > email address anymore.
+> 
+> Yeah, I'm just starting sorting out all previous opinions
+> and patches diff. Will update in the next version.
+> 
 
-diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-index fdfe6dc0d307..6c5f8d10589c 100644
---- a/fs/xfs/libxfs/xfs_ag_resv.c
-+++ b/fs/xfs/libxfs/xfs_ag_resv.c
-@@ -211,7 +211,11 @@ __xfs_ag_resv_init(
- 		ASSERT(0);
- 		return -EINVAL;
- 	}
--	error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
-+
-+	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_AG_RESV_FAIL))
-+		error = -ENOSPC;
-+	else
-+		error = xfs_mod_fdblocks(mp, -(int64_t)hidden_space, true);
- 	if (error) {
- 		trace_xfs_ag_resv_init_error(pag->pag_mount, pag->pag_agno,
- 				error, _RET_IP_);
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 6ca9084b6934..a23a52e643ad 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -58,7 +58,8 @@
- #define XFS_ERRTAG_BUF_IOERROR				35
- #define XFS_ERRTAG_REDUCE_MAX_IEXTENTS			36
- #define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
--#define XFS_ERRTAG_MAX					38
-+#define XFS_ERRTAG_AG_RESV_FAIL				38
-+#define XFS_ERRTAG_MAX					39
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -101,5 +102,6 @@
- #define XFS_RANDOM_BUF_IOERROR				XFS_RANDOM_DEFAULT
- #define XFS_RANDOM_REDUCE_MAX_IEXTENTS			1
- #define XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT		1
-+#define XFS_RANDOM_AG_RESV_FAIL				1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 185b4915b7bf..f70984f3174d 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -56,6 +56,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_BUF_IOERROR,
- 	XFS_RANDOM_REDUCE_MAX_IEXTENTS,
- 	XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT,
-+	XFS_RANDOM_AG_RESV_FAIL,
- };
- 
- struct xfs_errortag_attr {
-@@ -168,6 +169,7 @@ XFS_ERRORTAG_ATTR_RW(iunlink_fallback,	XFS_ERRTAG_IUNLINK_FALLBACK);
- XFS_ERRORTAG_ATTR_RW(buf_ioerror,	XFS_ERRTAG_BUF_IOERROR);
- XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
- XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
-+XFS_ERRORTAG_ATTR_RW(ag_resv_fail, XFS_ERRTAG_AG_RESV_FAIL);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -208,6 +210,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(buf_ioerror),
- 	XFS_ERRORTAG_ATTR_LIST(reduce_max_iextents),
- 	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
-+	XFS_ERRORTAG_ATTR_LIST(ag_resv_fail),
- 	NULL,
- };
- 
--- 
-2.27.0
+Sorry for bothering... After reading the previous discussion for a while,
+I'm fine with the trivial cleanups. Yet, it seems that there are mainly 2
+remaining open discussions unsolved yet...
+
+1 is magic number 1000,
+https://lore.kernel.org/r/20201029172045.GP1061252@magnolia
+
+while I also don't have better ideas of this (and have no idea why queue
+depth 1000 is optimal compared with other configurations), so it'd be better
+to get your thoughts about this in advance (e.g. just leave it as-is, or...
+plus, I don't have such test setting with such many cpus)
+
+2 is the hash size modificiation,
+https://lore.kernel.org/r/20201029162922.GM1061252@magnolia/
+
+it seems previously hash entires are limited to 64k, and this patch relaxes
+such limitation, but for huge directories I'm not sure the hash table
+utilization but from the previous commit message it seems the extra memory
+usage can be ignored.
+
+Anyway, I'm fine with just leave them as-is if agreed on these.
+
+Thanks,
+Gao Xiang
+
+> Thanks,
+> Gao Xiang
+> 
+> > 
+> > --D
+> > 
+> > > Thanks,
+> > > Gao Xiang
+> > > 
+> > 
 
