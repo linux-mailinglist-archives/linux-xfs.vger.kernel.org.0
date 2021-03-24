@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1785347A8B
+	by mail.lfdr.de (Postfix) with ESMTP id 8488E347A8A
 	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 15:22:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236144AbhCXOWJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Mar 2021 10:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
+        id S236246AbhCXOWI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Mar 2021 10:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236024AbhCXOVm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 10:21:42 -0400
+        with ESMTP id S236202AbhCXOVn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 10:21:43 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3BB9C061763
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4B92C0613DF
         for <linux-xfs@vger.kernel.org>; Wed, 24 Mar 2021 07:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=xll5QGets+wg5wDVzLdfOCWKDaftbPw7SetQ+4HrF4Q=; b=ILAQL+aw89PcR3n8NmPHG0CG/p
-        CXhuLfU8plpXMfN/UJTrSTL8kPOYORhHxVubG9Vp7ZUci/Zxlb7tQG1eUrXV1KYxMLM+AGhcEMP8d
-        3ERyAliJRJy1TLAqTyC46X1x01ZG7PYWw0XLxedEf7MDtkrXipSPUk0i692vk7TiEwzjfManCzRaL
-        Y5D/5jeixbty+Rn82Nq0Bt87A6jWK5Ji8/aevqElo/Mc7LHqwNmft2GrDutEd/7J1QowH2XR5/Q9S
-        hMzceEsVxS5jo/du1KdTeatQY8Q1aM4gyJxGxMLdfy2MtDu/KhlqvAY6Q+GD8+AsUS9E+HP+1g0RE
-        q/CN1HRw==;
+        bh=CndO8qRsyTMTBBuMfz2eq56r3DlPewLjX31EYs1JLqc=; b=lKe+hJGrZv5S9h3yKYiQXJyiSc
+        dF8xihLndyJCWTNAX4YvnwlF1Y7FbiC4rpaDddef0uKKq1UuN0Bo3z73ZoVzbrBJ+96hQUIvk5ovm
+        dwYDOLPKi80chWyYEyokOWTf1PCLmus4kbbgoAg7GguS+s6ncrxLsKiq0irlXMqv80TTyUukNgGCU
+        5G2pgPJwh7ZuI3WQ8rh6/8VxOLhMLuX7b/N6PBHui0K80Sg50kIFvuRRsvWefVFXVBxVM0zApr+dI
+        Oefa4vNRVVl+5nOzQrR6+I+LyE5IaTC7c/rdpIlLWQ5x4GW4caZJWmTI/wD4SpRaD1V+bT/w++RJE
+        Lq0gfTjQ==;
 Received: from [2001:4bb8:191:f692:b499:58dc:411a:54d1] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lP4OB-0045Wy-K6
-        for linux-xfs@vger.kernel.org; Wed, 24 Mar 2021 14:21:40 +0000
+        id 1lP4OE-0045X5-52
+        for linux-xfs@vger.kernel.org; Wed, 24 Mar 2021 14:21:42 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 03/18] xfs: handle crtime more carefully in xfs_bulkstat_one_int
-Date:   Wed, 24 Mar 2021 15:21:14 +0100
-Message-Id: <20210324142129.1011766-4-hch@lst.de>
+Subject: [PATCH 04/18] xfs: remove the unused xfs_icdinode_has_bigtime helper
+Date:   Wed, 24 Mar 2021 15:21:15 +0100
+Message-Id: <20210324142129.1011766-5-hch@lst.de>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210324142129.1011766-1-hch@lst.de>
 References: <20210324142129.1011766-1-hch@lst.de>
@@ -43,35 +43,27 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The crtime only exists for v5 inodes, so only copy it for those.
-
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_itable.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_inode_buf.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index ca310a125d1e14..444b551d540f44 100644
---- a/fs/xfs/xfs_itable.c
-+++ b/fs/xfs/xfs_itable.c
-@@ -99,8 +99,6 @@ xfs_bulkstat_one_int(
- 	buf->bs_mtime_nsec = inode->i_mtime.tv_nsec;
- 	buf->bs_ctime = inode->i_ctime.tv_sec;
- 	buf->bs_ctime_nsec = inode->i_ctime.tv_nsec;
--	buf->bs_btime = dic->di_crtime.tv_sec;
--	buf->bs_btime_nsec = dic->di_crtime.tv_nsec;
- 	buf->bs_gen = inode->i_generation;
- 	buf->bs_mode = inode->i_mode;
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
+index 9e1ae38380b3c0..b3097ea8b53366 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.h
++++ b/fs/xfs/libxfs/xfs_inode_buf.h
+@@ -32,11 +32,6 @@ struct xfs_icdinode {
+ 	struct timespec64 di_crtime;	/* time created */
+ };
  
-@@ -113,6 +111,8 @@ xfs_bulkstat_one_int(
- 	buf->bs_version = XFS_BULKSTAT_VERSION_V5;
- 
- 	if (xfs_sb_version_has_v3inode(&mp->m_sb)) {
-+		buf->bs_btime = dic->di_crtime.tv_sec;
-+		buf->bs_btime_nsec = dic->di_crtime.tv_nsec;
- 		if (dic->di_flags2 & XFS_DIFLAG2_COWEXTSIZE)
- 			buf->bs_cowextsize_blks = dic->di_cowextsize;
- 	}
+-static inline bool xfs_icdinode_has_bigtime(const struct xfs_icdinode *icd)
+-{
+-	return icd->di_flags2 & XFS_DIFLAG2_BIGTIME;
+-}
+-
+ /*
+  * Inode location information.  Stored in the inode and passed to
+  * xfs_imap_to_bp() to get a buffer and dinode for a given inode.
 -- 
 2.30.1
 
