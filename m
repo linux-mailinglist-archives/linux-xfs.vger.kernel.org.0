@@ -2,113 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 606353471FD
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 08:04:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D73D23472EB
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 08:45:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230255AbhCXHDx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Mar 2021 03:03:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37480 "EHLO
+        id S231557AbhCXHoc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Mar 2021 03:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbhCXHDS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 03:03:18 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BD2C061763
-        for <linux-xfs@vger.kernel.org>; Wed, 24 Mar 2021 00:03:18 -0700 (PDT)
+        with ESMTP id S230447AbhCXHo3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 03:44:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A03C061763;
+        Wed, 24 Mar 2021 00:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
-        Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=qSX6kggb1BnGoOLK2iEMXLDHlBH5AdTWXa4y4TXPedA=; b=HGjmQQAWO9cAnYLO2v1oIWXPi5
-        PeE2jree81KhcFAZzKRdN5clqvxykmJKDWKbffYfl959vi+xH8eN+knHnJ5GPVHQYk408hFNhBC8u
-        eTp87iRSVonixwbwvsgOvg1eCUmhIczgkZagO/ip2MBqW5SD8JnCcKjiM/Anb5hh9GJcouEKHV9MT
-        BS7V58sQYJ36l/hvNE0W1aufsTrF7xEpWcVTsCDWo2xdnbt2yeGxUDtZGVBXE3uYbJ+803tLM40wL
-        RkAagcaFUyVPX3+qb1vMMH6I7ybbA6ndU3ILVEdjjf0O3Y2I6+WCvppCgGPZpLjyQT1HV9yb/ksGb
-        bp54wcWQ==;
-Received: from [2001:4bb8:191:f692:b499:58dc:411a:54d1] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lOxXx-003uit-98
-        for linux-xfs@vger.kernel.org; Wed, 24 Mar 2021 07:03:17 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 3/3] xfs: pass struct xfs_eofblocks to the inode scan callback
-Date:   Wed, 24 Mar 2021 08:03:07 +0100
-Message-Id: <20210324070307.908462-4-hch@lst.de>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210324070307.908462-1-hch@lst.de>
-References: <20210324070307.908462-1-hch@lst.de>
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AjhZ2CVIIKjR5isQC6sJ/24i99ctPOUtMKvV5qXF0xo=; b=IOmFqAHA8XBS4+6O0mpzjzYRae
+        B1ys2xUT6rxBMk4sgdkyX6jTWMKUBaHQNKaPBp70tGMXQYhMaJQOj9TWfo2ONlGlm+wzTGpMakf6f
+        N7kwFlK3Vl5z23eVQ/ZAAwvf0wDFYLgqhTAdhABjiYp+BeVk1af3i6nZdPfU/9ttFO4aABwJ72JAg
+        fubbFCncJww+o/hOD7Fy5FEGotQpnB16aHDV7wwVy4/pGkyi4tV9yEk0T++f0KLug4oee9IaTZ5eH
+        XNSq0kMXV/XypVwmGWQn6JdDaqWkQ7YUZievOvUZF2/NtQbOD1C7E8kPVQ5ItimWZtpkSbfdJeGR/
+        J07I9N0w==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lOyAg-00B6jN-AB; Wed, 24 Mar 2021 07:43:35 +0000
+Date:   Wed, 24 Mar 2021 07:43:18 +0000
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Subject: Re: [PATCH] xfs: use a unique and persistent value for f_fsid
+Message-ID: <20210324074318.GA2646094@infradead.org>
+References: <20210322171118.446536-1-amir73il@gmail.com>
+ <20210322230352.GW63242@dread.disaster.area>
+ <CAOQ4uxjFMPNgR-aCqZt3FD90XtBVFZncdgNc4RdOCbsxukkyYQ@mail.gmail.com>
+ <20210323072607.GF63242@dread.disaster.area>
+ <CAOQ4uxgAddAfGkA7LMTPoBmrwVXbvHfnN8SWsW_WXm=LPVmc7Q@mail.gmail.com>
+ <20210324005421.GK63242@dread.disaster.area>
+ <CAOQ4uxhhMVQ4XE8DMU1EjaXBo-go3_pFX3CCWn=7GuUXcMW=PA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhhMVQ4XE8DMU1EjaXBo-go3_pFX3CCWn=7GuUXcMW=PA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Pass the actual structure instead of a void pointer here now
-that none of the functions is used as a callback.
+On Wed, Mar 24, 2021 at 08:53:25AM +0200, Amir Goldstein wrote:
+> > This also means that userspace can be entirely filesystem agnostic
+> > and it doesn't need to rely on parsing proc files to translate
+> > ephemeral mount IDs to paths, statvfs() and hoping that f_fsid is
+> > stable enough that it doesn't get the destination wrong.  It also
+> > means that fanotify UAPI probably no longer needs to supply a
+> > f_fsid with the filehandle because it is built into the
+> > filehandle....
+> >
+> 
+> That is one option. Let's call it the "bullet proof" option.
+> 
+> Another option, let's call it the "pragmatic" options, is that you accept
+> that my patch shouldn't break anything and agree to apply it.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
- xfs_inode_free_cowblocks(
----
- fs/xfs/xfs_icache.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+Your patch may very well break something.  Most Linux file systems do
+store the dev_t in the fsid and userspace may for whatever silly
+reasons depend on it.
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 7fdf77df66269c..06286b5b613252 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -763,7 +763,7 @@ xfs_inode_walk_ag_grab(
- static int
- xfs_blockgc_scan_inode(
- 	struct xfs_inode	*ip,
--	void			*args);
-+	struct xfs_eofblocks	*eofb);
- 
- /*
-  * For a given per-AG structure @pag, grab, @execute, and rele all incore
-@@ -1228,10 +1228,9 @@ xfs_reclaim_worker(
- STATIC int
- xfs_inode_free_eofblocks(
- 	struct xfs_inode	*ip,
--	void			*args,
-+	struct xfs_eofblocks	*eofb,
- 	unsigned int		*lockflags)
- {
--	struct xfs_eofblocks	*eofb = args;
- 	bool			wait;
- 
- 	wait = eofb && (eofb->eof_flags & XFS_EOF_FLAGS_SYNC);
-@@ -1436,10 +1435,9 @@ xfs_prep_free_cowblocks(
- STATIC int
- xfs_inode_free_cowblocks(
- 	struct xfs_inode	*ip,
--	void			*args,
-+	struct xfs_eofblocks	*eofb,
- 	unsigned int		*lockflags)
- {
--	struct xfs_eofblocks	*eofb = args;
- 	bool			wait;
- 	int			ret = 0;
- 
-@@ -1534,16 +1532,16 @@ xfs_blockgc_start(
- static int
- xfs_blockgc_scan_inode(
- 	struct xfs_inode	*ip,
--	void			*args)
-+	struct xfs_eofblocks	*eofb)
- {
- 	unsigned int		lockflags = 0;
- 	int			error;
- 
--	error = xfs_inode_free_eofblocks(ip, args, &lockflags);
-+	error = xfs_inode_free_eofblocks(ip, eofb, &lockflags);
- 	if (error)
- 		goto unlock;
- 
--	error = xfs_inode_free_cowblocks(ip, args, &lockflags);
-+	error = xfs_inode_free_cowblocks(ip, eofb, &lockflags);
- unlock:
- 	if (lockflags)
- 		xfs_iunlock(ip, lockflags);
--- 
-2.30.1
+Also trying to use the fsid for anything persistent is plain stupid,
+64-bits are not enough entropy for such an identifier.  You at least
+need a 128-bit UUID-like identifier for that.
 
+So I think this whole discussion is going in the wrong direction.
+Is exposing a stable file system identifier useful?  Yes, for many
+reasons.  Is repurposing the fsid for that a good idea?  Hell no.
