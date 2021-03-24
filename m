@@ -2,244 +2,151 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39208347A98
-	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 15:23:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07551347A9F
+	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 15:24:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236062AbhCXOWk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Mar 2021 10:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236210AbhCXOWT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 10:22:19 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210CDC061763
-        for <linux-xfs@vger.kernel.org>; Wed, 24 Mar 2021 07:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
-        Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=vR3J6bQ0KoGDwypIkgbmfGfVrb8w074si4XgRA60z3Y=; b=mJYpOgeE62r/OpuDGtFmLe743y
-        hvjYEKwBVJoqbSvGAEaXLb1LgGtfGz15aeN6CUBgM4jjUn/irxLrfKuuKw06oVcmqPWLnaFHmTPv7
-        zRQhBDSaLWh6nArcp8U60+athRoLh7B2xQW82eSCGNit7T4UorAc5DG3PtZsJyd3XC0HlsAVli5IV
-        IwJEZeK4pYE9Tu62nH5dG/h1s4b7mNoh1rlFgLIx8IENr1SPz4fGc0vPDAxW7hJy6y8AClawmjofM
-        HYTXegbmZYeKaAN0ixllB561dOjsyZp3waYvid6lvA/UI1mVh7WhXvanBWEsqSK2WIPNOkfx4Oo5K
-        QDskoHvQ==;
-Received: from [2001:4bb8:191:f692:b499:58dc:411a:54d1] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lP4Oo-0045YL-Cm
-        for linux-xfs@vger.kernel.org; Wed, 24 Mar 2021 14:22:18 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 18/18] xfs: move the di_crtime field to struct xfs_inode
-Date:   Wed, 24 Mar 2021 15:21:29 +0100
-Message-Id: <20210324142129.1011766-19-hch@lst.de>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210324142129.1011766-1-hch@lst.de>
-References: <20210324142129.1011766-1-hch@lst.de>
+        id S236125AbhCXOYQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Mar 2021 10:24:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42358 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236201AbhCXOYL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 10:24:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1616595850;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4NY1h6Oe7r3ji0gCW3vDq/3UwvOH5YL7i2nd2M4iAcw=;
+        b=b9NjHFwMRMwu4u41Hu5ePr1xRJ1DUFj7nj1GOQYKBT6oE/o10eHb0evAxNPV5sFylIfVaG
+        hL9xvjUdqdArYllqJ8R8WrCOjGF4lULgO52Fw0aeUms/RLhfhC2mQRFA0bc4ekShSzb+Q2
+        Aw1TgoizM16KSHKgPOJB2dpWJFU9P1Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-527-QiVuUAcJOgup2z8PkWDidg-1; Wed, 24 Mar 2021 10:24:06 -0400
+X-MC-Unique: QiVuUAcJOgup2z8PkWDidg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6E68E801817;
+        Wed, 24 Mar 2021 14:24:05 +0000 (UTC)
+Received: from bfoster (ovpn-113-24.rdu2.redhat.com [10.10.113.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E46667128C;
+        Wed, 24 Mar 2021 14:24:04 +0000 (UTC)
+Date:   Wed, 24 Mar 2021 10:24:03 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] xfs: set a mount flag when perag reservation is
+ active
+Message-ID: <YFtLg9iIzHbKPjrG@bfoster>
+References: <20210318161707.723742-1-bfoster@redhat.com>
+ <20210318161707.723742-2-bfoster@redhat.com>
+ <20210318205536.GO63242@dread.disaster.area>
+ <20210318221901.GN22100@magnolia>
+ <20210319010506.GP63242@dread.disaster.area>
+ <20210319014303.GQ63242@dread.disaster.area>
+ <YFS7IbGIyf4VqF59@bfoster>
+ <20210323224036.GJ63242@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210323224036.GJ63242@dread.disaster.area>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-In preparation of removing the historic icinode struct, move the crtime
-field into the containing xfs_inode structure.
+On Wed, Mar 24, 2021 at 09:40:36AM +1100, Dave Chinner wrote:
+> On Fri, Mar 19, 2021 at 10:54:25AM -0400, Brian Foster wrote:
+> > On Fri, Mar 19, 2021 at 12:43:03PM +1100, Dave Chinner wrote:
+> > > On Fri, Mar 19, 2021 at 12:05:06PM +1100, Dave Chinner wrote:
+> > > > On Thu, Mar 18, 2021 at 03:19:01PM -0700, Darrick J. Wong wrote:
+> > > > > TBH I think the COW recovery and the AG block reservation pieces are
+> > > > > prime candidates for throwing at an xfs_pwork workqueue so we can
+> > > > > perform those scans in parallel.
+> > > > 
+> > > > As I mentioned on #xfs, I think we only need to do the AG read if we
+> > > > are near enospc. i.e. we can take the entire reservation at mount
+> > > > time (which is fixed per-ag) and only take away the used from the
+> > > > reservation (i.e. return to the free space pool) when we actually
+> > > > access the AGF/AGI the first time. Or when we get a ENOSPC
+> > > > event, which might occur when we try to take the fixed reservation
+> > > > at mount time...
+> > > 
+> > > Which leaves the question about when we need to actually do the
+> > > accounting needed to fix the bug Brian is trying to fix. Can that be
+> > > delayed until we read the AGFs or have an ENOSPC event occur? Or
+> > > maybe some other "we are near ENOSPC and haven't read all AGFs yet"
+> > > threshold/trigger?
+> > > 
+> > 
+> > Technically there isn't a hard requirement to read in any AGFs at mount
+> > time. The tradeoff is that leaves a gap in effectiveness until at least
+> > the majority of allocbt blocks have been accounted for (via perag agf
+> > initialization). The in-core counter simply folds into the reservation
+> > set aside value, so it would just remain at 0 at reservation time and
+> > behave as if the mechanism didn't exist in the first place. The obvious
+> > risk is a user can mount the fs and immediately acquire reservation
+> > without having populated the counter from enough AGs to prevent the
+> > reservation overrun problem. For that reason, I didn't really consider
+> > the "lazy" init approach a suitable fix and hooked onto the (mostly)
+> > preexisting perag res behavior to initialize the appropriate structures
+> > at mount time.
+> > 
+> > If that underlying mount time behavior changes, it's not totally clear
+> > to me how that impacts this patch. If the perag res change relies on an
+> > overestimated mount time reservation and a fallback to a hard scan on
+> > -ENOSPC, then I wonder whether the overestimated reservation might
+> > effectively subsume whatever the allocbt set aside might be for that AG.
+> > If so, and the perag init effectively transfers excess reservation back
+> > to free space at the same time allocbt blocks are accounted for (and set
+> > aside from subsequent reservations), perhaps that has a similar net
+> > effect as the current behavior (of initializing the allocbt count at
+> > mount time)..?
+> > 
+> > One problem is that might be hard to reason about even with code in
+> > place, let alone right now when the targeted behavior is still
+> > vaporware. OTOH, I suppose that if we do know right now that the perag
+> > res scan will still fall back to mount time scans beyond some low free
+> > space threshold, perhaps it's just a matter of factoring allocbt set
+> > aside into the threshold somehow so that we know the counter will always
+> > be initialized before a user can over reserve blocks.
+> 
+> Yeah, that seems reasonable to me. I don't think it's difficult to
+> handle - just set the setaside to maximum at mount time, then as we
+> read in AGFs we replace the maximum setaside for that AG with the
+> actual btree block usage. If we hit ENOSPC, then we can read in the
+> uninitialised pags to reduce the setaside from the maximum to the
+> actual values and return that free space back to the global pool...
+> 
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/libxfs/xfs_format.h      |  5 ++---
- fs/xfs/libxfs/xfs_inode_buf.c   |  6 ++----
- fs/xfs/libxfs/xfs_inode_buf.h   | 10 ----------
- fs/xfs/libxfs/xfs_trans_inode.c |  2 +-
- fs/xfs/xfs_inode.c              |  2 +-
- fs/xfs/xfs_inode.h              |  3 +--
- fs/xfs/xfs_inode_item.c         |  3 +--
- fs/xfs/xfs_iops.c               |  2 +-
- fs/xfs/xfs_itable.c             |  7 ++-----
- 9 files changed, 11 insertions(+), 29 deletions(-)
+Ack. That seems like a generic enough fallback plan if the
+overestimation of perag reservation doesn't otherwise cover the gap.
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 630388b72dbe3f..c73378a4f8624d 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -955,9 +955,8 @@ static inline time64_t xfs_bigtime_to_unix(uint64_t ondisk_seconds)
-  * attribute use the XFS_DFORK_DPTR, XFS_DFORK_APTR, and XFS_DFORK_PTR macros
-  * below.
-  *
-- * There is a very similar struct icdinode in xfs_inode which matches the
-- * layout of the first 96 bytes of this structure, but is kept in native
-- * format instead of big endian.
-+ * There is a very similar struct xfs_log_inode which matches the layout of the
-+ * this structure, but is kept in native format instead of big endian.
-  *
-  * Note: di_flushiter is only used by v1/2 inodes - it's effectively a zeroed
-  * padding field for v3 inodes.
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index f3df60e3452e1e..36d6d46be8e7d4 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -173,7 +173,6 @@ xfs_inode_from_disk(
- 	struct xfs_inode	*ip,
- 	struct xfs_dinode	*from)
- {
--	struct xfs_icdinode	*to = &ip->i_d;
- 	struct inode		*inode = VFS_I(ip);
- 	int			error;
- 	xfs_failaddr_t		fa;
-@@ -239,7 +238,7 @@ xfs_inode_from_disk(
- 	if (xfs_sb_version_has_v3inode(&ip->i_mount->m_sb)) {
- 		inode_set_iversion_queried(inode,
- 					   be64_to_cpu(from->di_changecount));
--		to->di_crtime = xfs_inode_from_disk_ts(from, from->di_crtime);
-+		ip->i_crtime = xfs_inode_from_disk_ts(from, from->di_crtime);
- 		ip->i_diflags2 = be64_to_cpu(from->di_flags2);
- 		ip->i_cowextsize = be32_to_cpu(from->di_cowextsize);
- 	}
-@@ -286,7 +285,6 @@ xfs_inode_to_disk(
- 	struct xfs_dinode	*to,
- 	xfs_lsn_t		lsn)
- {
--	struct xfs_icdinode	*from = &ip->i_d;
- 	struct inode		*inode = VFS_I(ip);
- 
- 	to->di_magic = cpu_to_be16(XFS_DINODE_MAGIC);
-@@ -318,7 +316,7 @@ xfs_inode_to_disk(
- 	if (xfs_sb_version_has_v3inode(&ip->i_mount->m_sb)) {
- 		to->di_version = 3;
- 		to->di_changecount = cpu_to_be64(inode_peek_iversion(inode));
--		to->di_crtime = xfs_inode_to_disk_ts(ip, from->di_crtime);
-+		to->di_crtime = xfs_inode_to_disk_ts(ip, ip->i_crtime);
- 		to->di_flags2 = cpu_to_be64(ip->i_diflags2);
- 		to->di_cowextsize = cpu_to_be32(ip->i_cowextsize);
- 		to->di_ino = cpu_to_be64(ip->i_ino);
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-index 2f6015acfda81b..7f865bb4df840b 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.h
-+++ b/fs/xfs/libxfs/xfs_inode_buf.h
-@@ -9,16 +9,6 @@
- struct xfs_inode;
- struct xfs_dinode;
- 
--/*
-- * In memory representation of the XFS inode. This is held in the in-core struct
-- * xfs_inode and represents the current on disk values but the structure is not
-- * in on-disk format.  That is, this structure is always translated to on-disk
-- * format specific structures at the appropriate time.
-- */
--struct xfs_icdinode {
--	struct timespec64 di_crtime;	/* time created */
--};
--
- /*
-  * Inode location information.  Stored in the inode and passed to
-  * xfs_imap_to_bp() to get a buffer and dinode for a given inode.
-diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-index 102920303454df..78324e043e2572 100644
---- a/fs/xfs/libxfs/xfs_trans_inode.c
-+++ b/fs/xfs/libxfs/xfs_trans_inode.c
-@@ -70,7 +70,7 @@ xfs_trans_ichgtime(
- 	if (flags & XFS_ICHGTIME_CHG)
- 		inode->i_ctime = tv;
- 	if (flags & XFS_ICHGTIME_CREATE)
--		ip->i_d.di_crtime = tv;
-+		ip->i_crtime = tv;
- }
- 
- /*
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 28d57353bdfa57..21765ddc329861 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -842,7 +842,7 @@ xfs_init_new_inode(
- 	if (xfs_sb_version_has_v3inode(&mp->m_sb)) {
- 		inode_set_iversion(inode, 1);
- 		ip->i_cowextsize = 0;
--		ip->i_d.di_crtime = tv;
-+		ip->i_crtime = tv;
- 	}
- 
- 	flags = XFS_ILOG_CORE;
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 8fb87d3d98d174..767da7eaf696d0 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -66,8 +66,7 @@ typedef struct xfs_inode {
- 	uint8_t			i_forkoff;	/* attr fork offset >> 3 */
- 	uint16_t		i_diflags;	/* XFS_DIFLAG_... */
- 	uint64_t		i_diflags2;	/* XFS_DIFLAG2_... */
--
--	struct xfs_icdinode	i_d;		/* most of ondisk inode */
-+	struct timespec64	i_crtime;	/* time created */
- 
- 	/* VFS inode */
- 	struct inode		i_vnode;	/* embedded VFS inode */
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index 912c453b6fe46d..a79a3c52d105b0 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -350,7 +350,6 @@ xfs_inode_to_log_dinode(
- 	struct xfs_log_dinode	*to,
- 	xfs_lsn_t		lsn)
- {
--	struct xfs_icdinode	*from = &ip->i_d;
- 	struct inode		*inode = VFS_I(ip);
- 
- 	to->di_magic = XFS_DINODE_MAGIC;
-@@ -386,7 +385,7 @@ xfs_inode_to_log_dinode(
- 	if (xfs_sb_version_has_v3inode(&ip->i_mount->m_sb)) {
- 		to->di_version = 3;
- 		to->di_changecount = inode_peek_iversion(inode);
--		to->di_crtime = xfs_inode_to_log_dinode_ts(ip, from->di_crtime);
-+		to->di_crtime = xfs_inode_to_log_dinode_ts(ip, ip->i_crtime);
- 		to->di_flags2 = ip->i_diflags2;
- 		to->di_cowextsize = ip->i_cowextsize;
- 		to->di_ino = ip->i_ino;
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index df958611e854af..1bf4f37dc78806 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -567,7 +567,7 @@ xfs_vn_getattr(
- 	if (xfs_sb_version_has_v3inode(&mp->m_sb)) {
- 		if (request_mask & STATX_BTIME) {
- 			stat->result_mask |= STATX_BTIME;
--			stat->btime = ip->i_d.di_crtime;
-+			stat->btime = ip->i_crtime;
- 		}
- 	}
- 
-diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index 1f33f13d33a901..39a2352428626b 100644
---- a/fs/xfs/xfs_itable.c
-+++ b/fs/xfs/xfs_itable.c
-@@ -60,7 +60,6 @@ xfs_bulkstat_one_int(
- 	struct xfs_bstat_chunk	*bc)
- {
- 	struct user_namespace	*sb_userns = mp->m_super->s_user_ns;
--	struct xfs_icdinode	*dic;		/* dinode core info pointer */
- 	struct xfs_inode	*ip;		/* incore inode pointer */
- 	struct inode		*inode;
- 	struct xfs_bulkstat	*buf = bc->buf;
-@@ -81,8 +80,6 @@ xfs_bulkstat_one_int(
- 	ASSERT(ip->i_imap.im_blkno != 0);
- 	inode = VFS_I(ip);
- 
--	dic = &ip->i_d;
--
- 	/* xfs_iget returns the following without needing
- 	 * further change.
- 	 */
-@@ -111,8 +108,8 @@ xfs_bulkstat_one_int(
- 	buf->bs_version = XFS_BULKSTAT_VERSION_V5;
- 
- 	if (xfs_sb_version_has_v3inode(&mp->m_sb)) {
--		buf->bs_btime = dic->di_crtime.tv_sec;
--		buf->bs_btime_nsec = dic->di_crtime.tv_nsec;
-+		buf->bs_btime = ip->i_crtime.tv_sec;
-+		buf->bs_btime_nsec = ip->i_crtime.tv_nsec;
- 		if (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE)
- 			buf->bs_cowextsize_blks = ip->i_cowextsize;
- 	}
--- 
-2.30.1
+> > As it is, I don't
+> > really have a strong opinion on whether we should try to make this fix
+> > now and preserve it, or otherwise table it and revisit once we know what
+> > the resulting perag res code will look like. Thoughts?
+> 
+> It sounds like we have a solid plan to address the AG header access
+> at mount time, adding this code now doesn't make anything worse,
+> nor does it appear to prevent us from fixing the AG header access
+> problem in the future. So I'm happy for this fix to go ahead as it
+> stands.
+> 
+
+Ok, so is that a Rv-b..? ;)
+
+So far after a quick skim back through the discussion, I don't have a
+reason for a v4 of this series...
+
+Brian
+
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
 
