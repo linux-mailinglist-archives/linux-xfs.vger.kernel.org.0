@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FC24347A92
+	by mail.lfdr.de (Postfix) with ESMTP id 9AFB5347A93
 	for <lists+linux-xfs@lfdr.de>; Wed, 24 Mar 2021 15:22:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236042AbhCXOWO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 24 Mar 2021 10:22:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
+        id S236205AbhCXOWQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 24 Mar 2021 10:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236215AbhCXOWB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 10:22:01 -0400
+        with ESMTP id S236217AbhCXOWD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 24 Mar 2021 10:22:03 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD45C061763
-        for <linux-xfs@vger.kernel.org>; Wed, 24 Mar 2021 07:22:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9D4C061763
+        for <linux-xfs@vger.kernel.org>; Wed, 24 Mar 2021 07:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
         Reply-To:Cc:Content-Type:Content-ID:Content-Description;
-        bh=b8KqM9ukmLf7xLerNGUdnJVET902+HPOLR2J9/dySdg=; b=Q9FpCf+xth8J9dAsBNmuxTbnSE
-        MDxT3/RHhCluZ766UlXa11KdiEbvHo2Fdzq+pg43eQtAuf/PSU1LlUnZJ1kmS8GJLkrhArHrPd041
-        mZ7HTvIT9RCZ9AWFTmUfTCX4gx/W3DEg41iKQKH+vd1gxzFQdvbetiTXs/iQrf/R3mWSGpwf4/PB5
-        Y+FRbF6tQ5OPMwAfqGHFou9vjj4Tgv0lo69ljt+avZh7mx81nUMPZUE6l2IiHXFdh/J0IdBskz3w3
-        sqDvy6JrKFr0sLj2F2hlTYBhdFy0f4M916dXGL71dIqnz8UwEzhSPxfkf9CFaKgvqfTfuNdebtheH
-        tT9tt3vw==;
+        bh=ul9rxKisjkVZ3qOsKyhplidjigbBGyaOzCC4zSIgPHs=; b=Yl7Bf7B6hAU//GBU3TQ/+mDmXL
+        SY3IfWCBB7EP+l59tT4/O76UlNwcoGhlPzlu+W4k7LjOoDs9+fh0dISX9JVB99r73oO7KHlpl0d84
+        kvHwMA3kReEUHgPJP0VFM80FL81nchmLfqtcRefaOgDQPvT72LNqm3gubjQlhMGsk8oOviapSndJz
+        bb6vvwfKXgha0henh1Q1BZkp9jfwzISl8chlmnJi98uRZzOH7KqJIA+9wFTdjxKxdQ/LrH3TXCXm4
+        IB58rXtn7K49SssYR6RvZcIcNZwUHNMFRBQ7VLaZ3ms2KdrElLPsUFdibeGBLusVIrGObbtdzOnnR
+        zTTxeKVQ==;
 Received: from [2001:4bb8:191:f692:b499:58dc:411a:54d1] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lP4OW-0045Xd-Ev
-        for linux-xfs@vger.kernel.org; Wed, 24 Mar 2021 14:22:00 +0000
+        id 1lP4OY-0045Xs-Vh
+        for linux-xfs@vger.kernel.org; Wed, 24 Mar 2021 14:22:03 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 11/18] xfs: move the di_cowextsize field to struct xfs_inode
-Date:   Wed, 24 Mar 2021 15:21:22 +0100
-Message-Id: <20210324142129.1011766-12-hch@lst.de>
+Subject: [PATCH 12/18] xfs: move the di_flushiter field to struct xfs_inode
+Date:   Wed, 24 Mar 2021 15:21:23 +0100
+Message-Id: <20210324142129.1011766-13-hch@lst.de>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210324142129.1011766-1-hch@lst.de>
 References: <20210324142129.1011766-1-hch@lst.de>
@@ -44,177 +44,128 @@ List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 In preparation of removing the historic icinode struct, move the
-cowextsize field into the containing xfs_inode structure.  Also
-switch to use the xfs_extlen_t instead of a uint32_t.
+flushiter field into the containing xfs_inode structure.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_inode_buf.c | 4 ++--
- fs/xfs/libxfs/xfs_inode_buf.h | 1 -
- fs/xfs/xfs_file.c             | 2 +-
- fs/xfs/xfs_inode.c            | 6 +++---
- fs/xfs/xfs_inode.h            | 1 +
- fs/xfs/xfs_inode_item.c       | 2 +-
- fs/xfs/xfs_ioctl.c            | 8 +++-----
- fs/xfs/xfs_itable.c           | 2 +-
- fs/xfs/xfs_reflink.c          | 2 +-
- 9 files changed, 13 insertions(+), 15 deletions(-)
+ fs/xfs/libxfs/xfs_inode_buf.c |  4 ++--
+ fs/xfs/libxfs/xfs_inode_buf.h |  1 -
+ fs/xfs/xfs_icache.c           |  2 +-
+ fs/xfs/xfs_inode.c            | 19 +++++++++----------
+ fs/xfs/xfs_inode.h            |  1 +
+ fs/xfs/xfs_inode_item.c       |  2 +-
+ 6 files changed, 14 insertions(+), 15 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index fa21fb84c2d232..9f208d2c8ddb4d 100644
+index 9f208d2c8ddb4d..d090274fb8a152 100644
 --- a/fs/xfs/libxfs/xfs_inode_buf.c
 +++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -240,7 +240,7 @@ xfs_inode_from_disk(
- 					   be64_to_cpu(from->di_changecount));
- 		to->di_crtime = xfs_inode_from_disk_ts(from, from->di_crtime);
- 		to->di_flags2 = be64_to_cpu(from->di_flags2);
--		to->di_cowextsize = be32_to_cpu(from->di_cowextsize);
-+		ip->i_cowextsize = be32_to_cpu(from->di_cowextsize);
+@@ -193,7 +193,7 @@ xfs_inode_from_disk(
+ 	 * inode. If the inode is unused, mode is zero and we shouldn't mess
+ 	 * with the uninitialized part of it.
+ 	 */
+-	to->di_flushiter = be16_to_cpu(from->di_flushiter);
++	ip->i_flushiter = be16_to_cpu(from->di_flushiter);
+ 	inode->i_generation = be32_to_cpu(from->di_gen);
+ 	inode->i_mode = be16_to_cpu(from->di_mode);
+ 	if (!inode->i_mode)
+@@ -327,7 +327,7 @@ xfs_inode_to_disk(
+ 		to->di_flushiter = 0;
+ 	} else {
+ 		to->di_version = 2;
+-		to->di_flushiter = cpu_to_be16(from->di_flushiter);
++		to->di_flushiter = cpu_to_be16(ip->i_flushiter);
  	}
+ }
  
- 	error = xfs_iformat_data_fork(ip, from);
-@@ -319,7 +319,7 @@ xfs_inode_to_disk(
- 		to->di_changecount = cpu_to_be64(inode_peek_iversion(inode));
- 		to->di_crtime = xfs_inode_to_disk_ts(ip, from->di_crtime);
- 		to->di_flags2 = cpu_to_be64(from->di_flags2);
--		to->di_cowextsize = cpu_to_be32(from->di_cowextsize);
-+		to->di_cowextsize = cpu_to_be32(ip->i_cowextsize);
- 		to->di_ino = cpu_to_be64(ip->i_ino);
- 		to->di_lsn = cpu_to_be64(lsn);
- 		memset(to->di_pad2, 0, sizeof(to->di_pad2));
 diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-index 6bc78856373e31..77d250dbe96848 100644
+index 77d250dbe96848..e41a11bef04436 100644
 --- a/fs/xfs/libxfs/xfs_inode_buf.h
 +++ b/fs/xfs/libxfs/xfs_inode_buf.h
-@@ -21,7 +21,6 @@ struct xfs_icdinode {
+@@ -16,7 +16,6 @@ struct xfs_dinode;
+  * format specific structures at the appropriate time.
+  */
+ struct xfs_icdinode {
+-	uint16_t	di_flushiter;	/* incremented on flush */
+ 	uint8_t		di_forkoff;	/* attr fork offs, <<3 for 64b align */
  	uint16_t	di_flags;	/* random flags, XFS_DIFLAG_... */
  
- 	uint64_t	di_flags2;	/* more random flags */
--	uint32_t	di_cowextsize;	/* basic cow extent size for file */
- 
- 	struct timespec64 di_crtime;	/* time created */
- };
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 4c930078f45d82..d755fbf3640bee 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1162,7 +1162,7 @@ xfs_file_remap_range(
- 	    (src->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE) &&
- 	    pos_out == 0 && len >= i_size_read(inode_out) &&
- 	    !(dest->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE))
--		cowextsize = src->i_d.di_cowextsize;
-+		cowextsize = src->i_cowextsize;
- 
- 	ret = xfs_reflink_update_dest(dest, pos_out + len, cowextsize,
- 			remap_flags);
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index d7952d5955ede5..5c68e3069a8783 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -499,7 +499,7 @@ xfs_iget_cache_miss(
+ 	 * simply build the new inode core with a random generation number.
+ 	 *
+ 	 * For version 4 (and older) superblocks, log recovery is dependent on
+-	 * the di_flushiter field being initialised from the current on-disk
++	 * the i_flushiter field being initialised from the current on-disk
+ 	 * value and hence we must also read the inode off disk even when
+ 	 * initializing new inodes.
+ 	 */
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index ccd179900f21cf..b8f38423f8c451 100644
+index b8f38423f8c451..e951ea48b3a276 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -81,7 +81,7 @@ xfs_get_cowextsz_hint(
- 
- 	a = 0;
- 	if (ip->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE)
--		a = ip->i_d.di_cowextsize;
-+		a = ip->i_cowextsize;
- 	b = xfs_get_extsz_hint(ip);
- 
- 	a = max(a, b);
-@@ -754,7 +754,7 @@ xfs_inode_inherit_flags2(
- {
- 	if (pip->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE) {
- 		ip->i_d.di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
--		ip->i_d.di_cowextsize = pip->i_d.di_cowextsize;
-+		ip->i_cowextsize = pip->i_cowextsize;
- 	}
- 	if (pip->i_d.di_flags2 & XFS_DIFLAG2_DAX)
- 		ip->i_d.di_flags2 |= XFS_DIFLAG2_DAX;
-@@ -843,7 +843,7 @@ xfs_init_new_inode(
- 
- 	if (xfs_sb_version_has_v3inode(&mp->m_sb)) {
- 		inode_set_iversion(inode, 1);
--		ip->i_d.di_cowextsize = 0;
-+		ip->i_cowextsize = 0;
- 		ip->i_d.di_crtime = tv;
+@@ -3430,16 +3430,15 @@ xfs_iflush(
  	}
  
+ 	/*
+-	 * Inode item log recovery for v2 inodes are dependent on the
+-	 * di_flushiter count for correct sequencing. We bump the flush
+-	 * iteration count so we can detect flushes which postdate a log record
+-	 * during recovery. This is redundant as we now log every change and
+-	 * hence this can't happen but we need to still do it to ensure
+-	 * backwards compatibility with old kernels that predate logging all
+-	 * inode changes.
++	 * Inode item log recovery for v2 inodes are dependent on the flushiter
++	 * count for correct sequencing.  We bump the flush iteration count so
++	 * we can detect flushes which postdate a log record during recovery.
++	 * This is redundant as we now log every change and hence this can't
++	 * happen but we need to still do it to ensure backwards compatibility
++	 * with old kernels that predate logging all inode changes.
+ 	 */
+ 	if (!xfs_sb_version_has_v3inode(&mp->m_sb))
+-		ip->i_d.di_flushiter++;
++		ip->i_flushiter++;
+ 
+ 	/*
+ 	 * If there are inline format data / attr forks attached to this inode,
+@@ -3460,8 +3459,8 @@ xfs_iflush(
+ 	xfs_inode_to_disk(ip, dip, iip->ili_item.li_lsn);
+ 
+ 	/* Wrap, we never let the log put out DI_MAX_FLUSH */
+-	if (ip->i_d.di_flushiter == DI_MAX_FLUSH)
+-		ip->i_d.di_flushiter = 0;
++	if (ip->i_flushiter == DI_MAX_FLUSH)
++		ip->i_flushiter = 0;
+ 
+ 	xfs_iflush_fork(ip, dip, iip, XFS_DATA_FORK);
+ 	if (XFS_IFORK_Q(ip))
 diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 84cc2e74ba1961..36eb33d9bcbdcc 100644
+index 36eb33d9bcbdcc..6246ee8a4359ab 100644
 --- a/fs/xfs/xfs_inode.h
 +++ b/fs/xfs/xfs_inode.h
-@@ -58,6 +58,7 @@ typedef struct xfs_inode {
- 	xfs_rfsblock_t		i_nblocks;	/* # of direct & btree blocks */
+@@ -59,6 +59,7 @@ typedef struct xfs_inode {
  	uint32_t		i_projid;	/* owner's project id */
  	xfs_extlen_t		i_extsize;	/* basic/minimum extent size */
-+	xfs_extlen_t		i_cowextsize;	/* basic cow extent size */
+ 	xfs_extlen_t		i_cowextsize;	/* basic cow extent size */
++	uint16_t		i_flushiter;	/* incremented on flush */
  
  	struct xfs_icdinode	i_d;		/* most of ondisk inode */
  
 diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index 8a1411effd327d..44902fd513eb0b 100644
+index 44902fd513eb0b..091436857ee74b 100644
 --- a/fs/xfs/xfs_inode_item.c
 +++ b/fs/xfs/xfs_inode_item.c
-@@ -388,7 +388,7 @@ xfs_inode_to_log_dinode(
- 		to->di_changecount = inode_peek_iversion(inode);
- 		to->di_crtime = xfs_inode_to_log_dinode_ts(ip, from->di_crtime);
- 		to->di_flags2 = from->di_flags2;
--		to->di_cowextsize = from->di_cowextsize;
-+		to->di_cowextsize = ip->i_cowextsize;
- 		to->di_ino = ip->i_ino;
- 		to->di_lsn = lsn;
- 		memset(to->di_pad2, 0, sizeof(to->di_pad2));
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index ec769219e435e9..e45bce9b11082c 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1121,8 +1121,7 @@ xfs_fill_fsxattr(
- 
- 	simple_fill_fsxattr(fa, xfs_ip2xflags(ip));
- 	fa->fsx_extsize = ip->i_extsize << ip->i_mount->m_sb.sb_blocklog;
--	fa->fsx_cowextsize = ip->i_d.di_cowextsize <<
--			ip->i_mount->m_sb.sb_blocklog;
-+	fa->fsx_cowextsize = ip->i_cowextsize << ip->i_mount->m_sb.sb_blocklog;
- 	fa->fsx_projid = ip->i_projid;
- 	if (ifp && (ifp->if_flags & XFS_IFEXTENTS))
- 		fa->fsx_nextents = xfs_iext_count(ifp);
-@@ -1524,10 +1523,9 @@ xfs_ioctl_setattr(
- 		ip->i_extsize = 0;
- 	if (xfs_sb_version_has_v3inode(&mp->m_sb) &&
- 	    (ip->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE))
--		ip->i_d.di_cowextsize = fa->fsx_cowextsize >>
--				mp->m_sb.sb_blocklog;
-+		ip->i_cowextsize = fa->fsx_cowextsize >> mp->m_sb.sb_blocklog;
- 	else
--		ip->i_d.di_cowextsize = 0;
-+		ip->i_cowextsize = 0;
- 
- 	error = xfs_trans_commit(tp);
- 
-diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index ce95cb1a9bc9f5..43f8a89c9786c7 100644
---- a/fs/xfs/xfs_itable.c
-+++ b/fs/xfs/xfs_itable.c
-@@ -114,7 +114,7 @@ xfs_bulkstat_one_int(
- 		buf->bs_btime = dic->di_crtime.tv_sec;
- 		buf->bs_btime_nsec = dic->di_crtime.tv_nsec;
- 		if (dic->di_flags2 & XFS_DIFLAG2_COWEXTSIZE)
--			buf->bs_cowextsize_blks = dic->di_cowextsize;
-+			buf->bs_cowextsize_blks = ip->i_cowextsize;
+@@ -396,7 +396,7 @@ xfs_inode_to_log_dinode(
+ 		to->di_flushiter = 0;
+ 	} else {
+ 		to->di_version = 2;
+-		to->di_flushiter = from->di_flushiter;
++		to->di_flushiter = ip->i_flushiter;
  	}
- 
- 	switch (ip->i_df.if_format) {
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 306f13dfbfd856..d8735b3ee0f807 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -934,7 +934,7 @@ xfs_reflink_update_dest(
- 	}
- 
- 	if (cowextsize) {
--		dest->i_d.di_cowextsize = cowextsize;
-+		dest->i_cowextsize = cowextsize;
- 		dest->i_d.di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
- 	}
+ }
  
 -- 
 2.30.1
