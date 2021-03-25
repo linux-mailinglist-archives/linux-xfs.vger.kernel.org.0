@@ -2,130 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91C5E348FC6
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Mar 2021 12:30:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89D70349398
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Mar 2021 15:04:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231512AbhCYL3v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Mar 2021 07:29:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231469AbhCYL1X (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 07:27:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 86C5861A4E;
-        Thu, 25 Mar 2021 11:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616671618;
-        bh=QHdcJTezi9bvA14StpNy4bsRWJsJICWDl/4yxaAs0+Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VCei0o4GR+gWeSj9he4fc41Mz+udEy5cF2dxh7HVShmwtmHNxO5yEskEzxPuIv9z7
-         lzuI71RM+WPlHDHyx5u2xZp1mBD25VMKukL9FefYJeYcVhLnlpgAV+0slL/Nu/fl+W
-         KfO+FzI+Hg9XmvrDR4NwWDtOPn+7F3d+Ivuosk5lM/q4icqORb2LbxyFsxP+hRL+I/
-         TurY5m2/jrMmGCWP/CYoVDmdFFbbu1RtUruLQ+/tOgLACGUAhsqa6ZI3ycbyAGvPoy
-         M8U+HKGjdhCfymvxkeerYQvYXbijWPY++3sVVaPrZi3HADe3gbdgyKgYmb6y4JOhuk
-         ytfluLeaMcA7g==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/24] iomap: Fix negative assignment to unsigned sis->pages in iomap_swapfile_activate
-Date:   Thu, 25 Mar 2021 07:26:31 -0400
-Message-Id: <20210325112651.1927828-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210325112651.1927828-1-sashal@kernel.org>
-References: <20210325112651.1927828-1-sashal@kernel.org>
+        id S231344AbhCYOEL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Mar 2021 10:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231281AbhCYOD7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Mar 2021 10:03:59 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DF1C06174A
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Mar 2021 07:03:59 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id m11so2154616pfc.11
+        for <linux-xfs@vger.kernel.org>; Thu, 25 Mar 2021 07:03:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xy3iwbs7ggKcHUTrKKUPiIQ1zW95J0vGHjor1UXhyVA=;
+        b=f/CDkqJO+shcNEUTLjm2T1gyGhLHN+yBOx9++yZwvwqvaaNgH2ve9xy8h/ZMSxHjfd
+         bfho88Xe+RAi474G2JV5UQ7ZjpiTdbwZ8OJsYv+iYuspjeeMJTqTQ97mM/Wpdk71IGAr
+         lLS5lI0DIv1RfDeDmMlzRb6UMda54fwyJlIXDtEwV3PELuFT5Rh24tinHsUxLSccN+Uw
+         eX2Rw5Go44X4i2sNtgovzFJoahp5vT9uub3zjQBQpYDJhrX0ACIyYB+KqyeTXsa8R7qK
+         TT/CVWb4Z2Xo6+uCBEm1MAfoldMiRko90+ud31Ts1ED9vgpWr6ONRCXJqXbdUZ+6jDd8
+         EwMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xy3iwbs7ggKcHUTrKKUPiIQ1zW95J0vGHjor1UXhyVA=;
+        b=ZrqJbXGmefNHEz1AKGWYbGMzw9kbh7B5gIpxZrELSGEDQmNgVE9EG06PnHVcePDXjz
+         fFzj4bdLvfV6/G9kEpK8FrkIP9PcscVFCXWxbxUqgKvKUo3oJ8uW3EW5uy64kQ1vh2Bs
+         guqTEsBzQ/hTrfLCS4aFm97iTXi6TdQBMehycIZz+IZcEmVdkGM+ihxl/ccw8xtF3wBd
+         Ih0av11CBp/sZOqJLoC0/nFHPXp+cjo8BdDMcE6jbb6AlGKDin/JPZft4ekUEKEPp0/W
+         gBIGGlTmQqbaaJmPpViFOa0gfNk8y/jZCEfhC/bZxn6/uB/U5Duu+Me/b3p0iBOHTYkD
+         dUYg==
+X-Gm-Message-State: AOAM531XFz8qFl9pvWkFnUHaAHNhlBMA4C9rHbabPiQ/iYMisXhLL5YX
+        tuSE+hjUfv+ewJwRgE5bHOvDMLSARt4=
+X-Google-Smtp-Source: ABdhPJy1ffgZ0y5kWtv5A9DOzSV7ZVxZkgNvZsiBqEWSZ0kI7Nu+5zCxbvoeMO3+e9sGq/r10gvVEw==
+X-Received: by 2002:a63:1e20:: with SMTP id e32mr7634678pge.345.1616681038506;
+        Thu, 25 Mar 2021 07:03:58 -0700 (PDT)
+Received: from localhost.localdomain ([122.171.175.121])
+        by smtp.gmail.com with ESMTPSA id x2sm5876379pgb.89.2021.03.25.07.03.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Mar 2021 07:03:58 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>, djwong@kernel.org
+Subject: [PATCH 1/2] xfs: Initialize xfs_alloc_arg->total correctly when allocating minlen extents
+Date:   Thu, 25 Mar 2021 19:33:38 +0530
+Message-Id: <20210325140339.6603-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+xfs/538 can cause the following call trace to be printed when executing on a
+multi-block directory configuration,
 
-[ Upstream commit 5808fecc572391867fcd929662b29c12e6d08d81 ]
+ WARNING: CPU: 1 PID: 2578 at fs/xfs/libxfs/xfs_bmap.c:717 xfs_bmap_extents_to_btree+0x520/0x5d0
+ Call Trace:
+  ? xfs_buf_rele+0x4f/0x450
+  xfs_bmap_add_extent_hole_real+0x747/0x960
+  xfs_bmapi_allocate+0x39a/0x440
+  xfs_bmapi_write+0x507/0x9e0
+  xfs_da_grow_inode_int+0x1cd/0x330
+  ? up+0x12/0x60
+  xfs_dir2_grow_inode+0x62/0x110
+  ? xfs_trans_log_inode+0x234/0x2d0
+  xfs_dir2_sf_to_block+0x103/0x940
+  ? xfs_dir2_sf_check+0x8c/0x210
+  ? xfs_da_compname+0x19/0x30
+  ? xfs_dir2_sf_lookup+0xd0/0x3d0
+  xfs_dir2_sf_addname+0x10d/0x910
+  xfs_dir_createname+0x1ad/0x210
+  xfs_create+0x404/0x620
+  xfs_generic_create+0x24c/0x320
+  path_openat+0xda6/0x1030
+  do_filp_open+0x88/0x130
+  ? kmem_cache_alloc+0x50/0x210
+  ? __cond_resched+0x16/0x40
+  ? kmem_cache_alloc+0x50/0x210
+  do_sys_openat2+0x97/0x150
+  __x64_sys_creat+0x49/0x70
+  do_syscall_64+0x33/0x40
+  entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-In case if isi.nr_pages is 0, we are making sis->pages (which is
-unsigned int) a huge value in iomap_swapfile_activate() by assigning -1.
-This could cause a kernel crash in kernel v4.18 (with below signature).
-Or could lead to unknown issues on latest kernel if the fake big swap gets
-used.
+This occurs because xfs_bmap_exact_minlen_extent_alloc() initializes
+xfs_alloc_arg->total to xfs_bmalloca->minlen. In the context of
+xfs_bmap_exact_minlen_extent_alloc(), xfs_bmalloca->minlen has a value of 1
+and hence the space allocator could choose an AG which has less than
+xfs_bmalloca->total number of free blocks available. As the transaction
+proceeds, one of the future space allocation requests could fail due to
+non-availability of free blocks in the AG that was originally chosen.
 
-Fix this issue by returning -EINVAL in case of nr_pages is 0, since it
-is anyway a invalid swapfile. Looks like this issue will be hit when
-we have pagesize < blocksize type of configuration.
+This commit fixes the bug by assigning xfs_alloc_arg->total to the value of
+xfs_bmalloca->total.
 
-I was able to hit the issue in case of a tiny swap file with below
-test script.
-https://raw.githubusercontent.com/riteshharjani/LinuxStudy/master/scripts/swap-issue.sh
-
-kernel crash analysis on v4.18
-==============================
-On v4.18 kernel, it causes a kernel panic, since sis->pages becomes
-a huge value and isi.nr_extents is 0. When 0 is returned it is
-considered as a swapfile over NFS and SWP_FILE is set (sis->flags |= SWP_FILE).
-Then when swapoff was getting called it was calling a_ops->swap_deactivate()
-if (sis->flags & SWP_FILE) is true. Since a_ops->swap_deactivate() is
-NULL in case of XFS, it causes below panic.
-
-Panic signature on v4.18 kernel:
-=======================================
-root@qemu:/home/qemu# [ 8291.723351] XFS (loop2): Unmounting Filesystem
-[ 8292.123104] XFS (loop2): Mounting V5 Filesystem
-[ 8292.132451] XFS (loop2): Ending clean mount
-[ 8292.263362] Adding 4294967232k swap on /mnt1/test/swapfile.  Priority:-2 extents:1 across:274877906880k
-[ 8292.277834] Unable to handle kernel paging request for instruction fetch
-[ 8292.278677] Faulting instruction address: 0x00000000
-cpu 0x19: Vector: 400 (Instruction Access) at [c0000009dd5b7ad0]
-    pc: 0000000000000000
-    lr: c0000000003eb9dc: destroy_swap_extents+0xfc/0x120
-    sp: c0000009dd5b7d50
-   msr: 8000000040009033
-  current = 0xc0000009b6710080
-  paca    = 0xc00000003ffcb280   irqmask: 0x03   irq_happened: 0x01
-    pid   = 5604, comm = swapoff
-Linux version 4.18.0 (riteshh@xxxxxxx) (gcc version 8.4.0 (Ubuntu 8.4.0-1ubuntu1~18.04)) #57 SMP Wed Mar 3 01:33:04 CST 2021
-enter ? for help
-[link register   ] c0000000003eb9dc destroy_swap_extents+0xfc/0x120
-[c0000009dd5b7d50] c0000000025a7058 proc_poll_event+0x0/0x4 (unreliable)
-[c0000009dd5b7da0] c0000000003f0498 sys_swapoff+0x3f8/0x910
-[c0000009dd5b7e30] c00000000000bbe4 system_call+0x5c/0x70
-Exception: c01 (System Call) at 00007ffff7d208d8
-
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-[djwong: rework the comment to provide more details]
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 301519674699 ("xfs: Introduce error injection to allocate only minlen size extents for files")
+Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/iomap/swapfile.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/xfs/libxfs/xfs_bmap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
-index 152a230f668d..bd0cc3dcc980 100644
---- a/fs/iomap/swapfile.c
-+++ b/fs/iomap/swapfile.c
-@@ -169,6 +169,16 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
- 			return ret;
- 	}
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index e0905ad171f0..585f7e795023 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -3586,7 +3586,8 @@ xfs_bmap_exact_minlen_extent_alloc(
+ 	args.fsbno = ap->blkno;
+ 	args.oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
+ 	args.type = XFS_ALLOCTYPE_FIRST_AG;
+-	args.total = args.minlen = args.maxlen = ap->minlen;
++	args.minlen = args.maxlen = ap->minlen;
++	args.total = ap->total;
  
-+	/*
-+	 * If this swapfile doesn't contain even a single page-aligned
-+	 * contiguous range of blocks, reject this useless swapfile to
-+	 * prevent confusion later on.
-+	 */
-+	if (isi.nr_pages == 0) {
-+		pr_warn("swapon: Cannot find a single usable page in file.\n");
-+		return -EINVAL;
-+	}
-+
- 	*pagespan = 1 + isi.highest_ppage - isi.lowest_ppage;
- 	sis->max = isi.nr_pages;
- 	sis->pages = isi.nr_pages - 1;
+ 	args.alignment = 1;
+ 	args.minalignslop = 0;
 -- 
-2.30.1
+2.29.2
 
