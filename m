@@ -2,41 +2,77 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A84348BBC
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Mar 2021 09:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E2CC348BFA
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Mar 2021 09:58:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbhCYIlc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Mar 2021 04:41:32 -0400
-Received: from verein.lst.de ([213.95.11.211]:40191 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229659AbhCYIlS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 04:41:18 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D19B968CF0; Thu, 25 Mar 2021 09:41:16 +0100 (CET)
-Date:   Thu, 25 Mar 2021 09:41:13 +0100
-From:   Christoph Hellwig <hch@lst.de>
+        id S229659AbhCYI6Y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Mar 2021 04:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229622AbhCYI56 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Mar 2021 04:57:58 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AE7C06174A;
+        Thu, 25 Mar 2021 01:57:58 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id h25so1131369pgm.3;
+        Thu, 25 Mar 2021 01:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=lRCatidXWEtdBF+VqjiHqmNTjbdAzWdEfhAUSAtoMYk=;
+        b=dgPhEoMbyLFjXMCoLZaeZouoG1lNQRVtTWznm91wC8WZ6yNxzNKx00E9xHrADYMX9g
+         yuNA2jfJ+oNTBiVGCy6KF9//r6B1+2Nq5Jg5JVix7PmOluIJ2qfI9G04S9TZOuC0z0e4
+         lWvsukXREj2zMehWyAsvRG2L7D5dn26u6yi5P+brQkTpBVlNqaT1J+c64nJTlBFc6O34
+         3kPohQs0IoLVNGyxxhlETbYp16eBYhXwu4CTSb8aMbrzPuObPZoXJxGRf2L+6FcsKgQ+
+         AB8dBVB0N924GEou3+6ecW23OczozBwhxu1pCRWciWvUMvbDYWlkuykT4g8gjbEPfyKH
+         mecA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=lRCatidXWEtdBF+VqjiHqmNTjbdAzWdEfhAUSAtoMYk=;
+        b=E1bE2UBAukDQv+OyElw6f+vWElgMuxeG/9uxFDIA1BQBGaFoNt2qvuK6Ine9i1crnC
+         9UHCenHvtHx8PwT5WAtGYYLB6Lq/q9VjFeWWZvVmWmeKICbYG9u3tOp3vPZJA9l1uq3L
+         CP9p8HJCGQFMb+iav9LSpxLCaRzhccCdUEA6HCofDYi6BqfYMfMMO403eu0MgYlM8fpH
+         EDrFtMfTgbMbNijsBWILOndmnEUNUiL/4fx4mQv/GoOWjhB43OpOxdr5WSKizNxAtHVg
+         4/j3/ywWfSY42iXatyZ0mYwN6i/ddI3vuE4qwHCg3fGx4eyTEghCfn13iCzC3m7nzTF9
+         IlBA==
+X-Gm-Message-State: AOAM5333uhv9WVSYxbEZHOdV3eBDn20P4marIQS922F69lSPREE6SnKu
+        mjAkODpKJOC/OKgYgqymk8Y=
+X-Google-Smtp-Source: ABdhPJzJXObL56FbLhqDjZGsLHh1HKHHePllQTSOnbqRDPtzP7aj1QPCr4TxDzbWD7jV74BbbxNhJg==
+X-Received: by 2002:a63:3ecb:: with SMTP id l194mr6732628pga.146.1616662677737;
+        Thu, 25 Mar 2021 01:57:57 -0700 (PDT)
+Received: from garuda ([122.171.175.121])
+        by smtp.gmail.com with ESMTPSA id a20sm5280317pfl.97.2021.03.25.01.57.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 25 Mar 2021 01:57:57 -0700 (PDT)
+References: <161647320063.3430465.17720673716578854275.stgit@magnolia> <161647320615.3430465.16963127280244500558.stgit@magnolia>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 11/18] xfs: move the di_cowextsize field to struct
- xfs_inode
-Message-ID: <20210325084113.GC28146@lst.de>
-References: <20210324142129.1011766-1-hch@lst.de> <20210324142129.1011766-12-hch@lst.de> <20210324183130.GJ22100@magnolia> <20210324183349.GM22100@magnolia> <20210324184224.GT22100@magnolia>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me
+Subject: Re: [PATCH 1/3] xfs: test rtalloc alignment and math errors
+In-reply-to: <161647320615.3430465.16963127280244500558.stgit@magnolia>
+Date:   Thu, 25 Mar 2021 14:27:54 +0530
+Message-ID: <87o8f7objh.fsf@garuda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210324184224.GT22100@magnolia>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Mar 24, 2021 at 11:42:24AM -0700, Darrick J. Wong wrote:
-> > > /me wonders if you wouldn't mind converting these open coded shifts to
-> > > XFS_FSB_TO_B and XFS_B_TO_FSBT as a new patch at the end of this series?
-> > 
-> > Heh, you did already, ignore this question. :)
-> 
-> ...and now I go for a record /third/ reply to ask if you wouldn't mind
-> adding a patch to do the XFS_B_TO_FSBT conversion on xfs_ioctl_setattr?
+On 23 Mar 2021 at 09:50, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+>
+> Add a couple of regression tests for "xfs: make sure the rt allocator
+> doesn't run off the end" and "xfs: ensure that fpunch, fcollapse, and
+> finsert operations are aligned to rt extent size".
 
-Sure, I can add a patch for that.
+The changes look good to me,
+
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+
+-- 
+chandan
