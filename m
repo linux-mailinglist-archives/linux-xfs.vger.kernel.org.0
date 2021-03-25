@@ -2,27 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A6D348F50
-	for <lists+linux-xfs@lfdr.de>; Thu, 25 Mar 2021 12:27:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C5E348FC6
+	for <lists+linux-xfs@lfdr.de>; Thu, 25 Mar 2021 12:30:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231380AbhCYL1G (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Mar 2021 07:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35170 "EHLO mail.kernel.org"
+        id S231512AbhCYL3v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Mar 2021 07:29:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230478AbhCYL0Q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 07:26:16 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CE5C361A4C;
-        Thu, 25 Mar 2021 11:26:09 +0000 (UTC)
+        id S231469AbhCYL1X (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 25 Mar 2021 07:27:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 86C5861A4E;
+        Thu, 25 Mar 2021 11:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616671570;
-        bh=RAcmr8XK87Ey3UEhsWQklDNIkjlPCFA2XTgbM233wvY=;
+        s=k20201202; t=1616671618;
+        bh=QHdcJTezi9bvA14StpNy4bsRWJsJICWDl/4yxaAs0+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZQWtYrbpm6jfSJQOQgcbP6OCvWT11Ubd8ymjejPCRYxsteLYYVTOu8yjnvzcne8t
-         NdoScHPMoHXZ5SMjYwSnUFQZWtHWTlUQzsiUkXOAj+byastUEwP2XZfmFv3r9+nrwZ
-         egWFYuAFBcMGSu3YX3213x6gor0iXgEUlx2Oif5Pl8T96tciGzXuGQl7x7sUMG15SM
-         Sf0CvHA9eovNxSOKff1aDY/qJRdytAooI34PQuPZbsH6ix/MBIne42d213rlqAARU3
-         eVC3Cj7SSl2YO+Z6WZJ+V+IOHQTvkyV0P7iYwqYqgchQAG0QNF2JXllubCcOcHRS9K
-         HEnQGkff0wBJA==
+        b=VCei0o4GR+gWeSj9he4fc41Mz+udEy5cF2dxh7HVShmwtmHNxO5yEskEzxPuIv9z7
+         lzuI71RM+WPlHDHyx5u2xZp1mBD25VMKukL9FefYJeYcVhLnlpgAV+0slL/Nu/fl+W
+         KfO+FzI+Hg9XmvrDR4NwWDtOPn+7F3d+Ivuosk5lM/q4icqORb2LbxyFsxP+hRL+I/
+         TurY5m2/jrMmGCWP/CYoVDmdFFbbu1RtUruLQ+/tOgLACGUAhsqa6ZI3ycbyAGvPoy
+         M8U+HKGjdhCfymvxkeerYQvYXbijWPY++3sVVaPrZi3HADe3gbdgyKgYmb6y4JOhuk
+         ytfluLeaMcA7g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
@@ -30,12 +30,12 @@ Cc:     Ritesh Harjani <riteshh@linux.ibm.com>,
         Christoph Hellwig <hch@lst.de>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 08/39] iomap: Fix negative assignment to unsigned sis->pages in iomap_swapfile_activate
-Date:   Thu, 25 Mar 2021 07:25:27 -0400
-Message-Id: <20210325112558.1927423-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 05/24] iomap: Fix negative assignment to unsigned sis->pages in iomap_swapfile_activate
+Date:   Thu, 25 Mar 2021 07:26:31 -0400
+Message-Id: <20210325112651.1927828-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210325112558.1927423-1-sashal@kernel.org>
-References: <20210325112558.1927423-1-sashal@kernel.org>
+In-Reply-To: <20210325112651.1927828-1-sashal@kernel.org>
+References: <20210325112651.1927828-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -106,10 +106,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+)
 
 diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
-index a648dbf6991e..a5e478de1417 100644
+index 152a230f668d..bd0cc3dcc980 100644
 --- a/fs/iomap/swapfile.c
 +++ b/fs/iomap/swapfile.c
-@@ -170,6 +170,16 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
+@@ -169,6 +169,16 @@ int iomap_swapfile_activate(struct swap_info_struct *sis,
  			return ret;
  	}
  
