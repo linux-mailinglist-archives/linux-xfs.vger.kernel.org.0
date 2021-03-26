@@ -2,59 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2009A349DFD
+	by mail.lfdr.de (Postfix) with ESMTP id E298E349E01
 	for <lists+linux-xfs@lfdr.de>; Fri, 26 Mar 2021 01:34:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbhCZAdg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Mar 2021 20:33:36 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:58834 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbhCZAdY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Mar 2021 20:33:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12Q0Qp20112886
-        for <linux-xfs@vger.kernel.org>; Fri, 26 Mar 2021 00:33:23 GMT
+        id S229865AbhCZAdh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Mar 2021 20:33:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:57580 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229949AbhCZAdZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 25 Mar 2021 20:33:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12Q0OJ9J057396
+        for <linux-xfs@vger.kernel.org>; Fri, 26 Mar 2021 00:33:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references : content-type :
  mime-version; s=corp-2020-01-29;
- bh=DEmSWLxmYNQZ3iM+FsGnGMwvNhGLdFqIIubfOpQpbbM=;
- b=r34hOeIlZpSD1xVSA6p8YGD+F5/70p6iFjkjNZ1UYkCiX0BbOI2RicYdqpA0YIJEu6AJ
- nfqyovtk54OIQPu6T8VRWF49KuBX25rRyq++ojOXjjb9DMhHP8qRltCMyLRjpNRD5mkE
- hnUqvgRXxX57q3CA29Grtg/glkOWvmWhHgP4QJEPU++wkb8FA6sUmu26HjEGgSmLYVXc
- 4fq1+BTR627GttqMER/23OrDYMH5LMbpZLw36gtxTbx92PvL3TJwrWVr7bLbq1IibKza
- 2pMotIwY2NwKlgEazqLKnivE3aNdVLBRbxUU9alqs18anUtCf0tyBkE0fNDGbHW6Mt5d 0Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 37h1420h8h-1
+ bh=9JWfLLMHh9FuUy7F/QPdDZSUMvXZ8qkkmQeUODCuZ0Y=;
+ b=eJKpS597dLqVWdAib0rdorj6k6J6kOoaEI44V5PCGSnaNOnsYhucrho85FGjk4fCUfT9
+ LiLLpZBTuYoqcQdNV/jXUBcPGQkhfgAwIox/hS2vv7vepXJw+pSiia7J8xNOGYVqjPNn
+ SvbolxnhY7WHCiNFWFrnjVUXEF42BWdlwdenqwC9unIF+jli+PLpzIbtb7EfwqocxSsw
+ WFPs/mrYqWZ8anxDVtSDAcz1oTxPxjxFEUxp/yaM+3zLe9AKCxf1kUSO7joDaxJkYaGA
+ Bxt2iS4ofcwajlJF8BIHzFy6Hd8zUXnHqycaFsYPBZLgbdwHwFDOSNzSTiyL8baO3wMw NA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 37h13e8h64-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Fri, 26 Mar 2021 00:33:23 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12Q0OlNM009463
+        for <linux-xfs@vger.kernel.org>; Fri, 26 Mar 2021 00:33:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 12Q0PYwL096811
         for <linux-xfs@vger.kernel.org>; Fri, 26 Mar 2021 00:33:23 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
-        by aserp3020.oracle.com with ESMTP id 37h14mfud0-3
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
+        by aserp3030.oracle.com with ESMTP id 37h140qtxx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Fri, 26 Mar 2021 00:33:23 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RHhXa7TXml24lmntvuhq6m7b7n8y3uS1Riw54LfWkZZhfu5yl3P4WYxY/V9yDtx60qlxYAWybpmkjrqpT2MaPgvvYkDaAFmUaoILrDtDW1xtnM820N/bmejiXt1aGORfC3DH6w6FDlq6iZskhGBoxkmFXZxhyUYrdlGgNvxX25ajLnnbTeJml+k9+kisK0jy4fChMWEdvzrqOv8pudeg7VNuJ245XHAtOPmeRdI4VPw4gkN7nmWowSGUahaT7FsdTQyXbkesVZ63D6IRGJH4RDIPVdxMlRktn72XrIDlIo2dfhStGBvMCu71b12oyR+piK7Gvk7TaVo8OAr6BwcO3g==
+ b=RbORL7tP4T0phuv02m3N9uzejTzyvWVSa7IRzqD+CVeLYdANgu/tu6ReCW9Ba/EG9QR6hIXnWxB0xuyMVuDEkzg6Vj7d9BQouPANYiGe5uamnfTeWjFT91ONWTLLzElN93ouyElZDn+7wGDbpe5tZEapyWB4OOYlxd5c7mLqxseKo5fZCJcajfCoXEZHW02SIOg3F7mbZW9fEajlzUX4zHPgVhU0AXCqWRzZG/HyBOqClqfg7eC+5kMTPtK2ynfbOpjrmvFFPI5gJUZLjPfXzK3Ct8F/COOIimvuHhpHKpzrzeU1NRBQdFckjuhl1bUhkSYYV2lRxxRX/JJVuJ7/YA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DEmSWLxmYNQZ3iM+FsGnGMwvNhGLdFqIIubfOpQpbbM=;
- b=Xvlqt3a5EntwIIBzHvZaG3lXkgSItlm0ykqHLwmDH5ADaByldQ1uT5T4INF1BWynYcKWxFsoANw34ZCzFJH62oUGPjbt473Ey/Jm1Y4Noc0/PXik9xvpywy3xS3h15HOKGyz/RFAtXyIQq+PMAZ2Q74bjPlRS7qqxGPxK+/r8rXN4OW4PfEeywnS9pYyVAEPO3ytQOoRl2K2Nrj6jdwNJguN+RPbsrK+mQMH+vizbhyauCGvzsLv1SLV5IIOwl1BgKUqoFKxUUA0QjZhAb4thV8pWRM7RUprLvWg2nTYJ7/5Pl+Je1uKlgQYHOE+1TaOrhVbMpLw+028PfEubPDtwQ==
+ bh=9JWfLLMHh9FuUy7F/QPdDZSUMvXZ8qkkmQeUODCuZ0Y=;
+ b=iuEU4aJDz9h/4N1h6p/S/ICcvx5vwBL5qY7ldvfbL/mnipFskcuALXWoIg8YEjWp9iry4Oh7aMshKDVPHbzRHvofX+IlU3DckKXNQ8Yn+3kdcPvn6B6ssv6GLBnS2Es8iQpw9wEtix6h+wEktKAjRoFC4i6uMcoD/IKRfmyqTZ7Lv/64W9OeamAI4FDpm50mMj5BrRdEkoH8/FvgXLLw6vvvklZEpcn2YEM9WDg+7+2SRb7QcZZSsgO4vnz24h8zRZcw1Skt/wpHOxtLbc0FEDFh7qZTcRLjyKLbHh+CK+u+8uHb3s8J999YpKJrcZGHzQymuwaYs8EFaHcTn2yFWw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DEmSWLxmYNQZ3iM+FsGnGMwvNhGLdFqIIubfOpQpbbM=;
- b=U+b7qiPiNp9CKk9zS3xsyKwEn+S/dns4oC3gWfeDdoLKFlLZ7SPt0UEa0/EV018W5utyfvl3lFZ7aU8CNrxSAr8jVN6cLWXqasSJfiJqI94gH/lWR94alik6YY73yVNSoTgbmWns5qDU9+e/8QBmdabpX3ShrQqG2p58Us9NkRk=
+ bh=9JWfLLMHh9FuUy7F/QPdDZSUMvXZ8qkkmQeUODCuZ0Y=;
+ b=HcSY2Ll/8HbxoXmy3x81rvBpuGBZtmleGQgxFj+IjTTKxQdsZArqBXNdJv2Bf5yayBVg7McmDnleff9OgFG57zXwYCpwYPgeTYpXQEI4LYLUEgYgv2/+n1WHc74NFg7HV3LxAur9bCqPDd3hx9U9oBOqn3GiYgAkthvZbjTAbNk=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
- by BY5PR10MB4162.namprd10.prod.outlook.com (2603:10b6:a03:20c::13) with
+ by BYAPR10MB2645.namprd10.prod.outlook.com (2603:10b6:a02:b0::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.24; Fri, 26 Mar
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.25; Fri, 26 Mar
  2021 00:33:21 +0000
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com
  ([fe80::f4a1:6643:4c93:2a9f]) by BY5PR10MB4306.namprd10.prod.outlook.com
@@ -62,9 +62,9 @@ Received: from BY5PR10MB4306.namprd10.prod.outlook.com
  00:33:21 +0000
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v16 06/11] xfs: Add helper xfs_attr_node_addname_find_attr
-Date:   Thu, 25 Mar 2021 17:33:03 -0700
-Message-Id: <20210326003308.32753-7-allison.henderson@oracle.com>
+Subject: [PATCH v16 07/11] xfs: Hoist xfs_attr_node_addname
+Date:   Thu, 25 Mar 2021 17:33:04 -0700
+Message-Id: <20210326003308.32753-8-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210326003308.32753-1-allison.henderson@oracle.com>
 References: <20210326003308.32753-1-allison.henderson@oracle.com>
@@ -77,224 +77,287 @@ MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
 Received: from localhost.localdomain (67.1.223.248) by SJ0PR03CA0003.namprd03.prod.outlook.com (2603:10b6:a03:33a::8) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.24 via Frontend Transport; Fri, 26 Mar 2021 00:33:21 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: cc5dbd5b-497f-469c-46e8-08d8efeec23d
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4162:
-X-Microsoft-Antispam-PRVS: <BY5PR10MB416252B0842C5C918980DE4995619@BY5PR10MB4162.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Office365-Filtering-Correlation-Id: 25109b17-a098-4f03-796e-08d8efeec270
+X-MS-TrafficTypeDiagnostic: BYAPR10MB2645:
+X-Microsoft-Antispam-PRVS: <BYAPR10MB2645F22C2CF3B007CDE51FF195619@BYAPR10MB2645.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: a0SGRXkpbIS1Zf0tUO09VpVTgHrk70qU55CzAb5h4BosrZbHbTA6ugsLPoO5xlddXBIRHvIokjDFJw2xkfrrPySgM3Zn8OHjMi7r77ZvJrDV6Vt8Tfk39YOpkpBo52mnxQTHN/fQAOZ6sBcVb1lSRzavCB8rHnQ73S815bucXsk31nzJcixQqmOH1R8KK1yV8ifoTzzTTybcmoytQGO/oGfO2O3LWwI6hZnoCJevhPQN/DNiCckxy8hv1B8iYuPhTXa1DKYRYj5xPYTrtzse+sW+zidc/cniqhooDc+73HeBUBUbkfJBTBDwFOd/HaiPZ7VAuQWukfdSE9OEiv0zPViKiCnMzKJ6C+0uZD/veLtRyA83YSvewWSWd65AMpxEmL4dwd75UZYoD74QemRpQC2JqE7D233QF2eUMEuMQyvC9v5d5pyoOqIomsYUtdD3jwk5pA7bYcq+l2Jo3/VzOhtK5QlU+qBWEFhqSfk7uZufUU7piM7Feu2KMijjJnJc+fyINVuzJu0p1dtiaC/2lmcFKkNH8YM/rAlyTRZ0T817OqtEJCR5EImORAoVnfg8JGR78VViAI/45/rVfTgjyILGTnlkQP4xQHgWm02/lixP/skRGAeR/Gu/z9CndBqtPApgwxnJCCWuBKawPJ6ewMvWGz3XcM6Ta5VLS/JJ7nYpKTXpqxpvDBNvtTDNGj3r
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(366004)(39860400002)(136003)(376002)(346002)(16526019)(186003)(44832011)(478600001)(83380400001)(6512007)(316002)(86362001)(6916009)(26005)(956004)(2616005)(36756003)(66476007)(6506007)(52116002)(5660300002)(8936002)(69590400012)(6486002)(2906002)(8676002)(66556008)(6666004)(1076003)(38100700001)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?YcIx7mmtTuyoj9v0edGg+OPocrDO/2pSZ0CQGNvLXUa8xJmhoPh6LP7a0F+H?=
- =?us-ascii?Q?i92uG97EK7L5nRSet+GfCD2KOHsZsAOt7CFYXxtzgaVRYiD7iJ+k+F9JMqFl?=
- =?us-ascii?Q?gqFzRv0ccZctawSQea5oFhVLGJSmVudrta1ocHoBRnAeZbvx66H1ZUOUfnBS?=
- =?us-ascii?Q?hsRXd25e27yPVr68yWvGFh2b7/vg75sOpsPxPDZi3Q0r4AzdnAnvJ1nj1Dje?=
- =?us-ascii?Q?Wvo9AiLOX2WqmKR2sDNxBKpJUopIRt1pKmcpJ9rFTkB1NggTp2sWty1x6WcT?=
- =?us-ascii?Q?+OI8breBLCVx2q4UidzGYPFqhg0++TjS/54jtD4HCtT7I76LUYBdV9UdgZV/?=
- =?us-ascii?Q?mnJMwfOH/dGSBPKvffEJVQjVcjUpAM0Uz7NzOidOhWc2NSKvxGpVUMGL7yYW?=
- =?us-ascii?Q?tdkHdIkxgVYEb39OsiJSA0RB6nYMXLSgeNJGtZA46paishhRxnVVg6NkglzF?=
- =?us-ascii?Q?rOGNyFrDBDK8u2fa0kEoDvqk/oWnWgqZ6SpXN8qmDE3QNHysMbMc8zM/IehE?=
- =?us-ascii?Q?6bo3kM6NzWKI3xKDK2W3rVYYH5or4B99jR9QCsl6SHeOGtx4ZfNkPwIJM5ln?=
- =?us-ascii?Q?KiTG2NnIANrvL+Wtj0f0SzPhrFsW7mxAkt0NSOW5vaJufkSR+S3ExL6ecS9O?=
- =?us-ascii?Q?9rYCez6g8dudeN2cZp8qH4v1bOlVf94XEw1kFWpLFXzRvJErQPUAdMf7wi+n?=
- =?us-ascii?Q?6nLr8oB2hchgaI78NIoNvy+6zM/xmsFwFD4xOYYaCtn+o2ki+udjeLdwD6/i?=
- =?us-ascii?Q?TzN7+erf5orBTd3JveLIiZXb77AWiRa+DaoTxs3ir+1wqVv0U0k06343jdfQ?=
- =?us-ascii?Q?DMdRKVXoqe9dQj0Eg4G8fWpjzgY6OXnfqrF4o+0K64PacLhZ2HiCGjUJwDNq?=
- =?us-ascii?Q?bBqhbBvLDnH5E5ULH2aWoyJQRYlf3y1ZMqcGHPyqawioXtR8WfzaRyW/BhRK?=
- =?us-ascii?Q?VwCajX80gkteh8gTtcxyATNPOH+X4uA7KB5Kn7nFIIOpcO9e2aBMhppP4YC9?=
- =?us-ascii?Q?1JpBLDkvx//ucm7luyv6V+wNrlk59nbeu5rYQ4hBHG0TjQiz2isDZiX75MJE?=
- =?us-ascii?Q?z9rrx1W5cdKEnZIt8RLuT6xFdA2qPa8mCuVugjC/+kgH62hKEHHn1TYmlLaQ?=
- =?us-ascii?Q?24JKTqZpV3KhswTJsiwivBhOsIW1M1yhdd48huHBoDVkX6xVLUguysNKO+0o?=
- =?us-ascii?Q?VrY4RlajJmnc9ozrRQr4HVQT9PENfb2c+G9JcOsUUQ82jCncnfjv8ZEEuxHT?=
- =?us-ascii?Q?B7ZbVXlHoNQYB/I4y6VRNOgE9fewh858HaSHH47ICxXYSVkBgq2RReo/TndH?=
- =?us-ascii?Q?yTrogLAPfvovXvbd7c7SnYsV?=
+X-Microsoft-Antispam-Message-Info: dr+0XcgvTDtqu9p4QE7xGUE8Gw5s31CMsxqEsM1gD9TinqU40VN7Px8MRFvNlpBzTQAYiMyf47BueVrs+CZqVVV5uRIKQu4A+cKcc6rxEHQXMwObgqVsPX1O+i2jT7T/94Qc6ht4/thFg6C89aguJmnszH1MMZEQ4Qq/EOHhSxjSF9s/WVLzrsuI946tymhV7DslZJY8CHj0f0/mShz0301DZYGPFZ6NrApp69Qvfo7i5CMd5kEWo9vU2yD2RZp53QHkCRLxYpkxlWcAt4IMlvYriFoMZ2keWdxjhepgvf9KETYFfBIBYTJxSdcRMSaxsByQTcNYEDicufpXGl7e/MCzN4P1kM3PJMf+iqVggRyjrJQmAxnI5mjpimRp0JWhQe03SJ6HdKFXTNTlS7mbHPHeDVZBn/gcnU+TS3BnGc+oQZtd/vERF9G3qZeU5lh8mglcpAL7SAdtxU90tAiDwNbvb1Frr/+PO2gabAieHw6t3HZtsnqGoH0wADGpOudXrQcePmexH3CGzMUJHXEMb/nsSypD8mrZGNFEHmyYBCknA3L9pbOmC6jbxvDn2TynIShQUxnVH6MZ/LS7Yma5OhHkrC6C5xVy9AdoHK+6uTz2NB+yn7NSWA3acSmd7t58I/uZcr/PnvwgJQ9GmlA+ZjUtQ1LfuZg97EI/SgDxWbsD7SOi9U3aAzp++nfvbATi
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(376002)(366004)(396003)(136003)(39860400002)(66476007)(478600001)(6666004)(8936002)(66946007)(86362001)(8676002)(1076003)(6916009)(66556008)(52116002)(5660300002)(2906002)(956004)(6486002)(83380400001)(26005)(6506007)(186003)(2616005)(16526019)(38100700001)(316002)(6512007)(36756003)(44832011)(69590400012);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?EY2VApNb+CTN4XKeJpGWn75AE1Dg9q4uqhZ21YDDrVw6wkLeOkJoaMh/wzKm?=
+ =?us-ascii?Q?tlkkwF0KA2n4YkCYLN0L0NVLQuA4fld7IL6cOxt4iHx1rQ1HlJBd1qZ+/UgI?=
+ =?us-ascii?Q?O0yiIuUFDWa6KZuIpBKv21JdxL8M+SIasF4qu/2PJU9cGwXp6aXk8ZRelfnb?=
+ =?us-ascii?Q?FEcoAka24YQ1XOlfD1vUMGmZOCrYoDuSpJ970Sbg8F4Z+dbDqQTm/GeSz6SO?=
+ =?us-ascii?Q?CS2aRhqrqco6d+P4ZpygbpZVKZvXrK55EsLtTlecfcQ33nnXNwAfwxHB7Ah4?=
+ =?us-ascii?Q?Ic1c+xERAyIrduPeBLpdW+4SPeo14HEk5UEq2PVfuHkwpdhWuddF+bhQlVZX?=
+ =?us-ascii?Q?Y+u/0T/Gg9kwCXOPpCxd8L9DiijOvS+9RbMultZwT8W4+rhZxb91iKW2z0RQ?=
+ =?us-ascii?Q?46sFRaClTc+8vHfoILUFlp5eoQZE5h1BbIQnEpKUnTC0ctbks7cNMOeBGvVi?=
+ =?us-ascii?Q?etqiY6SWJHIDqGuiG338gtKH3Ve55k1kJbJo21ABQrp4fVocpW1yLyvkLmHR?=
+ =?us-ascii?Q?vFTFg/syaSx5QLeC3BqE/6qiKXfQMWUoA45mpRnY3Z1MffcjtW+j9Zp2zUBU?=
+ =?us-ascii?Q?1MuA2fRiAIY96vhKZk4ixxJa9d42ij9e381qv4fv2fC1KLcsFlmrZ36f1s1K?=
+ =?us-ascii?Q?GWbzPtI+9Rv8viJom67cCdt/f5NWW0u2XsqcRyudf8xl4fYY1kIgb8f+r1qW?=
+ =?us-ascii?Q?MnRay8LzeZpiO4e02ikiQQ6q29ucLWTlhDqWcVzbmSE6crUkERpTJlrRGaWa?=
+ =?us-ascii?Q?rPeNmR8dcLxggYlmVNsVB8RBFeundlLTnchSkgGIeP57x3ZTHWVI0+SrIc2Y?=
+ =?us-ascii?Q?csRyL8c10Zb7x++0miEd1ZUC9Q9gqo9HGiO9txz2l0HfJLlsV6Jf3G1Gjla1?=
+ =?us-ascii?Q?rPdaxyIcER/M+CjHqiAYMtijKCKXEQvlTv7dFG5KbVlXWb2ezaMVOnsbIP3p?=
+ =?us-ascii?Q?pThC6pF0ZDpEAk91VwWWbCxCI8sydYQ/pAtIgPtlccWusJGqw5LgnqwM0gis?=
+ =?us-ascii?Q?GXJJ7/KujJl92uHTgKy81GFvBDACcEvaXxbHW54hqZ9YTa2EkJQor/88zlVh?=
+ =?us-ascii?Q?P2JY6U37Ks0bRjMYN3i0Ra3+knhQoK8bbqKi1ncSwt+qU5Ib/tW+csHyrxk0?=
+ =?us-ascii?Q?2DRC/ukfOEmF5DX/ohEC1Pij0+4RKvdzyvzFbZCaAHmfXA5t5r7fIA4RejQz?=
+ =?us-ascii?Q?V7x9uDkU+VeRPWtu0LjlsaBWkFABDe9oo36LZX5t++Fws5BLPBzdNEDwZk4R?=
+ =?us-ascii?Q?+mG62uWLuDwvh6/jQ2f70KHpLYWgPgaDGFT8hJseuK8+NSA2kKniusyT07PG?=
+ =?us-ascii?Q?xf4inE5aE4ORNggybNLBoFiD?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc5dbd5b-497f-469c-46e8-08d8efeec23d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25109b17-a098-4f03-796e-08d8efeec270
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2021 00:33:21.4230
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2021 00:33:21.7734
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JR/+jAg7DbyTBDAcnf1mtrRO9Dfvpyb2aSg1XGXIO9BBgz+kXGR8rUziQf1kKxWFuSPuIiokV45fXX25AZHMRkAkab4jC463bpcMgkhzc84=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4162
+X-MS-Exchange-CrossTenant-UserPrincipalName: hv9crwFlsZGB+wHpvscoBzD+krHglYRaEXWEVcEvwxDNYSU4PCh4nkZyJU0DFf707DIS8F1l4UF9mA8LBA26Ave/KISRqY45f6y4qX6nz0k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2645
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9934 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2103250000 definitions=main-2103260000
-X-Proofpoint-GUID: dlbILE5X--4yNY2CkgccXMT3dF-La5Cp
-X-Proofpoint-ORIG-GUID: dlbILE5X--4yNY2CkgccXMT3dF-La5Cp
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9934 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 mlxscore=0
- clxscore=1015 impostorscore=0 spamscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=0 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2103250000
  definitions=main-2103260000
+X-Proofpoint-ORIG-GUID: SuWO7oeZE6zVMrDJoFCWs-ECUJv_8Lc2
+X-Proofpoint-GUID: SuWO7oeZE6zVMrDJoFCWs-ECUJv_8Lc2
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=9934 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 lowpriorityscore=0
+ bulkscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2103250000 definitions=main-2103260000
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch separates the first half of xfs_attr_node_addname into a
-helper function xfs_attr_node_addname_find_attr.  It also replaces the
-restart goto with with an EAGAIN return code driven by a loop in the
-calling function.  This looks odd now, but will clean up nicly once we
-introduce the state machine.  It will also enable hoisting the last
-state out of xfs_attr_node_addname with out having to plumb in a "done"
-parameter to know if we need to move to the next state or not.
+This patch hoists the later half of xfs_attr_node_addname into
+the calling function.  We do this because it is this area that
+will need the most state management, and we want to keep such
+code in the same scope as much as possible
 
 Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
 Reviewed-by: Brian Foster <bfoster@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr.c | 86 ++++++++++++++++++++++++++++++------------------
- 1 file changed, 54 insertions(+), 32 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c | 161 +++++++++++++++++++++++------------------------
+ 1 file changed, 78 insertions(+), 83 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 531ff56..16159f6 100644
+index 16159f6..5b5410f 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -52,7 +52,10 @@ STATIC int xfs_attr_leaf_hasname(struct xfs_da_args *args, struct xfs_buf **bp);
+@@ -52,6 +52,7 @@ STATIC int xfs_attr_leaf_hasname(struct xfs_da_args *args, struct xfs_buf **bp);
   * Internal routines when attribute list is more than one block.
   */
  STATIC int xfs_attr_node_get(xfs_da_args_t *args);
--STATIC int xfs_attr_node_addname(xfs_da_args_t *args);
-+STATIC int xfs_attr_node_addname(struct xfs_da_args *args,
-+				 struct xfs_da_state *state);
-+STATIC int xfs_attr_node_addname_find_attr(struct xfs_da_args *args,
-+				 struct xfs_da_state **state);
- STATIC int xfs_attr_node_removename(xfs_da_args_t *args);
- STATIC int xfs_attr_node_addname_clear_incomplete(struct xfs_da_args *args);
- STATIC int xfs_attr_node_hasname(xfs_da_args_t *args,
-@@ -267,6 +270,7 @@ xfs_attr_set_args(
++STATIC void xfs_attr_restore_rmt_blk(struct xfs_da_args *args);
+ STATIC int xfs_attr_node_addname(struct xfs_da_args *args,
+ 				 struct xfs_da_state *state);
+ STATIC int xfs_attr_node_addname_find_attr(struct xfs_da_args *args,
+@@ -270,8 +271,8 @@ xfs_attr_set_args(
  	struct xfs_da_args	*args)
  {
  	struct xfs_inode	*dp = args->dp;
-+	struct xfs_da_state     *state;
- 	int			error;
+-	struct xfs_da_state     *state;
+-	int			error;
++	struct xfs_da_state     *state = NULL;
++	int			error = 0;
  
  	/*
-@@ -312,7 +316,14 @@ xfs_attr_set_args(
+ 	 * If the attribute list is already in leaf format, jump straight to
+@@ -322,8 +323,79 @@ xfs_attr_set_args(
  			return error;
- 	}
- 
--	return xfs_attr_node_addname(args);
-+	do {
-+		error = xfs_attr_node_addname_find_attr(args, &state);
+ 		error = xfs_attr_node_addname(args, state);
+ 	} while (error == -EAGAIN);
++	if (error)
++		return error;
++
++	/*
++	 * Commit the leaf addition or btree split and start the next
++	 * trans in the chain.
++	 */
++	error = xfs_trans_roll_inode(&args->trans, dp);
++	if (error)
++		goto out;
++
++	/*
++	 * If there was an out-of-line value, allocate the blocks we
++	 * identified for its storage and copy the value.  This is done
++	 * after we create the attribute so that we don't overflow the
++	 * maximum size of a transaction and/or hit a deadlock.
++	 */
++	if (args->rmtblkno > 0) {
++		error = xfs_attr_rmtval_set(args);
 +		if (error)
 +			return error;
-+		error = xfs_attr_node_addname(args, state);
-+	} while (error == -EAGAIN);
++	}
 +
-+	return error;
++	if (!(args->op_flags & XFS_DA_OP_RENAME)) {
++		/*
++		 * Added a "remote" value, just clear the incomplete flag.
++		 */
++		if (args->rmtblkno > 0)
++			error = xfs_attr3_leaf_clearflag(args);
++		goto out;
++	}
++
++	/*
++	 * If this is an atomic rename operation, we must "flip" the incomplete
++	 * flags on the "new" and "old" attribute/value pairs so that one
++	 * disappears and one appears atomically.  Then we must remove the "old"
++	 * attribute/value pair.
++	 *
++	 * In a separate transaction, set the incomplete flag on the "old" attr
++	 * and clear the incomplete flag on the "new" attr.
++	 */
++	error = xfs_attr3_leaf_flipflags(args);
++	if (error)
++		goto out;
++	/*
++	 * Commit the flag value change and start the next trans in series
++	 */
++	error = xfs_trans_roll_inode(&args->trans, args->dp);
++	if (error)
++		goto out;
+ 
++	/*
++	 * Dismantle the "old" attribute/value pair by removing a "remote" value
++	 * (if it exists).
++	 */
++	xfs_attr_restore_rmt_blk(args);
++
++	if (args->rmtblkno) {
++		error = xfs_attr_rmtval_invalidate(args);
++		if (error)
++			return error;
++
++		error = xfs_attr_rmtval_remove(args);
++		if (error)
++			return error;
++	}
++
++	error = xfs_attr_node_addname_clear_incomplete(args);
++out:
++	if (state)
++		xfs_da_state_free(state);
+ 	return error;
++
  }
  
  /*
-@@ -885,47 +896,26 @@ xfs_attr_node_hasname(
-  * External routines when attribute list size > geo->blksize
-  *========================================================================*/
- 
--/*
-- * Add a name to a Btree-format attribute list.
-- *
-- * This will involve walking down the Btree, and may involve splitting
-- * leaf nodes and even splitting intermediate nodes up to and including
-- * the root node (a special case of an intermediate node).
-- *
-- * "Remote" attribute values confuse the issue and atomic rename operations
-- * add a whole extra layer of confusion on top of that.
-- */
- STATIC int
--xfs_attr_node_addname(
--	struct xfs_da_args	*args)
-+xfs_attr_node_addname_find_attr(
-+	struct xfs_da_args	*args,
-+	struct xfs_da_state     **state)
+@@ -957,7 +1029,7 @@ xfs_attr_node_addname(
  {
--	struct xfs_da_state	*state;
--	struct xfs_da_state_blk	*blk;
--	struct xfs_inode	*dp;
+ 	struct xfs_da_state_blk	*blk;
+ 	struct xfs_inode	*dp;
 -	int			retval, error;
--
--	trace_xfs_attr_node_addname(args);
-+	int			retval;
++	int			error;
  
- 	/*
--	 * Fill in bucket of arguments/results/context to carry around.
--	 */
--	dp = args->dp;
--restart:
--	/*
- 	 * Search to see if name already exists, and get back a pointer
- 	 * to where it should go.
- 	 */
--	retval = xfs_attr_node_hasname(args, &state);
-+	retval = xfs_attr_node_hasname(args, state);
- 	if (retval != -ENOATTR && retval != -EEXIST)
--		goto out;
-+		goto error;
+ 	trace_xfs_attr_node_addname(args);
  
--	blk = &state->path.blk[ state->path.active-1 ];
--	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
- 	if (retval == -ENOATTR && (args->attr_flags & XATTR_REPLACE))
--		goto out;
-+		goto error;
- 	if (retval == -EEXIST) {
- 		if (args->attr_flags & XATTR_CREATE)
--			goto out;
-+			goto error;
+@@ -965,8 +1037,8 @@ xfs_attr_node_addname(
+ 	blk = &state->path.blk[state->path.active-1];
+ 	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
  
- 		trace_xfs_attr_node_replace(args);
- 
-@@ -943,6 +933,38 @@ xfs_attr_node_addname(
- 		args->rmtvaluelen = 0;
+-	retval = xfs_attr3_leaf_add(blk->bp, state->args);
+-	if (retval == -ENOSPC) {
++	error = xfs_attr3_leaf_add(blk->bp, state->args);
++	if (error == -ENOSPC) {
+ 		if (state->path.active == 1) {
+ 			/*
+ 			 * Its really a single leaf node, but it had
+@@ -1012,85 +1084,8 @@ xfs_attr_node_addname(
+ 		xfs_da3_fixhashpath(state, &state->path);
  	}
  
-+	return 0;
-+error:
-+	if (*state)
-+		xfs_da_state_free(*state);
-+	return retval;
-+}
-+
-+/*
-+ * Add a name to a Btree-format attribute list.
-+ *
-+ * This will involve walking down the Btree, and may involve splitting
-+ * leaf nodes and even splitting intermediate nodes up to and including
-+ * the root node (a special case of an intermediate node).
-+ *
-+ * "Remote" attribute values confuse the issue and atomic rename operations
-+ * add a whole extra layer of confusion on top of that.
-+ */
-+STATIC int
-+xfs_attr_node_addname(
-+	struct xfs_da_args	*args,
-+	struct xfs_da_state	*state)
-+{
-+	struct xfs_da_state_blk	*blk;
-+	struct xfs_inode	*dp;
-+	int			retval, error;
-+
-+	trace_xfs_attr_node_addname(args);
-+
-+	dp = args->dp;
-+	blk = &state->path.blk[state->path.active-1];
-+	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
-+
- 	retval = xfs_attr3_leaf_add(blk->bp, state->args);
- 	if (retval == -ENOSPC) {
- 		if (state->path.active == 1) {
-@@ -968,7 +990,7 @@ xfs_attr_node_addname(
- 			if (error)
- 				goto out;
+-	/*
+-	 * Kill the state structure, we're done with it and need to
+-	 * allow the buffers to come back later.
+-	 */
+-	xfs_da_state_free(state);
+-	state = NULL;
+-
+-	/*
+-	 * Commit the leaf addition or btree split and start the next
+-	 * trans in the chain.
+-	 */
+-	error = xfs_trans_roll_inode(&args->trans, dp);
+-	if (error)
+-		goto out;
+-
+-	/*
+-	 * If there was an out-of-line value, allocate the blocks we
+-	 * identified for its storage and copy the value.  This is done
+-	 * after we create the attribute so that we don't overflow the
+-	 * maximum size of a transaction and/or hit a deadlock.
+-	 */
+-	if (args->rmtblkno > 0) {
+-		error = xfs_attr_rmtval_set(args);
+-		if (error)
+-			return error;
+-	}
+-
+-	if (!(args->op_flags & XFS_DA_OP_RENAME)) {
+-		/*
+-		 * Added a "remote" value, just clear the incomplete flag.
+-		 */
+-		if (args->rmtblkno > 0)
+-			error = xfs_attr3_leaf_clearflag(args);
+-		retval = error;
+-		goto out;
+-	}
+-
+-	/*
+-	 * If this is an atomic rename operation, we must "flip" the incomplete
+-	 * flags on the "new" and "old" attribute/value pairs so that one
+-	 * disappears and one appears atomically.  Then we must remove the "old"
+-	 * attribute/value pair.
+-	 *
+-	 * In a separate transaction, set the incomplete flag on the "old" attr
+-	 * and clear the incomplete flag on the "new" attr.
+-	 */
+-	error = xfs_attr3_leaf_flipflags(args);
+-	if (error)
+-		goto out;
+-	/*
+-	 * Commit the flag value change and start the next trans in series
+-	 */
+-	error = xfs_trans_roll_inode(&args->trans, args->dp);
+-	if (error)
+-		goto out;
+-
+-	/*
+-	 * Dismantle the "old" attribute/value pair by removing a "remote" value
+-	 * (if it exists).
+-	 */
+-	xfs_attr_restore_rmt_blk(args);
+-
+-	if (args->rmtblkno) {
+-		error = xfs_attr_rmtval_invalidate(args);
+-		if (error)
+-			return error;
+-
+-		error = xfs_attr_rmtval_remove(args);
+-		if (error)
+-			return error;
+-	}
+-
+-	error = xfs_attr_node_addname_clear_incomplete(args);
+ out:
+-	if (state)
+-		xfs_da_state_free(state);
+-	if (error)
+-		return error;
+-	return retval;
++	return error;
+ }
  
--			goto restart;
-+			return -EAGAIN;
- 		}
  
- 		/*
 -- 
 2.7.4
 
