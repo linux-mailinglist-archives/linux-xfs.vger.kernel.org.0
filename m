@@ -2,33 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E7CA349DB7
-	for <lists+linux-xfs@lfdr.de>; Fri, 26 Mar 2021 01:23:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD140349DBC
+	for <lists+linux-xfs@lfdr.de>; Fri, 26 Mar 2021 01:23:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230180AbhCZAWp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 25 Mar 2021 20:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35502 "EHLO mail.kernel.org"
+        id S230195AbhCZAWq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 25 Mar 2021 20:22:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230205AbhCZAWe (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 25 Mar 2021 20:22:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C6140619D3;
-        Fri, 26 Mar 2021 00:22:33 +0000 (UTC)
+        id S230209AbhCZAWj (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 25 Mar 2021 20:22:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7F12C619F3;
+        Fri, 26 Mar 2021 00:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616718153;
-        bh=FVa9gsvTp3KTrGOLcPps6bAcq7RxAhd3OIsEehcGDVc=;
+        s=k20201202; t=1616718159;
+        bh=zgl34HvqTAtCGjsQ3Jux5nEoazBUgs+3KVhXjw2Yqrk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TaD7sAkiPJhPm/KmqKRoZK0yUPOiFk45aUqXA6ZdH5Bdl+gwZ57IXIObFT9buJLuC
-         sYm94MzWW4LBxGzb7998jzLD9wALyiBuyuHi7Em+T7has6Ai7mRwtkZF32ZI7uoWda
-         zU3UjezxxEW28IxivpiUK3DuMLcpMC247LwW231rz3TDk9ZtEXyjO8qeTH4PLXug8/
-         eSuJBto5er4nAtdqbw1EnWABJ3siEF3qzCK6apg96iDTw7rxWlnLEM09uYenl1q4ED
-         mxm622R9TUAFGDRbzpSLwYFkeRNu/z1vV/moPfgB7efQ/EMCsOuYx1FRx0b/pD4cWF
-         t/Yd1Q8zW+vrQ==
-Subject: [PATCH 8/9] xfs: add inode scan limits to the eofblocks ioctl
+        b=nSxl449nN/T8kGwpvKvMLwkwX2hCPLkHNWzTHkf1VbnoWkRj9LEo4w3r2SQc2MPF3
+         rd4NnsFbWuPsLxDJSYYUa3+sqQgrNtA+XcNW/YQVekVJgiyY1BkD2GDqaCN2l06sSr
+         J2LA5nAZgIhjo3rAaGcZmT0bds7HDeiEFI2cGQbtpNUZstxnQ6dZMrDozvCVBwM/zg
+         KuqfRGfJw0Pni39+bF+cNjR4bVSxyfFpV4aCJE5Z6Jc5+JYc7DtlL6sxy8LnNonK/M
+         RDbhvLoR+oaV+H81DxxrZtgJXoK6AxJfeM5qH10WsZsZbr+pt3heVnEyLJS5qtXdd7
+         Ug1WFsvJcSlEg==
+Subject: [PATCH 9/9] xfs: don't run speculative preallocation gc when fs is
+ frozen
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com, hch@infradead.org
-Date:   Thu, 25 Mar 2021 17:22:33 -0700
-Message-ID: <161671815341.622901.4857956893537074437.stgit@magnolia>
+Date:   Thu, 25 Mar 2021 17:22:39 -0700
+Message-ID: <161671815908.622901.11201307813479002034.stgit@magnolia>
 In-Reply-To: <161671810866.622901.16520335819131743716.stgit@magnolia>
 References: <161671810866.622901.16520335819131743716.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -41,112 +42,149 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Allow callers of the userspace eofblocks ioctl to set a limit on the
-number of inodes to scan, and then plumb that through the interface.
-This removes a minor wart from the internal inode walk interface.
+Now that we have the infrastructure to switch background workers on and
+off at will, fix the block gc worker code so that we don't actually run
+the worker when the filesystem is frozen, same as we do for deferred
+inactivation.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h |    7 +++++--
- fs/xfs/xfs_icache.c    |    7 +++++--
- fs/xfs/xfs_icache.h    |    2 --
- fs/xfs/xfs_ioctl.c     |    9 +++++++--
- 4 files changed, 17 insertions(+), 8 deletions(-)
+ fs/xfs/xfs_icache.c |   28 +++++++++++++++++++++++-----
+ fs/xfs/xfs_mount.c  |    1 +
+ fs/xfs/xfs_mount.h  |    3 +++
+ fs/xfs/xfs_super.c  |    5 +++--
+ 4 files changed, 30 insertions(+), 7 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 6fad140d4c8e..0b21d4b93072 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -523,7 +523,7 @@ struct xfs_fs_eofblocks {
- 	uid_t		eof_uid;
- 	gid_t		eof_gid;
- 	prid_t		eof_prid;
--	__u32		pad32;
-+	__u32		eof_limit;
- 	__u64		eof_min_file_size;
- 	__u64		pad64[12];
- };
-@@ -537,12 +537,15 @@ struct xfs_fs_eofblocks {
- #define XFS_EOF_FLAGS_UNION		(1 << 5) /* union filter algorithm;
- 						  * kernel only, not included in
- 						  * valid mask */
-+#define XFS_EOF_FLAGS_LIMIT		(1 << 6) /* scan this many inodes */
-+
- #define XFS_EOF_FLAGS_VALID	\
- 	(XFS_EOF_FLAGS_SYNC |	\
- 	 XFS_EOF_FLAGS_UID |	\
- 	 XFS_EOF_FLAGS_GID |	\
- 	 XFS_EOF_FLAGS_PRID |	\
--	 XFS_EOF_FLAGS_MINFILESIZE)
-+	 XFS_EOF_FLAGS_MINFILESIZE | \
-+	 XFS_EOF_FLAGS_LIMIT)
- 
- 
- /*
 diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 23b04cfa38f3..e8a2e1cf7577 100644
+index e8a2e1cf7577..75a4df687d5d 100644
 --- a/fs/xfs/xfs_icache.c
 +++ b/fs/xfs/xfs_icache.c
-@@ -1047,7 +1047,7 @@ xfs_inode_walk_ag(
- 			break;
- 
- 		cond_resched();
--		if (tag == XFS_ICI_RECLAIM_TAG && eofb) {
-+		if (eofb && (eofb->eof_flags & XFS_EOF_FLAGS_LIMIT)) {
- 			eofb->nr_to_scan -= XFS_LOOKUP_BATCH;
- 			if (eofb->nr_to_scan < 0)
- 				break;
-@@ -1249,7 +1249,10 @@ xfs_reclaim_inodes_nr(
- 	struct xfs_mount	*mp,
- 	int			nr_to_scan)
- {
--	struct xfs_eofblocks	eofb = { .nr_to_scan = nr_to_scan };
-+	struct xfs_eofblocks	eofb = {
-+		.eof_flags	= XFS_EOF_FLAGS_LIMIT,
-+		.nr_to_scan	= nr_to_scan
-+	};
- 
- 	/* kick background reclaimer and push the AIL */
- 	xfs_reclaim_work_queue(mp);
-diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index a1230ebcea3e..0f832fa95fd4 100644
---- a/fs/xfs/xfs_icache.h
-+++ b/fs/xfs/xfs_icache.h
-@@ -15,8 +15,6 @@ struct xfs_eofblocks {
- 	kgid_t		eof_gid;
- 	prid_t		eof_prid;
- 	__u64		eof_min_file_size;
--
--	/* Number of inodes to scan, currently limited to reclaim */
- 	int		nr_to_scan;
- };
- 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 7f139ee442bf..b13869954846 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -2043,8 +2043,7 @@ xfs_fs_eofblocks_from_user(
- 	if (src->eof_flags & ~XFS_EOF_FLAGS_VALID)
- 		return -EINVAL;
- 
--	if (memchr_inv(&src->pad32, 0, sizeof(src->pad32)) ||
--	    memchr_inv(src->pad64, 0, sizeof(src->pad64)))
-+	if (memchr_inv(src->pad64, 0, sizeof(src->pad64)))
- 		return -EINVAL;
- 
- 	dst->eof_flags = src->eof_flags;
-@@ -2064,6 +2063,12 @@ xfs_fs_eofblocks_from_user(
- 		if (!gid_valid(dst->eof_gid))
- 			return -EINVAL;
- 	}
-+
-+	if (src->eof_flags & XFS_EOF_FLAGS_LIMIT)
-+		dst->nr_to_scan = min_t(int, src->eof_limit, INT_MAX);
-+	else if (src->eof_limit != 0)
-+		return -EINVAL;
-+
+@@ -1416,6 +1416,12 @@ xfs_inode_free_eofblocks(
  	return 0;
  }
  
++static inline bool
++xfs_blockgc_running(struct xfs_mount *mp)
++{
++	return test_bit(XFS_OPFLAG_BLOCKGC_RUNNING_BIT, &mp->m_opflags);
++}
++
+ /*
+  * Background scanning to trim preallocated space. This is queued based on the
+  * 'speculative_prealloc_lifetime' tunable (5m by default).
+@@ -1424,6 +1430,9 @@ static inline void
+ xfs_blockgc_queue(
+ 	struct xfs_perag	*pag)
+ {
++	if (!xfs_blockgc_running(pag->pag_mount))
++		return;
++
+ 	rcu_read_lock();
+ 	if (radix_tree_tagged(&pag->pag_ici_root, XFS_ICI_BLOCKGC_TAG))
+ 		queue_delayed_work(pag->pag_mount->m_gc_workqueue,
+@@ -1628,11 +1637,15 @@ void
+ xfs_blockgc_stop(
+ 	struct xfs_mount	*mp)
+ {
+-	struct xfs_perag	*pag;
+ 	xfs_agnumber_t		agno;
+ 
+-	for_each_perag_tag(mp, agno, pag, XFS_ICI_BLOCKGC_TAG)
++	clear_bit(XFS_OPFLAG_BLOCKGC_RUNNING_BIT, &mp->m_opflags);
++	for (agno = 0; agno < mp->m_sb.sb_agcount; agno++) {
++		struct xfs_perag	*pag = xfs_perag_get(mp, agno);
++
+ 		cancel_delayed_work_sync(&pag->pag_blockgc_work);
++		xfs_perag_put(pag);
++	}
+ }
+ 
+ /* Enable post-EOF and CoW block auto-reclamation. */
+@@ -1643,6 +1656,7 @@ xfs_blockgc_start(
+ 	struct xfs_perag	*pag;
+ 	xfs_agnumber_t		agno;
+ 
++	set_bit(XFS_OPFLAG_BLOCKGC_RUNNING_BIT, &mp->m_opflags);
+ 	for_each_perag_tag(mp, agno, pag, XFS_ICI_BLOCKGC_TAG)
+ 		xfs_blockgc_queue(pag);
+ }
+@@ -1656,6 +1670,13 @@ xfs_blockgc_scan_inode(
+ 	unsigned int		lockflags = 0;
+ 	int			error;
+ 
++	/*
++	 * Speculative preallocation gc isn't supposed to run when the fs is
++	 * frozen because we don't want kernel threads to block on transaction
++	 * allocation.
++	 */
++	ASSERT(ip->i_mount->m_super->s_writers.frozen < SB_FREEZE_FS);
++
+ 	error = xfs_inode_free_eofblocks(ip, eofb, &lockflags);
+ 	if (error)
+ 		goto unlock;
+@@ -1677,13 +1698,10 @@ xfs_blockgc_worker(
+ 	struct xfs_mount	*mp = pag->pag_mount;
+ 	int			error;
+ 
+-	if (!sb_start_write_trylock(mp->m_super))
+-		return;
+ 	error = xfs_inode_walk_ag(pag, XFS_ICI_BLOCKGC_TAG, NULL);
+ 	if (error)
+ 		xfs_info(mp, "AG %u preallocation gc worker failed, err=%d",
+ 				pag->pag_agno, error);
+-	sb_end_write(mp->m_super);
+ 	xfs_blockgc_queue(pag);
+ }
+ 
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 5db2a65b3729..d454d2492f3b 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -908,6 +908,7 @@ xfs_mountfs(
+ 
+ 	/* Enable background workers. */
+ 	xfs_inodegc_start(mp);
++	xfs_blockgc_start(mp);
+ 
+ 	/*
+ 	 * Get and sanity-check the root inode.
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index e910e5734026..629d971c8787 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -263,6 +263,9 @@ typedef struct xfs_mount {
+ 						   inode inactivation worker? */
+ #define XFS_OPFLAG_INACTIVATE_NOW_BIT	(1)	/* force foreground inactivation
+ 						   of unlinked inodes */
++#define XFS_OPFLAG_BLOCKGC_RUNNING_BIT	(0)	/* are we allowed to start the
++						   speculative preallocation gc
++						   worker? */
+ 
+ /*
+  * Max and min values for mount-option defined I/O
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index de44e9843558..75f08d00815b 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -813,8 +813,10 @@ xfs_fs_sync_fs(
+ 	 * s_umount, which means we can't lock out a concurrent thaw request
+ 	 * without adding another layer of locks to the freeze process.
+ 	 */
+-	if (sb->s_writers.frozen == SB_FREEZE_PAGEFAULT)
++	if (sb->s_writers.frozen == SB_FREEZE_PAGEFAULT) {
+ 		xfs_inodegc_stop(mp);
++		xfs_blockgc_stop(mp);
++	}
+ 
+ 	return 0;
+ }
+@@ -931,7 +933,6 @@ xfs_fs_freeze(
+ 	 * set a GFP_NOFS context here to avoid recursion deadlocks.
+ 	 */
+ 	flags = memalloc_nofs_save();
+-	xfs_blockgc_stop(mp);
+ 	xfs_save_resvblks(mp);
+ 	ret = xfs_log_quiesce(mp);
+ 	memalloc_nofs_restore(flags);
 
