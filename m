@@ -2,161 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6630D34BD57
-	for <lists+linux-xfs@lfdr.de>; Sun, 28 Mar 2021 18:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ADB134BE2A
+	for <lists+linux-xfs@lfdr.de>; Sun, 28 Mar 2021 20:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230395AbhC1QtX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 28 Mar 2021 12:49:23 -0400
-Received: from out20-27.mail.aliyun.com ([115.124.20.27]:57654 "EHLO
-        out20-27.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbhC1QtL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Mar 2021 12:49:11 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.0745825|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.205369-0.00320171-0.791429;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047201;MF=guan@eryu.me;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.JraZUby_1616950147;
-Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.JraZUby_1616950147)
-          by smtp.aliyun-inc.com(10.147.41.178);
-          Mon, 29 Mar 2021 00:49:07 +0800
-Date:   Mon, 29 Mar 2021 00:49:07 +0800
-From:   Eryu Guan <guan@eryu.me>
-To:     Chandan Babu R <chandanrlinux@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org,
-        "Darrick J . Wong" <djwong@kernel.org>
-Subject: Re: [PATCH 2/6] xfs/529: Fix test to execute in multi-block
- directory config
-Message-ID: <YGCzg2zwOW03qVaX@desktop>
-References: <20210325140857.7145-1-chandanrlinux@gmail.com>
- <20210325140857.7145-2-chandanrlinux@gmail.com>
+        id S231577AbhC1SIE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 28 Mar 2021 14:08:04 -0400
+Received: from mail.hanoi.gov.vn ([113.160.32.33]:32049 "EHLO
+        mx01.hanoi.gov.vn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231492AbhC1SHi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 28 Mar 2021 14:07:38 -0400
+X-Greylist: delayed 483 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Mar 2021 14:07:32 EDT
+Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B597EC3DB;
+        Mon, 29 Mar 2021 00:58:07 +0700 (+07)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hanoi.gov.vn;
+        s=default; t=1616954288;
+        bh=FuW10Z6fSdeNlf/0u/BQ1jcwkjYBw0uHUPQgn0LGo7I=; h=Date:From:To;
+        b=MnJpubbCOoNzrGbdl4opA9pGiqD1qL1TzNpy60QO4II5VnNpsotVl818lYgRa6I3d
+         Omzy1cLH1+oH7hvhrvWFGEjWO4Du7emM//yWycfTmkwXhJBSFfgFLpRpJNgbPUcm37
+         IfeanaeGGyboioiPWx6i9EzzU+DQGarsjKQF0WLA=
+X-IMSS-DKIM-Authentication-Result: mx01.hanoi.gov.vn; sigcount=0
+Received: from mx01.hanoi.gov.vn (localhost [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 713EBEC3DD;
+        Mon, 29 Mar 2021 00:58:05 +0700 (+07)
+Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
+        by mx01.hanoi.gov.vn (Postfix) with ESMTPS;
+        Mon, 29 Mar 2021 00:58:05 +0700 (+07)
+Received: from mail.hanoi.gov.vn (localhost [127.0.0.1])
+        by mail.hanoi.gov.vn (Postfix) with ESMTPS id 7EB1F7F41B5D;
+        Mon, 29 Mar 2021 00:57:59 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hanoi.gov.vn (Postfix) with ESMTP id 9F9587F41B42;
+        Mon, 29 Mar 2021 00:57:56 +0700 (+07)
+Received: from mail.hanoi.gov.vn ([127.0.0.1])
+        by localhost (mail.hanoi.gov.vn [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 5aziPsZZzTJX; Mon, 29 Mar 2021 00:57:52 +0700 (+07)
+Received: from mail.hanoi.gov.vn (mail.hanoi.gov.vn [10.1.1.25])
+        by mail.hanoi.gov.vn (Postfix) with ESMTP id 923357F41B59;
+        Mon, 29 Mar 2021 00:57:49 +0700 (+07)
+Date:   Mon, 29 Mar 2021 00:57:49 +0700 (ICT)
+From:   Mackenzie Scott <ttptqd_thanhoai@hanoi.gov.vn>
+Reply-To: Mackenzie Scott <propack@propck.net>
+Message-ID: <338153864.25920933.1616954269522.JavaMail.zimbra@hanoi.gov.vn>
+Subject: Congratulations ($ 100,800,000.00)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210325140857.7145-2-chandanrlinux@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [185.107.80.217]
+X-Mailer: Zimbra 8.8.15_GA_3894 (zclient/8.8.15_GA_3894)
+Thread-Index: /8qcKB84H/IsUnGyWvfkptZHVH6P1Q==
+Thread-Topic: Congratulations ($ 100,800,000.00)
+To:     undisclosed-recipients:;
+X-TM-AS-GCONF: 00
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 07:38:53PM +0530, Chandan Babu R wrote:
-> xfs/529 attempts to create $testfile after reduce_max_iextents error tag is
-> injected. Creation of $testfile fails when using a multi-block directory test
-> configuration because,
-> 1. A directory can have a pseudo maximum extent count of 10.
-> 2. In the worst case a directory entry creation operation can consume
->    (XFS_DA_NODE_MAXDEPTH + 1 + 1) * (Nr fs blocks in a single directory block)
->    extents.
->    With 1k fs block size and 4k directory block size, this evaluates to,
->    (5 + 1 + 1) * 4
->    = 7 * 4
->    = 28
->    > 10 (Pseudo maximum inode extent count).
-> 
-> This commit fixes the issue by creating $testfile before injecting
-> reduce_max_iextents error tag.
-> 
-> Reported-by: Darrick J. Wong <djwong@kernel.org>
-> Suggested-by: Darrick J. Wong <djwong@kernel.org>
-> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 
-Seems patch 2 to 6 fix the same bug in different tests, I think we could
-put the fixes in one patch.
 
-Thanks,
-Eryu
-> ---
->  tests/xfs/529     | 24 +++++++++++++++++++++---
->  tests/xfs/529.out |  6 +++++-
->  2 files changed, 26 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tests/xfs/529 b/tests/xfs/529
-> index abe5b1e0..b4533eba 100755
-> --- a/tests/xfs/529
-> +++ b/tests/xfs/529
-> @@ -54,6 +54,8 @@ echo "* Delalloc to written extent conversion"
->  
->  testfile=$SCRATCH_MNT/testfile
->  
-> +touch $testfile
-> +
->  echo "Inject reduce_max_iextents error tag"
->  _scratch_inject_error reduce_max_iextents 1
->  
-> @@ -74,10 +76,18 @@ if (( $nextents > 10 )); then
->  	exit 1
->  fi
->  
-> +echo "Disable reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 0
-> +
->  rm $testfile
->  
->  echo "* Fallocate unwritten extents"
->  
-> +touch $testfile
-> +
-> +echo "Inject reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 1
-> +
->  echo "Fallocate fragmented file"
->  for i in $(seq 0 2 $((nr_blks - 1))); do
->  	$XFS_IO_PROG -f -c "falloc $((i * bsize)) $bsize" $testfile \
-> @@ -93,10 +103,18 @@ if (( $nextents > 10 )); then
->  	exit 1
->  fi
->  
-> +echo "Disable reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 0
-> +
->  rm $testfile
->  
->  echo "* Directio write"
->  
-> +touch $testfile
-> +
-> +echo "Inject reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 1
-> +
->  echo "Create fragmented file via directio writes"
->  for i in $(seq 0 2 $((nr_blks - 1))); do
->  	$XFS_IO_PROG -d -s -f -c "pwrite $((i * bsize)) $bsize" $testfile \
-> @@ -112,15 +130,15 @@ if (( $nextents > 10 )); then
->  	exit 1
->  fi
->  
-> +echo "Disable reduce_max_iextents error tag"
-> +_scratch_inject_error reduce_max_iextents 0
-> +
->  rm $testfile
->  
->  # Check if XFS gracefully returns with an error code when we try to increase
->  # extent count of user quota inode beyond the pseudo max extent count limit.
->  echo "* Extend quota inodes"
->  
-> -echo "Disable reduce_max_iextents error tag"
-> -_scratch_inject_error reduce_max_iextents 0
-> -
->  echo "Consume free space"
->  fillerdir=$SCRATCH_MNT/fillerdir
->  nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
-> diff --git a/tests/xfs/529.out b/tests/xfs/529.out
-> index b2ae3f42..13489d34 100644
-> --- a/tests/xfs/529.out
-> +++ b/tests/xfs/529.out
-> @@ -4,14 +4,18 @@ Format and mount fs
->  Inject reduce_max_iextents error tag
->  Create fragmented file
->  Verify $testfile's extent count
-> +Disable reduce_max_iextents error tag
->  * Fallocate unwritten extents
-> +Inject reduce_max_iextents error tag
->  Fallocate fragmented file
->  Verify $testfile's extent count
-> +Disable reduce_max_iextents error tag
->  * Directio write
-> +Inject reduce_max_iextents error tag
->  Create fragmented file via directio writes
->  Verify $testfile's extent count
-> -* Extend quota inodes
->  Disable reduce_max_iextents error tag
-> +* Extend quota inodes
->  Consume free space
->  Create fragmented filesystem
->  Inject reduce_max_iextents error tag
-> -- 
-> 2.29.2
+Hello,i&#39;m Mackenzie Scott,Ex-wife of Amazon founder i&#39;m donating $4 billion to charities,individuals,universities across the Globe from my divorce funds,i&#39;m donating part of it to provide immediate support to people suffering economically during the COVID-19 pandemic,i have a donation worth $100,800,000.00 Dollars for you,you can contact me for more information if you&#39;re interested.
