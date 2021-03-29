@@ -2,50 +2,82 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B5A34C324
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Mar 2021 07:45:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB3BE34CB3D
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Mar 2021 10:46:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbhC2FpU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 29 Mar 2021 01:45:20 -0400
-Received: from verein.lst.de ([213.95.11.211]:52043 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230420AbhC2FpQ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 29 Mar 2021 01:45:16 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 86D7168BEB; Mon, 29 Mar 2021 07:45:13 +0200 (CEST)
-Date:   Mon, 29 Mar 2021 07:45:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: xfs ioend batching log reservation deadlock
-Message-ID: <20210329054513.GA26736@lst.de>
-References: <YF4AOto30pC/0FYW@bfoster>
+        id S235061AbhC2Ipj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 29 Mar 2021 04:45:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235058AbhC2Iog (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Mar 2021 04:44:36 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD78C061762
+        for <linux-xfs@vger.kernel.org>; Mon, 29 Mar 2021 01:44:35 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id y32so7828191pga.11
+        for <linux-xfs@vger.kernel.org>; Mon, 29 Mar 2021 01:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=biUaQuNraSftTF+NJdGSy8vb1esmcyqzKzYDs2KIJik=;
+        b=oaQX2OInwguJVkYsGYB4TCXKK+A6X0WMxhr47u7VdzKMQ0P3J9oItCIbDIA2YIQb1l
+         R06BGK3PhoVOOiUADnq8rBE1zefTPpWp8BBWm7QjDxwgKZsE/ecymJBYhLFBQyfl3Xcg
+         KecX7ql3anJ7vP+GjGtd4whbIT5rwYLmYE50g7K2NwUcrg4wyufpSHg23KMVdAAus6KH
+         xDxeYtY0ukpHckatTWJZtzrzdNRZb+1OU2QBqPoUI07wnbjmF8wp3bP2CIvmAugjYxC4
+         Awq+j/+HBLihTrZi4q0Vvk6aWPJBHGmly1cEJiPXd6vsBoIG8JAb9KBiCTgflOrFxQPA
+         CK6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=biUaQuNraSftTF+NJdGSy8vb1esmcyqzKzYDs2KIJik=;
+        b=nyCXg9Rbq054IOzibLaHmUji9bgZDpHhwZdmww3zjPpqQBEPWAXLhEtMTgxEG21woY
+         V0rOLTXdwgyJC9enAAbzP8E+fN9ycPGyHtIlvfBsevjHiHjHVdiFHWoxenzJv7C+bWd4
+         DrQiBs+Geen9Y6QgQsLTlU/1n1Z4kltZpr/eGf2JtZEdDeYxA1YyWuwltKS8YkbsBfB6
+         RHSOAeFbnx78nIaGO6e5B+FT8H2Oe/n9fl1x9aP+4ImA4DCufOcD5o6GzFPkjP7L76ci
+         z8v2sNS37PfPRH3gfnCgHa5nw1irSFPV8uD1FmAhLbUb7oRK2jBfOYwElosCLw4bjlgV
+         BtRg==
+X-Gm-Message-State: AOAM531Z+dERWo/xpbN5mf3ITkSYxXKzfA0VD34FKGOC3dbSINyKwmtt
+        u2FdXuzXWqqls6oey0xIND/kSldAGZg=
+X-Google-Smtp-Source: ABdhPJxRY6rhoNGn989RHbUXs+P5quYjfR7rrRDQbhc1zDmFqHRod0P8uCFMJfKkmD1ZOdF4IAAgOw==
+X-Received: by 2002:a05:6a00:8c:b029:1f4:25ee:af4 with SMTP id c12-20020a056a00008cb02901f425ee0af4mr23969420pfj.71.1617007475395;
+        Mon, 29 Mar 2021 01:44:35 -0700 (PDT)
+Received: from garuda ([122.171.151.73])
+        by smtp.gmail.com with ESMTPSA id t18sm17307421pfq.147.2021.03.29.01.44.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Mar 2021 01:44:34 -0700 (PDT)
+References: <20210326003308.32753-1-allison.henderson@oracle.com> <20210326003308.32753-2-allison.henderson@oracle.com>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     Allison Henderson <allison.henderson@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v16 01/11] xfs: Reverse apply 72b97ea40d
+In-reply-to: <20210326003308.32753-2-allison.henderson@oracle.com>
+Date:   Mon, 29 Mar 2021 14:14:32 +0530
+Message-ID: <87k0pqbb7z.fsf@garuda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YF4AOto30pC/0FYW@bfoster>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Mar 26, 2021 at 11:39:38AM -0400, Brian Foster wrote:
-> 1. Optimize current append transaction processing with an inode field as
-> noted above.
-> 
-> 2. Replace the submission side append transaction entirely with a flag
-> or some such on the ioend that allocates the transaction at completion
-> time, but otherwise preserves batching behavior instituted in patch 1.
+On 26 Mar 2021 at 06:02, Allison Henderson wrote:
+> Originally we added this patch to help modularize the attr code in
+> preparation for delayed attributes and the state machine it requires.
+> However, later reviews found that this slightly alters the transaction
+> handling as the helper function is ambiguous as to whether the
+> transaction is diry or clean.  This may cause a dirty transaction to be
+> included in the next roll, where previously it had not.  To preserve the
+> existing code flow, we reverse apply this commit.
 
-I'm pretty sure I had a patch to kill off the transaction reservation
-a while ago and Dave objected, mostly in performance grounds in that
-we might have tons of reservations coming from the I/O completion
-workqueue that would all be blocked on the transaction reservations.
+Indeed, In the mainline kernel, __xfs_attr_rmtval_remove() invokes
+xfs_defer_finish() when the last remote block mapping has been removed. Also,
+xfs_trans_roll_inode() is invoked before invoking xfs_attr_refillstate().
 
-This would probably be much better with the ioend merging, which should
-significantly reduce the amount of transactions reservations - to probably
-not more than common workloads using unwritten extents.
+Hence,
 
-I'm all for killing the transaction pre-reservations as they have created
-a lot of pain for us.
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+
+--
+chandan
