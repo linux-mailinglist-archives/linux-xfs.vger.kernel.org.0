@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5424034C312
-	for <lists+linux-xfs@lfdr.de>; Mon, 29 Mar 2021 07:41:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E77134C317
+	for <lists+linux-xfs@lfdr.de>; Mon, 29 Mar 2021 07:41:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbhC2Fka (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 29 Mar 2021 01:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41750 "EHLO
+        id S230052AbhC2Fkb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 29 Mar 2021 01:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbhC2FkS (ORCPT
+        with ESMTP id S229910AbhC2FkS (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Mon, 29 Mar 2021 01:40:18 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C06C061762
-        for <linux-xfs@vger.kernel.org>; Sun, 28 Mar 2021 22:40:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44F3C061764
+        for <linux-xfs@vger.kernel.org>; Sun, 28 Mar 2021 22:40:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Ui/Av88V4O47B9iVB0H7SDXKsDl60Uob7jzKIE2jmiM=; b=beIAQ+9kPSdH53tz6vQF8pMtgA
-        +gPRYAbKQQ4L4GsRw0K+VloXW3oGZEnycRbQz/10kWgxnQ8ppMyfhckaUhfejN4V22679PQjx0VeY
-        +m8f5Q4C3akoQcXZNWVXLvuTmUEctH6EhRS6iR7LUUIro8YP0aykMrvP1R/hzzIRVRiDFW+caVdNZ
-        984TDhQE6xor1UB1JttlA+Iz+0iSqYYkwa/nMD8vdPI7G7biwT43rQRWvN4+fLwsnQUcg8BW7GaKz
-        5myzsigCF1rr7G470MnAJzJ28QRv613d3PYS7iE/WKvagTcleNc2S2zWSDLxGPUxH6PffaK7Rcy7H
-        GUk5uv6g==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:
+        Reply-To:Cc:Content-Type:Content-ID:Content-Description;
+        bh=1WUmGZIKn5gyXxmKCA/D+Fk67OPk7MpM1f+Ekf5LaWc=; b=VuizoDYaopzmE4ySBKxaQY26FV
+        vPyYG0HqCS8p0gDqxcYduulLkFK0fYi34lBMK/fogtgK1qXh19Hu7QZn6AuKIuOwC1ogVs976rmsG
+        Kk854XXK3l3mdHc5utTHMQS9vVewRiTN51KYHcaldSbOa8MLNjLRvVux3exKFcj6l7SpuyxHiRrDl
+        M7dU6vhOktyxUsDgn/H/JqD/xi7/rb2mYO53o8yUKaaM5M3dbzsGq7uDhZW69lWh6s70E/YEo0I5T
+        VouzBh49mU5UbKEsdDArf5VKXRKahVsae8Ko2i3r9IOPJQboB2QxsQhPs27Qw6ht96j1dCgIvoRsu
+        2Foy/jFQ==;
 Received: from 173.40.253.84.static.wline.lns.sme.cust.swisscom.ch ([84.253.40.173] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lQkcB-006oPy-OL; Mon, 29 Mar 2021 05:39:04 +0000
+        id 1lQkcD-006oQ2-TZ
+        for linux-xfs@vger.kernel.org; Mon, 29 Mar 2021 05:39:06 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J . Wong" <djwong@kernel.org>
-Subject: [PATCH 13/20] xfs: cleanup xfs_fill_fsxattr
-Date:   Mon, 29 Mar 2021 07:38:22 +0200
-Message-Id: <20210329053829.1851318-14-hch@lst.de>
+Subject: [PATCH 14/20] xfs: use XFS_B_TO_FSB in xfs_ioctl_setattr
+Date:   Mon, 29 Mar 2021 07:38:23 +0200
+Message-Id: <20210329053829.1851318-15-hch@lst.de>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210329053829.1851318-1-hch@lst.de>
 References: <20210329053829.1851318-1-hch@lst.de>
@@ -43,34 +43,32 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Add a local xfs_mount variable, and use the XFS_FSB_TO_B helper.
+Clean up xfs_ioctl_setattr a bit by using XFS_B_TO_FSB.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_ioctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_ioctl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index e45bce9b11082c..d589ecef4ec730 100644
+index d589ecef4ec730..7909e46b5c5a18 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -1117,11 +1117,13 @@ xfs_fill_fsxattr(
- 	bool			attr,
- 	struct fsxattr		*fa)
- {
-+	struct xfs_mount	*mp = ip->i_mount;
- 	struct xfs_ifork	*ifp = attr ? ip->i_afp : &ip->i_df;
+@@ -1520,12 +1520,12 @@ xfs_ioctl_setattr(
+ 	 * are set on the inode then unconditionally clear the extent size hint.
+ 	 */
+ 	if (ip->i_d.di_flags & (XFS_DIFLAG_EXTSIZE | XFS_DIFLAG_EXTSZINHERIT))
+-		ip->i_extsize = fa->fsx_extsize >> mp->m_sb.sb_blocklog;
++		ip->i_extsize = XFS_B_TO_FSB(mp, fa->fsx_extsize);
+ 	else
+ 		ip->i_extsize = 0;
+ 	if (xfs_sb_version_has_v3inode(&mp->m_sb) &&
+ 	    (ip->i_d.di_flags2 & XFS_DIFLAG2_COWEXTSIZE))
+-		ip->i_cowextsize = fa->fsx_cowextsize >> mp->m_sb.sb_blocklog;
++		ip->i_cowextsize = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
+ 	else
+ 		ip->i_cowextsize = 0;
  
- 	simple_fill_fsxattr(fa, xfs_ip2xflags(ip));
--	fa->fsx_extsize = ip->i_extsize << ip->i_mount->m_sb.sb_blocklog;
--	fa->fsx_cowextsize = ip->i_cowextsize << ip->i_mount->m_sb.sb_blocklog;
-+
-+	fa->fsx_extsize = XFS_FSB_TO_B(mp, ip->i_extsize);
-+	fa->fsx_cowextsize = XFS_FSB_TO_B(mp, ip->i_cowextsize);
- 	fa->fsx_projid = ip->i_projid;
- 	if (ifp && (ifp->if_flags & XFS_IFEXTENTS))
- 		fa->fsx_nextents = xfs_iext_count(ifp);
 -- 
 2.30.1
 
