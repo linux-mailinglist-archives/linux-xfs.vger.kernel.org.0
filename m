@@ -2,63 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B61D34EA65
+	by mail.lfdr.de (Postfix) with ESMTP id 1040634EA64
 	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 16:26:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbhC3O0U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Mar 2021 10:26:20 -0400
-Received: from sonic312-23.consmr.mail.gq1.yahoo.com ([98.137.69.204]:40382
-        "EHLO sonic312-23.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232038AbhC3OZ6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:25:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114358; bh=6T7MFQGZWvo120ENbTkrCIAA6M7ISWh8ieg+g5XrEvg=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=t36XSjB0AZmXylXTZe2ucJYOibt6SIGvvPZmb8xRvAOzIyId2nihU9B1LdTWkylwVqtQc7/okRtuPhUN7+JqlD88cXnaWE9aua0waokerbUU/lWBAP8bUTYzZUmlZ7oqBo8NhrqH+xSmVI6Wm7hztsb0GPC6jMzqLC9DqGDSdw+4uGge4OqckJJrW8ZPC0wKY28+x5aE6ujrkfAkI4k2N1+EdnnDDp6/Js4yCCvObWJo3YXIG+JUcZml9+CY+pVaU1rtc3PIDbJzbCMhHgJmL2wQfP4nN091CVk7lYB85xvecr/ZjxTzhegh1RIcI5+BPvTEYA3OJtxFaZ1dM5jGGg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114358; bh=8dZi0vV2P36nZdiMeZo8DZv0KEvEAKcTGgi9ggDXbbU=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=stCjc/bzmMGnJlqmoXyzWEzWczAjWVRprvG9DathvXlPSmlUXqDmXl7yVft4odzFOjwWrvnodSH1zynXNkDypfThPjK+st8yxFPGsyu6B0lfRm49HsEDJXCfJi0EyB4qJJYUnKMQs4NIiorJsZxi8/DsPl/4L3d1cxppkd4QfyRDAVT1y9MbKH65UPGlLOt/T7g8Y7jYEuWaMyNyljj6cYSI0kWYwMZq2NGK52Pxf+qLvZsAcXxrc3XLvt2B9A7jSRh+HqB8LVpcvr8qMP3dPVbcrouogWoAk9pGuyYWpmHqJKP00526i1iedE6CNRuRSsywYZ5UvNorD/okql9ZNQ==
-X-YMail-OSG: 9yaXsgsVM1m59mZ_l5qSAFJWtRkPDJTaLTqCjyQGxHQNSGXy4XM0.RxtC.WQ1tM
- mcpoQGeHQlHxcwytm8nYKciocif4y4m0nLe_Gg68HOXWTlaSPH4O86mxXu_8rlW2ICCQ9DqN69eC
- UmDuyy6lpOlfuxXlstSAr.5Bf60JDwcf9HOuo7G1YHAtu8Qjzy38AIeROJ.mOyWvmqrsPhQ2YGoj
- IoVZVCNoJsSBiZ8jfOvLak00.jqsedMOPbPvhg_P9zazZbQxyj.M9o2sq2YQwtZZxVOuLKRpvNzg
- 7okQTkxsusMhGXDS0dr7G7NlWGY.EaNa6_9p9A1rvTKI0yJ4zk0hbjMX53J6yIA3dvk8tK422Luq
- v6tpmEKxxpPuFYxS.ihFx0t.Alhs_3elsV35KQSFiM2Khw18zsg_RspJr0512YBoQEZlCOmVGDOY
- xxjkNVcm3FpCHPur4HpE26W0JUYq4zHOGQdp3eI.Jduul0B4K0xhxlPGKbC2NVclq9.Mmv7KaiqD
- xoWR.ItQZye22zHx.lwFV.rnzybdLP.p9OpfCU296jDaMYQ9uIjcpujfblGBL5P6Fi_MgLWEAOSo
- VtKldnHZPiOYjVct4RBbE1JbWaGpidosW5Z0KPurwv4vVm4klszM4Kvur__84apwcXibYs3_36iI
- GrWcOOHQS6kbri.AvG2R6ap4nduTC1xyG.bbHFtQXslatTqXrE.itFQDp479aWUSKhTYavgiDmrq
- TFGgtNdJNLcW1DQwluMMf863hq9vyqQG8urXkQGO1XosBv2WIsR9JQIr2e6zBcWxYc4Tse4ZIrYh
- H66g_4783QK2Koa2ivWwg.6MAqrJuwJPuM.XHPxyy9tUk8teIvSt18dRWDhoutzjj19seZkxh_d7
- L_uSAwUcUfG06ee35lpQXP5s9UuZL2jeA.tXjwlojYUyu0ltCGhf5q4UeR4ODIcEiyplPnpLCteO
- bXPAx6Wu2x5kvrx4brhxcTZjXuYlrYAwNI_azniqK6jHxMIvcrGociVb98VFG5EhFCgxDRqnB8vQ
- esQqVnrFW0vo2OqxYyB4bSgV6GIZbWX_zknvBy4B99xgqhh49B_NttwhfH8u8AW1ss3B2EySx14T
- Lv9EweoiY5FPcbtOPE1E86KxFmspLKCGp.ucw0uvDdIFJA7csmqw72_KzPB8rnnVcUyx3VHta8GU
- V1FDYLnH.i6KNRto1d4SZIEkwj5tPXs5V0s7OCFCou9L2nWJUKPo8w.Hjz06QXHwAhsTPXcXM9eM
- adXA0vk1.BZFIzVhROUV7sqQ_68goT9zvgNmud8lvkBIBbcsev0JbE2nxXHfNLotznohmN3afE0w
- 4kd1Oa1w2.AqGlDzPZKixy7rqbSbcUjfefkFvTb.FNIiq3sMnLp1XyuOv7hK4gG86FEA4MFckHxi
- Kzrfyittw56TGm2domo2jee01OXn5YC9qA6lDWSmfHGtZrbd_LNazjKcieI_4kR7tgnbthWW.7aD
- AyWIy4Ho192AeW808eR.j1IIKQevJ33jn6V60uh6HabM3zhosR0ALICNSLzO_2YkO638bzHyVYa5
- jvBUHZo3pchu32XQ6.vd80NheEc0iq93ivRPUdhrVBIItzkbXS7wkY2RedENiO81Mx_bphK0Ny1i
- aeh0UOXReXy_QAHi0xpI_x9D8zwDPrXS7h92qOxDSfHfopo2laMfaG1f9nKgIyDtEeCbXT7iUHlu
- 3owM8sN0W9ptBtpPCl_P5ivfj6438g9tOiA6WTaJcgzgFjvvcue2RxxNptiNQeEzJ.6CfQyNH4yI
- m5ACYxqaKFqJQTFjrXPB6dae9s7OkZteJiU0zCmDf8ypwMp2qFmidu6QpO5asqaYaij7LnjsMWUQ
- z4Ra3vfJLmnp2N7J1PpJ2j1vx0g0JwizQen6JpBcDy4TsRNbFrepqIIzLhopjsEaNDAXZyMKFJJm
- 4xRR5Q_TpkJHUgn9bN52MRa5Ts5z.evOiX_zjRj.oQKdZsaB6j08vCGtjakSii.iiLomLyfXWz6c
- BwRJqT9LZL_w5h5_LS.2a3In53UMNeInYUlTkCRr3hz1NayB_agugvht8aKo9KexshRTufSh6LNn
- hVMZYF4FQ4HCjDf4ScNhCn0Ai.01bt2unkoWXEhA8ANGA7VHn7nlC_QUb7HGGhZaznRxhhO0.1iY
- dH3bkFTrCvYAT.FU7x7vyI4Akj7SUUSBIQ2HmhJ9.43lSIlQk__X9x_w9A7u.Ho_B.1Vb6lby9GV
- 8SKSdAqyboHuhhNZDKZzKTOyKy3rDAggAXPpwTumfh67iR1IaHbqFCHIvHAjsLv9wlgBvEmsY6O0
- j9EcsEeqFIJe6HAxX3UvSdm9EAR_mtrbQDAuUAMUhUP5cW0Jhs0CHGEaYm2d2t8yOI1r.l9xsuEw
- 53oo5Z1Em1Z6QO2sdMbAmk8RN5NtOJ4DKO3BMYQxaCNE2Vm7tawsRKKGnroDGg26.V0s4sHHLOzZ
- lG.2U7xYCzTzXA1pGImyD7NhP4YD0AvpGUAOVHGBR69iCFtgNX_tEcsIO4qwaDLpmyeLIknQf3i0
- J1oZBytAhOyXn.07GR6atkR99giwogw--
+        id S231939AbhC3O0V (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Mar 2021 10:26:21 -0400
+Received: from sonic308-54.consmr.mail.gq1.yahoo.com ([98.137.68.30]:42338
+        "EHLO sonic308-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232050AbhC3O0C (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:26:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114362; bh=jQFLtUMpum7DIShm1LZrwbac5hctvXo9TuoGTQbQLxQ=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=eGwAMIA34O3nFKexh4t95uEG1styvd+ohhwmVWOg3GqxyF5fvWcDCdcKTu5VowgOl99lntXLe5vfv/ZqwHSaec5cJVcJiC7rzuANmbQdiBOY/6qNglE/gXAks9duAzwf3OmMJoIZuyJedjHXw6o3tGBV1wYu05a4XeN47T5H639LcLbrpMr2v7D63ykTiKQbyw2DLjuy59lA1o6lnvEOm0XDLIw+ODurRdBuD4R+1qS84BoFsgoi5TqKATajVaMV3YNoNhnlghkziEH+ok73jkbkfqkGl3NGczTXhYcBxoZsYjk2NmLTbQtx1Th7fe8MvwHvI+n4CHmX9gCiPLHKTg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114362; bh=jEg4Heqb7kfan2EkVwI/z/a0gu3wKmKJkh0orzOVSVz=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=a175LXfHur4vubWEZvWNBoUqnyYoejaHqTkcvMmnM8URDWCoL8ZWgaLG3STwBuhLd4aQzCzlQPzlUyaRX0sxfLgqUVqnEwn73Xvp23l6njp2lwBKwjh25rFRcyO+/l8POXAHkdZQYbx11SupHE/SpBQjZgq1YVVAEy+2nzjkV3ZmbgqaBmq0O6UyTEebZJ26/RbhWVrtltdVXLxkR6EnceCYFf0Z1ltb/57VXyO1CK2Z4L+VuUtqHBCUtHIzuDLYCN4MQv7qg1jb3dQ+8gJgV5t+8dUlECB/Pe+vd14pFcT1P+MyNH18WU0hrKpGoVpxV3kE04V+jWQp3xMv+489HA==
+X-YMail-OSG: rNQJmlIVM1kqWm0BgdOAR2npospsgNL2AZl6dbIzZreiQijLqTdQG2Kd9xApRz9
+ hppSuYDOYE5JXbcZ8FL0ZjoAKIE4a0PGgN1uKYhVMs2eMZ659niYtilkmxAtLXJoDlA_B5N8spCK
+ y2MC8mdmkdj6dalHkyC1p0i8YUvymHd_BPQyXgGidoB93GK1F1uaR8Kds4cmpn_cMBAQU8jm2gyY
+ d_itrTr7saYWAQoc.INQwS_pKeR5_aWaSE8kNUJyXATuX_JsTK9e.Mnnl6E7wk6Ry24_RRLT7Dzd
+ 0FG4Kx7Txl8_TGLQCspb2x7FtX..1aGWAg.1UMlI2t1nkOxZQ3lhaZShcASrBFOcYlXL_hTswiAd
+ j.l9oCp3QdNsPFCT8tRtznGcWzM2ZnKsdnD2UPeGjEsj5nUQzL4FCDfXep4mZuILAWqA5nosV1D8
+ ESVhkOFgaUDuCxN0BkRdf1_rmayCDdpCLMfX8OLkyeIkfm3YKHaSkOr23X8LMLb2_wg0gamoZeo8
+ VfYHNo4SsuX3K1Tf9LgMoj8WwzDVVgrkoiIcQOeOyAC0s41hyMvq8cqGU8AyZ_2VPyVTRvfaUz6k
+ eOSqYzR81geDRHQ4uSmNp2xglfxhNySsr_fCcBpVHaxSZqr2.oeTKR65febK1nSwOvOlsFS3Y_W3
+ e35xEZnrFcHXuiDvINrB62wLughhsej6CpiO8swLiNTL8A2M8Q7Cih_0ME4XbGfdv8OShFzPeBAV
+ lAPtSjXnoxH9K10Jv0P9zx37M_TY0TdbC1.6vAVzu2RPb2J_.U7byvxiM.yEUfbn2k4EQvDFQyfl
+ YKZtGOAocMtYhCFQ7rtIGcSbadr9mYLDKVJSMuPETrmP56Yw2DUEWVohq0J76VlNawMkH1CvMnsN
+ epGlZhT2VMaiPhwbqn.eopkMeG8TMxO6S5oGrER.e2z1E7Hq7WAwFTRfBMzG8eJa4L5Le2xH7hHi
+ _gjTP614Zu5Hyj0X.qTnZHMVc_I6m8Aj9a3fDsVkpMMDknCUzxTorek1J0oufPqO5kA61X7py4ft
+ .arQt4UCtIBW1DEaCk1AlWK70hJMCi.ii4UpKpDpARRqf.D966r8jDFeoF3GI6o6KRFswi4Gp7.6
+ siy5T7I3Q3xbTKgun_MAnb1ajnoE6PtsZvZ_Bkzesera4gsAdvayGXTjsKEJf9o6EmkwcA8UOeCj
+ aTMF6m1qEKvA2NVmYnawHXO2VhXTLpcBFkzUXGEdsIdDn1Z9P60nzaQHTkf5OgkOMkUPDi7gz83p
+ mLUXjhtUMEtbHeP25niNeBNMllQIINlXLoU5eR2_SA6qBr8wvQcEb3QtvDbKKDEVcBovcBeDvsQI
+ OvU5_528LK1mHVaOKylllO7BUA6BncOqlQB3CpNQWh2ae0ep2HVdNvvOZwrstH2GirJpvSa_omN7
+ isDWa9OiuEnly1urCyRnUszyFwd__JM0E6u4EaU6uJkZ2k4JzH8EzJOjCDABgHItzlJEOnOuRbFh
+ Silj9cdvwVMkMH.6ZaDzE5D56ejyzO9WNmcfF30mORHfknKO1DcugO2eQ7uM3HXPWNTMJWARRUDH
+ MEWofAdWGO7hIIUHCp.2M.XQegujtkWTTrgIW_Mxvo4haIU6WijGIpFVOlf.4yqrYgxgjfiX5T1O
+ V58wHFMdKXGmk2b76QYG6FUaJ4VHKyr0N8JDEGLvpxsCxWiAWdbp6i6SwU9CZEbjFPaV_EjnM3rO
+ HsQxX_n9vworgqKfj9xEqruycgfMDe9fnPDMOuBYevX_cEA91ZcRobAaKx5zSLL9NI0qaJDROsFi
+ QnVRoyJTPeSpB9JNorgBcoBjRAlUG5BqPhOtbUOYVPDyy4fdkqADFjzeEfZO3iu3v9WguerLZuSC
+ kBksDJTIu0yWr62Iccpp82PhN2DrCwj4HikeXt9sA9q2rT_ZJNgDbL6iDBhr28W.EK_sueYEVoyA
+ sWMJwB_Snaxk0AflRMNS7kciRvmnLVLU9BX6p7jhcTrDd8IbjOgxK7o_wD8ilYvxaAfE1KwmM4nV
+ lbDx42SesAduKL7ldVT5zwv7aW4_qS3qR9d1.06krQEKlgDgBLvB.xIfoxLRU1yAi.hcr9k9tCbm
+ lBfM3fOJLaZnaGi59cfCj8w2Ql6jGZCNCQjjp5Z0Qp0voBhsNnbGdAq.lodOi766g2y.7CSsYmlA
+ 5gsUxCTa3sJPQ6LDoJk2e5Ga5HJZIWkoeHf_kqEvA1FWcK6u9bk8TncbSmNkXU562XR1_dBu30xF
+ hZujT098J7sUAlBf7OE0sai_8NRR_MsyggOUyrWK.C_PnUH5qvAoklsCTpvJWkDSKhG.Rg386Qh_
+ RXdmu1m5Af.MICnqe_UQ083ZI1KdSARstL8puZSghC863GgK3hl6QlHtiPDS4gyeEXFXL1.1hon.
+ yswdTzWSB9x_lmRWmoKVDOnISyL.UXDay.HlxrvVMeKhpZOLfQH1noSetVwJPANDLg4Sr_PngPJC
+ .NBSom_TM4qZb3HJHvAN_4ym7O3bRMON7_CnSlMdCXLW5bYij1zBzDqJ_kPgN0BwNiMqgwirqhlz
+ p0eG6kSIKvFtWiqQ_R5khAugshVWt_uYjl6iE8tp63jpJ9jwLizuuI0Gy2ZwqvnqcXrhZEOuIEiM
+ .5TjiWq7b4NmccrGD2WFd3MzSkoKD31DTi3CbGRR3kTsn9Iojhh3OqvA9pZCKLTX8NEiGCJsWrpT
+ eA3ogMQ3TC4qOm4PlCGOxg_g-
 X-Sonic-MF: <hsiangkao@aol.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:25:58 +0000
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:26:02 +0000
 Received: by kubenode575.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID d17ac850f756223f45b54c36ad526fbe;
-          Tue, 30 Mar 2021 14:25:56 +0000 (UTC)
+          Tue, 30 Mar 2021 14:25:59 +0000 (UTC)
 From:   Gao Xiang <hsiangkao@aol.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <djwong@kernel.org>,
         Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v3 5/8] repair: parallelise phase 6
-Date:   Tue, 30 Mar 2021 22:25:28 +0800
-Message-Id: <20210330142531.19809-6-hsiangkao@aol.com>
+Subject: [PATCH v3 6/8] repair: don't duplicate names in phase 6
+Date:   Tue, 30 Mar 2021 22:25:29 +0800
+Message-Id: <20210330142531.19809-7-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210330142531.19809-1-hsiangkao@aol.com>
 References: <20210330142531.19809-1-hsiangkao@aol.com>
@@ -70,136 +73,297 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-A recent metadump provided to us caused repair to take hours in
-phase6. It wasn't IO bound - it was fully CPU bound the entire time.
-The only way to speed it up is to make phase 6 run multiple
-concurrent processing threads.
+The name hash in phase 6 is constructed by using names that point
+directly into the directory buffers. Hence before the buffers can be
+released, the constructed name hash has to duplicate all those names
+into meory it owns via dir_hash_dup_names().
 
-The obvious way to do this is to spread the concurrency across AGs,
-like the other phases, and while this works it is not optimal. When
-a processing thread hits a really large directory, it essentially
-sits CPU bound until that directory is processed. IF an AG has lots
-of large directories, we end up with a really long single threaded
-tail that limits concurrency.
+Given that the structure that holds the name is dynamically
+allocated, it makes no sense to store a pointer to the name
+dir_hash_add() and then later have dynamically allocate the name.
 
-Hence we also need to have concurrency /within/ the AG. This is
-realtively easy, as the inode chunk records allow for a simple
-concurrency mechanism within an AG. We can simply feed each chunk
-record to a workqueue, and we get concurrency within the AG for
-free. However, this allows prefetch to run way ahead of processing
-and this blows out the buffer cache size and can cause OOM.
+Extend the name hash allocation to contain space for the name
+itself, and copy the name into the name hash structure in
+dir_hash_add(). This allows us to get rid of dir_hash_dup_names(),
+and the directory checking code no longer needs to hold all the
+directory buffers in memory until the entire directory walk is
+complete and the names duplicated.
 
-However, we can use the new workqueue depth limiting to limit the
-number of inode chunks queued, and this then backs up the inode
-prefetching to it's maximum queue depth. Hence we prevent having the
-prefetch code queue the entire AG's inode chunks on the workqueue
-blowing out memory by throttling the prefetch consumer.
-
-This takes phase 6 from taking many, many hours down to:
-
-Phase 6:        10/30 21:12:58  10/30 21:40:48  27 minutes, 50 seconds
-
-And burning 20-30 cpus that entire time on my test rig.
-
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- repair/phase6.c | 42 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 34 insertions(+), 8 deletions(-)
+ repair/phase6.c | 101 ++++++++++++++----------------------------------
+ 1 file changed, 29 insertions(+), 72 deletions(-)
 
 diff --git a/repair/phase6.c b/repair/phase6.c
-index 14464befa8b6..e51784521d28 100644
+index e51784521d28..df8db146c187 100644
 --- a/repair/phase6.c
 +++ b/repair/phase6.c
-@@ -6,6 +6,7 @@
+@@ -72,15 +72,15 @@ typedef struct dir_hash_ent {
+ 	struct dir_hash_ent	*nextbyorder;	/* next in order added */
+ 	xfs_dahash_t		hashval;	/* hash value of name */
+ 	uint32_t		address;	/* offset of data entry */
+-	xfs_ino_t 		inum;		/* inode num of entry */
++	xfs_ino_t		inum;		/* inode num of entry */
+ 	short			junkit;		/* name starts with / */
+ 	short			seen;		/* have seen leaf entry */
+ 	struct xfs_name		name;
++	unsigned char		namebuf[];
+ } dir_hash_ent_t;
  
- #include "libxfs.h"
- #include "threads.h"
-+#include "threads.h"
- #include "prefetch.h"
- #include "avl.h"
- #include "globals.h"
-@@ -3105,20 +3106,44 @@ check_for_orphaned_inodes(
+ typedef struct dir_hash_tab {
+ 	int			size;		/* size of hash tables */
+-	int			names_duped;	/* 1 = ent names malloced */
+ 	dir_hash_ent_t		*first;		/* ptr to first added entry */
+ 	dir_hash_ent_t		*last;		/* ptr to last added entry */
+ 	dir_hash_ent_t		**byhash;	/* ptr to name hash buckets */
+@@ -171,8 +171,6 @@ dir_hash_add(
+ 	short			junk;
+ 	struct xfs_name		xname;
+ 
+-	ASSERT(!hashtab->names_duped);
+-
+ 	xname.name = name;
+ 	xname.len = namelen;
+ 	xname.type = ftype;
+@@ -199,7 +197,12 @@ dir_hash_add(
+ 		}
+ 	}
+ 
+-	if ((p = malloc(sizeof(*p))) == NULL)
++	/*
++	 * Allocate enough space for the hash entry and the name in a single
++	 * allocation so we can store our own copy of the name for later use.
++	 */
++	p = calloc(1, sizeof(*p) + namelen + 1);
++	if (!p)
+ 		do_error(_("malloc failed in dir_hash_add (%zu bytes)\n"),
+ 			sizeof(*p));
+ 
+@@ -220,8 +223,12 @@ dir_hash_add(
+ 	p->address = addr;
+ 	p->inum = inum;
+ 	p->seen = 0;
+-	p->name = xname;
+ 
++	/* Set up the name in the region trailing the hash entry. */
++	memcpy(p->namebuf, name, namelen);
++	p->name.name = p->namebuf;
++	p->name.len = namelen;
++	p->name.type = ftype;
+ 	return !dup;
  }
  
- static void
--traverse_function(
-+do_dir_inode(
- 	struct workqueue	*wq,
--	xfs_agnumber_t 		agno,
-+	xfs_agnumber_t		agno,
- 	void			*arg)
+@@ -287,8 +294,6 @@ dir_hash_done(
+ 	for (i = 0; i < hashtab->size; i++) {
+ 		for (p = hashtab->byaddr[i]; p; p = n) {
+ 			n = p->nextbyaddr;
+-			if (hashtab->names_duped)
+-				free((void *)p->name.name);
+ 			free(p);
+ 		}
+ 	}
+@@ -385,27 +390,6 @@ dir_hash_see_all(
+ 	return j == stale ? DIR_HASH_CK_OK : DIR_HASH_CK_BADSTALE;
+ }
+ 
+-/*
+- * Convert name pointers into locally allocated memory.
+- * This must only be done after all the entries have been added.
+- */
+-static void
+-dir_hash_dup_names(dir_hash_tab_t *hashtab)
+-{
+-	unsigned char		*name;
+-	dir_hash_ent_t		*p;
+-
+-	if (hashtab->names_duped)
+-		return;
+-
+-	for (p = hashtab->first; p; p = p->nextbyorder) {
+-		name = malloc(p->name.len);
+-		memcpy(name, p->name.name, p->name.len);
+-		p->name.name = name;
+-	}
+-	hashtab->names_duped = 1;
+-}
+-
+ /*
+  * Given a block number in a fork, return the next valid block number (not a
+  * hole).  If this is the last block number then NULLFILEOFF is returned.
+@@ -1383,6 +1367,7 @@ dir2_kill_block(
+ 		res_failed(error);
+ 	libxfs_trans_ijoin(tp, ip, 0);
+ 	libxfs_trans_bjoin(tp, bp);
++	libxfs_trans_bhold(tp, bp);
+ 	memset(&args, 0, sizeof(args));
+ 	args.dp = ip;
+ 	args.trans = tp;
+@@ -1414,7 +1399,7 @@ longform_dir2_entry_check_data(
+ 	int			*need_dot,
+ 	ino_tree_node_t		*current_irec,
+ 	int			current_ino_offset,
+-	struct xfs_buf		**bpp,
++	struct xfs_buf		*bp,
+ 	dir_hash_tab_t		*hashtab,
+ 	freetab_t		**freetabp,
+ 	xfs_dablk_t		da_bno,
+@@ -1422,7 +1407,6 @@ longform_dir2_entry_check_data(
  {
--	ino_tree_node_t 	*irec;
-+	struct ino_tree_node	*irec = arg;
+ 	xfs_dir2_dataptr_t	addr;
+ 	xfs_dir2_leaf_entry_t	*blp;
+-	struct xfs_buf		*bp;
+ 	xfs_dir2_block_tail_t	*btp;
+ 	struct xfs_dir2_data_hdr *d;
+ 	xfs_dir2_db_t		db;
+@@ -1453,7 +1437,6 @@ longform_dir2_entry_check_data(
+ 	};
+ 
+ 
+-	bp = *bpp;
+ 	d = bp->b_addr;
+ 	ptr = (char *)d + mp->m_dir_geo->data_entry_offset;
+ 	nbad = 0;
+@@ -1554,10 +1537,8 @@ longform_dir2_entry_check_data(
+ 			dir2_kill_block(mp, ip, da_bno, bp);
+ 		} else {
+ 			do_warn(_("would junk block\n"));
+-			libxfs_buf_relse(bp);
+ 		}
+ 		freetab->ents[db].v = NULLDATAOFF;
+-		*bpp = NULL;
+ 		return;
+ 	}
+ 
+@@ -2215,17 +2196,15 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
+ 			int		ino_offset,
+ 			dir_hash_tab_t	*hashtab)
+ {
+-	struct xfs_buf		**bplist;
++	struct xfs_buf		*bp;
+ 	xfs_dablk_t		da_bno;
+ 	freetab_t		*freetab;
+-	int			num_bps;
  	int			i;
-+
-+	for (i = 0; i < XFS_INODES_PER_CHUNK; i++)  {
-+		if (inode_isadir(irec, i))
-+			process_dir_inode(wq->wq_ctx, agno, irec, i);
-+	}
-+}
-+
-+static void
-+traverse_function(
-+	struct workqueue	*wq,
-+	xfs_agnumber_t		agno,
-+	void			*arg)
-+{
-+	struct ino_tree_node	*irec;
- 	prefetch_args_t		*pf_args = arg;
-+	struct workqueue	lwq;
-+	struct xfs_mount	*mp = wq->wq_ctx;
+ 	int			isblock;
+ 	int			isleaf;
+ 	xfs_fileoff_t		next_da_bno;
+ 	int			seeval;
+ 	int			fixit = 0;
+-	xfs_dir2_db_t		db;
+ 	struct xfs_da_args	args;
  
- 	wait_for_inode_prefetch(pf_args);
+ 	*need_dot = 1;
+@@ -2242,11 +2221,6 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
+ 		freetab->ents[i].v = NULLDATAOFF;
+ 		freetab->ents[i].s = 0;
+ 	}
+-	num_bps = freetab->naents;
+-	bplist = calloc(num_bps, sizeof(struct xfs_buf*));
+-	if (!bplist)
+-		do_error(_("calloc failed in %s (%zu bytes)\n"),
+-			__func__, num_bps * sizeof(struct xfs_buf*));
  
- 	if (verbose)
- 		do_log(_("        - agno = %d\n"), agno);
- 
-+	/*
-+	 * The more AGs we have in flight at once, the fewer processing threads
-+	 * per AG. This means we don't overwhelm the machine with hundreds of
-+	 * threads when we start acting on lots of AGs at once. We just want
-+	 * enough that we can keep multiple CPUs busy across multiple AGs.
-+	 */
-+	workqueue_create_bound(&lwq, mp, ag_stride, 1000);
-+
- 	for (irec = findfirst_inode_rec(agno); irec; irec = next_ino_rec(irec)) {
- 		if (irec->ino_isa_dir == 0)
- 			continue;
-@@ -3126,18 +3151,19 @@ traverse_function(
- 		if (pf_args) {
- 			sem_post(&pf_args->ra_count);
- #ifdef XR_PF_TRACE
-+			{
-+			int	i;
- 			sem_getvalue(&pf_args->ra_count, &i);
- 			pftrace(
- 		"processing inode chunk %p in AG %d (sem count = %d)",
- 				irec, agno, i);
-+			}
- #endif
+ 	/* is this a block, leaf, or node directory? */
+ 	args.dp = ip;
+@@ -2275,28 +2249,12 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
+ 			break;
  		}
  
--		for (i = 0; i < XFS_INODES_PER_CHUNK; i++)  {
--			if (inode_isadir(irec, i))
--				process_dir_inode(wq->wq_ctx, agno, irec, i);
+-		db = xfs_dir2_da_to_db(mp->m_dir_geo, da_bno);
+-		if (db >= num_bps) {
+-			int last_size = num_bps;
+-
+-			/* more data blocks than expected */
+-			num_bps = db + 1;
+-			bplist = realloc(bplist, num_bps * sizeof(struct xfs_buf*));
+-			if (!bplist)
+-				do_error(_("realloc failed in %s (%zu bytes)\n"),
+-					__func__,
+-					num_bps * sizeof(struct xfs_buf*));
+-			/* Initialize the new elements */
+-			for (i = last_size; i < num_bps; i++)
+-				bplist[i] = NULL;
 -		}
-+		queue_work(&lwq, do_dir_inode, agno, irec);
+-
+ 		if (isblock)
+ 			ops = &xfs_dir3_block_buf_ops;
+ 		else
+ 			ops = &xfs_dir3_data_buf_ops;
+ 
+-		error = dir_read_buf(ip, da_bno, &bplist[db], ops, &fixit);
++		error = dir_read_buf(ip, da_bno, &bp, ops, &fixit);
+ 		if (error) {
+ 			do_warn(
+ 	_("can't read data block %u for directory inode %" PRIu64 " error %d\n"),
+@@ -2316,21 +2274,25 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
+ 		}
+ 
+ 		/* check v5 metadata */
+-		d = bplist[db]->b_addr;
++		d = bp->b_addr;
+ 		if (be32_to_cpu(d->magic) == XFS_DIR3_BLOCK_MAGIC ||
+ 		    be32_to_cpu(d->magic) == XFS_DIR3_DATA_MAGIC) {
+-			struct xfs_buf		 *bp = bplist[db];
+-
+ 			error = check_dir3_header(mp, bp, ino);
+ 			if (error) {
+ 				fixit++;
++				if (isblock)
++					goto out_fix;
+ 				continue;
+ 			}
+ 		}
+ 
+ 		longform_dir2_entry_check_data(mp, ip, num_illegal, need_dot,
+-				irec, ino_offset, &bplist[db], hashtab,
++				irec, ino_offset, bp, hashtab,
+ 				&freetab, da_bno, isblock);
++		if (isblock)
++			break;
++
++		libxfs_buf_relse(bp);
  	}
-+	destroy_work_queue(&lwq);
- 	cleanup_inode_prefetch(pf_args);
+ 	fixit |= (*num_illegal != 0) || dir2_is_badino(ino) || *need_dot;
+ 
+@@ -2341,7 +2303,7 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
+ 			xfs_dir2_block_tail_t	*btp;
+ 			xfs_dir2_leaf_entry_t	*blp;
+ 
+-			block = bplist[0]->b_addr;
++			block = bp->b_addr;
+ 			btp = xfs_dir2_block_tail_p(mp->m_dir_geo, block);
+ 			blp = xfs_dir2_block_leaf_p(btp);
+ 			seeval = dir_hash_see_all(hashtab, blp,
+@@ -2358,11 +2320,10 @@ longform_dir2_entry_check(xfs_mount_t	*mp,
+ 		}
+ 	}
+ out_fix:
++	if (isblock && bp)
++		libxfs_buf_relse(bp);
++
+ 	if (!no_modify && (fixit || dotdot_update)) {
+-		dir_hash_dup_names(hashtab);
+-		for (i = 0; i < num_bps; i++)
+-			if (bplist[i])
+-				libxfs_buf_relse(bplist[i]);
+ 		longform_dir2_rebuild(mp, ino, ip, irec, ino_offset, hashtab);
+ 		*num_illegal = 0;
+ 		*need_dot = 0;
+@@ -2370,12 +2331,8 @@ out_fix:
+ 		if (fixit || dotdot_update)
+ 			do_warn(
+ 	_("would rebuild directory inode %" PRIu64 "\n"), ino);
+-		for (i = 0; i < num_bps; i++)
+-			if (bplist[i])
+-				libxfs_buf_relse(bplist[i]);
+ 	}
+ 
+-	free(bplist);
+ 	free(freetab);
  }
  
-@@ -3165,7 +3191,7 @@ static void
- traverse_ags(
- 	struct xfs_mount	*mp)
- {
--	do_inode_prefetch(mp, 0, traverse_function, false, true);
-+	do_inode_prefetch(mp, ag_stride, traverse_function, false, true);
- }
- 
- void
 -- 
 2.20.1
 
