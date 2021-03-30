@@ -2,66 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D9A934EA60
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 16:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B61D34EA65
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 16:26:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231882AbhC3O0U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S231918AbhC3O0U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 30 Mar 2021 10:26:20 -0400
-Received: from sonic312-23.consmr.mail.gq1.yahoo.com ([98.137.69.204]:45008
+Received: from sonic312-23.consmr.mail.gq1.yahoo.com ([98.137.69.204]:40382
         "EHLO sonic312-23.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232027AbhC3OZ6 (ORCPT
+        by vger.kernel.org with ESMTP id S232038AbhC3OZ6 (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:25:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114358; bh=zhVB4g6LGbwzKv4Cl52Xh+NEV+mE7B3cm4bqqbPqkaM=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=io50svib24yNcKB/mxERknuAj4akrWbc1EKfILwqZYSUmku9XscsUqDqC3r6bEvWLnrUoV3cVafecT98F23LwSfj+n3Vw60K3dkovHeS49TEiWVQsA7D4QDxQfGICWLFsERnLTHASBSTbevL9JmiM8IdlhnYVMFNM7ZU66HTmCUdI0rmoGTis/kv+iMhznWjUriwcbw6W49shShpZdwHm1YBUdx/V5+pvgLbgsgStGXPdFookANY0txc8m6CLyzxcZLNOAlTBcMkaybxBh+JLdjzFKBKkY70id7/215DnveyUWmLuxkIDSHuZ7ZIHKcU1vRTPL0LUA/vnXQ4cLtNdQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114358; bh=AThyH4QEFWmX6C0MsC3pgv08M4Pld9M+7t8Fd5t/lRR=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=XALguWIsjZXgvffbtLbLGexraQ1LwmGiCOBHqITScncGckQu4gvp4B5WAuhG6OLXjOPxmKGohcRd+bwdhERFFX2Fc5KmHF3vw5wB1czVyg2Z6wT+P2GoemK8W1+B/iDFmiE7iOVzrlWCQ/CFl7FU9P6m6EVUd2uMPHw2ujmwkYf6tJM0Z5o7AVT6ltFlOvv81kpRsSYj2cpR6US7AlDSV/HXxj724aQnInkVxAJBI6VeZfiHLCuqxLkhMWH+EOdQJ4UA9WuwtXuEcJMHx71ThK7cXFvqIbURM+A1Q/A6n+8aezsHwxeDb9Wq5j/+n8zfzyV695ZzyNaY+SPTFZBYrQ==
-X-YMail-OSG: iqaZvzcVM1n8UiUzBkGPq9tDIs7WeHDvsrskqkevogjwcRAp_k35QuWE9KffiAZ
- j.6J12OvDIQIIIUOROA1x1FElUoKOJOiD_b5l7rRRKNRe5TDXOtIcGyB9sRxCBxs59vpEQWC6COv
- NNHPcPbYkHoZ3j17FLWbh0Mb9jMz1nyh9U4SBQUejuE4z_38QnKfJN_4RpNHV9DNXOi1lqmoNKom
- qoF0eBKjYcKcPQEK_3iv2.zYvSKGaOgWY5XeUIVdxSLTX8GmJNd0hKy8LYN9yvfNePV8H0znbRcd
- GillGWjFUoz5BHbbn6a5olonsTZoL2JoJ_TfnmMKqTUwSoY3xfvJSxtMXeHBGgWW1m0yfRsAhn08
- tAGr8Nz5J1C1PsAxTChU6UalpWD.EgMg.4ZCFScS6pSjXkIfgkgT8enxw5znMJGH0BjqfVBLE4TP
- wyeHFXVSS.epT4aaq73EUdP_CcGsEG8FVQ9JAUTrsi549f9S6l2p9.nX87BPslNJBRyon1m8Me3q
- VJSQAc0gSZF_RMJ9mOx4NA0kLiLSmXnW.Jy1rkdCj6GFOCEYo6Esc5DtZJqnhXOmG6KSUDL0pVRL
- DrRGogsW9YH7JOZqf84SYJbLAPpHJjPj2JERUwYHcZwFbcKJIzuI9Z7fsPiLc3AW7QNtxrph0vA6
- B6AGx58ihXb0ku2KD7xXCiOvRbX8VUgF4s65wf37D1PZUyyJOGpNT7UZHJpxajsNlb.Mpuum5vWf
- 7nHKBophCqka1.JUClLBOsJD7YwyiqvLAyg.6kHGm8_WWLAsOTmp_Hb3i0f3OzlPNHDiJNG_u0ZR
- 5v7XeFbJ8EfKcy6YgcQaXosXGB4LlSf3J34zftnPXz.LB2FWvhlzehHA2vxIEbebH0tWwO2FL23J
- XUYtGmYkbPHE45HBsx._CRsXpEW7zLHzSp2ZjSmqWOU1pJmiJXGb_TtScWp3zeMak3MLgJgKPeXw
- U8ZwnTsCfJkl88Wnfgf5qVn9sF9_F5JGFz2w_lm1uSkFN3hn9lnFeXQxSHuhUTIZd6PJ2ZEjrLVN
- TJ1PjLRVPeh.bB9.CNwM2KMAQhIuDfaJcR4MmoMJJzyScEQqd4XXWrX2xyNcsSo0Sc3WUX3pd7Xi
- 4oGqrMUy9ceNE0X2XdMjkv6z_bmC2JGJfF2Sho0EJ_.bIjIzzVMA6SZQQz1k9VK5ZwnMxaRD_0QS
- GvC8QjGHejO60nQdWK34o4l3Dmf54qwjCLCziFTcKptiDYZN4TxYPfZ.g_YdZdO3uL_alI_GCB65
- oNA19SiWs90DKDuV.oKwL5rICPwnGz0bqCrZ9XZwyPHn35BVCbQCkBim0j_xESIqkaCWDRkpq75Q
- EEHhfDkIZtHCc.UZfpcpWK60rFJSPN4fD3PsmgeWEmwcbq0_Fscp9zQ4YWZLhz6ipk4U_crGBNVO
- TSRe0ch6Ajbg0G11SEownZ_TxssR4mM0tSBpCymwgHhy3tBQVtaYXhuxIFEk0SjL2QvMAV_vGmCP
- IZuYkTi5bkpbkmEWzsW2LS7kRzdNFgexMf3m3uJ.mJCQT4K97VeTT.RaE9oMWzBDM0TDz46Nny7N
- 2JU0Mv5lavW1tjcSA8eNZMqcxDXp4CDpH8dpKjE0EEAHpy_1rKYInCjUo4cC3dxLEfN7dRs_atD2
- 7.1WLYPpOOh7jkMlqLgs8C0ypBn1cvFdxc69aJDyxabf0kGsB41rTbIIdf8zB5R.wrtDJPbzt7bD
- wybqM65QTm3RACjxusd_u1IlZwycmOPi2D0ITlfNi06_ZDYBuW1q_t5SmU90j_vRYuXoHtPruwrA
- s6wUmeVT_.gNXPb8FZRyacVFiO_sPv_w5gh0GsdcPIAEKf3ZzcfwNsA7LZlSYF16Jj5trRmG96V3
- ZoLJ8UXIKVRoFTa1a307ZX1t6ZKO61Mjl9MEg97_dUU8b1z0NKiPco6y_BNdGJr.wt.zA5.tR5un
- iIApV.1ke.iMQErs0zhjxlDyMcBCbo_0mGoolcogEtaddepaZ62i_WJe4TT1UHF4Lwovp0eLfssL
- fLazqMyhY8wh5lX2hd33U9wR4PPQrG1e76lGCBG4v8bS9HDjMFVuREeaNUzsnRnrKfc1OqmMKtbM
- cr3pc6d6cyHl5gTwCLGa0jSuA9s8XY01ng1dWjBiVeJh5KeMjOmUpge1c5OjuH1Z3hkQ0kLDXl0o
- 8g9Ef8j2.Mm3QiV.EqyUbwi02vA_KyUTcQkpEvWGrf8dHlgrSmG0t2SuCuyt6jlN3xQcjgtOGsTn
- GTOyCksmcGqY3JilXLgVQzujIh_tbzg_lb0F8dh1jfhlPN54VYmSe.Uy4Hg4mMRJbLF87fEN61pr
- GmSMDXCiWSxjXII8NsFMQq8pPJuyLWnIQrFdzwunOGyHNObQEaJNEJJgFqtuo8IpIif522XWikz2
- VZs5pe5YKfROzNQzlwu0HRGQhnQfnXvAP6gkFmPsqbRWFJ8XfMoc04CAQZvUU7jAy.TOscTaHcQP
- 8MHt2CtbxEVDK.7vsdd7c.I1VwFQBCCRh1I2ue1tRTxCRzY2pmwMLhDX2D7uY0DZhVB3JDOb0ZDe
- dFTLauJ2K7bemrfbHkQOjF5L5YR2mijpKObLW5X8jt4tvWruUGdEMYOM.TyWCjXOOiOOvtUnPOGQ
- lacaX.QbZuRGuVFq5lC2QHFsAZknTU8vBJVUTr4I7u7JxbimJJPJol8wnSm8nfExtNpCKXZiLDC3
- oDemUYAnXVMjmTZojrKX4ObievnjXOyNZ.4KPwdea
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114358; bh=6T7MFQGZWvo120ENbTkrCIAA6M7ISWh8ieg+g5XrEvg=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=t36XSjB0AZmXylXTZe2ucJYOibt6SIGvvPZmb8xRvAOzIyId2nihU9B1LdTWkylwVqtQc7/okRtuPhUN7+JqlD88cXnaWE9aua0waokerbUU/lWBAP8bUTYzZUmlZ7oqBo8NhrqH+xSmVI6Wm7hztsb0GPC6jMzqLC9DqGDSdw+4uGge4OqckJJrW8ZPC0wKY28+x5aE6ujrkfAkI4k2N1+EdnnDDp6/Js4yCCvObWJo3YXIG+JUcZml9+CY+pVaU1rtc3PIDbJzbCMhHgJmL2wQfP4nN091CVk7lYB85xvecr/ZjxTzhegh1RIcI5+BPvTEYA3OJtxFaZ1dM5jGGg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114358; bh=8dZi0vV2P36nZdiMeZo8DZv0KEvEAKcTGgi9ggDXbbU=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=stCjc/bzmMGnJlqmoXyzWEzWczAjWVRprvG9DathvXlPSmlUXqDmXl7yVft4odzFOjwWrvnodSH1zynXNkDypfThPjK+st8yxFPGsyu6B0lfRm49HsEDJXCfJi0EyB4qJJYUnKMQs4NIiorJsZxi8/DsPl/4L3d1cxppkd4QfyRDAVT1y9MbKH65UPGlLOt/T7g8Y7jYEuWaMyNyljj6cYSI0kWYwMZq2NGK52Pxf+qLvZsAcXxrc3XLvt2B9A7jSRh+HqB8LVpcvr8qMP3dPVbcrouogWoAk9pGuyYWpmHqJKP00526i1iedE6CNRuRSsywYZ5UvNorD/okql9ZNQ==
+X-YMail-OSG: 9yaXsgsVM1m59mZ_l5qSAFJWtRkPDJTaLTqCjyQGxHQNSGXy4XM0.RxtC.WQ1tM
+ mcpoQGeHQlHxcwytm8nYKciocif4y4m0nLe_Gg68HOXWTlaSPH4O86mxXu_8rlW2ICCQ9DqN69eC
+ UmDuyy6lpOlfuxXlstSAr.5Bf60JDwcf9HOuo7G1YHAtu8Qjzy38AIeROJ.mOyWvmqrsPhQ2YGoj
+ IoVZVCNoJsSBiZ8jfOvLak00.jqsedMOPbPvhg_P9zazZbQxyj.M9o2sq2YQwtZZxVOuLKRpvNzg
+ 7okQTkxsusMhGXDS0dr7G7NlWGY.EaNa6_9p9A1rvTKI0yJ4zk0hbjMX53J6yIA3dvk8tK422Luq
+ v6tpmEKxxpPuFYxS.ihFx0t.Alhs_3elsV35KQSFiM2Khw18zsg_RspJr0512YBoQEZlCOmVGDOY
+ xxjkNVcm3FpCHPur4HpE26W0JUYq4zHOGQdp3eI.Jduul0B4K0xhxlPGKbC2NVclq9.Mmv7KaiqD
+ xoWR.ItQZye22zHx.lwFV.rnzybdLP.p9OpfCU296jDaMYQ9uIjcpujfblGBL5P6Fi_MgLWEAOSo
+ VtKldnHZPiOYjVct4RBbE1JbWaGpidosW5Z0KPurwv4vVm4klszM4Kvur__84apwcXibYs3_36iI
+ GrWcOOHQS6kbri.AvG2R6ap4nduTC1xyG.bbHFtQXslatTqXrE.itFQDp479aWUSKhTYavgiDmrq
+ TFGgtNdJNLcW1DQwluMMf863hq9vyqQG8urXkQGO1XosBv2WIsR9JQIr2e6zBcWxYc4Tse4ZIrYh
+ H66g_4783QK2Koa2ivWwg.6MAqrJuwJPuM.XHPxyy9tUk8teIvSt18dRWDhoutzjj19seZkxh_d7
+ L_uSAwUcUfG06ee35lpQXP5s9UuZL2jeA.tXjwlojYUyu0ltCGhf5q4UeR4ODIcEiyplPnpLCteO
+ bXPAx6Wu2x5kvrx4brhxcTZjXuYlrYAwNI_azniqK6jHxMIvcrGociVb98VFG5EhFCgxDRqnB8vQ
+ esQqVnrFW0vo2OqxYyB4bSgV6GIZbWX_zknvBy4B99xgqhh49B_NttwhfH8u8AW1ss3B2EySx14T
+ Lv9EweoiY5FPcbtOPE1E86KxFmspLKCGp.ucw0uvDdIFJA7csmqw72_KzPB8rnnVcUyx3VHta8GU
+ V1FDYLnH.i6KNRto1d4SZIEkwj5tPXs5V0s7OCFCou9L2nWJUKPo8w.Hjz06QXHwAhsTPXcXM9eM
+ adXA0vk1.BZFIzVhROUV7sqQ_68goT9zvgNmud8lvkBIBbcsev0JbE2nxXHfNLotznohmN3afE0w
+ 4kd1Oa1w2.AqGlDzPZKixy7rqbSbcUjfefkFvTb.FNIiq3sMnLp1XyuOv7hK4gG86FEA4MFckHxi
+ Kzrfyittw56TGm2domo2jee01OXn5YC9qA6lDWSmfHGtZrbd_LNazjKcieI_4kR7tgnbthWW.7aD
+ AyWIy4Ho192AeW808eR.j1IIKQevJ33jn6V60uh6HabM3zhosR0ALICNSLzO_2YkO638bzHyVYa5
+ jvBUHZo3pchu32XQ6.vd80NheEc0iq93ivRPUdhrVBIItzkbXS7wkY2RedENiO81Mx_bphK0Ny1i
+ aeh0UOXReXy_QAHi0xpI_x9D8zwDPrXS7h92qOxDSfHfopo2laMfaG1f9nKgIyDtEeCbXT7iUHlu
+ 3owM8sN0W9ptBtpPCl_P5ivfj6438g9tOiA6WTaJcgzgFjvvcue2RxxNptiNQeEzJ.6CfQyNH4yI
+ m5ACYxqaKFqJQTFjrXPB6dae9s7OkZteJiU0zCmDf8ypwMp2qFmidu6QpO5asqaYaij7LnjsMWUQ
+ z4Ra3vfJLmnp2N7J1PpJ2j1vx0g0JwizQen6JpBcDy4TsRNbFrepqIIzLhopjsEaNDAXZyMKFJJm
+ 4xRR5Q_TpkJHUgn9bN52MRa5Ts5z.evOiX_zjRj.oQKdZsaB6j08vCGtjakSii.iiLomLyfXWz6c
+ BwRJqT9LZL_w5h5_LS.2a3In53UMNeInYUlTkCRr3hz1NayB_agugvht8aKo9KexshRTufSh6LNn
+ hVMZYF4FQ4HCjDf4ScNhCn0Ai.01bt2unkoWXEhA8ANGA7VHn7nlC_QUb7HGGhZaznRxhhO0.1iY
+ dH3bkFTrCvYAT.FU7x7vyI4Akj7SUUSBIQ2HmhJ9.43lSIlQk__X9x_w9A7u.Ho_B.1Vb6lby9GV
+ 8SKSdAqyboHuhhNZDKZzKTOyKy3rDAggAXPpwTumfh67iR1IaHbqFCHIvHAjsLv9wlgBvEmsY6O0
+ j9EcsEeqFIJe6HAxX3UvSdm9EAR_mtrbQDAuUAMUhUP5cW0Jhs0CHGEaYm2d2t8yOI1r.l9xsuEw
+ 53oo5Z1Em1Z6QO2sdMbAmk8RN5NtOJ4DKO3BMYQxaCNE2Vm7tawsRKKGnroDGg26.V0s4sHHLOzZ
+ lG.2U7xYCzTzXA1pGImyD7NhP4YD0AvpGUAOVHGBR69iCFtgNX_tEcsIO4qwaDLpmyeLIknQf3i0
+ J1oZBytAhOyXn.07GR6atkR99giwogw--
 X-Sonic-MF: <hsiangkao@aol.com>
 Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:25:58 +0000
 Received: by kubenode575.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID d17ac850f756223f45b54c36ad526fbe;
-          Tue, 30 Mar 2021 14:25:53 +0000 (UTC)
+          Tue, 30 Mar 2021 14:25:56 +0000 (UTC)
 From:   Gao Xiang <hsiangkao@aol.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <djwong@kernel.org>,
         Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v3 4/8] repair: protect inode chunk tree records with a mutex
-Date:   Tue, 30 Mar 2021 22:25:27 +0800
-Message-Id: <20210330142531.19809-5-hsiangkao@aol.com>
+Subject: [PATCH v3 5/8] repair: parallelise phase 6
+Date:   Tue, 30 Mar 2021 22:25:28 +0800
+Message-Id: <20210330142531.19809-6-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210330142531.19809-1-hsiangkao@aol.com>
 References: <20210330142531.19809-1-hsiangkao@aol.com>
@@ -73,263 +70,136 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Phase 6 accesses inode chunk records mostly in an isolated manner.
-However, when it finds a corruption in a directory or there are
-multiple hardlinks to an inode, there can be concurrent access
-to the inode chunk record to update state.
+A recent metadump provided to us caused repair to take hours in
+phase6. It wasn't IO bound - it was fully CPU bound the entire time.
+The only way to speed it up is to make phase 6 run multiple
+concurrent processing threads.
 
-Hence the inode record itself needs a mutex. This protects all state
-changes within the inode chunk record, as well as inode link counts
-and chunk references. That allows us to process multiple chunks at
-once, providing concurrency within an AG as well as across AGs.
+The obvious way to do this is to spread the concurrency across AGs,
+like the other phases, and while this works it is not optimal. When
+a processing thread hits a really large directory, it essentially
+sits CPU bound until that directory is processed. IF an AG has lots
+of large directories, we end up with a really long single threaded
+tail that limits concurrency.
 
-The inode chunk tree itself is not modified in the directory
-scanning and rebuilding part of phase 6 which we are making
-concurrent, hence we do not need to worry about locking for AVL tree
-lookups to find the inode chunk records themselves. Therefore
-internal locking is all we need here.
+Hence we also need to have concurrency /within/ the AG. This is
+realtively easy, as the inode chunk records allow for a simple
+concurrency mechanism within an AG. We can simply feed each chunk
+record to a workqueue, and we get concurrency within the AG for
+free. However, this allows prefetch to run way ahead of processing
+and this blows out the buffer cache size and can cause OOM.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+However, we can use the new workqueue depth limiting to limit the
+number of inode chunks queued, and this then backs up the inode
+prefetching to it's maximum queue depth. Hence we prevent having the
+prefetch code queue the entire AG's inode chunks on the workqueue
+blowing out memory by throttling the prefetch consumer.
+
+This takes phase 6 from taking many, many hours down to:
+
+Phase 6:        10/30 21:12:58  10/30 21:40:48  27 minutes, 50 seconds
+
+And burning 20-30 cpus that entire time on my test rig.
+
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- repair/incore.h     | 23 +++++++++++++++++++++++
- repair/incore_ino.c | 15 +++++++++++++++
- 2 files changed, 38 insertions(+)
+ repair/phase6.c | 42 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 34 insertions(+), 8 deletions(-)
 
-diff --git a/repair/incore.h b/repair/incore.h
-index 977e5dd04336..d64315fd2585 100644
---- a/repair/incore.h
-+++ b/repair/incore.h
-@@ -281,6 +281,7 @@ typedef struct ino_tree_node  {
- 		parent_list_t	*plist;		/* phases 2-5 */
- 	} ino_un;
- 	uint8_t			*ftypes;	/* phases 3,6 */
-+	pthread_mutex_t		lock;
- } ino_tree_node_t;
+diff --git a/repair/phase6.c b/repair/phase6.c
+index 14464befa8b6..e51784521d28 100644
+--- a/repair/phase6.c
++++ b/repair/phase6.c
+@@ -6,6 +6,7 @@
  
- #define INOS_PER_IREC	(sizeof(uint64_t) * NBBY)
-@@ -411,7 +412,9 @@ next_free_ino_rec(ino_tree_node_t *ino_rec)
-  */
- static inline void add_inode_refchecked(struct ino_tree_node *irec, int offset)
+ #include "libxfs.h"
+ #include "threads.h"
++#include "threads.h"
+ #include "prefetch.h"
+ #include "avl.h"
+ #include "globals.h"
+@@ -3105,20 +3106,44 @@ check_for_orphaned_inodes(
+ }
+ 
+ static void
+-traverse_function(
++do_dir_inode(
+ 	struct workqueue	*wq,
+-	xfs_agnumber_t 		agno,
++	xfs_agnumber_t		agno,
+ 	void			*arg)
  {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_un.ex_data->ino_processed |= IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
+-	ino_tree_node_t 	*irec;
++	struct ino_tree_node	*irec = arg;
+ 	int			i;
++
++	for (i = 0; i < XFS_INODES_PER_CHUNK; i++)  {
++		if (inode_isadir(irec, i))
++			process_dir_inode(wq->wq_ctx, agno, irec, i);
++	}
++}
++
++static void
++traverse_function(
++	struct workqueue	*wq,
++	xfs_agnumber_t		agno,
++	void			*arg)
++{
++	struct ino_tree_node	*irec;
+ 	prefetch_args_t		*pf_args = arg;
++	struct workqueue	lwq;
++	struct xfs_mount	*mp = wq->wq_ctx;
  
- static inline int is_inode_refchecked(struct ino_tree_node *irec, int offset)
-@@ -437,12 +440,16 @@ static inline int is_inode_confirmed(struct ino_tree_node *irec, int offset)
-  */
- static inline void set_inode_isadir(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_isa_dir |= IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
+ 	wait_for_inode_prefetch(pf_args);
  
- static inline void clear_inode_isadir(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_isa_dir &= ~IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
+ 	if (verbose)
+ 		do_log(_("        - agno = %d\n"), agno);
  
- static inline int inode_isadir(struct ino_tree_node *irec, int offset)
-@@ -455,15 +462,19 @@ static inline int inode_isadir(struct ino_tree_node *irec, int offset)
-  */
- static inline void set_inode_free(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	set_inode_confirmed(irec, offset);
- 	irec->ir_free |= XFS_INOBT_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- 
- }
- 
- static inline void set_inode_used(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	set_inode_confirmed(irec, offset);
- 	irec->ir_free &= ~XFS_INOBT_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- static inline int is_inode_free(struct ino_tree_node *irec, int offset)
-@@ -476,7 +487,9 @@ static inline int is_inode_free(struct ino_tree_node *irec, int offset)
-  */
- static inline void set_inode_sparse(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ir_sparse |= XFS_INOBT_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- static inline bool is_inode_sparse(struct ino_tree_node *irec, int offset)
-@@ -489,12 +502,16 @@ static inline bool is_inode_sparse(struct ino_tree_node *irec, int offset)
-  */
- static inline void set_inode_was_rl(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_was_rl |= IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- static inline void clear_inode_was_rl(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_was_rl &= ~IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- static inline int inode_was_rl(struct ino_tree_node *irec, int offset)
-@@ -507,12 +524,16 @@ static inline int inode_was_rl(struct ino_tree_node *irec, int offset)
-  */
- static inline void set_inode_is_rl(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_is_rl |= IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- static inline void clear_inode_is_rl(struct ino_tree_node *irec, int offset)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_is_rl &= ~IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- static inline int inode_is_rl(struct ino_tree_node *irec, int offset)
-@@ -545,7 +566,9 @@ static inline int is_inode_reached(struct ino_tree_node *irec, int offset)
- static inline void add_inode_reached(struct ino_tree_node *irec, int offset)
- {
- 	add_inode_ref(irec, offset);
-+	pthread_mutex_lock(&irec->lock);
- 	irec->ino_un.ex_data->ino_reached |= IREC_MASK(offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- /*
-diff --git a/repair/incore_ino.c b/repair/incore_ino.c
-index 82956ae93005..299e4f949e5e 100644
---- a/repair/incore_ino.c
-+++ b/repair/incore_ino.c
-@@ -91,6 +91,7 @@ void add_inode_ref(struct ino_tree_node *irec, int ino_offset)
- {
- 	ASSERT(irec->ino_un.ex_data != NULL);
- 
-+	pthread_mutex_lock(&irec->lock);
- 	switch (irec->nlink_size) {
- 	case sizeof(uint8_t):
- 		if (irec->ino_un.ex_data->counted_nlinks.un8[ino_offset] < 0xff) {
-@@ -112,6 +113,7 @@ void add_inode_ref(struct ino_tree_node *irec, int ino_offset)
- 	default:
- 		ASSERT(0);
- 	}
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- void drop_inode_ref(struct ino_tree_node *irec, int ino_offset)
-@@ -120,6 +122,7 @@ void drop_inode_ref(struct ino_tree_node *irec, int ino_offset)
- 
- 	ASSERT(irec->ino_un.ex_data != NULL);
- 
-+	pthread_mutex_lock(&irec->lock);
- 	switch (irec->nlink_size) {
- 	case sizeof(uint8_t):
- 		ASSERT(irec->ino_un.ex_data->counted_nlinks.un8[ino_offset] > 0);
-@@ -139,6 +142,7 @@ void drop_inode_ref(struct ino_tree_node *irec, int ino_offset)
- 
- 	if (refs == 0)
- 		irec->ino_un.ex_data->ino_reached &= ~IREC_MASK(ino_offset);
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- uint32_t num_inode_references(struct ino_tree_node *irec, int ino_offset)
-@@ -161,6 +165,7 @@ uint32_t num_inode_references(struct ino_tree_node *irec, int ino_offset)
- void set_inode_disk_nlinks(struct ino_tree_node *irec, int ino_offset,
- 		uint32_t nlinks)
- {
-+	pthread_mutex_lock(&irec->lock);
- 	switch (irec->nlink_size) {
- 	case sizeof(uint8_t):
- 		if (nlinks < 0xff) {
-@@ -182,6 +187,7 @@ void set_inode_disk_nlinks(struct ino_tree_node *irec, int ino_offset,
- 	default:
- 		ASSERT(0);
- 	}
-+	pthread_mutex_unlock(&irec->lock);
- }
- 
- uint32_t get_inode_disk_nlinks(struct ino_tree_node *irec, int ino_offset)
-@@ -253,6 +259,7 @@ alloc_ino_node(
- 	irec->nlink_size = sizeof(uint8_t);
- 	irec->disk_nlinks.un8 = alloc_nlink_array(irec->nlink_size);
- 	irec->ftypes = alloc_ftypes_array(mp);
-+	pthread_mutex_init(&irec->lock, NULL);
- 	return irec;
- }
- 
-@@ -294,6 +301,7 @@ free_ino_tree_node(
- 	}
- 
- 	free(irec->ftypes);
-+	pthread_mutex_destroy(&irec->lock);
- 	free(irec);
- }
- 
-@@ -600,6 +608,7 @@ set_inode_parent(
- 	uint64_t		bitmask;
- 	parent_entry_t		*tmp;
- 
-+	pthread_mutex_lock(&irec->lock);
- 	if (full_ino_ex_data)
- 		ptbl = irec->ino_un.ex_data->parents;
- 	else
-@@ -625,6 +634,7 @@ set_inode_parent(
++	/*
++	 * The more AGs we have in flight at once, the fewer processing threads
++	 * per AG. This means we don't overwhelm the machine with hundreds of
++	 * threads when we start acting on lots of AGs at once. We just want
++	 * enough that we can keep multiple CPUs busy across multiple AGs.
++	 */
++	workqueue_create_bound(&lwq, mp, ag_stride, 1000);
++
+ 	for (irec = findfirst_inode_rec(agno); irec; irec = next_ino_rec(irec)) {
+ 		if (irec->ino_isa_dir == 0)
+ 			continue;
+@@ -3126,18 +3151,19 @@ traverse_function(
+ 		if (pf_args) {
+ 			sem_post(&pf_args->ra_count);
+ #ifdef XR_PF_TRACE
++			{
++			int	i;
+ 			sem_getvalue(&pf_args->ra_count, &i);
+ 			pftrace(
+ 		"processing inode chunk %p in AG %d (sem count = %d)",
+ 				irec, agno, i);
++			}
  #endif
- 		ptbl->pentries[0] = parent;
+ 		}
  
-+		pthread_mutex_unlock(&irec->lock);
- 		return;
+-		for (i = 0; i < XFS_INODES_PER_CHUNK; i++)  {
+-			if (inode_isadir(irec, i))
+-				process_dir_inode(wq->wq_ctx, agno, irec, i);
+-		}
++		queue_work(&lwq, do_dir_inode, agno, irec);
  	}
- 
-@@ -642,6 +652,7 @@ set_inode_parent(
- #endif
- 		ptbl->pentries[target] = parent;
- 
-+		pthread_mutex_unlock(&irec->lock);
- 		return;
- 	}
- 
-@@ -682,6 +693,7 @@ set_inode_parent(
- #endif
- 	ptbl->pentries[target] = parent;
- 	ptbl->pmask |= (1ULL << offset);
-+	pthread_mutex_unlock(&irec->lock);
++	destroy_work_queue(&lwq);
+ 	cleanup_inode_prefetch(pf_args);
  }
  
- xfs_ino_t
-@@ -692,6 +704,7 @@ get_inode_parent(ino_tree_node_t *irec, int offset)
- 	int		i;
- 	int		target;
- 
-+	pthread_mutex_lock(&irec->lock);
- 	if (full_ino_ex_data)
- 		ptbl = irec->ino_un.ex_data->parents;
- 	else
-@@ -709,9 +722,11 @@ get_inode_parent(ino_tree_node_t *irec, int offset)
- #ifdef DEBUG
- 		ASSERT(target < ptbl->cnt);
- #endif
-+		pthread_mutex_unlock(&irec->lock);
- 		return(ptbl->pentries[target]);
- 	}
- 
-+	pthread_mutex_unlock(&irec->lock);
- 	return(0LL);
+@@ -3165,7 +3191,7 @@ static void
+ traverse_ags(
+ 	struct xfs_mount	*mp)
+ {
+-	do_inode_prefetch(mp, 0, traverse_function, false, true);
++	do_inode_prefetch(mp, ag_stride, traverse_function, false, true);
  }
  
+ void
 -- 
 2.20.1
 
