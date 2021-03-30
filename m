@@ -2,66 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A68CD34EA66
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 16:26:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B121634EA71
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 16:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232004AbhC3O0V (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Mar 2021 10:26:21 -0400
-Received: from sonic304-24.consmr.mail.gq1.yahoo.com ([98.137.68.205]:36953
-        "EHLO sonic304-24.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232067AbhC3O0I (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:26:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114368; bh=C+ztXxiHumfPzPm5X3Le/YXGTxHnu+eEnHfWnfIpcXQ=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=YAboQyijyqa7ZbZYMgzNnK3AhdSdnv69lncVMdBMlpksRn/uAzcjxnQWUQF58kTfl08bnXZGWmVQAf44ARWg1Uz02/Et1nj0mwRBwtdBAAGzg/t2wgDmJzRNrbXUP5zib5ELpcbciL2U63frSMT9COnj3jm1XwJKlHr5a5Df0Wrp8mLGo8RPLRv9WRifrlnJfwCweRAgxkn2WSqGxck2vSM16NSEeaUdds8xrD55VWy/oLMNSexV5ZY9wP/+J8kao2YjeAF4CxsMYmz0dxjIauWfO0uioC7ZlnEeOcyAFiww00ll9xuOAuSqCJxWeu6ha8THoz2u73eUbWWwVqccDg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114368; bh=dwlmUaBefD5lBZIaQU1sPm+AV73CWKLAaEoQ3WWcPaO=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=S766LXjYqR/I3Uj46QHasLYEnqDR7NGbQjkcPvCvXqkJTkbmXHZblyezYE2B7ViQLlwQyRobH791JtlHvHUpIcVmFEgcR0PKZitIipBJZhNId5K9lu2WgP7cHE3c/6uf4imepvNSPUhROkUMwK1EePU7ssybnVeyhWWq9YO1X4aT4VLn8BrEeOqeahzE9Sjeu1/3YS1r7Grjc4Gq6VKWN+L9oyF4CaBZf0ruP4y03DGBZUg6lE9WfsXzH0HJAGi+hlxtv9nHei+JK1+GU8T82J+mRaHME9l/QyiG2TaQQxN20UOz/wAGgSrFjo+vgJ0K/ev/1RJPUxTZ7hurON4PPA==
-X-YMail-OSG: hh6qyJ0VM1k1OQjguSk88vK0GLiZUK.pyNy45WfrVjFOXv6JXQ7kux7wst.7vNh
- hMw68HEfgaV2Ygzbpjz9cl6SIqRA_j30V9c03u_m6SA2T5B8B4F8t0wk3rJ8tK.aK6XDiPlxu.bi
- wJEa1oV4m1zhMTU8H1Z5am7ZaiVmnKw166_84woExgYFCznBd9DvO9buf3s0sAG_66Jo4DBItEWh
- APTT_KpUhsHvPXVd.DnDTgeIvaAq8pexJ71w5IkHg9XR8_cy9v3KUsf8lp9C.XFpgcZOAfxo9Bd5
- UQzcKTtRpzk85xC_DBsvV81026_oJI.llU6cEbRQ_ZZFz_LF.5q4lZgX87jC1WeFF.gDnPrco36a
- 7bLioL1BghVbLFDUrHNdrmTtWK5TauNLghgEKB85ocPybLvHTYOWhQQsA13fTNJu89spSZFuilOl
- MYspjBydqpbiepMdmJLrnSvqcp.j7B9BSFJwTeQlFRCztNC1uINv9btq16odvYFf.pAES9m6_ImS
- 458At6rGbw7e35K8oAyGiAkjTmiwqV38zhu2hZbbOxq84PVc1a.f1C7NlHahlJAJBDe1OIP78QSd
- 3KDPqF6iZdyXJW2EyRBk.Y7MtAt1KpO0alS7ymqJZAi.niz1lJj90MvZfw6p_5omIU8wE8Gf8uTh
- nZ6HEpx.OXtGdnP9b24nX5K4lOp.MO.VqM3HjW4pphAmfbzeYU1tSi3Rdb4j_fLB23OPIQhQO7na
- zRSrIvHQoS1ELDUZbIrDqwU_ruLl52dYvvBMLEFEqIq5Ls3htQsix_WqYu7S9DF96_iZ7Dy4kCkk
- VI3TAb_Ou3gbTcGPUSfe8aiE0mF7YoGbSFBA2B_WoznHzBHK5hyKFaM_znpe1WZJgWCheP4wnScQ
- X9ZFETq3ggVCFSNINdm9CDo6bxtkGQFnh9p1HTq0m_trsSWW1uhlTvfX.ef6ujrLn4Xj5Yh.rVY7
- oDznc5lIvmW6Yeiwn0VbwEwDnMTdy9WySZWbAgBAZDqRfWV1dxtMNHFcp8kjLjSHv_TndHWmfjc9
- fpynPp4ywUcL9lUUvXc.NgE8TMc8_h9i7hzeYdg8JEY4PlZd.ABodUX.IhDOX85kRKRcfAEhA7Me
- wsBR7Nax1xgdjV7dtZn5NVS7MTT4YRZp9HmoG2IrVaZkZec2N3Vso4ePWci4W4rQ8Me5xCSvECbK
- H_86Ej4DbUNfC.wS.9vZkP3StsOAluJbcQ_gjay5.X0WOv2nj05TpU79nsYE6i_gjKtUTE480pIr
- avmcqb3vvm047HFdu1r3JwM6AagBvXLv5udAStjEhpYHc7lH0.PdyZOkcYMwmE_rpgJNi3v8gsZf
- 4aXH3SVfmhDsj.A3nMZcGqkxPpAaPRMA3OPo.oPduz1YCqycIJDiafvUn0MztfIAXtn7RqwiTJAd
- rqvWfXmPI0b_WqQnJ0QrSaeTCElpJPd6VBD_xqL3InUcgP8ZZWAeYbT0.Mmk1pebLDswQGxtDtT7
- NwSO_lbcRitD0UXxlt4eKjvv.mgTLSv1pVG2oFFp6UUgxtLHaTREIqo70qJfARg_0.lCNCuKJQBl
- uZqDjFzfifMWRHLKaSgEv2iybpnN5K71qnzlMEA0pRz40raGxE.xm73sEmIujqlfJo3PzbHUYyGj
- XBtp4WQyvTqVLQGmfVxw9M1swHYVhKCtySx5uMRAn24G09THc8ROmOnXdg7BecJjVtc.LMR4pvsD
- gc.M6kgufMo8jcW0FKs5LrMaSkUsosuJRzGZQ7mUBwmAvwKxG7QWVKWbqm0URO.SwCFy6jf1Rqv2
- E8XCjUmckrOmq4J818KA5vv3PPSRBN2BDtFm4wG3_R20C_mIs2ORShmPz4SRR5qCbmOzfd8HZEW.
- jEsbcjp3uOCLYIC8l833lsy0oJPbCgZW0bzTOM1r0jYZMnw9vXFomNnFsEpQ0kc6gXdAHHlJQGR5
- eZvAe1g.RoG0x0.sheEqI9ZFtKPc.BApXwxCRJggy7Zf4rj5f0yZuQugJnLd6QYQ2wLu7rhnQKGX
- BHFRcNMh5tdkpWN3LD6xyhHO3_ogRLmM7_AxarCaXp26_xsa.PhSqCiyOds0jzr7VStSde6JJAcg
- k7ZG1oKmZg8damO3Bm_OJRZqcCnZ_81aLqKC3o0SjEAGMsSKUdvqPCzY5AdwKgr22Ui..sA6OJ_k
- 3BUDq__w3hFvkNqYkBSrz1bKdT3e_1pzOSM1cpksG.iLL372YErQPW8KLomcD.R9JPpZ_Gv3Me4T
- R6eNmH8fbll1VXBcngl3tKAs6V1ULwF9ATEFU1p3XxGQdPi_6.fduWsbwkXzM0zDVQqXavOLb9rl
- 72CaBaW8ccdK40XvVZvUgfaTtVs8gkUSoSACqiv9azLULTLIgtrWVK2XEN1V3wCe2sRRUr5Ta1pJ
- nwC621qhkRlEZKmRqdltnMCQgPr.PiNvXlkJtxmR5jCYqw04QiiC4hECsKF.J79UkzaiJOfJ.7p3
- kahPDaTiW5bAfEvGNElbnpyHZCsVskSiqtSbFMYP2oP4lzOYHpHDp98shcelsinvcnL68jqrDHhw
- evMc0HRv4H8kF43XxUt1P_Sc2xmErMCsdMvVsDVq.62JKTT7EsO_ELTo8y0E-
+        id S231998AbhC3Obq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Mar 2021 10:31:46 -0400
+Received: from sonic317-20.consmr.mail.gq1.yahoo.com ([98.137.66.146]:39677
+        "EHLO sonic317-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232007AbhC3Oba (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:31:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114689; bh=9D2qw1lU79Cy2El0txzMdRItqLsk6Sg9RDnGCQnPqmY=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Snictr78S1cJFWTLmruc4HsDj7tRaxKfODURYPiuuspEXGnLB+CDCFVdQsFS+bHh052yRNzKfxIqTdY0DM95OxyhWXPvhKqlan3sjifN/gsG0BIl/YcrwR7btetMIS4KnjHJGL0u5DSFOcq+QWdHGb0EE3KcWC6vHfAtqCHk7jrlphh0/xcTVGe6b9oDtXpU5amAUZcIbMiTjNlMCynj7OjKdu0YHqKmT0KDUUQJD+978NkzFIp7rmoBSoob5Bek95Ve7Tr9qvwsTAHMnYUiW0pKB30x7cJ5pv0hITOd/sxdHmLDO0IgQeN0jgUFIrPq2nTYxlNcJ3uXjB35lvXJPg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114689; bh=lTGRo+wboJm4UXCFBbQbDVs+mEhF6mTwZLTJWCS6ATK=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=WBMOaXGsOye3fNs1y8YW5qPOQrfNu/OmF5tPkINxKXV0FObo4v7t6gl+pthP49A0nl/bq//q2ZHvXbrj7iNCOKguXX4EwC6xdP4e5cJ66Nh2uvhdv0aZ4ARplAdz0zY3bYwV9yPwCyVxQ10HT79H+5u5OplCd46ktab5fQOKO7teAeNrHbUnFxMnGHr1BTaFx1oBiO6mt8ERpsuMTrrMSSBa8lzvl4/fHZE9tz12igIFBtK9tkF0ptCfZzjTc4tNJnAA5nNLviPM7Pup7cCdixNuLUIadmVimI1loFbzkKZoR92rsMPMJ4SiG2Ya3iMC4EPyz61jy+bVBvgQyhrqhA==
+X-YMail-OSG: PGRzGugVM1nfThQ3d5.PFdoMOEKl3Dkb.zfD7V82IgCyNOUEQOPaT9zo9xQTqHI
+ eOhN.v.WM_wdwySiYcwZr2YfMZjd9OTSHLmUfbMkEJG.Kb6oaJrQRdMbKiH57eNHYjaekIAoQSYf
+ WCz3NrZvS1pOZMeFK5garJr_oQEFrLBeb0dwSNdyxvu4buK.M794VEONVpUiFLozKQhkIzvguFvU
+ 9jDKyxcmGK40vkv4P4cUJQzl4o5F5ISGMr1dEIRtsnkggmmczpL3JeshjF3WYuDZWhnCV_.oNfEF
+ 5vqAvQZJUeqXkk.FRK0pEkpN4qdezlw6TJ6weksQQ_5Yc0PWC3DS4z_kulL1rbBRzSoYRk8zdfTZ
+ f860qsftAuUsOUy.45II82DrqISAu7plppnJ8XkD3vcpR7xljGtiM9Yv1q_.EdgQi3lLP6FHkgRS
+ j_Uwqvf6AfwHlsKiU9e0P5f_PpWFQYoEpMHF1YpkP2f48Q6rGzkaCCvMCycAQ3NfzQ2U8_FbKfmA
+ rhf_feorIMwXCxM87oNBmxs.9KOz9GquDUZb0CrvA8IQ51e1wLubhNVnIFF1E6C6dOSGSJRWumMq
+ K6UZhXKRz6n10YjI67vN5mEgL9YGch2T_5Zs.FgiX70SCGr0YzGKXw1lBPeLqijawgwcj5uAjrZD
+ rXFg6v1p9RpNT6uO8a8zHYScki91vofwuUqIBtnGpQIbFiZoDZx0EwPsd2UjzcpaiDJu3pnht0zX
+ Hmv.qAsHKJDnmnc6kN5C2MBE4MqvxLF6PBONwoG1t7KSdXSWww4Ye6Cr8FlxeK_dqfB5.x7lWk8z
+ nMwY6d0GdzMyuz4Jc_orCCKIeqo0DYJfCXibbFHNjJgjelD_Mc4OLVHR1lbevOTaGTA8._T4WR74
+ g2AEcmBSwQIyDp.PA7aFxfXlpLI04v9sspke83yrNlrUOIqMxhGhLj.9EAjWcNDfziugwkeQMCL0
+ o3KgzW2W8T36yLorXweGPZYZ8DEdTgByaZEjtvocgjY17WERRH2NAKsyUa6XpSYkASg7aWN7PYpf
+ S9hC65iTxrYzjPETc3D9A5rK7_6jJqCmtx51gNZpuLsKMDPiDPoOa5I.WA0cxjUMqyQt8..WJvtq
+ ZQUBSOwMOZlPmks7uET0saF4_pV4OwWZahyBMxeoSA24GNqUnXAGPqcrbsQ6FUUFJtj4CCaw5l_y
+ s9qkxFcjeIjcCUzWKVyznxTJT91TXPfmpDjhGXdd5b7TA3JE.Ki7BKajOp69RnZMpXgkwELR7ZAW
+ e_mKB9Jse4R1Xlez8xa3afQ_qfGn3b3dR1u35sslG4BN.aNoGo5IGOdyCDCMi3vw7OUXUn_Bpr5F
+ fPHrh.bNOOVagF1PyAUNbA2t96PFafOisn3.kmLwGiKlNNjKEVhEwJ6ujgK2A9kni5SMbFSfjjYK
+ OhrF99geujj0uczzJdNT_yWQ6zObGhEmUZESqf.ZueX7xgHYg3hJi9_7m821S8TCHVvngj36FVyr
+ 6nnAt8sfHkEcwqvn1lueKqQG96U.bgpBqkz5v2Jo9cMtsyuvHbaoMjbirOjsHW2u8oSMKzh1teM1
+ lUMGvcWCz8ixyj2z.kBjF3zqjxT3Tvrr3zKBYdErqsn9VkFhC_gOe1BhNAh.5p.jMWRNxgZ6TDFe
+ 2C8OfDULJlk4XTQ6LJmnjDShm1p48WLeflqb2qFv5SQLh13H49S3_hsoWjEo0JLQ9UGo9MYiftUL
+ PGg5QZZsH28jRASRpMRPRfgo2a.AsrckWUhLl65dzFdXQADBN.emX9sG1mje4J2z3pS5ze.UJ1d_
+ mOJQbcH1ofPu3LF3vPGSjR4twpadPkyDDmwrxAWbQ46e81QYjd3X_uBR.xGSc3OJjuXIpDD3S5Gl
+ n1W42QwqsfcT03BngCHC.2aYSuMKFfVhZHr.q.mLSgua8NpdFoOjUf2O3BAJxJafjyntS98NV4bi
+ IxuN3OmRGUPGQfyiviNJkGVm6Vc4LtG8DLDJKgQ1LgpTtCT80Mxg_nhdh6dPKEJ3yLXyjnEjpUJ4
+ MgtUhJcjVXdrlNzrjrF_PtDjJq8hudezlsrQCIRPgZRzwjB09Sd3RMJ2HShZ7SqHuzpGDf02TZR6
+ Ppmyq3Ifxci.Og5S1D5ZRo5GaXY6DRYqf3m3Ekvw_m3SHOPOdz4mRGzKbevIQX8qdrLCaCPYKrVd
+ cE9GiEO00cmv_lI1h50BNxxfOD0dow_GC7k7kwSy9QTAKcUiiPawb2Mn9zFaeajiVnImqXkFoJt5
+ 7fsqk4YOpCL7x0o4fICnnWcU97hZzIfTe6b1wcvTgnhSrF7T.St_YFHz6tGu7YmRKNo_DHXpdLjU
+ ULGDJvInDoSzCEJnuv8K5MGKQtXIsfobrwi4QQsl0vnsoGAnvsmVnPjGK7F4KxH7u7IzS6BpOw4v
+ df11OyJ1ixNLe2xd3LRQEumiwHNyvzICIgyhDM0sOJXU8oRIthxzGhVbOIPzuIizOdUdLktiyMnO
+ aKDMKRj4OO5goGz1crqSsDbaoahReM0QHNGmWT9yKo6cHFJTIvXUnSfQjG0_GkIhTslFPWvihxs7
+ 8jAYTQ159fzpLOC2JEdAzpsQg1Xz4Gt6ZVdYW75W1giLf1jUn0kaFqljELZ49gN1dpjNCPzAhsCj
+ 0cJuzUXQ4jsfbjqC4OpxC49D71y5U.oBpLvL.c2HWuBmfvlSAuKmF0cKo90t5lZEJz8SzHn8NEYV
+ jvSwtsVYe9qsZtmQTpNhyyE1nbGUBil11zQ--
 X-Sonic-MF: <hsiangkao@aol.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:26:08 +0000
-Received: by kubenode575.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID d17ac850f756223f45b54c36ad526fbe;
-          Tue, 30 Mar 2021 14:26:04 +0000 (UTC)
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:31:29 +0000
+Received: by kubenode514.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID e49be4bf1df824b016b2ed877f5a9aaa;
+          Tue, 30 Mar 2021 14:31:26 +0000 (UTC)
 From:   Gao Xiang <hsiangkao@aol.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <djwong@kernel.org>,
         Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v3 8/8] repair: scale duplicate name checking in phase 6.
-Date:   Tue, 30 Mar 2021 22:25:31 +0800
-Message-Id: <20210330142531.19809-9-hsiangkao@aol.com>
+Subject: [PATCH v3 RESEND 3/8] repair: Protect bad inode list with mutex
+Date:   Tue, 30 Mar 2021 22:31:18 +0800
+Message-Id: <20210330143118.21032-1-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20210330142531.19809-1-hsiangkao@aol.com>
-References: <20210330142531.19809-1-hsiangkao@aol.com>
+In-Reply-To: <20210330142531.19809-4-hsiangkao@aol.com>
+References: <20210330142531.19809-4-hsiangkao@aol.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -70,102 +73,71 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-phase 6 on large directories is cpu bound on duplicate name checking
-due to the algorithm having effectively O(n^2) scalability. Hence
-when the duplicate name hash table  size is far smaller than the
-number of directory entries, we end up with long hash chains that
-are searched linearly on every new entry that is found in the
-directory to do duplicate detection.
+To enable phase 6 parallelisation, we need to protect the bad inode
+list from concurrent modification and/or access. Wrap it with a
+mutex and clean up the nasty typedefs.
 
-The in-memory hash table size is limited to 64k entries. Hence when
-we have millions of entries in a directory, duplicate entry lookups
-on the hash table have substantial overhead. Scale this table out to
-larger sizes so that we keep the chain lengths short and hence the
-O(n^2) scalability impact is limited because N is always small.
-
-For a 10M entry directory consuming 400MB of directory data, the
-hash table now sizes at 6.4 million entries instead of ~64k - it is
-~100x larger. While the hash table now consumes ~50MB of RAM, the
-xfs_repair footprint barely changes as it's using already consuming
-~9GB of RAM at this point in time. IOWs, the incremental memory
-usage change is noise, but the directory checking time:
-
-Unpatched:
-
-  97.11%  xfs_repair          [.] dir_hash_add
-   0.38%  xfs_repair          [.] longform_dir2_entry_check_data
-   0.34%  libc-2.31.so        [.] __libc_calloc
-   0.32%  xfs_repair          [.] avl_ino_start
-
-Phase 6:        10/22 12:11:40  10/22 12:14:28  2 minutes, 48 seconds
-
-Patched:
-
-  46.74%  xfs_repair          [.] radix_tree_lookup
-  32.13%  xfs_repair          [.] dir_hash_see_all
-   7.70%  xfs_repair          [.] radix_tree_tag_get
-   3.92%  xfs_repair          [.] dir_hash_add
-   3.52%  xfs_repair          [.] radix_tree_tag_clear
-   2.43%  xfs_repair          [.] crc32c_le
-
-Phase 6:        10/22 13:11:01  10/22 13:11:18  17 seconds
-
-has been reduced by an order of magnitude.
-
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- repair/phase6.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+RESEND:
+ - fix broken v3 due to rebasing
 
-diff --git a/repair/phase6.c b/repair/phase6.c
-index 063329636500..aa991bf76da6 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -288,19 +288,37 @@ dir_hash_done(
- 	free(hashtab);
+ repair/dir2.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/repair/dir2.c b/repair/dir2.c
+index b6a8a5c40ae4..c1d262fb1207 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -26,6 +26,7 @@ struct dir2_bad {
+ };
+ 
+ static struct dir2_bad	dir2_bad;
++pthread_mutex_t		dir2_bad_lock = PTHREAD_MUTEX_INITIALIZER;
+ 
+ static void
+ dir2_add_badlist(
+@@ -33,6 +34,7 @@ dir2_add_badlist(
+ {
+ 	xfs_ino_t	*itab;
+ 
++	pthread_mutex_lock(&dir2_bad_lock);
+ 	itab = realloc(dir2_bad.itab, (dir2_bad.nr + 1) * sizeof(xfs_ino_t));
+ 	if (!itab) {
+ 		do_error(
+@@ -42,18 +44,25 @@ _("malloc failed (%zu bytes) dir2_add_badlist:ino %" PRIu64 "\n"),
+ 	}
+ 	itab[dir2_bad.nr++] = ino;
+ 	dir2_bad.itab = itab;
++	pthread_mutex_unlock(&dir2_bad_lock);
  }
  
-+/*
-+ * Create a directory hash index structure based on the size of the directory we
-+ * are about to try to repair. The size passed in is the size of the data
-+ * segment of the directory in bytes, so we don't really know exactly how many
-+ * entries are in it. Hence assume an entry size of around 64 bytes - that's a
-+ * name length of 40+ bytes so should cover a most situations with large
-+ * really directories.
-+ */
- static struct dir_hash_tab *
- dir_hash_init(
- 	xfs_fsize_t		size)
+ bool
+ dir2_is_badino(
+ 	xfs_ino_t	ino)
  {
--	struct dir_hash_tab	*hashtab;
-+	struct dir_hash_tab	*hashtab = NULL;
- 	int			hsize;
+-	unsigned int i;
++	unsigned int	i;
++	bool		ret = false;
  
--	hsize = size / (16 * 4);
--	if (hsize > 65536)
--		hsize = 63336;
--	else if (hsize < 16)
-+	hsize = size / 64;
-+	if (hsize < 16)
- 		hsize = 16;
--	if ((hashtab = calloc(DIR_HASH_TAB_SIZE(hsize), 1)) == NULL)
-+
-+	/*
-+	 * Try to allocate as large a hash table as possible. Failure to
-+	 * allocate isn't fatal, it will just result in slower performance as we
-+	 * reduce the size of the table.
-+	 */
-+	while (hsize >= 16) {
-+		hashtab = calloc(DIR_HASH_TAB_SIZE(hsize), 1);
-+		if (hashtab)
+-	for (i = 0; i < dir2_bad.nr; ++i)
+-		if (dir2_bad.itab[i] == ino)
+-			return true;
+-	return false;
++	pthread_mutex_lock(&dir2_bad_lock);
++	for (i = 0; i < dir2_bad.nr; ++i) {
++		if (dir2_bad.itab[i] == ino) {
++			ret = true;
 +			break;
-+		hsize /= 2;
++		}
 +	}
-+	if (!hashtab)
- 		do_error(_("calloc failed in dir_hash_init\n"));
- 	hashtab->size = hsize;
- 	hashtab->byhash = (struct dir_hash_ent **)((char *)hashtab +
++	pthread_mutex_unlock(&dir2_bad_lock);
++	return ret;
+ }
+ 
+ /*
 -- 
 2.20.1
 
