@@ -2,65 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C327934EA63
+	by mail.lfdr.de (Postfix) with ESMTP id C14CE34EA62
 	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 16:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbhC3O0T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Mar 2021 10:26:19 -0400
-Received: from sonic316-54.consmr.mail.gq1.yahoo.com ([98.137.69.30]:40123
-        "EHLO sonic316-54.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232004AbhC3OZv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:25:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114351; bh=0DKaLMLKGPV4V7NUDw1i/Rk6USZIsGSOjxW+ihUu+eY=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Fox0ICOOc5TVGXqnZidlysbi8JDxQXBhGAbBhVqlepXwo+tKc4DLEZ9HcQMkqiHVPBNKVaTIzic4QkTyPKdGeQSK7s4Ih0RZl8lcyIRB+rnDSHx8X2eakFM6GlAEYtwLxxpQ27CR/iYs2FwUVBTMjBPbUtkOup8CS/UHwlkvs5BPnKYxT9d8v6dCyJnp0DrB7alFfECGGUUI4Qyo3tyEwC5KEF1h7AdsXpCW+wm03HMl76cm25/z0SigBuMSXDFCpO8TNuA9vHIETVPR0p3C0iu+Kgjn1do9vc+p3L0Q2ilkvVjj1mTWPNnnzEuNBrgRdL7ryMAeKldZdFSaYBEIjg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114351; bh=WexBFiXV8eIXzbxhmTlGjDVTiRsql6qBDWosGxTLJ94=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=ilJZ8wAQr/PNMfM4W/awMDnDRYa+u1Dl2/vXUwQBbDUXRcaR3TsaVBVJDuJdnowVTXPp/srwpR3rWEsuBwUt+M4dtdDp82v8dgOGAdtTlfrdjX2A3iRQ86taQihuC1pEQbnwfpdfpkTzIrNzwyAy1+YMxPe5IBFxiEwqQs2CXl2C06lZk4hpp1/qoQ4L6DUsiilbSR+2/EYxfDL76rbgUYkSdVjk1YRMWlfi+4jlrdHZUxF4faQGK7X54PotkQj3Q5GvLO0q5U55CGb0Nnt8fbgZ/8fXSdFKe0+n5uhs2lzOXetMhX2eOqvGApS0bE2EMHmOW2LvoEwn2psRJR30hQ==
-X-YMail-OSG: fKCERFQVM1kvjLrZquSZjVyoWdXUNZl2nKz00khBjO8osclEwgLPL8jneabzlHP
- O9Uc_R9hdOL8k0B956r1L6rQzWwe74LEvFMjC.B97gId8fUgnWp0U7UUqVtjQhRUktXmaENsl2XE
- Uz4v5QDE3MnTo1l.8N6uaI8VV9_Ld04unzeTnAvIPM6.tfzLwlo1Eu1aAK0r_k8lLdLRGCQ6aDxw
- fqLq84EzrU6O.NNYrBLla_ts6NduilJUHoOL_Uar15SS_MLBA9apEffCTKXt7sj8XeDTH2cn1tHg
- dEkJ4pDfBBoQJ.OecCZEfAN2tPEAFVuEr.YsYdVZttI6pGFlX2jXasuVfvUS.Ix8V.CPeQm.ufa1
- _BjunYsH8toh9JXeKuaD8daxP8L1qVzyGa6Vqai1yLwy2YZKtRpAost4wyQ7NIX2YPQfkyGIuKLF
- LzkreMmoV73hiyoYqzYa5HJsrwPqMcg0b6_moRegZT5bkGLq3OwhzX14nDsDQ6mv1pcK6MNdnEoQ
- o6or6twpXMoyAdFwogBXaWVY39MiiRnxaJ7gvbxTYeoRFiFReWkZoCLUyQUClKqelGtv5hOp58QZ
- L.7jKc5wvC5EvvNS4tPFnCUDYjBt1U6HuAlcdT3hakwjDSpc4uKJcuF7lT3ef2zh9_KHhfdBc6XX
- 8YGrFNGtkMSNO8NIGWv98L.xx0t_vrpwVpdihZSGPxGT3YpTwhtenyc_aIsgX8E.jsACsdGfVWcr
- xHzH7aORscql19GFfEVZ1rlhMFILs7hf6hbMNy8SPohn0zaOrAb4EF3GI1OK1lueOZ3fOUmBiuKb
- TqyUj3GWShJTTCilidEtxtjBqDpdkk3j.KtaNc9KFXnJI40MjVPT6wnL8ZWaNISmvyIlnh2UxVNI
- _Wo7uGXrezW9tzAAHhmy9O_xD_RDgGo9c2pp7Fp7VBmJ8wqekVuNSY.XZNWMES.Xwzn_I9uL8iPp
- .VXnOxhPpfWct2UlGUcT8qKrS8UUFMdfvba0qaNxixWp6vU3SX7uqi7Z1x8owRkY6_pre_liyKuD
- M1tv.ljSTiu.FSSPlZRy8PhP15GnfKF7FzEc4GX_PVeY0902jhqI9F.mlDbcY_zcNnO5YyBnVSC8
- Jjd2lAEbc9_ywJlXFl7MwzZQ8pUrR4YW8pVcXK4zMJl_s8T1hS3yQG6xtXOFl.pd7DK7u24m.lfa
- NuZbB_b6oe3rNh4fnY0LXwowli7VmYAN6LfY9CxmyTjtVTpHFmDTI319Ega9Wsp7Xmfz8xMW9Vo_
- CdHs9vDX1c9Ac9rFX84Ad.UHs5YPktBmfsfuO6weLuBsyereEhKD7Af2v_dd2n.gM4i1xgyu3Cw_
- rgJdomiYvPq9E0vyojc4d4k5uusKDoeIMfnA7XFkTTrbIeUucRmxoy1HTdtnRic7efcXhAcogaSE
- RTb_Jq_N67p3S.v.U2v3hWvDFs7sDq7LD0n.5rYI1DWetMa7RDZxbIDVt8ps9.a_aXcIDF8x.k6C
- t8wmDigGAJGEOQr5IWgGC.KQzQTJ2YPVRmuUtlvyi.x_ei79ob2mL7AHg6850mIlpnbagNp9XrtP
- kCdCyjVvLfqN9ih2UHWVtwr5hxB4WtM_saLmfGSJWjDDJbyus6R.F6yLwJK4WUx7vRRBt.FpaqhH
- gWV4Uc7.yhFq.spg_7arfpRU1nhklSBn.7fU7AtlI2MEtW61FjTjFzBj0T661mmEmniwT026nFLf
- vO1lEKUuHVxgoy553KYbRWcy18VP3HYes5Lbzq4dX2s7W9EWkBtqT9qEQ0Rf1ejLpH3HrJUA9uKl
- 78S8Sm8om8OdA0Vbxaaoh6m.yM6EIpr0h9x7retEzjSM3NU.YWeJ4yPEmXcIhxheQI_sYC0gd6EN
- IFPP8OByH1ewGD9jybrIA85auDdfnYGuZS01sBpHyo63H7TbUcTjsWxhUF7q9vhzgxxl2yBxymFl
- 42N8U4aqfs1r_57lCbAR49YG6DjtxT1U2zQ_4eJT.uX712CFXLGpa1x_mkFQYyqu.u8FZU5QFFJ1
- qsnP_JH34di2t4FZmBFVVLqw3E1HhpbjrIbfvijr5BeSFWUCw2Znnfbr4QnqSEOIAPPreopJ8GBB
- .R8oUvriP37VnQMjkfLsYE.0lEtmS5.oCfk0hWqLKv7NOrCSLqlxlZe9K.mMPx1gpOAnOm70xKG6
- uGyqTureN5p8zM3c4RgbcLtlxmG5hCNHgVWAsxjeZwgfwtlfo.MHKZdcZKvpPvagZBFEqGrODtDP
- JKjiNJJqoHbDbXAcyNkA.KB5c9dpYBcPR74ZNMuIFS5Y5ErskLB3sbI3KNQDyZC6haC5.Ys8_6FD
- yFTi72bmr.b3wQvGCBexTKcLXAX0lDuy634yvVLIKc3dqlxvK3HRfdsMhL2l1Y9Kal.20DIHd5L2
- 8Z3S55XYT3BpKbq4d5Z71bXQxlrHnYONcyE7gXVp3qsKp43MBEqGe0HrdWfTnCZKYcUrkUOSNdvZ
- XhJ9o4cA6ETw2c9Ns.Loepie.Qnt430rpM6K.PZYkXnKlL6h2PB6sTpU4TzToBc5u3_KBq1TmOTP
- 3dfVg1.WgPJ2IvDkpnoYQcnammWX3zl6zrzTOLpeKjwZwT1DWNzlo7T4SCu7mb22ABKwxWOGxl7i
- B.pJPgoFC7dXfUclBJltXvmZWgZvxk.o_95h8
+        id S231622AbhC3O0U (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Mar 2021 10:26:20 -0400
+Received: from sonic311-23.consmr.mail.gq1.yahoo.com ([98.137.65.204]:46708
+        "EHLO sonic311-23.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231918AbhC3OZz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 10:25:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1617114355; bh=g5Yh0t0Afn9bSkRtW+yjgi1tpm/Hm7TbP7PeiMhsdm8=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=GeQZMhaL8EuSovwlNBnEl4SRtIy1UzXJ2Q91G9Cb3xelHcCOQ2/j1HHiVQ5EgodClvQm/yTYJhy7jIzMQ+jRy0exUY0ONPosHg3PyfZBqL+ReLq7XnYZAiM2N1GY3g0smNSFnH8ebUkXTA8f3IpK8EQEytZsjzNwtOU8JGKqZFP+Q1Ohb7UOzigNZ6DLR6cAkaePx/mkBwugcoMkzs9nMKmOLH4HWH7Pm5L0DhxV02nE0ciY0xTVH4VfKSWqj6JLdmI2NfvwPBBQbztZijlTtdAgj0shWP6B0UHeEex1HEYOId/kZKwbu25xWU/dNMbWk0hnQXnuf7nfXyBTSn3AvA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1617114355; bh=aFDRp30xRtKwHe/nZkkSpjM1YJcKB9AxgIq9YKpgv8z=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=Uwf+xbmN+6MDc56MMTqJr5iteJyZxHRLns/ieXPTgFq08y/c16sWpg1w3QbFraMNa6u9N7vVJ/KQczclwxhQ3tKhxILe70LN6Tmu6BlB5tOwSlsxAm+5ZTIhg912NrADRYvLnX1eW5M2zwwnF3JCCjnX7rQUIbToiaHVVdVKn7hwqgvkn5DY8MMZkKlmb8fdBtn3zh5I6lgkLpMeSP+noDOO52vg23/L93G1N3Use7jNeDPVwaQQpHK6Zk/Gzr+T26LAAviQnV6N1m8LuZwPySPClaCv/LBII04zL1CeyluET6XBVHvhpt8lOi6di9Mx3xpvdPiYydHFuwZYPP6PIQ==
+X-YMail-OSG: X7hEIRYVM1mTaQET.MDNebYNTp1m974MY502dbhWFypx5RwSEjiLOQtnA4YXF6l
+ uDQE0Yj6f3PX1puTJlhCBQ.ittzodb6lZIDmA6qhnzXChURCLKm9tRFOQF0kDVoAsOvOoY7wd6.m
+ rlwH2ufw7adWcwD4ze3qwhGi9A5nxlzSXphqAXuzSeQQ0Rs0Ney1ZGWdpUnoMwDi2f6SIltbwLHC
+ EmBdXc656AwHTxhK_Ay599ukdjimodzSDXwOIhwGop5A9sii.FlUPDiW8OixWRrCdMLbfS_OPUrE
+ uVfDS_p.0GOt.lVW_2x7CbPWjxA51oYBslJ66FWIZcmqV93.T3wSeXBRRCXzaKQ4vzHFG89urwt2
+ 9eB6XBbhsx94Dupr06G0La59aHt6LaIobUONosFhaloyyfOLjbWp8vtefnk.2klRLj_l_aS9qazg
+ nwOvFf35U7go4w8.yr3NBdim19D4VAUJ_GFUJvIYdpIUeyroRbLuWoTvYdv_NCq6s2q1l6PdhpRM
+ JxEPyQP7rLQr2_q3QcgLOzNvZxmV7HLNKXnj.L1RStLb8v852GpspCzIYqqMps2UWosHwX3TV3Wu
+ V1SXR6_FRydDzMFa6ek40Npi5PAH3FHlrn3cpp3PdzGCFjhrssjgB8nUag9z3mBGG6qOVznN59eR
+ vRYAku6ULP9N5IvuYX01C9lXeLldlQAkFd1v.ZEsHKooIZmmf4la7_WGqxXROcOuOav394J4_VVv
+ ZfWTebVuEmy5A1V5LaDcUUlwJrCOGYxcKgXzVe8fcqqfTU6nFICv5388GSYc.BGoIulSVKVUtU3p
+ W91XR9uDgJ1ZR6jODHzJCCm2QTEF5Q63B2EoveYErC6JFDtKL5Gu9bCv0_m7mOVKeBWkohNaUoCJ
+ 2AOHVyRTD5rR0oAqDn50FdFKTWZWr8NhUGnXyzvV74D7x7rAWr5jjXvMphib3jhF8G9M3ZAWcYbx
+ MN.aGX4D2MHkSM6kqS6lTN8FXCR2nZMOJWVhmXcupslhE_XX8Kb4LZcyHhOqR3496wlT6Cfiop9T
+ kgtZLyORFDYSEeDT9BsSkYOR22tYflq.SIMNnAyqYawGJht3J2PFxP2rC4wBwS2maxluWSSlMGtW
+ CVoPwwpLv8b9K.q.FopkiX2OpRhzhQODbX9HLI3HQcbQJgl_wjjlapBbFV1nbli.JouSI0kcPnmx
+ _V5HkJ1PMQQunyIA31PV10wwVcC83H8uDB5LfDOfXJHj2AZI4U8z_0Gfqv4_6G5Lpijmlv8Khi1l
+ Q8H3JhJusYHNodVWVLrxCOs53e5QUhtHrE6jNfvSJzWqC8NDRf6cvjWl.SsMrbg2pestUE9K3g2W
+ y0hnTf0J5rQvSVnuG2A62Tqz3lV1qIqqHdW3cASinTQZ_oYTaTa2mxAhNAe7wj3NGFAynlx6Yog6
+ 7FfKb4E1LZH9Hq4G54vbacr95rfu.dzPvvIf40Na8lhmvSX2.m1RRpgG9TY8DPoPljw2yuWdrSVn
+ yJiU38ruI9HormtbImKYE3RPwa54kFDfWvKqNw5tKSkNhkgxENFBQzh8Jb7xMHzwBEMnmNL_CISB
+ wIGI2FHsIrA8Ot.ZVTgKzGPwdDW.3z6pi1h6_ReUXCfFQnppxcgC_GqZ_iDqnr272w9C3gb6Su5O
+ j1ZdV9sQHyUKhY6sAZZS3JkDdYXTVkeGfks_ojutgAndJyEjkb_WQqPbmnmt9RCBNUUiNQqY2ZbH
+ aAv02InWxaZwiyMIRy_6Q6Uo3i56tFQaKGFRZs..sR79EmQqCUguYKN5vcXlfLCAGmSbDqb_fjdK
+ I1C8lAzjvGtbWeF18B8Gtgg.YhMxgV3NB2DfrqHVyN3ar3MTEpb.vV3STeniwUwwGLZdGn_58qZI
+ K0YGnKpmNv90iYu9ipJY7QFTPLZwEhnKaqciq22vOZNPvqvms_4r9i6dFdOlZZ3ETzbs2Se9MfqJ
+ V46icTa889UAn38.r2H9jFr1j3Gc9yMFq.MBDtrRTarnIrZjqmnBaz8oDRl584aXYBxu3b4TjIJi
+ bWMLW7Y8Nxa75ZSmFViG1VTHgZ5vd9Oz7Vc7hSdOEHdHxeQBJJNEZBWU_mMC3LrqbNlQLCH.p8r_
+ eBJwfzM4bDVyb1vxpUWDwa5YQ1NWXKpVCX8w8QJK34UpEEYAfpJLK.SH2ezc4fJX0TOc.GaCkqHI
+ OJmjRuHqcyox.nGuVPZ.sfjtL1IHVXN7XRPBjYHh2dNp_QX3_fbo5dKdc3s7vHh0h2yX1gMH46tb
+ tM0oS71UFp4S0hSXZKJ46WVcgcC5VtuPod5uAdQjA1Y6haylIcbCtHBa4n1UuQmQSQ4A6Jnj2OeB
+ zUmk2ufny5bqjzffMrvKCD6x1nC9I_dHrtYcT7u9qWhEcR403ZJdTVh9KLj.Ra0En5.CPznw2Eur
+ Cu0__DtCfsl9UbQyVjnz_sBRulJnG7r8Y7acIxJu1BY8Vm_n48UadnGr5bfLmSBJY3NguGFD2gtz
+ q47Imp.mMe3RpcROBQudnRu4ad7m.b4jgEScQGVLGSMP5Kj5VcpbYTrV9TdaeQqKBKF1Ibr0Mf3f
+ qd1Xot7nmvG4QuPI33Mj9nBNE.M_eVc.L2gRCUaKbkiKB43iRF.sc9FSv9SrUa_pFD08X42lYyrg
+ QAP8FABMmnANOoxghZEeoigFVCORWmIbrgtT9VJUXSw--
 X-Sonic-MF: <hsiangkao@aol.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:25:51 +0000
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.gq1.yahoo.com with HTTP; Tue, 30 Mar 2021 14:25:55 +0000
 Received: by kubenode575.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID d17ac850f756223f45b54c36ad526fbe;
-          Tue, 30 Mar 2021 14:25:47 +0000 (UTC)
+          Tue, 30 Mar 2021 14:25:50 +0000 (UTC)
 From:   Gao Xiang <hsiangkao@aol.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Dave Chinner <dchinner@redhat.com>,
         "Darrick J . Wong" <djwong@kernel.org>,
         Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH v3 2/8] workqueue: bound maximum queue depth
-Date:   Tue, 30 Mar 2021 22:25:25 +0800
-Message-Id: <20210330142531.19809-3-hsiangkao@aol.com>
+Subject: [PATCH v3 3/8] repair: Protect bad inode list with mutex
+Date:   Tue, 30 Mar 2021 22:25:26 +0800
+Message-Id: <20210330142531.19809-4-hsiangkao@aol.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210330142531.19809-1-hsiangkao@aol.com>
 References: <20210330142531.19809-1-hsiangkao@aol.com>
@@ -72,157 +72,68 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Existing users of workqueues have bound maximum queue depths in
-their external algorithms (e.g. prefetch counts). For parallelising
-work that doesn't have an external bound, allow workqueues to
-throttle incoming requests at a maximum bound. Bounded workqueues
-also need to distribute work over all worker threads themselves as
-there is no external bounding or worker function throttling
-provided.
-
-Existing callers are not throttled and retain direct control of
-worker threads, only users of the new create interface will be
-throttled and concurrency managed.
+To enable phase 6 parallelisation, we need to protect the bad inode
+list from concurrent modification and/or access. Wrap it with a
+mutex and clean up the nasty typedefs.
 
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 ---
- libfrog/workqueue.c | 42 +++++++++++++++++++++++++++++++++++++++---
- libfrog/workqueue.h |  4 ++++
- 2 files changed, 43 insertions(+), 3 deletions(-)
+ repair/dir2.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/libfrog/workqueue.c b/libfrog/workqueue.c
-index fe3de4289379..8c1a163e145f 100644
---- a/libfrog/workqueue.c
-+++ b/libfrog/workqueue.c
-@@ -40,13 +40,21 @@ workqueue_thread(void *arg)
- 		}
- 
- 		/*
--		 *  Dequeue work from the head of the list.
-+		 *  Dequeue work from the head of the list. If the queue was
-+		 *  full then send a wakeup if we're configured to do so.
- 		 */
- 		assert(wq->item_count > 0);
-+		if (wq->max_queued)
-+			pthread_cond_broadcast(&wq->queue_full);
-+
- 		wi = wq->next_item;
- 		wq->next_item = wi->next;
- 		wq->item_count--;
- 
-+		if (wq->max_queued && wq->next_item) {
-+			/* more work, wake up another worker */
-+			pthread_cond_signal(&wq->wakeup);
-+		}
- 		pthread_mutex_unlock(&wq->lock);
- 
- 		(wi->function)(wi->queue, wi->index, wi->arg);
-@@ -58,10 +66,11 @@ workqueue_thread(void *arg)
- 
- /* Allocate a work queue and threads.  Returns zero or negative error code. */
- int
--workqueue_create(
-+workqueue_create_bound(
- 	struct workqueue	*wq,
- 	void			*wq_ctx,
--	unsigned int		nr_workers)
-+	unsigned int		nr_workers,
-+	unsigned int		max_queue)
- {
- 	unsigned int		i;
- 	int			err = 0;
-@@ -70,12 +79,16 @@ workqueue_create(
- 	err = -pthread_cond_init(&wq->wakeup, NULL);
- 	if (err)
- 		return err;
-+	err = -pthread_cond_init(&wq->queue_full, NULL);
-+	if (err)
-+		goto out_wake;
- 	err = -pthread_mutex_init(&wq->lock, NULL);
- 	if (err)
- 		goto out_cond;
- 
- 	wq->wq_ctx = wq_ctx;
- 	wq->thread_count = nr_workers;
-+	wq->max_queued = max_queue;
- 	wq->threads = malloc(nr_workers * sizeof(pthread_t));
- 	if (!wq->threads) {
- 		err = -errno;
-@@ -102,10 +115,21 @@ workqueue_create(
- out_mutex:
- 	pthread_mutex_destroy(&wq->lock);
- out_cond:
-+	pthread_cond_destroy(&wq->queue_full);
-+out_wake:
- 	pthread_cond_destroy(&wq->wakeup);
- 	return err;
- }
- 
-+int
-+workqueue_create(
-+	struct workqueue	*wq,
-+	void			*wq_ctx,
-+	unsigned int		nr_workers)
-+{
-+	return workqueue_create_bound(wq, wq_ctx, nr_workers, 0);
-+}
-+
- /*
-  * Create a work item consisting of a function and some arguments and schedule
-  * the work item to be run via the thread pool.  Returns zero or a negative
-@@ -140,6 +164,7 @@ workqueue_add(
- 
- 	/* Now queue the new work structure to the work queue. */
- 	pthread_mutex_lock(&wq->lock);
-+restart:
- 	if (wq->next_item == NULL) {
- 		assert(wq->item_count == 0);
- 		ret = -pthread_cond_signal(&wq->wakeup);
-@@ -150,6 +175,16 @@ workqueue_add(
- 		}
- 		wq->next_item = wi;
- 	} else {
-+		/* throttle on a full queue if configured */
-+		if (wq->max_queued && wq->item_count == wq->max_queued) {
-+			pthread_cond_wait(&wq->queue_full, &wq->lock);
-+			/*
-+			 * Queue might be empty or even still full by the time
-+			 * we get the lock back, so restart the lookup so we do
-+			 * the right thing with the current state of the queue.
-+			 */
-+			goto restart;
-+		}
- 		wq->last_item->next = wi;
- 	}
- 	wq->last_item = wi;
-@@ -201,5 +236,6 @@ workqueue_destroy(
- 	free(wq->threads);
- 	pthread_mutex_destroy(&wq->lock);
- 	pthread_cond_destroy(&wq->wakeup);
-+	pthread_cond_destroy(&wq->queue_full);
- 	memset(wq, 0, sizeof(*wq));
- }
-diff --git a/libfrog/workqueue.h b/libfrog/workqueue.h
-index a56d1cf14081..a9c108d0e66a 100644
---- a/libfrog/workqueue.h
-+++ b/libfrog/workqueue.h
-@@ -31,10 +31,14 @@ struct workqueue {
- 	unsigned int		thread_count;
- 	bool			terminate;
- 	bool			terminated;
-+	int			max_queued;
-+	pthread_cond_t		queue_full;
+diff --git a/repair/dir2.c b/repair/dir2.c
+index b6a8a5c40ae4..c1d262fb1207 100644
+--- a/repair/dir2.c
++++ b/repair/dir2.c
+@@ -26,6 +26,7 @@ struct dir2_bad {
  };
  
- int workqueue_create(struct workqueue *wq, void *wq_ctx,
- 		unsigned int nr_workers);
-+int workqueue_create_bound(struct workqueue *wq, void *wq_ctx,
-+		unsigned int nr_workers, unsigned int max_queue);
- int workqueue_add(struct workqueue *wq, workqueue_func_t fn,
- 		uint32_t index, void *arg);
- int workqueue_terminate(struct workqueue *wq);
+ static struct dir2_bad	dir2_bad;
++pthread_mutex_t		dir2_bad_lock = PTHREAD_MUTEX_INITIALIZER;
+ 
+ static void
+ dir2_add_badlist(
+@@ -33,6 +34,7 @@ dir2_add_badlist(
+ {
+ 	xfs_ino_t	*itab;
+ 
++	pthread_mutex_lock(&dir2_bad_lock);
+ 	itab = realloc(dir2_bad.itab, (dir2_bad.nr + 1) * sizeof(xfs_ino_t));
+ 	if (!ino) {
+ 		do_error(
+@@ -42,18 +44,25 @@ _("malloc failed (%zu bytes) dir2_add_badlist:ino %" PRIu64 "\n"),
+ 	}
+ 	itab[dir2_bad.nr++] = ino;
+ 	dir2_bad.itab = itab;
++	pthread_mutex_unlock(&dir2_bad_lock);
+ }
+ 
+ bool
+ dir2_is_badino(
+ 	xfs_ino_t	ino)
+ {
+-	unsigned int i;
++	unsigned int	i;
++	bool		ret = false;
+ 
+-	for (i = 0; i < dir2_bad.nr; ++i)
+-		if (dir2_bad.itab[i] == ino)
+-			return true;
+-	return false;
++	pthread_mutex_lock(&dir2_bad_lock);
++	for (i = 0; i < dir2_bad.nr; ++i) {
++		if (dir2_bad.itab[i] == ino) {
++			ret = true;
++			break;
++		}
++	}
++	pthread_mutex_unlock(&dir2_bad_lock);
++	return ret;
+ }
+ 
+ /*
 -- 
 2.20.1
 
