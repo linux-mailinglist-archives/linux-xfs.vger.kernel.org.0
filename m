@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B86034E0AE
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 07:32:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CFC834E0B1
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Mar 2021 07:32:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbhC3Fbe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S229569AbhC3Fbe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 30 Mar 2021 01:31:34 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:55909 "EHLO
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:55901 "EHLO
         mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230223AbhC3FbD (ORCPT
+        by vger.kernel.org with ESMTP id S229675AbhC3FbD (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Mar 2021 01:31:03 -0400
 Received: from dread.disaster.area (pa49-181-239-12.pa.nsw.optusnet.com.au [49.181.239.12])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 567641AE80A
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 566911AE866
         for <linux-xfs@vger.kernel.org>; Tue, 30 Mar 2021 16:31:02 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lR6xx-008N4Z-C9
+        id 1lR6xx-008N4f-Cn
         for linux-xfs@vger.kernel.org; Tue, 30 Mar 2021 16:31:01 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lR6xx-005cnk-4b
+        id 1lR6xx-005cnn-5T
         for linux-xfs@vger.kernel.org; Tue, 30 Mar 2021 16:31:01 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/4] xfs: inode fork allocation depends on XFS_IFEXTENT flag
-Date:   Tue, 30 Mar 2021 16:30:57 +1100
-Message-Id: <20210330053059.1339949-3-david@fromorbit.com>
+Subject: [PATCH 3/4] xfs: default attr fork size does not handle device inodes
+Date:   Tue, 30 Mar 2021 16:30:58 +1100
+Message-Id: <20210330053059.1339949-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20210330053059.1339949-1-david@fromorbit.com>
 References: <20210330053059.1339949-1-david@fromorbit.com>
@@ -36,70 +36,58 @@ Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0 cx=a_idp_x
         a=gO82wUwQTSpaJfP49aMSow==:117 a=gO82wUwQTSpaJfP49aMSow==:17
-        a=dESyimp9J3IA:10 a=20KFwNOVAAAA:8 a=BYqOHQL4v3tMcFTdoaQA:9
+        a=dESyimp9J3IA:10 a=20KFwNOVAAAA:8 a=ugXx5VFp5meXLuiaRXkA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-XFS_IFEXTENT has two incompatible meanings to the code. The first
-meaning is that the fork is in extent format, the second meaning is
-that the extent list has been read into memory.
-
-When the inode fork is in extent format, we automatically read the
-extent list into memory and indexed by the inode extent btree when
-the inode is brought into memory off disk. Hence we set the flag to
-mean both "in extent format and in memory". That requires all new
-fork allocations where the default state is "extent format with zero
-extents" to set the XFS_IFEXTENT to indicate we've initialised the
-in-memory state even though we've really done no such thing.
-
-This fixes a scrub regression because it assumes XFS_IFEXTENT means
-"on disk format" and not "read into memory" and e6a688c33238 assumed
-it mean "read into memory". In reality, the XFS_IFEXTENT flag needs
-to be split up into two flags - one for the on disk fork format and
-one for the in-memory "extent btree has been populated" state.
+Device inodes have a non-default data fork size of 8 bytes
+as checked/enforced by xfs_repair. xfs_default_attroffset() doesn't
+handle this, so lets do a minor refactor so it does.
 
 Fixes: e6a688c33238 ("xfs: initialise attr fork on inode create")
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c       | 1 -
- fs/xfs/libxfs/xfs_inode_fork.c | 9 +++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_bmap.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 5574d345d066..2f72849c05f9 100644
+index 2f72849c05f9..16c8730c140f 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -1095,7 +1095,6 @@ xfs_bmap_add_attrfork(
- 	ASSERT(ip->i_afp == NULL);
+@@ -195,6 +195,9 @@ xfs_default_attroffset(
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	uint			offset;
  
- 	ip->i_afp = xfs_ifork_alloc(XFS_DINODE_FMT_EXTENTS, 0);
--	ip->i_afp->if_flags = XFS_IFEXTENTS;
- 	logflags = 0;
- 	switch (ip->i_df.if_format) {
- 	case XFS_DINODE_FMT_LOCAL:
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 1851d6f266d0..03e1a21848eb 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -292,6 +292,15 @@ xfs_ifork_alloc(
- 	ifp = kmem_cache_zalloc(xfs_ifork_zone, GFP_NOFS | __GFP_NOFAIL);
- 	ifp->if_format = format;
- 	ifp->if_nextents = nextents;
++	if (ip->i_df.if_format == XFS_DINODE_FMT_DEV)
++		return roundup(sizeof(xfs_dev_t), 8);
 +
-+	/*
-+	 * If this is a caller initialising a newly created fork, we need to
-+	 * set XFS_IFEXTENTS to indicate the fork state is completely up to
-+	 * date. Otherwise it is up to the caller to initialise the in-memory
-+	 * state of the inode fork from the on-disk state.
-+	 */
-+	if (format == XFS_DINODE_FMT_EXTENTS && nextents == 0)
-+		ifp->if_flags |= XFS_IFEXTENTS;
- 	return ifp;
- }
- 
+ 	if (mp->m_sb.sb_inodesize == 256)
+ 		offset = XFS_LITINO(mp) - XFS_BMDR_SPACE_CALC(MINABTPTRS);
+ 	else
+@@ -1036,16 +1039,18 @@ xfs_bmap_set_attrforkoff(
+ 	int			size,
+ 	int			*version)
+ {
++	int			default_size = xfs_default_attroffset(ip) >> 3;
++
+ 	switch (ip->i_df.if_format) {
+ 	case XFS_DINODE_FMT_DEV:
+-		ip->i_d.di_forkoff = roundup(sizeof(xfs_dev_t), 8) >> 3;
++		ip->i_d.di_forkoff = default_size;
+ 		break;
+ 	case XFS_DINODE_FMT_LOCAL:
+ 	case XFS_DINODE_FMT_EXTENTS:
+ 	case XFS_DINODE_FMT_BTREE:
+ 		ip->i_d.di_forkoff = xfs_attr_shortform_bytesfit(ip, size);
+ 		if (!ip->i_d.di_forkoff)
+-			ip->i_d.di_forkoff = xfs_default_attroffset(ip) >> 3;
++			ip->i_d.di_forkoff = default_size;
+ 		else if ((ip->i_mount->m_flags & XFS_MOUNT_ATTR2) && version)
+ 			*version = 2;
+ 		break;
 -- 
 2.31.0
 
