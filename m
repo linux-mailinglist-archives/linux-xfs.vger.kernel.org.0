@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AED5B34F5B7
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Mar 2021 03:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3D434F5B9
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Mar 2021 03:09:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbhCaBIR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Mar 2021 21:08:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41798 "EHLO mail.kernel.org"
+        id S232900AbhCaBIu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Mar 2021 21:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232401AbhCaBIM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 30 Mar 2021 21:08:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B08E619C1;
-        Wed, 31 Mar 2021 01:08:12 +0000 (UTC)
+        id S232126AbhCaBIS (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 30 Mar 2021 21:08:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D8E46190A;
+        Wed, 31 Mar 2021 01:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617152892;
-        bh=C3LMpm9/bbFKDjD+2lRl6JMrfRT6cK64OYeo4Zre+2w=;
+        s=k20201202; t=1617152898;
+        bh=CJ82AbyQcnYPHSdtrUNRy/iC/R95GeMCEQatDDi/F5M=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HwYN13ieknTe4veyfvpifMa/fpylxboj0DCJFU4eJvXsowsLu7oxeZmnpN1G0ml3U
-         o1WtYYfp9fvS+t60jepU4ySt+BCyvj1HLk5ITdR/dKYJeTqL331J6i3d9R0qJlTyYH
-         eKr/EwV+vg1lixDRk6ISz6tI9ZNNuisdBPTUokjTrtJjpEcu/DPCwLEd5XeKu1SQOP
-         zZK7FhOPGibv0Iyo3EiSC7zx5qfbJpKn1wereJLqeKmeuyt4EnPg4LZ8qCjM+tSHCO
-         Kjbi2MPZkGHPQpKkGi/3JP9DyaEey4/WoDN2ANXNdbVtWBlp3qOTqavl5IpXQpecy1
-         57bI1shpftaCA==
-Subject: [PATCH 1/3] common/xfs: support realtime devices with
- _scratch_xfs_admin
+        b=A7Pd9sCnk0TJlR35bA9djZ2NG+aIj8DuVgKsu1LwAlx0DG6aMi2/lKWHCr5CtpN5M
+         r/pyX15qszt9wn1RWLdGIF1hywu/hQNgsCVIYEKLa/aFM+5GxSRKxaUkU2QhTYRmez
+         895aEbM+Hdpo9L5hsgSkowm7AB4HGcWUEzdgvVBWyBo6FOi4uPFBEaVixsrapT/fn9
+         z3mfJh8bUYzwmgWDX8umBWqbAwVwpffFgRngb3w3u4OhogSItb7jXK+zEdyDys3tGm
+         7I5ZVBq4Q/+2q2qrZ1f4QGWbYHNlP2lodKgz1B10AjBCRvLR8Qr/mrm4jBtau7D5BN
+         UhIUxtnTj8ODQ==
+Subject: [PATCH 2/3] common/xfs: work around a hang-on-stdin bug in xfs_admin
+ 5.11
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 30 Mar 2021 18:08:10 -0700
-Message-ID: <161715289029.2703773.9509352442264553944.stgit@magnolia>
+Date:   Tue, 30 Mar 2021 18:08:15 -0700
+Message-ID: <161715289578.2703773.11659648563859531836.stgit@magnolia>
 In-Reply-To: <161715288469.2703773.13448230101596914371.stgit@magnolia>
 References: <161715288469.2703773.13448230101596914371.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,9 +42,11 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach _scratch_xfs_admin to support passing the realtime device to
-xfs_admin so that we can actually test xfs_admin functionality with
-those setups.
+xfs_admin in xfsprogs 5.11 has a bug wherein a caller who specifies an
+external log device forces xfs_db to be invoked, potentially with zero
+command arguments.  When this happens, xfs_db will wait for input on
+stdin, which causes fstests to hang.  Since xfs_admin is not an
+interactive tool, redirect stdin from /dev/null to prevent this issue.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
@@ -53,23 +55,21 @@ Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 
 
 diff --git a/common/xfs b/common/xfs
-index 69f76d6e..189da54b 100644
+index 189da54b..c97e08ba 100644
 --- a/common/xfs
 +++ b/common/xfs
-@@ -269,9 +269,15 @@ _test_xfs_db()
- _scratch_xfs_admin()
- {
- 	local options=("$SCRATCH_DEV")
-+	local rt_opts=()
- 	[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
- 		options+=("$SCRATCH_LOGDEV")
--	$XFS_ADMIN_PROG "$@" "${options[@]}"
-+	if [ "$USE_EXTERNAL" = yes ] && [ -n "$SCRATCH_RTDEV" ]; then
-+		$XFS_ADMIN_PROG --help 2>&1 | grep -q 'rtdev' || \
-+			_notrun 'xfs_admin does not support rt devices'
-+		rt_opts+=(-r "$SCRATCH_RTDEV")
-+	fi
-+	$XFS_ADMIN_PROG "${rt_opts[@]}" "$@" "${options[@]}"
+@@ -277,7 +277,13 @@ _scratch_xfs_admin()
+ 			_notrun 'xfs_admin does not support rt devices'
+ 		rt_opts+=(-r "$SCRATCH_RTDEV")
+ 	fi
+-	$XFS_ADMIN_PROG "${rt_opts[@]}" "$@" "${options[@]}"
++
++	# xfs_admin in xfsprogs 5.11 has a bug where an external log device
++	# forces xfs_db to be invoked, potentially with zero command arguments.
++	# When this happens, xfs_db will wait for input on stdin, which causes
++	# fstests to hang.  Since xfs_admin is not an interactive tool, we
++	# can redirect stdin from /dev/null to prevent this issue.
++	$XFS_ADMIN_PROG "${rt_opts[@]}" "$@" "${options[@]}" < /dev/null
  }
  
  _scratch_xfs_logprint()
