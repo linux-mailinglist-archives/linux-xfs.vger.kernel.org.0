@@ -2,176 +2,291 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D0F534F5C2
-	for <lists+linux-xfs@lfdr.de>; Wed, 31 Mar 2021 03:09:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BAB234F611
+	for <lists+linux-xfs@lfdr.de>; Wed, 31 Mar 2021 03:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233009AbhCaBJY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Mar 2021 21:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42506 "EHLO mail.kernel.org"
+        id S232905AbhCaBQu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Mar 2021 21:16:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233018AbhCaBJH (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 30 Mar 2021 21:09:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6E09661953;
-        Wed, 31 Mar 2021 01:09:07 +0000 (UTC)
+        id S232956AbhCaBQa (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Tue, 30 Mar 2021 21:16:30 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 1F591619D9
+        for <linux-xfs@vger.kernel.org>; Wed, 31 Mar 2021 01:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617152947;
-        bh=QbBo63TUrO5vkfeagbc7quVE29dg/RQI44IJK4tIwu4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TXtoNdzre6q5qLUL1easOJXPvI7V+OzzuI7X1rdo4hvUud1adaZs+jzo4nGdr8SKV
-         XAdsk5XtpyGBtT/hTrxUZ3WA3u0iPf+l+6PBOM/iTrEz3ACTfI2CTFqiNja+BKny8G
-         FNzPIU3WMpJBYBNI9OynIIBelNmo+cLoTRHWmrfN/q6eqU9+hUNXKSKt+J7XQmpe0y
-         j01LCwtWLA1172fffea4UXTnlSPduxVTWLi9Deo3SQf0qNQ6WSNyOrmJN73d06zzct
-         Y/h2m+SclCc0j3LKOUtxCuc52RPchhZd7ibZBsUxjdlkQ6p555KvykQAFBWIU6ET3v
-         Ojiw8cKJn5fIw==
-Subject: [PATCH 1/1] xfs/23[12]: abstractify the XFS cow prealloc trimming
- interval
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 30 Mar 2021 18:09:05 -0700
-Message-ID: <161715294506.2704105.18365101912825541162.stgit@magnolia>
-In-Reply-To: <161715293961.2704105.12379656102061134645.stgit@magnolia>
-References: <161715293961.2704105.12379656102061134645.stgit@magnolia>
-User-Agent: StGit/0.19
+        s=k20201202; t=1617153390;
+        bh=vNh9PaIgNNh25551ENzqSMHgWGi7R4YrLW1Zwrmmj/E=;
+        h=From:To:Subject:Date:From;
+        b=dfa7mEZZj9zUJFYSykfKwxI31DT/fvNx3TpzCrQA7N31/qoevTYrOSmK/uZrx/f7L
+         86w6rrXKkRnKXzv+/sIwOKUuKq81Kv9q84UszHVyr7/KcWzEwG0TR4q3wIlaXDnPzx
+         iveHEOBbBcsfHCySuvy5SmBpA0p0FJ6iMPY5YA6bAyZph/8ncrsfsX2hOryKWa3n6L
+         8kq2k8X8KFB04ugNAZKIUl0A36DVEJEJCKKsd/QjkC73fVr9bKMh72K26B0GaMoJf8
+         14sky7ZAw6OhK40KYm5uyYa4YbvXTGupxekFXvr5P50GOpDYPUPVTC7hYOHVu0dfgv
+         PyxLoE7+zdHTA==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id 1C2B262AB9; Wed, 31 Mar 2021 01:16:30 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 212495] New: xfs: system crash caused by null bp->b_pages
+Date:   Wed, 31 Mar 2021 01:16:29 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: high
+X-Bugzilla-Who: zp_8483@163.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression
+Message-ID: <bug-212495-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+https://bugzilla.kernel.org/show_bug.cgi?id=3D212495
 
-Create a couple of helper functions to get and set the XFS copy on write
-preallocation garbage collection interval.
+            Bug ID: 212495
+           Summary: xfs: system crash caused by null bp->b_pages
+           Product: File System
+           Version: 2.5
+    Kernel Version: 3.10
+          Hardware: Intel
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: high
+          Priority: P1
+         Component: XFS
+          Assignee: filesystem_xfs@kernel-bugs.kernel.org
+          Reporter: zp_8483@163.com
+        Regression: No
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- common/xfs    |   23 +++++++++++++++++++++++
- tests/xfs/231 |   13 +++++++------
- tests/xfs/232 |   13 +++++++------
- 3 files changed, 37 insertions(+), 12 deletions(-)
+We have encountered the following problems several times:
+    1=E3=80=81Hardware problem causes block device loss.
+    2=E3=80=81Continue to send IO requests to the block device.
+    3=E3=80=81The system possibly crash after a few hours.
 
 
-diff --git a/common/xfs b/common/xfs
-index c430b3ac..ade76d5a 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -1165,3 +1165,26 @@ _require_xfs_scratch_bigtime()
- 		_notrun "bigtime feature not advertised on mount?"
- 	_scratch_unmount
- }
-+
-+__xfs_cowgc_interval_knob1="/proc/sys/fs/xfs/speculative_cow_prealloc_lifetime"
-+__xfs_cowgc_interval_knob2="/proc/sys/fs/xfs/speculative_prealloc_lifetime"
-+
-+_xfs_set_cowgc_interval() {
-+	if [ -w $__xfs_cowgc_interval_knob1 ]; then
-+		echo "$@" > $__xfs_cowgc_interval_knob1
-+	elif [ -w $__xfs_cowgc_interval_knob2 ]; then
-+		echo "$@" > $__xfs_cowgc_interval_knob2
-+	else
-+		_fail "Can't find cowgc interval procfs knob?"
-+	fi
-+}
-+
-+_xfs_get_cowgc_interval() {
-+	if [ -w $__xfs_cowgc_interval_knob1 ]; then
-+		cat $__xfs_cowgc_interval_knob1
-+	elif [ -w $__xfs_cowgc_interval_knob2 ]; then
-+		cat $__xfs_cowgc_interval_knob2
-+	else
-+		_fail "Can't find cowgc interval procfs knob?"
-+	fi
-+}
-diff --git a/tests/xfs/231 b/tests/xfs/231
-index 5930339d..119a71bb 100755
---- a/tests/xfs/231
-+++ b/tests/xfs/231
-@@ -22,9 +22,10 @@ trap "_cleanup; exit \$status" 0 1 2 3 15
- 
- _cleanup()
- {
--    cd /
--    echo $old_cow_lifetime > /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime
--    rm -rf $tmp.*
-+	cd /
-+	test -n "$old_cowgc_interval" && \
-+		_xfs_set_cowgc_interval $old_cowgc_interval
-+	rm -rf $tmp.*
- }
- 
- # get standard environment, filters and checks
-@@ -40,7 +41,7 @@ _require_xfs_io_command "cowextsize"
- _require_xfs_io_command "falloc"
- _require_xfs_io_command "fiemap"
- 
--old_cow_lifetime=$(cat /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime)
-+old_cowgc_interval=$(_xfs_get_cowgc_interval)
- 
- rm -f $seqres.full
- 
-@@ -74,7 +75,7 @@ md5sum $testdir/file2 | _filter_scratch
- md5sum $testdir/file2.chk | _filter_scratch
- 
- echo "CoW and leave leftovers"
--echo 2 > /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime
-+_xfs_set_cowgc_interval 2
- seq 2 2 $((nr - 1)) | while read f; do
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f - 1)) 1" $testdir/file2 >> $seqres.full
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f - 1)) 1" $testdir/file2.chk >> $seqres.full
-@@ -91,7 +92,7 @@ done
- $XFS_IO_PROG -f -c "falloc 0 $filesize" $testdir/junk >> $seqres.full
- 
- echo "CoW and leave leftovers"
--echo $old_cow_lifetime > /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime
-+_xfs_set_cowgc_interval $old_cowgc_interval
- seq 2 2 $((nr - 1)) | while read f; do
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f)) 1" $testdir/file2 >> $seqres.full
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f)) 1" $testdir/file2.chk >> $seqres.full
-diff --git a/tests/xfs/232 b/tests/xfs/232
-index e56eb3aa..909f921c 100755
---- a/tests/xfs/232
-+++ b/tests/xfs/232
-@@ -23,9 +23,10 @@ trap "_cleanup; exit \$status" 0 1 2 3 15
- 
- _cleanup()
- {
--    cd /
--    echo $old_cow_lifetime > /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime
--    rm -rf $tmp.*
-+	cd /
-+	test -n "$old_cowgc_interval" && \
-+		_xfs_set_cowgc_interval $old_cowgc_interval
-+	rm -rf $tmp.*
- }
- 
- # get standard environment, filters and checks
-@@ -41,7 +42,7 @@ _require_cp_reflink
- _require_xfs_io_command "falloc"
- _require_xfs_io_command "fiemap"
- 
--old_cow_lifetime=$(cat /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime)
-+old_cowgc_interval=$(_xfs_get_cowgc_interval)
- 
- rm -f $seqres.full
- 
-@@ -75,7 +76,7 @@ md5sum $testdir/file2 | _filter_scratch
- md5sum $testdir/file2.chk | _filter_scratch
- 
- echo "CoW and leave leftovers"
--echo 2 > /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime
-+_xfs_set_cowgc_interval 2
- seq 2 2 $((nr - 1)) | while read f; do
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f - 1)) 1" $testdir/file2 >> $seqres.full
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f - 1)) 1" $testdir/file2.chk >> $seqres.full
-@@ -93,7 +94,7 @@ done
- $XFS_IO_PROG -f -c "falloc 0 $filesize" $testdir/junk >> $seqres.full
- 
- echo "CoW and leave leftovers"
--echo $old_cow_lifetime > /proc/sys/fs/xfs/speculative_cow_prealloc_lifetime
-+_xfs_set_cowgc_interval $old_cowgc_interval
- seq 2 2 $((nr - 1)) | while read f; do
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f)) 1" $testdir/file2 >> $seqres.full
- 	$XFS_IO_PROG -f -c "pwrite -S 0x63 $((blksz * f)) 1" $testdir/file2.chk >> $seqres.full
 
+
+15205901.386974] RIP: 0010:xfs_buf_offset+0x32/0x60 [xfs]
+[15205901.388044] RSP: 0018:ffffb28ba9b3bc68 EFLAGS: 00010246
+[15205901.389021] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
+000000000000000b
+[15205901.390016] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+ffff88627bebf000
+[15205901.391075] RBP: ffffb28ba9b3bc98 R08: ffff88627bebf000 R09:
+00000001802a000d
+[15205901.392031] R10: ffff88521f3a0240 R11: ffff88627bebf000 R12:
+ffff88521041e000
+[15205901.392950] R13: 0000000000000020 R14: ffff88627bebf000 R15:
+0000000000000000
+[15205901.393858] FS: 0000000000000000(0000) GS:ffff88521f380000(0000)
+knlGS:0000000000000000
+[15205901.394774] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[15205901.395756] CR2: 0000000000000000 CR3: 000000099bc09001 CR4:
+00000000007606e0
+[15205901.396904] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000
+[15205901.397869] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400
+[15205901.398836] PKRU: 55555554
+[15205901.400111] Call Trace:
+[15205901.401058] ? xfs_inode_buf_verify+0x8e/0xf0 [xfs]
+[15205901.402069] ? xfs_buf_delwri_submit_buffers+0x16d/0x2b0 [xfs]
+[15205901.403060] xfs_inode_buf_write_verify+0x10/0x20 [xfs]
+[15205901.404017] _xfs_buf_ioapply+0x88/0x410 [xfs]
+[15205901.404990] ? xfs_buf_delwri_submit_buffers+0x16d/0x2b0 [xfs]
+[15205901.405929] xfs_buf_submit+0x63/0x200 [xfs]
+[15205901.406801] xfs_buf_delwri_submit_buffers+0x16d/0x2b0 [xfs]
+[15205901.407675] ? xfs_buf_delwri_submit_nowait+0x10/0x20 [xfs]
+[15205901.408540] ? xfs_inode_item_push+0xb7/0x190 [xfs]
+[15205901.409395] xfs_buf_delwri_submit_nowait+0x10/0x20 [xfs]
+[15205901.410249] xfsaild+0x29a/0x780 [xfs]
+[15205901.411121] kthread+0x109/0x140
+[15205901.411981] ? xfs_trans_ail_cursor_first+0x90/0x90 [xfs]
+[15205901.412785] ? kthread_park+0x60/0x60
+[15205901.413578] ret_from_fork+0x2a/0x40
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+From vmcore, we found that b_pages=3DNULL but b_page_count=3D16.
+
+crash> struct xfs_buf 0xffff9005c51fb300
+struct xfs_buf {
+  b_rhash_head =3D {
+    next =3D 0x0
+  },
+  b_bn =3D 481790464,
+  b_length =3D 128,
+  b_hold =3D {
+    counter =3D 2
+  },
+  b_lru_ref =3D {
+    counter =3D 0
+  },
+  b_flags =3D 1048626,
+  b_sema =3D {
+    lock =3D {
+      raw_lock =3D {
+        val =3D {
+          counter =3D 0
+        }
+      }
+    },
+    count =3D 0,
+    wait_list =3D {
+      next =3D 0xffff9005c51fb328,
+      prev =3D 0xffff9005c51fb328
+    }
+  },
+  b_lru =3D {
+    next =3D 0xffff9005c51fb338,
+    prev =3D 0xffff9005c51fb338
+  },
+  b_lock =3D {
+    {
+      rlock =3D {
+        raw_lock =3D {
+          val =3D {
+            counter =3D 0
+          }
+        }
+      }
+    }
+  },
+  b_state =3D 3,
+  b_io_error =3D 0,
+  b_waiters =3D {
+    lock =3D {
+      {
+        rlock =3D {
+          raw_lock =3D {
+            val =3D {
+              counter =3D 0
+            }
+          }
+        }
+      }
+    },
+    task_list =3D {
+      next =3D 0xffff9005c51fb360,
+      prev =3D 0xffff9005c51fb360
+    }
+  },
+  b_list =3D {
+    next =3D 0xffff9005c51fb370,
+    prev =3D 0xffff9005c51fb370
+  },
+  b_pag =3D 0xffff9005de557400,
+  b_target =3D 0xffff9005ddff0d80,
+  b_addr =3D 0x0,
+  b_ioend_work =3D {
+    data =3D {
+      counter =3D 1920
+    },
+    entry =3D {
+      next =3D 0xffff9005c51fb3a0,
+      prev =3D 0xffff9005c51fb3a0
+    },
+    func =3D 0xffffffffc081ce80 <xfs_buf_ioend_work>
+  },
+  b_ioend_wq =3D 0xffff9035d433bc00,
+  b_iodone =3D 0xffffffffc0843220 <xfs_buf_iodone_callbacks>,
+  b_iowait =3D {
+    done =3D 0,
+    wait =3D {
+      lock =3D {
+        {
+          rlock =3D {
+            raw_lock =3D {
+              val =3D {
+                counter =3D 0
+              }
+            }
+          }
+        }
+      },
+      task_list =3D {
+        next =3D 0xffff9005c51fb3d8,
+        prev =3D 0xffff9005c51fb3d8
+      }
+    }
+  },
+  b_fspriv =3D 0xffff9005c5b9c690,
+  b_transp =3D 0x0,
+  b_pages =3D 0x0,
+  b_page_array =3D {0x0, 0x0},
+  b_maps =3D 0xffff9005c51fb418,
+  __b_map =3D {
+    bm_bn =3D 481790464,
+    bm_len =3D 128
+  },
+  b_map_count =3D 1,
+  b_io_length =3D 128,
+  b_pin_count =3D {
+    counter =3D 0
+  },
+  b_io_remaining =3D {
+    counter =3D 1
+  },
+  b_page_count =3D 16,=C6=92b
+  b_offset =3D 0,
+  b_error =3D 0,
+  b_retries =3D 0,
+  b_first_retry_time =3D 0,
+  b_last_error =3D -5,
+  b_ops =3D 0xffffffffc085cf00 <xfs_inode_buf_ops>
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+file: xfs_log.c function: xlog_sync, it seems current code not handle alloc=
+ate
+memory fail.
+
+if (split) {
+                bp =3D iclog->ic_log->l_xbuf;
+                XFS_BUF_SET_ADDR(bp, 0); /* logical 0 */
+                xfs_buf_associate_memory(bp,
+                                (char *)&iclog->ic_header + count, split);
+                bp->b_fspriv =3D iclog;
+                bp->b_flags &=3D ~XBF_FLUSH;
+                bp->b_flags |=3D (XBF_ASYNC | XBF_SYNCIO | XBF_WRITE | XBF_=
+FUA);
+
+                ASSERT(XFS_BUF_ADDR(bp) <=3D log->l_logBBsize-1);
+                ASSERT(XFS_BUF_ADDR(bp) + BTOBB(count) <=3D log->l_logBBsiz=
+e);
+
+                /* account for internal log which doesn't start at block #0=
+ */
+                XFS_BUF_SET_ADDR(bp, XFS_BUF_ADDR(bp) + log->l_logBBstart);
+                error =3D xlog_bdstrat(bp);
+                if (error) {
+                        xfs_buf_ioerror_alert(bp, "xlog_sync (split)");
+                        return error;
+                }
+        }
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
