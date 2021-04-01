@@ -2,104 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B3C351BD0
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Apr 2021 20:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA1F5351967
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Apr 2021 20:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236561AbhDASLM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Apr 2021 14:11:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236817AbhDASDB (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 1 Apr 2021 14:03:01 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D452A61359;
-        Thu,  1 Apr 2021 15:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1617291213;
-        bh=kGHDJioiCc9Fs272P6aEXWiCFsRtQE+nv4E9MqSyWyE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MP7ZM31pqtzwOn7DFGQmZAcHMxpJFOGWny3aTveKgcJUNytanosGWHSnC0pJOmcJb
-         xrfg2N3ThrIkhXxkgSPk3K0HBGKwBTMFNn7Qe4rp25Htpl3p4OKaOIa4fdxlV2als2
-         Nf8OmsXTS7XuYTi3Ff5WuV7EuEau16f2sqb/8/HbwwFh3u47yiLuBB3sEPdlmWOJB8
-         t+lKGwfib/d/Sa+BErC/OrQp8xo5QrFmw1uznFw0G3mQiYF3vHWTRHJqdK7LDUBYG1
-         ExdSoA2+SUc2OmFXkBcckKaKEfZTWnRevmPlZoOvsMRjyAca1mt0RtoXLvvJ3AmXd1
-         V6JfIvTgz6DNg==
-Date:   Thu, 1 Apr 2021 08:33:33 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Carlos Maiolino <cmaiolino@redhat.com>
+        id S235014AbhDARxK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Apr 2021 13:53:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30251 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236486AbhDARpM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Apr 2021 13:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1617299110;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1xdcdHMFI37QSkI/Jx0ad0Tb67LRp/vej3WqqaEExgY=;
+        b=efVCwUdz46nNBBBtQ8yfEbAqPLN9/EQYqZX2fzyQyRGB2DyCnqgk3geowf507OPdmXH4h3
+        IpLMtkWAS/sFHk1BxwUc8/vMV6XQ3hc5Ug2uM6Jtz6Y+Bm7cYWJE2oLXVMjUtn7+oSrtiU
+        kDjkBhELyo4AnOgA7gMhCigiq6GgyN0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-192-YsCtxxK9OLuiYFHAZk3vKA-1; Thu, 01 Apr 2021 11:43:17 -0400
+X-MC-Unique: YsCtxxK9OLuiYFHAZk3vKA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40940800D53;
+        Thu,  1 Apr 2021 15:43:16 +0000 (UTC)
+Received: from bfoster (ovpn-112-117.rdu2.redhat.com [10.10.112.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D8C1A1001281;
+        Thu,  1 Apr 2021 15:43:15 +0000 (UTC)
+Date:   Thu, 1 Apr 2021 11:43:13 -0400
+From:   Brian Foster <bfoster@redhat.com>
+To:     Allison Henderson <allison.henderson@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] Add dax mount option to man xfs(5)
-Message-ID: <20210401153333.GD4090233@magnolia>
-References: <20210315150250.11870-1-cmaiolino@redhat.com>
+Subject: Re: [PATCH v16 01/11] xfs: Reverse apply 72b97ea40d
+Message-ID: <YGXqEdJfzhES/xDz@bfoster>
+References: <20210326003308.32753-1-allison.henderson@oracle.com>
+ <20210326003308.32753-2-allison.henderson@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210315150250.11870-1-cmaiolino@redhat.com>
+In-Reply-To: <20210326003308.32753-2-allison.henderson@oracle.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Mar 15, 2021 at 04:02:50PM +0100, Carlos Maiolino wrote:
-> Details are already in kernel's documentation, but make dax mount option
-> information accessible through xfs(5) manpage.
+On Thu, Mar 25, 2021 at 05:32:58PM -0700, Allison Henderson wrote:
+> Originally we added this patch to help modularize the attr code in
+> preparation for delayed attributes and the state machine it requires.
+> However, later reviews found that this slightly alters the transaction
+> handling as the helper function is ambiguous as to whether the
+> transaction is diry or clean.  This may cause a dirty transaction to be
+> included in the next roll, where previously it had not.  To preserve the
+> existing code flow, we reverse apply this commit.
 > 
-> Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
 > ---
->  man/man5/xfs.5 | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+>  fs/xfs/libxfs/xfs_attr.c | 28 +++++++++-------------------
+>  1 file changed, 9 insertions(+), 19 deletions(-)
 > 
-> diff --git a/man/man5/xfs.5 b/man/man5/xfs.5
-> index 7642662f..46b0558a 100644
-> --- a/man/man5/xfs.5
-> +++ b/man/man5/xfs.5
-> @@ -133,6 +133,24 @@ by the filesystem.
->  CRC enabled filesystems always use the attr2 format, and so
->  will reject the noattr2 mount option if it is set.
->  .TP
-> +.BR dax=value
-> +Set DAX behavior for the current filesystem. This mount option accepts the
-
-It might be worth defining what DAX (the acronym) is...
-
-"Set CPU direct access (DAX) behavior for regular files in the
-filesystem."
-
-> +following values:
+> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+> index 472b303..b42144e 100644
+> --- a/fs/xfs/libxfs/xfs_attr.c
+> +++ b/fs/xfs/libxfs/xfs_attr.c
+> @@ -1202,24 +1202,6 @@ int xfs_attr_node_removename_setup(
+>  	return 0;
+>  }
+>  
+> -STATIC int
+> -xfs_attr_node_remove_rmt(
+> -	struct xfs_da_args	*args,
+> -	struct xfs_da_state	*state)
+> -{
+> -	int			error = 0;
+> -
+> -	error = xfs_attr_rmtval_remove(args);
+> -	if (error)
+> -		return error;
+> -
+> -	/*
+> -	 * Refill the state structure with buffers, the prior calls released our
+> -	 * buffers.
+> -	 */
+> -	return xfs_attr_refillstate(state);
+> -}
+> -
+>  /*
+>   * Remove a name from a B-tree attribute list.
+>   *
+> @@ -1248,7 +1230,15 @@ xfs_attr_node_removename(
+>  	 * overflow the maximum size of a transaction and/or hit a deadlock.
+>  	 */
+>  	if (args->rmtblkno > 0) {
+> -		error = xfs_attr_node_remove_rmt(args, state);
+> +		error = xfs_attr_rmtval_remove(args);
+> +		if (error)
+> +			goto out;
 > +
-> +"dax=inode" DAX will be enabled only on files with FS_XFLAG_DAX applied.
-
-"...enabled on regular files..."
-
-> +
-> +"dax=never" DAX will be disabled by the whole filesystem including files with
-> +FS_XFLAG_DAX applied"
-
-"DAX will not be enabled for any files.  FS_XFLAG_DAX will be ignored."
-
-> +
-> +"dax=always" DAX will be enabled to every file in the filesystem inclduing files
-
-"DAX will be enabled for all regular files, regardless of the
-FS_XFLAG_DAX state."
-
-> +without FS_XFLAG_DAX applied"
-> +
-> +If no option is used when mounting a pmem device, dax=inode will be used as
-
-"If no option is used when mounting a filesystem stored on a device
-capable of DAX access modes, dax=inode...."
-
-(DAX is a possibility with more than just persistent memory now...)
-
---D
-
-> +default.
-> +
-> +For details regarding DAX behavior in kernel, please refer to kernel's
-> +documentation at filesystems/dax.txt
-> +.TP
->  .BR discard | nodiscard
->  Enable/disable the issuing of commands to let the block
->  device reclaim space freed by the filesystem.  This is
+> +		/*
+> +		 * Refill the state structure with buffers, the prior calls
+> +		 * released our buffers.
+> +		 */
+> +		error = xfs_attr_refillstate(state);
+>  		if (error)
+>  			goto out;
+>  	}
 > -- 
-> 2.29.2
+> 2.7.4
 > 
+
