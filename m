@@ -2,192 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F3B2B351968
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Apr 2021 20:02:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2D20351AC0
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Apr 2021 20:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235217AbhDARxN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Apr 2021 13:53:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42265 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234689AbhDARqC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Apr 2021 13:46:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1617299161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9getto5pxH6KR+9/yI4vcdajOu1AruvIDUT3qfjsAqA=;
-        b=ezoDFDxALfBO7NUGkYZSoQDTf4ztdT4mdm3IVLRUMqvIcnevydL3ZbkOhDBnjN9m3e0+n9
-        9CJ70Paug7YB10dcollLp3DSf2hvVkrOyB2YgpTEmYMauAuaS0KHCvmU7dc9KHwtGQUAQe
-        A5bztCUmcZquV3h1ioSh4yI85gLeGpk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-HKoI7cWfOKyg_ekjJ_sOCQ-1; Thu, 01 Apr 2021 11:43:45 -0400
-X-MC-Unique: HKoI7cWfOKyg_ekjJ_sOCQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5EE4C1922966;
-        Thu,  1 Apr 2021 15:43:44 +0000 (UTC)
-Received: from bfoster (ovpn-112-117.rdu2.redhat.com [10.10.112.117])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01CCE100760B;
-        Thu,  1 Apr 2021 15:43:43 +0000 (UTC)
-Date:   Thu, 1 Apr 2021 11:43:42 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Allison Henderson <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v16 08/11] xfs: Hoist xfs_attr_leaf_addname
-Message-ID: <YGXqLqrf2p++5k5p@bfoster>
-References: <20210326003308.32753-1-allison.henderson@oracle.com>
- <20210326003308.32753-9-allison.henderson@oracle.com>
+        id S235222AbhDASDD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Apr 2021 14:03:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235567AbhDAR5R (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Apr 2021 13:57:17 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D8AC031150
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Apr 2021 09:45:33 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id s21so1467511pjq.1
+        for <linux-xfs@vger.kernel.org>; Thu, 01 Apr 2021 09:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f+anl2m9ZWMWpCmRcPfFGK1e1Rze610labL8K7bLAq8=;
+        b=Fka/D6mzjuUF/a6NxLXu5NHSQ2bjwjn7U9I3WdWNggQ2gSO/3dHpMgzhSSAHET02VA
+         wWVRmvl2oIRH3+xmkNskW/xvdcP8jMTV4fubYnjsscuYi6CmBW5qYVajQnspxpaNhCaB
+         PfccEgH+PyHgIGKKwZ4dilva5NDm7x4MaxFEsmvpL0WkI5jVtqWSMimWFnGR2iAhACzk
+         Zt+y5M4Cp2ZuVDGpvFw6txpzqa/4KSESDSajN412Y88aOG6KLNBWNaG+wYxZ5GIIYK2o
+         BTo2+OabdSYbsrps+kRReIZ9q1FaNJibVkx/0bbvvRrkoJUOKnCFpIoM7+j73aF0EEEa
+         ZvEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f+anl2m9ZWMWpCmRcPfFGK1e1Rze610labL8K7bLAq8=;
+        b=hqCuWehBfpo+dCcjrDT4cgdSmczDSwQ6YjCyXmf/ah25TOgSb0REhxyZLkeG9qTzYe
+         UI6wXhSDCY65nG3aa76YlmVssoMlD02nNdWMrnj2RaiVBAJ9x83KFvWKl1O8vQoCfksK
+         NdOfjUw0CEHzd5RRxWNmMD3kwpTBfII3GOJbyXXCL+LZVGztlaeiUWj2DJoDrANh1Zka
+         A+1BvDhdOj7SRKOfiwsg5hF5zyCkxDJKDvWX3a6j6qLZl05EgdHYpwgTG5XnBzTSwi+E
+         wHDEDl0x1P924cCOQkDxJWENB5BG7fjLgRK+4cMCWD7RfqL1FQau2j1k1WYDBUd8aZME
+         6fjQ==
+X-Gm-Message-State: AOAM533eqrZusIuBIyG3sUgGQ4m7mmXKaSXi9Vh1GwJKFb7e5kAHLMZk
+        peccDQHeXh+eo1lfd85Qq12JISa1FYI=
+X-Google-Smtp-Source: ABdhPJxSrziI2WCkVYTfFtb4s/DKpVda24CHlr52zDu0NeE0U7BHvIwdUqVGny/JgN52lrsMiFyRww==
+X-Received: by 2002:a17:903:4106:b029:e7:49bd:4266 with SMTP id r6-20020a1709034106b02900e749bd4266mr8821117pld.56.1617295532812;
+        Thu, 01 Apr 2021 09:45:32 -0700 (PDT)
+Received: from localhost.localdomain ([122.182.240.228])
+        by smtp.gmail.com with ESMTPSA id i10sm7052384pgo.75.2021.04.01.09.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Apr 2021 09:45:32 -0700 (PDT)
+From:   Chandan Babu R <chandanrlinux@gmail.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Chandan Babu R <chandanrlinux@gmail.com>
+Subject: [PATCH] xfs: Use struct xfs_bmdr_block instead of struct xfs_btree_block to calculate root node size
+Date:   Thu,  1 Apr 2021 22:15:25 +0530
+Message-Id: <20210401164525.8638-1-chandanrlinux@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210326003308.32753-9-allison.henderson@oracle.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Mar 25, 2021 at 05:33:05PM -0700, Allison Henderson wrote:
-> This patch hoists xfs_attr_leaf_addname into the calling function.  The
-> goal being to get all the code that will require state management into
-> the same scope. This isn't particuarly aesthetic right away, but it is a
-> preliminary step to merging in the state machine code.
-> 
-> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_attr.c | 209 ++++++++++++++++++++++-------------------------
->  1 file changed, 96 insertions(+), 113 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index 5b5410f..16f10ac 100644
-> --- a/fs/xfs/libxfs/xfs_attr.c
-> +++ b/fs/xfs/libxfs/xfs_attr.c
-...
-> @@ -729,115 +821,6 @@ xfs_attr_leaf_try_add(
->  	return retval;
->  }
->  
-> -
-> -/*
-> - * Add a name to the leaf attribute list structure
-> - *
-> - * This leaf block cannot have a "remote" value, we only call this routine
-> - * if bmap_one_block() says there is only one block (ie: no remote blks).
-> - */
-> -STATIC int
-> -xfs_attr_leaf_addname(
-> -	struct xfs_da_args	*args)
-> -{
-> -	int			error, forkoff;
-> -	struct xfs_buf		*bp = NULL;
-> -	struct xfs_inode	*dp = args->dp;
-> -
-> -	trace_xfs_attr_leaf_addname(args);
-> -
+The incore data fork of an inode stores the bmap btree root node as 'struct
+xfs_btree_block'. However, the ondisk version of the inode stores the bmap
+btree root node as a 'struct xfs_bmdr_block'.
 
-Did this tracepoint disappear for a reason?
+xfs_bmap_add_attrfork_btree() checks if the btree root node fits inside the
+data fork of the inode. However, it incorrectly uses 'struct xfs_btree_block'
+to compute the size of the bmap btree root node. Since size of 'struct
+xfs_btree_block' is larger than that of 'struct xfs_bmdr_block',
+xfs_bmap_add_attrfork_btree() could end up unnecessarily demoting the current
+root node as the child of newly allocated root node.
 
-Brian
+This commit optimizes space usage by modifying xfs_bmap_add_attrfork_btree()
+to use 'struct xfs_bmdr_block' to check if the bmap btree root node fits
+inside the data fork of the inode.
 
-> -	error = xfs_attr_leaf_try_add(args, bp);
-> -	if (error)
-> -		return error;
-> -
-> -	/*
-> -	 * Commit the transaction that added the attr name so that
-> -	 * later routines can manage their own transactions.
-> -	 */
-> -	error = xfs_trans_roll_inode(&args->trans, dp);
-> -	if (error)
-> -		return error;
-> -
-> -	/*
-> -	 * If there was an out-of-line value, allocate the blocks we
-> -	 * identified for its storage and copy the value.  This is done
-> -	 * after we create the attribute so that we don't overflow the
-> -	 * maximum size of a transaction and/or hit a deadlock.
-> -	 */
-> -	if (args->rmtblkno > 0) {
-> -		error = xfs_attr_rmtval_set(args);
-> -		if (error)
-> -			return error;
-> -	}
-> -
-> -	if (!(args->op_flags & XFS_DA_OP_RENAME)) {
-> -		/*
-> -		 * Added a "remote" value, just clear the incomplete flag.
-> -		 */
-> -		if (args->rmtblkno > 0)
-> -			error = xfs_attr3_leaf_clearflag(args);
-> -
-> -		return error;
-> -	}
-> -
-> -	/*
-> -	 * If this is an atomic rename operation, we must "flip" the incomplete
-> -	 * flags on the "new" and "old" attribute/value pairs so that one
-> -	 * disappears and one appears atomically.  Then we must remove the "old"
-> -	 * attribute/value pair.
-> -	 *
-> -	 * In a separate transaction, set the incomplete flag on the "old" attr
-> -	 * and clear the incomplete flag on the "new" attr.
-> -	 */
-> -
-> -	error = xfs_attr3_leaf_flipflags(args);
-> -	if (error)
-> -		return error;
-> -	/*
-> -	 * Commit the flag value change and start the next trans in series.
-> -	 */
-> -	error = xfs_trans_roll_inode(&args->trans, args->dp);
-> -	if (error)
-> -		return error;
-> -
-> -	/*
-> -	 * Dismantle the "old" attribute/value pair by removing a "remote" value
-> -	 * (if it exists).
-> -	 */
-> -	xfs_attr_restore_rmt_blk(args);
-> -
-> -	if (args->rmtblkno) {
-> -		error = xfs_attr_rmtval_invalidate(args);
-> -		if (error)
-> -			return error;
-> -
-> -		error = xfs_attr_rmtval_remove(args);
-> -		if (error)
-> -			return error;
-> -	}
-> -
-> -	/*
-> -	 * Read in the block containing the "old" attr, then remove the "old"
-> -	 * attr from that block (neat, huh!)
-> -	 */
-> -	error = xfs_attr3_leaf_read(args->trans, args->dp, args->blkno,
-> -				   &bp);
-> -	if (error)
-> -		return error;
-> -
-> -	xfs_attr3_leaf_remove(bp, args);
-> -
-> -	/*
-> -	 * If the result is small enough, shrink it all into the inode.
-> -	 */
-> -	forkoff = xfs_attr_shortform_allfit(bp, dp);
-> -	if (forkoff)
-> -		error = xfs_attr3_leaf_to_shortform(bp, args, forkoff);
-> -		/* bp is gone due to xfs_da_shrink_inode */
-> -
-> -	return error;
-> -}
-> -
->  /*
->   * Return EEXIST if attr is found, or ENOATTR if not
->   */
-> -- 
-> 2.7.4
-> 
+Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+---
+ fs/xfs/libxfs/xfs_bmap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 585f7e795023..63fcac13d29c 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -927,13 +927,16 @@ xfs_bmap_add_attrfork_btree(
+ 	xfs_inode_t		*ip,		/* incore inode pointer */
+ 	int			*flags)		/* inode logging flags */
+ {
++	struct xfs_btree_block	*block;
+ 	xfs_btree_cur_t		*cur;		/* btree cursor */
+ 	int			error;		/* error return value */
+ 	xfs_mount_t		*mp;		/* file system mount struct */
+ 	int			stat;		/* newroot status */
+ 
+ 	mp = ip->i_mount;
+-	if (ip->i_df.if_broot_bytes <= XFS_IFORK_DSIZE(ip))
++	block = ip->i_df.if_broot;
++
++	if (XFS_BMAP_BMDR_SPACE(block) <= XFS_IFORK_DSIZE(ip))
+ 		*flags |= XFS_ILOG_DBROOT;
+ 	else {
+ 		cur = xfs_bmbt_init_cursor(mp, tp, ip, XFS_DATA_FORK);
+-- 
+2.29.2
 
