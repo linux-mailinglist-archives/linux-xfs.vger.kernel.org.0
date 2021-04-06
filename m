@@ -2,163 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ED9C3552FD
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Apr 2021 13:59:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4582C355497
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Apr 2021 15:11:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343629AbhDFL7j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Apr 2021 07:59:39 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59515 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343630AbhDFL7i (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Apr 2021 07:59:38 -0400
-Received: from dread.disaster.area (pa49-181-239-12.pa.nsw.optusnet.com.au [49.181.239.12])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id BE7A81041F58
-        for <linux-xfs@vger.kernel.org>; Tue,  6 Apr 2021 21:59:27 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1lTkMg-00CnsA-Ur
-        for linux-xfs@vger.kernel.org; Tue, 06 Apr 2021 21:59:26 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1lTkMg-007IOa-NA
-        for linux-xfs@vger.kernel.org; Tue, 06 Apr 2021 21:59:26 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/4] xfs: precalculate default inode attribute offset
-Date:   Tue,  6 Apr 2021 21:59:23 +1000
-Message-Id: <20210406115923.1738753-5-david@fromorbit.com>
-X-Mailer: git-send-email 2.31.0
-In-Reply-To: <20210406115923.1738753-1-david@fromorbit.com>
+        id S242329AbhDFNLU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Apr 2021 09:11:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232492AbhDFNLT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Apr 2021 09:11:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0267C06174A
+        for <linux-xfs@vger.kernel.org>; Tue,  6 Apr 2021 06:11:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=c5bCfXP9h9npnsLxVo4Eh5eKYv7m7ACjrqyuqXj2Brk=; b=myhP4w3YWAm2WAcqJt+1GL+dlJ
+        r5HlftH9zB/fynvCFHXsKv1TGq2HsCVihBuWRUIvlaZEZb98Qyb9WolJWJs6/Af/kmUQAl1aMOLqH
+        behwLcGejS/NWoWv53RbQ0OyAHZ9kCEXLMRhzeGRd2G0Io9uq9gcgnUUELgmSI2T5DJETRui1rRlv
+        KMrycez8ZYKJkmj+qStXZUdMd6VHFzZqnE+xhXJcbwLB0lmyhkAHzF72sHzfBqescWW1C+0izPuld
+        MVJm+8BcATH7weBz8FgHhhM7+kDQpIBdmBzHB7h1etUoYsr5x67QzlWprfNrwy50mxGveEOVxkuyw
+        VZnuk54w==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1lTlTn-00Cq23-LD; Tue, 06 Apr 2021 13:11:00 +0000
+Date:   Tue, 6 Apr 2021 14:10:51 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/4] xfs: inode fork allocation depends on XFS_IFEXTENT
+ flag
+Message-ID: <20210406131051.GA3059873@infradead.org>
 References: <20210406115923.1738753-1-david@fromorbit.com>
+ <20210406115923.1738753-3-david@fromorbit.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0 cx=a_idp_x
-        a=gO82wUwQTSpaJfP49aMSow==:117 a=gO82wUwQTSpaJfP49aMSow==:17
-        a=3YhXtTcJ-WEA:10 a=20KFwNOVAAAA:8 a=Brqe-ThOQP42QkIYx_0A:9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210406115923.1738753-3-david@fromorbit.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Tue, Apr 06, 2021 at 09:59:21PM +1000, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> Due to confusion on when the XFS_IFEXTENT needs to be set, the
+> changes in e6a688c33238 ("xfs: initialise attr fork on inode
+> create") failed to set the flag when initialising the empty
+> attribute fork at inode creation. Set this flag the same way
+> xfs_bmap_add_attrfork() does after attry fork allocation.
+> 
+> Fixes: e6a688c33238 ("xfs: initialise attr fork on inode create")
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
 
-Default attr fork offset is based on inode size, so is a fixed
-geometry parameter of the inode. Move it to the xfs_ino_geometry
-structure and stop calculating it on every call to
-xfs_default_attroffset().
+Looks good,
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/libxfs/xfs_bmap.c   | 21 ++++++++++-----------
- fs/xfs/libxfs/xfs_bmap.h   |  1 +
- fs/xfs/libxfs/xfs_shared.h |  4 ++++
- fs/xfs/xfs_mount.c         | 14 +++++++++++++-
- 4 files changed, 28 insertions(+), 12 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 414882ebcc8e..f937d3f05bc7 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -94,6 +94,15 @@ xfs_bmap_compute_maxlevels(
- 	mp->m_bm_maxlevels[whichfork] = level;
- }
- 
-+unsigned int
-+xfs_bmap_compute_attr_offset(
-+	struct xfs_mount	*mp)
-+{
-+	if (mp->m_sb.sb_inodesize == 256)
-+		return XFS_LITINO(mp) - XFS_BMDR_SPACE_CALC(MINABTPTRS);
-+	return XFS_BMDR_SPACE_CALC(6 * MINABTPTRS);
-+}
-+
- STATIC int				/* error */
- xfs_bmbt_lookup_eq(
- 	struct xfs_btree_cur	*cur,
-@@ -192,19 +201,9 @@ uint
- xfs_default_attroffset(
- 	struct xfs_inode	*ip)
- {
--	struct xfs_mount	*mp = ip->i_mount;
--	uint			offset;
--
- 	if (ip->i_df.if_format == XFS_DINODE_FMT_DEV)
- 		return roundup(sizeof(xfs_dev_t), 8);
--
--	if (mp->m_sb.sb_inodesize == 256)
--		offset = XFS_LITINO(mp) - XFS_BMDR_SPACE_CALC(MINABTPTRS);
--	else
--		offset = XFS_BMDR_SPACE_CALC(6 * MINABTPTRS);
--
--	ASSERT(offset < XFS_LITINO(mp));
--	return offset;
-+	return M_IGEO(ip->i_mount)->attr_fork_offset;
- }
- 
- /*
-diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-index 6747e97a7949..a49df4092c30 100644
---- a/fs/xfs/libxfs/xfs_bmap.h
-+++ b/fs/xfs/libxfs/xfs_bmap.h
-@@ -185,6 +185,7 @@ static inline bool xfs_bmap_is_written_extent(struct xfs_bmbt_irec *irec)
- 
- void	xfs_trim_extent(struct xfs_bmbt_irec *irec, xfs_fileoff_t bno,
- 		xfs_filblks_t len);
-+unsigned int xfs_bmap_compute_attr_offset(struct xfs_mount *mp);
- int	xfs_bmap_add_attrfork(struct xfs_inode *ip, int size, int rsvd);
- int	xfs_bmap_set_attrforkoff(struct xfs_inode *ip, int size, int *version);
- void	xfs_bmap_local_to_extents_empty(struct xfs_trans *tp,
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index 8c61a461bf7b..782fdd08f759 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -176,8 +176,12 @@ struct xfs_ino_geometry {
- 
- 	unsigned int	agino_log;	/* #bits for agino in inum */
- 
-+	/* precomputed default inode attribute fork offset */
-+	unsigned int	attr_fork_offset;
-+
- 	/* precomputed value for di_flags2 */
- 	uint64_t	new_diflags2;
-+
- };
- 
- #endif /* __XFS_SHARED_H__ */
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 1c97b155a8ee..cb1e2c4702c3 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -675,6 +675,18 @@ xfs_unmount_flush_inodes(
- 	xfs_health_unmount(mp);
- }
- 
-+static void
-+xfs_mount_setup_inode_geom(
-+	struct xfs_mount	*mp)
-+{
-+	struct xfs_ino_geometry *igeo = M_IGEO(mp);
-+
-+	igeo->attr_fork_offset = xfs_bmap_compute_attr_offset(mp);
-+	ASSERT(igeo->attr_fork_offset < XFS_LITINO(mp));
-+
-+	xfs_ialloc_setup_geometry(mp);
-+}
-+
- /*
-  * This function does the following on an initial mount of a file system:
-  *	- reads the superblock from disk and init the mount struct
-@@ -758,7 +770,7 @@ xfs_mountfs(
- 	xfs_alloc_compute_maxlevels(mp);
- 	xfs_bmap_compute_maxlevels(mp, XFS_DATA_FORK);
- 	xfs_bmap_compute_maxlevels(mp, XFS_ATTR_FORK);
--	xfs_ialloc_setup_geometry(mp);
-+	xfs_mount_setup_inode_geom(mp);
- 	xfs_rmapbt_compute_maxlevels(mp);
- 	xfs_refcountbt_compute_maxlevels(mp);
- 
--- 
-2.31.0
-
