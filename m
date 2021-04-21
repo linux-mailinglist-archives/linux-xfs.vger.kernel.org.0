@@ -2,50 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F716366514
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Apr 2021 07:55:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E65EB366515
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Apr 2021 07:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230390AbhDUF4R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 21 Apr 2021 01:56:17 -0400
-Received: from verein.lst.de ([213.95.11.211]:53000 "EHLO verein.lst.de"
+        id S231171AbhDUF5E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 21 Apr 2021 01:57:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:53009 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230343AbhDUF4R (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 21 Apr 2021 01:56:17 -0400
+        id S230343AbhDUF5D (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 21 Apr 2021 01:57:03 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6C83468C4E; Wed, 21 Apr 2021 07:55:42 +0200 (CEST)
-Date:   Wed, 21 Apr 2021 07:55:41 +0200
+        id 691A868BFE; Wed, 21 Apr 2021 07:56:29 +0200 (CEST)
+Date:   Wed, 21 Apr 2021 07:56:28 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Subject: Re: [PATCH 2/7] xfs: clean up the EFI and EFD log format handling
-Message-ID: <20210421055541.GA28961@lst.de>
-References: <20210419082804.2076124-1-hch@lst.de> <20210419082804.2076124-3-hch@lst.de> <20210420170529.GH3122264@magnolia>
+Subject: Re: [PATCH 3/7] xfs: pass a xfs_efi_log_item to xfs_efi_item_sizeof
+Message-ID: <20210421055628.GB28961@lst.de>
+References: <20210419082804.2076124-1-hch@lst.de> <20210419082804.2076124-4-hch@lst.de> <20210420170952.GI3122264@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210420170529.GH3122264@magnolia>
+In-Reply-To: <20210420170952.GI3122264@magnolia>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Apr 20, 2021 at 10:05:29AM -0700, Darrick J. Wong wrote:
-> Hmm... so the behavior change here is that 32-bit kernels will start
-> logging 16-byte xfs_extent structures (like 64-bit kernels)?
+On Tue, Apr 20, 2021 at 10:09:52AM -0700, Darrick J. Wong wrote:
+> On Mon, Apr 19, 2021 at 10:28:00AM +0200, Christoph Hellwig wrote:
+> > xfs_efi_log_item only looks at the embedded xfs_efi_log_item structure,
+> > so pass that directly and rename the function to xfs_efi_log_item_sizeof.
+> > This allows using the helper in xlog_recover_efi_commit_pass2 as well.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  fs/xfs/xfs_extfree_item.c | 15 +++++++--------
+> >  1 file changed, 7 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+> > index ed8d0790908ea7..7ae570d1944590 100644
+> > --- a/fs/xfs/xfs_extfree_item.c
+> > +++ b/fs/xfs/xfs_extfree_item.c
+> > @@ -70,11 +70,11 @@ xfs_efi_release(
+> >   * structure.
+> >   */
+> >  static inline int
+> > -xfs_efi_item_sizeof(
+> > -	struct xfs_efi_log_item *efip)
+> > +xfs_efi_log_item_sizeof(
+> 
+> Shouldn't this be named xfs_efi_log_format_sizeof to correspond to the
+> name of the structure?  Two patches from now you (re)introduce
+> xfs_efi_item_sizeof that returns the size of a struct xfs_efi_log_item,
+> which is confusing.
 
-Yes.
-
-> I see that
-> xfs_extent_32 was added for 2.6.18; won't this break recovery on
-> everything from before that?
-
-Where everything is a 32-bit kernel that doesn't align properly, yes.
-
-> Granted, 2.6.17 came out 15 years ago and the last 2.6.16 LTS kernel was
-> released in 2008 so maybe we don't care, but this would seem to be a
-> breaking change, right?  This seems like a reasonable change for all V5
-> filesystems (since that format emerged well after 2.6.18), but not so
-> good for V4.
-
-Err, why?
+Well, that was the main reason to move these out of place, as they are
+rather misnamed.
