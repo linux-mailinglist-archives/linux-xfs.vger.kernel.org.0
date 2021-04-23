@@ -2,41 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2ED23692C3
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Apr 2021 15:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 331F93692C4
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Apr 2021 15:10:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242584AbhDWNLb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S242322AbhDWNLb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Fri, 23 Apr 2021 09:11:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20457 "EHLO
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49160 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242322AbhDWNLa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Apr 2021 09:11:30 -0400
+        by vger.kernel.org with ESMTP id S230521AbhDWNLb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Apr 2021 09:11:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619183453;
+        s=mimecast20190719; t=1619183454;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NWMTX1YWdYomHbu9x/l5fLi0UluhCIVsivYKMoVeJFU=;
-        b=hgcS5M2jPKgp0cGB+VHy2NOM5oxKUpMz18eiGlEcM/fCS/knS9ZYsDxjy8SyH7N/g75OEY
-        weTpTOANzN/8gahKKwdtS7ihA/LQqTVLMVezMSRbSPpokCPc70tPj74Wy6OAOeN9XUTIEd
-        r6PvcYpqQBU4hK89KrV5vL+ogG/PhKo=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fxWZWyX0JUNaAFUEiuHIi44uL6C5cq2H/OMuE7zibi4=;
+        b=LKhAI2b86LqejkAw73CoABkjX/ia+Jfz21eisZXmHP3ggWzt6BKPFxmHpAeB5gxCYYXI6F
+        sOzqwwtaaq1x9BzGwc288CvmNW+/dfDT0rQG5T2bXpsaQshRWJTMp49Vkk9PN0zg0gRdar
+        tlVX8R0BxKcC1ZK6YD8a7bjwbk06MJ4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-398-Sa3UjErqP1SiSRXXHFrD6g-1; Fri, 23 Apr 2021 09:10:51 -0400
-X-MC-Unique: Sa3UjErqP1SiSRXXHFrD6g-1
+ us-mta-541-slaqU8p3MVmnb0bLBMJRZg-1; Fri, 23 Apr 2021 09:10:52 -0400
+X-MC-Unique: slaqU8p3MVmnb0bLBMJRZg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10DB8343A0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7788081425A
         for <linux-xfs@vger.kernel.org>; Fri, 23 Apr 2021 13:10:51 +0000 (UTC)
 Received: from bfoster.redhat.com (ovpn-112-25.rdu2.redhat.com [10.10.112.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C2F0A60854
-        for <linux-xfs@vger.kernel.org>; Fri, 23 Apr 2021 13:10:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 35A4C60854
+        for <linux-xfs@vger.kernel.org>; Fri, 23 Apr 2021 13:10:51 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v4 0/3] xfs: set aside allocation btree blocks from block reservation
-Date:   Fri, 23 Apr 2021 09:10:47 -0400
-Message-Id: <20210423131050.141140-1-bfoster@redhat.com>
+Subject: [PATCH v4 1/3] xfs: unconditionally read all AGFs on mounts with perag reservation
+Date:   Fri, 23 Apr 2021 09:10:48 -0400
+Message-Id: <20210423131050.141140-2-bfoster@redhat.com>
+In-Reply-To: <20210423131050.141140-1-bfoster@redhat.com>
+References: <20210423131050.141140-1-bfoster@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
@@ -44,44 +47,83 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+perag reservation is enabled at mount time on a per AG basis. The
+upcoming change to set aside allocbt blocks from block reservation
+requires a populated allocbt counter as soon as possible after mount
+to be fully effective against large perag reservations. Therefore as
+a preparation step, initialize the pagf on all mounts where at least
+one reservation is active. Note that this already occurs to some
+degree on most default format filesystems as reservation requirement
+calculations already depend on the AGF or AGI, depending on the
+reservation type.
 
-Here's v4 of the proposed allocbt block set aside fix. The patches have
-been swizzled around a bit based on previous feedback to try and avoid
-confusion over what bits are perag res related and not. This hopefully
-facilitates analysis when it comes time to evaluate potential changes to
-remove the current perag res mount time AG header scan behavior on which
-this currently depends. Otherwise the actual code changes from v3 are
-fairly light and documented in the changelog below. Thoughts, reviews,
-flames appreciated.
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+---
+ fs/xfs/libxfs/xfs_ag_resv.c | 34 +++++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
-Brian
-
-v4:
-- Fix up perag res logic to not skip pagf init on partial res failure.
-- Split up set aside patch into separate counter mechanism and set aside
-  policy patches.
-- Drop unnecessary ->m_has_agresv flag as pagf's are always initialized
-  on filesystems with active reservations.
-v3: https://lore.kernel.org/linux-xfs/20210318161707.723742-1-bfoster@redhat.com/
-- Use a mount flag for easy detection of active perag reservation.
-- Filter rmapbt blocks from allocbt block accounting.
-v2: https://lore.kernel.org/linux-xfs/20210222152108.896178-1-bfoster@redhat.com/
-- Use an atomic counter instead of a percpu counter.
-v1: https://lore.kernel.org/linux-xfs/20210217132339.651020-1-bfoster@redhat.com/
-
-Brian Foster (3):
-  xfs: unconditionally read all AGFs on mounts with perag reservation
-  xfs: introduce in-core global counter of allocbt blocks
-  xfs: set aside allocation btree blocks from block reservation
-
- fs/xfs/libxfs/xfs_ag_resv.c     | 34 ++++++++++++++++++++++-----------
- fs/xfs/libxfs/xfs_alloc.c       | 12 ++++++++++++
- fs/xfs/libxfs/xfs_alloc_btree.c |  2 ++
- fs/xfs/xfs_mount.c              | 15 ++++++++++++++-
- fs/xfs/xfs_mount.h              |  6 ++++++
- 5 files changed, 57 insertions(+), 12 deletions(-)
-
+diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
+index 6c5f8d10589c..e32a1833d523 100644
+--- a/fs/xfs/libxfs/xfs_ag_resv.c
++++ b/fs/xfs/libxfs/xfs_ag_resv.c
+@@ -253,7 +253,8 @@ xfs_ag_resv_init(
+ 	xfs_agnumber_t			agno = pag->pag_agno;
+ 	xfs_extlen_t			ask;
+ 	xfs_extlen_t			used;
+-	int				error = 0;
++	int				error = 0, error2;
++	bool				has_resv = false;
+ 
+ 	/* Create the metadata reservation. */
+ 	if (pag->pag_meta_resv.ar_asked == 0) {
+@@ -291,6 +292,8 @@ xfs_ag_resv_init(
+ 			if (error)
+ 				goto out;
+ 		}
++		if (ask)
++			has_resv = true;
+ 	}
+ 
+ 	/* Create the RMAPBT metadata reservation */
+@@ -304,19 +307,28 @@ xfs_ag_resv_init(
+ 		error = __xfs_ag_resv_init(pag, XFS_AG_RESV_RMAPBT, ask, used);
+ 		if (error)
+ 			goto out;
++		if (ask)
++			has_resv = true;
+ 	}
+ 
+-#ifdef DEBUG
+-	/* need to read in the AGF for the ASSERT below to work */
+-	error = xfs_alloc_pagf_init(pag->pag_mount, tp, pag->pag_agno, 0);
+-	if (error)
+-		return error;
+-
+-	ASSERT(xfs_perag_resv(pag, XFS_AG_RESV_METADATA)->ar_reserved +
+-	       xfs_perag_resv(pag, XFS_AG_RESV_RMAPBT)->ar_reserved <=
+-	       pag->pagf_freeblks + pag->pagf_flcount);
+-#endif
+ out:
++	/*
++	 * Initialize the pagf if we have at least one active reservation on the
++	 * AG. This may have occurred already via reservation calculation, but
++	 * fall back to an explicit init to ensure the in-core allocbt usage
++	 * counters are initialized as soon as possible. This is important
++	 * because filesystems with large perag reservations are susceptible to
++	 * free space reservation problems that the allocbt counter is used to
++	 * address.
++	 */
++	if (has_resv) {
++		error2 = xfs_alloc_pagf_init(mp, tp, pag->pag_agno, 0);
++		if (error2)
++			return error2;
++		ASSERT(xfs_perag_resv(pag, XFS_AG_RESV_METADATA)->ar_reserved +
++		       xfs_perag_resv(pag, XFS_AG_RESV_RMAPBT)->ar_reserved <=
++		       pag->pagf_freeblks + pag->pagf_flcount);
++	}
+ 	return error;
+ }
+ 
 -- 
 2.26.3
 
