@@ -2,324 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37FB43697F5
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Apr 2021 19:06:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D47C3369876
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Apr 2021 19:30:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243287AbhDWRHK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 23 Apr 2021 13:07:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55914 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229691AbhDWRHG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 23 Apr 2021 13:07:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619197589;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/IDDDMJ8ROPoQqW55bCiAu5/S9K98OQIlznTAmsc2Zo=;
-        b=PoxQYpiWYxFSJWc4aQDj56qUO04++zl2XD36RGHVXtoGBFIaqHPMsGkZiom75eMU5j7jXd
-        MwyA3ruqJbXkpwdBgUgvIlj/XLIsRotkeKqETQ++IQeR1aSnSM+Rgs3eG1XDYgKCP2RUJJ
-        6FzJLYs+llbhZanW1vSGGIDWDZgpM9g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-507-u69itlGRNx6EQ0Xutf8q4Q-1; Fri, 23 Apr 2021 13:06:26 -0400
-X-MC-Unique: u69itlGRNx6EQ0Xutf8q4Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6600618397A5;
-        Fri, 23 Apr 2021 17:06:25 +0000 (UTC)
-Received: from bfoster (ovpn-112-25.rdu2.redhat.com [10.10.112.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DD4DA19C71;
-        Fri, 23 Apr 2021 17:06:24 +0000 (UTC)
-Date:   Fri, 23 Apr 2021 13:06:23 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Allison Henderson <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v17 10/11] xfs: Add delay ready attr remove routines
-Message-ID: <YIL+j3BmnDOEqHrp@bfoster>
-References: <20210416092045.2215-1-allison.henderson@oracle.com>
- <20210416092045.2215-11-allison.henderson@oracle.com>
+        id S243521AbhDWRbG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 23 Apr 2021 13:31:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43736 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243443AbhDWRbA (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 23 Apr 2021 13:31:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 957ABB1E0;
+        Fri, 23 Apr 2021 17:30:19 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 8D09B1E37A2; Fri, 23 Apr 2021 19:30:18 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     <linux-fsdevel@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>, Ted Tso <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, ceph-devel@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        linux-cifs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
+        Steve French <sfrench@samba.org>
+Subject: [PATCH 0/12 v4] fs: Hole punch vs page cache filling races
+Date:   Fri, 23 Apr 2021 19:29:29 +0200
+Message-Id: <20210423171010.12-1-jack@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210416092045.2215-11-allison.henderson@oracle.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Apr 16, 2021 at 02:20:44AM -0700, Allison Henderson wrote:
-> This patch modifies the attr remove routines to be delay ready. This
-> means they no longer roll or commit transactions, but instead return
-> -EAGAIN to have the calling routine roll and refresh the transaction. In
-> this series, xfs_attr_remove_args is merged with
-> xfs_attr_node_removename become a new function, xfs_attr_remove_iter.
-> This new version uses a sort of state machine like switch to keep track
-> of where it was when EAGAIN was returned. A new version of
-> xfs_attr_remove_args consists of a simple loop to refresh the
-> transaction until the operation is completed. A new XFS_DAC_DEFER_FINISH
-> flag is used to finish the transaction where ever the existing code used
-> to.
-> 
-> Calls to xfs_attr_rmtval_remove are replaced with the delay ready
-> version __xfs_attr_rmtval_remove. We will rename
-> __xfs_attr_rmtval_remove back to xfs_attr_rmtval_remove when we are
-> done.
-> 
-> xfs_attr_rmtval_remove itself is still in use by the set routines (used
-> during a rename).  For reasons of preserving existing function, we
-> modify xfs_attr_rmtval_remove to call xfs_defer_finish when the flag is
-> set.  Similar to how xfs_attr_remove_args does here.  Once we transition
-> the set routines to be delay ready, xfs_attr_rmtval_remove is no longer
-> used and will be removed.
-> 
-> This patch also adds a new struct xfs_delattr_context, which we will use
-> to keep track of the current state of an attribute operation. The new
-> xfs_delattr_state enum is used to track various operations that are in
-> progress so that we know not to repeat them, and resume where we left
-> off before EAGAIN was returned to cycle out the transaction. Other
-> members take the place of local variables that need to retain their
-> values across multiple function recalls.  See xfs_attr.h for a more
-> detailed diagram of the states.
-> 
-> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-> ---
->  fs/xfs/libxfs/xfs_attr.c        | 208 +++++++++++++++++++++++++++-------------
->  fs/xfs/libxfs/xfs_attr.h        | 131 +++++++++++++++++++++++++
->  fs/xfs/libxfs/xfs_attr_leaf.c   |   2 +-
->  fs/xfs/libxfs/xfs_attr_remote.c |  48 ++++++----
->  fs/xfs/libxfs/xfs_attr_remote.h |   2 +-
->  fs/xfs/xfs_attr_inactive.c      |   2 +-
->  6 files changed, 305 insertions(+), 88 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-> index ed06b60..0bea8dd 100644
-> --- a/fs/xfs/libxfs/xfs_attr.c
-> +++ b/fs/xfs/libxfs/xfs_attr.c
-...
-> @@ -1231,70 +1262,117 @@ xfs_attr_node_remove_cleanup(
->  }
->  
->  /*
-> - * Remove a name from a B-tree attribute list.
-> + * Remove the attribute specified in @args.
->   *
->   * This will involve walking down the Btree, and may involve joining
->   * leaf nodes and even joining intermediate nodes up to and including
->   * the root node (a special case of an intermediate node).
-> + *
-> + * This routine is meant to function as either an in-line or delayed operation,
-> + * and may return -EAGAIN when the transaction needs to be rolled.  Calling
-> + * functions will need to handle this, and recall the function until a
-> + * successful error code is returned.
->   */
-> -STATIC int
-> -xfs_attr_node_removename(
-> -	struct xfs_da_args	*args)
-> +int
-> +xfs_attr_remove_iter(
-> +	struct xfs_delattr_context	*dac)
->  {
-> -	struct xfs_da_state	*state;
-> -	int			retval, error;
-> -	struct xfs_inode	*dp = args->dp;
-> +	struct xfs_da_args		*args = dac->da_args;
-> +	struct xfs_da_state		*state = dac->da_state;
-> +	int				retval, error;
-> +	struct xfs_inode		*dp = args->dp;
->  
->  	trace_xfs_attr_node_removename(args);
->  
-...
-> +	case XFS_DAS_CLNUP:
-> +		retval = xfs_attr_node_remove_cleanup(args, state);
+Hello,
 
-This is a nit, but when reading the code the "cleanup" name gives the
-impression that this is a resource cleanup or something along those
-lines, when this is actually a primary component of the operation where
-we remove the attr name. That took me a second to find. Could we tweak
-the state and rename the helper to something like DAS_RMNAME  /
-_node_remove_name() so the naming is a bit more explicit?
+here is another version of my patches to address races between hole punching
+and page cache filling functions for ext4 and other filesystems. I think
+we are coming close to a complete solution so I've removed the RFC tag from
+the subject. I went through all filesystems supporting hole punching and
+converted them from their private locks to a generic one (usually fixing the
+race ext4 had as a side effect). I also found out ceph & cifs didn't have
+any protection from the hole punch vs page fault race either so I've added
+appropriate protections there. Open are still GFS2 and OCFS2 filesystems.
+GFS2 actually avoids the race but is prone to deadlocks (acquires the same lock
+both above and below mmap_sem), OCFS2 locking seems kind of hosed and some
+read, write, and hole punch paths are not properly serialized possibly leading
+to fs corruption. Both issues are non-trivial so respective fs maintainers
+have to deal with those (I've informed them and problems were generally
+confirmed). Anyway, for all the other filesystem this kind of race should
+be closed.
 
->  
-> -	/*
-> -	 * Check to see if the tree needs to be collapsed.
-> -	 */
-> -	if (retval && (state->path.active > 1)) {
-> -		error = xfs_da3_join(state);
-> -		if (error)
-> -			goto out;
-> -		error = xfs_defer_finish(&args->trans);
-> -		if (error)
-> -			goto out;
->  		/*
-> -		 * Commit the Btree join operation and start a new trans.
-> +		 * Check to see if the tree needs to be collapsed. Set the flag
-> +		 * to indicate that the calling function needs to move the
-> +		 * shrink operation
->  		 */
-> -		error = xfs_trans_roll_inode(&args->trans, dp);
-> -		if (error)
-> -			goto out;
-> -	}
-> +		if (retval && (state->path.active > 1)) {
-> +			error = xfs_da3_join(state);
-> +			if (error)
-> +				goto out;
->  
-> -	/*
-> -	 * If the result is small enough, push it all into the inode.
-> -	 */
-> -	if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
-> -		error = xfs_attr_node_shrink(args, state);
-> +			dac->flags |= XFS_DAC_DEFER_FINISH;
-> +			dac->dela_state = XFS_DAS_RM_SHRINK;
-> +			return -EAGAIN;
-> +		}
-> +
-> +		/* fallthrough */
-> +	case XFS_DAS_RM_SHRINK:
-> +		/*
-> +		 * If the result is small enough, push it all into the inode.
-> +		 */
-> +		if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
-> +			error = xfs_attr_node_shrink(args, state);
-> +
-> +		break;
-> +	default:
-> +		ASSERT(0);
-> +		error = -EINVAL;
-> +		goto out;
-> +	}
->  
-> +	if (error == -EAGAIN)
-> +		return error;
->  out:
->  	if (state)
->  		xfs_da_state_free(state);
-...
-> diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-> index 48d8e9c..908521e7 100644
-> --- a/fs/xfs/libxfs/xfs_attr_remote.c
-> +++ b/fs/xfs/libxfs/xfs_attr_remote.c
-...
-> @@ -685,31 +687,29 @@ xfs_attr_rmtval_remove(
->  	 * Keep de-allocating extents until the remote-value region is gone.
->  	 */
->  	do {
-> -		retval = __xfs_attr_rmtval_remove(args);
-> -		if (retval && retval != -EAGAIN)
-> -			return retval;
-> +		error = __xfs_attr_rmtval_remove(&dac);
-> +		if (error != -EAGAIN)
-> +			break;
+As a next step, I'd like to actually make sure all calls to
+truncate_inode_pages() happen under mapping->invalidate_lock, add the assert
+and then we can also get rid of i_size checks in some places (truncate can
+use the same serialization scheme as hole punch). But that step is mostly
+a cleanup so I'd like to get these functional fixes in first.
 
-Shouldn't this retain the (error && error != -EAGAIN) logic to roll the
-transaction after the final unmap? Even if this is transient, it's
-probably best to preserve behavior if this is unintentional.
+Changes since v3:
+* Renamed and moved lock to struct address_space
+* Added conversions of tmpfs, ceph, cifs, fuse, f2fs
+* Fixed error handling path in filemap_read()
+* Removed .page_mkwrite() cleanup from the series for now
 
-Otherwise my only remaining feedback was to add/tweak some comments that
-I think make the iteration function easier to follow. I've appended a
-diff for that. If you agree with the changes feel free to just fold them
-in and/or tweak as necessary. With those various nits and Chandan's
-feedback addressed, I think this patch looks pretty good.
+Changes since v2:
+* Added documentation and comments regarding lock ordering and how the lock is
+  supposed to be used
+* Added conversions of ext2, xfs, zonefs
+* Added patch removing i_mapping_sem protection from .page_mkwrite handlers
 
-Brian
+Changes since v1:
+* Moved to using inode->i_mapping_sem instead of aops handler to acquire
+  appropriate lock
 
---- 8< ---
+---
+Motivation:
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 0bea8dd34902..ee885c649c26 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -1289,14 +1289,21 @@ xfs_attr_remove_iter(
- 		if (!xfs_inode_hasattr(dp))
- 			return -ENOATTR;
- 
-+		/*
-+		 * Shortform or leaf formats don't require transaction rolls and
-+		 * thus state transitions. Call the right helper and return.
-+		 */
- 		if (dp->i_afp->if_format == XFS_DINODE_FMT_LOCAL) {
- 			ASSERT(dp->i_afp->if_flags & XFS_IFINLINE);
- 			return xfs_attr_shortform_remove(args);
- 		}
--
- 		if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
- 			return xfs_attr_leaf_removename(args);
- 
-+		/*
-+		 * Node format may require transaction rolls. Set up the
-+		 * state context and fall into the state machine.
-+		 */
- 		if (!dac->da_state) {
- 			error = xfs_attr_node_removename_setup(dac);
- 			if (error)
-@@ -1304,7 +1311,7 @@ xfs_attr_remove_iter(
- 			state = dac->da_state;
- 		}
- 
--	/* fallthrough */
-+		/* fallthrough */
- 	case XFS_DAS_RMTBLK:
- 		dac->dela_state = XFS_DAS_RMTBLK;
- 
-@@ -1316,7 +1323,8 @@ xfs_attr_remove_iter(
- 		 */
- 		if (args->rmtblkno > 0) {
- 			/*
--			 * May return -EAGAIN. Remove blocks until 0 is returned
-+			 * May return -EAGAIN. Roll and repeat until all remote
-+			 * blocks are removed.
- 			 */
- 			error = __xfs_attr_rmtval_remove(dac);
- 			if (error == -EAGAIN)
-@@ -1325,26 +1333,26 @@ xfs_attr_remove_iter(
- 				goto out;
- 
- 			/*
--			 * Refill the state structure with buffers, the prior
--			 * calls released our buffers.
-+			 * Refill the state structure with buffers (the prior
-+			 * calls released our buffers) and close out this
-+			 * transaction before proceeding.
- 			 */
- 			ASSERT(args->rmtblkno == 0);
- 			error = xfs_attr_refillstate(state);
- 			if (error)
- 				goto out;
--
- 			dac->dela_state = XFS_DAS_CLNUP;
- 			dac->flags |= XFS_DAC_DEFER_FINISH;
- 			return -EAGAIN;
- 		}
- 
-+		/* fallthrough */
- 	case XFS_DAS_CLNUP:
- 		retval = xfs_attr_node_remove_cleanup(args, state);
- 
- 		/*
--		 * Check to see if the tree needs to be collapsed. Set the flag
--		 * to indicate that the calling function needs to move the
--		 * shrink operation
-+		 * Check to see if the tree needs to be collapsed. If so, roll
-+		 * the transacton and fall into the shrink state.
- 		 */
- 		if (retval && (state->path.active > 1)) {
- 			error = xfs_da3_join(state);
-@@ -1360,10 +1368,12 @@ xfs_attr_remove_iter(
- 	case XFS_DAS_RM_SHRINK:
- 		/*
- 		 * If the result is small enough, push it all into the inode.
-+		 * This is our final state so it's safe to return a dirty
-+		 * transaction.
- 		 */
- 		if (xfs_bmap_one_block(dp, XFS_ATTR_FORK))
- 			error = xfs_attr_node_shrink(args, state);
--
-+		ASSERT(error != -EAGAIN);
- 		break;
- 	default:
- 		ASSERT(0);
+Amir has reported [1] a that ext4 has a potential issues when reads can race
+with hole punching possibly exposing stale data from freed blocks or even
+corrupting filesystem when stale mapping data gets used for writeout. The
+problem is that during hole punching, new page cache pages can get instantiated
+and block mapping from the looked up in a punched range after
+truncate_inode_pages() has run but before the filesystem removes blocks from
+the file. In principle any filesystem implementing hole punching thus needs to
+implement a mechanism to block instantiating page cache pages during hole
+punching to avoid this race. This is further complicated by the fact that there
+are multiple places that can instantiate pages in page cache.  We can have
+regular read(2) or page fault doing this but fadvise(2) or madvise(2) can also
+result in reading in page cache pages through force_page_cache_readahead().
 
+There are couple of ways how to fix this. First way (currently implemented by
+XFS) is to protect read(2) and *advise(2) calls with i_rwsem so that they are
+serialized with hole punching. This is easy to do but as a result all reads
+would then be serialized with writes and thus mixed read-write workloads suffer
+heavily on ext4. Thus this series introduces inode->i_mapping_sem and uses it
+when creating new pages in the page cache and looking up their corresponding
+block mapping. We also replace EXT4_I(inode)->i_mmap_sem with this new rwsem
+which provides necessary serialization with hole punching for ext4.
+
+								Honza
+
+[1] https://lore.kernel.org/linux-fsdevel/CAOQ4uxjQNmxqmtA_VbYW0Su9rKRk2zobJmahcyeaEVOFKVQ5dw@mail.gmail.com/
+
+Previous versions:
+Link: https://lore.kernel.org/linux-fsdevel/20210208163918.7871-1-jack@suse.cz/
+Link: http://lore.kernel.org/r/20210413105205.3093-1-jack@suse.cz
+
+CC: ceph-devel@vger.kernel.org
+CC: Chao Yu <yuchao0@huawei.com>
+CC: Damien Le Moal <damien.lemoal@wdc.com>
+CC: "Darrick J. Wong" <darrick.wong@oracle.com>
+CC: Hugh Dickins <hughd@google.com>
+CC: Jaegeuk Kim <jaegeuk@kernel.org>
+CC: Jeff Layton <jlayton@kernel.org>
+CC: Johannes Thumshirn <jth@kernel.org>
+CC: linux-cifs@vger.kernel.org
+CC: <linux-ext4@vger.kernel.org>
+CC: linux-f2fs-devel@lists.sourceforge.net
+CC: <linux-fsdevel@vger.kernel.org>
+CC: <linux-mm@kvack.org>
+CC: <linux-xfs@vger.kernel.org>
+CC: Miklos Szeredi <miklos@szeredi.hu>
+CC: Steve French <sfrench@samba.org>
+CC: Ted Tso <tytso@mit.edu>
