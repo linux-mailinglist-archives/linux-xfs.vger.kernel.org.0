@@ -2,34 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 937D436D119
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Apr 2021 06:09:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C3E936D11B
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Apr 2021 06:09:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234180AbhD1EJs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Apr 2021 00:09:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53718 "EHLO mail.kernel.org"
+        id S234377AbhD1EJt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Apr 2021 00:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234262AbhD1EJl (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 28 Apr 2021 00:09:41 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9CE68613F4;
-        Wed, 28 Apr 2021 04:08:44 +0000 (UTC)
+        id S234376AbhD1EJp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 28 Apr 2021 00:09:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A4A066140B;
+        Wed, 28 Apr 2021 04:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619582924;
-        bh=5KYxkKrJZwAzBQTdnDQjcJVMlies0NszrBYJMErl3jw=;
+        s=k20201202; t=1619582930;
+        bh=4PwztGnSxWZ/VL6GvbuVYk2rwUt/YXaCyz2ijRT7LHs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ClmnmYxGT2X2xJqKcr1rK5q6Yp4QTWdyknwEXLPhrm4SaiwHCjnqzVE4fYcInAQgJ
-         rrp6u4B+eosddrk2q0ZAtSoOXhywrAAdEc2HImErH0Vhd/jQYo80GyDe/60hoCC//x
-         8q5+o0ueZ4yOrbWh5gbBvJMINGE4QdYGLJiV7XCL2ECEaWmDJ+czSyo14DmMT6prym
-         wT2av8TMF5RPvP6Jfev2mLRcEnee/CMBqAscx8WGRGWJYZTqAXxPTLkT9kplNBeSUB
-         cZcoV/Ehks2JLnoKxpb0lB5G6Gh9R1JOaWuQ4awazrlne4sl7SUCwyRbR9yijqV76w
-         9QnjaDDauZtdQ==
-Subject: [PATCH 1/2] xfs: test what happens when we reset the root dir and it
- has xattrs
+        b=dlbWci5t2n/UQv3wyarjorqGEDDuUfbknxOrEYI5Bhg2jwk8USDAs3sKntRTEm8lO
+         JcYd8U8z43CVNfJX0XnhKpOSKWQBE9aT7lp18RlPziPZlBthXuIwp+ajGsxnD4jmFk
+         O62pcEw97uMmnlkKZjDjrzbpHGe9Lbor5rCm6oW7JhwQEwF8FNC/rf3Mmo1eLtpCIq
+         la7sS/HCZ46J6ulLmFOvjmCOz28pZ9FcbAdJgzC+XuO7PD++T9KQo7AAXX02V8N8FH
+         pAfigX/xwlg1N6QEAYmE2q8g4LS5mnc/zPWVFJj19QSD/N7U+IflJL08SIHGNpEcEV
+         gDWvIKwF5HKIg==
+Subject: [PATCH 2/2] xfs/010: filter out bad finobt levels complaint
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 27 Apr 2021 21:08:43 -0700
-Message-ID: <161958292387.3452247.4459342156885074164.stgit@magnolia>
+Date:   Tue, 27 Apr 2021 21:08:50 -0700
+Message-ID: <161958292995.3452247.16052548384852587095.stgit@magnolia>
 In-Reply-To: <161958291787.3452247.15296911612919535588.stgit@magnolia>
 References: <161958291787.3452247.15296911612919535588.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,110 +41,25 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that we can reset the root directory and the xattrs are erased
-properly.
+Since we're adding to xfs_repair the ability to warn about bad finobt
+levels, filter that out.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/757     |   63 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/757.out |    7 ++++++
- tests/xfs/group   |    1 +
- 3 files changed, 71 insertions(+)
- create mode 100755 tests/xfs/757
- create mode 100644 tests/xfs/757.out
+ tests/xfs/010 |    1 +
+ 1 file changed, 1 insertion(+)
 
 
-diff --git a/tests/xfs/757 b/tests/xfs/757
-new file mode 100755
-index 00000000..0b9914f6
---- /dev/null
-+++ b/tests/xfs/757
-@@ -0,0 +1,63 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2021 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 757
-+#
-+# Make sure that attrs are handled properly when repair has to reset the root
-+# directory.
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$seq
-+echo "QA output created by $seq"
-+
-+here=`pwd`
-+tmp=/tmp/$$
-+status=1	# failure is the default!
-+trap "_cleanup; exit \$status" 0 1 2 3 7 15
-+
-+_cleanup()
-+{
-+	cd /
-+	rm -rf $tmp.*
-+}
-+
-+# get standard environment, filters and checks
-+. ./common/rc
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_nocheck
-+
-+rm -f $seqres.full
-+
-+echo "Format and populate btree attr root dir"
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+
-+blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
-+__populate_create_attr "${SCRATCH_MNT}" "$((64 * blksz / 40))" true
-+_scratch_unmount
-+
-+echo "Break the root directory"
-+_scratch_xfs_fuzz_metadata_field core.mode zeroes 'sb 0' 'addr rootino' >> $seqres.full 2>&1
-+
-+echo "Detect bad root directory"
-+_scratch_xfs_repair -n >> $seqres.full 2>&1 && \
-+	echo "Should have detected bad root dir"
-+
-+echo "Fix bad root directory"
-+_scratch_xfs_repair >> $seqres.full 2>&1
-+
-+echo "Detect fixed root directory"
-+_scratch_xfs_repair -n >> $seqres.full 2>&1
-+
-+echo "Mount test"
-+_scratch_mount
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/757.out b/tests/xfs/757.out
-new file mode 100644
-index 00000000..9f3aed5a
---- /dev/null
-+++ b/tests/xfs/757.out
-@@ -0,0 +1,7 @@
-+QA output created by 757
-+Format and populate btree attr root dir
-+Break the root directory
-+Detect bad root directory
-+Fix bad root directory
-+Detect fixed root directory
-+Mount test
-diff --git a/tests/xfs/group b/tests/xfs/group
-index 731f869c..76e31167 100644
---- a/tests/xfs/group
-+++ b/tests/xfs/group
-@@ -528,5 +528,6 @@
- 537 auto quick
- 538 auto stress
- 539 auto quick mount
-+757 auto quick attr repair
- 908 auto quick bigtime
- 909 auto quick bigtime quota
+diff --git a/tests/xfs/010 b/tests/xfs/010
+index 95cc2555..a9394077 100755
+--- a/tests/xfs/010
++++ b/tests/xfs/010
+@@ -114,6 +114,7 @@ _corrupt_finobt_root $SCRATCH_DEV
+ 
+ filter_finobt_repair() {
+ 	sed -e '/^agi has bad CRC/d' \
++	    -e '/^bad levels/d' \
+ 	    -e '/^bad finobt block/d' | \
+ 		_filter_repair_lostblocks
+ }
 
