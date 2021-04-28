@@ -2,132 +2,187 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AA6236DDAE
-	for <lists+linux-xfs@lfdr.de>; Wed, 28 Apr 2021 18:57:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BE8336DE77
+	for <lists+linux-xfs@lfdr.de>; Wed, 28 Apr 2021 19:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241384AbhD1Q6B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 28 Apr 2021 12:58:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46092 "EHLO
+        id S242254AbhD1RkM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 28 Apr 2021 13:40:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53062 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241387AbhD1Q6B (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Apr 2021 12:58:01 -0400
+        by vger.kernel.org with ESMTP id S242594AbhD1RjT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 28 Apr 2021 13:39:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619629035;
+        s=mimecast20190719; t=1619631513;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=6ins1jAmF7Ztk23RCPKy7JAK6iAm+aqeLfw/qJ4s5l4=;
-        b=eD7C+3uat7S4tyqO3SKBDKRgwOXXYf6mMX5b6QC7/dBeEYv96tpeyW09MApbN9eJxTHJRJ
-        1hMLmtiGfLN12uh4wh4iUL4Jw2G8llBCYdJcrvjbrqFPCZJN5xb+fHMmuFT1sCS4PIuyzT
-        h8PlsdbrIhqgUEEWdyBiTp3wcy+LSUI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-291-D-EM7QIzN9SL5WSFUpXgwg-1; Wed, 28 Apr 2021 12:57:13 -0400
-X-MC-Unique: D-EM7QIzN9SL5WSFUpXgwg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A15A19611A4
-        for <linux-xfs@vger.kernel.org>; Wed, 28 Apr 2021 16:57:12 +0000 (UTC)
-Received: from bfoster.redhat.com (ovpn-113-229.rdu2.redhat.com [10.10.113.229])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 37AB85FC14
-        for <linux-xfs@vger.kernel.org>; Wed, 28 Apr 2021 16:57:12 +0000 (UTC)
+        bh=rQOZN7IxjSHlv0oOnrka40qKI0FY8ICE6KaNY+o3iY0=;
+        b=SzrI4WRxixN2z5yPzurHs0eHLxkVyYfJ66JTT08RXbZ4IOWrXLmngvPYKLfhjfXodpR23d
+        6+tmcsd+iNlYqndW/v12kUqISi5bJH1TL7cNc6xvhxrsAoQ+XnJ6QrTcuTEOCtKx7/YVgZ
+        rzls1ute4ez/dFaz+N99Q3yALmanrEU=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-209-b6kNB2O-McWW0cOeNmtuxg-1; Wed, 28 Apr 2021 13:38:31 -0400
+X-MC-Unique: b6kNB2O-McWW0cOeNmtuxg-1
+Received: by mail-qv1-f72.google.com with SMTP id s13-20020a0cdc0d0000b02901bbc03198caso6269239qvk.22
+        for <linux-xfs@vger.kernel.org>; Wed, 28 Apr 2021 10:38:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rQOZN7IxjSHlv0oOnrka40qKI0FY8ICE6KaNY+o3iY0=;
+        b=EjMG3W7mguEQlniBZP+jzSRCJ6qYsJmtwO61aBU96X0DVy2gb9qM1oLQBhpqz/41G5
+         K4+qoRgZMOZ1YS0XHX4Jv/Y8nMxckr85N/85sm7/jCS6CqNCDdgvBUQ/ESQIgpAx5cOX
+         9dbOm62Xlr3HPuwzY5Pgahvk1ktg05Wo8cwyAdGTvCgrWcAFsFITCJolAFd3Mu2tc8Yp
+         9/f3Cxvj/E9VQfm49VZe+jXjuGvZitW67pHNYe1AfaQz4tbFwpJceHTVWFCfWbEosl88
+         P7BCuqj2/XCYUZr483BbHU+XSBst/2yvSieu/m3ibAj+ALQW3EdSy3O5W5pDm47WUVQe
+         yIYQ==
+X-Gm-Message-State: AOAM533SWRCr3FEGxwHE6GGQV5ZsIEyn5Ej6U75WKn2PlETpI0vDXnGu
+        OvXnR3r8CXrXXryEN6TiOBGmsajnRAXTlqy5wyRyw5AZOZ8Q8SVNUAu5eoZYEFBRTv5cPYiWxII
+        GuBC6kj9uxNmrsdIbx5Jt
+X-Received: by 2002:ac8:6b05:: with SMTP id w5mr15035423qts.204.1619631511109;
+        Wed, 28 Apr 2021 10:38:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwf/gvo0Tj3PnvBCvo9l1LOCAkqfJcbUQU0I6jOrFPeF8yX2IhIeUfDy/39NEuArTZP0BpPxA==
+X-Received: by 2002:ac8:6b05:: with SMTP id w5mr15035397qts.204.1619631510766;
+        Wed, 28 Apr 2021 10:38:30 -0700 (PDT)
+Received: from bfoster ([98.216.211.229])
+        by smtp.gmail.com with ESMTPSA id n18sm472335qtv.87.2021.04.28.10.38.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Apr 2021 10:38:30 -0700 (PDT)
+Date:   Wed, 28 Apr 2021 13:38:27 -0400
 From:   Brian Foster <bfoster@redhat.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v5 3/3] xfs: set aside allocation btree blocks from block reservation
-Date:   Wed, 28 Apr 2021 12:57:10 -0400
-Message-Id: <20210428165710.385872-4-bfoster@redhat.com>
-In-Reply-To: <20210428165710.385872-1-bfoster@redhat.com>
-References: <20210428165710.385872-1-bfoster@redhat.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me
+Subject: Re: [PATCH 1/2] xfs: test what happens when we reset the root dir
+ and it has xattrs
+Message-ID: <YImdkx6ofgQ1t8CD@bfoster>
+References: <161958291787.3452247.15296911612919535588.stgit@magnolia>
+ <161958292387.3452247.4459342156885074164.stgit@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <161958292387.3452247.4459342156885074164.stgit@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The blocks used for allocation btrees (bnobt and countbt) are
-technically considered free space. This is because as free space is
-used, allocbt blocks are removed and naturally become available for
-traditional allocation. However, this means that a significant
-portion of free space may consist of in-use btree blocks if free
-space is severely fragmented.
+On Tue, Apr 27, 2021 at 09:08:43PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> Make sure that we can reset the root directory and the xattrs are erased
+> properly.
+> 
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  tests/xfs/757     |   63 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  tests/xfs/757.out |    7 ++++++
+>  tests/xfs/group   |    1 +
+>  3 files changed, 71 insertions(+)
+>  create mode 100755 tests/xfs/757
+>  create mode 100644 tests/xfs/757.out
+> 
+> 
+> diff --git a/tests/xfs/757 b/tests/xfs/757
+> new file mode 100755
+> index 00000000..0b9914f6
+> --- /dev/null
+> +++ b/tests/xfs/757
+> @@ -0,0 +1,63 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# Copyright (c) 2021 Oracle.  All Rights Reserved.
+> +#
+> +# FS QA Test No. 757
+> +#
+> +# Make sure that attrs are handled properly when repair has to reset the root
+> +# directory.
+> +#
+> +seq=`basename $0`
+> +seqres=$RESULT_DIR/$seq
+> +echo "QA output created by $seq"
+> +
+> +here=`pwd`
+> +tmp=/tmp/$$
+> +status=1	# failure is the default!
+> +trap "_cleanup; exit \$status" 0 1 2 3 7 15
+> +
+> +_cleanup()
+> +{
+> +	cd /
+> +	rm -rf $tmp.*
+> +}
+> +
+> +# get standard environment, filters and checks
+> +. ./common/rc
+> +. ./common/filter
+> +. ./common/populate
+> +. ./common/fuzzy
+> +
+> +# real QA test starts here
+> +_supported_fs xfs
+> +_require_scratch_nocheck
+> +
+> +rm -f $seqres.full
+> +
+> +echo "Format and populate btree attr root dir"
+> +_scratch_mkfs > "$seqres.full" 2>&1
+> +_scratch_mount
+> +
+> +blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
+> +__populate_create_attr "${SCRATCH_MNT}" "$((64 * blksz / 40))" true
+> +_scratch_unmount
+> +
+> +echo "Break the root directory"
+> +_scratch_xfs_fuzz_metadata_field core.mode zeroes 'sb 0' 'addr rootino' >> $seqres.full 2>&1
+> +
+> +echo "Detect bad root directory"
+> +_scratch_xfs_repair -n >> $seqres.full 2>&1 && \
+> +	echo "Should have detected bad root dir"
+> +
+> +echo "Fix bad root directory"
+> +_scratch_xfs_repair >> $seqres.full 2>&1
+> +
+> +echo "Detect fixed root directory"
+> +_scratch_xfs_repair -n >> $seqres.full 2>&1
+> +
+> +echo "Mount test"
+> +_scratch_mount
+> +
 
-On large filesystems with large perag reservations, this can lead to
-a rare but nasty condition where a significant amount of physical
-free space is available, but the majority of actual usable blocks
-consist of in-use allocbt blocks. We have a record of a (~12TB, 32
-AG) filesystem with multiple AGs in a state with ~2.5GB or so free
-blocks tracked across ~300 total allocbt blocks, but effectively at
-100% full because the the free space is entirely consumed by
-refcountbt perag reservation.
+Is the regression test here that attrs are erased after this sequence
+(as suggested in the commit log), or that the fs mounts, or both? I'm
+basically just wondering if we should also dump the xattrs on the root
+dir as a last step (and expect NULL output)..? That aside:
 
-Such a large perag reservation is by design on large filesystems.
-The problem is that because the free space is so fragmented, this AG
-contributes the 300 or so allocbt blocks to the global counters as
-free space. If this pattern repeats across enough AGs, the
-filesystem lands in a state where global block reservation can
-outrun physical block availability. For example, a streaming
-buffered write on the affected filesystem continues to allow delayed
-allocation beyond the point where writeback starts to fail due to
-physical block allocation failures. The expected behavior is for the
-delalloc block reservation to fail gracefully with -ENOSPC before
-physical block allocation failure is a possibility.
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-To address this problem, set aside in-use allocbt blocks at
-reservation time and thus ensure they cannot be reserved until truly
-available for physical allocation. This allows alloc btree metadata
-to continue to reside in free space, but dynamically adjusts
-reservation availability based on internal state. Note that the
-logic requires that the allocbt counter is fully populated at
-reservation time before it is fully effective. We currently rely on
-the mount time AGF scan in the perag reservation initialization code
-for this dependency on filesystems where it's most important (i.e.
-with active perag reservations).
-
-Signed-off-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_mount.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index cb1e2c4702c3..bdfee1943796 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -1188,6 +1188,7 @@ xfs_mod_fdblocks(
- 	int64_t			lcounter;
- 	long long		res_used;
- 	s32			batch;
-+	uint64_t		set_aside;
- 
- 	if (delta > 0) {
- 		/*
-@@ -1227,8 +1228,20 @@ xfs_mod_fdblocks(
- 	else
- 		batch = XFS_FDBLOCKS_BATCH;
- 
-+	/*
-+	 * Set aside allocbt blocks because these blocks are tracked as free
-+	 * space but not available for allocation. Technically this means that a
-+	 * single reservation cannot consume all remaining free space, but the
-+	 * ratio of allocbt blocks to usable free blocks should be rather small.
-+	 * The tradeoff without this is that filesystems that maintain high
-+	 * perag block reservations can over reserve physical block availability
-+	 * and fail physical allocation, which leads to much more serious
-+	 * problems (i.e. transaction abort, pagecache discards, etc.) than
-+	 * slightly premature -ENOSPC.
-+	 */
-+	set_aside = mp->m_alloc_set_aside + atomic64_read(&mp->m_allocbt_blks);
- 	percpu_counter_add_batch(&mp->m_fdblocks, delta, batch);
--	if (__percpu_counter_compare(&mp->m_fdblocks, mp->m_alloc_set_aside,
-+	if (__percpu_counter_compare(&mp->m_fdblocks, set_aside,
- 				     XFS_FDBLOCKS_BATCH) >= 0) {
- 		/* we had space! */
- 		return 0;
--- 
-2.26.3
+> +# success, all done
+> +status=0
+> +exit
+> diff --git a/tests/xfs/757.out b/tests/xfs/757.out
+> new file mode 100644
+> index 00000000..9f3aed5a
+> --- /dev/null
+> +++ b/tests/xfs/757.out
+> @@ -0,0 +1,7 @@
+> +QA output created by 757
+> +Format and populate btree attr root dir
+> +Break the root directory
+> +Detect bad root directory
+> +Fix bad root directory
+> +Detect fixed root directory
+> +Mount test
+> diff --git a/tests/xfs/group b/tests/xfs/group
+> index 731f869c..76e31167 100644
+> --- a/tests/xfs/group
+> +++ b/tests/xfs/group
+> @@ -528,5 +528,6 @@
+>  537 auto quick
+>  538 auto stress
+>  539 auto quick mount
+> +757 auto quick attr repair
+>  908 auto quick bigtime
+>  909 auto quick bigtime quota
+> 
 
