@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2680D3715FC
-	for <lists+linux-xfs@lfdr.de>; Mon,  3 May 2021 15:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83D3E371608
+	for <lists+linux-xfs@lfdr.de>; Mon,  3 May 2021 15:35:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233983AbhECNci (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 3 May 2021 09:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51226 "EHLO mail.kernel.org"
+        id S231166AbhECNgi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 3 May 2021 09:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234286AbhECNch (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 3 May 2021 09:32:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 5366961278
-        for <linux-xfs@vger.kernel.org>; Mon,  3 May 2021 13:31:44 +0000 (UTC)
+        id S234320AbhECNgh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 3 May 2021 09:36:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id F37F061369
+        for <linux-xfs@vger.kernel.org>; Mon,  3 May 2021 13:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620048704;
-        bh=KkCmjXxCF69xxeQ6SrTTd3RBJl8w+P8J+ahUm8T1jE4=;
+        s=k20201202; t=1620048944;
+        bh=PxNYR2hv1VZrWPGgHmvqvuu6/UKznUMqryq6X7hhkZM=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=IWZ4/mduvbUQhMQZH+Do9zG+/IReUy6KLJZo8YMG3sX2GZCM3RsFglmJGH/eqpTdh
-         5qhw4wTTYYHi2vDJGTUH0akFUiqHgzHv3phuT2dD2AGW2U2Qyucd/i01tEAoPzA0OJ
-         eNosou6fvHeH5i2Z01jQLqgEwZMEg0wPCZIsd2jaE9/LwUdI1nNhShbu7SisVh1CLr
-         kO4hqbxS2hWydRBuwCyLDLis5sdjX7F1sRVLOwAm3hw2Hrsu43P5tu5SIsPwBfZOAj
-         PwM7ipfEN/J9qBjBpfbKCUnsxVBpt9iFzkLIvyRu4syxys8dRg2aCBNO6xdbcewumF
-         AwOy8y9/OAp/w==
+        b=V3nqSeKSRhp9GtpYswCKDqpY4p61nCnh0Tz7Y79tdOWJ1D3Uz4MQ6aprtxmaCkx8X
+         On361jagaf5VIbU8nj5bJNBeZOl/oDx1Cw18iMMmiisi8ABZlSNdMlWgSPgdlDWIou
+         8a4OyMa3K2LC+4HdwJCf/DPuR902lzg2g5Bgp/3TT0ddrtwnch9SjcOWgSnPZpltay
+         zzVOOiHAW10wmFLUUGfOw0X3GbNSlwHOBaFp8mHnLTYO5lT2hUoFTCWNMrr15ySqyE
+         WOGal7SuAEJPLmnRzpeSdAcyyyFeFWiIDbUzRTTIEZw3XN4+F4G05c0HPHK8dtv+Gm
+         uuL6fo8QmOeAw==
 Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 500F161243; Mon,  3 May 2021 13:31:44 +0000 (UTC)
+        id EFE9461243; Mon,  3 May 2021 13:35:43 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     linux-xfs@vger.kernel.org
 Subject: [Bug 211605] Re-mount XFS causes "attr2 mount option is deprecated"
  warning
-Date:   Mon, 03 May 2021 13:31:43 +0000
+Date:   Mon, 03 May 2021 13:35:43 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -38,14 +38,14 @@ X-Bugzilla-Component: XFS
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: low
-X-Bugzilla-Who: preichl@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
+X-Bugzilla-Who: sandeen@sandeen.net
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: CODE_FIX
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: cc
-Message-ID: <bug-211605-201763-atFp7Ps5WT@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: bug_status cc resolution
+Message-ID: <bug-211605-201763-qLeM5bANHa@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-211605-201763@https.bugzilla.kernel.org/>
 References: <bug-211605-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -59,21 +59,16 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D211605
 
-Pavel Reichl (preichl@redhat.com) changed:
+Eric Sandeen (sandeen@sandeen.net) changed:
 
            What    |Removed                     |Added
 ----------------------------------------------------------------------------
-                 CC|                            |preichl@redhat.com
+             Status|NEW                         |RESOLVED
+                 CC|                            |sandeen@sandeen.net
+         Resolution|---                         |CODE_FIX
 
---- Comment #10 from Pavel Reichl (preichl@redhat.com) ---
-Hello,
-
-upstream kernel now contains following commits:
-
-92cf7d36384b9 xfs: Skip repetitive warnings about mount options
-0f98b4ece18da xfs: rename variable mp to parsing_mp
-
-This should fix the reported problem. Can we close the bug now?
+--- Comment #11 from Eric Sandeen (sandeen@sandeen.net) ---
+Yep!
 
 --=20
 You may reply to this email to add a comment.
