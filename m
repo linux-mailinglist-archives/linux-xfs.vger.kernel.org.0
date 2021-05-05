@@ -2,63 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BBF83746CF
-	for <lists+linux-xfs@lfdr.de>; Wed,  5 May 2021 19:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97266374A21
+	for <lists+linux-xfs@lfdr.de>; Wed,  5 May 2021 23:28:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236265AbhEER2L (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 5 May 2021 13:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235605AbhEERGV (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 5 May 2021 13:06:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 94F79613D8;
-        Wed,  5 May 2021 17:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620234104;
-        bh=f1ejHnXIziybYFyOtYLgg1Q0X5lDH9mC6M2haNXtx08=;
-        h=Date:From:To:Cc:Subject:From;
-        b=b0YPh6dB9tLJ/037eILhBiExKA1d7R86ZkFMxsB9prqAeO2ryBza7nC3pmfGWhuXx
-         2ZveRHNjwASxLRwCrzkJbZDhr2VR4JJCpVPoP2xnVGFd1FrHoycxA3cPoWBlZVe7cR
-         qPev9xD5byQeqHPh0MpzklLpDPyY/7eldb1xpb1tqLxcTUJtA+qcqcKRXdz5uQWB4+
-         gZ2+2m0rhXzIl0z2cM1jQ8+VsSCCCxa48RJyC8elkjBY/zjRbrhW/t8DuoasYo5kHd
-         uh3OsiCjq58YpHHOyqMvKI1AOzTJplAEr/j/F2H9E7Hn0b6wIGRDvGxhR8s5fMPruw
-         rOYCu3sAum2DQ==
-Date:   Wed, 5 May 2021 10:01:42 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] libxfs: copy crtime correctly now that it's timespec64
-Message-ID: <20210505170142.GC8582@magnolia>
+        id S230209AbhEEV3e (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 5 May 2021 17:29:34 -0400
+Received: from ns5.havocshack.com ([108.233.14.139]:37818 "EHLO
+        ns5.havocshack.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229893AbhEEV3e (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 5 May 2021 17:29:34 -0400
+X-Greylist: delayed 477 seconds by postgrey-1.27 at vger.kernel.org; Wed, 05 May 2021 17:29:34 EDT
+Received: by ns5.havocshack.com (Postfix, from userid 535)
+        id C74724A13FE; Wed,  5 May 2021 14:20:26 -0700 (PDT)
+X-Spam-Checker-Version: SpamAssassin 3.3.1 (2010-03-16) on ns5.havocshack.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.8 required=4.5 tests=ALL_TRUSTED,BAYES_00,
+        FREEMAIL_FORGED_REPLYTO,URIBL_BLOCKED autolearn=no version=3.3.1
+Received: from www.havocshack.com (localhost.localdomain [127.0.0.1])
+        by ns5.havocshack.com (Postfix) with ESMTP id 3F6374A13F3;
+        Wed,  5 May 2021 14:20:24 -0700 (PDT)
+Received: from 92.40.194.220
+        (SquirrelMail authenticated user susanb@nickb.org)
+        by www.havocshack.com with HTTP;
+        Wed, 5 May 2021 14:20:26 -0700
+Message-ID: <95702a8a973857aa158ef9a20372d5f4.squirrel@www.havocshack.com>
+Date:   Wed, 5 May 2021 14:20:26 -0700
+Subject: loan
+From:   "katherine tucker loan" <susanb@nickb.org>
+Reply-To: service.ktl@yahoo.com
+User-Agent: SquirrelMail/1.4.22
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Priority: 3 (Normal)
+Importance: Normal
+To:     undisclosed-recipients:;
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
 
-The incore i_mtime and di_crtime are both timespec64 now, which means
-that tv_sec is a 64-bit value.  Don't cast that to int32_t when we're
-creating an inode, because we'll end up truncating the creation time
-incorrectly, should an xfsprogs of this vintage make it to 2039. :P
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- libxfs/util.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 1025ad24..a49aee9e 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -290,8 +290,7 @@ libxfs_init_new_inode(
- 		VFS_I(ip)->i_version = 1;
- 		ip->i_d.di_flags2 = pip ? ip->i_mount->m_ino_geo.new_diflags2 :
- 				xfs_flags2diflags2(ip, fsx->fsx_xflags);
--		ip->i_d.di_crtime.tv_sec = (int32_t)VFS_I(ip)->i_mtime.tv_sec;
--		ip->i_d.di_crtime.tv_nsec = (int32_t)VFS_I(ip)->i_mtime.tv_nsec;
-+		ip->i_d.di_crtime = VFS_I(ip)->i_mtime; /* struct copy */
- 		ip->i_d.di_cowextsize = pip ? 0 : fsx->fsx_cowextsize;
- 	}
- 
+We grant loan ranging from 10,000 to 500,000,000 on a low
+interest rate of 3% per Annual, Apply via
+Email:kathrine@katherinetuckerloan.com
+Regards,
+Malzhan lisa
+
