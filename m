@@ -2,82 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6A5376723
-	for <lists+linux-xfs@lfdr.de>; Fri,  7 May 2021 16:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAB5D376CD3
+	for <lists+linux-xfs@lfdr.de>; Sat,  8 May 2021 00:27:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237686AbhEGOmQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 7 May 2021 10:42:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233545AbhEGOmO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 May 2021 10:42:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 851FDC061574;
-        Fri,  7 May 2021 07:41:14 -0700 (PDT)
+        id S229986AbhEGW1v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 7 May 2021 18:27:51 -0400
+Received: from bosmailout01.eigbox.net ([66.96.190.1]:36027 "EHLO
+        bosmailout01.eigbox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229470AbhEGW1h (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 7 May 2021 18:27:37 -0400
+X-Greylist: delayed 1929 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 May 2021 18:27:30 EDT
+Received: from bosmailscan09.eigbox.net ([10.20.15.9])
+        by bosmailout01.eigbox.net with esmtp (Exim)
+        id 1lf8QO-00068o-JJ; Fri, 07 May 2021 17:54:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vx06W0nngKfU8tIsu9g8fiUjk7fO4Zx6zOu8s1ypHe8=; b=Onpma/FHwNu6HH6pq1fWEeb7wc
-        m9Yv1Gr8JLQGtU2aQh9HbOFhu1tCtqy41/FqOyXO6JLQ7UenXt0wTYll5oIIUwSCx+z2zv8DFeyxF
-        8KmHkWlFWbBX7QxShZ+n46NX72st/qdSs0hNS/z8CG/E9eH9bicNVIW8SDZhgEAnsFg18oimDI1Mu
-        I/rfkIx+wzOgYI/LR8sTxbbnajnn0gMXIj3AiIKDt0lGepvWV9gk6Fv+7yLoodo6mZitGDjxT1gnE
-        ZHZ70FucyC9yLQHKyYk41lK/ah58mchElTAIQYSFbcQ7qt/n+mkc7TjsOo8h9qcw1fqOPi/XAxht3
-        55adjKYg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
-        id 1lf1eh-003Fy6-3t; Fri, 07 May 2021 14:40:44 +0000
-Date:   Fri, 7 May 2021 15:40:39 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Brian Foster <bfoster@redhat.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] xfs: kick extra large ioends to completion
- workqueue
-Message-ID: <YJVRZ1Bg1gan2BrW@casper.infradead.org>
-References: <20201002153357.56409-3-bfoster@redhat.com>
- <20201005152102.15797-1-bfoster@redhat.com>
- <20201006035537.GD49524@magnolia>
- <20201006124440.GA50358@bfoster>
- <20210506193158.GD8582@magnolia>
- <YJVJZzld5ucxnlAH@bfoster>
+        d=godsofu4.com; s=dkim; h=Sender:Content-Transfer-Encoding:Content-Type:
+        Message-ID:Reply-To:Subject:To:From:Date:MIME-Version:Cc:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aM9bUFGSTpfnep8zAVAJMnojqhcwpuHDFPgQnPqW4M4=; b=bjgKomV6NO5Eg5D3qsCBps1llx
+        tj4k2teSfIdfo/duBtOSoC/FW1+C1nXiYJbrvf2JDobx8fDCsgnxHFoPWOCb5eI+OJOIgvnnfKlpl
+        ZqidIuDnjEPTMao1vFwrg6M9FUKU/cz6TT5/KN4ccsk+aQli3Wgs3G1cQz5vdbC1Y2SXULFY8Mu2t
+        1PShwmiDRn71EPzgUHUVu0GG39z6uSTEuRgOXhiNl9ekuZ5QXUAEykoocvC5/DkORRmERAA91o1HY
+        Sl76pPWw9UBVGbuFbfdVPfVcFxJM5xZDrmgt6uCf9J+dn/n7LFOSOxBaL9svxxYdhOkJwdz4uh075
+        2gI+xJSw==;
+Received: from [10.115.3.32] (helo=bosimpout12)
+        by bosmailscan09.eigbox.net with esmtp (Exim)
+        id 1lf8QO-0003aD-AI; Fri, 07 May 2021 17:54:20 -0400
+Received: from boswebmail06.eigbox.net ([10.20.16.6])
+        by bosimpout12 with 
+        id 1xuH2500407qujN01xuLVi; Fri, 07 May 2021 17:54:20 -0400
+X-EN-SP-DIR: OUT
+X-EN-SP-SQ: 1
+Received: from [127.0.0.1] (helo=homestead)
+        by boswebmail06.eigbox.net with esmtp (Exim)
+        id 1lf8QL-0006fx-UG; Fri, 07 May 2021 17:54:17 -0400
+Received: from [197.239.81.229]
+ by emailmg.homestead.com
+ with HTTP (HTTP/1.1 POST); Fri, 07 May 2021 17:54:17 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YJVJZzld5ucxnlAH@bfoster>
+Date:   Fri, 07 May 2021 21:54:17 +0000
+From:   Mrs Suzara Maling Wan <fast65@godsofu4.com>
+To:     undisclosed-recipients:;
+Subject: URGENT REPLY NEEDED
+Reply-To: suzara2017malingwan@gmail.com
+Mail-Reply-To: suzara2017malingwan@gmail.com
+Message-ID: <36acfe805efde59f3f399df1324ce6b9@godsofu4.com>
+X-Sender: fast65@godsofu4.com
+User-Agent: Roundcube Webmail/1.3.14
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-EN-AuthUser: fast65@godsofu4.com
+Sender:  Mrs Suzara Maling Wan <fast65@godsofu4.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 07, 2021 at 10:06:31AM -0400, Brian Foster wrote:
-> > <nod> So I guess I'm saying that my resistance to /this/ part of the
-> > changes is melting away.  For a 2GB+ write IO, I guess the extra overhead
-> > of poking a workqueue can be amortized over the sheer number of pages.
-> 
-> I think the main question is what is a suitable size threshold to kick
-> an ioend over to the workqueue? Looking back, I think this patch just
-> picked 256k randomly to propose the idea. ISTM there could be a
-> potentially large window from the point where I/O latency starts to
-> dominate (over the extra context switch for wq processing) and where the
-> softlockup warning thing will eventually trigger due to having too many
-> pages. I think that means we could probably use a more conservative
-> value, I'm just not sure what value should be (10MB, 100MB, 1GB?). If
-> you have a reproducer it might be interesting to experiment with that.
 
-To my mind, there are four main types of I/Os.
 
-1. Small, dependent reads -- maybe reading a B-tree block so we can get
-the next pointer.  Those need latency above all.
+My names are Mrs Suzara Maling Wan, I am a Nationality of the Republic
+of the Philippine presently base in West Africa B/F, dealing with
+exportation of Gold, I was diagnose of blood Causal decease, and my
+doctor have announce to me that I have few days to leave due to the
+condition of my sickness.
 
-2. Readahead.  Tend to be large I/Os and latency is not a concern
+I have a desire to build an orphanage home in your country of which i
+cannot execute the project myself due to my present health condition,
+I am willing to hand over the project under your care for you to help
+me fulfill my dreams and desire of building an orphanage home in your
+country.
 
-3. Page writeback which tend to be large and can afford the extra latency.
+Reply in you are will to help so that I can direct you to my bank for
+the urgent transfer of the fund/money require for the project to your
+account as I have already made the fund/money available.
 
-4. Log writes.  These tend to be small, and I'm not sure what increasing
-their latency would do.  Probably bad.
-
-I like 256kB as a threshold.  I think I could get behind anything from
-128kB to 1MB.  I don't think playing with it is going to be really
-interesting because most IOs are going to be far below or far above
-that threshold.
-
+With kind regards
+Mrs Suzara Maling Wan
