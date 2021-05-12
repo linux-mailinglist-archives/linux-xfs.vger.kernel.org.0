@@ -2,177 +2,380 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E129D37EF1A
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 May 2021 01:10:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7EC37F010
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 May 2021 01:44:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231594AbhELW6y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 May 2021 18:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38020 "EHLO mail.kernel.org"
+        id S231826AbhELXoX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 May 2021 19:44:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237507AbhELW4w (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 12 May 2021 18:56:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 92D4761352;
-        Wed, 12 May 2021 22:55:43 +0000 (UTC)
+        id S237287AbhELXMc (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 12 May 2021 19:12:32 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D80D613EB;
+        Wed, 12 May 2021 23:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620860143;
-        bh=fn0TI4lZDOB9OVLMmRL88vJI096TeH/KoyRuyMfc/b0=;
+        s=k20201202; t=1620861075;
+        bh=Js/M1oARJBaX0ikpMLfUxPcWcxcw3GZhUxrpWYDXRe4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k4ulHQG7d3vNsb6vzd7IMBaIZG7ivw5U2xmtd/aO8uMSsWRoEQ9aeQU54oZXwg0wT
-         uSF5igoQwg5O3+8Pmmlyaf6NFCSnpp22ivhGXFWOlm/J0YMD2edu8f+5hTIBEmdJhj
-         5ZunB5wTICHsB5+rhYDAI20XZGNT36eMlpazPn0GHKnJug4X7a37X7HJokCGGdmfz4
-         1XiCXnelNoG//uC1+Ib06zezFLTSyegPzclvJEa4VobudFocGak21XwvSYCJwx/o90
-         Sykbanvcor7ZUHo1I6GV6Hgdxce7/4LkJV6cyumrFYKrnYZoSfT6SbC5L4sBDVLB38
-         oOGkmnAHPLgdA==
-Date:   Wed, 12 May 2021 15:55:42 -0700
+        b=hhathkQWSfCi1yLDMlV5pPFX7a3PLZKxCjyKghcgNJFJy+Bdq/FhiSN/ADub1GMB7
+         dmCVs0J3EJnHBzMqhfmX4rA7bKE9GgioHYcqxCtnrjhUUfa7PsQhaIJyXfDYjggT76
+         +Px2ElQWBP8NaWmx3KCtD3QKeMAxwBCXtjgWmE+qflhUEP/+l6qJT5/GpQ45MwUzz3
+         GxJDQXZDIQbRyWb77IrPF/0C10lEFe/8E0a5xyDWQA9YVs+QPeS8TrcGmsXIvPZCqb
+         CNV+f0Y/hlN9VXI8vicNYWB/pEz/d5w08u/xdXdhexuOKzOE/SyGqV1tJ8jdvfAlO6
+         w/OwPNSuz6zTw==
+Date:   Wed, 12 May 2021 16:11:14 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 17/22] xfs: simplify xfs_dialloc_select_ag() return values
-Message-ID: <20210512225542.GL8582@magnolia>
+Subject: Re: [PATCH 18/22] xfs: collapse AG selection for inode allocation
+Message-ID: <20210512231114.GM8582@magnolia>
 References: <20210506072054.271157-1-david@fromorbit.com>
- <20210506072054.271157-18-david@fromorbit.com>
+ <20210506072054.271157-19-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210506072054.271157-18-david@fromorbit.com>
+In-Reply-To: <20210506072054.271157-19-david@fromorbit.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 06, 2021 at 05:20:49PM +1000, Dave Chinner wrote:
+On Thu, May 06, 2021 at 05:20:50PM +1000, Dave Chinner wrote:
 > From: Dave Chinner <dchinner@redhat.com>
 > 
-> The only caller of xfs_dialloc_select_ag() will always return
-> -ENOSPC to it's caller if the agbp returned from
-> xfs_dialloc_select_ag() is NULL. IOWs, failure to find a candidate
-> AGI we can allocate inodes from is always an ENOSPC condition, so
-> move this logic up into xfs_dialloc_select_ag() so we can simplify
-> the return logic in this function.
+> xfs_dialloc_select_ag() does a lot of repetitive work. It first
+> calls xfs_ialloc_ag_select() to select the AG to start allocation
+> attempts in, which can do up to two entire loops across the perags
+> that inodes can be allocated in. This is simply checking if there is
+> spce available to allocate inodes in an AG, and it returns when it
+> finds the first candidate AG.
 > 
-> xfs_dialloc_select_ag() now only ever returns 0 with a locked
-> agbp, or an error with no agbp.
+> xfs_dialloc_select_ag() then does it's own iterative walk across
+> all the perags locking the AGIs and trying to allocate inodes from
+> the locked AG. It also doesn't limit the search to mp->m_maxagi,
+> so it will walk all AGs whether they can allocate inodes or not.
+> 
+> Hence if we are really low on inodes, we could do almost 3 entire
+> walks across the whole perag range before we find an allocation
+> group we can allocate inodes in or report ENOSPC.
+> 
+> Because xfs_ialloc_ag_select() returns on the first candidate AG it
+> finds, we can simply do these checks directly in
+> xfs_dialloc_select_ag() before we lock and try to allocate inodes.
+> This reduces the inode allocation pass down to 2 perag sweeps at
+> most - one for aligned inode cluster allocation and if we can't
+> allocate full, aligned inode clusters anywhere we'll do another pass
+> trying to do sparse inode cluster allocation.
+> 
+> This also removes a big chunk of duplicate code.
+
+Soooooo... we did an AG walk to pick the optimal starting point of an AG
+walk?  Heh.
+
 > 
 > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/libxfs/xfs_ialloc.c | 221 +++++++++++++------------------------
+>  1 file changed, 75 insertions(+), 146 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+> index 872591e8f5cb..b22556556bba 100644
+> --- a/fs/xfs/libxfs/xfs_ialloc.c
+> +++ b/fs/xfs/libxfs/xfs_ialloc.c
+> @@ -899,139 +899,6 @@ xfs_ialloc_ag_alloc(
+>  	return 0;
+>  }
+>  
+> -STATIC xfs_agnumber_t
+> -xfs_ialloc_next_ag(
+> -	xfs_mount_t	*mp)
+> -{
+> -	xfs_agnumber_t	agno;
+> -
+> -	spin_lock(&mp->m_agirotor_lock);
+> -	agno = mp->m_agirotor;
+> -	if (++mp->m_agirotor >= mp->m_maxagi)
+> -		mp->m_agirotor = 0;
+> -	spin_unlock(&mp->m_agirotor_lock);
+> -
+> -	return agno;
+> -}
+> -
+> -/*
+> - * Select an allocation group to look for a free inode in, based on the parent
+> - * inode and the mode.  Return the allocation group buffer.
+> - */
+> -STATIC xfs_agnumber_t
+> -xfs_ialloc_ag_select(
+> -	xfs_trans_t	*tp,		/* transaction pointer */
+> -	xfs_ino_t	parent,		/* parent directory inode number */
+> -	umode_t		mode)		/* bits set to indicate file type */
+> -{
+> -	xfs_agnumber_t	agcount;	/* number of ag's in the filesystem */
+> -	xfs_agnumber_t	agno;		/* current ag number */
+> -	int		flags;		/* alloc buffer locking flags */
+> -	xfs_extlen_t	ineed;		/* blocks needed for inode allocation */
+> -	xfs_extlen_t	longest = 0;	/* longest extent available */
+> -	xfs_mount_t	*mp;		/* mount point structure */
+> -	int		needspace;	/* file mode implies space allocated */
+> -	xfs_perag_t	*pag;		/* per allocation group data */
+> -	xfs_agnumber_t	pagno;		/* parent (starting) ag number */
+> -	int		error;
+> -
+> -	/*
+> -	 * Files of these types need at least one block if length > 0
+> -	 * (and they won't fit in the inode, but that's hard to figure out).
+> -	 */
+> -	needspace = S_ISDIR(mode) || S_ISREG(mode) || S_ISLNK(mode);
+> -	mp = tp->t_mountp;
+> -	agcount = mp->m_maxagi;
+> -	if (S_ISDIR(mode))
+> -		pagno = xfs_ialloc_next_ag(mp);
+> -	else {
+> -		pagno = XFS_INO_TO_AGNO(mp, parent);
+> -		if (pagno >= agcount)
+> -			pagno = 0;
+> -	}
+> -
+> -	ASSERT(pagno < agcount);
+> -
+> -	/*
+> -	 * Loop through allocation groups, looking for one with a little
+> -	 * free space in it.  Note we don't look for free inodes, exactly.
+> -	 * Instead, we include whether there is a need to allocate inodes
+> -	 * to mean that blocks must be allocated for them,
+> -	 * if none are currently free.
+> -	 */
+> -	agno = pagno;
+> -	flags = XFS_ALLOC_FLAG_TRYLOCK;
+> -	for (;;) {
+> -		pag = xfs_perag_get(mp, agno);
+> -		if (!pag->pagi_inodeok) {
+> -			xfs_ialloc_next_ag(mp);
+> -			goto nextag;
+> -		}
+> -
+> -		if (!pag->pagi_init) {
+> -			error = xfs_ialloc_pagi_init(mp, tp, agno);
+> -			if (error)
+> -				goto nextag;
+> -		}
+> -
+> -		if (pag->pagi_freecount) {
+> -			xfs_perag_put(pag);
+> -			return agno;
+> -		}
+> -
+> -		if (!pag->pagf_init) {
+> -			error = xfs_alloc_pagf_init(mp, tp, agno, flags);
+> -			if (error)
+> -				goto nextag;
+> -		}
+> -
+> -		/*
+> -		 * Check that there is enough free space for the file plus a
+> -		 * chunk of inodes if we need to allocate some. If this is the
+> -		 * first pass across the AGs, take into account the potential
+> -		 * space needed for alignment of inode chunks when checking the
+> -		 * longest contiguous free space in the AG - this prevents us
+> -		 * from getting ENOSPC because we have free space larger than
+> -		 * ialloc_blks but alignment constraints prevent us from using
+> -		 * it.
+> -		 *
+> -		 * If we can't find an AG with space for full alignment slack to
+> -		 * be taken into account, we must be near ENOSPC in all AGs.
+> -		 * Hence we don't include alignment for the second pass and so
+> -		 * if we fail allocation due to alignment issues then it is most
+> -		 * likely a real ENOSPC condition.
+> -		 */
+> -		ineed = M_IGEO(mp)->ialloc_min_blks;
+> -		if (flags && ineed > 1)
+> -			ineed += M_IGEO(mp)->cluster_align;
+> -		longest = pag->pagf_longest;
+> -		if (!longest)
+> -			longest = pag->pagf_flcount > 0;
+> -
+> -		if (pag->pagf_freeblks >= needspace + ineed &&
+> -		    longest >= ineed) {
+> -			xfs_perag_put(pag);
+> -			return agno;
+> -		}
+> -nextag:
+> -		xfs_perag_put(pag);
+> -		/*
+> -		 * No point in iterating over the rest, if we're shutting
+> -		 * down.
+> -		 */
+> -		if (XFS_FORCED_SHUTDOWN(mp))
+> -			return NULLAGNUMBER;
+> -		agno++;
+> -		if (agno >= agcount)
+> -			agno = 0;
+> -		if (agno == pagno) {
+> -			if (flags == 0)
+> -				return NULLAGNUMBER;
+> -			flags = 0;
+> -		}
+> -	}
+> -}
+> -
+>  /*
+>   * Try to retrieve the next record to the left/right from the current one.
+>   */
+> @@ -1708,6 +1575,21 @@ xfs_dialloc_roll(
+>  	return 0;
+>  }
+>  
+> +STATIC xfs_agnumber_t
+> +xfs_ialloc_next_ag(
+> +	xfs_mount_t	*mp)
+> +{
+> +	xfs_agnumber_t	agno;
+> +
+> +	spin_lock(&mp->m_agirotor_lock);
+> +	agno = mp->m_agirotor;
+> +	if (++mp->m_agirotor >= mp->m_maxagi)
+> +		mp->m_agirotor = 0;
+> +	spin_unlock(&mp->m_agirotor_lock);
+> +
+> +	return agno;
+> +}
+> +
+>  /*
+>   * Select and prepare an AG for inode allocation.
+>   *
+> @@ -1734,16 +1616,23 @@ xfs_dialloc_select_ag(
+>  	struct xfs_perag	*pag;
+>  	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
+>  	bool			okalloc = true;
+> +	int			needspace;
+> +	int			flags;
+>  
+>  	*IO_agbp = NULL;
+>  
+>  	/*
+> -	 * We do not have an agbp, so select an initial allocation
+> -	 * group for inode allocation.
+> +	 * Files of these types need at least one block if length > 0
+> +	 * (and they won't fit in the inode, but that's hard to figure out).
 
-Woo nice cleanup!
+Uh, what is length here?  Seeing as most directories and symlinks
+probably end up in local format, is this needspace computation really
+true?
+
+I guess it doesn't hurt to be cautious and assume that directories can
+expand and that people are aggressively symlinking.  But maybe this
+comment could be rephrased to something like:
+
+	/*
+	 * Directories, symlinks, and regular files frequently allocate
+	 * at least one block, so factor that potential expansion when
+	 * we examine whether an AG has enough space for file creation.
+	 */
+	needspace = S_ISDIR(mode)...;
+
+With that clarified,
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
 --D
 
-> ---
->  fs/xfs/libxfs/xfs_ialloc.c | 23 ++++++++---------------
->  fs/xfs/xfs_inode.c         |  3 ---
->  2 files changed, 8 insertions(+), 18 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-> index 4540fbcd68a3..872591e8f5cb 100644
-> --- a/fs/xfs/libxfs/xfs_ialloc.c
-> +++ b/fs/xfs/libxfs/xfs_ialloc.c
-> @@ -1717,7 +1717,7 @@ xfs_dialloc_roll(
->   * This function will ensure that the selected AG has free inodes available to
->   * allocate from. The selected AGI will be returned locked to the caller, and it
->   * will allocate more free inodes if required. If no free inodes are found or
-> - * can be allocated, no AGI will be returned.
-> + * can be allocated, -ENOSPC be returned.
->   */
->  int
->  xfs_dialloc_select_ag(
-> @@ -1730,7 +1730,6 @@ xfs_dialloc_select_ag(
->  	struct xfs_buf		*agbp;
->  	xfs_agnumber_t		agno;
->  	int			error;
-> -	bool			noroom = false;
->  	xfs_agnumber_t		start_agno;
->  	struct xfs_perag	*pag;
->  	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
-> @@ -1744,7 +1743,7 @@ xfs_dialloc_select_ag(
 >  	 */
->  	start_agno = xfs_ialloc_ag_select(*tpp, parent, mode);
->  	if (start_agno == NULLAGNUMBER)
-> -		return 0;
-> +		return -ENOSPC;
+> -	start_agno = xfs_ialloc_ag_select(*tpp, parent, mode);
+> -	if (start_agno == NULLAGNUMBER)
+> -		return -ENOSPC;
+> +	needspace = S_ISDIR(mode) || S_ISREG(mode) || S_ISLNK(mode);
+> +	if (S_ISDIR(mode))
+> +		start_agno = xfs_ialloc_next_ag(mp);
+> +	else {
+> +		start_agno = XFS_INO_TO_AGNO(mp, parent);
+> +		if (start_agno >= mp->m_maxagi)
+> +			start_agno = 0;
+> +	}
 >  
 >  	/*
 >  	 * If we have already hit the ceiling of inode blocks then clear
-> @@ -1757,7 +1756,6 @@ xfs_dialloc_select_ag(
->  	if (igeo->maxicount &&
->  	    percpu_counter_read_positive(&mp->m_icount) + igeo->ialloc_inos
->  							> igeo->maxicount) {
-> -		noroom = true;
->  		okalloc = false;
->  	}
->  
-> @@ -1794,10 +1792,8 @@ xfs_dialloc_select_ag(
->  		if (error)
->  			break;
->  
-> -		if (pag->pagi_freecount) {
-> -			xfs_perag_put(pag);
-> +		if (pag->pagi_freecount)
->  			goto found_ag;
+> @@ -1765,12 +1654,14 @@ xfs_dialloc_select_ag(
+>  	 * allocation groups upward, wrapping at the end.
+>  	 */
+>  	agno = start_agno;
+> +	flags = XFS_ALLOC_FLAG_TRYLOCK;
+>  	for (;;) {
+> +		xfs_extlen_t	ineed;
+> +		xfs_extlen_t	longest = 0;
+> +
+>  		pag = xfs_perag_get(mp, agno);
+> -		if (!pag->pagi_inodeok) {
+> -			xfs_ialloc_next_ag(mp);
+> +		if (!pag->pagi_inodeok)
+>  			goto nextag;
 > -		}
 >  
->  		if (!okalloc)
->  			goto nextag_relse_buffer;
-> @@ -1805,9 +1801,6 @@ xfs_dialloc_select_ag(
->  		error = xfs_ialloc_ag_alloc(*tpp, agbp, pag);
->  		if (error < 0) {
->  			xfs_trans_brelse(*tpp, agbp);
-> -
-> -			if (error == -ENOSPC)
-> -				error = 0;
->  			break;
+>  		if (!pag->pagi_init) {
+>  			error = xfs_ialloc_pagi_init(mp, *tpp, agno);
+> @@ -1778,10 +1669,41 @@ xfs_dialloc_select_ag(
+>  				break;
 >  		}
 >  
-> @@ -1818,12 +1811,11 @@ xfs_dialloc_select_ag(
->  			 * allocate one of the new inodes.
->  			 */
->  			ASSERT(pag->pagi_freecount > 0);
-> -			xfs_perag_put(pag);
+> +		if (!pag->pagi_freecount)
+> +			goto nextag;
+> +		if (!okalloc)
+> +			goto nextag;
+> +
+> +		if (!pag->pagf_init) {
+> +			error = xfs_alloc_pagf_init(mp, *tpp, agno, flags);
+> +			if (error)
+> +				goto nextag;
+> +		}
+> +
+>  		/*
+> -		 * Do a first racy fast path check if this AG is usable.
+> +		 * Check that there is enough free space for the file plus a
+> +		 * chunk of inodes if we need to allocate some. If this is the
+> +		 * first pass across the AGs, take into account the potential
+> +		 * space needed for alignment of inode chunks when checking the
+> +		 * longest contiguous free space in the AG - this prevents us
+> +		 * from getting ENOSPC because we have free space larger than
+> +		 * ialloc_blks but alignment constraints prevent us from using
+> +		 * it.
+> +		 *
+> +		 * If we can't find an AG with space for full alignment slack to
+> +		 * be taken into account, we must be near ENOSPC in all AGs.
+> +		 * Hence we don't include alignment for the second pass and so
+> +		 * if we fail allocation due to alignment issues then it is most
+> +		 * likely a real ENOSPC condition.
+>  		 */
+> -		if (!pag->pagi_freecount && !okalloc)
+> +		ineed = M_IGEO(mp)->ialloc_min_blks;
+> +		if (flags && ineed > 1)
+> +			ineed += M_IGEO(mp)->cluster_align;
+> +		longest = pag->pagf_longest;
+> +		if (!longest)
+> +			longest = pag->pagf_flcount > 0;
+> +
+> +		if (pag->pagf_freeblks < needspace + ineed || longest < ineed)
+>  			goto nextag;
 >  
->  			error = xfs_dialloc_roll(tpp, agbp);
->  			if (error) {
->  				xfs_buf_relse(agbp);
-> -				return error;
-> +				break;
->  			}
->  			goto found_ag;
->  		}
-> @@ -1831,16 +1823,17 @@ xfs_dialloc_select_ag(
+>  		/*
+> @@ -1823,10 +1745,17 @@ xfs_dialloc_select_ag(
 >  nextag_relse_buffer:
 >  		xfs_trans_brelse(*tpp, agbp);
 >  nextag:
-> -		xfs_perag_put(pag);
->  		if (++agno == mp->m_sb.sb_agcount)
->  			agno = 0;
->  		if (agno == start_agno)
-> -			return noroom ? -ENOSPC : 0;
-> +			break;
-> +		xfs_perag_put(pag);
+> -		if (++agno == mp->m_sb.sb_agcount)
+> -			agno = 0;
+> -		if (agno == start_agno)
+> +		if (XFS_FORCED_SHUTDOWN(mp)) {
+> +			error = -EFSCORRUPTED;
+>  			break;
+> +		}
+> +		if (++agno == mp->m_maxagi)
+> +			agno = 0;
+> +		if (agno == start_agno) {
+> +			if (!flags)
+> +				break;
+> +			flags = 0;
+> +		}
+>  		xfs_perag_put(pag);
 >  	}
 >  
->  	xfs_perag_put(pag);
-> -	return error;
-> +	return error ? error : -ENOSPC;
->  found_ag:
-> +	xfs_perag_put(pag);
->  	*IO_agbp = agbp;
->  	return 0;
->  }
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 25910b145d70..3918c99fa95b 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -923,9 +923,6 @@ xfs_dir_ialloc(
->  	if (error)
->  		return error;
->  
-> -	if (!agibp)
-> -		return -ENOSPC;
-> -
->  	/* Allocate an inode from the selected AG */
->  	error = xfs_dialloc_ag(*tpp, agibp, parent_ino, &ino);
->  	if (error)
 > -- 
 > 2.31.1
 > 
