@@ -2,120 +2,125 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0145C37BD6C
-	for <lists+linux-xfs@lfdr.de>; Wed, 12 May 2021 14:54:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73B2E37BE81
+	for <lists+linux-xfs@lfdr.de>; Wed, 12 May 2021 15:46:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233644AbhELMz5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 12 May 2021 08:55:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45581 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233434AbhELMxx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 12 May 2021 08:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620823965;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SsorM+LzPDwLSE1RVSafgExf3uaNFF0JLaHoGbYAWP8=;
-        b=Ll4RD/XmaRB0nokn0rik/Z6zCul/Cqh83uT0ZbTloVEht6LWkLvAvXeg34OgDW4hv7yP6/
-        Y3Rp8wViow/AX1tg5mRkM0pI6XsgeGsXjXsqPRAW46o8NXHKBpa9w2XwW08RCEUnzmy05V
-        anmWlYLaox8/fGvU1HRC2YeJ264OcIc=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-383mnIibMtCYh8U5CLcRSg-1; Wed, 12 May 2021 08:52:43 -0400
-X-MC-Unique: 383mnIibMtCYh8U5CLcRSg-1
-Received: by mail-qt1-f199.google.com with SMTP id e13-20020ac84e4d0000b02901e0f0a55411so3304314qtw.9
-        for <linux-xfs@vger.kernel.org>; Wed, 12 May 2021 05:52:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SsorM+LzPDwLSE1RVSafgExf3uaNFF0JLaHoGbYAWP8=;
-        b=I24ekMBIJTAEha3+3u0fTMf/fU8TyIeKSMlKmo6puxm8pdq1O5i2upB3hW3JYMN4HX
-         o3WZs/GiBO2zzMEUTlqp6Sb0Jf6uE6SIQohIwbrbHIr7BASGyf6mZj3Z9IgBo+Ofmfsn
-         l1VbujVLAfPu53Xu/Q5v317Naq+dFoXJxoxlas4tlzR521MGn0jhGwVQ6P4pSH1MQ96E
-         CJChXIimh9DM+Q/TBDmOdrkuLSzqJwBBkBwCxTh7qWVpaeqnRQCCIDDp65ebufpyVQ6E
-         5TUTVndoUggN2w2sXmCCb+owyu8Nc0LAG5I8B8e+29wOgNI+1TH5d3aa8dv7YiSeBaXU
-         lS6A==
-X-Gm-Message-State: AOAM533RZFBtj11OYzO/QxjcadEST4rCGeHyqTrosJrvmMZ1r/OXLuEV
-        +YkK2vVF0n74M4osdAJgw79QOMmiipp0FVg53W2BlNPwGk+RdpCPRVzvhQhRYmoJDEnox12dt/b
-        tjqC0bmacev7FCdMD4aZB
-X-Received: by 2002:a05:622a:1192:: with SMTP id m18mr32783705qtk.108.1620823963229;
-        Wed, 12 May 2021 05:52:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwteU38AiFH7QbQtTMB4i6zFwiUp4gsihGu/cV2u7DzEeRmPlLwRtQ3nggicFaJTPTz+Wm2Og==
-X-Received: by 2002:a05:622a:1192:: with SMTP id m18mr32783692qtk.108.1620823963043;
-        Wed, 12 May 2021 05:52:43 -0700 (PDT)
-Received: from bfoster ([98.216.211.229])
-        by smtp.gmail.com with ESMTPSA id f7sm17987554qtm.41.2021.05.12.05.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 May 2021 05:52:42 -0700 (PDT)
-Date:   Wed, 12 May 2021 08:52:41 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 20/22] xfs: inode allocation can use a single perag
- instance
-Message-ID: <YJvPmbp5ZOpyt3hE@bfoster>
-References: <20210506072054.271157-1-david@fromorbit.com>
- <20210506072054.271157-21-david@fromorbit.com>
+        id S231192AbhELNrn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 12 May 2021 09:47:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41334 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230486AbhELNrm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 12 May 2021 09:47:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5897EB1B1;
+        Wed, 12 May 2021 13:46:32 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D2B801E0A4C; Wed, 12 May 2021 15:46:31 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     <linux-fsdevel@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>, ceph-devel@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        linux-cifs@vger.kernel.org, <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net, <linux-mm@kvack.org>,
+        <linux-xfs@vger.kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+        Steve French <sfrench@samba.org>, Ted Tso <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/11 v5] fs: Hole punch vs page cache filling races
+Date:   Wed, 12 May 2021 15:46:08 +0200
+Message-Id: <20210512101639.22278-1-jack@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210506072054.271157-21-david@fromorbit.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, May 06, 2021 at 05:20:52PM +1000, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
-> 
-> Now that we've internalised the two-phase inode allocation, we can
-> now easily make the AG selection and allocation atomic from the
-> perspective of a single perag context. This will ensure AGs going
-> offline/away cannot occur between the selection and allocation
-> steps.
-> 
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
+Hello,
 
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+here is another version of my patches to address races between hole punching
+and page cache filling functions for ext4 and other filesystems. The biggest
+change since the last time is update of the documentation to reflect the fact
+Dave Chinner spotted that some places also use this type of lock to block
+changes to existing page cache pages through memory mappings.
 
->  fs/xfs/libxfs/xfs_ialloc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-> index 2c0ef2dd46d9..d749bb7c7a69 100644
-> --- a/fs/xfs/libxfs/xfs_ialloc.c
-> +++ b/fs/xfs/libxfs/xfs_ialloc.c
-> @@ -1432,6 +1432,7 @@ int
->  xfs_dialloc_ag(
->  	struct xfs_trans	*tp,
->  	struct xfs_buf		*agbp,
-> +	struct xfs_perag	*pag,
->  	xfs_ino_t		parent,
->  	xfs_ino_t		*inop)
->  {
-> @@ -1446,7 +1447,6 @@ xfs_dialloc_ag(
->  	int				error;
->  	int				offset;
->  	int				i;
-> -	struct xfs_perag		*pag = agbp->b_pag;
->  
->  	if (!xfs_sb_version_hasfinobt(&mp->m_sb))
->  		return xfs_dialloc_ag_inobt(tp, agbp, pag, parent, inop);
-> @@ -1761,9 +1761,9 @@ xfs_dialloc(
->  	xfs_perag_put(pag);
->  	return error ? error : -ENOSPC;
->  found_ag:
-> -	xfs_perag_put(pag);
->  	/* Allocate an inode in the found AG */
-> -	error = xfs_dialloc_ag(*tpp, agbp, parent, &ino);
-> +	error = xfs_dialloc_ag(*tpp, agbp, pag, parent, &ino);
-> +	xfs_perag_put(pag);
->  	if (error)
->  		return error;
->  	*new_ino = ino;
-> -- 
-> 2.31.1
-> 
+Out of all filesystem supporting hole punching, only GFS2 and OCFS2 remain
+unresolved. GFS2 people are working on their own solution (cluster locking is
+involved), OCFS2 has even bigger issues (maintainers informed, looking into
+it).
+
+As a next step, I'd like to actually make sure all calls to
+truncate_inode_pages() happen under mapping->invalidate_lock, add the assert
+and then we can also get rid of i_size checks in some places (truncate can
+use the same serialization scheme as hole punch). But that step is mostly
+a cleanup so I'd like to get these functional fixes in first.
+
+Note that the first patch of the series is already in mm tree but I'm
+submitting it here so that the series applies to Linus' tree cleanly.
+
+Changes since v4:
+* Rebased onto 5.13-rc1
+* Removed shmfs conversion patches
+* Fixed up zonefs changelog
+* Fixed up XFS comments
+* Added patch fixing up definition of file_operations in Documentation/vfs/
+* Updated documentation and comments to explain invalidate_lock is used also
+  to prevent changes through memory mappings to existing pages for some VFS
+  operations.
+
+Changes since v3:
+* Renamed and moved lock to struct address_space
+* Added conversions of tmpfs, ceph, cifs, fuse, f2fs
+* Fixed error handling path in filemap_read()
+* Removed .page_mkwrite() cleanup from the series for now
+
+Changes since v2:
+* Added documentation and comments regarding lock ordering and how the lock is
+  supposed to be used
+* Added conversions of ext2, xfs, zonefs
+* Added patch removing i_mapping_sem protection from .page_mkwrite handlers
+
+Changes since v1:
+* Moved to using inode->i_mapping_sem instead of aops handler to acquire
+  appropriate lock
+
+---
+Motivation:
+
+Amir has reported [1] a that ext4 has a potential issues when reads can race
+with hole punching possibly exposing stale data from freed blocks or even
+corrupting filesystem when stale mapping data gets used for writeout. The
+problem is that during hole punching, new page cache pages can get instantiated
+and block mapping from the looked up in a punched range after
+truncate_inode_pages() has run but before the filesystem removes blocks from
+the file. In principle any filesystem implementing hole punching thus needs to
+implement a mechanism to block instantiating page cache pages during hole
+punching to avoid this race. This is further complicated by the fact that there
+are multiple places that can instantiate pages in page cache.  We can have
+regular read(2) or page fault doing this but fadvise(2) or madvise(2) can also
+result in reading in page cache pages through force_page_cache_readahead().
+
+There are couple of ways how to fix this. First way (currently implemented by
+XFS) is to protect read(2) and *advise(2) calls with i_rwsem so that they are
+serialized with hole punching. This is easy to do but as a result all reads
+would then be serialized with writes and thus mixed read-write workloads suffer
+heavily on ext4. Thus this series introduces inode->i_mapping_sem and uses it
+when creating new pages in the page cache and looking up their corresponding
+block mapping. We also replace EXT4_I(inode)->i_mmap_sem with this new rwsem
+which provides necessary serialization with hole punching for ext4.
+
+								Honza
+
+[1] https://lore.kernel.org/linux-fsdevel/CAOQ4uxjQNmxqmtA_VbYW0Su9rKRk2zobJmahcyeaEVOFKVQ5dw@mail.gmail.com/
+
+Previous versions:
+Link: https://lore.kernel.org/linux-fsdevel/20210208163918.7871-1-jack@suse.cz/
+Link: http://lore.kernel.org/r/20210413105205.3093-1-jack@suse.cz
+Link: http://lore.kernel.org/r/20210423171010.12-1-jack@suse.cz
 
