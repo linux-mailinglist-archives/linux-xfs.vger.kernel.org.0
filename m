@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1EA388459
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 May 2021 03:21:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC29F388454
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 May 2021 03:21:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232046AbhESBW3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 May 2021 21:22:29 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:44603 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232051AbhESBWZ (ORCPT
+        id S231881AbhESBW2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 May 2021 21:22:28 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:59899 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231925AbhESBWZ (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 May 2021 21:22:25 -0400
 Received: from dread.disaster.area (pa49-195-118-180.pa.nsw.optusnet.com.au [49.195.118.180])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 06A4C1AFB3F
-        for <linux-xfs@vger.kernel.org>; Wed, 19 May 2021 11:21:03 +1000 (AEST)
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 109FB107F83
+        for <linux-xfs@vger.kernel.org>; Wed, 19 May 2021 11:21:04 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1ljAtT-002bOH-HJ
+        id 1ljAtT-002bOK-Ii
         for linux-xfs@vger.kernel.org; Wed, 19 May 2021 11:21:03 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1ljAtT-001tKB-9D
+        id 1ljAtT-001tKE-Ax
         for linux-xfs@vger.kernel.org; Wed, 19 May 2021 11:21:03 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 09/23] xfs: push perags through the ag reservation callouts
-Date:   Wed, 19 May 2021 11:20:48 +1000
-Message-Id: <20210519012102.450926-10-david@fromorbit.com>
+Subject: [PATCH 10/23] xfs: pass perags around in fsmap data dev functions
+Date:   Wed, 19 May 2021 11:20:49 +1000
+Message-Id: <20210519012102.450926-11-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210519012102.450926-1-david@fromorbit.com>
 References: <20210519012102.450926-1-david@fromorbit.com>
@@ -36,259 +36,261 @@ Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
         a=xcwBwyABtj18PbVNKPPJDQ==:117 a=xcwBwyABtj18PbVNKPPJDQ==:17
-        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=4ATdU0DdX-z0mX4Fz0gA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=xf-acLbKzRIEiCuWx2AA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-We currently pass an agno from the AG reservation functions to the
-individual feature accounting functions, which in future may have to
-do perag lookups to access per-AG state. Instead, pre-emptively
-plumb the perag through from the highest AG reservation layer to the
-feature callouts so they won't have to look it up again.
+Needs a [from, to] ranged AG walk, and the perag to be stuffed into
+the info structure for callouts to use.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ag_resv.c        |  9 ++++-----
- fs/xfs/libxfs/xfs_ialloc_btree.c   | 17 +++++++++--------
- fs/xfs/libxfs/xfs_ialloc_btree.h   |  2 +-
- fs/xfs/libxfs/xfs_refcount_btree.c |  7 +++----
- fs/xfs/libxfs/xfs_refcount_btree.h |  3 ++-
- fs/xfs/libxfs/xfs_rmap_btree.c     |  6 +++---
- fs/xfs/libxfs/xfs_rmap_btree.h     |  2 +-
- 7 files changed, 23 insertions(+), 23 deletions(-)
+ fs/xfs/libxfs/xfs_ag.h | 14 ++++++--
+ fs/xfs/xfs_fsmap.c     | 75 ++++++++++++++++++++++++++----------------
+ 2 files changed, 58 insertions(+), 31 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-index 2e3dcdfd4984..f7394a8ecf6b 100644
---- a/fs/xfs/libxfs/xfs_ag_resv.c
-+++ b/fs/xfs/libxfs/xfs_ag_resv.c
-@@ -250,7 +250,6 @@ xfs_ag_resv_init(
- 	struct xfs_trans		*tp)
- {
- 	struct xfs_mount		*mp = pag->pag_mount;
--	xfs_agnumber_t			agno = pag->pag_agno;
- 	xfs_extlen_t			ask;
- 	xfs_extlen_t			used;
- 	int				error = 0, error2;
-@@ -260,11 +259,11 @@ xfs_ag_resv_init(
- 	if (pag->pag_meta_resv.ar_asked == 0) {
- 		ask = used = 0;
- 
--		error = xfs_refcountbt_calc_reserves(mp, tp, agno, &ask, &used);
-+		error = xfs_refcountbt_calc_reserves(mp, tp, pag, &ask, &used);
- 		if (error)
- 			goto out;
- 
--		error = xfs_finobt_calc_reserves(mp, tp, agno, &ask, &used);
-+		error = xfs_finobt_calc_reserves(mp, tp, pag, &ask, &used);
- 		if (error)
- 			goto out;
- 
-@@ -282,7 +281,7 @@ xfs_ag_resv_init(
- 
- 			mp->m_finobt_nores = true;
- 
--			error = xfs_refcountbt_calc_reserves(mp, tp, agno, &ask,
-+			error = xfs_refcountbt_calc_reserves(mp, tp, pag, &ask,
- 					&used);
- 			if (error)
- 				goto out;
-@@ -300,7 +299,7 @@ xfs_ag_resv_init(
- 	if (pag->pag_rmapbt_resv.ar_asked == 0) {
- 		ask = used = 0;
- 
--		error = xfs_rmapbt_calc_reserves(mp, tp, agno, &ask, &used);
-+		error = xfs_rmapbt_calc_reserves(mp, tp, pag, &ask, &used);
- 		if (error)
- 			goto out;
- 
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-index 4c5831646bd9..4ec8ea1331a5 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-@@ -20,6 +20,7 @@
- #include "xfs_trace.h"
- #include "xfs_trans.h"
- #include "xfs_rmap.h"
-+#include "xfs_ag.h"
- 
- STATIC int
- xfs_inobt_get_minrecs(
-@@ -680,7 +681,7 @@ static int
- xfs_inobt_count_blocks(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
--	xfs_agnumber_t		agno,
-+	struct xfs_perag	*pag,
- 	xfs_btnum_t		btnum,
- 	xfs_extlen_t		*tree_blocks)
- {
-@@ -688,7 +689,7 @@ xfs_inobt_count_blocks(
- 	struct xfs_btree_cur	*cur = NULL;
- 	int			error;
- 
--	error = xfs_inobt_cur(mp, tp, agno, btnum, &cur, &agbp);
-+	error = xfs_inobt_cur(mp, tp, pag->pag_agno, btnum, &cur, &agbp);
- 	if (error)
- 		return error;
- 
-@@ -704,14 +705,14 @@ static int
- xfs_finobt_read_blocks(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
--	xfs_agnumber_t		agno,
-+	struct xfs_perag	*pag,
- 	xfs_extlen_t		*tree_blocks)
- {
- 	struct xfs_buf		*agbp;
- 	struct xfs_agi		*agi;
- 	int			error;
- 
--	error = xfs_ialloc_read_agi(mp, tp, agno, &agbp);
-+	error = xfs_ialloc_read_agi(mp, tp, pag->pag_agno, &agbp);
- 	if (error)
- 		return error;
- 
-@@ -728,7 +729,7 @@ int
- xfs_finobt_calc_reserves(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
--	xfs_agnumber_t		agno,
-+	struct xfs_perag	*pag,
- 	xfs_extlen_t		*ask,
- 	xfs_extlen_t		*used)
- {
-@@ -739,14 +740,14 @@ xfs_finobt_calc_reserves(
- 		return 0;
- 
- 	if (xfs_sb_version_hasinobtcounts(&mp->m_sb))
--		error = xfs_finobt_read_blocks(mp, tp, agno, &tree_len);
-+		error = xfs_finobt_read_blocks(mp, tp, pag, &tree_len);
- 	else
--		error = xfs_inobt_count_blocks(mp, tp, agno, XFS_BTNUM_FINO,
-+		error = xfs_inobt_count_blocks(mp, tp, pag, XFS_BTNUM_FINO,
- 				&tree_len);
- 	if (error)
- 		return error;
- 
--	*ask += xfs_inobt_max_size(mp, agno);
-+	*ask += xfs_inobt_max_size(mp, pag->pag_agno);
- 	*used += tree_len;
- 	return 0;
- }
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.h b/fs/xfs/libxfs/xfs_ialloc_btree.h
-index 35bbd978c272..d5afe01fb2de 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.h
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.h
-@@ -64,7 +64,7 @@ int xfs_inobt_rec_check_count(struct xfs_mount *,
- #endif	/* DEBUG */
- 
- int xfs_finobt_calc_reserves(struct xfs_mount *mp, struct xfs_trans *tp,
--		xfs_agnumber_t agno, xfs_extlen_t *ask, xfs_extlen_t *used);
-+		struct xfs_perag *pag, xfs_extlen_t *ask, xfs_extlen_t *used);
- extern xfs_extlen_t xfs_iallocbt_calc_size(struct xfs_mount *mp,
- 		unsigned long long len);
- int xfs_inobt_cur(struct xfs_mount *mp, struct xfs_trans *tp,
-diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
-index b281f0c674f5..c4ddf9ded00b 100644
---- a/fs/xfs/libxfs/xfs_refcount_btree.c
-+++ b/fs/xfs/libxfs/xfs_refcount_btree.c
-@@ -450,7 +450,7 @@ int
- xfs_refcountbt_calc_reserves(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
--	xfs_agnumber_t		agno,
-+	struct xfs_perag	*pag,
- 	xfs_extlen_t		*ask,
- 	xfs_extlen_t		*used)
- {
-@@ -463,8 +463,7 @@ xfs_refcountbt_calc_reserves(
- 	if (!xfs_sb_version_hasreflink(&mp->m_sb))
- 		return 0;
- 
--
--	error = xfs_alloc_read_agf(mp, tp, agno, 0, &agbp);
-+	error = xfs_alloc_read_agf(mp, tp, pag->pag_agno, 0, &agbp);
- 	if (error)
- 		return error;
- 
-@@ -479,7 +478,7 @@ xfs_refcountbt_calc_reserves(
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
- 	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == agno)
-+	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
- 		agblocks -= mp->m_sb.sb_logblocks;
- 
- 	*ask += xfs_refcountbt_max_size(mp, agblocks);
-diff --git a/fs/xfs/libxfs/xfs_refcount_btree.h b/fs/xfs/libxfs/xfs_refcount_btree.h
-index 69dc515db671..eab1b0c672c0 100644
---- a/fs/xfs/libxfs/xfs_refcount_btree.h
-+++ b/fs/xfs/libxfs/xfs_refcount_btree.h
-@@ -13,6 +13,7 @@
- struct xfs_buf;
- struct xfs_btree_cur;
- struct xfs_mount;
-+struct xfs_perag;
- struct xbtree_afakeroot;
+diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
+index 3fa88222dacd..bebbe1bfce27 100644
+--- a/fs/xfs/libxfs/xfs_ag.h
++++ b/fs/xfs/libxfs/xfs_ag.h
+@@ -116,14 +116,24 @@ void	xfs_perag_put(struct xfs_perag *pag);
  
  /*
-@@ -58,7 +59,7 @@ extern xfs_extlen_t xfs_refcountbt_max_size(struct xfs_mount *mp,
- 		xfs_agblock_t agblocks);
+  * Perag iteration APIs
++ *
++ * XXX: for_each_perag_range() usage really needs an iterator to clean up when
++ * we terminate at end_agno because we may have taken a reference to the perag
++ * beyond end_agno. RIght now callers have to be careful to catch and clean that
++ * up themselves. This is not necessary for the callers of for_each_perag() and
++ * for_each_perag_from() because they terminate at sb_agcount where there are
++ * no perag structures in tree beyond end_agno.
+  */
+-#define for_each_perag_from(mp, next_agno, pag) \
++#define for_each_perag_range(mp, next_agno, end_agno, pag) \
+ 	for ((pag) = xfs_perag_get((mp), (next_agno)); \
+-		(pag) != NULL; \
++		(pag) != NULL && (next_agno) <= (end_agno); \
+ 		(next_agno) = (pag)->pag_agno + 1, \
+ 		xfs_perag_put(pag), \
+ 		(pag) = xfs_perag_get((mp), (next_agno)))
  
- extern int xfs_refcountbt_calc_reserves(struct xfs_mount *mp,
--		struct xfs_trans *tp, xfs_agnumber_t agno, xfs_extlen_t *ask,
-+		struct xfs_trans *tp, struct xfs_perag *pag, xfs_extlen_t *ask,
- 		xfs_extlen_t *used);
++#define for_each_perag_from(mp, next_agno, pag) \
++	for_each_perag_range((mp), (next_agno), (mp)->m_sb.sb_agcount, (pag))
++
+ #define for_each_perag(mp, next_agno, pag) \
+ 	(next_agno) = 0; \
+ 	for_each_perag_from((mp), (next_agno), (pag))
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index 34f2b971ce43..835dd6e3819b 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -24,6 +24,7 @@
+ #include "xfs_refcount_btree.h"
+ #include "xfs_alloc_btree.h"
+ #include "xfs_rtalloc.h"
++#include "xfs_ag.h"
  
- void xfs_refcountbt_commit_staged_btree(struct xfs_btree_cur *cur,
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index 46a5295ecf35..ba2f7064451b 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -595,7 +595,7 @@ int
- xfs_rmapbt_calc_reserves(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
--	xfs_agnumber_t		agno,
-+	struct xfs_perag	*pag,
- 	xfs_extlen_t		*ask,
- 	xfs_extlen_t		*used)
- {
-@@ -608,7 +608,7 @@ xfs_rmapbt_calc_reserves(
- 	if (!xfs_sb_version_hasrmapbt(&mp->m_sb))
+ /* Convert an xfs_fsmap to an fsmap. */
+ static void
+@@ -157,10 +158,10 @@ struct xfs_getfsmap_info {
+ 	struct xfs_fsmap_head	*head;
+ 	struct fsmap		*fsmap_recs;	/* mapping records */
+ 	struct xfs_buf		*agf_bp;	/* AGF, for refcount queries */
++	struct xfs_perag	*pag;		/* AG info, if applicable */
+ 	xfs_daddr_t		next_daddr;	/* next daddr we expect */
+ 	u64			missing_owner;	/* owner of holes */
+ 	u32			dev;		/* device id */
+-	xfs_agnumber_t		agno;		/* AG number, if applicable */
+ 	struct xfs_rmap_irec	low;		/* low rmap key */
+ 	struct xfs_rmap_irec	high;		/* high rmap key */
+ 	bool			last;		/* last extent? */
+@@ -203,14 +204,14 @@ xfs_getfsmap_is_shared(
+ 	*stat = false;
+ 	if (!xfs_sb_version_hasreflink(&mp->m_sb))
+ 		return 0;
+-	/* rt files will have agno set to NULLAGNUMBER */
+-	if (info->agno == NULLAGNUMBER)
++	/* rt files will have no perag structure */
++	if (!info->pag)
  		return 0;
  
--	error = xfs_alloc_read_agf(mp, tp, agno, 0, &agbp);
-+	error = xfs_alloc_read_agf(mp, tp, pag->pag_agno, 0, &agbp);
- 	if (error)
- 		return error;
+ 	/* Are there any shared blocks here? */
+ 	flen = 0;
+ 	cur = xfs_refcountbt_init_cursor(mp, tp, info->agf_bp,
+-			info->agno);
++			info->pag->pag_agno);
  
-@@ -623,7 +623,7 @@ xfs_rmapbt_calc_reserves(
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
- 	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == agno)
-+	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
- 		agblocks -= mp->m_sb.sb_logblocks;
+ 	error = xfs_refcount_find_shared(cur, rec->rm_startblock,
+ 			rec->rm_blockcount, &fbno, &flen, false);
+@@ -311,7 +312,8 @@ xfs_getfsmap_helper(
+ 	if (info->head->fmh_entries >= info->head->fmh_count)
+ 		return -ECANCELED;
  
- 	/* Reserve 1% of the AG or enough for 1 block per record. */
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.h b/fs/xfs/libxfs/xfs_rmap_btree.h
-index 115c3455a734..57fab72e26ad 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.h
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.h
-@@ -57,6 +57,6 @@ extern xfs_extlen_t xfs_rmapbt_max_size(struct xfs_mount *mp,
- 		xfs_agblock_t agblocks);
+-	trace_xfs_fsmap_mapping(mp, info->dev, info->agno, rec);
++	trace_xfs_fsmap_mapping(mp, info->dev,
++			info->pag ? info->pag->pag_agno : NULLAGNUMBER, rec);
  
- extern int xfs_rmapbt_calc_reserves(struct xfs_mount *mp, struct xfs_trans *tp,
--		xfs_agnumber_t agno, xfs_extlen_t *ask, xfs_extlen_t *used);
-+		struct xfs_perag *pag, xfs_extlen_t *ask, xfs_extlen_t *used);
+ 	fmr.fmr_device = info->dev;
+ 	fmr.fmr_physical = rec_daddr;
+@@ -429,8 +431,8 @@ xfs_getfsmap_logdev(
+ 	info->high.rm_flags = XFS_RMAP_KEY_FLAGS | XFS_RMAP_REC_FLAGS;
+ 	info->missing_owner = XFS_FMR_OWN_FREE;
  
- #endif	/* __XFS_RMAP_BTREE_H__ */
+-	trace_xfs_fsmap_low_key(mp, info->dev, info->agno, &info->low);
+-	trace_xfs_fsmap_high_key(mp, info->dev, info->agno, &info->high);
++	trace_xfs_fsmap_low_key(mp, info->dev, NULLAGNUMBER, &info->low);
++	trace_xfs_fsmap_high_key(mp, info->dev, NULLAGNUMBER, &info->high);
+ 
+ 	if (keys[0].fmr_physical > 0)
+ 		return 0;
+@@ -508,8 +510,8 @@ __xfs_getfsmap_rtdev(
+ 	info->high.rm_blockcount = 0;
+ 	xfs_getfsmap_set_irec_flags(&info->high, &keys[1]);
+ 
+-	trace_xfs_fsmap_low_key(mp, info->dev, info->agno, &info->low);
+-	trace_xfs_fsmap_high_key(mp, info->dev, info->agno, &info->high);
++	trace_xfs_fsmap_low_key(mp, info->dev, NULLAGNUMBER, &info->low);
++	trace_xfs_fsmap_high_key(mp, info->dev, NULLAGNUMBER, &info->high);
+ 
+ 	return query_fn(tp, info);
+ }
+@@ -572,6 +574,7 @@ __xfs_getfsmap_datadev(
+ 	void				*priv)
+ {
+ 	struct xfs_mount		*mp = tp->t_mountp;
++	struct xfs_perag		*pag;
+ 	struct xfs_btree_cur		*bt_cur = NULL;
+ 	xfs_fsblock_t			start_fsb;
+ 	xfs_fsblock_t			end_fsb;
+@@ -610,20 +613,20 @@ __xfs_getfsmap_datadev(
+ 	start_ag = XFS_FSB_TO_AGNO(mp, start_fsb);
+ 	end_ag = XFS_FSB_TO_AGNO(mp, end_fsb);
+ 
+-	/* Query each AG */
+-	for (info->agno = start_ag; info->agno <= end_ag; info->agno++) {
++	for_each_perag_range(mp, start_ag, end_ag, pag) {
+ 		/*
+ 		 * Set the AG high key from the fsmap high key if this
+ 		 * is the last AG that we're querying.
+ 		 */
+-		if (info->agno == end_ag) {
++		info->pag = pag;
++		if (pag->pag_agno == end_ag) {
+ 			info->high.rm_startblock = XFS_FSB_TO_AGBNO(mp,
+ 					end_fsb);
+ 			info->high.rm_offset = XFS_BB_TO_FSBT(mp,
+ 					keys[1].fmr_offset);
+ 			error = xfs_fsmap_owner_to_rmap(&info->high, &keys[1]);
+ 			if (error)
+-				goto err;
++				break;
+ 			xfs_getfsmap_set_irec_flags(&info->high, &keys[1]);
+ 		}
+ 
+@@ -634,38 +637,45 @@ __xfs_getfsmap_datadev(
+ 			info->agf_bp = NULL;
+ 		}
+ 
+-		error = xfs_alloc_read_agf(mp, tp, info->agno, 0,
++		error = xfs_alloc_read_agf(mp, tp, pag->pag_agno, 0,
+ 				&info->agf_bp);
+ 		if (error)
+-			goto err;
++			break;
+ 
+-		trace_xfs_fsmap_low_key(mp, info->dev, info->agno, &info->low);
+-		trace_xfs_fsmap_high_key(mp, info->dev, info->agno,
++		trace_xfs_fsmap_low_key(mp, info->dev, pag->pag_agno,
++				&info->low);
++		trace_xfs_fsmap_high_key(mp, info->dev, pag->pag_agno,
+ 				&info->high);
+ 
+ 		error = query_fn(tp, info, &bt_cur, priv);
+ 		if (error)
+-			goto err;
++			break;
+ 
+ 		/*
+ 		 * Set the AG low key to the start of the AG prior to
+ 		 * moving on to the next AG.
+ 		 */
+-		if (info->agno == start_ag) {
++		if (pag->pag_agno == start_ag) {
+ 			info->low.rm_startblock = 0;
+ 			info->low.rm_owner = 0;
+ 			info->low.rm_offset = 0;
+ 			info->low.rm_flags = 0;
+ 		}
+-	}
+ 
+-	/* Report any gap at the end of the AG */
+-	info->last = true;
+-	error = query_fn(tp, info, &bt_cur, priv);
+-	if (error)
+-		goto err;
++		/*
++		 * If this is the last AG, report any gap at the end of it
++		 * before we drop the reference to the perag when the loop
++		 * terminates.
++		 */
++		if (pag->pag_agno == end_ag) {
++			info->last = true;
++			error = query_fn(tp, info, &bt_cur, priv);
++			if (error)
++				break;
++		}
++		info->pag = NULL;
++	}
+ 
+-err:
+ 	if (bt_cur)
+ 		xfs_btree_del_cursor(bt_cur, error < 0 ? XFS_BTREE_ERROR :
+ 							 XFS_BTREE_NOERROR);
+@@ -673,6 +683,13 @@ __xfs_getfsmap_datadev(
+ 		xfs_trans_brelse(tp, info->agf_bp);
+ 		info->agf_bp = NULL;
+ 	}
++	if (info->pag) {
++		xfs_perag_put(info->pag);
++		info->pag = NULL;
++	} else if (pag) {
++		/* loop termination case */
++		xfs_perag_put(pag);
++	}
+ 
+ 	return error;
+ }
+@@ -691,7 +708,7 @@ xfs_getfsmap_datadev_rmapbt_query(
+ 
+ 	/* Allocate cursor for this AG and query_range it. */
+ 	*curpp = xfs_rmapbt_init_cursor(tp->t_mountp, tp, info->agf_bp,
+-			info->agno);
++			info->pag->pag_agno);
+ 	return xfs_rmap_query_range(*curpp, &info->low, &info->high,
+ 			xfs_getfsmap_datadev_helper, info);
+ }
+@@ -724,7 +741,7 @@ xfs_getfsmap_datadev_bnobt_query(
+ 
+ 	/* Allocate cursor for this AG and query_range it. */
+ 	*curpp = xfs_allocbt_init_cursor(tp->t_mountp, tp, info->agf_bp,
+-			info->agno, XFS_BTNUM_BNO);
++			info->pag->pag_agno, XFS_BTNUM_BNO);
+ 	key->ar_startblock = info->low.rm_startblock;
+ 	key[1].ar_startblock = info->high.rm_startblock;
+ 	return xfs_alloc_query_range(*curpp, key, &key[1],
+@@ -937,7 +954,7 @@ xfs_getfsmap(
+ 
+ 		info.dev = handlers[i].dev;
+ 		info.last = false;
+-		info.agno = NULLAGNUMBER;
++		info.pag = NULL;
+ 		error = handlers[i].fn(tp, dkeys, &info);
+ 		if (error)
+ 			break;
 -- 
 2.31.1
 
