@@ -2,183 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 287E1388462
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 May 2021 03:21:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA41038851B
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 May 2021 05:03:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232192AbhESBWb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 18 May 2021 21:22:31 -0400
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:60341 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232277AbhESBW2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 May 2021 21:22:28 -0400
-Received: from dread.disaster.area (pa49-195-118-180.pa.nsw.optusnet.com.au [49.195.118.180])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 98AA11075C0
-        for <linux-xfs@vger.kernel.org>; Wed, 19 May 2021 11:21:04 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ljAtU-002bOx-6s
-        for linux-xfs@vger.kernel.org; Wed, 19 May 2021 11:21:04 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1ljAtT-001tKr-Vd
-        for linux-xfs@vger.kernel.org; Wed, 19 May 2021 11:21:03 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 23/23] xfs: remove xfs_perag_t
-Date:   Wed, 19 May 2021 11:21:02 +1000
-Message-Id: <20210519012102.450926-24-david@fromorbit.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210519012102.450926-1-david@fromorbit.com>
-References: <20210519012102.450926-1-david@fromorbit.com>
+        id S237478AbhESDEp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 18 May 2021 23:04:45 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:52738 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237253AbhESDEp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 18 May 2021 23:04:45 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=alimailimapcm10staff010182156082;MF=eguan@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0UZMlKqt_1621393404;
+Received: from localhost(mailfrom:eguan@linux.alibaba.com fp:SMTPD_---0UZMlKqt_1621393404)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 19 May 2021 11:03:24 +0800
+Date:   Wed, 19 May 2021 11:03:24 +0800
+From:   Eryu Guan <eguan@linux.alibaba.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Eryu Guan <guan@eryu.me>, guaneryu@gmail.com,
+        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 2/8] common/xfs: refactor commands to select a particular
+ xfs backing device
+Message-ID: <20210519030324.GB60846@e18g06458.et15sqa>
+References: <162078489963.3302755.9219127595550889655.stgit@magnolia>
+ <162078491108.3302755.3627499639796540923.stgit@magnolia>
+ <YKE/I0HE+2MNSCCG@desktop>
+ <20210516203437.GS9675@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
-        a=xcwBwyABtj18PbVNKPPJDQ==:117 a=xcwBwyABtj18PbVNKPPJDQ==:17
-        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=pAOcoVMQ13P0UJU-h3QA:9
-        a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210516203437.GS9675@magnolia>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Sun, May 16, 2021 at 01:34:37PM -0700, Darrick J. Wong wrote:
+> On Sun, May 16, 2021 at 11:49:55PM +0800, Eryu Guan wrote:
+> > On Tue, May 11, 2021 at 07:01:51PM -0700, Darrick J. Wong wrote:
+> > > From: Darrick J. Wong <djwong@kernel.org>
+> > > 
+> > > Refactor all the places where we try to force new file data allocations
+> > > to a specific xfs backing device so that we don't end up open-coding the
+> > > same xfs_io command lines over and over.
+> > > 
+> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > ---
+> > >  common/populate   |    2 +-
+> > >  common/xfs        |   25 +++++++++++++++++++++++++
+> > >  tests/generic/223 |    3 ++-
+> > >  tests/generic/449 |    2 +-
+> > >  tests/xfs/004     |    2 +-
+> > 
+> > >  tests/xfs/088     |    1 +
+> > >  tests/xfs/089     |    1 +
+> > >  tests/xfs/091     |    1 +
+> > >  tests/xfs/120     |    1 +
+> > >  tests/xfs/130     |    1 +
+> > 
+> > I think above updates should be in a separate patch.
+> 
+> Why?
 
-Almost unused, gets rid of another typedef.
+This patch is refactoring open-coded command into a helper, which should
+not change the logic. But above changes are adding new users of this
+helper and change test behavior. So I think they should be in a separate
+patch for review.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_ag.c    | 24 +++++++++++-----------
- fs/xfs/libxfs/xfs_ag.h    |  4 ++--
- fs/xfs/libxfs/xfs_alloc.c | 42 +++++++++++++++++++--------------------
- 3 files changed, 35 insertions(+), 35 deletions(-)
-
-diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index 0e0819f6fb89..29c42698aa90 100644
---- a/fs/xfs/libxfs/xfs_ag.c
-+++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -104,19 +104,19 @@ xfs_perag_put(
-  */
- int
- xfs_initialize_perag_data(
--	struct xfs_mount *mp,
--	xfs_agnumber_t	agcount)
-+	struct xfs_mount	*mp,
-+	xfs_agnumber_t		agcount)
- {
--	xfs_agnumber_t	index;
--	xfs_perag_t	*pag;
--	xfs_sb_t	*sbp = &mp->m_sb;
--	uint64_t	ifree = 0;
--	uint64_t	ialloc = 0;
--	uint64_t	bfree = 0;
--	uint64_t	bfreelst = 0;
--	uint64_t	btree = 0;
--	uint64_t	fdblocks;
--	int		error = 0;
-+	xfs_agnumber_t		index;
-+	struct xfs_perag	*pag;
-+	struct xfs_sb		*sbp = &mp->m_sb;
-+	uint64_t		ifree = 0;
-+	uint64_t		ialloc = 0;
-+	uint64_t		bfree = 0;
-+	uint64_t		bfreelst = 0;
-+	uint64_t		btree = 0;
-+	uint64_t		fdblocks;
-+	int			error = 0;
- 
- 	for (index = 0; index < agcount; index++) {
- 		/*
-diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
-index bebbe1bfce27..39f6a0dc984a 100644
---- a/fs/xfs/libxfs/xfs_ag.h
-+++ b/fs/xfs/libxfs/xfs_ag.h
-@@ -29,7 +29,7 @@ struct xfs_ag_resv {
-  * Per-ag incore structure, copies of information in agf and agi, to improve the
-  * performance of allocation group selection.
-  */
--typedef struct xfs_perag {
-+struct xfs_perag {
- 	struct xfs_mount *pag_mount;	/* owner filesystem */
- 	xfs_agnumber_t	pag_agno;	/* AG this structure belongs to */
- 	atomic_t	pag_ref;	/* perag reference count */
-@@ -102,7 +102,7 @@ typedef struct xfs_perag {
- 	 * or have some other means to control concurrency.
- 	 */
- 	struct rhashtable	pagi_unlinked_hash;
--} xfs_perag_t;
-+};
- 
- int xfs_initialize_perag(struct xfs_mount *mp, xfs_agnumber_t agcount,
- 			xfs_agnumber_t *maxagi);
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index f7864f33c1f0..00bb34251829 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2694,21 +2694,21 @@ xfs_alloc_fix_freelist(
-  * Get a block from the freelist.
-  * Returns with the buffer for the block gotten.
-  */
--int				/* error */
-+int
- xfs_alloc_get_freelist(
--	xfs_trans_t	*tp,	/* transaction pointer */
--	struct xfs_buf	*agbp,	/* buffer containing the agf structure */
--	xfs_agblock_t	*bnop,	/* block address retrieved from freelist */
--	int		btreeblk) /* destination is a AGF btree */
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*agbp,
-+	xfs_agblock_t		*bnop,
-+	int			btreeblk)
- {
--	struct xfs_agf	*agf = agbp->b_addr;
--	struct xfs_buf	*agflbp;/* buffer for a.g. freelist structure */
--	xfs_agblock_t	bno;	/* block number returned */
--	__be32		*agfl_bno;
--	int		error;
--	int		logflags;
--	xfs_mount_t	*mp = tp->t_mountp;
--	xfs_perag_t	*pag;	/* per allocation group data */
-+	struct xfs_agf		*agf = agbp->b_addr;
-+	struct xfs_buf		*agflbp;
-+	xfs_agblock_t		bno;
-+	__be32			*agfl_bno;
-+	int			error;
-+	int			logflags;
-+	struct xfs_mount	*mp = tp->t_mountp;
-+	struct xfs_perag	*pag;
- 
- 	/*
- 	 * Freelist is empty, give up.
-@@ -2818,20 +2818,20 @@ xfs_alloc_pagf_init(
- /*
-  * Put the block on the freelist for the allocation group.
-  */
--int					/* error */
-+int
- xfs_alloc_put_freelist(
--	xfs_trans_t		*tp,	/* transaction pointer */
--	struct xfs_buf		*agbp,	/* buffer for a.g. freelist header */
--	struct xfs_buf		*agflbp,/* buffer for a.g. free block array */
--	xfs_agblock_t		bno,	/* block being freed */
--	int			btreeblk) /* block came from a AGF btree */
-+	struct xfs_trans	*tp,
-+	struct xfs_buf		*agbp,
-+	struct xfs_buf		*agflbp,
-+	xfs_agblock_t		bno,
-+	int			btreeblk)
- {
- 	struct xfs_mount	*mp = tp->t_mountp;
- 	struct xfs_agf		*agf = agbp->b_addr;
--	__be32			*blockp;/* pointer to array entry */
-+	struct xfs_perag	*pag;
-+	__be32			*blockp;
- 	int			error;
- 	int			logflags;
--	xfs_perag_t		*pag;	/* per allocation group data */
- 	__be32			*agfl_bno;
- 	int			startoff;
- 
--- 
-2.31.1
-
+Thanks,
+Eryu
