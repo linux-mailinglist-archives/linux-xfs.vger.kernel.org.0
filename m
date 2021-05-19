@@ -2,100 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C08A1388DE3
-	for <lists+linux-xfs@lfdr.de>; Wed, 19 May 2021 14:21:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B309F388E43
+	for <lists+linux-xfs@lfdr.de>; Wed, 19 May 2021 14:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346486AbhESMW2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 19 May 2021 08:22:28 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:47465 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347770AbhESMWO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 May 2021 08:22:14 -0400
-Received: from dread.disaster.area (pa49-195-118-180.pa.nsw.optusnet.com.au [49.195.118.180])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 40D7B104391B
-        for <linux-xfs@vger.kernel.org>; Wed, 19 May 2021 22:20:53 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ljLC0-002m9u-NI
-        for linux-xfs@vger.kernel.org; Wed, 19 May 2021 22:20:52 +1000
-Date:   Wed, 19 May 2021 22:20:52 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: don't take a spinlock unconditionally in the DIO
- fastpath
-Message-ID: <20210519122052.GO2893@dread.disaster.area>
-References: <20210519011920.450421-1-david@fromorbit.com>
- <20210519075929.glb3kdbthuybywcs@omega.lan>
+        id S1353441AbhESMks (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 19 May 2021 08:40:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353440AbhESMkr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 19 May 2021 08:40:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19833C06175F
+        for <linux-xfs@vger.kernel.org>; Wed, 19 May 2021 05:39:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=P53im0PB84j2ShmE5xmImhFdw/1jUerSXIiJ1pjl1FI=; b=VzDFwCvKC41I6+dquh8CjJvgTK
+        lYnFPLxT0Trdbiidzn+9hYTMeU3MPSeT8QZrsJ3T0tl+172LY5UO4TuLMQHJ+6a5IW1/AIWbNXceQ
+        lLxpIvJOwVexY4S9N8CCz9WX6Lr+IMxcHEuKkDO6iVIiwpc8qHbd6J4eZtdW1eaDdbFPMstQ1bmum
+        byMb87RKH6FjKhqHJK1BZT+LBjXdPH/DNGT/vtOFg0WXhdenRKGsBogDJ7PNSmVBbv0ksu7ZVlzAR
+        Zw+7szv6rHTafbFLzskB2V9S85hMY7R40G9Z3ZPO9j5qsxDIhX2TLy0ZjTd3+w/hPHNK9LC8YyuB7
+        ZdaV8UxA==;
+Received: from hch by casper.infradead.org with local (Exim 4.94 #2 (Red Hat Linux))
+        id 1ljLSl-00EwOp-G4; Wed, 19 May 2021 12:38:27 +0000
+Date:   Wed, 19 May 2021 13:38:11 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Lukas Herbolt <lukas@herbolt.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH RFC] xfs: Print XFS UUID on mount and umount events.
+Message-ID: <YKUGs81af325hy18@infradead.org>
+References: <20210519093752.1670018-1-lukas@herbolt.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210519075929.glb3kdbthuybywcs@omega.lan>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
-        a=xcwBwyABtj18PbVNKPPJDQ==:117 a=xcwBwyABtj18PbVNKPPJDQ==:17
-        a=IkcTkHD0fZMA:10 a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=zfqAleI-jo9dw3_pwSkA:9 a=QEXdDO2ut3YA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20210519093752.1670018-1-lukas@herbolt.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 19, 2021 at 09:59:29AM +0200, Carlos Maiolino wrote:
-> On Wed, May 19, 2021 at 11:19:20AM +1000, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > Because this happens at high thread counts on high IOPS devices
-> > doing mixed read/write AIO-DIO to a single file at about a million
-> > iops:
-> > 
-> >    64.09%     0.21%  [kernel]            [k] io_submit_one
-> >    - 63.87% io_submit_one
-> >       - 44.33% aio_write
-> >          - 42.70% xfs_file_write_iter
-> >             - 41.32% xfs_file_dio_write_aligned
-> >                - 25.51% xfs_file_write_checks
-> >                   - 21.60% _raw_spin_lock
-> >                      - 21.59% do_raw_spin_lock
-> >                         - 19.70% __pv_queued_spin_lock_slowpath
-> > 
-> > This also happens of the IO completion IO path:
-> > 
-> >    22.89%     0.69%  [kernel]            [k] xfs_dio_write_end_io
-> >    - 22.49% xfs_dio_write_end_io
-> >       - 21.79% _raw_spin_lock
-> >          - 20.97% do_raw_spin_lock
-> >             - 20.10% __pv_queued_spin_lock_slowpath                                                                                                            ▒
-> > 
-> > IOWs, fio is burning ~14 whole CPUs on this spin lock.
-> > 
-> > So, do an unlocked check against inode size first, then if we are
-> > at/beyond EOF, take the spinlock and recheck. This makes the
-> > spinlock disappear from the overwrite fastpath.
-> > 
-> > I'd like to report that fixing this makes things go faster.
-> 
-> maybe you meant this does not make things go faster?
+On Wed, May 19, 2021 at 11:37:52AM +0200, Lukas Herbolt wrote:
+> As of now only device names are pritend out over __xfs_printk().
+> The device names are not persistent across reboots which in case
+> of searching for origin of corruption brings another task to properly
+> indetify the devices. This patch add XFS UUID upon every mount/umount
+> event which will make the identification much easier.
 
-Yes, that is what this statement means. That is, I'd -like- to
-report that things went faster, but reality doesn't care about what
-I'd -like- to have happen, as the next sentence explained... :(
+This looks sensible, but please avoid the pointless casts and overly
+long lines.  i.e. something like this:
 
-> > It
-> > doesn't - it just exposes the the XFS_ILOCK as the next severe
-> > contention point doing extent mapping lookups, and that now burns
-> > all the 14 CPUs this spinlock was burning.
-> > 
-> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> 
-> The patch looks good, and the comments about why it's safe to not take the
-> spinlock (specially why the EOF can't be moved back) is much welcomed.
-> 
-> Feel free to add:
-> Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-
-thanks!
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index c19a82adea1edb..2089177168f487 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -572,12 +572,14 @@ xfs_log_mount(
+ 	int		min_logfsbs;
+ 
+ 	if (!(mp->m_flags & XFS_MOUNT_NORECOVERY)) {
+-		xfs_notice(mp, "Mounting V%d Filesystem",
+-			   XFS_SB_VERSION_NUM(&mp->m_sb));
++		xfs_notice(mp, "Mounting V%d Filesystem %pU",
++			   XFS_SB_VERSION_NUM(&mp->m_sb),
++			   &mp->m_sb.sb_uuid);
+ 	} else {
+ 		xfs_notice(mp,
+-"Mounting V%d filesystem in no-recovery mode. Filesystem will be inconsistent.",
+-			   XFS_SB_VERSION_NUM(&mp->m_sb));
++"Mounting V%d filesystem %pU in no-recovery mode. Filesystem will be inconsistent.",
++			   XFS_SB_VERSION_NUM(&mp->m_sb),
++			   &mp->m_sb.sb_uuid);
+ 		ASSERT(mp->m_flags & XFS_MOUNT_RDONLY);
+ 	}
+ 
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index f7f70438d98703..fa4589d391a892 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1043,7 +1043,7 @@ xfs_fs_put_super(
+ 	if (!sb->s_fs_info)
+ 		return;
+ 
+-	xfs_notice(mp, "Unmounting Filesystem");
++	xfs_notice(mp, "Unmounting Filesystem %pU", &mp->m_sb.sb_uuid);
+ 	xfs_filestream_unmount(mp);
+ 	xfs_unmountfs(mp);
+ 
