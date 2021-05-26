@@ -2,132 +2,144 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B972D392302
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 May 2021 01:05:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1EF33922E4
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 May 2021 00:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232870AbhEZXHF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 May 2021 19:07:05 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:44727 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233149AbhEZXHF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 May 2021 19:07:05 -0400
+        id S231470AbhEZWtB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 May 2021 18:49:01 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48464 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234649AbhEZWtA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 May 2021 18:49:00 -0400
 Received: from dread.disaster.area (pa49-180-230-185.pa.nsw.optusnet.com.au [49.180.230.185])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id C444B80F8F6
-        for <linux-xfs@vger.kernel.org>; Thu, 27 May 2021 09:05:31 +1000 (AEST)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6D43F1044749;
+        Thu, 27 May 2021 08:47:26 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lm2JB-005b8U-L9; Thu, 27 May 2021 08:47:25 +1000
+        id 1lm2JB-005b8X-Lr; Thu, 27 May 2021 08:47:25 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lm2JB-004fAB-Cx; Thu, 27 May 2021 08:47:25 +1000
+        id 1lm2JB-004fAE-EG; Thu, 27 May 2021 08:47:25 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     hch@lst.de
-Subject: [PATCH 02/10] xfs: use xfs_buf_alloc_pages for uncached buffers
-Date:   Thu, 27 May 2021 08:47:14 +1000
-Message-Id: <20210526224722.1111377-3-david@fromorbit.com>
+Subject: [PATCH 03/10] xfs: use alloc_pages_bulk_array() for buffers
+Date:   Thu, 27 May 2021 08:47:15 +1000
+Message-Id: <20210526224722.1111377-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210526224722.1111377-1-david@fromorbit.com>
 References: <20210526224722.1111377-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
         a=dUIOjvib2kB+GiIc1vUx8g==:117 a=dUIOjvib2kB+GiIc1vUx8g==:17
-        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=EJc9BWZEyAod2tjSaAkA:9
+        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=KeS95dpyy_nX3SypCP0A:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Use the newly factored out page allocation code. This adds
-automatic buffer zeroing for non-read uncached buffers.
-
-This also allows us to greatly simply the error handling in
-xfs_buf_get_uncached(). Because xfs_buf_alloc_pages() cleans up
-partial allocation failure, we can just call xfs_buf_free() in all
-error cases now to clean up after failures.
+Because it's more efficient than allocating pages one at a time in a
+loop.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ag.c |  1 -
- fs/xfs/xfs_buf.c       | 27 ++++++---------------------
- 2 files changed, 6 insertions(+), 22 deletions(-)
+ fs/xfs/xfs_buf.c | 62 +++++++++++++++++++-----------------------------
+ 1 file changed, 24 insertions(+), 38 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index c68a36688474..be0087825ae0 100644
---- a/fs/xfs/libxfs/xfs_ag.c
-+++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -43,7 +43,6 @@ xfs_get_aghdr_buf(
- 	if (error)
- 		return error;
- 
--	xfs_buf_zero(bp, 0, BBTOB(bp->b_length));
- 	bp->b_bn = blkno;
- 	bp->b_maps[0].bm_bn = blkno;
- 	bp->b_ops = ops;
 diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 2e35d344a69b..b1610115d401 100644
+index b1610115d401..8ca4add138c5 100644
 --- a/fs/xfs/xfs_buf.c
 +++ b/fs/xfs/xfs_buf.c
-@@ -973,7 +973,7 @@ xfs_buf_get_uncached(
- 	struct xfs_buf		**bpp)
+@@ -386,10 +386,7 @@ xfs_buf_alloc_pages(
+ 	xfs_buf_flags_t	flags)
  {
- 	unsigned long		page_count;
--	int			error, i;
-+	int			error;
- 	struct xfs_buf		*bp;
- 	DEFINE_SINGLE_BUF_MAP(map, XFS_BUF_DADDR_NULL, numblks);
+ 	gfp_t		gfp_mask = xb_to_gfp(flags);
+-	size_t		size;
+-	size_t		offset;
+-	size_t		nbytes;
+-	int		i;
++	long		filled = 0;
+ 	int		error;
  
-@@ -982,41 +982,26 @@ xfs_buf_get_uncached(
- 	/* flags might contain irrelevant bits, pass only what we care about */
- 	error = _xfs_buf_alloc(target, &map, 1, flags & XBF_NO_IOACCT, &bp);
- 	if (error)
--		goto fail;
-+		return error;
+ 	/* Assure zeroed buffer for non-read cases. */
+@@ -400,50 +397,39 @@ xfs_buf_alloc_pages(
+ 	if (unlikely(error))
+ 		return error;
  
- 	page_count = PAGE_ALIGN(numblks << BBSHIFT) >> PAGE_SHIFT;
--	error = _xfs_buf_get_pages(bp, page_count);
-+	error = xfs_buf_alloc_pages(bp, page_count, flags);
- 	if (error)
- 		goto fail_free_buf;
+-	offset = bp->b_offset;
+ 	bp->b_flags |= _XBF_PAGES;
  
--	for (i = 0; i < page_count; i++) {
--		bp->b_pages[i] = alloc_page(xb_to_gfp(flags));
--		if (!bp->b_pages[i]) {
--			error = -ENOMEM;
--			goto fail_free_mem;
--		}
--	}
--	bp->b_flags |= _XBF_PAGES;
+-	for (i = 0; i < bp->b_page_count; i++) {
+-		struct page	*page;
+-		uint		retries = 0;
+-retry:
+-		page = alloc_page(gfp_mask);
+-		if (unlikely(page == NULL)) {
+-			if (flags & XBF_READ_AHEAD) {
+-				bp->b_page_count = i;
+-				error = -ENOMEM;
+-				goto out_free_pages;
+-			}
++	/*
++	 * Bulk filling of pages can take multiple calls. Not filling the entire
++	 * array is not an allocation failure, so don't back off if we get at
++	 * least one extra page.
++	 */
++	for (;;) {
++		long	last = filled;
+ 
+-			/*
+-			 * This could deadlock.
+-			 *
+-			 * But until all the XFS lowlevel code is revamped to
+-			 * handle buffer allocation failures we can't do much.
+-			 */
+-			if (!(++retries % 100))
+-				xfs_err(NULL,
+-		"%s(%u) possible memory allocation deadlock in %s (mode:0x%x)",
+-					current->comm, current->pid,
+-					__func__, gfp_mask);
 -
- 	error = _xfs_buf_map_pages(bp, 0);
- 	if (unlikely(error)) {
- 		xfs_warn(target->bt_mount,
- 			"%s: failed to map pages", __func__);
--		goto fail_free_mem;
-+		goto fail_free_buf;
- 	}
+-			XFS_STATS_INC(bp->b_mount, xb_page_retries);
+-			congestion_wait(BLK_RW_ASYNC, HZ/50);
+-			goto retry;
++		filled = alloc_pages_bulk_array(gfp_mask, bp->b_page_count,
++						bp->b_pages);
++		if (filled == bp->b_page_count) {
++			XFS_STATS_INC(bp->b_mount, xb_page_found);
++			break;
+ 		}
  
- 	trace_xfs_buf_get_uncached(bp, _RET_IP_);
- 	*bpp = bp;
+-		XFS_STATS_INC(bp->b_mount, xb_page_found);
++		if (filled != last)
++			continue;
+ 
+-		nbytes = min_t(size_t, size, PAGE_SIZE - offset);
+-		size -= nbytes;
+-		bp->b_pages[i] = page;
+-		offset = 0;
++		if (flags & XBF_READ_AHEAD) {
++			error = -ENOMEM;
++			goto out_free_pages;
++		}
++
++		XFS_STATS_INC(bp->b_mount, xb_page_retries);
++		congestion_wait(BLK_RW_ASYNC, HZ/50);
+ 	}
  	return 0;
  
-- fail_free_mem:
--	while (--i >= 0)
+ out_free_pages:
+-	for (i = 0; i < bp->b_page_count; i++)
 -		__free_page(bp->b_pages[i]);
--	_xfs_buf_free_pages(bp);
-- fail_free_buf:
--	xfs_buf_free_maps(bp);
--	kmem_cache_free(xfs_buf_zone, bp);
-- fail:
-+fail_free_buf:
-+	xfs_buf_free(bp);
++	while (--filled >= 0)
++		__free_page(bp->b_pages[filled]);
+ 	bp->b_flags &= ~_XBF_PAGES;
  	return error;
  }
- 
 -- 
 2.31.1
 
