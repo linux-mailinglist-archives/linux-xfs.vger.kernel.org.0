@@ -2,90 +2,400 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B60E239269E
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 May 2021 06:52:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11DA5392698
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 May 2021 06:52:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234365AbhE0Exo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 27 May 2021 00:53:44 -0400
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:52463 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234414AbhE0Exl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 May 2021 00:53:41 -0400
+        id S234416AbhE0Exk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 27 May 2021 00:53:40 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:33889 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229579AbhE0Exj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 27 May 2021 00:53:39 -0400
 Received: from dread.disaster.area (pa49-180-230-185.pa.nsw.optusnet.com.au [49.180.230.185])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 3E1A0105F88
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 2985667CED
         for <linux-xfs@vger.kernel.org>; Thu, 27 May 2021 14:52:06 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lm804-005h1F-P7
+        id 1lm804-005h1H-Q9
         for linux-xfs@vger.kernel.org; Thu, 27 May 2021 14:52:04 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lm804-004qgY-HO
+        id 1lm804-004qgb-IL
         for linux-xfs@vger.kernel.org; Thu, 27 May 2021 14:52:04 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/6] xfs: add a free space extent change reservation
-Date:   Thu, 27 May 2021 14:52:00 +1000
-Message-Id: <20210527045202.1155628-5-david@fromorbit.com>
+Subject: [PATCH 5/6] xfs: factor free space tree transaciton reservations
+Date:   Thu, 27 May 2021 14:52:01 +1000
+Message-Id: <20210527045202.1155628-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210527045202.1155628-1-david@fromorbit.com>
 References: <20210527045202.1155628-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
         a=dUIOjvib2kB+GiIc1vUx8g==:117 a=dUIOjvib2kB+GiIc1vUx8g==:17
-        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=rZi3jfzWYBuMxqL7aZQA:9
+        a=5FLXtPjwQuUA:10 a=20KFwNOVAAAA:8 a=nuMuv_KYr93gYNIyU0IA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Lots of the transaction reservation code reserves space for an
-extent allocation. It is inconsistently implemented, and many of
-them get it wrong. Introduce a new function to calculate the log
-space reservation for adding or removing an extent from the free
-space btrees.
-
-This function reserves space for logging the AGF, the AGFL and the
-free space btrees, avoiding the need to account for them seperately
-in every reservation that manipulates free space.
+Convert all the open coded free space tree modification reservations
+to use the new xfs_allocfree_extent_res() function.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_trans_resv.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ fs/xfs/libxfs/xfs_trans_resv.c | 122 ++++++++++++---------------------
+ 1 file changed, 45 insertions(+), 77 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
-index d1a0848cb52e..6363cacb790f 100644
+index 6363cacb790f..02079f55ef20 100644
 --- a/fs/xfs/libxfs/xfs_trans_resv.c
 +++ b/fs/xfs/libxfs/xfs_trans_resv.c
-@@ -79,6 +79,23 @@ xfs_allocfree_log_count(
- 	return blocks;
+@@ -143,18 +143,16 @@ xfs_calc_inode_res(
+  * reservation:
+  *
+  * the inode btree: max depth * blocksize
+- * the allocation btrees: 2 trees * (max depth - 1) * block size
++ * one extent allocfree reservation for the AG.
+  *
+- * The caller must account for SB and AG header modifications, etc.
+  */
+ STATIC uint
+ xfs_calc_inobt_res(
+ 	struct xfs_mount	*mp)
+ {
+ 	return xfs_calc_buf_res(M_IGEO(mp)->inobt_maxlevels,
+-			XFS_FSB_TO_B(mp, 1)) +
+-				xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
+-			XFS_FSB_TO_B(mp, 1));
++				XFS_FSB_TO_B(mp, 1)) +
++		xfs_allocfree_extent_res(mp);
  }
  
-+/*
-+ * Log reservation required to add or remove a single extent to the free space
-+ * btrees.  This requires modifying:
-+ *
-+ * the agf header: 1 sector
-+ * the agfl header: 1 sector
-+ * the allocation btrees: 2 trees * (max depth - 1) * block size
-+ */
-+uint
-+xfs_allocfree_extent_res(
-+	struct xfs_mount *mp)
-+{
-+	return xfs_calc_buf_res(2, mp->m_sb.sb_sectsize) +
-+	       xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
-+				XFS_FSB_TO_B(mp, 1));
-+}
-+
  /*
-  * Logging inodes is really tricksy. They are logged in memory format,
-  * which means that what we write into the log doesn't directly translate into
+@@ -182,7 +180,7 @@ xfs_calc_finobt_res(
+  * Calculate the reservation required to allocate or free an inode chunk. This
+  * includes:
+  *
+- * the allocation btrees: 2 trees * (max depth - 1) * block size
++ * one extent allocfree reservation for the AG.
+  * the inode chunk: m_ino_geo.ialloc_blks * N
+  *
+  * The size N of the inode chunk reservation depends on whether it is for
+@@ -200,8 +198,7 @@ xfs_calc_inode_chunk_res(
+ {
+ 	uint			res, size = 0;
+ 
+-	res = xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
+-			       XFS_FSB_TO_B(mp, 1));
++	res = xfs_allocfree_extent_res(mp);
+ 	if (alloc) {
+ 		/* icreate tx uses ordered buffers */
+ 		if (xfs_sb_version_has_v3inode(&mp->m_sb))
+@@ -256,22 +253,18 @@ xfs_rtalloc_log_count(
+  * extents.  This gives (t1):
+  *    the inode getting the new extents: inode size
+  *    the inode's bmap btree: max depth * block size
+- *    the agfs of the ags from which the extents are allocated: 2 * sector
+  *    the superblock free block counter: sector size
+- *    the allocation btrees: 2 exts * 2 trees * (2 * max depth - 1) * block size
++ *    two extent allocfree reservations for the AG.
+  * Or, if we're writing to a realtime file (t2):
+  *    the inode getting the new extents: inode size
+  *    the inode's bmap btree: max depth * block size
+- *    the agfs of the ags from which the extents are allocated: 2 * sector
++ *    one extent allocfree reservation for the AG.
+  *    the superblock free block counter: sector size
+  *    the realtime bitmap: ((MAXEXTLEN / rtextsize) / NBBY) bytes
+  *    the realtime summary: 1 block
+- *    the allocation btrees: 2 trees * (2 * max depth - 1) * block size
+  * And the bmap_finish transaction can free bmap blocks in a join (t3):
+- *    the agfs of the ags containing the blocks: 2 * sector size
+- *    the agfls of the ags containing the blocks: 2 * sector size
+  *    the super block free block counter: sector size
+- *    the allocation btrees: 2 exts * 2 trees * (2 * max depth - 1) * block size
++ *    two extent allocfree reservations for the AG.
+  */
+ STATIC uint
+ xfs_calc_write_reservation(
+@@ -282,8 +275,8 @@ xfs_calc_write_reservation(
+ 
+ 	t1 = xfs_calc_inode_res(mp, 1) +
+ 	     xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK), blksz) +
+-	     xfs_calc_buf_res(3, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 2), blksz);
++	     xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++	     xfs_allocfree_extent_res(mp) * 2;
+ 
+ 	if (xfs_sb_version_hasrealtime(&mp->m_sb)) {
+ 		t2 = xfs_calc_inode_res(mp, 1) +
+@@ -291,13 +284,13 @@ xfs_calc_write_reservation(
+ 				     blksz) +
+ 		     xfs_calc_buf_res(3, mp->m_sb.sb_sectsize) +
+ 		     xfs_calc_buf_res(xfs_rtalloc_log_count(mp, 1), blksz) +
+-		     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1), blksz);
++		     xfs_allocfree_extent_res(mp);
+ 	} else {
+ 		t2 = 0;
+ 	}
+ 
+-	t3 = xfs_calc_buf_res(5, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 2), blksz);
++	t3 = xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++	     xfs_allocfree_extent_res(mp) * 2;
+ 
+ 	return XFS_DQUOT_LOGRES(mp) + max3(t1, t2, t3);
+ }
+@@ -307,19 +300,13 @@ xfs_calc_write_reservation(
+  *    the inode being truncated: inode size
+  *    the inode's bmap btree: (max depth + 1) * block size
+  * And the bmap_finish transaction can free the blocks and bmap blocks (t2):
+- *    the agf for each of the ags: 4 * sector size
+- *    the agfl for each of the ags: 4 * sector size
+  *    the super block to reflect the freed blocks: sector size
+- *    worst case split in allocation btrees per extent assuming 4 extents:
+- *		4 exts * 2 trees * (2 * max depth - 1) * block size
++ *    four extent allocfree reservations for the AG.
+  * Or, if it's a realtime file (t3):
+- *    the agf for each of the ags: 2 * sector size
+- *    the agfl for each of the ags: 2 * sector size
+  *    the super block to reflect the freed blocks: sector size
+  *    the realtime bitmap: 2 exts * ((MAXEXTLEN / rtextsize) / NBBY) bytes
+  *    the realtime summary: 2 exts * 1 block
+- *    worst case split in allocation btrees per extent assuming 2 extents:
+- *		2 exts * 2 trees * (2 * max depth - 1) * block size
++ *    two extent allocfree reservations for the AG.
+  */
+ STATIC uint
+ xfs_calc_itruncate_reservation(
+@@ -331,13 +318,13 @@ xfs_calc_itruncate_reservation(
+ 	t1 = xfs_calc_inode_res(mp, 1) +
+ 	     xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) + 1, blksz);
+ 
+-	t2 = xfs_calc_buf_res(9, mp->m_sb.sb_sectsize) +
+-	     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 4), blksz);
++	t2 = xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++	     xfs_allocfree_extent_res(mp) * 4;
+ 
+ 	if (xfs_sb_version_hasrealtime(&mp->m_sb)) {
+-		t3 = xfs_calc_buf_res(5, mp->m_sb.sb_sectsize) +
++		t3 = xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
+ 		     xfs_calc_buf_res(xfs_rtalloc_log_count(mp, 2), blksz) +
+-		     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 2), blksz);
++		     xfs_allocfree_extent_res(mp) * 2;
+ 	} else {
+ 		t3 = 0;
+ 	}
+@@ -352,10 +339,8 @@ xfs_calc_itruncate_reservation(
+  *    the two directory bmap btrees: 2 * max depth * block size
+  * And the bmap_finish transaction can free dir and bmap blocks (two sets
+  *	of bmap blocks) giving:
+- *    the agf for the ags in which the blocks live: 3 * sector size
+- *    the agfl for the ags in which the blocks live: 3 * sector size
+  *    the superblock for the free block count: sector size
+- *    the allocation btrees: 3 exts * 2 trees * (2 * max depth - 1) * block size
++ *    three extent allocfree reservations for the AG.
+  */
+ STATIC uint
+ xfs_calc_rename_reservation(
+@@ -365,9 +350,8 @@ xfs_calc_rename_reservation(
+ 		max((xfs_calc_inode_res(mp, 4) +
+ 		     xfs_calc_buf_res(2 * XFS_DIROP_LOG_COUNT(mp),
+ 				      XFS_FSB_TO_B(mp, 1))),
+-		    (xfs_calc_buf_res(7, mp->m_sb.sb_sectsize) +
+-		     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 3),
+-				      XFS_FSB_TO_B(mp, 1))));
++		    (xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++		     xfs_allocfree_extent_res(mp) * 3));
+ }
+ 
+ /*
+@@ -381,20 +365,19 @@ xfs_calc_iunlink_remove_reservation(
+ 	struct xfs_mount        *mp)
+ {
+ 	return xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
+-	       2 * M_IGEO(mp)->inode_cluster_size;
++	       xfs_calc_buf_res(2, M_IGEO(mp)->inode_cluster_size);
+ }
+ 
+ /*
+  * For creating a link to an inode:
++ *    the inode is removed from the iunlink list (O_TMPFILE)
+  *    the parent directory inode: inode size
+  *    the linked inode: inode size
+  *    the directory btree could split: (max depth + v2) * dir block size
+  *    the directory bmap btree could join or split: (max depth + v2) * blocksize
+  * And the bmap_finish transaction can free some bmap blocks giving:
+- *    the agf for the ag in which the blocks live: sector size
+- *    the agfl for the ag in which the blocks live: sector size
+  *    the superblock for the free block count: sector size
+- *    the allocation btrees: 2 trees * (2 * max depth - 1) * block size
++ *    one extent allocfree reservation for the AG.
+  */
+ STATIC uint
+ xfs_calc_link_reservation(
+@@ -405,9 +388,8 @@ xfs_calc_link_reservation(
+ 		max((xfs_calc_inode_res(mp, 2) +
+ 		     xfs_calc_buf_res(XFS_DIROP_LOG_COUNT(mp),
+ 				      XFS_FSB_TO_B(mp, 1))),
+-		    (xfs_calc_buf_res(3, mp->m_sb.sb_sectsize) +
+-		     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
+-				      XFS_FSB_TO_B(mp, 1))));
++		    (xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++		     xfs_allocfree_extent_res(mp)));
+ }
+ 
+ /*
+@@ -419,20 +401,19 @@ STATIC uint
+ xfs_calc_iunlink_add_reservation(xfs_mount_t *mp)
+ {
+ 	return xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
+-			M_IGEO(mp)->inode_cluster_size;
++	       xfs_calc_buf_res(1, M_IGEO(mp)->inode_cluster_size);
+ }
+ 
+ /*
+  * For removing a directory entry we can modify:
++ *    the inode is added to the agi unlinked list
+  *    the parent directory inode: inode size
+  *    the removed inode: inode size
+  *    the directory btree could join: (max depth + v2) * dir block size
+  *    the directory bmap btree could join or split: (max depth + v2) * blocksize
+  * And the bmap_finish transaction can free the dir and bmap blocks giving:
+- *    the agf for the ag in which the blocks live: 2 * sector size
+- *    the agfl for the ag in which the blocks live: 2 * sector size
+  *    the superblock for the free block count: sector size
+- *    the allocation btrees: 2 exts * 2 trees * (2 * max depth - 1) * block size
++ *    two extent allocfree reservations for the AG.
+  */
+ STATIC uint
+ xfs_calc_remove_reservation(
+@@ -443,9 +424,8 @@ xfs_calc_remove_reservation(
+ 		max((xfs_calc_inode_res(mp, 1) +
+ 		     xfs_calc_buf_res(XFS_DIROP_LOG_COUNT(mp),
+ 				      XFS_FSB_TO_B(mp, 1))),
+-		    (xfs_calc_buf_res(4, mp->m_sb.sb_sectsize) +
+-		     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 2),
+-				      XFS_FSB_TO_B(mp, 1))));
++		    (xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++		     xfs_allocfree_extent_res(mp) * 2));
+ }
+ 
+ /*
+@@ -581,16 +561,14 @@ xfs_calc_ichange_reservation(
+ /*
+  * Growing the data section of the filesystem.
+  *	superblock
+- *	agi and agf
+- *	allocation btrees
++ *      one extent allocfree reservation for the AG.
+  */
+ STATIC uint
+ xfs_calc_growdata_reservation(
+ 	struct xfs_mount	*mp)
+ {
+-	return xfs_calc_buf_res(3, mp->m_sb.sb_sectsize) +
+-		xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
+-				 XFS_FSB_TO_B(mp, 1));
++	return xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++	       xfs_allocfree_extent_res(mp);
+ }
+ 
+ /*
+@@ -598,10 +576,9 @@ xfs_calc_growdata_reservation(
+  * In the first set of transactions (ALLOC) we allocate space to the
+  * bitmap or summary files.
+  *	superblock: sector size
+- *	agf of the ag from which the extent is allocated: sector size
+  *	bmap btree for bitmap/summary inode: max depth * blocksize
+  *	bitmap/summary inode: inode size
+- *	allocation btrees for 1 block alloc: 2 * (2 * maxdepth - 1) * blocksize
++ *      one extent allocfree reservation for the AG.
+  */
+ STATIC uint
+ xfs_calc_growrtalloc_reservation(
+@@ -611,8 +588,7 @@ xfs_calc_growrtalloc_reservation(
+ 		xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK),
+ 				 XFS_FSB_TO_B(mp, 1)) +
+ 		xfs_calc_inode_res(mp, 1) +
+-		xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
+-				 XFS_FSB_TO_B(mp, 1));
++		xfs_allocfree_extent_res(mp);
+ }
+ 
+ /*
+@@ -675,7 +651,7 @@ xfs_calc_writeid_reservation(
+  *	agf block and superblock (for block allocation)
+  *	the new block (directory sized)
+  *	bmap blocks for the new directory block
+- *	allocation btrees
++ *      one extent allocfree reservation for the AG.
+  */
+ STATIC uint
+ xfs_calc_addafork_reservation(
+@@ -687,8 +663,7 @@ xfs_calc_addafork_reservation(
+ 		xfs_calc_buf_res(1, mp->m_dir_geo->blksize) +
+ 		xfs_calc_buf_res(XFS_DAENTER_BMAP1B(mp, XFS_DATA_FORK) + 1,
+ 				 XFS_FSB_TO_B(mp, 1)) +
+-		xfs_calc_buf_res(xfs_allocfree_log_count(mp, 1),
+-				 XFS_FSB_TO_B(mp, 1));
++		xfs_allocfree_extent_res(mp);
+ }
+ 
+ /*
+@@ -696,11 +671,8 @@ xfs_calc_addafork_reservation(
+  *    the inode being truncated: inode size
+  *    the inode's bmap btree: max depth * block size
+  * And the bmap_finish transaction can free the blocks and bmap blocks:
+- *    the agf for each of the ags: 4 * sector size
+- *    the agfl for each of the ags: 4 * sector size
+  *    the super block to reflect the freed blocks: sector size
+- *    worst case split in allocation btrees per extent assuming 4 extents:
+- *		4 exts * 2 trees * (2 * max depth - 1) * block size
++ *    four extent allocfree reservations for the AG.
+  */
+ STATIC uint
+ xfs_calc_attrinval_reservation(
+@@ -709,9 +681,8 @@ xfs_calc_attrinval_reservation(
+ 	return max((xfs_calc_inode_res(mp, 1) +
+ 		    xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_ATTR_FORK),
+ 				     XFS_FSB_TO_B(mp, 1))),
+-		   (xfs_calc_buf_res(9, mp->m_sb.sb_sectsize) +
+-		    xfs_calc_buf_res(xfs_allocfree_log_count(mp, 4),
+-				     XFS_FSB_TO_B(mp, 1))));
++		   (xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++		    xfs_allocfree_extent_res(mp) * 4));
+ }
+ 
+ /*
+@@ -760,10 +731,8 @@ xfs_calc_attrsetrt_reservation(
+  *    the attribute btree could join: max depth * block size
+  *    the inode bmap btree could join or split: max depth * block size
+  * And the bmap_finish transaction can free the attr blocks freed giving:
+- *    the agf for the ag in which the blocks live: 2 * sector size
+- *    the agfl for the ag in which the blocks live: 2 * sector size
+  *    the superblock for the free block count: sector size
+- *    the allocation btrees: 2 exts * 2 trees * (2 * max depth - 1) * block size
++ *    two extent allocfree reservations for the AG.
+  */
+ STATIC uint
+ xfs_calc_attrrm_reservation(
+@@ -776,9 +745,8 @@ xfs_calc_attrrm_reservation(
+ 		     (uint)XFS_FSB_TO_B(mp,
+ 					XFS_BM_MAXLEVELS(mp, XFS_ATTR_FORK)) +
+ 		     xfs_calc_buf_res(XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK), 0)),
+-		    (xfs_calc_buf_res(5, mp->m_sb.sb_sectsize) +
+-		     xfs_calc_buf_res(xfs_allocfree_log_count(mp, 2),
+-				      XFS_FSB_TO_B(mp, 1))));
++		    (xfs_calc_buf_res(1, mp->m_sb.sb_sectsize) +
++		     xfs_allocfree_extent_res(mp) * 2));
+ }
+ 
+ /*
 -- 
 2.31.1
 
