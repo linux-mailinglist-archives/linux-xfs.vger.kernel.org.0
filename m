@@ -2,46 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0434C39ABE4
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 22:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5819B39ABE7
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 22:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229617AbhFCUn2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Jun 2021 16:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43650 "EHLO mail.kernel.org"
+        id S229665AbhFCUnm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Jun 2021 16:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229665AbhFCUn2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 3 Jun 2021 16:43:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D88C6610CB;
-        Thu,  3 Jun 2021 20:41:42 +0000 (UTC)
+        id S229576AbhFCUnm (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 3 Jun 2021 16:43:42 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6906F610CB;
+        Thu,  3 Jun 2021 20:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622752902;
-        bh=CNGOX7Qtjbj220jpTBVi4b+pDrbjOMtk7JNUOMQj9yE=;
+        s=k20201202; t=1622752917;
+        bh=mWMJ1tDLgZevBOKs3hPjVheP5tCllSbGr0Jxbad3lk0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UkT6Qoq89/yLFhgHaqpm+IVLZFbkqwVxIBrjsFt7MvTjhQmYFpHHTt66Xr1WJ7JRT
-         7Qsqvf8MmmSmuZioMmI/pvlm6j/eox/k72/9Y3PuJU/hlFegmWqGz9hY9c0qF07iS9
-         Sm8/lSNykqe4BHvf4h9N+G/4YgmXrS0Ba7hn7Q2HZ1uvRKVPcuibnt/9k9hZmV8mix
-         SwlD4x72ySZbxedIXQzTOTGTOGRd3fD9jcgKDRfyNqy2tirzY7biIX5lmobXzSFLeh
-         jR11GN7EgRC0qu1X4VEr2YsodAmG4wffTFKj+gWNDZXveYJl3ZWfwiq3gPu5vybF/W
-         e3g+hSKnzaNzg==
-Date:   Thu, 3 Jun 2021 13:41:42 -0700
+        b=nHysc0yAbtBoPDVMHqJqkaq/mwyXa2juDbE+OfQMUZ+HbkGskGVJnz4AHf9f6iIhu
+         dsqIpdCknI9o5sI8jPbVbAzPf/ZNq2R2Flgy92t5VATrMb0KV7Fa+pGYH4LIuKwl2a
+         sLAPpPlAjogYNF+IZoD4WnmUsLblPRHO7+KLZelrRbCHZAkPX1I6l3YciLhB0CPnMP
+         5boz42OWo68f/Hy1B0yVHshvpF81mK82nESYrK1/OuWs6aknQUvfr5ZXhXmUQAcsiz
+         mWHKrj4Pxv5tiRFR3ImFrXSFjwbkRYifAQ2O/qJ4w5JVR1qWDc4D7tJj30xtXaF4vD
+         3SamuglyXWe1Q==
+Date:   Thu, 3 Jun 2021 13:41:57 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, bfoster@redhat.com
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
 Subject: Re: [PATCH 1/3] xfs: only reset incore inode health state flags when
  reclaiming an inode
-Message-ID: <20210603204142.GY26380@locust>
+Message-ID: <20210603204157.GZ26380@locust>
 References: <162268995567.2724138.15163777746481739089.stgit@locust>
  <162268996135.2724138.14276025100886638786.stgit@locust>
- <20210603042107.GO664593@dread.disaster.area>
+ <YLjJcro1vhPTfGrv@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210603042107.GO664593@dread.disaster.area>
+In-Reply-To: <YLjJcro1vhPTfGrv@bfoster>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 03, 2021 at 02:21:07PM +1000, Dave Chinner wrote:
+On Thu, Jun 03, 2021 at 08:22:10AM -0400, Brian Foster wrote:
 > On Wed, Jun 02, 2021 at 08:12:41PM -0700, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <djwong@kernel.org>
 > > 
@@ -77,34 +77,42 @@ On Thu, Jun 03, 2021 at 02:21:07PM +1000, Dave Chinner wrote:
 > > Fixes: 6772c1f11206 ("xfs: track metadata health status")
 > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > > ---
-> >  fs/xfs/xfs_icache.c |    5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> Looks fine.
-> 
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> 
-> Though I do wonder how long such state will hang around, because
-> once the inode is IRECLAIMABLE and clean it is only a matter of
-> seconds before the background inode reclaimer will free it...
+> I think I reviewed this the last time around..
 
-A future patchset will add the ability to make the per-AG health status
-remember that we were forced to reclaim a sick inode:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=indirect-health-reporting
-
-This series used to be the "fixes first" part of that code, but since it
-directly intersects with the deferred inactivation changes, I moved it
-up to try to fix the problem sooner than later.
-
-Anyway, thanks for the review.
+Oops, yes, my bad. :(
 
 --D
 
 > 
-> Cheers,
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 > 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> >  fs/xfs/xfs_icache.c |    5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > 
+> > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> > index 396cc54ca03f..c3f912a9231b 100644
+> > --- a/fs/xfs/xfs_icache.c
+> > +++ b/fs/xfs/xfs_icache.c
+> > @@ -523,9 +523,6 @@ xfs_iget_cache_hit(
+> >  				XFS_INO_TO_AGINO(pag->pag_mount, ino),
+> >  				XFS_ICI_RECLAIM_TAG);
+> >  		inode->i_state = I_NEW;
+> > -		ip->i_sick = 0;
+> > -		ip->i_checked = 0;
+> > -
+> >  		spin_unlock(&ip->i_flags_lock);
+> >  		spin_unlock(&pag->pag_ici_lock);
+> >  	} else {
+> > @@ -979,6 +976,8 @@ xfs_reclaim_inode(
+> >  	spin_lock(&ip->i_flags_lock);
+> >  	ip->i_flags = XFS_IRECLAIM;
+> >  	ip->i_ino = 0;
+> > +	ip->i_sick = 0;
+> > +	ip->i_checked = 0;
+> >  	spin_unlock(&ip->i_flags_lock);
+> >  
+> >  	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> > 
+> 
