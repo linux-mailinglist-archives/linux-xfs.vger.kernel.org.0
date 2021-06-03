@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C863999EF
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 07:23:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ABC93999DC
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 07:23:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbhFCFZS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Jun 2021 01:25:18 -0400
-Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:58538 "EHLO
-        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229774AbhFCFZR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 01:25:17 -0400
+        id S229831AbhFCFYy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Jun 2021 01:24:54 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:56379 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229822AbhFCFYx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 01:24:53 -0400
 Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
-        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id B35021050CA
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B68A4104391D
         for <linux-xfs@vger.kernel.org>; Thu,  3 Jun 2021 15:22:51 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lofoh-008MrA-7N
+        id 1lofoh-008MrD-8w
         for linux-xfs@vger.kernel.org; Thu, 03 Jun 2021 15:22:51 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lofog-000imR-Vp
+        id 1lofoh-000imU-0f
         for linux-xfs@vger.kernel.org; Thu, 03 Jun 2021 15:22:51 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 26/39] xfs: use the CIL space used counter for emptiness checks
-Date:   Thu,  3 Jun 2021 15:22:27 +1000
-Message-Id: <20210603052240.171998-27-david@fromorbit.com>
+Subject: [PATCH 27/39] xfs: lift init CIL reservation out of xc_cil_lock
+Date:   Thu,  3 Jun 2021 15:22:28 +1000
+Message-Id: <20210603052240.171998-28-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210603052240.171998-1-david@fromorbit.com>
 References: <20210603052240.171998-1-david@fromorbit.com>
@@ -37,186 +37,82 @@ X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
         a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
         a=r6YtysWOX24A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=PUXlccLH651rOZYfVoIA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=63avsRBh0cCWs8EafugA:9 a=AjGcO6oz07-iQ99wixmX:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-In the next patches we are going to make the CIL list itself
-per-cpu, and so we cannot use list_empty() to check is the list is
-empty. Replace the list_empty() checks with a flag in the CIL to
-indicate we have committed at least one transaction to the CIL and
-hence the CIL is not empty.
-
-We need this flag to be an atomic so that we can clear it without
-holding any locks in the commit fast path, but we also need to be
-careful to avoid atomic operations in the fast path. Hence we use
-the fact that test_bit() is not an atomic op to first check if the
-flag is set and then run the atomic test_and_clear_bit() operation
-to clear it and steal the initial unit reservation for the CIL
-context checkpoint.
-
-When we are switching to a new context in a push, we place the
-setting of the XLOG_CIL_EMPTY flag under the xc_push_lock. THis
-allows all the other places that need to check whether the CIL is
-empty to use test_bit() and still be serialised correctly with the
-CIL context swaps that set the bit.
+The xc_cil_lock is the most highly contended lock in XFS now. To
+start the process of getting rid of it, lift the initial reservation
+of the CIL log space out from under the xc_cil_lock.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log_cil.c  | 45 ++++++++++++++++++++++++-------------------
- fs/xfs/xfs_log_priv.h |  4 ++++
- 2 files changed, 29 insertions(+), 20 deletions(-)
+ fs/xfs/xfs_log_cil.c | 27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
 diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index d87b09916f5a..62015be18615 100644
+index 62015be18615..035d9e104219 100644
 --- a/fs/xfs/xfs_log_cil.c
 +++ b/fs/xfs/xfs_log_cil.c
-@@ -70,6 +70,7 @@ xlog_cil_ctx_switch(
- 	struct xfs_cil		*cil,
- 	struct xfs_cil_ctx	*ctx)
- {
-+	set_bit(XLOG_CIL_EMPTY, &cil->xc_flags);
- 	ctx->sequence = ++cil->xc_current_sequence;
- 	ctx->cil = cil;
- 	cil->xc_ctx = ctx;
-@@ -436,13 +437,12 @@ xlog_cil_insert_items(
- 		list_splice_init(&tp->t_busy, &ctx->busy_extents);
- 
- 	/*
--	 * Now transfer enough transaction reservation to the context ticket
--	 * for the checkpoint. The context ticket is special - the unit
--	 * reservation has to grow as well as the current reservation as we
--	 * steal from tickets so we can correctly determine the space used
--	 * during the transaction commit.
-+	 * We need to take the CIL checkpoint unit reservation on the first
-+	 * commit into the CIL. Test the XLOG_CIL_EMPTY bit first so we don't
-+	 * unnecessarily do an atomic op in the fast path here.
+@@ -430,23 +430,19 @@ xlog_cil_insert_items(
  	 */
--	if (ctx->ticket->t_curr_res == 0) {
-+	if (test_bit(XLOG_CIL_EMPTY, &cil->xc_flags) &&
-+	    test_and_clear_bit(XLOG_CIL_EMPTY, &cil->xc_flags)) {
+ 	xlog_cil_insert_format_items(log, tp, &len);
+ 
+-	spin_lock(&cil->xc_cil_lock);
+-
+-	/* attach the transaction to the CIL if it has any busy extents */
+-	if (!list_empty(&tp->t_busy))
+-		list_splice_init(&tp->t_busy, &ctx->busy_extents);
+-
+ 	/*
+ 	 * We need to take the CIL checkpoint unit reservation on the first
+ 	 * commit into the CIL. Test the XLOG_CIL_EMPTY bit first so we don't
+-	 * unnecessarily do an atomic op in the fast path here.
++	 * unnecessarily do an atomic op in the fast path here. We don't need to
++	 * hold the xc_cil_lock here to clear the XLOG_CIL_EMPTY bit as we are
++	 * under the xc_ctx_lock here and that needs to be held exclusively to
++	 * reset the XLOG_CIL_EMPTY bit.
+ 	 */
+ 	if (test_bit(XLOG_CIL_EMPTY, &cil->xc_flags) &&
+-	    test_and_clear_bit(XLOG_CIL_EMPTY, &cil->xc_flags)) {
++	    test_and_clear_bit(XLOG_CIL_EMPTY, &cil->xc_flags))
  		ctx_res = ctx->ticket->t_unit_res;
- 		ctx->ticket->t_curr_res = ctx_res;
- 		tp->t_ticket->t_curr_res -= ctx_res;
-@@ -771,7 +771,7 @@ xlog_cil_push_work(
- 	 * move on to a new sequence number and so we have to be able to push
- 	 * this sequence again later.
- 	 */
--	if (list_empty(&cil->xc_cil)) {
-+	if (test_bit(XLOG_CIL_EMPTY, &cil->xc_flags)) {
- 		cil->xc_push_seq = 0;
- 		spin_unlock(&cil->xc_push_lock);
- 		goto out_skip;
-@@ -1019,9 +1019,10 @@ xlog_cil_push_background(
- 
- 	/*
- 	 * The cil won't be empty because we are called while holding the
--	 * context lock so whatever we added to the CIL will still be there
-+	 * context lock so whatever we added to the CIL will still be there.
- 	 */
- 	ASSERT(!list_empty(&cil->xc_cil));
-+	ASSERT(!test_bit(XLOG_CIL_EMPTY, &cil->xc_flags));
- 
- 	/*
- 	 * Don't do a background push if we haven't used up all the
-@@ -1108,7 +1109,8 @@ xlog_cil_push_now(
- 	 * there's no work we need to do.
- 	 */
- 	spin_lock(&cil->xc_push_lock);
--	if (list_empty(&cil->xc_cil) || push_seq <= cil->xc_push_seq) {
-+	if (test_bit(XLOG_CIL_EMPTY, &cil->xc_flags) ||
-+	    push_seq <= cil->xc_push_seq) {
- 		spin_unlock(&cil->xc_push_lock);
- 		return;
- 	}
-@@ -1127,7 +1129,7 @@ xlog_cil_empty(
- 	bool		empty = false;
- 
- 	spin_lock(&cil->xc_push_lock);
--	if (list_empty(&cil->xc_cil))
-+	if (test_bit(XLOG_CIL_EMPTY, &cil->xc_flags))
- 		empty = true;
- 	spin_unlock(&cil->xc_push_lock);
- 	return empty;
-@@ -1295,7 +1297,7 @@ xlog_cil_force_seq(
- 	 * we would have found the context on the committing list.
- 	 */
- 	if (sequence == cil->xc_current_sequence &&
--	    !list_empty(&cil->xc_cil)) {
-+	    !test_bit(XLOG_CIL_EMPTY, &cil->xc_flags)) {
- 		spin_unlock(&cil->xc_push_lock);
- 		goto restart;
- 	}
-@@ -1328,9 +1330,9 @@ bool
- xfs_log_item_in_current_chkpt(
- 	struct xfs_log_item *lip)
- {
--	struct xfs_cil_ctx *ctx = lip->li_mountp->m_log->l_cilp->xc_ctx;
-+	struct xfs_cil		*cil = lip->li_mountp->m_log->l_cilp;
- 
--	if (list_empty(&lip->li_cil))
-+	if (test_bit(XLOG_CIL_EMPTY, &cil->xc_flags))
- 		return false;
- 
- 	/*
-@@ -1338,7 +1340,7 @@ xfs_log_item_in_current_chkpt(
- 	 * first checkpoint it is written to. Hence if it is different to the
- 	 * current sequence, we're in a new checkpoint.
- 	 */
--	return lip->li_seq == ctx->sequence;
-+	return lip->li_seq == cil->xc_ctx->sequence;
- }
- 
- /*
-@@ -1375,13 +1377,16 @@ void
- xlog_cil_destroy(
- 	struct xlog	*log)
- {
--	if (log->l_cilp->xc_ctx) {
--		if (log->l_cilp->xc_ctx->ticket)
--			xfs_log_ticket_put(log->l_cilp->xc_ctx->ticket);
--		kmem_free(log->l_cilp->xc_ctx);
-+	struct xfs_cil	*cil = log->l_cilp;
+-		ctx->ticket->t_curr_res = ctx_res;
+-		tp->t_ticket->t_curr_res -= ctx_res;
+-	}
 +
-+	if (cil->xc_ctx) {
-+		if (cil->xc_ctx->ticket)
-+			xfs_log_ticket_put(cil->xc_ctx->ticket);
-+		kmem_free(cil->xc_ctx);
++	spin_lock(&cil->xc_cil_lock);
+ 
+ 	/* do we need space for more log record headers? */
+ 	iclog_space = log->l_iclog_size - log->l_iclog_hsize;
+@@ -456,11 +452,9 @@ xlog_cil_insert_items(
+ 		/* need to take into account split region headers, too */
+ 		split_res *= log->l_iclog_hsize + sizeof(struct xlog_op_header);
+ 		ctx->ticket->t_unit_res += split_res;
+-		ctx->ticket->t_curr_res += split_res;
+-		tp->t_ticket->t_curr_res -= split_res;
+-		ASSERT(tp->t_ticket->t_curr_res >= len);
+ 	}
+-	tp->t_ticket->t_curr_res -= len;
++	tp->t_ticket->t_curr_res -= split_res + ctx_res + len;
++	ctx->ticket->t_curr_res += split_res + ctx_res;
+ 	ctx->space_used += len;
+ 
+ 	/*
+@@ -498,6 +492,9 @@ xlog_cil_insert_items(
+ 			list_move_tail(&lip->li_cil, &cil->xc_cil);
  	}
  
--	ASSERT(list_empty(&log->l_cilp->xc_cil));
--	kmem_free(log->l_cilp);
-+	ASSERT(list_empty(&cil->xc_cil));
-+	ASSERT(test_bit(XLOG_CIL_EMPTY, &cil->xc_flags));
-+	kmem_free(cil);
- }
++	/* attach the transaction to the CIL if it has any busy extents */
++	if (!list_empty(&tp->t_busy))
++		list_splice_init(&tp->t_busy, &ctx->busy_extents);
+ 	spin_unlock(&cil->xc_cil_lock);
  
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 02c94b6d0642..11606c378b7f 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -244,6 +244,7 @@ struct xfs_cil_ctx {
-  */
- struct xfs_cil {
- 	struct xlog		*xc_log;
-+	unsigned long		xc_flags;
- 	struct list_head	xc_cil;
- 	spinlock_t		xc_cil_lock;
- 
-@@ -259,6 +260,9 @@ struct xfs_cil {
- 	wait_queue_head_t	xc_push_wait;	/* background push throttle */
- } ____cacheline_aligned_in_smp;
- 
-+/* xc_flags bit values */
-+#define	XLOG_CIL_EMPTY		1
-+
- /*
-  * The amount of log space we allow the CIL to aggregate is difficult to size.
-  * Whatever we choose, we have to make sure we can get a reservation for the
+ 	if (tp->t_ticket->t_curr_res < 0)
 -- 
 2.31.1
 
