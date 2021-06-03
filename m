@@ -2,227 +2,144 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4554D3999E3
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 07:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AFC93999E6
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 07:23:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbhFCFZF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Jun 2021 01:25:05 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:46512 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229695AbhFCFZE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 01:25:04 -0400
+        id S229758AbhFCFZH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Jun 2021 01:25:07 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:56966 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229761AbhFCFZH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 01:25:07 -0400
 Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 83938681B1
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 832BD1054DA
         for <linux-xfs@vger.kernel.org>; Thu,  3 Jun 2021 15:22:51 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lofoh-008Mqs-0C
+        id 1lofoh-008Mqu-0n
         for linux-xfs@vger.kernel.org; Thu, 03 Jun 2021 15:22:51 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lofog-000im9-On
+        id 1lofog-000imC-Pf
         for linux-xfs@vger.kernel.org; Thu, 03 Jun 2021 15:22:50 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 20/39] xfs: pass lv chain length into xlog_write()
-Date:   Thu,  3 Jun 2021 15:22:21 +1000
-Message-Id: <20210603052240.171998-21-david@fromorbit.com>
+Subject: [PATCH 21/39] xfs: introduce xlog_write_single()
+Date:   Thu,  3 Jun 2021 15:22:22 +1000
+Message-Id: <20210603052240.171998-22-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210603052240.171998-1-david@fromorbit.com>
 References: <20210603052240.171998-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
         a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
         a=r6YtysWOX24A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=hIND3nFijBJh5Kz5_mcA:9 a=SWhVIwS7yl9XnlAU:21 a=28HQk30EFEOawxvn:21
-        a=AjGcO6oz07-iQ99wixmX:22
+        a=S83ClQuvNvUpNviAnokA:9 a=AjGcO6oz07-iQ99wixmX:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The caller of xlog_write() usually has a close accounting of the
-aggregated vector length contained in the log vector chain passed to
-xlog_write(). There is no need to iterate the chain to calculate he
-length of the data in xlog_write_calculate_len() if the caller is
-already iterating that chain to build it.
-
-Passing in the vector length avoids doing an extra chain iteration,
-which can be a significant amount of work given that large CIL
-commits can have hundreds of thousands of vectors attached to the
-chain.
+Introduce an optimised version of xlog_write() that is used when the
+entire write will fit in a single iclog. This greatly simplifies the
+implementation of writing a log vector chain into an iclog, and sets
+the ground work for a much more understandable xlog_write()
+implementation.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log.c      | 37 ++++++-------------------------------
- fs/xfs/xfs_log_cil.c  | 16 +++++++++++-----
- fs/xfs/xfs_log_priv.h |  2 +-
- 3 files changed, 18 insertions(+), 37 deletions(-)
+ fs/xfs/xfs_log.c | 57 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 56 insertions(+), 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index e849f15e9e04..58f9aafce29e 100644
+index 58f9aafce29e..3b74d21e3786 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -864,7 +864,8 @@ xlog_write_unmount_record(
- 	 */
- 	if (log->l_targ != log->l_mp->m_ddev_targp)
- 		blkdev_issue_flush(log->l_targ->bt_bdev);
--	return xlog_write(log, &vec, ticket, NULL, NULL, XLOG_UNMOUNT_TRANS);
-+	return xlog_write(log, &vec, ticket, NULL, NULL, XLOG_UNMOUNT_TRANS,
-+				reg.i_len);
- }
- 
- /*
-@@ -1588,7 +1589,8 @@ xlog_commit_record(
- 
- 	/* account for space used by record data */
- 	ticket->t_curr_res -= reg.i_len;
--	error = xlog_write(log, &vec, ticket, lsn, iclog, XLOG_COMMIT_TRANS);
-+	error = xlog_write(log, &vec, ticket, lsn, iclog, XLOG_COMMIT_TRANS,
-+				reg.i_len);
- 	if (error)
- 		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
+@@ -2225,6 +2225,52 @@ xlog_write_copy_finish(
  	return error;
-@@ -2108,32 +2110,6 @@ xlog_print_trans(
- 	}
  }
  
--/*
-- * Calculate the potential space needed by the log vector. All regions contain
-- * their own opheaders and they are accounted for in region space so we don't
-- * need to add them to the vector length here.
-- */
--static int
--xlog_write_calc_vec_length(
--	struct xlog_ticket	*ticket,
--	struct xfs_log_vec	*log_vector,
--	uint			optype)
--{
--	struct xfs_log_vec	*lv;
--	int			len = 0;
--	int			i;
--
--	for (lv = log_vector; lv; lv = lv->lv_next) {
--		/* we don't write ordered log vectors */
--		if (lv->lv_buf_len == XFS_LOG_VEC_ORDERED)
--			continue;
--
--		for (i = 0; i < lv->lv_niovecs; i++)
--			len += lv->lv_iovecp[i].i_len;
--	}
--	return len;
--}
--
- static xlog_op_header_t *
- xlog_write_setup_ophdr(
- 	struct xlog_op_header	*ophdr,
-@@ -2296,13 +2272,13 @@ xlog_write(
- 	struct xlog_ticket	*ticket,
- 	xfs_lsn_t		*start_lsn,
- 	struct xlog_in_core	**commit_iclog,
--	uint			optype)
-+	uint			optype,
++/*
++ * Write log vectors into a single iclog which is guaranteed by the caller
++ * to have enough space to write the entire log vector into. Return the number
++ * of log vectors written into the iclog.
++ */
++static int
++xlog_write_single(
++	struct xfs_log_vec	*log_vector,
++	struct xlog_ticket	*ticket,
++	struct xlog_in_core	*iclog,
++	uint32_t		log_offset,
 +	uint32_t		len)
- {
- 	struct xlog_in_core	*iclog = NULL;
- 	struct xfs_log_vec	*lv = log_vector;
- 	struct xfs_log_iovec	*vecp = lv->lv_iovecp;
- 	int			index = 0;
--	int			len;
- 	int			partial_copy = 0;
- 	int			partial_copy_len = 0;
- 	int			contwr = 0;
-@@ -2317,7 +2293,6 @@ xlog_write(
- 		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
- 	}
- 
--	len = xlog_write_calc_vec_length(ticket, log_vector, optype);
- 	if (start_lsn)
- 		*start_lsn = 0;
- 	while (lv && (!lv->lv_niovecs || index < lv->lv_niovecs)) {
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 58900171de09..68bec4b81052 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -710,11 +710,12 @@ xlog_cil_build_trans_hdr(
- 				sizeof(struct xfs_trans_header);
- 	hdr->lhdr[1].i_type = XLOG_REG_TYPE_TRANSHDR;
- 
--	tic->t_curr_res -= hdr->lhdr[0].i_len + hdr->lhdr[1].i_len;
--
- 	lvhdr->lv_niovecs = 2;
- 	lvhdr->lv_iovecp = &hdr->lhdr[0];
-+	lvhdr->lv_bytes = hdr->lhdr[0].i_len + hdr->lhdr[1].i_len;
- 	lvhdr->lv_next = ctx->lv_chain;
++{
++	struct xfs_log_vec	*lv;
++	void			*ptr;
++	int			index = 0;
++	int			record_cnt = 0;
 +
-+	tic->t_curr_res -= lvhdr->lv_bytes;
- }
- 
++	ASSERT(log_offset + len <= iclog->ic_size);
++
++	ptr = iclog->ic_datap + log_offset;
++	for (lv = log_vector; lv; lv = lv->lv_next) {
++		/*
++		 * Ordered log vectors have no regions to write so this
++		 * loop will naturally skip them.
++		 */
++		for (index = 0; index < lv->lv_niovecs; index++) {
++			struct xfs_log_iovec	*reg = &lv->lv_iovecp[index];
++			struct xlog_op_header	*ophdr = reg->i_addr;
++
++			ASSERT(reg->i_len % sizeof(int32_t) == 0);
++			ASSERT((unsigned long)ptr % sizeof(int32_t) == 0);
++
++			ophdr->oh_tid = cpu_to_be32(ticket->t_tid);
++			ophdr->oh_len = cpu_to_be32(reg->i_len -
++						sizeof(struct xlog_op_header));
++			memcpy(ptr, reg->i_addr, reg->i_len);
++			xlog_write_adv_cnt(&ptr, &len, &log_offset, reg->i_len);
++			record_cnt++;
++		}
++	}
++	ASSERT(len == 0);
++	return record_cnt;
++}
++
++
  /*
-@@ -742,7 +743,8 @@ xlog_cil_push_work(
- 	struct xfs_log_vec	*lv;
- 	struct xfs_cil_ctx	*new_ctx;
- 	struct xlog_in_core	*commit_iclog;
--	int			num_iovecs;
-+	int			num_iovecs = 0;
-+	int			num_bytes = 0;
- 	int			error = 0;
- 	struct xlog_cil_trans_hdr thdr;
- 	struct xfs_log_vec	lvhdr = { NULL };
-@@ -835,7 +837,6 @@ xlog_cil_push_work(
- 	 * by the flush lock.
- 	 */
- 	lv = NULL;
--	num_iovecs = 0;
- 	while (!list_empty(&cil->xc_cil)) {
- 		struct xfs_log_item	*item;
+  * Write some region out to in-core log
+  *
+@@ -2305,16 +2351,25 @@ xlog_write(
+ 			return error;
  
-@@ -849,6 +850,10 @@ xlog_cil_push_work(
- 		lv = item->li_lv;
- 		item->li_lv = NULL;
- 		num_iovecs += lv->lv_niovecs;
+ 		ASSERT(log_offset <= iclog->ic_size - 1);
+-		ptr = iclog->ic_datap + log_offset;
+ 
+ 		/* Start_lsn is the first lsn written to. */
+ 		if (start_lsn && !*start_lsn)
+ 			*start_lsn = be64_to_cpu(iclog->ic_header.h_lsn);
+ 
++		/* If this is a single iclog write, go fast... */
++		if (!contwr && lv == log_vector) {
++			record_cnt = xlog_write_single(lv, ticket, iclog,
++						log_offset, len);
++			len = 0;
++			data_cnt = len;
++			break;
++		}
 +
-+		/* we don't write ordered log vectors */
-+		if (lv->lv_buf_len != XFS_LOG_VEC_ORDERED)
-+			num_bytes += lv->lv_bytes;
- 	}
- 
- 	/*
-@@ -887,6 +892,7 @@ xlog_cil_push_work(
- 	 * transaction header here as it is not accounted for in xlog_write().
- 	 */
- 	xlog_cil_build_trans_hdr(ctx, &thdr, &lvhdr, num_iovecs);
-+	num_bytes += lvhdr.lv_bytes;
- 
- 	/*
- 	 * Before we format and submit the first iclog, we have to ensure that
-@@ -901,7 +907,7 @@ xlog_cil_push_work(
- 	 * write head.
- 	 */
- 	error = xlog_write(log, &lvhdr, ctx->ticket, &ctx->start_lsn, NULL,
--				XLOG_START_TRANS);
-+				XLOG_START_TRANS, num_bytes);
- 	if (error)
- 		goto out_abort_free_ticket;
- 
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 301c36165974..eba905c273b0 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -459,7 +459,7 @@ void	xlog_print_tic_res(struct xfs_mount *mp, struct xlog_ticket *ticket);
- void	xlog_print_trans(struct xfs_trans *);
- int	xlog_write(struct xlog *log, struct xfs_log_vec *log_vector,
- 		struct xlog_ticket *tic, xfs_lsn_t *start_lsn,
--		struct xlog_in_core **commit_iclog, uint optype);
-+		struct xlog_in_core **commit_iclog, uint optype, uint32_t len);
- int	xlog_commit_record(struct xlog *log, struct xlog_ticket *ticket,
- 		struct xlog_in_core **iclog, xfs_lsn_t *lsn);
- 
+ 		/*
+ 		 * This loop writes out as many regions as can fit in the amount
+ 		 * of space which was allocated by xlog_state_get_iclog_space().
+ 		 */
++		ptr = iclog->ic_datap + log_offset;
+ 		while (lv && (!lv->lv_niovecs || index < lv->lv_niovecs)) {
+ 			struct xfs_log_iovec	*reg;
+ 			struct xlog_op_header	*ophdr;
 -- 
 2.31.1
 
