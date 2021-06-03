@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AB2F3999CF
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 07:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6197A3999F1
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Jun 2021 07:23:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbhFCFYu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Jun 2021 01:24:50 -0400
-Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:57252 "EHLO
-        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229640AbhFCFYt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 01:24:49 -0400
+        id S229837AbhFCFZT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Jun 2021 01:25:19 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:56556 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229840AbhFCFZT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 01:25:19 -0400
 Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
-        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 006831140945
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id A941C10227C
         for <linux-xfs@vger.kernel.org>; Thu,  3 Jun 2021 15:22:51 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lofoh-008Mr1-3v
+        id 1lofoh-008Mr4-58
         for linux-xfs@vger.kernel.org; Thu, 03 Jun 2021 15:22:51 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lofog-000imI-SB
+        id 1lofog-000imL-Tb
         for linux-xfs@vger.kernel.org; Thu, 03 Jun 2021 15:22:50 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 23/39] xfs: xlog_write() no longer needs contwr state
-Date:   Thu,  3 Jun 2021 15:22:24 +1000
-Message-Id: <20210603052240.171998-24-david@fromorbit.com>
+Subject: [PATCH 24/39] xfs: xlog_write() doesn't need optype anymore
+Date:   Thu,  3 Jun 2021 15:22:25 +1000
+Message-Id: <20210603052240.171998-25-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210603052240.171998-1-david@fromorbit.com>
 References: <20210603052240.171998-1-david@fromorbit.com>
@@ -37,147 +37,104 @@ X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
         a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
         a=r6YtysWOX24A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=0CMaWtTLTcrcxSC13TsA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=JnHvY13FuJIPsMKcdksA:9 a=AjGcO6oz07-iQ99wixmX:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The rework of xlog_write() no longer requires xlog_get_iclog_state()
-to tell it about internal iclog space reservation state to direct it
-on what to do. Remove this parameter.
-
-$ size fs/xfs/xfs_log.o.*
-   text	   data	    bss	    dec	    hex	filename
-  26520	    560	      8	  27088	   69d0	fs/xfs/xfs_log.o.orig
-  26384	    560	      8	  26952	   6948	fs/xfs/xfs_log.o.patched
+So remove it from the interface and callers.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+ fs/xfs/xfs_log.c      | 14 ++++----------
+ fs/xfs/xfs_log_cil.c  |  2 +-
+ fs/xfs/xfs_log_priv.h |  2 +-
+ 3 files changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 98a3e2e4f1e0..574078985f0a 100644
+index 574078985f0a..65b28fce4db4 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -47,7 +47,6 @@ xlog_state_get_iclog_space(
- 	int			len,
- 	struct xlog_in_core	**iclog,
+@@ -863,8 +863,7 @@ xlog_write_unmount_record(
+ 	 */
+ 	if (log->l_targ != log->l_mp->m_ddev_targp)
+ 		blkdev_issue_flush(log->l_targ->bt_bdev);
+-	return xlog_write(log, &vec, ticket, NULL, NULL, XLOG_UNMOUNT_TRANS,
+-				reg.i_len);
++	return xlog_write(log, &vec, ticket, NULL, NULL, reg.i_len);
+ }
+ 
+ /*
+@@ -1588,8 +1587,7 @@ xlog_commit_record(
+ 
+ 	/* account for space used by record data */
+ 	ticket->t_curr_res -= reg.i_len;
+-	error = xlog_write(log, &vec, ticket, lsn, iclog, XLOG_COMMIT_TRANS,
+-				reg.i_len);
++	error = xlog_write(log, &vec, ticket, lsn, iclog, reg.i_len);
+ 	if (error)
+ 		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
+ 	return error;
+@@ -2399,7 +2397,6 @@ xlog_write(
  	struct xlog_ticket	*ticket,
--	int			*continued_write,
- 	int			*logoffsetp);
- STATIC void
- xlog_grant_push_ail(
-@@ -2178,8 +2177,7 @@ xlog_write_get_more_iclog_space(
- 	uint32_t		*log_offset,
- 	uint32_t		len,
- 	uint32_t		*record_cnt,
--	uint32_t		*data_cnt,
--	int			*contwr)
-+	uint32_t		*data_cnt)
- {
- 	struct xlog_in_core	*iclog = *iclogp;
- 	int			error;
-@@ -2193,8 +2191,8 @@ xlog_write_get_more_iclog_space(
- 	if (error)
- 		return error;
- 
--	error = xlog_state_get_iclog_space(log, len, &iclog,
--				ticket, contwr, log_offset);
-+	error = xlog_state_get_iclog_space(log, len, &iclog, ticket,
-+					log_offset);
- 	if (error)
- 		return error;
- 	*record_cnt = 0;
-@@ -2218,8 +2216,7 @@ xlog_write_partial(
- 	uint32_t		*log_offset,
- 	uint32_t		*len,
- 	uint32_t		*record_cnt,
--	uint32_t		*data_cnt,
--	int			*contwr)
-+	uint32_t		*data_cnt)
- {
- 	struct xlog_in_core	*iclog = *iclogp;
- 	struct xfs_log_vec	*lv = log_vector;
-@@ -2253,7 +2250,7 @@ xlog_write_partial(
- 					sizeof(struct xlog_op_header)) {
- 			error = xlog_write_get_more_iclog_space(log, ticket,
- 					&iclog, log_offset, *len, record_cnt,
--					data_cnt, contwr);
-+					data_cnt);
- 			if (error)
- 				return ERR_PTR(error);
- 			ptr = iclog->ic_datap + *log_offset;
-@@ -2309,7 +2306,7 @@ xlog_write_partial(
- 
- 			error = xlog_write_get_more_iclog_space(log, ticket,
- 					&iclog, log_offset, *len, record_cnt,
--					data_cnt, contwr);
-+					data_cnt);
- 			if (error)
- 				return ERR_PTR(error);
- 			ptr = iclog->ic_datap + *log_offset;
-@@ -2407,7 +2404,6 @@ xlog_write(
+ 	xfs_lsn_t		*start_lsn,
+ 	struct xlog_in_core	**commit_iclog,
+-	uint			optype,
+ 	uint32_t		len)
  {
  	struct xlog_in_core	*iclog = NULL;
- 	struct xfs_log_vec	*lv = log_vector;
--	int			contwr = 0;
- 	int			record_cnt = 0;
- 	int			data_cnt = 0;
- 	int			error = 0;
-@@ -2421,7 +2417,7 @@ xlog_write(
- 	}
- 
- 	error = xlog_state_get_iclog_space(log, len, &iclog, ticket,
--					   &contwr, &log_offset);
-+					   &log_offset);
- 	if (error)
- 		return error;
- 
-@@ -2437,7 +2433,7 @@ xlog_write(
- 
- 		ASSERT(!(optype & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS)));
- 		lv = xlog_write_partial(log, lv, ticket, &iclog, &log_offset,
--					&len, &record_cnt, &data_cnt, &contwr);
-+					&len, &record_cnt, &data_cnt);
- 		if (IS_ERR_OR_NULL(lv)) {
- 			error = PTR_ERR_OR_ZERO(lv);
+@@ -2431,7 +2428,6 @@ xlog_write(
+ 		if (!lv)
  			break;
-@@ -2451,7 +2447,6 @@ xlog_write(
- 	 * those writes accounted to it. Hence we do not need to update the
- 	 * iclog with the number of bytes written here.
+ 
+-		ASSERT(!(optype & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS)));
+ 		lv = xlog_write_partial(log, lv, ticket, &iclog, &log_offset,
+ 					&len, &record_cnt, &data_cnt);
+ 		if (IS_ERR_OR_NULL(lv)) {
+@@ -2449,12 +2445,10 @@ xlog_write(
  	 */
--	ASSERT(!contwr || XLOG_FORCED_SHUTDOWN(log));
  	spin_lock(&log->l_icloglock);
  	xlog_state_finish_copy(log, iclog, record_cnt, 0);
- 	if (commit_iclog) {
-@@ -2855,7 +2850,6 @@ xlog_state_get_iclog_space(
- 	int			len,
- 	struct xlog_in_core	**iclogp,
- 	struct xlog_ticket	*ticket,
--	int			*continued_write,
- 	int			*logoffsetp)
- {
- 	int		  log_offset;
-@@ -2931,13 +2925,10 @@ xlog_state_get_iclog_space(
- 	 * iclogs (to mark it taken), this particular iclog will release/sync
- 	 * to disk in xlog_write().
- 	 */
--	if (len <= iclog->ic_size - iclog->ic_offset) {
--		*continued_write = 0;
-+	if (len <= iclog->ic_size - iclog->ic_offset)
- 		iclog->ic_offset += len;
+-	if (commit_iclog) {
+-		ASSERT(optype & XLOG_COMMIT_TRANS);
++	if (commit_iclog)
+ 		*commit_iclog = iclog;
 -	} else {
--		*continued_write = 1;
 +	else
- 		xlog_state_switch_iclogs(log, iclog, iclog->ic_size);
+ 		error = xlog_state_release_iclog(log, iclog);
 -	}
- 	*iclogp = iclog;
+ 	spin_unlock(&log->l_icloglock);
  
- 	ASSERT(iclog->ic_offset <= iclog->ic_size);
+ 	return error;
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index 68bec4b81052..b051f3c44ec1 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -907,7 +907,7 @@ xlog_cil_push_work(
+ 	 * write head.
+ 	 */
+ 	error = xlog_write(log, &lvhdr, ctx->ticket, &ctx->start_lsn, NULL,
+-				XLOG_START_TRANS, num_bytes);
++				num_bytes);
+ 	if (error)
+ 		goto out_abort_free_ticket;
+ 
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index eba905c273b0..a16ffdc8ae97 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -459,7 +459,7 @@ void	xlog_print_tic_res(struct xfs_mount *mp, struct xlog_ticket *ticket);
+ void	xlog_print_trans(struct xfs_trans *);
+ int	xlog_write(struct xlog *log, struct xfs_log_vec *log_vector,
+ 		struct xlog_ticket *tic, xfs_lsn_t *start_lsn,
+-		struct xlog_in_core **commit_iclog, uint optype, uint32_t len);
++		struct xlog_in_core **commit_iclog, uint32_t len);
+ int	xlog_commit_record(struct xlog *log, struct xlog_ticket *ticket,
+ 		struct xlog_in_core **iclog, xfs_lsn_t *lsn);
+ 
 -- 
 2.31.1
 
