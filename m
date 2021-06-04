@@ -2,118 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4734339AE56
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Jun 2021 00:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C9A39AF79
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Jun 2021 03:19:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbhFCWpi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Jun 2021 18:45:38 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:41023 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229610AbhFCWpi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 18:45:38 -0400
-Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id C37F41AFBF9;
-        Fri,  4 Jun 2021 08:43:36 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1low3r-008e6X-1r; Fri, 04 Jun 2021 08:43:35 +1000
-Date:   Fri, 4 Jun 2021 08:43:35 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 00/39 v5] xfs: CIL and log optimisations
-Message-ID: <20210603224335.GT664593@dread.disaster.area>
-References: <20210603052240.171998-1-david@fromorbit.com>
- <20210603170513.GH26402@locust>
+        id S229995AbhFDBUr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Jun 2021 21:20:47 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:12799 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229973AbhFDBUn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Jun 2021 21:20:43 -0400
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3AA3bLW6jvnopU4Bnx6L9YoZtz3nBQXuYji2hC?=
+ =?us-ascii?q?6mlwRA09TyX4rbHLoB1/73LJYVkqNk3I5urrBEDtexLhHP1OkOws1NWZLWrbUQ?=
+ =?us-ascii?q?KTRekM0WKI+UyDJ8SRzI5g/JYlW61/Jfm1NlJikPv9iTPSL/8QhPWB74Ck7N2z?=
+ =?us-ascii?q?80tQ?=
+X-IronPort-AV: E=Sophos;i="5.83,246,1616428800"; 
+   d="scan'208";a="109209787"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 04 Jun 2021 09:18:54 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 31BEC4C369FE;
+        Fri,  4 Jun 2021 09:18:49 +0800 (CST)
+Received: from G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.80) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Fri, 4 Jun 2021 09:18:49 +0800
+Received: from irides.mr.mr.mr (10.167.225.141) by
+ G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.2 via Frontend Transport; Fri, 4 Jun 2021 09:18:48 +0800
+From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>, <dm-devel@redhat.com>
+CC:     <darrick.wong@oracle.com>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@lst.de>, <agk@redhat.com>,
+        <snitzer@redhat.com>, <rgoldwyn@suse.de>
+Subject: [PATCH v4 00/10] fsdax: introduce fs query to support reflink
+Date:   Fri, 4 Jun 2021 09:18:34 +0800
+Message-ID: <20210604011844.1756145-1-ruansy.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210603170513.GH26402@locust>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
-        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
-        a=kj9zAlcOel0A:10 a=r6YtysWOX24A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=AU4K_jjmL_ufvn0EDyEA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: 31BEC4C369FE.A3141
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@fujitsu.com
+X-Spam-Status: No
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jun 03, 2021 at 10:05:13AM -0700, Darrick J. Wong wrote:
-> On Thu, Jun 03, 2021 at 03:22:01PM +1000, Dave Chinner wrote:
-> > Hi folks,
-> > 
-> > This is an update of the consolidated log scalability patchset I've been working
-> > on. Version 4 was posted here:
-> > 
-> > https://lore.kernel.org/linux-xfs/20210519121317.585244-1-david@fromorbit.com/
-> > 
-> > This version contains the changes Darrick requested during review. The only
-> > patch remaining without at least one RVB tag is patch 30.
-> > 
-> > Performance improvements are largely documented in the change logs of the
-> > individual patches. Headline numbers are an increase in transaction rate from
-> > 700k commits/s to 1.7M commits/s, and a reduction in fua/flush operations by
-> > 2-3 orders of magnitude on metadata heavy workloads that don't use fsync.
-> > 
-> > Summary of series:
-> > 
-> > Patches		Modifications
-> > -------		-------------
-> > 1-7:		log write FUA/FLUSH optimisations
-> > 8:		bug fix
-> > 9-11:		Async CIL pushes
-> > 12-25:		xlog_write() rework
-> > 26-39:		CIL commit scalability
-> 
-> From this latest posting, I see that the first nine patches all have
-> multiple reviews.  Some of patches 10-19 have review tags split between
-> Brian and Christoph, but neither have added them all the way through.
-> I think I'm the only one who has supplied RVB tags for all forty.
-> 
-> So my question is: at what point would you like me to pull the segments
-> of this patchset into upstream?  "The maintainer reviewed everything" is
-> of course our usual standard, but this touches a /lot/ of core logging
-> code, and logging isn't one of my stronger areas of familiarity.
-> 
-> I think 1-8 look fine for 5.14.  Do you want me to wait for Brian and/or
-> Christoph (or really, any third pair of eyes) to finish working their
-> way through 9-11 and 12-25 before merging them?
+This patchset is aimed to support shared pages tracking for fsdax.
 
-Quite frankly, I don't think waiting longer for more review is going
-to do much to improve the code further. It's largely unchanged since
-the last merge cycle went by when I was already waiting for reviews
-and it was considered "not enough time to review in this cycle".
-It's got enough reviews now to pass the merge bar, and the only way
-we are going to shake any remaining problems with this code out is
-to merge it and get it out to a wider testing base....
+Change from V3:
+  - Introduce dax_device->holder to split dax specific issues from
+    block device, instead of the ->corrupted_range() in
+    block_device_operations
+  - Other mistakes and problems fix
+  - Rebased to v5.13-rc4
 
-Indeed, if it is merged now it is going to sit another 3 months in
-for-next+rc kernels before it is released to users, so I don't think
-having it sit for another 3 months only in my test tree before it
-gets wider testing benefits anyone. All it does is slow me down and
-start pushing me towards having an entirely unmanageable review
-backlog like you already have, Darrick.
+This patchset moves owner tracking from dax_assocaite_entry() to pmem
+device driver, by introducing an interface ->memory_failure() of struct
+pagemap.  This interface is called by memory_failure() in mm, and
+implemented by pmem device.
 
-Given that our rate-of-merge limitations are largely caused by a
-lack of review bandwidth, putting off merging code that has already
-met the review bar so it can have "more review" seems like a big
-step backwards in terms of working through our review backlog. We
-need to review and merge stuff faster, not block more stuff by
-trying to make review capture every possible problem before we merge
-the code.
+Then call holder operations to find the filesystem which the corrupted
+data located in, and call filesystem handler to track files or metadata
+associated with this page.
 
-So, yeah, if I were maintainer and I saw every patch had a RVB on
-it, I'd be merging it straight away. But I'm not the maintainer, so
-I'll do whatever you want...
+Finally we are able to try to fix the corrupted data in filesystem and
+do other necessary processing, such as killing processes who are using
+the files affected.
 
-I've fixed the little issues with the last posting, and it ran
-through fstests just fine last night, so I'm just about ready to
-send you a pull request for this series.
+The call trace is like this:
+memory_failure()
+ pgmap->ops->memory_failure()      => pmem_pgmap_memory_failure()
+  dax_device->holder_ops->corrupted_range() =>
+                                      - fs_dax_corrupted_range()
+                                      - md_dax_corrupted_range()
+   sb->s_ops->currupted_range()    => xfs_fs_corrupted_range()
+    xfs_rmap_query_range()
+     xfs_currupt_helper()
+      * corrupted on metadata
+          try to recover data, call xfs_force_shutdown()
+      * corrupted on file data
+          try to recover data, call mf_dax_kill_procs()
 
-Cheers,
+The fsdax & reflink support for XFS is not contained in this patchset.
 
-Dave.
+(Rebased on v5.13-rc4)
+==
+
+
+Shiyang Ruan (10):
+  pagemap: Introduce ->memory_failure()
+  dax: Introduce holder for dax_device
+  fs: Introduce ->corrupted_range() for superblock
+  mm, fsdax: Refactor memory-failure handler for dax mapping
+  mm, pmem: Implement ->memory_failure() in pmem driver
+  fs/dax: Implement dax_holder_operations
+  dm: Introduce ->rmap() to find bdev offset
+  md: Implement dax_holder_operations
+  xfs: Implement ->corrupted_range() for XFS
+  fs/dax: Remove useless functions
+
+ block/genhd.c                 |  30 ++++++
+ drivers/dax/super.c           |  38 ++++++++
+ drivers/md/dm-linear.c        |  20 ++++
+ drivers/md/dm.c               | 119 ++++++++++++++++++++++-
+ drivers/nvdimm/pmem.c         |  14 +++
+ fs/dax.c                      |  79 +++++++---------
+ fs/xfs/xfs_fsops.c            |   5 +
+ fs/xfs/xfs_mount.h            |   1 +
+ fs/xfs/xfs_super.c            | 108 +++++++++++++++++++++
+ include/linux/dax.h           |  13 +++
+ include/linux/device-mapper.h |   5 +
+ include/linux/fs.h            |   2 +
+ include/linux/genhd.h         |   1 +
+ include/linux/memremap.h      |   8 ++
+ include/linux/mm.h            |   9 ++
+ mm/memory-failure.c           | 173 ++++++++++++++++++++++------------
+ 16 files changed, 520 insertions(+), 105 deletions(-)
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.31.1
+
+
+
