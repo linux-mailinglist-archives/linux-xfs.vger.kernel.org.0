@@ -2,52 +2,55 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A58039C20E
-	for <lists+linux-xfs@lfdr.de>; Fri,  4 Jun 2021 23:10:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C5D39C1F2
+	for <lists+linux-xfs@lfdr.de>; Fri,  4 Jun 2021 23:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231542AbhFDVMO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 4 Jun 2021 17:12:14 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:39737 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231534AbhFDVMM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 4 Jun 2021 17:12:12 -0400
-Received: by mail-pf1-f202.google.com with SMTP id j206-20020a6280d70000b02902e9e02e1654so5950923pfd.6
-        for <linux-xfs@vger.kernel.org>; Fri, 04 Jun 2021 14:10:25 -0700 (PDT)
+        id S231189AbhFDVLS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 4 Jun 2021 17:11:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230407AbhFDVLO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 4 Jun 2021 17:11:14 -0400
+Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1CD5C0617A6
+        for <linux-xfs@vger.kernel.org>; Fri,  4 Jun 2021 14:09:27 -0700 (PDT)
+Received: by mail-qt1-x849.google.com with SMTP id h24-20020ac856980000b0290243c83a3ddcso5070715qta.1
+        for <linux-xfs@vger.kernel.org>; Fri, 04 Jun 2021 14:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=P+DRV+1kr28zVJ/U3wDOfdSPd3HkANrRfuFzxqlC4Pc=;
-        b=BD3ZmfBd88tZgrK5VWyAdL43R8ifUsR8x6sFdE82nRuDKynYAWDrzE4ViAPmykHBE4
-         iyytiZIYdAESIcvzY6xdWybqTUGCNisGZiXWYfKieKbymZmV/yt7zvjY9NFl3juibb/s
-         ikEDpwDO3GTB7QBr/5PZz/yTynDJQ+EVyDbqXYxqVspW4jHjr6GfHmb6aePCiI+9M6Vd
-         nAWhQ+RRLTv2OXSWhOZSnRNx4+nvq3NfPSSnycc4sLlhRuBgnNb++2d32IlTONdzLlpM
-         5aRbbSRXEHIXxwZ6wYXd6/i1swYlGsa4c2M1WAwUuXtMLF2EffxUpGOmrT0pPALk2QKG
-         mb2w==
+        bh=8v+WJhPg9I/xdgL6B4MiQX3CWBXyQYuM5MOB3Jc9dDY=;
+        b=QRP2TwQixPWYnCinwP+Ayc/NX9oESif3zXsMESiFr/fPmLerJLAJJI31ktNvQoUUi/
+         270xuMczduXDEX0vo2WK/GiF+vYlLeW1mKOFuNGgyPlQ58ZhE1qMy99pqSLvPW1zdSpI
+         7WHShNVJE/9VUm/dGSwEosOgNVoiQe1PPfDMFzezYnam9YjQYccnGi34ygSa7XEX7oyb
+         0LCE4C40aaOhyoeVm54LpIKdrTmC5JktSYenjEnkgNCDh1qyuQ5tx8nGQ9HAf956iCrx
+         BD3SroZd7ttHA4w1l8C5fBKwL3tag/vAJxI3kmg5oNF7aOlMV5WLKwZoVqv3hv8mcYMc
+         gRcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=P+DRV+1kr28zVJ/U3wDOfdSPd3HkANrRfuFzxqlC4Pc=;
-        b=HLhmwDkSSeiU3s7ZjoCabSoGwX0d1nXuK/Wx7hxW1d1G4zdq/8Fi7Jx63IN3YHgcvx
-         IF6Lo3b5NI58T3yTofl+NBTIY9sRbkZelX69VMTRnoLWjKRtdktwWtewIbHIGb+4nBCl
-         TTNaU695D1yN3CjBqnYqwBS/zr4LVai/NprAu61hya7lY4GN/gqxj5+kN8ytudx9StGy
-         6ioZarGVj+9209jRf99dcKVGDhKtmty1cw9zU82BVM6FwYAMQikWpPkUx6bOUIwzwoDk
-         mgoTPu9HJaGEIRvT/AnDgIr6tAWaCtX87ShlWkJRUINyD0SyiBHuel3R+m4eKkVdIdOA
-         JXZw==
-X-Gm-Message-State: AOAM530XV+hwdStAHQbrUGD/fWLRQSVxwfcGjuBKqmfpWsusWm5rMbzV
-        ZCMYTMlTI2RvcoEIg/BtGOW4761A9mQ=
-X-Google-Smtp-Source: ABdhPJxmL8KM/5Kv0n8tQo795U2DFcdkGRAYUhSqHM6sj42QWQ+C3ACMCn3W2CeCnI48cqnYWj3LpGGCTK0=
+        bh=8v+WJhPg9I/xdgL6B4MiQX3CWBXyQYuM5MOB3Jc9dDY=;
+        b=gzV734jJieHnaWApUPgW907ZZg+Q6zD2Mgdu1WUC7I7KzGmR+D5V97vUV/hnptJjBD
+         1mo6z9if/KcFB1XTuZKE4pU9EIjqGPWoQzx9CmletvzebYWSjkbNiGanVxHkBtvY/X26
+         dB4Dpt7wNkGkc5jQkjm3wov7/z2mqQegn0deuEfdZ/sWefcoiJ2rbW4ohQkAl7N57AF9
+         bV/mvmoGK1SUBNt8N5shIa1Ynrj+rAEaHWHYFxjEcYkXTII3OEsh7ZNxFD2+wFelPcn2
+         kt1MBm8SVGK9PAjfgtT6wTqa+CMm+gzfWeeZTJndvJztyYs2i+8XcD+S+0pOxrD3xkLJ
+         ECGA==
+X-Gm-Message-State: AOAM531MzlJ+Lo1q4u9ONoS2prdRo0KGbOIVyVvfefzcYMQKA7l2QcNp
+        bfE0N2TUiSaqAPkc58PL5usJXH3m6tQ=
+X-Google-Smtp-Source: ABdhPJyjv+YInqbg6KaJ0jOYrxG2sn5YDWcEehU2DlFwYYyA8k2F0TGVXbcKcmz67/7RnRJ6djeyEnwJoGQ=
 X-Received: from satyaprateek.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:1092])
- (user=satyat job=sendgmr) by 2002:a63:1e55:: with SMTP id p21mr6828807pgm.412.1622840965137;
- Fri, 04 Jun 2021 14:09:25 -0700 (PDT)
-Date:   Fri,  4 Jun 2021 21:09:07 +0000
+ (user=satyat job=sendgmr) by 2002:ad4:4e68:: with SMTP id ec8mr6758723qvb.62.1622840966813;
+ Fri, 04 Jun 2021 14:09:26 -0700 (PDT)
+Date:   Fri,  4 Jun 2021 21:09:08 +0000
 In-Reply-To: <20210604210908.2105870-1-satyat@google.com>
-Message-Id: <20210604210908.2105870-9-satyat@google.com>
+Message-Id: <20210604210908.2105870-10-satyat@google.com>
 Mime-Version: 1.0
 References: <20210604210908.2105870-1-satyat@google.com>
 X-Mailer: git-send-email 2.32.0.rc1.229.g3e70b5a671-goog
-Subject: [PATCH v9 8/9] f2fs: support direct I/O with fscrypt using blk-crypto
+Subject: [PATCH v9 9/9] fscrypt: update documentation for direct I/O support
 From:   Satya Tangirala <satyat@google.com>
 To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
@@ -57,49 +60,62 @@ To:     "Theodore Y . Ts'o" <tytso@mit.edu>,
 Cc:     linux-kernel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
         linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
         linux-block@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Eric Biggers <ebiggers@google.com>,
-        Satya Tangirala <satyat@google.com>
+        Satya Tangirala <satyat@google.com>,
+        Eric Biggers <ebiggers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+Update fscrypt documentation to reflect the addition of direct I/O support
+and document the necessary conditions for direct I/O on encrypted files.
 
-Wire up f2fs with fscrypt direct I/O support. direct I/O with fscrypt is
-only supported through blk-crypto (i.e. CONFIG_BLK_INLINE_ENCRYPTION must
-have been enabled, the 'inlinecrypt' mount option must have been specified,
-and either hardware inline encryption support must be present or
-CONFIG_BLK_INLINE_ENCYRPTION_FALLBACK must have been enabled). Further,
-direct I/O on encrypted files is only supported when the *length* of the
-I/O is aligned to the filesystem block size (which is *not* necessarily the
-same as the block device's block size).
-
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Co-developed-by: Satya Tangirala <satyat@google.com>
 Signed-off-by: Satya Tangirala <satyat@google.com>
-Acked-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Reviewed-by: Eric Biggers <ebiggers@google.com>
+Reviewed-by: Jaegeuk Kim <jaegeuk@kernel.org>
 ---
- fs/f2fs/f2fs.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ Documentation/filesystems/fscrypt.rst | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index c83d90125ebd..a416ea3a1a04 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -4181,7 +4181,11 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	int rw = iov_iter_rw(iter);
+diff --git a/Documentation/filesystems/fscrypt.rst b/Documentation/filesystems/fscrypt.rst
+index 44b67ebd6e40..c0c1747fa2fb 100644
+--- a/Documentation/filesystems/fscrypt.rst
++++ b/Documentation/filesystems/fscrypt.rst
+@@ -1047,8 +1047,10 @@ astute users may notice some differences in behavior:
+   may be used to overwrite the source files but isn't guaranteed to be
+   effective on all filesystems and storage devices.
  
--	if (f2fs_post_read_required(inode))
-+	if (!fscrypt_dio_supported(iocb, iter))
-+		return true;
-+	if (fsverity_active(inode))
-+		return true;
-+	if (f2fs_compressed_file(inode))
- 		return true;
- 	if (f2fs_is_multi_device(sbi))
- 		return true;
+-- Direct I/O is not supported on encrypted files.  Attempts to use
+-  direct I/O on such files will fall back to buffered I/O.
++- Direct I/O is supported on encrypted files only under some
++  circumstances (see `Direct I/O support`_ for details). When these
++  circumstances are not met, attempts to use direct I/O on encrypted
++  files will fall back to buffered I/O.
+ 
+ - The fallocate operations FALLOC_FL_COLLAPSE_RANGE and
+   FALLOC_FL_INSERT_RANGE are not supported on encrypted files and will
+@@ -1121,6 +1123,21 @@ It is not currently possible to backup and restore encrypted files
+ without the encryption key.  This would require special APIs which
+ have not yet been implemented.
+ 
++Direct I/O support
++==================
++
++Direct I/O on encrypted files is supported through blk-crypto. In
++particular, this means the kernel must have CONFIG_BLK_INLINE_ENCRYPTION
++enabled, the filesystem must have had the 'inlinecrypt' mount option
++specified, and either hardware inline encryption must be present, or
++CONFIG_BLK_INLINE_ENCRYPTION_FALLBACK must have been enabled. Further,
++the starting position in the file and the length of any I/O must be aligned
++to the filesystem block size (*not* necessarily the same as the block
++device's block size). If any of these conditions isn't met, attempts to do
++direct I/O on an encrypted file will fall back to buffered I/O. However,
++there aren't any additional requirements on user buffer alignment (apart
++from those already present when using direct I/O on unencrypted files).
++
+ Encryption policy enforcement
+ =============================
+ 
 -- 
 2.32.0.rc1.229.g3e70b5a671-goog
 
