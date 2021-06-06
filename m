@@ -2,44 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E562039CF6B
-	for <lists+linux-xfs@lfdr.de>; Sun,  6 Jun 2021 15:57:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19F0339CF9E
+	for <lists+linux-xfs@lfdr.de>; Sun,  6 Jun 2021 16:44:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbhFFN72 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 6 Jun 2021 09:59:28 -0400
-Received: from static-167-142-179-140.neitel.net ([167.142.179.140]:44030 "EHLO
-        ftp.neitel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230003AbhFFN71 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 6 Jun 2021 09:59:27 -0400
-Received: from User (localhost [127.0.0.1])
-        by ftp.neitel.net (Postfix) with SMTP id 12C021A2BC8A;
-        Sun,  6 Jun 2021 01:55:31 -0500 (CDT)
-Reply-To: <barrusmanbello85@bk.ru>
-From:   "Barr. Usman Bello." <hometaro@oct-net.ne.jp>
-Subject: GET BACK TO ME URGENTLY
-Date:   Sun, 6 Jun 2021 08:55:38 +0200
+        id S230088AbhFFOqc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 6 Jun 2021 10:46:32 -0400
+Received: from out20-73.mail.aliyun.com ([115.124.20.73]:44199 "EHLO
+        out20-73.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230025AbhFFOqb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 6 Jun 2021 10:46:31 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436705|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0263461-0.00517875-0.968475;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047211;MF=guan@eryu.me;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.KOQDl36_1622990679;
+Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.KOQDl36_1622990679)
+          by smtp.aliyun-inc.com(10.147.42.16);
+          Sun, 06 Jun 2021 22:44:39 +0800
+Date:   Sun, 6 Jun 2021 22:44:39 +0800
+From:   Eryu Guan <guan@eryu.me>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org
+Subject: Re: [PATCHSET RFC 00/10] fstests: move test group lists into test
+ files
+Message-ID: <YLzfV9Xx1ynZQau+@desktop>
+References: <162199360248.3744214.17042613373014687643.stgit@locust>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20210606065533.12C021A2BC8A@ftp.neitel.net>
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <162199360248.3744214.17042613373014687643.stgit@locust>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear Sir,
+On Tue, May 25, 2021 at 06:46:42PM -0700, Darrick J. Wong wrote:
+> Hi all,
+> 
+> Test group files (e.g. tests/generic/group) are a pain to keep up.
+> Every week I rebase on Eryu's latest upstream, and every week I have to
+> slog through dozens of trivial merge conflicts because of the
+> groupfiles.  Moving tests is annoying because we have to maintain all
+> this code to move the group associations from one /group file to
+> another.
 
-I am Barr. Usman Bello an attorney to my late client Robert Norman the former managing director of Shell oil company Plc whom died after battling from COVID 19 and eventually died at the isolation center on the 26th/January/2021 which his daughter that was his next of kin also died on 22nd/February/2021 from the same COVID 19 virus disease.
+Thanks for doing this! It looks find overall from a quick look. Mind
+adding some words in README file as well?
 
-In fact, why i contacted you is that want to front you as my client next of kin which it will be very easy for me to front you as his next of kin so that we can apply for this claim of his funds of $29.350m with his bank here in Nigeria hence his next of kin is no more existing.
+> 
+> It doesn't need to be this way -- we could move each test's group
+> information into the test itself, and automatically generate the group
+> files as part of the make process.  This series does exactly that.
+> 
+> The first few patches add some convenient anchors for the new
+> per-testfile group tagging and a conversion script to migrate existing
+> test files.  Next there's a huge patch that is the results of running
+> the conversion script, followed by cleanup of the golden outputs.  After
+> that comes the build infrastructure to generate group files and other
 
-So if you accept to make this deal with me in other to claim the stated funds then i shall change the next of kin documents to your name/favor then after the success of this deal you will take 35% and 5% shall be set aside for any expenses which might arise during this transaction and 60% will be my own share.
+The group files are auto-generated correctly upon "make", but "make
+group" printed tons of errors like:
 
-Waiting to receive your reply if you accept this deal and condition.
-Barr. Usman Bello.
-barrusmanbello885@mail.ru
+[root@fedoravm xfstests]# make group
+ [GROUP] /root/workspace/xfstests/group
+/root/workspace/xfstests/tests/btrfs/001: line 9: ./common/test_names: No such file or directory
+/root/workspace/xfstests/tests/btrfs/001: line 10: _set_seq_and_groups: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 21: ./common/rc: No such file or directory
+/root/workspace/xfstests/tests/btrfs/001: line 22: ./common/filter: No such file or directory
+/root/workspace/xfstests/tests/btrfs/001: line 23: ./common/filter.btrfs: No such file or directory
+/root/workspace/xfstests/tests/btrfs/001: line 26: _supported_fs: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 27: _require_scratch: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 30: _scratch_mount: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 38: _filter_scratch: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 38: subvolume: command not found
+ls: cannot access '/snap': No such file or directory
+ls: cannot access '/snap': No such file or directory
+/root/workspace/xfstests/tests/btrfs/001: line 50: _filter_scratch: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 50: subvolume: command not found
+ls: cannot access '/subvol': No such file or directory
+/root/workspace/xfstests/tests/btrfs/001: line 60: _btrfs_get_subvolid: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 61: _filter_scratch: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 61: subvolume: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 62: _scratch_cycle_mount: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 65: _scratch_unmount: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 67: _scratch_mount: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 71: _filter_scratch: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 71: subvolume: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 72: _scratch_cycle_mount: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 78: subvolume: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 81: _filter_btrfs_subvol_delete: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 81: subvolume: command not found
+/root/workspace/xfstests/tests/btrfs/001: line 84: _scratch_cycle_mount: command not found
+
+I think it's better to let 'make group' work as well, it might be easier
+to re-generated just group files.
+
+> tweaks to the existing maintainer scripts to use the new infrastructure.
+> Finally, remove the group files themselves and the (now unnecessary)
+> code that maintained them.
+> 
+> If you're going to start using this mess, you probably ought to just
+> pull from my git trees, which are linked below.
+> 
+> This is an extraordinary way to destroy everything.  Enjoy!
+> Comments and questions are, as always, welcome.
+> 
+> --D
+> 
+> fstests git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=autogenerate-groupfiles
+
+I noticed that your patches are based on your internal base, and this
+branch couldn't be pulled into current master branch. But this is fine
+for RFC patches I think :)
+
+Thanks,
+Eryu
