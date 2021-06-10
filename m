@@ -2,62 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ADFF3A275A
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Jun 2021 10:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 584D73A278B
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Jun 2021 10:57:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbhFJIqc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 10 Jun 2021 04:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53824 "EHLO
+        id S230184AbhFJI7t (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 10 Jun 2021 04:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbhFJIqc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Jun 2021 04:46:32 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42AAAC061574;
-        Thu, 10 Jun 2021 01:44:20 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id z26so1024281pfj.5;
-        Thu, 10 Jun 2021 01:44:20 -0700 (PDT)
+        with ESMTP id S229943AbhFJI7s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Jun 2021 04:59:48 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148BDC061574;
+        Thu, 10 Jun 2021 01:57:53 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id md2-20020a17090b23c2b029016de4440381so3411012pjb.1;
+        Thu, 10 Jun 2021 01:57:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=references:user-agent:from:to:cc:subject:in-reply-to:date
          :message-id:mime-version;
-        bh=lVsvKiiR7CxPrj5T7GKiZgcGE780r8EQFR9Wnscdrh8=;
-        b=F68Otecm9ecMAMQaK7J3XDPjrjoQVtHFe11iGnimWiyKl0vAV4bGKikrlTfPGxBR/p
-         hcLqSOxFwrwR3Nj2cCjHXbBI4b6sa4kIku/jPJBzelF727WTs3AEMFyN53AbqF+HaALy
-         gy9pzt6fAYpZxi6YyDF8TwpcENjicCJKDRe2lzIBaVsnhC54Z9b3f3h7ChKAUtIkpNrj
-         sPBEESh95diMN9vJaVYplKQXt2Ufbu0lgYALYdimSzwjYFbj4kmNa4OLIIr/+BmbAhP1
-         Ue6Xq0mqSOu1LOz5lEOkokHnU3+hJP+Bz+dgfUAmiZ+zX60aQrU9qYxSMc3Z3o9jufWI
-         lBFw==
+        bh=ijWZr6HXHyIcQWn5sH05q8yu47bOscUp5VhIIoB/qUI=;
+        b=jJG8ndrRtefLijwy87Q438NPh0jliDP/q3liBUoLkVYyzttfDudX2xnxyyavuWYP48
+         cj1Cs7daQuY7R0b+Q5ouu436bVfCxjUoAXLGu2v+UEAy62JfMhw5FGOzUB9pvJfgGvFV
+         qTF4FL9bAV2unbEu5UCDhJ9ogDQbbM6m0X9PFQxGW+NdmnSKHjp9ubL8rpac/elHGBQO
+         HwuiFczrtoWsNpIIoGp72CVRA5t5/N6ppa9mEzJYs51vOI/PeE5DCIfxi72dEE246nIS
+         wD/h6a+Ss2kMMHCUh+oGdD2pVg84uw/NU6tjLlroIva3Td+B8x2oh7nbriLHhBX0gAr5
+         moZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject
          :in-reply-to:date:message-id:mime-version;
-        bh=lVsvKiiR7CxPrj5T7GKiZgcGE780r8EQFR9Wnscdrh8=;
-        b=tyD/GkYTyWpiWud4+6885A3iysXXj0J8paq57SoU0/u3lPOAqKM8qQG5Wu+7YDIASi
-         /oXYsuBObw22Co1xTQuYMKnMqyf+w63QwOrRC0oa0R5CSHQTF3SZ1fLWz31MmGKkazDt
-         QPrOp6xQqLTvKj39DLhiPruZRNe06diqnixU9ZGogMBDu+Xw4hv8AhkKt1gq5HxsU+KH
-         wLrOCIfHVMkdaac2Ba4jqp6cS0tlO+wA8WwyDcdczMmEh2FAcUua5cJjsIwCmmPKLcWk
-         fm5Fh7crXmiKrlMDudkkB6IU1620MniV5XCAjIFuF45bP0ZtvqbKaZ4rE2r9e8i8JY7R
-         9Ocw==
-X-Gm-Message-State: AOAM5314+hpZqWFAv/O1cDiOWon53LIIB6jddhKUeFL6abWd50tzNlgA
-        CPbzeKDDrA5sdSuv8TzpEAk=
-X-Google-Smtp-Source: ABdhPJwcIPjZGC7tuqr0zBxM8csanMZV5+yNt6ITjdIPG3s/Qm3kSrzcJ+KBLDEkKU/Std8+2wEllQ==
-X-Received: by 2002:a63:d403:: with SMTP id a3mr3962421pgh.175.1623314659893;
-        Thu, 10 Jun 2021 01:44:19 -0700 (PDT)
+        bh=ijWZr6HXHyIcQWn5sH05q8yu47bOscUp5VhIIoB/qUI=;
+        b=gZKCqCidapb0RKmpSaOC365XiIbQQRHkot1mEjwGF3ZOOKOrSvpr5hF5LSC2IGTzZ/
+         S+Jp7a+mVI050Nqnm3XAXdDwEBjll6zqwzKYyV2SQrphL9pjgZSdiBjgPJMjzOb15nnQ
+         wktRjxIA3jsrFxLBvdPsy1/qkIje3F43EGWMUzgyWZHcd3GN0Pn/DTc1IL23MUNtPoKB
+         D788kXrDXGIV96tCCOVI91k1j2NTt2opiy7jrMRgXM9NtGLDEcFpkqwKN0yBkhn9Kgqd
+         wb21kUqcmcuuouJKH+sMkT12YkklmgBETo2xADFpkSvqhLXytIyzKqQSioAjb+DMIGRL
+         ZUGw==
+X-Gm-Message-State: AOAM5320y51VdJY1u2ILPR2rr+IC9FULVUWeFI1Tzr4TZcLpbPNeQ1el
+        2gssevRheL2D11PvO1zKbZQ=
+X-Google-Smtp-Source: ABdhPJw74agagSohQPUJDaeCCsNd1D5MMcdD93LSVrrIs3c2mbR6der628jrKvnngN6PS8un7xq3qQ==
+X-Received: by 2002:a17:90a:8c14:: with SMTP id a20mr2278053pjo.167.1623315472589;
+        Thu, 10 Jun 2021 01:57:52 -0700 (PDT)
 Received: from garuda ([122.171.171.192])
-        by smtp.gmail.com with ESMTPSA id d15sm1762151pfd.35.2021.06.10.01.44.17
+        by smtp.gmail.com with ESMTPSA id ep6sm7091441pjb.24.2021.06.10.01.57.50
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 10 Jun 2021 01:44:19 -0700 (PDT)
-References: <162317276202.653489.13006238543620278716.stgit@locust> <162317278412.653489.8220326541398463657.stgit@locust>
+        Thu, 10 Jun 2021 01:57:52 -0700 (PDT)
+References: <162317276202.653489.13006238543620278716.stgit@locust> <162317279504.653489.6631181052382825481.stgit@locust>
 User-agent: mu4e 1.0; emacs 26.1
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
         fstests@vger.kernel.org, guan@eryu.me, amir73il@gmail.com,
         ebiggers@kernel.org
-Subject: Re: [PATCH 04/13] fstests: add tool migrate group membership data to test files
-In-reply-to: <162317278412.653489.8220326541398463657.stgit@locust>
-Date:   Thu, 10 Jun 2021 14:14:16 +0530
-Message-ID: <87v96mp0rj.fsf@garuda>
+Subject: Re: [PATCH 06/13] fstests: clean up open-coded golden output
+In-reply-to: <162317279504.653489.6631181052382825481.stgit@locust>
+Date:   Thu, 10 Jun 2021 14:27:48 +0530
+Message-ID: <87tum6p04z.fsf@garuda>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -67,161 +67,47 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 On 08 Jun 2021 at 22:49, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 >
-> Create a tool to migrate the mapping of tests <-> groups out of the
-> group file and into the individual test file as a _begin_fstest
-> call.  In the next patches we'll rewrite all the test files and auto
-> generate the group files from the tests.
+> Fix the handful of tests that open-coded 'QA output created by XXX'.
 >
 
-The code looks to be logically correct.
+Grep shows that the files modified by this patch are the only ones having open
+coded header in a *.out file. Hence,
 
 Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
->  tools/convert-group |  131 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 131 insertions(+)
->  create mode 100755 tools/convert-group
+>  tests/btrfs/006.out   |    2 +-
+>  tests/btrfs/012.out   |    2 +-
+>  tests/generic/184.out |    2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 >
 >
-> diff --git a/tools/convert-group b/tools/convert-group
-> new file mode 100755
-> index 00000000..42a99fe5
-> --- /dev/null
-> +++ b/tools/convert-group
-> @@ -0,0 +1,131 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2021 Oracle.  All Rights Reserved.
-> +
-> +# Move group tags from the groups file into the test files themselves.
-> +
-> +if [ -z "$1" ] || [ "$1" = "--help" ]; then
-> +	echo "Usage: $0 test_dir [test_dirs...]"
-> +	exit 1
-> +fi
-> +
-> +obliterate_group_file() {
-> +	sed -e 's/^#.*$//g' < group | while read test groups; do
-> +		if [ -z "$test" ]; then
-> +			continue;
-> +		elif [ ! -e "$test" ]; then
-> +			echo "Ignoring unknown test file \"$test\"."
-> +			continue
-> +		fi
-> +
-> +		# Replace all the open-coded test preparation code with a
-> +		# single call to _begin_fstest.
-> +		sed -e '/^seqres=\$RESULT_DIR\/\$seq$/d' \
-> +		    -e '/^seqres=\"\$RESULT_DIR\/\$seq\"$/d' \
-> +		    -e '/^echo "QA output created by \$seq"$/d' \
-> +		    -e '/^here=`pwd`$/d' \
-> +		    -e '/^here=\$(pwd)$/d' \
-> +		    -e '/^here=\$PWD$/d' \
-> +		    -e '/^here=\"`pwd`\"$/d' \
-> +		    -e '/^tmp=\/tmp\/\$\$$/d' \
-> +		    -e '/^status=1.*failure.*is.*the.*default/d' \
-> +		    -e '/^status=1.*FAILure.*is.*the.*default/d' \
-> +		    -e '/^status=1.*success.*is.*the.*default/d' \
-> +		    -e '/^status=1.*default.*failure/d' \
-> +		    -e '/^echo.*QA output created by.*seq/d' \
-> +		    -e '/^# remove previous \$seqres.full before test/d' \
-> +		    -e '/^rm -f \$seqres.full/d' \
-> +		    -e 's|^# get standard environment, filters and checks|# Import common functions.|g' \
-> +		    -e '/^\. \.\/common\/rc/d' \
-> +		    -e '/^\. common\/rc/d' \
-> +		    -e 's|^seq=.*$|. ./common/preamble\n_begin_fstest '"$groups"'|g' \
-> +		    -i "$test"
-> +
-> +		# Replace the open-coded trap calls that register cleanup code
-> +		# with a call to _register_cleanup.
-> +		#
-> +		# For tests that registered empty-string cleanups or open-coded
-> +		# calls to remove $tmp files, remove the _register_cleanup
-> +		# calls entirely because the default _cleanup does that for us.
-> +		#
-> +		# For tests that now have a _register_cleanup call for the
-> +		# _cleanup function, remove the explicit call because
-> +		# _begin_fstest already registers that for us.
-> +		#
-> +		# For tests that override _cleanup, insert a comment noting
-> +		# that it is overriding the default, to match the ./new
-> +		# template.
-> +		sed -e 's|^trap "exit \\\$status" 0 1 2 3 15|_register_cleanup ""|g' \
-> +		    -e 's|^trap "\(.*\)[[:space:]]*; exit \\\$status" 0 1 2 3 15|_register_cleanup "\1"|g' \
-> +		    -e 's|^trap "\(.*\)[[:space:]]*; exit \\\$status" 1 2 3 15|_register_cleanup "\1"|g' \
-> +		    -e 's|^trap '"'"'\(.*\)[[:space:]]*; exit \$status'"'"' 0 1 2 3 15|_register_cleanup "\1"|g' \
-> +		    -e 's|^trap "\(.*\)[[:space:]]*; exit \\\$status" 0 1 2 3 7 15|_register_cleanup "\1" BUS|g' \
-> +		    -e 's|^_register_cleanup "[[:space:]]*\([^[:space:]]*\)[[:space:]]*"|_register_cleanup "\1"|g' \
-> +		    -e '/^_register_cleanup ""$/d' \
-> +		    -e '/^_register_cleanup "rm -f \$tmp.*"$/d' \
-> +		    -e '/^_register_cleanup "_cleanup"$/d' \
-> +		    -e 's|^_cleanup()|# Override the default cleanup function.\n_cleanup()|g' \
-> +		    -i "$test"
-> +
-> +		# If the test doesn't import any common functionality,
-> +		# get rid of the pointless comment.
-> +		if ! grep -q '^\. .*common' "$test"; then
-> +			sed -e '/^# Import common functions.$/d' -i "$test"
-> +		fi
-> +
-> +		# Replace the "status=1" lines that don't have the usual
-> +		# "failure is the default" message if there's no other code
-> +		# between _begin_fstest and status=1.
-> +		if grep -q '^status=1$' "$test"; then
-> +			awk '
-> +BEGIN {
-> +	saw_groupinfo = 0;
-> +}
-> +{
-> +	if ($0 ~ /^_begin_fstest/) {
-> +		saw_groupinfo = 1;
-> +		printf("%s\n", $0);
-> +	} else if ($0 ~ /^status=1$/) {
-> +		if (saw_groupinfo == 0) {
-> +			printf("%s\n", $0);
-> +		}
-> +	} else if ($0 == "") {
-> +		printf("\n");
-> +	} else {
-> +		saw_groupinfo = 0;
-> +		printf("%s\n", $0);
-> +	}
-> +}
-> +' < "$test" > "$test.new"
-> +			cat "$test.new" > "$test"
-> +			rm -f "$test.new"
-> +		fi
-> +
-> +		# Collapse sequences of blank lines to a single blank line.
-> +		awk '
-> +BEGIN {
-> +	saw_blank = 0;
-> +}
-> +{
-> +	if ($0 ~ /^$/) {
-> +		if (saw_blank == 0) {
-> +			printf("\n");
-> +			saw_blank = 1;
-> +		}
-> +	} else {
-> +		printf("%s\n", $0);
-> +		saw_blank = 0;
-> +	}
-> +}
-> +' < "$test" > "$test.new"
-> +		cat "$test.new" > "$test"
-> +		rm -f "$test.new"
-> +	done
-> +}
-> +
-> +curr_dir="$PWD"
-> +for tdir in "$@"; do
-> +	cd "tests/$tdir"
-> +	obliterate_group_file
-> +	cd "$curr_dir"
-> +done
+> diff --git a/tests/btrfs/006.out b/tests/btrfs/006.out
+> index a9769721..b7f29f96 100644
+> --- a/tests/btrfs/006.out
+> +++ b/tests/btrfs/006.out
+> @@ -1,4 +1,4 @@
+> -== QA output created by 006
+> +QA output created by 006
+>  == Set filesystem label to TestLabel.006
+>  == Get filesystem label
+>  TestLabel.006
+> diff --git a/tests/btrfs/012.out b/tests/btrfs/012.out
+> index 2a41e7e4..7aa5ae94 100644
+> --- a/tests/btrfs/012.out
+> +++ b/tests/btrfs/012.out
+> @@ -1 +1 @@
+> -== QA output created by 012
+> +QA output created by 012
+> diff --git a/tests/generic/184.out b/tests/generic/184.out
+> index 2d19691d..4c300543 100644
+> --- a/tests/generic/184.out
+> +++ b/tests/generic/184.out
+> @@ -1 +1 @@
+> -QA output created by 184 - silence is golden
+> +QA output created by 184
 
 
--- 
+--
 chandan
