@@ -2,36 +2,40 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA9693A418D
-	for <lists+linux-xfs@lfdr.de>; Fri, 11 Jun 2021 13:59:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B94783A41BE
+	for <lists+linux-xfs@lfdr.de>; Fri, 11 Jun 2021 14:10:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230470AbhFKMBy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 11 Jun 2021 08:01:54 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:5508 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230370AbhFKMBy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 11 Jun 2021 08:01:54 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4G1fTW0g16zZgCL;
-        Fri, 11 Jun 2021 19:57:03 +0800 (CST)
+        id S230280AbhFKMMe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 11 Jun 2021 08:12:34 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:4038 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229785AbhFKMMd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 11 Jun 2021 08:12:33 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G1fgR0gFdzWtX7;
+        Fri, 11 Jun 2021 20:05:39 +0800 (CST)
 Received: from dggema769-chm.china.huawei.com (10.1.198.211) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Fri, 11 Jun 2021 19:59:54 +0800
-Received: from localhost (10.174.179.215) by dggema769-chm.china.huawei.com
- (10.1.198.211) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Fri, 11
- Jun 2021 19:59:54 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
+ 15.1.2176.2; Fri, 11 Jun 2021 20:10:33 +0800
+Received: from [10.174.179.215] (10.174.179.215) by
+ dggema769-chm.china.huawei.com (10.1.198.211) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Fri, 11 Jun 2021 20:10:33 +0800
+Subject: Re: [PATCH -next] xfs: Fix -Wunused-variable warning
 To:     <djwong@kernel.org>, <linux-xfs@vger.kernel.org>,
         <dchinner@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] xfs: Fix -Wunused-variable warning
-Date:   Fri, 11 Jun 2021 19:59:50 +0800
-Message-ID: <20210611115950.32588-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+CC:     <linux-kernel@vger.kernel.org>
+References: <20210611115950.32588-1-yuehaibing@huawei.com>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <c36787f3-862e-62af-065b-a13d3a1db054@huawei.com>
+Date:   Fri, 11 Jun 2021 20:10:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210611115950.32588-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.174.179.215]
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
@@ -41,31 +45,32 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-If DEBUG is n, gcc warns:
+PLS ignore this.
 
-fs/xfs/libxfs/xfs_ialloc.c:2032:20: warning: unused variable ‘agi’ [-Wunused-variable]
-
-Move it info #ifdef block to fix this.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/xfs/libxfs/xfs_ialloc.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 2ed6de6faf8a..a9973edd3c0a 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -2029,7 +2029,9 @@ xfs_difree_finobt(
- 	xfs_agino_t			agino,
- 	struct xfs_inobt_rec_incore	*ibtrec) /* inobt record */
- {
-+#ifdef DEBUG
- 	struct xfs_agi			*agi = agbp->b_addr;
-+#endif
- 	struct xfs_btree_cur		*cur;
- 	struct xfs_inobt_rec_incore	rec;
- 	int				offset = agino - ibtrec->ir_startino;
--- 
-2.17.1
-
+On 2021/6/11 19:59, YueHaibing wrote:
+> If DEBUG is n, gcc warns:
+> 
+> fs/xfs/libxfs/xfs_ialloc.c:2032:20: warning: unused variable ‘agi’ [-Wunused-variable]
+> 
+> Move it info #ifdef block to fix this.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  fs/xfs/libxfs/xfs_ialloc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+> index 2ed6de6faf8a..a9973edd3c0a 100644
+> --- a/fs/xfs/libxfs/xfs_ialloc.c
+> +++ b/fs/xfs/libxfs/xfs_ialloc.c
+> @@ -2029,7 +2029,9 @@ xfs_difree_finobt(
+>  	xfs_agino_t			agino,
+>  	struct xfs_inobt_rec_incore	*ibtrec) /* inobt record */
+>  {
+> +#ifdef DEBUG
+>  	struct xfs_agi			*agi = agbp->b_addr;
+> +#endif
+>  	struct xfs_btree_cur		*cur;
+>  	struct xfs_inobt_rec_incore	rec;
+>  	int				offset = agino - ibtrec->ir_startino;
+> 
