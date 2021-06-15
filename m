@@ -2,33 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CC043A83F1
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jun 2021 17:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94EE83A841D
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jun 2021 17:37:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231433AbhFOP3C (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Jun 2021 11:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230463AbhFOP2u (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 15 Jun 2021 11:28:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F19A960FE6;
-        Tue, 15 Jun 2021 15:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1623770806;
-        bh=tE+KkAt3Syz+Dbx9+Op+oI+sKkxVxmwYzMZvNw7QTbg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KDdobmNBdzYOP2+3rpQb6wK7RMBPTX0Ch2VogNoMdnHAoAgFwaefG7oVZr4KNnlJ5
-         4t/krzr7jMkPjfGw0P35mxja3a6mEAA6CUdQhmOGPGf2yheEJvC6X2zEU1X2mxfGkx
-         tu1fK1kr2JaZQEk+DsPH4we8xqeVbm2vUxvx/8vX6Mr4wcqOTBWFmFUW8WWSazogk2
-         Y4VzyeXd9JMWAHJQxE9IPzq3YnI0OJBcueC/5N3Kit4TnSjQYQXivgSes/o/0pYKcg
-         Em1qYOxnXYab/m61AW9n6llrIbAqJSezAlDRtOKMYc26r/SoTYeaXIb/k6pIlDoNPv
-         2GQakA5MxxLzg==
-Date:   Tue, 15 Jun 2021 08:26:45 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
+        id S230462AbhFOPkA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Jun 2021 11:40:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41694 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230076AbhFOPkA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Jun 2021 11:40:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1623771475;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SnzVmrtghThvPBt2LUuIefPWCcvFI5rUqRZE0d6JGLg=;
+        b=R7G0LEo0k7F+9Eor433IGNX/n8BMfwraG0gWaXoW6KgHTdzZFADpC0/P9/4Lyr0qfJc2sK
+        RAj7AyoXL+KG4YumcvFCrc0Dqj1oKhufn4BTqZpiy1H1BKAXIacT2c2m3Pfavz/6W+g2Hb
+        +1HAI+1atw/Ob8lhPzTlX+LpsCks/J0=
+Received: from mail-oi1-f200.google.com (mail-oi1-f200.google.com
+ [209.85.167.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-297-P8NJche1PYygkMHZRtZRpg-1; Tue, 15 Jun 2021 11:37:53 -0400
+X-MC-Unique: P8NJche1PYygkMHZRtZRpg-1
+Received: by mail-oi1-f200.google.com with SMTP id f84-20020aca38570000b02901f424a672b7so7858950oia.18
+        for <linux-xfs@vger.kernel.org>; Tue, 15 Jun 2021 08:37:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SnzVmrtghThvPBt2LUuIefPWCcvFI5rUqRZE0d6JGLg=;
+        b=DUvmjeKQy9WLc/TVx5C8pa36+G0azBPQzxhx90nGDqwGCfBS4W3MvpwRF4Vn74GwEb
+         n+On6FlW2FRsgqgMbx9A9utZLYDw9TNZE1gkNzTeNXQaCJTqC2APxgXsVp6pM9PUBQWS
+         /UXkU5U2TwqtsG/R39trHnnzHArCnUMEyN030ySQKujFnpPeak7ju9NO+OnjZVvx3vW0
+         cP3zeZTS1gvF5edOsfq5OGV0e8ptJWwNsrnnxe8bBcH8D9yugxUY/c6sEK1BT7KRHMk7
+         /ayAHmNqz8tNjjaXul0S5khhAG9ydt2bEbKPCM1im/oGtcK6wKv/AKEQQ3tZiMFWcBvN
+         sFBw==
+X-Gm-Message-State: AOAM5322uGJkgQSIeLxHVFTZwOnRTlMkB6Ql1hxuHpUhh3FZmJAM43Dc
+        BCcTYNA5LxFbd8se9jXz1DQCJVXMtaydCpSRMIm18wQquMry51UlGYSfmVK8Si0pOJH0huH64kV
+        rh7oajkTtwlzpLYMKSW8W
+X-Received: by 2002:a05:6830:907:: with SMTP id v7mr10137238ott.170.1623771472765;
+        Tue, 15 Jun 2021 08:37:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwzWITjgR/f2S7WjjTHzPQPQL61Y9ZiHpg2OUlHNHt2j4aj09D/GNUJwdR3laa9vpZ/5LhI4A==
+X-Received: by 2002:a05:6830:907:: with SMTP id v7mr10137222ott.170.1623771472504;
+        Tue, 15 Jun 2021 08:37:52 -0700 (PDT)
+Received: from bfoster ([98.216.211.229])
+        by smtp.gmail.com with ESMTPSA id l19sm3880569oou.2.2021.06.15.08.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Jun 2021 08:37:52 -0700 (PDT)
+Date:   Tue, 15 Jun 2021 11:37:49 -0400
+From:   Brian Foster <bfoster@redhat.com>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
 Subject: Re: [PATCH 1/2] xfs: add iclog state trace events
-Message-ID: <20210615152645.GB158209@locust>
+Message-ID: <YMjJTQfDQ3muz2YQ@bfoster>
 References: <20210615064658.854029-1-david@fromorbit.com>
  <20210615064658.854029-2-david@fromorbit.com>
 MIME-Version: 1.0
@@ -75,6 +101,9 @@ On Tue, Jun 15, 2021 at 04:46:57PM +1000, Dave Chinner wrote:
 >  	struct xlog		*log = iclog->ic_log;
 >  
 > +	trace_xlog_iclog_wait_on(iclog, _RET_IP_);
+
+Seems like this might be more informative if we actually wait.
+
 >  	if (!XLOG_FORCED_SHUTDOWN(log) &&
 >  	    iclog->ic_state != XLOG_STATE_ACTIVE &&
 >  	    iclog->ic_state != XLOG_STATE_DIRTY) {
@@ -100,6 +129,12 @@ On Tue, Jun 15, 2021 at 04:46:57PM +1000, Dave Chinner wrote:
 >  	ASSERT(list_empty_careful(&iclog->ic_callbacks));
 > +	trace_xlog_iclog_activate(iclog, _RET_IP_);
 >  
+
+I wonder a bit whether these state change oriented tracepoints could be
+served by a single trace_ixlog_iclog_state() or some such, since the
+tracepoint already prints the state. That wouldn't show the before ->
+state in each tracepoint, but that should reflect in the full log.
+
 >  	/*
 >  	 * If the number of ops in this iclog indicate it just contains the
 > @@ -2577,6 +2583,8 @@ xlog_state_clean_iclog(
@@ -166,6 +201,9 @@ On Tue, Jun 15, 2021 at 04:46:57PM +1000, Dave Chinner wrote:
 >  
 > +	trace_xlog_iclog_force(iclog, _RET_IP_);
 > +
+
+We have a log force tracepoint a few lines up. Do we need both?
+
 >  	if (iclog->ic_state == XLOG_STATE_DIRTY ||
 >  	    (iclog->ic_state == XLOG_STATE_ACTIVE &&
 >  	     atomic_read(&iclog->ic_refcnt) == 0 && iclog->ic_offset == 0)) {
@@ -216,15 +254,10 @@ On Tue, Jun 15, 2021 at 04:46:57PM +1000, Dave Chinner wrote:
 > +		  MAJOR(__entry->dev), MINOR(__entry->dev),
 > +		  __entry->state,
 
-Any chance you want to embed XLOG_STATE_* decoding instead of dumping
-the raw value here?
+It might be nice to see a string representation of the state like we do
+for other things like log item type, etc.
 
-Otherwise, looks fine to me,
-
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-
---D
-
+Brian
 
 > +		  __entry->refcount,
 > +		  __entry->offset,
@@ -261,3 +294,4 @@ Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 > -- 
 > 2.31.1
 > 
+
