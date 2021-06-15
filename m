@@ -2,358 +2,164 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4857B3A77E0
-	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jun 2021 09:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DD6E3A7A02
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Jun 2021 11:18:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbhFOHYJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 15 Jun 2021 03:24:09 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:23828 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S229781AbhFOHYJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Jun 2021 03:24:09 -0400
-IronPort-HdrOrdr: =?us-ascii?q?A9a23=3Af8MZ26nhWe7nYkRHS9oYRUlmwz7pDfIQ3DAb?=
- =?us-ascii?q?v31ZSRFFG/Fw9vre+MjzsCWYtN9/Yh8dcK+7UpVoLUm8yXcX2/h1AV7BZniEhI?=
- =?us-ascii?q?LAFugLgrcKqAeQeREWmNQ86Y5QN4B6CPDVSWNxlNvG5mCDeOoI8Z2q97+JiI7l?=
- =?us-ascii?q?o0tQcQ=3D=3D?=
-X-IronPort-AV: E=Sophos;i="5.83,275,1616428800"; 
-   d="scan'208";a="109611955"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 15 Jun 2021 15:22:03 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id D0B0C4C369F7;
-        Tue, 15 Jun 2021 15:22:01 +0800 (CST)
-Received: from G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.80) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 15 Jun 2021 15:21:50 +0800
-Received: from irides.mr.mr.mr (10.167.225.141) by
- G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Tue, 15 Jun 2021 15:21:50 +0800
-From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
-To:     <darrick.wong@oracle.com>
-CC:     <ruansy.fnst@fujitsu.com>, <dan.j.williams@intel.com>,
-        <david@fromorbit.com>, <djwong@kernel.org>, <hch@lst.de>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <nvdimm@lists.linux.dev>, <linux-xfs@vger.kernel.org>,
-        <rgoldwyn@suse.de>, <viro@zeniv.linux.org.uk>,
-        <willy@infradead.org>
-Subject: [PATCH v6.1 6/7] fs/xfs: Handle CoW for fsdax write() path
-Date:   Tue, 15 Jun 2021 15:21:47 +0800
-Message-ID: <20210615072147.73852-1-ruansy.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <OSBPR01MB2920A2BCD568364C1363AFA6F4369@OSBPR01MB2920.jpnprd01.prod.outlook.com>
-References: <OSBPR01MB2920A2BCD568364C1363AFA6F4369@OSBPR01MB2920.jpnprd01.prod.outlook.com>
+        id S231366AbhFOJUW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Jun 2021 05:20:22 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:54410 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231217AbhFOJUU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Jun 2021 05:20:20 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 0B0F4219C1;
+        Tue, 15 Jun 2021 09:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1623748695; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Ve/8VdV5ATCd8gDlWB7j+8DY7mnfOpAFlUgroZwDEto=;
+        b=pEvfs+MIdWGiL+79/LBEcUwyB/vGR9T8fYilFMpzFILeKheCjSOdm7S5Ui148U1KoQoQSy
+        3T/4yyzdeFSRyZPYoqzzSdelLmgiENiW8IdiyNqDxWQrPyvdeYH/zxgq65AnECabWZEs0m
+        Af2AoV2NiFrKRGYikCTbpuHeUChdhCo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1623748695;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=Ve/8VdV5ATCd8gDlWB7j+8DY7mnfOpAFlUgroZwDEto=;
+        b=ZMzjwv+y2ToAmcAxn3/BkX9H6OfYOU63RLwcSgZ661rESH7ekChXILZ5Zb+pJ62mhbgRpM
+        PY0tCz+eWLSO9rAg==
+Received: from quack2.suse.cz (unknown [10.100.200.198])
+        by relay2.suse.de (Postfix) with ESMTP id 58572A3B8A;
+        Tue, 15 Jun 2021 09:18:14 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 20C051F2C88; Tue, 15 Jun 2021 11:18:14 +0200 (CEST)
+From:   Jan Kara <jack@suse.cz>
+To:     <linux-fsdevel@vger.kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Dave Chinner <david@fromorbit.com>, ceph-devel@vger.kernel.org,
+        Chao Yu <yuchao0@huawei.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Johannes Thumshirn <jth@kernel.org>,
+        linux-cifs@vger.kernel.org, <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net, <linux-mm@kvack.org>,
+        <linux-xfs@vger.kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+        Steve French <sfrench@samba.org>, Ted Tso <tytso@mit.edu>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 0/14 v8] fs: Hole punch vs page cache filling races
+Date:   Tue, 15 Jun 2021 11:17:50 +0200
+Message-Id: <20210615090844.6045-1-jack@suse.cz>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: D0B0C4C369F7.A1B47
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@fujitsu.com
-X-Spam-Status: No
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4970; h=from:subject:message-id; bh=/sZ++c9xXAJeTuglXbv8ruz7LbfqLjU56wvnbCZ/6L0=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBgyHAdwkkXwSe7Dkt5sFq/HRSB1n3MRmc0+2hDWMSQ DQ6tVSOJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCYMhwHQAKCRCcnaoHP2RA2cgjB/ 92jqyXQZM9KaCgyXyl8ApDRJrJsxEZuAA1O2qua0wRVhnMBEiAhpMUKJG7cboL5Nvr1cNenxVTalp3 /dq1p168pS/8bkPlnsaldwKfpCAZq5fC8QdNz+/u5oK9U+i32NVPHfSZd3cQDPDdzLEovoPq4jaU9r 0ilefBWCXh5B317cK5JYIrG1okBRWTncncXjrIqYCqoK+EMpnPQrP7FiQIvc8HbrRPY/eI9BqGh4DF JjIIOvf58NezRRf3o8yXPHcrOCwdA6GZB5D5aFM+z2LttELmYw5W4WCMbwcDzhnSqMJTkJHOezSm70 mE7r1Fq3rNj/RFLT+IXZh+mdYlIgsY
+X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Darrick,
+Hello,
 
-Since other patches looks good, I post this RFC patch singly to hot-fix the
-problem in xfs_dax_write_iomap_ops->iomap_end() of v6 that the error code was
-ingored. I will split this in two patches(changes in iomap and xfs
-respectively) in next formal version if it looks ok.
+here is another version of my patches to address races between hole punching
+and page cache filling functions for ext4 and other filesystems. The only
+significant change since last time is simplification in xfs_isilocked()
+suggested by Dave Chinner. So that needs final review and I'd also like to
+have another pair of eyes on the mm changes in patch 3/14. Otherwise I think
+the series is ready - Darrick agreed to take it through his tree.
 
-====
+Out of all filesystem supporting hole punching, only GFS2 and OCFS2 remain
+unresolved. GFS2 people are working on their own solution (cluster locking is
+involved), OCFS2 has even bigger issues (maintainers informed, looking into
+it).
 
-Introduce a new interface called "iomap_post_actor()" in iomap_ops.  And call it
-between ->actor() and ->iomap_end().  It is mean to handle the error code
-returned from ->actor().  In this patchset, it is used to remap or cancel the
-CoW extents according to the error code.
+Once this series lands, I'd like to actually make sure all calls to
+truncate_inode_pages() happen under mapping->invalidate_lock, add the assert
+and then we can also get rid of i_size checks in some places (truncate can
+use the same serialization scheme as hole punch). But that step is mostly
+a cleanup so I'd like to get these functional fixes in first.
 
-Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+Note that the first patch of the series is already in mm tree but I'm
+submitting it here so that the series applies to Linus' tree cleanly.
+
+Changes since v7:
+* Rebased on top of 5.13-rc6
+* Added some reviewed-by tags
+* Simplified xfs_isilocked() changes as Dave Chinner suggested
+* Minor documentation formulation improvements
+
+Changes since v6:
+* Added some reviewed-by tags
+* Added wrapper for taking invalidate_lock similar to inode_lock
+* Renamed wrappers for taking invalidate_lock for two inodes
+* Added xfs patch to make xfs_isilocked() work better even without lockdep
+* Some minor documentation fixes
+
+Changes since v5:
+* Added some reviewed-by tags
+* Added functions for locking two mappings and using them from XFS where needed
+* Some minor code style & comment fixes
+
+Changes since v4:
+* Rebased onto 5.13-rc1
+* Removed shmfs conversion patches
+* Fixed up zonefs changelog
+* Fixed up XFS comments
+* Added patch fixing up definition of file_operations in Documentation/vfs/
+* Updated documentation and comments to explain invalidate_lock is used also
+  to prevent changes through memory mappings to existing pages for some VFS
+  operations.
+
+Changes since v3:
+* Renamed and moved lock to struct address_space
+* Added conversions of tmpfs, ceph, cifs, fuse, f2fs
+* Fixed error handling path in filemap_read()
+* Removed .page_mkwrite() cleanup from the series for now
+
+Changes since v2:
+* Added documentation and comments regarding lock ordering and how the lock is
+  supposed to be used
+* Added conversions of ext2, xfs, zonefs
+* Added patch removing i_mapping_sem protection from .page_mkwrite handlers
+
+Changes since v1:
+* Moved to using inode->i_mapping_sem instead of aops handler to acquire
+  appropriate lock
+
 ---
- fs/dax.c               | 27 ++++++++++++++++++---------
- fs/iomap/apply.c       |  4 ++++
- fs/xfs/xfs_bmap_util.c |  3 +--
- fs/xfs/xfs_file.c      |  5 +++--
- fs/xfs/xfs_iomap.c     | 33 ++++++++++++++++++++++++++++++++-
- fs/xfs/xfs_iomap.h     | 24 ++++++++++++++++++++++++
- fs/xfs/xfs_iops.c      |  7 +++----
- fs/xfs/xfs_reflink.c   |  3 +--
- include/linux/iomap.h  |  8 ++++++++
- 9 files changed, 94 insertions(+), 20 deletions(-)
+Motivation:
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 93f16210847b..0740c2610b6f 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1537,7 +1537,7 @@ static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
- 	struct iomap iomap = { .type = IOMAP_HOLE };
- 	struct iomap srcmap = { .type = IOMAP_HOLE };
- 	unsigned flags = IOMAP_FAULT;
--	int error;
-+	int error, copied = PAGE_SIZE;
- 	bool write = vmf->flags & FAULT_FLAG_WRITE;
- 	vm_fault_t ret = 0, major = 0;
- 	void *entry;
-@@ -1598,7 +1598,7 @@ static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
- 	ret = dax_fault_actor(vmf, pfnp, &xas, &entry, false, flags,
- 			      &iomap, &srcmap);
- 	if (ret == VM_FAULT_SIGBUS)
--		goto finish_iomap;
-+		goto finish_iomap_actor;
- 
- 	/* read/write MAPPED, CoW UNWRITTEN */
- 	if (iomap.flags & IOMAP_F_NEW) {
-@@ -1607,10 +1607,16 @@ static vm_fault_t dax_iomap_pte_fault(struct vm_fault *vmf, pfn_t *pfnp,
- 		major = VM_FAULT_MAJOR;
- 	}
- 
-+ finish_iomap_actor:
-+	if (ops->iomap_post_actor) {
-+		if (ret & VM_FAULT_ERROR)
-+			copied = 0;
-+		ops->iomap_post_actor(inode, pos, PMD_SIZE, copied, flags,
-+				      &iomap, &srcmap);
-+	}
-+
- finish_iomap:
- 	if (ops->iomap_end) {
--		int copied = PAGE_SIZE;
--
- 		if (ret & VM_FAULT_ERROR)
- 			copied = 0;
- 		/*
-@@ -1677,7 +1683,7 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
- 	pgoff_t max_pgoff;
- 	void *entry;
- 	loff_t pos;
--	int error;
-+	int error, copied = PMD_SIZE;
- 
- 	/*
- 	 * Check whether offset isn't beyond end of file now. Caller is
-@@ -1736,12 +1742,15 @@ static vm_fault_t dax_iomap_pmd_fault(struct vm_fault *vmf, pfn_t *pfnp,
- 	ret = dax_fault_actor(vmf, pfnp, &xas, &entry, true, flags,
- 			      &iomap, &srcmap);
- 
-+	if (ret == VM_FAULT_FALLBACK)
-+		copied = 0;
-+	if (ops->iomap_post_actor) {
-+		ops->iomap_post_actor(inode, pos, PMD_SIZE, copied, flags,
-+				      &iomap, &srcmap);
-+	}
-+
- finish_iomap:
- 	if (ops->iomap_end) {
--		int copied = PMD_SIZE;
--
--		if (ret == VM_FAULT_FALLBACK)
--			copied = 0;
- 		/*
- 		 * The fault is done by now and there's no way back (other
- 		 * thread may be already happily using PMD we have installed).
-diff --git a/fs/iomap/apply.c b/fs/iomap/apply.c
-index 0493da5286ad..26a54ded184f 100644
---- a/fs/iomap/apply.c
-+++ b/fs/iomap/apply.c
-@@ -84,6 +84,10 @@ iomap_apply(struct inode *inode, loff_t pos, loff_t length, unsigned flags,
- 	written = actor(inode, pos, length, data, &iomap,
- 			srcmap.type != IOMAP_HOLE ? &srcmap : &iomap);
- 
-+	if (ops->iomap_post_actor) {
-+		written = ops->iomap_post_actor(inode, pos, length, written,
-+						flags, &iomap, &srcmap);
-+	}
- out:
- 	/*
- 	 * Now the data has been copied, commit the range we've copied.  This
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index a5e9d7d34023..2a36dc93ff27 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -965,8 +965,7 @@ xfs_free_file_space(
- 		return 0;
- 	if (offset + len > XFS_ISIZE(ip))
- 		len = XFS_ISIZE(ip) - offset;
--	error = iomap_zero_range(VFS_I(ip), offset, len, NULL,
--			&xfs_buffered_write_iomap_ops);
-+	error = xfs_iomap_zero_range(ip, offset, len, NULL);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index 396ef36dcd0a..89406ec6741b 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -684,11 +684,12 @@ xfs_file_dax_write(
- 	pos = iocb->ki_pos;
- 
- 	trace_xfs_file_dax_write(iocb, from);
--	ret = dax_iomap_rw(iocb, from, &xfs_direct_write_iomap_ops);
-+	ret = dax_iomap_rw(iocb, from, &xfs_dax_write_iomap_ops);
- 	if (ret > 0 && iocb->ki_pos > i_size_read(inode)) {
- 		i_size_write(inode, iocb->ki_pos);
- 		error = xfs_setfilesize(ip, pos, ret);
- 	}
-+
- out:
- 	if (iolock)
- 		xfs_iunlock(ip, iolock);
-@@ -1309,7 +1310,7 @@ __xfs_filemap_fault(
- 
- 		ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL,
- 				(write_fault && !vmf->cow_page) ?
--				 &xfs_direct_write_iomap_ops :
-+				 &xfs_dax_write_iomap_ops :
- 				 &xfs_read_iomap_ops);
- 		if (ret & VM_FAULT_NEEDDSYNC)
- 			ret = dax_finish_sync_fault(vmf, pe_size, pfn);
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index d154f42e2dc6..2f322e2f8544 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -761,7 +761,8 @@ xfs_direct_write_iomap_begin(
- 
- 		/* may drop and re-acquire the ilock */
- 		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
--				&lockmode, flags & IOMAP_DIRECT);
-+				&lockmode,
-+				(flags & IOMAP_DIRECT) || IS_DAX(inode));
- 		if (error)
- 			goto out_unlock;
- 		if (shared)
-@@ -854,6 +855,36 @@ const struct iomap_ops xfs_direct_write_iomap_ops = {
- 	.iomap_begin		= xfs_direct_write_iomap_begin,
- };
- 
-+static int
-+xfs_dax_write_iomap_post_actor(
-+	struct inode		*inode,
-+	loff_t			pos,
-+	loff_t			length,
-+	ssize_t			written,
-+	unsigned int		flags,
-+	struct iomap		*iomap,
-+	struct iomap		*srcmap)
-+{
-+	int			error = 0;
-+	struct xfs_inode	*ip = XFS_I(inode);
-+	bool			cow = xfs_is_cow_inode(ip);
-+
-+	if (written <= 0) {
-+		if (cow)
-+			xfs_reflink_cancel_cow_range(ip, pos, length, true);
-+		return written;
-+	}
-+
-+	if (cow)
-+		error = xfs_reflink_end_cow(ip, pos, written);
-+	return error ?: written;
-+}
-+
-+const struct iomap_ops xfs_dax_write_iomap_ops = {
-+	.iomap_begin		= xfs_direct_write_iomap_begin,
-+	.iomap_post_actor	= xfs_dax_write_iomap_post_actor,
-+};
-+
- static int
- xfs_buffered_write_iomap_begin(
- 	struct inode		*inode,
-diff --git a/fs/xfs/xfs_iomap.h b/fs/xfs/xfs_iomap.h
-index 7d3703556d0e..fbacf638ab21 100644
---- a/fs/xfs/xfs_iomap.h
-+++ b/fs/xfs/xfs_iomap.h
-@@ -42,8 +42,32 @@ xfs_aligned_fsb_count(
- 
- extern const struct iomap_ops xfs_buffered_write_iomap_ops;
- extern const struct iomap_ops xfs_direct_write_iomap_ops;
-+extern const struct iomap_ops xfs_dax_write_iomap_ops;
- extern const struct iomap_ops xfs_read_iomap_ops;
- extern const struct iomap_ops xfs_seek_iomap_ops;
- extern const struct iomap_ops xfs_xattr_iomap_ops;
- 
-+static inline int
-+xfs_iomap_zero_range(
-+	struct xfs_inode	*ip,
-+	loff_t			offset,
-+	loff_t			len,
-+	bool			*did_zero)
-+{
-+	return iomap_zero_range(VFS_I(ip), offset, len, did_zero,
-+			IS_DAX(VFS_I(ip)) ? &xfs_dax_write_iomap_ops
-+					  : &xfs_buffered_write_iomap_ops);
-+}
-+
-+static inline int
-+xfs_iomap_truncate_page(
-+	struct xfs_inode	*ip,
-+	loff_t			pos,
-+	bool			*did_zero)
-+{
-+	return iomap_truncate_page(VFS_I(ip), pos, did_zero,
-+			IS_DAX(VFS_I(ip)) ? &xfs_dax_write_iomap_ops
-+					  : &xfs_buffered_write_iomap_ops);
-+}
-+
- #endif /* __XFS_IOMAP_H__*/
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index dfe24b7f26e5..6d936c3e1a6e 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -911,8 +911,8 @@ xfs_setattr_size(
- 	 */
- 	if (newsize > oldsize) {
- 		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
--		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
--				&did_zeroing, &xfs_buffered_write_iomap_ops);
-+		error = xfs_iomap_zero_range(ip, oldsize, newsize - oldsize,
-+				&did_zeroing);
- 	} else {
- 		/*
- 		 * iomap won't detect a dirty page over an unwritten block (or a
-@@ -924,8 +924,7 @@ xfs_setattr_size(
- 						     newsize);
- 		if (error)
- 			return error;
--		error = iomap_truncate_page(inode, newsize, &did_zeroing,
--				&xfs_buffered_write_iomap_ops);
-+		error = xfs_iomap_truncate_page(ip, newsize, &did_zeroing);
- 	}
- 
- 	if (error)
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index d25434f93235..9a780948dbd0 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -1266,8 +1266,7 @@ xfs_reflink_zero_posteof(
- 		return 0;
- 
- 	trace_xfs_zero_eof(ip, isize, pos - isize);
--	return iomap_zero_range(VFS_I(ip), isize, pos - isize, NULL,
--			&xfs_buffered_write_iomap_ops);
-+	return xfs_iomap_zero_range(ip, isize, pos - isize, NULL);
- }
- 
- /*
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index 95562f863ad0..58f2e1c78018 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -135,6 +135,14 @@ struct iomap_ops {
- 			unsigned flags, struct iomap *iomap,
- 			struct iomap *srcmap);
- 
-+	/*
-+	 * Handle the error code from actor(). Do the finishing jobs for extra
-+	 * operations, such as CoW, according to whether written is negative.
-+	 */
-+	int (*iomap_post_actor)(struct inode *inode, loff_t pos, loff_t length,
-+			ssize_t written, unsigned flags, struct iomap *iomap,
-+			struct iomap *srcmap);
-+
- 	/*
- 	 * Commit and/or unreserve space previous allocated using iomap_begin.
- 	 * Written indicates the length of the successful write operation which
--- 
-2.31.1
+Amir has reported [1] a that ext4 has a potential issues when reads can race
+with hole punching possibly exposing stale data from freed blocks or even
+corrupting filesystem when stale mapping data gets used for writeout. The
+problem is that during hole punching, new page cache pages can get instantiated
+and block mapping from the looked up in a punched range after
+truncate_inode_pages() has run but before the filesystem removes blocks from
+the file. In principle any filesystem implementing hole punching thus needs to
+implement a mechanism to block instantiating page cache pages during hole
+punching to avoid this race. This is further complicated by the fact that there
+are multiple places that can instantiate pages in page cache.  We can have
+regular read(2) or page fault doing this but fadvise(2) or madvise(2) can also
+result in reading in page cache pages through force_page_cache_readahead().
 
+There are couple of ways how to fix this. First way (currently implemented by
+XFS) is to protect read(2) and *advise(2) calls with i_rwsem so that they are
+serialized with hole punching. This is easy to do but as a result all reads
+would then be serialized with writes and thus mixed read-write workloads suffer
+heavily on ext4. Thus this series introduces inode->i_mapping_sem and uses it
+when creating new pages in the page cache and looking up their corresponding
+block mapping. We also replace EXT4_I(inode)->i_mmap_sem with this new rwsem
+which provides necessary serialization with hole punching for ext4.
 
+								Honza
 
+[1] https://lore.kernel.org/linux-fsdevel/CAOQ4uxjQNmxqmtA_VbYW0Su9rKRk2zobJmahcyeaEVOFKVQ5dw@mail.gmail.com/
+
+Previous versions:
+Link: https://lore.kernel.org/linux-fsdevel/20210208163918.7871-1-jack@suse.cz/
+Link: https://lore.kernel.org/r/20210413105205.3093-1-jack@suse.cz
+Link: https://lore.kernel.org/r/20210423171010.12-1-jack@suse.cz
+Link: https://lore.kernel.org/r/20210512101639.22278-1-jack@suse.cz
+Link: https://lore.kernel.org/r/20210525125652.20457-1-jack@suse.cz
+Link: https://lore.kernel.org/r/20210607144631.8717-1-jack@suse.cz
