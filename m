@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C48E13AA16C
-	for <lists+linux-xfs@lfdr.de>; Wed, 16 Jun 2021 18:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62FE83AA16E
+	for <lists+linux-xfs@lfdr.de>; Wed, 16 Jun 2021 18:34:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbhFPQgy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Jun 2021 12:36:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53678 "EHLO
+        id S229716AbhFPQg5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Jun 2021 12:36:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbhFPQgh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Jun 2021 12:36:37 -0400
+        with ESMTP id S230215AbhFPQg4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Jun 2021 12:36:56 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E60FC061760
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Jun 2021 09:34:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74B70C061574
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Jun 2021 09:34:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
         Content-Type:Content-ID:Content-Description;
-        bh=KcDSHBFHpogeWb37JH6IsrtjDkPG5LkJQotCBwXS6ho=; b=GPJADTupBus1uGRtIxclglC01p
-        JFUjxWHLHwvuMTr9VPFJ5XesbNYekwDijCCtyJ/kz86vLkoec+Vd/SaKDjl0pUPiAxOoj2hRvKGhU
-        UNsPE8lGGIFMnaVRLdlJHCD8e88VmBrwp3qtfb326AKBVc5IYczJH1z9vf6Jw60QqxElo1Z1TCemV
-        A41yHFWYd4B/nrnzi5rOlyMEkignJBpSACBrjsWKfxWMEN1jog787UptIQKpT8AnEvbf69lfnK+kM
-        wnLKpN49pYtBKq6tNhwEjPeHdW85pGUuT9bzSg40gSd3wGRBPg5CNs9l25HuztSmzXaVgSu0oHbW4
-        xcA6QE+Q==;
+        bh=AWmt/JAQcf5OF2oa8CpgUiKffxILYfQkA/gxmYiZ22o=; b=bPO87/ySMLGBHzEr+08p5Bv87d
+        sMGBd41rDVV8YDfqmXgs/99pIFTGahPe9KPZUYyWOXJLFudUyp0xzfzCVWtvl4QpFMfuiXa+veNV1
+        bxmvTvgL9IzI5y8YvxEpF7k4PAl9cHoi07XKWcL70C9q+KCTspeb6FlkSVCvaL2A4+lq+ICNuHeK8
+        y2DGFGu2xooVfY1P6cglwlIkCXq9rvyf7korrfXXA1OpyQ9a61eXhIpRHxUVpiRCcZMXWGfxHo1DK
+        g3W9pUyT1+QT1LmeDVgktlTlARafUkWYUfEC4OcLm3CxLGRv//Vpbk8oWWxl2rnvKeXLRqAuKiSCK
+        YIzN7F+g==;
 Received: from [2001:4bb8:19b:fdce:84d:447:81f0:ca60] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ltYUU-008G7y-Mc
-        for linux-xfs@vger.kernel.org; Wed, 16 Jun 2021 16:34:17 +0000
+        id 1ltYUn-008G9H-L0
+        for linux-xfs@vger.kernel.org; Wed, 16 Jun 2021 16:34:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 6/8] xfs: simplify the xlog_write_partial calling conventions
-Date:   Wed, 16 Jun 2021 18:32:10 +0200
-Message-Id: <20210616163212.1480297-7-hch@lst.de>
+Subject: [PATCH 7/8] xfs: factor out a xlog_write_full_log_vec helper
+Date:   Wed, 16 Jun 2021 18:32:11 +0200
+Message-Id: <20210616163212.1480297-8-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210616163212.1480297-1-hch@lst.de>
 References: <20210616163212.1480297-1-hch@lst.de>
@@ -43,108 +43,100 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Lift the iteration to the next log_vec into the callers, and drop
-the pointless log argument that can be trivially derived.
+Add a helper to write out an entire log_vec to prepare for additional
+cleanups.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log.c | 38 +++++++++++++++-----------------------
- 1 file changed, 15 insertions(+), 23 deletions(-)
+ fs/xfs/xfs_log.c | 61 +++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 21 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 5d55d4fff63035..4afa8ff1a82076 100644
+index 4afa8ff1a82076..f8df09f37c3b84 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -2232,14 +2232,11 @@ xlog_write_get_more_iclog_space(
- /*
-  * Write log vectors into a single iclog which is smaller than the current chain
-  * length. We write until we cannot fit a full record into the remaining space
-- * and then stop. We return the log vector that is to be written that cannot
-- * wholly fit in the iclog.
-+ * and then stop.
-  */
--static struct xfs_log_vec *
-+static int
- xlog_write_partial(
--	struct xlog		*log,
--	struct list_head	*lv_chain,
--	struct xfs_log_vec	*log_vector,
-+	struct xfs_log_vec	*lv,
- 	struct xlog_ticket	*ticket,
- 	struct xlog_in_core	**iclogp,
- 	uint32_t		*log_offset,
-@@ -2248,8 +2245,7 @@ xlog_write_partial(
- 	uint32_t		*data_cnt)
- {
- 	struct xlog_in_core	*iclog = *iclogp;
--	struct xfs_log_vec	*lv = log_vector;
--	struct xfs_log_iovec	*reg;
-+	struct xlog		*log = iclog->ic_log;
- 	struct xlog_op_header	*ophdr;
- 	int			index = 0;
- 	uint32_t		rlen;
-@@ -2257,9 +2253,8 @@ xlog_write_partial(
- 
- 	/* walk the logvec, copying until we run out of space in the iclog */
- 	for (index = 0; index < lv->lv_niovecs; index++) {
--		uint32_t	reg_offset = 0;
--
--		reg = &lv->lv_iovecp[index];
-+		struct xfs_log_iovec	*reg = &lv->lv_iovecp[index];
-+		uint32_t		reg_offset = 0;
- 
- 		/*
- 		 * The first region of a continuation must have a non-zero
-@@ -2278,7 +2273,7 @@ xlog_write_partial(
- 					&iclog, log_offset, *len, record_cnt,
- 					data_cnt);
- 			if (error)
--				return ERR_PTR(error);
-+				return error;
- 		}
- 
- 		ophdr = reg->i_addr;
-@@ -2329,7 +2324,7 @@ xlog_write_partial(
- 					*len + sizeof(struct xlog_op_header),
- 					record_cnt, data_cnt);
- 			if (error)
--				return ERR_PTR(error);
-+				return error;
- 
- 			ophdr = iclog->ic_datap + *log_offset;
- 			ophdr->oh_tid = cpu_to_be32(ticket->t_tid);
-@@ -2365,10 +2360,7 @@ xlog_write_partial(
- 	 * the caller so it can go back to fast path copying.
- 	 */
- 	*iclogp = iclog;
--	lv = list_next_entry(lv, lv_list);
--	if (list_entry_is_head(lv, lv_chain, lv_list))
--		return NULL;
--	return lv;
-+	return 0;
+@@ -2137,6 +2137,44 @@ xlog_write_iovec(
+ 	*data_cnt += write_len;
  }
  
++/*
++ * Write a whole log vector into a single iclog which is guaranteed to have
++ * either sufficient space for the entire log vector chain to be written or
++ * exclusive access to the remaining space in the iclog.
++ *
++ * Return the number of iovecs and data written into the iclog.
++ */
++static void
++xlog_write_full(
++	struct xfs_log_vec	*lv,
++	struct xlog_ticket	*ticket,
++	struct xlog_in_core	*iclog,
++	uint32_t		*log_offset,
++	uint32_t		*len,
++	uint32_t		*record_cnt,
++	uint32_t		*data_cnt)
++{
++	int			i;
++
++	ASSERT(*log_offset + *len <= iclog->ic_size ||
++		iclog->ic_state == XLOG_STATE_WANT_SYNC);
++
++	/*
++	 * Ordered log vectors have no regions to write so this loop will
++	 * naturally skip them.
++	 */
++	for (i = 0; i < lv->lv_niovecs; i++) {
++		struct xfs_log_iovec	*reg = &lv->lv_iovecp[i];
++		struct xlog_op_header	*ophdr = reg->i_addr;
++
++		ophdr->oh_tid = cpu_to_be32(ticket->t_tid);
++		ophdr->oh_len =
++			cpu_to_be32(reg->i_len - sizeof(struct xlog_op_header));
++		xlog_write_iovec(iclog, log_offset, reg->i_addr, reg->i_len,
++				 len, record_cnt, data_cnt);
++	}
++}
++
  /*
-@@ -2450,13 +2442,13 @@ xlog_write(
- 		if (!lv)
- 			break;
+  * Write whole log vectors into a single iclog which is guaranteed to have
+  * either sufficient space for the entire log vector chain to be written or
+@@ -2158,10 +2196,6 @@ xlog_write_single(
+ 	uint32_t		*data_cnt)
+ {
+ 	struct xfs_log_vec	*lv;
+-	int			index;
+-
+-	ASSERT(*log_offset + *len <= iclog->ic_size ||
+-		iclog->ic_state == XLOG_STATE_WANT_SYNC);
  
--		lv = xlog_write_partial(log, lv_chain, lv, ticket, &iclog,
--					&log_offset, &len, &record_cnt,
--					&data_cnt);
--		if (IS_ERR_OR_NULL(lv)) {
--			error = PTR_ERR_OR_ZERO(lv);
-+		error = xlog_write_partial(lv, ticket, &iclog, &log_offset,
-+					   &len, &record_cnt, &data_cnt);
-+		if (error)
-+			break;
-+		lv = list_next_entry(lv, lv_list);
-+		if (list_entry_is_head(lv, lv_chain, lv_list))
+ 	for (lv = log_vector;
+ 	     !list_entry_is_head(lv, lv_chain, lv_list);
+@@ -2173,23 +2207,8 @@ xlog_write_single(
+ 		if (lv->lv_niovecs &&
+ 		    lv->lv_bytes > iclog->ic_size - *log_offset)
  			break;
+-
+-		/*
+-		 * Ordered log vectors have no regions to write so this
+-		 * loop will naturally skip them.
+-		 */
+-		for (index = 0; index < lv->lv_niovecs; index++) {
+-			struct xfs_log_iovec	*reg = &lv->lv_iovecp[index];
+-			struct xlog_op_header	*ophdr = reg->i_addr;
+-
+-			ophdr->oh_tid = cpu_to_be32(ticket->t_tid);
+-			ophdr->oh_len = cpu_to_be32(reg->i_len -
+-						sizeof(struct xlog_op_header));
+-
+-			xlog_write_iovec(iclog, log_offset, reg->i_addr,
+-					 reg->i_len, len, record_cnt,
+-					 data_cnt);
 -		}
++		xlog_write_full(lv, ticket, iclog, log_offset, len, record_cnt,
++				data_cnt);
  	}
- 	ASSERT((len == 0 && !lv) || error);
- 
+ 	if (list_entry_is_head(lv, lv_chain, lv_list))
+ 		lv = NULL;
 -- 
 2.30.2
 
