@@ -2,65 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1140E3AAE8B
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Jun 2021 10:14:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1106C3AAEC1
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Jun 2021 10:26:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbhFQIQy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Jun 2021 04:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbhFQIQy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Jun 2021 04:16:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BE8C061574
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Jun 2021 01:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3GTIrjeeuyhbnf8mPkFO/VTnEbBlnzjHeSBQ4UfFW80=; b=j2ANK9ePzj89uQW0/t6gPWLaAl
-        hwN54fxQ6BKtEGK+1BbIg3XZjpd/U1az1LTju3+goAAsSs6CDyL8pIed5+iAGjrb56OxiqdYsyVlN
-        JI5uCQED7r244gG/wrtWxtELmyVNtYXhhnzY9yQNf25atj592iw8wS/QTfNKxSqblmfHgX1PHWXKn
-        6ps/ji215q92MlJ0CNk7bVrFgid+h1h3nZLiqOHVf/c1OkaH0drriuxs2mLf6kSaW3baUaccL+XEA
-        eFdSxB+7+e9JwWjEc/vTJQx9Dm6ChSYMVi7agkN4IzbEpsCsqkFJ0PHdzX+CjUZVUNHnjzvWVUCzr
-        bx6i616Q==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1ltnAZ-008uXB-2o; Thu, 17 Jun 2021 08:14:38 +0000
-Date:   Thu, 17 Jun 2021 09:14:35 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] xfs: force the log offline when log intent item
- recovery fails
-Message-ID: <YMsEa4CSu12V4ifB@infradead.org>
-References: <162388773802.3427167.4556309820960423454.stgit@locust>
- <162388774909.3427167.8813765394953438195.stgit@locust>
+        id S230361AbhFQI2d (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Jun 2021 04:28:33 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:51631 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230411AbhFQI2c (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Jun 2021 04:28:32 -0400
+Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id D26BE10B706
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Jun 2021 18:26:22 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ltnLx-00DjwK-CB
+        for linux-xfs@vger.kernel.org; Thu, 17 Jun 2021 18:26:21 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1ltnLx-0044v1-3R
+        for linux-xfs@vger.kernel.org; Thu, 17 Jun 2021 18:26:21 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/8 V2] xfs: log fixes for for-next
+Date:   Thu, 17 Jun 2021 18:26:09 +1000
+Message-Id: <20210617082617.971602-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162388774909.3427167.8813765394953438195.stgit@locust>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
+        a=r6YtysWOX24A:10 a=VwQbUJbxAAAA:8 a=eHPav1ZAIdXSiaH8SJwA:9
+        a=AjGcO6oz07-iQ99wixmX:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 16, 2021 at 04:55:49PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> If any part of log intent item recovery fails, we should shut down the
-> log immediately to stop the log from writing a clean unmount record to
-> disk, because the metadata is not consistent.  The inability to cancel a
-> dirty transaction catches most of these cases, but there are a few
-> things that have slipped through the cracks, such as ENOSPC from a
-> transaction allocation, or runtime errors that result in cancellation of
-> a non-dirty transaction.
-> 
-> This solves some weird behaviors reported by customers where a system
-> goes down, the first mount fails, the second succeeds, but then the fs
-> goes down later because of inconsistent metadata.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Hi folks,
 
-Looks good,
+This is followup from the first set of log fixes for for-next that
+were posted here:
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+https://lore.kernel.org/linux-xfs/20210615175719.GD158209@locust/T/#mde2cf0bb7d2ac369815a7e9371f0303efc89f51b
+
+The first two patches of this series are updates for those patches,
+change log below. The rest is the fix for the bigger issue we
+uncovered in investigating the generic/019 failures, being that
+we're triggering a zero-day bug in the way log recovery assigns LSNs
+to checkpoints.
+
+The "simple" fix of using the same ordering code as the commit
+record for the start records in the CIL push turned into a lot of
+patches once I started cleaning it up, separating out all the
+different bits and finally realising all the things I needed to
+change to avoid unintentional logic/behavioural changes. Hence
+there's some code movement, some factoring, API changes to
+xlog_write(), changing where we attach callbacks to commit iclogs so
+they remain correctly ordered if there are multiple commit records
+in the one iclog and then, finally, strictly ordering the start
+records....
+
+The original "simple fix" I tested last night ran almost a thousand
+cycles of generic/019 without a log hang or recovery failure of any
+kind. The refactored patchset has run a couple hundred cycles of
+g/019 and g/475 over the last few hours without a failure, so I'm
+posting this so we can get a review iteration done while I sleep so
+we can - hopefully - get this sorted out before the end of the week.
+
+Cheers,
+
+Dave.
+
+Version 2:
+
+- tested on 5.13-rc6 + linux-xfs/for-next
+- added strings for XLOG_STATE* variables to tracepoint output.
+- rewrote the past/future iclog detection to use iclog header LSNs
+  rather than iclog states as the state values do not tell us anything
+  useful about the temporal relativity of the iclog in relation to
+  the current commit iclog.
+- added patches to strictly order checkpoint start records the same
+  way we strictly order checkpoint commit records.
+
+
