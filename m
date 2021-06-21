@@ -2,75 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3743F3AE351
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Jun 2021 08:38:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15FBD3AE9DF
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Jun 2021 15:16:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229890AbhFUGlC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Jun 2021 02:41:02 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:36178 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229576AbhFUGlC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Jun 2021 02:41:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=eguan@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Ud6M3lq_1624257525;
-Received: from localhost(mailfrom:eguan@linux.alibaba.com fp:SMTPD_---0Ud6M3lq_1624257525)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 21 Jun 2021 14:38:45 +0800
-Date:   Mon, 21 Jun 2021 14:38:45 +0800
-From:   Eryu Guan <eguan@linux.alibaba.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Eryu Guan <guaneryu@gmail.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        Allison Henderson <allison.henderson@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>, Eryu Guan <guan@eryu.me>,
-        ebiggers@kernel.org
-Subject: Re: [PATCH 07/13] fstests: automatically generate group files
-Message-ID: <20210621063845.GG60846@e18g06458.et15sqa>
-References: <162370433910.3800603.9623820748404628250.stgit@locust>
- <162370437774.3800603.15907676407985880109.stgit@locust>
- <YMmpDGT9b4dBdSh2@infradead.org>
- <20210617001320.GK158209@locust>
- <YMsAEQsNhI1Y5JR8@infradead.org>
- <20210617171500.GC158186@locust>
- <YMyjgGEuLLcid9i+@infradead.org>
- <CAOQ4uxjvkJh2XcfDgj7g+JUkFXEc36_6YOKQHJ=pX2hpGfUDhQ@mail.gmail.com>
- <20210618155630.GE158209@locust>
- <YNAiutsL1f/KoBXM@infradead.org>
+        id S229640AbhFUNTD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Jun 2021 09:19:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59071 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229663AbhFUNTC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Jun 2021 09:19:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1624281407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=19UQ3nD1fqb9evHmIF5pt8XVqyIPe8VkrZC70Sv6Lm4=;
+        b=SSp0P9wUm3QSnZXFze7oIWJYhnZVZm+8xr90rx1tO56noC/Q/wHpO3D6crnba0q2jCi8pw
+        D3m+GIOSBCQRS4NtoYiOuR4eTLccfpY3X2Iu1p6WIJJ0maMHe+2hoqKYuP/Z0RqVvwZkni
+        ZVLF2sdHqJdrnFF+rrOCT3gJVT4W2/o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-515-nl21A4znM-SUZpd95_rOzA-1; Mon, 21 Jun 2021 09:16:46 -0400
+X-MC-Unique: nl21A4znM-SUZpd95_rOzA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A3A7800D62
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Jun 2021 13:16:45 +0000 (UTC)
+Received: from bfoster.redhat.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EB9CA19C46
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Jun 2021 13:16:44 +0000 (UTC)
+From:   Brian Foster <bfoster@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH v2 0/2] xfs: fix buffer use after free on unpin abort
+Date:   Mon, 21 Jun 2021 09:16:42 -0400
+Message-Id: <20210621131644.128177-1-bfoster@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YNAiutsL1f/KoBXM@infradead.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 21, 2021 at 06:25:14AM +0100, Christoph Hellwig wrote:
-> On Fri, Jun 18, 2021 at 08:56:30AM -0700, Darrick J. Wong wrote:
-> > On Fri, Jun 18, 2021 at 06:32:18PM +0300, Amir Goldstein wrote:
-> > > On Fri, Jun 18, 2021 at 4:47 PM Christoph Hellwig <hch@infradead.org> wrote:
-> > > >
-> > > > On Thu, Jun 17, 2021 at 10:15:00AM -0700, Darrick J. Wong wrote:
-> > > > > I suppose I could make the '-g' switch call 'make group.list', though
-> > > > > that's just going to increase the amount of noise for anyone like me who
-> > > > > runs fstests with a mostly readonly rootfs.
-> > > >
-> > > > Just stick to the original version and see if anyone screams loud
-> > > 
-> > > What is the original version?
-> > 
-> > Assuming the developer is smart enough to run 'make all install' before
-> > running fstests.
-> 
-> So install is also required now?  I have never before installed xfstests
-> I think.
+v2:
+- Split assert in patch 2.
+v1: https://lore.kernel.org/linux-xfs/20210511135257.878743-1-bfoster@redhat.com/
+- Rework patch 1 to hold conditionally in the abort case and document
+  the underlying design flaw.
+- Add patch 2 to remove some unused code.
+rfc: https://lore.kernel.org/linux-xfs/20210503121816.561340-1-bfoster@redhat.com/
 
-No, install is not required, but running make after updating fstests is
-required, at least some tests may introduce new test binary in src and
-the binary is missing if you don't run make. So I think make is fine
-after updating fstests.
+Brian Foster (2):
+  xfs: hold buffer across unpin and potential shutdown processing
+  xfs: remove dead stale buf unpin handling code
 
-Thanks,
-Eryu
+ fs/xfs/xfs_buf_item.c | 58 +++++++++++++++++--------------------------
+ 1 file changed, 23 insertions(+), 35 deletions(-)
+
+-- 
+2.26.3
+
