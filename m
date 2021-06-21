@@ -2,106 +2,94 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77BC93AF905
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jun 2021 01:11:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B3EC3AF915
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jun 2021 01:17:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbhFUXNd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Jun 2021 19:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229940AbhFUXNd (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 21 Jun 2021 19:13:33 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2B20560FDB;
-        Mon, 21 Jun 2021 23:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624317078;
-        bh=RBgGjR8MqmSWxCz2laOBal2KjAL98OKmL2um+YiU6Sw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XBKMy4VXA5KhWMo+RwSUdBkOn0jKi+myWyRIEM6SpEUUE2QfFLzuLNe+jnoF94xeI
-         ikryqWLWDnzSKvwz+nvTDm1Nw1vDPIDnnLPFwI9kB7K7ZOQZtEEUBEZ3cBpeETvAgL
-         ZJSLzFGOhhnj5VMEj6gUj+HvEHGvHEoEpi247nAbSwydNqjEWUqm7P8nlutHjIHau2
-         NsI/IYlR2gTuvv48PcCMc+lgCLbEOGi7kNxd7FEJBt9FeqYmsYj9+8ylVcKccqYwUK
-         Tz4ho3c10N/VtNOXNo2YbFG/rJwm0QX3mm3ggaLIP1ZsGClMKP/MHjAJ5MU62mktxE
-         nS/iosUrE0nCg==
-Subject: [PATCH 13/13] misc: update documentation to reflect auto-generated
- group files
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     Allison Henderson <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
-        amir73il@gmail.com, ebiggers@kernel.org
-Date:   Mon, 21 Jun 2021 16:11:17 -0700
-Message-ID: <162431707787.4090790.4406716516462715301.stgit@locust>
-In-Reply-To: <162431700639.4090790.11684371602638166127.stgit@locust>
-References: <162431700639.4090790.11684371602638166127.stgit@locust>
-User-Agent: StGit/0.19
+        id S231127AbhFUXTg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Jun 2021 19:19:36 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:38526 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230130AbhFUXTg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Jun 2021 19:19:36 -0400
+Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 75CE51B12B3;
+        Tue, 22 Jun 2021 09:17:20 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lvTAN-00FUTW-Du; Tue, 22 Jun 2021 09:17:19 +1000
+Date:   Tue, 22 Jun 2021 09:17:19 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     xfs <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH] xfs: fix endianness issue in xfs_ag_shrink_space
+Message-ID: <20210621231719.GX664593@dread.disaster.area>
+References: <20210621223436.GF3619569@locust>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210621223436.GF3619569@locust>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
+        a=kj9zAlcOel0A:10 a=r6YtysWOX24A:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+        a=7-415B0cAAAA:8 a=H_pVOhNOFlLZ4-ih4J0A:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+On Mon, Jun 21, 2021 at 03:34:36PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> The AGI buffer is in big-endian format, so we must convert the
+> endianness to CPU format to do any comparisons.
+> 
+> Fixes: 46141dc891f7 ("xfs: introduce xfs_ag_shrink_space()")
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  fs/xfs/libxfs/xfs_ag.c |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
+> index c68a36688474..afff2ab7e9f1 100644
+> --- a/fs/xfs/libxfs/xfs_ag.c
+> +++ b/fs/xfs/libxfs/xfs_ag.c
+> @@ -510,6 +510,7 @@ xfs_ag_shrink_space(
+>  	struct xfs_buf		*agibp, *agfbp;
+>  	struct xfs_agi		*agi;
+>  	struct xfs_agf		*agf;
+> +	xfs_agblock_t		aglen;
+>  	int			error, err2;
+>  
+>  	ASSERT(agno == mp->m_sb.sb_agcount - 1);
+> @@ -524,14 +525,14 @@ xfs_ag_shrink_space(
+>  		return error;
+>  
+>  	agf = agfbp->b_addr;
+> +	aglen = be32_to_cpu(agi->agi_length);
+>  	/* some extra paranoid checks before we shrink the ag */
+>  	if (XFS_IS_CORRUPT(mp, agf->agf_length != agi->agi_length))
+>  		return -EFSCORRUPTED;
+> -	if (delta >= agi->agi_length)
+> +	if (delta >= aglen)
+>  		return -EINVAL;
+>  
+> -	args.fsbno = XFS_AGB_TO_FSB(mp, agno,
+> -				    be32_to_cpu(agi->agi_length) - delta);
+> +	args.fsbno = XFS_AGB_TO_FSB(mp, agno, aglen - delta);
 
-Update the documentation to outline the new requirements for test files
-so that we can generate group files during build.
+Looks fine.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- README |   23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
+FWIW, my plan for this stuff is to move the perag geometry stuff
+into the xfs_perag. That gets rid of all this "need the on disk
+buffer to get AG size" stuff. It also avoids having to calculate
+valid ranges of types on every verify call (expensive) because, at
+most per-ag type verifier call sites, we already have the perag on
+hand...
 
-diff --git a/README b/README
-index 048491a6..18f7a6bc 100644
---- a/README
-+++ b/README
-@@ -140,7 +140,8 @@ Running tests:
-     - ./check '*/001' '*/002' '*/003'
-     - ./check '*/06?'
-     - Groups of tests maybe ran by: ./check -g [group(s)]
--      See the 'group' file for details on groups
-+      See the tests/*/group.list files after building xfstests to learn about
-+      each test's group memberships.
-     - If you want to run all tests regardless of what group they are in
-       (including dangerous tests), use the "all" group: ./check -g all
-     - To randomize test order: ./check -r [test(s)]
-@@ -174,8 +175,8 @@ Test script environment:
- 
-     When developing a new test script keep the following things in
-     mind.  All of the environment variables and shell procedures are
--    available to the script once the "common/rc" file has been
--    sourced.
-+    available to the script once the "common/preamble" file has been
-+    sourced and the "_begin_fstest" function has been called.
- 
-      1. The tests are run from an arbitrary directory.  If you want to
- 	do operations on an XFS filesystem (good idea, eh?), then do
-@@ -249,6 +250,22 @@ Test script environment:
- 	  in the ./new script. It can contain only alphanumeric characters
- 	  and dash. Note the "NNN-" part is added automatically.
- 
-+     6. Test group membership: Each test can be associated with any number
-+	of groups for convenient selection of subsets of tests.  Group names
-+	can be any sequence of non-whitespace characters.  Test authors
-+	associate a test with groups by passing the names of those groups as
-+	arguments to the _begin_fstest function.  For example, the code:
-+
-+	_begin_fstest auto quick subvol snapshot
-+
-+	associates the current test with the "auto", "quick", "subvol", and
-+	"snapshot" groups.  It is not necessary to specify the "all" group
-+	in the list because that group is computed at run time.
-+
-+	The build process scans test files for _begin_fstest invocations and
-+	compiles the group list from that information.  In other words, test
-+	files must call _begin_fstest or they will not be run.
-+
- Verified output:
- 
-     Each test script has a name, e.g. 007, and an associated
-
+Cheers,
+-- 
+Dave Chinner
+david@fromorbit.com
