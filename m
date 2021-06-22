@@ -2,100 +2,88 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 759623AFB68
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jun 2021 05:34:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6C43AFB96
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Jun 2021 06:06:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229904AbhFVDhF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Jun 2021 23:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230047AbhFVDhE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 21 Jun 2021 23:37:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D2C856124B;
-        Tue, 22 Jun 2021 03:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624332889;
-        bh=5AwhVSLjpalY9feo88Wf3fH4kyPDFIm7liHncMv69m0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YEo38MBF+4IrZJCGYxLSMr71pbYazVDeZXjXa9q4tOFdgNyiANQ5ypgdqJTULr9eJ
-         WYqbqFuyDQV2dWsXAo3ZmzYWgftfVmLCfAe9ZW1c0GdMG7Lmv9nZ3ldqExCfvu9qV3
-         rEnCmMRjxtwCVQbeA1wB4w0E2wZ4JZiBSUjJPHs6yWvyUnxZ9xqv3vakcDWEEk9DRy
-         21BV321lxq4tiF6Mfk5wPUJszdP24q8ONxLXbx73EyEMtaMZj0xxAqtMf60bq1XqGM
-         5kzBHCA7CghEEWkOaeNCsNJyY67W2mucB4/0L5Q4yYHvqzVeFmNMHR+4UjF8lFJHoF
-         MfkmaboZOephA==
-Date:   Mon, 21 Jun 2021 20:34:49 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs: fix endianness issue in xfs_ag_shrink_space
-Message-ID: <20210622033449.GG3619569@locust>
-References: <20210621223436.GF3619569@locust>
- <20210621231719.GX664593@dread.disaster.area>
+        id S229625AbhFVEI2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Jun 2021 00:08:28 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:33576 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229674AbhFVEI0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Jun 2021 00:08:26 -0400
+Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 71FBC68D5B
+        for <linux-xfs@vger.kernel.org>; Tue, 22 Jun 2021 14:06:08 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lvXfr-00FZEr-Dt
+        for linux-xfs@vger.kernel.org; Tue, 22 Jun 2021 14:06:07 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1lvXfr-005PwN-3k
+        for linux-xfs@vger.kernel.org; Tue, 22 Jun 2021 14:06:07 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/4] xfs: fix CIL shutdown UAF and shutdown hang
+Date:   Tue, 22 Jun 2021 14:06:00 +1000
+Message-Id: <20210622040604.1290539-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210621231719.GX664593@dread.disaster.area>
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
+        a=r6YtysWOX24A:10 a=DdC4s64k3o_t1qy2FY4A:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 09:17:19AM +1000, Dave Chinner wrote:
-> On Mon, Jun 21, 2021 at 03:34:36PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > The AGI buffer is in big-endian format, so we must convert the
-> > endianness to CPU format to do any comparisons.
-> > 
-> > Fixes: 46141dc891f7 ("xfs: introduce xfs_ag_shrink_space()")
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  fs/xfs/libxfs/xfs_ag.c |    7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-> > index c68a36688474..afff2ab7e9f1 100644
-> > --- a/fs/xfs/libxfs/xfs_ag.c
-> > +++ b/fs/xfs/libxfs/xfs_ag.c
-> > @@ -510,6 +510,7 @@ xfs_ag_shrink_space(
-> >  	struct xfs_buf		*agibp, *agfbp;
-> >  	struct xfs_agi		*agi;
-> >  	struct xfs_agf		*agf;
-> > +	xfs_agblock_t		aglen;
-> >  	int			error, err2;
-> >  
-> >  	ASSERT(agno == mp->m_sb.sb_agcount - 1);
-> > @@ -524,14 +525,14 @@ xfs_ag_shrink_space(
-> >  		return error;
-> >  
-> >  	agf = agfbp->b_addr;
-> > +	aglen = be32_to_cpu(agi->agi_length);
-> >  	/* some extra paranoid checks before we shrink the ag */
-> >  	if (XFS_IS_CORRUPT(mp, agf->agf_length != agi->agi_length))
-> >  		return -EFSCORRUPTED;
-> > -	if (delta >= agi->agi_length)
-> > +	if (delta >= aglen)
-> >  		return -EINVAL;
-> >  
-> > -	args.fsbno = XFS_AGB_TO_FSB(mp, agno,
-> > -				    be32_to_cpu(agi->agi_length) - delta);
-> > +	args.fsbno = XFS_AGB_TO_FSB(mp, agno, aglen - delta);
-> 
-> Looks fine.
-> 
-> Reviewed-by: Dave Chinner <dchinner@redhat.com>
-> 
-> FWIW, my plan for this stuff is to move the perag geometry stuff
-> into the xfs_perag. That gets rid of all this "need the on disk
-> buffer to get AG size" stuff. It also avoids having to calculate
-> valid ranges of types on every verify call (expensive) because, at
-> most per-ag type verifier call sites, we already have the perag on
-> hand...
+Hi folks,
 
-woo!
+The following patches implement an initial fix for the UAF that can
+occur in the CIL push code when a racing shutdown occurs. This was a
+zero-day bug in the delayed logging code, and only recently
+uncovered by the CIL pipelining changes that addresses a different
+zero-day bug in the delayed logging code. This UAF exists regardless
+in all kernels that support delayed logging (i.e. since 2.6.36), but
+is extremely unlikely that anyone has hit it as it requires a
+shutdown with extremely tight timing tolerances to trigger a UAF.
 
---D
+This is more of a problem for the current for-next tree, though,
+because there is now a call to xlog_wait_on_iclog() in the UAF
+window. While we don't reference the CIL context after the wait,
+this will soon be needed to fix the /other/ zero-day problems found
+by the CIL pipelining changes.
 
-> Cheers,
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+The encapsulation of the entire CIL commit iclog processing epilogue
+in the icloglock effectively serialises this code against shutdown
+races and allows us to error out before attaching the context to the
+iclog if a shutdown has already occurred. Callbacks used to be under
+the icloglock, but were split out in 2008 because of icloglock
+contention causing log scalability problems (sound familiar? :).
+Delayed logging fixed those icloglock scalability issues by moving
+it out of the hot transaction commit path, so we can move the
+callbacks back under the icloglock without re-introducing ancient
+problems and solve the initial UAF problem this way.
+
+With that problem solved, we can then fix the call to
+xlog_wait_on_iclog() in the CIL push code by ensuring that it only
+waits on older iclogs via LSN checks. As the wait drops the icloglock and
+potentially re-opens us to the above UAF on shutdown, we have to be
+careful not to reference the CIL context after the wait returns.
+
+Hence the patches don't really fix the underlying cause of the
+shutdown UAF here - this is intended as a low impact, easily
+backportable solution to the problem. Work to fix the underlying
+shutdown brokenness to remove the need to hold the icloglock from
+callback attachment to xlog_state_release_iclog() is needed
+(underway) before we can then apply start record ordering fixes and
+re-introduce the CIL pipelining fixes and the rest of the CIL
+scalabilty work....
+
+Cheers,
+
+Dave.
+
+
