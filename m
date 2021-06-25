@@ -2,62 +2,76 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5F13B3474
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Jun 2021 19:10:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEDBB3B3AE5
+	for <lists+linux-xfs@lfdr.de>; Fri, 25 Jun 2021 04:31:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbhFXRM4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Jun 2021 13:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbhFXRM4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Jun 2021 13:12:56 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0D29C061574
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Jun 2021 10:10:36 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id v3so9114296ioq.9
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Jun 2021 10:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:in-reply-to:references:from:date:message-id
-         :subject:to;
-        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
-        b=UZ+/VjiF819MgRVYmSa/OMhqMfkC/yEgfnEQuJltW5yVR9WSPy4OU31f9FVJ2FvSZM
-         q5F+9yb++Dkc/9f2j5uMXiDP10iYs2QJeyHJbIh0CjQ9mubfoLP4b/nWOrV6ZW3Y0eXx
-         Jy3EtgkvOQal7eqm8FFNEkcEY13qCZsokx/A93zRMVaqk/dMYxyFbq0OV/gNErogDca6
-         zPT9l6YFxKsGZIqqyUIuv8MoPN9VdmiB8HtDTUt7GkgKUVQn7xoLCjjzZ5QMsdLtTLKg
-         DwnDQn9slOLJnh2RbiiCnsMK9kBFpYV81sT8yB8hW5xiTbPFyNtytN89dy+n6vqDxhHe
-         dY7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:in-reply-to:references
-         :from:date:message-id:subject:to;
-        bh=ANhbTggsY3NFhRZExKMwUmb3VzJqye8XLvWVXSvNBkQ=;
-        b=Lwo1KGNAd+Z/g7xmzGAOfavxdNlkn6EMFfg28NYThK377mcnJ6SO+MSko/U/qK/1Ak
-         LnBAGgdzQLOoMHkIo5uTXO9l3blQCdIf1KbZEIR14M1vyZiydCII7hZ2tra8eVi/ZMx6
-         BU9RNDwMyyiHloEz86zvRJVP2HP+qdisx/7nzmClEqjNgKAf7vsjxUa3gmuAYbgdtDZ8
-         zLQphgxS9EsQG5RLkQj1uBRycHsoa/+j3YRzEBfQadW9tZMrnvZm9NWeVVsP8Br3T4YG
-         TLWj+d6iHs4kO/uyoBc5A+o5qGLdQAbPq7+8xH9rWrbVimFCVIW6VHQMwe+smfY9cgTp
-         GnuA==
-X-Gm-Message-State: AOAM533k23n5Sn7qe9bfujIgpMAxdtpvg1CHxdYWqLkBpwjhosLdNnOr
-        9AfzQoiBKtWVb4i8MqXoxv2ZiV0XjFVL1nkIteU=
-X-Google-Smtp-Source: ABdhPJwnWtBX/xPUpVgs9WxMlc29Wj7m9hM8FjTEewInglgRy/Qe1Vg94OFbXQ7c5AwqZ8QiyUoqP5WU0UQF9SwGiU8=
-X-Received: by 2002:a6b:b554:: with SMTP id e81mr5011767iof.163.1624554636366;
- Thu, 24 Jun 2021 10:10:36 -0700 (PDT)
+        id S233004AbhFYCdW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Jun 2021 22:33:22 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:49523 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232973AbhFYCdV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Jun 2021 22:33:21 -0400
+Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 16D6D86292E;
+        Fri, 25 Jun 2021 12:30:59 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lwbcP-00GgUM-P4; Fri, 25 Jun 2021 12:30:57 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1lwbcP-006BG2-En; Fri, 25 Jun 2021 12:30:57 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH 0/3] mm, xfs: memory allocation improvements
+Date:   Fri, 25 Jun 2021 12:30:26 +1000
+Message-Id: <20210625023029.1472466-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Received: by 2002:a05:6638:3aa:0:0:0:0 with HTTP; Thu, 24 Jun 2021 10:10:35
- -0700 (PDT)
-Reply-To: tutywoolgar021@gmail.com
-In-Reply-To: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
-References: <CADB47+4Wa3T59Vq_==GTXEfHrX5x-2vQFxaTBO0dTdyAweCVpw@mail.gmail.com>
-From:   tuty woolgar <faridaamadoubas@gmail.com>
-Date:   Thu, 24 Jun 2021 17:10:35 +0000
-Message-ID: <CADB47+6Ju33YtZhH5aYWAvJsqgLWcrRuA17P=6NJCEjCyMFxOA@mail.gmail.com>
-Subject: greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
+        a=r6YtysWOX24A:10 a=_MWFLEjnuH9FteaNsk4A:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-My greetings to you my friend i hope you are fine and good please respond
-back to me thanks,
+Hi folks,
+
+We're slowly trying to move the XFS code closer to the common memory
+allocation routines everyone else uses. This patch set addresses a
+regression from a previous set of changes (kmem_realloc() removal)
+and removes another couple of kmem wrappers from within the XFS
+code.
+
+The first patch addresses a regression - using large directory
+blocks triggers a warning when calling krealloc() recombine a buffer
+split across across two log records into a single contiguous
+memory buffer. this results in krealloc() being called to allocate a
+64kB buffer with __GFP_NOFAIL being set. This warning is trivially
+reproduced by generic/040 and generic/041 when run with 64kB
+directory block sizes on a 4kB page size machine.
+
+Log recovery really needs to use kvmalloc() like all the other
+"allocate up to 64kB and can't fail" cases in filesystem code (e.g.
+for xattrs), but there's no native kvrealloc() function that
+provides us with the necessary semantics. So rather than add a new
+wrapper, the first patch adds this helper to the common code and
+converts XFS to use it for log recovery.
+
+The latter two patches are removing what are essentially kvmalloc()
+wrappers from XFS. With the more widespread use of
+memalloc_nofs_save/restore(), we can call kvmalloc(GFP_KERNEL) and
+just have it do the right thing because GFP_NOFS contexts are
+covered by PF_MEMALLOC_NOFS task flags now. Hence we don't need
+kmem_alloc_large() anymore. And with the slab code guaranteeing at
+least 512 byte alignment for sector and block sized heap
+allocations, we no longer need the kmem_alloc_io() variant of
+kmem_alloc_large() for IO buffers. So these wrappers can all go
+away...
+
+Cheers,
+
+Dave.
+
