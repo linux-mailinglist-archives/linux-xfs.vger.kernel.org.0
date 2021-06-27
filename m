@@ -2,90 +2,151 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 581963B53EF
-	for <lists+linux-xfs@lfdr.de>; Sun, 27 Jun 2021 16:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E46C3B5574
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jun 2021 00:09:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbhF0O7j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 27 Jun 2021 10:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbhF0O7j (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 27 Jun 2021 10:59:39 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8321C061574
-        for <linux-xfs@vger.kernel.org>; Sun, 27 Jun 2021 07:57:14 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id r5so26792736lfr.5
-        for <linux-xfs@vger.kernel.org>; Sun, 27 Jun 2021 07:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=8lWsqX1ZN4u+E789NMjHwWZ/em1Vn8MdIyxxuFhlJq0=;
-        b=K3skCT8wSJ6RCjbJb3wfZK31dKIKGqB6s9w3avHE+jMaorMm8J/R0qB5Y0WiVoON4U
-         g6Mk8klF6hB8AJRff6dx71tyx2TI+0YpdeISuIb9mTGF1hVL/UYYKupeyaNeFBDk1ZTm
-         CPtTfzh5Cj15G9U3uas2jikgrzqCFr7Pj1UomW7sh9uY3+r2QJkfxPWJCVfXJBHaFtcq
-         u0FVXVRSR7uAoUJmL1UPki44fbz+SllUx1yEXI5rPkWHT21MBicFnGPTVuPr9cYfzIej
-         YENHctBDUY3klq9lSUf31YalSSSap+xNQ6Up/gut0izEs6xxpL7J43Laghg1J/RStd2H
-         ZTRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=8lWsqX1ZN4u+E789NMjHwWZ/em1Vn8MdIyxxuFhlJq0=;
-        b=iHg1QtAJKPMyVSNfTEwpqyAP+S5jqR3eYvYl1ppaPHP7vPexBxFqVzm3JYfdxB1kn+
-         2aABYIJUeqrnkGtwAlSjshesT2p1yB/wikVruwhUEky0Z520/KWEgd4mvZLggVPMwZ4B
-         rXFMMcMNv7J48BtBPeDCd91x/Gbmqce9pPvpem8gECmp6cyJBRE5xWgebg3yD6UR4hbb
-         nhLEKCxDRiCF+1sO3qaoVYAN/EteXfp36qCk8pzkwsMv8dQWqB5f0rMBQuMs84zlElqe
-         rLQs2xAx5rEko4txT+F2/URGw6i957AYS2lCsWNnyRCRAkJRQr4QY+LZkYVuJkOje9RH
-         9DRw==
-X-Gm-Message-State: AOAM531QP4OZAwkOW0P+k00fAdq2DuXexEuNTImwf9fANzrq17m2xbZO
-        Esm+xv4miU06KQgs6jPo+gV0h3aYUXAW2WxjT/udGhOJzQ==
-X-Google-Smtp-Source: ABdhPJy2u1ultfHTILsCeGVMJu0qcPcN3wL9qr4RKECwlYRfxIi/JJfdYkzFPa+pJFWlfQVXUD2fn/tozL4sDbYKlNg=
-X-Received: by 2002:a05:6512:15a1:: with SMTP id bp33mr15021281lfb.623.1624805833133;
- Sun, 27 Jun 2021 07:57:13 -0700 (PDT)
+        id S231704AbhF0WMP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 27 Jun 2021 18:12:15 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:40443 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231702AbhF0WMP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 27 Jun 2021 18:12:15 -0400
+Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 6663680BBCF;
+        Mon, 28 Jun 2021 08:09:48 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1lxcyI-0009Og-Vl; Mon, 28 Jun 2021 08:09:47 +1000
+Date:   Mon, 28 Jun 2021 08:09:46 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 2/3] xfs: remove kmem_alloc_io()
+Message-ID: <20210627220946.GD664593@dread.disaster.area>
+References: <20210625023029.1472466-1-david@fromorbit.com>
+ <20210625023029.1472466-3-david@fromorbit.com>
+ <20210626020145.GH13784@locust>
 MIME-Version: 1.0
-Received: by 2002:a2e:2e17:0:0:0:0:0 with HTTP; Sun, 27 Jun 2021 07:57:12
- -0700 (PDT)
-Reply-To: abungosamuel06@gmail.com
-From:   Abungo Samuel <adellaaleron2@gmail.com>
-Date:   Sun, 27 Jun 2021 07:57:12 -0700
-Message-ID: <CABFU+KjA0gfB6RzrxWWqb87xgHC9pHCm7Px91w3-n5MyfewQiA@mail.gmail.com>
-Subject: Good Morning!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210626020145.GH13784@locust>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
+        a=kj9zAlcOel0A:10 a=r6YtysWOX24A:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=Nvv_ug2qO9mfdb48CmQA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Greetings,
+On Fri, Jun 25, 2021 at 07:01:45PM -0700, Darrick J. Wong wrote:
+> On Fri, Jun 25, 2021 at 12:30:28PM +1000, Dave Chinner wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > Since commit 59bb47985c1d ("mm, sl[aou]b: guarantee natural alignment
+> > for kmalloc(power-of-two)"), the core slab code now guarantees slab
+> > alignment in all situations sufficient for IO purposes (i.e. minimum
+> > of 512 byte alignment of >= 512 byte sized heap allocations) we no
+> > longer need the workaround in the XFS code to provide this
+> > guarantee.
+> > 
+> > Replace the use of kmem_alloc_io() with kmem_alloc() or
+> > kmem_alloc_large() appropriately, and remove the kmem_alloc_io()
+> > interface altogether.
+> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > ---
+> >  fs/xfs/kmem.c            | 25 -------------------------
+> >  fs/xfs/kmem.h            |  1 -
+> >  fs/xfs/xfs_buf.c         |  3 +--
+> >  fs/xfs/xfs_log.c         |  3 +--
+> >  fs/xfs/xfs_log_recover.c |  4 +---
+> >  fs/xfs/xfs_trace.h       |  1 -
+> >  6 files changed, 3 insertions(+), 34 deletions(-)
+> > 
+> > diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+> > index e986b95d94c9..3f2979fd2f2b 100644
+> > --- a/fs/xfs/kmem.c
+> > +++ b/fs/xfs/kmem.c
+> > @@ -56,31 +56,6 @@ __kmem_vmalloc(size_t size, xfs_km_flags_t flags)
+> >  	return ptr;
+> >  }
+> >  
+> > -/*
+> > - * Same as kmem_alloc_large, except we guarantee the buffer returned is aligned
+> > - * to the @align_mask. We only guarantee alignment up to page size, we'll clamp
+> > - * alignment at page size if it is larger. vmalloc always returns a PAGE_SIZE
+> > - * aligned region.
+> > - */
+> > -void *
+> > -kmem_alloc_io(size_t size, int align_mask, xfs_km_flags_t flags)
+> > -{
+> > -	void	*ptr;
+> > -
+> > -	trace_kmem_alloc_io(size, flags, _RET_IP_);
+> > -
+> > -	if (WARN_ON_ONCE(align_mask >= PAGE_SIZE))
+> > -		align_mask = PAGE_SIZE - 1;
+> > -
+> > -	ptr = kmem_alloc(size, flags | KM_MAYFAIL);
+> > -	if (ptr) {
+> > -		if (!((uintptr_t)ptr & align_mask))
+> > -			return ptr;
+> > -		kfree(ptr);
+> > -	}
+> > -	return __kmem_vmalloc(size, flags);
+> > -}
+> > -
+> >  void *
+> >  kmem_alloc_large(size_t size, xfs_km_flags_t flags)
+> >  {
+> > diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
+> > index 38007117697e..9ff20047f8b8 100644
+> > --- a/fs/xfs/kmem.h
+> > +++ b/fs/xfs/kmem.h
+> > @@ -57,7 +57,6 @@ kmem_flags_convert(xfs_km_flags_t flags)
+> >  }
+> >  
+> >  extern void *kmem_alloc(size_t, xfs_km_flags_t);
+> > -extern void *kmem_alloc_io(size_t size, int align_mask, xfs_km_flags_t flags);
+> >  extern void *kmem_alloc_large(size_t size, xfs_km_flags_t);
+> >  static inline void  kmem_free(const void *ptr)
+> >  {
+> > diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+> > index 8ff42b3585e0..a5ef1f9eb622 100644
+> > --- a/fs/xfs/xfs_buf.c
+> > +++ b/fs/xfs/xfs_buf.c
+> > @@ -315,7 +315,6 @@ xfs_buf_alloc_kmem(
+> >  	struct xfs_buf	*bp,
+> >  	xfs_buf_flags_t	flags)
+> >  {
+> > -	int		align_mask = xfs_buftarg_dma_alignment(bp->b_target);
+> 
+> Is xfs_buftarg_dma_alignment unused now?
 
-My name is Mr. Abungo Samuel . I am working with one of the prime
-banks here in Burkina Faso. Here in this bank existed a dormant
-account for many years, which belong to one of our late foreign
-customer Mr. Moises Saba Masri from Mexico.
+It is unused, I'll remove it.
 
-You can get more information's as regards to this on below
-website:http://www.ynetnews.com/articles/0,7340,L-3832556,00.html.
-When I discovered that there had been neither deposits nor withdrawals
-from this account for this long period, I decided to carry out a
-system investigation and discovered that none of the family member or
-relations of the late person are aware of this account, which means
-nobody will come to take it.
+> -or-
+> 
+> Should we trust that the memory allocators will always maintain at least
+> the current alignment guarantees, or actually check the alignment of the
+> returned buffer if CONFIG_XFS_DEBUG=y?
 
-The amount in this account stands at $15,500, 000.00 (Fifteen million
-five hundred thousand Dollars). I want a foreign account where the
-bank will transfer this fund, I will front you in the bank as the Next
-of Kin to the late customer and back you up with relevant information.
+It's documented in Documentation/core-api/memory-allocation.rst that
+the alignment of the memory for power of two sized allocations is
+guaranteed. That means it's the responsibility of the mm developers
+to test and ensure this API-defined behaviour does not regress. I
+don't think it's viable for us to test every guarantee other
+subsystems are supposed to provide us with regardless of whether
+CONFIG_XFS_DEBUG=y is set or not...
 
-What the bank need is proof and information about the late customer
-which I will assist you on. his is a genuine, risk free and legal
-business transaction, All details shall be sent to you once I hear
-from you.
+Unfortunately, I don't see any debug or test infrastructure that
+ensures the allocation alignment guarantee is being met. Perhaps
+that's something the mm developers need to address?
 
-The information as contained herein be accorded the necessary
-attention, urgency as well as the secrecy it deserves.
+Cheers,
 
-If you are really sure of your integrity, trustworthy and
-confidentiality reply back to me urgently for more details
-
-Best regards,
-Abungo Samuel
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
