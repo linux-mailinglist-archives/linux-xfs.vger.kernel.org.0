@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 602693B5EAF
-	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jun 2021 15:06:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAA8D3B5EBA
+	for <lists+linux-xfs@lfdr.de>; Mon, 28 Jun 2021 15:10:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233116AbhF1NI7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 28 Jun 2021 09:08:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60504 "EHLO mail.kernel.org"
+        id S232598AbhF1NMj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 28 Jun 2021 09:12:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233114AbhF1NI6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 28 Jun 2021 09:08:58 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 05181619AB
-        for <linux-xfs@vger.kernel.org>; Mon, 28 Jun 2021 13:06:33 +0000 (UTC)
+        id S232502AbhF1NMi (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 28 Jun 2021 09:12:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 880BF61C72
+        for <linux-xfs@vger.kernel.org>; Mon, 28 Jun 2021 13:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624885593;
-        bh=6CqK1pOlYbf/YzCmyq/XF29JHNh5dHUMSYD72+cLRJA=;
+        s=k20201202; t=1624885812;
+        bh=+HfGHfaRkpqwgG89GQeggyPWkbatVYCgKKp4ANAXJHU=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=dRnehBvFhCXHZu8EL6V7Bk9cnJVflLaYdBBm1Y42NS9P6EbI5Tua+xdT/KvOuPI/A
-         KFxfmi9j47Y2WIJaz07gsmrzzX2WJBXx1aqphxToF3qRYgFGFwOfUROJ4rN7jkDkXx
-         /RoeNNCG02GPUO3HohsJD9EyLQ/DcI8H4rlhX3bXi7MYuLw3fuoznoQIlJIDsXzHbk
-         zfFY20HTQcsyAKzvmV5e4lVU9quVjXoWGY4pSbso3q+LXmyWM+FWGbSKK7vLUMSbjX
-         SRp539oda8KMVO4USZJlXwlaH6tf3qcet2Tm6kgQMAfJB3f9GqkWhZwXqxhYAHspaa
-         s+6bF4zmBCyug==
+        b=HtEgPq7gcg5tMC8Zy4yZAcdyabIjGJNm66trNsR1uqkwIXaCGqm1U3hHXcNnjsylN
+         rBXKuwBxEXFUkt1C2ssBqEwyhwYlOW9VjT+1qs7JYpyB24j8vjpSYG8Q6W0DMIa23z
+         ViS0eYFb5kQKA1Upu/lbyRqCKubVyGvVmfpslfMiElHTtL0YDOknBIzdAImfSEVsuO
+         LFh+yBhYOYNhvjdPmmoXT+/+aGw7/ae2gMCpFLX/ftBwDIgWVs3LLvh+RnYdJZOQtZ
+         dGVhl+Jc3fpfJ0VsdNwt8lMIfnASYBBolG2wfHqoZPex11u9Ce3eqJowIgKJSOH1nX
+         z1P2SxSzb0/sg==
 Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 016B561247; Mon, 28 Jun 2021 13:06:33 +0000 (UTC)
+        id 850526125F; Mon, 28 Jun 2021 13:10:12 +0000 (UTC)
 From:   bugzilla-daemon@bugzilla.kernel.org
 To:     linux-xfs@vger.kernel.org
 Subject: [Bug 213609] [xfstests xfs/503] testing always hang on 64k directory
  size xfs
-Date:   Mon, 28 Jun 2021 13:06:32 +0000
+Date:   Mon, 28 Jun 2021 13:10:12 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -44,8 +44,8 @@ X-Bugzilla-Resolution:
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: attachments.created
-Message-ID: <bug-213609-201763-eofscAQvTX@https.bugzilla.kernel.org/>
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-213609-201763-HSZHjunUYz@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-213609-201763@https.bugzilla.kernel.org/>
 References: <bug-213609-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -59,10 +59,19 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D213609
 
---- Comment #1 from Zorro Lang (zlang@redhat.com) ---
-Created attachment 297643
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D297643&action=3Dedit
-console log of xfs/503
+--- Comment #2 from Zorro Lang (zlang@redhat.com) ---
+Reproducible on xfs-5.14-merge-6.
+Test with latest upstream xfsprogs for-next branch.
+Build with:
+CONFIG_XFS_FS=3Dm
+CONFIG_XFS_SUPPORT_V4=3Dy
+CONFIG_XFS_QUOTA=3Dy
+CONFIG_XFS_POSIX_ACL=3Dy
+CONFIG_XFS_RT=3Dy
+CONFIG_XFS_ONLINE_SCRUB=3Dy
+CONFIG_XFS_ONLINE_REPAIR=3Dy
+CONFIG_XFS_DEBUG=3Dy
+# CONFIG_XFS_ASSERT_FATAL is not set
 
 --=20
 You may reply to this email to add a comment.
