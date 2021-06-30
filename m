@@ -2,243 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 43CF53B7DF6
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Jun 2021 09:21:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ACA13B804F
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Jun 2021 11:47:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232785AbhF3HXn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Jun 2021 03:23:43 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:52839 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232865AbhF3HXm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Jun 2021 03:23:42 -0400
-Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 235361B0829
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Jun 2021 17:21:13 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1lyUX2-0013NV-IB
-        for linux-xfs@vger.kernel.org; Wed, 30 Jun 2021 17:21:12 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1lyUX2-007M4e-AH
-        for linux-xfs@vger.kernel.org; Wed, 30 Jun 2021 17:21:12 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 5/5] xfs: order CIL checkpoint start records
-Date:   Wed, 30 Jun 2021 17:21:08 +1000
-Message-Id: <20210630072108.1752073-6-david@fromorbit.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210630072108.1752073-1-david@fromorbit.com>
-References: <20210630072108.1752073-1-david@fromorbit.com>
+        id S234085AbhF3Jtj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Jun 2021 05:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234101AbhF3Jti (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Jun 2021 05:49:38 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C209C06175F
+        for <linux-xfs@vger.kernel.org>; Wed, 30 Jun 2021 02:47:09 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id r9-20020a7bc0890000b02901f347b31d55so1073272wmh.2
+        for <linux-xfs@vger.kernel.org>; Wed, 30 Jun 2021 02:47:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Z6oz2a6snhnXVo8MXg6uFjLMjRtla/ZcY7D6SjSAauA=;
+        b=zLTi5aCbnypPB5E3aUA0ZTW2QZ9ElWO1rUMChAnrYkbnv5R1HppvSR83sz83GmhmUA
+         UMxwvrtyn70Zd9AoLodBjAgPxIMvZ1UB4cERbwNt9h4ezFzozjlRXTJceovl8itCNtkO
+         ZHpCXotz6yp1b1LU/oBZfpMMbHJ9z37zfQLOhI93YEXu77Z1hvbdB1hXccB0ErO3BuRM
+         2v2H3xdjL56voJXkKEkXOJouofN6tE6pWAPsziIGqT+x1uxsqXS8aHT7JlV4vp9xlNdX
+         RRmNLJxKm6216ZAGJ10+La1loxmhKlUG8r/gC+MQIkg6soAQE9aR2vguk2YO28brVd4+
+         UeDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Z6oz2a6snhnXVo8MXg6uFjLMjRtla/ZcY7D6SjSAauA=;
+        b=fBGfRjMnK+pMkoDIDP5W64SZa461mCMdCWb7SMRTxgs6kX74OOeaq4XqtN8HTAsdPh
+         q+74eRdTDy5Iulz8ub5sYdLRULVXigf2MkPQ0lbRK1D9IBsZjMnWmbcJAbIJUi5Xe8c7
+         etNfnlEu6Nd4ZCKl3CRZOFRZlpClaHSDoa0SGNy2//HgbnWzf+TwI4lys2Kricm4CRpA
+         aI7stxo96PLpvv0+vwwDahapM3NO7hGcLfYcsBjFEQVWoaZhP37IYQ+raW7UP8Rgfrir
+         41pfadHEmENP8dOkjKceho/MbGgbU+1oRCJUpboL1bZ0pRVCoVcAsPGNVwBRVRWu+E8X
+         E+Ig==
+X-Gm-Message-State: AOAM531mFAVvYKVCg0hX6tcBaISsQnVIJuEjS2K++3pIjjgXI0W15z1t
+        d4GzUPSMxhJELsGcZSWpZeohhg==
+X-Google-Smtp-Source: ABdhPJysgaWNsxoQ1Ekn5yIfyUpjV6tLOTWrZta/4RIlCjFmHAXWqbWe870FTEuNbqmWvtd9IqJeZQ==
+X-Received: by 2002:a1c:7f4a:: with SMTP id a71mr3558850wmd.33.1625046428092;
+        Wed, 30 Jun 2021 02:47:08 -0700 (PDT)
+Received: from dell ([95.144.13.171])
+        by smtp.gmail.com with ESMTPSA id p7sm8990839wrr.68.2021.06.30.02.47.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Jun 2021 02:47:07 -0700 (PDT)
+Date:   Wed, 30 Jun 2021 10:47:05 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Satya Tangirala <satyaprateek2357@gmail.com>
+Cc:     Satya Tangirala <satyat@google.com>,
+        "Theodore Y . Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>, Chao Yu <chao@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v8 0/8] add support for direct I/O with fscrypt using
+ blk-crypto
+Message-ID: <YNw9me1Fd6Siy18A@dell>
+References: <20210121230336.1373726-1-satyat@google.com>
+ <CAF2Aj3jbEnnG1-bHARSt6xF12VKttg7Bt52gV=bEQUkaspDC9w@mail.gmail.com>
+ <YK09eG0xm9dphL/1@google.com>
+ <20210526080224.GI4005783@dell>
+ <20210609024556.GA11153@fractal>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
-        a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
-        a=r6YtysWOX24A:10 a=20KFwNOVAAAA:8 a=0SoGSWBIiDR9d1GlltwA:9
+In-Reply-To: <20210609024556.GA11153@fractal>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Tue, 08 Jun 2021, Satya Tangirala wrote:
 
-Because log recovery depends on strictly ordered start records as
-well as strictly ordered commit records.
+> On Wed, May 26, 2021 at 09:02:24AM +0100, Lee Jones wrote:
+> > On Tue, 25 May 2021, Satya Tangirala wrote:
+> > 65;6200;1c
+> > > On Tue, May 25, 2021 at 01:57:28PM +0100, Lee Jones wrote:
+> > > > On Thu, 21 Jan 2021 at 23:06, Satya Tangirala <satyat@google.com> wrote:
+> > > > 
+> > > > > This patch series adds support for direct I/O with fscrypt using
+> > > > > blk-crypto.
+> > > > >
+> > > > 
+> > > > Is there an update on this set please?
+> > > > 
+> > > > I can't seem to find any reviews or follow-up since v8 was posted back in
+> > > > January.
+> > > > 
+> > > This patchset relies on the block layer fixes patchset here
+> > > https://lore.kernel.org/linux-block/20210325212609.492188-1-satyat@google.com/
+> > > That said, I haven't been able to actively work on both the patchsets
+> > > for a while, but I'll send out updates for both patchsets over the
+> > > next week or so.
+> > 
+> > Thanks Satya, I'd appreciate that.
+> FYI I sent out an updated patch series last week at
+> https://lore.kernel.org/linux-fscrypt/20210604210908.2105870-1-satyat@google.com/
 
-This is a zero day bug in the way XFS writes pipelined transactions
-to the journal which is exposed by fixing the zero day bug that
-prevents the CIL from pipelining checkpoints. This re-introduces
-explicit concurrent commits back into the on-disk journal and hence
-out of order start records.
+If you end up [RESEND]ing this or submitting another version, would
+you mind adding me on Cc please?
 
-The XFS journal commit code has never ordered start records and we
-have relied on strict commit record ordering for correct recovery
-ordering of concurrently written transactions. Unfortunately, root
-cause analysis uncovered the fact that log recovery uses the LSN of
-the start record for transaction commit processing. Hence, whilst
-the commits are processed in strict order by recovery, the LSNs
-associated with the commits can be out of order and so recovery may
-stamp incorrect LSNs into objects and/or misorder intents in the AIL
-for later processing. This can result in log recovery failures
-and/or on disk corruption, sometimes silent.
-
-Because this is a long standing log recovery issue, we can't just
-fix log recovery and call it good. This still leaves older kernels
-susceptible to recovery failures and corruption when replaying a log
-from a kernel that pipelines checkpoints. There is also the issue
-that in-memory ordering for AIL pushing and data integrity
-operations are based on checkpoint start LSNs, and if the start LSN
-is incorrect in the journal, it is also incorrect in memory.
-
-Hence there's really only one choice for fixing this zero-day bug:
-we need to strictly order checkpoint start records in ascending
-sequence order in the log, the same way we already strictly order
-commit records.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_log.c      |  1 +
- fs/xfs/xfs_log_cil.c  | 69 +++++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_log_priv.h |  1 +
- 3 files changed, 58 insertions(+), 13 deletions(-)
-
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index d3e1e1a07cdc..7c9990f64dc5 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -3769,6 +3769,7 @@ xlog_force_shutdown(
- 	 * avoid races.
- 	 */
- 	spin_lock(&log->l_cilp->xc_push_lock);
-+	wake_up_all(&log->l_cilp->xc_start_wait);
- 	wake_up_all(&log->l_cilp->xc_commit_wait);
- 	spin_unlock(&log->l_cilp->xc_push_lock);
- 	xlog_state_shutdown_callbacks(log);
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 30810b896e46..371577073a81 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -595,6 +595,7 @@ xlog_cil_committed(
- 	 */
- 	if (abort) {
- 		spin_lock(&ctx->cil->xc_push_lock);
-+		wake_up_all(&ctx->cil->xc_start_wait);
- 		wake_up_all(&ctx->cil->xc_commit_wait);
- 		spin_unlock(&ctx->cil->xc_push_lock);
- 	}
-@@ -648,7 +649,14 @@ xlog_cil_set_ctx_write_state(
- 	ASSERT(!ctx->commit_lsn);
- 	if (!ctx->start_lsn) {
- 		spin_lock(&cil->xc_push_lock);
-+		/*
-+		 * The LSN we need to pass to the log items on transaction
-+		 * commit is the LSN reported by the first log vector write, not
-+		 * the commit lsn. If we use the commit record lsn then we can
-+		 * move the tail beyond the grant write head.
-+		 */
- 		ctx->start_lsn = lsn;
-+		wake_up_all(&cil->xc_start_wait);
- 		spin_unlock(&cil->xc_push_lock);
- 		return;
- 	}
-@@ -690,10 +698,16 @@ xlog_cil_set_ctx_write_state(
-  * relies on the context LSN being zero until the log write has guaranteed the
-  * LSN that the log write will start at via xlog_state_get_iclog_space().
-  */
-+enum _record_type {
-+	_START_RECORD,
-+	_COMMIT_RECORD,
-+};
-+
- static int
- xlog_cil_order_write(
- 	struct xfs_cil		*cil,
--	xfs_csn_t		sequence)
-+	xfs_csn_t		sequence,
-+	enum _record_type	record)
- {
- 	struct xfs_cil_ctx	*ctx;
- 
-@@ -716,19 +730,47 @@ xlog_cil_order_write(
- 		 */
- 		if (ctx->sequence >= sequence)
- 			continue;
--		if (!ctx->commit_lsn) {
--			/*
--			 * It is still being pushed! Wait for the push to
--			 * complete, then start again from the beginning.
--			 */
--			xlog_wait(&cil->xc_commit_wait, &cil->xc_push_lock);
--			goto restart;
-+
-+		/* Wait until the LSN for the record has been recorded. */
-+		switch (record) {
-+		case _START_RECORD:
-+			if (!ctx->start_lsn) {
-+				xlog_wait(&cil->xc_start_wait, &cil->xc_push_lock);
-+				goto restart;
-+			}
-+			break;
-+		case _COMMIT_RECORD:
-+			if (!ctx->commit_lsn) {
-+				xlog_wait(&cil->xc_commit_wait, &cil->xc_push_lock);
-+				goto restart;
-+			}
-+			break;
- 		}
- 	}
- 	spin_unlock(&cil->xc_push_lock);
- 	return 0;
- }
- 
-+/*
-+ * Write out the log vector change now attached to the CIL context. This will
-+ * write a start record that needs to be strictly ordered in ascending CIL
-+ * sequence order so that log recovery will always use in-order start LSNs when
-+ * replaying checkpoints.
-+ */
-+static int
-+xlog_cil_write_chain(
-+	struct xfs_cil_ctx	*ctx,
-+	struct xfs_log_vec	*chain)
-+{
-+	struct xlog		*log = ctx->cil->xc_log;
-+	int			error;
-+
-+	error = xlog_cil_order_write(ctx->cil, ctx->sequence, _START_RECORD);
-+	if (error)
-+		return error;
-+	return xlog_write(log, ctx, chain, ctx->ticket, XLOG_START_TRANS);
-+}
-+
- /*
-  * Write out the commit record of a checkpoint transaction to close off a
-  * running log write. These commit records are strictly ordered in ascending CIL
-@@ -754,6 +796,10 @@ xlog_cil_write_commit_record(
- 	if (xlog_is_shutdown(log))
- 		return -EIO;
- 
-+	error = xlog_cil_order_write(ctx->cil, ctx->sequence, _COMMIT_RECORD);
-+	if (error)
-+		return error;
-+
- 	error = xlog_write(log, ctx, &vec, ctx->ticket, XLOG_COMMIT_TRANS);
- 	if (error)
- 		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-@@ -963,11 +1009,7 @@ xlog_cil_push_work(
- 	 */
- 	wait_for_completion(&bdev_flush);
- 
--	error = xlog_write(log, ctx, &lvhdr, tic, XLOG_START_TRANS);
--	if (error)
--		goto out_abort_free_ticket;
--
--	error = xlog_cil_order_write(ctx->cil, ctx->sequence);
-+	error = xlog_cil_write_chain(ctx, &lvhdr);
- 	if (error)
- 		goto out_abort_free_ticket;
- 
-@@ -1372,6 +1414,7 @@ xlog_cil_init(
- 	spin_lock_init(&cil->xc_push_lock);
- 	init_waitqueue_head(&cil->xc_push_wait);
- 	init_rwsem(&cil->xc_ctx_lock);
-+	init_waitqueue_head(&cil->xc_start_wait);
- 	init_waitqueue_head(&cil->xc_commit_wait);
- 
- 	INIT_LIST_HEAD(&ctx->committing);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index f74e3968bb84..400471fa12d2 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -271,6 +271,7 @@ struct xfs_cil {
- 	xfs_csn_t		xc_push_seq;
- 	struct list_head	xc_committing;
- 	wait_queue_head_t	xc_commit_wait;
-+	wait_queue_head_t	xc_start_wait;
- 	xfs_csn_t		xc_current_sequence;
- 	struct work_struct	xc_push_work;
- 	wait_queue_head_t	xc_push_wait;	/* background push throttle */
 -- 
-2.31.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
