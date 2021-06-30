@@ -2,93 +2,161 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E4113B7D4C
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Jun 2021 08:14:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8D1A3B7D4B
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Jun 2021 08:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231698AbhF3GRG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Jun 2021 02:17:06 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:47192 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229933AbhF3GRG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Jun 2021 02:17:06 -0400
+        id S232278AbhF3GRF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Jun 2021 02:17:05 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34862 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229874AbhF3GRF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Jun 2021 02:17:05 -0400
 Received: from dread.disaster.area (pa49-179-138-183.pa.nsw.optusnet.com.au [49.179.138.183])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 657F78625D1;
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6C7E71044EBF;
         Wed, 30 Jun 2021 16:14:35 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1lyTUY-0012JH-ID; Wed, 30 Jun 2021 16:14:34 +1000
+        id 1lyTUY-0012JJ-JS; Wed, 30 Jun 2021 16:14:34 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1lyTUY-007LTo-8Z; Wed, 30 Jun 2021 16:14:34 +1000
+        id 1lyTUY-007LTq-Bh; Wed, 30 Jun 2021 16:14:34 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 0/3 v2] mm, xfs: memory allocation improvements
-Date:   Wed, 30 Jun 2021 16:14:28 +1000
-Message-Id: <20210630061431.1750745-1-david@fromorbit.com>
+Subject: [PATCH 1/3] mm: Add kvrealloc()
+Date:   Wed, 30 Jun 2021 16:14:29 +1000
+Message-Id: <20210630061431.1750745-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210630061431.1750745-1-david@fromorbit.com>
+References: <20210630061431.1750745-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
         a=MnllW2CieawZLw/OcHE/Ng==:117 a=MnllW2CieawZLw/OcHE/Ng==:17
-        a=r6YtysWOX24A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=QLtZUzOzXB423iHX4GcA:9 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        a=r6YtysWOX24A:10 a=20KFwNOVAAAA:8 a=FgU_YNmxFDRv79IIi3MA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-HI folks,
+From: Dave Chinner <dchinner@redhat.com>
 
-This is an updated version of the patch series first posted here:
+During log recovery of an XFS filesystem with 64kB directory
+buffers, rebuilding a buffer split across two log records results
+in a memory allocation warning from krealloc like this:
 
-https://lore.kernel.org/linux-xfs/20210625023029.1472466-1-david@fromorbit.com/
+xfs filesystem being mounted at /mnt/scratch supports timestamps until 2038 (0x7fffffff)
+XFS (dm-0): Unmounting Filesystem
+XFS (dm-0): Mounting V5 Filesystem
+XFS (dm-0): Starting recovery (logdev: internal)
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 3435170 at mm/page_alloc.c:3539 get_page_from_freelist+0xdee/0xe40
+.....
+RIP: 0010:get_page_from_freelist+0xdee/0xe40
+Call Trace:
+ ? complete+0x3f/0x50
+ __alloc_pages+0x16f/0x300
+ alloc_pages+0x87/0x110
+ kmalloc_order+0x2c/0x90
+ kmalloc_order_trace+0x1d/0x90
+ __kmalloc_track_caller+0x215/0x270
+ ? xlog_recover_add_to_cont_trans+0x63/0x1f0
+ krealloc+0x54/0xb0
+ xlog_recover_add_to_cont_trans+0x63/0x1f0
+ xlog_recovery_process_trans+0xc1/0xd0
+ xlog_recover_process_ophdr+0x86/0x130
+ xlog_recover_process_data+0x9f/0x160
+ xlog_recover_process+0xa2/0x120
+ xlog_do_recovery_pass+0x40b/0x7d0
+ ? __irq_work_queue_local+0x4f/0x60
+ ? irq_work_queue+0x3a/0x50
+ xlog_do_log_recovery+0x70/0x150
+ xlog_do_recover+0x38/0x1d0
+ xlog_recover+0xd8/0x170
+ xfs_log_mount+0x181/0x300
+ xfs_mountfs+0x4a1/0x9b0
+ xfs_fs_fill_super+0x3c0/0x7b0
+ get_tree_bdev+0x171/0x270
+ ? suffix_kstrtoint.constprop.0+0xf0/0xf0
+ xfs_fs_get_tree+0x15/0x20
+ vfs_get_tree+0x24/0xc0
+ path_mount+0x2f5/0xaf0
+ __x64_sys_mount+0x108/0x140
+ do_syscall_64+0x3a/0x70
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
 
-Changes in this version can be found in the changelog below.
+Essentially, we are taking a multi-order allocation from kmem_alloc()
+(which has an open coded no fail, no warn loop) and then
+reallocating it out to 64kB using krealloc(__GFP_NOFAIL) and that is
+then triggering the above warning.
 
-Cheers,
+This is a regression caused by converting this code from an open
+coded no fail/no warn reallocation loop to using __GFP_NOFAIL.
 
-Dave.
+What we actually need here is kvrealloc(), so that if contiguous
+page allocation fails we fall back to vmalloc() and we don't
+get nasty warnings happening in XFS.
 
------
+Fixes: 771915c4f688 ("xfs: remove kmem_realloc()")
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ fs/xfs/xfs_log_recover.c |  2 +-
+ include/linux/mm.h       |  2 ++
+ mm/util.c                | 15 +++++++++++++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-We're slowly trying to move the XFS code closer to the common memory
-allocation routines everyone else uses. This patch set addresses a
-regression from a previous set of changes (kmem_realloc() removal)
-and removes another couple of kmem wrappers from within the XFS
-code.
-
-The first patch addresses a regression - using large directory
-blocks triggers a warning when calling krealloc() recombine a buffer
-split across across two log records into a single contiguous
-memory buffer. this results in krealloc() being called to allocate a
-64kB buffer with __GFP_NOFAIL being set. This warning is trivially
-reproduced by generic/040 and generic/041 when run with 64kB
-directory block sizes on a 4kB page size machine.
-
-Log recovery really needs to use kvmalloc() like all the other
-"allocate up to 64kB and can't fail" cases in filesystem code (e.g.
-for xattrs), but there's no native kvrealloc() function that
-provides us with the necessary semantics. So rather than add a new
-wrapper, the first patch adds this helper to the common code and
-converts XFS to use it for log recovery.
-
-The latter two patches are removing what are essentially kvmalloc()
-wrappers from XFS. With the more widespread use of
-memalloc_nofs_save/restore(), we can call kvmalloc(GFP_KERNEL) and
-just have it do the right thing because GFP_NOFS contexts are
-covered by PF_MEMALLOC_NOFS task flags now. Hence we don't need
-kmem_alloc_large() anymore. And with the slab code guaranteeing at
-least 512 byte alignment for sector and block sized heap
-allocations, we no longer need the kmem_alloc_io() variant of
-kmem_alloc_large() for IO buffers. So these wrappers can all go
-away...
-
-Version 2:
-- move kvrealloc to mm/util.c
-- check for null being returned by vmalloc
-- remove unused xfs_buftarg_dma_alignment()
-
-
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 1721fce2ec94..fee4fbadea0a 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -2062,7 +2062,7 @@ xlog_recover_add_to_cont_trans(
+ 	old_ptr = item->ri_buf[item->ri_cnt-1].i_addr;
+ 	old_len = item->ri_buf[item->ri_cnt-1].i_len;
+ 
+-	ptr = krealloc(old_ptr, len + old_len, GFP_KERNEL | __GFP_NOFAIL);
++	ptr = kvrealloc(old_ptr, old_len, len + old_len, GFP_KERNEL);
+ 	memcpy(&ptr[old_len], dp, len);
+ 	item->ri_buf[item->ri_cnt-1].i_len += len;
+ 	item->ri_buf[item->ri_cnt-1].i_addr = ptr;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 8ae31622deef..aa720bc0a1d0 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -827,6 +827,8 @@ static inline void *kvcalloc(size_t n, size_t size, gfp_t flags)
+ 	return kvmalloc_array(n, size, flags | __GFP_ZERO);
+ }
+ 
++extern void *kvrealloc(const void *p, size_t oldsize, size_t newsize,
++		gfp_t flags);
+ extern void kvfree(const void *addr);
+ extern void kvfree_sensitive(const void *addr, size_t len);
+ 
+diff --git a/mm/util.c b/mm/util.c
+index a8bf17f18a81..1104339ad2ca 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -635,6 +635,21 @@ void kvfree_sensitive(const void *addr, size_t len)
+ }
+ EXPORT_SYMBOL(kvfree_sensitive);
+ 
++void *kvrealloc(const void *p, size_t oldsize, size_t newsize, gfp_t flags)
++{
++	void *newp;
++
++	if (oldsize >= newsize)
++		return (void *)p;
++	newp = kvmalloc(newsize, flags);
++	if (!newp)
++		return NULL;
++	memcpy(newp, p, oldsize);
++	kvfree(p);
++	return newp;
++}
++EXPORT_SYMBOL(kvrealloc);
++
+ static inline void *__page_rmapping(struct page *page)
+ {
+ 	unsigned long mapping;
+-- 
+2.31.1
 
