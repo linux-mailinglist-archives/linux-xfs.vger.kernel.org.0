@@ -2,18 +2,18 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F493BD8B1
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Jul 2021 16:43:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14E413BD9F6
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Jul 2021 17:18:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233036AbhGFOqI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Jul 2021 10:46:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34208 "EHLO
+        id S232769AbhGFPUe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Jul 2021 11:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232944AbhGFOqA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Jul 2021 10:46:00 -0400
+        with ESMTP id S232752AbhGFPUb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Jul 2021 11:20:31 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B622C0613AC;
-        Tue,  6 Jul 2021 07:26:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA1CC0613DF;
+        Tue,  6 Jul 2021 06:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
