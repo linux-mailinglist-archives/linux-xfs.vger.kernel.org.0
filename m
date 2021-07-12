@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B8E3C5B58
-	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jul 2021 13:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CDFC3C5B59
+	for <lists+linux-xfs@lfdr.de>; Mon, 12 Jul 2021 13:44:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235812AbhGLLQw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 12 Jul 2021 07:16:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40170 "EHLO
+        id S235504AbhGLLRK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 12 Jul 2021 07:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235639AbhGLLQm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Jul 2021 07:16:42 -0400
+        with ESMTP id S235456AbhGLLQ4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 12 Jul 2021 07:16:56 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC64BC0613DD;
-        Mon, 12 Jul 2021 04:13:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC50C0613DD;
+        Mon, 12 Jul 2021 04:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=xieBsUOQPWNOtVW7+/uj5Qg2zjqMrA846E3mzziA//o=; b=UTfOSL6tzWV7idCl9ih30Wy58z
-        83fh5+TUkOV+GmoO5KsvAmkiBGp4eATObFwLzbZhwJX4itAa9KLtTUbH7bxBsvfMlGJ2cOSxbyRhh
-        xatDc/TdKhA7odx/wVzJ4Q0KeCvBq/NB0mtWpHqkY+9pyKg4NeuUoUWEcyVRyqKrwpizyIYzhS5qK
-        K/2KiFtF8NIO61xeSEgMlgjfGhEIlK0RTncaDHj1BgKoYocPmUmeEIkOmbLEiKeL7YCkyOhfE8qXa
-        7FHamCvrmZ2+agcqEmshIvpoHkqCrhtjf5ONRrv0cZEyU3lRt5IGFBaCU+9LEmZRdxH5+1Dv0G6MI
-        2QyrK7wA==;
+        bh=ZA4VP6EOXAg966+D6EAwKT23yxSFLPZH1bPIJnsKkSk=; b=ITMdY4BUJ5Vj5WZnyBThWZK/9g
+        irUEGep3quRLu/9o0HQFXQmkEIuic4crwUowX6x1Yw7xlC6+8yIpGlhSZ5H8/Ad+YwtKeTXTKOOz9
+        KuyUgyZJbyihvwMnHnHhPR4pj3W4XtD08q6weTQC+8jzJvHiQBpNcLP7FD3SrH5PWxxTuJdQtlfR/
+        rMb70B2p1INuVPt6VPCrwveFVDSz6iyefxSvIguZ6npeJCoAxu18HqNOO/tMe/xSheXiWU5JS0fwU
+        RZ94jJjO4sUcnQL1c3g+cHbO5kpwN8axOcjOwksNGy3h3CoMc5go91GMJvg7KgkeMz4O7J5EgxUJw
+        +IfuOymA==;
 Received: from [2001:4bb8:184:8b7c:bd9:61b8:39ba:d78a] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1m2tsR-00HXJw-AB; Mon, 12 Jul 2021 11:13:37 +0000
+        id 1m2tsn-00HXKw-LM; Mon, 12 Jul 2021 11:13:57 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     fstests@vger.kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Subject: [PATCH 5/6] xfs/304: don't turn quota accounting off
-Date:   Mon, 12 Jul 2021 13:11:45 +0200
-Message-Id: <20210712111146.82734-6-hch@lst.de>
+Subject: [PATCH 6/6] xfs/305: don't turn quota accounting off
+Date:   Mon, 12 Jul 2021 13:11:46 +0200
+Message-Id: <20210712111146.82734-7-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210712111146.82734-1-hch@lst.de>
 References: <20210712111146.82734-1-hch@lst.de>
@@ -49,40 +49,22 @@ removing support to turn quota accounting off.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- tests/xfs/304 | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tests/xfs/305 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tests/xfs/304 b/tests/xfs/304
-index 2716ccd5..91fa5d97 100755
---- a/tests/xfs/304
-+++ b/tests/xfs/304
-@@ -31,7 +31,7 @@ QUOTA_DIR=$SCRATCH_MNT/quota_dir
+diff --git a/tests/xfs/305 b/tests/xfs/305
+index 140557a0..0b89499a 100755
+--- a/tests/xfs/305
++++ b/tests/xfs/305
+@@ -38,7 +38,7 @@ _exercise()
  
- mkdir -p $QUOTA_DIR
- echo "*** turn off group quotas"
--xfs_quota -x -c 'off -g' $SCRATCH_MNT
-+xfs_quota -x -c 'disable -g' $SCRATCH_MNT
- rmdir $QUOTA_DIR
- echo "*** umount"
- _scratch_unmount
-@@ -39,7 +39,7 @@ _scratch_unmount
- _qmount
- mkdir -p $QUOTA_DIR
- echo "*** turn off project quotas"
--xfs_quota -x -c 'off -p' $SCRATCH_MNT
-+xfs_quota -x -c 'disable -p' $SCRATCH_MNT
- rmdir $QUOTA_DIR
- echo "*** umount"
- _scratch_unmount
-@@ -47,7 +47,7 @@ _scratch_unmount
- _qmount
- mkdir -p $QUOTA_DIR
- echo "*** turn off group/project quotas"
--xfs_quota -x -c 'off -gp' $SCRATCH_MNT
-+xfs_quota -x -c 'disable -gp' $SCRATCH_MNT
- rmdir $QUOTA_DIR
- echo "*** umount"
- _scratch_unmount
+ 	$FSSTRESS_PROG -d $QUOTA_DIR -n 1000000 -p 100 $FSSTRESS_AVOID >/dev/null 2>&1 &
+ 	sleep 10
+-	xfs_quota -x -c "off -$type" $SCRATCH_DEV
++	xfs_quota -x -c "disable -$type" $SCRATCH_DEV
+ 	sleep 5
+ 	$KILLALL_PROG -q $FSSTRESS_PROG
+ 	wait
 -- 
 2.30.2
 
