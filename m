@@ -2,93 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B7383C7DCD
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 07:04:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1A203C7DD3
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 07:06:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237815AbhGNFH2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Jul 2021 01:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39830 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229451AbhGNFH2 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 14 Jul 2021 01:07:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 016B960FD8;
-        Wed, 14 Jul 2021 05:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626239077;
-        bh=Jc1sNtDQLolCUqZGQica4040YhI273wmJsvNWUazVMU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UWnd/YzekvcZgciRPDO2VDGc5jefYAa1w8p3Vjj4SV7C/lPk0nz0bWt6/xjz0r+LN
-         /vsMehsZND0VXQBUpUt+yqOmVnh0nJnnv+5jeOHtFoErWyN5uO26GhuWQGXnZYFNtx
-         rZxXFverfex9HCcHFguzDqBLrC7mc41WwHaKY51njN+ELp1nH80BNjSPGnY7xW1Wh8
-         WXJ/XCZ0IShzVBu2YPhe/z0Ytdvm3PViCRMF7DWftS9pUMgBxyyzamzDc1wq5GelGt
-         I8To5FlidFdvSjJH5ie48P6mPDmR8ggS4bVkzvnSXWnzw4y1TT5TD1a3/A5cRrodnt
-         8Gl0faYQvuXbQ==
-Date:   Tue, 13 Jul 2021 22:04:36 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Wang Shilong <wangshilong1991@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        Wang Shilong <wshilong@ddn.com>
-Subject: Re: [PATCH v4] fs: forbid invalid project ID
-Message-ID: <20210714050436.GH22402@magnolia>
-References: <20210710143959.58077-1-wangshilong1991@gmail.com>
+        id S229451AbhGNFI6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Jul 2021 01:08:58 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:50935 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237849AbhGNFI5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Jul 2021 01:08:57 -0400
+Received: from dread.disaster.area (pa49-181-34-10.pa.nsw.optusnet.com.au [49.181.34.10])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id EF0721045304
+        for <linux-xfs@vger.kernel.org>; Wed, 14 Jul 2021 15:06:04 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1m3X5v-006KAs-QK
+        for linux-xfs@vger.kernel.org; Wed, 14 Jul 2021 15:06:03 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1m3X5v-00B2m9-GX
+        for linux-xfs@vger.kernel.org; Wed, 14 Jul 2021 15:06:03 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/3 v6] xfs: make CIL pipelining work
+Date:   Wed, 14 Jul 2021 15:05:57 +1000
+Message-Id: <20210714050600.2632218-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210710143959.58077-1-wangshilong1991@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+        a=hdaoRb6WoHYrV466vVKEyw==:117 a=hdaoRb6WoHYrV466vVKEyw==:17
+        a=e_q4qTt1xDgA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=TF2Z0k3je78k5Ci6_tQA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jul 10, 2021 at 10:39:59PM +0800, Wang Shilong wrote:
-> From: Wang Shilong <wshilong@ddn.com>
-> 
-> fileattr_set_prepare() should check if project ID
-> is valid, otherwise dqget() will return NULL for
-> such project ID quota.
-> 
-> Signed-off-by: Wang Shilong <wshilong@ddn.com>
-> ---
-> v3->v3:
-> only check project Id if caller is allowed
-> to change and being changed.
-> 
-> v2->v3: move check before @fsx_projid is accessed
-> and use make_kprojid() helper.
-> 
-> v1->v2: try to fix in the VFS
->  fs/ioctl.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 1e2204fa9963..d4fabb5421cd 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -817,6 +817,14 @@ static int fileattr_set_prepare(struct inode *inode,
->  		if ((old_ma->fsx_xflags ^ fa->fsx_xflags) &
->  				FS_XFLAG_PROJINHERIT)
->  			return -EINVAL;
-> +	} else {
-> +		/*
-> +		 * Caller is allowed to change the project ID. If it is being
-> +		 * changed, make sure that the new value is valid.
-> +		 */
-> +		if (old_ma->fsx_projid != fa->fsx_projid &&
-> +		    !projid_valid(make_kprojid(&init_user_ns, fa->fsx_projid)))
-> +			return -EINVAL;
+This patchset improves the behaviour of the CIL by increasing
+the processing capacity available for pushing changes into the
+journal.
 
-Hmm, for XFS this is sort of a userspace-breaking change in the sense
-that (technically) we've never rejected -1 before.  xfs_quota won't have
-anything to do with that, and (assuming I read the helper/macro
-gooeyness correctly) the vfs quota code won't either, so
+There are two aspects to this. The first is to reduce latency for
+callers that require non-blocking log force behaviour such as the
+AIL.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+The AIL only needs to push on the CIL to get items unpinned, and it
+doesn't need to wait for it to complete, either, before it continues
+onwards trying to push out items to disk. The AIL will back off when
+it reaches it's push target, so it doesn't need to wait on log
+forces to back off when there are pinned items in the AIL.
 
---D
+Hence we add a mechanism to async pushes on the CIL that do not
+block and convert the AIL to use it. This results in the AIL backing
+off on it's own short timeouts and trying to make progress
+repeatedly instead of stalling for seconds waiting for log large CIL
+forces to complete.
 
->  	}
->  
->  	/* Check extent size hints. */
-> -- 
-> 2.27.0
-> 
+This ability to run async CIL pushes then highlights a problem with
+pipelining of the CIL pushes. The pipelining isn't working as
+intended, it's actually serialising and only allowing a single CIL
+push work to be in progress at once.
+
+This can result in the CIL push work being CPU bound and limiting
+the rate at which items can be pushed to the journal. It is also
+creating excessive push latency where the CIL fills and hits the
+hard throttle while waiting for the push work to finish the current
+push and then start on the new push and swap in a new CIL context
+that can be committed to.
+
+Essentially, the problem is an implementation problem, not a design
+flaw. The implementation has a single work attached to the CIL,
+meaning we can only have a single outstanding push work in progress
+at any time. The workqueue can handle more, but we only have a
+single work. So the fix is to move the work to the CIL context so we
+can queue and process multiple works at the same time, thereby
+actually allowing the CIL push work to pipeline in the intended
+manner.
+
+With this change, it's also very clear that the CIL workqueue really
+belongs to the CIL, not the xfs_mount. Having the CIL push have to
+reference through the log and the xfs_mount to reach it's private
+workqueue is quite the layering violation, so fix this up, too.
+
+This has been run through thousands of cycles of generic/019 and
+generic/0475 since the start record ordering issues were fixed by
+"xfs: strictly order log start records" without any log recovery
+failures or corruptions being recorded.
+
+Version 6:
+- split out from aggregated patchset
+- add dependency on "xfs: strictly order log start records" for
+  correct log recovery and runtime AIL ordering behaviour.
+- rebase on 5.14-rc1 + "xfs: strictly order log start records"
+- add patch moving CIL push workqueue into the CIL itself rather
+  than having to go back up to the xfs_mount to access it at
+  runtime.
+
+Version 5:
+- https://lore.kernel.org/linux-xfs/20210603052240.171998-1-david@fromorbit.com/
+
