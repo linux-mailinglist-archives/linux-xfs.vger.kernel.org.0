@@ -2,268 +2,130 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 301273C7BDE
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 04:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7EC3C7C87
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 05:15:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237422AbhGNCh5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Jul 2021 22:37:57 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:59137 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237375AbhGNCh5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Jul 2021 22:37:57 -0400
+        id S237486AbhGNDSb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Jul 2021 23:18:31 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:44831 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237368AbhGNDSb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Jul 2021 23:18:31 -0400
 Received: from dread.disaster.area (pa49-181-34-10.pa.nsw.optusnet.com.au [49.181.34.10])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id DF95A80CAB4;
-        Wed, 14 Jul 2021 12:34:47 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 726C91B128A;
+        Wed, 14 Jul 2021 13:15:25 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1m3UjW-006Hek-Sx; Wed, 14 Jul 2021 12:34:46 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1m3UjW-00Awep-L6; Wed, 14 Jul 2021 12:34:46 +1000
+        id 1m3VMq-006IG9-NF; Wed, 14 Jul 2021 13:15:24 +1000
+Date:   Wed, 14 Jul 2021 13:15:24 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     linux-mm@kvack.org
-Subject: [PATCH 3/3] xfs: replace kmem_alloc_large() with kvmalloc()
-Date:   Wed, 14 Jul 2021 12:34:40 +1000
-Message-Id: <20210714023440.2608690-4-david@fromorbit.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210714023440.2608690-1-david@fromorbit.com>
-References: <20210714023440.2608690-1-david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 5/9] xfs: make forced shutdown processing atomic
+Message-ID: <20210714031524.GV664593@dread.disaster.area>
+References: <20210630063813.1751007-1-david@fromorbit.com>
+ <20210630063813.1751007-6-david@fromorbit.com>
+ <20210709044020.GX11588@locust>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210709044020.GX11588@locust>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
         a=hdaoRb6WoHYrV466vVKEyw==:117 a=hdaoRb6WoHYrV466vVKEyw==:17
-        a=e_q4qTt1xDgA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=dSPyfIX0mPSTpOhiuKoA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=kj9zAlcOel0A:10 a=e_q4qTt1xDgA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=bLZPg2y2iUBQkvzs1M8A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Thu, Jul 08, 2021 at 09:40:20PM -0700, Darrick J. Wong wrote:
+> On Wed, Jun 30, 2021 at 04:38:09PM +1000, Dave Chinner wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > The running of a forced shutdown is a bit of a mess. It does racy
+> > checks for XFS_MOUNT_SHUTDOWN in xfs_do_force_shutdown(), then
+> > does more racy checks in xfs_log_force_unmount() before finally
+> > setting XFS_MOUNT_SHUTDOWN and XLOG_IO_ERROR under the
+> > log->icloglock.
+> > 
+> > Move the checking and setting of XFS_MOUNT_SHUTDOWN into
+> > xfs_do_force_shutdown() so we only process a shutdown once and once
+> > only. Serialise this with the mp->m_sb_lock spinlock so that the
+> > state change is atomic and won't race. Move all the mount specific
+> 
+> Assuming you're working on cleaning /that/ up too, I'll let that go...
 
-There is no reason for this wrapper existing anymore. All the places
-that use KM_NOFS allocation are within transaction contexts and
-hence covered by memalloc_nofs_save/restore contexts. Hence we don't
-need any special handling of vmalloc for large IOs anymore and
-so special casing this code isn't necessary.
+Yes, a forward ported patch set that does this will be posted soon.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/kmem.c                 | 39 -----------------------------------
- fs/xfs/kmem.h                 |  1 -
- fs/xfs/libxfs/xfs_attr_leaf.c |  2 +-
- fs/xfs/scrub/attr.c           | 14 +++++++------
- fs/xfs/scrub/attr.h           |  3 ---
- fs/xfs/xfs_log.c              |  4 ++--
- fs/xfs/xfs_log_cil.c          | 10 ++++++++-
- fs/xfs/xfs_log_recover.c      |  2 +-
- fs/xfs/xfs_trace.h            |  1 -
- 9 files changed, 21 insertions(+), 55 deletions(-)
+> > +	xfs_alert_tag(mp, tag,
+> > +"%s (0x%x) detected at %pS (%s:%d).  Shutting down filesystem.",
+> > +			why, flags, __return_address, fname, lnnum);
+> >  	xfs_alert(mp,
+> >  		"Please unmount the filesystem and rectify the problem(s)");
+> > +	if (xfs_error_level >= XFS_ERRLEVEL_HIGH)
+> > +		xfs_stack_trace();
+> 
+> Doesn't xfs_alert already drop a stack trace for xfs_error_level >=
+> XFS_ERRLEVEL_HIGH ?
 
-diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
-index 3f2979fd2f2b..6f49bf39183c 100644
---- a/fs/xfs/kmem.c
-+++ b/fs/xfs/kmem.c
-@@ -29,42 +29,3 @@ kmem_alloc(size_t size, xfs_km_flags_t flags)
- 		congestion_wait(BLK_RW_ASYNC, HZ/50);
- 	} while (1);
- }
--
--
--/*
-- * __vmalloc() will allocate data pages and auxiliary structures (e.g.
-- * pagetables) with GFP_KERNEL, yet we may be under GFP_NOFS context here. Hence
-- * we need to tell memory reclaim that we are in such a context via
-- * PF_MEMALLOC_NOFS to prevent memory reclaim re-entering the filesystem here
-- * and potentially deadlocking.
-- */
--static void *
--__kmem_vmalloc(size_t size, xfs_km_flags_t flags)
--{
--	unsigned nofs_flag = 0;
--	void	*ptr;
--	gfp_t	lflags = kmem_flags_convert(flags);
--
--	if (flags & KM_NOFS)
--		nofs_flag = memalloc_nofs_save();
--
--	ptr = __vmalloc(size, lflags);
--
--	if (flags & KM_NOFS)
--		memalloc_nofs_restore(nofs_flag);
--
--	return ptr;
--}
--
--void *
--kmem_alloc_large(size_t size, xfs_km_flags_t flags)
--{
--	void	*ptr;
--
--	trace_kmem_alloc_large(size, flags, _RET_IP_);
--
--	ptr = kmem_alloc(size, flags | KM_MAYFAIL);
--	if (ptr)
--		return ptr;
--	return __kmem_vmalloc(size, flags);
--}
-diff --git a/fs/xfs/kmem.h b/fs/xfs/kmem.h
-index 9ff20047f8b8..54da6d717a06 100644
---- a/fs/xfs/kmem.h
-+++ b/fs/xfs/kmem.h
-@@ -57,7 +57,6 @@ kmem_flags_convert(xfs_km_flags_t flags)
- }
- 
- extern void *kmem_alloc(size_t, xfs_km_flags_t);
--extern void *kmem_alloc_large(size_t size, xfs_km_flags_t);
- static inline void  kmem_free(const void *ptr)
- {
- 	kvfree(ptr);
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index b910bd209949..16d64872acc0 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -489,7 +489,7 @@ xfs_attr_copy_value(
- 	}
- 
- 	if (!args->value) {
--		args->value = kmem_alloc_large(valuelen, KM_NOLOCKDEP);
-+		args->value = kvmalloc(valuelen, GFP_KERNEL | __GFP_NOLOCKDEP);
- 		if (!args->value)
- 			return -ENOMEM;
- 	}
-diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index 552af0cf8482..6c36af6dbd35 100644
---- a/fs/xfs/scrub/attr.c
-+++ b/fs/xfs/scrub/attr.c
-@@ -25,11 +25,11 @@
-  * reallocating the buffer if necessary.  Buffer contents are not preserved
-  * across a reallocation.
-  */
--int
-+static int
- xchk_setup_xattr_buf(
- 	struct xfs_scrub	*sc,
- 	size_t			value_size,
--	xfs_km_flags_t		flags)
-+	gfp_t			flags)
- {
- 	size_t			sz;
- 	struct xchk_xattr_buf	*ab = sc->buf;
-@@ -57,7 +57,7 @@ xchk_setup_xattr_buf(
- 	 * Don't zero the buffer upon allocation to avoid runtime overhead.
- 	 * All users must be careful never to read uninitialized contents.
- 	 */
--	ab = kmem_alloc_large(sizeof(*ab) + sz, flags);
-+	ab = kvmalloc(sizeof(*ab) + sz, flags);
- 	if (!ab)
- 		return -ENOMEM;
- 
-@@ -79,7 +79,7 @@ xchk_setup_xattr(
- 	 * without the inode lock held, which means we can sleep.
- 	 */
- 	if (sc->flags & XCHK_TRY_HARDER) {
--		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX, 0);
-+		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX, GFP_KERNEL);
- 		if (error)
- 			return error;
- 	}
-@@ -138,7 +138,8 @@ xchk_xattr_listent(
- 	 * doesn't work, we overload the seen_enough variable to convey
- 	 * the error message back to the main scrub function.
- 	 */
--	error = xchk_setup_xattr_buf(sx->sc, valuelen, KM_MAYFAIL);
-+	error = xchk_setup_xattr_buf(sx->sc, valuelen,
-+			GFP_KERNEL | __GFP_RETRY_MAYFAIL);
- 	if (error == -ENOMEM)
- 		error = -EDEADLOCK;
- 	if (error) {
-@@ -323,7 +324,8 @@ xchk_xattr_block(
- 		return 0;
- 
- 	/* Allocate memory for block usage checking. */
--	error = xchk_setup_xattr_buf(ds->sc, 0, KM_MAYFAIL);
-+	error = xchk_setup_xattr_buf(ds->sc, 0,
-+			GFP_KERNEL | __GFP_RETRY_MAYFAIL);
- 	if (error == -ENOMEM)
- 		return -EDEADLOCK;
- 	if (error)
-diff --git a/fs/xfs/scrub/attr.h b/fs/xfs/scrub/attr.h
-index 13a1d2e8424d..1719e1c4da59 100644
---- a/fs/xfs/scrub/attr.h
-+++ b/fs/xfs/scrub/attr.h
-@@ -65,7 +65,4 @@ xchk_xattr_dstmap(
- 			BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
- }
- 
--int xchk_setup_xattr_buf(struct xfs_scrub *sc, size_t value_size,
--		xfs_km_flags_t flags);
--
- #endif	/* __XFS_SCRUB_ATTR_H__ */
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 826b3cf5fd72..ec3668508acf 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1462,8 +1462,8 @@ xlog_alloc_log(
- 		iclog->ic_prev = prev_iclog;
- 		prev_iclog = iclog;
- 
--		iclog->ic_data = kmem_alloc_large(log->l_iclog_size,
--						KM_MAYFAIL | KM_ZERO);
-+		iclog->ic_data = kvzalloc(log->l_iclog_size,
-+				GFP_KERNEL | __GFP_RETRY_MAYFAIL);
- 		if (!iclog->ic_data)
- 			goto out_free_iclog;
- #ifdef DEBUG
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index b128aaa9b870..d162e8b83e90 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -185,7 +185,15 @@ xlog_cil_alloc_shadow_bufs(
- 			 */
- 			kmem_free(lip->li_lv_shadow);
- 
--			lv = kmem_alloc_large(buf_size, KM_NOFS);
-+			/*
-+			 * We are in transaction context, which means this
-+			 * allocation will pick up GFP_NOFS from the
-+			 * memalloc_nofs_save/restore context the transaction
-+			 * holds. This means we can use GFP_KERNEL here so the
-+			 * generic kvmalloc() code will run vmalloc on
-+			 * contiguous page allocation failure as we require.
-+			 */
-+			lv = kvmalloc(buf_size, GFP_KERNEL);
- 			memset(lv, 0, xlog_cil_iovec_space(niovecs));
- 
- 			lv->lv_item = lip;
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index d55fc7caa227..16df33f838cc 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -106,7 +106,7 @@ xlog_alloc_buffer(
- 	if (nbblks > 1 && log->l_sectBBsize > 1)
- 		nbblks += log->l_sectBBsize;
- 	nbblks = round_up(nbblks, log->l_sectBBsize);
--	return kmem_alloc_large(BBTOB(nbblks), KM_MAYFAIL | KM_ZERO);
-+	return kvzalloc(BBTOB(nbblks), GFP_KERNEL | __GFP_RETRY_MAYFAIL);
- }
- 
- /*
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 6865e838a71b..38f2f67303f7 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -3689,7 +3689,6 @@ DEFINE_EVENT(xfs_kmem_class, name, \
- 	TP_PROTO(ssize_t size, int flags, unsigned long caller_ip), \
- 	TP_ARGS(size, flags, caller_ip))
- DEFINE_KMEM_EVENT(kmem_alloc);
--DEFINE_KMEM_EVENT(kmem_alloc_large);
- 
- TRACE_EVENT(xfs_check_new_dalign,
- 	TP_PROTO(struct xfs_mount *mp, int new_dalign, xfs_ino_t calc_rootino),
+It does? I've never seen it do that, and the existing code implies
+it doesn't do this, either, and that's the logic was looking at
+here:
+
+        if (flags & SHUTDOWN_CORRUPT_INCORE) {
+                xfs_alert_tag(mp, XFS_PTAG_SHUTDOWN_CORRUPT,
+"Corruption of in-memory data (0x%x) detected at %pS (%s:%d).  Shutting down filesystem",
+                                flags, __return_address, fname, lnnum);
+                if (XFS_ERRLEVEL_HIGH <= xfs_error_level)
+                        xfs_stack_trace();
+	} else if (....)
+
+Yes, xfs_alert_tag() does not trigger a stack trace at all, but
+there's an unconditional xfs_alert() call after this so if that
+issues stack traces then we'd get a double stack trace on all
+SHUTDOWN_CORRUPT_INCORE incidents. AFAICT, that doesn't actually
+happen....
+
+This pattern is repeated in several places - look at
+xfs_inode_verifier_error(), xfs_buf_verifier_error(), and
+xfs_buf_corruption_error(). They all have xfs_alert() calls, then
+follow it up with a specific error level check for a stack dump.
+
+Hmmm, it looks like xfs_alert() was intended to dump stacks, but I
+don't think it works:
+
+        if (!kstrtoint(kern_level, 0, &level) &&                \
+            level <= LOGLEVEL_ERR &&                            \
+            xfs_error_level >= XFS_ERRLEVEL_HIGH)               \
+                xfs_stack_trace();                              \
+
+And kern_level is KERN_ALERT, which is:
+
+#define KERN_SOH        "\001"
+....
+#define KERN_ALERT      KERN_SOH "1"
+
+And:
+
+#define LOGLEVEL_ERR            3       /* error conditions */
+
+So what does kstrtoint() return when passed the string "\0011"? It's
+not actually an integer string...
+
+Hmmm, I think it returns -EINVAL, which means it then uses level
+uninitialised, and the result is .... unpredictable it is likely
+no stack trace is emitted....
+
+Fixing this mess is out of scope for this patchset.  The changes in
+this patchset don't change the existing pattern of the function of
+unconditionally calling xfs_alert() and conditionally and explicitly
+dumping stack traces manually. I'll add it to my ever growing list
+of cleanups that need to be done...
+
+Cheers,
+
+Dave.
 -- 
-2.31.1
-
+Dave Chinner
+david@fromorbit.com
