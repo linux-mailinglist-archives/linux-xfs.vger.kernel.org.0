@@ -2,125 +2,588 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33ECC3C8376
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 13:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A92CE3C840D
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 13:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239237AbhGNLOf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Jul 2021 07:14:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37635 "EHLO
+        id S239064AbhGNLuF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Jul 2021 07:50:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36127 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239236AbhGNLOf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Jul 2021 07:14:35 -0400
+        by vger.kernel.org with ESMTP id S238362AbhGNLuE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Jul 2021 07:50:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626261103;
+        s=mimecast20190719; t=1626263232;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ShDyfqu1SP+9DmcTRCtAwCgTKpF0tA/vGrl6Ux26IQ4=;
-        b=H3e1x0qQ5X++4LVsaK/fCIIOhcfq1aV9QDji1wGtpHkYGIVxfuqpM/yabVj1VjaoaHJm/I
-        b/NiAg9KkcSN9Kxss+3/LOXU6F0T1BnH8mQI4kUj+fngF6E6x5uJi1fgVgEf764evyorXo
-        1K33nSuQLgvyUIsNBssQNFJpGnW8Tx8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-501-t7Bfs0BSOgO2VQ6uEw9W4Q-1; Wed, 14 Jul 2021 07:11:42 -0400
-X-MC-Unique: t7Bfs0BSOgO2VQ6uEw9W4Q-1
-Received: by mail-wm1-f71.google.com with SMTP id b26-20020a7bc25a0000b0290218757e2783so639644wmj.7
-        for <linux-xfs@vger.kernel.org>; Wed, 14 Jul 2021 04:11:41 -0700 (PDT)
+        bh=44/HOvjcavrKiQRzUuff7ttudS3BNk+8eaUid84rEsE=;
+        b=MjZjoIkSYCZ5guEini7s5u56fEUt5qeAQoYsHNHcd33mVLBMW6g++QhX90mVs8RWMJQ3YC
+        QMzKiAFnOziV2BR4Cd8TPRmscxtw4I8+ZyomBnOSWMVK+gxRJkzspzD3up91Q/bx3rrMHL
+        X3i/uf1KP1kQG5YbGBXvske23mqb6SE=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-7BtPN8TtN6uYA2jyhKz0HA-1; Wed, 14 Jul 2021 07:47:11 -0400
+X-MC-Unique: 7BtPN8TtN6uYA2jyhKz0HA-1
+Received: by mail-wr1-f70.google.com with SMTP id r18-20020adff1120000b029013e2b4ee624so1399071wro.1
+        for <linux-xfs@vger.kernel.org>; Wed, 14 Jul 2021 04:47:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to;
-        bh=ShDyfqu1SP+9DmcTRCtAwCgTKpF0tA/vGrl6Ux26IQ4=;
-        b=JEAWKba7ZFiNhoNLaT+9xQpyYj1B6KsVVa6sJ+WTMbK7rjZG4NX49U/6FGj7DVypJY
-         q29mGGKxfH15u+/rZff+AnDg21sITW5ozsAEaRM57vqOARAGhdZTFT/5j5rHsi5LX9ch
-         GMQHBTvujG0RrmvQpC52gBBgnTSBiIHZaoFjVdlSSmE8vrUugOwQ0XO6I6paXIrAEk/j
-         1Ad0w5YzbUKocZ7FJhvkrKY8EASkapyKAUoa9AHcrm8xKDC4kHGtzbQHhpmX4/7Is60j
-         CQgUU6Q6G6tHOCzZdP+XTu/cpkLlmoYFai+tty1FKH/gejyyIiAPrr88h9V2EDRz6U+l
-         iLbw==
-X-Gm-Message-State: AOAM531LxupYL5pzGOh4COjS3za09chaJiSrAWQV2904s2SOYABdUWjP
-        Szs5ZK8mMJXxO8AgyrTXDUm+ZC/IW6Q6D9OPzPRuxuTBHGKr4MQvqaQweG61CLSRIGx7Wjqz1Mh
-        UDIaQKBvBHKhlMDFzUpbu
-X-Received: by 2002:a5d:46cc:: with SMTP id g12mr11840536wrs.136.1626261100710;
-        Wed, 14 Jul 2021 04:11:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJykZZupVc07QpvK87qaeThmg1730XxOfN2Izkn0HjG8d3B5L1OE8sQ6vAmeLyJRoRbiuPnqNQ==
-X-Received: by 2002:a5d:46cc:: with SMTP id g12mr11840511wrs.136.1626261100529;
-        Wed, 14 Jul 2021 04:11:40 -0700 (PDT)
+        bh=44/HOvjcavrKiQRzUuff7ttudS3BNk+8eaUid84rEsE=;
+        b=hNfEhOUYS+s9baIBemDRIC6AhnDHHfCFpmcF6bBmgJDT1ipvHgthHdWepLLBWWEn98
+         1dPVFJhrQWzUkKTsYwMRGVmY7UYMiuz6HF1flLV5GuiL4D1lSsR0QUbePOo2QXC2ibTa
+         K6hoylr6IRNFwDVEmMBQcVGKdnISmHKgYkrvMsYITfKw7naxdojcy3+dDgzR449z+F0B
+         Ed9CQr9zgsIr5AbCNNkyNlGQaor8wWNCPwm5j9YDpoiTqZHjGHrZ2XYF8qzoEiYoxVqd
+         7eZRQFq/Yy2VYB6XXoQ+9wcNszaBL4RIPgLYI1d85XS7LrKUxh84xUZczxEeYTqu+CwG
+         iCnw==
+X-Gm-Message-State: AOAM531dEV/KlhRjFvl4GcJTcGiswlVk7F/oIvqpu2SGIXVPWOiQU1Ml
+        Y+52bBKzve1MaGVWBCqx/4pUou5ffI47CJCYPNEpweHCWKbbLK0znlAmFr+YDxz/U/r/lFdpkpS
+        u5lIPzc75hyqv9CaxXq+B
+X-Received: by 2002:a5d:4a0f:: with SMTP id m15mr12445124wrq.350.1626263229627;
+        Wed, 14 Jul 2021 04:47:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyVkJox8wLheYzm7Iypq8RiYBDW07A0fRsAZY3s621lLjxhcHAowizkkefQPiPv+rhJpFFYEw==
+X-Received: by 2002:a5d:4a0f:: with SMTP id m15mr12445093wrq.350.1626263229394;
+        Wed, 14 Jul 2021 04:47:09 -0700 (PDT)
 Received: from omega.lan (ip4-46-39-172-19.cust.nbox.cz. [46.39.172.19])
-        by smtp.gmail.com with ESMTPSA id d8sm2280298wra.41.2021.07.14.04.11.39
+        by smtp.gmail.com with ESMTPSA id q7sm1888657wmq.33.2021.07.14.04.47.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jul 2021 04:11:40 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 13:11:38 +0200
+        Wed, 14 Jul 2021 04:47:08 -0700 (PDT)
+Date:   Wed, 14 Jul 2021 13:47:07 +0200
 From:   Carlos Maiolino <cmaiolino@redhat.com>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/3] xfs: remove the flags argument to xfs_qm_dquot_walk
-Message-ID: <20210714111138.4vd6s4ukncx7zb6s@omega.lan>
+Subject: Re: [PATCH 3/3] xfs: remove the active vs running quota
+ differentiation
+Message-ID: <20210714114707.ppv7wt3vv6mqec36@omega.lan>
 Mail-Followup-To: Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
 References: <20210712111426.83004-1-hch@lst.de>
- <20210712111426.83004-3-hch@lst.de>
+ <20210712111426.83004-4-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210712111426.83004-3-hch@lst.de>
+In-Reply-To: <20210712111426.83004-4-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 12, 2021 at 01:14:25PM +0200, Christoph Hellwig wrote:
-> We always purge all dquots now, so drop the argument.
+On Mon, Jul 12, 2021 at 01:14:26PM +0200, Christoph Hellwig wrote:
+> These only made a difference when quotaoff supported disabling quota
+> accounting on a mounted file system, so we can switch everyone to use
+> a single set of flags and helpers now. Note that the *QUOTA_ON naming
+> for the helpers is kept as it was the much more commonly used one.
 > 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/xfs/libxfs/xfs_quota_defs.h | 30 +++-----------------
+>  fs/xfs/scrub/quota.c           |  2 +-
+>  fs/xfs/xfs_dquot.c             |  3 --
+>  fs/xfs/xfs_ioctl.c             |  2 +-
+>  fs/xfs/xfs_iops.c              |  4 +--
+>  fs/xfs/xfs_mount.c             |  4 +--
+>  fs/xfs/xfs_qm.c                | 26 ++++++++---------
+>  fs/xfs/xfs_qm_syscalls.c       |  2 +-
+>  fs/xfs/xfs_quotaops.c          | 30 +++++++-------------
+>  fs/xfs/xfs_super.c             | 51 ++++++++++++++--------------------
+>  fs/xfs/xfs_trans_dquot.c       | 11 ++++----
+>  11 files changed, 58 insertions(+), 107 deletions(-)
+
+Looks good
 
 Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 
-
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_qm.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
 > 
+> diff --git a/fs/xfs/libxfs/xfs_quota_defs.h b/fs/xfs/libxfs/xfs_quota_defs.h
+> index 0f0af4e3503293..a02c5062f9b292 100644
+> --- a/fs/xfs/libxfs/xfs_quota_defs.h
+> +++ b/fs/xfs/libxfs/xfs_quota_defs.h
+> @@ -60,36 +60,14 @@ typedef uint8_t		xfs_dqtype_t;
+>  #define XFS_DQUOT_LOGRES(mp)	\
+>  	((sizeof(struct xfs_dq_logformat) + sizeof(struct xfs_disk_dquot)) * 6)
+>  
+> -#define XFS_IS_QUOTA_RUNNING(mp)	((mp)->m_qflags & XFS_ALL_QUOTA_ACCT)
+> -#define XFS_IS_UQUOTA_RUNNING(mp)	((mp)->m_qflags & XFS_UQUOTA_ACCT)
+> -#define XFS_IS_PQUOTA_RUNNING(mp)	((mp)->m_qflags & XFS_PQUOTA_ACCT)
+> -#define XFS_IS_GQUOTA_RUNNING(mp)	((mp)->m_qflags & XFS_GQUOTA_ACCT)
+> +#define XFS_IS_QUOTA_ON(mp)		((mp)->m_qflags & XFS_ALL_QUOTA_ACCT)
+> +#define XFS_IS_UQUOTA_ON(mp)		((mp)->m_qflags & XFS_UQUOTA_ACCT)
+> +#define XFS_IS_PQUOTA_ON(mp)		((mp)->m_qflags & XFS_PQUOTA_ACCT)
+> +#define XFS_IS_GQUOTA_ON(mp)		((mp)->m_qflags & XFS_GQUOTA_ACCT)
+>  #define XFS_IS_UQUOTA_ENFORCED(mp)	((mp)->m_qflags & XFS_UQUOTA_ENFD)
+>  #define XFS_IS_GQUOTA_ENFORCED(mp)	((mp)->m_qflags & XFS_GQUOTA_ENFD)
+>  #define XFS_IS_PQUOTA_ENFORCED(mp)	((mp)->m_qflags & XFS_PQUOTA_ENFD)
+>  
+> -/*
+> - * Incore only flags for quotaoff - these bits get cleared when quota(s)
+> - * are in the process of getting turned off. These flags are in m_qflags but
+> - * never in sb_qflags.
+> - */
+> -#define XFS_UQUOTA_ACTIVE	0x1000  /* uquotas are being turned off */
+> -#define XFS_GQUOTA_ACTIVE	0x2000  /* gquotas are being turned off */
+> -#define XFS_PQUOTA_ACTIVE	0x4000  /* pquotas are being turned off */
+> -#define XFS_ALL_QUOTA_ACTIVE	\
+> -	(XFS_UQUOTA_ACTIVE | XFS_GQUOTA_ACTIVE | XFS_PQUOTA_ACTIVE)
+> -
+> -/*
+> - * Checking XFS_IS_*QUOTA_ON() while holding any inode lock guarantees
+> - * quota will be not be switched off as long as that inode lock is held.
+> - */
+> -#define XFS_IS_QUOTA_ON(mp)	((mp)->m_qflags & (XFS_UQUOTA_ACTIVE | \
+> -						   XFS_GQUOTA_ACTIVE | \
+> -						   XFS_PQUOTA_ACTIVE))
+> -#define XFS_IS_UQUOTA_ON(mp)	((mp)->m_qflags & XFS_UQUOTA_ACTIVE)
+> -#define XFS_IS_GQUOTA_ON(mp)	((mp)->m_qflags & XFS_GQUOTA_ACTIVE)
+> -#define XFS_IS_PQUOTA_ON(mp)	((mp)->m_qflags & XFS_PQUOTA_ACTIVE)
+> -
+>  /*
+>   * Flags to tell various functions what to do. Not all of these are meaningful
+>   * to a single function. None of these XFS_QMOPT_* flags are meant to have
+> diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
+> index acbb9839d42fbd..3cccd6d5b57755 100644
+> --- a/fs/xfs/scrub/quota.c
+> +++ b/fs/xfs/scrub/quota.c
+> @@ -42,7 +42,7 @@ xchk_setup_quota(
+>  	xfs_dqtype_t		dqtype;
+>  	int			error;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(sc->mp) || !XFS_IS_QUOTA_ON(sc->mp))
+> +	if (!XFS_IS_QUOTA_ON(sc->mp))
+>  		return -ENOENT;
+>  
+>  	dqtype = xchk_quota_to_dqtype(sc);
+> diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+> index ecd5059d6928f7..c301b18b7685b1 100644
+> --- a/fs/xfs/xfs_dquot.c
+> +++ b/fs/xfs/xfs_dquot.c
+> @@ -847,9 +847,6 @@ xfs_qm_dqget_checks(
+>  	struct xfs_mount	*mp,
+>  	xfs_dqtype_t		type)
+>  {
+> -	if (WARN_ON_ONCE(!XFS_IS_QUOTA_RUNNING(mp)))
+> -		return -ESRCH;
+> -
+>  	switch (type) {
+>  	case XFS_DQTYPE_USER:
+>  		if (!XFS_IS_UQUOTA_ON(mp))
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 65270e63c032a0..9f4aa1477e2fca 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1433,7 +1433,7 @@ xfs_fileattr_set(
+>  
+>  	/* Change the ownerships and register project quota modifications */
+>  	if (ip->i_projid != fa->fsx_projid) {
+> -		if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_PQUOTA_ON(mp)) {
+> +		if (XFS_IS_PQUOTA_ON(mp)) {
+>  			olddquot = xfs_qm_vop_chown(tp, ip,
+>  						&ip->i_pdquot, pdqp);
+>  		}
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 93c082db04b78c..327d65ef1e268c 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -778,7 +778,7 @@ xfs_setattr_nonsize(
+>  		 * in the transaction.
+>  		 */
+>  		if (!uid_eq(iuid, uid)) {
+> -			if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_UQUOTA_ON(mp)) {
+> +			if (XFS_IS_UQUOTA_ON(mp)) {
+>  				ASSERT(mask & ATTR_UID);
+>  				ASSERT(udqp);
+>  				olddquot1 = xfs_qm_vop_chown(tp, ip,
+> @@ -787,7 +787,7 @@ xfs_setattr_nonsize(
+>  			inode->i_uid = uid;
+>  		}
+>  		if (!gid_eq(igid, gid)) {
+> -			if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_GQUOTA_ON(mp)) {
+> +			if (XFS_IS_GQUOTA_ON(mp)) {
+>  				ASSERT(xfs_sb_version_has_pquotino(&mp->m_sb) ||
+>  				       !XFS_IS_PQUOTA_ON(mp));
+>  				ASSERT(mask & ATTR_GID);
+> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+> index d0755494597f99..baf7b323cb15eb 100644
+> --- a/fs/xfs/xfs_mount.c
+> +++ b/fs/xfs/xfs_mount.c
+> @@ -836,13 +836,11 @@ xfs_mountfs(
+>  	/*
+>  	 * Initialise the XFS quota management subsystem for this mount
+>  	 */
+> -	if (XFS_IS_QUOTA_RUNNING(mp)) {
+> +	if (XFS_IS_QUOTA_ON(mp)) {
+>  		error = xfs_qm_newmount(mp, &quotamount, &quotaflags);
+>  		if (error)
+>  			goto out_rtunmount;
+>  	} else {
+> -		ASSERT(!XFS_IS_QUOTA_ON(mp));
+> -
+>  		/*
+>  		 * If a file system had quotas running earlier, but decided to
+>  		 * mount without -o uquota/pquota/gquota options, revoke the
 > diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-> index 580b9dba21122b..2b34273d0405e7 100644
+> index 2b34273d0405e7..351d99bc52e5f8 100644
 > --- a/fs/xfs/xfs_qm.c
 > +++ b/fs/xfs/xfs_qm.c
-> @@ -187,15 +187,11 @@ xfs_qm_dqpurge(
->   */
->  static void
->  xfs_qm_dqpurge_all(
-> -	struct xfs_mount	*mp,
-> -	uint			flags)
-> +	struct xfs_mount	*mp)
+> @@ -295,8 +295,6 @@ xfs_qm_need_dqattach(
 >  {
-> -	if (flags & XFS_QMOPT_UQUOTA)
-> -		xfs_qm_dquot_walk(mp, XFS_DQTYPE_USER, xfs_qm_dqpurge, NULL);
-> -	if (flags & XFS_QMOPT_GQUOTA)
-> -		xfs_qm_dquot_walk(mp, XFS_DQTYPE_GROUP, xfs_qm_dqpurge, NULL);
-> -	if (flags & XFS_QMOPT_PQUOTA)
-> -		xfs_qm_dquot_walk(mp, XFS_DQTYPE_PROJ, xfs_qm_dqpurge, NULL);
-> +	xfs_qm_dquot_walk(mp, XFS_DQTYPE_USER, xfs_qm_dqpurge, NULL);
-> +	xfs_qm_dquot_walk(mp, XFS_DQTYPE_GROUP, xfs_qm_dqpurge, NULL);
-> +	xfs_qm_dquot_walk(mp, XFS_DQTYPE_PROJ, xfs_qm_dqpurge, NULL);
->  }
+>  	struct xfs_mount	*mp = ip->i_mount;
 >  
->  /*
-> @@ -206,7 +202,7 @@ xfs_qm_unmount(
->  	struct xfs_mount	*mp)
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> -		return false;
+>  	if (!XFS_IS_QUOTA_ON(mp))
+>  		return false;
+>  	if (!XFS_NOT_DQATTACHED(mp, ip))
+> @@ -631,7 +629,7 @@ xfs_qm_init_quotainfo(
+>  	struct xfs_quotainfo	*qinf;
+>  	int			error;
+>  
+> -	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
+> +	ASSERT(XFS_IS_QUOTA_ON(mp));
+>  
+>  	qinf = mp->m_quotainfo = kmem_zalloc(sizeof(struct xfs_quotainfo), 0);
+>  
+> @@ -676,11 +674,11 @@ xfs_qm_init_quotainfo(
+>  	xfs_qm_init_timelimits(mp, XFS_DQTYPE_GROUP);
+>  	xfs_qm_init_timelimits(mp, XFS_DQTYPE_PROJ);
+>  
+> -	if (XFS_IS_UQUOTA_RUNNING(mp))
+> +	if (XFS_IS_UQUOTA_ON(mp))
+>  		xfs_qm_set_defquota(mp, XFS_DQTYPE_USER, qinf);
+> -	if (XFS_IS_GQUOTA_RUNNING(mp))
+> +	if (XFS_IS_GQUOTA_ON(mp))
+>  		xfs_qm_set_defquota(mp, XFS_DQTYPE_GROUP, qinf);
+> -	if (XFS_IS_PQUOTA_RUNNING(mp))
+> +	if (XFS_IS_PQUOTA_ON(mp))
+>  		xfs_qm_set_defquota(mp, XFS_DQTYPE_PROJ, qinf);
+>  
+>  	qinf->qi_shrinker.count_objects = xfs_qm_shrink_count;
+> @@ -1143,7 +1141,7 @@ xfs_qm_dqusage_adjust(
+>  	xfs_filblks_t		rtblks = 0;	/* total rt blks */
+>  	int			error;
+>  
+> -	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
+> +	ASSERT(XFS_IS_QUOTA_ON(mp));
+>  
+>  	/*
+>  	 * rootino must have its resources accounted for, not so with the quota
+> @@ -1284,7 +1282,7 @@ xfs_qm_quotacheck(
+>  	flags = 0;
+>  
+>  	ASSERT(uip || gip || pip);
+> -	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
+> +	ASSERT(XFS_IS_QUOTA_ON(mp));
+>  
+>  	xfs_notice(mp, "Quotacheck needed: Please wait.");
+>  
+> @@ -1414,7 +1412,7 @@ xfs_qm_mount_quotas(
+>  		goto write_changes;
+>  	}
+>  
+> -	ASSERT(XFS_IS_QUOTA_RUNNING(mp));
+> +	ASSERT(XFS_IS_QUOTA_ON(mp));
+>  
+>  	/*
+>  	 * Allocate the quotainfo structure inside the mount struct, and
+> @@ -1469,7 +1467,7 @@ xfs_qm_mount_quotas(
+>  			 * the incore structures are convinced that quotas are
+>  			 * off, but the on disk superblock doesn't know that !
+>  			 */
+> -			ASSERT(!(XFS_IS_QUOTA_RUNNING(mp)));
+> +			ASSERT(!(XFS_IS_QUOTA_ON(mp)));
+>  			xfs_alert(mp, "%s: Superblock update failed!",
+>  				__func__);
+>  		}
+> @@ -1641,7 +1639,7 @@ xfs_qm_vop_dqalloc(
+>  	int			error;
+>  	uint			lockflags;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return 0;
+>  
+>  	lockflags = XFS_ILOCK_EXCL;
+> @@ -1772,7 +1770,7 @@ xfs_qm_vop_chown(
+>  
+>  
+>  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> -	ASSERT(XFS_IS_QUOTA_RUNNING(ip->i_mount));
+> +	ASSERT(XFS_IS_QUOTA_ON(ip->i_mount));
+>  
+>  	/* old dquot */
+>  	prevdq = *IO_olddq;
+> @@ -1825,7 +1823,7 @@ xfs_qm_vop_rename_dqattach(
+>  	struct xfs_mount	*mp = i_tab[0]->i_mount;
+>  	int			i;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return 0;
+>  
+>  	for (i = 0; (i < 4 && i_tab[i]); i++) {
+> @@ -1856,7 +1854,7 @@ xfs_qm_vop_create_dqattach(
 >  {
->  	if (mp->m_quotainfo) {
-> -		xfs_qm_dqpurge_all(mp, XFS_QMOPT_QUOTALL);
-> +		xfs_qm_dqpurge_all(mp);
->  		xfs_qm_destroy_quotainfo(mp);
->  	}
+>  	struct xfs_mount	*mp = tp->t_mountp;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return;
+>  
+>  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+> diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+> index e00067a142a094..b5685ce666f70d 100644
+> --- a/fs/xfs/xfs_qm_syscalls.c
+> +++ b/fs/xfs/xfs_qm_syscalls.c
+> @@ -204,7 +204,7 @@ xfs_qm_scall_quotaon(
+>  	     (mp->m_qflags & XFS_GQUOTA_ACCT)))
+>  		return 0;
+>  
+> -	if (! XFS_IS_QUOTA_RUNNING(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return -ESRCH;
+>  
+>  	/*
+> diff --git a/fs/xfs/xfs_quotaops.c b/fs/xfs/xfs_quotaops.c
+> index 88d70c236a5445..07989bd677289a 100644
+> --- a/fs/xfs/xfs_quotaops.c
+> +++ b/fs/xfs/xfs_quotaops.c
+> @@ -60,18 +60,18 @@ xfs_fs_get_quota_state(
+>  	struct xfs_quotainfo *q = mp->m_quotainfo;
+>  
+>  	memset(state, 0, sizeof(*state));
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return 0;
+>  	state->s_incoredqs = q->qi_dquots;
+> -	if (XFS_IS_UQUOTA_RUNNING(mp))
+> +	if (XFS_IS_UQUOTA_ON(mp))
+>  		state->s_state[USRQUOTA].flags |= QCI_ACCT_ENABLED;
+>  	if (XFS_IS_UQUOTA_ENFORCED(mp))
+>  		state->s_state[USRQUOTA].flags |= QCI_LIMITS_ENFORCED;
+> -	if (XFS_IS_GQUOTA_RUNNING(mp))
+> +	if (XFS_IS_GQUOTA_ON(mp))
+>  		state->s_state[GRPQUOTA].flags |= QCI_ACCT_ENABLED;
+>  	if (XFS_IS_GQUOTA_ENFORCED(mp))
+>  		state->s_state[GRPQUOTA].flags |= QCI_LIMITS_ENFORCED;
+> -	if (XFS_IS_PQUOTA_RUNNING(mp))
+> +	if (XFS_IS_PQUOTA_ON(mp))
+>  		state->s_state[PRJQUOTA].flags |= QCI_ACCT_ENABLED;
+>  	if (XFS_IS_PQUOTA_ENFORCED(mp))
+>  		state->s_state[PRJQUOTA].flags |= QCI_LIMITS_ENFORCED;
+> @@ -114,10 +114,8 @@ xfs_fs_set_info(
+>  
+>  	if (sb_rdonly(sb))
+>  		return -EROFS;
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> -		return -ENOSYS;
+>  	if (!XFS_IS_QUOTA_ON(mp))
+> -		return -ESRCH;
+> +		return -ENOSYS;
+>  	if (info->i_fieldmask & ~XFS_QC_SETINFO_MASK)
+>  		return -EINVAL;
+>  	if ((info->i_fieldmask & XFS_QC_SETINFO_MASK) == 0)
+> @@ -164,7 +162,7 @@ xfs_quota_enable(
+>  
+>  	if (sb_rdonly(sb))
+>  		return -EROFS;
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return -ENOSYS;
+>  
+>  	return xfs_qm_scall_quotaon(mp, xfs_quota_flags(uflags));
+> @@ -179,10 +177,8 @@ xfs_quota_disable(
+>  
+>  	if (sb_rdonly(sb))
+>  		return -EROFS;
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> -		return -ENOSYS;
+>  	if (!XFS_IS_QUOTA_ON(mp))
+> -		return -EINVAL;
+> +		return -ENOSYS;
+>  
+>  	return xfs_qm_scall_quotaoff(mp, xfs_quota_flags(uflags));
 >  }
-> @@ -1359,7 +1355,7 @@ xfs_qm_quotacheck(
->  	 * at this point (because we intentionally didn't in dqget_noattach).
->  	 */
->  	if (error) {
-> -		xfs_qm_dqpurge_all(mp, XFS_QMOPT_QUOTALL);
-> +		xfs_qm_dqpurge_all(mp);
->  		goto error_return;
+> @@ -223,10 +219,8 @@ xfs_fs_get_dqblk(
+>  	struct xfs_mount	*mp = XFS_M(sb);
+>  	xfs_dqid_t		id;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> -		return -ENOSYS;
+>  	if (!XFS_IS_QUOTA_ON(mp))
+> -		return -ESRCH;
+> +		return -ENOSYS;
+>  
+>  	id = from_kqid(&init_user_ns, qid);
+>  	return xfs_qm_scall_getquota(mp, id, xfs_quota_type(qid.type), qdq);
+> @@ -243,10 +237,8 @@ xfs_fs_get_nextdqblk(
+>  	struct xfs_mount	*mp = XFS_M(sb);
+>  	xfs_dqid_t		id;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> -		return -ENOSYS;
+>  	if (!XFS_IS_QUOTA_ON(mp))
+> -		return -ESRCH;
+> +		return -ENOSYS;
+>  
+>  	id = from_kqid(&init_user_ns, *qid);
+>  	ret = xfs_qm_scall_getquota_next(mp, &id, xfs_quota_type(qid->type),
+> @@ -269,10 +261,8 @@ xfs_fs_set_dqblk(
+>  
+>  	if (sb_rdonly(sb))
+>  		return -EROFS;
+> -	if (!XFS_IS_QUOTA_RUNNING(mp))
+> -		return -ENOSYS;
+>  	if (!XFS_IS_QUOTA_ON(mp))
+> -		return -ESRCH;
+> +		return -ENOSYS;
+>  
+>  	return xfs_qm_scall_setqlim(mp, from_kqid(&init_user_ns, qid),
+>  				     xfs_quota_type(qid.type), qdq);
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 2c9e26a44546b8..36fc81e52dc22a 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -201,25 +201,20 @@ xfs_fs_show_options(
+>  		seq_printf(m, ",swidth=%d",
+>  				(int)XFS_FSB_TO_BB(mp, mp->m_swidth));
+>  
+> -	if (mp->m_qflags & XFS_UQUOTA_ACCT) {
+> -		if (mp->m_qflags & XFS_UQUOTA_ENFD)
+> -			seq_puts(m, ",usrquota");
+> -		else
+> -			seq_puts(m, ",uqnoenforce");
+> -	}
+> +	if (mp->m_qflags & XFS_UQUOTA_ENFD)
+> +		seq_puts(m, ",usrquota");
+> +	else if (mp->m_qflags & XFS_UQUOTA_ACCT)
+> +		seq_puts(m, ",uqnoenforce");
+>  
+> -	if (mp->m_qflags & XFS_PQUOTA_ACCT) {
+> -		if (mp->m_qflags & XFS_PQUOTA_ENFD)
+> -			seq_puts(m, ",prjquota");
+> -		else
+> -			seq_puts(m, ",pqnoenforce");
+> -	}
+> -	if (mp->m_qflags & XFS_GQUOTA_ACCT) {
+> -		if (mp->m_qflags & XFS_GQUOTA_ENFD)
+> -			seq_puts(m, ",grpquota");
+> -		else
+> -			seq_puts(m, ",gqnoenforce");
+> -	}
+> +	if (mp->m_qflags & XFS_PQUOTA_ENFD)
+> +		seq_puts(m, ",prjquota");
+> +	else if (mp->m_qflags & XFS_PQUOTA_ACCT)
+> +		seq_puts(m, ",pqnoenforce");
+> +
+> +	if (mp->m_qflags & XFS_GQUOTA_ENFD)
+> +		seq_puts(m, ",grpquota");
+> +	else if (mp->m_qflags & XFS_GQUOTA_ACCT)
+> +		seq_puts(m, ",gqnoenforce");
+>  
+>  	if (!(mp->m_qflags & XFS_ALL_QUOTA_ACCT))
+>  		seq_puts(m, ",noquota");
+> @@ -962,8 +957,8 @@ xfs_finish_flags(
+>  		return -EROFS;
 >  	}
 >  
+> -	if ((mp->m_qflags & (XFS_GQUOTA_ACCT | XFS_GQUOTA_ACTIVE)) &&
+> -	    (mp->m_qflags & (XFS_PQUOTA_ACCT | XFS_PQUOTA_ACTIVE)) &&
+> +	if ((mp->m_qflags & XFS_GQUOTA_ACCT) &&
+> +	    (mp->m_qflags & XFS_PQUOTA_ACCT) &&
+>  	    !xfs_sb_version_has_pquotino(&mp->m_sb)) {
+>  		xfs_warn(mp,
+>  		  "Super block does not support project and group quota together");
+> @@ -1228,35 +1223,31 @@ xfs_fs_parse_param(
+>  	case Opt_noquota:
+>  		parsing_mp->m_qflags &= ~XFS_ALL_QUOTA_ACCT;
+>  		parsing_mp->m_qflags &= ~XFS_ALL_QUOTA_ENFD;
+> -		parsing_mp->m_qflags &= ~XFS_ALL_QUOTA_ACTIVE;
+>  		return 0;
+>  	case Opt_quota:
+>  	case Opt_uquota:
+>  	case Opt_usrquota:
+> -		parsing_mp->m_qflags |= (XFS_UQUOTA_ACCT | XFS_UQUOTA_ACTIVE |
+> -				 XFS_UQUOTA_ENFD);
+> +		parsing_mp->m_qflags |= (XFS_UQUOTA_ACCT | XFS_UQUOTA_ENFD);
+>  		return 0;
+>  	case Opt_qnoenforce:
+>  	case Opt_uqnoenforce:
+> -		parsing_mp->m_qflags |= (XFS_UQUOTA_ACCT | XFS_UQUOTA_ACTIVE);
+> +		parsing_mp->m_qflags |= XFS_UQUOTA_ACCT;
+>  		parsing_mp->m_qflags &= ~XFS_UQUOTA_ENFD;
+>  		return 0;
+>  	case Opt_pquota:
+>  	case Opt_prjquota:
+> -		parsing_mp->m_qflags |= (XFS_PQUOTA_ACCT | XFS_PQUOTA_ACTIVE |
+> -				 XFS_PQUOTA_ENFD);
+> +		parsing_mp->m_qflags |= (XFS_PQUOTA_ACCT | XFS_PQUOTA_ENFD);
+>  		return 0;
+>  	case Opt_pqnoenforce:
+> -		parsing_mp->m_qflags |= (XFS_PQUOTA_ACCT | XFS_PQUOTA_ACTIVE);
+> +		parsing_mp->m_qflags |= XFS_PQUOTA_ACCT;
+>  		parsing_mp->m_qflags &= ~XFS_PQUOTA_ENFD;
+>  		return 0;
+>  	case Opt_gquota:
+>  	case Opt_grpquota:
+> -		parsing_mp->m_qflags |= (XFS_GQUOTA_ACCT | XFS_GQUOTA_ACTIVE |
+> -				 XFS_GQUOTA_ENFD);
+> +		parsing_mp->m_qflags |= (XFS_GQUOTA_ACCT | XFS_GQUOTA_ENFD);
+>  		return 0;
+>  	case Opt_gqnoenforce:
+> -		parsing_mp->m_qflags |= (XFS_GQUOTA_ACCT | XFS_GQUOTA_ACTIVE);
+> +		parsing_mp->m_qflags |= XFS_GQUOTA_ACCT;
+>  		parsing_mp->m_qflags &= ~XFS_GQUOTA_ENFD;
+>  		return 0;
+>  	case Opt_discard:
+> diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+> index b7e4b05a559bdb..eb76bc5bed9d0a 100644
+> --- a/fs/xfs/xfs_trans_dquot.c
+> +++ b/fs/xfs/xfs_trans_dquot.c
+> @@ -132,8 +132,7 @@ xfs_trans_mod_dquot_byino(
+>  {
+>  	xfs_mount_t	*mp = tp->t_mountp;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) ||
+> -	    !XFS_IS_QUOTA_ON(mp) ||
+> +	if (!XFS_IS_QUOTA_ON(mp) ||
+>  	    xfs_is_quota_inode(&mp->m_sb, ip->i_ino))
+>  		return;
+>  
+> @@ -192,7 +191,7 @@ xfs_trans_mod_dquot(
+>  	struct xfs_dqtrx	*qtrx;
+>  
+>  	ASSERT(tp);
+> -	ASSERT(XFS_IS_QUOTA_RUNNING(tp->t_mountp));
+> +	ASSERT(XFS_IS_QUOTA_ON(tp->t_mountp));
+>  	qtrx = NULL;
+>  
+>  	if (!delta)
+> @@ -738,7 +737,7 @@ xfs_trans_reserve_quota_bydquots(
+>  {
+>  	int		error;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return 0;
+>  
+>  	ASSERT(flags & XFS_QMOPT_RESBLK_MASK);
+> @@ -795,7 +794,7 @@ xfs_trans_reserve_quota_nblks(
+>  	unsigned int		qflags = 0;
+>  	int			error;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return 0;
+>  
+>  	ASSERT(!xfs_is_quota_inode(&mp->m_sb, ip->i_ino));
+> @@ -836,7 +835,7 @@ xfs_trans_reserve_quota_icreate(
+>  {
+>  	struct xfs_mount	*mp = tp->t_mountp;
+>  
+> -	if (!XFS_IS_QUOTA_RUNNING(mp) || !XFS_IS_QUOTA_ON(mp))
+> +	if (!XFS_IS_QUOTA_ON(mp))
+>  		return 0;
+>  
+>  	return xfs_trans_reserve_quota_bydquots(tp, mp, udqp, gdqp, pdqp,
 > -- 
 > 2.30.2
 > 
