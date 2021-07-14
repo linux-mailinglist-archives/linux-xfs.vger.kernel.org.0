@@ -2,130 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD7EC3C7C87
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 05:15:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED623C7CC8
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 05:20:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237486AbhGNDSb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Jul 2021 23:18:31 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:44831 "EHLO
-        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237368AbhGNDSb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Jul 2021 23:18:31 -0400
+        id S237725AbhGNDW7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Jul 2021 23:22:59 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:56584 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237718AbhGNDW6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Jul 2021 23:22:58 -0400
 Received: from dread.disaster.area (pa49-181-34-10.pa.nsw.optusnet.com.au [49.181.34.10])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 726C91B128A;
-        Wed, 14 Jul 2021 13:15:25 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id D35D4102511
+        for <linux-xfs@vger.kernel.org>; Wed, 14 Jul 2021 13:20:01 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1m3VMq-006IG9-NF; Wed, 14 Jul 2021 13:15:24 +1000
-Date:   Wed, 14 Jul 2021 13:15:24 +1000
+        id 1m3VRJ-006IJ6-3I
+        for linux-xfs@vger.kernel.org; Wed, 14 Jul 2021 13:20:01 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1m3VRI-00Ay8r-PO
+        for linux-xfs@vger.kernel.org; Wed, 14 Jul 2021 13:20:00 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 5/9] xfs: make forced shutdown processing atomic
-Message-ID: <20210714031524.GV664593@dread.disaster.area>
-References: <20210630063813.1751007-1-david@fromorbit.com>
- <20210630063813.1751007-6-david@fromorbit.com>
- <20210709044020.GX11588@locust>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/9 v2] xfs: shutdown is a racy mess
+Date:   Wed, 14 Jul 2021 13:19:49 +1000
+Message-Id: <20210714031958.2614411-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210709044020.GX11588@locust>
+Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
         a=hdaoRb6WoHYrV466vVKEyw==:117 a=hdaoRb6WoHYrV466vVKEyw==:17
-        a=kj9zAlcOel0A:10 a=e_q4qTt1xDgA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=bLZPg2y2iUBQkvzs1M8A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=e_q4qTt1xDgA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=Gw3JTCxDVW9RoVmuXrcA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 08, 2021 at 09:40:20PM -0700, Darrick J. Wong wrote:
-> On Wed, Jun 30, 2021 at 04:38:09PM +1000, Dave Chinner wrote:
-> > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > The running of a forced shutdown is a bit of a mess. It does racy
-> > checks for XFS_MOUNT_SHUTDOWN in xfs_do_force_shutdown(), then
-> > does more racy checks in xfs_log_force_unmount() before finally
-> > setting XFS_MOUNT_SHUTDOWN and XLOG_IO_ERROR under the
-> > log->icloglock.
-> > 
-> > Move the checking and setting of XFS_MOUNT_SHUTDOWN into
-> > xfs_do_force_shutdown() so we only process a shutdown once and once
-> > only. Serialise this with the mp->m_sb_lock spinlock so that the
-> > state change is atomic and won't race. Move all the mount specific
-> 
-> Assuming you're working on cleaning /that/ up too, I'll let that go...
 
-Yes, a forward ported patch set that does this will be posted soon.
+With the recent log problems we've uncovered, it's clear that the
+way we shut down filesystems and the log is a chaotic mess. We can
+have multiple filesystem shutdown executions being in progress at
+once, all competing to run shutdown processing and emit log messages
+saying the filesystem has been shut down and why. Further, shutdown
+changes the log state and runs log IO completion callbacks without
+any co-ordination with ongoing log operations.
 
-> > +	xfs_alert_tag(mp, tag,
-> > +"%s (0x%x) detected at %pS (%s:%d).  Shutting down filesystem.",
-> > +			why, flags, __return_address, fname, lnnum);
-> >  	xfs_alert(mp,
-> >  		"Please unmount the filesystem and rectify the problem(s)");
-> > +	if (xfs_error_level >= XFS_ERRLEVEL_HIGH)
-> > +		xfs_stack_trace();
-> 
-> Doesn't xfs_alert already drop a stack trace for xfs_error_level >=
-> XFS_ERRLEVEL_HIGH ?
+This results in shutdowns running unpredictably, running multiple
+times, racing with the iclog state machine transitions and exposing
+us to use-after-free situations and unexpected state changes within
+the log itself.
 
-It does? I've never seen it do that, and the existing code implies
-it doesn't do this, either, and that's the logic was looking at
-here:
+This patch series tries to address the chaotic nature of shutdowns
+by making shutdown execution consistent and predictable. This is
+achieved by:
 
-        if (flags & SHUTDOWN_CORRUPT_INCORE) {
-                xfs_alert_tag(mp, XFS_PTAG_SHUTDOWN_CORRUPT,
-"Corruption of in-memory data (0x%x) detected at %pS (%s:%d).  Shutting down filesystem",
-                                flags, __return_address, fname, lnnum);
-                if (XFS_ERRLEVEL_HIGH <= xfs_error_level)
-                        xfs_stack_trace();
-	} else if (....)
+- making the mount shutdown state transistion atomic and not
+  dependent on log state.
+- making operational log state transitions atomic
+- making the log shutdown check be based entirely on the operational
+  XLOG_IO_ERROR log state rather than a combination of log flags and
+  iclog XLOG_STATE_IOERROR checks.
+- Getting rid of XLOG_STATE_IOERROR means shutdown doesn't perturb
+  iclog state in the middle of operations that are expecting iclogs
+  to be in specific state(s).
+- shutdown doesn't process iclogs that are actively referenced.
+  This avoids use-after-free situations where shutdown runs
+  callbacks and frees objects that own the reference to the iclog
+  and are still in use by the iclog reference owner.
+- Run shutdown processing when the last active reference to an iclog
+  goes away. This guarantees that shutdown processing occurs on all
+  iclogs, but it only occurs when it is safe to do so.
+- acknowledge that log state is not consistent once shutdown has
+  been entered and so don't try to apply consistency checking during
+  a shutdown...
 
-Yes, xfs_alert_tag() does not trigger a stack trace at all, but
-there's an unconditional xfs_alert() call after this so if that
-issues stack traces then we'd get a double stack trace on all
-SHUTDOWN_CORRUPT_INCORE incidents. AFAICT, that doesn't actually
-happen....
+At the end of this patch series, shutdown runs once and once only at
+the first trigger, iclog state is not modified by shutdown, and
+iclog callbacks and wakeups are not processed until all active
+references to the iclog(s) are dropped. Hence we now have
+deterministic shutdown behaviour for both the mount and the log and
+a consistent iclog lifecycle framework that we can build more
+complex functionality on top of safely.
 
-This pattern is repeated in several places - look at
-xfs_inode_verifier_error(), xfs_buf_verifier_error(), and
-xfs_buf_corruption_error(). They all have xfs_alert() calls, then
-follow it up with a specific error level check for a stack dump.
 
-Hmmm, it looks like xfs_alert() was intended to dump stacks, but I
-don't think it works:
+Version 2:
+- rebase on 5.14-rc1
+- added comment about XFS_FORCED_SHUTDOWN -> xlog_is_shutdown in commit message.
+- fix spurious semi-colon at end of for loop.
+- fixed typos in commit messages
+- undid the do {} while -> for {} conversion in xlog_state_do_callbacks()
+- removed spurious blank lines in xfs_do_force_shutdown()
+- added comment to commit description explaining the unconditional stack dump on
+  shutdown if the error level is high enough.
+- added comment about iclog IO completion avoiding shutdown races with
+  referenced iclogs that haven't yet been submitted to commit description.
+- cleaned up xlog_state_release_iclog() structure for better readability.
+- cleaned up xlog_space_left() structure for better readability.
 
-        if (!kstrtoint(kern_level, 0, &level) &&                \
-            level <= LOGLEVEL_ERR &&                            \
-            xfs_error_level >= XFS_ERRLEVEL_HIGH)               \
-                xfs_stack_trace();                              \
+Version 1:
+- https://lore.kernel.org/linux-xfs/20210630063813.1751007-1-david@fromorbit.com/
 
-And kern_level is KERN_ALERT, which is:
-
-#define KERN_SOH        "\001"
-....
-#define KERN_ALERT      KERN_SOH "1"
-
-And:
-
-#define LOGLEVEL_ERR            3       /* error conditions */
-
-So what does kstrtoint() return when passed the string "\0011"? It's
-not actually an integer string...
-
-Hmmm, I think it returns -EINVAL, which means it then uses level
-uninitialised, and the result is .... unpredictable it is likely
-no stack trace is emitted....
-
-Fixing this mess is out of scope for this patchset.  The changes in
-this patchset don't change the existing pattern of the function of
-unconditionally calling xfs_alert() and conditionally and explicitly
-dumping stack traces manually. I'll add it to my ever growing list
-of cleanups that need to be done...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
