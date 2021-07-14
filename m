@@ -2,88 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EB653C7D3F
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 06:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BCFC3C7D45
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Jul 2021 06:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229850AbhGNETc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Jul 2021 00:19:32 -0400
-Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:47526 "EHLO
+        id S237736AbhGNEWJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Jul 2021 00:22:09 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:37495 "EHLO
         mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229518AbhGNETc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Jul 2021 00:19:32 -0400
+        by vger.kernel.org with ESMTP id S229635AbhGNEWI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Jul 2021 00:22:08 -0400
 Received: from dread.disaster.area (pa49-181-34-10.pa.nsw.optusnet.com.au [49.181.34.10])
-        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 8FB031B0FF6;
-        Wed, 14 Jul 2021 14:16:38 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 70B281B126A
+        for <linux-xfs@vger.kernel.org>; Wed, 14 Jul 2021 14:19:16 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1m3WK5-006JHL-OG; Wed, 14 Jul 2021 14:16:37 +1000
-Date:   Wed, 14 Jul 2021 14:16:37 +1000
+        id 1m3WMd-006JJY-PU
+        for linux-xfs@vger.kernel.org; Wed, 14 Jul 2021 14:19:15 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1m3WMd-00B14k-Ff
+        for linux-xfs@vger.kernel.org; Wed, 14 Jul 2021 14:19:15 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Wang Shilong <wangshilong1991@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        Wang Shilong <wshilong@ddn.com>
-Subject: Re: [PATCH v4] fs: forbid invalid project ID
-Message-ID: <20210714041637.GW664593@dread.disaster.area>
-References: <20210710143959.58077-1-wangshilong1991@gmail.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 00/16] xfs: rework feature flags
+Date:   Wed, 14 Jul 2021 14:18:56 +1000
+Message-Id: <20210714041912.2625692-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210710143959.58077-1-wangshilong1991@gmail.com>
+Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
         a=hdaoRb6WoHYrV466vVKEyw==:117 a=hdaoRb6WoHYrV466vVKEyw==:17
-        a=kj9zAlcOel0A:10 a=e_q4qTt1xDgA:10 a=lB0dNpNiAAAA:8 a=20KFwNOVAAAA:8
-        a=7-415B0cAAAA:8 a=tKE4i-voY_5ZeL1wqn4A:9 a=CjuIK1q_8ugA:10
-        a=c-ZiYqmG3AbHTdtsH08C:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=e_q4qTt1xDgA:10 a=I2v1oZfhEBykgp050BAA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Jul 10, 2021 at 10:39:59PM +0800, Wang Shilong wrote:
-> From: Wang Shilong <wshilong@ddn.com>
-> 
-> fileattr_set_prepare() should check if project ID
-> is valid, otherwise dqget() will return NULL for
-> such project ID quota.
-> 
-> Signed-off-by: Wang Shilong <wshilong@ddn.com>
-> ---
-> v3->v3:
-> only check project Id if caller is allowed
-> to change and being changed.
-> 
-> v2->v3: move check before @fsx_projid is accessed
-> and use make_kprojid() helper.
-> 
-> v1->v2: try to fix in the VFS
->  fs/ioctl.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 1e2204fa9963..d4fabb5421cd 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -817,6 +817,14 @@ static int fileattr_set_prepare(struct inode *inode,
->  		if ((old_ma->fsx_xflags ^ fa->fsx_xflags) &
->  				FS_XFLAG_PROJINHERIT)
->  			return -EINVAL;
-> +	} else {
-> +		/*
-> +		 * Caller is allowed to change the project ID. If it is being
-> +		 * changed, make sure that the new value is valid.
-> +		 */
-> +		if (old_ma->fsx_projid != fa->fsx_projid &&
-> +		    !projid_valid(make_kprojid(&init_user_ns, fa->fsx_projid)))
-> +			return -EINVAL;
->  	}
->  
->  	/* Check extent size hints. */
+With the shutdown rework, it became very clear that we needed to
+make atomic state changes to the mount so that shutdown would be run
+once and once only. To do this, we used the mp->m_sb_lock as a
+serialisation mechanism rather than introduce a new single use
+spinlock for this purpose.
 
-Looks good. Thanks!
+However, what we really need to is to separate the operational state
+changes from static feature flag information kept in the mp->m_flags
+field. This would allow the m_flags field to remain largely
+read-only, and we can make the operational state use atomic bit
+operations to set, check and clear the current state.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+This separation between state and features was done for the log as
+part of the shutdown cleanup work. Reworking the way the xfs mount
+feature flags are used is a much bigger undertaking, hence this
+separate patchset.
 
--- 
-Dave Chinner
-david@fromorbit.com
+One of the big things we need to address is that features for the
+xfs mount can come from multiple sources. They can come from on-disk
+state via flags in the superblock, mount options, proc and sysfs
+variables, and so on. Each different mechanism has it's own special
+way of setting what is effectively read-only boolean state in the
+xfs mount that is then checked at runtime by executing code.
+
+In some cases, these boolean checks can be expensive because we have
+to do multiple cheaks and mask variables in the superblock to get
+the flag information. The naming can be verbose, and the combination
+of open coded flag checks vs wrapper based flag checks does little
+to improve the readability of the code. 
+
+To clean all this up, introduce a m_features field and a m_opstate
+field. The m_features field holds all the features the filesysetm
+has enabled or disabled, and the m_opstate field holds all the
+atomic operational state. m_features is currently a 64 bit variable
+with on-disk features starting at bit 0 counting up and mount
+features starting at bit 63 and counting down. At the end of the
+series, we have roughly 26 on-disk and 16 mount feature flags used,
+so there's still plenty of flag space available for future
+additions.
+
+The result of moving all the feature flags to the mount is that we
+get rid of all the xfs_sb_version_has() wrappers in
+libxfs/xfs_format.h. We really want this file to contain the on-disk
+format defintion, not code used to access or interpret it. This gets
+rid of a large amount of boiler plate wrappers from this file and
+replaces them with mount features checks which are much simpler and
+lower overhead.
+
+Getting rid of all the sueprblock feature checks reduces the code
+size by about 5kB on x86-64. There are about 400
+xfs_sb_version_has() feature checks in the code, so saving a few
+instructions on every check ends up making a substantial difference
+to code size. It also means this patchset is rather large....
+
+There are a few cleanups needed before the patch set starts. We need
+to fix up the attr2/noattr2 mount option/superblock bit issues, as
+well as properly namespace some internal attribute code so we can
+use the global "xfs_" namespace for global feature and operational
+state functions.
+
+There are many further cleanups that can be done following on from
+this patch set. e.g the xfs_mount has several boolean state/flag
+fields that can be moved into the m_opstate and/or m_features
+variables, we can shadow state and or features into the log fields
+so the log doesn't need to access the xfs_mount to check current
+state, runtime quota state can move into the m_opstate field instead
+of needing separate flags, etc.
+
+This passes fstests for all the simple configurations (defaults,
+quotas, different directory block sizes, etc) without regressions,
+so nothing has been obviously broken. There may be corner cases that
+I haven't exercises where issues are present, but so far I haven't
+found anything.
+
+Version 1:
+- based on 5.14-rc1 + "xfs: strictly order log start records"
+
