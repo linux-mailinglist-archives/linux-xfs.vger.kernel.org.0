@@ -2,76 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE9C3CA449
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jul 2021 19:26:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 056253CAE2A
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jul 2021 22:56:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231941AbhGOR2s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Jul 2021 13:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235533AbhGOR2r (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Jul 2021 13:28:47 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3EE9C061762
-        for <linux-xfs@vger.kernel.org>; Thu, 15 Jul 2021 10:25:53 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id u11so7553494oiv.1
-        for <linux-xfs@vger.kernel.org>; Thu, 15 Jul 2021 10:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
-        b=A07qw47jpyx7/pJf1ZS9aQv4pD7PiHBZWlsl9UoiurRqqc+7ZndQI51YdaaD0nkecu
-         Qd4i+G02coH8O2I/r6ZupOF8oYSIAoIwVq4zkuCtuhDJYsbynWGQdegcG7aq+QxGg/bp
-         poyp2DbaibSeABlojQr/pIAqMWExNaHg4RIE+IQzBlXdCiQq16Yp/UqkBXwITYu4DgIP
-         XTs1gXkC7Br62pPmJXs/2nF+jRhXCAs3iAxTxuy51YthTghMWE/kONdSGZKCG8sWM+Ev
-         WU1ATEDaIH5W63c7UQCvZTdM21+mq9I9FOl7BCTb650pCRFEJMZ521zklByg85zlNwmj
-         7b/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=Ibb5KNEw1DKqJEg9n4gJy5KnzVasBofn6QaWYsu9UCQ=;
-        b=qq2zhomG3h16vH4CV7dyqSDivoLBRk3hQ5Skce9WpYEckYLiJcfGbS2QG9cus950yC
-         sxb/YPzDhV7ef5OhhuDVc89N5amx95QhZpd2np2RYKrhMsbiX+OYUUhtn8kRFYwaaM60
-         3WAzHx3aobs9HfbT6RxWk0VGLu3A3SDUHo2ZEMjzXeP1vjxJKboHu5p20LjcMgveSfEO
-         hYIP24z0Ik1HZ0WhwuOVC1YWK24jzJdfvNfPb9+Tyn+u2lpqdsiAQm1lB2RuXdltJ5TV
-         Oi5CNNjvuhvWsTK2/mBRXiGDa+5hk7vPcmmyUJz1QQ9J/lmGl6Y0gYWza9QwoALE7wBi
-         ZHvA==
-X-Gm-Message-State: AOAM531JNRAfWXGX3n0EWg9W2xLcfAkWJShrnZXs0oSaZhsQQVI/CAdW
-        x5QEfdnYIVWxDj4l2YOXCvmckQqvT5QrFtu+PT7wcD3B2Uk=
-X-Google-Smtp-Source: ABdhPJyZMrq1Z7I3pjjmyAtUHW3ABh0oEghTe77F5dAxRk/llsByjQhtZ30eIUOoh7sIooPsLTy5+nPJ1BCNgIavtsM=
-X-Received: by 2002:a17:90b:d8f:: with SMTP id bg15mr10963237pjb.152.1626369941880;
- Thu, 15 Jul 2021 10:25:41 -0700 (PDT)
+        id S229498AbhGOU6x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Jul 2021 16:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229459AbhGOU6w (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 15 Jul 2021 16:58:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7CDBC6120A;
+        Thu, 15 Jul 2021 20:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626382558;
+        bh=eVa3YPxlLDd15+D66NQ0t+IiF12L8+DLPWO8dJgMn78=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VlMi1u71FdpFIeQlkLZNMkyVMx6XDB+HTLHlbXUtExfzvd2lnLKB8ERCTjWmrVDFE
+         zhkIKNwAFxiDquNZ3Q3sgzjXfkhjScyZFJJYqSqT2/UlFQ+bSz3JKxfhzBr4G4zZQc
+         o5M7ruW6F6VqimT53f1L6xzyuAqe0qGsGkciCtvri7B7g3Cz33VQPxXc+u99A6LXs+
+         i90rXH5FnXv3FQciRDidK2CjML+rySmLq7VBVkx63bbB5GPhz9UmRk67rLKRxjLwOI
+         YH7O8yV8k0QZZmU02yJo4pumAy297P1QAPJuo2ntrKI9bFqs4ZSVVeIGvAlDuqQkaF
+         +cnqIjWfaj9ig==
+Date:   Thu, 15 Jul 2021 13:55:58 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     agruenba@redhat.com
+Subject: [ANNOUNCE] xfs-linux: iomap-5.14-fixes updated to 229adf3c64db
+Message-ID: <20210715205558.GW22402@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:fc85:0:0:0:0 with HTTP; Thu, 15 Jul 2021 10:25:41
- -0700 (PDT)
-Reply-To: faty.muhamad@gmail.com
-From:   Ms Fatima Muhammad <general.infofederalreserve@gmail.com>
-Date:   Thu, 15 Jul 2021 17:25:41 +0000
-Message-ID: <CAJzJz_Dwu6rUxmnqq1QV9qD4hugxutFJZuENGUwx7RamXm5txA@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello Dear,
+Hi folks,
 
-My name is Ms.Fatima Muhammad., Please forgive me for stressing you
-with my predicaments and I sorry to approach you through this media
-because is serves the fastest means of  my communication right now,
+The iomap-5.14-fixes branch of the xfs-linux repository at:
 
-I came across your Email from my personal search and I decided to
-contact you believing you will be honest to fulfill my business
-proposal which I believe that will be a very good opportunity for both
-of us. Please it is my pleasure to contact you today for a business
-partnership investments projects worth $4.6 million USD which I intend
-to establish in your country..
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-Pls If this business proposal offends your moral and ethic values do
-accept my apology. therefore kindly contact me immediately if you are
-interested for more details.
+has just been updated.
 
-Thank you for your wiliness to help me
-Yours Sincerely Fatima Muhammad
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
+
+The new head of the iomap-5.14-fixes branch is commit:
+
+229adf3c64db iomap: Don't create iomap_page objects in iomap_page_mkwrite_actor
+
+New Commits:
+
+Andreas Gruenbacher (3):
+      [8e1bcef8e18d] iomap: Permit pages without an iop to enter writeback
+      [637d3375953e] iomap: Don't create iomap_page objects for inline files
+      [229adf3c64db] iomap: Don't create iomap_page objects in iomap_page_mkwrite_actor
+
+Christoph Hellwig (2):
+      [3ac1d426510f] iomap: remove the length variable in iomap_seek_data
+      [49694d14ff68] iomap: remove the length variable in iomap_seek_hole
+
+
+Code Diffstat:
+
+ fs/iomap/buffered-io.c |  8 ++++----
+ fs/iomap/seek.c        | 25 +++++++++----------------
+ 2 files changed, 13 insertions(+), 20 deletions(-)
