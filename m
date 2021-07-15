@@ -2,108 +2,107 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D19AB3C9FB3
-	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jul 2021 15:40:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24DE03CA3A4
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Jul 2021 19:11:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237921AbhGONnj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 15 Jul 2021 09:43:39 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:59720 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237209AbhGONn2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 15 Jul 2021 09:43:28 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 8C5E920303;
-        Thu, 15 Jul 2021 13:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1626356433; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aHhQqe8KTjBCv9r4mi6xe2At5YRjoevCFxA6zjCOvEc=;
-        b=RuJfucQ18UcdWSlSoKBS0R02LQqU1/2ikN5fVOsUopTm5nVBDrhxzwoexmEPqEfDpiFR/f
-        h+qcLI/KXCIM5K9dG6BkjTUF9Jd4Z85o20OQyK28wK2Z/X0BOJ8jCdlBKz20WHBt1bCCVb
-        moM3VmI061wTH+Chtl1RODrrlZNEyR0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1626356433;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aHhQqe8KTjBCv9r4mi6xe2At5YRjoevCFxA6zjCOvEc=;
-        b=okfc6hssx0z1h1XKdCgUrgiqbuGqpuR+6jkXPziR0sbZUxXCsDdVf5LpJxwHEQW8SJ8h69
-        h5gs7zxRdmnrUeCg==
-Received: from quack2.suse.cz (unknown [10.100.200.198])
-        by relay2.suse.de (Postfix) with ESMTP id 75781A3B9B;
-        Thu, 15 Jul 2021 13:40:33 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 34DDA1E110A; Thu, 15 Jul 2021 15:40:33 +0200 (CEST)
-From:   Jan Kara <jack@suse.cz>
-To:     <linux-fsdevel@vger.kernel.org>
-Cc:     <linux-ext4@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J. Wong" <djwong@kernel.org>, Ted Tso <tytso@mit.edu>,
-        Dave Chinner <david@fromorbit.com>,
-        Matthew Wilcox <willy@infradead.org>, <linux-mm@kvack.org>,
-        <linux-xfs@vger.kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Steve French <sfrench@samba.org>
-Subject: [PATCH 14/14] cifs: Fix race between hole punch and page fault
-Date:   Thu, 15 Jul 2021 15:40:24 +0200
-Message-Id: <20210715134032.24868-14-jack@suse.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210715133202.5975-1-jack@suse.cz>
-References: <20210715133202.5975-1-jack@suse.cz>
+        id S232070AbhGOROq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 15 Jul 2021 13:14:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231977AbhGOROp (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 15 Jul 2021 13:14:45 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 298FB613D8;
+        Thu, 15 Jul 2021 17:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626369112;
+        bh=FY4e+oZ1PFtHlMAKa/Bsp5UEp0fB77fsFYJPP2oLU6U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KXXddtYDTrm0gSn9hX/wlxWLaGSOhAF0JIE80yuFrp41mSOsycIe5H7/PowCrqoCG
+         H1yFnyrY8gC5fRTpb85ZkSuT7lwhtFww3+uX14gCVnKXGefiPU2E3GybGPHpy3ZYhY
+         rCocgvbdZoYDv/JY60VJRxss50LmwwYTQYhnQjBYumauSRTAd0nkkl6BAjpAPvb1Tu
+         V/JkBneUfyIdkgkQm9JuIuPgK87OUoW05LRCsvffzsEk+KOaEtCfsUA+vu7dJjnG6i
+         y4XvIXDDREY7ocscb3Hk+ks773TBx31HDbXLNT2YHyOM8E8DUB9xNZ/NuTgNroQQor
+         icHAyHi7bL6qw==
+Date:   Thu, 15 Jul 2021 10:11:51 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Jia He <justin.he@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>, nd@arm.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC 07/13] iomap: simplify iomap_swapfile_fail() with
+ '%pD' specifier
+Message-ID: <20210715171151.GU22402@magnolia>
+References: <20210715031533.9553-1-justin.he@arm.com>
+ <20210715031533.9553-8-justin.he@arm.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1533; h=from:subject; bh=1e9BARQoajJDSgUdYORenFPF3ecMZ7Jduf79ehs8h7w=; b=owGbwMvMwME4Z+4qdvsUh5uMp9WSGBI+WB1n1Ns3Y96Kydy5/1TSyzp5XkorV0pMDjoluy51bumy pHq5TkZjFgZGDgZZMUWW1ZEXta/NM+raGqohAzOIlQlkCgMXpwBMZOcODoZWJVaREsa87UFlLCyKym 6Jz7/Om7Llk3eCg4bKo9Mz5yQv57j/oybvSLtrzHthh0TB2CtnGXOMp2jfvbtdVV/OezJjU7votVnG llXaMuz16cwaKVErlmcwc4VzuIdkbl1902Oq6ZOkT8+s+dUE8pe2Nt9tuBa4U21Oycx5efGnpy855L RFINhWyEgzMmXDxUCTm0cq2aS+nGqerlR/7EpmjLGTVcWK6GtLV8TYd8XMF9/G6rZlz8qXj1k/yy04 L/70Rm151ZWv8u8jkhOtnzn1qzf+lBRWTmXmyBF9tOJVo+OL20Kxc9zFGqZFbTe1Tpx7f6aT79Rz5+ KYW3iC+t5EbhGRPfjkj5xdzfJSAA==
-X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210715031533.9553-8-justin.he@arm.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Cifs has a following race between hole punching and page fault:
+On Thu, Jul 15, 2021 at 11:15:27AM +0800, Jia He wrote:
+> After the behavior of '%pD' is change to print the full path of file,
+> iomap_swapfile_fail() can be simplified.
+> 
+> Given the space with proper length would be allocated in vprintk_store(),
+> the kmalloc() is not required any more.
+> 
+> Besides, the previous number postfix of '%pD' in format string is
+> pointless.
+> 
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: "Darrick J. Wong" <djwong@kernel.org>
+> Cc: linux-xfs@vger.kernel.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Jia He <justin.he@arm.com>
 
-CPU1                                            CPU2
-smb3_fallocate()
-  smb3_punch_hole()
-    truncate_pagecache_range()
-                                                filemap_fault()
-                                                  - loads old data into the
-                                                    page cache
-    SMB2_ioctl(..., FSCTL_SET_ZERO_DATA, ...)
+Seems reasonable to me...
+Acked-by: Darrick J. Wong <djwong@kernel.org>
 
-And now we have stale data in the page cache. Fix the problem by locking
-out faults (as well as reads) using mapping->invalidate_lock while hole
-punch is running.
+--D
 
-CC: Steve French <sfrench@samba.org>
-CC: linux-cifs@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
----
- fs/cifs/smb2ops.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index e4c8f603dd58..458c546ce8cd 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3588,6 +3588,7 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 		return rc;
- 	}
- 
-+	filemap_invalidate_lock(inode->i_mapping);
- 	/*
- 	 * We implement the punch hole through ioctl, so we need remove the page
- 	 * caches first, otherwise the data may be inconsistent with the server.
-@@ -3605,6 +3606,7 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 			sizeof(struct file_zero_data_information),
- 			CIFSMaxBufSize, NULL, NULL);
- 	free_xid(xid);
-+	filemap_invalidate_unlock(inode->i_mapping);
- 	return rc;
- }
- 
--- 
-2.26.2
-
+> ---
+>  fs/iomap/direct-io.c | 2 +-
+>  fs/iomap/swapfile.c  | 8 +-------
+>  2 files changed, 2 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index 9398b8c31323..e876a5f9d888 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -426,7 +426,7 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		 * iomap_apply() call in the DIO path, then it will see the
+>  		 * DELALLOC block that the page-mkwrite allocated.
+>  		 */
+> -		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %pD4 Comm: %.20s\n",
+> +		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %pD Comm: %.20s\n",
+>  				    dio->iocb->ki_filp, current->comm);
+>  		return -EIO;
+>  	default:
+> diff --git a/fs/iomap/swapfile.c b/fs/iomap/swapfile.c
+> index 6250ca6a1f85..17032c14e466 100644
+> --- a/fs/iomap/swapfile.c
+> +++ b/fs/iomap/swapfile.c
+> @@ -73,13 +73,7 @@ static int iomap_swapfile_add_extent(struct iomap_swapfile_info *isi)
+>  
+>  static int iomap_swapfile_fail(struct iomap_swapfile_info *isi, const char *str)
+>  {
+> -	char *buf, *p = ERR_PTR(-ENOMEM);
+> -
+> -	buf = kmalloc(PATH_MAX, GFP_KERNEL);
+> -	if (buf)
+> -		p = file_path(isi->file, buf, PATH_MAX);
+> -	pr_err("swapon: file %s %s\n", IS_ERR(p) ? "<unknown>" : p, str);
+> -	kfree(buf);
+> +	pr_err("swapon: file %pD %s\n", isi->file, str);
+>  	return -EINVAL;
+>  }
+>  
+> -- 
+> 2.17.1
+> 
