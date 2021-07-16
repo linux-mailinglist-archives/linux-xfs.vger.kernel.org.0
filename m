@@ -2,73 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FBB03CB956
-	for <lists+linux-xfs@lfdr.de>; Fri, 16 Jul 2021 17:04:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3090F3CB96D
+	for <lists+linux-xfs@lfdr.de>; Fri, 16 Jul 2021 17:07:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240657AbhGPPHq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 16 Jul 2021 11:07:46 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:59269 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240717AbhGPPHq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 16 Jul 2021 11:07:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R641e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0UfzeaRF_1626447887;
-Received: from B-P7TQMD6M-0146.local(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0UfzeaRF_1626447887)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 16 Jul 2021 23:04:48 +0800
-Date:   Fri, 16 Jul 2021 23:04:46 +0800
-From:   Gao Xiang <hsiangkao@linux.alibaba.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Gao Xiang <xiang@kernel.org>,
-        linux-erofs@lists.ozlabs.org, stable@vger.kernel.org
-Subject: Re: [PATCH] iomap: Add missing flush_dcache_page
-Message-ID: <YPGgDoyn7pgM+7Vb@B-P7TQMD6M-0146.local>
-Mail-Followup-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Gao Xiang <xiang@kernel.org>,
-        linux-erofs@lists.ozlabs.org, stable@vger.kernel.org
-References: <20210716150032.1089982-1-willy@infradead.org>
+        id S233094AbhGPPKx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 16 Jul 2021 11:10:53 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57661 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S240493AbhGPPKw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 16 Jul 2021 11:10:52 -0400
+Received: from callcc.thunk.org (96-65-121-81-static.hfc.comcastbusiness.net [96.65.121.81])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 16GF7fnw014809
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 16 Jul 2021 11:07:42 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id D6FEA4202F5; Fri, 16 Jul 2021 11:07:40 -0400 (EDT)
+Date:   Fri, 16 Jul 2021 11:07:40 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Alex Sierra <alex.sierra@amd.com>, akpm@linux-foundation.org,
+        linux-mm@kvack.org, rcampbell@nvidia.com,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        hch@lst.de, jgg@nvidia.com, jglisse@redhat.com
+Subject: Re: [PATCH v3 0/8] Support DEVICE_GENERIC memory in migrate_vma_*
+Message-ID: <YPGgvNxfOCx/Sp0g@mit.edu>
+References: <20210617151705.15367-1-alex.sierra@amd.com>
+ <YM9NXrGlhdp0qb7S@mit.edu>
+ <905418d1-9099-0ea8-a6e6-84cc8ef3d0b0@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210716150032.1089982-1-willy@infradead.org>
+In-Reply-To: <905418d1-9099-0ea8-a6e6-84cc8ef3d0b0@amd.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jul 16, 2021 at 04:00:32PM +0100, Matthew Wilcox (Oracle) wrote:
-> Inline data needs to be flushed from the kernel's view of a page before
-> it's mapped by userspace.
+On Wed, Jun 23, 2021 at 05:49:55PM -0400, Felix Kuehling wrote:
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 19e0c58f6552 ("iomap: generic inline data handling")
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-(will update on my side as well)
-
-Thanks,
-Gao Xiang
-
-> ---
->  fs/iomap/buffered-io.c | 1 +
->  1 file changed, 1 insertion(+)
+> I can think of two ways to test the changes for MEMORY_DEVICE_GENERIC in
+> this patch series in a way that is reproducible without special hardware and
+> firmware:
 > 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 41da4f14c00b..fe60c603f4ca 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -222,6 +222,7 @@ iomap_read_inline_data(struct inode *inode, struct page *page,
->  	memcpy(addr, iomap->inline_data, size);
->  	memset(addr + size, 0, PAGE_SIZE - size);
->  	kunmap_atomic(addr);
-> +	flush_dcache_page(page);
->  	SetPageUptodate(page);
->  }
->  
-> -- 
-> 2.30.2
+> For the reference counting changes we could use the dax driver with hmem and
+> use efi_fake_mem on the kernel command line to create some DEVICE_GENERIC
+> pages. I'm open to suggestions for good user mode tests to exercise dax
+> functionality on this type of memory.
+
+Sorry for the thread necromancy, but now that the merge window is
+past....
+
+Today I test ext4's dax support, without having any $$$ DAX hardware,
+by using the kernel command line "memmap=4G!9G:memmap=9G!14G" which
+reserves memory so that creates two pmem device and then I run
+xfstests with DAX enabled using qemu or using a Google Compute Engine
+VM, using TEST_DEV=/dev/pmem0 and SCRATCH_DEV=/dev/pmem1.
+
+If you can give me a recipe for what kernel configs I should enable,
+and what magic kernel command line arguments to use, then I'd be able
+to test your patch set with ext4.
+
+Cheers,
+
+						- Ted
