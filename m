@@ -2,97 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF0FD3CC9E7
-	for <lists+linux-xfs@lfdr.de>; Sun, 18 Jul 2021 18:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B6253CCA4A
+	for <lists+linux-xfs@lfdr.de>; Sun, 18 Jul 2021 20:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbhGRQmc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 18 Jul 2021 12:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41912 "EHLO mail.kernel.org"
+        id S231861AbhGRSvo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 18 Jul 2021 14:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229437AbhGRQmb (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 18 Jul 2021 12:42:31 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B9B8A600D3;
-        Sun, 18 Jul 2021 16:39:32 +0000 (UTC)
+        id S230397AbhGRSvY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sun, 18 Jul 2021 14:51:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 5046361184;
+        Sun, 18 Jul 2021 18:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626626372;
-        bh=PcfSJqnL4nyO3nvWZC3cpvEwmt7XAIh3V/izsRLYz7o=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qCExeGBmkA8H3dI6aiXY9olfjOPloGP/EUxi/c+/Kn/WFLnp2mqjoWSv3xoeQC07b
-         aEkOFJETDS2iXtBaDPbreLGR9/Sy7BcKdXjZjMdmnJhWVn4mFkWwYHuFxJtWlVTzIg
-         tpIbPjw8pFskkZwf0YvmMn4o5itTMEpLuRhyBP8TvppBvlTYBFgp0N1Ft424y+6bqe
-         NbuFNn6gpS0aNFwbSdRCVnM+Bxy/IC3FcZnQA33bvAzFPvD0zYAEmu57cfnbfLKYoj
-         GgfDEYQQmvVYKXY+alCYS4ib+g7qmZJLQeV9OanwP4ozgsx++oSSqvjrrX+jtVfPTU
-         H4uOPpkhszfNA==
-Date:   Sun, 18 Jul 2021 09:39:31 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: bug fixes for 5.14-rc2
-Message-ID: <20210718163931.GB22402@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        s=k20201202; t=1626634106;
+        bh=rJyAuMm1vmjPgHJgTP5GKsEyI5x5h60bVRrsKbrveTk=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=V6n9hJlPo2q8abU1oU1Iq1aZCTLFTFSUZn71vCNDHJmBhMPrYjr1N8XfNGEouFBG7
+         TPbqoLucf6W2hkyy8n7/JlCdB7/J6yADymScM32f6zjPmLkTcQcBRtH0gMOnv/MFMb
+         NFvJnA/1/AB55jMuAQJRW0XsaezFRHlT5ohEDfusxKZf+2vB5lCxs7vQam0pe+3RcK
+         o36mC9NSy/TO5eRvk5hqrOGyLXsBmzVdTxqjyq0lYZmJWffsYjHh+EI9JVOkZmJ4Gm
+         1wk6OonEQvcXaExFZ5GF/Dq40Ix0LY18nUA+kBxEB9oH7GGPzV9BWtFVv+2p0S0r/p
+         nIADrUPaaVWDA==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 4754160A2A;
+        Sun, 18 Jul 2021 18:48:26 +0000 (UTC)
+Subject: Re: [GIT PULL] iomap: fixes for 5.14-rc2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210718163232.GA22402@magnolia>
+References: <20210718163232.GA22402@magnolia>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210718163232.GA22402@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.14-fixes-1
+X-PR-Tracked-Commit-Id: 229adf3c64dbeae4e2f45fb561907ada9fcc0d0c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: fbf1bddc4e171e26ac55a9637c7db13e75acf4fa
+Message-Id: <162663410628.7372.7970370951401810839.pr-tracker-bot@kernel.org>
+Date:   Sun, 18 Jul 2021 18:48:26 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hch@lst.de
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Sun, 18 Jul 2021 09:32:32 -0700:
 
-Please pull this branch containing a bunch of bug fixes in XFS.  There
-are a few fixes for issues in the new online shrink code, additional
-corrections for my recent bug-hunt w.r.t. extent size hints on realtime,
-and improved input checking of the GROWFSRT ioctl.  IOWs, the usual "I
-somehow got bored during the merge window and resumed auditing the
-farther reaches of xfs."
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.14-fixes-1
 
-The branch merges cleanly against upstream as of a few minutes ago.
-Please let me know if anything else strange happens during the merge
-process.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/fbf1bddc4e171e26ac55a9637c7db13e75acf4fa
 
---D
+Thank you!
 
-The following changes since commit e73f0f0ee7541171d89f2e2491130c7771ba58d3:
-
-  Linux 5.14-rc1 (2021-07-11 15:07:40 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.14-fixes-1
-
-for you to fetch changes up to b102a46ce16fd5550aed882c3c5b95f50da7992c:
-
-  xfs: detect misaligned rtinherit directory extent size hints (2021-07-15 09:58:42 -0700)
-
-----------------------------------------------------------------
-Fixes for 5.14-rc:
- * Fix shrink eligibility checking when sparse inode clusters enabled.
- * Reset '..' directory entries when unlinking directories to prevent
-   verifier errors if fs is shrinked later.
- * Don't report unusable extent size hints to FSGETXATTR.
- * Don't warn when extent size hints are unusable because the sysadmin
-   configured them that way.
- * Fix insufficient parameter validation in GROWFSRT ioctl.
- * Fix integer overflow when adding rt volumes to filesystem.
-
-----------------------------------------------------------------
-Darrick J. Wong (7):
-      xfs: check for sparse inode clusters that cross new EOAG when shrinking
-      xfs: reset child dir '..' entry when unlinking child
-      xfs: correct the narrative around misaligned rtinherit/extszinherit dirs
-      xfs: don't expose misaligned extszinherit hints to userspace
-      xfs: improve FSGROWFSRT precondition checking
-      xfs: fix an integer overflow error in xfs_growfs_rt
-      xfs: detect misaligned rtinherit directory extent size hints
-
- fs/xfs/libxfs/xfs_ag.c          |  8 ++++++
- fs/xfs/libxfs/xfs_ialloc.c      | 55 +++++++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_ialloc.h      |  3 +++
- fs/xfs/libxfs/xfs_inode_buf.c   | 28 ++++++++++++---------
- fs/xfs/libxfs/xfs_trans_inode.c | 10 +++-----
- fs/xfs/scrub/inode.c            | 18 ++++++++++++--
- fs/xfs/xfs_inode.c              | 13 ++++++++++
- fs/xfs/xfs_ioctl.c              | 27 ++++++++++++++++----
- fs/xfs/xfs_rtalloc.c            | 49 +++++++++++++++++++++++++++---------
- 9 files changed, 174 insertions(+), 37 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
