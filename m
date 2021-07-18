@@ -2,27 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 986483CC988
-	for <lists+linux-xfs@lfdr.de>; Sun, 18 Jul 2021 16:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 309103CC996
+	for <lists+linux-xfs@lfdr.de>; Sun, 18 Jul 2021 16:32:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232224AbhGROX6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 18 Jul 2021 10:23:58 -0400
-Received: from out20-50.mail.aliyun.com ([115.124.20.50]:52774 "EHLO
-        out20-50.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbhGROX6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 18 Jul 2021 10:23:58 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07505499|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0237661-0.00541911-0.970815;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047192;MF=guan@eryu.me;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.Kkr7JVp_1626618058;
-Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.Kkr7JVp_1626618058)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Sun, 18 Jul 2021 22:20:58 +0800
-Date:   Sun, 18 Jul 2021 22:20:58 +0800
+        id S232895AbhGROfJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 18 Jul 2021 10:35:09 -0400
+Received: from out20-49.mail.aliyun.com ([115.124.20.49]:39269 "EHLO
+        out20-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230307AbhGROfI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 18 Jul 2021 10:35:08 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07501587|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0237661-0.00541911-0.970815;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047207;MF=guan@eryu.me;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.KkrFLCr_1626618728;
+Received: from localhost(mailfrom:guan@eryu.me fp:SMTPD_---.KkrFLCr_1626618728)
+          by smtp.aliyun-inc.com(10.147.41.187);
+          Sun, 18 Jul 2021 22:32:08 +0800
+Date:   Sun, 18 Jul 2021 22:32:08 +0800
 From:   Eryu Guan <guan@eryu.me>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
         fstests@vger.kernel.org
 Subject: Re: [PATCH 4/8] dmthin: erase the metadata device properly before
  starting
-Message-ID: <YPQ4yl55EkwibVsA@desktop>
+Message-ID: <YPQ7aF4//Fzmxma6@desktop>
 References: <162561726690.543423.15033740972304281407.stgit@locust>
  <162561728893.543423.5093723938379703860.stgit@locust>
 MIME-Version: 1.0
@@ -44,6 +44,14 @@ On Tue, Jul 06, 2021 at 05:21:28PM -0700, Darrick J. Wong wrote:
 >  QA output created by 347
 > -=== completed
 > +failed to create dm thin pool device
+
+Note that I have to add space indention to above diff lines, otherwise
+it seems git am will treat lines after "---" as the beginning of patch,
+and failed to apply.
+
+Thanks,
+Eryu
+
 > 
 > Accompanied by the following dmesg spew:
 > 
@@ -80,11 +88,6 @@ On Tue, Jul 06, 2021 at 05:21:28PM -0700, Darrick J. Wong wrote:
 > 
 > Fixes: 4b52fffb ("dm-thinp helpers in common/dmthin")
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-
-This is a hard one to catch, thanks for the patch! :)
-
-Eryu
-
 > ---
 >  common/dmthin |    8 ++++++--
 >  1 file changed, 6 insertions(+), 2 deletions(-)
