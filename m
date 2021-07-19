@@ -2,61 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 022053CCA45
-	for <lists+linux-xfs@lfdr.de>; Sun, 18 Jul 2021 20:48:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B29133CD022
+	for <lists+linux-xfs@lfdr.de>; Mon, 19 Jul 2021 11:09:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231495AbhGRSvn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 18 Jul 2021 14:51:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230402AbhGRSvY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 18 Jul 2021 14:51:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 6689861186;
-        Sun, 18 Jul 2021 18:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626634106;
-        bh=pvQ0Zxb2ILAuFyTetxXMOtpaF32INjgho6wS7jYMTBI=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=G+yW3f/HElZuO7vpPu42IhWReU7u6a44CCbeS2W6/O3VY8fHaXJ+mZ+Rpfy3bhqbp
-         HEiFeGFdqlF4zZv1AUjnKGC3VzKsiXRiDUOW5ekt6ZswGk3a1k7WcjU61pn8bnmx+0
-         RpaiqxaxUCUQB/gRu2a1eCA4jKUmnh87Huk3fixqED15fmv+DU4NYJXY2MiQ4mzYle
-         dgiZ9CdZ6+L5Rx7Tue5ByiVp1ln0jznDxiNHlBshW0b18XfajBNen4EO/y3djfvprk
-         5NSbMvm5GdOILVERJqQfdV/aMuEjTwnorDKNaLAWVQlTj2lkzGoltmIPznU5XTvn7g
-         1Fk+HsBpr5/Zg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 5C0C960A37;
-        Sun, 18 Jul 2021 18:48:26 +0000 (UTC)
-Subject: Re: [GIT PULL] xfs: bug fixes for 5.14-rc2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210718163931.GB22402@magnolia>
-References: <20210718163931.GB22402@magnolia>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210718163931.GB22402@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.14-fixes-1
-X-PR-Tracked-Commit-Id: b102a46ce16fd5550aed882c3c5b95f50da7992c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f0eb870a84224c9bfde0dc547927e8df1be4267c
-Message-Id: <162663410637.7372.13651239253430897917.pr-tracker-bot@kernel.org>
-Date:   Sun, 18 Jul 2021 18:48:26 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        id S235499AbhGSI24 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 19 Jul 2021 04:28:56 -0400
+Received: from casper.infradead.org ([90.155.50.34]:45340 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235382AbhGSI2z (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Jul 2021 04:28:55 -0400
+X-Greylist: delayed 612 seconds by postgrey-1.27 at vger.kernel.org; Mon, 19 Jul 2021 04:26:50 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cc8WxTp9u8HYpKx7zXqvjDzDZErsRxFk/MMnyKkMLQg=; b=A9Xm6YNlWN+nzI/dpgXm0abe3A
+        luJ1k4KEHp2gDhChrg4AiKI+M2OZ0q+Ux0kqutpjRVUORh32sJIEUA+Arf7sYFFaUVusZPNRER6MD
+        CIUar6CD9U4dE5V1h8tVC37BNxgzxwnM/1BgOaC7jyW6/R0TZUEFnMOI14yYCIXgRb5qxTiR/Ynmz
+        m+2Elq52B126zZr+Kcytn4Xq7rRrlOSxTV9yGflhkk80X3rJV9CFp961ly+zL1kf8P0jwmQ0nyT8L
+        hyQSQLKZuF5VKo7Ixfq8omp22OV4030nCh9yUdu2buSXncSp7cIZh+LLeDgFHGRAo0wIZPqXZggjM
+        xKgjAg0Q==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m5Oo1-006f6U-0s; Mon, 19 Jul 2021 08:39:22 +0000
+Date:   Mon, 19 Jul 2021 09:39:17 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Gao Xiang <xiang@kernel.org>,
+        linux-erofs@lists.ozlabs.org, stable@vger.kernel.org
+Subject: Re: [PATCH] iomap: Add missing flush_dcache_page
+Message-ID: <YPU6NVlfIh4PfbPl@infradead.org>
+References: <20210716150032.1089982-1-willy@infradead.org>
+ <YPGf8o7vo6/9iTE5@infradead.org>
+ <YPHBqlLJQKQgRHqH@casper.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YPHBqlLJQKQgRHqH@casper.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pull request you sent on Sun, 18 Jul 2021 09:39:31 -0700:
+On Fri, Jul 16, 2021 at 06:28:10PM +0100, Matthew Wilcox wrote:
+> > >  	memcpy(addr, iomap->inline_data, size);
+> > >  	memset(addr + size, 0, PAGE_SIZE - size);
+> > >  	kunmap_atomic(addr);
+> > > +	flush_dcache_page(page);
+> > 
+> > .. and all writes into a kmap also need such a flush, so this needs to
+> > move a line up.  My plan was to add a memcpy_to_page_and_pad helper
+> > ala memcpy_to_page to get various file systems and drivers out of the
+> > business of cache flushing as much as we can.
+> 
+> hm?  It's absolutely allowed to flush the page after calling kunmap.
+> Look at zero_user_segments(), for example.
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.14-fixes-1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f0eb870a84224c9bfde0dc547927e8df1be4267c
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Documentation/core-api/cachetlb.rst states that any user page obtained
+using kmap needs a flush_kernel_dcache_page after modification.
+flush_dcache_page is a strict superset of flush_kernel_dcache_page.
+That beeing said flushing after kmap updates is a complete mess.
+arm as probably the poster child for dcache challenged plus highmem
+architectures always flushed caches from kunmap and, and arc has
+a flush_dcache_page that doesn't work at all on a highmem page that
+is not kmapped (where kmap_atomic and kmap_local_page don't count as
+kmapped as they don't set page->virtual).
