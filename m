@@ -2,36 +2,33 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CA203CF121
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jul 2021 03:11:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B4DC3CF12C
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jul 2021 03:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236842AbhGTAbC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 19 Jul 2021 20:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41532 "EHLO mail.kernel.org"
+        id S1380381AbhGTAbJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 19 Jul 2021 20:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1380874AbhGTA1u (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 19 Jul 2021 20:27:50 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F197600D1;
-        Tue, 20 Jul 2021 01:08:29 +0000 (UTC)
+        id S236860AbhGTA1w (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 19 Jul 2021 20:27:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 0951C60FF3;
+        Tue, 20 Jul 2021 01:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626743309;
-        bh=ltHUv5SYK8uwTC+Kmh832KUqB5N7CIuDox1+NMXQXaE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UTKsIiPp6LHRCT1QMjmJ5w0gPznqFFYn/DYOcjdq6lumETKru8l6yKaUZhYlDfZnV
-         UcMC5QCxgBPNTnl6fZkPiaEQ87Wjc+SqMhYllgNOp7FWtMyfsBbr41z70Xvf2fEqEz
-         zZckPFqqlNz+Dj9udB4kBw13d9N83zmYUUXDr2pGgQcg4Rkao5LNDoCR2hz9h1Ia1Q
-         0KfLfGp1SSy3E9VgGTTZQw5pcbOfBi0q24TMNe75ceWNU2fhLS5KzEljd24v5XVw/d
-         oAEYEBcOfH6UzgLkhjgykguR6nxE/Wobcfu+sKd3bCHtEnsZQI6pxnyauAubZRosVa
-         CQw4lAyzEnUoA==
-Subject: [PATCH 1/1] generic/561: hide assertions when duperemove is killed
+        s=k20201202; t=1626743311;
+        bh=bJ+U5i5+0YzYg8DRxzkDBzavZEfcsykyJRVR5uOy9PQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=qd9u9bRhLFh+jqQ4tEHBYJbPJlC0r6zJfvrceKXyxh9yYIoMPgBPLrqTkgEXU6gHY
+         fhfuilu8itzYqpoPGIk4gO0mQeL+7S2QxozQf1p4dvKyf2WLc5CexnlqKW/YipT9I3
+         TmoXxtxgn3iR37GiBwio7YPfyQnaAxxEy9hId5qyRIFzwoPNXh0oFrJRcbHwuJBtYR
+         3F6GzBloI/GQnRpUgf5e8+8E+xlV0tqBAAL4Plx0j6XqPQbr2JYJ+fbuRlgUpfsyAa
+         JS41pU/qYBlcnKlNL38ZBlC1nRqO3OoFdY2tAZziHjxQZpEFTQoKDu78LxDewXCaht
+         jVak9QUHiIKWQ==
+Subject: [PATCHSET 0/2] fstests: regression tests for 5.13 fixes
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com
-Cc:     Allison Henderson <allison.henderson@oracle.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Mon, 19 Jul 2021 18:08:29 -0700
-Message-ID: <162674330933.2650745.11380233368495712613.stgit@magnolia>
-In-Reply-To: <162674330387.2650745.4586773764795034384.stgit@magnolia>
-References: <162674330387.2650745.4586773764795034384.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+Date:   Mon, 19 Jul 2021 18:08:30 -0700
+Message-ID: <162674331075.2650812.11935724515971931345.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -40,37 +37,33 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Use some bash redirection trickery to capture in $seqres.full all of
-bash's warnings about duperemove being killed due to assertions
-triggering.
+Add regression tests to trigger some bugs in the realtime allocator that
+were fixed in kernel 5.13.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-fixes
 ---
- tests/generic/561 |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-
-diff --git a/tests/generic/561 b/tests/generic/561
-index bfd4443d..44f07802 100755
---- a/tests/generic/561
-+++ b/tests/generic/561
-@@ -62,8 +62,13 @@ dupe_run=$TEST_DIR/${seq}-running
- touch $dupe_run
- for ((i = 0; i < $((2 * LOAD_FACTOR)); i++)); do
- 	while [ -e $dupe_run ]; do
--		$DUPEREMOVE_PROG -dr --dedupe-options=same $testdir \
--			>>$seqres.full 2>&1
-+		# Run cmd in a subshell so that the golden output does not
-+		# capture assertions that trigger when killall shoots down
-+		# dupremove processes in an arbitrary order, which leaves the
-+		# memory in an inconsistent state long enough for the assert
-+		# to trip.
-+		cmd="$DUPEREMOVE_PROG -dr --dedupe-options=same $testdir"
-+		bash -c "$cmd" >> $seqres.full 2>&1
- 	done 2>&1 | sed -e '/Terminated/d' &
- 	dedup_pids="$! $dedup_pids"
- done
+ tests/xfs/774     |   78 +++++++++++++++++++++++++
+ tests/xfs/774.out |    5 ++
+ tests/xfs/775     |  165 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/775.out |    3 +
+ tests/xfs/776     |   57 ++++++++++++++++++
+ tests/xfs/776.out |    5 ++
+ 6 files changed, 313 insertions(+)
+ create mode 100755 tests/xfs/774
+ create mode 100644 tests/xfs/774.out
+ create mode 100755 tests/xfs/775
+ create mode 100644 tests/xfs/775.out
+ create mode 100755 tests/xfs/776
+ create mode 100644 tests/xfs/776.out
 
