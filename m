@@ -2,47 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 912C43CF49A
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jul 2021 08:37:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03F3A3CF655
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Jul 2021 10:52:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238084AbhGTF5P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 20 Jul 2021 01:57:15 -0400
-Received: from verein.lst.de ([213.95.11.211]:53906 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235503AbhGTF5O (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Tue, 20 Jul 2021 01:57:14 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 5BCBE68AFE; Tue, 20 Jul 2021 08:37:51 +0200 (CEST)
-Date:   Tue, 20 Jul 2021 08:37:51 +0200
+        id S234899AbhGTIL2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 20 Jul 2021 04:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230161AbhGTIDd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Jul 2021 04:03:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11CCAC061762;
+        Tue, 20 Jul 2021 01:44:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=hDxhkvl1GckRp/8tfsdTt+oLETLQj3SGmuyOppemisU=; b=E6h+j2IZrkz9vX8wE5cJUT8w04
+        9KtLcZOxgDU94wJyotd/+LL5TwYUkVYvbHqemHTQ5viqk0NARaAtKk6e6fb1m2rU4Bk/McE30JN4Q
+        mg8ObHnq//pWwN31Jnrltp/ajHtgB8SBe3HysdkX9dXUjOM1/y6aP+QraZg8RWqhyxAJfb4oVwLa4
+        ymjZWtjE5aDcJrj/qMbtku7Yr4m2UvM6Ay9TSq5EpO3j+SaQkAQ7mf1UPoDjFbUJVuLjynsXz5LCR
+        LUoZ/0hcsoBamxirxbZU+XROMOHrr+V3pQaWTE32cDxeRwqDcXhdg6X42vctbW6RlVRLuPtKBT8CC
+        FW7ztdHA==;
+Received: from [2001:4bb8:193:7660:5612:5e3c:ba3d:2b3c] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1m5lLW-007vLn-SG; Tue, 20 Jul 2021 08:43:33 +0000
 From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 4/6] xfs/220: avoid failure when disabling quota
- accounting is not supported
-Message-ID: <20210720063751.GC14747@lst.de>
-References: <20210712111146.82734-1-hch@lst.de> <20210712111146.82734-5-hch@lst.de> <20210714233049.GO22402@magnolia>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, willy@infradead.org
+Subject: [PATCH 1/2] iomap: simplify iomap_readpage_actor
+Date:   Tue, 20 Jul 2021 10:43:19 +0200
+Message-Id: <20210720084320.184877-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210714233049.GO22402@magnolia>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 04:30:49PM -0700, Darrick J. Wong wrote:
-> > +#
-> > +# The sed expression below replaces a notrun to cater for kernels that have
-> > +# removed the ability to disable quota accounting at runtime.  On those
-> > +# kernel this test is rather useless, and in a few years we can drop it.
-> > +xfs_quota -x -c off -c remove $SCRATCH_DEV 2>&1 | \
-> 
-> Please replace 'xfs_quota' with '$XFS_QUOTA_PROG' in all these tests
-> you're touching.
-> 
-> > +	sed -e '/XFS_QUOTARM: Invalid argument/d'
-> 
-> Between 'off' and 'remove', which one returned EINVAL?
+Now that the outstanding reads are counted in bytes, there is no need
+to use the low-level __bio_try_merge_page API, we can switch back to
+always using bio_add_page and simply iomap_readpage_actor again.
 
-remove, as the file system is still using the quota files.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/iomap/buffered-io.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
+
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 87ccb3438becd9..4eaadbd265fcfa 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -241,7 +241,6 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	struct iomap_readpage_ctx *ctx = data;
+ 	struct page *page = ctx->cur_page;
+ 	struct iomap_page *iop;
+-	bool same_page = false, is_contig = false;
+ 	loff_t orig_pos = pos;
+ 	unsigned poff, plen;
+ 	sector_t sector;
+@@ -268,16 +267,10 @@ iomap_readpage_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
+ 	if (iop)
+ 		atomic_add(plen, &iop->read_bytes_pending);
+ 
+-	/* Try to merge into a previous segment if we can */
+ 	sector = iomap_sector(iomap, pos);
+-	if (ctx->bio && bio_end_sector(ctx->bio) == sector) {
+-		if (__bio_try_merge_page(ctx->bio, page, plen, poff,
+-				&same_page))
+-			goto done;
+-		is_contig = true;
+-	}
+-
+-	if (!is_contig || bio_full(ctx->bio, plen)) {
++	if (!ctx->bio ||
++	    bio_full(ctx->bio, plen) ||
++	    bio_end_sector(ctx->bio) != sector) {
+ 		gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+ 		gfp_t orig_gfp = gfp;
+ 		unsigned int nr_vecs = DIV_ROUND_UP(length, PAGE_SIZE);
+-- 
+2.30.2
+
