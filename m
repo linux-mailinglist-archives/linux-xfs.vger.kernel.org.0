@@ -2,121 +2,99 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 519323D1A71
-	for <lists+linux-xfs@lfdr.de>; Thu, 22 Jul 2021 01:31:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C18F13D1B8C
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Jul 2021 03:53:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231132AbhGUWuV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 21 Jul 2021 18:50:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230495AbhGUWuU (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 21 Jul 2021 18:50:20 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AB7736121F;
-        Wed, 21 Jul 2021 23:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626910256;
-        bh=VMOgEl7XFLHAT/9MyUGH631UPK2nLrJgvCVfTC76OXE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=avyfBZd+m2fsiaqVE7LhlJdjZdPSMSSlFazuZF0elabwpN7xyAp35Xyrgyf74TXuM
-         Hpx2hEe7va9UoGiICUmIpKg2RrJf6sFlGjgs0IkxbzMKSv/MeryAzJd/d3wqzXCq//
-         Urxn/91473LXpqbWJV5pj+eFAO7+Ju3G8znaQgIeAftceXIwqKWBOfjoCYZwMmbnn+
-         JNdnRG1oV+NYjJNZo0cyqCzBe5/iK8cY/dODQ98Egm2uZo01iTdJv7LiUCkOly1FYQ
-         lDtIUJ2JTTC6Y7etJYMgLmgqh10B2zpPuBXX6Snr/uQ//FZoD3o/FmDRLL+5pxxACK
-         bvt+tbO6ZaaWg==
-Date:   Wed, 21 Jul 2021 16:30:56 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yuanxzhang@fudan.edu.cn, Xin Tan <tanxin.ctf@gmail.com>
-Subject: Re: [PATCH] iomap: Convert from atomic_t to refcount_t on
- iomap_dio->ref
-Message-ID: <20210721233056.GC8639@magnolia>
-References: <1626683544-64155-1-git-send-email-xiyuyang19@fudan.edu.cn>
+        id S230040AbhGVBNS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 21 Jul 2021 21:13:18 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:38902 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230017AbhGVBNG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 21 Jul 2021 21:13:06 -0400
+Received: from dread.disaster.area (pa49-181-34-10.pa.nsw.optusnet.com.au [49.181.34.10])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 76ACA80B3FD
+        for <linux-xfs@vger.kernel.org>; Thu, 22 Jul 2021 11:53:39 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1m6Nu6-009JQ9-8e
+        for linux-xfs@vger.kernel.org; Thu, 22 Jul 2021 11:53:38 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.94)
+        (envelope-from <david@fromorbit.com>)
+        id 1m6Nu5-00CquV-UG
+        for linux-xfs@vger.kernel.org; Thu, 22 Jul 2021 11:53:38 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/5] xfs: fix log cache flush regressions
+Date:   Thu, 22 Jul 2021 11:53:30 +1000
+Message-Id: <20210722015335.3063274-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1626683544-64155-1-git-send-email-xiyuyang19@fudan.edu.cn>
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+        a=hdaoRb6WoHYrV466vVKEyw==:117 a=hdaoRb6WoHYrV466vVKEyw==:17
+        a=e_q4qTt1xDgA:10 a=4B8MH4RbZXiobv8yyc8A:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 19, 2021 at 04:32:24PM +0800, Xiyu Yang wrote:
-> refcount_t type and corresponding API can protect refcounters from
-> accidental underflow and overflow and further use-after-free situations.
-> 
-> Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-> Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-> ---
->  fs/iomap/direct-io.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index 9398b8c31323..d1393579a954 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -3,6 +3,7 @@
->   * Copyright (C) 2010 Red Hat, Inc.
->   * Copyright (c) 2016-2018 Christoph Hellwig.
->   */
-> +#include <linux/refcount.h>
->  #include <linux/module.h>
->  #include <linux/compiler.h>
->  #include <linux/fs.h>
-> @@ -28,7 +29,7 @@ struct iomap_dio {
->  	const struct iomap_dio_ops *dops;
->  	loff_t			i_size;
->  	loff_t			size;
-> -	atomic_t		ref;
-> +	refcount_t		ref;
->  	unsigned		flags;
->  	int			error;
->  	bool			wait_for_completion;
-> @@ -62,7 +63,7 @@ EXPORT_SYMBOL_GPL(iomap_dio_iopoll);
->  static void iomap_dio_submit_bio(struct iomap_dio *dio, struct iomap *iomap,
->  		struct bio *bio, loff_t pos)
->  {
-> -	atomic_inc(&dio->ref);
-> +	refcount_inc(&dio->ref);
+The first four patches in this series fix regressions introduced by
+commit eef983ffeae7 ("xfs: journal IO cache flush reductions") and
+exposed by generic/482. I have one test machine that reproduces
+the failures, and in general a failure occurs 1 in every 30 test
+iterations.
 
-Seems all right to me, though I wonder if any of the more
-performance-minded people have comments about the overhead of refcount_t
-vs. atomic_t?
+The first two patches are related to external logs. These were found
+by code inspection while looking for the cause of the generic/482
+failures.
 
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+The third patch addresses a race condition between the new
+unconditional async data device cache flush run by the CIL push and
+the log tail changing between that flush completing and the commit
+iclog being synced. In this situation, if the commit_iclog doesn't
+issue a REQ_PREFLUSH, we fail to guarantee that the metadata IO
+completions that moved the log tail are on stable storage. The fix
+for this issue is to sample the log tail before we issue the async
+cache flush, and if the log tail has changed when we release the
+commit_iclog we set the XLOG_ICL_NEED_FLUSH flag on the iclog to
+guarantee a cache flush is issued before the commit record that
+moves the tail of the log forward is written to the log.
 
---D
+The fourth patch addresses an oversight about log forces. Log forces
+imply a cache flush if they result in iclog IO being issued,
+allowing the caller to elide cache flushes that they might require
+for data integrity. The change to requiring the iclog owner to
+signal that a cache flush is required completely missed the log
+force code. This patch ensures that all ACTIVE and WANT_SYNC iclogs
+that we either flush or wait on issue cache flushes and so guarantee
+that they are on stable storage at IO completion before they signal
+completion to log force waiters.
 
->  
->  	if (dio->iocb->ki_flags & IOCB_HIPRI)
->  		bio_set_polled(bio, dio->iocb);
-> @@ -158,7 +159,7 @@ static void iomap_dio_bio_end_io(struct bio *bio)
->  	if (bio->bi_status)
->  		iomap_dio_set_error(dio, blk_status_to_errno(bio->bi_status));
->  
-> -	if (atomic_dec_and_test(&dio->ref)) {
-> +	if (refcount_dec_and_test(&dio->ref)) {
->  		if (dio->wait_for_completion) {
->  			struct task_struct *waiter = dio->submit.waiter;
->  			WRITE_ONCE(dio->submit.waiter, NULL);
-> @@ -471,7 +472,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  		return ERR_PTR(-ENOMEM);
->  
->  	dio->iocb = iocb;
-> -	atomic_set(&dio->ref, 1);
-> +	refcount_set(&dio->ref, 1);
->  	dio->size = 0;
->  	dio->i_size = i_size_read(inode);
->  	dio->dops = dops;
-> @@ -611,7 +612,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
->  	 *	after we got woken by the I/O completion handler.
->  	 */
->  	dio->wait_for_completion = wait_for_completion;
-> -	if (!atomic_dec_and_test(&dio->ref)) {
-> +	if (!refcount_dec_and_test(&dio->ref)) {
->  		if (!wait_for_completion)
->  			return ERR_PTR(-EIOCBQUEUED);
->  
-> -- 
-> 2.7.4
-> 
+The last patch is not a regression, but a fix for another log force
+iclog related flush problem I noticed and found while triaging the
+above problems. Occasionally the tests would sit idle doing nothing
+for up to 30s waiting on a xfs_log_force_seq() call to complete. The
+trigger for them to wake up was the background log worker issuing a
+new log force. This appears to be another "incorrectly wait on
+future iclog state changes" situation, and it's notable that
+xfs_log_force() specifically handles this situation while
+xfs_log_force_seq() does not. Changing xfs_log_force_seq() to use
+the same "iclog IO already completed" detection as xfs_log_force()
+made those random delays go away.
+
+I'm still not sure that I've caught all the cases where we don't
+issue cache flushes correctly - debugging this has been a slow
+process of whack-a-mole, and there are still questionable failures
+occurring where an fsync is not appearing to issue an iclog with a
+cache flush correctly after hundreds of test cycles. Capturing a
+failure with enough debug information for it to be meaningful is a
+slow, time-consuming process...
+
+However, this patchset as it stands makes things a lot better, so I
+figure it's better to get this out there now and get more eyes on it
+sooner rather than later...
+
+Version 1:
+- based on 5.14-rc1
+
