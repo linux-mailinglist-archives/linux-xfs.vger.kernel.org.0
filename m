@@ -2,57 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45C1E3D1E68
-	for <lists+linux-xfs@lfdr.de>; Thu, 22 Jul 2021 08:41:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031E03D1E78
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Jul 2021 08:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbhGVGBQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Jul 2021 02:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51482 "EHLO
+        id S229971AbhGVGIP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Jul 2021 02:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230397AbhGVGBP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Jul 2021 02:01:15 -0400
+        with ESMTP id S229573AbhGVGIP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 22 Jul 2021 02:08:15 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1544EC061575
-        for <linux-xfs@vger.kernel.org>; Wed, 21 Jul 2021 23:41:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3A4C061575
+        for <linux-xfs@vger.kernel.org>; Wed, 21 Jul 2021 23:48:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kmNivVvmCPfNUH9oquDxG79MGFnye5uN7HqvtCbKgMc=; b=ga5afbaDLkjTyalccIaJ2aV+gn
-        izqfzjaKs7sF7a8ZHp0uRnaqvv1UXc72DKBpvP6LtzdNmMn3oIPk96p/O1eHigEqevGGF26xEujAn
-        1Ll39jEGkiYVDaeviGlqtNLfi38IOnDwLL+pM03A+5oC5fqAvPisTAuIs+5a/Cwd4l76NGzgjKWrE
-        yOUIdjnbJolU8mfZlF+l2EqYgKmykf26AnI2RnbuTm6WHAVtAi+5V5GofYJvzDXJLhWKXwzqcM0kf
-        uxymyV/VPrnbtIUOdQonRiP9fH6Ssk6PTsS+U0erstoJOMvUa8riEAL65zpz/GrmX9OvXzs04TQnD
-        UMyFztBQ==;
+        bh=VAywGs1gMVyF3G1F0g2GBxJbpVqpAc85vRWodQZX9eY=; b=ebffW4lZDSDzR9MdmtCdO//q/1
+        wowTdXmcgfVcOofJ/2riJL7sFIBTQSG67GXhzz3jsOYEkXSCVHeZm5Mxz2yCtKrrr5WYwLfkRW/C/
+        bZQOOBEzVCl7MX947d9GUVUOwRq5hsgmZaOwIph8u8TwNCKEtice9TbA1fNIoGQqppwI4oT5Fxqpk
+        EzPod1Q6p31LDV3fdIxhnoQp9+xyKmW45F/dERq/0IWWq+TA+xEruYKjyV7L4rhyFgXLq3wAaJb5F
+        USH2herxBf4i1WXQItGBh6IXyf6NJF3AHUbvOhPipaeTREqHGodJZHz7CX0+yX8sChF/2NxiRwGMA
+        iBHAa5rw==;
 Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1m6SOL-009xw8-Tp; Thu, 22 Jul 2021 06:41:18 +0000
-Date:   Thu, 22 Jul 2021 07:41:09 +0100
+        id 1m6SVV-009yEQ-Jk; Thu, 22 Jul 2021 06:48:40 +0000
+Date:   Thu, 22 Jul 2021 07:48:33 +0100
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 1/5] xfs: flush data dev on external log write
-Message-ID: <YPkTBRQvVYkgccDo@infradead.org>
+Subject: Re: [PATCH 2/5] xfs: external logs need to flush data device
+Message-ID: <YPkUwd/IridkTHAQ@infradead.org>
 References: <20210722015335.3063274-1-david@fromorbit.com>
- <20210722015335.3063274-2-david@fromorbit.com>
+ <20210722015335.3063274-3-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210722015335.3063274-2-david@fromorbit.com>
+In-Reply-To: <20210722015335.3063274-3-david@fromorbit.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 11:53:31AM +1000, Dave Chinner wrote:
+On Thu, Jul 22, 2021 at 11:53:32AM +1000, Dave Chinner wrote:
 > From: Dave Chinner <dchinner@redhat.com>
 > 
-> We incorrectly flush the log device instead of the data device when
-> trying to ensure metadata is correctly on disk before writing the
-> unmount record.
+> The recent journal flush/FUA changes replaced the flushing of the
+> data device on every iclog write with an up-front async data device
+> cache flush. Unfortunately, the assumption of which this was based
+> on has been proven incorrect by the flush vs log tail update
+> ordering issue. As the fix for that issue uses the
+> XLOG_ICL_NEED_FLUSH flag to indicate that data device needs a cache
+> flush, we now need to (once again) ensure that an iclog write to
+> external logs that need a cache flush to be issued actually issue a
+> cache flush to the data device as well as the log device.
 > 
 > Fixes: eef983ffeae7 ("xfs: journal IO cache flush reductions")
 > Signed-off-by: Dave Chinner <dchinner@redhat.com>
 
-Ooops, looks good:
+Looks good,
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
