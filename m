@@ -2,27 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A37FB3D32C8
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jul 2021 05:59:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2786F3D3356
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jul 2021 06:02:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234300AbhGWDSR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Jul 2021 23:18:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38782 "EHLO mail.kernel.org"
+        id S233855AbhGWDVQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Jul 2021 23:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234200AbhGWDR7 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 22 Jul 2021 23:17:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 276A660F36;
-        Fri, 23 Jul 2021 03:58:32 +0000 (UTC)
+        id S233858AbhGWDRM (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 22 Jul 2021 23:17:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F09760C41;
+        Fri, 23 Jul 2021 03:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627012713;
-        bh=PcJSEufoi0i8jRxWfiKREwhqCPga+r/UzzLHV2wQEnw=;
+        s=k20201202; t=1627012666;
+        bh=+tUf8UsEFsnhIbkN1zSKvp4omNtzqg1OVxJOYm4VOpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBeLVZSP3iVZ5R436dWTy+VhSNFV5x2gaXeiCA9QwYz/I+mAEwm31/7YTrBDEtHXm
-         qMwMT9Ir9CFesdQV7Rmtl9zIfqJMn+jJZaPxF9SRAVLe6jawtq50hEiBZ3BFs+sp9/
-         KvsAsaECkXG48Q0B8+73kR44vO1QUACefmEkyDXGQ40Gy1Q/qqVj/Qhx/v2rFepc+D
-         4xw7XoqkXFQK9WA7n5C5vOpzszCuCxFcGUst91caOkQP6fAS8HNGMuC6TC3jJ/gG6f
-         eXR52nW+Bi4YRiRCwuWVhI6eUJ+EKGZUav+zx9xka5JWDQC2vrZMXAqSlUmZoUO0Pd
-         G1R6CQx+BRWqQ==
+        b=IxLpHrh43oPPOI6xIj7CieJok+Q1+fyjOaLPOd61wH6L21I9YI9tCUE5lmll3LbIg
+         r62UY6h0531Q03gE8yddJDVa6rwQU0kN51blqUIEZcv0GTm13U9s7SwF/tawVf1VPd
+         6XYc4KPncZ3WoqrkVp7X0CpeQvbBkzvzbUPOYJ9aTYrkMgxOIzaHLO/jmgUPT3O3XZ
+         esx2x8qK6S+mg9VBWmLELtAmNnXBQpZINtF+NY/cXUlyOFOC9KGGtQMlJ7I7xtKs/o
+         awfjyo1GTGxe7/DuzFWJCKFHsDznHRAiBUkpFEqNs+qIfRe3CJ+nazg+T+xD9h9BN6
+         Tq5lr0lIYsIlg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>,
@@ -31,12 +31,12 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Matthew Wilcox <willy@infradead.org>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/14] iomap: remove the length variable in iomap_seek_hole
-Date:   Thu, 22 Jul 2021 23:58:12 -0400
-Message-Id: <20210723035813.531837-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 18/19] iomap: remove the length variable in iomap_seek_hole
+Date:   Thu, 22 Jul 2021 23:57:19 -0400
+Message-Id: <20210723035721.531372-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210723035813.531837-1-sashal@kernel.org>
-References: <20210723035813.531837-1-sashal@kernel.org>
+In-Reply-To: <20210723035721.531372-1-sashal@kernel.org>
+References: <20210723035721.531372-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,10 +64,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/fs/iomap/seek.c b/fs/iomap/seek.c
-index c61b889235b3..10c4c1e80124 100644
+index 50b8f1418f26..ce6fb810854f 100644
 --- a/fs/iomap/seek.c
 +++ b/fs/iomap/seek.c
-@@ -140,23 +140,20 @@ loff_t
+@@ -35,23 +35,20 @@ loff_t
  iomap_seek_hole(struct inode *inode, loff_t offset, const struct iomap_ops *ops)
  {
  	loff_t size = i_size_read(inode);
