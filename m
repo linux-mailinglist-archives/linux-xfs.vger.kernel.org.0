@@ -2,27 +2,27 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 393273D32BF
-	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jul 2021 05:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A7373D32D4
+	for <lists+linux-xfs@lfdr.de>; Fri, 23 Jul 2021 05:59:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234056AbhGWDSK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 22 Jul 2021 23:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38266 "EHLO mail.kernel.org"
+        id S234315AbhGWDST (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 22 Jul 2021 23:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234057AbhGWDRg (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 22 Jul 2021 23:17:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 1195660F23;
-        Fri, 23 Jul 2021 03:58:09 +0000 (UTC)
+        id S234194AbhGWDR5 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 22 Jul 2021 23:17:57 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C521F60F4D;
+        Fri, 23 Jul 2021 03:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627012691;
-        bh=8mW5LOfHd/0SVuLd0fSKIgVlKgyZ/PRI5ivodnmqkRU=;
+        s=k20201202; t=1627012711;
+        bh=4ONx8zleb/J/EZvZr8o+gLi87G4j7rh8wL10QVPWXRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RQVTKRNPXPZ7H6rgQdwgAhyWYPZf6mWZnFQ1r+a5Y2jMiuTv+1Or/HbfNNilEqF3/
-         jTpPi3p3DP13tYJFpIEAgAT7eRVtxHF2v98LBLZP5VOfiVoCgIZkLGSwx9U5DUgR1k
-         LXSSlkzFRXqmCB4k4DkOTE7kHRcPIGWeLa42o+7F1Z3N/N4TRx3aTZt7PdPByOZiIY
-         gq0L3B5RbaBDm6DAoTQtDFnu3MidAbKCdl0YUqUGws7igAlzAu+664lPXxKv5xOiH8
-         7avDEq88K9F1cq4EqUfaJHO0VMpxOSI/2979ok+YSBjKMuwqFGHeOMSZFgC9+i/Gnb
-         vCVk3gDrffFmw==
+        b=Z3qQxoy9wtPDv8gNzlnNGpV1lIYLbx1Og66PmbdwoS8UwP4i8F9dxvaeyyc23O4bn
+         +fEZZRv1mRz7qoU3KOEIR5gGNtd16bQb4yyuasuU+NcNTTO1VAqXpvPinpVr0+FFvL
+         mUoutmkJiCc+wdCWrcRCOvDx3DHFeNHllj+XLjX7C/d6CXfxaoULj3FisJ9oKKdwFl
+         GvrGL23mK4rUGpTP3yhLD+UFU/WqQonMFTHQo9M0Bq55aZ5iVIcy2HCiPOMe4UPShN
+         uZhMsltyE4psinCWoDF73QV9n4MAN4efNtf2+Dib8bbifRZRjS95eCVgzwzbZ4YpGb
+         PIpRVsn5PHRcg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>,
@@ -31,12 +31,12 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Matthew Wilcox <willy@infradead.org>,
         Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 16/17] iomap: remove the length variable in iomap_seek_hole
-Date:   Thu, 22 Jul 2021 23:57:47 -0400
-Message-Id: <20210723035748.531594-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 12/14] iomap: remove the length variable in iomap_seek_data
+Date:   Thu, 22 Jul 2021 23:58:11 -0400
+Message-Id: <20210723035813.531837-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210723035748.531594-1-sashal@kernel.org>
-References: <20210723035748.531594-1-sashal@kernel.org>
+In-Reply-To: <20210723035813.531837-1-sashal@kernel.org>
+References: <20210723035813.531837-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -47,7 +47,7 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 49694d14ff68fa4b5f86019dbcfb44a8bd213e58 ]
+[ Upstream commit 3ac1d426510f97ace05093ae9f2f710d9cbe6215 ]
 
 The length variable is rather pointless given that it can be trivially
 deduced from offset and size.  Also the initial calculation can lead
@@ -60,15 +60,15 @@ Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/iomap/seek.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ fs/iomap/seek.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
 diff --git a/fs/iomap/seek.c b/fs/iomap/seek.c
-index 271edcc84a28..220c306167f7 100644
+index c04bad4b2b43..c61b889235b3 100644
 --- a/fs/iomap/seek.c
 +++ b/fs/iomap/seek.c
-@@ -140,23 +140,20 @@ loff_t
- iomap_seek_hole(struct inode *inode, loff_t offset, const struct iomap_ops *ops)
+@@ -186,27 +186,23 @@ loff_t
+ iomap_seek_data(struct inode *inode, loff_t offset, const struct iomap_ops *ops)
  {
  	loff_t size = i_size_read(inode);
 -	loff_t length = size - offset;
@@ -80,20 +80,27 @@ index 271edcc84a28..220c306167f7 100644
  
 -	while (length > 0) {
 -		ret = iomap_apply(inode, offset, length, IOMAP_REPORT, ops,
--				  &offset, iomap_seek_hole_actor);
+-				  &offset, iomap_seek_data_actor);
 +	while (offset < size) {
 +		ret = iomap_apply(inode, offset, size - offset, IOMAP_REPORT,
-+				  ops, &offset, iomap_seek_hole_actor);
++				  ops, &offset, iomap_seek_data_actor);
  		if (ret < 0)
  			return ret;
  		if (ret == 0)
- 			break;
+-			break;
 -
++			return offset;
  		offset += ret;
 -		length -= ret;
  	}
  
- 	return offset;
+-	if (length <= 0)
+-		return -ENXIO;
+-	return offset;
++	/* We've reached the end of the file without finding data */
++	return -ENXIO;
+ }
+ EXPORT_SYMBOL_GPL(iomap_seek_data);
 -- 
 2.30.2
 
