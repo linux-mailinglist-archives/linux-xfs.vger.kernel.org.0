@@ -2,63 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A1EA3D65A3
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 19:25:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5DE73D652A
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 19:09:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236222AbhGZQoj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Jul 2021 12:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240648AbhGZQof (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 12:44:35 -0400
-Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A46CC0617BB
-        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 10:04:02 -0700 (PDT)
-Received: by mail-ua1-x92f.google.com with SMTP id d6so3823705uav.2
-        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 10:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=dqWo1cJKltYm0kgUUF9ha9eRwUy1a0AkQIgFIcHfjZo=;
-        b=ZrkQui4xfvoh3I3+0RO9AnsC9hA6d2y5SUYcQzhjBNWmNbL8jqDotKTCYgPLxHwSyn
-         lRzyaGawC1POaVtcb1WBO6ZYvNKKda/cLE1HKAu06y35UNfMaU+SZhg2Sg/ITrMX5mZX
-         aY7w/vuwGqR77DivElMMtduFPn7OYS9gZ6uJTkaIOZV2uXyGK44xV0KOSgzjsfCNaIYB
-         M40M56gp2sMinPyBMw+picm/L1jFgvx94UIrNEg6y+pF7iSDUZNcfwe+fV3M7ITRFpXS
-         vZw62F7ADAEDflrU7KLrJHZxTeVZltY74Zoyx39jx19DhOQi9XdNmA3BbEOQ6wbRlyyl
-         hG3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=dqWo1cJKltYm0kgUUF9ha9eRwUy1a0AkQIgFIcHfjZo=;
-        b=um+zcMkj+zPczVz+I+4kPdewBQBYWxoFRLyPuzF4Jl7f3MEPnXN/PwVw8jLcqVz75F
-         Tpl0QByCkBtp70ViZLDItMg3gA5ucMd4ScL8dXxMYP4JU2bOhMIc01niPYhuaWna3Kwu
-         r3XbJSD/WLtxjOd4cxEIGW4WmSSkkeNpq5PgXbmbhtS8R+6zN9Apb+ZQsCWOoEyvOnVx
-         vgI4xHK6lQSK29NV4oLqZj0VUITzOIh1i87Xpa7TEVs7uvClkLWQhaOLuIiaSRMP4dbh
-         vG2cXsjHM+ELFy2LANi8CUm09VFQ4aMmljWBvObS0yFqSe0f6S8ZbUlFGeSCL4hYftcC
-         s6Wg==
-X-Gm-Message-State: AOAM532RWIsrTd+RPV0ZcPKUURCqu+rG/1cqqEHx5KX+0PxATbC0C28n
-        cJnUjZA4NT10JGqib2/8xQiPpzDKhzQaN+QcY6I=
-X-Google-Smtp-Source: ABdhPJzD9TzVFqhv8tfkg7GLtBs0WKbvqyvutRqMRgnT5Xjvk3xmVwgNaLWambJGrdEpFE97ykwOdUU5aAH/wow3OZ8=
-X-Received: by 2002:a9f:3e0d:: with SMTP id o13mr11562696uai.143.1627319041625;
- Mon, 26 Jul 2021 10:04:01 -0700 (PDT)
+        id S236168AbhGZQ2h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Jul 2021 12:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S243465AbhGZQ17 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 26 Jul 2021 12:27:59 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E49E960F44;
+        Mon, 26 Jul 2021 17:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1627319308;
+        bh=U0DYVQba8m26zqgBmoaH6I6tpYtnXeEJjBWHK6VHXYw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iaX3JQwHOJ9RccebjIztaUZq5RigapioqJrxzu7z5lTyF6r6Pv8eD7lY3P5vIPtvA
+         KLGNI4ZEvKHhsjtHGZJHMmRrf71OqYLtisq6gP/SNHpGMbttBdbnofYkQXEo1ROdXd
+         dP8jPbb5FBg90yD7+5vV7PDVg8XsMYGaqjeYQLsSLdA+Xfk39bV2Ne8BF0pnluUZDZ
+         mTG6EiSpfSoYXxsg6X06yo2UjcCdmjL1mxdfspGtjVT42olZJ4rYhSj4uGDInfz3nf
+         0aeRh0FsIQTHwUqw1eSsk8CVq3yscTfeyGiNM2dSj4417x+Ozjc+XQn7LEQG5wjnxa
+         dYtXmNpfZYU+A==
+Date:   Mon, 26 Jul 2021 10:08:27 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Chandan Babu R <chandanrlinux@gmail.com>
+Cc:     fstests@vger.kernel.org, guaneryu@gmail.com,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs/530: Do not pass block size argument to
+ _scratch_mkfs
+Message-ID: <20210726170827.GU559212@magnolia>
+References: <20210726064313.19153-1-chandanrlinux@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a67:edd6:0:0:0:0:0 with HTTP; Mon, 26 Jul 2021 10:04:01
- -0700 (PDT)
-Reply-To: 1234567officialnicole@gmail.com
-From:   Miss Nicole <leeyan6000@gmail.com>
-Date:   Mon, 26 Jul 2021 17:04:01 +0000
-Message-ID: <CAHPc8MYR5juTnaox2DiUfi9v7vxnUhr7cB1sYs36WRN7Vtww8w@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210726064313.19153-1-chandanrlinux@gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Nice to meet you, my name is Miss Nicole from New York but currently
-on mission abroad
-I sent you an email,did you receive it?
-Please reply to this email for more details about myself
-Regards
-Ms. N
+On Mon, Jul 26, 2021 at 12:13:11PM +0530, Chandan Babu R wrote:
+> _scratch_do_mkfs constructs a mkfs command line by concatenating the values of
+> 1. $mkfs_cmd
+> 2. $MKFS_OPTIONS
+> 3. $extra_mkfs_options
+> 
+> The block size argument passed by xfs/530 to _scratch_mkfs() will cause
+> mkfs.xfs to fail if $MKFS_OPTIONS also has a block size specified. In such a
+> case, _scratch_do_mkfs() will construct and invoke an mkfs command line
+> without including the value of $MKFS_OPTIONS.
+> 
+> To prevent such silent failures, this commit removes the block size option
+> that was being explicitly passed to _scratch_mkfs().
+
+Yes, that makes sense.
+
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+> 
+> Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
+> ---
+>  tests/xfs/530 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tests/xfs/530 b/tests/xfs/530
+> index 4d168ac5..16dc426c 100755
+> --- a/tests/xfs/530
+> +++ b/tests/xfs/530
+> @@ -60,7 +60,7 @@ echo "Format and mount rt volume"
+>  
+>  export USE_EXTERNAL=yes
+>  export SCRATCH_RTDEV=$rtdev
+> -_scratch_mkfs -d size=$((1024 * 1024 * 1024)) -b size=${dbsize} \
+> +_scratch_mkfs -d size=$((1024 * 1024 * 1024)) \
+>  	      -r size=${rtextsz},extsize=${rtextsz} >> $seqres.full
+>  _try_scratch_mount || _notrun "Couldn't mount fs with synthetic rt volume"
+>  
+> -- 
+> 2.30.2
+> 
