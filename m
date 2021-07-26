@@ -2,146 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25B1B3D6528
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 19:09:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1EA3D65A3
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 19:25:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237930AbhGZQ2f (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Jul 2021 12:28:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240417AbhGZQVh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 26 Jul 2021 12:21:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 78A4660F37;
-        Mon, 26 Jul 2021 17:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627318913;
-        bh=dlBCmGaytFioU+IzHg/7V5rT4gMrDW4dQ6geZyza8k0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mk73q9jKczWo6Q46WDxrNTLCdY0dnUgPakINxc++lQ8PPGdh3gX6a0SCkSNtxskxa
-         WDyJOpgNBlAzVB41uNBvmBkciRiyUVjjSihv7cEVW4CIsmJGO9T5FgcPozxMTnpPuH
-         rGgF1pOQ5Uugvylh/Q+/AkS/fKaD/mHm2fQtvbwU/wacdNs7IJIw9UivqLvcpfPXm1
-         jwvAzYqTXXepyv3fqMtNJ/iqLUz9T3lIyDJ/vwPgt843i6OuTVN+0/XVyZPSgBrR8N
-         mtvlXOI5ykc4owlEYrGsu80IPATJUDZjDEquaf3OLt2I6M0RFk5ogY8bO4sj/nv064
-         3TWqyNLKhL5/A==
-Date:   Mon, 26 Jul 2021 10:01:52 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Eryu Guan <guan@eryu.me>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org
-Subject: Re: [PATCH 1/2] generic: test xattr operations only
-Message-ID: <20210726170152.GT559212@magnolia>
-References: <162674332320.2650898.17601790625049494810.stgit@magnolia>
- <162674332866.2650898.16916837755915187962.stgit@magnolia>
- <YP2LJTF7mL9ooKxf@desktop>
+        id S236222AbhGZQoj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Jul 2021 12:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40212 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240648AbhGZQof (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 12:44:35 -0400
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A46CC0617BB
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 10:04:02 -0700 (PDT)
+Received: by mail-ua1-x92f.google.com with SMTP id d6so3823705uav.2
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 10:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=dqWo1cJKltYm0kgUUF9ha9eRwUy1a0AkQIgFIcHfjZo=;
+        b=ZrkQui4xfvoh3I3+0RO9AnsC9hA6d2y5SUYcQzhjBNWmNbL8jqDotKTCYgPLxHwSyn
+         lRzyaGawC1POaVtcb1WBO6ZYvNKKda/cLE1HKAu06y35UNfMaU+SZhg2Sg/ITrMX5mZX
+         aY7w/vuwGqR77DivElMMtduFPn7OYS9gZ6uJTkaIOZV2uXyGK44xV0KOSgzjsfCNaIYB
+         M40M56gp2sMinPyBMw+picm/L1jFgvx94UIrNEg6y+pF7iSDUZNcfwe+fV3M7ITRFpXS
+         vZw62F7ADAEDflrU7KLrJHZxTeVZltY74Zoyx39jx19DhOQi9XdNmA3BbEOQ6wbRlyyl
+         hG3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=dqWo1cJKltYm0kgUUF9ha9eRwUy1a0AkQIgFIcHfjZo=;
+        b=um+zcMkj+zPczVz+I+4kPdewBQBYWxoFRLyPuzF4Jl7f3MEPnXN/PwVw8jLcqVz75F
+         Tpl0QByCkBtp70ViZLDItMg3gA5ucMd4ScL8dXxMYP4JU2bOhMIc01niPYhuaWna3Kwu
+         r3XbJSD/WLtxjOd4cxEIGW4WmSSkkeNpq5PgXbmbhtS8R+6zN9Apb+ZQsCWOoEyvOnVx
+         vgI4xHK6lQSK29NV4oLqZj0VUITzOIh1i87Xpa7TEVs7uvClkLWQhaOLuIiaSRMP4dbh
+         vG2cXsjHM+ELFy2LANi8CUm09VFQ4aMmljWBvObS0yFqSe0f6S8ZbUlFGeSCL4hYftcC
+         s6Wg==
+X-Gm-Message-State: AOAM532RWIsrTd+RPV0ZcPKUURCqu+rG/1cqqEHx5KX+0PxATbC0C28n
+        cJnUjZA4NT10JGqib2/8xQiPpzDKhzQaN+QcY6I=
+X-Google-Smtp-Source: ABdhPJzD9TzVFqhv8tfkg7GLtBs0WKbvqyvutRqMRgnT5Xjvk3xmVwgNaLWambJGrdEpFE97ykwOdUU5aAH/wow3OZ8=
+X-Received: by 2002:a9f:3e0d:: with SMTP id o13mr11562696uai.143.1627319041625;
+ Mon, 26 Jul 2021 10:04:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YP2LJTF7mL9ooKxf@desktop>
+Received: by 2002:a67:edd6:0:0:0:0:0 with HTTP; Mon, 26 Jul 2021 10:04:01
+ -0700 (PDT)
+Reply-To: 1234567officialnicole@gmail.com
+From:   Miss Nicole <leeyan6000@gmail.com>
+Date:   Mon, 26 Jul 2021 17:04:01 +0000
+Message-ID: <CAHPc8MYR5juTnaox2DiUfi9v7vxnUhr7cB1sYs36WRN7Vtww8w@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jul 26, 2021 at 12:02:45AM +0800, Eryu Guan wrote:
-> On Mon, Jul 19, 2021 at 06:08:48PM -0700, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > Exercise extended attribute operations.
-> > 
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  tests/generic/724     |   57 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  tests/generic/724.out |    2 ++
-> >  2 files changed, 59 insertions(+)
-> >  create mode 100755 tests/generic/724
-> >  create mode 100644 tests/generic/724.out
-> > 
-> > 
-> > diff --git a/tests/generic/724 b/tests/generic/724
-> > new file mode 100755
-> > index 00000000..f2f4a2ec
-> > --- /dev/null
-> > +++ b/tests/generic/724
-> > @@ -0,0 +1,57 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (c) 2021 Oracle, Inc.  All Rights Reserved.
-> > +#
-> > +# FS QA Test No. 724
-> > +#
-> > +# Run an extended attributes fsstress run with multiple threads to shake out
-> > +# bugs in the xattr code.
-> > +#
-> > +. ./common/preamble
-> > +_begin_fstest auto attr
-> > +
-> > +_cleanup()
-> > +{
-> > +	$KILLALL_PROG -9 fsstress > /dev/null 2>&1
-> > +	cd /
-> > +	rm -f $tmp.*
-> > +}
-> > +
-> > +# Modify as appropriate.
-> > +_supported_fs generic
-> > +
-> > +_require_scratch
-> > +_require_command "$KILLALL_PROG" "killall"
-> > +
-> > +echo "Silence is golden."
-> > +
-> > +_scratch_mkfs > $seqres.full 2>&1
-> > +_scratch_mount >> $seqres.full 2>&1
-> > +
-> > +nr_cpus=$((LOAD_FACTOR * 4))
-> > +nr_ops=$((700000 * nr_cpus * TIME_FACTOR))
-> 
-> This takes too long time to be an 'auto' test, it runs for 20min on my
-> test vm and is still running, I think I have to kill it manually.
-> 
-> I noticed that generic/52[12] run long time fsx tests, and they are in
-> 'soak long_rw' groups, perhaps this one fits there as well? And maybe
-> 'stress' group too.
-
-Oh, yikes, I sent this out configured for 700,000 xattr ops.  Let me
-lower that to 70k.
-
---D
-
-> 
-> Thanks,
-> Eryu
-> 
-> > +
-> > +args=('-z' '-S' 'c')
-> > +
-> > +# Do some directory tree modifications, but the bulk of this is geared towards
-> > +# exercising the xattr code, especially attr_set which can do up to 10k values.
-> > +for verb in unlink rmdir; do
-> > +	args+=('-f' "${verb}=1")
-> > +done
-> > +for verb in creat mkdir; do
-> > +	args+=('-f' "${verb}=2")
-> > +done
-> > +for verb in getfattr listfattr; do
-> > +	args+=('-f' "${verb}=3")
-> > +done
-> > +for verb in attr_remove removefattr; do
-> > +	args+=('-f' "${verb}=4")
-> > +done
-> > +args+=('-f' "setfattr=20")
-> > +args+=('-f' "attr_set=60")	# sets larger xattrs
-> > +
-> > +$FSSTRESS_PROG "${args[@]}" $FSSTRESS_AVOID -d $SCRATCH_MNT -n $nr_ops -p $nr_cpus >> $seqres.full
-> > +
-> > +# success, all done
-> > +status=0
-> > +exit
-> > diff --git a/tests/generic/724.out b/tests/generic/724.out
-> > new file mode 100644
-> > index 00000000..164cfffb
-> > --- /dev/null
-> > +++ b/tests/generic/724.out
-> > @@ -0,0 +1,2 @@
-> > +QA output created by 724
-> > +Silence is golden.
-> > 
+Nice to meet you, my name is Miss Nicole from New York but currently
+on mission abroad
+I sent you an email,did you receive it?
+Please reply to this email for more details about myself
+Regards
+Ms. N
