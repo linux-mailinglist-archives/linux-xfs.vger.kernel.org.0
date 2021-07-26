@@ -2,106 +2,128 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 814B63D5304
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 08:07:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20E233D5307
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 08:07:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231546AbhGZF0z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Jul 2021 01:26:55 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:36541 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231621AbhGZF0x (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 01:26:53 -0400
+        id S231696AbhGZF04 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Jul 2021 01:26:56 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:50034 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231707AbhGZF0y (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 01:26:54 -0400
 Received: from dread.disaster.area (pa49-181-34-10.pa.nsw.optusnet.com.au [49.181.34.10])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 12DE910457EA
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 139611B1735
         for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 16:07:20 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1m7tlm-00AtQ3-L3
+        id 1m7tlm-00AtQ5-Ld
         for linux-xfs@vger.kernel.org; Mon, 26 Jul 2021 16:07:18 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1m7tlm-00DpCE-DH
+        id 1m7tlm-00DpCH-EA
         for linux-xfs@vger.kernel.org; Mon, 26 Jul 2021 16:07:18 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 02/10] xfs: external logs need to flush data device
-Date:   Mon, 26 Jul 2021 16:07:08 +1000
-Message-Id: <20210726060716.3295008-3-david@fromorbit.com>
+Subject: [PATCH 03/10] xfs: fold __xlog_state_release_iclog into xlog_state_release_iclog
+Date:   Mon, 26 Jul 2021 16:07:09 +1000
+Message-Id: <20210726060716.3295008-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210726060716.3295008-1-david@fromorbit.com>
 References: <20210726060716.3295008-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
         a=hdaoRb6WoHYrV466vVKEyw==:117 a=hdaoRb6WoHYrV466vVKEyw==:17
-        a=e_q4qTt1xDgA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=edIB7ZaJnL-MFb9X88MA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=e_q4qTt1xDgA:10 a=20KFwNOVAAAA:8 a=m2tONhP6haBYosPBVmYA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-The recent journal flush/FUA changes replaced the flushing of the
-data device on every iclog write with an up-front async data device
-cache flush. Unfortunately, the assumption of which this was based
-on has been proven incorrect by the flush vs log tail update
-ordering issue. As the fix for that issue uses the
-XLOG_ICL_NEED_FLUSH flag to indicate that data device needs a cache
-flush, we now need to (once again) ensure that an iclog write to
-external logs that need a cache flush to be issued actually issue a
-cache flush to the data device as well as the log device.
+Fold __xlog_state_release_iclog intos it's only caller to prepare
+make an upcomding fix easier.
 
-Fixes: eef983ffeae7 ("xfs: journal IO cache flush reductions")
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+[hch: split from a larger patch]
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ fs/xfs/xfs_log.c | 45 +++++++++++++++++----------------------------
+ 1 file changed, 17 insertions(+), 28 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 96434cc4df6e..a3c4d48195d9 100644
+index a3c4d48195d9..82f5996d3889 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -827,13 +827,6 @@ xlog_write_unmount_record(
- 	/* account for space used by record data */
- 	ticket->t_curr_res -= sizeof(ulf);
- 
--	/*
--	 * For external log devices, we need to flush the data device cache
--	 * first to ensure all metadata writeback is on stable storage before we
--	 * stamp the tail LSN into the unmount record.
--	 */
--	if (log->l_targ != log->l_mp->m_ddev_targp)
--		blkdev_issue_flush(log->l_mp->m_ddev_targp->bt_bdev);
- 	return xlog_write(log, &vec, ticket, NULL, NULL, XLOG_UNMOUNT_TRANS);
+@@ -487,29 +487,6 @@ xfs_log_reserve(
+ 	return error;
  }
  
-@@ -1796,10 +1789,20 @@ xlog_write_iclog(
- 	 * metadata writeback and causing priority inversions.
- 	 */
- 	iclog->ic_bio.bi_opf = REQ_OP_WRITE | REQ_META | REQ_SYNC | REQ_IDLE;
--	if (iclog->ic_flags & XLOG_ICL_NEED_FLUSH)
-+	if (iclog->ic_flags & XLOG_ICL_NEED_FLUSH) {
- 		iclog->ic_bio.bi_opf |= REQ_PREFLUSH;
-+		/*
-+		 * For external log devices, we also need to flush the data
-+		 * device cache first to ensure all metadata writeback covered
-+		 * by the LSN in this iclog is on stable storage. This is slow,
-+		 * but it *must* complete before we issue the external log IO.
-+		 */
-+		if (log->l_targ != log->l_mp->m_ddev_targp)
-+			blkdev_issue_flush(log->l_mp->m_ddev_targp->bt_bdev);
-+	}
- 	if (iclog->ic_flags & XLOG_ICL_NEED_FUA)
- 		iclog->ic_bio.bi_opf |= REQ_FUA;
-+
- 	iclog->ic_flags &= ~(XLOG_ICL_NEED_FLUSH | XLOG_ICL_NEED_FUA);
+-static bool
+-__xlog_state_release_iclog(
+-	struct xlog		*log,
+-	struct xlog_in_core	*iclog)
+-{
+-	lockdep_assert_held(&log->l_icloglock);
+-
+-	if (iclog->ic_state == XLOG_STATE_WANT_SYNC) {
+-		/* update tail before writing to iclog */
+-		xfs_lsn_t tail_lsn = xlog_assign_tail_lsn(log->l_mp);
+-
+-		iclog->ic_state = XLOG_STATE_SYNCING;
+-		iclog->ic_header.h_tail_lsn = cpu_to_be64(tail_lsn);
+-		xlog_verify_tail_lsn(log, iclog, tail_lsn);
+-		/* cycle incremented when incrementing curr_block */
+-		trace_xlog_iclog_syncing(iclog, _RET_IP_);
+-		return true;
+-	}
+-
+-	ASSERT(iclog->ic_state == XLOG_STATE_ACTIVE);
+-	return false;
+-}
+-
+ /*
+  * Flush iclog to disk if this is the last reference to the given iclog and the
+  * it is in the WANT_SYNC state.
+@@ -519,19 +496,31 @@ xlog_state_release_iclog(
+ 	struct xlog		*log,
+ 	struct xlog_in_core	*iclog)
+ {
++	xfs_lsn_t		tail_lsn;
+ 	lockdep_assert_held(&log->l_icloglock);
  
- 	if (xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, count)) {
+ 	trace_xlog_iclog_release(iclog, _RET_IP_);
+ 	if (iclog->ic_state == XLOG_STATE_IOERROR)
+ 		return -EIO;
+ 
+-	if (atomic_dec_and_test(&iclog->ic_refcnt) &&
+-	    __xlog_state_release_iclog(log, iclog)) {
+-		spin_unlock(&log->l_icloglock);
+-		xlog_sync(log, iclog);
+-		spin_lock(&log->l_icloglock);
++	if (!atomic_dec_and_test(&iclog->ic_refcnt))
++		return 0;
++
++	if (iclog->ic_state != XLOG_STATE_WANT_SYNC) {
++		ASSERT(iclog->ic_state == XLOG_STATE_ACTIVE);
++		return 0;
+ 	}
+ 
++	/* update tail before writing to iclog */
++	tail_lsn = xlog_assign_tail_lsn(log->l_mp);
++	iclog->ic_state = XLOG_STATE_SYNCING;
++	iclog->ic_header.h_tail_lsn = cpu_to_be64(tail_lsn);
++	xlog_verify_tail_lsn(log, iclog, tail_lsn);
++	trace_xlog_iclog_syncing(iclog, _RET_IP_);
++
++	spin_unlock(&log->l_icloglock);
++	xlog_sync(log, iclog);
++	spin_lock(&log->l_icloglock);
+ 	return 0;
+ }
+ 
 -- 
 2.31.1
 
