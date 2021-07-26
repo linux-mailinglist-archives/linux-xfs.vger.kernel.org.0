@@ -2,152 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 861CB3D58C2
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 13:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 732C33D58CA
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 13:47:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233660AbhGZLFq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Jul 2021 07:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48056 "EHLO
+        id S233618AbhGZLHG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Jul 2021 07:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233656AbhGZLFp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 07:05:45 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180FEC061757
-        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:46:13 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id ca5so135015pjb.5
-        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:46:13 -0700 (PDT)
+        with ESMTP id S233616AbhGZLHG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 07:07:06 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A5D3C061757
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:47:35 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id b1-20020a17090a8001b029017700de3903so796158pjn.1
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LtzGqbqNtf2wpW85/3/glrq9hlOpReMPhax778/j8KQ=;
-        b=nXBXt8AbKV3HS2fxmCpFDm+QK4KwxvdnH0a6ldzgK8z6y+pFx8czQwoC2nsvGXqsKd
-         5wkGySfYhEpLNcV6n+JHo2ai76pnVKHmgjA6a9T4yeyk1BDNRSUjfw2HEuG/lsjh64NU
-         Lj+lkWlFz9zIogngCU8EJP12bDRfsGnKFTls8CuJnqRzSPDjnxzIBkhLbleckiASZxi9
-         SukrdDPtv0mwX1K7NBHa4L1hRL0EHcfOAp8kWFXL11G6XRSNkiNg4woI2H+U34jWiMzL
-         pf6cOWAVLPEZ3MW/sEbnVcPVyMbMQ3ZDif/wlwYEXDcE62Fy8BWnlRzRMr3X9n4BpCSE
-         u3/A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P7EbrKD82+V5N/f+v2JXbXWMxlDD2n7AP6n1J2U6UOA=;
+        b=cm7jM2gI5Y63ab8yogR7bhB/JeDneGoEvySUC5xRRJcabSR+30jaFPXZ8PNzO/tOWc
+         99M53+pHxK1DEBClpuU8TN4XeWqQaQOEWuUdyd/BIPfM1qzuWdhiul680ujEu5hEey09
+         hAcHcZsee0bc3IlQZjEvWDUQpachPyoFVaUzbW9ueNgt1ZaQd5TXvQ0s5OXensghs8AF
+         ftAw+eDgIZVS9sG5g3y9pcjKS2MA9ce2UsF7X44bZsqDFwqXjSUy0sPy8g0bQzg0oSiE
+         b0qBWO8leIeMQ7ftOeloJfDC7JTtrNGft1pjhbzujSeG3cD749S+M+o7KVUDGBl1JUxK
+         IJ6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LtzGqbqNtf2wpW85/3/glrq9hlOpReMPhax778/j8KQ=;
-        b=LXf+BksVInutMtQCDLM/e04nPczMt5cKTVMpBucIADSYHM36MRmqX1GZROTfWrGaTt
-         JZZeExlrSx1SEDctWO+h1WSVt/FI7XSUwrqGDhzRE08vmeIbMQ6I6DTx27YUHbMw1SS4
-         ZC4GzcmtlojHTQlFdLpLVZN2edW38+LGITAFTnchF3lsPqGt1oiqVsXTNJGvbRlWEPsG
-         ty/ndyPbM+e5KjBNRx8Y7mrOVMzoxI7NJji7XOR31kMM2ya0iwSK8K++gQclR8aIkUbl
-         8GWK+gH/kx21V4H9p1x7xe6v1/Hf1mYRCOOmDOl+KDwYuAhPWtDxysbr1cjng8RmhfGs
-         4h9w==
-X-Gm-Message-State: AOAM530s822NtmkaHnMAYo/ytrnw6/zGVSy8buLlOmXn6kgO8dJc3eRc
-        PTIJv5jgsZcsEvfJVppyxwuIHwDxWXU=
-X-Google-Smtp-Source: ABdhPJxNG103/QEc3socKjgpeGOTKTWE6QW83QXC38b70mwPkCSJ2ouzOxsCEfW8s48WK30NCgwrsg==
-X-Received: by 2002:aa7:8812:0:b029:32d:8252:fd0 with SMTP id c18-20020aa788120000b029032d82520fd0mr17900518pfo.48.1627299972531;
-        Mon, 26 Jul 2021 04:46:12 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=P7EbrKD82+V5N/f+v2JXbXWMxlDD2n7AP6n1J2U6UOA=;
+        b=nF5L6WW2NIX4qnaGq9s6s2xfsKnR+knMNBNGe2WhuPOV+YP0J7XcO9P0XOxAuqqe1z
+         6VGwxeoHS2uOpwcV8m0VOSj/Je/GA7HFg9ssB/HFVgXukezFU2sRIcpaosdwm5qTpgJQ
+         VExcL9QfPNOQUMMdQIrmG/ZR97rTEuCmhh/4BjnvKndsvOjeKAnWg3DzvF9SBoPWBtxT
+         sZQqIjOWa9ftMjTSqDUqrxSsmo6Dt1nDkIBINV6cH0hPeXXAeBLWJjzK44XPZnev2tdD
+         dJ+NvokWYlmhM9NqMRFVJgvMOOATBoNbyw6h3kytVESBz8c6XBda1ewRwvXdYpIbZURY
+         B9FA==
+X-Gm-Message-State: AOAM533KuLR2fdxQdAFLDuPE8nL039CDnILdL+xcLq7EWT38z9FnSa5d
+        DqLLqoLglmV8HNHudjpylg5VSMGOdCE=
+X-Google-Smtp-Source: ABdhPJxaPhCteS5a+fCkOw2LQys04ir2Z7SUsPP0hB5xGw2lZdGSdjouzexKg0uj5KdM9nYWzFbLdA==
+X-Received: by 2002:a63:9c5:: with SMTP id 188mr14504386pgj.187.1627300054918;
+        Mon, 26 Jul 2021 04:47:34 -0700 (PDT)
 Received: from localhost.localdomain ([122.179.41.55])
-        by smtp.gmail.com with ESMTPSA id k8sm50833919pgr.91.2021.07.26.04.46.11
+        by smtp.gmail.com with ESMTPSA id y10sm35936900pjy.18.2021.07.26.04.47.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 04:46:12 -0700 (PDT)
+        Mon, 26 Jul 2021 04:47:34 -0700 (PDT)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, djwong@kernel.org
-Subject: [PATCH V2 12/12] xfs: Error tag to test if v5 bulkstat skips inodes with large extent count
-Date:   Mon, 26 Jul 2021 17:15:41 +0530
-Message-Id: <20210726114541.24898-13-chandanrlinux@gmail.com>
+Subject: [PATCH V2 00/12] xfsprogs: Extend per-inode extent counters
+Date:   Mon, 26 Jul 2021 17:17:12 +0530
+Message-Id: <20210726114724.24956-1-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210726114541.24898-1-chandanrlinux@gmail.com>
-References: <20210726114541.24898-1-chandanrlinux@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit adds a new error tag to allow user space tests to check if V5
-bulkstat ioctl skips reporting inodes with large extent count.
+This patchset implements the changes to userspace programs that are
+required to support extending inode's data and attr fork extent
+counter fields. It adds the following capabilities to xfsprogs,
+1. Add support to programs in xfsprogs to be able to create and work
+   with filesystem instances with 64-bit data fork extent counter and
+   32-bit attr fork extent counter fields.
+2. Enable support for the newly introduced XFS_IOC_BULKSTAT_V6 ioctl.
 
-Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
----
- fs/xfs/libxfs/xfs_errortag.h | 4 +++-
- fs/xfs/xfs_error.c           | 3 +++
- fs/xfs/xfs_itable.c          | 9 ++++++++-
- 3 files changed, 14 insertions(+), 2 deletions(-)
+The patchset is based on Darrick's btree-dynamic-depth branch.
+These patches can also be obtained from
+https://github.com/chandanr/xfsprogs-dev.git at branch
+xfs-incompat-extend-extcnt-v2.
 
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index f5fa2151e05d..b2c533153737 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -60,7 +60,8 @@
- #define XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT		37
- #define XFS_ERRTAG_AG_RESV_FAIL				38
- #define XFS_ERRTAG_SWAPEXT_FINISH_ONE			39
--#define XFS_ERRTAG_MAX					40
-+#define XFS_ERRTAG_BULKSTAT_REDUCE_MAX_IEXTENTS		40
-+#define XFS_ERRTAG_MAX					41
- 
- /*
-  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
-@@ -105,5 +106,6 @@
- #define XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT		1
- #define XFS_RANDOM_AG_RESV_FAIL				1
- #define XFS_RANDOM_SWAPEXT_FINISH_ONE			1
-+#define XFS_RANDOM_BULKSTAT_REDUCE_MAX_IEXTENTS		1
- 
- #endif /* __XFS_ERRORTAG_H_ */
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index e25b440cbfd3..e2a9446fb025 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -58,6 +58,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_BMAP_ALLOC_MINLEN_EXTENT,
- 	XFS_RANDOM_AG_RESV_FAIL,
- 	XFS_RANDOM_SWAPEXT_FINISH_ONE,
-+	XFS_RANDOM_BULKSTAT_REDUCE_MAX_IEXTENTS,
- };
- 
- struct xfs_errortag_attr {
-@@ -172,6 +173,7 @@ XFS_ERRORTAG_ATTR_RW(reduce_max_iextents,	XFS_ERRTAG_REDUCE_MAX_IEXTENTS);
- XFS_ERRORTAG_ATTR_RW(bmap_alloc_minlen_extent,	XFS_ERRTAG_BMAP_ALLOC_MINLEN_EXTENT);
- XFS_ERRORTAG_ATTR_RW(ag_resv_fail, XFS_ERRTAG_AG_RESV_FAIL);
- XFS_ERRORTAG_ATTR_RW(swapext_finish_one, XFS_RANDOM_SWAPEXT_FINISH_ONE);
-+XFS_ERRORTAG_ATTR_RW(bulkstat_reduce_max_iextents, XFS_ERRTAG_BULKSTAT_REDUCE_MAX_IEXTENTS);
- 
- static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(noerror),
-@@ -214,6 +216,7 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(bmap_alloc_minlen_extent),
- 	XFS_ERRORTAG_ATTR_LIST(ag_resv_fail),
- 	XFS_ERRORTAG_ATTR_LIST(swapext_finish_one),
-+	XFS_ERRORTAG_ATTR_LIST(bulkstat_reduce_max_iextents),
- 	NULL,
- };
- 
-diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index 8493870a0a87..1b252d1cda9d 100644
---- a/fs/xfs/xfs_itable.c
-+++ b/fs/xfs/xfs_itable.c
-@@ -20,6 +20,7 @@
- #include "xfs_icache.h"
- #include "xfs_health.h"
- #include "xfs_trans.h"
-+#include "xfs_errortag.h"
- 
- /*
-  * Bulk Stat
-@@ -143,7 +144,13 @@ xfs_bulkstat_one_int(
- 
- 	nextents = xfs_ifork_nextents(&ip->i_df);
- 	if (bc->breq->version != XFS_BULKSTAT_VERSION_V6) {
--		if (nextents > XFS_IFORK_EXTCNT_MAXS32) {
-+		xfs_extnum_t max_nextents = XFS_IFORK_EXTCNT_MAXS32;
-+
-+		if (unlikely(XFS_TEST_ERROR(false, mp,
-+				XFS_ERRTAG_BULKSTAT_REDUCE_MAX_IEXTENTS)))
-+			max_nextents = 10;
-+
-+		if (nextents > max_nextents) {
- 			xfs_iunlock(ip, XFS_ILOCK_SHARED);
- 			xfs_irele(ip);
- 			error = -EINVAL;
+Changelog:
+V1 -> V2:
+1. Rebase patches on top of Darrick's btree-dynamic-depth branch.
+2. Add support for using the new bulkstat ioctl version to support
+   64-bit data fork extent counter field.
+   
+Chandan Babu R (12):
+  xfsprogs: Move extent count limits to xfs_format.h
+  xfsprogs: Rename MAXEXTNUM, MAXAEXTNUM to XFS_IFORK_EXTCNT_MAXS32,
+    XFS_IFORK_EXTCNT_MAXS16
+  xfsprogs: Introduce xfs_iext_max() helper
+  xfsprogs: Use xfs_extnum_t instead of basic data types
+  xfsprogs: Introduce xfs_dfork_nextents() helper
+  xfsprogs: xfs_dfork_nextents: Return extent count via an out argument
+  xfsprogs: Rename inode's extent counter fields based on their width
+  xfsprogs: Promote xfs_extnum_t and xfs_aextnum_t to 64 and 32-bits
+    respectively
+  xfsprogs: Rename XFS_IOC_BULKSTAT to XFS_IOC_BULKSTAT_V5
+  xfsprogs: Enable bulkstat ioctl to support 64-bit extent counters
+  xfsprogs: Extend per-inode extent counter widths
+  xfsprogs: Add extcnt64bit mkfs option
+
+ db/bmap.c                  |  21 +--
+ db/btdump.c                |  11 +-
+ db/check.c                 |  44 +++++--
+ db/field.c                 |   4 -
+ db/field.h                 |   2 -
+ db/frag.c                  |  11 +-
+ db/inode.c                 |  62 +++++++--
+ db/metadump.c              |  12 +-
+ fsr/xfs_fsr.c              |   9 +-
+ include/libxlog.h          |   6 +-
+ io/bulkstat.c              |  10 +-
+ libfrog/bulkstat.c         | 264 +++++++++++++++++++++----------------
+ libfrog/bulkstat.h         |   7 +-
+ libfrog/fsgeom.h           |   5 +-
+ libxfs/xfs_bmap.c          |  19 ++-
+ libxfs/xfs_format.h        |  30 +++--
+ libxfs/xfs_fs.h            |   9 +-
+ libxfs/xfs_inode_buf.c     |  86 ++++++++++--
+ libxfs/xfs_inode_buf.h     |   2 +
+ libxfs/xfs_inode_fork.c    |  38 ++++--
+ libxfs/xfs_inode_fork.h    |  18 +++
+ libxfs/xfs_log_format.h    |   7 +-
+ libxfs/xfs_types.h         |  11 +-
+ logprint/log_misc.c        |  23 +++-
+ logprint/log_print_all.c   |  34 ++++-
+ logprint/log_print_trans.c |   2 +-
+ man/man8/mkfs.xfs.8        |   7 +
+ mkfs/xfs_mkfs.c            |  23 ++++
+ repair/attr_repair.c       |  11 +-
+ repair/bmap_repair.c       |  22 +++-
+ repair/dinode.c            | 139 ++++++++++++-------
+ repair/dinode.h            |   4 +-
+ repair/prefetch.c          |   7 +-
+ repair/scan.c              |   6 +-
+ 34 files changed, 665 insertions(+), 301 deletions(-)
+
 -- 
 2.30.2
 
