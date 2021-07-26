@@ -2,57 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E83673D58C0
-	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 13:46:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1603D58C3
+	for <lists+linux-xfs@lfdr.de>; Mon, 26 Jul 2021 13:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233671AbhGZLFn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 26 Jul 2021 07:05:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48028 "EHLO
+        id S233656AbhGZLFr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 26 Jul 2021 07:05:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233589AbhGZLFk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 07:05:40 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22CDEC061757
-        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:46:08 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id mt6so12541201pjb.1
-        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:46:08 -0700 (PDT)
+        with ESMTP id S233669AbhGZLFn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 26 Jul 2021 07:05:43 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A996AC061760
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:46:09 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id l19so12605393pjz.0
+        for <linux-xfs@vger.kernel.org>; Mon, 26 Jul 2021 04:46:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+sNe0biOTzrw8FH/FH+7krQPI3MEAik336cuQ1PpaBU=;
-        b=o+RrJ1EcRK/kr/Ni7noL1i/HVVUUp50/Q6SSGEaLO68YGw24/YLDPHJJLDmSdadq6F
-         +rGduVV0egO3oDh7MxgTHmbsKTMGfibeYjryFxqyx91dSocLuCD+xp4IzHeqbfc+PEXd
-         0e7ECo2arJnZWWcgbxEWV70qqPGYyg63v5Xc+SbsRx4kZeTVblCZVuUSbqiPquVsP5ac
-         wgl0M4M+jdr8VmYeYNlcXQsjcsSH7s46/R3IjYpltkMvNuXtPSqrt3u48Scl1FWHtkf3
-         OEU2M93LRrxIH6Lua5sB9bWD2v6VXUzSuwnsQDn9L1HqfWOjLGCHwCioXi9+1moA8Xub
-         Vf0A==
+        bh=znSA5RStZM3Z97yY0DOr1Pxi36RUJ6xfhLKiW9+thY0=;
+        b=fEWci3OQ9eUmyjuz8wH9mvRl5LEzuMo2tMqRCNl4GAvaGosZ7iV6wLsvswnOKGu4mL
+         hlQ305B3NSM2l0fgM9ymsjd4QH4NKyV92NeRU6iJ3NOTdGGPiRJX1fOPTYBFHf2l3HDQ
+         popPlXmV8jCDf2Z7sCfLW7yMru0SgLcD32/FUc7q2L1ughI6iz7/iv4FRQYg1TTOu4HW
+         J2v01qc8MnAzkOIu0OnXBCsgp/m6Fvy/IeOkR3KQz21Uppx9FeBotPbGTSPVV8kgXYXB
+         R/SyZMz96mXqTsk9WpyQZGn10bIbfdJjO0crkuNv+QkoQU+EvD+b4YQw33NKsYPekMqO
+         JS4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+sNe0biOTzrw8FH/FH+7krQPI3MEAik336cuQ1PpaBU=;
-        b=ejQVJYQ69mA/AQzqJAoj3ETEo5/3FKZvCrwRHdHaQKfUY+HR9+zwQc9Ma7fSs5UBt4
-         0c3Qslr352Vlunto59d8Q/AT4qasiSWHNlM18hQezP+JI41nJQR8kcWgbRNnd7/55Eek
-         QXpB35UYOggZaovs2D8SaF4LAa67Ss1wc1obZ2Ef0UqkDERxDWPlCrYjbdGlhiDNWSlH
-         M5mTisXTEBt2PqzQR9g0cA3lw74PN+rvhPBBYxy3mtXd4iNQ9J/KSWvDiksE/uxpNV6Z
-         A7SMh+Bt2wrFagb6/VF/yARyG/XaJhhiDprthFQ8mpFKURbLp+2sxsSHtHh3MUDGSxJ/
-         8QYA==
-X-Gm-Message-State: AOAM530WGdQg08mImeyZLaNfuR7VzEx2JFql8zj4QinotSNQqqSjr940
-        obbXJzocvhdP/tMBjhIUtgVlDzttmdI=
-X-Google-Smtp-Source: ABdhPJzhT/CJ9don88L8lTuTF4cMA/5pNguX6ZIhBXy3WGDcGDBsA4Qz6k+jP5kVz3jRMZ9DQaUQ/A==
-X-Received: by 2002:a17:90a:2f62:: with SMTP id s89mr1524586pjd.33.1627299967567;
-        Mon, 26 Jul 2021 04:46:07 -0700 (PDT)
+        bh=znSA5RStZM3Z97yY0DOr1Pxi36RUJ6xfhLKiW9+thY0=;
+        b=p1vMedu4G9eadkXGcffdYrAYSPes4MUGVXpRuQfRIsHCuDOYDA1Sz0lwbtGAuAOgGe
+         Vi3Fm0kHapxnVEnCPWy/P29f3UcIH9H7v61yDqSntR8gD9bzVCigOTt/zz48L/2lDx2l
+         KCYpP5dCd1/SONKJTRn0L+ek1SCfMHwKel02JjajHLWrTP+ai+V4mHDPvXKZYL8OgN7t
+         yQfDO7TNwZT1W22QzvXjfAolyvARDl5NXM5Lfoh/XuzP5JGZzG55byC4Pjk+EyB9BtWA
+         vJ4vrODLaV2ZDqVzR7cfptCCmU44TgktKFeWC6Y88/atKVwziqoVgzJJRfWXYdvCMgWd
+         K6yQ==
+X-Gm-Message-State: AOAM530EJomSJQFQxeWlHbZpR8/VDU2OCY3cY+TQoKXxBlw7YOJS7fvH
+        kiQ6K+KBsY3TagPhpIg+YtZ75K7wKqw=
+X-Google-Smtp-Source: ABdhPJyVUS7YeowaO8CZwqB8T54BCP67SkjE7IfqGz7EqFRR7iVLDNP9Wp3PJVOFMabwBOudzDt7Iw==
+X-Received: by 2002:aa7:8b07:0:b029:2f7:d38e:ff1 with SMTP id f7-20020aa78b070000b02902f7d38e0ff1mr17825578pfd.72.1627299969143;
+        Mon, 26 Jul 2021 04:46:09 -0700 (PDT)
 Received: from localhost.localdomain ([122.179.41.55])
-        by smtp.gmail.com with ESMTPSA id k8sm50833919pgr.91.2021.07.26.04.46.06
+        by smtp.gmail.com with ESMTPSA id k8sm50833919pgr.91.2021.07.26.04.46.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jul 2021 04:46:07 -0700 (PDT)
+        Mon, 26 Jul 2021 04:46:08 -0700 (PDT)
 From:   Chandan Babu R <chandanrlinux@gmail.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandanrlinux@gmail.com>, djwong@kernel.org
-Subject: [PATCH V2 09/12] xfs: Rename XFS_IOC_BULKSTAT to XFS_IOC_BULKSTAT_V5
-Date:   Mon, 26 Jul 2021 17:15:38 +0530
-Message-Id: <20210726114541.24898-10-chandanrlinux@gmail.com>
+Subject: [PATCH V2 10/12] xfs: Enable bulkstat ioctl to support 64-bit extent counters
+Date:   Mon, 26 Jul 2021 17:15:39 +0530
+Message-Id: <20210726114541.24898-11-chandanrlinux@gmail.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210726114541.24898-1-chandanrlinux@gmail.com>
 References: <20210726114541.24898-1-chandanrlinux@gmail.com>
@@ -62,223 +62,126 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This commit renames XFS_IOC_BULKSTAT to XFS_IOC_BULKSTAT_V5 to allow a future
-commit to extend bulkstat facility to support 64-bit extent counters. To this
-end, this commit also renames xfs_bulkstat->bs_extents field to
-xfs_bulkstat->bs_extents32.
+This commit adds XFS_IOC_BULKSTAT_V6 to support 64-bit inode extent
+counters. The new field xfs_bulkstat->bs_extents64 is added to hold data
+extent count for filesystems supporting 64-bit data extent counters.
+
+However, the accessibility of this ioctl is deferred to a future commit which
+actually adds support for 64-bit data extent counter.
 
 Signed-off-by: Chandan Babu R <chandanrlinux@gmail.com>
 ---
- fs/xfs/libxfs/xfs_fs.h |  4 ++--
- fs/xfs/xfs_ioctl.c     | 27 ++++++++++++++++++++++-----
- fs/xfs/xfs_ioctl32.c   |  7 +++++++
- fs/xfs/xfs_itable.c    |  4 ++--
- fs/xfs/xfs_itable.h    |  1 +
- 5 files changed, 34 insertions(+), 9 deletions(-)
+ fs/xfs/libxfs/xfs_fs.h |  6 ++++--
+ fs/xfs/xfs_ioctl.c     |  5 +++--
+ fs/xfs/xfs_itable.c    | 26 +++++++++++++++++++++++---
+ 3 files changed, 30 insertions(+), 7 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 2594fb647384..d760a969599e 100644
+index d760a969599e..756be4ff5996 100644
 --- a/fs/xfs/libxfs/xfs_fs.h
 +++ b/fs/xfs/libxfs/xfs_fs.h
 @@ -394,7 +394,7 @@ struct xfs_bulkstat {
  	uint32_t	bs_extsize_blks; /* extent size hint, blocks	*/
  
  	uint32_t	bs_nlink;	/* number of links		*/
--	uint32_t	bs_extents;	/* number of extents		*/
-+	uint32_t	bs_extents32;	/* number of extents		*/
+-	uint32_t	bs_extents32;	/* number of extents		*/
++	uint32_t	bs_extents32;	/* number of extents; v5 only	*/
  	uint32_t	bs_aextents;	/* attribute number of extents	*/
  	uint16_t	bs_version;	/* structure version		*/
  	uint16_t	bs_forkoff;	/* inode fork offset in bytes	*/
-@@ -853,7 +853,7 @@ struct xfs_scrub_metadata {
- #define XFS_IOC_FSGEOMETRY_V4	     _IOR ('X', 124, struct xfs_fsop_geom_v4)
- #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, uint32_t)
- #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 126, struct xfs_fsop_geom)
--#define XFS_IOC_BULKSTAT	     _IOR ('X', 127, struct xfs_bulkstat_req)
-+#define XFS_IOC_BULKSTAT_V5	     _IOR ('X', 127, struct xfs_bulkstat_req)
- #define XFS_IOC_INUMBERS	     _IOR ('X', 128, struct xfs_inumbers_req)
- /*	FIEXCHANGE_RANGE ----------- hoisted 129	 */
- /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
+@@ -403,12 +403,14 @@ struct xfs_bulkstat {
+ 	uint16_t	bs_checked;	/* checked inode metadata	*/
+ 	uint16_t	bs_mode;	/* type and mode		*/
+ 	uint16_t	bs_pad2;	/* zeroed			*/
++	uint64_t	bs_extents64;	/* number of extents; v6 only	*/
+ 
+-	uint64_t	bs_pad[7];	/* zeroed			*/
++	uint64_t	bs_pad[6];	/* zeroed			*/
+ };
+ 
+ #define XFS_BULKSTAT_VERSION_V1	(1)
+ #define XFS_BULKSTAT_VERSION_V5	(5)
++#define XFS_BULKSTAT_VERSION_V6	(6)
+ 
+ /* bs_sick flags */
+ #define XFS_BS_SICK_INODE	(1 << 0)  /* inode core */
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 2da90f81e6e3..85f45340cb16 100644
+index 85f45340cb16..19964b394dc4 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -715,6 +715,8 @@ xfs_fsbulkstat_one_fmt(
- {
- 	struct xfs_bstat		bs1;
- 
-+	ASSERT(breq->version == XFS_BULKSTAT_VERSION_V1);
-+
- 	xfs_bulkstat_to_bstat(breq->mp, &bs1, bstat);
- 	if (copy_to_user(breq->ubuffer, &bs1, sizeof(bs1)))
- 		return -EFAULT;
-@@ -728,6 +730,8 @@ xfs_fsinumbers_fmt(
- {
- 	struct xfs_inogrp		ig1;
- 
-+	ASSERT(breq->version == XFS_INUMBERS_VERSION_V1);
-+
- 	xfs_inumbers_to_inogrp(&ig1, igrp);
- 	if (copy_to_user(breq->ubuffer, &ig1, sizeof(struct xfs_inogrp)))
- 		return -EFAULT;
-@@ -787,14 +791,17 @@ xfs_ioc_fsbulkstat(
- 	 */
- 	if (cmd == XFS_IOC_FSINUMBERS) {
- 		breq.startino = lastino ? lastino + 1 : 0;
-+		breq.version = XFS_INUMBERS_VERSION_V1;
- 		error = xfs_inumbers(&breq, xfs_fsinumbers_fmt);
- 		lastino = breq.startino - 1;
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_SINGLE) {
- 		breq.startino = lastino;
- 		breq.icount = 1;
-+		breq.version = XFS_BULKSTAT_VERSION_V1;
- 		error = xfs_bulkstat_one(&breq, xfs_fsbulkstat_one_fmt);
- 	} else {	/* XFS_IOC_FSBULKSTAT */
- 		breq.startino = lastino ? lastino + 1 : 0;
-+		breq.version = XFS_BULKSTAT_VERSION_V1;
- 		error = xfs_bulkstat(&breq, xfs_fsbulkstat_one_fmt);
- 		lastino = breq.startino - 1;
- 	}
-@@ -819,6 +826,8 @@ xfs_bulkstat_fmt(
+@@ -826,7 +826,8 @@ xfs_bulkstat_fmt(
  	struct xfs_ibulk		*breq,
  	const struct xfs_bulkstat	*bstat)
  {
-+	ASSERT(breq->version == XFS_BULKSTAT_VERSION_V5);
-+
+-	ASSERT(breq->version == XFS_BULKSTAT_VERSION_V5);
++	ASSERT(breq->version == XFS_BULKSTAT_VERSION_V5 ||
++		breq->version == XFS_BULKSTAT_VERSION_V6);
+ 
  	if (copy_to_user(breq->ubuffer, bstat, sizeof(struct xfs_bulkstat)))
  		return -EFAULT;
- 	return xfs_ibulk_advance(breq, sizeof(struct xfs_bulkstat));
-@@ -918,13 +927,15 @@ STATIC int
+@@ -922,7 +923,7 @@ xfs_bulk_ireq_teardown(
+ 	hdr->ocount = breq->ocount;
+ }
+ 
+-/* Handle the v5 bulkstat ioctl. */
++/* Handle the v5/v6 bulkstat ioctl. */
+ STATIC int
  xfs_ioc_bulkstat(
  	struct file			*file,
- 	unsigned int			cmd,
--	struct xfs_bulkstat_req __user	*arg)
-+	struct xfs_bulkstat_req __user	*arg,
-+	int				version)
- {
- 	struct xfs_mount		*mp = XFS_I(file_inode(file))->i_mount;
- 	struct xfs_bulk_ireq		hdr;
- 	struct xfs_ibulk		breq = {
- 		.mp			= mp,
- 		.mnt_userns		= file_mnt_user_ns(file),
-+		.version		= version,
- 	};
- 	int				error;
- 
-@@ -960,6 +971,8 @@ xfs_inumbers_fmt(
- 	struct xfs_ibulk		*breq,
- 	const struct xfs_inumbers	*igrp)
- {
-+	ASSERT(breq->version == XFS_INUMBERS_VERSION_V5);
-+
- 	if (copy_to_user(breq->ubuffer, igrp, sizeof(struct xfs_inumbers)))
- 		return -EFAULT;
- 	return xfs_ibulk_advance(breq, sizeof(struct xfs_inumbers));
-@@ -970,11 +983,13 @@ STATIC int
- xfs_ioc_inumbers(
- 	struct xfs_mount		*mp,
- 	unsigned int			cmd,
--	struct xfs_inumbers_req __user	*arg)
-+	struct xfs_inumbers_req __user	*arg,
-+	int				version)
- {
- 	struct xfs_bulk_ireq		hdr;
- 	struct xfs_ibulk		breq = {
- 		.mp			= mp,
-+		.version		= version,
- 	};
- 	int				error;
- 
-@@ -1882,10 +1897,12 @@ xfs_file_ioctl(
- 	case XFS_IOC_FSINUMBERS:
- 		return xfs_ioc_fsbulkstat(filp, cmd, arg);
- 
--	case XFS_IOC_BULKSTAT:
--		return xfs_ioc_bulkstat(filp, cmd, arg);
-+	case XFS_IOC_BULKSTAT_V5:
-+		return xfs_ioc_bulkstat(filp, cmd, arg,
-+				XFS_BULKSTAT_VERSION_V5);
- 	case XFS_IOC_INUMBERS:
--		return xfs_ioc_inumbers(mp, cmd, arg);
-+		return xfs_ioc_inumbers(mp, cmd, arg,
-+				XFS_INUMBERS_VERSION_V5);
- 
- 	case XFS_IOC_FSGEOMETRY_V1:
- 		return xfs_ioc_fsgeometry(mp, arg, 3);
-diff --git a/fs/xfs/xfs_ioctl32.c b/fs/xfs/xfs_ioctl32.c
-index bef19060f4aa..d9a7abc209b5 100644
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -88,6 +88,8 @@ xfs_fsinumbers_fmt_compat(
- 	struct xfs_inogrp		ig1;
- 	struct xfs_inogrp		*igrp = &ig1;
- 
-+	ASSERT(breq->version == XFS_INUMBERS_VERSION_V1);
-+
- 	xfs_inumbers_to_inogrp(&ig1, ig);
- 
- 	if (put_user(igrp->xi_startino,   &p32->xi_startino) ||
-@@ -177,6 +179,8 @@ xfs_fsbulkstat_one_fmt_compat(
- 	struct xfs_bstat		bs1;
- 	struct xfs_bstat		*buffer = &bs1;
- 
-+	ASSERT(breq->version == XFS_BULKSTAT_VERSION_V1);
-+
- 	xfs_bulkstat_to_bstat(breq->mp, &bs1, bstat);
- 
- 	if (put_user(buffer->bs_ino,	  &p32->bs_ino)		||
-@@ -293,15 +297,18 @@ xfs_compat_ioc_fsbulkstat(
- 	 */
- 	if (cmd == XFS_IOC_FSINUMBERS_32) {
- 		breq.startino = lastino ? lastino + 1 : 0;
-+		breq.version = XFS_INUMBERS_VERSION_V1;
- 		error = xfs_inumbers(&breq, inumbers_func);
- 		lastino = breq.startino - 1;
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_SINGLE_32) {
- 		breq.startino = lastino;
- 		breq.icount = 1;
-+		breq.version = XFS_BULKSTAT_VERSION_V1;
- 		error = xfs_bulkstat_one(&breq, bs_one_func);
- 		lastino = breq.startino;
- 	} else if (cmd == XFS_IOC_FSBULKSTAT_32) {
- 		breq.startino = lastino ? lastino + 1 : 0;
-+		breq.version = XFS_BULKSTAT_VERSION_V1;
- 		error = xfs_bulkstat(&breq, bs_one_func);
- 		lastino = breq.startino - 1;
- 	} else {
 diff --git a/fs/xfs/xfs_itable.c b/fs/xfs/xfs_itable.c
-index 65c194cdea79..f0daa65e61ff 100644
+index f0daa65e61ff..8493870a0a87 100644
 --- a/fs/xfs/xfs_itable.c
 +++ b/fs/xfs/xfs_itable.c
-@@ -134,7 +134,7 @@ xfs_bulkstat_one_int(
+@@ -74,6 +74,7 @@ xfs_bulkstat_one_int(
+ 	struct xfs_inode	*ip;		/* incore inode pointer */
+ 	struct inode		*inode;
+ 	struct xfs_bulkstat	*buf = bc->buf;
++	xfs_extnum_t		nextents;
+ 	int			error = -EINVAL;
+ 
+ 	error = xfs_iget(mp, tp, ino,
+@@ -95,7 +96,12 @@ xfs_bulkstat_one_int(
+ 		buf->bs_gen = inode->i_generation;
+ 		buf->bs_mode = inode->i_mode & S_IFMT;
+ 		xfs_bulkstat_health(ip, buf);
+-		buf->bs_version = XFS_BULKSTAT_VERSION_V5;
++
++		if (bc->breq->version != XFS_BULKSTAT_VERSION_V6)
++			buf->bs_version = XFS_BULKSTAT_VERSION_V5;
++		else
++			buf->bs_version = XFS_BULKSTAT_VERSION_V6;
++
+ 		xfs_iunlock(ip, XFS_ILOCK_SHARED);
+ 		xfs_irele(ip);
+ 
+@@ -134,11 +140,25 @@ xfs_bulkstat_one_int(
  
  	buf->bs_xflags = xfs_ip2xflags(ip);
  	buf->bs_extsize_blks = ip->i_extsize;
--	buf->bs_extents = xfs_ifork_nextents(&ip->i_df);
-+	buf->bs_extents32 = xfs_ifork_nextents(&ip->i_df);
+-	buf->bs_extents32 = xfs_ifork_nextents(&ip->i_df);
++
++	nextents = xfs_ifork_nextents(&ip->i_df);
++	if (bc->breq->version != XFS_BULKSTAT_VERSION_V6) {
++		if (nextents > XFS_IFORK_EXTCNT_MAXS32) {
++			xfs_iunlock(ip, XFS_ILOCK_SHARED);
++			xfs_irele(ip);
++			error = -EINVAL;
++			goto out_advance;
++		}
++		buf->bs_extents32 = nextents;
++		buf->bs_version = XFS_BULKSTAT_VERSION_V5;
++	} else {
++		buf->bs_extents64 = nextents;
++		buf->bs_version = XFS_BULKSTAT_VERSION_V6;
++	}
++
  	xfs_bulkstat_health(ip, buf);
  	buf->bs_aextents = xfs_ifork_nextents(ip->i_afp);
  	buf->bs_forkoff = XFS_IFORK_BOFF(ip);
-@@ -356,7 +356,7 @@ xfs_bulkstat_to_bstat(
- 	bs1->bs_blocks = bstat->bs_blocks;
- 	bs1->bs_xflags = bstat->bs_xflags;
- 	bs1->bs_extsize = XFS_FSB_TO_B(mp, bstat->bs_extsize_blks);
--	bs1->bs_extents = bstat->bs_extents;
-+	bs1->bs_extents = bstat->bs_extents32;
- 	bs1->bs_gen = bstat->bs_gen;
- 	bs1->bs_projid_lo = bstat->bs_projectid & 0xFFFF;
- 	bs1->bs_forkoff = bstat->bs_forkoff;
-diff --git a/fs/xfs/xfs_itable.h b/fs/xfs/xfs_itable.h
-index f5a13f69883a..ee4d8d0461ca 100644
---- a/fs/xfs/xfs_itable.h
-+++ b/fs/xfs/xfs_itable.h
-@@ -14,6 +14,7 @@ struct xfs_ibulk {
- 	unsigned int		icount;   /* number of elements in ubuffer */
- 	unsigned int		ocount;   /* number of records returned */
- 	unsigned int		flags;    /* see XFS_IBULK_FLAG_* */
-+	int			version;  /* structure version to be returned */
- };
+-	buf->bs_version = XFS_BULKSTAT_VERSION_V5;
  
- /* Only iterate within the same AG as startino */
+ 	if (xfs_sb_version_has_v3inode(&mp->m_sb)) {
+ 		buf->bs_btime = ip->i_crtime.tv_sec;
 -- 
 2.30.2
 
