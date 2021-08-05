@@ -2,113 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FBFF3E0ED3
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 Aug 2021 09:01:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 379933E1255
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 Aug 2021 12:10:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237010AbhHEHBZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 Aug 2021 03:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234448AbhHEHBZ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 5 Aug 2021 03:01:25 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4520560F58;
-        Thu,  5 Aug 2021 07:01:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628146871;
-        bh=jAltqYrDNqmTUYoNWzUoGyKqIMK5nsFH+8LKpeuHV00=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ji33TB5i3tSaiS1zz/ZCoRkW9YSJqfWmU96ysA+mJRzUKRlqkR5kajmvkPKaBRlbV
-         qvhGLvapTspMWA5aAaJjbmstD7U3yxk70xce0mr3Wov+l+Tukes1O2Vjuu9S687tAb
-         4KzA1326pyMtaiwcu0Pzwynigb/N2vOnme3Sbt21hIO/fGT9Nsk2QLQfzGubYpwowh
-         +UlBy/gNV/18VUNragikNUwFQsTnNWKTQCcQPIRowD8UC5wO4QO2zINWKy9sDQUvxZ
-         AbDJ/6Cp1PU6mU9uk3XURyFPBbIeJ8Qa8Au55yKUo1iFGqMLZedIxi2syHyoPc9Y0K
-         IQF/kIiUNvgJA==
-Subject: [PATCH 5/5] xfs: dump log intent items that cannot be recovered due
- to corruption
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 05 Aug 2021 00:01:11 -0700
-Message-ID: <162814687097.2777088.3937845877884086271.stgit@magnolia>
-In-Reply-To: <162814684332.2777088.14593133806068529811.stgit@magnolia>
-References: <162814684332.2777088.14593133806068529811.stgit@magnolia>
-User-Agent: StGit/0.19
+        id S240478AbhHEKKu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 Aug 2021 06:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240488AbhHEKKh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 Aug 2021 06:10:37 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D016C0617BE
+        for <linux-xfs@vger.kernel.org>; Thu,  5 Aug 2021 03:10:17 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id ec13so7628580edb.0
+        for <linux-xfs@vger.kernel.org>; Thu, 05 Aug 2021 03:10:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=J67+rxbQxfS8kPDQ/50P30WNOuT2eFzd+bURjICaS/k=;
+        b=iS9YA7D4AkLyKrMVsoVYMawu0L36NuU4+ZSSyySlEHd80Db/SKmaXNHUYbn10iE1ak
+         iC2IvrlH8v1AbmVGIfByuGkfSJI0XOychxHlUayNB69sXT4UE/GxiJdUnwpUeLi55ukG
+         xxmbK315oyKozAfiGnXEqKK3PxzEgZV5MZYS8JrbDSFfNkjPPnwGCrlh5tDeKwhJwNKw
+         T5dIuH8sR8enUCr5iznpK0TZ2LjgjrjjYSvOKCwjpML2kXz9bFVQEOg044XfixvXje/K
+         h6N675zJB4VwjShIVvQTmJWjRDKft4Rcevz64ZRcI/rUzQ/43BUMnv9UMxVY4mSVx0dv
+         +ZPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=J67+rxbQxfS8kPDQ/50P30WNOuT2eFzd+bURjICaS/k=;
+        b=oSxwlFKRhYWKlITRZn5+7Y5Ojk/+BIAgeIYlFlHCLdbFUuktuVOf0szpnJZsX7Kn8H
+         QHctLLqAWIHb1PUcY49exGqd2wz67BanL94IoKSKUC0nXRlDKj9fS8hi2zjZ2UU184oC
+         aqk4CcF7tUMygiaNvQkr2cmchmadbuEo/VthouovdOYJTsghTXlX3peorvToW6eb85j+
+         ZRkm+aiTzp0C5R4oGoN50tSiCLLokwUnSm4Sh7eNWVGmIBcGGgqw+tZ+lq2FR25gRzDf
+         9glp3okXlmqgdpOqmv6sjtpdaGKd3+vp+DmYd73iLuQPcG5zal/KgW5FrBVLvKI6HCGG
+         Jeyw==
+X-Gm-Message-State: AOAM530IL6ncftw6yv5ZfgAdIsGdi37MhzkSIELOMi5qB2QHXHUZOvbW
+        i9ZQjliNxk0LWtIZdcqEe+njCwqGK77dRTs+A9s=
+X-Google-Smtp-Source: ABdhPJz/RKmv260xIbuerDTPdwMwXLpAeKReSpRsKd2xVxrYh4CfQJfzAebDIdig2CS2Izsib4l5qV0PM0JZd046dok=
+X-Received: by 2002:a05:6402:40c7:: with SMTP id z7mr5373679edb.193.1628158216069;
+ Thu, 05 Aug 2021 03:10:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a05:6408:258c:b029:e3:fe5c:5c2d with HTTP; Thu, 5 Aug 2021
+ 03:10:15 -0700 (PDT)
+Reply-To: theresabangurah3333@yahoo.com
+From:   Theresa Bangurah <mariamabah77879@gmail.com>
+Date:   Thu, 5 Aug 2021 11:10:15 +0100
+Message-ID: <CAAi==jrP1LU0nh-DrLEYOsm5GW=VtCGzFW8zeRyVbCcv17qusA@mail.gmail.com>
+Subject: Hello
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
-
-If we try to recover a log intent item and the operation fails due to
-filesystem corruption, dump the contents of the item to the log for
-further analysis.
-
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_bmap_item.c     |    3 +++
- fs/xfs/xfs_extfree_item.c  |    3 +++
- fs/xfs/xfs_refcount_item.c |    3 +++
- fs/xfs/xfs_rmap_item.c     |    3 +++
- 4 files changed, 12 insertions(+)
-
-
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index e3a691937e92..3d6f70da8820 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -522,6 +522,9 @@ xfs_bui_item_recover(
- 	error = xfs_trans_log_finish_bmap_update(tp, budp, bui_type, ip,
- 			whichfork, bmap->me_startoff, bmap->me_startblock,
- 			&count, state);
-+	if (error == -EFSCORRUPTED)
-+		XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp, bmap,
-+				sizeof(*bmap));
- 	if (error)
- 		goto err_cancel;
- 
-diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
-index 2424230ca2c3..3f8a0713573a 100644
---- a/fs/xfs/xfs_extfree_item.c
-+++ b/fs/xfs/xfs_extfree_item.c
-@@ -629,6 +629,9 @@ xfs_efi_item_recover(
- 		error = xfs_trans_free_extent(tp, efdp, extp->ext_start,
- 					      extp->ext_len,
- 					      &XFS_RMAP_OINFO_ANY_OWNER, false);
-+		if (error == -EFSCORRUPTED)
-+			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
-+					extp, sizeof(*extp));
- 		if (error)
- 			goto abort_error;
- 
-diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-index 746f4eda724c..163615285b18 100644
---- a/fs/xfs/xfs_refcount_item.c
-+++ b/fs/xfs/xfs_refcount_item.c
-@@ -522,6 +522,9 @@ xfs_cui_item_recover(
- 			error = xfs_trans_log_finish_refcount_update(tp, cudp,
- 				type, refc->pe_startblock, refc->pe_len,
- 				&new_fsb, &new_len, &rcur);
-+		if (error == -EFSCORRUPTED)
-+			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
-+					refc, sizeof(*refc));
- 		if (error)
- 			goto abort_error;
- 
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index dc4f0c9f0897..9b91a788722a 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
-@@ -578,6 +578,9 @@ xfs_rui_item_recover(
- 				rmap->me_owner, whichfork,
- 				rmap->me_startoff, rmap->me_startblock,
- 				rmap->me_len, state, &rcur);
-+		if (error == -EFSCORRUPTED)
-+			XFS_CORRUPTION_ERROR(__func__, XFS_ERRLEVEL_LOW, mp,
-+					rmap, sizeof(*rmap));
- 		if (error)
- 			goto abort_error;
- 
-
+-- 
+My name is Mrs.Theresa Bangurah,i am American citizen i have something
+important to tell you.Reply me immediately you get this message.God
+bless you.
