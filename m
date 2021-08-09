@@ -2,76 +2,57 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 98BF13E4853
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 Aug 2021 17:08:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23A353E488F
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 Aug 2021 17:19:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235256AbhHIPIk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 9 Aug 2021 11:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53780 "EHLO
+        id S233568AbhHIPT3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 9 Aug 2021 11:19:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235196AbhHIPIj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 9 Aug 2021 11:08:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C27C0613D3;
-        Mon,  9 Aug 2021 08:08:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lVisPR5KYrIvMXDw9TO9BYr5cUWzTK5uEBjREsWaDZw=; b=FZAC+JOHKOolQ0tQy9niwPLdJY
-        ZPBp2OAOsqp/iUYEibb87Zogf2D10l8lnVlSq/lwCZAwZi/mphoKiVWRGKVoKhIKlq3bfSu568mFa
-        moyOiJGlg0B/Ha9fNfYWhsdXSfoUKvWXD02eLBsgHv3pGg2BMwWw91GpvmeLmifT5JzzpRpw5iKk6
-        ZLuDMXg42FiE4YsZOcsMPDLHQkTWSSXFNwSAN4x0XxnROurFGseOV1SX48PHp0m1dUS9b4XG3jpNa
-        Z7KcNSFFGkqitSX3e9Ik35/qWyXPKLhtRkJhSbUw3MKzWiy7t5tKei8p7Q+irVo5IbFWEMNux+L/0
-        NAW9/boQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mD6sG-00B6dW-2h; Mon, 09 Aug 2021 15:07:43 +0000
-Date:   Mon, 9 Aug 2021 16:07:32 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ojeda@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        arnd@arndb.de
-Subject: Re: [PATCH 3/5] xfs: automatic resource cleanup of for_each_perag*
-Message-ID: <YRFEtK1CNr0Q+4nz@infradead.org>
-References: <162814684332.2777088.14593133806068529811.stgit@magnolia>
- <162814685996.2777088.11268635137040103857.stgit@magnolia>
+        with ESMTP id S232717AbhHIPT3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 9 Aug 2021 11:19:29 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6BBC0613D3
+        for <linux-xfs@vger.kernel.org>; Mon,  9 Aug 2021 08:19:08 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id q11-20020a7bce8b0000b02902e6880d0accso3137939wmj.0
+        for <linux-xfs@vger.kernel.org>; Mon, 09 Aug 2021 08:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=GZ0pKN6J296etXXH/eImj5nw/RrhVRmViLzun8Bacws=;
+        b=eoC52aHHE2aJ15uullKU8BXIM1jAAA4ruRBRigUKv0cOMx63vJRODIztqueUeLIBib
+         txU5RosCjaKkTgigzZ/D8EvdD/OrTl/ZjvI/y7ZQT+zB4rsWqEzpZpuhAN5EElGRixkK
+         K6HYwMvC4elceRyuNZaB9Y0O2o2GF4Pn5pQknYOmjvS1xuUwchqShz/LS1IsuseNDbBT
+         Pf/FCe8BsIUrMYoVSUgA8SamFjWlQBgOw4xc0bCnBJq+XAaaTLbq3zRh9LhBZPojIfd4
+         bK+D1f0v1t2CjpTq10ZFeOyIH5teNn+iOfiO8hHaAQn8kSt/HLvNOtOLvmdsDWuhHZDM
+         qcPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=GZ0pKN6J296etXXH/eImj5nw/RrhVRmViLzun8Bacws=;
+        b=TxwxpF1lIuZJKcBOhRJcS/sxGjWUGKmGp085U86/TxV1is21/RNY3ePk1wW/q2RDls
+         /8iS8P5uXQDQch6sN32sTO04dV7ZlefbRQFzyCluv6ALkPfl0SOtOQP2iXFc1FNYBSWc
+         rk/KqHLCwoyfVa+qbEQBnNyc5Dbp5//K0eYuu/leBnug9dYWvak8cn3Qn+/TtJKCmwnk
+         FhwPsPNcqoawjuQIlb7Y+WlAbY1bJNnifIqZWNkM2BhmOaXNHl4m3MysBpDSODlSSgTA
+         0mVkJ0AHR03LxfctbIyx7k5LDWH8VH55uBBMvcYpVHmGUQgnNevrAru59orkBDC3RFiQ
+         mqDA==
+X-Gm-Message-State: AOAM5312NFOB/ZcwH+a8UBYhmkeoZtFXj4fbyE4T5gV2Af5wIT+7Cu+x
+        PqavjFefNtkfFVcp0GLEiDONRShcSAThxjU9b1g=
+X-Google-Smtp-Source: ABdhPJyxJboZWwMd7hXfl4/l+bt1SitYpunxox/Sm6LduYcGqtaiXiCXjVa7OvPyKYxDsdMwSRBol5310wnpvEg0j54=
+X-Received: by 2002:a1c:f206:: with SMTP id s6mr16997239wmc.102.1628522347176;
+ Mon, 09 Aug 2021 08:19:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <162814685996.2777088.11268635137040103857.stgit@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:adf:df0b:0:0:0:0:0 with HTTP; Mon, 9 Aug 2021 08:19:06 -0700 (PDT)
+Reply-To: awaahmed34@gmail.com
+From:   "Mrs. Awa Ahmed" <martinhoward868@gmail.com>
+Date:   Mon, 9 Aug 2021 16:19:06 +0100
+Message-ID: <CABMvHDyokRUmt6UjL-5ZJ-bZaAEpP3WOn2ExOqWhGkFDuLH_FQ@mail.gmail.com>
+Subject: HELLO
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> +# Required for for_each_perag*
-> +ccflags-y += -std=gnu99
-
-I don't think it is up to an individual subsystem to pick a specific C
-dialect.
-
-I think the most important reason why the kernel sticks with gnu89 is
-to avoid the misfeature of variable declarations in the middle of
-blocks, and this change would lose it.
-
-> +	xfs_agnumber_t		last_agno = 0;
->  	int			saved_error = 0;
->  	int			error = 0;
->  	LIST_HEAD		(buffer_list);
->  
->  	/* update secondary superblocks. */
-> -	for_each_perag_from(mp, agno, pag) {
-> +	for_each_perag_from(mp, iter, 1) {
->  		struct xfs_buf		*bp;
->  
-> +		last_agno = iter.pag->pag_agno;
-
-This is a really horrible API as it magically injects a local variable
-in a macro.  It also leads to worse code generation and a small but
-noticable increase in .text sie:
-
-hch@brick:~/work/xfs$ size xfs.o.*
-   text	   data	    bss	    dec	    hex	filename
-1521421	 301161	   1880	1824462	 1bd6ce	xfs.o.old
-1521516	 301161	   1880	1824557	 1bd72d	xfs.o.new
+Please with due respect I want to talk to you is very important
