@@ -2,167 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 950633E52DD
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Aug 2021 07:25:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DCE53E52EF
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Aug 2021 07:28:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236330AbhHJFZS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 Aug 2021 01:25:18 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:46519 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236364AbhHJFZS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Aug 2021 01:25:18 -0400
+        id S237264AbhHJF3R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 Aug 2021 01:29:17 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:52137 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237249AbhHJF3R (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Aug 2021 01:29:17 -0400
 Received: from dread.disaster.area (pa49-195-182-146.pa.nsw.optusnet.com.au [49.195.182.146])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id AFB2984AF1
-        for <linux-xfs@vger.kernel.org>; Tue, 10 Aug 2021 15:24:55 +1000 (AEST)
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id A78CC80BC72
+        for <linux-xfs@vger.kernel.org>; Tue, 10 Aug 2021 15:28:54 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1mDKFz-00GZgB-73
-        for linux-xfs@vger.kernel.org; Tue, 10 Aug 2021 15:24:55 +1000
+        id 1mDKJq-00GZt7-3C
+        for linux-xfs@vger.kernel.org; Tue, 10 Aug 2021 15:28:54 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1mDKFy-000AqJ-Vq
-        for linux-xfs@vger.kernel.org; Tue, 10 Aug 2021 15:24:54 +1000
+        id 1mDKJp-000B4E-Rl
+        for linux-xfs@vger.kernel.org; Tue, 10 Aug 2021 15:28:53 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 16/16] xfs: kill xfs_sb_version_has_v3inode()
-Date:   Tue, 10 Aug 2021 15:24:51 +1000
-Message-Id: <20210810052451.41578-17-david@fromorbit.com>
+Subject: [PATCH 0/3] xfs: clean up buffer cache disk addressing
+Date:   Tue, 10 Aug 2021 15:28:48 +1000
+Message-Id: <20210810052851.42312-1-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210810052451.41578-1-david@fromorbit.com>
-References: <20210810052451.41578-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
         a=QpfB3wCSrn/dqEBSktpwZQ==:117 a=QpfB3wCSrn/dqEBSktpwZQ==:17
-        a=MhDmnRu9jo8A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=9cW39zbgiq67NevJaTUA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=MhDmnRu9jo8A:10 a=AxGcN0OE7OLTWqCLmmIA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Over time, we've moved from using bp->b_bn as the physical disk
+address for a buffer to using the address of the first buffer map
+attached to the buffer. This can be seen by the implementation of
+XFS_BUF_ADDR() macro:
 
-All callers to xfs_dinode_good_version() and XFS_DINODE_SIZE() in
-both the kernel and userspace have a xfs_mount structure available
-which means they can use mount features checks instead looking
-directly are the superblock.
+#define XFS_BUF_ADDR(bp) ((bp)->b_maps[0].bm_bn)
 
-Convert these functions to take a mount and use a xfs_has_v3inodes()
-check and move it out of the libxfs/xfs_format.h file as it really
-doesn't have anything to do with the definition of the on-disk
-format.
+The bp->b_bn value is now used as the buffer cache index for the
+buffer, and it is always set to XFS_BUF_DADDR_NULL for uncached
+buffers. Hence code that uses bp->b_bn for the physical address of
+the buffer will not do the right thing when passed an uncached
+buffer.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/libxfs/xfs_format.h    | 18 +++---------------
- fs/xfs/libxfs/xfs_ialloc.c    |  3 +--
- fs/xfs/libxfs/xfs_inode_buf.c |  2 +-
- fs/xfs/libxfs/xfs_inode_buf.h | 11 ++++++++++-
- 4 files changed, 15 insertions(+), 19 deletions(-)
+This series of patches addresses this problem. It adds a helper
+function xfs_buf_daddr() to extract the physical address of the
+buffer from it, and replaces all the open coded bp->b_bn accesses
+and the XFS_BUF_ADDR() users to use it. It then renames b_bn to
+b_index and converts all the internal cache lookup code to use
+b_index rather than b_bn.
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index ee479feb32b5..2d7057b7984b 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -414,18 +414,6 @@ xfs_sb_add_incompat_log_features(
- }
- 
- 
--/*
-- * v5 file systems support V3 inodes only, earlier file systems support
-- * v2 and v1 inodes.
-- */
--static inline bool xfs_dinode_good_version(struct xfs_sb *sbp,
--		uint8_t version)
--{
--	if (xfs_sb_is_v5(sbp))
--		return version == 3;
--	return version == 1 || version == 2;
--}
--
- static inline bool
- xfs_is_quota_inode(struct xfs_sb *sbp, xfs_ino_t ino)
- {
-@@ -892,12 +880,12 @@ enum xfs_dinode_fmt {
- /*
-  * Inode size for given fs.
-  */
--#define XFS_DINODE_SIZE(sbp) \
--	(xfs_sb_is_v5(sbp) ? \
-+#define XFS_DINODE_SIZE(mp) \
-+	(xfs_has_v3inodes(mp) ? \
- 		sizeof(struct xfs_dinode) : \
- 		offsetof(struct xfs_dinode, di_crc))
- #define XFS_LITINO(mp) \
--	((mp)->m_sb.sb_inodesize - XFS_DINODE_SIZE(&(mp)->m_sb))
-+	((mp)->m_sb.sb_inodesize - XFS_DINODE_SIZE(mp))
- 
- /*
-  * Inode data & attribute fork sizes, per inode.
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index d2f436c1bf40..d943847c40c5 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -337,7 +337,6 @@ xfs_ialloc_inode_init(
- 		xfs_buf_zero(fbuf, 0, BBTOB(fbuf->b_length));
- 		for (i = 0; i < M_IGEO(mp)->inodes_per_cluster; i++) {
- 			int	ioffset = i << mp->m_sb.sb_inodelog;
--			uint	isize = XFS_DINODE_SIZE(&mp->m_sb);
- 
- 			free = xfs_make_iptr(mp, fbuf, i);
- 			free->di_magic = cpu_to_be16(XFS_DINODE_MAGIC);
-@@ -354,7 +353,7 @@ xfs_ialloc_inode_init(
- 			} else if (tp) {
- 				/* just log the inode core */
- 				xfs_trans_log_buf(tp, fbuf, ioffset,
--						  ioffset + isize - 1);
-+					  ioffset + XFS_DINODE_SIZE(mp) - 1);
- 			}
- 		}
- 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index fefecdf3f632..036f909ff7a6 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -58,7 +58,7 @@ xfs_inode_buf_verify(
- 		dip = xfs_buf_offset(bp, (i << mp->m_sb.sb_inodelog));
- 		unlinked_ino = be32_to_cpu(dip->di_next_unlinked);
- 		di_ok = xfs_verify_magic16(bp, dip->di_magic) &&
--			xfs_dinode_good_version(&mp->m_sb, dip->di_version) &&
-+			xfs_dinode_good_version(mp, dip->di_version) &&
- 			xfs_verify_agino_or_null(mp, agno, unlinked_ino);
- 		if (unlikely(XFS_TEST_ERROR(!di_ok, mp,
- 						XFS_ERRTAG_ITOBP_INOTOBP))) {
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
-index 7f865bb4df84..585ed5a110af 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.h
-+++ b/fs/xfs/libxfs/xfs_inode_buf.h
-@@ -21,7 +21,7 @@ struct xfs_imap {
- 
- int	xfs_imap_to_bp(struct xfs_mount *mp, struct xfs_trans *tp,
- 		       struct xfs_imap *imap, struct xfs_buf **bpp);
--void	xfs_dinode_calc_crc(struct xfs_mount *, struct xfs_dinode *);
-+void	xfs_dinode_calc_crc(struct xfs_mount *mp, struct xfs_dinode *dip);
- void	xfs_inode_to_disk(struct xfs_inode *ip, struct xfs_dinode *to,
- 			  xfs_lsn_t lsn);
- int	xfs_inode_from_disk(struct xfs_inode *ip, struct xfs_dinode *from);
-@@ -42,4 +42,13 @@ static inline uint64_t xfs_inode_encode_bigtime(struct timespec64 tv)
- struct timespec64 xfs_inode_from_disk_ts(struct xfs_dinode *dip,
- 		const xfs_timestamp_t ts);
- 
-+static inline bool
-+xfs_dinode_good_version(struct xfs_mount *mp, uint8_t version)
-+{
-+	if (xfs_has_v3inodes(mp))
-+		return version == 3;
-+	return version == 1 || version == 2;
-+}
-+
-+
- #endif	/* __XFS_INODE_BUF_H__ */
--- 
-2.31.1
+The result is that all code now uses xfs_buf_daddr() where physical
+addresses are required, and the cache index variable isn't named in
+a manner that engenders external use of access. The changes end up
+being relatively small, and the impact on userspace outside libxfs
+is even smaller (only a couple of dozen references to b_bn or
+XFS_BUF_ADDR).
+
+Version 1
+- based on 5.14-rc4 + for-next + "xfs: rework feature flags"
 
