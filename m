@@ -2,130 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D53E3E5007
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Aug 2021 01:36:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B6B23E5157
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Aug 2021 05:07:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235510AbhHIXgX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 9 Aug 2021 19:36:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235336AbhHIXgX (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 9 Aug 2021 19:36:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DB56660E52;
-        Mon,  9 Aug 2021 23:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628552162;
-        bh=am93hnEEYvFW9SCnTlVeQVHL5BxCWjGKVlnhT1Zva6c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r1n044MN42NJ6ykBShYW8QRucgNdqFJr0b9guh7aAEKJinnhoNqnQZ91aJN5R4lof
-         aUCsN9a5HIF8Ms5YIm8Wn78cXsSdCwb17J3y4RzhHdyJY2Wbin+a4ztY3gwgzgmtQy
-         +DuKVErtMx9wYq4HchXXz2Y/hTUTjhjbyfi81+26Dbjo6jbslCXw3UqH5uYWXkpICh
-         BRI5zAfDp0mO5Lp+NyVr1VgzBCKOv6Nx8/PZZIfNBAmeAnHh07QegsXwS7TM92UArq
-         XIN9TiFE7g1wPC/Vt9vAwKbQhszWNx1kID85N7cCmElhrciY4NhdhMnO/GTe15SuXJ
-         9fEgO0a/uyzsA==
-Date:   Mon, 9 Aug 2021 16:36:01 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
-        hch@infradead.org
-Subject: Re: [PATCH 05/14] xfs: per-cpu deferred inode inactivation queues
-Message-ID: <20210809233601.GR3601466@magnolia>
-References: <162812918259.2589546.16599271324044986858.stgit@magnolia>
- <162812921040.2589546.137433781469727121.stgit@magnolia>
- <20210807002104.GB3601443@magnolia>
- <20210807214900.GB3657114@dread.disaster.area>
+        id S236517AbhHJDHn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 9 Aug 2021 23:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236490AbhHJDHm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 9 Aug 2021 23:07:42 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F94C0613D3;
+        Mon,  9 Aug 2021 20:07:20 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id c9so24114331wri.8;
+        Mon, 09 Aug 2021 20:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=5NTJSky9UX3JbuB9riY3wCYfXDpCwy2c7hzO0kF4AHA=;
+        b=GEfwcskAwtO6j7mW8StYFf1AOzo+E5N/+M7SAR4cYpk1qDA+wEixynwgyIpDIMYO4J
+         8zBjOT3PYUwh4IVLIZuHzXcXRA3Uj66BSyGw0+fwa4YaQSQqVFfy3KiNBf0c6NPeXjvg
+         ojC5zuJAUPmSvZ2XoYu4rNH7eRYDMeDm58povtqtdAefKd8/ARoUu11rYZl7ZlMkNvXp
+         GICqYxfZ5u25rkwBIVmV95reSEhqn9FAebVKhTFE1kfHvJk24lS2UJXFkuE3Dh63RZJw
+         LX1kVl0JXjv/vLnDkP8sPUa5KiBqIayuVCcX1C7RhOd6bK+MZqmExZDZ3AN+w33RYB2H
+         jTSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=5NTJSky9UX3JbuB9riY3wCYfXDpCwy2c7hzO0kF4AHA=;
+        b=eUTTQTei7eiHbRPeUQ6XdetOyRdf2GAuRPxx5Tf0cj+nrGQVgOtjqjwp1sLwCYtTQU
+         4jS/E80TF9sZi/q0IOwqIH28LsrZs+22iBvcqMWYsZJWe/MKCZKxJ9qxaHfh1KQF7F4I
+         o8B6nv2zdDD4Q4V7g0E5ZOkL5cwWQwdidHDKkKM+M5wXdfbL8G/UbloaLrR0/xGCxXfD
+         JUrWKLTpahAQIBrhVEW5mN2vwPIrPDKTQ406zwdFHVmhUCweZZs+6Cb1gzabWNqfuEEO
+         qqkOgKOKZnpAH7sRmmH+vTyKx4CSK4QJzze+JTTmRsNZBBgSTtBvdTFWvXVcvDsWliMn
+         +00A==
+X-Gm-Message-State: AOAM532Qtv+UOir4JkSZpfdfTrq70waRws3LqHwdLupM+jhtHl90zV99
+        JP9x9eJDxT4V+po0OxZhAQ==
+X-Google-Smtp-Source: ABdhPJyNFASrClckY+401IVdjAHQrIeArym7O9iK+G5CYy3ke4GTNTmTD0l2eD+yrNnicT9DXA68+A==
+X-Received: by 2002:adf:e806:: with SMTP id o6mr28933301wrm.307.1628564839467;
+        Mon, 09 Aug 2021 20:07:19 -0700 (PDT)
+Received: from [192.168.1.70] ([102.64.223.208])
+        by smtp.gmail.com with ESMTPSA id 129sm19535021wmz.26.2021.08.09.20.07.14
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 09 Aug 2021 20:07:19 -0700 (PDT)
+Message-ID: <6111ed67.1c69fb81.977c5.b10d@mx.google.com>
+From:   Vanina curth <curtisvani0023@gmail.com>
+X-Google-Original-From: Vanina  curth
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210807214900.GB3657114@dread.disaster.area>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Dear
+To:     Recipients <Vanina@vger.kernel.org>
+Date:   Tue, 10 Aug 2021 03:07:09 +0000
+Reply-To: curtisvani9008@gmail.com
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Aug 08, 2021 at 07:49:00AM +1000, Dave Chinner wrote:
-> On Fri, Aug 06, 2021 at 05:21:04PM -0700, Darrick J. Wong wrote:
-> > On Wed, Aug 04, 2021 at 07:06:50PM -0700, Darrick J. Wong wrote:
-> > > From: Dave Chinner <dchinner@redhat.com>
-> > 
-> > <megasnip> A couple of minor changes that aren't worth reposting the
-> > entire series:
-> > 
-> > > diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> > > index b9214733d0c3..fedfa40e3cd6 100644
-> > > --- a/fs/xfs/xfs_icache.c
-> > > +++ b/fs/xfs/xfs_icache.c
-> > 
-> > <snip>
-> > 
-> > > @@ -1767,30 +1801,276 @@ xfs_inode_mark_reclaimable(
-> > >  		ASSERT(0);
-> > >  	}
-> > >  
-> > > +	pag = xfs_perag_get(mp, XFS_INO_TO_AGNO(mp, ip->i_ino));
-> > > +	spin_lock(&pag->pag_ici_lock);
-> > > +	spin_lock(&ip->i_flags_lock);
-> > > +
-> > > +	trace_xfs_inode_set_reclaimable(ip);
-> > > +	ip->i_flags &= ~(XFS_NEED_INACTIVE | XFS_INACTIVATING);
-> > > +	ip->i_flags |= XFS_IRECLAIMABLE;
-> > > +	xfs_perag_set_inode_tag(pag, XFS_INO_TO_AGINO(mp, ip->i_ino),
-> > > +			XFS_ICI_RECLAIM_TAG);
-> > > +
-> > > +	spin_unlock(&ip->i_flags_lock);
-> > > +	spin_unlock(&pag->pag_ici_lock);
-> > > +	xfs_perag_put(pag);
-> > > +}
-> > > +
-> > > +/*
-> > > + * Free all speculative preallocations and possibly even the inode itself.
-> > > + * This is the last chance to make changes to an otherwise unreferenced file
-> > > + * before incore reclamation happens.
-> > > + */
-> > > +static void
-> > > +xfs_inodegc_inactivate(
-> > > +	struct xfs_inode	*ip)
-> > > +{
-> > > +	struct xfs_mount        *mp = ip->i_mount;
-> > > +
-> > > +	/*
-> > > +	* Inactivation isn't supposed to run when the fs is frozen because
-> > > +	* we don't want kernel threads to block on transaction allocation.
-> > > +	*/
-> > > +	ASSERT(mp->m_super->s_writers.frozen < SB_FREEZE_FS);
-> > > +
-> > 
-> > I solved the problems Dave was complaining about (g/390, x/517) by
-> > removing this ASSERT.
-> > 
-> > > diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-> > > index 19260291ff8b..bd8abb50b33a 100644
-> > > --- a/fs/xfs/xfs_trace.h
-> > > +++ b/fs/xfs/xfs_trace.h
-> > > @@ -157,6 +157,48 @@ DEFINE_PERAG_REF_EVENT(xfs_perag_put);
-> > >  DEFINE_PERAG_REF_EVENT(xfs_perag_set_inode_tag);
-> > >  DEFINE_PERAG_REF_EVENT(xfs_perag_clear_inode_tag);
-> > >  
-> > > +#define XFS_STATE_FLAGS \
-> > > +	{ (1UL << XFS_STATE_INODEGC_ENABLED),		"inodegc" }
-> > 
-> > I've also changed the name of this to XFS_OPSTATE_STRINGS because we use
-> > _STRINGS everywhere else in this file.
-> 
-> FWIW, can we define this with the definition of the OPSTATE
-> variables in xfs_mount.h? THat makes it much easier to keep up to
-> date when we add new flags because it's obvious that there are
-> tracing flags that also need to be updated when we add a new state
-> flag...
-
-Yeah, I'll move the _STRINGS definition and clean up all these names to
-have 'OPSTATE' instead of just 'STATE' too.
-
---D
-
-> 
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+How are you? I'm Vanina. I'm interested to know you and I would like to kno=
+w more about you and establish relationship with you. i will wait for your =
+response. thank you.
