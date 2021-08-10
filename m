@@ -2,32 +2,32 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3844E3E52D1
-	for <lists+linux-xfs@lfdr.de>; Tue, 10 Aug 2021 07:23:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2F913E52D4
+	for <lists+linux-xfs@lfdr.de>; Tue, 10 Aug 2021 07:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237185AbhHJFXX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 Aug 2021 01:23:23 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53458 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237177AbhHJFXX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Aug 2021 01:23:23 -0400
+        id S236849AbhHJFX1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 Aug 2021 01:23:27 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:58614 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237337AbhHJFXZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 Aug 2021 01:23:25 -0400
 Received: from dread.disaster.area (pa49-195-182-146.pa.nsw.optusnet.com.au [49.195.182.146])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4D45B10482F4
-        for <linux-xfs@vger.kernel.org>; Tue, 10 Aug 2021 15:23:00 +1000 (AEST)
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id CBE7784BCF
+        for <linux-xfs@vger.kernel.org>; Tue, 10 Aug 2021 15:23:02 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1mDKE7-00GZdI-Q8
+        id 1mDKE7-00GZdO-R7
         for linux-xfs@vger.kernel.org; Tue, 10 Aug 2021 15:22:59 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.94)
         (envelope-from <david@fromorbit.com>)
-        id 1mDKE7-000AlK-IR
+        id 1mDKE7-000AlN-JU
         for linux-xfs@vger.kernel.org; Tue, 10 Aug 2021 15:22:59 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/3] xfs: CIL work is serialised, not pipelined
-Date:   Tue, 10 Aug 2021 15:22:56 +1000
-Message-Id: <20210810052257.41308-3-david@fromorbit.com>
+Subject: [PATCH 3/3] xfs: move the CIL workqueue to the CIL
+Date:   Tue, 10 Aug 2021 15:22:57 +1000
+Message-Id: <20210810052257.41308-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210810052257.41308-1-david@fromorbit.com>
 References: <20210810052257.41308-1-david@fromorbit.com>
@@ -37,259 +37,160 @@ X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
         a=QpfB3wCSrn/dqEBSktpwZQ==:117 a=QpfB3wCSrn/dqEBSktpwZQ==:17
         a=MhDmnRu9jo8A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=A5Cs0mGKsY9zP8qgzdMA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=DQkj07otzc7_PMFSBPwA:9 a=AjGcO6oz07-iQ99wixmX:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Because we use a single work structure attached to the CIL rather
-than the CIL context, we can only queue a single work item at a
-time. This results in the CIL being single threaded and limits
-performance when it becomes CPU bound.
-
-The design of the CIL is that it is pipelined and multiple commits
-can be running concurrently, but the way the work is currently
-implemented means that it is not pipelining as it was intended. The
-critical work to switch the CIL context can take a few milliseconds
-to run, but the rest of the CIL context flush can take hundreds of
-milliseconds to complete. The context switching is the serialisation
-point of the CIL, once the context has been switched the rest of the
-context push can run asynchrnously with all other context pushes.
-
-Hence we can move the work to the CIL context so that we can run
-multiple CIL pushes at the same time and spread the majority of
-the work out over multiple CPUs. We can keep the per-cpu CIL commit
-state on the CIL rather than the context, because the context is
-pinned to the CIL until the switch is done and we aggregate and
-drain the per-cpu state held on the CIL during the context switch.
-
-However, because we no longer serialise the CIL work, we can have
-effectively unlimited CIL pushes in progress. We don't want to do
-this - not only does it create contention on the iclogs and the
-state machine locks, we can run the log right out of space with
-outstanding pushes. Instead, limit the work concurrency to 4
-concurrent works being processed at a time. This is enough
-concurrency to remove the CIL from being a CPU bound bottleneck but
-not enough to create new contention points or unbound concurrency
-issues.
+We only use the CIL workqueue in the CIL, so it makes no sense to
+hang it off the xfs_mount and have to walk multiple pointers back up
+to the mount when we have the CIL structures right there.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log_cil.c  | 80 +++++++++++++++++++++++--------------------
- fs/xfs/xfs_log_priv.h |  2 +-
- fs/xfs/xfs_super.c    |  6 +++-
- 3 files changed, 48 insertions(+), 40 deletions(-)
+ fs/xfs/xfs_log_cil.c  | 20 +++++++++++++++++---
+ fs/xfs/xfs_log_priv.h |  1 +
+ fs/xfs/xfs_mount.h    |  1 -
+ fs/xfs/xfs_super.c    | 15 +--------------
+ 4 files changed, 19 insertions(+), 18 deletions(-)
 
 diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 59d3bd45543b..17785f4d50f7 100644
+index 17785f4d50f7..ccd621ea9412 100644
 --- a/fs/xfs/xfs_log_cil.c
 +++ b/fs/xfs/xfs_log_cil.c
-@@ -47,6 +47,34 @@ xlog_cil_ticket_alloc(
- 	return tic;
- }
- 
-+/*
-+ * Unavoidable forward declaration - xlog_cil_push_work() calls
-+ * xlog_cil_ctx_alloc() itself.
-+ */
-+static void xlog_cil_push_work(struct work_struct *work);
-+
-+static struct xfs_cil_ctx *
-+xlog_cil_ctx_alloc(void)
-+{
-+	struct xfs_cil_ctx	*ctx;
-+
-+	ctx = kmem_zalloc(sizeof(*ctx), KM_NOFS);
-+	INIT_LIST_HEAD(&ctx->committing);
-+	INIT_LIST_HEAD(&ctx->busy_extents);
-+	INIT_WORK(&ctx->push_work, xlog_cil_push_work);
-+	return ctx;
-+}
-+
-+static void
-+xlog_cil_ctx_switch(
-+	struct xfs_cil		*cil,
-+	struct xfs_cil_ctx	*ctx)
-+{
-+	ctx->sequence = ++cil->xc_current_sequence;
-+	ctx->cil = cil;
-+	cil->xc_ctx = ctx;
-+}
-+
- /*
-  * After the first stage of log recovery is done, we know where the head and
-  * tail of the log are. We need this log initialisation done before we can
-@@ -824,11 +852,11 @@ static void
- xlog_cil_push_work(
- 	struct work_struct	*work)
- {
--	struct xfs_cil		*cil =
--		container_of(work, struct xfs_cil, xc_push_work);
-+	struct xfs_cil_ctx	*ctx =
-+		container_of(work, struct xfs_cil_ctx, push_work);
-+	struct xfs_cil		*cil = ctx->cil;
- 	struct xlog		*log = cil->xc_log;
- 	struct xfs_log_vec	*lv;
--	struct xfs_cil_ctx	*ctx;
- 	struct xfs_cil_ctx	*new_ctx;
- 	struct xlog_ticket	*tic;
- 	int			num_iovecs;
-@@ -842,11 +870,10 @@ xlog_cil_push_work(
- 	DECLARE_COMPLETION_ONSTACK(bdev_flush);
- 	bool			push_commit_stable;
- 
--	new_ctx = kmem_zalloc(sizeof(*new_ctx), KM_NOFS);
-+	new_ctx = xlog_cil_ctx_alloc();
- 	new_ctx->ticket = xlog_cil_ticket_alloc(log);
- 
- 	down_write(&cil->xc_ctx_lock);
--	ctx = cil->xc_ctx;
- 
- 	spin_lock(&cil->xc_push_lock);
- 	push_seq = cil->xc_push_seq;
-@@ -878,7 +905,7 @@ xlog_cil_push_work(
- 
- 
- 	/* check for a previously pushed sequence */
--	if (push_seq < cil->xc_ctx->sequence) {
-+	if (push_seq < ctx->sequence) {
- 		spin_unlock(&cil->xc_push_lock);
- 		goto out_skip;
- 	}
-@@ -951,19 +978,7 @@ xlog_cil_push_work(
- 	}
- 
- 	/*
--	 * initialise the new context and attach it to the CIL. Then attach
--	 * the current context to the CIL committing list so it can be found
--	 * during log forces to extract the commit lsn of the sequence that
--	 * needs to be forced.
--	 */
--	INIT_LIST_HEAD(&new_ctx->committing);
--	INIT_LIST_HEAD(&new_ctx->busy_extents);
--	new_ctx->sequence = ctx->sequence + 1;
--	new_ctx->cil = cil;
--	cil->xc_ctx = new_ctx;
--
--	/*
--	 * The switch is now done, so we can drop the context lock and move out
-+	 * Switch the contexts so we can drop the context lock and move out
- 	 * of a shared context. We can't just go straight to the commit record,
- 	 * though - we need to synchronise with previous and future commits so
- 	 * that the commit records are correctly ordered in the log to ensure
-@@ -988,7 +1003,7 @@ xlog_cil_push_work(
- 	 * deferencing a freed context pointer.
- 	 */
- 	spin_lock(&cil->xc_push_lock);
--	cil->xc_current_sequence = new_ctx->sequence;
-+	xlog_cil_ctx_switch(cil, new_ctx);
- 	spin_unlock(&cil->xc_push_lock);
- 	up_write(&cil->xc_ctx_lock);
- 
-@@ -1136,7 +1151,7 @@ xlog_cil_push_background(
+@@ -1151,7 +1151,7 @@ xlog_cil_push_background(
  	spin_lock(&cil->xc_push_lock);
  	if (cil->xc_push_seq < cil->xc_current_sequence) {
  		cil->xc_push_seq = cil->xc_current_sequence;
--		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_push_work);
-+		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_ctx->push_work);
+-		queue_work(log->l_mp->m_cil_workqueue, &cil->xc_ctx->push_work);
++		queue_work(cil->xc_push_wq, &cil->xc_ctx->push_work);
  	}
  
  	/*
-@@ -1202,7 +1217,7 @@ xlog_cil_push_now(
+@@ -1217,7 +1217,7 @@ xlog_cil_push_now(
  
  	/* start on any pending background push to minimise wait time on it */
  	if (!async)
--		flush_work(&cil->xc_push_work);
-+		flush_workqueue(log->l_mp->m_cil_workqueue);
+-		flush_workqueue(log->l_mp->m_cil_workqueue);
++		flush_workqueue(cil->xc_push_wq);
  
  	/*
  	 * If the CIL is empty or we've already pushed the sequence then
-@@ -1216,7 +1231,7 @@ xlog_cil_push_now(
+@@ -1231,7 +1231,7 @@ xlog_cil_push_now(
  
  	cil->xc_push_seq = push_seq;
  	cil->xc_push_commit_stable = async;
--	queue_work(log->l_mp->m_cil_workqueue, &cil->xc_push_work);
-+	queue_work(log->l_mp->m_cil_workqueue, &cil->xc_ctx->push_work);
+-	queue_work(log->l_mp->m_cil_workqueue, &cil->xc_ctx->push_work);
++	queue_work(cil->xc_push_wq, &cil->xc_ctx->push_work);
  	spin_unlock(&cil->xc_push_lock);
  }
  
-@@ -1456,13 +1471,6 @@ xlog_cil_init(
+@@ -1470,6 +1470,15 @@ xlog_cil_init(
+ 	cil = kmem_zalloc(sizeof(*cil), KM_MAYFAIL);
  	if (!cil)
  		return -ENOMEM;
- 
--	ctx = kmem_zalloc(sizeof(*ctx), KM_MAYFAIL);
--	if (!ctx) {
--		kmem_free(cil);
--		return -ENOMEM;
--	}
--
--	INIT_WORK(&cil->xc_push_work, xlog_cil_push_work);
- 	INIT_LIST_HEAD(&cil->xc_cil);
- 	INIT_LIST_HEAD(&cil->xc_committing);
- 	spin_lock_init(&cil->xc_cil_lock);
-@@ -1471,16 +1479,12 @@ xlog_cil_init(
- 	init_rwsem(&cil->xc_ctx_lock);
- 	init_waitqueue_head(&cil->xc_start_wait);
- 	init_waitqueue_head(&cil->xc_commit_wait);
--
--	INIT_LIST_HEAD(&ctx->committing);
--	INIT_LIST_HEAD(&ctx->busy_extents);
--	ctx->sequence = 1;
--	ctx->cil = cil;
--	cil->xc_ctx = ctx;
--	cil->xc_current_sequence = ctx->sequence;
--
- 	cil->xc_log = log;
- 	log->l_cilp = cil;
-+
-+	ctx = xlog_cil_ctx_alloc();
-+	xlog_cil_ctx_switch(cil, ctx);
-+
- 	return 0;
- }
- 
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 014e0dc0ba97..5aaaf5f0b35c 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -249,6 +249,7 @@ struct xfs_cil_ctx {
- 	struct list_head	iclog_entry;
- 	struct list_head	committing;	/* ctx committing list */
- 	struct work_struct	discard_endio_work;
-+	struct work_struct	push_work;
- };
- 
- /*
-@@ -282,7 +283,6 @@ struct xfs_cil {
- 	wait_queue_head_t	xc_commit_wait;
- 	wait_queue_head_t	xc_start_wait;
- 	xfs_csn_t		xc_current_sequence;
--	struct work_struct	xc_push_work;
- 	wait_queue_head_t	xc_push_wait;	/* background push throttle */
- } ____cacheline_aligned_in_smp;
- 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 53ce25008948..6d42883b8fae 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -518,9 +518,13 @@ xfs_init_mount_workqueues(
- 	if (!mp->m_unwritten_workqueue)
- 		goto out_destroy_buf;
- 
 +	/*
 +	 * Limit the CIL pipeline depth to 4 concurrent works to bound the
 +	 * concurrency the log spinlocks will be exposed to.
 +	 */
- 	mp->m_cil_workqueue = alloc_workqueue("xfs-cil/%s",
- 			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_UNBOUND),
--			0, mp->m_super->s_id);
-+			4, mp->m_super->s_id);
- 	if (!mp->m_cil_workqueue)
- 		goto out_destroy_unwritten;
++	cil->xc_push_wq = alloc_workqueue("xfs-cil/%s",
++			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_UNBOUND),
++			4, log->l_mp->m_super->s_id);
++	if (!cil->xc_push_wq)
++		goto out_destroy_cil;
  
+ 	INIT_LIST_HEAD(&cil->xc_cil);
+ 	INIT_LIST_HEAD(&cil->xc_committing);
+@@ -1486,6 +1495,10 @@ xlog_cil_init(
+ 	xlog_cil_ctx_switch(cil, ctx);
+ 
+ 	return 0;
++
++out_destroy_cil:
++	kmem_free(cil);
++	return -ENOMEM;
+ }
+ 
+ void
+@@ -1499,6 +1512,7 @@ xlog_cil_destroy(
+ 	}
+ 
+ 	ASSERT(list_empty(&log->l_cilp->xc_cil));
++	destroy_workqueue(log->l_cilp->xc_push_wq);
+ 	kmem_free(log->l_cilp);
+ }
+ 
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index 5aaaf5f0b35c..844fbeec3545 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -272,6 +272,7 @@ struct xfs_cil {
+ 	struct xlog		*xc_log;
+ 	struct list_head	xc_cil;
+ 	spinlock_t		xc_cil_lock;
++	struct workqueue_struct	*xc_push_wq;
+ 
+ 	struct rw_semaphore	xc_ctx_lock ____cacheline_aligned_in_smp;
+ 	struct xfs_cil_ctx	*xc_ctx;
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 32143102cc91..2266c6a668cf 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -107,7 +107,6 @@ typedef struct xfs_mount {
+ 	struct xfs_mru_cache	*m_filestream;  /* per-mount filestream data */
+ 	struct workqueue_struct *m_buf_workqueue;
+ 	struct workqueue_struct	*m_unwritten_workqueue;
+-	struct workqueue_struct	*m_cil_workqueue;
+ 	struct workqueue_struct	*m_reclaim_workqueue;
+ 	struct workqueue_struct	*m_sync_workqueue;
+ 	struct workqueue_struct *m_blockgc_wq;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 6d42883b8fae..7b55464f6de0 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -518,21 +518,11 @@ xfs_init_mount_workqueues(
+ 	if (!mp->m_unwritten_workqueue)
+ 		goto out_destroy_buf;
+ 
+-	/*
+-	 * Limit the CIL pipeline depth to 4 concurrent works to bound the
+-	 * concurrency the log spinlocks will be exposed to.
+-	 */
+-	mp->m_cil_workqueue = alloc_workqueue("xfs-cil/%s",
+-			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM | WQ_UNBOUND),
+-			4, mp->m_super->s_id);
+-	if (!mp->m_cil_workqueue)
+-		goto out_destroy_unwritten;
+-
+ 	mp->m_reclaim_workqueue = alloc_workqueue("xfs-reclaim/%s",
+ 			XFS_WQFLAGS(WQ_FREEZABLE | WQ_MEM_RECLAIM),
+ 			0, mp->m_super->s_id);
+ 	if (!mp->m_reclaim_workqueue)
+-		goto out_destroy_cil;
++		goto out_destroy_unwritten;
+ 
+ 	mp->m_blockgc_wq = alloc_workqueue("xfs-blockgc/%s",
+ 			XFS_WQFLAGS(WQ_UNBOUND | WQ_FREEZABLE | WQ_MEM_RECLAIM),
+@@ -559,8 +549,6 @@ xfs_init_mount_workqueues(
+ 	destroy_workqueue(mp->m_blockgc_wq);
+ out_destroy_reclaim:
+ 	destroy_workqueue(mp->m_reclaim_workqueue);
+-out_destroy_cil:
+-	destroy_workqueue(mp->m_cil_workqueue);
+ out_destroy_unwritten:
+ 	destroy_workqueue(mp->m_unwritten_workqueue);
+ out_destroy_buf:
+@@ -577,7 +565,6 @@ xfs_destroy_mount_workqueues(
+ 	destroy_workqueue(mp->m_blockgc_wq);
+ 	destroy_workqueue(mp->m_inodegc_wq);
+ 	destroy_workqueue(mp->m_reclaim_workqueue);
+-	destroy_workqueue(mp->m_cil_workqueue);
+ 	destroy_workqueue(mp->m_unwritten_workqueue);
+ 	destroy_workqueue(mp->m_buf_workqueue);
+ }
 -- 
 2.31.1
 
