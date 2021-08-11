@@ -2,60 +2,115 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B22F73E9134
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 Aug 2021 14:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 656443E93D2
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 Aug 2021 16:43:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbhHKMcO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 Aug 2021 08:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229912AbhHKMcL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 Aug 2021 08:32:11 -0400
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95B99C061199
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Aug 2021 05:30:02 -0700 (PDT)
-Received: by mail-oi1-x234.google.com with SMTP id u10so4317311oiw.4
-        for <linux-xfs@vger.kernel.org>; Wed, 11 Aug 2021 05:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=77BwqRII9XCweQU8IJul6unijI/BEL+vUJmVmCRLxH4=;
-        b=l4gMJVQR0kiw5jB7QjBwuNpfM6KgRmAnZ+U3/uWnaDOrOmeNXH1cBsuQp1/yvU/vbe
-         h7truI0tSaL01ahWzSqREXmT86UPLmMGQ2+FLEgN9spMzc4cuAIBO//Q+H5br/KBc0TV
-         kFrfyS3HAXSTLm9xum/FyUF/jALDjxDHHjAbGHdZk+wTj7O/Gvjxi495MUWK0LMLb61t
-         xWjyjzLQh6acP97vVSQvECAoNev4PY9q3zMqG/1nqsutkiyZpW2+ssMsVdYVIVzVs9ax
-         stDtdqMeOw7/9vXNfePZRksemawFwQjcQ1gGbjzrFwOEwtevs3PZsUTk25T8b2r2n2+I
-         0gBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=77BwqRII9XCweQU8IJul6unijI/BEL+vUJmVmCRLxH4=;
-        b=N9/MdzSp5taSY8i+LqAasb75+1jT6LCfp25c7mk9aGfrRVHeNy2Unk0LKrXsdHsegv
-         7r8ahZfn5RwyCC8wCr/8J0OhprU5KJsgl07mltwHyToamHydWup+FZteBW/dAJNPPS2D
-         /ypRNV1t/EAAF0LX3CU4/CYHJDSsBHjfUDYL1sRiB5mwzDKIRhqttqpo+WeXLeO1mlFc
-         w4HUJsKg6778imDLLwwS7XZx6H2KBMneOZKx6BaIiTTIQCtE6maDWxxkWUDVEGjwObxe
-         RriargC4XRmf6hdPRvbK6QTwPwL9nygw2+qpUJ8s5ltpvZO+uCZRml0fIiPQ89YbKVXM
-         kTPA==
-X-Gm-Message-State: AOAM532aDo+6VkQXDsYobEjRZCzimLowX/pBthYe5NE+ux5M6R1JES/w
-        4xiFIeD2mmuMeN056JTh906YApXx5o8L5ASI++Y=
-X-Google-Smtp-Source: ABdhPJwW80yC3Jv4N7Ygd/oz/W2w0OMWMVUNvF3laMRZsfuxi/a2uJ5LPRrNJQDqCRwhEl9YwYATyhizs0DKY0HnRMk=
-X-Received: by 2002:a05:6808:1924:: with SMTP id bf36mr24189327oib.106.1628685002002;
- Wed, 11 Aug 2021 05:30:02 -0700 (PDT)
+        id S232284AbhHKOoK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 Aug 2021 10:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231872AbhHKOoJ (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 11 Aug 2021 10:44:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A8AB560E93;
+        Wed, 11 Aug 2021 14:43:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628693025;
+        bh=A4sH3E2KfyLdhCZNMa6bajIYD//xy6/126wVil10EmI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fMKD9jHSTsGoJ7/M9qyzF9VUMwo+yqYhQSkzJ73z8l+Kr+EB6Xn6s56daPVg0z6+u
+         kv4ZPQnOTr5NkLfQaVQJ6MkxsHGKg3+2jeuSAb/Jv/OEK4/QHA9m8qXheEVlsnuJ4X
+         F65m3OfiNtOB4qKENXSt2sM6gpxcAsK/Mgm5+1N43PFsei+TcDHqPW4HL1owG8LVI4
+         IDLKnjPI6B0ZKkxwMWybTVqaIc/ykpejz+o1b09xct7IKv3Fj56L1El59oECL45dX3
+         Bsm5QsmHCj9TTzfQk7mqWqIiQmT8QcJfa3VnD52WZo1uLp3YOteq18Lezo1hNP62xZ
+         yZpRekj+rC3mQ==
+Date:   Wed, 11 Aug 2021 07:43:45 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        David Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        Dave Chinner <dchinner@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the folio tree with the xfs tree
+Message-ID: <20210811144345.GC3601443@magnolia>
+References: <20210811174231.688566de@canb.auug.org.au>
 MIME-Version: 1.0
-Received: by 2002:a05:6830:23a5:0:0:0:0 with HTTP; Wed, 11 Aug 2021 05:30:01
- -0700 (PDT)
-Reply-To: rihabmanyang07@yahoo.com
-From:   Rihab Manyang <ndourandiogou1@gmail.com>
-Date:   Wed, 11 Aug 2021 13:30:01 +0100
-Message-ID: <CAP5_mB76a-FSZzks8OG9YWvLEFv62qfHQ6sTAFQrmH0xjgR9bw@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210811174231.688566de@canb.auug.org.au>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
--- 
-How are you?I am miss.Rihab Manyang i will like to be your friend
-please write me back on my email for more details, Thanks.
+On Wed, Aug 11, 2021 at 05:42:31PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Today's linux-next merge of the folio tree got a conflict in:
+> 
+>   mm/util.c
+> 
+> between commit:
+> 
+>   de2860f46362 ("mm: Add kvrealloc()")
+> 
+> from the xfs tree and commit:
+> 
+>   3bc0556bade4 ("mm: Add folio_raw_mapping()")
+> 
+> from the folio tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+
+Hmmm.  Seeing as krealloc lives in mm/slab_common.c anyway, I might just
+move this function there, and (hopefully) avoid this conflict.
+
+--D
+
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc mm/util.c
+> index d06e48b28eec,e8fa30e48447..000000000000
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@@ -660,31 -635,6 +660,21 @@@ void kvfree_sensitive(const void *addr
+>   }
+>   EXPORT_SYMBOL(kvfree_sensitive);
+>   
+>  +void *kvrealloc(const void *p, size_t oldsize, size_t newsize, gfp_t flags)
+>  +{
+>  +	void *newp;
+>  +
+>  +	if (oldsize >= newsize)
+>  +		return (void *)p;
+>  +	newp = kvmalloc(newsize, flags);
+>  +	if (!newp)
+>  +		return NULL;
+>  +	memcpy(newp, p, oldsize);
+>  +	kvfree(p);
+>  +	return newp;
+>  +}
+>  +EXPORT_SYMBOL(kvrealloc);
+>  +
+> - static inline void *__page_rmapping(struct page *page)
+> - {
+> - 	unsigned long mapping;
+> - 
+> - 	mapping = (unsigned long)page->mapping;
+> - 	mapping &= ~PAGE_MAPPING_FLAGS;
+> - 
+> - 	return (void *)mapping;
+> - }
+> - 
+>   /* Neutral page->mapping pointer to address_space or anon_vma or other */
+>   void *page_rmapping(struct page *page)
+>   {
+
+
