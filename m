@@ -2,37 +2,37 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E69913EA0E8
-	for <lists+linux-xfs@lfdr.de>; Thu, 12 Aug 2021 10:46:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCCC73EA0F8
+	for <lists+linux-xfs@lfdr.de>; Thu, 12 Aug 2021 10:49:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235359AbhHLIqj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 12 Aug 2021 04:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53442 "EHLO
+        id S234529AbhHLIte (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 12 Aug 2021 04:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbhHLIqj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Aug 2021 04:46:39 -0400
+        with ESMTP id S234226AbhHLIte (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 12 Aug 2021 04:49:34 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA26CC0613D5
-        for <linux-xfs@vger.kernel.org>; Thu, 12 Aug 2021 01:46:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD89C061765
+        for <linux-xfs@vger.kernel.org>; Thu, 12 Aug 2021 01:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
         Content-Type:Content-ID:Content-Description;
-        bh=67VqQMgYOvqf/kbt3XSEuWISADUWRmBnSnI2KUSyszU=; b=Kcc9e0ZA6la+vv6mwtdI7Ce1Hd
-        JN9Umfhq0RWTkHvuXNVsGZslnGBsDJ9sSpL18giJqE2liASqoyGHBsZwtxED+lifHT10pMgxy01TD
-        6iaNAszzVqMdWhAJtGeAFSD4CKVeX5yen6CA9rpNFmL2c0WuuvC+ZgVKMxKFDP+2kOui/GZqIB+tv
-        Fod7awF/7givU3o3TCuj2gN7pTv4fTEoVJnWESaTmCnxXJMBnnNO5xgDx/YvAXndY5zQ5BuxKV+o6
-        0bofoskRoyhibeYCSFerXfdgySyphIzRnAysWpPHFKS0j7C8e2WT/yaSUSy+LBlQm3o8fU7nXYAzI
-        feAnKhQw==;
+        bh=wPjKYAvQXQeYmVB6pACd5PoS7Il6KCTkWjfINiAcmwk=; b=nw15zekYXZGu0dyYpvKRuH1n0D
+        LVdTQHiTIRAYvtKBZ7j5e1ar3IkfqB2Ox7aOgIzhvhp5rQDDOvxcisPA4DRm3WZamLIGlXBv/4Ydo
+        zbSIhq0SrflPlBJIGDMmV9pisAIrfW2olf2XHZCgT70bje8dr8JPynJqjB8h4ZTSkzMokbox83pox
+        PyENmhRC28PaPXBHz/dxDukgL8F+3vCWXdLyJp+Nuk5MQrmuMyKzz1ilcudMrKGrUGcmiQsW6Wkmd
+        2I1CuAFoFjkYE00zos8Vi3UYWycqegnp6MMecMz1l2I//wNo94OlOezg/KWYTGYnrRAalP/LGMKX9
+        +hIsYSTA==;
 Received: from [2001:4bb8:184:6215:d7d:1904:40de:694d] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mE6KK-00EM5f-BM
-        for linux-xfs@vger.kernel.org; Thu, 12 Aug 2021 08:44:55 +0000
+        id 1mE6Lu-00EMBz-7u
+        for linux-xfs@vger.kernel.org; Thu, 12 Aug 2021 08:46:55 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/3] xfs: remove the xfs_dinode_t typedef
-Date:   Thu, 12 Aug 2021 10:43:41 +0200
-Message-Id: <20210812084343.27934-2-hch@lst.de>
+Subject: [PATCH 2/3] xfs: remove the xfs_dsb_t typedef
+Date:   Thu, 12 Aug 2021 10:43:42 +0200
+Message-Id: <20210812084343.27934-3-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210812084343.27934-1-hch@lst.de>
 References: <20210812084343.27934-1-hch@lst.de>
@@ -47,105 +47,87 @@ Remove the few leftover instances of the xfs_dinode_t typedef.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/libxfs/xfs_format.h     |  4 ++--
- fs/xfs/libxfs/xfs_inode_buf.c  |  6 +++---
- fs/xfs/libxfs/xfs_inode_fork.c | 16 ++++++++--------
- fs/xfs/xfs_buf_item_recover.c  |  2 +-
- 4 files changed, 14 insertions(+), 14 deletions(-)
+ fs/xfs/libxfs/xfs_format.h | 5 ++---
+ fs/xfs/libxfs/xfs_sb.c     | 4 ++--
+ fs/xfs/xfs_trans.c         | 8 ++++----
+ 3 files changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 5d8a129150d547..f601049b65f465 100644
+index f601049b65f465..5819c25c1478d0 100644
 --- a/fs/xfs/libxfs/xfs_format.h
 +++ b/fs/xfs/libxfs/xfs_format.h
-@@ -977,7 +977,7 @@ static inline time64_t xfs_bigtime_to_unix(uint64_t ondisk_seconds)
-  * padding field for v3 inodes.
+@@ -184,7 +184,7 @@ typedef struct xfs_sb {
+  * Superblock - on disk version.  Must match the in core version above.
+  * Must be padded to 64 bit alignment.
   */
- #define	XFS_DINODE_MAGIC		0x494e	/* 'IN' */
--typedef struct xfs_dinode {
-+struct xfs_dinode {
- 	__be16		di_magic;	/* inode magic # = XFS_DINODE_MAGIC */
- 	__be16		di_mode;	/* mode and type of file */
- 	__u8		di_version;	/* inode version */
-@@ -1022,7 +1022,7 @@ typedef struct xfs_dinode {
- 	uuid_t		di_uuid;	/* UUID of the filesystem */
+-typedef struct xfs_dsb {
++struct xfs_dsb {
+ 	__be32		sb_magicnum;	/* magic number == XFS_SB_MAGIC */
+ 	__be32		sb_blocksize;	/* logical block size, bytes */
+ 	__be64		sb_dblocks;	/* number of data blocks */
+@@ -263,8 +263,7 @@ typedef struct xfs_dsb {
+ 	uuid_t		sb_meta_uuid;	/* metadata file system unique id */
  
- 	/* structure must be padded to 64 bit alignment */
--} xfs_dinode_t;
+ 	/* must be padded to 64 bit alignment */
+-} xfs_dsb_t;
+-
 +};
  
- #define XFS_DINODE_CRC_OFF	offsetof(struct xfs_dinode, di_crc)
- 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index 84ea2e0af9f026..891940cc16f905 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -51,9 +51,9 @@ xfs_inode_buf_verify(
- 	agno = xfs_daddr_to_agno(mp, XFS_BUF_ADDR(bp));
- 	ni = XFS_BB_TO_FSB(mp, bp->b_length) * mp->m_sb.sb_inopblock;
- 	for (i = 0; i < ni; i++) {
--		int		di_ok;
--		xfs_dinode_t	*dip;
--		xfs_agino_t	unlinked_ino;
-+		struct xfs_dinode	*dip;
-+		xfs_agino_t		unlinked_ino;
-+		int			di_ok;
- 
- 		dip = xfs_buf_offset(bp, (i << mp->m_sb.sb_inodelog));
- 		unlinked_ino = be32_to_cpu(dip->di_next_unlinked);
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 1d174909f9bdf5..08a390a259491c 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -67,10 +67,10 @@ xfs_init_local_fork(
-  */
- STATIC int
- xfs_iformat_local(
--	xfs_inode_t	*ip,
--	xfs_dinode_t	*dip,
--	int		whichfork,
--	int		size)
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip,
-+	int			whichfork,
-+	int			size)
+ /*
+  * Misc. Flags - warning - these will be cleared by xfs_repair unless
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 04f5386446dbb0..56d241cb17ee1b 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -391,7 +391,7 @@ xfs_sb_quota_from_disk(struct xfs_sb *sbp)
+ static void
+ __xfs_sb_from_disk(
+ 	struct xfs_sb	*to,
+-	xfs_dsb_t	*from,
++	struct xfs_dsb	*from,
+ 	bool		convert_xquota)
  {
- 	/*
- 	 * If the size is unreasonable, then something
-@@ -162,8 +162,8 @@ xfs_iformat_extents(
-  */
- STATIC int
- xfs_iformat_btree(
--	xfs_inode_t		*ip,
--	xfs_dinode_t		*dip,
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip,
- 	int			whichfork)
- {
- 	struct xfs_mount	*mp = ip->i_mount;
-@@ -580,8 +580,8 @@ xfs_iextents_copy(
-  */
+ 	to->sb_magicnum = be32_to_cpu(from->sb_magicnum);
+@@ -466,7 +466,7 @@ __xfs_sb_from_disk(
  void
- xfs_iflush_fork(
--	xfs_inode_t		*ip,
--	xfs_dinode_t		*dip,
-+	struct xfs_inode	*ip,
-+	struct xfs_dinode	*dip,
- 	struct xfs_inode_log_item *iip,
- 	int			whichfork)
+ xfs_sb_from_disk(
+ 	struct xfs_sb	*to,
+-	xfs_dsb_t	*from)
++	struct xfs_dsb	*from)
  {
-diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-index 4775485b406233..55ee89a88f5549 100644
---- a/fs/xfs/xfs_buf_item_recover.c
-+++ b/fs/xfs/xfs_buf_item_recover.c
-@@ -603,7 +603,7 @@ xlog_recover_do_inode_buffer(
- 	inodes_per_buf = BBTOB(bp->b_length) >> mp->m_sb.sb_inodelog;
- 	for (i = 0; i < inodes_per_buf; i++) {
- 		next_unlinked_offset = (i * mp->m_sb.sb_inodesize) +
--			offsetof(xfs_dinode_t, di_next_unlinked);
-+			offsetof(struct xfs_dinode, di_next_unlinked);
+ 	__xfs_sb_from_disk(to, from, true);
+ }
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 83abaa21961605..7f4f431bc256ce 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -477,7 +477,7 @@ STATIC void
+ xfs_trans_apply_sb_deltas(
+ 	xfs_trans_t	*tp)
+ {
+-	xfs_dsb_t	*sbp;
++	struct xfs_dsb	*sbp;
+ 	struct xfs_buf	*bp;
+ 	int		whole = 0;
  
- 		while (next_unlinked_offset >=
- 		       (reg_buf_offset + reg_buf_bytes)) {
+@@ -541,14 +541,14 @@ xfs_trans_apply_sb_deltas(
+ 		/*
+ 		 * Log the whole thing, the fields are noncontiguous.
+ 		 */
+-		xfs_trans_log_buf(tp, bp, 0, sizeof(xfs_dsb_t) - 1);
++		xfs_trans_log_buf(tp, bp, 0, sizeof(struct xfs_dsb) - 1);
+ 	else
+ 		/*
+ 		 * Since all the modifiable fields are contiguous, we
+ 		 * can get away with this.
+ 		 */
+-		xfs_trans_log_buf(tp, bp, offsetof(xfs_dsb_t, sb_icount),
+-				  offsetof(xfs_dsb_t, sb_frextents) +
++		xfs_trans_log_buf(tp, bp, offsetof(struct xfs_dsb, sb_icount),
++				  offsetof(struct xfs_dsb, sb_frextents) +
+ 				  sizeof(sbp->sb_frextents) - 1);
+ }
+ 
 -- 
 2.30.2
 
