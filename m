@@ -2,163 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2A7D3EBA00
-	for <lists+linux-xfs@lfdr.de>; Fri, 13 Aug 2021 18:26:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0827A3EBE97
+	for <lists+linux-xfs@lfdr.de>; Sat, 14 Aug 2021 01:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbhHMQ1E (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 13 Aug 2021 12:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234309AbhHMQ1D (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 13 Aug 2021 12:27:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B03F5610A4;
-        Fri, 13 Aug 2021 16:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628871996;
-        bh=f6CeVft/lEe9k+7VQRrspkKiwwAdf8DMs+X0a23/Pew=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AjJvCJjZlooVpvlwmKBumF2PNo8m84epIV4txrBF+AUJ+uIToFGUfAgDMXABs6Oux
-         4JIkOrPEju9z+ynMmbqj7dHlmzS1dyyBxZ9Xl4CJ4M5Mawm7cWo4jM6tGEG54La5YZ
-         imHyCiiPqSIeQNSAuGG9cY3f67izx5q6xNbL2HNzXq50KzPJ0TCY5fsqSjgAKfhwbJ
-         oT4rdlrB92pURS7yG6f7ejOH8108xlMjN3LHiP/tUQieUC9uhTthyv3Dv8T29DFerQ
-         ojNsNlT11teizGZTnmEpAKVhNmcH1qijUcUmGlUkqKUkKPXoK7Z9M0sE1PFI93xgnL
-         l77yHhroyiFEw==
-Date:   Fri, 13 Aug 2021 09:26:36 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-xfs@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] xfs: remove support for untagged lookups in xfs_icwalk*
-Message-ID: <20210813162636.GX3601443@magnolia>
-References: <20210813081623.83323-1-hch@lst.de>
+        id S235390AbhHMXQF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 13 Aug 2021 19:16:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44822 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235029AbhHMXQE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 13 Aug 2021 19:16:04 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39093C061756;
+        Fri, 13 Aug 2021 16:15:37 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id h13so15344653wrp.1;
+        Fri, 13 Aug 2021 16:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=5NTJSky9UX3JbuB9riY3wCYfXDpCwy2c7hzO0kF4AHA=;
+        b=m3kaznv5RSK1BWuewGhPniRCVZRVtmLhiMQc82NPgV1lbpig4IpWDqLHfRFQWep4uV
+         u9USJqn0i117kVuZbpQRiaKoPduf5vBv+5n2XCJ1Zi/PiOCPtxBqSNRCAQP5kaQ2mAsU
+         Y5bZ9l/Ywh28JmGvLJoxqM6Ul1ffDV3u/hGNUkAkuLBi6/5lvfo3cx5uV4E7YqFcrVoD
+         P473X5jZVfA8ng+UmAQBhFJnNm0tghQFe9GY6EPJCAtfH7J6uWDWXNiLZGtU9MevCUW5
+         DRowXfKzl2fu1GqCIZqK9osnArGXXSweMNTjsEvEIs/LZ9N5qS/xKejKJQ4am+tM4765
+         6D3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=5NTJSky9UX3JbuB9riY3wCYfXDpCwy2c7hzO0kF4AHA=;
+        b=kY2WU6JKkqW14/hBfsBCO7KzhB6k0DCzrPgFmhWabjMHMoS/ln/38s8LS3Mdv8KAuy
+         kzWZOK1ARLp6s5mstu+MsdF9HlSqkhthDUBjLpmH67OIjnBrMPiyKW5xawtISRBhgZEB
+         pMZzDP/6QFuOpd/MeuLg6QCUCqcCsGRdTh2K9eqgm0Ii+U1TnmkgYN36leSoWdOEsGCz
+         SD7gBL3LFRPdgtrx5BsxErDq4uAt1ywl5PF5jlVRoCVo9Xh9EWVdxiY7jA/TDizkO53y
+         jTxBxjQt27OeiODaL9uhzzIZwE+YNmAMUFp0gMzxjte/OYqzCZ7w/leIEHdi2pFL0vwC
+         CxPQ==
+X-Gm-Message-State: AOAM531e/pX1DNTNWQnXBiHUtkds4/4E7wKbDpuVn+KyVouNLjCyJymD
+        2nvav++5bEmW+kzUx6qnx84=
+X-Google-Smtp-Source: ABdhPJzo+/68/RbgwmMkWN69xSAJ9ge9jJs+Ht3ETckBqMN9U4gb0ZjAmsERXteo+OUcF7kI6kbhSQ==
+X-Received: by 2002:a5d:45c2:: with SMTP id b2mr5463075wrs.188.1628896535899;
+        Fri, 13 Aug 2021 16:15:35 -0700 (PDT)
+Received: from [192.168.1.70] ([102.64.163.193])
+        by smtp.gmail.com with ESMTPSA id a18sm2566962wmg.43.2021.08.13.16.15.31
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 13 Aug 2021 16:15:35 -0700 (PDT)
+Message-ID: <6116fd17.1c69fb81.4edbd.f5df@mx.google.com>
+From:   Vanina curth <akoelekouevidjin95@gmail.com>
+X-Google-Original-From: Vanina  curth
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210813081623.83323-1-hch@lst.de>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Dear
+To:     Recipients <Vanina@vger.kernel.org>
+Date:   Fri, 13 Aug 2021 23:15:10 +0000
+Reply-To: curtisvani9008@gmail.com
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 10:16:23AM +0200, Christoph Hellwig wrote:
-> With quotaoff not allowing disabling of accounting there is no need
-> for untagged lookups in this code, so remove the dead leftovers.
-> 
-> Repoted-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/xfs/xfs_icache.c | 39 ++++-----------------------------------
->  1 file changed, 4 insertions(+), 35 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index e7e69e55b7680a..f5a52ec084842d 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -43,15 +43,6 @@ enum xfs_icwalk_goal {
-
-The patch itself looks fine, so
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-
-But you might as well convert the ag walk to use the foreach macros
-like everywhere else:
-
---D
-
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index f5a52ec08484..b7ffdc03e0f7 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1762,16 +1762,16 @@ xfs_icwalk(
- 	struct xfs_perag	*pag;
- 	int			error = 0;
- 	int			last_error = 0;
--	xfs_agnumber_t		agno = 0;
-+	xfs_agnumber_t		agno;
- 
--	while ((pag = xfs_perag_get_tag(mp, agno, goal))) {
--		agno = pag->pag_agno + 1;
-+	for_each_perag_tag(mp, agno, pag, goal) {
- 		error = xfs_icwalk_ag(pag, goal, icw);
--		xfs_perag_put(pag);
- 		if (error) {
- 			last_error = error;
--			if (error == -EFSCORRUPTED)
-+			if (error == -EFSCORRUPTED) {
-+				xfs_perag_put(pag);
- 				break;
-+			}
- 		}
- 	}
- 	return last_error;
->  	XFS_ICWALK_RECLAIM	= XFS_ICI_RECLAIM_TAG,
->  };
->  
-> -#define XFS_ICWALK_NULL_TAG	(-1U)
-> -
-> -/* Compute the inode radix tree tag for this goal. */
-> -static inline unsigned int
-> -xfs_icwalk_tag(enum xfs_icwalk_goal goal)
-> -{
-> -	return goal < 0 ? XFS_ICWALK_NULL_TAG : goal;
-> -}
-> -
->  static int xfs_icwalk(struct xfs_mount *mp,
->  		enum xfs_icwalk_goal goal, struct xfs_icwalk *icw);
->  static int xfs_icwalk_ag(struct xfs_perag *pag,
-> @@ -1676,22 +1667,14 @@ xfs_icwalk_ag(
->  	nr_found = 0;
->  	do {
->  		struct xfs_inode *batch[XFS_LOOKUP_BATCH];
-> -		unsigned int	tag = xfs_icwalk_tag(goal);
->  		int		error = 0;
->  		int		i;
->  
->  		rcu_read_lock();
->  
-> -		if (tag == XFS_ICWALK_NULL_TAG)
-> -			nr_found = radix_tree_gang_lookup(&pag->pag_ici_root,
-> -					(void **)batch, first_index,
-> -					XFS_LOOKUP_BATCH);
-> -		else
-> -			nr_found = radix_tree_gang_lookup_tag(
-> -					&pag->pag_ici_root,
-> -					(void **) batch, first_index,
-> -					XFS_LOOKUP_BATCH, tag);
-> -
-> +		nr_found = radix_tree_gang_lookup_tag(&pag->pag_ici_root,
-> +				(void **) batch, first_index,
-> +				XFS_LOOKUP_BATCH, goal);
->  		if (!nr_found) {
->  			done = true;
->  			rcu_read_unlock();
-> @@ -1769,20 +1752,6 @@ xfs_icwalk_ag(
->  	return last_error;
->  }
->  
-> -/* Fetch the next (possibly tagged) per-AG structure. */
-> -static inline struct xfs_perag *
-> -xfs_icwalk_get_perag(
-> -	struct xfs_mount	*mp,
-> -	xfs_agnumber_t		agno,
-> -	enum xfs_icwalk_goal	goal)
-> -{
-> -	unsigned int		tag = xfs_icwalk_tag(goal);
-> -
-> -	if (tag == XFS_ICWALK_NULL_TAG)
-> -		return xfs_perag_get(mp, agno);
-> -	return xfs_perag_get_tag(mp, agno, tag);
-> -}
-> -
->  /* Walk all incore inodes to achieve a given goal. */
->  static int
->  xfs_icwalk(
-> @@ -1795,7 +1764,7 @@ xfs_icwalk(
->  	int			last_error = 0;
->  	xfs_agnumber_t		agno = 0;
->  
-> -	while ((pag = xfs_icwalk_get_perag(mp, agno, goal))) {
-> +	while ((pag = xfs_perag_get_tag(mp, agno, goal))) {
->  		agno = pag->pag_agno + 1;
->  		error = xfs_icwalk_ag(pag, goal, icw);
->  		xfs_perag_put(pag);
-> -- 
-> 2.30.2
-> 
+How are you? I'm Vanina. I'm interested to know you and I would like to kno=
+w more about you and establish relationship with you. i will wait for your =
+response. thank you.
