@@ -2,44 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 431683EC846
-	for <lists+linux-xfs@lfdr.de>; Sun, 15 Aug 2021 11:16:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDC0E3EC848
+	for <lists+linux-xfs@lfdr.de>; Sun, 15 Aug 2021 11:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236862AbhHOJRW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 15 Aug 2021 05:17:22 -0400
-Received: from verein.lst.de ([213.95.11.211]:51414 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236733AbhHOJRW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 15 Aug 2021 05:17:22 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2F2856736F; Sun, 15 Aug 2021 11:16:49 +0200 (CEST)
-Date:   Sun, 15 Aug 2021 11:16:48 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Alex Sierra <alex.sierra@amd.com>
-Cc:     akpm@linux-foundation.org, Felix.Kuehling@amd.com,
-        linux-mm@kvack.org, rcampbell@nvidia.com,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        hch@lst.de, jgg@nvidia.com, jglisse@redhat.com
-Subject: Re: [PATCH v6 06/13] include/linux/mm.h: helpers to check zone
- device generic type
-Message-ID: <20210815091648.GC25067@lst.de>
-References: <20210813063150.2938-1-alex.sierra@amd.com> <20210813063150.2938-7-alex.sierra@amd.com>
+        id S236733AbhHOJSe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 15 Aug 2021 05:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231194AbhHOJSd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 15 Aug 2021 05:18:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365B1C061764
+        for <linux-xfs@vger.kernel.org>; Sun, 15 Aug 2021 02:18:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1sQQs6Pc2lAqeutIRPV7t9e2GTscv8N+k2BTTBXYuPU=; b=Tq6MbLMp1Qqv9tmF9tNRwTyAs5
+        pwt2zXTInHz5jKAY8/mg+FHC3BGbm6ZbqntJv6qEESUmJiTiHBn04YUneTMFN9OZH5rDidjzLb2Vg
+        p1JW42ehQJic0oEqWUr6Cmh690/euxB22kRrhbe/bpUEbWvsLbUA8GxiozJ3Q7tVKIBE2GxXGXBGW
+        CmRCrST70MHUlxRDoalIQlpeSCgtC2Fbi64set6QZEt/2301YOE2FcroLHi+AOWz3vT2yQEI6rVae
+        lrTu7DDOtMwAomudnwiuwwUqkXT+f8plGIqTagvL6UPpU6tIewLxtp/w22Kffu8LSZhSfsyYCJmrm
+        XruWxirw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mFCGf-00Ha8J-1S; Sun, 15 Aug 2021 09:17:38 +0000
+Date:   Sun, 15 Aug 2021 10:17:21 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 06/10] xfs: mark the record passed into xchk_btree
+ functions as const
+Message-ID: <YRjbodX52tAd0w8T@infradead.org>
+References: <162881108307.1695493.3416792932772498160.stgit@magnolia>
+ <162881111657.1695493.2646352717736011507.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210813063150.2938-7-alex.sierra@amd.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <162881111657.1695493.2646352717736011507.stgit@magnolia>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 01:31:43AM -0500, Alex Sierra wrote:
-> Two helpers added. One checks if zone device page is generic
-> type. The other if page is either private or generic type.
-> 
-> Signed-off-by: Alex Sierra <alex.sierra@amd.com>
+> -extern void xfs_bmbt_disk_get_all(xfs_bmbt_rec_t *r, xfs_bmbt_irec_t *s);
+> +extern void xfs_bmbt_disk_get_all(const struct xfs_bmbt_rec *r,
+> +		struct xfs_bmbt_irec *s);
 
-Looks good,
+Might be worth to drop the extern while you're at it.
+
+Otherwise looks good:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
