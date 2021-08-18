@@ -2,290 +2,191 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33ADA3F09E5
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 Aug 2021 19:06:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1A473F0BC3
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 Aug 2021 21:28:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbhHRRGp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 Aug 2021 13:06:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30503 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232453AbhHRRGo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 Aug 2021 13:06:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629306369;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6zMYbqrH9XfBTnMAFqOkBm7ntXqgwxK8x8YmffvuEM8=;
-        b=Fv5dleXFLdF/dsTXsld9lqfw+KcZyXNc0ls7BP43tF75lI29CAYQd+vNjw24SP4IciymOC
-        9uMDwjZ1FwHpTrBN35OVekjp4ZAemTNJ/1CFyFKdkWYXL9/8+XWxdKRG8fwmQ2eq3iSR8X
-        JapRplaSb5QdSis03CXK3oAhndZjSIE=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-5jbkqRr5PfeHbKaoMu71TA-1; Wed, 18 Aug 2021 13:06:07 -0400
-X-MC-Unique: 5jbkqRr5PfeHbKaoMu71TA-1
-Received: by mail-pf1-f198.google.com with SMTP id p40-20020a056a0026e8b02903e08239ba3cso1639110pfw.18
-        for <linux-xfs@vger.kernel.org>; Wed, 18 Aug 2021 10:06:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=6zMYbqrH9XfBTnMAFqOkBm7ntXqgwxK8x8YmffvuEM8=;
-        b=c31pzU8xJAv+rw3hcRxrt4PNtRrgTa2Eyq8UK1/LmmVgMTKxs2L0Thj/g03y6S9jNB
-         yIPORZ4FHfEh7YIWLLL4zNv1cgO5kdWurIMhVYVnO0QefnfDeEPUwHQBGgAugAP31BTf
-         bGpBbZw2znv5KVESoZx32MzM5ywaNgzfYFP2ICBVM/6OF7vM+saAMwu2lKGA2B3pbZ6L
-         4RjgsjPuc99z30m8KZJspEOTcUz/TaJJ9R0SQT0XkmakkeredTruNUgFzE/3/8tqD2Md
-         3XUJoizZ5L45vIBSbARxvm4wm9dm1X4kzWOdR4knYbHMkZ6BwEpB0lQI0co0/99VQB81
-         EHAA==
-X-Gm-Message-State: AOAM531JMItQ3GYw1lV2xa4/TTeg20VV7MRqzvXS82w5r1TtHoqZUwRm
-        bA4+JFigAq7tOXbN+xZnf/to0Vxlfxi2bGRIX1EOh1QnLtmucVvh91di0PXpp0yKnJ577JJDa3a
-        HrD7khZxSIqKyKBNWd3Cs
-X-Received: by 2002:a17:902:b593:b0:12d:7aa5:de2d with SMTP id a19-20020a170902b59300b0012d7aa5de2dmr8164764pls.31.1629306366758;
-        Wed, 18 Aug 2021 10:06:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx2GF2JspdCJ9qA7UgzPjj1gvn8JSxW9suaApaJ3Bmh6GDaVQNwOaebKgyHxuPcH9NqERCH9w==
-X-Received: by 2002:a17:902:b593:b0:12d:7aa5:de2d with SMTP id a19-20020a170902b59300b0012d7aa5de2dmr8164743pls.31.1629306366517;
-        Wed, 18 Aug 2021 10:06:06 -0700 (PDT)
-Received: from fedora ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id p3sm323144pfw.152.2021.08.18.10.06.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Aug 2021 10:06:06 -0700 (PDT)
-Date:   Thu, 19 Aug 2021 01:18:44 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org, guan@eryu.me
-Subject: Re: [PATCH 2/2] generic: test shutdowns of a nested filesystem
-Message-ID: <20210818171844.zkuwc7etsyd342oo@fedora>
-Mail-Followup-To: "Darrick J. Wong" <djwong@kernel.org>, guaneryu@gmail.com,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-References: <162924439425.779465.16029390956507261795.stgit@magnolia>
- <162924440518.779465.6907507760500586987.stgit@magnolia>
- <20210818070654.hmhq7g5t4u3xueaj@fedora>
- <20210818155526.GH12640@magnolia>
+        id S233305AbhHRT3O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 Aug 2021 15:29:14 -0400
+Received: from mail-bn1nam07on2059.outbound.protection.outlook.com ([40.107.212.59]:24067
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229965AbhHRT3I (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 18 Aug 2021 15:29:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OmqAQXEpdPdb56bWQLnHNSLDQOMGxN8VS/P7Yt77DbI+5YYFwp0KU1atRqRD1TnaRH5CVZ1lNfSBAOZXIJz8h2rSmYT0cOl6/BSHvJccyOJTzOEuCSI8YCXCqn9pRrFUZ3RcktSO+fkGKrxVCQx/MSIoYPBvAk8jfCMibKgaJppWWaD1nRkw1+RrCLUXwJFFjXGCt+SkgMigkKVjKIH9IP/03u8+hlvJC9DCkwR9cdOcgdPyNcDLRCbnAX61Z559KG7m6MH6OQWdp71b4I8OzTzoGWFgsbtXBqaNHvCR5jQvh/z8cbSkVbEix+R2b6E7YAmC380XHkoRxkYCP+nQLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P0dxBB+gTPgn6xtJRTWooXg5Ofo2P3zOE2xwaHUAyrQ=;
+ b=J2qUs7VWgvBw2jNN1Th68X+biEN4JshjW8F7UcXQp222K9sJDBIZILqXFwXHk1CTXubyf3AD8ouUUXpt6zolx3OpPZTzyqU13urlZ0giXb3CdS3c2YovxST6jhwEat8G5nCjPb7vdTzC1jAdbbZwcwgpKdlGbTB+WNUZ99DmpV+PUnIbMJCYHH4VDpD2sb+7twAHTw6wy7ckyR7QvG5ci2HK+mkt3EP06hGzm/utcbdMTjvs8mwz5hBRg4UbEtCXlNEmRwCORSZPUbQqfRkWJQNvxBk8wZEBSdQ4IrNsFJ2t0/YmbvsM25RovSIYxaC91UDQfhOCd9B+Et9Jpq10Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.112.32) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P0dxBB+gTPgn6xtJRTWooXg5Ofo2P3zOE2xwaHUAyrQ=;
+ b=pt4FulzCGAi6z3RnU1HIgF/giSn4aJ4+QiNKT99IQN+2FcFVNWdQskycy5R1vzxhx3k24TIbYTHIxCNDsm8HdjFOgos7bKyilPZOVC7kmMxH0dTIlUKAKFItG1bl8nwYoCveSj4u7OZM9Y/MA0cn8QbWjvxg3ZU0p82WMo5BfQpqZ2i0lySiVqZceiIOCIVovSvMq5rEKwnXORjNJQUvQS+DJAhUw92jRpvkUVPAGIGNWi8p7iSAY9CpWIMU+r35L2rb83u/bRCB8aAMBYDJ3/jWVNSjb7f+o0rdT6X+bdRMV2auGIYnLvoX5SerzauujmEGWWTMOxJCc1aKneEGag==
+Received: from MWHPR02CA0018.namprd02.prod.outlook.com (2603:10b6:300:4b::28)
+ by DM5PR12MB1609.namprd12.prod.outlook.com (2603:10b6:4:10::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.24; Wed, 18 Aug
+ 2021 19:28:31 +0000
+Received: from CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:4b::4) by MWHPR02CA0018.outlook.office365.com
+ (2603:10b6:300:4b::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend
+ Transport; Wed, 18 Aug 2021 19:28:31 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.32)
+ smtp.mailfrom=nvidia.com; redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.112.32 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.32; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.32) by
+ CO1NAM11FT031.mail.protection.outlook.com (10.13.174.118) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4415.16 via Frontend Transport; Wed, 18 Aug 2021 19:28:31 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 18 Aug
+ 2021 12:28:31 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 18 Aug
+ 2021 19:28:31 +0000
+Received: from rcampbell-test.nvidia.com (172.20.187.5) by mail.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.2 via Frontend
+ Transport; Wed, 18 Aug 2021 19:28:31 +0000
+Subject: Re: [PATCH v6 02/13] mm: remove extra ZONE_DEVICE struct page
+ refcount
+To:     Felix Kuehling <felix.kuehling@amd.com>,
+        Alex Sierra <alex.sierra@amd.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-ext4@vger.kernel.org>,
+        <linux-xfs@vger.kernel.org>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <hch@lst.de>, <jgg@nvidia.com>, <jglisse@redhat.com>
+References: <20210813063150.2938-1-alex.sierra@amd.com>
+ <20210813063150.2938-3-alex.sierra@amd.com>
+ <7b821150-af18-f786-e419-ec245b8cfb1e@nvidia.com>
+ <393e9815-838d-5fe6-d6ab-bfe7b543fef6@amd.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <e155ed59-8c3c-4046-e731-f082ee4b10bb@nvidia.com>
+Date:   Wed, 18 Aug 2021 12:28:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210818155526.GH12640@magnolia>
+In-Reply-To: <393e9815-838d-5fe6-d6ab-bfe7b543fef6@amd.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0ca49a3a-3231-4322-e250-08d9627e5d0b
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1609:
+X-Microsoft-Antispam-PRVS: <DM5PR12MB16092220E81E2EBBCE5A66FEC2FF9@DM5PR12MB1609.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VpQvXu9STTWL62aQ9sm3SiAiAuc7renl76Gf3apCxC6dfqMz5ba7e337onDgTTnp97GB6WdCZXzpLTUzFVkO7wIdTa6wceM9aeNi1k3xZAiYsRQ/WiTRaKJb6mXWuWM4qns+A5pBsgYB0Nve2Vrsp8V2AiiRkNQUckVKxahydna4r20JsxRkk/2KEbZnKLN13Q/sWfbUDQc9Vm/eoZhtklqfhlK7pMn2u9QDwBUuSNHEKsYy8lggMK9vbLpXxMLG5+si9n/jJgZ5fa1lV34GZ5bOPewkMDlt32p8KJ+JWZF7SPmKi++LZ6RxBXpVrs3ySuodvPgr9V+M7xatUiilVZnE1upsrmFe6cnWCKHnufKWF7zAju4K75Dg4FT6NHeNZNs7Be8NqWr4M+aDclW0EmC3Mc9gzoRD/mtc7Sa9sPRJvYrPkwzjsk2oJhK4boNuH36VJtmRAoaGxBq3eC2yNxqjoaV0k3Uz3fFdPumDWn+2BCuUVoKGDNhnFN1LKt4YRcHRWFVbVmmErydJE+rKWyvTnPQLu1dYWVPsb3w5ayMfuz44G++oEE5Mu++xJdCWkulT6bClScEWRzuWUsZ2QkxngNQ7+ypLmDVWRU89nK1rwO+i/uHn4D2zbMdJyLsSh6SSdzDPjEYHsSlbNwQ4OTmRJgCkrdZdzN6J13xeW4AoEuOpX4j4/E/hZH0RLZpJ0uqRqI7Pu1GmT0k5mQx6E2/sEEB/sK5u/naXP2yGvx1e17fzoXR0Kcn4Z72I3d5gghms4FTzNAWRt+REDg9B6iJAX6/dBj225YerKItxDrFwCnxL8nkJRMda7DBzcOf2kxgku6+l2rslz/YaFEvoJ2MISmngxtSuTNe49jQmtEU+py2uBL7FPhL94iT9CM0D
+X-Forefront-Antispam-Report: CIP:216.228.112.32;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid01.nvidia.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(46966006)(36840700001)(2906002)(54906003)(83380400001)(110136005)(86362001)(8676002)(316002)(82310400003)(8936002)(47076005)(31686004)(82740400003)(36860700001)(36756003)(356005)(7636003)(53546011)(70586007)(70206006)(186003)(478600001)(336012)(7416002)(26005)(5660300002)(2616005)(31696002)(7696005)(4326008)(966005)(426003)(2101003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2021 19:28:31.4867
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ca49a3a-3231-4322-e250-08d9627e5d0b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.32];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT031.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1609
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Aug 18, 2021 at 08:55:26AM -0700, Darrick J. Wong wrote:
-> On Wed, Aug 18, 2021 at 03:06:54PM +0800, Zorro Lang wrote:
-> > On Tue, Aug 17, 2021 at 04:53:25PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <djwong@kernel.org>
-> > > 
-> > > generic/475, but we're running fsstress on a disk image inside the
-> > > scratch filesystem
-> > > 
-> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > > ---
-> > 
-> > Good to me, thanks for this helpful test case. Just one question,
-> > is it better to use xfs_metadump with "-o" option by default?
-> 
-> _xfs_metadump already passes -a and -o.
+On 8/17/21 5:35 PM, Felix Kuehling wrote:
+> Am 2021-08-17 um 8:01 p.m. schrieb Ralph Campbell:
+>> On 8/12/21 11:31 PM, Alex Sierra wrote:
+>>> From: Ralph Campbell <rcampbell@nvidia.com>
+>>>
+>>> ZONE_DEVICE struct pages have an extra reference count that
+>>> complicates the
+>>> code for put_page() and several places in the kernel that need to
+>>> check the
+>>> reference count to see that a page is not being used (gup, compaction,
+>>> migration, etc.). Clean up the code so the reference count doesn't
+>>> need to
+>>> be treated specially for ZONE_DEVICE.
+>>>
+>>> v2:
+>>> AS: merged this patch in linux 5.11 version
+>>>
+>>> v5:
+>>> AS: add condition at try_grab_page to check for the zone device type,
+>>> while
+>>> page ref counter is checked less/equal to zero. In case of device
+>>> zone, pages
+>>> ref counter are initialized to zero.
+>>>
+>>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>> Signed-off-by: Alex Sierra <alex.sierra@amd.com>
+>>> ---
+>>>    arch/powerpc/kvm/book3s_hv_uvmem.c     |  2 +-
+>>>    drivers/gpu/drm/nouveau/nouveau_dmem.c |  2 +-
+>>>    fs/dax.c                               |  4 +-
+>>>    include/linux/dax.h                    |  2 +-
+>>>    include/linux/memremap.h               |  7 +--
+>>>    include/linux/mm.h                     | 13 +----
+>>>    lib/test_hmm.c                         |  2 +-
+>>>    mm/internal.h                          |  8 +++
+>>>    mm/memremap.c                          | 68 +++++++-------------------
+>>>    mm/migrate.c                           |  5 --
+>>>    mm/page_alloc.c                        |  3 ++
+>>>    mm/swap.c                              | 45 ++---------------
+>>>    12 files changed, 46 insertions(+), 115 deletions(-)
+>>>
+>> I haven't seen a response to the issues I raised back at v3 of this
+>> series.
+>> https://lore.kernel.org/linux-mm/4f6dd918-d79b-1aa7-3a4c-caa67ddc29bc@nvidia.com/
+>>
+>>
+>> Did I miss something?
+> I think part of the response was that we did more testing. Alex added
+> support for DEVICE_GENERIC pages to test_hmm and he ran DAX tests
+> recommended by Theodore Tso. In that testing he ran into a WARN_ON_ONCE
+> about a zero page refcount in try_get_page. The fix is in the latest
+> version of patch 2. But it's already obsolete because John Hubbard is
+> about to remove that function altogether.
+>
+> I think the issues you raised were more uncertainty than known bugs. It
+> seems the fact that you can have DAX pages with 0 refcount is a feature
+> more than a bug.
+>
+> Regards,
+>    Felix
 
-Oh, sorry, I didn't notice this line:
+Did you test on a system without CONFIG_ARCH_HAS_PTE_SPECIAL defined?
+In that case, mmap() of a DAX device will call insert_page() which calls
+get_page() which would trigger VM_BUG_ON_PAGE().
 
-test -z "$options" && options="-a -o".
+I can believe it is OK for PTE_SPECIAL page table entries to have no
+struct page or that MEMORY_DEVICE_GENERIC struct pages be mapped with
+a zero reference count using insert_pfn().
 
-> 
-> --D
-> 
-> > Reviewed-by: Zorro Lang <zlang@redhat.com>
-> > 
-> > >  common/rc             |   20 +++++++
-> > >  tests/generic/725     |  136 +++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  tests/generic/725.out |    2 +
-> > >  3 files changed, 158 insertions(+)
-> > >  create mode 100755 tests/generic/725
-> > >  create mode 100644 tests/generic/725.out
-> > > 
-> > > 
-> > > diff --git a/common/rc b/common/rc
-> > > index 84757fc1..473bfb0a 100644
-> > > --- a/common/rc
-> > > +++ b/common/rc
-> > > @@ -631,6 +631,26 @@ _ext4_metadump()
-> > >  		$DUMP_COMPRESSOR -f "$dumpfile" &>> "$seqres.full"
-> > >  }
-> > >  
-> > > +# Capture the metadata of a filesystem in a dump file for offline analysis
-> > > +_metadump_dev() {
-> > > +	local device="$1"
-> > > +	local dumpfile="$2"
-> > > +	local compressopt="$3"
-> > > +
-> > > +	case "$FSTYP" in
-> > > +	ext*)
-> > > +		_ext4_metadump $device $dumpfile $compressopt
-> > > +		;;
-> > > +	xfs)
-> > > +		_xfs_metadump $dumpfile $device none $compressopt
-> > > +		;;
-> > > +	*)
-> > > +		echo "Don't know how to metadump $FSTYP"
-> > > +		return 1
-> > > +		;;
-> > > +	esac
-> > > +}
-> > > +
-> > >  _test_mkfs()
-> > >  {
-> > >      case $FSTYP in
-> > > diff --git a/tests/generic/725 b/tests/generic/725
-> > > new file mode 100755
-> > > index 00000000..ac008fdb
-> > > --- /dev/null
-> > > +++ b/tests/generic/725
-> > > @@ -0,0 +1,136 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Copyright (c) 2021 Oracle, Inc.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test No. 725
-> > > +#
-> > > +# Test nested log recovery with repeated (simulated) disk failures.  We kick
-> > > +# off fsstress on a loopback filesystem mounted on the scratch fs, then switch
-> > > +# out the underlying scratch device with dm-error to see what happens when the
-> > > +# disk goes down.  Having taken down both fses in this manner, remount them and
-> > > +# repeat.  This test simulates VM hosts crashing to try to shake out CoW bugs
-> > > +# in writeback on the host that cause VM guests to fail to recover.
-> > > +#
-> > > +. ./common/preamble
-> > > +_begin_fstest shutdown auto log metadata eio recoveryloop
-> > > +
-> > > +_cleanup()
-> > > +{
-> > > +	cd /
-> > > +	$KILLALL_PROG -9 fsstress > /dev/null 2>&1
-> > > +	wait
-> > > +	if [ -n "$loopmnt" ]; then
-> > > +		$UMOUNT_PROG $loopmnt 2>/dev/null
-> > > +		rm -r -f $loopmnt
-> > > +	fi
-> > > +	rm -f $tmp.*
-> > > +	_dmerror_unmount
-> > > +	_dmerror_cleanup
-> > > +}
-> > > +
-> > > +# Import common functions.
-> > > +. ./common/dmerror
-> > > +. ./common/reflink
-> > > +
-> > > +# Modify as appropriate.
-> > > +_supported_fs generic
-> > > +
-> > > +_require_scratch_reflink
-> > > +_require_cp_reflink
-> > > +_require_dm_target error
-> > > +_require_command "$KILLALL_PROG" "killall"
-> > > +
-> > > +echo "Silence is golden."
-> > > +
-> > > +_scratch_mkfs >> $seqres.full 2>&1
-> > > +_require_metadata_journaling $SCRATCH_DEV
-> > > +_dmerror_init
-> > > +_dmerror_mount
-> > > +
-> > > +# Create a fs image consuming 1/3 of the scratch fs
-> > > +scratch_freesp_bytes=$(_get_available_space $SCRATCH_MNT)
-> > > +loopimg_bytes=$((scratch_freesp_bytes / 3))
-> > > +
-> > > +loopimg=$SCRATCH_MNT/testfs
-> > > +truncate -s $loopimg_bytes $loopimg
-> > > +_mkfs_dev $loopimg
-> > > +
-> > > +loopmnt=$tmp.mount
-> > > +mkdir -p $loopmnt
-> > > +
-> > > +scratch_aliveflag=$tmp.runsnap
-> > > +snap_aliveflag=$tmp.snapping
-> > > +
-> > > +snap_loop_fs() {
-> > > +	touch "$snap_aliveflag"
-> > > +	while [ -e "$scratch_aliveflag" ]; do
-> > > +		rm -f $loopimg.a
-> > > +		_cp_reflink $loopimg $loopimg.a
-> > > +		sleep 1
-> > > +	done
-> > > +	rm -f "$snap_aliveflag"
-> > > +}
-> > > +
-> > > +fsstress=($FSSTRESS_PROG $FSSTRESS_AVOID -d "$loopmnt" -n 999999 -p "$((LOAD_FACTOR * 4))")
-> > > +
-> > > +for i in $(seq 1 $((25 * TIME_FACTOR)) ); do
-> > > +	touch $scratch_aliveflag
-> > > +	snap_loop_fs >> $seqres.full 2>&1 &
-> > > +
-> > > +	if ! _mount $loopimg $loopmnt -o loop; then
-> > > +		rm -f $scratch_aliveflag
-> > > +		_metadump_dev $loopimg $seqres.loop.$i.md
-> > > +		_fail "iteration $i loopimg mount failed"
-> > > +		break
-> > > +	fi
-> > > +
-> > > +	("${fsstress[@]}" >> $seqres.full &) > /dev/null 2>&1
-> > > +
-> > > +	# purposely include 0 second sleeps to test shutdown immediately after
-> > > +	# recovery
-> > > +	sleep $((RANDOM % (3 * TIME_FACTOR) ))
-> > > +	rm -f $scratch_aliveflag
-> > > +
-> > > +	# This test aims to simulate sudden disk failure, which means that we
-> > > +	# do not want to quiesce the filesystem or otherwise give it a chance
-> > > +	# to flush its logs.  Therefore we want to call dmsetup with the
-> > > +	# --nolockfs parameter; to make this happen we must call the load
-> > > +	# error table helper *without* 'lockfs'.
-> > > +	_dmerror_load_error_table
-> > > +
-> > > +	ps -e | grep fsstress > /dev/null 2>&1
-> > > +	while [ $? -eq 0 ]; do
-> > > +		$KILLALL_PROG -9 fsstress > /dev/null 2>&1
-> > > +		wait > /dev/null 2>&1
-> > > +		ps -e | grep fsstress > /dev/null 2>&1
-> > > +	done
-> > > +	for ((i = 0; i < 10; i++)); do
-> > > +		test -e "$snap_aliveflag" || break
-> > > +		sleep 1
-> > > +	done
-> > > +
-> > > +	# Mount again to replay log after loading working table, so we have a
-> > > +	# consistent fs after test.
-> > > +	$UMOUNT_PROG $loopmnt
-> > > +	_dmerror_unmount || _fail "iteration $i scratch unmount failed"
-> > > +	_dmerror_load_working_table
-> > > +	if ! _dmerror_mount; then
-> > > +		_metadump_dev $DMERROR_DEV $seqres.scratch.$i.md
-> > > +		_fail "iteration $i scratch mount failed"
-> > > +	fi
-> > > +done
-> > > +
-> > > +# Make sure the fs image file is ok
-> > > +if [ -f "$loopimg" ]; then
-> > > +	if _mount $loopimg $loopmnt -o loop; then
-> > > +		$UMOUNT_PROG $loopmnt &> /dev/null
-> > > +	else
-> > > +		_metadump_dev $DMERROR_DEV $seqres.scratch.final.md
-> > > +		echo "final scratch mount failed"
-> > > +	fi
-> > > +	SCRATCH_RTDEV= SCRATCH_LOGDEV= _check_scratch_fs $loopimg
-> > > +fi
-> > > +
-> > > +# success, all done; let the test harness check the scratch fs
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/generic/725.out b/tests/generic/725.out
-> > > new file mode 100644
-> > > index 00000000..ed73a9fc
-> > > --- /dev/null
-> > > +++ b/tests/generic/725.out
-> > > @@ -0,0 +1,2 @@
-> > > +QA output created by 725
-> > > +Silence is golden.
-> > > 
-> > 
-> 
+I find it hard to believe that other MM developers don't see an issue
+with a struct page with refcount == 0 and mapcount == 1.
+
+I don't see where init_page_count() is being called for the
+MEMORY_DEVICE_GENERIC or MEMORY_DEVICE_PRIVATE struct pages the AMD
+driver allocates and passes to migrate_vma_setup().
+Looks like svm_migrate_get_vram_page() needs to call init_page_count()
+instead of get_page(). (I'm looking at branch origin/alexsierrag/device_generic
+https://github.com/RadeonOpenCompute/ROCK-Kernel-Driver.git)
+
+Also, what about the other places where is_device_private_page() is called?
+Don't they need to be updated to call is_device_page() instead?
+One of my goals for this patch was to remove special casing reference counts
+for ZONE_DEVICE pages in rmap.c, etc.
+
+I still think this patch needs an ACK from a FS/DAX maintainer.
 
