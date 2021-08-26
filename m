@@ -2,68 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 287563F805A
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 Aug 2021 04:06:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E67563F8377
+	for <lists+linux-xfs@lfdr.de>; Thu, 26 Aug 2021 10:02:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236054AbhHZCH0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 Aug 2021 22:07:26 -0400
-Received: from smtp1.onthe.net.au ([203.22.196.249]:43974 "EHLO
-        smtp1.onthe.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235677AbhHZCH0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 Aug 2021 22:07:26 -0400
-Received: from localhost (smtp2.private.onthe.net.au [10.200.63.13])
-        by smtp1.onthe.net.au (Postfix) with ESMTP id 2EAFB61C4B
-        for <linux-xfs@vger.kernel.org>; Thu, 26 Aug 2021 12:06:38 +1000 (EST)
-Received: from smtp1.onthe.net.au ([10.200.63.11])
-        by localhost (smtp.onthe.net.au [10.200.63.13]) (amavisd-new, port 10028)
-        with ESMTP id DxcvWOdQm_Be for <linux-xfs@vger.kernel.org>;
-        Thu, 26 Aug 2021 12:06:38 +1000 (AEST)
-Received: from athena.private.onthe.net.au (chris-gw2-vpn.private.onthe.net.au [10.9.3.2])
-        by smtp1.onthe.net.au (Postfix) with ESMTP id C5B2D61C5D
-        for <linux-xfs@vger.kernel.org>; Thu, 26 Aug 2021 12:06:37 +1000 (EST)
-Received: by athena.private.onthe.net.au (Postfix, from userid 1026)
-        id AEE12680468; Thu, 26 Aug 2021 12:06:37 +1000 (AEST)
-Date:   Thu, 26 Aug 2021 12:06:37 +1000
-From:   Chris Dunlop <chris@onthe.net.au>
+        id S240156AbhHZIDT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 26 Aug 2021 04:03:19 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:34715 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232926AbhHZIDT (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 26 Aug 2021 04:03:19 -0400
+Received: from [192.168.0.3] (ip5f5aeb42.dynamic.kabel-deutschland.de [95.90.235.66])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 3065D61E30BA9
+        for <linux-xfs@vger.kernel.org>; Thu, 26 Aug 2021 10:02:30 +0200 (CEST)
 To:     linux-xfs@vger.kernel.org
-Subject: XFS fallocate implementation incorrectly reports ENOSPC
-Message-ID: <20210826020637.GA2402680@onthe.net.au>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: xfs.org: Unknown error in PHP's mail() function.
+Message-ID: <b0369a19-b313-1279-0a46-14b501977d1e@molgen.mpg.de>
+Date:   Thu, 26 Aug 2021 10:02:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi,
+Dear xfs.org folks,
 
-As reported by Charles Hathaway here (with no resolution):
 
-XFS fallocate implementation incorrectly reports ENOSPC
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1791323
+I am trying to create a Wiki account [1], but after clicking the button 
+*Request account*, only the error message below is shown.
 
-Given this sequence:
+> Error sending mail:
+> 
+> Unknown error in PHP's mail() function. 
 
-fallocate -l 1GB image.img
-mkfs.xfs -f image.img
-mkdir mnt
-mount -o loop ./image.img mnt
-fallocate -o 0 -l 700mb mnt/image.img
-fallocate -o 0 -l 700mb mnt/image.img
 
-Why does the second fallocate fail with ENOSPC, and is that considered an 
-XFS bug?
+Kind regards,
 
-Ext4 is happy to do the second fallocate without error.
+Paul
 
-Tested on linux-5.10.60
 
-Background: I'm chasing a mysterious ENOSPC error on an XFS filesystem 
-with way more space than the app should be asking for. There are no quotas 
-on the fs. Unfortunately it's a third party app and I can't tell what 
-sequence is producing the error, but this fallocate issue is a 
-possibility.
-
-Cheers,
-
-Chris
+[1]: https://xfs.org/index.php/Special:RequestAccount
