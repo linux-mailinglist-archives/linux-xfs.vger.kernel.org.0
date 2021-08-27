@@ -2,72 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 227323F926E
-	for <lists+linux-xfs@lfdr.de>; Fri, 27 Aug 2021 04:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9887B3F928D
+	for <lists+linux-xfs@lfdr.de>; Fri, 27 Aug 2021 04:55:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244071AbhH0CmM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 Aug 2021 22:42:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244015AbhH0CmK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Aug 2021 22:42:10 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1370C0613A4
-        for <linux-xfs@vger.kernel.org>; Thu, 26 Aug 2021 19:41:22 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id b7so6640276iob.4
-        for <linux-xfs@vger.kernel.org>; Thu, 26 Aug 2021 19:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=JcCnNkxtHweN6ApEPCItRB3oqJyAr4ORMY/4f0Zly6Y=;
-        b=hePZR6l3xkStPPzaZuEEI5aAsDiq5dQtzNWNyjWzrepGL3zDg5RRM5jmzv3hA8Qe8s
-         U5eUSbP2BQ7A45zN3gKzMQbxc2I7TBQ+WGjJw07Ca+N4SD7OgsCT4ZKEmx6x2fsD6OqX
-         sDvMxBGlSNKZbvz0OZuVA0WFxvTs+J+u862pdllDKBdFdGgib9ZiPj9FP+K5yMejz9W4
-         OuAlWF0fiIbSrR3GjuzqKB/+JO2AcrVVCdco4KgUAztF/I1ojRBAGLgKYgf3zRYK3mCq
-         atYBVOANeHK8VXipDb5RywYKh0b5pA6B9IAIIuUon7ytDHQT/+sb7hMNDgkjIhtqobzS
-         9yGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=JcCnNkxtHweN6ApEPCItRB3oqJyAr4ORMY/4f0Zly6Y=;
-        b=j5BshFaVwFIPVHVf+im/EK68Vh/ePUe7yiUz+IZ+3RpjT10liuZOxs5DY9R7ub2XUs
-         ZB9TTpSMnvu7PY1qJV5wlkV95JKVaJA3y6jw1LVVwET9rhWpjTTUTtr5N0oy8xwi+vbo
-         L3CyNhuDODOHgU/zFQya+2XbNFheEvSYtKrvv9j/HB2GkLRTtmkvqT9ZCnb0JA27m5hy
-         cZz8KoLW0ezTmULhATcC7EMlOclsB59l4xUR9fn7bdpa3MyU+YdjrXEuhWXEu3w8ss9N
-         iBvJNu6iHJS1dapM6oHcZHn+anSPPbX5Caj4XZBTAsl0ChYFlmy1pcbvIR1PuNsW0BWS
-         ec9g==
-X-Gm-Message-State: AOAM533ORTHuR59Xn4xRZwNsqZzzbHHPkf2xZVaaBjzchSaQLZpYIa1m
-        u64V9orqgJr5QPSbaW5VFB4aJdFTiMyr9EUrh3s=
-X-Google-Smtp-Source: ABdhPJy2KvQ1y9lDWFCt4tUkVLyCqygzMboFgevi6gaXvHUugKzDyPWXP8Dr7Y84OXabbw7jN7/E9JfzCpuZS4GffJY=
-X-Received: by 2002:a05:6602:26cb:: with SMTP id g11mr5610199ioo.110.1630032081852;
- Thu, 26 Aug 2021 19:41:21 -0700 (PDT)
+        id S243968AbhH0C4a (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 26 Aug 2021 22:56:30 -0400
+Received: from smtp1.onthe.net.au ([203.22.196.249]:47967 "EHLO
+        smtp1.onthe.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243896AbhH0C43 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 Aug 2021 22:56:29 -0400
+Received: from localhost (smtp2.private.onthe.net.au [10.200.63.13])
+        by smtp1.onthe.net.au (Postfix) with ESMTP id AFC1561C61;
+        Fri, 27 Aug 2021 12:55:39 +1000 (EST)
+Received: from smtp1.onthe.net.au ([10.200.63.11])
+        by localhost (smtp.onthe.net.au [10.200.63.13]) (amavisd-new, port 10028)
+        with ESMTP id gyWhNuhvru_J; Fri, 27 Aug 2021 12:55:39 +1000 (AEST)
+Received: from athena.private.onthe.net.au (chris-gw2-vpn.private.onthe.net.au [10.9.3.2])
+        by smtp1.onthe.net.au (Postfix) with ESMTP id 4562D61BE7;
+        Fri, 27 Aug 2021 12:55:39 +1000 (EST)
+Received: by athena.private.onthe.net.au (Postfix, from userid 1026)
+        id 2A10E680468; Fri, 27 Aug 2021 12:55:39 +1000 (AEST)
+Date:   Fri, 27 Aug 2021 12:55:39 +1000
+From:   Chris Dunlop <chris@onthe.net.au>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: XFS fallocate implementation incorrectly reports ENOSPC
+Message-ID: <20210827025539.GA3583175@onthe.net.au>
+References: <20210826020637.GA2402680@onthe.net.au>
+ <335ae292-cb09-6e6e-9673-68cfae666fc0@sandeen.net>
+ <20210826205635.GA2453892@onthe.net.au>
 MIME-Version: 1.0
-Received: by 2002:a02:c6bc:0:0:0:0:0 with HTTP; Thu, 26 Aug 2021 19:41:21
- -0700 (PDT)
-From:   john williams <jw626521@gmail.com>
-Date:   Thu, 26 Aug 2021 14:41:21 -1200
-Message-ID: <CAA3cKDMLeZp=ywZ5d2MXfHebbUuYzsTJ67QeWGpBio58+vGPUA@mail.gmail.com>
-Subject: CONFIRM YOUR DETAILS TO ENABLE US START,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20210826205635.GA2453892@onthe.net.au>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dear Beneficiary,
+On Fri, Aug 27, 2021 at 06:56:35AM +1000, Chris Dunlop wrote:
+> On Thu, Aug 26, 2021 at 10:05:00AM -0500, Eric Sandeen wrote:
+>> On 8/25/21 9:06 PM, Chris Dunlop wrote:
+>>>
+>>> fallocate -l 1GB image.img
+>>> mkfs.xfs -f image.img
+>>> mkdir mnt
+>>> mount -o loop ./image.img mnt
+>>> fallocate -o 0 -l 700mb mnt/image.img
+>>> fallocate -o 0 -l 700mb mnt/image.img
+>>>
+>>> Why does the second fallocate fail with ENOSPC, and is that considered an XFS bug?
+>>
+>> Interesting.  Off the top of my head, I assume that xfs is not looking at
+>> current file space usage when deciding how much is needed to satisfy the
+>> fallocate request.  While filesystems can return ENOSPC at any time for
+>> any reason, this does seem a bit suboptimal.
+>
+> Yes, I would have thought the second fallocate should be a noop.
 
-Following your pending fund for years and the delay you imposed in
-receiving it,We have called back your fund to this office as directed
-by the Finance Office and we will be paying you directly through the
-BANK OF AMERICA.(BOA) NEW YORK BRANCH AND ALL YOU NEED NOW IS TO
-RE-CONFIRM YOUR BANKING DETAILS FOR THE TRANSFER IMMEDIATELY WITHOUT
-ANY FURTHER DELAY.
+On further reflection, "filesystems can return ENOSPC at any time" is 
+certainly something apps need to be prepared for (and in this case, it's 
+doing the right thing, by logging the error and aborting), but it's not 
+really a "not a bug" excuse for the filesystem in all circumstances (or 
+this one?), is it? E.g. a write(fd, buf, 1) returning ENOSPC on an fresh 
+filesystem would be considered a bug, no?
 
-NOTE THAT WE WILL PAY ALL THE EXPENSES INVOLVED FOR YOU TO RECEIVE
-THIS FUND AND ALL WE NEED FROM YOU IS YOUR CO-OPERATION.
+...or maybe your "suboptimal" was entirely tongue in cheek?
 
-Send your full details with Banking details to enable us commence the
-transfer process immediately through the BOA BANK IN NEW YORK,USA OR
-DO YOU WANT TO RECEIVE THIS FUND VIA ATM CARD ????????.
+>>> Background: I'm chasing a mysterious ENOSPC error on an XFS 
+>>> filesystem with way more space than the app should be asking for. 
+>>> There are no quotas on the fs. Unfortunately it's a third party 
+>>> app and I can't tell what sequence is producing the error, but 
+>>> this fallocate issue is a possibility.
+>>
+>> Presumably you've tried stracing it and looking for ENOSPC returns from
+>> syscalls?
+>
+> That would be an obvious approach. Unfortunately it's not that easy. 
+> The problem is associated with one specific client which is out of my 
+> control so I can't experiment in a controlled environment. The app 
+> runs for several hours in multiple phases, each with multiple threads, 
+> and the problem typically occurs in the early hours of the morning 
+> after several hours of running, so attaching to the correct instance 
+> is fraught, and the strace output will be voluminous.
 
-John O.Williams.
+I decided to stop being lazy and look into taking the strace option 
+further. I can script looking for the right process as it starts up, and 
+with judicious use of "-Z" for failed calls only, and filtering out 
+commonly failing syscalls (futex, stat etc.), the output volume is reduced 
+to just about nothing. This could be the solution - but it'll probably 
+take a week or so for it to fail again and see if I can catch what's going 
+on.
+
+Thanks for the inspiration / kick in the pants to get this going.
+
+Strace has grown more options since the last time I looked at the man 
+page: "-Z" is fantastic!
+
+Cheers,
+
+Chris
