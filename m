@@ -2,64 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B63B3FA501
-	for <lists+linux-xfs@lfdr.de>; Sat, 28 Aug 2021 12:36:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87E183FA661
+	for <lists+linux-xfs@lfdr.de>; Sat, 28 Aug 2021 17:10:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233732AbhH1KhT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 28 Aug 2021 06:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230428AbhH1KhS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 28 Aug 2021 06:37:18 -0400
-X-Greylist: delayed 1281 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 28 Aug 2021 03:36:28 PDT
-Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC246C061756
-        for <linux-xfs@vger.kernel.org>; Sat, 28 Aug 2021 03:36:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=bugs.debian.org; s=smtpauto.buxtehude; h=Date:References:Message-ID:Subject
-        :CC:To:From:Content-Type:MIME-Version:Content-Transfer-Encoding:Reply-To:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=6Hcc6/VsVxF8a36M7IPPBgoNdZOVe7pUdxdBVBsYg1A=; b=DoZV/2BnVOziXUhlw2KERgDCoC
-        Og9ACv1ecLTDX1JMpMInXSwwDhsenyPhkbc7ZJmhay56StUgh8YgnVuYQsEOZbOGj7l1HlxQihYVG
-        ncA8lAPRHcLMF37ynPVXsloiLXLWPAV4Nk22d6IImYhPARPFl0MLkbsapqL1uEv2Wfy8Ams8gSu/p
-        uTub3hJau5qkU/jTh/3Fc9kThXxgO4acd8Tb6Nmi6J4jQIwVgiZGcvBKNsKlgHAElqKkQqJvLa1aJ
-        aezyEA2VD0EayXiWXfGVTfwl4iZmO/SpPFvtYyO0ZNl+5ltMwrkU7xyAiJ6FmaGK2Clem+QI5cXhx
-        VdKsbx9w==;
-Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
-        (envelope-from <debbugs@buxtehude.debian.org>)
-        id 1mJvMe-0006w3-BF; Sat, 28 Aug 2021 10:15:04 +0000
-X-Loop: owner@bugs.debian.org
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+        id S229911AbhH1PK4 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Sat, 28 Aug 2021 11:10:56 -0400
+Received: from mail.chamber.uz ([217.30.169.104]:60016 "EHLO mail.chamber.uz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229799AbhH1PK4 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Sat, 28 Aug 2021 11:10:56 -0400
+Received: from DESKTOP-7A9DIF2.Home (172.24.0.9) by mail.chamber.uz
+ (172.24.0.254) with Microsoft SMTP Server (TLS) id 14.2.347.0; Sat, 28 Aug
+ 2021 20:09:00 +0500
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-Mailer: MIME-tools 5.509 (Entity 5.509)
-Content-Type: text/plain; charset=utf-8
-From:   "Debian Bug Tracking System" <owner@bugs.debian.org>
-To:     Bastian Germann <bastiangermann@fishpost.de>
-CC:     linux-xfs@vger.kernel.org
-Subject: Processed: 981662 severity
-Message-ID: <handler.s.C.163014558624663.transcript@bugs.debian.org>
-References: <adbff455-e70a-6354-dc08-db3c2765ce7d@fishpost.de>
-X-Debian-PR-Package: src:xfsprogs
-X-Debian-PR-Source: xfsprogs
-X-Debian-PR-Message: transcript
-X-Loop: owner@bugs.debian.org
-Date:   Sat, 28 Aug 2021 10:15:04 +0000
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: C O V I D - 1 9  BENEFIT FUNDS
+To:     Recipients <bx@chamber.uz>
+From:   <bx@chamber.uz>
+Date:   Sat, 28 Aug 2021 17:08:48 +0200
+Reply-To: <unfunding@outlook.com>
+Message-ID: <6d1e0398-d59f-44af-a5d9-674f46923d2d@MX2010.chamber.local>
+X-Originating-IP: [172.24.0.9]
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Processing commands for control@bugs.debian.org:
+Congratulation lucky winner,
 
-> severity 981662 important
-Bug #981662 {Done: Bastian Germann <bastiangermann@fishpost.de>} [src:xfspr=
-ogs] xfsprogs-udeb depends on libinih1, not libinih1-udeb
-Severity set to 'important' from 'serious'
->
-End of message, stopping processing here.
+Congratulations on being one of the lucky winners to receive the C O V I D -1 9  benefit Funds worth €500,000 EUR to help with the fight against C O V I D  - 1 9 and finance your business while staying at home and stopping the spread of the virus. 
+United Nations and the government have awarded you with €500,000 EUR benefit funds with REF NUMBER C O V I D -  19/2021/0362
 
-Please contact me if you need assistance.
---=20
-981662: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=3D981662
-Debian Bug Tracking System
-Contact owner@bugs.debian.org with problems
+Kindly fill the below details to process your winning.
+Full Name, 
+Date of birth,
+Country, 
+Phone, 
+Home address: 
+
+Regards
+On behalf of United Nations Economic and Social Council (ECOSOC)
+Munir Akram
