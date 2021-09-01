@@ -2,140 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CE4183FD46C
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 09:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 947013FD568
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 10:29:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242502AbhIAHbl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Sep 2021 03:31:41 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:54880 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242568AbhIAHbk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 03:31:40 -0400
-Received: from dread.disaster.area (pa49-195-182-146.pa.nsw.optusnet.com.au [49.195.182.146])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 30939104E3C3;
-        Wed,  1 Sep 2021 17:30:43 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1mLKhm-007NLX-ME; Wed, 01 Sep 2021 17:30:42 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1mLKhm-003Xo8-EG; Wed, 01 Sep 2021 17:30:42 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     allison.henderson@oracle.com
-Subject: [PATCH 5/5] [RFC] xfs: don't commit the first deferred transaction without intents
-Date:   Wed,  1 Sep 2021 17:30:39 +1000
-Message-Id: <20210901073039.844617-6-david@fromorbit.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210901073039.844617-1-david@fromorbit.com>
-References: <20210824224434.968720-1-allison.henderson@oracle.com>
- <20210901073039.844617-1-david@fromorbit.com>
+        id S243065AbhIAIaZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Sep 2021 04:30:25 -0400
+Received: from verein.lst.de ([213.95.11.211]:46728 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242943AbhIAIaY (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 1 Sep 2021 04:30:24 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 711DE68AFE; Wed,  1 Sep 2021 10:29:25 +0200 (CEST)
+Date:   Wed, 1 Sep 2021 10:29:25 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Felix Kuehling <felix.kuehling@amd.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Sierra Guiza, Alejandro (Alex)" <alex.sierra@amd.com>,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        rcampbell@nvidia.com, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, jgg@nvidia.com, jglisse@redhat.com
+Subject: Re: [PATCH v1 03/14] mm: add iomem vma selection for memory
+ migration
+Message-ID: <20210901082925.GA21961@lst.de>
+References: <20210825034828.12927-1-alex.sierra@amd.com> <20210825034828.12927-4-alex.sierra@amd.com> <20210825074602.GA29620@lst.de> <c4241eb3-07d2-c85b-0f48-cce4b8369381@amd.com> <a9eb2c4a-d8cc-9553-57b7-fd1622679aaa@amd.com> <20210830082800.GA6836@lst.de> <e40b3b79-f548-b87b-7a85-f654f25ed8dd@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
-        a=QpfB3wCSrn/dqEBSktpwZQ==:117 a=QpfB3wCSrn/dqEBSktpwZQ==:17
-        a=7QKq2e-ADPsA:10 a=20KFwNOVAAAA:8 a=D7YTRf8iRGDD4oG3zsQA:9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e40b3b79-f548-b87b-7a85-f654f25ed8dd@amd.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Mon, Aug 30, 2021 at 01:04:43PM -0400, Felix Kuehling wrote:
+> >> driver code is not really involved in updating the CPU mappings. Maybe
+> >> it's something we need to do in the migration helpers.
+> > It looks like I'm totally misunderstanding what you are adding here
+> > then.  Why do we need any special treatment at all for memory that
+> > has normal struct pages and is part of the direct kernel map?
+> 
+> The pages are like normal memory for purposes of mapping them in CPU
+> page tables and for coherent access from the CPU.
 
-If the first operation in a string of defer ops has no intents,
-then there is no reason to commit it before running the first call
-to xfs_defer_finish_one(). This allows the defer ops to be used
-effectively for non-intent based operations without requiring an
-unnecessary extra transaction commit when first called.
+That's the user page tables.  What about the kernel direct map?
+If there is a normal kernel struct page backing there really should
+be no need for the pgmap.
 
-This fixes a regression in per-attribute modification transaction
-count when delayed attributes are not being used.
+> From an application
+> perspective, we want file-backed and anonymous mappings to be able to
+> use DEVICE_PUBLIC pages with coherent CPU access. The goal is to
+> optimize performance for GPU heavy workloads while minimizing the need
+> to migrate data back-and-forth between system memory and device memory.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_defer.c | 29 +++++++++++++++++------------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+I don't really understand that part.  file backed pages are always
+allocated by the file system using the pagecache helpers, that is
+using the page allocator.  Anonymouns memory also always comes from
+the page allocator.
 
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index 01fcf5e93be5..05983a4a4f91 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -181,7 +181,7 @@ static const struct xfs_defer_op_type *defer_op_types[] = {
- 	[XFS_DEFER_OPS_TYPE_ATTR]	= &xfs_attr_defer_type,
- };
- 
--static void
-+static bool
- xfs_defer_create_intent(
- 	struct xfs_trans		*tp,
- 	struct xfs_defer_pending	*dfp,
-@@ -192,6 +192,7 @@ xfs_defer_create_intent(
- 	if (!dfp->dfp_intent)
- 		dfp->dfp_intent = ops->create_intent(tp, &dfp->dfp_work,
- 						     dfp->dfp_count, sort);
-+	return dfp->dfp_intent;
- }
- 
- /*
-@@ -199,16 +200,18 @@ xfs_defer_create_intent(
-  * associated extents, then add the entire intake list to the end of
-  * the pending list.
-  */
--STATIC void
-+STATIC bool
- xfs_defer_create_intents(
- 	struct xfs_trans		*tp)
- {
- 	struct xfs_defer_pending	*dfp;
-+	bool				ret = false;
- 
- 	list_for_each_entry(dfp, &tp->t_dfops, dfp_list) {
- 		trace_xfs_defer_create_intent(tp->t_mountp, dfp);
--		xfs_defer_create_intent(tp, dfp, true);
-+		ret |= xfs_defer_create_intent(tp, dfp, true);
- 	}
-+	return ret;
- }
- 
- /* Abort all the intents that were committed. */
-@@ -459,7 +462,7 @@ int
- xfs_defer_finish_noroll(
- 	struct xfs_trans		**tp)
- {
--	struct xfs_defer_pending	*dfp;
-+	struct xfs_defer_pending	*dfp = NULL;
- 	int				error = 0;
- 	LIST_HEAD(dop_pending);
- 
-@@ -478,17 +481,19 @@ xfs_defer_finish_noroll(
- 		 * of time that any one intent item can stick around in memory,
- 		 * pinning the log tail.
- 		 */
--		xfs_defer_create_intents(*tp);
-+		bool has_intents = xfs_defer_create_intents(*tp);
- 		list_splice_init(&(*tp)->t_dfops, &dop_pending);
- 
--		error = xfs_defer_trans_roll(tp);
--		if (error)
--			goto out_shutdown;
-+		if (has_intents || dfp) {
-+			error = xfs_defer_trans_roll(tp);
-+			if (error)
-+				goto out_shutdown;
- 
--		/* Possibly relog intent items to keep the log moving. */
--		error = xfs_defer_relog(tp, &dop_pending);
--		if (error)
--			goto out_shutdown;
-+			/* Possibly relog intent items to keep the log moving. */
-+			error = xfs_defer_relog(tp, &dop_pending);
-+			if (error)
-+				goto out_shutdown;
-+		}
- 
- 		dfp = list_first_entry(&dop_pending, struct xfs_defer_pending,
- 				       dfp_list);
--- 
-2.31.1
+> The pages are special in two ways:
+> 
+>  1. The memory is managed not by the Linux buddy allocator, but by the
+>     GPU driver's TTM memory manager
 
+Why?
+
+>  2. We want to migrate data in response to GPU page faults and
+>     application hints using the migrate_vma helpers
+
+Why? 
