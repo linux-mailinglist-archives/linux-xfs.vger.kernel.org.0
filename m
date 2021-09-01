@@ -2,246 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21B783FE042
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 18:43:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB21C3FE214
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 20:11:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245578AbhIAQoJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Sep 2021 12:44:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344156AbhIAQoI (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 1 Sep 2021 12:44:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9E9D161059;
-        Wed,  1 Sep 2021 16:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630514591;
-        bh=EsBrb5ltlCJQoHJ8BGbpofVbVtPrr6R36M79JfOPrK8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N7kjFSdHHZg9PVmZ3nsio5tELnkj/f0KVXrs0+jCdAzkTDAh8R3MHIxrDFER9XwB3
-         QJIu++rc2Wei2t5/BiNxGmDxtsFfuGbXrUjhEKzyaBLBeCL3/ygzp1aXCDdfVG/u3t
-         Hn4Km8RnHfDSi1vM6588OaEbYy/SgOwAQ21/2klDvGeZV2zyMVumnSupM9FIx/X9z2
-         0/ZTN8C/cHZdqyMaqMtuzvM0upC+zQV0MHIpS5I2BbtTHXTT13X+UwKb1Ppt9Mk+qj
-         xyZsRWjl45pY6eslJJzq1RL9Ah/8qhiXV7ldwRbCgtOciokOeqP2p9dbm7Ks+i0OAv
-         s1YTNIyOGdnuQ==
-Date:   Wed, 1 Sep 2021 09:43:11 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>, Eryu Guan <guan@eryu.me>
-Subject: Re: [PATCH 4/5] tools: make sure that test groups are described in
- the documentation
-Message-ID: <20210901164311.GB9911@magnolia>
-References: <163045514980.771564.6282165259140399788.stgit@magnolia>
- <163045517173.771564.1524162806861567173.stgit@magnolia>
- <CAOQ4uxi7205Ae+un1w4C4Dzh9-SykL=ogHQSBH=nnVGDkPfkhw@mail.gmail.com>
+        id S1344435AbhIASMg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Sep 2021 14:12:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346806AbhIASMU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 14:12:20 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4B4C0617A8
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Sep 2021 11:11:22 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id bn14so293234qvb.12
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Sep 2021 11:11:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
+         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
+         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
+         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
+         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
+         0RlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
+        b=keNWobN9NredIr5337Pg6R+Hw0+1bQpklvoACiBCAu3WCVMJX7RnObj/iWBFdsUH+k
+         +/O0Rkqzbk6StZdC34Co3VZ6vWjAj+zSXp8qJQQYlzg83UR//VRfNTiGr6+poNWhnOff
+         mRpY1D02Rs7RueCCh6iQIs2Lc21AbmPoLSS/lBGvh9BrgAzG+nlflD/f1EUbQUbYy+jC
+         Blj924LHUtaupTvhcToHqdgytdpwX/vsaYRE+xNf6GroR9WMetyb1QQPXFuM5LaS99sg
+         bV4yGSRN7lDPJg5v8yL6ISH8maJ60D7wQ9h1eoZbQYhKs7IMgygEY/o+kzvNDtN2Qw6V
+         0ayw==
+X-Gm-Message-State: AOAM533eMqBu4wtI4My7F3xh+gYP2FbBJXMesqGxsbedJupDSS98awVp
+        AvtXQpojWl6whsBBipK0lqGYU09bpaWDHDoJs7l7VSgCPAiGrw==
+X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
+X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
+ Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi7205Ae+un1w4C4Dzh9-SykL=ogHQSBH=nnVGDkPfkhw@mail.gmail.com>
+Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
+From:   CorisBank International <corisbankintlbf@gmail.com>
+Date:   Wed, 1 Sep 2021 11:11:10 -0700
+Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
+Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 01, 2021 at 07:46:01AM +0300, Amir Goldstein wrote:
-> On Wed, Sep 1, 2021 at 3:37 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> >
-> > From: Darrick J. Wong <djwong@kernel.org>
-> >
-> > Create a file to document the purpose of each test group that is
-> > currently defined in fstests, and add a build script to check that every
-> > group mentioned in the tests is also mentioned in the documentation.
-> >
-> 
-> This is awesome and long due.
-> Thanks for doing that!
-> 
-> Minor nits about overlayfs groups below...
+Att: Client
 
-Heh, yeah, thanks for making corrections. :)
 
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  doc/group-names.txt    |  136 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >  include/buildgrouplist |    1
-> >  tools/check-groups     |   33 ++++++++++++
-> >  3 files changed, 170 insertions(+)
-> >  create mode 100644 doc/group-names.txt
-> >  create mode 100755 tools/check-groups
-> >
-> >
-> > diff --git a/doc/group-names.txt b/doc/group-names.txt
-> > new file mode 100644
-> > index 00000000..ae517328
-> > --- /dev/null
-> > +++ b/doc/group-names.txt
-> > @@ -0,0 +1,136 @@
-> > +======================= =======================================================
-> > +Group Name:            Description:
-> > +======================= =======================================================
-> > +all                    All known tests, automatically generated by ./check at
-> > +                       runtime
-> > +auto                   Tests that should be run automatically.  These should
-> > +                       not require more than ~5 minutes to run.
-> > +quick                  Tests that should run in under 30 seconds.
-> > +deprecated             Old tests that should not be run.
-> > +
-> > +acl                    Access Control Lists
-> > +admin                  xfs_admin functionality
-> > +aio                    general libaio async io tests
-> > +atime                  file access time
-> > +attr                   extended attributes
-> > +attr2                  xfs v2 extended aributes
-> > +balance                        btrfs tree rebalance
-> > +bigtime                        timestamps beyond the year 2038
-> > +blockdev               block device functionality
-> > +broken                 broken tests
-> > +cap                    Linux capabilities
-> > +casefold               directory name casefolding
-> > +ci                     ASCII case-insensitive directory name lookups
-> > +clone                  FICLONE/FICLONERANGE ioctls
-> > +clone_stress           stress testing FICLONE/FICLONERANGE
-> > +collapse               fallocate collapse_range
-> > +compress               file compression
-> > +convert                        btrfs ext[34] conversion tool
-> > +copy                   xfs_copy functionality
-> > +copy_range             copy_file_range syscall
-> > +copyup                 overlayfs copyup support
-> 
-> The tests in this group exercise copy up.
-> There is no such thing as overlayfs without "copyup support",
-> so guess my point is - remove the word "support"
+CORISBANK INTERNATIONAL URGENT NOTIFICATION
 
-OK.
+Notification / Notification/ Notification
 
-> > +dangerous              dangerous test that can crash the system
-> > +dangerous_bothrepair   fuzzers to evaluate xfs_scrub + xfs_repair repair
-> > +dangerous_fuzzers      fuzzers that can crash your computer
-> > +dangerous_norepair     fuzzers to evaluate kernel metadata verifiers
-> > +dangerous_online_repair        fuzzers to evaluate xfs_scrub online repair
-> > +dangerous_repair       fuzzers to evaluate xfs_repair offline repair
-> > +dangerous_scrub                fuzzers to evaluate xfs_scrub checking
-> > +data                   data loss checkers
-> > +dax                    direct access mode for persistent memory files
-> > +db                     xfs_db functional tests
-> > +dedupe                 FIEDEDUPERANGE ioctl
-> > +defrag                 filesystem defragmenters
-> > +dir                    directory test functions
-> > +dump                   dump and restore utilities
-> > +eio                    IO error reporting
-> > +encrypt                        encrypted file contents
-> > +enospc                 ENOSPC error reporting
-> > +exportfs               file handles
-> > +filestreams            XFS filestreams allocator
-> > +freeze                 filesystem freeze tests
-> > +fsck                   general fsck tests
-> > +fsmap                  FS_IOC_GETFSMAP ioctl
-> > +fsr                    XFS free space reorganizer
-> > +fuzzers                        filesystem fuzz tests
-> > +growfs                 increasing the size of a filesystem
-> > +hardlink               hardlinks
-> > +health                 XFS health reporting
-> > +idmapped               idmapped mount functionality
-> > +inobtcount             XFS inode btree count tests
-> > +insert                 fallocate insert_range
-> > +ioctl                  general ioctl tests
-> > +io_uring               general io_uring async io tests
-> > +label                  filesystem labelling
-> > +limit                  resource limits
-> > +locks                  file locking
-> > +log                    metadata logging
-> > +logprint               xfs_logprint functional tests
-> > +long_rw                        long-soak read write IO path exercisers
-> > +metacopy               overlayfs metadata-only copy-up
-> > +metadata               filesystem metadata update exercisers
-> > +metadump               xfs_metadump/xfs_mdrestore functionality
-> > +mkfs                   filesystem formatting tools
-> > +mount                  mount option and functionality checks
-> > +nested                 nested overlayfs instances
-> > +nfs4_acl               NFSv4 access control lists
-> > +nonsamefs              overlayfs layers on different filesystems
-> > +online_repair          online repair functionality tests
-> > +other                  dumping ground, do not add more tests to this group
-> > +overlay                        using overlayfs on top of FSTYP
-> 
-> This description is a bit confusing, because the recommended
-> way to run overlayfs tests as described in README.overlay is
-> to set FSTYP=xfs and run ./check -overlay
-> 
-> I'm struggling for a better description but perhaps:
-> "using overlayfs regardless of ./check -overlay flag"?
+Note, We are writing to inform you officially that Finally the Central
+Bank Financial Authority have approved to transfer your $8.2Million
+which was signed by late Mrs Rose Banneth the COVID.19 victim to
+transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
+transfer her fund in our bank to you for Orphanage work before she
+died by the COVID.19
+and as it is now, you will receive your fund through our corresponding
+bank in Dubai [Emirate Investment Bank ] for security reason. Please
+you should reconfirm your details to receive the $8.2Million.
 
-Hmm.  Since I'm the author of the only test that uses this tag, I guess
-I'm the authority (ha!) on what the name actually means.
+Name, Country, Address, occupations, Age, Telephone number, account
+Details so that we can immediately forward to the World Bank to
+transfer the fund.
+You are advised to comply on timely manner to permit this esteem bank
+transfer your fund as scheduled.
 
-That test (generic/631) is a regression test for a XFS whiteout handling
-bug that can only be reproduced by layering overlayfs atop xfs.
-Overlayfs is incidental to reproducing the XFS bug, but AFAIK overlayfs
-is the only in-kernel user of whiteout, which is why it's critical here.
+We look forward to serving you better
+Your Financial Comfort Is A Priority
+Thank you for choosing Corisbank International.
 
-It's not right to make it "_supported_fs overlay" because we're not
-testing overlayfs functionality; we're merely using it as a stick to
-poke another filesystem.
+Sincerely,
 
-How about: "regression tests that require the use of overlayfs in a
-targetted configuration" ?
+----
 
-> > +pattern                        specific IO pattern tests
-> > +perms                  access control and permission checking
-> > +pipe                   pipe functionality
-> > +pnfs                   PNFS
-> > +posix                  POSIX behavior conformance
-> > +prealloc               fallocate
-> > +preallocrw             fallocate, then read and write
-> > +punch                  fallocate punch_hole
-> > +qgroup                 btrfs qgroup feature
-> > +quota                  filesystem usage quotas
-> > +raid                   btrfs RAID
-> > +realtime               XFS realtime volumes
-> > +recoveryloop           crash recovery loops
-> > +redirect               overlayfs redirect_dir feature
-> > +remote                 dump and restore with a remote tape
-> > +remount                        remounting filesystems
-> > +rename                 rename system call
-> > +repair                 xfs_repair functional tests
-> > +replace                        btrfs device replace
-> > +replay                 dm-logwrites replays
-> > +resize                 resize2fs functionality tests
-> > +richacl                        rich ACL feature
-> > +rmap                   XFS reverse mapping exercisers
-> > +rotate                 overlayfs feature of some sort"
-> 
-> I guess that works :-D
-> but to be accurate, this is actually a unionmount testsuite feature -
-> at selected test points in the workload, a new upper layer is stacked
-> on to overlayfs, so maybe:
-> "upper layer rotate tests from the unionmount test suite"?
-
-I've changed it to 'overlayfs upper layer rotate tests from the
-unionmount test suite'.
-
-> > +rw                     read/write IO tests
-> > +samefs                 overlayfs when all layers are on the same fs
-> > +scrub                  filesystem metadata scrubbers
-> > +seed                   btrfs seeded filesystems
-> > +seek                   llseek functionality
-> > +send                   btrfs send/receive
-> > +shrinkfs               decreasing the size of a filesystem
-> > +shutdown               FS_IOC_SHUTDOWN ioctl
-> > +snapshot               btrfs snapshots
-> > +soak                   long soak tests of any kind
-> > +spaceman               xfs_spaceman functional tests
-> > +splice                 splice system call
-> > +stress                 fsstress filesystem exerciser
-> > +subvol                 btrfs subvolumes
-> > +subvolume              btrfs subvolumes (again?)
-> 
-> A cleanup patch to fix this typo in btrfs/233?
-
-Will do.
-
---D
-
-> 
-> Thanks,
-> Amir.
+Mr Diakarya Ouattara
+Managing Director
+Bank Coris
+Burkina Faso
++226 556 163 37
+financial_bf_info@accountant.com
