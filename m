@@ -2,236 +2,229 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B60A33FD285
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 06:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A938D3FD2ED
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 07:34:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241815AbhIAErL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Sep 2021 00:47:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241684AbhIAErK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 00:47:10 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D77FC061575;
-        Tue, 31 Aug 2021 21:46:14 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id j15so2115971ila.1;
-        Tue, 31 Aug 2021 21:46:14 -0700 (PDT)
+        id S232334AbhIAFfK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Sep 2021 01:35:10 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:4806 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233857AbhIAFfK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 01:35:10 -0400
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 17VNawQG032756;
+        Wed, 1 Sep 2021 05:34:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=+2O2psQhtKbvX6LIrZ1Aagnv9WmOu3MtxvrmGVvhQEI=;
+ b=huqY5ed94ygPCvjlIFa3hAj5MEHT5nvzFNAg6vvuLBkeEXfBsrvMvN+ckZsqYxLgwMce
+ z8bUB53cI3wujgAIrwly3fPwDWqV/fM4oQ0HZIkC41+v7vMk8bmsUhx/fIvjjIVHGf3w
+ FBjjsOIFjMQXqv7r3tZxVPFrKI30shKEJOs2C+vhYixUe3+JS2qESshcSKn1sjK8G1Bf
+ v7sgcASY1V5M4WN9tiiZelcpMyZZZlZd4hO/NlHMkeFrJxalsLGAsbU/d/3HTBDDv/zU
+ s28aEkg9+Vrp/GoSaG2kyP40tus2QIm7fkOg48ma+tmeTkQYwStbq4VZ6y/QR/E4yW2z pw== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2020-01-29;
+ bh=+2O2psQhtKbvX6LIrZ1Aagnv9WmOu3MtxvrmGVvhQEI=;
+ b=shuP0Qpsdoe9YfJNaqP063eraFN/sZUFiY/P+B/cLuasfETPZaUiEpxjuv4MeTQv0HaL
+ 501UK09e1OrbtllKeKtbtXuki/yjTTNIopOfBNTOvsPWV3S+yZGxx8mpp0quswMzjUBQ
+ hBPMJLYUl5ujVy1xl1JZI8FMuNXZyRvaJG/CdwgnS2wOVCqR0oZulLVGF4zPD1V3+U9o
+ vxFBQRPJRFVCqSWqB2YltB1W730d5jTfjumN6LpGuWFmlU5AE7QQBUPCc7XSyhJMg21g
+ uU4twhw2x+lt2P4fRtoIdxyn90C8iLaMoVLOlhxlrjIOELK+3u3QYpobozpbA2NWCOs/ wg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3aseedkbme-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Sep 2021 05:34:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1815PeFH177527;
+        Wed, 1 Sep 2021 05:34:08 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2174.outbound.protection.outlook.com [104.47.58.174])
+        by aserp3020.oracle.com with ESMTP id 3aqcy61kma-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Sep 2021 05:34:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O/gC/jptynbH4pEufuRCSWYz5w5VbOztxNO/qN/w0BBrMvYE0vL2unn/ovHKXMJOqbgDMjIr9uX5Hzu9v2gVmj5uTGAbUWjeHLlgu6r/ffnTGa54bYZAdCapuo5h13qoVlTa6Z7PzgpcpKHkWhB4PuGcv9hyIoPRhn014jmREvO//+jVePHOxqi84LPkoN6iGU2cVAx27D3GMo15ASrOpq5JVlmQDeV01gf1zkeuMLO31Mjm2m/FC+PENqMCMaaNEvFb9wfOvVqGsNkxl5O8k/pphPoDJUayiUGd8Aa3PJQzZryeMXoOk5uNvMx39k/0CNKpsPLWdEMuJvcJrUn4Ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2O2psQhtKbvX6LIrZ1Aagnv9WmOu3MtxvrmGVvhQEI=;
+ b=Ow9DH5R622Kr+Ejt27KjUnDbOZ0yTVhtCbYpntwIk8p258RVJ11woFSyPkcjk5Wzk8Ye+om3L14A5PCoRRQ9AzU/0gF/7TZFs0TiIIkT30ORgdZOhyp+Q/3G7PA/aVnKDOoPNegY4QIB7jPryb2XdIAmVhl/QXhUmrMlEf1tnhz/EtvcPU1HlAU1PjvUX4A6rkh8AyVo57qYJskblfiG0jSI5uniPhWtrpzFxwwnN7j708un/CSwiptGioOiY5S0mll1oLavY38L7THglG/IIsI9EIT2MOXKib4jlomSKHr4GaHy4IndNGQAbtlytTi5EBeBY0nK8xmhGkvzFE6BNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zsHyYeSR9ACZUZpjPtsYlGcvCJ8qMXDCUzjBMk6kPkQ=;
-        b=LMV/7YIRYOIoNB2Kp+7qEIFKC07giHsCnwXQnNcvXtHyuuRFfGChyKkMUvsIrz63se
-         E4/UdNoN+h56l1s+0DvlV2GpaO6uPNWcBnRz4R57RxH9AF0yK/vnkoEPUfZnW6i1MxKS
-         oPxKk1kK0GYwlQMBVEYs7ABSXAh5SBV1rGeSRtezTX4Iq4JQt6GOEdlpfcFGo+rD+Ns+
-         PK9hdt8OQBwXGLsdisFYeBThbpKe3QdqCjuzZW+Aw+bWAgCjVqEBYR9VFpvkZk3B/1gu
-         hUQTHZScBsjU2sofYKmitEQLfKbJbgVmFtJ7Wwo6KeGhfEpMD9v8d64fnMy8OaND7wrE
-         wxGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zsHyYeSR9ACZUZpjPtsYlGcvCJ8qMXDCUzjBMk6kPkQ=;
-        b=qzBOClT6UP1FrA1DMrl1h72A/rylq68sygs/t4Hxh21CI1bXwOUbMKqOQHNO11KpyS
-         hEQh8hLd7UIZEx2qJ8aJfCkVWO+mHFED/MPJqUMK3ABY/dM6cg6GaV6offSMSTuMAp8O
-         Krs37My8afJH9NwwqJKcp1a9C8O3MFSqPzB+gDOTw5J+hdfLe9qAnEgTky/qs9VQ+pbi
-         Bx9cwZXVRlZiNT4Chyf0g56cNJPMhIwSAJgOI1ZKPW5fy4RGHO8nEOnFh9U7iEPVAqQh
-         6hPR/8Hke/SiDkaZuL5tbjC1eN4Rjq+kKXpF6dDpStkp5F9vWH7NX8lAMl+iJwTNaVuR
-         hiHQ==
-X-Gm-Message-State: AOAM531iWdMxvzxNuHZxmMB95zUh6rJU7IrSBvBP4mm5duy+SC9JZec9
-        uUR+a3Dfb7Ha9XlbX4XwvZMkcaRLIU/UH9+orRUb8oQwbDA=
-X-Google-Smtp-Source: ABdhPJz4Y3Rm6ELofvyyeWwTKq9zbV6qB7AaBxGYp8m+f/HKCiNVBM7MtIWnRKG3PVXvNuxWXnh+2DDUmTMMeEeLsLc=
-X-Received: by 2002:a05:6e02:10d0:: with SMTP id s16mr23828439ilj.275.1630471573579;
- Tue, 31 Aug 2021 21:46:13 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+2O2psQhtKbvX6LIrZ1Aagnv9WmOu3MtxvrmGVvhQEI=;
+ b=iH/kANKk8Evb+GKYYUIJUckgfumCSgYip+3XPJduGlHNdmQkXAUEazddOvviHF8EifpilIco4ZPQf81myEEVsAVjys3QxOGW2cJKXtSiODPiporKPO3L4DOT2kMSFqvqeDdR3mtTicHL6vduudGaYoAnXJ+qe0s/hHsROV0KCkU=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
+ by BYAPR10MB3109.namprd10.prod.outlook.com (2603:10b6:a03:14d::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.23; Wed, 1 Sep
+ 2021 05:34:06 +0000
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::7878:545b:f037:e6f]) by BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::7878:545b:f037:e6f%9]) with mapi id 15.20.4478.019; Wed, 1 Sep 2021
+ 05:34:06 +0000
+Subject: Re: [PATCH v24 03/11] xfs: Set up infrastructure for log atrribute
+ replay
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <20210824224434.968720-1-allison.henderson@oracle.com>
+ <20210824224434.968720-4-allison.henderson@oracle.com>
+ <20210831215234.GU3657114@dread.disaster.area>
+From:   Allison Henderson <allison.henderson@oracle.com>
+Message-ID: <a16d362d-9353-e3dd-b05d-89483faca8b4@oracle.com>
+Date:   Tue, 31 Aug 2021 22:34:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+In-Reply-To: <20210831215234.GU3657114@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0230.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::25) To BY5PR10MB4306.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::7)
 MIME-Version: 1.0
-References: <163045514980.771564.6282165259140399788.stgit@magnolia> <163045517173.771564.1524162806861567173.stgit@magnolia>
-In-Reply-To: <163045517173.771564.1524162806861567173.stgit@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 1 Sep 2021 07:46:01 +0300
-Message-ID: <CAOQ4uxi7205Ae+un1w4C4Dzh9-SykL=ogHQSBH=nnVGDkPfkhw@mail.gmail.com>
-Subject: Re: [PATCH 4/5] tools: make sure that test groups are described in
- the documentation
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>, Eryu Guan <guan@eryu.me>
-Content-Type: text/plain; charset="UTF-8"
+Received: from [192.168.1.167] (67.1.112.125) by SJ0PR03CA0230.namprd03.prod.outlook.com (2603:10b6:a03:39f::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.21 via Frontend Transport; Wed, 1 Sep 2021 05:34:06 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4a2ab2a3-1a36-49ec-98c6-08d96d0a1d9e
+X-MS-TrafficTypeDiagnostic: BYAPR10MB3109:
+X-Microsoft-Antispam-PRVS: <BYAPR10MB3109A07417DD7C0817D89E8095CD9@BYAPR10MB3109.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZmO3cMFCwWKZ/Y4vg3Cg6jIDBq1z//qpChD7jwy7U2j/mt+XQLVV/tYeddUYaWAFIc48QVUlg6ai9PRqbdw4RQakrSlgLu8LDgCjGet5sKk17PRjcLNKvQILZkG1dL4qnlH9FBOwQBjwDvHgtwkxn0NtUi56p/EdG+Yz7jkv80V4knGt4BtuQkcGAAQUURCv9LaDs2nm8YjxcIpdEJY1mP0KAToOs2+FSzON3FWPQqb5A3BHqyZVeHxU7V/av71CeEbe2SFU7GGZCz2N94ievA3HfIYkgICLwh5cDPYX6mjYTHIj1lIxeyymPeUpz431bO+kWVBYshhMs9lRD8szF73uMHIUcceBzmRlzumhulKVcvn8Xx2HkUKILEqob7xj4fgHQTlqCQ4dNx/VySfwIn1np2GMClapOhAvJFDIXeER8Ect7cf/IJWWp+kUsW6BT1xfcRYYLXs9f1tX48FHXUCb737CPa73pa4IUFyHWWlotzaZlIG1ZBvqplMlW4Aqzbetl3YVQMWSgIOSlUrpzkUmUUuz6pfIIR3OvN7Q2IGGF4U7Xx9fEmTSeQpWKJSp5RV4r5IIn/nBwQOX3ZLLgm/cyR787ejV0LTMohR+vRWCnOGvsO2moNRIhkkUnm3JjrplczyloElFMsWR+N1/QJWMR3ZfVO+nmaoUoexatXi0rtQp8CX7tN7a8wdHl3jzq5nkbelScnfgxALLU+a+ZhbFSAwznbfZm8ZAoozZbvK787DNzQQjTrR9NTLBi2YozYmoplgSKVfVnAgJr9GKyw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(366004)(376002)(346002)(39860400002)(136003)(86362001)(36756003)(31696002)(16576012)(316002)(186003)(31686004)(53546011)(6916009)(26005)(38350700002)(4326008)(44832011)(2616005)(2906002)(66476007)(956004)(5660300002)(8676002)(8936002)(38100700002)(66946007)(66556008)(52116002)(6486002)(478600001)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NnM3U0k5YXhRTVlUQldXMVg2Qy9ZZVV3N3RNN09lTWl5TGw3N2wyNzB2U05P?=
+ =?utf-8?B?dUhNL3d3UkkwcjNNczljeVAxbW1QUWdKcmFyazJDRE1YU3duYmtSSVV2QzFZ?=
+ =?utf-8?B?eTJZTGNBQnczTEF0VDB4bUtwYVRERnhBOTVpbEY5amVBQy9IekwveURHd0NN?=
+ =?utf-8?B?ZVBYZExyQ2F4ZVJrZzFsZGlIMzJHRFlYTmdVNnZtK24yWEdzMlh1Z1YrRlhF?=
+ =?utf-8?B?WXZLVENqcmV2alRCbTNrbHdzaEJScjMrZER2UUdJcG51UHNDbnFFNVFnYUVZ?=
+ =?utf-8?B?OVFUK2d5OVFXVVprQlRmVGJLYXh0ZnNpcmEzYVV5U0VTcENULytJVzlibS9i?=
+ =?utf-8?B?bC9neTRZdk9tZXlub3RjVkg2U1ZHNTZWK2VHRWhQWWpudlE4bzBxbHIvYWFR?=
+ =?utf-8?B?aHpBYVNkU1ZvZkxLdHkxbFEwWjU4aHRwdEUvdFBXVitkN1dQYVZQNHdWU2xD?=
+ =?utf-8?B?SHdUL3VCUk5jM0Q1N0ZpTTlyckQwNTA0QnRhZ0Fra2NFSWE4ZHpRK0xrZTBZ?=
+ =?utf-8?B?QXltYUt1L05HL1B5K3Q3ckNuN29LNUowVHdScjY4QXp3MzZaOXVLRVRUN2VY?=
+ =?utf-8?B?WHdxN3B2SDJCQmsxa0Q0THdBZEdsaTRpZmlVTEpFU1lNc2RnVHJCOW5zeENk?=
+ =?utf-8?B?TDUrUmVuUUtUelJtWmRkY0VnUUZGRDIyL3hBOXU2V3Y3VmF5a3NRQXhjNkRt?=
+ =?utf-8?B?a3hxakhFVlZtdkN6NUYvakt6WWRBNllyWDZpeXViY2NDL056c1NwNWZUL2pt?=
+ =?utf-8?B?UlZhSGtrTjJKVy9SZ0E2YkFBYk5uWk15TDFCU1BHYmx6UjJBN3hSVEVzMFpm?=
+ =?utf-8?B?MTBhZ08rc1htK2RYV0FUQkpNMXNPeitUeVpTKy8yNUNiclA5TUdXUEszbTdK?=
+ =?utf-8?B?djR2MXVUcVV1dXA2a3hFRTllZTlaNUZqL2F4cHVLMTczdHNWVkN6QStVdTdq?=
+ =?utf-8?B?R0hzNTcvWFZCOTRHS3F6UW5udkM3Ykc1OFRBY0JlM0p6cTk5VkErT29ndy9F?=
+ =?utf-8?B?SjBmWW9LR1lCM0ptQzIvbklScGQ3YkpoTjdFYS82d2tyOUxIQ1ZCa2xoOWcz?=
+ =?utf-8?B?T2h0N1BJazN4K0x3aWJtbTlXMEhnQTMveTUzVnBqVlVseEpxMVJqbGw2ZWYz?=
+ =?utf-8?B?b3Rrc0Nnc0JrdWJzeUxSdlBSeUg0U1NjYWhnZGM4K3hVSThVeEY1SmJxaU1t?=
+ =?utf-8?B?YXo2UFEwR1NpQzVrSzRxQVh4TzZsampFMVRwZGUzVWhQNjRwVzRZQXJjUTNL?=
+ =?utf-8?B?eVJveFF3ZFpqMXdiT3lyWVcyWDQ5WkhvZkUydXhMM2VoM0Q1a2RYK3pSWG9N?=
+ =?utf-8?B?Y3Ixc0RLMlQwRHBnVkcvczNzYk41Z25TcGViR01rVXRabFBCcGpZWEJzZ05H?=
+ =?utf-8?B?K0pQc2hJRGFzd0UwT3RBR2ZLSU5nekhqbFBIdDZyUVJYTjRpa2F1V3JScTZu?=
+ =?utf-8?B?WGpTQ1JVT1NtOU0rTzN6SkxuQU0vSHd6NjhpMCtjZlQxU1dWa1VCQ09KT2RP?=
+ =?utf-8?B?WU1sa3JCN0NZaExuNUN4dWtLeWxZZnM5V25nTjNYZEN4RE5xRXJwOUpjL0tD?=
+ =?utf-8?B?T3BHbm10QVI4dDVIYkUzSzZpdnQvcER1MFlWR2g4czVHa3JqRW5SYmFVa2p3?=
+ =?utf-8?B?QzVMbitaTkR5eS80emZ3UE5wVmNhcFhzT1ZMU0gzSDlTbUR2MDJ0cGFCSmlh?=
+ =?utf-8?B?UjRqbnJQZ2J0SWlmNXhGRFpHNnptN3RrdlZzNDV1OUFLT1lJbCtsYzVVanFr?=
+ =?utf-8?Q?LYaUXIZvlnomCxBm8mOfzNWd2cRcuTEbHMCt7mr?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a2ab2a3-1a36-49ec-98c6-08d96d0a1d9e
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2021 05:34:06.5003
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ATF+2rQoRwL6l6wGl6FnvVfP5E8A2aRdMZ0cSHY6T/kW1uiDuXWhtXZPD5cKkL1sq98xo3gEQLDNQFmffi9ylMilkjUHck3GfhoA06RnQ30=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3109
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10093 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2109010029
+X-Proofpoint-ORIG-GUID: 7k-zRxo6zQVLyuiSzCU8FjnUbMhFXvYP
+X-Proofpoint-GUID: 7k-zRxo6zQVLyuiSzCU8FjnUbMhFXvYP
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 1, 2021 at 3:37 AM Darrick J. Wong <djwong@kernel.org> wrote:
->
-> From: Darrick J. Wong <djwong@kernel.org>
->
-> Create a file to document the purpose of each test group that is
-> currently defined in fstests, and add a build script to check that every
-> group mentioned in the tests is also mentioned in the documentation.
->
-
-This is awesome and long due.
-Thanks for doing that!
-
-Minor nits about overlayfs groups below...
-
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  doc/group-names.txt    |  136 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/buildgrouplist |    1
->  tools/check-groups     |   33 ++++++++++++
->  3 files changed, 170 insertions(+)
->  create mode 100644 doc/group-names.txt
->  create mode 100755 tools/check-groups
->
->
-> diff --git a/doc/group-names.txt b/doc/group-names.txt
-> new file mode 100644
-> index 00000000..ae517328
-> --- /dev/null
-> +++ b/doc/group-names.txt
-> @@ -0,0 +1,136 @@
-> +======================= =======================================================
-> +Group Name:            Description:
-> +======================= =======================================================
-> +all                    All known tests, automatically generated by ./check at
-> +                       runtime
-> +auto                   Tests that should be run automatically.  These should
-> +                       not require more than ~5 minutes to run.
-> +quick                  Tests that should run in under 30 seconds.
-> +deprecated             Old tests that should not be run.
-> +
-> +acl                    Access Control Lists
-> +admin                  xfs_admin functionality
-> +aio                    general libaio async io tests
-> +atime                  file access time
-> +attr                   extended attributes
-> +attr2                  xfs v2 extended aributes
-> +balance                        btrfs tree rebalance
-> +bigtime                        timestamps beyond the year 2038
-> +blockdev               block device functionality
-> +broken                 broken tests
-> +cap                    Linux capabilities
-> +casefold               directory name casefolding
-> +ci                     ASCII case-insensitive directory name lookups
-> +clone                  FICLONE/FICLONERANGE ioctls
-> +clone_stress           stress testing FICLONE/FICLONERANGE
-> +collapse               fallocate collapse_range
-> +compress               file compression
-> +convert                        btrfs ext[34] conversion tool
-> +copy                   xfs_copy functionality
-> +copy_range             copy_file_range syscall
-> +copyup                 overlayfs copyup support
-
-The tests in this group exercise copy up.
-There is no such thing as overlayfs without "copyup support",
-so guess my point is - remove the word "support"
-
-> +dangerous              dangerous test that can crash the system
-> +dangerous_bothrepair   fuzzers to evaluate xfs_scrub + xfs_repair repair
-> +dangerous_fuzzers      fuzzers that can crash your computer
-> +dangerous_norepair     fuzzers to evaluate kernel metadata verifiers
-> +dangerous_online_repair        fuzzers to evaluate xfs_scrub online repair
-> +dangerous_repair       fuzzers to evaluate xfs_repair offline repair
-> +dangerous_scrub                fuzzers to evaluate xfs_scrub checking
-> +data                   data loss checkers
-> +dax                    direct access mode for persistent memory files
-> +db                     xfs_db functional tests
-> +dedupe                 FIEDEDUPERANGE ioctl
-> +defrag                 filesystem defragmenters
-> +dir                    directory test functions
-> +dump                   dump and restore utilities
-> +eio                    IO error reporting
-> +encrypt                        encrypted file contents
-> +enospc                 ENOSPC error reporting
-> +exportfs               file handles
-> +filestreams            XFS filestreams allocator
-> +freeze                 filesystem freeze tests
-> +fsck                   general fsck tests
-> +fsmap                  FS_IOC_GETFSMAP ioctl
-> +fsr                    XFS free space reorganizer
-> +fuzzers                        filesystem fuzz tests
-> +growfs                 increasing the size of a filesystem
-> +hardlink               hardlinks
-> +health                 XFS health reporting
-> +idmapped               idmapped mount functionality
-> +inobtcount             XFS inode btree count tests
-> +insert                 fallocate insert_range
-> +ioctl                  general ioctl tests
-> +io_uring               general io_uring async io tests
-> +label                  filesystem labelling
-> +limit                  resource limits
-> +locks                  file locking
-> +log                    metadata logging
-> +logprint               xfs_logprint functional tests
-> +long_rw                        long-soak read write IO path exercisers
-> +metacopy               overlayfs metadata-only copy-up
-> +metadata               filesystem metadata update exercisers
-> +metadump               xfs_metadump/xfs_mdrestore functionality
-> +mkfs                   filesystem formatting tools
-> +mount                  mount option and functionality checks
-> +nested                 nested overlayfs instances
-> +nfs4_acl               NFSv4 access control lists
-> +nonsamefs              overlayfs layers on different filesystems
-> +online_repair          online repair functionality tests
-> +other                  dumping ground, do not add more tests to this group
-> +overlay                        using overlayfs on top of FSTYP
-
-This description is a bit confusing, because the recommended
-way to run overlayfs tests as described in README.overlay is
-to set FSTYP=xfs and run ./check -overlay
-
-I'm struggling for a better description but perhaps:
-"using overlayfs regardless of ./check -overlay flag"?
 
 
-> +pattern                        specific IO pattern tests
-> +perms                  access control and permission checking
-> +pipe                   pipe functionality
-> +pnfs                   PNFS
-> +posix                  POSIX behavior conformance
-> +prealloc               fallocate
-> +preallocrw             fallocate, then read and write
-> +punch                  fallocate punch_hole
-> +qgroup                 btrfs qgroup feature
-> +quota                  filesystem usage quotas
-> +raid                   btrfs RAID
-> +realtime               XFS realtime volumes
-> +recoveryloop           crash recovery loops
-> +redirect               overlayfs redirect_dir feature
-> +remote                 dump and restore with a remote tape
-> +remount                        remounting filesystems
-> +rename                 rename system call
-> +repair                 xfs_repair functional tests
-> +replace                        btrfs device replace
-> +replay                 dm-logwrites replays
-> +resize                 resize2fs functionality tests
-> +richacl                        rich ACL feature
-> +rmap                   XFS reverse mapping exercisers
-> +rotate                 overlayfs feature of some sort"
+On 8/31/21 2:52 PM, Dave Chinner wrote:
+> On Tue, Aug 24, 2021 at 03:44:26PM -0700, Allison Henderson wrote:
+>> Currently attributes are modified directly across one or more
+>> transactions. But they are not logged or replayed in the event of an
+>> error. The goal of log attr replay is to enable logging and replaying
+>> of attribute operations using the existing delayed operations
+>> infrastructure.  This will later enable the attributes to become part of
+>> larger multi part operations that also must first be recorded to the
+>> log.  This is mostly of interest in the scheme of parent pointers which
+>> would need to maintain an attribute containing parent inode information
+>> any time an inode is moved, created, or removed.  Parent pointers would
+>> then be of interest to any feature that would need to quickly derive an
+>> inode path from the mount point. Online scrub, nfs lookups and fs grow
+>> or shrink operations are all features that could take advantage of this.
+>>
+>> This patch adds two new log item types for setting or removing
+>> attributes as deferred operations.  The xfs_attri_log_item will log an
+>> intent to set or remove an attribute.  The corresponding
+>> xfs_attrd_log_item holds a reference to the xfs_attri_log_item and is
+>> freed once the transaction is done.  Both log items use a generic
+>> xfs_attr_log_format structure that contains the attribute name, value,
+>> flags, inode, and an op_flag that indicates if the operations is a set
+>> or remove.
+>>
+>> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+>> ---
+>>   fs/xfs/Makefile                 |   1 +
+>>   fs/xfs/libxfs/xfs_attr.c        |   5 +-
+>>   fs/xfs/libxfs/xfs_attr.h        |  31 +++
+>>   fs/xfs/libxfs/xfs_defer.h       |   2 +
+>>   fs/xfs/libxfs/xfs_log_format.h  |  44 +++-
+>>   fs/xfs/libxfs/xfs_log_recover.h |   2 +
+>>   fs/xfs/scrub/common.c           |   2 +
+>>   fs/xfs/xfs_attr_item.c          | 453 ++++++++++++++++++++++++++++++++
+> 
+> Comment on the overall structure of this file now I've been trying
+> to navigate through it for a little while. It is structured like:
+> 
+> <some attri stuff>
+> <some attrd stuff>
+> static const struct xfs_item_ops xfs_attrd_item_ops = {...}
+> <some more attri stuff>
+> static const struct xfs_item_ops xfs_attri_item_ops = {...}
+> <some attri log recovery stuff>
+> <some attrd log recovery stuff>
+> 
+> IOWs, the attri and attrd functions are interleaved non-obvious
+> ways and that makes it hard to navigate around when trying to find
+> related information. It would make more sense to me to structure
+> this as:
+> 
+> <attri stuff>
+> <attri log recovery stuff>
+> <some attrd stuff>
+> <attrd log recovery stuff>
+> static const struct xfs_item_ops xfs_attri_item_ops = {...}
+> const struct xlog_recover_item_ops xlog_attri_item_ops = {...}
+> static const struct xfs_item_ops xfs_attrd_item_ops = {...}
+> const struct xlog_recover_item_ops xlog_attrd_item_ops = {...}
+> 
+> because then all the related functionality is grouped together. It
+> also puts all the ops structures together in the one place, so we
+> don't have to jump around all over the file when just looking at
+> what ops the items run at different times...
+> 
+Sure, will make a note to re-arrange some of these in the next version
 
-I guess that works :-D
-but to be accurate, this is actually a unionmount testsuite feature -
-at selected test points in the workload, a new upper layer is stacked
-on to overlayfs, so maybe:
-"upper layer rotate tests from the unionmount test suite"?
+Allison
 
-> +rw                     read/write IO tests
-> +samefs                 overlayfs when all layers are on the same fs
-> +scrub                  filesystem metadata scrubbers
-> +seed                   btrfs seeded filesystems
-> +seek                   llseek functionality
-> +send                   btrfs send/receive
-> +shrinkfs               decreasing the size of a filesystem
-> +shutdown               FS_IOC_SHUTDOWN ioctl
-> +snapshot               btrfs snapshots
-> +soak                   long soak tests of any kind
-> +spaceman               xfs_spaceman functional tests
-> +splice                 splice system call
-> +stress                 fsstress filesystem exerciser
-> +subvol                 btrfs subvolumes
-> +subvolume              btrfs subvolumes (again?)
-
-A cleanup patch to fix this typo in btrfs/233?
-
-Thanks,
-Amir.
+> Cheers,
+> 
+> Dave.
+> 
