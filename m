@@ -2,91 +2,101 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB21C3FE214
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 20:11:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 808183FE4F5
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 23:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344435AbhIASMg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Sep 2021 14:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346806AbhIASMU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 14:12:20 -0400
-Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4B4C0617A8
-        for <linux-xfs@vger.kernel.org>; Wed,  1 Sep 2021 11:11:22 -0700 (PDT)
-Received: by mail-qv1-xf32.google.com with SMTP id bn14so293234qvb.12
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Sep 2021 11:11:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
-        b=LD3mpzy1s09M3e/Eheelu/QMtbN6lrYJQ+S1BsYhmG4zP9OQuKOeD1zHV2lZaK7Hdt
-         vXoBMumPRACuZhnwd8TYAFIvdImPe0Zn4DA41GnzHGsnpDZPE0wUFWVFNzgpxF6bh6D8
-         CVxTiiIN7w8BVpPirFLytZKK2cFqqV6q9qR8cw4XmdYYgGZs+MdnDeP+neEr/SbnLI2h
-         mwT6gqJ8+HvNCQei5Zu6b3U+/YcUOepEDfVn6t0IkNG5YzxTV8mH8IqZ4zEsqBchdgxI
-         E/zGH3KCiuS7UdfEMBVKPbpzhhPyh4quLRALvE4iCHtswqSZDgWUuzksodIw8OWwGR1Z
-         0RlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=2joGkq8i8C5vglZO1FYNTlWqLyr4vSiCXKQYXBVnv4Q=;
-        b=keNWobN9NredIr5337Pg6R+Hw0+1bQpklvoACiBCAu3WCVMJX7RnObj/iWBFdsUH+k
-         +/O0Rkqzbk6StZdC34Co3VZ6vWjAj+zSXp8qJQQYlzg83UR//VRfNTiGr6+poNWhnOff
-         mRpY1D02Rs7RueCCh6iQIs2Lc21AbmPoLSS/lBGvh9BrgAzG+nlflD/f1EUbQUbYy+jC
-         Blj924LHUtaupTvhcToHqdgytdpwX/vsaYRE+xNf6GroR9WMetyb1QQPXFuM5LaS99sg
-         bV4yGSRN7lDPJg5v8yL6ISH8maJ60D7wQ9h1eoZbQYhKs7IMgygEY/o+kzvNDtN2Qw6V
-         0ayw==
-X-Gm-Message-State: AOAM533eMqBu4wtI4My7F3xh+gYP2FbBJXMesqGxsbedJupDSS98awVp
-        AvtXQpojWl6whsBBipK0lqGYU09bpaWDHDoJs7l7VSgCPAiGrw==
-X-Google-Smtp-Source: ABdhPJwbbBYGjUEQSS3Bb7EfYk34O3AVuG22pVIF78fkATQG8c+PQmeHgcc35+YrriS74Wl5STB8JbzOasp+8kCVBlk=
-X-Received: by 2002:a67:8c5:: with SMTP id 188mr1017695vsi.4.1630519870726;
- Wed, 01 Sep 2021 11:11:10 -0700 (PDT)
+        id S1344242AbhIAVaf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Sep 2021 17:30:35 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:46321 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344792AbhIAVae (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 17:30:34 -0400
+Received: from dread.disaster.area (pa49-195-182-146.pa.nsw.optusnet.com.au [49.195.182.146])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 627EC80EA48;
+        Thu,  2 Sep 2021 07:29:28 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mLXnS-007bAG-US; Thu, 02 Sep 2021 07:29:26 +1000
+Date:   Thu, 2 Sep 2021 07:29:26 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me
+Subject: Re: [PATCH 5/5] new: only allow documented test group names
+Message-ID: <20210901212926.GB1756565@dread.disaster.area>
+References: <163045514980.771564.6282165259140399788.stgit@magnolia>
+ <163045517721.771564.12357505876401888990.stgit@magnolia>
 MIME-Version: 1.0
-Received: by 2002:ab0:740d:0:0:0:0:0 with HTTP; Wed, 1 Sep 2021 11:11:10 -0700 (PDT)
-From:   CorisBank International <corisbankintlbf@gmail.com>
-Date:   Wed, 1 Sep 2021 11:11:10 -0700
-Message-ID: <CA+25hwzjLgVdtDXYWeuqFBTvAbpc4oxK0dW54s7tjGNyU_m0ow@mail.gmail.com>
-Subject: CORISBANK INTERNATIONAL OFFICIAL NOTIFICATION
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163045517721.771564.12357505876401888990.stgit@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+        a=QpfB3wCSrn/dqEBSktpwZQ==:117 a=QpfB3wCSrn/dqEBSktpwZQ==:17
+        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=7mY_CRzyQrjIPYwugv4A:9 a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Att: Client
+On Tue, Aug 31, 2021 at 05:12:57PM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> Now that we require all group names to be listed in doc/group-names.txt,
+> we can use that (instead of running mkgroupfile) to check if the group
+> name(s) supplied by the user actually exist.  This has the secondary
+> effect of being a second nudge towards keeping the description of groups
+> up to date.
+> 
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> ---
+>  new |   24 +++++++++++-------------
+>  1 file changed, 11 insertions(+), 13 deletions(-)
+> 
+> 
+> diff --git a/new b/new
+> index 2097a883..44777bd6 100755
+> --- a/new
+> +++ b/new
+> @@ -83,6 +83,14 @@ then
+>      exit 1
+>  fi
+>  
+> +# Extract group names from the documentation.
+> +group_names() {
+> +	grep '^[[:lower:][:digit:]_]' doc/group-names.txt | awk '
+> +{if ($1 != "" && $1 != "Group" && $2 != "Name:" && $1 != "all")
+> +	printf("%s\n", $1);
+> +}'
+> +}
+
+Took me a while to realise this was running an awk script for output
+slection but using grep for regex based line selection. Awk can do
+both of these things just fine, and the result is much more
+readable:
+
+group_names() {
+	awk '/^[[:lower:][:digit:]_]/ {
+		if ($1 != "Group" && $2 != "Name:" && $1 != "all")
+			printf("%s\n", $1);
+	}' doc/group-names.txt
+}
 
 
-CORISBANK INTERNATIONAL URGENT NOTIFICATION
+$ awk '/^[[:lower:][:digit:]_]/ { if ($1 != "Group" && $2 != "Name:" && $1 != "all") printf("%s\n", $1); }' t.t
+auto
+quick
+deprecated
+acl
+admin
+aio
+atime
+....
 
-Notification / Notification/ Notification
+Cheers,
 
-Note, We are writing to inform you officially that Finally the Central
-Bank Financial Authority have approved to transfer your $8.2Million
-which was signed by late Mrs Rose Banneth the COVID.19 victim to
-transfer to you, Late Mrs Rose Banneth the France Lady contacted us to
-transfer her fund in our bank to you for Orphanage work before she
-died by the COVID.19
-and as it is now, you will receive your fund through our corresponding
-bank in Dubai [Emirate Investment Bank ] for security reason. Please
-you should reconfirm your details to receive the $8.2Million.
-
-Name, Country, Address, occupations, Age, Telephone number, account
-Details so that we can immediately forward to the World Bank to
-transfer the fund.
-You are advised to comply on timely manner to permit this esteem bank
-transfer your fund as scheduled.
-
-We look forward to serving you better
-Your Financial Comfort Is A Priority
-Thank you for choosing Corisbank International.
-
-Sincerely,
-
-----
-
-Mr Diakarya Ouattara
-Managing Director
-Bank Coris
-Burkina Faso
-+226 556 163 37
-financial_bf_info@accountant.com
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
