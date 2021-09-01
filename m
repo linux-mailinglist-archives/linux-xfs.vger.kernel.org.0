@@ -2,257 +2,360 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CEC43FD2EC
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 07:34:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1880F3FD3D0
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Sep 2021 08:29:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241935AbhIAFfK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Sep 2021 01:35:10 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:12010 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232334AbhIAFfJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 01:35:09 -0400
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 17VNaqcY019479;
-        Wed, 1 Sep 2021 05:34:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=QvGYt8LOKe7qZDuETuBSAvqIHTyXMR6kJWEEBeCyPtM=;
- b=jF77nQqXNJSehDE0JozahXKvRX2Km+3MXvmQLW1il/YUxGuPKFfCzoQZzHr50GJqGody
- Sy0fplNoGYIUlecEG3zQ0HJKKeVWqs4O4tlIDl44qsyNVOfJGP8g+GJNs6QRvAprVT+o
- t+EWtIq7W9x2v/2+exk6nv5du+XwD0t5miIbqup6OkiOG8ftWvON+az/roMkYs+NxcEz
- iZs/6yYx0jdATHgBlnCRMgowNlsP6AZ2hPpPZr6sqjm42JW/KWgTgTpSgYvi51wTzB4w
- 3z5UCJTX/DmG6Fz8CPPz0XV4OGtcPnUJzhsrbfiOVj5DK6PSbnPFS1hx9moWylPPkoTd UQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=QvGYt8LOKe7qZDuETuBSAvqIHTyXMR6kJWEEBeCyPtM=;
- b=Zww0lOppcTo2p5zci3tZJX+Rs5FT6PVJ5tk0af7IGFO26HBgFL5YS/sKrCEoc8+hRBj2
- LFgimJY3MsgKq99FjLwz/qT6de6j+22aq/gzk3JwhxCa4Mbz4rSONGiCDDHi1wA15E2H
- Anrz11ssmmWsHUqm5WHs6y3CC8ZlMXUp8wrAJYkw3wf7VZaXLcxb4cYNCWaMS5Ao7k4r
- rSW111wd4NPqm8n+oVVydp4sJz0tsRkxXVWba1+3LuZZpcfZ89ha2dExJjSqpRvRFcfz
- Ow8r6JCG6g+yCFH4Z596Ld7gi0Q5XJzy2bUJeBxyL5KxOoA0+3yfU4Dm5BBDwMNhkSdU RQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ase02bd9a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Sep 2021 05:34:11 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 1815Pm0J157187;
-        Wed, 1 Sep 2021 05:34:10 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2174.outbound.protection.outlook.com [104.47.58.174])
-        by aserp3030.oracle.com with ESMTP id 3aqb6f674h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Sep 2021 05:34:10 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ALYQAjWroUEwAMeHlr0LV9r1ZoxwxjHvL+dTyUPtfAXRLoUZbp8cV2l1ija+lIFko3RG1zi3Q3o9tsIEuzLKj8MvtYz1qQZ0caJU7LG74ejeCC2/QUbtxye+0y0vK7Eu2ZUPPnVv0JxMBQVYcnmGFD9APNm+0Kg8PntGoexSDyMco1HGQyub1h662CNFYOg1aHgCEl7fBx+EgxuLdkJPyMmtC7DCWKa/t8VzuDxD9K/mTiwo+nJzjpRdAaESzW6aY/UxeH97dsG31vcNNIe1EUNF4Kv6zy6bB3EXj1i3cYcEBElVTUdrUmYJ5EhnJQpbcIYj2qvm9o1Qua+oA834zQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QvGYt8LOKe7qZDuETuBSAvqIHTyXMR6kJWEEBeCyPtM=;
- b=OdbVnxPrJyV9Gxs62u5j6Pbs+oQjduCa/tktCfZdZTfFtBBHNnT7nryr5Un1VYR5oWlJnxDWICuTz3IcQPESv0acZDJ/aluDEbxKNOPrUaLHqGtITITS9e67h14N07KoAQyuK9L3sBZIj79KQHuNfiSt4TMadStZbqU011TtnW9BZNSrHT2Iif3JtochVuNl2XUK2IQdBKMbU3jPKsQb/UVpD3nJEKtdbwquOUtaAgg1MLPwO72hmDQbt+4uSdKoFOA0pzPxwBfPE0KtCwTKurZLy0UKrpCko2yS8TrwHYBcLlk7wT7xUo/2HKFYHCR8TXkrRY1njpKI9T9zYud5Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QvGYt8LOKe7qZDuETuBSAvqIHTyXMR6kJWEEBeCyPtM=;
- b=bryxBhxt0WOPrvIuQSgDuF0mLm2xi/P6m0v+X44E85kwwC/uEmZGbFBUC+jCVtanFWgk8v7T8vDs5F2siV3tXL67eBqCItqIGJs+p3ttSEw/lqtNcO4EPIclA07X8cch6fQ7LhEmUGxk9cQ1p0izMfHCZ651rnCoHIZ0DG/7UQk=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
- by BYAPR10MB3109.namprd10.prod.outlook.com (2603:10b6:a03:14d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4457.23; Wed, 1 Sep
- 2021 05:34:08 +0000
-Received: from BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::7878:545b:f037:e6f]) by BY5PR10MB4306.namprd10.prod.outlook.com
- ([fe80::7878:545b:f037:e6f%9]) with mapi id 15.20.4478.019; Wed, 1 Sep 2021
- 05:34:08 +0000
-Subject: Re: [PATCH v24 06/11] xfs: Add xfs_attr_set_deferred and
- xfs_attr_remove_deferred
-To:     Dave Chinner <david@fromorbit.com>
+        id S242088AbhIAGan (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Sep 2021 02:30:43 -0400
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33758 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229910AbhIAGam (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Sep 2021 02:30:42 -0400
+Received: from dread.disaster.area (pa49-195-182-146.pa.nsw.optusnet.com.au [49.195.182.146])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 36765104E52D;
+        Wed,  1 Sep 2021 16:29:44 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mLJkl-007MKz-5Y; Wed, 01 Sep 2021 16:29:43 +1000
+Date:   Wed, 1 Sep 2021 16:29:43 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Allison Henderson <allison.henderson@oracle.com>
 Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v24 00/11] Log Attribute Replay
+Message-ID: <20210901062943.GX3657114@dread.disaster.area>
 References: <20210824224434.968720-1-allison.henderson@oracle.com>
- <20210824224434.968720-7-allison.henderson@oracle.com>
- <20210901034754.GW3657114@dread.disaster.area>
-From:   Allison Henderson <allison.henderson@oracle.com>
-Message-ID: <67b6c67f-8036-9eec-d55d-a6c4c8d8b4a9@oracle.com>
-Date:   Tue, 31 Aug 2021 22:34:07 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-In-Reply-To: <20210901034754.GW3657114@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0228.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::23) To BY5PR10MB4306.namprd10.prod.outlook.com
- (2603:10b6:a03:211::7)
+ <20210831002010.GS3657114@dread.disaster.area>
+ <2b6b0478-b0df-7e35-b0ac-f02298ccf727@oracle.com>
 MIME-Version: 1.0
-Received: from [192.168.1.167] (67.1.112.125) by SJ0PR03CA0228.namprd03.prod.outlook.com (2603:10b6:a03:39f::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4478.19 via Frontend Transport; Wed, 1 Sep 2021 05:34:08 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c7409a63-f307-45f5-b2dd-08d96d0a1ef6
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3109:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB3109EC96EC6721DBF40C2DE895CD9@BYAPR10MB3109.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Os4i//GcW1yqJtw96O3mjg51qsdu1ya51jUfVOSUUuCpXRVaY5qLN645Loaytsbjd6V40gLWRwcmjQ19duO2MoJ9P5cK4QW7eEaP8s0Ehdt9tSa5YkCQBb+XYN9nkDYrDRLGAttZw3XqBwk46DTzMxij/D8oKlikEqWxEsosClbsBCcG38cd0A/O0vJfwwMgjSHtT4bu05RKQmwyRAUsjdTsoLxPEjci5hSlVEWLn4DEbATSQlyDoExF8NVzQSmND52XamEsCbRxdK8nG9UdahUmHYrFzBxOVFJZRTAI2dmCris0J21DXXFsnMBmyZbN5n/2WIGP/0YrzvqrKHfddEOgdPDl5pIO6Y0ntHYy29kNOrMzfkL6hSfv6USYHfPeA/alpp4FIFYdudt5zJRfANpDhLE2EcYcBkGx5NlaRgN+amoERjvBaoTAu3HFQyO08Hrok3BkPiLiVuv8NXcwpmEiRi8zuPUIcPajHo3aSnKxL3Xx4yjXdjT1WdMGSnJ1FCBcLyULvX3dWZMiBXn7CHsR0dbJ4SnLtsx4SJUec1cQ4nMkJKVOba5pshx/GGCaav6sfyAdsZmZk893yRHa8ZP37ghULWFGzlhzuQcBkxwJmdxiPwAZhJuexl8mtKrasV9UBMNBCez1FSK7EN394xJ9cvHL1my+baNukFlQzihJROEiUA2wAqs2okJmHhxTMW8yLhSrjl6cuHof3mnRgpYJvBjkESFXP+Ydkm1hr7TyDF2YTZsYRhJxatyWpTJiLUXPBCosJriDLujeER2wIw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(366004)(376002)(346002)(39860400002)(136003)(86362001)(36756003)(31696002)(16576012)(316002)(186003)(31686004)(53546011)(6916009)(26005)(38350700002)(4326008)(44832011)(2616005)(2906002)(66476007)(956004)(5660300002)(8676002)(8936002)(38100700002)(66946007)(66556008)(52116002)(6486002)(478600001)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UGMxQy9zUk5ReGhySjlMbnBRb3prRlpaMkNYSjJmMzhsdndOY2E4QjhwT09M?=
- =?utf-8?B?YU9RY3NEL09Qb1hObGtSVDFWK1FwaGsweTR3MXpZREdOS3NDWjE1M1RQRE9P?=
- =?utf-8?B?SzlETzI1T1MxYVBRZkFDa1lmQWJtellUTU9HeU9pa0lOQkxLdnhSZFdIenhl?=
- =?utf-8?B?Qng3RGpPRjdXb05jODBhVFRjRDdhY3dOc1pOZmFPZ3dhZk1HMVRXd29kYjc3?=
- =?utf-8?B?QXpSSVdUSFY4dS9HSHlMS2hlTkJRVTlJWFlzU3Z6UUFhUDhxYWdWTWVFNjRZ?=
- =?utf-8?B?cGo0SjFURkk4WnJBcnh4UXhwMHlCQ05WSVdGL1Jadzd1cW5IQ1N2WlczdVBs?=
- =?utf-8?B?MU9xbklSVUdzMzRlVEtMby81eGJEdzhVVERHNVFYNDhabEwrUUxBcFlzOFRW?=
- =?utf-8?B?bDBwM0xHekI3dVozNG1yZXZCYXRBenQ0bWlBazh0QzBqODZwVHJLRGtlVnpD?=
- =?utf-8?B?bnY5VnN3TlNtN3JqTUg5Ti9ob01HOUZ0N015c0IreTJGZHlsckNGSFdXeCtU?=
- =?utf-8?B?aHNSaWxIWk9WY1h1SytJUG9ITXRJR3dvQk56YlFSQmNreU9GWUsvYlppbWJv?=
- =?utf-8?B?UHBzdUhWYWtrdzhFM3lGLyt0VHVPNHRHTDRiUjJRWFVZN0xCRFRFN0I4R1Iy?=
- =?utf-8?B?YjZYWGFMTmE2UlhaZG5ha0RFSkdqNDJvNVlMUm5UQnV1YTdVYkNqQ0pFbWxp?=
- =?utf-8?B?R2ZQeXNxRVdERVVmVWtOMUNkTlRSOUdsSWRJSnRiaTBFQU1qUG1pelR2RUlF?=
- =?utf-8?B?K1hYb1Q5cmFUaE5MTVE0VE1uMDg4MThNY25WYkN1K1pad1V5YnpwMEI5bjF1?=
- =?utf-8?B?QTYyL1I0VmQrTUdKbmJoZjlWcWdDUis3cjZUbFhJd2lMa1krOFZDQ09BK2FU?=
- =?utf-8?B?NE1JM01NbjRiT2o1SVRjMFRVRy8vSWNhZVl6V242RVd0UllkYmdnT1NLWWsw?=
- =?utf-8?B?MGlBNUJXTDc0Tk1HaUs0UW8xNzJUazFVQ2FkSytYb2p6cFNVN2NnbVdQNFZI?=
- =?utf-8?B?Tm9nU0dFQ0pKVmRoRitnSGpoNnAyMUVmQlVIQnFZNElvQy9WMTAwQjVNTUty?=
- =?utf-8?B?NllkL1RrZEJ5NXluMDYzNmtDT3lVb2RyaFJibEZrVERTT3NTbzAwWVFoRSt0?=
- =?utf-8?B?bHFXbHo0VXg3c3VhdzJsS0t3ZURUK01Uc01tbkw3MUJKTUtuZXNiK21Jc1p6?=
- =?utf-8?B?c2NlZG9UVEZQb0p4SGo4ajl1Rk94UFpkRzUzRGZyQ3ZpNXBxejQzUU9ZZ2dE?=
- =?utf-8?B?NDhIVC9RcE81aVBSR1FuWG1iTHVGS0hlTTVBdDBoYzkxT3ljcXdlcEhuM2xj?=
- =?utf-8?B?aDBZSTZyMFZYVlRGTnhvNWhEdkdYWTErREpSaVpSbGVoRXBJL0xjMFh3cUxj?=
- =?utf-8?B?SlBhdGtSWTNmSUMwL0dqdjlQWFBuRGRVT2FWU3RaWnpWVG5idWxOUWxjZHBC?=
- =?utf-8?B?Z3RtUnE5WmtSVlR2cFdsQUUrL0RVcmdhaFFpbXF6SWljbFdJTmc1enpoQmJs?=
- =?utf-8?B?UklsdVZQTzVhN3NGMFB0elNxMFVmekplT29LNHlLM0NhVHZXcXI3bE5rQU9X?=
- =?utf-8?B?Z2ZmS1BKUUlrbHk2V3h6c1l2ajVGd1JoNHllTEZ5NGVIWWlQWFozdkp2NE5F?=
- =?utf-8?B?eDZaRWU2NHJ3dGtyUVBpaGxuNlFuZVZUUkhsNzVDMC9sVkRFRzA0TGlFbkVZ?=
- =?utf-8?B?Y1pZenc0SzBmZ09rMDVGb0FpdjBTVG01eHBpZUhRSWdVUEpPWVZYUS9DREVF?=
- =?utf-8?Q?WjP8JUE/WLlc8pDr6LMEbJ6BT8KPRnSXnEcp80T?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7409a63-f307-45f5-b2dd-08d96d0a1ef6
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2021 05:34:08.7226
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZasP43XxIN80v4YsKi5wIFK6cIl8ueNxDN8hjduJilCXHodIcnAVVVmlgik/QJojiH6WcIFaZw/ercRedq7yqda6jIWV7b8PX/zWdDpVH0Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3109
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10093 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2109010029
-X-Proofpoint-GUID: ItAXgKFv9-wRTbzy1E5YEkiQwi7Vq1ku
-X-Proofpoint-ORIG-GUID: ItAXgKFv9-wRTbzy1E5YEkiQwi7Vq1ku
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b6b0478-b0df-7e35-b0ac-f02298ccf727@oracle.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
+        a=QpfB3wCSrn/dqEBSktpwZQ==:117 a=QpfB3wCSrn/dqEBSktpwZQ==:17
+        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=7-415B0cAAAA:8
+        a=oblMXyimVlj30a4j4JUA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Tue, Aug 31, 2021 at 11:27:48AM -0700, Allison Henderson wrote:
+> 
+> 
+> On 8/30/21 5:20 PM, Dave Chinner wrote:
+> > On Tue, Aug 24, 2021 at 03:44:23PM -0700, Allison Henderson wrote:
+> > > Hi all,
+> > > 
+> > > This set is a subset of a larger series parent pointers. Delayed attributes allow
+> > > attribute operations (set and remove) to be logged and committed in the same
+> > > way that other delayed operations do. This allows more complex operations (like
+> > > parent pointers) to be broken up into multiple smaller transactions. To do
+> > > this, the existing attr operations must be modified to operate as a delayed
+> > > operation.  This means that they cannot roll, commit, or finish transactions.
+> > > Instead, they return -EAGAIN to allow the calling function to handle the
+> > > transaction.  In this series, we focus on only the delayed attribute portion.
+> > > We will introduce parent pointers in a later set.
+> > > 
+> > > The set as a whole is a bit much to digest at once, so I usually send out the
+> > > smaller sub series to reduce reviewer burn out.  But the entire extended series
+> > > is visible through the included github links.
+> 
+> Some of this we worked out in the chat last night, but I will echo it here
+> for the archives
+> 
+> > 
+> > Ok, so like I did with Darrick's deferred inactivation series, the
+> > first thing I'm doing here is throwing this patchset at
+> > scalability/performance worklaods and finding out what is different.
+> > 
+> > I've merged this series with 5.14 + xfs/for-next + xfs-cil-scale and
+> > then run some tests on it. First up is fsmark creating zero length
+> > files w/ 64 byte xattrs. This should stress only shortform attribute
+> > manipulations.
+> > 
+> > I have not enabled delayed attributes yet (i.e.
+> > /sys/fs/xfs/debug/larp = 0)
+> > 
+> > First thing I notice is the transaction commit rate during create is
+> > up around 900k/s, so we are doing 3 transactions per inode - 1 for
+> > create, 2 for attributes. That looks like a regression - existing
+> > shortform attribute creation only takes a single transaction commit,
+> > so this workload prior to this patchset only ran at 600k commits/s.
+> > 
+> > Note that hte only reason I'm getting 900k transactions/s is the
+> > CIL scalability patchset - without that the system tops out at ~800k
+> > transactions/s and so this would be a significant performance
+> > regression (20%) vs the current xfs/for-next code.
+> > 
+> > Essentially, this looks like we are doing an extra transaction
+> > commit to defer the creation of the attribute, then doing another
+> > transaction to actually modify the attribute. i.e.:
+> > 
+> >   - 11.04% xfs_attr_set
+> >      - 8.70% xfs_trans_commit
+> >         - 8.69% __xfs_trans_commit
+> > 	  - 5.10% xfs_defer_finish_noroll
+> > 	     - 3.74% xfs_defer_trans_roll
+> > 		- 3.57% xfs_trans_roll
+> > 		   - 3.13% __xfs_trans_commit
+> > 		      - 3.01% xlog_cil_commit
+> > 			   0.66% down_read
+> > 			   0.63% xfs_log_ticket_regrant
+> > 	     - 1.16% xfs_attr_finish_item
+> > 		- 1.06% xfs_trans_attr_finish_update
+> > 		   - 1.03% xfs_attr_set_iter
+> > 		      - 1.01% xfs_attr_sf_addname
+> > 			 - 0.99% xfs_attr_try_sf_addname
+> > 			    - 0.61% xfs_attr_shortform_addname
+> > 				 0.55% xfs_attr_shortform_add
+> > 
+> > 
+> > AFAICT, for non-delayed attributes, this first transaction commit
+> > logs the inode but does not create intent or intent done items
+> > (returns NULL for both operations), so just rolls and runs the
+> > ->finish_item. So it would seem that the first transaction just
+> > changes the inode timestamps and does nothing else.
+> > 
+> > Firstly, this means the inode timestamp change is not atomic w.r.t.
+> > the attribute change the timestamp change relates to and it's
+> > essentially new overhead for the non-delayed path.
+> > 
+> > Looking at the unlink path, I see the same thing - there's an extra
+> > transaction for the attr remove path, the same as the attr set path.
+> > This drives the unlink path to 1.1 million transaction commits/sec
+> > instead of 800k/s, so it's likely that there's a substantial
+> > performance regression here on a kernel without the CIL scalability
+> > patchset.
+> > 
+> > IOWs, there's significant behavioural changes with the non-delayed
+> > logging version of this patchset, both in terms of performance and
+> > the atomicity of changes that appear in the journal and hence
+> > recovery behaviour.
+> > 
+> > At this point I have to ask: why are we trying to retain the "old"
+> > way of doing things (even for testing) if it is substantially
+> > changing behaviour and on-disk journal contents for attribute
+> > modifications?
+> Per the chat discussion, we have to keep both methods since sb v4 would not
+> use the new log entries.
 
+Yup, but we likely have better reasons than this. Tests I've run
+today have indicated that as the xattr size goes up, the performance
+regression of the delayed attrs gets worse. At max sized xattrs,
+performance is only ~25% of the existing attr implementation.
 
-On 8/31/21 8:47 PM, Dave Chinner wrote:
-> On Tue, Aug 24, 2021 at 03:44:29PM -0700, Allison Henderson wrote:
->> From: Allison Collins <allison.henderson@oracle.com>
->>
->> These routines set up and queue a new deferred attribute operations.
->> These functions are meant to be called by any routine needing to
->> initiate a deferred attribute operation as opposed to the existing
->> inline operations. New helper function xfs_attr_item_init also added.
->>
->> Finally enable delayed attributes in xfs_attr_set and xfs_attr_remove.
->>
->> Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
->> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> .....
->>   
->> +STATIC int
->> +xfs_attr_item_init(
->> +	struct xfs_da_args	*args,
->> +	unsigned int		op_flags,	/* op flag (set or remove) */
->> +	struct xfs_attr_item	**attr)		/* new xfs_attr_item */
->> +{
->> +
->> +	struct xfs_attr_item	*new;
->> +
->> +	new = kmem_zalloc(sizeof(struct xfs_attr_item), KM_NOFS);
-> 
-> In transaction context here so we don't need KM_NOFS.
-ok, will remove
+Largely the problem is the number of copies of the xattr value we
+end up in memory when we are using delalyed attrs. In the current
+case, we have this all in a single syscall context:
 
-> 
->> +	new->xattri_op_flags = op_flags;
->> +	new->xattri_dac.da_args = args;
->> +
->> +	*attr = new;
->> +	return 0;
->> +}
-> 
-> Why doesn't this just return the object or NULL on allocation
-> failure? What other error could it ever return?
-I had adopted this function signature just to be consistent with other 
-*_item_init routines at the time.  Mostly just trying to be uniform, 
-though they may have changed since.  This patch spent some time on the 
-back burner while we were more focused on the state machine refactoring.
+	- xattr value allocated by VFS
+	- attached to xfs_da_args
+	- xfs_da_args passed to xfs_attr_rmtval_set_value() where we
+	  allocate buffer(s) to hold the encoded name.
+	- buffer is written to disk.
+	- xattr VFS value freed.
 
-> 
->> +
->> +/* Sets an attribute for an inode as a deferred operation */
->> +int
->> +xfs_attr_set_deferred(
->> +	struct xfs_da_args	*args)
->> +{
->> +	struct xfs_attr_item	*new;
->> +	int			error = 0;
->> +
->> +	error = xfs_attr_item_init(args, XFS_ATTR_OP_FLAGS_SET, &new);
->> +	if (error)
->> +		return error;
-> 
-> i.e.
-> 	attri = xfs_attr_item_init(args, XFS_ATTR_OP_FLAGS_SET);
-> 	if (!attri)
-> 		return -ENOMEM;
-> 
->> +
->> +	xfs_defer_add(args->trans, XFS_DEFER_OPS_TYPE_ATTR, &new->xattri_list);
->> +
->> +	return 0;
->> +}
->> +
->> +/* Removes an attribute for an inode as a deferred operation */
->> +int
->> +xfs_attr_remove_deferred(
->> +	struct xfs_da_args	*args)
->> +{
->> +
->> +	struct xfs_attr_item	*new;
->> +	int			error;
->> +
->> +	error  = xfs_attr_item_init(args, XFS_ATTR_OP_FLAGS_REMOVE, &new);
->> +	if (error)
->> +		return error;
->> +
->> +	xfs_defer_add(args->trans, XFS_DEFER_OPS_TYPE_ATTR, &new->xattri_list);
->> +
->> +	return 0;
->> +}
-> 
-> We really should not use "new" as a variable name. As a general
-> rule, the common pattern set by this file is that xfs_attri_item
-> objects in a function are named "attri". Just because it's newly
-> allocated doesn't mean we should use a different convention for
-> naming xfs_attri_item objects...
-> 
-Ok, I had seen the pattern around and reused it.  Will change to attri
+And the xfs_buf is freed when memory pressure occurs.
 
-Allison
+So, essentially we have two copies of the xattr value and two
+memcpy()s of it to get it to disk.
 
-> Cheers,
+Now, with delayed attrs we have this in the syscall context:
+
+	- xattr value allocated by VFS
+	- attached to xfs_da_args
+	- attached to xfs_attri_item
+	- attri item intent gets created, allocates a 64k+ shadow
+	  buffer and memcpy()s the value into it.
+	- intent gets committed and attached to the CIL
+	- xfs_da_args passed to xfs_attr_rmtval_set_value() where we
+	  allocate buffer(s) to hold the encoded name.
+	- buffer is written to disk.
+	- xattr VFS value freed.
+
+Now userspace runs more xattr creation syscalls, all queuing up
+shadow buffers on the CIL. memory footprint goes up massively.
+
+Some time later, the CIL commits and we:
+	- shadow buffer attached to CIL commit
+	- memcpy() the value from the shadow buffer to the iclog
+	- commit the CIL checkpoint
+	- on CIL checkpoint completion, shadow buffer is freed.
+
+And the xfs_bufs is freed when memory pressure occurs.
+
+The result is that with delayed attrs, large attr creation hammers
+the page allocator really badly - more than 50% of the CPU time is
+spent trying to allocate pages and compact memory into contiguous
+regions and so performance goes way down. e.g.
+
+- 51.90% xlog_cil_commit
+ - 36.96% kvmalloc_node
+    - 36.51% __kmalloc_node
+       - 36.32% kmalloc_large_node
+	  - 36.24% __alloc_pages
+	     - 34.53% __alloc_pages_slowpath.constprop.0
+		- 33.80% __alloc_pages_direct_compact
+		   - 33.62% try_to_compact_pages
+		      - compact_zone_order
+			 - 30.58% compact_zone
+			      14.72% PageHuge
+
+I suspect we need to look at our use of kvmalloc() and the flags we
+pass it because I think if we can't get contiguous ranges
+immediately, we should go straight to vmalloc rather than burn a
+dozen CPUs trying to compact memory...
+
+The amount we log also goes way up.  At 16 threads and 4kB xattrs,
+the log alone is sustaining more than 1GB/s throughput at 50k xattrs
+creates/s.  There is over 2GB/s going to disk.
+
+With 64k xattrs, there is over 2.5GB/s being written to the log and
+just over 3GB/s being written to disk. Performance is about 9000
+xattr creates/s.
+
+In comparison, with delayed attrs turned off for 64k xattrs, log
+throughput is roughly 500MB/s, disk throughput is between 3.5-4GB/s
+and the create rate is around 45,000 xattrs/s. So you can see that
+logging large xattrs really hurts performance.
+
+We want delayed attrs for modifying attributes atomically
+with other inode modifications (i.e. parent pointers, security
+labels, ACLs, etc) and none of these use cases use large xattrs -
+they are all relatively small and so the logging and memory overhead
+of delayed attrs isn't a huge deal for them. For anything else,
+small or large, a 10-15% regression is a deal breaker (think ceph,
+samba, etc).
+
+So I think we're going to need to select attribute modification
+behaviour at the call site. e.g. from xattr syscalls we don't get
+any real integrity benefit from logging xattrs, so maybe this path
+always uses the unlogged path. The we can change the internal create
+path to use delayed attrs for parent pointers and security attrs.
+As Darrick said, this is likely what the current larp debug knob
+should turn into - caller selected behaviour.
+
+> > Ok, there's the first failure.
+> > 
+> > This looks like it's a problem with xfs_attri_item_{size,format} in
+> > calculating the number of bytes to log. They use ATTR_NVEC_SIZE() to
+> > calculate the number of bytes of copy from the attribute item which
+> > rounds up the length to copy to 4 byte aligned values. I'm not sure
+> > what this function is calculating:
+> > 
+> > /* iovec length must be 32-bit aligned */
+> > static inline size_t ATTR_NVEC_SIZE(size_t size)
+> > {
+> >          return size == sizeof(int32_t) ? size :
+> > 	               sizeof(int32_t) + round_up(size, sizeof(int32_t));
+> > }
+> > 
+> > It appears to be saying if the size == 4, then return 4, otherwise
+> > return 4 + roundup(size)... which leads me to struct
+> > xfs_attri_log_format:
+> > 
+> > struct xfs_attri_log_format {
+> >          uint16_t        alfi_type;      /* attri log item type */
+> >          uint16_t        alfi_size;      /* size of this item */
+> >          uint32_t        __pad;          /* pad to 64 bit aligned */
+> >          uint64_t        alfi_id;        /* attri identifier */
+> >          uint64_t        alfi_ino;       /* the inode for this attr operation */
+> >          uint32_t        alfi_op_flags;  /* marks the op as a set or remove */
+> >          uint32_t        alfi_name_len;  /* attr name length */
+> >          uint32_t        alfi_value_len; /* attr value length */
+> >          uint32_t        alfi_attr_flags;/* attr flags */
+> > };
+> > 
+> > I don't see where the extra 4 bytes for the attribute vector size
+> > comes from. It's not needed to store the length, so this could
+> > oversize the amount of data to be copied from the source
+> > buffer by up to 7 bytes?
+> > 
+> > I can see that it might need rounding with the existing
+> > log code (because the formatter is responsible for 32 bit alignment
+> > of log vectors), but that goes away with the CIL scalability
+> > patchset that always aligns iovecs to 4 byte alignment so the
+> > formatters do not need to do that.
 > 
-> Dave.
+> I think we figured this out last night, initially this was here for an
+> assertion check in the log code, but I think just the round up will suffice
+> for the check.
+
+I've got a cleaner solution in the works - we should be hiding the
+alignment behind the log iovec API, not force callers to know about
+it and always get it right.
+
+> > Hiding it in a "macro" is not necessary, either - look at how
+> > xfs_inode_item_{data,attr}_fork_size handle the rounding up of the
+> > local format fork size. They round up the fork byte count to 4
+> > directly, and the format code copies those bytes because
+> > xfs_idata_realloc() allocates those bytes.
+> > 
+> > However, for the attribute buffers, this isn't guaranteed. Look at
+> > xfs_xattr_set():
+> > 
+> >          struct xfs_da_args      args = {
+> >                  .dp             = XFS_I(inode),
+> >                  .attr_filter    = handler->flags,
+> >                  .attr_flags     = flags,
+> >                  .name           = name,
+> >                  .namelen        = strlen(name),
+> >                  .value          = (void *)value,
+> >                  .valuelen       = size,
+> >          };
+> > 
+> > There is no rounding up of the name or value lengths, and these end
+> > up directly referenced by the deferred logging via xfs_attr_log_item()
+> > and attrip->da_args->...
+> > 
+> >          attrip->attri_name = (void *)attr->xattri_da_args->name;
+> >          attrip->attri_value = attr->xattri_da_args->value;
+> >          attrip->attri_name_len = attr->xattri_da_args->namelen;
+> >          attrip->attri_value_len = attr->xattri_da_args->valuelen;
+> > 
+> > We then pass those pointers directly to xlog_iovec_copy() but with a
+> > rounded up length that is longer than the source buffer:
+> > 
+> >          xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_ATTR_NAME,
+> >                          attrip->attri_name,
+> >                          ATTR_NVEC_SIZE(attrip->attri_name_len));
+> >          if (attrip->attri_value_len > 0)
+> >                  xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_ATTR_VALUE,
+> >                                  attrip->attri_value,
+> >                                  ATTR_NVEC_SIZE(attrip->attri_value_len));
+> > 
+> > So while this might not be the source of the above crash, it's
+> > certainly a bug that needs fixing.
+> > 
+> > At this point, I'm just going to hack on the code to make it work,
+> > and we can go from there...
 > 
+> I think when we left off last night, we are more concerned with the extra
+> transaction overhead in the perf captures.  I will see if I can replicate
+> what you are seeing with perf and maybe we can work out some short cuts.
+> Thank for your help here!
+
+Yup, there's a few issues. I've hacked out the initial transaction
+for non-delayed attrs and that brings the commit count down as
+expected. it might be acceptible, but we'll see.
+
+I've also added intent whiteouts to try to avoid having to log
+intents that are completed before the intent has been written to the
+log. With that in place, the above large xattr creation workloads
+have relatively consistent log throughput of around 600-700MB/s, and
+performance for 4k and 64kB xattrs roughly doubles. It's still way
+behind the current implementation, though, because it hammers the
+page allocator even harder now. However, intent whiteouts are
+generic, so I'll write this up into a separate patchset that
+addresses all the other types of intents we have as well.
+
+There's some other things we can potentially do to minimise the
+memory footprint and the number of memcpy()s of the logged values,
+so I'll look into these tomorrow.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
