@@ -2,265 +2,226 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 235A93FEBC6
-	for <lists+linux-xfs@lfdr.de>; Thu,  2 Sep 2021 11:59:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 518EA3FEFCA
+	for <lists+linux-xfs@lfdr.de>; Thu,  2 Sep 2021 17:03:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233585AbhIBKAf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 2 Sep 2021 06:00:35 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:48521 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233710AbhIBKAe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 Sep 2021 06:00:34 -0400
-Received: from dread.disaster.area (pa49-195-182-146.pa.nsw.optusnet.com.au [49.195.182.146])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id CDA5D80D5DB
-        for <linux-xfs@vger.kernel.org>; Thu,  2 Sep 2021 19:59:32 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1mLjVL-007nJ2-RB
-        for linux-xfs@vger.kernel.org; Thu, 02 Sep 2021 19:59:31 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.94)
-        (envelope-from <david@fromorbit.com>)
-        id 1mLjVL-003pD3-JQ
-        for linux-xfs@vger.kernel.org; Thu, 02 Sep 2021 19:59:31 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 7/7] xfs: reduce kvmalloc overhead for CIL shadow buffers
-Date:   Thu,  2 Sep 2021 19:59:27 +1000
-Message-Id: <20210902095927.911100-8-david@fromorbit.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210902095927.911100-1-david@fromorbit.com>
-References: <20210902095927.911100-1-david@fromorbit.com>
+        id S1345655AbhIBPEG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 Sep 2021 11:04:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229941AbhIBPEG (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 2 Sep 2021 11:04:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 958B060BD3;
+        Thu,  2 Sep 2021 15:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630594987;
+        bh=Tjt0PHy0qq37NTeabGyPABBmpSbllYCUDPs9hhZQadU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B0t0/qK6WPrqjE/bKYYIOuS2FgpDethbqV3mmXlBkOFm+4etMj5fqNN3rzx+PM6Xj
+         acaMt5KBrREtNOpVlRrnIdVdN12JgGhutFQk9LGBnu0nv5a1UXtq2CUAYF8Z2a1pzP
+         6ARvwsx4soZxLAJtPhCU1WV7S/aLbbUmFDqfzTcR7L7XDjrF+lYmwvHOaO+52ZH+rR
+         ajRx2y0e/w/DdJ1wh/3bu4EtJpuxjMQ2Jfo4WnmlLq7Qn8cT1eIl6y4DOcJqOUEsJH
+         QxaFOprMic/QBm1PXG5885h/8IZZ7o1OJUDmUb+sB7ZuqrtOECRbp0wRHdJMLaIApC
+         Yq2B293x4vWSw==
+Date:   Thu, 2 Sep 2021 08:03:07 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Eryu Guan <guaneryu@gmail.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>, Eryu Guan <guan@eryu.me>
+Subject: Re: [PATCH 4/5] tools: make sure that test groups are described in
+ the documentation
+Message-ID: <20210902150307.GF9942@magnolia>
+References: <163045514980.771564.6282165259140399788.stgit@magnolia>
+ <163045517173.771564.1524162806861567173.stgit@magnolia>
+ <CAOQ4uxi7205Ae+un1w4C4Dzh9-SykL=ogHQSBH=nnVGDkPfkhw@mail.gmail.com>
+ <20210901164311.GB9911@magnolia>
+ <CAOQ4uxgJz6OBmV=SD1fp9tkCAfiAhxjdCr+fxGd4ko4Y6NUscA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Tu+Yewfh c=1 sm=1 tr=0
-        a=QpfB3wCSrn/dqEBSktpwZQ==:117 a=QpfB3wCSrn/dqEBSktpwZQ==:17
-        a=7QKq2e-ADPsA:10 a=20KFwNOVAAAA:8 a=BYTb1cA_JtdTmwEp6ZAA:9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxgJz6OBmV=SD1fp9tkCAfiAhxjdCr+fxGd4ko4Y6NUscA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Thu, Sep 02, 2021 at 07:49:51AM +0300, Amir Goldstein wrote:
+> On Wed, Sep 1, 2021 at 7:43 PM Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > On Wed, Sep 01, 2021 at 07:46:01AM +0300, Amir Goldstein wrote:
+> > > On Wed, Sep 1, 2021 at 3:37 AM Darrick J. Wong <djwong@kernel.org> wrote:
+> > > >
+> > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > >
+> > > > Create a file to document the purpose of each test group that is
+> > > > currently defined in fstests, and add a build script to check that every
+> > > > group mentioned in the tests is also mentioned in the documentation.
+> > > >
+> > >
+> > > This is awesome and long due.
+> > > Thanks for doing that!
+> > >
+> > > Minor nits about overlayfs groups below...
+> >
+> > Heh, yeah, thanks for making corrections. :)
+> >
+> > > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > > ---
+> > > >  doc/group-names.txt    |  136 ++++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  include/buildgrouplist |    1
+> > > >  tools/check-groups     |   33 ++++++++++++
+> > > >  3 files changed, 170 insertions(+)
+> > > >  create mode 100644 doc/group-names.txt
+> > > >  create mode 100755 tools/check-groups
+> > > >
+> > > >
+> > > > diff --git a/doc/group-names.txt b/doc/group-names.txt
+> > > > new file mode 100644
+> > > > index 00000000..ae517328
+> > > > --- /dev/null
+> > > > +++ b/doc/group-names.txt
+> > > > @@ -0,0 +1,136 @@
+> > > > +======================= =======================================================
+> > > > +Group Name:            Description:
+> > > > +======================= =======================================================
+> > > > +all                    All known tests, automatically generated by ./check at
+> > > > +                       runtime
+> > > > +auto                   Tests that should be run automatically.  These should
+> > > > +                       not require more than ~5 minutes to run.
+> > > > +quick                  Tests that should run in under 30 seconds.
+> > > > +deprecated             Old tests that should not be run.
+> > > > +
+> > > > +acl                    Access Control Lists
+> > > > +admin                  xfs_admin functionality
+> > > > +aio                    general libaio async io tests
+> > > > +atime                  file access time
+> > > > +attr                   extended attributes
+> > > > +attr2                  xfs v2 extended aributes
+> > > > +balance                        btrfs tree rebalance
+> > > > +bigtime                        timestamps beyond the year 2038
+> > > > +blockdev               block device functionality
+> > > > +broken                 broken tests
+> > > > +cap                    Linux capabilities
+> > > > +casefold               directory name casefolding
+> > > > +ci                     ASCII case-insensitive directory name lookups
+> > > > +clone                  FICLONE/FICLONERANGE ioctls
+> > > > +clone_stress           stress testing FICLONE/FICLONERANGE
+> > > > +collapse               fallocate collapse_range
+> > > > +compress               file compression
+> > > > +convert                        btrfs ext[34] conversion tool
+> > > > +copy                   xfs_copy functionality
+> > > > +copy_range             copy_file_range syscall
+> > > > +copyup                 overlayfs copyup support
+> > >
+> > > The tests in this group exercise copy up.
+> > > There is no such thing as overlayfs without "copyup support",
+> > > so guess my point is - remove the word "support"
+> >
+> > OK.
+> >
+> > > > +dangerous              dangerous test that can crash the system
+> > > > +dangerous_bothrepair   fuzzers to evaluate xfs_scrub + xfs_repair repair
+> > > > +dangerous_fuzzers      fuzzers that can crash your computer
+> > > > +dangerous_norepair     fuzzers to evaluate kernel metadata verifiers
+> > > > +dangerous_online_repair        fuzzers to evaluate xfs_scrub online repair
+> > > > +dangerous_repair       fuzzers to evaluate xfs_repair offline repair
+> > > > +dangerous_scrub                fuzzers to evaluate xfs_scrub checking
+> > > > +data                   data loss checkers
+> > > > +dax                    direct access mode for persistent memory files
+> > > > +db                     xfs_db functional tests
+> > > > +dedupe                 FIEDEDUPERANGE ioctl
+> > > > +defrag                 filesystem defragmenters
+> > > > +dir                    directory test functions
+> > > > +dump                   dump and restore utilities
+> > > > +eio                    IO error reporting
+> > > > +encrypt                        encrypted file contents
+> > > > +enospc                 ENOSPC error reporting
+> > > > +exportfs               file handles
+> > > > +filestreams            XFS filestreams allocator
+> > > > +freeze                 filesystem freeze tests
+> > > > +fsck                   general fsck tests
+> > > > +fsmap                  FS_IOC_GETFSMAP ioctl
+> > > > +fsr                    XFS free space reorganizer
+> > > > +fuzzers                        filesystem fuzz tests
+> > > > +growfs                 increasing the size of a filesystem
+> > > > +hardlink               hardlinks
+> > > > +health                 XFS health reporting
+> > > > +idmapped               idmapped mount functionality
+> > > > +inobtcount             XFS inode btree count tests
+> > > > +insert                 fallocate insert_range
+> > > > +ioctl                  general ioctl tests
+> > > > +io_uring               general io_uring async io tests
+> > > > +label                  filesystem labelling
+> > > > +limit                  resource limits
+> > > > +locks                  file locking
+> > > > +log                    metadata logging
+> > > > +logprint               xfs_logprint functional tests
+> > > > +long_rw                        long-soak read write IO path exercisers
+> > > > +metacopy               overlayfs metadata-only copy-up
+> > > > +metadata               filesystem metadata update exercisers
+> > > > +metadump               xfs_metadump/xfs_mdrestore functionality
+> > > > +mkfs                   filesystem formatting tools
+> > > > +mount                  mount option and functionality checks
+> > > > +nested                 nested overlayfs instances
+> > > > +nfs4_acl               NFSv4 access control lists
+> > > > +nonsamefs              overlayfs layers on different filesystems
+> > > > +online_repair          online repair functionality tests
+> > > > +other                  dumping ground, do not add more tests to this group
+> > > > +overlay                        using overlayfs on top of FSTYP
+> > >
+> > > This description is a bit confusing, because the recommended
+> > > way to run overlayfs tests as described in README.overlay is
+> > > to set FSTYP=xfs and run ./check -overlay
+> > >
+> > > I'm struggling for a better description but perhaps:
+> > > "using overlayfs regardless of ./check -overlay flag"?
+> >
+> > Hmm.  Since I'm the author of the only test that uses this tag, I guess
+> > I'm the authority (ha!) on what the name actually means.
+> >
+> > That test (generic/631) is a regression test for a XFS whiteout handling
+> > bug that can only be reproduced by layering overlayfs atop xfs.
+> > Overlayfs is incidental to reproducing the XFS bug, but AFAIK overlayfs
+> > is the only in-kernel user of whiteout, which is why it's critical here.
+> >
+> > It's not right to make it "_supported_fs overlay" because we're not
+> > testing overlayfs functionality; we're merely using it as a stick to
+> > poke another filesystem.
+> 
+> Yes. I know.
+> Note that while this is the only case of _require_extra_fs overaly
+> there is another case of _require_extra_fs ext2 (xfs/049)
+> 
+> >
+> > How about: "regression tests that require the use of overlayfs in a
+> > targetted configuration" ?
+> >
+> 
+> TBH, I do not think it is wise to tag the test by the test method
+> rather than the tested functionality.
 
-Oh, let me count the ways that the kvmalloc API sucks dog eggs.
+<nod> It seemed kinda awkward to me.
 
-The problem is when we are logging lots of large objects, we hit
-kvmalloc really damn hard with costly order allocations, and
-behaviour utterly sucks:
+> What is more likely?
+> that a tester wants to run all tests that use overlay over FSTYP?
+> Or that a tester wants to run all tests to verify whiteout related
+> behavior after changing whiteout related code?
+> 
+> I suggest that you re-tag this test as 'whiteout', which is documented
+> already.
 
-     - 49.73% xlog_cil_commit
-	 - 31.62% kvmalloc_node
-	    - 29.96% __kmalloc_node
-	       - 29.38% kmalloc_large_node
-		  - 29.33% __alloc_pages
-		     - 24.33% __alloc_pages_slowpath.constprop.0
-			- 18.35% __alloc_pages_direct_compact
-			   - 17.39% try_to_compact_pages
-			      - compact_zone_order
-				 - 15.26% compact_zone
-				      5.29% __pageblock_pfn_to_page
-				      3.71% PageHuge
-				    - 1.44% isolate_migratepages_block
-					 0.71% set_pfnblock_flags_mask
-				   1.11% get_pfnblock_flags_mask
-			   - 0.81% get_page_from_freelist
-			      - 0.59% _raw_spin_lock_irqsave
-				 - do_raw_spin_lock
-				      __pv_queued_spin_lock_slowpath
-			- 3.24% try_to_free_pages
-			   - 3.14% shrink_node
-			      - 2.94% shrink_slab.constprop.0
-				 - 0.89% super_cache_count
-				    - 0.66% xfs_fs_nr_cached_objects
-				       - 0.65% xfs_reclaim_inodes_count
-					    0.55% xfs_perag_get_tag
-				   0.58% kfree_rcu_shrink_count
-			- 2.09% get_page_from_freelist
-			   - 1.03% _raw_spin_lock_irqsave
-			      - do_raw_spin_lock
-				   __pv_queued_spin_lock_slowpath
-		     - 4.88% get_page_from_freelist
-			- 3.66% _raw_spin_lock_irqsave
-			   - do_raw_spin_lock
-				__pv_queued_spin_lock_slowpath
-	    - 1.63% __vmalloc_node
-	       - __vmalloc_node_range
-		  - 1.10% __alloc_pages_bulk
-		     - 0.93% __alloc_pages
-			- 0.92% get_page_from_freelist
-			   - 0.89% rmqueue_bulk
-			      - 0.69% _raw_spin_lock
-				 - do_raw_spin_lock
-				      __pv_queued_spin_lock_slowpath
-	   13.73% memcpy_erms
-	 - 2.22% kvfree
+Ooh!  That's a much better suggestion.  I'll do that instead! :)
 
-On this workload, that's almost a dozen CPUs all trying to compact
-and reclaim memory inside kvmalloc_node at the same time. Yet it is
-regularly falling back to vmalloc despite all that compaction, page
-and shrinker reclaim that direct reclaim is doing. Copying all the
-metadata is taking far less CPU time than allocating the storage!
+> If you want to be more specific, you can create a group
+> rename_whiteout, because RENAME_WHITEOUT is the vfs
+> interface that this test is actually exercising.
 
-Direct reclaim should be considered extremely harmful.
+Eh, if we want to split the groups someday we can always revisit it.
 
-This is a high frequency, high throughput, CPU usage and latency
-sensitive allocation. We've got memory there, and we're using
-kvmalloc to allow memory allocation to avoid doing lots of work to
-try to do contiguous allocations.
+Thanks for the suggestion; I'll have a v2 series out shortly.
 
-Except it still does *lots of costly work* that is unnecessary.
+--D
 
-Worse: the only way to avoid the slowpath page allocation trying to
-do compaction on costly allocations is to turn off direct reclaim
-(i.e. remove __GFP_RECLAIM_DIRECT from the gfp flags).
-
-Unfortunately, the stupid kvmalloc API then says "oh, this isn't a
-GFP_KERNEL allocation context, so you only get kmalloc!". This
-cuts off the vmalloc fallback, and this leads to almost instant OOM
-problems which ends up in filesystems deadlocks, shutdowns and/or
-kernel crashes.
-
-I want some basic kvmalloc behaviour:
-
-- kmalloc for a contiguous range with fail fast semantics - no
-  compaction direct reclaim if the allocation enters the slow path.
-- run normal vmalloc (i.e. GFP_KERNEL) if kmalloc fails
-
-The really, really stupid part about this is these kvmalloc() calls
-are run under memalloc_nofs task context, so all the allocations are
-always reduced to GFP_NOFS regardless of the fact that kvmalloc
-requires GFP_KERNEL to be passed in. IOWs, we're already telling
-kvmalloc to behave differently to the gfp flags we pass in, but it
-still won't allow vmalloc to be run with anything other than
-GFP_KERNEL.
-
-So, this patch open codes the kvmalloc() in the commit path to have
-the above described behaviour. The result is we more than halve the
-CPU time spend doing kvmalloc() in this path and transaction commits
-with 64kB objects in them more than doubles. i.e. we get ~5x
-reduction in CPU usage per costly-sized kvmalloc() invocation and
-the profile looks like this:
-
-  - 37.60% xlog_cil_commit
-	16.01% memcpy_erms
-      - 8.45% __kmalloc
-	 - 8.04% kmalloc_order_trace
-	    - 8.03% kmalloc_order
-	       - 7.93% alloc_pages
-		  - 7.90% __alloc_pages
-		     - 4.05% __alloc_pages_slowpath.constprop.0
-			- 2.18% get_page_from_freelist
-			- 1.77% wake_all_kswapds
-....
-				    - __wake_up_common_lock
-				       - 0.94% _raw_spin_lock_irqsave
-		     - 3.72% get_page_from_freelist
-			- 2.43% _raw_spin_lock_irqsave
-      - 5.72% vmalloc
-	 - 5.72% __vmalloc_node_range
-	    - 4.81% __get_vm_area_node.constprop.0
-	       - 3.26% alloc_vmap_area
-		  - 2.52% _raw_spin_lock
-	       - 1.46% _raw_spin_lock
-	      0.56% __alloc_pages_bulk
-      - 4.66% kvfree
-	 - 3.25% vfree
-	    - __vfree
-	       - 3.23% __vunmap
-		  - 1.95% remove_vm_area
-		     - 1.06% free_vmap_area_noflush
-			- 0.82% _raw_spin_lock
-		     - 0.68% _raw_spin_lock
-		  - 0.92% _raw_spin_lock
-	 - 1.40% kfree
-	    - 1.36% __free_pages
-	       - 1.35% __free_pages_ok
-		  - 1.02% _raw_spin_lock_irqsave
-
-It's worth noting that over 50% of the CPU time spent allocating
-these shadow buffers is now spent on spinlocks. So the shadow buffer
-allocation overhead is greatly reduced by getting rid of direct
-reclaim from kmalloc, and could probably be made even less costly if
-vmalloc() didn't use global spinlocks to protect it's structures.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_log_cil.c | 46 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 11 deletions(-)
-
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index fff68aad254e..81ebf03bfa5c 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -185,6 +185,39 @@ xlog_cil_iovec_space(
- 			sizeof(uint64_t));
- }
- 
-+/*
-+ * shadow buffers can be large, so we need to use kvmalloc() here to ensure
-+ * success. Unfortunately, kvmalloc() only allows GFP_KERNEL contexts to fall
-+ * back to vmalloc, so we can't actually do anything useful with gfp flags to
-+ * control the kmalloc() behaviour within kvmalloc(). Hence kmalloc() will do
-+ * direct reclaim and compaction in the slow path, both of which are
-+ * horrendously expensive. We just want kmalloc to fail fast and fall back to
-+ * vmalloc if it can't get somethign straight away from the free lists or buddy
-+ * allocator. Hence we have to open code kvmalloc outselves here.
-+ *
-+ * Also, we are in memalloc_nofs_save task context here, so despite the use of
-+ * GFP_KERNEL here, we are actually going to be doing GFP_NOFS allocations. This
-+ * is actually the only way to make vmalloc() do GFP_NOFS allocations, so lets
-+ * just all pretend this is a GFP_KERNEL context operation....
-+ */
-+static inline void *
-+xlog_cil_kvmalloc(
-+	size_t		size)
-+{
-+	gfp_t		flags = GFP_KERNEL;
-+	void		*p;
-+
-+	flags &= ~__GFP_DIRECT_RECLAIM;
-+	flags |= __GFP_NOWARN | __GFP_NORETRY;
-+	do {
-+		p = kmalloc(buf_size, flags);
-+		if (!p)
-+			p = vmalloc(buf_size);
-+	} while (!p);
-+
-+	return p;
-+}
-+
- /*
-  * Allocate or pin log vector buffers for CIL insertion.
-  *
-@@ -293,25 +326,16 @@ xlog_cil_alloc_shadow_bufs(
- 		 */
- 		if (!lip->li_lv_shadow ||
- 		    buf_size > lip->li_lv_shadow->lv_size) {
--
- 			/*
- 			 * We free and allocate here as a realloc would copy
--			 * unnecessary data. We don't use kmem_zalloc() for the
-+			 * unnecessary data. We don't use kvzalloc() for the
- 			 * same reason - we don't need to zero the data area in
- 			 * the buffer, only the log vector header and the iovec
- 			 * storage.
- 			 */
- 			kmem_free(lip->li_lv_shadow);
-+			lv = xlog_cil_kvmalloc(buf_size);
- 
--			/*
--			 * We are in transaction context, which means this
--			 * allocation will pick up GFP_NOFS from the
--			 * memalloc_nofs_save/restore context the transaction
--			 * holds. This means we can use GFP_KERNEL here so the
--			 * generic kvmalloc() code will run vmalloc on
--			 * contiguous page allocation failure as we require.
--			 */
--			lv = kvmalloc(buf_size, GFP_KERNEL);
- 			memset(lv, 0, xlog_cil_iovec_space(niovecs));
- 
- 			INIT_LIST_HEAD(&lv->lv_list);
--- 
-2.31.1
-
+> 
+> Thanks,
+> Amir.
