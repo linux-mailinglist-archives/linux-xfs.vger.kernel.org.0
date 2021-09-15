@@ -2,34 +2,34 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E967140D012
-	for <lists+linux-xfs@lfdr.de>; Thu, 16 Sep 2021 01:12:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26F5540D013
+	for <lists+linux-xfs@lfdr.de>; Thu, 16 Sep 2021 01:12:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232740AbhIOXNW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Sep 2021 19:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39516 "EHLO mail.kernel.org"
+        id S232749AbhIOXN1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Sep 2021 19:13:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232465AbhIOXNW (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 15 Sep 2021 19:13:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8F12960E94;
-        Wed, 15 Sep 2021 23:12:02 +0000 (UTC)
+        id S232465AbhIOXN1 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 15 Sep 2021 19:13:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 085DD60E05;
+        Wed, 15 Sep 2021 23:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1631747522;
-        bh=tKFyvEgjyD+skrOGjKkfoanM3a4lVjhfbjNMXohjNKg=;
+        s=k20201202; t=1631747528;
+        bh=1r6itSjeaor1NSB0WAu3Ycree7YLU9eAeoDb4D1bBcc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Po5vKxrTOnNKHWpc0oUS9SMUgjbJTD1nDdkTC6svpeKc7dpPTVqx2PjudEiIcqkek
-         HkBF/MLAFAPVPA6KXWBWhUnIk7uDfQisq2oADJWxsgYcOQ+kG+Q6AnTp3eGx31n4tA
-         PAU48CwIAn+UfTjs2syU0qTDAAq7GDNrCDaITnkDNL9wW+qNqhOYC0g6N1qVuBFYQ9
-         NaZ9GGzO0Dci5XyBO6pTao5GNtRhT/FS1K+Iu8r3HRTSDwOjHclzlH+qm0CS3f3BUl
-         7urNarrSx609iAh03QybQWgBL432eEfpG5y6qRw0NW/33VotAbFbkXLH5gTwvY1JdS
-         al6OG0ziV72Pg==
-Subject: [PATCH 60/61] xfs_db: convert the agresv command to use
- for_each_perag
+        b=q+ihFGIHWprK7tOjW+tDm19b1izeuiKPxAjUzrP/ARjbAQCfq9+nVzsMQCWGbmmeL
+         ZV6oWNd1opbqKnCNj1wdOCInH8ysaTpV1kUxhtJxFwZRhu8RrFeKEDnx3G/lyWwIi4
+         RinEofKqPDJZyXmQFDECb+MtOg1SyJ5Di6pNLzO1Cob8X6r7vI2eWOWXd2Avl6dWIx
+         Lbk6B1m8e+xXOFE6VeaQXNYk05vnKDCkn05+257VPwBZT72dJrzJjEu3sxZJbNx1VA
+         xSnN3gmd8J1ENey4p6b3aJ4DcZao34QOY92/XLF3MAlGfxuE1aOv+yXKHXXl/1xeSR
+         aFtuggbRtA7qQ==
+Subject: [PATCH 61/61] mkfs: warn about V4 deprecation when creating new V4
+ filesystems
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     sandeen@sandeen.net, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Wed, 15 Sep 2021 16:12:02 -0700
-Message-ID: <163174752232.350433.14940185128838830345.stgit@magnolia>
+Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
+Date:   Wed, 15 Sep 2021 16:12:07 -0700
+Message-ID: <163174752777.350433.15312061958254066456.stgit@magnolia>
 In-Reply-To: <163174719429.350433.8562606396437219220.stgit@magnolia>
 References: <163174719429.350433.8562606396437219220.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -42,67 +42,37 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Convert the AG iteration loop for this debugger command to use
-for_each_perag, since it's the only place in userspace that obvious
-wants it.
+The V4 filesystem format is deprecated in the upstream Linux kernel.  In
+September 2025 it will be turned off by default in the kernel and five
+years after that, support will be removed entirely.  Warn people
+formatting new filesystems with the old format, particularly since V4 is
+not the default.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 ---
- db/info.c |   14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ mkfs/xfs_mkfs.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 
-diff --git a/db/info.c b/db/info.c
-index 2ecaea64..fdee76ba 100644
---- a/db/info.c
-+++ b/db/info.c
-@@ -62,11 +62,11 @@ agresv_help(void)
- 
- static void
- print_agresv_info(
--	xfs_agnumber_t	agno)
-+	struct xfs_perag *pag)
- {
- 	struct xfs_buf	*bp;
- 	struct xfs_agf	*agf;
--	struct xfs_perag *pag = libxfs_perag_get(mp, agno);
-+	xfs_agnumber_t	agno = pag->pag_agno;
- 	xfs_extlen_t	ask = 0;
- 	xfs_extlen_t	used = 0;
- 	xfs_extlen_t	free = 0;
-@@ -97,7 +97,6 @@ print_agresv_info(
- 	if (ask - used > free)
- 		printf(" <not enough space>");
- 	printf("\n");
--	libxfs_perag_put(pag);
- }
- 
- static int
-@@ -105,6 +104,7 @@ agresv_f(
- 	int			argc,
- 	char			**argv)
- {
-+	struct xfs_perag	*pag;
- 	xfs_agnumber_t		agno;
- 	int			i;
- 
-@@ -127,13 +127,15 @@ agresv_f(
- 				continue;
- 			}
- 
--			print_agresv_info(a);
-+			pag = libxfs_perag_get(mp, a);
-+			print_agresv_info(pag);
-+			libxfs_perag_put(pag);
+diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
+index 53904677..b8c11ce9 100644
+--- a/mkfs/xfs_mkfs.c
++++ b/mkfs/xfs_mkfs.c
+@@ -2103,6 +2103,15 @@ _("Directory ftype field always enabled on CRC enabled filesystems\n"));
  		}
- 		return 0;
- 	}
  
--	for (agno = 0; agno < mp->m_sb.sb_agcount; agno++)
--		print_agresv_info(agno);
-+	for_each_perag(mp, agno, pag)
-+		print_agresv_info(pag);
- 
- 	return 0;
- }
+ 	} else {	/* !crcs_enabled */
++		/*
++		 * The V4 filesystem format is deprecated in the upstream Linux
++		 * kernel.  In September 2025 it will be turned off by default
++		 * in the kernel and in September 2030 support will be removed
++		 * entirely.
++		 */
++		fprintf(stdout,
++_("V4 filesystems are deprecated and will not be supported by future versions.\n"));
++
+ 		/*
+ 		 * The kernel doesn't support crc=0,finobt=1 filesystems.
+ 		 * If crcs are not enabled and the user has not explicitly
 
