@@ -2,127 +2,77 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4467440EFEC
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Sep 2021 04:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A71840F1E3
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Sep 2021 08:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243206AbhIQDAq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Sep 2021 23:00:46 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:41356 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243049AbhIQDAp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Sep 2021 23:00:45 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 09F2B2007B;
-        Fri, 17 Sep 2021 02:59:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1631847562; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8pvkjCFdBH92niZgGsbVOrH9zONIePhOsL1BwdfqgnA=;
-        b=NrP8J0vhVKv0eLroW/bpzL2ejtwWpy1oEAi7DdQ4kMU5Kv8Oq6l5iLYPu7H9EkxbF1q4/A
-        na+xtpPAcJUY68yb7FlQ9lmxSLRRQKANIKbvzZj9RSTof31Djq1vJviErXSODqyW0wqB4e
-        LQe1sAc/mk1g9ojaRCFZduOcyNryYAc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1631847562;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=8pvkjCFdBH92niZgGsbVOrH9zONIePhOsL1BwdfqgnA=;
-        b=PMuREhLfwiF/t1B800k94ChByfic8xUfzyWra9ANkKBEq5p7ic9AJetd/jrDccwucIyfGK
-        Kco4+Zd25/JWTsBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9733913D0B;
-        Fri, 17 Sep 2021 02:59:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id wyQIFYUERGFLMwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 17 Sep 2021 02:59:17 +0000
-Subject: [PATCH 0/6 v2] congestion_wait() and GFP_NOFAIL
-From:   NeilBrown <neilb@suse.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Michal Hocko <mhocko@suse.com>,
-        ". Dave Chinner" <david@fromorbit.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Date:   Fri, 17 Sep 2021 12:56:57 +1000
-Message-ID: <163184698512.29351.4735492251524335974.stgit@noble.brown>
-User-Agent: StGit/0.23
+        id S234178AbhIQGJC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Sep 2021 02:09:02 -0400
+Received: from smtp1.onthe.net.au ([203.22.196.249]:56229 "EHLO
+        smtp1.onthe.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232726AbhIQGJB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Sep 2021 02:09:01 -0400
+Received: from localhost (smtp2.private.onthe.net.au [10.200.63.13])
+        by smtp1.onthe.net.au (Postfix) with ESMTP id 8C90461C64;
+        Fri, 17 Sep 2021 16:07:38 +1000 (EST)
+Received: from smtp1.onthe.net.au ([10.200.63.11])
+        by localhost (smtp.onthe.net.au [10.200.63.13]) (amavisd-new, port 10028)
+        with ESMTP id 3jrt91Gak1AL; Fri, 17 Sep 2021 16:07:38 +1000 (AEST)
+Received: from athena.private.onthe.net.au (chris-gw2-vpn.private.onthe.net.au [10.9.3.2])
+        by smtp1.onthe.net.au (Postfix) with ESMTP id 5E4A161C65;
+        Fri, 17 Sep 2021 16:07:38 +1000 (EST)
+Received: by athena.private.onthe.net.au (Postfix, from userid 1026)
+        id 48F406802FA; Fri, 17 Sep 2021 16:07:38 +1000 (AEST)
+Date:   Fri, 17 Sep 2021 16:07:38 +1000
+From:   Chris Dunlop <chris@onthe.net.au>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org
+Subject: Re: Mysterious ENOSPC
+Message-ID: <20210917060738.GA1005340@onthe.net.au>
+References: <20210826205635.GA2453892@onthe.net.au>
+ <20210827025539.GA3583175@onthe.net.au>
+ <20210827054956.GP3657114@dread.disaster.area>
+ <20210827065347.GA3594069@onthe.net.au>
+ <20210827220343.GQ3657114@dread.disaster.area>
+ <20210828002137.GA3642069@onthe.net.au>
+ <20210828035824.GA3654894@onthe.net.au>
+ <20210829220457.GR3657114@dread.disaster.area>
+ <20210830073720.GA3763165@onthe.net.au>
+ <20210902014206.GN2566745@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20210902014206.GN2566745@dread.disaster.area>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This second version:
-  - add recipients for the Documentation/core-api changes
-  - add fix for __alloc_pages_bulk() to handle GFP_NOFAIL
-  - drops the annotations for congestion_wait() as being ineffective
-    as that isn't really useful until an alternative is available
-  - changes to GFP_NOFAIL documentation changes to focus on the possible
-    deadlocks rather than the use of memory reserves
-  - Improves ext4 and xfs patches based on feedback from Ted and Dave.
+On Thu, Sep 02, 2021 at 11:42:06AM +1000, Dave Chinner wrote:
+> On Mon, Aug 30, 2021 at 08:04:57AM +1000, Dave Chinner wrote:
+>> FWIW, if you are using reflink heavily and you have rmap enabled (as
+>> you have), there's every chance that an AG has completely run out of
+>> space and so new rmap records for shared extents can't be allocated
+>> - that can give you spurious ENOSPC errors before the filesystem is
+>> 100% full, too.
+>>
+>> i.e. every shared extent in the filesystem has a rmap record
+>> pointing back to each owner of the shared extent. That means for an
+>> extent shared 1000 times, there are 1000 rmap records for that
+>> shared extent. If you share it again, a new rmap record needs to be
+>> inserted into the rmapbt, and if the AG is completely out of space
+>> this can fail w/ ENOSPC. Hence you can get ENOSPC errors attempting
+>> to shared or unshare extents because there isn't space in the AG for
+>> the tracking metadata for the new extent record....
+...
+> Ok, now I've seen the filesystem layout, I can say that the
+> preconditions for per-ag ENOSPC conditions do actually exist. Hence
+> we now really need to know what operation is reporting ENOSPC. I
+> guess we'll just have to wait for that to occur again and hope your
+> scripts capture it.
 
-The patches are independent, except that the last patch depends on the
-first.
+FYI, "something" seems to have changed without any particular prompting 
+and there haven't been any ENOSPC events in the last 3 weeks whereas 
+previously they were occurring 4-5 times a week. Sigh.
 
-As mentioned last time:
+Cheers,
 
-  These are the easy bits.  There are 5 calls to congestion_wait() and
-  one to wait_iff_congested() in mm/ which need consideration.  There
-  are multiple calls to congestion_wait in fs/, particularly fs/f2fs/
-  which need to be addressed too.  I'll try to form an opinion about
-  these in coming weeks.
-
-(other interesting comment in original cover letter just duplicates
- observations made in the commit messages of individual patches).
-
-NeilBrown
-
-
----
-
-NeilBrown (6):
-      MM: Support __GFP_NOFAIL in  alloc_pages_bulk_*() and improve doco
-      MM: improve documentation for __GFP_NOFAIL
-      EXT4: Remove ENOMEM/congestion_wait() loops.
-      EXT4: remove congestion_wait from ext4_bio_write_page, and simplify
-      XFS: remove congestion_wait() loop from kmem_alloc()
-      XFS: remove congestion_wait() loop from xfs_buf_alloc_pages()
-
-
- Documentation/core-api/memory-allocation.rst | 25 ++++++++-
- fs/ext4/ext4.h                               |  2 +-
- fs/ext4/ext4_jbd2.c                          |  4 +-
- fs/ext4/ext4_jbd2.h                          | 14 +++---
- fs/ext4/extents.c                            | 53 ++++++++------------
- fs/ext4/extents_status.c                     | 35 +++++++------
- fs/ext4/extents_status.h                     |  2 +-
- fs/ext4/ialloc.c                             |  3 +-
- fs/ext4/indirect.c                           |  2 +-
- fs/ext4/inode.c                              |  6 +--
- fs/ext4/ioctl.c                              |  4 +-
- fs/ext4/page-io.c                            | 13 ++---
- fs/ext4/super.c                              |  2 +-
- fs/jbd2/transaction.c                        |  8 +--
- fs/xfs/kmem.c                                | 19 +++----
- fs/xfs/xfs_buf.c                             | 14 +++---
- include/linux/gfp.h                          |  6 ++-
- 17 files changed, 113 insertions(+), 99 deletions(-)
-
---
-Signature
-
+Chris
