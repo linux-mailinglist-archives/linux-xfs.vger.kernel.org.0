@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 135D740EFF3
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Sep 2021 04:59:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D03740F00C
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Sep 2021 05:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243297AbhIQDAy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Sep 2021 23:00:54 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:41390 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243248AbhIQDAw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Sep 2021 23:00:52 -0400
+        id S243575AbhIQDBa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Sep 2021 23:01:30 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:56608 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243240AbhIQDB1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Sep 2021 23:01:27 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id ABA7D2007B;
-        Fri, 17 Sep 2021 02:59:29 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 9687D223BD;
+        Fri, 17 Sep 2021 03:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1631847569; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1631847604; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PhO+AMBCn5CF5KJqwHi2NRgoifLeDG6tBD6IhB9YLqI=;
-        b=vThorR8aWQ88Y2GmJEKKlzu9235Z/ZeCUkMr1tu37GhRXPpZfoOnsprc1JRFJTuXWRqbYo
-        OrwNdG+winpkkSlgaBUSLsVjiQSK1WiUbcsFBMP1c4iGoCvNYpDkYEriFSvFrODR8idE2j
-        Tlusg86Y9/ATaenPc/okC73RyP3RPU0=
+        bh=+1u7JfJ60ADhg0u9Pcl8n+h1Bz25Z10lXHgfdltE1Jc=;
+        b=09WD61SfjEhN3tce5Wk8dsHcJSb/WzRs0PxztPkg/oLbQ8tSPZsUEzjy6uqwmhzuikCPuq
+        U/HwnCMpj/gmCuZzk7ruhT8FrXhKowH88e6xhNyS5IhdEstIJ/afToqMOTj8wFJrEPQ6Xa
+        cVP2L7nrJ3Ww7J3EnBJIz5piqvJIZY0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1631847569;
+        s=susede2_ed25519; t=1631847604;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=PhO+AMBCn5CF5KJqwHi2NRgoifLeDG6tBD6IhB9YLqI=;
-        b=PdD7iVhth5i0uczJ3IGRe4R+iuVLNQA6JKSOCFB6xykfVbdQIAbKb0z9L556d52BZHWlwR
-        comcujPIZxeGDSBw==
+        bh=+1u7JfJ60ADhg0u9Pcl8n+h1Bz25Z10lXHgfdltE1Jc=;
+        b=x0CJKsYi96KJP/4iSQP5YmW+cfO6FQgofzJz/NaLv+dviaJqtmgBNoT8ZnNF2BRpgwlvYN
+        cVAEWbD8Oc5hvoAg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4A36E13D0B;
-        Fri, 17 Sep 2021 02:59:25 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3870F13D0B;
+        Fri, 17 Sep 2021 02:59:59 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id v4HZAo0ERGFmMwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 17 Sep 2021 02:59:25 +0000
-Subject: [PATCH 1/6] MM: Support __GFP_NOFAIL in  alloc_pages_bulk_*() and
- improve doco
+        id s9QlOq8ERGGiMwAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 17 Sep 2021 02:59:59 +0000
+Subject: [PATCH 5/6] XFS: remove congestion_wait() loop from kmem_alloc()
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Theodore Ts'o <tytso@mit.edu>,
@@ -61,7 +60,7 @@ Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org
 Date:   Fri, 17 Sep 2021 12:56:57 +1000
-Message-ID: <163184741776.29351.3565418361661850328.stgit@noble.brown>
+Message-ID: <163184741781.29351.4475236694432020436.stgit@noble.brown>
 In-Reply-To: <163184698512.29351.4735492251524335974.stgit@noble.brown>
 References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -72,49 +71,55 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-When alloc_pages_bulk_array() is called on an array that is partially
-allocated, the level of effort to get a single page is less than when
-the array was completely unallocated.  This behaviour is inconsistent,
-but now fixed.  One effect if this is that __GFP_NOFAIL will not ensure
-at least one page is allocated.
+Documentation commment in gfp.h discourages indefinite retry loops on
+ENOMEM and says of __GFP_NOFAIL that it
 
-Also clarify the expected success rate.  __alloc_pages_bulk() will
-allocated one page according to @gfp, and may allocate more if that can
-be done cheaply.  It is assumed that the caller values cheap allocation
-where possible and may decide to use what it has got, or to call again
-to get more.
+    is definitely preferable to use the flag rather than opencode
+    endless loop around allocator.
 
-Acked-by: Mel Gorman <mgorman@suse.com>
-Fixes: 0f87d9d30f21 ("mm/page_alloc: add an array-based interface to the bulk page allocator")
+So remove the loop, instead specifying __GFP_NOFAIL if KM_MAYFAIL was
+not given.
+
+As we no longer have the opportunity to report a warning after some
+failures, clear __GFP_NOWARN so that the default warning (rate-limited
+to 1 ever 10 seconds) will be reported instead.
+
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- mm/page_alloc.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/xfs/kmem.c |   19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index b37435c274cf..aa51016e49c5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5191,6 +5191,11 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
-  * is the maximum number of pages that will be stored in the array.
-  *
-  * Returns the number of pages on the list or array.
-+ *
-+ * At least one page will be allocated if that is possible while
-+ * remaining consistent with @gfp.  Extra pages up to the requested
-+ * total will be allocated opportunistically when doing so is
-+ * significantly cheaper than having the caller repeat the request.
-  */
- unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 			nodemask_t *nodemask, int nr_pages,
-@@ -5292,7 +5297,7 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 								pcp, pcp_list);
- 		if (unlikely(!page)) {
- 			/* Try and get at least one page */
--			if (!nr_populated)
-+			if (!nr_account)
- 				goto failed_irq;
- 			break;
- 		}
+diff --git a/fs/xfs/kmem.c b/fs/xfs/kmem.c
+index 6f49bf39183c..575a58e61391 100644
+--- a/fs/xfs/kmem.c
++++ b/fs/xfs/kmem.c
+@@ -11,21 +11,14 @@
+ void *
+ kmem_alloc(size_t size, xfs_km_flags_t flags)
+ {
+-	int	retries = 0;
+ 	gfp_t	lflags = kmem_flags_convert(flags);
+-	void	*ptr;
+ 
+ 	trace_kmem_alloc(size, flags, _RET_IP_);
+ 
+-	do {
+-		ptr = kmalloc(size, lflags);
+-		if (ptr || (flags & KM_MAYFAIL))
+-			return ptr;
+-		if (!(++retries % 100))
+-			xfs_err(NULL,
+-	"%s(%u) possible memory allocation deadlock size %u in %s (mode:0x%x)",
+-				current->comm, current->pid,
+-				(unsigned int)size, __func__, lflags);
+-		congestion_wait(BLK_RW_ASYNC, HZ/50);
+-	} while (1);
++	if (!(flags & KM_MAYFAIL)) {
++		lflags |= __GFP_NOFAIL;
++		lflags &= ~__GFP_NOWARN;
++	}
++
++	return kmalloc(size, lflags);
+ }
 
 
