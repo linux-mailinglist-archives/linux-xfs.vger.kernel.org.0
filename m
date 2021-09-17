@@ -2,142 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BAF240EF34
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Sep 2021 04:31:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A1CC40F003
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Sep 2021 05:00:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242740AbhIQCc7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 16 Sep 2021 22:32:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235118AbhIQCc6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Sep 2021 22:32:58 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF84C061574;
-        Thu, 16 Sep 2021 19:31:37 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id g9so10355499ioq.11;
-        Thu, 16 Sep 2021 19:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NuvBmw6cCGiq3RJD+Zt4hkm198hAaQNjVtZlomWjdxg=;
-        b=d6YPwq9pMMWXRwDrAQMcdm592xgFXZgFsvKGT0Yd1m6baLguOlhYDj96zsCDAFOOs7
-         2I0iOxonrgYVGEIbHgG6mXsHnZGKGn4WSRxNg7T+oyHj1MyWcZwpI4s6/GbSP0M/xEuS
-         DsalqapgmzBFjdXGkBgkVmUxOhYkLQj5JP1VttVpzXVKe7r+XUnNWSdfGuRinba/3coe
-         HgJ2cOkyvld0pdhiIWeeBKeoqDLda6nbA0uiqjPlkahxCzb4C/E/5MzNc8LjfSEzbDO1
-         8GLIu2XQ/slqUDV4hmimKpv7B+1yQFo7Jjq16vkjQoaA8ehHa8UsuJ1Ar4O3v1FjB0O6
-         8YYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NuvBmw6cCGiq3RJD+Zt4hkm198hAaQNjVtZlomWjdxg=;
-        b=MoMTL13FqR0oGhyNNfndEHlBbU/MDu2Xc5GFMPi8vs9uhu8GorP3uhSx7JkoR+R7Oi
-         LS4/De4/8r+WIBHwJOHPtev9fXQp6iFlkf4GfuysGLbYY1l1gTKX5zFEVYAJ/Iqj7sWJ
-         hnUspau3CI1DgC8+DZXfXblEfMcYvbl8UHOES4dSoxnnsNVHmuBKLYn1gJ64AuBNqAch
-         ES0ilRqxaC1q7N5G1hz9UxF/VvWdzYgQRDJwVn9DHC0zk/UAxDcAcCMeCtbCAaDDmOVz
-         CKwROWGxRVsJc/FPylGNXaTAe3HUlTlxRaQE5c9gR3xWjk1SmaC361wgRsq9o21q2Lsc
-         5SgQ==
-X-Gm-Message-State: AOAM531Gf12xAfvTlOcb8tjpSSXhx9dk1Pz9cQvl4UHI7Rw/kPBx4039
-        9rScQr4Ocr5XSs9QQBySPzanSXoo4x3UYO1edmwff/F4
-X-Google-Smtp-Source: ABdhPJzKqEUJKQ6zf8NTDfGVBMPYTEolQ1qRxJ2ldNGdpWGjR2DTGMRS5YyXuIs+RUN0LM6IC2cmzT2b/tRiJ6e6JcM=
-X-Received: by 2002:a6b:6f18:: with SMTP id k24mr6750022ioc.196.1631845896734;
- Thu, 16 Sep 2021 19:31:36 -0700 (PDT)
+        id S243480AbhIQDBV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 16 Sep 2021 23:01:21 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:56580 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243481AbhIQDBR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 16 Sep 2021 23:01:17 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id D0018223BD;
+        Fri, 17 Sep 2021 02:59:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1631847594; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K2Rgi41wxZueRRJfJ3e7t139IMXGOwOFm/IW/86sxa8=;
+        b=TN9g57JhoeeQCj56ZDT1Z5eH8c3azHNFurn6Qcu8WtVKUJyL+7juZYOKl1ThupKPKuR9Zk
+        wrwCImtWXdb8m2WpjzERGLTMfrZEvG2PAT+/nYm6aGTE1kEUhzGQxoTgg4GRVdjak/X352
+        u75+NChOvjnDYseuYUWwfwRfaQ3y4LU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1631847594;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=K2Rgi41wxZueRRJfJ3e7t139IMXGOwOFm/IW/86sxa8=;
+        b=wTggxCx6C/rUpvp5f5bdxeTCzPFiiQYeoHK1ofO3v0pxvISag8G6Kmr6h1TGJJjXk9dWpv
+        DMvK0w6KJxde2nCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8AC2A13D0B;
+        Fri, 17 Sep 2021 02:59:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id OQR+EqQERGGWMwAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 17 Sep 2021 02:59:48 +0000
+Subject: [PATCH 4/6] EXT4: remove congestion_wait from ext4_bio_write_page,
+ and simplify
+From:   NeilBrown <neilb@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Michal Hocko <mhocko@suse.com>,
+        ". Dave Chinner" <david@fromorbit.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Date:   Fri, 17 Sep 2021 12:56:57 +1000
+Message-ID: <163184741781.29351.8660877195340279243.stgit@noble.brown>
+In-Reply-To: <163184698512.29351.4735492251524335974.stgit@noble.brown>
+References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-References: <163174935747.380880.7635671692624086987.stgit@magnolia>
- <163174940659.380880.14564845266535022734.stgit@magnolia> <CAOQ4uxh6fZNzCX2wAQdhmz4Z+4xGbZMF0zfSkKUZKjS0KZhpOA@mail.gmail.com>
- <20210916225306.GB34846@magnolia>
-In-Reply-To: <20210916225306.GB34846@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 17 Sep 2021 05:31:25 +0300
-Message-ID: <CAOQ4uxiXFw9t61S3J3MPULqrS9RvGEUPQf3Eq54P9qtjL8zMcw@mail.gmail.com>
-Subject: Re: [PATCH 9/9] new: don't allow new tests in group 'other'
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>, Eryu Guan <guan@eryu.me>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 1:53 AM Darrick J. Wong <djwong@kernel.org> wrote:
->
-> On Thu, Sep 16, 2021 at 09:40:54AM +0300, Amir Goldstein wrote:
-> > On Thu, Sep 16, 2021 at 2:43 AM Darrick J. Wong <djwong@kernel.org> wrote:
-> > >
-> > > From: Darrick J. Wong <djwong@kernel.org>
-> > >
-> > > The 'other' group is vaguely defined at best -- other than what?  It's
-> > > not clear what tests belong in this group, and it has become a dumping
-> > > ground for random stuff that are classified in other groups.  Don't let
-> > > people create new other group tests.
-> > >
-> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > > ---
-> > >  new |    7 +++++--
-> > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > >
-> > >
-> > > diff --git a/new b/new
-> > > index 6b7dc5d4..5cf96c50 100755
-> > > --- a/new
-> > > +++ b/new
-> > > @@ -96,9 +96,9 @@ then
-> > >
-> > >      while true
-> > >      do
-> > > -       echo -n "Add to group(s) [other] (separate by space, ? for list): "
-> > > +       echo -n "Add to group(s) [auto] (separate by space, ? for list): "
-> > >         read ans
-> > > -       [ -z "$ans" ] && ans=other
-> > > +       [ -z "$ans" ] && ans=auto
-> > >         if [ "X$ans" = "X?" ]
-> > >         then
-> > >             echo $(group_names)
-> > > @@ -109,6 +109,9 @@ then
-> > >                 echo "Invalid characters in group(s): $inval"
-> > >                 echo "Only lower cases, digits and underscore are allowed in groups, separated by space"
-> > >                 continue
-> > > +           elif echo "$ans" | grep -q -w "other"; then
-> > > +               echo "Do not add more tests to group \"other\"."
-> > > +               continue
-> >
-> > Should we also filter out "other" from group_names(), so it is not listed
-> > for "?"?
->
-> No; there are drawbacks to that, as you point out below.
->
-> > With this patch, "other" does not emit a warning when passed in as a script
-> > command line argument.
->
-> Done.
->
-> > If we filter "other" from group_names(), then the warning in "expert mode"
-> > will be a bit confusing (group "other" not defined in documentation).
->
-> I will filter it out in the specific case case that the interactive user
-> specified "?" to list the groups.
->
-> > Also, it is not clear to me if this is intentional behavior that interactive
-> > mode allows non-dcumented groups (with valid chars validation) and
-> > expert mode does not allow non-documented groups?
->
-> Probably not.
->
-> > It may be simpler to use the same helper in both modes (is_group_valid)
-> > to emit the correct warning and either proceed (expert mode) or get
-> > back to prompt (interactive mode).
->
-> This is getting farther afield from where I wanted this thing to go.
-> Very well, I'll split the ./new cleanups into its own series, but TBH
-> I've gotten tired of people asking for more and more cleanups out of me.
->
+congestion_wait() is indistinguishable from
+schedule_timeout_uninterruptible().  It is best avoided and should be
+deprecated.
 
-Fair enough.
-TBH I just wanted to point out the inconsistencies that I noticed.
-I don't really mind if they are fixed.
-I should have been more clear about this point.
+It is not needed in ext4_bio_write_page().  There are two cases.
+If there are no ->io_bio yet, then it is appropriate to use __GFP_NOFAIL
+which does the waiting in a better place.  The code already uses this
+flag on the second attempt.  This patch changes to it always use that
+flag for this case.
 
-Thanks,
-Amir.
+If there *are* ->io_bio (in which case the allocation was non-blocking)
+we submit the io and return the first case.  No waiting is needed in
+this case.
+
+So remove the congestion_wait() call, and simplify the code so that the
+two cases are somewhat clearer.
+
+Remove the "if (io->io_bio)" before calling ext4_io_submit() as that
+test is performed internally by that function.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/ext4/page-io.c |   13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
+index f038d578d8d8..3b6ece0d3ad6 100644
+--- a/fs/ext4/page-io.c
++++ b/fs/ext4/page-io.c
+@@ -506,7 +506,7 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
+ 	 * can't happen in the common case of blocksize == PAGE_SIZE.
+ 	 */
+ 	if (fscrypt_inode_uses_fs_layer_crypto(inode) && nr_to_submit) {
+-		gfp_t gfp_flags = GFP_NOFS;
++		gfp_t gfp_flags;
+ 		unsigned int enc_bytes = round_up(len, i_blocksize(inode));
+ 
+ 		/*
+@@ -514,21 +514,18 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
+ 		 * a waiting mask (i.e. request guaranteed allocation) on the
+ 		 * first page of the bio.  Otherwise it can deadlock.
+ 		 */
++	retry_encrypt:
+ 		if (io->io_bio)
+ 			gfp_flags = GFP_NOWAIT | __GFP_NOWARN;
+-	retry_encrypt:
++		else
++			gfp_flags = GFP_NOFS | __GFP_NOFAIL;
+ 		bounce_page = fscrypt_encrypt_pagecache_blocks(page, enc_bytes,
+ 							       0, gfp_flags);
+ 		if (IS_ERR(bounce_page)) {
+ 			ret = PTR_ERR(bounce_page);
+ 			if (ret == -ENOMEM &&
+ 			    (io->io_bio || wbc->sync_mode == WB_SYNC_ALL)) {
+-				gfp_flags = GFP_NOFS;
+-				if (io->io_bio)
+-					ext4_io_submit(io);
+-				else
+-					gfp_flags |= __GFP_NOFAIL;
+-				congestion_wait(BLK_RW_ASYNC, HZ/50);
++				ext4_io_submit(io);
+ 				goto retry_encrypt;
+ 			}
+ 
+
+
