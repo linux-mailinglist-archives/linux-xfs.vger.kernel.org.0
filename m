@@ -2,253 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51507415162
-	for <lists+linux-xfs@lfdr.de>; Wed, 22 Sep 2021 22:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34224151FB
+	for <lists+linux-xfs@lfdr.de>; Wed, 22 Sep 2021 22:55:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237640AbhIVU2g (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Sep 2021 16:28:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55796 "EHLO
+        id S237868AbhIVU4x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 22 Sep 2021 16:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237636AbhIVU2g (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Sep 2021 16:28:36 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DE8C061574
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Sep 2021 13:27:05 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 81so448794pgb.0
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Sep 2021 13:27:05 -0700 (PDT)
+        with ESMTP id S237769AbhIVU4q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Sep 2021 16:56:46 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC02C061757
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Sep 2021 13:55:13 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id 73so14563044qki.4
+        for <linux-xfs@vger.kernel.org>; Wed, 22 Sep 2021 13:55:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V7B4Op7jxUlLVva1iz44pF/hK7De7vsXXP5PesX0X2Q=;
-        b=b7N5Ex30Cv4q+WMABFbt2GD823yZYE1yCO+IWqtkdCuFr8PiQnuLUnlsD+lW58qZgY
-         Iz56sfrm27QwPIHkuaODUTAGg892LRl0+jY3ubsyWnqth93LaBv06cht9p3O4AYueyg7
-         R2BLnpcUQHu/Z6JPvnqRnTr9nMUvGDRRPK4MEiUlvINNv2nsaqSQl9fxSjet3gChtaqI
-         fs0Vgju2kmKfooEISsAWCYoyJtjaww/qVwLHWRN5gIn49BIr2hSe4QiXoI2Hh0IH57cu
-         NwZy1+9th0sRpJFxYW0kWFVlWedBppj8jbAyeEK4j1iLzqrsUtsOPwmg4GZKxVr5qEKN
-         cOzQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=ijKrByR1/KtEp2Ut8Wj0vMi00kBZm/A/r1gPwOEYZIg=;
+        b=KdXnhe/3zkHeZgixn9BpXiRXniwMgDmhauf6YTuxP0wgB5yzxGI3euReyxhx9TVrxq
+         3Od5gARvk08SiaQHEdbK80uTPJiKvZD1mvaXmFEi2OlRGGLVxi9qjTdQEJHDNx6GrhQf
+         +YDVSfcVXX6hJ9tzkOuxVlwY0IK/v4ECFsMgPN0YbEUFjdWw7wtLO6HU7k0GlwYOwBU7
+         g0u5ZrnjkFj9bDNBfxTJ+EZszn5R+MIWkE1noseX+tMOjLt3VKfnAtHOf7zGnzUi7/Ss
+         4zORj2FhCL6VBd/6ui6VhZsTJDlTQFr3MO12bpjTdn18irITsVHBfbJQd5ezVh5SqLsC
+         4EBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V7B4Op7jxUlLVva1iz44pF/hK7De7vsXXP5PesX0X2Q=;
-        b=ZBVx0D/SEKgkveKNre1GTy94cymGIQZLguC7nGSZhot1XY2IuyxVDV8H8Yig+ayV/m
-         ptf6P8gCijWfabI6DoXR4qzQqT2F9fG6mGQneKVmdQbbUlN43+Az74r0Ap9nAEXQykVT
-         KNcg2jgQWdlYUeYPoqxpea/iNWPrvYcf8KJXsIk+vBhSLzvHIG3d4kxIcwqxO56UUk0B
-         AvIlGZqxgeAUDlqVy24pRzVVsgybz8FRQGdJdxvg6rx/ogsNShTv9butfBIrL50q6H6a
-         L7HMB/fXy0ukSgeaRrSR3aWVjO4HAEq3beAxz8cY4WkNsdESOL/PPNYoLundQWMJA2oc
-         bcAw==
-X-Gm-Message-State: AOAM533sTOVZp5UI8ZPQ5ORXw/6cgNLglP75WsBIPb3x2/vrW2EZl8lL
-        C4WvtIkhPWw+tqY3GISyIw1zFsClGCFL99Y4KVCw/w==
-X-Google-Smtp-Source: ABdhPJyuDHAkKuwK0QN430F33N+99p9Vhf/jnqueqby8Lbqd2MmB68lW2/3XLrOqyt9IzAM1A4MSEcYu0LJrdwU3Gck=
-X-Received: by 2002:a62:7f87:0:b0:444:b077:51ef with SMTP id
- a129-20020a627f87000000b00444b07751efmr850946pfd.61.1632342425287; Wed, 22
- Sep 2021 13:27:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=ijKrByR1/KtEp2Ut8Wj0vMi00kBZm/A/r1gPwOEYZIg=;
+        b=Dk8IU3HZ0dFK+xaR97DgUIE1cvu9Y6JdEpEuU1BxXDyKy71Cw+wPQYbp2o+PRKOdDB
+         almc4v2w0e4WR9JFGtJNHyPCQer7I3L84kez4Pf95TGxPgdwFCxsF5NaUik7SAB3IoMe
+         gWSRlLhflrXepwjxJ6fboS7GpmN/LHsCQ2JeiaIDD5KuAz8SczKjpgrzP6sXfdWY5HDS
+         fxmyls+gCVXCRYqJ2JBXHNd0VRF4RgECdkP9fdXmUGnbVJD617lxiNWQzqYpKCivbMnH
+         IqvjgVtNGrewVH/fz7zyThPJ1RBTsBvYUvN3KZJoxy4kjLeUp0LSRYhVBtUQGNoeIdAL
+         QN7Q==
+X-Gm-Message-State: AOAM531CIqX7zhSCMrqyXkL5lW7Ro1XVg+9xqssn1/07UvaXED7QfdXY
+        6JE0JTAqdIbbssMXF2JCvFIAYSY6NkKUw9cE/If2EX6uZ9RqvA==
+X-Google-Smtp-Source: ABdhPJwsLqRgkk9jb+wC1ECBTFJXrEEB4mmlIo/Kaul20LfIYdlAYLv9tmwaB5Pxv0AmysZSk6ZePRs2dvYCH/qVqH0=
+X-Received: by 2002:a05:6902:150a:: with SMTP id q10mr1344586ybu.515.1632344102557;
+ Wed, 22 Sep 2021 13:55:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <163192864476.417973.143014658064006895.stgit@magnolia>
- <163192865031.417973.8372869475521627214.stgit@magnolia> <20210918165408.ivsue463wpiitzjw@riteshh-domain>
- <20210920172225.GA570615@magnolia> <20210921040708.ojbbbt6i524wgsaj@riteshh-domain>
- <20210922182642.GJ570615@magnolia>
-In-Reply-To: <20210922182642.GJ570615@magnolia>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 22 Sep 2021 13:26:54 -0700
-Message-ID: <CAPcyv4iDSk+-azs52cw-Aqs7yn0_hifqNgKtM1c68Wu_xam8RQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] dax: prepare pmem for use by zero-initializing
- contents and clearing poisons
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     riteshh <riteshh@linux.ibm.com>, Jane Chu <jane.chu@oracle.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Sender: pablogboy98@gmail.com
+Received: by 2002:a05:7000:1903:0:0:0:0 with HTTP; Wed, 22 Sep 2021 13:55:02
+ -0700 (PDT)
+From:   Aisha Al-Qaddafi <aisha.gdaffi24@gmail.com>
+Date:   Wed, 22 Sep 2021 21:55:02 +0100
+X-Google-Sender-Auth: EgWN-7KeHIzBWxs5WISil-9jI9s
+Message-ID: <CAFZ0LQG=HorOEh0B82pMRaOtrfukA2tHOBoX92F9fX48+pG2cA@mail.gmail.com>
+Subject: My Dear Friend
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 11:27 AM Darrick J. Wong <djwong@kernel.org> wrote:
->
-> On Tue, Sep 21, 2021 at 09:37:08AM +0530, riteshh wrote:
-> > On 21/09/20 10:22AM, Darrick J. Wong wrote:
-> > > On Sat, Sep 18, 2021 at 10:24:08PM +0530, riteshh wrote:
-> > > > On 21/09/17 06:30PM, Darrick J. Wong wrote:
-> > > > > From: Darrick J. Wong <djwong@kernel.org>
-> > > > >
-> > > > > Our current "advice" to people using persistent memory and FSDAX who
-> > > > > wish to recover upon receipt of a media error (aka 'hwpoison') event
-> > > > > from ACPI is to punch-hole that part of the file and then pwrite it,
-> > > > > which will magically cause the pmem to be reinitialized and the poison
-> > > > > to be cleared.
-> > > > >
-> > > > > Punching doesn't make any sense at all -- the (re)allocation on pwrite
-> > > > > does not permit the caller to specify where to find blocks, which means
-> > > > > that we might not get the same pmem back.  This pushes the user farther
-> > > > > away from the goal of reinitializing poisoned memory and leads to
-> > > > > complaints about unnecessary file fragmentation.
-> > > > >
-> > > > > AFAICT, the only reason why the "punch and write" dance works at all is
-> > > > > that the XFS and ext4 currently call blkdev_issue_zeroout when
-> > > > > allocating pmem ahead of a write call.  Even a regular overwrite won't
-> > > > > clear the poison, because dax_direct_access is smart enough to bail out
-> > > > > on poisoned pmem, but not smart enough to clear it.  To be fair, that
-> > > > > function maps pages and has no idea what kinds of reads and writes the
-> > > > > caller might want to perform.
-> > > > >
-> > > > > Therefore, create a dax_zeroinit_range function that filesystems can to
-> > > > > reset the pmem contents to zero and clear hardware media error flags.
-> > > > > This uses the dax page zeroing helper function, which should ensure that
-> > > > > subsequent accesses will not trip over any pre-existing media errors.
-> > > >
-> > > > Thanks Darrick for such clear explaination of the problem and your solution.
-> > > > As I see from this thread [1], it looks like we are heading in this direction,
-> > > > so I thought of why not review this RFC patch series :)
-> > > >
-> > > > [1]: https://lore.kernel.org/all/CAPcyv4iAr_Vwwgqw+4wz0RQUXhUUJGGz7_T+p+W6tC4T+k+zNw@mail.gmail.com/
-> > > >
-> > > > >
-> > > > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > > > > ---
-> > > > >  fs/dax.c            |   93 +++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > > >  include/linux/dax.h |    7 ++++
-> > > > >  2 files changed, 100 insertions(+)
-> > > > >
-> > > > >
-> > > > > diff --git a/fs/dax.c b/fs/dax.c
-> > > > > index 4e3e5a283a91..765b80d08605 100644
-> > > > > --- a/fs/dax.c
-> > > > > +++ b/fs/dax.c
-> > > > > @@ -1714,3 +1714,96 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
-> > > > >         return dax_insert_pfn_mkwrite(vmf, pfn, order);
-> > > > >  }
-> > > > >  EXPORT_SYMBOL_GPL(dax_finish_sync_fault);
-> > > > > +
-> > > > > +static loff_t
-> > > > > +dax_zeroinit_iter(struct iomap_iter *iter)
-> > > > > +{
-> > > > > +       struct iomap *iomap = &iter->iomap;
-> > > > > +       const struct iomap *srcmap = iomap_iter_srcmap(iter);
-> > > > > +       const u64 start = iomap->addr + iter->pos - iomap->offset;
-> > > > > +       const u64 nr_bytes = iomap_length(iter);
-> > > > > +       u64 start_page = start >> PAGE_SHIFT;
-> > > > > +       u64 nr_pages = nr_bytes >> PAGE_SHIFT;
-> > > > > +       int ret;
-> > > > > +
-> > > > > +       if (!iomap->dax_dev)
-> > > > > +               return -ECANCELED;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * The physical extent must be page aligned because that's what the dax
-> > > > > +        * function requires.
-> > > > > +        */
-> > > > > +       if (!PAGE_ALIGNED(start | nr_bytes))
-> > > > > +               return -ECANCELED;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * The dax function, by using pgoff_t, is stuck with unsigned long, so
-> > > > > +        * we must check for overflows.
-> > > > > +        */
-> > > > > +       if (start_page >= ULONG_MAX || start_page + nr_pages > ULONG_MAX)
-> > > > > +               return -ECANCELED;
-> > > > > +
-> > > > > +       /* Must be able to zero storage directly without fs intervention. */
-> > > > > +       if (iomap->flags & IOMAP_F_SHARED)
-> > > > > +               return -ECANCELED;
-> > > > > +       if (srcmap != iomap)
-> > > > > +               return -ECANCELED;
-> > > > > +
-> > > > > +       switch (iomap->type) {
-> > > > > +       case IOMAP_MAPPED:
-> > > > > +               while (nr_pages > 0) {
-> > > > > +                       /* XXX function only supports one page at a time?! */
-> > > > > +                       ret = dax_zero_page_range(iomap->dax_dev, start_page,
-> > > > > +                                       1);
-> > > > > +                       if (ret)
-> > > > > +                               return ret;
-> > > > > +                       start_page++;
-> > > > > +                       nr_pages--;
-> > > > > +               }
-> > > > > +
-> > > > > +               fallthrough;
-> > > > > +       case IOMAP_UNWRITTEN:
-> > > > > +               return nr_bytes;
-> > > > > +       }
-> > > > > +
-> > > > > +       /* Reject holes, inline data, or delalloc extents. */
-> > > > > +       return -ECANCELED;
-> > > >
-> > > > We reject holes here, but the other vfs plumbing patch [2] mentions
-> > > > "Holes and unwritten extents are left untouched.".
-> > > > Shouldn't we just return nr_bytes for IOMAP_HOLE case as well?
-> > >
-> > > I'm not entirely sure what we should do for holes and unwritten extents,
-> > > as you can tell from the gross inconsistency between the comment and the
-> > > code. :/
-> > >
-> > > On block devices, I think we rely on the behavior that writing to disk
-> > > will clear the device's error state (via LBA remapping or some other
-> > > strategy).  I think this means iomap_zeroinit can skip unwritten extents
-> > > because reads and read faults will be satisfied from the zero page and
-> > > writeback (or direct writes) will trigger the drive firmware.
-> > >
-> > > On FSDAX devices, reads are fulfilled by zeroing the user buffer, and
-> > > read faults with the (dax) zero page.  Writes and write faults won't
-> > > clear the poison (unlike disks).  So I guess this means that
-> > > dax_zeroinit *does* have to act on unwritten areas.
->
-> I was confused when I wrote this -- before writing, dax filesystems are
-> required to allocate written zeroed extents and/or zero unwritten
-> extents and mark them written.  So we don't actually need to zero
-> unwritten extents.
->
-> > >
-> > > Ok.  I'll make those changes.
-> >
-> > Yes, I guess unwritten extents still have extents blocks allocated with
-> > generally a bit marked (to mark it as unwritten). So there could still be
-> > a need to clear the poison for this in case of DAX.
-> >
-> > >
-> > > As for holes -- on the one hand, one could argue that zero-initializing
-> > > a hole makes no sense and should be an error.  OTOH one could make an
-> > > equally compelling argument that it's merely a nop.  Thoughts?
-> >
-> > So in case of holes consider this case (please correct if any of my
-> > understanding below is wrong/incomplete).
-> > If we have a large hole and if someone tries to do write to that area.
-> > 1. Then from what I understood from the code FS will try and allocate some disk
-> >    blocks (could these blocks be marked with HWpoison as FS has no way of
-> >    knowing it?).
->
-> Freshly allocated extents are zeroed via blkdev_issue_zeroout before
-> being mapped into the file, which will clear the poison.  That last bit
-> is only the reason why the punch-and-rewrite dance ever worked at all.
->
-> We'll have to make sure this poison clearing still happens even after
-> the dax/block layer divorce.
->
-> > 2. If yes, then after allocating those blocks dax_direct_access will fail (as
-> >    you had mentioned above). But it won't clear the HWposion.
-> > 3. Then the user again will have to clear using this API. But that is only for
-> >    a given extent which is some part of the hole which FS allocated.
-> > Now above could be repeated until the entire hole range is covered.
-> > Is that above understanding correct?
-> >
-> > If yes, then maybe it all depends on what sort of gurantee the API is providing.
-> > If using the API on the given range guarantees that the entire file range will
-> > not have any blocks with HWpoison then I guess we may have to cover the
-> > IOMAP_HOLE case as well?
-> > If not, then maybe we could explicitly mentioned this in the API documentation.
->
-> Ok.  The short version is that zeroinit will ensure that subsequent
-> reads, writes, or faults to allocated file ranges won't have problems
-> with pre-existing poison flags.
-
-s/won't/likely won't/
-
-s/pre-existing/known pre-existing/
-
-i.e. the guarantees of this interface is that it will have tried its
-best to clean up media errors, and that may only be possible for pmem
-if latent poison has been previously notified to the driver, and if
-the driver supports error clearing. For example, if you're using
-memmap=ss!nn to emulate PMEM with a DRAM range with poison I expect
-that this routine will succeed even though no poison is corrected.
+Assalamu alaikum,
+I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological,
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children. I have investment funds
+worth Twenty Seven Million Five Hundred Thousand United State Dollar
+($27.500.000.00 ) and i need a trusted  investment Manager/Partner
+because of my current refugee status, however, I am interested in you
+for investment project assistance in your country. If you are willing
+to handle this project on my behalf kindly reply urgently to enable me
+to provide you more information about the investment
+funds.
+Best Regards
