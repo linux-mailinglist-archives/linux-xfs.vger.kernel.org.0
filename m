@@ -2,34 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CA9941696E
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Sep 2021 03:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79EA541696F
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Sep 2021 03:27:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243768AbhIXB3K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 23 Sep 2021 21:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        id S243772AbhIXB3R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 Sep 2021 21:29:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243765AbhIXB3K (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Thu, 23 Sep 2021 21:29:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3444F610CB;
-        Fri, 24 Sep 2021 01:27:38 +0000 (UTC)
+        id S243769AbhIXB3Q (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Thu, 23 Sep 2021 21:29:16 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id B10D0610CB;
+        Fri, 24 Sep 2021 01:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632446858;
-        bh=TLGEAes75D4OnUc2Y+ZRI5XP95SWLtqPOnqcEGn6Twc=;
-        h=Subject:From:To:Cc:Date:From;
-        b=EZHfdp/83Tl+2v5aPdMqXN21ZmRGhekHO3OrwJP0Udb1KDarP3nhv1NCMjXmfjRAu
-         FOsboTFQxEl5BtbNVmmxj0yTQHEDR5pt7nBtGUbVHggImhv39p+Bu9a+IQaAfLxy5N
-         FKoKXUGamcTEbr82mVnP1pLgy3RBVNMXIgDDLcc+V+dWydguh+Av2XdPTqyaG7xqrM
-         lhmjka3Yb7OdCMFqIRsFBa+cmuOohG6H7nJAqcU2WKmmbCFl5ay4dnYYVZDDRaLo1s
-         5fNcO+Npz4rtAPBTLTfrP4dhyYe3xTEOTFUOaSRBddp6BL5fCyUrJbbpI2kpBbi//c
-         X1e8vn1pbUFNA==
-Subject: [PATCHSET RFC v2 chandan 0/4] xfs: separate btree cursor slab zones
+        s=k20201202; t=1632446863;
+        bh=/BCv7Obigp0Z9IPSuQwTI0GSnBv8Ceqy8y/weVWjWdk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=uGxEZJrxlMv9S6b00rczs8owCKksMDkE6SC6sy1EwnqRwRC54L3g4xg157pmgUnYF
+         KQH8ynmJCQg5k4uEsSp9LUrjqMRG5avVXGN/JOOkjMrXXscj03mIAqYYsgl+Mc+F34
+         7mINtPtoJ55O8IcP+xyacZg+HGJQPhmv8wdGcAWk0B60pSTSQ0NJU+X+pDoWoTXEiC
+         I1WEq4lUeGgVJLvU7ZmsmocE+WnJY2MabGPu5DRMxIMhNCEGQnmwAWHGSz3U5mIHNy
+         ekUniq6PJ0MM5zOe2Rf1nIuiLU5oemUkGv3iptAxWYcZ1Z7g0J5bhBz2At3KbQO3rI
+         NULoDSZP1/IXg==
+Subject: [PATCH 1/4] xfs: remove xfs_btree_cur.bc_blocklog
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, chandan.babu@oracle.com,
         chandanrlinux@gmail.com, david@fromorbit.com
 Cc:     linux-xfs@vger.kernel.org
-Date:   Thu, 23 Sep 2021 18:27:37 -0700
-Message-ID: <163244685787.2701674.13029851795897591378.stgit@magnolia>
+Date:   Thu, 23 Sep 2021 18:27:43 -0700
+Message-ID: <163244686340.2701674.14324295598821372906.stgit@magnolia>
+In-Reply-To: <163244685787.2701674.13029851795897591378.stgit@magnolia>
+References: <163244685787.2701674.13029851795897591378.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -38,65 +40,39 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Following the review discussions about the dynamic btree cursor height
-patches, I've throw together another series to reduce the size of the
-btree cursor, compute the absolute maximum possible btree heights for
-each btree type, and now each btree cursor has its own slab zone:
+This field isn't used by anyone, so get rid of it.
 
-$ grep xfs.*cur /proc/slabinfo
-xfs_refc_btree_cur      0      0    192   21    1 : tunables    0    0    0 : slabdata      0      0      0
-xfs_ialloc_btree_cur      0      0    208   19    1 : tunables    0    0    0 : slabdata      0      0      0
-xfs_bmap_btree_cur      0      0    240   17    1 : tunables    0    0    0 : slabdata      0      0      0
-xfs_rmap_btree_cur      0      0    240   17    1 : tunables    0    0    0 : slabdata      0      0      0
-xfs_alloc_btree_cur      0      0    208   19    1 : tunables    0    0    0 : slabdata      0      0      0
-
-I've also rigged up the debugger to make it easier to extract the actual
-height information:
-
-$ xfs_db /dev/sda -c 'btheight -w absmax all'
-bnobt: 7
-cntbt: 7
-inobt: 7
-finobt: 7
-bmapbt: 9
-refcountbt: 6
-rmapbt: 9
-
-As you can see from the slabinfo output, this no longer means that we're
-allocating 224-byte cursors for all five btree types.  Even with the
-extra overhead of supporting dynamic cursor sizes, we still come out
-ahead in terms of cursor size for three of the five btree types.
-
-This series also includes a couple of patches to reduce holes and
-unnecessary fields in the btree cursor.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=btree-cursor-zones-5.16
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc_btree.c    |   12 +++++++
- fs/xfs/libxfs/xfs_alloc_btree.h    |    1 +
- fs/xfs/libxfs/xfs_bmap_btree.c     |   13 ++++++++
- fs/xfs/libxfs/xfs_bmap_btree.h     |    1 +
- fs/xfs/libxfs/xfs_btree.c          |   61 +++++++++++++++++++++++++++++++----
- fs/xfs/libxfs/xfs_btree.h          |   28 +++++++++-------
- fs/xfs/libxfs/xfs_fs.h             |    3 ++
- fs/xfs/libxfs/xfs_ialloc_btree.c   |   11 ++++++
- fs/xfs/libxfs/xfs_ialloc_btree.h   |    1 +
- fs/xfs/libxfs/xfs_refcount_btree.c |   13 ++++++++
- fs/xfs/libxfs/xfs_refcount_btree.h |    1 +
- fs/xfs/libxfs/xfs_rmap_btree.c     |   25 +++++++++++++++
- fs/xfs/libxfs/xfs_rmap_btree.h     |    1 +
- fs/xfs/libxfs/xfs_types.h          |    3 ++
- fs/xfs/xfs_super.c                 |   62 +++++++++++++++++++++++++++++++++---
- 15 files changed, 210 insertions(+), 26 deletions(-)
+ fs/xfs/libxfs/xfs_btree.c |    1 -
+ fs/xfs/libxfs/xfs_btree.h |    1 -
+ 2 files changed, 2 deletions(-)
+
+
+diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
+index 64b47e81f6f3..619319ff41e5 100644
+--- a/fs/xfs/libxfs/xfs_btree.c
++++ b/fs/xfs/libxfs/xfs_btree.c
+@@ -5023,7 +5023,6 @@ xfs_btree_alloc_cursor(
+ 	cur->bc_tp = tp;
+ 	cur->bc_mp = mp;
+ 	cur->bc_btnum = btnum;
+-	cur->bc_blocklog = mp->m_sb.sb_blocklog;
+ 	cur->bc_maxlevels = maxlevels;
+ 
+ 	return cur;
+diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+index 89239b2be096..527b90aa085b 100644
+--- a/fs/xfs/libxfs/xfs_btree.h
++++ b/fs/xfs/libxfs/xfs_btree.h
+@@ -241,7 +241,6 @@ struct xfs_btree_cur
+ 	uint			bc_flags; /* btree features - below */
+ 	uint8_t		bc_maxlevels;	/* maximum levels for this btree type */
+ 	uint8_t		bc_nlevels;	/* number of levels in the tree */
+-	uint8_t		bc_blocklog;	/* log2(blocksize) of btree blocks */
+ 	union xfs_btree_irec	bc_rec;	/* current insert/search record value */
+ 	xfs_btnum_t	bc_btnum;	/* identifies which btree type */
+ 	int		bc_statoff;	/* offset of btre stats array */
 
