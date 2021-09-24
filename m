@@ -2,232 +2,224 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C54041769C
-	for <lists+linux-xfs@lfdr.de>; Fri, 24 Sep 2021 16:10:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB8B3417995
+	for <lists+linux-xfs@lfdr.de>; Fri, 24 Sep 2021 19:18:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346710AbhIXOMG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 24 Sep 2021 10:12:06 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:47570 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1346713AbhIXOMD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Sep 2021 10:12:03 -0400
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18ODQEEh017543;
-        Fri, 24 Sep 2021 14:10:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version;
- s=corp-2021-07-09; bh=ZWaltiW5z4Yi+UEgPmgDA6GzdgtN6q3u5rRH+cXfJjo=;
- b=UFq5dhMR5n0e/7Ubi3taBIg3Sgzb2t8kSFxgkkHZckB9+MicPvMBf6VQA5l5ovtsggkU
- hhMuERnvcMA+5NhOCoGK3Q2SOG1azsJB69gYyebOF+RInF2CUAiNxeOTZNLSWYPHoGHF
- 6PfmlFLFlGZFRelvw39/6dI7677V3dP2ZLriwKfyZ1SjDMHOiCbSC4vTfVIQVitz26dE
- 3uGN9Jx2jr2o7hJiiNdw0lSxYr2egR77z77W/cH6NXNqNpCF5Re8oXf0wjE7olp7HfBa
- +KxOGIGe9LYv1Bbui0Ay+88TPvD7ZGZ+Bq2XQqKwHGbg2agXuvR2pjtmIrt9RtDdj+eC CA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3b93eqkq3w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Sep 2021 14:10:23 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18OE1hLc125156;
-        Fri, 24 Sep 2021 14:10:19 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-        by userp3030.oracle.com with ESMTP id 3b93g3aadf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Sep 2021 14:10:19 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kGKPGaG6wrodBbeCFMe0A6RRPVirVPD/6eZQxiBhjXRd/jh+IG70SnG28ISlYXfLOnbdV4Gb4+W++Hk4o2hXPrf27T0dmEZzd13KXVP5ZvKnJ823IKCu5Z6RoTj1f7NlxXeM0nzMw71eosLVSkipSAJ5FMHb2/TDGl/2i7MOuXyipird0gEUjV6ndHxQ8Kp5BzrvWaxa6wAIRg49VvjhkSUUpAskgUe5U3ZcEhrZHP5xbiTXBAEQMek/DKHzvEICJde6py6DonJxupKUK9inclEygyXYXTW5RzuJ1wlN2yUeaNx1o+J1Mm95oRuOVDDSgRmq+XvF/aiqXtfdQNus7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=ZWaltiW5z4Yi+UEgPmgDA6GzdgtN6q3u5rRH+cXfJjo=;
- b=d64SzSwTWgerC2x6rSdqyCVn+HrSg97imr/XfPdp5yfzSgbSxj35HCvCO1DiIEuNwuGKCb86rM/EmJby8eumtnsUsQ0i8rw1t2+bC91fsyN1UM5VLNwAfKtcfnFZx/0d+gXJW7rO2eODmGOdtn/tda6czAv89lRpTEzcvnQ/BB1nNjH1aLTIQXU6RtwR9HUbdW2UVfW5Czf21QNxDYykwrDT8C2FU4K1cMmQ5QsjMHnPC7GQoZQJlvxZ8gRMOkmatddwaR7zTEszT5L7yAypjtXZ9eURhoSNngUhtnjYoGQjCQ4q20vxwvUrO2ClGjX7BLMYywr7dpk3oPdxkmkpAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZWaltiW5z4Yi+UEgPmgDA6GzdgtN6q3u5rRH+cXfJjo=;
- b=QlbH8KkxP4iJ5d/9OnDA550/Zqf/STNRZ0Jz35oj6lde3qypr1BaVl8t778HKw/LiQovOVlBsm/XQP13x/6O5wQnKyKXA/r+J7v/HMQum+UL3ba5Vdr4x9+WwY+TJ0M+Sw2KrqS+vVYaU8A7CHyMaelJ3KURueNnTKCPhpM9960=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12)
- by SN6PR10MB2541.namprd10.prod.outlook.com (2603:10b6:805:44::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4523.14; Fri, 24 Sep
- 2021 14:10:17 +0000
-Received: from SA2PR10MB4587.namprd10.prod.outlook.com
- ([fe80::1138:f2cb:64f8:c901]) by SA2PR10MB4587.namprd10.prod.outlook.com
- ([fe80::1138:f2cb:64f8:c901%8]) with mapi id 15.20.4544.018; Fri, 24 Sep 2021
- 14:10:17 +0000
-From:   Chandan Babu R <chandan.babu@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>, david@fromorbit.com,
-        sandeen@sandeen.net, djwong@kernel.org
-Subject: [PATCH V2 5/5] libxfs: add wrappers for kernel semaphores
-Date:   Fri, 24 Sep 2021 19:39:12 +0530
-Message-Id: <20210924140912.201481-6-chandan.babu@oracle.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210924140912.201481-1-chandan.babu@oracle.com>
-References: <20210924140912.201481-1-chandan.babu@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0143.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:71::13) To SA2PR10MB4587.namprd10.prod.outlook.com
- (2603:10b6:806:114::12)
+        id S1343923AbhIXRTo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 24 Sep 2021 13:19:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47227 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1344383AbhIXRTn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 24 Sep 2021 13:19:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632503889;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=eQGrOpfP233mFmIfFg/o+cJ+c+v9gOkxJH/IeGmKkL0=;
+        b=HEk5ozOJBbmSwdKPtFE9h7rlnwXj6vdONxfi038CQajJQX+2ewwpQoYjuiHcf20YDgSqD5
+        THijPNHOnfoqOcEbb2QPqYwCZPUAFTUcKjwU1tJmRp+HYmqdTCXD/sgGdSIBh9FxvZ+9cH
+        RNpjd3E1+Dn9vf88rWX1rhdFJTjWIrY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-430-POZdDApVPBmG1-VdzFXypg-1; Fri, 24 Sep 2021 13:18:05 -0400
+X-MC-Unique: POZdDApVPBmG1-VdzFXypg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED37B8015C7;
+        Fri, 24 Sep 2021 17:17:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B39FD19D9B;
+        Fri, 24 Sep 2021 17:17:53 +0000 (UTC)
+Subject: [RFC][PATCH v3 0/9] mm: Use DIO for swap and fix NFS swapfiles
+From:   David Howells <dhowells@redhat.com>
+To:     willy@infradead.org, hch@lst.de, trond.myklebust@primarydata.com
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-block@vger.kernel.org,
+        ceph-devel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>, linux-mm@kvack.org,
+        Bob Liu <bob.liu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Seth Jennings <sjenning@linux.vnet.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-cifs@vger.kernel.org, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Steve French <sfrench@samba.org>, NeilBrown <neilb@suse.de>,
+        Dan Magenheimer <dan.magenheimer@oracle.com>,
+        linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        linux-btrfs@vger.kernel.org, dhowells@redhat.com,
+        dhowells@redhat.com, darrick.wong@oracle.com,
+        viro@zeniv.linux.org.uk, jlayton@kernel.org,
+        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 24 Sep 2021 18:17:52 +0100
+Message-ID: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Received: from localhost.localdomain (122.179.80.2) by MA1PR01CA0143.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:71::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13 via Frontend Transport; Fri, 24 Sep 2021 14:10:15 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 62af3a9c-c1f3-4465-bb03-08d97f65093f
-X-MS-TrafficTypeDiagnostic: SN6PR10MB2541:
-X-Microsoft-Antispam-PRVS: <SN6PR10MB254117AD19E1EE29CEC998FBF6A49@SN6PR10MB2541.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u7iVfRp4cCK/YxI2JEpv8UgWJo1zCotf023soS84wvVL5cu3akpU7qCxA8vn4hKBlHQ96vZPcMtAKTpXDaVOnHfnQn01D2I8ET9lOb3CydIpEe9bVx9fHPcCPNuWBqFeRyabqAKSqEB83UGgpsY2NV9cjc0YOjAwtnPPe7JRY7byu1mrk2fa2rVoPD5VlZJst2BRN9MvueUSqz89VvLcnizrvFQYuQgI7NS+Cd+NMZKpyUFE7wNfNt0yo/dKHbJN80eNSqboxJ7phshUEECHT1D3hDlf59BIxdXMLoQ3IBztpunXPu6YpJxkdMOQTqXn7E2NOITGR8oWOWkQxOQ+evvYYSRuW4+EZm+jmdiv4KLisidoTF+w4njfY4dnD93TUZxL+6/LQu6qDwjqqbPwEveNjfbDTJ1IvSnFavz2xSHXzAQpA2IFQCHRgUTiELTD5lcVqIfOH+uOQaZIy98AL6xSS7INcX1DS6gR0Rl3SxZlLB9HbqI5mc9Q9lugvlQAvm/kHTW94ZoDsGhqu22+mw240+zOhvyzv7BjPiY+klhhHbqkGU2KpTbi7sLToRnqqnLjtYnDD1wfaExaGxWJJoE1t67n9xHJn1Gjau114dZmX+bAuuTdrOhniyzLuqokqEc0zdzBOBMErcng4B8M5XeODhme31CMemf1A8NlzWMlwrKHwIEtnOR89Vm+xGh5NcydExb5rHh/BC8WsLpmAg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR10MB4587.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(38350700002)(38100700002)(36756003)(86362001)(316002)(956004)(1076003)(8936002)(6916009)(508600001)(2616005)(26005)(83380400001)(66476007)(8676002)(66946007)(66556008)(4326008)(6512007)(6506007)(6666004)(186003)(52116002)(6486002)(2906002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WLT7Ft12+MYYRkgT0c+DuQHllJ5Gtan9a7jRD3jqw8dZxkj/P7yd+3lJCr3+?=
- =?us-ascii?Q?dy0ln8L9NyIEmQr08AHJq0MgITHscJXfuVdHX+xoNBN0rcJXvu7kTNf4gTbB?=
- =?us-ascii?Q?MOj48WY9IfqavhGC9rj14pQOTCjDcLq/6O6AQol10/cGUNUxP9FX9t8Am61O?=
- =?us-ascii?Q?KAStgg9vM8bqVDHJ5eglXsN/Kxgo5+0uhfvMFymlWqvcNfewKsMzyyALhRSw?=
- =?us-ascii?Q?kGk9nQzog5kZxLVQ7NZzJy1Q3UZfjBjUgyxLwWlemvUEzA+5po4uImE36mfG?=
- =?us-ascii?Q?UWv0EXnqtdiylOyexIr45zollrPTCJ3zx3saCuXiul/KZoRksHe/CsfmoTGG?=
- =?us-ascii?Q?QZd3wruSfwR43xXhJumOfKd6FxorfBjuq6iKo6z/XKjxsarVWgBa8/twlJ8y?=
- =?us-ascii?Q?5GwE3CTem/sBCGubEoJhrbC/nTvabiIQS+KF9N6kcgJEvOpT3TGlmP9k7hFW?=
- =?us-ascii?Q?cf5xlhUNnnYb8+5VeLMbP6UZXKns5/r7K35rULAT+YNuTbG9YQ6jZA4q267H?=
- =?us-ascii?Q?7/PTqiDq55+rJphFTIgz7v88hWAz4TlHrIf/msTGPoKGhQKZcaEUwF8sVkKL?=
- =?us-ascii?Q?Op/z0jBiNWR32tA8PzLCMoBLD3vvHI734bpEjOnP9vgptNT/MDpZXb9EjEuB?=
- =?us-ascii?Q?4nG8OiES/zZZjlcvvL4vlv4hWcnEbQiiamzCB96zFwzzm/4J6gmNtfKyOHs/?=
- =?us-ascii?Q?eJi1RkibDxbl8VmWDf9V99Za1Gav6Sy2FRtoY8bUhA6HV/omdZXkaLtObGBY?=
- =?us-ascii?Q?wj7l1JBVqWueoq1qIqR8AdBRTC155YkoPKdK+x7Jig+5H4k9QRRrT4WCW80j?=
- =?us-ascii?Q?aDtpD5MdQvdlOwODX3bfJYmJpgYqmGLowzqTQKd7CBmO9IdNFK58bFDCj300?=
- =?us-ascii?Q?qbhkrh41uSgJq1eLKz3hhzUhXwAXMRCtlR+xLBP+b+cLSexEqghVbezUrHKx?=
- =?us-ascii?Q?xN2gGiMKL7AMRLXRdk88wNtp+0tJb6GhlDHfzw9Z0y0kpG5lHh60NnyhdzyC?=
- =?us-ascii?Q?uW1AzfnzroV5pcypYjoYQ3YmA2hjDfsO5ny6/IpRilUFFym2acu+W4YbRZEd?=
- =?us-ascii?Q?Dyst5i5luvRnoF9pm85G4++L1RI5zi3yPwkb/WpdsvjO5hNrdyn6Tf/qIlyD?=
- =?us-ascii?Q?hyiLVDIMbPpsxRwcFaVxPG7iKWSn4J7CKTX61IdAVAreEjIaD0/0B+oBOI3s?=
- =?us-ascii?Q?9yV85H+Yof+bGf6YlOD79DXQO6ZGwrRN8ID97W4R007CspXRml7y65pI8Heh?=
- =?us-ascii?Q?y0C/U+lYbTfPBc1nQ3UscZyColmgB9nJR+QR8xEpkERlAf4M5+EElj68Q2Az?=
- =?us-ascii?Q?d483Z4xcWICNEU2XE65VxEw6?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62af3a9c-c1f3-4465-bb03-08d97f65093f
-X-MS-Exchange-CrossTenant-AuthSource: SA2PR10MB4587.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2021 14:10:17.6776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: W5MCnWiPnhoc2wAyP4jSDwRWQSa8q5dZkpDju47W+JBTMSTPhJywgthk0a0IenZ9U3tT5rndjD8oes8Ah3yJZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR10MB2541
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10116 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 spamscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2109240088
-X-Proofpoint-ORIG-GUID: OoC0RLChH1mzPkl53K2XpyZ0MN3s0BvH
-X-Proofpoint-GUID: OoC0RLChH1mzPkl53K2XpyZ0MN3s0BvH
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
 
-Implemented via pthread mutexes.
+Hi Willy, Trond, Christoph,
 
-On Linux, fast pthread mutexes don't actaully check which thread
-owns the lock on unlock, so can be used in situations where the
-unlock occurs in a different thread to the lock. This is
-non-portable behaviour, so if other platforms are supported, this
-may need to be converted to posix semaphores.
+Here's v3 of a change to make reads and writes from the swapfile use async
+DIO, adding a new ->swap_rw() address_space method, rather than readpage()
+or direct_IO(), as requested by Willy.  This allows NFS to bypass the write
+checks that prevent swapfiles from working, plus a bunch of other checks
+that may or may not be necessary.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Whilst trying to make this work, I found that NFS's support for swapfiles
+seems to have been non-functional since Aug 2019 (I think), so the first
+patch fixes that.  Question is: do we actually *want* to keep this
+functionality, given that it seems that no one's tested it with an upstream
+kernel in the last couple of years?
+
+There are additional patches to get rid of noop_direct_IO and replace it
+with a feature bitmask, to make btrfs, ext4, xfs and raw blockdevs use the
+new ->swap_rw method and thence remove the direct BIO submission paths from
+swap.
+
+I kept the IOCB_SWAP flag, using it to enable REQ_SWAP.  I'm not sure if
+that's necessary, but it seems accounting related.
+
+The synchronous DIO I/O code on NFS, raw blockdev, ext4 swapfile and xfs
+swapfile all seem to work fine.  Btrfs refuses to swapon because the file
+might be CoW'd.  I've tried doing "chattr +C", but that didn't help.
+
+The async DIO paths fail spectacularly (from I/O errors to ATA failure
+messages on the test disk using a normal swapspace); NFS just hangs.
+
+My patches can be found here also:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=swap-dio
+
+I tested this using the procedure and program outlined in the NFS patch.
+
+I also encountered occasional instances of the following warning with NFS, so
+I'm wondering if there's a scheduling problem somewhere:
+
+BUG: workqueue lockup - pool cpus=0-3 flags=0x5 nice=0 stuck for 34s!
+Showing busy workqueues and worker pools:
+workqueue events: flags=0x0
+  pwq 6: cpus=3 node=0 flags=0x0 nice=0 active=1/256 refcnt=2
+    in-flight: 1565:fill_page_cache_func
+workqueue events_highpri: flags=0x10
+  pwq 3: cpus=1 node=0 flags=0x1 nice=-20 active=1/256 refcnt=2
+    in-flight: 1547:fill_page_cache_func
+  pwq 1: cpus=0 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2
+    in-flight: 1811:fill_page_cache_func
+workqueue events_unbound: flags=0x2
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=3/512 refcnt=5
+    pending: fsnotify_connector_destroy_workfn, fsnotify_mark_destroy_workfn, cleanup_offline_cgwbs_workfn
+workqueue events_power_efficient: flags=0x82
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=4/256 refcnt=6
+    pending: neigh_periodic_work, neigh_periodic_work, check_lifetime, do_cache_clean
+workqueue writeback: flags=0x4a
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=1/256 refcnt=4
+    in-flight: 433(RESCUER):wb_workfn
+workqueue rpciod: flags=0xa
+  pwq 8: cpus=0-3 flags=0x5 nice=0 active=38/256 refcnt=40
+    in-flight: 7:rpc_async_schedule, 1609:rpc_async_schedule, 1610:rpc_async_schedule, 912:rpc_async_schedule, 1613:rpc_async_schedule, 1631:rpc_async_schedule, 34:rpc_async_schedule, 44:rpc_async_schedule
+    pending: rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule, rpc_async_schedule
+workqueue ext4-rsv-conversion: flags=0x2000a
+pool 1: cpus=0 node=0 flags=0x0 nice=-20 hung=59s workers=2 idle: 6
+pool 3: cpus=1 node=0 flags=0x1 nice=-20 hung=43s workers=2 manager: 20
+pool 6: cpus=3 node=0 flags=0x0 nice=0 hung=0s workers=3 idle: 498 29
+pool 8: cpus=0-3 flags=0x5 nice=0 hung=34s workers=9 manager: 1623
+pool 9: cpus=0-3 flags=0x5 nice=-20 hung=0s workers=2 manager: 5224 idle: 859
+
+Note that this is due to DIO writes to NFS only, as far as I can tell, and
+that no reads had happened yet.
+
+Changes:
+========
+ver #3:
+   - Introduced a new ->swap_rw() method.
+   - Added feature support flags to the address_space_operations struct and
+     got rid of the checks for ->direct_() and noop_direct_IO() and
+     similar.
+   - Implemented swap_rw for nfs, adjusting the direct I/O code paths.
+   - Implemented swap_rw for blockdev, btrfs, ext4 and xfs.
+   - Got rid of the return value on swap_readpage() as it's never checked.
+
+ver #2:
+   - Remove the callback param to __swap_writepage() as it's invariant.
+   - Allocate the kiocb on the stack in sync mode.
+   - Do an async DIO write if WB_SYNC_ALL isn't set.
+   - Try to remove the BIO submission paths.
+
+David
+
+Link: https://lore.kernel.org/r/162876946134.3068428.15475611190876694695.stgit@warthog.procyon.org.uk/ # v1
+Link: https://lore.kernel.org/r/162879971699.3306668.8977537647318498651.stgit@warthog.procyon.org.uk/ # v2
 ---
- include/Makefile     |  1 +
- include/libxfs.h     |  1 +
- include/sema.h       | 35 +++++++++++++++++++++++++++++++++++
- libxfs/libxfs_priv.h |  1 +
- 4 files changed, 38 insertions(+)
- create mode 100644 include/sema.h
+David Howells (9):
+      mm: Remove the callback func argument from __swap_writepage()
+      mm: Add 'supports' field to the address_space_operations to list features
+      mm: Make swap_readpage() void
+      Introduce IOCB_SWAP kiocb flag to trigger REQ_SWAP
+      mm: Make swap_readpage() for SWP_FS_OPS use ->swap_rw() not ->readpage()
+      mm: Make __swap_writepage() do async DIO if asked for it
+      nfs: Fix write to swapfile failure due to generic_write_checks()
+      block, btrfs, ext4, xfs: Implement swap_rw
+      mm: Remove swap BIO paths and only use DIO paths
 
-diff --git a/include/Makefile b/include/Makefile
-index 98031e70..ce89d023 100644
---- a/include/Makefile
-+++ b/include/Makefile
-@@ -17,6 +17,7 @@ LIBHFILES = libxfs.h \
- 	kmem.h \
- 	list.h \
- 	parent.h \
-+	sema.h \
- 	spinlock.h \
- 	xfs_inode.h \
- 	xfs_log_recover.h \
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 61475347..ca5a21b0 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -20,6 +20,7 @@
- #include "atomic.h"
- #include "spinlock.h"
- #include "completion.h"
-+#include "sema.h"
- 
- #include "xfs_types.h"
- #include "xfs_fs.h"
-diff --git a/include/sema.h b/include/sema.h
-new file mode 100644
-index 00000000..bcccb156
---- /dev/null
-+++ b/include/sema.h
-@@ -0,0 +1,35 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019-20 RedHat, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef __LIBXFS_SEMA_H__
-+#define __LIBXFS_SEMA_H__
-+
-+/*
-+ * This implements kernel compatible semaphore _exclusion_ semantics. It does
-+ * not implement counting semaphore behaviour.
-+ *
-+ * This makes use of the fact that fast pthread mutexes on Linux don't check
-+ * that the unlocker is the same thread that locked the mutex, and hence can be
-+ * unlocked in a different thread safely.
-+ *
-+ * If this needs to be portable or we require counting semaphore behaviour in
-+ * libxfs code, this requires re-implementation based on posix semaphores.
-+ */
-+struct semaphore {
-+	pthread_mutex_t		lock;
-+};
-+
-+#define sema_init(l, nolock)		\
-+do {					\
-+	pthread_mutex_init(&(l)->lock, NULL);	\
-+	if (!nolock)			\
-+		pthread_mutex_lock(&(l)->lock);	\
-+} while (0)
-+
-+#define down(l)			pthread_mutex_lock(&(l)->lock)
-+#define down_trylock(l)		pthread_mutex_trylock(&(l)->lock)
-+#define up(l)			pthread_mutex_unlock(&(l)->lock)
-+
-+#endif /* __LIBXFS_SEMA_H__ */
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 9f28fd90..1fc243cf 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -50,6 +50,7 @@
- #include "atomic.h"
- #include "spinlock.h"
- #include "completion.h"
-+#include "sema.h"
- 
- #include "xfs_types.h"
- #include "xfs_arch.h"
--- 
-2.30.2
+
+ Documentation/filesystems/vfs.rst |   8 +
+ block/fops.c                      |   2 +
+ drivers/block/loop.c              |   6 +-
+ fs/9p/vfs_addr.c                  |   1 +
+ fs/affs/file.c                    |   1 +
+ fs/btrfs/inode.c                  |  14 +-
+ fs/ceph/addr.c                    |  13 +-
+ fs/cifs/file.c                    |  21 +-
+ fs/direct-io.c                    |   2 +
+ fs/erofs/data.c                   |   2 +-
+ fs/exfat/inode.c                  |   1 +
+ fs/ext2/inode.c                   |   4 +-
+ fs/ext4/inode.c                   |  17 +-
+ fs/f2fs/data.c                    |   1 +
+ fs/fat/inode.c                    |   1 +
+ fs/fcntl.c                        |   2 +-
+ fs/fuse/dax.c                     |   2 +-
+ fs/fuse/file.c                    |   1 +
+ fs/gfs2/aops.c                    |   2 +-
+ fs/hfs/inode.c                    |   1 +
+ fs/hfsplus/inode.c                |   1 +
+ fs/jfs/inode.c                    |   1 +
+ fs/libfs.c                        |  12 -
+ fs/nfs/direct.c                   |  28 +--
+ fs/nfs/file.c                     |  15 +-
+ fs/nilfs2/inode.c                 |   1 +
+ fs/ntfs3/inode.c                  |   1 +
+ fs/ocfs2/aops.c                   |   1 +
+ fs/open.c                         |   3 +-
+ fs/orangefs/inode.c               |   1 +
+ fs/overlayfs/file.c               |   2 +-
+ fs/overlayfs/inode.c              |   3 +-
+ fs/reiserfs/inode.c               |   1 +
+ fs/udf/file.c                     |   1 +
+ fs/udf/inode.c                    |   1 +
+ fs/xfs/xfs_aops.c                 |  13 +-
+ fs/zonefs/super.c                 |   2 +-
+ include/linux/bio.h               |   2 +
+ include/linux/fs.h                |   7 +-
+ include/linux/nfs_fs.h            |   2 +-
+ include/linux/swap.h              |   2 +-
+ mm/page_io.c                      | 356 +++++++++++++++---------------
+ mm/swapfile.c                     |   4 +-
+ 43 files changed, 275 insertions(+), 287 deletions(-)
+
 
