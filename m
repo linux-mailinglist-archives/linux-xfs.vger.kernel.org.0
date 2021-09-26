@@ -2,95 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CEE4187E2
-	for <lists+linux-xfs@lfdr.de>; Sun, 26 Sep 2021 11:19:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46151418B50
+	for <lists+linux-xfs@lfdr.de>; Sun, 26 Sep 2021 23:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229753AbhIZJUs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 26 Sep 2021 05:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbhIZJUr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Sep 2021 05:20:47 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68800C061570
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Sep 2021 02:19:11 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id l8so7799784edw.2
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Sep 2021 02:19:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=VtMedlaeZmHrhFE51DwsgmfqzcPBW4fjw77eXvhaRas=;
-        b=TUsKzF64pnd1dJAcKI+IDow35F5SWPCJksYRhe4dMxzXorJWuxqm9qrXG1/2dRH/ha
-         ch/+RvdpwuQRHKoCNj0T0VIosRQ5JXSVHaQYhRJ79yDoXYC63y5mIoTOXWe8Vd+a1T0v
-         nYjs3Q0bcS5GTUqpiR5uVUXuxUyfoTwF/4UKbJJJsziXMJ7gGCK+e7yGiZhNHXMrJDZd
-         eGG55Ir0+aEaoCqAU5/hkK0K5Qp+PLKWy4wu/dT1bLlQzilz/W0XRm0YNrY7GGADAbrz
-         VCVJgb8z6A+a9FQAxwN0ba996zts3o7Hukvx9SEB85lCCSOhFe9hQkloeC5js/GaRKG3
-         CQGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=VtMedlaeZmHrhFE51DwsgmfqzcPBW4fjw77eXvhaRas=;
-        b=pPL1K/QQRfu8xYyITMDkS3DliWw+/kKBlPLr2BF4Uk187UahIjBn82JL9JOtsd9PHl
-         pyHJhV6Eg5h/GefJ9lnSLJnil1rCCBc1irX5q7AVpTfwmBbmOy9c/H6/9ErVqUZ/SZ/D
-         Uivgwb84rqss9mex7Y2rOoopsI93FLldAEF2b9d+B8pgr2vuEa8zAvxCGeIQlw0rsHOU
-         338W+ZR79qfwLzhCZH1iEBrnNwPZZBippavmAR4CvKMiBCiciTJf3NEHGnUIjy2oJwwT
-         ArUdU1VRjy6x4H4sMr69a0gEu77ahI21wsz9q1kDJ29sztMbwGUQKkAjBCPQsS1DGMsW
-         sd3w==
-X-Gm-Message-State: AOAM530TrD7UlYUdsueb3uM2CjdESyGlE1usONAOqTurTvp+SB6oYqW/
-        63A7aJpJKpSNstqirxKTKZdaJgwB1s0kU2SEBjM=
-X-Google-Smtp-Source: ABdhPJyLefpjTR7HOK3DU86pr9B/GBMJhnkhmJnYHN5ZeXEQiJnDk6gULOr2tvHGcMWQ71b08nqx06LkqYhZAeOUG40=
-X-Received: by 2002:a05:6402:510b:: with SMTP id m11mr17267505edd.82.1632647949924;
- Sun, 26 Sep 2021 02:19:09 -0700 (PDT)
+        id S230296AbhIZV6P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 26 Sep 2021 17:58:15 -0400
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:35015 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229827AbhIZV6P (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Sep 2021 17:58:15 -0400
+Received: from dread.disaster.area (pa49-195-238-16.pa.nsw.optusnet.com.au [49.195.238.16])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id C1B96A7FB;
+        Mon, 27 Sep 2021 07:56:34 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mUc8P-00H5Dz-7k; Mon, 27 Sep 2021 07:56:33 +1000
+Date:   Mon, 27 Sep 2021 07:56:33 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     willy@infradead.org, hch@lst.de, trond.myklebust@primarydata.com,
+        "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, darrick.wong@oracle.com,
+        viro@zeniv.linux.org.uk, jlayton@kernel.org,
+        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/9] Introduce IOCB_SWAP kiocb flag to trigger REQ_SWAP
+Message-ID: <20210926215633.GG2361455@dread.disaster.area>
+References: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
+ <163250391274.2330363.16176856646027970865.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Sender: uchuche66@gmail.com
-Received: by 2002:a17:906:6552:0:0:0:0 with HTTP; Sun, 26 Sep 2021 02:19:09
- -0700 (PDT)
-From:   Evelyn Philips <evelynphilips517@gmail.com>
-Date:   Sun, 26 Sep 2021 02:19:09 -0700
-X-Google-Sender-Auth: DBAG4e6AIYcolUpGjIN_5Q1oRVo
-Message-ID: <CABieb2wgRZ=YtAbXozM2CqPixJSznErgScMLDF6asFzWY47d=A@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163250391274.2330363.16176856646027970865.stgit@warthog.procyon.org.uk>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=F8MpiZpN c=1 sm=1 tr=0
+        a=DzKKRZjfViQTE5W6EVc0VA==:117 a=DzKKRZjfViQTE5W6EVc0VA==:17
+        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=20KFwNOVAAAA:8 a=JfrnYn6hAAAA:8
+        a=VwQbUJbxAAAA:8 a=37rDS-QxAAAA:8 a=7-415B0cAAAA:8 a=4LiqF8mHRpqmJXjidzwA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=k1Nq6YrhK2t884LQW06G:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello Dear Friend,
+On Fri, Sep 24, 2021 at 06:18:32PM +0100, David Howells wrote:
+> Introduce an IOCB_SWAP flag for the kiocb struct such that the REQ_SWAP
+> will get set on lower level operation structures in generic code.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: Christoph Hellwig <hch@lst.de>
+> cc: Darrick J. Wong <djwong@kernel.org>
+> cc: linux-xfs@vger.kernel.org
+> cc: linux-block@vger.kernel.org
+> cc: linux-fsdevel@vger.kernel.org
+> cc: linux-mm@kvack.org
+> ---
+> 
+>  fs/direct-io.c      |    2 ++
+>  include/linux/bio.h |    2 ++
+>  include/linux/fs.h  |    1 +
+>  3 files changed, 5 insertions(+)
+> 
+> diff --git a/fs/direct-io.c b/fs/direct-io.c
+> index b2e86e739d7a..76eec0a68fa4 100644
+> --- a/fs/direct-io.c
+> +++ b/fs/direct-io.c
+> @@ -1216,6 +1216,8 @@ do_blockdev_direct_IO(struct kiocb *iocb, struct inode *inode,
+>  	}
+>  	if (iocb->ki_flags & IOCB_HIPRI)
+>  		dio->op_flags |= REQ_HIPRI;
+> +	if (iocb->ki_flags & IOCB_SWAP)
+> +		dio->op_flags |= REQ_SWAP;
+>  
+>  	/*
+>  	 * For AIO O_(D)SYNC writes we need to defer completions to a workqueue
+> diff --git a/include/linux/bio.h b/include/linux/bio.h
+> index 00952e92eae1..b01133727494 100644
+> --- a/include/linux/bio.h
+> +++ b/include/linux/bio.h
+> @@ -787,6 +787,8 @@ static inline void bio_set_polled(struct bio *bio, struct kiocb *kiocb)
+>  	bio->bi_opf |= REQ_HIPRI;
+>  	if (!is_sync_kiocb(kiocb))
+>  		bio->bi_opf |= REQ_NOWAIT;
+> +	if (kiocb->ki_flags & IOCB_SWAP)
+> +		bio->bi_opf |= REQ_SWAP;
+>  }
+>  
+>  struct bio *blk_next_bio(struct bio *bio, unsigned int nr_pages, gfp_t gfp);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index c909ca6c0eb6..c20f4423e2f1 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -321,6 +321,7 @@ enum rw_hint {
+>  #define IOCB_NOIO		(1 << 20)
+>  /* can use bio alloc cache */
+>  #define IOCB_ALLOC_CACHE	(1 << 21)
+> +#define IOCB_SWAP		(1 << 22)	/* Operation on a swapfile */
+>  
+>  struct kiocb {
+>  	struct file		*ki_filp;
 
-I am glad to know you, but God knows you better and he knows why he
-has directed me to you at this point in time so do not be surprise at
-all. My names are Mrs.Philips.Evelyn.a widow, i have been suffering
-from ovarian cancer disease. At this moment i am about to end the race
-like this because the illness has gotten to a very bad stage, without
-any family members and no child. I hoped that you will not expose or
-betray this trust and confident that I am about to entrust on you for
-the mutual benefit of the orphans and the less privileges ones. I have
-some funds I inherited from my late husband, the sum of ($
-9,500,000.00 Nine point five million dollars.) deposited in the Bank.
-Having known my present health status, I decided to entrust this fund
-to you believing that you will utilize it the way i
-am going to instruct herein.
+This doesn't set REQ_SWAP for the iomap based DIO path.
+bio_set_polled() is only called from iomap for IOCB_HIPRI IO.
 
-Therefore I need you to assist me and reclaim this money and use it
-for Charity works, for orphanages and gives justice and help to the
-poor, needy and to promote the words of God and the effort that the
-house of God will be maintained says The Lord." Jeremiah 22:15-16.=E2=80=9C
-It will be my great pleasure to compensate you with 35 % percent of
-the total money for your personal use, 5 % percent for any expenses
-that may occur during the international transfer process while 60% of
-the money will go to the charity project.
+Cheers,
 
-All I require from you is sincerity and ability to complete God task
-without any failure. It will be my pleasure to see that the bank has
-finally release and transfer the fund into your bank account therein
-your country even before I die here in the hospital, because of my
-present health status everything need to be process rapidly as soon as
-possible. I am waiting for your immediate reply, if only you are
-interested for further details of the transaction and execution of
-this charitable project.
-
-Best Regards your friend . Mrs.Philips.Evelyn.
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
