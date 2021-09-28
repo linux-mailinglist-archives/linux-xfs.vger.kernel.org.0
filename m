@@ -2,58 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF6F41A433
-	for <lists+linux-xfs@lfdr.de>; Tue, 28 Sep 2021 02:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C150841A434
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Sep 2021 02:26:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238325AbhI1A1m (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Sep 2021 20:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
+        id S238334AbhI1A1n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Sep 2021 20:27:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S238277AbhI1A1m (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Sep 2021 20:27:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727AFC061575
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Sep 2021 17:26:03 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id b192so1949360wmb.2
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Sep 2021 17:26:03 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C959C061575
+        for <linux-xfs@vger.kernel.org>; Mon, 27 Sep 2021 17:26:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g16so54903637wrb.3
+        for <linux-xfs@vger.kernel.org>; Mon, 27 Sep 2021 17:26:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fishpost-de.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=srGU3VFBqBxm6uu3+3RXumeG0vzzIrMeoyu/iUfxMF0=;
-        b=VQg4QNgFUD3IRKgqniJLS99QfiXhVGdo96A69DJvEnBjICDfTZFnR6qDOoqT3DOp/8
-         3nDq/1uw1TQEvywQO5R2bAPpq229iwpDIXqtXjwSTH4aSF4gsDV713NZvvu/7AeO2vyg
-         eYpS0J1C4Eu8c+xfutsb8TG4wWR+Wruhzu3NqGriHRjRjWnuQ+cCyFyPYqzymVfxNIFR
-         g6ReeiYvVG4klfEk8S5AXt4nTEPaiCs5pZ5/Sj17PaAsSrDpbTKBwL49rIENfTYkpEgY
-         1aYLbO6RQRI55PUuIIAJgueYcdQgpHqeZXsGpg9lWrjt+mUWWPUdDiqXtVnIN0eCs6ri
-         J0jw==
+        bh=ziBD856Nze7aFwTtcToCjla8YIrnLw4T4XVO4dEXdlM=;
+        b=P/9+QUAmBnPt7u+/9zK6wn1V0AbwJwHh7SE65+btHNY5tE+KkZSse/QXGUJUI4jc9w
+         l0UPS3He9MmBARsXrVpVjgkePLCu7YNt5IrzI/3RIBzUTb+c+ZI4i86V611L/Kw6o6PZ
+         6W0n+tbrGtKl9tHf90MSkbO8L9qe22laMC4+rz7wHjNu+cXpB6n7gh4tre+No8aSUuIO
+         LuuGzhRBL5M+W4CDG5rAi0AOANz8xF/AyV37hSuZBRRZipHi1ba+xUcjK7UIm+b6G6hB
+         GYHBLQhZliwGEPAkFSaAH0ArAFR/UqNu38NphzCMFgOsU0EFEg4+1SlgDCdNQd0HJ/k3
+         fr1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=srGU3VFBqBxm6uu3+3RXumeG0vzzIrMeoyu/iUfxMF0=;
-        b=N3PbxufuP6OrqGhAUMZF+fiTeOP/RE1X1IGbeFMVHqUC63YNMWO1SA6edV3HPuY7uX
-         ZqbfyXFFG9/JtecA0wWAzRxlKU/CiJJHR38FAOspRqtQMcXpVSsynALEpI7/WAaj5poZ
-         UEvvikI60e8/DFsRUXql7KqAnlS0+RNrQxIyFPpjrutNf1ALqs5Y17NEN2WcTGQc8zpb
-         g+WkkuZunL6gff57IsEq6U1XKqLB9lcJaluHRkW0Y/Lr0taOZNLMWA2P3SEbo6o+Eb79
-         y8rZhcfEX3AzKYg2Fdd9f9P6mc7wsENmPjEFjcZa0eGikAsrrLV8yI2M9P5qhNTeIxBd
-         1ljg==
-X-Gm-Message-State: AOAM530cUNqSNfx6OpiYdN8R7fJJ+mvPcYkGxXHq1O3ZWLZNd0j2qZmf
-        f5dl13jNTxbDWyCKpd7T9LTHpIgZ76un3zlaP8Q=
-X-Google-Smtp-Source: ABdhPJxaIsgwKCb+D16Y/7jc+iWFs9PCE3yLKX3iQrjPVqMgjsM2VtXNnal1GBu7EW/MOCO/EUX9IQ==
-X-Received: by 2002:a05:600c:1552:: with SMTP id f18mr1797544wmg.184.1632788762152;
+        bh=ziBD856Nze7aFwTtcToCjla8YIrnLw4T4XVO4dEXdlM=;
+        b=BYlXVdPn2x7RXPxwbMSfcJKQrfWokDunldKpQVuAmJ7W8T/Ecilvj4gOOZ+la6yCIy
+         8usVmGoO40tdZpIGwklrIN5sJkVoBlqVWn9uufrwUsrpx85QOIfq7nPH3PX9DjC9LUD5
+         oplRx1rrK9w2QM0ZmGZr5IZJ2X/CNcbGSb54SNbrty9SSiGmEdZex1bsRVgVrn2ICUcL
+         CB2KHz0OJfVIM1eulbursvY/CCe9dZ7ktdbSHUgoZxv1Wtpcm5vz19sY4xdB31Cutsr8
+         u1U1NaYZBM0WmAb5RDhRNGwiASq/h/LyiXn1+h848OlXJKupJgX1vCyGaGuZJ+B9msiS
+         RO9Q==
+X-Gm-Message-State: AOAM530L6NMG3yyPPsydf9OzqXB8H0URcM7VBFumFjsp5f7OUxAxXW93
+        jtqWM4S7KpkwqJU/OHxd7GbnPRyVFCRTcnF2Ejo=
+X-Google-Smtp-Source: ABdhPJx4oXQYKRZZt46pf73YoxCsGo/chNCmTLr/UHdERH+1F34GygCDtr1u4hPJq9WG2EpFKZMb6A==
+X-Received: by 2002:adf:f687:: with SMTP id v7mr3111725wrp.347.1632788762902;
         Mon, 27 Sep 2021 17:26:02 -0700 (PDT)
 Received: from thinkbage.fritz.box (p200300d06f1f7300176a2a162e6525fe.dip0.t-ipconnect.de. [2003:d0:6f1f:7300:176a:2a16:2e65:25fe])
-        by smtp.gmail.com with ESMTPSA id p3sm4755814wrn.47.2021.09.27.17.26.01
+        by smtp.gmail.com with ESMTPSA id p3sm4755814wrn.47.2021.09.27.17.26.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Sep 2021 17:26:01 -0700 (PDT)
+        Mon, 27 Sep 2021 17:26:02 -0700 (PDT)
 From:   Bastian Germann <bastiangermann@fishpost.de>
 X-Google-Original-From: Bastian Germann <bage@debian.org>
 To:     linux-xfs@vger.kernel.org
-Cc:     Bastian Germann <bage@debian.org>
-Subject: [PATCH 1/3] debian: Update Uploaders list
-Date:   Tue, 28 Sep 2021 02:25:50 +0200
-Message-Id: <20210928002552.10517-2-bage@debian.org>
+Cc:     Bastian Germann <bage@debian.org>,
+        Helmut Grohne <helmut@subdivi.de>
+Subject: [PATCH 2/3] debian: Pass --build and --host to configure
+Date:   Tue, 28 Sep 2021 02:25:51 +0200
+Message-Id: <20210928002552.10517-3-bage@debian.org>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20210928002552.10517-1-bage@debian.org>
 References: <20210928002552.10517-1-bage@debian.org>
@@ -63,26 +64,65 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Set Bastian's debian.org email address.
+xfsprogs fails to cross build because it fails to pass --host to configure.
+Thus it selects the build architecture as host architecture and fails
+configure, because the requested libraries are only installed for the host
+architecture.
 
+Link: https://bugs.debian.org/794158
+Reported-by: Helmut Grohne <helmut@subdivi.de>
 Signed-off-by: Bastian Germann <bage@debian.org>
 ---
- debian/control | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ debian/changelog | 8 ++++++++
+ debian/rules     | 9 +++++++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/debian/control b/debian/control
-index e4ec897c..57131bb4 100644
---- a/debian/control
-+++ b/debian/control
-@@ -2,7 +2,7 @@ Source: xfsprogs
- Section: admin
- Priority: optional
- Maintainer: XFS Development Team <linux-xfs@vger.kernel.org>
--Uploaders: Nathan Scott <nathans@debian.org>, Anibal Monsalve Salazar <anibal@debian.org>, Bastian Germann <bastiangermann@fishpost.de>
-+Uploaders: Nathan Scott <nathans@debian.org>, Anibal Monsalve Salazar <anibal@debian.org>, Bastian Germann <bage@debian.org>
- Build-Depends: libinih-dev (>= 53), uuid-dev, dh-autoreconf, debhelper (>= 5), gettext, libtool, libedit-dev, libblkid-dev (>= 2.17), linux-libc-dev, libdevmapper-dev, libattr1-dev, libicu-dev, pkg-config
- Standards-Version: 4.0.0
- Homepage: https://xfs.wiki.kernel.org/
+diff --git a/debian/changelog b/debian/changelog
+index 4f09e2ca..8b5c6037 100644
+--- a/debian/changelog
++++ b/debian/changelog
+@@ -1,3 +1,11 @@
++xfsprogs (5.13.0-2) unstable; urgency=medium
++
++  [ Helmut Grohne ]
++  * Fix FTCBFS (Closes: #794158)
++    + Pass --build and --host to configure
++
++ -- Bastian Germann <bage@debian.org>  Tue, 28 Sep 2021 00:42:50 +0200
++
+ xfsprogs (5.13.0-1) unstable; urgency=medium
+ 
+   * New upstream release
+diff --git a/debian/rules b/debian/rules
+index fe9a1c3a..e12814b3 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -11,6 +11,9 @@ package = xfsprogs
+ develop = xfslibs-dev
+ bootpkg = xfsprogs-udeb
+ 
++DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
++DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
++
+ version = $(shell dpkg-parsechangelog | grep ^Version: | cut -d ' ' -f 2 | cut -d '-' -f 1)
+ target ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+ udebpkg = $(bootpkg)_$(version)_$(target).udeb
+@@ -23,11 +26,13 @@ pkgdev = DIST_ROOT=`pwd`/$(dirdev); export DIST_ROOT;
+ pkgdi  = DIST_ROOT=`pwd`/$(dirdi); export DIST_ROOT;
+ stdenv = @GZIP=-q; export GZIP;
+ 
++configure_options = --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
++
+ options = export DEBUG=-DNDEBUG DISTRIBUTION=debian \
+ 	  INSTALL_USER=root INSTALL_GROUP=root \
+-	  LOCAL_CONFIGURE_OPTIONS="--enable-editline=yes --enable-blkid=yes --disable-ubsan --disable-addrsan --disable-threadsan --enable-lto" ;
++	  LOCAL_CONFIGURE_OPTIONS="$(configure_options) --enable-editline=yes --enable-blkid=yes --disable-ubsan --disable-addrsan --disable-threadsan --enable-lto" ;
+ diopts  = $(options) \
+-	  export OPTIMIZER=-Os LOCAL_CONFIGURE_OPTIONS="--enable-gettext=no --disable-ubsan --disable-addrsan --disable-threadsan --enable-lto" ;
++	  export OPTIMIZER=-Os LOCAL_CONFIGURE_OPTIONS="$(configure_options) --enable-gettext=no --disable-ubsan --disable-addrsan --disable-threadsan --enable-lto" ;
+ checkdir = test -f debian/rules
+ 
+ build: build-arch build-indep
 -- 
 2.33.0
 
