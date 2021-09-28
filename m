@@ -2,101 +2,123 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 321EA41A435
-	for <lists+linux-xfs@lfdr.de>; Tue, 28 Sep 2021 02:26:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE6F441A43F
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Sep 2021 02:33:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238336AbhI1A1n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Sep 2021 20:27:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238277AbhI1A1n (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Sep 2021 20:27:43 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A03C061575
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Sep 2021 17:26:04 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id b192so1949415wmb.2
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Sep 2021 17:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fishpost-de.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=stNblUEltNnbJlko2VRTFD7ipHRkldkQJMsYEjE8bO4=;
-        b=rGyIDEVkOwAaShuumlfQVBCXkfhSZ8jwM1T8cR1pc6VO6/1CWm65y0zCfUIb69CoHQ
-         rTB4RMz+qEGizw7aT93uUnjUjf8BcCqYUmhnJy+XD2AgIjaUPJxf8mN9tHDjMSWoJMBu
-         a/DyOn3nnsDyny0cUjqRay70Nw7DD+bqQZnFhIBr5LEhBtgeqtRrVD80GOYSr0m783So
-         I81CmNXTr55Uds/KHj/TcxTeXRueXhZ4fyMysSOOfVtomoaOJ4qPyKIO3GYbzZhMxrBh
-         Hz0n2Lnhu+C3n7PVYYwHY6Yp9h9Udrz3KZImvUxuTPgIH/xmwEeiU6T0W9WT4Gg9PQ1m
-         UyWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=stNblUEltNnbJlko2VRTFD7ipHRkldkQJMsYEjE8bO4=;
-        b=TnKmF0RGZ+huTkxdzWkD1J1PMJIx/BsrcB8ErLgw7KqYSEB70sdgmM47PJY71Qivd/
-         R3lXBLpYAY676iI1mhC8vw4Ivb+QIZqAGuHro7yXTqw9LECHaJBtsHoeRCcBUIvTiumO
-         nDux9PRU7lpdkFd+GWhajBbnZSaNb4cVO1yefKKmLsTObeBre4lu9+u+Bupy3bq+b80r
-         k46VQsLWmkSg7GgQVJjH02t5LMztJJvAAWJP008OLkUnYX2A38Yv6VKeu0R1cAehwgTO
-         Gy4j+8gU8/tj0h5B/W2XrsXRYIv0fPuL5Hf/JBV0VBpj8/fw9Ykrngs2kVmp/+rCmDlR
-         OeGA==
-X-Gm-Message-State: AOAM533R+eqnFBc9LBMNS4UM2Lar474TQd8oWvODnAZHLe0dy+iWdicc
-        plzdE4HZ1tNAda2tQGcO/8wRxsUGwyd42YsHQkw=
-X-Google-Smtp-Source: ABdhPJyEhPMRMc8NKAB81jD7ZHedOjSJBnzZ/xMmQZEKMYqJDaqwvXtef/RPNDNkp5NxW5MaLTHzLA==
-X-Received: by 2002:a7b:cc14:: with SMTP id f20mr1771319wmh.137.1632788763572;
-        Mon, 27 Sep 2021 17:26:03 -0700 (PDT)
-Received: from thinkbage.fritz.box (p200300d06f1f7300176a2a162e6525fe.dip0.t-ipconnect.de. [2003:d0:6f1f:7300:176a:2a16:2e65:25fe])
-        by smtp.gmail.com with ESMTPSA id p3sm4755814wrn.47.2021.09.27.17.26.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Sep 2021 17:26:03 -0700 (PDT)
-From:   Bastian Germann <bastiangermann@fishpost.de>
-X-Google-Original-From: Bastian Germann <bage@debian.org>
-To:     linux-xfs@vger.kernel.org
-Cc:     Bastian Germann <bage@debian.org>
-Subject: [PATCH 3/3] debian: Tag xfslibs-dev "Multi-Arch: same"
-Date:   Tue, 28 Sep 2021 02:25:52 +0200
-Message-Id: <20210928002552.10517-4-bage@debian.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20210928002552.10517-1-bage@debian.org>
-References: <20210928002552.10517-1-bage@debian.org>
+        id S238352AbhI1AfG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Sep 2021 20:35:06 -0400
+Received: from mail107.syd.optusnet.com.au ([211.29.132.53]:48229 "EHLO
+        mail107.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238236AbhI1AfF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Sep 2021 20:35:05 -0400
+Received: from dread.disaster.area (pa49-195-238-16.pa.nsw.optusnet.com.au [49.195.238.16])
+        by mail107.syd.optusnet.com.au (Postfix) with ESMTPS id 37D1DA9EE;
+        Tue, 28 Sep 2021 10:33:25 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mV13k-00HVNh-Gq; Tue, 28 Sep 2021 10:33:24 +1000
+Date:   Tue, 28 Sep 2021 10:33:24 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chandan Babu R <chandan.babu@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org
+Subject: Re: [PATCH V3 12/12] xfs: Define max extent length based on on-disk
+ format definition
+Message-ID: <20210928003324.GN1756565@dread.disaster.area>
+References: <20210916100647.176018-1-chandan.babu@oracle.com>
+ <20210916100647.176018-13-chandan.babu@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210916100647.176018-13-chandan.babu@oracle.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
+        a=DzKKRZjfViQTE5W6EVc0VA==:117 a=DzKKRZjfViQTE5W6EVc0VA==:17
+        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=7-415B0cAAAA:8
+        a=Lg7D5mDAIUrzhamEM1YA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Tag the binary package xfslibs-dev "Multi-Arch: same" because it has all
-properties that qualify for this tag.
+On Thu, Sep 16, 2021 at 03:36:47PM +0530, Chandan Babu R wrote:
+> The maximum extent length depends on maximum block count that can be stored in
+> a BMBT record. Hence this commit defines MAXEXTLEN based on
+> BMBT_BLOCKCOUNT_BITLEN.
+> 
+> While at it, the commit also renames MAXEXTLEN to XFS_MAX_EXTLEN.
 
-Link: https://wiki.debian.org/MultiArch/Hints#ma-same
-Signed-off-by: Bastian Germann <bage@debian.org>
----
- debian/changelog | 2 ++
- debian/control   | 1 +
- 2 files changed, 3 insertions(+)
+hmmmm. So you reimplemented:
 
-diff --git a/debian/changelog b/debian/changelog
-index 8b5c6037..b1414369 100644
---- a/debian/changelog
-+++ b/debian/changelog
-@@ -1,5 +1,7 @@
- xfsprogs (5.13.0-2) unstable; urgency=medium
- 
-+  * Tag xfslibs-dev "Multi-Arch: same"
-+
-   [ Helmut Grohne ]
-   * Fix FTCBFS (Closes: #794158)
-     + Pass --build and --host to configure
-diff --git a/debian/control b/debian/control
-index 57131bb4..11f8cf08 100644
---- a/debian/control
-+++ b/debian/control
-@@ -32,6 +32,7 @@ Section: libdevel
- Depends: libc6-dev | libc-dev, uuid-dev, xfsprogs (>= 3.0.0), ${misc:Depends}
- Breaks: xfsprogs (<< 3.0.0)
- Architecture: linux-any
-+Multi-Arch: same
- Description: XFS filesystem-specific static libraries and headers
-  xfslibs-dev contains the libraries and header files needed to
-  develop XFS filesystem-specific programs.
+#define BMBT_BLOCKCOUNT_MASK    ((1ULL << BMBT_BLOCKCOUNT_BITLEN) - 1)
+
+and defined it as XFS_MAX_EXTLEN?
+
+One of these two defines needs to go away. :)
+
+Also, this macro really defines the maximum extent length a BMBT
+record can hold, not the maximum XFS extent length supported. I
+think it should be  named XFS_BMBT_MAX_EXTLEN and also used to
+replace BMBT_BLOCKCOUNT_MASK.
+
+The counter example are free space btree records - they can hold
+extents lengths up to 2^31 blocks long:
+
+typedef struct xfs_alloc_rec {
+        __be32          ar_startblock;  /* starting block number */
+        __be32          ar_blockcount;  /* count of free blocks */
+} xfs_alloc_rec_t, xfs_alloc_key_t;
+
+So, yes, I think MAXEXTLEN needs cleaning up, but it needs some more
+work to make it explicit in what it refers to.
+
+Also:
+
+> -/*
+> - * Max values for extlen and disk inode's extent counters.
+> - */
+> -#define	MAXEXTLEN		((xfs_extlen_t)0x1fffff)	/* 21 bits */
+> -#define XFS_IFORK_EXTCNT_MAXU48	((xfs_extnum_t)0xffffffffffff)	/* Unsigned 48-bits */
+> -#define XFS_IFORK_EXTCNT_MAXU32	((xfs_aextnum_t)0xffffffff)	/* Unsigned 32-bits */
+> -#define XFS_IFORK_EXTCNT_MAXS32 ((xfs_extnum_t)0x7fffffff)	/* Signed 32-bits */
+> -#define XFS_IFORK_EXTCNT_MAXS16 ((xfs_aextnum_t)0x7fff)		/* Signed 16-bits */
+> -
+> -
+>  /*
+>   * Inode minimum and maximum sizes.
+>   */
+> @@ -1701,6 +1691,16 @@ typedef struct xfs_bmbt_rec {
+>  typedef uint64_t	xfs_bmbt_rec_base_t;	/* use this for casts */
+>  typedef xfs_bmbt_rec_t xfs_bmdr_rec_t;
+>  
+> +/*
+> + * Max values for extlen and disk inode's extent counters.
+> + */
+> +#define XFS_MAX_EXTLEN		((xfs_extlen_t)(1 << BMBT_BLOCKCOUNT_BITLEN) - 1)
+> +#define XFS_IFORK_EXTCNT_MAXU48	((xfs_extnum_t)0xffffffffffff)	/* Unsigned 48-bits */
+> +#define XFS_IFORK_EXTCNT_MAXU32	((xfs_aextnum_t)0xffffffff)	/* Unsigned 32-bits */
+> +#define XFS_IFORK_EXTCNT_MAXS32 ((xfs_extnum_t)0x7fffffff)	/* Signed 32-bits */
+> +#define XFS_IFORK_EXTCNT_MAXS16 ((xfs_aextnum_t)0x7fff)		/* Signed 16-bits */
+
+At the end of the patch series, I still really don't like these
+names. Hungarian notation is ugly, and they don't tell me what type
+they apply to. Hence I don't know what limit is the correct one to
+apply to which fork and which format....
+
+These would be much better as
+
+#define XFS_MAX_EXTCNT_DATA_FORK	((1ULL < 48) - 1)
+#define XFS_MAX_EXTCNT_ATTR_FORK	((1ULL < 32) - 1)
+
+#define XFS_MAX_EXTCNT_DATA_FORK_OLD	((1ULL < 31) - 1)
+#define XFS_MAX_EXTCNT_ATTR_FORK_OLD	((1ULL < 15) - 1)
+
+The name tells me what object/format they apply to, and the
+implementation tells me the exact size without needing a comment
+to make it readable. And it doesn't need casts that just add noise
+to the implementation...
+
+Cheers,
+
+Dave.
 -- 
-2.33.0
-
+Dave Chinner
+david@fromorbit.com
