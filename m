@@ -2,266 +2,195 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92FCB41CB67
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Sep 2021 20:00:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC5C341CC71
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Sep 2021 21:12:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245539AbhI2SBm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 29 Sep 2021 14:01:42 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:25486 "EHLO
+        id S1344146AbhI2TOe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Sep 2021 15:14:34 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:28152 "EHLO
         mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244878AbhI2SBl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Sep 2021 14:01:41 -0400
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18THQ1QH007974;
-        Wed, 29 Sep 2021 17:59:58 GMT
+        by vger.kernel.org with ESMTP id S1344094AbhI2TOd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Sep 2021 15:14:33 -0400
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18TJ8HGL013615;
+        Wed, 29 Sep 2021 19:12:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=references : from :
  to : cc : subject : in-reply-to : message-id : date : content-type :
  mime-version; s=corp-2021-07-09;
- bh=2UhY1KPKznf+FAcW0/S/vYShuDA6nACXlBNE2wFs1EA=;
- b=RIaKBoQre4SmXYTKug5AlWK8kOT5uPpfZmUdam4rnBbp44CjEXr9WenrWLnD81Vjarx6
- 0Ha3uMjMPMkwOTL0I6oqe8aj71KDYKp2XdGUm7td3U6J9iXXZRY+2DSPAlaTNv0xT1Oh
- 4ni7T4r22HtfRwgie0XLbc40eG5TyYYeUzr+r1tuEGR/r9phZQhmLOxluN6VAuBFmT9I
- qdJ7TC6tKmKpfBlee7WoS9u1LxY8NO5PSYWXdYyAd/ASjQV6+fku1fqf8iKOfTbg+MVp
- I4EOghH32gzbDDZIaCF1DjElIrC94iYdIEVfOyLiWmKY79uQ9yE/SZ20gZ2Mb2QF+A0G Wg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3bcdcw02nh-160
+ bh=1KwjHxZezOg6Dmm0PGHgnJhW6/Ys/d4ZhI9lbaQKRFQ=;
+ b=RaNaonYHx/6792lJjgGCIcI/VIzVpxsKP9AU6cEOHahanmvxA6jgwLoQMHCuYnTvq0bX
+ KU2Vj68uAA7psgpJmJpP59nPgnwTytBq4GYmejnxEN6eyYwiy5ZIQlLXoAlwlRcPYjXM
+ tww2UyKMBNLr+7vHC95LVBQb0giLHmgM6+TjKeb5ok9XIhNnt0pqAQm2qt2eZrKQqW5q
+ o1Yen2utq5XOrKkDmedMlagPo0K7seFpSrc8OrvqdSs0wGCQzCQjuus97/+Xd5ocCYbZ
+ GPy1SjuP3LWBJMD0+YSfZnNFbjpfFYoqyLnKE5LAF6iOzMwJZp7kKoZiqc6tuLtCmlQE JA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3bcf6cx7s5-22
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Sep 2021 17:59:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18TGpf54195314;
-        Wed, 29 Sep 2021 17:04:23 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-        by aserp3020.oracle.com with ESMTP id 3bceu5s7rr-1
+        Wed, 29 Sep 2021 19:12:49 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18TGoBvO143187;
+        Wed, 29 Sep 2021 17:03:37 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+        by userp3020.oracle.com with ESMTP id 3bc3cej6d4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Sep 2021 17:04:23 +0000
+        Wed, 29 Sep 2021 17:03:37 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jnnBQyKWg0haLO5G0JOipcAcdL2hExpbJFoY41wAovWD67yBiL+OJN3F50W3pUQUwH8xj4wwjUsp0eqVbLDxJNpz68aLOzN8GZJoMFebVsc5lyYHJ1Us0x9fjxtqK5gIh++Qr2SIZuCziwP45cQ4sWRN8eUuDaBkRkMNYERI7aTOYjB8hYkWb25V0NLLBFD02IiS7utLTAWYGil6SpVemTigptkRIQmw+JfFYmOTl8oPTWNdTVJRIkz/40IsSa6YiOByhWwRMYHZ0G/CytgYpynszZ5VuukKxTVHysUhJuLb9qfepMAm7e8OV06HI56CAyBcLpExqf83l8yTUsftmA==
+ b=FNguVEkqsGqnp1R2nd4kBzqd00XXTgu0qtUhULaJrb90eQwDwp0C/zxEQMVEqvsUv1L2wEXm9bhxQ4tTJMdMe9vLQmU30DIX819go1DlTGpFAqNDxb7qWqN7hiVb8j6plUGmQhpR2FtN2ghetYd/rhBCbdRwAU/JZdIXpglKh2dsyb5o4GXLVKTVchicdD5fF0h4A/X6SMzfP+wFcY8Qk7YRNGQJnWyIktYUQBrFcADRZ45WSlkfN2rwY+lIjniZH3nWzGt2TAHQWqZDLhORJpAkcJxTT0c+/4mdK05+mauK/wwBYhcisn1ucVVf9yx9Jx5Uohtrbtgyh6lKkYZh7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=2UhY1KPKznf+FAcW0/S/vYShuDA6nACXlBNE2wFs1EA=;
- b=Kitoz0CjM9O3JCVOLTSfoaZD+I3wvnkytfJmen9yAazg/bmeFagDqx4ePgFkcrCs/oRLbPEO0kiZJOH/XWRG/S1T/vkcxjZDyw0gxo6q5DkskrFo/VOiXwDuZc61WQXHMSW5s7jW52FfZzvESZJbNvftVKVGGO+viLNr6CI6LL5NQDOcaVFtB6JREJTGi/ctzX7QaFNSMzTqYu/BMtmbmsGGLN/BmDeo/kbRaD/oPYjUcssbqyaFzINH0VGBIsVwCScDoSCym1ERRM3u6enQpQHZZCrWvxEvDI+ZbPHkXZwf5u8qEwazW8QCAntTaSALaAmpFgOzI2QSFcgy+3YtQA==
+ bh=1KwjHxZezOg6Dmm0PGHgnJhW6/Ys/d4ZhI9lbaQKRFQ=;
+ b=jS8C9EL1v5+md4hSn4CoxtOwj6hzfVDIlh+lFRrzwXADslSGlnxJkoHMXfsgdkuzqLdZymmeMIRZBvt/sXMHgQluuFE8gN++9U8BtYizClCf9CdeQboMoue4sm3MbVqx48hIOikIJTPajuGDOgtp7ipiPpxu2Nsh7s5E5RJdiE3zA1GjwPXIguud+BdNIKw4woIHyNLANROTrqzRjN5kAUP0xfabs13VwUQyXIncxfwHM1l1XcqmCz22jhgKv/ZZt8wCEUJGQE1N3U701b73NpEzEkq73EVuUuElWR4e6VdFdxQx38mhmjZtE9XT6I7fNlKsRRPZUVdfKtLwXB+NEQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2UhY1KPKznf+FAcW0/S/vYShuDA6nACXlBNE2wFs1EA=;
- b=R+DeU1Qo7rBTxEnHQqftT2lpIfUfr9OOKkHuyiJzTlMrC5deLwrl6WqxQoquV6kCkecw2tqJIMiXFSa/CH7xb7hyC7qhA1ezKAdczmSecKad/MOVN6/LrnaGteG5hgrBVJBdiqU3vIBMzeVIIK1nQ5EtbGGvQHiG4bG5IPO5UQ8=
+ bh=1KwjHxZezOg6Dmm0PGHgnJhW6/Ys/d4ZhI9lbaQKRFQ=;
+ b=CRtFzPLxR2MKtzHuL5GVLg3OQ9mVgkRLuk6u+kvcyBu3eTD67JLhol9BLn/SULG24iNzvCdwZ9l4Zva2t3WtTdMJs4awBVukwz1YmgUN2GVRw/J4YXeQqq1nkM8RUQ7tLNiwo+W+rAF0v3v9tgo8+PQKWVH4E6BLTfUDyFtBSxE=
 Authentication-Results: kernel.org; dkim=none (message not signed)
  header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
 Received: from SJ0PR10MB4589.namprd10.prod.outlook.com (2603:10b6:a03:2d0::16)
- by BY5PR10MB4244.namprd10.prod.outlook.com (2603:10b6:a03:207::14) with
+ by BYAPR10MB2678.namprd10.prod.outlook.com (2603:10b6:a02:a9::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15; Wed, 29 Sep
- 2021 17:04:21 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Wed, 29 Sep
+ 2021 17:03:35 +0000
 Received: from SJ0PR10MB4589.namprd10.prod.outlook.com
  ([fe80::c50a:e8fe:496f:8481]) by SJ0PR10MB4589.namprd10.prod.outlook.com
  ([fe80::c50a:e8fe:496f:8481%9]) with mapi id 15.20.4544.022; Wed, 29 Sep 2021
- 17:04:21 +0000
+ 17:03:35 +0000
 References: <20210916100647.176018-1-chandan.babu@oracle.com>
- <20210916100647.176018-9-chandan.babu@oracle.com>
- <20210928004707.GO1756565@dread.disaster.area>
- <874ka51168.fsf@debian-BULLSEYE-live-builder-AMD64>
- <20210928230822.GK2361455@dread.disaster.area>
+ <20210916100647.176018-8-chandan.babu@oracle.com>
+ <20210927234637.GM1756565@dread.disaster.area>
+ <20210928040431.GP1756565@dread.disaster.area>
 User-agent: mu4e 1.4.15; emacs 27.1
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     Dave Chinner <david@fromorbit.com>
 Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org
-Subject: Re: [PATCH V3 08/12] xfs: Promote xfs_extnum_t and xfs_aextnum_t to
- 64 and 32-bits respectively
-In-reply-to: <20210928230822.GK2361455@dread.disaster.area>
-Message-ID: <87a6jvs48l.fsf@debian-BULLSEYE-live-builder-AMD64>
-Date:   Wed, 29 Sep 2021 22:34:11 +0530
+Subject: Re: [PATCH V3 07/12] xfs: Rename inode's extent counter fields
+ based on their width
+In-reply-to: <20210928040431.GP1756565@dread.disaster.area>
+Message-ID: <87czors49w.fsf@debian-BULLSEYE-live-builder-AMD64>
+Date:   Wed, 29 Sep 2021 22:33:23 +0530
 Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::24) To SJ0PR10MB4589.namprd10.prod.outlook.com
+X-ClientProxiedBy: MA1PR01CA0113.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:1::29) To SJ0PR10MB4589.namprd10.prod.outlook.com
  (2603:10b6:a03:2d0::16)
 MIME-Version: 1.0
-Received: from nandi (122.167.3.90) by MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14 via Frontend Transport; Wed, 29 Sep 2021 17:04:20 +0000
+Received: from nandi (122.167.3.90) by MA1PR01CA0113.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:1::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.13 via Frontend Transport; Wed, 29 Sep 2021 17:03:33 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 618e3623-055c-46b4-06a7-08d9836b2e7f
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4244:
-X-Microsoft-Antispam-PRVS: <BY5PR10MB4244394C7A7B5241928C82D4F6A99@BY5PR10MB4244.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Office365-Filtering-Correlation-Id: 6c166b7b-1e58-4c03-ba71-08d9836b12c7
+X-MS-TrafficTypeDiagnostic: BYAPR10MB2678:
+X-Microsoft-Antispam-PRVS: <BYAPR10MB26785DB8323B25681481CE36F6A99@BYAPR10MB2678.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mF8BytEEB75YWX/qaCaibs6NQ1nb4f0/Pyzke/Cn04cdCorRh2H2ssscXb7ZAFnqf7inEFcwVZzJvBTba9avup561hqS622s0Nym/sa7e8V78r1k/bSpHo83EyD9n9kyvrcQPO2Rv4k2KI6JjuZkZ18EkLatLSfGsg1r340pMa4C/9evQ1SDglOd//kn8mUfwR3n4esiF+CjS4Gg23UA8cD+nKWGnlgN9dYMpZvpU/EesU1A50Psue6TU3kWzswsUWyIjCDVSL2JTgwT5XVSD5+GxnMrygYe77LZr6ATrbG19ljFdqxrQCgsMhRHYTox9Jmdv+FWaimdSETu8/X7SsJjIeDYn0TPj+OiJbW6nIj9MjLQ9xn7fdj1Yjy4J4OQmiNZeI72DtFRRQgas7WRusP0DdIEdgYAX2NgjXp0ged4bg0SLxQzwoddups7DZKLyguWOuuWxMOM7jpEArpAV1Pskzc3Xa/OFRVRrrTYGT+/VQ0iM1aYWWROHOpCYT74JF0m95XJlsSMd04Em4UuKRp+hmyxlsfLsJcQyaDtCgmoHUhzdH0mLQiDD8fQ9vpEb7tMZxMVzXiE+q2kYs+cAR8pFVe95MYl6AcWNdFS3dJfEvVLj/3y5Om6U5n3TFrtHD+/0CvVC0e6RQTKvb+nkna04We1PFcZM/aUqsPh/K9z8GGDLTOmSYhk3C1MpwL8kORLcQJ52CmIsAFSWxgqgQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4589.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(8676002)(508600001)(66946007)(86362001)(4326008)(53546011)(8936002)(316002)(6666004)(52116002)(6496006)(956004)(66476007)(66556008)(6916009)(83380400001)(5660300002)(33716001)(38350700002)(26005)(38100700002)(186003)(9686003)(6486002)(2906002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: B7CDSh41dj/LizFJCtNuHkuD2UVwAfAmldprMUOVfB3TmRnzAxhkAEiCesXvfUrtEmxSexTUmWCmyobgMS97vodpKHd5XP4xij/Ha0k0lN2YglFGIMLVt+sn9V1suIiymPG1apRTtNazasX3/vBD8OdehNb/EHDUJIna8H6MIXkwE4Yek6/98Nn2nM5yl/G0Si+j6C9Lxsh4ZQPwgDuYqFJBL8Z3oOaAiRjBAjU+Y+mZvOqibVvN4tN7r8U0/KXtbrXFL2/HK3XMugOBdt9UmzYWKzapXk7QQKjeWjuyCZRzutVPwmUPHc1tCCTYwzKflmY7M3EmprmZG6MD7/uE4V0U12sxNeSElC9s5nd7qWcFHi09VHOrf6bx+NooJjaX7Y7ZG5w71JgKtyEe5KK80VvWoZpaM0i9DAIIz8t3juWRloZLSsJ1AWeAhxrFubXjC8zPw9f6j9KAj2fOKzHjcE/DYVQpLUfkk096E7xC2pc0KsBk6AvrG2UD3vrn6BhijmunXamFmZr+cbqUOulnhmt2p9lHc0LxC0VDrym1T1lcqOyJnQblIzO7udIMNe3zTr7iryXStkJJid4iq9Bb/+74XqvpnGdBkJcgReoIXRD1+jJzZUtF39/VjOvVxzMwXvSzQnRKHomMJAHH0SYrDjZct6VIY4Aj1/YMR3zXkoBQU2Kr02peOeKEP5xpTlLyDlDnfdxHcLCZtTGPB/wFgg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4589.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(38350700002)(38100700002)(956004)(86362001)(26005)(33716001)(186003)(6666004)(83380400001)(6486002)(66476007)(66556008)(4326008)(53546011)(52116002)(66946007)(316002)(5660300002)(9686003)(6496006)(2906002)(6916009)(508600001)(8936002)(8676002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ovtc3cQB/NaWC9iS3QzGDRz2Yx4w9oMgMh1eQOwBvzzXeSqF1iyjUP/prq80?=
- =?us-ascii?Q?7XmihUdPAWxKea11gqVUxp65W3RSqLYhNpuW60CbsHKVJXm+SlPsVqUMez4O?=
- =?us-ascii?Q?H/VJ9L6HJJyg7siII0sPlViRO170EeoUph5uTJ6T9/FstCB/P+dSd5nwDPBw?=
- =?us-ascii?Q?rZ/vjtGyuFqoD9RsBArCJw8tjexpviAAcw3r9exan4XwpRgkn3cXRn2W3YES?=
- =?us-ascii?Q?ajRUhCiZTLce3eZA5nJtcHVZ6bQC+hRZBTXXjLy6HW4AB9RSXeRZjcw/hTxl?=
- =?us-ascii?Q?/4sUq3NIJZG9WvX4SFL0aMZkYbk6M8tQeptr+nyXiSTmuOpmEMZLDIL9hAR0?=
- =?us-ascii?Q?OUEu2wQuYEh87m3lXUpJxmtaIPll1MlJCoQMCo8PP23qPeZnGRTd2M5sqEq7?=
- =?us-ascii?Q?3TrAwW9UhHr9WgHtAAwkVifGNENdfL9R12dQguj2xodCeQtgk7RY+4wQO7du?=
- =?us-ascii?Q?i5LF6Saxh6d2ROX1g1dVQCXruH8t8Bwms+/jY9DMowJVE4rF3Wbjee/HU6Ah?=
- =?us-ascii?Q?wD7WKPDkTyaFa5mnJQ/1/LImyGTCwc0I8X7BgZ6wE/gfS6oUhspiB+iFFob2?=
- =?us-ascii?Q?43OAHArbcohJwsqphySCjmb+n7nDBeOnGUzBBeJolPSf7y3ExnI6OS5ll5Bi?=
- =?us-ascii?Q?2UIgDCoNUfoWCFTGAmBovRA20UDZEWFivP382RaEgauwz5IeLKYEEwX0oXNi?=
- =?us-ascii?Q?h7sQW0PcjzcJI/iPzacr5hXtQ4L9TNczZ+OyaoOSwrHvbcmy5yfbSaUD5tAZ?=
- =?us-ascii?Q?VX0fSrtU6S+9FrMNziMKZiQy9M6IBJh3WnWZCGyvTD7Ioc8GQiu3CnCEvlvM?=
- =?us-ascii?Q?RVzkJoQb0YN70gle0A2glQYX6O9BLnsKEnSsmVVkvQSjwOdN9Jqlqa+cubHb?=
- =?us-ascii?Q?jMqHttNxiEbiMPnjtTVRKEP9Waf/6ii+NRY3DTHif3uBEFnFfgPm0xE6PYsJ?=
- =?us-ascii?Q?W+PriEGNVnnOwLlo5j0vPZVzSwOPD/7Sh+gI6KKP7pPR0F3KYZ15NGqTMNZX?=
- =?us-ascii?Q?Q5N25IG+tDiIYjr+SAOgTX/vTE/hwtLjaIl3mPWJ1dn29dqOgB/RKF0h9l+1?=
- =?us-ascii?Q?+AIlvJbXDTNok+SmWUnKBauGhMaYkK04XlsDQi5Xmi6rwS7kz0NC2YGgrzAe?=
- =?us-ascii?Q?HreDY50dlj3/6xMFaYCoQZYjZBTLg9xmG5ktsI8tn/klPPGFdII3BML+W1GL?=
- =?us-ascii?Q?V+p2W19psLbsjx2DambhSZZT+X2BacvPHCgMfmjgtoY4fjt2CatxZRhTa7gm?=
- =?us-ascii?Q?GUVzYmG3jOMorCqKt4Fae7cS+uYYhB3s6prGMFbtQk0QF+LKaSBo2FBYIuyC?=
- =?us-ascii?Q?mgan26Peoq6UMNNU6QES86u4?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?GuYkpWiuc/ZrkTUfWnKLSUdvIi386Pvz8Rv6gkpKh0UgmwpxRPwJc1fUFNFt?=
+ =?us-ascii?Q?hpdRufolyA5dz85AaHynfLm8hXuiHnJoXzVU7GuMqgol0YN3QrZIWwnGylDi?=
+ =?us-ascii?Q?CsI4i6e0dJ4XPlC4n0H7D+8Ls+j/8Hw6N9BCw6+46K+1hcgjqG6j8SF8F3RY?=
+ =?us-ascii?Q?Fm0KSy2YqE/huySUbdibBylLvRSkRJL1agHY8zj1jujaPVtqucfTRz1O0z2o?=
+ =?us-ascii?Q?IpQnfHnFpCn+64yYaOV6BXh9hzLrIWJl2qgD+x9XCvYdLPDkfhGQoeAKyhB+?=
+ =?us-ascii?Q?Vjtp4zdMGkmzaDVH91klr/43HotLd/vyhhd4Uyl2pcT3h+5O+zngbut7bYxY?=
+ =?us-ascii?Q?QOjupDGgNfNg3arkELVXuBA7YbvIP8iVxQvbYig7K8q70XVkgNNi0+m2Mao/?=
+ =?us-ascii?Q?GIdOT7tz5Fr87Yy9FkdgiubVIxE0C+YBJ+IAJPcZ3QfWZgvli7z8REicTClU?=
+ =?us-ascii?Q?SnpcB+S6SMGHBZ/MpPhD4IHj+7amFM+CKOXjOiQmaqerTnttMBL8VlDEPbZx?=
+ =?us-ascii?Q?p/1nnIzlcf24fCIZLqNWYldrbpjbm/7hPmbPqudJT39vU0e89izyl5VlsCjO?=
+ =?us-ascii?Q?f5kZ500sMWX8PrqAMZ+NeU+VrWvfV2tqaj7QtkR4+ICYHoIzM/Ai6pM+DU4W?=
+ =?us-ascii?Q?27eGFBIoS5JseOMpxxtK0Yiwh0xwy09Uv1gLOnX37xlxWUvwCqYSywz7Fy7J?=
+ =?us-ascii?Q?ppBQWuSjwv3TXF6a9eMWx1mJCAOa60o92BdzMFjkf8nSWY9kgYEbV72EG6Nn?=
+ =?us-ascii?Q?mP6vrIR0alg6+ntn3S/LoEbAv23hwchZRAd8TyngQwfV+Kbui9Oaifle3o8+?=
+ =?us-ascii?Q?TyykYOR6DOIAGICAfTxbP0fNqA6RkiDHd4i8Gen4/gPtmkUpDaZT3aQPwN2W?=
+ =?us-ascii?Q?W5twD7/sLNZfCPJhHV5V89kUjGTRTX/brz/8gJnn3mO1PCTyH80Lo2dVwLYI?=
+ =?us-ascii?Q?hyY5SpGQ5KtRHNk0nb6vPNuCVG147OIU6evkhdNKQrxiO4u1gekvmpk/Nd0i?=
+ =?us-ascii?Q?sCU189CL+DX6vb4MT28PSea4GLXzpR0fNn/sWztt+Rtb0kQif6Fcs9oF+4Ub?=
+ =?us-ascii?Q?JKh2w6cL5JS7aqcdp6d/tg40PIK2hUyY8kvifGf1IpPthhMmAuQB0uRCa7BX?=
+ =?us-ascii?Q?q251XSwKdE0UJ2jwEf/qOp5/a3fGA7ZeSdzjLy9wAS0pj/s43EK0y6EBZvAN?=
+ =?us-ascii?Q?YwnvGBI8RSLyZ9jRnKbTAR4RHoWUQuUaw7am3F0kzyspH0b1qZcYDUGp51oV?=
+ =?us-ascii?Q?w8Gp8lX5J28cvShWmkAJp0Yi9GpyYzXkVQFVFW/zZsLjJJm7FDOYCFacqzz8?=
+ =?us-ascii?Q?mYL/eBT3PMBpi4olb5KCyHK5?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 618e3623-055c-46b4-06a7-08d9836b2e7f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c166b7b-1e58-4c03-ba71-08d9836b12c7
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4589.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 17:04:21.7379
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2021 17:03:35.1605
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vdnltW3BbqpdPMAOTh7Wcj1ILyO+SGXnO5u5OD/EZP/3XMfOaCt0x7CK/WRfbKrjasZYL21Z3zNXfTPi2MuSfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4244
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2Q5hvIWE3nddaphu/6rmqlp993CcBr/U2DrKM20SK3Lokk831+kBjv1OD2P2V2nWpvyGR7eapLkYXxyydoOfCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2678
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10122 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
- adultscore=0 bulkscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
  definitions=main-2109290098
-X-Proofpoint-GUID: IzOXHsFR5DSD8Xc42TTOcJpS-eL6WZVa
-X-Proofpoint-ORIG-GUID: IzOXHsFR5DSD8Xc42TTOcJpS-eL6WZVa
+X-Proofpoint-GUID: 4V-bnEASapwbVM3_4A2AiObmP7-gePql
+X-Proofpoint-ORIG-GUID: 4V-bnEASapwbVM3_4A2AiObmP7-gePql
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 29 Sep 2021 at 04:38, Dave Chinner wrote:
-> On Tue, Sep 28, 2021 at 03:17:59PM +0530, Chandan Babu R wrote:
->> On 28 Sep 2021 at 06:17, Dave Chinner wrote:
->> > On Thu, Sep 16, 2021 at 03:36:43PM +0530, Chandan Babu R wrote:
->> >> A future commit will introduce a 64-bit on-disk data extent counter and a
->> >> 32-bit on-disk attr extent counter. This commit promotes xfs_extnum_t and
->> >> xfs_aextnum_t to 64 and 32-bits in order to correctly handle in-core versions
->> >> of these quantities.
->> >> 
->> >> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
->> >> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
->> >
->> > So while I was auditing extent lengths w.r.t. the last patch f the
->> > series, I noticed that xfs_extnum_t is used in the struct
->> > xfs_log_dinode and so changing the size of these types changes the
->> > layout of this structure:
->> >
->> > /*
->> >  * Define the format of the inode core that is logged. This structure must be
->> >  * kept identical to struct xfs_dinode except for the endianness annotations.
->> >  */
->> > struct xfs_log_dinode {
->> > ....
->> >         xfs_rfsblock_t  di_nblocks;     /* # of direct & btree blocks used */
->> >         xfs_extlen_t    di_extsize;     /* basic/minimum extent size for file */
->> >         xfs_extnum_t    di_nextents;    /* number of extents in data fork */
->> >         xfs_aextnum_t   di_anextents;   /* number of extents in attribute fork*/
->> > ....
->> >
->> > Which means this:
->> >
->> >> -typedef int32_t		xfs_extnum_t;	/* # of extents in a file */
->> >> -typedef int16_t		xfs_aextnum_t;	/* # extents in an attribute fork */
->> >> +typedef uint64_t	xfs_extnum_t;	/* # of extents in a file */
->> >> +typedef uint32_t	xfs_aextnum_t;	/* # extents in an attribute fork */
->> >
->> > creates an incompatible log format change that will cause silent
->> > inode corruption during log recovery if inodes logged with this
->> > change are replayed on an older kernel without this change. It's not
->> > just the type size change that matters here - it also changes the
->> > implicit padding in this structure because xfs_extlen_t is a 32 bit
->> > object and so:
->> >
->> > Old					New
->> > 64 bit object (di_nblocks)		64 bit object (di_nblocks)
->> > 32 bit object (di_extsize)		32 bit object (di_extsize)
->> > 					32 bit pad (implicit)
->> > 32 bit object (di_nextents)		64 bit object (di_nextents)
->> > 16 bit object (di_anextents)		32 bit ojecct (di_anextents
->> > 8 bit object (di_forkoff)		8 bit object (di_forkoff)
->> > 8 bit object (di_aformat)		8 bit object (di_aformat)
->> > 					16 bit pad (implicit)
->> > 32 bit object (di_dmevmask)		32 bit object (di_dmevmask)
->> >
->> >
->> > That's quite the layout change, and that's something we must not do
->> > without a feature bit being set. hence I think we need to rev the
->> > struct xfs_log_dinode version for large extent count support, too,
->> > so that the struct xfs_log_dinode does not change size for
->> > filesystems without the large extent count feature.
+On 28 Sep 2021 at 09:34, Dave Chinner wrote:
+> On Tue, Sep 28, 2021 at 09:46:37AM +1000, Dave Chinner wrote:
+>> On Thu, Sep 16, 2021 at 03:36:42PM +0530, Chandan Babu R wrote:
+>> > This commit renames extent counter fields in "struct xfs_dinode" and "struct
+>> > xfs_log_dinode" based on the width of the fields. As of this commit, the
+>> > 32-bit field will be used to count data fork extents and the 16-bit field will
+>> > be used to count attr fork extents.
+>> > 
+>> > This change is done to enable a future commit to introduce a new 64-bit extent
+>> > counter field.
+>> > 
+>> > Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
+>> > ---
+>> >  fs/xfs/libxfs/xfs_format.h      |  8 ++++----
+>> >  fs/xfs/libxfs/xfs_inode_buf.c   |  4 ++--
+>> >  fs/xfs/libxfs/xfs_log_format.h  |  4 ++--
+>> >  fs/xfs/scrub/inode_repair.c     |  4 ++--
+>> >  fs/xfs/scrub/trace.h            | 14 +++++++-------
+>> >  fs/xfs/xfs_inode_item.c         |  4 ++--
+>> >  fs/xfs/xfs_inode_item_recover.c |  8 ++++----
+>> >  7 files changed, 23 insertions(+), 23 deletions(-)
+>> > 
+>> > diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+>> > index dba868f2c3e3..87c927d912f6 100644
+>> > --- a/fs/xfs/libxfs/xfs_format.h
+>> > +++ b/fs/xfs/libxfs/xfs_format.h
+>> > @@ -802,8 +802,8 @@ typedef struct xfs_dinode {
+>> >  	__be64		di_size;	/* number of bytes in file */
+>> >  	__be64		di_nblocks;	/* # of direct & btree blocks used */
+>> >  	__be32		di_extsize;	/* basic/minimum extent size for file */
+>> > -	__be32		di_nextents;	/* number of extents in data fork */
+>> > -	__be16		di_anextents;	/* number of extents in attribute fork*/
+>> > +	__be32		di_nextents32;	/* number of extents in data fork */
+>> > +	__be16		di_nextents16;	/* number of extents in attribute fork*/
 >> 
->> Actually, the current patch replaces the data types xfs_extnum_t and
->> xfs_aextnum_t inside "struct xfs_log_dinode" with the basic integral types
->> uint32_t and uint16_t respectively. The patch "xfs: Extend per-inode extent
->> counter widths" which arrives later in the series adds the new field
->> di_nextents64 to "struct xfs_log_dinode" and uint64_t is used as its data
->> type.
-
-Sorry, The previous patch is the one which changes the data type of the extent
-counter fields in "struct xfs_log_dinode".
-
+>> 
+>> Hmmm. Having the same field in the inode hold the extent count
+>> for different inode forks based on a bit in the superblock means the
+>> on-disk inode format is not self describing. i.e. we can't decode
+>> the on-disk contents of an inode correctly without knowing whether a
+>> specific feature bit is set in the superblock or not.
 >
-> Arggh.
+> Hmmmm - I just realised that there is an inode flag that indicates
+> the format is different. It's jsut that most of the code doing
+> conditional behaviour is using the superblock flag, not the inode
+> flag as the conditional.
 >
-> Perhaps now you might see why I really don't like naming things by
-> size and having the contents of those fields based on context? It
-> is so easy to miss things like when the wrong variable or type is
-> used for a given context because the code itself gives you no hint
-> as to what the correct usage it.
-
-I agree. I will go with the "Increment inode version" suggestion.
-
->
-> I suspect part of the problem I'm had here is that the change of
-> the type in the xfs_log_dinode is done in a -variable rename- patch
-> that names variables by size, not in the patch that -actually
-> changes the variable size-.
->
-> IOWs, the type change in the xfs_log_dinode should
-> either be in this patch where the log_dinode structure shape would
-> change, or in it's own standalone patch with a description that says
-> "we need to avoid changing the on-disk structure shape".
-
-I think I will put the data type change in a separate patch to make it much
-easier to spot. Thanks for suggesting that.
-
->
-> Making sure that the on-disk format changes (or things that avoid
-> them!) are clear and explicit in a patchset is critical as these are
-> things we really need to get right.
->
-> I missed the per-inode extent size flag for a similar reason - it
-> was buried in a larger patch that made lots of different
-> modifications to support the on-disk extent count format change, so
-> it wasn't clearly defined/called out as a separate on-disk format
-> change necessary for correct functioning.
+> So it is self describing, but I still don't like the way the same
+> field is used for the different forks. It just feels like we are
+> placing a landmine that we are going to forget about and step
+> on in the future....
 >
 
-You are right. I will pull out critical parts of the "xfs: Extend per-inode
-extent counter widths" into as many separate patches as possible.
+Sorry, I missed this response from you.
 
->> So in a scenario where we have a filesystem which does not have support for
->> 64-bit extent counters and a kernel which does not support 64-bit extent
->> counters is replaying a log created by a kernel supporting 64-bit extent
->> counters, the contents of the 16-bit and 32-bit extent counter fields should
->> be replayed correctly into xfs_inode's attr and data fork extent counters
->> respectively. The contents of the 64-bit extent counter (whose value will be
->> zero) in the logged inode will be replayed back into di_pad2[] field of the
->> inode.
->
-> I think that's correct, because the superblock bit will prevent
-> mount on old kernels that don't support the 64 bit extent counter
-> and so the zeroes in di_pad2 won't get overwritten incorrectly.
->
-> Cheers,
->
-> Dave.
+I agree with your suggestion. I will use the inode version number to help in
+deciding which extent counter fields are valid for a specific inode.
 
 -- 
 chandan
