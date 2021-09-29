@@ -2,132 +2,92 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E22B41BB18
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Sep 2021 01:39:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F24241C8A5
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Sep 2021 17:45:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243370AbhI1Xky (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Sep 2021 19:40:54 -0400
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:36582 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S243314AbhI1Xky (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Sep 2021 19:40:54 -0400
-Received: from dread.disaster.area (pa49-195-238-16.pa.nsw.optusnet.com.au [49.195.238.16])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id F3B7710535FA;
-        Wed, 29 Sep 2021 09:39:11 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1mVMgo-000GxB-Re; Wed, 29 Sep 2021 09:39:10 +1000
-Date:   Wed, 29 Sep 2021 09:39:10 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chandan Babu R <chandan.babu@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org
-Subject: Re: [PATCH V3 09/12] xfs: Enable bulkstat ioctl to support 64-bit
- per-inode extent counters
-Message-ID: <20210928233910.GL2361455@dread.disaster.area>
-References: <20210916100647.176018-1-chandan.babu@oracle.com>
- <20210916100647.176018-10-chandan.babu@oracle.com>
- <20210927230637.GL1756565@dread.disaster.area>
- <87zgrxyqqe.fsf@debian-BULLSEYE-live-builder-AMD64>
+        id S245678AbhI2Pqz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 29 Sep 2021 11:46:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41821 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243396AbhI2Pqu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 29 Sep 2021 11:46:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632930309;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YD/JzDwhuk7rGKkEzFS8gH/oiqrA2eu324rL5fdp0h4=;
+        b=Lz7WjyxocCjmsYeXNRdCp/IBMXOtyFGWvz9SypmaqDaSVBiVBMCw9xEJ3Go4oX4szWhtUL
+        5Fq5iJ+HC4jNaFXcHrEognDAun7jYhxkyAvdPVwqNpcl1aTsvDDpvTlcicmNWgUimPGegD
+        MNUU0jWU2Dit9hOWocmOFPaPohvPyWE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-RydRWjxQMwK58uTqWu6Ekw-1; Wed, 29 Sep 2021 11:45:08 -0400
+X-MC-Unique: RydRWjxQMwK58uTqWu6Ekw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00CAB1006AA3;
+        Wed, 29 Sep 2021 15:45:06 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 51DD86A900;
+        Wed, 29 Sep 2021 15:45:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20210927200708.GI9286@twin.jikos.cz>
+References: <20210927200708.GI9286@twin.jikos.cz> <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
+To:     dsterba@suse.cz
+Cc:     dhowells@redhat.com
+Cc:     willy@infradead.org, Chris Mason <clm@fb.com>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Ilya Dryomov <idryomov@gmail.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH v3 0/9] mm: Use DIO for swap and fix NFS swapfiles
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zgrxyqqe.fsf@debian-BULLSEYE-live-builder-AMD64>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=Af7P4EfG c=1 sm=1 tr=0
-        a=DzKKRZjfViQTE5W6EVc0VA==:117 a=DzKKRZjfViQTE5W6EVc0VA==:17
-        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=7-415B0cAAAA:8
-        a=dxHEdJrIkcwWQ-yBpGEA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4005661.1632930302.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 29 Sep 2021 16:45:02 +0100
+Message-ID: <4005662.1632930302@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Sep 28, 2021 at 03:19:29PM +0530, Chandan Babu R wrote:
-> On 28 Sep 2021 at 04:36, Dave Chinner wrote:
-> > On Thu, Sep 16, 2021 at 03:36:44PM +0530, Chandan Babu R wrote:
-> >> @@ -492,9 +494,16 @@ struct xfs_bulk_ireq {
-> >>   */
-> >>  #define XFS_BULK_IREQ_METADIR	(1 << 2)
-> >>  
-> >> -#define XFS_BULK_IREQ_FLAGS_ALL	(XFS_BULK_IREQ_AGNO | \
-> >> +#define XFS_BULK_IREQ_BULKSTAT	(1 << 3)
-> >> +
-> >> +#define XFS_BULK_IREQ_FLAGS_ALL	(XFS_BULK_IREQ_AGNO |	 \
-> >>  				 XFS_BULK_IREQ_SPECIAL | \
-> >> -				 XFS_BULK_IREQ_METADIR)
-> >> +				 XFS_BULK_IREQ_METADIR | \
-> >> +				 XFS_BULK_IREQ_BULKSTAT)
-> >
-> > What's this XFS_BULK_IREQ_METADIR thing? I haven't noticed that when
-> > scanning any recent proposed patch series....
-> >
-> 
-> XFS_BULK_IREQ_METADIR is from Darrick's tree. His "Kill XFS_BTREE_MAXLEVELS"
-> patch series is based on his other patchsets. His recent "xfs: support dynamic
-> btree cursor height" patch series rebases only the required patchset on top of
-> v5.15-rc1 kernel eliminating the others.
+David Sterba <dsterba@suse.cz> wrote:
 
-OK, so how much testing has this had on just a straight v5.15-rcX
-kernel?
+> > There are additional patches to get rid of noop_direct_IO and replace =
+it
+> > with a feature bitmask, to make btrfs, ext4, xfs and raw blockdevs use=
+ the
+> > new ->swap_rw method and thence remove the direct BIO submission paths=
+ from
+> > swap.
+> > =
 
-> >> @@ -134,7 +136,26 @@ xfs_bulkstat_one_int(
-> >>  
-> >>  	buf->bs_xflags = xfs_ip2xflags(ip);
-> >>  	buf->bs_extsize_blks = ip->i_extsize;
-> >> -	buf->bs_extents = xfs_ifork_nextents(&ip->i_df);
-> >> +
-> >> +	nextents = xfs_ifork_nextents(&ip->i_df);
-> >> +	if (!(bc->breq->flags & XFS_IBULK_NREXT64)) {
-> >> +		xfs_extnum_t max_nextents = XFS_IFORK_EXTCNT_MAXS32;
-> >> +
-> >> +		if (unlikely(XFS_TEST_ERROR(false, mp,
-> >> +				XFS_ERRTAG_REDUCE_MAX_IEXTENTS)))
-> >> +			max_nextents = 10;
-> >> +
-> >> +		if (nextents > max_nextents) {
-> >> +			xfs_iunlock(ip, XFS_ILOCK_SHARED);
-> >> +			xfs_irele(ip);
-> >> +			error = -EINVAL;
-> >> +			goto out_advance;
-> >> +		}
-> >
-> > So we return an EINVAL error if any extent overflows the 32 bit
-> > counter? Why isn't this -EOVERFLOW?
-> >
-> 
-> Returning -EINVAL causes xfs_bulkstat_iwalk() to skip inodes whose extent
-> count is larger than that which can be fitted into a 32-bit field. Returning
-> -EOVERFLOW causes the bulkstat ioctl to stop reporting remaining inodes.
+> > I kept the IOCB_SWAP flag, using it to enable REQ_SWAP.  I'm not sure =
+if
+> > that's necessary, but it seems accounting related.
+>
+> There was probably some step missing. The file must not have holes, so
+> either do 'dd' to the right size or use fallocate (which is recommended
+> in manual page btrfs(5) SWAPFILE SUPPORT). There are some fstests
+> exercising swapfile (grep -l _format_swapfile tests/generic/*) so you
+> could try that without having to set up the swapfile manually.
 
-Ok, that's a bad behaviour we need to fix because it will cause
-things like old versions of xfs_dump to miss inodes that
-have overflowing extent counts. i.e. it will cause incomplete
-backups, and the failure will likely be silent.
+Yeah.  As advised elsewhere, I removed the file and recreated it, doing th=
+e
+chattr before extending the file.  At that point swapon worked.  It didn't
+work though, and various userspace programs started dying.  I'm guessing m=
+y
+btrfs_swap_rw() is wrong somehow.
 
-I asked about -EOVERFLOW because that's what stat() returns when an
-inode attribute value doesn't fit in the stat_buf field (e.g. 64 bit
-inode number on 32 bit kernel), and if we are overflowing the
-bulkstat field then we really should be telling userspace that an
-overflow occurred.
+David
 
-/me has a sudden realisation that the xfs_dump format may not
-support large extents counts and goes looking...
-
-Yeah, xfsdump doesn't support extent counts greater than 2^32. So
-that means we really do need -EOVERFLOW errors here.  i.e, if we get
-an extent count overflow with a !(bc->breq->flags &
-XFS_IBULK_NREXT64) bulkstat walk, xfs_dump needs bulkstat to fill
-out the inode with the overflow with all the fileds that aren't
-overflowed, then error out with -EOVERFLOW.
-
-Bulkstat itself should not silently skip the inode because it would
-overflow a field in the struct xfs-bstat - the decision of what to
-do with the overflow is something xfsdump needs to handle, not the
-kernel.  Hence we need to return -EOVERFLOW here so that userspace
-can decide what to do with an inode it can't handle...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
