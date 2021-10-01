@@ -2,71 +2,248 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D1C641EC1F
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 Oct 2021 13:34:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAA4641F3FD
+	for <lists+linux-xfs@lfdr.de>; Fri,  1 Oct 2021 19:54:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353932AbhJALgi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Oct 2021 07:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41186 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353988AbhJALgh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 Oct 2021 07:36:37 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F059C061775
-        for <linux-xfs@vger.kernel.org>; Fri,  1 Oct 2021 04:34:53 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id g41so37318411lfv.1
-        for <linux-xfs@vger.kernel.org>; Fri, 01 Oct 2021 04:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=5L/E4eErsLvrvRSyjenHMn1XgR3BfAibYkaUBTxnmho=;
-        b=UOLbJNv/PHcWOU6Z4rzzgus9xotes2ecLAW3m0Y6kDPTOjFVwFz4/NRCuiUc/AjV39
-         70shoNLlGtW2zJKiJK8gWF1ZVghHqNU0FYvYoPopWEQ+fHy4PMJvg/rPa7XOjHzx5+I8
-         Xe7YeiWNQ2x44H4dPlVOE6Ah0lUroynwj/qWhWvYMyQ5kBZOuJhQVhc3aP+Fl6qaCTTC
-         uMrRxUPJ3wsFo+uvtThbmIiq0+6yFUOE4prZ7QcU8rJP7m7ajkacKs1kWI1OpkOo3grw
-         EL6Sbr67jUVUBegOHPesQ5yrtjLicwMzSf4ZTlJn80mKLZXzPrStel0YHAEyxcF5xL+2
-         tHhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=5L/E4eErsLvrvRSyjenHMn1XgR3BfAibYkaUBTxnmho=;
-        b=KtLHIwioFKoGBRY5VvlIWXRXmBoYmyohz5Gy4oggF/W62ECgjHT6dQp60EalW2okxR
-         dtvdw0py14uc96OBm3CX9ZixNnoCUB8ZJJiSpqrigeXg9GzmLQoo6Cp/nqaZ06MP2XNC
-         1WU044Zp2EsR3+lrUiYZBiQ+P68E++H+mWfeu1inVO2vLKuT3Si/8m/nk46/XK+FYCPY
-         AjeEe8+1l7GyOSG7o2geXjvWF4ud34iudgETnAqBTxovLugoE0z9OXj2hyIq0BDOA8YN
-         P7yzf42ewftDE6DdV2lMpw/Sfp9HjBzQ+283/2xvEKPQw4ccEDneXk8yNUin/uW+k3Uy
-         fuVQ==
-X-Gm-Message-State: AOAM533MSzGzEROgo7BVSveiRCGW8raXgqSL0SEaJtRC/C0v0pCi0i5G
-        9lXksAopihNZrADAJs2eG+8qgW1J1pdND8I4t1v+mhROFBpMgw==
-X-Google-Smtp-Source: ABdhPJzk33LSFp+PeISm+eJBQbbjD4Um0GnvAV/blvchXzlEurQQitZPK5UL59BP+L6PnQP4Ag8ozt5qB2PABb7m0KY=
-X-Received: by 2002:a17:906:1749:: with SMTP id d9mr5442671eje.178.1633088080796;
- Fri, 01 Oct 2021 04:34:40 -0700 (PDT)
+        id S1355493AbhJAR4g (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 Oct 2021 13:56:36 -0400
+Received: from sandeen.net ([63.231.237.45]:45238 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1355478AbhJAR4g (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Fri, 1 Oct 2021 13:56:36 -0400
+Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id ACF1514A18;
+        Fri,  1 Oct 2021 12:54:11 -0500 (CDT)
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+References: <163174719429.350433.8562606396437219220.stgit@magnolia>
+ <163174721668.350433.1083608596895028766.stgit@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: [PATCH 04/61] libxfs: port xfs_set_inode_alloc from the kernel
+Message-ID: <4964baa5-fb26-1aba-1ce4-055c556f07e6@sandeen.net>
+Date:   Fri, 1 Oct 2021 12:54:50 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.14.0
 MIME-Version: 1.0
-Received: by 2002:a17:906:724a:0:0:0:0 with HTTP; Fri, 1 Oct 2021 04:34:39
- -0700 (PDT)
-Reply-To: joymat52@gmail.com
-From:   Joyce Thomas <tjoyc1234@gmail.com>
-Date:   Fri, 1 Oct 2021 04:34:39 -0700
-Message-ID: <CAF-RpUgaUkMbj2QzyBnkOuwEe=PmUv5qivCYUGKtEUkg1Z6r2w@mail.gmail.com>
-Subject: ATTN:
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <163174721668.350433.1083608596895028766.stgit@magnolia>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello Dear
-My Name is Mr. Joyce Thomas. Contact me for more information on the
-transfer of ($7.9 million dollars) left by my late client from your
-Country. I want to present you as a business partner and next of kin
-of the fund. I will give you the details of this transaction, as soon
-as I hear from you. I need the information below:
-Full Name:
-Address:
-Occupation:
-Age:
-Personal Email:
-Personal Telephone:
-Best Regards,
-Mr.Joyce  Thomas
+On 9/15/21 6:06 PM, Darrick J. Wong wrote:
+> From: Darrick J. Wong <djwong@kernel.org>
+> 
+> To prepare to perag initialization code move to libxfs, port the
+> xfs_set_inode_alloc function from the kernel and make
+> libxfs_initialize_perag use it.  The code isn't 1:1 identical, but
+> AFAICT it behaves the same way.  In a future kernel release we'll
+> move the function into xfs_ag.c and update xfsprogs.
+> 
+> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+
+Ok, so this is in effect syncing up:
+
+
+commit 2d2194f61fddab3a9731b6e7a7ae3a4a19dd810c
+Author: Carlos Maiolino <cmaiolino@redhat.com>
+Date:   Thu Sep 20 10:32:38 2012 -0300
+
+     xfs: reduce code duplication handling inode32/64 options
+
+and a few others up to about this change:
+
+commit 12c3f05c7b592ae3bf2219392f1cbf252645cd79
+Author: Eric Sandeen <sandeen@redhat.com>
+Date:   Wed Mar 2 09:58:09 2016 +1100
+
+     xfs: fix up inode32/64 (re)mount handling
+
+from the kernel.  The pitfalls of having copied kernel code that's not
+in libxfs.  :(
+
+The change looks legit and works fine here.
+
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+
+Thanks,
+-Eric
+
+> ---
+>   libxfs/init.c |  142 ++++++++++++++++++++++++++++++++++++---------------------
+>   1 file changed, 89 insertions(+), 53 deletions(-)
+> 
+> 
+> diff --git a/libxfs/init.c b/libxfs/init.c
+> index 1ec83791..6223181f 100644
+> --- a/libxfs/init.c
+> +++ b/libxfs/init.c
+> @@ -482,18 +482,102 @@ rtmount_init(
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Set parameters for inode allocation heuristics, taking into account
+> + * filesystem size and inode32/inode64 mount options; i.e. specifically
+> + * whether or not XFS_MOUNT_SMALL_INUMS is set.
+> + *
+> + * Inode allocation patterns are altered only if inode32 is requested
+> + * (XFS_MOUNT_SMALL_INUMS), and the filesystem is sufficiently large.
+> + * If altered, XFS_MOUNT_32BITINODES is set as well.
+> + *
+> + * An agcount independent of that in the mount structure is provided
+> + * because in the growfs case, mp->m_sb.sb_agcount is not yet updated
+> + * to the potentially higher ag count.
+> + *
+> + * Returns the maximum AG index which may contain inodes.
+> + */
+> +xfs_agnumber_t
+> +xfs_set_inode_alloc(
+> +	struct xfs_mount *mp,
+> +	xfs_agnumber_t	agcount)
+> +{
+> +	xfs_agnumber_t	index;
+> +	xfs_agnumber_t	maxagi = 0;
+> +	xfs_sb_t	*sbp = &mp->m_sb;
+> +	xfs_agnumber_t	max_metadata;
+> +	xfs_agino_t	agino;
+> +	xfs_ino_t	ino;
+> +
+> +	/*
+> +	 * Calculate how much should be reserved for inodes to meet
+> +	 * the max inode percentage.  Used only for inode32.
+> +	 */
+> +	if (M_IGEO(mp)->maxicount) {
+> +		uint64_t	icount;
+> +
+> +		icount = sbp->sb_dblocks * sbp->sb_imax_pct;
+> +		do_div(icount, 100);
+> +		icount += sbp->sb_agblocks - 1;
+> +		do_div(icount, sbp->sb_agblocks);
+> +		max_metadata = icount;
+> +	} else {
+> +		max_metadata = agcount;
+> +	}
+> +
+> +	/* Get the last possible inode in the filesystem */
+> +	agino =	XFS_AGB_TO_AGINO(mp, sbp->sb_agblocks - 1);
+> +	ino = XFS_AGINO_TO_INO(mp, agcount - 1, agino);
+> +
+> +	/*
+> +	 * If user asked for no more than 32-bit inodes, and the fs is
+> +	 * sufficiently large, set XFS_MOUNT_32BITINODES if we must alter
+> +	 * the allocator to accommodate the request.
+> +	 */
+> +	if ((mp->m_flags & XFS_MOUNT_SMALL_INUMS) && ino > XFS_MAXINUMBER_32)
+> +		mp->m_flags |= XFS_MOUNT_32BITINODES;
+> +	else
+> +		mp->m_flags &= ~XFS_MOUNT_32BITINODES;
+> +
+> +	for (index = 0; index < agcount; index++) {
+> +		struct xfs_perag	*pag;
+> +
+> +		ino = XFS_AGINO_TO_INO(mp, index, agino);
+> +
+> +		pag = xfs_perag_get(mp, index);
+> +
+> +		if (mp->m_flags & XFS_MOUNT_32BITINODES) {
+> +			if (ino > XFS_MAXINUMBER_32) {
+> +				pag->pagi_inodeok = 0;
+> +				pag->pagf_metadata = 0;
+> +			} else {
+> +				pag->pagi_inodeok = 1;
+> +				maxagi++;
+> +				if (index < max_metadata)
+> +					pag->pagf_metadata = 1;
+> +				else
+> +					pag->pagf_metadata = 0;
+> +			}
+> +		} else {
+> +			pag->pagi_inodeok = 1;
+> +			pag->pagf_metadata = 0;
+> +		}
+> +
+> +		xfs_perag_put(pag);
+> +	}
+> +
+> +	return (mp->m_flags & XFS_MOUNT_32BITINODES) ? maxagi : agcount;
+> +}
+> +
+>   static int
+>   libxfs_initialize_perag(
+>   	xfs_mount_t	*mp,
+>   	xfs_agnumber_t	agcount,
+>   	xfs_agnumber_t	*maxagi)
+>   {
+> -	xfs_agnumber_t	index, max_metadata;
+> +	xfs_agnumber_t	index;
+>   	xfs_agnumber_t	first_initialised = 0;
+>   	xfs_perag_t	*pag;
+> -	xfs_agino_t	agino;
+> -	xfs_ino_t	ino;
+> -	xfs_sb_t	*sbp = &mp->m_sb;
+>   	int		error = -ENOMEM;
+>   
+>   	/*
+> @@ -522,55 +606,7 @@ libxfs_initialize_perag(
+>   		}
+>   	}
+>   
+> -	/*
+> -	 * If we mount with the inode64 option, or no inode overflows
+> -	 * the legacy 32-bit address space clear the inode32 option.
+> -	 */
+> -	agino = XFS_AGB_TO_AGINO(mp, sbp->sb_agblocks - 1);
+> -	ino = XFS_AGINO_TO_INO(mp, agcount - 1, agino);
+> -
+> -	if ((mp->m_flags & XFS_MOUNT_SMALL_INUMS) && ino > XFS_MAXINUMBER_32)
+> -		mp->m_flags |= XFS_MOUNT_32BITINODES;
+> -	else
+> -		mp->m_flags &= ~XFS_MOUNT_32BITINODES;
+> -
+> -	if (mp->m_flags & XFS_MOUNT_32BITINODES) {
+> -		/*
+> -		 * Calculate how much should be reserved for inodes to meet
+> -		 * the max inode percentage.
+> -		 */
+> -		if (M_IGEO(mp)->maxicount) {
+> -			uint64_t	icount;
+> -
+> -			icount = sbp->sb_dblocks * sbp->sb_imax_pct;
+> -			do_div(icount, 100);
+> -			icount += sbp->sb_agblocks - 1;
+> -			do_div(icount, sbp->sb_agblocks);
+> -			max_metadata = icount;
+> -		} else {
+> -			max_metadata = agcount;
+> -		}
+> -
+> -		for (index = 0; index < agcount; index++) {
+> -			ino = XFS_AGINO_TO_INO(mp, index, agino);
+> -			if (ino > XFS_MAXINUMBER_32) {
+> -				index++;
+> -				break;
+> -			}
+> -
+> -			pag = xfs_perag_get(mp, index);
+> -			pag->pagi_inodeok = 1;
+> -			if (index < max_metadata)
+> -				pag->pagf_metadata = 1;
+> -			xfs_perag_put(pag);
+> -		}
+> -	} else {
+> -		for (index = 0; index < agcount; index++) {
+> -			pag = xfs_perag_get(mp, index);
+> -			pag->pagi_inodeok = 1;
+> -			xfs_perag_put(pag);
+> -		}
+> -	}
+> +	index = xfs_set_inode_alloc(mp, agcount);
+>   
+>   	if (maxagi)
+>   		*maxagi = index;
+> 
