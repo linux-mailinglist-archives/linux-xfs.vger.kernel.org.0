@@ -2,169 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E607A41F656
-	for <lists+linux-xfs@lfdr.de>; Fri,  1 Oct 2021 22:33:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E82B41FB8D
+	for <lists+linux-xfs@lfdr.de>; Sat,  2 Oct 2021 14:05:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbhJAUfF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Oct 2021 16:35:05 -0400
-Received: from sandeen.net ([63.231.237.45]:53250 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1355034AbhJAUfE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Fri, 1 Oct 2021 16:35:04 -0400
-Received: from liberator.sandeen.net (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 7B72314A18
-        for <linux-xfs@vger.kernel.org>; Fri,  1 Oct 2021 15:32:39 -0500 (CDT)
-To:     xfs <linux-xfs@vger.kernel.org>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 7c432f77
-Message-ID: <bddb12ee-3726-2bd3-764d-654d54625535@sandeen.net>
-Date:   Fri, 1 Oct 2021 15:33:18 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
+        id S233022AbhJBMHk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 2 Oct 2021 08:07:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233001AbhJBMHk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 2 Oct 2021 08:07:40 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8870FC0613EC
+        for <linux-xfs@vger.kernel.org>; Sat,  2 Oct 2021 05:05:54 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id r9so13336896ile.5
+        for <linux-xfs@vger.kernel.org>; Sat, 02 Oct 2021 05:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=mT5J/tgsvdHKNzbixMF0b8bXsjz3ofG89XtBIEYmm31DKAJqTVQnTbIBfX8t5JlCAm
+         Opjgf9WSclRRmZYAkjQxD/epAd7Be57Lkd99MvP59l8GGX8KlyEhPtYedt0NvXplBgjX
+         pECf49P18/Mbmf2mju+ev/IXAfzf+OcnFAI/6DhrXKGlFJfTFDtBD9i87Iy0J15pnXOZ
+         wHRscuxmZb9WncCxGJWn5OmzniZ/0JhwvdctqOeXs5rUDL4iSc0GnXXiVo4MDWIsdUoF
+         mNikICZvRlqzk8OVrQqc8igQ84mfgLfFjLJ6CSExD9iGVksBBxAaSPWqjMuOrlpsdQPB
+         rsUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=NhgMTPTUETwxZSHghZX8ColRsbVwB4ywKcKrPvfeLeF/UCPf/Z/8oUq0+YBDZKmSgn
+         f6MvrYsCVRmSByHsyM3QV1VLgRZMy+ICNB+8VimZuQceqEMlXIYvZPx6sKr+mCXFp+g+
+         x2eEa4ueRZiHPYrcTctXZTCs38EgNrJq3XMIBcWdCLQDa1gfmUPaBtXC8y3YZ8nkWEAY
+         LsnJrnwxFnFGbD859vp9xpYNTyy68bdkwcRdEgUYEpCIJLPGFnIFt7kb9GMWaWWszB+d
+         NsdOCyPSINNEa5NdLHio3gIxqu3YqWiz+Y30gTcJ0etFop/xb6JueqKnCgonW1VcUkaA
+         F5Cg==
+X-Gm-Message-State: AOAM530gbvtDYmfoo0IZrRYMNcaiUyHJqiH6DNITradg62tW5w+rzmxK
+        XBK/407UkZIi3wbmxB/Nfve91Y5SGbUJCQ5/DRQ=
+X-Google-Smtp-Source: ABdhPJx2Z/TM2nA5wUcQB6WcULjoMe7ab+gT2T6RTYBvc0J8X+RyTYtawkdaKMq1gSZualViA+kQI7VQTvC2tm5O+Dk=
+X-Received: by 2002:a92:ca06:: with SMTP id j6mr2338241ils.42.1633176354004;
+ Sat, 02 Oct 2021 05:05:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="9frgLgUAGwF6E99hgYvIpC4lf6FJT55z7"
+Received: by 2002:a4f:f90d:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 05:05:53 -0700 (PDT)
+Reply-To: unitednnation0@gmail.com
+From:   "U.n" <wadebaye33@gmail.com>
+Date:   Sat, 2 Oct 2021 00:05:53 -1200
+Message-ID: <CACE0T5U12wTpag8TzpKG7SQXE2-Lmps=PgU=pU_4uJkcXNmpjg@mail.gmail.com>
+Subject: Attention
+To:     unitednnation0@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9frgLgUAGwF6E99hgYvIpC4lf6FJT55z7
-Content-Type: multipart/mixed; boundary="BYlyVDYf2yceXP2842ZfdWnYzLOhq1V9x";
- protected-headers="v1"
-From: Eric Sandeen <sandeen@sandeen.net>
-To: xfs <linux-xfs@vger.kernel.org>
-Message-ID: <bddb12ee-3726-2bd3-764d-654d54625535@sandeen.net>
-Subject: [ANNOUNCE] xfsprogs for-next updated to 7c432f77
-
---BYlyVDYf2yceXP2842ZfdWnYzLOhq1V9x
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-Hi folks,
-
-The for-next branch of the xfsprogs repository at:
-
-	git://git.kernel.org/pub/scm/fs/xfs/xfsprogs-dev.git
-
-has just been updated.
-
-Patches often get missed, so please check if your outstanding
-patches were in this update. If they have not been in this update,
-please resubmit them to linux-xfs@vger.kernel.org so they can be
-picked up in the next update.
-
-The new head of the for-next branch is commit:
-
-7c432f77 misc: convert utilities to use "fallthrough;"
-
-New Commits:
-
-Darrick J. Wong (5):
-       [ec4e15fd] mkfs: move mkfs/proto.c declarations to mkfs/proto.h
-       [6bc3531c] libfrog: move topology.[ch] to libxfs
-       [b9ee1227] libxfs: port xfs_set_inode_alloc from the kernel
-       [8fb63e2a] libxfs: fix whitespace inconsistencies with kernel
-       [7c432f77] misc: convert utilities to use "fallthrough;"
-
-Dave Chinner (3):
-       [e4da1b16] xfsprogs: introduce liburcu support
-       [686bddf9] libxfs: add spinlock_t wrapper
-       [de555f66] atomic: convert to uatomic
-
-Gustavo A. R. Silva (1):
-       [df9c7d8d] xfs: Fix fall-through warnings for Clang
+--=20
 
 
-Code Diffstat:
-
-  configure.ac                   |   3 +
-  copy/Makefile                  |   3 +-
-  copy/xfs_copy.c                |   3 +
-  db/Makefile                    |   3 +-
-  db/type.c                      |   2 +-
-  debian/control                 |   2 +-
-  growfs/Makefile                |   3 +-
-  growfs/xfs_growfs.c            |   6 +-
-  include/Makefile               |   1 +
-  include/atomic.h               |  65 +++++++++++++++---
-  include/builddefs.in           |   4 +-
-  include/libxfs.h               |   2 +
-  include/linux.h                |  21 ++++++
-  include/platform_defs.h.in     |   1 +
-  include/spinlock.h             |  25 +++++++
-  include/xfs_inode.h            |   1 +
-  include/xfs_mount.h            |   2 +
-  include/xfs_multidisk.h        |   5 --
-  include/xfs_trans.h            |   1 +
-  libfrog/Makefile               |   2 -
-  libfrog/workqueue.c            |   3 +
-  libxfs/Makefile                |  10 +--
-  libxfs/init.c                  | 149 ++++++++++++++++++++++++++--------=
--------
-  libxfs/libxfs_priv.h           |   7 +-
-  libxfs/logitem.c               |   4 +-
-  libxfs/rdwr.c                  |   2 +
-  {libfrog =3D> libxfs}/topology.c |   5 +-
-  {libfrog =3D> libxfs}/topology.h |   6 +-
-  libxfs/xfs_ag_resv.c           |   4 +-
-  libxfs/xfs_alloc.c             |   2 +-
-  libxfs/xfs_btree.h             |   2 +-
-  libxfs/xfs_da_btree.c          |   2 +-
-  libxfs/xfs_rmap_btree.h        |   2 +-
-  logprint/Makefile              |   3 +-
-  m4/Makefile                    |   1 +
-  m4/package_urcu.m4             |  22 ++++++
-  mdrestore/Makefile             |   3 +-
-  mkfs/Makefile                  |   2 +-
-  mkfs/proto.c                   |   1 +
-  mkfs/proto.h                   |  13 ++++
-  mkfs/xfs_mkfs.c                |   2 +-
-  repair/Makefile                |   2 +-
-  repair/dinode.c                |  18 ++---
-  repair/phase4.c                |   4 +-
-  repair/prefetch.c              |   9 ++-
-  repair/progress.c              |   4 +-
-  repair/sb.c                    |   1 -
-  repair/scan.c                  |   4 +-
-  scrub/Makefile                 |   3 +-
-  scrub/inodes.c                 |   2 +-
-  scrub/progress.c               |   2 +
-  scrub/repair.c                 |   2 +-
-  scrub/scrub.c                  |   8 +--
-  53 files changed, 327 insertions(+), 132 deletions(-)
-  create mode 100644 include/spinlock.h
-  rename {libfrog =3D> libxfs}/topology.c (99%)
-  rename {libfrog =3D> libxfs}/topology.h (88%)
-  create mode 100644 m4/package_urcu.m4
-  create mode 100644 mkfs/proto.h
+Attention Sir/Madam
+This is the United Nation (UN). We the United Nations (UN) Globally
+has approved (US$2.500,000)( two Million Five hundred thousand
+dollars) compensation as part of our responsibilities for humanitarian
+Aid for fighting against CoronaVirus and you are among the lucky ones.
 
 
---BYlyVDYf2yceXP2842ZfdWnYzLOhq1V9x--
+This compensation is for the most affected countries, communities and
+families across the global. Your funds were deposited with Bank in USA
+to transfer your funds to you via Internet Banking. You have to send
+your full details as state below:with this email Address
+  ( unitednnation0@gmail.com )
+Your full names:
+Address:
+Telephone:
+Occupation:
 
---9frgLgUAGwF6E99hgYvIpC4lf6FJT55z7
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
 
------BEGIN PGP SIGNATURE-----
 
-wsF5BAABCAAjFiEEK4GFkZ6NJImBhp3tIK4WkuE93uAFAmFXcI4FAwAAAAAACgkQIK4WkuE93uCc
-LA/+JDxM6yhtNobukABg7GGX+rFx6xRM8SG3fH22xSbJIf8k1vygeC65wazutnBTxInZnS9JE717
-Z1Lyq6/BAyxaeqmE33WQBikWLpVElgWAUck6/A5ZqMe+08u/maopAbKTneJrYatM1nT/8JLmJFFY
-QSs6W8UB30CKB3bbLU4bNTIvAdGEQ1e/ByARrSnrwf84FcacokIGSkGJ/PMVoYBkD235Fdgmw+5z
-Uj8nnhGhXVrhkK08YVnIRbgEtKWrtVitfDcIhJcgAl/sRIy7QL587ih5spH+9UlOjN3FInQo+bva
-0gfr5EIg06Z9+GaZkeDcB1160SnnYpWm9nYwxSDCW+Hc1h3kjCCbS+ZqWC8llG2z1BvL+D9HGoSh
-gp3OnJ9ELbsngAEf6CINhfgUtAYRIePXHhkOSj7bdtCdk2O21j8HiLvRAbXW/QNzwCLSQMdy8llY
-3LmFMZf2l2R4BbbDN6DTebu/cPkY3yY6l/1oOGt0AHSUFBGJjyPo51IjmZcxaYyZkLDGB4DG13mE
-8/lThC+wHoBbdWckDeMg9xw0gWICThsdHvaONJO+snOkVWEBaNKgzAzOPJ7fBGYqXW6TxEBGhVW2
-FHF21CEMNQhM7Lp1ZRY39KNLzVnfNoBTxSNman+PJtNWNQdqZWY8zNwQW1wLfwVcO7+1dEzXjj+J
-Ez0=
-=i3VZ
------END PGP SIGNATURE-----
-
---9frgLgUAGwF6E99hgYvIpC4lf6FJT55z7--
+Yours Sincerely
+Mr. Ant=C3=B3nio Guterres
+United Nations (UN).
