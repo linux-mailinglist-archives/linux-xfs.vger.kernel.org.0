@@ -2,14 +2,14 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 868DE42AA02
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Oct 2021 18:52:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0181642AA03
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Oct 2021 18:52:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231756AbhJLQyJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S231808AbhJLQyJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Tue, 12 Oct 2021 12:54:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47425 "EHLO
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58065 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231368AbhJLQyI (ORCPT
+        by vger.kernel.org with ESMTP id S231672AbhJLQyI (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Oct 2021 12:54:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1634057526;
@@ -17,27 +17,27 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=C8DgAKQt+g0xpzeemZnygAEnsbkFdNdKw/wLUefKWtM=;
-        b=dYGojYq+0UdyFQCgU01QoV30Y3ABQmiYVshvYQe0hqoBYWrr6lmP2PjeVX3BDaF1CC5bOr
-        A9s47BBvV/4ApHm3Ht9mEBIlGx0dL8N6U7Mm5mhztz32DlfGx2/G2MpXYPAIz9Ku4z5TYv
-        sPFKWKiY35AjrQzxXPsiyxlRDJgDdo0=
+        bh=s8e2NXiwk0XT1uQvITg1dVwnW8fhbkDT+Onk2rBkej4=;
+        b=Ytr9PPMcCtlg615K73L3ylgs2dnPpYX63s2BvM9TPR2fBGCiGHMU5pXHp4f4l8hHgrCyA1
+        zf9dQAPfB9+cjkOiQdfYiaFXncwE3JfbjWBw3ewKO9q+mtUVa5rCKZm2Ldyso0dqBtibx3
+        7O5MP57IwlPOmY3mr9w9+NbjacpnPvU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-JWMwRC-IOse9sSA8Zf8kWA-1; Tue, 12 Oct 2021 12:52:05 -0400
-X-MC-Unique: JWMwRC-IOse9sSA8Zf8kWA-1
+ us-mta-335-fb-HTyriNvWyyhCNsKkR_Q-1; Tue, 12 Oct 2021 12:52:05 -0400
+X-MC-Unique: fb-HTyriNvWyyhCNsKkR_Q-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EEEC800FF0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B6D4880158D
         for <linux-xfs@vger.kernel.org>; Tue, 12 Oct 2021 16:52:04 +0000 (UTC)
 Received: from bfoster.redhat.com (unknown [10.22.18.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DFEA51F38
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Oct 2021 16:52:03 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 74E0951F0F
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Oct 2021 16:52:04 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 1/4] xfs: fold perag loop iteration logic into helper function
-Date:   Tue, 12 Oct 2021 12:52:00 -0400
-Message-Id: <20211012165203.1354826-2-bfoster@redhat.com>
+Subject: [PATCH v2 2/4] xfs: rename the next_agno perag iteration variable
+Date:   Tue, 12 Oct 2021 12:52:01 -0400
+Message-Id: <20211012165203.1354826-3-bfoster@redhat.com>
 In-Reply-To: <20211012165203.1354826-1-bfoster@redhat.com>
 References: <20211012165203.1354826-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -47,44 +47,50 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Fold the loop iteration logic into a helper in preparation for
-further fixups. No functional change in this patch.
+Rename the next_agno variable to be consistent across the several
+iteration macros and shorten line length.
 
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ag.h | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_ag.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
-index 4c6f9045baca..48eb22e8d717 100644
+index 48eb22e8d717..cf8baae2ba18 100644
 --- a/fs/xfs/libxfs/xfs_ag.h
 +++ b/fs/xfs/libxfs/xfs_ag.h
-@@ -124,12 +124,22 @@ void xfs_perag_put(struct xfs_perag *pag);
-  * for_each_perag_from() because they terminate at sb_agcount where there are
-  * no perag structures in tree beyond end_agno.
-  */
-+static inline
-+struct xfs_perag *xfs_perag_next(
-+	struct xfs_perag	*pag,
-+	xfs_agnumber_t		*next_agno)
-+{
-+	struct xfs_mount	*mp = pag->pag_mount;
-+
-+	*next_agno = pag->pag_agno + 1;
-+	xfs_perag_put(pag);
-+	return xfs_perag_get(mp, *next_agno);
-+}
-+
- #define for_each_perag_range(mp, next_agno, end_agno, pag) \
- 	for ((pag) = xfs_perag_get((mp), (next_agno)); \
- 		(pag) != NULL && (next_agno) <= (end_agno); \
--		(next_agno) = (pag)->pag_agno + 1, \
--		xfs_perag_put(pag), \
--		(pag) = xfs_perag_get((mp), (next_agno)))
-+		(pag) = xfs_perag_next((pag), &(next_agno)))
+@@ -127,22 +127,22 @@ void xfs_perag_put(struct xfs_perag *pag);
+ static inline
+ struct xfs_perag *xfs_perag_next(
+ 	struct xfs_perag	*pag,
+-	xfs_agnumber_t		*next_agno)
++	xfs_agnumber_t		*agno)
+ {
+ 	struct xfs_mount	*mp = pag->pag_mount;
  
- #define for_each_perag_from(mp, next_agno, pag) \
- 	for_each_perag_range((mp), (next_agno), (mp)->m_sb.sb_agcount, (pag))
+-	*next_agno = pag->pag_agno + 1;
++	*agno = pag->pag_agno + 1;
+ 	xfs_perag_put(pag);
+-	return xfs_perag_get(mp, *next_agno);
++	return xfs_perag_get(mp, *agno);
+ }
+ 
+-#define for_each_perag_range(mp, next_agno, end_agno, pag) \
+-	for ((pag) = xfs_perag_get((mp), (next_agno)); \
+-		(pag) != NULL && (next_agno) <= (end_agno); \
+-		(pag) = xfs_perag_next((pag), &(next_agno)))
++#define for_each_perag_range(mp, agno, end_agno, pag) \
++	for ((pag) = xfs_perag_get((mp), (agno)); \
++		(pag) != NULL && (agno) <= (end_agno); \
++		(pag) = xfs_perag_next((pag), &(agno)))
+ 
+-#define for_each_perag_from(mp, next_agno, pag) \
+-	for_each_perag_range((mp), (next_agno), (mp)->m_sb.sb_agcount, (pag))
++#define for_each_perag_from(mp, agno, pag) \
++	for_each_perag_range((mp), (agno), (mp)->m_sb.sb_agcount, (pag))
+ 
+ 
+ #define for_each_perag(mp, agno, pag) \
 -- 
 2.31.1
 
