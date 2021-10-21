@@ -2,172 +2,487 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 25D0A4356C1
-	for <lists+linux-xfs@lfdr.de>; Thu, 21 Oct 2021 02:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC4A6435877
+	for <lists+linux-xfs@lfdr.de>; Thu, 21 Oct 2021 03:56:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231428AbhJUAOr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Oct 2021 20:14:47 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:37902 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231453AbhJUAOo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 Oct 2021 20:14:44 -0400
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19KNjJrX019159;
-        Thu, 21 Oct 2021 00:12:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references : content-type :
- mime-version; s=corp-2021-07-09;
- bh=rDb12PtZNgwTC1TYwBkAnpIWDw9Pt6HblK1iL44AkUU=;
- b=ZW/9hTO1jUKL+n8QzLRCnSq5cfz+N74UkwyUxbuBTwBzGc7KNHfFMzH6YS8mmO7+YGBw
- aEYiJSR7vMiMBVn3x8LcsBnJgChQsYbXGR7TYUnT69RMwSetrpIxVknxKCgdXWuT5v+5
- ZBUFhRS6UKgGHZpJXqg4vgedkQ0VSDa5r1AqoXPUOWS9YPpghRZqVAEZn2uYiWvYsxZ4
- K4AUkRzBqpWLAdxRMEErwN79eU9g+MJZAhJ5tg68dYNv038Kz7Undl7LO/i3/UmE1w7i
- qRLMQLceC/V5C+S6/wKvXhuJkWV44UUYQ6sRLh+OACllYZv6a4bSLwB2sEwKLEH6SgWv LA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3btqyphuu9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Oct 2021 00:12:05 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 19L0BD3W010014;
-        Thu, 21 Oct 2021 00:12:04 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2049.outbound.protection.outlook.com [104.47.73.49])
-        by aserp3020.oracle.com with ESMTP id 3bqpj7vuvd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Oct 2021 00:12:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P1s2sBqsFk2Wei9l4OZbIuXPWhekb3J4yjfQp5oHQI8YB9F4/p5Ykd6QCmDAXpdRPx8VTCH6w8wfquK5jkI2bxBIIpuIipOl58JlmWuH4AK6KuVMDNIjR3V7nHhwZV8AEe8OXEUMKV9KOcviYnbKIhQsKkCVYW9ev7w8Aiha0yI1kfw+Ymg84YrtPtmSVhoS/2a9UOmaRwDcWsJGiPH857bdvDmhPdx07MPgBinI8qL6Zztye8nRFLAYg02h8bEP/v9nIQB6oc8J82lJCLGQhUpjliF6f0sdEi1I0m78bV0+5Es5JSsS8O8sdYi8swutU38ueku3BybDUyD5fNr1KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rDb12PtZNgwTC1TYwBkAnpIWDw9Pt6HblK1iL44AkUU=;
- b=O8qG3Dd6rmCesxeV2LtXFzlOghHOARGj6JslQbtSO87a6JBUxmNsvHiqIckVaeU/AZUQ+k4dGiwMT1kL3+c9cf4F5CwzGSkqnX1eh6ZxT+GWcm0EMdfAwv+IK0j+WOsPPas+D4B1iWtPExPuQysui6ZsAp/TKd+omYWNTmluV7Kobu1hMjJO/On+45ouKJeytckWMp5iuDI3oXxs/9L3yyfCmYu1n+0dUUxh/mx5pzL6ROm45ixXHwxQqOteLpKmYQ5cqMb1Czbn+hbDh3J1WYVIEw8vN1055pQ+1+Q8C+ZI1P7OaE2dwqfGW7xBKwul1vIk/krl4vekscr7VhzYiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rDb12PtZNgwTC1TYwBkAnpIWDw9Pt6HblK1iL44AkUU=;
- b=rKpx11dpxDYSYqNg2MaPwyp9aTgY980PhGBW67cRFi4qF5Jz6pckfCDz1uW9cOekYCYBa4Z4xrhBUgHV8Wgyt2BMCuj3r1PNNe3ZHtoeDlLSAfVgJTNZ9O18B3t3aBjgWxbH2VnCPR69rtpgGpTc900aAuNz6sr8rM9fXd0WpQo=
-Authentication-Results: fromorbit.com; dkim=none (message not signed)
- header.d=none;fromorbit.com; dmarc=none action=none header.from=oracle.com;
-Received: from SJ0PR10MB4429.namprd10.prod.outlook.com (2603:10b6:a03:2d1::14)
- by BYAPR10MB2759.namprd10.prod.outlook.com (2603:10b6:a02:b5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.17; Thu, 21 Oct
- 2021 00:12:02 +0000
-Received: from SJ0PR10MB4429.namprd10.prod.outlook.com
- ([fe80::401:1df2:3e9a:66c]) by SJ0PR10MB4429.namprd10.prod.outlook.com
- ([fe80::401:1df2:3e9a:66c%5]) with mapi id 15.20.4608.018; Thu, 21 Oct 2021
- 00:12:02 +0000
-From:   Jane Chu <jane.chu@oracle.com>
-To:     david@fromorbit.com, djwong@kernel.org, dan.j.williams@intel.com,
-        hch@infradead.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        ira.weiny@intel.com, willy@infradead.org, vgoyal@redhat.com,
-        linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: [PATCH 6/6] dm: Ensure dm honors DAXDEV_F_RECOVERY flag on dax only
-Date:   Wed, 20 Oct 2021 18:10:59 -0600
-Message-Id: <20211021001059.438843-7-jane.chu@oracle.com>
-X-Mailer: git-send-email 2.18.4
-In-Reply-To: <20211021001059.438843-1-jane.chu@oracle.com>
-References: <20211021001059.438843-1-jane.chu@oracle.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0801CA0003.namprd08.prod.outlook.com
- (2603:10b6:803:29::13) To SJ0PR10MB4429.namprd10.prod.outlook.com
- (2603:10b6:a03:2d1::14)
+        id S230103AbhJUB6m (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Oct 2021 21:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34468 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229771AbhJUB6l (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 20 Oct 2021 21:58:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 97BAE610A2;
+        Thu, 21 Oct 2021 01:56:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634781386;
+        bh=gmfFdUKUsgEvTd8jXQ7boxd7MXuugem0DsRAlarE7uI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OzmaiexQh2Z+GPYAujqZwahSh/2JIQaDKOMs5sppMACxXhvFqcmdHxMz4/QVkODa8
+         +XouJV+e7msdhgUcJnbPfxdubR471jSUw+7T7efRwjRMTQiVKbNtkUl0nmTlIrj/Iw
+         TH2kIUjiMPo7vreJmN61amBs0t/z0lZ849XOgjCPm0nLB4fooXU+vov2iy7+1lUHEo
+         z2te+p1+LojNXawerERhGQGWjCKLoUMjhA259XebsH6lhUQgmvLY8A5f70KTvoWhGa
+         VzRmhEQH8fa1xkuQbCnit1/XogiUpjlxY57Q9R2K48uCg837PNAseeB8/lI76biJge
+         0cSqeI+1oDFxw==
+Date:   Wed, 20 Oct 2021 18:56:26 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Chandan Babu R <chandan.babu@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/5] xfs: create slab caches for frequently-used deferred
+ items
+Message-ID: <20211021015626.GU24307@magnolia>
+References: <163466952709.2235671.6966476326124447013.stgit@magnolia>
+ <163466953819.2235671.899746816552861515.stgit@magnolia>
+ <874k9cht4h.fsf@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
-Received: from brm-x62-16.us.oracle.com (2606:b400:8004:44::1d) by SN4PR0801CA0003.namprd08.prod.outlook.com (2603:10b6:803:29::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.16 via Frontend Transport; Thu, 21 Oct 2021 00:12:00 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3086f6e0-b295-4ae8-3830-08d9942767f9
-X-MS-TrafficTypeDiagnostic: BYAPR10MB2759:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB2759CF48A81FADD320728D33F3BF9@BYAPR10MB2759.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:813;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SwUxeInXWh+dgh6GbaS/ZG2Nv9S0cNJ6M42dZaeHBDJs558Q90G0R2h30G+aA3dCh2LfzmJWyQA/ahTIb91NfBH9wHpRUhPbLz24LQwxTDi2nc/xAnN81kzemmPwmScfKMnCd7/XDyPhNWepbqP7QhOJG/zrvKDustSxzm/HfGh4o5epcm/eNGP6fBFBnssAbDxt2nCnv4qpz/1+OKzrUhVmjQ9c0/wPCAa9WFhx2pRUtBlj+iqMPv/AF4kvb6otCDzlfbF6S9YH6BBLGvXXCSjDPvAp3qZMIvPDeMPU2rWMuEXGxzjNGrYzFgxJbJb0TjgDCSMAT28yHD/I11P91WFAub1FnuSHFRk3aKzHaNcXYE10DyJwa+YvavKRJ69ZB3NiS2/JycT1JWrbsyPkIelWMNA26e/3FVsoy83xHacU916cXMiiVuI9rZAUsd39hJk88SVbBHi5f972R8ZvpNZx+xCVg9n4pXEM6ARcSocBkGxcAHXwPzA5d5jxD/wpZu/x3vBTcacXOaCpPicCnYwiaSSI9DWOBaxNAzNM9sM3P/jYeH1YUA/eaLlA9fubW+bxuFpxRaNZahyUxaK4AC1B65GAErZBXlHRpDPpSIyDVDI/ug4nOCZc7qlLl6ZeOLx2FaMycGoOyu2JjwI7/9n5XbMup6N64gRaHe8etM3IVwf7o8zfY5cDzPMdMpPW
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4429.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(316002)(5660300002)(1076003)(66946007)(66476007)(7416002)(38100700002)(83380400001)(36756003)(66556008)(921005)(508600001)(6486002)(8676002)(86362001)(186003)(7696005)(52116002)(8936002)(44832011)(2616005)(2906002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1JriRzLKMTs+EtHmGlcariODedtlWhYMtDDMliqQ+PnnOYwKb+N265nSqLb7?=
- =?us-ascii?Q?8TImsA4Pmr5rNPkLiMJLcMJtzDHoo9bxJeIzfLWjqjB+TJV/qy2JLPWxmUPE?=
- =?us-ascii?Q?cO473bekRvRPx32LXD+5J2ZBvmmaBBSUMlXCdK3+mZll4QjuDJ0+jPbTxT8c?=
- =?us-ascii?Q?J8E5Z5RkTcdxdlFJR+I9jo8VxRyNGJDvmpH0Z3uDKgEzlRX/C07RxtaXhwqq?=
- =?us-ascii?Q?c475/0ZCWr2829X+9FzM0tggHKJwGeVLLB21iIyZG5BW3iEtJDsSjNG5CWKO?=
- =?us-ascii?Q?NlU458r2dPNhZQgamu61TBQ48pimdGVZP3gIZ1h1lMB7FKhHMrBA2EIScmHT?=
- =?us-ascii?Q?9YM4qC0eIcO0bWwFvE5JhK3Va2FKziCN1gh482FtlfefF4ZB6maXsgA9L6wE?=
- =?us-ascii?Q?3F+wRWJ75CwPNSEkA2rkSXT0PrUUU8JHo4Ec90iopP10Z5yR6S/zlqu3AiWm?=
- =?us-ascii?Q?KxslpKSQMHgqVEYdiTCTuacobcyruTAU/cRpNxZFHjYKtEr37Mdcw3HWyA2Z?=
- =?us-ascii?Q?ViDB5NN4tgFilwSBcFHCOYcRw7TgDO7XWb/rRydso0C1zs4ZzEl0xs+zN45G?=
- =?us-ascii?Q?xx3q7dOKU0SSoToXmzYzWxb8hvniCBfxrb4rCSMftf38CJTcQHYLr4P9rOqM?=
- =?us-ascii?Q?mY3SrVDiW2c+JvM88GmR5hwhjBXUBEl2Lyz8SvRaSArKg1q9JasUbZvHXzue?=
- =?us-ascii?Q?KN6jZtKmRwy+29XBZSSoxbTsYjVbjxlzkg030EPGvGyudI2SLvgr4kY/ztmG?=
- =?us-ascii?Q?3p98F6isss1Qv3T9jlOBQJOj2ZavTBQMj5B7GkKmLKULreEB9fAKXMAuQ+NP?=
- =?us-ascii?Q?4mV/IUkmR7RwkoMFwhCBDANQ+VzRO8pcmSJNLS1jW9eHseVV8vP1ktu7mmG5?=
- =?us-ascii?Q?bycp7geH8gJK/zT4KpPmqq8yjBkQwJKeKfCNLy59Exc3U0T5FldExKael5dJ?=
- =?us-ascii?Q?vTE+Z00seULukXaTTKSJ6VnRTWIfiVT+hAC9UW90qjVU6aflWzlasKKCWFWY?=
- =?us-ascii?Q?4SHs8qoQF2x0cVRX2ln5ED8cCX44z3lCkknCULe9XyxKK87lu4OjvMrIQbZx?=
- =?us-ascii?Q?80+GsibrZcRIlcyPNwpVZgtOXfEWg5my2Ae8H7IJIlZPmy96I+0Y9TLi0wPy?=
- =?us-ascii?Q?SexNpj68zuim3kxt7xsEVW6ad51jnZPtwTgzpOZo3XJ/IAOF49aJXcswzWgA?=
- =?us-ascii?Q?xUg/HPAipIfuTuiRVYAHYkLH29pu9panYqfrB3FeLj5l6DIBhTqf1v8Pzkhh?=
- =?us-ascii?Q?xZngUX68nlU3KeSsKt9FJvrnPzInBPqPsTWS8TqeOoNFe7H/mG7R0mN5tYSg?=
- =?us-ascii?Q?v3/dtJeqUjuVbQbM1WoYTD4HRUc8Xbozeto1fjJ6YE1RTQ=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3086f6e0-b295-4ae8-3830-08d9942767f9
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4429.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2021 00:12:02.0369
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jane.chu@oracle.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2759
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10143 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
- malwarescore=0 phishscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
- definitions=main-2110210000
-X-Proofpoint-ORIG-GUID: jlTJ0Uy0HZJPhubLMe06VMJMPNG1rwVD
-X-Proofpoint-GUID: jlTJ0Uy0HZJPhubLMe06VMJMPNG1rwVD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874k9cht4h.fsf@debian-BULLSEYE-live-builder-AMD64>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-dm_dax_direct_access() supports DAXDEV_F_RECOVERY, so it may
-translate a poisoned range. But if dm_dax_copy_to/from_iter()
-don't have a dax_copy_to/from_iter() foundation underneath,
-performing load/store over poisoned range is dangerous and
-should be avoided.
+On Wed, Oct 20, 2021 at 04:15:34PM +0530, Chandan Babu R wrote:
+> On 20 Oct 2021 at 00:22, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> >
+> > Create slab caches for the high-level structures that coordinate
+> > deferred intent items, since they're used fairly heavily.
+> >
+> 
+> Apart from the nits pointed later in this mail, the remaining changes looks
+> good to me.
+> 
+> Reviewed-by: Chandan Babu R <chandan.babu@oracle.com>
+> 
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > ---
+> >  fs/xfs/libxfs/xfs_bmap.c     |   21 +++++++++++++-
+> >  fs/xfs/libxfs/xfs_bmap.h     |    5 +++
+> >  fs/xfs/libxfs/xfs_defer.c    |   62 +++++++++++++++++++++++++++++++++++++++---
+> >  fs/xfs/libxfs/xfs_defer.h    |    3 ++
+> >  fs/xfs/libxfs/xfs_refcount.c |   23 ++++++++++++++--
+> >  fs/xfs/libxfs/xfs_refcount.h |    5 +++
+> >  fs/xfs/libxfs/xfs_rmap.c     |   21 ++++++++++++++
+> >  fs/xfs/libxfs/xfs_rmap.h     |    5 +++
+> >  fs/xfs/xfs_bmap_item.c       |    4 +--
+> >  fs/xfs/xfs_refcount_item.c   |    4 +--
+> >  fs/xfs/xfs_rmap_item.c       |    4 +--
+> >  fs/xfs/xfs_super.c           |   10 ++++++-
+> >  12 files changed, 151 insertions(+), 16 deletions(-)
+> >
+> >
+> > diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> > index 8a993ef6b7f4..ef2ac0ecaed9 100644
+> > --- a/fs/xfs/libxfs/xfs_bmap.c
+> > +++ b/fs/xfs/libxfs/xfs_bmap.c
+> > @@ -37,7 +37,7 @@
+> >  #include "xfs_icache.h"
+> >  #include "xfs_iomap.h"
+> >  
+> > -
+> > +struct kmem_cache		*xfs_bmap_intent_cache;
+> >  struct kmem_cache		*xfs_bmap_free_item_cache;
+> >  
+> >  /*
+> > @@ -6190,7 +6190,7 @@ __xfs_bmap_add(
+> >  			bmap->br_blockcount,
+> >  			bmap->br_state);
+> >  
+> > -	bi = kmem_alloc(sizeof(struct xfs_bmap_intent), KM_NOFS);
+> > +	bi = kmem_cache_alloc(xfs_bmap_intent_cache, GFP_NOFS | __GFP_NOFAIL);
+> >  	INIT_LIST_HEAD(&bi->bi_list);
+> >  	bi->bi_type = type;
+> >  	bi->bi_owner = ip;
+> > @@ -6301,3 +6301,20 @@ xfs_bmap_validate_extent(
+> >  		return __this_address;
+> >  	return NULL;
+> >  }
+> > +
+> > +int __init
+> > +xfs_bmap_intent_init_cache(void)
+> > +{
+> > +	xfs_bmap_intent_cache = kmem_cache_create("xfs_bmap_intent",
+> > +			sizeof(struct xfs_bmap_intent),
+> > +			0, 0, NULL);
+> > +
+> > +	return xfs_bmap_intent_cache != NULL ? 0 : -ENOMEM;
+> > +}
+> > +
+> > +void
+> > +xfs_bmap_intent_destroy_cache(void)
+> > +{
+> > +	kmem_cache_destroy(xfs_bmap_intent_cache);
+> > +	xfs_bmap_intent_cache = NULL;
+> > +}
+> > diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+> > index db01fe83bb8a..fa73a56827b1 100644
+> > --- a/fs/xfs/libxfs/xfs_bmap.h
+> > +++ b/fs/xfs/libxfs/xfs_bmap.h
+> > @@ -290,4 +290,9 @@ int	xfs_bmapi_remap(struct xfs_trans *tp, struct xfs_inode *ip,
+> >  		xfs_fileoff_t bno, xfs_filblks_t len, xfs_fsblock_t startblock,
+> >  		int flags);
+> >  
+> > +extern struct kmem_cache	*xfs_bmap_intent_cache;
+> > +
+> > +int __init xfs_bmap_intent_init_cache(void);
+> > +void xfs_bmap_intent_destroy_cache(void);
+> > +
+> >  #endif	/* __XFS_BMAP_H__ */
+> > diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
+> > index 136a367d7b16..641a5dee4ffc 100644
+> > --- a/fs/xfs/libxfs/xfs_defer.c
+> > +++ b/fs/xfs/libxfs/xfs_defer.c
+> > @@ -18,6 +18,11 @@
+> >  #include "xfs_trace.h"
+> >  #include "xfs_icache.h"
+> >  #include "xfs_log.h"
+> > +#include "xfs_rmap.h"
+> > +#include "xfs_refcount.h"
+> > +#include "xfs_bmap.h"
+> > +
+> > +static struct kmem_cache	*xfs_defer_pending_cache;
+> >  
+> >  /*
+> >   * Deferred Operations in XFS
+> > @@ -365,7 +370,7 @@ xfs_defer_cancel_list(
+> >  			ops->cancel_item(pwi);
+> >  		}
+> >  		ASSERT(dfp->dfp_count == 0);
+> > -		kmem_free(dfp);
+> > +		kmem_cache_free(xfs_defer_pending_cache, dfp);
+> >  	}
+> >  }
+> >  
+> > @@ -462,7 +467,7 @@ xfs_defer_finish_one(
+> >  
+> >  	/* Done with the dfp, free it. */
+> >  	list_del(&dfp->dfp_list);
+> > -	kmem_free(dfp);
+> > +	kmem_cache_free(xfs_defer_pending_cache, dfp);
+> >  out:
+> >  	if (ops->finish_cleanup)
+> >  		ops->finish_cleanup(tp, state, error);
+> > @@ -596,8 +601,8 @@ xfs_defer_add(
+> >  			dfp = NULL;
+> >  	}
+> >  	if (!dfp) {
+> > -		dfp = kmem_alloc(sizeof(struct xfs_defer_pending),
+> > -				KM_NOFS);
+> > +		dfp = kmem_cache_zalloc(xfs_defer_pending_cache,
+> > +				GFP_NOFS | __GFP_NOFAIL);
+> >  		dfp->dfp_type = type;
+> >  		dfp->dfp_intent = NULL;
+> >  		dfp->dfp_done = NULL;
+> > @@ -809,3 +814,52 @@ xfs_defer_resources_rele(
+> >  	dres->dr_bufs = 0;
+> >  	dres->dr_ordered = 0;
+> >  }
+> > +
+> > +static inline int __init
+> > +xfs_defer_init_cache(void)
+> > +{
+> > +	xfs_defer_pending_cache = kmem_cache_create("xfs_defer_pending",
+> > +			sizeof(struct xfs_defer_pending),
+> > +			0, 0, NULL);
+> > +
+> > +	return xfs_defer_pending_cache != NULL ? 0 : -ENOMEM;
+> > +}
+> > +
+> > +static inline void
+> > +xfs_defer_destroy_cache(void)
+> > +{
+> > +	kmem_cache_destroy(xfs_defer_pending_cache);
+> > +	xfs_defer_pending_cache = NULL;
+> > +}
+> > +
+> > +/* Set up caches for deferred work items. */
+> > +int __init
+> > +xfs_defer_init_item_caches(void)
+> > +{
+> > +	int				error;
+> > +
+> > +	error = xfs_defer_init_cache();
+> > +	if (error)
+> > +		return error;
+> > +	error = xfs_rmap_intent_init_cache();
+> > +	if (error)
+> > +		return error;
+> > +	error = xfs_refcount_intent_init_cache();
+> > +	if (error)
+> > +		return error;
+> > +	error = xfs_bmap_intent_init_cache();
+> > +	if (error)
+> > +		return error;
+> > +
+> 
+> If the call to xfs_rmap_intent_init_cache() fails, then we don't free up
+> xfs_defer_pending_cache. Same logic applies to the rest of initialization
+> functions called above.
 
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
----
- drivers/md/dm.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Ooh, good catch.  I'll go fix that.
 
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 764183ddebc1..5f7fe64d3c37 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1058,6 +1058,8 @@ static size_t dm_dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
- 	if (!ti)
- 		goto out;
- 	if (!ti->type->dax_copy_from_iter) {
-+		if (flags & DAXDEV_F_RECOVERY)
-+			goto out;
- 		ret = copy_from_iter(addr, bytes, i);
- 		goto out;
- 	}
-@@ -1082,6 +1084,8 @@ static size_t dm_dax_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
- 	if (!ti)
- 		goto out;
- 	if (!ti->type->dax_copy_to_iter) {
-+		if (flags & DAXDEV_F_RECOVERY)
-+			goto out;
- 		ret = copy_to_iter(addr, bytes, i);
- 		goto out;
- 	}
--- 
-2.18.4
+> > +	return 0;
+> > +}
+> > +
+> > +/* Destroy all the deferred work item caches, if they've been allocated. */
+> > +void
+> > +xfs_defer_destroy_item_caches(void)
+> > +{
+> > +	xfs_bmap_intent_destroy_cache();
+> > +	xfs_refcount_intent_destroy_cache();
+> > +	xfs_rmap_intent_destroy_cache();
+> > +	xfs_defer_destroy_cache();
+> > +}
+> > diff --git a/fs/xfs/libxfs/xfs_defer.h b/fs/xfs/libxfs/xfs_defer.h
+> > index 7952695c7c41..7bb8a31ad65b 100644
+> > --- a/fs/xfs/libxfs/xfs_defer.h
+> > +++ b/fs/xfs/libxfs/xfs_defer.h
+> > @@ -122,4 +122,7 @@ void xfs_defer_ops_capture_free(struct xfs_mount *mp,
+> >  		struct xfs_defer_capture *d);
+> >  void xfs_defer_resources_rele(struct xfs_defer_resources *dres);
+> >  
+> > +int __init xfs_defer_init_item_caches(void);
+> > +void xfs_defer_destroy_item_caches(void);
+> > +
+> >  #endif /* __XFS_DEFER_H__ */
+> > diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+> > index e5d767a7fc5d..2c03df715d4f 100644
+> > --- a/fs/xfs/libxfs/xfs_refcount.c
+> > +++ b/fs/xfs/libxfs/xfs_refcount.c
+> > @@ -24,6 +24,8 @@
+> >  #include "xfs_rmap.h"
+> >  #include "xfs_ag.h"
+> >  
+> > +struct kmem_cache	*xfs_refcount_intent_cache;
+> > +
+> >  /* Allowable refcount adjustment amounts. */
+> >  enum xfs_refc_adjust_op {
+> >  	XFS_REFCOUNT_ADJUST_INCREASE	= 1,
+> > @@ -1235,8 +1237,8 @@ __xfs_refcount_add(
+> >  			type, XFS_FSB_TO_AGBNO(tp->t_mountp, startblock),
+> >  			blockcount);
+> >  
+> > -	ri = kmem_alloc(sizeof(struct xfs_refcount_intent),
+> > -			KM_NOFS);
+> > +	ri = kmem_cache_alloc(xfs_refcount_intent_cache,
+> > +			GFP_NOFS | __GFP_NOFAIL);
+> >  	INIT_LIST_HEAD(&ri->ri_list);
+> >  	ri->ri_type = type;
+> >  	ri->ri_startblock = startblock;
+> > @@ -1782,3 +1784,20 @@ xfs_refcount_has_record(
+> >  
+> >  	return xfs_btree_has_record(cur, &low, &high, exists);
+> >  }
+> > +
+> > +int __init
+> > +xfs_refcount_intent_init_cache(void)
+> > +{
+> > +	xfs_refcount_intent_cache = kmem_cache_create("xfs_refc_intent",
+> > +			sizeof(struct xfs_refcount_intent),
+> > +			0, 0, NULL);
+> > +
+> > +	return xfs_refcount_intent_cache != NULL ? 0 : -ENOMEM;
+> > +}
+> > +
+> > +void
+> > +xfs_refcount_intent_destroy_cache(void)
+> > +{
+> > +	kmem_cache_destroy(xfs_refcount_intent_cache);
+> > +	xfs_refcount_intent_cache = NULL;
+> > +}
+> > diff --git a/fs/xfs/libxfs/xfs_refcount.h b/fs/xfs/libxfs/xfs_refcount.h
+> > index 894045968bc6..9eb01edbd89d 100644
+> > --- a/fs/xfs/libxfs/xfs_refcount.h
+> > +++ b/fs/xfs/libxfs/xfs_refcount.h
+> > @@ -83,4 +83,9 @@ extern void xfs_refcount_btrec_to_irec(const union xfs_btree_rec *rec,
+> >  extern int xfs_refcount_insert(struct xfs_btree_cur *cur,
+> >  		struct xfs_refcount_irec *irec, int *stat);
+> >  
+> > +extern struct kmem_cache	*xfs_refcount_intent_cache;
+> > +
+> > +int __init xfs_refcount_intent_init_cache(void);
+> > +void xfs_refcount_intent_destroy_cache(void);
+> > +
+> >  #endif	/* __XFS_REFCOUNT_H__ */
+> > diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
+> > index f45929b1b94a..cd322174dbff 100644
+> > --- a/fs/xfs/libxfs/xfs_rmap.c
+> > +++ b/fs/xfs/libxfs/xfs_rmap.c
+> > @@ -24,6 +24,8 @@
+> >  #include "xfs_inode.h"
+> >  #include "xfs_ag.h"
+> >  
+> > +struct kmem_cache	*xfs_rmap_intent_cache;
+> > +
+> >  /*
+> >   * Lookup the first record less than or equal to [bno, len, owner, offset]
+> >   * in the btree given by cur.
+> > @@ -2485,7 +2487,7 @@ __xfs_rmap_add(
+> >  			bmap->br_blockcount,
+> >  			bmap->br_state);
+> >  
+> > -	ri = kmem_alloc(sizeof(struct xfs_rmap_intent), KM_NOFS);
+> > +	ri = kmem_cache_alloc(xfs_rmap_intent_cache, GFP_NOFS | __GFP_NOFAIL);
+> >  	INIT_LIST_HEAD(&ri->ri_list);
+> >  	ri->ri_type = type;
+> >  	ri->ri_owner = owner;
+> > @@ -2779,3 +2781,20 @@ const struct xfs_owner_info XFS_RMAP_OINFO_REFC = {
+> >  const struct xfs_owner_info XFS_RMAP_OINFO_COW = {
+> >  	.oi_owner = XFS_RMAP_OWN_COW,
+> >  };
+> > +
+> > +int __init
+> > +xfs_rmap_intent_init_cache(void)
+> > +{
+> > +	xfs_rmap_intent_cache = kmem_cache_create("xfs_rmap_intent",
+> > +			sizeof(struct xfs_rmap_intent),
+> > +			0, 0, NULL);
+> > +
+> > +	return xfs_rmap_intent_cache != NULL ? 0 : -ENOMEM;
+> > +}
+> > +
+> > +void
+> > +xfs_rmap_intent_destroy_cache(void)
+> > +{
+> > +	kmem_cache_destroy(xfs_rmap_intent_cache);
+> > +	xfs_rmap_intent_cache = NULL;
+> > +}
+> > diff --git a/fs/xfs/libxfs/xfs_rmap.h b/fs/xfs/libxfs/xfs_rmap.h
+> > index 85dd98ac3f12..b718ebeda372 100644
+> > --- a/fs/xfs/libxfs/xfs_rmap.h
+> > +++ b/fs/xfs/libxfs/xfs_rmap.h
+> > @@ -215,4 +215,9 @@ extern const struct xfs_owner_info XFS_RMAP_OINFO_INODES;
+> >  extern const struct xfs_owner_info XFS_RMAP_OINFO_REFC;
+> >  extern const struct xfs_owner_info XFS_RMAP_OINFO_COW;
+> >  
+> > +extern struct kmem_cache	*xfs_rmap_intent_cache;
+> > +
+> > +int __init xfs_rmap_intent_init_cache(void);
+> > +void xfs_rmap_intent_destroy_cache(void);
+> > +
+> >  #endif	/* __XFS_RMAP_H__ */
+> > diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+> > index 6049f0722181..e1f4d7d5a011 100644
+> > --- a/fs/xfs/xfs_bmap_item.c
+> > +++ b/fs/xfs/xfs_bmap_item.c
+> > @@ -384,7 +384,7 @@ xfs_bmap_update_finish_item(
+> >  		bmap->bi_bmap.br_blockcount = count;
+> >  		return -EAGAIN;
+> >  	}
+> > -	kmem_free(bmap);
+> > +	kmem_cache_free(xfs_bmap_intent_cache, bmap);
+> >  	return error;
+> >  }
+> >  
+> > @@ -404,7 +404,7 @@ xfs_bmap_update_cancel_item(
+> >  	struct xfs_bmap_intent		*bmap;
+> >  
+> >  	bmap = container_of(item, struct xfs_bmap_intent, bi_list);
+> > -	kmem_free(bmap);
+> > +	kmem_cache_free(xfs_bmap_intent_cache, bmap);
+> >  }
+> >  
+> >  const struct xfs_defer_op_type xfs_bmap_update_defer_type = {
+> > diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+> > index f23e86e06bfb..d3da67772d57 100644
+> > --- a/fs/xfs/xfs_refcount_item.c
+> > +++ b/fs/xfs/xfs_refcount_item.c
+> > @@ -384,7 +384,7 @@ xfs_refcount_update_finish_item(
+> >  		refc->ri_blockcount = new_aglen;
+> >  		return -EAGAIN;
+> >  	}
+> > -	kmem_free(refc);
+> > +	kmem_cache_free(xfs_refcount_intent_cache, refc);
+> >  	return error;
+> >  }
+> >  
+> > @@ -404,7 +404,7 @@ xfs_refcount_update_cancel_item(
+> >  	struct xfs_refcount_intent	*refc;
+> >  
+> >  	refc = container_of(item, struct xfs_refcount_intent, ri_list);
+> > -	kmem_free(refc);
+> > +	kmem_cache_free(xfs_refcount_intent_cache, refc);
+> >  }
+> >  
+> >  const struct xfs_defer_op_type xfs_refcount_update_defer_type = {
+> > diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
+> > index b5cdeb10927e..c3966b4c58ef 100644
+> > --- a/fs/xfs/xfs_rmap_item.c
+> > +++ b/fs/xfs/xfs_rmap_item.c
+> > @@ -427,7 +427,7 @@ xfs_rmap_update_finish_item(
+> >  			rmap->ri_bmap.br_startoff, rmap->ri_bmap.br_startblock,
+> >  			rmap->ri_bmap.br_blockcount, rmap->ri_bmap.br_state,
+> >  			state);
+> > -	kmem_free(rmap);
+> > +	kmem_cache_free(xfs_rmap_intent_cache, rmap);
+> >  	return error;
+> >  }
+> >  
+> > @@ -447,7 +447,7 @@ xfs_rmap_update_cancel_item(
+> >  	struct xfs_rmap_intent		*rmap;
+> >  
+> >  	rmap = container_of(item, struct xfs_rmap_intent, ri_list);
+> > -	kmem_free(rmap);
+> > +	kmem_cache_free(xfs_rmap_intent_cache, rmap);
+> >  }
+> >  
+> >  const struct xfs_defer_op_type xfs_rmap_update_defer_type = {
+> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> > index 0afa47378211..8909e08cbf77 100644
+> > --- a/fs/xfs/xfs_super.c
+> > +++ b/fs/xfs/xfs_super.c
+> > @@ -38,6 +38,7 @@
+> >  #include "xfs_pwork.h"
+> >  #include "xfs_ag.h"
+> >  #include "xfs_btree.h"
+> > +#include "xfs_defer.h"
+> >  
+> >  #include <linux/magic.h>
+> >  #include <linux/fs_context.h>
+> > @@ -1972,11 +1973,15 @@ xfs_init_caches(void)
+> >  	if (error)
+> >  		goto out_destroy_bmap_free_item_cache;
+> >  
+> > +	error = xfs_defer_init_item_caches();
+> > +	if (error)
+> > +		goto out_destroy_btree_cur_cache;
+> > +
+> >  	xfs_da_state_cache = kmem_cache_create("xfs_da_state",
+> >  					      sizeof(struct xfs_da_state),
+> >  					      0, 0, NULL);
+> >  	if (!xfs_da_state_cache)
+> > -		goto out_destroy_btree_cur_cache;
+> > +		goto out_destroy_defer_item_cache;
+> >  
+> >  	xfs_ifork_cache = kmem_cache_create("xfs_ifork",
+> >  					   sizeof(struct xfs_ifork),
+> > @@ -2106,6 +2111,8 @@ xfs_init_caches(void)
+> >  	kmem_cache_destroy(xfs_ifork_cache);
+> >   out_destroy_da_state_cache:
+> >  	kmem_cache_destroy(xfs_da_state_cache);
+> > + out_destroy_defer_item_cache:
+> > +	xfs_defer_destroy_item_caches();
+> >   out_destroy_btree_cur_cache:
+> >  	xfs_btree_destroy_cur_caches();
+> >   out_destroy_bmap_free_item_cache:
+> > @@ -2140,6 +2147,7 @@ xfs_destroy_caches(void)
+> >  	kmem_cache_destroy(xfs_ifork_cache);
+> >  	kmem_cache_destroy(xfs_da_state_cache);
+> >  	xfs_btree_destroy_cur_caches();
+> > +	xfs_defer_destroy_item_caches();
+> 
+> Since caches are being freed in the reverse order of their creation,
+> xfs_defer_destroy_item_caches() should be invoked before
+> xfs_btree_destroy_cur_caches().
 
+Fixed.  Thanks for the review!
+
+--D
+
+> >  	kmem_cache_destroy(xfs_bmap_free_item_cache);
+> >  	kmem_cache_destroy(xfs_log_ticket_cache);
+> >  }
+> 
+> 
+> -- 
+> chandan
