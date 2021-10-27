@@ -2,73 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0F7A43D339
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Oct 2021 22:53:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A165B43D350
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Oct 2021 22:54:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238909AbhJ0Uzy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 27 Oct 2021 16:55:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234080AbhJ0Uzx (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 27 Oct 2021 16:55:53 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E192660720;
-        Wed, 27 Oct 2021 20:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635368008;
-        bh=lR4BUuybzYA05P+MmciU7UFrNU2jug/xDcDUahEPscw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aK5lTPJhNP7O5M8SRf4tlz12iShtHHSDbSrCZz0cRCHjDGx5qpk2F09b5oE6C3K38
-         ap+MitTKVRq4mzQwwBmgg8JwsjblqwDuEXUAsM40tBDpiDQaqm3vHrFyLjHOn5qogx
-         TaYJtXwOZgygWr5IQ7faO+723pmoapjQvOEgfNk5YIEE0lcpbcbW/FI2Kdwq6R+AmU
-         UJehgWb2Fk8W6H3+6LYzyaBZOtEtlxkkdHf+rYPewSbaFQ5c5nvFWUc9QY176LaWco
-         oxpgLk1cRacK+BIFtTJR1BC4p+75BTHOJAdyJ+wAxI6zEVbPLpuW+I2Cr1aRiHTfwM
-         aKqrmKtzT65Uw==
-Date:   Wed, 27 Oct 2021 13:53:27 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cgel.zte@gmail.com
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ran jianping <ran.jianping@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: Re: [PATCH xfs] xfs: remove duplicate include in xfs_super.c
-Message-ID: <20211027205327.GC24307@magnolia>
-References: <20211027081652.1946-1-ran.jianping@zte.com.cn>
+        id S244134AbhJ0U5F (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 27 Oct 2021 16:57:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48254 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244130AbhJ0U5C (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 27 Oct 2021 16:57:02 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED822C061767
+        for <linux-xfs@vger.kernel.org>; Wed, 27 Oct 2021 13:54:36 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id a26so3844511pfr.11
+        for <linux-xfs@vger.kernel.org>; Wed, 27 Oct 2021 13:54:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MW2+yuOLdVC2FiYNaHWFO+PStoIyhupC83aZvNmdg00=;
+        b=xAWE2Gs6elQhyFnpgWWwNUZcIIN+S0dTB23e1v1SGSkr3xAYgCO6FZbQyPbRQqQf23
+         9I8Y78UczhWRyEynzMK/aUvy5wOw4Vy6/4LxJus/eHVGZMzDNjEAK+zx722FS9qK0he2
+         1U1cd8YzY36X3CDASwjtuR6iKB/eUu6jn2zPH05rfMggNUg3QvABlXcipTgHgz3k7BuS
+         H+rhb1Vq1z7S7EkZGdXP0ONpo163cZlk5BsINHv2ASIpi7dd31Nuhi/Qnq9EJvDvkYxw
+         Pntfc80cc9CfDzJp6vju7flE64Efz7hVPlBsr/GGmt1WhUviknbfEb0n+v3Q2OiU1RqV
+         8kaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MW2+yuOLdVC2FiYNaHWFO+PStoIyhupC83aZvNmdg00=;
+        b=Z1RjvdIbX+wRvmhPHkmsyhVaKxvn2QCFktiMe8euguAqnfYvgR0TPlAmfffCP+6Nj3
+         +PMoPHlepGhxMcjdeDfSGoVSdNlHr0ovdW71dqPSaPrbSiLLXZHuhlCdGMKL2m0zPTMv
+         /QeqhhqfPS+OPOV+2ZkrS/Rbrz1gBVev+CYIcFNJQ6Q5wTVLSMtRhxPmWZUrWBWg7GIz
+         YdYH3tNASos19GKXNh3Kc4DXFo7uWP66wRHVqky1sOeOxV4d/mKuJVrjIa+aWL0DrrOm
+         5bdOXTQodfbSFXqhXTVYtJsSUUAntuarAo6LNvqNr7eDEUsKdmTOKGS5tIuaIwGrLRHv
+         qZzg==
+X-Gm-Message-State: AOAM533pg6pToLPczhsNIjlIWuH8uzw+fbiUZ/6xTWYvHKy11owAZRX0
+        G7O6xusIVXyZIo8BKSIs558k0XziLTnFemCho5pEUg==
+X-Google-Smtp-Source: ABdhPJxqYRzrssHaaThSAQ3S9v6yHWHIiMadGqtNgSbRxpNG6jDSA2a4I6mJJqbjxV8Pnl8ItfliO9eaeQbTvv574gs=
+X-Received: by 2002:a63:770e:: with SMTP id s14mr43824pgc.377.1635368076533;
+ Wed, 27 Oct 2021 13:54:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211027081652.1946-1-ran.jianping@zte.com.cn>
+References: <20211018044054.1779424-1-hch@lst.de> <20211018044054.1779424-3-hch@lst.de>
+In-Reply-To: <20211018044054.1779424-3-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 27 Oct 2021 13:54:25 -0700
+Message-ID: <CAPcyv4jAd5O=keOkvtKzrnqpy21dfH0sJSk7Oo16wYrFfPnk=Q@mail.gmail.com>
+Subject: Re: [PATCH 02/11] dax: remove CONFIG_DAX_DRIVER
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Mike Snitzer <snitzer@redhat.com>, Ira Weiny <ira.weiny@intel.com>,
+        device-mapper development <dm-devel@redhat.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Oct 27, 2021 at 08:16:52AM +0000, cgel.zte@gmail.com wrote:
-> From: ran jianping <ran.jianping@zte.com.cn>
-> 
-> 'xfs_btree.h ' included in 'fs/xfs/xfs_super.c'
->  is duplicated.It is also included on the 40 line.
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: ran jianping <ran.jianping@zte.com.cn>
+On Sun, Oct 17, 2021 at 9:41 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> CONFIG_DAX_DRIVER only selects CONFIG_DAX now, so remove it.
 
-How is this different from the identical patch posted two days ago?
+Looks good, I don't think an s390 ack is needed for this one.
 
---D
-
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  fs/xfs/xfs_super.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index f4c508428aad..e21459f9923a 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -37,7 +37,6 @@
->  #include "xfs_reflink.h"
->  #include "xfs_pwork.h"
->  #include "xfs_ag.h"
-> -#include "xfs_btree.h"
->  #include "xfs_defer.h"
->  
->  #include <linux/magic.h>
-> -- 
-> 2.25.1
-> 
+>  drivers/dax/Kconfig        | 4 ----
+>  drivers/nvdimm/Kconfig     | 2 +-
+>  drivers/s390/block/Kconfig | 2 +-
+>  fs/fuse/Kconfig            | 2 +-
+>  4 files changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dax/Kconfig b/drivers/dax/Kconfig
+> index d2834c2cfa10d..954ab14ba7778 100644
+> --- a/drivers/dax/Kconfig
+> +++ b/drivers/dax/Kconfig
+> @@ -1,8 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -config DAX_DRIVER
+> -       select DAX
+> -       bool
+> -
+>  menuconfig DAX
+>         tristate "DAX: direct access to differentiated memory"
+>         select SRCU
+> diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
+> index b7d1eb38b27d4..347fe7afa5830 100644
+> --- a/drivers/nvdimm/Kconfig
+> +++ b/drivers/nvdimm/Kconfig
+> @@ -22,7 +22,7 @@ if LIBNVDIMM
+>  config BLK_DEV_PMEM
+>         tristate "PMEM: Persistent memory block device support"
+>         default LIBNVDIMM
+> -       select DAX_DRIVER
+> +       select DAX
+>         select ND_BTT if BTT
+>         select ND_PFN if NVDIMM_PFN
+>         help
+> diff --git a/drivers/s390/block/Kconfig b/drivers/s390/block/Kconfig
+> index d0416dbd0cd81..e3710a762abae 100644
+> --- a/drivers/s390/block/Kconfig
+> +++ b/drivers/s390/block/Kconfig
+> @@ -5,7 +5,7 @@ comment "S/390 block device drivers"
+>  config DCSSBLK
+>         def_tristate m
+>         select FS_DAX_LIMITED
+> -       select DAX_DRIVER
+> +       select DAX
+>         prompt "DCSSBLK support"
+>         depends on S390 && BLOCK
+>         help
+> diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
+> index 40ce9a1c12e5d..038ed0b9aaa5d 100644
+> --- a/fs/fuse/Kconfig
+> +++ b/fs/fuse/Kconfig
+> @@ -45,7 +45,7 @@ config FUSE_DAX
+>         select INTERVAL_TREE
+>         depends on VIRTIO_FS
+>         depends on FS_DAX
+> -       depends on DAX_DRIVER
+> +       depends on DAX
+>         help
+>           This allows bypassing guest page cache and allows mapping host page
+>           cache directly in guest address space.
+> --
+> 2.30.2
+>
