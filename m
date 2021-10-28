@@ -2,104 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E4D2C43DAE1
-	for <lists+linux-xfs@lfdr.de>; Thu, 28 Oct 2021 07:52:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AFC143DF80
+	for <lists+linux-xfs@lfdr.de>; Thu, 28 Oct 2021 12:52:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229697AbhJ1Fy6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 28 Oct 2021 01:54:58 -0400
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:46433 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229586AbhJ1Fy5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Oct 2021 01:54:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R541e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Utxz1z-_1635400347;
-Received: from admindeMacBook-Pro-2.local(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Utxz1z-_1635400347)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 28 Oct 2021 13:52:28 +0800
-Subject: Re: [Question] ext4/xfs: Default behavior changed after per-file DAX
-To:     Vivek Goyal <vgoyal@redhat.com>, Ira Weiny <ira.weiny@intel.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, adilger.kernel@dilger.ca,
-        linux-xfs@vger.kernel.org,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, dan.j.williams@intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <dchinner@redhat.com>
-References: <26ddaf6d-fea7-ed20-cafb-decd63b2652a@linux.alibaba.com>
- <20211026154834.GB24307@magnolia> <YXhWP/FCkgHG/+ou@redhat.com>
- <20211026205730.GI3465596@iweiny-DESK2.sc.intel.com>
- <YXlj6GhxkFBQRJYk@redhat.com>
-From:   JeffleXu <jefflexu@linux.alibaba.com>
-Message-ID: <665787d0-f227-a95b-37a3-20f2ea3e09aa@linux.alibaba.com>
-Date:   Thu, 28 Oct 2021 13:52:27 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
+        id S230298AbhJ1KzB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 28 Oct 2021 06:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230229AbhJ1Kyx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 28 Oct 2021 06:54:53 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436F0C0432C4
+        for <linux-xfs@vger.kernel.org>; Thu, 28 Oct 2021 03:52:23 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id g10so22795575edj.1
+        for <linux-xfs@vger.kernel.org>; Thu, 28 Oct 2021 03:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
+        b=MqgQiMnth4O6zLvpsYbAhVLW1BorpgoCleWwfkY0/i+i6OSDuXRZO1jIKzpTTrmehO
+         XtsLWdXiTcL+XCe4naFtf2tTUJnbwwmDpuUkpvRhLd+LEnuxY7nNr11hmTRUVX1WOHsO
+         bN0u1arCg4gm9LHdXRMZFcXOD22U5gDGuBOuhPo6qvWbt6nA2j/p/5IZ88XFHrEsiSW3
+         12hentYJMlWeUfa2lUQkLm+5/fvMSizrI7wGoF2taOa3dgGUV5HKZWb0yAAH7nAXVevJ
+         tDC/xbHNLzSn310XeD3Gkoobjl6MPBQzT5DSLzerNBdTKOdmyp3xvfvOyo80qVUTZIED
+         gaRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
+        b=0N0MN18i6hkTQJLIXBdFLljLWtCOjAHiGmw6ZrjRNdNJSI3pLgBb5NgtfT5IAM6vsA
+         UVlRf817R+iLHQ/JFEWa8QsBXpqt3klGChWG8+mZ2JlrhuckY3x74d+ec24D1ybGlnf2
+         0iwxSi9P2RnxFmsRTfffn73FqU/sn0+euJtGVKE1KnuaygS5rfi065t5jUQXX731j7uL
+         VfKHw0ftaLsZ4loKJ/fqk0htOqbk7ca1x5Bk6D6gRhwJD05efaIfhZ+UaTB3Qcm4QmO2
+         v0O9hGK3jMMYryP8P5kJ4yngaZJDRMlP2EGRRAkO8AGlraeZmPhFAac0Uf52uC7esmbf
+         OrHg==
+X-Gm-Message-State: AOAM533bPeCP6bqgb576XZtOltUjwJL0S1r0ytx+kZ+iT2ft2NlMVFwq
+        LW+6YnPh941m1vMkxX59zbRYOm9CEcaDrkIPS0EpfWCSa03bwkwq
+X-Google-Smtp-Source: ABdhPJw39EF9dJlXS9lAFrZ3adXxB8DVzXcygVzA3uRLiZxWlggxaB9ElCxkEB0P82xisoA6G442GD5iqMe2hCgLIt8=
+X-Received: by 2002:a2e:9a83:: with SMTP id p3mr3750290lji.145.1635418330269;
+ Thu, 28 Oct 2021 03:52:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YXlj6GhxkFBQRJYk@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Received: by 2002:ab3:6f89:0:0:0:0:0 with HTTP; Thu, 28 Oct 2021 03:52:09
+ -0700 (PDT)
+Reply-To: aabdulwalialhashmi@gmail.com
+From:   Abdulwali Alhashmi <husamalsayed.hs@gmail.com>
+Date:   Thu, 28 Oct 2021 03:52:09 -0700
+Message-ID: <CAF6yYCeS=rm8=_71-kMjVo4oaVK57w9X52R_yv1HDrBe7vh-sA@mail.gmail.com>
+Subject: PLEASE GET BACK TO ME IF I CAN I TRUST YOU
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 10/27/21 10:36 PM, Vivek Goyal wrote:
-> [snip]
-> 
->>
->> Is the biggest issue the lack of visibility to see if the device supports DAX?
-> 
-> Not necessarily. I think for me two biggest issues are.
-> 
-> - Should dax be enabled by default in server as well. If we do that,
->   server will have to make extra ioctl() call on every LOOKUP and GETATTR
->   fuse request. Local filesystems probably can easily query FS_XFLAGS_DAX
->   state but doing extra syscall all the time will probably be some cost
->   (No idea how much).
-
-I tested the time cost from virtiofsd's perspective (time cost of
-passthrough_ll.c:lo_do_lookup()):
-- before per inode DAX feature: 2~4 us
-- after per inode DAX feature: 7~8 us
-
-It is within expectation, as the introduction of per inode DAX feature,
-one extra ioctl() system call is introduced.
-
-Also the time cost from client's perspective (time cost of
-fs/fuse/dir.c:fuse_lookup_name())
-- before per inode DAX feature: 25~30 us
-- after per inode DAX feature: 30~35 us
-
-That is, ~15%~20% performance loss.
-
-Currently we do ioctl() to query the persitent inode flags every time
-FUSE_LOOKUP request is received, maybe we could cache the result of
-ioctl() on virtiofsd side, but I have no idea how to intercept the
-runtime modification to these persistent indoe flags from other
-processes on host, e.g. sysadmin on host, to maintain the cache consistency.
-
-So if the default behavior of client side is 'dax=inode', and virtiofsd
-disables per inode DAX by default (neither '-o dax=server|attr' is
-specified for virtiofsd) for the sake of performance, then guest won't
-see DAX enabled and thus won't be surprised. This can reduce the
-behavior change to the minimum.
-
-
-> 
-> - So far if virtiofs is mounted without any of the dax options, just
->   by looking at mount option, I could tell, DAX is not enabled on any
->   of the files. But that will not be true anymore. Because dax=inode
->   be default, it is possible that server upgrade enabled dax on some
->   or all the files.
-> 
->   I guess I will have to stick to same reason given by ext4/xfs. That is
->   to determine whether DAX is enabled on a file or not, you need to
->   query STATX_ATTR_DAX flag. That's the only way to conclude if DAX is
->   being used on a file or not. Don't look at filesystem mount options
->   and reach a conclusion (except the case of dax=never).
-
-
 -- 
-Thanks,
-Jeffle
+Greetings,
+
+Firstly, I apologize for encroaching into your privacy in this manner
+as it may seem unethical though it is a matter of great importance.
+
+I am Abdulwali Alhashmi, I work with Cayman National Bank (Cayman Islands).
+
+I am contacting you because my status would not permit me to do this
+alone as it is concerning our customer and an investment placed under
+our bank's management over 5 years ago.
+
+I have a proposal I would love to discuss with you which will be very
+beneficial to both of us. It's regarding my late client who has a huge
+deposit with my bank.
+
+He is from your country and shares the same last name with you.
+
+I want to seek your consent to present you as the next of kin to my
+late client who died and left a huge deposit with my bank.
+
+I would respectfully request that you keep the contents of this mail
+confidential and respect the integrity of the information you come by
+as a result of this mail.
+
+Please kindly get back to me for more details if I can TRUST YOU.{
+aabdulwalialhashmi@gmail.com }
+
+Regards
+Abdulwali Alhashmi
+Treasury and Deposit Management,
+Cayman National Bank Cayman Islands
