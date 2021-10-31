@@ -2,57 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AB934410BA
-	for <lists+linux-xfs@lfdr.de>; Sun, 31 Oct 2021 21:09:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D51894410FE
+	for <lists+linux-xfs@lfdr.de>; Sun, 31 Oct 2021 22:30:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230080AbhJaUMD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 31 Oct 2021 16:12:03 -0400
-Received: from mailgate.kemenperin.go.id ([202.47.80.142]:58854 "EHLO
-        mailgate.kemenperin.go.id" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbhJaUMC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 31 Oct 2021 16:12:02 -0400
-X-Greylist: delayed 5193 seconds by postgrey-1.27 at vger.kernel.org; Sun, 31 Oct 2021 16:11:58 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id 2A4A7828F1E;
-        Mon,  1 Nov 2021 01:00:16 +0700 (WIB)
-Received: from mailgate.kemenperin.go.id ([127.0.0.1])
-        by localhost (mailgate.kemenperin.go.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id aSDB9UjKRu4l; Mon,  1 Nov 2021 01:00:13 +0700 (WIB)
-Received: from localhost (localhost [127.0.0.1])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id DDB2F828CE9;
-        Mon,  1 Nov 2021 00:56:54 +0700 (WIB)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mailgate.kemenperin.go.id DDB2F828CE9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kemenperin.go.id;
-        s=3298A942-BBC6-11E3-B333-483736368EC2; t=1635703015;
-        bh=+tje3x5yIAM91gcZZJ8xoRjx6IuR+B3ePoXPCKu2mgI=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=KATUX992ge7D0qn9bU4D7zaeizgarlAYHOvy9yELrWAITGQnfQ7PTBkI/H7sn7ojK
-         6pYXvXirX8AfGfpGsZJ7vxq+ahjwtWBHvtg0siRTUmL0krLt/o2v2EbA8Sx2Bxubbh
-         OIJ8zNHAsG4Q9ZMaXzGon9a6CFzAJeqzE8v3/xHo=
-X-Virus-Scanned: amavisd-new at kemenperin.go.id
-Received: from mailgate.kemenperin.go.id ([127.0.0.1])
-        by localhost (mailgate.kemenperin.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 3ZjV-aWozXQn; Mon,  1 Nov 2021 00:56:54 +0700 (WIB)
-Received: from mailgate.kemenperin.go.id (mailgate.kemenperin.go.id [10.1.0.89])
-        by mailgate.kemenperin.go.id (Postfix) with ESMTP id F1386828B2F;
-        Mon,  1 Nov 2021 00:55:03 +0700 (WIB)
-Date:   Mon, 1 Nov 2021 00:55:03 +0700 (WIB)
-From:   Manuel Franco <silitonga@kemenperin.go.id>
-Reply-To: Manuel Franco <manuelfrancospende1@gmail.com>
-Message-ID: <316885095.327001.1635702903906.JavaMail.zimbra@kemenperin.go.id>
-Subject: 2,000,000.00 Euro
+        id S230025AbhJaVcs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 31 Oct 2021 17:32:48 -0400
+Received: from ishtar.tlinx.org ([173.164.175.65]:39458 "EHLO
+        Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229982AbhJaVcr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 31 Oct 2021 17:32:47 -0400
+Received: from [192.168.3.12] (Athenae [192.168.3.12])
+        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 19VLTIZF090177;
+        Sun, 31 Oct 2021 14:29:20 -0700
+Message-ID: <617F0A6D.6060506@tlinx.org>
+Date:   Sun, 31 Oct 2021 14:28:13 -0700
+From:   L A Walsh <xfs@tlinx.org>
+User-Agent: Thunderbird 2.0.0.24 (Windows/20100228)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+To:     Dave Chinner <david@fromorbit.com>
+CC:     linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: xfsrestore'ing from file backups don't restore...why not?
+References: <617721E0.5000009@tlinx.org> <20211026004814.GA5111@dread.disaster.area>
+In-Reply-To: <20211026004814.GA5111@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.1.0.89]
-Thread-Index: cYoBZ9/HjDprLbzYDgjeQYDGCx21TQ==
-Thread-Topic: 2,000,000.00 Euro
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+When looking at a dump of /home (but not on other partitions 
+that I've noticed, I see (stopping listing on problem line)
+
+XFSDUMP_OPTIONS=-J #(set externally , not usually)
+
+>./dump1fs#160(Xfsdump)> xfsdump -b 268435456 -l 8 -L home -J - /home
+xfsdump: using file dump (drive_simple) strategy
+xfsdump: version 3.1.8 (dump format 3.0)
+xfsdump: level 8 incremental dump of Ishtar:/home based on level 6 dump begun Fri Oct 29 04:30:13 2021
+xfsdump: dump date: Sun Oct 31 14:20:37 2021
+xfsdump: session id: 249233a0-a642-42a0-ae02-ed53012f3fa4
+xfsdump: session label: "home"
+xfsdump: NOTE: root ino 192 differs from mount dir ino 256, bind mount?
+
+Of note, most things were placed in orphanage under
+256.0
+
+df shows:
+df /home
+Filesystem        Size  Used Avail Use% Mounted on
+/dev/Space/Home2  2.0T  1.5T  570G  73% /home
+
+(Became months ago as I made new partition of 2T to replace
+old partition of 1.5T, after which I did another 
+level-0 backup.
 
 
--- 
-You have a donation of 2,000,000.00 Euro.Get back to me now so we can proceed.
+
