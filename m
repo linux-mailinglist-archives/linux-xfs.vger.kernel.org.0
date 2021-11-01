@@ -2,33 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF60E4420FE
-	for <lists+linux-xfs@lfdr.de>; Mon,  1 Nov 2021 20:41:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0E44421A5
+	for <lists+linux-xfs@lfdr.de>; Mon,  1 Nov 2021 21:25:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbhKATna (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 1 Nov 2021 15:43:30 -0400
-Received: from ishtar.tlinx.org ([173.164.175.65]:39460 "EHLO
+        id S229896AbhKAU2T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 1 Nov 2021 16:28:19 -0400
+Received: from ishtar.tlinx.org ([173.164.175.65]:39462 "EHLO
         Ishtar.sc.tlinx.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbhKATna (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Nov 2021 15:43:30 -0400
+        with ESMTP id S229560AbhKAU2S (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 1 Nov 2021 16:28:18 -0400
 Received: from [192.168.3.12] (Athenae [192.168.3.12])
-        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 1A1Jerqw042854;
-        Mon, 1 Nov 2021 12:40:55 -0700
-Message-ID: <61804254.3070001@tlinx.org>
-Date:   Mon, 01 Nov 2021 12:39:00 -0700
+        by Ishtar.sc.tlinx.org (8.14.7/8.14.4/SuSE Linux 0.8) with ESMTP id 1A1KPfRK046364;
+        Mon, 1 Nov 2021 13:25:43 -0700
+Message-ID: <61804CD4.8070103@tlinx.org>
+Date:   Mon, 01 Nov 2021 13:23:48 -0700
 From:   L A Walsh <xfs@tlinx.org>
 User-Agent: Thunderbird 2.0.0.24 (Windows/20100228)
 MIME-Version: 1.0
 To:     linux-xfs <linux-xfs@vger.kernel.org>
 CC:     Dave Chinner <david@fromorbit.com>
 Subject: cause of xfsdump msg: root ino 192 differs from mount dir ino 256
-References: <617721E0.5000009@tlinx.org> <20211026004814.GA5111@dread.disaster.area>
-In-Reply-To: <20211026004814.GA5111@dread.disaster.area>
+References: <617721E0.5000009@tlinx.org> <20211026004814.GA5111@dread.disaster.area> <617F0A6D.6060506@tlinx.org>
+In-Reply-To: <617F0A6D.6060506@tlinx.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
+
+
+Addendum to the below: get_blocks showed no error messages.
 
 
 When I xfsdump my /home partition, I see the above diagnostic
@@ -55,10 +58,8 @@ I try mounting the same filesystem someplace new:
 # df .
 Filesystem        Size  Used Avail Use% Mounted on
 /dev/Space/Home2  2.0T  1.5T  569G  73% /home
-
 mkdir /home2
 Ishtar:home# mount /dev/Space/Home2 /home2
-
 Ishtar:home# ll -di /home /home2
 256 drwxr-xr-x 40 4096 Nov  1 10:23 /home/
 256 drwxr-xr-x 40 4096 Nov  1 10:23 /home2/
