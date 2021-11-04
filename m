@@ -2,110 +2,79 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E101444DBC
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Nov 2021 04:34:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4BD0444DD1
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Nov 2021 04:44:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbhKDDgh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 3 Nov 2021 23:36:37 -0400
-Received: from sandeen.net ([63.231.237.45]:58490 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229893AbhKDDgh (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Wed, 3 Nov 2021 23:36:37 -0400
-Received: from [10.0.0.146] (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 03E41FB436;
-        Wed,  3 Nov 2021 22:32:20 -0500 (CDT)
-Message-ID: <d5bf39e3-c1d0-192b-89bc-bc74f1c43460@sandeen.net>
-Date:   Wed, 3 Nov 2021 22:33:58 -0500
+        id S230011AbhKDDrE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 3 Nov 2021 23:47:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229913AbhKDDrE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 3 Nov 2021 23:47:04 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879ABC061714;
+        Wed,  3 Nov 2021 20:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=cnhGo81+/Ft3W318LxOJ86hyjf+30Zc+kGoqFQuytcs=; b=Vx/zAxB+JeDPoimpTG7jtXsasE
+        HC05BdpaUL3S+bzRlf9/foDJ4xpkfkF8aaN1uji8zCwY5rr2l6KnuawISqxz6I1X8bwq1KtN3QbN8
+        tM7v3iSm0+qzSpMkm8A3/S83siOGhCJbLTdWniVREHn2Fk0FBzntbqyY8zeEN2Ew/+24WDKK5DuCh
+        OSmXYGrJ40Wwbdb5kOq/qIgHR0UE9UOtFzFZPbfd4Le0RGGmtyXzr12DPyitNWZRBo9e/TTcSGX+y
+        TiCNsbmqZwvXWdnjVE9iAt1WdHebh7wXT72p986IUJgTwUw1GPemdGfBpLILYcYFEvd4G5WTudUBG
+        SCgfrLjQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1miTeA-005duZ-0r; Thu, 04 Nov 2021 03:43:05 +0000
+Date:   Thu, 4 Nov 2021 03:42:37 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH 18/21] iomap: Convert iomap_add_to_ioend to take a folio
+Message-ID: <YYNWrSyPCabrcRfr@casper.infradead.org>
+References: <20211101203929.954622-1-willy@infradead.org>
+ <20211101203929.954622-19-willy@infradead.org>
+ <YYDoMltwjNKtJaWR@infradead.org>
+ <YYGfUuItAyTNax5V@casper.infradead.org>
+ <20211103160057.GH24333@magnolia>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.2.1
-Content-Language: en-US
-To:     "Darrick J. Wong" <djwong@kernel.org>, sandeen@redhat.com
-Cc:     xfs <linux-xfs@vger.kernel.org>
-References: <389722a5-4b02-c76d-a5ac-d92d1e642b21@redhat.com>
- <7fe17d89-749d-7114-1f4f-294aba1e3f1d@redhat.com>
- <20211104031411.GS24307@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH V2] xfsprogs: move stubbed-out kernel functions out of
- xfs_shared.h
-In-Reply-To: <20211104031411.GS24307@magnolia>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211103160057.GH24333@magnolia>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-
-
-On 11/3/21 10:14 PM, Darrick J. Wong wrote:
-> On Wed, Nov 03, 2021 at 09:59:57PM -0500, Eric Sandeen wrote:
->> Move kernel stubs out of libxfs/xfs_shared.h, which is kernel
->> libxfs code and should not have userspace shims in it.
->>
->> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
->> ---
->>
->> V2: fix spdx and copyright
->>
->> diff --git a/include/libxfs.h b/include/libxfs.h
->> index 24424d0e..64b44af8 100644
->> --- a/include/libxfs.h
->> +++ b/include/libxfs.h
->> @@ -11,6 +11,7 @@
->>   #include "platform_defs.h"
->>   #include "xfs.h"
->> +#include "stubs.h"
->>   #include "list.h"
->>   #include "hlist.h"
->>   #include "cache.h"
->> diff --git a/include/stubs.h b/include/stubs.h
->> new file mode 100644
->> index 00000000..d80e8de0
->> --- /dev/null
->> +++ b/include/stubs.h
->> @@ -0,0 +1,29 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (c) 2021 Red Hat, Inc.
->> + * All Rights Reserved.
->> + */
->> +#ifndef STUBS_H
->> +#define STUBS_H
->> +
->> +/* Stub out unimplemented and unneeded kernel functions */
->> +struct rb_root {
->> +};
->> +
->> +#define RB_ROOT 		(struct rb_root) { }
+On Wed, Nov 03, 2021 at 09:00:57AM -0700, Darrick J. Wong wrote:
+> > -			wpc->ops->discard_folio(page_folio(page), file_offset);
+> > +			wpc->ops->discard_folio(folio, pos);
 > 
-> Please to remove  ^ this unnecessary space.
+> /me wonders why this wouldn't have been done in whichever patch added
+> folio as a local variable, but fmeh, the end result is the same:
+
+Found it and fixed it.
+
+> > @@ -1474,17 +1474,15 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
+> >  		 * memory is zeroed when mapped, and writes to that region are
+> >  		 * not written out to the file."
+> >  		 */
+> > -		zero_user_segment(page, poff, PAGE_SIZE);
+> > -
+> > -		/* Adjust the end_offset to the end of file */
+> > +		zero_user_segment(&folio->page, poff, folio_size(folio));
 > 
->> +
->> +typedef struct wait_queue_head {
->> +} wait_queue_head_t;
->> +
->> +#define init_waitqueue_head(wqh)	do { } while(0)
->> +
->> +struct rhashtable {
->> +};
->> +
->> +struct delayed_work {
->> +};
->> +
->> +#define INIT_DELAYED_WORK(work, func)	do { } while(0)
->> +#define cancel_delayed_work_sync(work)	do { } while(0)
->> +
->> +#endif
-> 
-> This probably ought to be '#endif /* STUBS_H */' just to keep it clear
-> which #ifdef it goes with.
+> Question: is &folio->page != page here?  I guess the idea is that we
+> have a (potentially multi-page) folio straddling i_size, and we need to
+> zero everything in the whole folio after i_size.  But then why not pass
+> the whole folio?
 
-Yup I spotted and added that already. I'm so rusty.
+Ugh, thanks.  You made me realise that zero_user_segments() is still
+conditional on CONFIG_TRANSPARENT_HUGEPAGE.  It's a relic of when I
+was going to do all of this with THP; before I switched to the folio
+mental model.
 
-> With those two things fixed,
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+So now we're going to get folio_zero_segments(), folio_zero_segment()
+and folio_zero_range().
 
-Thanks,
--Eric
