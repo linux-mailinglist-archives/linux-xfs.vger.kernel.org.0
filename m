@@ -2,80 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59FF04479DB
-	for <lists+linux-xfs@lfdr.de>; Mon,  8 Nov 2021 06:13:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C47B447AE4
+	for <lists+linux-xfs@lfdr.de>; Mon,  8 Nov 2021 08:27:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235335AbhKHFPq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Nov 2021 00:15:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56584 "EHLO
+        id S235673AbhKHH3y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Nov 2021 02:29:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232906AbhKHFPq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Nov 2021 00:15:46 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723BEC061570;
-        Sun,  7 Nov 2021 21:13:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=nzuUy/RymcDXWey2K/SRNJ0dp8iKpgBkhbpM0hGxxL4=; b=MTukNndNFo7xpUENhAmjVatEPu
-        BDGXech/R4FW5SDL9ituYcQvpsJPBe4lv/MrJmn2MrD6lr0rgEP3JR13/MjnTR8dM6g5UlrbFxC8v
-        Yle2CRx7DA8Q3RVo6LbA6gCW2Eous6ohXI8s6sAqlPuQG5e+EICfAMuxDA2KQOWOt8cnHdN93q0jd
-        3SrXrsF8IYVmrWkbTRLfeNwI3jbp0AyfIWBQPvWkvgwoXyLYZA3t9rNVw6tMtM4pl7dGY7mHF31ZT
-        9xYYmsaAhseZYNlg5ZPrtol0LTpiGYVj1rTJTWqpW7o12mdLbc7IVQjf5+9wI9oz+XTlJU5h26U+f
-        XjOJi98g==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mjwtX-008AzS-1k; Mon, 08 Nov 2021 05:09:06 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     "Darrick J . Wong " <djwong@kernel.org>
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH v2 28/28] xfs: Support multi-page folios
-Date:   Mon,  8 Nov 2021 04:05:51 +0000
-Message-Id: <20211108040551.1942823-29-willy@infradead.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211108040551.1942823-1-willy@infradead.org>
-References: <20211108040551.1942823-1-willy@infradead.org>
+        with ESMTP id S236530AbhKHH3v (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Nov 2021 02:29:51 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11E3C061714
+        for <linux-xfs@vger.kernel.org>; Sun,  7 Nov 2021 23:27:06 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id x27so33987876lfu.5
+        for <linux-xfs@vger.kernel.org>; Sun, 07 Nov 2021 23:27:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=PnTjqCg/4dLlfwZvkIw5TCFiXXqI7eQL3D+17+RauQ+gPkf2k9hY9S+Ii/M5IA0uoj
+         tcY9XkBE8UoWnMFVRIdA+q744Hmx7Z0JsFaVREssmf6KamM5Bd6A03cMP5bTAvPf1/y/
+         DwxXsJaTEuCfFdzSQFJTUHpZB56hO6UBVJPo7/S7fIQbraF2JB9fnNx0H/YOCyXyn5Fv
+         TpIbuoc9MhMDHEy5d5ztUWIHQVhdvbVN+KOKXsEiQg7QzXSruhiqF9yWAy+A70V6Qa0U
+         ve8aiam44Pcv5P2919T2rRvgnVW0nPh2s7GY8MWiotEmFwjxJpYnpgBFa5LZ/bTsndTX
+         N0eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=LEfsRhHP8Bmkky7FYD7MGaU6upog47E5Hc5cJ1KDYhAhPLTodioHkmEw8hLZsqIm2t
+         o3VADXRv3ZNgiBZwwYbLAC/m0jaMHPscd9BygTL1c4UgVPGFyi5pBgCcZibGtXJ/wMvZ
+         tF7T2JeuVB/bhIRqF3JqElaSh4TccC1h2IeG6xcX1Lj8iVNO3xYfNetVrQe0zAKk20Xu
+         HH0HAnzvfBZl9yAKNkcjOvtgh/y2WuwALLNUOKsWqYxYbgHaiegcgkPnKQVHCzAwkbdN
+         /AbZXJz9jjphjHjDk3xUGQc7UMYJLeAPTUnYJfxGM580XG4WDtRrp9MPJ6/jHOUqSPRX
+         XDbQ==
+X-Gm-Message-State: AOAM530WRrTeLax9wxYRx5+l10GyPR7Cgzixw2uQYh96ckcx7TVSzf30
+        pNyMWQXhG6RQsbeVnLvPVQVzlc6uuS8YVlFOoFcJv70cE9g=
+X-Google-Smtp-Source: ABdhPJz9Akl6xfGwwFGOOyIMXLWznjij6kDDSEQ53AjVdYeVh/nfgX+la012XOuUHhNctlqPhGJ9oR9znvMO/9Cv6/o=
+X-Received: by 2002:a50:930b:: with SMTP id m11mr83450378eda.133.1636356414537;
+ Sun, 07 Nov 2021 23:26:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a50:2501:0:0:0:0:0 with HTTP; Sun, 7 Nov 2021 23:26:54 -0800 (PST)
+Reply-To: mariaschaefler@gmx.com
+From:   Maria Schaefler <ziskoraa@gmail.com>
+Date:   Mon, 8 Nov 2021 07:26:54 +0000
+Message-ID: <CAJh0FjiDs5_oQE4K3AME-kH_RMPNXEEapYKvrR9As+S+Dzwh5Q@mail.gmail.com>
+Subject: MY HEART CHOOSE YOU.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Now that iomap has been converted, XFS is multi-page folio safe.
-Indicate to the VFS that it can now create multi-page folios for XFS.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_icache.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index e1472004170e..5380a3f001e9 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -87,6 +87,7 @@ xfs_inode_alloc(
- 	/* VFS doesn't initialise i_mode or i_state! */
- 	VFS_I(ip)->i_mode = 0;
- 	VFS_I(ip)->i_state = 0;
-+	mapping_set_large_folios(VFS_I(ip)->i_mapping);
- 
- 	XFS_STATS_INC(mp, vn_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
-@@ -336,6 +337,7 @@ xfs_reinit_inode(
- 	inode->i_rdev = dev;
- 	inode->i_uid = uid;
- 	inode->i_gid = gid;
-+	mapping_set_large_folios(inode->i_mapping);
- 	return error;
- }
- 
--- 
-2.33.0
-
+Given my current state of health, I have decided to donate what I
+inherited from my late husband to you to help the poor and needy. I am
+Mrs Maria Schaefler,a 57years old dying woman. I was diagnosed for
+cancer about 2 years ago and I have few months to live according to
+medical experts. Email me for my directives
