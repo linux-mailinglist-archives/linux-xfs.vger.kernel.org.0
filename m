@@ -2,107 +2,150 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AF60449F30
-	for <lists+linux-xfs@lfdr.de>; Tue,  9 Nov 2021 00:46:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B1B044A441
+	for <lists+linux-xfs@lfdr.de>; Tue,  9 Nov 2021 02:51:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237895AbhKHXtN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 8 Nov 2021 18:49:13 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:35391 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236538AbhKHXtM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Nov 2021 18:49:12 -0500
-Received: by mail-io1-f69.google.com with SMTP id g24-20020a056602249800b005db75d2a291so12723451ioe.2
-        for <linux-xfs@vger.kernel.org>; Mon, 08 Nov 2021 15:46:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kv3eiU/xeC6qSTp+i5dk+Lz5SOGQgV3Fx7iKIxXP+Ko=;
-        b=qWnPkvyZiDgza4kL2wwtKkV6TKhOKHD8ThhOtnbXj9qQVSGAdWCWlBUi4opZ6X/Nxg
-         WEnloNIb2Iir1ampUtTndfVSBsKb/lrp+vxW8d/610LSqqb+pAbJDf7BGwWKY9WZp5EZ
-         mUcyYu41dJpjdgnKebFUQaOpGbLMKrbZuJs1IQQjpGjYLMqGwz/WLAQHWibYLd4KlsRL
-         YRFlZ7x7DfuCGJTpHmtKd7wWAXTTQDy4whItJpLQk56X6K37JyOwpScdKVbgv7sKqzWc
-         Y2O66nfaFAj3Koi3phOWN+vnhJBsJLWYrkwJqHlWcx0ceqt9FoqAIeuLt+l5lCEsb8Y4
-         U3Tw==
-X-Gm-Message-State: AOAM530J8TX+Lvk6EPMM8BrVKnE2dYvqnsSS8Vhv2DKbHP4YrtXh9/um
-        T448uNferICuCwhDrpOWko5tEwqx9m1sg6fSfsVUXhklUnQ0
-X-Google-Smtp-Source: ABdhPJxKDJob30e8ZiyIj7CMUEH5RQL2ew7YaI7b9lZ/58+a4VZz08d1c6oFNNc0icajQEwpedVAVvlaQ9fL+MKqhKnoWNpjRxSJ
+        id S240381AbhKIBxt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 8 Nov 2021 20:53:49 -0500
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:39231 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240487AbhKIBxq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 8 Nov 2021 20:53:46 -0500
+Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 1B534107019
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Nov 2021 12:50:58 +1100 (AEDT)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mkGHq-006ZXp-1C
+        for linux-xfs@vger.kernel.org; Tue, 09 Nov 2021 12:50:58 +1100
+Received: from dave by discord.disaster.area with local (Exim 4.95)
+        (envelope-from <david@fromorbit.com>)
+        id 1mkGHp-006UcG-W5
+        for linux-xfs@vger.kernel.org;
+        Tue, 09 Nov 2021 12:50:58 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 00/16 v6] xfs: rework xlog_write()
+Date:   Tue,  9 Nov 2021 12:50:39 +1100
+Message-Id: <20211109015055.1547604-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2e8c:: with SMTP id m12mr1948251iow.91.1636415187321;
- Mon, 08 Nov 2021 15:46:27 -0800 (PST)
-Date:   Mon, 08 Nov 2021 15:46:27 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f2075605d04f9964@google.com>
-Subject: [syzbot] WARNING in iomap_iter
-From:   syzbot <syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com>
-To:     djwong@kernel.org, hch@infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6189d403
+        a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
+        a=vIxV3rELxO4A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=afZ3VLhyg-m26p0hK-wA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hello,
+Time to try again for this code....
 
-syzbot found the following issue on:
+xlog_write() is code that causes severe eye bleeding. It's extremely
+difficult to understand the way it is structured, and extremely easy
+to break because of all the weird parameters it passes between
+functions that do very non-obvious things. state is set in
+xlog_write_finish_copy() that is carried across both outer and inner
+loop iterations that is used by xlog_write_setup_copy(), which also
+sets state that xlog_write_finish_copy() needs. The way iclog space
+was obtained affects the accounting logic that ends up being passed
+to xlog_state_finish_copy(). The code that handles commit iclogs is
+spread over multiple functions and is obfuscated by the set/finish
+copy code.
 
-HEAD commit:    7ddb58cb0eca Merge tag 'clk-for-linus' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13443b82b00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a30ce238f371e547
-dashboard link: https://syzkaller.appspot.com/bug?extid=a8e049cd3abd342936b6
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-userspace arch: i386
+It's just a mess.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+It's also extremely inefficient.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com
+For all the complexity created by having to keep track of partial
+copy state for loop continuation, this is a *rare* occurrence. On a
+256kB iclog buffer, we can copy a couple of thousand regions (e.g.
+inode log format + inode core regions) without hitting the partial
+copy case once. IOWs, we don't need to track partial copy state for
+the vast majority of region copy operations we perform. It's all
+unnecessary overhead.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1112 at fs/iomap/iter.c:33 iomap_iter_done fs/iomap/iter.c:33 [inline]
-WARNING: CPU: 0 PID: 1112 at fs/iomap/iter.c:33 iomap_iter+0xdcf/0x11b0 fs/iomap/iter.c:78
-Modules linked in:
-CPU: 0 PID: 1112 Comm: kworker/u4:5 Not tainted 5.15.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: loop0 loop_rootcg_workfn
-RIP: 0010:iomap_iter_done fs/iomap/iter.c:33 [inline]
-RIP: 0010:iomap_iter+0xdcf/0x11b0 fs/iomap/iter.c:78
-Code: fd ff ff e8 93 9f d1 ff e9 f9 f9 ff ff e8 79 24 8b ff 0f 0b e9 85 f8 ff ff e8 6d 24 8b ff 0f 0b e9 96 f7 ff ff e8 61 24 8b ff <0f> 0b e9 f8 f6 ff ff e8 55 24 8b ff 0f 0b 48 b8 00 00 00 00 00 fc
-RSP: 0018:ffffc90004d4f680 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffffc90004d4f818 RCX: 0000000000000000
-RDX: ffff88801c181d00 RSI: ffffffff81ec9faf RDI: 0000000000000003
-RBP: ffffc90004d4f848 R08: 00000fff80000000 R09: 000000000000000c
-R10: ffffffff81ec96a0 R11: 000000000000003f R12: ffffc90004d4f820
-R13: ffffffff80000000 R14: ffffc90004d4f840 R15: ffffc90004d4f888
-FS:  0000000000000000(0000) GS:ffff8880b9c00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fc3d2148008 CR3: 00000000307d5000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __iomap_dio_rw+0x6b2/0x1a10 fs/iomap/direct-io.c:588
- iomap_dio_rw+0x38/0x90 fs/iomap/direct-io.c:679
- ext4_dio_read_iter fs/ext4/file.c:77 [inline]
- ext4_file_read_iter+0x41c/0x5d0 fs/ext4/file.c:128
- call_read_iter include/linux/fs.h:2155 [inline]
- lo_rw_aio.isra.0+0xa99/0xc90 drivers/block/loop.c:453
- do_req_filebacked drivers/block/loop.c:497 [inline]
- loop_handle_cmd drivers/block/loop.c:1857 [inline]
- loop_process_work+0x92f/0x1db0 drivers/block/loop.c:1897
- process_one_work+0x9b2/0x1690 kernel/workqueue.c:2298
- worker_thread+0x658/0x11f0 kernel/workqueue.c:2445
- kthread+0x405/0x4f0 kernel/kthread.c:327
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:295
- </TASK>
+Not to mention that before we even start the copy, we walk every log
+vector and log iovec to count the op headers needed and the amount
+of space consumed by the log vector chain despite having just done a
+log item walk to construct the log vector chain.  This is all
+unnecessary overhead given that the CIL code already counts the
+vectors and can trivially count the size of the log vector chain at
+the same time.
 
+Then there is the opheaders that xlog_write() adds before every
+region. This is why it needs to count headers, because we have
+to account for this space they use in the journal. We've already
+reserved this space when committing items to the CIL, but we still
+require xlog_write() to add these fixed size headers to log regions
+and account for the space in the CIL context log ticket.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Hence we have complexity tracking and reserving CIL space at
+transaction commit time, as well as complexity formatting and
+accounting for this space when the CIL writes them to the log. This
+can be done much more efficiently by adding the opheaders to the log
+regions at item formatting time, largely removing the need to do
+anything but update opheader lengths and flags in xlog_write().
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+This opens up a bunch of other optimisations in the item formatting
+code that can reduce the number of regions we need to track, but
+that is not a topic this patch set tries to address.
+
+The simplification of the accounting and reservation of space for
+log opheaders during the transaction commit path allows for further
+optimisations of that fast path. e.g. it makes it possible to
+move to per-cpu accounting and tracking of the CIL.
+
+Further, the simplifications in opheader management allow us to
+implement a fast path for xlog_write() that does almost nothing but
+iterate the log vector chain doing memcpy() and advancing the iclog
+data pointer. The only time we need to worry about partial copies is
+when a log vector will not wholly fit within the current iclog. By
+writing a slow path that just handles a single log vector that needs
+to be split across multiple iclogs, we get rid of all the difficult
+to follow logic. That is what this patchset implements.
+
+Overall, we go from 3 iterations of the log vector chain to two, the
+majority of the copies hit the xlog_write_single() fast path, the
+xlog_write() code is much simpler, the handling of iclog state is
+much cleaner, and all the partial copy state is contained within a
+single function. The fast path loops are much smaller and tighter,
+the regions we memcpy() are larger, and so overall the code is much
+more efficient.
+
+Unfortunately, this code is complex and full of subtle stuff that
+takes a *lot* of time and effort to understand. Hence I feel that
+these changes aren't actually properly reviewable by anyone. If
+someone else presented this patchset to me, I'd be pretty much say
+the same thing, because to understand all the subtle corner cases in
+xlog_write() takes weeks of bashing your head repeatedly into said
+corner cases.
+
+But, really, that's why I've rewritten the code. I think the code
+I've written is much easier to understand and there's less of it.
+The compiled code is smaller and faster. It passes fstests. And it
+opens more avenues for future improvement of the log write code
+that would otherwise have to do with the mess of xlog_write()....
+
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xlog-write-rework
+
+Version 6:
+- split out from aggregated patchset
+- rebase on linux-xfs/for-next
+- include iclog->ic_datap type change patch from Christoph Hellwig
+- rolled xlog_write_iovec()/xlog_write_full() improvements into the
+  xlog_write_single() introduction (adaption from patches written by Christoph
+  Hellwig)
+- pass record_cnt and data_cnt into xlog_write_single() right from the start
+  rather than modify the interface when xlog_write_partial() comes along.
+- rolled the xlog_write_partial() and log vector iteration improvements into
+  the xlog_write_partial() introduction (adaption from patches written by
+  Christoph Hellwig).
+- include remove xlog_verify_dest_ptr() patch from Christoph Hellwig
+
+Version 5:
+- https://lore.kernel.org/linux-xfs/20210603052240.171998-1-david@fromorbit.com/
+
