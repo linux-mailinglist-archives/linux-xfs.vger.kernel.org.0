@@ -2,62 +2,74 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D0B544FBCC
-	for <lists+linux-xfs@lfdr.de>; Sun, 14 Nov 2021 22:24:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ED1F44FC65
+	for <lists+linux-xfs@lfdr.de>; Sun, 14 Nov 2021 23:59:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236345AbhKNV1P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 14 Nov 2021 16:27:15 -0500
-Received: from mx1.bul.net ([195.85.215.56]:59702 "EHLO mx1.bul.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236359AbhKNV1H (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sun, 14 Nov 2021 16:27:07 -0500
-X-Greylist: delayed 522 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Nov 2021 16:27:06 EST
-Received: by mx1.bul.net (Postfix, from userid 1002)
-        id 4DE58609A1; Sun, 14 Nov 2021 23:15:25 +0200 (EET)
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mx1.bul.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,T_SPF_HELO_PERMERROR,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.2
-Received: from purple.bonev.com (purple.bonev.com [195.85.215.215])
-        by mx1.bul.net (Postfix) with ESMTP id 66DB96096E
-        for <linux-xfs@vger.kernel.org>; Sun, 14 Nov 2021 23:15:20 +0200 (EET)
-Received: (qmail 25989 invoked by uid 64020); 14 Nov 2021 23:15:20 +0200
-Received: from unknown (HELO localhost.localdomain) (195.85.215.8)
-  by purple.bonev.com with SMTP; 14 Nov 2021 23:15:20 +0200
-From:   Boian Bonev <bbonev@ipacct.com>
+        id S233569AbhKNXCL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Sun, 14 Nov 2021 18:02:11 -0500
+Received: from sender11-of-o53.zoho.eu ([31.186.226.239]:21808 "EHLO
+        sender11-of-o53.zoho.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231968AbhKNXCI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 14 Nov 2021 18:02:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1636929828; cv=none; 
+        d=zohomail.eu; s=zohoarc; 
+        b=kcgm1J/FE9QigP/qTcXlctjgOrRq4ZxDjlM9qcuG3/E0L5gE7eYgD7MdYzpdmMqRB+0Tr7cE5NS4dSisJ6Bm2WflKCb+uPaZTR5GWRHtkha5dW9YxvQxSngyglTRtGbkRodB6knLxacbMl3VIRGhE/vYc4NC0EewIoKw9b57T0g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+        t=1636929828; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
+        bh=FeTaBvqjdkMTXJkHBvsaxVZhLjUtaDJRRxbRu/2fqt8=; 
+        b=lDQavFENljDMTJrm35zEIfSJ4mzyfGnATWF+rMajLaGrZgYQQx3nvxgwkFVOSheh6CMLuDuyMmSphr1+bmzHOt4alLRiSlIxfNokzPiRf5sNcdtoj85C33THz4PAXRk3M5IgejU3kqRuZOJf0puBT0FZtyNkFTZE1N6m4JKFnrY=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+        spf=pass  smtp.mailfrom=hostmaster@neglo.de;
+        dmarc=pass header.from=<bage@debian.org>
+Received: from thinkbage.fritz.box (pd9544ed8.dip0.t-ipconnect.de [217.84.78.216]) by mx.zoho.eu
+        with SMTPS id 1636929825971297.74720821417645; Sun, 14 Nov 2021 23:43:45 +0100 (CET)
+From:   Bastian Germann <bage@debian.org>
 To:     linux-xfs@vger.kernel.org
-Cc:     bage@debian.org, Boian Bonev <bbonev@ipacct.com>
-Subject: [PATCH] Avoid format truncation
-Date:   Sun, 14 Nov 2021 23:14:58 +0200
-Message-Id: <20211114211457.199710-1-bbonev@ipacct.com>
+Cc:     Bastian Germann <bage@debian.org>
+Message-ID: <20211114224339.20246-1-bage@debian.org>
+Subject: [PATCH v2 0/4] xfsprogs debian updates
+Date:   Sun, 14 Nov 2021 23:43:35 +0100
 X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf8
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-io.c:644:17: note: ‘snprintf’ output between 4 and 14 bytes into a destination of size 8
+Hi,
 
-Signed-off-by: Boian Bonev <bbonev@ipacct.com>
----
- db/io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+As my Debian package changes were not included with the rc1,
+I resend them with modifications and a new patch by Boian Bonev
+that fixes the current RC build issue in Debian.
 
-diff --git a/db/io.c b/db/io.c
-index c79cf105..154c3bd9 100644
---- a/db/io.c
-+++ b/db/io.c
-@@ -638,7 +638,7 @@ stack_f(
- 	char	**argv)
- {
- 	int	i;
--	char	tagbuf[8];
-+	char	tagbuf[14];
- 
- 	for (i = iocur_sp; i > 0; i--) {
- 		snprintf(tagbuf, sizeof(tagbuf), "%d: ", i);
+I ask you to apply them asap so that I can upload a fixed version.
+
+Thanks,
+Bastian
+
+Changelog:
+ v2: - Collect Review tags
+     - Rebase 1st patch on the liburcu-dev addition
+     - Drop debian/changelog changes from 2nd patch
+     - Drop Multi-Arch patch (did not receive feedback in 1.5 months)
+     - Add FTBFS fixing patch by Boian Bonev
+     - Add patch with changelog entry
+
+Bastian Germann (3):
+  debian: Update Uploaders list
+  debian: Pass --build and --host to configure
+  debian: Add changelog entry for 5.14.0-rc1-1
+
+Boian Bonev (1):
+  debian: Fix FTBFS
+
+ debian/changelog | 15 +++++++++++++++
+ debian/control   |  2 +-
+ debian/rules     | 10 ++++++++--
+ 3 files changed, 24 insertions(+), 3 deletions(-)
+
 -- 
 2.33.1
+
 
