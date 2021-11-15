@@ -2,99 +2,183 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD7A94517D0
-	for <lists+linux-xfs@lfdr.de>; Mon, 15 Nov 2021 23:44:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55DDB451FAA
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Nov 2021 01:42:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347305AbhKOWq5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 15 Nov 2021 17:46:57 -0500
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:57519 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S242275AbhKOW37 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Nov 2021 17:29:59 -0500
-Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 35875A3EE7;
-        Tue, 16 Nov 2021 09:26:28 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1mmkQm-009HS0-AB; Tue, 16 Nov 2021 09:26:28 +1100
-Date:   Tue, 16 Nov 2021 09:26:28 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ian Kent <raven@themaw.net>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Brian Foster <bfoster@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2 2/2] xfs: make sure link path does not go away at access
-Message-ID: <20211115222628.GP449541@dread.disaster.area>
-References: <163694289979.229789.1176392639284347792.stgit@mickey.themaw.net>
- <163694306800.229789.11812765289669370510.stgit@mickey.themaw.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163694306800.229789.11812765289669370510.stgit@mickey.themaw.net>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6192de97
-        a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
-        a=HsDoLlocmGUuF16g:21 a=kj9zAlcOel0A:10 a=vIxV3rELxO4A:10 a=jUFqNg-nAAAA:8
-        a=7-415B0cAAAA:8 a=EyonS_EgehF9X83yCPAA:9 a=CjuIK1q_8ugA:10
-        a=hl_xKfOxWho2XEkUDbUg:22 a=-tElvS_Zar9K8zhlwiSp:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        id S1348177AbhKPAoz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 15 Nov 2021 19:44:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343669AbhKOTVf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 15 Nov 2021 14:21:35 -0500
+X-Greylist: delayed 451 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 15 Nov 2021 10:21:57 PST
+Received: from c.mx.filmlight.ltd.uk (c.mx.filmlight.ltd.uk [IPv6:2a05:d018:e66:3130::21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E781CC061226
+        for <linux-xfs@vger.kernel.org>; Mon, 15 Nov 2021 10:21:56 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by omni.filmlight.ltd.uk (Postfix) with ESMTP id 7808940000DE;
+        Mon, 15 Nov 2021 18:08:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 omni.filmlight.ltd.uk 7808940000DE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=filmlight.ltd.uk;
+        s=default; t=1636999692;
+        bh=DLLulAFG6MEUG043oYjWM0yzOypr0nrrS02suwqEmM0=;
+        h=Subject:From:In-Reply-To:Date:Cc:References:To:From;
+        b=G0tm9riBBHZR8gxO4mudQN00S2U5VWjL+t8RqMM8+dBeonV2Jl73pO4RKHTlAjgL4
+         9J5TccYdO5qAHKIzomOJOjs8EtgNmUCFxNZy+MJIoMHAZmLdHA4VrgmK5GD1XUID42
+         MekTdWo8ZyrSrRLW3UJg4w+gUVNX1OGTQA8u0/sc=
+Received: from smtpclient.apple (cpc122860-stev8-2-0-cust234.9-2.cable.virginm.net [81.111.212.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: roger)
+        by omni.filmlight.ltd.uk (Postfix) with ESMTPSA id 31517867204;
+        Mon, 15 Nov 2021 18:08:12 +0000 (GMT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: Question regarding XFS crisis recovery
+From:   Roger Willcocks <roger@filmlight.ltd.uk>
+In-Reply-To: <CAA43vkU_X5Ss0uiKwji3eOPSo00-t-UGO-hNnAUy7-Wuyuce-g@mail.gmail.com>
+Date:   Mon, 15 Nov 2021 18:13:59 +0000
+Cc:     Roger Willcocks <roger@filmlight.ltd.uk>, linux-xfs@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0CC7D592-3B70-4EE5-B94D-228740ABBEC9@filmlight.ltd.uk>
+References: <CAA43vkU_X5Ss0uiKwji3eOPSo00-t-UGO-hNnAUy7-Wuyuce-g@mail.gmail.com>
+To:     Sean Caron <scaron@umich.edu>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 10:24:28AM +0800, Ian Kent wrote:
-> When following an inline symlink in rcu-walk mode it's possible to
-> succeed in getting the ->get_link() method pointer but the link path
-> string be deallocated while it's being used.
-> 
-> This is becuase of the xfs inode reclaim mechanism. While rcu freeing
-> the link path can prevent it from being freed during use the inode
-> reclaim could assign a new value to the field at any time outside of
-> the path walk and result in an invalid link path pointer being
-> returned. Admittedly a very small race window but possible.
-> 
-> The best way to mitigate this risk is to return -ECHILD to the VFS
-> if the inline symlink method, ->get_link(), is called in rcu-walk mode
-> so the VFS can switch to ref-walk mode or redo the walk if the inode
-> has become invalid.
-> 
-> If it's discovered that staying in rcu-walk mode gives a worth while
-> performance improvement (unlikely) then the link path could be freed
-> under rcu once potential side effects of the xfs inode reclaim
-> sub-system have been analysed and dealt with if needed.
-> 
-> Signed-off-by: Ian Kent <raven@themaw.net>
-> ---
->  fs/xfs/xfs_iops.c |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index a607d6aca5c4..0a96183c5381 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -520,6 +520,9 @@ xfs_vn_get_link_inline(
->  	struct xfs_inode	*ip = XFS_I(inode);
->  	char			*link;
->  
-> +	if (!dentry)
-> +		return ERR_PTR(-ECHILD);
-> +
->  	ASSERT(ip->i_df.if_format == XFS_DINODE_FMT_LOCAL);
+In principle that should have worked. And yes, when you=E2=80=99ve got =
+the filesystem back to the point where it mounts, xfs-repair is your =
+only option.
 
-NACK. As I just mentioned in the original thread, we can fix this
-inode reuse within the RCU grace period problem realtively easily
-without needing to turn off lockless pathwalk support for inline
-symlinks.
+It might have been useful to take an xfs-metadump before the repair, to =
+see what xfs-repair would make if it, and to share it with others for =
+their thoughts.
 
-Cheers,
+It does seem like there should be an md resync recovery option which =
+substitutes zeroes for bad blocks instead of giving up immediately. A =
+few blocks of corrupted data in 150 TB is obviously preferable to no =
+data at all.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Or allow it to fall back to reading the =E2=80=98dropped out=E2=80=99 =
+drives if there=E2=80=99s a read error elsewhere in the stripe while =
+they=E2=80=99re build rebuilt.=20
+
+=E2=80=94
+Roger
+
+
+> On 15 Nov 2021, at 17:14, Sean Caron <scaron@umich.edu> wrote:
+>=20
+> Hi all,
+>=20
+> I recently had to manage a storage failure on a ~150 TB XFS volume and
+> I just wanted to check with the group here to see if anything could
+> have been done differently. Here is my story.
+>=20
+> We had a 150 TB RAID 60 volume formatted with XFS. The volume was made
+> up of two 21-drive RAID 6 strings (4 TB drives). This was all done
+> with Linux MD software RAID.
+>=20
+> The filesystem was filled to 100% capacity when it failed. I'm not
+> sure if this contributed to the poor outcome.
+>=20
+> There was no backup available of this filesystem (of course).
+>=20
+> About a week ago, we had two drives become spuriously ejected from one
+> of the two RAID 6 strings that composed this volume. This seems to
+> happen sometimes as a result of various hardware and software
+> glitches. We checked the drives with smartctl, added them back to the
+> array and a resync operation started.
+>=20
+> The resync ran for a little while and failed, because a third disk in
+> the array (which mdadm had never failed out, and smartctl still
+> thought was OK) reported a read error/bad blocks and dropped out of
+> the array.
+>=20
+> We decided to clone the failed disk to a brand new replacement drive =
+with:
+>=20
+> dd conv=3Dnotrunc,noerror,sync
+>=20
+> Figuring we'd lose a few sectors to get nulled out, but we'd have a
+> drive that could run the rebuild without getting kicked due to read
+> errors (we've used this technique in the past to recover from this
+> kind of situation successfully).
+>=20
+> Clone completed. We swapped the clone drive with the bad blocks drive
+> and kicked off another rebuild.
+>=20
+> Rebuild fails again because a fourth drive is throwing bad blocks/read
+> errors and gets kicked out of the array.
+>=20
+> We scan all 21 drives in this array with smartctl and there are
+> actually three more drives in total where SMART has logged read
+> errors.
+>=20
+> This is starting to look pretty bad but what can we do? We just clone
+> these three drives to three more fresh drives using dd
+> conv=3Dnotrunc,noerror,sync.
+>=20
+> Swap them in for the old bad block drives and kick off another
+> rebuild. The rebuild actually runs and completes successfully. MD
+> thinks the array is fine, running, not degraded at all.
+>=20
+> We mount the array. It mounts, but it is obviously pretty damaged.
+> Normally when this happens we try to mount it read only and copy off
+> what we can, then write it off. This time, we can't hardly do anything
+> but an "ls" in the filesystem without getting "structure needs
+> cleaning". Doing any kind of material access to the filesystem gives
+> various major errors (i.e. "in-memory corruption of filesystem data
+> detected") and the filesystem goes offline. Reads just fail with I/O
+> errors.
+>=20
+> What can we do? Seems like at this stage we just run xfs_repair and
+> hope for the best, right?
+>=20
+> Ran xfs_repair in dry run mode and it's looking pretty bad, just from
+> the sheer amount of output.
+>=20
+> But there's no real way to know exactly how much data xfs_repair will
+> wipe out, and what alternatives do we have? The filesystem hardly
+> mounts without faulting anyway. Seems like there's little choice going
+> forward to run it, and see what shakes out.
+>=20
+> We run xfs_repair overnight. It ran for a while, then eventually hung
+> in Phase 4, I think.
+>=20
+> We killed xfs_repair off and re-ran it with the -P flag. It runs for
+> maybe two or three hours and eventually completes.
+>=20
+> We mount the filesystem up. Of around 150 TB, we have maybe 10% of
+> that in data salad in lost+found, 21 GB of good data and the rest is
+> gone.
+>=20
+> Copy off what we can, and call it dead. This is where we're at now.
+>=20
+> It seems like the MD rebuild process really scrambled things somehow.
+> I'm not sure if this was due to some kind of kernel bug, or just
+> zeroed out bad sectors in wrong places or what. Once the md resync
+> ran, we were cooked.
+>=20
+> I guess, after blowing through four or five "Hope you have a backup,
+> but if not, you can try this and pray" checkpoints, I just want to
+> check with the developers and group here to see if we did the best
+> thing possible given the circumstances?
+>=20
+> Xfs_repair is it, right? When things are that scrambled, pretty much
+> all you can do is run an xfs_repair and hope for the best? Am I
+> correct in thinking that there is no better or alternative tool that
+> will give different results?
+>=20
+> Can a commercial data recovery service make any better sense of a
+> scrambled XFS than xfs_repair could? When the underlying device is
+> presenting OK, just scrambled data on it?
+>=20
+> Thanks,
+>=20
+> Sean
+>=20
+
