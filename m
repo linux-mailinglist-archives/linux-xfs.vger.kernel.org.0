@@ -2,164 +2,322 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2E06456644
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Nov 2021 00:13:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F051345664D
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Nov 2021 00:14:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233055AbhKRXQ5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Nov 2021 18:16:57 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:44750 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233023AbhKRXQ4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Nov 2021 18:16:56 -0500
+        id S233023AbhKRXRA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Nov 2021 18:17:00 -0500
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:37639 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233064AbhKRXQ6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Nov 2021 18:16:58 -0500
 Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B7FF7105E6BE
-        for <linux-xfs@vger.kernel.org>; Fri, 19 Nov 2021 10:13:54 +1100 (AEDT)
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id AB3ED112470
+        for <linux-xfs@vger.kernel.org>; Fri, 19 Nov 2021 10:13:55 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1mnqbJ-00ATgy-Jl
+        id 1mnqbJ-00ATgz-LI
         for linux-xfs@vger.kernel.org; Fri, 19 Nov 2021 10:13:53 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1mnqbJ-008bol-Hx
+        id 1mnqbJ-008bop-Je
         for linux-xfs@vger.kernel.org;
         Fri, 19 Nov 2021 10:13:53 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 01/16] xfs: factor out the CIL transaction header building
-Date:   Fri, 19 Nov 2021 10:13:37 +1100
-Message-Id: <20211118231352.2051947-2-david@fromorbit.com>
+Subject: [PATCH 02/16] xfs: only CIL pushes require a start record
+Date:   Fri, 19 Nov 2021 10:13:38 +1100
+Message-Id: <20211118231352.2051947-3-david@fromorbit.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211118231352.2051947-1-david@fromorbit.com>
 References: <20211118231352.2051947-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6196de32
+X-Optus-CM-Analysis: v=2.4 cv=epq8cqlX c=1 sm=1 tr=0 ts=6196de33
         a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
         a=vIxV3rELxO4A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=xMttu46VdFABuZTklvgA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=t-facBynN2U2mDZzMFUA:9 a=AjGcO6oz07-iQ99wixmX:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-It is static code deep in the middle of the CIL push logic. Factor
-it out into a helper so that it is clear and easy to modify
-separately.
+So move the one-off start record writing in xlog_write() out into
+the static header that the CIL push builds to write into the log
+initially. This simplifes the xlog_write() logic a lot.
+
+pahole on x86-64 confirms that the xlog_cil_trans_hdr is correctly
+32 bit aligned and packed for copying the log op and transaction
+headers directly into the log as a single log region copy.
+
+struct xlog_cil_trans_hdr {
+        struct xlog_op_header      oph[2];               /*     0    24 */
+        struct xfs_trans_header    thdr;                 /*    24    16 */
+        struct xfs_log_iovec       lhdr[2];              /*    40    32 */
+
+        /* size: 72, cachelines: 2, members: 3 */
+        /* last cacheline: 8 bytes */
+};
+
+A wart is needed to handle the fact that length of the region the
+opheader points to doesn't include the opheader length. hence if
+we embed the opheader, we have to substract the opheader length from
+the length written into the opheader by the generic copying code.
+This will eventually go away when everything is converted to
+embedded opheaders.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/xfs/xfs_log_cil.c | 61 ++++++++++++++++++++++++++++----------------
- 1 file changed, 39 insertions(+), 22 deletions(-)
+ fs/xfs/xfs_log.c     | 90 ++++++++++++++++++++++----------------------
+ fs/xfs/xfs_log_cil.c | 43 +++++++++++++++++----
+ 2 files changed, 81 insertions(+), 52 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 6c93c8ada6f3..28f8104fbef1 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -834,6 +834,41 @@ xlog_cil_write_commit_record(
- 	return error;
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 89fec9a18c34..e2953ce470de 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -2235,9 +2235,9 @@ xlog_print_trans(
  }
  
-+struct xlog_cil_trans_hdr {
-+	struct xfs_trans_header	thdr;
-+	struct xfs_log_iovec	lhdr;
-+};
-+
-+/*
-+ * Build a checkpoint transaction header to begin the journal transaction.  We
-+ * need to account for the space used by the transaction header here as it is
-+ * not accounted for in xlog_write().
-+ */
-+static void
-+xlog_cil_build_trans_hdr(
-+	struct xfs_cil_ctx	*ctx,
-+	struct xlog_cil_trans_hdr *hdr,
-+	struct xfs_log_vec	*lvhdr,
-+	int			num_iovecs)
-+{
-+	struct xlog_ticket	*tic = ctx->ticket;
-+
-+	memset(hdr, 0, sizeof(*hdr));
-+
-+	hdr->thdr.th_magic = XFS_TRANS_HEADER_MAGIC;
-+	hdr->thdr.th_type = XFS_TRANS_CHECKPOINT;
-+	hdr->thdr.th_tid = tic->t_tid;
-+	hdr->thdr.th_num_items = num_iovecs;
-+	hdr->lhdr.i_addr = &hdr->thdr;
-+	hdr->lhdr.i_len = sizeof(xfs_trans_header_t);
-+	hdr->lhdr.i_type = XLOG_REG_TYPE_TRANSHDR;
-+	tic->t_curr_res -= hdr->lhdr.i_len + sizeof(struct xlog_op_header);
-+
-+	lvhdr->lv_niovecs = 1;
-+	lvhdr->lv_iovecp = &hdr->lhdr;
-+	lvhdr->lv_next = ctx->lv_chain;
-+}
-+
  /*
-  * Push the Committed Item List to the log.
-  *
-@@ -858,11 +893,9 @@ xlog_cil_push_work(
- 	struct xlog		*log = cil->xc_log;
- 	struct xfs_log_vec	*lv;
- 	struct xfs_cil_ctx	*new_ctx;
--	struct xlog_ticket	*tic;
- 	int			num_iovecs;
- 	int			error = 0;
--	struct xfs_trans_header thdr;
--	struct xfs_log_iovec	lhdr;
-+	struct xlog_cil_trans_hdr thdr;
- 	struct xfs_log_vec	lvhdr = { NULL };
- 	xfs_lsn_t		preflush_tail_lsn;
- 	xfs_csn_t		push_seq;
-@@ -1011,24 +1044,8 @@ xlog_cil_push_work(
- 	 * Build a checkpoint transaction header and write it to the log to
- 	 * begin the transaction. We need to account for the space used by the
- 	 * transaction header here as it is not accounted for in xlog_write().
--	 *
--	 * The LSN we need to pass to the log items on transaction commit is
--	 * the LSN reported by the first log vector write. If we use the commit
--	 * record lsn then we can move the tail beyond the grant write head.
- 	 */
--	tic = ctx->ticket;
--	thdr.th_magic = XFS_TRANS_HEADER_MAGIC;
--	thdr.th_type = XFS_TRANS_CHECKPOINT;
--	thdr.th_tid = tic->t_tid;
--	thdr.th_num_items = num_iovecs;
--	lhdr.i_addr = &thdr;
--	lhdr.i_len = sizeof(xfs_trans_header_t);
--	lhdr.i_type = XLOG_REG_TYPE_TRANSHDR;
--	tic->t_curr_res -= lhdr.i_len + sizeof(xlog_op_header_t);
+- * Calculate the potential space needed by the log vector.  We may need a start
+- * record, and each region gets its own struct xlog_op_header and may need to be
+- * double word aligned.
++ * Calculate the potential space needed by the log vector. If this is a start
++ * transaction, the caller has already accounted for both opheaders in the start
++ * transaction, so we don't need to account for them here.
+  */
+ static int
+ xlog_write_calc_vec_length(
+@@ -2250,9 +2250,6 @@ xlog_write_calc_vec_length(
+ 	int			len = 0;
+ 	int			i;
+ 
+-	if (optype & XLOG_START_TRANS)
+-		headers++;
 -
--	lvhdr.lv_niovecs = 1;
--	lvhdr.lv_iovecp = &lhdr;
--	lvhdr.lv_next = ctx->lv_chain;
-+	xlog_cil_build_trans_hdr(ctx, &thdr, &lvhdr, num_iovecs);
+ 	for (lv = log_vector; lv; lv = lv->lv_next) {
+ 		/* we don't write ordered log vectors */
+ 		if (lv->lv_buf_len == XFS_LOG_VEC_ORDERED)
+@@ -2268,24 +2265,20 @@ xlog_write_calc_vec_length(
+ 		}
+ 	}
  
- 	/*
- 	 * Before we format and submit the first iclog, we have to ensure that
-@@ -1044,7 +1061,7 @@ xlog_cil_push_work(
- 	if (error)
- 		goto out_abort_free_ticket;
++	/* Don't account for regions with embedded ophdrs */
++	if (optype && headers > 0) {
++		if (optype & XLOG_START_TRANS) {
++			ASSERT(headers >= 2);
++			headers -= 2;
++		}
++	}
++
+ 	ticket->t_res_num_ophdrs += headers;
+ 	len += headers * sizeof(struct xlog_op_header);
  
--	xfs_log_ticket_ungrant(log, tic);
-+	xfs_log_ticket_ungrant(log, ctx->ticket);
+ 	return len;
+ }
  
- 	/*
- 	 * If the checkpoint spans multiple iclogs, wait for all previous iclogs
-@@ -1108,7 +1125,7 @@ xlog_cil_push_work(
- 	return;
+-static void
+-xlog_write_start_rec(
+-	struct xlog_op_header	*ophdr,
+-	struct xlog_ticket	*ticket)
+-{
+-	ophdr->oh_tid	= cpu_to_be32(ticket->t_tid);
+-	ophdr->oh_clientid = ticket->t_clientid;
+-	ophdr->oh_len = 0;
+-	ophdr->oh_flags = XLOG_START_TRANS;
+-	ophdr->oh_res2 = 0;
+-}
+-
+ static xlog_op_header_t *
+ xlog_write_setup_ophdr(
+ 	struct xlog		*log,
+@@ -2481,9 +2474,11 @@ xlog_write(
+ 	 * If this is a commit or unmount transaction, we don't need a start
+ 	 * record to be written.  We do, however, have to account for the
+ 	 * commit or unmount header that gets written. Hence we always have
+-	 * to account for an extra xlog_op_header here.
++	 * to account for an extra xlog_op_header here for commit and unmount
++	 * records.
+ 	 */
+-	ticket->t_curr_res -= sizeof(struct xlog_op_header);
++	if (optype & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS))
++		ticket->t_curr_res -= sizeof(struct xlog_op_header);
+ 	if (ticket->t_curr_res < 0) {
+ 		xfs_alert_tag(log->l_mp, XFS_PTAG_LOGRES,
+ 		     "ctx ticket reservation ran out. Need to up reservation");
+@@ -2524,7 +2519,7 @@ xlog_write(
+ 			int			copy_len;
+ 			int			copy_off;
+ 			bool			ordered = false;
+-			bool			wrote_start_rec = false;
++			bool			added_ophdr = false;
  
- out_abort_free_ticket:
--	xfs_log_ticket_ungrant(log, tic);
-+	xfs_log_ticket_ungrant(log, ctx->ticket);
- 	ASSERT(xlog_is_shutdown(log));
- 	if (!ctx->commit_iclog) {
- 		xlog_cil_committed(ctx);
+ 			/* ordered log vectors have no regions to write */
+ 			if (lv->lv_buf_len == XFS_LOG_VEC_ORDERED) {
+@@ -2538,25 +2533,24 @@ xlog_write(
+ 			ASSERT((unsigned long)ptr % sizeof(int32_t) == 0);
+ 
+ 			/*
+-			 * Before we start formatting log vectors, we need to
+-			 * write a start record. Only do this for the first
+-			 * iclog we write to.
++			 * The XLOG_START_TRANS has embedded ophdrs for the
++			 * start record and transaction header. They will always
++			 * be the first two regions in the lv chain.
+ 			 */
+ 			if (optype & XLOG_START_TRANS) {
+-				xlog_write_start_rec(ptr, ticket);
+-				xlog_write_adv_cnt(&ptr, &len, &log_offset,
+-						sizeof(struct xlog_op_header));
+-				optype &= ~XLOG_START_TRANS;
+-				wrote_start_rec = true;
+-			}
+-
+-			ophdr = xlog_write_setup_ophdr(log, ptr, ticket, optype);
+-			if (!ophdr)
+-				return -EIO;
++				ophdr = reg->i_addr;
++				if (index)
++					optype &= ~XLOG_START_TRANS;
++			} else {
++				ophdr = xlog_write_setup_ophdr(log, ptr,
++							ticket, optype);
++				if (!ophdr)
++					return -EIO;
+ 
+-			xlog_write_adv_cnt(&ptr, &len, &log_offset,
++				xlog_write_adv_cnt(&ptr, &len, &log_offset,
+ 					   sizeof(struct xlog_op_header));
+-
++				added_ophdr = true;
++			}
+ 			len += xlog_write_setup_copy(ticket, ophdr,
+ 						     iclog->ic_size-log_offset,
+ 						     reg->i_len,
+@@ -2565,13 +2559,22 @@ xlog_write(
+ 						     &partial_copy_len);
+ 			xlog_verify_dest_ptr(log, ptr);
+ 
++
++			/*
++			 * Wart: need to update length in embedded ophdr not
++			 * to include it's own length.
++			 */
++			if (!added_ophdr) {
++				ophdr->oh_len = cpu_to_be32(copy_len -
++						sizeof(struct xlog_op_header));
++			}
+ 			/*
+ 			 * Copy region.
+ 			 *
+-			 * Unmount records just log an opheader, so can have
+-			 * empty payloads with no data region to copy. Hence we
+-			 * only copy the payload if the vector says it has data
+-			 * to copy.
++			 * Commit and unmount records just log an opheader, so
++			 * we can have empty payloads with no data region to
++			 * copy.  Hence we only copy the payload if the vector
++			 * says it has data to copy.
+ 			 */
+ 			ASSERT(copy_len >= 0);
+ 			if (copy_len > 0) {
+@@ -2579,12 +2582,9 @@ xlog_write(
+ 				xlog_write_adv_cnt(&ptr, &len, &log_offset,
+ 						   copy_len);
+ 			}
+-			copy_len += sizeof(struct xlog_op_header);
+-			record_cnt++;
+-			if (wrote_start_rec) {
++			if (added_ophdr)
+ 				copy_len += sizeof(struct xlog_op_header);
+-				record_cnt++;
+-			}
++			record_cnt++;
+ 			data_cnt += contwr ? copy_len : 0;
+ 
+ 			error = xlog_write_copy_finish(log, iclog, optype,
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index 28f8104fbef1..9a810a2c92e9 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -835,14 +835,22 @@ xlog_cil_write_commit_record(
+ }
+ 
+ struct xlog_cil_trans_hdr {
++	struct xlog_op_header	oph[2];
+ 	struct xfs_trans_header	thdr;
+-	struct xfs_log_iovec	lhdr;
++	struct xfs_log_iovec	lhdr[2];
+ };
+ 
+ /*
+  * Build a checkpoint transaction header to begin the journal transaction.  We
+  * need to account for the space used by the transaction header here as it is
+  * not accounted for in xlog_write().
++ *
++ * This is the only place we write a transaction header, so we also build the
++ * log opheaders that indicate the start of a log transaction and wrap the
++ * transaction header. We keep the start record in it's own log vector rather
++ * than compacting them into a single region as this ends up making the logic
++ * in xlog_write() for handling empty opheaders for start, commit and unmount
++ * records much simpler.
+  */
+ static void
+ xlog_cil_build_trans_hdr(
+@@ -852,20 +860,41 @@ xlog_cil_build_trans_hdr(
+ 	int			num_iovecs)
+ {
+ 	struct xlog_ticket	*tic = ctx->ticket;
++	__be32			tid = cpu_to_be32(tic->t_tid);
+ 
+ 	memset(hdr, 0, sizeof(*hdr));
+ 
++	/* Log start record */
++	hdr->oph[0].oh_tid = tid;
++	hdr->oph[0].oh_clientid = XFS_TRANSACTION;
++	hdr->oph[0].oh_flags = XLOG_START_TRANS;
++
++	/* log iovec region pointer */
++	hdr->lhdr[0].i_addr = &hdr->oph[0];
++	hdr->lhdr[0].i_len = sizeof(struct xlog_op_header);
++	hdr->lhdr[0].i_type = XLOG_REG_TYPE_LRHEADER;
++
++	/* log opheader */
++	hdr->oph[1].oh_tid = tid;
++	hdr->oph[1].oh_clientid = XFS_TRANSACTION;
++	hdr->oph[1].oh_len = cpu_to_be32(sizeof(struct xfs_trans_header));
++
++	/* transaction header in host byte order format */
+ 	hdr->thdr.th_magic = XFS_TRANS_HEADER_MAGIC;
+ 	hdr->thdr.th_type = XFS_TRANS_CHECKPOINT;
+ 	hdr->thdr.th_tid = tic->t_tid;
+ 	hdr->thdr.th_num_items = num_iovecs;
+-	hdr->lhdr.i_addr = &hdr->thdr;
+-	hdr->lhdr.i_len = sizeof(xfs_trans_header_t);
+-	hdr->lhdr.i_type = XLOG_REG_TYPE_TRANSHDR;
+-	tic->t_curr_res -= hdr->lhdr.i_len + sizeof(struct xlog_op_header);
+ 
+-	lvhdr->lv_niovecs = 1;
+-	lvhdr->lv_iovecp = &hdr->lhdr;
++	/* log iovec region pointer */
++	hdr->lhdr[1].i_addr = &hdr->oph[1];
++	hdr->lhdr[1].i_len = sizeof(struct xlog_op_header) +
++				sizeof(struct xfs_trans_header);
++	hdr->lhdr[1].i_type = XLOG_REG_TYPE_TRANSHDR;
++
++	tic->t_curr_res -= hdr->lhdr[0].i_len + hdr->lhdr[1].i_len;
++
++	lvhdr->lv_niovecs = 2;
++	lvhdr->lv_iovecp = &hdr->lhdr[0];
+ 	lvhdr->lv_next = ctx->lv_chain;
+ }
+ 
 -- 
 2.33.0
 
