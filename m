@@ -2,168 +2,182 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DE0B456650
-	for <lists+linux-xfs@lfdr.de>; Fri, 19 Nov 2021 00:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA84456652
+	for <lists+linux-xfs@lfdr.de>; Fri, 19 Nov 2021 00:15:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233071AbhKRXRA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Nov 2021 18:17:00 -0500
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:44618 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233082AbhKRXQ6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Nov 2021 18:16:58 -0500
+        id S229915AbhKRXS4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Nov 2021 18:18:56 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48882 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229754AbhKRXS4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Nov 2021 18:18:56 -0500
 Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 845F5FEB028
-        for <linux-xfs@vger.kernel.org>; Fri, 19 Nov 2021 10:13:55 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B96E8105E69F
+        for <linux-xfs@vger.kernel.org>; Fri, 19 Nov 2021 10:15:54 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1mnqbK-00AThi-4V
-        for linux-xfs@vger.kernel.org; Fri, 19 Nov 2021 10:13:54 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1mnqbK-008bpw-30
-        for linux-xfs@vger.kernel.org;
-        Fri, 19 Nov 2021 10:13:54 +1100
+        id 1mnqdG-00ATjn-5t
+        for linux-xfs@vger.kernel.org; Fri, 19 Nov 2021 10:15:54 +1100
+Date:   Fri, 19 Nov 2021 10:15:54 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 16/16] xfs: CIL context doesn't need to count iovecs
-Date:   Fri, 19 Nov 2021 10:13:52 +1100
-Message-Id: <20211118231352.2051947-17-david@fromorbit.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211118231352.2051947-1-david@fromorbit.com>
-References: <20211118231352.2051947-1-david@fromorbit.com>
+Subject: Re: [PATCH 00/14 v6] xfs: improve CIL scalability
+Message-ID: <20211118231554.GY449541@dread.disaster.area>
+References: <20211109015240.1547991-1-david@fromorbit.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211109015240.1547991-1-david@fromorbit.com>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6196de33
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6196deaa
         a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
-        a=vIxV3rELxO4A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=FbNIXIO7bxCRj49lnCIA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=kj9zAlcOel0A:10 a=vIxV3rELxO4A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=fcR5QpBUM8123QvTjT4A:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+FYI: I've just rebased the git tree branch containing this code
+on the V7 version of the xlog_write() rework patch set I just
+posted.
 
-Now that we account for log opheaders in the log item formatting
-code, we don't actually use the aggregated count of log iovecs in
-the CIL for anything. Remove it and the tracking code that
-calculates it.
+No changes to this series were made in the rebase.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- fs/xfs/xfs_log_cil.c  | 22 ++++++----------------
- fs/xfs/xfs_log_priv.h |  1 -
- 2 files changed, 6 insertions(+), 17 deletions(-)
+Cheers,
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index ad98e4df0e2c..f7ca7a4e6fa5 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -260,22 +260,18 @@ xlog_cil_alloc_shadow_bufs(
- 
- /*
-  * Prepare the log item for insertion into the CIL. Calculate the difference in
-- * log space and vectors it will consume, and if it is a new item pin it as
-- * well.
-+ * log space it will consume, and if it is a new item pin it as well.
-  */
- STATIC void
- xfs_cil_prepare_item(
- 	struct xlog		*log,
- 	struct xfs_log_vec	*lv,
- 	struct xfs_log_vec	*old_lv,
--	int			*diff_len,
--	int			*diff_iovecs)
-+	int			*diff_len)
- {
- 	/* Account for the new LV being passed in */
--	if (lv->lv_buf_len != XFS_LOG_VEC_ORDERED) {
-+	if (lv->lv_buf_len != XFS_LOG_VEC_ORDERED)
- 		*diff_len += lv->lv_bytes;
--		*diff_iovecs += lv->lv_niovecs;
--	}
- 
- 	/*
- 	 * If there is no old LV, this is the first time we've seen the item in
-@@ -292,7 +288,6 @@ xfs_cil_prepare_item(
- 		ASSERT(lv->lv_buf_len != XFS_LOG_VEC_ORDERED);
- 
- 		*diff_len -= old_lv->lv_bytes;
--		*diff_iovecs -= old_lv->lv_niovecs;
- 		lv->lv_item->li_lv_shadow = old_lv;
- 	}
- 
-@@ -341,12 +336,10 @@ static void
- xlog_cil_insert_format_items(
- 	struct xlog		*log,
- 	struct xfs_trans	*tp,
--	int			*diff_len,
--	int			*diff_iovecs)
-+	int			*diff_len)
- {
- 	struct xfs_log_item	*lip;
- 
--
- 	/* Bail out if we didn't find a log item.  */
- 	if (list_empty(&tp->t_items)) {
- 		ASSERT(0);
-@@ -389,7 +382,6 @@ xlog_cil_insert_format_items(
- 			 * set the item up as though it is a new insertion so
- 			 * that the space reservation accounting is correct.
- 			 */
--			*diff_iovecs -= lv->lv_niovecs;
- 			*diff_len -= lv->lv_bytes;
- 
- 			/* Ensure the lv is set up according to ->iop_size */
-@@ -414,7 +406,7 @@ xlog_cil_insert_format_items(
- 		ASSERT(IS_ALIGNED((unsigned long)lv->lv_buf, sizeof(uint64_t)));
- 		lip->li_ops->iop_format(lip, lv);
- insert:
--		xfs_cil_prepare_item(log, lv, old_lv, diff_len, diff_iovecs);
-+		xfs_cil_prepare_item(log, lv, old_lv, diff_len);
- 	}
- }
- 
-@@ -434,7 +426,6 @@ xlog_cil_insert_items(
- 	struct xfs_cil_ctx	*ctx = cil->xc_ctx;
- 	struct xfs_log_item	*lip;
- 	int			len = 0;
--	int			diff_iovecs = 0;
- 	int			iclog_space;
- 	int			iovhdr_res = 0, split_res = 0, ctx_res = 0;
- 
-@@ -444,7 +435,7 @@ xlog_cil_insert_items(
- 	 * We can do this safely because the context can't checkpoint until we
- 	 * are done so it doesn't matter exactly how we update the CIL.
- 	 */
--	xlog_cil_insert_format_items(log, tp, &len, &diff_iovecs);
-+	xlog_cil_insert_format_items(log, tp, &len);
- 
- 	spin_lock(&cil->xc_cil_lock);
- 
-@@ -479,7 +470,6 @@ xlog_cil_insert_items(
- 	}
- 	tp->t_ticket->t_curr_res -= len;
- 	ctx->space_used += len;
--	ctx->nvecs += diff_iovecs;
- 
- 	/*
- 	 * If we've overrun the reservation, dump the tx details before we move
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 3008c0c884c7..a3981567c42a 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -221,7 +221,6 @@ struct xfs_cil_ctx {
- 	xfs_lsn_t		commit_lsn;	/* chkpt commit record lsn */
- 	struct xlog_in_core	*commit_iclog;
- 	struct xlog_ticket	*ticket;	/* chkpt ticket */
--	int			nvecs;		/* number of regions */
- 	int			space_used;	/* aggregate size of regions */
- 	struct list_head	busy_extents;	/* busy extents in chkpt */
- 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
+Dave.
+
+On Tue, Nov 09, 2021 at 12:52:26PM +1100, Dave Chinner wrote:
+> Time to try again to get this code merged.
+> 
+> This series aims to improve the scalability of XFS transaction
+> commits on large CPU count machines. My 32p machine hits contention
+> limits in xlog_cil_commit() at about 700,000 transaction commits a
+> section. It hits this at 16 thread workloads, and 32 thread
+> workloads go no faster and just burn CPU on the CIL spinlocks.
+> 
+> This patchset gets rid of spinlocks and global serialisation points
+> in the xlog_cil_commit() path. It does this by moving to a
+> combination of per-cpu counters, unordered per-cpu lists and
+> post-ordered per-cpu lists.
+> 
+> This results in transaction commit rates exceeding 1.6 million
+> commits/s under unlink certain workloads, and while the log lock
+> contention is largely gone there is still significant lock
+> contention at the VFS at 600,000 transactions/s:
+> 
+>   19.39%  [kernel]  [k] __pv_queued_spin_lock_slowpath
+>    6.40%  [kernel]  [k] do_raw_spin_lock
+>    4.07%  [kernel]  [k] __raw_callee_save___pv_queued_spin_unlock
+>    3.08%  [kernel]  [k] memcpy_erms
+>    1.93%  [kernel]  [k] xfs_buf_find
+>    1.69%  [kernel]  [k] xlog_cil_commit
+>    1.50%  [kernel]  [k] syscall_exit_to_user_mode
+>    1.18%  [kernel]  [k] memset_erms
+> 
+> 
+> -   64.23%     0.22%  [kernel]            [k] path_openat
+>    - 64.01% path_openat
+>       - 48.69% xfs_vn_create
+>          - 48.60% xfs_generic_create
+>             - 40.96% xfs_create
+>                - 20.39% xfs_dir_ialloc
+>                   - 7.05% xfs_setup_inode
+> >>>>>                - 6.87% inode_sb_list_add
+>                         - 6.54% _raw_spin_lock
+>                            - 6.53% do_raw_spin_lock
+>                                 6.08% __pv_queued_spin_lock_slowpath
+> .....
+>                - 11.27% xfs_trans_commit
+>                   - 11.23% __xfs_trans_commit
+>                      - 10.85% xlog_cil_commit
+>                           2.47% memcpy_erms
+>                         - 1.77% xfs_buf_item_committing
+>                            - 1.70% xfs_buf_item_release
+>                               - 0.79% xfs_buf_unlock
+>                                    0.68% up
+>                                 0.61% xfs_buf_rele
+>                           0.80% xfs_buf_item_format
+>                           0.73% xfs_inode_item_format
+>                           0.68% xfs_buf_item_size
+>                         - 0.55% kmem_alloc_large
+>                            - 0.55% kmem_alloc
+>                                 0.52% __kmalloc
+> .....
+>             - 7.08% d_instantiate
+>                - 6.66% security_d_instantiate
+> >>>>>>            - 6.63% selinux_d_instantiate
+>                      - 6.48% inode_doinit_with_dentry
+>                         - 6.11% _raw_spin_lock
+>                            - 6.09% do_raw_spin_lock
+>                                 5.60% __pv_queued_spin_lock_slowpath
+> ....
+>       - 1.77% terminate_walk
+> >>>>>>   - 1.69% dput
+>             - 1.55% _raw_spin_lock
+>                - do_raw_spin_lock
+>                     1.19% __pv_queued_spin_lock_slowpath
+> 
+> 
+> But when we extend out to 1.5M commits/s we see that the contention
+> starts to shift to the atomics in the lockless log reservation path:
+> 
+>   14.81%  [kernel]  [k] __pv_queued_spin_lock_slowpath
+>    7.88%  [kernel]  [k] xlog_grant_add_space
+>    7.18%  [kernel]  [k] xfs_log_ticket_ungrant
+>    4.82%  [kernel]  [k] do_raw_spin_lock
+>    3.58%  [kernel]  [k] xlog_space_left
+>    3.51%  [kernel]  [k] xlog_cil_commit
+> 
+> There's still substantial spin lock contention occurring at the VFS,
+> too, but it's indicating that multiple atomic variable updates per
+> transaction reservation/commit pair is starting to reach scalability
+> limits here.
+> 
+> This is largely a re-implementation of a past RFC patchsets. While
+> that were good enough proof of concept to perf test, they did not
+> preserve transaction order correctly and failed shutdown tests all
+> the time. The changes to the CIL accounting and behaviour, combined
+> with the structural changes to xlog_write() in prior patchsets make
+> the per-cpu restructuring possible and sane.
+> 
+> Instead of trying to account for continuation log opheaders on a
+> "growth" basis, we pre-calculate how many iclogs we'll need to write
+> out a maximally sized CIL checkpoint and just reserve that space one
+> per commit until the CIL has a full reservation. If we ever run a
+> commit when we are already at the hard limit (because
+> post-throttling) we simply take an extra reservation from each
+> commit that is run when over the limit. Hence we don't need to do
+> space usage math in the fast path and so never need to sum the
+> per-cpu counters in this path.
+> 
+> Similarly, per-cpu lists have the problem of ordering - we can't
+> remove an item from a per-cpu list if we want to move it forward in
+> the CIL. We solve this problem by using an atomic counter to give
+> every commit a sequence number that is copied into the log items in
+> that transaction. Hence relogging items just overwrites the sequence
+> number in the log item, and does not move it in the per-cpu lists.
+> Once we reaggregate the per-cpu lists back into a single list in the
+> CIL push work, we can run it through list-sort() and reorder it back
+> into a globally ordered list. This costs a bit of CPU time, but now
+> that the CIL can run multiple works and pipelines properly, this is
+> not a limiting factor for performance. It does increase fsync
+> latency when the CIL is full, but workloads issuing large numbers of
+> fsync()s or sync transactions end up with very small CILs and so the
+> latency impact or sorting is not measurable for such workloads.
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-cil-scale-3
+> 
+> Version 6:
+> - split out from aggregated patchset
+> - rebase on linux-xfs/for-next + dgc/xlog-write-rework
+> 
+> Version 5:
+> - https://lore.kernel.org/linux-xfs/20210603052240.171998-1-david@fromorbit.com/
+> 
+> 
+
 -- 
-2.33.0
-
+Dave Chinner
+david@fromorbit.com
