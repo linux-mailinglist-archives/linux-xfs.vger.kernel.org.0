@@ -2,89 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E24054580CF
-	for <lists+linux-xfs@lfdr.de>; Sat, 20 Nov 2021 23:31:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E29FA45865F
+	for <lists+linux-xfs@lfdr.de>; Sun, 21 Nov 2021 21:44:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236566AbhKTWe6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 20 Nov 2021 17:34:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236491AbhKTWe6 (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Sat, 20 Nov 2021 17:34:58 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 7411060E9C
-        for <linux-xfs@vger.kernel.org>; Sat, 20 Nov 2021 22:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637447514;
-        bh=VRj2wmraq0pcA4bowdV4ANBrH9KdFHmJhp2Vjb7HkDM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Fi5hWIetEl5PYJa8C1mFJReA2IMT7lQWe9Zvvzv0tFxe9qKiXf9tkIEj54KnShXn0
-         PYMR9TY4F5HKbV+aeZK4swxfbTHyU1r/M3ct7IJRtGvrQoO5/1RD/IMjmKxSw1PRkN
-         lcnftDtVhIeN36+ZowmlepHOZ6Sk8bFDbf+TONJlWYBGs2UJ9UoNID/xzVOviMnbcQ
-         qeH1i0LM99XmXkQzSx3y5V5hCRj+5RypQ089V+GI2kNOyVwCk8cjJJOm48pyJzi1ZE
-         B7hqL53o0/jZg5ZuRGwXRWFg7JqomSFWUALPs+8xiwIbWCpshaLtLZ0IBOj+QQFNdo
-         tE8mkWWqhOJYA==
-Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
-        id 7064961104; Sat, 20 Nov 2021 22:31:54 +0000 (UTC)
-From:   bugzilla-daemon@bugzilla.kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 214767] xfs seems to hang due to race condition? maybe related
- to (gratuitous) thaw.
-Date:   Sat, 20 Nov 2021 22:31:53 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: high
-X-Bugzilla-Who: david@fromorbit.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-214767-201763-75ZeSKlXLU@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-214767-201763@https.bugzilla.kernel.org/>
-References: <bug-214767-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        id S232930AbhKUUrz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 21 Nov 2021 15:47:55 -0500
+Received: from mx07-00227901.pphosted.com ([185.132.182.185]:50190 "EHLO
+        mx08-00227901.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S230421AbhKUUry (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 21 Nov 2021 15:47:54 -0500
+X-Greylist: delayed 31417 seconds by postgrey-1.27 at vger.kernel.org; Sun, 21 Nov 2021 15:47:52 EST
+Received: from pps.filterd (m0097675.ppops.net [127.0.0.1])
+        by mx07-.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1AJ7xOI5005994;
+        Fri, 19 Nov 2021 10:27:14 +0100
+Received: from zbw2k16ex01.bardusch.net ([185.80.186.174])
+        by mx07-.pphosted.com (PPS) with ESMTPS id 3cdjtyh6e0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 19 Nov 2021 10:27:14 +0100
+Received: from ZBW2K16EX01.bardusch.net (172.25.1.1) by
+ ZBW2K16EX01.bardusch.net (172.25.1.1) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.2308.20;
+ Fri, 19 Nov 2021 10:27:13 +0100
+Received: from User (172.25.1.131) by ZBW2K16EX01.bardusch.net (172.25.1.1)
+ with Microsoft SMTP Server id 15.1.2308.20 via Frontend Transport; Fri, 19
+ Nov 2021 10:27:03 +0100
+Reply-To: <josechoondak@gmail.com>
+From:   Joseph Choondak <info@ndd.co.mz>
+Subject: I hope this email finds you well.
+Date:   Fri, 19 Nov 2021 01:27:17 -0800
 MIME-Version: 1.0
+Content-Type: text/plain; charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-ID: <df3f24ed-6571-4db0-afaf-2f1171b46248@ZBW2K16EX01.bardusch.net>
+To:     Undisclosed recipients:;
+X-Proofpoint-ORIG-GUID: 64rehLaKfzm2AOk5eUTzKrlN8apD89hM
+X-Proofpoint-GUID: 64rehLaKfzm2AOk5eUTzKrlN8apD89hM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-19_08,2021-11-17_01,2020-04-07_01
+X-Proofpoint-Spam-Reason: orgsafe
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D214767
+May I please ask with considerable urgency for your kind assistance with the following matter.
+I'm a financial person, I think  I have something huge you might be interested in.
 
---- Comment #17 from Dave Chinner (david@fromorbit.com) ---
-On Wed, Nov 10, 2021 at 03:16:35PM +0000, bugzilla-daemon@bugzilla.kernel.o=
-rg
-wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D214767
->=20
-> --- Comment #16 from Christian Theune (ct@flyingcircus.io) ---
-> I started trying out the fix that Dave and am using it with 5.10.76 (appl=
-ied
-> clean with a bit of fuzzing).
->=20
-> @Dave do you happen do know whether there's a helper that can stress test
-> live
-> systems in this regard?
+Looking forward to hearing from you.
 
-fstests has some tests in the "freeze" group that stress
-freeze/thaw. And it has lots of other tests in it that will tell you
-if there's a regression in your backport, so might be an idea to run
-a full "auto" group pass rather than just the freeze group....
 
-Cheers,
-
-Dave.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+Respectfully!!
+Joseph Choondak
+Account Executive.
