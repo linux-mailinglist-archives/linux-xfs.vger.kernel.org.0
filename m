@@ -2,77 +2,84 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27D62464CEC
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Dec 2021 12:34:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CEA53465331
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Dec 2021 17:45:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348936AbhLALhs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Dec 2021 06:37:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349003AbhLALhi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Dec 2021 06:37:38 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 705EEC061398
-        for <linux-xfs@vger.kernel.org>; Wed,  1 Dec 2021 03:34:11 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id b13so17473990plg.2
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Dec 2021 03:34:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
-        b=nKE9e+4jEQRb21OhoYPSbxPLfJ2IuSmNXU0U6wmcP4ykCacrWpdbtE0jjuz/hSLLGi
-         3CHjeG+lFmWzoULwCsmlhVFgDEk5dLFaYb51pw7bXGjZ9H8t0j91dP9aL17MRQYkMPZK
-         Snvty/Yp8/ZrWZr2EuFXHqBxUdbU8X39ik45viERJ1Dn7qW8BPCFp2vlafV2okU0kn5j
-         QPTIDY8QJSy8zAVbK10d6+AY0lky+mrQRAAg0uS1DacQStzD/dQtt/uBz/RlGIdZCai/
-         BHep24kmiLdl1nvBvHYMFonu8NoJvJlErv7lbZlg2+2c277BpkzmDA4WwPZoxzlIf0Mh
-         Af5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
-        b=04wTxQz9Rtrcs9ZvWJbwCSMByJgCivtqTMhMTH6Een1/txHHcsUDS2BewfmQwzGz6I
-         7tIXzp4v+VZ+zOoiUCyXXNKkEgCSW/qac2OeYoDZeRRUgwm47j1z8UeGiPapceirnFh4
-         WdrKch59yY2QJq+mMvKq+oqs8VOtYRxttEqLVJCmYSW6o9xM+Feb1hHp8qO+3oS2kQwb
-         H9N4fF7lQrQ+cHHAOoUf+T01ZzbA5f8sQ3dyuqunesW5DEj1orB2du+Ig3KYTnCfyVB2
-         wJrs7ZEBSLbY17q8L8R5K3xUSXVoMhED1QhOV5Vs4niOyoxWFXOa+MQ4Iy02N1kZC0NI
-         aEHg==
-X-Gm-Message-State: AOAM5311Xbpban88MhXAqqfLEdVXTtT83mXZLa4yNrijqHpZaqkWeAQx
-        H6rG7235dK3yhqoUHpAPdtdYfD1x4yCAHfx4RAtmh5eVKtc=
-X-Google-Smtp-Source: ABdhPJwK+H50pzFgfv5CJPfAwBzUdMqIKHh+Ckkuju2lG2knVlJrzqINPiiwPjc/Uz6xuSJez7Fkn5YZPcfa5CPpvro=
-X-Received: by 2002:a67:ef4d:: with SMTP id k13mr6266305vsr.4.1638358439020;
- Wed, 01 Dec 2021 03:33:59 -0800 (PST)
+        id S1351658AbhLAQsc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Dec 2021 11:48:32 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:51921 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1351517AbhLAQqV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Dec 2021 11:46:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638376975;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fuWponqes6VhO075r7aSGZGmq+5KvEV3psFaKe37cZg=;
+        b=gqqBsL1VBhACUzBhyIqlUfOTWMXxujSICBR8pAbGNlSRE+ob825SMuEarbjA4QfsD+FuoT
+        XNDx5z2Qsh4Oh6FDxYtuSyn2rsWtD3njeBW3PDNNTEpQTvBMyEvf6lkRdrI6U4mrUoaCPW
+        0dl4LSEa0lqO6krhHUwOYtkNhHLwwSw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-415-9FgcmBxUN9K7gXOkCmFwrA-1; Wed, 01 Dec 2021 11:42:52 -0500
+X-MC-Unique: 9FgcmBxUN9K7gXOkCmFwrA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8193681CCBF;
+        Wed,  1 Dec 2021 16:42:51 +0000 (UTC)
+Received: from [127.0.0.1] (ovpn04.gateway.prod.ext.phx2.redhat.com [10.5.9.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4CEAA4EC37;
+        Wed,  1 Dec 2021 16:42:51 +0000 (UTC)
+Message-ID: <2106770b-5977-47b6-8b91-22b829cc5bf7@redhat.com>
+Date:   Wed, 1 Dec 2021 10:42:50 -0600
 MIME-Version: 1.0
-Sender: unitednationawardwinner@gmail.com
-Received: by 2002:ab0:6c55:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 03:33:58 -0800 (PST)
-From:   "Mrs. Orgil Baatar" <mrs.orgilbaatar21@gmail.com>
-Date:   Wed, 1 Dec 2021 03:33:58 -0800
-X-Google-Sender-Auth: uTQ_nfkzXaWGWaTWp1BSFqK3Ucs
-Message-ID: <CAJ4dHaSrD-X=xpfKNZV-hXSiMV6mNYrgy5vWCNkKm6iu5RQStg@mail.gmail.com>
-Subject: Your long awaited part payment of $2.5.000.00Usd
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.2
+Subject: Re: [PATCH] xfs: remove incorrect ASSERT in xfs_rename
+Content-Language: en-US
+From:   Eric Sandeen <esandeen@redhat.com>
+To:     xfs <linux-xfs@vger.kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>
+References: <bbb4b6d5-744c-11c8-fcda-62777e8d7b19@redhat.com>
+Reply-To: sandeen@redhat.com
+In-Reply-To: <bbb4b6d5-744c-11c8-fcda-62777e8d7b19@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Attention: Beneficiary, Your long awaited part payment of
-$2.5.000.00Usd (TWO MILLION FIVE Hundred Thousand United State
-Dollars) is ready for immediate release to you, and it was
-electronically credited into an ATM Visa Card for easy delivery.
+On 11/30/21 11:17 PM, Eric Sandeen wrote:
+> This ASSERT in xfs_rename is a) incorrect, because
+> (RENAME_WHITEOUT|RENAME_NOREPLACE) is a valid combination, and
+> b) unnecessary, because actual invalid flag combinations are already
+> handled at the vfs level in do_renameat2() before we get called.
+> So, remove it.
+> 
+> Reported-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
+> ---
+> 
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 64b9bf3..6771f35 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -3122,7 +3122,6 @@ struct xfs_iunlink {
+>        * appropriately.
+>        */
+>       if (flags & RENAME_WHITEOUT) {
+> -        ASSERT(!(flags & (RENAME_NOREPLACE | RENAME_EXCHANGE)));
+>           error = xfs_rename_alloc_whiteout(mnt_userns, target_dp, &wip);
+>           if (error)
+>               return error;
+> 
 
-Your new Payment Reference No.- 6363836,
-Pin Code No: 1787
-Your Certificate of Merit Payment No: 05872,
+Ugh, I don't understand this flavor of whitespace mangling I'm getting now,
+I'm sorry :(
 
-Your Names: |
-Address: |
-
-Person to Contact:MR KELLY HALL the Director of the International
-Audit unit ATM Payment Center,
-
-Email: uba-bf@e-ubabf.com
-TELEPHONE: +226 64865611 You can whatsApp the bank
-
-Regards.
-Mrs ORGIL BAATAR
