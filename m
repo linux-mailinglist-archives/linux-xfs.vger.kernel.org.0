@@ -2,84 +2,77 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A911464BE0
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Dec 2021 11:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27D62464CEC
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Dec 2021 12:34:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348653AbhLAKtT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Dec 2021 05:49:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50850 "EHLO
+        id S1348936AbhLALhs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Dec 2021 06:37:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348320AbhLAKtS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Dec 2021 05:49:18 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39BD5C061574
-        for <linux-xfs@vger.kernel.org>; Wed,  1 Dec 2021 02:45:58 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id j2so61903130ybg.9
-        for <linux-xfs@vger.kernel.org>; Wed, 01 Dec 2021 02:45:58 -0800 (PST)
+        with ESMTP id S1349003AbhLALhi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Dec 2021 06:37:38 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 705EEC061398
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Dec 2021 03:34:11 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id b13so17473990plg.2
+        for <linux-xfs@vger.kernel.org>; Wed, 01 Dec 2021 03:34:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=UHYcdyWm1JaGYSPdCaksjsmvc0WqcBJjN/tMfuSlkeY=;
-        b=o0zhJk6mO//BZO8H+23UW4kI8BZmA/RL6lFMR7nvpff9y1lRHcoBvnccv2fyWiz1lB
-         CSxO80PsFFRJUnWJXdRUaDMe8ykZB3K2pgViiddPa0oPtcB1icjpr85f51h6iWofdBo0
-         wcJr6uZmZkc7W0pftV3YvC4kRSQg4ZTo+vfDvPanF/8GVrXTj5Dfeo7q7VivFy2MIlDK
-         mLAgqh+IGgGZryVxWtKCPFTFtjBorQmbBpGwtYH6leZ5qh9a1m021x09cqFt7RbFt4Cb
-         Xvou+7TRMwe71pUifTTPTdOmfd1hnaErsYlhM3vv8rB0QsoqlMeHwq0ORvhHS9tgvmKm
-         Aolw==
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
+        b=nKE9e+4jEQRb21OhoYPSbxPLfJ2IuSmNXU0U6wmcP4ykCacrWpdbtE0jjuz/hSLLGi
+         3CHjeG+lFmWzoULwCsmlhVFgDEk5dLFaYb51pw7bXGjZ9H8t0j91dP9aL17MRQYkMPZK
+         Snvty/Yp8/ZrWZr2EuFXHqBxUdbU8X39ik45viERJ1Dn7qW8BPCFp2vlafV2okU0kn5j
+         QPTIDY8QJSy8zAVbK10d6+AY0lky+mrQRAAg0uS1DacQStzD/dQtt/uBz/RlGIdZCai/
+         BHep24kmiLdl1nvBvHYMFonu8NoJvJlErv7lbZlg2+2c277BpkzmDA4WwPZoxzlIf0Mh
+         Af5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=UHYcdyWm1JaGYSPdCaksjsmvc0WqcBJjN/tMfuSlkeY=;
-        b=v9305STy+WjJ48YZLFUc89BWmt9y1eHJtMVduiEKhlAIf/ed0nX+aPfLQpPLqPeLXd
-         505oY8aJfvZJJNp+X4M3TOzhfeeeizLAPx5oeu7MP0ra/CIjYiIqHcShol0diWugizdk
-         Rf2rk+6Ah8p0jS0cNaqfQ3RhavTyHPDJxCPi6VJdxb7M3wVVaRP7ZIKpgLMonMAEOde/
-         hl3EWeM11YHH3u/hgJzASsAHUdkOaQytwNlyfo8//vVbUWOL7R3RgRnpAeHErvLwz2O1
-         jD3i+0UxScP5Vs4N56n5XoCX9jWpgbjGk2ZG/SwHJ/UhuaEaxeJH6abayfA4/Y6GZQLs
-         NOFQ==
-X-Gm-Message-State: AOAM5333vET8ZedlnwcP3R8ppWpLasQQmUg/hhgIZq8ffyPh6id45XZu
-        fdomw01sxT2Rq/z6xjmOKBvWL1hG7cuhL/FQmnMVj86+6/7+mBy4PwJ7bA==
-X-Google-Smtp-Source: ABdhPJy+i9KMwRbcKUi1vGC7OIRSEUdeCJLeY56plMH6vNirRQwJLayBs6kzzuDDEkWBlRC9pN96aA8MoXJrxCfdEyM=
-X-Received: by 2002:a25:2a89:: with SMTP id q131mr6952886ybq.436.1638355557296;
- Wed, 01 Dec 2021 02:45:57 -0800 (PST)
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=l4J9Z+m4hmgZbWtQHlC70w1zjUmiI7wjClCwm6dHAnY=;
+        b=04wTxQz9Rtrcs9ZvWJbwCSMByJgCivtqTMhMTH6Een1/txHHcsUDS2BewfmQwzGz6I
+         7tIXzp4v+VZ+zOoiUCyXXNKkEgCSW/qac2OeYoDZeRRUgwm47j1z8UeGiPapceirnFh4
+         WdrKch59yY2QJq+mMvKq+oqs8VOtYRxttEqLVJCmYSW6o9xM+Feb1hHp8qO+3oS2kQwb
+         H9N4fF7lQrQ+cHHAOoUf+T01ZzbA5f8sQ3dyuqunesW5DEj1orB2du+Ig3KYTnCfyVB2
+         wJrs7ZEBSLbY17q8L8R5K3xUSXVoMhED1QhOV5Vs4niOyoxWFXOa+MQ4Iy02N1kZC0NI
+         aEHg==
+X-Gm-Message-State: AOAM5311Xbpban88MhXAqqfLEdVXTtT83mXZLa4yNrijqHpZaqkWeAQx
+        H6rG7235dK3yhqoUHpAPdtdYfD1x4yCAHfx4RAtmh5eVKtc=
+X-Google-Smtp-Source: ABdhPJwK+H50pzFgfv5CJPfAwBzUdMqIKHh+Ckkuju2lG2knVlJrzqINPiiwPjc/Uz6xuSJez7Fkn5YZPcfa5CPpvro=
+X-Received: by 2002:a67:ef4d:: with SMTP id k13mr6266305vsr.4.1638358439020;
+ Wed, 01 Dec 2021 03:33:59 -0800 (PST)
 MIME-Version: 1.0
-From:   Kang Chen <void0red@gmail.com>
-Date:   Wed, 1 Dec 2021 18:45:46 +0800
-Message-ID: <CANE+tVp9Au=beERRjy9mp90-=5S9ErjEDT=E7i5E3dWvFP928g@mail.gmail.com>
-Subject: Why 'fallocate' clear the file's SUID flag?
-To:     linux-xfs@vger.kernel.org
+Sender: unitednationawardwinner@gmail.com
+Received: by 2002:ab0:6c55:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 03:33:58 -0800 (PST)
+From:   "Mrs. Orgil Baatar" <mrs.orgilbaatar21@gmail.com>
+Date:   Wed, 1 Dec 2021 03:33:58 -0800
+X-Google-Sender-Auth: uTQ_nfkzXaWGWaTWp1BSFqK3Ucs
+Message-ID: <CAJ4dHaSrD-X=xpfKNZV-hXSiMV6mNYrgy5vWCNkKm6iu5RQStg@mail.gmail.com>
+Subject: Your long awaited part payment of $2.5.000.00Usd
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-I found that the 'xfs_update_prealloc_flags' function is called
-during the =E2=80=98fallocate=E2=80=99 syscall and the SUID flag is cleared
-when the 'XFS_PREALLOC_INVISIBLE' flag is not set.
-I am a beginner and have some questions about it.
+Attention: Beneficiary, Your long awaited part payment of
+$2.5.000.00Usd (TWO MILLION FIVE Hundred Thousand United State
+Dollars) is ready for immediate release to you, and it was
+electronically credited into an ATM Visa Card for easy delivery.
 
-1. What does XFS_PREALLOC_INVISIBLE mean and
-why should the SUID flag be cleared
-when XFS_PREALLOC_INVISIBLE is not set?
+Your new Payment Reference No.- 6363836,
+Pin Code No: 1787
+Your Certificate of Merit Payment No: 05872,
 
-2. The behavior of XFS in handling the fallocate syscall is
-a bit strange and not quite the same as other file systems,
-such as ext4 and btrfs.
+Your Names: |
+Address: |
 
-Here is an example:
-foo is a normal file.
-chmod set the SUID and SGID flag.
-The last two parameters of fallocate are irrelevant to this problem.
-After running, ext4 and btrfs set mode o6000, but xfs set mode o2000.
-```
-int fd =3D open("foo", 2, 0);
-chmod("foo", o6000);
-fallocate(fd, 3, 6549, 1334);
-fsync(fd);
-```
+Person to Contact:MR KELLY HALL the Director of the International
+Audit unit ATM Payment Center,
 
-Can you give me some help?
+Email: uba-bf@e-ubabf.com
+TELEPHONE: +226 64865611 You can whatsApp the bank
 
-Best wishes.
+Regards.
+Mrs ORGIL BAATAR
