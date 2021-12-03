@@ -2,214 +2,71 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76B0A466E27
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 Dec 2021 01:01:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3D12466F82
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 Dec 2021 03:06:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349743AbhLCAEp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 2 Dec 2021 19:04:45 -0500
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:36185 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1377734AbhLCAEo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 Dec 2021 19:04:44 -0500
-Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 4AD7B869B73
-        for <linux-xfs@vger.kernel.org>; Fri,  3 Dec 2021 11:01:18 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1msw0p-00G1Ld-IG
-        for linux-xfs@vger.kernel.org; Fri, 03 Dec 2021 11:01:15 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1msw0p-00Bkj6-Gs
-        for linux-xfs@vger.kernel.org;
-        Fri, 03 Dec 2021 11:01:15 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 36/36] xfs: convert trim to use for_each_perag_range
-Date:   Fri,  3 Dec 2021 11:01:11 +1100
-Message-Id: <20211203000111.2800982-37-david@fromorbit.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211203000111.2800982-1-david@fromorbit.com>
-References: <20211203000111.2800982-1-david@fromorbit.com>
+        id S237498AbhLCCJg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 Dec 2021 21:09:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235940AbhLCCJg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 Dec 2021 21:09:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250A5C06174A
+        for <linux-xfs@vger.kernel.org>; Thu,  2 Dec 2021 18:06:13 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BDEA628A9
+        for <linux-xfs@vger.kernel.org>; Fri,  3 Dec 2021 02:06:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7EEAC00446
+        for <linux-xfs@vger.kernel.org>; Fri,  3 Dec 2021 02:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638497171;
+        bh=1AgjDap/K93u4RcpYaIM5Ck9wiZlJJTQ+5ETI+HE2X4=;
+        h=Date:From:To:Subject:From;
+        b=uNYlYG5fLvqRfvhAPXYoj6YIvm8XnCb+QpqqkQRc5XMXohBEU2zI+TAMxc+guCpkh
+         bG+5D/ZJhGn5O0lbw/3eOeppnEiqnWbiF8rPFgtWyPdEbhCsvjm6HeSdeM1uZd9zW+
+         B3UiICTbwpx3AOJkQQI4U9UcwG/78BQ/uxUh2SStpIuC0wkzLlCuhTIxINdk2hJXRQ
+         maDOodXh7kLye8J9zEtjbkxETbl1iCO/RLWtFuo5NkblnKQqEu64CTFrZt9yueG5NU
+         sgLdWZxMJIlcsZcHSjFxIpehz3Od7ZrU0xonODszlrXfdS/Q/REoC31Ia809I4Fy+4
+         xbDcEwNXauL+Q==
+Date:   Thu, 2 Dec 2021 18:06:11 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to e445976537ad
+Message-ID: <20211203020611.GN8467@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=61a95e4e
-        a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
-        a=IOMw9HtfNCkA:10 a=20KFwNOVAAAA:8 a=PynOkrAUnEEYtSWtPP4A:9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi folks,
 
-To convert it to using active perag references and hence make it
-shrink safe.
+The for-next branch of the xfs-linux repository at:
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_discard.c | 50 ++++++++++++++++++++------------------------
- 1 file changed, 23 insertions(+), 27 deletions(-)
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-diff --git a/fs/xfs/xfs_discard.c b/fs/xfs/xfs_discard.c
-index ccec28c914cd..310d760376a5 100644
---- a/fs/xfs/xfs_discard.c
-+++ b/fs/xfs/xfs_discard.c
-@@ -21,23 +21,20 @@
- 
- STATIC int
- xfs_trim_extents(
--	struct xfs_mount	*mp,
--	xfs_agnumber_t		agno,
-+	struct xfs_perag	*pag,
- 	xfs_daddr_t		start,
- 	xfs_daddr_t		end,
- 	xfs_daddr_t		minlen,
- 	uint64_t		*blocks_trimmed)
- {
-+	struct xfs_mount	*mp = pag->pag_mount;
- 	struct block_device	*bdev = mp->m_ddev_targp->bt_bdev;
- 	struct xfs_btree_cur	*cur;
- 	struct xfs_buf		*agbp;
- 	struct xfs_agf		*agf;
--	struct xfs_perag	*pag;
- 	int			error;
- 	int			i;
- 
--	pag = xfs_perag_get(mp, agno);
--
- 	/*
- 	 * Force out the log.  This means any transactions that might have freed
- 	 * space before we take the AGF buffer lock are now on disk, and the
-@@ -47,7 +44,7 @@ xfs_trim_extents(
- 
- 	error = xfs_alloc_read_agf(pag, NULL, 0, &agbp);
- 	if (error)
--		goto out_put_perag;
-+		return error;
- 	agf = agbp->b_addr;
- 
- 	cur = xfs_allocbt_init_cursor(mp, NULL, agbp, pag, XFS_BTNUM_CNT);
-@@ -71,10 +68,10 @@ xfs_trim_extents(
- 
- 		error = xfs_alloc_get_rec(cur, &fbno, &flen, &i);
- 		if (error)
--			goto out_del_cursor;
-+			break;
- 		if (XFS_IS_CORRUPT(mp, i != 1)) {
- 			error = -EFSCORRUPTED;
--			goto out_del_cursor;
-+			break;
- 		}
- 		ASSERT(flen <= be32_to_cpu(agf->agf_longest));
- 
-@@ -83,15 +80,15 @@ xfs_trim_extents(
- 		 * the format the range/len variables are supplied in by
- 		 * userspace.
- 		 */
--		dbno = XFS_AGB_TO_DADDR(mp, agno, fbno);
-+		dbno = XFS_AGB_TO_DADDR(mp, pag->pag_agno, fbno);
- 		dlen = XFS_FSB_TO_BB(mp, flen);
- 
- 		/*
- 		 * Too small?  Give up.
- 		 */
- 		if (dlen < minlen) {
--			trace_xfs_discard_toosmall(mp, agno, fbno, flen);
--			goto out_del_cursor;
-+			trace_xfs_discard_toosmall(mp, pag->pag_agno, fbno, flen);
-+			break;
- 		}
- 
- 		/*
-@@ -100,7 +97,7 @@ xfs_trim_extents(
- 		 * down partially overlapping ranges for now.
- 		 */
- 		if (dbno + dlen < start || dbno > end) {
--			trace_xfs_discard_exclude(mp, agno, fbno, flen);
-+			trace_xfs_discard_exclude(mp, pag->pag_agno, fbno, flen);
- 			goto next_extent;
- 		}
- 
-@@ -109,32 +106,30 @@ xfs_trim_extents(
- 		 * discard and try again the next time.
- 		 */
- 		if (xfs_extent_busy_search(mp, pag, fbno, flen)) {
--			trace_xfs_discard_busy(mp, agno, fbno, flen);
-+			trace_xfs_discard_busy(mp, pag->pag_agno, fbno, flen);
- 			goto next_extent;
- 		}
- 
--		trace_xfs_discard_extent(mp, agno, fbno, flen);
-+		trace_xfs_discard_extent(mp, pag->pag_agno, fbno, flen);
- 		error = blkdev_issue_discard(bdev, dbno, dlen, GFP_NOFS, 0);
- 		if (error)
--			goto out_del_cursor;
-+			break;
- 		*blocks_trimmed += flen;
- 
- next_extent:
- 		error = xfs_btree_decrement(cur, 0, &i);
- 		if (error)
--			goto out_del_cursor;
-+			break;
- 
- 		if (fatal_signal_pending(current)) {
- 			error = -ERESTARTSYS;
--			goto out_del_cursor;
-+			break;
- 		}
- 	}
- 
- out_del_cursor:
- 	xfs_btree_del_cursor(cur, error);
- 	xfs_buf_relse(agbp);
--out_put_perag:
--	xfs_perag_put(pag);
- 	return error;
- }
- 
-@@ -152,11 +147,12 @@ xfs_ioc_trim(
- 	struct xfs_mount		*mp,
- 	struct fstrim_range __user	*urange)
- {
-+	struct xfs_perag	*pag;
- 	struct request_queue	*q = bdev_get_queue(mp->m_ddev_targp->bt_bdev);
- 	unsigned int		granularity = q->limits.discard_granularity;
- 	struct fstrim_range	range;
- 	xfs_daddr_t		start, end, minlen;
--	xfs_agnumber_t		start_agno, end_agno, agno;
-+	xfs_agnumber_t		agno;
- 	uint64_t		blocks_trimmed = 0;
- 	int			error, last_error = 0;
- 
-@@ -193,18 +189,18 @@ xfs_ioc_trim(
- 	end = start + BTOBBT(range.len) - 1;
- 
- 	if (end > XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks) - 1)
--		end = XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks)- 1;
--
--	start_agno = xfs_daddr_to_agno(mp, start);
--	end_agno = xfs_daddr_to_agno(mp, end);
-+		end = XFS_FSB_TO_BB(mp, mp->m_sb.sb_dblocks) - 1;
- 
--	for (agno = start_agno; agno <= end_agno; agno++) {
--		error = xfs_trim_extents(mp, agno, start, end, minlen,
-+	agno = xfs_daddr_to_agno(mp, start);
-+	for_each_perag_range(mp, agno, xfs_daddr_to_agno(mp, end), pag) {
-+		error = xfs_trim_extents(pag, start, end, minlen,
- 					  &blocks_trimmed);
- 		if (error) {
- 			last_error = error;
--			if (error == -ERESTARTSYS)
-+			if (error == -ERESTARTSYS) {
-+				xfs_perag_rele(pag);
- 				break;
-+			}
- 		}
- 	}
- 
--- 
-2.33.0
+has just been updated.
 
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.  Will start on 5.17 stuff next week.
+
+The new head of the for-next branch is commit:
+
+e445976537ad xfs: remove incorrect ASSERT in xfs_rename
+
+New Commits:
+
+Eric Sandeen (1):
+      [e445976537ad] xfs: remove incorrect ASSERT in xfs_rename
+
+
+Code Diffstat:
+
+ fs/xfs/xfs_inode.c | 1 -
+ 1 file changed, 1 deletion(-)
