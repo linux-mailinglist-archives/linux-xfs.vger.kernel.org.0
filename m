@@ -2,172 +2,313 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DEB7466E1B
-	for <lists+linux-xfs@lfdr.de>; Fri,  3 Dec 2021 01:01:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16456466E37
+	for <lists+linux-xfs@lfdr.de>; Fri,  3 Dec 2021 01:01:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349634AbhLCAEl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 2 Dec 2021 19:04:41 -0500
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:35179 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349505AbhLCAEk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 Dec 2021 19:04:40 -0500
+        id S1377734AbhLCAE7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 2 Dec 2021 19:04:59 -0500
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:58186 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1377741AbhLCAEz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 2 Dec 2021 19:04:55 -0500
 Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 26A9F869D29
-        for <linux-xfs@vger.kernel.org>; Fri,  3 Dec 2021 11:01:16 +1100 (AEDT)
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 78644606C62
+        for <linux-xfs@vger.kernel.org>; Fri,  3 Dec 2021 11:01:23 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1msw0o-00G1Ju-6Q
+        id 1msw0o-00G1Jv-7d
         for linux-xfs@vger.kernel.org; Fri, 03 Dec 2021 11:01:14 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1msw0o-00BkgF-2v
+        id 1msw0o-00BkgI-6P
         for linux-xfs@vger.kernel.org;
         Fri, 03 Dec 2021 11:01:14 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [RFC] [PATCH 00/36] xfs: more work towards shrinking.
-Date:   Fri,  3 Dec 2021 11:00:35 +1100
-Message-Id: <20211203000111.2800982-1-david@fromorbit.com>
+Subject: [PATCH 01/36] xfs: make last AG grow/shrink perag centric
+Date:   Fri,  3 Dec 2021 11:00:36 +1100
+Message-Id: <20211203000111.2800982-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20211203000111.2800982-1-david@fromorbit.com>
+References: <20211203000111.2800982-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=epq8cqlX c=1 sm=1 tr=0 ts=61a95e4c
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=61a95e53
         a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
-        a=IOMw9HtfNCkA:10 a=wzagjBjDD1SL2wRYs4UA:9
-        a=7Zwj6sZBwVKJAoWSPKxL6X1jA+E=:19
+        a=IOMw9HtfNCkA:10 a=20KFwNOVAAAA:8 a=rNnZobXno7lJzOInF4AA:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Note: this is "heads up" at this point so that people can see what
-is coming down the line and make early comments, not a request to
-consider these for merging soon.
+From: Dave Chinner <dchinner@redhat.com>
 
-This series continues the work towards making shrinking a filesystem
-possible.  We need to be able to stop operations from taking place
-on AGs that need to be removed by a shrink, so before shrink can be
-implemented we need to have the infrastructure in place to prevent
-incursion into AGs that are going to be, or are in the process, of
-being removed from active duty.
+Because the perag must exist for these operations, look it up as
+part of the common shrink operations and pass it instead of the
+mount/agno pair.
 
-The focus of this is making operations that depend on access to AGs
-use the perag to access and pin the AG in active use, thereby
-creating a barrier we can use to delay shrink until all active uses
-have been drained and new uses are prevented.
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ fs/xfs/libxfs/xfs_ag.c | 48 ++++++++++++++++--------------------------
+ fs/xfs/libxfs/xfs_ag.h | 11 +++++-----
+ fs/xfs/xfs_fsops.c     | 11 ++++++----
+ fs/xfs/xfs_ioctl.c     |  8 ++++++-
+ 4 files changed, 37 insertions(+), 41 deletions(-)
 
-This series starts by driving the perag down into the AGI, AGF and
-AGFL access routines and unifies the perag structure initialisation
-with the high level AG header read functions. This largely replaces
-the xfs_mount/agno pair that is passed to all these functions with a
-perag, and in most places we already have a perag ready to pass in.
-There are a few places where perags need to be grabbed before
-reading the AG header buffers - some of these will need to be driven
-to higher layers to ensure we can run operations on AGs without
-getting stuck part way through waiting on a perag reference.
-
-The next section of this patchset moves some of the AG geometry
-information from the xfs_mount to the xfs_perag, and starts
-converting code that requires geometry validation to use a perag
-instead of a mount and having to extract the AGNO from the object
-location. This also allows us to store the AG size in the perag and
-then we can stop having to compare the agno against sb_agcount to
-determine if the AG is the last AG and so has a runt size.  This
-greatly simplifies some of the type validity checking we do and
-substantially reduces the CPU overhead of type validity checking. It
-also cuts over 1.2kB out of the binary size.
-
-The series then starts converting the code to use active references.
-Active reference counts are used by high level code that needs to
-prevent the AG from being taken out from under it by a shrink
-operation. The high level code needs to be able to handle not
-getting an active reference gracefully, and the shrink code will
-need to wait for active references to drain before continuing.
-
-Active references are implemented just as reference counts right now
-- an active reference is taken at perag init during mount, and all
-other active references are dependent on the active reference count
-being greater than zero. This gives us an initial method of stopping
-new active references without needing other infrastructure; just
-drop the reference taken at filesystem mount time and when the
-refcount then falls to zero no new references can be taken.
-
-In future, this will need to take into account AG control state
-(e.g. offline, no alloc, etc) as well as the reference count, but
-right now we can implement a basic barrier for shrink with just
-reference count manipulations. There are patches to convert the
-perag state to atomic opstate fields similar to the xfs_mount and
-xlog opstate fields in preparation for this.
-
-The first target for active reference conversion is the
-for_each_perag*() iterators. This captures a lot of high level code
-that should skip offline AGs, and introduces the ability to
-differentiate between a lookup that didn't have an online AG and the
-end of the AG iteration range.
-
-From there, the inode allocation AG selection is converted to active
-references, and the perag is driven deeper into the inode allocation
-and btree code to replace the xfs_mount. Most of the inode
-allocation code operates on a single AG once it is selected, hence
-it should pass the perag as the primary referenced object around for
-allocation, not the xfs_mount. There is a bit of churn here, but it
-emphasises that inode allocation is inherently an allocation group
-based operation.
-
-Next the bmap/alloc interface undergoes a major untangling,
-reworking xfs_bmap_btalloc() into separate allocation operations for
-different contexts and failure handling behaviours. This then allows
-us to completely remove the xfs_alloc_vextent() layer via
-restructuring the xfs_alloc_vextent/xfs_alloc_ag_vextent() into a
-set of realtively simple helper function that describe the
-allocation that they are doing. e.g.  xfs_alloc_vextent_exact_bno().
-
-This allows the requirements for accessing AGs to be allocation
-context dependent. The allocations that require operation on a
-single AG generally can't tolerate failure after the allocation
-method and AG has been decided on, and hence the caller needs to
-manage the active references to ensure the allocation does not race
-with shrink removing the selected AG for the duration of the
-operation that requires access to that allocation group.
-
-Other allocations iterate AGs and so the first AG is just a hint -
-these do not need to pin a perag first as they can tolerate not
-being able to access an AG by simply skipping over it. These require
-new perag iteration functions that can start at arbitrary AGs and
-wrap around at arbitrary AGs, hence a new set for
-for_each_perag_wrap*() helpers to do this.
-
-So far this smoke tests OK - there's a problem with AGF locking
-deadlocks as a result of converting xfs_alloc_vextent_iterate_ags()
-to use for_each_perag_wrap_range() that shows in stress tests, but
-it passes everything in the quick group.
-
-There's more to come:
-- the bmapi layer needs to handle active AG references for exact and
-  near allocation
-- filestreams allocator AG selection needs a significant rework to
-  simplify and use active references
-- converting the allocation "firstblock" restrictions to hold an
-  actively referenced perag, not a filesystem block address.
-- inode cache lookups need to converted to active references
-- audits needed to find and convert all the places that we use
-  bp->b_pag instead of active references passed from high level
-  code.
-- addition of a "going offline" opstate and state machine to use for
-  rejecting new active references as well as blocking shrink from
-  making progress until all active references are gone
-- ioctls for changing AG state from userspace
-- audit of the freeing code to determine whether it can use passive
-  references to allow freeing of blocks (which may require
-  allocation!) whilst new allocations are prevented from being run
-  on "going offline" AGs. This will allow userspace to stop new
-  allocations in AGs to be shrunk before it starts emptying them and
-  freeing the space that they have in use.
-- the physical shrink code.
-
-This current patchset is based on 5.16-rc3.
-
--Dave.
-
+diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
+index 1e4ee042d52f..84f8b0f12b50 100644
+--- a/fs/xfs/libxfs/xfs_ag.c
++++ b/fs/xfs/libxfs/xfs_ag.c
+@@ -762,11 +762,11 @@ xfs_ag_init_headers(
+ 
+ int
+ xfs_ag_shrink_space(
+-	struct xfs_mount	*mp,
++	struct xfs_perag	*pag,
+ 	struct xfs_trans	**tpp,
+-	xfs_agnumber_t		agno,
+ 	xfs_extlen_t		delta)
+ {
++	struct xfs_mount	*mp = pag->pag_mount;
+ 	struct xfs_alloc_arg	args = {
+ 		.tp	= *tpp,
+ 		.mp	= mp,
+@@ -783,14 +783,14 @@ xfs_ag_shrink_space(
+ 	xfs_agblock_t		aglen;
+ 	int			error, err2;
+ 
+-	ASSERT(agno == mp->m_sb.sb_agcount - 1);
+-	error = xfs_ialloc_read_agi(mp, *tpp, agno, &agibp);
++	ASSERT(pag->pag_agno == mp->m_sb.sb_agcount - 1);
++	error = xfs_ialloc_read_agi(mp, *tpp, pag->pag_agno, &agibp);
+ 	if (error)
+ 		return error;
+ 
+ 	agi = agibp->b_addr;
+ 
+-	error = xfs_alloc_read_agf(mp, *tpp, agno, 0, &agfbp);
++	error = xfs_alloc_read_agf(mp, *tpp, pag->pag_agno, 0, &agfbp);
+ 	if (error)
+ 		return error;
+ 
+@@ -802,13 +802,13 @@ xfs_ag_shrink_space(
+ 	if (delta >= aglen)
+ 		return -EINVAL;
+ 
+-	args.fsbno = XFS_AGB_TO_FSB(mp, agno, aglen - delta);
++	args.fsbno = XFS_AGB_TO_FSB(mp, pag->pag_agno, aglen - delta);
+ 
+ 	/*
+ 	 * Make sure that the last inode cluster cannot overlap with the new
+ 	 * end of the AG, even if it's sparse.
+ 	 */
+-	error = xfs_ialloc_check_shrink(*tpp, agno, agibp, aglen - delta);
++	error = xfs_ialloc_check_shrink(*tpp, pag->pag_agno, agibp, aglen - delta);
+ 	if (error)
+ 		return error;
+ 
+@@ -884,9 +884,8 @@ xfs_ag_shrink_space(
+  */
+ int
+ xfs_ag_extend_space(
+-	struct xfs_mount	*mp,
++	struct xfs_perag	*pag,
+ 	struct xfs_trans	*tp,
+-	struct aghdr_init_data	*id,
+ 	xfs_extlen_t		len)
+ {
+ 	struct xfs_buf		*bp;
+@@ -894,23 +893,20 @@ xfs_ag_extend_space(
+ 	struct xfs_agf		*agf;
+ 	int			error;
+ 
+-	/*
+-	 * Change the agi length.
+-	 */
+-	error = xfs_ialloc_read_agi(mp, tp, id->agno, &bp);
++	ASSERT(pag->pag_agno == pag->pag_mount->m_sb.sb_agcount - 1);
++
++	error = xfs_ialloc_read_agi(pag->pag_mount, tp, pag->pag_agno, &bp);
+ 	if (error)
+ 		return error;
+ 
+ 	agi = bp->b_addr;
+ 	be32_add_cpu(&agi->agi_length, len);
+-	ASSERT(id->agno == mp->m_sb.sb_agcount - 1 ||
+-	       be32_to_cpu(agi->agi_length) == mp->m_sb.sb_agblocks);
+ 	xfs_ialloc_log_agi(tp, bp, XFS_AGI_LENGTH);
+ 
+ 	/*
+ 	 * Change agf length.
+ 	 */
+-	error = xfs_alloc_read_agf(mp, tp, id->agno, 0, &bp);
++	error = xfs_alloc_read_agf(pag->pag_mount, tp, pag->pag_agno, 0, &bp);
+ 	if (error)
+ 		return error;
+ 
+@@ -925,13 +921,12 @@ xfs_ag_extend_space(
+ 	 * XFS_RMAP_OINFO_SKIP_UPDATE is used here to tell the rmap btree that
+ 	 * this doesn't actually exist in the rmap btree.
+ 	 */
+-	error = xfs_rmap_free(tp, bp, bp->b_pag,
+-				be32_to_cpu(agf->agf_length) - len,
++	error = xfs_rmap_free(tp, bp, pag, be32_to_cpu(agf->agf_length) - len,
+ 				len, &XFS_RMAP_OINFO_SKIP_UPDATE);
+ 	if (error)
+ 		return error;
+ 
+-	return  xfs_free_extent(tp, XFS_AGB_TO_FSB(mp, id->agno,
++	return  xfs_free_extent(tp, XFS_AGB_TO_FSB(pag->pag_mount, pag->pag_agno,
+ 					be32_to_cpu(agf->agf_length) - len),
+ 				len, &XFS_RMAP_OINFO_SKIP_UPDATE,
+ 				XFS_AG_RESV_NONE);
+@@ -940,34 +935,27 @@ xfs_ag_extend_space(
+ /* Retrieve AG geometry. */
+ int
+ xfs_ag_get_geometry(
+-	struct xfs_mount	*mp,
+-	xfs_agnumber_t		agno,
++	struct xfs_perag	*pag,
+ 	struct xfs_ag_geometry	*ageo)
+ {
+ 	struct xfs_buf		*agi_bp;
+ 	struct xfs_buf		*agf_bp;
+ 	struct xfs_agi		*agi;
+ 	struct xfs_agf		*agf;
+-	struct xfs_perag	*pag;
+ 	unsigned int		freeblks;
+ 	int			error;
+ 
+-	if (agno >= mp->m_sb.sb_agcount)
+-		return -EINVAL;
+-
+ 	/* Lock the AG headers. */
+-	error = xfs_ialloc_read_agi(mp, NULL, agno, &agi_bp);
++	error = xfs_ialloc_read_agi(pag->pag_mount, NULL, pag->pag_agno, &agi_bp);
+ 	if (error)
+ 		return error;
+-	error = xfs_alloc_read_agf(mp, NULL, agno, 0, &agf_bp);
++	error = xfs_alloc_read_agf(pag->pag_mount, NULL, pag->pag_agno, 0, &agf_bp);
+ 	if (error)
+ 		goto out_agi;
+ 
+-	pag = agi_bp->b_pag;
+-
+ 	/* Fill out form. */
+ 	memset(ageo, 0, sizeof(*ageo));
+-	ageo->ag_number = agno;
++	ageo->ag_number = pag->pag_agno;
+ 
+ 	agi = agi_bp->b_addr;
+ 	ageo->ag_icount = be32_to_cpu(agi->agi_count);
+diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
+index e411d51c2589..1132cda9a92f 100644
+--- a/fs/xfs/libxfs/xfs_ag.h
++++ b/fs/xfs/libxfs/xfs_ag.h
+@@ -168,11 +168,10 @@ struct aghdr_init_data {
+ };
+ 
+ int xfs_ag_init_headers(struct xfs_mount *mp, struct aghdr_init_data *id);
+-int xfs_ag_shrink_space(struct xfs_mount *mp, struct xfs_trans **tpp,
+-			xfs_agnumber_t agno, xfs_extlen_t delta);
+-int xfs_ag_extend_space(struct xfs_mount *mp, struct xfs_trans *tp,
+-			struct aghdr_init_data *id, xfs_extlen_t len);
+-int xfs_ag_get_geometry(struct xfs_mount *mp, xfs_agnumber_t agno,
+-			struct xfs_ag_geometry *ageo);
++int xfs_ag_shrink_space(struct xfs_perag *pag, struct xfs_trans **tpp,
++			xfs_extlen_t delta);
++int xfs_ag_extend_space(struct xfs_perag *pag, struct xfs_trans *tp,
++			xfs_extlen_t len);
++int xfs_ag_get_geometry(struct xfs_perag *pag, struct xfs_ag_geometry *ageo);
+ 
+ #endif /* __LIBXFS_AG_H */
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 33e26690a8c4..7a209fd9eec7 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -40,6 +40,7 @@ xfs_resizefs_init_new_ags(
+ 	xfs_agnumber_t		oagcount,
+ 	xfs_agnumber_t		nagcount,
+ 	xfs_rfsblock_t		delta,
++	struct xfs_perag	*last_pag,
+ 	bool			*lastag_extended)
+ {
+ 	struct xfs_mount	*mp = tp->t_mountp;
+@@ -72,7 +73,7 @@ xfs_resizefs_init_new_ags(
+ 
+ 	if (delta) {
+ 		*lastag_extended = true;
+-		error = xfs_ag_extend_space(mp, tp, id, delta);
++		error = xfs_ag_extend_space(last_pag, tp, delta);
+ 	}
+ 	return error;
+ }
+@@ -95,6 +96,7 @@ xfs_growfs_data_private(
+ 	xfs_agnumber_t		oagcount;
+ 	struct xfs_trans	*tp;
+ 	struct aghdr_init_data	id = {};
++	struct xfs_perag	*last_pag;
+ 
+ 	nb = in->newblocks;
+ 	error = xfs_sb_validate_fsb_count(&mp->m_sb, nb);
+@@ -127,7 +129,6 @@ xfs_growfs_data_private(
+ 		return -EINVAL;
+ 
+ 	oagcount = mp->m_sb.sb_agcount;
+-
+ 	/* allocate the new per-ag structures */
+ 	if (nagcount > oagcount) {
+ 		error = xfs_initialize_perag(mp, nagcount, &nagimax);
+@@ -144,9 +145,10 @@ xfs_growfs_data_private(
+ 	if (error)
+ 		return error;
+ 
++	last_pag = xfs_perag_get(mp, oagcount - 1);
+ 	if (delta > 0) {
+ 		error = xfs_resizefs_init_new_ags(tp, &id, oagcount, nagcount,
+-						  delta, &lastag_extended);
++				delta, last_pag, &lastag_extended);
+ 	} else {
+ 		static struct ratelimit_state shrink_warning = \
+ 			RATELIMIT_STATE_INIT("shrink_warning", 86400 * HZ, 1);
+@@ -156,8 +158,9 @@ xfs_growfs_data_private(
+ 			xfs_alert(mp,
+ 	"EXPERIMENTAL online shrink feature in use. Use at your own risk!");
+ 
+-		error = xfs_ag_shrink_space(mp, &tp, nagcount - 1, -delta);
++		error = xfs_ag_shrink_space(last_pag, &tp, -delta);
+ 	}
++	xfs_perag_put(last_pag);
+ 	if (error)
+ 		goto out_trans_cancel;
+ 
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 174cd8950cb6..5af4da0e6621 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1031,6 +1031,7 @@ xfs_ioc_ag_geometry(
+ 	struct xfs_mount	*mp,
+ 	void			__user *arg)
+ {
++	struct xfs_perag	*pag;
+ 	struct xfs_ag_geometry	ageo;
+ 	int			error;
+ 
+@@ -1041,7 +1042,12 @@ xfs_ioc_ag_geometry(
+ 	if (memchr_inv(&ageo.ag_reserved, 0, sizeof(ageo.ag_reserved)))
+ 		return -EINVAL;
+ 
+-	error = xfs_ag_get_geometry(mp, ageo.ag_number, &ageo);
++	pag = xfs_perag_get(mp, ageo.ag_number);
++	if (!pag)
++		return -EINVAL;
++
++	error = xfs_ag_get_geometry(pag, &ageo);
++	xfs_perag_put(pag);
+ 	if (error)
+ 		return error;
+ 
+-- 
+2.33.0
 
