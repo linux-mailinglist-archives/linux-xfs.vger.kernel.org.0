@@ -2,52 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C98D2468D6E
-	for <lists+linux-xfs@lfdr.de>; Sun,  5 Dec 2021 22:10:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE3CD4698D9
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Dec 2021 15:26:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239148AbhLEVON (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 5 Dec 2021 16:14:13 -0500
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:53761 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239101AbhLEVOM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 5 Dec 2021 16:14:12 -0500
-Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id DD12F8686CA;
-        Mon,  6 Dec 2021 08:10:42 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1mtymO-00H9cy-Fd; Mon, 06 Dec 2021 08:10:40 +1100
-Date:   Mon, 6 Dec 2021 08:10:40 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>, 1000974@bugs.debian.org
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Thomas Goirand <zigo@debian.org>,
+        id S1344263AbhLFO3x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Dec 2021 09:29:53 -0500
+Received: from sandeen.net ([63.231.237.45]:33190 "EHLO sandeen.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1344279AbhLFO3u (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 6 Dec 2021 09:29:50 -0500
+Received: from [10.0.0.146] (liberator.sandeen.net [10.0.0.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by sandeen.net (Postfix) with ESMTPSA id 0CAE3328A15;
+        Mon,  6 Dec 2021 08:26:13 -0600 (CST)
+Message-ID: <c7633bca-3cf2-f263-0ab8-0edaca7e9703@sandeen.net>
+Date:   Mon, 6 Dec 2021 08:26:19 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.2
+Content-Language: en-US
+To:     "Darrick J. Wong" <djwong@kernel.org>,
+        Eric Sandeen <sandeen@redhat.com>
+Cc:     Thomas Goirand <zigo@debian.org>, 1000974@bugs.debian.org,
         Giovanni Mascellani <gio@debian.org>,
         xfslibs-dev@packages.debian.org, xfs <linux-xfs@vger.kernel.org>,
         gustavoars@kernel.org, keescook@chromium.org
-Subject: Re: Bug#1000974: [PATCH xfsprogs-5.14.2 URGENT] libxfs: hide the
- drainbamaged fallthrough macro from xfslibs
-Message-ID: <20211205211040.GH449541@dread.disaster.area>
-References: <163839370805.58768.6385074074873965943.reportbug@zbuz.infomaniak.ch>
- <20211205174951.GQ8467@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20211205174951.GQ8467@magnolia>
+From:   Eric Sandeen <sandeen@sandeen.net>
+Subject: Re: [PATCH xfsprogs-5.14.2 URGENT] libxfs: hide the drainbamaged
+ fallthrough macro from xfslibs
 In-Reply-To: <20211205174951.GQ8467@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=61ad2ad3
-        a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
-        a=kj9zAlcOel0A:10 a=IOMw9HtfNCkA:10 a=VwQbUJbxAAAA:8 a=xNf9USuDAAAA:8
-        a=cm27Pg_UAAAA:8 a=mDV3o1hIAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=c3vKcX8GL7GHeQn_U0YA:9 a=CjuIK1q_8ugA:10 a=ppDDjHLidN0A:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=SEwjQc04WA-l_NiBhQ7s:22
-        a=xmb-EsYY8bH0VWELuYED:22 a=_FVE-zBwftR9WsbkzFJk:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Dec 05, 2021 at 09:49:51AM -0800, Darrick J. Wong wrote:
+
+On 12/5/21 11:49 AM, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
 > Back in mid-2021, Kees and Gustavo rammed into the kernel a bunch of
@@ -72,19 +65,28 @@ On Sun, Dec 05, 2021 at 09:49:51AM -0800, Darrick J. Wong wrote:
 > Fixes: df9c7d8d ("xfs: Fix fall-through warnings for Clang")
 > Cc: 1000974@bugs.debian.org, gustavoars@kernel.org, keescook@chromium.org
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+
+Thanks Darrick, I'll get a 5.14.2 pushed out today. Not sure if it was you
+or I who stuffed it into this header originally, but apologies for not
+thinking that through before merging it in any case.
+
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+
+-Eric
+
 > ---
->  include/linux.h            |   20 ++------------------
->  include/platform_defs.h.in |   21 +++++++++++++++++++++
->  2 files changed, 23 insertions(+), 18 deletions(-)
+>   include/linux.h            |   20 ++------------------
+>   include/platform_defs.h.in |   21 +++++++++++++++++++++
+>   2 files changed, 23 insertions(+), 18 deletions(-)
 > 
 > diff --git a/include/linux.h b/include/linux.h
 > index 24650228..054117aa 100644
 > --- a/include/linux.h
 > +++ b/include/linux.h
 > @@ -360,24 +360,8 @@ fsmap_advance(
->  #endif /* HAVE_MAP_SYNC */
->  
->  /*
+>   #endif /* HAVE_MAP_SYNC */
+>   
+>   /*
 > - * Add the pseudo keyword 'fallthrough' so case statement blocks
 > - * must end with any of these keywords:
 > - *   break;
@@ -96,19 +98,46 @@ On Sun, Dec 05, 2021 at 09:49:51AM -0800, Darrick J. Wong wrote:
 > - *  gcc: https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
 > + * Reminder: anything added to this file will be compiled into downstream
 > + * userspace projects!
-
-This comment belongs at the top of the file before all the includes,
-not at the end of it. Otherwise looks ok for a quick fix.
-
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-
-But I have to wonder - why is this file even exported to userspace?
-It's mostly the xfsprogs source build wrapper stuff for linux -
-there's no public API in it except for xfsctl()....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>    */
+> -#if defined __has_attribute
+> -#  if __has_attribute(__fallthrough__)
+> -#    define fallthrough                    __attribute__((__fallthrough__))
+> -#  else
+> -#    define fallthrough                    do {} while (0)  /* fallthrough */
+> -#  endif
+> -#else
+> -#    define fallthrough                    do {} while (0)  /* fallthrough */
+> -#endif
+>   
+>   #endif	/* __XFS_LINUX_H__ */
+> diff --git a/include/platform_defs.h.in b/include/platform_defs.h.in
+> index 7c6b3ada..6e6f26ef 100644
+> --- a/include/platform_defs.h.in
+> +++ b/include/platform_defs.h.in
+> @@ -113,4 +113,25 @@ static inline size_t __ab_c_size(size_t a, size_t b, size_t c)
+>   		sizeof(*(p)->member) + __must_be_array((p)->member),	\
+>   		sizeof(*(p)))
+>   
+> +/*
+> + * Add the pseudo keyword 'fallthrough' so case statement blocks
+> + * must end with any of these keywords:
+> + *   break;
+> + *   fallthrough;
+> + *   continue;
+> + *   goto <label>;
+> + *   return [expression];
+> + *
+> + *  gcc: https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html#Statement-Attributes
+> + */
+> +#if defined __has_attribute
+> +#  if __has_attribute(__fallthrough__)
+> +#    define fallthrough                    __attribute__((__fallthrough__))
+> +#  else
+> +#    define fallthrough                    do {} while (0)  /* fallthrough */
+> +#  endif
+> +#else
+> +#    define fallthrough                    do {} while (0)  /* fallthrough */
+> +#endif
+> +
+>   #endif	/* __XFS_PLATFORM_DEFS_H__ */
+> 
