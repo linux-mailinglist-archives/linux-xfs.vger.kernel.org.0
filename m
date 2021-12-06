@@ -2,100 +2,146 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F0746A6A5
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Dec 2021 21:15:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F3546AAF9
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Dec 2021 22:51:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349398AbhLFUSe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 Dec 2021 15:18:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349378AbhLFUSd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Dec 2021 15:18:33 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6557C061746
-        for <linux-xfs@vger.kernel.org>; Mon,  6 Dec 2021 12:15:04 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id 133so11489908pgc.12
-        for <linux-xfs@vger.kernel.org>; Mon, 06 Dec 2021 12:15:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xj+DELkhOblvzQopIj8ntNBacOz9m9Kzrou2+3x4Y54=;
-        b=eNdT0ymDKEgHHn8ekiAYPZrO9K6JQ/N7Zb1mKfnZ2tVagy0dBiFqzMa77aK/1NET/e
-         q8LwdVkQOEUDPgsltiOtlXPtAOz7ZHsbU4Ebh7vqpjLSSO1aJnYoTzWMF8W9PpmsRZkA
-         7LUeJrANZwXyt/2RbVFyx1guDU+dx4FvVTInI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xj+DELkhOblvzQopIj8ntNBacOz9m9Kzrou2+3x4Y54=;
-        b=MzfkneHp9sRp1RPMCPwyOkKSTXGfoHtN7Z8PWwZRZUflSf1gzfoTkU7q3Ct9ymxMa/
-         FTYcT1FiuW9vebObjsPhCU4ZoXKSO3GjRUDubchKmq0Dog9gakUImCoZKDO4KPFK0Y/L
-         hqmBHn/GhMpAe5UMOspez7YUOjlXBZVwOVY0G78TBNWQEn/Qf+NiKkjTpBD4YB5ijRtD
-         lKBGQEQjv82WLFdllO2cQoGC5ijwJVFxPrOxeReimV5OEa3CQ9ehxiLQfsgNqIQq6KJw
-         xM7irqTEW2o4pIFbBuzj/h2qWhvWs+WB4Zwl0ie5acSK1nRYxaonbcT2v1ueGSOpnx2B
-         TYqw==
-X-Gm-Message-State: AOAM532cdu30WBdkIFZUMIWzQvpFGw0lQITPDY61Uo4PVwEZuHNwDetf
-        dClqrd1SREpnOjM0b38o0HcCwg==
-X-Google-Smtp-Source: ABdhPJwp+/shrxotTBbfsV46abK50S1X7kv89Rvnez7rxC5+4aQV/3iGw1Tc/YNOf7uowW7derArkA==
-X-Received: by 2002:a05:6a00:1822:b0:49f:c55b:6235 with SMTP id y34-20020a056a00182200b0049fc55b6235mr38245006pfa.66.1638821704311;
-        Mon, 06 Dec 2021 12:15:04 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c81sm12795271pfb.166.2021.12.06.12.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 12:15:04 -0800 (PST)
-Date:   Mon, 6 Dec 2021 12:15:03 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Eric Sandeen <sandeen@redhat.com>,
-        Thomas Goirand <zigo@debian.org>, 1000974@bugs.debian.org,
-        Giovanni Mascellani <gio@debian.org>,
-        xfslibs-dev@packages.debian.org, xfs <linux-xfs@vger.kernel.org>,
-        gustavoars@kernel.org
-Subject: Re: [PATCH xfsprogs-5.14.2 URGENT] libxfs: hide the drainbamaged
- fallthrough macro from xfslibs
-Message-ID: <202112061204.404658A87@keescook>
-References: <20211205174951.GQ8467@magnolia>
+        id S1355886AbhLFVzS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Dec 2021 16:55:18 -0500
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:41531 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1355557AbhLFVzS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Dec 2021 16:55:18 -0500
+Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 2A45C8698E8;
+        Tue,  7 Dec 2021 08:51:45 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1muLtf-00HYfB-MA; Tue, 07 Dec 2021 08:51:43 +1100
+Date:   Tue, 7 Dec 2021 08:51:43 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Gonzalo Siero Humet <gsierohu@redhat.com>
+Subject: Re: [RFD] XFS inode reclaim (inactivation) under fs freeze
+Message-ID: <20211206215143.GI449541@dread.disaster.area>
+References: <Ya5IeB3iBBcpD1z+@bfoster>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211205174951.GQ8467@magnolia>
+In-Reply-To: <Ya5IeB3iBBcpD1z+@bfoster>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=61ae85f1
+        a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
+        a=kj9zAlcOel0A:10 a=IOMw9HtfNCkA:10 a=7-415B0cAAAA:8
+        a=Q99jk5y9W0baHjx8qOUA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Dec 05, 2021 at 09:49:51AM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Mon, Dec 06, 2021 at 12:29:28PM -0500, Brian Foster wrote:
+> Hi,
 > 
-> Back in mid-2021, Kees and Gustavo rammed into the kernel a bunch of
-> static checker "improvements" that redefined '/* fallthrough */'
-> comments for switch statements as a macro that virtualizes either that
-> same comment, a do-while loop, or a compiler __attribute__.  This was
-> necessary to work around the poor decision-making of the clang, gcc, and
-> C language standard authors, who collectively came up with four mutually
-> incompatible ways to document a lack of branching in a code flow.
-> 
-> Having received ZERO HELP porting this to userspace, Eric and I
+> We have reports on distro (pre-deferred inactivation) kernels that inode
+> reclaim (i.e. via drop_caches) can deadlock on the s_umount lock when
+> invoked on a frozen XFS fs. This occurs because drop_caches acquires the
+> lock and then blocks in xfs_inactive() on transaction alloc for an inode
+> that requires an eofb trim. Unfreeze blocks on the same lock and thus
+> the fs is deadlocked (in a frozen state). As far as I'm aware, this has
+> been broken for some time and probably just not observed because reclaim
+> under freeze is a rare and unusual situation.
+>     
+> With deferred inactivation, the deadlock problem actually goes away
+> because ->destroy_inode() will never block when the filesystem is
+> frozen. There is new/odd behavior, however, in that lookups of a pending
+> inactive inode spin loop waiting for the pending inactive state to
+> clear. That won't happen until the fs is unfrozen.
 
-Look, I know you don't like this feature, but claiming that you received
-no help with it is just false. I explicitly offered to help with xfsprogs,
-and even sent a first-attempt at a patch to do so[1], which looks very
-similar to what you've got here, almost 6 months later. I even went
-through and changed all the comments to an explicitly XFS-specific
-macro when you made it clear you hated the statement-like "fallthrough"
-macro name.
+That's existing behaviour for any inode that is stuck waiting for
+inactivation, regardless of how it is stuck. We've always had
+situations where lookups would spin waiting on indoes when there are
+frozen filesystems preventing XFS_IRECLAIMABLE inodes from making
+progress.
 
-I continue to be baffled about this whole saga. We're all trying to help
-make Linux better, and I went out of my way to help with xfsprogs too to
-minimize the impact on you (since you said you wanted to have nothing to
-do with it), yet Gustavo and I got continually flamed by yourself and
-Dave, including even now in this very misleading commit log.
+IOWs, this is not new behaviour - accessing files stuck in reclaim
+during freeze have done this for a couple of decades now...
 
-What is going on here?
+> Also, the deferred inactivation queues are not consistently flushed on
+> freeze. I've observed that xfs_freeze invokes an xfs_inodegc_flush()
+> indirectly via xfs_fs_statfs(), but fsfreeze does not.
 
--Kees
+Userspace does not need to flush the inactivatin queues on freeze -
+- the XFS kernel side freeze code has a full queue flush in it. It's
+a bit subtle, but it is there.
 
-[1] https://lore.kernel.org/lkml/202105280915.9117D7C@keescook/
+> Therefore, I
+> suspect it may be possible to land in this state from the onset of a
+> freeze based on prior reclaim behavior. (I.e., we may want to make this
+> flush explicit on freeze, depending on the eventual solution.)
 
+xfs_inodegc_stop() does a full queue flush and it's called during
+freeze from xfs_fs_sync_fs() after the page faults have been frozen
+and waited on. i.e. it does:
+
+	xfs_inodegc_queue_all()
+	for_each_online_cpu(cpu) {
+		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+		cancel_work_sync(&gc->work);
+	}
+
+xfs_inodegc_queue_all() queues works all the pending non-empty per
+cpu queues, then we run cancel_work_sync() on them.
+cancel_work_sync() runs __flush_work() internally, and so
+it is almost the same as running { flush_work(); cancel_work(); }
+except that it serialises against other attemps to queue/cancel as
+it marks the work as having a cancel in progress.
+
+> Some internal discussion followed on potential improvements in response
+> to the deadlock report. Dave suggested potentially preventing reclaim of
+> inodes that would require inactivation, keeping them in cache, but it
+> appears we may not have enough control in the local fs to guarantee this
+> behavior out of the vfs and shrinkers (Dave can chime in on details, if
+> needed).
+
+My idea was to check for inactivation being required in ->drop_inode
+and preventing linked inodes from being immediately reclaimed and
+hence inactivated by ensuring they always remain in the VFS cache.
+
+This does not work because memory pressure will run the shrinkers
+and the inode cache shrinker does not give us an opportunity to say
+"do not reclaim this inode" before it evicts them from cache. Hence
+we'll get linked inodes that require inactivation work through the
+shrinker rather than from iput_final.
+
+> He also suggested skipping eofb trims and sending such inodes
+> directly to reclaim.
+
+This is what we do on read-only filesystems. This is exactly what
+happens if a filesystem is remounted RO with open files backed by
+clean inodes that have post-eof speculative preallocation attached
+when the remount occurs. This would just treat frozen filesystems
+the same as we currently treat remount,ro situations.
+
+> My current preference is to invoke an inodegc flush
+> and blockgc scan during the freeze sequence so presumably no pending
+> inactive but potentially accessible (i.e. not unlinked) inodes can
+> reside in the queues for the duration of a freeze. Perhaps others have
+> different ideas or thoughts on these.
+
+We have xfs_blockgc_flush_all() to do such a scan. We only do that
+at hard ENOSPC right now because it's an expensive, slow operation,
+especially if we have large caches and the system is under heavy CPU
+load. I'm not sure we really want to force such an operation to be
+performed during a freeze - freeze is supposed to put the filesystem
+into a consistent state on disk as fast as possible with minimum
+system-wide interruption. Doing stuff like force-trimming all
+post-eof speculative prealloc is not necessary to make the on-disk
+format consistent. Hence force-trimming seems more harmful to me
+than just treating the frozen state like a temporary RO state in
+terms of blockgc....
+
+Cheers,
+
+Dave.
 -- 
-Kees Cook
+Dave Chinner
+david@fromorbit.com
