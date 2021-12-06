@@ -2,15 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE3CD4698D9
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Dec 2021 15:26:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B51F1469919
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Dec 2021 15:36:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344263AbhLFO3x (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 Dec 2021 09:29:53 -0500
-Received: from sandeen.net ([63.231.237.45]:33190 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1344279AbhLFO3u (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
-        Mon, 6 Dec 2021 09:29:50 -0500
+        id S244424AbhLFOjr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Dec 2021 09:39:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242092AbhLFOjq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Dec 2021 09:39:46 -0500
+Received: from buxtehude.debian.org (buxtehude.debian.org [IPv6:2607:f8f0:614:1::1274:39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37067C061746
+        for <linux-xfs@vger.kernel.org>; Mon,  6 Dec 2021 06:36:18 -0800 (PST)
+Received: from debbugs by buxtehude.debian.org with local (Exim 4.92)
+        (envelope-from <debbugs@buxtehude.debian.org>)
+        id 1muF6F-00060m-5b; Mon, 06 Dec 2021 14:36:15 +0000
+X-Loop: owner@bugs.debian.org
+Subject: Bug#1000974: [PATCH xfsprogs-5.14.2 URGENT] libxfs: hide the drainbamaged fallthrough macro from xfslibs
+Reply-To: Eric Sandeen <sandeen@sandeen.net>, 1000974@bugs.debian.org
+X-Loop: owner@bugs.debian.org
+X-Debian-PR-Message: followup 1000974
+X-Debian-PR-Package: xfslibs-dev
+X-Debian-PR-Keywords: 
+References: <20211205174951.GQ8467@magnolia> <163839370805.58768.6385074074873965943.reportbug@zbuz.infomaniak.ch>
+X-Debian-PR-Source: xfsprogs
+Received: via spool by 1000974-submit@bugs.debian.org id=B1000974.163880136122913
+          (code B ref 1000974); Mon, 06 Dec 2021 14:36:14 +0000
+Received: (at 1000974) by bugs.debian.org; 6 Dec 2021 14:36:01 +0000
+X-Spam-Checker-Version: SpamAssassin 3.4.2-bugs.debian.org_2005_01_02
+        (2018-09-13) on buxtehude.debian.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-9.1 required=4.0 tests=BAYES_00,DIGITS_LETTERS,
+        FOURLA,MURPHY_DRUGS_REL8,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS,TXREP
+        autolearn=ham autolearn_force=no
+        version=3.4.2-bugs.debian.org_2005_01_02
+X-Spam-Bayes: score:0.0000 Tokens: new, 88; hammy, 149; neutral, 167; spammy,
+        1. spammytokens:0.993-+--URGENT hammytokens:0.000-+--size_t,
+        0.000-+--Signedoffby, 0.000-+--Signed-off-by, 0.000-+--reviewedby,
+        0.000-+--reviewed-by
+Received: from sandeen.net ([63.231.237.45]:51752)
+        by buxtehude.debian.org with esmtp (Exim 4.92)
+        (envelope-from <sandeen@sandeen.net>)
+        id 1muF60-0005xO-VR
+        for 1000974@bugs.debian.org; Mon, 06 Dec 2021 14:36:01 +0000
 Received: from [10.0.0.146] (liberator.sandeen.net [10.0.0.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
@@ -28,13 +62,11 @@ Cc:     Thomas Goirand <zigo@debian.org>, 1000974@bugs.debian.org,
         Giovanni Mascellani <gio@debian.org>,
         xfslibs-dev@packages.debian.org, xfs <linux-xfs@vger.kernel.org>,
         gustavoars@kernel.org, keescook@chromium.org
-References: <20211205174951.GQ8467@magnolia>
 From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH xfsprogs-5.14.2 URGENT] libxfs: hide the drainbamaged
- fallthrough macro from xfslibs
 In-Reply-To: <20211205174951.GQ8467@magnolia>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Greylist: delayed 578 seconds by postgrey-1.36 at buxtehude; Mon, 06 Dec 2021 14:36:00 UTC
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
