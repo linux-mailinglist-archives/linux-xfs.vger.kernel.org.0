@@ -2,78 +2,149 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CFA0146BC7D
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Dec 2021 14:26:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 339F246C236
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Dec 2021 18:56:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbhLGN3s (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Dec 2021 08:29:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbhLGN3s (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Dec 2021 08:29:48 -0500
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05D24C061574
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Dec 2021 05:26:18 -0800 (PST)
-Received: by mail-ua1-x935.google.com with SMTP id j14so26408799uan.10
-        for <linux-xfs@vger.kernel.org>; Tue, 07 Dec 2021 05:26:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Fb6VKJy87SAnSS5qugiCgwfRBDIqEu6cr8Crb4Jq8z8=;
-        b=SH4Xkzk+CgNcCMTQOqJN6tQ/839tVvcDhVWYsHBVsE6ZvKDX1IWo6vsgiNLjNtElQ9
-         mgBrbiqpTc0eE4Iry+SWfh+7+oX6J2nE7aw/5DoVzOyeE89ed6OgYK8jbjvnyWXqzFqe
-         1I/y8ggc4GMV6QZtztHruAIsmSD68k0lUZqJ90xp0/mVIQxjMl8FDoNAwE1/sazR9vhL
-         Qcmovrlf7hS5/Yn9WYQ9B88mOCLIC8xi5BuiLkTF5ShueDAWrG/8qGFp+5mUXyP/wy1x
-         nsqQ+to7CvQ4haEA4GyJD1zjCmxnI0OAV5+e9neBOG0ZP0KbnoqmL7U74HdhPxVpNxDX
-         YXbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Fb6VKJy87SAnSS5qugiCgwfRBDIqEu6cr8Crb4Jq8z8=;
-        b=BEXTYpunb9cz/ssc6mf3l5Ea6jhi53EYoKJjIE7zg7R88ReI0og+Cnn63I42vV494m
-         LgYCr72C2kwr7AtFNjJy29YTfJk/r6bHdFIZoInSpa0mpcejUq0xwFvWhlJDb1ybytVq
-         /8FTAg7GZV83hc54FL8o5kGnJnTT9kG86fI5V3EnpBMwN+XCH/74CvjS9ZnpiJJGvqz3
-         WEGs9/jiZge33V9jQoANvqHoKH+LvtTrjK5cG8zwNgaU7G2L2Mqf8b8G6Sjv5nvw4G+f
-         wsyzjDelZ9QU/CZpA/jznK7IOtPNGSrMEKxIF81KxD6gh4GPXBFGVtNaNvbdu6/0Jenh
-         xq5Q==
-X-Gm-Message-State: AOAM530LZSjgbiFiHZh0sOIv+8ExzbXJ+OElQcyTXy8XMx8TbsxRpPsZ
-        uvfdkb2CCEgx5T/LAK2oCGdyA7Ir7z2KGAmqbb5cIFe3ioA=
-X-Google-Smtp-Source: ABdhPJynWyPQTZWTOrm2ksLSaDCj6fjnN4VwPwS9UgIEwVOYIG7nmrebYju449XjKs5UMdbZIKUm5c3hnl+5zzrNWV8=
-X-Received: by 2002:ab0:74c1:: with SMTP id f1mr50316663uaq.109.1638883577111;
- Tue, 07 Dec 2021 05:26:17 -0800 (PST)
-MIME-Version: 1.0
-From:   tiandi huang <juanfengpy@gmail.com>
-Date:   Tue, 7 Dec 2021 21:26:06 +0800
-Message-ID: <CAPmgiULFc3w__JxXmbLdqvaC+shxwCFrwjfA9ubY8UjZjxbQQA@mail.gmail.com>
-Subject: hang on shrink_dcache_sb at remount of directories inside container
+        id S235313AbhLGSAU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Dec 2021 13:00:20 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:37762 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235627AbhLGSAU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Dec 2021 13:00:20 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3CD06B81DAE
+        for <linux-xfs@vger.kernel.org>; Tue,  7 Dec 2021 17:56:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E1947C341CB
+        for <linux-xfs@vger.kernel.org>; Tue,  7 Dec 2021 17:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638899807;
+        bh=7NdeRBDVA7ynBbvewsWi7NrMHABwYqe8eJEK88uN2P4=;
+        h=From:To:Subject:Date:From;
+        b=lhaZtEV/fmT6+L500DqBzPN4HGfOqi+Gw+0Nsj+766Qau9ZC1XkkZJTMd6u0GBBQb
+         lGa8jDGLYi8aogGF2LkYKN7yOtut+sZ/XYW7MKENBIVt+vnzjqYZdS1GGPjcMwU1DS
+         GVkkoBjnw5am1bFBwOYRKZ+e2kxXlgn6pWH/xGMFJcaxrDYICKkm/btrJaUNhYxQy2
+         DyYHjMeFIrg3O6X7HFsScnrwgBzsK6evdtqbiLxYDvLds9+vr+YyBki/RSt3rv8C2o
+         fIh+GffEzB1GvjSOLb/EztXNVmVFqFS/LfU/5/T9zNO9Y9xtyLt/3ifXO7qyUDCroq
+         PV5BgP5Jr2vUQ==
+Received: by pdx-korg-bugzilla-2.web.codeaurora.org (Postfix, from userid 48)
+        id D3B7660F4F; Tue,  7 Dec 2021 17:56:47 +0000 (UTC)
+From:   bugzilla-daemon@bugzilla.kernel.org
 To:     linux-xfs@vger.kernel.org
+Subject: [Bug 215261] New: [xfstests xfs/177] test still fails after merge
+ f38a032b165d ("xfs: fix I_DONTCACHE")
+Date:   Tue, 07 Dec 2021 17:56:47 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: new
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: zlang@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_id short_desc product version
+ cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
+ priority component assigned_to reporter cf_regression
+Message-ID: <bug-215261-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi, guys!
-Recently, We have met a problem that systemd insides docker always
-hang at below stack, stays inside shrink_dcache_sb as long as hours.
- __dentry_kill+0x124/0x170
-shrink_dentry_list+0x64/0xb0
-shrink_dcache_sb+0xb2/0x140
-reconfigure_super+0x85/0x220
-do_mount+0x90e/0x980
-ksys_mount+0xb6/0xd0
- __x64_sys_mount+0x25/0x30
-do_syscall_64+0x47/0x140
-entry_SYSCALL_64_after_hwframe+0x44/0xa9
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215261
 
-We run many containers onside /data which is a xfs file system.
-Directories on /data are bind mounted inside containers, sometimes,
-systemd inside containers may do remount operations with these bind
-directories. Each remount would cause a reconfigure on /data and
-shrink_dcache_sb is called to shrink the s_dentry_lru list, as data is
-shared by all containers, processes may still produce dentries on this
-list, which may cause a long time to wait shrinking ends.
-So, We mailed to wonder  is it possible to skip this shrink operation
-for containers as lower xfs file system is still running, or is it
-possible to optimize shrink_dcache_sb function to scan only once of
-the dentry lru list, do not wait the list to become empty.
-We appreciate for a response, Thanks!
+            Bug ID: 215261
+           Summary: [xfstests xfs/177] test still fails after merge
+                    f38a032b165d ("xfs: fix I_DONTCACHE")
+           Product: File System
+           Version: 2.5
+    Kernel Version: v5.16-rc2 + xfs-5.16-fixes-2
+          Hardware: All
+                OS: Linux
+              Tree: Mainline
+            Status: NEW
+          Severity: normal
+          Priority: P1
+         Component: XFS
+          Assignee: filesystem_xfs@kernel-bugs.kernel.org
+          Reporter: zlang@redhat.com
+        Regression: No
+
+xfstests xfs/177 still fails on xfs-5.16-fixes-2 sometimes, e.g [1][2]. The
+kernel has merged f38a032b165d ("xfs: fix I_DONTCACHE").
+
+[1]
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/x86_64 ibm-x3650m4-xxx-vm-xx 5.16.0-rc2+ #1 SMP PREE=
+MPT
+Sun Nov 28 06:43:30 EST 2021
+MKFS_OPTIONS  -- -f -m crc=3D1,finobt=3D1,rmapbt=3D0,reflink=3D1,bigtime=3D=
+1,inobtcount=3D1
+/dev/vda3
+MOUNT_OPTIONS -- -o context=3Dsystem_u:object_r:root_t:s0 /dev/vda3
+/mnt/xfstests/scratch
+
+xfs/177 - output mismatch (see /var/lib/xfstests/results//xfs/177.out.bad)
+    --- tests/xfs/177.out       2021-11-28 09:56:52.236830568 -0500
+    +++ /var/lib/xfstests/results//xfs/177.out.bad      2021-11-30
+04:21:03.282699626 -0500
+    @@ -2,11 +2,14 @@
+     new file count is in range
+     inodes after creating files is in range
+     Round 1
+    -inodes after bulkstat is in range
+    +inodes after bulkstat has value of 102
+    +inodes after bulkstat is NOT in range 1023 .. 1033
+     inodes after expire is in range
+    ...
+    (Run 'diff -u /var/lib/xfstests/tests/xfs/177.out
+/var/lib/xfstests/results//xfs/177.out.bad'  to see the entire diff)
+Ran: xfs/177
+Failures: xfs/177
+Failed 1 of 1 tests
+
+[2]
+FSTYP         -- xfs (debug)
+PLATFORM      -- Linux/aarch64 hpe-apollo-cnxxxx-xx-vm-xx 5.16.0-rc2+ #1 SMP
+Sun Nov 28 06:10:24 EST 2021
+MKFS_OPTIONS  -- -f -m crc=3D1,finobt=3D1,rmapbt=3D0,reflink=3D1,bigtime=3D=
+1,inobtcount=3D1
+/dev/vda3
+MOUNT_OPTIONS -- -o context=3Dsystem_u:object_r:root_t:s0 /dev/vda3
+/mnt/xfstests/scratch
+
+xfs/177 - output mismatch (see /var/lib/xfstests/results//xfs/177.out.bad)
+    --- tests/xfs/177.out       2021-11-28 10:04:49.415509327 -0500
+    +++ /var/lib/xfstests/results//xfs/177.out.bad      2021-11-29
+04:47:32.148868974 -0500
+    @@ -2,7 +2,8 @@
+     new file count is in range
+     inodes after creating files is in range
+     Round 1
+    -inodes after bulkstat is in range
+    +inodes after bulkstat has value of 575
+    +inodes after bulkstat is NOT in range 1023 .. 1033
+     inodes after expire is in range
+    ...
+    (Run 'diff -u /var/lib/xfstests/tests/xfs/177.out
+/var/lib/xfstests/results//xfs/177.out.bad'  to see the entire diff)
+Ran: xfs/177
+Failures: xfs/177
+Failed 1 of 1 tests
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
