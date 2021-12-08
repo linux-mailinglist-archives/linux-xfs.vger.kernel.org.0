@@ -2,92 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B9CF546CC31
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Dec 2021 05:13:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D43346CFCB
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Dec 2021 10:12:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238483AbhLHERT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Dec 2021 23:17:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        id S229728AbhLHJPo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Dec 2021 04:15:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244188AbhLHERS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Dec 2021 23:17:18 -0500
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 046AAC061A72
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Dec 2021 20:13:47 -0800 (PST)
-Received: by mail-pg1-x543.google.com with SMTP id l64so953619pgl.9
-        for <linux-xfs@vger.kernel.org>; Tue, 07 Dec 2021 20:13:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=cGWxDwe8B66FlIrZtrergIqE5+JvdqJ48sEvPTrvhBJ9xEqZLGyWZmuSPdCEFce/7D
-         /sVR44uqtlb2dmBH+iwgt0kboAu4/HTy3OZt9J6nwOu1H5twbKwVBnMykOKrBLHcBBEb
-         cgMJ7/59oMUtMggaQ9x/N1xe+U0YzN1k+xfCXkO5L7YIW30RFDnvCB0PrD7sMExliX7S
-         joeNtgfdJmxv3l42BA4cQp1HveXj/LpauGoYMsZKrrlYurvW6FC9Nrn9v/z7yklCLUv+
-         2uZJGSHlx+O0Rg+LxyFVcXJ8erZC2O96QnEFLkA1QmSl94RBUxOevwSkF8rG8CDqN06m
-         KdcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=PjoRXm+LiisSgr64R19jTCX5OAwegi91wusmICGOVjjc7pCdX7JGA2kQtKEHPZDZDN
-         OHja4I4VUMmJEk0ZcBJHGLlIzEoCC2oC3nDAyr0v5m6M6bz1GJiFyQBrltubr058uanw
-         zWhaMHaSpQAXh8sYrq9VhXHOIikngWLffGheM05g41NqHRu/6cktHmzMYDYrKsIM/HUd
-         J+IOQl1rhTL76W3phUDRVvFx9lVFVPogSTTK03Uj9xu4XOCRMs1AL+tU8IhXrWcsVu9S
-         OnxwF22ZYgc+YmCI8apBK62K5Snlra4LfXF3adpzAy70FR3vyMrJV1POawYbICI0yOY4
-         xQfw==
-X-Gm-Message-State: AOAM532otGaVMwXefG7zcMOQ4S6RQxPPZLNRPvhDmom2ifkvyiE12yeg
-        tfmPWAOQsnQBtijYFdWuxr1enFaZq6ccfAzs88vhGSiRgKy5VQ==
-X-Google-Smtp-Source: ABdhPJx498jQ3rDCAEAukf875uPMCUUvAAHHJyp/169nhahBv8dg1ZTt80/LmlBc7j967yPpWx87fZn4PQyrL4JX27A=
-X-Received: by 2002:a92:600f:: with SMTP id u15mr3954317ilb.292.1638936815828;
- Tue, 07 Dec 2021 20:13:35 -0800 (PST)
+        with ESMTP id S229515AbhLHJPn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Dec 2021 04:15:43 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFF8C061746;
+        Wed,  8 Dec 2021 01:12:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=PnxYJD3WDG7A6/Qbtohv5ldkeqBnLPDokzFd0VlbXDM=; b=hXtDnEinie60aCy4kEJDppRTtm
+        HpXJbdtROe93AVQnkA+uddN18Pl+NElsl85lzED9zBmOOkjXHUJRLlVym4j+AsrAOqgm0VAzTB1+G
+        W06cTyy9tQExMI2Nx3wzkRhnDEkIKZDQf8cWY6JYL9lfFPyBN/s5+jC3l0hsNdXT5NdyLIh4joYYi
+        M09z3uVx7N4rxdRbcIePTcZg6uw+CPKCx3Bpz++e58wAiIVIRWp4jc4hdu6iIWFV662paPTwcfO5U
+        38nP4Pa4a8QgdC4ZTLbxGBe7uHp+vy5ITa58prN3iNjo1TQN9CCzxh4XCuAwL02fO+0M3QXQBzniW
+        u5mmO98Q==;
+Received: from [2001:4bb8:180:a1c8:2bed:fe3e:6e0:11ff] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1muszb-008Gth-5a; Wed, 08 Dec 2021 09:12:04 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     dan.j.williams@intel.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        nvdimm@lists.linux.dev, Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] iomap: turn the byte variable in iomap_zero_iter into a ssize_t
+Date:   Wed,  8 Dec 2021 10:12:03 +0100
+Message-Id: <20211208091203.2927754-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1a07:0:0:0:0 with HTTP; Tue, 7 Dec 2021 20:13:35
- -0800 (PST)
-Reply-To: dj0015639@gmail.com
-From:   David Jackson <enkenpaul@gmail.com>
-Date:   Wed, 8 Dec 2021 05:13:35 +0100
-Message-ID: <CAG7-cQ_JEx-8fDdxn0Ex314ViSE32kaUjoR=sUvV7wmCUiKRGw@mail.gmail.com>
-Subject: FEDERAL BUREAU OF INVESTIGATION
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Our Ref: RTB /SNT/STB
-To: Beneficiary
+bytes also hold the return value from iomap_write_end, which can contain
+a negative error value.  As bytes is always less than the page size even
+the signed type can hold the entire possible range.
 
-This is FBI special agents, David Jackson. I was delegated along side
-others by the United Nations to investigate scammers who has been in
-the business of swindling foreigners especially those that has one
-form of transaction/contracts and another. Please be informed that in
-the course of our investigation, we detected that your name and
-details in our Scammed Monitoring Network. We also found out that you
-were scammed of a huge sum of money by scammers via Western union and
-MoneyGram. Be informed here that in a bid to alleviate the suffering
-of scammed victims, the United Nations initiated this compensation
-program and therefore, you are entitled to the sum of Five Million Two
-Hundred Thousand United States Dollars ($5,200,000.00 USD) for being a
-victim.
+Fixes: c6f40468657d ("fsdax: decouple zeroing from the iomap buffered I/O code")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ fs/iomap/buffered-io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Note that the said fund will be transfer to you via the Citibank being
-the paying bank mandated by the United Nations officials.
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index b1511255b4df8..ac040d607f4fe 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -883,7 +883,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
+ 
+ 	do {
+ 		unsigned offset = offset_in_page(pos);
+-		size_t bytes = min_t(u64, PAGE_SIZE - offset, length);
++		ssize_t bytes = min_t(u64, PAGE_SIZE - offset, length);
+ 		struct page *page;
+ 		int status;
+ 
+-- 
+2.30.2
 
-However, we have to inform you that we have been able to arrest some
-of the swindlers who has been in this illicit business and will all be
-prosecuted accordingly. Be informed as well that we have limited time
-to stay back here, so we will advice that you urgently respond to this
-message ASAP. And do not inform any of the people that collected money
-from you before now about this new development to avoid jeopardizing
-our investigation. All you need to do is to follow our instruction and
-receive your compensation accordingly as directed by the United
-Nations.
-
-We urgently wait to receive your response.
-
-Regards,
-DAVID JACKSON
-FEDERAL BUREAU OF INVESTIGATION
-INVESTIGATION ON ALL ONLINE WIRE TRANSFER
