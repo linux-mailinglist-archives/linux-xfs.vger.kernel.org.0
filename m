@@ -2,75 +2,122 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3493E46FE1D
-	for <lists+linux-xfs@lfdr.de>; Fri, 10 Dec 2021 10:49:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CA90470577
+	for <lists+linux-xfs@lfdr.de>; Fri, 10 Dec 2021 17:20:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239543AbhLJJwy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Dec 2021 04:52:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47210 "EHLO
+        id S240495AbhLJQXf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Dec 2021 11:23:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239541AbhLJJwy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Dec 2021 04:52:54 -0500
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90082C061746
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Dec 2021 01:49:19 -0800 (PST)
-Received: by mail-wr1-x444.google.com with SMTP id a18so13950431wrn.6
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Dec 2021 01:49:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=ZVso/INF9YGVY3C745HvTv1sjWrkOpG/fXnPAQeLCUM=;
-        b=iW/pnfUcP7lXl1gGT8x9i9VL7ZK9qWE93KwN0TlmcL7QttmSnSsLWy9PDo7uydvDEX
-         du98DYGxUvW1Q1JqxzMC2YMAgUE4p8WF2fMdJ9olsmDHKyJYJLj9rdb8BKEJv3ZjjpOM
-         9q/taOLQ9Wq6VfudyGh0tTxQVfzl3lEyw1mcSCqp5udI0CXJwvmtz18U6pmP1Xsfn998
-         jyMUfwilBr2TE53u1sBoW7uWFqnfkMGvFKUg9pD77fesETdubXwxHboeFaY0S38swE2I
-         xtFhA51UxNRMCt0rNUjeV81nxPMULuNQHTG1UvEM8tPb/5RmDWeruqt9Fxj+/BhGhVkL
-         ZoLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=ZVso/INF9YGVY3C745HvTv1sjWrkOpG/fXnPAQeLCUM=;
-        b=BmZ4D5SJfxYKYM8s/VHt7RDcOPRHFIv4EL+kEf7RykLT1KCkqHRcfUac+wXIeiET53
-         OfC6l1oOcAM+G35mPjtpmlNevUsSTA9BKuNS8jCvtozizvLr0CDjbYq5HbHXbybAnHfz
-         pDODXnLOCflD1d3D0gHMLm08L2OeJZbt1Wn5+xOqsZJJFfuPE7DYRwYYa8BNgmw5DkV6
-         rMSLl43iZSjv8bs0GjIsJ4zkV9LmEYY3Ggiod9DjKGynlusW8+x9Xno9bnGHoPd6iVFL
-         tIVrNorlvvd1YGPRs4CJIBR6DqYfdEIh8Mh8CUSMsZr6Oqa6e5EDZNQfgfW1tXh5Nv7J
-         pvHg==
-X-Gm-Message-State: AOAM531saGSFMSe50eZqxM+qTsCOw2+DiLlkU0WkfW/H7THCT01e5rwF
-        oY9tDte+d1PZ6g0QfIx1WpeUhuzFAsd0yC22
-X-Google-Smtp-Source: ABdhPJxgjXY8KQPRDcqAdqUioRE4z6ovgAtqwlCJZ5JyWjhgOdBzfn2wynymCyFThPYww+7LZKhwIQ==
-X-Received: by 2002:adf:d844:: with SMTP id k4mr12893610wrl.622.1639129758021;
-        Fri, 10 Dec 2021 01:49:18 -0800 (PST)
-Received: from [10.135.0.26] ([203.26.81.15])
-        by smtp.gmail.com with ESMTPSA id b15sm2694785wri.62.2021.12.10.01.49.12
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 10 Dec 2021 01:49:17 -0800 (PST)
-Message-ID: <61b3229d.1c69fb81.4ae6e.eb82@mx.google.com>
-From:   chippewap <pet141174@gmail.com>
-X-Google-Original-From: chippewap" <info@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S240729AbhLJQXd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Dec 2021 11:23:33 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF0BC061746;
+        Fri, 10 Dec 2021 08:19:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=bQKwfN6aNXQHwZHVhA6OGDeJq601xLR25UKpfXdatfo=; b=Ny6DjNqSEJVyWgTkBORi1+Qc5+
+        mTW8Dvfx/YQzImCymApCZt5oni3kLQlybqFiCyhkEtUPVZddxMNq3u+pmG/lI2pTWKww+cbRvdt5t
+        tt/eXhAT2/0tVIT6ZAgcw+IO7jmIhf0t/BeVI0U7m16EZRLz3ac8r7JsPTe+6LnztWXdfexApGpFP
+        l9xNSLTLhILrGX2J6QmjgIXS172OmUzsbV7PMUpHMkPn9RUP4deCgpL8nBtH8yeH13MYRcA7gY9q2
+        twhDOsj1mkRXvTCf4XAC5tp1XcNR5vbR0p9D95Kv9ZqnnS9A6a8iI2lxkFciOzpe670m9guZmC2Ej
+        zrZnaEVg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mvick-00ATZt-5Y; Fri, 10 Dec 2021 16:19:54 +0000
+Date:   Fri, 10 Dec 2021 16:19:54 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Darrick J . Wong " <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v2 19/28] iomap: Convert __iomap_zero_iter to use a folio
+Message-ID: <YbN+KqqCG0032NMG@casper.infradead.org>
+References: <20211108040551.1942823-1-willy@infradead.org>
+ <20211108040551.1942823-20-willy@infradead.org>
+ <YbJ3O1qf+9p/HWka@casper.infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Nab=C3=ADdka_pujcky?=
-To:     Recipients <chippewap@vger.kernel.org>
-Date:   Fri, 10 Dec 2021 10:49:08 +0100
-Reply-To: igorkola55@gmail.com
-X-Antivirus: Avast (VPS 211210-0, 12/10/2021), Outbound message
-X-Antivirus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YbJ3O1qf+9p/HWka@casper.infradead.org>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Potrebujete nal=C3=A9havou pujcku na splacen=C3=AD sv=C3=BDch dluhu nebo za=
-h=C3=A1jen=C3=AD nov=C3=A9ho podnik=C3=A1n=C3=AD? Zde n=C3=A1s mu=C5=BEete =
-je=C5=A1te dnes kontaktovat pro v=C3=ADce informac=C3=AD. igorkola55@gmail.=
-com
+On Thu, Dec 09, 2021 at 09:38:03PM +0000, Matthew Wilcox wrote:
+> @@ -891,16 +893,19 @@ static s64 __iomap_zero_iter(struct iomap_iter *iter, loff
+> _t pos, u64 length)
+>         struct page *page;
+>         int status;
+>         unsigned offset = offset_in_page(pos);
+> -       unsigned bytes = min_t(u64, PAGE_SIZE - offset, length);
+> 
+> -       status = iomap_write_begin(iter, pos, bytes, &page);
+> +       if (length > UINT_MAX)
+> +               length = UINT_MAX;
+> +       status = iomap_write_begin(iter, pos, length, &page);
+>         if (status)
+>                 return status;
+> +       if (length > PAGE_SIZE - offset)
+> +               length = PAGE_SIZE - offset;
+> 
+> -       zero_user(page, offset, bytes);
+> +       zero_user(page, offset, length);
+>         mark_page_accessed(page);
+> 
+> -       return iomap_write_end(iter, pos, bytes, bytes, page);
+> +       return iomap_write_end(iter, pos, length, length, page);
+>  }
 
--- 
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+After attempting the merge with Christoph's ill-timed refactoring,
+I decided that eliding the use of 'bytes' here was the wrong approach,
+because it very much needs to be put back in for the merge.
+
+Here's the merge as I have it:
+
+diff --cc fs/iomap/buffered-io.c
+index f3176cf90351,d1aa0f0e7fd5..40356db3e856
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@@ -888,19 -926,12 +904,23 @@@ static loff_t iomap_zero_iter(struct io
+                return length;
+
+        do {
+-               unsigned offset = offset_in_page(pos);
+-               size_t bytes = min_t(u64, PAGE_SIZE - offset, length);
+-               struct page *page;
+ -              s64 bytes;
+++              struct folio *folio;
+ +              int status;
+++              size_t offset;
+++              size_t bytes = min_t(u64, SIZE_MAX, length);
+ +
+-               status = iomap_write_begin(iter, pos, bytes, &page);
+++              status = iomap_write_begin(iter, pos, bytes, &folio);
+ +              if (status)
+ +                      return status;
+ +
+-               zero_user(page, offset, bytes);
+-               mark_page_accessed(page);
+++              offset = offset_in_folio(folio, pos);
+++              if (bytes > folio_size(folio) - offset)
+++                      bytes = folio_size(folio) - offset;
+++
+++              folio_zero_range(folio, offset, bytes);
+++              folio_mark_accessed(folio);
+
+-               bytes = iomap_write_end(iter, pos, bytes, bytes, page);
+ -              if (IS_DAX(iter->inode))
+ -                      bytes = dax_iomap_zero(pos, length, iomap);
+ -              else
+ -                      bytes = __iomap_zero_iter(iter, pos, length);
+++              bytes = iomap_write_end(iter, pos, bytes, bytes, folio);
+                if (bytes < 0)
+                        return bytes;
+
+I've pushed out a new tag:
+
+https://git.infradead.org/users/willy/linux.git/shortlog/refs/tags/iomap-folio-5.17d
 
