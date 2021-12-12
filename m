@@ -2,69 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 887D547176B
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 Dec 2021 01:34:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6541C47198A
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Dec 2021 10:53:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232310AbhLLAev (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 11 Dec 2021 19:34:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59258 "EHLO
+        id S230004AbhLLJxg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 12 Dec 2021 04:53:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231836AbhLLAet (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 11 Dec 2021 19:34:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 105D4C061714;
-        Sat, 11 Dec 2021 16:34:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DEA3FB80B81;
-        Sun, 12 Dec 2021 00:34:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B0CFC004DD;
-        Sun, 12 Dec 2021 00:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639269285;
-        bh=WWyIsTZJSHNdano2d10Xl2eOTOGo/zid2rQWi4FFiZQ=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Y8yqPDGExPDwRwawD9I+hPtV1q1ddHj7OtnC08zotb/rnmNFm2BBQ6sMAF/4BctbM
-         av+29zkZ+wAqZIMO68oQ9MsIks0RLZ0eleTIMYE7cFuUgzvCuCU9RimSS6oJdrmxxX
-         TSUsvIY72Boystgiyu1mcHxZXNO8xcr7rspxT/wRX6/Bl2uf6+Wpx2l6NAbPYYc3LG
-         8aSfOq1bwTick7w5OUa7GRHkGN58FdgeaEVItIMjNNiCqUfGDz/2cQwSgXq5SY1XdS
-         1D4IqIWvyu6URnofG2RHzfmbVBZN1Zt94+DawpvjzLKUEwDReGrKE2lcYs74cUupIQ
-         E4uWWmXDkjl8A==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 7424960A4D;
-        Sun, 12 Dec 2021 00:34:45 +0000 (UTC)
-Subject: Re: [GIT PULL] xfs: bug fixes for 5.16-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20211211172242.GH1218082@magnolia>
-References: <20211211172242.GH1218082@magnolia>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20211211172242.GH1218082@magnolia>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.16-fixes-3
-X-PR-Tracked-Commit-Id: 089558bc7ba785c03815a49c89e28ad9b8de51f9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e034d9cbf9f17613c954541f65390be5c35807fc
-Message-Id: <163926928546.10000.18339109912268195117.pr-tracker-bot@kernel.org>
-Date:   Sun, 12 Dec 2021 00:34:45 +0000
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
+        with ESMTP id S229894AbhLLJxf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Dec 2021 04:53:35 -0500
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBCAC061714
+        for <linux-xfs@vger.kernel.org>; Sun, 12 Dec 2021 01:53:35 -0800 (PST)
+Received: by mail-oi1-x235.google.com with SMTP id bf8so19417423oib.6
+        for <linux-xfs@vger.kernel.org>; Sun, 12 Dec 2021 01:53:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=D4ALZE3w0VGBNsZ3hKFBxDJR8A6z2cZuPBmNN+LczaM=;
+        b=At6J27qiT5dlZ+Id6j09nmvVH/STSos3nAvM4lAl6ueCDxr6IWNFq5teXxi3fglvnI
+         1LeS3nSx5dmbc0Q9WEzI3gf4nR90Y1w37qFfzynY3kSaIlbDErwGkZuHqLNeemRHnWdk
+         dhNZwb4zerRUOHxQmwgPhdk3gcBsAMcr/0HnYqJhiw4ICPvA5xPT0+265535/Zsds4Gu
+         zuvdg+k7e3VjJkcQSlWA8KzLOp6DCpn63RRXt23gCcFHU4JdtUW4XDf/90Ai2OzQi5al
+         GyDwmh/4Z1FFy4ovQW+2/cVCxTvTz+rPbfuQb9UMs/dc2F1ysur/85oW8mHVOEbOnYPM
+         frGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=D4ALZE3w0VGBNsZ3hKFBxDJR8A6z2cZuPBmNN+LczaM=;
+        b=0Ywqxz6UxtRikz8yqAJIjchaY+bhe9OCqIqY8JRGwISbzhcpRadgvbL+QOBqmjQyM1
+         DEgmUUBrzhpSQyhc2zKYkgnfLjayCtMstYy/shdOy+QML2Va69h8Te2dniNj14IL0EH1
+         sEr6srEo252ySXHFhdNhs7adSCUPEpi9Jw6Hpz1hS8ZNgWB/OQ976eaH50+sM2izcxv6
+         UjsyafgyxARGuyVMqF+ye7W6458Bfjc/sRppaDsghcYofDJLsMez8Nmm7O2JXT+nAT4/
+         kIUPQvt019OoN92cyOwY9Iabo5D4ILjWBpdCymZrNIsJbdpfhdxUlACttyNNsb3ItMyK
+         hOyg==
+X-Gm-Message-State: AOAM531TpwVSotXAvE3R6ZMTdFS9upNI5GjLEmzvAsoVPbcvJlUNw2Lw
+        tXXyAMrqVOG/rEHBOVvWJpr9JVO8ODre0DDPKeQ=
+X-Google-Smtp-Source: ABdhPJyxM1wzFIUDh1JOcaekN0HuFT5aqIDv4t2643sgWG8BLwrP0l5v57DIrJllIS7SGIW5FsnlVU/fx2IuHa8HToM=
+X-Received: by 2002:aca:1b15:: with SMTP id b21mr21916289oib.64.1639302814683;
+ Sun, 12 Dec 2021 01:53:34 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a05:6830:4426:0:0:0:0 with HTTP; Sun, 12 Dec 2021 01:53:34
+ -0800 (PST)
+Reply-To: KristalinaGeorgieva20211@gmail.com
+From:   Kristalina Georgieva <rkyle708@gmail.com>
+Date:   Sun, 12 Dec 2021 09:53:34 +0000
+Message-ID: <CAM5dpWePMDFiLy1W_10+2Nmc7NOi6LLqtNDZk8mhMtFwTcX9vw@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The pull request you sent on Sat, 11 Dec 2021 09:22:42 -0800:
+--=20
+-
+DIRECTORA GERENTE Y PRESIDENTA (FMI)
+SE=C3=91ORA. KRISTALINA GEORGIEVA
+(TARJETA VISA DEL BANCO UBA)
 
-> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.16-fixes-3
+ESTIMADO PROPIETARIO DEL CORREO ELECTR=C3=93NICO / BENEFICIARIO DEL FONDO
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e034d9cbf9f17613c954541f65390be5c35807fc
+RECIBO SU CORREO Y EL CONTENIDO EN EL MISMO ANOTADO. CONTACTAR
+SECRETARIO DE UBA BANK PARA ENTREGA INMEDIATA DE SU ATM ACREDITADO
+TARJETA VISA A SU DIRECCI=C3=93N UTILIZANDO LOS DETALLES DE CONTACTO A CONT=
+INUACI=C3=93N:
 
-Thank you!
+NOMBRES: SR. TONY ELUMELU
+CORREO ELECTR=C3=93NICO: WWW.UBABANKOFAFRICA.TG01@GMAIL.COM
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+P=C3=93NGASE EN CONTACTO CON EL SECRETARIO DE LA U.B.A QUE MANEJA SU
+ARCHIVO DE TRANSACCI=C3=93N DE INMEDIATO
+PREPARACI=C3=93N DE LOS DOCUMENTOS DE SU FONDO. ENV=C3=8DE POR CORREO
+ELECTR=C3=93NICO SUS DETALLES PARA
+ENV=C3=8DE SU TARJETA VISA ATM Y MANTENGA SIEMPRE ACTUALIZADO.
+
+NOTA: LE RECOMENDAR=C3=89 SIEMPRE ACT=C3=9AE DE ACUERDO CON LAS INSTRUCCION=
+ES
+PARA HABILITAR
+HAGAMOS ESTA ENTREGA ANTES DEL PLAZO ESTIMADO.
+
+ATENTAMENTE,
+SE=C3=91ORA. KRISTALINA GEORGIEVA
+DIRECTORA GERENTE Y PRESIDENTA (FMI)
