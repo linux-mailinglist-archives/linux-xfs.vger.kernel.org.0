@@ -2,112 +2,58 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 622F54797C8
-	for <lists+linux-xfs@lfdr.de>; Sat, 18 Dec 2021 01:23:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 522C6479A1F
+	for <lists+linux-xfs@lfdr.de>; Sat, 18 Dec 2021 11:04:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbhLRAXH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Dec 2021 19:23:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbhLRAXH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Dec 2021 19:23:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2502DC061574
-        for <linux-xfs@vger.kernel.org>; Fri, 17 Dec 2021 16:23:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA9E3623C0
-        for <linux-xfs@vger.kernel.org>; Sat, 18 Dec 2021 00:23:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09777C36AE5;
-        Sat, 18 Dec 2021 00:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639786986;
-        bh=HEZL3NHLYHkjgeD3ukkhWdwgBC6Qu5w9Hd+n5CLNTTQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CUG9AsXBV1Sgy/YPAg6HzveTLQWgT5nV3SC2qA/NOlyftqB/VZ4aKVk5H2MSPU/GF
-         r0xF1nc5lRd6+7JYyMsVfPlLLX/ANi+ytxiuZyKPqTq5OEj/7MO5Hnh652bSAC9rAj
-         LEZKh6zoWltxaNeCzxXI7ZbsOg40ZX66Vlb9xMKB2SGawJIINJ7HyXBbDaXb/YifSv
-         ogogPLvagUoRmtLeTHurpAkHbJnGaKbx9K7kkDYagDjFZrYuaG9+QmrnLXWuiq4+1X
-         avEIcgkstTejS+UiZpEz8ZzNJei2Xtt1pJDSxggo3nX9y4T3NQri3hZEQj2YtfSmcv
-         0x38yUlh0ZWsw==
-Date:   Fri, 17 Dec 2021 16:23:05 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH v2 4/3] mkfs: document sample configuration file location
-Message-ID: <20211218002305.GV27664@magnolia>
-References: <20211218001616.GB27676@magnolia>
+        id S230039AbhLRKE3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 18 Dec 2021 05:04:29 -0500
+Received: from smtp.tresorpublic.ga ([217.77.77.169]:36144 "EHLO
+        smtp.tresorpublic.ga" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229632AbhLRKE3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 18 Dec 2021 05:04:29 -0500
+X-Greylist: delayed 9086 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Dec 2021 05:04:28 EST
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by smtp.tresorpublic.ga (Postfix) with ESMTP id 2C21A25413C;
+        Sat, 18 Dec 2021 01:35:57 +0100 (WAT)
+Received: from smtp.tresorpublic.ga ([127.0.0.1])
+        by localhost (smtp.tresorpublic.ga [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id lTzRuZja8nGB; Sat, 18 Dec 2021 01:35:57 +0100 (WAT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by smtp.tresorpublic.ga (Postfix) with ESMTP id 32B3B25095B;
+        Sat, 18 Dec 2021 01:33:26 +0100 (WAT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 smtp.tresorpublic.ga 32B3B25095B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tresorpublic.ga;
+        s=0E35EDB0-8E70-11EB-9FFE-7B977987BC13; t=1639787606;
+        bh=Z7Mw/S3S5QVQoiiPjOJ36U/V8PEZWEi+LI3C94Euu4g=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=m3k5C+2VsG9QV2ZvhJjClkDYDIc/vZo71WBZVYyaA10dM9l3ODK991+CPVRFiQBlI
+         vkAMPhqBJb+ZjDPi5/i4bf0DjPdEy9yodq2knocQzjYbn58+Ps4WVOa2DjPK1+wWTx
+         f8X3hlOdIoRYEV2q9bAJn2fZ1ER/4SSvCGHNhkUjnd16RSZwunrRqFgzX5hL4ssn9T
+         /TiYb+F9pewB/lQbDvMvmwvZ0V5Z/e6R7/rMe+NNLc63GpQdc3f4931BpKsOiqWE3t
+         c9hKdBK+2ERcsg/9BfrJZfer1Y/gnOLwjIBHPcJfa2VBmmc1lpovDtNjd0I6r7OTes
+         vE4q2WdfcwpWg==
+X-Virus-Scanned: amavisd-new at smtp.tresorpublic.ga
+Received: from smtp.tresorpublic.ga ([127.0.0.1])
+        by localhost (smtp.tresorpublic.ga [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id CV3zG0bJDZMP; Sat, 18 Dec 2021 01:33:26 +0100 (WAT)
+Received: from [192.168.10.100] (unknown [169.159.94.58])
+        by smtp.tresorpublic.ga (Postfix) with ESMTPSA id 12290251FFD;
+        Sat, 18 Dec 2021 01:03:39 +0100 (WAT)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211218001616.GB27676@magnolia>
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: US$48.2M 
+To:     Recipients <blandine.lebondo@tresorpublic.ga>
+From:   "Jim Yang" <blandine.lebondo@tresorpublic.ga>
+Date:   Sat, 18 Dec 2021 01:03:27 +0100
+Reply-To: jimyangprivate24@gmail.com
+Message-Id: <20211218000341.12290251FFD@smtp.tresorpublic.ga>
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+I have Profitable deal.Reply for more details.
 
-Update the documentation to note where one can find sample configuration
-files.  While we're at it, add -c to the topmost list of mkfs.xfs
-options.
+Jim Yang
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
-v2: use the mkfs config file directory from the build system
----
- man/man8/Makefile      |    7 +++++++
- man/man8/mkfs.xfs.8.in |    4 ++++
- 2 files changed, 11 insertions(+)
- rename man/man8/{mkfs.xfs.8 => mkfs.xfs.8.in} (99%)
-
-diff --git a/man/man8/Makefile b/man/man8/Makefile
-index e6a55729..272e45ae 100644
---- a/man/man8/Makefile
-+++ b/man/man8/Makefile
-@@ -12,8 +12,10 @@ ifneq ("$(ENABLE_SCRUB)","yes")
- else
-   MAN_PAGES = $(shell echo *.$(MAN_SECTION))
- endif
-+MAN_PAGES	+= mkfs.xfs.8
- MAN_DEST	= $(PKG_MAN_DIR)/man$(MAN_SECTION)
- LSRCFILES	= $(MAN_PAGES)
-+DIRT		= mkfs.xfs.8
- 
- default : $(MAN_PAGES)
- 
-@@ -22,4 +24,9 @@ include $(BUILDRULES)
- install : default
- 	$(INSTALL) -m 755 -d $(MAN_DEST)
- 	$(INSTALL_MAN)
-+
-+mkfs.xfs.8: mkfs.xfs.8.in
-+	@echo "    [SED]    $@"
-+	$(Q)$(SED) -e 's|@mkfs_cfg_dir@|$(MKFS_CFG_DIR)|g' < $^ > $@
-+
- install-dev :
-diff --git a/man/man8/mkfs.xfs.8 b/man/man8/mkfs.xfs.8.in
-similarity index 99%
-rename from man/man8/mkfs.xfs.8
-rename to man/man8/mkfs.xfs.8.in
-index 880e949b..a3526753 100644
---- a/man/man8/mkfs.xfs.8
-+++ b/man/man8/mkfs.xfs.8.in
-@@ -7,6 +7,9 @@ mkfs.xfs \- construct an XFS filesystem
- .B \-b
- .I block_size_options
- ] [
-+.B \-c
-+.I config_file_options
-+] [
- .B \-m
- .I global_metadata_options
- ] [
-@@ -159,6 +162,7 @@ The configuration options will be sourced from the file specified by the
- option string.
- This option can be use either an absolute or relative path to the configuration
- file to be read.
-+Sample configuration files can be found in @mkfs_cfg_dir@.
- .RE
- .PP
- .PD 0
