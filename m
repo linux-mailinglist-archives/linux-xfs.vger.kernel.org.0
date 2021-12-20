@@ -2,81 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C769047B5CB
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Dec 2021 23:10:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 027CA47B6CF
+	for <lists+linux-xfs@lfdr.de>; Tue, 21 Dec 2021 02:25:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbhLTWKo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 20 Dec 2021 17:10:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231875AbhLTWKn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Dec 2021 17:10:43 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3756DC061574;
-        Mon, 20 Dec 2021 14:10:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Tv+e0YzWj7EnlpLaFuicF+ep+GIPnCrnk5iHywil75Y=; b=fG+mYiUzwhdMYKpKlw6RitBL9U
-        Dd60zq/eWe7QyCAe2DH7ZQktAP/xFZJbovS9+DrnhbZsZybIIbjqwSzhmmNCP8pvtmwrUIoYMRHi5
-        pNxvEUrI9eaSEpe/m/D7ql9CfprRvYZbFG4iEw6iQuLu28X9di1F5FhdgUe3hORXOa8vHindWgtNa
-        9ayzoh9mpCrGYAVpvH958cAxr4JeiPYG9M059O4Z5/bQlh2aOnf9+MYUzDXr9Cj0eG3CK3d8O30F2
-        aao/zuLCI/u7nNVEKx96IaWANTrW0dzEFbbIDQ7dSxctMMf6G6QWBVJEFkxV2ysH4B2An9aIDS7gp
-        UtX642UQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mzQra-001xdx-FZ; Mon, 20 Dec 2021 22:10:34 +0000
-Date:   Mon, 20 Dec 2021 22:10:34 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dan.j.williams@intel.com, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] iomap: turn the byte variable in iomap_zero_iter into a
- ssize_t
-Message-ID: <YcD/WjYXg9LKydhY@casper.infradead.org>
-References: <20211208091203.2927754-1-hch@lst.de>
+        id S230064AbhLUBZX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 20 Dec 2021 20:25:23 -0500
+Received: from mail.osorio.rs.gov.br ([177.73.0.123]:53038 "EHLO
+        mail.osorio.rs.gov.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229596AbhLUBZW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 20 Dec 2021 20:25:22 -0500
+X-Greylist: delayed 9096 seconds by postgrey-1.27 at vger.kernel.org; Mon, 20 Dec 2021 20:25:22 EST
+Received: by mail.osorio.rs.gov.br (Postfix, from userid 999)
+        id 905812DB8C6; Tue, 21 Dec 2021 03:08:46 -0200 (BRST)
+Received: from localhost (nac.osorio.rs.gov.br [127.0.0.1])
+        by nac (Postfix) with SMTP id 84D05496A3EF;
+        Mon, 20 Dec 2021 16:15:01 -0200 (BRST)
+Received: from User (unknown [84.38.132.16])
+        by mail.osorio.rs.gov.br (Postfix) with ESMTP id 3C0C7261ABD;
+        Mon, 20 Dec 2021 05:19:46 -0200 (BRST)
+Reply-To: <andbaill228@mail2world.com>
+From:   "Ads" <projetos@gov.br>
+Subject: Importante Notice
+Date:   Mon, 20 Dec 2021 02:53:25 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211208091203.2927754-1-hch@lst.de>
+Content-Type: text/plain;
+        charset="Windows-1251"
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+X-MSMail-Priority: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
+Message-Id: <20211220071948.3C0C7261ABD@mail.osorio.rs.gov.br>
+To:     undisclosed-recipients:;
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Dan, why is this erroneous commit still in your tree?
-iomap_write_end() cannot return an errno; if an error occurs, it
-returns zero.  The code in iomap_zero_iter() should be:
 
-                bytes = iomap_write_end(iter, pos, bytes, bytes, page);
-                if (WARN_ON_ONCE(bytes == 0))
-                        return -EIO;
+Good Day 
 
-On Wed, Dec 08, 2021 at 10:12:03AM +0100, Christoph Hellwig wrote:
-> bytes also hold the return value from iomap_write_end, which can contain
-> a negative error value.  As bytes is always less than the page size even
-> the signed type can hold the entire possible range.
-> 
-> Fixes: c6f40468657d ("fsdax: decouple zeroing from the iomap buffered I/O code")
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/iomap/buffered-io.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index b1511255b4df8..ac040d607f4fe 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -883,7 +883,7 @@ static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
->  
->  	do {
->  		unsigned offset = offset_in_page(pos);
-> -		size_t bytes = min_t(u64, PAGE_SIZE - offset, length);
-> +		ssize_t bytes = min_t(u64, PAGE_SIZE - offset, length);
->  		struct page *page;
->  		int status;
->  
-> -- 
-> 2.30.2
-> 
+There is an inheritance deposit with your name, You are advice to contact Mr Andrew Bailey through this private email
+
+( andbaill228@mail2world.com ) with your full name and address, phone number for more info.
+
+Best Regards.
+
+Financial Department
