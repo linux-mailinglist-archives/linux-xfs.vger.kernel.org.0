@@ -2,108 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EDB08489510
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jan 2022 10:20:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 909BD48998A
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jan 2022 14:12:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242714AbiAJJUN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jan 2022 04:20:13 -0500
-Received: from smtp01.aussiebb.com.au ([121.200.0.92]:36148 "EHLO
-        smtp01.aussiebb.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242724AbiAJJUI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jan 2022 04:20:08 -0500
-X-Greylist: delayed 500 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Jan 2022 04:20:05 EST
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by smtp01.aussiebb.com.au (Postfix) with ESMTP id 4B67A102287;
-        Mon, 10 Jan 2022 20:11:39 +1100 (AEDT)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-        by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7j31_hoD2O1z; Mon, 10 Jan 2022 20:11:39 +1100 (AEDT)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-        id 424F810228F; Mon, 10 Jan 2022 20:11:39 +1100 (AEDT)
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        smtp01.aussiebb.com.au
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=10.0 tests=KHOP_HELO_FCRDNS,RDNS_DYNAMIC,
-        SPF_HELO_NONE autolearn=disabled version=3.4.4
-Received: from mickey.themaw.net (180-150-90-198.b4965a.per.nbn.aussiebb.net [180.150.90.198])
-        by smtp01.aussiebb.com.au (Postfix) with ESMTP id 2ED02100059;
-        Mon, 10 Jan 2022 20:11:37 +1100 (AEDT)
-Subject: [PATCH] vfs: check dentry is still valid in get_link()
-From:   Ian Kent <raven@themaw.net>
-To:     Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Brian Foster <bfoster@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        xfs <linux-xfs@vger.kernel.org>
-Date:   Mon, 10 Jan 2022 17:11:31 +0800
-Message-ID: <164180589176.86426.501271559065590169.stgit@mickey.themaw.net>
-User-Agent: StGit/0.23
+        id S231586AbiAJNME (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jan 2022 08:12:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231590AbiAJNLs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jan 2022 08:11:48 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18113C061245
+        for <linux-xfs@vger.kernel.org>; Mon, 10 Jan 2022 05:11:47 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id s30so16337737lfo.7
+        for <linux-xfs@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=Bgie3w5lZXcUpEJsNUNnYT9D80sz6831OKMgWSWMpAMR4c04HQM1hwHkoZ1AqHgJ5M
+         pQJfhFBsNTGc+jfMsWTuSDXhNBe5XPwJ8/UQZKbYcWTDQ68Eu4MBBVsHf0V3Baa+27Pp
+         IUJW/950IUGNsTto2NnsTW49/Cy4Vf+KfgzDT0+KZ2gcb/QkEKg3LEIj8qPJpiII0Qbk
+         buE3CbPl0T8T6omQLXT3KYJBxN98pPIrfxDam1Qs0diPFN43pWVugWbd8LU8WaIGviK3
+         O/t/NLMKhR03EdE8rMi5c8T5epCw09Yzc4YmAU5QrO9ZaREbayNwAtpm1SWYSR1IiBuY
+         5w9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=Gp0jCulaqRJDQJ5SBPG7DRlAW/zBPc1ALJ8uiJ2ASrj0vB7OyXmQ2oLJeEcPUwnlfw
+         fWlGN3jka82IeDZMD+W1ZMIfeuVDiJrvrBB3xeNWp02koqLPaqAkT6ZsgqSqSxRW1QUA
+         nk1eOQeERznImlcl4VFKqKjrPt6UErfD2KluIsQbhSAu2WbR4BRBV0abSeiCwhJbANSv
+         3lwtBHllskn0ldzFNVKiPuAKJ4dAz7HhN4lFw+N0qlOww76kWJXp7mxMI1pMugXViEgu
+         8ybY5evvL6qTGi54zZ5wHV9gklSM9uVE5U9g1lJqBosOQS+jrSuP/ljoY8xfK68JW6b4
+         v6cA==
+X-Gm-Message-State: AOAM533+hhYK1X5Ae/iL4HjXugukjnAnjv7pKyRW0qZH0F4MmOLYqB2m
+        e90k+MxbnED4KbkH3K951mKToR66FqjIn6X+k8BUqrL/42o=
+X-Google-Smtp-Source: ABdhPJyUuzfRq9+VAp3YIslVsNF7E8r6u+SDvjtiaFw6sfTA9uOxrmlrl9JDay/jDh10uqplhgk07a+YHTpM3Ge0znw=
+X-Received: by 2002:ac2:4c51:: with SMTP id o17mr60639917lfk.558.1641820293776;
+ Mon, 10 Jan 2022 05:11:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:6504:15d1:0:0:0:0 with HTTP; Mon, 10 Jan 2022 05:11:32
+ -0800 (PST)
+Reply-To: gtbank107@yahoo.com
+From:   Barr Robert Richter <westernunion.benin982@gmail.com>
+Date:   Mon, 10 Jan 2022 14:11:32 +0100
+Message-ID: <CAP=nHBK9zHzp_=-EVswWQiLxEoc+HV4oqddgtnEqf-9qYab_4Q@mail.gmail.com>
+Subject: Contact GT Bank-Benin to receive your transfer amount of $18.5m US Dollars.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-When following a trailing symlink in rcu-walk mode it's possible for
-the dentry to become invalid between the last dentry seq lock check
-and getting the link (eg. an unlink) leading to a backtrace similar
-to this:
+Attn,Dear
+I need you to know that the fear of the LORD is
+the beginning of wisdom, and knowledge of the Holy One is
+understanding. As power of God Most High. And This is the confidence
+we have in approaching God, that if we ask anything according to his
+will, he hears us. I will make you know that Slow and steady wins the race.
+It is your turn to receive your overdue compensation funds total
+amount $18.5Milion  USD.
+I actualized that you will receive your transfer today without any more delay
+No More fee OK, Believe me , I am your Attorney standing here on your favor.
+I just concluded conversation with the Gt Bank Director, Mrs Mary Gate
+And She told me that your transfer is ready today
 
-crash> bt
-PID: 10964  TASK: ffff951c8aa92f80  CPU: 3   COMMAND: "TaniumCX"
-…
- #7 [ffffae44d0a6fbe0] page_fault at ffffffff8d6010fe
-    [exception RIP: unknown or invalid address]
-    RIP: 0000000000000000  RSP: ffffae44d0a6fc90  RFLAGS: 00010246
-    RAX: ffffffff8da3cc80  RBX: ffffae44d0a6fd30  RCX: 0000000000000000
-    RDX: ffffae44d0a6fd98  RSI: ffff951aa9af3008  RDI: 0000000000000000
-    RBP: 0000000000000000   R8: ffffae44d0a6fb94   R9: 0000000000000000
-    R10: ffff951c95d8c318  R11: 0000000000080000  R12: ffffae44d0a6fd98
-    R13: ffff951aa9af3008  R14: ffff951c8c9eb840  R15: 0000000000000000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- #8 [ffffae44d0a6fc90] trailing_symlink at ffffffff8cf24e61
- #9 [ffffae44d0a6fcc8] path_lookupat at ffffffff8cf261d1
-#10 [ffffae44d0a6fd28] filename_lookup at ffffffff8cf2a700
-#11 [ffffae44d0a6fe40] vfs_statx at ffffffff8cf1dbc4
-#12 [ffffae44d0a6fe98] __do_sys_newstat at ffffffff8cf1e1f9
-#13 [ffffae44d0a6ff38] do_syscall_64 at ffffffff8cc0420b
+So the Bank Asked you to contact them immediately by re-confirming
+your Bank details asap.
+Because this is the Only thing holding this transfer
+If you did not trust me and Mrs Mary Gate,Who Else will you Trust?
+For we are the ones trying to protect your funds here
+and make sure that your funds is secure.
+So Promisingly, I am here to assure you, that Grate Miracle is coming on
+your way, and this funds total amount of $18.500,000 is your
+compensation, entitlement inheritance overdue funds on your name.
+Which you cannot let anything delay you from receiving your funds now,
 
-Most of the time this is not a problem because the inode is unchanged
-while the rcu read lock is held.
+Finally i advised you to try your possible best and contact Gt Bank Benin
+once you get this message to receive your transfer $18.5 USD today.
+I know that a journey of thousand miles begins with a single step.
+Always put your best foot forward
+Try as hard as you can, God give you best.
+take my advice and follow the due process of your payment, the
+transfer will be released to
+you smoothly without any hitches or hindrance.
 
-But xfs can re-use inodes which can result in the inode ->get_link()
-method becoming invalid (or NULL).
+Contact DR.MRS MARY GATE, Director Gt bank-Benin to receive your
+transfer amount of $18.5m US Dollars
+It was deposited and registered to your name this morning.
+Contact the Bank now to know when they will transfer to your
+country today
 
-This case needs to be checked for in fs/namei.c:get_link() and if
-detected the walk re-started.
+Email id: gtbank107@yahoo.com
+Tel/mobile, +229 99069872
+Contact person, Mrs Mary Gate,Director Gt bank-Benin.
+Among the blind the one-eyed man is king
 
-Signed-off-by: Ian Kent <raven@themaw.net>
----
- fs/namei.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+As you sow, so you shall reap, i want you to receive your funds
+Best things in life are free
+Send to her your Bank Details as i listed here.
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 1f9d2187c765..37a7dba3083b 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1760,8 +1760,11 @@ static const char *pick_link(struct nameidata *nd, struct path *link,
- 	if (!res) {
- 		const char * (*get)(struct dentry *, struct inode *,
- 				struct delayed_call *);
--		get = inode->i_op->get_link;
-+		get = READ_ONCE(inode->i_op->get_link);
- 		if (nd->flags & LOOKUP_RCU) {
-+			/* Does the inode still match the associated dentry? */
-+			if (unlikely(read_seqcount_retry(&link->dentry->d_seq, last->seq)))
-+				return ERR_PTR(-ECHILD);
- 			res = get(NULL, inode, &last->done);
- 			if (res == ERR_PTR(-ECHILD) && try_to_unlazy(nd))
- 				res = get(link->dentry, inode, &last->done);
+Your account name-------------
+Your Bank Name----------------
+Account Number----------
+your Bank address----------
+Country-----------
+Your private phone number---------
+Routing Numbers-------------
+Swift Code-----------
 
+Note, Your funds is %100 Percent ready for
+transfer.
+Everything you do remember that Good things come to those who wait.
+I have done this work for you with my personally effort, Honesty is
+the best policy.
+now your transfer is currently deposited with paying bank this morning.
+It is by the grace of God that I received Christ, having known the truth.
+I had no choice than to do what is lawful and justice in the
+sight of God for eternal life and in the sight of man for witness of
+God & His Mercies and glory upon my life.
 
+send this needed bank details to the bank today, so that you receive
+your transfer today as
+it is available for your confirmation today.
+Please do your best as a serious person and send the fee urgent, Note
+that this transfer of $18.500.000 M USD is a Gift from God to Bless
+you.
+
+If you did not contact the bank urgent, finally the Bank will release
+your transfer of $18.500.000M USD to  Mr. David Bollen as your
+representative.
+So not allow another to claim your Money.
+Thanks For your Understanding.
+
+Barr Robert Richter, UN Attorney At Law Court-Benin
