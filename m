@@ -2,144 +2,203 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4445F48A26B
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jan 2022 23:06:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7208148A2D7
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Jan 2022 23:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240999AbiAJWGT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 10 Jan 2022 17:06:19 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:50110 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240960AbiAJWGS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 10 Jan 2022 17:06:18 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E442B8180C;
-        Mon, 10 Jan 2022 22:06:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ED69C36AE9;
-        Mon, 10 Jan 2022 22:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641852376;
-        bh=0EknUIecnauWxeDKBTherSAPBBzXTdCu/8DysfmHeQc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DsqDjduXjGcJL/m+4zf3/kFjC3DcMLMLNwFj0dWWsqNPDTYM7drDmVjN4x+gT+moN
-         OxaJCCJzAoWiIqK+n6olTqp5lbbyMliNYd4IO4FtiQIdVRCygo0t46BNRfZ1tib7jM
-         IZeqEamENLNSwPuO2GFN4odNOPoG9mct8MMdXQdpWil3qkQ5vpsHEeKaSvLqTjnSEu
-         XU2E3JtJEvsaHf+nVtDvxMN7CF1PZq9mP+8yg52hU5rSfnU/p78QFGPDErH4mfIKw7
-         55COssmfGNU3MHMtGo9BeZrbWmsGbIJn7xjooG7FL/mTNzj1mYpS351Cnw3HW48sTA
-         4s6hP982+u5+w==
-Date:   Mon, 10 Jan 2022 14:06:15 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] xfs: new code for 5.17
-Message-ID: <20220110220615.GA656707@magnolia>
+        id S1345039AbiAJWcU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 10 Jan 2022 17:32:20 -0500
+Received: from mail-bn8nam11on2049.outbound.protection.outlook.com ([40.107.236.49]:12768
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1344990AbiAJWcP (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Mon, 10 Jan 2022 17:32:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DW4PPAdP6TGm7e3U6VRygLBFkEPYsPpyzvLH7vQyUqSRI16wkZMZXRkGX+W5wWxiGZKxKStt6yZ8HU0y94EPQ+rTSc402zgQAv+x/yAFypuNeCtaeUdwcLrdtQbbjXBgNQTYCSknaMPLtPZnJHaPpknipTfcsc7F+CrB1lCixWLNeavNLDDOKaLfLlJogxQfYSrgCpB593tdl2/HBxbC4vOECSs3sj/OIgDdArB6EcTBmJYliYww3LV5xu3AqfeTW7xH1dFdzjgYXhudbc0aDilJeuN1iWPUX0J+v2Zr/aGt/GzhGlc14wHXfivV6VuOPbNK9syNp2h9VwzzG2zOog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xR82BW4h6NFpqaoY0q6TPilayF+99w063kfeUZFnY3s=;
+ b=GdmEPwMGwk5P+/n+N4xj1g7D1icrUBjnjnz33AyoWU7pgTlp6k7xP4bIa5wfeUVd1hK+l2N5JPIK3IDSuMiih1G8w7Sgi9/DgrwHryqFSfrsS3z4fjBx8V3QSK4OxnYKLSCbeD40/2CcLgFr11TLMioLTRu8ZVW5KrO1bzXDkeBNxUZfhutMZtiPky6zyss9n7vTepcMeMG7iTAMnQai3oSZ0WBd+JrEV8SbXUj8Ajuh5SbFEU6GKpApYuEZT2UE775i6VCKjytiBHvA5J6wZV1UPJJbZdeUEoo0nNnQTETrYqjGUPqvUMWGlbk41n5PXE8fMJ9adrFgLimw+tBe+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xR82BW4h6NFpqaoY0q6TPilayF+99w063kfeUZFnY3s=;
+ b=IBChe8+g4a/xj3HTqAULlZpJE6As4ubSOsXUKozuaZeHAH/ho5s8gwiILViOqQAQsnA2NNE9dh3tDsLIovnOnZRB3/jVjOJ1sklnosyJTZXo53aT/Oboxcotyei3cQAZE9M1q5Kpgp6meP4SPfK5sIXrhuceFQe38mMWV+65pZo=
+Received: from BN0PR04CA0128.namprd04.prod.outlook.com (2603:10b6:408:ed::13)
+ by BN6PR1201MB0081.namprd12.prod.outlook.com (2603:10b6:405:4f::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Mon, 10 Jan
+ 2022 22:32:13 +0000
+Received: from BN8NAM11FT013.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:ed:cafe::a8) by BN0PR04CA0128.outlook.office365.com
+ (2603:10b6:408:ed::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.9 via Frontend
+ Transport; Mon, 10 Jan 2022 22:32:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT013.mail.protection.outlook.com (10.13.176.182) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4867.9 via Frontend Transport; Mon, 10 Jan 2022 22:32:12 +0000
+Received: from alex-MS-7B09.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Mon, 10 Jan
+ 2022 16:32:10 -0600
+From:   Alex Sierra <alex.sierra@amd.com>
+To:     <akpm@linux-foundation.org>, <Felix.Kuehling@amd.com>,
+        <linux-mm@kvack.org>, <rcampbell@nvidia.com>,
+        <linux-ext4@vger.kernel.org>, <linux-xfs@vger.kernel.org>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <hch@lst.de>, <jgg@nvidia.com>, <jglisse@redhat.com>,
+        <apopple@nvidia.com>, <willy@infradead.org>
+Subject: [PATCH v3 00/10] Add MEMORY_DEVICE_COHERENT for coherent device memory mapping
+Date:   Mon, 10 Jan 2022 16:31:51 -0600
+Message-ID: <20220110223201.31024-1-alex.sierra@amd.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e3ef1d66-ad2f-444c-c2e1-08d9d4890c35
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0081:EE_
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB00814A5943DD01D6AAFEDF1FFD509@BN6PR1201MB0081.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CkmHSLvWvNsde18u0QJEJAOCfhYmTi574o6+bIpN0yToODXDAQevlUZk1BIUZAOv/M0dtOSvGf9tj/YFptxaaAj7bV8wnBRNtcMcYpCgmeR74QDqfsXcMC8vDUE1si/YgT/Uo3GcERTZALMNelEnpitjccS5KYKDC+/7xkD8UiXUTwS1pacw3eYLoI1LK4FlJzYaSrf5OcspphJQgNYxHFdn4PnS8V3J0ruvvJuYqt3a/MU3KNWuAny9U+0ZrNQkyFFZpwZS8Cxa5xND8LH4V1sGVKzDY1tLS2aLvYS4mXNbDEh04jiA3RiOVJiQOF0aE/q5LUcvxU0sgmSGO1LkTpENNn5/5sYTKmLQ2EX31rxnd6eul28ea1BZeFTqoOCJM/eUkqtyi+w25HQJBNyjJnym0N61j8nh5CGUmXT1wOghG5y1E6WkuSVU1ubqF+siiREEf54qOn4ZC0she6PJXlmJAzCdcjoOCXjdYMJyuobaHvldp5yY+Ohvi9pn9gje4jUsqwrhPcMPMsXJFj+KgsEIM6Cnl4RSqtDWpreUx9rQtxOF9cRchRt3s9y26hX7zvlUvX4MFwZ3sPFlA7ZaW8xtZroIEJvlNyZxyOrbtFBJElzrdt08uj7qLOe4ZY+wGNmWdQlZe0D4judq6GMPoQruQrOnq/bw6rRms9R+mtHDGkTZ8ZJHdik6tAGZwVL3DUeeaVthtX+RRnbZGvj2ToE4Cs7tdAwvz4mgnmeMn9Fyo39WTylc1c49D/AImCDeoDUstRGoaKG2SaQhyrUNrEuPMaZktlYLcS7z+WFKhQM=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(40470700002)(46966006)(36840700001)(6666004)(83380400001)(16526019)(336012)(70206006)(4326008)(44832011)(2616005)(70586007)(186003)(36756003)(1076003)(356005)(81166007)(426003)(508600001)(86362001)(8676002)(7696005)(316002)(7416002)(8936002)(54906003)(2906002)(5660300002)(40460700001)(82310400004)(36860700001)(47076005)(110136005)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2022 22:32:12.9625
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3ef1d66-ad2f-444c-c2e1-08d9d4890c35
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT013.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0081
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+This patch series introduces MEMORY_DEVICE_COHERENT, a type of memory
+owned by a device that can be mapped into CPU page tables like
+MEMORY_DEVICE_GENERIC and can also be migrated like
+MEMORY_DEVICE_PRIVATE.
 
-Please pull this new code for Linux 5.17.  The big new feature here is
-that the mount code now only bothers to try to free stale COW staging
-extents if the fs unmounted uncleanly.  This should reduce mount times,
-particularly on filesystems supporting reflink and containing a large
-number of allocation groups.
+Christoph, the suggestion to incorporate Ralph Campbell’s refcount
+cleanup patch into our hardware page migration patchset originally came
+from you, but it proved impractical to do things in that order because
+the refcount cleanup introduced a bug with wide ranging structural
+implications. Instead, we amended Ralph’s patch so that it could be
+applied after merging the migration work. As we saw from the recent
+discussion, merging the refcount work is going to take some time and
+cooperation between multiple development groups, while the migration
+work is ready now and is needed now. So we propose to merge this
+patchset first and continue to work with Ralph and others to merge the
+refcount cleanup separately, when it is ready.
 
-Everything else this cycle are bugfixes, as the iomap folios conversion
-should be plenty enough excitement for anyone.  That and I ran out of
-brain bandwidth after Thanksgiving last year.
+This patch series is mostly self-contained except for a few places where
+it needs to update other subsystems to handle the new memory type.
+System stability and performance are not affected according to our
+ongoing testing, including xfstests.
 
-The branch merges cleanly against upstream as of a few minutes ago.
-Please let me know if anything else strange happens during the merge
-process.  There will definitely be a second pull request coming with
-at least one more bug fix and most probably a full withdrawal of the
-recently troublesome ALLOCSP ioctl family.
+How it works: The system BIOS advertises the GPU device memory
+(aka VRAM) as SPM (special purpose memory) in the UEFI system address
+map.
 
---D
+The amdgpu driver registers the memory with devmap as
+MEMORY_DEVICE_COHERENT using devm_memremap_pages. The initial user for
+this hardware page migration capability is the Frontier supercomputer
+project. This functionality is not AMD-specific. We expect other GPU
+vendors to find this functionality useful, and possibly other hardware
+types in the future.
 
-The following changes since commit 2585cf9dfaaddf00b069673f27bb3f8530e2039c:
+Our test nodes in the lab are similar to the Frontier configuration,
+with .5 TB of system memory plus 256 GB of device memory split across
+4 GPUs, all in a single coherent address space. Page migration is
+expected to improve application efficiency significantly. We will
+report empirical results as they become available.
 
-  Linux 5.16-rc5 (2021-12-12 14:53:01 -0800)
+We extended hmm_test to cover migration of MEMORY_DEVICE_COHERENT. This
+patch set builds on HMM and our SVM memory manager already merged in
+5.15.
 
-are available in the Git repository at:
+v2:
+- test_hmm is now able to create private and coherent device mirror
+instances in the same driver probe. This adds more usability to the hmm
+test by not having to remove the kernel module for each device type
+test (private/coherent type). This is done by passing the module
+parameters spm_addr_dev0 & spm_addr_dev1. In this case, it will create
+four instances of device_mirror. The first two correspond to private
+device type, the last two to coherent type. Then, they can be easily
+accessed from user space through /dev/hmm_mirror<num_device>. Usually
+num_device 0 and 1 are for private, and 2 and 3 for coherent types.
 
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.17-merge-2
+- Coherent device type pages at gup are now migrated back to system
+memory if they have been long term pinned (FOLL_LONGTERM). The reason
+is these pages could eventually interfere with their own device memory
+manager. A new hmm_gup_test has been added to the hmm-test to test this
+functionality. It makes use of the gup_test module to long term pin
+user pages that have been migrate to device memory first.
 
-for you to fetch changes up to 7e937bb3cbe1f6b9840a43f879aa6e3f1a5e6537:
+- Other patch corrections made by Felix, Alistair and Christoph.
 
-  xfs: warn about inodes with project id of -1 (2022-01-06 10:43:30 -0800)
+v3:
+- Based on last v2 feedback we got from Alistair, we've decided to
+remove migration logic for FOLL_LONGTERM coherent device type pages at
+gup for now. Ideally, this should be done through the kernel mm,
+instead of calling the device driver to do it. Currently, there's no
+support for migrating device pages based on pfn, mainly because
+migrate_pages() relies on pages being LRU pages. Alistair mentioned, he
+has started to work on adding this migrate device pages logic. For now,
+we fail on get_user_pages call with FOLL_LONGTERM for DEVICE_COHERENT
+pages.
 
-----------------------------------------------------------------
-New code for 5.17:
- - Fix log recovery with da btree buffers when metauuid is in use.
- - Fix type coercion problems in xattr buffer size validation.
- - Fix a bug in online scrub dir leaf bestcount checking.
- - Only run COW recovery when recovering the log.
- - Fix symlink target buffer UAF problems and symlink locking problems
-   by not exposing xfs innards to the VFS.
- - Fix incorrect quotaoff lock usage.
- - Don't let transactions cancel cleanly if they have deferred work
-   items attached.
- - Fix a UAF when we're deciding if we need to relog an intent item.
- - Reduce kvmalloc overhead for log shadow buffers.
- - Clean up sysfs attr group usage.
- - Fix a bug where scrub's bmap/rmap checking could race with a quota
-   file block allocation due to insufficient locking.
- - Teach scrub to complain about invalid project ids.
+- Also, hmm_gup_test has been removed from hmm-test. We plan to include
+it again after this migration work is ready.
 
-----------------------------------------------------------------
-Dan Carpenter (1):
-      xfs: prevent a WARN_ONCE() in xfs_ioc_attr_list()
+- Addressed Liam Howlett's feedback changes.
 
-Darrick J. Wong (8):
-      xfs: shut down filesystem if we xfs_trans_cancel with deferred work items
-      xfs: fix quotaoff mutex usage now that we don't support disabling it
-      xfs: don't expose internal symlink metadata buffers to the vfs
-      xfs: only run COW extent recovery when there are no live extents
-      xfs: fix a bug in the online fsck directory leaf1 bestcount check
-      xfs: prevent UAF in xfs_log_item_in_current_chkpt
-      xfs: hold quota inode ILOCK_EXCL until the end of dqalloc
-      xfs: warn about inodes with project id of -1
+Alex Sierra (10):
+  mm: add zone device coherent type memory support
+  mm: add device coherent vma selection for memory migration
+  mm/gup: fail get_user_pages for LONGTERM dev coherent type
+  drm/amdkfd: add SPM support for SVM
+  drm/amdkfd: coherent type as sys mem on migration to ram
+  lib: test_hmm add ioctl to get zone device type
+  lib: test_hmm add module param for zone device type
+  lib: add support for device coherent type in test_hmm
+  tools: update hmm-test to support device coherent type
+  tools: update test_hmm script to support SP config
 
-Dave Chinner (2):
-      xfs: check sb_meta_uuid for dabuf buffer recovery
-      xfs: reduce kvmalloc overhead for CIL shadow buffers
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |  34 ++-
+ include/linux/memremap.h                 |   8 +
+ include/linux/migrate.h                  |   1 +
+ include/linux/mm.h                       |  16 ++
+ lib/test_hmm.c                           | 333 +++++++++++++++++------
+ lib/test_hmm_uapi.h                      |  22 +-
+ mm/gup.c                                 |   7 +
+ mm/memcontrol.c                          |   6 +-
+ mm/memory-failure.c                      |   8 +-
+ mm/memremap.c                            |   5 +-
+ mm/migrate.c                             |  30 +-
+ tools/testing/selftests/vm/hmm-tests.c   | 122 +++++++--
+ tools/testing/selftests/vm/test_hmm.sh   |  24 +-
+ 13 files changed, 475 insertions(+), 141 deletions(-)
 
-Greg Kroah-Hartman (1):
-      xfs: sysfs: use default_groups in kobj_type
+-- 
+2.32.0
 
-Jiapeng Chong (1):
-      xfs: Remove redundant assignment of mp
-
-Yang Xu (1):
-      xfs: Fix comments mentioning xfs_ialloc
-
- fs/xfs/scrub/dir.c            | 15 +++++---
- fs/xfs/scrub/inode.c          | 14 ++++++++
- fs/xfs/scrub/quota.c          |  4 +--
- fs/xfs/scrub/repair.c         |  3 ++
- fs/xfs/scrub/scrub.c          |  4 ---
- fs/xfs/scrub/scrub.h          |  1 -
- fs/xfs/xfs_buf_item_recover.c |  2 +-
- fs/xfs/xfs_dquot.c            | 79 +++++++++++++++----------------------------
- fs/xfs/xfs_error.c            |  3 +-
- fs/xfs/xfs_icache.c           |  3 +-
- fs/xfs/xfs_ioctl.c            |  2 +-
- fs/xfs/xfs_ioctl.h            |  5 +--
- fs/xfs/xfs_iops.c             | 40 +++-------------------
- fs/xfs/xfs_log_cil.c          | 52 ++++++++++++++++++++--------
- fs/xfs/xfs_log_recover.c      | 26 ++++++++++++--
- fs/xfs/xfs_mount.c            | 10 ------
- fs/xfs/xfs_qm_syscalls.c      | 11 +-----
- fs/xfs/xfs_reflink.c          |  5 ++-
- fs/xfs/xfs_super.c            |  9 -----
- fs/xfs/xfs_symlink.c          | 27 ++++++++++-----
- fs/xfs/xfs_sysfs.c            | 16 +++++----
- fs/xfs/xfs_trans.c            | 11 +++++-
- 22 files changed, 175 insertions(+), 167 deletions(-)
