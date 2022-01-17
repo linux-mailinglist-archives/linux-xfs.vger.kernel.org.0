@@ -2,86 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0C3D490F66
-	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jan 2022 18:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D976490FB3
+	for <lists+linux-xfs@lfdr.de>; Mon, 17 Jan 2022 18:35:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234977AbiAQR1X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 17 Jan 2022 12:27:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232943AbiAQR1V (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jan 2022 12:27:21 -0500
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46721C061574
-        for <linux-xfs@vger.kernel.org>; Mon, 17 Jan 2022 09:27:21 -0800 (PST)
-Received: by mail-vk1-xa43.google.com with SMTP id w206so10816962vkd.10
-        for <linux-xfs@vger.kernel.org>; Mon, 17 Jan 2022 09:27:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=keHN+EBH2qKVCHvCD+KLdvL9V2fH8OH7Vzt9dqF4zQo=;
-        b=VIrhu+Sxyt78UNJYfWWLlEeS9XLRIPl7yRGXWyTDxGOOz9OQ+sLRNsmVOMsx/epevf
-         Cq77WEy16f8BSDjaZFgpCc5H3oO+8VwSLw+5ojCaEcd9Spoxid8bOOeIYXYEsTshXxHc
-         vkyC67WQ3Wcwxvc8tqUHRIy7LANuFuMHDpDXYp13z1k6WIE6UIlICWVLrPr+UnKG49ol
-         VPUD7GILMGt7vytZcx0niY+A/5GOUJDiLy7opyE+WuhuTnJUMjJxAXB5SnzY/9RK6Wws
-         JCWd5E6uL911FhzoWEQWcsFYJc3ze8r0e9NEFyi6zb/667Q8+/+vNZlsIqVd67GT6K0O
-         hULA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=keHN+EBH2qKVCHvCD+KLdvL9V2fH8OH7Vzt9dqF4zQo=;
-        b=ItWskgxmf7irN+miTvdnGaN1kWTaUCA6Q5dd48dBW7UcbFCMkBobAltYwsH5CZorLM
-         qLaNzxCudVcfpbFNFi5kdbjE+BQQuqzwIOvpvFKQKqNXxRsNzK8zOVVabmUHLX6Zmwou
-         288e5NslMlQIpgaO+ozaeqRFvSP0v2KSQmPwI/cLLP19U+ocMOVhDQo5aYhbHCYMjsHO
-         6HWjOPNSE2gqtv9e7y+IlZmr5dbg7XaYC+EJN5jRa5Oe7NEXihAkqbbPJ6BcpGURlesz
-         7IJUdb8CVXZEJHggDGo0bvdFjuBXBq+ww3JWcKoq1hufrq2wOEUTjUGAItTkL+9Z0HEs
-         D8YQ==
-X-Gm-Message-State: AOAM532vXUKQ50xYRmu+kt32kajPzIIbTREHes8n0xxycOmGdvTH2QWd
-        C9+QQG42Y4jHxDOvf7QUkHAPlgWWNgTqxxn2YvI=
-X-Google-Smtp-Source: ABdhPJynj+FHX/bXtd9A7vcf9QMplkWLrv4CWkOUXAcgrdteHRuUwG49jvy/PZ/TdVxphiMt2tR9FGTTQw1O0nE4yTg=
-X-Received: by 2002:a1f:3a83:: with SMTP id h125mr6947041vka.28.1642440440343;
- Mon, 17 Jan 2022 09:27:20 -0800 (PST)
+        id S241435AbiAQRfE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 17 Jan 2022 12:35:04 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:43608 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238108AbiAQRfC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 17 Jan 2022 12:35:02 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B5E8FB81055
+        for <linux-xfs@vger.kernel.org>; Mon, 17 Jan 2022 17:35:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526F4C36AE7
+        for <linux-xfs@vger.kernel.org>; Mon, 17 Jan 2022 17:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1642440900;
+        bh=hKFO/x3g6uyrdcn/nPcsBUszTtF+t8YqJT7gBsnfHc0=;
+        h=Date:From:To:Subject:From;
+        b=npScnD0X/TpYFW8Jj+VKaaSlOYa7Uuv+d+dwbNDTxDIzqQQCqyrIJOJ89mNFvq8NL
+         Jjd4uJQiqrteWA7yXj8cHuaUVhSLQepqXJ4qEfNEAiOzLK+5whDXxmVci67lp5pUgC
+         DG8bPfFtkMTyedBvajPRWBnuHD640gGOVuDvgUmtgq1K6OfdqzfLsMGz3Xx8OYdb42
+         JkLq1uGl/9hlhu6YplTuCxNU2JYIHdOPb6Y8IWy9gNlLZzkMN1d70G3V2BixgiUrBI
+         mJDnO0JBe+6X28nima1vSRsg12t14sAKWl31U88x6hTi3Jj4VwmGAIq9nsrzShpeuW
+         0RFqdGCqz3X6w==
+Date:   Mon, 17 Jan 2022 09:34:59 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     xfs <linux-xfs@vger.kernel.org>
+Subject: [ANNOUNCE] xfs-linux: for-next updated to b3bb9413e717
+Message-ID: <20220117173459.GA13540@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a05:612c:2408:b0:279:fdf8:9a3e with HTTP; Mon, 17 Jan 2022
- 09:27:20 -0800 (PST)
-Reply-To: ahmedzzango@yahoo.com
-From:   Ahmed Zango <lompobakala@gmail.com>
-Date:   Mon, 17 Jan 2022 09:27:20 -0800
-Message-ID: <CAHk7wm9jxNP8qfhYYfzXgZ+XAS5GCYoYcLdpeyqhYHNifwBY4A@mail.gmail.com>
-Subject: Reply Urgent
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
--- 
-Dear Friend,
-Reply Urgent
+Hi folks,
 
-Please pardon the abruptness of this letter. However strange or
-surprising this message might seem to you as we have not met
-personally or had any dealings with you in the past. I must apologize
-for intruding into your privacy.
+The for-next branch of the xfs-linux repository at:
 
-I am Mr. Ahmed Zango, Working with a reputable bank here in Burkina
-Faso as the manager in audit department. During our last banking
-audits we discovered an abandoned account belongs to one of our
-deceased customer, a billionaire businessman.
+	git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git
 
-Meanwhile, before i contacted you i have done personal investigation
-in locating any of his relatives who knows about the account, but i
-came out unsuccessful. I am writing to request your assistance in
-transferring Sum of $19.300.000.00 (Nineteen million Three Hundred
-Thousand United State Dollars) into your account.
+has just been updated.
 
-I decided to contact you to act as his foreign business partner so
-that my bank will accord you the recognition and have the fund
-transfer into your account. When i receive your quick respond the more
-details information will be forwarded to you.
+Patches often get missed, so please check if your outstanding patches
+were in this update. If they have not been in this update, please
+resubmit them to linux-xfs@vger.kernel.org so they can be picked up in
+the next update.
 
-I am expecting to read from you as soon as possible you receive this message.
+This last update for the merge window removes a bunch of ioctl
+definitions for defunct and broken functionality.  I originally planned
+to fast-forward this branch to avoid merge conflicts between the ALLOCSP
+CVE fix and 4d1b97f9ce7c, but upstream head fails fstests spectacularly
+so I gave up on that plan.
 
-Best Regards
-Mr. Ahmed Zango.
+The new head of the for-next branch is commit:
+
+b3bb9413e717 xfs: remove the XFS_IOC_{ALLOC,FREE}SP* definitions
+
+New Commits:
+
+Darrick J. Wong (3):
+      [9dec0368b964] xfs: remove the XFS_IOC_FSSETDM definitions
+      [4d1b97f9ce7c] xfs: kill the XFS_IOC_{ALLOC,FREE}SP* ioctls
+      [b3bb9413e717] xfs: remove the XFS_IOC_{ALLOC,FREE}SP* definitions
+
+
+Code Diffstat:
+
+ fs/xfs/libxfs/xfs_fs.h |  37 ++++--------------
+ fs/xfs/xfs_bmap_util.c |   7 ++--
+ fs/xfs/xfs_bmap_util.h |   2 +-
+ fs/xfs/xfs_file.c      |   3 +-
+ fs/xfs/xfs_ioctl.c     | 101 +++++++------------------------------------------
+ fs/xfs/xfs_ioctl.h     |   6 ---
+ fs/xfs/xfs_ioctl32.c   |  27 -------------
+ fs/xfs/xfs_ioctl32.h   |   4 --
+ 8 files changed, 27 insertions(+), 160 deletions(-)
