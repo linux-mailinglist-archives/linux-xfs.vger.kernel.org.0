@@ -2,68 +2,68 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD5B495933
-	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jan 2022 06:21:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6547495936
+	for <lists+linux-xfs@lfdr.de>; Fri, 21 Jan 2022 06:21:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348552AbiAUFVD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 21 Jan 2022 00:21:03 -0500
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:3210 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234931AbiAUFU5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jan 2022 00:20:57 -0500
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20L03rY1001013;
-        Fri, 21 Jan 2022 05:20:54 GMT
+        id S1348547AbiAUFV2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 21 Jan 2022 00:21:28 -0500
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:9620 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234018AbiAUFVC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 21 Jan 2022 00:21:02 -0500
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20L042Lj017777;
+        Fri, 21 Jan 2022 05:20:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version;
- s=corp-2021-07-09; bh=xchVTKQTW4IECbvoTNa5POR6is+dNUfG5DRGSLJKnqw=;
- b=bsN/rzGFouJ2yi6VOQv70Kd2M/OBHYI21RHtltHgCez5Cw1SFrsJWHZh2VCLzMBQc1Jb
- 36SH1839t3wAsshIP5A9f3e89poZHd41LVrauv2UYVg74v2xv8/aiVqUslx8BKK8t3Ei
- cdeEpzqNxOw4Jrh27LIAnCxTcMANjOIPDrpxzqiVNmbmwCgccjmETfrLmEKhHLjwC4oA
- I557OzJ1Q9YYOhXpzt6ElM08mewAGz/gDo/X7ExUlMyaFaLIfhV0G0vbUW+pkOIYQrOx
- IrU0XJOd1YVOwE04r+CkFLxEDPLy+l1RqdUZwhFFiHQh5ZFnmiVRtk8enseBVtzR86vK mw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3dqhy9rcph-1
+ s=corp-2021-07-09; bh=2kHdSxkmY1lrmuT1Y3/bdHeXXn+4XDn6wjCnZ6Lc5j0=;
+ b=P4kgdL8MnQBGll4E55c7Bfu2ikguyKQ31ocjpGyA1anxUrhsXb8gQjje5hGGTj/Oiuvo
+ 7v728TSOGCdkA30jtwm/v3fDK+/MkR2lLl21ztIWvwu5BkO0qlWwSD1t1/xQygqoKFWW
+ d/Lrm7EMmP1yYD/HlZqdvHQ2QfR7fnyfaGZD8bQj3c7UUISPNuMd/F7Z01r8+aTeZbH7
+ WTNCygW3DykV0IQ3GXLGaZyQDG+SpaqQ1G60t9XMt/CWMGdXbR5CEnUq3dZz+N2vUbgj
+ ip6ZZhWdP1L7A0r2fILJxcbXTddVGUlJDD6Xj1/gwtaKSKkGFhLXSivjZhqG6lepZ0bM ng== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3dqhyc0d3x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jan 2022 05:20:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20L5KWJc007076;
-        Fri, 21 Jan 2022 05:20:53 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
-        by aserp3020.oracle.com with ESMTP id 3dqj0sh10a-1
+        Fri, 21 Jan 2022 05:20:59 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20L5Khlt094579;
+        Fri, 21 Jan 2022 05:20:58 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
+        by userp3030.oracle.com with ESMTP id 3dqj0vbm37-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jan 2022 05:20:53 +0000
+        Fri, 21 Jan 2022 05:20:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YQXBolHChpMCLZME2qtQlWnku7dSKEJaIYNNMp5qcUG3LkagSvShE2Fcd6iqPzP7I29FoSRs0u3ggbA8Oh5kxdrMSY/Ap2iWhLH3Xj0l/sK3LWAMyvVEsJjP0JsjxmY+Aq64GgbaWJ/LAVQpDXDkwixzumhkhty4bULCLsFCiA8Z7+f4/SY+6uD9G55Mmc81M4zfrVTsZ5irBRvXzW1/Q6pkoGzDLHUX9w2qlj6Jx2ub6WONqmj/g/wreSAyV80rMKnAOCD3BdXcWRNQkfBarXoQ6OrqFcrceQT45YgPSHIVWN41Z7m7aQmI80kagOErLcyNEX9ZKuck62uPbbbKAQ==
+ b=nQHOxRX3mQm3cGSFedfHjA/geZtjzHMT20qGVjV6/GqAdSgQ7ePIYUVonmX9JclqlQtgxw8LWNzojRRGRXSVVQfTHOnQE2mb+IryvgQzyW4ke1s+HEQ7M/NuNM8cRFLhT1ucQiaIvXbjBdDtePg+UpMH02BWmd6ezDkJq7+lEtwo+r50t9oIghNxzhjRD4K5E1FQJ1mSqa8ZpWdZvRbn7qZwCjwr+3KCL3f6ZdfoGkbLQP4e3GG3decw+f0oOEvpDSR4BKrSwZZq0MKUGHVR+flzSQf0ruV+A9v551DfrLLqIzMPT57cYkUUqu+51rPhCxgPiQlptcRdXogqI4YhNw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xchVTKQTW4IECbvoTNa5POR6is+dNUfG5DRGSLJKnqw=;
- b=PX5lqg/00LXf68muGioetwI13+hzr/4zDwh2/kdau8ChEx2pbS6SOivcys7IhFAjHR8Pf6Ut5RVmoG6gXGETQT9ltTOgscqAHQCRo3+pmweo2Kk0IXbxL42YiFRA4YAyPrM2a7pHHi2dCi+/l20df95JfSHP7oVcGBqetJ8Mf9QIawZPcuKLQ/DO0NGAiRz37khvSfUOUFBvXIl1kh1K2gLQxzRqpokDzOnwiwcklyqLdtySrSrBJX9Yv5SnT0owLbVFbeaMoYrNkTMlAV3hpVLZoawazb4gc8fXDwBKu5T55R0JbZUE5W60So9cdfDanSN4eJSwKl2dZq53GbAD3Q==
+ bh=2kHdSxkmY1lrmuT1Y3/bdHeXXn+4XDn6wjCnZ6Lc5j0=;
+ b=Eu6mpw1kyBBtTjwTdy3uorIue9dsGStyCSZ+1vzxo+h34FQZzKQSksEf0VyQ8YwgWDvMtc+n/uVQWlif9wRvtHoP+ZRACtGUn8AaBz/4eY00pfYOi4/aOA9N93acevfuXrsqJNLTcFuo+3dqNF8ShCos2ewwzQY4qCO1CwhlhH6mnaAgIfXmXU/vUzyfJSBo2ejcT2jkUn6VXrxZsIeWWY6n6OFbS4DGT4+23OIrdWfQlae1HV/irR6XL5HFu/HHh4bvWfJBkO5yv6xvJeZcwXub8QUCjJsh2tiEaYRfhH9J1DIItD8AggldNYPyU5vntqE2/jyMrfkxFfdPEjUXAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xchVTKQTW4IECbvoTNa5POR6is+dNUfG5DRGSLJKnqw=;
- b=nNT07b0Wsi5goYoLW5yFserAOeUlnFZRGyp9zeWJ6Rm1ZsLYKgwsaQr1tXO+SPV33+cCcAVDmRQU9nyUxsRHP048KLqrkWCOvTojZM740bcCvdATEb5qGfF6sAyNHUDSOElVQG+GJJwoIUTh1fgNBf78uPna5KPRszGXcAF1q4s=
+ bh=2kHdSxkmY1lrmuT1Y3/bdHeXXn+4XDn6wjCnZ6Lc5j0=;
+ b=rUrDpvXM/aoYGGhCoi8IVbqW2XDcXRtNoHimBdsCRTph7Li+WiMBWY/c5HzM+nw+La5FOeKLN9nL2OOkaqz1QW8+L5kZtV6PStx0JdgIeszhCM7BeGBAOermcnVsimtJnTsglr/9whkxSfBuO21hiI3ZBpAQfTyKQc3zWNnRF/o=
 Received: from SJ0PR10MB4589.namprd10.prod.outlook.com (2603:10b6:a03:2d0::16)
  by CY4PR10MB1287.namprd10.prod.outlook.com (2603:10b6:903:2b::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.12; Fri, 21 Jan
- 2022 05:20:51 +0000
+ 2022 05:20:55 +0000
 Received: from SJ0PR10MB4589.namprd10.prod.outlook.com
  ([fe80::3ce8:7ee8:46a0:9d4b]) by SJ0PR10MB4589.namprd10.prod.outlook.com
  ([fe80::3ce8:7ee8:46a0:9d4b%3]) with mapi id 15.20.4909.011; Fri, 21 Jan 2022
- 05:20:51 +0000
+ 05:20:53 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandan.babu@oracle.com>, djwong@kernel.org,
         david@fromorbit.com
-Subject: [PATCH V5 06/20] xfsprogs: Use basic types to define xfs_log_dinode's di_nextents and di_anextents
-Date:   Fri, 21 Jan 2022 10:50:05 +0530
-Message-Id: <20220121052019.224605-7-chandan.babu@oracle.com>
+Subject: [PATCH V5 07/20] xfsprogs: Promote xfs_extnum_t and xfs_aextnum_t to 64 and 32-bits respectively
+Date:   Fri, 21 Jan 2022 10:50:06 +0530
+Message-Id: <20220121052019.224605-8-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220121052019.224605-1-chandan.babu@oracle.com>
 References: <20220121052019.224605-1-chandan.babu@oracle.com>
@@ -74,90 +74,301 @@ X-ClientProxiedBy: SG2PR02CA0049.apcprd02.prod.outlook.com
  (2603:10b6:a03:2d0::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a8c38314-8819-437d-a475-08d9dc9dca59
+X-MS-Office365-Filtering-Correlation-Id: 2da34523-adeb-4f1a-6369-08d9dc9dcba7
 X-MS-TrafficTypeDiagnostic: CY4PR10MB1287:EE_
-X-Microsoft-Antispam-PRVS: <CY4PR10MB12875DA206C7F6920BB10766F65B9@CY4PR10MB1287.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:428;
+X-Microsoft-Antispam-PRVS: <CY4PR10MB1287550FE2C60C37E58A90B2F65B9@CY4PR10MB1287.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:26;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: w03CjmG+t15OdqxlDizekFVAvgzYe9cb1sl6LKh8sjoDshtEPEhtWUWXMim40X1xZXLyasz77Q+gOA2SPdaKdbtZyHfWNO8O67TOktiJZZqNtdte2cDE3SaSrvzfEhWPYVXEPR3eyschy4ybWoB2V8zWLMHF8CpA+URYSLdY3Y5vN8QDkwXVy2I9WnvufF3k/kt4UwUg1q/eVg6GyhQK0USWqpNSH39odTL1jvN4ypCIOW9amQpiwQQszk4O3kDfdfB1iQlGwFzMFUt3tToXdWvbTJSqCcso495nv6ZP+weTGifQxcvwUjTZbXalgwcO5u/YZAQ4yxudNPChTwOvyaLVfPdO7sgk9DpGnNAQrkTTt4yAyxjBuV48Ch69+17D9g4MDXxLXAgwsd+OmTft20gVTQRm8hX1YiK+zT16zo2NPWQ7OSP+E1mAusIJf+tQwFE6hfzHB8cfohkX3iJQ3dbWKQEuf7w1czhoGIYsq8e4nAnYgBZM7DcqDz8J9WlUy7OscSmg80tX/VDGRAOf1GSCbtYN2JMO5XETibiyHTRsSrMo4KX2dHKmiVQKra+AGy8Wns8fM+iRdAWsLbiC1pFZ7ImNDzUwo+1eSQjk2LnDcLvm73qwXmssNoTl5toRUJpwwahjWVwzOznqMOfy4gMXXPOBxr73vbFxV9aulgAEM8SQwD23yT46c+L9azt7hr9h7Hui6PhcRc9AETSn3g==
+X-Microsoft-Antispam-Message-Info: VxBr4IEAKjjVe7inlTakTJZlLh6CHxObm7mDEFxZTgJ95YafvSbH5mitkg5og/u2lqhGmR+pldFgs9oE6qa++/ZjJNKBFNNvp6SLlUhEWesBHzqPzxyG6l/YECm+M/+wFQ6SMbOxLJjDXea7mTK9Fe8/F/rObpoNmezG//HAEB9Fy1Id1+zkPiFz2YyDf/IirI5yzY4ZHOZhle6VZdaq+7/Saq8Zqf1yPcQh8Spg0IY9TyttE8YdoxOfi50CUNcx9Y5S8CRk5RuU3eSP3zYrJkAyMmEIyIDWx7D4ekUgGoObHtWBnDF0NCd3rcpx7tOhVeckPevbQ4z4cGdsgY2VGbiAL3O0Qt0jMHRwwn5bOv5enrL8JSez4J85PGiQX1egHzgEYIA1ztn76Phf5my9nHAZMnF8LKXbdykQxFn3wjRd1ZBZp3HeM4uaEQXYy2HfEo6skt704MTNYidzjCKNO+bPC4NjZ4O0xVKd8iFypRVOsN/n4xKJIuN4dVXXwwG1giAn7c9ez6NXrJtT7c+F6IzzKf/gJBH6vehXla8ee8PYClTgtes4X+Z1Ib62Qu6SQu+2Rk6KTVxE4uZeTRwrlokyMs7kjQRywRpzewLv/wOT9ZXkfeRBTWDC8OkNcGicdO2gtFnikGZI06xqzzAufCyXkxdWSnax5iC31f9AErKxYvQCgJIDDnFb25R7X6cABtcHbMkMPdgTELpRCqSWoQ==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4589.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(186003)(52116002)(66556008)(26005)(6916009)(2906002)(8676002)(5660300002)(66946007)(2616005)(6512007)(1076003)(4326008)(38100700002)(83380400001)(66476007)(86362001)(38350700002)(8936002)(6506007)(316002)(6486002)(6666004)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?B+2Zj8UDrtJE03900r40nOdVIEpvoDSgoOBPSwaPi1+rptD12bEsSJbjdg5i?=
- =?us-ascii?Q?f+iEQ924iFs9aOKH+XoH5pR/ATTipCOj5ZCsvil468cuxPbGbyWU6luvMMQQ?=
- =?us-ascii?Q?yoenb8nO+NevgeAqadbfq6NMgFJ5QdW5Gr2owBNpgCjJEZ/Tygf95T/hpz4j?=
- =?us-ascii?Q?4u6iwT9PmnahKP9pdQ3t3qaXGLoEPg01sWuNutjTiaqljB2m3Cib1+lgZ+y2?=
- =?us-ascii?Q?OV9WD6S8jnb7nt3/sM8eUl04zJUVKz5r6a8Hoo8VJWJF0Dz0dfr21LRpEOLr?=
- =?us-ascii?Q?lYOBtPNfyUgkoBTNOj1vQ8qMdrMgPTLuxFIh4HOJgf5/4tlU/7EM3QLk4h3e?=
- =?us-ascii?Q?HqcxeomTXh+8Xknq9XeKB33UAfz64VyXGlmPQBjKKDPG/u7XHAB2gKHLqYLp?=
- =?us-ascii?Q?vG934SD4UfsqxCPlCIfiQ6BaSVIUpM6zxl+NwzPTUueOQkiQ2eljzbWiH+09?=
- =?us-ascii?Q?O7/IDJYQifv8wQSLlocqMg85PdGveV83IpHDWAQOgtDoicMHMKHuNh5PcDyc?=
- =?us-ascii?Q?jhuIc5a+qaaUnIeUEMxVdxgKcWEVnBadKB+FSgPgnNLIMEOMV46lwzVvxau0?=
- =?us-ascii?Q?5U0SMT357i5XMxcWJ/yd612+/BXpgrDPl/GA39s6mkKDtvn6BVjfbP1hGbXa?=
- =?us-ascii?Q?oO9pOn9o6hzd3Z4DaVpnc/sorV+X/o6svIhgJmF0QcUEZqSYD+1JT/2CnsMd?=
- =?us-ascii?Q?NIeb6HRswr7p8WKMwJq9JJs3lg1ciCuWRhMIw5sm3ylzKtowUwe793F8br7f?=
- =?us-ascii?Q?rOTkvR60i6kdljHU/0xHSW1XYh12oLuxBBQMtsLVmgyU1X3TkAkPsUR2mK1y?=
- =?us-ascii?Q?fUzKy3aUNaUk9jvNPX27dg6vfQmPeRkfOBzM5G4i2NnHHjF/PxdkkAlNaQAd?=
- =?us-ascii?Q?05oJdS481OvVAtEngGqXWhoif7sGBaKocSrscBnyLkWdkTZ5OfoFUspX0bT3?=
- =?us-ascii?Q?LVBvPTJDzQTZNB1igWQeIlLyKWb/vW1X5mizzuyv+bV8OfVO7m3H8kEbjw9w?=
- =?us-ascii?Q?C+pRwv/C5djYEy+syczk2I+cR8yod5v6tTPRn3LgLNFCDY7r/hpSMWgiNLps?=
- =?us-ascii?Q?+1zmarJmkMn3ZGXs6El1kTod5r9eDStFLpey0Rx4OHa9MGUmFJk7Dg1NT2MJ?=
- =?us-ascii?Q?pBpu+ps127Dh2u+PquNLTGEG6w2sESK2gTFVwlXD1KdLFSt6Fe6TDGMQ6xMp?=
- =?us-ascii?Q?tbMdbtw4rdIrD4QAyiHAi8AYIjw15EojGN2bIY2CCqxWiY9tjg4IS6dnJ6jE?=
- =?us-ascii?Q?c52EL35mslEvATU68/Q75lv9GgqojsTqI6hGLcPsQBGb8/q8WgfGoF7Oc+LU?=
- =?us-ascii?Q?aJV5C22gSP40INkqJVpCYQPZcf9vP4nadyixZF6A1tIJh+6FTNCJMl9/fTbd?=
- =?us-ascii?Q?pkuiq+8+rgB/FKkaNeadTFtKXPgfHwRUveba1IoTHn8czBp1uaMqvVWwVVs7?=
- =?us-ascii?Q?KRn5NPoT2Beva0UCl041JbZ/NknC3R16uNFV5DNx5/9MNzI1v2Yr6oP9/+NC?=
- =?us-ascii?Q?2Ri1pLprlj5NMLq73NSp47MHIoyggxaRMmMvoPCSRWEwBUZe1rWnXRjqtehp?=
- =?us-ascii?Q?/ENxl2d/6WdNyHAL0DebiHcC6AAGfRNeBLuSrl4y+hqAri717lFRtBoaQexF?=
- =?us-ascii?Q?iPZSoSpnw6kAt4MOAb34f+k=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?qFXAibdLxHFqgOictubDOoOrPuIo/kWFG5EY53vfHUZRb9z3zC8D8egv51QJ?=
+ =?us-ascii?Q?FCtexbrY3QKlJ2mhbT2dVw9saCABfFCW5r/9IX3RjDMbvNkXvlxrgnrpJxKx?=
+ =?us-ascii?Q?LqJzZD3ZZra+jH2usfyYzvaUdE/fladdwUxr+YXold5XnONLgn7q8majgJod?=
+ =?us-ascii?Q?x5s2cjAUFYu8LrYtCBBhxuxtt0C0hM0HgzcsF3oFnMoNFXFjoqaONetmWiN1?=
+ =?us-ascii?Q?CXsjKa8EsNtILmSxYqNoPJQuKA7vZ3lB8kjN56wSb6EqwNlH41gmROwBVXDC?=
+ =?us-ascii?Q?aMv3ByWyu1LLigFa9qcg+6CMdEfWXQyBwAHiJsxMzxNqcNrPW7Z6YHQNUThp?=
+ =?us-ascii?Q?CcFSud/RnhOjB4v4ocrTDQnY8+MHLPA6z1IAh1np6yrkWLhF5oncat3QJxLB?=
+ =?us-ascii?Q?AoUCsfRBk+m6S3YTI6HBjvondgAIoWLUUPumyDcb9dAYvUvUNobiHGmSvKKp?=
+ =?us-ascii?Q?C6uRJo0sQ6nmpaynuZORsDvC90Phe3mGyDYNQMudaHc7DRLj41ZYCAagjQ7i?=
+ =?us-ascii?Q?Y30JctKVagxLEWQGDYplEM0BA+Kn5mMG4D53MLtRJbRCTdC9b8PLI4hOirMu?=
+ =?us-ascii?Q?BN/04W/+XQU4P0dIVPkPQX2blixFmFzpP3apzUbyWVBnGfIJlwu3bHB07mLz?=
+ =?us-ascii?Q?uhveoT+QswwsP0QjP7IhMjrZmynE/CEGMhRGu9qrMzk5EkoOe1FrwebzegXH?=
+ =?us-ascii?Q?Os3zceFtig5eOMPr/alQQoG/WWtvfS5yOhfh3PbOIix/ojd+J4ifUCNJBlLH?=
+ =?us-ascii?Q?cOmjWl4uG5BOolYv9d9/Gcb9DMjCpsIpPRkRFIudIPqWUFcEw75cTUtpmUTF?=
+ =?us-ascii?Q?8Vwb6GBWvljPTFcjRJFHWdv6m85AtFGqPHmq3UhDZEinKqJMF960sIHKu2/c?=
+ =?us-ascii?Q?k2zR/3s4RGVvsTYX7Fpmiclzg1hw1gDo11+r5/l+auzSvjR8kPxDjx22TsTW?=
+ =?us-ascii?Q?Jc/5uILG8NvJPHrXJa/TwHEJYzlYkAqsqo5NtlzV+pZFOk3q9spEd9VH5kn5?=
+ =?us-ascii?Q?eBbvLbEjNFwd6KGRsbEEY14kBOC4ltK2MLhSeBwaEYIOOVlS1snQTzlKSOvD?=
+ =?us-ascii?Q?p2EB3lp6dEWHTVK96qwC275z7Vr1hkPX7G7xCR6mAYDDL/J3XVU1N8/nslnt?=
+ =?us-ascii?Q?80OsnMovJ4SQ1owSXRemNrR6a2Poc2Fj8ujQTVveX9cJSq7pE2O4PGy9oyOJ?=
+ =?us-ascii?Q?5SZFm93EUP4C7YFXWx8KafvbrqOlfihQ4Fqo8ciYQps0Ory2An4S+KAJ4MUM?=
+ =?us-ascii?Q?6/t0QzS1d+9IkBjhN90aukFsRrEINtkARCCizd/1jmfHE3BukEg/S8izLygf?=
+ =?us-ascii?Q?cY7+3OvvUNACLW2GGUCtuemKJHqIiyQFoliw0KDATXjc3oDiLBgNCBb3qp5j?=
+ =?us-ascii?Q?9aoc6DJp63CTG1L4JUjvEIVOk0Y+Tqm4YWQ4bF7cYHhaZ3h0dzGdfdXy1WRR?=
+ =?us-ascii?Q?tFA3Myi8L+K/4d8NgpEcFryzIyU8ruHwOQab9spXjp6tPY2ox8bso3rpj+iz?=
+ =?us-ascii?Q?KzjjUjsqvIvPZxGjGIYvUFCeNCCGS+3+ribYitNQyexiEYfLNqco3D2DxH2O?=
+ =?us-ascii?Q?8hxVI3jWu8cjWTpG0yqVyYlgg9T/1I4S6WBTQ0dhTItKzbr8irMDc0DHCeKW?=
+ =?us-ascii?Q?j02iVr1uBpMG6w9ElsRljjw=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8c38314-8819-437d-a475-08d9dc9dca59
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2da34523-adeb-4f1a-6369-08d9dc9dcba7
 X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4589.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2022 05:20:51.5296
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2022 05:20:53.7637
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5bJtT+s7unbSGLIr/HPRQsBAwaxn+0T4WCI89bsqX7eHoNnMtYXwhAIIhX9CRNiEo+C2KsG5RzwHZtm85dYt3Q==
+X-MS-Exchange-CrossTenant-UserPrincipalName: qK7L7X8g7g8piW29a1kQKtc9YiReMnkXJujumQldV0Pdmw9KkYm7YcNMxOnqHA/aBMhn1WpYFmSIwWYuF4asyQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR10MB1287
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10233 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- malwarescore=0 phishscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2201210038
-X-Proofpoint-GUID: MyjMjssSNR8uNei-MfU1y-nPaE4kkOg7
-X-Proofpoint-ORIG-GUID: MyjMjssSNR8uNei-MfU1y-nPaE4kkOg7
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2201210038
+X-Proofpoint-ORIG-GUID: phDqRRu-jqXWA95KjQ4pHKzrCXj9MR8j
+X-Proofpoint-GUID: phDqRRu-jqXWA95KjQ4pHKzrCXj9MR8j
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-A future commit will increase the width of xfs_extnum_t in order to facilitate
-larger per-inode extent counters. Hence this patch now uses basic types to
-define xfs_log_dinode->[di_nextents|dianextents].
+A future commit will introduce a 64-bit on-disk data extent counter and a
+32-bit on-disk attr extent counter. This commit promotes xfs_extnum_t and
+xfs_aextnum_t to 64 and 32-bits in order to correctly handle in-core versions
+of these quantities.
 
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- libxfs/xfs_log_format.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ libxfs/xfs_bmap.c       |  6 +++---
+ libxfs/xfs_inode_fork.c |  2 +-
+ libxfs/xfs_inode_fork.h |  2 +-
+ libxfs/xfs_types.h      |  4 ++--
+ repair/dinode.c         | 20 ++++++++++----------
+ repair/dinode.h         |  4 ++--
+ repair/scan.c           |  6 +++---
+ 7 files changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/libxfs/xfs_log_format.h b/libxfs/xfs_log_format.h
-index b322db52..fd66e702 100644
---- a/libxfs/xfs_log_format.h
-+++ b/libxfs/xfs_log_format.h
-@@ -396,8 +396,8 @@ struct xfs_log_dinode {
- 	xfs_fsize_t	di_size;	/* number of bytes in file */
- 	xfs_rfsblock_t	di_nblocks;	/* # of direct & btree blocks used */
- 	xfs_extlen_t	di_extsize;	/* basic/minimum extent size for file */
--	xfs_extnum_t	di_nextents;	/* number of extents in data fork */
--	xfs_aextnum_t	di_anextents;	/* number of extents in attribute fork*/
-+	uint32_t	di_nextents;	/* number of extents in data fork */
-+	uint16_t	di_anextents;	/* number of extents in attribute fork*/
- 	uint8_t		di_forkoff;	/* attr fork offs, <<3 for 64b align */
- 	int8_t		di_aformat;	/* format of attr fork's data */
- 	uint32_t	di_dmevmask;	/* DMIG event mask */
+diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
+index 8da8aaab..42694956 100644
+--- a/libxfs/xfs_bmap.c
++++ b/libxfs/xfs_bmap.c
+@@ -45,9 +45,9 @@ xfs_bmap_compute_maxlevels(
+ 	xfs_mount_t	*mp,		/* file system mount structure */
+ 	int		whichfork)	/* data or attr fork */
+ {
++	xfs_extnum_t	maxleafents;	/* max leaf entries possible */
+ 	int		level;		/* btree level */
+ 	uint		maxblocks;	/* max blocks at this level */
+-	xfs_extnum_t	maxleafents;	/* max leaf entries possible */
+ 	int		maxrootrecs;	/* max records in root block */
+ 	int		minleafrecs;	/* min records in leaf block */
+ 	int		minnoderecs;	/* min records in node block */
+@@ -76,7 +76,7 @@ xfs_bmap_compute_maxlevels(
+ 	maxrootrecs = xfs_bmdr_maxrecs(sz, 0);
+ 	minleafrecs = mp->m_bmap_dmnr[0];
+ 	minnoderecs = mp->m_bmap_dmnr[1];
+-	maxblocks = (maxleafents + minleafrecs - 1) / minleafrecs;
++	maxblocks = howmany_64(maxleafents, minleafrecs);
+ 	for (level = 1; maxblocks > 1; level++) {
+ 		if (maxblocks <= maxrootrecs)
+ 			maxblocks = 1;
+@@ -460,7 +460,7 @@ error0:
+ 	if (bp_release)
+ 		xfs_trans_brelse(NULL, bp);
+ error_norelse:
+-	xfs_warn(mp, "%s: BAD after btree leaves for %d extents",
++	xfs_warn(mp, "%s: BAD after btree leaves for %llu extents",
+ 		__func__, i);
+ 	xfs_err(mp, "%s: CORRUPTED BTREE OR SOMETHING", __func__);
+ 	xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
+diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
+index 14b29722..f7fa0af5 100644
+--- a/libxfs/xfs_inode_fork.c
++++ b/libxfs/xfs_inode_fork.c
+@@ -115,7 +115,7 @@ xfs_iformat_extents(
+ 	 * we just bail out rather than crash in kmem_alloc() or memcpy() below.
+ 	 */
+ 	if (unlikely(size < 0 || size > XFS_DFORK_SIZE(dip, mp, whichfork))) {
+-		xfs_warn(ip->i_mount, "corrupt inode %Lu ((a)extents = %d).",
++		xfs_warn(ip->i_mount, "corrupt inode %Lu ((a)extents = %llu).",
+ 			(unsigned long long) ip->i_ino, nex);
+ 		xfs_inode_verifier_error(ip, -EFSCORRUPTED,
+ 				"xfs_iformat_extents(1)", dip, sizeof(*dip),
+diff --git a/libxfs/xfs_inode_fork.h b/libxfs/xfs_inode_fork.h
+index 7ed2ecb5..4a8b77d4 100644
+--- a/libxfs/xfs_inode_fork.h
++++ b/libxfs/xfs_inode_fork.h
+@@ -21,9 +21,9 @@ struct xfs_ifork {
+ 		void		*if_root;	/* extent tree root */
+ 		char		*if_data;	/* inline file data */
+ 	} if_u1;
++	xfs_extnum_t		if_nextents;	/* # of extents in this fork */
+ 	short			if_broot_bytes;	/* bytes allocated for root */
+ 	int8_t			if_format;	/* format of this fork */
+-	xfs_extnum_t		if_nextents;	/* # of extents in this fork */
+ };
+ 
+ /*
+diff --git a/libxfs/xfs_types.h b/libxfs/xfs_types.h
+index 794a54cb..373f64a4 100644
+--- a/libxfs/xfs_types.h
++++ b/libxfs/xfs_types.h
+@@ -12,8 +12,8 @@ typedef uint32_t	xfs_agblock_t;	/* blockno in alloc. group */
+ typedef uint32_t	xfs_agino_t;	/* inode # within allocation grp */
+ typedef uint32_t	xfs_extlen_t;	/* extent length in blocks */
+ typedef uint32_t	xfs_agnumber_t;	/* allocation group number */
+-typedef int32_t		xfs_extnum_t;	/* # of extents in a file */
+-typedef int16_t		xfs_aextnum_t;	/* # extents in an attribute fork */
++typedef uint64_t	xfs_extnum_t;	/* # of extents in a file */
++typedef uint32_t	xfs_aextnum_t;	/* # extents in an attribute fork */
+ typedef int64_t		xfs_fsize_t;	/* bytes in a file */
+ typedef uint64_t	xfs_ufsize_t;	/* unsigned bytes in a file */
+ 
+diff --git a/repair/dinode.c b/repair/dinode.c
+index 386c39f6..4cfc6352 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -342,7 +342,7 @@ static int
+ process_bmbt_reclist_int(
+ 	xfs_mount_t		*mp,
+ 	xfs_bmbt_rec_t		*rp,
+-	int			*numrecs,
++	xfs_extnum_t		*numrecs,
+ 	int			type,
+ 	xfs_ino_t		ino,
+ 	xfs_rfsblock_t		*tot,
+@@ -645,7 +645,7 @@ int
+ process_bmbt_reclist(
+ 	xfs_mount_t		*mp,
+ 	xfs_bmbt_rec_t		*rp,
+-	int			*numrecs,
++	xfs_extnum_t		*numrecs,
+ 	int			type,
+ 	xfs_ino_t		ino,
+ 	xfs_rfsblock_t		*tot,
+@@ -666,7 +666,7 @@ int
+ scan_bmbt_reclist(
+ 	xfs_mount_t		*mp,
+ 	xfs_bmbt_rec_t		*rp,
+-	int			*numrecs,
++	xfs_extnum_t		*numrecs,
+ 	int			type,
+ 	xfs_ino_t		ino,
+ 	xfs_rfsblock_t		*tot,
+@@ -1045,7 +1045,7 @@ _("mismatch between format (%d) and size (%" PRId64 ") in symlink inode %" PRIu6
+ 	 */
+ 	if (numrecs > max_symlink_blocks)  {
+ 		do_warn(
+-_("bad number of extents (%d) in symlink %" PRIu64 " data fork\n"),
++_("bad number of extents (%lu) in symlink %" PRIu64 " data fork\n"),
+ 			numrecs, lino);
+ 		return(1);
+ 	}
+@@ -1603,7 +1603,7 @@ _("realtime summary inode %" PRIu64 " has bad type 0x%x, "),
+ 		nextents = xfs_dfork_data_extents(dinoc);
+ 		if (mp->m_sb.sb_rblocks == 0 && nextents != 0)  {
+ 			do_warn(
+-_("bad # of extents (%d) for realtime summary inode %" PRIu64 "\n"),
++_("bad # of extents (%lu) for realtime summary inode %" PRIu64 "\n"),
+ 				nextents, lino);
+ 			return 1;
+ 		}
+@@ -1626,7 +1626,7 @@ _("realtime bitmap inode %" PRIu64 " has bad type 0x%x, "),
+ 		nextents = xfs_dfork_data_extents(dinoc);
+ 		if (mp->m_sb.sb_rblocks == 0 && nextents != 0)  {
+ 			do_warn(
+-_("bad # of extents (%d) for realtime bitmap inode %" PRIu64 "\n"),
++_("bad # of extents (%lu) for realtime bitmap inode %" PRIu64 "\n"),
+ 				nextents, lino);
+ 			return 1;
+ 		}
+@@ -1815,13 +1815,13 @@ _("too many data fork extents (%" PRIu64 ") in inode %" PRIu64 "\n"),
+ 	if (nextents != dnextents)  {
+ 		if (!no_modify)  {
+ 			do_warn(
+-_("correcting nextents for inode %" PRIu64 ", was %d - counted %" PRIu64 "\n"),
++_("correcting nextents for inode %" PRIu64 ", was %lu - counted %" PRIu64 "\n"),
+ 				lino, dnextents, nextents);
+ 			dino->di_nextents = cpu_to_be32(nextents);
+ 			*dirty = 1;
+ 		} else  {
+ 			do_warn(
+-_("bad nextents %d for inode %" PRIu64 ", would reset to %" PRIu64 "\n"),
++_("bad nextents %lu for inode %" PRIu64 ", would reset to %" PRIu64 "\n"),
+ 				dnextents, lino, nextents);
+ 		}
+ 	}
+@@ -1837,13 +1837,13 @@ _("too many attr fork extents (%" PRIu64 ") in inode %" PRIu64 "\n"),
+ 	if (anextents != dnextents)  {
+ 		if (!no_modify)  {
+ 			do_warn(
+-_("correcting anextents for inode %" PRIu64 ", was %d - counted %" PRIu64 "\n"),
++_("correcting anextents for inode %" PRIu64 ", was %lu - counted %" PRIu64 "\n"),
+ 				lino, dnextents, anextents);
+ 			dino->di_anextents = cpu_to_be16(anextents);
+ 			*dirty = 1;
+ 		} else  {
+ 			do_warn(
+-_("bad anextents %d for inode %" PRIu64 ", would reset to %" PRIu64 "\n"),
++_("bad anextents %lu for inode %" PRIu64 ", would reset to %" PRIu64 "\n"),
+ 				dnextents, lino, anextents);
+ 		}
+ 	}
+diff --git a/repair/dinode.h b/repair/dinode.h
+index 4ed8b46f..333d96d2 100644
+--- a/repair/dinode.h
++++ b/repair/dinode.h
+@@ -20,7 +20,7 @@ convert_extent(
+ int
+ process_bmbt_reclist(xfs_mount_t	*mp,
+ 		xfs_bmbt_rec_t		*rp,
+-		int			*numrecs,
++		xfs_extnum_t		*numrecs,
+ 		int			type,
+ 		xfs_ino_t		ino,
+ 		xfs_rfsblock_t		*tot,
+@@ -33,7 +33,7 @@ int
+ scan_bmbt_reclist(
+ 	xfs_mount_t		*mp,
+ 	xfs_bmbt_rec_t		*rp,
+-	int			*numrecs,
++	xfs_extnum_t		*numrecs,
+ 	int			type,
+ 	xfs_ino_t		ino,
+ 	xfs_rfsblock_t		*tot,
+diff --git a/repair/scan.c b/repair/scan.c
+index 5a4b8dbd..c8977a02 100644
+--- a/repair/scan.c
++++ b/repair/scan.c
+@@ -220,7 +220,7 @@ scan_bmapbt(
+ 	xfs_fileoff_t		first_key;
+ 	xfs_fileoff_t		last_key;
+ 	char			*forkname = get_forkname(whichfork);
+-	int			numrecs;
++	xfs_extnum_t		numrecs;
+ 	xfs_agnumber_t		agno;
+ 	xfs_agblock_t		agbno;
+ 	int			state;
+@@ -425,7 +425,7 @@ _("couldn't add inode %"PRIu64" bmbt block %"PRIu64" reverse-mapping data."),
+ 		if (numrecs > mp->m_bmap_dmxr[0] || (isroot == 0 && numrecs <
+ 							mp->m_bmap_dmnr[0])) {
+ 				do_warn(
+-_("inode %" PRIu64 " bad # of bmap records (%u, min - %u, max - %u)\n"),
++_("inode %" PRIu64 " bad # of bmap records (%lu, min - %u, max - %u)\n"),
+ 					ino, numrecs, mp->m_bmap_dmnr[0],
+ 					mp->m_bmap_dmxr[0]);
+ 			return(1);
+@@ -476,7 +476,7 @@ _("out-of-order bmap key (file offset) in inode %" PRIu64 ", %s fork, fsbno %" P
+ 	if (numrecs > mp->m_bmap_dmxr[1] || (isroot == 0 && numrecs <
+ 							mp->m_bmap_dmnr[1])) {
+ 		do_warn(
+-_("inode %" PRIu64 " bad # of bmap records (%u, min - %u, max - %u)\n"),
++_("inode %" PRIu64 " bad # of bmap records (%lu, min - %u, max - %u)\n"),
+ 			ino, numrecs, mp->m_bmap_dmnr[1], mp->m_bmap_dmxr[1]);
+ 		return(1);
+ 	}
 -- 
 2.30.2
 
