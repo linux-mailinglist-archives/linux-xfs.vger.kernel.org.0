@@ -2,568 +2,218 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA4E149D880
-	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jan 2022 03:52:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F37649D8D9
+	for <lists+linux-xfs@lfdr.de>; Thu, 27 Jan 2022 04:10:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbiA0Cwu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 26 Jan 2022 21:52:50 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22259 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229584AbiA0Cwu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 26 Jan 2022 21:52:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643251969;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kWKz7dCJ5Ew8+0klR8LjBnAFJfzmPJdpEk21qPjuCVI=;
-        b=PTb4gDx9g28iCz68ZRFGdNE8SgB3wpOgw3z5ViqlnfeENP+Aou0wOeABqD1wrOFC6C8ueo
-        rfVBGfuhfnSQL48lVtc7Od5jSGwFIPMzsiGwkIVO2AIp39wkXdHIFNuP0J4M3Dy5AdTUUC
-        l7bUGn9H/44xeXrpLTqoRc0hK4Nq59o=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-596-YwjZcpVzNuOC7fKWxJo5Zw-1; Wed, 26 Jan 2022 21:52:48 -0500
-X-MC-Unique: YwjZcpVzNuOC7fKWxJo5Zw-1
-Received: by mail-pf1-f200.google.com with SMTP id d9-20020a62f809000000b004bb5ffee9b3so846933pfh.15
-        for <linux-xfs@vger.kernel.org>; Wed, 26 Jan 2022 18:52:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=kWKz7dCJ5Ew8+0klR8LjBnAFJfzmPJdpEk21qPjuCVI=;
-        b=Q3Qw2z5oeEPibCBrsWwXhT9sWpC3CYV5kqsDDQzAjo/+zZ5/N+lNp71mYT5INCRRRq
-         NljJ1iks0zi3svX8tYUanrY6Uk/drJ8wEMsfENw8HrUE7naKl/lmSus86JBScDcaYrk6
-         Bz/njwDDDmzPleHDZuS09KLPNPEVdGq/DgznG/fYExYH/0+XdxEYUTNMqxlseVqs92T7
-         gHoRAN13llw53LG2M7yLhuDxNmiJJMSwru4xuhQeAy2E1rc/0QGIEOtIDMyQkRI/C5IF
-         auKrqS+I1tOC3Lhq2u/gYPaByNxWca8RESxpTDblJqaISZV3lEJeB+RNhXXJZUPVQGq6
-         UibA==
-X-Gm-Message-State: AOAM531LabZq+rXFCFREhaNdGLn6RpClKcGcxTPLqw6NPtaaSGAS2K3t
-        iiQDKadYCJu5W/PuHKVizA8JjA1nsI+JZ2qyRYNf4c+iQGRwMSvbp1JKE9Yq6LY31tGYgRcFtlF
-        +BrHQcS2w3PY95TlHwDOD
-X-Received: by 2002:a17:90b:4b8e:: with SMTP id lr14mr82875pjb.54.1643251966891;
-        Wed, 26 Jan 2022 18:52:46 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyQrOe/2nD6sGhFCXpahGGtIY4+5WLhJVM3yDST0ldZgqwl1vti6nqV0jOL6lm6lUXjmpttDg==
-X-Received: by 2002:a17:90b:4b8e:: with SMTP id lr14mr82858pjb.54.1643251966475;
-        Wed, 26 Jan 2022 18:52:46 -0800 (PST)
-Received: from zlang-mailbox ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id j15sm3583048pfj.102.2022.01.26.18.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jan 2022 18:52:45 -0800 (PST)
-Date:   Thu, 27 Jan 2022 10:52:42 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 1/2] generic: test suid/sgid behavior with reflink and
- dedupe
-Message-ID: <20220127025242.yfw2h5vfw3lxbfep@zlang-mailbox>
-Mail-Followup-To: "Darrick J. Wong" <djwong@kernel.org>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-References: <164316310323.2594527.8578672050751235563.stgit@magnolia>
- <164316310910.2594527.6072232851001636761.stgit@magnolia>
- <20220126055641.wnyawz3ooeqnwefi@zlang-mailbox>
- <20220127005556.GC13540@magnolia>
+        id S235580AbiA0DKK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 26 Jan 2022 22:10:10 -0500
+Received: from mail-dm6nam11on2084.outbound.protection.outlook.com ([40.107.223.84]:21441
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S235511AbiA0DKE (ORCPT <rfc822;linux-xfs@vger.kernel.org>);
+        Wed, 26 Jan 2022 22:10:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EazSu/kbhx2c+x0P29prix7boVv40QEEcsr1GIKo6YrSOCZ9zP+Y8LThIEbB1tnw3J876JuMoiWloBuCDSrSqVh/ylUOCCc2CUBJKVe6i+8gEAaptoKjLXxd16FE0/cgvf/MieVxkDKC8SvWSd3xxW/DEWvG4zCQQ2DR2s5izk/gUnmoFGfSBtZ8qFF9YAVB5PJO+9/YNWTiQLF3BOLA38LKM/y4QxQX0e95PGlKILo80CDVBN/3NT+QC1lq1Zec34v78aiMvUFsm5vbkiYypc0fuAqY4J7EkQrhHaLPJ76OFu7Mi8kWo5SNE4Mqyo8Kry2fRBa3DoNK/YVHo2calw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=echqpR4vSwoF6VTqdjBRSvMm9RVhcVS/z9aiXSLA7Eo=;
+ b=SmoQUors0y69Juljkl20xDOxA0BE03DzuieaOY8A9UcSTZ+DWUfQmarTgqxGEXMW/bCv/f3ykfjiSfHIyG296Xs5eOzzbs3oVu3JLddfuM6jRqGdJsrwDn5wYFlouVSKuxLH6SVT4NGSxK5LpYRtYPxkEoLPYcK2XNDdFm1L7H7CDd5l3k0Jgoh6cEHeCXi9+vn1LhXxULM7fexsuRZ0jBzJH96IV3QWWarZNkGUvPb6d2rjD4A6KIV0iiLN7MtvV4PU1XT7x1vpJZw+w374q7p/4+ZolOksnqw1xw8kOsXzAoPu1yKZLhNQ6zmOKOQMCdgDb0y2Oih2RyVTI6KVEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=echqpR4vSwoF6VTqdjBRSvMm9RVhcVS/z9aiXSLA7Eo=;
+ b=eF0oT8aIvyNbEf8P9mRQUuVG/NoMM2Kb+TBieGYIJwU84RyJbFkwiFp8UCIoXcPGyQP2EA0r+NbrRMeNm+3HExK+cNKd2eHO17HbvFt0mOAbn8Xfd1YY1YjIYDSZEecbzgTJCWbuhib9N/1GUJ8QezkvS/Mk2j2s000emwCaOYQ=
+Received: from CO2PR05CA0087.namprd05.prod.outlook.com (2603:10b6:104:1::13)
+ by BN7PR12MB2770.namprd12.prod.outlook.com (2603:10b6:408:32::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.17; Thu, 27 Jan
+ 2022 03:10:01 +0000
+Received: from CO1NAM11FT066.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:104:1:cafe::85) by CO2PR05CA0087.outlook.office365.com
+ (2603:10b6:104:1::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.17 via Frontend
+ Transport; Thu, 27 Jan 2022 03:10:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT066.mail.protection.outlook.com (10.13.175.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4930.15 via Frontend Transport; Thu, 27 Jan 2022 03:10:00 +0000
+Received: from alex-MS-7B09.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Wed, 26 Jan
+ 2022 21:09:58 -0600
+From:   Alex Sierra <alex.sierra@amd.com>
+To:     <akpm@linux-foundation.org>, <Felix.Kuehling@amd.com>,
+        <linux-mm@kvack.org>, <rcampbell@nvidia.com>,
+        <linux-ext4@vger.kernel.org>, <linux-xfs@vger.kernel.org>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <hch@lst.de>, <jgg@nvidia.com>, <jglisse@redhat.com>,
+        <apopple@nvidia.com>, <willy@infradead.org>
+Subject: [PATCH v4 00/10] Add MEMORY_DEVICE_COHERENT for coherent device memory mapping
+Date:   Wed, 26 Jan 2022 21:09:39 -0600
+Message-ID: <20220127030949.19396-1-alex.sierra@amd.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220127005556.GC13540@magnolia>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ec8902e5-b213-44ab-2380-08d9e1428167
+X-MS-TrafficTypeDiagnostic: BN7PR12MB2770:EE_
+X-Microsoft-Antispam-PRVS: <BN7PR12MB277038D90D656EF0C05064D9FD219@BN7PR12MB2770.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9+GdVnhbmrRllv9+d949E4IQN5p2Nj8GTzTCR1/QEBds+mXglwfQTwprvh/Y4rxloej/5vhRWtYLu8k29KPDg9/mv9XhIlzxOg6wglTLQ78aiCme4n7G0Y+cmwuG8UuueBWl7stgBaK54tK1FYLryy6HH6bFGSv48HWmfVB48758a6+uPfbqQQc42glUFrAZk7qGgZbOLTfeJZULg/PsfWbMkIlT4mgioEihmJGi0KUzfteuB6wha/He/OAHRZSTUSm6Qtn51FuYE+2uStyQKPquOPB9j0lUnLD0yu2RnpqDN6ZyQCM62BQKlNKp/K50yrT+Mh9RH5oqxtah2rb2BkkN9KHfXr3R6B/bTNWPDF0LnoHY9dW0kU0MlTioBDEj4gy2f4/DIrcwES3qQQIQQTvLLa8GjUgljAZ/vJM3Dwr8F42HR+kHNyROvKpvYbGCbkuY3UzIDM+HwVb73Cdezl9TbVjeu8DiN12iZV9qaiAZwFU3xZ4eCK/B1jncld20V/S4d7K7rXhJdnKr86+0FOmfSGx6FpeLZ/dPFPVhZCuDrORqvMMOJBDo4Azy/tr+VCSFYZQ4j7YpBZOcJZt3lc08MRJc4BA+dsr/1LC25ibb7M4FNsxMmgOvoBF4IJVj3CHZ86ynY8Wv4wGd/qIfZpuvCezalaiqRsl8kvx5jMsSLHKuMqDJjcx2CN32CrKdOx0GIg8cCk1ohl7dfPMSoChgJ8kNQYKQhDFqRCPms1KT8o625+cLc9ELR8G94GU4wjAJ1eRjmlRqT6i0QHSUCq7Jf4yVUcYd21UZIdPgz78=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(40470700004)(356005)(83380400001)(6666004)(336012)(26005)(2616005)(47076005)(70586007)(40460700003)(8676002)(316002)(110136005)(44832011)(54906003)(508600001)(1076003)(36756003)(36860700001)(7416002)(4326008)(7696005)(2906002)(81166007)(70206006)(5660300002)(8936002)(186003)(16526019)(82310400004)(426003)(86362001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2022 03:10:00.2872
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec8902e5-b213-44ab-2380-08d9e1428167
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT066.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2770
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jan 26, 2022 at 04:55:56PM -0800, Darrick J. Wong wrote:
-> On Wed, Jan 26, 2022 at 01:56:41PM +0800, Zorro Lang wrote:
-> > On Tue, Jan 25, 2022 at 06:11:49PM -0800, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <djwong@kernel.org>
-> > > 
-> > > Make sure that we drop the setuid and setgid bits any time reflink or
-> > > dedupe change the file contents.
-> > > 
-> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > > ---
-> > >  tests/generic/950     |  108 +++++++++++++++++++++++++++++++++++++++++++++
-> > >  tests/generic/950.out |   49 ++++++++++++++++++++
-> > >  tests/generic/951     |  118 +++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  tests/generic/951.out |   49 ++++++++++++++++++++
-> > >  tests/generic/952     |   71 +++++++++++++++++++++++++++++
-> > >  tests/generic/952.out |   13 +++++
-> > >  6 files changed, 408 insertions(+)
-> > >  create mode 100755 tests/generic/950
-> > >  create mode 100644 tests/generic/950.out
-> > >  create mode 100755 tests/generic/951
-> > >  create mode 100644 tests/generic/951.out
-> > >  create mode 100755 tests/generic/952
-> > >  create mode 100644 tests/generic/952.out
-> > > 
-> > > 
-> > > diff --git a/tests/generic/950 b/tests/generic/950
-> > > new file mode 100755
-> > > index 00000000..84f1d1f0
-> > > --- /dev/null
-> > > +++ b/tests/generic/950
-> > > @@ -0,0 +1,108 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Copyright (c) 2022 Oracle.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test 950
-> > > +#
-> > > +# Functional test for dropping suid and sgid bits as part of a reflink.
-> > > +#
-> > > +. ./common/preamble
-> > > +_begin_fstest auto clone quick
-> > > +
-> > > +# Import common functions.
-> > > +. ./common/filter
-> > > +. ./common/reflink
-> > > +
-> > > +# real QA test starts here
-> > > +
-> > > +# Modify as appropriate.
-> > > +_supported_fs generic
-> > > +_require_user
-> > > +_require_scratch_reflink
-> > > +
-> > > +_scratch_mkfs >> $seqres.full
-> > > +_scratch_mount
-> > > +_require_congruent_file_oplen $SCRATCH_MNT 1048576
-> > 
-> > Is this a Darrick's secret helper ? :)
-> 
-> Oops, yes.  Will resend.
-> 
-> There's a big old patchset in djwong-dev that teaches all the reflink
-> tests to _notrun if the file allocation unit is not congruent (i.e. an
-> integer multiple or factor) with the operation sizes used in the test.
-> 
-> I should probably move that up in the branch, but with Lunar New Year
-> starting next week there probably isn't much point... ;)
+This patch series introduces MEMORY_DEVICE_COHERENT, a type of memory
+owned by a device that can be mapped into CPU page tables like
+MEMORY_DEVICE_GENERIC and can also be migrated like
+MEMORY_DEVICE_PRIVATE.
 
-Sure, Happy Lunar New Year ("新春快乐") in advance :)
+Christoph, the suggestion to incorporate Ralph Campbell’s refcount
+cleanup patch into our hardware page migration patchset originally came
+from you, but it proved impractical to do things in that order because
+the refcount cleanup introduced a bug with wide ranging structural
+implications. Instead, we amended Ralph’s patch so that it could be
+applied after merging the migration work. As we saw from the recent
+discussion, merging the refcount work is going to take some time and
+cooperation between multiple development groups, while the migration
+work is ready now and is needed now. So we propose to merge this
+patchset first and continue to work with Ralph and others to merge the
+refcount cleanup separately, when it is ready.
 
-> 
-> --D
-> 
-> > Thanks,
-> > Zorro
-> > 
-> > > +chmod a+rw $SCRATCH_MNT/
-> > > +
-> > > +setup_testfile() {
-> > > +	rm -f $SCRATCH_MNT/a $SCRATCH_MNT/b
-> > > +	_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
-> > > +	_pwrite_byte 0x57 0 1m $SCRATCH_MNT/b >> $seqres.full
-> > > +	chmod a+r $SCRATCH_MNT/b
-> > > +	sync
-> > > +}
-> > > +
-> > > +commit_and_check() {
-> > > +	local user="$1"
-> > > +
-> > > +	md5sum $SCRATCH_MNT/a | _filter_scratch
-> > > +	stat -c '%a %A %n' $SCRATCH_MNT/a | _filter_scratch
-> > > +
-> > > +	local cmd="$XFS_IO_PROG -c 'reflink $SCRATCH_MNT/b 0 0 1m' $SCRATCH_MNT/a"
-> > > +	if [ -n "$user" ]; then
-> > > +		su - "$user" -c "$cmd" >> $seqres.full
-> > > +	else
-> > > +		$SHELL -c "$cmd" >> $seqres.full
-> > > +	fi
-> > > +
-> > > +	_scratch_cycle_mount
-> > > +	md5sum $SCRATCH_MNT/a | _filter_scratch
-> > > +	stat -c '%a %A %n' $SCRATCH_MNT/a | _filter_scratch
-> > > +
-> > > +	# Blank line in output
-> > > +	echo
-> > > +}
-> > > +
-> > > +# Commit to a non-exec file by an unprivileged user clears suid but leaves
-> > > +# sgid.
-> > > +echo "Test 1 - qa_user, non-exec file"
-> > > +setup_testfile
-> > > +chmod a+rws $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a group-exec file by an unprivileged user clears suid and sgid.
-> > > +echo "Test 2 - qa_user, group-exec file"
-> > > +setup_testfile
-> > > +chmod g+x,a+rws $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a user-exec file by an unprivileged user clears suid but not sgid.
-> > > +echo "Test 3 - qa_user, user-exec file"
-> > > +setup_testfile
-> > > +chmod u+x,a+rws,g-x $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a all-exec file by an unprivileged user clears suid and sgid.
-> > > +echo "Test 4 - qa_user, all-exec file"
-> > > +setup_testfile
-> > > +chmod a+rwxs $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a non-exec file by root clears suid but leaves sgid.
-> > > +echo "Test 5 - root, non-exec file"
-> > > +setup_testfile
-> > > +chmod a+rws $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# Commit to a group-exec file by root clears suid and sgid.
-> > > +echo "Test 6 - root, group-exec file"
-> > > +setup_testfile
-> > > +chmod g+x,a+rws $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# Commit to a user-exec file by root clears suid but not sgid.
-> > > +echo "Test 7 - root, user-exec file"
-> > > +setup_testfile
-> > > +chmod u+x,a+rws,g-x $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# Commit to a all-exec file by root clears suid and sgid.
-> > > +echo "Test 8 - root, all-exec file"
-> > > +setup_testfile
-> > > +chmod a+rwxs $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# success, all done
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/generic/950.out b/tests/generic/950.out
-> > > new file mode 100644
-> > > index 00000000..b42e4931
-> > > --- /dev/null
-> > > +++ b/tests/generic/950.out
-> > > @@ -0,0 +1,49 @@
-> > > +QA output created by 950
-> > > +Test 1 - qa_user, non-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +2666 -rw-rwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 2 - qa_user, group-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +676 -rw-rwxrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 3 - qa_user, user-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +2766 -rwxrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 4 - qa_user, all-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +777 -rwxrwxrwx SCRATCH_MNT/a
-> > > +
-> > > +Test 5 - root, non-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 6 - root, group-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 7 - root, user-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 8 - root, all-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +3784de23efab7a2074c9ec66901e39e5  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +
-> > > diff --git a/tests/generic/951 b/tests/generic/951
-> > > new file mode 100755
-> > > index 00000000..99f67ab7
-> > > --- /dev/null
-> > > +++ b/tests/generic/951
-> > > @@ -0,0 +1,118 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Copyright (c) 2022 Oracle.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test 951
-> > > +#
-> > > +# Functional test for dropping suid and sgid bits as part of a deduplication.
-> > > +#
-> > > +. ./common/preamble
-> > > +_begin_fstest auto clone quick
-> > > +
-> > > +# Import common functions.
-> > > +. ./common/filter
-> > > +. ./common/reflink
-> > > +
-> > > +# real QA test starts here
-> > > +
-> > > +# Modify as appropriate.
-> > > +_supported_fs generic
-> > > +_require_user
-> > > +_require_scratch_reflink
-> > > +_require_xfs_io_command dedupe
-> > > +
-> > > +_scratch_mkfs >> $seqres.full
-> > > +_scratch_mount
-> > > +_require_congruent_file_oplen $SCRATCH_MNT 1048576
-> > > +chmod a+rw $SCRATCH_MNT/
-> > > +
-> > > +setup_testfile() {
-> > > +	rm -f $SCRATCH_MNT/a $SCRATCH_MNT/b
-> > > +	_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
-> > > +	_pwrite_byte 0x58 0 1m $SCRATCH_MNT/b >> $seqres.full
-> > > +	chmod a+r $SCRATCH_MNT/b
-> > > +	sync
-> > > +}
-> > > +
-> > > +commit_and_check() {
-> > > +	local user="$1"
-> > > +
-> > > +	md5sum $SCRATCH_MNT/a | _filter_scratch
-> > > +	stat -c '%a %A %n' $SCRATCH_MNT/a | _filter_scratch
-> > > +
-> > > +	local before_freesp=$(_get_available_space $SCRATCH_MNT)
-> > > +
-> > > +	local cmd="$XFS_IO_PROG -c 'dedupe $SCRATCH_MNT/b 0 0 1m' $SCRATCH_MNT/a"
-> > > +	if [ -n "$user" ]; then
-> > > +		su - "$user" -c "$cmd" >> $seqres.full
-> > > +	else
-> > > +		$SHELL -c "$cmd" >> $seqres.full
-> > > +	fi
-> > > +
-> > > +	_scratch_cycle_mount
-> > > +	md5sum $SCRATCH_MNT/a | _filter_scratch
-> > > +	stat -c '%a %A %n' $SCRATCH_MNT/a | _filter_scratch
-> > > +
-> > > +	local after_freesp=$(_get_available_space $SCRATCH_MNT)
-> > > +
-> > > +	echo "before: $before_freesp; after: $after_freesp" >> $seqres.full
-> > > +	if [ $after_freesp -le $before_freesp ]; then
-> > > +		echo "expected more free space after dedupe"
-> > > +	fi
-> > > +
-> > > +	# Blank line in output
-> > > +	echo
-> > > +}
-> > > +
-> > > +# Commit to a non-exec file by an unprivileged user clears suid but leaves
-> > > +# sgid.
-> > > +echo "Test 1 - qa_user, non-exec file"
-> > > +setup_testfile
-> > > +chmod a+rws $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a group-exec file by an unprivileged user clears suid and sgid.
-> > > +echo "Test 2 - qa_user, group-exec file"
-> > > +setup_testfile
-> > > +chmod g+x,a+rws $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a user-exec file by an unprivileged user clears suid but not sgid.
-> > > +echo "Test 3 - qa_user, user-exec file"
-> > > +setup_testfile
-> > > +chmod u+x,a+rws,g-x $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a all-exec file by an unprivileged user clears suid and sgid.
-> > > +echo "Test 4 - qa_user, all-exec file"
-> > > +setup_testfile
-> > > +chmod a+rwxs $SCRATCH_MNT/a
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit to a non-exec file by root clears suid but leaves sgid.
-> > > +echo "Test 5 - root, non-exec file"
-> > > +setup_testfile
-> > > +chmod a+rws $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# Commit to a group-exec file by root clears suid and sgid.
-> > > +echo "Test 6 - root, group-exec file"
-> > > +setup_testfile
-> > > +chmod g+x,a+rws $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# Commit to a user-exec file by root clears suid but not sgid.
-> > > +echo "Test 7 - root, user-exec file"
-> > > +setup_testfile
-> > > +chmod u+x,a+rws,g-x $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# Commit to a all-exec file by root clears suid and sgid.
-> > > +echo "Test 8 - root, all-exec file"
-> > > +setup_testfile
-> > > +chmod a+rwxs $SCRATCH_MNT/a
-> > > +commit_and_check
-> > > +
-> > > +# success, all done
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/generic/951.out b/tests/generic/951.out
-> > > new file mode 100644
-> > > index 00000000..f7099ea2
-> > > --- /dev/null
-> > > +++ b/tests/generic/951.out
-> > > @@ -0,0 +1,49 @@
-> > > +QA output created by 951
-> > > +Test 1 - qa_user, non-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 2 - qa_user, group-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 3 - qa_user, user-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 4 - qa_user, all-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +
-> > > +Test 5 - root, non-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6666 -rwSrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 6 - root, group-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6676 -rwSrwsrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 7 - root, user-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6766 -rwsrwSrw- SCRATCH_MNT/a
-> > > +
-> > > +Test 8 - root, all-exec file
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
-> > > +6777 -rwsrwsrwx SCRATCH_MNT/a
-> > > +
-> > > diff --git a/tests/generic/952 b/tests/generic/952
-> > > new file mode 100755
-> > > index 00000000..470d73bd
-> > > --- /dev/null
-> > > +++ b/tests/generic/952
-> > > @@ -0,0 +1,71 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Copyright (c) 2022 Oracle.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test 952
-> > > +#
-> > > +# Functional test for dropping suid and sgid capabilities as part of a reflink.
-> > > +#
-> > > +. ./common/preamble
-> > > +_begin_fstest auto clone quick
-> > > +
-> > > +# Import common functions.
-> > > +. ./common/filter
-> > > +. ./common/reflink
-> > > +
-> > > +# real QA test starts here
-> > > +
-> > > +# Modify as appropriate.
-> > > +_supported_fs generic
-> > > +_require_user
-> > > +_require_command "$GETCAP_PROG" getcap
-> > > +_require_command "$SETCAP_PROG" setcap
-> > > +_require_scratch_reflink
-> > > +
-> > > +_scratch_mkfs >> $seqres.full
-> > > +_scratch_mount
-> > > +_require_congruent_file_oplen $SCRATCH_MNT 1048576
-> > > +chmod a+rw $SCRATCH_MNT/
-> > > +
-> > > +setup_testfile() {
-> > > +	rm -f $SCRATCH_MNT/a $SCRATCH_MNT/b
-> > > +	_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
-> > > +	_pwrite_byte 0x57 0 1m $SCRATCH_MNT/b >> $seqres.full
-> > > +	chmod a+rwx $SCRATCH_MNT/a $SCRATCH_MNT/b
-> > > +	$SETCAP_PROG cap_setgid,cap_setuid+ep $SCRATCH_MNT/a
-> > > +	sync
-> > > +}
-> > > +
-> > > +commit_and_check() {
-> > > +	local user="$1"
-> > > +
-> > > +	stat -c '%a %A %n' $SCRATCH_MNT/a | _filter_scratch
-> > > +	_getcap -v $SCRATCH_MNT/a | _filter_scratch
-> > > +
-> > > +	local cmd="$XFS_IO_PROG -c 'reflink $SCRATCH_MNT/b 0 0 1m' $SCRATCH_MNT/a"
-> > > +	if [ -n "$user" ]; then
-> > > +		su - "$user" -c "$cmd" >> $seqres.full
-> > > +	else
-> > > +		$SHELL -c "$cmd" >> $seqres.full
-> > > +	fi
-> > > +
-> > > +	stat -c '%a %A %n' $SCRATCH_MNT/a | _filter_scratch
-> > > +	_getcap -v $SCRATCH_MNT/a | _filter_scratch
-> > > +
-> > > +	# Blank line in output
-> > > +	echo
-> > > +}
-> > > +
-> > > +# Commit by an unprivileged user clears capability bits.
-> > > +echo "Test 1 - qa_user"
-> > > +setup_testfile
-> > > +commit_and_check "$qa_user"
-> > > +
-> > > +# Commit by root leaves capability bits.
-> > > +echo "Test 2 - root"
-> > > +setup_testfile
-> > > +commit_and_check
-> > > +
-> > > +# success, all done
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/generic/952.out b/tests/generic/952.out
-> > > new file mode 100644
-> > > index 00000000..eac9e76a
-> > > --- /dev/null
-> > > +++ b/tests/generic/952.out
-> > > @@ -0,0 +1,13 @@
-> > > +QA output created by 952
-> > > +Test 1 - qa_user
-> > > +777 -rwxrwxrwx SCRATCH_MNT/a
-> > > +SCRATCH_MNT/a cap_setgid,cap_setuid=ep
-> > > +777 -rwxrwxrwx SCRATCH_MNT/a
-> > > +SCRATCH_MNT/a
-> > > +
-> > > +Test 2 - root
-> > > +777 -rwxrwxrwx SCRATCH_MNT/a
-> > > +SCRATCH_MNT/a cap_setgid,cap_setuid=ep
-> > > +777 -rwxrwxrwx SCRATCH_MNT/a
-> > > +SCRATCH_MNT/a
-> > > +
-> > > 
-> > 
-> 
+This patch series is mostly self-contained except for a few places where
+it needs to update other subsystems to handle the new memory type.
+
+System stability and performance are not affected according to our
+ongoing testing, including xfstests.
+
+How it works: The system BIOS advertises the GPU device memory
+(aka VRAM) as SPM (special purpose memory) in the UEFI system address
+map.
+
+The amdgpu driver registers the memory with devmap as
+MEMORY_DEVICE_COHERENT using devm_memremap_pages. The initial user for
+this hardware page migration capability is the Frontier supercomputer
+project. This functionality is not AMD-specific. We expect other GPU
+vendors to find this functionality useful, and possibly other hardware
+types in the future.
+
+Our test nodes in the lab are similar to the Frontier configuration,
+with .5 TB of system memory plus 256 GB of device memory split across
+4 GPUs, all in a single coherent address space. Page migration is
+expected to improve application efficiency significantly. We will
+report empirical results as they become available.
+
+We extended hmm_test to cover migration of MEMORY_DEVICE_COHERENT. This
+patch set builds on HMM and our SVM memory manager already merged in
+5.15.
+
+v2:
+- test_hmm is now able to create private and coherent device mirror
+instances in the same driver probe. This adds more usability to the hmm
+test by not having to remove the kernel module for each device type
+test (private/coherent type). This is done by passing the module
+parameters spm_addr_dev0 & spm_addr_dev1. In this case, it will create
+four instances of device_mirror. The first two correspond to private
+device type, the last two to coherent type. Then, they can be easily
+accessed from user space through /dev/hmm_mirror<num_device>. Usually
+num_device 0 and 1 are for private, and 2 and 3 for coherent types.
+
+- Coherent device type pages at gup are now migrated back to system
+memory if they have been long term pinned (FOLL_LONGTERM). The reason
+is these pages could eventually interfere with their own device memory
+manager. A new hmm_gup_test has been added to the hmm-test to test this
+functionality. It makes use of the gup_test module to long term pin
+user pages that have been migrate to device memory first.
+
+- Other patch corrections made by Felix, Alistair and Christoph.
+
+v3:
+- Based on last v2 feedback we got from Alistair, we've decided to
+remove migration logic for FOLL_LONGTERM coherent device type pages at
+gup for now. Ideally, this should be done through the kernel mm,
+instead of calling the device driver to do it. Currently, there's no
+support for migrating device pages based on pfn, mainly because
+migrate_pages() relies on pages being LRU pages. Alistair mentioned, he
+has started to work on adding this migrate device pages logic. For now,
+we fail on get_user_pages call with FOLL_LONGTERM for DEVICE_COHERENT
+pages.
+
+- Also, hmm_gup_test has been removed from hmm-test. We plan to include
+it again after this migration work is ready.
+
+- Addressed Liam Howlett's feedback changes.
+
+v4:
+- Addressed Alistair Popple's last v3 feedback.
+
+- Use the same system entry path for coherent device pages at
+migrate_vma_insert_page.
+
+- Add coherent device type support for try_to_migrate /
+try_to_migrate_one.
+
+- Include number of coherent device pages successfully migrated back to
+system at test_hmm. Made the proper changes to hmm-test to read/check
+this number.
+
+Alex Sierra (10):
+  mm: add zone device coherent type memory support
+  mm: add device coherent vma selection for memory migration
+  mm/gup: fail get_user_pages for LONGTERM dev coherent type
+  drm/amdkfd: add SPM support for SVM
+  drm/amdkfd: coherent type as sys mem on migration to ram
+  lib: test_hmm add ioctl to get zone device type
+  lib: test_hmm add module param for zone device type
+  lib: add support for device coherent type in test_hmm
+  tools: update hmm-test to support device coherent type
+  tools: update test_hmm script to support SP config
+
+ drivers/gpu/drm/amd/amdkfd/kfd_migrate.c |  34 ++-
+ include/linux/memremap.h                 |   8 +
+ include/linux/migrate.h                  |   1 +
+ include/linux/mm.h                       |  16 +
+ lib/test_hmm.c                           | 356 +++++++++++++++++------
+ lib/test_hmm_uapi.h                      |  22 +-
+ mm/gup.c                                 |   7 +
+ mm/memcontrol.c                          |   6 +-
+ mm/memory-failure.c                      |   8 +-
+ mm/memremap.c                            |  14 +-
+ mm/migrate.c                             |  56 ++--
+ mm/rmap.c                                |  20 +-
+ tools/testing/selftests/vm/hmm-tests.c   | 123 ++++++--
+ tools/testing/selftests/vm/test_hmm.sh   |  24 +-
+ 14 files changed, 529 insertions(+), 166 deletions(-)
+
+-- 
+2.32.0
 
