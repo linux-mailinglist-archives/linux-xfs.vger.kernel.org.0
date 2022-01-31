@@ -2,121 +2,126 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 436664A3DCE
-	for <lists+linux-xfs@lfdr.de>; Mon, 31 Jan 2022 07:43:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5981B4A3E0A
+	for <lists+linux-xfs@lfdr.de>; Mon, 31 Jan 2022 08:02:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357737AbiAaGn4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Jan 2022 01:43:56 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:51683 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1357762AbiAaGn4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Jan 2022 01:43:56 -0500
+        id S232746AbiAaHCc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Jan 2022 02:02:32 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53378 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237178AbiAaHC3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Jan 2022 02:02:29 -0500
 Received: from dread.disaster.area (pa49-180-69-7.pa.nsw.optusnet.com.au [49.180.69.7])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 829B462C1D3
-        for <linux-xfs@vger.kernel.org>; Mon, 31 Jan 2022 17:43:53 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 33C6E10C4804
+        for <linux-xfs@vger.kernel.org>; Mon, 31 Jan 2022 18:02:27 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nEQPo-006J3e-SN
-        for linux-xfs@vger.kernel.org; Mon, 31 Jan 2022 17:43:52 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1nEQPo-0036Uj-RL
-        for linux-xfs@vger.kernel.org;
-        Mon, 31 Jan 2022 17:43:52 +1100
+        id 1nEQhm-006JSQ-CV
+        for linux-xfs@vger.kernel.org; Mon, 31 Jan 2022 18:02:26 +1100
+Date:   Mon, 31 Jan 2022 18:02:26 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 5/5] xfs: ensure log flush at the end of a synchronous fallocate call
-Date:   Mon, 31 Jan 2022 17:43:50 +1100
-Message-Id: <20220131064350.739863-6-david@fromorbit.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20220131064350.739863-1-david@fromorbit.com>
+Subject: [PATCH v1.1 3/5] xfs: set prealloc flag in xfs_alloc_file_space()
+Message-ID: <20220131070226.GW59729@dread.disaster.area>
 References: <164351876356.4177728.10148216594418485828.stgit@magnolia>
  <20220131064350.739863-1-david@fromorbit.com>
+ <20220131064350.739863-4-david@fromorbit.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220131064350.739863-4-david@fromorbit.com>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=61f78529
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=61f78983
         a=NB+Ng1P8A7U24Uo7qoRq4Q==:117 a=NB+Ng1P8A7U24Uo7qoRq4Q==:17
-        a=DghFqjY3_ZEA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
-        a=DiPZYHmhye4uBU5i4MYA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=kj9zAlcOel0A:10 a=DghFqjY3_ZEA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
+        a=MQa1602MSgzbZQLP09sA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+From: Dave Chinner <dchinner@redhat.com>
 
-Since we've started treating fallocate more like a file write, we
-should flush the log to disk if the user has asked for synchronous
-writes either by setting it via fcntl flags, or inode flags, or with
-the sync mount option.  We've already got a helper for this, so use
-it.
+Now that we only call xfs_update_prealloc_flags() from
+xfs_file_fallocate() in the case where we need to set the
+preallocation flag, do this in xfs_alloc_file_space() where we
+already have the inode joined into a transaction and get
+rid of the call to xfs_update_prealloc_flags() from the fallocate
+code.
 
-[Slightly massaged by <dchinner@redhat.com> to fit this patchset]
+This also means that we now correctly avoid setting the
+XFS_DIFLAG_PREALLOC flag when xfs_is_always_cow_inode() is true, as
+these inodes will never have preallocated extents.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_file.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+V1.1
+- fix whitespace damage
+- remove redundant comments in xfs_alloc_file_space().
 
+ fs/xfs/xfs_bmap_util.c | 9 +++------
+ fs/xfs/xfs_file.c      | 8 --------
+ 2 files changed, 3 insertions(+), 14 deletions(-)
+
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index d4a387d3d0ce..eb2e387ba528 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -850,9 +850,6 @@ xfs_alloc_file_space(
+ 			rblocks = 0;
+ 		}
+ 
+-		/*
+-		 * Allocate and setup the transaction.
+-		 */
+ 		error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write,
+ 				dblocks, rblocks, false, &tp);
+ 		if (error)
+@@ -869,9 +866,9 @@ xfs_alloc_file_space(
+ 		if (error)
+ 			goto error;
+ 
+-		/*
+-		 * Complete the transaction
+-		 */
++		ip->i_diflags |= XFS_DIFLAG_PREALLOC;
++		xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++
+ 		error = xfs_trans_commit(tp);
+ 		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 		if (error)
 diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index ddc3336e8f84..209cba0f0ddc 100644
+index 223996822d84..ae6f5b15a023 100644
 --- a/fs/xfs/xfs_file.c
 +++ b/fs/xfs/xfs_file.c
-@@ -861,6 +861,21 @@ xfs_break_layouts(
- 	return error;
- }
- 
-+/* Does this file, inode, or mount want synchronous writes? */
-+static inline bool xfs_file_sync_writes(struct file *filp)
-+{
-+	struct xfs_inode	*ip = XFS_I(file_inode(filp));
-+
-+	if (xfs_has_wsync(ip->i_mount))
-+		return true;
-+	if (filp->f_flags & (__O_SYNC | O_DSYNC))
-+		return true;
-+	if (IS_SYNC(file_inode(filp)))
-+		return true;
-+
-+	return false;
-+}
-+
- #define	XFS_FALLOC_FL_SUPPORTED						\
- 		(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |		\
- 		 FALLOC_FL_COLLAPSE_RANGE | FALLOC_FL_ZERO_RANGE |	\
-@@ -1045,7 +1060,7 @@ xfs_file_fallocate(
- 	if (do_file_insert)
- 		error = xfs_insert_file_space(ip, offset, len);
- 
--	if (file->f_flags & O_DSYNC)
-+	if (xfs_file_sync_writes(file))
- 		error = xfs_log_force_inode(ip);
- 
- out_unlock:
-@@ -1078,21 +1093,6 @@ xfs_file_fadvise(
- 	return ret;
- }
- 
--/* Does this file, inode, or mount want synchronous writes? */
--static inline bool xfs_file_sync_writes(struct file *filp)
--{
--	struct xfs_inode	*ip = XFS_I(file_inode(filp));
+@@ -908,7 +908,6 @@ xfs_file_fallocate(
+ 	struct inode		*inode = file_inode(file);
+ 	struct xfs_inode	*ip = XFS_I(inode);
+ 	long			error;
+-	enum xfs_prealloc_flags	flags = 0;
+ 	uint			iolock = XFS_IOLOCK_EXCL | XFS_MMAPLOCK_EXCL;
+ 	loff_t			new_size = 0;
+ 	bool			do_file_insert = false;
+@@ -1006,8 +1005,6 @@ xfs_file_fallocate(
+ 		}
+ 		do_file_insert = true;
+ 	} else {
+-		flags |= XFS_PREALLOC_SET;
 -
--	if (xfs_has_wsync(ip->i_mount))
--		return true;
--	if (filp->f_flags & (__O_SYNC | O_DSYNC))
--		return true;
--	if (IS_SYNC(file_inode(filp)))
--		return true;
+ 		if (!(mode & FALLOC_FL_KEEP_SIZE) &&
+ 		    offset + len > i_size_read(inode)) {
+ 			new_size = offset + len;
+@@ -1057,11 +1054,6 @@ xfs_file_fallocate(
+ 			if (error)
+ 				goto out_unlock;
+ 		}
 -
--	return false;
--}
+-		error = xfs_update_prealloc_flags(ip, XFS_PREALLOC_SET);
+-		if (error)
+-			goto out_unlock;
 -
- STATIC loff_t
- xfs_file_remap_range(
- 	struct file		*file_in,
+ 	}
+ 
+ 	/* Change file size if needed */
 -- 
-2.33.0
-
+Dave Chinner
+david@fromorbit.com
