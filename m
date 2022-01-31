@@ -2,102 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB6C4A5361
+	by mail.lfdr.de (Postfix) with ESMTP id 05AC74A5360
 	for <lists+linux-xfs@lfdr.de>; Tue,  1 Feb 2022 00:39:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbiAaXj3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Jan 2022 18:39:29 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:35092 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229642AbiAaXj1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Jan 2022 18:39:27 -0500
+        id S229608AbiAaXj2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Jan 2022 18:39:28 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:52338 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229640AbiAaXjZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Jan 2022 18:39:25 -0500
 Received: from dread.disaster.area (pa49-180-69-7.pa.nsw.optusnet.com.au [49.180.69.7])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7AACA62C4B6
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7F11A10C4C0F
         for <linux-xfs@vger.kernel.org>; Tue,  1 Feb 2022 10:39:24 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nEgGY-006aS0-Qi
+        id 1nEgGY-006aS1-Rr
         for linux-xfs@vger.kernel.org; Tue, 01 Feb 2022 10:39:22 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nEgGY-003I1t-Nu
+        id 1nEgGY-003I1w-Qf
         for linux-xfs@vger.kernel.org;
         Tue, 01 Feb 2022 10:39:22 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 0/5 v2] xfs: fallocate() vs xfs_update_prealloc_flags()
-Date:   Tue,  1 Feb 2022 10:39:15 +1100
-Message-Id: <20220131233920.784181-1-david@fromorbit.com>
+Subject: [PATCH 1/5] xfs: remove XFS_PREALLOC_SYNC
+Date:   Tue,  1 Feb 2022 10:39:16 +1100
+Message-Id: <20220131233920.784181-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20220131233920.784181-1-david@fromorbit.com>
+References: <20220131233920.784181-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=61f8732c
         a=NB+Ng1P8A7U24Uo7qoRq4Q==:117 a=NB+Ng1P8A7U24Uo7qoRq4Q==:17
-        a=oGFeUVbbRNcA:10 a=VwQbUJbxAAAA:8 a=p2abxV9NUEgnOpzo1_kA:9
-        a=AjGcO6oz07-iQ99wixmX:22
+        a=oGFeUVbbRNcA:10 a=20KFwNOVAAAA:8 a=QGsI9pyVmG3Z0Kn9KY0A:9
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+From: Dave Chinner <dchinner@redhat.com>
 
-From Darrick's original patch set:
+Callers can acheive the same thing by calling xfs_log_force_inode()
+after making their modifications. There is no need for
+xfs_update_prealloc_flags() to do this.
 
-https://lore.kernel.org/linux-xfs/164351876356.4177728.10148216594418485828.stgit@magnolia/T/#m8785dae565ff0f68ade64ca720debd483f566d6c
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ fs/xfs/xfs_file.c  | 13 +++++++------
+ fs/xfs/xfs_inode.h |  3 +--
+ fs/xfs/xfs_pnfs.c  |  6 ++++--
+ 3 files changed, 12 insertions(+), 10 deletions(-)
 
-While auditing the file permission dropping for fallocate, I reached the
-conclusion that fallocate can modify file contents, and therefore should
-be treated as a file write.  As such, it needs to update the file
-modification and file (metadata) change timestamps, and it needs to drop
-file privileges such as setuid and capabilities, just like a regular
-write.  Moreover, if the inode is configured for synchronous writes,
-then all the fallocate changes really ought to be persisted to disk
-before fallocate returns to userspace.
-
-Unfortunately, the XFS fallocate implementation doesn't do this
-correctly.  setgid without group-exec is a mandatory locking mark and is
-left alone by write(), which means that we shouldn't drop it
-unconditionally.  Furthermore, file capabilities are another vector for
-setuid to be set on a program file, and XFS ignores these.
-
-I also noticed that fallocate doesn't flush the log to disk after
-fallocate when the fs is mounted with -o sync or if the DIFLAG_SYNC flag
-is set on the inode.
-
-Therefore, refactor the XFS fallocate implementation to use the VFS
-helper file_modified to update file metadata instead of open-coding it
-incorrectly.  Refactor it further to use xfs_file_sync_writes to decide
-if we need to flush the log; and then fix the log flushing so that it
-flushes after we've made /all/ the changes.
-
---
-
-And from my reply:
-
-https://lore.kernel.org/linux-xfs/164351876356.4177728.10148216594418485828.stgit@magnolia/T/#m58cedaa33368c619fcdfb53639fce881bacfa9d3
-
-This is more along the lines of what I was thinking. Unfortunately,
-xfs_fs_map_blocks() can't be made to use file based VFS helpers, so
-the whole "open code the permissions stripping on data extent
-allocation" thing needs to remain in that code. Otherwise, we can
-significantly clean up xfs_file_fallocate() and completely remove
-the entire transaction that sets the prealloc flag. And given that
-xfs_ioc_space() no longer exists, most of the option functionality
-that xfs_update_prealloc_flags() provides is no longer necessary...
-
---
-
-This is an updated version based on 5.17-rc2 that has been run
-through fstests now and there are no apparent regressions from these
-changes. 
-
-Version 2:
-- add missing error handling (patch 1)
-- fix whitespace damage (patch 3)
-- remove redundant comments in xfs_alloc_file_space (patch 3)
-- rework comments to provide context to security issues around
-  PNFS operations (patch 4)
-
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 22ad207bedf4..ed375b3d0614 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -95,8 +95,6 @@ xfs_update_prealloc_flags(
+ 		ip->i_diflags &= ~XFS_DIFLAG_PREALLOC;
+ 
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+-	if (flags & XFS_PREALLOC_SYNC)
+-		xfs_trans_set_sync(tp);
+ 	return xfs_trans_commit(tp);
+ }
+ 
+@@ -1057,9 +1055,6 @@ xfs_file_fallocate(
+ 		}
+ 	}
+ 
+-	if (file->f_flags & O_DSYNC)
+-		flags |= XFS_PREALLOC_SYNC;
+-
+ 	error = xfs_update_prealloc_flags(ip, flags);
+ 	if (error)
+ 		goto out_unlock;
+@@ -1082,8 +1077,14 @@ xfs_file_fallocate(
+ 	 * leave shifted extents past EOF and hence losing access to
+ 	 * the data that is contained within them.
+ 	 */
+-	if (do_file_insert)
++	if (do_file_insert) {
+ 		error = xfs_insert_file_space(ip, offset, len);
++		if (error)
++			goto out_unlock;
++	}
++
++	if (file->f_flags & O_DSYNC)
++		error = xfs_log_force_inode(ip);
+ 
+ out_unlock:
+ 	xfs_iunlock(ip, iolock);
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index c447bf04205a..3fc6d77f5be9 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -465,8 +465,7 @@ xfs_itruncate_extents(
+ enum xfs_prealloc_flags {
+ 	XFS_PREALLOC_SET	= (1 << 1),
+ 	XFS_PREALLOC_CLEAR	= (1 << 2),
+-	XFS_PREALLOC_SYNC	= (1 << 3),
+-	XFS_PREALLOC_INVISIBLE	= (1 << 4),
++	XFS_PREALLOC_INVISIBLE	= (1 << 3),
+ };
+ 
+ int	xfs_update_prealloc_flags(struct xfs_inode *ip,
+diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
+index d6334abbc0b3..ce6d66f20385 100644
+--- a/fs/xfs/xfs_pnfs.c
++++ b/fs/xfs/xfs_pnfs.c
+@@ -164,10 +164,12 @@ xfs_fs_map_blocks(
+ 		 * that the blocks allocated and handed out to the client are
+ 		 * guaranteed to be present even after a server crash.
+ 		 */
+-		error = xfs_update_prealloc_flags(ip,
+-				XFS_PREALLOC_SET | XFS_PREALLOC_SYNC);
++		error = xfs_update_prealloc_flags(ip, XFS_PREALLOC_SET);
++		if (!error)
++			error = xfs_log_force_inode(ip);
+ 		if (error)
+ 			goto out_unlock;
++
+ 	} else {
+ 		xfs_iunlock(ip, lock_flags);
+ 	}
+-- 
+2.33.0
 
