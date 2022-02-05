@@ -2,43 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1484C4AA610
-	for <lists+linux-xfs@lfdr.de>; Sat,  5 Feb 2022 03:56:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C131A4AAA92
+	for <lists+linux-xfs@lfdr.de>; Sat,  5 Feb 2022 18:29:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240948AbiBEC4z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 4 Feb 2022 21:56:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49088 "EHLO
+        id S1380742AbiBER3h (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 5 Feb 2022 12:29:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238321AbiBEC4y (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 4 Feb 2022 21:56:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A5E5C061346
-        for <linux-xfs@vger.kernel.org>; Fri,  4 Feb 2022 18:56:54 -0800 (PST)
+        with ESMTP id S1380725AbiBER3a (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 5 Feb 2022 12:29:30 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 315BAC061348;
+        Sat,  5 Feb 2022 09:29:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E548060C45
-        for <linux-xfs@vger.kernel.org>; Sat,  5 Feb 2022 02:56:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B08AC004E1
-        for <linux-xfs@vger.kernel.org>; Sat,  5 Feb 2022 02:56:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DF332B80CAC;
+        Sat,  5 Feb 2022 17:29:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6D03C340EF;
+        Sat,  5 Feb 2022 17:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644029813;
-        bh=7BuaQP9n9qrpRhlWfKQWYI9vdM0jhaz4tr0FWuRcmMc=;
-        h=Date:From:To:Subject:From;
-        b=ItxvDH91qNP+ukTuXmKBwVX4ZT2RoQj6MCaxvSmRVe/J8odc5QQbP03NQHM9cI/Hu
-         cVf5epOLxeBxHaSLszaWaoyMB/gbW2GMHCcQMS01G/gVVLlP+mqqZ9wtH6iKOJezoN
-         kd2rQd98ituj20MHcR718eFTIqpHOkVlA/WfJdbq5d8RCbdGJRrWXxgafAzHlvgdP+
-         bDCP7GGCcCquHwgNmLdYiancwqAJmqXwgD+AvjYyIh3rfeFpihZ27o+9qSVHCiG7Bn
-         g7XxOclWFrGsVOrMKb4AALp5JMabcCCFGvy7jOs9OOjMYxVL+qS5t+Nrkj1s9MukHN
-         oHuHBPgxzJVBQ==
-Date:   Fri, 4 Feb 2022 18:56:52 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] xfs: return error from sync_filesystem during remount
-Message-ID: <20220205025652.GY8313@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        s=k20201202; t=1644082166;
+        bh=DP4reiDeLBUgpPNcg6xTx8Soq05WJHD+O+qX/H7/TOM=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=FF6/Uwdgy1BZxB3a6YdXrz9K5jDBSdJzM5ksM45TNhITjzQ7NRSZPSEGT4eC+frzF
+         VBns1SzUO+zeHkFfjfQCDdWsipEOWEp0vzpDJvebl9fnR/jWhtHJ4BRdSMiTr+VOCX
+         76VlZ2IuLLwnqBH8BLEekdqHvEXGpG08Wp3pyd1mA5RFdHYrt3VoSEKj0jrAMMnqMv
+         pHpjOIDkDeFNBe/BdHx/hMNQzMmgCdOVDnpzxOIvcJYal6CL7WB96erKMHW0RzGffc
+         CRqQ1CSvJ8lk0+oQp7yly8diYLncj3HR0PE10A6+0wOtK9821A608hpc9kgh66UcjF
+         euTYzfB6oMU9A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8A5DBE6BBD2;
+        Sat,  5 Feb 2022 17:29:26 +0000 (UTC)
+Subject: Re: [GIT PULL] vfs: fixes for 5.17-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220205025100.GW8313@magnolia>
+References: <20220205025100.GW8313@magnolia>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220205025100.GW8313@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/vfs-5.17-fixes-2
+X-PR-Tracked-Commit-Id: 2d86293c70750e4331e9616aded33ab6b47c299d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ea7b3e6d42d7afa141ff765099d6b4ea406001bc
+Message-Id: <164408216656.7836.6110778217091833319.pr-tracker-bot@kernel.org>
+Date:   Sat, 05 Feb 2022 17:29:26 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -49,28 +62,15 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+The pull request you sent on Fri, 4 Feb 2022 18:51:00 -0800:
 
-In xfs_fs_reconfigure, check the return value from sync_filesystem and
-fail the remount if there was an internal error.
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/vfs-5.17-fixes-2
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_super.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ea7b3e6d42d7afa141ff765099d6b4ea406001bc
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 4c0dee78b2f8..5f3781879c63 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1831,7 +1831,9 @@ xfs_fs_reconfigure(
- 	if (error)
- 		return error;
- 
--	sync_filesystem(mp->m_super);
-+	error = sync_filesystem(mp->m_super);
-+	if (error)
-+		return error;
- 
- 	/* inode32 -> inode64 */
- 	if (xfs_has_small_inums(mp) && !xfs_has_small_inums(new_mp)) {
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
