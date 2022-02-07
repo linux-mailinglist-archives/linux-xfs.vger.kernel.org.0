@@ -2,134 +2,235 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB9A14AB5AD
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Feb 2022 08:24:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C87524AB852
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Feb 2022 11:13:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240437AbiBGHQT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Feb 2022 02:16:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45914 "EHLO
+        id S234561AbiBGKC3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Feb 2022 05:02:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238631AbiBGG45 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Feb 2022 01:56:57 -0500
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBA0C043184;
-        Sun,  6 Feb 2022 22:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1644217015; x=1675753015;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=78Zs28KpKxQ8bPUPZ5jK1PRmnWo6oej03te2uWqoGL8=;
-  b=LvJJWJD1fiCvDKTxHbtlVXSoTOLhD9SQgFNpO7+NMRUwRjxVq4DidYtX
-   jKBOsI8plwoNyNrg4MLxPr8IZgzI+8ow4UKlGsBD26vciiqpp48oO4WL6
-   kClafmIZAlEK++btL8P94XHEW9g6dAtIjbBUshLd3bQPtwhLywMPSyfPf
-   M4cwZ8HUcWOafGStVFr78oJv28dH8fEroHCbgcdP4lKr9x5qehII/o9ov
-   m82XHTNnEhjGzAdT6RCw5kQAARW36SyGB9LhAfp1N3E2lUQXfacnBaUIE
-   zK2kLmGSMVOq5JqtfhC3vnWbNrbcFlTEJZMNDz6+VYNMLrhy6+ZjHkJn2
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.88,349,1635177600"; 
-   d="scan'208";a="192305071"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 07 Feb 2022 14:55:51 +0800
-IronPort-SDR: EMJgNkMWnFfkl8IJ5MjTea6OkFCwZjeZTatf/gXYHTpkC9JCNzxI4Ha6HvoqCtZ4xswEKbqj23
- gOkPz2nrGws7WoeU84Ba5ndNmcRQqxez8XGl38Q3wMbaCcbhvK7U7kgUPGXvfVQT3OU8zVGkvO
- Re8BSBoABIx7Em0DZKffm+AlAYPibJS4mEvXLkfGHeCGsc4ImWz9nihNxL3NPVNsyw/2tsavNG
- X1dy/r/qsBmay03a6U62wNrOpVl7Z/gc+Xc7fKnPgPoPMlSGxEkFC9my4To9AtZp0xqY5yTJr1
- GiBn0nosIprTflDJEDTmFNId
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2022 22:28:53 -0800
-IronPort-SDR: GMWIEtGmlMxmFLTe4Rb5AN6uU0cHMtnWRJhC+waZTS9hy7Au4NwNulNQZKvFrvlN26Xo4IMdDy
- MfstK1BTqaJG3JE0Eu8p5GKbtah5dU+1qYVVwMLFrITB+N+ppNtF/diabefS9ifyGhcv8wKFy2
- kWd7KpVTJFwYJX4ZSmHIPN4nQF/VAeh6VvJtM1lCoMgCOGfqp77sq1Npd81CHy5mbf7ZL2pQEo
- HPOHRLUN1bRh9lA+pJ/jQdFRBUYrK4NUM8jW33EdxY6zfw3+rgV2ZNqY6mMX6sKyH4EDURkSQ6
- gyA=
-WDCIronportException: Internal
-Received: from shindev.dhcp.fujisawa.hgst.com (HELO shindev.fujisawa.hgst.com) ([10.149.52.173])
-  by uls-op-cesaip01.wdc.com with ESMTP; 06 Feb 2022 22:55:52 -0800
-From:   Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-To:     fstests@vger.kernel.org, linux-btrfs@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Subject: [PATCH 7/7] generic/204: do xfs unique preparation only for xfs
-Date:   Mon,  7 Feb 2022 15:55:41 +0900
-Message-Id: <20220207065541.232685-8-shinichiro.kawasaki@wdc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220207065541.232685-1-shinichiro.kawasaki@wdc.com>
-References: <20220207065541.232685-1-shinichiro.kawasaki@wdc.com>
+        with ESMTP id S245362AbiBGJrJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Feb 2022 04:47:09 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7156C043181
+        for <linux-xfs@vger.kernel.org>; Mon,  7 Feb 2022 01:47:07 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 2178ACXN009053;
+        Mon, 7 Feb 2022 09:47:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=references : from :
+ to : cc : subject : in-reply-to : message-id : date : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=cZ+8vwrs2tYkXOc6Z8SBn8An+e+pQ+nZqJ8JklQ1lBU=;
+ b=bbt5xsK8rSDUUO7VYB9BxbEiQHnxzdZD6nK5vIh1ArfMsT/1IQiaqJMWCmOw+jjf70R0
+ ZedzINKZNiW1jLX6HTJRwobsxvPfz9sX4T8rfGQl2kAxvzQZXswYrsuDClAwPZIef1vn
+ rAtNokLlOraGl1PRBeMDrjfsANNhzWwAZPcf0cQIj/dZRNYyWiaoOuwrNfsgAVkd+qiO
+ s7PweqIrDG/YE6cJBkyD+jiHSizq+ERX/aq2WWnck/MNxhpI7yARG9DnNDuqPQR1NMGj
+ 3Kwwdb8ke8Rx4egg+T03z+mi9ksKd0Z8ro0TOwkR0LSDDP3Uj7GZZuW8GjhlSqHonq6G Gg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3e1fu2npef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Feb 2022 09:47:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 2179jLAA126234;
+        Mon, 7 Feb 2022 09:47:03 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
+        by userp3020.oracle.com with ESMTP id 3e1jpn79vq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 07 Feb 2022 09:47:02 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ci6jy35yndPKsbLCvucHiGwlTPq64jBcF9BAdSnZ93jmma/zcmT8eznaeAGsUEUKH7CFBUUbxL8rf/moVG2t9p6Lc0/Ms18OqXCYb9Atz5OtQ+1184tVniV4fWyHxjRGRBKwpkNBoG6PwwO/SCOqWWlleDnci4Lh4nD5HHsVQc+qQxnJ+AOnDHCNKYtwBoDrZ/m6JRqu8FEULFHR8YpMue8Wu59p9QcwFrpPTYooiFJ0tmStJM57o/DhQWVeVRqEHCIzh1S8DdRARngdjKBlY4rLOwtodOh653l/9IJNdmnm2MNn9v+ACoYoHCemBCpGAihK5lT/k62KE/Dk+55VpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cZ+8vwrs2tYkXOc6Z8SBn8An+e+pQ+nZqJ8JklQ1lBU=;
+ b=eZYHRhKRKTpq8yd/C5k/V7vCIPowO7jkdjzfDLbd47ABtnfs8qH+zwdbS+glc4IM/13YhnRHQATs9zto67S11fujgt8kfFfRuvqXNyMvBko5oUJVla4uqIeo1uwRXi9+v5QJXLTjmcW7zvExojW8kP3DFM8Dke4q2Py+7vO9aX6Eku4nxFD4OW87WnVeru4yDocNnjE9yIQpqWndCtK3brOgk9bK+/im97mSDDWkGuwO3M0QWnJW7PECjouX1ol39V2KeQ81tocSg1y9sRIXu4ronT2fKKKSiP2qw5PJ2Ae6shlxJofFAqXcWlfkZz2M7yk5z7BxCPXMxFN9U/63Cg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cZ+8vwrs2tYkXOc6Z8SBn8An+e+pQ+nZqJ8JklQ1lBU=;
+ b=MlREyKf9I92eR6oG6OD9f+vee8jHoCz/7a0L1TZNEBiO1WvgWI8Sh+IF8mqUtiYL0Hb5NU/ssnbZRC8sMBvFMypAnlfF8Dn2nRxnl6KvdSdd5NgBnysT4Lvjqry/s8yniHhpHR2e4G0Jc+ZpaDHapQfRlU/TNZ35ODuNev3H6rI=
+Received: from SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12)
+ by BY5PR10MB4355.namprd10.prod.outlook.com (2603:10b6:a03:20a::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.11; Mon, 7 Feb
+ 2022 09:47:00 +0000
+Received: from SA2PR10MB4587.namprd10.prod.outlook.com
+ ([fe80::fc8e:7310:2762:be9e]) by SA2PR10MB4587.namprd10.prod.outlook.com
+ ([fe80::fc8e:7310:2762:be9e%5]) with mapi id 15.20.4951.018; Mon, 7 Feb 2022
+ 09:47:00 +0000
+References: <20220121051857.221105-1-chandan.babu@oracle.com>
+ <20220121051857.221105-15-chandan.babu@oracle.com>
+ <20220201192449.GB8338@magnolia>
+ <87o83jmg0a.fsf@debian-BULLSEYE-live-builder-AMD64>
+User-agent: mu4e 1.4.15; emacs 27.1
+From:   Chandan Babu R <chandan.babu@oracle.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
+Subject: Re: [PATCH V5 14/16] xfs: Enable bulkstat ioctl to support 64-bit
+ per-inode extent counters
+In-reply-to: <87o83jmg0a.fsf@debian-BULLSEYE-live-builder-AMD64>
+Message-ID: <87leynm2k3.fsf@debian-BULLSEYE-live-builder-AMD64>
+Date:   Mon, 07 Feb 2022 15:16:52 +0530
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR02CA0039.apcprd02.prod.outlook.com
+ (2603:1096:404:a6::27) To SA2PR10MB4587.namprd10.prod.outlook.com
+ (2603:10b6:806:114::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6aec7452-b556-4b67-a143-08d9ea1ec97c
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4355:EE_
+X-Microsoft-Antispam-PRVS: <BY5PR10MB4355FF3616AE93F03CE276A7F62C9@BY5PR10MB4355.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tSi/9zzNWn7lh0wk6HnzQTIaoVXTaAxwaZBnwdHtSyBBqrJ/GDmBKEOqG4YD5bQfnmCyjuBOtmdKYNcfMW0/NwkqliuOXJ3kYMKre7/ekl1tUDafH89lge5zvs3BEmzrXOcWe3LcnyBy2YpmRxWDlO3Rs3dbohLMHx6hRpUvP0ZIjHcbDbKWfuzmrNQ9IZcfhIg3jw16K32OIbkVQgZgYRze/0NJFhGt/JUqqpZKgby7wkMdIfhK74FPQMxbkfYGJgy/cWVEGF+/3m4g0kHA3G5iFogpmnpKoFgJUHm0BmfhYboGiTVeYGroUmGBC8KiILCAcR8R5DrO4XluZYlurihaUkPzS+siFC5ntqHZiVrNcyurcSQ5LMIWg6n0VBiaiUNyD2T/PvMuqvypSr445DnYmE6uqZMmY/Wb+Kgllz+U4/uHi5KnT8nuBriNhhtMVgdpKKn7j2yfl2uKIXxw0hFd87buYs84mgOBwnXkZ5+y5VekImHflMzd4LvQmDZLa65Z/swjxhvFxuvA3+DjBNWnE43NRoTApQVBh9tcLh8r9BmF2Dwd48QYAYp4w9GL05IlI5jYBc4djFRMVqDUDiSr2elTCJrVNlSBCEJ6TBAZc/26KS16kdHdIN4Nr7Pk5eq5JNE8whp4NNjFLCIYINBQMX91h35pkjQGvJepi5gznparZSCkJOmxXKkQxDCh5IEofNvpmd47A/oKWd2Gpw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR10MB4587.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(4326008)(186003)(26005)(5660300002)(33716001)(83380400001)(86362001)(66946007)(66476007)(66556008)(6486002)(8936002)(8676002)(9686003)(6512007)(6666004)(2906002)(6506007)(38350700002)(38100700002)(53546011)(52116002)(508600001)(316002)(6916009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?iFv83ZoX6cl6GXPtTPWHzDZKLNc1QA0hwD2km82srNR9zpIBMGn4UeQRD5I6?=
+ =?us-ascii?Q?CFL4dDXPcSHf3v26E7p3XvNazRRTd8/eiAFlyNeYovoBSjlqAxrHHeVkBdS1?=
+ =?us-ascii?Q?lCon8GfK4MsQBUtoXpkZWxTyyRQxCeGeuGYfZDsV0+F+z3SRbxfu8Gt29jsC?=
+ =?us-ascii?Q?+GgIvwjD23l43TxHcYfWdSv92hakPADrAuEdZCG3swgo/h32EyMZ2JmE5D9+?=
+ =?us-ascii?Q?vXUdcaxxeLJnyTI5gadWYgLaoL1kuvJYNt8MT3pkw4PG6buyRNw4sQ8Bsiks?=
+ =?us-ascii?Q?A2AMVk07aIIMbntRHdIgKavzqmmxLGB8NpNBRTlwyP/jCXdUjeq+/e9GJqmK?=
+ =?us-ascii?Q?7Cp2KilqIrYgnxHxQTz1WK/4/gO/U5LP/wSh6kNWE6iZ7cbQtNNbATbGAkAS?=
+ =?us-ascii?Q?A/dgA3XVCsUdzZyiMwPA3swypon7mjTv9fuytdrj3T4GmUZAOIYm6iLqMwTv?=
+ =?us-ascii?Q?hHvzQhYZR2YxoV+6Dz7ndVoS4NWaL/Nync9lqLBJ5T6bh5tBF6jJXpMb0plm?=
+ =?us-ascii?Q?FEeZpQAku4lbpPsI0sI45Xd3+ZE73HUOBW8pZXEx8TdD674ZG8Gqtxvfiu9i?=
+ =?us-ascii?Q?pgaHbLhc+iKuwRuxkqKN9Cr9ZNNudTotAhw/mCKvbGkgioHJgtvZumHKn3eJ?=
+ =?us-ascii?Q?4sCIwEFbNUZQGBrwtPRZ5G6JALdGr6EcSd6FLGHrwGZHs1mT3he17b7thSA7?=
+ =?us-ascii?Q?6L4mcA37+KUSucK/RXw/ezpQW9MGNdtzTn5apvYf9KOOgnhEkPxEUGQ5AcZN?=
+ =?us-ascii?Q?YgAXLJrlaY6fMtEvhNzHhuOnjP91lm/gRb8yMEaT2hiHQ8/ThnwHzu4Od/+z?=
+ =?us-ascii?Q?N4wFuHLES3Cgr4zuVvuFoiHf5l/Rw47pbxnBZ+mrO6HEjXzMW7DqRjA4x+6C?=
+ =?us-ascii?Q?9yJLu3GnKpndGA+6Vmk/bvhy+iSa4h8EqpXcGNRIO6MM2IdA7DhqCS/S78tq?=
+ =?us-ascii?Q?vxGagFwZuCHQXhr0eye9dwrQUnVxgIle5LnVzzvvim94Lm/YDVPM3nNj//Zw?=
+ =?us-ascii?Q?G3JBeoioQxC6wdwd+p/EUFQnEV7uaFpHcn6Jyfmr5bKva9W2GmeU9c89bCbh?=
+ =?us-ascii?Q?Rdzt0sbilGu5rO2YeUlgW9cZGsTD6r3DgJAjJmCnqYcN3J6K5mzoaD4hgiix?=
+ =?us-ascii?Q?aRQEbcVcRdAwj/+CG6zJPXQLC+2fcxU5NA2JeC96SXUsVHRmNTScIdsyeDt5?=
+ =?us-ascii?Q?mmHLxrM9mmadAszcraWqvCeaEwfOqiekXBmNeFKrDnzGJN29kZK9oMBRaVmD?=
+ =?us-ascii?Q?aOAcFqmYmD7KTDVbdee0xWAptI11PwyIyVIYAKsPd/cwZGasOM/6qy5gezYU?=
+ =?us-ascii?Q?58KrsCFnJbyx5wD9D2xvti4cltvk/1bVjKTf01fwMd4GITNi/vrP4IIUEYIT?=
+ =?us-ascii?Q?50Z6t+D538hoNlbxGG9Ts80UOhlI7pK1N+li5fLcPhNWOByruLpQhSEhC3ot?=
+ =?us-ascii?Q?N6Sq1BtxymLqb+WzEvyqRTWKYMRvBl1jpdt1tbvZ8y+VcsjlJiAqpNAM/vsc?=
+ =?us-ascii?Q?/VdNdn7ECS3YrkMjnEV1sL/bd1q3XPS6UQHUk5Ff8YM2rgQIV66XvFEY2+ra?=
+ =?us-ascii?Q?R2W1+zYLDxifPAEApWDGjAtyCKEBPxg1AXbhNbVME5d4UVicy/1b9ltkCZ3J?=
+ =?us-ascii?Q?+hhpqiX9zesOXX7yOqaPoAk=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6aec7452-b556-4b67-a143-08d9ea1ec97c
+X-MS-Exchange-CrossTenant-AuthSource: SA2PR10MB4587.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2022 09:47:00.2285
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /pDC8iTpaCAmoAqTYZcYq7FxQTDq/l59aKkwblp+kcHaQ/gEUd/qcOatlrcGbtCeczbRiiAPj7oxTR5iCz382Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4355
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10250 signatures=673430
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0 bulkscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2202070063
+X-Proofpoint-ORIG-GUID: 4vYDTXW0DcNbK8Dcrpcki_v_92H01h-V
+X-Proofpoint-GUID: 4vYDTXW0DcNbK8Dcrpcki_v_92H01h-V
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The test case generic/204 formats the scratch device to get block size
-as a part of preparation. However, this preparation is required only for
-xfs. To simplify preparation for other filesystems, do the preparation
-only for xfs.
+On 07 Feb 2022 at 10:26, Chandan Babu R wrote:
+> On 02 Feb 2022 at 00:54, Darrick J. Wong wrote:
+>> On Fri, Jan 21, 2022 at 10:48:55AM +0530, Chandan Babu R wrote:
+>>> The following changes are made to enable userspace to obtain 64-bit extent
+>>> counters,
+>>> 1. Carve out a new 64-bit field xfs_bulkstat->bs_extents64 from
+>>>    xfs_bulkstat->bs_pad[] to hold 64-bit extent counter.
+>>> 2. Define the new flag XFS_BULK_IREQ_BULKSTAT for userspace to indicate that
+>>>    it is capable of receiving 64-bit extent counters.
+>>> 
+>>> Suggested-by: Darrick J. Wong <djwong@kernel.org>
+>>> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
+>>> ---
+>>>  fs/xfs/libxfs/xfs_fs.h | 12 ++++++++----
+>>>  fs/xfs/xfs_ioctl.c     |  3 +++
+>>>  fs/xfs/xfs_itable.c    | 27 +++++++++++++++++++++++++--
+>>>  fs/xfs/xfs_itable.h    |  7 ++++++-
+>>>  fs/xfs/xfs_iwalk.h     |  7 +++++--
+>>>  5 files changed, 47 insertions(+), 9 deletions(-)
+>>> 
+>>> diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+>>> index 42bc39501d81..4e12530eb518 100644
+>>> --- a/fs/xfs/libxfs/xfs_fs.h
+>>> +++ b/fs/xfs/libxfs/xfs_fs.h
+>>> @@ -393,7 +393,7 @@ struct xfs_bulkstat {
+>>>  	uint32_t	bs_extsize_blks; /* extent size hint, blocks	*/
+>>>  
+>>>  	uint32_t	bs_nlink;	/* number of links		*/
+>>> -	uint32_t	bs_extents;	/* number of extents		*/
+>>> +	uint32_t	bs_extents;	/* 32-bit data fork extent counter */
+>>>  	uint32_t	bs_aextents;	/* attribute number of extents	*/
+>>>  	uint16_t	bs_version;	/* structure version		*/
+>>>  	uint16_t	bs_forkoff;	/* inode fork offset in bytes	*/
+>>> @@ -402,8 +402,9 @@ struct xfs_bulkstat {
+>>>  	uint16_t	bs_checked;	/* checked inode metadata	*/
+>>>  	uint16_t	bs_mode;	/* type and mode		*/
+>>>  	uint16_t	bs_pad2;	/* zeroed			*/
+>>> +	uint64_t	bs_extents64;	/* 64-bit data fork extent counter */
+>>>  
+>>> -	uint64_t	bs_pad[7];	/* zeroed			*/
+>>> +	uint64_t	bs_pad[6];	/* zeroed			*/
+>>>  };
+>>>  
+>>>  #define XFS_BULKSTAT_VERSION_V1	(1)
+>>> @@ -484,8 +485,11 @@ struct xfs_bulk_ireq {
+>>>   */
+>>>  #define XFS_BULK_IREQ_SPECIAL	(1 << 1)
+>>>  
+>>> -#define XFS_BULK_IREQ_FLAGS_ALL	(XFS_BULK_IREQ_AGNO | \
+>>> -				 XFS_BULK_IREQ_SPECIAL)
+>>> +#define XFS_BULK_IREQ_NREXT64	(1 << 2)
+>>
+>> This needs a comment specifying the behavior of this flag.
+>>
+>> If the flag is set and the data fork extent count fits in both fields,
+>> will they both be filled out?
+>
+> If the flag is set, xfs_bulkstat->bs_extents64 field will be assigned the data
+> fork extent count and xfs_bulkstat->bs_extents will be set to 0
+> (xfs_bulkstat() allocates xfs_bstat_chunk->buf by invoking kmem_zalloc()).
+>
+> If the flag is not set, xfs_bulkstat->bs_extents field will be assigned the
+> data fork extent count and xfs_bulkstat->bs_extents64 will be set to 0.
+>
+>>
+>> If the flag is set but the data fork extent count only fits in
+>> bs_extents64, what will be written to bs_extents?
+>
+> bs_extents will be set to zero.
+>
+>>
+>> If the flag is not set and the data fork extent count won't fit in
+>> bs_extents, do we return an error value?  Fill it with garbage?
+>>
+>
+> In this case, we return -EOVERFLOW and the contents of bs_extents will be set
+> to zero. This happens because xfs_bulkstat() will return success even if
+> xfs_iwalk() returned an error provided that we already have collected details
+> about one more inodes. The next call to xfs_ioc_bulkstat() will start from the
+> problematic inode. Here we allocate xfs_bstat_chunk->buf using kmem_zalloc()
+> which zeroes the contents of the allocated memory and returns -EOVERFLOW to
+> userspace.
+>
 
-Suggested-by: Naohiro Aota <naohiro.aota@wdc.com>
-Signed-off-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
----
- tests/generic/204 | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+Sorry, I forgot to mention that I will add the above data points as a comment
+before posting the next version of the patchset.
 
-diff --git a/tests/generic/204 b/tests/generic/204
-index 40d524d1..ea267760 100755
---- a/tests/generic/204
-+++ b/tests/generic/204
-@@ -16,17 +16,18 @@ _cleanup()
- 	sync
- }
- 
--# Import common functions.
--. ./common/filter
--
- # real QA test starts here
- _supported_fs generic
- 
- _require_scratch
- 
--# get the block size first
--_scratch_mkfs 2> /dev/null | _xfs_filter_mkfs 2> $tmp.mkfs > /dev/null
--. $tmp.mkfs
-+dbsize=4096
-+isize=256
-+if [ $FSTYP = "xfs" ]; then
-+	# get the block size first
-+	_scratch_mkfs 2> /dev/null | _xfs_filter_mkfs 2> $tmp.mkfs > /dev/null
-+	. $tmp.mkfs
-+fi
- 
- # For xfs, we need to handle the different default log sizes that different
- # versions of mkfs create. All should be valid with a 16MB log, so use that.
-@@ -37,11 +38,15 @@ _scratch_mkfs 2> /dev/null | _xfs_filter_mkfs 2> $tmp.mkfs > /dev/null
- SIZE=`expr 115 \* 1024 \* 1024`
- _scratch_mkfs_sized $SIZE $dbsize 2> /dev/null > $tmp.mkfs.raw \
- 	|| _fail "mkfs failed"
--cat $tmp.mkfs.raw | _xfs_filter_mkfs 2> $tmp.mkfs > /dev/null
-+
-+if [ $FSTYP = "xfs" ]; then
-+	cat $tmp.mkfs.raw | _xfs_filter_mkfs 2> $tmp.mkfs > /dev/null
-+	# Source $tmp.mkfs to get geometry
-+	. $tmp.mkfs
-+fi
-+
- _scratch_mount
- 
--# Source $tmp.mkfs to get geometry
--. $tmp.mkfs
- 
- # fix the reserve block pool to a known size so that the enospc calculations
- # work out correctly. Space usages is based 22500 files and 1024 reserved blocks
 -- 
-2.34.1
-
+chandan
