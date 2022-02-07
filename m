@@ -2,47 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1192B4AC725
-	for <lists+linux-xfs@lfdr.de>; Mon,  7 Feb 2022 18:22:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B733E4AC72C
+	for <lists+linux-xfs@lfdr.de>; Mon,  7 Feb 2022 18:22:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234133AbiBGRVN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 7 Feb 2022 12:21:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
+        id S229775AbiBGRVo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 7 Feb 2022 12:21:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345412AbiBGRHa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Feb 2022 12:07:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76CAC0401D1
-        for <linux-xfs@vger.kernel.org>; Mon,  7 Feb 2022 09:07:29 -0800 (PST)
+        with ESMTP id S1383791AbiBGRJP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 7 Feb 2022 12:09:15 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13671C0401D5
+        for <linux-xfs@vger.kernel.org>; Mon,  7 Feb 2022 09:09:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7FC78B81157
-        for <linux-xfs@vger.kernel.org>; Mon,  7 Feb 2022 17:07:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D89C004E1;
-        Mon,  7 Feb 2022 17:07:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A2D8D61149
+        for <linux-xfs@vger.kernel.org>; Mon,  7 Feb 2022 17:09:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE264C004E1;
+        Mon,  7 Feb 2022 17:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644253647;
-        bh=g8puCuyNkDAUZefMsQycACyjbf4OLY2gGTB9kPIKKCA=;
+        s=k20201202; t=1644253754;
+        bh=/M02WtFHI48LJZ3Gpe8Tp7B8zEi8z/oa3rDkSj6UnLY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qTKSgfBu3I66o2cfuLqlyfUJWvoP2B7MmPOOWmTIFi2QUxCtpyKAjRi9WIdkxZL7T
-         XMBpATRdpu6FdH8Z2Ews6IL8G+f2nzEKUpmm1CTMwSlhEQ84fZGf3+lEBYhCONa+3S
-         TZyKD10cj9bJODRSOHB4J2EF9rPtOUWkT29GKUnHwfRHbqY8B/A5vBN6uSfNzUbpAf
-         IpVTJYBTQM5yx74OK7u+OBqhtg95/HgoacCeGJZuig3+VZWP/T1Q3D5Q+Ru2UOc+OV
-         /mfZXVcHvdz6aAjF/meAJTm1USDeP8rXceGil6icUgzeWnoCNL7UT6ASui6QjfYTIE
-         2zn4MGAxkHlrw==
-Date:   Mon, 7 Feb 2022 09:07:26 -0800
+        b=dRDu/drPnHFo+eylP8O+Qjz6SB4RYwTutn08oLk+1nhbdiUF7yg4t08wC7JwDYWtr
+         kRo39bPu5zfYzcqQrYmbIgT+Jvhx1T8oCqcuV/TIcoDjjWsrKSJX4BtOUBXITMrI4q
+         LZFFfk52ozhPBT5s5DIPetkvVER75KzgS+uSIp2IEarn0mEwOcFO0R9V07fdgN9X34
+         gHQoN+Foh4a+wyvRwJPlX9mUGilCE0jTWNK+UBupR9+bw8i1M3/HGjgSkpHMywUMuB
+         vpR8UwcOeKYsgLrNq14F/ElUMngzSxsNcH2J47r4ATB9a49sbte4S2bhhCa8feTzCA
+         qdStnDX1ASCiQ==
+Date:   Mon, 7 Feb 2022 09:09:13 -0800
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Dave Chinner <david@fromorbit.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] xfs: return error from sync_filesystem during remount
-Message-ID: <20220207170726.GZ8313@magnolia>
-References: <20220205025652.GY8313@magnolia>
- <20220206221825.GC59729@dread.disaster.area>
+Cc:     Eric Sandeen <sandeen@sandeen.net>, linux-xfs@vger.kernel.org,
+        allison.henderson@oracle.com
+Subject: Re: [PATCH 04/17] libfrog: move the GETFSMAP definitions into libfrog
+Message-ID: <20220207170913.GA8313@magnolia>
+References: <164263809453.863810.8908193461297738491.stgit@magnolia>
+ <164263811682.863810.12064586264139896800.stgit@magnolia>
+ <bb88560e-bbdf-80c5-b4d6-6c00f4ab3ef1@sandeen.net>
+ <20220205003618.GU8313@magnolia>
+ <20220207010541.GE59729@dread.disaster.area>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220206221825.GC59729@dread.disaster.area>
+In-Reply-To: <20220207010541.GE59729@dread.disaster.area>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,79 +57,37 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 07, 2022 at 09:18:25AM +1100, Dave Chinner wrote:
-> On Fri, Feb 04, 2022 at 06:56:52PM -0800, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <djwong@kernel.org>
+On Mon, Feb 07, 2022 at 12:05:41PM +1100, Dave Chinner wrote:
+> On Fri, Feb 04, 2022 at 04:36:18PM -0800, Darrick J. Wong wrote:
+> > On Fri, Feb 04, 2022 at 05:18:12PM -0600, Eric Sandeen wrote:
+> > > On 1/19/22 6:21 PM, Darrick J. Wong wrote:
+> > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > > 
+> > > > Move our private copy of the GETFSMAP definition into a libfrog header
+> > > > file that (preferentially) uses the system header files.  We have no
+> > > > business shipping kernel headers in the xfslibs package, but this shim
+> > > > is still needed to build fully functional xfsprogs on old userspace.
+> > > 
+> > > Hm. Fine, but I wonder if we can get a bit more intentional about how
+> > > we handle this kind of thing, I understand why we copy this stuff into
+> > > xfsprogs early, but then we never know how to get rid of it.
+> > > 
+> > > Do we /need/ to build fully functional xfsprogs on old userspace?
+> > > (really: systems with old kernel headers?)  How far back do we go,
+> > > I wonder?  Anyway...
 > > 
-> > In xfs_fs_reconfigure, check the return value from sync_filesystem and
-> > fail the remount if there was an internal error.
-> > 
-> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > ---
-> >  fs/xfs/xfs_super.c |    4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > index 4c0dee78b2f8..5f3781879c63 100644
-> > --- a/fs/xfs/xfs_super.c
-> > +++ b/fs/xfs/xfs_super.c
-> > @@ -1831,7 +1831,9 @@ xfs_fs_reconfigure(
-> >  	if (error)
-> >  		return error;
-> >  
-> > -	sync_filesystem(mp->m_super);
-> > +	error = sync_filesystem(mp->m_super);
-> > +	if (error)
-> > +		return error;
-> >  
-> >  	/* inode32 -> inode64 */
-> >  	if (xfs_has_small_inums(mp) && !xfs_has_small_inums(new_mp)) {
+> > TBH we could probably get rid of these entirely, assuming nobody is
+> > building xfsprogs with old kernel headers for a system with a newer
+> > kernel?
 > 
-> Ummm, so why do we even need to call sync_filesystem()
-> unconditionally here?  The only case where we have to actually write
-> back anything on a remount is the rw->ro case, otherwise we aren't
-> changing any state that requires data or metadata writeback.
-> 
-> I had a look at why sync_filesytem() was there, and it goes back to
-> this commit that moved it from the VFS remount code:
-> 
-> commit 02b9984d640873b7b3809e63f81a0d7e13496886
-> Author: Theodore Ts'o <tytso@mit.edu>
-> Date:   Thu Mar 13 10:14:33 2014 -0400
-> 
->     fs: push sync_filesystem() down to the file system's remount_fs()
->     
->     Previously, the no-op "mount -o mount /dev/xxx" operation when the
->     file system is already mounted read-write causes an implied,
->     unconditional syncfs().  This seems pretty stupid, and it's certainly
->     documented or guaraunteed to do this, nor is it particularly useful,
->     except in the case where the file system was mounted rw and is getting
->     remounted read-only.
->     
->     However, it's possible that there might be some file systems that are
->     actually depending on this behavior.  In most file systems, it's
->     probably fine to only call sync_filesystem() when transitioning from
->     read-write to read-only, and there are some file systems where this is
->     not needed at all (for example, for a pseudo-filesystem or something
->     like romfs).
-> 
-> And later on __ext4_remount got modified to only call
-> sync_filesystem() on rw->ro transition. We do not depend on
-> sync_filesystem() for anything here except in the rw->ro remount
-> case, so why don't we just move the sync_filesystem() call to
-> xfs_remount_ro()? We already have an error path there for failing to
-> clean the filesystem, and avoids the possibility of other random
-> mount option changes failing because some because there is some
-> random pending data writeback error....
+> Just fiddle the autoconf rules to refuse to build if the system
+> headers we need aren't present. It just means that build systems
+> need to have the userspace they intend to target installed in the
+> build environment.
 
-That's a good question.  I was doing the minimum needed to fix a
-callsite.  Ted's commit seems to have pushed an unconditional (and
-unchecked) call from the VFS into the first line of the filesystem
-implementation.
-
-Anyway I'll change the patch to move the call to xfs_remount_ro and
-report back.  (Or rather, I did that last night, so we'll see what the
-CI system reports...)
+GETFSMAP premiered in 4.12, so I'm going to take this response (and the
+lack of any others) as a sign that I can respin this patch to require
+recent kernel headers instead of providing our own copy.
 
 --D
 
