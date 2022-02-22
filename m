@@ -2,88 +2,261 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 842864BF75E
-	for <lists+linux-xfs@lfdr.de>; Tue, 22 Feb 2022 12:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78E6F4BF800
+	for <lists+linux-xfs@lfdr.de>; Tue, 22 Feb 2022 13:23:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231751AbiBVLkv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 22 Feb 2022 06:40:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60606 "EHLO
+        id S231337AbiBVMYE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 22 Feb 2022 07:24:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231747AbiBVLku (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Feb 2022 06:40:50 -0500
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54505136EE7;
-        Tue, 22 Feb 2022 03:40:25 -0800 (PST)
-Received: by mail-wr1-x442.google.com with SMTP id j17so5923851wrc.0;
-        Tue, 22 Feb 2022 03:40:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:from:mime-version:content-transfer-encoding
-         :content-description:subject:to:date:reply-to;
-        bh=zncUP4k0qWTkrruw/2Qwtl328+sz3ixjRaMsIKFNcuk=;
-        b=XuEBGqk1UWckbKz/Q0ppMwA+n/lm00aE9YMAHsMtfR7s0qipKYab2gYfuvhTKNXdpO
-         kLc+PGiANsE1AsQnGNo+gfxziyYfr+scVn5OwHqARXbOnHLxfRXu3rjaQHRBuvNaaX4J
-         ve02x7eReY4nM/xmPsra7xA6zvTKJaNhj12kZE1mXogJmU2HL4ykbR6nY3g3NmrIzPXA
-         c02H+C/gNdjDnBfTh0F+8VkYqYe0oBTl88h+5oO6eaK0tObgUm+KfsDAriC9LBxb+Xc+
-         9K5gtzWS6vkqSRkCys2FsxLrMAQ9l25sWvmg51i4jACyMdvRUwwaVGBBa2ETwwRWa7i+
-         PgPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:from:mime-version
-         :content-transfer-encoding:content-description:subject:to:date
-         :reply-to;
-        bh=zncUP4k0qWTkrruw/2Qwtl328+sz3ixjRaMsIKFNcuk=;
-        b=S8mGMwyhpPvpERgnvW7uaa9mReLNbD3ojdRMNOU0ST4ALyGqt5scm4NUPwqV8dLo5Q
-         c5hpuVTuUzsJVRyAHsU5OKwGm9xNBmXXksP2ZpZx8rRWkLDBK7R/+m7L9AXCZfRwP3eA
-         I2cxDq/AsyctLNMlSaE72LUTJHtwPqDEjB5UcOFO3HwahJvmgLX+88Yek04yeNFZCeeI
-         Dso2XTqKF1sV7TJD9U5Ll/SfQXVIVkDpPjgP3miGrXPnkuXb7v2Q9fTMbs4Z+B0xK0k0
-         1qFOQ0GEChpLomrfrrWpKgCHNrgZbwNSEAZB4c4CAehi7n5H2PPOSn/16WcHyfUmweGQ
-         rPpQ==
-X-Gm-Message-State: AOAM53360zTL+h9NnvwhXmJ5lOpSLqLr/j1y+tuwPCY6V5lKpQD9Md+H
-        M33fzqxljYB+dCR9oNk9rX0=
-X-Google-Smtp-Source: ABdhPJz1IaIbefl8JOdUJUpr36UXp0n5OEscVfyeW0XlUGPsfMJATfvgRM0LgNi+Y04N5AYQZVvfaA==
-X-Received: by 2002:a05:6000:188b:b0:1e3:1cfa:5851 with SMTP id a11-20020a056000188b00b001e31cfa5851mr20035629wri.510.1645530023937;
-        Tue, 22 Feb 2022 03:40:23 -0800 (PST)
-Received: from MACBOOKPROF612.localdomain ([102.165.192.234])
-        by smtp.gmail.com with ESMTPSA id c17sm2093025wmh.31.2022.02.22.03.40.17
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 22 Feb 2022 03:40:23 -0800 (PST)
-Message-ID: <6214cba7.1c69fb81.bb0b.71a2@mx.google.com>
-From:   Scott Godfrey <markmillercom322@gmail.com>
-X-Google-Original-From: Scott Godfrey
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S231148AbiBVMYE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 22 Feb 2022 07:24:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B93BF9AE61
+        for <linux-xfs@vger.kernel.org>; Tue, 22 Feb 2022 04:23:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 69BEEB819B7
+        for <linux-xfs@vger.kernel.org>; Tue, 22 Feb 2022 12:23:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE9FC340E8;
+        Tue, 22 Feb 2022 12:23:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645532616;
+        bh=MPQeKtB9KS6epcnecLUWpJlb4PnkIAQgtuujs8WEYpo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ur6lUR9BJrByMNz+8FnPySXvvYXEvGK0kQRlTDV8LMpYcqpeJscnl8I/hbCg6ocME
+         l0XmjIFJdahKqro1M0eKY/qB8jvDGn0lJb5s3xzrtq+ZlV1eceUZtvbmVcUambEH7P
+         bhqsYwMhS8WfLmChmd5RRtbLQ+0Tph/cws82YKjTlbi9khqKt+E+IWa2gFDy5Axl/d
+         xIk0SQLMedQCCCSlaL/VolUNeUzkMBhBYditejl6QLRs8IucoZSd3egSEOsuvr4JHE
+         tFz5KjqQjBc9be+J+vyWiIIpVIfW5VkpU4gGERCd6IVVHgYa+m6QopTOhhD9Dc0o74
+         Vyq1JM7/u4J8Q==
+Date:   Tue, 22 Feb 2022 13:23:31 +0100
+From:   Christian Brauner <brauner@kernel.org>
+To:     Andrey Zhadchenko <andrey.zhadchenko@virtuozzo.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        djwong@kernel.org
+Subject: Re: [PATCH] xfs: do not clear S_ISUID|S_ISGID for idmapped mounts
+Message-ID: <20220222122331.ijeapomur76h7xf6@wittgenstein>
+References: <20220221182218.748084-1-andrey.zhadchenko@virtuozzo.com>
+ <20220222083340.GA5899@lst.de>
+ <20220222102405.mmqlzimwabz7v67d@wittgenstein>
+ <bdfa9081-1994-95f9-6feb-6710d34b33a1@virtuozzo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: CONGRATULATION!!!!
-To:     Recipients <Scott@vger.kernel.org>
-Date:   Tue, 22 Feb 2022 13:40:14 +0200
-Reply-To: scottgodfrey.net@gmail.com
-X-Antivirus: AVG (VPS 220222-0, 2/22/2022), Outbound message
-X-Antivirus-Status: Clean
-X-Spam-Status: No, score=4.6 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FRAUD_3,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,TO_MALFORMED,T_SCC_BODY_TEXT_LINE,
-        XFER_LOTSA_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bdfa9081-1994-95f9-6feb-6710d34b33a1@virtuozzo.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-My Name is Scott Godfrey. I wish to inform you that The sum of $2,500,000(M=
-illion)has been donated to you.I
-won a fortune of $699.8 Million in the Million Dollars Power-Ball Jackpot L=
-ottery,2021.And I am
-donating part of it to five lucky people and five Charity
-organization. Your email came out victorious. Please contact via email: sco=
-ttgodfrey.net@gmail.com. For more information about your claims. Thanks.
+On Tue, Feb 22, 2022 at 02:19:16PM +0300, Andrey Zhadchenko wrote:
+> On 2/22/22 13:24, Christian Brauner wrote:
+> > On Tue, Feb 22, 2022 at 09:33:40AM +0100, Christoph Hellwig wrote:
+> > > On Mon, Feb 21, 2022 at 09:22:18PM +0300, Andrey Zhadchenko wrote:
+> > > > xfs_fileattr_set() handles idmapped mounts correctly and do not drop this
+> > > > bits.
+> > > > Unfortunately chown syscall results in different callstask:
+> > > > i_op->xfs_vn_setattr()->...->xfs_setattr_nonsize() which checks if process
+> > > > has CAP_FSETID capable in init_user_ns rather than mntns userns.
+> > > 
+> > > Can you add an xfstests the exercises this path?
+> > > 
+> > > The fix itself looks good:
+> > > 
+> > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > 
+> > So for anything other than directories the s{g,u}id bits are cleared on
+> > every chown in notify_change() by the vfs; even for the root user (Also
+> > documented on chown(2) manpage).
+> 
+> Only exception - chown preserves setgid bit set on a non-group-executable
+> file (also documented there) but do not take root privileges into account at
+> vfs level.
+> 
+> > 
+> > So the only scenario were this change would be relevant is for
+> > directories afaict:
+> > 
+> > 1. So ext4 has the behavior:
+> > 
+> >     ubuntu@f2-vm|~
+> >     > mkdir suid.dir
+> >     ubuntu@f2-vm|~
+> >     > perms ./suid.dir
+> >     drwxrwxr-x 775 (1000:1000) ./suid.dir
+> >     ubuntu@f2-vm|~
+> >     > chmod u+s ./suid.dir/
+> >     ubuntu@f2-vm|~
+> >     > perms ./suid.dir
+> >     drwsrwxr-x 4775 (1000:1000) ./suid.dir
+> >     ubuntu@f2-vm|~
+> >     > chmod g+s ./suid.dir/
+> >     ubuntu@f2-vm|~
+> >     > perms ./suid.dir
+> >     drwsrwsr-x 6775 (1000:1000) ./suid.dir
+> >     ubuntu@f2-vm|~
+> >     > chown 1000:1000 ./suid.dir/
+> >     ubuntu@f2-vm|~
+> >     > perms ./suid.dir/
+> >     drwsrwsr-x 6775 (1000:1000) ./suid.dir/
+> >     meaning that both s{g,u}id bits are retained for directories. (Just to
+> >     make this explicit: changing {g,u}id to the same {g,u}id still ends up
+> >     calling into the filesystem.)
+> > 
+> > 2. Whereas xfs currently has:
+> > 
+> >     brauner@wittgenstein|~
+> >     > mkdir suid.dir
+> >     brauner@wittgenstein|~
+> >     > perms ./suid.dir
+> >     drwxrwxr-x 775 ./suid.dir
+> >     brauner@wittgenstein|~
+> >     > chmod u+s ./suid.dir/
+> >     brauner@wittgenstein|~
+> >     > perms ./suid.dir
+> >     drwsrwxr-x 4775 ./suid.dir
+> >     brauner@wittgenstein|~
+> >     > chmod g+s ./suid.dir/
+> >     brauner@wittgenstein|~
+> >     > perms ./suid.dir
+> >     drwsrwsr-x 6775 ./suid.dir
+> >     brauner@wittgenstein|~
+> >     > chown 1000:1000 ./suid.dir/
+> >     brauner@wittgenstein|~
+> >     > perms ./suid.dir/
+> >     drwxrwxr-x 775 ./suid.dir/
+> >     meaning that both s{g,u}id bits are cleared for directories.
+> > 
+> > Since the vfs will always ensure that s{g,u}id bits are stripped for
+> > anything that isn't a directory in the vfs:
+> > - ATTR_KILL_S{G,U}ID is raised in chown_common():
+> > 
+> > 	if (!S_ISDIR(inode->i_mode))
+> > 		newattrs.ia_valid |=
+> > 			ATTR_KILL_SUID | ATTR_KILL_SGID | ATTR_KILL_PRIV;
+> > 
+> > - and then in notify_change() we'll get the bits stripped and ATTR_MODE
+> >    raised:
+> > 
+> > 	if (ia_valid & ATTR_KILL_SUID) {
+> > 		if (mode & S_ISUID) {
+> > 			ia_valid = attr->ia_valid |= ATTR_MODE;
+> > 			attr->ia_mode = (inode->i_mode & ~S_ISUID);
+> > 		}
+> > 	}
+> > 	if (ia_valid & ATTR_KILL_SGID) {
+> > 		if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)) {
+> 
+> So SGID is not killed if there is no S_IXGRP (yet no capability check)
+> 
+> Actually I do not really understand why do kernel expects filesystems to
+> further apply restrictions with CAP_FSETID. Why not kill it here since we
+> have all info?
 
+Some filesystems do treat the sgid behavior of directories special (some
+network filesystems do where they send that information to the server
+before updating the inode afair). So I'd rather not do that in there as
+we're risking breaking expectations and it's a very sensitive change.
 
--- 
-This email has been checked for viruses by AVG.
-https://www.avg.com
+Plus, the logic is encapsulated in the vfs generic setattr_copy() helper
+which nearly all filesystems call.
 
+> 
+> > 			if (!(ia_valid & ATTR_MODE)) {
+> > 				ia_valid = attr->ia_valid |= ATTR_MODE;
+> > 				attr->ia_mode = inode->i_mode;
+> > 			}
+> > 			attr->ia_mode &= ~S_ISGID;
+> > 		}
+> > 	}
+> > 
+> > we can change this codepath to just mirror setattr_copy() or switch
+> > fully to setattr_copy() (if feasible).
+> > 
+> > Because as of right now the code seems to imply that the xfs code itself
+> > is responsible for stripping s{g,u}id bits for all files whereas it is
+> > the vfs that does it for any non-directory. So I'd propose to either try
+> > and switch that code to setattr_copy() or to do open-code the
+> > setattr_copy() check:
+> > 
+> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > index b79b3846e71b..ff55b31521a2 100644
+> > --- a/fs/xfs/xfs_iops.c
+> > +++ b/fs/xfs/xfs_iops.c
+> > @@ -748,9 +748,13 @@ xfs_setattr_nonsize(
+> >                   * The set-user-ID and set-group-ID bits of a file will be
+> >                   * cleared upon successful return from chown()
+> >                   */
+> > -               if ((inode->i_mode & (S_ISUID|S_ISGID)) &&
+> > -                   !capable(CAP_FSETID))
+> > -                       inode->i_mode &= ~(S_ISUID|S_ISGID);
+> > +               if (iattr->ia_valid & ATTR_MODE) {
+> > +                       umode_t mode = iattr->ia_mode;
+> > +                       if (!in_group_p(i_gid_into_mnt(mnt_userns, inode)) &&
+> > +                           !capable_wrt_inode_uidgid(mnt_userns, inode, CAP_FSETID))
+> > +                               mode &= ~S_ISGID;
+> > +                       inode->i_mode = mode;
+> > +               }
+> > 
+> >                  /*
+> >                   * Change the ownerships and register quota modifications
+> > 
+> > which aligns xfs with ext4 and any other filesystem. Any thoughts on
+> > this?
+> > 
+> > For @Andrey specifically: the tests these should go into:
+> > 
+> > https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/tree/src/idmapped-mounts/idmapped-mounts.c
+> > 
+> > Note that there are already setgid inheritance tests and set*id
+> > execution tests in there.
+> > You should be able to copy a lot of code from them. Could you please add
+> > the test I sketched above and ideally also a test that the set{g,u}id
+> > bits are stripped during chown for regular files?
+> Thanks for the link. To clarify what tests and result you expect:
+> - for directory chown we expect to preserve s{g,u}id
+> - for regfile chown we expect to preserve S_ISGID only if S_IXGRP is absent
+> and CAP_FSETID is present
+
+So specifically for chown():
+1. if regfile
+   -> strip suid bit unconditionally
+   -> strip sgid bit if inode has sgid bit and file is group-executable
+2. if directory
+   -> strip sgid bit if inode's gid is neither among the caller's groups
+      nor is the caller capable wrt to that inode
+The behavior described in 2. is encoded in the vfs generic
+setattr_copy() helper. And that is what we should see.
+
+The behavior of ext4 and btrfs is what we should see afaict as both use
+setattr_copy().
+
+> 
+> JFYI: I found out this problem while running LTP (specifically
+> syscalls/chown02 test) on idmapped XFS. Maybe I will be able to find more,
+> who knows.
+
+Hm, if you look above, then you can see that the failure (or difference
+in behavior) you're reporting is independent of idmapped mounts. An
+ext4 directory shows different behavior than an xfs directory on a
+regular system without any idmapped mounts used. So I'm not clear how
+that's specifically related to idmapped mounts yet.
+
+Fwiw, one part in your commit message is a bit misleading:
+
+> > > > has CAP_FSETID capable in init_user_ns rather than mntns userns.
+
+that's not what capable_wrt_to_inode_uidgid() does. What it does is to
+check whether the caller is capable in their current user namespace.
+That's how capable_wrt_to_inode_uidgid() has always worked.
+The mnt_userns is only used to idmap the inode's {g,u}id. So if the
+caller has CAP_FSETID in its current userns and the inode's {g,u}id have
+a valid mapping in the mnt's userns the caller is considered privileged
+over that inode.
