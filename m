@@ -2,74 +2,116 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9CBC4C7EF0
-	for <lists+linux-xfs@lfdr.de>; Tue,  1 Mar 2022 01:00:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A642F4C7ECA
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Mar 2022 00:58:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbiCAAAU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 28 Feb 2022 19:00:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42882 "EHLO
+        id S231473AbiB1X6j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 28 Feb 2022 18:58:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiCAAAT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Feb 2022 19:00:19 -0500
-X-Greylist: delayed 1970 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 28 Feb 2022 15:59:40 PST
-Received: from fornost.hmeau.com (helcar.hmeau.com [216.24.177.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 347D338798
-        for <linux-xfs@vger.kernel.org>; Mon, 28 Feb 2022 15:59:40 -0800 (PST)
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.103.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1nOpPZ-000832-Uq; Tue, 01 Mar 2022 10:26:39 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 01 Mar 2022 11:26:37 +1200
-Date:   Tue, 1 Mar 2022 11:26:37 +1200
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Giovanni Cabiddu <giovanni.cabiddu@intel.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kyle Sanderson <kyle.leet@gmail.com>,
-        Dave Chinner <david@fromorbit.com>, qat-linux@intel.com,
-        Linux-Kernal <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        device-mapper development <dm-devel@redhat.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: Intel QAT on A2SDi-8C-HLN4F causes massive data corruption with
- dm-crypt + xfs
-Message-ID: <Yh1aLfy/oBawCJIg@gondor.apana.org.au>
-References: <CACsaVZ+mt3CfdXV0_yJh7d50tRcGcRZ12j3n6-hoX2cz3+njsg@mail.gmail.com>
- <20220219210354.GF59715@dread.disaster.area>
- <CACsaVZ+LZUebtsGuiKhNV_No8fNLTv5kJywFKOigieB1cZcKUw@mail.gmail.com>
- <YhN76/ONC9qgIKQc@silpixa00400314>
- <CACsaVZJFane88cXxG_E1VkcMcJm8YVN+GDqQ2+tRYNpCf+m8zA@mail.gmail.com>
- <CAHk-=whVT2GcwiJM8m-XzgJj8CjytTHi_pmgmOnSpzvGWzZM1A@mail.gmail.com>
- <Yh0y75aegqS4jIP7@silpixa00400314>
+        with ESMTP id S229981AbiB1X6j (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Feb 2022 18:58:39 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A781B37BDF;
+        Mon, 28 Feb 2022 15:57:58 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id z2so12067234plg.8;
+        Mon, 28 Feb 2022 15:57:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h0sCSJGBWDN5mRT7aBgm8yBHFMNHKb8Jl03bv/QDMQY=;
+        b=GujjR472ePh+4ybziZIBTl5oJqLyn60Vy/wWd2iruPDB8ietcm6zd0dPOqrAvbbVzg
+         lu1rmIwMX1tX718vXxLYWh6HqAjNXf6Nt481UeNh7PTTVZnqLMfiLohrXOzMrndT/tF9
+         xF7yFEDCllEofZ/7wPRZvgRtjdnb6wT7kJB+cBCSAL+TJqyT67dxGGFriY4zwEms1cL6
+         WN3+St0LOh9HKPTqu+svRT/jobZW1/t3wxrwPM0+GURK/tdO/Ks0HXIFu5S6voTDBrJ9
+         kNKyUyoKks4IOeFQIC0M34I8we8kcEOXlJjYbXD7Pcj7TYN5u3X7MekovnN3yraE6PkT
+         MPuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h0sCSJGBWDN5mRT7aBgm8yBHFMNHKb8Jl03bv/QDMQY=;
+        b=xg+KBZqw8NwaGr78vw/7LBc5VVeNrK++qBd8Qn2grmB7p8i23qjFUnxYC7MNMJOYIx
+         dKqqvZYBI0qcov5KnFCTLu25Ryo0BWH7jdDKcacA07/4VZPWPC6+Pf+EQtrej+dBDJtk
+         DRpBEotOf54naOCfF7pvzEtsKhTWKySHCOI4IsdsrOBwPtlItyg9tguHeWGY8K6kc4TV
+         PksvMASawFFwPup3b5/yCBetWV+GnxDeFkZd26xnnmvfN8ZoCJfEIABsLs7XpLC+G7DO
+         OjgI56W6RC8JSE3otczCmf3aNGGJxZsnxYexr+lLyH3MJ5zITuvk7bQzHeOhUGCZ5+Zp
+         Yt7Q==
+X-Gm-Message-State: AOAM533ceOkqyGab/R/efvZrXhhqfr3xvuvErt6S9fqwJ4wSglk7s2E0
+        eAoVyv6GGddgPfx293fVA7A=
+X-Google-Smtp-Source: ABdhPJzD9SKtkQ8vuX0qPac1DGv6DOmMazBubWiEtu4ddPmWBpE6VIc64Q3TkV9smEiRbog2V++tHA==
+X-Received: by 2002:a17:903:2c7:b0:14f:522c:d33c with SMTP id s7-20020a17090302c700b0014f522cd33cmr23162298plk.143.1646092678136;
+        Mon, 28 Feb 2022 15:57:58 -0800 (PST)
+Received: from localhost.localdomain (c-67-174-241-145.hsd1.ca.comcast.net. [67.174.241.145])
+        by smtp.gmail.com with ESMTPSA id on15-20020a17090b1d0f00b001b9d1b5f901sm396963pjb.47.2022.02.28.15.57.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Feb 2022 15:57:57 -0800 (PST)
+From:   Yang Shi <shy828301@gmail.com>
+To:     vbabka@suse.cz, kirill.shutemov@linux.intel.com,
+        songliubraving@fb.com, linmiaohe@huawei.com, riel@surriel.com,
+        willy@infradead.org, ziy@nvidia.com, akpm@linux-foundation.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca, darrick.wong@oracle.com
+Cc:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/8] Make khugepaged collapse readonly FS THP more consistent
+Date:   Mon, 28 Feb 2022 15:57:33 -0800
+Message-Id: <20220228235741.102941-1-shy828301@gmail.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yh0y75aegqS4jIP7@silpixa00400314>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 08:39:11PM +0000, Giovanni Cabiddu wrote:
->
-> The dm-crypt + QAT use-case is already disabled since kernel 5.10 due to
-> a different issue.
 
-Indeed, qat has been disabled for dm-crypt since
+The readonly FS THP relies on khugepaged to collapse THP for suitable
+vmas.  But it is kind of "random luck" for khugepaged to see the
+readonly FS vmas (see report: https://lore.kernel.org/linux-mm/00f195d4-d039-3cf2-d3a1-a2c88de397a0@suse.cz/) since currently the vmas are registered to khugepaged when:
+  - Anon huge pmd page fault
+  - VMA merge
+  - MADV_HUGEPAGE
+  - Shmem mmap
 
-commit b8aa7dc5c7535f9abfca4bceb0ade9ee10cf5f54
-Author: Mikulas Patocka <mpatocka@redhat.com>
-Date:   Thu Jul 9 23:20:41 2020 -0700
+If the above conditions are not met, even though khugepaged is enabled
+it won't see readonly FS vmas at all.  MADV_HUGEPAGE could be specified
+explicitly to tell khugepaged to collapse this area, but when khugepaged
+mode is "always" it should scan suitable vmas as long as VM_NOHUGEPAGE
+is not set.
 
-    crypto: drivers - set the flag CRYPTO_ALG_ALLOCATES_MEMORY
+So make sure readonly FS vmas are registered to khugepaged to make the
+behavior more consistent.
 
-So this should no longer be an issue with an up-to-date kernel.
+Registering the vmas in mmap path seems more preferred from performance
+point of view since page fault path is definitely hot path.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+The patch 1 ~ 7 are minor bug fixes, clean up and preparation patches.
+The patch 8 converts ext4 and xfs.  We may need convert more filesystems,
+but I'd like to hear some comments before doing that.
+
+
+Tested with khugepaged test in selftests and the testcase provided by
+Vlastimil Babka in https://lore.kernel.org/lkml/df3b5d1c-a36b-2c73-3e27-99e74983de3a@suse.cz/
+by commenting out MADV_HUGEPAGE call.
+
+
+ b/fs/ext4/file.c                 |    4 +++
+ b/fs/xfs/xfs_file.c              |    4 +++
+ b/include/linux/huge_mm.h        |    9 +++++++
+ b/include/linux/khugepaged.h     |   69 +++++++++++++++++++++----------------------------------------
+ b/include/linux/sched/coredump.h |    3 +-
+ b/kernel/fork.c                  |    4 ---
+ b/mm/huge_memory.c               |   15 +++----------
+ b/mm/khugepaged.c                |   71 ++++++++++++++++++++++++++++++++++++++++++++-------------------
+ b/mm/shmem.c                     |   14 +++---------
+ 9 files changed, 102 insertions(+), 91 deletions(-)
+
+
