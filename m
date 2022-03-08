@@ -2,49 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C51124D1F07
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Mar 2022 18:26:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E81D4D2422
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Mar 2022 23:19:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343803AbiCHR0l (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Mar 2022 12:26:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40104 "EHLO
+        id S234653AbiCHWTz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Mar 2022 17:19:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349121AbiCHR0f (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Mar 2022 12:26:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DFA4554BB
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Mar 2022 09:25:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 183DF60C82
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Mar 2022 17:25:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79943C340F4
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Mar 2022 17:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646760338;
-        bh=HpKQnWiZSYPN2fLzdRVBosncC6Jn3JjClAPbYb4V6V0=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=IV8DNIn3wk79LpAqoIqlVWWTh5BAwB2bHIAJkgrULE3H1ykaX3wVo92BH8EXajXWa
-         lMsxMdH/ACnWjfaerSiyLz00KIKa9fMY3oYLVmSpYznFaoOv7m9Np+kl32a8+hsKRm
-         1BbLKrJDl8tbGMVsQwdXQG4g0GDiBBaTx2cEhNShF2FPnMVNnToVN+mnQfO27u3KcJ
-         XzG6Qxts1WTnkV1MNLY4N+Hl6edl6XF6qULmZBWB1C0Pq0U7heInuvs1dMiyCUFn7Y
-         r3R6D+OLHzxBt/McaxH13K3sCX4WfRUhWTS4OaAyDx3/9zQSmgvTiujdiOFNNo4Zti
-         /BYoCn53QefzA==
-Date:   Tue, 8 Mar 2022 09:25:38 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     xfs <linux-xfs@vger.kernel.org>
+        with ESMTP id S232983AbiCHWTz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Mar 2022 17:19:55 -0500
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F17D6F1B
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Mar 2022 14:18:57 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-17-0.pa.vic.optusnet.com.au [49.186.17.0])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 402D610E2442;
+        Wed,  9 Mar 2022 09:18:56 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1nRiAS-0039c8-0D; Wed, 09 Mar 2022 09:18:56 +1100
+Date:   Wed, 9 Mar 2022 09:18:55 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     xfs <linux-xfs@vger.kernel.org>
 Subject: Re: [PATCH] xfs: reserve quota for directory expansion when
  hardlinking files
-Message-ID: <20220308172538.GN117732@magnolia>
+Message-ID: <20220308221855.GC661808@dread.disaster.area>
 References: <20220301025118.GG117732@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220301025118.GG117732@magnolia>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=6227d651
+        a=+dVDrTVfsjPpH/ci3UuFng==:117 a=+dVDrTVfsjPpH/ci3UuFng==:17
+        a=kj9zAlcOel0A:10 a=o8Y5sQTvuykA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=3BAniVUdc8oPeBq_kggA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,12 +55,7 @@ On Mon, Feb 28, 2022 at 06:51:18PM -0800, Darrick J. Wong wrote:
 > expansion with EDQUOT when we're at or near a hard limit, which means
 > that one can use linkat() to exceed quota.  Fix this by adding a quota
 > reservation.
-
-Could someone review this, please?  I'd like to get a 5.18-fixes branch
-rolling along with the other patches that have already been sent.
-
---D
-
+> 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
 >  fs/xfs/xfs_inode.c |    4 ++++
@@ -86,3 +76,31 @@ rolling along with the other patches that have already been sent.
 >  	error = xfs_iext_count_may_overflow(tdp, XFS_DATA_FORK,
 >  			XFS_IEXT_DIR_MANIP_CNT(mp));
 >  	if (error)
+
+Yup, ok, but doesn't xfs_remove have exactly the same problem? i.e.
+removing a directory entry can punch a hole in the bmbt and require
+new allocations for a BMBT split, thereby increasing the number of
+blocks allocated to the directory? e.g. remove a single data block,
+need to then allocate half a dozen BMBT blocks for the shape change.
+
+If so, then both xfs_link() and xfs_remove() have exactly the same
+dquot, inode locking and transaction setup code and requirements,
+and probably should be factored out into xfs_trans_alloc_dir() (i.e.
+equivalent of xfs_trans_alloc_icreate() used by all the inode create
+functions).  That way we only have one copy of this preamble and
+only need to fix the bug in one place?
+
+Alternatively, fix the bug in both places first and add a followup
+patch that factors out this code as per above.
+
+Hmmm - looking further a callers of xfs_lock_two_inodes(), it would
+appear that xfs_swap_extents() needs the same quota reservation
+and also largely has the same transaction setup and inode locking
+preamble as link and remove...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
