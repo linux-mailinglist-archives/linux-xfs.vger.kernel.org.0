@@ -2,46 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 379514D2889
-	for <lists+linux-xfs@lfdr.de>; Wed,  9 Mar 2022 06:47:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C1A4D2867
+	for <lists+linux-xfs@lfdr.de>; Wed,  9 Mar 2022 06:29:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbiCIFsP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 9 Mar 2022 00:48:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        id S229506AbiCIFam (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 9 Mar 2022 00:30:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbiCIFsO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Mar 2022 00:48:14 -0500
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3DEC2161119
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Mar 2022 21:47:16 -0800 (PST)
+        with ESMTP id S229650AbiCIFal (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 9 Mar 2022 00:30:41 -0500
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D1823FBD2
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Mar 2022 21:29:41 -0800 (PST)
 Received: from dread.disaster.area (pa49-186-17-0.pa.vic.optusnet.com.au [49.186.17.0])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 88182531007
-        for <linux-xfs@vger.kernel.org>; Wed,  9 Mar 2022 16:47:15 +1100 (AEDT)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id ABF8C10E26AC
+        for <linux-xfs@vger.kernel.org>; Wed,  9 Mar 2022 16:29:40 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nRotH-003H4z-G8
+        id 1nRotH-003H51-H8
         for linux-xfs@vger.kernel.org; Wed, 09 Mar 2022 16:29:39 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nRotH-00BJWh-F5
+        id 1nRotH-00BJWl-Ft
         for linux-xfs@vger.kernel.org;
         Wed, 09 Mar 2022 16:29:39 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 03/16] xfs: embed the xlog_op_header in the unmount record
-Date:   Wed,  9 Mar 2022 16:29:24 +1100
-Message-Id: <20220309052937.2696447-4-david@fromorbit.com>
+Subject: [PATCH 04/16] xfs: embed the xlog_op_header in the commit record
+Date:   Wed,  9 Mar 2022 16:29:25 +1100
+Message-Id: <20220309052937.2696447-5-david@fromorbit.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20220309052937.2696447-1-david@fromorbit.com>
 References: <20220309052937.2696447-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=62283f63
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62283b44
         a=+dVDrTVfsjPpH/ci3UuFng==:117 a=+dVDrTVfsjPpH/ci3UuFng==:17
         a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8
-        a=UXhe6C7XvhuX9EOlRy0A:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=Oc_qpV5cMpSWUF8m4ooA:9 a=AjGcO6oz07-iQ99wixmX:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,TVD_PH_BODY_ACCOUNTS_PRE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
@@ -51,111 +51,104 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
-
-Remove another case where xlog_write() has to prepend an opheader to
-a log transaction. The unmount record + ophdr is smaller than the
-minimum amount of space guaranteed to be free in an iclog (2 *
-sizeof(ophdr)) and so we don't have to care about an unmount record
-being split across 2 iclogs.
+Remove the final case where xlog_write() has to prepend an opheader
+to a log transaction. Similar to the start record, the commit record
+is just an empty opheader with a XLOG_COMMIT_TRANS type, so we can
+just make this the payload for the region being passed to
+xlog_write() and remove the special handling in xlog_write() for
+the commit record.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- fs/xfs/xfs_log.c | 39 ++++++++++++++++++++++++++++-----------
- 1 file changed, 28 insertions(+), 11 deletions(-)
+ fs/xfs/xfs_log.c     | 22 ++++++----------------
+ fs/xfs/xfs_log_cil.c | 11 +++++++++--
+ 2 files changed, 15 insertions(+), 18 deletions(-)
 
 diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index e2953ce470de..e5515d0c85c4 100644
+index e5515d0c85c4..f789acd2f755 100644
 --- a/fs/xfs/xfs_log.c
 +++ b/fs/xfs/xfs_log.c
-@@ -915,12 +915,22 @@ xlog_write_unmount_record(
- 	struct xlog		*log,
- 	struct xlog_ticket	*ticket)
- {
--	struct xfs_unmount_log_format ulf = {
--		.magic = XLOG_UNMOUNT_TYPE,
-+	struct  {
-+		struct xlog_op_header ophdr;
-+		struct xfs_unmount_log_format ulf;
-+	} unmount_rec = {
-+		.ophdr = {
-+			.oh_clientid = XFS_LOG,
-+			.oh_tid = cpu_to_be32(ticket->t_tid),
-+			.oh_flags = XLOG_UNMOUNT_TRANS,
-+		},
-+		.ulf = {
-+			.magic = XLOG_UNMOUNT_TYPE,
-+		},
- 	};
- 	struct xfs_log_iovec reg = {
--		.i_addr = &ulf,
--		.i_len = sizeof(ulf),
-+		.i_addr = &unmount_rec,
-+		.i_len = sizeof(unmount_rec),
- 		.i_type = XLOG_REG_TYPE_UNMOUNT,
- 	};
- 	struct xfs_log_vec vec = {
-@@ -928,8 +938,12 @@ xlog_write_unmount_record(
- 		.lv_iovecp = &reg,
- 	};
- 
-+	BUILD_BUG_ON((sizeof(struct xlog_op_header) +
-+		      sizeof(struct xfs_unmount_log_format)) !=
-+							sizeof(unmount_rec));
-+
- 	/* account for space used by record data */
--	ticket->t_curr_res -= sizeof(ulf);
-+	ticket->t_curr_res -= sizeof(unmount_rec);
- 
- 	return xlog_write(log, NULL, &vec, ticket, XLOG_UNMOUNT_TRANS);
- }
-@@ -2267,6 +2281,8 @@ xlog_write_calc_vec_length(
+@@ -2281,11 +2281,10 @@ xlog_write_calc_vec_length(
  
  	/* Don't account for regions with embedded ophdrs */
  	if (optype && headers > 0) {
-+		if (optype & XLOG_UNMOUNT_TRANS)
-+			headers--;
+-		if (optype & XLOG_UNMOUNT_TRANS)
+-			headers--;
++		headers--;
  		if (optype & XLOG_START_TRANS) {
- 			ASSERT(headers >= 2);
- 			headers -= 2;
-@@ -2472,12 +2488,11 @@ xlog_write(
+-			ASSERT(headers >= 2);
+-			headers -= 2;
++			ASSERT(headers >= 1);
++			headers--;
+ 		}
+ 	}
  
- 	/*
- 	 * If this is a commit or unmount transaction, we don't need a start
--	 * record to be written.  We do, however, have to account for the
--	 * commit or unmount header that gets written. Hence we always have
--	 * to account for an extra xlog_op_header here for commit and unmount
--	 * records.
-+	 * record to be written.  We do, however, have to account for the commit
-+	 * header that gets written. Hence we always have to account for an
-+	 * extra xlog_op_header here for commit records.
- 	 */
--	if (optype & (XLOG_COMMIT_TRANS | XLOG_UNMOUNT_TRANS))
-+	if (optype & XLOG_COMMIT_TRANS)
- 		ticket->t_curr_res -= sizeof(struct xlog_op_header);
+@@ -2486,14 +2485,6 @@ xlog_write(
+ 	int			data_cnt = 0;
+ 	int			error = 0;
+ 
+-	/*
+-	 * If this is a commit or unmount transaction, we don't need a start
+-	 * record to be written.  We do, however, have to account for the commit
+-	 * header that gets written. Hence we always have to account for an
+-	 * extra xlog_op_header here for commit records.
+-	 */
+-	if (optype & XLOG_COMMIT_TRANS)
+-		ticket->t_curr_res -= sizeof(struct xlog_op_header);
  	if (ticket->t_curr_res < 0) {
  		xfs_alert_tag(log->l_mp, XFS_PTAG_LOGRES,
-@@ -2541,6 +2556,8 @@ xlog_write(
+ 		     "ctx ticket reservation ran out. Need to up reservation");
+@@ -2550,14 +2541,13 @@ xlog_write(
+ 			/*
+ 			 * The XLOG_START_TRANS has embedded ophdrs for the
+ 			 * start record and transaction header. They will always
+-			 * be the first two regions in the lv chain.
++			 * be the first two regions in the lv chain. Commit and
++			 * unmount records also have embedded ophdrs.
+ 			 */
+-			if (optype & XLOG_START_TRANS) {
++			if (optype) {
  				ophdr = reg->i_addr;
  				if (index)
  					optype &= ~XLOG_START_TRANS;
-+			} else if (optype & XLOG_UNMOUNT_TRANS) {
-+				ophdr = reg->i_addr;
+-			} else if (optype & XLOG_UNMOUNT_TRANS) {
+-				ophdr = reg->i_addr;
  			} else {
  				ophdr = xlog_write_setup_ophdr(log, ptr,
  							ticket, optype);
-@@ -2571,7 +2588,7 @@ xlog_write(
- 			/*
- 			 * Copy region.
- 			 *
--			 * Commit and unmount records just log an opheader, so
-+			 * Commit records just log an opheader, so
- 			 * we can have empty payloads with no data region to
- 			 * copy.  Hence we only copy the payload if the vector
- 			 * says it has data to copy.
+diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+index ff3fbc67be89..f7a5d1ec24e0 100644
+--- a/fs/xfs/xfs_log_cil.c
++++ b/fs/xfs/xfs_log_cil.c
+@@ -834,9 +834,14 @@ xlog_cil_write_commit_record(
+ 	struct xfs_cil_ctx	*ctx)
+ {
+ 	struct xlog		*log = ctx->cil->xc_log;
++	struct xlog_op_header	ophdr = {
++		.oh_clientid = XFS_TRANSACTION,
++		.oh_tid = cpu_to_be32(ctx->ticket->t_tid),
++		.oh_flags = XLOG_COMMIT_TRANS,
++	};
+ 	struct xfs_log_iovec	reg = {
+-		.i_addr = NULL,
+-		.i_len = 0,
++		.i_addr = &ophdr,
++		.i_len = sizeof(struct xlog_op_header),
+ 		.i_type = XLOG_REG_TYPE_COMMIT,
+ 	};
+ 	struct xfs_log_vec	vec = {
+@@ -852,6 +857,8 @@ xlog_cil_write_commit_record(
+ 	if (error)
+ 		return error;
+ 
++	/* account for space used by record data */
++	ctx->ticket->t_curr_res -= reg.i_len;
+ 	error = xlog_write(log, ctx, &vec, ctx->ticket, XLOG_COMMIT_TRANS);
+ 	if (error)
+ 		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
 -- 
 2.33.0
 
