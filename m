@@ -2,208 +2,192 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 260454D5079
-	for <lists+linux-xfs@lfdr.de>; Thu, 10 Mar 2022 18:29:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A0854D50A9
+	for <lists+linux-xfs@lfdr.de>; Thu, 10 Mar 2022 18:35:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244941AbiCJR2P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 10 Mar 2022 12:28:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42006 "EHLO
+        id S245134AbiCJRfz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 10 Mar 2022 12:35:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244981AbiCJR1x (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Mar 2022 12:27:53 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2070.outbound.protection.outlook.com [40.107.236.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 905FCC2E62;
-        Thu, 10 Mar 2022 09:26:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OFEBKSQFyqeRHtai7awNAGQ/SGHMOflQITcG1gx7HMlk00BPX/qmMs0LnVSrXh0dFppweNV7/AF9CIh8haJbD9zZONveuFkoPW2kxW69CviKutowrYWHyuGA0xuSeZs6O2ui9gOTl2G1srovSxBWjkmDuuctxdJgbUKmGKvkOoyKS155kOr9RGIQJBY1hT4PZ1nsrkUObQD5M7PaWU3zMNjNrTheX6sVtufFY5zIlHLCFde3dtjWchzWzP/eduNUSW5aXYEs2QSObLsZH93vjDyicQl63JOLDnGNbW5t2BKYm6drBrESypQj8AOuB58dDFEWHWnc2lE6CgUR2LgxfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+v+1UPaPthHsygapXxuY4sqVDC3cvlVfCyGWQ0h08FA=;
- b=n1iy540S9M4XzPyVHItLtr5MFznLBd728lGCGmIiIDjXuI/oo/fT9ua4sHUPIN9WU1Ep34iwI12K+8VAbX4AuSoj7xp9fJvgUb0ATfm+6FlyuKSkpQ+SmRVVgdMt1xtTyN8p6o9ZKxlK9mKAMH+XGELMYs+OLi8BuTu8vv1ne9645GkSnBOIOrJZYYyWaXYSS6scsFSNquvZvt2+HtwCFdpigHWJWHmZ4CAiUdH6im0NpV1GiB5RJumleqhfXEK2lL938L/QvwiNDfaQMxGWt7W0aGcBF5EQN1xy3r7qQmMv+82utCJbIzafe3jBMyJTtEzLZLx5J4R7nIZ2Rz20tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+v+1UPaPthHsygapXxuY4sqVDC3cvlVfCyGWQ0h08FA=;
- b=NNmB470gb/CYX90FK4yEbhGDNmtUDwjqkl72EgETLlLCQ/6xDMUzK5iY8SW6q5Bi2eUl99mubFJbJdNdoM9w+c7Fat/ZG5++cL0h5oCxuz9HbrisKngmZ/i3IPq0DHF+mbwg4j910rEkooHMTDc+vajAFkQuS9sh6sLGWukc6F8=
-Received: from DM3PR11CA0019.namprd11.prod.outlook.com (2603:10b6:0:54::29) by
- BL1PR12MB5141.namprd12.prod.outlook.com (2603:10b6:208:309::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5038.14; Thu, 10 Mar 2022 17:26:47 +0000
-Received: from DM6NAM11FT010.eop-nam11.prod.protection.outlook.com
- (2603:10b6:0:54:cafe::da) by DM3PR11CA0019.outlook.office365.com
- (2603:10b6:0:54::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.27 via Frontend
- Transport; Thu, 10 Mar 2022 17:26:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT010.mail.protection.outlook.com (10.13.172.222) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5061.22 via Frontend Transport; Thu, 10 Mar 2022 17:26:47 +0000
-Received: from alex-MS-7B09.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 10 Mar
- 2022 11:26:45 -0600
-From:   Alex Sierra <alex.sierra@amd.com>
-To:     <jgg@nvidia.com>
-CC:     <david@redhat.com>, <Felix.Kuehling@amd.com>, <linux-mm@kvack.org>,
-        <rcampbell@nvidia.com>, <linux-ext4@vger.kernel.org>,
-        <linux-xfs@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <hch@lst.de>,
-        <jglisse@redhat.com>, <apopple@nvidia.com>, <willy@infradead.org>,
-        <akpm@linux-foundation.org>
-Subject: [PATCH v1 3/3] tools: add selftests to hmm for COW in device memory
-Date:   Thu, 10 Mar 2022 11:26:33 -0600
-Message-ID: <20220310172633.9151-4-alex.sierra@amd.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220310172633.9151-1-alex.sierra@amd.com>
-References: <20220310172633.9151-1-alex.sierra@amd.com>
+        with ESMTP id S245139AbiCJRfy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 10 Mar 2022 12:35:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4032318FAE7
+        for <linux-xfs@vger.kernel.org>; Thu, 10 Mar 2022 09:34:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 733B361DF6
+        for <linux-xfs@vger.kernel.org>; Thu, 10 Mar 2022 17:34:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1CF0C340E8;
+        Thu, 10 Mar 2022 17:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1646933690;
+        bh=4SNPQETx9GVsxvP1Nl5RQxIESo9hNMbgG0ZbLnpix28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kcw0gCuvQ+CWD77dFfK3gu6ObAtTgaGWJtb82H3F6yTAJbcwNbBzBRp17JO002Euj
+         bw2aRz7xvlU4vjDlaI0U4+cbrY2lp18l0Up5N+0trIFnea45nmI8WsDhK+Hrw37Bs8
+         LCgTQ6uJl87raZww1FdGiBOt58vbLpfaljeXmu7vDxNW3YeyR/wyU/91IhoiOX0nRr
+         W3mSWDIKdsn4rmyu4mceX5pPUwAv+24Gu1tX+TzbRQVa9ilfAAY+By7yX2642Cb6WB
+         hmjUhh83yl8ew/WEA0PhIlTe7JaGuaRefWsr4DGcsngj38xo5Be+zOeTd3zGwRxakc
+         gf4XWNApUsx0g==
+Date:   Thu, 10 Mar 2022 09:34:50 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, fdmanana@kernel.org,
+        andrey.zhadchenko@virtuozzo.com, david@fromorbit.com, hch@lst.de
+Subject: Re: [PATCH 1/2] xfs: use setattr_copy to set vfs inode attributes
+Message-ID: <20220310173450.GI8224@magnolia>
+References: <164685372611.495833.8601145506549093582.stgit@magnolia>
+ <164685373184.495833.7593050602112292799.stgit@magnolia>
+ <20220310101158.atqf7grb2qz7a73o@wittgenstein>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 85354b9d-0445-47ff-a513-08da02bb278d
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5141:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5141E25CAEBBBB5DA3CDA141FD0B9@BL1PR12MB5141.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NCbRBKF8uJrOBI8LouOXjRxOdyXZMhchPVjs8D+xtAq+7pBrN92E8HVOh1idHSDDnASLZlwyrx884SnsUFAVb3I2F/wplQtQx/aIQcAVN6g1dZ0iMGoHxxRt0pMjlB2t3IyYscBrb9QjNmr+POap6/+aKa8kD8RUy1HbtZQZC9lhZfde95b8PCz+Kh+Vk1AnLrN2zDRQad6fH9hys/S1Jus+cRzk3j4QQHCl+VsUFElnzS/DmqKt/SBQYAPgZVybdxX5IVjPEfKo8iXIwZA34pE9xVeAEwpIDp74lodgsrz5zS7JBugcJynpHFtqlYpTIr45aFc9Wsalptbt28LZ9L0+jeY89nKj2Semp2eOIykwi3iPq6qG4vOMz/pXLOsH2dDeL9Zp73+jc+/b5sn2/e+cULzj7Ai1UWHYD53QUjNCsKw2WJ68nI5kdOX1UIdmwLNznB3JpJX/7GBYFTpaNvdqbTXL1vYhAma5RNGb9DR722ER+iodnCdsoWgPRcZTxHkMG5/i8y21rcyfD+hnhoWlYpWihdy399WtuUluqYB+dhVUdoRH+comEnnFEpyp8HE6lybrtG94lrMtbpijjS9O4r4HHRJE9ToFEt//p9lnZxnUmiqkTMH/VGB3AmXxclyjOPkcV3vO6KaYOhUH2E0xykJR1wTmgJnBBTsV9J7yUdel5SWAT0sLj2TI98FSMuDc0I83RWDRP2pfcIBXgw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(46966006)(40470700004)(5660300002)(47076005)(7416002)(2616005)(6666004)(40460700003)(83380400001)(1076003)(26005)(2906002)(8936002)(82310400004)(44832011)(7696005)(336012)(426003)(16526019)(186003)(70206006)(36756003)(4326008)(81166007)(6916009)(70586007)(54906003)(356005)(316002)(86362001)(8676002)(508600001)(36860700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Mar 2022 17:26:47.0830
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85354b9d-0445-47ff-a513-08da02bb278d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT010.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5141
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220310101158.atqf7grb2qz7a73o@wittgenstein>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The objective is to test device migration mechanism in pages marked
-as COW, for private and coherent device type. In case of writing to
-COW private page(s), a page fault will migrate pages back to system
-memory first. Then, these pages will be duplicated. In case of COW
-device coherent type, pages are duplicated directly from device
-memory.
+On Thu, Mar 10, 2022 at 11:11:58AM +0100, Christian Brauner wrote:
+> On Wed, Mar 09, 2022 at 11:22:11AM -0800, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > Filipe Manana pointed out that XFS' behavior w.r.t. setuid/setgid
+> > revocation isn't consistent with btrfs[1] or ext4.  Those two
+> > filesystems use the VFS function setattr_copy to convey certain
+> > attributes from struct iattr into the VFS inode structure.
+> > 
+> > Andrey Zhadchenko reported[2] that XFS uses the wrong user namespace to
+> > decide if it should clear setgid and setuid on a file attribute update.
+> > This is a second symptom of the problem that Filipe noticed.
+> > 
+> > XFS, on the other hand, open-codes setattr_copy in xfs_setattr_mode,
+> > xfs_setattr_nonsize, and xfs_setattr_time.  Regrettably, setattr_copy is
+> > /not/ a simple copy function; it contains additional logic to clear the
+> > setgid bit when setting the mode, and XFS' version no longer matches.
+> > 
+> > The VFS implements its own setuid/setgid stripping logic, which
+> > establishes consistent behavior.  It's a tad unfortunate that it's
+> > scattered across notify_change, should_remove_suid, and setattr_copy but
+> > XFS should really follow the Linux VFS.  Adapt XFS to use the VFS
+> > functions and get rid of the old functions.
+> > 
+> > [1] https://lore.kernel.org/fstests/CAL3q7H47iNQ=Wmk83WcGB-KBJVOEtR9+qGczzCeXJ9Y2KCV25Q@mail.gmail.com/
+> > [2] https://lore.kernel.org/linux-xfs/20220221182218.748084-1-andrey.zhadchenko@virtuozzo.com/
+> > 
+> > Fixes: f736d93d76d3 ("xfs: support idmapped mounts")
+> 
+> Fwiw, as I've pointed out in
+> https://lore.kernel.org/linux-xfs/20220222122331.ijeapomur76h7xf6@wittgenstein/
+> the original analysis that this commit message links to in [2] is not
+> correct. But the thread clarifies it so I think it's fine.
+> 
+> But I think the fixes tag is wrong here afaict. As I've pointed out in
+> https://lore.kernel.org/linux-xfs/20220222123656.433l67bxhv3s2vbo@wittgenstein/
+> the faulty behavior should predate idmapped mounts by a lot. The bug is
+> with capable(CAP_FSETID). A simple reproducer that should work on any
+> pre 5.12 kernel is:
+> 
+> brauner@wittgenstein|~/src/git/linux/ltp/testcases/kernel/syscalls/chown|master %=
+> > unshare -U --map-root
+> root@wittgenstein|~/src/git/linux/ltp/testcases/kernel/syscalls/chown|master %=
+> > PATH=$PATH:$PWD ./chown02
+> tst_memutils.c:157: TWARN: Can't adjust score, even with capabilities!?
+> tst_test.c:1455: TINFO: Timeout per run is 0h 05m 00s
+> chown02.c:45: TPASS: chown(testfile1, 0, 0) passed
+> chown02.c:45: TPASS: chown(testfile2, 0, 0) passed
+> chown02.c:57: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
+> 
+> Summary:
+> passed   2
+> failed   1
+> broken   0
+> skipped  0
+> warnings 1
+> 
+> There's no idmapped mounts here in play. The caller simply has been
+> placed in a new user namespace and thus they fail the current
+> capable(CAP_FSETID) check which will cause xfs to strip the sgid bit.
+> 
+> Now trying the same with ext4:
+> 
+> ubuntu@f2-vm:~/src/git/linux/ltp/testcases/kernel/syscalls/chown$ unshare -U --map-root
+> root@f2-vm:~/src/git/linux/ltp/testcases/kernel/syscalls/chown# PATH=$PATH:$PWD ./chown02
+> tst_memutils.c:157: TWARN: Can't adjust score, even with capabilities!?
+> tst_test.c:1455: TINFO: Timeout per run is 0h 05m 00s
+> chown02.c:45: TPASS: chown(testfile1, 0, 0) passed
+> chown02.c:45: TPASS: chown(testfile2, 0, 0) passed
+> 
+> Summary:
+> passed   2
+> failed   0
+> broken   0
+> skipped  0
+> warnings 1
+> 
+> it passes since ext4 uses setattr_copy() and thus the capability is
+> checked for in the caller's user namespace.
 
-Signed-off-by: Alex Sierra <alex.sierra@amd.com>
-Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
----
- tools/testing/selftests/vm/hmm-tests.c | 80 ++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+Hmm.  The last person to touch the ATTR_MODE part of setattr_copy was
+you, back in January 2021:
 
-diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftests/vm/hmm-tests.c
-index 65e30ab6494c..d70b780df877 100644
---- a/tools/testing/selftests/vm/hmm-tests.c
-+++ b/tools/testing/selftests/vm/hmm-tests.c
-@@ -1870,4 +1870,84 @@ TEST_F(hmm, hmm_gup_test)
- 	close(gup_fd);
- 	hmm_buffer_free(buffer);
- }
-+
-+/*
-+ * Test copy-on-write in device pages.
-+ * In case of writing to COW private page(s), a page fault will migrate pages
-+ * back to system memory first. Then, these pages will be duplicated. In case
-+ * of COW device coherent type, pages are duplicated directly from device
-+ * memory.
-+ */
-+TEST_F(hmm, hmm_cow_in_device)
-+{
-+	struct hmm_buffer *buffer;
-+	unsigned long npages;
-+	unsigned long size;
-+	unsigned long i;
-+	int *ptr;
-+	int ret;
-+	unsigned char *m;
-+	pid_t pid;
-+	int status;
-+
-+	npages = 4;
-+	size = npages << self->page_shift;
-+
-+	buffer = malloc(sizeof(*buffer));
-+	ASSERT_NE(buffer, NULL);
-+
-+	buffer->fd = -1;
-+	buffer->size = size;
-+	buffer->mirror = malloc(size);
-+	ASSERT_NE(buffer->mirror, NULL);
-+
-+	buffer->ptr = mmap(NULL, size,
-+			   PROT_READ | PROT_WRITE,
-+			   MAP_PRIVATE | MAP_ANONYMOUS,
-+			   buffer->fd, 0);
-+	ASSERT_NE(buffer->ptr, MAP_FAILED);
-+
-+	/* Initialize buffer in system memory. */
-+	for (i = 0, ptr = buffer->ptr; i < size / sizeof(*ptr); ++i)
-+		ptr[i] = i;
-+
-+	/* Migrate memory to device. */
-+
-+	ret = hmm_migrate_sys_to_dev(self->fd, buffer, npages);
-+	ASSERT_EQ(ret, 0);
-+	ASSERT_EQ(buffer->cpages, npages);
-+
-+	pid = fork();
-+	if (pid == -1)
-+		ASSERT_EQ(pid, 0);
-+	if (!pid) {
-+		/* Child process waitd for SIGTERM from the parent. */
-+		while (1) {
-+		}
-+		perror("Should not reach this\n");
-+		exit(0);
-+	}
-+	/* Parent process writes to COW pages(s) and gets a
-+	 * new copy in system. In case of device private pages,
-+	 * this write causes a migration to system mem first.
-+	 */
-+	for (i = 0, ptr = buffer->ptr; i < size / sizeof(*ptr); ++i)
-+		ptr[i] = i;
-+
-+	/* Terminate child and wait */
-+	EXPECT_EQ(0, kill(pid, SIGTERM));
-+	EXPECT_EQ(pid, waitpid(pid, &status, 0));
-+	EXPECT_NE(0, WIFSIGNALED(status));
-+	EXPECT_EQ(SIGTERM, WTERMSIG(status));
-+
-+	/* Take snapshot to CPU pagetables */
-+	ret = hmm_dmirror_cmd(self->fd, HMM_DMIRROR_SNAPSHOT, buffer, npages);
-+	ASSERT_EQ(ret, 0);
-+	ASSERT_EQ(buffer->cpages, npages);
-+	m = buffer->mirror;
-+	for (i = 0; i < npages; i++)
-+		ASSERT_EQ(HMM_DMIRROR_PROT_WRITE, m[i]);
-+
-+	hmm_buffer_free(buffer);
-+}
- TEST_HARNESS_MAIN
--- 
-2.32.0
+2f221d6f7b88 ("attr: handle idmapped mounts")
 
+though I think that was merely switching the user_ns parameter to
+inode_capable_wrt_uidgid.  The previous major change was made by Andy
+Lutomirski in 2014:
+
+23adbe12ef7d ("fs,userns: Change inode_capable to capable_wrt_inode_uidgid")
+
+This seems to be the start(?) of the "_wrt_inode_uidgid" variants,
+though I think the only real change in behavior was checking that the
+inode's gid is mapped in the current userns?  Going back even further,
+it looks like Eric Biederman started thsi whole process in 2012 with:
+
+7fa294c8991c ("userns: Allow chown and setgid preservation")
+
+This patch switched the VFS from purely checking process capabilities to
+checking the privileges of the userns, I think.  From a purely code
+inspection perspective, this is where the behavior divergence between
+XFS and VFS began.
+
+I'm ok with switching the fixes tag to 7fa294, though I won't be shocked
+if this patch doesn't apply cleanly to fs/xfs/ from that era.
+
+Thanks for the review!
+
+<rant>
+That said, I now have this bad habit of picking more recent commits for
+Fixes because I get so much blowback from the stable maintainers it's
+not worth any of the frustration.
+
+I *do* still agree with the principle that a fixpatch should reference
+the exact moment things went wrong, even if some autobackport bot can't
+trivially apply the patch!
+
+I fully expect to get complaints from the LTS maintainers like I always
+do when I attach a Fixes tag without throughly compile-testing every LTS
+branch between the tag and HEAD.  They clearly haven't taken any of my
+hints, so I'll just say it: I DON'T HAVE TIME TO QA ANYTHING OTHER THAN
+UPSTREAM!  Six LTS kernels (plus 3 distro kernels) will eat a week and a
+half of time on the testing cloud, **per fix**.
+
+Hell, you all have probably noticed: I haven't had sufficient mental
+spoons to do much of anything with upstream, so there is no 5.18 merge
+branch and reviews are getting sloppier.
+</rant>
+
+--D
+
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > ---
+> 
+> Other than the wrong Fixes:,
+> Reviewed-by: Christian Brauner <brauner@kernel.org>
