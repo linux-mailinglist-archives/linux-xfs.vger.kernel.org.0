@@ -2,402 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F7FA4D8F43
-	for <lists+linux-xfs@lfdr.de>; Mon, 14 Mar 2022 23:07:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71EFD4D94BE
+	for <lists+linux-xfs@lfdr.de>; Tue, 15 Mar 2022 07:42:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244320AbiCNWIQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 14 Mar 2022 18:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54010 "EHLO
+        id S1345238AbiCOGoE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 15 Mar 2022 02:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245478AbiCNWHs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 14 Mar 2022 18:07:48 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F412B3D1E6
-        for <linux-xfs@vger.kernel.org>; Mon, 14 Mar 2022 15:06:36 -0700 (PDT)
+        with ESMTP id S1345265AbiCOGoC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 15 Mar 2022 02:44:02 -0400
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D9A9C6F
+        for <linux-xfs@vger.kernel.org>; Mon, 14 Mar 2022 23:42:47 -0700 (PDT)
 Received: from dread.disaster.area (pa49-186-150-27.pa.vic.optusnet.com.au [49.186.150.27])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 85A5C532E56
-        for <linux-xfs@vger.kernel.org>; Tue, 15 Mar 2022 09:06:34 +1100 (AEDT)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B322210E444E
+        for <linux-xfs@vger.kernel.org>; Tue, 15 Mar 2022 17:42:44 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nTspl-005W6V-OJ
-        for linux-xfs@vger.kernel.org; Tue, 15 Mar 2022 09:06:33 +1100
+        id 1nU0tH-005elE-GM
+        for linux-xfs@vger.kernel.org; Tue, 15 Mar 2022 17:42:43 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nTspl-00Cyip-NI
+        id 1nU0tH-00D9Ju-Ep
         for linux-xfs@vger.kernel.org;
-        Tue, 15 Mar 2022 09:06:33 +1100
+        Tue, 15 Mar 2022 17:42:43 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 8/8] xfs: intent item whiteouts
-Date:   Tue, 15 Mar 2022 09:06:31 +1100
-Message-Id: <20220314220631.3093283-9-david@fromorbit.com>
+Subject: [PATCH 0/7 v3] xfs: log recovery fixes
+Date:   Tue, 15 Mar 2022 17:42:34 +1100
+Message-Id: <20220315064241.3133751-1-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220314220631.3093283-1-david@fromorbit.com>
-References: <20220314220631.3093283-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=622fbc6a
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62303565
         a=sPqof0Mm7fxWrhYUF33ZaQ==:117 a=sPqof0Mm7fxWrhYUF33ZaQ==:17
-        a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=q14WkXbCT3_XINgowQsA:9
+        a=o8Y5sQTvuykA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=AmCRXBs-6vWbMaXcZSAA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Willy reported generic/530 had started hanging on his test machines
+and I've tried to reproduce the problem he reported. While I haven't
+reproduced the exact hang he's been having, I've found a couple of
+others while running g/530 in a tight loop on a couple of test
+machines.
 
-When we log modifications based on intents, we add both intent
-and intent done items to the modification being made. These get
-written to the log to ensure that the operation is re-run if the
-intent done is not found in the log.
+The first 3 patches are defensive fixes - the log worker acts as a
+watchdog, and the issues in patch 2 and 3 were triggered on my
+testing of g/530 and lead to 30s delays that the log worker watchdog
+caught. Without the watchdog, these may actually be deadlock
+triggers.
 
-However, for operations that complete wholly within a single
-checkpoint, the change in the checkpoint is atomic and will never
-need replay. In this case, we don't need to actually write the
-intent and intent done items to the journal because log recovery
-will never need to manually restart this modification.
+The 4th patch is the one that fixes the problem Willy reported.
+It is a regression from conversion of the AIL pushing to use
+non-blocking CIL flushes. It is unknown why this suddenly started
+showing up on Willy's test machine right now, and why only on that
+machine, but it is clearly a problem. This patch catches the state
+that leads to the deadlock and breaks it with an immediate log
+force to flush any pending iclogs.
 
-Log recovery currently handles intent/intent done matching by
-inserting the intent into the AIL, then removing it when a matching
-intent done item is found. Hence for all the intent-based operations
-that complete within a checkpoint, we spend all that time parsing
-the intent/intent done items just to cancel them and do nothing with
-them.
+In testing these patches, I found generic/388 was causing frequent
+failures with recovery failing because inode clusters were being
+found uninitialised in log recovery. That turns out to be a zero day
+race condition in the forced shutdown code, and that is fixed over
+the patches 5-7. In short, we can't abort writeback of log items
+before we shut down the log (because that's separate to -mount-
+shutdown) as removing aborted log items can move the tail of the log
+forward and that can be propagated to the on-disk log and corrupt it
+if timing is just right.
 
-Hence it follows that the only time we actually need intents in the
-log is when the modification crosses checkpoint boundaries in the
-log and so may only be partially complete in the journal. Hence if
-we commit and intent done item to the CIL and the intent item is in
-the same checkpoint, we don't actually have to write them to the
-journal because log recovery will always cancel the intents.
+Fixing this takes failures of g/388 from 1 in 5-10 runs to 1 in 100
+runs. There is a change in patch 7 that I mention "I'm not sure how
+this can happen here, but it's handled elsewhere like this" that
+avoids a double remove of an aborted inode from the AIL that results
+in an ASSERT failure. I *think* I now know how that can occur, but
+fixing it is another set of patches, and it may be a recent
+regression rather than a long standing issue.
 
-We've never really worried about the overhead of logging intents
-unnecessarily like this because the intents we log are generally
-very much smaller than the change being made. e.g. freeing an extent
-involves modifying at lease two freespace btree blocks and the AGF,
-so the EFI/EFD overhead is only a small increase in space and
-processing time compared to the overall cost of freeing an extent.
+Version 3:
+- added fixes for generic/388 failures.
 
-However, delayed attributes change this cost equation dramatically,
-especially for inline attributes. In the case of adding an inline
-attribute, we only log the inode core and attribute fork at present.
-With delayed attributes, we now log the attr intent which includes
-the name and value, the inode core adn attr fork, and finally the
-attr intent done item. We increase the number of items we log from 1
-to 3, and the number of log vectors (regions) goes up from 3 to 7.
-Hence we tripple the number of objects that the CIL has to process,
-and more than double the number of log vectors that need to be
-written to the journal.
+Version 2:
+- https://lore.kernel.org/linux-xfs/20220309015512.2648074-1-david@fromorbit.com/
+- updated to 5.17-rc7
+- tested by Willy.
 
-At scale, this means delayed attributes cause a non-pipelined CIL to
-become CPU bound processing all the extra items, resulting in a > 40%
-performance degradation on 16-way file+xattr create worklaods.
-Pipelining the CIL (as per 5.15) reduces the performance degradation
-to 20%, but now the limitation is the rate at which the log items
-can be written to the iclogs and iclogs be dispatched for IO and
-completed.
-
-Even log IO completion is slowed down by these intents, because it
-now has to process 3x the number of items in the checkpoint.
-Processing completed intents is especially inefficient here, because
-we first insert the intent into the AIL, then remove it from the AIL
-when the intent done is processed. IOWs, we are also doing expensive
-operations in log IO completion we could completely avoid if we
-didn't log completed intent/intent done pairs.
-
-Enter log item whiteouts.
-
-When an intent done is committed, we can check to see if the
-associated intent is in the same checkpoint as we are currently
-committing the intent done to. If so, we can mark the intent log
-item with a whiteout and immediately free the intent done item
-rather than committing it to the CIL. We can basically skip the
-entire formatting and CIL insertion steps for the intent done item.
-
-However, we cannot remove the intent item from the CIL at this point
-because the unlocked per-cpu CIL item lists do not permit removal
-without holding the CIL context lock exclusively. Transaction commit
-only holds the context lock shared, hence the best we can do is mark
-the intent item with a whiteout so that the CIL push can release it
-rather than writing it to the log.
-
-This means we never write the intent to the log if the intent done
-has also been committed to the same checkpoint, but we'll always
-write the intent if the intent done has not been committed or has
-been committed to a different checkpoint. This will result in
-correct log recovery behaviour in all cases, without the overhead of
-logging unnecessary intents.
-
-This intent whiteout concept is generic - we can apply it to all
-intent/intent done pairs that have a direct 1:1 relationship. The
-way deferred ops iterate and relog intents mean that all intents
-currently have a 1:1 relationship with their done intent, and hence
-we can apply this cancellation to all existing intent/intent done
-implementations.
-
-For delayed attributes with a 16-way 64kB xattr create workload,
-whiteouts reduce the amount of journalled metadata from ~2.5GB/s
-down to ~600MB/s and improve the creation rate from 9000/s to
-14000/s.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_bmap_item.c |  2 ++
- fs/xfs/xfs_log_cil.c   | 80 ++++++++++++++++++++++++++++++++++++++++--
- fs/xfs/xfs_rmap_item.c |  2 ++
- fs/xfs/xfs_trace.h     |  3 ++
- fs/xfs/xfs_trans.h     |  7 ++--
- 5 files changed, 89 insertions(+), 5 deletions(-)
-
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index c6f47c13da27..fa710067aac2 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -39,6 +39,7 @@ STATIC void
- xfs_bui_item_free(
- 	struct xfs_bui_log_item	*buip)
- {
-+	kmem_free(buip->bui_item.li_lv_shadow);
- 	kmem_cache_free(xfs_bui_cache, buip);
- }
- 
-@@ -199,6 +200,7 @@ xfs_bud_item_release(
- {
- 	struct xfs_bud_log_item	*budp = BUD_ITEM(lip);
- 
-+	kmem_free(budp->bud_item.li_lv_shadow);
- 	xfs_bui_release(budp->bud_buip);
- 	kmem_cache_free(xfs_bud_cache, budp);
- }
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index dda71f1a25c5..3d8ebf2a1e55 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -476,7 +476,8 @@ xlog_cil_insert_format_items(
- static void
- xlog_cil_insert_items(
- 	struct xlog		*log,
--	struct xfs_trans	*tp)
-+	struct xfs_trans	*tp,
-+	uint32_t		released_space)
- {
- 	struct xfs_cil		*cil = log->l_cilp;
- 	struct xfs_cil_ctx	*ctx = cil->xc_ctx;
-@@ -526,6 +527,7 @@ xlog_cil_insert_items(
- 	}
- 	tp->t_ticket->t_curr_res -= len;
- 	ctx->space_used += len;
-+	ctx->space_used -= released_space;
- 
- 	/*
- 	 * If we've overrun the reservation, dump the tx details before we move
-@@ -960,11 +962,16 @@ xlog_cil_build_trans_hdr(
-  * Pull all the log vectors off the items in the CIL, and remove the items from
-  * the CIL. We don't need the CIL lock here because it's only needed on the
-  * transaction commit side which is currently locked out by the flush lock.
-+ *
-+ * If a log item is marked with a whiteout, we do not need to write it to the
-+ * journal and so we just move them to the whiteout list for the caller to
-+ * dispose of appropriately.
-  */
- static void
- xlog_cil_build_lv_chain(
- 	struct xfs_cil		*cil,
- 	struct xfs_cil_ctx	*ctx,
-+	struct list_head	*whiteouts,
- 	uint32_t		*num_iovecs,
- 	uint32_t		*num_bytes)
- {
-@@ -975,6 +982,13 @@ xlog_cil_build_lv_chain(
- 
- 		item = list_first_entry(&cil->xc_cil,
- 					struct xfs_log_item, li_cil);
-+
-+		if (test_bit(XFS_LI_WHITEOUT, &item->li_flags)) {
-+			list_move(&item->li_cil, whiteouts);
-+			trace_xfs_cil_whiteout_skip(item);
-+			continue;
-+		}
-+
- 		list_del_init(&item->li_cil);
- 		if (!ctx->lv_chain)
- 			ctx->lv_chain = item->li_lv;
-@@ -1023,6 +1037,7 @@ xlog_cil_push_work(
- 	struct bio		bio;
- 	DECLARE_COMPLETION_ONSTACK(bdev_flush);
- 	bool			push_commit_stable;
-+	LIST_HEAD		(whiteouts);
- 
- 	new_ctx = xlog_cil_ctx_alloc();
- 	new_ctx->ticket = xlog_cil_ticket_alloc(log);
-@@ -1108,7 +1123,7 @@ xlog_cil_push_work(
- 	xfs_flush_bdev_async(&bio, log->l_mp->m_ddev_targp->bt_bdev,
- 				&bdev_flush);
- 
--	xlog_cil_build_lv_chain(cil, ctx, &num_iovecs, &num_bytes);
-+	xlog_cil_build_lv_chain(cil, ctx, &whiteouts, &num_iovecs, &num_bytes);
- 
- 	/*
- 	 * Switch the contexts so we can drop the context lock and move out
-@@ -1217,6 +1232,15 @@ xlog_cil_push_work(
- 	/* Not safe to reference ctx now! */
- 
- 	spin_unlock(&log->l_icloglock);
-+
-+	/* clean up log items that had whiteouts */
-+	while (!list_empty(&whiteouts)) {
-+		struct xfs_log_item *item = list_first_entry(&whiteouts,
-+						struct xfs_log_item, li_cil);
-+		list_del_init(&item->li_cil);
-+		trace_xfs_cil_whiteout_unpin(item);
-+		item->li_ops->iop_unpin(item, 1);
-+	}
- 	return;
- 
- out_skip:
-@@ -1228,6 +1252,14 @@ xlog_cil_push_work(
- out_abort_free_ticket:
- 	xfs_log_ticket_ungrant(log, ctx->ticket);
- 	ASSERT(xlog_is_shutdown(log));
-+	while (!list_empty(&whiteouts)) {
-+		struct xfs_log_item *item = list_first_entry(&whiteouts,
-+						struct xfs_log_item, li_cil);
-+		list_del_init(&item->li_cil);
-+		trace_xfs_cil_whiteout_unpin(item);
-+		item->li_ops->iop_unpin(item, 1);
-+	}
-+
- 	if (!ctx->commit_iclog) {
- 		xlog_cil_committed(ctx);
- 		return;
-@@ -1367,6 +1399,43 @@ xlog_cil_empty(
- 	return empty;
- }
- 
-+/*
-+ * If there are intent done items in this transaction and the related intent was
-+ * committed in the current (same) CIL checkpoint, we don't need to write either
-+ * the intent or intent done item to the journal as the change will be
-+ * journalled atomically within this checkpoint. As we cannot remove items from
-+ * the CIL here, mark the related intent with a whiteout so that the CIL push
-+ * can remove it rather than writing it to the journal. Then remove the intent
-+ * done item from the current transaction and release it so it doesn't get put
-+ * into the CIL at all.
-+ */
-+static uint32_t
-+xlog_cil_process_intents(
-+	struct xfs_cil		*cil,
-+	struct xfs_trans	*tp)
-+{
-+	struct xfs_log_item	*lip, *ilip, *next;
-+	uint32_t		len = 0;
-+
-+	list_for_each_entry_safe(lip, next, &tp->t_items, li_trans) {
-+		if (!(lip->li_ops->flags & XFS_ITEM_INTENT_DONE))
-+			continue;
-+
-+		ilip = lip->li_ops->iop_intent(lip);
-+		if (!ilip || !xlog_item_in_current_chkpt(cil, ilip))
-+			continue;
-+		set_bit(XFS_LI_WHITEOUT, &ilip->li_flags);
-+		trace_xfs_cil_whiteout_mark(ilip);
-+		len += ilip->li_lv->lv_bytes;
-+		kmem_free(ilip->li_lv);
-+		ilip->li_lv = NULL;
-+
-+		xfs_trans_del_item(lip);
-+		lip->li_ops->iop_release(lip);
-+	}
-+	return len;
-+}
-+
- /*
-  * Commit a transaction with the given vector to the Committed Item List.
-  *
-@@ -1389,6 +1458,7 @@ xlog_cil_commit(
- {
- 	struct xfs_cil		*cil = log->l_cilp;
- 	struct xfs_log_item	*lip, *next;
-+	uint32_t		released_space = 0;
- 
- 	/*
- 	 * Do all necessary memory allocation before we lock the CIL.
-@@ -1400,7 +1470,11 @@ xlog_cil_commit(
- 	/* lock out background commit */
- 	down_read(&cil->xc_ctx_lock);
- 
--	xlog_cil_insert_items(log, tp);
-+	if (tp->t_flags & XFS_TRANS_HAS_INTENT_DONE)
-+		released_space = xlog_cil_process_intents(cil, tp);
-+
-+	xlog_cil_insert_items(log, tp, released_space);
-+	tp->t_ticket->t_curr_res += released_space;
- 
- 	if (regrant && !xlog_is_shutdown(log))
- 		xfs_log_ticket_regrant(log, tp->t_ticket);
-diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
-index fa691a6ae737..cb0490919b2c 100644
---- a/fs/xfs/xfs_rmap_item.c
-+++ b/fs/xfs/xfs_rmap_item.c
-@@ -35,6 +35,7 @@ STATIC void
- xfs_rui_item_free(
- 	struct xfs_rui_log_item	*ruip)
- {
-+	kmem_free(ruip->rui_item.li_lv_shadow);
- 	if (ruip->rui_format.rui_nextents > XFS_RUI_MAX_FAST_EXTENTS)
- 		kmem_free(ruip);
- 	else
-@@ -228,6 +229,7 @@ xfs_rud_item_release(
- {
- 	struct xfs_rud_log_item	*rudp = RUD_ITEM(lip);
- 
-+	kmem_free(rudp->rud_item.li_lv_shadow);
- 	xfs_rui_release(rudp->rud_ruip);
- 	kmem_cache_free(xfs_rud_cache, rudp);
- }
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 4a8076ef8cb4..585bd9853b6b 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1348,6 +1348,9 @@ DEFINE_LOG_ITEM_EVENT(xfs_ail_push);
- DEFINE_LOG_ITEM_EVENT(xfs_ail_pinned);
- DEFINE_LOG_ITEM_EVENT(xfs_ail_locked);
- DEFINE_LOG_ITEM_EVENT(xfs_ail_flushing);
-+DEFINE_LOG_ITEM_EVENT(xfs_cil_whiteout_mark);
-+DEFINE_LOG_ITEM_EVENT(xfs_cil_whiteout_skip);
-+DEFINE_LOG_ITEM_EVENT(xfs_cil_whiteout_unpin);
- 
- DECLARE_EVENT_CLASS(xfs_ail_class,
- 	TP_PROTO(struct xfs_log_item *lip, xfs_lsn_t old_lsn, xfs_lsn_t new_lsn),
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index 6182c97cb8e7..85dca2c9b559 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -54,13 +54,16 @@ struct xfs_log_item {
- #define	XFS_LI_IN_AIL	0
- #define	XFS_LI_ABORTED	1
- #define	XFS_LI_FAILED	2
--#define	XFS_LI_DIRTY	3	/* log item dirty in transaction */
-+#define	XFS_LI_DIRTY	3
-+#define	XFS_LI_WHITEOUT	4
- 
- #define XFS_LI_FLAGS \
- 	{ (1 << XFS_LI_IN_AIL),		"IN_AIL" }, \
- 	{ (1 << XFS_LI_ABORTED),	"ABORTED" }, \
- 	{ (1 << XFS_LI_FAILED),		"FAILED" }, \
--	{ (1 << XFS_LI_DIRTY),		"DIRTY" }
-+	{ (1 << XFS_LI_DIRTY),		"DIRTY" }, \
-+	{ (1 << XFS_LI_WHITEOUT),	"WHITEOUT" }
-+
- 
- struct xfs_item_ops {
- 	unsigned flags;
--- 
-2.35.1
+Version 1:
+- https://lore.kernel.org/linux-xfs/20220307053252.2534616-1-david@fromorbit.com/
 
