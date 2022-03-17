@@ -2,231 +2,151 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12DE84DBD77
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Mar 2022 04:20:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A7DC4DBD5C
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Mar 2022 04:08:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbiCQDWH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 16 Mar 2022 23:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
+        id S233130AbiCQDJs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 16 Mar 2022 23:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230388AbiCQDWG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Mar 2022 23:22:06 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2061.outbound.protection.outlook.com [40.107.244.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8FE25580;
-        Wed, 16 Mar 2022 20:20:50 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VD8ChS86ql8I3EHi6a2cD1bMNKBzKSsFoHvNwy1KYR5YN+nzleYEAQn3vf/3Q69vfqGj4ZcHrYpDRyBTejn/Fg8BYyphIf8JZSYYGfMBizmXkdGFWEA5pJMBmMGgBSKIuQU5AiclqjhVa/vt+iguO8SxVPgQJ9O8ukkg5+WgUSD+zaXe1FDSwFCSB+dT6wKooa+YNwUkIAWDUv4kSMSW9qz/bbubCdtkEBu7l3AuA5/KXgV8JQ1yQBdcILvEcJF9FFOC3rmr364XKCHfohi+QmFWH5a5G1TDsVpLhejjuA0R6Mkh1jO7Fx6sDs+41BlSVOAQIZK/DtsG1TS3C0n42Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2hZXs5614Ry23AFr3tQIw/LDAHUOvFd4D9TAbEVNAl0=;
- b=n6Ay1j9//1uv9ytHJ/yLXCRSuE+zyZ+x2mBETyM2NW9qzCrHJBGSGY2AVGRhKCO3fnMHRtFOUrHv1wtvO2a7PRFxsigmRR5vojlR+KLhj8PEt1iZzJRrDtEh7Vfhl32Uzuv6JbkRUpM5h+eQJS+H1+sXp4fVbDFEEHDbZ3UuQa/4c2UTU6TH86PXdztYBUopSfEQc/mroZEIvB+sayvt0eWduXTWZ2WL17qMzPZisCt7VaUp+EMp+gBe/XVXv+eB2wEVGIN0ONAebsHAdfGrz5JVZwVE0zITNNGy0F0a1eYaFCMxudMSXvPSXdq8M7i02AaXXo/HQ2b4u78yzlNVpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2hZXs5614Ry23AFr3tQIw/LDAHUOvFd4D9TAbEVNAl0=;
- b=MuEDe15Q8bkZSxlfW6Ek8ftvvS23YlgypiuOhIBVXm122+ge7Yy6GqHsOl60Bgt/+BD9ZEfu4aQXo3PO3so6I1TT8Buo7e5stYH9IyOHRhUAN337FuIjqmxYmxecjeZ00uRqfSUIay/7rlIfe3B43lPEKkAoZvAI4Nh4MT+lwGd2djA5+3qMOZL9XwXBekltKHBf1qVYSKcORa3KW7h+PnD7/tVFRPfzFrmcI+Il4JxUEuZwoprCiY+zBaMQo6EjSqXTXATvUipe9JBXeWp/6Czpqtv+DmZUXRCF8oONN9nUSb6Z24vmJYH4et3nCr88legVF9ggZPwZFeHQdYGDDQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
- by CY4PR12MB1750.namprd12.prod.outlook.com (2603:10b6:903:11c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.17; Thu, 17 Mar
- 2022 03:20:48 +0000
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::152f:613b:7041:68d6]) by BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::152f:613b:7041:68d6%7]) with mapi id 15.20.5061.030; Thu, 17 Mar 2022
- 03:20:48 +0000
-From:   Alistair Popple <apopple@nvidia.com>
-To:     Felix Kuehling <felix.kuehling@amd.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Alex Sierra <alex.sierra@amd.com>, jgg@nvidia.com,
-        linux-mm@kvack.org, rcampbell@nvidia.com,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        hch@lst.de, jglisse@redhat.com, willy@infradead.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v1 1/3] mm: split vm_normal_pages for LRU and non-LRU
- handling
-Date:   Thu, 17 Mar 2022 13:54:32 +1100
-References: <20220310172633.9151-1-alex.sierra@amd.com>
- <20220310172633.9151-2-alex.sierra@amd.com>
- <07401a0a-6878-6af2-f663-9f0c3c1d88e5@redhat.com>
- <1747447c-202d-9195-9d44-57f299be48c4@amd.com>
-User-agent: mu4e 1.6.9; emacs 27.1
-In-reply-to: <1747447c-202d-9195-9d44-57f299be48c4@amd.com>
-Message-ID: <87lex98dtg.fsf@nvdebian.thelocal>
-Content-Type: multipart/mixed; boundary="=-=-="
-X-ClientProxiedBy: BY5PR20CA0004.namprd20.prod.outlook.com
- (2603:10b6:a03:1f4::17) To BYAPR12MB3176.namprd12.prod.outlook.com
- (2603:10b6:a03:134::26)
+        with ESMTP id S229690AbiCQDJq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 16 Mar 2022 23:09:46 -0400
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4619D21242
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Mar 2022 20:08:30 -0700 (PDT)
+Received: from dread.disaster.area (pa49-186-150-27.pa.vic.optusnet.com.au [49.186.150.27])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 812D910E46BA;
+        Thu, 17 Mar 2022 14:08:29 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1nUgV2-006OGF-P5; Thu, 17 Mar 2022 14:08:28 +1100
+Date:   Thu, 17 Mar 2022 14:08:28 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Manfred Spraul <manfred@colorfullife.com>
+Cc:     linux-xfs@vger.kernel.org,
+        "Spraul Manfred (XC/QMM21-CT)" <Manfred.Spraul@de.bosch.com>
+Subject: Re: Metadata CRC error detected at
+ xfs_dir3_block_read_verify+0x9e/0xc0 [xfs], xfs_dir3_block block 0x86f58
+Message-ID: <20220317030828.GZ3927073@dread.disaster.area>
+References: <613af505-7646-366c-428a-b64659e1f7cf@colorfullife.com>
+ <20220313224624.GJ3927073@dread.disaster.area>
+ <8024317e-07be-aa3d-9aa3-2f835aaa1278@colorfullife.com>
+ <3242ad20-0039-2579-b125-b7a9447a7230@colorfullife.com>
+ <20220317024705.GY3927073@dread.disaster.area>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 792d664f-dca3-4051-ca5f-08da07c52196
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1750:EE_
-X-Microsoft-Antispam-PRVS: <CY4PR12MB17508FC1392C4CCA02FE65B3DF129@CY4PR12MB1750.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ObGGRxDpTibUGN0gK4MzABNcJ/qiRhdOUe0ZdMOg5KwsVGf2KZC5E06Q/tSFeYNVl9FNh1R50SB47jVs05p2nCpVr+C3Eh4sr0AV2yUXJJjFX26UaVehVtrIOdqLd+R4uencBUX5UCpoFUYGlCIrtiULECikuEKKu8k49muulmFJ3s0xLIeneMU3z8XfLDRFhgUhZC27Em053hhpymIzaVeDD0IDUtr8K5nlI83pD1xxgQSGLgwmSfGze2ECEnNjgU+ReLUZCv+g3bjSP1Ae2P/iDPhpWpCa2im1A4NFdY8MDjGQoLWVH22HWGJaO25hEm7MV4hT9G3Sk74cA84jk3AmQ3RV0I6lbuS5VgQEubWeF+oy8ERbxncbCSNZSq1UxR09s6Wzkt6sInCGiM/bZmOwqBgCKWB/6TpHYNm0ZLPa4+XOLUNLMaCHRicSVADY54df9YMeCAEpnC93RZ4Eg63o07EXckKKkE9wKygzyUK4gPxqvlgJqUPOnX1zp2yaVRdGqogG6dMTHAS2HFNpT6S+fJQ977NT56dS+ml/HdJXbCv3/Kv4ZwZ6DWci3QnN+yYvGkkLIhKKbDg/9IrfPesoiwBw4HyfQWxPHTUE+id4Oh+NTXYgKAfxeX17ttoK7HUlX7Y9Z2olrgZQa9O+4Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6666004)(6486002)(508600001)(7416002)(5660300002)(316002)(26005)(186003)(6916009)(66946007)(54906003)(66556008)(2906002)(8676002)(4326008)(66476007)(9686003)(6512007)(8936002)(6506007)(44144004)(53546011)(33964004)(86362001)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bU1HL1I3dzRzSCtJQkpIU1F6Q3pDRWJ0Q0ttZDZ2em0ya20wM2R5MU41bzNS?=
- =?utf-8?B?TTUrNnZvS3BFSjNuTFF2STNnL1hkZ2ZuOXB1eVppckxTN3lDWGY5VCttQ1BW?=
- =?utf-8?B?Z3dBMVVRRWdqRzRPeUIzOElISUc4QU5SVUpLOTdxRkltRDlndmQvcVB0OURM?=
- =?utf-8?B?Y0lCeS9jU2NEYXNZQm5LaHNMZnVGQmQ5QTkzMHhTZnNhNk8vSzdyUHhXNjZZ?=
- =?utf-8?B?Wi9OdFd5QVdTZ3RaWXk1dVVWRVlSVEN3SzJBemNmMVhNWDlCbk9hWjg5QS81?=
- =?utf-8?B?WGhYM04yR2tOK2o4RUxwZTBFVFdQakVnTWtsMmZUTyt1R3pzNlVvUmJSdEsx?=
- =?utf-8?B?WkYyeDlVTU82a2tDWVM2Q2NDN1pvbGlxVkZxaXpkYzRvY2MwazFjd2hseHNq?=
- =?utf-8?B?QjF3V2g5ZGNUTkRmMm1FcGM4V25DQjhpaUxXcTgzd3ViVTUxaE82bVlvRmRO?=
- =?utf-8?B?Z2Y5K1d3bE9pRGJlam9sMDFKcUEvdHNscjN1WVlCdFpoM0FQVEljMEx2RkVW?=
- =?utf-8?B?SXcxaXVPUVRUSE1hQlZPM0tvTkQ3VUtrN2FQT1BGS3VEc0Fwc1BET2dsQkRm?=
- =?utf-8?B?ZXN0eVJNTFNnWDRWL0xxVmVqY25QQlM4Z0hCS01XOTNnNzV6dkVUdUlwOFhL?=
- =?utf-8?B?TlM3bUtLWlZwR0o5WlpmSmZsU0FSNUYyenBoMDRVTytCZC9kR0FGc2pJU0sy?=
- =?utf-8?B?N21WOExhMVJVWWNQYjVmZDFJSkJGQWdZbWFXSjBxb0hydmZ5L0plMDRGZVN2?=
- =?utf-8?B?OEw5dWN0dUVBNWUraHlmZ1hQcGxlRVNMUTVnRnlJcnhpamNMMkhWS1NaVytJ?=
- =?utf-8?B?QTZUbEp1UnlYbVNEZldIMytBdi9mVG45WVhVQ3pieW9UUTZEejNqSk5ha3ZJ?=
- =?utf-8?B?K3pFa1pGQm9rbnkzbGJYMzViOHBXdUhZYVR3ekxFc0JSK0ZCY0lyS1hoNS9a?=
- =?utf-8?B?cjBsM1ZzWmw4ekJCL3BXUGMvZ3hCK1R0MWxSR3JZTzBEalg4WmNXWUEzSHB2?=
- =?utf-8?B?a09UVnBXbjlpVGVrcEhnQ0k4dTdSdEJTeGkxQ0preDRtaU04WUNMbmUrcWFh?=
- =?utf-8?B?Z3RCUkhyNk8wWGVJTnVJeVRXSE9ZVUp0cHVOSnNuditxYnBzNVZhWUNZTm11?=
- =?utf-8?B?cS9JeW95ZVRSTERhNWowWCs3Zi94SmtGNVg5bUZYZmUwc3hnUGpUMVBDY05h?=
- =?utf-8?B?SEVOUThvanZoU3VIZVFmNTY0bXBmZDBjWkZRR2gvQUpSekt1VXYvOFQ0N253?=
- =?utf-8?B?ckwrZ1JTb3prWmtValN4MnRYcERZYXJMRXIvQThGWEFvNDhDUkxvUk52a3NB?=
- =?utf-8?B?dWZydWt1N0FkWnU0VVM4WTFITE1FdzlqbjJGOFI2ck1oZWcvcmZuZXA5T3dB?=
- =?utf-8?B?Wjl2TlRzeGtaM0xzN21ULzdhNTJRSG9IUTJ4bEJJRVZZWWRac3lUMmZ6bzJW?=
- =?utf-8?B?S095REk1OXVVd20rN3BXc3RWTUtGbTlqMFkzM3dlTVNkMjhrbFR6ZTVGb1FC?=
- =?utf-8?B?N2pTYkFKVFJQM0dOenBMUm9wRERwL2dJZzFkZ3daY0dKWXJGeTZXQUZWRnFp?=
- =?utf-8?B?T2dRamFCQnJQMG5CMFRmOTV6Y1A5aTJYa0N3KzhGK0VTbGMrREx5dkJzVUpx?=
- =?utf-8?B?WEpPbmFJaitjUVl6bE1kcWJVZHpQMkliZEJycWZua2tlNlVKQmg5QjdlWUdD?=
- =?utf-8?B?anVIeWF3a1Z2cW1BMjJKTktQUDJ5bTV2TFdCWUo1cmtoOGFzKzBxYm1lK2h2?=
- =?utf-8?B?bEpkak8zcnBlNUhnb0prMnk5bE5oeHZaQkxMM0xMa0lQanFuU0xsdW5TaFR5?=
- =?utf-8?B?OUlxemdVMTBZSzk5NmV2aTFrVEJzeHJaYmFZczRHemljWVlNY3l5azBWUUVG?=
- =?utf-8?B?MHJ1UjJselNOUE4vN2pXNTdpNy84N2hYdUkyZDhxK2VvRit2WGUzdG9LZmFB?=
- =?utf-8?Q?XTlAofVH35o3jxAcI42aUAceoHbvAuGR?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 792d664f-dca3-4051-ca5f-08da07c52196
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Mar 2022 03:20:48.1234
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dqU/RXm16+RQUo3Xt06yKA5nAmBiBb3CrcZCjOk/Sjz79bMK5C2XjjQCl0Q/00JU7WG5VrZZ2iFO3hjRDF86Tw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1750
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220317024705.GY3927073@dread.disaster.area>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6232a62d
+        a=sPqof0Mm7fxWrhYUF33ZaQ==:117 a=sPqof0Mm7fxWrhYUF33ZaQ==:17
+        a=kj9zAlcOel0A:10 a=o8Y5sQTvuykA:10 a=7-415B0cAAAA:8
+        a=tctxP7Ghy1wDT3JLoegA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 17, 2022 at 01:47:05PM +1100, Dave Chinner wrote:
+> On Wed, Mar 16, 2022 at 09:55:04AM +0100, Manfred Spraul wrote:
+> > Hi Dave,
+> > 
+> > On 3/14/22 16:18, Manfred Spraul wrote:
+> > > Hi Dave,
+> > > 
+> > > On 3/13/22 23:46, Dave Chinner wrote:
+> > > > OK, this test is explicitly tearing writes at the storage level.
+> > > > When there is an update to multiple sectors of the metadata block,
+> > > > the metadata will be inconsistent on disk while those individual
+> > > > sector writes are replayed.
+> > > 
+> > > Thanks for the clarification.
+> > > 
+> > > I'll modify the test application to never tear write operations and
+> > > retry.
+> > > 
+> > > If there are findings, then I'll distribute them.
+> > > 
+> > I've modified the test app, and with 4000 simulated power failures I have
+> > not seen any corruptions.
+> > 
+> > 
+> > Thus:
+> > 
+> > - With teared write operations: 2 corruptions from ~800 simulated power
+> > failures
+> > 
+> > - Without teared write operations: no corruptions from ~4000 simulated power
+> > failures.
+> 
+> Good to hear.
+> 
+> > But:
+> > 
+> > I've checked the eMMC specification, and the spec allows that teared write
+> > happen:
+> 
+> Yes, most storage only guarantees that sector writes are atomic and
+> so multi-sector writes have no guarantees of being written
+> atomically.  IOWs, all storage technologies that currently exist are
+> allowed to tear multi-sector writes.
+> 
+> However, FUA writes are guaranteed to be whole on persistent storage
+> regardless of size when the hardware signals completion. And any
+> write that the hardware has signalled as complete before a cache
+> flush is received is also guaranteed to be whole on persistent
+> storage when the cache flush is signalled as complete by the
+> hardware. These mechanisms provide protection against torn writes.
+> 
+> IOWs, it's up to filesystems to guarantee data is on stable storage
+> before they trust it fully. Filesystems are pretty good at using
+> REQ_FLUSH, REQ_FUA and write completion ordering to ensure that
+> anything they need whole and complete on stable storage is actually
+> whole and complete.
+> 
+> In the cases where torn writes occur because that haven't been
+> covered by a FUA or cache flush guarantee (such as your test),
+> filesystems need mechanisms in their metadata to detect such events.
+> CRCs are the prime mechanism for this - that's what XFS uses, and it
+> was XFS reporting a CRC failure when reading torn metadata that
+> started this whole thread.
+> 
+> > Is my understanding correct that XFS support neither eMMC nor NVM devices?
+> > (unless there is a battery backup that exceeds the guarantees from the spec)
+> 
+> Incorrect.
+> 
+> They are supported just fine because flush/FUA semantics provide
+> guarantees against torn writes in normal operation. IOWs, torn
+> writes are something that almost *never* happen in real life, even
+> when power fails suddenly. Despite this, XFS can detect it has
+> occurred (because broken storage is all too common!), and if it
+> can't recovery automatically, it will shut down and ask the user to
+> correct the problem.
+> 
+> BTRFS and ZFS can also detect torn writes, and if you use the
+> (non-default) ext4 option "metadata_csum" it will also detect torn
 
-Felix Kuehling <felix.kuehling@amd.com> writes:
+Correction - metadata_csum is ienabled by default, I just ran the
+wrong mkfs command when I tested it a few moments ago.
 
-> On 2022-03-11 04:16, David Hildenbrand wrote:
->> On 10.03.22 18:26, Alex Sierra wrote:
->>> DEVICE_COHERENT pages introduce a subtle distinction in the way
->>> "normal" pages can be used by various callers throughout the kernel.
->>> They behave like normal pages for purposes of mapping in CPU page
->>> tables, and for COW. But they do not support LRU lists, NUMA
->>> migration or THP. Therefore we split vm_normal_page into two
->>> functions vm_normal_any_page and vm_normal_lru_page. The latter will
->>> only return pages that can be put on an LRU list and that support
->>> NUMA migration, KSM and THP.
->>>
->>> We also introduced a FOLL_LRU flag that adds the same behaviour to
->>> follow_page and related APIs, to allow callers to specify that they
->>> expect to put pages on an LRU list.
->>>
->> I still don't see the need for s/vm_normal_page/vm_normal_any_page/. And
->> as this patch is dominated by that change, I'd suggest (again) to just
->> drop it as I don't see any value of that renaming. No specifier implies =
-any.
->
-> OK. If nobody objects, we can adopts that naming convention.
+-Dave.
 
-I'd prefer we avoid the churn too, but I don't think we should make
-vm_normal_page() the equivalent of vm_normal_any_page(). It would mean
-vm_normal_page() would return non-LRU device coherent pages, but to me at l=
-east
-device coherent pages seem special and not what I'd expect from a function =
-with
-"normal" in the name.
+> writes to metadata via CRC failures. There are other filesystems
+> that can detect and correct torn writes, too.
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
+> 
 
-So I think it would be better to s/vm_normal_lru_page/vm_normal_page/ and k=
-eep
-vm_normal_any_page() (or perhaps call it vm_any_page?). This is basically w=
-hat
-the previous incarnation of this feature did:
-
-struct page *_vm_normal_page(struct vm_area_struct *vma, unsigned long addr=
-,
-                            pte_t pte, bool with_public_device);
-#define vm_normal_page(vma, addr, pte) _vm_normal_page(vma, addr, pte, fals=
-e)
-
-Except we should add:
-
-#define vm_normal_any_page(vma, addr, pte) _vm_normal_page(vma, addr, pte, =
-true)
-
->> The general idea of this change LGTM.
->>
->>
->> I wonder how this interacts with the actual DEVICE_COHERENT coherent
->> series. Is this a preparation? Should it be part of the DEVICE_COHERENT
->> series?
->
-> Yes, it should be part of that series. Alex developed it on top of the se=
-ries
-> for now. But I think eventually it would need to be spliced into it.
-
-Agreed, this needs to go at the start of the DEVICE_COHERENT series.
-
-Thanks.
-
-Alistair
-
-> Patch1 would need to go somewhere before the other DEVICE_COHERENT patche=
-s (with
-> minor modifications). Patch 2 could be squashed into "tools: add hmm gup =
-test
-> for long term pinned device pages" or go next to it. Patch 3 doesn't have=
- a
-> direct dependency on device-coherent pages. It only mentions them in comm=
-ents.
->
->
->>
->> IOW, should this patch start with
->>
->> "With DEVICE_COHERENT, we'll soon have vm_normal_pages() return
->> device-managed anonymous pages that are not LRU pages. Although they
->> behave like normal pages for purposes of mapping in CPU page, and for
->> COW, they do not support LRU lists, NUMA migration or THP. [...]"
->
-> Yes, that makes sense.
->
-> Regards,
-> =C2=A0 Felix
->
->
->>
->> But then, I'm confused by patch 2 and 3, because it feels more like we'd
->> already have DEVICE_COHERENT then ("hmm_is_coherent_type").
->>
->>
-
---=-=-=--
+-- 
+Dave Chinner
+david@fromorbit.com
