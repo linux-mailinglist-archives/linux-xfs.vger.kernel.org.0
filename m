@@ -2,429 +2,372 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6634D4DBEED
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Mar 2022 07:05:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D22BA4DBF9D
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Mar 2022 07:49:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229777AbiCQGGi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Mar 2022 02:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57476 "EHLO
+        id S229776AbiCQGuZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Mar 2022 02:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbiCQGG3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Mar 2022 02:06:29 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD04D136668
-        for <linux-xfs@vger.kernel.org>; Wed, 16 Mar 2022 22:39:12 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-150-27.pa.vic.optusnet.com.au [49.186.150.27])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D1C1A10E4A9F
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Mar 2022 16:39:09 +1100 (AEDT)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nUiqr-006Qog-7J
-        for linux-xfs@vger.kernel.org; Thu, 17 Mar 2022 16:39:09 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1nUiqr-000gii-6H
-        for linux-xfs@vger.kernel.org;
-        Thu, 17 Mar 2022 16:39:09 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 7/7] xfs: xfs_is_shutdown vs xlog_is_shutdown cage fight
-Date:   Thu, 17 Mar 2022 16:39:07 +1100
-Message-Id: <20220317053907.164160-8-david@fromorbit.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220317053907.164160-1-david@fromorbit.com>
-References: <20220317053907.164160-1-david@fromorbit.com>
+        with ESMTP id S229827AbiCQGuY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Mar 2022 02:50:24 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F8625C43
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Mar 2022 23:49:06 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id ja24so3276773ejc.11
+        for <linux-xfs@vger.kernel.org>; Wed, 16 Mar 2022 23:49:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=colorfullife-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to;
+        bh=Q64qx1DNtZjRPi6sd+IKNiH9YP4Zqdg3QA6kkOQgkbg=;
+        b=jHepYbkWSQ3elbN31EyN/YV9etdhUCycI1RBJyjr0glPsEOkWbls2LVDyI2KlVirO6
+         xxY511u9JsuwH3HMjVYWo+Sn+r8NiGZ0ICTRLqlNmfA7jVxaPeWU37KgP4jXbe6ilSYr
+         w25PRe3s8BcbwkBeUQ8mqqRlVTNYcDwilzK1MZ8Boq8ycaQ+OLhkuVWro/G97PBxchyZ
+         4T7khECmvrYYtWD6MbkU46axhOjRQwbkBZJI/xVpSZpQRN59Pcxcmk8NTLCtcsUEIxai
+         fIDH596HAUfO/7mvabTpA+s6tLwphvKi1i44CkJhZda9uVcoc5+4dZiqz9C/3qSiXltO
+         EK3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to;
+        bh=Q64qx1DNtZjRPi6sd+IKNiH9YP4Zqdg3QA6kkOQgkbg=;
+        b=iEsbU0gKBO3HjZx+pDG7N8xfd0jRHD7ziEHZ9WVVRHSXQssHBKagMyLRrmGHriROqM
+         dELF5/5UYj9A6PXwApjN72Sb6j2iPouSwJoWAFrQM04ATs6pQHrcel6yxVeOt299abZT
+         QpqzO5Aba64gDYoqD20m0AtHaK3Vk51nmlz9r2V3n8eWq4kuQoiZwEDKjpePTcg5Ua0L
+         rbZPkwHg8GnCLdv5sV5D9yZIc+1GRQ2tC+3GRMjyW1gQKfQIkEV0MQY2ve441V5WdmL5
+         8Uyo2AZqCIEREb4DvP95yjhxJufaL7CRERpsaIG5kTK8OT3pefQ+iWeErF8VWLJ7OCoq
+         J61A==
+X-Gm-Message-State: AOAM530HmGQGq4kNIYplAHyOSeIgSrhM0gQZs2019Y7C5KM/uoTLw0A5
+        YVMY0mmFIPureORvXM75zZsCIgmrjhBNE4Ww
+X-Google-Smtp-Source: ABdhPJw5u++p0D8JqPL2Lcs577BbR0Rf/oHGr0fPGVme9AB83wu6kQM5uLgEUztBOwMIfhsbiZOaSg==
+X-Received: by 2002:a17:907:1689:b0:6de:4347:82a0 with SMTP id hc9-20020a170907168900b006de434782a0mr2990885ejc.535.1647499745098;
+        Wed, 16 Mar 2022 23:49:05 -0700 (PDT)
+Received: from ?IPV6:2003:d9:970a:1500:3685:1631:4fc4:d41f? (p200300d9970a1500368516314fc4d41f.dip0.t-ipconnect.de. [2003:d9:970a:1500:3685:1631:4fc4:d41f])
+        by smtp.googlemail.com with ESMTPSA id hv17-20020a17090760d100b006df8415fb0dsm1443505ejc.166.2022.03.16.23.49.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Mar 2022 23:49:04 -0700 (PDT)
+Content-Type: multipart/mixed; boundary="------------K6dfoJ1xu2Tu6oUNYmbmBu5I"
+Message-ID: <21c13283-2a9f-4978-25e4-228e44ab74e6@colorfullife.com>
+Date:   Thu, 17 Mar 2022 07:49:02 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=6232c97e
-        a=sPqof0Mm7fxWrhYUF33ZaQ==:117 a=sPqof0Mm7fxWrhYUF33ZaQ==:17
-        a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=oZUn2sGMXd-MfdiT1LEA:9
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.2
+Subject: Re: Metadata CRC error detected at
+ xfs_dir3_block_read_verify+0x9e/0xc0 [xfs], xfs_dir3_block block 0x86f58
+Content-Language: en-US
+To:     Dave Chinner <david@fromorbit.com>, Theodore Ts'o <tytso@mit.edu>
+Cc:     linux-xfs@vger.kernel.org,
+        "Spraul Manfred (XC/QMM21-CT)" <Manfred.Spraul@de.bosch.com>
+References: <613af505-7646-366c-428a-b64659e1f7cf@colorfullife.com>
+ <20220313224624.GJ3927073@dread.disaster.area>
+ <8024317e-07be-aa3d-9aa3-2f835aaa1278@colorfullife.com>
+ <3242ad20-0039-2579-b125-b7a9447a7230@colorfullife.com>
+ <20220317024705.GY3927073@dread.disaster.area>
+ <20220317030828.GZ3927073@dread.disaster.area>
+From:   Manfred Spraul <manfred@colorfullife.com>
+In-Reply-To: <20220317030828.GZ3927073@dread.disaster.area>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+This is a multi-part message in MIME format.
+--------------K6dfoJ1xu2Tu6oUNYmbmBu5I
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-I've been chasing a recent resurgence in generic/388 recovery
-failure and/or corruption events. The events have largely been
-uninitialised inode chunks being tripped over in log recovery
-such as:
+Hi Dave,
 
- XFS (pmem1): User initiated shutdown received.
- pmem1: writeback error on inode 12621949, offset 1019904, sector 12968096
- XFS (pmem1): Log I/O Error (0x6) detected at xfs_fs_goingdown+0xa3/0xf0 (fs/xfs/xfs_fsops.c:500).  Shutting down filesystem.
- XFS (pmem1): Please unmount the filesystem and rectify the problem(s)
- XFS (pmem1): Unmounting Filesystem
- XFS (pmem1): Mounting V5 Filesystem
- XFS (pmem1): Starting recovery (logdev: internal)
- XFS (pmem1): bad inode magic/vsn daddr 8723584 #0 (magic=1818)
- XFS (pmem1): Metadata corruption detected at xfs_inode_buf_verify+0x180/0x190, xfs_inode block 0x851c80 xfs_inode_buf_verify
- XFS (pmem1): Unmount and run xfs_repair
- XFS (pmem1): First 128 bytes of corrupted metadata buffer:
- 00000000: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000010: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000020: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000030: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000040: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000050: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000060: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- 00000070: 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18  ................
- XFS (pmem1): metadata I/O error in "xlog_recover_items_pass2+0x52/0xc0" at daddr 0x851c80 len 32 error 117
- XFS (pmem1): log mount/recovery failed: error -117
- XFS (pmem1): log mount failed
+[+Ted as the topic also applies to ext4]
 
-There have been isolated random other issues, too - xfs_repair fails
-because it finds some corruption in symlink blocks, rmap
-inconsistencies, etc - but they are nowhere near as common as the
-uninitialised inode chunk failure.
+On 3/17/22 04:08, Dave Chinner wrote:
+> On Thu, Mar 17, 2022 at 01:47:05PM +1100, Dave Chinner wrote:
+>> On Wed, Mar 16, 2022 at 09:55:04AM +0100, Manfred Spraul wrote:
+>>> Hi Dave,
+>>>
+>>> On 3/14/22 16:18, Manfred Spraul wrote:
+>>>
+>>> But:
+>>>
+>>> I've checked the eMMC specification, and the spec allows that teared write
+>>> happen:
+>> Yes, most storage only guarantees that sector writes are atomic and
+>> so multi-sector writes have no guarantees of being written
+>> atomically.  IOWs, all storage technologies that currently exist are
+>> allowed to tear multi-sector writes.
+>>
+>> However, FUA writes are guaranteed to be whole on persistent storage
+>> regardless of size when the hardware signals completion. And any
+>> write that the hardware has signalled as complete before a cache
+>> flush is received is also guaranteed to be whole on persistent
+>> storage when the cache flush is signalled as complete by the
+>> hardware. These mechanisms provide protection against torn writes.
 
-The problem has clearly happened at runtime before recovery has run;
-I can see the ICREATE log item in the log shortly before the
-actively recovered range of the log. This means the ICREATE was
-definitely created and written to the log, but for some reason the
-tail of the log has been moved past the ordered buffer log item that
-tracks INODE_ALLOC buffers and, supposedly, prevents the tail of the
-log moving past the ICREATE log item before the inode chunk buffer
-is written to disk.
+My plan was to create a replay application that randomly creates disc 
+images allowed by the writeback_cache_control documentation.
 
-Tracing the fsstress processes that are running when the filesystem
-shut down immediately pin-pointed the problem:
+https://www.kernel.org/doc/html/latest/block/writeback_cache_control.html
 
-user shutdown marks xfs_mount as shutdown
+And then check that the filesystem behaves as expected/defined.
 
-         godown-213341 [008]  6398.022871: console:              [ 6397.915392] XFS (pmem1): User initiated shutdown received.
-.....
+The first step was: Implement the framework and just stop at a random 
+location.
 
-aild tries to push ordered inode cluster buffer
+>>> Is my understanding correct that XFS support neither eMMC nor NVM devices?
+>>> (unless there is a battery backup that exceeds the guarantees from the spec)
+>> Incorrect.
+>>
+>> They are supported just fine because flush/FUA semantics provide
+>> guarantees against torn writes in normal operation. IOWs, torn
+>> writes are something that almost *never* happen in real life, even
+>> when power fails suddenly. Despite this, XFS can detect it has
+>> occurred (because broken storage is all too common!), and if it
+>> can't recovery automatically, it will shut down and ask the user to
+>> correct the problem.
 
-  xfsaild/pmem1-213314 [001]  6398.022974: xfs_buf_trylock:      dev 259:1 daddr 0x851c80 bbcount 0x20 hold 16 pincount 0 lock 0 flags DONE|INODES|PAGES caller xfs_inode_item_push+0x8e
-  xfsaild/pmem1-213314 [001]  6398.022976: xfs_ilock_nowait:     dev 259:1 ino 0x851c80 flags ILOCK_SHARED caller xfs_iflush_cluster+0xae
+So for xfs the behavior should be:
 
-xfs_iflush_cluster() checks xfs_is_shutdown(), returns true,
-calls xfs_iflush_abort() to kill writeback of the inode.
-Inode is removed from AIL, drops cluster buffer reference.
+- without torn writes: Mount always successful, no errors when accessing 
+the content.
 
-  xfsaild/pmem1-213314 [001]  6398.022977: xfs_ail_delete:       dev 259:1 lip 0xffff88880247ed80 old lsn 7/20344 new lsn 7/21000 type XFS_LI_INODE flags IN_AIL
-  xfsaild/pmem1-213314 [001]  6398.022978: xfs_buf_rele:         dev 259:1 daddr 0x851c80 bbcount 0x20 hold 17 pincount 0 lock 0 flags DONE|INODES|PAGES caller xfs_iflush_abort+0xd7
+- with torn writes: There may be error that will be detected only at 
+runtime. The errors may at the end cause a file system shutdown.
 
-.....
+(commented dmesg is attached)
 
-All inodes on cluster buffer are aborted, then the cluster buffer
-itself is aborted and removed from the AIL *without writeback*:
+The application I have in mind are embedded systems.
 
-xfsaild/pmem1-213314 [001]  6398.023011: xfs_buf_error_relse:  dev 259:1 daddr 0x851c80 bbcount 0x20 hold 2 pincount 0 lock 0 flags ASYNC|DONE|STALE|INODES|PAGES caller xfs_buf_ioend_fail+0x33
-   xfsaild/pmem1-213314 [001]  6398.023012: xfs_ail_delete:       dev 259:1 lip 0xffff8888053efde8 old lsn 7/20344 new lsn 7/20344 type XFS_LI_BUF flags IN_AIL
+I.e. there is no user that can correct something, the recovery strategy 
+must be included in the design.
 
-The inode buffer was at 7/20344 when it was removed from the AIL.
+>> BTRFS and ZFS can also detect torn writes, and if you use the
+>> (non-default) ext4 option "metadata_csum" it will also detect torn
+> Correction - metadata_csum is ienabled by default, I just ran the
+> wrong mkfs command when I tested it a few moments ago.
 
-   xfsaild/pmem1-213314 [001]  6398.023012: xfs_buf_item_relse:   dev 259:1 daddr 0x851c80 bbcount 0x20 hold 2 pincount 0 lock 0 flags ASYNC|DONE|STALE|INODES|PAGES caller xfs_buf_item_done+0x31
-   xfsaild/pmem1-213314 [001]  6398.023012: xfs_buf_rele:         dev 259:1 daddr 0x851c80 bbcount 0x20 hold 2 pincount 0 lock 0 flags ASYNC|DONE|STALE|INODES|PAGES caller xfs_buf_item_relse+0x39
+For ext4, I have seen so far only corrupted commit blocks that cause 
+mount failures.
 
-.....
+https://lore.kernel.org/all/8fe067d0-6d57-9dd7-2c10-5a2c34037ee1@colorfullife.com/
 
-Userspace is still running, doing stuff. an fsstress process runs
-syncfs() or sync() and we end up in sync_fs_one_sb() which issues
-a log force. This pushes on the CIL:
+But Ted didn't confirm yet that this is per design :-)
 
-        fsstress-213322 [001]  6398.024430: xfs_fs_sync_fs:       dev 259:1 m_features 0x20000000019ff6e9 opstate (clean|shutdown|inodegc|blockgc) s_flags 0x70810000 caller sync_fs_one_sb+0x26
-        fsstress-213322 [001]  6398.024430: xfs_log_force:        dev 259:1 lsn 0x0 caller xfs_fs_sync_fs+0x82
-        fsstress-213322 [001]  6398.024430: xfs_log_force:        dev 259:1 lsn 0x5f caller xfs_log_force+0x7c
-           <...>-194402 [001]  6398.024467: kmem_alloc:           size 176 flags 0x14 caller xlog_cil_push_work+0x9f
 
-And the CIL fills up iclogs with pending changes. This picks up
-the current tail from the AIL:
+--
 
-           <...>-194402 [001]  6398.024497: xlog_iclog_get_space: dev 259:1 state XLOG_STATE_ACTIVE refcnt 1 offset 0 lsn 0x0 flags  caller xlog_write+0x149
-           <...>-194402 [001]  6398.024498: xlog_iclog_switch:    dev 259:1 state XLOG_STATE_ACTIVE refcnt 1 offset 0 lsn 0x700005408 flags  caller xlog_state_get_iclog_space+0x37e
-           <...>-194402 [001]  6398.024521: xlog_iclog_release:   dev 259:1 state XLOG_STATE_WANT_SYNC refcnt 1 offset 32256 lsn 0x700005408 flags  caller xlog_write+0x5f9
-           <...>-194402 [001]  6398.024522: xfs_log_assign_tail_lsn: dev 259:1 new tail lsn 7/21000, old lsn 7/20344, last sync 7/21448
+     Manfred
 
-And it moves the tail of the log to 7/21000 from 7/20344. This
-*moves the tail of the log beyond the ICREATE transaction* that was
-at 7/20344 and pinned by the inode cluster buffer that was cancelled
-above.
+--------------K6dfoJ1xu2Tu6oUNYmbmBu5I
+Content-Type: text/plain; charset=UTF-8; name="dmesg-final.txt"
+Content-Disposition: attachment; filename="dmesg-final.txt"
+Content-Transfer-Encoding: base64
 
-....
+MSkgc2V0dXAKWyAxNTkxLjg3ODgzMl0gbG9vcDA6IGRldGVjdGVkIGNhcGFjaXR5IGNoYW5n
+ZSBmcm9tIDAgdG8gMTAyNDAwMAoKRm9yIGluZm86IG1kNXN1bSBvZiB0aGUgaW1hZ2UgZmls
+ZToKCWI3MTAzYjUxOWFkYTdkYzUyODFkN2E0MmMyOWE0MjcxICAvdG1wL21vdW50X2ltZy0y
+NTM2LmltZwoKMikgbW91bnQuIENvbW1hbmQ6Cgltb3VudCAtdCBhdXRvIC9kZXYvbG9vcDAg
+eApbIDE1OTEuOTExNTE2XSBYRlMgKGxvb3AwKTogTW91bnRpbmcgVjUgRmlsZXN5c3RlbQpb
+IDE1OTEuOTQ1MDU4XSBYRlMgKGxvb3AwKTogU3RhcnRpbmcgcmVjb3ZlcnkgKGxvZ2Rldjog
+aW50ZXJuYWwpClsgMTU5MS45NDkwNTVdIFhGUyAobG9vcDApOiByZXNldHRpbmcgcXVvdGEg
+ZmxhZ3MKWyAxNTkxLjk0OTU5MF0gWEZTIChsb29wMCk6IEVuZGluZyByZWNvdmVyeSAobG9n
+ZGV2OiBpbnRlcm5hbCkKCkVzcGVjaWFsbHk6IENvcnJ1cHRpb24gbm90IG5vdGljZWQgYXQg
+bW91bnQgdGltZS4KCjMpIGZpbmQgeCAtdHlwZSBmClsgMTc0MS4wMzM1MzVdIFhGUyAobG9v
+cDApOiBNZXRhZGF0YSBDUkMgZXJyb3IgZGV0ZWN0ZWQgYXQgeGZzX2RpcjNfYmxvY2tfcmVh
+ZF92ZXJpZnkrMHg5ZS8weGMwIFt4ZnNdLCB4ZnNfZGlyM19ibG9jayBibG9jayAweDg2ZjU4
+IApbIDE3NDEuMDMzNjkzXSBYRlMgKGxvb3AwKTogVW5tb3VudCBhbmQgcnVuIHhmc19yZXBh
+aXIKWyAxNzQxLjAzMzY5Nl0gWEZTIChsb29wMCk6IEZpcnN0IDEyOCBieXRlcyBvZiBjb3Jy
+dXB0ZWQgbWV0YWRhdGEgYnVmZmVyOgpbIDE3NDEuMDMzNzAwXSAwMDAwMDAwMDogNTggNDQg
+NDIgMzMgOWYgYWIgZDcgZjQgMDAgMDAgMDAgMDAgMDAgMDggNmYgNTggIFhEQjMuLi4uLi4u
+Li4ub1gKWyAxNzQxLjAzMzcwNF0gMDAwMDAwMTA6IDAwIDAwIDAwIDBmIDAwIDAwIDAyIDVj
+IDUzIDVhIDM1IDIzIDU3IDJjIDRjIGYxICAuLi4uLi4uXFNaNSNXLEwuClsgMTc0MS4wMzM3
+MDZdIDAwMDAwMDIwOiA4ZCBhYyA3YyBiMCAzOCBhOSBlYyBiNyAwMCAwMCAwMCAwMCAwMCAw
+OCA2OSAyNSAgLi58LjguLi4uLi4uLi5pJQpbIDE3NDEuMDMzNzA4XSAwMDAwMDAzMDogMDIg
+MjggMGQgNDAgMDEgNjggMDAgMzAgMDEgYzggMDAgMzAgMDAgMDAgMDAgMDAgIC4oLkAuaC4w
+Li4uMC4uLi4KWyAxNzQxLjAzMzcxMV0gMDAwMDAwNDA6IDAwIDAwIDAwIDAwIDAwIDA4IDY5
+IDI1IDAxIDJlIDAyIDAwIDAwIDAwIDAwIDQwICAuLi4uLi5pJS4uLi4uLi5AClsgMTc0MS4w
+MzM3MTNdIDAwMDAwMDUwOiAwMCAwMCAwMCAwMCAwMCAwYyAwYSA0ZCAwMiAyZSAyZSAwMiAw
+MCAwMCAwMCA1MCAgLi4uLi4uLk0uLi4uLi4uUApbIDE3NDEuMDMzNzE1XSAwMDAwMDA2MDog
+MDAgMDAgMDAgMDAgMDAgMDggNjkgMjYgMGIgNDMgNDQgNTIgNTIgNGYgNGMgNTMgIC4uLi4u
+LmkmLkNEUlJPTFMKWyAxNzQxLjAzMzcxN10gMDAwMDAwNzA6IDJlIDQzIDQ2IDQ3IDAxIDAw
+IDAwIDYwIDAwIDAwIDAwIDAwIDAwIDA4IDY5IDI3ICAuQ0ZHLi4uYC4uLi4uLmknClsgMTc0
+MS4wMzM3NjFdIFhGUyAobG9vcDApOiBNZXRhZGF0YSBDUkMgZXJyb3IgZGV0ZWN0ZWQgYXQg
+eGZzX2RpcjNfYmxvY2tfcmVhZF92ZXJpZnkrMHg5ZS8weGMwIFt4ZnNdLCB4ZnNfZGlyM19i
+bG9jayBibG9jayAweDg2ZjU4IApbIDE3NDEuMDMzODg2XSBYRlMgKGxvb3AwKTogVW5tb3Vu
+dCBhbmQgcnVuIHhmc19yZXBhaXIKWyAxNzQxLjAzMzg4OV0gWEZTIChsb29wMCk6IEZpcnN0
+IDEyOCBieXRlcyBvZiBjb3JydXB0ZWQgbWV0YWRhdGEgYnVmZmVyOgpbIDE3NDEuMDMzODkz
+XSAwMDAwMDAwMDogNTggNDQgNDIgMzMgOWYgYWIgZDcgZjQgMDAgMDAgMDAgMDAgMDAgMDgg
+NmYgNTggIFhEQjMuLi4uLi4uLi4ub1gKWyAxNzQxLjAzMzg5Nl0gMDAwMDAwMTA6IDAwIDAw
+IDAwIDBmIDAwIDAwIDAyIDVjIDUzIDVhIDM1IDIzIDU3IDJjIDRjIGYxICAuLi4uLi4uXFNa
+NSNXLEwuClsgMTc0MS4wMzM4OTldIDAwMDAwMDIwOiA4ZCBhYyA3YyBiMCAzOCBhOSBlYyBi
+NyAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNSAgLi58LjguLi4uLi4uLi5pJQpbIDE3NDEuMDMz
+OTAxXSAwMDAwMDAzMDogMDIgMjggMGQgNDAgMDEgNjggMDAgMzAgMDEgYzggMDAgMzAgMDAg
+MDAgMDAgMDAgIC4oLkAuaC4wLi4uMC4uLi4KWyAxNzQxLjAzMzkwM10gMDAwMDAwNDA6IDAw
+IDAwIDAwIDAwIDAwIDA4IDY5IDI1IDAxIDJlIDAyIDAwIDAwIDAwIDAwIDQwICAuLi4uLi5p
+JS4uLi4uLi5AClsgMTc0MS4wMzM5MDVdIDAwMDAwMDUwOiAwMCAwMCAwMCAwMCAwMCAwYyAw
+YSA0ZCAwMiAyZSAyZSAwMiAwMCAwMCAwMCA1MCAgLi4uLi4uLk0uLi4uLi4uUApbIDE3NDEu
+MDMzOTA3XSAwMDAwMDA2MDogMDAgMDAgMDAgMDAgMDAgMDggNjkgMjYgMGIgNDMgNDQgNTIg
+NTIgNGYgNGMgNTMgIC4uLi4uLmkmLkNEUlJPTFMKWyAxNzQxLjAzMzkwOV0gMDAwMDAwNzA6
+IDJlIDQzIDQ2IDQ3IDAxIDAwIDAwIDYwIDAwIDAwIDAwIDAwIDAwIDA4IDY5IDI3ICAuQ0ZH
+Li4uYC4uLi4uLmknClsgMTc0MS4wMzM5MjBdIFhGUyAobG9vcDApOiBtZXRhZGF0YSBJL08g
+ZXJyb3IgaW4gInhmc19kYV9yZWFkX2J1ZisweGIxLzB4MTEwIFt4ZnNdIiBhdCBkYWRkciAw
+eDg2ZjU4IGxlbiA4IGVycm9yIDc0CgotLT4gY29ycnVwdGlvbiBub3RpY2VkIGF0IHJ1biB0
+aW1lLiBGUyB0cmllcyB0byBjb250aW51ZS4KCjQpIG1hbnVhbCBwbGF5aW5nIGFyb3VuZCBp
+biB0aGUgZmlsZXN5c3RlbToKCXJtIC1SZgoJbXYgYSAuLi9iCgpbIDE4MjQuNjQyNzYyXSBY
+RlMgKGxvb3AwKTogTWV0YWRhdGEgQ1JDIGVycm9yIGRldGVjdGVkIGF0IHhmc19kaXIzX2Js
+b2NrX3JlYWRfdmVyaWZ5KzB4OWUvMHhjMCBbeGZzXSwgeGZzX2RpcjNfYmxvY2sgYmxvY2sg
+MHg4NmY1OCAKWyAxODI0LjY0MzAwMF0gWEZTIChsb29wMCk6IFVubW91bnQgYW5kIHJ1biB4
+ZnNfcmVwYWlyClsgMTgyNC42NDMwMDZdIFhGUyAobG9vcDApOiBGaXJzdCAxMjggYnl0ZXMg
+b2YgY29ycnVwdGVkIG1ldGFkYXRhIGJ1ZmZlcjoKWyAxODI0LjY0MzAxNF0gMDAwMDAwMDA6
+IDU4IDQ0IDQyIDMzIDlmIGFiIGQ3IGY0IDAwIDAwIDAwIDAwIDAwIDA4IDZmIDU4ICBYREIz
+Li4uLi4uLi4uLm9YClsgMTgyNC42NDMwMjBdIDAwMDAwMDEwOiAwMCAwMCAwMCAwZiAwMCAw
+MCAwMiA1YyA1MyA1YSAzNSAyMyA1NyAyYyA0YyBmMSAgLi4uLi4uLlxTWjUjVyxMLgpbIDE4
+MjQuNjQzMDI1XSAwMDAwMDAyMDogOGQgYWMgN2MgYjAgMzggYTkgZWMgYjcgMDAgMDAgMDAg
+MDAgMDAgMDggNjkgMjUgIC4ufC44Li4uLi4uLi4uaSUKWyAxODI0LjY0MzAzMF0gMDAwMDAw
+MzA6IDAyIDI4IDBkIDQwIDAxIDY4IDAwIDMwIDAxIGM4IDAwIDMwIDAwIDAwIDAwIDAwICAu
+KC5ALmguMC4uLjAuLi4uClsgMTgyNC42NDMwMzVdIDAwMDAwMDQwOiAwMCAwMCAwMCAwMCAw
+MCAwOCA2OSAyNSAwMSAyZSAwMiAwMCAwMCAwMCAwMCA0MCAgLi4uLi4uaSUuLi4uLi4uQApb
+IDE4MjQuNjQzMDQwXSAwMDAwMDA1MDogMDAgMDAgMDAgMDAgMDAgMGMgMGEgNGQgMDIgMmUg
+MmUgMDIgMDAgMDAgMDAgNTAgIC4uLi4uLi5NLi4uLi4uLlAKWyAxODI0LjY0MzA0NF0gMDAw
+MDAwNjA6IDAwIDAwIDAwIDAwIDAwIDA4IDY5IDI2IDBiIDQzIDQ0IDUyIDUyIDRmIDRjIDUz
+ICAuLi4uLi5pJi5DRFJST0xTClsgMTgyNC42NDMwNDldIDAwMDAwMDcwOiAyZSA0MyA0NiA0
+NyAwMSAwMCAwMCA2MCAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNyAgLkNGRy4uLmAuLi4uLi5p
+JwpbIDE4MjQuNjQzMTQ1XSBYRlMgKGxvb3AwKTogTWV0YWRhdGEgQ1JDIGVycm9yIGRldGVj
+dGVkIGF0IHhmc19kaXIzX2Jsb2NrX3JlYWRfdmVyaWZ5KzB4OWUvMHhjMCBbeGZzXSwgeGZz
+X2RpcjNfYmxvY2sgYmxvY2sgMHg4NmY1OCAKWyAxODI0LjY0MzM2MV0gWEZTIChsb29wMCk6
+IFVubW91bnQgYW5kIHJ1biB4ZnNfcmVwYWlyClsgMTgyNC42NDMzNjZdIFhGUyAobG9vcDAp
+OiBGaXJzdCAxMjggYnl0ZXMgb2YgY29ycnVwdGVkIG1ldGFkYXRhIGJ1ZmZlcjoKWyAxODI0
+LjY0MzM3MV0gMDAwMDAwMDA6IDU4IDQ0IDQyIDMzIDlmIGFiIGQ3IGY0IDAwIDAwIDAwIDAw
+IDAwIDA4IDZmIDU4ICBYREIzLi4uLi4uLi4uLm9YClsgMTgyNC42NDMzNzddIDAwMDAwMDEw
+OiAwMCAwMCAwMCAwZiAwMCAwMCAwMiA1YyA1MyA1YSAzNSAyMyA1NyAyYyA0YyBmMSAgLi4u
+Li4uLlxTWjUjVyxMLgpbIDE4MjQuNjQzMzgxXSAwMDAwMDAyMDogOGQgYWMgN2MgYjAgMzgg
+YTkgZWMgYjcgMDAgMDAgMDAgMDAgMDAgMDggNjkgMjUgIC4ufC44Li4uLi4uLi4uaSUKWyAx
+ODI0LjY0MzM4Nl0gMDAwMDAwMzA6IDAyIDI4IDBkIDQwIDAxIDY4IDAwIDMwIDAxIGM4IDAw
+IDMwIDAwIDAwIDAwIDAwICAuKC5ALmguMC4uLjAuLi4uClsgMTgyNC42NDMzOTBdIDAwMDAw
+MDQwOiAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNSAwMSAyZSAwMiAwMCAwMCAwMCAwMCA0MCAg
+Li4uLi4uaSUuLi4uLi4uQApbIDE4MjQuNjQzMzk1XSAwMDAwMDA1MDogMDAgMDAgMDAgMDAg
+MDAgMGMgMGEgNGQgMDIgMmUgMmUgMDIgMDAgMDAgMDAgNTAgIC4uLi4uLi5NLi4uLi4uLlAK
+WyAxODI0LjY0MzM5OV0gMDAwMDAwNjA6IDAwIDAwIDAwIDAwIDAwIDA4IDY5IDI2IDBiIDQz
+IDQ0IDUyIDUyIDRmIDRjIDUzICAuLi4uLi5pJi5DRFJST0xTClsgMTgyNC42NDM0MDNdIDAw
+MDAwMDcwOiAyZSA0MyA0NiA0NyAwMSAwMCAwMCA2MCAwMCAwMCAwMCAwMCAwMCAwOCA2OSAy
+NyAgLkNGRy4uLmAuLi4uLi5pJwpbIDE4MjQuNjQzNDMzXSBYRlMgKGxvb3AwKTogbWV0YWRh
+dGEgSS9PIGVycm9yIGluICJ4ZnNfZGFfcmVhZF9idWYrMHhiMS8weDExMCBbeGZzXSIgYXQg
+ZGFkZHIgMHg4NmY1OCBsZW4gOCBlcnJvciA3NApbIDE4MjQuNjQzNzQ5XSBYRlMgKGxvb3Aw
+KTogTWV0YWRhdGEgQ1JDIGVycm9yIGRldGVjdGVkIGF0IHhmc19kaXIzX2Jsb2NrX3JlYWRf
+dmVyaWZ5KzB4OWUvMHhjMCBbeGZzXSwgeGZzX2RpcjNfYmxvY2sgYmxvY2sgMHg4NmY1OCAK
+WyAxODI0LjY0Mzg4MF0gWEZTIChsb29wMCk6IFVubW91bnQgYW5kIHJ1biB4ZnNfcmVwYWly
+ClsgMTgyNC42NDM4ODNdIFhGUyAobG9vcDApOiBGaXJzdCAxMjggYnl0ZXMgb2YgY29ycnVw
+dGVkIG1ldGFkYXRhIGJ1ZmZlcjoKWyAxODI0LjY0Mzg4N10gMDAwMDAwMDA6IDU4IDQ0IDQy
+IDMzIDlmIGFiIGQ3IGY0IDAwIDAwIDAwIDAwIDAwIDA4IDZmIDU4ICBYREIzLi4uLi4uLi4u
+Lm9YClsgMTgyNC42NDM4OTFdIDAwMDAwMDEwOiAwMCAwMCAwMCAwZiAwMCAwMCAwMiA1YyA1
+MyA1YSAzNSAyMyA1NyAyYyA0YyBmMSAgLi4uLi4uLlxTWjUjVyxMLgpbIDE4MjQuNjQzODkz
+XSAwMDAwMDAyMDogOGQgYWMgN2MgYjAgMzggYTkgZWMgYjcgMDAgMDAgMDAgMDAgMDAgMDgg
+NjkgMjUgIC4ufC44Li4uLi4uLi4uaSUKWyAxODI0LjY0Mzg5Nl0gMDAwMDAwMzA6IDAyIDI4
+IDBkIDQwIDAxIDY4IDAwIDMwIDAxIGM4IDAwIDMwIDAwIDAwIDAwIDAwICAuKC5ALmguMC4u
+LjAuLi4uClsgMTgyNC42NDM4OThdIDAwMDAwMDQwOiAwMCAwMCAwMCAwMCAwMCAwOCA2OSAy
+NSAwMSAyZSAwMiAwMCAwMCAwMCAwMCA0MCAgLi4uLi4uaSUuLi4uLi4uQApbIDE4MjQuNjQz
+OTAwXSAwMDAwMDA1MDogMDAgMDAgMDAgMDAgMDAgMGMgMGEgNGQgMDIgMmUgMmUgMDIgMDAg
+MDAgMDAgNTAgIC4uLi4uLi5NLi4uLi4uLlAKWyAxODI0LjY0MzkwM10gMDAwMDAwNjA6IDAw
+IDAwIDAwIDAwIDAwIDA4IDY5IDI2IDBiIDQzIDQ0IDUyIDUyIDRmIDRjIDUzICAuLi4uLi5p
+Ji5DRFJST0xTClsgMTgyNC42NDM5MDVdIDAwMDAwMDcwOiAyZSA0MyA0NiA0NyAwMSAwMCAw
+MCA2MCAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNyAgLkNGRy4uLmAuLi4uLi5pJwpbIDE4MjQu
+NjQzOTQ4XSBYRlMgKGxvb3AwKTogTWV0YWRhdGEgQ1JDIGVycm9yIGRldGVjdGVkIGF0IHhm
+c19kaXIzX2Jsb2NrX3JlYWRfdmVyaWZ5KzB4OWUvMHhjMCBbeGZzXSwgeGZzX2RpcjNfYmxv
+Y2sgYmxvY2sgMHg4NmY1OCAKWyAxODI0LjY0NDA3NF0gWEZTIChsb29wMCk6IFVubW91bnQg
+YW5kIHJ1biB4ZnNfcmVwYWlyClsgMTgyNC42NDQwNzZdIFhGUyAobG9vcDApOiBGaXJzdCAx
+MjggYnl0ZXMgb2YgY29ycnVwdGVkIG1ldGFkYXRhIGJ1ZmZlcjoKWyAxODI0LjY0NDA3OV0g
+MDAwMDAwMDA6IDU4IDQ0IDQyIDMzIDlmIGFiIGQ3IGY0IDAwIDAwIDAwIDAwIDAwIDA4IDZm
+IDU4ICBYREIzLi4uLi4uLi4uLm9YClsgMTgyNC42NDQwODFdIDAwMDAwMDEwOiAwMCAwMCAw
+MCAwZiAwMCAwMCAwMiA1YyA1MyA1YSAzNSAyMyA1NyAyYyA0YyBmMSAgLi4uLi4uLlxTWjUj
+VyxMLgpbIDE4MjQuNjQ0MDg0XSAwMDAwMDAyMDogOGQgYWMgN2MgYjAgMzggYTkgZWMgYjcg
+MDAgMDAgMDAgMDAgMDAgMDggNjkgMjUgIC4ufC44Li4uLi4uLi4uaSUKWyAxODI0LjY0NDA4
+Nl0gMDAwMDAwMzA6IDAyIDI4IDBkIDQwIDAxIDY4IDAwIDMwIDAxIGM4IDAwIDMwIDAwIDAw
+IDAwIDAwICAuKC5ALmguMC4uLjAuLi4uClsgMTgyNC42NDQwODhdIDAwMDAwMDQwOiAwMCAw
+MCAwMCAwMCAwMCAwOCA2OSAyNSAwMSAyZSAwMiAwMCAwMCAwMCAwMCA0MCAgLi4uLi4uaSUu
+Li4uLi4uQApbIDE4MjQuNjQ0MDkxXSAwMDAwMDA1MDogMDAgMDAgMDAgMDAgMDAgMGMgMGEg
+NGQgMDIgMmUgMmUgMDIgMDAgMDAgMDAgNTAgIC4uLi4uLi5NLi4uLi4uLlAKWyAxODI0LjY0
+NDA5M10gMDAwMDAwNjA6IDAwIDAwIDAwIDAwIDAwIDA4IDY5IDI2IDBiIDQzIDQ0IDUyIDUy
+IDRmIDRjIDUzICAuLi4uLi5pJi5DRFJST0xTClsgMTgyNC42NDQwOTVdIDAwMDAwMDcwOiAy
+ZSA0MyA0NiA0NyAwMSAwMCAwMCA2MCAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNyAgLkNGRy4u
+LmAuLi4uLi5pJwpbIDE4MjQuNjQ0MTA3XSBYRlMgKGxvb3AwKTogbWV0YWRhdGEgSS9PIGVy
+cm9yIGluICJ4ZnNfZGFfcmVhZF9idWYrMHhiMS8weDExMCBbeGZzXSIgYXQgZGFkZHIgMHg4
+NmY1OCBsZW4gOCBlcnJvciA3NApbIDE4MzguNTc4Mjk2XSBYRlMgKGxvb3AwKTogTWV0YWRh
+dGEgQ1JDIGVycm9yIGRldGVjdGVkIGF0IHhmc19kaXIzX2Jsb2NrX3JlYWRfdmVyaWZ5KzB4
+OWUvMHhjMCBbeGZzXSwgeGZzX2RpcjNfYmxvY2sgYmxvY2sgMHg4NmY1OCAKWyAxODM4LjU3
+ODQ1Ml0gWEZTIChsb29wMCk6IFVubW91bnQgYW5kIHJ1biB4ZnNfcmVwYWlyClsgMTgzOC41
+Nzg0NTZdIFhGUyAobG9vcDApOiBGaXJzdCAxMjggYnl0ZXMgb2YgY29ycnVwdGVkIG1ldGFk
+YXRhIGJ1ZmZlcjoKWyAxODM4LjU3ODQ2MF0gMDAwMDAwMDA6IDU4IDQ0IDQyIDMzIDlmIGFi
+IGQ3IGY0IDAwIDAwIDAwIDAwIDAwIDA4IDZmIDU4ICBYREIzLi4uLi4uLi4uLm9YClsgMTgz
+OC41Nzg0NjRdIDAwMDAwMDEwOiAwMCAwMCAwMCAwZiAwMCAwMCAwMiA1YyA1MyA1YSAzNSAy
+MyA1NyAyYyA0YyBmMSAgLi4uLi4uLlxTWjUjVyxMLgpbIDE4MzguNTc4NDY3XSAwMDAwMDAy
+MDogOGQgYWMgN2MgYjAgMzggYTkgZWMgYjcgMDAgMDAgMDAgMDAgMDAgMDggNjkgMjUgIC4u
+fC44Li4uLi4uLi4uaSUKWyAxODM4LjU3ODQ3MF0gMDAwMDAwMzA6IDAyIDI4IDBkIDQwIDAx
+IDY4IDAwIDMwIDAxIGM4IDAwIDMwIDAwIDAwIDAwIDAwICAuKC5ALmguMC4uLjAuLi4uClsg
+MTgzOC41Nzg0NzJdIDAwMDAwMDQwOiAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNSAwMSAyZSAw
+MiAwMCAwMCAwMCAwMCA0MCAgLi4uLi4uaSUuLi4uLi4uQApbIDE4MzguNTc4NDc1XSAwMDAw
+MDA1MDogMDAgMDAgMDAgMDAgMDAgMGMgMGEgNGQgMDIgMmUgMmUgMDIgMDAgMDAgMDAgNTAg
+IC4uLi4uLi5NLi4uLi4uLlAKWyAxODM4LjU3ODQ3N10gMDAwMDAwNjA6IDAwIDAwIDAwIDAw
+IDAwIDA4IDY5IDI2IDBiIDQzIDQ0IDUyIDUyIDRmIDRjIDUzICAuLi4uLi5pJi5DRFJST0xT
+ClsgMTgzOC41Nzg0NzldIDAwMDAwMDcwOiAyZSA0MyA0NiA0NyAwMSAwMCAwMCA2MCAwMCAw
+MCAwMCAwMCAwMCAwOCA2OSAyNyAgLkNGRy4uLmAuLi4uLi5pJwpbIDE4MzguNTc4NTI5XSBY
+RlMgKGxvb3AwKTogTWV0YWRhdGEgQ1JDIGVycm9yIGRldGVjdGVkIGF0IHhmc19kaXIzX2Js
+b2NrX3JlYWRfdmVyaWZ5KzB4OWUvMHhjMCBbeGZzXSwgeGZzX2RpcjNfYmxvY2sgYmxvY2sg
+MHg4NmY1OCAKWyAxODM4LjU3ODY5OV0gWEZTIChsb29wMCk6IFVubW91bnQgYW5kIHJ1biB4
+ZnNfcmVwYWlyClsgMTgzOC41Nzg3MDNdIFhGUyAobG9vcDApOiBGaXJzdCAxMjggYnl0ZXMg
+b2YgY29ycnVwdGVkIG1ldGFkYXRhIGJ1ZmZlcjoKWyAxODM4LjU3ODcwN10gMDAwMDAwMDA6
+IDU4IDQ0IDQyIDMzIDlmIGFiIGQ3IGY0IDAwIDAwIDAwIDAwIDAwIDA4IDZmIDU4ICBYREIz
+Li4uLi4uLi4uLm9YClsgMTgzOC41Nzg3MTFdIDAwMDAwMDEwOiAwMCAwMCAwMCAwZiAwMCAw
+MCAwMiA1YyA1MyA1YSAzNSAyMyA1NyAyYyA0YyBmMSAgLi4uLi4uLlxTWjUjVyxMLgpbIDE4
+MzguNTc4NzE1XSAwMDAwMDAyMDogOGQgYWMgN2MgYjAgMzggYTkgZWMgYjcgMDAgMDAgMDAg
+MDAgMDAgMDggNjkgMjUgIC4ufC44Li4uLi4uLi4uaSUKWyAxODM4LjU3ODcxOV0gMDAwMDAw
+MzA6IDAyIDI4IDBkIDQwIDAxIDY4IDAwIDMwIDAxIGM4IDAwIDMwIDAwIDAwIDAwIDAwICAu
+KC5ALmguMC4uLjAuLi4uClsgMTgzOC41Nzg3MjRdIDAwMDAwMDQwOiAwMCAwMCAwMCAwMCAw
+MCAwOCA2OSAyNSAwMSAyZSAwMiAwMCAwMCAwMCAwMCA0MCAgLi4uLi4uaSUuLi4uLi4uQApb
+IDE4MzguNTc4NzI4XSAwMDAwMDA1MDogMDAgMDAgMDAgMDAgMDAgMGMgMGEgNGQgMDIgMmUg
+MmUgMDIgMDAgMDAgMDAgNTAgIC4uLi4uLi5NLi4uLi4uLlAKWyAxODM4LjU3ODczMl0gMDAw
+MDAwNjA6IDAwIDAwIDAwIDAwIDAwIDA4IDY5IDI2IDBiIDQzIDQ0IDUyIDUyIDRmIDRjIDUz
+ICAuLi4uLi5pJi5DRFJST0xTClsgMTgzOC41Nzg3MzZdIDAwMDAwMDcwOiAyZSA0MyA0NiA0
+NyAwMSAwMCAwMCA2MCAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNyAgLkNGRy4uLmAuLi4uLi5p
+JwpbIDE4MzguNTc4Nzg1XSBYRlMgKGxvb3AwKTogbWV0YWRhdGEgSS9PIGVycm9yIGluICJ4
+ZnNfZGFfcmVhZF9idWYrMHhiMS8weDExMCBbeGZzXSIgYXQgZGFkZHIgMHg4NmY1OCBsZW4g
+OCBlcnJvciA3NApbIDE4NzYuMzAyMDE5XSBYRlMgKGxvb3AwKTogTWV0YWRhdGEgQ1JDIGVy
+cm9yIGRldGVjdGVkIGF0IHhmc19kaXIzX2Jsb2NrX3JlYWRfdmVyaWZ5KzB4OWUvMHhjMCBb
+eGZzXSwgeGZzX2RpcjNfYmxvY2sgYmxvY2sgMHg4NmY1OCAKWyAxODc2LjMwMjE3N10gWEZT
+IChsb29wMCk6IFVubW91bnQgYW5kIHJ1biB4ZnNfcmVwYWlyClsgMTg3Ni4zMDIxODBdIFhG
+UyAobG9vcDApOiBGaXJzdCAxMjggYnl0ZXMgb2YgY29ycnVwdGVkIG1ldGFkYXRhIGJ1ZmZl
+cjoKWyAxODc2LjMwMjE4NF0gMDAwMDAwMDA6IDU4IDQ0IDQyIDMzIDlmIGFiIGQ3IGY0IDAw
+IDAwIDAwIDAwIDAwIDA4IDZmIDU4ICBYREIzLi4uLi4uLi4uLm9YClsgMTg3Ni4zMDIxODhd
+IDAwMDAwMDEwOiAwMCAwMCAwMCAwZiAwMCAwMCAwMiA1YyA1MyA1YSAzNSAyMyA1NyAyYyA0
+YyBmMSAgLi4uLi4uLlxTWjUjVyxMLgpbIDE4NzYuMzAyMTkxXSAwMDAwMDAyMDogOGQgYWMg
+N2MgYjAgMzggYTkgZWMgYjcgMDAgMDAgMDAgMDAgMDAgMDggNjkgMjUgIC4ufC44Li4uLi4u
+Li4uaSUKWyAxODc2LjMwMjE5NF0gMDAwMDAwMzA6IDAyIDI4IDBkIDQwIDAxIDY4IDAwIDMw
+IDAxIGM4IDAwIDMwIDAwIDAwIDAwIDAwICAuKC5ALmguMC4uLjAuLi4uClsgMTg3Ni4zMDIx
+OTZdIDAwMDAwMDQwOiAwMCAwMCAwMCAwMCAwMCAwOCA2OSAyNSAwMSAyZSAwMiAwMCAwMCAw
+MCAwMCA0MCAgLi4uLi4uaSUuLi4uLi4uQApbIDE4NzYuMzAyMTk5XSAwMDAwMDA1MDogMDAg
+MDAgMDAgMDAgMDAgMGMgMGEgNGQgMDIgMmUgMmUgMDIgMDAgMDAgMDAgNTAgIC4uLi4uLi5N
+Li4uLi4uLlAKWyAxODc2LjMwMjIwMV0gMDAwMDAwNjA6IDAwIDAwIDAwIDAwIDAwIDA4IDY5
+IDI2IDBiIDQzIDQ0IDUyIDUyIDRmIDRjIDUzICAuLi4uLi5pJi5DRFJST0xTClsgMTg3Ni4z
+MDIyMDRdIDAwMDAwMDcwOiAyZSA0MyA0NiA0NyAwMSAwMCAwMCA2MCAwMCAwMCAwMCAwMCAw
+MCAwOCA2OSAyNyAgLkNGRy4uLmAuLi4uLi5pJwpbIDE4NzYuMzAyMjIxXSBYRlMgKGxvb3Aw
+KTogbWV0YWRhdGEgSS9PIGVycm9yIGluICJ4ZnNfZGFfcmVhZF9idWYrMHhiMS8weDExMCBb
+eGZzXSIgYXQgZGFkZHIgMHg4NmY1OCBsZW4gOCBlcnJvciA3NApbIDE4NzYuMzAyNjU2XSBY
+RlMgKGxvb3AwKTogTWV0YWRhdGEgSS9PIEVycm9yICgweDEpIGRldGVjdGVkIGF0IHhmc190
+cmFuc19yZWFkX2J1Zl9tYXArMHgxMmYvMHgyYjAgW3hmc10gKGZzL3hmcy94ZnNfdHJhbnNf
+YnVmLmM6Mjk2KS4gIFNodXR0aW5nIGRvd24gZmlsZXN5c3RlbS4KWyAxODc2LjMwMjkxMl0g
+WEZTIChsb29wMCk6IFBsZWFzZSB1bm1vdW50IHRoZSBmaWxlc3lzdGVtIGFuZCByZWN0aWZ5
+IHRoZSBwcm9ibGVtKHMpCgoKICAgLT4gTm93IEkgYnJva2UgaXQgOi0oCgo0KSB1bW91bnQK
+WyAxOTMxLjcyNTU4NV0gWEZTIChsb29wMCk6IFVubW91bnRpbmcgRmlsZXN5c3RlbQoKNSkg
+cnVuIHhmc19yZXBhaXIuCglUaGlzIGZhaWxzIGR1ZSB0byBhIGxvZyB0aGF0IGZpcnN0IG5l
+ZWRzIHRvIGJlIHJlcGxheWVkCgo2KSBtb3VudCAtdCBhdXRvIC9kZXYvbG9vcDAgeApbIDIw
+NDEuMjQ3NTMwXSBYRlMgKGxvb3AwKTogTW91bnRpbmcgVjUgRmlsZXN5c3RlbQpbIDIwNDEu
+MjUxODM4XSBYRlMgKGxvb3AwKTogU3RhcnRpbmcgcmVjb3ZlcnkgKGxvZ2RldjogaW50ZXJu
+YWwpClsgMjA0MS4yNTI4NzddIFhGUyAobG9vcDApOiBFbmRpbmcgcmVjb3ZlcnkgKGxvZ2Rl
+djogaW50ZXJuYWwpCgo3KSB1bW91bnQKWyAyMDQ3LjIxODA2Ml0gWEZTIChsb29wMCk6IFVu
+bW91bnRpbmcgRmlsZXN5c3RlbQoKOCkgcnVuIHhmc19yZXBhaXIKCVRoaXMgaXMgc3VjY2Vz
+c2Z1bC4K
 
-         godown-213341 [008]  6398.027005: xfs_force_shutdown:   dev 259:1 tag logerror flags log_io|force_umount file fs/xfs/xfs_fsops.c line_num 500
-          godown-213341 [008]  6398.027022: console:              [ 6397.915406] pmem1: writeback error on inode 12621949, offset 1019904, sector 12968096
-          godown-213341 [008]  6398.030551: console:              [ 6397.919546] XFS (pmem1): Log I/O Error (0x6) detected at xfs_fs_goingdown+0xa3/0xf0 (fs/
-
-And finally the log itself is now shutdown, stopping all further
-writes to the log. But this is too late to prevent the corruption
-that moving the tail of the log forwards after we start cancelling
-writeback causes.
-
-The fundamental problem here is that we are using the wrong shutdown
-checks for log items. We've long conflated mount shutdown with log
-shutdown state, and I started separating that recently with the
-atomic shutdown state changes in commit b36d4651e165 ("xfs: make
-forced shutdown processing atomic"). The changes in that commit
-series are directly responsible for being able to diagnose this
-issue because it clearly separated mount shutdown from log shutdown.
-
-Essentially, once we start cancelling writeback of log items and
-removing them from the AIL because the filesystem is shut down, we
-*cannot* update the journal because we may have cancelled the items
-that pin the tail of the log. That moves the tail of the log
-forwards without having written the metadata back, hence we have
-corrupt in memory state and writing to the journal propagates that
-to the on-disk state.
-
-What commit b36d4651e165 makes clear is that log item state needs to
-change relative to log shutdown, not mount shutdown. IOWs, anything
-that aborts metadata writeback needs to check log shutdown state
-because log items directly affect log consistency. Having them check
-mount shutdown state introduces the above race condition where we
-cancel metadata writeback before the log shuts down.
-
-To fix this, this patch works through all log items and converts
-shutdown checks to use xlog_is_shutdown() rather than
-xfs_is_shutdown(), so that we don't start aborting metadata
-writeback before we shut off journal writes.
-
-AFAICT, this race condition is a zero day IO error handling bug in
-XFS that dates back to the introduction of XLOG_IO_ERROR,
-XLOG_STATE_IOERROR and XFS_FORCED_SHUTDOWN back in January 1997.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_buf.c        | 40 ++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_icache.c     | 10 +++++++++-
- fs/xfs/xfs_inode.c      | 15 +++++++++++++--
- fs/xfs/xfs_inode_item.c | 12 ++++++++++++
- fs/xfs/xfs_qm.c         |  8 ++++----
- 5 files changed, 70 insertions(+), 15 deletions(-)
-
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 8867f143598e..3617d9d2bc73 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -14,6 +14,7 @@
- #include "xfs_trace.h"
- #include "xfs_log.h"
- #include "xfs_log_recover.h"
-+#include "xfs_log_priv.h"
- #include "xfs_trans.h"
- #include "xfs_buf_item.h"
- #include "xfs_errortag.h"
-@@ -813,7 +814,15 @@ xfs_buf_read_map(
- 	 * buffer.
- 	 */
- 	if (error) {
--		if (!xfs_is_shutdown(target->bt_mount))
-+		/*
-+		 * Check against log shutdown for error reporting because
-+		 * metadata writeback may require a read first and we need to
-+		 * report errors in metadata writeback until the log is shut
-+		 * down. High level transaction read functions already check
-+		 * against mount shutdown, anyway, so we only need to be
-+		 * concerned about low level IO interactions here.
-+		 */
-+		if (!xlog_is_shutdown(target->bt_mount->m_log))
- 			xfs_buf_ioerror_alert(bp, fa);
- 
- 		bp->b_flags &= ~XBF_DONE;
-@@ -1177,10 +1186,10 @@ xfs_buf_ioend_handle_error(
- 	struct xfs_error_cfg	*cfg;
- 
- 	/*
--	 * If we've already decided to shutdown the filesystem because of I/O
--	 * errors, there's no point in giving this a retry.
-+	 * If we've already shutdown the journal because of I/O errors, there's
-+	 * no point in giving this a retry.
- 	 */
--	if (xfs_is_shutdown(mp))
-+	if (xlog_is_shutdown(mp->m_log))
- 		goto out_stale;
- 
- 	xfs_buf_ioerror_alert_ratelimited(bp);
-@@ -1593,8 +1602,23 @@ __xfs_buf_submit(
- 
- 	ASSERT(!(bp->b_flags & _XBF_DELWRI_Q));
- 
--	/* on shutdown we stale and complete the buffer immediately */
--	if (xfs_is_shutdown(bp->b_mount)) {
-+	/*
-+	 * On log shutdown we stale and complete the buffer immediately. We can
-+	 * be called to read the superblock before the log has been set up, so
-+	 * be careful checking the log state.
-+	 *
-+	 * Checking the mount shutdown state here can result in the log tail
-+	 * moving inappropriately on disk as the log may not yet be shut down.
-+	 * i.e. failing this buffer on mount shutdown can remove it from the AIL
-+	 * and move the tail of the log forwards without having written this
-+	 * buffer to disk. This corrupts the log tail state in memory, and
-+	 * because the log may not be shut down yet, it can then be propagated
-+	 * to disk before the log is shutdown. Hence we check log shutdown
-+	 * state here rather than mount state to avoid corrupting the log tail
-+	 * on shutdown.
-+	 */
-+	if (bp->b_mount->m_log &&
-+	    xlog_is_shutdown(bp->b_mount->m_log)) {
- 		xfs_buf_ioend_fail(bp);
- 		return -EIO;
- 	}
-@@ -1808,10 +1832,10 @@ xfs_buftarg_drain(
- 	 * If one or more failed buffers were freed, that means dirty metadata
- 	 * was thrown away. This should only ever happen after I/O completion
- 	 * handling has elevated I/O error(s) to permanent failures and shuts
--	 * down the fs.
-+	 * down the journal.
- 	 */
- 	if (write_fail) {
--		ASSERT(xfs_is_shutdown(btp->bt_mount));
-+		ASSERT(xlog_is_shutdown(btp->bt_mount->m_log));
- 		xfs_alert(btp->bt_mount,
- 	      "Please run xfs_repair to determine the extent of the problem.");
- 	}
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 9644f938990c..4148cdf7ce4a 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -23,6 +23,7 @@
- #include "xfs_reflink.h"
- #include "xfs_ialloc.h"
- #include "xfs_ag.h"
-+#include "xfs_log_priv.h"
- 
- #include <linux/iversion.h>
- 
-@@ -873,7 +874,14 @@ xfs_reclaim_inode(
- 	if (xfs_iflags_test_and_set(ip, XFS_IFLUSHING))
- 		goto out_iunlock;
- 
--	if (xfs_is_shutdown(ip->i_mount)) {
-+	/*
-+	 * Check for log shutdown because aborting the inode can move the log
-+	 * tail and corrupt in memory state. This is fine if the log is shut
-+	 * down, but if the log is still active and only the mount is shut down
-+	 * then the in-memory log tail movement caused by the abort can be
-+	 * incorrectly propagated to disk.
-+	 */
-+	if (xlog_is_shutdown(ip->i_mount->m_log)) {
- 		xfs_iunpin_wait(ip);
- 		xfs_iflush_abort(ip);
- 		goto reclaim;
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 04bf467b1090..aab55a06ece7 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -35,6 +35,7 @@
- #include "xfs_bmap_btree.h"
- #include "xfs_reflink.h"
- #include "xfs_ag.h"
-+#include "xfs_log_priv.h"
- 
- struct kmem_cache *xfs_inode_cache;
- 
-@@ -3659,7 +3660,7 @@ xfs_iflush_cluster(
- 		 * AIL, leaving a dirty/unpinned inode attached to the buffer
- 		 * that otherwise looks like it should be flushed.
- 		 */
--		if (xfs_is_shutdown(mp)) {
-+		if (xlog_is_shutdown(mp->m_log)) {
- 			xfs_iunpin_wait(ip);
- 			xfs_iflush_abort(ip);
- 			xfs_iunlock(ip, XFS_ILOCK_SHARED);
-@@ -3685,9 +3686,19 @@ xfs_iflush_cluster(
- 	}
- 
- 	if (error) {
-+		/*
-+		 * Shutdown first so we kill the log before we release this
-+		 * buffer. If it is an INODE_ALLOC buffer and pins the tail
-+		 * of the log, failing it before the _log_ is shut down can
-+		 * result in the log tail being moved forward in the journal
-+		 * on disk because log writes can still be taking place. Hence
-+		 * unpinning the tail will allow the ICREATE intent to be
-+		 * removed from the log an recovery will fail with uninitialised
-+		 * inode cluster buffers.
-+		 */
-+		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 		bp->b_flags |= XBF_ASYNC;
- 		xfs_buf_ioend_fail(bp);
--		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
- 		return error;
- 	}
- 
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index 90d8e591baf8..11158fa81a09 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -17,6 +17,7 @@
- #include "xfs_trans_priv.h"
- #include "xfs_buf_item.h"
- #include "xfs_log.h"
-+#include "xfs_log_priv.h"
- #include "xfs_error.h"
- 
- #include <linux/iversion.h>
-@@ -720,6 +721,17 @@ xfs_iflush_ail_updates(
- 		if (INODE_ITEM(lip)->ili_flush_lsn != lip->li_lsn)
- 			continue;
- 
-+		/*
-+		 * dgc: Not sure how this happens, but it happens very
-+		 * occassionaly via generic/388.  xfs_iflush_abort() also
-+		 * silently handles this same "under writeback but not in AIL at
-+		 * shutdown" condition via xfs_trans_ail_delete().
-+		 */
-+		if (!test_bit(XFS_LI_IN_AIL, &lip->li_flags)) {
-+			ASSERT(xlog_is_shutdown(lip->li_log));
-+			continue;
-+		}
-+
- 		lsn = xfs_ail_delete_one(ailp, lip);
- 		if (!tail_lsn && lsn)
- 			tail_lsn = lsn;
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 32ac8d9c8940..f165d1a3de1d 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -25,6 +25,7 @@
- #include "xfs_error.h"
- #include "xfs_ag.h"
- #include "xfs_ialloc.h"
-+#include "xfs_log_priv.h"
- 
- /*
-  * The global quota manager. There is only one of these for the entire
-@@ -121,8 +122,7 @@ xfs_qm_dqpurge(
- 	struct xfs_dquot	*dqp,
- 	void			*data)
- {
--	struct xfs_mount	*mp = dqp->q_mount;
--	struct xfs_quotainfo	*qi = mp->m_quotainfo;
-+	struct xfs_quotainfo	*qi = dqp->q_mount->m_quotainfo;
- 	int			error = -EAGAIN;
- 
- 	xfs_dqlock(dqp);
-@@ -157,7 +157,7 @@ xfs_qm_dqpurge(
- 	}
- 
- 	ASSERT(atomic_read(&dqp->q_pincount) == 0);
--	ASSERT(xfs_is_shutdown(mp) ||
-+	ASSERT(xlog_is_shutdown(dqp->q_logitem.qli_item.li_log) ||
- 		!test_bit(XFS_LI_IN_AIL, &dqp->q_logitem.qli_item.li_flags));
- 
- 	xfs_dqfunlock(dqp);
-@@ -172,7 +172,7 @@ xfs_qm_dqpurge(
- 	 */
- 	ASSERT(!list_empty(&dqp->q_lru));
- 	list_lru_del(&qi->qi_lru, &dqp->q_lru);
--	XFS_STATS_DEC(mp, xs_qm_dquot_unused);
-+	XFS_STATS_DEC(dqp->q_mount, xs_qm_dquot_unused);
- 
- 	xfs_qm_dqdestroy(dqp);
- 	return 0;
--- 
-2.35.1
-
+--------------K6dfoJ1xu2Tu6oUNYmbmBu5I--
