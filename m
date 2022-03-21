@@ -2,124 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E77D4E337B
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 23:56:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84F2E4E32F0
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 23:48:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230349AbiCUWwc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Mar 2022 18:52:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
+        id S229887AbiCUWrn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Mar 2022 18:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbiCUWwO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 18:52:14 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2D439F02E
-        for <linux-xfs@vger.kernel.org>; Mon, 21 Mar 2022 15:31:37 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id pv16so32793333ejb.0
-        for <linux-xfs@vger.kernel.org>; Mon, 21 Mar 2022 15:31:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thejof-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kEtqK72Zw9ibC1HWUR067mDWAJ0KkSMiUJjG7zRfYrM=;
-        b=bZrMi3zZ+sK4zSf1J1N0bP6fctrHy3SqLkMfGmurgK8GLtDde7SkzH4KM5rKUkfF2C
-         Lm4B5L2tLYBVUZ+VE+2KVhFA0ncn5ESTAw9dJrlncxi6WsFvv8+6UZDtJ4wLSJEBffm8
-         lsY+B++L4364u7ESexw5gHgqQyYCWd0zWJswjjo/Am7aBPRumrFZxdk8MpUzvlvg7ZtG
-         CrdmufNZP8HvUUDKV0XDk5899KRYgD2DQIh7sWrPxyq00CbB6QLa1b1QkHeEFDD1BT8y
-         +8yjMMD7uGOo82KfDVOnAd7wtPBU/Dzlu11KmG9m+Y/MLFQr+o+kAhw3+DWGT3ly99kb
-         Un5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kEtqK72Zw9ibC1HWUR067mDWAJ0KkSMiUJjG7zRfYrM=;
-        b=rT/5pWz0llFICGYFyJg/jj0AfSZ+Nxgis68rKnvwtUiJgWaIuRj+TtP5z8WGTMKXyk
-         CTzb8W85c4x67Xz/Wt3dGbzGcnCeIc8z1MC39Orym+pSHPUHQuisqlwHG82+BB38VHJN
-         KLDjX89X0+DkJRF8WW3TWg9pq7ueS0A9CfelaWixkz5axDwi8PgzlV8RqhKhKg9/rnw1
-         1QGqepCRbEPk7LpMUcO4dmJvBnGEtkjDtSD3HJkVleseJYgZxTXzSM/RgMUvicQjqNZ1
-         jUw7aWRsbd0qTh2oeH94EMNm5ZBtXgrGaxk3oLJxc8/VtSV8Bsh+rlbupc7n9tNnKeVJ
-         6qHw==
-X-Gm-Message-State: AOAM532xlEEJ1sGk0Hh3QXAL60CIoV50c9JK3GOsXT6Uoyp7QK3TvfMU
-        6ag7mTALYwNm4V9S146NvxuazVs1d6BUGQuJ32PgxH861ct8H9Pr2IU=
-X-Google-Smtp-Source: ABdhPJwnbT+/HirccKoILTERQKJpjWMYGeNrlv+6zQl3JFPHyGcExCZiGbt/bCY187zRJmYIOe+7DWPKpp9Cmh5w5D0=
-X-Received: by 2002:a17:906:99c5:b0:6df:8215:4ccd with SMTP id
- s5-20020a17090699c500b006df82154ccdmr23107165ejn.684.1647900199431; Mon, 21
- Mar 2022 15:03:19 -0700 (PDT)
+        with ESMTP id S229664AbiCUWrf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 18:47:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FAE2AB89C;
+        Mon, 21 Mar 2022 15:27:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 888C3B81AAA;
+        Mon, 21 Mar 2022 22:21:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 412CAC340E8;
+        Mon, 21 Mar 2022 22:21:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647901286;
+        bh=YdRuUQ7n1xMKIOQKXhmD50thxaX6B8sq7j5Ta8xBOgE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mjrrZhGi7hE60DXYpI8kfKjkj+BhXTfVQpSXi9BT1Apy9rZmUoILwCuqgWgjXu0yf
+         JpgH6Z6s4/G6nT/DnXwgZ/ye3OJr1CCaWjJjutJGCsRzVrZPt3zg4WKTr3ZlGlzZpr
+         1OQ3Udyb8DbZ+RPAKFG/RAhmqPtk31O9WLmwicpipRwY5r7RXeIed9dqsrIDHxlomJ
+         s4cO7P3CBiQfItlhxWaNLlyXHwOgldO1SRlMnF44TORG4zwkn5i6PxWBGob4XqZ5T/
+         /DPTr1cAGh3NUUjALHlSPYMO+C+5+nASO3V3YD5Ev0lSNOtwdt65XTaxUShbUweoF6
+         TQkJfmnr1r0mQ==
+Date:   Mon, 21 Mar 2022 15:21:25 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc:     xfs <linux-xfs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/3] xfs: some end COW remapping optimization
+Message-ID: <20220321222125.GN8241@magnolia>
+References: <20220216030854.30180-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
-References: <0bc6a322d6f9b812b1444b588b5036263f377455.1647495044.git.jof@thejof.com>
- <20220317231620.GC1544202@dread.disaster.area>
-In-Reply-To: <20220317231620.GC1544202@dread.disaster.area>
-From:   Jonathan Lassoff <jof@thejof.com>
-Date:   Mon, 21 Mar 2022 15:03:08 -0700
-Message-ID: <CAHsqw9sZfsNsQs779-hb5wR4H+W+wnHfNV=wo0vT2D6oXZ9t=g@mail.gmail.com>
-Subject: Re: [PATCH v0 1/2] Add XFS messages to printk index
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220216030854.30180-1-hsiangkao@linux.alibaba.com>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, 17 Mar 2022 at 16:16, Dave Chinner <david@fromorbit.com> wrote:
-> That's a nasty mess. To begin with, we most definitely do not want
-> to have to define log level translations in multiple places so this
-> needs to be reworked so the front end macros define everything and
-> pass things down to the lower level functions.
+On Wed, Feb 16, 2022 at 11:08:51AM +0800, Gao Xiang wrote:
+> Hi folks,
+> 
+> Currently, xfs_reflink_end_cow_extent() will unconditionally unmap an
+> extent from DATA fork and then remap an extent from COW fork. It seems
+> somewhat ineffective since for many cases we could update real bmbt
+> records directly by sightly enhancing old
+> xfs_bmap_add_extent_unwritten_real() implementation, thus reduce some
+> measurable extra metadata overhead.
 
-I can follow up with a PATCH v1 to do this kernel level deduplication.
-I focused my initial attempt at changing as little as possible.
+Does it work with rmap enabled?
 
-> And, anyway, why can't you just drop printk_index_subsys_emit() into
-> the define_xfs_printk_level() macro? The kern_level, the fmt string
-> and the varargs are all available there...
+Reading between the lines, I'm guessing the performance boost might
+come from avoiding a transaction roll and (possibly) reducing the need
+to log bmbt updates?  Particularly in the worst case where we split the
+bmbt only to rejoin the blocks immediately after.
 
-The short answer is that the format strings need to be known at
-compile time, as this printk index is added into a section of the
-resultant ELF binary.
+Recently, Dave and Allison have been pondering making an addition to the
+deferred log item code so that we could ->finish_item the first defer op
+in the same transaction that logs the caller's deferred operations.
+Might that get you most of the speed advantage that you're seeking?
 
-> Anyway, there's more important high level stuff that needs
-> explaining first.
->
-> This is competely undocumented functionality and it's the first I've
-> ever heard about it. There's nothing I can easily find to learn how
-> this information being exposed to userspace is supposed to be used.
-> The commit message is pretty much information free, but this is a
-> new userspace ABI. What ABI constraints are we now subject to by
-> exporting XFS log message formats to userspace places?
->
-> i.e. Where's the documentation defining the contract this new
-> userspace ABI forms between the kernel log messages and userspace?
-> How do users know what we guarantee won't or will break, and how do
-> we kernel developers know what we're allowed to do once these very
-> specific internal subsystem implementation details are exposed to
-> userspace?
->
-> Hell, how did this stuff even get merged without any supporting
-> documentation?
+> It's important to us since, actually, we're planing to use a modified
+> alway-cow like atomic write approach internally for database
+> applications, therefore it'd be nice to do some optimization over
+> simple end COW approach. Also I think it's still generic and can
+> benefit other reflink use cases as well.
 
-I can't really comment as to the commit history of the printk
-indexing, though I think it's a fair criticism that there doesn't
-currently seem to be any in-tree Documentation file about the
-functionality yet.
-The best references I could point to are commit
-337015573718b161891a3473d25f59273f2e626b and this LWN article:
-https://lwn.net/Articles/857148/
+Hmm, that sounds /awfully/ similar to what sqlite does with f2fs' atomic
+write ioctls.
 
-Your concern about ABI commitments is totally valid, and is (to me)
-rather ironic in this context. This printk indexing effort was started
-so that end user-operators can more reliably capture critical event
-data *without* asking developers to commit to anything. The hope here
-is that developers can change format strings and parameters at will,
-and that from release-to-release end user-operators can compare the
-printk index to see if there are any changes in printk index entries
-that they care about for their environment.
+Alternately, would this[1] feature that's been sitting around in
+djwong-dev since late 2019 help?
 
-It is my genuine hope that by merging a change like what I'm proposing
-here, that end users can more reliably detect and react to XFS events
-without XFS developers needing to know about this or commit to
-anything. The only reason this change is needed is because XFS wraps
-printk() for its own formatting.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=atomic-file-updates
+
+--D
+
+> 
+> I did some tests with ramdisk in order to measure metadata overhead:
+> 
+> echo 1 > /sys/fs/xfs/debug/always_cow
+> mkfs.xfs -f -mreflink=1 /dev/ram0
+> mount /dev/ram0 testdir
+> fio -filename=testdir/1 -size=1G -ioengine=psync -bs=4k -rw=randwrite -overwrite=1 -direct=1 -end_fsync=1 -name=job1
+> 
+> Test results as below:
+> Vanilla:
+> (1)   iops        : min= 7986, max=16434, avg=12505.76, stdev=2400.05, samples=41
+> (2)   iops        : min= 7636, max=16376, avg=12474.19, stdev=2258.18, samples=42
+> (3)   iops        : min= 8346, max=16439, avg=12227.95, stdev=2432.12, samples=42
+> (4)   iops        : min= 8580, max=16496, avg=12779.41, stdev=2297.42, samples=41
+> (5)   iops        : min= 8286, max=16556, avg=12500.76, stdev=2123.90, samples=41
+> 
+> Patched:
+> (1)   iops        : min= 7086, max=17132, avg=12931.20, stdev=2729.10, samples=40
+> (2)   iops        : min= 7704, max=17508, avg=13204.62, stdev=2507.70, samples=39
+> (3)   iops        : min= 8736, max=17634, avg=13253.08, stdev=2545.18, samples=39
+> (4)   iops        : min= 7188, max=17550, avg=12928.40, stdev=2633.64, samples=40
+> (5)   iops        : min= 8268, max=17446, avg=12837.55, stdev=2717.98, samples=40
+> 
+> xfstests seems survived. Comments are much welcomed and
+> thanks for your time!
+> 
+> Thanks,
+> Gao Xiang
+> 
+> Changes since v1:
+>  - fix missing tmp_logflags initialization;
+>  - drop unnecessary realtime inode check pointed out by Darrick.
+> 
+> Gao Xiang (3):
+>   xfs: get rid of LEFT, RIGHT, PREV in
+>     xfs_bmap_add_extent_unwritten_real()
+>   xfs: introduce xfs_bmap_update_extent_real()
+>   xfs: introduce xfs_bremapi_from_cowfork()
+> 
+>  fs/xfs/libxfs/xfs_bmap.c | 377 +++++++++++++++++++++++++--------------
+>  fs/xfs/libxfs/xfs_bmap.h |   7 +-
+>  fs/xfs/xfs_reflink.c     |  24 +--
+>  3 files changed, 252 insertions(+), 156 deletions(-)
+> 
+> -- 
+> 2.24.4
+> 
