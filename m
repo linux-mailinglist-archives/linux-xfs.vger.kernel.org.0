@@ -2,50 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84F2E4E32F0
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 23:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E94E4E3384
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 23:56:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbiCUWrn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Mar 2022 18:47:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
+        id S229807AbiCUWwU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Mar 2022 18:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbiCUWrf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 18:47:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FAE2AB89C;
-        Mon, 21 Mar 2022 15:27:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 888C3B81AAA;
-        Mon, 21 Mar 2022 22:21:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 412CAC340E8;
-        Mon, 21 Mar 2022 22:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647901286;
-        bh=YdRuUQ7n1xMKIOQKXhmD50thxaX6B8sq7j5Ta8xBOgE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mjrrZhGi7hE60DXYpI8kfKjkj+BhXTfVQpSXi9BT1Apy9rZmUoILwCuqgWgjXu0yf
-         JpgH6Z6s4/G6nT/DnXwgZ/ye3OJr1CCaWjJjutJGCsRzVrZPt3zg4WKTr3ZlGlzZpr
-         1OQ3Udyb8DbZ+RPAKFG/RAhmqPtk31O9WLmwicpipRwY5r7RXeIed9dqsrIDHxlomJ
-         s4cO7P3CBiQfItlhxWaNLlyXHwOgldO1SRlMnF44TORG4zwkn5i6PxWBGob4XqZ5T/
-         /DPTr1cAGh3NUUjALHlSPYMO+C+5+nASO3V3YD5Ev0lSNOtwdt65XTaxUShbUweoF6
-         TQkJfmnr1r0mQ==
-Date:   Mon, 21 Mar 2022 15:21:25 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] xfs: some end COW remapping optimization
-Message-ID: <20220321222125.GN8241@magnolia>
-References: <20220216030854.30180-1-hsiangkao@linux.alibaba.com>
+        with ESMTP id S230226AbiCUWwL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 18:52:11 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8615C3D8B3F
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Mar 2022 15:41:26 -0700 (PDT)
+Received: from dread.disaster.area (pa49-186-150-27.pa.vic.optusnet.com.au [49.186.150.27])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 40013533776;
+        Tue, 22 Mar 2022 09:41:25 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1nWQiJ-008HnX-Co; Tue, 22 Mar 2022 09:41:23 +1100
+Date:   Tue, 22 Mar 2022 09:41:23 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 2/2] xfs: shutdown in intent recovery has non-intent
+ items in the AIL
+Message-ID: <20220321224123.GK1544202@dread.disaster.area>
+References: <20220321012329.376307-1-david@fromorbit.com>
+ <20220321012329.376307-3-david@fromorbit.com>
+ <20220321215236.GK8224@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220216030854.30180-1-hsiangkao@linux.alibaba.com>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <20220321215236.GK8224@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=6238ff15
+        a=sPqof0Mm7fxWrhYUF33ZaQ==:117 a=sPqof0Mm7fxWrhYUF33ZaQ==:17
+        a=kj9zAlcOel0A:10 a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
+        a=7-415B0cAAAA:8 a=4v67lGCmLuo1e8ycD80A:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,88 +49,104 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 11:08:51AM +0800, Gao Xiang wrote:
-> Hi folks,
+On Mon, Mar 21, 2022 at 02:52:36PM -0700, Darrick J. Wong wrote:
+> On Mon, Mar 21, 2022 at 12:23:29PM +1100, Dave Chinner wrote:
+> > From: Dave Chinner <dchinner@redhat.com>
+> > 
+> > generic/388 triggered a failure in RUI recovery due to a corrupted
+> > btree record and the system then locked up hard due to a subsequent
+> > assert failure while holding a spinlock cancelling intents:
+> > 
+> >  XFS (pmem1): Corruption of in-memory data (0x8) detected at xfs_do_force_shutdown+0x1a/0x20 (fs/xfs/xfs_trans.c:964).  Shutting down filesystem.
+> >  XFS (pmem1): Please unmount the filesystem and rectify the problem(s)
+> >  XFS: Assertion failed: !xlog_item_is_intent(lip), file: fs/xfs/xfs_log_recover.c, line: 2632
+> >  Call Trace:
+> >   <TASK>
+> >   xlog_recover_cancel_intents.isra.0+0xd1/0x120
+> >   xlog_recover_finish+0xb9/0x110
+> >   xfs_log_mount_finish+0x15a/0x1e0
+> >   xfs_mountfs+0x540/0x910
+> >   xfs_fs_fill_super+0x476/0x830
+> >   get_tree_bdev+0x171/0x270
+> >   ? xfs_init_fs_context+0x1e0/0x1e0
+> >   xfs_fs_get_tree+0x15/0x20
+> >   vfs_get_tree+0x24/0xc0
+> >   path_mount+0x304/0xba0
+> >   ? putname+0x55/0x60
+> >   __x64_sys_mount+0x108/0x140
+> >   do_syscall_64+0x35/0x80
+> >   entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > 
+> > Essentially, there's dirty metadata in the AIL from intent recovery
+> > transactions, so when we go to cancel the remaining intents we assume
+> > that all objects after the first non-intent log item in the AIL are
+> > not intents.
+> > 
+> > This is not true. Intent recovery can log new intents to continue
+> > the operations the original intent could not complete in a single
+> > transaction. The new intents are committed before they are deferred,
+> > which means if the CIL commits in the background they will get
+> > inserted into the AIL at the head.
 > 
-> Currently, xfs_reflink_end_cow_extent() will unconditionally unmap an
-> extent from DATA fork and then remap an extent from COW fork. It seems
-> somewhat ineffective since for many cases we could update real bmbt
-> records directly by sightly enhancing old
-> xfs_bmap_add_extent_unwritten_real() implementation, thus reduce some
-> measurable extra metadata overhead.
+> Like you, I wonder how I never hit this.  Maybe I've never hit a
+> corrupted rmap btree record during recovery?
+> 
+> So I guess what we're tripping over is a sequence of items in the AIL
+> that looks something like this?
+> 
+> 0. <recovered non intent items>
+> 1. <recovered intent item>
+> 2. <new non-intent item>
+> 3. <new intent items>
 
-Does it work with rmap enabled?
+Mostly correct, but not quite. At the end of the first phase of
+recovery (i.e. reading the log and extracting/recovering individual
+items), the AIL looks like this:
 
-Reading between the lines, I'm guessing the performance boost might
-come from avoiding a transaction roll and (possibly) reducing the need
-to log bmbt updates?  Particularly in the worst case where we split the
-bmbt only to rejoin the blocks immediately after.
+0. <incomplete recovered intents>
 
-Recently, Dave and Allison have been pondering making an addition to the
-deferred log item code so that we could ->finish_item the first defer op
-in the same transaction that logs the caller's deferred operations.
-Might that get you most of the speed advantage that you're seeking?
+It has nothing else in it, just the intents that need recovery.
 
-> It's important to us since, actually, we're planing to use a modified
-> alway-cow like atomic write approach internally for database
-> applications, therefore it'd be nice to do some optimization over
-> simple end COW approach. Also I think it's still generic and can
-> benefit other reflink use cases as well.
+In the second phase of recovery, we start processing those intents,
+walking the above list and calling ->recover on them. IIUC,
+recovering a BUI can create CUI and RUI intents, recovering a CUI
+can create both RUI and EFI intents, and recovering a RUI can create
+EFI intents.
 
-Hmm, that sounds /awfully/ similar to what sqlite does with f2fs' atomic
-write ioctls.
+Now, processing these newly created chained intents is deferred
+after committing them to the *CIL*, so only the initial intents in 0
+above are replayed because we check the AIL contents again. If there
+is enough space in the journal and CIL to aggregate all these new
+intents and objects, they will never reach the AIL before the
+initial intent recovery has completed, and the check will never
+fail.  Hence I think the actual logged contents check is rarely, if
+ever, run properly because nothing has reached the AIL in normal
+cases.
 
-Alternately, would this[1] feature that's been sitting around in
-djwong-dev since late 2019 help?
+However, if the CIL -ever- commits during intent processing, then
+the AIL check is completely invalid - the AIL can contain buffers,
+inodes, new intents, etc in any order:
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=atomic-file-updates
+0. <incomplete recovered intents>
+1. <non intent items>
+2. <new chained/deferred intents>
+3. <non intent items>
+4. <new chained/deferred intents>
+5. <non intent items>
+....
 
---D
+> So we speed along the AIL list, dealing with the <0> items until we get
+> to <1>.  We recover <1>, which generates <2> and <3>.  Next, the
+> debugging code thinks we've hit the end of the list of recovered items,
+> and therefore it can keep walking the AIL and that it will only find
+> items like <2>.  Unfortunately, it finds the new intent <3> and trips?
 
-> 
-> I did some tests with ramdisk in order to measure metadata overhead:
-> 
-> echo 1 > /sys/fs/xfs/debug/always_cow
-> mkfs.xfs -f -mreflink=1 /dev/ram0
-> mount /dev/ram0 testdir
-> fio -filename=testdir/1 -size=1G -ioengine=psync -bs=4k -rw=randwrite -overwrite=1 -direct=1 -end_fsync=1 -name=job1
-> 
-> Test results as below:
-> Vanilla:
-> (1)   iops        : min= 7986, max=16434, avg=12505.76, stdev=2400.05, samples=41
-> (2)   iops        : min= 7636, max=16376, avg=12474.19, stdev=2258.18, samples=42
-> (3)   iops        : min= 8346, max=16439, avg=12227.95, stdev=2432.12, samples=42
-> (4)   iops        : min= 8580, max=16496, avg=12779.41, stdev=2297.42, samples=41
-> (5)   iops        : min= 8286, max=16556, avg=12500.76, stdev=2123.90, samples=41
-> 
-> Patched:
-> (1)   iops        : min= 7086, max=17132, avg=12931.20, stdev=2729.10, samples=40
-> (2)   iops        : min= 7704, max=17508, avg=13204.62, stdev=2507.70, samples=39
-> (3)   iops        : min= 8736, max=17634, avg=13253.08, stdev=2545.18, samples=39
-> (4)   iops        : min= 7188, max=17550, avg=12928.40, stdev=2633.64, samples=40
-> (5)   iops        : min= 8268, max=17446, avg=12837.55, stdev=2717.98, samples=40
-> 
-> xfstests seems survived. Comments are much welcomed and
-> thanks for your time!
-> 
-> Thanks,
-> Gao Xiang
-> 
-> Changes since v1:
->  - fix missing tmp_logflags initialization;
->  - drop unnecessary realtime inode check pointed out by Darrick.
-> 
-> Gao Xiang (3):
->   xfs: get rid of LEFT, RIGHT, PREV in
->     xfs_bmap_add_extent_unwritten_real()
->   xfs: introduce xfs_bmap_update_extent_real()
->   xfs: introduce xfs_bremapi_from_cowfork()
-> 
->  fs/xfs/libxfs/xfs_bmap.c | 377 +++++++++++++++++++++++++--------------
->  fs/xfs/libxfs/xfs_bmap.h |   7 +-
->  fs/xfs/xfs_reflink.c     |  24 +--
->  3 files changed, 252 insertions(+), 156 deletions(-)
-> 
-> -- 
-> 2.24.4
-> 
+Effectively, yes.
+
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+Thanks!
+
+-- 
+Dave Chinner
+david@fromorbit.com
