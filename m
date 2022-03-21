@@ -2,151 +2,327 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 329094E321A
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 21:59:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E2214E331E
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 23:56:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbiCUVAm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Mar 2022 17:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57466 "EHLO
+        id S230459AbiCUWxX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Mar 2022 18:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230090AbiCUVAm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 17:00:42 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B57C403D7;
-        Mon, 21 Mar 2022 13:59:16 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id bx5so14025422pjb.3;
-        Mon, 21 Mar 2022 13:59:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IIUq70JYO9LLmND1+BslUpEoL6qaTZK16a7hVYB0QVM=;
-        b=GndI/VxWim9/UZXk2q5afrDqn2qyfiunzh3+1Wi9X8fNS1w85Tf4ChDSAH8lNu5uUL
-         oWYqa/jbEnaFBK81JDNc81tks7HXnDtf3AndRcwvNV9bSWWPsC4XzNwmnBsOEdkY0L1X
-         BSUG7RROwOeVpU/tFDseuWll/YOx3hbAqIOScG1ZrCafa0FxC4cOZFUyKofji/UXVGZE
-         FdsJxWWGaHKc+ZeWwRHhBQEb4MxhvniyoNYzNkXb1HCmR+ZLFFOcLbXYmMAGkuuYqiiQ
-         4v3yAupeTJUIl3lUpmw43KqO20tcx9Zmm/IP2nvuGgT+hjVlPo1QRaBdT0e2fmiBIXjV
-         tF+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IIUq70JYO9LLmND1+BslUpEoL6qaTZK16a7hVYB0QVM=;
-        b=RBUXKlp5L2IowEYcQGNXmnZvQ4rtDLYcdKICVOmMEuLMxmO+vpnbeT9jJ33fV7ugsr
-         TFKrdi/mgw6pJtbD9zEc4OI4sHUZeC0+kpLufsNFlg7mkAt9av+Jo14soNzjzvbRjp8M
-         ngQi42rRIiaf98qO8s+wtMtscoA8xNbwz10u+qBcNikp0EnYEZpBNycjJgHiakkEkKwL
-         a84lOulBs03J+RCQP4aYk9SDCZHWNU+JZ1zz82M33jZ5tRmZ1RtDPj8izdxSSe3wzOH5
-         bXXFMi+d3x5xhd6VPr8IH+wlxgZBY68jd2u9oz4XJWGZBTzRYS2ROGaBfs+/05RzIOSW
-         6vBA==
-X-Gm-Message-State: AOAM530Qj70tzzhYA2leYaomF8fNceqVBGRLqckaqg2/d1zhWUvw1VSz
-        u+7UhbiFQHfwEilv7RrVzPFDtA2ifr4Bh8OOGec8MgM3
-X-Google-Smtp-Source: ABdhPJyBLvSja91CZSb9b1UipjcC7dfke8iT6LTMlxKJcStOuDIKqmTw96VUrfGKcbTdWt/JgXkudAetfH8E4lRL998=
-X-Received: by 2002:a17:903:124a:b0:151:99fe:1a10 with SMTP id
- u10-20020a170903124a00b0015199fe1a10mr14532689plh.87.1647896356123; Mon, 21
- Mar 2022 13:59:16 -0700 (PDT)
+        with ESMTP id S230333AbiCUWxQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 18:53:16 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 737D83CCCC8
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Mar 2022 15:32:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 44D02B81A70
+        for <linux-xfs@vger.kernel.org>; Mon, 21 Mar 2022 21:56:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E077CC340F0;
+        Mon, 21 Mar 2022 21:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647899781;
+        bh=qx9K+B1KyilX2uuGdsZKcH3fKEAHWpzzpAUODobqgL0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fLvNNGWZEHBVB94AcCl0Ov1tUR+Ti+QDWxO835iVi3+YZj2qMIY5PkXY8xreNFqyF
+         H7IbV5SLZcCNL8pzi4DaZ88KSJizjB6t1LVx3wj8SGs5eKJGq+p2dfEkTUK1gOm/K+
+         QcSpCcDv7hWBaXuStKDaZphHYf0Nla9wdid5y9jFk4aCokrUb9NtYHErWxQTwtcBtY
+         PdFdoeTCrENIwxvgSpXP68MNlKIs6odq2TMqu3EXzqmCJo0Nr5wCpldbLJGUF1fj0w
+         BhMX9jTDN53Rxpeivc6OOgi7aB2Sv49VaM7bk5DoL5mTHMYFrLr3xVC5nf02t+4qrQ
+         0Si4nGh7a+mKw==
+Date:   Mon, 21 Mar 2022 14:56:20 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] xfs: aborting inodes on shutdown may need buffer lock
+Message-ID: <20220321215620.GL8224@magnolia>
+References: <20220321012329.376307-1-david@fromorbit.com>
+ <20220321012329.376307-2-david@fromorbit.com>
 MIME-Version: 1.0
-References: <20220317234827.447799-1-shy828301@gmail.com> <20220317234827.447799-4-shy828301@gmail.com>
- <YjhpxDKJFtztdTCb@ip-172-31-19-208.ap-northeast-1.compute.internal>
-In-Reply-To: <YjhpxDKJFtztdTCb@ip-172-31-19-208.ap-northeast-1.compute.internal>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 21 Mar 2022 13:59:04 -0700
-Message-ID: <CAHbLzkpZVJ0L1rVQdZEeLq6s9H9DSPQVKdHz626uHk2z0Mw7uw@mail.gmail.com>
-Subject: Re: [v2 PATCH 3/8] mm: khugepaged: skip DAX vma
-To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Song Liu <songliubraving@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        darrick.wong@oracle.com, Linux MM <linux-mm@kvack.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220321012329.376307-2-david@fromorbit.com>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Mar 21, 2022 at 5:04 AM Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
->
-> On Thu, Mar 17, 2022 at 04:48:22PM -0700, Yang Shi wrote:
-> > The DAX vma may be seen by khugepaged when the mm has other khugepaged
-> > suitable vmas.  So khugepaged may try to collapse THP for DAX vma, but
-> > it will fail due to page sanity check, for example, page is not
-> > on LRU.
-> >
-> > So it is not harmful, but it is definitely pointless to run khugepaged
-> > against DAX vma, so skip it in early check.
->
-> in fs/xfs/xfs_file.c:
-> 1391 STATIC int
-> 1392 xfs_file_mmap(
-> 1393         struct file             *file,
-> 1394         struct vm_area_struct   *vma)
-> 1395 {
-> 1396         struct inode            *inode = file_inode(file);
-> 1397         struct xfs_buftarg      *target = xfs_inode_buftarg(XFS_I(inode));
-> 1398
-> 1399         /*
-> 1400          * We don't support synchronous mappings for non-DAX files and
-> 1401          * for DAX files if underneath dax_device is not synchronous.
-> 1402          */
-> 1403         if (!daxdev_mapping_supported(vma, target->bt_daxdev))
-> 1404                 return -EOPNOTSUPP;
-> 1405
-> 1406         file_accessed(file);
-> 1407         vma->vm_ops = &xfs_file_vm_ops;
-> 1408         if (IS_DAX(inode))
-> 1409                 vma->vm_flags |= VM_HUGEPAGE;
->
-> Are xfs and other filesystems setting VM_HUGEPAGE flag even if it can
-> never be collapsed?
+On Mon, Mar 21, 2022 at 12:23:28PM +1100, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+> 
+> Most buffer io list operations are run with the bp->b_lock held, but
+> xfs_iflush_abort() can be called without the buffer lock being held
+> resulting in inodes being removed from the buffer list while other
+> list operations are occurring. This causes problems with corrupted
+> bp->b_io_list inode lists during filesystem shutdown, leading to
+> traversals that never end, double removals from the AIL, etc.
+> 
+> Fix this by passing the buffer to xfs_iflush_abort() if we have
+> it locked. If the inode is attached to the buffer, we're going to
+> have to remove it from the buffer list and we'd have to get the
+> buffer off the inode log item to do that anyway.
+> 
+> If we don't have a buffer passed in (e.g. from xfs_reclaim_inode())
+> then we can determine if the inode has a log item and if it is
+> attached to a buffer before we do anything else. If it does have an
+> attached buffer, we can lock it safely (because the inode has a
+> reference to it) and then perform the inode abort.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_icache.c     |   2 +-
+>  fs/xfs/xfs_inode.c      |   2 +-
+>  fs/xfs/xfs_inode_item.c | 156 ++++++++++++++++++++++++++++++----------
+>  fs/xfs/xfs_inode_item.h |   1 +
+>  4 files changed, 122 insertions(+), 39 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 4148cdf7ce4a..6c7267451b82 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -883,7 +883,7 @@ xfs_reclaim_inode(
+>  	 */
+>  	if (xlog_is_shutdown(ip->i_mount->m_log)) {
+>  		xfs_iunpin_wait(ip);
+> -		xfs_iflush_abort(ip);
+> +		xfs_iflush_shutdown_abort(ip);
+>  		goto reclaim;
+>  	}
+>  	if (xfs_ipincount(ip))
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index aab55a06ece7..07be0992321c 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -3612,7 +3612,7 @@ xfs_iflush_cluster(
+>  
+>  	/*
+>  	 * We must use the safe variant here as on shutdown xfs_iflush_abort()
+> -	 * can remove itself from the list.
+> +	 * will remove itself from the list.
+>  	 */
+>  	list_for_each_entry_safe(lip, n, &bp->b_li_list, li_bio_list) {
+>  		iip = (struct xfs_inode_log_item *)lip;
+> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
+> index 11158fa81a09..79504b721ffe 100644
+> --- a/fs/xfs/xfs_inode_item.c
+> +++ b/fs/xfs/xfs_inode_item.c
+> @@ -721,17 +721,6 @@ xfs_iflush_ail_updates(
+>  		if (INODE_ITEM(lip)->ili_flush_lsn != lip->li_lsn)
+>  			continue;
+>  
+> -		/*
+> -		 * dgc: Not sure how this happens, but it happens very
+> -		 * occassionaly via generic/388.  xfs_iflush_abort() also
+> -		 * silently handles this same "under writeback but not in AIL at
+> -		 * shutdown" condition via xfs_trans_ail_delete().
+> -		 */
+> -		if (!test_bit(XFS_LI_IN_AIL, &lip->li_flags)) {
+> -			ASSERT(xlog_is_shutdown(lip->li_log));
+> -			continue;
+> -		}
+> -
+>  		lsn = xfs_ail_delete_one(ailp, lip);
+>  		if (!tail_lsn && lsn)
+>  			tail_lsn = lsn;
+> @@ -834,46 +823,139 @@ xfs_buf_inode_io_fail(
+>  }
+>  
+>  /*
+> - * This is the inode flushing abort routine.  It is called when
+> - * the filesystem is shutting down to clean up the inode state.  It is
+> - * responsible for removing the inode item from the AIL if it has not been
+> - * re-logged and clearing the inode's flush state.
+> + * Clear the inode logging fields so no more flushes are attempted.  If we are
+> + * on a buffer list, it is now safe to remove it because the buffer is
+> + * guaranteed to be locked. The caller will drop the reference to the buffer
+> + * the log item held.
+> + */
+> +static void
+> +xfs_iflush_abort_clean(
+> +	struct xfs_inode_log_item *iip)
+> +{
+> +	iip->ili_last_fields = 0;
+> +	iip->ili_fields = 0;
+> +	iip->ili_fsync_fields = 0;
+> +	iip->ili_flush_lsn = 0;
+> +	iip->ili_item.li_buf = NULL;
+> +	list_del_init(&iip->ili_item.li_bio_list);
+> +}
+> +
+> +/*
+> + * Abort flushing the inode from a context holding the cluster buffer locked.
+> + *
+> + * This is the normal runtime method of aborting writeback of an inode that is
+> + * attached to a cluster buffer. It occurs when the inode and the backing
+> + * cluster buffer have been freed (i.e. inode is XFS_ISTALE), or when cluster
+> + * flushing or buffer IO completion encounters a log shutdown situation.
+> + *
+> + * If we need to abort inode writeback and we don't already hold the buffer
+> + * locked, call xfs_iflush_shutdown_abort() instead as this should only ever be
+> + * necessary in a shutdown situation.
+>   */
+>  void
+>  xfs_iflush_abort(
+>  	struct xfs_inode	*ip)
+>  {
+>  	struct xfs_inode_log_item *iip = ip->i_itemp;
+> -	struct xfs_buf		*bp = NULL;
+> +	struct xfs_buf		*bp;
+>  
+> -	if (iip) {
+> -		/*
+> -		 * Clear the failed bit before removing the item from the AIL so
+> -		 * xfs_trans_ail_delete() doesn't try to clear and release the
+> -		 * buffer attached to the log item before we are done with it.
+> -		 */
+> -		clear_bit(XFS_LI_FAILED, &iip->ili_item.li_flags);
+> -		xfs_trans_ail_delete(&iip->ili_item, 0);
+> +	if (!iip) {
+> +		/* clean inode, nothing to do */
+> +		xfs_iflags_clear(ip, XFS_IFLUSHING);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Capture the associated buffer and lock it if the caller didn't
+> +	 * pass us the locked buffer to begin with.
+> +	 */
+> +	spin_lock(&iip->ili_lock);
+> +	bp = iip->ili_item.li_buf;
+> +	xfs_iflush_abort_clean(iip);
+> +	spin_unlock(&iip->ili_lock);
 
-DAX is available or intended to use on some special devices, for
-example, persistent memory. Collapsing huge pages on such devices is
-not the intended usecase of khugepaged.
+Is the comment here incorrect?  The _shutdown_abort variant will go
+ahead and lock the buffer, but this function does not do that...?
 
->
-> 1410         return 0;
-> 1411 }
->
->
-> > Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-> > Signed-off-by: Yang Shi <shy828301@gmail.com>
-> > ---
-> >  mm/khugepaged.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 82c71c6da9ce..a0e4fa33660e 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -448,6 +448,10 @@ static bool hugepage_vma_check(struct vm_area_struct *vma,
-> >       if (vm_flags & VM_NO_KHUGEPAGED)
-> >               return false;
-> >
-> > +     /* Don't run khugepaged against DAX vma */
-> > +     if (vma_is_dax(vma))
-> > +             return false;
-> > +
-> >       if (vma->vm_file && !IS_ALIGNED((vma->vm_start >> PAGE_SHIFT) -
-> >                               vma->vm_pgoff, HPAGE_PMD_NR))
-> >               return false;
-> > --
-> > 2.26.3
-> >
-> >
->
-> --
-> Thank you, You are awesome!
-> Hyeonggon :-)
+> +
+> +	/*
+> +	 * Clear the failed bit before removing the item from the AIL so
+> +	 * xfs_trans_ail_delete() doesn't try to clear and release the buffer
+> +	 * attached to the log item before we are done with it.
+> +	 */
+> +	clear_bit(XFS_LI_FAILED, &iip->ili_item.li_flags);
+> +	xfs_trans_ail_delete(&iip->ili_item, 0);
+> +
+> +	xfs_iflags_clear(ip, XFS_IFLUSHING);
+> +
+> +	/* we can now release the buffer reference the inode log item held. */
+> +	if (bp)
+> +		xfs_buf_rele(bp);
+> +}
+>  
+> +/*
+> + * Abort an inode flush in the case of a shutdown filesystem. This can be called
+> + * from anywhere with just an inode reference and does not require holding the
+> + * inode cluster buffer locked. If the inode is attached to a cluster buffer,
+> + * it will grab and lock it safely, then abort the inode flush.
+> + */
+> +void
+> +xfs_iflush_shutdown_abort(
+> +	struct xfs_inode	*ip)
+> +{
+> +	struct xfs_inode_log_item *iip = ip->i_itemp;
+> +	struct xfs_buf		*bp;
+> +
+> +	if (!iip) {
+> +		/* clean inode, nothing to do */
+> +		xfs_iflags_clear(ip, XFS_IFLUSHING);
+> +		return;
+> +	}
+> +
+> +	spin_lock(&iip->ili_lock);
+> +	bp = iip->ili_item.li_buf;
+> +	if (!bp) {
+> +		spin_unlock(&iip->ili_lock);
+> +		xfs_iflush_abort(ip);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * We have to take a reference to the buffer so that it doesn't get
+> +	 * freed when we drop the ili_lock and then wait to lock the buffer.
+> +	 * We'll clean up the extra reference after we pick up the ili_lock
+> +	 * again.
+> +	 */
+> +	xfs_buf_hold(bp);
+> +	spin_unlock(&iip->ili_lock);
+> +	xfs_buf_lock(bp);
+> +
+> +	spin_lock(&iip->ili_lock);
+> +	if (!iip->ili_item.li_buf) {
+>  		/*
+> -		 * Clear the inode logging fields so no more flushes are
+> -		 * attempted.
+> +		 * Raced with another removal, hold the only reference
+> +		 * to bp now. Inode should not be in the AIL now, so just clean
+> +		 * up and return;
+>  		 */
+> -		spin_lock(&iip->ili_lock);
+> -		iip->ili_last_fields = 0;
+> -		iip->ili_fields = 0;
+> -		iip->ili_fsync_fields = 0;
+> -		iip->ili_flush_lsn = 0;
+> -		bp = iip->ili_item.li_buf;
+> -		iip->ili_item.li_buf = NULL;
+> -		list_del_init(&iip->ili_item.li_bio_list);
+> +		ASSERT(list_empty(&iip->ili_item.li_bio_list));
+> +		ASSERT(!test_bit(XFS_LI_IN_AIL, &iip->ili_item.li_flags));
+> +		xfs_iflush_abort_clean(iip);
+>  		spin_unlock(&iip->ili_lock);
+> +		xfs_iflags_clear(ip, XFS_IFLUSHING);
+> +		xfs_buf_relse(bp);
+> +		return;
+>  	}
+> -	xfs_iflags_clear(ip, XFS_IFLUSHING);
+> -	if (bp)
+> -		xfs_buf_rele(bp);
+> +
+> +	/*
+> +	 * Got two references to bp. The first will get droped by 
+
+"The first will get dropped by..." (spelling and stgit nagging me about
+trailing whitespace)
+
+> +	 * xfs_iflush_abort() when the item is removed from the buffer list, but
+> +	 * we can't drop our reference until _abort() returns because we have to
+> +	 * unlock the buffer as well. Hence we abort and then unlock and release
+> +	 * our reference to the buffer.
+
+...and presumably xfs_iflush_abort will drop the other bp reference at
+some point after where we unlocked the inode item, locked the (held)
+buffer, and relocked the inode item?
+
+--D
+
+> +	 */
+> +	ASSERT(iip->ili_item.li_buf == bp);
+> +	spin_unlock(&iip->ili_lock);
+> +	xfs_iflush_abort(ip);
+> +	xfs_buf_relse(bp);
+>  }
+>  
+> +
+>  /*
+>   * convert an xfs_inode_log_format struct from the old 32 bit version
+>   * (which can have different field alignments) to the native 64 bit version
+> diff --git a/fs/xfs/xfs_inode_item.h b/fs/xfs/xfs_inode_item.h
+> index 1a302000d604..bbd836a44ff0 100644
+> --- a/fs/xfs/xfs_inode_item.h
+> +++ b/fs/xfs/xfs_inode_item.h
+> @@ -44,6 +44,7 @@ static inline int xfs_inode_clean(struct xfs_inode *ip)
+>  extern void xfs_inode_item_init(struct xfs_inode *, struct xfs_mount *);
+>  extern void xfs_inode_item_destroy(struct xfs_inode *);
+>  extern void xfs_iflush_abort(struct xfs_inode *);
+> +extern void xfs_iflush_shutdown_abort(struct xfs_inode *);
+>  extern int xfs_inode_item_format_convert(xfs_log_iovec_t *,
+>  					 struct xfs_inode_log_format *);
+>  
+> -- 
+> 2.35.1
+> 
