@@ -2,72 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8BFA4E1FE9
-	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 06:19:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E69EB4E1FE5
+	for <lists+linux-xfs@lfdr.de>; Mon, 21 Mar 2022 06:19:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344384AbiCUFU3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 21 Mar 2022 01:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53530 "EHLO
+        id S243205AbiCUFU0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 21 Mar 2022 01:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344385AbiCUFUW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 01:20:22 -0400
+        with ESMTP id S1344376AbiCUFUU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 21 Mar 2022 01:20:20 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA6B344CA
-        for <linux-xfs@vger.kernel.org>; Sun, 20 Mar 2022 22:18:57 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22L54Ji4031878;
-        Mon, 21 Mar 2022 05:18:54 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB8633E3C
+        for <linux-xfs@vger.kernel.org>; Sun, 20 Mar 2022 22:18:56 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22KK9IaW008859;
+        Mon, 21 Mar 2022 05:18:52 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version;
- s=corp-2021-07-09; bh=oW1KN6VbAfM5lK47B/S92vOMY1WkQFMCIC7pIn0qbpA=;
- b=QxLIuYOnZUFXOn1+H+oApeo94XDPxIYrXVcFWyR9cOFXVzODXHVoKG9ttAfviwrn8SPo
- mt7KD7vrZjpp2qsJOGMgFD6tsUyMzVu8Hu4rA7Zs1lW5Gmx12RnNurdtFny7EgxD8MvL
- Mjj8fxP/csjTz5gjI7NytC32eXBvXOzE8G4yknh2YuWOapl6kOkAyjd1MnA8DbB38Mld
- 2+8JtKPg/nboq5VL5WuBpB3U20F/CaGj/iiMDfUalV3J+ufZtdywlVsO8h3kak73G6S6
- WTkvgxfGGwe/MJ4hsebdhhnwRDoKvUhGKLMlHltZqb2cWz4OLl5mMwqV35QWxYWEzrzs VA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ew5s0j510-1
+ s=corp-2021-07-09; bh=OVUBl4DYKVJiDOKdvHTV78q0/fXz8IkkfxdYtdNvcnw=;
+ b=iJ5/Kcnv1M7cvQA+/S+Fu+oZEuqXtULkajJy3yf0Buf6Y015SeXJoWNEHducwubRzlKw
+ 9XgpId8ZrLP1P4AFgjgJBBxpuA2pLUbhd2DNakCyd5RNde8xWLW9wi72bj/NfeEUgeog
+ ZnNlhOobpMFe87VWZ9geRe0su09ww+c3hImr8MCRYbJFWKowi9i2BX8IIBAuuftJyqXn
+ MSIoGiApx4c2mykAfnSPwG1GX5XjexxMsiMWzgYTxBXa+ujbKJdCPjknECWIpbFK0oSr
+ G2s5AXZ57ynR0D1aSVkC4gp9QEzgqIyek65Md12dXE8kd6t/LbsvrSP86vMkRG5K9DPY gQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80] (may be forged))
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ew7qt22vs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Mar 2022 05:18:54 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22L5FvGu057853;
-        Mon, 21 Mar 2022 05:18:46 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2048.outbound.protection.outlook.com [104.47.56.48])
-        by userp3020.oracle.com with ESMTP id 3exawgev3v-1
+        Mon, 21 Mar 2022 05:18:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22L5Im57094853;
+        Mon, 21 Mar 2022 05:18:48 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2046.outbound.protection.outlook.com [104.47.56.46])
+        by userp3030.oracle.com with ESMTP id 3ew49r2h0c-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 21 Mar 2022 05:18:45 +0000
+        Mon, 21 Mar 2022 05:18:48 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jHzg+HmCEIzzDd5/bXoMsmM/GQ+MYUOA74/erd3fX3Sa/SOZSOO4ajLiaWQE4QEXBG9X9h7w+XVHnU6YDaCxIsp8Lv+m5EDXnILt1K1PIpMjp6/Z+QOQHl0Z8C7k7vd6njt4gszLqTPFdw9PI0sNRJGx89tXi/QtMyDNo/v5YYVcq8pZ1XnY3OJtz9AdnrosuuYYIrlbf9BQA3eRusgUPc5fQl2BYiH2q4G4GQDtVN8hceHMB9hlaT35dRI/eNMLjAsQ/Z5t/CG+It+vtSpTfGGfWzNoMhjn5eGPHLxiHfnlKKx5z7q/HSY0PwZ/ZGFopPWhgj/zfYccVHEA96nnhQ==
+ b=liSXc//PKtj9RD54NUCjsXB2HycFaS0xLxNt0bPTug05vLEBo+oyGhUb2JvJg+qVY+mKoOq0qzrZqorJOcBGMqWD1D3GNoWooh4p3CJ0qS4eRjPcY5+5YOUX95udSu1Vh/UbKv1ZJa3HxInSun4qsNcC+a084U0eTfNwIr/jy/vSpooD8h/DiMB+1ythzNgS3UFuBsbLJUT1eGX1unkNSYGPSFaV12xWGjVA2dN+nhjy9xQ6LJPfhOKrR5QrXIqGmeFgplb95sZ/yH/cQqRp8dFRXL17Mdr7T3eeWnDk+k1wnFV9U8JbsgBH4WozKzvQMPrGu89iem8tDb+5pcFCIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oW1KN6VbAfM5lK47B/S92vOMY1WkQFMCIC7pIn0qbpA=;
- b=fkDl/aVI58R1UNngigBCx7/BFfTvHXqOrkAfqDBsR84DcMAB+LDm3pGgVyFh2rfQbwnUnHSxhkl7Y7MMHi/z+Yre2M/PGrgTm6fZTAATTk2NLqosJJNlbvGFf4y97TELM7G0l3ooqctxNW1KQukZ4bLOGWSluFp28q1Toij9UQf9HBs+o7pcfuETrpWX/94kVlV4YcHye8cUFLXlarlahhckNFjGdqfIP/C9Lr7lHVR54Fh33WS+caiMARO/tW6ZRypaWCevJgYgVph/6VFtSyLiv+mWUBRsbj5iDX9UBIBoUKRsV9OHEU6Igigas7rX0B0+aiDuS4H3i4SAuTsZlQ==
+ bh=OVUBl4DYKVJiDOKdvHTV78q0/fXz8IkkfxdYtdNvcnw=;
+ b=Z3FDtlM5JpaY5SJ7oG/qDPm+ThAwkvK9tGRUtXoTbnH7hBpvkzu4h2BdyGn8wCC77q0IYpYtltqDCbqmJGnsIn0mCHsS7wiaXQTxRnPWXOSdR5FnUsDn+ba2v4QcKappbPNmeMPHmz7tbminbE7IRJCsIPlwJvkCWadEctj6xC95ObvLmhMylM8wIyqFcQywRHvNMFfZ0fheDj4EdydaE6CcQwjND4XYNODFYNSysgrg7HD8/saRk/glxZKidvTyxvgMMvDSGHu0c2fzJdqB33urwEYoX1qPfLCBITQcidADLDdAi1undgLSJe6W6XKpU2lkWOZQy/0EW2oHylpofg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oW1KN6VbAfM5lK47B/S92vOMY1WkQFMCIC7pIn0qbpA=;
- b=ekqnXILLmn8fJiiSFT36/VagjJKKZNH1dOKMXfxslEm546VnB4B/tv/BtiwJN9zZLtLLkY7DTEkZBloy+9cFfTRGavsPHA9S569ALROKNg633xBK7t+gKTwc+beXJBb9TRo7+nflUk82PYWivkDsXLe5lGsJ7PB5wq6tM3pkTJU=
+ bh=OVUBl4DYKVJiDOKdvHTV78q0/fXz8IkkfxdYtdNvcnw=;
+ b=VINNw81Pjqkfc+ETWs7FeAS++XLcOAOE+TGKxZWOsfWFFT7EoGk6tcCrNVuQmEjx8tK2ewixsEa/Z5WtBY8lrEmpPmMOXSNp5obvfBzcUkPfAkmw/ATiCi5890lFPOO98XxDNPLR6gWCUCWtScogEYhpfxAZi8quwTY+SGdOWLk=
 Received: from SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12)
  by CO6PR10MB5537.namprd10.prod.outlook.com (2603:10b6:303:134::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.22; Mon, 21 Mar
- 2022 05:18:44 +0000
+ 2022 05:18:46 +0000
 Received: from SA2PR10MB4587.namprd10.prod.outlook.com
  ([fe80::b0b4:e94f:82df:234f]) by SA2PR10MB4587.namprd10.prod.outlook.com
  ([fe80::b0b4:e94f:82df:234f%9]) with mapi id 15.20.5081.022; Mon, 21 Mar 2022
- 05:18:44 +0000
+ 05:18:46 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Chandan Babu R <chandan.babu@oracle.com>, djwong@kernel.org,
         david@fromorbit.com
-Subject: [PATCH V8 15/19] xfs: Directory's data fork extent counter can never overflow
-Date:   Mon, 21 Mar 2022 10:47:46 +0530
-Message-Id: <20220321051750.400056-16-chandan.babu@oracle.com>
+Subject: [PATCH V8 16/19] xfs: Conditionally upgrade existing inodes to use large extent counters
+Date:   Mon, 21 Mar 2022 10:47:47 +0530
+Message-Id: <20220321051750.400056-17-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220321051750.400056-1-chandan.babu@oracle.com>
 References: <20220321051750.400056-1-chandan.babu@oracle.com>
@@ -78,58 +78,58 @@ X-ClientProxiedBy: TYCPR01CA0120.jpnprd01.prod.outlook.com
  (2603:10b6:806:114::12)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 78e9080b-b9d6-4b6f-f9fd-08da0afa44e8
+X-MS-Office365-Filtering-Correlation-Id: a42196b3-b411-4854-bb1a-08da0afa461e
 X-MS-TrafficTypeDiagnostic: CO6PR10MB5537:EE_
-X-Microsoft-Antispam-PRVS: <CO6PR10MB55379CE9E103479952CEE564F6169@CO6PR10MB5537.namprd10.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <CO6PR10MB5537562C54CF3A22AC8B10CFF6169@CO6PR10MB5537.namprd10.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HHQIN4EXlMLhwk5cVZSoePhV2r9wxhXoDwfmzJBEmSX6TfoHCqNsmzbIJsa3oA59I3jpOHJ9EXgiaOXbn0zxex7uSYT7Zp38m9EAFK27IXwd8eXQvnxWiRJQwQY7FhrFdYxW9nd0HEScE0xdvt1J4r+KoBLfOnUapl84idtX3dKzi8+j2CdqgFOZsi//p7+y7sCHnehsR0EefDvnI7lou16mj9u58LklkSEPT3Dv+V3qjpaS4J99ahQfzMUz4z8Vvr4W1fTRwTSkHlWI13S8JqPkwwvZcNyV4c7wSDNrWi6egO4Aw337LBKDdtlr+lFShik0UE6a2ZCHIPizd7v//vi9FdpO1dCXD9S0etuYtCO/MeB8UiAIbb0g+RX6z4pQTbk11RsTku5RajIMP71QHG7I65GKFskuEA0ZVTrzgNy/3JL+olqYZW3YyWmzLqInOSPW5h495Idl2GNXaIgVPVrkx4rFH/NXku9qQo+4Wa29lHfFAOsrcZiW2xSX+XfSZP0LeOIVLdmwqyhExW/Rjvc1sdezxZ5RXyxn3HOxAlBW6LgEViymm5robAH7wLbrJHOt4NG9zv2gdD3kEoNaSjU8UG0PPf7WU3Q5fbfe2xoLnWLRBfWcZeP0O2v/eaJs6Z37Y54yiJTXrwn3Z7PjPUN4cUzA+rDWMarkPzl2DxXaS8jVnL/4LqALg8tFr4IClLsxIBf2kgnCblXH6TRWgA==
+X-Microsoft-Antispam-Message-Info: fPnyv7cjzy4/V4rJx2Fy2ZqC6Q/MOGNs+ETIyB45NosiUPGLirY6k+o4HArR5sZjXE0ajAgzFkEqkgB05q2f7jYtdDcDzQjA0dOmeSvEB4KuDue1/qUmUKdep3aAoNcGUuxuBui8/3BKCeSgV9Zs0rA9j9uSjuHccwZRebHd7QpzuoLduUfX2KzSdcDO2ccluGbNyge46pQsl7O3S8AhWZhAp75WD3u8gzycfFNVD5bG1oQWI1aQYdVz+oazONO71VWeluon/ZnMqMpPn+Do8xh5ucJrGJB9oN45eO1csUBO8VmS4eMsCV7tg/pckxlMTjne9HtRplwm41Uk6+OJvolnfCY/FmkFqgeAgp+rCoyyHyVBYnpqxkSaqhxZKlJRODSiW99jTKJIGcl852Ave780LrfPGqKINWvLhIA7IZ31dGA7alpJ5J9NsSG9zLVylydr9xecbed8bOPiTr/OpjaiTPlhqgSlo5hatKwsaEVHfsIhBevryUUCknU9FoBjt/9imUaXMXmM1rIjDZ1kWEJ5RiF23gX7oDBVXsDwE6a+04fdHk4T9QWidW/I+cXr3Y0MwGzxFDXczXs0yRpe44j/7pfISigICvdlzCicJvFO3rftLOG4quDNhgGUYyF6UcadyoUzYlcHH7aypsZk73LB1rUMVG0H6qeVUuN0Hj8o4/UWIg2wbbJs7v4tOnedP1ySgQtmEnBhLKPoOmvKDw==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR10MB4587.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(38350700002)(2616005)(4326008)(66476007)(66556008)(66946007)(6512007)(6486002)(86362001)(6916009)(8676002)(508600001)(316002)(26005)(36756003)(52116002)(5660300002)(8936002)(186003)(6506007)(83380400001)(2906002)(1076003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VR/FawIYf4WbXznhqmlhgpIt+Bntq8broXmDjNS/ODVvS8m+SgzKeImiZnL4?=
- =?us-ascii?Q?0icr+ORfSQ8iAAjH+lbnkKmnACfJcjBVJcCgLVGOCQj7HOAsaGb3t7wV+ckn?=
- =?us-ascii?Q?nCyBJYWZbvLXtO1J9DrAyvOUstqhVj8MFN0UkoAZKFTlhNUMDKpPw75gS5Xb?=
- =?us-ascii?Q?/j10httHPELtn/FPylYesJ644XhL+zkBg3w3Vf++AjYrB5alqgVonNdMR4fe?=
- =?us-ascii?Q?H/qne6RSh8w63D+dPMsBNEIWw2HjJqK2f/QzAg8SikxUKbpjWzwm/GiV7G+y?=
- =?us-ascii?Q?MGMEsyO1yUe1cfhr1iRZrnB4NgikRIba8LPrrEJmpWsGi9OQnikxx1gIp8jR?=
- =?us-ascii?Q?8xfMnahbeewMrtNcirO12rJ43eZI0NHIPr6PZbpxvY5fGpbjNjjtcmhatfY8?=
- =?us-ascii?Q?3fTHDa7viKlQ5QNvgIgzj96Z7p4H4XmtuVNdzvHpLoTtUuLiCEjfwX8BAA8M?=
- =?us-ascii?Q?ZGEepMPOmfSnBI8vvje3CXQ5wZzEtj6N1hVdlINZVXs4WXAZXzExyjW6zWxO?=
- =?us-ascii?Q?Ygu/ik45VBHjt6XvE+8if0Ex5tI0oLGaFevHR/E+p0J5b9OvRq/nVIgVgx5e?=
- =?us-ascii?Q?gLn0iqzfgXYdeE76iZb6ex7yLWEDTUVXo3yLytqfqMhXGfH6nIw644s0FmjB?=
- =?us-ascii?Q?8heiiYRchswNzWr2+TsgeYIQP+f+uN5MI5JitXddixN7v5eZxBR44MYHMmAK?=
- =?us-ascii?Q?9ZIb8V8rcRwer3WQMAvcusOBQexeBZgL6tXMsvlX8u9cDOt/DO9XdKiuxSfW?=
- =?us-ascii?Q?qvMJuLUVSISOSrLZxiRNwKpXSELYVY7t+2VtXF4s2RSmKyFp9ikQDm3ZNGNl?=
- =?us-ascii?Q?gv6E9kQ609U591i4mQ/ahoJ5T18c79QhEMlcxxkSndJIb1R1Fm31SnFs7uvl?=
- =?us-ascii?Q?t9JipprJ29LtKuKtzQ7EY2pI7b/+j4hegAitcYfdto33vbUudaVXgk+irrZJ?=
- =?us-ascii?Q?bxsbY0ywtAEY6niTcV7AAco3cNIvVCx52GdhgmNXQOUYdowCQ+LVdt6+InA/?=
- =?us-ascii?Q?C38vMUcuKUgCPVS3AhHbn4vi1L+bUxZwPDWH1KxfKtJpm0wQPcqmGAETa5c7?=
- =?us-ascii?Q?H0gthkWq1feyMmPYkf/TT+lA0aCROrPhVrvmDmGMCILn20neYmkwDo8wS/yn?=
- =?us-ascii?Q?vGT/GzvdSWEmoQUA5/R3+jhib8nKRhct85TynL+1N7edutFfCkMlfGg/QeFU?=
- =?us-ascii?Q?RX+AquwxXPJpkgZ4nWusKSYqGVbomcoD9pHK3NwFLVyKuEaq5WTUVxt78SSH?=
- =?us-ascii?Q?Eu4ZERZdYcYJh7zOTiGzzpZYhnSe7uK0QGZE9azQp9eVB3Tu+OWzjH1qZOj7?=
- =?us-ascii?Q?GdrmnLL3iTnQxTaeXrBPsfCfYdNLWyOy0grDFHxzzfogIuDXnOO1sBF11TJ5?=
- =?us-ascii?Q?p/HCS1UyYi8VuGrov0w3HQVBVPFGMmPSseQEIEN63Z5ojoEV6mMX+LvXoWQe?=
- =?us-ascii?Q?FsH1yRvvi/za2p8ezB/xiWuvQzshIicgh7bYeHqY3ssX7X0O2HY3nQ=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6346fV1JAvJsNLAbujPyRX/cR+NT39K34OBT8um2fZJt/kO2fv0GkDpYe7gV?=
+ =?us-ascii?Q?+eLVqWLWiaBYPx1O6nNGpkjNx+CdgBPZPO8gIqftMpgC+1AbBvzhj0KwI8we?=
+ =?us-ascii?Q?qIcDwv/k2vYIEP7aWxR/tUOJG0+sXGuLQx5znGT8WiXI7b1ufoOyMG8SiGdO?=
+ =?us-ascii?Q?cc1RDV8WYzMic3vmzBiwNV7Piz89eJiY9hwxcxzs7RWV1j2LgjsiS3y29UsV?=
+ =?us-ascii?Q?6332SkLOrfSEY1AG0LYDNHIriUduE3DzsBJ21onojnp+8jsQcYfAaGxu5Su+?=
+ =?us-ascii?Q?ADrP3ACxYQLU/isw3JXke4sFbflYmXj1fCF/yd89i41X+9GY2q4MNSeaEDsX?=
+ =?us-ascii?Q?GYI3XU5jNMBsQGQHJ4o6QpNIPs8RoEAvE8qJqcCFoOXp3vFuirC/N/252jKl?=
+ =?us-ascii?Q?cs2At+iiKlKhXIkK7jFdukvCdJIlzrWzsw0T3OmVEXnB5Ls2SF7eq751TnI/?=
+ =?us-ascii?Q?lCwOsD+ccpGM46837al7Iqm4jmBkI3v/aBV/ZBXsECDO1X7zdXfK4qWIUh1k?=
+ =?us-ascii?Q?oFxKl7TVkIXXbYBRi4EVjlEgKsalK2AUdqaJXKS6x4ITfUh/OC6O+iQNpjcg?=
+ =?us-ascii?Q?6Wh8LSDdvh2kvLSB5ncQsTQ/fL+eesd2TPFyyZ2Xbys2VjUNSG+lGlFuYSmC?=
+ =?us-ascii?Q?oPVGWYWKBH/og3fa5S3UoHNGrmRsdvNGuntTKcGXvgShZfhg95K9CW5FR4Ep?=
+ =?us-ascii?Q?rj1jmd9YjmxIja165m87rscafI0j7vBX02/dtYXf893yovArKz3s3ssQAoul?=
+ =?us-ascii?Q?rNTBMySG1D9mDKdR+6KW6YIxfb8LNrLsABhcgZU20Js1ynqrfcfo2DsY5JFE?=
+ =?us-ascii?Q?5eyPz3QH9e9u5omCkO7P09VnTLQX0YrH/DJeCzD8zNy1eyTbhuMRZEGZbJki?=
+ =?us-ascii?Q?lQFgt6RsG5zvOjjxK1qC1Z4S7bxALvz1H0s4zOCzVB7A/NR2E6wANTMBT6KG?=
+ =?us-ascii?Q?4O6kKWDuj4+9feu5GCrvm7ydXs4xK0/LNxaT0OOyz3cl3bbzWWHdY9je06j8?=
+ =?us-ascii?Q?ECJQncgkxfNfna11m2wXKy8KQFy8qNEFcwtdbk9/iYv0Ev3TKX9eLIJ3GZ3/?=
+ =?us-ascii?Q?Td3I8Tqr9fl4aJ/5xyz6qkoEQLxVDW0FRJd+tt+OzIat99YZaNDcw2X9gTSv?=
+ =?us-ascii?Q?QrUtIxrZqYvds07LkGoQO2y2oX8Br6gR2qPCJ6lbyLIA1JV+u7Ko6AbH/dHK?=
+ =?us-ascii?Q?H+6YUhnEEdhS6yxIUEYVrPUxYNmnwETqhVtWKcyGl8vyQw6dw3YNqctVzlAW?=
+ =?us-ascii?Q?oHjOEPGt/ungwjN4/4KKuQ3wFPuN5oebxnIjV00E0SjcRUvt4scWuJFosQiw?=
+ =?us-ascii?Q?fy/Gn+9TzAafPdwOLhv3YfWkRfeZAqF2AqnnaOKqIBpSGOCAHHXflVb7Xh97?=
+ =?us-ascii?Q?dZe1Lm/Qpm3kSDlwJB/SkUpjyfDGHFXL6e7owIDC81yP8+0CyGq1II+m/7M0?=
+ =?us-ascii?Q?9S4GiSZrBAwAvk8ltxk4wU+3yJQQFM/WFU8JsYwzl/hDq2K+oAM2Rw=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78e9080b-b9d6-4b6f-f9fd-08da0afa44e8
+X-MS-Exchange-CrossTenant-Network-Message-Id: a42196b3-b411-4854-bb1a-08da0afa461e
 X-MS-Exchange-CrossTenant-AuthSource: SA2PR10MB4587.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2022 05:18:44.2284
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2022 05:18:46.2585
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: B1PD7XNaj/bHtqZ51P9MdJpJ8m0QaQbVxBKeZcEMcZKAyuwrtEODy55NniPn5PyeDpK88BR+VwPg3ZsL1vmYmg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: /meBWVdDAhCmow21iixRv4GqZpZzPrjr8y6VK1pNgVUolyOsnLhZisYWREOguj1UTmhJMjKKn+7V20uPrCMk2g==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5537
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10292 signatures=694221
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203210033
-X-Proofpoint-GUID: G1s3Kg7J8vsWM_X3PZsR4BvpQ3zXsUym
-X-Proofpoint-ORIG-GUID: G1s3Kg7J8vsWM_X3PZsR4BvpQ3zXsUym
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 phishscore=0 spamscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203210033
+X-Proofpoint-GUID: vTDnw36dV7llH39VQfW628ljFgy8OLa8
+X-Proofpoint-ORIG-GUID: vTDnw36dV7llH39VQfW628ljFgy8OLa8
 X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -140,158 +140,351 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The maximum file size that can be represented by the data fork extent counter
-in the worst case occurs when all extents are 1 block in length and each block
-is 1KB in size.
-
-With XFS_MAX_EXTCNT_DATA_FORK_SMALL representing maximum extent count and with
-1KB sized blocks, a file can reach upto,
-(2^31) * 1KB = 2TB
-
-This is much larger than the theoretical maximum size of a directory
-i.e. 32GB * 3 = 96GB.
-
-Since a directory's inode can never overflow its data fork extent counter,
-this commit replaces checking the return value of
-xfs_iext_count_may_overflow() with calls to ASSERT(error == 0).
+This commit enables upgrading existing inodes to use large extent counters
+provided that underlying filesystem's superblock has large extent counter
+feature enabled.
 
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- fs/xfs/libxfs/xfs_bmap.c | 19 +++++++++----------
- fs/xfs/xfs_inode.c       | 32 ++++++++++++++++++++++++++++++++
- fs/xfs/xfs_symlink.c     |  8 ++++++++
- 3 files changed, 49 insertions(+), 10 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c       |  9 ++++++-
+ fs/xfs/libxfs/xfs_bmap.c       | 10 ++++++--
+ fs/xfs/libxfs/xfs_inode_fork.c | 27 +++++++++++++++++++++
+ fs/xfs/libxfs/xfs_inode_fork.h |  2 ++
+ fs/xfs/xfs_bmap_item.c         |  8 ++++++-
+ fs/xfs/xfs_bmap_util.c         | 43 ++++++++++++++++++++++++++++++----
+ fs/xfs/xfs_dquot.c             |  9 ++++++-
+ fs/xfs/xfs_iomap.c             | 17 ++++++++++++--
+ fs/xfs/xfs_reflink.c           | 17 ++++++++++++--
+ fs/xfs/xfs_rtalloc.c           |  9 ++++++-
+ 10 files changed, 136 insertions(+), 15 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 1254d4d4821e..5a089674c666 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -5148,24 +5148,23 @@ xfs_bmap_del_extent_real(
- 		 */
- 
- 		/*
--		 * For directories, -ENOSPC is returned since a directory entry
--		 * remove operation must not fail due to low extent count
--		 * availability. -ENOSPC will be handled by higher layers of XFS
-+		 * Extent count overflow during directory entry remove/rename
-+		 * operation ideally should result in -ENOSPC being returned.
-+		 * This error will eventually be handled by higher layers of XFS
- 		 * by letting the corresponding empty Data/Free blocks to linger
- 		 * until a future remove operation. Dabtree blocks would be
- 		 * swapped with the last block in the leaf space and then the
- 		 * new last block will be unmapped.
- 		 *
--		 * The above logic also applies to the source directory entry of
--		 * a rename operation.
-+		 * However, a directory inode can never overflow its data fork
-+		 * extent counter because of reasons provided in the definition
-+		 * of xfs_create().
- 		 */
- 		error = xfs_iext_count_may_overflow(ip, whichfork, 1);
--		if (error) {
--			ASSERT(S_ISDIR(VFS_I(ip)->i_mode) &&
--				whichfork == XFS_DATA_FORK);
--			error = -ENOSPC;
-+		ASSERT(XFS_TEST_ERROR(false, ip->i_mount,
-+				XFS_ERRTAG_REDUCE_MAX_IEXTENTS) || error == 0);
-+		if (error)
- 			goto done;
--		}
- 
- 		old = got;
- 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 6810c4feaa45..6016013658ff 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -1023,8 +1023,25 @@ xfs_create(
- 	xfs_ilock(dp, XFS_ILOCK_EXCL | XFS_ILOCK_PARENT);
- 	unlock_dp_on_error = true;
- 
-+	/*
-+	 * The maximum file size that can be represented by the data fork extent
-+	 * counter in the worst case occurs when all extents are 1 block in
-+	 * length and each block is 1KB in size.
-+	 *
-+	 * With XFS_MAX_EXTCNT_DATA_FORK_SMALL representing maximum extent count
-+	 * and with 1KB sized blocks, a file can reach upto,
-+	 * 1KB * (2^31) = 2TB
-+	 *
-+	 * This is much larger than the theoretical maximum size of a directory
-+	 * i.e. 32GB * 3 = 96GB.
-+	 *
-+	 * Hence, a directory inode can never overflow its data fork extent
-+	 * counter.
-+	 */
- 	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
- 			XFS_IEXT_DIR_MANIP_CNT(mp));
-+	ASSERT(XFS_TEST_ERROR(false, dp->i_mount,
-+			XFS_ERRTAG_REDUCE_MAX_IEXTENTS) || error == 0);
- 	if (error)
- 		goto out_trans_cancel;
- 
-@@ -1249,8 +1266,15 @@ xfs_link(
- 	xfs_trans_ijoin(tp, sip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, tdp, XFS_ILOCK_EXCL);
- 
-+	/*
-+	 * Please refer to the comment in xfs_create() for an explaination of
-+	 * why a directory inode cannot have its data fork extent counter to
-+	 * overflow.
-+	 */
- 	error = xfs_iext_count_may_overflow(tdp, XFS_DATA_FORK,
- 			XFS_IEXT_DIR_MANIP_CNT(mp));
-+	ASSERT(XFS_TEST_ERROR(false, tdp->i_mount,
-+			XFS_ERRTAG_REDUCE_MAX_IEXTENTS) || error == 0);
- 	if (error)
- 		goto error_return;
- 
-@@ -3232,9 +3256,17 @@ xfs_rename(
- 			if (error)
- 				goto out_trans_cancel;
- 		} else {
-+			/*
-+			 * Please refer to the comment in xfs_create() for an
-+			 * explaination of why a directory inode cannot have its
-+			 * data fork extent counter to overflow.
-+			 */
- 			error = xfs_iext_count_may_overflow(target_dp,
- 					XFS_DATA_FORK,
- 					XFS_IEXT_DIR_MANIP_CNT(mp));
-+			ASSERT(XFS_TEST_ERROR(false, target_dp->i_mount,
-+					XFS_ERRTAG_REDUCE_MAX_IEXTENTS) ||
-+			       error == 0);
- 			if (error)
- 				goto out_trans_cancel;
- 		}
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index affbedf78160..0e5acb00c59f 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -23,6 +23,7 @@
- #include "xfs_trans.h"
- #include "xfs_ialloc.h"
- #include "xfs_error.h"
-+#include "xfs_errortag.h"
- 
- /* ----- Kernel only functions below ----- */
- int
-@@ -226,8 +227,15 @@ xfs_symlink(
- 		goto out_trans_cancel;
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 23523b802539..6e56aa17fd82 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -776,8 +776,15 @@ xfs_attr_set(
+ 	if (args->value || xfs_inode_hasattr(dp)) {
+ 		error = xfs_iext_count_may_overflow(dp, XFS_ATTR_FORK,
+ 				XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
+-		if (error)
++		if (error && error != -EFBIG)
+ 			goto out_trans_cancel;
++
++		if (error == -EFBIG) {
++			error = xfs_iext_count_upgrade(args->trans, dp,
++					XFS_IEXT_ATTR_MANIP_CNT(rmt_blks));
++			if (error)
++				goto out_trans_cancel;
++		}
  	}
  
-+	/*
-+	 * Please refer to the comment in xfs_create() for an explaination of
-+	 * why a directory inode cannot have its data fork extent counter to
-+	 * overflow.
-+	 */
- 	error = xfs_iext_count_may_overflow(dp, XFS_DATA_FORK,
- 			XFS_IEXT_DIR_MANIP_CNT(mp));
-+	ASSERT(XFS_TEST_ERROR(false, dp->i_mount,
-+			XFS_ERRTAG_REDUCE_MAX_IEXTENTS) || error == 0);
- 	if (error)
+ 	error = xfs_attr_lookup(args);
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 5a089674c666..0cb915bf8285 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -4524,13 +4524,19 @@ xfs_bmapi_convert_delalloc(
+ 		return error;
+ 
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
++	xfs_trans_ijoin(tp, ip, 0);
+ 
+ 	error = xfs_iext_count_may_overflow(ip, whichfork,
+ 			XFS_IEXT_ADD_NOSPLIT_CNT);
+-	if (error)
++	if (error && error != -EFBIG)
  		goto out_trans_cancel;
  
+-	xfs_trans_ijoin(tp, ip, 0);
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip,
++				XFS_IEXT_ADD_NOSPLIT_CNT);
++		if (error)
++			goto out_trans_cancel;
++	}
+ 
+ 	if (!xfs_iext_lookup_extent(ip, ifp, offset_fsb, &bma.icur, &bma.got) ||
+ 	    bma.got.br_startoff > offset_fsb) {
+diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
+index bb5d841aac58..aff9242db829 100644
+--- a/fs/xfs/libxfs/xfs_inode_fork.c
++++ b/fs/xfs/libxfs/xfs_inode_fork.c
+@@ -756,3 +756,30 @@ xfs_iext_count_may_overflow(
+ 
+ 	return 0;
+ }
++
++int
++xfs_iext_count_upgrade(
++	struct xfs_trans	*tp,
++	struct xfs_inode	*ip,
++	int			nr_to_add)
++{
++	if (!xfs_has_large_extent_counts(ip->i_mount) ||
++	    (ip->i_diflags2 & XFS_DIFLAG2_NREXT64) ||
++	    XFS_TEST_ERROR(false, ip->i_mount, XFS_ERRTAG_REDUCE_MAX_IEXTENTS))
++		return -EFBIG;
++
++	ip->i_diflags2 |= XFS_DIFLAG2_NREXT64;
++	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++
++	/*
++	 * The value of nr_to_add cannot be larger than 2^17
++	 *
++	 * - XFS_MAX_EXTCNT_ATTR_FORK_LARGE - XFS_MAX_EXTCNT_ATTR_FORK_SMALL
++	 *   i.e. 2^32 - 2^15
++	 * - XFS_MAX_EXTCNT_DATA_FORK_LARGE - XFS_MAX_EXTCNT_DATA_FORK_SMALL
++	 *   i.e. 2^48 - 2^31
++	 */
++	ASSERT(nr_to_add <= (1 << 17));
++
++	return 0;
++}
+diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
+index fd5c3c2d77e0..f2fe513e7252 100644
+--- a/fs/xfs/libxfs/xfs_inode_fork.h
++++ b/fs/xfs/libxfs/xfs_inode_fork.h
+@@ -288,6 +288,8 @@ int xfs_ifork_verify_local_data(struct xfs_inode *ip);
+ int xfs_ifork_verify_local_attr(struct xfs_inode *ip);
+ int xfs_iext_count_may_overflow(struct xfs_inode *ip, int whichfork,
+ 		int nr_to_add);
++int xfs_iext_count_upgrade(struct xfs_trans *tp, struct xfs_inode *ip,
++		int nr_to_add);
+ 
+ /* returns true if the fork has extents but they are not read in yet. */
+ static inline bool xfs_need_iread_extents(struct xfs_ifork *ifp)
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index e1f4d7d5a011..e8729abc15ab 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -506,9 +506,15 @@ xfs_bui_item_recover(
+ 		iext_delta = XFS_IEXT_PUNCH_HOLE_CNT;
+ 
+ 	error = xfs_iext_count_may_overflow(ip, whichfork, iext_delta);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto err_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip, iext_delta);
++		if (error)
++			goto err_cancel;
++	}
++
+ 	count = bmap->me_len;
+ 	error = xfs_trans_log_finish_bmap_update(tp, budp, bui_type, ip,
+ 			whichfork, bmap->me_startoff, bmap->me_startblock,
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 18c1b99311a8..9f7112625934 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -859,9 +859,16 @@ xfs_alloc_file_space(
+ 
+ 		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 				XFS_IEXT_ADD_NOSPLIT_CNT);
+-		if (error)
++		if (error && error != -EFBIG)
+ 			goto error;
+ 
++		if (error == -EFBIG) {
++			error = xfs_iext_count_upgrade(tp, ip,
++					XFS_IEXT_ADD_NOSPLIT_CNT);
++			if (error)
++				goto error;
++		}
++
+ 		error = xfs_bmapi_write(tp, ip, startoffset_fsb,
+ 				allocatesize_fsb, XFS_BMAPI_PREALLOC, 0, imapp,
+ 				&nimaps);
+@@ -914,9 +921,15 @@ xfs_unmap_extent(
+ 
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 			XFS_IEXT_PUNCH_HOLE_CNT);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto out_trans_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip, XFS_IEXT_PUNCH_HOLE_CNT);
++		if (error)
++			goto out_trans_cancel;
++	}
++
+ 	error = xfs_bunmapi(tp, ip, startoffset_fsb, len_fsb, 0, 2, done);
+ 	if (error)
+ 		goto out_trans_cancel;
+@@ -1195,9 +1208,15 @@ xfs_insert_file_space(
+ 
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 			XFS_IEXT_PUNCH_HOLE_CNT);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto out_trans_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip, XFS_IEXT_PUNCH_HOLE_CNT);
++		if (error)
++			goto out_trans_cancel;
++	}
++
+ 	/*
+ 	 * The extent shifting code works on extent granularity. So, if stop_fsb
+ 	 * is not the starting block of extent, we need to split the extent at
+@@ -1423,16 +1442,30 @@ xfs_swap_extent_rmap(
+ 				error = xfs_iext_count_may_overflow(ip,
+ 						XFS_DATA_FORK,
+ 						XFS_IEXT_SWAP_RMAP_CNT);
+-				if (error)
++				if (error && error != -EFBIG)
+ 					goto out;
++
++				if (error == -EFBIG) {
++					error = xfs_iext_count_upgrade(tp, ip,
++							XFS_IEXT_SWAP_RMAP_CNT);
++					if (error)
++						goto out;
++				}
+ 			}
+ 
+ 			if (xfs_bmap_is_real_extent(&irec)) {
+ 				error = xfs_iext_count_may_overflow(tip,
+ 						XFS_DATA_FORK,
+ 						XFS_IEXT_SWAP_RMAP_CNT);
+-				if (error)
++				if (error && error != -EFBIG)
+ 					goto out;
++
++				if (error == -EFBIG) {
++					error = xfs_iext_count_upgrade(tp, ip,
++							XFS_IEXT_SWAP_RMAP_CNT);
++					if (error)
++						goto out;
++				}
+ 			}
+ 
+ 			/* Remove the mapping from the donor file. */
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 5afedcbc78c7..8b8fc98a01eb 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -322,9 +322,16 @@ xfs_dquot_disk_alloc(
+ 
+ 	error = xfs_iext_count_may_overflow(quotip, XFS_DATA_FORK,
+ 			XFS_IEXT_ADD_NOSPLIT_CNT);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto err_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, quotip,
++				XFS_IEXT_ADD_NOSPLIT_CNT);
++		if (error)
++			goto err_cancel;
++	}
++
+ 	/* Create the block mapping. */
+ 	error = xfs_bmapi_write(tp, quotip, dqp->q_fileoffset,
+ 			XFS_DQUOT_CLUSTER_SIZE_FSB, XFS_BMAPI_METADATA, 0, &map,
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index 87e1cf5060bd..57c3c2ccb07b 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -251,9 +251,15 @@ xfs_iomap_write_direct(
+ 		return error;
+ 
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK, nr_exts);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto out_trans_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip, nr_exts);
++		if (error)
++			goto out_trans_cancel;
++	}
++
+ 	/*
+ 	 * From this point onwards we overwrite the imap pointer that the
+ 	 * caller gave to us.
+@@ -555,9 +561,16 @@ xfs_iomap_write_unwritten(
+ 
+ 		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 				XFS_IEXT_WRITE_UNWRITTEN_CNT);
+-		if (error)
++		if (error && error != -EFBIG)
+ 			goto error_on_bmapi_transaction;
+ 
++		if (error == -EFBIG) {
++			error = xfs_iext_count_upgrade(tp, ip,
++					XFS_IEXT_WRITE_UNWRITTEN_CNT);
++			if (error)
++				goto error_on_bmapi_transaction;
++		}
++
+ 		/*
+ 		 * Modify the unwritten extent state of the buffer.
+ 		 */
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index db70060e7bf6..04717be330d7 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -617,9 +617,16 @@ xfs_reflink_end_cow_extent(
+ 
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 			XFS_IEXT_REFLINK_END_COW_CNT);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto out_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip,
++				XFS_IEXT_REFLINK_END_COW_CNT);
++		if (error)
++			goto out_cancel;
++	}
++
+ 	/*
+ 	 * In case of racing, overlapping AIO writes no COW extents might be
+ 	 * left by the time I/O completes for the loser of the race.  In that
+@@ -1118,9 +1125,15 @@ xfs_reflink_remap_extent(
+ 		++iext_delta;
+ 
+ 	error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK, iext_delta);
+-	if (error)
++	if (error && error != -EFBIG)
+ 		goto out_cancel;
+ 
++	if (error == -EFBIG) {
++		error = xfs_iext_count_upgrade(tp, ip, iext_delta);
++		if (error)
++			goto out_cancel;
++	}
++
+ 	if (smap_real) {
+ 		/*
+ 		 * If the extent we're unmapping is backed by storage (written
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index b8c79ee791af..8cab153201d0 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -806,9 +806,16 @@ xfs_growfs_rt_alloc(
+ 
+ 		error = xfs_iext_count_may_overflow(ip, XFS_DATA_FORK,
+ 				XFS_IEXT_ADD_NOSPLIT_CNT);
+-		if (error)
++		if (error && error != -EFBIG)
+ 			goto out_trans_cancel;
+ 
++		if (error == -EFBIG) {
++			error = xfs_iext_count_upgrade(tp, ip,
++					XFS_IEXT_ADD_NOSPLIT_CNT);
++			if (error)
++				goto out_trans_cancel;
++		}
++
+ 		/*
+ 		 * Allocate blocks to the bitmap file.
+ 		 */
 -- 
 2.30.2
 
