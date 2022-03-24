@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C77D4E5C48
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Mar 2022 01:21:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6525A4E5C45
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Mar 2022 01:21:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242420AbiCXAWm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 23 Mar 2022 20:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S241641AbiCXAWk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 23 Mar 2022 20:22:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346773AbiCXAWl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 23 Mar 2022 20:22:41 -0400
+        with ESMTP id S240524AbiCXAWj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 23 Mar 2022 20:22:39 -0400
 Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9A57B7891A
-        for <linux-xfs@vger.kernel.org>; Wed, 23 Mar 2022 17:21:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DD96C7891B
+        for <linux-xfs@vger.kernel.org>; Wed, 23 Mar 2022 17:21:08 -0700 (PDT)
 Received: from dread.disaster.area (pa49-186-150-27.pa.vic.optusnet.com.au [49.186.150.27])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 19BF410E5107
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Mar 2022 11:21:08 +1100 (AEDT)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id AE4E110E506B
+        for <linux-xfs@vger.kernel.org>; Thu, 24 Mar 2022 11:21:07 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nXBDt-0096a3-PI
+        id 1nXBDt-0096a5-Q1
         for linux-xfs@vger.kernel.org; Thu, 24 Mar 2022 11:21:05 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nXBDt-002z4p-OR
+        id 1nXBDt-002z4v-PJ
         for linux-xfs@vger.kernel.org;
         Thu, 24 Mar 2022 11:21:05 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/6] xfs: log shutdown triggers should only shut down the log
-Date:   Thu, 24 Mar 2022 11:21:01 +1100
-Message-Id: <20220324002103.710477-5-david@fromorbit.com>
+Subject: [PATCH 5/6] xfs: xfs_do_force_shutdown needs to block racing shutdowns
+Date:   Thu, 24 Mar 2022 11:21:02 +1100
+Message-Id: <20220324002103.710477-6-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220324002103.710477-1-david@fromorbit.com>
 References: <20220324002103.710477-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=623bb974
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=623bb973
         a=sPqof0Mm7fxWrhYUF33ZaQ==:117 a=sPqof0Mm7fxWrhYUF33ZaQ==:17
-        a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=MiGWg7VNLSfdgH8YA24A:9
+        a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=oz-SYxHX2ioO59wv_cgA:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,255 +52,100 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-We've got a mess on our hands.
+When we call xfs_forced_shutdown(), the caller often expects the
+filesystem to be completely shut down when it returns. However,
+if we have racing xfs_forced_shutdown() calls, the first caller sets
+the mount shutdown flag then goes to shutdown the log. The second
+caller sees the mount shutdown flag and returns immediately - it
+does not wait for the log to be shut down.
 
-1. xfs_trans_commit() cannot cancel transactions because the mount is
-shut down - that causes dirty, aborted, unlogged log items to sit
-unpinned in memory and potentially get written to disk before the
-log is shut down. Hence xfs_trans_commit() can only abort
-transactions when xlog_is_shutdown() is true.
+Unfortunately, xfs_forced_shutdown() is used in some places that
+expect it to completely shut down the filesystem before it returns
+(e.g. xfs_trans_log_inode()). As such, returning before the log has
+been shut down leaves us in a place where the transaction failed to
+complete correctly but we still call xfs_trans_commit(). This
+situation arises because xfs_trans_log_inode() does not return an
+error and instead calls xfs_force_shutdown() to ensure that the
+transaction being committed is aborted.
 
-2. xfs_force_shutdown() is used in places to cause the current
-modification to be aborted via xfs_trans_commit() because it may be
-impractical or impossible to cancel the transaction directly, and
-hence xfs_trans_commit() must cancel transactions when
-xfs_is_shutdown() is true in this situation. But we can't do that
-because of #1.
+Unfortunately, we have a race condition where xfs_trans_commit()
+needs to check xlog_is_shutdown() because it can't abort log items
+before the log is shut down, but it needs to use xfs_is_shutdown()
+because xfs_forced_shutdown() does not block waiting for the log to
+shut down.
 
-3. Log IO errors cause log shutdowns by calling xfs_force_shutdown()
-to shut down the mount and then the log from log IO completion.
-
-4. xfs_force_shutdown() can result in a log force being issued,
-which has to wait for log IO completion before it will mark the log
-as shut down. If #3 races with some other shutdown trigger that runs
-a log force, we rely on xfs_force_shutdown() silently ignoring #3
-and avoiding shutting down the log until the failed log force
-completes.
-
-5. To ensure #2 always works, we have to ensure that
-xfs_force_shutdown() does not return until the the log is shut down.
-But in the case of #4, this will result in a deadlock because the
-log Io completion will block waiting for a log force to complete
-which is blocked waiting for log IO to complete....
-
-So the very first thing we have to do here to untangle this mess is
-dissociate log shutdown triggers from mount shutdowns. We already
-have xlog_forced_shutdown, which will atomically transistion to the
-log a shutdown state. Due to internal asserts it cannot be called
-multiple times, but was done simply because the only place that
-could call it was xfs_do_force_shutdown() (i.e. the mount shutdown!)
-and that could only call it once and once only.  So the first thing
-we do is remove the asserts.
-
-We then convert all the internal log shutdown triggers to call
-xlog_force_shutdown() directly instead of xfs_force_shutdown(). This
-allows the log shutdown triggers to shut down the log without
-needing to care about mount based shutdown constraints. This means
-we shut down the log independently of the mount and the mount may
-not notice this until it's next attempt to read or modify metadata.
-At that point (e.g. xfs_trans_commit()) it will see that the log is
-shutdown, error out and shutdown the mount.
-
-To ensure that all the unmount behaviours and asserts track
-correctly as a result of a log shutdown, propagate the shutdown up
-to the mount if it is not already set. This keeps the mount and log
-state in sync, and saves a huge amount of hassle where code fails
-because of a log shutdown but only checks for mount shutdowns and
-hence ends up doing the wrong thing. Cleaning up that mess is
-an exercise for another day.
-
-This enables us to address the other problems noted above in
-followup patches.
+To fix this conundrum, first we make all calls to
+xfs_forced_shutdown() block until the log is also shut down. This
+means we can then safely use xfs_forced_shutdown() as a mechanism
+that ensures the currently running transaction will be aborted by
+xfs_trans_commit() regardless of the shutdown check it uses.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_log.c         | 32 +++++++++++++++++++++++---------
- fs/xfs/xfs_log_cil.c     |  4 ++--
- fs/xfs/xfs_log_recover.c |  6 +++---
- fs/xfs/xfs_mount.c       |  1 +
- fs/xfs/xfs_trans_ail.c   |  8 ++++----
- 5 files changed, 33 insertions(+), 18 deletions(-)
+ fs/xfs/xfs_fsops.c    |  6 +++++-
+ fs/xfs/xfs_log.c      |  1 +
+ fs/xfs/xfs_log_priv.h | 11 +++++++++++
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 388d53df7620..6879d6d19d68 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1360,7 +1360,7 @@ xlog_ioend_work(
- 	 */
- 	if (XFS_TEST_ERROR(error, log->l_mp, XFS_ERRTAG_IODONE_IOERR)) {
- 		xfs_alert(log->l_mp, "log I/O error %d", error);
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- 	}
- 
- 	xlog_state_done_syncing(iclog);
-@@ -1899,7 +1899,7 @@ xlog_write_iclog(
- 	iclog->ic_flags &= ~(XLOG_ICL_NEED_FLUSH | XLOG_ICL_NEED_FUA);
- 
- 	if (xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, count)) {
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- 		return;
- 	}
- 	if (is_vmalloc_addr(iclog->ic_data))
-@@ -2474,7 +2474,7 @@ xlog_write(
- 		xfs_alert_tag(log->l_mp, XFS_PTAG_LOGRES,
- 		     "ctx ticket reservation ran out. Need to up reservation");
- 		xlog_print_tic_res(log->l_mp, ticket);
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- 	}
- 
- 	len = xlog_write_calc_vec_length(ticket, log_vector, optype);
-@@ -3808,9 +3808,10 @@ xlog_verify_iclog(
- #endif
- 
- /*
-- * Perform a forced shutdown on the log. This should be called once and once
-- * only by the high level filesystem shutdown code to shut the log subsystem
-- * down cleanly.
-+ * Perform a forced shutdown on the log.
-+ *
-+ * This can be called from low level log code to trigger a shutdown, or from the
-+ * high level mount shutdown code when the mount shuts down.
-  *
-  * Our main objectives here are to make sure that:
-  *	a. if the shutdown was not due to a log IO error, flush the logs to
-@@ -3819,6 +3820,8 @@ xlog_verify_iclog(
-  *	   parties to find out. Nothing new gets queued after this is done.
-  *	c. Tasks sleeping on log reservations, pinned objects and
-  *	   other resources get woken up.
-+ *	d. The mount is also marked as shut down so that log triggered shutdowns
-+ *	   still behave the same as if they called xfs_forced_shutdown().
-  *
-  * Return true if the shutdown cause was a log IO error and we actually shut the
-  * log down.
-@@ -3837,8 +3840,6 @@ xlog_force_shutdown(
- 	if (!log || xlog_in_recovery(log))
- 		return false;
- 
--	ASSERT(!xlog_is_shutdown(log));
--
- 	/*
- 	 * Flush all the completed transactions to disk before marking the log
- 	 * being shut down. We need to do this first as shutting down the log
-@@ -3865,11 +3866,24 @@ xlog_force_shutdown(
- 	spin_lock(&log->l_icloglock);
- 	if (test_and_set_bit(XLOG_IO_ERROR, &log->l_opstate)) {
- 		spin_unlock(&log->l_icloglock);
--		ASSERT(0);
- 		return false;
- 	}
- 	spin_unlock(&log->l_icloglock);
- 
-+	/*
-+	 * If this log shutdown also sets the mount shutdown state, issue a
-+	 * shutdown warning message.
-+	 */
-+	if (!test_and_set_bit(XFS_OPSTATE_SHUTDOWN, &log->l_mp->m_opstate)) {
-+		xfs_alert_tag(log->l_mp, XFS_PTAG_SHUTDOWN_LOGERROR,
-+		"Filesystem has been shut down due to log error (0x%x).",
-+				shutdown_flags);
-+		xfs_alert(log->l_mp,
-+		"Please unmount the filesystem and rectify the problem(s)");
-+		if (xfs_error_level >= XFS_ERRLEVEL_HIGH)
-+			xfs_stack_trace();
-+	}
-+
- 	/*
- 	 * We don't want anybody waiting for log reservations after this. That
- 	 * means we have to wake up everybody queued up on reserveq as well as
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 43006f6f5ab8..ba57323bfdce 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -540,7 +540,7 @@ xlog_cil_insert_items(
- 	spin_unlock(&cil->xc_cil_lock);
- 
- 	if (tp->t_ticket->t_curr_res < 0)
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- }
- 
- static void
-@@ -864,7 +864,7 @@ xlog_cil_write_commit_record(
- 
- 	error = xlog_write(log, ctx, &vec, ctx->ticket, XLOG_COMMIT_TRANS);
- 	if (error)
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 7758a6706b8c..c4ad4296c540 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2485,7 +2485,7 @@ xlog_finish_defer_ops(
- 		error = xfs_trans_alloc(mp, &resv, dfc->dfc_blkres,
- 				dfc->dfc_rtxres, XFS_TRANS_RESERVE, &tp);
- 		if (error) {
--			xfs_force_shutdown(mp, SHUTDOWN_LOG_IO_ERROR);
-+			xlog_force_shutdown(mp->m_log, SHUTDOWN_LOG_IO_ERROR);
- 			return error;
- 		}
- 
-@@ -3454,7 +3454,7 @@ xlog_recover_finish(
- 		 */
- 		xlog_recover_cancel_intents(log);
- 		xfs_alert(log->l_mp, "Failed to recover intents");
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- 		return error;
- 	}
- 
-@@ -3501,7 +3501,7 @@ xlog_recover_finish(
- 		 * end of intents processing can be pushed through the CIL
- 		 * and AIL.
- 		 */
--		xfs_force_shutdown(log->l_mp, SHUTDOWN_LOG_IO_ERROR);
-+		xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
- 	}
- 
- 	return 0;
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index bed73e8002a5..4e1aa4240b61 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -21,6 +21,7 @@
- #include "xfs_trans.h"
- #include "xfs_trans_priv.h"
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 33e26690a8c4..093a44aecec0 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -17,6 +17,7 @@
+ #include "xfs_fsops.h"
+ #include "xfs_trans_space.h"
  #include "xfs_log.h"
 +#include "xfs_log_priv.h"
- #include "xfs_error.h"
- #include "xfs_quota.h"
- #include "xfs_fsops.h"
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index c2ccb98c7bcd..d3a97a028560 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -873,17 +873,17 @@ xfs_trans_ail_delete(
- 	int			shutdown_type)
- {
- 	struct xfs_ail		*ailp = lip->li_ailp;
--	struct xfs_mount	*mp = ailp->ail_log->l_mp;
-+	struct xlog		*log = ailp->ail_log;
- 	xfs_lsn_t		tail_lsn;
+ #include "xfs_ag.h"
+ #include "xfs_ag_resv.h"
+ #include "xfs_trace.h"
+@@ -528,8 +529,11 @@ xfs_do_force_shutdown(
+ 	int		tag;
+ 	const char	*why;
  
- 	spin_lock(&ailp->ail_lock);
- 	if (!test_bit(XFS_LI_IN_AIL, &lip->li_flags)) {
- 		spin_unlock(&ailp->ail_lock);
--		if (shutdown_type && !xlog_is_shutdown(ailp->ail_log)) {
--			xfs_alert_tag(mp, XFS_PTAG_AILDELETE,
-+		if (shutdown_type && !xlog_is_shutdown(log)) {
-+			xfs_alert_tag(log->l_mp, XFS_PTAG_AILDELETE,
- 	"%s: attempting to delete a log item that is not in the AIL",
- 					__func__);
--			xfs_force_shutdown(mp, shutdown_type);
-+			xlog_force_shutdown(log, shutdown_type);
- 		}
+-	if (test_and_set_bit(XFS_OPSTATE_SHUTDOWN, &mp->m_opstate))
++
++	if (test_and_set_bit(XFS_OPSTATE_SHUTDOWN, &mp->m_opstate)) {
++		xlog_shutdown_wait(mp->m_log);
  		return;
- 	}
++	}
+ 	if (mp->m_sb_bp)
+ 		mp->m_sb_bp->b_flags |= XBF_DONE;
+ 
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 6879d6d19d68..4336eb804a4a 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -3909,6 +3909,7 @@ xlog_force_shutdown(
+ 	xlog_state_shutdown_callbacks(log);
+ 	spin_unlock(&log->l_icloglock);
+ 
++	wake_up_var(&log->l_opstate);
+ 	return log_error;
+ }
+ 
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index 80d77aac6fe4..401cdc400980 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -484,6 +484,17 @@ xlog_is_shutdown(struct xlog *log)
+ 	return test_bit(XLOG_IO_ERROR, &log->l_opstate);
+ }
+ 
++/*
++ * Wait until the xlog_force_shutdown() has marked the log as shut down
++ * so xlog_is_shutdown() will always return true.
++ */
++static inline void
++xlog_shutdown_wait(
++	struct xlog	*log)
++{
++	wait_var_event(&log->l_opstate, xlog_is_shutdown(log));
++}
++
+ /* common routines */
+ extern int
+ xlog_recover(
 -- 
 2.35.1
 
