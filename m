@@ -2,72 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D84404EA2F0
-	for <lists+linux-xfs@lfdr.de>; Tue, 29 Mar 2022 00:31:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 270124EA2EB
+	for <lists+linux-xfs@lfdr.de>; Tue, 29 Mar 2022 00:31:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbiC1W2u (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 28 Mar 2022 18:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57572 "EHLO
+        id S229877AbiC1W2v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 28 Mar 2022 18:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbiC1W2r (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Mar 2022 18:28:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0668B171EF0
-        for <linux-xfs@vger.kernel.org>; Mon, 28 Mar 2022 15:27:04 -0700 (PDT)
+        with ESMTP id S229928AbiC1W2s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 28 Mar 2022 18:28:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D96BC1728A8
+        for <linux-xfs@vger.kernel.org>; Mon, 28 Mar 2022 15:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1648506423;
+        s=mimecast20190719; t=1648506424;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yLorVpU4OmrorCzSCw7oTgCr/F/sLwSWRUU9OL3LPR4=;
-        b=a4kOmb4dG6tLftHGf9QeLOfGOKRMu55rGmk07NGGTtt4X/+f3In5+AhWTDZSXZ3onrEVMN
-        5kZhyBRhIDXyG8soPfcXEC4R/3AVSOdYe27edFkRwZIOw9cGBxfApF5bXY/A40KL8O/BEN
-        lkWV/E8suCVy2OYQf84tJ53JN2FzsDM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=vqP0qoAPAW+XR9MNalFFLNb+d2lbrYOJww0irumLfec=;
+        b=CRtt99VgCJDDxrRxFRnx8gB1srZYSi/0mqxZJ4e1Al3VaCIx8rdv2V+Ko88fzbEHU/5Cdb
+        wDfEQPRuK0l/V7q/XIkb+7ifboMXBA3Fy5CKHJkXT1Xlhb6eyOqmpmiKqhZ/AXtWSTHGJi
+        zlNd3WCAh9PeAgJAyz9wlERinJBXyWY=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-627-ccVNxmZFOluBcNkabAtgUQ-1; Mon, 28 Mar 2022 18:27:02 -0400
-X-MC-Unique: ccVNxmZFOluBcNkabAtgUQ-1
-Received: by mail-ej1-f69.google.com with SMTP id i14-20020a17090639ce00b006dabe6a112fso7303446eje.13
+ us-mta-244-wJwcrZ03MymzShKG5lX6Zw-1; Mon, 28 Mar 2022 18:27:03 -0400
+X-MC-Unique: wJwcrZ03MymzShKG5lX6Zw-1
+Received: by mail-ed1-f72.google.com with SMTP id l24-20020a056402231800b00410f19a3103so9776149eda.5
         for <linux-xfs@vger.kernel.org>; Mon, 28 Mar 2022 15:27:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=yLorVpU4OmrorCzSCw7oTgCr/F/sLwSWRUU9OL3LPR4=;
-        b=zxDdUYLD3tbjMW84ZArjGJ46l9QzhfmRZHbxFYCQ+B304BFV+FyVPU8FaxYd+Mz1ME
-         3ANR2r5NTQS1MPiu+N/5A8XajjPVirsneIFHLAMMFC0EkH4ZJ5v2boLUQRFQ3Pc/5hX8
-         44QvGuiww5vYNCrcv9jyaTzI02FKNVC1DIPcC5mK3dN0q97fy+2p42fLXkTLI39e9s84
-         dnqFwn7KcxACrQe79G5CedQIzDXNH0orTLv5vh4lpD2n3SIT1lGXPqMaOAxsC2HE9vWm
-         bx45UvxcEyXWqCl4lHxh8Y2r+/g49CW1bsZwxL+IvUsMKVyNrZtOL4ATWhs77e7DKqca
-         IsTA==
-X-Gm-Message-State: AOAM531Z48egr8cQ/j3FkcjtzHkmZDxuYcfRHSP1Xm/bOqW+LeS00h/F
-        2Sjs+twNlGaLiu+TbE3klxmUMr0O3NVbLPtDzmVor10LTi+mNl5IW9f1K3QTXEWUH/RY9mWjRUF
-        d+W3iYKilp/Mb/to0N+jfuJgIjOa6k1BiZIc53+jtTuJ89/XmJiXBZaMFy1vA9uQ4zzvPQF8=
-X-Received: by 2002:a05:6402:3495:b0:419:1ff6:95d9 with SMTP id v21-20020a056402349500b004191ff695d9mr91463edc.249.1648506420355;
-        Mon, 28 Mar 2022 15:27:00 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzLYQI31VpXRJhcebdK5CMDmmPBja5XLRXoXbx6Z5867Jkv3BOAaopR7LJ+hjdB6qmzHN9plA==
-X-Received: by 2002:a05:6402:3495:b0:419:1ff6:95d9 with SMTP id v21-20020a056402349500b004191ff695d9mr91436edc.249.1648506420050;
-        Mon, 28 Mar 2022 15:27:00 -0700 (PDT)
+        bh=vqP0qoAPAW+XR9MNalFFLNb+d2lbrYOJww0irumLfec=;
+        b=m4qWImjF3TRdg9llCGsABvhORnaZNMZ4w4dWb0YZ3gwuRJay7QCWLVLFnWaBwrbS5b
+         Dm1T3EC/iXDUVBDHW4S93eBZE+lsMJIIYmDOQ5ibJiixqb58BUMH5TNA/UFDBhVobOI3
+         5OKa8NT9WSByKQ60tiGctkIHrTqq8HOg928DcbvpbPdomEgDsS8T/e4WT9Ny/7ilLlRJ
+         QexmCmdYycK4dCepnfzF78upyC9MR769gYyyB5p22a1au+pGvKZcoP/n06dseel0YhnF
+         4iXqk+joliXUNtrj4oA5jGN/B2c8a9gfraSFKcfseU+D/7EYVWs+yEDbYpq/6B/yrIiV
+         m76A==
+X-Gm-Message-State: AOAM533Doz+C6DBoBxWpKLKOT+LxxF8vsdUIXCiNe+EAzsa+cZ/tdhDw
+        uL7mMq9bzE1fVgTUo03mfPIV0nGWo6VJL9wnE5yFe0IjDdnPBaqU4uK4Zp6rI9Ruf3iF1vcqh98
+        QPD8w43DaVmpmvsVNzL7xPZAFGZTbVCFi16Z1k15gXUX6rAuC+ASxxbEmafGazeu5oU7dWTY=
+X-Received: by 2002:aa7:d543:0:b0:416:13eb:6fec with SMTP id u3-20020aa7d543000000b0041613eb6fecmr132767edr.348.1648506421403;
+        Mon, 28 Mar 2022 15:27:01 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJycltK5WvUm0kQA1iquW0mHC0j8ltqLM9Yf19z+OHpp1RjLFaJBGZ9KpI2gW0SuspHaHItzBA==
+X-Received: by 2002:aa7:d543:0:b0:416:13eb:6fec with SMTP id u3-20020aa7d543000000b0041613eb6fecmr132749edr.348.1648506421171;
+        Mon, 28 Mar 2022 15:27:01 -0700 (PDT)
 Received: from aalbersh.remote.csb ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id t19-20020a056402525300b0041952a1a764sm7722360edd.33.2022.03.28.15.26.59
+        by smtp.gmail.com with ESMTPSA id t19-20020a056402525300b0041952a1a764sm7722360edd.33.2022.03.28.15.27.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Mar 2022 15:26:59 -0700 (PDT)
+        Mon, 28 Mar 2022 15:27:00 -0700 (PDT)
 From:   Andrey Albershteyn <aalbersh@redhat.com>
 To:     linux-xfs@vger.kernel.org
 Cc:     Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [PATCH 4/5] xfs_quota: utilize XFS_GETNEXTQUOTA for ranged calls in report/dump
-Date:   Tue, 29 Mar 2022 00:25:02 +0200
-Message-Id: <20220328222503.146496-5-aalbersh@redhat.com>
+Subject: [PATCH 5/5] xfs_quota: apply -L/-U range limits in uid/gid/pid loops
+Date:   Tue, 29 Mar 2022 00:25:03 +0200
+Message-Id: <20220328222503.146496-6-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20220328222503.146496-1-aalbersh@redhat.com>
 References: <20220328222503.146496-1-aalbersh@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,189 +75,100 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The implementation based on XFS_GETQUOTA call for each ID in range,
-specified with -L/-U, is quite slow for wider ranges.
-
-If kernel supports XFS_GETNEXTQUOTA, report_*_mount/dump_any_file
-will use that to obtain quota list for the mount. XFS_GETNEXTQUOTA
-returns quota of the requested ID and next ID with non-empty quota.
-
-Otherwise, XFS_GETQUOTA will be used for each user/group/project ID
-known from password/group/project database.
-
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- quota/report.c | 113 +++++++++++++++----------------------------------
- 1 file changed, 35 insertions(+), 78 deletions(-)
+ quota/report.c | 36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
 diff --git a/quota/report.c b/quota/report.c
-index 14b7f458..074abbc1 100644
+index 074abbc1..c79e95ab 100644
 --- a/quota/report.c
 +++ b/quota/report.c
-@@ -135,7 +135,7 @@ dump_limits_any_type(
- {
- 	fs_path_t	*mount;
- 	fs_disk_quota_t d;
--	uint		id = 0, oid;
-+	uint		id = lower, oid, flags = 0;
- 
- 	if ((mount = fs_table_lookup(dir, FS_MOUNT_POINT)) == NULL) {
- 		exitcode = 1;
-@@ -144,27 +144,17 @@ dump_limits_any_type(
- 		return;
- 	}
- 
--	/* Range was specified; query everything in it */
--	if (upper) {
--		for (id = lower; id <= upper; id++) {
--			get_quota(&d, id, &oid, type, mount->fs_name, 0);
--			dump_file(fp, &d, mount->fs_name);
--		}
--		return;
--	}
--
--	/* Use GETNEXTQUOTA if it's available */
--	if (get_quota(&d, id, &oid, type, mount->fs_name, GETNEXTQUOTA_FLAG)) {
-+	while (get_quota(&d, id, &oid, type,
-+				mount->fs_name, flags|GETNEXTQUOTA_FLAG) &&
-+			!(upper && (d.d_id > upper))) {
- 		dump_file(fp, &d, mount->fs_name);
- 		id = oid + 1;
--		while (get_quota(&d, id, &oid, type, mount->fs_name,
--					GETNEXTQUOTA_FLAG)) {
--			dump_file(fp, &d, mount->fs_name);
--			id = oid + 1;
--		}
--		return;
-+		flags |= GETNEXTQUOTA_FLAG;
- 	}
- 
-+	if (flags & GETNEXTQUOTA_FLAG)
-+		return;
-+
- 	/* Otherwise fall back to iterating over each uid/gid/prjid */
- 	switch (type) {
- 	case XFS_GROUP_QUOTA: {
-@@ -469,31 +459,19 @@ report_user_mount(
- {
- 	struct passwd	*u;
- 	fs_disk_quota_t	d;
--	uint		id = 0, oid;
-+	uint		id = lower, oid;
- 
--	if (upper) {	/* identifier range specified */
--		for (id = lower; id <= upper; id++) {
--			if (get_quota(&d, id, NULL, XFS_USER_QUOTA,
--						mount->fs_name, flags)) {
--				report_mount(fp, &d, NULL, form, XFS_USER_QUOTA, mount,
--						flags);
--				flags |= NO_HEADER_FLAG;
--			}
--		}
--	} else if (get_quota(&d, id, &oid, XFS_USER_QUOTA, mount->fs_name,
--				flags|GETNEXTQUOTA_FLAG)) {
--		report_mount(fp, &d, NULL, form, XFS_USER_QUOTA, mount,
--			flags|GETNEXTQUOTA_FLAG);
-+	while (get_quota(&d, id, &oid, XFS_USER_QUOTA,
-+				mount->fs_name, flags|GETNEXTQUOTA_FLAG) &&
-+			!(upper && (d.d_id > upper))) {
-+		report_mount(fp, &d, NULL, form, XFS_USER_QUOTA, mount, flags);
- 		id = oid + 1;
- 		flags |= GETNEXTQUOTA_FLAG;
- 		flags |= NO_HEADER_FLAG;
--		while (get_quota(&d, id, &oid, XFS_USER_QUOTA, mount->fs_name,
--				flags)) {
--			report_mount(fp, &d, NULL, form, XFS_USER_QUOTA,
--				mount, flags);
--			id = oid + 1;
--		}
--	} else {
-+	}
-+
-+	/* No GETNEXTQUOTA support, iterate over all from password file */
-+	if (!(flags & GETNEXTQUOTA_FLAG)) {
+@@ -161,8 +161,10 @@ dump_limits_any_type(
+ 			struct group *g;
+ 			setgrent();
+ 			while ((g = getgrent()) != NULL) {
+-				get_quota(&d, g->gr_gid, NULL, type, mount->fs_name, 0);
+-				dump_file(fp, &d, mount->fs_name);
++				if (get_quota(&d, g->gr_gid, NULL, type, mount->fs_name, 0) &&
++						!(lower && (d.d_id < lower)) &&
++						!(upper && (d.d_id > upper)))
++					dump_file(fp, &d, mount->fs_name);
+ 			}
+ 			endgrent();
+ 			break;
+@@ -171,8 +173,10 @@ dump_limits_any_type(
+ 			struct fs_project *p;
+ 			setprent();
+ 			while ((p = getprent()) != NULL) {
+-				get_quota(&d, p->pr_prid, NULL, type, mount->fs_name, 0);
+-				dump_file(fp, &d, mount->fs_name);
++				if (get_quota(&d, p->pr_prid, NULL, type, mount->fs_name, 0) &&
++						!(lower && (d.d_id < lower)) &&
++						!(upper && (d.d_id > upper)))
++					dump_file(fp, &d, mount->fs_name);
+ 			}
+ 			endprent();
+ 			break;
+@@ -181,8 +185,10 @@ dump_limits_any_type(
+ 			struct passwd *u;
+ 			setpwent();
+ 			while ((u = getpwent()) != NULL) {
+-				get_quota(&d, u->pw_uid, NULL, type, mount->fs_name, 0);
+-				dump_file(fp, &d, mount->fs_name);
++				if (get_quota(&d, u->pw_uid, NULL, type, mount->fs_name, 0) &&
++						!(lower && (d.d_id < lower)) &&
++						!(upper && (d.d_id > upper)))
++					dump_file(fp, &d, mount->fs_name);
+ 			}
+ 			endpwent();
+ 			break;
+@@ -474,8 +480,10 @@ report_user_mount(
+ 	if (!(flags & GETNEXTQUOTA_FLAG)) {
  		setpwent();
  		while ((u = getpwent()) != NULL) {
- 			if (get_quota(&d, u->pw_uid, NULL, XFS_USER_QUOTA, mount->fs_name,
-@@ -521,30 +499,19 @@ report_group_mount(
- {
- 	struct group	*g;
- 	fs_disk_quota_t	d;
--	uint		id = 0, oid;
-+	uint		id = lower, oid;
- 
--	if (upper) {	/* identifier range specified */
--		for (id = lower; id <= upper; id++) {
--			if (get_quota(&d, id, NULL, XFS_GROUP_QUOTA,
--						mount->fs_name, flags)) {
--				report_mount(fp, &d, NULL, form, XFS_GROUP_QUOTA, mount, flags);
--				flags |= NO_HEADER_FLAG;
--			}
--		}
--	} else if (get_quota(&d, id, &oid, XFS_GROUP_QUOTA,
--				mount->fs_name, flags|GETNEXTQUOTA_FLAG)) {
--		report_mount(fp, &d, NULL, form, XFS_GROUP_QUOTA, mount,
--				flags|GETNEXTQUOTA_FLAG);
-+	while (get_quota(&d, id, &oid, XFS_GROUP_QUOTA,
-+				mount->fs_name, flags|GETNEXTQUOTA_FLAG) &&
-+			!(upper && (oid > upper))) {
-+		report_mount(fp, &d, NULL, form, XFS_GROUP_QUOTA, mount, flags);
- 		id = oid + 1;
- 		flags |= GETNEXTQUOTA_FLAG;
- 		flags |= NO_HEADER_FLAG;
--		while (get_quota(&d, id, &oid, XFS_GROUP_QUOTA,
--					mount->fs_name, flags)) {
--			report_mount(fp, &d, NULL, form, XFS_GROUP_QUOTA, mount,
--					flags);
--			id = oid + 1;
--		}
--	} else {
-+	}
-+
-+	/* No GETNEXTQUOTA support, iterate over all from password file */
-+	if (!(flags & GETNEXTQUOTA_FLAG)) {
+-			if (get_quota(&d, u->pw_uid, NULL, XFS_USER_QUOTA, mount->fs_name,
+-					flags)) {
++			if (get_quota(&d, u->pw_uid, NULL, XFS_USER_QUOTA,
++						mount->fs_name, flags) &&
++					!(lower && (d.d_id < lower)) &&
++					!(upper && (d.d_id > upper))) {
+ 				report_mount(fp, &d, u->pw_name, form, XFS_USER_QUOTA, mount,
+ 						flags);
+ 				flags |= NO_HEADER_FLAG;
+@@ -515,7 +523,9 @@ report_group_mount(
  		setgrent();
  		while ((g = getgrent()) != NULL) {
  			if (get_quota(&d, g->gr_gid, NULL, XFS_GROUP_QUOTA,
-@@ -571,29 +538,19 @@ report_project_mount(
- {
- 	fs_project_t	*p;
- 	fs_disk_quota_t	d;
--	uint		id = 0, oid;
-+	uint		id = lower, oid;
- 
--	if (upper) {	/* identifier range specified */
--		for (id = lower; id <= upper; id++) {
--			if (get_quota(&d, id, NULL, XFS_PROJ_QUOTA,
 -						mount->fs_name, flags)) {
--				report_mount(fp, &d, NULL, form, XFS_PROJ_QUOTA, mount, flags);
--				flags |= NO_HEADER_FLAG;
--			}
--		}
--	} else if (get_quota(&d, id, &oid, XFS_PROJ_QUOTA,
--				mount->fs_name, flags|GETNEXTQUOTA_FLAG)) {
--		report_mount(fp, &d, NULL, form, XFS_PROJ_QUOTA, mount,
--				flags|GETNEXTQUOTA_FLAG);
-+	while (get_quota(&d, id, &oid, XFS_PROJ_QUOTA,
-+				mount->fs_name, flags|GETNEXTQUOTA_FLAG) &&
-+			!(upper && (d.d_id > upper))) {
-+		report_mount(fp, &d, NULL, form, XFS_PROJ_QUOTA, mount, flags);
- 		id = oid + 1;
- 		flags |= GETNEXTQUOTA_FLAG;
- 		flags |= NO_HEADER_FLAG;
--		while (get_quota(&d, id, &oid, XFS_PROJ_QUOTA,
--					mount->fs_name, flags)) {
--			report_mount(fp, &d, NULL, form, XFS_PROJ_QUOTA, mount, flags);
--			id = oid + 1;
--		}
--	} else {
-+	}
-+
-+	/* No GETNEXTQUOTA support, iterate over all */
-+	if (!(flags & GETNEXTQUOTA_FLAG)) {
- 		if (!getprprid(0)) {
- 			/*
- 			 * Print default project quota, even if projid 0
++						mount->fs_name, flags) &&
++					!(lower && (d.d_id < lower)) &&
++					!(upper && (d.d_id > upper))) {
+ 				report_mount(fp, &d, g->gr_name, form,
+ 						XFS_GROUP_QUOTA, mount, flags);
+ 				flags |= NO_HEADER_FLAG;
+@@ -557,7 +567,9 @@ report_project_mount(
+ 			 * isn't defined
+ 			 */
+ 			if (get_quota(&d, 0, NULL, XFS_PROJ_QUOTA,
+-						mount->fs_name, flags)) {
++						mount->fs_name, flags) &&
++					!(lower && (d.d_id < lower)) &&
++					!(upper && (d.d_id > upper))) {
+ 				report_mount(fp, &d, NULL, form, XFS_PROJ_QUOTA, mount, flags);
+ 				flags |= NO_HEADER_FLAG;
+ 			}
+@@ -566,7 +578,9 @@ report_project_mount(
+ 		setprent();
+ 		while ((p = getprent()) != NULL) {
+ 			if (get_quota(&d, p->pr_prid, NULL, XFS_PROJ_QUOTA,
+-						mount->fs_name, flags)) {
++						mount->fs_name, flags) &&
++					!(lower && (d.d_id < lower)) &&
++					!(upper && (d.d_id > upper))) {
+ 				report_mount(fp, &d, p->pr_name, form, XFS_PROJ_QUOTA, mount,
+ 						flags);
+ 				flags |= NO_HEADER_FLAG;
 -- 
 2.27.0
 
