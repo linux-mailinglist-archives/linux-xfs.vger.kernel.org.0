@@ -2,91 +2,113 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F4B4ECAF1
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Mar 2022 19:44:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FF5A4ECC2A
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Mar 2022 20:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229641AbiC3Rqi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Mar 2022 13:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49984 "EHLO
+        id S1350545AbiC3S1Y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Mar 2022 14:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiC3Rqe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Mar 2022 13:46:34 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF1E7101F0E
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 10:44:48 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id h1so25353556edj.1
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 10:44:48 -0700 (PDT)
+        with ESMTP id S1350605AbiC3S0s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Mar 2022 14:26:48 -0400
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA214B42A
+        for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 11:23:50 -0700 (PDT)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-dacc470e03so22908933fac.5
+        for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 11:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K9mTfr+9yfX3AQnQTAMmg9qUgbHlxUCd+LHRj3aLr3g=;
-        b=a8uyOGhltB2hbdhzxesec2SJFiOfBuRDY4Q7L8qOaFZZxhIh9JTcjqiO6qP55q6bAh
-         7f3cNxL67IGepkCXg5GjknH7P18HeGKudRvZ/BCA34+GS+pdR2N+55Gwz2VILXtuczZ8
-         eTdGY/LB/U9MS/gKOBAktt+WY1dwMAFoRrqDk=
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=6PnxJaVdYHTfEoSreao3ANO+XeqxY/p/4dxKSObIH1I=;
+        b=U1oUia1Thamt6Z7oWm6PGNKOk9RXK6Jv76DGrI1cLcYRcY5/d1Tt5qepQRdZm6lsyq
+         RBa/xpJM28ShOu5ibphzafHjPKptRC4OMeOVco0xYKihrCNFhnaGQOBDSvUdgHWgE3gf
+         cWTbx+dPO2nv/wujOZrrbxfJpePUzp7QZ1RCloUPxJhGXTvBKUziPieC1LSkK8oSaB+t
+         E85QJNBGnQK8HE8wei7Zq5jQSpeI5JY8kzofCGcJSUHLIHQXWsBy6ta+brl9WPLZzyWA
+         2jPBZlOFyxLxFI8awBJCcZtcLmSyu35IRMr8cJ72zb2pokIUUqe6EUB9pKUwVKwbq4my
+         ou5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K9mTfr+9yfX3AQnQTAMmg9qUgbHlxUCd+LHRj3aLr3g=;
-        b=j+XU6ewe3Oxj4U6HD+6HBQeKwf+kt/3HSQY6qznHUrZoc9s3AQZunBW5CjDdMCm8Ky
-         y0VgEyP69YacDzLuFCm1QnrqyIIDglLHuPiHFyLxy88AD85kgyJARyWwAgMxP5oBt+2c
-         Fli8qSAAPlxRsl6fNi7YJe5NbHOboTmvPXpusVyWvxxJFu5Wz/QMPFsTxafWqtMFpOPQ
-         EeLeA8YrBsotpEuaivihO90ab1+vau4VczrYSy0SzYpfJx8ER6fftCcC584VLlGPdHln
-         rjvm7lsE7XIcOmXlZaqG/ZZ3/ZwSAt+3nxzKSxEO1VmbjVa/kGMJQjd9iao/LF2v4+Qb
-         mFWQ==
-X-Gm-Message-State: AOAM531+pTmegaHUx7AYZoac3oqQgZnctsi2XfeaKeqoe5Av58ue3XRD
-        Al57ekr0+NVxt7S6xeaJksNWMQ==
-X-Google-Smtp-Source: ABdhPJyXZjJVdo9jS5TputnGifcTBItqiDHBkCcTIzy1elSLr+zghA9tBYudVSaXXnwB9ZaE/g6Ojw==
-X-Received: by 2002:a05:6402:362:b0:419:2b6d:a662 with SMTP id s2-20020a056402036200b004192b6da662mr12211868edw.54.1648662286785;
-        Wed, 30 Mar 2022 10:44:46 -0700 (PDT)
-Received: from localhost ([2620:10d:c093:400::5:c1bb])
-        by smtp.gmail.com with ESMTPSA id u23-20020a17090626d700b006cfcd39645fsm8329857ejc.88.2022.03.30.10.44.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 10:44:46 -0700 (PDT)
-Date:   Wed, 30 Mar 2022 18:44:45 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dave Chinner <david@fromorbit.com>, Petr Mladek <pmladek@suse.com>,
-        Jonathan Lassoff <jof@thejof.com>, linux-xfs@vger.kernel.org,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v3 2/2] Add XFS messages to printk index
-Message-ID: <YkSXDWztoLpqn4/7@chrisdown.name>
-References: <3e1f6011b22ca87ea3c0fad701286369daa2187f.1648228733.git.jof@thejof.com>
- <3c3ae424913cb921a9f8abddfcb1b418e7cfa601.1648228733.git.jof@thejof.com>
- <YkMKyN9w0S8VFJRk@alley>
- <20220330003457.GB1544202@dread.disaster.area>
- <YkREmrfoTcqOYbma@chrisdown.name>
- <20220330124739.70edca36@gandalf.local.home>
- <YkSOyC+vEMVSDsdU@chrisdown.name>
- <20220330133950.6ed0ead6@gandalf.local.home>
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=6PnxJaVdYHTfEoSreao3ANO+XeqxY/p/4dxKSObIH1I=;
+        b=l34c/WkbmAHxYhnI3UMBvHTOK32HAzDZUx/BTG/GQtvgAlbBe7U6gy9uRtHLvyFOLI
+         kkENd0G/rv7tfT36J9FgsU+gYt+vNRF4kRZIGm5J2y0Y7AZvpILf2XpwU881EvSBMnHo
+         mofStcGyQ7+3rcylWTfBaMaVn9LsFdzO2yQqHx7JDudEefYaBm3JHdgeCb2m2a3KWpZo
+         KoEpLb+hSIpcOyfngQ3qS+vQ05pQpkfqreRBQdG7mjjwAgkG6mUiQ+HakP+Vd71pM/TI
+         L2UU/1Fefum4WitaRbBnKUDTDvvoBEFNfvRdl6y7Hxxtid+pheveYNxRQ2pLBfO6Y71I
+         nqPg==
+X-Gm-Message-State: AOAM530+uKT0b9uJs7koNn6aOf8eOry5RhKiQ8pDEn326bADRO4sLJz5
+        9UCHNADUEktjFYohhyGrxHVBSCVrwPp+fh9Dk6LlJ0wfDZ2s
+X-Google-Smtp-Source: ABdhPJzkTl+tJbylc9dRvis6ZhULbTl7j4ynIkLgm4b/Lu4YSrf6PCWjehKBvofPJCmWKHUKJGD0xbE01MjL0VC50Jo=
+X-Received: by 2002:a17:90b:3143:b0:1c7:5cee:3948 with SMTP id
+ ip3-20020a17090b314300b001c75cee3948mr852445pjb.140.1648664618224; Wed, 30
+ Mar 2022 11:23:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20220330133950.6ed0ead6@gandalf.local.home>
-User-Agent: Mutt/2.2.2 (aa28abe8) (2022-03-25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Reply-To: isabellasayouba0@gmail.com
+Sender: 040stherchurch@gmail.com
+Received: by 2002:a05:6a20:691d:b0:76:6cf5:d552 with HTTP; Wed, 30 Mar 2022
+ 11:23:37 -0700 (PDT)
+From:   Mrs Isabella Sayouba <isabellasayouba0@gmail.com>
+Date:   Wed, 30 Mar 2022 18:23:37 +0000
+X-Google-Sender-Auth: _Xe1kByDkvq-Dn04BagO7gok_qM
+Message-ID: <CAAzQq761QVaWKiKernxpKjqNCK+6V9mRKHBnOcqF8rXJO9Y+aA@mail.gmail.com>
+Subject: =?UTF-8?B?44GC44GE44GV44Gk44CC?=
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_99,BAYES_999,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_HK_NAME_FM_MR_MRS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Steven Rostedt writes:
->There isn't a majority opinion on this. There's only one opinion, and
->that's Linus's ;-)
-
-Fair enough :-)
-
-Regardless, I don't think we need to get too into the weeds about whether 
-debugfs is a stable ABI or not here. Even if it is considered to be so, the ABI 
-here would be the format and location of the printk index -- printk entries 
-being added, changed, or removed are just backing data changes in the same way 
-that adding or removing a map and that then being reflected in /proc/self/smaps 
-isn't an ABI break either.
+44GC44GE44GV44Gk44CCDQoNCua2meOCkua1geOBl+OBquOBjOOCieOBk+OBruODoeODvOODq+OC
+kuabuOOBhOOBpuOBhOOBvuOBmeOAguengeOBruebruOBq+OBr+Wkp+OBjeOBquaCsuOBl+OBv+OB
+jOOBguOCiuOBvuOBmeOAguengeOBruWQjeWJjeOBr+OCpOOCtuODmeODqeODu+OCteODqOOCpuOD
+kOOBleOCk+OBp+OBmeOAguODgeODpeODi+OCuOOCouWHuui6q+OBp+OAgeODluODq+OCreODiuOD
+leOCoeOCveOBrueXhemZouOBi+OCiemAo+e1oeOCkuWPluOCiuOBvuOBmeOAguengeOBr+OBguOB
+quOBn+OBq+W/g+OCkumWi+OBhOOBpuaEn+WLleOBl+OBn+OBruOBp+OAgeOBguOBquOBn+OBq+ip
+seOBmeS7peWkluOBq+mBuOaKnuiCouOBr+OBguOCiuOBvuOBm+OCk+OAguengeOBr+OAgTIwMTHl
+ubTjgavkuqHjgY/jgarjgovliY3jgavjg5bjg6vjgq3jg4rjg5XjgqHjgr3jga7jg4Hjg6Xjg4vj
+grjjgqLlpKfkvb/jgag55bm06ZaT5YON44GE44Gm44GE44GfU2F5b3ViYQ0KQnJvd27msI/jgajn
+tZDlqZrjgZfjgb7jgZfjgZ/jgILlrZDkvpvjgarjgZfjgacxMeW5tOmWk+e1kOWpmuOBl+OBn+OA
+gg0KDQrlvbzjga/jgZ/jgaPjgZ815pel6ZaT57aa44GE44Gf55+t44GE55eF5rCX44Gu5b6M44Gn
+5q2744Gr44G+44GX44Gf44CC5b2844Gu5q275b6M44CB56eB44Gv5YaN5ama44GX44Gq44GE44GT
+44Go44Gr5rG644KB44G+44GX44Gf44CC5Lqh44GP44Gq44Gj44Gf5aSr44GM55Sf44GN44Gm44GE
+44Gf44Go44GN44CB5b2844Gv57eP6aGNODUw5LiH44OJ44Or44KS6aCQ44GR44G+44GX44Gf44CC
+DQrvvIg4MDDkuIc1MDAw44OJ44Or77yJ6KW/44Ki44OV44Oq44Kr44Gu44OW44Or44Kt44OK44OV
+44Kh44K944Gu6aaW6YO944Ov44Ks44OJ44Kl44Kw44O844Gu6YqA6KGM44Gn44CC54++5Zyo44CB
+44GT44Gu44GK6YeR44Gv44G+44Gg6YqA6KGM44Gr44GC44KK44G+44GZ44CC5b2844Gv44GT44Gu
+44GK6YeR44KS44OW44Or44Kt44OK44OV44Kh44K944Gu6Ymx5qWt44GL44KJ44Gu6YeR44Gu6Ly4
+5Ye644Gr5Yip55So44Gn44GN44KL44KI44GG44Gr44GX44G+44GX44Gf44CCDQoNCuacgOi/keOA
+geengeOBruWMu+iAheOBr+engeOBjOeZjOOBqOiEs+WNkuS4reOBruWVj+mhjOOBruOBn+OCgeOB
+qzfjg7bmnIjplpPjga/ntprjgYvjgarjgYTjgaDjgo3jgYbjgajnp4HjgavoqIDjgYTjgb7jgZfj
+gZ/jgILnp4HjgpLmnIDjgoLmgqnjgb7jgZvjgabjgYTjgovjga7jga/ohLPljZLkuK3jga7nl4Xm
+sJfjgafjgZnjgILnp4Hjga7nirbmhYvjgpLnn6XjgaPjgZ/jga7jgafjgIHnp4Hjga/jgZPjga7j
+gYrph5HjgpLjgYLjgarjgZ/jgavmuKHjgZfjgabjgIHmgbXjgb7jgozjgarjgYTkurrjgIXjga7k
+uJboqbHjgpLjgZnjgovjgZPjgajjgavjgZfjgb7jgZfjgZ/jgILjgYLjgarjgZ/jga/jgZPjga7j
+gYrph5HjgpLnp4HjgYzjgZPjgZPjgafmjIfnpLrjgZnjgovmlrnms5XjgafliKnnlKjjgZnjgovj
+gafjgZfjgofjgYbjgILnp4Hjga/jgYLjgarjgZ/jgavjgYLjgarjgZ/jga7lgIvkurrnmoTjgark
+vb/nlKjjga7jgZ/jgoHjgavnt4/jgYrph5Hjga4zMOODkeODvOOCu+ODs+ODiOOCkuWPluOBo+OB
+puassuOBl+OBhOOBp+OBmeOAguOBiumHkeOBrjcw77yF44Gv56eB44Gu5ZCN5YmN44Gn5a2k5YWQ
+6Zmi44KS5bu644Gm44CB6YCa44KK44Gu6LKn44GX44GE5Lq644CF44KS5Yqp44GR44KL44Gf44KB
+44Gr5L2/44GG44Gn44GX44KH44GG44CC56eB44Gv5a2k5YWQ44Go44GX44Gm6IKy44Gh44G+44GX
+44Gf44GM44CB56We44Gu5a6244KS57at5oyB44GZ44KL44Gf44KB44Gg44GR44Gr44CB5a625peP
+44Gr44Gv6Kqw44KC44GE44G+44Gb44KT44CC44GT44Gu55eF5rCX44GM56eB44KS44Go44Gm44KC
+6Ium44GX44KB44Gf44Gu44Gn44CB56We44GM56eB44Gu572q44KS6LWm44GX44CB5qW95ZyS44Gn
+56eB44Gu6a2C44KS5Y+X44GR5YWl44KM44KL44KI44GG44Gr44GT44KM44KS44GX44Gm44GE44KL
+44Gu44Gn44GZ44CCDQoNCui/lOS/oeOCkuWPl+OBkeWPluOCiuasoeesrOOAgeODluODq+OCreOD
+iuODleOCoeOCveOBrumKgOihjOOBrumAo+e1oeWFiOOCkuOBiuefpeOCieOBm+OBl+OBvuOBmeOA
+guOBvuOBn+OAgemKgOihjOOBruePvuWcqOOBruWPl+WPluS6uuOBp+OBguOCi+OBk+OBqOOCkuio
+vOaYjuOBmeOCi+aoqemZkOabuOOCkueZuuihjOOBmeOCi+OCiOOBhumKgOihjOmVt+OBq+aMh+ek
+uuOBl+OBvuOBmeOAguengeOBjOOBk+OBk+OBp+i/sOOBueOBn+OCiOOBhuOBq+OBguOBquOBn+OB
+jOOBneOCjOOBq+W/nOOBmOOBpuihjOWLleOBmeOCi+OBk+OBqOOCkuengeOBq+S/neiovOOBl+OB
+puOBj+OBoOOBleOBhOOAgg0KDQrjgqTjgrbjg5njg6njg7vjgrXjg6jjgqbjg5DlpKvkurrjgYvj
+gonjgIINCg==
