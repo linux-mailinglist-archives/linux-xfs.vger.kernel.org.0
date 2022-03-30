@@ -2,46 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 318BD4EB7AB
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Mar 2022 03:11:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 415304EB7A8
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Mar 2022 03:11:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241550AbiC3BMn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Mar 2022 21:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55728 "EHLO
+        id S241546AbiC3BMk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Mar 2022 21:12:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241551AbiC3BMl (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Mar 2022 21:12:41 -0400
+        with ESMTP id S241545AbiC3BMi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Mar 2022 21:12:38 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B2B7427E2
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Mar 2022 18:10:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A88A660CDB
+        for <linux-xfs@vger.kernel.org>; Tue, 29 Mar 2022 18:10:53 -0700 (PDT)
 Received: from dread.disaster.area (pa49-180-43-123.pa.nsw.optusnet.com.au [49.180.43.123])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id F3252534113
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 62026534100
         for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 12:10:51 +1100 (AEDT)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nZMrK-00BVQ9-BA
+        id 1nZMrK-00BVQB-CB
         for linux-xfs@vger.kernel.org; Wed, 30 Mar 2022 12:10:50 +1100
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nZMrK-005VF7-9g
+        id 1nZMrK-005VFB-BE
         for linux-xfs@vger.kernel.org;
         Wed, 30 Mar 2022 12:10:50 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/8] xfs: shutdown in intent recovery has non-intent items in the AIL
-Date:   Wed, 30 Mar 2022 12:10:42 +1100
-Message-Id: <20220330011048.1311625-3-david@fromorbit.com>
+Subject: [PATCH 3/8] xfs: run callbacks before waking waiters in xlog_state_shutdown_callbacks
+Date:   Wed, 30 Mar 2022 12:10:43 +1100
+Message-Id: <20220330011048.1311625-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220330011048.1311625-1-david@fromorbit.com>
 References: <20220330011048.1311625-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6243ae1c
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6243ae1b
         a=MV6E7+DvwtTitA3W+3A2Lw==:117 a=MV6E7+DvwtTitA3W+3A2Lw==:17
         a=o8Y5sQTvuykA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=W2dFxmz-06ihNOqDruYA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=fo4PnSdgFuoABmlt5NgA:9 a=AjGcO6oz07-iQ99wixmX:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -53,161 +53,163 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-generic/388 triggered a failure in RUI recovery due to a corrupted
-btree record and the system then locked up hard due to a subsequent
-assert failure while holding a spinlock cancelling intents:
+Brian reported a null pointer dereference failure during unmount in
+xfs/006. He tracked the problem down to the AIL being torn down
+before a log shutdown had completed and removed all the items from
+the AIL. The failure occurred in this path while unmount was
+proceeding in another task:
 
- XFS (pmem1): Corruption of in-memory data (0x8) detected at xfs_do_force_shutdown+0x1a/0x20 (fs/xfs/xfs_trans.c:964).  Shutting down filesystem.
- XFS (pmem1): Please unmount the filesystem and rectify the problem(s)
- XFS: Assertion failed: !xlog_item_is_intent(lip), file: fs/xfs/xfs_log_recover.c, line: 2632
- Call Trace:
-  <TASK>
-  xlog_recover_cancel_intents.isra.0+0xd1/0x120
-  xlog_recover_finish+0xb9/0x110
-  xfs_log_mount_finish+0x15a/0x1e0
-  xfs_mountfs+0x540/0x910
-  xfs_fs_fill_super+0x476/0x830
-  get_tree_bdev+0x171/0x270
-  ? xfs_init_fs_context+0x1e0/0x1e0
-  xfs_fs_get_tree+0x15/0x20
-  vfs_get_tree+0x24/0xc0
-  path_mount+0x304/0xba0
-  ? putname+0x55/0x60
-  __x64_sys_mount+0x108/0x140
-  do_syscall_64+0x35/0x80
-  entry_SYSCALL_64_after_hwframe+0x44/0xae
+ xfs_trans_ail_delete+0x102/0x130 [xfs]
+ xfs_buf_item_done+0x22/0x30 [xfs]
+ xfs_buf_ioend+0x73/0x4d0 [xfs]
+ xfs_trans_committed_bulk+0x17e/0x2f0 [xfs]
+ xlog_cil_committed+0x2a9/0x300 [xfs]
+ xlog_cil_process_committed+0x69/0x80 [xfs]
+ xlog_state_shutdown_callbacks+0xce/0xf0 [xfs]
+ xlog_force_shutdown+0xdf/0x150 [xfs]
+ xfs_do_force_shutdown+0x5f/0x150 [xfs]
+ xlog_ioend_work+0x71/0x80 [xfs]
+ process_one_work+0x1c5/0x390
+ worker_thread+0x30/0x350
+ kthread+0xd7/0x100
+ ret_from_fork+0x1f/0x30
 
-Essentially, there's dirty metadata in the AIL from intent recovery
-transactions, so when we go to cancel the remaining intents we assume
-that all objects after the first non-intent log item in the AIL are
-not intents.
+This is processing an EIO error to a log write, and it's
+triggering a force shutdown. This causes the log to be shut down,
+and then it is running attached iclog callbacks from the shutdown
+context. That means the fs and log has already been marked as
+xfs_is_shutdown/xlog_is_shutdown and so high level code will abort
+(e.g. xfs_trans_commit(), xfs_log_force(), etc) with an error
+because of shutdown.
 
-This is not true. Intent recovery can log new intents to continue
-the operations the original intent could not complete in a single
-transaction. The new intents are committed before they are deferred,
-which means if the CIL commits in the background they will get
-inserted into the AIL at the head.
+The umount would have been blocked waiting for a log force
+completion inside xfs_log_cover() -> xfs_sync_sb(). The first thing
+for this situation to occur is for xfs_sync_sb() to exit without
+waiting for the iclog buffer to be comitted to disk. The
+above trace is the completion routine for the iclog buffer, and
+it is shutting down the filesystem.
 
-Hence if we shut down the filesystem while processing intent
-recovery, the AIL may have new intents active at the current head.
-Hence this check:
+xlog_state_shutdown_callbacks() does this:
 
-                /*
-                 * We're done when we see something other than an intent.
-                 * There should be no intents left in the AIL now.
-                 */
-                if (!xlog_item_is_intent(lip)) {
-#ifdef DEBUG
-                        for (; lip; lip = xfs_trans_ail_cursor_next(ailp, &cur))
-                                ASSERT(!xlog_item_is_intent(lip));
-#endif
-                        break;
+{
+        struct xlog_in_core     *iclog;
+        LIST_HEAD(cb_list);
+
+        spin_lock(&log->l_icloglock);
+        iclog = log->l_iclog;
+        do {
+                if (atomic_read(&iclog->ic_refcnt)) {
+                        /* Reference holder will re-run iclog callbacks. */
+                        continue;
                 }
+                list_splice_init(&iclog->ic_callbacks, &cb_list);
+>>>>>>           wake_up_all(&iclog->ic_write_wait);
+>>>>>>           wake_up_all(&iclog->ic_force_wait);
+        } while ((iclog = iclog->ic_next) != log->l_iclog);
 
-in both xlog_recover_process_intents() and
-log_recover_cancel_intents() is simply not valid. It was valid back
-when we only had EFI/EFD intents and didn't chain intents, but it
-hasn't been valid ever since intent recovery could create and commit
-new intents.
+        wake_up_all(&log->l_flush_wait);
+        spin_unlock(&log->l_icloglock);
 
-Given that crashing the mount task like this pretty much prevents
-diagnosing what went wrong that lead to the initial failure that
-triggered intent cancellation, just remove the checks altogether.
+>>>>>>  xlog_cil_process_committed(&cb_list);
+}
 
+This wakes any thread waiting on IO completion of the iclog (in this
+case the umount log force) before shutdown processes all the pending
+callbacks.  That means the xfs_sync_sb() waiting on a sync
+transaction in xfs_log_force() on iclog->ic_force_wait will get
+woken before the callbacks attached to that iclog are run. This
+results in xfs_sync_sb() returning an error, and so unmount unblocks
+and continues to run whilst the log shutdown is still in progress.
+
+Normally this is just fine because the force waiter has nothing to
+do with AIL operations. But in the case of this unmount path, the
+log force waiter goes on to tear down the AIL because the log is now
+shut down and so nothing ever blocks it again from the wait point in
+xfs_log_cover().
+
+Hence it's a race to see who gets to the AIL first - the unmount
+code or xlog_cil_process_committed() killing the superblock buffer.
+
+To fix this, we just have to change the order of processing in
+xlog_state_shutdown_callbacks() to run the callbacks before it wakes
+any task waiting on completion of the iclog.
+
+Reported-by: Brian Foster <bfoster@redhat.com>
+Fixes: aad7272a9208 ("xfs: separate out log shutdown callback processing")
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log_recover.c | 50 ++++++++++++++--------------------------
- 1 file changed, 17 insertions(+), 33 deletions(-)
+ fs/xfs/xfs_log.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 30e22cd943c2..bc8ddc4b78e8 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2519,21 +2519,22 @@ xlog_abort_defer_ops(
- 		xfs_defer_ops_capture_free(mp, dfc);
- 	}
- }
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 5010ce712a3e..e0d47e74c540 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -487,7 +487,10 @@ xfs_log_reserve(
+  * Run all the pending iclog callbacks and wake log force waiters and iclog
+  * space waiters so they can process the newly set shutdown state. We really
+  * don't care what order we process callbacks here because the log is shut down
+- * and so state cannot change on disk anymore.
++ * and so state cannot change on disk anymore. However, we cannot wake waiters
++ * until the callbacks have been processed because we may be in unmount and
++ * we must ensure that all AIL operations the callbacks perform have completed
++ * before we tear down the AIL.
+  *
+  * We avoid processing actively referenced iclogs so that we don't run callbacks
+  * while the iclog owner might still be preparing the iclog for IO submssion.
+@@ -501,7 +504,6 @@ xlog_state_shutdown_callbacks(
+ 	struct xlog_in_core	*iclog;
+ 	LIST_HEAD(cb_list);
+ 
+-	spin_lock(&log->l_icloglock);
+ 	iclog = log->l_iclog;
+ 	do {
+ 		if (atomic_read(&iclog->ic_refcnt)) {
+@@ -509,14 +511,16 @@ xlog_state_shutdown_callbacks(
+ 			continue;
+ 		}
+ 		list_splice_init(&iclog->ic_callbacks, &cb_list);
++		spin_unlock(&log->l_icloglock);
 +
- /*
-  * When this is called, all of the log intent items which did not have
-- * corresponding log done items should be in the AIL.  What we do now
-- * is update the data structures associated with each one.
-+ * corresponding log done items should be in the AIL.  What we do now is update
-+ * the data structures associated with each one.
-  *
-- * Since we process the log intent items in normal transactions, they
-- * will be removed at some point after the commit.  This prevents us
-- * from just walking down the list processing each one.  We'll use a
-- * flag in the intent item to skip those that we've already processed
-- * and use the AIL iteration mechanism's generation count to try to
-- * speed this up at least a bit.
-+ * Since we process the log intent items in normal transactions, they will be
-+ * removed at some point after the commit.  This prevents us from just walking
-+ * down the list processing each one.  We'll use a flag in the intent item to
-+ * skip those that we've already processed and use the AIL iteration mechanism's
-+ * generation count to try to speed this up at least a bit.
-  *
-- * When we start, we know that the intents are the only things in the
-- * AIL.  As we process them, however, other items are added to the
-- * AIL.
-+ * When we start, we know that the intents are the only things in the AIL. As we
-+ * process them, however, other items are added to the AIL. Hence we know we
-+ * have started recovery on all the pending intents when we find an non-intent
-+ * item in the AIL.
-  */
- STATIC int
- xlog_recover_process_intents(
-@@ -2556,17 +2557,8 @@ xlog_recover_process_intents(
- 	for (lip = xfs_trans_ail_cursor_first(ailp, &cur, 0);
- 	     lip != NULL;
- 	     lip = xfs_trans_ail_cursor_next(ailp, &cur)) {
--		/*
--		 * We're done when we see something other than an intent.
--		 * There should be no intents left in the AIL now.
--		 */
--		if (!xlog_item_is_intent(lip)) {
--#ifdef DEBUG
--			for (; lip; lip = xfs_trans_ail_cursor_next(ailp, &cur))
--				ASSERT(!xlog_item_is_intent(lip));
--#endif
-+		if (!xlog_item_is_intent(lip))
- 			break;
--		}
++		xlog_cil_process_committed(&cb_list);
++
++		spin_lock(&log->l_icloglock);
+ 		wake_up_all(&iclog->ic_write_wait);
+ 		wake_up_all(&iclog->ic_force_wait);
+ 	} while ((iclog = iclog->ic_next) != log->l_iclog);
  
- 		/*
- 		 * We should never see a redo item with a LSN higher than
-@@ -2607,8 +2599,9 @@ xlog_recover_process_intents(
+ 	wake_up_all(&log->l_flush_wait);
+-	spin_unlock(&log->l_icloglock);
+-
+-	xlog_cil_process_committed(&cb_list);
  }
  
  /*
-- * A cancel occurs when the mount has failed and we're bailing out.
-- * Release all pending log intent items so they don't pin the AIL.
-+ * A cancel occurs when the mount has failed and we're bailing out.  Release all
-+ * pending log intent items that we haven't started recovery on so they don't
-+ * pin the AIL.
-  */
- STATIC void
- xlog_recover_cancel_intents(
-@@ -2622,17 +2615,8 @@ xlog_recover_cancel_intents(
- 	spin_lock(&ailp->ail_lock);
- 	lip = xfs_trans_ail_cursor_first(ailp, &cur, 0);
- 	while (lip != NULL) {
--		/*
--		 * We're done when we see something other than an intent.
--		 * There should be no intents left in the AIL now.
--		 */
--		if (!xlog_item_is_intent(lip)) {
--#ifdef DEBUG
--			for (; lip; lip = xfs_trans_ail_cursor_next(ailp, &cur))
--				ASSERT(!xlog_item_is_intent(lip));
--#endif
-+		if (!xlog_item_is_intent(lip))
- 			break;
+@@ -583,11 +587,8 @@ xlog_state_release_iclog(
+ 		 * pending iclog callbacks that were waiting on the release of
+ 		 * this iclog.
+ 		 */
+-		if (last_ref) {
+-			spin_unlock(&log->l_icloglock);
++		if (last_ref)
+ 			xlog_state_shutdown_callbacks(log);
+-			spin_lock(&log->l_icloglock);
 -		}
+ 		return -EIO;
+ 	}
  
- 		spin_unlock(&ailp->ail_lock);
- 		lip->li_ops->iop_release(lip);
+@@ -3903,7 +3904,10 @@ xlog_force_shutdown(
+ 	wake_up_all(&log->l_cilp->xc_start_wait);
+ 	wake_up_all(&log->l_cilp->xc_commit_wait);
+ 	spin_unlock(&log->l_cilp->xc_push_lock);
++
++	spin_lock(&log->l_icloglock);
+ 	xlog_state_shutdown_callbacks(log);
++	spin_unlock(&log->l_icloglock);
+ 
+ 	return log_error;
+ }
 -- 
 2.35.1
 
