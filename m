@@ -2,197 +2,203 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F66C4ED15C
-	for <lists+linux-xfs@lfdr.de>; Thu, 31 Mar 2022 03:38:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC0DA4ED0D8
+	for <lists+linux-xfs@lfdr.de>; Thu, 31 Mar 2022 02:27:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231608AbiCaBkO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Mar 2022 21:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
+        id S229567AbiCaA3k (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 30 Mar 2022 20:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbiCaBkN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Mar 2022 21:40:13 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B42C013FAA
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 18:38:25 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id b24so26450150edu.10
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Mar 2022 18:38:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thejof-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gAgRS/ShScj1cT+FPSiK6LTNDcAE+AwE8jKvwbqdpyY=;
-        b=LfQ6N5ooCoZT66+7rFuHe/SJy/tqUrRrTSfxpP2M6YCAXEdB5J/Qc5iM8lFB1OnZG0
-         7ioujkNeKR37d8Yin+sybUdHCb6AbHZBJS5QZ92Kmq0zZMWIYk8N8YH8lIHDQs277HhX
-         GvU9+/mLdxiLt8EtciQ4xl7V9XcXNmzphjeNHCyk4RMcEFFFQkobnOqfF956cGMC716T
-         J1XYK0oeS7/ZulGHiERnropTuZ1ATVfCZaYvmm8dmNbNQTTkSWBClMVTqtgyLAIUdIDV
-         MzUqv41CNsI8iK3FZAsKA+o/KQYBz0R/WKNPOyGua4Mvu3NHVAqU2Bzd6O5RLXICIg79
-         T4yA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gAgRS/ShScj1cT+FPSiK6LTNDcAE+AwE8jKvwbqdpyY=;
-        b=Gj3YJY2uRiYlO+M8z0bbOcMdWWYMk8bLf444W+1r4V3oxweE5k51xxKVmhGUvBrg60
-         B9BwAS9m2cYRagAoyK9/wCh+tVmaqEX0yfS6jFB9mTKzLArltmkxATdc65OCcOnBGH5Q
-         mBHn8d+6B98kogcDtyv0ASbIbYcvvCiygrf1UlPa4fUirQO0YBw/Z2gBRNZDkwaNf7vz
-         NLNJq9FxMCu+FAKJHjGjVHRilVSY+tBru2x12p5km/KCNSF5+bCVkLcVNsw2R2SUputU
-         2bLQAtft3fU9ym54aK/ylfLLgDBJumWsBIInf2U4mdOenC7cLoqTK3X9jEtvTRlEm5in
-         zvJw==
-X-Gm-Message-State: AOAM532z/3MOiOdhjU/V74L81A4W2KpsXorXXohFXd0EY+kjCYFAirI6
-        W+dow8JMJ3ouUMRtHoTLp4fBgPXN/Lz+Rtx5qycQrA==
-X-Google-Smtp-Source: ABdhPJwBCWlYhyoiuImpTUNlab8CXn72EhWkk7+V5zC+tq3ch+5v+4uEd/TnDZ31R9wQpvmPHQJTptpQKvxlOm7YXTA=
-X-Received: by 2002:a05:6402:1706:b0:419:1548:8119 with SMTP id
- y6-20020a056402170600b0041915488119mr14239618edu.126.1648690704322; Wed, 30
- Mar 2022 18:38:24 -0700 (PDT)
+        with ESMTP id S1352091AbiCaA3g (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Mar 2022 20:29:36 -0400
+X-Greylist: delayed 416 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 30 Mar 2022 17:27:48 PDT
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BABE4C429;
+        Wed, 30 Mar 2022 17:27:48 -0700 (PDT)
+Received: from mxde.zte.com.cn (unknown [10.35.8.63])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4KTP8y6gtgzvgMn;
+        Thu, 31 Mar 2022 08:20:50 +0800 (CST)
+Received: from mxus.zte.com.cn (unknown [10.207.168.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxde.zte.com.cn (FangMail) with ESMTPS id 4KTP8g3ctzzCTpfd;
+        Thu, 31 Mar 2022 08:20:35 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxus.zte.com.cn (FangMail) with ESMTPS id 4KTP8b5vvrz9wMSh;
+        Thu, 31 Mar 2022 08:20:31 +0800 (CST)
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4KTP8X1fycz7jZxQ;
+        Thu, 31 Mar 2022 08:20:28 +0800 (CST)
+Received: from szxlzmapp03.zte.com.cn ([10.5.231.207])
+        by mse-fl1.zte.com.cn with SMTP id 22V0KOVe048101;
+        Thu, 31 Mar 2022 08:20:24 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-cloudhost8.localdomain (unknown [10.234.72.110])
+        by smtp (Zmail) with SMTP;
+        Thu, 31 Mar 2022 08:20:24 +0800
+X-Zmail-TransId: 3e816244f3c7004-b9eba
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
+        wang.liang82@zte.com.cn, Cheng Lin <cheng.lin130@zte.com.cn>
+Subject: [PATCH] xfs: getattr ignore blocks beyond eof
+Date:   Thu, 31 Mar 2022 16:02:56 +0800
+Message-Id: <20220331080256.1874-1-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 2.33.0.rc0.dirty
 MIME-Version: 1.0
-References: <3e1f6011b22ca87ea3c0fad701286369daa2187f.1648228733.git.jof@thejof.com>
- <3c3ae424913cb921a9f8abddfcb1b418e7cfa601.1648228733.git.jof@thejof.com> <YkRIBtx2qMtu9wPG@chrisdown.name>
-In-Reply-To: <YkRIBtx2qMtu9wPG@chrisdown.name>
-From:   Jonathan Lassoff <jof@thejof.com>
-Date:   Thu, 31 Mar 2022 01:38:13 +0000
-Message-ID: <CAHsqw9sgryk2icrij2Vax-=jO8RRG_MkdeiopYc+b+G6h+A0Rg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] Add XFS messages to printk index
-To:     Chris Down <chris@chrisdown.name>
-Cc:     linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl1.zte.com.cn 22V0KOVe048101
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.251.14.novalocal with ID 6244F3E1.000 by FangMail milter!
+X-FangMail-Envelope: 1648686051/4KTP8y6gtgzvgMn/6244F3E1.000/10.35.8.63/[10.35.8.63]/mxde.zte.com.cn/<wang.yi59@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6244F3E1.000/4KTP8y6gtgzvgMn
+X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Thanks for the useful feedback from all. I've integrated the
-formatting suggestions and will follow up with a [PATCH v4] set.
+From: Cheng Lin <cheng.lin130@zte.com.cn>
 
-My initial commit message describing a "semi-stable interface" was a
-poor choice of words on my part. My idea of "interface" was users
-comparing the index entries from release to release and developing on
-top of that; I didn't take into consideration the contextual meaning
-of "interface" in Kernel development. This change doesn't create or
-alter any interfaces, this just makes the backing store of information
-for an existing interface more correct and complete.
-It is my hope that once these changes are made, XFS maintainers will
-hardly need to engage with or keep track of this printk indexing
-effort. These are only needed because printk() isn't called directly.
+Blocks beyond EOF, which preallocated, will be reclaimed at some time.
+These blocks can be ignored when getattr.
 
--- jof
+This patch will optimize query accuracy for getattr blocks.
 
-On Wed, 30 Mar 2022 at 12:07, Chris Down <chris@chrisdown.name> wrote:
->
-> Jonathan Lassoff writes:
-> >In order for end users to quickly react to new issues that come up in
-> >production, it is proving useful to leverage the printk indexing system.
-> >This printk index enables kernel developers to use calls to printk()
-> >with changeable ad-hoc format strings, while still enabling end users
-> >to detect changes from release to release.
-> >
-> >So that detailed XFS messages are captures by this printk index, this
-> >patch wraps the xfs_<level> and xfs_alert_tag functions.
-> >
-> >Signed-off-by: Jonathan Lassoff <jof@thejof.com>
->
-> After Dave's suggested whitespace/ordering fixup, feel free to add:
->
-> Reviewed-by: Chris Down <chris@chrisdown.name>
->
-> Thanks!
->
-> >---
-> >
-> >Notes:
-> >    [PATCH v1]
-> >      * De-duplicate kernel logging levels and tidy whitespace.
-> >    [PATCH v2]
-> >      * Split changes into two patches:
-> >         - function and prototype de-duplication.
-> >         - Adding printk indexing
-> >    [PATCH v3]
-> >      * Fix some whitespace and semicolon. *facepalm*
-> >
-> > fs/xfs/xfs_message.c |  2 +-
-> > fs/xfs/xfs_message.h | 29 ++++++++++++++++++++---------
-> > 2 files changed, 21 insertions(+), 10 deletions(-)
-> >
-> >diff --git a/fs/xfs/xfs_message.c b/fs/xfs/xfs_message.c
-> >index ede8a4f2f676..f01efad20420 100644
-> >--- a/fs/xfs/xfs_message.c
-> >+++ b/fs/xfs/xfs_message.c
-> >@@ -51,7 +51,7 @@ void xfs_printk_level(
-> > }
-> >
-> > void
-> >-xfs_alert_tag(
-> >+_xfs_alert_tag(
-> >       const struct xfs_mount  *mp,
-> >       int                     panic_tag,
-> >       const char              *fmt, ...)
-> >diff --git a/fs/xfs/xfs_message.h b/fs/xfs/xfs_message.h
-> >index 2f609800e806..6f9a1b67c4d7 100644
-> >--- a/fs/xfs/xfs_message.h
-> >+++ b/fs/xfs/xfs_message.h
-> >@@ -6,34 +6,45 @@
-> >
-> > struct xfs_mount;
-> >
-> >+#define xfs_printk_index_wrap(kern_level, mp, fmt, ...)               \
-> >+({                                                            \
-> >+      printk_index_subsys_emit("%sXFS%s: ", kern_level, fmt); \
-> >+      xfs_printk_level(kern_level, mp, fmt, ##__VA_ARGS__);   \
-> >+})
-> > extern __printf(3, 4)
-> > void xfs_printk_level(
-> >       const char *kern_level,
-> >       const struct xfs_mount *mp,
-> >       const char *fmt, ...);
-> > #define xfs_emerg(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_EMERG, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_EMERG, mp, fmt, ##__VA_ARGS__)
-> > #define xfs_alert(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_ALERT, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_ALERT, mp, fmt, ##__VA_ARGS__)
-> > #define xfs_crit(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_CRIT, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_CRIT, mp, fmt, ##__VA_ARGS__)
-> > #define xfs_err(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_ERR, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_ERR, mp, fmt, ##__VA_ARGS__)
-> > #define xfs_warn(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_WARNING, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_WARNING, mp, fmt, ##__VA_ARGS__)
-> > #define xfs_notice(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_NOTICE, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_NOTICE, mp, fmt, ##__VA_ARGS__)
-> > #define xfs_info(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_INFO, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_INFO, mp, fmt, ##__VA_ARGS__)
-> > #ifdef DEBUG
-> > #define xfs_debug(mp, fmt, ...) \
-> >-      xfs_printk_level(KERN_DEBUG, mp, fmt, ##__VA_ARGS__)
-> >+      xfs_printk_index_wrap(KERN_DEBUG, mp, fmt, ##__VA_ARGS__)
-> > #else
-> > #define xfs_debug(mp, fmt, ...) do {} while (0)
-> > #endif
-> >
-> >+#define xfs_alert_tag(mp, tag, fmt, ...)                      \
-> >+({                                                            \
-> >+      printk_index_subsys_emit("%sXFS%s: ", KERN_ALERT, fmt); \
-> >+      _xfs_alert_tag(mp, tag, fmt, ##__VA_ARGS__);            \
-> >+})
-> >+
-> > extern __printf(3, 4)
-> >-void xfs_alert_tag(const struct xfs_mount *mp, int tag, const char *fmt, ...);
-> >+void _xfs_alert_tag(const struct xfs_mount *mp, int tag, const char *fmt, ...);
-> >
-> >
-> > #define xfs_printk_ratelimited(func, dev, fmt, ...)                   \
-> >--
-> >2.35.1
-> >
+Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+---
+ fs/xfs/xfs_bmap_util.c |  1 +
+ fs/xfs/xfs_icache.c    |  1 +
+ fs/xfs/xfs_inode.h     |  1 +
+ fs/xfs/xfs_iomap.c     |  5 +++++
+ fs/xfs/xfs_iops.c      | 19 ++++++++++++++++++-
+ 5 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index eb2e387..9f4081d 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -753,6 +753,7 @@
+ 	if (error)
+ 		goto out_unlock;
+ 
++	ip->i_last_fsb = end_fsb;
+ 	xfs_inode_clear_eofblocks_tag(ip);
+ 	goto out_unlock;
+ 
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 9644f93..43ffb9e 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -102,6 +102,7 @@ struct xfs_inode *
+ 	memset(&ip->i_df, 0, sizeof(ip->i_df));
+ 	ip->i_flags = 0;
+ 	ip->i_delayed_blks = 0;
++	ip->i_last_fsb = 0;
+ 	ip->i_diflags2 = mp->m_ino_geo.new_diflags2;
+ 	ip->i_nblocks = 0;
+ 	ip->i_forkoff = 0;
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index b7e8f14..56fc41b 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -55,6 +55,7 @@
+ 	unsigned long		i_flags;	/* see defined flags below */
+ 	uint64_t		i_delayed_blks;	/* count of delay alloc blks */
+ 	xfs_fsize_t		i_disk_size;	/* number of bytes in file */
++	xfs_fileoff_t		i_last_fsb;	/* last fsb preallocated */
+ 	xfs_rfsblock_t		i_nblocks;	/* # of direct & btree blocks */
+ 	prid_t			i_projid;	/* owner's project id */
+ 	xfs_extlen_t		i_extsize;	/* basic/minimum extent size */
+diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+index e552ce5..bd9266e 100644
+--- a/fs/xfs/xfs_iomap.c
++++ b/fs/xfs/xfs_iomap.c
+@@ -881,6 +881,7 @@
+ 	bool			eof = false, cow_eof = false, shared = false;
+ 	int			allocfork = XFS_DATA_FORK;
+ 	int			error = 0;
++	xfs_fileoff_t		prealloc_last_fsb = 0;
+ 
+ 	if (xfs_is_shutdown(mp))
+ 		return -EIO;
+@@ -1024,6 +1025,7 @@
+ 				XFS_B_TO_FSB(mp, mp->m_super->s_maxbytes));
+ 			ASSERT(p_end_fsb > offset_fsb);
+ 			prealloc_blocks = p_end_fsb - end_fsb;
++			prealloc_last_fsb = p_end_fsb;
+ 		}
+ 	}
+ 
+@@ -1049,6 +1051,9 @@
+ 		goto out_unlock;
+ 	}
+ 
++	if (prealloc_last_fsb && prealloc_blocks)
++		ip->i_last_fsb = prealloc_last_fsb;
++
+ 	if (allocfork == XFS_COW_FORK) {
+ 		trace_xfs_iomap_alloc(ip, offset, count, allocfork, &cmap);
+ 		goto found_cow;
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index b79b384..ca0372c 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -559,8 +559,14 @@
+ 	struct xfs_inode	*ip = XFS_I(inode);
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 
++	xfs_off_t		fsb_beyond_eof;
++	xfs_fileoff_t		end_fsb;
++
+ 	trace_xfs_getattr(ip);
+ 
++	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
++	fsb_beyond_eof = ip->i_last_fsb - end_fsb;
++
+ 	if (xfs_is_shutdown(mp))
+ 		return -EIO;
+ 
+@@ -574,7 +580,15 @@
+ 	stat->atime = inode->i_atime;
+ 	stat->mtime = inode->i_mtime;
+ 	stat->ctime = inode->i_ctime;
+-	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
++
++	if (fsb_beyond_eof > 0) {
++		stat->blocks =
++		XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks)
++				  - fsb_beyond_eof;
++	} else {
++		stat->blocks =
++		XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
++	}
+ 
+ 	if (xfs_has_v3inodes(mp)) {
+ 		if (request_mask & STATX_BTIME) {
+@@ -988,6 +1002,9 @@
+ 	ip->i_disk_size = newsize;
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 
++	/* update i_last_fsb to newsize when truncate.*/
++	ip->i_last_fsb = XFS_B_TO_FSB(mp, newsize);
++
+ 	if (newsize <= oldsize) {
+ 		error = xfs_itruncate_extents(&tp, ip, XFS_DATA_FORK, newsize);
+ 		if (error)
+-- 
+1.8.3.1
