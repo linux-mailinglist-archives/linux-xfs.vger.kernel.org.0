@@ -2,203 +2,172 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC0DA4ED0D8
-	for <lists+linux-xfs@lfdr.de>; Thu, 31 Mar 2022 02:27:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6087D4ED2D9
+	for <lists+linux-xfs@lfdr.de>; Thu, 31 Mar 2022 06:35:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiCaA3k (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 30 Mar 2022 20:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45468 "EHLO
+        id S230197AbiCaERE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 31 Mar 2022 00:17:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352091AbiCaA3g (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 30 Mar 2022 20:29:36 -0400
-X-Greylist: delayed 416 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 30 Mar 2022 17:27:48 PDT
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BABE4C429;
-        Wed, 30 Mar 2022 17:27:48 -0700 (PDT)
-Received: from mxde.zte.com.cn (unknown [10.35.8.63])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4KTP8y6gtgzvgMn;
-        Thu, 31 Mar 2022 08:20:50 +0800 (CST)
-Received: from mxus.zte.com.cn (unknown [10.207.168.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxde.zte.com.cn (FangMail) with ESMTPS id 4KTP8g3ctzzCTpfd;
-        Thu, 31 Mar 2022 08:20:35 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxus.zte.com.cn (FangMail) with ESMTPS id 4KTP8b5vvrz9wMSh;
-        Thu, 31 Mar 2022 08:20:31 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4KTP8X1fycz7jZxQ;
-        Thu, 31 Mar 2022 08:20:28 +0800 (CST)
-Received: from szxlzmapp03.zte.com.cn ([10.5.231.207])
-        by mse-fl1.zte.com.cn with SMTP id 22V0KOVe048101;
-        Thu, 31 Mar 2022 08:20:24 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from fox-cloudhost8.localdomain (unknown [10.234.72.110])
-        by smtp (Zmail) with SMTP;
-        Thu, 31 Mar 2022 08:20:24 +0800
-X-Zmail-TransId: 3e816244f3c7004-b9eba
-From:   Yi Wang <wang.yi59@zte.com.cn>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        with ESMTP id S230239AbiCaEQn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 31 Mar 2022 00:16:43 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE0525EC88;
+        Wed, 30 Mar 2022 21:01:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648699262; x=1680235262;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/WJjZChIo8N1c8iyIkTk+sLE9BhLskWf4w/kKr8E+fU=;
+  b=ThgFKeeLfVooXc15RA3hT18hmq+AqapRpEHsw3sACYiVxvWZIx5AnAez
+   JtjQkGbsPUMEc+7e+B7+10p/uIGflJ7NQ8UxJ1TunF3fnxWNWujZi23I+
+   Yx2TOob3LOtfMcJD4GJ5feQN6mye1i+wChz6OryFNWRZfA82t7puznC6U
+   MQ4WHSJqHbwss4ZU+g/K5nIq2vR/aSBpCQAlgOm3YvNld29NvKWdYe8WV
+   cg50gsZPRvCVGhpoo/XXF901h7GhYM9iMzrErli8SRM/8QmFG0w8nZYVx
+   0gCkbEB9hUWruXEx0e8cCgDEhkuR82f+DzOCXo3pXt5DXHMo6jjj4e/n+
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="258538091"
+X-IronPort-AV: E=Sophos;i="5.90,224,1643702400"; 
+   d="scan'208";a="258538091"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 19:57:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,224,1643702400"; 
+   d="scan'208";a="520138912"
+Received: from lkp-server02.sh.intel.com (HELO 56431612eabd) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2022 19:57:50 -0700
+Received: from kbuild by 56431612eabd with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nZl0P-0000mi-SJ;
+        Thu, 31 Mar 2022 02:57:49 +0000
+Date:   Thu, 31 Mar 2022 10:57:16 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Yi Wang <wang.yi59@zte.com.cn>, djwong@kernel.org
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         xue.zhihong@zte.com.cn, wang.yi59@zte.com.cn,
         wang.liang82@zte.com.cn, Cheng Lin <cheng.lin130@zte.com.cn>
-Subject: [PATCH] xfs: getattr ignore blocks beyond eof
-Date:   Thu, 31 Mar 2022 16:02:56 +0800
-Message-Id: <20220331080256.1874-1-wang.yi59@zte.com.cn>
-X-Mailer: git-send-email 2.33.0.rc0.dirty
+Subject: Re: [PATCH] xfs: getattr ignore blocks beyond eof
+Message-ID: <202203311017.dWBicGOM-lkp@intel.com>
+References: <20220331080256.1874-1-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl1.zte.com.cn 22V0KOVe048101
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.251.14.novalocal with ID 6244F3E1.000 by FangMail milter!
-X-FangMail-Envelope: 1648686051/4KTP8y6gtgzvgMn/6244F3E1.000/10.35.8.63/[10.35.8.63]/mxde.zte.com.cn/<wang.yi59@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6244F3E1.000/4KTP8y6gtgzvgMn
-X-Spam-Status: No, score=0.0 required=5.0 tests=BAYES_00,DATE_IN_FUTURE_06_12,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220331080256.1874-1-wang.yi59@zte.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Cheng Lin <cheng.lin130@zte.com.cn>
+Hi Yi,
 
-Blocks beyond EOF, which preallocated, will be reclaimed at some time.
-These blocks can be ignored when getattr.
+Thank you for the patch! Yet something to improve:
 
-This patch will optimize query accuracy for getattr blocks.
+[auto build test ERROR on xfs-linux/for-next]
+[also build test ERROR on v5.17 next-20220330]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Signed-off-by: Cheng Lin <cheng.lin130@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
----
- fs/xfs/xfs_bmap_util.c |  1 +
- fs/xfs/xfs_icache.c    |  1 +
- fs/xfs/xfs_inode.h     |  1 +
- fs/xfs/xfs_iomap.c     |  5 +++++
- fs/xfs/xfs_iops.c      | 19 ++++++++++++++++++-
- 5 files changed, 26 insertions(+), 1 deletion(-)
+url:    https://github.com/intel-lab-lkp/linux/commits/Yi-Wang/xfs-getattr-ignore-blocks-beyond-eof/20220331-082944
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+config: s390-randconfig-r002-20220330 (https://download.01.org/0day-ci/archive/20220331/202203311017.dWBicGOM-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 0f6d9501cf49ce02937099350d08f20c4af86f3d)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install s390 cross compiling tool for clang build
+        # apt-get install binutils-s390x-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/e560188227f8fed285a1bd736e5708de984f0596
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Yi-Wang/xfs-getattr-ignore-blocks-beyond-eof/20220331-082944
+        git checkout e560188227f8fed285a1bd736e5708de984f0596
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index eb2e387..9f4081d 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -753,6 +753,7 @@
- 	if (error)
- 		goto out_unlock;
- 
-+	ip->i_last_fsb = end_fsb;
- 	xfs_inode_clear_eofblocks_tag(ip);
- 	goto out_unlock;
- 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 9644f93..43ffb9e 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -102,6 +102,7 @@ struct xfs_inode *
- 	memset(&ip->i_df, 0, sizeof(ip->i_df));
- 	ip->i_flags = 0;
- 	ip->i_delayed_blks = 0;
-+	ip->i_last_fsb = 0;
- 	ip->i_diflags2 = mp->m_ino_geo.new_diflags2;
- 	ip->i_nblocks = 0;
- 	ip->i_forkoff = 0;
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index b7e8f14..56fc41b 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -55,6 +55,7 @@
- 	unsigned long		i_flags;	/* see defined flags below */
- 	uint64_t		i_delayed_blks;	/* count of delay alloc blks */
- 	xfs_fsize_t		i_disk_size;	/* number of bytes in file */
-+	xfs_fileoff_t		i_last_fsb;	/* last fsb preallocated */
- 	xfs_rfsblock_t		i_nblocks;	/* # of direct & btree blocks */
- 	prid_t			i_projid;	/* owner's project id */
- 	xfs_extlen_t		i_extsize;	/* basic/minimum extent size */
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index e552ce5..bd9266e 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -881,6 +881,7 @@
- 	bool			eof = false, cow_eof = false, shared = false;
- 	int			allocfork = XFS_DATA_FORK;
- 	int			error = 0;
-+	xfs_fileoff_t		prealloc_last_fsb = 0;
- 
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
-@@ -1024,6 +1025,7 @@
- 				XFS_B_TO_FSB(mp, mp->m_super->s_maxbytes));
- 			ASSERT(p_end_fsb > offset_fsb);
- 			prealloc_blocks = p_end_fsb - end_fsb;
-+			prealloc_last_fsb = p_end_fsb;
- 		}
- 	}
- 
-@@ -1049,6 +1051,9 @@
- 		goto out_unlock;
- 	}
- 
-+	if (prealloc_last_fsb && prealloc_blocks)
-+		ip->i_last_fsb = prealloc_last_fsb;
-+
- 	if (allocfork == XFS_COW_FORK) {
- 		trace_xfs_iomap_alloc(ip, offset, count, allocfork, &cmap);
- 		goto found_cow;
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index b79b384..ca0372c 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -559,8 +559,14 @@
- 	struct xfs_inode	*ip = XFS_I(inode);
- 	struct xfs_mount	*mp = ip->i_mount;
- 
-+	xfs_off_t		fsb_beyond_eof;
-+	xfs_fileoff_t		end_fsb;
-+
- 	trace_xfs_getattr(ip);
- 
-+	end_fsb = XFS_B_TO_FSB(mp, (xfs_ufsize_t)XFS_ISIZE(ip));
-+	fsb_beyond_eof = ip->i_last_fsb - end_fsb;
-+
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
- 
-@@ -574,7 +580,15 @@
- 	stat->atime = inode->i_atime;
- 	stat->mtime = inode->i_mtime;
- 	stat->ctime = inode->i_ctime;
--	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
-+
-+	if (fsb_beyond_eof > 0) {
-+		stat->blocks =
-+		XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks)
-+				  - fsb_beyond_eof;
-+	} else {
-+		stat->blocks =
-+		XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
-+	}
- 
- 	if (xfs_has_v3inodes(mp)) {
- 		if (request_mask & STATX_BTIME) {
-@@ -988,6 +1002,9 @@
- 	ip->i_disk_size = newsize;
- 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
- 
-+	/* update i_last_fsb to newsize when truncate.*/
-+	ip->i_last_fsb = XFS_B_TO_FSB(mp, newsize);
-+
- 	if (newsize <= oldsize) {
- 		error = xfs_itruncate_extents(&tp, ip, XFS_DATA_FORK, newsize);
- 		if (error)
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+>> fs/xfs/xfs_bmap_util.c:756:19: error: use of undeclared identifier 'end_fsb'
+           ip->i_last_fsb = end_fsb;
+                            ^
+   1 error generated.
+
+
+vim +/end_fsb +756 fs/xfs/xfs_bmap_util.c
+
+   710	
+   711	/*
+   712	 * This is called to free any blocks beyond eof. The caller must hold
+   713	 * IOLOCK_EXCL unless we are in the inode reclaim path and have the only
+   714	 * reference to the inode.
+   715	 */
+   716	int
+   717	xfs_free_eofblocks(
+   718		struct xfs_inode	*ip)
+   719	{
+   720		struct xfs_trans	*tp;
+   721		struct xfs_mount	*mp = ip->i_mount;
+   722		int			error;
+   723	
+   724		/* Attach the dquots to the inode up front. */
+   725		error = xfs_qm_dqattach(ip);
+   726		if (error)
+   727			return error;
+   728	
+   729		/* Wait on dio to ensure i_size has settled. */
+   730		inode_dio_wait(VFS_I(ip));
+   731	
+   732		error = xfs_trans_alloc(mp, &M_RES(mp)->tr_itruncate, 0, 0, 0, &tp);
+   733		if (error) {
+   734			ASSERT(xfs_is_shutdown(mp));
+   735			return error;
+   736		}
+   737	
+   738		xfs_ilock(ip, XFS_ILOCK_EXCL);
+   739		xfs_trans_ijoin(tp, ip, 0);
+   740	
+   741		/*
+   742		 * Do not update the on-disk file size.  If we update the on-disk file
+   743		 * size and then the system crashes before the contents of the file are
+   744		 * flushed to disk then the files may be full of holes (ie NULL files
+   745		 * bug).
+   746		 */
+   747		error = xfs_itruncate_extents_flags(&tp, ip, XFS_DATA_FORK,
+   748					XFS_ISIZE(ip), XFS_BMAPI_NODISCARD);
+   749		if (error)
+   750			goto err_cancel;
+   751	
+   752		error = xfs_trans_commit(tp);
+   753		if (error)
+   754			goto out_unlock;
+   755	
+ > 756		ip->i_last_fsb = end_fsb;
+   757		xfs_inode_clear_eofblocks_tag(ip);
+   758		goto out_unlock;
+   759	
+   760	err_cancel:
+   761		/*
+   762		 * If we get an error at this point we simply don't
+   763		 * bother truncating the file.
+   764		 */
+   765		xfs_trans_cancel(tp);
+   766	out_unlock:
+   767		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+   768		return error;
+   769	}
+   770	
+
 -- 
-1.8.3.1
+0-DAY CI Kernel Test Service
+https://01.org/lkp
