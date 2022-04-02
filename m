@@ -2,46 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F634EFD92
-	for <lists+linux-xfs@lfdr.de>; Sat,  2 Apr 2022 03:04:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F3584EFE13
+	for <lists+linux-xfs@lfdr.de>; Sat,  2 Apr 2022 05:07:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353376AbiDBBFk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 1 Apr 2022 21:05:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
+        id S240162AbiDBDJj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 1 Apr 2022 23:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352895AbiDBBFa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 Apr 2022 21:05:30 -0400
+        with ESMTP id S239403AbiDBDJi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 1 Apr 2022 23:09:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383B3DB1;
-        Fri,  1 Apr 2022 18:03:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669C049936;
+        Fri,  1 Apr 2022 20:07:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C705661BA0;
-        Sat,  2 Apr 2022 01:03:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7B9C340F2;
-        Sat,  2 Apr 2022 01:03:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0260961CC2;
+        Sat,  2 Apr 2022 03:07:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5C072C340EC;
+        Sat,  2 Apr 2022 03:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648861419;
-        bh=5VYMrcOx8O4wrYuwRZe41/ymZHbb4meqyu+BuXg43TM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=o69ahH8l3DpKQWxIT9y2Xz/XqPazxGdZT0+BD6WzBAz/QjQhsG4vc8p7gpA9QdduD
-         lATi6RfDiaikw/gIAVxxLC04jtUjEbyVZLVShGq6i8H9poDRvJbkPSTbphvxANPN1s
-         HjU8kUA0P7eFP2pYeKby3qzpGxw45KWFfP/+QxXeEbPkoAaTQvZ4bxIqvKYMu74Lgr
-         ngh5ef4QymamT1n5s2HytcWC9uEDWJoUXS3qgCn2k5uOzwV2fmg5/dWGWcEGv6WXiV
-         y4LkRY3eX/LisT9f7SUs8vSaDRcYqncwfUTqBehSn0pyUTZ2IFuRoFDRnmSr5LmPBF
-         +WZEi8nHTPwRg==
-Date:   Fri, 1 Apr 2022 18:03:38 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        s=k20201202; t=1648868867;
+        bh=nia9gVLequCKrCipSRiu9PLs45Z5+qelDo++sMvE2Ik=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=OIIPpUOwuoBPK58BBKexxJG2mHkfFju+55A1jYXD4VPo3vwSdmRcXDsTLkkyn0wY6
+         XH4pXkVaycb8fCGu8qkN3teCa9nyg7rtylF2ufBoDiiGIRzUifVNcoI5Fakhiy6pou
+         kpwG1f29QIzbc8lr4hJdkbM4cWCcjnm6zpypZg16x1OkT8rLW2q8JxY2qJ+IrXPBKw
+         kyxyEceHB9qPUfEEsqrG/U8CPbOjqF72JOWq2ye2RHqERpK/NeertzliHuhU5LNRGj
+         vUBHc5akOMmUHC3W6yy3Kguv15Y+2dLyR5Bk4knJ0unWKzR0MXfoOQEqYFxkImOGB3
+         sVCU6Rw1jFPZw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 49095F03848;
+        Sat,  2 Apr 2022 03:07:47 +0000 (UTC)
+Subject: Re: [GIT PULL] xfs: bug fixes for 5.18-rc1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220402005721.GO27690@magnolia>
+References: <20220402005721.GO27690@magnolia>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220402005721.GO27690@magnolia>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.18-merge-4
+X-PR-Tracked-Commit-Id: 919edbadebe17a67193533f531c2920c03e40fa4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b32e3819a8230332d7848a6fb067aee52d08557e
+Message-Id: <164886886729.20951.2807133982895477424.pr-tracker-bot@kernel.org>
+Date:   Sat, 02 Apr 2022 03:07:47 +0000
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
         david@fromorbit.com, linux-kernel@vger.kernel.org,
-        sandeen@sandeen.net, hch@lst.de
-Subject: [GIT PULL] vfs: fixes for 5.18-rc1
-Message-ID: <20220402010338.GP27690@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        sandeen@sandeen.net, hch@lst.de, fstests <fstests@vger.kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -52,43 +62,15 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Fri, 1 Apr 2022 17:57:21 -0700:
 
-Please pull this branch of VFS bugfixes for 5.18-rc1.  The erofs
-developers felt that FIEMAP should handle ranged requests starting at
-s_maxbytes by returning EFBIG instead of passing the filesystem
-implementation a nonsense 0-byte request.
+> git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/xfs-5.18-merge-4
 
-Not sure why they keep tagging this 'iomap', but the VFS shouldn't be
-asking for information about ranges of a file that the filesystem
-already declared that it does not support.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b32e3819a8230332d7848a6fb067aee52d08557e
 
-As usual, I did a test-merge with upstream master as of a few minutes
-ago, and didn't see any conflicts.  Please let me know if you encounter
-any problems.
+Thank you!
 
---D
-
-The following changes since commit 7e57714cd0ad2d5bb90e50b5096a0e671dec1ef3:
-
-  Linux 5.17-rc6 (2022-02-27 14:36:33 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/vfs-5.18-merge-1
-
-for you to fetch changes up to 49df34221804cfd6384135b28b03c9461a31d024:
-
-  fs: fix an infinite loop in iomap_fiemap (2022-03-30 09:49:28 -0700)
-
-----------------------------------------------------------------
-Fixes for 5.18-rc1:
- - Fix a potential infinite loop in FIEMAP by fixing an off by one error
-   when comparing the requested range against s_maxbytes.
-
-----------------------------------------------------------------
-Guo Xuenan (1):
-      fs: fix an infinite loop in iomap_fiemap
-
- fs/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
