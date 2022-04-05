@@ -2,95 +2,110 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 051C94F528E
-	for <lists+linux-xfs@lfdr.de>; Wed,  6 Apr 2022 04:54:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E83404F5296
+	for <lists+linux-xfs@lfdr.de>; Wed,  6 Apr 2022 04:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1451888AbiDFCy7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 5 Apr 2022 22:54:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54662 "EHLO
+        id S231215AbiDFCzN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 5 Apr 2022 22:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349831AbiDEVad (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Apr 2022 17:30:33 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5218D267D
-        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 13:48:37 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id bx5so612469pjb.3
-        for <linux-xfs@vger.kernel.org>; Tue, 05 Apr 2022 13:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eQJXQ0o4/xZn83G9V0zs1zmNIfX3wUZZ2U7kK8rPsT8=;
-        b=dqZAVPoJmEVZRkK4fDdyarkdxCjyaLibCaemYMbu2ALQFNFVNsR01bQisMSFPUJig2
-         z9clku74QrgA8hZ48ZC2BxYWSpSp7iMBzUqDX1w1xgC90j9PA743LNIcAcHZSYvGEP/Y
-         DqyhIBwncn8ZK1MfzOWoXw32w1qT2EQwzjgPId+pk8WVWf/C6w8y0iDXZSyUyo3SQmD9
-         OnVTX9CPhHxMV75rn2OpT49euYse8RyIvGJmHUQCss5WRabuzTZZ0OuUWGx8HimUKJf7
-         ba+xogmszDY37tfobgluSoZHRD6Fpmr9evryc7vTgFFfRuF9G4VgKrYBZnoBH0mS3zqM
-         aDWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eQJXQ0o4/xZn83G9V0zs1zmNIfX3wUZZ2U7kK8rPsT8=;
-        b=WBI1zKmQD8RjHrCRQ9h2sRmRHhYT094lX9hQyGynKK5PYA+reIm32GtbT1C0FQn+yZ
-         CrqcYI5YjA6cJcBQbBuU+kFgM9/FNGuA+XNPl9ED0X4Ijnelhlqf/GUu+AA26BfI2ad5
-         ozPmTD7T+nrjPe+PXwQjcCenr/76aEPg9UQppYvMrYsuG32L867zWDyEtAMbGcb70sKr
-         nJpIW67h8B0X6SJCX10w7soO26BfvV+q2fPVx7KRy7pVENN0Z2UTPVN+QYbo7hO3vq9+
-         3K6WZ2GB6htiHqyyXpvWCYy4W8697v2kXK+KExerA0P4h1WAbYDMojh9FODJcCrFEQMi
-         izmw==
-X-Gm-Message-State: AOAM532puro7N2j61kSVA18S423uncJuzXjOmn6DWm0/6Icca/wXqpS5
-        8cMshDRHomeln3WDOIZxAU0XXJmbISHS2YJen+U=
-X-Google-Smtp-Source: ABdhPJwNwBsNPifmbbwbkO5MnAKc7ceCoJwOotXzWhk0urCtLqOMcRUvQm/YZBXhUnj4IYsbiw8eVB9f2NKD5ae7qJo=
-X-Received: by 2002:a17:903:1cb:b0:156:c35f:7f14 with SMTP id
- e11-20020a17090301cb00b00156c35f7f14mr5235856plh.26.1649191712485; Tue, 05
- Apr 2022 13:48:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <bug-215804-201763@https.bugzilla.kernel.org/> <YkyXRsMubP8uNOF8@casper.infradead.org>
-In-Reply-To: <YkyXRsMubP8uNOF8@casper.infradead.org>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Tue, 5 Apr 2022 13:48:21 -0700
-Message-ID: <CAHbLzkqm4WVGpEp+YOxkNd+VeOvnO+314kbzDhgKaJ-oeyNt9g@mail.gmail.com>
-Subject: Re: [Bug 215804] New: [xfstests generic/670] Unable to handle kernel
- paging request at virtual address fffffbffff000008
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     bugzilla-daemon@kernel.org, linux-xfs@vger.kernel.org,
-        Linux MM <linux-mm@kvack.org>
+        with ESMTP id S1377072AbiDEV1p (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Apr 2022 17:27:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CCE152B11
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 13:48:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6FD22B81FE1
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 20:48:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 35B9EC385A9
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 20:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649191716;
+        bh=Cc/ANYn9lORDUVoCuGoQA8LzvFOKFmEb3woct9/TsKU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=fNjgfsRpZLhF/Y6jvxuRj4T3Ny53VrAwrN4So1Dn8ebrpqcFoI3PVEgtpu5teAq82
+         xZ6QL6nyJHSCHRCf3CbeRLmW4d1EFn9Ksat1AhbMEitNOtJf7SV1Ze98c65h7iarz8
+         io3wkPNh1njliuJQTsUEHmks3IKBlq6+ei8R3jIZCQMh35RjS/tHua6sAD5FoNgY1T
+         k52ZbiOsMqm4ICMXmuJnIb8pdFWgD+UCLxhS0PwmYN3u1rmDhye/F8A/rzsZcjL23Z
+         5OLKoO4PRrNk9koWM5U4Ep6tEcuL7YfqAFUJEeKWmgTt8BVKEp3IaqqmX2PyUKdGGw
+         f+If3pXi601dQ==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 1FDC9CC13AD; Tue,  5 Apr 2022 20:48:36 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 215804] [xfstests generic/670] Unable to handle kernel paging
+ request at virtual address fffffbffff000008
+Date:   Tue, 05 Apr 2022 20:48:35 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: shy828301@gmail.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-215804-201763-kkPW7Pcs6S@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215804-201763@https.bugzilla.kernel.org/>
+References: <bug-215804-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
+MIME-Version: 1.0
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215804
+
+--- Comment #6 from Yang Shi (shy828301@gmail.com) ---
 On Tue, Apr 5, 2022 at 12:25 PM Matthew Wilcox <willy@infradead.org> wrote:
 >
-> On Tue, Apr 05, 2022 at 04:44:35AM +0000, bugzilla-daemon@kernel.org wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=215804
+> On Tue, Apr 05, 2022 at 04:44:35AM +0000, bugzilla-daemon@kernel.org wrot=
+e:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D215804
 > [...]
 > > [37285.232165] Unable to handle kernel paging request at virtual address
 > > fffffbffff000008
 > > [37285.232776] KASAN: maybe wild-memory-access in range
 > > [0x0003dffff8000040-0x0003dffff8000047]
 > > [37285.233332] Mem abort info:
-> > [37285.233520]   ESR = 0x96000006
-> > [37285.233725]   EC = 0x25: DABT (current EL), IL = 32 bits
-> > [37285.234077]   SET = 0, FnV = 0
-> > [37285.234281]   EA = 0, S1PTW = 0
-> > [37285.234544]   FSC = 0x06: level 2 translation fault
+> > [37285.233520]   ESR =3D 0x96000006
+> > [37285.233725]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> > [37285.234077]   SET =3D 0, FnV =3D 0
+> > [37285.234281]   EA =3D 0, S1PTW =3D 0
+> > [37285.234544]   FSC =3D 0x06: level 2 translation fault
 > > [37285.234871] Data abort info:
-> > [37285.235065]   ISV = 0, ISS = 0x00000006
-> > [37285.235319]   CM = 0, WnR = 0
-> > [37285.235517] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000004574eb000
-> > [37285.235953] [fffffbffff000008] pgd=0000000458c71003, p4d=0000000458c71003,
-> > pud=0000000458c72003, pmd=0000000000000000
+> > [37285.235065]   ISV =3D 0, ISS =3D 0x00000006
+> > [37285.235319]   CM =3D 0, WnR =3D 0
+> > [37285.235517] swapper pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000457=
+4eb000
+> > [37285.235953] [fffffbffff000008] pgd=3D0000000458c71003,
+> p4d=3D0000000458c71003,
+> > pud=3D0000000458c72003, pmd=3D0000000000000000
 > > [37285.236651] Internal error: Oops: 96000006 [#1] SMP
-> > [37285.239187] CPU: 3 PID: 3302514 Comm: xfs_io Kdump: loaded Tainted: G       W         5.17.0+ #1
-> > [37285.239810] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-> > [37285.240292] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > [37285.239187] CPU: 3 PID: 3302514 Comm: xfs_io Kdump: loaded Tainted: =
+G=20=20=20
+>    W         5.17.0+ #1
+> > [37285.239810] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0
+> 02/06/2015
+> > [37285.240292] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS
+> BTYPE=3D--)
 > > [37285.240783] pc : __split_huge_pmd+0x1d8/0x34c
 > > [37285.241097] lr : __split_huge_pmd+0x174/0x34c
 > > [37285.241407] sp : ffff800023a56fe0
@@ -130,14 +145,14 @@ On Tue, Apr 5, 2022 at 12:25 PM Matthew Wilcox <willy@infradead.org> wrote:
 > split_huge_page()
 >   split_huge_page_to_list()
 >     unmap_page()
->       ttu_flags = ... TTU_SPLIT_HUGE_PMD ...
+>       ttu_flags =3D ... TTU_SPLIT_HUGE_PMD ...
 >       try_to_unmap()
 >         try_to_unmap_one()
 >           split_huge_pmd_address()
->             pmd = pmd_offset(pud, address);
+>             pmd =3D pmd_offset(pud, address);
 >             __split_huge_pmd(vma, pmd, address, freeze, folio);
 >               if (folio) {
->                 if (folio != page_folio(pmd_page(*pmd)))
+>                 if (folio !=3D page_folio(pmd_page(*pmd)))
 >
 > I'm assuming it's crashing at that line.  Calling pmd_page() on a
 > pmd that we haven't checked is pmd_trans_huge() seems like a really
@@ -150,13 +165,14 @@ On Tue, Apr 5, 2022 at 12:25 PM Matthew Wilcox <willy@infradead.org> wrote:
 > pmd_trans_huge():
 >
 > +++ b/mm/huge_memory.c
-> @@ -2145,15 +2145,14 @@ void __split_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+> @@ -2145,15 +2145,14 @@ void __split_huge_pmd(struct vm_area_struct *vma,
+> pmd_t *pmd,
 >          * pmd against. Otherwise we can end up replacing wrong folio.
 >          */
 >         VM_BUG_ON(freeze && !folio);
 > -       if (folio) {
 > -               VM_WARN_ON_ONCE(!folio_test_locked(folio));
-> -               if (folio != page_folio(pmd_page(*pmd)))
+> -               if (folio !=3D page_folio(pmd_page(*pmd)))
 > -                       goto out;
 > -       }
 > +       VM_WARN_ON_ONCE(folio && !folio_test_locked(folio));
@@ -164,7 +180,7 @@ On Tue, Apr 5, 2022 at 12:25 PM Matthew Wilcox <willy@infradead.org> wrote:
 >         if (pmd_trans_huge(*pmd) || pmd_devmap(*pmd) ||
 > -           is_pmd_migration_entry(*pmd))
 > +           is_pmd_migration_entry(*pmd)) {
-> +               if (folio && folio != page_folio(pmd_page(*pmd)))
+> +               if (folio && folio !=3D page_folio(pmd_page(*pmd)))
 > +                       goto out;
 >                 __split_huge_pmd_locked(vma, pmd, range.start, freeze);
 > +       }
@@ -179,3 +195,9 @@ I agree with your analysis. That pmd may be a normal PMD so its
 so-called pfn is invalid in fact. The fix looks fine to me.
 
 >
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
