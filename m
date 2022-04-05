@@ -2,67 +2,132 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C2974F529D
-	for <lists+linux-xfs@lfdr.de>; Wed,  6 Apr 2022 04:55:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B34034F5284
+	for <lists+linux-xfs@lfdr.de>; Wed,  6 Apr 2022 04:54:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1850696AbiDFCzo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 5 Apr 2022 22:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
+        id S232227AbiDFCyg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 5 Apr 2022 22:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1453370AbiDEP41 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Apr 2022 11:56:27 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A74139AF3
-        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 08:00:31 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0FD2968AFE; Tue,  5 Apr 2022 17:00:27 +0200 (CEST)
-Date:   Tue, 5 Apr 2022 17:00:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/5] xfs: remove a superflous hash lookup when
- inserting new buffers
-Message-ID: <20220405150027.GB15992@lst.de>
-References: <20220403120119.235457-1-hch@lst.de> <20220403120119.235457-4-hch@lst.de> <20220403230452.GP1544202@dread.disaster.area>
+        with ESMTP id S1457663AbiDEQ3s (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 5 Apr 2022 12:29:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0677C166
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 09:27:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 30C85617D0
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 16:27:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 872CDC385A7
+        for <linux-xfs@vger.kernel.org>; Tue,  5 Apr 2022 16:27:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649176068;
+        bh=DXp3HLSv0SXr9DOLt0Q5kGGwGZ8vXA7HHZOktyVfHak=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=QlPFEBOhKh3xOeaBmAa0q+7TwvfjkMEfmkZqDthyQL76QiSXG5OcjxaZniqsy1f0a
+         RomgHJu+5p0hgu4rBAQP9EjD9Tl7GovQt1Cm6anVFtfFVHVhSRZcLlpAU+A5vMb7Ic
+         8Th6tPapGNIi8VeBZvcMlRFtl6JVGUafpDFKU6baDumpFwc8mPajeR7wl1ZYMYTOKL
+         QL+G2geM+JHz+ui1AzNW/J2FI9EsrbOu0sV6K/GvbuY1IKPFKfLdOuFbQqIWNBfkIQ
+         q2u7zAJXNKEdeNUoTJMt2D6KB74bP8GbMnDIeoA3400LRERlZQ28klYztLJ419F7bS
+         SmzWE7RamIEww==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 5F5F2CC13B0; Tue,  5 Apr 2022 16:27:48 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 215804] [xfstests generic/670] Unable to handle kernel paging
+ request at virtual address fffffbffff000008
+Date:   Tue, 05 Apr 2022 16:27:48 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: zlang@redhat.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-215804-201763-f0aoIh4JkW@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215804-201763@https.bugzilla.kernel.org/>
+References: <bug-215804-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220403230452.GP1544202@dread.disaster.area>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 04, 2022 at 09:04:52AM +1000, Dave Chinner wrote:
-> On Sun, Apr 03, 2022 at 02:01:17PM +0200, Christoph Hellwig wrote:
-> > xfs_buf_get_map has a bit of a strange structure where the xfs_buf_find
-> > helper is called twice before we actually insert a new buffer on a cache
-> > miss.  Given that the rhashtable has an interface to insert a new entry
-> > and return the found one on a conflict we can easily get rid of the
-> > double lookup by using that.
-> 
-> We can do that without completely rewriting this code.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215804
 
-We could.  And I had something similar earlier.  But I actually thing
-the structure of the code after this patch makes much more sense.  All
-the logic for the fast path buffer lookup is clearly layed out in one
-function, which then just calls a helper to perform the lookup.
-The new scheme also is slightly less code overall.  Even more so once
-the lockless lookup comes into play which requires different locking
-and refcount increments.
+--- Comment #4 from Zorro Lang (zlang@redhat.com) ---
+(In reply to Dave Chinner from comment #3)
+> Hi Zorro,
+>=20
+> On Tue, Apr 05, 2022 at 04:44:35AM +0000, bugzilla-daemon@kernel.org wrot=
+e:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D215804
+> >=20
+> >             Bug ID: 215804
+> >            Summary: [xfstests generic/670] Unable to handle kernel pagi=
+ng
+> >                     request at virtual address fffffbffff000008
+> >            Product: File System
+> >            Version: 2.5
+> >     Kernel Version: xfs-5.18-merge-4
+> >           Hardware: All
+> >                 OS: Linux
+> >               Tree: Mainline
+> >             Status: NEW
+> >           Severity: normal
+> >           Priority: P1
+> >          Component: XFS
+> >           Assignee: filesystem_xfs@kernel-bugs.kernel.org
+> >           Reporter: zlang@redhat.com
+> >         Regression: No
+> >=20
+> > xfstests generic/670 hit a panic[1] on 64k directory block size XFS
+> (mkfs.xfs
+> > -n size=3D65536 -m rmapbt=3D1 -b size=3D1024):
+> .....
+> > [37285.246770] Call trace:=20
+> > [37285.246952]  __split_huge_pmd+0x1d8/0x34c=20
+> > [37285.247246]  split_huge_pmd_address+0x10c/0x1a0=20
+> > [37285.247577]  try_to_unmap_one+0xb64/0x125c=20
+> > [37285.247878]  rmap_walk_file+0x1dc/0x4b0=20
+> > [37285.248159]  try_to_unmap+0x134/0x16c=20
+> > [37285.248427]  split_huge_page_to_list+0x5ec/0xcbc=20
+> > [37285.248763]  truncate_inode_partial_folio+0x194/0x2ec=20
+> > [37285.249128]  truncate_inode_pages_range+0x2e8/0x870=20
+> > [37285.249483]  truncate_pagecache_range+0xa0/0xc0=20
+>=20
+> That doesn't look like an XFS regression, more likely a bug in the
+> new large folios in the page cache feature. Can you revert commit
+> 6795801366da ("xfs: Support large folios") and see if the problem
+> goes away?
 
-> The return cases of this function end up being a bit of a mess. We can return:
-> 
->  - error = 0 and a locked buffer in *bpp
->  - error = -EEXIST and an unlocked buffer in *bpp
->  - error != 0 and a modified *bpp pointer
->  - error != 0 and an unmodified *bpp pointer
+Sure, I'm going to test that, thanks!
 
-The last two are the same  - the *bpp pointer simply is not valid on a
-"real" error return.  So the return really is a tristate, similar
-to many other places in xfs.
+>=20
+> Cheers,
+>=20
+> Dave.
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
