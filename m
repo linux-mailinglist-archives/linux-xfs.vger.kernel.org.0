@@ -2,69 +2,119 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 882714F68D2
-	for <lists+linux-xfs@lfdr.de>; Wed,  6 Apr 2022 20:19:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFC224F6A7E
+	for <lists+linux-xfs@lfdr.de>; Wed,  6 Apr 2022 21:52:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240078AbiDFSHF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Apr 2022 14:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50142 "EHLO
+        id S232849AbiDFTy1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Apr 2022 15:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239775AbiDFSG7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Apr 2022 14:06:59 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D83092D0A
-        for <linux-xfs@vger.kernel.org>; Wed,  6 Apr 2022 09:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RXf5wbvbWIDXV60fW59OPdsf8xxYfFjyzah1GAOsXtQ=; b=KEPdLYk1hhH7QUfHs5/WT/1S3t
-        yxYbnuOkNLwkB3wqeK9HKDFCR7mZB5DPuz5ZKqHSoZk79oe3StT0aR/swTJjpahVeCySys8NGhWhH
-        GMDKKCdw2zw0dYb0Q9u8VFg8+8CiLFxSOGh3J687PwmsR1YFH5pzSk9/etzk+WrZs+yN9UGIwNPGZ
-        MmvUguSli+OxqMbntFIFXL7j6LrwX7/pgtAv5p19BdS9qF7jRjv8Usp+ym0dqv9egEapM1nt3WR3R
-        1g4krQh6m9NtaM+XNofj9TK5ClB7zoKyN9MjjvChCwgTgqcBBE1cScje9dM0PSeBqhUMez5G9DEjE
-        Sw2VutIg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nc8kX-007Eyt-Gl; Wed, 06 Apr 2022 16:43:17 +0000
-Date:   Wed, 6 Apr 2022 09:43:17 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Brian Foster <bfoster@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
-        david@fromorbit.com
-Subject: Re: [PATCH 6/6] xfs: don't report reserved bnobt space as available
-Message-ID: <Yk3DJfsEA/lNO9B+@infradead.org>
-References: <164840029642.54920.17464512987764939427.stgit@magnolia>
- <164840033043.54920.18407468773094720534.stgit@magnolia>
+        with ESMTP id S233135AbiDFTw2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Apr 2022 15:52:28 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607792CE209;
+        Wed,  6 Apr 2022 10:28:30 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id b21so5307724lfb.5;
+        Wed, 06 Apr 2022 10:28:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WJLYFFwKJzu0AzBejzceyC93Fh4AhvIk3A/MNZXzKIU=;
+        b=nHoFYmIVcbUdYBuRBczLdRhO5AcYZ6GHHFtKpS9G1n5vNIpBGLipmKmQ40hQnwfBEK
+         9YcCx5HGe8T4NG1UPywpqZKblDsiU8Uam6EvTYaei53mUEV7gX/X6QEIMPDVNdTe1RsC
+         lSqUADllCjDlRJ3aqfDHj4gGsZ5WvTndElsOvm3ukXbURNWbOjm9tS3FKy9TW5JIte+s
+         iqchodtdlLO+0839AsHapTHL+am4rmkQFqKuweIuQiuTq0iA/dxkHoEkiJl793SmXbAL
+         d6FIVbXVTWtg6j4nPkHK8I7vb1+rBuBMN5T4ZVmgoa+qulAgS9/S0AV92hnwAdWJS/in
+         gNUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WJLYFFwKJzu0AzBejzceyC93Fh4AhvIk3A/MNZXzKIU=;
+        b=RQhuh1VW2nh/dlZLeIhr9KmcpN0aPNEI+bySuhv/r4F71i1vjkfPP0l4zqy/umh7ki
+         L9hYrQAPZxIhhKyH29OI8SFZnOzKwIPrEK77UeJ14ahP0USQFU+Jv4F8GNGn4dBvfyDS
+         M9O+cFoN2t50uRNJVSbqaxsK1Val6vQbikXT/G6UharYbRtqMjRsMez2j3/syfoSZMsB
+         hwYPzdJqWT4l5fLkKOSZa3DXw/6Ks2UBeCXjV/0TMUooggjoq8C91XLr5HDzRIwGLAby
+         9oCZ+grhbBjh5zMNvy44LIs8hprwKhM6P8l1jlGsd67WJ6VRm0H7aZlPuXd4nlJD4IhT
+         ojbw==
+X-Gm-Message-State: AOAM533qJRZDilB+U+foSwg4+93mGooPkjZ6clWyf1Cx4YsYOKos1fbN
+        aKI5/NVj9Vxyc2bkKGTZSY6y8i3IZiG7RMTSTnnWKJBEjIqw4w==
+X-Google-Smtp-Source: ABdhPJxvT7YhfWN8QbCVz4oydCsKwT/zbXQ5089WXaSZlqzdjbFflulVc086iBmKtewP4KtbC66vp+jW8qrWjcRFTmg=
+X-Received: by 2002:ac2:5f4d:0:b0:43e:da3e:4529 with SMTP id
+ 13-20020ac25f4d000000b0043eda3e4529mr6768924lfz.627.1649266108188; Wed, 06
+ Apr 2022 10:28:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164840033043.54920.18407468773094720534.stgit@magnolia>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220406060516.409838-1-hch@lst.de> <20220406060516.409838-24-hch@lst.de>
+In-Reply-To: <20220406060516.409838-24-hch@lst.de>
+From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date:   Thu, 7 Apr 2022 02:28:15 +0900
+Message-ID: <CAKFNMokGOma3pvHdEsnsjuKgW+jpYX9zx8fWwJWyeKuCpKz-YQ@mail.gmail.com>
+Subject: Re: [PATCH 23/27] block: add a bdev_max_discard_sectors helper
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        device-mapper development <dm-devel@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-block@vger.kernel.org,
+        drbd-dev@lists.linbit.com, nbd@other.debian.org,
+        ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-nilfs <linux-nilfs@vger.kernel.org>, ntfs3@lists.linux.dev,
+        ocfs2-devel@oss.oracle.com, Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sun, Mar 27, 2022 at 09:58:50AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> On a modern filesystem, we don't allow userspace to allocate blocks for
-> data storage from the per-AG space reservations, the user-controlled
-> reservation pool that prevents ENOSPC in the middle of internal
-> operations, or the internal per-AG set-aside that prevents unwanted
-> filesystem shutdowns due to ENOSPC during a bmap btree split.
-> 
-> Since we now consider freespace btree blocks as unavailable for
-> allocation for data storage, we shouldn't report those blocks via statfs
-> either.  This makes the numbers that we return via the statfs f_bavail
-> and f_bfree fields a more conservative estimate of actual free space.
+On Wed, Apr 6, 2022 at 11:05 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Add a helper to query the number of sectors support per each discard bio
+> based on the block device and use this helper to stop various places from
+> poking into the request_queue to see if discard is supported and if so how
+> much.  This mirrors what is done e.g. for write zeroes as well.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+...
+> diff --git a/drivers/target/target_core_device.c b/drivers/target/target_core_device.c
+> index 16e775bcf4a7c..7d510e4231713 100644
+> --- a/drivers/target/target_core_device.c
+> +++ b/drivers/target/target_core_device.c
+> @@ -829,9 +829,7 @@ struct se_device *target_alloc_device(struct se_hba *hba, const char *name)
+>  }
+>
+>  /*
+> - * Check if the underlying struct block_device request_queue supports
+> - * the QUEUE_FLAG_DISCARD bit for UNMAP/WRITE_SAME in SCSI + TRIM
+> - * in ATA and we need to set TPE=1
 
-Looks good:
+> + * Check if the underlying struct block_device request_queue supports disard.
+>   */
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Here was a typo:
+
+ s/disard/discard/
+
+On Thu, Apr 7, 2022 at 12:19 AM Andreas Gruenbacher <agruenba@redhat.com> wrote:
+> If I'm misreading things, could you please document that
+> bdev_max_discard_sectors() != 0 implies that discard is supported?
+
+I got the same impression.   Checking the discard support with
+bdev_max_discard_sectors() != 0 seems a bit unclear than before.
+
+Thanks,
+Ryusuke Konishi
