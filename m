@@ -2,45 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9034F4F7184
-	for <lists+linux-xfs@lfdr.de>; Thu,  7 Apr 2022 03:32:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D951F4F718C
+	for <lists+linux-xfs@lfdr.de>; Thu,  7 Apr 2022 03:32:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234628AbiDGBdp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 6 Apr 2022 21:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43660 "EHLO
+        id S238065AbiDGBdw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 6 Apr 2022 21:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241287AbiDGBay (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Apr 2022 21:30:54 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 084EA1BBE38
-        for <linux-xfs@vger.kernel.org>; Wed,  6 Apr 2022 18:23:49 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-233-190.pa.vic.optusnet.com.au [49.186.233.190])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 418A953457E;
-        Thu,  7 Apr 2022 11:23:48 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ncGsF-00EfLU-07; Thu, 07 Apr 2022 11:23:47 +1000
-Date:   Thu, 7 Apr 2022 11:23:46 +1000
-From:   Dave Chinner <david@fromorbit.com>
+        with ESMTP id S242152AbiDGBcH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 6 Apr 2022 21:32:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DC3190EB5
+        for <linux-xfs@vger.kernel.org>; Wed,  6 Apr 2022 18:26:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E36C360AF5
+        for <linux-xfs@vger.kernel.org>; Thu,  7 Apr 2022 01:26:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B44C385A1;
+        Thu,  7 Apr 2022 01:26:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1649294811;
+        bh=BdcllleRo4A/QHlA2HorAK+irTVIH0i7eXyTd1Ez9Xo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=unEXG7Eaf/tW7xjOgEy+bcCm+48Pr03pHy2aVk5sdWkgiJooGfLZX6qsYFmNR9Q3l
+         bZFxUAkKV/NtIbuRlvDmZQo59S5Tf/RXbpWA9Z+Y2ph+TZZZan9/j7fS2limZV7Fh2
+         uSDTdOnq/KlSHtxoqh15fZWZwqH8aGfEydloQ1EqBlGhnV3cuCndFrBue88fG0cfVd
+         RdUMz4/Cz+6nZRZHWJCCrth2FSRYWP+rndPiV0nlW21EkOI6c4jLv0giDkwtQLTLLm
+         93rkZlU4DYFzjjWc8A+EgUVvySLsmRxsW+cgfTyF4MpDbmrhBcIsPGOO4z6Gq0N7qi
+         xWLKug5QSMp9w==
+Date:   Wed, 6 Apr 2022 18:26:50 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Chandan Babu R <chandan.babu@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
 Subject: Re: [PATCH V9 19/19] xfs: Add XFS_SB_FEAT_INCOMPAT_NREXT64 to the
  list of supported flags
-Message-ID: <20220407012346.GG1544202@dread.disaster.area>
+Message-ID: <20220407012650.GS27690@magnolia>
 References: <20220406061904.595597-1-chandan.babu@oracle.com>
  <20220406061904.595597-20-chandan.babu@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220406061904.595597-20-chandan.babu@oracle.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=624e3d24
-        a=bHAvQTfMiaNt/bo4vVGwyA==:117 a=bHAvQTfMiaNt/bo4vVGwyA==:17
-        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=hd0ETXrtVO7WQ9fHu_EA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,10 +93,16 @@ On Wed, Apr 06, 2022 at 11:49:03AM +0530, Chandan Babu R wrote:
 > +	"EXPERIMENTAL Large extent counts feature in use. Use at your own risk!");
 > +	}
 
-Thanks for adding this. :)
+Style nit: no need for braces here.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+But thanks for putting on the EXPERIMENTAL tag.
 
--- 
-Dave Chinner
-david@fromorbit.com
+--D
+
+> +
+>  	error = xfs_mountfs(mp);
+>  	if (error)
+>  		goto out_filestream_unmount;
+> -- 
+> 2.30.2
+> 
