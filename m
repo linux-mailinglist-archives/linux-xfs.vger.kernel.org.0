@@ -2,65 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B5D4FAEAF
-	for <lists+linux-xfs@lfdr.de>; Sun, 10 Apr 2022 18:09:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E4764FAF3E
+	for <lists+linux-xfs@lfdr.de>; Sun, 10 Apr 2022 19:16:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243492AbiDJQLb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Apr 2022 12:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        id S234695AbiDJRSm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Apr 2022 13:18:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243466AbiDJQL1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 12:11:27 -0400
+        with ESMTP id S233133AbiDJRSl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 13:18:41 -0400
 Received: from heian.cn.fujitsu.com (mail.cn.fujitsu.com [183.91.158.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 495036470;
-        Sun, 10 Apr 2022 09:09:15 -0700 (PDT)
-IronPort-Data: =?us-ascii?q?A9a23=3A5oDcDa9khLlKNmToxkBnDrUD63+TJUtcMsCJ2f8?=
- =?us-ascii?q?bfWQNrUpzgTACn2IWXjqHOfiJNDCjKNx3Pdjk80sOvZPRz4MxTldlrnsFo1Bi8?=
- =?us-ascii?q?5ScXYvDRqvT04J+FuWaFQQ/qZx2huDodKjYdVeB4Ef9WlTdhSMkj/vQHOKlULe?=
- =?us-ascii?q?s1h1ZHmeIdg9w0HqPpMZp2uaEsfDha++8kYuaT//3YTdJ6BYoWo4g0J9vnTs01?=
- =?us-ascii?q?BjEVJz0iXRlDRxDlAe2e3D4l/vzL4npR5fzatE88uJX24/+IL+FEmPxp3/BC/u?=
- =?us-ascii?q?ulPD1b08LXqXPewOJjxK6WYD72l4b+HN0if19aZLwam8O49mNt8pswdNWpNq+T?=
- =?us-ascii?q?xw1FqPRmuUBSAQeGCZ7VUFD0OadeiTi6pzJliUqdFOpmZ2CFnoeMYQG++pfD3t?=
- =?us-ascii?q?J8PsCIjERKBuEgoqewLm7YuhqiN4qIMTiMMUYoH4I5T3QC7AkB4/CR6HL7NpD9?=
- =?us-ascii?q?DY2ms1KW/3ZYqIxZThwaxLPSx5CIFEaDNQ5hujArn3+dSBI7VeQjakp6mPQigt?=
- =?us-ascii?q?r39DFNsTZe9mPbcFUhVqD4GbH+XnpRB0XKrS3yzOD/zSnhvLnmjnyU4YfUra/8?=
- =?us-ascii?q?5ZChFyV23xWBgYaWEW2pdGnhUOkHdFSMUoZ/mwpt6da3EiqSMTtGh61uniJujY?=
- =?us-ascii?q?CVNdKVe438geAzuzT+QnxLmwFSCNRLcwor+coSjEwkFyEhdXkAXpoqrL9dJ433?=
- =?us-ascii?q?t94thvrYW5MczBEPnRCEGM4DxDYiNlbpnryohxLScZZVuHIJAw=3D?=
-IronPort-HdrOrdr: =?us-ascii?q?A9a23=3AhiBYba81319KbbFc15Fuk+A8I+orL9Y04lQ7?=
- =?us-ascii?q?vn2YSXRuHPBw8Pre+sjztCWE8Qr5N0tBpTntAsW9qDbnhPtICOoqTNCftWvdyQ?=
- =?us-ascii?q?iVxehZhOOIqVDd8m/Fh4pgPMxbEpSWZueeMbEDt7eZ3OCnKadc/PC3tLCvmfzF?=
- =?us-ascii?q?z2pgCSVja6Rb5Q9/DQqBe3cGPzVuNN4oEoaG/Mpbq36FcXQTVM6yAX4IRKztvN?=
- =?us-ascii?q?vO/aiWGyIuNlo27hWUlzO05PrfGxic5B0XVDRC2vMD3AH+4nTE2pk=3D?=
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA12D583B0;
+        Sun, 10 Apr 2022 10:16:29 -0700 (PDT)
+IronPort-Data: =?us-ascii?q?A9a23=3AVvyYO6uaBqbAJzGM+x5z/Iq0BOfnVD1fMUV32f8?=
+ =?us-ascii?q?akzHdYEJGY0x3ymIYDD+DaKnbYWejeNB1PI+y/EoHucLXx4BrTgJo+H1gHilAw?=
+ =?us-ascii?q?SbnLY7Hdx+vZUt+DSFioHpPtpxYMp+ZRCwNZie0SiyFb/6x/RGQ6YnSHuCmULS?=
+ =?us-ascii?q?cY3goLeNZYHxJZSxLyrdRbrFA0YDR7zOl4bsekuWHULOX82cc3lE8t8pvnChSU?=
+ =?us-ascii?q?MHa41v0iLCRicdj5zcyn1FNZH4WyDrYw3HQGuG4FcbiLwrPIS3Qw4/Xw/stIov?=
+ =?us-ascii?q?NfrfTeUtMTKPQPBSVlzxdXK3Kbhpq/3R0i/hkcqFHLxo/ZzahxridzP1XqJW2U?=
+ =?us-ascii?q?hZvMKvXhMwTThtZDzpje6ZB/dcrJFDm65fPkhGaKCKEL/JGSRte0Zcj0up+H2B?=
+ =?us-ascii?q?C3fICLzUKdBqCm6S9x7fTYulnhuwiKsfxNY8Ss30myivWZd4qSJaFQePV5Ntc3?=
+ =?us-ascii?q?T41nehPG+rTY4wSbj8HRBjCfBpJNX8UBYg4kePugWPwGxVcqVSIte8y5kDQ0gV?=
+ =?us-ascii?q?60/7qKtW9UtqUScRQm26cp3na5CL9AxcHJJqTxCTt2nClgOKJliPmcIUIHba8+?=
+ =?us-ascii?q?7hhh1j77mgSDgAGEFWgrfSnh0qWRd1SMQoX9zAooKx081akJvH5XhulsDuHswQ?=
+ =?us-ascii?q?aVt54DeI38keOx7DS7gLfAXILJhZFado7pIomSycCyFCEhZXqCCZpvbnTTmiSn?=
+ =?us-ascii?q?op4Bxva1TM9dDdEPHFbC1BepYSLnW36tTqXJv4LLUJ/poSd9enM/g23?=
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3A6G4Bcap521rlgzzkrg4nTksaV5oXeYIsimQD?=
+ =?us-ascii?q?101hICG9E/bo8/xG+c536faaslgssQ4b8+xoVJPgfZq+z+8R3WByB8bAYOCOgg?=
+ =?us-ascii?q?LBQ72KhrGSoQEIdRefysdtkY9kc4VbTOb7FEVGi6/BizWQIpINx8am/cmT6dvj?=
+ =?us-ascii?q?8w=3D=3D?=
 X-IronPort-AV: E=Sophos;i="5.88,333,1635177600"; 
-   d="scan'208";a="123453821"
+   d="scan'208";a="123454431"
 Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 11 Apr 2022 00:09:14 +0800
+  by heian.cn.fujitsu.com with ESMTP; 11 Apr 2022 01:16:28 +0800
 Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 6D5BA4D17168;
-        Mon, 11 Apr 2022 00:09:10 +0800 (CST)
+        by cn.fujitsu.com (Postfix) with ESMTP id 7BE8A4D16FF4;
+        Mon, 11 Apr 2022 01:16:24 +0800 (CST)
 Received: from G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.85) by
  G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.23; Mon, 11 Apr 2022 00:09:13 +0800
+ (TLS) id 15.0.1497.23; Mon, 11 Apr 2022 01:16:27 +0800
 Received: from irides.mr.mr (10.167.225.141) by
  G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.23 via Frontend Transport; Mon, 11 Apr 2022 00:09:09 +0800
+ id 15.0.1497.23 via Frontend Transport; Mon, 11 Apr 2022 01:16:23 +0800
 From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
 To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
         <nvdimm@lists.linux.dev>, <linux-mm@kvack.org>,
         <linux-fsdevel@vger.kernel.org>
 CC:     <djwong@kernel.org>, <dan.j.williams@intel.com>,
         <david@fromorbit.com>, <hch@infradead.org>, <jane.chu@oracle.com>
-Subject: [PATCH v12 7/7] fsdax: set a CoW flag when associate reflink mappings
-Date:   Mon, 11 Apr 2022 00:09:04 +0800
-Message-ID: <20220410160904.3758789-8-ruansy.fnst@fujitsu.com>
+Subject: [RFC PATCH] mm, pmem, xfs: Introduce MF_MEM_REMOVE for unbind
+Date:   Mon, 11 Apr 2022 01:16:23 +0800
+Message-ID: <20220410171623.3788004-1-ruansy.fnst@fujitsu.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220410160904.3758789-1-ruansy.fnst@fujitsu.com>
-References: <20220410160904.3758789-1-ruansy.fnst@fujitsu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 6D5BA4D17168.A0E9E
+X-yoursite-MailScanner-ID: 7BE8A4D16FF4.A3A26
 X-yoursite-MailScanner: Found to be clean
 X-yoursite-MailScanner-From: ruansy.fnst@fujitsu.com
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -72,151 +69,109 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Introduce a PAGE_MAPPING_DAX_COW flag to support association with CoW file
-mappings.  In this case, since the dax-rmap has already took the
-responsibility to look up for shared files by given dax page,
-the page->mapping is no longer to used for rmap but for marking that
-this dax page is shared.  And to make sure disassociation works fine, we
-use page->index as refcount, and clear page->mapping to the initial
-state when page->index is decreased to 0.
+This patch is inspired by Dan's "mm, dax, pmem: Introduce
+dev_pagemap_failure()"[1].  With the help of dax_holder and
+->notify_failure() mechanism, the pmem driver is able to ask filesystem
+(or mapped device) on it to unmap all files in use and notify processes
+who are using those files.
 
-With the help of this new flag, it is able to distinguish normal case
-and CoW case, and keep the warning in normal case.
+Call trace:
+trigger unbind
+ -> unbind_store()
+  -> ... (skip)
+   -> pmem driver ->remove()
+    -> kill_dax()
+     -> dax_holder_notify_failure(dax_dev, 0, U64_MAX, MF_MEM_REMOVE)
+      -> xfs_dax_notify_failure()
 
-==
-PS: The @cow added for dax_associate_entry(), is used to let it know
-whether the entry is to be shared during iomap operation.  It is decided
-by iomap,srcmap's flag, and will be used in another patchset(
-fsdax,xfs: Add reflink&dedupe support for fsdax[1]).
+Introduce MF_MEM_REMOVE to let filesystem know this is a remove event.
+So do not shutdown filesystem directly if something not supported, or if
+failure range includes metadata area.  Make sure all files and processes
+are handled correctly.
 
-In this patch, we set @cow always false for now.
+Based on "[PATCH v12] fsdax: introduce fs query to support reflink"[2]
 
-[1] https://lore.kernel.org/linux-xfs/20210928062311.4012070-1-ruansy.fnst@fujitsu.com/
-==
+[1]: https://lore.kernel.org/linux-mm/161604050314.1463742.14151665140035795571.stgit@dwillia2-desk3.amr.corp.intel.com/
+[2]: https://lore.kernel.org/linux-xfs/20220410160904.3758789-1-ruansy.fnst@fujitsu.com/T/#t
 
 Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 ---
- fs/dax.c                   | 65 ++++++++++++++++++++++++++++++++------
- include/linux/page-flags.h |  6 ++++
- 2 files changed, 62 insertions(+), 9 deletions(-)
+ drivers/dax/super.c         | 2 +-
+ drivers/nvdimm/pmem.c       | 3 ++-
+ fs/xfs/xfs_notify_failure.c | 6 +++++-
+ include/linux/mm.h          | 1 +
+ 4 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 57efd3f73655..2c2958425b95 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -334,13 +334,46 @@ static unsigned long dax_end_pfn(void *entry)
- 	for (pfn = dax_to_pfn(entry); \
- 			pfn < dax_end_pfn(entry); pfn++)
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 619a05615497..52f820fdd8ff 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -312,7 +312,7 @@ void kill_dax(struct dax_device *dax_dev)
+ 		return;
  
-+static inline void dax_mapping_set_cow_flag(struct address_space **mapping)
-+{
-+	*mapping = (struct address_space *)PAGE_MAPPING_DAX_COW;
-+}
-+
-+static inline bool dax_mapping_is_cow(struct address_space *mapping)
-+{
-+	return (unsigned long)mapping == PAGE_MAPPING_DAX_COW;
-+}
-+
- /*
-- * TODO: for reflink+dax we need a way to associate a single page with
-- * multiple address_space instances at different linear_page_index()
-- * offsets.
-+ * Set or Update the page->mapping with FS_DAX_MAPPING_COW flag.
-+ * Return true if it is an Update.
-+ */
-+static inline bool dax_mapping_set_cow(struct page *page)
-+{
-+	if (page->mapping) {
-+		/* flag already set */
-+		if (dax_mapping_is_cow(page->mapping))
-+			return false;
-+
-+		/*
-+		 * This page has been mapped even before it is shared, just
-+		 * need to set this FS_DAX_MAPPING_COW flag.
-+		 */
-+		dax_mapping_set_cow_flag(&page->mapping);
-+		return true;
-+	}
-+	/* Newly associate CoW mapping */
-+	dax_mapping_set_cow_flag(&page->mapping);
-+	return false;
-+}
-+
-+/*
-+ * When it is called in dax_insert_entry(), the cow flag will indicate that
-+ * whether this entry is shared by multiple files.  If so, set the page->mapping
-+ * to be FS_DAX_MAPPING_COW, and use page->index as refcount.
-  */
- static void dax_associate_entry(void *entry, struct address_space *mapping,
--		struct vm_area_struct *vma, unsigned long address)
-+		struct vm_area_struct *vma, unsigned long address, bool cow)
- {
- 	unsigned long size = dax_entry_size(entry), pfn, index;
- 	int i = 0;
-@@ -352,9 +385,17 @@ static void dax_associate_entry(void *entry, struct address_space *mapping,
- 	for_each_mapped_pfn(entry, pfn) {
- 		struct page *page = pfn_to_page(pfn);
+ 	if (dax_dev->holder_data != NULL)
+-		dax_holder_notify_failure(dax_dev, 0, U64_MAX, 0);
++		dax_holder_notify_failure(dax_dev, 0, U64_MAX, MF_MEM_REMOVE);
  
--		WARN_ON_ONCE(page->mapping);
--		page->mapping = mapping;
--		page->index = index + i++;
-+		if (cow) {
-+			if (dax_mapping_set_cow(page)) {
-+				/* Was normal, now updated to CoW */
-+				page->index = 2;
-+			} else
-+				page->index++;
-+		} else {
-+			WARN_ON_ONCE(page->mapping);
-+			page->mapping = mapping;
-+			page->index = index + i++;
-+		}
+ 	clear_bit(DAXDEV_ALIVE, &dax_dev->flags);
+ 	synchronize_srcu(&dax_srcu);
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index bd502957cfdf..72d9e69aea98 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -359,7 +359,6 @@ static void pmem_release_disk(void *__pmem)
+ 	struct pmem_device *pmem = __pmem;
+ 
+ 	dax_remove_host(pmem->disk);
+-	kill_dax(pmem->dax_dev);
+ 	put_dax(pmem->dax_dev);
+ 	del_gendisk(pmem->disk);
+ 
+@@ -597,6 +596,8 @@ static void nd_pmem_remove(struct device *dev)
+ 		pmem->bb_state = NULL;
  	}
+ 	nvdimm_flush(to_nd_region(dev->parent), NULL);
++
++	kill_dax(pmem->dax_dev);
  }
  
-@@ -370,7 +411,12 @@ static void dax_disassociate_entry(void *entry, struct address_space *mapping,
- 		struct page *page = pfn_to_page(pfn);
+ static void nd_pmem_shutdown(struct device *dev)
+diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
+index aac44f54feb4..f8b41085218b 100644
+--- a/fs/xfs/xfs_notify_failure.c
++++ b/fs/xfs/xfs_notify_failure.c
+@@ -73,7 +73,9 @@ xfs_dax_failure_fn(
+ 	struct failure_info		*notify = data;
+ 	int				error = 0;
  
- 		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
--		WARN_ON_ONCE(page->mapping && page->mapping != mapping);
-+		if (!dax_mapping_is_cow(page->mapping)) {
-+			/* keep the CoW flag if this page is still shared */
-+			if (page->index-- > 0)
-+				continue;
-+		} else
-+			WARN_ON_ONCE(page->mapping && page->mapping != mapping);
- 		page->mapping = NULL;
- 		page->index = 0;
- 	}
-@@ -829,7 +875,8 @@ static void *dax_insert_entry(struct xa_state *xas,
- 		void *old;
+-	if (XFS_RMAP_NON_INODE_OWNER(rec->rm_owner) ||
++	/* Do not shutdown so early when device is to be removed */
++	if (!(notify->mf_flags & MF_MEM_REMOVE) ||
++	    XFS_RMAP_NON_INODE_OWNER(rec->rm_owner) ||
+ 	    (rec->rm_flags & (XFS_RMAP_ATTR_FORK | XFS_RMAP_BMBT_BLOCK))) {
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_ONDISK);
+ 		return -EFSCORRUPTED;
+@@ -181,6 +183,8 @@ xfs_dax_notify_failure(
  
- 		dax_disassociate_entry(entry, mapping, false);
--		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address);
-+		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address,
-+				false);
- 		/*
- 		 * Only swap our new entry into the page cache if the current
- 		 * entry is a zero page or an empty entry.  If a normal PTE or
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index b70124b9c7c1..e02907150e5c 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -650,6 +650,12 @@ __PAGEFLAG(Reported, reported, PF_NO_COMPOUND)
- #define PAGE_MAPPING_KSM	(PAGE_MAPPING_ANON | PAGE_MAPPING_MOVABLE)
- #define PAGE_MAPPING_FLAGS	(PAGE_MAPPING_ANON | PAGE_MAPPING_MOVABLE)
- 
-+/*
-+ * Different with flags above, this flag is used only for fsdax mode.  It
-+ * indicates that this page->mapping is now under reflink case.
-+ */
-+#define PAGE_MAPPING_DAX_COW	0x1
-+
- static __always_inline int PageMappingFlags(struct page *page)
- {
- 	return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) != 0;
+ 	if (mp->m_logdev_targp && mp->m_logdev_targp->bt_daxdev == dax_dev &&
+ 	    mp->m_logdev_targp != mp->m_ddev_targp) {
++		if (mf_flags & MF_MEM_REMOVE)
++			return -EOPNOTSUPP;
+ 		xfs_err(mp, "ondisk log corrupt, shutting down fs!");
+ 		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_ONDISK);
+ 		return -EFSCORRUPTED;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 742604feef28..b47c3745782d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -3225,6 +3225,7 @@ enum mf_flags {
+ 	MF_MUST_KILL = 1 << 2,
+ 	MF_SOFT_OFFLINE = 1 << 3,
+ 	MF_UNPOISON = 1 << 4,
++	MF_MEM_REMOVE = 1 << 5,
+ };
+ int mf_dax_kill_procs(struct address_space *mapping, pgoff_t index,
+ 		      unsigned long count, int mf_flags);
 -- 
 2.35.1
 
