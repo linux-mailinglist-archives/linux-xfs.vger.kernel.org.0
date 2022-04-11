@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB6DA4FB113
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Apr 2022 02:32:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 306814FB10C
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Apr 2022 02:31:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239993AbiDKAeL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Apr 2022 20:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59298 "EHLO
+        id S236575AbiDKAeG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Apr 2022 20:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239706AbiDKAeG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 20:34:06 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1BF30120B8
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Apr 2022 17:31:54 -0700 (PDT)
+        with ESMTP id S232656AbiDKAeD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 20:34:03 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12B38DED4
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Apr 2022 17:31:51 -0700 (PDT)
 Received: from dread.disaster.area (pa49-186-233-190.pa.vic.optusnet.com.au [49.186.233.190])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4FC5010CE88C
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 525D153AD07
         for <linux-xfs@vger.kernel.org>; Mon, 11 Apr 2022 10:31:50 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1ndhy9-00GEMT-6E
+        id 1ndhy9-00GEMV-7C
         for linux-xfs@vger.kernel.org; Mon, 11 Apr 2022 10:31:49 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1ndhy9-008pit-5H
+        id 1ndhy9-008pix-6H
         for linux-xfs@vger.kernel.org;
         Mon, 11 Apr 2022 10:31:49 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 03/17] xfs: convert scrub type flags to unsigned.
-Date:   Mon, 11 Apr 2022 10:31:33 +1000
-Message-Id: <20220411003147.2104423-4-david@fromorbit.com>
+Subject: [PATCH 04/17] xfs: convert bmap extent type flags to unsigned.
+Date:   Mon, 11 Apr 2022 10:31:34 +1000
+Message-Id: <20220411003147.2104423-5-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220411003147.2104423-1-david@fromorbit.com>
 References: <20220411003147.2104423-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=625376f6
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=625376f6
         a=bHAvQTfMiaNt/bo4vVGwyA==:117 a=bHAvQTfMiaNt/bo4vVGwyA==:17
-        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=48NU_tySdWvFSTkSyFUA:9
+        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=iPUYN0WQYUd8Jtb8ip0A:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -55,62 +55,119 @@ From: Dave Chinner <dchinner@redhat.com>
 5.18 w/ std=gnu11 compiled with gcc-5 wants flags stored in unsigned
 fields to be unsigned.
 
-This touches xfs_fs.h so affects the user API, but the user API
-fields are also unsigned so the flags should really be unsigned,
-too.
-
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_fs.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c | 14 +++++++-------
+ fs/xfs/libxfs/xfs_bmap.h | 22 +++++++++++-----------
+ 2 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 505533c43a92..52c9d8676fa3 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -699,34 +699,34 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_NR	25
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 74198dd82b03..d53dfe8db8f2 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -1399,7 +1399,7 @@ xfs_bmap_add_extent_delay_real(
+ 	xfs_bmbt_irec_t		r[3];	/* neighbor extent entries */
+ 					/* left is 0, right is 1, prev is 2 */
+ 	int			rval=0;	/* return value (logging flags) */
+-	int			state = xfs_bmap_fork_to_state(whichfork);
++	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	xfs_filblks_t		da_new; /* new count del alloc blocks used */
+ 	xfs_filblks_t		da_old; /* old count del alloc blocks used */
+ 	xfs_filblks_t		temp=0;	/* value for da_new calculations */
+@@ -1950,7 +1950,7 @@ xfs_bmap_add_extent_unwritten_real(
+ 	xfs_bmbt_irec_t		r[3];	/* neighbor extent entries */
+ 					/* left is 0, right is 1, prev is 2 */
+ 	int			rval=0;	/* return value (logging flags) */
+-	int			state = xfs_bmap_fork_to_state(whichfork);
++	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct xfs_bmbt_irec	old;
  
- /* i: Repair this metadata. */
--#define XFS_SCRUB_IFLAG_REPAIR		(1 << 0)
-+#define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
+@@ -2479,7 +2479,7 @@ xfs_bmap_add_extent_hole_delay(
+ 	xfs_filblks_t		newlen=0;	/* new indirect size */
+ 	xfs_filblks_t		oldlen=0;	/* old indirect size */
+ 	xfs_bmbt_irec_t		right;	/* right neighbor extent entry */
+-	int			state = xfs_bmap_fork_to_state(whichfork);
++	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	xfs_filblks_t		temp;	 /* temp for indirect calculations */
  
- /* o: Metadata object needs repair. */
--#define XFS_SCRUB_OFLAG_CORRUPT		(1 << 1)
-+#define XFS_SCRUB_OFLAG_CORRUPT		(1u << 1)
+ 	ifp = XFS_IFORK_PTR(ip, whichfork);
+@@ -2626,7 +2626,7 @@ xfs_bmap_add_extent_hole_real(
+ 	xfs_bmbt_irec_t		left;	/* left neighbor extent entry */
+ 	xfs_bmbt_irec_t		right;	/* right neighbor extent entry */
+ 	int			rval=0;	/* return value (logging flags) */
+-	int			state = xfs_bmap_fork_to_state(whichfork);
++	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	struct xfs_bmbt_irec	old;
  
+ 	ASSERT(!isnullstartblock(new->br_startblock));
+@@ -4801,7 +4801,7 @@ xfs_bmap_del_extent_delay(
+ 	int64_t			da_old, da_new, da_diff = 0;
+ 	xfs_fileoff_t		del_endoff, got_endoff;
+ 	xfs_filblks_t		got_indlen, new_indlen, stolen;
+-	int			state = xfs_bmap_fork_to_state(whichfork);
++	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	int			error = 0;
+ 	bool			isrt;
+ 
+@@ -4926,7 +4926,7 @@ xfs_bmap_del_extent_cow(
+ 	struct xfs_ifork	*ifp = XFS_IFORK_PTR(ip, XFS_COW_FORK);
+ 	struct xfs_bmbt_irec	new;
+ 	xfs_fileoff_t		del_endoff, got_endoff;
+-	int			state = BMAP_COWFORK;
++	uint32_t		state = BMAP_COWFORK;
+ 
+ 	XFS_STATS_INC(mp, xs_del_exlist);
+ 
+@@ -5015,7 +5015,7 @@ xfs_bmap_del_extent_real(
+ 	xfs_bmbt_irec_t		new;	/* new record to be inserted */
+ 	/* REFERENCED */
+ 	uint			qfield;	/* quota field to update */
+-	int			state = xfs_bmap_fork_to_state(whichfork);
++	uint32_t		state = xfs_bmap_fork_to_state(whichfork);
+ 	struct xfs_bmbt_irec	old;
+ 
+ 	mp = ip->i_mount;
+diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+index 03d9aaf87413..29d38c3c2607 100644
+--- a/fs/xfs/libxfs/xfs_bmap.h
++++ b/fs/xfs/libxfs/xfs_bmap.h
+@@ -124,16 +124,16 @@ static inline int xfs_bmapi_whichfork(int bmapi_flags)
  /*
-  * o: Metadata object could be optimized.  It's not corrupt, but
-  *    we could improve on it somehow.
+  * Flags for xfs_bmap_add_extent*.
   */
--#define XFS_SCRUB_OFLAG_PREEN		(1 << 2)
-+#define XFS_SCRUB_OFLAG_PREEN		(1u << 2)
+-#define BMAP_LEFT_CONTIG	(1 << 0)
+-#define BMAP_RIGHT_CONTIG	(1 << 1)
+-#define BMAP_LEFT_FILLING	(1 << 2)
+-#define BMAP_RIGHT_FILLING	(1 << 3)
+-#define BMAP_LEFT_DELAY		(1 << 4)
+-#define BMAP_RIGHT_DELAY	(1 << 5)
+-#define BMAP_LEFT_VALID		(1 << 6)
+-#define BMAP_RIGHT_VALID	(1 << 7)
+-#define BMAP_ATTRFORK		(1 << 8)
+-#define BMAP_COWFORK		(1 << 9)
++#define BMAP_LEFT_CONTIG	(1u << 0)
++#define BMAP_RIGHT_CONTIG	(1u << 1)
++#define BMAP_LEFT_FILLING	(1u << 2)
++#define BMAP_RIGHT_FILLING	(1u << 3)
++#define BMAP_LEFT_DELAY		(1u << 4)
++#define BMAP_RIGHT_DELAY	(1u << 5)
++#define BMAP_LEFT_VALID		(1u << 6)
++#define BMAP_RIGHT_VALID	(1u << 7)
++#define BMAP_ATTRFORK		(1u << 8)
++#define BMAP_COWFORK		(1u << 9)
  
- /* o: Cross-referencing failed. */
--#define XFS_SCRUB_OFLAG_XFAIL		(1 << 3)
-+#define XFS_SCRUB_OFLAG_XFAIL		(1u << 3)
+ #define XFS_BMAP_EXT_FLAGS \
+ 	{ BMAP_LEFT_CONTIG,	"LC" }, \
+@@ -243,7 +243,7 @@ void	xfs_bmap_map_extent(struct xfs_trans *tp, struct xfs_inode *ip,
+ void	xfs_bmap_unmap_extent(struct xfs_trans *tp, struct xfs_inode *ip,
+ 		struct xfs_bmbt_irec *imap);
  
- /* o: Metadata object disagrees with cross-referenced metadata. */
--#define XFS_SCRUB_OFLAG_XCORRUPT	(1 << 4)
-+#define XFS_SCRUB_OFLAG_XCORRUPT	(1u << 4)
- 
- /* o: Scan was not complete. */
--#define XFS_SCRUB_OFLAG_INCOMPLETE	(1 << 5)
-+#define XFS_SCRUB_OFLAG_INCOMPLETE	(1u << 5)
- 
- /* o: Metadata object looked funny but isn't corrupt. */
--#define XFS_SCRUB_OFLAG_WARNING		(1 << 6)
-+#define XFS_SCRUB_OFLAG_WARNING		(1u << 6)
- 
- /*
-  * o: IFLAG_REPAIR was set but metadata object did not need fixing or
-  *    optimization and has therefore not been altered.
-  */
--#define XFS_SCRUB_OFLAG_NO_REPAIR_NEEDED (1 << 7)
-+#define XFS_SCRUB_OFLAG_NO_REPAIR_NEEDED (1u << 7)
- 
- #define XFS_SCRUB_FLAGS_IN	(XFS_SCRUB_IFLAG_REPAIR)
- #define XFS_SCRUB_FLAGS_OUT	(XFS_SCRUB_OFLAG_CORRUPT | \
+-static inline int xfs_bmap_fork_to_state(int whichfork)
++static inline uint32_t xfs_bmap_fork_to_state(int whichfork)
+ {
+ 	switch (whichfork) {
+ 	case XFS_ATTR_FORK:
 -- 
 2.35.1
 
