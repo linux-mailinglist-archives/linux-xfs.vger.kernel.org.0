@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB2204FB117
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Apr 2022 02:32:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 397294FB110
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Apr 2022 02:31:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236657AbiDKAeM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Apr 2022 20:34:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59326 "EHLO
+        id S236543AbiDKAeJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Apr 2022 20:34:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232656AbiDKAeI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 20:34:08 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 107C1101C8
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Apr 2022 17:31:56 -0700 (PDT)
+        with ESMTP id S236501AbiDKAeG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 20:34:06 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D47CEDED4
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Apr 2022 17:31:53 -0700 (PDT)
 Received: from dread.disaster.area (pa49-186-233-190.pa.vic.optusnet.com.au [49.186.233.190])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 8BCDE10CE8AF
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A92C853AD3C
         for <linux-xfs@vger.kernel.org>; Mon, 11 Apr 2022 10:31:50 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1ndhy9-00GEN7-Hq
+        id 1ndhy9-00GEN8-IM
         for linux-xfs@vger.kernel.org; Mon, 11 Apr 2022 10:31:49 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1ndhy9-008pjr-GT
+        id 1ndhy9-008pjw-HR
         for linux-xfs@vger.kernel.org;
         Mon, 11 Apr 2022 10:31:49 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 15/17] xfs: convert quota options flags to unsigned.
-Date:   Mon, 11 Apr 2022 10:31:45 +1000
-Message-Id: <20220411003147.2104423-16-david@fromorbit.com>
+Subject: [PATCH 16/17] xfs: convert shutdown reasons to unsigned.
+Date:   Mon, 11 Apr 2022 10:31:46 +1000
+Message-Id: <20220411003147.2104423-17-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220411003147.2104423-1-david@fromorbit.com>
 References: <20220411003147.2104423-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=625376f6
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=625376f6
         a=bHAvQTfMiaNt/bo4vVGwyA==:117 a=bHAvQTfMiaNt/bo4vVGwyA==:17
-        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=fOiYvdzM27_PIthXDlwA:9
+        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=S7XFdT2ykH6ascrGT28A:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -57,109 +57,77 @@ fields to be unsigned.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_quota_defs.h | 45 +++++++++++++++++++++++-----------
- fs/xfs/xfs_trace.h             | 16 ------------
- 2 files changed, 31 insertions(+), 30 deletions(-)
+ fs/xfs/xfs_fsops.c |  2 +-
+ fs/xfs/xfs_log.c   |  2 +-
+ fs/xfs/xfs_log.h   |  2 +-
+ fs/xfs/xfs_mount.h | 11 +++++------
+ 4 files changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_quota_defs.h b/fs/xfs/libxfs/xfs_quota_defs.h
-index fdfe3cc6f15c..3076cd74fcaa 100644
---- a/fs/xfs/libxfs/xfs_quota_defs.h
-+++ b/fs/xfs/libxfs/xfs_quota_defs.h
-@@ -73,29 +73,45 @@ typedef uint8_t		xfs_dqtype_t;
-  * to a single function. None of these XFS_QMOPT_* flags are meant to have
-  * persistent values (ie. their values can and will change between versions)
-  */
--#define XFS_QMOPT_UQUOTA	0x0000004 /* user dquot requested */
--#define XFS_QMOPT_PQUOTA	0x0000008 /* project dquot requested */
--#define XFS_QMOPT_FORCE_RES	0x0000010 /* ignore quota limits */
--#define XFS_QMOPT_SBVERSION	0x0000040 /* change superblock version num */
--#define XFS_QMOPT_GQUOTA	0x0002000 /* group dquot requested */
-+#define XFS_QMOPT_UQUOTA	(1u << 0) /* user dquot requested */
-+#define XFS_QMOPT_GQUOTA	(1u << 1) /* group dquot requested */
-+#define XFS_QMOPT_PQUOTA	(1u << 2) /* project dquot requested */
-+#define XFS_QMOPT_FORCE_RES	(1u << 3) /* ignore quota limits */
-+#define XFS_QMOPT_SBVERSION	(1u << 4) /* change superblock version num */
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 68f74549fa22..e4cc6b7cae0f 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -512,7 +512,7 @@ xfs_fs_goingdown(
+ void
+ xfs_do_force_shutdown(
+ 	struct xfs_mount *mp,
+-	int		flags,
++	uint32_t	flags,
+ 	char		*fname,
+ 	int		lnnum)
+ {
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 499e15b24215..3c216140a1c4 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -3829,7 +3829,7 @@ xlog_verify_iclog(
+ bool
+ xlog_force_shutdown(
+ 	struct xlog	*log,
+-	int		shutdown_flags)
++	uint32_t	shutdown_flags)
+ {
+ 	bool		log_error = (shutdown_flags & SHUTDOWN_LOG_IO_ERROR);
  
- /*
-  * flags to xfs_trans_mod_dquot to indicate which field needs to be
-  * modified.
-  */
--#define XFS_QMOPT_RES_REGBLKS	0x0010000
--#define XFS_QMOPT_RES_RTBLKS	0x0020000
--#define XFS_QMOPT_BCOUNT	0x0040000
--#define XFS_QMOPT_ICOUNT	0x0080000
--#define XFS_QMOPT_RTBCOUNT	0x0100000
--#define XFS_QMOPT_DELBCOUNT	0x0200000
--#define XFS_QMOPT_DELRTBCOUNT	0x0400000
--#define XFS_QMOPT_RES_INOS	0x0800000
-+#define XFS_QMOPT_RES_REGBLKS	(1u << 7)
-+#define XFS_QMOPT_RES_RTBLKS	(1u << 8)
-+#define XFS_QMOPT_BCOUNT	(1u << 9)
-+#define XFS_QMOPT_ICOUNT	(1u << 10)
-+#define XFS_QMOPT_RTBCOUNT	(1u << 11)
-+#define XFS_QMOPT_DELBCOUNT	(1u << 12)
-+#define XFS_QMOPT_DELRTBCOUNT	(1u << 13)
-+#define XFS_QMOPT_RES_INOS	(1u << 14)
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index dc1b77b92fc1..3ecf891f34c4 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -140,7 +140,7 @@ void	xfs_log_clean(struct xfs_mount *mp);
+ bool	xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
  
- /*
-  * flags for dqalloc.
-  */
--#define XFS_QMOPT_INHERIT	0x1000000
-+#define XFS_QMOPT_INHERIT	(1u << 31)
-+
-+#define XFS_QMOPT_FLAGS \
-+	{ XFS_QMOPT_UQUOTA,		"UQUOTA" }, \
-+	{ XFS_QMOPT_PQUOTA,		"PQUOTA" }, \
-+	{ XFS_QMOPT_FORCE_RES,		"FORCE_RES" }, \
-+	{ XFS_QMOPT_SBVERSION,		"SBVERSION" }, \
-+	{ XFS_QMOPT_GQUOTA,		"GQUOTA" }, \
-+	{ XFS_QMOPT_INHERIT,		"INHERIT" }, \
-+	{ XFS_QMOPT_RES_REGBLKS,	"RES_REGBLKS" }, \
-+	{ XFS_QMOPT_RES_RTBLKS,		"RES_RTBLKS" }, \
-+	{ XFS_QMOPT_BCOUNT,		"BCOUNT" }, \
-+	{ XFS_QMOPT_ICOUNT,		"ICOUNT" }, \
-+	{ XFS_QMOPT_RTBCOUNT,		"RTBCOUNT" }, \
-+	{ XFS_QMOPT_DELBCOUNT,		"DELBCOUNT" }, \
-+	{ XFS_QMOPT_DELRTBCOUNT,	"DELRTBCOUNT" }, \
-+	{ XFS_QMOPT_RES_INOS,		"RES_INOS" }
+ xfs_lsn_t xlog_grant_push_threshold(struct xlog *log, int need_bytes);
+-bool	  xlog_force_shutdown(struct xlog *log, int shutdown_flags);
++bool	  xlog_force_shutdown(struct xlog *log, uint32_t shutdown_flags);
  
- /*
-  * flags to xfs_trans_mod_dquot.
-@@ -114,6 +130,7 @@ typedef uint8_t		xfs_dqtype_t;
- 		(XFS_QMOPT_UQUOTA | XFS_QMOPT_PQUOTA | XFS_QMOPT_GQUOTA)
- #define XFS_QMOPT_RESBLK_MASK	(XFS_QMOPT_RES_REGBLKS | XFS_QMOPT_RES_RTBLKS)
+ void xlog_use_incompat_feat(struct xlog *log);
+ void xlog_drop_incompat_feat(struct xlog *log);
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index f6dc19de8322..e5629e7c5aaf 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -425,16 +425,15 @@ __XFS_IS_OPSTATE(blockgc_enabled, BLOCKGC_ENABLED)
+ #define XFS_MAX_IO_LOG		30	/* 1G */
+ #define XFS_MIN_IO_LOG		PAGE_SHIFT
  
-+
- extern xfs_failaddr_t xfs_dquot_verify(struct xfs_mount *mp,
- 		struct xfs_disk_dquot *ddq, xfs_dqid_t id);
- extern xfs_failaddr_t xfs_dqblk_verify(struct xfs_mount *mp,
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 989ecda904db..b88bd45da27a 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1096,22 +1096,6 @@ DEFINE_DQUOT_EVENT(xfs_dqflush_done);
- DEFINE_DQUOT_EVENT(xfs_trans_apply_dquot_deltas_before);
- DEFINE_DQUOT_EVENT(xfs_trans_apply_dquot_deltas_after);
+-#define xfs_is_shutdown(mp)		xfs_is_shutdown(mp)
+-void xfs_do_force_shutdown(struct xfs_mount *mp, int flags, char *fname,
++void xfs_do_force_shutdown(struct xfs_mount *mp, uint32_t flags, char *fname,
+ 		int lnnum);
+ #define xfs_force_shutdown(m,f)	\
+ 	xfs_do_force_shutdown(m, f, __FILE__, __LINE__)
  
--#define XFS_QMOPT_FLAGS \
--	{ XFS_QMOPT_UQUOTA,		"UQUOTA" }, \
--	{ XFS_QMOPT_PQUOTA,		"PQUOTA" }, \
--	{ XFS_QMOPT_FORCE_RES,		"FORCE_RES" }, \
--	{ XFS_QMOPT_SBVERSION,		"SBVERSION" }, \
--	{ XFS_QMOPT_GQUOTA,		"GQUOTA" }, \
--	{ XFS_QMOPT_INHERIT,		"INHERIT" }, \
--	{ XFS_QMOPT_RES_REGBLKS,	"RES_REGBLKS" }, \
--	{ XFS_QMOPT_RES_RTBLKS,		"RES_RTBLKS" }, \
--	{ XFS_QMOPT_BCOUNT,		"BCOUNT" }, \
--	{ XFS_QMOPT_ICOUNT,		"ICOUNT" }, \
--	{ XFS_QMOPT_RTBCOUNT,		"RTBCOUNT" }, \
--	{ XFS_QMOPT_DELBCOUNT,		"DELBCOUNT" }, \
--	{ XFS_QMOPT_DELRTBCOUNT,	"DELRTBCOUNT" }, \
--	{ XFS_QMOPT_RES_INOS,		"RES_INOS" }
--
- TRACE_EVENT(xfs_trans_mod_dquot,
- 	TP_PROTO(struct xfs_trans *tp, struct xfs_dquot *dqp,
- 		 unsigned int field, int64_t delta),
+-#define SHUTDOWN_META_IO_ERROR	0x0001	/* write attempt to metadata failed */
+-#define SHUTDOWN_LOG_IO_ERROR	0x0002	/* write attempt to the log failed */
+-#define SHUTDOWN_FORCE_UMOUNT	0x0004	/* shutdown from a forced unmount */
+-#define SHUTDOWN_CORRUPT_INCORE	0x0008	/* corrupt in-memory data structures */
++#define SHUTDOWN_META_IO_ERROR	(1u << 0) /* write attempt to metadata failed */
++#define SHUTDOWN_LOG_IO_ERROR	(1u << 1) /* write attempt to the log failed */
++#define SHUTDOWN_FORCE_UMOUNT	(1u << 2) /* shutdown from a forced unmount */
++#define SHUTDOWN_CORRUPT_INCORE	(1u << 3) /* corrupt in-memory structures */
+ 
+ #define XFS_SHUTDOWN_STRINGS \
+ 	{ SHUTDOWN_META_IO_ERROR,	"metadata_io" }, \
 -- 
 2.35.1
 
