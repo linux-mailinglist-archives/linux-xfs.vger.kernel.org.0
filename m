@@ -2,45 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAAFC4FB115
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Apr 2022 02:32:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 685244FB144
+	for <lists+linux-xfs@lfdr.de>; Mon, 11 Apr 2022 03:13:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240902AbiDKAeL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 10 Apr 2022 20:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59302 "EHLO
+        id S238901AbiDKBQB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 10 Apr 2022 21:16:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240793AbiDKAeG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 20:34:06 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2D32812618
-        for <linux-xfs@vger.kernel.org>; Sun, 10 Apr 2022 17:31:54 -0700 (PDT)
+        with ESMTP id S229492AbiDKBQA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 10 Apr 2022 21:16:00 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB0B63A5C0
+        for <linux-xfs@vger.kernel.org>; Sun, 10 Apr 2022 18:13:48 -0700 (PDT)
 Received: from dread.disaster.area (pa49-186-233-190.pa.vic.optusnet.com.au [49.186.233.190])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 906A810CE8B0
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Apr 2022 10:31:50 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3780453B9C3
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Apr 2022 11:13:48 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1ndhy9-00GENA-JD
-        for linux-xfs@vger.kernel.org; Mon, 11 Apr 2022 10:31:49 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1ndhy9-008pk1-IK
-        for linux-xfs@vger.kernel.org;
-        Mon, 11 Apr 2022 10:31:49 +1000
+        id 1ndick-00GF8F-Aq
+        for linux-xfs@vger.kernel.org; Mon, 11 Apr 2022 11:13:46 +1000
+Date:   Mon, 11 Apr 2022 11:13:46 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 17/17] xfs: convert log ticket and iclog flags to unsigned.
-Date:   Mon, 11 Apr 2022 10:31:47 +1000
-Message-Id: <20220411003147.2104423-18-david@fromorbit.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220411003147.2104423-1-david@fromorbit.com>
-References: <20220411003147.2104423-1-david@fromorbit.com>
+Subject: [ANNOUNCE] xfs: master and for-next branches updated to v5.18-rc2
+Message-ID: <20220411011346.GP1544202@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=625376f6
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=625380cc
         a=bHAvQTfMiaNt/bo4vVGwyA==:117 a=bHAvQTfMiaNt/bo4vVGwyA==:17
-        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=a4IuYPeEK0sUFmN56-AA:9
+        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=7-415B0cAAAA:8
+        a=JuDxSlhT3OO6blO4plAA:9 a=CjuIK1q_8ugA:10 a=n3xvM8a_0i4A:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -50,49 +44,16 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi folks,
 
-5.18 w/ std=gnu11 compiled with gcc-5 wants flags stored in unsigned
-fields to be unsigned.
+I've just updated the master and for-next branches of the
+xfs-linux tree to v5.18-rc2. I would appreciate it if patchsets
+for review and pull requests are based on this master branch so I
+have a common base to merge patchsets from.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_log_priv.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Cheers,
 
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 401cdc400980..438df48a84c4 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -51,8 +51,8 @@ enum xlog_iclog_state {
- /*
-  * In core log flags
-  */
--#define XLOG_ICL_NEED_FLUSH	(1 << 0)	/* iclog needs REQ_PREFLUSH */
--#define XLOG_ICL_NEED_FUA	(1 << 1)	/* iclog needs REQ_FUA */
-+#define XLOG_ICL_NEED_FLUSH	(1u << 0)	/* iclog needs REQ_PREFLUSH */
-+#define XLOG_ICL_NEED_FUA	(1u << 1)	/* iclog needs REQ_FUA */
- 
- #define XLOG_ICL_STRINGS \
- 	{ XLOG_ICL_NEED_FLUSH,	"XLOG_ICL_NEED_FLUSH" }, \
-@@ -62,7 +62,7 @@ enum xlog_iclog_state {
- /*
-  * Log ticket flags
-  */
--#define XLOG_TIC_PERM_RESERV	0x1	/* permanent reservation */
-+#define XLOG_TIC_PERM_RESERV	(1u << 0)	/* permanent reservation */
- 
- #define XLOG_TIC_FLAGS \
- 	{ XLOG_TIC_PERM_RESERV,	"XLOG_TIC_PERM_RESERV" }
-@@ -165,7 +165,7 @@ typedef struct xlog_ticket {
- 	char		   t_ocnt;	 /* original count		 : 1  */
- 	char		   t_cnt;	 /* current count		 : 1  */
- 	char		   t_clientid;	 /* who does this belong to;	 : 1  */
--	char		   t_flags;	 /* properties of reservation	 : 1  */
-+	uint8_t		   t_flags;	 /* properties of reservation	 : 1  */
- 
-         /* reservation array fields */
- 	uint		   t_res_num;                    /* num in array : 4 */
+Dave.
 -- 
-2.35.1
-
+Dave Chinner
+david@fromorbit.com
