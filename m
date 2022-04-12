@@ -2,54 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBBDB4FCD54
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Apr 2022 05:52:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB9514FCDC6
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Apr 2022 06:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345307AbiDLDxc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Apr 2022 23:53:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51578 "EHLO
+        id S243444AbiDLE2N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 12 Apr 2022 00:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345657AbiDLDxX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Apr 2022 23:53:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A39933343;
-        Mon, 11 Apr 2022 20:50:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8CCF561735;
-        Tue, 12 Apr 2022 03:50:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A21C385A6;
-        Tue, 12 Apr 2022 03:50:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649735443;
-        bh=dbjm/Ip6Jo5BhNungtA0HT0445pR5PAm6Wft+hCHZhw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n7dsbpVeo2ApX3NdtVkElk6OCKqgz2VZUtQS9PXgZgP4ENjMFL/OJtOjeKdDRW6bT
-         H2azFbYRr92mwG+VMwINMzmLQaoreAnPvgilDaJRNFLIsaVWUZSHNqYwtI8igTtmzL
-         AbGzFIuNhBbPbuvYjTz1uIzfdxEBYkdtUt+HnJcot44pp7dFMYOacvwkqyPijYJVKE
-         quW1qXfIlNDsXMkPnE3jOK6lcdlafCree/FJPeqGhvOBrDyn3N3h+HZ6U7wydhlmzN
-         3f/V1LTfZllZE7na2RGiel26+1Hkn1ezyHivhvEH+z8Kdbv5v+DFuK+tBN0ZPvcqU3
-         BZmQxq61lKlNA==
-Date:   Mon, 11 Apr 2022 20:50:42 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: update IOMAP FILESYSTEM LIBRARY and XFS
- FILESYSTEM
-Message-ID: <20220412035042.GC16799@magnolia>
-References: <1649733686-6128-1-git-send-email-yangtiezhu@loongson.cn>
- <20220412033917.GB16799@magnolia>
+        with ESMTP id S244464AbiDLE2H (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Apr 2022 00:28:07 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0CB6832992
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Apr 2022 21:25:49 -0700 (PDT)
+Received: from dread.disaster.area (pa49-186-233-190.pa.vic.optusnet.com.au [49.186.233.190])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3527053460A;
+        Tue, 12 Apr 2022 14:25:47 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ne865-00Gh2J-Rm; Tue, 12 Apr 2022 14:25:45 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.95)
+        (envelope-from <david@fromorbit.com>)
+        id 1ne865-009NrF-Q9;
+        Tue, 12 Apr 2022 14:25:45 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     allison.henderson@oracle.com
+Subject: [PATCH 00/10] xfs: LARP - clean up xfs_attr_set_iter state machine
+Date:   Tue, 12 Apr 2022 14:25:33 +1000
+Message-Id: <20220412042543.2234866-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220412033917.GB16799@magnolia>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6254ff4b
+        a=bHAvQTfMiaNt/bo4vVGwyA==:117 a=bHAvQTfMiaNt/bo4vVGwyA==:17
+        a=z0gMJWrwH1QA:10 a=VwQbUJbxAAAA:8 a=-TPetH3yESX3ffJ-qN0A:9
+        a=AjGcO6oz07-iQ99wixmX:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,63 +48,98 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 08:39:17PM -0700, Darrick J. Wong wrote:
-> On Tue, Apr 12, 2022 at 11:21:26AM +0800, Tiezhu Yang wrote:
-> > Remove the following section entries of IOMAP FILESYSTEM LIBRARY:
-> > 
-> > M:	linux-xfs@vger.kernel.org
-> > M:	linux-fsdevel@vger.kernel.org
-> > 
-> > Remove the following section entry of XFS FILESYSTEM:
-> > 
-> > M:	linux-xfs@vger.kernel.org
-> > 
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> 
-> WTF?
-> 
->  ▄▄   ▄   ▄▄   ▄    ▄
->  █▀▄  █   ██   █  ▄▀
->  █ █▄ █  █  █  █▄█
->  █  █ █  █▄▄█  █  █▄
->  █   ██ █    █ █   ▀▄
+Hi Allison,
 
-*OH*, I see, you're getting rid of the M(ail): entry, probably because
-it's redundant with L(ist): or something??  Still... why does it matter?
+This is first patchset for fixing up stuff in the LARP code. I've
+based this on my current 5.19-compose branch here:
 
-Seriously, changelogs need to say /why/ they're changing something, not
-simply restate what's already in the diff.
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-5.19-compose
 
---D
+The first patch in the series fixes the splat that occurs in
+generic/642 in that merge from the empty, dirty transaction. I
+haven't touched the xfs_attri_finish_one() code to remove the
+XFS_TRANS_DIRTY there because that code is used for the remove path,
+too, and I didn't want to perturb that before I was finished with
+the set path.
 
-> 
-> --D
-> 
-> > ---
-> >  MAINTAINERS | 3 ---
-> >  1 file changed, 3 deletions(-)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 61d9f11..726608f 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -10238,8 +10238,6 @@ F:	drivers/net/ethernet/sgi/ioc3-eth.c
-> >  IOMAP FILESYSTEM LIBRARY
-> >  M:	Christoph Hellwig <hch@infradead.org>
-> >  M:	Darrick J. Wong <djwong@kernel.org>
-> > -M:	linux-xfs@vger.kernel.org
-> > -M:	linux-fsdevel@vger.kernel.org
-> >  L:	linux-xfs@vger.kernel.org
-> >  L:	linux-fsdevel@vger.kernel.org
-> >  S:	Supported
-> > @@ -21596,7 +21594,6 @@ F:	drivers/xen/*swiotlb*
-> >  XFS FILESYSTEM
-> >  C:	irc://irc.oftc.net/xfs
-> >  M:	Darrick J. Wong <djwong@kernel.org>
-> > -M:	linux-xfs@vger.kernel.org
-> >  L:	linux-xfs@vger.kernel.org
-> >  S:	Supported
-> >  W:	http://xfs.org/
-> > -- 
-> > 2.1.0
-> > 
+The rest of the patchset is cleaning up the xfs_attr_set_iter()
+state machine. THe use of XFS_DAS_UNINIT is gone - instead I set the
+initial state according to the format of the attr fork. Then if we
+convert from sf to leaf, or leaf to node, we bump the state to
+LEAF_ADD or NODE_ADD and roll the transaction. The next time in it
+will perform the appropriate attr addition.
+
+I've then added extra states to handle remote value block allocation
+and setting of the value for the leaf blocks. This makes the code
+the same as setting the remote value for node blocks, and that then
+leads to collapsing all the duplicate code paths.
+
+To do that, I set up the leaf and node states as identical
+numerically ascending sequences, allowing state changes to be done
+by incrementing the state value from a specific initial condition,
+but progressing down the correct sequence of states even though they
+are executing the same code path. This initial condition (leaf or
+node) is set directly by the LEAF/NODE_ADD states that have already
+been separated and set up.
+
+From there, it's really just cleanup - I separated the flipflags
+operation into a separate state, so when larp is enabled it just
+skips straight over it. I renamed the states to describe the
+high level operation it is performing rather than the mechanics of
+the modification it is making. Like the remote val block alloc, I
+enabled it to skip over the remote attr states on remove if it isn't
+a remote attr.
+
+I factored the code a bit more, cleaning up the final leaf/node
+states to look the same from the perspective of the state machine.
+
+I then made sure that the state machine has a termination state -
+XFS_DAS_DONE - so taht callers can determine whether the operation
+is complete without requiring xfs_attr_set_iter() to return -EAGAIN
+to tell the caller it needs to keep iterating. This allows removal
+of most of the -EAGAIN returns and conditional logic in the
+xfs_attr_set_iter() implementation and leaf functions. This means
+that requirement of the deferop transaction rolling API (return
+-EAGAIN) is contained entirely within xfs_attri_finish_one() instead
+of bleeding through to xfs_attr_set_iter().
+
+Overall, I find the state machine code much easier to read and
+follow because it largely separates the implementation of individual
+states from the execution of the state machine. The states are
+smaller and easier to understate, too.
+
+What I haven't done yet is update the big flowchart in xfs_attr.h.
+Much of it is now stale and it doesn't match the new states or
+progression through the states. I'm wondering if there's a better
+way to document the state machine than a comment that will get
+rapidly out of date, even though that comment was very helpful in
+working out how to re-write the state machine cleanly....
+
+I plan to make the same structural mods to xfs_attr_remove_iter(),
+and then I can clean up xfs_attri_finish_one() and get rid of the
+XFS_TRANS_DIRTY in that code.
+
+The diffstat isn't too bad - it doesn't make the code smaller
+overall because I split a lot of stuff out into smaller functions,
+but it doesn't get bigger, either, and I think the result is much
+more readable and maintainable.
+
+ fs/xfs/libxfs/xfs_attr.c | 586 ++++++++++++++++-------------------
+ fs/xfs/libxfs/xfs_attr.h |  60 +++-
+ fs/xfs/xfs_attr_item.c   |   2 +
+ fs/xfs/xfs_trace.h       |  26 +-
+ 4 files changed, 345 insertions(+), 329 deletions(-)
+
+The patchset passes fstests '-g attr' running in a loop when larp=0,
+but I haven't tested it with larp=1 yet - I've done zero larp=1
+testing so far so I don't even know whether it works in the base
+5.19 compose yet. I'll look at that when I finish the state machine
+updates....
+
+Thoughts?
+
+Cheers,
+
+Dave.
+
+
