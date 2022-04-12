@@ -2,120 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C708D4FDB4F
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Apr 2022 12:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F23CB4FDC43
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Apr 2022 13:04:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235678AbiDLKAm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 12 Apr 2022 06:00:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39166 "EHLO
+        id S241168AbiDLKQz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 12 Apr 2022 06:16:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243796AbiDLJmc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Apr 2022 05:42:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E3A861A2A
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 01:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649753274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8j73F4KYuVNfbOqQ2tBdzOoEal08IKt31ONBAxqG4sg=;
-        b=gTVqUSfddj9Pt5s/AyJbDkU0n5ua9Al69SWr7CeCNwtyjM4WxbMqcbRqKE5RtvtCnTnw6m
-        8aFDVcdWh3NGXwnc0hJDA9jriKXoi13V5Brzw+mHoy0I/RtT/Oe7sc3VYmkRUpXzYhxbPN
-        flhZUs/8LEeYpyu0PC1zYL37HqQdMOI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-670-3WZOH4kYMV6QXS2sSIlrKA-1; Tue, 12 Apr 2022 04:47:53 -0400
-X-MC-Unique: 3WZOH4kYMV6QXS2sSIlrKA-1
-Received: by mail-qv1-f69.google.com with SMTP id eo15-20020ad4594f000000b004443ac37d09so6244676qvb.0
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 01:47:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=8j73F4KYuVNfbOqQ2tBdzOoEal08IKt31ONBAxqG4sg=;
-        b=8JNu8Dz3uvyrTWpaRWAANgzzmxxPF7OCdh3R6T5+Fiz1gQ6yAvpJIPsksBWvZmzcQ9
-         1pqFhPm1KwHtPQwFqiExmp8z6oAVan+p87c85wVTib7QW47utjthhLQxkzlsQme2MkEJ
-         kdJGDW5YeIWJ3+6o8JQale6qoNdWJUijIlMzrIR4XH9SgnYZn9U9ImsPlSS/V6KV2aRw
-         kcqMTE67AS/h1AGuTgZBeZx9M5k1RJs8oN9yyJot8Idi6cOcAjLhVhFOTsn1yKcpcwto
-         dRpWuoXI7AA6jCGXe1d+drn4WdLmvuC2I70sIOgsncbCHEgRn1utVLrCLGZw/9sCrXW1
-         sP2Q==
-X-Gm-Message-State: AOAM531hts7QnqLoEaldtwLaXxXhQoHdZp9mNPGZ0xUsLBy+Nm/vi0K8
-        maI5A/xSZHEkKUO/5BcpPM1fsk6N1tTQeLxzU95T5TuACF3uZuB9VlX1JQLOOhity5ZiEl863vd
-        wd1Q68pSi3ynttBEvK17c
-X-Received: by 2002:a05:6214:21ec:b0:444:8356:4cb9 with SMTP id p12-20020a05621421ec00b0044483564cb9mr1378352qvj.38.1649753272862;
-        Tue, 12 Apr 2022 01:47:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyy+SlCJK3RCU/EQ3mZGoiWXT4ngJymuEpc0IEV51Ns3s0EKcjxChSNXx4Y+Tyz5JiltqcFcw==
-X-Received: by 2002:a05:6214:21ec:b0:444:8356:4cb9 with SMTP id p12-20020a05621421ec00b0044483564cb9mr1378345qvj.38.1649753272653;
-        Tue, 12 Apr 2022 01:47:52 -0700 (PDT)
-Received: from zlang-mailbox ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id f12-20020a379c0c000000b0069a048e7f0bsm9535301qke.76.2022.04.12.01.47.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 01:47:51 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 16:47:46 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org, guan@eryu.me
-Subject: Re: [PATCH 2/2] xfs/507: add test to auto group
-Message-ID: <20220412084746.th3gapgutwspf6rb@zlang-mailbox>
-Mail-Followup-To: "Darrick J. Wong" <djwong@kernel.org>, guaneryu@gmail.com,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-References: <164971765670.169895.10730350919455923432.stgit@magnolia>
- <164971766805.169895.12082898167045363438.stgit@magnolia>
+        with ESMTP id S1353861AbiDLKC5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Apr 2022 06:02:57 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4DBBC340C1
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 02:09:19 -0700 (PDT)
+Received: from dread.disaster.area (pa49-186-233-190.pa.vic.optusnet.com.au [49.186.233.190])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 05203534515;
+        Tue, 12 Apr 2022 19:09:17 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1neCWS-00GlqL-JY; Tue, 12 Apr 2022 19:09:16 +1000
+Date:   Tue, 12 Apr 2022 19:09:16 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     allison.henderson@oracle.com
+Subject: [PATCH 11/10] xfs: initialise attrd item to zero
+Message-ID: <20220412090916.GF1544202@dread.disaster.area>
+References: <20220412042543.2234866-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164971766805.169895.12082898167045363438.stgit@magnolia>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220412042543.2234866-1-david@fromorbit.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=625541be
+        a=bHAvQTfMiaNt/bo4vVGwyA==:117 a=bHAvQTfMiaNt/bo4vVGwyA==:17
+        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8
+        a=VdGwt750K41ze9-0lWsA:9 a=CjuIK1q_8ugA:10
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 03:54:28PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Add this regression test to the auto group now that it's been quite a
-> while since the fix patches went upstream.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
 
-Reviewed-by: Zorro Lang <zlang@redhat.com>
+From: Dave Chinner <dchinner@redhat.com>
 
->  tests/xfs/507 |    6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> 
-> diff --git a/tests/xfs/507 b/tests/xfs/507
-> index aa3d8eeb..b9c9ab29 100755
-> --- a/tests/xfs/507
-> +++ b/tests/xfs/507
-> @@ -4,13 +4,17 @@
->  #
->  # FS QA Test No. 507
->  #
-> +# Regression test for kernel commit:
-> +#
-> +# 394aafdc15da ("xfs: widen inode delalloc block counter to 64-bits")
-> +#
->  # Try to overflow i_delayed_blks by setting the largest cowextsize hint
->  # possible, creating a sparse file with a single byte every cowextsize bytes,
->  # reflinking it, and retouching every written byte to see if we can create
->  # enough speculative COW reservations to overflow i_delayed_blks.
->  #
->  . ./common/preamble
-> -_begin_fstest clone
-> +_begin_fstest auto clone
->  
->  _register_cleanup "_cleanup" BUS
->  
-> 
+On the first allocation of a attrd item, xfs_trans_add_item() fires
+an assert like so:
 
+ XFS (pmem0): EXPERIMENTAL logged extended attributes feature added. Use at your own risk!
+ XFS: Assertion failed: !test_bit(XFS_LI_DIRTY, &lip->li_flags), file: fs/xfs/xfs_trans.c, line: 683
+ ------------[ cut here ]------------
+ kernel BUG at fs/xfs/xfs_message.c:102!
+ Call Trace:
+  <TASK>
+  xfs_trans_add_item+0x17e/0x190
+  xfs_trans_get_attrd+0x67/0x90
+  xfs_attr_create_done+0x13/0x20
+  xfs_defer_finish_noroll+0x100/0x690
+  __xfs_trans_commit+0x144/0x330
+  xfs_trans_commit+0x10/0x20
+  xfs_attr_set+0x3e2/0x4c0
+  xfs_initxattrs+0xaa/0xe0
+  security_inode_init_security+0xb0/0x130
+  xfs_init_security+0x18/0x20
+  xfs_generic_create+0x13a/0x340
+  xfs_vn_create+0x17/0x20
+  path_openat+0xff3/0x12f0
+  do_filp_open+0xb2/0x150
+
+The attrd log item is allocated via kmem_cache_alloc, and
+xfs_log_item_init() does not zero the entire log item structure - it
+assumes that the structure is already all zeros as it only
+initialises non-zero fields. Fix the attr items to be allocated
+via the *zalloc methods.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+
+With this patch, the series also passes the attr group fstests with
+larp enabled. This probably should be folded back into the original
+patchset where this allocation is added.
+
+ fs/xfs/xfs_attr_item.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
+index 0e2ef0dedb28..b6561861ef01 100644
+--- a/fs/xfs/xfs_attr_item.c
++++ b/fs/xfs/xfs_attr_item.c
+@@ -725,7 +725,7 @@ xfs_trans_get_attrd(struct xfs_trans		*tp,
+ 
+ 	ASSERT(tp != NULL);
+ 
+-	attrdp = kmem_cache_alloc(xfs_attrd_cache, GFP_NOFS | __GFP_NOFAIL);
++	attrdp = kmem_cache_zalloc(xfs_attrd_cache, GFP_NOFS | __GFP_NOFAIL);
+ 
+ 	xfs_log_item_init(tp->t_mountp, &attrdp->attrd_item, XFS_LI_ATTRD,
+ 			  &xfs_attrd_item_ops);
