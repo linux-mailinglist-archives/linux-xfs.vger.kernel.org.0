@@ -2,118 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FE484FDB5F
-	for <lists+linux-xfs@lfdr.de>; Tue, 12 Apr 2022 12:56:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C708D4FDB4F
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Apr 2022 12:56:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347293AbiDLKAv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 12 Apr 2022 06:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60532 "EHLO
+        id S235678AbiDLKAm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 12 Apr 2022 06:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243839AbiDLJmc (ORCPT
+        with ESMTP id S243796AbiDLJmc (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Tue, 12 Apr 2022 05:42:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EDD4D61A33
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 01:47:25 -0700 (PDT)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E3A861A2A
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 01:47:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649753245;
+        s=mimecast20190719; t=1649753274;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=tUlVlY57ZX7uV3RPkJUwhJgZ9Q5YSBMyxFuTi8R7RpU=;
-        b=MyQw3LcOGnEZjMfKHsUyxVvli1QTwF9G6vbstZwA+nQ4l4me/EtVIEISdViepUKl++hX4w
-        ZaefvUvHkVneR2ggP0cPkrJP8ljEICm+4uLOTeUOKhqjY3C4OevbhqHHu/fIjEculVwkKY
-        9k9F7Dw+ZtEuqqLOSqtUTqYTvBu/9Gg=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8j73F4KYuVNfbOqQ2tBdzOoEal08IKt31ONBAxqG4sg=;
+        b=gTVqUSfddj9Pt5s/AyJbDkU0n5ua9Al69SWr7CeCNwtyjM4WxbMqcbRqKE5RtvtCnTnw6m
+        8aFDVcdWh3NGXwnc0hJDA9jriKXoi13V5Brzw+mHoy0I/RtT/Oe7sc3VYmkRUpXzYhxbPN
+        flhZUs/8LEeYpyu0PC1zYL37HqQdMOI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-263-hOcFE4WRPvCIBITVDeb1dQ-1; Tue, 12 Apr 2022 04:47:24 -0400
-X-MC-Unique: hOcFE4WRPvCIBITVDeb1dQ-1
-Received: by mail-qk1-f197.google.com with SMTP id v14-20020a05620a0f0e00b00699f4ea852cso9184194qkl.9
-        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 01:47:24 -0700 (PDT)
+ us-mta-670-3WZOH4kYMV6QXS2sSIlrKA-1; Tue, 12 Apr 2022 04:47:53 -0400
+X-MC-Unique: 3WZOH4kYMV6QXS2sSIlrKA-1
+Received: by mail-qv1-f69.google.com with SMTP id eo15-20020ad4594f000000b004443ac37d09so6244676qvb.0
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 01:47:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to;
-        bh=tUlVlY57ZX7uV3RPkJUwhJgZ9Q5YSBMyxFuTi8R7RpU=;
-        b=KKROSpRe3/75PL4oxc/gCcSYtExZPZu6PKbDfP14ARv4jEWbb8M4iezj6BVxZRzrWM
-         Bl+StQT+GvgbAu7j610esimJAD9bHvibOzFhKkrNZKUFesTugJixse+iY8E+hUo0Hu7O
-         vyFhsnySHxn++FmIyobtZoyrAQTtH3kKSN2mvj/C/GQHCDpu1IVZ5s7Rcz7v/28HY1Je
-         6Ysv5tSW0JilkXiEo3SfJI2tuKhqAenGvXIEPuV+nmkpzRa95b16dCeKUeA831lArlLu
-         TqCG0dBU0ZCMVqUqNm05ikT7jKElZhTP6jQPQQdtYZwu0GjiZcntO0zyU/4CbjI2dCZS
-         5cHg==
-X-Gm-Message-State: AOAM531HI6vtpZeSjKHB/DUSGJJoxvkXLDg8YiwThrkc4jxCDg+LZmZM
-        gmRtyfuPo/Aswp99MoLDFdAdSZTtQZtQzaKYJBICqroQ+OO5RA4vfAnng8lqyzZ1+c4N0EG+kNQ
-        EAkfD42tZiUfR3F2QZ6pN
-X-Received: by 2002:ac8:5e4c:0:b0:2e2:2bbf:57fa with SMTP id i12-20020ac85e4c000000b002e22bbf57famr2440547qtx.278.1649753243024;
-        Tue, 12 Apr 2022 01:47:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyvycSwxVRjJOhT+Jr5XOeyZael71AMFX7+JlCFx5ZUU29mGMcKJPTHsxSVvR4WZRU1Ts39Gw==
-X-Received: by 2002:ac8:5e4c:0:b0:2e2:2bbf:57fa with SMTP id i12-20020ac85e4c000000b002e22bbf57famr2440539qtx.278.1649753242798;
-        Tue, 12 Apr 2022 01:47:22 -0700 (PDT)
+        bh=8j73F4KYuVNfbOqQ2tBdzOoEal08IKt31ONBAxqG4sg=;
+        b=8JNu8Dz3uvyrTWpaRWAANgzzmxxPF7OCdh3R6T5+Fiz1gQ6yAvpJIPsksBWvZmzcQ9
+         1pqFhPm1KwHtPQwFqiExmp8z6oAVan+p87c85wVTib7QW47utjthhLQxkzlsQme2MkEJ
+         kdJGDW5YeIWJ3+6o8JQale6qoNdWJUijIlMzrIR4XH9SgnYZn9U9ImsPlSS/V6KV2aRw
+         kcqMTE67AS/h1AGuTgZBeZx9M5k1RJs8oN9yyJot8Idi6cOcAjLhVhFOTsn1yKcpcwto
+         dRpWuoXI7AA6jCGXe1d+drn4WdLmvuC2I70sIOgsncbCHEgRn1utVLrCLGZw/9sCrXW1
+         sP2Q==
+X-Gm-Message-State: AOAM531hts7QnqLoEaldtwLaXxXhQoHdZp9mNPGZ0xUsLBy+Nm/vi0K8
+        maI5A/xSZHEkKUO/5BcpPM1fsk6N1tTQeLxzU95T5TuACF3uZuB9VlX1JQLOOhity5ZiEl863vd
+        wd1Q68pSi3ynttBEvK17c
+X-Received: by 2002:a05:6214:21ec:b0:444:8356:4cb9 with SMTP id p12-20020a05621421ec00b0044483564cb9mr1378352qvj.38.1649753272862;
+        Tue, 12 Apr 2022 01:47:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyy+SlCJK3RCU/EQ3mZGoiWXT4ngJymuEpc0IEV51Ns3s0EKcjxChSNXx4Y+Tyz5JiltqcFcw==
+X-Received: by 2002:a05:6214:21ec:b0:444:8356:4cb9 with SMTP id p12-20020a05621421ec00b0044483564cb9mr1378345qvj.38.1649753272653;
+        Tue, 12 Apr 2022 01:47:52 -0700 (PDT)
 Received: from zlang-mailbox ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id 20-20020ac84e94000000b002ef2ab3f499sm3511038qtp.3.2022.04.12.01.47.20
+        by smtp.gmail.com with ESMTPSA id f12-20020a379c0c000000b0069a048e7f0bsm9535301qke.76.2022.04.12.01.47.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Apr 2022 01:47:22 -0700 (PDT)
-Date:   Tue, 12 Apr 2022 16:47:16 +0800
+        Tue, 12 Apr 2022 01:47:51 -0700 (PDT)
+Date:   Tue, 12 Apr 2022 16:47:46 +0800
 From:   Zorro Lang <zlang@redhat.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 1/2] xfs/187: don't rely on FSCOUNTS for free space data
-Message-ID: <20220412084716.vwljkrc7bpnzl75z@zlang-mailbox>
-Mail-Followup-To: "Darrick J. Wong" <djwong@kernel.org>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Cc:     guaneryu@gmail.com, linux-xfs@vger.kernel.org,
+        fstests@vger.kernel.org, guan@eryu.me
+Subject: Re: [PATCH 2/2] xfs/507: add test to auto group
+Message-ID: <20220412084746.th3gapgutwspf6rb@zlang-mailbox>
+Mail-Followup-To: "Darrick J. Wong" <djwong@kernel.org>, guaneryu@gmail.com,
+        linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 References: <164971765670.169895.10730350919455923432.stgit@magnolia>
- <164971766238.169895.2389864738831855587.stgit@magnolia>
+ <164971766805.169895.12082898167045363438.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164971766238.169895.2389864738831855587.stgit@magnolia>
+In-Reply-To: <164971766805.169895.12082898167045363438.stgit@magnolia>
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 11, 2022 at 03:54:22PM -0700, Darrick J. Wong wrote:
+On Mon, Apr 11, 2022 at 03:54:28PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> Currently, this test relies on the XFS_IOC_FSCOUNTS ioctl to return
-> accurate free space information.  It doesn't.  Convert it to use statfs,
-> which uses the accurate versions of the percpu counters.  Obviously,
-> this only becomes a problem when we convert the free rtx count to use
-> (sloppier) percpu counters instead of the (more precise and previously
-> buggy) ondisk superblock counts.
+> Add this regression test to the auto group now that it's been quite a
+> while since the fix patches went upstream.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
->  tests/xfs/187 |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Reviewed-by: Zorro Lang <zlang@redhat.com>
+
+>  tests/xfs/507 |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
 > 
-> diff --git a/tests/xfs/187 b/tests/xfs/187
-> index 1929e566..a9dfb30a 100755
-> --- a/tests/xfs/187
-> +++ b/tests/xfs/187
-> @@ -135,7 +135,7 @@ punch_off=$((bigfile_sz - frag_sz))
->  $here/src/punch-alternating $SCRATCH_MNT/bigfile -o $((punch_off / fsbsize)) -i $((rtextsize_blks * 2)) -s $rtextsize_blks
+> diff --git a/tests/xfs/507 b/tests/xfs/507
+> index aa3d8eeb..b9c9ab29 100755
+> --- a/tests/xfs/507
+> +++ b/tests/xfs/507
+> @@ -4,13 +4,17 @@
+>  #
+>  # FS QA Test No. 507
+>  #
+> +# Regression test for kernel commit:
+> +#
+> +# 394aafdc15da ("xfs: widen inode delalloc block counter to 64-bits")
+> +#
+>  # Try to overflow i_delayed_blks by setting the largest cowextsize hint
+>  # possible, creating a sparse file with a single byte every cowextsize bytes,
+>  # reflinking it, and retouching every written byte to see if we can create
+>  # enough speculative COW reservations to overflow i_delayed_blks.
+>  #
+>  . ./common/preamble
+> -_begin_fstest clone
+> +_begin_fstest auto clone
 >  
->  # Make sure we have some free rtextents.
-> -free_rtx=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep counts.freertx | awk '{print $3}')
-> +free_rtx=$($XFS_IO_PROG -c 'statfs' $SCRATCH_MNT | grep statfs.f_bavail | awk '{print $3}')
-
-Do you mean the "cnt->freertx = mp->m_sb.sb_frextents" in xfs_fs_counts() isn't
-right?
-
-Thanks,
-Zorro
-
->  if [ $free_rtx -eq 0 ]; then
->  	echo "Expected fragmented free rt space, found none."
->  fi
+>  _register_cleanup "_cleanup" BUS
+>  
 > 
 
