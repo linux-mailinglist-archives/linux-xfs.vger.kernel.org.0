@@ -2,120 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51F834FEF6A
-	for <lists+linux-xfs@lfdr.de>; Wed, 13 Apr 2022 08:12:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E35B44FF006
+	for <lists+linux-xfs@lfdr.de>; Wed, 13 Apr 2022 08:42:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231919AbiDMGMt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 13 Apr 2022 02:12:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52138 "EHLO
+        id S232514AbiDMGo0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 13 Apr 2022 02:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232277AbiDMGMP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 13 Apr 2022 02:12:15 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 56C1F35DE1;
-        Tue, 12 Apr 2022 23:09:53 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-115-138.pa.nsw.optusnet.com.au [49.181.115.138])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E9AFA53458F;
-        Wed, 13 Apr 2022 16:09:48 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1neWCI-00H7H4-RH; Wed, 13 Apr 2022 16:09:46 +1000
-Date:   Wed, 13 Apr 2022 16:09:46 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Shiyang Ruan <ruansy.fnst@fujitsu.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jane Chu <jane.chu@oracle.com>
-Subject: Re: [PATCH v12 6/7] xfs: Implement ->notify_failure() for XFS
-Message-ID: <20220413060946.GL1544202@dread.disaster.area>
-References: <20220410160904.3758789-1-ruansy.fnst@fujitsu.com>
- <20220410160904.3758789-7-ruansy.fnst@fujitsu.com>
- <20220413000423.GK1544202@dread.disaster.area>
- <CAPcyv4jKLZhcCiSEU+O+OJ2e+y9_B2CvaEfAKyBnhhSd+da=Zg@mail.gmail.com>
+        with ESMTP id S231899AbiDMGoZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 13 Apr 2022 02:44:25 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00462C11C
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 23:42:05 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id r13so1921444ejd.5
+        for <linux-xfs@vger.kernel.org>; Tue, 12 Apr 2022 23:42:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=QX/1FO7BJ13W8Bio4Hvphp1pk6RLZuW1D+bYVy4ZDhE=;
+        b=EaNNNwjvIikpu0NncNg8x9TMIeBIG34OHfquW4PEe6dFbTyXsQG3ES/22AS97VEVaN
+         0hZyFFbBl2rteuBwyYmlkIj989wlVmMrxpdp+CzfNlT2a0/Owf9L0uwFW/MW3NzLvvjn
+         uwe55Oi62Td1AQiM/ejgpLWyUn4aWaMiC+PSoxjTqbWPzhDUkMHT2Dx8QYyg1qew5bhk
+         uDhrMc3AseKySol+PlVAfYbuSphhXBmZmyYn4BUbG5yexMBXreFUfvMJQX5NoS2dxsVY
+         8UgbGp2osqJ7E79Julit8kyTS9msuagsncwEingckG2JQVp+Kc380Enydhc85sp737QZ
+         AL2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=QX/1FO7BJ13W8Bio4Hvphp1pk6RLZuW1D+bYVy4ZDhE=;
+        b=7IbS8MU9FkbYdTeUvph8V+bql23c42iJ8TDRBwbrcv0fnjrCTm1fQaEKXyqTxnhQUe
+         qUYSFoPIGCGfKBQxXTrtahkbv/hFplez8pq/5LInXm9ZR01ids66No8O2oqSx9byw+y9
+         Kw0McSBudvP+vyFHlR2gPfxWgxuRmfH8DEHHBJskaIKmUBRUV3tDYNemzF//bz2sIvC0
+         +iqo+no+IAaIXGB3ZvNJTOExlGs9btqiAjBcneK9oCt5XXwTc7Z+GeRJfb4Y1i4lEGFE
+         +CxQUwN0hNfaZaOuVzbzBQEERQo8u1NGEsO+AyzMdPjLl12mQgs6VQa5GMyEf56Xm6p0
+         ZXuw==
+X-Gm-Message-State: AOAM53182bwcojogHD6TenoWdHvxWOgb2ddT+NK7Si+EjfQgGCaH9hzK
+        KMs9Bp0hPnjAHlwKx38ibVDFqG2rGYeseTr+4uO53+aB
+X-Google-Smtp-Source: ABdhPJyGWkuBYsBFg2fHK1BO3p5y4Jn2Um3EWKFG84c2MxjRaCHMnjxmi21M0WYHd55BzXx8Dfz5ZvOczqPfiUSHgfU=
+X-Received: by 2002:a17:907:724a:b0:6e8:4f12:b6fd with SMTP id
+ ds10-20020a170907724a00b006e84f12b6fdmr21368033ejc.198.1649832123773; Tue, 12
+ Apr 2022 23:42:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4jKLZhcCiSEU+O+OJ2e+y9_B2CvaEfAKyBnhhSd+da=Zg@mail.gmail.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62566930
-        a=/kVtbFzwtM2bJgxRVb+eeA==:117 a=/kVtbFzwtM2bJgxRVb+eeA==:17
-        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=7-415B0cAAAA:8
-        a=1SRcz3ERVth_psKDs80A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   zgur ETH <ozgur.root@gmail.com>
+Date:   Wed, 13 Apr 2022 10:41:52 +0400
+Message-ID: <CAC2PxVMhMSZTfRg=4jPoibHN-FQRkPDi3Mw41P=6_W_8YRy-vw@mail.gmail.com>
+Subject: 
+To:     linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 07:06:40PM -0700, Dan Williams wrote:
-> On Tue, Apr 12, 2022 at 5:04 PM Dave Chinner <david@fromorbit.com> wrote:
-> > On Mon, Apr 11, 2022 at 12:09:03AM +0800, Shiyang Ruan wrote:
-> > > Introduce xfs_notify_failure.c to handle failure related works, such as
-> > > implement ->notify_failure(), register/unregister dax holder in xfs, and
-> > > so on.
-> > >
-> > > If the rmap feature of XFS enabled, we can query it to find files and
-> > > metadata which are associated with the corrupt data.  For now all we do
-> > > is kill processes with that file mapped into their address spaces, but
-> > > future patches could actually do something about corrupt metadata.
-> > >
-> > > After that, the memory failure needs to notify the processes who are
-> > > using those files.
-...
-> > > @@ -1964,8 +1965,8 @@ xfs_alloc_buftarg(
-> > >       btp->bt_mount = mp;
-> > >       btp->bt_dev =  bdev->bd_dev;
-> > >       btp->bt_bdev = bdev;
-> > > -     btp->bt_daxdev = fs_dax_get_by_bdev(bdev, &btp->bt_dax_part_off, NULL,
-> > > -                                         NULL);
-> > > +     btp->bt_daxdev = fs_dax_get_by_bdev(bdev, &btp->bt_dax_part_off, mp,
-> > > +                                         &xfs_dax_holder_operations);
-> >
-> > I see a problem with this: we are setting up notify callbacks before
-> > we've even read in the superblock during mount. i.e. we don't even
-> > kow yet if we've got an XFS filesystem on this block device.
-> > Hence these notifications need to be delayed until after the
-> > filesystem is mounted, all the internal structures have been set up
-> > and log recovery has completed.
-> 
-> So I think this gets back to the fact that there will eventually be 2
-> paths into this notifier.
-
-I'm not really concerned by how the notifications are generated;
-my concern is purely that notifications can be handled safely.
-
-> All that to say, I think it is ok / expected for the filesystem to
-> drop notifications on the floor when it is not ready to handle them.
-
-Well, yes. The whole point of notifications is the consumer makes
-the decision on what to do with the notification it receives - the
-producer of the notification does not (and can not) dictate what
-policy the consumer(s) implement...
-
-> For example there are no processes to send SIGBUS to if the filesystem
-> has not even finished mount.
-
-There may be not processes to send SIGBUS to even if the filesystem
-has finished mount. But we still want the notifications to be
-delivered and we still need to handle them safely.
-
-IOWs, while we might start by avoiding notifications during mount,
-this doesn't mean we will never have reason to process events during
-mount. What we do with this notification is going to evolve over
-time as we add new and adapt existing functionality....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+unsubscribe linux-xfs
