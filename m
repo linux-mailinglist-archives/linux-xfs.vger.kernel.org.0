@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8542500A5F
-	for <lists+linux-xfs@lfdr.de>; Thu, 14 Apr 2022 11:47:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46108500A43
+	for <lists+linux-xfs@lfdr.de>; Thu, 14 Apr 2022 11:47:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241989AbiDNJtA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 14 Apr 2022 05:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44082 "EHLO
+        id S242101AbiDNJtC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 14 Apr 2022 05:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242272AbiDNJsO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Apr 2022 05:48:14 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E10278061
-        for <linux-xfs@vger.kernel.org>; Thu, 14 Apr 2022 02:44:44 -0700 (PDT)
+        with ESMTP id S242242AbiDNJsN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 14 Apr 2022 05:48:13 -0400
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 79D6876292
+        for <linux-xfs@vger.kernel.org>; Thu, 14 Apr 2022 02:44:38 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-115-138.pa.nsw.optusnet.com.au [49.181.115.138])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C7F4C53457A
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 63EA210C7832
         for <linux-xfs@vger.kernel.org>; Thu, 14 Apr 2022 19:44:37 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1new1j-00HZK4-Pp
+        id 1new1j-00HZK5-Qd
         for linux-xfs@vger.kernel.org; Thu, 14 Apr 2022 19:44:35 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1new1j-00AWzG-Ou
+        id 1new1j-00AWzK-Pg
         for linux-xfs@vger.kernel.org;
         Thu, 14 Apr 2022 19:44:35 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 02/16] xfs: initialise attrd item to zero
-Date:   Thu, 14 Apr 2022 19:44:20 +1000
-Message-Id: <20220414094434.2508781-3-david@fromorbit.com>
+Subject: [PATCH 03/16] xfs: make xattri_leaf_bp more useful
+Date:   Thu, 14 Apr 2022 19:44:21 +1000
+Message-Id: <20220414094434.2508781-4-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220414094434.2508781-1-david@fromorbit.com>
 References: <20220414094434.2508781-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=6257ed06
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=6257ed05
         a=/kVtbFzwtM2bJgxRVb+eeA==:117 a=/kVtbFzwtM2bJgxRVb+eeA==:17
-        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=VdGwt750K41ze9-0lWsA:9
+        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=MSQD5IXnzoLRaKXEXdcA:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,54 +52,116 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-On the first allocation of a attrd item, xfs_trans_add_item() fires
-an assert like so:
+We currently set it and hold it when converting from short to leaf
+form, then release it only to immediately look it back up again
+to do the leaf insert.
 
- XFS (pmem0): EXPERIMENTAL logged extended attributes feature added. Use at your own risk!
- XFS: Assertion failed: !test_bit(XFS_LI_DIRTY, &lip->li_flags), file: fs/xfs/xfs_trans.c, line: 683
- ------------[ cut here ]------------
- kernel BUG at fs/xfs/xfs_message.c:102!
- Call Trace:
-  <TASK>
-  xfs_trans_add_item+0x17e/0x190
-  xfs_trans_get_attrd+0x67/0x90
-  xfs_attr_create_done+0x13/0x20
-  xfs_defer_finish_noroll+0x100/0x690
-  __xfs_trans_commit+0x144/0x330
-  xfs_trans_commit+0x10/0x20
-  xfs_attr_set+0x3e2/0x4c0
-  xfs_initxattrs+0xaa/0xe0
-  security_inode_init_security+0xb0/0x130
-  xfs_init_security+0x18/0x20
-  xfs_generic_create+0x13a/0x340
-  xfs_vn_create+0x17/0x20
-  path_openat+0xff3/0x12f0
-  do_filp_open+0xb2/0x150
-
-The attrd log item is allocated via kmem_cache_alloc, and
-xfs_log_item_init() does not zero the entire log item structure - it
-assumes that the structure is already all zeros as it only
-initialises non-zero fields. Fix the attr items to be allocated
-via the *zalloc methods.
+Do a bit of refactoring to xfs_attr_leaf_try_add() to avoid this
+messy handling of the newly allocated leaf buffer.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_attr_item.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_attr.c | 50 +++++++++++++++++++++++++---------------
+ 1 file changed, 32 insertions(+), 18 deletions(-)
 
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index 0e2ef0dedb28..b6561861ef01 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -725,7 +725,7 @@ xfs_trans_get_attrd(struct xfs_trans		*tp,
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index b3d918195160..a4b0b20a3bab 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -319,7 +319,15 @@ xfs_attr_leaf_addname(
+ 	int			error;
  
- 	ASSERT(tp != NULL);
+ 	if (xfs_attr_is_leaf(dp)) {
++
++		/*
++		 * Use the leaf buffer we may already hold locked as a result of
++		 * a sf-to-leaf conversion. The held buffer is no longer valid
++		 * after this call, regardless of the result.
++		 */
+ 		error = xfs_attr_leaf_try_add(args, attr->xattri_leaf_bp);
++		attr->xattri_leaf_bp = NULL;
++
+ 		if (error == -ENOSPC) {
+ 			error = xfs_attr3_leaf_to_node(args);
+ 			if (error)
+@@ -341,6 +349,8 @@ xfs_attr_leaf_addname(
+ 		}
+ 		next_state = XFS_DAS_FOUND_LBLK;
+ 	} else {
++		ASSERT(!attr->xattri_leaf_bp);
++
+ 		error = xfs_attr_node_addname_find_attr(attr);
+ 		if (error)
+ 			return error;
+@@ -396,12 +406,6 @@ xfs_attr_set_iter(
+ 		 */
+ 		if (xfs_attr_is_shortform(dp))
+ 			return xfs_attr_sf_addname(attr);
+-		if (attr->xattri_leaf_bp != NULL) {
+-			xfs_trans_bhold_release(args->trans,
+-						attr->xattri_leaf_bp);
+-			attr->xattri_leaf_bp = NULL;
+-		}
+-
+ 		return xfs_attr_leaf_addname(attr);
  
--	attrdp = kmem_cache_alloc(xfs_attrd_cache, GFP_NOFS | __GFP_NOFAIL);
-+	attrdp = kmem_cache_zalloc(xfs_attrd_cache, GFP_NOFS | __GFP_NOFAIL);
+ 	case XFS_DAS_FOUND_LBLK:
+@@ -992,18 +996,31 @@ xfs_attr_leaf_try_add(
+ 	struct xfs_da_args	*args,
+ 	struct xfs_buf		*bp)
+ {
+-	int			retval;
++	int			error;
  
- 	xfs_log_item_init(tp->t_mountp, &attrdp->attrd_item, XFS_LI_ATTRD,
- 			  &xfs_attrd_item_ops);
+ 	/*
+-	 * Look up the given attribute in the leaf block.  Figure out if
+-	 * the given flags produce an error or call for an atomic rename.
++	 * If the caller provided a buffer to us, it is locked and held in
++	 * the transaction because it just did a shortform to leaf conversion.
++	 * Hence we don't need to read it again. Otherwise read in the leaf
++	 * buffer.
+ 	 */
+-	retval = xfs_attr_leaf_hasname(args, &bp);
+-	if (retval != -ENOATTR && retval != -EEXIST)
+-		return retval;
+-	if (retval == -ENOATTR && (args->attr_flags & XATTR_REPLACE))
++	if (bp) {
++		xfs_trans_bhold_release(args->trans, bp);
++	} else {
++		error = xfs_attr3_leaf_read(args->trans, args->dp, 0, &bp);
++		if (error)
++			return error;
++	}
++
++	/*
++	 * Look up the xattr name to set the insertion point for the new xattr.
++	 */
++	error = xfs_attr3_leaf_lookup_int(bp, args);
++	if (error != -ENOATTR && error != -EEXIST)
+ 		goto out_brelse;
+-	if (retval == -EEXIST) {
++	if (error == -ENOATTR && (args->attr_flags & XATTR_REPLACE))
++		goto out_brelse;
++	if (error == -EEXIST) {
+ 		if (args->attr_flags & XATTR_CREATE)
+ 			goto out_brelse;
+ 
+@@ -1023,14 +1040,11 @@ xfs_attr_leaf_try_add(
+ 		args->rmtvaluelen = 0;
+ 	}
+ 
+-	/*
+-	 * Add the attribute to the leaf block
+-	 */
+ 	return xfs_attr3_leaf_add(bp, args);
+ 
+ out_brelse:
+ 	xfs_trans_brelse(args->trans, bp);
+-	return retval;
++	return error;
+ }
+ 
+ /*
 -- 
 2.35.1
 
