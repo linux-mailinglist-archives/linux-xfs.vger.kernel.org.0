@@ -2,153 +2,157 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5483B5028A4
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Apr 2022 13:02:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A049C5027E4
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Apr 2022 12:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352579AbiDOLDu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 15 Apr 2022 07:03:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34842 "EHLO
+        id S1352048AbiDOKEn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 15 Apr 2022 06:04:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352580AbiDOLD3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Apr 2022 07:03:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E40D5BF52B
-        for <linux-xfs@vger.kernel.org>; Fri, 15 Apr 2022 04:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1650020450;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=swJmJjsyEir1ptFGEkx0uxAo7c+eDE2H3xRn7VWYphQ=;
-        b=IyYak90jj0HnWuOqkylXROFzabUoWUlkUVMnfOXlfdlLFBAQbXK96WbRV5P/rZzQmHQ5uV
-        6Bu+tN7iywngoTfqO42rK/lM/oB5Mc8xiV5Cd9DEGERBWPN8DI1iosIBysTVFt07Ec5Hhh
-        w4Wa4JfqaaQr3ndH6YO3KzKD07p+9To=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-85-AyWIkw6wMn-zgAe2jDt2yg-1; Fri, 15 Apr 2022 07:00:47 -0400
-X-MC-Unique: AyWIkw6wMn-zgAe2jDt2yg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S231634AbiDOKEm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Apr 2022 06:04:42 -0400
+Received: from mail1.bemta34.messagelabs.com (mail1.bemta34.messagelabs.com [195.245.231.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8425BB092;
+        Fri, 15 Apr 2022 03:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+        s=170520fj; t=1650016932; i=@fujitsu.com;
+        bh=L39Zc6T31yhBdlKZJPZn+8BfrmfPaBm119Jec/uhYAA=;
+        h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type;
+        b=KGvEO1qDW1f7azgJxx4j/+vZ2wx+7xAoJHrGP8SIABs1QyibzCU0Eu+sst64JFFUd
+         uoboTag2Us2lj1U3zBuUr9qD5LNaDeziHsm0xXGcud5q+THMHqkvgvtm80DQGU8qxV
+         12U96NqGkvSu9AKK5sCm2+adWDnE1Jex7TLtva7jZB0mBzBfb4XWPlBinG8qqHXgwZ
+         /z//E4n9LnnOkBjMxigTrXldz0mhwCaNOlr2JeHyChWw6Oj9oMszJIzbut/8yw+g2I
+         /TIsxMtEhhFnL8jGRG4wb5mDxkS8Xv8yyk1hRkqDyn/+K4YYSPKkDdsII8lGXGcZMo
+         9KFsvBT8vyp6Q==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRWlGSWpSXmKPExsViZ8MxSXexU2S
+  SwZtZkhavD39itPhwcxKTxZZj9xgtLj/hs/i5bBW7xZ69J1ksLhw4zWqx688Odovzf4+zOnB6
+  nFok4bFpVSebx+dNch6bnrxlCmCJYs3MS8qvSGDNuH1tE2PBY6GKu8suMTYwPuXvYuTkEBLYw
+  ijxY4pZFyMXkL2ASWLW+x1MEM4eRomPTY9YQKrYBDQlnnUuYAaxRQRcJBZOWM8IUsQscIVR4n
+  r7HLCEsEC6RMuhr+wgNouAqsSUA/vZQGxeAU+JWee2gg2SEFCQmPLwPTNEXFDi5MwnYHFmAQm
+  Jgy9eMEPUKEpc6vjGCGFXSMya1cYEYatJXD23iXkCI/8sJO2zkLQvYGRaxWidVJSZnlGSm5iZ
+  o2toYKBraGiqa2ypa2RorJdYpZuol1qqW55aXKJrpJdYXqyXWlysV1yZm5yTopeXWrKJERgBK
+  cXqV3cwbl71U+8QoyQHk5Io71vRyCQhvqT8lMqMxOKM+KLSnNTiQ4wyHBxKErx/7YFygkWp6a
+  kVaZk5wGiESUtw8CiJ8IZaA6V5iwsSc4sz0yFSpxgVpcR5lRyBEgIgiYzSPLg2WAK4xCgrJcz
+  LyMDAIMRTkFqUm1mCKv+KUZyDUUmY9xvIFJ7MvBK46a+AFjMBLf62KhRkcUkiQkqqgWm2zIMr
+  BTor8v9dSTppq8/YfMI97NXhZYInZIsj3F8ke9+Y9TajUqDv6/4zxWLCsddfNRjoHvy5csGMh
+  668UxrMS2cdSP/5m/FmwFG/F8ufVh+tiJdKsIx05Lq19qOKy//1r65XBti0ps84dnL2dJk3sa
+  s+nDxTo3+MLbPv4M86mSNcXB0r3/j+4F59y9as6bDxzh9Hr+mWFs8wSLx4c9m8/qrHS4tXO0/
+  rjtOs+29qafIw995V8dd6jAvLjprMrQg+35z1XTw282HmmqmL9/tkPpmf9c5NuerZ2vfLT0oX
+  cj8/GJV0/viDb8dFUiXjQs0PlvyTyzwY01b8oaF7uW/T5KCWSSE3DK7NXVS4KVBGiaU4I9FQi
+  7moOBEA/dcPcnsDAAA=
+X-Env-Sender: xuyang2018.jy@fujitsu.com
+X-Msg-Ref: server-23.tower-548.messagelabs.com!1650016931!58992!1
+X-Originating-IP: [62.60.8.146]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.85.8; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 12238 invoked from network); 15 Apr 2022 10:02:11 -0000
+Received: from unknown (HELO n03ukasimr02.n03.fujitsu.local) (62.60.8.146)
+  by server-23.tower-548.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 15 Apr 2022 10:02:11 -0000
+Received: from n03ukasimr02.n03.fujitsu.local (localhost [127.0.0.1])
+        by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTP id 05119100475;
+        Fri, 15 Apr 2022 11:02:11 +0100 (BST)
+Received: from R01UKEXCASM126.r01.fujitsu.local (unknown [10.183.43.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDEA638041DB;
-        Fri, 15 Apr 2022 11:00:46 +0000 (UTC)
-Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D388C40EC01C;
-        Fri, 15 Apr 2022 11:00:42 +0000 (UTC)
-Date:   Fri, 15 Apr 2022 19:00:37 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        Changhui Zhong <czhong@redhat.com>
-Subject: Re: [PATCH V2] block: avoid io timeout in case of sync polled dio
-Message-ID: <YllQVT6n472eUB7+@T590>
-References: <20220415034703.2081695-1-ming.lei@redhat.com>
- <20220415051844.GA22762@lst.de>
+        by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTPS id EBDD2100467;
+        Fri, 15 Apr 2022 11:02:10 +0100 (BST)
+Received: from localhost.localdomain (10.167.220.84) by
+ R01UKEXCASM126.r01.fujitsu.local (10.183.43.178) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.32; Fri, 15 Apr 2022 11:01:45 +0100
+From:   Yang Xu <xuyang2018.jy@fujitsu.com>
+To:     <david@fromorbit.com>, <djwong@kernel.org>, <brauner@kernel.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <ceph-devel@vger.kernel.org>,
+        <linux-nfs@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <viro@zeniv.linux.org.uk>, <jlayton@kernel.org>,
+        Yang Xu <xuyang2018.jy@fujitsu.com>
+Subject: [PATCH v3 1/7] fs/inode: move sgid strip operation from inode_init_owner into inode_sgid_strip
+Date:   Fri, 15 Apr 2022 19:02:17 +0800
+Message-ID: <1650020543-24908-1-git-send-email-xuyang2018.jy@fujitsu.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220415051844.GA22762@lst.de>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.167.220.84]
+X-ClientProxiedBy: G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.80) To
+ R01UKEXCASM126.r01.fujitsu.local (10.183.43.178)
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 07:18:44AM +0200, Christoph Hellwig wrote:
-> On Fri, Apr 15, 2022 at 11:47:03AM +0800, Ming Lei wrote:
-> > +	/* make sure the bio is issued before polling */
-> > +	if (bio.bi_opf & REQ_POLLED)
-> > +		blk_flush_plug(current->plug, false);
-> 
-> I still think the core code should handle this.  Without that we'd need
-> to export the blk_flush_plug for anything that would want to poll bios
-> from modules, in addition to it generally being a mess.  See a proposed
+This has no functional change. Just create and export inode_sgid_strip api for
+the subsequent patch. This function is used to strip S_ISGID mode when init
+a new inode.
 
-So far there isn't such usage yet. dm calls bio_poll() in ->iopoll(),
-and its caller(io_uring) will finish the plug.
+Signed-off-by: Yang Xu <xuyang2018.jy@fujitsu.com>
+---
+v2->v3:
+1.Use const struct inode * instead of struct inode *
+2.replace sgid strip with inode_sgid_strip in a single patch
+ fs/inode.c         | 24 ++++++++++++++++++++----
+ include/linux/fs.h |  3 ++-
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
-> patch for that below.  I'd also split the flush aspect from the poll
-> aspect into two patches.
-> 
-> > +		if (bio.bi_opf & REQ_POLLED)
-> > +			bio_poll(&bio, NULL, 0);
-> > +		else
-> >  			blk_io_schedule();
-> 
-> Instead of this duplicate logic everywhere I'd just make bio_boll
-> call blk_io_schedule for the !REQ_POLLED case and simplify all the
-> callers.
-
-bio_poll() may be called with rcu read lock held, so I'd suggest to
-not mix the two together.
-
-> 
-> > +			if (dio->submit.poll_bio &&
-> > +					(dio->submit.poll_bio->bi_opf &
-> > +						REQ_POLLED))
-> 
-> This indentation looks awfull,normal would be:
-> 
-> 			if (dio->submit.poll_bio &&
-> 			    (dio->submit.poll_bio->bi_opf & REQ_POLLED))
-
-That follows the indentation style of fs/iomap/direct-io.c for break in
-'if'.
-
-> 
-> ---
-> From 08ff61b0142eb708fc384cf867c72175561d974a Mon Sep 17 00:00:00 2001
-> From: Christoph Hellwig <hch@lst.de>
-> Date: Fri, 15 Apr 2022 07:15:42 +0200
-> Subject: blk-mq: don't plug for synchronously polled requests
-> 
-> For synchronous polling to work, the bio must be issued to the driver from
-> the submit_bio call, otherwise ->bi_cookie won't be set.
-> 
-> Based on a patch from Ming Lei.
-> 
-> Reported-by: Changhui Zhong <czhong@redhat.com>
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  block/blk-mq.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index ed3ed86f7dd24..bcc7e3d11296c 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -2851,7 +2851,13 @@ void blk_mq_submit_bio(struct bio *bio)
->  		return;
->  	}
->  
-> -	if (plug)
-> +	/*
-> +	 * We can't plug for synchronously polled submissions, otherwise
-> +	 * bio->bi_cookie won't be set directly after submission, which is the
-> +	 * indicator used by the submitter to check if a bio needs polling.
-> +	 */
-> +	if (plug &&
-> +	    (rq->bio->bi_opf & (REQ_POLLED | REQ_NOWAIT)) != REQ_POLLED)
->  		blk_add_rq_to_plug(plug, rq);
->  	else if ((rq->rq_flags & RQF_ELV) ||
->  		 (rq->mq_hctx->dispatch_busy &&
-
-It is nothing to do with REQ_NOWAIT. sync polled dio can be marked as
-REQ_NOWAIT by userspace too. If '--nowait=1' is added in the fio
-reproducer, io timeout is triggered too.
-
-
-
-Thanks,
-Ming
+diff --git a/fs/inode.c b/fs/inode.c
+index 9d9b422504d1..1b569ad882ce 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -2246,10 +2246,8 @@ void inode_init_owner(struct user_namespace *mnt_userns, struct inode *inode,
+ 		/* Directories are special, and always inherit S_ISGID */
+ 		if (S_ISDIR(mode))
+ 			mode |= S_ISGID;
+-		else if ((mode & (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP) &&
+-			 !in_group_p(i_gid_into_mnt(mnt_userns, dir)) &&
+-			 !capable_wrt_inode_uidgid(mnt_userns, dir, CAP_FSETID))
+-			mode &= ~S_ISGID;
++		else
++			inode_sgid_strip(mnt_userns, dir, &mode);
+ 	} else
+ 		inode_fsgid_set(inode, mnt_userns);
+ 	inode->i_mode = mode;
+@@ -2405,3 +2403,21 @@ struct timespec64 current_time(struct inode *inode)
+ 	return timestamp_truncate(now, inode);
+ }
+ EXPORT_SYMBOL(current_time);
++
++void inode_sgid_strip(struct user_namespace *mnt_userns,
++		      const struct inode *dir, umode_t *mode)
++{
++	if (!dir || !(dir->i_mode & S_ISGID))
++		return;
++	if ((*mode & (S_ISGID | S_IXGRP)) != (S_ISGID | S_IXGRP))
++		return;
++	if (S_ISDIR(*mode))
++		return;
++	if (in_group_p(i_gid_into_mnt(mnt_userns, dir)))
++		return;
++	if (capable_wrt_inode_uidgid(mnt_userns, dir, CAP_FSETID))
++		return;
++
++	*mode &= ~S_ISGID;
++}
++EXPORT_SYMBOL(inode_sgid_strip);
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index bbde95387a23..4a617aaab6f6 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1897,7 +1897,8 @@ extern long compat_ptr_ioctl(struct file *file, unsigned int cmd,
+ void inode_init_owner(struct user_namespace *mnt_userns, struct inode *inode,
+ 		      const struct inode *dir, umode_t mode);
+ extern bool may_open_dev(const struct path *path);
+-
++void inode_sgid_strip(struct user_namespace *mnt_userns,
++		      const struct inode *dir, umode_t *mode);
+ /*
+  * This is the "filldir" function type, used by readdir() to let
+  * the kernel specify what kind of dirent layout it wants to have.
+-- 
+2.27.0
 
