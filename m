@@ -2,160 +2,153 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63591502726
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Apr 2022 10:54:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5483B5028A4
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Apr 2022 13:02:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240429AbiDOI5W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 15 Apr 2022 04:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37130 "EHLO
+        id S1352579AbiDOLDu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 15 Apr 2022 07:03:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiDOI5W (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Apr 2022 04:57:22 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447532BB33;
-        Fri, 15 Apr 2022 01:54:50 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id o18so5593622qtk.7;
-        Fri, 15 Apr 2022 01:54:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xnli73CgXce9Rl9w+mcJKH48CENcIY1UXRC2Gs7We1c=;
-        b=JeHd+/S20hUYk33m4PdLKvVCkbpHKTcuHtxBD3DEeBSASsbr7ndme2gX3ni87T3ntH
-         zcH2X92QlsHkXs40RPwQQC5FTF/FYe0UxWPs+zyToMBmPsiqC0N1HIjsVpgDInk1/zlh
-         ZpoU8jfHMCIiRK4Kj9KmUvVw6FMPk8pmokOqdy8AObYcduc+jp6HgjzbdPyhmOkQTAKe
-         Xr/nixMlRkUNkiV3NyTlqiTKnaMUvJAFe471L7iI3/NgaE/RA1JNmfAiaMXxh49+m3yc
-         L7jhNn0bLAnXPUanJPmNGIPwPT3w5IUM0VuzIBbpYLEOalbR+FLW1iIop7MAiMFVGyn8
-         3wKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xnli73CgXce9Rl9w+mcJKH48CENcIY1UXRC2Gs7We1c=;
-        b=ijq32CVW7RShvuWRpy2xBTzGuJOKK6Js6bTapNFD+UpfD14IYgfss36mP9z0NOq4WD
-         UGCfDick94F8zmm9nRZSwFie6tBmrGvIMcZFOQ/oUtJ+3k6AHiUMEJy7HDCFGPKv5V6y
-         W/kkrdC/h0SrlXzUQjAHUVBYscvNIRrNk00muiM5fLYoZZ6aglpzuFGKbGrqxUa9ERS4
-         77Lgxn2vuXKIWgbVhHMbIShuoGTWHg9Q4WDXMUwU2lOEu31KPpMwGzd+biWH0BijS/lp
-         uTKctxhaMMJ0cYB419t/MOG0uD/Xcl0fatqsTC3kufFyQLHhBgxSOtVjxrJt1eZsXC1E
-         9Cqw==
-X-Gm-Message-State: AOAM5322svc5r08QKNvCvKgGn6iDBa/2wx7EPwAU/R82zVgzmAfg3lZo
-        bj01xU1lmqjFX8MNuOIjG6DNOzQGCMKUGkkJlkk=
-X-Google-Smtp-Source: ABdhPJwi9ofCGAVcTu0utTw3kKkm8fElQKH2cJRHNPL4U0ErBxMpj+yI39F2inWs9bKSFQoza6dT/vCmsPehoxMyjlg=
-X-Received: by 2002:ac8:5fc4:0:b0:2f1:e898:2973 with SMTP id
- k4-20020ac85fc4000000b002f1e8982973mr3545725qta.157.1650012889900; Fri, 15
- Apr 2022 01:54:49 -0700 (PDT)
+        with ESMTP id S1352580AbiDOLD3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Apr 2022 07:03:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E40D5BF52B
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Apr 2022 04:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1650020450;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=swJmJjsyEir1ptFGEkx0uxAo7c+eDE2H3xRn7VWYphQ=;
+        b=IyYak90jj0HnWuOqkylXROFzabUoWUlkUVMnfOXlfdlLFBAQbXK96WbRV5P/rZzQmHQ5uV
+        6Bu+tN7iywngoTfqO42rK/lM/oB5Mc8xiV5Cd9DEGERBWPN8DI1iosIBysTVFt07Ec5Hhh
+        w4Wa4JfqaaQr3ndH6YO3KzKD07p+9To=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-85-AyWIkw6wMn-zgAe2jDt2yg-1; Fri, 15 Apr 2022 07:00:47 -0400
+X-MC-Unique: AyWIkw6wMn-zgAe2jDt2yg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDEA638041DB;
+        Fri, 15 Apr 2022 11:00:46 +0000 (UTC)
+Received: from T590 (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D388C40EC01C;
+        Fri, 15 Apr 2022 11:00:42 +0000 (UTC)
+Date:   Fri, 15 Apr 2022 19:00:37 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        Changhui Zhong <czhong@redhat.com>
+Subject: Re: [PATCH V2] block: avoid io timeout in case of sync polled dio
+Message-ID: <YllQVT6n472eUB7+@T590>
+References: <20220415034703.2081695-1-ming.lei@redhat.com>
+ <20220415051844.GA22762@lst.de>
 MIME-Version: 1.0
-References: <164971767143.169983.12905331894414458027.stgit@magnolia>
- <164971768254.169983.13280225265874038241.stgit@magnolia> <20220412115205.d6jjudlkxs72vezd@zlang-mailbox>
- <CAOQ4uxiDW6=qgWtH8uHkOmAyZBR7vfgwgt-DA_Rn0QVihQZQLw@mail.gmail.com>
- <20220413154401.vun2usvgwlfers2r@zlang-mailbox> <20220414155007.GC17014@magnolia>
-In-Reply-To: <20220414155007.GC17014@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Fri, 15 Apr 2022 11:54:37 +0300
-Message-ID: <CAOQ4uxhUZJ+fjWpnoSq1TfDFTNW3W7ywKC=uQNVJ=VC4+CY9Kg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] generic: ensure we drop suid after fallocate
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Eryu Guan <guaneryu@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        fstests <fstests@vger.kernel.org>, Eryu Guan <guan@eryu.me>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220415051844.GA22762@lst.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> > > > > +# Modify as appropriate.
-> > > > > +_supported_fs xfs btrfs ext4
-> > > >
-> > > > So we have more cases will break downstream XFS testing :)
-> > >
-> > > Funny you should mention that.
-> > > I was going to propose an RFC for something like:
-> > >
-> > > _fixed_by_kernel_commit fbe7e5200365 "xfs: fallocate() should call
-> > > file_modified()"
-> > >
-> > > The first thing that could be done with this standard annotation is print a
-> > > hint on failure, like LTP does:
-> > >
-> > > HINT: You _MAY_ be missing kernel fixes:
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fbe7e5200365
-> >
-> > I think it's not difficult to implement this behavior in xfstests. Generally if
-> > a case covers a known bug, we record the patch commit in case description.
->
-> It's not hard, but it's a treewide change to identify all the fstests
-> that are regression fixes (or at least mention a commit hash) and well
-> beyond the scope of adding tests for a new fallocate security behavior.
->
-> In fact, it's an *entirely new project*.  One that I don't have time to
-> take on myself as a condition for getting *this* patch merged.
->
+On Fri, Apr 15, 2022 at 07:18:44AM +0200, Christoph Hellwig wrote:
+> On Fri, Apr 15, 2022 at 11:47:03AM +0800, Ming Lei wrote:
+> > +	/* make sure the bio is issued before polling */
+> > +	if (bio.bi_opf & REQ_POLLED)
+> > +		blk_flush_plug(current->plug, false);
+> 
+> I still think the core code should handle this.  Without that we'd need
+> to export the blk_flush_plug for anything that would want to poll bios
+> from modules, in addition to it generally being a mess.  See a proposed
 
-To be clear, my comment had no intention to serve as a condition for
-merging your patch and not for suggesting that you should do anything really.
-My comment was that "I was going to propose an RFC" meaning that
-I was going to send patches but didn't get to it yet.
-It's not a treewide project either, it's a simple optional annotation per test,
-as is the case with LTP's optional .tags array.
+So far there isn't such usage yet. dm calls bio_poll() in ->iopoll(),
+and its caller(io_uring) will finish the plug.
 
-My plan was to start with annotating the overlay tests and the xfs tests
-that I collected during my work on v5.10..v.5.17 xfs backports, as they say
-The change starts with me ;)
+> patch for that below.  I'd also split the flush aspect from the poll
+> aspect into two patches.
+> 
+> > +		if (bio.bi_opf & REQ_POLLED)
+> > +			bio_poll(&bio, NULL, 0);
+> > +		else
+> >  			blk_io_schedule();
+> 
+> Instead of this duplicate logic everywhere I'd just make bio_boll
+> call blk_io_schedule for the !REQ_POLLED case and simplify all the
+> callers.
 
-[...]
+bio_poll() may be called with rcu read lock held, so I'd suggest to
+not mix the two together.
 
-> > >
-> > > What in the behavior of fallocate() and setgid makes it so special that it needs
-> > > to be restricted to "xfs btrfs ext4" and not treated as a bug for other fs?
-> > > I suspect that it might be difficult or impossible to change that behavior in
-> > > network filesystems?
-> >
-> > I'm not sure what other filesystems think about this behavior. If this's a standard
-> > or most common behavior, I hope it can be a generic test (then let other fs maintainers
-> > worry about their new testing failure:-P). Likes generic/673 was written for XFS,
-> > then btrfs found failure, then btrfs said XFS should follow VFS as btrfs does :)
->
-> It will *become* a new behavior, but I haven't spread it to any other
-> filesystems other than the three listed above.  Overlayfs, for example,
-> doesn't clear set.id bits or drop file capabilities, nor do things like
-> f2fs and fat.  I'll get to them eventually, but I think I'll have an
-> easier time persuading the other maintainers of this new behavior if I
-> can tell them "Here is a change, and this is an existing fstest that
-> checks the behavior for correctness."
->
+> 
+> > +			if (dio->submit.poll_bio &&
+> > +					(dio->submit.poll_bio->bi_opf &
+> > +						REQ_POLLED))
+> 
+> This indentation looks awfull,normal would be:
+> 
+> 			if (dio->submit.poll_bio &&
+> 			    (dio->submit.poll_bio->bi_opf & REQ_POLLED))
 
-TBH, I am a bit surprised that you sign yourself up to fixing all those
-other filesystems. It sounds like you got plenty on your plate already.
-My intention is not to talk you out of doing community work, but to ask
-what is the best way for developers that find a bug which they do NOT
-intend to fix, to annotate the test for that bug.
+That follows the indentation style of fs/iomap/direct-io.c for break in
+'if'.
 
-I ran into that dilema with overlay/061 which tests for some non-standard
-behavior regarding mmap that has been there since day 1 and is sufficiently
-hard to fix. I ended up leaving this test out of "auto" group and in
-"posix" group.
-I might have left it in "known" or "broken" group just the same.
+> 
+> ---
+> From 08ff61b0142eb708fc384cf867c72175561d974a Mon Sep 17 00:00:00 2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Fri, 15 Apr 2022 07:15:42 +0200
+> Subject: blk-mq: don't plug for synchronously polled requests
+> 
+> For synchronous polling to work, the bio must be issued to the driver from
+> the submit_bio call, otherwise ->bi_cookie won't be set.
+> 
+> Based on a patch from Ming Lei.
+> 
+> Reported-by: Changhui Zhong <czhong@redhat.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  block/blk-mq.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index ed3ed86f7dd24..bcc7e3d11296c 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -2851,7 +2851,13 @@ void blk_mq_submit_bio(struct bio *bio)
+>  		return;
+>  	}
+>  
+> -	if (plug)
+> +	/*
+> +	 * We can't plug for synchronously polled submissions, otherwise
+> +	 * bio->bi_cookie won't be set directly after submission, which is the
+> +	 * indicator used by the submitter to check if a bio needs polling.
+> +	 */
+> +	if (plug &&
+> +	    (rq->bio->bi_opf & (REQ_POLLED | REQ_NOWAIT)) != REQ_POLLED)
+>  		blk_add_rq_to_plug(plug, rq);
+>  	else if ((rq->rq_flags & RQF_ELV) ||
+>  		 (rq->mq_hctx->dispatch_busy &&
 
-Regarding *this* patch, why not leave it _supported_fs generic?
-What are the downsides?
-Other fs would fail the test as they should.
-It's not like that new behavior is debatable, it's a proper security issue.
-And especially for fs that support FALLOC_FL_COLLAPSE_RANGE
-and FALLOC_FL_INSERT_RANGE, so my other suggestion if you do
-not wish to inflict this new failure on all other fs is to make the test require
-finsert and document in a comment why that was done.
+It is nothing to do with REQ_NOWAIT. sync polled dio can be marked as
+REQ_NOWAIT by userspace too. If '--nowait=1' is added in the fio
+reproducer, io timeout is triggered too.
 
-I know that the test won't run on btrfs with this requirement, but that is not
-your problem to solve and also I am quite surprised that btrfs does not
-support finsert/fcollapse, so maybe that support will be added some day
-and then the security thread that comes with it could be avoided.
+
 
 Thanks,
-Amir.
+Ming
+
