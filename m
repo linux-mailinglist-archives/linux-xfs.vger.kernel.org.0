@@ -2,107 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0CAC503457
-	for <lists+linux-xfs@lfdr.de>; Sat, 16 Apr 2022 07:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 631555034D7
+	for <lists+linux-xfs@lfdr.de>; Sat, 16 Apr 2022 09:51:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbiDPFvs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 16 Apr 2022 01:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        id S230227AbiDPHwr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 16 Apr 2022 03:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbiDPFvr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 16 Apr 2022 01:51:47 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D702980B;
-        Fri, 15 Apr 2022 22:49:17 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 8C5F768AFE; Sat, 16 Apr 2022 07:49:13 +0200 (CEST)
-Date:   Sat, 16 Apr 2022 07:49:13 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, Changhui Zhong <czhong@redhat.com>
-Subject: Re: [PATCH V2] block: avoid io timeout in case of sync polled dio
-Message-ID: <20220416054913.GA7405@lst.de>
-References: <20220415034703.2081695-1-ming.lei@redhat.com> <20220415051844.GA22762@lst.de> <YllQVT6n472eUB7+@T590>
+        with ESMTP id S230160AbiDPHwZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 16 Apr 2022 03:52:25 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD0C100759
+        for <linux-xfs@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id s137so10079897pgs.5
+        for <linux-xfs@vger.kernel.org>; Sat, 16 Apr 2022 00:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=bJd2DIgtyK+bZCVQpMa9XLiI7bVnFQgVFeGzbZ6bXamjrEFIUCNaIDR9YpvR5iTRQC
+         EoRjHn2hxdGgHpTmUXoJLhLdkz8kw8CpdMkf+RjOM2yxgJf0M2w5tnzpw0NiczM9cGQm
+         aTRY2J48j2+AVBVM6ZplapTERLwB7sqpQHn0KTPy+GATyEE1HlWbU25nZewZyTln9PiO
+         eb2iuPe3VcoLkYjZ6tmC44EeIcF1BzRiek/y+/+gg720T1wEvd/5m2iOgdTIUS3isI5Z
+         q2z1OdX/gYACU6OexrbNcXzEKBC+MKUq0Bm7V68HpmeyS3D5tFhEEP1iOfnkPKJo7x6w
+         XtNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=BgxxTe+QHk9/mWhrJfV54OiHrV7uXYhSDEzGPW3noQfmOgiQ+lZ0HEETm0KFnT+5Y2
+         kCo5GH539lDk0Fmnte6/AA8ubFTBAhP/wv+neuVV+4hbU+d4Rp1LqTAanDajbSKGZBh6
+         TX2VXvOUIlKXdu9K/OYbMpMwD4CKkG6LrXaWhka96YrmFHA8X/VnRG2p9OBgeEUNAjlo
+         h1YamIKAaq+STylq7g4ikMW9XDfTuTZ8cezmhD2+e1DMZ02Kjm2oHGpt64Su8dDThq67
+         HuAWyqnwCtblH6w5EmWlIqAm48kR3grC9PoptKPTQFTmDeigdJRdOZrFp3Vjzi3o46z3
+         wTIw==
+X-Gm-Message-State: AOAM531mY8t2usT2PGdFFSHKm+FvrxIY932YsI7pF14WyjFc2M4oTfQi
+        15yPlXq3JlI1sYEFTkhumWjPSZSBvbhtQTUwB57vMqx/wII=
+X-Google-Smtp-Source: ABdhPJzPQ782jxaaybf4v05kBQtFRTzv0MMrux20NcZ4Q10XmGrK6dnUIabFDBNBmBOv8fFyQY5zqzYAgf4Cnc3KaCc=
+X-Received: by 2002:a92:508:0:b0:2cb:ebd8:a76b with SMTP id
+ q8-20020a920508000000b002cbebd8a76bmr1009500ile.156.1650095366830; Sat, 16
+ Apr 2022 00:49:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YllQVT6n472eUB7+@T590>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6638:1309:0:0:0:0 with HTTP; Sat, 16 Apr 2022 00:49:26
+ -0700 (PDT)
+Reply-To: daniel.seyba@yahoo.com
+From:   Seyba Daniel <royhalton13@gmail.com>
+Date:   Sat, 16 Apr 2022 09:49:26 +0200
+Message-ID: <CALSxb2w9zQYotuLcRSCPns53ksvT9UrEMVx-1Cp1f8RE7er3cA@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:544 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [royhalton13[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [royhalton13[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Apr 15, 2022 at 07:00:37PM +0800, Ming Lei wrote:
-> On Fri, Apr 15, 2022 at 07:18:44AM +0200, Christoph Hellwig wrote:
-> > On Fri, Apr 15, 2022 at 11:47:03AM +0800, Ming Lei wrote:
-> > > +	/* make sure the bio is issued before polling */
-> > > +	if (bio.bi_opf & REQ_POLLED)
-> > > +		blk_flush_plug(current->plug, false);
-> > 
-> > I still think the core code should handle this.  Without that we'd need
-> > to export the blk_flush_plug for anything that would want to poll bios
-> > from modules, in addition to it generally being a mess.  See a proposed
-> 
-> So far there isn't such usage yet. dm calls bio_poll() in ->iopoll(),
-> and its caller(io_uring) will finish the plug.
+Hello,
 
-Yes.  But not doing this automatically also means you keep easily
-forgetting callsites.  For example iomap still does not flush the plug
-in your patch.
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-> > patch for that below.  I'd also split the flush aspect from the poll
-> > aspect into two patches.
-> > 
-> > > +		if (bio.bi_opf & REQ_POLLED)
-> > > +			bio_poll(&bio, NULL, 0);
-> > > +		else
-> > >  			blk_io_schedule();
-> > 
-> > Instead of this duplicate logic everywhere I'd just make bio_boll
-> > call blk_io_schedule for the !REQ_POLLED case and simplify all the
-> > callers.
-> 
-> bio_poll() may be called with rcu read lock held, so I'd suggest to
-> not mix the two together.
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-Ok, makes sense.
+So please confirm interest by responding back.
 
-> > 
-> > > +			if (dio->submit.poll_bio &&
-> > > +					(dio->submit.poll_bio->bi_opf &
-> > > +						REQ_POLLED))
-> > 
-> > This indentation looks awfull,normal would be:
-> > 
-> > 			if (dio->submit.poll_bio &&
-> > 			    (dio->submit.poll_bio->bi_opf & REQ_POLLED))
-> 
-> That follows the indentation style of fs/iomap/direct-io.c for break in
-> 'if'.
+My dearest regards
 
-It doesn't.  Just look at the conditional you replaced for example :)
-
-> > +	/*
-> > +	 * We can't plug for synchronously polled submissions, otherwise
-> > +	 * bio->bi_cookie won't be set directly after submission, which is the
-> > +	 * indicator used by the submitter to check if a bio needs polling.
-> > +	 */
-> > +	if (plug &&
-> > +	    (rq->bio->bi_opf & (REQ_POLLED | REQ_NOWAIT)) != REQ_POLLED)
-> >  		blk_add_rq_to_plug(plug, rq);
-> >  	else if ((rq->rq_flags & RQF_ELV) ||
-> >  		 (rq->mq_hctx->dispatch_busy &&
-> 
-> It is nothing to do with REQ_NOWAIT. sync polled dio can be marked as
-> REQ_NOWAIT by userspace too. If '--nowait=1' is added in the fio
-> reproducer, io timeout is triggered too.
-
-True.  So I guess we'll need a new flag to distinguish the cases.
+Seyba Daniel
