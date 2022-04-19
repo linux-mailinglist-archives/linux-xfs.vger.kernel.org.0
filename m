@@ -2,43 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0C950600E
-	for <lists+linux-xfs@lfdr.de>; Tue, 19 Apr 2022 01:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A6D7506399
+	for <lists+linux-xfs@lfdr.de>; Tue, 19 Apr 2022 06:53:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234163AbiDRXFH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Apr 2022 19:05:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
+        id S1348544AbiDSEzd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 19 Apr 2022 00:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231876AbiDRXFG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Apr 2022 19:05:06 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF9E0BC2A
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Apr 2022 16:02:25 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-115-138.pa.nsw.optusnet.com.au [49.181.115.138])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 129B110E5BA1;
-        Tue, 19 Apr 2022 09:02:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ngaNy-001lj6-Jb; Tue, 19 Apr 2022 09:02:22 +1000
-Date:   Tue, 19 Apr 2022 09:02:22 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Fabrice Fontaine <fontaine.fabrice@gmail.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] io/mmap.c: fix musl build on mips64
-Message-ID: <20220418230222.GN1544202@dread.disaster.area>
-References: <20220418203606.760110-1-fontaine.fabrice@gmail.com>
+        with ESMTP id S1348466AbiDSEzT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 19 Apr 2022 00:55:19 -0400
+Received: from heian.cn.fujitsu.com (mail.cn.fujitsu.com [183.91.158.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0C81032ECC;
+        Mon, 18 Apr 2022 21:50:49 -0700 (PDT)
+IronPort-Data: =?us-ascii?q?A9a23=3Au2RBvKjQPIjEua4iyUkhZ8J3X161CxEKZh0ujC4?=
+ =?us-ascii?q?5NGQNrF6WrkUEyWUXXWCBOPmLYjbwfYx3aIXg/BkC78WDxoAwTFFqpXw8FHgiR?=
+ =?us-ascii?q?ejtX4rAdhiqV8+xwmwvdGo+toNGLICowPkcFhcwnT/wdOixxZVA/fvQHOCkUra?=
+ =?us-ascii?q?dYnkZqTJME0/NtzoywobVvaY42bBVMyvV0T/Di5W31G2NglaYAUpIg063ky6Di?=
+ =?us-ascii?q?dyp0N8uUvPSUtgQ1LPWvyF94JvyvshdJVOgKmVfNrbSq+ouUNiEEm3lExcFUrt?=
+ =?us-ascii?q?Jk57wdAsEX7zTIROTzHFRXsBOgDAb/mprjPl9b6FaNC+7iB3Q9zx14M9QvJqrW?=
+ =?us-ascii?q?EEnOLbQsOoAURhECDw4NqpDkFPCCSHl6pLMlhKaLRMAxN0rVinaJ7Yw9u9pAG1?=
+ =?us-ascii?q?m++YfLTcXZBGfwemxxdqTSuJsrsUlItPiMI4Wtjdn1z6xJfovR9bBBbrL4dtZ1?=
+ =?us-ascii?q?TIrrsFIAfvaIcEebFJHYBbfZBtAElQaEpQzmKGvnHaXWzlZrk+F4K8yy2vNxQd?=
+ =?us-ascii?q?ylr/3P7L9fMKGRMBQtkKZvX7duWD4BAwKctCS11Kt8Huqi6nEnT7TX5gbH7m1s?=
+ =?us-ascii?q?PVthTW7wm0VFQ1TW0C3rOe0jmagVN9FbU8Z4Cwjqe417kPDZt38WQCo5X2JpBg?=
+ =?us-ascii?q?RX/JOHOAgrgKA0KzZ50CeHGdsZjpAbsE28d84XhQ02VKT2dDkHzpitPuSU331y?=
+ =?us-ascii?q?1s+hVteIgBMdSlbO3BCFlBDvrHeTEgIpkqnZr5e/GSd0rUZwQ3N/g0=3D?=
+IronPort-HdrOrdr: =?us-ascii?q?A9a23=3AOx2m76hS8LA8xk4fM2ePciqv63BQXjAji2hC?=
+ =?us-ascii?q?6mlwRA09TySZ//rOoB19726StN9xYgBHpTnuAtjifZqxz/FICOoqTNOftWvdyQ?=
+ =?us-ascii?q?mVxehZhOOIqVCNJ8SUzI5gPMlbHZSWcOeAaGSSk/yKmjWQIpIxxsWd6qC0iaP7?=
+ =?us-ascii?q?x3dpdwtjbKZt9G5Ce36mO3wzVA9bHoA4CZbZwsJGogCrcXMRYt/+KWICW4H41q?=
+ =?us-ascii?q?b2vaOjcRgbHAQm9QXLqTup7YTxGx+e0gxbcx4n+8ZazVT4?=
+X-IronPort-AV: E=Sophos;i="5.88,333,1635177600"; 
+   d="scan'208";a="123671746"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 19 Apr 2022 12:50:48 +0800
+Received: from G08CNEXMBPEKD05.g08.fujitsu.local (unknown [10.167.33.204])
+        by cn.fujitsu.com (Postfix) with ESMTP id D439E4D17171;
+        Tue, 19 Apr 2022 12:50:47 +0800 (CST)
+Received: from G08CNEXJMPEKD02.g08.fujitsu.local (10.167.33.202) by
+ G08CNEXMBPEKD05.g08.fujitsu.local (10.167.33.204) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.23; Tue, 19 Apr 2022 12:50:47 +0800
+Received: from G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.85) by
+ G08CNEXJMPEKD02.g08.fujitsu.local (10.167.33.202) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.23; Tue, 19 Apr 2022 12:50:49 +0800
+Received: from irides.mr.mr (10.167.225.141) by
+ G08CNEXCHPEKD09.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
+ id 15.0.1497.23 via Frontend Transport; Tue, 19 Apr 2022 12:50:45 +0800
+From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-mm@kvack.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <djwong@kernel.org>, <dan.j.williams@intel.com>,
+        <david@fromorbit.com>, <hch@infradead.org>, <jane.chu@oracle.com>
+Subject: [PATCH v13 0/7] fsdax: introduce fs query to support reflink
+Date:   Tue, 19 Apr 2022 12:50:38 +0800
+Message-ID: <20220419045045.1664996-1-ruansy.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220418203606.760110-1-fontaine.fabrice@gmail.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=625dee00
-        a=/kVtbFzwtM2bJgxRVb+eeA==:117 a=/kVtbFzwtM2bJgxRVb+eeA==:17
-        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=NEAV23lmAAAA:8 a=YRHvXXt1AAAA:8
-        a=pGLkceISAAAA:8 a=7-415B0cAAAA:8 a=pXdvw13oSBbM9zxNHrUA:9
-        a=CjuIK1q_8ugA:10 a=9bw_jnHfPby8klRCszyn:22 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-yoursite-MailScanner-ID: D439E4D17171.A07DF
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: ruansy.fnst@fujitsu.com
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,86 +73,80 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Apr 18, 2022 at 10:36:06PM +0200, Fabrice Fontaine wrote:
-> musl undefines MAP_SYNC on some architectures such as mips64 since
-> version 1.1.20 and
-> https://github.com/ifduyue/musl/commit/9b57db3f958d9adc3b1c7371b5c6723aaee448b7
-> resulting in the following build failure:
-> 
-> mmap.c: In function 'mmap_f':
-> mmap.c:196:33: error: 'MAP_SYNC' undeclared (first use in this function); did you mean 'MS_SYNC'?
->   196 |                         flags = MAP_SYNC | MAP_SHARED_VALIDATE;
->       |                                 ^~~~~~~~
->       |                                 MS_SYNC
-> 
-> To fix this build failure, include <sys/mman.h> before the other
-> includes
-> 
-> Fixes:
->  - http://autobuild.buildroot.org/results/3296194907baf7d3fe039f59bcbf595aa8107a28
-> 
-> Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
-> ---
->  io/mmap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/io/mmap.c b/io/mmap.c
-> index 8c048a0a..b8609295 100644
-> --- a/io/mmap.c
-> +++ b/io/mmap.c
-> @@ -4,9 +4,9 @@
->   * All Rights Reserved.
->   */
->  
-> +#include <sys/mman.h>
->  #include "command.h"
->  #include "input.h"
-> -#include <sys/mman.h>
->  #include <signal.h>
->  #include "init.h"
->  #include "io.h"
+This patchset is aimed to support shared pages tracking for fsdax.
 
-I can't see how this makes any difference to the problem, nor can I
-see why you are having this issues.
+Changes since V12:
+  - Rebased onto next-20220414
+  - Do not continue ->notify_failure() if filesystem is not ready yet
+  - Simplify the logic of setting CoW flag
+  - Fix build warning/error and typo
 
-From the configure output:
+This patchset moves owner tracking from dax_assocaite_entry() to pmem
+device driver, by introducing an interface ->memory_failure() for struct
+pagemap.  This interface is called by memory_failure() in mm, and
+implemented by pmem device.
 
-....
-checking for MAP_SYNC... no
-....
+Then call holder operations to find the filesystem which the corrupted
+data located in, and call filesystem handler to track files or metadata
+associated with this page.
 
-It is clear that the build has detected that MAP_SYNC does not exist
-on this platform, and that means HAVE_MAP_SYNC will not be defined.
-That means when xfs_io is built, io/Makefile does not add
--DHAVE_MAP_SYNC to the cflags, and so when io/mmap.c includes
-io/io.h -> xfs.h -> linux.h we hit this code:
+Finally we are able to try to fix the corrupted data in filesystem and
+do other necessary processing, such as killing processes who are using
+the files affected.
 
-#ifndef HAVE_MAP_SYNC
-#define MAP_SYNC 0
-#define MAP_SHARED_VALIDATE 0
-#else
-#include <asm-generic/mman.h>
-#include <asm-generic/mman-common.h>
-#endif /* HAVE_MAP_SYNC */
+The call trace is like this:
+memory_failure()
+|* fsdax case
+|------------
+|pgmap->ops->memory_failure()      => pmem_pgmap_memory_failure()
+| dax_holder_notify_failure()      =>
+|  dax_device->holder_ops->notify_failure() =>
+|                                     - xfs_dax_notify_failure()
+|  |* xfs_dax_notify_failure()
+|  |--------------------------
+|  |   xfs_rmap_query_range()
+|  |    xfs_dax_failure_fn()
+|  |    * corrupted on metadata
+|  |       try to recover data, call xfs_force_shutdown()
+|  |    * corrupted on file data
+|  |       try to recover data, call mf_dax_kill_procs()
+|* normal case
+|-------------
+|mf_generic_kill_procs()
 
-Given that this is the last include in the io/mmap.c file, it should
-not matter what musl is doing - this define should be overriding it
-completely.
+==
+Shiyang Ruan (7):
+  dax: Introduce holder for dax_device
+  mm: factor helpers for memory_failure_dev_pagemap
+  pagemap,pmem: Introduce ->memory_failure()
+  fsdax: Introduce dax_lock_mapping_entry()
+  mm: Introduce mf_dax_kill_procs() for fsdax case
+  xfs: Implement ->notify_failure() for XFS
+  fsdax: set a CoW flag when associate reflink mappings
 
-Ooooh.
+ drivers/dax/super.c         |  67 +++++++++-
+ drivers/md/dm.c             |   2 +-
+ drivers/nvdimm/pmem.c       |  17 +++
+ fs/dax.c                    | 113 ++++++++++++++--
+ fs/erofs/super.c            |  10 +-
+ fs/ext2/super.c             |   7 +-
+ fs/ext4/super.c             |   9 +-
+ fs/xfs/Makefile             |   5 +
+ fs/xfs/xfs_buf.c            |  10 +-
+ fs/xfs/xfs_fsops.c          |   3 +
+ fs/xfs/xfs_mount.h          |   1 +
+ fs/xfs/xfs_notify_failure.c | 220 +++++++++++++++++++++++++++++++
+ fs/xfs/xfs_super.h          |   1 +
+ include/linux/dax.h         |  48 +++++--
+ include/linux/memremap.h    |  12 ++
+ include/linux/mm.h          |   2 +
+ include/linux/page-flags.h  |   6 +
+ mm/memory-failure.c         | 255 +++++++++++++++++++++++++-----------
+ 18 files changed, 682 insertions(+), 106 deletions(-)
+ create mode 100644 fs/xfs/xfs_notify_failure.c
 
-input.h -> libfrog/projects.h -> xfs.h -> linux.h.
-
-Ok, we've tangled up header includes, and that's why moving the
-sys/mman.h header fixes the warning. Right, we need to untangle the
-headers.
-
-.... and my build + test rack just had a total internal power
-failure of some kind, so that's as far as I can go right now...
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+2.35.1
+
+
+
