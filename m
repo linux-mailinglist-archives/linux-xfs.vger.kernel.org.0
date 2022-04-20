@@ -2,186 +2,116 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2682A508AD4
-	for <lists+linux-xfs@lfdr.de>; Wed, 20 Apr 2022 16:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 665C5508B29
+	for <lists+linux-xfs@lfdr.de>; Wed, 20 Apr 2022 16:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348369AbiDTOeZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 20 Apr 2022 10:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35756 "EHLO
+        id S1354575AbiDTOxl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 20 Apr 2022 10:53:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351440AbiDTOeY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 Apr 2022 10:34:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5DEEF443C6
-        for <linux-xfs@vger.kernel.org>; Wed, 20 Apr 2022 07:31:38 -0700 (PDT)
+        with ESMTP id S238867AbiDTOxl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 20 Apr 2022 10:53:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9D0F31A385
+        for <linux-xfs@vger.kernel.org>; Wed, 20 Apr 2022 07:50:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1650465097;
+        s=mimecast20190719; t=1650466252;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
-        bh=I7T6uNrxtdMv6Jk9B2TNgRBUsej61OwrtET1tcadZAw=;
-        b=NfySVGnbojsVu6yJfGGOFcCzrXdfht8qPFw211xyUg2TSiYU421XnYqdUh2/6YaUo8ixA1
-        BWVITJn6Him4UW1cs3KEGvqcWh7l4yN+jYER5+6ijc4oL8R1zOL8yyBSdH8hZy9cI4jgxD
-        gn4ziLdk5SQtwHlc9bakodppodj4IXM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=SHAw/nkW7zop0IaDrIjG7cO7ulQBq+OCA2EpzDuVt40=;
+        b=Wofbq3FD+UC5szC1Q6q4/kHtB80GwXLthRU2fNtge+BFv0w1w++wBwGz4e0cjt+hI3192w
+        H5VL2XQT9iOWmte36B00twXfRflk43nk/38mNfgo3rj81Jl9wTtz3oz9y5KXOfXHGfymT3
+        Ia++q6ODANonnsUGRwvrRHwsTTZRszg=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-634-sopYKkH1O7a55SH0zeFU0Q-1; Wed, 20 Apr 2022 10:31:34 -0400
-X-MC-Unique: sopYKkH1O7a55SH0zeFU0Q-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2DB0B8517E7;
-        Wed, 20 Apr 2022 14:31:18 +0000 (UTC)
-Received: from localhost (ovpn-8-20.pek2.redhat.com [10.72.8.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 464B854CE2F;
-        Wed, 20 Apr 2022 14:31:16 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Ming Lei <ming.lei@redhat.com>, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, Changhui Zhong <czhong@redhat.com>
-Subject: [PATCH V2] block: ignore RWF_HIPRI hint for sync dio
-Date:   Wed, 20 Apr 2022 22:31:10 +0800
-Message-Id: <20220420143110.2679002-1-ming.lei@redhat.com>
+ us-mta-3-R9fG7U5XNC2KLG2MczR5RQ-1; Wed, 20 Apr 2022 10:50:51 -0400
+X-MC-Unique: R9fG7U5XNC2KLG2MczR5RQ-1
+Received: by mail-ed1-f69.google.com with SMTP id dk2-20020a0564021d8200b0041d789d18bcso1323044edb.21
+        for <linux-xfs@vger.kernel.org>; Wed, 20 Apr 2022 07:50:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SHAw/nkW7zop0IaDrIjG7cO7ulQBq+OCA2EpzDuVt40=;
+        b=F/tOrj0LHUEqRXvgZrLaygQ2tIjxVQJ2rswNmYYsKzGCIrDp2apX8Brxw9PbkSqZDs
+         BYtVNIaA5kg2V4b9V6vPINQvDecwwl7uz7ZUqhDt4Nzzeo2iQdvOGtovF0XHIIrnB1yT
+         8Kv5y/ypqq8PYFVoyXowFJOBQ9XB5N2gdWMd2jkgDIJ5ck/pHqt31S4nqC6VbaG3U05Y
+         wZaYoT0lPQJO5N2kKu15SUpsI8xcuYPBNLlvNL/fqOSRe9Ek7Izb8yMJXyK7cz+vBjeh
+         JwJgCvyRXLzxi/82+EhjZhXs/61FE/xharJCVPYYF0eotIw6QLy7E9M30VD2LrvSRzss
+         Wxxw==
+X-Gm-Message-State: AOAM5321TkdFxlztIFlvAMPCWAfRD7vQasWsNXabtLSRyW5InGpIoBS/
+        ep0xwDuY+qVs8jYtx6NHG8QZK5/3DS2YIKOu3WOdi6TP6h18Bcj4dxdgxmpjSQxscgf8eKM9hpq
+        PHvltVJyguAUEbGSRSoMuYwHNuINIHphXOrOROLRQ3W0jfZsRhUzjEtCyremu/TRA4YVHA00=
+X-Received: by 2002:a50:d613:0:b0:41d:71bb:4af3 with SMTP id x19-20020a50d613000000b0041d71bb4af3mr23768222edi.99.1650466250245;
+        Wed, 20 Apr 2022 07:50:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzUNLh5ifsN23rIYrAADkNqeXnLZBl9nSTxQ7iDhuzqrtPmaAmUM/RSRAMspJW+t1JPKwSDtQ==
+X-Received: by 2002:a50:d613:0:b0:41d:71bb:4af3 with SMTP id x19-20020a50d613000000b0041d71bb4af3mr23768200edi.99.1650466249936;
+        Wed, 20 Apr 2022 07:50:49 -0700 (PDT)
+Received: from aalbersh.remote.csb ([109.183.6.197])
+        by smtp.gmail.com with ESMTPSA id s14-20020aa7cb0e000000b00410bf015567sm9935622edt.92.2022.04.20.07.50.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 07:50:49 -0700 (PDT)
+From:   Andrey Albershteyn <aalbersh@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Andrey Albershteyn <aalbersh@redhat.com>
+Subject: [PATCH v2 0/5] xfsprogs: optimize -L/-U range calls for xfs_quota's dump/report
+Date:   Wed, 20 Apr 2022 16:45:03 +0200
+Message-Id: <20220420144507.269754-1-aalbersh@redhat.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-So far bio is marked as REQ_POLLED if RWF_HIPRI/IOCB_HIPRI is passed
-from userspace sync io interface, then block layer tries to poll until
-the bio is completed. But the current implementation calls
-blk_io_schedule() if bio_poll() returns 0, and this way causes io hang or
-timeout easily.
+The xfs_quota's 'report' and 'dump' commands have -L and -U
+arguments for restricting quota querying to the range of
+UIDs/GIDs/PIDs. The current implementation is using XFS_GETQUOTA to
+get every ID in specified range. It doesn't perform well on wider
+ranges. Also, the fallback case (UIDs from /etc/passwd) doesn't take
+into account range restriction and outputs all users with quota.
 
-But looks no one reports this kind of issue, which should have been
-triggered in normal io poll sanity test or blktests block/007 as
-observed by Changhui, that means it is very likely that no one uses it
-or no one cares it.
+First 3 patches do minor refactoring to split acquisition and
+outputting of the quota information. This is not that necessary, but
+makes it easier to manipulate with acquired data.
 
-Also after io_uring is invented, io poll for sync dio becomes legacy
-interface.
+The 4th one replaces XFS_GETQUOTA based loop with XFS_GETNEXTQUOTA
+one. The latter returns ID of the next user/group/project with
+non-empty quota. The ID is then used for further call.
 
-So ignore RWF_HIPRI hint for sync dio.
+The last patch adds range checks for fallback case when
+XFS_GETNEXTQUOTA is not available.
 
-CC: linux-mm@kvack.org
-Cc: linux-xfs@vger.kernel.org
-Reported-by: Changhui Zhong <czhong@redhat.com>
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
-V2:
-	- avoid to break io_uring async polling as pointed by Chritoph
+The fallback case will be also executed in case that empty range is
+specified (e.g. -L <too high>), but will print nothing.
 
- block/fops.c         | 22 +---------------------
- fs/iomap/direct-io.c |  7 +++----
- mm/page_io.c         |  4 +---
- 3 files changed, 5 insertions(+), 28 deletions(-)
+Changes from v1:
+Darrick J. Wong:
+- Renamed get_quota() -> get_dquot()
+Christoph Hellwig:
+- Formatting: if() with tab, operators without spaces, long lines
+- Replace 'fs_disk_quota_t' with 'struct fs_disk_quota'
+- Merge and then split patch 2 & 3, so dump_file() and
+  report_mount() are in separate patches
 
-diff --git a/block/fops.c b/block/fops.c
-index e3643362c244..b9b83030e0df 100644
---- a/block/fops.c
-+++ b/block/fops.c
-@@ -44,14 +44,6 @@ static unsigned int dio_bio_write_op(struct kiocb *iocb)
- 
- #define DIO_INLINE_BIO_VECS 4
- 
--static void blkdev_bio_end_io_simple(struct bio *bio)
--{
--	struct task_struct *waiter = bio->bi_private;
--
--	WRITE_ONCE(bio->bi_private, NULL);
--	blk_wake_io_task(waiter);
--}
--
- static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
- 		struct iov_iter *iter, unsigned int nr_pages)
- {
-@@ -83,8 +75,6 @@ static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
- 		bio_init(&bio, bdev, vecs, nr_pages, dio_bio_write_op(iocb));
- 	}
- 	bio.bi_iter.bi_sector = pos >> SECTOR_SHIFT;
--	bio.bi_private = current;
--	bio.bi_end_io = blkdev_bio_end_io_simple;
- 	bio.bi_ioprio = iocb->ki_ioprio;
- 
- 	ret = bio_iov_iter_get_pages(&bio, iter);
-@@ -97,18 +87,8 @@ static ssize_t __blkdev_direct_IO_simple(struct kiocb *iocb,
- 
- 	if (iocb->ki_flags & IOCB_NOWAIT)
- 		bio.bi_opf |= REQ_NOWAIT;
--	if (iocb->ki_flags & IOCB_HIPRI)
--		bio_set_polled(&bio, iocb);
- 
--	submit_bio(&bio);
--	for (;;) {
--		set_current_state(TASK_UNINTERRUPTIBLE);
--		if (!READ_ONCE(bio.bi_private))
--			break;
--		if (!(iocb->ki_flags & IOCB_HIPRI) || !bio_poll(&bio, NULL, 0))
--			blk_io_schedule();
--	}
--	__set_current_state(TASK_RUNNING);
-+	submit_bio_wait(&bio);
- 
- 	bio_release_pages(&bio, should_dirty);
- 	if (unlikely(bio.bi_status))
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 62da020d02a1..80f9b047aa1b 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -56,7 +56,8 @@ static void iomap_dio_submit_bio(const struct iomap_iter *iter,
- {
- 	atomic_inc(&dio->ref);
- 
--	if (dio->iocb->ki_flags & IOCB_HIPRI) {
-+	/* Sync dio can't be polled reliably */
-+	if ((dio->iocb->ki_flags & IOCB_HIPRI) && !is_sync_kiocb(dio->iocb)) {
- 		bio_set_polled(bio, dio->iocb);
- 		dio->submit.poll_bio = bio;
- 	}
-@@ -653,9 +654,7 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 			if (!READ_ONCE(dio->submit.waiter))
- 				break;
- 
--			if (!dio->submit.poll_bio ||
--			    !bio_poll(dio->submit.poll_bio, NULL, 0))
--				blk_io_schedule();
-+			blk_io_schedule();
- 		}
- 		__set_current_state(TASK_RUNNING);
- 	}
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 89fbf3cae30f..3fbdab6a940e 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -360,7 +360,6 @@ int swap_readpage(struct page *page, bool synchronous)
- 	 * attempt to access it in the page fault retry time check.
- 	 */
- 	if (synchronous) {
--		bio->bi_opf |= REQ_POLLED;
- 		get_task_struct(current);
- 		bio->bi_private = current;
- 	}
-@@ -372,8 +371,7 @@ int swap_readpage(struct page *page, bool synchronous)
- 		if (!READ_ONCE(bio->bi_private))
- 			break;
- 
--		if (!bio_poll(bio, NULL, 0))
--			blk_io_schedule();
-+		blk_io_schedule();
- 	}
- 	__set_current_state(TASK_RUNNING);
- 	bio_put(bio);
+Andrey Albershteyn (5):
+  xfs_quota: separate quota info acquisition into get_dquot()
+  xfs_quota: separate get_dquot() and dump_file()
+  xfs_quota: separate get_dquot() and report_mount()
+  xfs_quota: utilize XFS_GETNEXTQUOTA for ranged calls in report/dump
+  xfs_quota: apply -L/-U range limits in uid/gid/pid loops
+
+ quota/report.c | 323 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 160 insertions(+), 163 deletions(-)
+
 -- 
-2.31.1
+2.27.0
 
