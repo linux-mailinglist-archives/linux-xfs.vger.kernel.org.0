@@ -2,157 +2,118 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DF5E50BCCD
-	for <lists+linux-xfs@lfdr.de>; Fri, 22 Apr 2022 18:22:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B702B50C3BA
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Apr 2022 01:11:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381788AbiDVQZa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 22 Apr 2022 12:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54760 "EHLO
+        id S232822AbiDVWfr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 22 Apr 2022 18:35:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381784AbiDVQZ1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Apr 2022 12:25:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F1DEB5DE77
-        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 09:22:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1650644553;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=91guVFhA4c6rMSnJbNy065R1r+hZGV4CGuBJvar4hZ4=;
-        b=QJbFnd3x2xLfwlopYG0/OqlojmKRYttKRMjLHRpDWYHiqpjtbwSU8zWf0ibI+oEBNQn3+l
-        a3Eq5sotuRJ47ZAIo+u3N/eS47XhwS1UTsOWHO3WEqS4/t7EfkB7RFtMAd0Z5Mcf2hYith
-        chrJG6qu7itSooBY6AnAlQevj+mCImg=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-148-zOCVpsVjO_21Rrt1Z1QgLg-1; Fri, 22 Apr 2022 12:22:31 -0400
-X-MC-Unique: zOCVpsVjO_21Rrt1Z1QgLg-1
-Received: by mail-qk1-f199.google.com with SMTP id t3-20020a05620a034300b0069e60a0760cso5702102qkm.20
-        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 09:22:31 -0700 (PDT)
+        with ESMTP id S233330AbiDVWfN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Apr 2022 18:35:13 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C802CC193
+        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 14:27:44 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id h12so9858016plf.12
+        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 14:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w9AKK/wGlnxig+lE3h4LHV/aZa9ukqQjCgIygmyWAnI=;
+        b=68ZELSGoErna6Kx0I1rr70ZevaMAPMnUYlggojQeGdeNtet7Hum0m7txFWvhbVCPoh
+         Lpfn1c1GUzjoDoqF3atTMDyB/W54WSq09ZqEMstjj/nD57yi3McP45zUESmlBRcMSayd
+         RCzz4ipAytYtGQe71XITH8QJ3AOzILuXAM8yhmiGgJ7WF+oGlf5airqmyAOM2HGknwiH
+         NL8jDL6gpoJPBQW7EeAY6wZ4C88AXehvjWq8bqkos1IivsjngJ9pqrOMVpnTljE1x58T
+         I93xuOolWlJ6WC9weiHMQEfCyYC7FH5wSxSWXUOcug8i2eaQtc0PgYHeEI3sT7IioZIr
+         TevA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=91guVFhA4c6rMSnJbNy065R1r+hZGV4CGuBJvar4hZ4=;
-        b=cbFgZFOb8EAHfIccrFkRzRD17hR3Jns+9WMYPxWzU+94ZUJV7FFY1Rog02e8kLaG/d
-         8Hg3oBDB+ry/uo25Gdjgr698bQHwBjWafeTE1awASnX/Rj+ht0lOgtzoybaZ5BE+pRP3
-         odm4lhoN6/2vSA0AOgYT8ZMvNIgZSzfrKyStHZ4qmyMAyVjZj3YIlMxJXqZ53W5vG1nH
-         6sudU169Mzv5qCXQzqc4RCwoFz+8UrMXbybwOSQC6WHGKVOnGzxlst72bOqe5eIav2+K
-         HTnsF3RY49mXoEHunl/FTezfLJuBlsuEF8b0P8eAa3D15ezqh+f+rt+v63OotsZBNWsK
-         tkzQ==
-X-Gm-Message-State: AOAM532ikEm7h8JupJtyFGfqOQuo4xw3/Y1aSb9Ij5DGyMkvuZj49yLo
-        P0BsuT459vo0EOMPJgtd2zT/q8MojmUx5FDbgDTKxzFAzSGu5AdUU3wbg3kMtBv9Y1l+ci/hif3
-        X8f8U+OiWAv+mzhpmxGfE
-X-Received: by 2002:a05:622a:191:b0:2f1:ffe6:283c with SMTP id s17-20020a05622a019100b002f1ffe6283cmr3763856qtw.557.1650644551275;
-        Fri, 22 Apr 2022 09:22:31 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzr/g9eL0NXPiiZSlLtnLRfqAoQm1t5WmQ1V810/XXBpWLBqK94uIqmFckHXGsM/S+dSePrcw==
-X-Received: by 2002:a05:622a:191:b0:2f1:ffe6:283c with SMTP id s17-20020a05622a019100b002f1ffe6283cmr3763840qtw.557.1650644551045;
-        Fri, 22 Apr 2022 09:22:31 -0700 (PDT)
-Received: from bfoster (c-24-61-119-116.hsd1.ma.comcast.net. [24.61.119.116])
-        by smtp.gmail.com with ESMTPSA id j131-20020a37a089000000b0069e7ebc625bsm1066807qke.78.2022.04.22.09.22.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 09:22:30 -0700 (PDT)
-Date:   Fri, 22 Apr 2022 12:22:28 -0400
-From:   Brian Foster <bfoster@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix soft lockup via spinning in filestream ag
- selection loop
-Message-ID: <YmLWRBjTSP43r6Cs@bfoster>
-References: <20220422141226.1831426-1-bfoster@redhat.com>
- <20220422160021.GB17025@magnolia>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w9AKK/wGlnxig+lE3h4LHV/aZa9ukqQjCgIygmyWAnI=;
+        b=sn2dQWRPYfWmus2Qnn9lNhzZYLjEWtV44/oSxiE30EgPjYi2DaiDKvMZX8gS022msH
+         s0VR0OnPI+Q0t9y32tl5J+DPXkryimUcV9CEDNW+IpzxjfPSGG4zIJJfwALUdNvPm2Yo
+         4R89K+/H4rfgBLp6rNo7VVceGXyQr1TFaA/Uj0on+V7cpjO3WlRorl6C5uVOAImF9dAG
+         8vrYQzQztrD2nqm5oZL53wTVUHssvvA2JGvN7Aba8t8AKfpZhyNhpYMTBhXOcxQ1g1Ul
+         DWXodBS9boNDFKXiZcezTw03YmfFp46fVUUDVjklMZRVptw4PzdzyqNNscGYNbw/vOBI
+         SFvg==
+X-Gm-Message-State: AOAM533jxmSVaQ/ByjXecSKtu6lKV6nk0uLsSRHVIvbQ+7yd9wcUq6R/
+        BVZ75OhJmc94dWbQE0LxprvwjF54myls+rBYBdx1qQ==
+X-Google-Smtp-Source: ABdhPJwBmyn23Epq/35EZiri4tm6JvqSiIIERB77yO45Op+oQcI+/5ahmZRwLntOQrNzhYN0N3NhjEndaBvuqb3gpmc=
+X-Received: by 2002:a17:902:7296:b0:14b:4bc6:e81 with SMTP id
+ d22-20020a170902729600b0014b4bc60e81mr6342011pll.132.1650662863976; Fri, 22
+ Apr 2022 14:27:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220422160021.GB17025@magnolia>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220419045045.1664996-1-ruansy.fnst@fujitsu.com>
+ <20220421012045.GR1544202@dread.disaster.area> <86cb0ada-208c-02de-dbc9-53c6014892c3@fujitsu.com>
+ <CAPcyv4i0Noum8hqHtCpdM5HMVdmNHm3Aj2JCnZ+KZLgceiXYaA@mail.gmail.com>
+ <20220421043502.GS1544202@dread.disaster.area> <YmDxs1Hj4H/cu2sd@infradead.org>
+ <20220421074653.GT1544202@dread.disaster.area>
+In-Reply-To: <20220421074653.GT1544202@dread.disaster.area>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 22 Apr 2022 14:27:32 -0700
+Message-ID: <CAPcyv4jj_Z+P4BuC6EXXrzbVr1uHomQVu1A+cq55EFnSGmP7cQ@mail.gmail.com>
+Subject: Re: [PATCH v13 0/7] fsdax: introduce fs query to support reflink
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Shiyang Ruan <ruansy.fnst@fujitsu.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Linux NVDIMM <nvdimm@lists.linux.dev>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Jane Chu <jane.chu@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Apr 22, 2022 at 09:00:21AM -0700, Darrick J. Wong wrote:
-> On Fri, Apr 22, 2022 at 10:12:26AM -0400, Brian Foster wrote:
-> > The filestream AG selection loop uses pagf data to aid in AG
-> > selection, which depends on pagf initialization. If the in-core
-> > structure is not initialized, the caller invokes the AGF read path
-> > to do so and carries on. If another task enters the loop and finds
-> > a pagf init already in progress, the AGF read returns -EAGAIN and
-> > the task continues the loop. This does not increment the current ag
-> > index, however, which means the task spins on the current AGF buffer
-> > until unlocked.
-> > 
-> > If the AGF read I/O submitted by the initial task happens to be
-> > delayed for whatever reason, this results in soft lockup warnings
-> 
-> Is there a specific 'whatever reason' going on here?
-> 
+On Thu, Apr 21, 2022 at 12:47 AM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Wed, Apr 20, 2022 at 10:54:59PM -0700, Christoph Hellwig wrote:
+> > On Thu, Apr 21, 2022 at 02:35:02PM +1000, Dave Chinner wrote:
+> > > Sure, I'm not a maintainer and just the stand-in patch shepherd for
+> > > a single release. However, being unable to cleanly merge code we
+> > > need integrated into our local subsystem tree for integration
+> > > testing because a patch dependency with another subsystem won't gain
+> > > a stable commit ID until the next merge window is .... distinctly
+> > > suboptimal.
+> >
+> > Yes.  Which is why we've taken a lot of mm patchs through other trees,
+> > sometimes specilly crafted for that.  So I guess in this case we'll
+> > just need to take non-trivial dependencies into the XFS tree, and just
+> > deal with small merge conflicts for the trivial ones.
+>
+> OK. As Naoyo has pointed out, the first dependency/conflict Ruan has
+> listed looks trivial to resolve.
+>
+> The second dependency, OTOH, is on a new function added in the patch
+> pointed to. That said, at first glance it looks to be independent of
+> the first two patches in that series so I might just be able to pull
+> that one patch in and have that leave us with a working
+> fsdax+reflink tree.
+>
+> Regardless, I'll wait to see how much work the updated XFS/DAX
+> reflink enablement patchset still requires when Ruan posts it before
+> deciding what to do here.  If it isn't going to be a merge
+> candidate, what to do with this patchset is moot because there's
+> little to test without reflink enabled...
 
-Presumably.. given this seems to reproduce reliably or not at all in
-certain environments/configs, my suspicion was that either the timing of
-the test changes enough such that some other task involved with the test
-is able to load the bdev, or otherwise timing changes just enough to
-trigger the pagf_init race and the subsequent spinning is what
-exacerbates the delay (i.e. burning cpu and subsequent soft lockup BUG
-starve out some part(s) of the I/O submission/completion processing).
-I've no tangible evidence for either aside from the latter seems fairly
-logical when you consider that the test consistently completes in 3-4
-seconds with the fix in place, but without it we consistently hit
-multiple instances of the soft lockup detector (on ~20s intervals IIRC)
-and the system seems to melt down indefinitely. *shrug*
-
-Brian
-
-> > via the spinning task. This is reproduced by xfs/170. To avoid this
-> > problem, fix the AGF trylock failure path to properly iterate to the
-> > next AG. If a task iterates all AGs without making progress, the
-> > trylock behavior is dropped in favor of blocking locks and thus a
-> > soft lockup is no longer possible.
-> > 
-> > Fixes: f48e2df8a877ca1c ("xfs: make xfs_*read_agf return EAGAIN to ALLOC_FLAG_TRYLOCK callers")
-> 
-> Ooops, this was a major braino on my part.
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> 
-> --D
-> 
-> > Signed-off-by: Brian Foster <bfoster@redhat.com>
-> > ---
-> > 
-> > I included the Fixes: tag because this looks like a regression in said
-> > commit, but I've not explicitly verified.
-> > 
-> > Brian
-> > 
-> >  fs/xfs/xfs_filestream.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
-> > index 6a3ce0f6dc9e..be9bcf8a1f99 100644
-> > --- a/fs/xfs/xfs_filestream.c
-> > +++ b/fs/xfs/xfs_filestream.c
-> > @@ -128,11 +128,12 @@ xfs_filestream_pick_ag(
-> >  		if (!pag->pagf_init) {
-> >  			err = xfs_alloc_pagf_init(mp, NULL, ag, trylock);
-> >  			if (err) {
-> > -				xfs_perag_put(pag);
-> > -				if (err != -EAGAIN)
-> > +				if (err != -EAGAIN) {
-> > +					xfs_perag_put(pag);
-> >  					return err;
-> > +				}
-> >  				/* Couldn't lock the AGF, skip this AG. */
-> > -				continue;
-> > +				goto next_ag;
-> >  			}
-> >  		}
-> >  
-> > -- 
-> > 2.34.1
-> > 
-> 
-
+I do have a use case for this work absent the reflink work. Recall we
+had a conversation about how to communicate "dax-device has been
+ripped away from the fs" events and we ended up on the idea of reusing
+->notify_failure(), but with the device's entire logical address range
+as the notification span. That will let me unwind and delete the
+PTE_DEVMAP infrastructure for taking extra device references to hold
+off device-removal. Instead ->notify_failure() arranges for all active
+DAX mappings to be invalidated and allow the removal to proceed
+especially since physical removal does not care about software pins.
