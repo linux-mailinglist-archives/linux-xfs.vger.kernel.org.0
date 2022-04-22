@@ -2,70 +2,311 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51CCC50C340
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 Apr 2022 01:10:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E30C250C41D
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Apr 2022 01:12:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232882AbiDVWi0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 22 Apr 2022 18:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60418 "EHLO
+        id S232894AbiDVW07 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 22 Apr 2022 18:26:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233599AbiDVWhi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Apr 2022 18:37:38 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F60C28CFFC
-        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 14:48:19 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-115-138.pa.nsw.optusnet.com.au [49.181.115.138])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A4DF053451C;
-        Sat, 23 Apr 2022 07:48:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ni18T-003KSy-Cf; Sat, 23 Apr 2022 07:48:17 +1000
-Date:   Sat, 23 Apr 2022 07:48:17 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] xfs: simplify xfs_rmap_lookup_le call sites
-Message-ID: <20220422214817.GZ1544202@dread.disaster.area>
-References: <164997683918.383709.10179435130868945685.stgit@magnolia>
- <164997685075.383709.9161047695879739444.stgit@magnolia>
+        with ESMTP id S232900AbiDVW0u (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Apr 2022 18:26:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC4ED18A61B;
+        Fri, 22 Apr 2022 14:59:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1428261DFE;
+        Fri, 22 Apr 2022 21:59:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E5E2C385A4;
+        Fri, 22 Apr 2022 21:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650664784;
+        bh=4turbuBRMN8/swdi24GItGGklkq+FeLx3KcDfxRElKM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hQ9BviK4KjW5XxRjO+Ee3vBWVjmDxn0lvR2ISt5aHfeqv4/grRXXAJQu5/9aG78ab
+         J1cwCKvXZEn1InpWkYp8sOucCv4N/5UZlJESj/dTi8kod9oIuYt8K4sR7KcD940ufo
+         468+9A61X+B6GLWsbY2OdeiJYPRqATs0wB5+hSyjLrginUDLB5vQ/gr/CM5369s7i9
+         gAJZMKsaz9dER4D4fb5UzHus8WyqRtmQ7jjXBeAHoRD1YCMS/OeJcCRN6OQiy8D92G
+         fQKyU6386Q3Rv7nJGqT6fQF2ZuPIjV90NMuKBGy/T1/yoCGkzBcJ4tX2OkBHcEgirS
+         YI3yURHuGNNGQ==
+Date:   Fri, 22 Apr 2022 14:59:43 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     xfs <linux-xfs@vger.kernel.org>, fstests <fstests@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: generic/068 crash on 5.18-rc2?
+Message-ID: <20220422215943.GC17025@magnolia>
+References: <20220413033425.GM16799@magnolia>
+ <YlbjOPEQP66gc1WQ@casper.infradead.org>
+ <20220418174747.GF17025@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164997685075.383709.9161047695879739444.stgit@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=626322a2
-        a=/kVtbFzwtM2bJgxRVb+eeA==:117 a=/kVtbFzwtM2bJgxRVb+eeA==:17
-        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
-        a=7-415B0cAAAA:8 a=eq8JXRs6Dps1z5OMOyQA:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220418174747.GF17025@magnolia>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 03:54:10PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
+On Mon, Apr 18, 2022 at 10:47:47AM -0700, Darrick J. Wong wrote:
+> On Wed, Apr 13, 2022 at 03:50:32PM +0100, Matthew Wilcox wrote:
+> > On Tue, Apr 12, 2022 at 08:34:25PM -0700, Darrick J. Wong wrote:
+> > > Hmm.  Two nights in a row I've seen the following crash.  Has anyone
+> > > else seen this, or should I keep digging?  This is a fairly boring
+> > > x86_64 VM with a XFS v5 filesystem + rmapbt.
+> > 
+> > I have not seen this before.  I test with:
+> > MKFS_OPTIONS  -- -f -m reflink=1,rmapbt=1 -i sparse=1 -b size=1024 /dev/sdc
+> > 
+> > Maybe I should try a 4096 byte block size.
+> > 
+> > > mm/filemap.c:1653 is the BUG in:
+> > > 
+> > > void folio_end_writeback(struct folio *folio)
+> > > {
+> > > 	/*
+> > > 	 * folio_test_clear_reclaim() could be used here but it is an
+> > > 	 * atomic operation and overkill in this particular case.
+> > > 	 * Failing to shuffle a folio marked for immediate reclaim is
+> > > 	 * too mild a gain to justify taking an atomic operation penalty
+> > > 	 * at the end of every folio writeback.
+> > > 	 */
+> > > 	if (folio_test_reclaim(folio)) {
+> > > 		folio_clear_reclaim(folio);
+> > > 		folio_rotate_reclaimable(folio);
+> > > 	}
+> > > 
+> > > 	/*
+> > > 	 * Writeback does not hold a folio reference of its own, relying
+> > > 	 * on truncation to wait for the clearing of PG_writeback.
+> > > 	 * But here we must make sure that the folio is not freed and
+> > > 	 * reused before the folio_wake().
+> > > 	 */
+> > > 	folio_get(folio);
+> > > 	if (!__folio_end_writeback(folio))
+> > > >>>>		BUG();
+> > 
+> > Grr, that should have been a VM_BUG_ON_FOLIO(1, folio) so we get useful
+> > information about the folio (like whether it has an iop, or what order
+> > the folio is).  Can you make that change and try to reproduce?
 > 
-> Most callers of xfs_rmap_lookup_le will retrieve the btree record
-> immediately if the lookup succeeds.  The overlapped version of this
-> function (xfs_rmap_lookup_le_range) will return the record if the lookup
-> succeeds, so make the regular version do it too.  Get rid of the useless
-> len argument, since it's not part of the lookup key.
+> > What's going on here is that we've called folio_end_writeback() on a
+> > folio which does not have the writeback flag set.  That _should_ be
+> > impossible, hence the use of BUG().  Either we've called
+> > folio_end_writeback() twice on the same folio, or we neglected to set
+> > the writeback flag on the folio.  I don't immediately see why either
+> > of those two things would happen.
 > 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_rmap.c |   59 +++++++++++++++++-----------------------------
->  fs/xfs/libxfs/xfs_rmap.h |    4 ++-
->  fs/xfs/scrub/bmap.c      |   24 +++----------------
->  3 files changed, 28 insertions(+), 59 deletions(-)
+> Well, I made that change and rebased to -rc3 to see if reverting that
+> ZERO_PAGE thing would produce better results, I think I just got the
+> same crash.  Curiously, the only VM that died this time was the one
+> running the realtime configuration, but it's still generic/068:
+> 
+> FSTYP         -- xfs (debug)
+> PLATFORM      -- Linux/x86_64 oci-mtr28 5.18.0-rc3-djwx #rc3 SMP PREEMPT_DYNAMIC Sun Apr 17 14:42:49 PDT 2022
+> MKFS_OPTIONS  -- -f -rrtdev=/dev/sdb4 -llogdev=/dev/sdb2 -m reflink=0,rmapbt=0, -d rtinherit=1, /dev/sda4
+> MOUNT_OPTIONS -- -ortdev=/dev/sdb4 -ologdev=/dev/sdb2 /dev/sda4 /opt
+> 
+> I don't know if it'll help, but here's the sequence of tests that we
+> were running just prior to crashing:
+> 
+> generic/445      3s
+> generic/225      76s
+> xfs/306  22s
+> xfs/290  3s
+> generic/155     [not run] Reflink not supported by test filesystem type: xfs
+> generic/525      6s
+> generic/269      89s
+> generic/1206    [not run] xfs_io swapext -v vfs -s 64k -l 64k ioctl support is missing
+> xfs/504  198s
+> xfs/192 [not run] Reflink not supported by scratch filesystem type: xfs
+> xfs/303  1s
+> generic/346      6s
+> generic/512      5s
+> xfs/227  308s
+> generic/147     [not run] Reflink not supported by test filesystem type: xfs
+> generic/230     [not run] Quotas not supported on realtime test device
+> generic/008      4s
+> generic/108      4s
+> xfs/264  12s
+> generic/200     [not run] Reflink not supported by scratch filesystem type: xfs
+> generic/493     [not run] Dedupe not supported by scratch filesystem type: xfs
+> xfs/021  5s
+> generic/672     [not run] Reflink not supported by scratch filesystem type: xfs
+> xfs/493  5s
+> xfs/146  13s
+> xfs/315 [not run] Reflink not supported by scratch filesystem type: xfs
+> generic/068     
+> 
+> And the dmesg output:
+> 
+> run fstests generic/068 at 2022-04-17 16:57:16
+> XFS (sda4): Mounting V5 Filesystem
+> XFS (sda4): Ending clean mount
+> page:ffffea0004a39c40 refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x128e71
+> flags: 0x17ff80000000000(node=0|zone=2|lastcpupid=0xfff)
+> raw: 017ff80000000000 0000000000000000 ffffffff00000203 0000000000000000
+> raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+> page dumped because: VM_BUG_ON_FOLIO(((unsigned int) folio_ref_count(folio) + 127u <= 127u))
+> ------------[ cut here ]------------
+> kernel BUG at include/linux/mm.h:1164!
+> invalid opcode: 0000 [#1] PREEMPT SMP
+> CPU: 3 PID: 1094085 Comm: 3:0 Tainted: G        W         5.18.0-rc3-djwx #rc3 0a707744ee7c555d54e50726c5b02515710a6aae
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20171121_152543-x86-ol7-builder-01.us.oracle.com-4.el7.1 04/01/2014
+> Workqueue: xfs-conv/sda4 xfs_end_io [xfs]
+> RIP: 0010:folio_end_writeback+0xd0/0x110
+> Code: 80 60 02 fb 48 89 ef e8 5e 6d 01 00 8b 45 34 83 c0 7f 83 f8 7f 0f 87 6a ff ff ff 48 c7 c6 40 c7 e2 81 48 89 ef e8 30 69 04 00 <0f> 0b 48 89 ee e8 b6 51 02 00 eb 9a 48 c7 c6 c0 ad e5 81 48 89 ef
+> RSP: 0018:ffffc900084f3d48 EFLAGS: 00010246
+> RAX: 000000000000005c RBX: 0000000000001000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff81e56da3 RDI: 00000000ffffffff
+> RBP: ffffea0004a39c40 R08: 0000000000000000 R09: ffffffff8205fe40
+> R10: 0000000000017578 R11: 00000000000175f0 R12: 0000000000004000
+> R13: ffff88814dc5cd40 R14: 000000000000002e R15: ffffea0004a39c40
+> FS:  0000000000000000(0000) GS:ffff88843fd80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f2b0ea47010 CR3: 000000043f00c000 CR4: 00000000001506a0
+> Call Trace:
+>  <TASK>
+>  iomap_finish_ioend+0x1ee/0x6a0
+>  iomap_finish_ioends+0x69/0x100
+>  xfs_end_ioend+0x5a/0x160 [xfs e8251de1111d7958449fd159d84af12a2afc12f2]
+>  xfs_end_io+0xb1/0xf0 [xfs e8251de1111d7958449fd159d84af12a2afc12f2]
+>  process_one_work+0x1df/0x3c0
+>  ? rescuer_thread+0x3b0/0x3b0
+>  worker_thread+0x53/0x3b0
+>  ? rescuer_thread+0x3b0/0x3b0
+>  kthread+0xea/0x110
+>  ? kthread_complete_and_exit+0x20/0x20
+>  ret_from_fork+0x1f/0x30
+>  </TASK>
+> Modules linked in: xfs dm_zero btrfs blake2b_generic xor lzo_compress lzo_decompress zlib_deflate raid6_pq zstd_compress dm_delay dm_snapshot dm_thin_pool dm_persistent_data dm_bio_prison dm_bufio dm_flakey libcrc32c xt_REDIRECT iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 auth_rpcgss oid_registry xt_tcpudp ip_set_hash_ip ip_set_hash_net xt_set ip_set_hash_mac ip_set nfnetlink ip6table_filter ip6_tables iptable_filter bfq sch_fq_codel ip_tables x_tables overlay nfsv4 af_packet [last unloaded: scsi_debug]
+> Dumping ftrace buffer:
+>    (ftrace buffer empty)
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:folio_end_writeback+0xd0/0x110
+> Code: 80 60 02 fb 48 89 ef e8 5e 6d 01 00 8b 45 34 83 c0 7f 83 f8 7f 0f 87 6a ff ff ff 48 c7 c6 40 c7 e2 81 48 89 ef e8 30 69 04 00 <0f> 0b 48 89 ee e8 b6 51 02 00 eb 9a 48 c7 c6 c0 ad e5 81 48 89 ef
+> RSP: 0018:ffffc900084f3d48 EFLAGS: 00010246
+> RAX: 000000000000005c RBX: 0000000000001000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff81e56da3 RDI: 00000000ffffffff
+> RBP: ffffea0004a39c40 R08: 0000000000000000 R09: ffffffff8205fe40
+> R10: 0000000000017578 R11: 00000000000175f0 R12: 0000000000004000
+> R13: ffff88814dc5cd40 R14: 000000000000002e R15: ffffea0004a39c40
+> FS:  0000000000000000(0000) GS:ffff88843fd80000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f2b0ea47010 CR3: 000000043f00c000 CR4: 00000000001506a0
 
-Nice cleanup.
+Hmm.  I think you might be on to something about this being some
+mis-interaction when multi-page folios get truncated or possibly just
+split?  The VM_BUG_ON points to pfn 0x206a79, which I /think/ is the
+second page of the four-page folio starting with pfn=0x206a78?
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+    <...>-5263      3..... 276242022us : page_ref_mod: pfn=0x206a70 flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1
+    <...>-5263      3..... 276242023us : page_ref_mod_and_test: pfn=0x206a70 flags=referenced|uptodate|lru|active|private|head count=5 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+    <...>-5263      3..... 276242023us : page_ref_mod: pfn=0x206a74 flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1
+    <...>-5263      3..... 276242024us : page_ref_mod_and_test: pfn=0x206a74 flags=referenced|uptodate|lru|active|private|head count=5 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+    <...>-5263      3..... 276242025us : page_ref_mod: pfn=0x206a78 flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1
+   fstest-12612     2..... 276242082us : page_ref_mod_unless: pfn=0x206a70 flags=referenced|uptodate|lru|active|private|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+   fstest-12612     2..... 276242083us : page_ref_mod_unless: pfn=0x206a74 flags=referenced|uptodate|lru|active|private|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+   fstest-12612     2..... 276242083us : page_ref_mod_unless: pfn=0x206a78 flags=referenced|uptodate|lru|active|private|head count=7 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+   fstest-12612     2..... 276242084us : page_ref_mod_unless: pfn=0x206a7c flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+   fstest-12612     2..... 276242084us : page_ref_mod_and_test: pfn=0x206a7c flags=referenced|uptodate|lru|active|private|writeback|head count=5 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242094us : page_ref_mod_and_test: pfn=0x206a70 flags=locked|referenced|uptodate|lru|active|head count=5 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242094us : page_ref_mod_and_test: pfn=0x206a74 flags=locked|referenced|uptodate|lru|active|head count=5 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242094us : page_ref_mod_and_test: pfn=0x206a78 flags=locked|referenced|uptodate|lru|active|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242102us : page_ref_mod_and_test: pfn=0x206a70 flags=locked|referenced|uptodate|lru|active|head count=1 mapcount=0 mapping=0000000000000000 mt=1 val=-4 ret=0
+   fstest-12612     2..... 276242102us : page_ref_mod_and_test: pfn=0x206a74 flags=locked|referenced|uptodate|lru|active|head count=1 mapcount=0 mapping=0000000000000000 mt=1 val=-4 ret=0
+   fstest-12612     2..... 276242102us : page_ref_mod_and_test: pfn=0x206a78 flags=locked|referenced|uptodate|lru|active|head count=2 mapcount=0 mapping=0000000000000000 mt=1 val=-4 ret=0
+   fstest-12612     2..... 276242110us : page_ref_mod_and_test: pfn=0x206a70 flags=referenced|uptodate|lru|active|head count=0 mapcount=0 mapping=0000000000000000 mt=1 val=-1 ret=1
+   fstest-12612     2..... 276242111us : page_ref_mod_and_test: pfn=0x206a74 flags=referenced|uptodate|lru|active|head count=0 mapcount=0 mapping=0000000000000000 mt=1 val=-1 ret=1
+   fstest-12612     2..... 276242112us : page_ref_mod_and_test: pfn=0x206a78 flags=referenced|uptodate|lru|active|head count=1 mapcount=0 mapping=0000000000000000 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242112us : page_ref_mod_unless: pfn=0x206a7c flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+   fstest-12612     2..... 276242112us : page_ref_mod_and_test: pfn=0x206a7c flags=referenced|uptodate|lru|active|private|writeback|head count=5 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242119us : page_ref_mod_unless: pfn=0x206a7c flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+    <...>-5263      3..... 276242194us : page_ref_mod_and_test: pfn=0x206a78 flags=referenced|uptodate|lru|active|head count=0 mapcount=0 mapping=0000000000000000 mt=1 val=-1 ret=1
+    <...>-5263      3d..1. 276242208us : console: [  309.491317] page:ffffea00081a9e40 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x206a79
 
--- 
-Dave Chinner
-david@fromorbit.com
+In which case, that output reduces to:
+
+    <...>-5263      3..... 276242025us : page_ref_mod: pfn=0x206a78 flags=referenced|uptodate|lru|active|private|writeback|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1
+   fstest-12612     2..... 276242083us : page_ref_mod_unless: pfn=0x206a78 flags=referenced|uptodate|lru|active|private|head count=7 mapcount=0 mapping=ffff888125e5d868 mt=1 val=1 ret=1
+   fstest-12612     2..... 276242094us : page_ref_mod_and_test: pfn=0x206a78 flags=locked|referenced|uptodate|lru|active|head count=6 mapcount=0 mapping=ffff888125e5d868 mt=1 val=-1 ret=0
+   fstest-12612     2..... 276242102us : page_ref_mod_and_test: pfn=0x206a78 flags=locked|referenced|uptodate|lru|active|head count=2 mapcount=0 mapping=0000000000000000 mt=1 val=-4 ret=0
+   fstest-12612     2..... 276242112us : page_ref_mod_and_test: pfn=0x206a78 flags=referenced|uptodate|lru|active|head count=1 mapcount=0 mapping=0000000000000000 mt=1 val=-1 ret=0
+    <...>-5263      3..... 276242194us : page_ref_mod_and_test: pfn=0x206a78 flags=referenced|uptodate|lru|active|head count=0 mapcount=0 mapping=0000000000000000 mt=1 val=-1 ret=1
+    <...>-5263      3d..1. 276242208us : console: [  309.491317] page:ffffea00081a9e40 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x206a79
+
+Clearly the mapping gets torn off of this folio before time index
+276242102us while it still has refcount==6.  It's curious that lost the
+writeback bit at the first line.
+
+Unfortunately, the VM_BUG_ON means that the kernel dumps the ftrace
+buffer and crashes, so I can't actually do anything with the incomplete
+trace-cmd files that were recorded earlier.
+
+--D
+
+> --D
+> 
+> > 
+> > > 
+> > > 
+> > > --D
+> > > 
+> > > run fstests generic/068 at 2022-04-12 17:57:11
+> > > XFS (sda3): Mounting V5 Filesystem
+> > > XFS (sda3): Ending clean mount
+> > > XFS (sda4): Mounting V5 Filesystem
+> > > XFS (sda4): Ending clean mount
+> > > ------------[ cut here ]------------
+> > > kernel BUG at mm/filemap.c:1653!
+> > > invalid opcode: 0000 [#1] PREEMPT SMP
+> > > CPU: 0 PID: 1349866 Comm: 0:116 Tainted: G        W         5.18.0-rc2-djwx #rc2 19cc48221d47ada6c8e5859639b6a0946c9a3777
+> > > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20171121_152543-x86-ol7-builder-01.us.oracle.com-4.el7.1 04/01/2014
+> > > Workqueue: xfs-conv/sda4 xfs_end_io [xfs]
+> > > RIP: 0010:folio_end_writeback+0x79/0x80
+> > > Code: d2 75 1d f0 ff 4d 34 74 0e 5d c3 f0 80 67 02 fb e8 ac 29 01 00 eb ad 48 89 ef 5d e9 a1 0f 01 00 48 89 ee e8 b9 e8 01 00 eb d9 <0f> 0b 0f 1f 44 00 00 0f 1f 44 00 00 53 48 89 fb e8 62 f7 ff ff 48
+> > > RSP: 0018:ffffc9000286fd50 EFLAGS: 00010246
+> > > RAX: 0000000000000000 RBX: ffffea0007376840 RCX: 000000000000000c
+> > > RDX: ffff88810d2de000 RSI: ffffffff81e55f0b RDI: ffff88810d2de000
+> > > RBP: ffffea0007376840 R08: ffffea000b82c308 R09: ffffea000b82c308
+> > > R10: 0000000000000001 R11: 000000000000000c R12: 0000000000000000
+> > > R13: 000000000000c000 R14: 0000000000000005 R15: 0000000000000001
+> > > FS:  0000000000000000(0000) GS:ffff88843fc00000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 00007f5b067d0000 CR3: 000000010d1bb000 CR4: 00000000001506b0
+> > > Call Trace:
+> > >  <TASK>
+> > >  iomap_finish_ioend+0x19e/0x560
+> > >  iomap_finish_ioends+0x69/0x100
+> > >  xfs_end_ioend+0x5a/0x160 [xfs 513857e2ae300a835ce1fbd8065a84dc5382e649]
+> > >  xfs_end_io+0xb1/0xf0 [xfs 513857e2ae300a835ce1fbd8065a84dc5382e649]
+> > >  process_one_work+0x1df/0x3c0
+> > >  ? rescuer_thread+0x3b0/0x3b0
+> > >  worker_thread+0x53/0x3b0
+> > >  ? rescuer_thread+0x3b0/0x3b0
+> > >  kthread+0xea/0x110
+> > >  ? kthread_complete_and_exit+0x20/0x20
+> > >  ret_from_fork+0x1f/0x30
+> > >  </TASK>
+> > > Modules linked in: dm_snapshot dm_bufio dm_zero dm_flakey xfs libcrc32c xt_REDIRECT iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 auth_rpcgss oid_registry xt_tcpudp ip_set_hash_ip ip_set_hash_net xt_set ip_set_hash_mac ip_set nfnetlink ip6table_filter ip6_tables iptable_filter bfq sch_fq_codel ip_tables x_tables overlay nfsv4 af_packet [last unloaded: scsi_debug]
+> > > Dumping ftrace buffer:
+> > >    (ftrace buffer empty)
+> > > ---[ end trace 0000000000000000 ]---
+> > > RIP: 0010:folio_end_writeback+0x79/0x80
+> > > Code: d2 75 1d f0 ff 4d 34 74 0e 5d c3 f0 80 67 02 fb e8 ac 29 01 00 eb ad 48 89 ef 5d e9 a1 0f 01 00 48 89 ee e8 b9 e8 01 00 eb d9 <0f> 0b 0f 1f 44 00 00 0f 1f 44 00 00 53 48 89 fb e8 62 f7 ff ff 48
+> > > RSP: 0018:ffffc9000286fd50 EFLAGS: 00010246
+> > > RAX: 0000000000000000 RBX: ffffea0007376840 RCX: 000000000000000c
+> > > RDX: ffff88810d2de000 RSI: ffffffff81e55f0b RDI: ffff88810d2de000
+> > > RBP: ffffea0007376840 R08: ffffea000b82c308 R09: ffffea000b82c308
+> > > R10: 0000000000000001 R11: 000000000000000c R12: 0000000000000000
+> > > R13: 000000000000c000 R14: 0000000000000005 R15: 0000000000000001
+> > > FS:  0000000000000000(0000) GS:ffff88843fc00000(0000) knlGS:0000000000000000
+> > > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > CR2: 00007f4b94008278 CR3: 0000000101ac9000 CR4: 00000000001506b0
+> > > 
