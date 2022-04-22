@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BE3550C45B
-	for <lists+linux-xfs@lfdr.de>; Sat, 23 Apr 2022 01:12:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2340D50C373
+	for <lists+linux-xfs@lfdr.de>; Sat, 23 Apr 2022 01:10:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233401AbiDVWoa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 22 Apr 2022 18:44:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49562 "EHLO
+        id S233575AbiDVWie (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 22 Apr 2022 18:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233646AbiDVWlp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Apr 2022 18:41:45 -0400
+        with ESMTP id S234397AbiDVWiQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 22 Apr 2022 18:38:16 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3D4B161E90
-        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 14:43:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 62D9818C45B
+        for <linux-xfs@vger.kernel.org>; Fri, 22 Apr 2022 14:46:46 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-115-138.pa.nsw.optusnet.com.au [49.181.115.138])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C5607534552;
-        Sat, 23 Apr 2022 07:43:37 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 492A6534468;
+        Sat, 23 Apr 2022 07:46:45 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1ni13w-003KPZ-9H; Sat, 23 Apr 2022 07:43:36 +1000
-Date:   Sat, 23 Apr 2022 07:43:36 +1000
+        id 1ni16y-003KRZ-Nz; Sat, 23 Apr 2022 07:46:44 +1000
+Date:   Sat, 23 Apr 2022 07:46:44 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 3/4] xfs: speed up rmap lookups by using non-overlapped
- lookups when possible
-Message-ID: <20220422214336.GW1544202@dread.disaster.area>
+Subject: Re: [PATCH 4/4] xfs: speed up write operations by using
+ non-overlapped lookups when possible
+Message-ID: <20220422214644.GX1544202@dread.disaster.area>
 References: <164997683918.383709.10179435130868945685.stgit@magnolia>
- <164997685638.383709.4789775648712621300.stgit@magnolia>
+ <164997686196.383709.14448633533668211390.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164997685638.383709.4789775648712621300.stgit@magnolia>
+In-Reply-To: <164997686196.383709.14448633533668211390.stgit@magnolia>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=6263218a
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=62632245
         a=/kVtbFzwtM2bJgxRVb+eeA==:117 a=/kVtbFzwtM2bJgxRVb+eeA==:17
         a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
         a=THs0KBySIzEuiYoJLZYA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
@@ -47,7 +47,7 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Apr 14, 2022 at 03:54:16PM -0700, Darrick J. Wong wrote:
+On Thu, Apr 14, 2022 at 03:54:22PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
 > Reverse mapping on a reflink-capable filesystem has some pretty high
@@ -60,32 +60,39 @@ On Thu, Apr 14, 2022 at 03:54:16PM -0700, Darrick J. Wong wrote:
 > However, profiling data shows that when the index contains a record that
 > is an exact match for a query key, the non-overlapped btree search
 > function can find the record much faster than the overlapped version.
-> Try the non-overlapped lookup first, which will make scrub run much
-> faster.
+> Try the non-overlapped lookup first when we're trying to find the left
+> neighbor rmap record for a given file mapping, which makes unwritten
+> extent conversion and remap operations run faster if data block sharing
+> is minimal in this part of the filesystem.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
->  fs/xfs/libxfs/xfs_rmap.c |   38 ++++++++++++++++++++++++++++++++------
->  1 file changed, 32 insertions(+), 6 deletions(-)
+>  fs/xfs/libxfs/xfs_rmap.c |   35 ++++++++++++++++++++++++++++++-----
+>  fs/xfs/libxfs/xfs_rmap.h |    3 ---
+>  2 files changed, 30 insertions(+), 8 deletions(-)
 > 
 > 
 > diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
-> index 3eea8056e7bc..5aa94deb3afd 100644
+> index 5aa94deb3afd..bd394138df9e 100644
 > --- a/fs/xfs/libxfs/xfs_rmap.c
 > +++ b/fs/xfs/libxfs/xfs_rmap.c
-> @@ -402,12 +402,38 @@ xfs_rmap_lookup_le_range(
->  	info.irec = irec;
->  	info.stat = stat;
+> @@ -299,7 +299,7 @@ xfs_rmap_find_left_neighbor_helper(
+>   * return a match with the same owner and adjacent physical and logical
+>   * block ranges.
+>   */
+> -int
+> +STATIC int
+>  xfs_rmap_find_left_neighbor(
+>  	struct xfs_btree_cur	*cur,
+>  	xfs_agblock_t		bno,
+> @@ -332,10 +332,35 @@ xfs_rmap_find_left_neighbor(
+>  	trace_xfs_rmap_find_left_neighbor_query(cur->bc_mp,
+>  			cur->bc_ag.pag->pag_agno, bno, 0, owner, offset, flags);
 >  
-> -	trace_xfs_rmap_lookup_le_range(cur->bc_mp,
-> -			cur->bc_ag.pag->pag_agno, bno, 0, owner, offset, flags);
 > -	error = xfs_rmap_query_range(cur, &info.high, &info.high,
-> -			xfs_rmap_lookup_le_range_helper, &info);
+> -			xfs_rmap_find_left_neighbor_helper, &info);
 > -	if (error == -ECANCELED)
 > -		error = 0;
-> +	trace_xfs_rmap_lookup_le_range(cur->bc_mp, cur->bc_ag.pag->pag_agno,
-> +			bno, 0, owner, offset, flags);
-> +
 > +	/*
 > +	 * Historically, we always used the range query to walk every reverse
 > +	 * mapping that could possibly overlap the key that the caller asked
@@ -98,8 +105,8 @@ On Thu, Apr 14, 2022 at 03:54:16PM -0700, Darrick J. Wong wrote:
 > +	 * between the record we want and the key we supplied.
 > +	 *
 > +	 * As an optimization, try a non-overlapped lookup first.  This makes
-> +	 * scrub run much faster on most filesystems because bmbt records are
-> +	 * usually an exact match for rmap records.  If we don't find what we
+> +	 * extent conversion and remap operations run a bit faster if the
+> +	 * physical extents aren't being shared.  If we don't find what we
 > +	 * want, we fall back to the overlapped query.
 > +	 */
 > +	error = xfs_rmap_lookup_le(cur, bno, owner, offset, flags, irec, stat);
@@ -107,51 +114,20 @@ On Thu, Apr 14, 2022 at 03:54:16PM -0700, Darrick J. Wong wrote:
 > +		return error;
 > +	if (*stat) {
 > +		*stat = 0;
-> +		xfs_rmap_lookup_le_range_helper(cur, irec, &info);
+> +		xfs_rmap_find_left_neighbor_helper(cur, irec, &info);
 > +	}
 > +	if (!(*stat)) {
 > +		error = xfs_rmap_query_range(cur, &info.high, &info.high,
-> +				xfs_rmap_lookup_le_range_helper, &info);
+> +				xfs_rmap_find_left_neighbor_helper, &info);
 > +		if (error == -ECANCELED)
 > +			error = 0;
 > +	}
 
-Ok, I can see what this is doing, but the code is nasty - zeroing
-info.stat via *stat = 0, then having
-xfs_rmap_lookup_le_range_helper() modify *stat via info.stat and
-then relying on that implicit update to skip the very next if
-(!(*stat)) clause is not very nice.
-
-xfs_rmap_lookup_le_range_helper() returns -ECANCELED when it's
-found a match, so we can use this rather than relying on *stat
-to determine what to do:
-
-	error = xfs_rmap_lookup_le(cur, bno, owner, offset, flags, irec, stat);
-	if (error)
-		return error;
-
-	info.irec = irec;
-	info.stat = 0;
-	if (*stat)
-		error = xfs_rmap_lookup_le_range_helper(cur, irec, &info);
-	if (!error)
-		error = xfs_rmap_query_range(cur, &info.high, &info.high,
-				xfs_rmap_lookup_le_range_helper, &info);
-	if (error == -ECANCELED)
-		error = 0;
-
-	*stat = info.stat;
-....
+Same comment as previous patch.
 
 Cheers,
 
 Dave.
-
->  	if (*stat)
->  		trace_xfs_rmap_lookup_le_range_result(cur->bc_mp,
->  				cur->bc_ag.pag->pag_agno, irec->rm_startblock,
-> 
-> 
 
 -- 
 Dave Chinner
