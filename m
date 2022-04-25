@@ -2,212 +2,108 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3774A50D9EB
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Apr 2022 09:10:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9739B50DA63
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Apr 2022 09:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231497AbiDYHNK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 25 Apr 2022 03:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59962 "EHLO
+        id S241392AbiDYHvg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 25 Apr 2022 03:51:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbiDYHNJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Apr 2022 03:13:09 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764331FA6B;
-        Mon, 25 Apr 2022 00:10:06 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id p12so2279772pfn.0;
-        Mon, 25 Apr 2022 00:10:06 -0700 (PDT)
+        with ESMTP id S241398AbiDYHvQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Apr 2022 03:51:16 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD03A113
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Apr 2022 00:47:42 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id a186so10180651qkc.10
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Apr 2022 00:47:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=hGufFMukOHc4blvUQh1docXjGP4MPH0H29ViDwO9XyE=;
-        b=jzSe1/BVWg3pAeI7xkDrl0dKY1OFPa+brmKBrMRIN3afhwUQSUE12HTPrqf/W6Xp7c
-         Y9JM6BYqiaUT3u+bS+Kmo7XGszDKtqnOEPSGnZjVOsRNktB1xo5QJhn57uNK4F2OPsEK
-         s9DDYVsbjP7s3+5Y2/X7JzF2U6/LeH8STFaiOHad1St4tgse7LCL4YWKIcUuGl7cWkqX
-         5m82LMBiJmdSttLJHjjkYqkID/KLxw/6d9RZI+ebMycUANTFVnB3IKJP1HmBOue5dXJA
-         0D/t8SFrhQUhfx80ftEZvUmkxAVGQ4DqSS4puOKjZCygQU+JCwTugH+/toMRGXkGQYDj
-         Dsrg==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
+        b=db1Gh+dbbOkrs3+CkezCcfSMDq6/zhG+HKIUQBCn3xYADIM41sZSQFz/URHmkIisCL
+         7pZqnx/TdzbQawzzOfVElh+os1jZ2B9DLHIcxPsugnMI2M60YoWhe6xuoTkc56KEVSLM
+         Pzsu1OHG9mQrp4lqlx/Fsm/MgAHKlkoWkHGXoHCcHeEBfO5/AaRI4BK2JRNgFn3H25Hf
+         7ohYxgBKcu12J83jIEDH6BxScVW1GelrhCkauZMny4G64qD/PKLpRMyIv57TGM7jCMZ/
+         F4xJI/A3kH4PlBjxvGzqvF0tIGbqAyfuz+YHLeXY+XH8CEpJJC1W4rRJCO+8CsZT+tKE
+         IcJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=hGufFMukOHc4blvUQh1docXjGP4MPH0H29ViDwO9XyE=;
-        b=gMjRXZTRG3qVaM4cpNwRGxMMor/MqIIt/WwhbhGpKPPvQan0A8AItowqDE2yCxkjVy
-         gfVCPwMqxGW9fjvDRPe9NUbDJQbUQlkP8JBgtZ76dthByNQAB/5KXnxPTwn39F64SJ50
-         Qz/d+wP3LkCF0ob4QZ6bJ0JGt5750ye7VJXdPodMpW2yqnwa4ZswblobXgZU81GJ52wy
-         T/c4a12WYwh7qvZdaPfObyztCp47+QIkJQ7J/5LPvSiAD5Qo/26Z4Kwj+lOIgDKVAuLl
-         VWyI1qh/M15I4fzIAH0qQwzrrppOH4TnzyN1DfouZ8yTQp96maWBXwk5kUICCP8X5TMb
-         CxNg==
-X-Gm-Message-State: AOAM533LTc7vWSEJsmRvoph+Tzi6+jhsnDCFcJ+IxOS1MPKVv/q8ja5D
-        za8b4sf6fO0XJOA5I3fUgpc=
-X-Google-Smtp-Source: ABdhPJyIg4YQ4yqEYP9G0fhC2PquvhaI1cK+Q9YFX0Yt+pASjEklJMVT5hkZZvyFx5HIutthLl9d1Q==
-X-Received: by 2002:a05:6a00:1f0b:b0:50a:8181:fecb with SMTP id be11-20020a056a001f0b00b0050a8181fecbmr17415762pfb.12.1650870605470;
-        Mon, 25 Apr 2022 00:10:05 -0700 (PDT)
-Received: from [172.20.119.1] ([61.16.102.71])
-        by smtp.gmail.com with ESMTPSA id u22-20020a17090ae01600b001d945337442sm5744618pjy.10.2022.04.25.00.10.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Apr 2022 00:10:05 -0700 (PDT)
-Message-ID: <d2ecf0b8-3bd9-e992-f723-178aae58a0a4@gmail.com>
-Date:   Mon, 25 Apr 2022 15:10:02 +0800
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
+        b=EeVm53qwUhXr6xqwnSCggIkS1dw77KjBeyeS+E8fo6dFsYijTK5y7wjVIijNCOxlud
+         rbjNWUW6YGcCOoAWfCZ2ObocqqeS9ilo3ImFhYxBbOa9mX8hYCPOrZipCMYCcxmo1bq8
+         ST7XhvjNhWl5pQoiXDOWUAgp1oT8Vvgyf7S16Bfrr41npPyAis8kVRHrOAwgeOfCCiDh
+         L3Yv5vk4U8nYVXfJgBs8ElobZa8YYQmPYEq9dMpN64jVUqe75VfQmEwOIVcxLXJma3IX
+         K2/OtvSLfsVRrSVvtUBEsG+nXwt3SV5PALHlUwJRRjTd9WuA5lqzxTjISUG31OrzyqpF
+         79Pw==
+X-Gm-Message-State: AOAM533hK4L73D6yauvvNrxjwAOPWBemaYn8kgw0Gdx7RdaGHXBBGCfd
+        a4RSWySkCN6GzqlrAZDmNVes/aiQbMn4X4aRb0Q=
+X-Google-Smtp-Source: ABdhPJwK2ygbdOaO2kPYyQtxAKKpUe9yIQ/KzfJixnpIpudQmiJIYiw+C7F9wb46BqVjsq0hsQNZFPuVjD2jZtPrySQ=
+X-Received: by 2002:a05:620a:178f:b0:69f:4d61:e1b1 with SMTP id
+ ay15-20020a05620a178f00b0069f4d61e1b1mr2520843qkb.523.1650872862066; Mon, 25
+ Apr 2022 00:47:42 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.6.1
-Subject: Re: [PATCH] xfs: fix the ABBA deadlock around agf and inode
-Content-Language: en-US
-From:   Wang Jianchao <jianchao.wan9@gmail.com>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220425070620.19986-1-jianchao.wan9@gmail.com>
-In-Reply-To: <20220425070620.19986-1-jianchao.wan9@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+Received: by 2002:ac8:7fcc:0:0:0:0:0 with HTTP; Mon, 25 Apr 2022 00:47:41
+ -0700 (PDT)
+Reply-To: mrsbillchantallawrence58@gmail.com
+From:   chantal <mrs.samira7@gmail.com>
+Date:   Mon, 25 Apr 2022 00:47:41 -0700
+Message-ID: <CANv7eTvCyLtFwvViHgNUoYSGG3RNObUt1Qv=6cJBHUsE9YqutQ@mail.gmail.com>
+Subject: dear frinds incase my connession is not good
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=7.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNDISC_FREEM,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:72d listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5055]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [mrs.samira7[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrsbillchantallawrence58[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [mrs.samira7[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  0.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+        *  2.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The deadlock context is as following,
-hold inode, try to require agf
+hello....
 
-inode buf xfs_buf.b_log_item ffff9ca7491eb2c0
+You have been compensated with the sum of 5.5 million dollars in this
+united nation the payment will be issue into atm visa card and send to
+you from the santander bank we need your address and your  Whatsapp
+this my email.ID (  mrsbillchantallawrence58@gmail.com)  contact  me
 
-PID: 82240  TASK: ffff9ca4cd633d80  CPU: 88  COMMAND: ""
- #0 [ffffb696ad7f7410] __schedule at ffffffffa0067073
- #1 [ffffb696ad7f74b0] schedule at ffffffffa0067678
- #2 [ffffb696ad7f74b8] schedule_timeout at ffffffffa006b88d
- #3 [ffffb696ad7f7558] __down at ffffffffa0069dcb
- #4 [ffffb696ad7f75b8] down at ffffffff9f90890b
- #5 [ffffb696ad7f75d0] xfs_buf_lock at ffffffffc6cb1133 [xfs]
- #6 [ffffb696ad7f75f0] xfs_buf_find at ffffffffc6cb15fa [xfs]
- #7 [ffffb696ad7f7688] xfs_buf_get_map at ffffffffc6cb18e0 [xfs]
- #8 [ffffb696ad7f76d0] xfs_buf_read_map at ffffffffc6cb20e8 [xfs]
- #9 [ffffb696ad7f7710] xfs_trans_read_buf_map at ffffffffc6ce6796 [xfs]
-#10 [ffffb696ad7f7750] xfs_read_agf at ffffffffc6c66fde [xfs]
-#11 [ffffb696ad7f77b8] xfs_alloc_read_agf at ffffffffc6c670ae [xfs]
-#12 [ffffb696ad7f77f0] xfs_alloc_fix_freelist at ffffffffc6c675dc [xfs]
-#13 [ffffb696ad7f7900] xfs_alloc_vextent at ffffffffc6c6796b [xfs]
-#14 [ffffb696ad7f7940] __xfs_inobt_alloc_block at ffffffffc6c972f0 [xfs]
-#15 [ffffb696ad7f79f8] __xfs_btree_split at ffffffffc6c7ee5d [xfs]
-#16 [ffffb696ad7f7ab8] xfs_btree_split at ffffffffc6c7f34b [xfs]
-#17 [ffffb696ad7f7b68] xfs_btree_make_block_unfull at ffffffffc6c80882 [xfs]
-#18 [ffffb696ad7f7bc8] xfs_btree_insrec at ffffffffc6c80ccd [xfs]
-#19 [ffffb696ad7f7ca0] xfs_btree_insert at ffffffffc6c80e3b [xfs]
-#20 [ffffb696ad7f7d60] xfs_difree_finobt at ffffffffc6c94859 [xfs]
-#21 [ffffb696ad7f7db8] xfs_difree at ffffffffc6c9634e [xfs]
-#22 [ffffb696ad7f7e08] xfs_ifree at ffffffffc6cc63d2 [xfs]
-#23 [ffffb696ad7f7e58] xfs_inactive_ifree at ffffffffc6cc6551 [xfs]
-#24 [ffffb696ad7f7e88] xfs_inactive at ffffffffc6cc66fe [xfs]
-#25 [ffffb696ad7f7ea0] xfs_fs_destroy_inode at ffffffffc6ccfdb8 [xfs]
-#26 [ffffb696ad7f7ec0] do_unlinkat at ffffffff9face066
-#27 [ffffb696ad7f7f38] do_syscall_64 at ffffffff9f8041cb
-#28 [ffffb696ad7f7f50] entry_SYSCALL_64_after_hwframe at ffffffffa02000ad
-    RIP: 00007f5e27b64e57  RSP: 00007f5e0d1f9a98  RFLAGS: 00000202
-    RAX: ffffffffffffffda  RBX: 00007f578b4011a0  RCX: 00007f5e27b64e57
-    RDX: 00007f5b1684e680  RSI: 0000000000000070  RDI: 00007f5b1684e680
-    RBP: 00007f578b4011c0   R8: 00000000000002e8   R9: 0000000000000007
-    R10: 00007f5e0d1fae20  R11: 0000000000000202  R12: 00007f5e0d1f9c00
-    R13: 00007f5d191e2118  R14: 00007f5d191e22d0  R15: 00007f5e0d1f9b50
-    ORIG_RAX: 0000000000000057  CS: 0033  SS: 002b
+Thanks my
 
-
-The task hold agf, try to require inode
-
-
-PID: 1653499  TASK: ffff9c9f5490bd80  CPU: 66  COMMAND: "kworker/u209:2"
- #0 [ffffb696ccdff270] __schedule at ffffffffa0067073
- #1 [ffffb696ccdff310] schedule at ffffffffa0067678
- #2 [ffffb696ccdff318] schedule_timeout at ffffffffa006b88d
- #3 [ffffb696ccdff3b8] __down at ffffffffa0069dcb
- #4 [ffffb696ccdff410] down at ffffffff9f90890b
- #5 [ffffb696ccdff428] xfs_buf_lock at ffffffffc6cb1133 [xfs]
- #6 [ffffb696ccdff448] xfs_buf_find at ffffffffc6cb15fa [xfs]
- #7 [ffffb696ccdff4e0] xfs_buf_get_map at ffffffffc6cb18e0 [xfs]
- #8 [ffffb696ccdff528] xfs_buf_read_map at ffffffffc6cb20e8 [xfs]
- #9 [ffffb696ccdff568] xfs_trans_read_buf_map at ffffffffc6ce6796 [xfs]
-#10 [ffffb696ccdff5a8] xfs_imap_to_bp at ffffffffc6c9a3e7 [xfs]
-#11 [ffffb696ccdff608] xfs_trans_log_inode at ffffffffc6ce757e [xfs]
-#12 [ffffb696ccdff658] xfs_bmap_btalloc at ffffffffc6c75ccc [xfs]
-#13 [ffffb696ccdff750] xfs_bmapi_write at ffffffffc6c77ca0 [xfs]
-#14 [ffffb696ccdff8a8] xfs_bmapi_convert_delalloc at ffffffffc6c782a4 [xfs]
-#15 [ffffb696ccdff8d0] xfs_iomap_write_allocate at ffffffffc6cc11a7 [xfs]
-#16 [ffffb696ccdff940] xfs_map_blocks at ffffffffc6ca9f97 [xfs]
-#17 [ffffb696ccdff9d0] xfs_do_writepage at ffffffffc6caa911 [xfs]
-#18 [ffffb696ccdffa48] write_cache_pages at ffffffff9fa20675
-#19 [ffffb696ccdffb40] xfs_vm_writepages at ffffffffc6caa3e4 [xfs]
-#20 [ffffb696ccdffba8] do_writepages at ffffffff9fa217c1
-#21 [ffffb696ccdffc10] __writeback_single_inode at ffffffff9faec1bd
-#22 [ffffb696ccdffc58] writeback_sb_inodes at ffffffff9faec953
-#23 [ffffb696ccdffd38] __writeback_inodes_wb at ffffffff9faecc1d
-#24 [ffffb696ccdffd78] wb_writeback at ffffffff9faecf9f
-#25 [ffffb696ccdffe08] wb_workfn at ffffffff9faed8a2
-#26 [ffffb696ccdffe98] process_one_work at ffffffff9f8cd9f7
-#27 [ffffb696ccdffed8] worker_thread at ffffffff9f8ce0fa
-#28 [ffffb696ccdfff10] kthread at ffffffff9f8d3802
-#29 [ffffb696ccdfff50] ret_from_fork at ffffffffa020023f
-
-
-Thanks
-Jianchao
-
-On 2022/4/25 3:06 下午, Wang Jianchao (Kuaishou) wrote:
-> Recently, we encounter a deadlock case where there are many tasks
-> hung on agi and agf xfs_buf. It end up with a deadlock between
-> agf and inode xfs_buf as following,
-> 
-> xfs_ifree()             xfs_bmap_btalloc()
-> xfs_iunlink_remove()    xfs_alloc_vextent()
->   hold inode bp           hold agf
-> xfs_difree()            xfs_trans_log_inode()
->   require agf             require inode bp
-> 
-> The task requires inode bp with agf held block other tasks which
-> want to require agf with agi held. Then the whole filesystem
-> looks like a agi/agf deadlock. To fix this issue, get agf in
-> xfs_iunlink_remove() after it get agi and before get indoe bp.
-> 
-> Signed-off-by: Wang Jianchao (Kuaishou) <jianchao.wan9@gmail.com>
-> ---
->  fs/xfs/xfs_inode.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 9de6205fe134..c0a29fd00b0e 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -36,6 +36,7 @@
->  #include "xfs_reflink.h"
->  #include "xfs_ag.h"
->  #include "xfs_log_priv.h"
-> +#include "xfs_alloc.h"
->  
->  struct kmem_cache *xfs_inode_cache;
->  
-> @@ -2337,6 +2338,7 @@ xfs_iunlink_remove(
->  {
->  	struct xfs_mount	*mp = tp->t_mountp;
->  	struct xfs_agi		*agi;
-> +	struct xfs_buf		*agfbp;
->  	struct xfs_buf		*agibp;
->  	struct xfs_buf		*last_ibp;
->  	struct xfs_dinode	*last_dip = NULL;
-> @@ -2352,6 +2354,14 @@ xfs_iunlink_remove(
->  	error = xfs_read_agi(mp, tp, pag->pag_agno, &agibp);
->  	if (error)
->  		return error;
-> +
-> +	/*
-> +	 * Get the agf buffer first to ensure the lock ordering against inode bp
-> +	 */
-> +	error = xfs_read_agf(mp, tp, pag->pag_agno, 0, &agfbp);
-> +	if (error)
-> +		return error;
-> +
->  	agi = agibp->b_addr;
->  
->  	/*
+mrs chantal
