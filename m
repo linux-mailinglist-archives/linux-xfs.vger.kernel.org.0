@@ -2,108 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9739B50DA63
-	for <lists+linux-xfs@lfdr.de>; Mon, 25 Apr 2022 09:48:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6CC650DD23
+	for <lists+linux-xfs@lfdr.de>; Mon, 25 Apr 2022 11:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241392AbiDYHvg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 25 Apr 2022 03:51:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41292 "EHLO
+        id S240394AbiDYJw1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 25 Apr 2022 05:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241398AbiDYHvQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Apr 2022 03:51:16 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD03A113
-        for <linux-xfs@vger.kernel.org>; Mon, 25 Apr 2022 00:47:42 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id a186so10180651qkc.10
-        for <linux-xfs@vger.kernel.org>; Mon, 25 Apr 2022 00:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
-        b=db1Gh+dbbOkrs3+CkezCcfSMDq6/zhG+HKIUQBCn3xYADIM41sZSQFz/URHmkIisCL
-         7pZqnx/TdzbQawzzOfVElh+os1jZ2B9DLHIcxPsugnMI2M60YoWhe6xuoTkc56KEVSLM
-         Pzsu1OHG9mQrp4lqlx/Fsm/MgAHKlkoWkHGXoHCcHeEBfO5/AaRI4BK2JRNgFn3H25Hf
-         7ohYxgBKcu12J83jIEDH6BxScVW1GelrhCkauZMny4G64qD/PKLpRMyIv57TGM7jCMZ/
-         F4xJI/A3kH4PlBjxvGzqvF0tIGbqAyfuz+YHLeXY+XH8CEpJJC1W4rRJCO+8CsZT+tKE
-         IcJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=1Br/N6WhyVMlujnGsxiPG2oa5QW+rtf7KlXAbdHBbwA=;
-        b=EeVm53qwUhXr6xqwnSCggIkS1dw77KjBeyeS+E8fo6dFsYijTK5y7wjVIijNCOxlud
-         rbjNWUW6YGcCOoAWfCZ2ObocqqeS9ilo3ImFhYxBbOa9mX8hYCPOrZipCMYCcxmo1bq8
-         ST7XhvjNhWl5pQoiXDOWUAgp1oT8Vvgyf7S16Bfrr41npPyAis8kVRHrOAwgeOfCCiDh
-         L3Yv5vk4U8nYVXfJgBs8ElobZa8YYQmPYEq9dMpN64jVUqe75VfQmEwOIVcxLXJma3IX
-         K2/OtvSLfsVRrSVvtUBEsG+nXwt3SV5PALHlUwJRRjTd9WuA5lqzxTjISUG31OrzyqpF
-         79Pw==
-X-Gm-Message-State: AOAM533hK4L73D6yauvvNrxjwAOPWBemaYn8kgw0Gdx7RdaGHXBBGCfd
-        a4RSWySkCN6GzqlrAZDmNVes/aiQbMn4X4aRb0Q=
-X-Google-Smtp-Source: ABdhPJwK2ygbdOaO2kPYyQtxAKKpUe9yIQ/KzfJixnpIpudQmiJIYiw+C7F9wb46BqVjsq0hsQNZFPuVjD2jZtPrySQ=
-X-Received: by 2002:a05:620a:178f:b0:69f:4d61:e1b1 with SMTP id
- ay15-20020a05620a178f00b0069f4d61e1b1mr2520843qkb.523.1650872862066; Mon, 25
- Apr 2022 00:47:42 -0700 (PDT)
+        with ESMTP id S230012AbiDYJwH (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 25 Apr 2022 05:52:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC763ED2C
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Apr 2022 02:49:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CE74260018
+        for <linux-xfs@vger.kernel.org>; Mon, 25 Apr 2022 09:49:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276EFC385A7;
+        Mon, 25 Apr 2022 09:49:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1650880142;
+        bh=1v4CWvOwE+xauipiKRG6or1/wkq6IhbkbSCG4TSRREU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SC4yUNwNep4HKOvf9k395X+xfVvf5daqXMBC2J3D/jzFF0Eaeun4QTYP3lppkZzHK
+         AMrr1KT4LrgWbwCw0Aamos9BX8T4m/FlBPH8Rxd5EdB20CWavbfnaXtIt6Pws1c16X
+         RfgmmTRiQTuOB2oPeoeMR5J2MeYqCtZ3+8YHoAFRni/ir9EKWa5kLQa9/VystJ2XHm
+         kh9rZttmThQcBLBq+mKdlu513awWcG4SrVQU+bBObtemcSlMf5s38ODzWEH3WtTDof
+         iRXzCyyPBN0uGKQO6W8IxeSRcKwNxTlCgeyo5t8ThrWlx+4ZYPnxL0CUPTzExu0wk5
+         2sNQb51qyv+cg==
+Date:   Mon, 25 Apr 2022 11:48:57 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Yang Xu <xuyang2018.jy@fujitsu.com>
+Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org
+Subject: Re: [PATCH] xfs: improve __xfs_set_acl
+Message-ID: <20220425094857.xgks2ugyxswunkuz@wittgenstein>
+References: <1650531290-3262-1-git-send-email-xuyang2018.jy@fujitsu.com>
 MIME-Version: 1.0
-Received: by 2002:ac8:7fcc:0:0:0:0:0 with HTTP; Mon, 25 Apr 2022 00:47:41
- -0700 (PDT)
-Reply-To: mrsbillchantallawrence58@gmail.com
-From:   chantal <mrs.samira7@gmail.com>
-Date:   Mon, 25 Apr 2022 00:47:41 -0700
-Message-ID: <CANv7eTvCyLtFwvViHgNUoYSGG3RNObUt1Qv=6cJBHUsE9YqutQ@mail.gmail.com>
-Subject: dear frinds incase my connession is not good
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNDISC_FREEM,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:72d listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5055]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [mrs.samira7[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mrsbillchantallawrence58[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [mrs.samira7[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  0.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.2 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1650531290-3262-1-git-send-email-xuyang2018.jy@fujitsu.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-hello....
+On Thu, Apr 21, 2022 at 04:54:50PM +0800, Yang Xu wrote:
+> Provide a proper stub for the !CONFIG_XFS_POSIX_ACL case.
+> 
+> Also use a easy way for xfs_get_acl stub.
+> 
+> Suggested-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+> Signed-off-by: Yang Xu <xuyang2018.jy@fujitsu.com>
+> ---
 
-You have been compensated with the sum of 5.5 million dollars in this
-united nation the payment will be issue into atm visa card and send to
-you from the santander bank we need your address and your  Whatsapp
-this my email.ID (  mrsbillchantallawrence58@gmail.com)  contact  me
-
-Thanks my
-
-mrs chantal
+Fwiw,
+Acked-by: Christian Brauner (Microsoft) <brauner@kernel.org>
