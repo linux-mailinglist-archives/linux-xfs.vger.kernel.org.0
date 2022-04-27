@@ -2,45 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28844510EC8
-	for <lists+linux-xfs@lfdr.de>; Wed, 27 Apr 2022 04:29:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7208E510EC5
+	for <lists+linux-xfs@lfdr.de>; Wed, 27 Apr 2022 04:29:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357161AbiD0C0Q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 26 Apr 2022 22:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
+        id S1357159AbiD0C0M (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 26 Apr 2022 22:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357158AbiD0C0O (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Apr 2022 22:26:14 -0400
+        with ESMTP id S233257AbiD0C0M (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 26 Apr 2022 22:26:12 -0400
 Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 781BB14B671
-        for <linux-xfs@vger.kernel.org>; Tue, 26 Apr 2022 19:23:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B65BF14B65D
+        for <linux-xfs@vger.kernel.org>; Tue, 26 Apr 2022 19:23:02 -0700 (PDT)
 Received: from dread.disaster.area (pa49-195-62-197.pa.nsw.optusnet.com.au [49.195.62.197])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0B5F210E5EFE
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 061E410E5EFB
         for <linux-xfs@vger.kernel.org>; Wed, 27 Apr 2022 12:23:01 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1njXKW-004yyG-TU
+        id 1njXKW-004yyH-Ue
         for linux-xfs@vger.kernel.org; Wed, 27 Apr 2022 12:23:00 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1njXKW-002uv7-S8
+        id 1njXKW-002uvD-Th
         for linux-xfs@vger.kernel.org;
         Wed, 27 Apr 2022 12:23:00 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 5/8] xfs: factor and move some code in xfs_log_cil.c
-Date:   Wed, 27 Apr 2022 12:22:56 +1000
-Message-Id: <20220427022259.695399-6-david@fromorbit.com>
+Subject: [PATCH 6/8] xfs: add log item method to return related intents
+Date:   Wed, 27 Apr 2022 12:22:57 +1000
+Message-Id: <20220427022259.695399-7-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220427022259.695399-1-david@fromorbit.com>
 References: <20220427022259.695399-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6268a906
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6268a906
         a=KhGSFSjofVlN3/cgq4AT7A==:117 a=KhGSFSjofVlN3/cgq4AT7A==:17
-        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=bNR77jJvHOTF9d2als0A:9
+        a=z0gMJWrwH1QA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8
+        a=S1N-PUcTW3_U964qLncA:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -51,171 +52,133 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-In preparation for adding support for intent item whiteouts.
+To apply a whiteout to an intent item when an intent done item is
+committed, we need to be able to retrieve the intent item from the
+the intent done item. Add a log item op method for doing this, and
+wire all the intent done items up to it.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 ---
- fs/xfs/xfs_log_cil.c | 119 ++++++++++++++++++++++++-------------------
- 1 file changed, 67 insertions(+), 52 deletions(-)
+ fs/xfs/xfs_bmap_item.c     | 8 ++++++++
+ fs/xfs/xfs_extfree_item.c  | 8 ++++++++
+ fs/xfs/xfs_refcount_item.c | 8 ++++++++
+ fs/xfs/xfs_rmap_item.c     | 8 ++++++++
+ fs/xfs/xfs_trans.h         | 1 +
+ 5 files changed, 33 insertions(+)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index e5ab62f08c19..0d8d092447ad 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -47,6 +47,38 @@ xlog_cil_ticket_alloc(
- 	return tic;
+diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+index 3b968b31911b..e1b0e321d604 100644
+--- a/fs/xfs/xfs_bmap_item.c
++++ b/fs/xfs/xfs_bmap_item.c
+@@ -201,12 +201,20 @@ xfs_bud_item_release(
+ 	kmem_cache_free(xfs_bud_cache, budp);
  }
  
-+/*
-+ * Check if the current log item was first committed in this sequence.
-+ * We can't rely on just the log item being in the CIL, we have to check
-+ * the recorded commit sequence number.
-+ *
-+ * Note: for this to be used in a non-racy manner, it has to be called with
-+ * CIL flushing locked out. As a result, it should only be used during the
-+ * transaction commit process when deciding what to format into the item.
-+ */
-+static bool
-+xlog_item_in_current_chkpt(
-+	struct xfs_cil		*cil,
++static struct xfs_log_item *
++xfs_bud_item_intent(
 +	struct xfs_log_item	*lip)
 +{
-+	if (list_empty(&lip->li_cil))
-+		return false;
-+
-+	/*
-+	 * li_seq is written on the first commit of a log item to record the
-+	 * first checkpoint it is written to. Hence if it is different to the
-+	 * current sequence, we're in a new checkpoint.
-+	 */
-+	return lip->li_seq == READ_ONCE(cil->xc_current_sequence);
++	return &BUD_ITEM(lip)->bud_buip->bui_item;
 +}
 +
-+bool
-+xfs_log_item_in_current_chkpt(
-+	struct xfs_log_item *lip)
-+{
-+	return xlog_item_in_current_chkpt(lip->li_log->l_cilp, lip);
-+}
-+
- /*
-  * Unavoidable forward declaration - xlog_cil_push_work() calls
-  * xlog_cil_ctx_alloc() itself.
-@@ -934,6 +966,40 @@ xlog_cil_build_trans_hdr(
- 	tic->t_curr_res -= lvhdr->lv_bytes;
+ static const struct xfs_item_ops xfs_bud_item_ops = {
+ 	.flags		= XFS_ITEM_RELEASE_WHEN_COMMITTED |
+ 			  XFS_ITEM_INTENT_DONE,
+ 	.iop_size	= xfs_bud_item_size,
+ 	.iop_format	= xfs_bud_item_format,
+ 	.iop_release	= xfs_bud_item_release,
++	.iop_intent	= xfs_bud_item_intent,
+ };
+ 
+ static struct xfs_bud_log_item *
+diff --git a/fs/xfs/xfs_extfree_item.c b/fs/xfs/xfs_extfree_item.c
+index 96735f23d12d..032db5269e97 100644
+--- a/fs/xfs/xfs_extfree_item.c
++++ b/fs/xfs/xfs_extfree_item.c
+@@ -306,12 +306,20 @@ xfs_efd_item_release(
+ 	xfs_efd_item_free(efdp);
  }
  
-+/*
-+ * Pull all the log vectors off the items in the CIL, and remove the items from
-+ * the CIL. We don't need the CIL lock here because it's only needed on the
-+ * transaction commit side which is currently locked out by the flush lock.
-+ */
-+static void
-+xlog_cil_build_lv_chain(
-+	struct xfs_cil		*cil,
-+	struct xfs_cil_ctx	*ctx,
-+	uint32_t		*num_iovecs,
-+	uint32_t		*num_bytes)
++static struct xfs_log_item *
++xfs_efd_item_intent(
++	struct xfs_log_item	*lip)
 +{
-+	struct xfs_log_vec	*lv = NULL;
-+
-+	while (!list_empty(&cil->xc_cil)) {
-+		struct xfs_log_item	*item;
-+
-+		item = list_first_entry(&cil->xc_cil,
-+					struct xfs_log_item, li_cil);
-+		list_del_init(&item->li_cil);
-+		if (!ctx->lv_chain)
-+			ctx->lv_chain = item->li_lv;
-+		else
-+			lv->lv_next = item->li_lv;
-+		lv = item->li_lv;
-+		item->li_lv = NULL;
-+		*num_iovecs += lv->lv_niovecs;
-+
-+		/* we don't write ordered log vectors */
-+		if (lv->lv_buf_len != XFS_LOG_VEC_ORDERED)
-+			*num_bytes += lv->lv_bytes;
-+	}
++	return &EFD_ITEM(lip)->efd_efip->efi_item;
 +}
 +
+ static const struct xfs_item_ops xfs_efd_item_ops = {
+ 	.flags		= XFS_ITEM_RELEASE_WHEN_COMMITTED |
+ 			  XFS_ITEM_INTENT_DONE,
+ 	.iop_size	= xfs_efd_item_size,
+ 	.iop_format	= xfs_efd_item_format,
+ 	.iop_release	= xfs_efd_item_release,
++	.iop_intent	= xfs_efd_item_intent,
+ };
+ 
  /*
-  * Push the Committed Item List to the log.
-  *
-@@ -956,7 +1022,6 @@ xlog_cil_push_work(
- 		container_of(work, struct xfs_cil_ctx, push_work);
- 	struct xfs_cil		*cil = ctx->cil;
- 	struct xlog		*log = cil->xc_log;
--	struct xfs_log_vec	*lv;
- 	struct xfs_cil_ctx	*new_ctx;
- 	int			num_iovecs = 0;
- 	int			num_bytes = 0;
-@@ -1033,31 +1098,7 @@ xlog_cil_push_work(
- 	list_add(&ctx->committing, &cil->xc_committing);
- 	spin_unlock(&cil->xc_push_lock);
- 
--	/*
--	 * Pull all the log vectors off the items in the CIL, and remove the
--	 * items from the CIL. We don't need the CIL lock here because it's only
--	 * needed on the transaction commit side which is currently locked out
--	 * by the flush lock.
--	 */
--	lv = NULL;
--	while (!list_empty(&cil->xc_cil)) {
--		struct xfs_log_item	*item;
--
--		item = list_first_entry(&cil->xc_cil,
--					struct xfs_log_item, li_cil);
--		list_del_init(&item->li_cil);
--		if (!ctx->lv_chain)
--			ctx->lv_chain = item->li_lv;
--		else
--			lv->lv_next = item->li_lv;
--		lv = item->li_lv;
--		item->li_lv = NULL;
--		num_iovecs += lv->lv_niovecs;
--
--		/* we don't write ordered log vectors */
--		if (lv->lv_buf_len != XFS_LOG_VEC_ORDERED)
--			num_bytes += lv->lv_bytes;
--	}
-+	xlog_cil_build_lv_chain(cil, ctx, &num_iovecs, &num_bytes);
- 
- 	/*
- 	 * Switch the contexts so we can drop the context lock and move out
-@@ -1508,32 +1549,6 @@ xlog_cil_force_seq(
- 	return 0;
+diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
+index b523ce2c775b..a2213b5ee344 100644
+--- a/fs/xfs/xfs_refcount_item.c
++++ b/fs/xfs/xfs_refcount_item.c
+@@ -207,12 +207,20 @@ xfs_cud_item_release(
+ 	kmem_cache_free(xfs_cud_cache, cudp);
  }
  
--/*
-- * Check if the current log item was first committed in this sequence.
-- * We can't rely on just the log item being in the CIL, we have to check
-- * the recorded commit sequence number.
-- *
-- * Note: for this to be used in a non-racy manner, it has to be called with
-- * CIL flushing locked out. As a result, it should only be used during the
-- * transaction commit process when deciding what to format into the item.
-- */
--bool
--xfs_log_item_in_current_chkpt(
--	struct xfs_log_item	*lip)
--{
--	struct xfs_cil		*cil = lip->li_log->l_cilp;
--
--	if (list_empty(&lip->li_cil))
--		return false;
--
--	/*
--	 * li_seq is written on the first commit of a log item to record the
--	 * first checkpoint it is written to. Hence if it is different to the
--	 * current sequence, we're in a new checkpoint.
--	 */
--	return lip->li_seq == READ_ONCE(cil->xc_current_sequence);
--}
--
++static struct xfs_log_item *
++xfs_cud_item_intent(
++	struct xfs_log_item	*lip)
++{
++	return &CUD_ITEM(lip)->cud_cuip->cui_item;
++}
++
+ static const struct xfs_item_ops xfs_cud_item_ops = {
+ 	.flags		= XFS_ITEM_RELEASE_WHEN_COMMITTED |
+ 			  XFS_ITEM_INTENT_DONE,
+ 	.iop_size	= xfs_cud_item_size,
+ 	.iop_format	= xfs_cud_item_format,
+ 	.iop_release	= xfs_cud_item_release,
++	.iop_intent	= xfs_cud_item_intent,
+ };
+ 
+ static struct xfs_cud_log_item *
+diff --git a/fs/xfs/xfs_rmap_item.c b/fs/xfs/xfs_rmap_item.c
+index b269e68407b9..053eb135380c 100644
+--- a/fs/xfs/xfs_rmap_item.c
++++ b/fs/xfs/xfs_rmap_item.c
+@@ -230,12 +230,20 @@ xfs_rud_item_release(
+ 	kmem_cache_free(xfs_rud_cache, rudp);
+ }
+ 
++static struct xfs_log_item *
++xfs_rud_item_intent(
++	struct xfs_log_item	*lip)
++{
++	return &RUD_ITEM(lip)->rud_ruip->rui_item;
++}
++
+ static const struct xfs_item_ops xfs_rud_item_ops = {
+ 	.flags		= XFS_ITEM_RELEASE_WHEN_COMMITTED |
+ 			  XFS_ITEM_INTENT_DONE,
+ 	.iop_size	= xfs_rud_item_size,
+ 	.iop_format	= xfs_rud_item_format,
+ 	.iop_release	= xfs_rud_item_release,
++	.iop_intent	= xfs_rud_item_intent,
+ };
+ 
+ static struct xfs_rud_log_item *
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index f68e74e46026..d72a5995d33e 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -78,6 +78,7 @@ struct xfs_item_ops {
+ 	bool (*iop_match)(struct xfs_log_item *item, uint64_t id);
+ 	struct xfs_log_item *(*iop_relog)(struct xfs_log_item *intent,
+ 			struct xfs_trans *tp);
++	struct xfs_log_item *(*iop_intent)(struct xfs_log_item *intent_done);
+ };
+ 
  /*
-  * Perform initial CIL structure initialisation.
-  */
 -- 
 2.35.1
 
