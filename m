@@ -2,47 +2,59 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1581516BF5
-	for <lists+linux-xfs@lfdr.de>; Mon,  2 May 2022 10:20:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48DD5516DA4
+	for <lists+linux-xfs@lfdr.de>; Mon,  2 May 2022 11:44:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344335AbiEBIYM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 2 May 2022 04:24:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34044 "EHLO
+        id S1353113AbiEBJsB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 2 May 2022 05:48:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383745AbiEBIXy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 2 May 2022 04:23:54 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 925B86317
-        for <linux-xfs@vger.kernel.org>; Mon,  2 May 2022 01:20:23 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4A44610E666F
-        for <linux-xfs@vger.kernel.org>; Mon,  2 May 2022 18:20:22 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nlRI4-0073Tn-PV
-        for linux-xfs@vger.kernel.org; Mon, 02 May 2022 18:20:20 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1nlRI4-004WML-O7
-        for linux-xfs@vger.kernel.org;
-        Mon, 02 May 2022 18:20:20 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 4/4] xfs: validate v5 feature fields
-Date:   Mon,  2 May 2022 18:20:18 +1000
-Message-Id: <20220502082018.1076561-5-david@fromorbit.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220502082018.1076561-1-david@fromorbit.com>
-References: <20220502082018.1076561-1-david@fromorbit.com>
+        with ESMTP id S1351744AbiEBJsB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 2 May 2022 05:48:01 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50161CF
+        for <linux-xfs@vger.kernel.org>; Mon,  2 May 2022 02:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1651484672; x=1683020672;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bqxSOvToufb2ubldzolaelfvFGZZokbcWKbp4ey/gbE=;
+  b=Ps5UAoTmw0XfeSy5Uau0P8zuCj0WfYtAll6fxQuTU8uak8oRSOYJL+u/
+   YYccLlS0hBNzDn2+VFUuHA0Oe4m6MHuvd1vCjIP+KVciym0qi31C6WEnk
+   vV7oqWtSt+IDZho82Q9ciPsMZ1ybKvHhG+GVsFGaWBmZLvXWS/NcBEwca
+   Ie+r37EiS4AVkpPbLby0FwkYBpXe3Wd49RZ8vvcMwj+377Vl/5pus7O6n
+   DqL9ZYRyUdm0E+BuigY+U31IwjtJoFAHAUWt1qfjO1VJvJnXS91QVRLz9
+   hFBtlvG3U7B8bp7G7GTrnJGoOxe7ggEQKiKikJt5xS+V88vpZcBhDwmIb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10334"; a="264759235"
+X-IronPort-AV: E=Sophos;i="5.91,190,1647327600"; 
+   d="scan'208";a="264759235"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2022 02:44:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,190,1647327600"; 
+   d="scan'208";a="516003394"
+Received: from lkp-server01.sh.intel.com (HELO 5056e131ad90) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 02 May 2022 02:44:30 -0700
+Received: from kbuild by 5056e131ad90 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nlSbW-0009Sf-52;
+        Mon, 02 May 2022 09:44:30 +0000
+Date:   Mon, 2 May 2022 17:44:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Cc:     kbuild-all@lists.01.org
+Subject: Re: [PATCH 4/4] xfs: validate v5 feature fields
+Message-ID: <202205021726.Rr1K0yfS-lkp@intel.com>
+References: <20220502082018.1076561-5-david@fromorbit.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=626f9446
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=oZkIemNP1mAA:10 a=20KFwNOVAAAA:8 a=YMDFXDUo5hmWN72gFVsA:9
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220502082018.1076561-5-david@fromorbit.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,119 +62,71 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi Dave,
 
-Because stupid dumb fuzzers.
+Thank you for the patch! Perhaps something to improve:
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_sb.c | 67 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 57 insertions(+), 10 deletions(-)
+[auto build test WARNING on xfs-linux/for-next]
+[also build test WARNING on next-20220429]
+[cannot apply to v5.18-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index ec6eec5c0e02..d1afe0d43d7f 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -30,6 +30,46 @@
-  * Physical superblock buffer manipulations. Shared with libxfs in userspace.
-  */
- 
-+/*
-+ * Validate all the compulsory V4 feature bits are set on a V5 filesystem.
-+ */
-+bool
-+xfs_sb_validate_v5_features(
-+	struct xfs_sb	*sbp)
-+{
-+	/* We must not have any unknown V4 feature bits set */
-+	if (sbp->sb_versionnum & ~XFS_SB_VERSION_OKBITS)
-+		return false;
-+
-+	/*
-+	 * The CRC bit is considered an invalid V4 flag, so we have to add it
-+	 * manually to the OKBITS mask.
-+	 */
-+	if (sbp->sb_features2 & ~(XFS_SB_VERSION2_OKBITS |
-+				  XFS_SB_VERSION2_CRCBIT))
-+		return false;
-+
-+	/* Now check all the required V4 feature flags are set. */
-+
-+#define V5_VERS_FLAGS	(XFS_SB_VERSION_NLINKBIT	| \
-+			XFS_SB_VERSION_ALIGNBIT		| \
-+			XFS_SB_VERSION_LOGV2BIT		| \
-+			XFS_SB_VERSION_EXTFLGBIT	| \
-+			XFS_SB_VERSION_DIRV2BIT		| \
-+			XFS_SB_VERSION_MOREBITSBIT)
-+
-+#define V5_FEAT_FLAGS	(XFS_SB_VERSION2_LAZYSBCOUNTBIT	| \
-+			XFS_SB_VERSION2_ATTR2BIT	| \
-+			XFS_SB_VERSION2_PROJID32BIT	| \
-+			XFS_SB_VERSION2_CRCBIT)
-+
-+	if ((sbp->sb_versionnum & V5_VERS_FLAGS) != V5_VERS_FLAGS)
-+		return false;
-+	if ((sbp->sb_features2 & V5_FEAT_FLAGS) != V5_FEAT_FLAGS)
-+		return false;
-+	return true;
-+}
-+
- /*
-  * We support all XFS versions newer than a v4 superblock with V2 directories.
-  */
-@@ -37,9 +77,19 @@ bool
- xfs_sb_good_version(
- 	struct xfs_sb	*sbp)
- {
--	/* all v5 filesystems are supported */
-+	/*
-+	 * All v5 filesystems are supported, but we must check that all the
-+	 * required v4 feature flags are enabled correctly as the code checks
-+	 * those flags and not for v5 support.
-+	 */
- 	if (xfs_sb_is_v5(sbp))
--		return true;
-+		return xfs_sb_validate_v5_features(sbp);
-+
-+	/* We must not have any unknown v4 feature bits set */
-+	if ((sbp->sb_versionnum & ~XFS_SB_VERSION_OKBITS) ||
-+	    ((sbp->sb_versionnum & XFS_SB_VERSION_MOREBITSBIT) &&
-+	     (sbp->sb_features2 & ~XFS_SB_VERSION2_OKBITS)))
-+		return false;
- 
- 	/* versions prior to v4 are not supported */
- 	if (XFS_SB_VERSION_NUM(sbp) < XFS_SB_VERSION_4)
-@@ -51,12 +101,6 @@ xfs_sb_good_version(
- 	if (!(sbp->sb_versionnum & XFS_SB_VERSION_EXTFLGBIT))
- 		return false;
- 
--	/* And must not have any unknown v4 feature bits set */
--	if ((sbp->sb_versionnum & ~XFS_SB_VERSION_OKBITS) ||
--	    ((sbp->sb_versionnum & XFS_SB_VERSION_MOREBITSBIT) &&
--	     (sbp->sb_features2 & ~XFS_SB_VERSION2_OKBITS)))
--		return false;
--
- 	/* It's a supported v4 filesystem */
- 	return true;
- }
-@@ -267,12 +311,15 @@ xfs_validate_sb_common(
- 	bool			has_dalign;
- 
- 	if (!xfs_verify_magic(bp, dsb->sb_magicnum)) {
--		xfs_warn(mp, "bad magic number");
-+		xfs_warn(mp,
-+"Superblock has bad magic number 0x%x. Not an XFS filesystem?",
-+			be32_to_cpu(dsb->sb_magicnum));
- 		return -EWRONGFS;
- 	}
- 
- 	if (!xfs_sb_good_version(sbp)) {
--		xfs_warn(mp, "bad version");
-+		xfs_warn(mp,
-+"Superblock has unknown features enabled or corrupted feature masks.");
- 		return -EWRONGFS;
- 	}
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Dave-Chinner/xfs-fix-random-format-verification-issues/20220502-162206
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20220502/202205021726.Rr1K0yfS-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/701c0cd0bdea877a997898941f62df6c05045f40
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Dave-Chinner/xfs-fix-random-format-verification-issues/20220502-162206
+        git checkout 701c0cd0bdea877a997898941f62df6c05045f40
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash fs/xfs/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> fs/xfs/libxfs/xfs_sb.c:37:1: warning: no previous prototype for 'xfs_sb_validate_v5_features' [-Wmissing-prototypes]
+      37 | xfs_sb_validate_v5_features(
+         | ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/xfs_sb_validate_v5_features +37 fs/xfs/libxfs/xfs_sb.c
+
+    28	
+    29	/*
+    30	 * Physical superblock buffer manipulations. Shared with libxfs in userspace.
+    31	 */
+    32	
+    33	/*
+    34	 * Validate all the compulsory V4 feature bits are set on a V5 filesystem.
+    35	 */
+    36	bool
+  > 37	xfs_sb_validate_v5_features(
+    38		struct xfs_sb	*sbp)
+    39	{
+    40		/* We must not have any unknown V4 feature bits set */
+    41		if (sbp->sb_versionnum & ~XFS_SB_VERSION_OKBITS)
+    42			return false;
+    43	
+    44		/*
+    45		 * The CRC bit is considered an invalid V4 flag, so we have to add it
+    46		 * manually to the OKBITS mask.
+    47		 */
+    48		if (sbp->sb_features2 & ~(XFS_SB_VERSION2_OKBITS |
+    49					  XFS_SB_VERSION2_CRCBIT))
+    50			return false;
+    51	
+    52		/* Now check all the required V4 feature flags are set. */
+    53	
+
 -- 
-2.35.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
