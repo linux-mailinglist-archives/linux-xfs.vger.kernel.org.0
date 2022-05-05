@@ -2,140 +2,130 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F65B51B52B
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 May 2022 03:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF31951B52C
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 May 2022 03:18:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235178AbiEEBWG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        id S233344AbiEEBWG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
         Wed, 4 May 2022 21:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38692 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235148AbiEEBWF (ORCPT
+        with ESMTP id S235175AbiEEBWF (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 May 2022 21:22:05 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FAF054F8F
-        for <linux-xfs@vger.kernel.org>; Wed,  4 May 2022 18:18:27 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 244LGQOx026110
-        for <linux-xfs@vger.kernel.org>; Thu, 5 May 2022 01:18:26 GMT
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3201454F8C
+        for <linux-xfs@vger.kernel.org>; Wed,  4 May 2022 18:18:28 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24501C45018676
+        for <linux-xfs@vger.kernel.org>; Thu, 5 May 2022 01:18:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=a7WNgNfdbnKrn/XtAA960ubHvpdTpQLXEbQr7+tZXko=;
- b=wG/by0heT3nA5U9JydeJNp3XSLLOhKkL+Jqz7zqVPZMp6wSfdD5MHqDOc5h8DQ94ETZm
- ZkVNF2+6MtqaG9C2DlVS+2U4RbHVaZVAqf/8jZ0UsA97hv2LO9UdpaPw8XVdXGeipqnd
- hRFrZIdBRLN3GsZaPY2RSo0r6h8McyIs5EFwvyq6150aILsr2SKl0c4EscT/4A1nzF7U
- UAsDAAawCFnH3zwUXOJasQ8XSYIZ5IfueahCAQro8KmE2Cwr+LBr5AA6BjsPkH3cTsHh
- f66nwXMkYlv4rcOU428HvzKjO8yzaN/EaGfdIa4Wzsc9zzwGrJz/N6kaSeseYoxs0Nxe 5A== 
+ date : message-id : in-reply-to : references : content-transfer-encoding :
+ content-type : mime-version; s=corp-2021-07-09;
+ bh=XOFqEtgr8UshzvLqxNIxsmSXZ71VsM2vD1kuubkt6EA=;
+ b=aLPvV7zbH+RpKBeUz41fDnqXOUijZkSzsownnQn0BXrbSztOpcOcdr6nepoBq+Ml4+WS
+ +Z5cvWX9f2ub/x9oxzY3/WK7cWlvi/B+T8xSs51pHBTgfOs90TGZufsewyVBdP+EFQU9
+ k6S61+B9g0AOtf9Z8LhS2nEOwQdLUDJr18e7MoUFKO/3F5EFUjOrW7RFE5srJrggvIsd
+ vZC7UeoWOpHzEarC/BjoFmTj3j5EiyBN7rb23fBu8lvsgCdYUYmZtxoE/djMOyEcaj4w
+ aoL4/8VPrXQ/wewuJ3UnPseotInud4a2jesqq99Whle5ldWKsDUZ7FGAT0oYEZKh3xpz Aw== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fruhc9uv0-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3frwnta2gp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-xfs@vger.kernel.org>; Thu, 05 May 2022 01:18:27 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 2451AgXQ006894
+        for <linux-xfs@vger.kernel.org>; Thu, 5 May 2022 01:18:26 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fus8xd1t6-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Thu, 05 May 2022 01:18:26 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 2451AgXP006894
-        for <linux-xfs@vger.kernel.org>; Thu, 5 May 2022 01:18:25 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fus8xd1t6-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 May 2022 01:18:25 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lRgD2xr/8W0giXgcBy+OYr++XQKdEg/wKasGxDzoviThH48DHbEQaYtk1jFeM95qWo94j5wK3BREfREwb8pb9yMtb0bg51YA/ct+a7AwGgGa0vvHMrZScDyw0bsA42S61iWnp4ai08gE1VmugOjNT1jUpxx2bowyNRXoY15WGDsRW1TuT9kjCOXwVIOorbcsqgafvvxhHhUXiF1/dfgVDxO4UJLSK7gmG4ZaPSQGtUY3b1X/iXsuyPb9/OI/ns6EsoMJ0XgmIH+CPWqm9knF67Xxyd0Warq7lU5+TroJhxVMwZTuRymA6waj4fLumG/2vxtCz7XI1NQkXj26Mk/P9A==
+ b=LidBaEBRoIOKBLsRsSi2lulbo9CSVgDiB/Y/Tk/4YusiEPGgiPocJ+ZxtUw5Jnsb7WpopTuaUHpzjgX5SiY0ZdFAI+d6PmjOS5KcbxeBD4Sx0j9Bc4hcJsAzY50vXnuXaV2c1XAL4OynQGuHFsY+XKFa+uBKf0mMvlzi9ek5yJFFMlG0lNJe0LCvtZKJevi8LEl72otyw+TTx3rPD8+WThT24ICjahcB5U5ggyRNfJzoiXYQ+4wyFdL2OnpYJtL7DPmI2ATAeX0s4Uk1wDYusQzg+P6qAh8qPb1M9C1uvMtu3XqsoxavkqdF1OHZq96WqiGrHXRajne+V5alIEiXJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a7WNgNfdbnKrn/XtAA960ubHvpdTpQLXEbQr7+tZXko=;
- b=KPHJE9tPFMz9/7Z/WKgQexu7jOJ8jc9rem5cw7To6/uJOXpMO05QPRtwqDYO8F4xdnf7VLBecD+/ZA3Uj1F02lLpU12R1jP5UDxzabMN0z8aIa6RpFT6FDL6ceAgZbs36QFJGwVjD7XEw4ahnBtoRQ2PQ9EXbLsjwpGCFhKhaNRWjAFh2m6GAxNEAHX8MphBS1RtSmJS/3eNJgNH+FFJ+RfJyiQfPhtYAlh7l9c08CZsK8hWKC6vS+lD8V9WMZTa8GN3rwsbG02u3fSTEOZR/8mbzIX/wKIEtC5NptNddnCjhVn4MvkJ/Dg5GbPsUFgONalqF++zI0uuZKetkMPbJg==
+ bh=XOFqEtgr8UshzvLqxNIxsmSXZ71VsM2vD1kuubkt6EA=;
+ b=JpeYBLrMi236loDJr7E/R3lnet3VeZHP77KcX/uVX8aA1FhaMtRkjgCIKGXZ5YqiAm5SCvtbXl/4MIgZEyKuK3yLbsuky5Isripi0WI/JGlO4Imz5kiQKajHB2pQ33GPWyp58TKlWkvOlAGnwN48MYNknFTBBeJwCdKXgS3vzpyL3S2A38fVe5eseH8RGFq3yFWGLrTXtGsJyaxGS7accImHrFx2mcJ8zRcqRjjo4IW5FHqzaqXhWaYe+m02IPIhuI8+A7Nb97T5F/e9Qo5mIpoH0bAF+rJd0PakdNeT3t3N3qGX7Ap5dQuDJIfMzcQURHuT5YrLvKT8197SeFEdyg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a7WNgNfdbnKrn/XtAA960ubHvpdTpQLXEbQr7+tZXko=;
- b=hnaFzpzl2RIvWxw4gzaTPGNpwEXzF0lmISgJY5s1YbSpV3NDnZONVrfStfG8YpZTZffSlKkRF6C+2p2i5yOGCXbwvvSQEzg3upN6pU/F8mDAp9QoNqap39bW2cUzci/rLjBz8x92AZLgrgDQFYuwaMUd4yw3wCK7lMXATj7IUxA=
+ bh=XOFqEtgr8UshzvLqxNIxsmSXZ71VsM2vD1kuubkt6EA=;
+ b=GksND4/MsEkLb8qnVkXGlHe/w8sB58T3eexnYfSfRYZTdRT2s9mp35JqH/4eTqkQSZX1zIL4WdAlg54Bo/k9Ss3CshtP/3ckPuIX329TUFVR1IgRCCOzC3Eo7Bc7UaoLrZmGl9u6P8h0enHVdb9dt1+sDQ7bTEtpanX9dfvFIPQ=
 Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
  by DM6PR10MB3193.namprd10.prod.outlook.com (2603:10b6:5:1a6::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.24; Thu, 5 May
- 2022 01:18:23 +0000
+ 2022 01:18:24 +0000
 Received: from BLAPR10MB5316.namprd10.prod.outlook.com
  ([fe80::8433:507c:9751:97b0]) by BLAPR10MB5316.namprd10.prod.outlook.com
  ([fe80::8433:507c:9751:97b0%3]) with mapi id 15.20.5206.025; Thu, 5 May 2022
- 01:18:23 +0000
+ 01:18:24 +0000
 From:   Catherine Hoang <catherine.hoang@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 1/3] xfs: remove quota warning limit from struct xfs_quota_limits
-Date:   Wed,  4 May 2022 18:18:13 -0700
-Message-Id: <20220505011815.20075-2-catherine.hoang@oracle.com>
+Subject: [PATCH v2 2/3] xfs: remove warning counters from struct xfs_dquot_res
+Date:   Wed,  4 May 2022 18:18:14 -0700
+Message-Id: <20220505011815.20075-3-catherine.hoang@oracle.com>
 X-Mailer: git-send-email 2.32.0 (Apple Git-132)
 In-Reply-To: <20220505011815.20075-1-catherine.hoang@oracle.com>
 References: <20220505011815.20075-1-catherine.hoang@oracle.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: SJ0PR03CA0118.namprd03.prod.outlook.com
  (2603:10b6:a03:333::33) To BLAPR10MB5316.namprd10.prod.outlook.com
  (2603:10b6:208:326::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c8ed4ce9-c12b-4d91-bea2-08da2e35262f
+X-MS-Office365-Filtering-Correlation-Id: 0ad444b1-db34-4923-ad8f-08da2e352691
 X-MS-TrafficTypeDiagnostic: DM6PR10MB3193:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR10MB31934051B345CD23440E657D89C29@DM6PR10MB3193.namprd10.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM6PR10MB3193C51366DBB5DDB891069489C29@DM6PR10MB3193.namprd10.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: noZ4lD4IlXCUnQFdt/CgefrsNCso1V61EeFLZj+zpcyzPH69O4ObynEbH6qQYvhXOI7v+Qinj+nfE5xybKCvL007zVpTSuga6/uDyUL4aCYRnG70sjV0J+Eh0G7eZRATWxigBZzrWrPyGdjyeKb45/76D4oPI/F9WqoJu9NtIGofpn8IH1tNPlg9ODpIAeVNSZVMOtjkMGzBwprnvttPWcjcZ+fVlQJxUElsDogCTNBRKWLQENNetOxYye8gmPR5Uz4qGZ0KgI1yfszivaRdMMtvmNlkmFcOYUK94Wo+cJ0icvurKtdgXinbpBwSbb/SdeFG00GsNBDrV6HD4umU9zOI/Bo43f6g4vY8eza8MFNrT4MdmMfd02A1Mcc6eQhFbbCC9hIKF79VBWHqfempE/IOU6uag8e0bnsVOx6f63Gn4ci8+YHzEfY0wtyqgfHdqkIF2ZRrb+z4B9gcsF9jUAw3EzyKV9ig1wY8X1h1EeN0I5AlKfi/Mzn3ZFke/v0SzwLpfqvILTqPP0WiDvB91K5y5wi5/yANXGW4kR6TqcAgSqSh+nlLkNN7avGYDOWs1NeW1IvGATT1dC3FdFBO3392eYDWu4zkqqpeoOajpAIgnxV/Nfi9jiUNTr3NOYmAfePUFV3mtM31s8BCNesfMA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6916009)(6512007)(6666004)(44832011)(2906002)(38100700002)(86362001)(52116002)(6506007)(508600001)(316002)(5660300002)(83380400001)(1076003)(15650500001)(6486002)(2616005)(36756003)(66946007)(66556008)(66476007)(8936002)(8676002)(186003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: m3Jlt/KJseqtd6OKg80Jk8O8d/NoC7eLhRDF5W3UllocVyVDftTIIfbIsi3XB19zSzBv8zE59tfIu/+DcDtBwu/34bXdWtyiBoIle8/S1kf1CTnlryA4z0jWIf9LQfG5FBA+HA1QAIiDUFmUM5D2JYJZPBgizGja7AydIShGzC0OGsu9gq1/DDDCbW+rsAfkxb+K2sjk4Rp7i4o6Gaa09HrbAYgpWbMUn//6w06xXoTI9pFd38iz5CAOSslGbXh12AXXw4MDdLQ9Xc+POMU0VM7TtTgnXGK/3n3pl0C1g5TwDBSp0nX8GfhRQ50UbJpbN+6DbPTPdhOMDMCqAhYO3gQQKkotefTlXNyk7iV4laX51TwA0wG6y2sM1/wzruF9S9Nzbl0H+/NEQHtHFRfLUvmuTppTKSRgJPy368iV9w7/Z9thtNpTpEwpJM1HVKps9cyk2l8cRWMtyX1uK/SpV5MEAg8hX6ImdI1cLtpce5Qwrg2TBZCOl3eyHQlVthv1PEHmhLchuBz5ZD5Lr2BT9h12ldnOa+PLXsyMUXaWZgvk6K278YzLyXoWZG09UQcZnDcvWOtpHb1eu/BnUYjfHFwpY8JhGJOaS98EDaJ1WQBAReF1U01UiDDZRg+U8ykvK834ay6xXstJGd1IyOs/JQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6916009)(6512007)(6666004)(44832011)(2906002)(38100700002)(86362001)(52116002)(6506007)(508600001)(316002)(5660300002)(83380400001)(1076003)(6486002)(2616005)(36756003)(66946007)(66556008)(66476007)(8936002)(8676002)(186003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UFdNemhqY3FkSmc4QzJJSXhlK2FVTWlGRmFBUzYydTZHVHc1MUZicE10ZTNE?=
- =?utf-8?B?Z2Y4ZG1nZjhSdVdEWjJ2VHk2Z2s1OXd2c1p4V2tCSTZaTWEwQURRanNPb1hz?=
- =?utf-8?B?TitGU3RXR0hSR2h5UjVkTHpob28yZmJqNGpEWXFOamN1cEVaR1dhdGVUUmhT?=
- =?utf-8?B?RDBwWXdYTXlXMW9pWTZDWkhoNlhmdFJTT0RGdHN3aEhKa3EvNkUrZThVcnpu?=
- =?utf-8?B?YWp3TEMzd1pjTjd6dmwwMC9GQUhraVBDYXdUZUdnR29PaEErejFHSlZFRUlR?=
- =?utf-8?B?SFh5Y2wzL2I1cnp2SDJGTjZ6RDNnaW1TT3YrVERMY0k5TkdDWGcxanI0R1p4?=
- =?utf-8?B?eE9yNHhsOStmaVovcFRVMHVMbjFkSUZXTW5qdGhIeUN2WEpQaHZiT21zL1ZS?=
- =?utf-8?B?dkVKek14eS9UWnBWam8zR1NTZ0R0QTJlZXlGdzZVVjMvMWZLVlBQd0dQRGFX?=
- =?utf-8?B?V3VSUGtKZDZORWp5a2ZiTEw4NkY1TGJjN3pHT2ZPK1FySy9lZ01IYjhXaERU?=
- =?utf-8?B?aVZyS0FKR1Boc0RwSGtZT1drSUdhbFlBa1Q4REJ4RGVwOEt0V1VrRnk4L0Ju?=
- =?utf-8?B?SWJVT25lZFdIT2t1YjM0MTk3amEyYkREU3pNKzNGSG1ZMld5OGxLcEpQU2pG?=
- =?utf-8?B?dW5kcGlqRDkrM0ltWGo5ayszczZTV2JMVWwwdEFtSDhtUU8xSDB1R3lCWVpl?=
- =?utf-8?B?SEl2ODNwVzFMYU9KWUY4ZVhHdXVUNEtrVUNUc0Jrczh1UjZyY2E3b1pQVDdy?=
- =?utf-8?B?YlVyalBLODd0TkdacEJXa0RVd0FZYzUwcFdXZkl2YitGOUoyNjMvUVdld25q?=
- =?utf-8?B?bnJJMHVNdGkrQVZLTTJsbXluMXR3YkY2L3BtaWJ1QjFvdXJhNWczQ2NPYzBS?=
- =?utf-8?B?TFBIN0ZXQlJXWWVGOCtPV1M5a2QrTkdiQmZ0WndRQTNuaTlSc2ZVMVhpcXlm?=
- =?utf-8?B?L0w5czZpVysvZzdYaXJPaVBvNnhUM2NYYlpST3d1WlM0Z3grZXVramVraWlp?=
- =?utf-8?B?NWlaUWo1VHE0M0FVd2IxU01tOEpEazc3TW9qamFORHZkVTlHWGhhUzlCeUpB?=
- =?utf-8?B?WVdweWlEQ2JsYXl4R3FFTmxnQUlHZzA3ZnNENkl5Zno0dWFqSk50ZEJra2Q0?=
- =?utf-8?B?WnNHSFBZT2xOV09pSEszak85NzNSZFhRa0ZTYUxDTnNibmp6VVZUcjJ5aEFh?=
- =?utf-8?B?Ukt6cVQ3YUZUVisrOWJSdUxYb202VTUxY01RN3lyUTI2NC92QytJN2haQi9F?=
- =?utf-8?B?SGRVZXd4V2tvMEdTakdkWmtPcTZFVTd4Z0JlRlRpdXJQOHk4RlFCR1BUcWxx?=
- =?utf-8?B?Qm5RVnMvazU0R21EcGZwU3Q3bGU5dXUvVGVtTHE1d1hWL3lMaytiNERoSVZa?=
- =?utf-8?B?cTM5SFY2bDlPc2VibGNzVWRkMllKVmZxWUlEQ0FGQkRPYmNoK3BzQnNGNW9V?=
- =?utf-8?B?dlhyR2xaNDZ4VmVaRHAvK3hUQm0xaDM1MHRSTitBRFpaSnJPUThJUGZiN3BE?=
- =?utf-8?B?Y1VjTEtYTVBKLy9oeHBoWjBBb2RRRlc0SDZQRFZFNm1kc1ZxNEpjV2lianl1?=
- =?utf-8?B?Y3V3eFNLUjBoRCtLK2Uvb3lPai9GTFJJZWt2VHZ1SWIxVlZ5TldHUGwvVTN2?=
- =?utf-8?B?TEYxUEdKMlFqU1NHVHRYZytJaDlqRkdRVzdBVDVyelBjN01Ydjg3aVFpSUhY?=
- =?utf-8?B?eFpES3JwL3lHRmV0VWc3Nkw4c1ZCcmYxM3pJZFlSRGQvdmRyeDgrblpKaHNp?=
- =?utf-8?B?MnVCVFY1eHJwTW5oM3pGL2dTZ28xeUJ0ZzZ5UmRXMUxlUkdGN0FZSHd4RUtw?=
- =?utf-8?B?WEUvNFQrbWt0VDk4NDFSeFZZa1VjT2p2bkVlNG8yRnJiZkh1bm5Tbjk1OEUw?=
- =?utf-8?B?Uy9uaFNsOXVka3N5b1J0QUl3WFV0R2c1TDNmSHdhRHBVdUl0cy9QUFVMTU1D?=
- =?utf-8?B?VXVCTXRNWDlBVFNUbnFEQjZQNklibXhjc1RRc0lPREplTmtRUXVDZXFscEZW?=
- =?utf-8?B?VWIzaG5UVXkxQ3RGenFWdFoxU0tBa2t0T2FaYTZ2eUZ0YnpCa05vTWtrMlgz?=
- =?utf-8?B?UDl0Q0U2OGJkZUNvdEN0YzFXbGt3d2k5ZHFXUEszNThIRndNNlZNdk84Ty9Z?=
- =?utf-8?B?bzV1L05Mem4yUHRESW9iSS9OQ0pPSkdUSUFmK044bjlKR1J4WGEyeE1tRms0?=
- =?utf-8?B?WlBMZ2VCRDhvMTEzTWRIREJ0THlLS1NlclBqNzEyaVFuTWh1MWY3dm4vVk9x?=
- =?utf-8?B?S2VITVNzc2UydFU0NHlHN1V4MXc0N2wyZnJQcjd0UUgxQ1N2Wmg2SjZXMnhC?=
- =?utf-8?B?VWxnVXdFdkltZlloYjlmWmRUUkp0czB0QnBaQldYNWpaMkFjS3lXMkxRVENt?=
- =?utf-8?Q?O1RH1hLLMaqvn2tOjqq/ZQC4LWQYakgkPym3/0aTn7l63?=
-X-MS-Exchange-AntiSpam-MessageData-1: +uDKFG7Ok1TUow==
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5GAn8EstxfxePvZt/AGIFx9yuKX3R4QFtB0TNKSB2Ii0cd/npGJZ1fn/bvk9?=
+ =?us-ascii?Q?o6IajkwZeXlCnEB4RXV+bpj4nlWVPQL0aOSEh/3RCFGSFs+tLIgqX2OhInEP?=
+ =?us-ascii?Q?2tpmsmgaKeFt0uaz98lI1XRYRxsSPEMGWBc/1nNI37Tsw7ZVcOuWG6tjLKM2?=
+ =?us-ascii?Q?XvTUTND3LbsBdi3D4DQdUrb+P428o8vaMz0EyDyVsbnvbN/lFl7BTWK1dYCD?=
+ =?us-ascii?Q?f4DetgLzVUNqEAwLUY7uFwX6AT5whJhA6y+3Xc8nIdLN01YB59MBowwWxPTG?=
+ =?us-ascii?Q?3EorCjLOETuvczuxpuUvXjMLhrRHE3NgSS2UYsUnGfpOUI8DjXBXp+L83+lk?=
+ =?us-ascii?Q?9HneE++k24QYVzFCIAtgi6WEybf/ltXGaWjkw5m+6zNpxl89/14JfmjJFftY?=
+ =?us-ascii?Q?78+6OcvWs6O7Z5IOdG837bfAm/FpUhLnYQ5baXYX/qZa01m/0fJOE2VBdLD9?=
+ =?us-ascii?Q?LoddNY4p7MasPcsbwsSG96OyQaXm+Cmbd6EAB7z14Iqy/fY5UiPO66IGKKbq?=
+ =?us-ascii?Q?6heRIWqTQvLpp7h3giVoYgbUv8A6NKD9W7+70yF2ZmrMgQnrH0fo5MZfqntk?=
+ =?us-ascii?Q?MnzmvLxyi5Q9CcS4/7kgO2l74aFflyxN+eiWiz04wiTScJO81w4lGHh4uBuX?=
+ =?us-ascii?Q?cFR3QNLg3kXZVaGWOByFg72LEvvnDRKiguk1X5RRnGXrVh77LR1BuoFHs01U?=
+ =?us-ascii?Q?LTFlIgK9A1Vp71/XknOWoAD6zdOHsszU/2vSXYe9oF6LMUzkSsMUade7sgeT?=
+ =?us-ascii?Q?3uomls/IhpjUKnF8IiRaEt9R1yFuOl9Kxszf+OmmY7k+dzI3cWjPxSW8ja3h?=
+ =?us-ascii?Q?awjMJ0czM0aox3cc46gUpdkxj8Ozm/PHA63/ONEF3T5LWV1RAbvLEHRLgM1h?=
+ =?us-ascii?Q?f4oYH35XZaw5gGMZUfcZELKiFxOaL0u8/4M3TPJEOcdByw56HTjD+LmwgUcO?=
+ =?us-ascii?Q?auZ+JJSPa9tBG4tAnfL6KA7e1c+Ku3MKPyzORIKB3GT8dvK3yLi3ibakvP5d?=
+ =?us-ascii?Q?/qNpZBnJs/Gg0V5d7EoZ0l3YW7UZgI6/q8Orhk3Sz2aJA39nkZ/hEkyCX8ci?=
+ =?us-ascii?Q?5sIbFDvb6fs28lnL0oAKTfoBHOnQehW50yLt4hRbmdzmWVRX5lNalP3Dwyzu?=
+ =?us-ascii?Q?AQdtdoctFI7CbvXx2rsgRe7Ajj7CO2XbIpZQPm1Hgn+GcnuU/sVCN9pp4tcA?=
+ =?us-ascii?Q?0/DTqwEh5N3hjoqCUOSSZ7nubBIQxmVfP1qn2dxhqUuFmFNuaqPyiNWQ9lPU?=
+ =?us-ascii?Q?8V2q0RLMsd53trCXDEevEvutb92ew/j+wShONxWESbHpW1I9n7cByLDmTVh/?=
+ =?us-ascii?Q?nij4Geb2q7tWzBmv9Z6XOyW5UbF5i+nUJl+cRkwdmYZZv9xvdqv7cHmXb3UT?=
+ =?us-ascii?Q?WTrZfLGkKG93Sb67gPf9BUNYPZDqn6n33MW8GSLrXKfKwzVhQRA+aEGRIVjL?=
+ =?us-ascii?Q?zf6/45wMgL8b0424wywYtqKY5g+MZ/mMD6T0GZHjMwFXG7Q+qn7iaQ2af/RZ?=
+ =?us-ascii?Q?RBeUWXyruix0ETVk20dLMgDJAv6FWnBnfLCb/ONKLvS9dC6x1+UUe1dNC3l0?=
+ =?us-ascii?Q?droOL7TK2FQA1Ryx8e+T09E8vBQrOt4Mwk3WV14vSRvvk2XPE4244vkR2Z0K?=
+ =?us-ascii?Q?FU70E/0fljvvXIAeV1ebMgCUZQ+AJypD4Zy9MBm+g5vL4Z2y0rIx7HqHnaAP?=
+ =?us-ascii?Q?3kuON8+tVYVLpSOqu6L81vRMyscbgq2dxmJ/vuV1y+qN4FRANoP2gKl640OU?=
+ =?us-ascii?Q?rMwTG/C2Oxq9bUxKNXH+2D5WFDFvJ9n6BEi2ogVuPW1Z6AwGMZUNsV2Lp59i?=
+X-MS-Exchange-AntiSpam-MessageData-1: ziYsQBsHVIB2+Q==
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c8ed4ce9-c12b-4d91-bea2-08da2e35262f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ad444b1-db34-4923-ad8f-08da2e352691
 X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2022 01:18:23.7354
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2022 01:18:24.3291
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bsa1WdP0E/6vpaM60fGWb25pZy7hL+ORycVTuDU8cku6LAg3AVtBCvKm2PzsgeaQIV44WlRHJdIm1axOLI8vTJvRVlXyCataOcbb+JrIxoI=
+X-MS-Exchange-CrossTenant-UserPrincipalName: N6+ZMB+3iatXdAoKpmrelx8kEHdl7uGPhhrSmpXotQx+j8YVVI5zKh6vN/0URFY3AtpBQU0Be2EatEkjNGgELn4rCe0fIw844ac1tPdoIec=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB3193
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
  definitions=2022-05-04_06:2022-05-04,2022-05-04 signatures=0
@@ -143,8 +133,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspe
  mlxlogscore=999 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
  phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2202240000 definitions=main-2205050007
-X-Proofpoint-GUID: PH1XHUq7pKpdMfkGZWK__yyQwwebSrLj
-X-Proofpoint-ORIG-GUID: PH1XHUq7pKpdMfkGZWK__yyQwwebSrLj
+X-Proofpoint-ORIG-GUID: 1hdxzC3WkWxQ-9cClrYWRlgCF_7qVOST
+X-Proofpoint-GUID: 1hdxzC3WkWxQ-9cClrYWRlgCF_7qVOST
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -155,152 +145,138 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Warning limits in xfs quota is an unused feature that is currently
-documented as unimplemented, and it is unclear what the intended behavior
-of these limits are. Remove the ‘warn’ field from struct xfs_quota_limits
-and any other related code.
+Warning counts are not used anywhere in the kernel. In addition, there
+are no use cases, test coverage, or documentation for this
+functionality. Remove the 'warnings' field from struct xfs_dquot_res and
+any other related code.
 
 Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_qm.c          |  9 ---------
- fs/xfs/xfs_qm.h          |  5 -----
- fs/xfs/xfs_qm_syscalls.c | 17 +++--------------
- fs/xfs/xfs_quotaops.c    |  6 +++---
- fs/xfs/xfs_trans_dquot.c |  3 +--
- 5 files changed, 7 insertions(+), 33 deletions(-)
+ fs/xfs/libxfs/xfs_quota_defs.h |  1 -
+ fs/xfs/xfs_dquot.c             | 15 ++++-----------
+ fs/xfs/xfs_dquot.h             |  8 --------
+ fs/xfs/xfs_qm_syscalls.c       | 12 +++---------
+ 4 files changed, 7 insertions(+), 29 deletions(-)
 
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index f165d1a3de1d..8fc813cb6011 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -582,9 +582,6 @@ xfs_qm_init_timelimits(
- 	defq->blk.time = XFS_QM_BTIMELIMIT;
- 	defq->ino.time = XFS_QM_ITIMELIMIT;
- 	defq->rtb.time = XFS_QM_RTBTIMELIMIT;
--	defq->blk.warn = XFS_QM_BWARNLIMIT;
--	defq->ino.warn = XFS_QM_IWARNLIMIT;
--	defq->rtb.warn = XFS_QM_RTBWARNLIMIT;
+diff --git a/fs/xfs/libxfs/xfs_quota_defs.h b/fs/xfs/libxfs/xfs_quota_defs.h
+index a02c5062f9b2..c1e96abefed2 100644
+--- a/fs/xfs/libxfs/xfs_quota_defs.h
++++ b/fs/xfs/libxfs/xfs_quota_defs.h
+@@ -16,7 +16,6 @@
+  * and quota-limits. This is a waste in the common case, but hey ...
+  */
+ typedef uint64_t	xfs_qcnt_t;
+-typedef uint16_t	xfs_qwarncnt_t;
  
- 	/*
- 	 * We try to get the limits from the superuser's limits fields.
-@@ -608,12 +605,6 @@ xfs_qm_init_timelimits(
- 		defq->ino.time = dqp->q_ino.timer;
- 	if (dqp->q_rtb.timer)
- 		defq->rtb.time = dqp->q_rtb.timer;
--	if (dqp->q_blk.warnings)
--		defq->blk.warn = dqp->q_blk.warnings;
--	if (dqp->q_ino.warnings)
--		defq->ino.warn = dqp->q_ino.warnings;
--	if (dqp->q_rtb.warnings)
--		defq->rtb.warn = dqp->q_rtb.warnings;
+ typedef uint8_t		xfs_dqtype_t;
  
- 	xfs_qm_dqdestroy(dqp);
+diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
+index 5afedcbc78c7..aff727ba603f 100644
+--- a/fs/xfs/xfs_dquot.c
++++ b/fs/xfs/xfs_dquot.c
+@@ -136,10 +136,7 @@ xfs_qm_adjust_res_timer(
+ 			res->timer = xfs_dquot_set_timeout(mp,
+ 					ktime_get_real_seconds() + qlim->time);
+ 	} else {
+-		if (res->timer == 0)
+-			res->warnings = 0;
+-		else
+-			res->timer = 0;
++		res->timer = 0;
+ 	}
  }
-diff --git a/fs/xfs/xfs_qm.h b/fs/xfs/xfs_qm.h
-index 5bb12717ea28..9683f0457d19 100644
---- a/fs/xfs/xfs_qm.h
-+++ b/fs/xfs/xfs_qm.h
-@@ -34,7 +34,6 @@ struct xfs_quota_limits {
- 	xfs_qcnt_t		hard;	/* default hard limit */
- 	xfs_qcnt_t		soft;	/* default soft limit */
- 	time64_t		time;	/* limit for timers */
--	xfs_qwarncnt_t		warn;	/* limit for warnings */
+ 
+@@ -589,10 +586,6 @@ xfs_dquot_from_disk(
+ 	dqp->q_ino.count = be64_to_cpu(ddqp->d_icount);
+ 	dqp->q_rtb.count = be64_to_cpu(ddqp->d_rtbcount);
+ 
+-	dqp->q_blk.warnings = be16_to_cpu(ddqp->d_bwarns);
+-	dqp->q_ino.warnings = be16_to_cpu(ddqp->d_iwarns);
+-	dqp->q_rtb.warnings = be16_to_cpu(ddqp->d_rtbwarns);
+-
+ 	dqp->q_blk.timer = xfs_dquot_from_disk_ts(ddqp, ddqp->d_btimer);
+ 	dqp->q_ino.timer = xfs_dquot_from_disk_ts(ddqp, ddqp->d_itimer);
+ 	dqp->q_rtb.timer = xfs_dquot_from_disk_ts(ddqp, ddqp->d_rtbtimer);
+@@ -634,9 +627,9 @@ xfs_dquot_to_disk(
+ 	ddqp->d_icount = cpu_to_be64(dqp->q_ino.count);
+ 	ddqp->d_rtbcount = cpu_to_be64(dqp->q_rtb.count);
+ 
+-	ddqp->d_bwarns = cpu_to_be16(dqp->q_blk.warnings);
+-	ddqp->d_iwarns = cpu_to_be16(dqp->q_ino.warnings);
+-	ddqp->d_rtbwarns = cpu_to_be16(dqp->q_rtb.warnings);
++    ddqp->d_bwarns = 0;
++    ddqp->d_iwarns = 0;
++    ddqp->d_rtbwarns = 0;
+ 
+ 	ddqp->d_btimer = xfs_dquot_to_disk_ts(dqp, dqp->q_blk.timer);
+ 	ddqp->d_itimer = xfs_dquot_to_disk_ts(dqp, dqp->q_ino.timer);
+diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
+index 6b5e3cf40c8b..80c8f851a2f3 100644
+--- a/fs/xfs/xfs_dquot.h
++++ b/fs/xfs/xfs_dquot.h
+@@ -44,14 +44,6 @@ struct xfs_dquot_res {
+ 	 * in seconds since the Unix epoch.
+ 	 */
+ 	time64_t		timer;
+-
+-	/*
+-	 * For root dquots, this is the maximum number of warnings that will
+-	 * be issued for this quota type.  Otherwise, this is the number of
+-	 * warnings issued against this quota.  Note that none of this is
+-	 * implemented.
+-	 */
+-	xfs_qwarncnt_t		warnings;
  };
  
- /* Defaults for each quota type: time limits, warn limits, usage limits */
-@@ -134,10 +133,6 @@ struct xfs_dquot_acct {
- #define XFS_QM_RTBTIMELIMIT	(7 * 24*60*60)          /* 1 week */
- #define XFS_QM_ITIMELIMIT	(7 * 24*60*60)          /* 1 week */
- 
--#define XFS_QM_BWARNLIMIT	5
--#define XFS_QM_IWARNLIMIT	5
--#define XFS_QM_RTBWARNLIMIT	5
--
- extern void		xfs_qm_destroy_quotainfo(struct xfs_mount *);
- 
- /* quota ops */
+ static inline bool
 diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 7d5a31827681..e7f3ac60ebd9 100644
+index e7f3ac60ebd9..2149c203b1d0 100644
 --- a/fs/xfs/xfs_qm_syscalls.c
 +++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -250,17 +250,6 @@ xfs_setqlim_limits(
- 	return true;
- }
+@@ -343,8 +343,6 @@ xfs_qm_scall_setqlim(
  
--static inline void
--xfs_setqlim_warns(
--	struct xfs_dquot_res	*res,
--	struct xfs_quota_limits	*qlim,
--	int			warns)
--{
--	res->warnings = warns;
--	if (qlim)
--		qlim->warn = warns;
--}
--
- static inline void
- xfs_setqlim_timer(
- 	struct xfs_mount	*mp,
-@@ -355,7 +344,7 @@ xfs_qm_scall_setqlim(
  	if (xfs_setqlim_limits(mp, res, qlim, hard, soft, "blk"))
  		xfs_dquot_set_prealloc_limits(dqp);
- 	if (newlim->d_fieldmask & QC_SPC_WARNS)
--		xfs_setqlim_warns(res, qlim, newlim->d_spc_warns);
-+		res->warnings = newlim->d_spc_warns;
+-	if (newlim->d_fieldmask & QC_SPC_WARNS)
+-		res->warnings = newlim->d_spc_warns;
  	if (newlim->d_fieldmask & QC_SPC_TIMER)
  		xfs_setqlim_timer(mp, res, qlim, newlim->d_spc_timer);
  
-@@ -371,7 +360,7 @@ xfs_qm_scall_setqlim(
+@@ -359,8 +357,6 @@ xfs_qm_scall_setqlim(
+ 	qlim = id == 0 ? &defq->rtb : NULL;
  
  	xfs_setqlim_limits(mp, res, qlim, hard, soft, "rtb");
- 	if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
--		xfs_setqlim_warns(res, qlim, newlim->d_rt_spc_warns);
-+		res->warnings = newlim->d_rt_spc_warns;
+-	if (newlim->d_fieldmask & QC_RT_SPC_WARNS)
+-		res->warnings = newlim->d_rt_spc_warns;
  	if (newlim->d_fieldmask & QC_RT_SPC_TIMER)
  		xfs_setqlim_timer(mp, res, qlim, newlim->d_rt_spc_timer);
  
-@@ -387,7 +376,7 @@ xfs_qm_scall_setqlim(
+@@ -375,8 +371,6 @@ xfs_qm_scall_setqlim(
+ 	qlim = id == 0 ? &defq->ino : NULL;
  
  	xfs_setqlim_limits(mp, res, qlim, hard, soft, "ino");
- 	if (newlim->d_fieldmask & QC_INO_WARNS)
--		xfs_setqlim_warns(res, qlim, newlim->d_ino_warns);
-+		res->warnings = newlim->d_ino_warns;
+-	if (newlim->d_fieldmask & QC_INO_WARNS)
+-		res->warnings = newlim->d_ino_warns;
  	if (newlim->d_fieldmask & QC_INO_TIMER)
  		xfs_setqlim_timer(mp, res, qlim, newlim->d_ino_timer);
  
-diff --git a/fs/xfs/xfs_quotaops.c b/fs/xfs/xfs_quotaops.c
-index 07989bd67728..50391730241f 100644
---- a/fs/xfs/xfs_quotaops.c
-+++ b/fs/xfs/xfs_quotaops.c
-@@ -40,9 +40,9 @@ xfs_qm_fill_state(
- 	tstate->spc_timelimit = (u32)defq->blk.time;
- 	tstate->ino_timelimit = (u32)defq->ino.time;
- 	tstate->rt_spc_timelimit = (u32)defq->rtb.time;
--	tstate->spc_warnlimit = defq->blk.warn;
--	tstate->ino_warnlimit = defq->ino.warn;
--	tstate->rt_spc_warnlimit = defq->rtb.warn;
-+	tstate->spc_warnlimit = 0;
-+	tstate->ino_warnlimit = 0;
-+	tstate->rt_spc_warnlimit = 0;
- 	if (tempqip)
- 		xfs_irele(ip);
- }
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index ebe2c227eb2f..aa00cf67ad72 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -597,8 +597,7 @@ xfs_dqresv_check(
- 	if (softlimit && total_count > softlimit) {
- 		time64_t	now = ktime_get_real_seconds();
+@@ -417,13 +411,13 @@ xfs_qm_scall_getquota_fill_qc(
+ 	dst->d_ino_count = dqp->q_ino.reserved;
+ 	dst->d_spc_timer = dqp->q_blk.timer;
+ 	dst->d_ino_timer = dqp->q_ino.timer;
+-	dst->d_ino_warns = dqp->q_ino.warnings;
+-	dst->d_spc_warns = dqp->q_blk.warnings;
++	dst->d_ino_warns = 0;
++	dst->d_spc_warns = 0;
+ 	dst->d_rt_spc_hardlimit = XFS_FSB_TO_B(mp, dqp->q_rtb.hardlimit);
+ 	dst->d_rt_spc_softlimit = XFS_FSB_TO_B(mp, dqp->q_rtb.softlimit);
+ 	dst->d_rt_space = XFS_FSB_TO_B(mp, dqp->q_rtb.reserved);
+ 	dst->d_rt_spc_timer = dqp->q_rtb.timer;
+-	dst->d_rt_spc_warns = dqp->q_rtb.warnings;
++	dst->d_rt_spc_warns = 0;
  
--		if ((res->timer != 0 && now > res->timer) ||
--		    (res->warnings != 0 && res->warnings >= qlim->warn)) {
-+		if (res->timer != 0 && now > res->timer) {
- 			*fatal = true;
- 			return QUOTA_NL_ISOFTLONGWARN;
- 		}
+ 	/*
+ 	 * Internally, we don't reset all the timers when quota enforcement
 -- 
 2.27.0
 
