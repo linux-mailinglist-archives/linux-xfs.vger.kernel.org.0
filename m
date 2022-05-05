@@ -2,172 +2,172 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CAAB51B52D
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 May 2022 03:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 379A851B608
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 May 2022 04:41:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235148AbiEEBWH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 4 May 2022 21:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38708 "EHLO
+        id S239788AbiEECoE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 4 May 2022 22:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230176AbiEEBWF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 May 2022 21:22:05 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B385F54F8F
-        for <linux-xfs@vger.kernel.org>; Wed,  4 May 2022 18:18:28 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 244KHMAw019152
-        for <linux-xfs@vger.kernel.org>; Thu, 5 May 2022 01:18:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : in-reply-to : references : content-transfer-encoding :
- content-type : mime-version; s=corp-2021-07-09;
- bh=DXT0YgLorYkNPkFLgwDVxI7ImuYa6nU1wLxtZeeDjr0=;
- b=0/9VrMdSb0e9+o8rCymyXpBgmRliGWcccdcsTDXsgpU5X85TULRebVfdOCiWRUg9iqMM
- VdkdvrGYDkNu7EYbbOfSWWmObLy4DSfANaQri4OEFAtGA8Zs9nEEreNQXfSYx31fqPgz
- m2YLm+oXs8ijtxJKsFVhDhDq1e7ZqLJCEliwcwFG1xQn8FHV5gfTkfEYRKF7f+ptm/ML
- XCfVeTS0fJY4yZnPoWzdzVFp8VPrQQ8O3c7D8zIDo4+ghGF5a5ikS43k1YjoPqfOs5b/
- sAlflGOe7Q51yzJBcfTpx7p03+AhQ/v+FCiIDr7BUdw71kH7s9cGM/Np45vtxkWBa0p3 cw== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3frw0asrn1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 May 2022 01:18:28 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 2451AgXR006894
-        for <linux-xfs@vger.kernel.org>; Thu, 5 May 2022 01:18:26 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fus8xd1t6-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 05 May 2022 01:18:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VSuCE19Qw6fP3VxArJx+n4JANuKTosK/BU65yxbKTC5Dy/X1lEqZQ4tU6lBfMnFiV9nSgdLIHqjy8SuQYIYnbmJmkN1sMhRqp+XPQsJ5dCS9wkqyXjNVwxuSEBXRd1g8NxQWA6GKAju4vVTSC2t7ZcNqLsUFhCbZp5PvZ7+fQmhjfYVAYimMCi6sRk77rjNmR+K50NJXdwgtvU1B2+cSzTz+SkwMvrmZ9bgU9FBzaBi+nGwqAW8HFJx8YHkDOFk3J0ZaMf0f8GGexOpCinDDXKdDKLe3p4MCd8S24NtKDYW9uwfQ5WyO0UZNgleHXrqosixHV3frey7Xwkxyat1WaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DXT0YgLorYkNPkFLgwDVxI7ImuYa6nU1wLxtZeeDjr0=;
- b=BQVWMoUqRAoD5zyGnVRagSyoFH+k9xADe42WqWDGYtIjVQkr2QXRy7X7spbTWKJveNK95KCjdOfskbjo2oAjIeTQBr2xdmTFcjbMuB+DRjUuNG7OlwUsTPtuAFnE9FxzbniJcUuHRrFCmYFapHSMJc3bZQN+f7oyyjeMKpH+sKQS2oMJEk1ou7j4+W/rHHwffIWwEm72u+Bl+qoLOqbgDz1cEfRGIq1OslPcxgiT2nkW5VhKVG7Zp2zjHkC1TGWCARaUc9tWxLqWzgOH6WxzUufDjq4dgm4wTLT/gA1FbthiJUK0ERKc5ur0bCckHdSWLbekY7JQj4kGFcx5JtyXAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DXT0YgLorYkNPkFLgwDVxI7ImuYa6nU1wLxtZeeDjr0=;
- b=zAGG3FJ8Fj7j32iEcRVL481TfPCgDVpriqO5qCPYrzUlakXpK4hl/eJz/yUvNbMJXBjYS0QgLkO+gpyE7bNb2p+LMJX49EyJQPSijlikqFgdIjtjlJ4ML6hQFrRqeR2qvZVIJ68C2D0/+Z/Se9XDfnyEwtjNuWMORwsEE3AS964=
-Received: from BLAPR10MB5316.namprd10.prod.outlook.com (2603:10b6:208:326::6)
- by DM6PR10MB3193.namprd10.prod.outlook.com (2603:10b6:5:1a6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.24; Thu, 5 May
- 2022 01:18:25 +0000
-Received: from BLAPR10MB5316.namprd10.prod.outlook.com
- ([fe80::8433:507c:9751:97b0]) by BLAPR10MB5316.namprd10.prod.outlook.com
- ([fe80::8433:507c:9751:97b0%3]) with mapi id 15.20.5206.025; Thu, 5 May 2022
- 01:18:25 +0000
-From:   Catherine Hoang <catherine.hoang@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 3/3] xfs: don't set warns on dquots
-Date:   Wed,  4 May 2022 18:18:15 -0700
-Message-Id: <20220505011815.20075-4-catherine.hoang@oracle.com>
-X-Mailer: git-send-email 2.32.0 (Apple Git-132)
-In-Reply-To: <20220505011815.20075-1-catherine.hoang@oracle.com>
-References: <20220505011815.20075-1-catherine.hoang@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0118.namprd03.prod.outlook.com
- (2603:10b6:a03:333::33) To BLAPR10MB5316.namprd10.prod.outlook.com
- (2603:10b6:208:326::6)
+        with ESMTP id S239791AbiEECnz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 4 May 2022 22:43:55 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6291087;
+        Wed,  4 May 2022 19:40:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BC227B82A9E;
+        Thu,  5 May 2022 02:40:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73637C385A5;
+        Thu,  5 May 2022 02:40:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1651718413;
+        bh=qY4KmXLzLDJbFRydh6JicSuMK3vMZp0aSGlP21fPJGo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JkUTG5WLBHaxwkKCi4GUy+4L/PBlhzjjkgAFnLOGijc9nS3s+CIjHaS7WE38RjLiB
+         ckwRW5mLeJOaA2cGJl0D61aW5HbFPJAxQYGUetGb+3ojsxZO0eB2wL87Ei29G9GJ0I
+         MDPPBj8rmYYSdbIzCWCb1bRJBTrUTEAJvv2PtmPuMbedU8faq5QcUPALsh3gdu+s7K
+         Yiid7Ao38dRUkkTwLMiiI7YeeBXnwTBLNsguFo8L5fkd2+gwVF5j666QWIgfDxGvnQ
+         zaGPrbkizfEjcxBn13qz8s1C2VqoBst71vSHbV4irmmSQP73xXuldd1fbW6yKgiGqL
+         qFp95wbChuBWw==
+Date:   Wed, 4 May 2022 19:40:12 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Brian Foster <bfoster@redhat.com>, xfs <linux-xfs@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: generic/068 crash on 5.18-rc2?
+Message-ID: <20220505024012.GA27195@magnolia>
+References: <YlbjOPEQP66gc1WQ@casper.infradead.org>
+ <20220418174747.GF17025@magnolia>
+ <20220422215943.GC17025@magnolia>
+ <Ymq4brjhBcBvcfIs@bfoster>
+ <Ymywh003c+Hd4Zu9@casper.infradead.org>
+ <Ym2szx2S3ontYsBf@casper.infradead.org>
+ <Ym/McFNCTzmsLBak@bfoster>
+ <20220503032534.GC8297@magnolia>
+ <YnCwBVdmg3IiGhfD@casper.infradead.org>
+ <20220503172532.GA8265@magnolia>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ba9f81c7-0007-4c5c-a550-08da2e3526ee
-X-MS-TrafficTypeDiagnostic: DM6PR10MB3193:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR10MB3193F71D63F14276333A5C0489C29@DM6PR10MB3193.namprd10.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2EYhHEdtPDc5C3RsFI5sF54/CgMR7dhdCiPQ3Y7RlI/8TiNzQ7b4TY+no/fpP9HUKlPHJX0pwinmPBwFW7wZz75WuF3xVbFdDT3lLf8PlXLOP8sThtyo8NsYA3O+3gHj2lsrrPdJ4fvv66Cftqm8IhWqdywzKwvP+XijCd27pwSAn+KdW5WT4en6GA08wXG6RUvk4e/wBq1LO11drX/kVX5sHQE+N0XEcP4xHSPWBOuHSG+X/7Ht9kWWQGGeWNUEtRQ2MuE3UVHn7n0BJS/Xfu1vY1JZMG7ZyZbzbE9aMcyG0p7TDZZkCkp1caeTIisPX8I13cTUBB/6EOCO1oEXYVumFGs5K3C25w/r52VW6kQlB7XDMlQKRosIWl2yKgGV3Th1qV1HOusJRxPkRDisvwc7b2hDA3gLTFAef8fImSXWZcwB46/RhlvewntDL49S2aTHxoPfrDeSFmY4cHB+pkhoWHL/tzY3JFDcp4IkiJXcqoOmf128IFePSPNJ3fk6FNnwJ29925oAMV6mXjh78LT737VvIwxOeLCdgyMQRRIOAyZT5taJ9H8McoiomGQr15Dw+pUrlr/T2q/vnogUe+dapFIN+VPbsgV9fzDUz3XXaJaOxhU2oeuf6IcQuLsek7WRh7pqKaDxZYMnc8am0A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5316.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6916009)(6512007)(6666004)(4744005)(44832011)(2906002)(38100700002)(86362001)(52116002)(6506007)(508600001)(316002)(5660300002)(83380400001)(1076003)(6486002)(2616005)(36756003)(66946007)(66556008)(66476007)(8936002)(8676002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bpnS/hthMDxovw7mMijdDLl4uix7eoWOCGs7+UNd4+aoEQ5qhC3pREq4jhen?=
- =?us-ascii?Q?4ezxqJVbJ5MXXxjX2xuT3zTTwogiq2RWSowcKm45ia1CrETK2yuDi3vmab8E?=
- =?us-ascii?Q?3WHWgXjF8ysNd//y0Idmp4KgqSpU1xi4MQWE0TCWQn2IrItY48N44yDeTlwb?=
- =?us-ascii?Q?5wxqwEwPKT9gpLSFMpX/VMa0RE+tpcFkBV+Yr8SYpXenLdWbOfzzIUtHq97k?=
- =?us-ascii?Q?9BBE9qLw9EFwlKr8W1EQwSINYAVeKn/0RTll/bOTnpdDCQyS12QwKiJ02+Vl?=
- =?us-ascii?Q?D4nV6RGJLpOXM+UfadFP/0U+3ZgCk8zazA9YVQzCQvO9zE/uNWGxAbblIvR7?=
- =?us-ascii?Q?fEM9lvHfHQXdu2oXUsagKbubFi5Pnjet+A0e5JmYHnvXJd1vYtnhXBDjkH5Y?=
- =?us-ascii?Q?YosBvhd5jTtZ12Y8pViq9ZXruhCtqiYgJsJUyroKvR5N3abPDMyXxXkJ0Uub?=
- =?us-ascii?Q?8+WYBWIxEqGG3/pWtKftUNIWuTo/ImGdQ/IdCDYoI6GOksYEQXWtpTQ9NIks?=
- =?us-ascii?Q?AVHGrJEBDPEEyZNdloNaq0DRrrDaQyuwdH5DNcRjk0qVcXVNKzs6CPmkGpq6?=
- =?us-ascii?Q?fUYR1PNZ3pDOSnHID12o82PYVX6lxdfkMtNOozymilQEH6+cSgxB1JsbYNQG?=
- =?us-ascii?Q?JxNcuGqm+teYHthsW+NZobWDOTTZuHjoNWg6jimHq3gdoYfuiqxeD8wP39AC?=
- =?us-ascii?Q?9TD7qfJJEclx36JI3BHZaIg8vL00boPxdS8K8buYW+NPNgdzuwpwCmz1ukQ1?=
- =?us-ascii?Q?HNSGNq8pMQaTzMrSKnmY6A9Qjj6EZhP0rU4khXsaATNeSJJ4dbkVHLM3wQAK?=
- =?us-ascii?Q?/ebKBlRH/zKFPKcmwgi2eqfwk0yHuesIf0dT0+3m+3kloRfaoZhqEi01VSbO?=
- =?us-ascii?Q?WZ6S72pAQfz6TroGpuK7WvF1qmiMML2QX6MqbKFWSwouqFJ6Q3GPxT244u3I?=
- =?us-ascii?Q?Dd963oRSvvoXZsbG1M0jyV0XsEuA3igWWvRWyBd1tUrdlyUfzI5KkKIBsaAn?=
- =?us-ascii?Q?DwPBxYufrH0be1JzOPwvh9FBqYCTHvpGsFgX5Wz6gDCFj3ZF/UFzAO6hiOBV?=
- =?us-ascii?Q?caazAKXzi3MQOxqCzsjenlsQpr7L4VH30Pn9/3wCZHstnlFyMbHZpeZNCTS3?=
- =?us-ascii?Q?ae+rigr5+Ju3/+HzUOey6pii1qAqd/AUzUzmDZu4AHnH1T8faYGpTWBi8c7x?=
- =?us-ascii?Q?bxVTf0EOm2pAjd/4uVZ6rlw21e7uSz4G2aqJ1Dny77WzJHklPPfcbCDYxrSF?=
- =?us-ascii?Q?JyOj6qP7Ij40VUpq4tzuMM3M3qCBKR3V+FNDcPbTzdW1LkJvtzn1EH+HRrYR?=
- =?us-ascii?Q?JqreRLuKoBYj9PL0fmtKl7TiZPHibD2qULNHsXaJG1w+KiMiHYnD4G22FPs7?=
- =?us-ascii?Q?K+JDqiCNhG3aV/6fi2C59LuA8QBYTaXh6dIjBxaOhvFF4rlWqsqfivz11JQl?=
- =?us-ascii?Q?+NpCVmBbFwW5Q3GhbZxRRovAB0YDY5owz2yubfHCtATlAqFMNKgH3Q2YwWf3?=
- =?us-ascii?Q?6m3Hsz2AsMivo5Rvz7duCho21lRhCvsN1sZg7LqluaNBrKEkmerSo1YQUza/?=
- =?us-ascii?Q?ty3AulB5JcnL1B2CboMdZ8sjmFGOfPLs76XVK/xAYfLE7QikG/8t9rg+NG5I?=
- =?us-ascii?Q?cPc2a66Brgol3jmSQQ1aCuaHX11dlfz9927MM+q8qnLVNKqvuUje7Z+All8C?=
- =?us-ascii?Q?nq0sWsEMP2jX0RRolXeAMGEWvHuhlDRbKUxYugwracbAFaTK5Dap0qSnlEzH?=
- =?us-ascii?Q?oF3wDv36OY/tfAZW+BGjNZ2/PpPDWEmIYDLoELepsRATUmc4wwq7DeCvhbgT?=
-X-MS-Exchange-AntiSpam-MessageData-1: Ph+lzspTqO2Dfw==
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba9f81c7-0007-4c5c-a550-08da2e3526ee
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5316.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2022 01:18:25.0008
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JXOVL7A4rNc4NrDj6Edwdo9qKl3Ki1ZPAfxz2yvQp5dybfbK+s8G0RQgUbLzzffCx+znCecIMTZNEd8Bh7SCa7ysBCl4f4/UE4l6Ja76JQA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB3193
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
- definitions=2022-05-04_06:2022-05-04,2022-05-04 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2205050007
-X-Proofpoint-GUID: YRbli004WBedaXEUwxwmoACPQ6oAEoHR
-X-Proofpoint-ORIG-GUID: YRbli004WBedaXEUwxwmoACPQ6oAEoHR
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220503172532.GA8265@magnolia>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Having just dropped support for quota warning limits and warning counters,
-the warning fields no longer have any meaning. Return -EINVAL if the
-fieldmask has any of the QC_*_WARNS set.
+On Tue, May 03, 2022 at 10:25:32AM -0700, Darrick J. Wong wrote:
+> On Tue, May 03, 2022 at 05:31:01AM +0100, Matthew Wilcox wrote:
+> > On Mon, May 02, 2022 at 08:25:34PM -0700, Darrick J. Wong wrote:
+> > > On Mon, May 02, 2022 at 08:20:00AM -0400, Brian Foster wrote:
+> > > > On Sat, Apr 30, 2022 at 10:40:31PM +0100, Matthew Wilcox wrote:
+> > > > > On Sat, Apr 30, 2022 at 04:44:07AM +0100, Matthew Wilcox wrote:
+> > > > > > (I do not love this, have not even compiled it; it's late.  We may be
+> > > > > > better off just storing next_folio inside the folio_iter).
+> > > > > 
+> > > > > Does anyone have a preference for fixing this between Option A:
+> > > > > 
+> > > > 
+> > > > After seeing the trace in my previous mail and several thousand
+> > > > successful iterations of the test hack, I had reworked it into this
+> > > > (which survived weekend testing until it ran into some other XFS problem
+> > > > that looks unrelated):
+> > > > 
+> > > > diff --git a/include/linux/bio.h b/include/linux/bio.h
+> > > > index 278cc81cc1e7..aa820e09978e 100644
+> > > > --- a/include/linux/bio.h
+> > > > +++ b/include/linux/bio.h
+> > > > @@ -269,6 +269,7 @@ struct folio_iter {
+> > > >  	size_t offset;
+> > > >  	size_t length;
+> > > >  	/* private: for use by the iterator */
+> > > > +	struct folio *_next;
+> > > >  	size_t _seg_count;
+> > > >  	int _i;
+> > > >  };
+> > > > @@ -279,6 +280,7 @@ static inline void bio_first_folio(struct folio_iter *fi, struct bio *bio,
+> > > >  	struct bio_vec *bvec = bio_first_bvec_all(bio) + i;
+> > > >  
+> > > >  	fi->folio = page_folio(bvec->bv_page);
+> > > > +	fi->_next = folio_next(fi->folio);
+> > > >  	fi->offset = bvec->bv_offset +
+> > > >  			PAGE_SIZE * (bvec->bv_page - &fi->folio->page);
+> > > >  	fi->_seg_count = bvec->bv_len;
+> > > > @@ -290,13 +292,15 @@ static inline void bio_next_folio(struct folio_iter *fi, struct bio *bio)
+> > > >  {
+> > > >  	fi->_seg_count -= fi->length;
+> > > >  	if (fi->_seg_count) {
+> > > > -		fi->folio = folio_next(fi->folio);
+> > > > +		fi->folio = fi->_next;
+> > > > +		fi->_next = folio_next(fi->folio);
+> > > >  		fi->offset = 0;
+> > > >  		fi->length = min(folio_size(fi->folio), fi->_seg_count);
+> > > >  	} else if (fi->_i + 1 < bio->bi_vcnt) {
+> > > >  		bio_first_folio(fi, bio, fi->_i + 1);
+> > > >  	} else {
+> > > >  		fi->folio = NULL;
+> > > > +		fi->_next = NULL;
+> > > >  	}
+> > > >  }
+> > > > 
+> > > > So FWIW, that is just to say that I find option A to be cleaner and more
+> > > > readable.
+> > > 
+> > > Me too.  I'll queue up the usual nightly tests with that patch added and
+> > > we'll see how that does.
+> > 
+> > I've just pushed essentially that patch to my for-next tree in case
+> > anybody does any testing with that.  I'll give it a couple of days
+> > before creating a folio-5.18f tag and asking Linus to pull the first two
+> > commits on
+> > 
+> > git://git.infradead.org/users/willy/pagecache.git for-next
+> > 
+> > That is, commits
+> > 
+> > 1a4c97e2dd5b ("block: Do not call folio_next() on an unreferenced folio")
+> > 095099da208b ("mm/readahead: Fix readahead with large folios")
+> 
+> Hmm.  Well, I added 1a4c97 to my tree last night, and it seems to have
+> cleared up all but two of the problems I saw with the for-next branch.
+> 
+> generic/388 still fails (40 minutes in) with:
+> 
+> WARN_ON_ONCE(atomic_read(&iop->write_bytes_pending));
+> VM_BUG_ON_FOLIO(i_blocks_per_folio(inode, folio) > 1 && !iop, folio);
+> 
+> Which I think is the same problem where the fs goes down, XFS throws an
+> error back to iomap_do_writepages, and it tries to discard a folio that
+> already had writeback running on it.
+> 
+> There's also the same problem I reported a few days ago in xfs/501
+> on a 64k-page ARM64 VM where:
+> 
+> run fstests xfs/501 at 2022-05-02 21:17:31
+> XFS: Assertion failed: IS_ALIGNED((unsigned long)lv->lv_buf, sizeof(uint64_t)), file: fs/xfs/xfs_log_cil.c, line: 430
+> XFS: Assertion failed: IS_ALIGNED((unsigned long)buf, sizeof(uint64_t)), file: fs/xfs/xfs_log.c, line: 137
+> XFS: Assertion failed: IS_ALIGNED((unsigned long)buf, sizeof(uint64_t)), file: fs/xfs/xfs_log.c, line: 137
+> 
+> But I think that's a new bug that came in with all the log buffer
+> alignment changes in the 5.19 branch.
+> 
+> Oh.  My tree still had the "disable large folios" patch in it.  I guess
+> the "successful" results are mostly invalid then.
 
-Signed-off-by: Catherine Hoang <catherine.hoang@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_qm_syscalls.c | 2 ++
- 1 file changed, 2 insertions(+)
+Well... with large folios turned back on and those two patches added to
+the branch, *most* of the problems go away.  The generic/388 problem
+persists, and last night's run showed that the weird xfs_dquot leak that
+I"ve occasionally seen on 5.18 with xfs/43[46] also exists in 5.17.
 
-diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
-index 2149c203b1d0..188e1fed2eba 100644
---- a/fs/xfs/xfs_qm_syscalls.c
-+++ b/fs/xfs/xfs_qm_syscalls.c
-@@ -290,6 +290,8 @@ xfs_qm_scall_setqlim(
- 		return -EINVAL;
- 	if ((newlim->d_fieldmask & XFS_QC_MASK) == 0)
- 		return 0;
-+	if (newlim->d_fieldmask & QC_WARNS_MASK)
-+		return -EINVAL;
- 
- 	/*
- 	 * Get the dquot (locked) before we start, as we need to do a
--- 
-2.27.0
+--D
 
+> --D
+> 
+> > (more than happy to update anything about those patches)
