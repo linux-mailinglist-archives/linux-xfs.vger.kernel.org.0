@@ -2,104 +2,80 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2401A51C9D7
-	for <lists+linux-xfs@lfdr.de>; Thu,  5 May 2022 22:01:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8748C51CA3C
+	for <lists+linux-xfs@lfdr.de>; Thu,  5 May 2022 22:11:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244042AbiEEUFW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 5 May 2022 16:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54270 "EHLO
+        id S1384474AbiEEUPG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 5 May 2022 16:15:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244961AbiEEUFV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 May 2022 16:05:21 -0400
-Received: from sandeen.net (sandeen.net [63.231.237.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF2155EDF0
-        for <linux-xfs@vger.kernel.org>; Thu,  5 May 2022 13:01:40 -0700 (PDT)
-Received: from [10.0.0.146] (liberator.sandeen.net [10.0.0.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 0DBA54909;
-        Thu,  5 May 2022 15:01:06 -0500 (CDT)
-Message-ID: <b03a9331-f795-ca8f-d134-ac9912d73372@sandeen.net>
-Date:   Thu, 5 May 2022 15:01:39 -0500
+        with ESMTP id S1385692AbiEEUPE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 5 May 2022 16:15:04 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FF25F270;
+        Thu,  5 May 2022 13:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=PM/ccdcCD65YSGdtLUhZqCD/2HMCRZs8uHjzR7djGJc=; b=0BiWRkfdPMosId3kf4yQdb54lq
+        E0wUE7dJH1N4x/QTJyIUAdWRKMYdPGObO4CAF1i6UnVjQYsZAXNsteVHfLrv43c+BpZpB0hhBDw3O
+        BIVTTJ6xjUe9ohXguAioDP4uksbyzEjjnp8uxtZ/Q7bx3Irw1I26/QBxAYAstcbQf16ncu8HSPLkj
+        sxJp39YcqwvQUx0/FfnYVPGkO5csTywIU6Vxtxx+GTebnOnEsSr3pensS9e2H4baosbaWX9G/wa09
+        yhJyRnNzCwk8SESNDcLvhJKCHHMUAmkKMUdo91ikFHAC4m5N1oWlfylz8g8jyR64XGC7PsNJCMHFG
+        gsVAvjEA==;
+Received: from 65-114-90-19.dia.static.qwest.net ([65.114.90.19] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nmhoj-0006hV-B9; Thu, 05 May 2022 20:11:17 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: reduce memory allocation in the btrfs direct I/O path v2
+Date:   Thu,  5 May 2022 15:11:08 -0500
+Message-Id: <20220505201115.937837-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.0
-Content-Language: en-US
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-References: <165176665416.246985.13192803422215905607.stgit@magnolia>
- <165176665975.246985.16711050246120025448.stgit@magnolia>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Subject: Re: [PATCH 1/2] xfs_db: warn about suspicious finobt trees when
- metadumping
-In-Reply-To: <165176665975.246985.16711050246120025448.stgit@magnolia>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 5/5/22 11:04 AM, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> We warn about suspicious roots and btree heights before metadumping the
-> inode btree, so do the same for the free inode btree.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-LGTM. I wonder if we could do this without quite so much copied code
-(like maybe call copy_inodes twice, once for inode tree once for free inode
-tree?) but that's a patch for another day.
+this series adds two minor improvements to iomap that allow btrfs
+to avoid a memory allocation per read/write system call and another
+one per submitted bio.  I also have at last two other pending uses
+for the iomap functionality later on, so they are not really btrfs
+specific either.
 
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Changes since v1:
+ - pass the private data direct to iomap_dio_rw instead of through the
+   iocb
+ - better document the bio_set in iomap_dio_ops
+ - split a patch into three
+ - use kcalloc to allocate the checksums
 
-===
-
-maybe like this? worth it?
-
-static int
-copy_inodes(
-        xfs_agnumber_t          agno,
-        xfs_agi_t               *agi,
-        int                     finobt)
-{
-        xfs_agblock_t           root;
-        int                     levels;
-        int                     type;
-
-        if (finobt) {
-                type = TYP_FINOBT;
-                root = be32_to_cpu(agi->agi_root);
-                levels = be32_to_cpu(agi->agi_level);
-        } else {
-                type = TYP_INOBT;
-                root = be32_to_cpu(agi->agi_free_root);
-                levels = be32_to_cpu(agi->agi_free_level);
-        }
-
-        /* validate root and levels before processing the tree */
-        if (root == 0 || root > mp->m_sb.sb_agblocks) {
-                if (show_warnings)
-                        print_warning("invalid block number (%u) in %s"
-                                        "root in agi %u", root,
-                                        finobt ? "finobt" : "inobt", agno);
-                return 1;
-        }
-        if (levels > M_IGEO(mp)->inobt_maxlevels) {
-                if (show_warnings)
-                        print_warning("invalid level (%u) in %s root "
-                                        "in agi %u", levels,
-                                        finobt ? "finobt" : "inobt", agno);
-                return 1;
-        }
-
-        if (!scan_btree(agno, root, levels, type, &finobt, scanfunc_ino))
-                return 0;
-
-        return 1;
-}
+Diffstat:
+ fs/btrfs/btrfs_inode.h |   25 --------
+ fs/btrfs/ctree.h       |    6 -
+ fs/btrfs/file.c        |    6 -
+ fs/btrfs/inode.c       |  152 +++++++++++++++++++++++--------------------------
+ fs/erofs/data.c        |    2 
+ fs/ext4/file.c         |    4 -
+ fs/f2fs/file.c         |    4 -
+ fs/gfs2/file.c         |    4 -
+ fs/iomap/direct-io.c   |   26 ++++++--
+ fs/xfs/xfs_file.c      |    6 -
+ fs/zonefs/super.c      |    4 -
+ include/linux/iomap.h  |   16 ++++-
+ 12 files changed, 123 insertions(+), 132 deletions(-)
