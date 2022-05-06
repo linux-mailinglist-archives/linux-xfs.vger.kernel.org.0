@@ -2,570 +2,372 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D8B151D4F6
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 May 2022 11:46:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77C3E51D50D
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 May 2022 11:58:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355839AbiEFJt5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 May 2022 05:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34154 "EHLO
+        id S1390747AbiEFKCF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 May 2022 06:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390710AbiEFJtq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 May 2022 05:49:46 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 90DB223BE4
-        for <linux-xfs@vger.kernel.org>; Fri,  6 May 2022 02:46:02 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id CB55453462B
-        for <linux-xfs@vger.kernel.org>; Fri,  6 May 2022 19:45:58 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nmuX7-008fN0-3K
-        for linux-xfs@vger.kernel.org; Fri, 06 May 2022 19:45:57 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1nmuX7-0029U6-2U
-        for linux-xfs@vger.kernel.org;
-        Fri, 06 May 2022 19:45:57 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 17/17] xfs: ATTR_REPLACE algorithm with LARP enabled needs rework
-Date:   Fri,  6 May 2022 19:45:53 +1000
-Message-Id: <20220506094553.512973-18-david@fromorbit.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220506094553.512973-1-david@fromorbit.com>
-References: <20220506094553.512973-1-david@fromorbit.com>
-MIME-Version: 1.0
+        with ESMTP id S236473AbiEFKCE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 May 2022 06:02:04 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5239756FBC;
+        Fri,  6 May 2022 02:58:22 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2468sC9O030007;
+        Fri, 6 May 2022 09:58:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=2fQlTPDRDrJItV/WuYbMIEpIMCyXqLh3cw3z5W/tLxs=;
+ b=cpBVS0l2YNAhoH342beajA9xvV1vVd21w+tEvXmXYJ9eu536LgLhrSs5TenFiIiu+TiD
+ QEHFnKeDiTsfz3EBFzmWeUjpObuHQQGE1PF/A78AW6iMs5Ve+8HrIstTTz3i48epcWb+
+ f7ANJg7oSa4ZlyZHbIYJh5c/QCHUOVYDBv8nYQ9AInX+1yh1rIcvc+I9pQBvaVK4vb0z
+ yyLbNVW3X4Gz9M+kuYTPUTOm+xtT64V6palKgL67CbmYJ1XBzrBNlSuw/TbDM2C5xZmp
+ iCWjeM9F3Tme7q4nkFHyyV9Bxqez9e+meRLfeZNKVo0C36j1i2+1v7BAZ4yZcKspsUz8 +w== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fruq0ns8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 May 2022 09:58:21 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 2469usqL024125;
+        Fri, 6 May 2022 09:58:20 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fus904yec-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 06 May 2022 09:58:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KDqN6uOdUTMScCrSr9pxQdzmqz/EJPpExLfCGAvC30XO5YrrHhrvtKCuJysp1uxud+mGvFfnUlIDV21kZmGFrOMao3ACQ7lC4ao9kUFc7DykM4L9UpZt8TknG/MGjA9JpltfKqohBKO9dAbOWn6kTPg7C7G3jU1yJEG3YJeyo5Uw/we1fxbIRztkoCO865Mwze35nGS3dW7Gtod/Zh1DdtFUbPddNsHhjGMhuy/rfAiq9kbSd9fz4+kWzYqBUEDFRJ7wm0HEL9yaAlOAQCbbZh/f/JSlGRJfU/PaAMiuncvsZR87it6SaNbtSeJAqEzLpROWo5LGph6a9fuNvLdVmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2fQlTPDRDrJItV/WuYbMIEpIMCyXqLh3cw3z5W/tLxs=;
+ b=kMY0QolLZENIitU46BxGMjw1iFTL1UOEzF8h4Q3sXReVl1H33hIxC7mdZI7umoL6qhQttvpsTpz48eDA49oXkVsYtskSGfdKIEtRCRl5e77KCx+CeOcKChznTPrjw4xYKahEm4KoXPVyT5WBYkvxGYvjTKm+GEv5rLlAJvrLuyJ1V/wsw1YEhpbOb3MUSkJacsi2aeku2ta85uetFHi8b4/NuGASBVO7RK2CmeA6GTgUrB8Qwep1oR1/eXsOrxi7jj2z/9OP2WFEDPKDQDJ7YVF/4DDN/UxybLaJfciu1y6SdOCWOcKoUUJSIs+SI75iDFBRGr7LC9m/hWQIfvv5MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2fQlTPDRDrJItV/WuYbMIEpIMCyXqLh3cw3z5W/tLxs=;
+ b=dcliOKjFnUOpMfWj2DV9s9zLC1bIBtGOV4c8y9o5J+Jw7L/jEMMwAHlAONcwAY34gSQkM3oUqOgJbLVpZMsJ8klz2IGMsKpbVbIPx1wRoaQz8AhM2g6kynnSWAWQcwG5V38mFyD7RryFTN1RTxQnn8lRYoDcOrl4Xv9YT+PqlCQ=
+Received: from SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12)
+ by BLAPR10MB4995.namprd10.prod.outlook.com (2603:10b6:208:333::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.20; Fri, 6 May
+ 2022 09:58:17 +0000
+Received: from SA2PR10MB4587.namprd10.prod.outlook.com
+ ([fe80::7d41:aa0f:80cf:ea15]) by SA2PR10MB4587.namprd10.prod.outlook.com
+ ([fe80::7d41:aa0f:80cf:ea15%6]) with mapi id 15.20.5206.026; Fri, 6 May 2022
+ 09:58:17 +0000
+From:   Chandan Babu R <chandan.babu@oracle.com>
+To:     fstests@vger.kernel.org
+Cc:     Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org
+Subject: [PATCH] xfs/533: Delete test since directory's extent count can never overflow
+Date:   Fri,  6 May 2022 15:27:46 +0530
+Message-Id: <20220506095746.1014345-1-chandan.babu@oracle.com>
+X-Mailer: git-send-email 2.30.2
 Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6274ee57
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=oZkIemNP1mAA:10 a=20KFwNOVAAAA:8 a=8u-lSLDIrFwSWhHH7igA:9
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-ClientProxiedBy: TYAPR01CA0010.jpnprd01.prod.outlook.com (2603:1096:404::22)
+ To SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 887c3271-28e0-4d21-425c-08da2f46f1a0
+X-MS-TrafficTypeDiagnostic: BLAPR10MB4995:EE_
+X-Microsoft-Antispam-PRVS: <BLAPR10MB4995374AC94AE4F8D517D586F6C59@BLAPR10MB4995.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rQal0eM6LxAjYe3UAchY05oPNZOA068KNACTa4iil6K4hwF0PT/dMuoqLDjj6z1nhebnZVNrOB6VTiuJf212g9CT59jNF9oUm3A4O9A+yLPy0e1ifDez8ovXBFiT3ZF0LgCTDrVCfCPclgBITv7Uj3DRT+3fmPf7PDPHj96c11RD6Wpb+X6LqXSjEVQPKNed0CaQPE7gr4diCxFRY1m/8lMPoh/WOBY9YaNDCuekEGRyoZgOGDQKDisL0z5o4jEo7HVchQdBg7xU/rF0PbbJhp0y9l2DOAtMq6PH3RLBMLqFNXlZiFsQ5UaTQlNA4Yl7X6GHRo+c6aEjCm1mB145In5UqQ1t8zJqGOn65Gaob7iQj5tCViPHwLcVNpsikbZeRJPJ9iGz24GPplaeo2Df4HKu0h/rrnbbG6SAannvkJ4YW35lQker+QgFvdXDbY7XNsdVJPvzGsdi5EnoIJISoXnqPKlTQ4FJ9gSQcLFqQxWZcPzNsGZE7V/7mKULEpXKt73i6oo3zgdStsnVGvXitSjVKmJ5DYbnCSycBLP38vkuleMLU9ozQoiQnOgNXom9omXDilDcxy4SHRFYHrwvicnJNd330AVW2KF/mb/zt24Kz6Fr6dvaU+H6yPGSK8TpwCBGd8IriXYpjkro2lOA/o/eLs2MSQ+UYPGzIly64JRGTayV598vQj0YOMrRh5MY366YPEw6ZWCg0z68b4UHHQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR10MB4587.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6506007)(450100002)(83380400001)(66946007)(66556008)(66476007)(8936002)(86362001)(8676002)(4326008)(6486002)(5660300002)(508600001)(38100700002)(38350700002)(6666004)(2906002)(52116002)(1076003)(36756003)(316002)(6916009)(2616005)(186003)(26005)(6512007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3TtQ8eG7DXBcNsgW+vOsPyToOTJiy5XpXAiy9v6UoPHd2D2cSy3TwZDx70Mz?=
+ =?us-ascii?Q?i9BNnpK8kxWVj/WxxiIRuEODby2vvux9R36IZap5uAT9lsaSajNt9ty4RGlc?=
+ =?us-ascii?Q?X5SrIlZK0V8tMPd5kPsphy3o3YIUdlU/+jddry088vxIsnfMVEOJXo7FQ2jU?=
+ =?us-ascii?Q?a0Z5Z/EOWhS6eHxqVu0QbgtT0rnhsR3vndAgFTedqKN0hhjICOOlonn2IQiw?=
+ =?us-ascii?Q?Ugkz27fDLXjTXR9Lqibkvx7u0dgLsU0Na/my1fNawcNiokpTEWkZIfXF9tbL?=
+ =?us-ascii?Q?WZt6euCNoGGx/pOM9UcUsH858EZPhK+F5xWdxUP7eWXDzC2+eReMcOf/LOz0?=
+ =?us-ascii?Q?kSjY51gxfiU24BiMEfSYdRWkX/U5L7otTJnQwe+ntWSFXn0nczaM/Nrn/D0y?=
+ =?us-ascii?Q?qW3a67Uy7e+ThuY23wGNbNcvQfma1FwSPZyr2BIDp7HRC9hNt7GC2B9mcJ4i?=
+ =?us-ascii?Q?811vsQttfnCVTD8IfGgI+DfmzYEgz0moVBF19rkjFnbb68y0y4qSLTK436Kr?=
+ =?us-ascii?Q?5CAaN0oRcDeGi3cevN2qbBYHU5W6rO0r8jpmeCwycjn/blaGtbHJaPAqzD/A?=
+ =?us-ascii?Q?BGBr/n6PIwwNpR1LZ7BpKNCcyTe7AGwpy6IRP8NvLgvcrz22TU9V1RGVD35T?=
+ =?us-ascii?Q?i3IEUFOaCh13rWa5c0a2I8uGMBL4qk1MK8opxcvSL9PDnOCTMPIywXYLf7cP?=
+ =?us-ascii?Q?ZanESPi+EtyguSimlKVSiJqNnxUvTCAsWq56e+LTsX6ewnRi6eK09s0y3B3C?=
+ =?us-ascii?Q?o9Lpqr4rNwnWQE6mBuXT/L4gi9HnziXFC4W3GPKyyX2Evo8CQvKxsPt2YfWB?=
+ =?us-ascii?Q?rJuXyfjvLXgKzoWzJ9DYIrGThIBny7ZHm4Sbd7Tr5jY+YhY5IwsB7ObwV/PO?=
+ =?us-ascii?Q?nzkBIDV1zjzpNyoT+7IqxfkUZBpNtZvny1yZoCA9NUO2vg5KHF1GXEVYoJUE?=
+ =?us-ascii?Q?DVIDRNsSLtWs7cwDzpDLtm7fSri0VOc/vJnClYQ0Kb/WW42g1YLdEVu7vj9H?=
+ =?us-ascii?Q?Cc20YZQJDNSt6tM+chgNeFwogQRyVx9FWBdO/NXNLT3O0hnOLUjDlTtU5hCX?=
+ =?us-ascii?Q?XTiEznoGHacFyRd7y0FiqF0VxMO+Nc2X5C6Cw2aYX6s3cTgbZaeG+M8o4L70?=
+ =?us-ascii?Q?EZFUQukV5ymABMTZ1VjBpmfvi1HwP1OE7rDJlVSJYYcb6axkxAKKhihCwLok?=
+ =?us-ascii?Q?MGS0UW/ulcVGGYcgBrTcou+zQ1TKqm+d524C7uw0MUcLDWywmeRcEcug5MSm?=
+ =?us-ascii?Q?/l5X6NsJ8SuKg+1Bg8Numw4js1vuX0gEvsxQWk3Bzfh2JYfqom7j+xjKZLSe?=
+ =?us-ascii?Q?s7dZhRFLLoGr54WetIUV0xKHQqf0Px6uUkjqS2tX3P8ypB6lfS79p5ChFVzh?=
+ =?us-ascii?Q?uzzc0W9XASmrlvWDFuVJzYow73HKqR/l4HXgftiON9yGiGXqYZUxu5EKft7d?=
+ =?us-ascii?Q?9/A18pQ00SaymCJLc95GfhV0uiDQKByTRsDWORQf5LvNGuzEIZ+U+yMUDwSB?=
+ =?us-ascii?Q?kquLmacx6oP3/EM/zP1stdnyVcmkFpD5xJMkLzCm2EX6cji+KIUu86qhm8G5?=
+ =?us-ascii?Q?ZMaJ8w1habLq4WHo2PCSjSitoEX8czLif7VzghV8X1LKCm8bm2ZUJcME4iYf?=
+ =?us-ascii?Q?GSw3X/iIi81+CgYsm49X6jGEWI5xOoY97RjmJXmqPc/M5hykzFYpA72NVXc5?=
+ =?us-ascii?Q?RneM3uQkPTTwrrv4qG/NxOgrHHXqYyp6RMBuKufTiZYfFUcypLJT3YowHoqr?=
+ =?us-ascii?Q?XcqG2hkqxLos+CiIHfIsglRrHzeGECw=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 887c3271-28e0-4d21-425c-08da2f46f1a0
+X-MS-Exchange-CrossTenant-AuthSource: SA2PR10MB4587.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2022 09:58:17.7030
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EY5tQj7r9w/UgMMo+Ak00kt5TNhNAJ7C/04JxbgwW9Nlrz3JPr6sDpl98HFE+ZkRNBGjSzp3BFsIabUmH/qAMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4995
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
+ definitions=2022-05-06_03:2022-05-05,2022-05-06 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 mlxscore=0 spamscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205060055
+X-Proofpoint-ORIG-GUID: OWWkr2cQ1wZRSe7inAniQWq9fM5kNHIr
+X-Proofpoint-GUID: OWWkr2cQ1wZRSe7inAniQWq9fM5kNHIr
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+The maximum file size that can be represented by the data fork extent counter
+in the worst case occurs when all extents are 1 block in length and each block
+is 1KB in size.
 
-We can't use the same algorithm for replacing an existing attribute
-when logging attributes. The existing algorithm is essentially:
+With XFS_MAX_EXTCNT_DATA_FORK_SMALL representing maximum extent count and with
+1KB sized blocks, a file can reach upto,
+(2^31) * 1KB = 2TB
 
-1. create new attr w/ INCOMPLETE
-2. atomically flip INCOMPLETE flags between old + new attribute
-3. remove old attr which is marked w/ INCOMPLETE
+This is much larger than the theoretical maximum size of a directory
+i.e. XFS_DIR2_SPACE_SIZE * 3 = ~96GB.
 
-This algorithm guarantees that we see either the old or new
-attribute, and if we fail after the atomic flag flip, we don't have
-to recover the removal of the old attr because we never see
-INCOMPLETE attributes in lookups.
+Since a directory can never overflow its data fork extent counter, the xfs
+kernel driver removed code which checked for such a situation before any
+directory modification operation could be executed. Instead, the kernel driver
+verifies the sanity of directory's data fork extent counter when the inode is
+read from disk.
 
-For logged attributes, however, this does not work. The logged
-attribute intents do not track the work that has been done as the
-transaction rolls, and hence the only recovery mechanism we have is
-"run the replace operation from scratch".
+This commit removes the test xfs/533 due to the reasons mentioned above.
 
-This is further exacerbated by the attempt to avoid needing the
-INCOMPLETE flag to create an atomic swap. This means we can create
-a second active attribute of the same name before we remove the
-original. If we fail at any point after the create but before the
-removal has completed, we end up with duplicate attributes in
-the attr btree and recovery only tries to replace one of them.
-
-There are several other failure modes where we can leave partially
-allocated remote attributes that expose stale data, partially free
-remote attributes that enable UAF based stale data exposure, etc.
-
-TO fix this, we need a different algorithm for replace operations
-when LARP is enabled. Luckily, it's not that complex if we take the
-right first step. That is, the first thing we log is the attri
-intent with the new name/value pair and mark the old attr as
-INCOMPLETE in the same transaction.
-
-From there, we then remove the old attr and keep relogging the
-new name/value in the intent, such that we always know that we have
-to create the new attr in recovery. Once the old attr is removed,
-we then run a normal ATTR_CREATE operation relogging the intent as
-we go. If the new attr is local, then it gets created in a single
-atomic transaction that also logs the final intent done. If the new
-attr is remote, the we set INCOMPLETE on the new attr while we
-allocate and set the remote value, and then we clear the INCOMPLETE
-flag at in the last transaction taht logs the final intent done.
-
-If we fail at any point in this algorithm, log recovery will always
-see the same state on disk: the new name/value in the intent, and
-either an INCOMPLETE attr or no attr in the attr btree. If we find
-an INCOMPLETE attr, we run the full replace starting with removing
-the INCOMPLETE attr. If we don't find it, then we simply create the
-new attr.
-
-Notably, recovery of a failed create that has an INCOMPLETE flag set
-is now the same - we start with the lookup of the INCOMPLETE attr,
-and if that exists then we do the full replace recovery process,
-otherwise we just create the new attr.
-
-Hence changing the way we do the replace operation when LARP is
-enabled allows us to use the same log recovery algorithm for both
-the ATTR_CREATE and ATTR_REPLACE operations. This is also the same
-algorithm we use for runtime ATTR_REPLACE operations (except for the
-step setting up the initial conditions).
-
-The result is that:
-
-- ATTR_CREATE uses the same algorithm regardless of whether LARP is
-  enabled or not
-- ATTR_REPLACE with larp=0 is identical to the old algorithm
-- ATTR_REPLACE with larp=1 runs an unmodified attr removal algorithm
-  from the larp=0 code and then runs the unmodified ATTR_CREATE
-  code.
-- log recovery when larp=1 runs the same ATTR_REPLACE algorithm as
-  it uses at runtime.
-
-Because the state machine is now quite clean, changing the algorithm
-is really just a case of changing the initial state and how the
-states link together for the ATTR_REPLACE case. Hence it's not a
-huge amoutn of code for what is a fairly substantial rework
-of the attr logging and recovery algorithm....
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- fs/xfs/libxfs/xfs_attr.c      | 97 +++++++++++++++++++++--------------
- fs/xfs/libxfs/xfs_attr.h      | 49 +++++++++++-------
- fs/xfs/libxfs/xfs_attr_leaf.c | 44 +++++++++++++---
- fs/xfs/libxfs/xfs_da_btree.h  |  4 +-
- fs/xfs/xfs_attr_item.c        |  8 ++-
- fs/xfs/xfs_trace.h            |  7 +--
- 6 files changed, 137 insertions(+), 72 deletions(-)
+ tests/xfs/533     | 170 ----------------------------------------------
+ tests/xfs/533.out |  17 -----
+ 2 files changed, 187 deletions(-)
+ delete mode 100755 tests/xfs/533
+ delete mode 100644 tests/xfs/533.out
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 546e17574488..83fefee44bbe 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -71,9 +71,12 @@ int
- xfs_inode_hasattr(
- 	struct xfs_inode	*ip)
- {
--	if (!XFS_IFORK_Q(ip) ||
--	    (ip->i_afp->if_format == XFS_DINODE_FMT_EXTENTS &&
--	     ip->i_afp->if_nextents == 0))
-+	if (!XFS_IFORK_Q(ip))
-+		return 0;
-+	if (!ip->i_afp)
-+		return 0;
-+	if (ip->i_afp->if_format == XFS_DINODE_FMT_EXTENTS &&
-+	    ip->i_afp->if_nextents == 0)
- 		return 0;
- 	return 1;
- }
-@@ -411,23 +414,30 @@ xfs_attr_sf_addname(
- }
- 
- /*
-- * When we bump the state to REPLACE, we may actually need to skip over the
-- * state. When LARP mode is enabled, we don't need to run the atomic flags flip,
-- * so we skip straight over the REPLACE state and go on to REMOVE_OLD.
-+ * Handle the state change on completion of a multi-state attr operation.
-+ *
-+ * If the XFS_DA_OP_REPLACE flag is set, this means the operation was the first
-+ * modification in a attr replace operation and we still have to do the second
-+ * state, indicated by @replace_state.
-+ *
-+ * We consume the XFS_DA_OP_REPLACE flag so that when we are called again on
-+ * completion of the second half of the attr replace operation we correctly
-+ * signal that it is done.
-  */
--static void
--xfs_attr_dela_state_set_replace(
-+static enum xfs_delattr_state
-+xfs_attr_complete_op(
- 	struct xfs_attr_item	*attr,
--	enum xfs_delattr_state	replace)
-+	enum xfs_delattr_state	replace_state)
- {
- 	struct xfs_da_args	*args = attr->xattri_da_args;
-+	bool			do_replace = args->op_flags & XFS_DA_OP_REPLACE;
- 
--	ASSERT(replace == XFS_DAS_LEAF_REPLACE ||
--			replace == XFS_DAS_NODE_REPLACE);
+diff --git a/tests/xfs/533 b/tests/xfs/533
+deleted file mode 100755
+index b85b5298..00000000
+--- a/tests/xfs/533
++++ /dev/null
+@@ -1,170 +0,0 @@
+-#! /bin/bash
+-# SPDX-License-Identifier: GPL-2.0
+-# Copyright (c) 2021 Chandan Babu R.  All Rights Reserved.
+-#
+-# FS QA Test 533
+-#
+-# Verify that XFS does not cause inode fork's extent count to overflow when
+-# adding/removing directory entries.
+-. ./common/preamble
+-_begin_fstest auto quick dir hardlink symlink
 -
--	attr->xattri_dela_state = replace;
--	if (xfs_has_larp(args->dp->i_mount))
--		attr->xattri_dela_state++;
-+	args->op_flags &= ~XFS_DA_OP_REPLACE;
-+	if (do_replace) {
-+		args->attr_filter &= ~XFS_ATTR_INCOMPLETE;
-+		return replace_state;
-+	}
-+	return XFS_DAS_DONE;
- }
- 
- static int
-@@ -469,10 +479,9 @@ xfs_attr_leaf_addname(
- 	 */
- 	if (args->rmtblkno)
- 		attr->xattri_dela_state = XFS_DAS_LEAF_SET_RMT;
--	else if (args->op_flags & XFS_DA_OP_REPLACE)
--		xfs_attr_dela_state_set_replace(attr, XFS_DAS_LEAF_REPLACE);
- 	else
--		attr->xattri_dela_state = XFS_DAS_DONE;
-+		attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+							XFS_DAS_LEAF_REPLACE);
- out:
- 	trace_xfs_attr_leaf_addname_return(attr->xattri_dela_state, args->dp);
- 	return error;
-@@ -514,10 +523,9 @@ xfs_attr_node_addname(
- 
- 	if (args->rmtblkno)
- 		attr->xattri_dela_state = XFS_DAS_NODE_SET_RMT;
--	else if (args->op_flags & XFS_DA_OP_REPLACE)
--		xfs_attr_dela_state_set_replace(attr, XFS_DAS_NODE_REPLACE);
- 	else
--		attr->xattri_dela_state = XFS_DAS_DONE;
-+		attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+							XFS_DAS_NODE_REPLACE);
- out:
- 	trace_xfs_attr_node_addname_return(attr->xattri_dela_state, args->dp);
- 	return error;
-@@ -549,18 +557,15 @@ xfs_attr_rmtval_alloc(
- 	if (error)
- 		return error;
- 
--	/* If this is not a rename, clear the incomplete flag and we're done. */
--	if (!(args->op_flags & XFS_DA_OP_REPLACE)) {
-+	attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+						++attr->xattri_dela_state);
-+	/*
-+	 * If we are not doing a rename, we've finished the operation but still
-+	 * have to clear the incomplete flag protecting the new attr from
-+	 * exposing partially initialised state if we crash during creation.
-+	 */
-+	if (attr->xattri_dela_state == XFS_DAS_DONE)
- 		error = xfs_attr3_leaf_clearflag(args);
--		attr->xattri_dela_state = XFS_DAS_DONE;
--	} else {
--		/*
--		 * We are running a REPLACE operation, so we need to bump the
--		 * state to the step in that operation.
--		 */
--		attr->xattri_dela_state++;
--		xfs_attr_dela_state_set_replace(attr, attr->xattri_dela_state);
--	}
- out:
- 	trace_xfs_attr_rmtval_alloc(attr->xattri_dela_state, args->dp);
- 	return error;
-@@ -685,13 +690,24 @@ xfs_attr_set_iter(
- 		return xfs_attr_node_addname(attr);
- 
- 	case XFS_DAS_SF_REMOVE:
--		attr->xattri_dela_state = XFS_DAS_DONE;
--		return xfs_attr_sf_removename(args);
-+		error = xfs_attr_sf_removename(args);
-+		attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+						xfs_attr_init_add_state(args));
-+		break;
- 	case XFS_DAS_LEAF_REMOVE:
--		attr->xattri_dela_state = XFS_DAS_DONE;
--		return xfs_attr_leaf_removename(args);
-+		error = xfs_attr_leaf_removename(args);
-+		attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+						xfs_attr_init_add_state(args));
-+		break;
- 	case XFS_DAS_NODE_REMOVE:
- 		error = xfs_attr_node_removename_setup(attr);
-+		if (error == -ENOATTR &&
-+		    (args->op_flags & XFS_DA_OP_RECOVERY)) {
-+			attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+						xfs_attr_init_add_state(args));
-+			error = 0;
-+			break;
-+		}
- 		if (error)
- 			return error;
- 		attr->xattri_dela_state = XFS_DAS_NODE_REMOVE_RMT;
-@@ -777,12 +793,14 @@ xfs_attr_set_iter(
- 
- 	case XFS_DAS_LEAF_REMOVE_ATTR:
- 		error = xfs_attr_leaf_remove_attr(attr);
--		attr->xattri_dela_state = XFS_DAS_DONE;
-+		attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+						xfs_attr_init_add_state(args));
- 		break;
- 
- 	case XFS_DAS_NODE_REMOVE_ATTR:
- 		error = xfs_attr_node_remove_attr(attr);
--		attr->xattri_dela_state = XFS_DAS_DONE;
-+		attr->xattri_dela_state = xfs_attr_complete_op(attr,
-+						xfs_attr_init_add_state(args));
- 		break;
- 	default:
- 		ASSERT(0);
-@@ -1284,9 +1302,10 @@ xfs_attr_leaf_removename(
- 	dp = args->dp;
- 
- 	error = xfs_attr_leaf_hasname(args, &bp);
+-# Import common functions.
+-. ./common/filter
+-. ./common/inject
+-. ./common/populate
 -
- 	if (error == -ENOATTR) {
- 		xfs_trans_brelse(args->trans, bp);
-+		if (args->op_flags & XFS_DA_OP_RECOVERY)
-+			return 0;
- 		return error;
- 	} else if (error != -EEXIST)
- 		return error;
-diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index e93efc8b11cd..7467d31cb3f1 100644
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -444,18 +444,23 @@ struct xfs_attr_list_context {
-  */
- enum xfs_delattr_state {
- 	XFS_DAS_UNINIT		= 0,	/* No state has been set yet */
--	XFS_DAS_SF_ADD,			/* Initial shortform set iter state */
--	XFS_DAS_LEAF_ADD,		/* Initial leaf form set iter state */
--	XFS_DAS_NODE_ADD,		/* Initial node form set iter state */
--	XFS_DAS_RMTBLK,			/* Removing remote blks */
--	XFS_DAS_RM_NAME,		/* Remove attr name */
--	XFS_DAS_RM_SHRINK,		/* We are shrinking the tree */
+-# real QA test starts here
 -
--	XFS_DAS_SF_REMOVE,		/* Initial shortform set iter state */
--	XFS_DAS_LEAF_REMOVE,		/* Initial leaf form set iter state */
--	XFS_DAS_NODE_REMOVE,		/* Initial node form set iter state */
+-_supported_fs xfs
+-_require_scratch
+-_require_xfs_debug
+-_require_test_program "punch-alternating"
+-_require_xfs_io_error_injection "reduce_max_iextents"
+-_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
 -
--	/* Leaf state set/replace sequence */
-+
-+	/*
-+	 * Initial sequence states. The replace setup code relies on the
-+	 * ADD and REMOVE states for a specific format to be sequential so
-+	 * that we can transform the initial operation to be performed
-+	 * according to the xfs_has_larp() state easily.
-+	 */
-+	XFS_DAS_SF_ADD,			/* Initial sf add state */
-+	XFS_DAS_SF_REMOVE,		/* Initial sf replace/remove state */
-+
-+	XFS_DAS_LEAF_ADD,		/* Initial leaf add state */
-+	XFS_DAS_LEAF_REMOVE,		/* Initial leaf replace/remove state */
-+
-+	XFS_DAS_NODE_ADD,		/* Initial node add state */
-+	XFS_DAS_NODE_REMOVE,		/* Initial node replace/remove state */
-+
-+	/* Leaf state set/replace/remove sequence */
- 	XFS_DAS_LEAF_SET_RMT,		/* set a remote xattr from a leaf */
- 	XFS_DAS_LEAF_ALLOC_RMT,		/* We are allocating remote blocks */
- 	XFS_DAS_LEAF_REPLACE,		/* Perform replace ops on a leaf */
-@@ -463,7 +468,7 @@ enum xfs_delattr_state {
- 	XFS_DAS_LEAF_REMOVE_RMT,	/* A rename is removing remote blocks */
- 	XFS_DAS_LEAF_REMOVE_ATTR,	/* Remove the old attr from a leaf */
- 
--	/* Node state set/replace sequence, must match leaf state above */
-+	/* Node state sequence, must match leaf state above */
- 	XFS_DAS_NODE_SET_RMT,		/* set a remote xattr from a node */
- 	XFS_DAS_NODE_ALLOC_RMT,		/* We are allocating remote blocks */
- 	XFS_DAS_NODE_REPLACE,		/* Perform replace ops on a node */
-@@ -477,11 +482,11 @@ enum xfs_delattr_state {
- #define XFS_DAS_STRINGS	\
- 	{ XFS_DAS_UNINIT,		"XFS_DAS_UNINIT" }, \
- 	{ XFS_DAS_SF_ADD,		"XFS_DAS_SF_ADD" }, \
-+	{ XFS_DAS_SF_REMOVE,		"XFS_DAS_SF_REMOVE" }, \
- 	{ XFS_DAS_LEAF_ADD,		"XFS_DAS_LEAF_ADD" }, \
-+	{ XFS_DAS_LEAF_REMOVE,		"XFS_DAS_LEAF_REMOVE" }, \
- 	{ XFS_DAS_NODE_ADD,		"XFS_DAS_NODE_ADD" }, \
--	{ XFS_DAS_RMTBLK,		"XFS_DAS_RMTBLK" }, \
--	{ XFS_DAS_RM_NAME,		"XFS_DAS_RM_NAME" }, \
--	{ XFS_DAS_RM_SHRINK,		"XFS_DAS_RM_SHRINK" }, \
-+	{ XFS_DAS_NODE_REMOVE,		"XFS_DAS_NODE_REMOVE" }, \
- 	{ XFS_DAS_LEAF_SET_RMT,		"XFS_DAS_LEAF_SET_RMT" }, \
- 	{ XFS_DAS_LEAF_ALLOC_RMT,	"XFS_DAS_LEAF_ALLOC_RMT" }, \
- 	{ XFS_DAS_LEAF_REPLACE,		"XFS_DAS_LEAF_REPLACE" }, \
-@@ -525,8 +530,7 @@ struct xfs_attr_item {
- 	enum xfs_delattr_state		xattri_dela_state;
- 
- 	/*
--	 * Indicates if the attr operation is a set or a remove
--	 * XFS_ATTR_OP_FLAGS_{SET,REMOVE}
-+	 * Attr operation being performed - XFS_ATTR_OP_FLAGS_*
- 	 */
- 	unsigned int			xattri_op_flags;
- 
-@@ -605,10 +609,19 @@ xfs_attr_init_remove_state(struct xfs_da_args *args)
- 	return XFS_DAS_NODE_REMOVE;
- }
- 
-+/*
-+ * If we are logging the attributes, then we have to start with removal of the
-+ * old attribute so that there is always consistent state that we can recover
-+ * from if the system goes down part way through. We always log the new attr
-+ * value, so even when we remove the attr first we still have the information in
-+ * the log to finish the replace operation atomically.
-+ */
- static inline enum xfs_delattr_state
- xfs_attr_init_replace_state(struct xfs_da_args *args)
- {
- 	args->op_flags |= XFS_DA_OP_ADDNAME | XFS_DA_OP_REPLACE;
-+	if (xfs_has_larp(args->dp->i_mount))
-+		return xfs_attr_init_remove_state(args);
- 	return xfs_attr_init_add_state(args);
- }
- 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 53d02ce9ed78..d15e92858bf0 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -446,6 +446,14 @@ xfs_attr3_leaf_read(
-  * Namespace helper routines
-  *========================================================================*/
- 
-+/*
-+ * If we are in log recovery, then we want the lookup to ignore the INCOMPLETE
-+ * flag on disk - if there's an incomplete attr then recovery needs to tear it
-+ * down. If there's no incomplete attr, then recovery needs to tear that attr
-+ * down to replace it with the attr that has been logged. In this case, the
-+ * INCOMPLETE flag will not be set in attr->attr_filter, but rather
-+ * XFS_DA_OP_RECOVERY will be set in args->op_flags.
-+ */
- static bool
- xfs_attr_match(
- 	struct xfs_da_args	*args,
-@@ -453,14 +461,18 @@ xfs_attr_match(
- 	unsigned char		*name,
- 	int			flags)
- {
-+
- 	if (args->namelen != namelen)
- 		return false;
- 	if (memcmp(args->name, name, namelen) != 0)
- 		return false;
--	/*
--	 * If we are looking for incomplete entries, show only those, else only
--	 * show complete entries.
--	 */
-+
-+	/* Recovery ignores the INCOMPLETE flag. */
-+	if ((args->op_flags & XFS_DA_OP_RECOVERY) &&
-+	    args->attr_filter == (flags & XFS_ATTR_NSP_ONDISK_MASK))
-+		return true;
-+
-+	/* All remaining matches need to be filtered by INCOMPLETE state. */
- 	if (args->attr_filter !=
- 	    (flags & (XFS_ATTR_NSP_ONDISK_MASK | XFS_ATTR_INCOMPLETE)))
- 		return false;
-@@ -799,6 +811,14 @@ xfs_attr_sf_removename(
- 	sf = (struct xfs_attr_shortform *)dp->i_afp->if_u1.if_data;
- 
- 	error = xfs_attr_sf_findname(args, &sfe, &base);
-+
-+	/*
-+	 * If we are recovering an operation, finding nothing to
-+	 * remove is not an error - it just means there was nothing
-+	 * to clean up.
-+	 */
-+	if (error == -ENOATTR && (args->op_flags & XFS_DA_OP_RECOVERY))
-+		return 0;
- 	if (error != -EEXIST)
- 		return error;
- 	size = xfs_attr_sf_entsize(sfe);
-@@ -819,7 +839,7 @@ xfs_attr_sf_removename(
- 	totsize -= size;
- 	if (totsize == sizeof(xfs_attr_sf_hdr_t) && xfs_has_attr2(mp) &&
- 	    (dp->i_df.if_format != XFS_DINODE_FMT_BTREE) &&
--	    !(args->op_flags & XFS_DA_OP_ADDNAME)) {
-+	    !(args->op_flags & (XFS_DA_OP_ADDNAME | XFS_DA_OP_REPLACE))) {
- 		xfs_attr_fork_remove(dp, args->trans);
- 	} else {
- 		xfs_idata_realloc(dp, -size, XFS_ATTR_FORK);
-@@ -1128,9 +1148,17 @@ xfs_attr3_leaf_to_shortform(
- 		goto out;
- 
- 	if (forkoff == -1) {
--		ASSERT(xfs_has_attr2(dp->i_mount));
--		ASSERT(dp->i_df.if_format != XFS_DINODE_FMT_BTREE);
--		xfs_attr_fork_remove(dp, args->trans);
-+		/*
-+		 * Don't remove the attr fork if this operation is the first
-+		 * part of a attr replace operations. We're going to add a new
-+		 * attr immediately, so we need to keep the attr fork around in
-+		 * this case.
-+		 */
-+		if (!(args->op_flags & XFS_DA_OP_REPLACE)) {
-+			ASSERT(xfs_has_attr2(dp->i_mount));
-+			ASSERT(dp->i_df.if_format != XFS_DINODE_FMT_BTREE);
-+			xfs_attr_fork_remove(dp, args->trans);
-+		}
- 		goto out;
- 	}
- 
-diff --git a/fs/xfs/libxfs/xfs_da_btree.h b/fs/xfs/libxfs/xfs_da_btree.h
-index 13ee2e34f92f..835d1a1da648 100644
---- a/fs/xfs/libxfs/xfs_da_btree.h
-+++ b/fs/xfs/libxfs/xfs_da_btree.h
-@@ -91,6 +91,7 @@ typedef struct xfs_da_args {
- #define XFS_DA_OP_CILOOKUP	(1u << 4) /* lookup returns CI name if found */
- #define XFS_DA_OP_NOTIME	(1u << 5) /* don't update inode timestamps */
- #define XFS_DA_OP_REMOVE	(1u << 6) /* this is a remove operation */
-+#define XFS_DA_OP_RECOVERY	(1u << 7) /* Log recovery operation */
- 
- #define XFS_DA_OP_FLAGS \
- 	{ XFS_DA_OP_JUSTCHECK,	"JUSTCHECK" }, \
-@@ -99,7 +100,8 @@ typedef struct xfs_da_args {
- 	{ XFS_DA_OP_OKNOENT,	"OKNOENT" }, \
- 	{ XFS_DA_OP_CILOOKUP,	"CILOOKUP" }, \
- 	{ XFS_DA_OP_NOTIME,	"NOTIME" }, \
--	{ XFS_DA_OP_REMOVE,	"REMOVE" }
-+	{ XFS_DA_OP_REMOVE,	"REMOVE" }, \
-+	{ XFS_DA_OP_RECOVERY,	"RECOVERY" }
- 
- 
- /*
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index fb9549e7ea96..50ad3aa891ee 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -554,6 +554,7 @@ xfs_attri_item_recover(
- 	args->namelen = attrp->alfi_name_len;
- 	args->hashval = xfs_da_hashname(args->name, args->namelen);
- 	args->attr_filter = attrp->alfi_attr_flags;
-+	args->op_flags = XFS_DA_OP_RECOVERY | XFS_DA_OP_OKNOENT;
- 
- 	switch (attrp->alfi_op_flags & XFS_ATTR_OP_FLAGS_TYPE_MASK) {
- 	case XFS_ATTR_OP_FLAGS_SET:
-@@ -561,9 +562,14 @@ xfs_attri_item_recover(
- 		args->value = attrip->attri_value;
- 		args->valuelen = attrp->alfi_value_len;
- 		args->total = xfs_attr_calc_size(args, &local);
--		attr->xattri_dela_state = xfs_attr_init_add_state(args);
-+		if (xfs_inode_hasattr(args->dp))
-+			attr->xattri_dela_state = xfs_attr_init_replace_state(args);
-+		else
-+			attr->xattri_dela_state = xfs_attr_init_add_state(args);
- 		break;
- 	case XFS_ATTR_OP_FLAGS_REMOVE:
-+		if (!xfs_inode_hasattr(args->dp))
-+			goto out;
- 		attr->xattri_dela_state = xfs_attr_init_remove_state(args);
- 		break;
- 	default:
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 01b047d86cd1..d32026585c1b 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -4131,13 +4131,10 @@ DEFINE_ICLOG_EVENT(xlog_iclog_write);
- 
- TRACE_DEFINE_ENUM(XFS_DAS_UNINIT);
- TRACE_DEFINE_ENUM(XFS_DAS_SF_ADD);
--TRACE_DEFINE_ENUM(XFS_DAS_LEAF_ADD);
--TRACE_DEFINE_ENUM(XFS_DAS_NODE_ADD);
--TRACE_DEFINE_ENUM(XFS_DAS_RMTBLK);
--TRACE_DEFINE_ENUM(XFS_DAS_RM_NAME);
--TRACE_DEFINE_ENUM(XFS_DAS_RM_SHRINK);
- TRACE_DEFINE_ENUM(XFS_DAS_SF_REMOVE);
-+TRACE_DEFINE_ENUM(XFS_DAS_LEAF_ADD);
- TRACE_DEFINE_ENUM(XFS_DAS_LEAF_REMOVE);
-+TRACE_DEFINE_ENUM(XFS_DAS_NODE_ADD);
- TRACE_DEFINE_ENUM(XFS_DAS_NODE_REMOVE);
- TRACE_DEFINE_ENUM(XFS_DAS_LEAF_SET_RMT);
- TRACE_DEFINE_ENUM(XFS_DAS_LEAF_ALLOC_RMT);
+-_scratch_mkfs_sized $((1024 * 1024 * 1024)) | _filter_mkfs >> $seqres.full 2> $tmp.mkfs
+-. $tmp.mkfs
+-
+-# Filesystems with directory block size greater than one FSB will not be tested,
+-# since "7 (i.e. XFS_DA_NODE_MAXDEPTH + 1 data block + 1 free block) * 2 (fsb
+-# count) = 14" is greater than the pseudo max extent count limit of 10.
+-# Extending the pseudo max limit won't help either.  Consider the case where 1
+-# FSB is 1k in size and 1 dir block is 64k in size (i.e. fsb count = 64). In
+-# this case, the pseudo max limit has to be greater than 7 * 64 = 448 extents.
+-if (( $dirbsize > $dbsize )); then
+-	_notrun "Directory block size ($dirbsize) is larger than FSB size ($dbsize)"
+-fi
+-
+-echo "Format and mount fs"
+-_scratch_mkfs_sized $((1024 * 1024 * 1024)) >> $seqres.full
+-_scratch_mount >> $seqres.full
+-
+-# Disable realtime inherit flag (if any) on root directory so that space on data
+-# device gets fragmented rather than realtime device.
+-_xfs_force_bdev data $SCRATCH_MNT
+-
+-echo "Consume free space"
+-fillerdir=$SCRATCH_MNT/fillerdir
+-nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
+-nr_free_blks=$((nr_free_blks * 90 / 100))
+-
+-_fill_fs $((dbsize * nr_free_blks)) $fillerdir $dbsize 0 >> $seqres.full 2>&1
+-
+-echo "Create fragmented filesystem"
+-for dentry in $(ls -1 $fillerdir/); do
+-	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
+-done
+-
+-echo "Inject reduce_max_iextents error tag"
+-_scratch_inject_error reduce_max_iextents 1
+-
+-echo "Inject bmap_alloc_minlen_extent error tag"
+-_scratch_inject_error bmap_alloc_minlen_extent 1
+-
+-dent_len=255
+-
+-echo "* Create directory entries"
+-
+-testdir=$SCRATCH_MNT/testdir
+-mkdir $testdir
+-
+-nr_dents=$((dbsize * 20 / dent_len))
+-for i in $(seq 1 $nr_dents); do
+-	dentry="$(printf "%0255d" $i)"
+-	touch ${testdir}/$dentry >> $seqres.full 2>&1 || break
+-done
+-
+-echo "Verify directory's extent count"
+-nextents=$(_xfs_get_fsxattr nextents $testdir)
+-if (( $nextents > 10 )); then
+-	echo "Extent count overflow check failed: nextents = $nextents"
+-	exit 1
+-fi
+-
+-rm -rf $testdir
+-
+-echo "* Rename: Populate destination directory"
+-
+-dstdir=$SCRATCH_MNT/dstdir
+-mkdir $dstdir
+-
+-nr_dents=$((dirbsize * 20 / dent_len))
+-
+-echo "Populate \$dstdir by moving new directory entries"
+-for i in $(seq 1 $nr_dents); do
+-	dentry="$(printf "%0255d" $i)"
+-	dentry=${SCRATCH_MNT}/${dentry}
+-	touch $dentry || break
+-	mv $dentry $dstdir >> $seqres.full 2>&1 || break
+-done
+-
+-rm $dentry
+-
+-echo "Verify \$dstdir's extent count"
+-
+-nextents=$(_xfs_get_fsxattr nextents $dstdir)
+-if (( $nextents > 10 )); then
+-	echo "Extent count overflow check failed: nextents = $nextents"
+-	exit 1
+-fi
+-
+-rm -rf $dstdir
+-
+-echo "* Create multiple hard links to a single file"
+-
+-testdir=$SCRATCH_MNT/testdir
+-mkdir $testdir
+-
+-testfile=$SCRATCH_MNT/testfile
+-touch $testfile
+-
+-nr_dents=$((dirbsize * 20 / dent_len))
+-
+-echo "Create multiple hardlinks"
+-for i in $(seq 1 $nr_dents); do
+-	dentry="$(printf "%0255d" $i)"
+-	ln $testfile ${testdir}/${dentry} >> $seqres.full 2>&1 || break
+-done
+-
+-rm $testfile
+-
+-echo "Verify directory's extent count"
+-nextents=$(_xfs_get_fsxattr nextents $testdir)
+-if (( $nextents > 10 )); then
+-	echo "Extent count overflow check failed: nextents = $nextents"
+-	exit 1
+-fi
+-
+-rm -rf $testdir
+-
+-echo "* Create multiple symbolic links to a single file"
+-
+-testdir=$SCRATCH_MNT/testdir
+-mkdir $testdir
+-
+-testfile=$SCRATCH_MNT/testfile
+-touch $testfile
+-
+-nr_dents=$((dirbsize * 20 / dent_len))
+-
+-echo "Create multiple symbolic links"
+-for i in $(seq 1 $nr_dents); do
+-	dentry="$(printf "%0255d" $i)"
+-	ln -s $testfile ${testdir}/${dentry} >> $seqres.full 2>&1 || break;
+-done
+-
+-rm $testfile
+-
+-echo "Verify directory's extent count"
+-nextents=$(_xfs_get_fsxattr nextents $testdir)
+-if (( $nextents > 10 )); then
+-	echo "Extent count overflow check failed: nextents = $nextents"
+-	exit 1
+-fi
+-
+-rm -rf $testdir
+-
+-# success, all done
+-status=0
+-exit
+diff --git a/tests/xfs/533.out b/tests/xfs/533.out
+deleted file mode 100644
+index c3cbe2e0..00000000
+--- a/tests/xfs/533.out
++++ /dev/null
+@@ -1,17 +0,0 @@
+-QA output created by 533
+-Format and mount fs
+-Consume free space
+-Create fragmented filesystem
+-Inject reduce_max_iextents error tag
+-Inject bmap_alloc_minlen_extent error tag
+-* Create directory entries
+-Verify directory's extent count
+-* Rename: Populate destination directory
+-Populate $dstdir by moving new directory entries
+-Verify $dstdir's extent count
+-* Create multiple hard links to a single file
+-Create multiple hardlinks
+-Verify directory's extent count
+-* Create multiple symbolic links to a single file
+-Create multiple symbolic links
+-Verify directory's extent count
 -- 
-2.35.1
+2.30.2
 
