@@ -2,47 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69F3951D4AD
-	for <lists+linux-xfs@lfdr.de>; Fri,  6 May 2022 11:33:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5E3F51D4ED
+	for <lists+linux-xfs@lfdr.de>; Fri,  6 May 2022 11:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1390656AbiEFJdu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 6 May 2022 05:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44860 "EHLO
+        id S1390617AbiEFJtt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 6 May 2022 05:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390575AbiEFJde (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 May 2022 05:33:34 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A350B65D27;
-        Fri,  6 May 2022 02:29:20 -0700 (PDT)
+        with ESMTP id S1390678AbiEFJtn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 6 May 2022 05:49:43 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 15DB665D13
+        for <linux-xfs@vger.kernel.org>; Fri,  6 May 2022 02:46:00 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D916110E6631;
-        Fri,  6 May 2022 19:29:18 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id B524353461C
+        for <linux-xfs@vger.kernel.org>; Fri,  6 May 2022 19:45:57 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nmuGx-008fB5-EV; Fri, 06 May 2022 19:29:15 +1000
-Date:   Fri, 6 May 2022 19:29:15 +1000
+        id 1nmuX6-008fMC-H4
+        for linux-xfs@vger.kernel.org; Fri, 06 May 2022 19:45:56 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.95)
+        (envelope-from <david@fromorbit.com>)
+        id 1nmuX6-0029Sn-G4
+        for linux-xfs@vger.kernel.org;
+        Fri, 06 May 2022 19:45:56 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Stefan Roesch <shr@fb.com>
-Cc:     io-uring@vger.kernel.org, kernel-team@fb.com, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 11/18] xfs: add async buffered write support
-Message-ID: <20220506092915.GI1098723@dread.disaster.area>
-References: <20220426174335.4004987-1-shr@fb.com>
- <20220426174335.4004987-12-shr@fb.com>
- <20220426225652.GS1544202@dread.disaster.area>
- <30f2920c-5262-7cb0-05b5-6e84a76162a7@fb.com>
- <20220428215442.GW1098723@dread.disaster.area>
- <19d411e5-fe1f-a3f8-36e0-87284a1c02f3@fb.com>
+To:     linux-xfs@vger.kernel.org
+Subject: 
+Date:   Fri,  6 May 2022 19:45:36 +1000
+Message-Id: <20220506094553.512973-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <19d411e5-fe1f-a3f8-36e0-87284a1c02f3@fb.com>
+Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6274ea6f
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6274ee55
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=FOH2dFAWAAAA:8 a=7-415B0cAAAA:8
-        a=y0LPT60VOqdp-VbHO3cA:9 a=CjuIK1q_8ugA:10 a=i3VuKzQdj-NEYjvDI-p3:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        a=oZkIemNP1mAA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=q30YGFRHdTyF80sAfkgA:9 a=xo5jKAKm-U-Zyk2_beg_:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,107 +50,97 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, May 02, 2022 at 02:21:17PM -0700, Stefan Roesch wrote:
-> 
-> 
-> On 4/28/22 2:54 PM, Dave Chinner wrote:
-> > On Thu, Apr 28, 2022 at 12:58:59PM -0700, Stefan Roesch wrote:
-> >>
-> >>
-> >> On 4/26/22 3:56 PM, Dave Chinner wrote:
-> >>> On Tue, Apr 26, 2022 at 10:43:28AM -0700, Stefan Roesch wrote:
-> >>>> This adds the async buffered write support to XFS. For async buffered
-> >>>> write requests, the request will return -EAGAIN if the ilock cannot be
-> >>>> obtained immediately.
-> >>>>
-> >>>> Signed-off-by: Stefan Roesch <shr@fb.com>
-> >>>> ---
-> >>>>  fs/xfs/xfs_file.c | 10 ++++++----
-> >>>>  1 file changed, 6 insertions(+), 4 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-> >>>> index 6f9da1059e8b..49d54b939502 100644
-> >>>> --- a/fs/xfs/xfs_file.c
-> >>>> +++ b/fs/xfs/xfs_file.c
-> >>>> @@ -739,12 +739,14 @@ xfs_file_buffered_write(
-> >>>>  	bool			cleared_space = false;
-> >>>>  	int			iolock;
-> >>>>  
-> >>>> -	if (iocb->ki_flags & IOCB_NOWAIT)
-> >>>> -		return -EOPNOTSUPP;
-> >>>> -
-> >>>>  write_retry:
-> >>>>  	iolock = XFS_IOLOCK_EXCL;
-> >>>> -	xfs_ilock(ip, iolock);
-> >>>> +	if (iocb->ki_flags & IOCB_NOWAIT) {
-> >>>> +		if (!xfs_ilock_nowait(ip, iolock))
-> >>>> +			return -EAGAIN;
-> >>>> +	} else {
-> >>>> +		xfs_ilock(ip, iolock);
-> >>>> +	}
-> >>>
-> >>> xfs_ilock_iocb().
-> >>>
-> >>
-> >> The helper xfs_ilock_iocb cannot be used as it hardcoded to use iocb->ki_filp to
-> >> get a pointer to the xfs_inode.
-> > 
-> > And the problem with that is?
-> > 
-> > I mean, look at what xfs_file_buffered_write() does to get the
-> > xfs_inode 10 lines about that change:
-> > 
-> > xfs_file_buffered_write(
-> >         struct kiocb            *iocb,
-> >         struct iov_iter         *from)
-> > {
-> >         struct file             *file = iocb->ki_filp;
-> >         struct address_space    *mapping = file->f_mapping;
-> >         struct inode            *inode = mapping->host;
-> >         struct xfs_inode        *ip = XFS_I(inode);
-> > 
-> > In what cases does file_inode(iocb->ki_filp) point to a different
-> > inode than iocb->ki_filp->f_mapping->host? The dio write path assumes
-> > that file_inode(iocb->ki_filp) is correct, as do both the buffered
-> > and dio read paths.
-> > 
-> > What makes the buffered write path special in that
-> > file_inode(iocb->ki_filp) is not correctly set whilst
-> > iocb->ki_filp->f_mapping->host is?
-> > 
-> 
-> In the function xfs_file_buffered_write() the code calls the function 
-> xfs_ilock(). The xfs_inode pointer that is passed in is iocb->ki_filp->f_mapping->host.
-> The one used in xfs_ilock_iocb is ki_filp->f_inode.
-> 
-> After getting the lock, the code in xfs_file_buffered_write calls the
-> function xfs_buffered_write_iomap_begin(). In this function the code
-> calls xfs_ilock() for ki_filp->f_inode in exclusive mode.
-> 
-> If I replace the first xfs_ilock() call with xfs_ilock_iocb(), then it looks
-> like I get a deadlock.
-> 
-> Am I missing something?
+[PATCH 00/17 V3] XFS: LARP state machine and recovery rework
 
-Yes. They take different locks. xfs_file_buffered_write() takes the
-IOLOCK, xfs_buffered_write_iomap_begin() takes the ILOCK....
+This patchset aims to simplify the state machine that the new logged
+attributes require to do their stuff. It also reworks the
+attribute logging and recovery algorithms to simplify them and to
+avoid leaving incomplete attributes around after recovery.
 
-> I can:
-> - replace the pointer to iocb with pointer to xfs_inode in the function xfs_ilock_iocb()
->   and also pass in the flags value as a parameter.
-> or
-> - create function xfs_ilock_inode(), which xfs_ilock_iocb() calls. The existing
->   calls will not need to change, only the xfs_ilock in xfs_file_buffered_write()
->   will use xfs_ilock_inode().
+When I first dug into this code, I modified the state machine
+to try to simplify the set and replace operations as there was
+a lot of duplicate code in them. I also wasn't completely happy with
+the different transistions for replace operations when larp mode was
+enabled. I simplified the state machien and renumbered the states so
+that we can iterate through the same state progression for different
+attr formats just by having different inital leaf and node states.
 
-You're making this way more complex than it needs to be. As I said:
+Once I'd largely done this and started testing it, I realised that
+recovery wasn't setting the initial state properly, so I started
+digging into the recovery code. At this point, I realised the
+recovery code didn't work correctly in all cases and could often
+leave unremovable incomplete attrs sitting around. The issues are
+larger documented in the last patch in the series, so I won't go
+over them here, just read that patch.
 
-> > Regardless, if this is a problem, then just pass the XFS inode to
-> > xfs_ilock_iocb() and this is a moot point.
+However, to get, the whole replace operation for LARP=1 needed to
+change. Luckily, that turned out to be pretty simple because it was
+largely already broken down into component operations in the state
+machine. hence I just needed to add new "remove" initial states to
+the set_iter state machine, and that allowed the new algorithm to
+function.
 
-Cheers,
+Then I realised that I'd just implemented the remove_iter algorithm
+in the set_iter state machine, so I removed the remove_iter code and
+it's states altogether and just pointed remove ops at the set-iter
+remove initial states. The code now uses the XFS_DA_OP_RENAME flag
+to determine if it should follow up an add or remove with a remove
+or add, and it all largely just works. All runtime algorithms run
+throught he same state machine just with different initial states
+and state progressions.
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+And with the last patch in the series, attr item log recovery uses
+that same state machine, too. It has a few quirks that need to be
+handled, so I added the XFS_DA_OP_RECOVERY flag to allow the right
+thing to be done with the INCOMPLETE flag deep in the guts of the
+attr lookup code. And so recovery with LARP=1 now seems to mostly
+work.
+
+This version passes fstests, several recoveryloop passes and the
+targeted error injection based attr recovery test that Catherine
+wrote. There's a fair bit of re-org in the patch series since V2,
+but most of that is pulling stuff from the last patch and putting it
+in the right place in the series. hence the only real logic iand bug
+fixes changes occurred in the last patch that changes the logging 
+and recovery algorithm.
+
+Comments, reviews and, most especially, testing welcome.
+
+A compose of the patchset I've been testing based on the current
+for-next tree can be found here:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-5.19-compose
+
+Version 3:
+- rebased on 5.18-rc2 + for-next + rebased larp v29
+- added state asserts to xfs_attr_dela_state_set_replace()
+- only roll the transactions in ALLOC_RMT when we need to do more
+  extent allocation for the remote attr value container.
+- removed unnecessary attr->xattri_blkcnt check in ALLOC_RMT
+- added comments to commit message to explain why we are combining
+  the set and remove paths.
+- preserved and isolated the state path save/restore code for
+  avoiding repeated name entry path lookups when rolling transactins
+  across remove operations.  Left a big comment for Future Dave to
+  re-enable the optimisation.
+- fixed a transient attr fork removal bug in
+  xfs_attr3_leaf_to_shortform() in the new removal algorithm which
+  can result in the attr fork being removed between the remove and
+  set ops in a REPLACE operation.
+- moved defer operation setup changes ("split replace from set op")
+  to early on in the series and combined it with the refactoring
+  done immediately afterwards in the last patch of the series. This
+  allows for cleanly fixing the log recovery state initialisation
+  problem the patchset had.
+- pulled the state initialisation for log recovery up into the
+  patches that introduce the state machine changes for the given
+  operations.
+- Lots of changes to log recovery algorithm change in last patch.
+
+Version 2:
+https://lore.kernel.org/linux-xfs/20220414094434.2508781-1-david@fromorbit.com/
+- fixed attrd initialisation for LARP=1 mode
+- fixed REPLACE->REMOVE_OLD state transition for LARP=1 mode
+- added more comments to describe the assumptions that allow
+  xfs_attr_remove_leaf_attr() to work for both modes
+
