@@ -2,116 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B924751F78B
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 May 2022 11:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B92A0520362
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 May 2022 19:15:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbiEIIzD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 9 May 2022 04:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
+        id S239509AbiEIRTR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Mon, 9 May 2022 13:19:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237429AbiEIIW5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 9 May 2022 04:22:57 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC3051F0185
-        for <linux-xfs@vger.kernel.org>; Mon,  9 May 2022 01:18:58 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D30F610E641B
-        for <linux-xfs@vger.kernel.org>; Mon,  9 May 2022 18:17:40 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nnyaI-009pGQ-Ic
-        for linux-xfs@vger.kernel.org; Mon, 09 May 2022 18:17:38 +1000
-Date:   Mon, 9 May 2022 18:17:38 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 16/17] xfs: use XFS_DA_OP flags in deferred attr ops
-Message-ID: <20220509081738.GO1098723@dread.disaster.area>
-References: <20220506094553.512973-1-david@fromorbit.com>
- <20220506094553.512973-17-david@fromorbit.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220506094553.512973-17-david@fromorbit.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6278ce25
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=7-415B0cAAAA:8
-        a=HmUQqCAQpMAkksBoIDYA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S239656AbiEIRTM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 9 May 2022 13:19:12 -0400
+X-Greylist: delayed 17593 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 09 May 2022 10:15:17 PDT
+Received: from college.royalclean-uae.com (unknown [46.101.234.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D3ED6D
+        for <linux-xfs@vger.kernel.org>; Mon,  9 May 2022 10:15:16 -0700 (PDT)
+Received: by college.royalclean-uae.com (Postfix, from userid 5002)
+        id B0C49215EE6; Mon,  9 May 2022 12:07:34 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: *******
+X-Spam-Status: Yes, score=7.4 required=5.0 tests=BAYES_95,DATE_IN_PAST_12_24,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HK_NAME_MR_MRS,
+        KHOP_HELO_FCRDNS,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Received: from regiespfs.net (unknown [194.31.98.83])
+        (Authenticated sender: info@royalclean-uae.com)
+        by college.royalclean-uae.com (Postfix) with ESMTPA id 09F1F2C04D7
+        for <linux-xfs@vger.kernel.org>; Sun,  8 May 2022 16:09:24 +0000 (UTC)
+Reply-To: bastienlouise273@gmail.com
+From:   "Mrs Louise Bastien" <admin@regiespfs.net>
+To:     linux-xfs@vger.kernel.org
+Subject: Hello and hope you are having a good day? 
+Date:   08 May 2022 09:09:24 -0700
+Message-ID: <20220508090924.371B737BCC3C465D@regiespfs.net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Report: *  3.0 BAYES_95 BODY: Bayes spam probability is 95 to 99%
+        *      [score: 0.9591]
+        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
+        *      [46.101.234.199 listed in wl.mailspike.net]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [bastienlouise273[at]gmail.com]
+        *  0.0 SPF_NONE SPF: sender does not publish an SPF Record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  1.0 DATE_IN_PAST_12_24 Date: is 12 to 24 hours before Received:
+        *      date
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  1.0 HK_NAME_MR_MRS No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+        *  0.0 KHOP_HELO_FCRDNS Relay HELO differs from its IP's reverse DNS
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, May 06, 2022 at 07:45:52PM +1000, Dave Chinner wrote:
-> @@ -1357,46 +1370,45 @@ xfs_attr_node_hasname(
->  
->  STATIC int
->  xfs_attr_node_addname_find_attr(
-> -	 struct xfs_attr_item		*attr)
-> +	 struct xfs_attr_item	*attr)
->  {
-> -	struct xfs_da_args		*args = attr->xattri_da_args;
-> -	int				retval;
-> +	struct xfs_da_args	*args = attr->xattri_da_args;
-> +	int			error;
->  
->  	/*
->  	 * Search to see if name already exists, and get back a pointer
->  	 * to where it should go.
->  	 */
-> -	retval = xfs_attr_node_hasname(args, &attr->xattri_da_state);
-> -	if (retval != -ENOATTR && retval != -EEXIST)
-> -		goto error;
-> -
-> -	if (retval == -ENOATTR && (args->attr_flags & XATTR_REPLACE))
-> -		goto error;
-> -	if (retval == -EEXIST) {
-> -		if (args->attr_flags & XATTR_CREATE)
-> +	error = xfs_attr_node_hasname(args, &attr->xattri_da_state);
-> +	switch (error) {
-> +	case -ENOATTR:
-> +		if (args->op_flags & XFS_DA_OP_REPLACE)
-> +			goto error;
-> +		break;
-> +	case -EEXIST:
-> +		if (!(args->op_flags & XFS_DA_OP_REPLACE))
->  			goto error;
->  
-> -		trace_xfs_attr_node_replace(args);
-> -
-> -		/* save the attribute state for later removal*/
-> -		args->op_flags |= XFS_DA_OP_RENAME;	/* atomic rename op */
-> -		xfs_attr_save_rmt_blk(args);
->  
-> +		trace_xfs_attr_node_replace(args);
->  		/*
-> -		 * clear the remote attr state now that it is saved so that the
-> -		 * values reflect the state of the attribute we are about to
-> +		 * Save the existing remote attr state so that the current
-> +		 * values reflect the state of the new attribute we are about to
->  		 * add, not the attribute we just found and will remove later.
->  		 */
-> -		args->rmtblkno = 0;
-> -		args->rmtblkcnt = 0;
-> -		args->rmtvaluelen = 0;
-> +		xfs_attr_save_rmt_blk(args);
+Sorry to invade your privacy.
 
-Ok, removing the rmtblk zeroing right there is a bug. Not sure how I
-introduced that, or why it didn't show up until this afternoon. The
-leaf version of this same code is correct, and it triggers on
-generic/026 when larp = 0 but not when larp = 1.
+My name is Ms. Louise Bastien and I'm from Aix-en-Provence, France. I
+am contacting you to make a charitable donation  to help the poor and underprivileged. Please, if you can handle this project, 
+kindly reply to my email for more information and also discussion.
 
-I've fixed it, but vger is constipated again and I patches sent 8
-hours ago haven't reached the list yet so when I arrives I'll post
-an updated version of this patch against it....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Best regards.
+Mrs Louise Bastien
