@@ -2,47 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A394951F239
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 May 2022 03:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A015151F248
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 May 2022 03:26:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230012AbiEIBaF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 8 May 2022 21:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34794 "EHLO
+        id S233627AbiEIBaf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 8 May 2022 21:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234318AbiEIAHW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 May 2022 20:07:22 -0400
+        with ESMTP id S235598AbiEIApg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 May 2022 20:45:36 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCB33DEF1;
-        Sun,  8 May 2022 17:03:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 080B6BC04
+        for <linux-xfs@vger.kernel.org>; Sun,  8 May 2022 17:41:44 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 88BAC52DCAB;
-        Mon,  9 May 2022 10:03:28 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 35D55534474
+        for <linux-xfs@vger.kernel.org>; Mon,  9 May 2022 10:41:41 +1000 (AEST)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nnqs2-009h1M-Jk; Mon, 09 May 2022 10:03:26 +1000
-Date:   Mon, 9 May 2022 10:03:26 +1000
+        id 1nnrT2-009hcm-39
+        for linux-xfs@vger.kernel.org; Mon, 09 May 2022 10:41:40 +1000
+Received: from dave by discord.disaster.area with local (Exim 4.95)
+        (envelope-from <david@fromorbit.com>)
+        id 1nnrT2-003COx-1q
+        for linux-xfs@vger.kernel.org;
+        Mon, 09 May 2022 10:41:40 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Carel Si <beibei.si@intel.com>
-Cc:     lkp@intel.com, linux-kernel@vger.kernel.org, lkp@lists.01.org,
-        fengwei.yin@intel.com, linux-xfs@vger.kernel.org,
-        oliver.sang@intel.com
-Subject: Re: [LKP] Re: [xfs]  32678f1513:  aim7.jobs-per-min -5.6% regression
-Message-ID: <20220509000326.GN1098723@dread.disaster.area>
-References: <20220502082018.1076561-2-david@fromorbit.com>
- <20220506092250.GI23061@xsang-OptiPlex-9020>
- <20220506212924.GJ1098723@dread.disaster.area>
- <20220507110941.GA10880@linux.intel.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 00/18 V4] XFS: LARP state machine and recovery rework
+Date:   Mon,  9 May 2022 10:41:20 +1000
+Message-Id: <20220509004138.762556-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220507110941.GA10880@linux.intel.com>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62785a51
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62786345
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=8nJEP1OIZ-IA:10 a=oZkIemNP1mAA:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8
-        a=7-415B0cAAAA:8 a=OIWXXrKM4WwZCH1KPDMA:9 a=wPNLvfGTeEIA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=oZkIemNP1mAA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=fCEDb6516mKtF2QmGWwA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,79 +50,105 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, May 07, 2022 at 07:09:46PM +0800, Carel Si wrote:
-> Hi Dave,
-> 
-> On Sat, May 07, 2022 at 07:29:24AM +1000, Dave Chinner wrote:
-> > On Fri, May 06, 2022 at 05:22:50PM +0800, kernel test robot wrote:
-> > > 
-> > > 
-> > > Greeting,
-> > > 
-> > > FYI, we noticed a -5.6% regression of aim7.jobs-per-min due to commit:
-> > > 
-> > > 
-> > > commit: 32678f151338b9a321e9e27139a63c81f353acb7 ("[PATCH 1/4] xfs: detect self referencing btree sibling pointers")
-> > > url: https://github.com/intel-lab-lkp/linux/commits/Dave-Chinner/xfs-fix-random-format-verification-issues/20220502-162206
-> > > base: https://git.kernel.org/cgit/fs/xfs/xfs-linux.git for-next
-> > > patch link: https://lore.kernel.org/linux-xfs/20220502082018.1076561-2-david@fromorbit.com
-> > 
-> > Well, that answers the concern I had about the impact of 
-> > changing the way endian conversions were done in that patch.
-> > 
-> > > a44a027a8b2a20fe 32678f151338b9a321e9e27139a 
-> > > ---------------- --------------------------- 
-> > >          %stddev     %change         %stddev
-> > >              \          |                \  
-> > >     464232            -5.6%     438315        aim7.jobs-per-min
-> > ....
-> > >       0.13 ±  5%      +0.2        0.33 ±  6%  perf-profile.children.cycles-pp.__xfs_btree_check_sblock
-> > ....
-> > >       0.11 ±  4%      +0.2        0.30 ±  5%  perf-profile.self.cycles-pp.__xfs_btree_check_sblock
-> > 
-> > Because there is it, right at the bottom of the profile.
-> > 
-> > Can you try the patch below and see if that fixes the issue?
-> 
-> We tested below patch, it didn't fix the issue, still has -6.4% regression [1] 
-> comparing to a44a027a8b ("Merge tag 'large-extent-counters-v9' of 
-> https://github.com/chandanr/linux into xfs-5.19-for-next"). 
+This patchset aims to simplify the state machine that the new logged
+attributes require to do their stuff. It also reworks the
+attribute logging and recovery algorithms to simplify them and to
+avoid leaving incomplete attributes around after recovery.
 
-Really? It made the regression *worse*?
+When I first dug into this code, I modified the state machine
+to try to simplify the set and replace operations as there was
+a lot of duplicate code in them. I also wasn't completely happy with
+the different transistions for replace operations when larp mode was
+enabled. I simplified the state machien and renumbered the states so
+that we can iterate through the same state progression for different
+attr formats just by having different inital leaf and node states.
 
-Oh, wait, *that* wasn't in the last set of profiles:
+Once I'd largely done this and started testing it, I realised that
+recovery wasn't setting the initial state properly, so I started
+digging into the recovery code. At this point, I realised the
+recovery code didn't work correctly in all cases and could often
+leave unremovable incomplete attrs sitting around. The issues are
+larger documented in the last patch in the series, so I won't go
+over them here, just read that patch.
 
-....
->      35.30 ±  4%      +1.3       36.59 ±  3%      +1.9       37.24 ±  3%  perf-profile.children.cycles-pp.osq_lock
->      36.88 ±  4%      +1.3       38.19 ±  2%      +1.9       38.83 ±  3%  perf-profile.children.cycles-pp.rwsem_optimistic_spin
->      37.40 ±  4%      +1.4       38.77 ±  2%      +2.0       39.35 ±  3%  perf-profile.children.cycles-pp.rwsem_down_write_slowpath
-....
->       1.89 ±  3%      +0.1        1.96 ±  4%      +0.0        1.90 ±  2%  perf-profile.self.cycles-pp.rwsem_spin_on_owner
->       0.11 ±  4%      +0.2        0.30 ±  5%      +0.2        0.29        perf-profile.self.cycles-pp.__xfs_btree_check_sblock
->      35.08 ±  4%      +1.3       36.33 ±  2%      +1.9       37.01 ±  3%  perf-profile.self.cycles-pp.osq_lock
+However, to get, the whole replace operation for LARP=1 needed to
+change. Luckily, that turned out to be pretty simple because it was
+largely already broken down into component operations in the state
+machine. hence I just needed to add new "remove" initial states to
+the set_iter state machine, and that allowed the new algorithm to
+function.
 
-This test is hammering an rwsem which is them spinning on exclusive
-write locks somewhere. That's where all the increase in system time
-has come from, and that's what's causing the difference in
-perofrmance. I bet this test is hammering single file write IO from
-all 96 CPUs at once, and that's where all the problems start.
+Then I realised that I'd just implemented the remove_iter algorithm
+in the set_iter state machine, so I removed the remove_iter code and
+it's states altogether and just pointed remove ops at the set-iter
+remove initial states. The code now uses the XFS_DA_OP_RENAME flag
+to determine if it should follow up an add or remove with a remove
+or add, and it all largely just works. All runtime algorithms run
+throught he same state machine just with different initial states
+and state progressions.
 
-IOWs, this likley has nothing to with the btree validation change,
-and everything to do with the system being driven into a lock and
-cacheline contention corner. When there is lock contention like this
-on a large CPU count system, we can't infer anything at all from any
-other measurement because the cacheline contention skews
-everything...
+And with the last patch in the series, attr item log recovery uses
+that same state machine, too. It has a few quirks that need to be
+handled, so I added the XFS_DA_OP_RECOVERY flag to allow the right
+thing to be done with the INCOMPLETE flag deep in the guts of the
+attr lookup code. And so recovery with LARP=1 now seems to mostly
+work.
 
-I'm not going to look at this any further, and I think I'm going to
-ignore AIM7 write test regressions in future until the test is
-reconfigured to avoid this sort of "100 cpus all trying to do
-buffered writes to the same file" contention issue.
+This version passes fstests, several recoveryloop passes and the
+targeted error injection based attr recovery test that Catherine
+wrote. There's a fair bit of re-org in the patch series since V2,
+but most of that is pulling stuff from the last patch and putting it
+in the right place in the series. hence the only real logic iand bug
+fixes changes occurred in the last patch that changes the logging 
+and recovery algorithm.
 
-Cheers,
+Comments, reviews and, most especially, testing welcome.
 
-Dave.
+A compose of the patchset I've been testing based on the current
+for-next tree can be found here:
 
--- 
-Dave Chinner
-david@fromorbit.com
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-5.19-compose
+
+Version 4:
+- fixed failure to collapse empty node form structures back to
+  shortform and/or removing the attr fork altogether if empty.
+  Several subsequent patches needed rebasing after this, so I
+  decided a new version of the patchset was warranted.
+- added patch to ensure leaf format verifiers catch empty leaf nodes
+  being written to disk. This would have caught the node format
+  collapse bug this version fixes.
+
+Version 3:
+- https://lore.kernel.org/linux-xfs/20220506223532.GK1098723@dread.disaster.area/
+- rebased on 5.18-rc2 + for-next + rebased larp v29
+- added state asserts to xfs_attr_dela_state_set_replace()
+- only roll the transactions in ALLOC_RMT when we need to do more
+  extent allocation for the remote attr value container.
+- removed unnecessary attr->xattri_blkcnt check in ALLOC_RMT
+- added comments to commit message to explain why we are combining
+  the set and remove paths.
+- preserved and isolated the state path save/restore code for
+  avoiding repeated name entry path lookups when rolling transactins
+  across remove operations.  Left a big comment for Future Dave to
+  re-enable the optimisation.
+- fixed a transient attr fork removal bug in
+  xfs_attr3_leaf_to_shortform() in the new removal algorithm which
+  can result in the attr fork being removed between the remove and
+  set ops in a REPLACE operation.
+- moved defer operation setup changes ("split replace from set op")
+  to early on in the series and combined it with the refactoring
+  done immediately afterwards in the last patch of the series. This
+  allows for cleanly fixing the log recovery state initialisation
+  problem the patchset had.
+- pulled the state initialisation for log recovery up into the
+  patches that introduce the state machine changes for the given
+  operations.
+- Lots of changes to log recovery algorithm change in last patch.
+
+Version 2:
+https://lore.kernel.org/linux-xfs/20220414094434.2508781-1-david@fromorbit.com/
+- fixed attrd initialisation for LARP=1 mode
+- fixed REPLACE->REMOVE_OLD state transition for LARP=1 mode
+- added more comments to describe the assumptions that allow
+  xfs_attr_remove_leaf_attr() to work for both modes
+
