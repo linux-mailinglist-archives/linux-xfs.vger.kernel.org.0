@@ -2,45 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A015151F248
-	for <lists+linux-xfs@lfdr.de>; Mon,  9 May 2022 03:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C084551F240
+	for <lists+linux-xfs@lfdr.de>; Mon,  9 May 2022 03:26:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233627AbiEIBaf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 8 May 2022 21:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44624 "EHLO
+        id S232160AbiEIBaW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 8 May 2022 21:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235598AbiEIApg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 May 2022 20:45:36 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 080B6BC04
-        for <linux-xfs@vger.kernel.org>; Sun,  8 May 2022 17:41:44 -0700 (PDT)
+        with ESMTP id S235596AbiEIApf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 8 May 2022 20:45:35 -0400
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6BF96BC03
+        for <linux-xfs@vger.kernel.org>; Sun,  8 May 2022 17:41:43 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 35D55534474
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 37A8F10E63EE
         for <linux-xfs@vger.kernel.org>; Mon,  9 May 2022 10:41:41 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nnrT2-009hcm-39
+        id 1nnrT2-009hcn-40
         for linux-xfs@vger.kernel.org; Mon, 09 May 2022 10:41:40 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nnrT2-003COx-1q
+        id 1nnrT2-003CP0-2y
         for linux-xfs@vger.kernel.org;
         Mon, 09 May 2022 10:41:40 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 00/18 V4] XFS: LARP state machine and recovery rework
-Date:   Mon,  9 May 2022 10:41:20 +1000
-Message-Id: <20220509004138.762556-1-david@fromorbit.com>
+Subject: [PATCH 01/18] xfs: avoid empty xattr transaction when attrs are inline
+Date:   Mon,  9 May 2022 10:41:21 +1000
+Message-Id: <20220509004138.762556-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220509004138.762556-1-david@fromorbit.com>
+References: <20220509004138.762556-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62786345
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62786345
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=oZkIemNP1mAA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=fCEDb6516mKtF2QmGWwA:9 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+        a=oZkIemNP1mAA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8
+        a=z6sQ9X07RN1rA8HuyEwA:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -50,105 +51,127 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patchset aims to simplify the state machine that the new logged
-attributes require to do their stuff. It also reworks the
-attribute logging and recovery algorithms to simplify them and to
-avoid leaving incomplete attributes around after recovery.
+From: Dave Chinner <dchinner@redhat.com>
 
-When I first dug into this code, I modified the state machine
-to try to simplify the set and replace operations as there was
-a lot of duplicate code in them. I also wasn't completely happy with
-the different transistions for replace operations when larp mode was
-enabled. I simplified the state machien and renumbered the states so
-that we can iterate through the same state progression for different
-attr formats just by having different inital leaf and node states.
+generic/642 triggered a reproducable assert failure in
+xlog_cil_commit() that resulted from a xfs_attr_set() committing
+an empty but dirty transaction. When the CIL is empty and this
+occurs, xlog_cil_commit() tries a background push and this triggers
+a "pushing an empty CIL" assert.
 
-Once I'd largely done this and started testing it, I realised that
-recovery wasn't setting the initial state properly, so I started
-digging into the recovery code. At this point, I realised the
-recovery code didn't work correctly in all cases and could often
-leave unremovable incomplete attrs sitting around. The issues are
-larger documented in the last patch in the series, so I won't go
-over them here, just read that patch.
+XFS: Assertion failed: !list_empty(&cil->xc_cil), file: fs/xfs/xfs_log_cil.c, line: 1274
+Call Trace:
+ <TASK>
+ xlog_cil_commit+0xa5a/0xad0
+ __xfs_trans_commit+0xb8/0x330
+ xfs_trans_commit+0x10/0x20
+ xfs_attr_set+0x3e2/0x4c0
+ xfs_xattr_set+0x8d/0xe0
+ __vfs_setxattr+0x6b/0x90
+ __vfs_setxattr_noperm+0x76/0x220
+ __vfs_setxattr_locked+0xdf/0x100
+ vfs_setxattr+0x94/0x170
+ setxattr+0x110/0x200
+ path_setxattr+0xbf/0xe0
+ __x64_sys_setxattr+0x2b/0x30
+ do_syscall_64+0x35/0x80
 
-However, to get, the whole replace operation for LARP=1 needed to
-change. Luckily, that turned out to be pretty simple because it was
-largely already broken down into component operations in the state
-machine. hence I just needed to add new "remove" initial states to
-the set_iter state machine, and that allowed the new algorithm to
-function.
+The problem is related to the breakdown of attribute addition in
+xfs_attr_set_iter() and how it is called from deferred operations.
+When we have a pure leaf xattr insert, we add the xattr to the leaf
+and set the next state to XFS_DAS_FOUND_LBLK and return -EAGAIN.
+This requeues the xattr defered work, rolls the transaction and
+runs xfs_attr_set_iter() again. This then checks the xattr for
+being remote (it's not) and whether a replace op is being done (this
+is a create op) and if neither are true it returns without having
+done anything.
 
-Then I realised that I'd just implemented the remove_iter algorithm
-in the set_iter state machine, so I removed the remove_iter code and
-it's states altogether and just pointed remove ops at the set-iter
-remove initial states. The code now uses the XFS_DA_OP_RENAME flag
-to determine if it should follow up an add or remove with a remove
-or add, and it all largely just works. All runtime algorithms run
-throught he same state machine just with different initial states
-and state progressions.
+xfs_xattri_finish_update() then unconditionally sets the transaction
+dirty, and the deferops finishes and returns to __xfs_trans_commit()
+which sees the transaction dirty and tries to commit it by calling
+xlog_cil_commit(). The transaction is empty, and then the assert
+fires if this happens when the CIL is empty.
 
-And with the last patch in the series, attr item log recovery uses
-that same state machine, too. It has a few quirks that need to be
-handled, so I added the XFS_DA_OP_RECOVERY flag to allow the right
-thing to be done with the INCOMPLETE flag deep in the guts of the
-attr lookup code. And so recovery with LARP=1 now seems to mostly
-work.
+This patch addresses the structure of xfs_attr_set_iter() that
+requires re-entry on leaf add even when nothing will be done. This
+gets rid of the trailing empty transaction and so doesn't trigger
+the XFS_TRANS_DIRTY assignment in xfs_xattri_finish_update()
+incorrectly. Addressing that is for a different patch.
 
-This version passes fstests, several recoveryloop passes and the
-targeted error injection based attr recovery test that Catherine
-wrote. There's a fair bit of re-org in the patch series since V2,
-but most of that is pulling stuff from the last patch and putting it
-in the right place in the series. hence the only real logic iand bug
-fixes changes occurred in the last patch that changes the logging 
-and recovery algorithm.
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Allison Henderson<allison.henderson@oracle.com>
+---
+ fs/xfs/libxfs/xfs_attr.c | 39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
 
-Comments, reviews and, most especially, testing welcome.
-
-A compose of the patchset I've been testing based on the current
-for-next tree can be found here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/dgc/linux-xfs.git xfs-5.19-compose
-
-Version 4:
-- fixed failure to collapse empty node form structures back to
-  shortform and/or removing the attr fork altogether if empty.
-  Several subsequent patches needed rebasing after this, so I
-  decided a new version of the patchset was warranted.
-- added patch to ensure leaf format verifiers catch empty leaf nodes
-  being written to disk. This would have caught the node format
-  collapse bug this version fixes.
-
-Version 3:
-- https://lore.kernel.org/linux-xfs/20220506223532.GK1098723@dread.disaster.area/
-- rebased on 5.18-rc2 + for-next + rebased larp v29
-- added state asserts to xfs_attr_dela_state_set_replace()
-- only roll the transactions in ALLOC_RMT when we need to do more
-  extent allocation for the remote attr value container.
-- removed unnecessary attr->xattri_blkcnt check in ALLOC_RMT
-- added comments to commit message to explain why we are combining
-  the set and remove paths.
-- preserved and isolated the state path save/restore code for
-  avoiding repeated name entry path lookups when rolling transactins
-  across remove operations.  Left a big comment for Future Dave to
-  re-enable the optimisation.
-- fixed a transient attr fork removal bug in
-  xfs_attr3_leaf_to_shortform() in the new removal algorithm which
-  can result in the attr fork being removed between the remove and
-  set ops in a REPLACE operation.
-- moved defer operation setup changes ("split replace from set op")
-  to early on in the series and combined it with the refactoring
-  done immediately afterwards in the last patch of the series. This
-  allows for cleanly fixing the log recovery state initialisation
-  problem the patchset had.
-- pulled the state initialisation for log recovery up into the
-  patches that introduce the state machine changes for the given
-  operations.
-- Lots of changes to log recovery algorithm change in last patch.
-
-Version 2:
-https://lore.kernel.org/linux-xfs/20220414094434.2508781-1-david@fromorbit.com/
-- fixed attrd initialisation for LARP=1 mode
-- fixed REPLACE->REMOVE_OLD state transition for LARP=1 mode
-- added more comments to describe the assumptions that allow
-  xfs_attr_remove_leaf_attr() to work for both modes
+diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+index 48b7e7efbb30..b3d918195160 100644
+--- a/fs/xfs/libxfs/xfs_attr.c
++++ b/fs/xfs/libxfs/xfs_attr.c
+@@ -315,6 +315,7 @@ xfs_attr_leaf_addname(
+ {
+ 	struct xfs_da_args	*args = attr->xattri_da_args;
+ 	struct xfs_inode	*dp = args->dp;
++	enum xfs_delattr_state	next_state = XFS_DAS_UNINIT;
+ 	int			error;
+ 
+ 	if (xfs_attr_is_leaf(dp)) {
+@@ -335,37 +336,35 @@ xfs_attr_leaf_addname(
+ 			 * when we come back, we'll be a node, so we'll fall
+ 			 * down into the node handling code below
+ 			 */
+-			trace_xfs_attr_set_iter_return(
+-				attr->xattri_dela_state, args->dp);
+-			return -EAGAIN;
++			error = -EAGAIN;
++			goto out;
+ 		}
+-
+-		if (error)
+-			return error;
+-
+-		attr->xattri_dela_state = XFS_DAS_FOUND_LBLK;
++		next_state = XFS_DAS_FOUND_LBLK;
+ 	} else {
+ 		error = xfs_attr_node_addname_find_attr(attr);
+ 		if (error)
+ 			return error;
+ 
++		next_state = XFS_DAS_FOUND_NBLK;
+ 		error = xfs_attr_node_addname(attr);
+-		if (error)
+-			return error;
+-
+-		/*
+-		 * If addname was successful, and we dont need to alloc or
+-		 * remove anymore blks, we're done.
+-		 */
+-		if (!args->rmtblkno &&
+-		    !(args->op_flags & XFS_DA_OP_RENAME))
+-			return 0;
++	}
++	if (error)
++		return error;
+ 
+-		attr->xattri_dela_state = XFS_DAS_FOUND_NBLK;
++	/*
++	 * We need to commit and roll if we need to allocate remote xattr blocks
++	 * or perform more xattr manipulations. Otherwise there is nothing more
++	 * to do and we can return success.
++	 */
++	if (args->rmtblkno ||
++	    (args->op_flags & XFS_DA_OP_RENAME)) {
++		attr->xattri_dela_state = next_state;
++		error = -EAGAIN;
+ 	}
+ 
++out:
+ 	trace_xfs_attr_leaf_addname_return(attr->xattri_dela_state, args->dp);
+-	return -EAGAIN;
++	return error;
+ }
+ 
+ /*
+-- 
+2.35.1
 
