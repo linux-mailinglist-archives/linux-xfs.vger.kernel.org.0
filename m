@@ -2,211 +2,435 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EEF0522884
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 May 2022 02:37:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66CF25228A0
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 May 2022 02:54:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239731AbiEKAhO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 May 2022 20:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54354 "EHLO
+        id S235374AbiEKAyd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 May 2022 20:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbiEKAhN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 May 2022 20:37:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF7A5996E
-        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 17:37:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D8075B82023
-        for <linux-xfs@vger.kernel.org>; Wed, 11 May 2022 00:37:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A651C385D3;
-        Wed, 11 May 2022 00:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652229429;
-        bh=7aGRwnyqAlqg04tC3dmT/0OTzGzJTswCWazULQtFn4s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RQiGiHFM2gJYQ/Y/5CZgpa5sDvzlPNf/t0efmJt082Y45zIBMfx0CHVGJzf/NAp8x
-         lM2muZeeQzr6kwAa/U/VYyjp/E3br78nKcm0yTqotbZpPwiVJWFDCzKjkJSLk7go3f
-         l3Q93pOOrw2CvSocl3H4jYAblt7zS9yhiMX/kIcVbsB5csMsniALxHet4lgctP1keS
-         tSs2fnY9HMrn2n+EcrrVoJPE02bZiKS38AJj+lbdnlBGfz9Ixrydbg44RmQjaHZPzO
-         Z3cT9Y19g6rGxBTTuTiMZX7WvR90w1M3hVTmIqnrQEQ/7XBq/LLR60qzW20UiZARSK
-         VrlKwBVgM5Keg==
-Date:   Tue, 10 May 2022 17:37:08 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Chris Dunlop <chris@onthe.net.au>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: Highly reflinked and fragmented considered harmful?
-Message-ID: <20220511003708.GA27195@magnolia>
-References: <20220509024659.GA62606@onthe.net.au>
- <20220509230918.GP1098723@dread.disaster.area>
- <CAOQ4uxgf6AHzLM-mGte_L-A+piSZTRsbdLMBT3hZFNhk-yfxZQ@mail.gmail.com>
- <20220510051057.GY27195@magnolia>
- <20220510063051.GA215522@onthe.net.au>
- <20220510081632.GS1098723@dread.disaster.area>
- <20220510191918.GD27195@magnolia>
- <20220510215411.GT1098723@dread.disaster.area>
+        with ESMTP id S233586AbiEKAyb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 May 2022 20:54:31 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93AF6522D0
+        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 17:54:30 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24AMSXJ7010429;
+        Wed, 11 May 2022 00:54:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
+ : from : to : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=OoraBN5KB7GAibHk9RKzheHxIGEHapmh7hJTtOqeMa4=;
+ b=sHyIZzi0zEA+AgYTrGZ3e8E69cJu9RPXLi+dnZMXvy+a3go/o1SAywzCMUuge29J3lf0
+ +CKDXBPrA4EZhG3CsgqVAmJt33JDFn51XBmwkK0tPYZ6HXSWc72yh+EnEVDNy+d4nPXn
+ mjTtudRTmIteDUQu4p1ki30VaEpAaB+mfgyvNxc3ZESLL9U9JyfE98oRCLik62XBrIXJ
+ x4rRgvPwL9go1nE9KetBGjsDx8CIChWfGsZyvCgBXWy6x650ZAdvYJRhzznjcCz6snkx
+ 2h55VjNIwauMMqoR9SpuGZCfQ70dFANrNuP1rvZzpvmUFjCE/DDGaTJuGEATTCTQocyI Bg== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fwf6c84nv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 May 2022 00:54:19 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24B0jmEb034811;
+        Wed, 11 May 2022 00:54:18 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fwf73qf1s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 May 2022 00:54:18 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VidfCRweamRSus8ULbgyY6K2GuhOJEPAMKb/6zkOiXzP7k9AFDwk6ailQxCgmtBiP44/UGbWg9e3qf8NGILDclVvP15jdNfXM00pLU0QGxLwjmqrV9CDNjza/ZSlXirQBF+iI5ll8lZD2jsNUd+r4pGvgqyDOJZw75XIha1IPW87Nhr+BfP3345RkcQOAxEfRyIJpSnXSr+ekCMznrag+uW0xygp+yWdR0N3jgfvhK7Lv0rOzBzK8nt6vA7mHp607m444pXy+RZvo/RBny7g3nZ4J/BWFQ8PCZq66KuAWSEmuKY47s0Hmz7HA4u68vKgEIKf1mxkZ+1J4Fzbs+TfIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OoraBN5KB7GAibHk9RKzheHxIGEHapmh7hJTtOqeMa4=;
+ b=WsPlkhW7lKugEXsJ46ExWB+rRViOXzz0yAIOZgTqoQsOUJXuqgy3/FFB0WMZp0i9RDFh0t4SlaS23C2EfW8kUMinusFQxcZrray4Fy+BGhfQpqthNKF29BVf+GJ6c0VtOT+PttQyMGA5I9L2cIqvb0LOLSdV4uBSvzApIj9FF3cI7LmyGvQtPqhSsh2e9+Rvhd9/EJb0dgeB8sJh8el7tuOZunRPZT0HYcPNOdCwhqZQD34IzIcNee8fFfYiMbPWqOCg+PPItGHSRo0Ul6C4adtyhT3VxnC5O9PfMf6mR+4Gcl1Kl+e2FCCoCkrABFzwJhgU3SLRlO/zxKtb3dzi2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OoraBN5KB7GAibHk9RKzheHxIGEHapmh7hJTtOqeMa4=;
+ b=xdodewuatwu79QDdU5ifPfPBQljuGn4szwDCQzMaJc44h7+qyQyKhj3yFOSAeAGHxD1qKL8XaeGTa+Mbq5b4iNKhqm07JOag1evK7iqVpiMwFHcTxvnFEjgVeDdCn03Dqrp9An3G2JTV1le8bRVP+JF8A9Z/BXQ37uVlsP7OPhQ=
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
+ by DS7PR10MB4830.namprd10.prod.outlook.com (2603:10b6:5:3ac::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5227.20; Wed, 11 May
+ 2022 00:54:16 +0000
+Received: from BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::a0d7:21c9:1b7e:455f]) by BY5PR10MB4306.namprd10.prod.outlook.com
+ ([fe80::a0d7:21c9:1b7e:455f%8]) with mapi id 15.20.5227.023; Wed, 11 May 2022
+ 00:54:16 +0000
+Message-ID: <f2fdf0afdec6e1dcef75f5d7b51bb6db8f062208.camel@oracle.com>
+Subject: Re: [PATCH 19/18] xfs: can't use kmem_zalloc() for attribute buffers
+From:   Alli <allison.henderson@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org
+Date:   Tue, 10 May 2022 17:54:15 -0700
+In-Reply-To: <20220510222716.GW1098723@dread.disaster.area>
+References: <20220509004138.762556-1-david@fromorbit.com>
+         <20220510222716.GW1098723@dread.disaster.area>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH0PR07CA0046.namprd07.prod.outlook.com
+ (2603:10b6:510:e::21) To BY5PR10MB4306.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::7)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220510215411.GT1098723@dread.disaster.area>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: efd5616c-0fc5-4ab8-9908-08da32e8c60d
+X-MS-TrafficTypeDiagnostic: DS7PR10MB4830:EE_
+X-Microsoft-Antispam-PRVS: <DS7PR10MB48300BD6E3ED97DF1F106BFB95C89@DS7PR10MB4830.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZsnUKRbj/KkucFBSq3ZNsNjcl5zkMEqFhlK0FvGOTXYFQ5jUqYvslena1u1Y0lLaOOSYv3IcLjucN36BIg10jHulQMTkRIgJD/FKuxOBESG/15foEdSam2vRvgcge9e3GtIKq4ZmYpIKbMoxwETtm+qSmfnOV1bkoYN5EJXrkwvXHgZwlgPeKPXg7sXtJ6sTN1KTINfqByQm29jpTgofLzD463nQOqqCGUwqRu+yYgvlWkFLKEtwFQcqKW4n3jL8FtqXDitKF4f/NLYHjtZZLEmUCo9no2GvevZiUbALwKcCKAntbjh5GAMMFyABbmvE5jSZ+Ja9z+VOgsCSCSLz0TZy0ifavJlzL0ItBS8oKA7WuwB/Llik+tWjT4An2hjqnk/Ai8y0J1rTO2wv/f8bxLsBjTYvVPilfUwFdun1QbtUneOgbSYV6qs1uX4CzYj3Os2AABBR/5SWm4bNNlGgCLYyNwl8pwFHD0K0WXgUDeVrtx3xGLVTRlw4TtOo/TTL31EFQrdh6IdY6+k/EyHIWpxckE5jKPjX6fHzYdUZ8SBhU4uEDAkcZfgsc3sEQQwDZeTX+ac0vqDU65mBQugP2lodDk9q4GLsuBeGPMzWYhr6yFnoXe6nt08usXIJKEDsN6yjxy7ZFpYDunPkV8pgrR0/KztKp76nzw09b7DNcL7wIWWq3Xl5vVcra1//Rf+aFpgr9lIxBvNpTShifcx8ng==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(36756003)(2906002)(8936002)(38100700002)(38350700002)(5660300002)(186003)(83380400001)(508600001)(66946007)(66476007)(2616005)(66556008)(8676002)(316002)(6506007)(52116002)(6512007)(26005)(6486002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eEVDQk42blpDKzg0Qy9GLy9lWlUwdC8wTG45bnYrVUhlK2lXS2RrQTUxSjB0?=
+ =?utf-8?B?NjVwSHgzYWxvbGkvZmNFeS93RnJVVmZrdC9rS3ZoL2NxMitvTVJaVWhFMHpL?=
+ =?utf-8?B?TTFVaEZWUWNXeVVzUS9CTUhDKzdxajhhSnhCejBnQ3hKbmZ5R2EyeDQwU0hO?=
+ =?utf-8?B?NlUvNzNnUVJSdUM1NXZPRXgwQVlKQVVFUEVkSkhJdE9tMWw3bjZtNm41b1Ew?=
+ =?utf-8?B?MmcrWkgzUGJkODF6Y0lxNEsxWTMrMGJzdDBwcll5UzlDUHdBMEZjdGt1NEhC?=
+ =?utf-8?B?NDNrR3Z3WXVwZWdvMGp0YVdpZmUwNW0vVENHNU9zTUYrMkRtNlNFNFlxMGll?=
+ =?utf-8?B?M2VzaUk3SkVMZTF4QTlrTUtXbEVQd1BoMGIrZXRVeTJuNUxpSytDSm9VWS9K?=
+ =?utf-8?B?c01EN1gxaDNxY1BzTXJKQW5nUzA3eDlSbTBTTStiVEFqL0NWZWttTjFjRUpp?=
+ =?utf-8?B?QjZOaXdjUS9PcFNLWmwralVoZi8wUGd5Q0pCYUQ0RUZ4K0RjT3lLaGpzZWdx?=
+ =?utf-8?B?T0hqMzN2MlR5d01iRzQ3TDluVUdZZlRSWEZjVlZVejYxZmVSeUh2ckJjbllP?=
+ =?utf-8?B?MGlTNzc3RGxGM1ZGa3JTTHdCUnJuOTRxTUhBM09BZ2ZmSG9DWThGVXBmUk1s?=
+ =?utf-8?B?K1lOOXFlY2M4TnNQelBvN3pOZm9yVWhKa1pHdmVoWVYzRG1hM3ltdWN1amVz?=
+ =?utf-8?B?eVYrRHF5UkdtbzRWQTgvalhpK21ZNkwrSVpDaE8rbUtEeVJoUmdidGpWdUtM?=
+ =?utf-8?B?NmsxNDNvZ1NkS1NqSnJTVnNYVkJiS016VTRlQm9lVFpYT1hnVUk4R2VWR0E0?=
+ =?utf-8?B?VjVOalJuTWtIVmdQTGFvTndyREdIM093WXVQcVYrTEExVUlTYUhhd05xWGlJ?=
+ =?utf-8?B?WmI1ZGhJd2IzVTU5NzdRRXJoY2dSbGxLUXVrUG9jdm5ZUU1DTHN0cTY2ZXRp?=
+ =?utf-8?B?SXBHcHF1M3NMc1dXM20rUGtsSWt2REhlZEJrQkVob05LRTNMTFhvZThWbFFl?=
+ =?utf-8?B?SU5qQWJuZlNndExDTXpNUUFiVkxuVTFiWVhqN2hyamRxTC9UMmg1NThVMHNq?=
+ =?utf-8?B?Q2p3R1RLdHlQT09JemRDanFmZ3NlZWNVQ2c5T0RKK00rM2hDV0J5endtd2Zu?=
+ =?utf-8?B?V1pRR25PSnFUUVdBSkN3Mi9IWFNKMW1MQ25QckF6NGd2K05mTllZZlEzNEM3?=
+ =?utf-8?B?akRRaUhSM1g3QmpMQVc0UW9MKzZWTVlsdHNuY2tYelNTeU9TbmlhcGhtYU9n?=
+ =?utf-8?B?STlpOXRKQ2Fxd3BiaHFEdUd6M0ZuWEZXTU10UnlaZ2FHOWgrY0NPMHFhK3ow?=
+ =?utf-8?B?anNyMTJza0hzU2hmeEZTU0hoYkZRdkh5QTNCbXVzU3pvR3BsaFlPVmwxa2c4?=
+ =?utf-8?B?b0llSTVLeGNIM1BtQkpWNFRNWHdncGxMUVJXSk1UUU1oOVIvUDRMQzh0cnJM?=
+ =?utf-8?B?Z0hVc2N3S1NaRnEwVzRCKytVczJHNlRySzV1V1Q4dzRDSHRyNWgyeG5rV05X?=
+ =?utf-8?B?cC9wakNjQ1BuMEVzZGEwUVc5Mm5PNHNtNnFZenc0VGUyUEdaOU1JTnFWaG16?=
+ =?utf-8?B?UThVMzNkR21yclc2LzNYNWoyQndueDIxbWsxWmRxM0lrRXVWQnBydzF3SjlX?=
+ =?utf-8?B?VThtNEpHcDVCaUxudHpPaThzc01SNlgyMjdhTkhUYlZaMmVqcklEa0l4VE5I?=
+ =?utf-8?B?K0FtdmVYUTVnZUMwM0UrcGN3YWkrQ3BDNURNaGVESEgyckFHT2R5Z25YUEFK?=
+ =?utf-8?B?VGVoTWliVUxJK3BRN0VuRVY2d1FNRUppalZtb1lLdCtKZUhwc1p2Z29LWnpm?=
+ =?utf-8?B?NlFRdkczZHkzZWVPeDgwNnduUXd4NlcrbmNXSzZHRDVYNVFNM0IzOXVMNEho?=
+ =?utf-8?B?Tk52SnoyT01yZWVrNDl1QWs5Y1Z5Y1pzcm4waG9xK0tXSTRvRWFuSHVyUUo4?=
+ =?utf-8?B?dmZXQmNtYWJWb3BlRkdYK2hEVUt4MVFwRTVOZVV6MGtoNGQzSkdSd2k2R3pW?=
+ =?utf-8?B?RDBvOURscEhHanlIWDRJbkZIR3ZuSXg4OXlua0RQV2Y4cHZmclBMam0xMENt?=
+ =?utf-8?B?MzFvRm5pUHhFbUsvYlQxaUNwbmJwbm1CNnZyRm5td0lSZnNRdmVsQXVNR0hn?=
+ =?utf-8?B?RFExeGoxY0pDaEtmS0xzY2hxand5NEdEL0k0WUcwTkgzRW5kRnI3QXhyNStx?=
+ =?utf-8?B?aHI4R0VyamhjcUU4Z041TlB6bFE2K2JMRnQ4SVBoYWx0bjVQeHM3ekIydE50?=
+ =?utf-8?B?dUtuOXh5ZWNGM1oxMm16eFNJT0hCblZ4RkhlVUFTWVUrZGJ1OHVqUS95SWtu?=
+ =?utf-8?B?WWFuQjIrM1ByajN5aTZ2YkcvZ0V3NG5ISGxrM3ppNklucjBxbmkzNDBxUUN3?=
+ =?utf-8?Q?EPXWwV7B8qnTltXQ=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efd5616c-0fc5-4ab8-9908-08da32e8c60d
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2022 00:54:16.4021
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /85iqPwA2ZP+MN2FEptPb2H+Zm13oNZnfgHq0norcW8fKTIVQO5AFhV+uN44nDhNCY674BRWqrEFflotwfzHlHLpkamw/YSpw6pqRmTtrdI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4830
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
+ definitions=2022-05-10_07:2022-05-09,2022-05-10 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2202240000 definitions=main-2205110001
+X-Proofpoint-ORIG-GUID: uKyRxiJvZz11xQ0wK2Gedj2Aj1SpG2YH
+X-Proofpoint-GUID: uKyRxiJvZz11xQ0wK2Gedj2Aj1SpG2YH
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 11, 2022 at 07:54:11AM +1000, Dave Chinner wrote:
-> On Tue, May 10, 2022 at 12:19:18PM -0700, Darrick J. Wong wrote:
-> > On Tue, May 10, 2022 at 06:16:32PM +1000, Dave Chinner wrote:
-> > > On Tue, May 10, 2022 at 04:30:51PM +1000, Chris Dunlop wrote:
-> > > > On Mon, May 09, 2022 at 10:10:57PM -0700, Darrick J. Wong wrote:
-> > > > > On Tue, May 10, 2022 at 07:07:35AM +0300, Amir Goldstein wrote:
-> > > > > > On Mon, May 09, 2022 at 12:46:59PM +1000, Chris Dunlop wrote:
-> > > > > > > Is it to be expected that removing 29TB of highly reflinked and fragmented
-> > > > > > > data could take days, the entire time blocking other tasks like "rm" and
-> > > > > > > "df" on the same filesystem?
-> > > > ...
-> > > > > > From a product POV, I think what should have happened here is that
-> > > > > > freeing up the space would have taken 10 days in the background, but
-> > > > > > otherwise, filesystem should not have been blocking other processes
-> > > > > > for long periods of time.
-> > > 
-> > > Sure, that's obvious, and without looking at the code I know what
-> > > that is: statfs()
-> > > 
-> > > > > Indeed.  Chris, do you happen to have the sysrq-w output handy?  I'm
-> > > > > curious if the stall warning backtraces all had xfs_inodegc_flush() in
-> > > > > them, or were there other parts of the system stalling elsewhere too?
-> > > > > 50 billion updates is a lot, but there shouldn't be stall warnings.
-> > > > 
-> > > > Sure: https://file.io/25za5BNBlnU8  (6.8M)
-> > > > 
-> > > > Of the 3677 tasks in there, only 38 do NOT show xfs_inodegc_flush().
-> > > 
-> > > yup, 3677 tasks in statfs(). The majority are rm, df, and check_disk
-> > > processes, there's a couple of veeamagent processes stuck and
-> > > an (ostnamed) process, whatever that is...
-> > > 
-> > > No real surprises there, and it's not why the filesystem is taking
-> > > so long to remove all the reflink references.
-> > > 
-> > > There is just one background inodegc worker thread running, so
-> > > there's no excessive load being generated by inodegc, either. It's
-> > > no different to a single rm running xfs_inactive() directly on a
-> > > slightly older kernel and filling the journal:
-> > > 
-> > > May 06 09:49:01 d5 kernel: task:kworker/6:1     state:D stack:    0 pid:23258 ppid:     2 flags:0x00004000
-> > > May 06 09:49:01 d5 kernel: Workqueue: xfs-inodegc/dm-1 xfs_inodegc_worker [xfs]
-> > > May 06 09:49:01 d5 kernel: Call Trace:
-> > > May 06 09:49:01 d5 kernel:  <TASK>
-> > > May 06 09:49:01 d5 kernel:  __schedule+0x241/0x740
-> > > May 06 09:49:01 d5 kernel:  schedule+0x3a/0xa0
-> > > May 06 09:49:01 d5 kernel:  schedule_timeout+0x271/0x310
-> > > May 06 09:49:01 d5 kernel:  __down+0x6c/0xa0
-> > > May 06 09:49:01 d5 kernel:  down+0x3b/0x50
-> > > May 06 09:49:01 d5 kernel:  xfs_buf_lock+0x40/0xe0 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_buf_find.isra.32+0x3ee/0x730 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_buf_get_map+0x3c/0x430 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_buf_read_map+0x37/0x2c0 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_trans_read_buf_map+0x1cb/0x300 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_btree_read_buf_block.constprop.40+0x75/0xb0 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_btree_lookup_get_block+0x85/0x150 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_btree_overlapped_query_range+0x33c/0x3c0 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_btree_query_range+0xd5/0x100 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_rmap_query_range+0x71/0x80 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_rmap_lookup_le_range+0x88/0x180 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_rmap_unmap_shared+0x89/0x560 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_rmap_finish_one+0x201/0x260 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_rmap_update_finish_item+0x33/0x60 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_defer_finish_noroll+0x215/0x5a0 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_defer_finish+0x13/0x70 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_itruncate_extents_flags+0xc4/0x240 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_inactive_truncate+0x7f/0xc0 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_inactive+0x10c/0x130 [xfs]
-> > > May 06 09:49:01 d5 kernel:  xfs_inodegc_worker+0xb5/0x140 [xfs]
-> > > May 06 09:49:01 d5 kernel:  process_one_work+0x2a8/0x4c0
-> > > May 06 09:49:01 d5 kernel:  worker_thread+0x21b/0x3c0
-> > > May 06 09:49:01 d5 kernel:  kthread+0x121/0x140
-> > > 
-> > > There are 18 tasks in destroy_inode() blocked on a workqueue flush
-> > > - these are new unlinks that are getting throttled because that
-> > > per-cpu inodegc queue is full and work is ongoing. Not a huge
-> > > deal, maybe we should look to hand full queues to another CPU if
-> > > the neighbour CPU has an empty queue. That would reduce
-> > > unnecessary throttling, though it may mean more long running
-> > > inodegc processes in the background....
-> > > 
-> > > Really, though, I don't see anything deadlocked, just a system
-> > > backed up doing a really large amount of metadata modification.
-> > > Everything is sitting on throttles or waiting on IO and making
-> > > slow forwards progress as metadata writeback allows log space to be
-> > > freed.
-> > > 
-> > > I think we should just accept that statfs() can never really report
-> > > exactly accurate space usagei to userspace and get rid of the flush.
-> > 
-> > What about all the code that flushes gc work when we hit ENOSPC/EDQUOT?
-> > Do we let those threads stall too because the fs is out of resources and
-> > they can just wait?  Or would that also be better off with a flush
-> > timeout and userspace can just eat the ENOSPC/EDQUOT after 30 seconds?
+On Wed, 2022-05-11 at 08:27 +1000, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
 > 
-> 1. Not an immediate problem we need to solve.
-> 2. flush at enospc/edquot is best effort, so doesn't need to block
->    waiting on inodegc. the enospc/edquot flush will get repeated
->    soon enough, so that will take into account progress made by
->    long running inodegc ops.
-> 3. we leave pending work on the per-cpu queues under the
->    flush/throttle thresholds indefinitely.
-> 4. to be accurate, statfs() needs to flush #3.
-
-Yes, that's the state of things currently...
-
-> 5. While working on the rework of inode reclaimation, I converted the
->    inodegc queues to use delayed works to ensure work starts on
->    per-cpu queues within 10ms of queueing to avoid #3 causing
->    problems.
-> 6. I added a non-blocking async flush mechanism that works by
->    modifying the queue timer to 0 to trigger immedate work
->    scheduling for anything that hasn't been run.
-
-*OH*, you've already built those two things?  Well that makes this
-/much/ easier.  I think all we'd need to fix #4 is an xfs_inodegc_push()
-function that statfs/enospc/edquot can call to do xfs_inodegc_queue_all
-and return immediately.
-
-/me calms down, goes back to proofreading the online fsck design doc.
-
---D
-
-> #4 is the problem that Chris hit - we're trying to be perfectly
-> accurate when perfect accuracy is impossible and we're paying the
-> price for that.
+> Because when running fsmark workloads with 64kB xattrs, heap
+> allocation of >64kB buffers for the attr item name/value buffer
+> will fail and deadlock.
 > 
-> Fix #3, and the need to block statfs() largely goes away. And as per
-> #2, we don't really need to block edquot/enospc flushes, either. We
-> jsut need to push the queues to make sure they are running and doing
-> work...
+> ....
+>  XFS: fs_mark(8414) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8417) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8409) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8428) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8430) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8437) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8433) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8406) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8412) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8432) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+>  XFS: fs_mark(8424) possible memory allocation deadlock size 65768 in
+> kmem_alloc (mode:0x2d40)
+> ....
 > 
-> > > Work around the specific fstests dependencies on rm always
-> > > immediately making unlinked inodes free space in fstests rather than
-> > > in the kernel code.
-> > 
-> > <grumble> I *really* don't want to launch *yet another* full scale audit
-> > of XFS + supporting software behavior on tiny and/or full filesystems.
+> I'd use kvmalloc(), but if we are doing 15,000 64kB xattr creates a
+> second, the attempt to use kmalloc() in kvmalloc() results in a huge
+> amount of direct reclaim work that is guaranteed to fail occurs
+> before it falls back to vmalloc:
 > 
-> This doesn't need an audit. Just fix the "single unlinks don't get
-> processed until a flush occurs" problem, and most of the issues
-> fstests has will go away.
+> - 48.19% xfs_attr_create_intent
+>   - 46.89% xfs_attri_init
+>      - kvmalloc_node
+> 	- 46.04% __kmalloc_node
+> 	   - kmalloc_large_node
+> 	      - 45.99% __alloc_pages
+> 		 - 39.39% __alloc_pages_slowpath.constprop.0
+> 		    - 38.89% __alloc_pages_direct_compact
+> 		       - 38.71% try_to_compact_pages
+> 			  - compact_zone_order
+> 			  - compact_zone
+> 			     - 21.09% isolate_migratepages_block
+> 				  10.31% PageHuge
+> 				  5.82% set_pfnblock_flags_mask
+> 				  0.86% get_pfnblock_flags_mask
+> 			     - 4.48% __reset_isolation_suitable
+> 				  4.44% __reset_isolation_pfn
+> 			     - 3.56% __pageblock_pfn_to_page
+> 				  1.33% pfn_to_online_page
+> 			       2.83% get_pfnblock_flags_mask
+> 			     - 0.87% migrate_pages
+> 				  0.86% compaction_alloc
+> 			       0.84% find_suitable_fallback
+> 		 - 6.60% get_page_from_freelist
+> 		      4.99% clear_page_erms
+> 		    - 1.19% _raw_spin_lock_irqsave
+> 		       - do_raw_spin_lock
+> 			    __pv_queued_spin_lock_slowpath
+> 	- 0.86% __vmalloc_node_range
+> 	     0.65% __alloc_pages_bulk
 > 
-> Cheers,
+> So lift xlog_cil_kvmalloc(), rename it to xlog_kvmalloc() and use
+> that instead because it has sane fail-fast behaviour for the
+> embedded kmalloc attempt. It also provides __GFP_NOFAIL guarantees
+> that kvmalloc() won't do, either....
 > 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+This looks ok to me, didnt run across any test failures
+Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
+
+> ---
+>  fs/xfs/xfs_attr_item.c | 35 +++++++++++++++--------------------
+>  fs/xfs/xfs_log_cil.c   | 35 +----------------------------------
+>  fs/xfs/xfs_log_priv.h  | 34 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 50 insertions(+), 54 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
+> index 56f678c965b7..e8ac88d9fd14 100644
+> --- a/fs/xfs/xfs_attr_item.c
+> +++ b/fs/xfs/xfs_attr_item.c
+> @@ -44,7 +44,7 @@ xfs_attri_item_free(
+>  	struct xfs_attri_log_item	*attrip)
+>  {
+>  	kmem_free(attrip->attri_item.li_lv_shadow);
+> -	kmem_free(attrip);
+> +	kvfree(attrip);
+>  }
+>  
+>  /*
+> @@ -119,11 +119,11 @@ xfs_attri_item_format(
+>  			sizeof(struct xfs_attri_log_format));
+>  	xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_ATTR_NAME,
+>  			attrip->attri_name,
+> -			xlog_calc_iovec_len(attrip->attri_name_len));
+> +			attrip->attri_name_len);
+>  	if (attrip->attri_value_len > 0)
+>  		xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_ATTR_VALUE,
+>  				attrip->attri_value,
+> -				xlog_calc_iovec_len(attrip-
+> >attri_value_len));
+> +				attrip->attri_value_len);
+>  }
+>  
+>  /*
+> @@ -163,26 +163,21 @@ xfs_attri_init(
+>  
+>  {
+>  	struct xfs_attri_log_item	*attrip;
+> -	uint32_t			name_vec_len = 0;
+> -	uint32_t			value_vec_len = 0;
+> -	uint32_t			buffer_size;
+> -
+> -	if (name_len)
+> -		name_vec_len = xlog_calc_iovec_len(name_len);
+> -	if (value_len)
+> -		value_vec_len = xlog_calc_iovec_len(value_len);
+> -
+> -	buffer_size = name_vec_len + value_vec_len;
+> +	uint32_t			buffer_size = name_len + value_len;
+>  
+>  	if (buffer_size) {
+> -		attrip = kmem_zalloc(sizeof(struct xfs_attri_log_item)
+> +
+> -				    buffer_size, KM_NOFS);
+> -		if (attrip == NULL)
+> -			return NULL;
+> +		/*
+> +		 * This could be over 64kB in length, so we have to use
+> +		 * kvmalloc() for this. But kvmalloc() utterly sucks,
+> so we
+> +		 * use own version.
+> +		 */
+> +		attrip = xlog_kvmalloc(sizeof(struct
+> xfs_attri_log_item) +
+> +					buffer_size);
+>  	} else {
+> -		attrip = kmem_cache_zalloc(xfs_attri_cache,
+> -					  GFP_NOFS | __GFP_NOFAIL);
+> +		attrip = kmem_cache_alloc(xfs_attri_cache,
+> +					GFP_NOFS | __GFP_NOFAIL);
+>  	}
+> +	memset(attrip, 0, sizeof(struct xfs_attri_log_item));
+>  
+>  	attrip->attri_name_len = name_len;
+>  	if (name_len)
+> @@ -195,7 +190,7 @@ xfs_attri_init(
+>  	if (value_len)
+>  		attrip->attri_value = ((char *)attrip) +
+>  				sizeof(struct xfs_attri_log_item) +
+> -				name_vec_len;
+> +				name_len;
+>  	else
+>  		attrip->attri_value = NULL;
+>  
+> diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
+> index 42ace9b091d8..b4023693b89f 100644
+> --- a/fs/xfs/xfs_log_cil.c
+> +++ b/fs/xfs/xfs_log_cil.c
+> @@ -219,39 +219,6 @@ xlog_cil_iovec_space(
+>  			sizeof(uint64_t));
+>  }
+>  
+> -/*
+> - * shadow buffers can be large, so we need to use kvmalloc() here to
+> ensure
+> - * success. Unfortunately, kvmalloc() only allows GFP_KERNEL
+> contexts to fall
+> - * back to vmalloc, so we can't actually do anything useful with gfp
+> flags to
+> - * control the kmalloc() behaviour within kvmalloc(). Hence
+> kmalloc() will do
+> - * direct reclaim and compaction in the slow path, both of which are
+> - * horrendously expensive. We just want kmalloc to fail fast and
+> fall back to
+> - * vmalloc if it can't get somethign straight away from the free
+> lists or buddy
+> - * allocator. Hence we have to open code kvmalloc outselves here.
+> - *
+> - * Also, we are in memalloc_nofs_save task context here, so despite
+> the use of
+> - * GFP_KERNEL here, we are actually going to be doing GFP_NOFS
+> allocations. This
+> - * is actually the only way to make vmalloc() do GFP_NOFS
+> allocations, so lets
+> - * just all pretend this is a GFP_KERNEL context operation....
+> - */
+> -static inline void *
+> -xlog_cil_kvmalloc(
+> -	size_t		buf_size)
+> -{
+> -	gfp_t		flags = GFP_KERNEL;
+> -	void		*p;
+> -
+> -	flags &= ~__GFP_DIRECT_RECLAIM;
+> -	flags |= __GFP_NOWARN | __GFP_NORETRY;
+> -	do {
+> -		p = kmalloc(buf_size, flags);
+> -		if (!p)
+> -			p = vmalloc(buf_size);
+> -	} while (!p);
+> -
+> -	return p;
+> -}
+> -
+>  /*
+>   * Allocate or pin log vector buffers for CIL insertion.
+>   *
+> @@ -368,7 +335,7 @@ xlog_cil_alloc_shadow_bufs(
+>  			 * storage.
+>  			 */
+>  			kmem_free(lip->li_lv_shadow);
+> -			lv = xlog_cil_kvmalloc(buf_size);
+> +			lv = xlog_kvmalloc(buf_size);
+>  
+>  			memset(lv, 0, xlog_cil_iovec_space(niovecs));
+>  
+> diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+> index 4aa95b68450a..46f989641eda 100644
+> --- a/fs/xfs/xfs_log_priv.h
+> +++ b/fs/xfs/xfs_log_priv.h
+> @@ -679,4 +679,38 @@ xlog_valid_lsn(
+>   */
+>  void xlog_cil_pcp_dead(struct xlog *log, unsigned int cpu);
+>  
+> +/*
+> + * Log vector and shadow buffers can be large, so we need to use
+> kvmalloc() here
+> + * to ensure success. Unfortunately, kvmalloc() only allows
+> GFP_KERNEL contexts
+> + * to fall back to vmalloc, so we can't actually do anything useful
+> with gfp
+> + * flags to control the kmalloc() behaviour within kvmalloc(). Hence
+> kmalloc()
+> + * will do direct reclaim and compaction in the slow path, both of
+> which are
+> + * horrendously expensive. We just want kmalloc to fail fast and
+> fall back to
+> + * vmalloc if it can't get somethign straight away from the free
+> lists or
+> + * buddy allocator. Hence we have to open code kvmalloc outselves
+> here.
+> + *
+> + * This assumes that the caller uses memalloc_nofs_save task context
+> here, so
+> + * despite the use of GFP_KERNEL here, we are going to be doing
+> GFP_NOFS
+> + * allocations. This is actually the only way to make vmalloc() do
+> GFP_NOFS
+> + * allocations, so lets just all pretend this is a GFP_KERNEL
+> context
+> + * operation....
+> + */
+> +static inline void *
+> +xlog_kvmalloc(
+> +	size_t		buf_size)
+> +{
+> +	gfp_t		flags = GFP_KERNEL;
+> +	void		*p;
+> +
+> +	flags &= ~__GFP_DIRECT_RECLAIM;
+> +	flags |= __GFP_NOWARN | __GFP_NORETRY;
+> +	do {
+> +		p = kmalloc(buf_size, flags);
+> +		if (!p)
+> +			p = vmalloc(buf_size);
+> +	} while (!p);
+> +
+> +	return p;
+> +}
+> +
+>  #endif	/* __XFS_LOG_PRIV_H__ */
+
