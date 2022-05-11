@@ -2,104 +2,133 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FE4522B43
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 May 2022 06:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6793522B94
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 May 2022 07:18:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241386AbiEKEkQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 11 May 2022 00:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
+        id S236761AbiEKFSe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 11 May 2022 01:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239382AbiEKEj1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 May 2022 00:39:27 -0400
-Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D25C414FCB3
-        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 21:39:23 -0700 (PDT)
-Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-edf3b6b0f2so1460803fac.9
-        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 21:39:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=s3Cdswvtyrq8qHVwuRB9YRoTAIoD9G/2//h6WeFZHzo=;
-        b=nrkBIDyCffFbQz5WNhQU88q5l+bx8m1CoLNL/nRcxBFZRgp3B2RwRJzpJi69hjmFPQ
-         Eotn36CVTQor8sTwq84btYhQQ+OsypTpYdHIfGkC/Ekjg8a9U0HkQq0T/gbcQg5/if4Y
-         i1yzcJYhTRMm8ny1NIiOYUNRazrfloxlCC/1XVxW2+TG0ItQpx2/G3cXjgMuOALgO1Rc
-         auxKHXwS3ghK6vFFIfR8essc70JXfRi2oIpi3YT/VLqISCMTaVWCOI/Xf0rWfpfTmlnw
-         XgqCFC8jOuHD5AjsEtox3h0b9tzcHlVM0fA1RrJyDFubK9aS707t1BYf/K43qSc4slo4
-         wrQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=s3Cdswvtyrq8qHVwuRB9YRoTAIoD9G/2//h6WeFZHzo=;
-        b=YrEmGbeMw8yJiRW94t3ntl/kF/Lv3n/sBvRk/8sCDOFb2uqci4suCapok6lf55KAG5
-         tloZaEKwEFESwlpZuVXOuiAi/GMK5MGcuggEWOhe2+dGRLkxVgtXA02u7Xhq18XsfRk6
-         IP3JjiuTbIHS/Mym+26c9L+OkS8Sv3dyaGsQi2MpAkPKbUlH03nVR/9V4TmKrP9V9e+/
-         Ls3WhDOn85eSivcY4R3jHUonqoQE8JFIWDXa3MUxbTMoHfkRZegSftKsiL8BFgrTlkwP
-         u6VgtVFiwtX5wAtbjNjDjzjzsMwGBgd/CtgpuEFomz8Rq+JzoagyZKY9KmMEccdQ5N3b
-         agTg==
-X-Gm-Message-State: AOAM5333TqA+N90e85op1jSwQrkQ5/zyXV7XRfUFRkFLxQMUU9EYzUwG
-        1niates098C/N3OiqyLZ24lcU68ODSst5dluCaTHoZ0HMTkUnA==
-X-Google-Smtp-Source: ABdhPJwbKHmbnZDflMHBZCcp2YbZAAZvFdPcM4owWeuPIkoxodmwIZJ+Xpgi08ylB1RFXLrw63SQRxJzumbwJKMTxhs=
-X-Received: by 2002:a17:90b:1007:b0:1dc:9862:68af with SMTP id
- gm7-20020a17090b100700b001dc986268afmr3261389pjb.205.1652243951499; Tue, 10
- May 2022 21:39:11 -0700 (PDT)
+        with ESMTP id S234347AbiEKFSd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 11 May 2022 01:18:33 -0400
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6840C231CBA
+        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 22:18:32 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 5CBA510E6A78;
+        Wed, 11 May 2022 15:18:30 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1noek1-00AZR7-10; Wed, 11 May 2022 15:18:29 +1000
+Date:   Wed, 11 May 2022 15:18:29 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chris Dunlop <chris@onthe.net.au>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>
+Subject: Re: Highly reflinked and fragmented considered harmful?
+Message-ID: <20220511051829.GH1098723@dread.disaster.area>
+References: <20220510051057.GY27195@magnolia>
+ <20220510063051.GA215522@onthe.net.au>
+ <20220510081632.GS1098723@dread.disaster.area>
+ <20220510191918.GD27195@magnolia>
+ <20220510215411.GT1098723@dread.disaster.area>
+ <20220511003708.GA27195@magnolia>
+ <20220511013654.GC1098723@dread.disaster.area>
+ <20220511021657.GA333471@onthe.net.au>
+ <20220511025235.GG1098723@dread.disaster.area>
+ <20220511035813.GA342362@onthe.net.au>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:319:0:0:0:0 with HTTP; Tue, 10 May 2022 21:39:10
- -0700 (PDT)
-From:   Private Mail <privatemail1961@gmail.com>
-Date:   Tue, 10 May 2022 21:39:10 -0700
-Message-ID: <CANjAOAiiVcSrSv31FjThCVmeppS54UVvGVj3SRSvMfxOB+T8DA@mail.gmail.com>
-Subject: Have you had this? It is for your Benefit
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.3 required=5.0 tests=ADVANCE_FEE_4_NEW_MONEY,
-        BAYES_50,DEAR_BENEFICIARY,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-        DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLY,
-        LOTS_OF_MONEY,MONEY_FRAUD_5,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220511035813.GA342362@onthe.net.au>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=627b4727
+        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
+        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=7-415B0cAAAA:8
+        a=2VJgV-_3Ko9OsoYCn-0A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Our Ref: BG/WA0151/2022
+On Wed, May 11, 2022 at 01:58:13PM +1000, Chris Dunlop wrote:
+> On Wed, May 11, 2022 at 12:52:35PM +1000, Dave Chinner wrote:
+> > On Wed, May 11, 2022 at 12:16:57PM +1000, Chris Dunlop wrote:
+> > > Out of interest, would this work also reduce the time spent mounting
+> > > in my case? I.e. would a lot of the work from my recovery mount be
+> > > punted off to a background thread?
+> > 
+> > No. log recovery will punt the remaining inodegc work to background
+> > threads so it might get slightly parallelised, but we have a hard
+> > barrier between completing log recovery work and completing the
+> > mount process at the moment. Hence we wait for inodegc to complete
+> > before log recovery is marked as complete.
+> > 
+> > In theory we could allow background inodegc to bleed into active
+> > duty once log recovery has processed all the unlinked lists, but
+> > that's a change of behaviour that would require a careful audit of
+> > the last part of the mount path to ensure that it is safe to be
+> > running concurrent background operations whilst complete mount state
+> > updates.
+> > 
+> > This hasn't been on my radar at all up until now, but I'll have a
+> > think about it next time I look at those bits of recovery. I suspect
+> > that probably won't be far away - I have a set of unlinked inode
+> > list optimisations that rework the log recovery infrastructure near
+> > the top of my current work queue, so I will be in that general
+> > vicinity over the next few weeks...
+> 
+> I'll keep an eye out.
+> 
+> > Regardless, the inodegc work is going to be slow on your system no
+> > matter what we do because of the underlying storage layout. What we
+> > need to do is try to remove all the places where stuff can get
+> > blocked on inodegc completion, but that is somewhat complex because
+> > we still need to be able to throttle queue depths in various
+> > situations.
+> 
+> That reminds of a something I've been wondering about for obvious reasons:
+> for workloads where metadata operations are dominant, do you have any
+> ponderings on allowing AGs to be put on fast storage whilst the bulk data is
+> on molasses storage?
 
-Dear Beneficiary
+If you're willing to give up reflink and pretty much all the
+allocation optimisations for storage locality that make spinning
+disks perform OK, then you can do this right now with a realtime
+device as the user data store. You still have AGs, but they will
+contain metadata only - your bulk data storage device is the
+realtime device.
 
-Subject: An Estate of US$15.8 Million
+This has downsides. You give up reflink. You give up rmap. You give
+up allocation concurrency. You give up btree indexed free space,
+which means giving up the ability to find optimal free spaces.
+Allocation algorithms are optimised for deterministic, bound
+overhead behaviour (the "realtime" aspect of the RT device) so you
+give up smart, context aware allocation algorithms. the list goes
+on.
 
-Blount and Griffin Genealogical Investigators specializes in probate
-research to locate missing heirs and beneficiaries to estates in the
-United Kingdom and Europe.
+reflink and rmap support for the realtime device are in the pipeline
+(not likely to be added in the near term), but solutions for any of
+the other issues are not. They are intrinsic behaviours that result
+from the realtime device architecture.
 
-We can also help you find wills, obtain copies of certificates, help
-you to administer an estate, as well as calculating how an estate,
-intestacy or trust should be distributed.
+However, there's no real way to separate data in AGs from metadata
+in AGs - they share the same address space and there's no simple way
+to keep them separate and map different parts of the AG to different
+storage devices. that would require a fair chunk of slicing and
+dicing at the DM level, and then we have a whole net set of problems
+to deal with when AGs run out of metadata space because reflink
+and/or rmap metadata explosions...
 
-You may be entitled to a large pay out for an inheritance in Europe
-worth US$15.8 million. We have discovered an estate belonging to the
-late Depositor has remained unclaimed since he died in 2011 and we
-have strong reasons to believe you are the closest living relative to
-the deceased we can find.
+Cheers,
 
-You may unknowingly be the heir of this person who died without
-leaving a will (intestate). We will conduct a probate research to
-prove your entitlement, and can submit a claim on your behalf all at
-no risk to yourselves.
+Dave.
 
-Our service fee of 10% will be paid to us after you have received the estate.
-
-The estate transfer process should take just a matter of days as we
-have the mechanism and expertise to get this done very quickly. This
-message may come to you as a shock, however we hope to work with you
-to transfer the estate to you as quickly as possible.
-
-Feel free to email our senior case worker Mr. Malcolm Casey on email:
-malcolmcasey68@yahoo.com for further discussions.
-
-With warm regards,
-
-Mr. Blount W. Gort, CEO.
-Blount and Griffin Associates Inc
+-- 
+Dave Chinner
+david@fromorbit.com
