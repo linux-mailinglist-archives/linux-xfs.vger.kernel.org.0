@@ -2,42 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E12452289F
-	for <lists+linux-xfs@lfdr.de>; Wed, 11 May 2022 02:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B421C5228A4
+	for <lists+linux-xfs@lfdr.de>; Wed, 11 May 2022 02:57:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234442AbiEKAyY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 10 May 2022 20:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55470 "EHLO
+        id S231344AbiEKA5p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 10 May 2022 20:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233586AbiEKAyY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 May 2022 20:54:24 -0400
+        with ESMTP id S236761AbiEKA5o (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 10 May 2022 20:57:44 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 099FA522D0
-        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 17:54:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 13D86532CF
+        for <linux-xfs@vger.kernel.org>; Tue, 10 May 2022 17:57:42 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E5425534506;
-        Wed, 11 May 2022 10:54:21 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3669253458A;
+        Wed, 11 May 2022 10:57:42 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1noacO-00AUuX-4Q; Wed, 11 May 2022 10:54:20 +1000
-Date:   Wed, 11 May 2022 10:54:20 +1000
+        id 1noafd-00AV6G-FJ; Wed, 11 May 2022 10:57:41 +1000
+Date:   Wed, 11 May 2022 10:57:41 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 19/18] xfs: can't use kmem_zalloc() for attribute buffers
-Message-ID: <20220511005420.GX1098723@dread.disaster.area>
+Subject: Re: [PATCH 04/18] xfs: rework deferred attribute operation setup
+Message-ID: <20220511005741.GY1098723@dread.disaster.area>
 References: <20220509004138.762556-1-david@fromorbit.com>
- <20220510222716.GW1098723@dread.disaster.area>
- <20220510235931.GX27195@magnolia>
+ <20220509004138.762556-5-david@fromorbit.com>
+ <20220510230451.GH27195@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220510235931.GX27195@magnolia>
+In-Reply-To: <20220510230451.GH27195@magnolia>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=627b093e
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=627b0a06
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=jaZkWtyvtoCeetgN7UkA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=ol1Rakwd5XOFDp043FwA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -47,88 +48,79 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, May 10, 2022 at 04:59:31PM -0700, Darrick J. Wong wrote:
-> On Wed, May 11, 2022 at 08:27:16AM +1000, Dave Chinner wrote:
+On Tue, May 10, 2022 at 04:04:51PM -0700, Darrick J. Wong wrote:
+> On Mon, May 09, 2022 at 10:41:24AM +1000, Dave Chinner wrote:
 > > From: Dave Chinner <dchinner@redhat.com>
 > > 
-> > Because when running fsmark workloads with 64kB xattrs, heap
-> > allocation of >64kB buffers for the attr item name/value buffer
-> > will fail and deadlock.
-.....
-> > @@ -119,11 +119,11 @@ xfs_attri_item_format(
-> >  			sizeof(struct xfs_attri_log_format));
-> >  	xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_ATTR_NAME,
-> >  			attrip->attri_name,
-> > -			xlog_calc_iovec_len(attrip->attri_name_len));
-> > +			attrip->attri_name_len);
+> > Logged attribute intents only have set and remove types - there is
+> > no type of the replace operation. We should ahve a separate type for
 > 
-> Are we fixing these because the xlog_{copy,finish}_iovec functions do
-> the rounding themselves now?
-
-Yes, I forgot that I cleaned this up here when I noticed it.
-Probably should mention it in the commit log:
-
-"We also clean up the attribute name and value lengths as they no
-longer need to be rounded out to sizes compatible with log vectors."
-
+> "..no separate intent type for a replace operation."?
 > 
-> >  	if (attrip->attri_value_len > 0)
-> >  		xlog_copy_iovec(lv, &vecp, XLOG_REG_TYPE_ATTR_VALUE,
-> >  				attrip->attri_value,
-> > -				xlog_calc_iovec_len(attrip->attri_value_len));
-> > +				attrip->attri_value_len);
+> Also, "ahve" -> "have".
+> 
+> > a replace operation, as it needs to perform operations that neither
+> > SET or REMOVE can perform.
+> > 
+> > Add this type to the intent items and rearrange the deferred
+> > operation setup to reflect the different operations we are
+> > performing.
+> > 
+> > Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> > Reviewed-by: Allison Henderson<allison.henderson@oracle.com>
+> > ---
+> >  fs/xfs/libxfs/xfs_attr.c       | 165 +++++++++++++++++++--------------
+> >  fs/xfs/libxfs/xfs_attr.h       |   2 -
+> >  fs/xfs/libxfs/xfs_log_format.h |   1 +
+> >  fs/xfs/xfs_attr_item.c         |   9 +-
+> >  fs/xfs/xfs_trace.h             |   4 +
+> >  5 files changed, 110 insertions(+), 71 deletions(-)
+> > 
+> > diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
+> > index a4b0b20a3bab..817e15740f9c 100644
+> > --- a/fs/xfs/libxfs/xfs_attr.c
+> > +++ b/fs/xfs/libxfs/xfs_attr.c
+> > @@ -671,6 +671,81 @@ xfs_attr_lookup(
+> >  	return xfs_attr_node_hasname(args, NULL);
 > >  }
 > >  
-> >  /*
-> > @@ -163,26 +163,21 @@ xfs_attri_init(
-> >  
-> >  {
-> >  	struct xfs_attri_log_item	*attrip;
-> > -	uint32_t			name_vec_len = 0;
-> > -	uint32_t			value_vec_len = 0;
-> > -	uint32_t			buffer_size;
-> > -
-> > -	if (name_len)
-> > -		name_vec_len = xlog_calc_iovec_len(name_len);
-> > -	if (value_len)
-> > -		value_vec_len = xlog_calc_iovec_len(value_len);
+> > +static int
+> > +xfs_attr_item_init(
+> > +	struct xfs_da_args	*args,
+> > +	unsigned int		op_flags,	/* op flag (set or remove) */
+> > +	struct xfs_attr_item	**attr)		/* new xfs_attr_item */
+> > +{
+> > +
+> > +	struct xfs_attr_item	*new;
+> > +
+> > +	new = kmem_zalloc(sizeof(struct xfs_attr_item), KM_NOFS);
 > 
-> ...and we don't need to bloat up the internal structures anymore either,
+> Can this fail?
+> 
+> > +	new->xattri_op_flags = op_flags;
+> > +	new->xattri_da_args = args;
+> > +
+> > +	*attr = new;
+> > +	return 0;
+> 
+> And if it can't, then there's no need for a return value, AFAICT.  I
+> looked at the end of xfs-5.19-compose and there's no other return
+> statements in this function.
+> 
+> And then you don't need any of the error handling in this patch at all,
 > right?
-
-Yup, because we only copy out the exact length of the name/val now.
-
 > 
-> > -
-> > -	buffer_size = name_vec_len + value_vec_len;
-> > +	uint32_t			buffer_size = name_len + value_len;
-> >  
-> >  	if (buffer_size) {
-> > -		attrip = kmem_zalloc(sizeof(struct xfs_attri_log_item) +
-> > -				    buffer_size, KM_NOFS);
-> > -		if (attrip == NULL)
-> > -			return NULL;
-> > +		/*
-> > +		 * This could be over 64kB in length, so we have to use
-> > +		 * kvmalloc() for this. But kvmalloc() utterly sucks, so we
-> > +		 * use own version.
-> > +		 */
-> > +		attrip = xlog_kvmalloc(sizeof(struct xfs_attri_log_item) +
-> > +					buffer_size);
-> >  	} else {
-> > -		attrip = kmem_cache_zalloc(xfs_attri_cache,
-> > -					  GFP_NOFS | __GFP_NOFAIL);
-> > +		attrip = kmem_cache_alloc(xfs_attri_cache,
-> > +					GFP_NOFS | __GFP_NOFAIL);
-> >  	}
-> > +	memset(attrip, 0, sizeof(struct xfs_attri_log_item));
+> *OH*, this is just a hoist of the stuff at the end.  Could someone add a
+> patch on the end of ... whatever patchset there is to clean that up?
 > 
-> I wonder if this memset should be right after the xlog_kvmalloc and
-> leave the kmem_cache_zalloc alone?
+> In the meantime, with the commit message typos cleaned up,
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-Then we memset the header twice in the common small attr case, and
-the xfs_attri_log_item header is not exactly what you'd call small
-(224 bytes).
+Thanks.
+
+I'm making notes of all the things that need cleaning up. there's a
+few things already, that probably won't happen until the next cycle
+at this point...
 
 Cheers,
 
