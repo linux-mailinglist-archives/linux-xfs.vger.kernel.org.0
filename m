@@ -2,88 +2,131 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 730FF528AF5
-	for <lists+linux-xfs@lfdr.de>; Mon, 16 May 2022 18:49:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D72A528C70
+	for <lists+linux-xfs@lfdr.de>; Mon, 16 May 2022 19:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343506AbiEPQtH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 16 May 2022 12:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37896 "EHLO
+        id S230212AbiEPR7q (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 16 May 2022 13:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343939AbiEPQtB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 May 2022 12:49:01 -0400
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71443C716
-        for <linux-xfs@vger.kernel.org>; Mon, 16 May 2022 09:49:00 -0700 (PDT)
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24GEduGG008319
-        for <linux-xfs@vger.kernel.org>; Mon, 16 May 2022 09:49:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=mezo8o29O3Ay9l7JyNHPANH1KNPPbed3umcUOpvhL7Q=;
- b=dOWKddljHLiLqH6enz3FCUuE1EKK1FMPRjjc3y+O06gtjfUeMGFida1KPzkmZGAx+xv6
- a/qZzDFHiYrtgjUpG2/cbfrB4IZxrMlsmIJ6P8aXAS6r2hTDRJK/BfyCZy+ya5wbssH8
- vLe96TvqlNWULUbmucJD0xLPeiwYTc2hnTI= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3g29xxjmfx-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-xfs@vger.kernel.org>; Mon, 16 May 2022 09:48:59 -0700
-Received: from twshared8307.18.frc3.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 16 May 2022 09:48:58 -0700
-Received: by devvm225.atn0.facebook.com (Postfix, from userid 425415)
-        id 9AA17F146DEF; Mon, 16 May 2022 09:48:25 -0700 (PDT)
-From:   Stefan Roesch <shr@fb.com>
-To:     <io-uring@vger.kernel.org>, <kernel-team@fb.com>,
-        <linux-mm@kvack.org>, <linux-xfs@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <shr@fb.com>, <david@fromorbit.com>, <jack@suse.cz>
-Subject: [RFC PATCH v2 16/16] xfs: enable async buffered write support
-Date:   Mon, 16 May 2022 09:47:18 -0700
-Message-ID: <20220516164718.2419891-17-shr@fb.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220516164718.2419891-1-shr@fb.com>
-References: <20220516164718.2419891-1-shr@fb.com>
+        with ESMTP id S234971AbiEPR7p (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 16 May 2022 13:59:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8253B39BBA
+        for <linux-xfs@vger.kernel.org>; Mon, 16 May 2022 10:59:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A1ED610D5
+        for <linux-xfs@vger.kernel.org>; Mon, 16 May 2022 17:59:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71FB8C385AA;
+        Mon, 16 May 2022 17:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652723983;
+        bh=7WZcbtG2C8XB++rumG8NnHTO4pmKZN0uhSRh2w45tR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IcygrzSR4G4D93XCEDhl615Aq0U0GLWSWC23eXJTIKcLB5LCIZ7YGPvBwlSOWHkdv
+         qdaS+9kn51w+YGlh650OdTnQe7gYP32kt55zvx0UJ44doBqQmsp3UE4s8MhOeOMuau
+         FHLfO4DhQa5RON0RqKQMcS85WuB7kJdZvZLVGiEEizfuKxaNUEAxmTbZ2FagDFGlvU
+         Y/0VxLHY2XY7HK9ygkN1VHfNp18cDgne56AU9hjv+ZQA8JTV+OZ3jmzaPFaX1BL95x
+         Ash5r8u+7FC5J0EPunRvbHTTEl3MFDb+R5TNBQ55oLUc+TbJV3Tc7ncqqjg76Gh6E2
+         MGPc2ohLfd3sg==
+Date:   Mon, 16 May 2022 10:59:42 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Eric Sandeen <sandeen@redhat.com>, sandeen@sandeen.net,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] xfs_repair: detect v5 featureset mismatches in
+ secondary supers
+Message-ID: <YoKRDhAgythlT0if@magnolia>
+References: <165176674590.248791.17672675617466150793.stgit@magnolia>
+ <165176675148.248791.14783205262181556770.stgit@magnolia>
+ <57914c5f-c39a-e3de-14cf-6565ee82f834@redhat.com>
+ <20220512191329.GH27195@magnolia>
+ <20220516081153.GO1098723@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: MfzNruunbqQkwYoFk0gKJtGUvskJAmBJ
-X-Proofpoint-ORIG-GUID: MfzNruunbqQkwYoFk0gKJtGUvskJAmBJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
- definitions=2022-05-16_15,2022-05-16_02,2022-02-23_01
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220516081153.GO1098723@dread.disaster.area>
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This turns on the async buffered write support for XFS.
+On Mon, May 16, 2022 at 06:11:53PM +1000, Dave Chinner wrote:
+> On Thu, May 12, 2022 at 12:13:29PM -0700, Darrick J. Wong wrote:
+> > On Thu, May 12, 2022 at 02:02:33PM -0500, Eric Sandeen wrote:
+> > > On 5/5/22 11:05 AM, Darrick J. Wong wrote:
+> > > > From: Darrick J. Wong <djwong@kernel.org>
+> > > > 
+> > > > Make sure we detect and correct mismatches between the V5 features
+> > > > described in the primary and the secondary superblocks.
+> > > > 
+> > > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > > ---
+> > > 
+> > > 
+> > > > +	if ((mp->m_sb.sb_features_incompat ^ sb->sb_features_incompat) &
+> > > > +			~XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR) {
+> > > 
+> > > I'd like to add a comment about why XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR is special.
+> > > (Why is XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR special? Just because userspace doesn't
+> > > bother to set it on all superblocks in the upgrade paths, right?)
+> > 
+> > Right -- we only set it on the primary super to force users to run
+> > xfs_repair.  Repair will clear NEEDSREPAIR on the primary and all
+> > secondaries before it exits
+> 
+> Oh no it doesn't! :)
+> 
+> I just debugged the persistent xfs/158 failure down to repair only
+> writing the secondary superblocks with "features_changed" is true.
+> 
+> xfs/158 trashes the repair process after setting the inobtcnt and
+> needrepair feature bits in the primary superblock. That's the only
+> code that sets the internal "features_changed" flag that triggers
+> secondary superblock writeback. If repair then dies after this it
+> won't get set on the next run without the upgrade options set on the
+> command line. Hence we re-run repair without the upgrade feature
+> being enabled to check that it still recovers correctly.
+> 
+> The result is that repair does the right thing in completing the
+> feature upgrade because it sees the feature flag in the primary
+> superblock, but it *never sets "features_changed"* and so the
+> secondary superblocks are not updated when it is done. It then goes
+> on to check NEEDSREPAIR in the primary superblock and clears it,
+> allowing the fileystem to mount again.
+> 
+> This results in secondary superblocks with in-progress set and
+> mis-matched feature bits, resulting in xfs_scrub reporting corrupt
+> secondary superblocks and so failing the test.
+> 
+> This change will probably mask that specific bug - it'll still be
+> lying their waiting to pounce on some unsuspecting bystander, but it
+> will be masked by other code detecting the feature mismatch that it
+> causes and correcting it that way...
 
-Signed-off-by: Stefan Roesch <shr@fb.com>
----
- fs/xfs/xfs_file.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ah, ok.  You're pointing out that repair needs to set features_changed
+right after printing "clearing needsrepair flag and regenerating
+metadata", and that this patch sort of papers over the underlying issue.
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index ad3175b7d366..af4fdc852da5 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1169,7 +1169,7 @@ xfs_file_open(
- 		return -EFBIG;
- 	if (xfs_is_shutdown(XFS_M(inode->i_sb)))
- 		return -EIO;
--	file->f_mode |=3D FMODE_NOWAIT | FMODE_BUF_RASYNC;
-+	file->f_mode |=3D FMODE_NOWAIT | FMODE_BUF_RASYNC | FMODE_BUF_WASYNC;
- 	return 0;
- }
-=20
---=20
-2.30.2
+The genesis of this patch wasn't xfs/158 failing, it was the secondary
+sb fuzz testing noticing that xfs_scrub reported a failure whereas
+xfs_repair didn't.
 
+So, I'll go add an extra patch to fix the upgrade case, and I think we
+can let Eric add this one to his tree.
+
+--D
+
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
