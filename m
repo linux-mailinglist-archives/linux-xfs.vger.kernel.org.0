@@ -2,114 +2,67 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C5952C658
-	for <lists+linux-xfs@lfdr.de>; Thu, 19 May 2022 00:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C59852C72D
+	for <lists+linux-xfs@lfdr.de>; Thu, 19 May 2022 01:02:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbiERWgN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 May 2022 18:36:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
+        id S231126AbiERW6d (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 May 2022 18:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230030AbiERWgL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 May 2022 18:36:11 -0400
-Received: from smtp1.onthe.net.au (smtp1.onthe.net.au [203.22.196.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3A45A205FC
-        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 15:36:08 -0700 (PDT)
-Received: from localhost (smtp2.private.onthe.net.au [10.200.63.13])
-        by smtp1.onthe.net.au (Postfix) with ESMTP id 9E1C260FB5;
-        Thu, 19 May 2022 08:36:06 +1000 (EST)
-Received: from smtp1.onthe.net.au ([10.200.63.11])
-        by localhost (smtp.onthe.net.au [10.200.63.13]) (amavisd-new, port 10028)
-        with ESMTP id 8wUWdEkO1d1n; Thu, 19 May 2022 08:36:06 +1000 (AEST)
-Received: from athena.private.onthe.net.au (chris-gw2-vpn.private.onthe.net.au [10.9.3.2])
-        by smtp1.onthe.net.au (Postfix) with ESMTP id 7152360F6F;
-        Thu, 19 May 2022 08:36:06 +1000 (EST)
-Received: by athena.private.onthe.net.au (Postfix, from userid 1026)
-        id 5CCF168026D; Thu, 19 May 2022 08:36:06 +1000 (AEST)
-Date:   Thu, 19 May 2022 08:36:06 +1000
-From:   Chris Dunlop <chris@onthe.net.au>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: fstrim and strace considered harmful?
-Message-ID: <20220518223606.GA1343027@onthe.net.au>
-References: <20220518065949.GA1237408@onthe.net.au>
- <20220518070713.GA1238882@onthe.net.au>
- <YoUXxBe1d7b29wif@magnolia>
+        with ESMTP id S231152AbiERW6I (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 May 2022 18:58:08 -0400
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5EAA17DDEB
+        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 15:57:12 -0700 (PDT)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2ff1ed64f82so40458477b3.1
+        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 15:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
+        b=czYkjWVoP4p/ZkNBJUSmJBfxUUt+Y13DbrrHvBfDUk39swnu2r1R2LMB3wAsUSY8FJ
+         6ZHix6GZx2AHI61Xybet6sdcQlFElibcif9NAvmWTzz0l58WRUD1Pr+/0udl5Tub4w6J
+         meMNyRnYfYgN6d8AQA50exC5S8Br4+BjGl3igVF9bo6vnyZ0caprRk+RWxvnLby0Adqm
+         hPjkVM8mttTA162cBcx8kN6mr4q9cNJsYcLYU7yQFFkOaGBf3QJSI1TLD1TTjQK6bKO2
+         /uQaa7XB0ntetoq2a8c8ZgimsW4075bFpPpigSla9RqML/vkCGJpD6xavnQrqxd781aK
+         ZwFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=mZ3wqB4NmL7z6lpFr/h15h1rYqsZKafJnUpMVahbEPg=;
+        b=psANjpRtq73lx+hJuLeFnvkQ0WRfhKlZfYxvMLtn/WohzkcQCyCgQ5IWaOOrrEa7PR
+         IdVmtuC8BUhV3LX7m0llG/ftceVPzUJYt4STDrb9GP2i1cuiaDC4g7osrRGmAUjXwkBG
+         OjjtmSJXv+mPuPQSACVy5TPVdWBdUrLdP4PAElx3AxJ9a3lAXEWk1F9lEs84w92rA8Nc
+         GmK0wmz/EUzZeOyR4RT+1hHz9reTXCRoFa6GhnIHukKnZYvGBS6OZXIzORrAOaRez1Xi
+         dCATRQAnJfuUhnK/zql+gNbYyMjjdPdF9j7/sf0jhtYFGaGqksQ4Srf9BjgpDPcPNU5a
+         2w3g==
+X-Gm-Message-State: AOAM531BRBt/bXrz/i6cxqsJ59Nb6FbjZJPxNnf+mURXNncm0N7A9yCU
+        Xdx/jXUHjYsgazPMxrF5UStAkSej/TBvmXYPVpw=
+X-Google-Smtp-Source: ABdhPJwfS30wbsCjPY8UVYlWs7ui3rJia0tAtpKvKb7UJ9kvW7xj8JsSqbuzt2V828J/37SMn7X7nS55vBF2Wrce63I=
+X-Received: by 2002:a0d:ccc3:0:b0:2ff:4e0:2be5 with SMTP id
+ o186-20020a0dccc3000000b002ff04e02be5mr1833971ywd.225.1652914631436; Wed, 18
+ May 2022 15:57:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <YoUXxBe1d7b29wif@magnolia>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:7000:7143:0:0:0:0 with HTTP; Wed, 18 May 2022 15:57:11
+ -0700 (PDT)
+Reply-To: tonywenn@asia.com
+From:   Tony Wen <weboutloock4@gmail.com>
+Date:   Thu, 19 May 2022 06:57:11 +0800
+Message-ID: <CAE2_YrAOSJNMn2masB_R9LowQvWJNrct3SYBUk3PivGhjD0fCA@mail.gmail.com>
+Subject: engage
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.4 required=5.0 tests=BAYES_40,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, May 18, 2022 at 08:59:00AM -0700, Darrick J. Wong wrote:
-> On Wed, May 18, 2022 at 05:07:13PM +1000, Chris Dunlop wrote:
->> Oh, sorry... on linux v5.15.34
->>
->> On Wed, May 18, 2022 at 04:59:49PM +1000, Chris Dunlop wrote:
->>> I have an fstrim that's been running for over 48 hours on a 256T thin
->>> provisioned XFS fs containing around 55T of actual data on a slow
->>> subsystem (ceph 8,3 erasure-encoded rbd). I don't think there would be
->>> an an enourmous amount of data to trim, maybe a few T, but I've no idea
->>> how long how long it might be expected to take. In an attempt to see
->>> what the what the fstrim was doing, I ran an strace on it. The strace
->>> has been sitting there without output and unkillable since then, now 5+
->>> hours ago.  Since the strace, on that same filesystem I now have 123 df
->>> processes and 615 rm processes -- and growing -- that are blocked in
->>> xfs_inodegc_flush, e.g.:
-...
-> It looks like the storage device is stalled on the discard, and most
-> everything else is stuck waiting for buffer locks?  The statfs threads
-> are the same symptom as last time.
-
-Note: the box has been rebooted and it's back to normal after an anxious 
-30 minutes waiting for the mount recovery. (Not an entirely wasted 30 
-minutes - what a thrilling stage of the Giro d'Italia!)
-
-I'm not sure if the fstrim was stalled, unless the strace had stalled it 
-somehow: it had been running for ~48 hours without apparent issues before 
-the strace was attached, and then it was another hour before the first 
-process stuck on xfs_inodegc_flush appeared.
-
-The open question is what caused the stuck processes? It's possible the 
-strace was involved: the stuck process with the earliest start time, a 
-"df", was started an hour after the strace and it's entirely plausible 
-that was the very first df or rm issued after the strace. However it's 
-also plausible that was a coincidence and the strace had nothing to do 
-with it. Indeed it's even plausible the fstrim had nothing to do with the 
-stuck processes and there's something else entirely going on: I don't know 
-if there's a ticking time bomb somewhere in the system
-
-It's now no mystery to me why the fstrim was taking so long, nor why the 
-strace didn't produce any output: it turns out fstrim, without an explicit 
---offset --length range, issues a single ioctl() to trim from the start of 
-the device to the end, and without an explicit --minimum, uses 
-/sys/block/xxx/queue/discard_granularity as the minimum block size to 
-discard, in this case 64kB. So it would have been issuing a metric 
-shit-ton of discard requests to the underlying storage, something close 
-to:
-
-   (fs-size - fs-used) / discard-size
-   256T - 26T / 64k
-   3,858,759,680 requests
-
-It was after figuring out all that that I hit the reset.
-
-Note: it turns out the actual used space per the filesystem is 26T, whilst 
-the underlying storage shows 55T used, i.e. there's 29T of real discards 
-to process. With this ceph rbd storage I don't know if a "real" discard 
-takes any more or less time than a discard to already-unoccupied storage. 
-
-Next time I'll issue the fstrim in much smaller increments, e.g. starting 
-with perhaps 128G (at least at first), and use a --minimum that matches 
-the underlying object size (4MB). Then play around and monitor it to work 
-out what parameters work best for this system.
-
-Cheers,
-
-Chris - older, wiser, a little more sleep deprived
+Can I engage your services?
