@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F16452C2D6
-	for <lists+linux-xfs@lfdr.de>; Wed, 18 May 2022 21:01:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E1852C2F8
+	for <lists+linux-xfs@lfdr.de>; Wed, 18 May 2022 21:02:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241738AbiERS4R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 18 May 2022 14:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39170 "EHLO
+        id S241756AbiERS4W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 18 May 2022 14:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241805AbiERS4P (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 May 2022 14:56:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE16915F6EE
-        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 11:56:13 -0700 (PDT)
+        with ESMTP id S241746AbiERS4V (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 18 May 2022 14:56:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1365A19C77A
+        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 11:56:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 793A26183D
-        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 18:56:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFDFC385A9;
-        Wed, 18 May 2022 18:56:12 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B32D2B821A2
+        for <linux-xfs@vger.kernel.org>; Wed, 18 May 2022 18:56:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72980C36AE2;
+        Wed, 18 May 2022 18:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652900172;
-        bh=KhThWLvpCOtCgjti211la3L3kE8kaHZs5sliKTNQ1v0=;
+        s=k20201202; t=1652900178;
+        bh=XFeOWycLBWrQICF7reLr+ufEHRQBvsSaErgMKwkpWZ0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=kNQ4liG3qeiPjYhD2KOXcAS9JXYSS8R8G+Oj2+JqEmmP06tcw2OUwGv6J3L6Rp7Of
-         +2zggg9Ir4PVsz9weR/GG9N7V/13wN26a8h32z1as7ec4JWBFkgz8otyHtglz8GwDe
-         ahe7eV+awxXYlyA/+tKCiX7+8KzPUIiO78x/4TMbpOA5najRCVeBtSqwFbTWq2v/Al
-         J0CtHAjR97sj/xn899qybQUuKpNzdf7g+1FHoFaSdfTpRe3Ea5azKYwSCNeGV06MOX
-         xnHqzeXneOn4n0LI7frpNWclbZLALAzho05spB/z3d0UHFc3buaBykCkm3B1hS8Vtx
-         G9uSDF94szaAA==
-Subject: [PATCH 5/7] xfs: put attr[id] log item cache init with the others
+        b=XXd1CbSlR6OdKDIiXcEArWrkAVYT2kafBxlqAUA2sof8/pHfrL2/yXC3o5g8VApH/
+         JvvmN0dhUVmbCa/aDf/QWRNgV/wVfcEmHVFxAnrPTJ/I8uUTexjXT+lIRBJuM8++Dz
+         +yc838zIx+1AD5eMAltUFdhDO63tJXmiF8BHAjzHcY5FfdldoBiNU/djp6L7w0qGfK
+         ZaWVAM5aQxCyt88hStOMoSyJxb99zShOHBpIoxQ1k7oJcUVI6makmk5MHnm96n5P15
+         fya583zhgJpItwGJU0fQh9Cm5WoMOvZUKaBsTWY8ahNDv4XUYr49kHTS8PFl/nQaj+
+         9OskbW7lSJ0sw==
+Subject: [PATCH 6/7] xfs: clean up state variable usage in
+ xfs_attr_node_remove_attr
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Allison Henderson <allison.henderson@oracle.com>,
-        linux-xfs@vger.kernel.org, david@fromorbit.com,
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
         allison.henderson@oracle.com
-Date:   Wed, 18 May 2022 11:56:12 -0700
-Message-ID: <165290017235.1647637.9369712725209110531.stgit@magnolia>
+Date:   Wed, 18 May 2022 11:56:18 -0700
+Message-ID: <165290017800.1647637.17976841524804650684.stgit@magnolia>
 In-Reply-To: <165290014409.1647637.4876706578208264219.stgit@magnolia>
 References: <165290014409.1647637.4876706578208264219.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -57,190 +57,46 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Initialize and destroy the xattr log item caches in the same places that
-we do all the other log item caches.
+The state variable is now a local variable pointing to a heap
+allocation, so we don't need to zero-initialize it, nor do we need the
+conditional to decide if we should free it.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
 ---
- fs/xfs/libxfs/xfs_attr.c  |   36 ------------------------------------
- fs/xfs/libxfs/xfs_attr.h  |    8 --------
- fs/xfs/libxfs/xfs_defer.c |    8 --------
- fs/xfs/xfs_attr_item.c    |    3 +++
- fs/xfs/xfs_attr_item.h    |    3 +++
- fs/xfs/xfs_super.c        |   19 +++++++++++++++++++
- 6 files changed, 25 insertions(+), 52 deletions(-)
+ fs/xfs/libxfs/xfs_attr.c |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 350b7a997321..162fbac78524 100644
+index 162fbac78524..b1300bd10318 100644
 --- a/fs/xfs/libxfs/xfs_attr.c
 +++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -27,8 +27,6 @@
- #include "xfs_attr_item.h"
- #include "xfs_log.h"
- 
--struct kmem_cache		*xfs_attri_cache;
--struct kmem_cache		*xfs_attrd_cache;
- struct kmem_cache		*xfs_attr_intent_cache;
- 
- /*
-@@ -1113,40 +1111,6 @@ xfs_attr_set(
- 	goto out_unlock;
- }
- 
--int __init
--xfs_attri_init_cache(void)
--{
--	xfs_attri_cache = kmem_cache_create("xfs_attri",
--					    sizeof(struct xfs_attri_log_item),
--					    0, 0, NULL);
--
--	return xfs_attri_cache != NULL ? 0 : -ENOMEM;
--}
--
--void
--xfs_attri_destroy_cache(void)
--{
--	kmem_cache_destroy(xfs_attri_cache);
--	xfs_attri_cache = NULL;
--}
--
--int __init
--xfs_attrd_init_cache(void)
--{
--	xfs_attrd_cache = kmem_cache_create("xfs_attrd",
--					    sizeof(struct xfs_attrd_log_item),
--					    0, 0, NULL);
--
--	return xfs_attrd_cache != NULL ? 0 : -ENOMEM;
--}
--
--void
--xfs_attrd_destroy_cache(void)
--{
--	kmem_cache_destroy(xfs_attrd_cache);
--	xfs_attrd_cache = NULL;
--}
--
- /*========================================================================
-  * External routines when attribute list is inside the inode
-  *========================================================================*/
-diff --git a/fs/xfs/libxfs/xfs_attr.h b/fs/xfs/libxfs/xfs_attr.h
-index 8053415666fa..e271462c4f04 100644
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -566,14 +566,6 @@ int xfs_attr_calc_size(struct xfs_da_args *args, int *local);
- void xfs_init_attr_trans(struct xfs_da_args *args, struct xfs_trans_res *tres,
- 			 unsigned int *total);
- 
--extern struct kmem_cache	*xfs_attri_cache;
--extern struct kmem_cache	*xfs_attrd_cache;
--
--int __init xfs_attri_init_cache(void);
--void xfs_attri_destroy_cache(void);
--int __init xfs_attrd_init_cache(void);
--void xfs_attrd_destroy_cache(void);
--
- /*
-  * Check to see if the attr should be upgraded from non-existent or shortform to
-  * single-leaf-block attribute list.
-diff --git a/fs/xfs/libxfs/xfs_defer.c b/fs/xfs/libxfs/xfs_defer.c
-index ed65f7e5a9c7..ace229c1d251 100644
---- a/fs/xfs/libxfs/xfs_defer.c
-+++ b/fs/xfs/libxfs/xfs_defer.c
-@@ -871,12 +871,6 @@ xfs_defer_init_item_caches(void)
- 	if (error)
- 		goto err;
- 	error = xfs_extfree_intent_init_cache();
--	if (error)
--		goto err;
--	error = xfs_attri_init_cache();
--	if (error)
--		goto err;
--	error = xfs_attrd_init_cache();
- 	if (error)
- 		goto err;
- 	error = xfs_attr_intent_init_cache();
-@@ -893,8 +887,6 @@ void
- xfs_defer_destroy_item_caches(void)
+@@ -1516,7 +1516,7 @@ xfs_attr_node_remove_attr(
+ 	struct xfs_attr_item		*attr)
  {
- 	xfs_attr_intent_destroy_cache();
--	xfs_attri_destroy_cache();
--	xfs_attrd_destroy_cache();
- 	xfs_extfree_intent_destroy_cache();
- 	xfs_bmap_intent_destroy_cache();
- 	xfs_refcount_intent_destroy_cache();
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index 07f1208cf18c..4b7919ff0fc6 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -29,6 +29,9 @@
- #include "xfs_log_priv.h"
- #include "xfs_log_recover.h"
+ 	struct xfs_da_args		*args = attr->xattri_da_args;
+-	struct xfs_da_state		*state = NULL;
++	struct xfs_da_state		*state = xfs_da_state_alloc(args);
+ 	int				retval = 0;
+ 	int				error = 0;
  
-+struct kmem_cache		*xfs_attri_cache;
-+struct kmem_cache		*xfs_attrd_cache;
-+
- static const struct xfs_item_ops xfs_attri_item_ops;
- static const struct xfs_item_ops xfs_attrd_item_ops;
- static struct xfs_attrd_log_item *xfs_trans_get_attrd(struct xfs_trans *tp,
-diff --git a/fs/xfs/xfs_attr_item.h b/fs/xfs/xfs_attr_item.h
-index 2475e68712e1..5141dc809d65 100644
---- a/fs/xfs/xfs_attr_item.h
-+++ b/fs/xfs/xfs_attr_item.h
-@@ -48,4 +48,7 @@ struct xfs_attrd_log_item {
- 	struct xfs_attrd_log_format	attrd_format;
- };
- 
-+extern struct kmem_cache	*xfs_attri_cache;
-+extern struct kmem_cache	*xfs_attrd_cache;
-+
- #endif	/* __XFS_ATTR_ITEM_H__ */
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 93e43e1a2863..51ce127a0cc6 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -38,6 +38,7 @@
- #include "xfs_pwork.h"
- #include "xfs_ag.h"
- #include "xfs_defer.h"
-+#include "xfs_attr_item.h"
- 
- #include <linux/magic.h>
- #include <linux/fs_context.h>
-@@ -2083,8 +2084,24 @@ xfs_init_caches(void)
- 	if (!xfs_bui_cache)
- 		goto out_destroy_bud_cache;
- 
-+	xfs_attrd_cache = kmem_cache_create("xfs_attrd_item",
-+					    sizeof(struct xfs_attrd_log_item),
-+					    0, 0, NULL);
-+	if (!xfs_attrd_cache)
-+		goto out_destroy_bui_cache;
-+
-+	xfs_attri_cache = kmem_cache_create("xfs_attri_item",
-+					    sizeof(struct xfs_attri_log_item),
-+					    0, 0, NULL);
-+	if (!xfs_attri_cache)
-+		goto out_destroy_attrd_cache;
-+
- 	return 0;
- 
-+ out_destroy_attrd_cache:
-+	kmem_cache_destroy(xfs_attrd_cache);
-+ out_destroy_bui_cache:
-+	kmem_cache_destroy(xfs_bui_cache);
-  out_destroy_bud_cache:
- 	kmem_cache_destroy(xfs_bud_cache);
-  out_destroy_cui_cache:
-@@ -2131,6 +2148,8 @@ xfs_destroy_caches(void)
- 	 * destroy caches.
+@@ -1526,8 +1526,6 @@ xfs_attr_node_remove_attr(
+ 	 * attribute entry after any split ops.
  	 */
- 	rcu_barrier();
-+	kmem_cache_destroy(xfs_attri_cache);
-+	kmem_cache_destroy(xfs_attrd_cache);
- 	kmem_cache_destroy(xfs_bui_cache);
- 	kmem_cache_destroy(xfs_bud_cache);
- 	kmem_cache_destroy(xfs_cui_cache);
+ 	args->attr_filter |= XFS_ATTR_INCOMPLETE;
+-	state = xfs_da_state_alloc(args);
+-	state->inleaf = 0;
+ 	error = xfs_da3_node_lookup_int(state, &retval);
+ 	if (error)
+ 		goto out;
+@@ -1545,8 +1543,7 @@ xfs_attr_node_remove_attr(
+ 	retval = error = 0;
+ 
+ out:
+-	if (state)
+-		xfs_da_state_free(state);
++	xfs_da_state_free(state);
+ 	if (error)
+ 		return error;
+ 	return retval;
 
