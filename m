@@ -2,45 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A827532351
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 May 2022 08:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EED6153239C
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 May 2022 09:05:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232301AbiEXGiK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 May 2022 02:38:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36280 "EHLO
+        id S229656AbiEXHFr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 May 2022 03:05:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232342AbiEXGiJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 May 2022 02:38:09 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8602595DDE
-        for <linux-xfs@vger.kernel.org>; Mon, 23 May 2022 23:38:07 -0700 (PDT)
+        with ESMTP id S229638AbiEXHFq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 May 2022 03:05:46 -0400
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B61782165
+        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 00:05:45 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BB7365345EA;
-        Tue, 24 May 2022 16:38:06 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id BD25F10E6B44
+        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 17:05:44 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1ntOBA-00FjS5-Qj; Tue, 24 May 2022 16:38:04 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1ntOBA-0088W8-Pj;
-        Tue, 24 May 2022 16:38:04 +1000
+        id 1ntObv-00Fjz6-4s
+        for linux-xfs@vger.kernel.org; Tue, 24 May 2022 17:05:43 +1000
+Date:   Tue, 24 May 2022 17:05:43 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Cc:     chris@onthe.net.au
-Subject: [PATCH 2/2] xfs: introduce xfs_inodegc_push()
-Date:   Tue, 24 May 2022 16:38:02 +1000
-Message-Id: <20220524063802.1938505-3-david@fromorbit.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220524063802.1938505-1-david@fromorbit.com>
-References: <20220524063802.1938505-1-david@fromorbit.com>
+Subject: xfsprogs: 5.19 libxfs kernel sync
+Message-ID: <20220524070543.GA1098723@dread.disaster.area>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=628c7d4e
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=628c83c8
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=oZkIemNP1mAA:10 a=20KFwNOVAAAA:8 a=N8xf_ed3AAAA:8
-        a=KfyTXh2ViG2rkT9xil4A:9 a=sE4t997d3Q9FUvws1cBB:22
+        a=kj9zAlcOel0A:10 a=oZkIemNP1mAA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8
+        a=7-415B0cAAAA:8 a=9-NPeEEhPnI-2cUCaMAA:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -50,117 +44,53 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi folks,
 
-The current blocking mechanism for pushing the inodegc queue out to
-disk can result in systems becoming unusable when there is a long
-running inodegc operation. This is because the statfs()
-implementation currently issues a blocking flush of the inodegc
-queue and a significant number of common system utilities will call
-statfs() to discover something about the underlying filesystem.
+Now that the 5.19 kernel code is largely stablised for the first
+merge, I've been starting to get together the libxfs sync tree for
+xfsprogs with all those changes in it. I have built a branch
+that can be found here:
 
-This can result in userspace operations getting stuck on inodegc
-progress, and when trying to remove a heavily reflinked file on slow
-storage with a full journal, this can result in delays measuring in
-hours.
+git://git.kernel.org/pub/scm/linux/kernel/git/dgc/xfsprogs-dev.git libxfs-5.19-sync
 
-Avoid this problem by adding "push" function that expedites the
-flushing of the inodegc queue, but doesn't wait for it to complete.
+that contains my work in progress so far. It's build on top of the
+current xfsprogs for-next branch. I've ported across everything up
+to the start of the LARP series so far, so I have done the porting
+of the large extent count work and all the other bits and pieces for
+log changes and so on.
 
-Convert xfs_fs_statfs() to use this mechanism so it doesn't block
-but it does ensure that queued operations are expedited.
+For the large extent count work, I have not added any of the
+specific new xfsprogs functionality like mkfs, etc. Patches 14-18
+of Chandan's V7 patch series here:
 
-Fixes: ab23a7768739 ("xfs: per-cpu deferred inode inactivation queues")
-Reported-by: Chris Dunlop <chris@onthe.net.au>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_icache.c | 20 +++++++++++++++-----
- fs/xfs/xfs_icache.h |  1 +
- fs/xfs/xfs_super.c  |  7 +++++--
- fs/xfs/xfs_trace.h  |  1 +
- 4 files changed, 22 insertions(+), 7 deletions(-)
+https://lore.kernel.org/linux-xfs/20220321052027.407099-1-chandan.babu@oracle.com/
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 786702273621..2609825d53ee 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -1862,19 +1862,29 @@ xfs_inodegc_worker(
- }
- 
- /*
-- * Force all currently queued inode inactivation work to run immediately and
-- * wait for the work to finish.
-+ * Expedite all pending inodegc work to run immediately. This does not wait for
-+ * completion of the work.
-  */
- void
--xfs_inodegc_flush(
-+xfs_inodegc_push(
- 	struct xfs_mount	*mp)
- {
- 	if (!xfs_is_inodegc_enabled(mp))
- 		return;
-+	trace_xfs_inodegc_push(mp, __return_address);
-+	xfs_inodegc_queue_all(mp);
-+}
- 
-+/*
-+ * Force all currently queued inode inactivation work to run immediately and
-+ * wait for the work to finish.
-+ */
-+void
-+xfs_inodegc_flush(
-+	struct xfs_mount	*mp)
-+{
-+	xfs_inodegc_push(mp);
- 	trace_xfs_inodegc_flush(mp, __return_address);
--
--	xfs_inodegc_queue_all(mp);
- 	flush_workqueue(mp->m_inodegc_wq);
- }
- 
-diff --git a/fs/xfs/xfs_icache.h b/fs/xfs/xfs_icache.h
-index 2e4cfddf8b8e..6cd180721659 100644
---- a/fs/xfs/xfs_icache.h
-+++ b/fs/xfs/xfs_icache.h
-@@ -76,6 +76,7 @@ void xfs_blockgc_stop(struct xfs_mount *mp);
- void xfs_blockgc_start(struct xfs_mount *mp);
- 
- void xfs_inodegc_worker(struct work_struct *work);
-+void xfs_inodegc_push(struct xfs_mount *mp);
- void xfs_inodegc_flush(struct xfs_mount *mp);
- void xfs_inodegc_stop(struct xfs_mount *mp);
- void xfs_inodegc_start(struct xfs_mount *mp);
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 62f6b97355a2..e14101813851 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -796,8 +796,11 @@ xfs_fs_statfs(
- 	xfs_extlen_t		lsize;
- 	int64_t			ffree;
- 
--	/* Wait for whatever inactivations are in progress. */
--	xfs_inodegc_flush(mp);
-+	/*
-+	 * Expedite background inodegc but don't wait. We do not want to block
-+	 * here waiting hours for a billion extent file to be truncated.
-+	 */
-+	xfs_inodegc_push(mp);
- 
- 	statp->f_type = XFS_SUPER_MAGIC;
- 	statp->f_namelen = MAXNAMELEN - 1;
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index d32026585c1b..0fa1b7a2918c 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -240,6 +240,7 @@ DEFINE_EVENT(xfs_fs_class, name,					\
- 	TP_PROTO(struct xfs_mount *mp, void *caller_ip), \
- 	TP_ARGS(mp, caller_ip))
- DEFINE_FS_EVENT(xfs_inodegc_flush);
-+DEFINE_FS_EVENT(xfs_inodegc_push);
- DEFINE_FS_EVENT(xfs_inodegc_start);
- DEFINE_FS_EVENT(xfs_inodegc_stop);
- DEFINE_FS_EVENT(xfs_inodegc_queue);
+still need to be ported on top of this for the functionality to be
+fully supported in xfsprogs.
+
+Chandan, can you port those changes over to this libxfs sync branch
+and check that I haven't missed anything in the conversion? I did
+pick up one of your patches from that series - "Introduce per-inode
+64-bit extent counters" - because of all the xfs_db bits in it for
+the change in on-disk format, but otherwise I've largely just worked
+through fixing all the compiler errors and converting the xfsprogs
+code over to the new functions and types.
+
+If you port the ramin patches over to thsi branch and test them,
+I'll include them into the branch. I'll be checking for stability
+and regressions on this brnach for the next couple of days, and if
+everythign looks OK I'll send Eric a pull request for it....
+
+Once I've done that, I'll work through the same process with the
+LARP patches. I'll probably lean heavily on Allison's recent
+xfsprogs updates for that (no point doing the same work twice!), but
+right now I'm hoping to have the full 5.19 libxfs syncup done with
+both large extent counts and LARP fully functional in that branch
+before the end of the 5.19 merge window....
+
+Cheers,
+
+Dave.
 -- 
-2.35.1
-
+Dave Chinner
+david@fromorbit.com
