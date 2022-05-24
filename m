@@ -2,44 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BB3153227F
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 May 2022 07:36:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E300F532287
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 May 2022 07:36:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233647AbiEXFgE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 May 2022 01:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
+        id S234522AbiEXFgK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 May 2022 01:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234522AbiEXFgE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 May 2022 01:36:04 -0400
+        with ESMTP id S234277AbiEXFgI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 May 2022 01:36:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD4F1157
-        for <linux-xfs@vger.kernel.org>; Mon, 23 May 2022 22:36:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8407DF11
+        for <linux-xfs@vger.kernel.org>; Mon, 23 May 2022 22:36:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9C89F6147C
-        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 05:36:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06AA3C385AA;
-        Tue, 24 May 2022 05:36:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 644DD6147C
+        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 05:36:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C48CBC385AA;
+        Tue, 24 May 2022 05:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653370562;
-        bh=baZX5gH5uQYlPvEidEhb9tmoUPNvKZDr+cA8eMAtS6k=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nkByuhngct0FA6efKTSgeJR8u36ZiNghqPZrBKtewmbd5gZP+94qhheONcfi75i5N
-         QK77ixmdoqP9vITdbw6btdjfOPgQhl27VvncRWSqQ6tC/T7459JjfjsNE2m1tJ2MWt
-         Rh6P4yZu9kSnIwmkMmnVz647J68UDjOvzUS9LcdW9RwpLmHgNLlU2NuXiprApeTez7
-         EIT9GCmg8Alhl2sFI9W6EkSVmgx1sqTsEP9UPEMJCTZy7lWX5828j28U3GRThDpQqu
-         bP5wVQcFuVP1TKN0YaqyiLleq/A3ZPJTlUzVN6O3kSqOoMQqeaLfUgMbxGdwbq1Ip4
-         mXXlUfVQk/Yvg==
-Subject: [PATCH 3/3] xfs: convert buf_cancel_table allocation to kmalloc_array
+        s=k20201202; t=1653370565;
+        bh=bburmVjGbA+4XZl3uNU03OTpNcpeGb2KER4SDDVrDPQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=FZDLzQwHuOScgIA2OhVnSOO105loy/xX5PO+hS1hNttyoZr6dAHDPArAkN0n7KdbM
+         w3c3lSOvtlF1On3kVbPGcXtWfePetGCvEoLWuQ8wsKzOWPFDOcESfAPJcYO3GinJDy
+         GxkjALA0tHLJqCj8o5Ex+AHtG8COXCp3xCrAEWV6YRsCxPqu0IOVnVlRs8R3+6J+aA
+         /o9ySYDYFc+lxr3wtbcffoWAqINTbF13uK9fo8gBiL5zm2QRfmgE1oBwPHEkw1ABdF
+         ZvZpiRkNq9YtruigL2VgunVTx6umBWI9IVQ/69s4Zj0J4UZp1kufo6EYKdwIOmiMT/
+         jg0h4vuL72/ZQ==
+Subject: [PATCHSET v2 0/2] xfs: random fixes for 5.19
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        david@fromorbit.com
-Date:   Mon, 23 May 2022 22:36:01 -0700
-Message-ID: <165337056157.992964.12304312171548323321.stgit@magnolia>
-In-Reply-To: <165337054460.992964.11039203493792530929.stgit@magnolia>
-References: <165337054460.992964.11039203493792530929.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com,
+        allison.henderson@oracle.com
+Date:   Mon, 23 May 2022 22:36:05 -0700
+Message-ID: <165337056527.993079.1232300816023906959.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,82 +52,28 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-While we're messing around with how recovery allocates and frees the
-buffer cancellation table, convert the allocation to use kmalloc_array
-instead of the old kmem_alloc APIs, and make it handle a null return,
-even though that's not likely.
+Here are a few more fixes for 5.19 -- now that the LARP fixes have
+landed, now we just have the quotacheck fix, a btree cursor leak fix,
+and a fix to the deferred ops manager so that ->create_intent can return
+errors.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+v2: older larp cleanups were picked up by for-next, and fix a leak when
+    btree inserts fail and debugging is enabled
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=random-fixes-5.19
 ---
- fs/xfs/libxfs/xfs_log_recover.h |    2 +-
- fs/xfs/xfs_buf_item_recover.c   |   14 ++++++++++----
- fs/xfs/xfs_log_recover.c        |    4 +++-
- 3 files changed, 14 insertions(+), 6 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_log_recover.h b/fs/xfs/libxfs/xfs_log_recover.h
-index cc36ef9f5df5..2420865f3007 100644
---- a/fs/xfs/libxfs/xfs_log_recover.h
-+++ b/fs/xfs/libxfs/xfs_log_recover.h
-@@ -122,7 +122,7 @@ int xlog_recover_iget(struct xfs_mount *mp, xfs_ino_t ino,
- 		struct xfs_inode **ipp);
- void xlog_recover_release_intent(struct xlog *log, unsigned short intent_type,
- 		uint64_t intent_id);
--void xlog_alloc_buf_cancel_table(struct xlog *log);
-+int xlog_alloc_buf_cancel_table(struct xlog *log);
- void xlog_free_buf_cancel_table(struct xlog *log);
- 
- #ifdef DEBUG
-diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-index f983af4de0a5..ffa94102094d 100644
---- a/fs/xfs/xfs_buf_item_recover.c
-+++ b/fs/xfs/xfs_buf_item_recover.c
-@@ -1015,19 +1015,25 @@ xlog_check_buf_cancel_table(
- }
- #endif
- 
--void
-+int
- xlog_alloc_buf_cancel_table(
- 	struct xlog	*log)
- {
-+	void		*p;
- 	int		i;
- 
- 	ASSERT(log->l_buf_cancel_table == NULL);
- 
--	log->l_buf_cancel_table = kmem_zalloc(XLOG_BC_TABLE_SIZE *
--						 sizeof(struct list_head),
--						 0);
-+	p = kmalloc_array(XLOG_BC_TABLE_SIZE, sizeof(struct list_head),
-+			  GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	log->l_buf_cancel_table = p;
- 	for (i = 0; i < XLOG_BC_TABLE_SIZE; i++)
- 		INIT_LIST_HEAD(&log->l_buf_cancel_table[i]);
-+
-+	return 0;
- }
- 
- void
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 9cf59ae98b86..5f7e4e6e33ce 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -3231,7 +3231,9 @@ xlog_do_log_recovery(
- 	 * First do a pass to find all of the cancelled buf log items.
- 	 * Store them in the buf_cancel_table for use in the second pass.
- 	 */
--	xlog_alloc_buf_cancel_table(log);
-+	error = xlog_alloc_buf_cancel_table(log);
-+	if (error)
-+		return error;
- 
- 	error = xlog_do_recovery_pass(log, head_blk, tail_blk,
- 				      XLOG_RECOVER_PASS1, NULL);
+ fs/xfs/libxfs/xfs_btree.c |    8 +++++---
+ fs/xfs/xfs_qm.c           |    9 ++++++++-
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
