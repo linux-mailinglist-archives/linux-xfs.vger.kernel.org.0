@@ -2,58 +2,145 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1BB653282D
-	for <lists+linux-xfs@lfdr.de>; Tue, 24 May 2022 12:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13A353281F
+	for <lists+linux-xfs@lfdr.de>; Tue, 24 May 2022 12:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236355AbiEXKtd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 24 May 2022 06:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35688 "EHLO
+        id S229824AbiEXKrw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 24 May 2022 06:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233418AbiEXKtb (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 May 2022 06:49:31 -0400
-X-Greylist: delayed 1152 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 24 May 2022 03:49:30 PDT
-Received: from oftenbest.adminbbserv.bond (adminbbserv.bond [213.108.199.214])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D1060059;
-        Tue, 24 May 2022 03:49:30 -0700 (PDT)
-Received: from webmail.adminbbserv.bond (localhost.localdomain [IPv6:::1])
-        by oftenbest.adminbbserv.bond (Postfix) with ESMTPSA id 50A0C5D0A;
-        Tue, 24 May 2022 06:16:17 -0400 (EDT)
-Authentication-Results: oftenbest.adminbbserv.bond;
-        spf=pass (sender IP is ::1) smtp.mailfrom=trade@adminbbserv.bond smtp.helo=webmail.adminbbserv.bond
-Received-SPF: pass (oftenbest.adminbbserv.bond: connection is authenticated)
+        with ESMTP id S233418AbiEXKrv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 24 May 2022 06:47:51 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F07260AA6
+        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 03:47:48 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id v14so14440145qtc.3
+        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 03:47:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3mUYpErWT/ENGOL6r7dnzJ9kNaD9CmxfzD81AuTe4KI=;
+        b=W0qsFXtVvepWx/aZTqh87Uy/ZIpqTx82qL1qxMsa50zAwQJsl5/Ix4kFsGUYbeMxsz
+         cttrCXDEQPguF1Ltk//C8pnD0M57npNMAKxoyCCDx/3ZhLDhWU2H7t4P2ks6pKOHRAsW
+         9L0arYzgS2QfttpQLGKS/xN6W6OVe9fE7f6HgLX7M/V0Dd1c+JqI1CDlMSoR3ix8XqOK
+         cAXGSNKwfsJ+st6e9utjRyZbvB1XDMO4eEFAKPUczDO6HxlDTU8uq5/gFPUEQqOMJ8QX
+         kdbauDJYGk41BqnNT2Q5E6/1KZ66xkvtArFsGc0HyBE2SiaaLWNZEXFxw5UoRCz1ct89
+         B9bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3mUYpErWT/ENGOL6r7dnzJ9kNaD9CmxfzD81AuTe4KI=;
+        b=JZabZzgdPGwHOdaXwBULQcAMy+Nf5yY6nlj4EuoqamEB64tQjvCMgrZX/u119XdcOy
+         hTHF6LjzcyV48IDsVZroaVUgGx8i9+qOdD4FheAhQo9ybWlNR6kKExU+F/LjK8cWmNjt
+         lxgd1/wLX8JmBKDIAMDwMbsW54E77eb6m2lUbEE0oU6aKgWeNkr8zEdWmiY3DtMbzIuI
+         vo1QSXdG3j/warkxd7ZAEsF2pulXgyKfUikDnYpMzPCN2dhCRoV2NhbSPaNnQmUzza4e
+         N7uorJm7/yRe908IbTYnPJ3AOGjRhyZ7gBbE+IhOfq7MixuEq+BYsJo5cIUq6VddK6sR
+         f4gg==
+X-Gm-Message-State: AOAM531u5WthaPfIFrTSS+2YXyrZK1U2j4iVWQWhAsRopWTLXsPXAoJo
+        Ps25eKTSNV4KaKASO7uIAMX8Qx5Uoe4sg3WT5PnvMk5cB1y78Q==
+X-Google-Smtp-Source: ABdhPJyWo6fqwaRXTS6Vc/J/wdWa3Iuk3MpSXHbYCcfB5U9KS52/OYg7GYknhzbXCNhNJViROkPYiaQPp//phOCk76Y=
+X-Received: by 2002:a05:622a:1a9c:b0:2f3:d873:4acc with SMTP id
+ s28-20020a05622a1a9c00b002f3d8734accmr19689652qtc.424.1653389267308; Tue, 24
+ May 2022 03:47:47 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Tue, 24 May 2022 11:16:17 +0100
-From:   HR <trade@adminbbserv.bond>
-To:     undisclosed-recipients:;
-Subject: Alkalmaz
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <8d7038d276995d925b2df35d32728886@adminbbserv.bond>
-X-Sender: trade@adminbbserv.bond
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
-        KHOP_HELO_FCRDNS,MIXED_ES,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20220524063802.1938505-1-david@fromorbit.com> <20220524063802.1938505-3-david@fromorbit.com>
+In-Reply-To: <20220524063802.1938505-3-david@fromorbit.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 24 May 2022 13:47:36 +0300
+Message-ID: <CAOQ4uxj7q=XpAzPjcC46AUD3cmDzFwKaYsxmQSm=1pzCQrw+wQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] xfs: introduce xfs_inodegc_push()
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs <linux-xfs@vger.kernel.org>,
+        Chris Dunlop <chris@onthe.net.au>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+On Tue, May 24, 2022 at 1:37 PM Dave Chinner <david@fromorbit.com> wrote:
+>
+> From: Dave Chinner <dchinner@redhat.com>
+>
+> The current blocking mechanism for pushing the inodegc queue out to
+> disk can result in systems becoming unusable when there is a long
+> running inodegc operation. This is because the statfs()
+> implementation currently issues a blocking flush of the inodegc
+> queue and a significant number of common system utilities will call
+> statfs() to discover something about the underlying filesystem.
+>
+> This can result in userspace operations getting stuck on inodegc
+> progress, and when trying to remove a heavily reflinked file on slow
+> storage with a full journal, this can result in delays measuring in
+> hours.
+>
+> Avoid this problem by adding "push" function that expedites the
+> flushing of the inodegc queue, but doesn't wait for it to complete.
+>
+> Convert xfs_fs_statfs() to use this mechanism so it doesn't block
+> but it does ensure that queued operations are expedited.
+>
+> Fixes: ab23a7768739 ("xfs: per-cpu deferred inode inactivation queues")
+> Reported-by: Chris Dunlop <chris@onthe.net.au>
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_icache.c | 20 +++++++++++++++-----
+>  fs/xfs/xfs_icache.h |  1 +
+>  fs/xfs/xfs_super.c  |  7 +++++--
+>  fs/xfs/xfs_trace.h  |  1 +
+>  4 files changed, 22 insertions(+), 7 deletions(-)
+>
+> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+> index 786702273621..2609825d53ee 100644
+> --- a/fs/xfs/xfs_icache.c
+> +++ b/fs/xfs/xfs_icache.c
+> @@ -1862,19 +1862,29 @@ xfs_inodegc_worker(
+>  }
+>
+>  /*
+> - * Force all currently queued inode inactivation work to run immediately and
+> - * wait for the work to finish.
+> + * Expedite all pending inodegc work to run immediately. This does not wait for
+> + * completion of the work.
+>   */
+>  void
+> -xfs_inodegc_flush(
+> +xfs_inodegc_push(
+>         struct xfs_mount        *mp)
+>  {
+>         if (!xfs_is_inodegc_enabled(mp))
+>                 return;
+> +       trace_xfs_inodegc_push(mp, __return_address);
+> +       xfs_inodegc_queue_all(mp);
+> +}
+>
+> +/*
+> + * Force all currently queued inode inactivation work to run immediately and
+> + * wait for the work to finish.
+> + */
+> +void
+> +xfs_inodegc_flush(
+> +       struct xfs_mount        *mp)
+> +{
+> +       xfs_inodegc_push(mp);
+>         trace_xfs_inodegc_flush(mp, __return_address);
 
+Unintentional(?) change of behavior:
+trace_xfs_inodegc_flush() will be called in
+(!xfs_is_inodegc_enabled(mp)) case.
 
-Helló,
+I also wonder if trace_xfs_inodegc_flush()
+should not be before trace_xfs_inodegc_push() in this flow,
+but this is just a matter of tracing conventions and you should
+know best how it will be convenient for xfs developers to be
+reading the trace events stream.
 
-Örömmel értesítjük Önt egy elérhető távmunka részmunkaidős ügyintézői 
-állásról, heti 500 eurós bérért. Ha az időbeosztása elég rugalmas ahhoz, 
-hogy betöltse ezt a pozíciót, kérjük, írjon az 
-"apply@blenheimbuildings.uk" címre a pozícióval kapcsolatos további 
-részletekért. Kérjük, jelentkezéskor tüntesse fel mobiltelefonszámát, 
-valamint a lakóhelyét. Figyelem: Ez a pozíció érkezési sorrendben 
-foglalható el.
-
-Üdvözlettel
-Bánkiné Józsa Mária
-HR vezető/tanácsadó
-Magyarországi Munkaügyi Hivatal.
+Thanks,
+Amir.
