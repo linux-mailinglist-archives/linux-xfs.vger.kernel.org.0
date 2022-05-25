@@ -2,228 +2,104 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D5626534500
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 May 2022 22:36:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D88453453D
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 May 2022 22:48:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243350AbiEYUgE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 May 2022 16:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
+        id S240888AbiEYUs3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 May 2022 16:48:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238201AbiEYUgD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 May 2022 16:36:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40EC650038
-        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 13:36:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D949E61A3F
-        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 20:36:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 39F7DC3411B
-        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 20:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653510961;
-        bh=tdcICqfCbr9T1lxGfVy25raeaIvbKGSIKN9BoUQfixQ=;
-        h=From:To:Subject:Date:From;
-        b=AUOYLuZG28h+WDdEf7Sldk+ubqA6ZeMdzDwxg+haPfqiab5Eb17oZqQeBhrrWuMxy
-         7ORrRJssbN3jPTQmsZQYpLOSJFyKJfEeg7tNmz1HEgtW07Xp6Qpd9AwCplTW1h4A+g
-         V2v5L2fL7yM0RlZV4C9TgPw7rF5obBeqOF6n+ffzS9rG6cUbxI0nTjkCzeIW0w49cM
-         zDk+Df8eVyEbNXaFGwGdgrH3+hgr638xHz42AvpE019ahMuzif6+ZIMuzH3EyS2H8D
-         P0YX7zGg8NOvQVLWl29w3m96cuNc2ejL2eirRv+GPiqC3wBkIhQb2dRIADw80HuUlh
-         3/B27agq940gA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 2ADBBC05FD6; Wed, 25 May 2022 20:36:01 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216031] New: forced kernel crash soon after startup exposes XFS
- growfs race condition
-Date:   Wed, 25 May 2022 20:36:00 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: dusty@dustymabe.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression
-Message-ID: <bug-216031-201763@https.bugzilla.kernel.org/>
+        with ESMTP id S235569AbiEYUsY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 May 2022 16:48:24 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8AC6941AF
+        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id i187so36043618ybg.6
+        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
+        b=MIznAoP29XHGMZwK2XaORcuFYY4KHU3SiD37YZr3IksbwEszYFwRGI6NMOaIsgw3Rc
+         MNWUak9e2Pk5zm0JPp6szTBpWptBOFEsDKaXw1mzZOTFcRGcvyjOwqdtF8UB9EvyuuJZ
+         fMICjT1+KZ7bxeE9NTTU8LESXRGeqFThSri55TjzyU4r+qSYB8KRkbeHsWYNf08X2bEy
+         pryupL2ykuBV+sygnkk+fqajrVN1/45XJT6UIDBI/J4JIiO7GZW4kaISjbo9xtOnIbu3
+         /lAT2wlHOnLDqj2MsvwscUqPgxRkbuhwflLse0VSR01xDxZYapbGb527uMRlqnyfWWDn
+         3l8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
+        b=qSu+DNARJGmwY+2rCfgYqeYeoDklfUwDPX8Farykx2lb0D56PerJ/70Jw9jxRFJIGk
+         po4pLDk6zSHd1IDl8sUtIZygGUBf2YI9mPbJdjuLVo7vkA+z6EsKt2+xDOMezbIVHD/n
+         OrcDw/fO2g0BIuzdN/dimA4xlEVe2KCLzxf7n++BvoTAZcSn5YviZlgnQ7/AsnMWzf1x
+         UKZOiuzPj6/IkJpc3tGwtD35eTKAjb4g5bUBog9TxjHyHhVCZftREVNizQP5AYKp2/hg
+         PkAdqhR/jkFAZg1/uuJ5Wj9C4erqLgqduDulFI2lLikL15Gn1p+WKvJDFGfwjogwJS5L
+         FVbA==
+X-Gm-Message-State: AOAM531vZi+olcnwYXmo3Quk2euQCBi97NuE2CpylJJDMOaJcO5Aor5x
+        f1xl3/DonC1uTfk3eosyS2hCtUNdrv7zUPBooOQ=
+X-Google-Smtp-Source: ABdhPJygDnPWuNyLLxTk2B3Kv8LEKih1+m2wVtTUpsrNi1Bs8nM6GPylqvWzkD99kDlHZJJaie6GrPKCBIwCtXokpK8=
+X-Received: by 2002:a05:6902:1023:b0:64f:39e7:ef05 with SMTP id
+ x3-20020a056902102300b0064f39e7ef05mr31533397ybt.126.1653511701867; Wed, 25
+ May 2022 13:48:21 -0700 (PDT)
+MIME-Version: 1.0
+Received: by 2002:a05:7110:3682:b0:17b:2b7b:c035 with HTTP; Wed, 25 May 2022
+ 13:48:21 -0700 (PDT)
+From:   Colina Fernando <colinafernando724@gmail.com>
+Date:   Wed, 25 May 2022 22:48:21 +0200
+Message-ID: <CAP7Hh1-EL6tqrQsO0De_QJ1avJao_roXNeVStyzCoPtO9q14fg@mail.gmail.com>
+Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
+To:     contact@firstdiamondbk.com
+Cc:     info@firstdiamondbk.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
-MIME-Version: 1.0
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216031
+Guten Tag,
 
-            Bug ID: 216031
-           Summary: forced kernel crash soon after startup exposes XFS
-                    growfs race condition
-           Product: File System
-           Version: 2.5
-    Kernel Version: 5.17.6
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: XFS
-          Assignee: filesystem_xfs@kernel-bugs.kernel.org
-          Reporter: dusty@dustymabe.com
-        Regression: No
+Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
 
-In Fedora CoreOS we have a test that tests kdump by forcing a kernel crash.=
- We
-also have code that does an xfs_growfs on our root filesystem on instance
-bringup. Our CI recently exposed a race condition here where if you trigger=
- the
-kernel crash in the right time window after growfs the kernel starts spitti=
-ng
-out traces in the XFS stack.
+haben ?
+
+Ich habe versucht, Sie per E-Mail zu erreichen.
+
+Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
+
+Danke
+
+Fernando Colina
+
+colinafernando724@gmail.com
 
 
-```
-[    1.920053] systemd[1]: Mounting kdumproot-sysroot.mount -
-/kdumproot/sysroot...
-[    2.194643] SGI XFS with ACLs, security attributes, scrub, quota, no deb=
-ug
-enabled
-[    2.199585] XFS: attr2 mount option is deprecated.
-[    2.200537] XFS (vda4): Mounting V5 Filesystem
-[    2.241396] XFS (vda4): Starting recovery (logdev: internal)
-[    2.264029] XFS (vda4): xfs_buf_find: daddr 0x3b6001 out of range, EOFS
-0x3b6000
-[    2.264921] ------------[ cut here ]------------
-[    2.265443] WARNING: CPU: 0 PID: 487 at fs/xfs/xfs_buf.c:556
-xfs_buf_find+0x518/0x5f0 [xfs]
-[    2.266645] Modules linked in: xfs crct10dif_pclmul crc32_pclmul
-crc32c_intel ghash_clmulni_intel serio_raw virtio_net net_failover
-virtio_console failover virtio_blk ata_generic pata_acpi qemu_fw_cfg ip6_ta=
-bles
-ip_tables ipmi_devintf ipmi_msghandler fuse overlay squashfs loop
-[    2.269172] CPU: 0 PID: 487 Comm: mount Not tainted 5.17.6-300.fc36.x86_=
-64
-#1
-[    2.269920] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.16.0-1.fc36 04/01/2014
-[    2.270835] RIP: 0010:xfs_buf_find+0x518/0x5f0 [xfs]
-[    2.271448] Code: e8 2d 4f f1 c0 e9 e5 fe ff ff 0f 1f 44 00 00 e9 b5 fe =
-ff
-ff 48 89 c1 48 c7 c2 b0 bb 22 c0 48 c7 c6 e0 c6 23 c0 e8 65 28 05 00 <0f> 0=
-b b8
-8b ff ff ff e9 cd fe ff ff 0f 1f 44 00 00 e9 1a fd ff ff
-[    2.273331] RSP: 0018:ffffc9000073f980 EFLAGS: 00010282
-[    2.273888] RAX: 00000000ffffffea RBX: 0000000000000001 RCX:
-000000007fffffff
-[    2.274642] RDX: 0000000000000021 RSI: 0000000000000000 RDI:
-ffffffffc02378fd
-[    2.275423] RBP: 0000000000000000 R08: 0000000000000000 R09:
-000000000000000a
-[    2.276300] R10: 000000000000000a R11: 0fffffffffffffff R12:
-ffff8880bb1c5100
-[    2.277205] R13: ffffc9000073f9e8 R14: ffffc9000073fa98 R15:
-0000000000000001
-[    2.278144] FS:  00007f815240f800(0000) GS:ffff8880b8a00000(0000)
-knlGS:0000000000000000
-[    2.279101] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.279807] CR2: 00007f4b81ba8c08 CR3: 00000000bb248000 CR4:
-0000000000350eb0
-[    2.280829] Call Trace:
-[    2.281176]  <TASK>
-[    2.281461]  xfs_buf_get_map+0x35/0x390 [xfs]
-[    2.282289]  xfs_buf_read_map+0x39/0x270 [xfs]
-[    2.282932]  xfs_buf_readahead_map+0x40/0x50 [xfs]
-[    2.283648]  ? xfs_buf_readahead_map+0x22/0x50 [xfs]
-[    2.284421]  xlog_buf_readahead+0x52/0x60 [xfs]
-[    2.285113]  xlog_recover_commit_trans+0xcf/0x300 [xfs]
-[    2.285879]  xlog_recovery_process_trans+0xc0/0xf0 [xfs]
-[    2.286685]  xlog_recover_process_data+0xa0/0x120 [xfs]
-[    2.287395]  xlog_do_recovery_pass+0x3ae/0x5b0 [xfs]
-[    2.288004]  ? preempt_count_add+0x44/0x90
-[    2.288474]  xlog_do_log_recovery+0x87/0xb0 [xfs]
-[    2.289046]  xlog_do_recover+0x34/0x1b0 [xfs]
-[    2.289597]  xlog_recover+0xb6/0x150 [xfs]
-[    2.290113]  xfs_log_mount+0x14a/0x280 [xfs]
-[    2.290651]  xfs_mountfs+0x3ce/0x840 [xfs]
-[    2.291175]  ? xfs_filestream_get_parent+0x70/0x70 [xfs]
-[    2.291807]  ? xfs_mru_cache_create+0x136/0x180 [xfs]
-[    2.292469]  xfs_fs_fill_super+0x466/0x810 [xfs]
-[    2.293032]  ? xfs_init_fs_context+0x170/0x170 [xfs]
-[    2.293637]  get_tree_bdev+0x16d/0x260
-[    2.294064]  vfs_get_tree+0x25/0xb0
-[    2.294465]  path_mount+0x431/0xa70
-[    2.294857]  __x64_sys_mount+0xe2/0x120
-[    2.295290]  do_syscall_64+0x3a/0x80
-[    2.295688]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[    2.296241] RIP: 0033:0x7f81526002ae
-[    2.296641] Code: 48 8b 0d 6d fb 0d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 =
-2e
-0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3=
-d 01
-f0 ff ff 73 01 c3 48 8b 0d 3a fb 0d 00 f7 d8 64 89 01 48
-[    2.298518] RSP: 002b:00007ffdf1b0e548 EFLAGS: 00000246 ORIG_RAX:
-00000000000000a5
-[    2.299312] RAX: ffffffffffffffda RBX: 0000564ccec18bb0 RCX:
-00007f81526002ae
-[    2.300051] RDX: 0000564ccec18f20 RSI: 0000564ccec18f80 RDI:
-0000564ccec19c50
-[    2.300801] RBP: 0000000000000000 R08: 0000564ccec18e80 R09:
-0000000000000073
-[    2.301560] R10: 0000000000200000 R11: 0000000000000246 R12:
-0000564ccec19c50
-[    2.302314] R13: 0000564ccec18f20 R14: 00000000ffffffff R15:
-00007f815274e076
-[    2.303056]  </TASK>
-[    2.303329] ---[ end trace 0000000000000000 ]---
-```
 
-The original bug with some more context is at
-https://github.com/coreos/fedora-coreos-tracker/issues/1195
 
-This was originally seen with Fedora kernel 5.17.6-300.fc36.x86_64
+----------------------------------
 
-Eric Sandeen created a small reproducer:
 
-```
-#!/bin/bash
 
-rm -f fsfile
-mkfs.xfs -b size=3D4096 -dfile,name=3Dfsfile,size=3D486400b
-truncate --size=3D10199478272 fsfile
-mkdir -p mnt
-mount -o loop fsfile mnt
-xfs_growfs mnt
-for I in `seq 1 32`; do
-        mkdir mnt/dir$I
-        touch mnt/dir$I/file
-done
-sync -f mnt
-xfs_io -x -c "shutdown" mnt
-umount mnt
-mount -o loop fsfile mnt
-umount mnt
-```
 
---=20
-You may reply to this email to add a comment.
+Good Afternoon,
 
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+I was just wondering if you got my Previous E-mail
+have ?
+
+I tried to reach you by E-mail.
+
+Please come back to me quickly, it is very Important.
+
+Thanks
+
+Fernando Colina
+
+colinafernando724@gmail.com
