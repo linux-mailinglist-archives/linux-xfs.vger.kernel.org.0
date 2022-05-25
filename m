@@ -2,104 +2,155 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D88453453D
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 May 2022 22:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C22965345B7
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 May 2022 23:23:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240888AbiEYUs3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 May 2022 16:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        id S238571AbiEYVXP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 May 2022 17:23:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235569AbiEYUsY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 May 2022 16:48:24 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8AC6941AF
-        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id i187so36043618ybg.6
-        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 13:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
-        b=MIznAoP29XHGMZwK2XaORcuFYY4KHU3SiD37YZr3IksbwEszYFwRGI6NMOaIsgw3Rc
-         MNWUak9e2Pk5zm0JPp6szTBpWptBOFEsDKaXw1mzZOTFcRGcvyjOwqdtF8UB9EvyuuJZ
-         fMICjT1+KZ7bxeE9NTTU8LESXRGeqFThSri55TjzyU4r+qSYB8KRkbeHsWYNf08X2bEy
-         pryupL2ykuBV+sygnkk+fqajrVN1/45XJT6UIDBI/J4JIiO7GZW4kaISjbo9xtOnIbu3
-         /lAT2wlHOnLDqj2MsvwscUqPgxRkbuhwflLse0VSR01xDxZYapbGb527uMRlqnyfWWDn
-         3l8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=+uyh4vUIYntN7Mid2B5fbgguOxBR2RiHnKBh7A4r37I=;
-        b=qSu+DNARJGmwY+2rCfgYqeYeoDklfUwDPX8Farykx2lb0D56PerJ/70Jw9jxRFJIGk
-         po4pLDk6zSHd1IDl8sUtIZygGUBf2YI9mPbJdjuLVo7vkA+z6EsKt2+xDOMezbIVHD/n
-         OrcDw/fO2g0BIuzdN/dimA4xlEVe2KCLzxf7n++BvoTAZcSn5YviZlgnQ7/AsnMWzf1x
-         UKZOiuzPj6/IkJpc3tGwtD35eTKAjb4g5bUBog9TxjHyHhVCZftREVNizQP5AYKp2/hg
-         PkAdqhR/jkFAZg1/uuJ5Wj9C4erqLgqduDulFI2lLikL15Gn1p+WKvJDFGfwjogwJS5L
-         FVbA==
-X-Gm-Message-State: AOAM531vZi+olcnwYXmo3Quk2euQCBi97NuE2CpylJJDMOaJcO5Aor5x
-        f1xl3/DonC1uTfk3eosyS2hCtUNdrv7zUPBooOQ=
-X-Google-Smtp-Source: ABdhPJygDnPWuNyLLxTk2B3Kv8LEKih1+m2wVtTUpsrNi1Bs8nM6GPylqvWzkD99kDlHZJJaie6GrPKCBIwCtXokpK8=
-X-Received: by 2002:a05:6902:1023:b0:64f:39e7:ef05 with SMTP id
- x3-20020a056902102300b0064f39e7ef05mr31533397ybt.126.1653511701867; Wed, 25
- May 2022 13:48:21 -0700 (PDT)
+        with ESMTP id S238386AbiEYVXP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 May 2022 17:23:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FBFBF64
+        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 14:23:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3573861A85
+        for <linux-xfs@vger.kernel.org>; Wed, 25 May 2022 21:23:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D07FC385B8;
+        Wed, 25 May 2022 21:23:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653513791;
+        bh=NRkpEF99tG4OLRdNOvYkcp1bBsfC+oEd6mIEPZb/8qc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dvD/96DDyRUyHCDjhtfjvV5MdS9tjCdDtUXTL6Ettt3ebGXPn8uUNP13JoddT3n9R
+         xVY3ph3K6qrJ88NGmMmnW17kfkT1DNnprTGrNHsoO0+22lfE0/I8oXq5Q5JKKmW9BH
+         nZb1iQssyVNlUHMG63rt3hTRAzpOWScN3q8bhzPMuH6X1I8HeldAYJFEF7re3+KcZY
+         JQlGTbNeds4pqqbGs3QbHfIEAFtzDnJmFdzldSK3vfrYAeyVmfDMIyF6TyMmSz2eDO
+         cRPMfXnFQJ28Vs90Q38gBijCxEUDmplFPKsVKCsbFxCnJ+zSA6FtHCq48xITw0IXr7
+         tdSCn/1Al1NpQ==
+Date:   Wed, 25 May 2022 14:23:10 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     xfs <linux-xfs@vger.kernel.org>
+Cc:     Leah Rumancik <lrumancik@google.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Shirley Ma <shirley.ma@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        Konrad Wilk <konrad.wilk@oracle.com>
+Subject: XFS LTS backport cabal
+Message-ID: <Yo6ePjvpC7nhgek+@magnolia>
 MIME-Version: 1.0
-Received: by 2002:a05:7110:3682:b0:17b:2b7b:c035 with HTTP; Wed, 25 May 2022
- 13:48:21 -0700 (PDT)
-From:   Colina Fernando <colinafernando724@gmail.com>
-Date:   Wed, 25 May 2022 22:48:21 +0200
-Message-ID: <CAP7Hh1-EL6tqrQsO0De_QJ1avJao_roXNeVStyzCoPtO9q14fg@mail.gmail.com>
-Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
-To:     contact@firstdiamondbk.com
-Cc:     info@firstdiamondbk.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Guten Tag,
+Hi everyone,
 
-Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
+As most of the people cc'd on this message are aware, there's been a
+recent groundswell of interest in increasing the amount of staff time
+assigned to backporting bug fixes to LTS kernels.  As part of preparing
+to resume maintainership on June 5th, I thought it would be a good idea
+to introduce all the participants (that I know of!) and to capture a
+summary of everyone's thoughts w.r.t. how to make stable backports
+happen.
 
-haben ?
+First, some introductions: Leah and Ted work at Google, and they've
+expressed interest in 5.15 LTS backports.  Dave and Eric are the other
+upstream XFS maintainers, so I've included them.  Amir seems to be
+working on 5.10 LTS backports for his employer(?).  Chandan and I work
+at Oracle (obviously) and he's also been working on a few 5.15 LTS
+backports.
 
-Ich habe versucht, Sie per E-Mail zu erreichen.
+I won't speak for other organizations, but we (Oracle) are also
+interested in stable backports for the 5.4 and 4.14 LTS kernels, since
+we have customers running <cough> derivatives of those kernels.  Given
+what I've heard from others, many kernel distributors lean on the LTS
+kernels.
 
-Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
+The goal of this thread, then, is to shed some light on who's currently
+doing what to reduce duplication of LTS work, and to make sure that
+we're all more or less on the same page with regards to what we will and
+won't try to push to stable.  (A side goal of mine is to help everyone
+working on the stable branches to avoid the wrath and unhelpful form
+letters of the stable maintainers.)
 
-Danke
+Briefly, I think the patches that flow into XFS could be put into three
+rough categories:
 
-Fernando Colina
+(a) Straightforward fixes.  These are usually pretty simple fixes (e.g.
+omitted errno checking, insufficient validation, etc.) sometimes get
+proper Fixes tags, which means that AUTOSEL can be of some benefit.
 
-colinafernando724@gmail.com
+(b) Probable fixes.  Often these aren't all that obvious -- for example,
+the author may be convinced that they correct a mis-interaction between
+subsystems, but we would like the changes to soak in upstream for a few
+months to build confidence that they solve the problem and without
+causing more problems.
 
+(c) Everything else.  New features, giant refactorings, etc.  These
+generally should not be backported, unless someone has a /really/ good
+reason.
 
+Here are a few principles I'd like to see guiding stable backport
+efforts:
 
+1. AUTOSEL is a good tool to _start_ the process of identifying low
+hanging fruit to backport.  Automation is our friend, but XFS is complex
+so we still need people who have kept up with linux-xfs to know what's
+appropriate (and what compile tests can't find) to finish the process.
 
-----------------------------------
+2. Some other tag for patches that could be a fix, but need a few months
+to soak.  This is targetted at (b), since I'm terrible at remembering
+that there are patches that are reaching ripeness.
 
+3. fstesting -- new patches proposed for stable branches shouldn't
+introduce new regressions, and ideally there would also be a regression
+test that would now pass.  As Dave and I have stated in the past,
+fstests is a big umbrella of a test suite, which implies that A/B
+testing is the way to go.  I think at least Zorro and I would like to
+improve the tagging in fstests to make it more obvious which tests
+contain enough randomness that they cannot be expected to behave 100%
+reliably.
 
+Here's a couple of antipatterns from the past:
 
+i. Robots shovelling patches into stable kernels with no testing.
 
-Good Afternoon,
+ii. Massively large backports.  New features don't go to stable kernels,
+and I doubt the stable kernel maintainers will accept that anyway.  I
+grok the temptation to backport more so that it's easier to land future
+fixes via AUTOSEL, but I personally wouldn't endorse frontloading a
+bunch of work to chase a promise of less future work.
 
-I was just wondering if you got my Previous E-mail
-have ?
+And a question or two:
 
-I tried to reach you by E-mail.
+a> I've been following the recent fstests threads, and it seems to me
+that there are really two classes of users -- sustaining people who want
+fstests to run reliably so they can tell if their backports have broken
+anything; and developers, who want the randomness to try to poke into
+dusty corners of the filesystem.  Can we make it easier to associate
+random bits of data (reliability rates, etc.) with a given fstests
+configuration?  And create a test group^Wtag for the tests that rely on
+RNGs to shake things up?
 
-Please come back to me quickly, it is very Important.
+b> Testing relies very heavily on being able to spin up a lot of testing
+resources.  Can/should we make it easier for people with a kernel.org
+account to get free(ish) cloud accounts with the LF members who are also
+cloud vendors?
 
-Thanks
+Thoughts? Flames?
 
-Fernando Colina
-
-colinafernando724@gmail.com
+--D
