@@ -2,120 +2,140 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D02D533765
-	for <lists+linux-xfs@lfdr.de>; Wed, 25 May 2022 09:32:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDDBC533677
+	for <lists+linux-xfs@lfdr.de>; Wed, 25 May 2022 07:37:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243925AbiEYHcp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 25 May 2022 03:32:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51730 "EHLO
+        id S232051AbiEYFhC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 25 May 2022 01:37:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231886AbiEYHci (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 May 2022 03:32:38 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2079.outbound.protection.outlook.com [40.107.243.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE4AD3CA6B;
-        Wed, 25 May 2022 00:32:35 -0700 (PDT)
+        with ESMTP id S241230AbiEYFg7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 25 May 2022 01:36:59 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 410A220F6B
+        for <linux-xfs@vger.kernel.org>; Tue, 24 May 2022 22:36:58 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24P0EWGj023375;
+        Wed, 25 May 2022 05:36:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=corp-2021-07-09;
+ bh=B4fzw3MjwU6/rIhgg0QTs7Qi717DBljLAs8S1HfqoWQ=;
+ b=BjAiNbCF8MZ1WunMVSFHmDO9AG6JZBT3S1GF5Uu40b+UL2MRpUwXBBwDM6Ad5qe38lOo
+ 4yCCLdQzRpcQwoZVDwYNU3an8EaYM5q5Z/v94YYtJGud0OdkLSJz7NEQlKj56fOw/Rv6
+ m28zN5jgfBK8ejtGiim7OppAgofRJGuCTuI7MYwM4eux8L62YiWA83knbZFQ1wf/17vB
+ 8WqjukSRZlKRmkYe8bJY0WYcGDyRjdrhBHGQih2mMRbLhGAOxM7dqjOGTzEWuyfAE9Uc
+ cImqQnvWCetCok3VgmIoQJL5UrL4NkOnCofLC6o8eeEtq2MQ7hzCyVGQwDB+sV7+KFJN Kw== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g93tbs3u2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 May 2022 05:36:55 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24P5aMWX029862;
+        Wed, 25 May 2022 05:36:54 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2040.outbound.protection.outlook.com [104.47.66.40])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3g93x5d5fp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 May 2022 05:36:54 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PlmEiKyxOmlgwaQGlGeOtVluJdud6WyAjPuHXUFEC26jv8n0z2u18pn6Dqa5iU26reG8wgUodVsmGzm+6a/IpBSQzTVdJPRbaII1BunkUEZOwHKP7tCQmHAkD+kTb5EA2Is8D3319qstVkNBXIGYWGcohEoiIFMoB0iL878gFPHXb6ieLLyt5MLXHvNcntPOICXTKC3AQYPuT9kjlmj1Yy+Ex0u6Y4T8v12G6sdypoVNeqCXsHEI5g60IFG5gy6Qg4HgUUmrAOhNwDniWCJUzlKuh2sNiegGpZo9FD/MltJkwKUb4JMXTtD5fo3hrlhkSpEVh1NvDMWV8DogGpY83g==
+ b=WmUEWc14deBvf0jcId3NcAdTJZhBX4qbH2IXp0582p1hY10PdNHZAsbII6BLvNAFv1adIo8Pk1x1rYmoIUMEWEuMcMfWVUDlu4wciET9T//4GoaOtZ1BCJv/XpWCvaVuUyjLNPJGZYRzs5Q5mzpIvzyU8oxDg9+oOcWrR5PbeYEzKIVpDE0U1vaxIIKmSYF9ZxKlLPVEYlXVBcaDDDc8n7MbII8EXCxz0mSmSA5Sg9HGCQlJIg6uw3TZOVeUcM1z6gjgw+DwiDbJGrSXqfP5nJ9+C/V3kmxJYg5tqSjkmNK+5HqWXVqHQDZ1r+dwdh64WsjF0Td8K1qovQhticmZTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uYHDQmuQ7udjTOU1J/nU3Iwwl5ic62llU61AS4c2Ebw=;
- b=icJpzNHSgKZYgS71jlaFzmHMp8hIsB2QbXZdrJU59j7OldI269luYtXaQI2uYLWIAteWBihDOCNPDbH/Hs9Soxnc/27Rvmm2pG5NbNYFR4miFIf/GsVPuS8ZCzm6w/8u+Em+sA3R8BgQeorJRKanch+8jFxulJkNSCTiOUXuh70EKXP4gBuM7gSYwkimmFUNjCKMe74pSdsjWyCiyEB5FhmJL2IAZEzzHi2oIdEeQ2jKSO+81Fmg/RgDrhwK/lfEOs8JklZM/ikSERlJIhsA8hAgPr6Tb304MbJmQ3z6Y9bTFPqckstFU+li678zKmMXmcZtpRmjww6F9Nb37+9yow==
+ bh=B4fzw3MjwU6/rIhgg0QTs7Qi717DBljLAs8S1HfqoWQ=;
+ b=YVXNZMqdkEDD19uth6TFQXVBp8heOGsxdB+o0nJW8zh1YY3zco3d8jAXJIEgrCseu2gKUN4WWXEGqcQgmvGyhI4B7RNCROnqfmRhEtP7UO/yjkdiaR9lAAj8bGYf1dAf76KmnoZo1W22q2Ci5YW6aktgrf1S5oBnKNp5agAwKhqI8MOI4Gyd4D+9EcI0Mxi64LXouJ8cYbpVWxsH+ORZjwygok4J920seYrASkLFKt+Zp0Eaneg1SCImp9fUkTrL7lSLYUPL8K9H9s7dUVEk2BKJQMo0QmbefWwa3EOWvhBJAvvpY5S70HjhC8hoVrnTN1X6eCGZKnWjGwikBb4j7Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uYHDQmuQ7udjTOU1J/nU3Iwwl5ic62llU61AS4c2Ebw=;
- b=DNsL9tGYWDHalN9r5fBXUC8eJNLdYjfoqxoT0pM3r1mgsi3ck7lzVTdQRW0XPzNXRjTqhcs/E5+2cNN3H+weOp5CLllduXQr0CBwUHxaBF57BLNGMhvZriGOfKuJ2IvwJFYlx17CQ4aIm0k7W45stJ12fmW7LvUu+3MeNn754tWgcVhoWk5Nn2XYHqa7ZeeLYabipHomtuZpeKxN0t+TcMi3DtyJZW7iPa6vkZLMeDQ76XodkbJKTg5ocsLne4VrAe1EqYSAO5cBi1TUEuF1NSYbZXr336KFaOqmE0I3uUKTD0YHXNdcOu3dSWNwtHapZDKCmzil9jX5GZEHxvl/IA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com (2603:10b6:a03:134::26)
- by DM6PR12MB2953.namprd12.prod.outlook.com (2603:10b6:5:189::24) with
+ bh=B4fzw3MjwU6/rIhgg0QTs7Qi717DBljLAs8S1HfqoWQ=;
+ b=CqINnUU/quarlyX1FjKAn8BdGoB3DTyECcfYMb5/ImU7ITphAgOoVGPBkFXKHxME4gle3GHigaLC2CRhA4/eExfU9Lh/gLgSBEIYWn4y4hVKKiUqB1eSdiFuPkb/IEfYWUDAksgGErsQWuxPZGRO/+5uXy81VXwlosvPqBsaBqA=
+Received: from SA2PR10MB4587.namprd10.prod.outlook.com (2603:10b6:806:114::12)
+ by BLAPR10MB4817.namprd10.prod.outlook.com (2603:10b6:208:321::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Wed, 25 May
- 2022 07:32:32 +0000
-Received: from BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::59cf:d090:5d26:6e7b]) by BYAPR12MB3176.namprd12.prod.outlook.com
- ([fe80::59cf:d090:5d26:6e7b%5]) with mapi id 15.20.5293.013; Wed, 25 May 2022
- 07:32:32 +0000
-References: <20220524190632.3304-1-alex.sierra@amd.com>
- <20220524190632.3304-3-alex.sierra@amd.com>
-User-agent: mu4e 1.6.9; emacs 27.1
-From:   Alistair Popple <apopple@nvidia.com>
-To:     Alex Sierra <alex.sierra@amd.com>
-Cc:     jgg@nvidia.com, david@redhat.com, Felix.Kuehling@amd.com,
-        linux-mm@kvack.org, rcampbell@nvidia.com,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        hch@lst.de, jglisse@redhat.com, willy@infradead.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v3 02/13] mm: handling Non-LRU pages returned by
- vm_normal_pages
-Date:   Wed, 25 May 2022 14:11:40 +1000
-In-reply-to: <20220524190632.3304-3-alex.sierra@amd.com>
-Message-ID: <87leuqf4oj.fsf@nvdebian.thelocal>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Wed, 25 May
+ 2022 05:36:52 +0000
+Received: from SA2PR10MB4587.namprd10.prod.outlook.com
+ ([fe80::5476:49e9:e3eb:e62]) by SA2PR10MB4587.namprd10.prod.outlook.com
+ ([fe80::5476:49e9:e3eb:e62%5]) with mapi id 15.20.5273.023; Wed, 25 May 2022
+ 05:36:52 +0000
+From:   Chandan Babu R <chandan.babu@oracle.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Chandan Babu R <chandan.babu@oracle.com>, david@fromorbit.com
+Subject: [PATCH 0/5] xfsprogs: Large extent counters
+Date:   Wed, 25 May 2022 11:06:25 +0530
+Message-Id: <20220525053630.734938-1-chandan.babu@oracle.com>
+X-Mailer: git-send-email 2.35.1
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BY5PR03CA0019.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::29) To BYAPR12MB3176.namprd12.prod.outlook.com
- (2603:10b6:a03:134::26)
+X-ClientProxiedBy: TY2PR06CA0047.apcprd06.prod.outlook.com
+ (2603:1096:404:2e::35) To SA2PR10MB4587.namprd10.prod.outlook.com
+ (2603:10b6:806:114::12)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26fce0b1-22ef-4370-2fcd-08da3e20bab7
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2953:EE_
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2953855675E57EFAACCCB563DFD69@DM6PR12MB2953.namprd12.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 009039dd-049a-4ee6-5af6-08da3e10921b
+X-MS-TrafficTypeDiagnostic: BLAPR10MB4817:EE_
+X-Microsoft-Antispam-PRVS: <BLAPR10MB481789E196C490359A411624F6D69@BLAPR10MB4817.namprd10.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NsSvrbzrVr0GP+MF+sTwJYXkpx14Sy6CPqzBZ4KNjoWhlld4tyUscHbDxH8cbjk8+nilz57TMVqv6u+WRspCLCGD/DW2d9itMo/5rFkMPJPmixbZiePT+2jWXI5nm4wvCPdolmxeRNDixcJbaTkBwKAt3yGmGCzonEncAh2V/X8AakaXdVOhkhCe56jyWTeSZSzmWET/CU7LJ1YTugphsEHYan8JMCz0gGn6H27OMw5JM4QZo2U99QlmIcxMLtZm/YfO5QZ7XrwOSHvkq8kteK9cv9J4uMOahZzqpIxa7x6Qfz1s7PTlRIFq+w8Z08MArPrS/R3te0zigzWosLXOKH4qHe4YtYOLHaYhu/CKrY1+cfcKjNTmFXbXtPYlvsAIghURRwYAveXm/fBsn5SPMP1EmdQMF0xfcjuI5XsegHahn12uGm/nYa0pA2EqEJ9lCFTTg59mc1PQgRjU/iYpTaVCYyCosVtvHFdBQq19vWnid2z5wZGLn9dy9iYmIpX2X8GNNFVZhwCCSY7l3io/+lT0L2RZdFjNhiGBm1l4B/dk00JZ2N+wWpl7s2/LZ+s1bNHpW/AtijmBFHKU0frNeYu04Y1a2sNH1d4eNeiPj7+zGK8qDf5Y9puWtZ2/u2HGaIGqYNxBZDLK3nebdyiHTw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3176.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(316002)(8676002)(7416002)(8936002)(4326008)(5660300002)(6916009)(30864003)(26005)(6506007)(6666004)(6512007)(9686003)(6486002)(508600001)(2906002)(66476007)(66946007)(66556008)(86362001)(186003)(38100700002)(83380400001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: zlYdB124RyO+SaJQpu26GdVlu+s6hgAyG392OMhBi2ErX4Wd0wIRxnYmIEtOJJBJDLxLgBlm3gkN96O/sC8UbwcNxjy6zBAG6X93niOqJFqj5Yi4d+EXty20FgOjZZ0nUjp3p7Lkt3IJskOpH2BG+ZTxUm3I7KpfM9kIj+0WUa5yMgj/j7TeKzHEZhG8X32HM4ZOzPouIRc5l26OFx3aOPIRFX5oVLc+RtderZF33a9XfMZUiG88beydt+5ICmDQkp74Jj4QactTJUbaGQeMMQ04V37a6J8udw7LVQdPmavmQh3zYjlzGlNqiq1bWw7WTXTwJqkRByC+zy+gAXyhlFQvlwGk01f6ixmHvX/8MlMAc1OSLeXrM7s8nYvrjQM3psvdfQKNwAX4mvawqGyRlIqFtflC8G0olb4tWtDLr5WwsD6rjs40bEFgDOUHo9iMRuCP8MiSL90sRHc7uXHpZ9Sevzto/KQEfkCw9M9b/mrPBqrRoYm7FL5SpYLMvQJFq4h16Ima8KlbVVXtJicwfKf58JyRLn2LdtitynaH8a3Z+UQgigV3rhW/1zYBv0fu5my6fq8QaXLx4+n+47l+wwMjRamjw3d0R1rJsegYHXaiqGKGA2yePnTXOI1MvkISxi/vgMjKnREUNqscS7jidly8pI1z9FXhYtg71Kd4QG7T9R5s5DD3D5yikShwUd6xbPzFaME4h/3HqRuP5dd30G9T21nJfAUidIP5Jos8LtlTGieoY2AlZjTGD7hBIPYdxMveSgBzu1PP1JdEon1CE8LgJtX+zAErmC2L5U9wri8=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA2PR10MB4587.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(5660300002)(66946007)(66556008)(6512007)(4326008)(8676002)(66476007)(83380400001)(8936002)(508600001)(6486002)(966005)(6506007)(1076003)(316002)(38100700002)(6666004)(52116002)(86362001)(6916009)(186003)(36756003)(2906002)(26005)(38350700002)(2616005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?O1+Y/V0AsE4gahB1po+oeqd/WYhm0bUyKIMkp3aHKSrUcSE9VXKOa6vwyUO9?=
- =?us-ascii?Q?CWJsKV463h4OTQAJBxkZSbkw4910uEtk7Ui4LPrPcBwJanlhu0s+lwbuygZ8?=
- =?us-ascii?Q?jdVy05EPA9z9QllnPFxbbn7zN5l5ku5ZIPyPCEbf3WONJVUsGy/efLINFXHE?=
- =?us-ascii?Q?r0u4hQIkWIyE59ohuEIE/4sisfDIJ2hnNY7JaOe/QFav8dxh0uuNxBi+YSgd?=
- =?us-ascii?Q?PdKhnyIAWCOR1uHv+bC6/qTb8CdZpeaL6gKqa3tFVVxUxMwao41NbHfpeZ8m?=
- =?us-ascii?Q?VAYSPvYUsInu9HsypnviUbir6YSlX0opwZerZxDr8oy4zgyJLzPV69ufULn+?=
- =?us-ascii?Q?hBNf7RxXCM349gHyjBMRwzes4BSr/rmLMfcIgls4jLXWk71XV6S2pGPlILp1?=
- =?us-ascii?Q?vKNtNgPjjZ2eFK98rxUTojnzAcKhU1+y687x4Ch4PwX9HbFJTgx2OWYXAe31?=
- =?us-ascii?Q?yNkqEaxDwVKVTqd67BVJpl+S8df6fsRPhza0xqYtK+KuCdiG5wUJdPRYChph?=
- =?us-ascii?Q?XcK07yPzEG0smTT636erO2ChxkXfeOXpHfLt840aVIYEhu2s0UTUGg5bZwSm?=
- =?us-ascii?Q?SssyFWxYdBecGcDXnNUae+sBMU7elRHCu7FL+aKjpT4atWxsehu+U+uAPNm5?=
- =?us-ascii?Q?UO/pAfXK1cJp1XBuNkbwz6XHuMW9lY7VlSrV9hg60ulZsTwAFFG0HLWzHLwH?=
- =?us-ascii?Q?7Z53/IdN/ltxB1Mk7lmxwj5XaMOC3Y1KWwlLk+U1TBI+uPM31zqp02YDMfQm?=
- =?us-ascii?Q?YVtbBJAag4gBhMnQVM/LXaNR9TE0qezRrOL3SJDhQTGM6OdY9OfUAC6XMuY9?=
- =?us-ascii?Q?dVq0M/6hy/aYPPJQj4euhrnSyyZGqMxq3MjSgGg8wzpeRFFZ+Qz2H/ax9OqH?=
- =?us-ascii?Q?/tdbuj2fbJW5aM+4shE95UDGzBiIHBenCBdXje7iOxeqkvftatdDJRLApaBL?=
- =?us-ascii?Q?FniVwwWp3sfk1cX6x0xrXRSgOIEpAwfQoawXbtlXMaJs9oJ/imeSi0VqEgHl?=
- =?us-ascii?Q?uT7S7GF51Vq0GcwzQWCgwJtTt65xMxuO6bmV+RajqNLkhNFLysB18n7330gh?=
- =?us-ascii?Q?6fqRufS3gJFC1y8hKiLr6WkxFHnRd0Fz9iEno0xlZc6kq/bRnoK9fkqX3ZUG?=
- =?us-ascii?Q?5wsYzuuYMZCtLIMZymQrmlFagC+bblLvw066/VdWjxB0kM6oTwxPVJ8pm17a?=
- =?us-ascii?Q?4/FneW+XMTTl8svkBrTwpZ7trraEQYqKpkG1KRuOeqo5opZyaLoojYZxFMKc?=
- =?us-ascii?Q?K3ebth6sH0hyBIQOdPrpRJlJZcG7MFNimtDtfr9Njg0XDD2OIspN46HCaJWi?=
- =?us-ascii?Q?v28ffRjpEjbUfFgx2SgId8k0vKezve4gR6CzNiYHdczzmtYCCmJ7wDwLMe1f?=
- =?us-ascii?Q?mo+F7PpeY448jlAAcpw4nxmEP4H2pz31S8KX0Jo9OaySwS6+mNEKPz8uoGuW?=
- =?us-ascii?Q?I6ITe0YAjUFL0cz3wJrbALLTGq/Q60UsaRgMQ3A/m0yErWTOcFU47HWcf1/Q?=
- =?us-ascii?Q?azLWCL4gO53gxpN2XnJ1XH5tDgowh9Rrkm8e9bxa8QBLU7044V0KgCAY/FV/?=
- =?us-ascii?Q?Vgi9KLuBgdg3rjHZXr96Q6sXUemWSKfyu5j7ZsgGOsORoZlbWwyKEvYtP5TP?=
- =?us-ascii?Q?YIp/3zLpQDGSbJYvnXfE90Vv9uU5sKj0SZZUY7MI8iZAhlcCW/yvxIAd3oo4?=
- =?us-ascii?Q?CyQyT7w9Vu2QMhDnjlDuMOjy/KRv8iEMKZpPYdkjB9IfeQQ15a6Efn2EUk1v?=
- =?us-ascii?Q?8omDzBXIaw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26fce0b1-22ef-4370-2fcd-08da3e20bab7
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3176.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?q8YvA+vGvU979cSFYkWQj2UOHYs/h6hEtWp4osBQdoQfaRQbkatKqFto2f/+?=
+ =?us-ascii?Q?aOpY/NwQa4qwuE+80jqXjgElPnXfab3wPytO2Y9dQ9zbqtEcTEcYAZwEVKGC?=
+ =?us-ascii?Q?m4f4ovV+tAIv7vSzPN5h1iH9gJx7hSSnFJjVOgvKa2l5H0jNrunglS8TFns/?=
+ =?us-ascii?Q?gLI0cUeIO8h/3dzWYxaCohO3srb89ZqhCpprYyMoQbsDeTMrmZSxRdIr2MKx?=
+ =?us-ascii?Q?ELzBejIDvpNWgxYUnOzslWWLCcpxJ0R6MUmuD0ulnzA47yO6/gHXcowG8tO5?=
+ =?us-ascii?Q?o8jn9DNvKlF1FrwJMtTuCMoHx7M6+J821dhXwgegnnOIHye2CDhqqsbIJfRj?=
+ =?us-ascii?Q?z88dKA9PgxMkPK/N/VDdehCjNw6OM0SAw/wuCKucXnV1vSLfdjL992mSpRcU?=
+ =?us-ascii?Q?b2ALojCtb8N2sMDGGNvADGHSHt9l36PTqknq0S3SQzNacRtofXUwTbqJpoRr?=
+ =?us-ascii?Q?D1Flsw5WsS/Xomj4SCRgkc2k6XJbfRTdRIHTLNQMqn4bnRfJlXVvfcXBBZVN?=
+ =?us-ascii?Q?EYcZi38goH/NaJu/zWqz7iZtBCRiApDl7YhKUeI/NahG2RTCJConUxrO/Gav?=
+ =?us-ascii?Q?KSdnXggHizS794fh23dnCwnX8Atrn85lxaIJ307bGJbuS2fQop0qFugc5BON?=
+ =?us-ascii?Q?BL47xE3AzjLy1XU3NQhazktS0glsimOxe6UUMxoNyB+dwZrHG6OtSP5m8odR?=
+ =?us-ascii?Q?WYX03ezgjl8TQJsfix2QyS+bGkVCsvKyOVEpSD660Kl3y3Bu6akidPrspL4O?=
+ =?us-ascii?Q?K3pk3xwWqSqdTdG2KuRm4M1BJlPGkP7n5b3GMBdh1giExJ1jcUbKgMIybTia?=
+ =?us-ascii?Q?YHVqVPNxbX3HmDqh0muEqTsnE4XJ0USsN5P5kEKV74bDiLqEVmkWUVCIUoRA?=
+ =?us-ascii?Q?oSf7/3U8eA9u42QPvS9qaC6G/36LFuxHNHoaIC22s0Vj2ApKzroOYi2hPylf?=
+ =?us-ascii?Q?8xuHXR0xFMKxDuDR69HHBfqbJVas0c/b7PwZyo3Lk3re3y8qajG2IruZFlUz?=
+ =?us-ascii?Q?7YaHYRy3FW8eENfKd/kVn65Wd3CkCAcodkRuBBZ1JoyqcnApPZBfgcQBrg+X?=
+ =?us-ascii?Q?BUbbGmlg6eyvCV7RmJFUTyu0vVEjWZ2S5JnVKjy4+1NyZTumPswcWimuI/Xx?=
+ =?us-ascii?Q?FT7Cdi6bGqib+DQ19D8RzhrVpHVwIMl7mhdHc83MU8E8IcK08VBFbJnYvQGl?=
+ =?us-ascii?Q?9jtL2F8iKySNggvGdoLPs8Xm4p04+W5F7aNxgQcPCsvZO1BcsNWSv5AdJLQp?=
+ =?us-ascii?Q?gcg/jgGBBkRsBB3vvy/kGnFV5r5tLI3Oh1q1RN1/Dt9uvcpKaJsyECg5umPY?=
+ =?us-ascii?Q?e7zGmXqDv4wDGELiVhbFKVRhCOiVXrvHob6w205ps3SAv+974VBVhjf8ZQ6U?=
+ =?us-ascii?Q?luO9Lr81OpV0y/dCQH6hBXn6rBpo0qbySeFnA1gFFOZyaukdKogcUoFz/XLj?=
+ =?us-ascii?Q?8SDouJC2cpGpQF3/F50jcLJ7pzCngD+fvSqDnFlpbYb4+laHTftigv6fXfbR?=
+ =?us-ascii?Q?+caRcPAeQfjWAUfEmVYjPAiIpkpottUN6kyXuDXMbx3WCuD1p5/mWZu986XA?=
+ =?us-ascii?Q?a5SBnY8Kag5+ASKtNtAmg3+XFBt8zzLLj6Gd9bhprRz4YKR6OvPxcsUcQUHh?=
+ =?us-ascii?Q?Hfle3ne0sKgWjdcYH8SgH2j/tWKVX7P8XRHVaCaRgEEX2T1dNnnC9T39LUED?=
+ =?us-ascii?Q?4g2CEEf8FXUL4txqvGFHcv0jf/3Rga1toY2+SwppqIn2ehZD9KwPwuGM8TRa?=
+ =?us-ascii?Q?2C8h3VHuAfZFg8mh1qKmFJ5ssE5DtE4=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 009039dd-049a-4ee6-5af6-08da3e10921b
+X-MS-Exchange-CrossTenant-AuthSource: SA2PR10MB4587.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2022 07:32:32.0976
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2022 05:36:52.0354
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xO7FdSa+C5nAZXKLVzBpSqZTQy+I9UYyBkI4M9eTs3HZVmcB4zVs382DflBBpTVrZ6WquIQ3TlN+GMiskcHOcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2953
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FORGED_SPF_HELO,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+X-MS-Exchange-CrossTenant-UserPrincipalName: DKjkRcQjzm3hWsfFHcMH07wcaRLQ/NE1qELTWXeNt2Hzre/aXUgQk02KqacRNPO3CgvHVnQCO06eFB2KXvJL6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4817
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.874
+ definitions=2022-05-25_01:2022-05-23,2022-05-25 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
+ definitions=main-2205250029
+X-Proofpoint-GUID: BP7BqCVrunfKYHCzX3JntxouW3Aa5CsJ
+X-Proofpoint-ORIG-GUID: BP7BqCVrunfKYHCzX3JntxouW3Aa5CsJ
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -123,313 +143,52 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+This patchset implements the changes to userspace programs that are
+required to support large per-inode extent counters. These changes
+allow programs in xfsprogs to be able to create and work with
+filesystem instances with 64-bit data fork extent counter and 32-bit
+attr fork extent counter fields.
 
-Alex Sierra <alex.sierra@amd.com> writes:
+The patchset can also be obtained from
+https://github.com/chandanr/xfsprogs-dev.git at branch
+large-extent-counters.
 
-> With DEVICE_COHERENT, we'll soon have vm_normal_pages() return
-> device-managed anonymous pages that are not LRU pages. Although they
-> behave like normal pages for purposes of mapping in CPU page, and for
-> COW. They do not support LRU lists, NUMA migration or THP.
->
-> We also introduced a FOLL_LRU flag that adds the same behaviour to
-> follow_page and related APIs, to allow callers to specify that they
-> expect to put pages on an LRU list.
+PS: Dave, I noticed that xfs/070 is failing during xfstest runs. This
+failure is seen on libxfs-5.19-sync branch as well. The bad commit was
+"xfs: validate v5 feature fields". I will debug this and find the root
+cause.
 
-Continuing the follow up from the thread for v2:
+Chandan Babu R (4):
+  xfsprogs: Invoke bulkstat ioctl with XFS_BULK_IREQ_NREXT64 flag
+  xfs_info: Report NREXT64 feature status
+  mkfs: Add option to create filesystem with large extent counters
+  xfs_repair: Add support for upgrading to large extent counters
 
->> This means by default GUP can return non-LRU pages. I didn't see
->> anywhere that would be a problem but I didn't check everything. Did you
->> check this or is there some other reason I've missed that makes this not
->> a problem?
+Darrick J. Wong (1):
+  xfs_repair: check filesystem geometry before allowing upgrades
 
-> I have double checked all gup and pin_user_pages callers and none of them seem
-> to have interaction with LRU APIs.
+ fsr/xfs_fsr.c                 |   4 +-
+ include/libxfs.h              |   1 +
+ include/xfs_mount.h           |   1 +
+ io/bulkstat.c                 |   1 +
+ libfrog/bulkstat.c            |  29 ++++-
+ libfrog/fsgeom.c              |   6 +-
+ libxfs/init.c                 |  24 ++--
+ libxfs/libxfs_api_defs.h      |   3 +
+ man/man2/ioctl_xfs_bulkstat.2 |  10 +-
+ man/man8/mkfs.xfs.8.in        |   7 ++
+ man/man8/xfs_admin.8          |   7 ++
+ mkfs/lts_4.19.conf            |   1 +
+ mkfs/lts_5.10.conf            |   1 +
+ mkfs/lts_5.15.conf            |   1 +
+ mkfs/lts_5.4.conf             |   1 +
+ mkfs/xfs_mkfs.c               |  23 ++++
+ repair/globals.c              |   1 +
+ repair/globals.h              |   1 +
+ repair/phase2.c               | 230 ++++++++++++++++++++++++++++++++--
+ repair/xfs_repair.c           |  11 ++
+ 20 files changed, 339 insertions(+), 24 deletions(-)
 
-And actually if I'm understanding things correctly callers of
-GUP/PUP/follow_page_pte() should already expect to get non-LRU pages
-returned:
+-- 
+2.35.1
 
-    page = vm_normal_page(vma, address, pte);
-    if ((flags & FOLL_LRU) && page && is_zone_device_page(page))
-        page = NULL;
-    if (!page && pte_devmap(pte) && (flags & (FOLL_GET | FOLL_PIN))) {
-        /*
-         * Only return device mapping pages in the FOLL_GET or FOLL_PIN
-         * case since they are only valid while holding the pgmap
-         * reference.
-         */
-        *pgmap = get_dev_pagemap(pte_pfn(pte), *pgmap);
-        if (*pgmap)
-            page = pte_page(pte);
-
-Which I think makes FOLL_LRU confusing, because if understand correctly
-even with FOLL_LRU it is still possible for follow_page_pte() to return
-a non-LRU page. Could we do something like this to make it consistent:
-
-    if ((flags & FOLL_LRU) && (page && is_zone_device_page(page) ||
-        !page && pte_devmap(pte)))
-
-Looking at callers that currently use FOLL_LRU I don't think this would
-change any behaviour as they already filter out devmap through various
-other means.
-
->
-> Signed-off-by: Alex Sierra <alex.sierra@amd.com>
-> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
-> ---
->  fs/proc/task_mmu.c | 2 +-
->  include/linux/mm.h | 3 ++-
->  mm/gup.c           | 2 ++
->  mm/huge_memory.c   | 2 +-
->  mm/khugepaged.c    | 9 ++++++---
->  mm/ksm.c           | 6 +++---
->  mm/madvise.c       | 4 ++--
->  mm/memory.c        | 9 ++++++++-
->  mm/mempolicy.c     | 2 +-
->  mm/migrate.c       | 4 ++--
->  mm/mlock.c         | 2 +-
->  mm/mprotect.c      | 2 +-
->  12 files changed, 30 insertions(+), 17 deletions(-)
->
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index f46060eb91b5..5d620733f173 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -1785,7 +1785,7 @@ static struct page *can_gather_numa_stats(pte_t pte, struct vm_area_struct *vma,
->  		return NULL;
->
->  	page = vm_normal_page(vma, addr, pte);
-> -	if (!page)
-> +	if (!page || is_zone_device_page(page))
->  		return NULL;
->
->  	if (PageReserved(page))
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 9f44254af8ce..d7f253a0c41e 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -601,7 +601,7 @@ struct vm_operations_struct {
->  #endif
->  	/*
->  	 * Called by vm_normal_page() for special PTEs to find the
-> -	 * page for @addr.  This is useful if the default behavior
-> +	 * page for @addr. This is useful if the default behavior
->  	 * (using pte_page()) would not find the correct page.
->  	 */
->  	struct page *(*find_special_page)(struct vm_area_struct *vma,
-> @@ -2929,6 +2929,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
->  #define FOLL_NUMA	0x200	/* force NUMA hinting page fault */
->  #define FOLL_MIGRATION	0x400	/* wait for page to replace migration entry */
->  #define FOLL_TRIED	0x800	/* a retry, previous pass started an IO */
-> +#define FOLL_LRU        0x1000  /* return only LRU (anon or page cache) */
->  #define FOLL_REMOTE	0x2000	/* we are working on non-current tsk/mm */
->  #define FOLL_COW	0x4000	/* internal GUP flag */
->  #define FOLL_ANON	0x8000	/* don't do file mappings */
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 501bc150792c..c9cbac06bcc5 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -479,6 +479,8 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  	}
->
->  	page = vm_normal_page(vma, address, pte);
-> +	if ((flags & FOLL_LRU) && page && is_zone_device_page(page))
-> +		page = NULL;
->  	if (!page && pte_devmap(pte) && (flags & (FOLL_GET | FOLL_PIN))) {
->  		/*
->  		 * Only return device mapping pages in the FOLL_GET or FOLL_PIN
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 910a138e9859..eed80696c5fd 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -2856,7 +2856,7 @@ static int split_huge_pages_pid(int pid, unsigned long vaddr_start,
->  		}
->
->  		/* FOLL_DUMP to ignore special (like zero) pages */
-> -		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP);
-> +		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP | FOLL_LRU);
->
->  		if (IS_ERR(page))
->  			continue;
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index a4e5eaf3eb01..8bf4126b6b9c 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -627,7 +627,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  			goto out;
->  		}
->  		page = vm_normal_page(vma, address, pteval);
-> -		if (unlikely(!page)) {
-> +		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
->  			result = SCAN_PAGE_NULL;
->  			goto out;
->  		}
-> @@ -1276,7 +1276,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->  			writable = true;
->
->  		page = vm_normal_page(vma, _address, pteval);
-> -		if (unlikely(!page)) {
-> +		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
->  			result = SCAN_PAGE_NULL;
->  			goto out_unmap;
->  		}
-> @@ -1484,7 +1484,8 @@ void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr)
->  			goto abort;
->
->  		page = vm_normal_page(vma, addr, *pte);
-> -
-> +		if (WARN_ON_ONCE(page && is_zone_device_page(page)))
-> +			page = NULL;
->  		/*
->  		 * Note that uprobe, debugger, or MAP_PRIVATE may change the
->  		 * page table, but the new page will not be a subpage of hpage.
-> @@ -1502,6 +1503,8 @@ void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr)
->  		if (pte_none(*pte))
->  			continue;
->  		page = vm_normal_page(vma, addr, *pte);
-> +		if (WARN_ON_ONCE(page && is_zone_device_page(page)))
-> +			goto abort;
->  		page_remove_rmap(page, vma, false);
->  	}
->
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index 063a48eeb5ee..f16056efca21 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -474,7 +474,7 @@ static int break_ksm(struct vm_area_struct *vma, unsigned long addr)
->  	do {
->  		cond_resched();
->  		page = follow_page(vma, addr,
-> -				FOLL_GET | FOLL_MIGRATION | FOLL_REMOTE);
-> +				FOLL_GET | FOLL_MIGRATION | FOLL_REMOTE | FOLL_LRU);
->  		if (IS_ERR_OR_NULL(page))
->  			break;
->  		if (PageKsm(page))
-> @@ -559,7 +559,7 @@ static struct page *get_mergeable_page(struct rmap_item *rmap_item)
->  	if (!vma)
->  		goto out;
->
-> -	page = follow_page(vma, addr, FOLL_GET);
-> +	page = follow_page(vma, addr, FOLL_GET | FOLL_LRU);
->  	if (IS_ERR_OR_NULL(page))
->  		goto out;
->  	if (PageAnon(page)) {
-> @@ -2288,7 +2288,7 @@ static struct rmap_item *scan_get_next_rmap_item(struct page **page)
->  		while (ksm_scan.address < vma->vm_end) {
->  			if (ksm_test_exit(mm))
->  				break;
-> -			*page = follow_page(vma, ksm_scan.address, FOLL_GET);
-> +			*page = follow_page(vma, ksm_scan.address, FOLL_GET | FOLL_LRU);
->  			if (IS_ERR_OR_NULL(*page)) {
->  				ksm_scan.address += PAGE_SIZE;
->  				cond_resched();
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 1873616a37d2..e9c24c834e98 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -413,7 +413,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
->  			continue;
->
->  		page = vm_normal_page(vma, addr, ptent);
-> -		if (!page)
-> +		if (!page || is_zone_device_page(page))
->  			continue;
->
->  		/*
-> @@ -628,7 +628,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
->  		}
->
->  		page = vm_normal_page(vma, addr, ptent);
-> -		if (!page)
-> +		if (!page || is_zone_device_page(page))
->  			continue;
->
->  		/*
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 76e3af9639d9..571a26805ee1 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -621,6 +621,13 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
->  		if (is_zero_pfn(pfn))
->  			return NULL;
->  		if (pte_devmap(pte))
-> +/*
-> + * NOTE: New uers of ZONE_DEVICE will not set pte_devmap() and will have
-> + * refcounts incremented on their struct pages when they are inserted into
-> + * PTEs, thus they are safe to return here. Legacy ZONE_DEVICE pages that set
-> + * pte_devmap() do not have refcounts. Example of legacy ZONE_DEVICE is
-> + * MEMORY_DEVICE_FS_DAX type in pmem or virtio_fs drivers.
-> + */
->  			return NULL;
->
->  		print_bad_pte(vma, addr, pte, NULL);
-> @@ -4422,7 +4429,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
->  	pte = pte_modify(old_pte, vma->vm_page_prot);
->
->  	page = vm_normal_page(vma, vmf->address, pte);
-> -	if (!page)
-> +	if (!page || is_zone_device_page(page))
->  		goto out_map;
->
->  	/* TODO: handle PTE-mapped THP */
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 8c74107a2b15..e32edbecb0cd 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -528,7 +528,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  		if (!pte_present(*pte))
->  			continue;
->  		page = vm_normal_page(vma, addr, *pte);
-> -		if (!page)
-> +		if (!page || is_zone_device_page(page))
->  			continue;
->  		/*
->  		 * vm_normal_page() filters out zero pages, but there might
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 6c31ee1e1c9b..c5d50e96ecd7 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1611,7 +1611,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
->  		goto out;
->
->  	/* FOLL_DUMP to ignore special (like zero) pages */
-> -	page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP);
-> +	page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP | FOLL_LRU);
->
->  	err = PTR_ERR(page);
->  	if (IS_ERR(page))
-> @@ -1802,7 +1802,7 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
->  			goto set_status;
->
->  		/* FOLL_DUMP to ignore special (like zero) pages */
-> -		page = follow_page(vma, addr, FOLL_DUMP);
-> +		page = follow_page(vma, addr, FOLL_DUMP | FOLL_LRU);
->
->  		err = PTR_ERR(page);
->  		if (IS_ERR(page))
-> diff --git a/mm/mlock.c b/mm/mlock.c
-> index 716caf851043..b14e929084cc 100644
-> --- a/mm/mlock.c
-> +++ b/mm/mlock.c
-> @@ -333,7 +333,7 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
->  		if (!pte_present(*pte))
->  			continue;
->  		page = vm_normal_page(vma, addr, *pte);
-> -		if (!page)
-> +		if (!page || is_zone_device_page(page))
->  			continue;
->  		if (PageTransCompound(page))
->  			continue;
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index b69ce7a7b2b7..a6f3587ea29a 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -91,7 +91,7 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
->  					continue;
->
->  				page = vm_normal_page(vma, addr, oldpte);
-> -				if (!page || PageKsm(page))
-> +				if (!page || is_zone_device_page(page) || PageKsm(page))
->  					continue;
->
->  				/* Also skip shared copy-on-write pages */
