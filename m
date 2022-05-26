@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 602F7534C64
-	for <lists+linux-xfs@lfdr.de>; Thu, 26 May 2022 11:17:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB5E534D4A
+	for <lists+linux-xfs@lfdr.de>; Thu, 26 May 2022 12:27:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241093AbiEZJRF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 26 May 2022 05:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48668 "EHLO
+        id S230274AbiEZK1B (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 26 May 2022 06:27:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232473AbiEZJRE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 May 2022 05:17:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C86C6E4F
-        for <linux-xfs@vger.kernel.org>; Thu, 26 May 2022 02:17:02 -0700 (PDT)
+        with ESMTP id S230117AbiEZK1A (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 26 May 2022 06:27:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96E6C5E70
+        for <linux-xfs@vger.kernel.org>; Thu, 26 May 2022 03:26:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 14B4661B9F
-        for <linux-xfs@vger.kernel.org>; Thu, 26 May 2022 09:17:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D0C5C3411E
-        for <linux-xfs@vger.kernel.org>; Thu, 26 May 2022 09:17:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0ED6161149
+        for <linux-xfs@vger.kernel.org>; Thu, 26 May 2022 10:26:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 41A99C3411F
+        for <linux-xfs@vger.kernel.org>; Thu, 26 May 2022 10:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653556621;
-        bh=QQv5NBt5gcJ9kWBY23d4w+wZH3D9HvF+LkYq0G9ji1Q=;
+        s=k20201202; t=1653560815;
+        bh=fplu98nAgi5nmIv3qNrYN0GFfU7wQlAk2Es85vLhB6Y=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=kpS4CC1QyJXTZYhaf9hr0ceydS9xTrErGWOBBao4tHKUWVqKcNdjHmgLwOL99jXhw
-         yPG8/ZBh1Zz8r1Vqy0/quEsZk0xxVZp1BfVh3jortFAtNCUkiJl25SI5IoceIUuy4P
-         2EJorkUcCUUoncwXct73UZSrNuoPMRQOVdjHAtWb770mAFhTp51wgslfH3n0pGLpY2
-         7Vw7m9OLcol1VMiZT1npPVsO1fBS8PJSc4OZ1J0GNWDf9zOO41BMc8GKUsmRGiKOLP
-         Xn4f5NTX3jTd/5wBNBvQ7xHAmUIVwcHztKneyFnq/Rfmt3BYvMA6J0/HPH0dVui4y3
-         WPrb4h/qFgSXA==
+        b=ZOhIbTgo6YUAmsWtqUbnGihZxRE87E9LWcAJwzahLabqVi9CJp1STGsm5zu+LwfZa
+         B7TNfGOwC1mOteoxpSNXtsrjARna3exKKBfIMNoFwcpWue2UykLT+6mqAhcTi8bvG7
+         GTKhtpLY24GgmNJyKJmSvzH9iiFvT236SwXi/SPQ5ElDDywW1rX9/ux9NGZ/yHHFYK
+         PozJ0AkoVlSDArrxfqz9FE4p3k0D2v7X8tyab0BTfH1M3z2kVYs2AYmbFB/OyGGucX
+         tQC7A9AKmPIQvcPhwAsB/dWm/WLsv05QVJi9WFdK3/naawx3ItnNtfXvPqUUmDDVrN
+         qFkdaHdzbTXJA==
 Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 3220BC05FD2; Thu, 26 May 2022 09:17:01 +0000 (UTC)
+        id 2F116C05FF5; Thu, 26 May 2022 10:26:55 +0000 (UTC)
 From:   bugzilla-daemon@kernel.org
 To:     linux-xfs@vger.kernel.org
 Subject: [Bug 216007] XFS hangs in iowait when extracting large number of
  files
-Date:   Thu, 26 May 2022 09:16:59 +0000
+Date:   Thu, 26 May 2022 10:26:54 +0000
 X-Bugzilla-Reason: None
 X-Bugzilla-Type: changed
 X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
@@ -46,14 +46,14 @@ X-Bugzilla-Component: XFS
 X-Bugzilla-Version: 2.5
 X-Bugzilla-Keywords: 
 X-Bugzilla-Severity: normal
-X-Bugzilla-Who: bugzkernelorg8392@araxon.sk
+X-Bugzilla-Who: mgorman@suse.de
 X-Bugzilla-Status: NEW
 X-Bugzilla-Resolution: 
 X-Bugzilla-Priority: P1
 X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
 X-Bugzilla-Flags: 
 X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216007-201763-GwNuopMzC0@https.bugzilla.kernel.org/>
+Message-ID: <bug-216007-201763-cSoWm7t2fM@https.bugzilla.kernel.org/>
 In-Reply-To: <bug-216007-201763@https.bugzilla.kernel.org/>
 References: <bug-216007-201763@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset="UTF-8"
@@ -73,7 +73,7 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 https://bugzilla.kernel.org/show_bug.cgi?id=3D216007
 
---- Comment #21 from Peter Pavlisko (bugzkernelorg8392@araxon.sk) ---
+--- Comment #22 from Mel Gorman (mgorman@suse.de) ---
 (In reply to Mel Gorman from comment #20)
 > (In reply to Peter Pavlisko from comment #19)
 > > (In reply to Mel Gorman from comment #18)
@@ -102,15 +102,7 @@ ly.
 > cc'd as I only have the bugzilla email alias for you but I'll post a
 > lore.kernel.org link here.
 
-Thank you very much.
-
-I don't know if this is the proper place to discuss this, but I am curious
-about the cause. Was it an issue with the way XFS is calling the allocator =
-in a
-for(;;) loop when it does not get the expected result? Or was it an issue w=
-ith
-the allocator itself not working in some obscure edge case? Or was it my
-.config, stretching the kernel ability to function in a bad way?
+https://lore.kernel.org/all/20220526091210.GC3441@techsingularity.net/
 
 --=20
 You may reply to this email to add a comment.
