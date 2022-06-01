@@ -2,97 +2,93 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AFF53ACBD
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jun 2022 20:24:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BAB053AC1E
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jun 2022 19:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344932AbiFASYS convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-xfs@lfdr.de>); Wed, 1 Jun 2022 14:24:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
+        id S1356401AbiFARm0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Jun 2022 13:42:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbiFASYR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jun 2022 14:24:17 -0400
-X-Greylist: delayed 3255 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Jun 2022 11:24:16 PDT
-Received: from cloud48395.mywhc.ca (cloud48395.mywhc.ca [173.209.37.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331B7A30B0;
-        Wed,  1 Jun 2022 11:24:15 -0700 (PDT)
-Received: from [45.44.224.220] (port=40682 helo=[192.168.1.179])
-        by cloud48395.mywhc.ca with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <olivier@trillion01.com>)
-        id 1nwSAP-000142-Ov;
-        Wed, 01 Jun 2022 13:29:57 -0400
-Message-ID: <32fa2fa1db1adcc3c60974fa84a88c74aad82cae.camel@trillion01.com>
-Subject: Re: [PATCH v6 04/16] iomap: Add flags parameter to
- iomap_page_create()
-From:   Olivier Langlois <olivier@trillion01.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>, Stefan Roesch <shr@fb.com>,
-        io-uring@vger.kernel.org, kernel-team@fb.com, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        david@fromorbit.com, hch@infradead.org
-Date:   Wed, 01 Jun 2022 13:29:55 -0400
-In-Reply-To: <20220601082131.rem4qaqabu4ktofl@quack3.lan>
-References: <20220526173840.578265-1-shr@fb.com>
-         <20220526173840.578265-5-shr@fb.com> <Yo/GIF1EoK7Acvmy@magnolia>
-         <12a76c029e9f3cac279c025776dfb2f59331dca0.camel@olivierlanglois.net>
-         <20220601082131.rem4qaqabu4ktofl@quack3.lan>
-Organization: Trillion01 Inc
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.1 
+        with ESMTP id S1352351AbiFARmY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jun 2022 13:42:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC2652B08
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Jun 2022 10:42:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B649E61645
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Jun 2022 17:42:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 262F7C341C5
+        for <linux-xfs@vger.kernel.org>; Wed,  1 Jun 2022 17:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654105343;
+        bh=wNzgA7Fl6ojuR3oVT9qM9a3nS+gvFqy2jaEMGYwPckw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Hr7HieOdbv2ZnOuW59XHwcOANAkWbX1g8z82LOv7A76r6BkdFEgnDagMnxWlfq3VE
+         q9823r0oY3iNflSshhrjEHcIEGVx+Ieq+4ey5wJtoAeYrruuvYwjS0f1zMEEI0cRH6
+         HsOv8JWRLbwSv5wOZ+l6HPozoinMPK3FFNQYX3h64OPthVgLaksn8JOPSIh8+j/8A8
+         E6YAWNYOK6RxKDf14RUPDVel7dhbPmBnPDbXI7MNQIl7JFD//FCcCM6md+4ROHBroh
+         KoMr8gKWNUK//zb+k9cmS3hYsRvBj8Dc9iTtBuHNvwjwteNYy8vmroGCDm5mBvsVmh
+         i7NaZC6ar2gDw==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 15B4CCC13B0; Wed,  1 Jun 2022 17:42:23 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: =?UTF-8?B?W0J1ZyAyMTU3MzFdIFNlcmlhbCBwb3J0IGNvbnRpbnVvdXNseSBv?=
+ =?UTF-8?B?dXRwdXRzIOKAnFhGUyAoZG0tMCk6IE1ldGFkYXRhIGNvcnJ1cHRpb24gZGV0?=
+ =?UTF-8?B?ZWN0ZWTigJ0=?=
+Date:   Wed, 01 Jun 2022 17:42:22 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: sandeen@redhat.com
+X-Bugzilla-Status: RESOLVED
+X-Bugzilla-Resolution: INVALID
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: bug_status cc resolution
+Message-ID: <bug-215731-201763-3kz7gWLDho@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-215731-201763@https.bugzilla.kernel.org/>
+References: <bug-215731-201763@https.bugzilla.kernel.org/>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - cloud48395.mywhc.ca
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - trillion01.com
-X-Get-Message-Sender-Via: cloud48395.mywhc.ca: authenticated_id: olivier@trillion01.com
-X-Authenticated-Sender: cloud48395.mywhc.ca: olivier@trillion01.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, 2022-06-01 at 10:21 +0200, Jan Kara wrote:
-> > I have a question that is a bit offtopic but since it is concerning
-> > GFP
-> > flags and this is what is discussed here maybe a participant will
-> > kindly give me some hints about this mystery that has burned me for
-> > so
-> > long...
-> > 
-> > Why does out_of_memory() requires GFP_FS to kill a process? AFAIK,
-> > no
-> > filesystem-dependent operations are needed to kill a process...
-> 
-> AFAIK it is because without GFP_FS, the chances for direct reclaim
-> are
-> fairly limited so we are not sure whether the machine is indeed out
-> of
-> memory or whether it is just that we need to reclaim from fs pools to
-> free
-> up memory.
-> 
->                                                                 Honza
-Jan,
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215731
 
-thx a lot for this lead. I will study it further. Your answer made me
-realized that the meaning of direct reclaim was not crystal clear to
-me. I'll return to my Bovet & Cesati book to clear that out (That is
-probably the book in my bookshelf that I have read the most).
+Eric Sandeen (sandeen@redhat.com) changed:
 
-After having sending out my question, I have came up with another
-possible explanation...
+           What    |Removed                     |Added
+----------------------------------------------------------------------------
+             Status|NEW                         |RESOLVED
+                 CC|                            |sandeen@redhat.com
+         Resolution|---                         |INVALID
 
-Maybe it is not so much to send the killing signal to the oom victim
-that requires GFP_FS but maybe the trouble the condition is avoiding is
-the oom victim process trying to return memory to VFS as it exits while
-VFS is busy waiting for its allocation request to succeed...
+--- Comment #2 from Eric Sandeen (sandeen@redhat.com) ---
+Agreed, this is simply a report of corruption, and there is not nearly enou=
+gh
+information to act on or triage.
 
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
