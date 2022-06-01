@@ -2,78 +2,91 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9BC85397E2
-	for <lists+linux-xfs@lfdr.de>; Tue, 31 May 2022 22:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3E09539AB7
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jun 2022 03:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245568AbiEaUP1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 31 May 2022 16:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51738 "EHLO
+        id S245616AbiFABYS convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Tue, 31 May 2022 21:24:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344224AbiEaUP0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 May 2022 16:15:26 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A23198089;
-        Tue, 31 May 2022 13:15:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0F372B81644;
-        Tue, 31 May 2022 20:15:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB84C385A9;
-        Tue, 31 May 2022 20:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654028122;
-        bh=BFanbqOhtsJfdsE0t1WgCWXCbNVZbf6rMzjnBDejGko=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HTExhv82IFTfAX9On7K7/OBjqiJbZE6iPiLVuvD4xx82SDjLP9P74u8VjQUVFAjYl
-         ipwq3tQzLRu4WCAoOB9JIjZvP0W8r6gnw6qcSNx7RiF1RvUBlur0Axirx9QoHRO4xQ
-         mIa5TUL/xyxubDp51oQbQjoddfa2708yaXR7QhTbDyXUch3iGCMttd33LEyVHbjjT9
-         gq98XIBn/tlCG0GYwnLfHur6a6GxGG911xMwSm8K4GCtR51UsL7NzWgvbXkVlJGppV
-         og6hGBkGa9DhTnwHtJ5GGoTvNVvSzmeqXzaqVn+W2rpE3QZ9cgjwzIA2RaKx8qJWFD
-         Xo/D5sYinC2bg==
-Date:   Tue, 31 May 2022 13:15:20 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-block@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] f2fs: add sysfs entry to avoid FUA
-Message-ID: <YpZ3WI/Vjgk/CwFE@google.com>
-References: <20220527205955.3251982-1-jaegeuk@kernel.org>
- <YpFDw3mQjN1LBd2j@gmail.com>
- <YpF1gPrQY3UFsgwC@google.com>
- <YpGtDhV7V7gDk430@infradead.org>
+        with ESMTP id S231534AbiFABYR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 31 May 2022 21:24:17 -0400
+X-Greylist: delayed 2991 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 31 May 2022 18:24:16 PDT
+Received: from cloud48395.mywhc.ca (cloud48395.mywhc.ca [173.209.37.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71948CB21;
+        Tue, 31 May 2022 18:24:16 -0700 (PDT)
+Received: from [45.44.224.220] (port=40386 helo=[192.168.1.179])
+        by cloud48395.mywhc.ca with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <olivier@olivierlanglois.net>)
+        id 1nwCJa-0005jM-Mx;
+        Tue, 31 May 2022 20:34:22 -0400
+Message-ID: <12a76c029e9f3cac279c025776dfb2f59331dca0.camel@olivierlanglois.net>
+Subject: Re: [PATCH v6 04/16] iomap: Add flags parameter to
+ iomap_page_create()
+From:   Olivier Langlois <olivier@olivierlanglois.net>
+To:     "Darrick J. Wong" <djwong@kernel.org>, Stefan Roesch <shr@fb.com>
+Cc:     io-uring@vger.kernel.org, kernel-team@fb.com, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        david@fromorbit.com, jack@suse.cz, hch@infradead.org
+Date:   Tue, 31 May 2022 20:34:20 -0400
+In-Reply-To: <Yo/GIF1EoK7Acvmy@magnolia>
+References: <20220526173840.578265-1-shr@fb.com>
+         <20220526173840.578265-5-shr@fb.com> <Yo/GIF1EoK7Acvmy@magnolia>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YpGtDhV7V7gDk430@infradead.org>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - cloud48395.mywhc.ca
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - olivierlanglois.net
+X-Get-Message-Sender-Via: cloud48395.mywhc.ca: authenticated_id: olivier@olivierlanglois.net
+X-Authenticated-Sender: cloud48395.mywhc.ca: olivier@olivierlanglois.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 05/27, Christoph Hellwig wrote:
-> On Fri, May 27, 2022 at 06:06:08PM -0700, Jaegeuk Kim wrote:
-> > I think there's still some benefit to use FUA such as small chunk writes
-> > for checkpoint.
+On Thu, 2022-05-26 at 11:25 -0700, Darrick J. Wong wrote:
+> On Thu, May 26, 2022 at 10:38:28AM -0700, Stefan Roesch wrote:
+> > 
+> >  static struct iomap_page *
+> > -iomap_page_create(struct inode *inode, struct folio *folio)
+> > +iomap_page_create(struct inode *inode, struct folio *folio,
+> > unsigned int flags)
+> >  {
+> >         struct iomap_page *iop = to_iomap_page(folio);
+> >         unsigned int nr_blocks = i_blocks_per_folio(inode, folio);
+> > +       gfp_t gfp = GFP_NOFS | __GFP_NOFAIL;
+> >  
+> >         if (iop || nr_blocks <= 1)
+> >                 return iop;
+> >  
+> > +       if (flags & IOMAP_NOWAIT)
+> > +               gfp = GFP_NOWAIT;
 > 
-> Did you measure if there is?  Because some SSDs basically implemented
-> FUA as an implied flush after the write, in which case it would not
-> really help there either (but also not hurt).
+> Hmm.  GFP_NOWAIT means we don't wait for reclaim or IO or filesystem
+> callbacks, and NOFAIL means we retry indefinitely.  What happens in
+> the
+> NOWAIT|NOFAIL case?  Does that imply that the kzalloc loops without
+> triggering direct reclaim until someone else frees enough memory?
 > 
-> But as the previous two maintainers already said - this needs quirking
-> at the driver layer, not in the submitter.
+> --D
 
-Thanks, I indeed measured this using UFS, and it turned out cache_flush
-is better than FUA all the time like this. Hence, I posted a quirk [1].
+I have a question that is a bit offtopic but since it is concerning GFP
+flags and this is what is discussed here maybe a participant will
+kindly give me some hints about this mystery that has burned me for so
+long...
 
-Write(us/KB)	4	64	256	1024	2048
-FUA		873.792	754.604	995.624	1011.67	1067.99
-CACHE_FLUSH	824.703	712.98	800.307	1019.5	1037.37
+Why does out_of_memory() requires GFP_FS to kill a process? AFAIK, no
+filesystem-dependent operations are needed to kill a process...
 
-[1] https://lore.kernel.org/linux-scsi/20220531201053.3300018-1-jaegeuk@kernel.org/T/#u
