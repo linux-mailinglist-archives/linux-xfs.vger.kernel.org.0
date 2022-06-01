@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B84E353A31B
-	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jun 2022 12:46:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B40FD53A318
+	for <lists+linux-xfs@lfdr.de>; Wed,  1 Jun 2022 12:46:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351748AbiFAKqN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 1 Jun 2022 06:46:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
+        id S1345961AbiFAKqr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 1 Jun 2022 06:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352373AbiFAKqC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jun 2022 06:46:02 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D6281488;
-        Wed,  1 Jun 2022 03:45:57 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id r9-20020a1c4409000000b00397345f2c6fso2763148wma.4;
-        Wed, 01 Jun 2022 03:45:57 -0700 (PDT)
+        with ESMTP id S1352371AbiFAKqD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 1 Jun 2022 06:46:03 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2A3814AA;
+        Wed,  1 Jun 2022 03:45:59 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id q21so1782180wra.2;
+        Wed, 01 Jun 2022 03:45:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DxI+KP/yP2c1dj72ZEf9XEZoYdpFMxSLMCxGwNL12Ug=;
-        b=SSchd4ou2Qrd6oY3fcHH5+g1IFPuS2tvK+hrbnb0JWstRhc6AFH/rL8JMdhvkgLlHC
-         ZQnMiyzGdrmz7zxpZycbRjhZEnAlUnJikj921NXo9WhKDeRM0kPeZPqyRt6mhnkAKbsI
-         NhofRNZAJ21B7ZW5mb9Ai94DP+J2+9SpDz+IpdJvwY3nB4MzAnlQqeHAOb0wrmKZObkn
-         GBtqfOkfPP4tTdFfs1Id/G/8oEw5QO47M4f+k1aXXd9RayTalDf/DDddsRI6HaQXdF2i
-         F+DTcjHCU8Z7OBScDLfQe4v/NRF06Q1ZL9KBUJXXmLEqTHUZ+eLMUm4D+/7DzYFdeeSO
-         2Fnw==
+        bh=KtH8GLMcafEYSB20tONa+zJ9ioX5tusX1ZCZq7mMdkA=;
+        b=OYiJF8IkYWo+pvv/QFkFP37snbX/mqn8II0s1X8xQb2d35XFOiBAuh488BYDaN7FDg
+         gyTtI8HcppUQ1pZdoujy4P4EScBFCkFlmJS1akp6EdX8xTQKVJe+kfztdBygPZ1919vG
+         A2FIAkseEcp2LBCllYtD/egpd1I+TC8WR56DpmUxDlWNq3oWgNmG0m0meLXkQGt4FHop
+         TUQ4+s0eQrky7IkUOJrOifw7a2qjOPGOpb1BGbzYQP7ablN1aP3/Kb/6amGcon74uO8m
+         oQZqkqcjxNg85hILHWggRsit71WmaLbcwG+Af2R49HiBn2oTcKUQy5a4DSwKNMxI1fXb
+         LUvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DxI+KP/yP2c1dj72ZEf9XEZoYdpFMxSLMCxGwNL12Ug=;
-        b=BFIiz/KM1W3luy1/ZGZPwQmlubkBqcbzZfiwhH17tRj8hCuFF89TZhmt7jwKoXMQt+
-         rKKqK5TZI0vBq6W5vbRuCXMhU0KzpqtL4bXJ4zze/aqFq+tZcQiiUNuDjawvWct/RckP
-         NBvQqigj1m1GMxTgoMRVR2as2pD5A1w6PEldw3OwJDdcstXDp0ZZlM8ZlfXLXiPl0M26
-         HcnssYxeHRdgc4EKvC0FSoIkj3cclXRY4aRsHAVTr/y/vy6KsCSip/mS/SdQpG84N6jL
-         w1ORKoOBzvBBLPrNJfwG4LSOBy54KiaP440teC6NLqFyjRitlApbcZMGbm51N9AzbYp5
-         pI6g==
-X-Gm-Message-State: AOAM5327pu9VgwsvIYmGKduWisjAt1dcQdZujNv37mxgTW02y0p7wV8p
-        dGBs2jxL82GTUkLvvB505rI=
-X-Google-Smtp-Source: ABdhPJzBklGwj5Q+1v+rSCE4Qoyh0XYrgDTRYeslp8/xMqxEL+ImMzqNLyht0DgmF0I/9DJivB4GZw==
-X-Received: by 2002:a05:600c:350f:b0:397:7204:ce8e with SMTP id h15-20020a05600c350f00b003977204ce8emr27969597wmq.0.1654080356056;
-        Wed, 01 Jun 2022 03:45:56 -0700 (PDT)
+        bh=KtH8GLMcafEYSB20tONa+zJ9ioX5tusX1ZCZq7mMdkA=;
+        b=Gtt/VtAnUhvW7Wqs1ITxw1CEsvBjwraw1cshEmXcggxiqu98Za10Q1/78AfMJwUop0
+         u/N1rzrV8zZgsXZ5jEXYJBGeOnShLc1hpivtpMcaVRr9jnKMpBMZScQkiMvv4qDxZC85
+         qAI1ft6sBXnhaE56fhJmf+9Sx9iGfSCu9hrwNkIjMuQZ0/CcdrHFG9HLfu+5Uvh6rDzH
+         jbcFgbBWReANx235t7tSe0JHJ/4M4ZvSTI3H0MCS+8QOSPhIT4NWHWQ14m2/+DY4o2j6
+         W3YS86Yfp/msX6UbmYJIgUPORaVT8EEZOASwSKMAv04mDi+cmJ+LRWsN7jo0BEqeYsRi
+         yg1A==
+X-Gm-Message-State: AOAM531b2woo9K7sUAKxMhq0x8blde/Gco1xiZL8yuq8zP5qKsP6kna7
+        X5ZtV5lXNX8iKiCkdLD5V08=
+X-Google-Smtp-Source: ABdhPJzq97m2fnUxvb1nKJQb59FtkhhKuNlswE1bx6aje3nVxPUXzUGUTvIdAdlF9BSdk4kZNzVeRw==
+X-Received: by 2002:adf:e8c3:0:b0:210:3dc0:6c8 with SMTP id k3-20020adfe8c3000000b002103dc006c8mr2649016wrn.611.1654080357827;
+        Wed, 01 Jun 2022 03:45:57 -0700 (PDT)
 Received: from localhost.localdomain ([77.137.79.96])
-        by smtp.gmail.com with ESMTPSA id h9-20020a5d4309000000b002102af52a2csm1562150wrq.9.2022.06.01.03.45.54
+        by smtp.gmail.com with ESMTPSA id h9-20020a5d4309000000b002102af52a2csm1562150wrq.9.2022.06.01.03.45.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Jun 2022 03:45:55 -0700 (PDT)
+        Wed, 01 Jun 2022 03:45:57 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     "Darrick J . Wong" <djwong@kernel.org>
 Cc:     Dave Chinner <david@fromorbit.com>,
@@ -55,11 +55,13 @@ Cc:     Dave Chinner <david@fromorbit.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Adam Manzanares <a.manzanares@samsung.com>,
         Tyler Hicks <code@tyhicks.com>, linux-xfs@vger.kernel.org,
-        fstests@vger.kernel.org,
-        Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
-Subject: [PATCH 5.10 CANDIDATE 2/8] xfs: set inode size after creating symlink
-Date:   Wed,  1 Jun 2022 13:45:41 +0300
-Message-Id: <20220601104547.260949-3-amir73il@gmail.com>
+        fstests@vger.kernel.org, Gao Xiang <hsiangkao@redhat.com>,
+        Allison Henderson <allison.henderson@oracle.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Bill O'Donnell <billodo@redhat.com>
+Subject: [PATCH 5.10 CANDIDATE 3/8] xfs: sync lazy sb accounting on quiesce of read-only mounts
+Date:   Wed,  1 Jun 2022 13:45:42 +0300
+Message-Id: <20220601104547.260949-4-amir73il@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220601104547.260949-1-amir73il@gmail.com>
 References: <20220601104547.260949-1-amir73il@gmail.com>
@@ -75,42 +77,127 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+From: Brian Foster <bfoster@redhat.com>
 
-commit 8aa921a95335d0a8c8e2be35a44467e7c91ec3e4 upstream.
+commit 50d25484bebe94320c49dd1347d3330c7063bbdb upstream.
 
-When XFS creates a new symlink, it writes its size to disk but not to the
-VFS inode. This causes i_size_read() to return 0 for that symlink until
-it is re-read from disk, for example when the system is rebooted.
+xfs_log_sbcount() syncs the superblock specifically to accumulate
+the in-core percpu superblock counters and commit them to disk. This
+is required to maintain filesystem consistency across quiesce
+(freeze, read-only mount/remount) or unmount when lazy superblock
+accounting is enabled because individual transactions do not update
+the superblock directly.
 
-I found this inconsistency while protecting directories with eCryptFS.
-The command "stat path/to/symlink/in/ecryptfs" will report "Size: 0" if
-the symlink was created after the last reboot on an XFS root.
+This mechanism works as expected for writable mounts, but
+xfs_log_sbcount() skips the update for read-only mounts. Read-only
+mounts otherwise still allow log recovery and write out an unmount
+record during log quiesce. If a read-only mount performs log
+recovery, it can modify the in-core superblock counters and write an
+unmount record when the filesystem unmounts without ever syncing the
+in-core counters. This leaves the filesystem with a clean log but in
+an inconsistent state with regard to lazy sb counters.
 
-Call i_size_write() in xfs_symlink()
+Update xfs_log_sbcount() to use the same logic
+xfs_log_unmount_write() uses to determine when to write an unmount
+record. This ensures that lazy accounting is always synced before
+the log is cleaned. Refactor this logic into a new helper to
+distinguish between a writable filesystem and a writable log.
+Specifically, the log is writable unless the filesystem is mounted
+with the norecovery mount option, the underlying log device is
+read-only, or the filesystem is shutdown. Drop the freeze state
+check because the update is already allowed during the freezing
+process and no context calls this function on an already frozen fs.
+Also, retain the shutdown check in xfs_log_unmount_write() to catch
+the case where the preceding log force might have triggered a
+shutdown.
 
-Signed-off-by: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Gao Xiang <hsiangkao@redhat.com>
+Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- fs/xfs/xfs_symlink.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/xfs_log.c   | 28 ++++++++++++++++++++--------
+ fs/xfs/xfs_log.h   |  1 +
+ fs/xfs/xfs_mount.c |  3 +--
+ 3 files changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index 8e88a7ca387e..8d3abf06c54f 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -300,6 +300,7 @@ xfs_symlink(
- 		}
- 		ASSERT(pathlen == 0);
- 	}
-+	i_size_write(VFS_I(ip), ip->i_d.di_size);
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index fa2d05e65ff1..b445e63cbc3c 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -347,6 +347,25 @@ xlog_tic_add_region(xlog_ticket_t *tic, uint len, uint type)
+ 	tic->t_res_num++;
+ }
+ 
++bool
++xfs_log_writable(
++	struct xfs_mount	*mp)
++{
++	/*
++	 * Never write to the log on norecovery mounts, if the block device is
++	 * read-only, or if the filesystem is shutdown. Read-only mounts still
++	 * allow internal writes for log recovery and unmount purposes, so don't
++	 * restrict that case here.
++	 */
++	if (mp->m_flags & XFS_MOUNT_NORECOVERY)
++		return false;
++	if (xfs_readonly_buftarg(mp->m_log->l_targ))
++		return false;
++	if (XFS_FORCED_SHUTDOWN(mp))
++		return false;
++	return true;
++}
++
+ /*
+  * Replenish the byte reservation required by moving the grant write head.
+  */
+@@ -886,15 +905,8 @@ xfs_log_unmount_write(
+ {
+ 	struct xlog		*log = mp->m_log;
+ 
+-	/*
+-	 * Don't write out unmount record on norecovery mounts or ro devices.
+-	 * Or, if we are doing a forced umount (typically because of IO errors).
+-	 */
+-	if (mp->m_flags & XFS_MOUNT_NORECOVERY ||
+-	    xfs_readonly_buftarg(log->l_targ)) {
+-		ASSERT(mp->m_flags & XFS_MOUNT_RDONLY);
++	if (!xfs_log_writable(mp))
+ 		return;
+-	}
+ 
+ 	xfs_log_force(mp, XFS_LOG_SYNC);
+ 
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index 58c3fcbec94a..98c913da7587 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -127,6 +127,7 @@ int	  xfs_log_reserve(struct xfs_mount *mp,
+ int	  xfs_log_regrant(struct xfs_mount *mp, struct xlog_ticket *tic);
+ void      xfs_log_unmount(struct xfs_mount *mp);
+ int	  xfs_log_force_umount(struct xfs_mount *mp, int logerror);
++bool	xfs_log_writable(struct xfs_mount *mp);
+ 
+ struct xlog_ticket *xfs_log_ticket_get(struct xlog_ticket *ticket);
+ void	  xfs_log_ticket_put(struct xlog_ticket *ticket);
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 7110507a2b6b..a62b8a574409 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1176,8 +1176,7 @@ xfs_fs_writable(
+ int
+ xfs_log_sbcount(xfs_mount_t *mp)
+ {
+-	/* allow this to proceed during the freeze sequence... */
+-	if (!xfs_fs_writable(mp, SB_FREEZE_COMPLETE))
++	if (!xfs_log_writable(mp))
+ 		return 0;
  
  	/*
- 	 * Create the directory entry for the symlink.
 -- 
 2.25.1
 
