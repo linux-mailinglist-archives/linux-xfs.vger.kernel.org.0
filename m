@@ -2,138 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B598453D416
-	for <lists+linux-xfs@lfdr.de>; Sat,  4 Jun 2022 02:34:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DCAD53D4B6
+	for <lists+linux-xfs@lfdr.de>; Sat,  4 Jun 2022 03:52:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237245AbiFDAeJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 3 Jun 2022 20:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37838 "EHLO
+        id S1348505AbiFDBwn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-xfs@lfdr.de>); Fri, 3 Jun 2022 21:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231737AbiFDAeI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Jun 2022 20:34:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8D41EAEC
-        for <linux-xfs@vger.kernel.org>; Fri,  3 Jun 2022 17:34:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B73960F2A
-        for <linux-xfs@vger.kernel.org>; Sat,  4 Jun 2022 00:34:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1448C385A9;
-        Sat,  4 Jun 2022 00:34:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654302846;
-        bh=fyPHOuskJULXMe/LaUwbRWtB0ZfJVc8ik6ierAlzUaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XJRbF7N7fi3zMve3fcNjW8PoUTThy5N6DnvlTp1G7lyWcY9fK6MR8BneifTPxeLh1
-         RcUfzvZAy0cFqkZjT8b2Gswp5wmzL+sfDbRKd2feR5T7UyAZB/+8LyD3p/Tt2x6hxE
-         ACWdwv5UhnwpJDFMQPYW2QazrOs/+PQubya0F/EBvMAXiV/Pyg0a51YiXR6QMH4j+c
-         lPM1b5prdHv5qe8ClMSGxRuFpGGUry+8zVTwi7snz094BrwMLW8SCVr7cHEsCn3sJ0
-         DEL5KTxmSz6b56jNjdZ70+kOY3TDYLO3okiBQzIrBN2QshWINBI3nMUtRTborEVaaa
-         /eQVjVgBwh7VA==
-Date:   Fri, 3 Jun 2022 17:34:05 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     Lukas Herbolt <lukas@herbolt.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH RFC v2] xfs: Print XFS UUID on mount and umount events.
-Message-ID: <YpqofakhfvHIBWK/@magnolia>
-References: <20210519152247.1853357-1-lukas@herbolt.com>
- <781bf2c0-5983-954e-49a5-570e365be515@sandeen.net>
+        with ESMTP id S232100AbiFDBwn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 3 Jun 2022 21:52:43 -0400
+X-Greylist: delayed 304 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 03 Jun 2022 18:52:41 PDT
+Received: from srv-correo.valvulasarco.es (srv-correo.valvulasarco.es [217.130.82.102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 180B916581;
+        Fri,  3 Jun 2022 18:52:40 -0700 (PDT)
+Received: from [103.153.79.240] (103.153.79.240) by SRV-MAIL.jferrer.es
+ (172.16.22.8) with Microsoft SMTP Server (TLS) id 8.3.348.2; Sat, 4 Jun 2022
+ 03:35:24 +0200
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <781bf2c0-5983-954e-49a5-570e365be515@sandeen.net>
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: Hi...
+To:     Recipients <mbravo@valvulasarco.es>
+From:   MIKE TAILOR INVESTMENT <mbravo@valvulasarco.es>
+Date:   Fri, 3 Jun 2022 18:20:36 -0700
+Reply-To: <investmentdept2022@miketailorinv.us>
+Message-ID: <b3cabe0c-e19b-49cf-bc17-a8e684117d7a@SRV-MAIL.jferrer.es>
+X-EXCLAIMER-MD-CONFIG: 34136305-f895-4c7a-ba04-06adf52f1cb6
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_50,NIXSPAM_IXHASH,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 03, 2022 at 11:14:13AM -0500, Eric Sandeen wrote:
-> On 5/19/21 10:22 AM, Lukas Herbolt wrote:
-> > As of now only device names are printed out over __xfs_printk().
-> > The device names are not persistent across reboots which in case
-> > of searching for origin of corruption brings another task to properly
-> > identify the devices. This patch add XFS UUID upon every mount/umount
-> > event which will make the identification much easier.
-> > 
-> > Signed-off-by: Lukas Herbolt <lukas@herbolt.com>
-> > ---
-> > V2: Drop void casts and fix long lines
-> 
-> Can we revisit this? I think it's a nice enhancement.
-> 
-> The "nouuid" concern raised in the thread doesn't seem like a problem;
-> if someone mounts with "-o nouuid" then you'll see 2 different devices
-> mounted with the same uuid printed. I don't think that's an argument
-> against the patch. Printing the uuid still provides more info than not.
-
-Ok fair.
-
-> I, uh, also don't think the submitter should be required to do a tree-wide
-> change for an xfs printk enhancement. Sure, it'd be nice to have ext4
-> and btrfs and and and but we have no other requirements that mount-time
-> messages must be consistent across all filesystems....
-
-As you pointed out on irc, btrfs already prints its own uuids.  So that
-leaves ext4 -- are you all planning to send a patch for that?
-
-(Otherwise, I don't mind this patch, if it helps support perform
-forensics on systems with a lot of filesystem activity.)
-
-> Thanks,
-> -Eric
-> 
-> > 
-> >  fs/xfs/xfs_log.c   | 10 ++++++----
-> >  fs/xfs/xfs_super.c |  2 +-
-> >  2 files changed, 7 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-> > index 06041834daa31..8f4f671fd80d5 100644
-> > --- a/fs/xfs/xfs_log.c
-> > +++ b/fs/xfs/xfs_log.c
-> > @@ -570,12 +570,14 @@ xfs_log_mount(
-> >  	int		min_logfsbs;
-> >  
-> >  	if (!(mp->m_flags & XFS_MOUNT_NORECOVERY)) {
-> > -		xfs_notice(mp, "Mounting V%d Filesystem",
-> > -			   XFS_SB_VERSION_NUM(&mp->m_sb));
-> > +		xfs_notice(mp, "Mounting V%d Filesystem %pU",
-> > +			   XFS_SB_VERSION_NUM(&mp->m_sb),
-> > +			   &mp->m_sb.sb_uuid);
-> >  	} else {
-> >  		xfs_notice(mp,
-> > -"Mounting V%d filesystem in no-recovery mode. Filesystem will be inconsistent.",
-> > -			   XFS_SB_VERSION_NUM(&mp->m_sb));
-> > +"Mounting V%d filesystem %pU in no-recovery mode. Filesystem will be inconsistent.",
-> > +			   XFS_SB_VERSION_NUM(&mp->m_sb),
-> > +			   &mp->m_sb.sb_uuid);
-
-sb_uuid is the uuid that the user can set, not the one that's encoded
-identically in all the cloud vm images, right?
-
---D
-
-> >  		ASSERT(mp->m_flags & XFS_MOUNT_RDONLY);
-> >  	}
-> >  
-> > diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> > index e5e0713bebcd8..a4b8a5ad8039f 100644
-> > --- a/fs/xfs/xfs_super.c
-> > +++ b/fs/xfs/xfs_super.c
-> > @@ -1043,7 +1043,7 @@ xfs_fs_put_super(
-> >  	if (!sb->s_fs_info)
-> >  		return;
-> >  
-> > -	xfs_notice(mp, "Unmounting Filesystem");
-> > +	xfs_notice(mp, "Unmounting Filesystem %pU", &mp->m_sb.sb_uuid);
-> >  	xfs_filestream_unmount(mp);
-> >  	xfs_unmountfs(mp);
-> >  
+Mike Tailor INV is currently doing a great investment Promo, You have the opportunity to invest at least $250 USD and earn $2,500 USD in 4 working days. Contact the investment company via this email: ( investmentdept2022@miketailorinv.us ). The higher you invest the higher your profit value.
