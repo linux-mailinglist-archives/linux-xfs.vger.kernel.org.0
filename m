@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 461AF53E9C5
-	for <lists+linux-xfs@lfdr.de>; Mon,  6 Jun 2022 19:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7A8E53E8F5
+	for <lists+linux-xfs@lfdr.de>; Mon,  6 Jun 2022 19:08:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238108AbiFFQGA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 6 Jun 2022 12:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42568 "EHLO
+        id S241523AbiFFQGB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 6 Jun 2022 12:06:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241566AbiFFQFz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Jun 2022 12:05:55 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0DD18E449;
-        Mon,  6 Jun 2022 09:05:54 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id o37-20020a05600c512500b0039c4ba4c64dso2283183wms.2;
-        Mon, 06 Jun 2022 09:05:53 -0700 (PDT)
+        with ESMTP id S241568AbiFFQF4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 6 Jun 2022 12:05:56 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F22F1912E8;
+        Mon,  6 Jun 2022 09:05:55 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id k16so20493968wrg.7;
+        Mon, 06 Jun 2022 09:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=leXUx+xiC8LILxdanH1dyfbyYi+fnX1NdyLFj2WsWtg=;
-        b=kxfJpSgnzSY1qKxIJQW20YkKbKeph4we0ZKVixQjoYxsfs8LLqzPVnBNqQS6L4GV/M
-         rnioW50SIggjU8R5ue85EJS0PF9gW2fjWksWra3CPHB7OTqsk7sbOVcRXyOQVYSPA8sy
-         UzqQ05gcZ+tREEvUlLpw/CXm3BgCAWCBzYQaqY7jLX2K4AoZFd4Bbey4IalzSL2PLhCN
-         THdXaF9fw7AfMnzer66mJg3ns3BsKwrZFeGpblfn+iCazwNfWRSJMwy3ZT2TXCubcqMp
-         dO30zJLkQoCAkyyskmKBFTxQg8LQrUV3qpLUAKuymUMQBHhKqrr8Fq/nXvn5qVZSZ5/U
-         XUzA==
+        bh=wIQ8SbeGnrxRzelf44sWZSiCxelEYptJHBoYPCZkwKo=;
+        b=Ot/xSCCYP8hNUNiAXKSvq6f4tZNmZ7rKO+T8XkRRg78MzTw/gUBlH4hrdkLg/oY150
+         y1CJIJ2wWb2D/ramGOvdlnPU+tjUkf2F9I/TtATnFolCnTxcU567ImRvG4g/+FfKOUh1
+         tqjeeJtmHD88Mog3RQJ2HoKx01oHyrcVQLLRtEjhlmjTVSWFTkov9yHQqlTF0mLjX6u/
+         Wmt2vIwN8ihAubO98dZ0LC89A7NsPYAtiYCeGNeztiC+YrjgJbnXkgeqbbLhnWNQx7BE
+         nUzkWZwHCiIug8NXk70VPf8Emd5tIKUBSJIfBDBMkRbqDvC3Ts3Y6MkYf7DMlohLWmPp
+         3iKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=leXUx+xiC8LILxdanH1dyfbyYi+fnX1NdyLFj2WsWtg=;
-        b=FY/aXtaEJmL/M19rKi11aKMdNcWLsRno2kOQ/YJbb88sQwES5Hz2IwmBS173U+Wrr5
-         aKweHZMml54FkPNHYWTjt9xuMKQommuAA3keshbtuqHd4UxvkldTzpDUZYohViNJjj4S
-         oNe7KxaysxSb9fdZ2m9COBR+bDscE+W7GXS15abdcPc7aEhB/5Ce45kV6tOWLDptNzrK
-         vmFBh4MECKYFLYrztmFq35Jge1UaH5aDj4/tzNWLgDYo1tGTHdKSmDsDeUU69p11mNy4
-         4PqpMYq43oBSPGnbMkQZsjBQpsmqMKRSBDdyE+ZvK+Efrq0gjb2QkSBXRb9Jw1AIOwRj
-         vHmA==
-X-Gm-Message-State: AOAM531YWJR2ySlXSely+2v0/7mMFNzlff8hxHF7r2H2Ujl6unb4Ln/c
-        Kz5aD7IzAil6Sy/k1fpwV84=
-X-Google-Smtp-Source: ABdhPJxQzODfrBtKl3V5YaNBG/g6qSV7RJr64EHdUAH+o+QCPEJaysu5oHUH5ccmr9+3MHCwRE5HYQ==
-X-Received: by 2002:a05:600c:42c6:b0:39c:4bfd:a4a9 with SMTP id j6-20020a05600c42c600b0039c4bfda4a9mr8953830wme.8.1654531552544;
-        Mon, 06 Jun 2022 09:05:52 -0700 (PDT)
+        bh=wIQ8SbeGnrxRzelf44sWZSiCxelEYptJHBoYPCZkwKo=;
+        b=m8zuvX3gen+HVwXKaIRvKQHl9ug1t9n8iXJtNNlEwrBrmPvtzW1GDApaO8ZyWN8Hxv
+         KSnWHZtl/eeCEPPlmWvazGzaaOeUQKbpilRywnyFlREX4ootAHghsP39D9iVCCYBVzct
+         M75GAnf+bLa18X4VOvH/3nbDGom9DNaC8iBi4abnO/6WuKgwgNtsiWfqGS3ispFNppTz
+         c0z0ozI3ohaMbclvUoAe4hx9g1LblIPl8nRESxoBtVNFSsUW+egapSwD0ldJW+Z7gCOW
+         Xpfkwu9OwN9rjpbIRO5Wx9h76eJ7pHyxuS/MSlOm3a9SgFSnss/gJscbyGVBMbZ+ByVy
+         1ndw==
+X-Gm-Message-State: AOAM530H/XWjjzyoEFxj7jQhCC5cD8apU9/igxwUJ9bhMSO2JqYg6MbW
+        bJuOJ2GjBvnh5MAxAj9buwE=
+X-Google-Smtp-Source: ABdhPJx9FnVRP+SlLfBgtMNCXzFwR6wPt/+IqDxGi8T6pBsKLFVzUzJDfJrFbTV9YM6wRrYyPD7vVg==
+X-Received: by 2002:a5d:6b8b:0:b0:211:6641:628c with SMTP id n11-20020a5d6b8b000000b002116641628cmr22847695wrx.105.1654531553904;
+        Mon, 06 Jun 2022 09:05:53 -0700 (PDT)
 Received: from amir-ThinkPad-T480.ctera.local (bzq-166-168-31-246.red.bezeqint.net. [31.168.166.246])
-        by smtp.gmail.com with ESMTPSA id n22-20020a05600c3b9600b00397342e3830sm25681327wms.0.2022.06.06.09.05.51
+        by smtp.gmail.com with ESMTPSA id n22-20020a05600c3b9600b00397342e3830sm25681327wms.0.2022.06.06.09.05.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Jun 2022 09:05:52 -0700 (PDT)
+        Mon, 06 Jun 2022 09:05:53 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     "Darrick J . Wong" <djwong@kernel.org>
 Cc:     Dave Chinner <david@fromorbit.com>,
@@ -55,10 +55,10 @@ Cc:     Dave Chinner <david@fromorbit.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Adam Manzanares <a.manzanares@samsung.com>,
         linux-xfs@vger.kernel.org, fstests@vger.kernel.org,
-        Gao Xiang <hsiangkao@redhat.com>
-Subject: [PATCH 5.10 CANDIDATE 4/7] xfs: ensure xfs_errortag_random_default matches XFS_ERRTAG_MAX
-Date:   Mon,  6 Jun 2022 19:05:34 +0300
-Message-Id: <20220606160537.689915-5-amir73il@gmail.com>
+        Anthony Iliopoulos <ailiop@suse.com>
+Subject: [PATCH 5.10 CANDIDATE 5/7] xfs: fix xfs_trans slab cache name
+Date:   Mon,  6 Jun 2022 19:05:35 +0300
+Message-Id: <20220606160537.689915-6-amir73il@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220606160537.689915-1-amir73il@gmail.com>
 References: <20220606160537.689915-1-amir73il@gmail.com>
@@ -74,36 +74,36 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Gao Xiang <hsiangkao@redhat.com>
+From: Anthony Iliopoulos <ailiop@suse.com>
 
-commit b2c2974b8cdf1eb3ef90ff845eb27b19e2187b7e upstream.
+commit 25dfa65f814951a33072bcbae795989d817858da upstream.
 
-Add the BUILD_BUG_ON to xfs_errortag_add() in order to make sure that
-the length of xfs_errortag_random_default matches XFS_ERRTAG_MAX when
-building.
+Removal of kmem_zone_init wrappers accidentally changed a slab cache
+name from "xfs_trans" to "xf_trans". Fix this so that userspace
+consumers of /proc/slabinfo and /sys/kernel/slab can find it again.
 
-Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: b1231760e443 ("xfs: Remove slab init wrappers")
+Signed-off-by: Anthony Iliopoulos <ailiop@suse.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- fs/xfs/xfs_error.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index 7f6e20899473..f9e2f606b5b8 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -293,6 +293,8 @@ xfs_errortag_add(
- 	struct xfs_mount	*mp,
- 	unsigned int		error_tag)
- {
-+	BUILD_BUG_ON(ARRAY_SIZE(xfs_errortag_random_default) != XFS_ERRTAG_MAX);
-+
- 	if (error_tag >= XFS_ERRTAG_MAX)
- 		return -EINVAL;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index b4a3a71bd667..d220a63d7883 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1926,7 +1926,7 @@ xfs_init_zones(void)
+ 	if (!xfs_ifork_zone)
+ 		goto out_destroy_da_state_zone;
  
+-	xfs_trans_zone = kmem_cache_create("xf_trans",
++	xfs_trans_zone = kmem_cache_create("xfs_trans",
+ 					   sizeof(struct xfs_trans),
+ 					   0, 0, NULL);
+ 	if (!xfs_trans_zone)
 -- 
 2.25.1
 
