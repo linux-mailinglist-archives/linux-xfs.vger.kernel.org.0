@@ -2,66 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A7C8540215
-	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jun 2022 17:05:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE69E540249
+	for <lists+linux-xfs@lfdr.de>; Tue,  7 Jun 2022 17:20:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244928AbiFGPFi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jun 2022 11:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47226 "EHLO
+        id S1343977AbiFGPUZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jun 2022 11:20:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343904AbiFGPFS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jun 2022 11:05:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2539F5FF8
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 08:05:18 -0700 (PDT)
+        with ESMTP id S230093AbiFGPUX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jun 2022 11:20:23 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FB4F5049;
+        Tue,  7 Jun 2022 08:20:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B22E0616B6
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 15:05:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1E10DC341CC
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 15:05:17 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3B147B81FD1;
+        Tue,  7 Jun 2022 15:20:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC0BC385A5;
+        Tue,  7 Jun 2022 15:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654614317;
-        bh=1/SbG5g9eMlWftKOmhn0QiJo7P9Cs9dIYRWVXfzRm3o=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=s2VE6WbQz1xnupbzcSy+IuVVbg/Z32kB1Tzlm5m5MiC/zZZw214Ja21GTeIDj1ewb
-         tX48nd81BPamifE6W5nD3QaL9AbPRTkeQfCPK+8aYoeDKqRiqwNOj91hlWPjm5kNmS
-         qpxR3/LE9hNAt+3mR0MVYDQjfdhI6q7os4V1ZAHTs9WkTBq5Dhr3mo6sJQZDSG88kq
-         hidGiYG9fZ2krZg0oX87Su/3Xk78XCyznsJ368ONGo47L0OCW+iPOIExouI1orBocZ
-         H522cnJQg2WGYQgEv2oMuoEGOxq7PSDDRbVjeMODLD3b9LncLwmsYfkuW2wnxsMqSA
-         lJbs3H5+1O+uQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 0D3C4C05FD4; Tue,  7 Jun 2022 15:05:17 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216073] [s390x] kernel BUG at mm/usercopy.c:101! usercopy:
- Kernel memory exposure attempt detected from vmalloc 'n  o area' (offset 0,
- size 1)!
-Date:   Tue, 07 Jun 2022 15:05:16 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: Memory Management
-X-Bugzilla-Component: Other
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: agordeev@linux.ibm.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: akpm@linux-foundation.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216073-201763-snYTLCtV3h@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216073-201763@https.bugzilla.kernel.org/>
-References: <bug-216073-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1654615219;
+        bh=f+T8wKpMUYP+kTLpLknhwr/nxUQ0vSrraelpXdlIjDE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LQCafVypCjnjCLM5+gyGAGDh8rv54YudL9cRPt37pm5Lf0Qx2yBXOfxdzGPuxgd5o
+         NFpNh81C+7PDIE4oMRcN23yvSR4tW7r54Rli5+QzOKPPDtDfIOo1r2I0z2J92KJVip
+         PC+Nz4qeONzWCu29lDl0ZeupTvVe4wgvWKN0wmwY4ezkYxigI3sBI6oYKLydr565uE
+         TbrNeDEwN6qprUatVzYPvTlWaupzR6b7kbwlegrAt1odMQ2upUCeIEiA6B4Of64lIP
+         45dnrq9egqjzpLbGHcE+4tCfe5ZaodJby37hH1qWIlvH6Gj1xsiuzvC/Vf6M6vNHgJ
+         EcfP97Bh/8Y5w==
+Date:   Tue, 7 Jun 2022 08:20:19 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Chandan Babu R <chandan.babu@oracle.com>
+Cc:     fstests@vger.kernel.org, zlang@kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 4/4] xfs/548: Verify correctness of upgrading an fs to
+ support large extent counters
+Message-ID: <Yp9ss8hzVRD7VYLR@magnolia>
+References: <20220606124101.263872-1-chandan.babu@oracle.com>
+ <20220606124101.263872-5-chandan.babu@oracle.com>
+ <Yp4etwsUF/B6aSbe@magnolia>
+ <874k0wol8x.fsf@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874k0wol8x.fsf@debian-BULLSEYE-live-builder-AMD64>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -72,22 +57,137 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216073
+On Tue, Jun 07, 2022 at 03:17:01PM +0530, Chandan Babu R wrote:
+> On Mon, Jun 06, 2022 at 08:35:19 AM -0700, Darrick J. Wong wrote:
+> > On Mon, Jun 06, 2022 at 06:11:01PM +0530, Chandan Babu R wrote:
+> >> This commit adds a test to verify upgrade of an existing V5 filesystem to
+> >> support large extent counters.
+> >> 
+> >> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
+> >> ---
+> >>  tests/xfs/548     | 109 ++++++++++++++++++++++++++++++++++++++++++++++
+> >>  tests/xfs/548.out |  12 +++++
+> >>  2 files changed, 121 insertions(+)
+> >>  create mode 100755 tests/xfs/548
+> >>  create mode 100644 tests/xfs/548.out
+> >> 
+> >> diff --git a/tests/xfs/548 b/tests/xfs/548
+> >> new file mode 100755
+> >> index 00000000..6c577584
+> >> --- /dev/null
+> >> +++ b/tests/xfs/548
+> >> @@ -0,0 +1,109 @@
+> >> +#! /bin/bash
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +# Copyright (c) 2022 Oracle.  All Rights Reserved.
+> >> +#
+> >> +# FS QA Test 548
+> >> +#
+> >> +# Test to verify upgrade of an existing V5 filesystem to support large extent
+> >> +# counters.
+> >> +#
+> >> +. ./common/preamble
+> >> +_begin_fstest auto quick metadata
+> >> +
+> >> +# Import common functions.
+> >> +. ./common/filter
+> >> +. ./common/attr
+> >> +. ./common/inject
+> >> +. ./common/populate
+> >> +
+> >> +# real QA test starts here
+> >> +_supported_fs xfs
+> >> +_require_scratch
+> >> +_require_scratch_xfs_nrext64
+> >> +_require_attrs
+> >> +_require_xfs_debug
+> >> +_require_test_program "punch-alternating"
+> >> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
+> >> +
+> >> +_scratch_mkfs -d size=$((512 * 1024 * 1024)) >> $seqres.full
+> >> +_scratch_mount >> $seqres.full
+> >> +
+> >> +bsize=$(_get_file_block_size $SCRATCH_MNT)
+> >> +
+> >> +testfile=$SCRATCH_MNT/testfile
+> >> +
+> >> +nr_blks=20
+> >> +
+> >> +echo "Add blocks to file's data fork"
+> >> +$XFS_IO_PROG -f -c "pwrite 0 $((nr_blks * bsize))" $testfile \
+> >> +	     >> $seqres.full
+> >> +$here/src/punch-alternating $testfile
+> >> +
+> >> +echo "Consume free space"
+> >> +fillerdir=$SCRATCH_MNT/fillerdir
+> >> +nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
+> >> +nr_free_blks=$((nr_free_blks * 90 / 100))
+> >> +
+> >> +_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 \
+> >> +	 >> $seqres.full 2>&1
+> >> +
+> >> +echo "Create fragmented filesystem"
+> >> +for dentry in $(ls -1 $fillerdir/); do
+> >> +	$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
+> >> +done
+> >> +
+> >> +echo "Inject bmap_alloc_minlen_extent error tag"
+> >> +_scratch_inject_error bmap_alloc_minlen_extent 1
+> >> +
+> >> +echo "Add blocks to file's attr fork"
+> >> +nr_blks=10
+> >> +attr_len=255
+> >> +nr_attrs=$((nr_blks * bsize / attr_len))
+> >> +for i in $(seq 1 $nr_attrs); do
+> >> +	attr="$(printf "trusted.%0247d" $i)"
+> >> +	$SETFATTR_PROG -n "$attr" $testfile >> $seqres.full 2>&1
+> >> +	[[ $? != 0 ]] && break
+> >> +done
+> >> +
+> >> +testino=$(stat -c '%i' $testfile)
+> >> +
+> >> +echo "Unmount filesystem"
+> >> +_scratch_unmount >> $seqres.full
+> >> +
+> >> +orig_dcnt=$(_scratch_xfs_get_metadata_field core.nextents "inode $testino")
+> >> +orig_acnt=$(_scratch_xfs_get_metadata_field core.naextents "inode $testino")
+> >> +
+> >> +echo "Upgrade filesystem to support large extent counters"
+> >> +_scratch_xfs_admin -O nrext64=1 >> $seqres.full 2>&1
+> >> +if [[ $? != 0 ]]; then
+> >> +	_notrun "Filesystem geometry is not suitable for upgrading"
+> >> +fi
+> >> +
+> >> +
+> >> +echo "Mount filesystem"
+> >> +_scratch_mount >> $seqres.full
+> >> +
+> >> +echo "Modify inode core"
+> >> +touch $testfile
+> >> +
+> >> +echo "Unmount filesystem"
+> >> +_scratch_unmount >> $seqres.full
+> >> +
+> >> +dcnt=$(_scratch_xfs_get_metadata_field core.nextents "inode $testino")
+> >> +acnt=$(_scratch_xfs_get_metadata_field core.naextents "inode $testino")
+> >> +
+> >> +echo "Verify inode extent counter values after fs upgrade"
+> >
+> > Is there a scenario where the inode counters would become corrupt after
+> > enabling the superblock feature bit?  IIRC repair doesn't rewrite the
+> > inodes during the upgrade... so is this test merely being cautious?  Or
+> > is this covering a failure you found somewhere while writing the feature?
+> >
+> 
+> I was just being cautious w.r.t "Large extent counters" functionality working
+> correctly. I used this test during my development to make sure that I was able
+> to capture failures before I ran the entire xfstests suite.
 
---- Comment #4 from agordeev@linux.ibm.com ---
-On Mon, Jun 06, 2022 at 03:13:12PM -0700, Andrew Morton wrote:
-> (switched to email.  Please respond via emailed reply-to-all, not via the
-> bugzilla web interface).
+Fair enough,
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-Hi Zorro,
+--D
 
-Unfortunately, I am not able to reproduce the issue. Could you please
-clarify your test environment details and share your xfstests config?
-
-Thanks!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
+> 
+> -- 
+> chandan
