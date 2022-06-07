@@ -2,45 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3D28542413
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F05D5423A8
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:51:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350130AbiFHBMU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 7 Jun 2022 21:12:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48324 "EHLO
+        id S234618AbiFHBLr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jun 2022 21:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1588282AbiFGXyY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jun 2022 19:54:24 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C39A820188;
-        Tue,  7 Jun 2022 16:02:00 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E867C5EC626;
-        Wed,  8 Jun 2022 09:01:52 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nyiCs-003wPA-W3; Wed, 08 Jun 2022 09:01:51 +1000
-Date:   Wed, 8 Jun 2022 09:01:50 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chandan Babu R <chandan.babu@oracle.com>
-Cc:     fstests@vger.kernel.org, zlang@kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 2/4] common/xfs: Add helper to check if nrext64 option is
- supported
-Message-ID: <20220607230150.GQ1098723@dread.disaster.area>
-References: <20220606124101.263872-1-chandan.babu@oracle.com>
- <20220606124101.263872-3-chandan.babu@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220606124101.263872-3-chandan.babu@oracle.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=629fd8e8
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=JPEYwPQDsx4A:10 a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8
-        a=3aXqCYULcEE8ljHi-yoA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S1588393AbiFGXyh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jun 2022 19:54:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5A93887;
+        Tue,  7 Jun 2022 16:05:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CA6E8616C3;
+        Tue,  7 Jun 2022 23:05:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E53A3C3411C;
+        Tue,  7 Jun 2022 23:05:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1654643147;
+        bh=L2/9wdu7Khtn1jgRd/gRWs85FKV7GMEfu2Bx/poJDFY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k+UwKDEV/MRQwkXB5GEKRtm2Di/gHC2LRSO6nQViEuk/6dD3hr7MvP/0vj0zqLVWv
+         9JNVf6cy17/X+St9S61aR7O50aZcShX/CFBiouhtQyH7lXP1P09Z8/WH425ooZ8oVC
+         qOwAf9x8kdCgV042PxoFEupjtD+JDsP+Rk+VMujE=
+Date:   Tue, 7 Jun 2022 16:05:46 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Shiyang Ruan <ruansy.fnst@fujitsu.com>, kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master 728/1207] fs/xfs/xfs_file.c:1266:31: sparse:
+ sparse: incorrect type in return expression (different base types)
+Message-Id: <20220607160546.2a0a826d29bec858ca402720@linux-foundation.org>
+In-Reply-To: <202206071511.FI7WLdZo-lkp@intel.com>
+References: <202206071511.FI7WLdZo-lkp@intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,61 +54,44 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Jun 06, 2022 at 06:10:59PM +0530, Chandan Babu R wrote:
-> This commit adds a new helper to allow tests to check if xfsprogs and xfs
-> kernel module support nrext64 option.
+On Tue, 7 Jun 2022 15:09:18 +0800 kernel test robot <lkp@intel.com> wrote:
+
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> head:   73d0e32571a0786151eb72634f1a4c5891166176
+> commit: d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c [728/1207] xfs: support CoW in fsdax mode
+> config: x86_64-rhel-8.3-kselftests (https://download.01.org/0day-ci/archive/20220607/202206071511.FI7WLdZo-lkp@intel.com/config)
+> compiler: gcc-11 (Debian 11.3.0-1) 11.3.0
+> reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.4-18-g56afb504-dirty
+>         # https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c
+>         git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>         git fetch --no-tags linux-next master
+>         git checkout d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/xfs/
 > 
-> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
-> ---
->  common/xfs | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> If you fix the issue, kindly add following tag where applicable
+> Reported-by: kernel test robot <lkp@intel.com>
 > 
-> diff --git a/common/xfs b/common/xfs
-> index 2123a4ab..dca7af57 100644
-> --- a/common/xfs
-> +++ b/common/xfs
-> @@ -1328,3 +1328,16 @@ _xfs_filter_mkfs()
->  		print STDOUT "realtime =RDEV extsz=XXX blocks=XXX, rtextents=XXX\n";
->  	}'
->  }
-> +
-> +_require_scratch_xfs_nrext64()
-> +{
-> +	_require_scratch
+> 
+> sparse warnings: (new ones prefixed by >>)
+> >> fs/xfs/xfs_file.c:1266:31: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got restricted vm_fault_t @@
+>    fs/xfs/xfs_file.c:1266:31: sparse:     expected int
+>    fs/xfs/xfs_file.c:1266:31: sparse:     got restricted vm_fault_t
+> >> fs/xfs/xfs_file.c:1260:1: sparse: sparse: symbol 'xfs_dax_fault' was not declared. Should it be static?
+> >> fs/xfs/xfs_file.c:1314:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted vm_fault_t [usertype] ret @@     got int @@
+>    fs/xfs/xfs_file.c:1314:21: sparse:     expected restricted vm_fault_t [usertype] ret
+>    fs/xfs/xfs_file.c:1314:21: sparse:     got int
+> 
+> Please review and possibly fold the followup patch.
 
-Not needed - caller should be doing that first.
+Well yes, the followup patch
+(https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/xfs-support-cow-in-fsdax-mode-fix.patch)
+will most definitely be folded.
 
-> +
-> +	_scratch_mkfs -i nrext64=1 &>/dev/null || \
-> +		_notrun "mkfs.xfs doesn't support nrext64 feature"
-
-_scratch_mkfs_xfs_supported -i nrext64=1
-
-see for example:
-
-_require_xfs_mkfs_crc
-
-> +	_try_scratch_mount || \
-> +		_notrun "kernel doesn't support xfs nrext64 feature"
-> +	$XFS_INFO_PROG "$SCRATCH_MNT" | grep -q -w "nrext64=1" || \
-> +		_notrun "nrext64 feature not advertised on mount?"
-
-This seems unnecessary - if mkfs supports the feature bit, and the
-kernel supports is, this should just work. We don't do checks like
-this in any other feature bit test. e.g:
-
-_require_xfs_finobt
-_require_xfs_sparse_inodes
-
-etc.
-
-Also, you should put this in the same region of the file as all the
-other feature checks, not right down the bottom by itself.
-
-Cheers,
-
-Dave.
-
--- 
-Dave Chinner
-david@fromorbit.com
+Can you suggest how this can be communicated to the robot in order to
+suppress this notification?  A Fixes: won't work, as neither of these
+patches have yet been promoted to a "stable" state.  Their hashes will
+change.
