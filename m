@@ -2,49 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41B64542683
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:57:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 671E35426EC
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbiFHEGq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jun 2022 00:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46114 "EHLO
+        id S231140AbiFHBMc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 7 Jun 2022 21:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235180AbiFHEFL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 00:05:11 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498B920E53E
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 14:03:17 -0700 (PDT)
+        with ESMTP id S1842708AbiFHAJ6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 7 Jun 2022 20:09:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDEC20E6E0
+        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 14:03:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EE58EB823EF
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 21:03:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A37E4C385A2;
-        Tue,  7 Jun 2022 21:03:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DAFF4618D3
+        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 21:03:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473DEC3411C;
+        Tue,  7 Jun 2022 21:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654635794;
-        bh=sPdlS4XioxspyVnwiRZ6X41x+1aXMojBrdhZPbEQ44w=;
+        s=k20201202; t=1654635800;
+        bh=FLxXZAWuxC7O0Fm+om5dY6kd16B52wMe5sXvPb8Mmus=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=a4FjuJ3W4uMIBnfwuM+Ij7iqGO9YqrapGBSKtHnalvx1EiDZHG9CLKLZ6RUXxITt8
-         jbPXk+fmLgfJN1eFI0w7KHbBNIdEraSUaB5R1AukYrQA85C/3+SC5mTwVDFtRRBup2
-         y+CENusCOVtcMdbZY4XE/8mlTkwcEL5yvQ2E82Vtl0ct0I92lsXHOs22slfJa4vIDa
-         fwnVKp8h69KpCH+Efdg2v8CLeAcqKH0k+gJqstd8uBI/U5QIcjRmTiQfOA0lecnW+B
-         rCbmjEEhJ2QoJPPYQZKqan4+jEmjKk4yeFI0sT6mxAR7kuhziKIANo6Rr9Z0w6hHwy
-         C7ySwEPHPBd+w==
-Subject: [PATCH 2/3] xfs: fix variable state usage
+        b=iz0mydMmw1u8TkteesNbzZDcDN59Y5uFa03hMGLoywKXyBZt4RzAJb+Tw9C4KDYS2
+         e8fn2/U5bMckUdtIvDjLbDSJhU2kjaAYJ8TEEouL/DLSQ8Jn1xXK6qVRJLCCUIoP3M
+         /v/ZQX4Kcf5PogtjZO/3ru9dteSY8+9SEj8CC4BWPUfXvaUVxJcv2IPrYcLWbie2Hh
+         jbjuWVdyV7OdbehdITlIB//iSiuvabNE57CSj2cbyCjBRJN0qoQEWHnwMjHKHP3k74
+         R7LfmoOFGMGzW/n5yoX1jUtej8B5IvXh0br+hjDd7fEitIw75nGfU5I5koTsdZ5ugd
+         9WsmlWklS4oSg==
+Subject: [PATCH 3/3] xfs: preserve DIFLAG2_NREXT64 when setting other inode
+ attributes
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org,
-        david@fromorbit.com, allison.henderson@oracle.com,
-        chandan.babu@oracle.com
-Date:   Tue, 07 Jun 2022 14:03:14 -0700
-Message-ID: <165463579422.417102.2354416446860242047.stgit@magnolia>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        linux-xfs@vger.kernel.org, david@fromorbit.com,
+        allison.henderson@oracle.com, chandan.babu@oracle.com
+Date:   Tue, 07 Jun 2022 14:03:19 -0700
+Message-ID: <165463579982.417102.16435790324978634359.stgit@magnolia>
 In-Reply-To: <165463578282.417102.208108580175553342.stgit@magnolia>
 References: <165463578282.417102.208108580175553342.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,41 +59,30 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The variable @args is fed to a tracepoint, and that's the only place
-it's used.  This is fine for the kernel, but for userspace, tracepoints
-are #define'd out of existence, which results in this warning on gcc
-11.2:
+It is vitally important that we preserve the state of the NREXT64 inode
+flag when we're changing the other flags2 fields.
 
-xfs_attr.c: In function ‘xfs_attr_node_try_addname’:
-xfs_attr.c:1440:42: warning: unused variable ‘args’ [-Wunused-variable]
- 1440 |         struct xfs_da_args              *args = attr->xattri_da_args;
-      |                                          ^~~~
-
-Clean this up.
-
+Fixes: 9b7d16e34bbe ("xfs: Introduce XFS_DIFLAG2_NREXT64 and associated helpers")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- fs/xfs/libxfs/xfs_attr.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/xfs/xfs_ioctl.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_attr.c b/fs/xfs/libxfs/xfs_attr.c
-index 0847b4e16237..1824f61621a2 100644
---- a/fs/xfs/libxfs/xfs_attr.c
-+++ b/fs/xfs/libxfs/xfs_attr.c
-@@ -1441,12 +1441,11 @@ static int
- xfs_attr_node_try_addname(
- 	struct xfs_attr_intent		*attr)
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 5a364a7d58fd..0d67ff8a8961 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1096,7 +1096,8 @@ xfs_flags2diflags2(
  {
--	struct xfs_da_args		*args = attr->xattri_da_args;
- 	struct xfs_da_state		*state = attr->xattri_da_state;
- 	struct xfs_da_state_blk		*blk;
- 	int				error;
+ 	uint64_t		di_flags2 =
+ 		(ip->i_diflags2 & (XFS_DIFLAG2_REFLINK |
+-				   XFS_DIFLAG2_BIGTIME));
++				   XFS_DIFLAG2_BIGTIME |
++				   XFS_DIFLAG2_NREXT64));
  
--	trace_xfs_attr_node_addname(args);
-+	trace_xfs_attr_node_addname(state->args);
- 
- 	blk = &state->path.blk[state->path.active-1];
- 	ASSERT(blk->magic == XFS_ATTR_LEAF_MAGIC);
+ 	if (xflags & FS_XFLAG_DAX)
+ 		di_flags2 |= XFS_DIFLAG2_DAX;
 
