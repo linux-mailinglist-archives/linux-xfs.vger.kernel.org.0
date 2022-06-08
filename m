@@ -2,69 +2,62 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4462542344
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:51:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FA415423CA
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:51:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbiFHFQ4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jun 2022 01:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36074 "EHLO
+        id S234802AbiFHGBi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Jun 2022 02:01:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233139AbiFHFQf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 01:16:35 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D953C3040
-        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 19:20:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6EA73B823D1
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Jun 2022 02:19:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 24C89C341CB
-        for <linux-xfs@vger.kernel.org>; Wed,  8 Jun 2022 02:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654654777;
-        bh=8k/cCbLv/bjFnVGdbaVsd6SO3BhhLLjOxnVpg8HcW00=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=H6aBxWIrdE7Jco04XQe4Ps8NcAEae8iQ+bEpIACuW8HGJmCSWuAcS1iQIZRciJ3qv
-         DKQF4DqDuNd4xgI3j6S7N653EJD3ixD1U75xEDUnPMwdCNVFVNR0XPwDiydrTfT5na
-         VY7tbiAIunlf+WkvQTmdpuYIbSOtLNsMpAOiPYyjfmi56HV1/SKTUL2PM3AxfZwTcs
-         wfPrz5aXQEZ3ek2xEWju1qRlTOHqdDgzlP3n7zjtEzhSq6A0R0M/n+L7MCk8bKHtW6
-         HSRogpKu/qM6TfM/EpQbv8d+C9fBx25dDyCP3QhjekAmfHadndgOvd1wWCNFqFFt5p
-         xXOzZnZ4ZeFgA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 08792C05FD2; Wed,  8 Jun 2022 02:19:37 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216073] [s390x] kernel BUG at mm/usercopy.c:101! usercopy:
- Kernel memory exposure attempt detected from vmalloc 'n  o area' (offset 0,
- size 1)!
-Date:   Wed, 08 Jun 2022 02:19:36 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: Memory Management
-X-Bugzilla-Component: Other
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: zlang@redhat.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: akpm@linux-foundation.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216073-201763-MAvXsBz9h3@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216073-201763@https.bugzilla.kernel.org/>
-References: <bug-216073-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        with ESMTP id S240916AbiFHFxM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 01:53:12 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E183D3FD4;
+        Tue,  7 Jun 2022 20:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654660290; x=1686196290;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xIcozfLdj0wmlKDo/KeNlOUgX9nLL33V5khVHg6L5cw=;
+  b=HeipGJE1YzPf55S7sWokvQD54aI9Hfi0GkiUOPPEoGyxD8+PI5oBTAcM
+   fnNl/vzar2vF2c3QtdEX2ejk+/TkN18N5vN41PbNu1qQaj0U9WLytowoU
+   xoaI6i003A23I52yWoCK1rseLAmLhSLZvb/8tjChfOnyC/VFnrj0w9VTB
+   rgaLoJzjIUJE6C9DzLE/Fklim+dOgiX2np4CU1Ym5ZSOR9Z7d6HznDMuj
+   9XGX80nA+kjSQOHWqBNmow9YFDDzlYBxAsOCzP+RgOy1fUSh9Dd+KoJmy
+   3Ub4HNGQBqsJskHq0iuJQGEbIgPnWU59pXbXfUhTSNPTKEI4xHol+LmC8
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="274317878"
+X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
+   d="scan'208";a="274317878"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 20:51:28 -0700
+X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
+   d="scan'208";a="636530713"
+Received: from rli9-dbox.sh.intel.com (HELO rli9-dbox) ([10.239.159.142])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 20:51:26 -0700
+Date:   Wed, 8 Jun 2022 11:49:53 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Shiyang Ruan <ruansy.fnst@fujitsu.com>,
+        kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [kbuild-all] Re: [linux-next:master 728/1207]
+ fs/xfs/xfs_file.c:1266:31: sparse: sparse: incorrect type in return
+ expression (different base types)
+Message-ID: <YqAcYYydYqMef+wi@rli9-dbox>
+References: <202206071511.FI7WLdZo-lkp@intel.com>
+ <20220607160546.2a0a826d29bec858ca402720@linux-foundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220607160546.2a0a826d29bec858ca402720@linux-foundation.org>
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,69 +65,63 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216073
+On Tue, Jun 07, 2022 at 04:05:46PM -0700, Andrew Morton wrote:
+> On Tue, 7 Jun 2022 15:09:18 +0800 kernel test robot <lkp@intel.com> wrote:
+> 
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+> > head:   73d0e32571a0786151eb72634f1a4c5891166176
+> > commit: d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c [728/1207] xfs: support CoW in fsdax mode
+> > config: x86_64-rhel-8.3-kselftests (https://download.01.org/0day-ci/archive/20220607/202206071511.FI7WLdZo-lkp@intel.com/config)
+> > compiler: gcc-11 (Debian 11.3.0-1) 11.3.0
+> > reproduce:
+> >         # apt-get install sparse
+> >         # sparse version: v0.6.4-18-g56afb504-dirty
+> >         # https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c
+> >         git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >         git fetch --no-tags linux-next master
+> >         git checkout d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c
+> >         # save the config file
+> >         mkdir build_dir && cp config build_dir/.config
+> >         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/xfs/
+> > 
+> > If you fix the issue, kindly add following tag where applicable
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > 
+> > 
+> > sparse warnings: (new ones prefixed by >>)
+> > >> fs/xfs/xfs_file.c:1266:31: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got restricted vm_fault_t @@
+> >    fs/xfs/xfs_file.c:1266:31: sparse:     expected int
+> >    fs/xfs/xfs_file.c:1266:31: sparse:     got restricted vm_fault_t
+> > >> fs/xfs/xfs_file.c:1260:1: sparse: sparse: symbol 'xfs_dax_fault' was not declared. Should it be static?
+> > >> fs/xfs/xfs_file.c:1314:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted vm_fault_t [usertype] ret @@     got int @@
+> >    fs/xfs/xfs_file.c:1314:21: sparse:     expected restricted vm_fault_t [usertype] ret
+> >    fs/xfs/xfs_file.c:1314:21: sparse:     got int
+> > 
+> > Please review and possibly fold the followup patch.
+> 
+> Well yes, the followup patch
+> (https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/xfs-support-cow-in-fsdax-mode-fix.patch)
+> will most definitely be folded.
 
---- Comment #5 from Zorro Lang (zlang@redhat.com) ---
-On Tue, Jun 07, 2022 at 05:05:01PM +0200, Alexander Gordeev wrote:
-> On Mon, Jun 06, 2022 at 03:13:12PM -0700, Andrew Morton wrote:
-> > (switched to email.  Please respond via emailed reply-to-all, not via t=
-he
-> > bugzilla web interface).
->=20
-> Hi Zorro,
->=20
-> Unfortunately, I am not able to reproduce the issue. Could you please
-> clarify your test environment details and share your xfstests config?
+Sorry, currently we disable the auto patch, this sentence "Please review and possibly fold the followup patch"
+is misleading. We will not have follow up patch before we can have human to
+do a check.
 
-One of the test environment details as [1]. The xfstests config as [2].
-It's easier to reproduce on 64k directory size xfs by running xfstests
-auto group.
+> 
+> Can you suggest how this can be communicated to the robot in order to
+> suppress this notification?  A Fixes: won't work, as neither of these
+> patches have yet been promoted to a "stable" state.  Their hashes will
+> change.
 
-Thanks,
-Zorro
+Got it, we also think the Fixes tag in the proposed patch brings confusion
+if the "bad" commit is in development state. So far, we haven't exposed a
+way to feedback the "Fixes: won't work", but we will work on some level
+of mail based communication in 2nd half this year, which can simplify the
+communication like this.
 
-[1]
-CPU
-Vendor  IBM/S390
-Model Name      8561
-Family  0
-Model   3126312
-Stepping        0
-Speed   0.0
-Processors      2
-Cores   0
-Sockets 0
-Hyper   True
-Flags   edat dfp vxp vx vxe ldisp sie vxe2 highgprs etf3eh te vxd gs sort z=
-arch
-msa stfle dflt eimm esan3
-Arch(s) s390x
+Anyway, we now disable the auto patch to avoid bring confusion and sometimes
+wrong patch without human check.
 
-Memory  4096 MB
-NUMA Nodes      1
-
-Disks
-Model   Size    Logical sector size     Physical sector size
-3390/0c 41.03 GB / 38.21 GiB    4096 bytes      4096 bytes
-
-[2]
-# cat local.config
-FSTYP=3Dxfs
-TEST_DEV=3D/dev/loop0
-TEST_DIR=3D/mnt/fstests/TEST_DIR
-SCRATCH_DEV=3D/dev/loop1
-SCRATCH_MNT=3D/mnt/fstests/SCRATCH_DIR
-LOGWRITES_DEV=3D/dev/loop2
-MKFS_OPTIONS=3D"-n size=3D65536 -m
-crc=3D1,finobt=3D1,reflink=3D1,rmapbt=3D0,bigtime=3D1,inobtcount=3D1"
-TEST_FS_MOUNT_OPTS=3D""
-
->=20
-> Thanks!
->
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
+> _______________________________________________
+> kbuild-all mailing list -- kbuild-all@lists.01.org
+> To unsubscribe send an email to kbuild-all-leave@lists.01.org
