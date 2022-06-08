@@ -2,381 +2,402 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E0BD5422DA
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD792542851
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 09:49:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234873AbiFHGBk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jun 2022 02:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34030 "EHLO
+        id S232378AbiFHHrC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Jun 2022 03:47:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347849AbiFHF6H (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 01:58:07 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F6E1AF23;
-        Tue,  7 Jun 2022 21:37:51 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id q1so6534810uao.1;
-        Tue, 07 Jun 2022 21:37:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XZzMxHdmYchPC1QPKtku5HZMqUhC7gxvpvmerbCwSOs=;
-        b=RPtsJDGo8QE1gsePdUyIFabOUxm19f62VgCrseAVuays6hRYMZ4G8l7G6/G2yhp0ja
-         U76Qk0ZCwW/Al8ItAFes5JOQznyvXaK/Ih7dVpIBcpc7OifF9vg7M2CiNbqV1APFFcto
-         S249uZLLKEUN6EGQpe0FNWoIdBsMDLtV23VimsvJNCx9UOGVkHvc2v8uEZUUXm5bDRTo
-         uBhR56mhlJ7qGQrkmEBUDbp/4DZW+KK9NpHnxmlVeDASW4MVhMUo4revktfY/qZ18hdv
-         1lkDM8KTGpTJsdNL6uEhqJHB3rWYjgFxjEFP5WZsYkw5AaaBlh0la7koUvVOzspttzEm
-         Euxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XZzMxHdmYchPC1QPKtku5HZMqUhC7gxvpvmerbCwSOs=;
-        b=C9GQdXOVl3HfC2JgneWIBD7lorHSTtaAcuTdIVf4uO6eTYos7fJUCxMKPZB0LGApnt
-         Y9UF3cELhoOEUd9y4VBPiYoLl3nx2UXThUC8YTqAWznUNg+aF95s4fGQNNZ7kqzZ6taV
-         ppbfpwk/T0NUWPTtsZBJ/4QDkZCFLn0eXn+dsG3nqrb21EB/HcmLSY6XvtsQeKThw5AQ
-         Rmjyq+uAvivEKGZ7OJV8dZpiFK4SsLiU0SVXdDg0ZPC1bwlkCsI1ONN8NI0PkLifjauJ
-         +GISIZ7ryzGSvJu3kUhGHflzzIB3Q71HAzoI9IaFR1FjVvViL6p/FptCIsCsIZX0UVoC
-         X1gw==
-X-Gm-Message-State: AOAM530PDxI5SViJQ9OnwkuDTqW0BimLwYgiwqpVeTj+IsanrZ0aLCBy
-        7FwmQ2+9C/C15568sU7a48robAJwj57i/UQFNrk=
-X-Google-Smtp-Source: ABdhPJxQbBp2rru8R9NKReeFJulH3UN3fxPEKHfc32tL19Qdt3zw2FIjn/zi2UZCt91ZIRTv0AJogNSIdNB8AehJ3BM=
-X-Received: by 2002:ab0:2315:0:b0:378:cc65:f798 with SMTP id
- a21-20020ab02315000000b00378cc65f798mr7842149uao.60.1654663069868; Tue, 07
- Jun 2022 21:37:49 -0700 (PDT)
+        with ESMTP id S233450AbiFHHpJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 03:45:09 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2061e.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eae::61e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABE7276210;
+        Wed,  8 Jun 2022 00:09:30 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WGR2MGWu/Vb0gmzSpORw7gDyIW0qRSuom2W3xBYMV+9AaStL+VQIFQtHujGhWG9QGOOC3m+tCzpfHkigjLKm0RaVovDTpDhM0Y9PxZe+OEtDaMFtnAweu9tCNzRkRIy+JmPMA0POslUobOJMCe4eJUUsYpRm5PULkNY4JtRal+Iuxp08lrePgB57zmqIOEj1Zx+2EWRK7svvVWnFbMXmXgLtGSOnZjon4/N4qJlkOr7Gmuxfuy/CBvvnKdip4FmMVVp7iCp+bOWqaFskrPo3rxqQ2BvxI0Qtu9lirJJzaG3I/8UbXy33DytvoEWXQDOpME7zCI8pZWwHcpCzSlTakA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3JdNyq0j3Ok4dukbsNPsQWxOAkF3FVDRg7jq1vws/Is=;
+ b=guu8zsjbEZw4gOI6Qxcxx0OxJfBjzzAeeZr3eYBz9yHnSpC1ijELa4KhNsZLW8Zh9h+IVcgcocXbVskzoKBf/L2usp/SQg7UqEQNhmLLB36zgFWXd19PbwdoLEiu9e3mTI1tLs3xN3bagpyiGZdw+G46eXOcFXXrWm9orDHvAqXRBhT4Fb6Kl/+ir/JFN/hnzfhK1EPaL/LbDyiZ2Q4Zh3wz3S/NRN3YOMPEMXHwQrfeEqWPhynWasPJE0cdAEDLoSZi1E1jxDL0v4JsnxyQ3ugMHuHfKQqduHCDYTaF7fuENTJ3AcI3zE9Vk3W5dTxmNsSP2HdN1w2tCE4+V38BRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3JdNyq0j3Ok4dukbsNPsQWxOAkF3FVDRg7jq1vws/Is=;
+ b=jWwIOSuPRALiUPIOPCwJKfkz/2o3gVCCE7CxS6pYPRLgwAqrQcMpD/WfMoh6P3b7Y6PRy4aFDYf/9wEaqeIp5wkSJLMcbYV+VfkwSsbPG5neosY8XJixaUgarRKXz2auvcDuMiBPj/ldn1hgtAmGEh4Mxjw/ZOgCPHsq5IabynpoAtK9Jnf6YiVSKuR5R8fmb1xdohYlChs79NmKwy60Sl7Gyf/xyBZ9TAU0R0IPND6MxclSpUzH5gnsW5op+aUB5QtcVUghkb4Zb0o3LxpFEksHcHlsOi+sanDMr3qnh9UxwjShjxh+9tojeUVEL6/ofMqjNmJf+GmH0kGAKbYsOA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3179.namprd12.prod.outlook.com (2603:10b6:5:183::18)
+ by MN0PR12MB5787.namprd12.prod.outlook.com (2603:10b6:208:376::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.18; Wed, 8 Jun
+ 2022 07:07:20 +0000
+Received: from DM6PR12MB3179.namprd12.prod.outlook.com
+ ([fe80::f2:c8b8:5343:91a3]) by DM6PR12MB3179.namprd12.prod.outlook.com
+ ([fe80::f2:c8b8:5343:91a3%7]) with mapi id 15.20.5314.019; Wed, 8 Jun 2022
+ 07:07:20 +0000
+References: <20220531200041.24904-1-alex.sierra@amd.com>
+ <20220531200041.24904-3-alex.sierra@amd.com>
+User-agent: mu4e 1.6.9; emacs 27.1
+From:   Alistair Popple <apopple@nvidia.com>
+To:     Alex Sierra <alex.sierra@amd.com>
+Cc:     jgg@nvidia.com, david@redhat.com, Felix.Kuehling@amd.com,
+        linux-mm@kvack.org, rcampbell@nvidia.com,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        hch@lst.de, jglisse@redhat.com, willy@infradead.org,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH v5 02/13] mm: handling Non-LRU pages returned by
+ vm_normal_pages
+Date:   Wed, 08 Jun 2022 17:06:28 +1000
+In-reply-to: <20220531200041.24904-3-alex.sierra@amd.com>
+Message-ID: <87o7z38wgr.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR13CA0077.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::22) To DM6PR12MB3179.namprd12.prod.outlook.com
+ (2603:10b6:5:183::18)
 MIME-Version: 1.0
-References: <20220606143255.685988-1-amir73il@gmail.com> <20220606143255.685988-9-amir73il@gmail.com>
- <20220606213042.GS227878@dread.disaster.area> <CAOQ4uxhCjLoYOd7X-yFQOA24YtychwKz3wUfX79zUwFs2o3ziw@mail.gmail.com>
- <20220607030147.GU227878@dread.disaster.area> <CAOQ4uxgP_knOriJPyU6PS_TYhsMRfAJon2nsJ2FO34SUbY6Ygw@mail.gmail.com>
- <Yp+ahuC1tWy1BOQm@magnolia>
-In-Reply-To: <Yp+ahuC1tWy1BOQm@magnolia>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 8 Jun 2022 07:37:38 +0300
-Message-ID: <CAOQ4uxhZt028F=OW7cLYigHEa=VXHyFS2LFkfk2GjMPZM3prAw@mail.gmail.com>
-Subject: XFS stable maintenance (Was: Re: [PATCH 5.10 v2 8/8] xfs: assert in
- xfs_btree_del_cursor should take into account error)
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Brian Foster <bfoster@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Leah Rumancik <leah.rumancik@gmail.com>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Theodore Tso <tytso@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7f256f99-9d9e-4b04-3171-08da491d8743
+X-MS-TrafficTypeDiagnostic: MN0PR12MB5787:EE_
+X-Microsoft-Antispam-PRVS: <MN0PR12MB57877FDB90BC6E0FBDEFC25DDFA49@MN0PR12MB5787.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4FvMU9vmeLAwB6WNe4rPn8/Fn0mhoszRX4370Yt1RU9tnHWsL+Sywo/KNA5M+tyXJtTCQoWmvoJKVVq1TOof5R0F5AqXEhuM7s2kIi04ziQ3tFFkGdKEfwdbMQJ99ocVNWL1gF3aLLxZhDWQSSl/QOO7HPSy/YVMFJBRVtNt+GIklY3BwVBENjPSKRB/1CtdWF2n+v1YMV8joFBOOPUKCCkrIfNol3USoqJywN7bRjviu3epr/hnJRFoZmgn6ZynPtxSY47+iuL9gXPB0tuiN/CV64es+fdLjqLGVX+vaMPDQZ4qAodLhMwrJFHU3JjSO1U5Dx0xzUa0MdK9etK2Ego9YglIrlAXoC+Oo2368cD07SwlyS9wd2cPJFzPHrOpU5MsW6ORNfwc/vTp+Swq79dmmpBQ8oX/3j1/X/vylZo1H1qqfHWJCeBYaL15jAH9xVB75xU7hvuZ+bdwD0q6yOjH17B/EPMeEgP+L2zyW56Qz1Ud9eo/0NB0BJWGi17ZZNOvCEH+6JeqMFIBNjs9+ydvJLnyNCwOPaRnvbgI2myZej3vM0AAu0xaXsiGmpRBMsT04SAaO9uJSYM2AM18v98xIWd6t6tv1EzsENww/H9Xk8JbEdrJMdELBmzRu626w2ArZppKagJ5xnyXc4BxOQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3179.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(316002)(6506007)(2906002)(508600001)(5660300002)(186003)(7416002)(6486002)(8676002)(38100700002)(26005)(9686003)(6512007)(66946007)(66556008)(66476007)(4326008)(83380400001)(6916009)(8936002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/kNtRtHb7O6KxGa7qsw4VNRSuO102p72rNTCu3yfBTcw9+h9DcfweKZDzQL3?=
+ =?us-ascii?Q?ceTILqzqjKbgBaZypB9CK4LVzM7EcxNqEDhC4pxlWRGNrDKS8M0rMlf12zv7?=
+ =?us-ascii?Q?D/In3ihFiqDApcSULp1A0LwiNDyxWbo+jL4JXRMKHJ8F1bsC572yV4/HZIdH?=
+ =?us-ascii?Q?FDmxIeywddqIWSiOEqJu/ozotjzhS6FZrEhUs3Cg1s2L+dsZirnXNh296wLv?=
+ =?us-ascii?Q?ujlVStLS1keyeKdFRSv2z7OblXLsUt+VE+3pSbGkLzbEg+hmPqh3tQSw1HIQ?=
+ =?us-ascii?Q?/uGRl+hrwcDmWTH/muRfZtMqAFHIk0dZwfsWW1Qtb+NvOnfWpCD7PqHhyFFB?=
+ =?us-ascii?Q?c1dMPcGw7BH/YdWBADOV9mYoc2ILuh2j+bK8fnHQXMH4UsKq2QfAD7YtaZ4q?=
+ =?us-ascii?Q?wl1aDsK+t00tFv726XHFt3IYHl5i5stGzjwrWs44dPGetLAfqCASHwc1G47m?=
+ =?us-ascii?Q?FY+oPUi/H7IObhnQfUL8xTIk8s2imiUsfUB0jByTuV6x7lUzlZ8If+Ip4ePn?=
+ =?us-ascii?Q?QkL/mtYtlzAIBVjEk0MaOt40kfadUZklTZ+HL1dTAZsvXOSiwolXsOypPCIj?=
+ =?us-ascii?Q?0Hi+J64wLjxHNauIcdZ8xNTji12tPNrdVknB20Jj8nhQxYlkmptiKZ52UCik?=
+ =?us-ascii?Q?O+yS/Wx3Wmk8HdGCQHEhUtcepLF0Q7nq6/1U/xF2Kayg3cvtAiOi6oRg3U/y?=
+ =?us-ascii?Q?PxiWvc0FvP7GIbHKODiuLBDx5vVsjpJW42rz188gjL7aTqoFaO9OdDslOaaM?=
+ =?us-ascii?Q?PKNejuVpXQGSB7cx+P8gz43ojU29Xt/qPzLmLVLk7pSkIKvuxpVKQ3bYaGFX?=
+ =?us-ascii?Q?19N/UFZp55QkUXeVZn3opWcDyoxFn8C93tyWTZOifZ3X/RYkPUfacba7Gtz/?=
+ =?us-ascii?Q?fTR8MqCrnR817OPyeRBvLQsOcm49vClwn3RQd7u/MTRsJyhRzghNGgVE0tmq?=
+ =?us-ascii?Q?hF0nWjlfG89nA2EnkdIb0G2JXcwWZR7e6OBa+4ps/hyFWmth3xG5qTFj+y+H?=
+ =?us-ascii?Q?Jq2IC/efETQPkFJq+g9lKWgWzj/PWzTg2nXo/izH41dZgzo+83USjflEQE0t?=
+ =?us-ascii?Q?Ud8/N/ViZF8tWmBCM3bdmQLHeyIV2cEJBjBaPHx/FAuD788Eaj+lK0LGtn2e?=
+ =?us-ascii?Q?hLG2NjC/iqz4NMXByXh5ewOECWdr0hJAaMY6mH381GJiEgEHgV5/slXkxtSW?=
+ =?us-ascii?Q?LY8V1uGR1w3cGjfJkn9hR5EiqVySOxg/DjsWZzY9QeTFdP7/rzgdbWHlSX6y?=
+ =?us-ascii?Q?1T9jhK1M173uAgqSvIrghWVznb3OWP4S1BR0ZquROz7qsHF2lmYq1EBFFhIx?=
+ =?us-ascii?Q?1DTQSHRNmjNimbjIhoJHCsVHhgeqjZsTKV9YJbSQal/ZRkbfcZ7yDxhrdXHW?=
+ =?us-ascii?Q?uN8Ywpx6l1ptPb52d8LYrwVtqMj5hEOF4+VKqJBvrGJDs473XYDOmUd+KyMh?=
+ =?us-ascii?Q?Brsdv84o+FtkhmFw0i3lPVZyH3ywKr14CA8YP9VJVsSVT2QHbhKVVXjuQUOX?=
+ =?us-ascii?Q?+Ev08fsJiOaMffYutNih7rBl4jwRcmOfQIRq2UkJC++H04wAjRewnaNvsP9Q?=
+ =?us-ascii?Q?bvMU/kk8jCZa6WtVDZBb0PJ/96q5g27g+T/UAvFAOJsYtTX/mqpnRHVwyrNT?=
+ =?us-ascii?Q?EJrkln85HsSRecfx54fmZptFlOPHAGosq5o158ypcwqug+LsD4ez0tfKJtOL?=
+ =?us-ascii?Q?UCFvuEezKXHRZL7wedaScyZow0EYmqg1KcMkCLb8BCpitDqL+257qH56CIUG?=
+ =?us-ascii?Q?5iBLRnKHgg=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f256f99-9d9e-4b04-3171-08da491d8743
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3179.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2022 07:07:20.1834
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HRTJVSGX3lLy6nTLXJoSgxFPAADDnljciJXyF8GdGdHfevZwITTDoFfhd5iSzs/450okQPgbnRWR6mY7rP/nRw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5787
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-> > Of course I need to do all things.
-> > If I am not doing them it could be because I made a mistake
-> > or misunderstood something.
-> > I am always trying to improve and incorporate feedback on my mistakes.
->
-> One thing I've noticed watching the candidate series going by on the
-> list -- is there something consistent that could go in the subject line of a
-> candidate series from the first posting all the way until the stable
-> maintainers queue them up?
->
-> "[PATCH 5.10 v2 0/8] xfs fixes for 5.10.y (part 2)"
->
-> isn't quite specific enough to make it easy to find the threads in
-> mutt, at least not if they're all called "xfs fixes for 5.10.y".  I'm
-> not sure what to suggest here though -- pick two random dictionary
-> words?
->
-> "xfs: fixes for 5.10.y (trews sphenic)"
->
-> But that just looks like your $pet walked over the keyboard.  Maybe
-> something boring like the date the candidate series was first posted?
->
 
-That's good feedback!
+I can't see any issues with this now so:
 
-In my tree this part 2 is tag xfs-5.10.y-2 which is annotated as:
+Reviewed-by: Alistair Popple <apopple@nvidia.com>
 
-5.10.y xfs backports circa 5.12
+Alex Sierra <alex.sierra@amd.com> writes:
 
-I can go with something along those lines.
-It will not always be possible to use the origin release
-as a description, but the word backports is pretty descriptive
-and should not collide with anything else going through xfs list.
-
-I was also pondering how to reflect the transition from candidate
-to stable posting.
-
-Note that from part 1 to part 2 I added CANDIDATE to the
-review post.
-
-The choice of going with v2 for stable posting is just the best
-idea I came up with, not sure if it is a good idea.
-I would certainly have been better if I had done the changelog
-since v1.
-In retrospect, I should have posted v2 CANDIDATE and only then
-posted to stable.
-
-> > Regarding changelogs, I do not understand what you mean.
-> > Isn't that a changelog at the bottom of my cover letter?
-> > Do you mean something else?
+> With DEVICE_COHERENT, we'll soon have vm_normal_pages() return
+> device-managed anonymous pages that are not LRU pages. Although they
+> behave like normal pages for purposes of mapping in CPU page, and for
+> COW. They do not support LRU lists, NUMA migration or THP.
 >
-> I /think/ Dave wanted to see something at the bottom of the cover letter
-> like this.  Actually, I won't speak for Dave, but this is what I'd like
-> to see if you make substantive changes between the CANDIDATE patchset
-> and the one that actually gets sent to -stable:
+> We also introduced a FOLL_LRU flag that adds the same behaviour to
+> follow_page and related APIs, to allow callers to specify that they
+> expect to put pages on an LRU list.
 >
-> "I would like to thank Samsung for contributing the hardware for the
-> kdevops test environment and especially to Luis for his ongoing support
-> in the test environment, which does most of the work for me :)
+> Signed-off-by: Alex Sierra <alex.sierra@amd.com>
+> Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
+> ---
+>  fs/proc/task_mmu.c | 2 +-
+>  include/linux/mm.h | 3 ++-
+>  mm/gup.c           | 6 +++++-
+>  mm/huge_memory.c   | 2 +-
+>  mm/khugepaged.c    | 9 ++++++---
+>  mm/ksm.c           | 6 +++---
+>  mm/madvise.c       | 4 ++--
+>  mm/memory.c        | 9 ++++++++-
+>  mm/mempolicy.c     | 2 +-
+>  mm/migrate.c       | 4 ++--
+>  mm/mlock.c         | 2 +-
+>  mm/mprotect.c      | 2 +-
+>  12 files changed, 33 insertions(+), 18 deletions(-)
 >
-> "v3: Change frob to brof, per maintainer request.
-> v2: Add patch 7, which it turns out was a hidden prerequisite for patch 8.
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 2d04e3470d4c..2dd8c8a66924 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -1792,7 +1792,7 @@ static struct page *can_gather_numa_stats(pte_t pte, struct vm_area_struct *vma,
+>  		return NULL;
 >
-
-Gosh! of course.
-Total blackout.
-
-I had a mental perception of a RESEND that drops the CANDIDATE
-tag, so I completely forgot about that.
-
-The clear mistake here was to not post CANDIDATE v2 to xfs.
-And it is not out of laziness or eagerness that I didn't post v2.
-I was trying to reduce the already loud noise that this effort is
-causing to a minimum, but in retrospect, the risk of creating friction
-due to misunderstanding was not worth it.
-
+>  	page = vm_normal_page(vma, addr, pte);
+> -	if (!page)
+> +	if (!page || is_zone_device_page(page))
+>  		return NULL;
 >
-> > Regarding explicit ACKs, I wasn't sure what to do.
+>  	if (PageReserved(page))
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index bc8f326be0ce..d3f43908ff8d 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -601,7 +601,7 @@ struct vm_operations_struct {
+>  #endif
+>  	/*
+>  	 * Called by vm_normal_page() for special PTEs to find the
+> -	 * page for @addr.  This is useful if the default behavior
+> +	 * page for @addr. This is useful if the default behavior
+>  	 * (using pte_page()) would not find the correct page.
+>  	 */
+>  	struct page *(*find_special_page)(struct vm_area_struct *vma,
+> @@ -2934,6 +2934,7 @@ struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+>  #define FOLL_NUMA	0x200	/* force NUMA hinting page fault */
+>  #define FOLL_MIGRATION	0x400	/* wait for page to replace migration entry */
+>  #define FOLL_TRIED	0x800	/* a retry, previous pass started an IO */
+> +#define FOLL_LRU        0x1000  /* return only LRU (anon or page cache) */
+>  #define FOLL_REMOTE	0x2000	/* we are working on non-current tsk/mm */
+>  #define FOLL_COW	0x4000	/* internal GUP flag */
+>  #define FOLL_ANON	0x8000	/* don't do file mappings */
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 551264407624..48b45bcc8501 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -532,7 +532,11 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+>  	}
 >
-> Me neither.  It feels a little funny to ACK a patch in a stable queue
-> that I already RVB'd for upstream, but is that peoples' expectation?
+>  	page = vm_normal_page(vma, address, pte);
+> -	if (!page && pte_devmap(pte) && (flags & (FOLL_GET | FOLL_PIN))) {
+> +	if ((flags & FOLL_LRU) && ((page && is_zone_device_page(page)) ||
+> +	    (!page && pte_devmap(pte)))) {
+> +		page = ERR_PTR(-EEXIST);
+> +		goto out;
+> +	} else if (!page && pte_devmap(pte) && (flags & (FOLL_GET | FOLL_PIN))) {
+>  		/*
+>  		 * Only return device mapping pages in the FOLL_GET or FOLL_PIN
+>  		 * case since they are only valid while holding the pgmap
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index a77c78a2b6b5..48182c8fe151 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2906,7 +2906,7 @@ static int split_huge_pages_pid(int pid, unsigned long vaddr_start,
+>  		}
 >
-
-My goal is not to take away control from xfs maintainers.
-My goal is to lower the burden on xfs maintainers.
-It would seem to me that requiring explicit ACK per patch
-is not the formula for reducing burden.
-
-Luis suggested the earlier of explicit ACK (can also be on the series)
-and two weeks of grace on xfs list.
-
-That sounds like a good balance to me.
-But rest assured, if there is a patch that is more than trivial,
-and I am not sure about, I would ping the relevant developer myself
-and not trust the tests alone.
-
-> > Ted has asked this on this thread [1].
-> >
-> > [1] https://lore.kernel.org/linux-fsdevel/YieG8rZkgnfwygyu@mit.edu/
-> >
-> > I asked this in my reply [2] to Darrick's email, but got no reply:
-> >
-> > :Should we post to xfs list and wait for explicit ACK/RVB on every patch?
-> > :Should we post to xfs list and if no objections are raised post to stable?
-> >
-> > [2] https://lore.kernel.org/linux-xfs/CAOQ4uxjtOJ_=65MXVv0Ry0Z224dBxeLJ44FB_O-Nr9ke1epQ=Q@mail.gmail.com/
+>  		/* FOLL_DUMP to ignore special (like zero) pages */
+> -		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP);
+> +		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP | FOLL_LRU);
 >
-> TBH there have been enough stable process discussion threads in the past
-> month that I've probably lost track of ... well, clearly, those two. :/
+>  		if (IS_ERR(page))
+>  			continue;
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 16be62d493cd..671ac7800e53 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -618,7 +618,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>  			goto out;
+>  		}
+>  		page = vm_normal_page(vma, address, pteval);
+> -		if (unlikely(!page)) {
+> +		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
+>  			result = SCAN_PAGE_NULL;
+>  			goto out;
+>  		}
+> @@ -1267,7 +1267,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>  			writable = true;
 >
-> > Since I had no explicit rules, I used my common sense, which is a recipe
-> > for misunderstandings... :-/
-> >
-> > I posted the candidates one week ago, so I thought everyone had the
-> > opportunity to comment.
-> > You gave me comments on patches 1 and 7 so I had assumed that
-> > you had seen the entire series and had no objections to the rest.
-> >
-> > I incorporated your feedback and wrote my plans in this email [3]
+>  		page = vm_normal_page(vma, _address, pteval);
+> -		if (unlikely(!page)) {
+> +		if (unlikely(!page) || unlikely(is_zone_device_page(page))) {
+>  			result = SCAN_PAGE_NULL;
+>  			goto out_unmap;
+>  		}
+> @@ -1479,7 +1479,8 @@ void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr)
+>  			goto abort;
 >
-> I'm going to offer my (probably controversial) opinion here: I would
-> like to delegate /all/ of the power and responsibility for stable
-> maintenance to all of you (Amir/Leah/Chandan/etc.) who are doing the
-> work.  What Amir did here (send a candidate patchset, take suggestions
-> for a week, run the batch through fstests) is more or less what I'd
-> expect from whoever owns the LTS backport process.
+>  		page = vm_normal_page(vma, addr, *pte);
+> -
+> +		if (WARN_ON_ONCE(page && is_zone_device_page(page)))
+> +			page = NULL;
+>  		/*
+>  		 * Note that uprobe, debugger, or MAP_PRIVATE may change the
+>  		 * page table, but the new page will not be a subpage of hpage.
+> @@ -1497,6 +1498,8 @@ void collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr)
+>  		if (pte_none(*pte))
+>  			continue;
+>  		page = vm_normal_page(vma, addr, *pte);
+> +		if (WARN_ON_ONCE(page && is_zone_device_page(page)))
+> +			goto abort;
+>  		page_remove_rmap(page, vma, false);
+>  	}
 >
-> Frankly, I don't see so much difference between what I do between -rc1
-> and -rc4 and what Amir's doing -- propose a bunch of fixpatches, wait a
-> few days, and if there aren't any strenuous objections, send them on
-> their way.  IOWS, I own whatever's going to the upstream tree; Amir owns
-> whatever's going to 5.10; Leah and Chandan own whatever's going to 5.15;
-> and (I guess?) Chandan owns whatever's going to 5.4.
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index 54f78c9eecae..400790128102 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -474,7 +474,7 @@ static int break_ksm(struct vm_area_struct *vma, unsigned long addr)
+>  	do {
+>  		cond_resched();
+>  		page = follow_page(vma, addr,
+> -				FOLL_GET | FOLL_MIGRATION | FOLL_REMOTE);
+> +				FOLL_GET | FOLL_MIGRATION | FOLL_REMOTE | FOLL_LRU);
+>  		if (IS_ERR_OR_NULL(page))
+>  			break;
+>  		if (PageKsm(page))
+> @@ -559,7 +559,7 @@ static struct page *get_mergeable_page(struct rmap_item *rmap_item)
+>  	if (!vma)
+>  		goto out;
 >
-> I think Dave's afraid that if something goes wrong with an LTS kernel
-> then the downstream consumers of those LTS kernels will show up on the
-> list with bug reports and asking for fixes, and that will just put more
-> pressure on the upstream maintainers since those consumers don't care
-> about who they're talking to, they just want a resolution.  But I'll let
-> him express his thoughts.
+> -	page = follow_page(vma, addr, FOLL_GET);
+> +	page = follow_page(vma, addr, FOLL_GET | FOLL_LRU);
+>  	if (IS_ERR_OR_NULL(page))
+>  		goto out;
+>  	if (PageAnon(page)) {
+> @@ -2307,7 +2307,7 @@ static struct rmap_item *scan_get_next_rmap_item(struct page **page)
+>  		while (ksm_scan.address < vma->vm_end) {
+>  			if (ksm_test_exit(mm))
+>  				break;
+> -			*page = follow_page(vma, ksm_scan.address, FOLL_GET);
+> +			*page = follow_page(vma, ksm_scan.address, FOLL_GET | FOLL_LRU);
+>  			if (IS_ERR_OR_NULL(*page)) {
+>  				ksm_scan.address += PAGE_SIZE;
+>  				cond_resched();
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index d7b4f2602949..e5637181de1b 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -421,7 +421,7 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+>  			continue;
 >
-> I've been pondering this overnight, and I don't agree that the above
-> scenario is the inevitable outcome.  Are you (LTS branch maintainers)
-> willing to put your names in the MAINTAINERS file for the LTS kernels
-> and let us (upstream maintainers) point downstream consumers (and their
-> bug report) of those branches at you?  If so, then I see that as
-> effective delegation of responsibilities to people who have taken
-> ownership of the LTS branches, not merely blame shifting.
+>  		page = vm_normal_page(vma, addr, ptent);
+> -		if (!page)
+> +		if (!page || is_zone_device_page(page))
+>  			continue;
 >
-
-Yes, I am willing to take that responsibility.
-I curated the 5.10 backports, signed them and tested them.
-I see them as my responsibility to LTS users whether you list
-me in MAINTAINERS or you don't.
-
-I can commit to being responsive to reports from LTS users.
-I do want to state, though, that my ability to continue to validate and
-post backports depends on the resources that Samsung provided Luis
-and me. If that changes in the future, we will need to re-assess.
-
-> If yes, then ... do as you like, you're the branch owner.  I expect
-> things to be rocky for a while, but it beats burning myself out with too
-> many responsibilities that I have not been able to keep up with.  It's
-> probably better for the long term stability of each LTS branch if
-> there's one or two people who are really familiar with how that LTS has
-> been doing, instead of me trying and failing to multiplex.
+>  		/*
+> @@ -639,7 +639,7 @@ static int madvise_free_pte_range(pmd_t *pmd, unsigned long addr,
+>  		}
 >
-> Also, as Greg points out, at worst, you /can/ decide to revert something
-> that initially looked good but later turned out smelly.
+>  		page = vm_normal_page(vma, addr, ptent);
+> -		if (!page)
+> +		if (!page || is_zone_device_page(page))
+>  			continue;
 >
-> The one thing I /will/ caution you about -- watch out for changes that
-> affect what gets persisted to disk.  Those need more review because
-> fixing those things up after the fact (look at the AGFL padding
-> corrections we had to do to fix some uncaught problems upstream) is
-> /not/ fun.
+>  		/*
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 21dadf03f089..30ecbc715e60 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -624,6 +624,13 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+>  		if (is_zero_pfn(pfn))
+>  			return NULL;
+>  		if (pte_devmap(pte))
+> +/*
+> + * NOTE: New uers of ZONE_DEVICE will not set pte_devmap() and will have
+> + * refcounts incremented on their struct pages when they are inserted into
+> + * PTEs, thus they are safe to return here. Legacy ZONE_DEVICE pages that set
+> + * pte_devmap() do not have refcounts. Example of legacy ZONE_DEVICE is
+> + * MEMORY_DEVICE_FS_DAX type in pmem or virtio_fs drivers.
+> + */
+>  			return NULL;
 >
-
-Duly noted.
-
-Speaking on my behalf, the candidates that I post go through
-careful manual inspection, which takes the wider context into account.
-I have been following the xfs list for over 5 years, before starting
-to do this work and the backport work started top down from a complete
-overview of everything that got merged since v5.10.
-
-> > :Just to make sure we are all on the same page.
-> > :
-> > :I have applied both patches to my test tree:
-> > :1. 1cd738b13ae9 xfs: consider shutdown in bmapbt cursor delete assert
-> > :2. 56486f307100 xfs: assert in xfs_btree_del_cursor should take into
-> > :account error
-> > :
-> > :Patch #2 looks pretty safe and it only affects builds with XFS_WARN/DEBUG,
-> > :so I am not too concerned about a soaking period.
-> > :I plan to send it along with patch #1 to stable after a few more test runs.
-> >
-> > Once again, I *assumed* that you saw that because this was part of
-> > an ongoing conversation, not some random email.
-> >
-> > 4 days later (after more testing) I did what I said I would do
-> > and posted the revised series to stable with feedback incorporated.
-> > This was also detailed in the cover letter to stable.
-> >
-> > [3] https://lore.kernel.org/linux-xfs/CAOQ4uxhxLRTUfyhSy9D6nsGdVANrUOgRM8msVPVmFmw0oaky+w@mail.gmail.com/
-> >
-> > If this situation repeats itself in the future, I will post v2 to xfs
-> > list first.
+>  		print_bad_pte(vma, addr, pte, NULL);
+> @@ -4685,7 +4692,7 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+>  	pte = pte_modify(old_pte, vma->vm_page_prot);
 >
-> Yes, please do.  It has been customary to push a final patchset for 24h
-> prior to submission just to see if anything shakes out at the last
-> minute.
+>  	page = vm_normal_page(vma, vmf->address, pte);
+> -	if (!page)
+> +	if (!page || is_zone_device_page(page))
+>  		goto out_map;
 >
-
-ok.
-
-> > > And I notice that you've already sent out yet another set of stable
-> > > patches for review despite the paint not even being dry on these
-> > > ones. Not to mention that there's a another set of different 5.15
-> > > stable patches out for review as well.
-> >
-> > I will pace myself going forward and collaborate closer with Leah.
-> > I have two years of kernel releases to catch up with, but once we
-> > reach the point of selecting patches from the present releases
-> > Hopefully, some of the reviews for candidates for different LTS
-> > kernels will be shared.
+>  	/* TODO: handle PTE-mapped THP */
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index d39b01fd52fe..abc26890fc95 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -523,7 +523,7 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
+>  		if (!pte_present(*pte))
+>  			continue;
+>  		page = vm_normal_page(vma, addr, *pte);
+> -		if (!page)
+> +		if (!page || is_zone_device_page(page))
+>  			continue;
+>  		/*
+>  		 * vm_normal_page() filters out zero pages, but there might
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index e51588e95f57..f7d1b8312631 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1612,7 +1612,7 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
+>  		goto out;
 >
-> Admittedly, a new patchset every week is kind of a lot to pick through
-> with everything /else/ going on ... particularly this week, since I
-> /was/ busy trying to get the online fsck design doc review started, and
-> dealing with a CVE for the grub xfs driver, and also trying to get the
-> new LARP/NREXT64 itself sorted.  That said, a couple of years is a lot
-> of stuff to get through, so if we need to do a continuous trickle of
-> patches to get caught up then so be it.
+>  	/* FOLL_DUMP to ignore special (like zero) pages */
+> -	page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP);
+> +	page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP | FOLL_LRU);
 >
-> As long as you all end up doing a better job with LTS maintenance than I
-> was doing, it's an improvement, even with the lumps and bumps. :)
+>  	err = PTR_ERR(page);
+>  	if (IS_ERR(page))
+> @@ -1803,7 +1803,7 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
+>  			goto set_status;
 >
-> > >
-> > > This is not a sustainable process.
-> > >
-> > > Seriously: slow down and stop being so damn aggressive. Let everyone
-> > > catch up and build sustainable processes and timetables. If you keep
-> > > going like this, you are going break people.
-> >
-> > I do not want that.
-> >
-> > Let me explain my process. As I described in the meta-cover letter [4] for
-> > the multi part series:
-> >
-> > :My intention is to post the parts for review on the xfs list on
-> > :a ~weekly basis and forward them to stable only after xfs developers
-> > :have had the chance to review the selection.
-> >
-> > [4] https://lore.kernel.org/linux-xfs/20220525111715.2769700-1-amir73il@gmail.com/
-> >
-> > To you, it may appear that "paint not even being dry on these ones"
-> > but to me, I perceived part 2 was already out of review and part 3 was already
-> > spinning in xfstests for a week, so I wanted to post those patches
-> > and give as much time for review as needed.
-> >
-> > My idea of sustainable was posting ~7 stable candidates per week.
-> > This pace may be a bit higher than normal fixes flow, but I do need
-> > to catch up with 2 years of fixes, so the rate has to be a bit higher
-> > than the normal rate of fixes that go into upstream.
+>  		/* FOLL_DUMP to ignore special (like zero) pages */
+> -		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP);
+> +		page = follow_page(vma, addr, FOLL_GET | FOLL_DUMP | FOLL_LRU);
 >
-> Pipelining is a bit more troublesome -- it's difficult for me to
-> concentrate on two similarly named patchsets at the same time.  If you
-> have (say) part 3 running through its paces internally but only post
-> part 3 after Greg lands part 2, that sounds acceptable to me.
+>  		err = PTR_ERR(page);
+>  		if (IS_ERR(page))
+> diff --git a/mm/mlock.c b/mm/mlock.c
+> index 716caf851043..b14e929084cc 100644
+> --- a/mm/mlock.c
+> +++ b/mm/mlock.c
+> @@ -333,7 +333,7 @@ static int mlock_pte_range(pmd_t *pmd, unsigned long addr,
+>  		if (!pte_present(*pte))
+>  			continue;
+>  		page = vm_normal_page(vma, addr, *pte);
+> -		if (!page)
+> +		if (!page || is_zone_device_page(page))
+>  			continue;
+>  		if (PageTransCompound(page))
+>  			continue;
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index ba5592655ee3..e034aae2a98b 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -95,7 +95,7 @@ static unsigned long change_pte_range(struct mmu_gather *tlb,
+>  					continue;
 >
-
-That makes sense.
-Looks like part 4 is going to be cooked "well done" by the time I post it ;-)
-Luis' kdevops is gaining more stability as time goes by. I can sometimes
-leave it running for days without attending to sporadic testing issues.
-
-> > I had to choose something based on no other feedback, but of course
-> > the idea is to take feedback and incorporate it into the process
-> > in order to make it sustainable.
-> >
-> > I will do my best to amend the things that were broken in this posting.
-> > I am sure this is not the last time I am going to make mistakes.
-> > I am trying to fix a process that has been broken for years.
-> > I invest a lot of my time and energy in this effort.
-> >
-> > My request is that you assume good intentions on my part and if there
-> > are rules that you want me to follow please spell them out, so I won't
-> > end up guessing wrong again.
+>  				page = vm_normal_page(vma, addr, oldpte);
+> -				if (!page || PageKsm(page))
+> +				if (!page || is_zone_device_page(page) || PageKsm(page))
+>  					continue;
 >
-> I know, and thank you all for your willingness to take on LTS
-> maintainership.  There will undoubtedly be more, uh, learning
-> opportunities, but I'll try to roll with them as gently as I can.
-> Emotional self-regulation has not been one of my strong points the last
-> year or so.
->
-
-Thank you for this email.
-It helps a lot to clarify the process!
-
-Amir.
+>  				/* Also skip shared copy-on-write pages */
