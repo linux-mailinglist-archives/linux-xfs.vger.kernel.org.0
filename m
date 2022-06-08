@@ -2,62 +2,76 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FA415423CA
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:51:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 041E15421BB
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 08:44:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234802AbiFHGBi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jun 2022 02:01:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33904 "EHLO
+        id S234669AbiFHGBh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Jun 2022 02:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240916AbiFHFxM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 01:53:12 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E183D3FD4;
-        Tue,  7 Jun 2022 20:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654660290; x=1686196290;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xIcozfLdj0wmlKDo/KeNlOUgX9nLL33V5khVHg6L5cw=;
-  b=HeipGJE1YzPf55S7sWokvQD54aI9Hfi0GkiUOPPEoGyxD8+PI5oBTAcM
-   fnNl/vzar2vF2c3QtdEX2ejk+/TkN18N5vN41PbNu1qQaj0U9WLytowoU
-   xoaI6i003A23I52yWoCK1rseLAmLhSLZvb/8tjChfOnyC/VFnrj0w9VTB
-   rgaLoJzjIUJE6C9DzLE/Fklim+dOgiX2np4CU1Ym5ZSOR9Z7d6HznDMuj
-   9XGX80nA+kjSQOHWqBNmow9YFDDzlYBxAsOCzP+RgOy1fUSh9Dd+KoJmy
-   3Ub4HNGQBqsJskHq0iuJQGEbIgPnWU59pXbXfUhTSNPTKEI4xHol+LmC8
-   w==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10371"; a="274317878"
-X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
-   d="scan'208";a="274317878"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 20:51:28 -0700
-X-IronPort-AV: E=Sophos;i="5.91,285,1647327600"; 
-   d="scan'208";a="636530713"
-Received: from rli9-dbox.sh.intel.com (HELO rli9-dbox) ([10.239.159.142])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2022 20:51:26 -0700
-Date:   Wed, 8 Jun 2022 11:49:53 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Shiyang Ruan <ruansy.fnst@fujitsu.com>,
-        kbuild-all@lists.01.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [kbuild-all] Re: [linux-next:master 728/1207]
- fs/xfs/xfs_file.c:1266:31: sparse: sparse: incorrect type in return
- expression (different base types)
-Message-ID: <YqAcYYydYqMef+wi@rli9-dbox>
-References: <202206071511.FI7WLdZo-lkp@intel.com>
- <20220607160546.2a0a826d29bec858ca402720@linux-foundation.org>
+        with ESMTP id S1343676AbiFHFz4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 01:55:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76E873D9F84
+        for <linux-xfs@vger.kernel.org>; Tue,  7 Jun 2022 20:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1654660781;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FMT1wlgJbLx2m8SJsF/yfd3/kTWNTcXwn25iSFqRJ0U=;
+        b=GfrBnxqaJQH4/cK1VKrwh0isJas5B/XigBBPfZpq3DUtoDSej6pjGmIrXDpBgtE75tRyor
+        8RSvbX43EYoOldbjpnh2LONrvMBCAGqhLNQ1zgN0ronRhnsW2swK20SeWBfBmea9dp/x4r
+        oiBRowqK5QoamdZBF9KB5ZoE+1zr6J4=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-604-FkuUgbcjMKqHw0yC17n_Cw-1; Tue, 07 Jun 2022 23:59:40 -0400
+X-MC-Unique: FkuUgbcjMKqHw0yC17n_Cw-1
+Received: by mail-qv1-f70.google.com with SMTP id z10-20020ad4414a000000b004644d6dafe3so12197485qvp.11
+        for <linux-xfs@vger.kernel.org>; Tue, 07 Jun 2022 20:59:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FMT1wlgJbLx2m8SJsF/yfd3/kTWNTcXwn25iSFqRJ0U=;
+        b=saO1F0gskrc9Q0uCEdoGVzIqsZw/ldhpJkMWV5PI4uEu3kNK1rPan8R5tjfw7Aj4qU
+         jGReFlFqXoO4o1FRNjFukAOjeYYySyZ1V4T+bU/ygjv6E7dMTSSbKwlp0IpjsIG6/peI
+         p2aHZulcmG9G48s1titOMu7hylFqSEWAx8joKcqwSahCass6TwDaxBhGh240R6eQIfYm
+         hckUIwZjrNO0fXbT8QONMP9vxHuOZJrPT3voZ3gaOXSF3VEWYVXu/Ou5773SLWTfkdLC
+         OQojivHPxkd25DRs3L0ikKZZU2gd84GpmYvfTxKeIAjermJRMRzwhLp2gRMzHR0GNJ8l
+         KSNA==
+X-Gm-Message-State: AOAM531T232PxQ7vD6yIfY7fQMDehUqIAw2m6ZY/hOH2KOYQMlYkeDE7
+        yuVZxq/MPIPMqEYnJ3rdazIbCrOlNQmdaTAi8gGcO7bEdgrhlUfehiQ+btmzPz1jB7gbW69s1EE
+        eXX9LEjUEkCWUmyshpjxz
+X-Received: by 2002:ac8:5ac2:0:b0:304:c980:7d76 with SMTP id d2-20020ac85ac2000000b00304c9807d76mr25562570qtd.454.1654660780343;
+        Tue, 07 Jun 2022 20:59:40 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzUjCHX9AwQQcYhsCb41SYRAtX+JvP789ujrfGlt/LGhaF6PTUKGXkVu7YnFhxC7+tyI9JKAg==
+X-Received: by 2002:ac8:5ac2:0:b0:304:c980:7d76 with SMTP id d2-20020ac85ac2000000b00304c9807d76mr25562565qtd.454.1654660780049;
+        Tue, 07 Jun 2022 20:59:40 -0700 (PDT)
+Received: from zlang-mailbox ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id bp38-20020a05622a1ba600b00304e4bbc369sm8831821qtb.10.2022.06.07.20.59.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 20:59:39 -0700 (PDT)
+Date:   Wed, 8 Jun 2022 11:59:33 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Chandan Babu R <chandan.babu@oracle.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, fstests@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH 3/4] xfs/547: Verify that the correct inode extent
+ counters are updated with/without nrext64
+Message-ID: <20220608035933.rcaevihjijarst5v@zlang-mailbox>
+References: <20220606124101.263872-1-chandan.babu@oracle.com>
+ <20220606124101.263872-4-chandan.babu@oracle.com>
+ <Yp4f/yalwFunfEgz@magnolia>
+ <87zgion6nx.fsf@debian-BULLSEYE-live-builder-AMD64>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220607160546.2a0a826d29bec858ca402720@linux-foundation.org>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+In-Reply-To: <87zgion6nx.fsf@debian-BULLSEYE-live-builder-AMD64>
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,63 +79,138 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 07, 2022 at 04:05:46PM -0700, Andrew Morton wrote:
-> On Tue, 7 Jun 2022 15:09:18 +0800 kernel test robot <lkp@intel.com> wrote:
+On Tue, Jun 07, 2022 at 03:06:58PM +0530, Chandan Babu R wrote:
+> On Mon, Jun 06, 2022 at 08:40:47 AM -0700, Darrick J. Wong wrote:
+> > On Mon, Jun 06, 2022 at 06:11:00PM +0530, Chandan Babu R wrote:
+> >> This commit adds a new test to verify if the correct inode extent counter
+> >> fields are updated with/without nrext64 mkfs option.
+> >> 
+> >> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
+> >> ---
+> >>  tests/xfs/547     | 91 +++++++++++++++++++++++++++++++++++++++++++++++
+> >>  tests/xfs/547.out | 13 +++++++
+> >>  2 files changed, 104 insertions(+)
+> >>  create mode 100755 tests/xfs/547
+> >>  create mode 100644 tests/xfs/547.out
+> >> 
+> >> diff --git a/tests/xfs/547 b/tests/xfs/547
+> >> new file mode 100755
+> >> index 00000000..d5137ca7
+> >> --- /dev/null
+> >> +++ b/tests/xfs/547
+> >> @@ -0,0 +1,91 @@
+> >> +#! /bin/bash
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +# Copyright (c) 2022 Oracle.  All Rights Reserved.
+> >> +#
+> >> +# FS QA Test 547
+> >> +#
+> >> +# Verify that correct inode extent count fields are populated with and without
+> >> +# nrext64 feature.
+> >> +#
+> >> +. ./common/preamble
+> >> +_begin_fstest auto quick metadata
+> >> +
+> >> +# Import common functions.
+> >> +. ./common/filter
+> >> +. ./common/attr
+> >> +. ./common/inject
+> >> +. ./common/populate
+> >> +
+> >> +# real QA test starts here
+> >> +_supported_fs xfs
+> >> +_require_scratch
+> >> +_require_scratch_xfs_nrext64
+> >> +_require_attrs
+> >> +_require_xfs_debug
+> >> +_require_test_program "punch-alternating"
+> >> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
+> >> +
+> >> +for nrext64 in 0 1; do
+> >> +	echo "* Verify extent counter fields with nrext64=${nrext64} option"
+> >> +
+> >> +	_scratch_mkfs -i nrext64=${nrext64} -d size=$((512 * 1024 * 1024)) \
+> >> +		      >> $seqres.full
+> >> +	_scratch_mount >> $seqres.full
+> >> +
+> >> +	bsize=$(_get_file_block_size $SCRATCH_MNT)
+> >> +
+> >> +	testfile=$SCRATCH_MNT/testfile
+> >> +
+> >> +	nr_blks=20
+> >> +
+> >> +	echo "Add blocks to test file's data fork"
+> >> +	$XFS_IO_PROG -f -c "pwrite 0 $((nr_blks * bsize))" $testfile \
+> >> +		     >> $seqres.full
+> >> +	$here/src/punch-alternating $testfile
+> >> +
+> >> +	echo "Consume free space"
+> >> +	fillerdir=$SCRATCH_MNT/fillerdir
+> >> +	nr_free_blks=$(stat -f -c '%f' $SCRATCH_MNT)
+> >> +	nr_free_blks=$((nr_free_blks * 90 / 100))
+> >> +
+> >> +	_fill_fs $((bsize * nr_free_blks)) $fillerdir $bsize 0 \
+> >> +		 >> $seqres.full 2>&1
+> >> +
+> >> +	echo "Create fragmented filesystem"
+> >> +	for dentry in $(ls -1 $fillerdir/); do
+> >> +		$here/src/punch-alternating $fillerdir/$dentry >> $seqres.full
+> >> +	done
+> >> +
+> >> +	echo "Inject bmap_alloc_minlen_extent error tag"
+> >> +	_scratch_inject_error bmap_alloc_minlen_extent 1
+> >> +
+> >> +	echo "Add blocks to test file's attr fork"
+> >> +	attr_len=255
+> >> +	nr_attrs=$((nr_blks * bsize / attr_len))
+> >> +	for i in $(seq 1 $nr_attrs); do
+> >> +		attr="$(printf "trusted.%0247d" $i)"
+> >> +		$SETFATTR_PROG -n "$attr" $testfile >> $seqres.full 2>&1
+> >> +		[[ $? != 0 ]] && break
+> >> +	done
+> >> +
+> >> +	testino=$(stat -c '%i' $testfile)
+> >> +
+> >> +	_scratch_unmount >> $seqres.full
+> >> +
+> >> +	dcnt=$(_scratch_xfs_get_metadata_field core.nextents "inode $testino")
+> >> +	acnt=$(_scratch_xfs_get_metadata_field core.naextents "inode $testino")
+> >
+> > Note: For any test requiring functionality added after 5.10, you can use
+> > the xfs_db path command to avoid this sort of inode number saving:
+> >
+> > dcnt=$(_scratch_xfs_get_metadata_field core.nextents "path /testfile")
+> >
 > 
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> > head:   73d0e32571a0786151eb72634f1a4c5891166176
-> > commit: d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c [728/1207] xfs: support CoW in fsdax mode
-> > config: x86_64-rhel-8.3-kselftests (https://download.01.org/0day-ci/archive/20220607/202206071511.FI7WLdZo-lkp@intel.com/config)
-> > compiler: gcc-11 (Debian 11.3.0-1) 11.3.0
-> > reproduce:
-> >         # apt-get install sparse
-> >         # sparse version: v0.6.4-18-g56afb504-dirty
-> >         # https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c
-> >         git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> >         git fetch --no-tags linux-next master
-> >         git checkout d5f5b32dee7c09e3152cbbce45c73f0b1ea7d94c
-> >         # save the config file
-> >         mkdir build_dir && cp config build_dir/.config
-> >         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/xfs/
-> > 
-> > If you fix the issue, kindly add following tag where applicable
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > 
-> > 
-> > sparse warnings: (new ones prefixed by >>)
-> > >> fs/xfs/xfs_file.c:1266:31: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got restricted vm_fault_t @@
-> >    fs/xfs/xfs_file.c:1266:31: sparse:     expected int
-> >    fs/xfs/xfs_file.c:1266:31: sparse:     got restricted vm_fault_t
-> > >> fs/xfs/xfs_file.c:1260:1: sparse: sparse: symbol 'xfs_dax_fault' was not declared. Should it be static?
-> > >> fs/xfs/xfs_file.c:1314:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted vm_fault_t [usertype] ret @@     got int @@
-> >    fs/xfs/xfs_file.c:1314:21: sparse:     expected restricted vm_fault_t [usertype] ret
-> >    fs/xfs/xfs_file.c:1314:21: sparse:     got int
-> > 
-> > Please review and possibly fold the followup patch.
-> 
-> Well yes, the followup patch
-> (https://git.kernel.org/pub/scm/linux/kernel/git/akpm/25-new.git/tree/patches/xfs-support-cow-in-fsdax-mode-fix.patch)
-> will most definitely be folded.
+> Ok. I will post a v2 of the patchset to include the above suggestion.
 
-Sorry, currently we disable the auto patch, this sentence "Please review and possibly fold the followup patch"
-is misleading. We will not have follow up patch before we can have human to
-do a check.
+_require_xfs_db_command path ?
+
+Looks like the 'path' command is a new command will be in linux and xfsprogs
+5.10.
+
+It's not always recommended to use latest features/tools, that depends what does
+this case test for. If this case is only for a bug/feature in 5.10, then the
+'path' command is fine. If it's a common test case for old and new kernels, then
+this new command isn't recommended, that will cause this test can't be run on
+old system.
+
+BTW, you'd better to not use a fixed case number in the patch subject, if the
+patch is a new case. Due to the number might be changed when we merge it. And
+a fixed case number in subject, might cause others feel this's a known case
+update, not a new case.
+
+Thanks,
+Zorro
 
 > 
-> Can you suggest how this can be communicated to the robot in order to
-> suppress this notification?  A Fixes: won't work, as neither of these
-> patches have yet been promoted to a "stable" state.  Their hashes will
-> change.
+> > Up to you if you want to change the test to do that; otherwise,
+> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> >
+> 
+> Thanks for the review.
+> 
+> -- 
+> chandan
+> 
 
-Got it, we also think the Fixes tag in the proposed patch brings confusion
-if the "bad" commit is in development state. So far, we haven't exposed a
-way to feedback the "Fixes: won't work", but we will work on some level
-of mail based communication in 2nd half this year, which can simplify the
-communication like this.
-
-Anyway, we now disable the auto patch to avoid bring confusion and sometimes
-wrong patch without human check.
-
-> _______________________________________________
-> kbuild-all mailing list -- kbuild-all@lists.01.org
-> To unsubscribe send an email to kbuild-all-leave@lists.01.org
