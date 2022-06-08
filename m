@@ -2,229 +2,328 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDAE0543752
-	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 17:26:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAB04543A3B
+	for <lists+linux-xfs@lfdr.de>; Wed,  8 Jun 2022 19:24:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244448AbiFHP0o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 8 Jun 2022 11:26:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43964 "EHLO
+        id S231845AbiFHRYi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 8 Jun 2022 13:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244751AbiFHP0Q (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 11:26:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DE68142AB5;
-        Wed,  8 Jun 2022 08:22:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 37F0360AE5;
-        Wed,  8 Jun 2022 15:22:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D62AC34116;
-        Wed,  8 Jun 2022 15:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654701776;
-        bh=SgYW51aN3OeqjU6+EIk8CHclo6M6cc2uvUEPUetN9AY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p7z+0eY7ntbEVxA2gI3ZDLWM0mQwSUHKo0XnCgV0chmlHkz2P/vCANEjmqGsAdwGb
-         EoSpjHFAP8n9bDzPCEYaP1TdvsHfTZs7ZO2YCb1PhaDgWMEewk0XhfG2S7DJV8N6Zq
-         6BFFHYmv/C0EtAhNH8ykQ23VCX1LuObfUCtnf/2zRNky8BKsi3YeFoHUI0AgtoZtnU
-         /s5ocIdJDBgJaNkjIJoR2ZyE63FMuzKBldotmlU9Pd6NrsbPX3n/4O3QNinmpI+xhS
-         eF/3KfLyFpQXF2Gi5KoPPct1DqMaQ4m32g9c7heF/cNtqM6cQYwdFJN5c8DpxFzwH1
-         PF1h9+AG7Xw/A==
-Date:   Wed, 8 Jun 2022 08:22:56 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-aio@kvack.org,
-        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ocfs2-devel@oss.oracle.com, linux-mtd@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v2 11/19] mm/migrate: Add filemap_migrate_folio()
-Message-ID: <YqC+0J9/P1siKkBk@magnolia>
-References: <20220608150249.3033815-1-willy@infradead.org>
- <20220608150249.3033815-12-willy@infradead.org>
+        with ESMTP id S229904AbiFHRYU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 8 Jun 2022 13:24:20 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CD42E9D5
+        for <linux-xfs@vger.kernel.org>; Wed,  8 Jun 2022 10:18:11 -0700 (PDT)
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 258FPS9t015588
+        for <linux-xfs@vger.kernel.org>; Wed, 8 Jun 2022 10:18:11 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=4WKNgt7QNKNdy5fwG1fWfcdBnMefmcZDESVc0HAPJAU=;
+ b=EaaDkqlmZWlO+akqU4VzBEDA7hFMsJ9W/zdBUmFwXBLZ0epliEuyVHC4XfxokdRO2o4V
+ M0lbl4vuOKeqraXJZ02Kh7grKt5wckCr3sYUmvsNkZUcPblAgHz6thHixdPERcxQyZzr
+ iToL7vut4VaQZQL748r9flifc5BhdjoO0zQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3gj13ctwgt-11
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-xfs@vger.kernel.org>; Wed, 08 Jun 2022 10:18:11 -0700
+Received: from twshared5131.09.ash9.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.28; Wed, 8 Jun 2022 10:18:05 -0700
+Received: by devvm225.atn0.facebook.com (Postfix, from userid 425415)
+        id 92A99103BFB54; Wed,  8 Jun 2022 10:17:43 -0700 (PDT)
+From:   Stefan Roesch <shr@fb.com>
+To:     <io-uring@vger.kernel.org>, <kernel-team@fb.com>,
+        <linux-mm@kvack.org>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <shr@fb.com>, <david@fromorbit.com>, <jack@suse.cz>,
+        <hch@infradead.org>, <axboe@kernel.dk>
+Subject: [PATCH v8 00/14] io-uring/xfs: support async buffered writes
+Date:   Wed, 8 Jun 2022 10:17:27 -0700
+Message-ID: <20220608171741.3875418-1-shr@fb.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220608150249.3033815-12-willy@infradead.org>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-GUID: hCDCzf4TSv21AAZvcF4xtJqQsvmVE_Cg
+X-Proofpoint-ORIG-GUID: hCDCzf4TSv21AAZvcF4xtJqQsvmVE_Cg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-08_05,2022-06-07_02,2022-02-23_01
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Wed, Jun 08, 2022 at 04:02:41PM +0100, Matthew Wilcox (Oracle) wrote:
-> There is nothing iomap-specific about iomap_migratepage(), and it fits
-> a pattern used by several other filesystems, so move it to mm/migrate.c,
-> convert it to be filemap_migrate_folio() and convert the iomap filesystems
-> to use it.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+This patch series adds support for async buffered writes when using both
+xfs and io-uring. Currently io-uring only supports buffered writes in the
+slow path, by processing them in the io workers. With this patch series i=
+t is
+now possible to support buffered writes in the fast path. To be able to u=
+se
+the fast path the required pages must be in the page cache, the required =
+locks
+in xfs can be granted immediately and no additional blocks need to be rea=
+d
+form disk.
 
-LGTM
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Updating the inode can take time. An optimization has been implemented fo=
+r
+the time update. Time updates will be processed in the slow path. While t=
+here
+is already a time update in process, other write requests for the same fi=
+le,
+can skip the update of the modification time.
+ =20
 
---D
+Performance results:
+  For fio the following results have been obtained with a queue depth of
+  1 and 4k block size (runtime 600 secs):
 
-> ---
->  fs/gfs2/aops.c          |  2 +-
->  fs/iomap/buffered-io.c  | 25 -------------------------
->  fs/xfs/xfs_aops.c       |  2 +-
->  fs/zonefs/super.c       |  2 +-
->  include/linux/iomap.h   |  6 ------
->  include/linux/pagemap.h |  6 ++++++
->  mm/migrate.c            | 20 ++++++++++++++++++++
->  7 files changed, 29 insertions(+), 34 deletions(-)
-> 
-> diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-> index 106e90a36583..57ff883d432c 100644
-> --- a/fs/gfs2/aops.c
-> +++ b/fs/gfs2/aops.c
-> @@ -774,7 +774,7 @@ static const struct address_space_operations gfs2_aops = {
->  	.invalidate_folio = iomap_invalidate_folio,
->  	.bmap = gfs2_bmap,
->  	.direct_IO = noop_direct_IO,
-> -	.migratepage = iomap_migrate_page,
-> +	.migrate_folio = filemap_migrate_folio,
->  	.is_partially_uptodate = iomap_is_partially_uptodate,
->  	.error_remove_page = generic_error_remove_page,
->  };
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 66278a14bfa7..5a91aa1db945 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -489,31 +489,6 @@ void iomap_invalidate_folio(struct folio *folio, size_t offset, size_t len)
->  }
->  EXPORT_SYMBOL_GPL(iomap_invalidate_folio);
->  
-> -#ifdef CONFIG_MIGRATION
-> -int
-> -iomap_migrate_page(struct address_space *mapping, struct page *newpage,
-> -		struct page *page, enum migrate_mode mode)
-> -{
-> -	struct folio *folio = page_folio(page);
-> -	struct folio *newfolio = page_folio(newpage);
-> -	int ret;
-> -
-> -	ret = folio_migrate_mapping(mapping, newfolio, folio, 0);
-> -	if (ret != MIGRATEPAGE_SUCCESS)
-> -		return ret;
-> -
-> -	if (folio_test_private(folio))
-> -		folio_attach_private(newfolio, folio_detach_private(folio));
-> -
-> -	if (mode != MIGRATE_SYNC_NO_COPY)
-> -		folio_migrate_copy(newfolio, folio);
-> -	else
-> -		folio_migrate_flags(newfolio, folio);
-> -	return MIGRATEPAGE_SUCCESS;
-> -}
-> -EXPORT_SYMBOL_GPL(iomap_migrate_page);
-> -#endif /* CONFIG_MIGRATION */
-> -
->  static void
->  iomap_write_failed(struct inode *inode, loff_t pos, unsigned len)
->  {
-> diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
-> index 8ec38b25187b..5d1a995b15f8 100644
-> --- a/fs/xfs/xfs_aops.c
-> +++ b/fs/xfs/xfs_aops.c
-> @@ -570,7 +570,7 @@ const struct address_space_operations xfs_address_space_operations = {
->  	.invalidate_folio	= iomap_invalidate_folio,
->  	.bmap			= xfs_vm_bmap,
->  	.direct_IO		= noop_direct_IO,
-> -	.migratepage		= iomap_migrate_page,
-> +	.migrate_folio		= filemap_migrate_folio,
->  	.is_partially_uptodate  = iomap_is_partially_uptodate,
->  	.error_remove_page	= generic_error_remove_page,
->  	.swap_activate		= xfs_iomap_swapfile_activate,
-> diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
-> index bcb21aea990a..d4c3f28f34ee 100644
-> --- a/fs/zonefs/super.c
-> +++ b/fs/zonefs/super.c
-> @@ -237,7 +237,7 @@ static const struct address_space_operations zonefs_file_aops = {
->  	.dirty_folio		= filemap_dirty_folio,
->  	.release_folio		= iomap_release_folio,
->  	.invalidate_folio	= iomap_invalidate_folio,
-> -	.migratepage		= iomap_migrate_page,
-> +	.migrate_folio		= filemap_migrate_folio,
->  	.is_partially_uptodate	= iomap_is_partially_uptodate,
->  	.error_remove_page	= generic_error_remove_page,
->  	.direct_IO		= noop_direct_IO,
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index e552097c67e0..758a1125e72f 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -231,12 +231,6 @@ void iomap_readahead(struct readahead_control *, const struct iomap_ops *ops);
->  bool iomap_is_partially_uptodate(struct folio *, size_t from, size_t count);
->  bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
->  void iomap_invalidate_folio(struct folio *folio, size_t offset, size_t len);
-> -#ifdef CONFIG_MIGRATION
-> -int iomap_migrate_page(struct address_space *mapping, struct page *newpage,
-> -		struct page *page, enum migrate_mode mode);
-> -#else
-> -#define iomap_migrate_page NULL
-> -#endif
->  int iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
->  		const struct iomap_ops *ops);
->  int iomap_zero_range(struct inode *inode, loff_t pos, loff_t len,
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 1caccb9f99aa..2a67c0ad7348 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -1078,6 +1078,12 @@ static inline int __must_check write_one_page(struct page *page)
->  int __set_page_dirty_nobuffers(struct page *page);
->  bool noop_dirty_folio(struct address_space *mapping, struct folio *folio);
->  
-> +#ifdef CONFIG_MIGRATION
-> +int filemap_migrate_folio(struct address_space *mapping, struct folio *dst,
-> +		struct folio *src, enum migrate_mode mode);
-> +#else
-> +#define filemap_migrate_folio NULL
-> +#endif
->  void page_endio(struct page *page, bool is_write, int err);
->  
->  void folio_end_private_2(struct folio *folio);
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 785e32d0cf1b..4d8115ca93bb 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -784,6 +784,26 @@ int buffer_migrate_folio_norefs(struct address_space *mapping,
->  }
->  #endif
->  
-> +int filemap_migrate_folio(struct address_space *mapping,
-> +		struct folio *dst, struct folio *src, enum migrate_mode mode)
-> +{
-> +	int ret;
-> +
-> +	ret = folio_migrate_mapping(mapping, dst, src, 0);
-> +	if (ret != MIGRATEPAGE_SUCCESS)
-> +		return ret;
-> +
-> +	if (folio_get_private(src))
-> +		folio_attach_private(dst, folio_detach_private(src));
-> +
-> +	if (mode != MIGRATE_SYNC_NO_COPY)
-> +		folio_migrate_copy(dst, src);
-> +	else
-> +		folio_migrate_flags(dst, src);
-> +	return MIGRATEPAGE_SUCCESS;
-> +}
-> +EXPORT_SYMBOL_GPL(filemap_migrate_folio);
-> +
->  /*
->   * Writeback a folio to clean the dirty state
->   */
-> -- 
-> 2.35.1
-> 
+                 sequential writes:
+                 without patch           with patch      libaio     psync
+  iops:              77k                    209k          195K       233K
+  bw:               314MB/s                 854MB/s       790MB/s    953M=
+B/s
+  clat:            9600ns                   120ns         540ns     3000n=
+s
+
+
+For an io depth of 1, the new patch improves throughput by over three tim=
+es
+(compared to the exiting behavior, where buffered writes are processed by=
+ an
+io-worker process) and also the latency is considerably reduced. To achie=
+ve the
+same or better performance with the exisiting code an io depth of 4 is re=
+quired.
+Increasing the iodepth further does not lead to improvements.
+
+In addition the latency of buffered write operations is reduced considera=
+bly.
+
+
+
+Support for async buffered writes:
+
+  To support async buffered writes the flag FMODE_BUF_WASYNC is introduce=
+d. In
+  addition the check in generic_write_checks is modified to allow for asy=
+nc
+  buffered writes that have this flag set.
+
+  Changes to the iomap page create function to allow the caller to specif=
+y
+  the gfp flags. Sets the IOMAP_NOWAIT flag in iomap if IOCB_NOWAIT has b=
+een set
+  and specifies the requested gfp flags.
+
+  Adds the iomap async buffered write support to the xfs iomap layer.
+  Adds async buffered write support to the xfs iomap layer.
+
+Support for async buffered write support and inode time modification
+
+  Splits the functions for checking if the file privileges need to be rem=
+oved in
+  two functions: check function and a function for the removal of file pr=
+ivileges.
+  The same split is also done for the function to update the file modific=
+ation time.
+
+  Implement an optimization that while a file modification time is pendin=
+g other
+  requests for the same file don't need to wait for the file modification=
+ update.=20
+  This avoids that a considerable number of buffered async write requests=
+ get
+  punted.
+
+  Take the ilock in nowait mode if async buffered writes are enabled and =
+enable
+  the async buffered writes optimization in io_uring.
+
+Support for write throttling of async buffered writes:
+
+  Add a no_wait parameter to the exisiting balance_dirty_pages() function=
+. The
+  function will return -EAGAIN if the parameter is true and write throttl=
+ing is
+  required.
+
+  Add a new function called balance_dirty_pages_ratelimited_async() that =
+will be
+  invoked from iomap_write_iter() if an async buffered write is requested=
+.
+ =20
+Enable async buffered write support in xfs
+   This enables async buffered writes for xfs.
+
+
+Testing:
+  This patch has been tested with xfstests, fsx, fio and individual test =
+programs.
+
+
+Changes:
+  V8:
+  - Reverted back changes to iomap_write_iter and used Mathew Wilcox code=
+ review
+    recommendation with an additional change to revert the iterator.
+  - Removed patch "fs: Optimization for concurrent file time updates"=20
+  - Setting flag value in file_modified_flags()
+  - Removed additional spaces in comment in file_update_time()
+  - Run fsx with 1 billion ops against the changes (Run passed)
+
+  V7:
+  - Change definition and if clause in " iomap: Add flags parameter to
+    iomap_page_create()"
+  - Added patch "iomap: Return error code from iomap_write_iter()" to add=
+ress
+    the problem Dave Chinner brought up: retrying memory allocation a sec=
+ond
+    time when we are under memory pressure.=20
+  - Removed patch "xfs: Change function signature of xfs_ilock_iocb()"
+  - Merged patch "xfs: Enable async buffered write support" with previous
+    patch
+
+  V6:
+  - Pass in iter->flags to calls in iomap_page_create()
+ =20
+  V5:
+  - Refreshed to 5.19-rc1
+  - Merged patch 3 and patch 4
+    "mm: Prepare balance_dirty_pages() for async buffered writes" and
+    "mm: Add balance_dirty_pages_ratelimited_flags() function"
+  - Reformatting long file in iomap_page_create()
+  - Replacing gfp parameter with flags parameter in iomap_page_create()
+    This makes sure that the gfp setting is done in one location.
+  - Moved variable definition outside of loop in iomap_write_iter()
+  - Merged patch 7 with patch 6.
+  - Introduced __file_remove_privs() that get the iocb_flags passed in
+    as an additional parameter
+  - Removed file_needs_remove_privs() function
+  - Renamed file_needs_update_time() inode_needs_update_time()
+  - inode_needs_update_time() no longer passes the file pointer
+  - Renamed file_modified_async() to file_modified_flags()
+  - Made file_modified_flags() an internal function
+  - Removed extern keyword in file_modified_async definition
+  - Added kiocb_modified function.
+  - Separate patch for changes to xfs_ilock_for_iomap()
+  - Separate patch for changes to xfs_ilock_inode()
+  - Renamed xfs_ilock_xfs_inode()n back to xfs_ilock_iocb()
+  - Renamed flags parameter to iocb_flags in function xfs_ilock_iocb()
+  - Used inode_set_flags() to manipulate inode flags in the function
+    file_modified_flags()
+
+  V4:
+  - Reformat new code in generic_write_checks_count().
+  - Removed patch that introduced new function iomap_page_create_gfp().
+  - Add gfp parameter to iomap_page_create() and change all callers
+    All users will enforce the number of blocks check
+  - Removed confusing statement in iomap async buffer support patch
+  - Replace no_wait variable in __iomap_write_begin with check of
+    IOMAP_NOWAIT for easier readability.
+  - Moved else if clause in __iomap_write_begin into else clause for
+    easier readability
+  - Removed the balance_dirty_pages_ratelimited_async() function and
+    reverted back to the earlier version that used the function
+    balance_dirty_pages_ratelimited_flags()
+  - Introduced the flag BDP_ASYNC.
+  - Renamed variable in iomap_write_iter from i_mapping to mapping.
+  - Directly call balance_dirty_pages_ratelimited_flags() in the function
+    iomap_write_iter().
+  - Re-ordered the patches.
+ =20
+  V3:
+  - Reformat new code in generic_write_checks_count() to line lengthof 80=
+.
+  - Remove if condition in __iomap_write_begin to maintain current behavi=
+or.
+  - use GFP_NOWAIT flag in __iomap_write_begin
+  - rename need_file_remove_privs() function to file_needs_remove_privs()
+  - rename do_file_remove_privs to __file_remove_privs()
+  - add kernel documentation to file_remove_privs() function
+  - rework else if branch in file_remove_privs() function
+  - add kernel documentation to file_modified() function
+  - add kernel documentation to file_modified_async() function
+  - rename err variable in file_update_time to ret
+  - rename function need_file_update_time() to file_needs_update_time()
+  - rename function do_file_update_time() to __file_update_time()
+  - don't move check for FMODE_NOCMTIME in generic helper
+  - reformat __file_update_time for easier reading
+  - add kernel documentation to file_update_time() function
+  - fix if in file_update_time from < to <=3D
+  - move modification of inode flags from do_file_update_time to file_mod=
+ified()
+    When this function is called, the caller must hold the inode lock.
+  - 3 new patches from Jan to add new no_wait flag to balance_dirty_pages=
+(),
+    remove patch 12 from previous series
+  - Make balance_dirty_pages_ratelimited_flags() a static function
+  - Add new balance_dirty_pages_ratelimited_async() function
+ =20
+  V2:
+  - Remove atomic allocation
+  - Use direct write in xfs_buffered_write_iomap_begin()
+  - Use xfs_ilock_for_iomap() in xfs_buffered_write_iomap_begin()
+  - Remove no_wait check at the end of xfs_buffered_write_iomap_begin() f=
+or
+    the COW path.
+  - Pass xfs_inode pointer to xfs_ilock_iocb and rename function to
+    xfs_lock_xfs_inode
+  - Replace existing uses of xfs_ilock_iocb with xfs_ilock_xfs_inode
+  - Use xfs_ilock_xfs_inode in xfs_file_buffered_write()
+  - Callers of xfs_ilock_for_iomap need to initialize lock mode. This is
+    required so writes use an exclusive lock
+  - Split of _balance_dirty_pages() from balance_dirty_pages() and return
+    sleep time
+  - Call _balance_dirty_pages() in balance_dirty_pages_ratelimited_flags(=
+)
+  - Move call to balance_dirty_pages_ratelimited_flags() in iomap_write_i=
+ter()
+    to the beginning of the loop
+
+
+Jan Kara (3):
+  mm: Move starting of background writeback into the main balancing loop
+  mm: Move updates of dirty_exceeded into one place
+  mm: Add balance_dirty_pages_ratelimited_flags() function
+
+Stefan Roesch (11):
+  iomap: Add flags parameter to iomap_page_create()
+  iomap: Add async buffered write support
+  iomap: Return -EAGAIN from iomap_write_iter()
+  fs: Add check for async buffered writes to generic_write_checks
+  fs: add __remove_file_privs() with flags parameter
+  fs: Split off inode_needs_update_time and __file_update_time
+  fs: Add async write file modification handling.
+  io_uring: Add support for async buffered writes
+  io_uring: Add tracepoint for short writes
+  xfs: Specify lockmode when calling xfs_ilock_for_iomap()
+  xfs: Add async buffered write support
+
+ fs/inode.c                      | 168 +++++++++++++++++++++++---------
+ fs/io_uring.c                   |  32 +++++-
+ fs/iomap/buffered-io.c          |  62 +++++++++---
+ fs/read_write.c                 |   4 +-
+ fs/xfs/xfs_file.c               |  11 +--
+ fs/xfs/xfs_iomap.c              |  11 ++-
+ include/linux/fs.h              |   4 +
+ include/linux/writeback.h       |   7 ++
+ include/trace/events/io_uring.h |  25 +++++
+ mm/page-writeback.c             |  86 ++++++++--------
+ 10 files changed, 299 insertions(+), 111 deletions(-)
+
+
+base-commit: 952923ddc01120190dcf671e7b354364ce1d1362
+--=20
+2.30.2
+
