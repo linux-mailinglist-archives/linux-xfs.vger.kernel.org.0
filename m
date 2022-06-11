@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C8EE5470ED
-	for <lists+linux-xfs@lfdr.de>; Sat, 11 Jun 2022 03:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF84547108
+	for <lists+linux-xfs@lfdr.de>; Sat, 11 Jun 2022 03:28:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346654AbiFKB1K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Jun 2022 21:27:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60636 "EHLO
+        id S1347004AbiFKB1W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Jun 2022 21:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346860AbiFKB1J (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Jun 2022 21:27:09 -0400
+        with ESMTP id S1348595AbiFKB1O (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Jun 2022 21:27:14 -0400
 Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2CADF3A4817
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Jun 2022 18:27:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 50A7E3FB121
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Jun 2022 18:27:13 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 492FD10E71F4
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id B8A8C10E7209
         for <linux-xfs@vger.kernel.org>; Sat, 11 Jun 2022 11:27:04 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nzpu3-005AOV-7r
+        id 1nzpu3-005AOY-90
         for linux-xfs@vger.kernel.org; Sat, 11 Jun 2022 11:27:03 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nzpu3-00ELLH-6i
+        id 1nzpu3-00ELLM-7k
         for linux-xfs@vger.kernel.org;
         Sat, 11 Jun 2022 11:27:03 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 09/50] xfs: pass perag to xfs_alloc_put_freelist
-Date:   Sat, 11 Jun 2022 11:26:18 +1000
-Message-Id: <20220611012659.3418072-10-david@fromorbit.com>
+Subject: [PATCH 10/50] xfs: pass perag to xfs_alloc_read_agfl
+Date:   Sat, 11 Jun 2022 11:26:19 +1000
+Message-Id: <20220611012659.3418072-11-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220611012659.3418072-1-david@fromorbit.com>
 References: <20220611012659.3418072-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62a3ef68
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62a3ef68
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=jutQHCjETx02lnyGB_AA:9
+        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=mXlnn1I1KsIwerf7m04A:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,129 +52,126 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-It's available in all callers, so pass it in so that the perag can
-be passed further down the stack.
+We have the perag in most places we call xfs_alloc_read_agfl, so
+pass the perag instead of a mount/agno pair.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c       |  5 ++---
- fs/xfs/libxfs/xfs_alloc.h       | 14 +++-----------
- fs/xfs/libxfs/xfs_alloc_btree.c |  3 ++-
- fs/xfs/libxfs/xfs_rmap_btree.c  |  2 +-
- fs/xfs/scrub/repair.c           |  4 ++--
- 5 files changed, 10 insertions(+), 18 deletions(-)
+ fs/xfs/libxfs/xfs_alloc.c      | 31 ++++++++++++++++---------------
+ fs/xfs/libxfs/xfs_alloc.h      |  4 ++--
+ fs/xfs/scrub/agheader_repair.c |  2 +-
+ fs/xfs/scrub/common.c          |  2 +-
+ 4 files changed, 20 insertions(+), 19 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 97f8ff105dcc..8ea2670ea33c 100644
+index 8ea2670ea33c..74c8bd1b0b75 100644
 --- a/fs/xfs/libxfs/xfs_alloc.c
 +++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2742,7 +2742,7 @@ xfs_alloc_fix_freelist(
- 		 * Put each allocated block on the list.
- 		 */
- 		for (bno = targs.agbno; bno < targs.agbno + targs.len; bno++) {
--			error = xfs_alloc_put_freelist(tp, agbp,
-+			error = xfs_alloc_put_freelist(pag, tp, agbp,
- 							agflbp, bno, 0);
- 			if (error)
- 				goto out_agflbp_relse;
-@@ -2872,6 +2872,7 @@ xfs_alloc_log_agf(
+@@ -703,20 +703,19 @@ const struct xfs_buf_ops xfs_agfl_buf_ops = {
+ /*
+  * Read in the allocation group free block array.
   */
- int
- xfs_alloc_put_freelist(
+-int					/* error */
++int
+ xfs_alloc_read_agfl(
+-	xfs_mount_t	*mp,		/* mount point structure */
+-	xfs_trans_t	*tp,		/* transaction pointer */
+-	xfs_agnumber_t	agno,		/* allocation group number */
+-	struct xfs_buf	**bpp)		/* buffer for the ag free block array */
 +	struct xfs_perag	*pag,
- 	struct xfs_trans	*tp,
- 	struct xfs_buf		*agbp,
- 	struct xfs_buf		*agflbp,
-@@ -2880,7 +2881,6 @@ xfs_alloc_put_freelist(
++	struct xfs_trans	*tp,
++	struct xfs_buf		**bpp)
  {
- 	struct xfs_mount	*mp = tp->t_mountp;
- 	struct xfs_agf		*agf = agbp->b_addr;
--	struct xfs_perag	*pag;
- 	__be32			*blockp;
- 	int			error;
- 	uint32_t		logflags;
-@@ -2894,7 +2894,6 @@ xfs_alloc_put_freelist(
+-	struct xfs_buf	*bp;		/* return value */
+-	int		error;
++	struct xfs_mount	*mp = pag->pag_mount;
++	struct xfs_buf		*bp;
++	int			error;
+ 
+-	ASSERT(agno != NULLAGNUMBER);
+ 	error = xfs_trans_read_buf(
+ 			mp, tp, mp->m_ddev_targp,
+-			XFS_AG_DADDR(mp, agno, XFS_AGFL_DADDR(mp)),
++			XFS_AG_DADDR(mp, pag->pag_agno, XFS_AGFL_DADDR(mp)),
+ 			XFS_FSS_TO_BB(mp, 1), 0, &bp, &xfs_agfl_buf_ops);
+ 	if (error)
+ 		return error;
+@@ -2713,7 +2712,7 @@ xfs_alloc_fix_freelist(
+ 	targs.alignment = targs.minlen = targs.prod = 1;
+ 	targs.type = XFS_ALLOCTYPE_THIS_AG;
+ 	targs.pag = pag;
+-	error = xfs_alloc_read_agfl(mp, tp, targs.agno, &agflbp);
++	error = xfs_alloc_read_agfl(pag, tp, &agflbp);
+ 	if (error)
+ 		goto out_agbp_relse;
+ 
+@@ -2792,8 +2791,7 @@ xfs_alloc_get_freelist(
+ 	/*
+ 	 * Read the array of free blocks.
+ 	 */
+-	error = xfs_alloc_read_agfl(mp, tp, be32_to_cpu(agf->agf_seqno),
+-				    &agflbp);
++	error = xfs_alloc_read_agfl(pag, tp, &agflbp);
+ 	if (error)
+ 		return error;
+ 
+@@ -2887,9 +2885,12 @@ xfs_alloc_put_freelist(
+ 	__be32			*agfl_bno;
+ 	int			startoff;
+ 
+-	if (!agflbp && (error = xfs_alloc_read_agfl(mp, tp,
+-			be32_to_cpu(agf->agf_seqno), &agflbp)))
+-		return error;
++	if (!agflbp) {
++		error = xfs_alloc_read_agfl(pag, tp, &agflbp);
++		if (error)
++			return error;
++	}
++
+ 	be32_add_cpu(&agf->agf_fllast, 1);
  	if (be32_to_cpu(agf->agf_fllast) == xfs_agfl_size(mp))
  		agf->agf_fllast = 0;
- 
--	pag = agbp->b_pag;
- 	ASSERT(!pag->pagf_agflreset);
- 	be32_add_cpu(&agf->agf_flcount, 1);
- 	pag->pagf_flcount++;
 diff --git a/fs/xfs/libxfs/xfs_alloc.h b/fs/xfs/libxfs/xfs_alloc.h
-index 6349f0e5f93d..d32a70a28c32 100644
+index d32a70a28c32..2c3f762dfb58 100644
 --- a/fs/xfs/libxfs/xfs_alloc.h
 +++ b/fs/xfs/libxfs/xfs_alloc.h
-@@ -97,6 +97,9 @@ unsigned int xfs_alloc_min_freelist(struct xfs_mount *mp,
- 		struct xfs_perag *pag);
- int xfs_alloc_get_freelist(struct xfs_perag *pag, struct xfs_trans *tp,
- 		struct xfs_buf *agfbp, xfs_agblock_t *bnop, int	 btreeblk);
-+int xfs_alloc_put_freelist(struct xfs_perag *pag, struct xfs_trans *tp,
-+		struct xfs_buf *agfbp, struct xfs_buf *agflbp,
-+		xfs_agblock_t bno, int btreeblk);
- 
- /*
-  * Compute and fill in value of m_alloc_maxlevels.
-@@ -114,17 +117,6 @@ xfs_alloc_log_agf(
- 	struct xfs_buf	*bp,	/* buffer for a.g. freelist header */
- 	uint32_t	fields);/* mask of fields to be logged (XFS_AGF_...) */
- 
--/*
-- * Put the block on the freelist for the allocation group.
-- */
--int				/* error */
--xfs_alloc_put_freelist(
--	struct xfs_trans *tp,	/* transaction pointer */
--	struct xfs_buf	*agbp,	/* buffer for a.g. freelist header */
--	struct xfs_buf	*agflbp,/* buffer for a.g. free block array */
--	xfs_agblock_t	bno,	/* block being freed */
--	int		btreeblk); /* owner was a AGF btree */
--
- /*
-  * Allocate an extent (variable-size).
-  */
-diff --git a/fs/xfs/libxfs/xfs_alloc_btree.c b/fs/xfs/libxfs/xfs_alloc_btree.c
-index a2ead80afb39..549a3cba0234 100644
---- a/fs/xfs/libxfs/xfs_alloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_alloc_btree.c
-@@ -89,7 +89,8 @@ xfs_allocbt_free_block(
- 	int			error;
- 
- 	bno = xfs_daddr_to_agbno(cur->bc_mp, xfs_buf_daddr(bp));
--	error = xfs_alloc_put_freelist(cur->bc_tp, agbp, NULL, bno, 1);
-+	error = xfs_alloc_put_freelist(cur->bc_ag.pag, cur->bc_tp, agbp, NULL,
-+			bno, 1);
+@@ -172,8 +172,8 @@ int xfs_read_agf(struct xfs_perag *pag, struct xfs_trans *tp, int flags,
+ 		struct xfs_buf **agfbpp);
+ int xfs_alloc_read_agf(struct xfs_perag *pag, struct xfs_trans *tp, int flags,
+ 		struct xfs_buf **agfbpp);
+-int xfs_alloc_read_agfl(struct xfs_mount *mp, struct xfs_trans *tp,
+-			xfs_agnumber_t agno, struct xfs_buf **bpp);
++int xfs_alloc_read_agfl(struct xfs_perag *pag, struct xfs_trans *tp,
++		struct xfs_buf **bpp);
+ int xfs_free_agfl_block(struct xfs_trans *, xfs_agnumber_t, xfs_agblock_t,
+ 			struct xfs_buf *, struct xfs_owner_info *);
+ int xfs_alloc_fix_freelist(struct xfs_alloc_arg *args, int flags);
+diff --git a/fs/xfs/scrub/agheader_repair.c b/fs/xfs/scrub/agheader_repair.c
+index 230bdfe36e80..10ac1118a595 100644
+--- a/fs/xfs/scrub/agheader_repair.c
++++ b/fs/xfs/scrub/agheader_repair.c
+@@ -405,7 +405,7 @@ xrep_agf(
+ 	 * btrees rooted in the AGF.  If the AGFL contents are obviously bad
+ 	 * then we'll bail out.
+ 	 */
+-	error = xfs_alloc_read_agfl(mp, sc->tp, sc->sa.pag->pag_agno, &agfl_bp);
++	error = xfs_alloc_read_agfl(sc->sa.pag, sc->tp, &agfl_bp);
  	if (error)
  		return error;
  
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index fbbbeda1b06d..1ae14d0c831c 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -129,7 +129,7 @@ xfs_rmapbt_free_block(
- 			bno, 1);
- 	be32_add_cpu(&agf->agf_rmap_blocks, -1);
- 	xfs_alloc_log_agf(cur->bc_tp, agbp, XFS_AGF_RMAP_BLOCKS);
--	error = xfs_alloc_put_freelist(cur->bc_tp, agbp, NULL, bno, 1);
-+	error = xfs_alloc_put_freelist(pag, cur->bc_tp, agbp, NULL, bno, 1);
- 	if (error)
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index cd7d4ebd240b..9bbbf20f401b 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -424,7 +424,7 @@ xchk_ag_read_headers(
+ 	if (error && want_ag_read_header_failure(sc, XFS_SCRUB_TYPE_AGF))
  		return error;
  
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index cd6c92b070f8..c983b76e070f 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -516,8 +516,8 @@ xrep_put_freelist(
+-	error = xfs_alloc_read_agfl(mp, sc->tp, agno, &sa->agfl_bp);
++	error = xfs_alloc_read_agfl(sa->pag, sc->tp, &sa->agfl_bp);
+ 	if (error && want_ag_read_header_failure(sc, XFS_SCRUB_TYPE_AGFL))
  		return error;
  
- 	/* Put the block on the AGFL. */
--	error = xfs_alloc_put_freelist(sc->tp, sc->sa.agf_bp, sc->sa.agfl_bp,
--			agbno, 0);
-+	error = xfs_alloc_put_freelist(sc->sa.pag, sc->tp, sc->sa.agf_bp,
-+			sc->sa.agfl_bp, agbno, 0);
- 	if (error)
- 		return error;
- 	xfs_extent_busy_insert(sc->tp, sc->sa.pag, agbno, 1,
 -- 
 2.35.1
 
