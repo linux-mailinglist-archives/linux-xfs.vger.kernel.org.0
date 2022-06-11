@@ -2,45 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF89C547119
-	for <lists+linux-xfs@lfdr.de>; Sat, 11 Jun 2022 03:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB1D5470F0
+	for <lists+linux-xfs@lfdr.de>; Sat, 11 Jun 2022 03:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347367AbiFKB1R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 10 Jun 2022 21:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60928 "EHLO
+        id S1346465AbiFKB1K (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 10 Jun 2022 21:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347858AbiFKB1N (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Jun 2022 21:27:13 -0400
+        with ESMTP id S1346654AbiFKB1J (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 10 Jun 2022 21:27:09 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E7EB3A482D
-        for <linux-xfs@vger.kernel.org>; Fri, 10 Jun 2022 18:27:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 130023A4813
+        for <linux-xfs@vger.kernel.org>; Fri, 10 Jun 2022 18:27:05 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 670E45EC7EF
-        for <linux-xfs@vger.kernel.org>; Sat, 11 Jun 2022 11:27:04 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 44D6F5EC7E4
+        for <linux-xfs@vger.kernel.org>; Sat, 11 Jun 2022 11:27:03 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1nzpu3-005AOk-DT
+        id 1nzpu3-005AOn-EY
         for linux-xfs@vger.kernel.org; Sat, 11 Jun 2022 11:27:03 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1nzpu3-00ELLg-CB
+        id 1nzpu3-00ELLl-DP
         for linux-xfs@vger.kernel.org;
         Sat, 11 Jun 2022 11:27:03 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 14/50] xfs: make is_log_ag() a first class helper
-Date:   Sat, 11 Jun 2022 11:26:23 +1000
-Message-Id: <20220611012659.3418072-15-david@fromorbit.com>
+Subject: [PATCH 15/50] xfs: active perag reference counting
+Date:   Sat, 11 Jun 2022 11:26:24 +1000
+Message-Id: <20220611012659.3418072-16-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220611012659.3418072-1-david@fromorbit.com>
 References: <20220611012659.3418072-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62a3ef68
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62a3ef68
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=mae3UHUuaFR5lmlHqFUA:9
+        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=PRkkLlb27XPojcOo628A:9
+        a=nzbRRBgF3B2C-GGZ:21
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,167 +53,372 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-We check if an ag contains the log in many places, so make this
-a first class XFS helper by lifting it to fs/xfs/libxfs/xfs_ag.h and
-renaming it xfs_ag_contains_log(). The convert all the places that
-check if the AG contains the log to use this helper.
+We need to be able to dynamically remove instantiated AGs from
+memory safely, either for shrinking the filesystem or paging AG
+state in and out of memory (e.g. supporting millions of AGs). This
+means we need to be able to safely exclude operations from accessing
+perags while dynamic removal is in progress.
+
+To do this, introduce the concept of active and passive references.
+Active references are required for high level operations that make
+use of an AG for a given operation (e.g. allocation) and pin the
+perag in memory for the duration of the operation that is operating
+on the perag (e.g. transaction scope). This means we can fail to get
+an active reference to an AG, hence callers of the new active
+reference API must be able to handle lookup failure gracefully.
+
+Passive references are used in low level code, where we might need
+to access the perag structure for the purposes of completing high
+level operations. For example, buffers need to use passive
+references because:
+- we need to be able to do metadata IO during operations like grow
+  and shrink transactions where high level active references to the
+  AG have already been blocked
+- buffers need to pin the perag until they are reclaimed from
+  memory, something that high level code has no direct control over.
+- unused cached buffers should not prevent a shrink from being
+  started.
+
+Hence we have active references that will form exclusion barriers
+for operations to be performed on an AG, and passive references that
+will prevent reclaim of the perag until all objects with passive
+references have been reclaimed themselves.
+
+This patch introduce xfs_perag_grab()/xfs_perag_rele() as the API
+for active AG reference functionality. We also need to convert the
+for_each_perag*() iterators to use active references, which will
+start the process of converting high level code over to using active
+references. Conversion of non-iterator based code to active
+references will be done in followup patches.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/libxfs/xfs_ag.c             | 12 +++---------
- fs/xfs/libxfs/xfs_ag.h             |  7 +++++++
- fs/xfs/libxfs/xfs_ialloc.c         |  3 +--
- fs/xfs/libxfs/xfs_ialloc_btree.c   |  3 +--
- fs/xfs/libxfs/xfs_refcount_btree.c |  3 +--
- fs/xfs/libxfs/xfs_rmap_btree.c     |  3 +--
- fs/xfs/scrub/health.c              |  2 ++
- fs/xfs/scrub/refcount.c            |  2 ++
- 8 files changed, 18 insertions(+), 17 deletions(-)
+ fs/xfs/libxfs/xfs_ag.c    | 74 +++++++++++++++++++++++++++++++++++++--
+ fs/xfs/libxfs/xfs_ag.h    | 31 +++++++++++-----
+ fs/xfs/scrub/bmap.c       |  2 +-
+ fs/xfs/scrub/fscounters.c |  4 +--
+ fs/xfs/xfs_fsmap.c        |  4 +--
+ fs/xfs/xfs_icache.c       |  2 +-
+ fs/xfs/xfs_iwalk.c        |  6 ++--
+ fs/xfs/xfs_reflink.c      |  2 +-
+ fs/xfs/xfs_trace.h        |  3 ++
+ 9 files changed, 107 insertions(+), 21 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index 2ec5fc953a0f..49e1ef2f0b9a 100644
+index 49e1ef2f0b9a..ae5b91d7fa5f 100644
 --- a/fs/xfs/libxfs/xfs_ag.c
 +++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -390,12 +390,6 @@ xfs_get_aghdr_buf(
- 	return 0;
+@@ -94,6 +94,68 @@ xfs_perag_put(
+ 	trace_xfs_perag_put(pag->pag_mount, pag->pag_agno, ref, _RET_IP_);
  }
  
--static inline bool is_log_ag(struct xfs_mount *mp, struct aghdr_init_data *id)
--{
--	return mp->m_sb.sb_logstart > 0 &&
--	       id->agno == XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart);
--}
--
- /*
-  * Generic btree root block init function
-  */
-@@ -421,7 +415,7 @@ xfs_freesp_init_recs(
- 	arec = XFS_ALLOC_REC_ADDR(mp, XFS_BUF_TO_BLOCK(bp), 1);
- 	arec->ar_startblock = cpu_to_be32(mp->m_ag_prealloc_blocks);
- 
--	if (is_log_ag(mp, id)) {
-+	if (xfs_ag_contains_log(mp, id->agno)) {
- 		struct xfs_alloc_rec	*nrec;
- 		xfs_agblock_t		start = XFS_FSB_TO_AGBNO(mp,
- 							mp->m_sb.sb_logstart);
-@@ -548,7 +542,7 @@ xfs_rmaproot_init(
- 	}
- 
- 	/* account for the log space */
--	if (is_log_ag(mp, id)) {
-+	if (xfs_ag_contains_log(mp, id->agno)) {
- 		rrec = XFS_RMAP_REC_ADDR(block,
- 				be16_to_cpu(block->bb_numrecs) + 1);
- 		rrec->rm_startblock = cpu_to_be32(
-@@ -619,7 +613,7 @@ xfs_agfblock_init(
- 		agf->agf_refcount_blocks = cpu_to_be32(1);
- 	}
- 
--	if (is_log_ag(mp, id)) {
-+	if (xfs_ag_contains_log(mp, id->agno)) {
- 		int64_t	logblocks = mp->m_sb.sb_logblocks;
- 
- 		be32_add_cpu(&agf->agf_freeblks, -logblocks);
-diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
-index bb9e91bd38e2..75f7c10c110a 100644
---- a/fs/xfs/libxfs/xfs_ag.h
-+++ b/fs/xfs/libxfs/xfs_ag.h
-@@ -165,6 +165,13 @@ xfs_verify_agino_or_null(struct xfs_perag *pag, xfs_agino_t agino)
- 	return xfs_verify_agino(pag, agino);
- }
- 
-+static inline bool
-+xfs_ag_contains_log(struct xfs_mount *mp, xfs_agnumber_t agno)
++/*
++ * Active references for perag structures. This is for short term access to the
++ * per ag structures for walking trees or accessing state. If an AG is being
++ * shrunk or is offline, then this will fail to find that AG and return NULL
++ * instead.
++ */
++struct xfs_perag *
++xfs_perag_grab(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		agno)
 +{
-+	return mp->m_sb.sb_logstart > 0 &&
-+	       agno == XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart);
++	struct xfs_perag	*pag;
++
++	rcu_read_lock();
++	pag = radix_tree_lookup(&mp->m_perag_tree, agno);
++	if (pag) {
++		trace_xfs_perag_grab(mp, pag->pag_agno,
++				atomic_read(&pag->pag_active_ref), _RET_IP_);
++		if (!atomic_inc_not_zero(&pag->pag_active_ref))
++			pag = NULL;
++	}
++	rcu_read_unlock();
++	return pag;
++}
++
++/*
++ * search from @first to find the next perag with the given tag set.
++ */
++struct xfs_perag *
++xfs_perag_grab_tag(
++	struct xfs_mount	*mp,
++	xfs_agnumber_t		first,
++	int			tag)
++{
++	struct xfs_perag	*pag;
++	int			found;
++
++	rcu_read_lock();
++	found = radix_tree_gang_lookup_tag(&mp->m_perag_tree,
++					(void **)&pag, first, 1, tag);
++	if (found <= 0) {
++		rcu_read_unlock();
++		return NULL;
++	}
++	trace_xfs_perag_grab_tag(mp, pag->pag_agno,
++			atomic_read(&pag->pag_active_ref), _RET_IP_);
++	if (!atomic_inc_not_zero(&pag->pag_active_ref))
++		pag = NULL;
++	rcu_read_unlock();
++	return pag;
++}
++
++void
++xfs_perag_rele(
++	struct xfs_perag	*pag)
++{
++	trace_xfs_perag_rele(pag->pag_mount, pag->pag_agno,
++			atomic_read(&pag->pag_active_ref), _RET_IP_);
++	if (atomic_dec_and_test(&pag->pag_active_ref))
++		wake_up(&pag->pag_active_wq);
 +}
 +
  /*
-  * Perag iteration APIs
-  */
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 39ad3b7af502..6cdfd64bc56b 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -2897,8 +2897,7 @@ xfs_ialloc_calc_rootino(
- 	 * allocation group, or very odd geometries created by old mkfs
- 	 * versions on very small filesystems.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == 0)
-+	if (xfs_ag_contains_log(mp, 0))
- 		 first_bno += mp->m_sb.sb_logblocks;
+  * xfs_initialize_perag_data
+  *
+@@ -191,12 +253,15 @@ xfs_free_perag(
+ 		pag = radix_tree_delete(&mp->m_perag_tree, agno);
+ 		spin_unlock(&mp->m_perag_lock);
+ 		ASSERT(pag);
+-		XFS_IS_CORRUPT(pag->pag_mount, atomic_read(&pag->pag_ref) != 0);
++		XFS_IS_CORRUPT(mp, atomic_read(&pag->pag_ref) != 0);
  
- 	/*
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-index 2e0ff99d9f0b..8c83e265770c 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-@@ -697,8 +697,7 @@ xfs_inobt_max_size(
- 	 * never be available for the kinds of things that would require btree
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
-+	if (xfs_ag_contains_log(mp, pag->pag_agno))
- 		agblocks -= mp->m_sb.sb_logblocks;
+ 		cancel_delayed_work_sync(&pag->pag_blockgc_work);
+ 		xfs_iunlink_destroy(pag);
+ 		xfs_buf_hash_destroy(pag);
  
- 	return xfs_btree_calc_size(M_IGEO(mp)->inobt_mnr,
-diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
-index 1063234df34a..316c1ec0c3c2 100644
---- a/fs/xfs/libxfs/xfs_refcount_btree.c
-+++ b/fs/xfs/libxfs/xfs_refcount_btree.c
-@@ -507,8 +507,7 @@ xfs_refcountbt_calc_reserves(
- 	 * never be available for the kinds of things that would require btree
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
-+	if (xfs_ag_contains_log(mp, pag->pag_agno))
- 		agblocks -= mp->m_sb.sb_logblocks;
++		/* drop the mount's active reference */
++		xfs_perag_rele(pag);
++		XFS_IS_CORRUPT(mp, atomic_read(&pag->pag_active_ref) != 0);
+ 		call_rcu(&pag->rcu_head, __xfs_free_perag);
+ 	}
+ }
+@@ -315,6 +380,7 @@ xfs_initialize_perag(
+ 		INIT_DELAYED_WORK(&pag->pag_blockgc_work, xfs_blockgc_worker);
+ 		INIT_RADIX_TREE(&pag->pag_ici_root, GFP_ATOMIC);
+ 		init_waitqueue_head(&pag->pagb_wait);
++		init_waitqueue_head(&pag->pag_active_wq);
+ 		pag->pagb_count = 0;
+ 		pag->pagb_tree = RB_ROOT;
+ #endif /* __KERNEL__ */
+@@ -327,6 +393,9 @@ xfs_initialize_perag(
+ 		if (error)
+ 			goto out_hash_destroy;
  
- 	*ask += xfs_refcountbt_max_size(mp, agblocks);
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index 1ae14d0c831c..7f83f62e51e0 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -666,8 +666,7 @@ xfs_rmapbt_calc_reserves(
- 	 * never be available for the kinds of things that would require btree
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
-+	if (xfs_ag_contains_log(mp, pag->pag_agno))
- 		agblocks -= mp->m_sb.sb_logblocks;
++		/* Active ref owned by mount indicates AG is online. */
++		atomic_set(&pag->pag_active_ref, 1);
++
+ 		/* first new pag is fully initialized */
+ 		if (first_initialised == NULLAGNUMBER)
+ 			first_initialised = index;
+@@ -363,7 +432,8 @@ xfs_initialize_perag(
+ 			break;
+ 		xfs_buf_hash_destroy(pag);
+ 		xfs_iunlink_destroy(pag);
+-		kmem_free(pag);
++		xfs_perag_rele(pag);
++		__xfs_free_perag(&pag->rcu_head);
+ 	}
+ 	return error;
+ }
+diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
+index 75f7c10c110a..b36d5725c91c 100644
+--- a/fs/xfs/libxfs/xfs_ag.h
++++ b/fs/xfs/libxfs/xfs_ag.h
+@@ -32,7 +32,9 @@ struct xfs_ag_resv {
+ struct xfs_perag {
+ 	struct xfs_mount *pag_mount;	/* owner filesystem */
+ 	xfs_agnumber_t	pag_agno;	/* AG this structure belongs to */
+-	atomic_t	pag_ref;	/* perag reference count */
++	atomic_t	pag_ref;	/* passive reference count */
++	atomic_t	pag_active_ref;	/* active reference count */
++	wait_queue_head_t pag_active_wq;/* woken active_ref falls to zero */
+ 	char		pagf_init;	/* this agf's entry is initialized */
+ 	char		pagi_init;	/* this agi's entry is initialized */
+ 	char		pagf_metadata;	/* the agf is preferred to be metadata */
+@@ -117,11 +119,18 @@ int xfs_initialize_perag(struct xfs_mount *mp, xfs_agnumber_t agcount,
+ int xfs_initialize_perag_data(struct xfs_mount *mp, xfs_agnumber_t agno);
+ void xfs_free_perag(struct xfs_mount *mp);
  
- 	/* Reserve 1% of the AG or enough for 1 block per record. */
-diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
-index 2e61df3bca83..aa65ec88a0c0 100644
---- a/fs/xfs/scrub/health.c
-+++ b/fs/xfs/scrub/health.c
-@@ -8,6 +8,8 @@
- #include "xfs_shared.h"
- #include "xfs_format.h"
- #include "xfs_btree.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
- #include "xfs_ag.h"
- #include "xfs_health.h"
- #include "scrub/scrub.h"
-diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
-index 3f82a1a1f390..c68b767dc08f 100644
---- a/fs/xfs/scrub/refcount.c
-+++ b/fs/xfs/scrub/refcount.c
-@@ -13,6 +13,8 @@
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/btree.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
- #include "xfs_ag.h"
++/* Passive AG references */
+ struct xfs_perag *xfs_perag_get(struct xfs_mount *mp, xfs_agnumber_t agno);
+ struct xfs_perag *xfs_perag_get_tag(struct xfs_mount *mp, xfs_agnumber_t agno,
+ 		unsigned int tag);
+ void xfs_perag_put(struct xfs_perag *pag);
  
++/* Active AG references */
++struct xfs_perag *xfs_perag_grab(struct xfs_mount *, xfs_agnumber_t);
++struct xfs_perag *xfs_perag_grab_tag(struct xfs_mount *, xfs_agnumber_t,
++				   int tag);
++void xfs_perag_rele(struct xfs_perag *pag);
++
  /*
+  * Per-ag geometry infomation and validation
+  */
+@@ -184,14 +193,18 @@ xfs_perag_next(
+ 	struct xfs_mount	*mp = pag->pag_mount;
+ 
+ 	*agno = pag->pag_agno + 1;
+-	xfs_perag_put(pag);
+-	if (*agno > end_agno)
+-		return NULL;
+-	return xfs_perag_get(mp, *agno);
++	xfs_perag_rele(pag);
++	while (*agno <= end_agno) {
++		pag = xfs_perag_grab(mp, *agno);
++		if (pag)
++			return pag;
++		(*agno)++;
++	}
++	return NULL;
+ }
+ 
+ #define for_each_perag_range(mp, agno, end_agno, pag) \
+-	for ((pag) = xfs_perag_get((mp), (agno)); \
++	for ((pag) = xfs_perag_grab((mp), (agno)); \
+ 		(pag) != NULL; \
+ 		(pag) = xfs_perag_next((pag), &(agno), (end_agno)))
+ 
+@@ -204,11 +217,11 @@ xfs_perag_next(
+ 	for_each_perag_from((mp), (agno), (pag))
+ 
+ #define for_each_perag_tag(mp, agno, pag, tag) \
+-	for ((agno) = 0, (pag) = xfs_perag_get_tag((mp), 0, (tag)); \
++	for ((agno) = 0, (pag) = xfs_perag_grab_tag((mp), 0, (tag)); \
+ 		(pag) != NULL; \
+ 		(agno) = (pag)->pag_agno + 1, \
+-		xfs_perag_put(pag), \
+-		(pag) = xfs_perag_get_tag((mp), (agno), (tag)))
++		xfs_perag_rele(pag), \
++		(pag) = xfs_perag_grab_tag((mp), (agno), (tag)))
+ 
+ struct aghdr_init_data {
+ 	/* per ag data */
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index 9353fd060525..81245c66590f 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -605,7 +605,7 @@ xchk_bmap_check_rmaps(
+ 			break;
+ 	}
+ 	if (pag)
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	return error;
+ }
+ 
+diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+index 6a6f8fe7f87c..3706296c61b6 100644
+--- a/fs/xfs/scrub/fscounters.c
++++ b/fs/xfs/scrub/fscounters.c
+@@ -105,7 +105,7 @@ xchk_fscount_warmup(
+ 	if (agi_bp)
+ 		xfs_buf_relse(agi_bp);
+ 	if (pag)
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	return error;
+ }
+ 
+@@ -224,7 +224,7 @@ xchk_fscount_aggregate_agcounts(
+ 
+ 	}
+ 	if (pag)
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index d8337274c74d..ca80ad703e06 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -688,11 +688,11 @@ __xfs_getfsmap_datadev(
+ 		info->agf_bp = NULL;
+ 	}
+ 	if (info->pag) {
+-		xfs_perag_put(info->pag);
++		xfs_perag_rele(info->pag);
+ 		info->pag = NULL;
+ 	} else if (pag) {
+ 		/* loop termination case */
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	}
+ 
+ 	return error;
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 5269354b1b69..f2b0ca0453d6 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -1759,7 +1759,7 @@ xfs_icwalk(
+ 		if (error) {
+ 			last_error = error;
+ 			if (error == -EFSCORRUPTED) {
+-				xfs_perag_put(pag);
++				xfs_perag_rele(pag);
+ 				break;
+ 			}
+ 		}
+diff --git a/fs/xfs/xfs_iwalk.c b/fs/xfs/xfs_iwalk.c
+index 7558486f4937..c31857d903a4 100644
+--- a/fs/xfs/xfs_iwalk.c
++++ b/fs/xfs/xfs_iwalk.c
+@@ -591,7 +591,7 @@ xfs_iwalk(
+ 	}
+ 
+ 	if (iwag.pag)
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	xfs_iwalk_free(&iwag);
+ 	return error;
+ }
+@@ -683,7 +683,7 @@ xfs_iwalk_threaded(
+ 			break;
+ 	}
+ 	if (pag)
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	if (polled)
+ 		xfs_pwork_poll(&pctl);
+ 	return xfs_pwork_destroy(&pctl);
+@@ -776,7 +776,7 @@ xfs_inobt_walk(
+ 	}
+ 
+ 	if (iwag.pag)
+-		xfs_perag_put(pag);
++		xfs_perag_rele(pag);
+ 	xfs_iwalk_free(&iwag);
+ 	return error;
+ }
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index d2328cc26ddf..1243f0ea8dd8 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -799,7 +799,7 @@ xfs_reflink_recover_cow(
+ 	for_each_perag(mp, agno, pag) {
+ 		error = xfs_refcount_recover_cow_leftovers(mp, pag);
+ 		if (error) {
+-			xfs_perag_put(pag);
++			xfs_perag_rele(pag);
+ 			break;
+ 		}
+ 	}
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index d32026585c1b..32efed970b73 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -189,6 +189,9 @@ DEFINE_EVENT(xfs_perag_class, name,	\
+ DEFINE_PERAG_REF_EVENT(xfs_perag_get);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_get_tag);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_put);
++DEFINE_PERAG_REF_EVENT(xfs_perag_grab);
++DEFINE_PERAG_REF_EVENT(xfs_perag_grab_tag);
++DEFINE_PERAG_REF_EVENT(xfs_perag_rele);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_set_inode_tag);
+ DEFINE_PERAG_REF_EVENT(xfs_perag_clear_inode_tag);
+ 
 -- 
 2.35.1
 
