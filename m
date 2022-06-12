@@ -2,130 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07AC0547B66
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 20:05:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF1B547B88
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 20:45:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230357AbiFLSFy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 12 Jun 2022 14:05:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35792 "EHLO
+        id S231741AbiFLSpS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 12 Jun 2022 14:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbiFLSFx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 14:05:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C55B7275EC
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 11:05:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7056EB80CAC
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 18:05:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 359F9C341CC
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 18:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655057150;
-        bh=ebZ8zPWJ0JzLRKICsghlFRG3YhJnIowOr4LR3Tm8Suk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=cloWxDMEZz0Q2iIiv50Vih+DGZ6Wor/EJhOyltBBTLzaYr5R71v+GiODgbuBHg/fj
-         3iXMaf5v4qAPxNPWz3kJSqYgjkl6YfvUrgW3UqEgLh/QIUeJrYMjDGIgsZvrIMSgC1
-         diAtZa7SrfxptbBteD78xMz02iU1VGbTSagRx9j5nIeFGkbG0ipY1nMAwFQpH4Gtuc
-         uUuXQRz/RKYJoqHjYm7jSIakWUs73m4V3RJi3/G3JfPeT3DKO9aewrY0d57llgJbLH
-         EtKkjDeCL//7QQEaTlM6Y5nZh1W3wcyxrJUsQ7rk3GXSqCzhVBWWZUa9nR5WQDTdw6
-         DMd/cqD+JBtLA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 25599CC13B4; Sun, 12 Jun 2022 18:05:50 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216073] [s390x] kernel BUG at mm/usercopy.c:101! usercopy:
- Kernel memory exposure attempt detected from vmalloc 'n  o area' (offset 0,
- size 1)!
-Date:   Sun, 12 Jun 2022 18:05:49 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: Memory Management
-X-Bugzilla-Component: Other
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: willy@infradead.org
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: akpm@linux-foundation.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216073-201763-shOMDb2E3g@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216073-201763@https.bugzilla.kernel.org/>
-References: <bug-216073-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        with ESMTP id S234221AbiFLSoY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 14:44:24 -0400
+Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FDB5C84D
+        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 11:44:23 -0700 (PDT)
+Received: by mail-vk1-xa2e.google.com with SMTP id n203so1744235vke.7
+        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 11:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QCktWd+n5KgBQynLnBWE6RqZZ6FNqdKAToR40bXnybk=;
+        b=rE4ZKOj9G5jD2nQ2CRonznQYOzu8A5GJ78TYm6TMyjo/YSz1Ke2AwnEVVmeUxKnSOs
+         VU/PnveGAuCXod1sYTPGF4SYY8Kayhou1MRw9NRbhAp0Vs8rJ40+iNxr80I3A/bPOSSB
+         XoFDipXokhUzLcWqJF7Zu8Uwr9IsUndy2MMK73MNeo15l2oLqBbu+vxpxNojHhWOTb8Z
+         3ZZ38lETVABRQispRTHE7nDOwCPrm7B0YGH0RBwW3xdOdgnfhWn91GJMKXDPxvEMusZa
+         CghG+0ks70Y5Xz1TD3ibb9iy2EdpA9EEKYosomjlT7bknvtajQYIP5zCK183nPtzrdiS
+         jC3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QCktWd+n5KgBQynLnBWE6RqZZ6FNqdKAToR40bXnybk=;
+        b=TMNdeXt+rMvESogY7ROurMtEhhGdDri/MSc0W8EwcNbn7yLdGK9FjCUUj1gIq9Rn0+
+         SNQgtU9XMCIkpxA0SeJ51ijgmz6IJxubSct4WbakyUTms7EU6Y0Jkq/Jck+PWCkzo9lA
+         eencjWTnESE+Km425EoYdh8C7L1zS6IRZvRg7seQ5ib8G7F7SCYF3q1ZV8GdQOuOMOuh
+         /YhGhJXYayJ5S2sEiKOe1JLFwLhZur0vc4PZ/8C8BKNb56Sw3aZERgc6BTYOWJPVSxtD
+         GMYcsgVu9CnVolCkFuUZ9pSWCaw92ybP8pH3XBBeeQTYQ7JtA3ZlVOeZNDv4/TYRG1oS
+         IFEg==
+X-Gm-Message-State: AOAM532WOdDct+2DcT5xMmAU+ATSZH34T2gVAXM7xvR1nIbi47cug92+
+        xIDEa1AuZxxDzKcPuQl0BAiF9xDDemX/zc4JVDsU4w==
+X-Google-Smtp-Source: ABdhPJzZ/47s2snJvZ7uwTxgvT6BhXeoHrhBRaplai/C7kYtFaFHZUC6p8rFmt5CyUlbVZ4GknNgi/R9kqTEL6R3Zxk=
+X-Received: by 2002:a1f:a504:0:b0:35e:4fd4:d3bf with SMTP id
+ o4-20020a1fa504000000b0035e4fd4d3bfmr12696376vke.7.1655059462057; Sun, 12 Jun
+ 2022 11:44:22 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <bug-216073-27@https.bugzilla.kernel.org/> <20220606151312.6a9d098c85ed060d36519600@linux-foundation.org>
+ <Yp9pHV14OqvH0n02@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+ <20220608021922.n2izu7n4yoadknkx@zlang-mailbox> <YqD0yAELzHxdRBU6@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+ <20220612044230.murerhsa765akogj@zlang-mailbox> <YqXU+oU7wayOcmCe@casper.infradead.org>
+ <YqXkGMY9xtUvPR5D@pc638.lan> <YqYh0xyJvoNsSOpy@casper.infradead.org>
+ <CAOUHufbBkcjChkMfF8exh3=6=JM09-GCU71KXhUGmz4UdOhUmg@mail.gmail.com> <YqYq846zFUInllTw@casper.infradead.org>
+In-Reply-To: <YqYq846zFUInllTw@casper.infradead.org>
+From:   Yu Zhao <yuzhao@google.com>
+Date:   Sun, 12 Jun 2022 12:43:45 -0600
+Message-ID: <CAOUHufan8+uombVMSSrKra-8Cu5pSJj80LVa6QrGbFzBmUQHxg@mail.gmail.com>
+Subject: Re: [Bug 216073] New: [s390x] kernel BUG at mm/usercopy.c:101!
+ usercopy: Kernel memory exposure attempt detected from vmalloc 'n o area'
+ (offset 0, size 1)!
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, Zorro Lang <zlang@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        bugzilla-daemon@kernel.org, linux-s390@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>, Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216073
+On Sun, Jun 12, 2022 at 12:05 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Sun, Jun 12, 2022 at 11:59:58AM -0600, Yu Zhao wrote:
+> > Please let me know if there is something we want to test -- I can
+> > reproduce the problem reliably:
+> >
+> > ------------[ cut here ]------------
+> > kernel BUG at mm/usercopy.c:101!
+>
+> The line right before cut here would have been nice ;-)
 
---- Comment #15 from willy@infradead.org ---
-On Sun, Jun 12, 2022 at 11:59:58AM -0600, Yu Zhao wrote:
-> Please let me know if there is something we want to test -- I can
-> reproduce the problem reliably:
->=20
-> ------------[ cut here ]------------
-> kernel BUG at mm/usercopy.c:101!
+Right.
 
-The line right before cut here would have been nice ;-)
+$ grep usercopy:
+usercopy: Kernel memory exposure attempt detected from vmalloc (offset
+2882303761517129920, size 11)!
+usercopy: Kernel memory exposure attempt detected from vmalloc (offset
+8574853690513436864, size 11)!
+usercopy: Kernel memory exposure attempt detected from vmalloc (offset
+7998392938210013376, size 11)!
+...
 
-https://lore.kernel.org/linux-mm/YqXU+oU7wayOcmCe@casper.infradead.org/
+> https://lore.kernel.org/linux-mm/YqXU+oU7wayOcmCe@casper.infradead.org/
+>
+> might fix your problem, but I can't be sure without that line.
 
-might fix your problem, but I can't be sure without that line.
-
-> Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> CPU: 4 PID: 3259 Comm: iptables Not tainted 5.19.0-rc1-lockdep+ #1
-> pc : usercopy_abort+0x9c/0xa0
-> lr : usercopy_abort+0x9c/0xa0
-> sp : ffffffc010bd78d0
-> x29: ffffffc010bd78e0 x28: 42ffff80ac08d8ec x27: 42ffff80ac08d8ec
-> x26: 42ffff80ac08d8c0 x25: 000000000000000a x24: ffffffdf4c7e5120
-> x23: 000000000bec44c2 x22: efffffc000000000 x21: ffffffdf2896b0c0
-> x20: 0000000000000001 x19: 000000000000000b x18: 0000000000000000
-> x17: 2820636f6c6c616d x16: 0000000000000042 x15: 6574636574656420
-> x14: 74706d6574746120 x13: 0000000000000018 x12: 000000000000000d
-> x11: ff80007fffffffff x10: 0000000000000001 x9 : db174b7f89103400
-> x8 : db174b7f89103400 x7 : 0000000000000000 x6 : 79706f6372657375
-> x5 : ffffffdf4d9c617e x4 : 0000000000000000 x3 : ffffffdf4b7d017c
-> x2 : ffffff80eb188b18 x1 : 42ffff80ac08d8c8 x0 : 0000000000000066
-> Call trace:
->  usercopy_abort+0x9c/0xa0
->  __check_object_size+0x38c/0x400
->  xt_obj_to_user+0xe4/0x200
->  xt_compat_target_to_user+0xd8/0x18c
->  compat_copy_entries_to_user+0x278/0x424
->  do_ipt_get_ctl+0x7bc/0xb2c
->  nf_getsockopt+0x7c/0xb4
->  ip_getsockopt+0xee8/0xfa4
->  raw_getsockopt+0xf4/0x23c
->  sock_common_getsockopt+0x48/0x54
->  __sys_getsockopt+0x11c/0x2f8
->  __arm64_sys_getsockopt+0x60/0x70
->  el0_svc_common+0xfc/0x1cc
->  do_el0_svc_compat+0x38/0x5c
->  el0_svc_compat+0x68/0xf4
->  el0t_32_sync_handler+0xc0/0xf0
->  el0t_32_sync+0x190/0x194
-> Code: aa0903e4 a9017bfd 910043fd 9438be18 (d4210000)
-> ---[ end trace 0000000000000000 ]---
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
+Thanks, it worked!
