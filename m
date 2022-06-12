@@ -2,150 +2,66 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FFF2547C1A
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 22:54:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C514547C7C
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 23:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234678AbiFLUx6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 12 Jun 2022 16:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
+        id S236423AbiFLVcr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 12 Jun 2022 17:32:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234392AbiFLUx6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 16:53:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ACF742A3B
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 13:53:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0F230B80D07
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 20:53:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B1356C341CF
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 20:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655067233;
-        bh=Zuuyj3PDsjmuYTcUYW/EUQVFP7yRvaFe8KgDoOx85DM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=KWvm9VRmLHom8KTwMmxwUDK84N6eSJIu79abbE578kweCgP/t3EduunraNQN0T37V
-         FCTqcNm7yq6l2/Sf/tPg4STstPb2VgV7j1yvvthPeT1TeIlGFeT21MA+G9SRnhbIb1
-         Kdwk0KBFYoXSZtdcOf2O2VGtRnqhbLMJWPzR8QAI4lT4gdl9DveavPp/guay5TRW1o
-         +jxZlFn+yYw5nRE6KoywFOUClrUXbD4lMVngEKBif9+5+I8Jbm/lkVPYaDaq3NM6yI
-         xyny4xI+FcPoskXieAG1lxl3SPBmvxLIP/b7rV5NJWgVsObnHaZ4HOwE3L7MIAiwgf
-         nvFqAzBqKYrhg==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id A06AECC13B1; Sun, 12 Jun 2022 20:53:53 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216073] [s390x] kernel BUG at mm/usercopy.c:101! usercopy:
- Kernel memory exposure attempt detected from vmalloc 'n  o area' (offset 0,
- size 1)!
-Date:   Sun, 12 Jun 2022 20:53:52 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: Memory Management
-X-Bugzilla-Component: Other
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: yuzhao@google.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: akpm@linux-foundation.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216073-201763-opH3QiEYvc@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216073-201763@https.bugzilla.kernel.org/>
-References: <bug-216073-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        with ESMTP id S236375AbiFLVcn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 17:32:43 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844229FFD;
+        Sun, 12 Jun 2022 14:32:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=v4mIWqTNLi/H6cmlkOhqCaPgNun/BIW7dc3RoGC1nCY=; b=RCB5aj0M0GTxq97GmTfmw83ojw
+        6Lz0+yDJJVhmt3dLRuQcUvAeQI0hjWuSjpff2j//5DuETvlCYUQNTjVC7GKOLZcY96yNhWKXFKjKr
+        DNvkjqt7GtQXUS3s8qhb1hqvDShj56YIdu6eEfQ6D0KkCOteF4ZqmEH3bSNyP6SmQPk+QahDv1N3o
+        84o8/lp4NngLD7yLlh7Lgn2Vmc+eNN0Wpfg6z7zyON1RrlZMMWBl+PqAyHHd77AgWykWepvY9Sl/F
+        +QlPO0Mc0maVzAY9VXdlpUW2m8lzQMEwxQ5TOQj3LrQnRSxdzzGS12ueggK/EncIqqFrNtPg8R+xI
+        0YRAnZaw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1o0VC9-00GHpu-A8; Sun, 12 Jun 2022 21:32:29 +0000
+From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, Uladzislau Rezki <urezki@gmail.com>,
+        Zorro Lang <zlang@redhat.com>, linux-xfs@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 0/3] Fixes for usercopy
+Date:   Sun, 12 Jun 2022 22:32:24 +0100
+Message-Id: <20220612213227.3881769-1-willy@infradead.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216073
+Kees, I'm hoping you'll take these through your tree.  I think they're
+all reasonable fixes to go into 5.19.  The first one is essential;
+it fixes two different bugs that people have hit.
 
---- Comment #19 from yuzhao@google.com ---
-On Sun, Jun 12, 2022 at 1:52 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Sun, Jun 12, 2022 at 12:43:45PM -0600, Yu Zhao wrote:
-> > On Sun, Jun 12, 2022 at 12:05 PM Matthew Wilcox <willy@infradead.org>
-> wrote:
-> > >
-> > > On Sun, Jun 12, 2022 at 11:59:58AM -0600, Yu Zhao wrote:
-> > > > Please let me know if there is something we want to test -- I can
-> > > > reproduce the problem reliably:
-> > > >
-> > > > ------------[ cut here ]------------
-> > > > kernel BUG at mm/usercopy.c:101!
-> > >
-> > > The line right before cut here would have been nice ;-)
-> >
-> > Right.
-> >
-> > $ grep usercopy:
-> > usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-> > 2882303761517129920, size 11)!
-> > usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-> > 8574853690513436864, size 11)!
-> > usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-> > 7998392938210013376, size 11)!
->
-> That's a different problem.  And, er, what?  How on earth do we have
-> an offset that big?!
->
->                 struct vm_struct *area =3D find_vm_area(ptr);
->                 offset =3D ptr - area->addr;
->                 if (offset + n > get_vm_area_size(area))
->                         usercopy_abort("vmalloc", NULL, to_user, offset, =
-n);
->
-> That first offset is 0x2800'0000'0000'30C0
->
-> You said it was easy to replicate; can you add:
->
->                         printk("addr:%px ptr:%px\n", area->addr, ptr);
->
-> so that we can start to understand how we end up with such a bogus
-> offset?
+Matthew Wilcox (Oracle) (3):
+  usercopy: Handle vm_map_ram() areas
+  usercopy: Cast pointer to an integer once
+  usercopy: Make usercopy resilient against ridiculously large copies
 
-Here you go:
+ include/linux/vmalloc.h |  1 +
+ mm/usercopy.c           | 24 +++++++++++++-----------
+ mm/vmalloc.c            |  2 +-
+ 3 files changed, 15 insertions(+), 12 deletions(-)
 
-addr:96ffffdfebcd4000 ptr:ffffffdfebcd70c0
-usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-7566047373982445760, size 11)!
+-- 
+2.35.1
 
-And, not sure if it'd be helpful, with the vmap:
-
-va_start:ffffffd83db0d000 va_end:ffffffd83db13000
-addr:44ffffd83db0d000 ptr:ffffffd83db100c0
-usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-13474770085092536512, size 11)!
-
-which seems to explain why the fix worked.
-
-+               if (offset + n > get_vm_area_size(area)) {
-+                       struct vmap_area *vmap =3D
-find_vmap_area((unsigned long)ptr);
-+
-+                       if (vmap)
-+                               printk("va_start:%px va_end:%px\n",
-vmap->va_start, vmap->va_end);
-+                       printk("addr:%px ptr:%px\n", area->addr, ptr);
-                        usercopy_abort("vmalloc", NULL, to_user, offset, n);
-+               }
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
