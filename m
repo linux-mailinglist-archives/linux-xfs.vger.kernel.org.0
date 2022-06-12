@@ -2,39 +2,39 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65982547C7D
+	by mail.lfdr.de (Postfix) with ESMTP id ADF72547C7E
 	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 23:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234215AbiFLVcs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 12 Jun 2022 17:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50162 "EHLO
+        id S235950AbiFLVcp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 12 Jun 2022 17:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236111AbiFLVco (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 17:32:44 -0400
+        with ESMTP id S236298AbiFLVcn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 17:32:43 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 751A3116E;
-        Sun, 12 Jun 2022 14:32:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467EF9FDF;
+        Sun, 12 Jun 2022 14:32:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=tvuIUvh4KMt/W3Ck0YL8jqhN/KST+B/kPdeyBtOnYMI=; b=jOcEWP6MokPpHUTnlAkh/E65mL
-        4W8V4vdlxVz2zQtkO9qZYuNZFn6zxe5LZMB+22Jesq35WG5x3Nw2E3mICgwIDFOWEmlaEzeLzTZif
-        F1GoRcMUDGfoYNRj1nVAjB22aXZ/MwOO1EqMsv4gwAqSiELfP/UKhYIiEePON6kF+HKG7nHdQzv2v
-        lQDev+2c7TK3GFkWkjZwQ1dgj9RG1XcUcrKpO8SY1zyRMfgip7xKLuuYv2IEupKC4R2Dp5F8os/YI
-        opoHyaafYUTwT8RK0IuVDaP//qQIWKe5VGQMnGY6LVMulBYnbpkT5IkqyQj0zN0ywgWy3VDWwcTGT
-        66BdCNUQ==;
+        bh=KF4owYCbPISYV5a61DiGRvGs/L1LMsz9ReyZ7eXT5t8=; b=geEs3gAVKXk3eNcQdArpYi2DVd
+        f/MN4q94FG7FHdgrWVmDI4vEtNGBpS1vD/DP2rHs7ji3PrgfGGHOWvn8A3AAmpRzatm8leS4fNMaR
+        Fs6S3luOZoQnLu1wdgThCd5i4g41xF0vblXF68HK3PGR3NF5mHXwdGlK8f7j8EYhpBEMYEy9oRHEH
+        qlEW7b8tnYQ0rBpT67IXfWPu99LTz+lOBZmsIyf5LrvwXzKFSHCbS4hUlucLJWK2Wrj8/2TQSpg3W
+        i9qz6yiljtaOFgTf83pXjguAzUIl6miPCNqPkGAOUJitBDthtLjXjcCzOkxJg685Cs7EdPJSyQkRX
+        IVlGdg9w==;
 Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1o0VC9-00GHpw-CG; Sun, 12 Jun 2022 21:32:29 +0000
+        id 1o0VC9-00GHpy-EN; Sun, 12 Jun 2022 21:32:29 +0000
 From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
 Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
         linux-mm@kvack.org, Uladzislau Rezki <urezki@gmail.com>,
         Zorro Lang <zlang@redhat.com>, linux-xfs@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 1/3] usercopy: Handle vm_map_ram() areas
-Date:   Sun, 12 Jun 2022 22:32:25 +0100
-Message-Id: <20220612213227.3881769-2-willy@infradead.org>
+Subject: [PATCH 2/3] usercopy: Cast pointer to an integer once
+Date:   Sun, 12 Jun 2022 22:32:26 +0100
+Message-Id: <20220612213227.3881769-3-willy@infradead.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20220612213227.3881769-1-willy@infradead.org>
 References: <20220612213227.3881769-1-willy@infradead.org>
@@ -50,71 +50,53 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-vmalloc does not allocate a vm_struct for vm_map_ram() areas.  That causes
-us to deny usercopies from those areas.  This affects XFS which uses
-vm_map_ram() for its directories.
+Get rid of a lot of annoying casts by setting 'addr' once at the top
+of the function.
 
-Fix this by calling find_vmap_area() instead of find_vm_area().
-
-Fixes: 0aef499f3172 ("mm/usercopy: Detect vmalloc overruns")
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/vmalloc.h | 1 +
- mm/usercopy.c           | 8 +++++---
- mm/vmalloc.c            | 2 +-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+ mm/usercopy.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index b159c2789961..096d48aa3437 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -215,6 +215,7 @@ extern struct vm_struct *__get_vm_area_caller(unsigned long size,
- void free_vm_area(struct vm_struct *area);
- extern struct vm_struct *remove_vm_area(const void *addr);
- extern struct vm_struct *find_vm_area(const void *addr);
-+struct vmap_area *find_vmap_area(unsigned long addr);
- 
- static inline bool is_vm_area_hugepages(const void *addr)
- {
 diff --git a/mm/usercopy.c b/mm/usercopy.c
-index baeacc735b83..fdd1bed3b90a 100644
+index fdd1bed3b90a..31deee7dd2f5 100644
 --- a/mm/usercopy.c
 +++ b/mm/usercopy.c
-@@ -173,7 +173,7 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+@@ -161,19 +161,20 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
+ static inline void check_heap_object(const void *ptr, unsigned long n,
+ 				     bool to_user)
+ {
++	uintptr_t addr = (uintptr_t)ptr;
+ 	struct folio *folio;
+ 
+ 	if (is_kmap_addr(ptr)) {
+-		unsigned long page_end = (unsigned long)ptr | (PAGE_SIZE - 1);
++		unsigned long page_end = addr | (PAGE_SIZE - 1);
+ 
+-		if ((unsigned long)ptr + n - 1 > page_end)
++		if (addr + n - 1 > page_end)
+ 			usercopy_abort("kmap", NULL, to_user,
+ 					offset_in_page(ptr), n);
+ 		return;
  	}
  
  	if (is_vmalloc_addr(ptr)) {
--		struct vm_struct *area = find_vm_area(ptr);
-+		struct vmap_area *area = find_vmap_area((unsigned long)ptr);
+-		struct vmap_area *area = find_vmap_area((unsigned long)ptr);
++		struct vmap_area *area = find_vmap_area(addr);
  		unsigned long offset;
  
  		if (!area) {
-@@ -181,8 +181,10 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 			return;
- 		}
+@@ -183,8 +184,8 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
  
--		offset = ptr - area->addr;
--		if (offset + n > get_vm_area_size(area))
-+		/* XXX: We should also abort for free vmap_areas */
-+
-+		offset = (unsigned long)ptr - area->va_start;
-+		if ((unsigned long)ptr + n > area->va_end)
+ 		/* XXX: We should also abort for free vmap_areas */
+ 
+-		offset = (unsigned long)ptr - area->va_start;
+-		if ((unsigned long)ptr + n > area->va_end)
++		offset = addr - area->va_start;
++		if (addr + n > area->va_end)
  			usercopy_abort("vmalloc", NULL, to_user, offset, n);
  		return;
  	}
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 07db42455dd4..effd1ff6a4b4 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1798,7 +1798,7 @@ static void free_unmap_vmap_area(struct vmap_area *va)
- 	free_vmap_area_noflush(va);
- }
- 
--static struct vmap_area *find_vmap_area(unsigned long addr)
-+struct vmap_area *find_vmap_area(unsigned long addr)
- {
- 	struct vmap_area *va;
- 
 -- 
 2.35.1
 
