@@ -2,109 +2,134 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4A2E547B84
-	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 20:44:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCD66547BA4
+	for <lists+linux-xfs@lfdr.de>; Sun, 12 Jun 2022 21:07:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbiFLSor (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 12 Jun 2022 14:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38014 "EHLO
+        id S233815AbiFLTH5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 12 Jun 2022 15:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232869AbiFLSo3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 14:44:29 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F36C5C84D
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 11:44:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 15B8EB80CFF
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 18:44:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BB87CC341D0
-        for <linux-xfs@vger.kernel.org>; Sun, 12 Jun 2022 18:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655059465;
-        bh=kq+ZTyr/+EZan0OI+B+Gn9OC8Gt6qgB27u/iPvHpj0s=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=mCXkkt9LcVdRIqRex5AMm1eDLkSCUAZHsvvcT49g0xaHUNc/wOVcdK49keWpanGXj
-         Pr4PaJ6AYw8lEqvVPq8e7ZnQ8y9hcBdJ7lNRuc3ADW/NyIJZ+WonTHrYgNRgMKP81W
-         fKwtV1JemCqIiK7l5w2hZqInAVyFZgy0kaxVb4sgWrX+vmzeAKPeiCMokINmtYuwzU
-         zpRGn1J4mKtGoQxXL/ZpgzLqhwDyGn2jjKe7F+WDqKlA8Tl976MZskwKtBcbhOU9V4
-         iSG+I2EorIua9roJa/Ux7f6PxSIiWD3/7GocBCzCEIgxPCRyuOOy0MAolgtl87YbQQ
-         fPxhOilxxr8Lw==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id ACA02CC13B6; Sun, 12 Jun 2022 18:44:25 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216073] [s390x] kernel BUG at mm/usercopy.c:101! usercopy:
- Kernel memory exposure attempt detected from vmalloc 'n  o area' (offset 0,
- size 1)!
-Date:   Sun, 12 Jun 2022 18:44:25 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: CC filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: Memory Management
-X-Bugzilla-Component: Other
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: yuzhao@google.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: akpm@linux-foundation.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216073-201763-mUXS1oEcIm@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216073-201763@https.bugzilla.kernel.org/>
-References: <bug-216073-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        with ESMTP id S233945AbiFLTH4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 12 Jun 2022 15:07:56 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88EA26547;
+        Sun, 12 Jun 2022 12:07:54 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id y29so4144169ljd.7;
+        Sun, 12 Jun 2022 12:07:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/lRrX5aKWLjE/LdPrNz1fAnJtllQTJwoJoNcjGrmnxk=;
+        b=E02cn2lO+RPuC7XXwZFrNYb3KP5mVhxYPStSV98kHlD/R3jGkV+bTFZTmF5ZsCgfyl
+         TlrD0OIJ1Af45nPpx1Lkhe98VVwUqIiXM4/9l77AjoUtwhiZY9LqNh1dcyHP0c37/YOt
+         T4IzsJ+AYuMhw23vVAC8/HPpEMtslgb41vmsm8TmOJUbTlPg0MoTFPKXojAueVjNm8jb
+         m/J3EyXIMaGGrbJ/rvj8z3K1SifLGU/dvUuYku6iy3iYriWve1zToNp55q/okwHQ/6/Q
+         WR9pFi4ePwC7EGYe2V7JwQFPANmPgQtgP7+r1TgJvz6yauwI2xgYkMmK7/Jym0llaj7O
+         9JzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/lRrX5aKWLjE/LdPrNz1fAnJtllQTJwoJoNcjGrmnxk=;
+        b=Zwp7SB8RivU/Z2SeSIHfflTjqlnk+0psshtfpfqsjVNszlfzVyfNGKYKKBycz4+yGn
+         jqUGNZ/vBbJIoYtoPXndIIhE4vWqrPZODAxD2mQJl4j1LscXAK3joAt5pGZ6p/WFbEwN
+         ya52lGRtkS1tMVzCA2oxot+lpNXd2BWrt3vWFV0b9cSZKIFHFivaYBodeqWilr8Mee9T
+         Vu0/tBxanTy72f/NX7KpPgBCm+86E9FpdiNz2Nr1eHvR7Q9kHnwDh2veLF24C7Hh5DsD
+         zSqfIMT9/M6yE2G1Lujx4hZ3VK7BsGbFHxYFiXmc3uj4495QgLIIulox5GFbI7XtZAaC
+         dRwg==
+X-Gm-Message-State: AOAM5339pbX4TO8zgsAUrX6QTts0KhZrqjvM1Cj1RMLNaxPGgztN9QyT
+        KDQ/EuQQe78JAhaZprdRFbevGdg71cIQKA==
+X-Google-Smtp-Source: ABdhPJy851Li2/EGWVlluRRVu5vxEDi8U8jOZqo3ku4xXL+Y7QuRxMV0kmW5cdCL9yR8J2B5EiSdcQ==
+X-Received: by 2002:a2e:7d05:0:b0:255:5dcf:f294 with SMTP id y5-20020a2e7d05000000b002555dcff294mr33620493ljc.187.1655060873150;
+        Sun, 12 Jun 2022 12:07:53 -0700 (PDT)
+Received: from pc638.lan ([155.137.26.201])
+        by smtp.gmail.com with ESMTPSA id v22-20020a05651203b600b0047255d21171sm200596lfp.160.2022.06.12.12.07.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jun 2022 12:07:52 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc638.lan>
+Date:   Sun, 12 Jun 2022 21:07:50 +0200
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>, Zorro Lang <zlang@redhat.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        bugzilla-daemon@kernel.org, linux-s390@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [Bug 216073] New: [s390x] kernel BUG at mm/usercopy.c:101!
+ usercopy: Kernel memory exposure attempt detected from vmalloc 'n  o area'
+ (offset 0, size 1)!
+Message-ID: <YqY5hrW5jJPTxgZx@pc638.lan>
+References: <bug-216073-27@https.bugzilla.kernel.org/>
+ <20220606151312.6a9d098c85ed060d36519600@linux-foundation.org>
+ <Yp9pHV14OqvH0n02@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+ <20220608021922.n2izu7n4yoadknkx@zlang-mailbox>
+ <YqD0yAELzHxdRBU6@li-4a3a4a4c-28e5-11b2-a85c-a8d192c6f089.ibm.com>
+ <20220612044230.murerhsa765akogj@zlang-mailbox>
+ <YqXU+oU7wayOcmCe@casper.infradead.org>
+ <YqXkGMY9xtUvPR5D@pc638.lan>
+ <YqYh0xyJvoNsSOpy@casper.infradead.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YqYh0xyJvoNsSOpy@casper.infradead.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216073
+> On Sun, Jun 12, 2022 at 03:03:20PM +0200, Uladzislau Rezki wrote:
+> > > @@ -181,8 +181,9 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
+> > >  			return;
+> > >  		}
+> > >  
+> > > -		offset = ptr - area->addr;
+> > > -		if (offset + n > get_vm_area_size(area))
+> > > +		/* XXX: We should also abort for free vmap_areas */
+> > > +		offset = (unsigned long)ptr - area->va_start;
+> > >
+> > I was a bit confused about "offset" and why it is needed here. It is always zero. 
+> > So we can get rid of it to make it less confused. From the other hand a zero offset
+> > contributes to nothing.
+> 
+> I don't think offset is necessarily zero.  'ptr' is a pointer somewhere
+> in the object, not necessarily the start of the object.
+> 
+Right you are. Just checked the __find_vmap_area() it returns VA of the address it
+belongs to. Initially i was thinking that addr have to be exactly as va->start only,
+so i was wrong.
 
---- Comment #16 from yuzhao@google.com ---
-On Sun, Jun 12, 2022 at 12:05 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Sun, Jun 12, 2022 at 11:59:58AM -0600, Yu Zhao wrote:
-> > Please let me know if there is something we want to test -- I can
-> > reproduce the problem reliably:
-> >
-> > ------------[ cut here ]------------
-> > kernel BUG at mm/usercopy.c:101!
->
-> The line right before cut here would have been nice ;-)
+> > >
+> > > +		if (offset + n >= area->va_end)
+> > >
+> > I think it is a bit wrong. As i see it, "n" is a size and what we would like to do
+> > here is boundary check:
+> > 
+> > <snip>
+> > if (n > va_size(area))
+> >     usercopy_abort("vmalloc", NULL, to_user, 0, n);
+> > <snip>
+> 
+> Hmm ... we should probably be more careful about wrapping.
+> 
+>                 if (n > area->va_end - addr)
+>                         usercopy_abort("vmalloc", NULL, to_user, offset, n);
+> 
+> ... and that goes for the whole function actually.  I'll split that into
+> a separate change.
+> 
+Based on that offset can be > 0, checking "offset + n" with va->va_end is OK.
 
-Right.
+<snip>
+if (offset + n > area->va_end)
+    usercopy_abort("vmalloc", NULL, to_user, offset, n);
+<snip>
 
-$ grep usercopy:
-usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-2882303761517129920, size 11)!
-usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-8574853690513436864, size 11)!
-usercopy: Kernel memory exposure attempt detected from vmalloc (offset
-7998392938210013376, size 11)!
-...
-
-> https://lore.kernel.org/linux-mm/YqXU+oU7wayOcmCe@casper.infradead.org/
->
-> might fix your problem, but I can't be sure without that line.
-
-Thanks, it worked!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching someone on the CC list of the bug.=
+--
+Uladzislau Rezki
