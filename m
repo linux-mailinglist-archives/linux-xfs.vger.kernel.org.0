@@ -2,43 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEAC254D435
+	by mail.lfdr.de (Postfix) with ESMTP id 77BDA54D434
 	for <lists+linux-xfs@lfdr.de>; Thu, 16 Jun 2022 00:04:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346327AbiFOWEZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jun 2022 18:04:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56466 "EHLO
+        id S1346840AbiFOWEY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jun 2022 18:04:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346329AbiFOWEX (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jun 2022 18:04:23 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BD7125639D
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 15:04:22 -0700 (PDT)
+        with ESMTP id S242770AbiFOWEW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jun 2022 18:04:22 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CDD8E5638B
+        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 15:04:20 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 4FAC510E7692
-        for <linux-xfs@vger.kernel.org>; Thu, 16 Jun 2022 08:04:20 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id E84015ECAB3
+        for <linux-xfs@vger.kernel.org>; Thu, 16 Jun 2022 08:04:19 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o1b7a-00768P-6v
+        id 1o1b7a-00768Q-85
         for linux-xfs@vger.kernel.org; Thu, 16 Jun 2022 08:04:18 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1o1b7a-00FS1I-5D
+        id 1o1b7a-00FS1L-6o
         for linux-xfs@vger.kernel.org;
         Thu, 16 Jun 2022 08:04:18 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 0/2 V2] xfs: xfs: non-blocking inodegc pushes
-Date:   Thu, 16 Jun 2022 08:04:14 +1000
-Message-Id: <20220615220416.3681870-1-david@fromorbit.com>
+Subject: [PATCH 1/2] xfs: bound maximum wait time for inodegc work
+Date:   Thu, 16 Jun 2022 08:04:15 +1000
+Message-Id: <20220615220416.3681870-2-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220615220416.3681870-1-david@fromorbit.com>
+References: <20220615220416.3681870-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62aa5765
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=62aa5764
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=JPEYwPQDsx4A:10 a=80JqfrdUrcx2x15jGyEA:9
+        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=MKQDRZKB9nwGUNYnySIA:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -48,51 +50,152 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+From: Dave Chinner <dchinner@redhat.com>
 
-These patches introduce non-blocking inodegc pushes to fix long
-hold-offs in statfs() operations when inodegc is performing long
-running inode inactivation operations.
+Currently inodegc work can sit queued on the per-cpu queue until
+the workqueue is either flushed of the queue reaches a depth that
+triggers work queuing (and later throttling). This means that we
+could queue work that waits for a long time for some other event to
+trigger flushing.
 
-The first patch introduces the bound maximum work start time for the
-inodegc queues - it's short, only 1 jiffie (10ms) - but we don't
-want to delay inodegc for an arbitrarily long period of time.
-However, it means that work always starts quickly and so that
-reduces the need for statfs() to have to wait for background inodegc
-to start and complete to catch space "freed" by recent unlinks.
+Hence instead of just queueing work at a specific depth, use a
+delayed work that queues the work at a bound time. We can still
+schedule the work immediately at a given depth, but we no long need
+to worry about leaving a number of items on the list that won't get
+processed until external events prevail.
 
-The second patch converts statfs to use a "push" rather than a
-"flush". The push simply schedules any pending work that hasn't yet
-timed out to run immediately and returns. It does not wait for the
-inodegc work to complete - that's what a flush does, and that's what
-caused all the problems for statfs(). Hence statfs() is converted to
-push semantics at the same time, thereby removing the blocking
-behaviour it currently has.
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+---
+ fs/xfs/xfs_icache.c | 36 ++++++++++++++++++++++--------------
+ fs/xfs/xfs_mount.h  |  2 +-
+ fs/xfs/xfs_super.c  |  2 +-
+ 3 files changed, 24 insertions(+), 16 deletions(-)
 
-This should prevent a large amount of the issues that have been
-seeing with lots of processes stuck in statfs() - that will no long
-happen. The only time user processes should get stuck now is when
-the inodegc throttle kicks in (unlinks only at this point) or if we
-are waiting for a lock a long running inodegc operation holds to be
-released. We had those specific problems before background inodegc -
-they manifested as unkillable unlink operations that had every
-backed up on them instead of background inodegc that has everything
-backed up on them.
-
-This patch has been running in my test environment for nearly a
-month now without regressions occurring. While there are likely
-still going to be inodegc flush related hold-offs in certain
-circumstances, nothing appears to be impacting the correctness of
-fstests tests or creating new issues. The 0-day kernel testing bot
-also indicates that certain benchmarks (such as aim7 and
-stress-ng.rename) run significantly faster with bound maximum delays
-and non-blocking statfs operations.
-
-Comments, thoughts and testing appreciated.
-
--Dave.
-
-Version 2:
-- Also convert quota reportting inodegc flushes to a push.
-
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 374b3bafaeb0..46b30ecf498c 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -442,7 +442,7 @@ xfs_inodegc_queue_all(
+ 	for_each_online_cpu(cpu) {
+ 		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+ 		if (!llist_empty(&gc->list))
+-			queue_work_on(cpu, mp->m_inodegc_wq, &gc->work);
++			mod_delayed_work_on(cpu, mp->m_inodegc_wq, &gc->work, 0);
+ 	}
+ }
+ 
+@@ -1844,8 +1844,8 @@ void
+ xfs_inodegc_worker(
+ 	struct work_struct	*work)
+ {
+-	struct xfs_inodegc	*gc = container_of(work, struct xfs_inodegc,
+-							work);
++	struct xfs_inodegc	*gc = container_of(to_delayed_work(work),
++						struct xfs_inodegc, work);
+ 	struct llist_node	*node = llist_del_all(&gc->list);
+ 	struct xfs_inode	*ip, *n;
+ 
+@@ -2017,6 +2017,7 @@ xfs_inodegc_queue(
+ 	struct xfs_inodegc	*gc;
+ 	int			items;
+ 	unsigned int		shrinker_hits;
++	unsigned long		queue_delay = 1;
+ 
+ 	trace_xfs_inode_set_need_inactive(ip);
+ 	spin_lock(&ip->i_flags_lock);
+@@ -2028,19 +2029,26 @@ xfs_inodegc_queue(
+ 	items = READ_ONCE(gc->items);
+ 	WRITE_ONCE(gc->items, items + 1);
+ 	shrinker_hits = READ_ONCE(gc->shrinker_hits);
+-	put_cpu_ptr(gc);
+ 
+-	if (!xfs_is_inodegc_enabled(mp))
++	/*
++	 * We queue the work while holding the current CPU so that the work
++	 * is scheduled to run on this CPU.
++	 */
++	if (!xfs_is_inodegc_enabled(mp)) {
++		put_cpu_ptr(gc);
+ 		return;
+-
+-	if (xfs_inodegc_want_queue_work(ip, items)) {
+-		trace_xfs_inodegc_queue(mp, __return_address);
+-		queue_work(mp->m_inodegc_wq, &gc->work);
+ 	}
+ 
++	if (xfs_inodegc_want_queue_work(ip, items))
++		queue_delay = 0;
++
++	trace_xfs_inodegc_queue(mp, __return_address);
++	mod_delayed_work(mp->m_inodegc_wq, &gc->work, queue_delay);
++	put_cpu_ptr(gc);
++
+ 	if (xfs_inodegc_want_flush_work(ip, items, shrinker_hits)) {
+ 		trace_xfs_inodegc_throttle(mp, __return_address);
+-		flush_work(&gc->work);
++		flush_delayed_work(&gc->work);
+ 	}
+ }
+ 
+@@ -2057,7 +2065,7 @@ xfs_inodegc_cpu_dead(
+ 	unsigned int		count = 0;
+ 
+ 	dead_gc = per_cpu_ptr(mp->m_inodegc, dead_cpu);
+-	cancel_work_sync(&dead_gc->work);
++	cancel_delayed_work_sync(&dead_gc->work);
+ 
+ 	if (llist_empty(&dead_gc->list))
+ 		return;
+@@ -2076,12 +2084,12 @@ xfs_inodegc_cpu_dead(
+ 	llist_add_batch(first, last, &gc->list);
+ 	count += READ_ONCE(gc->items);
+ 	WRITE_ONCE(gc->items, count);
+-	put_cpu_ptr(gc);
+ 
+ 	if (xfs_is_inodegc_enabled(mp)) {
+ 		trace_xfs_inodegc_queue(mp, __return_address);
+-		queue_work(mp->m_inodegc_wq, &gc->work);
++		mod_delayed_work(mp->m_inodegc_wq, &gc->work, 0);
+ 	}
++	put_cpu_ptr(gc);
+ }
+ 
+ /*
+@@ -2176,7 +2184,7 @@ xfs_inodegc_shrinker_scan(
+ 			unsigned int	h = READ_ONCE(gc->shrinker_hits);
+ 
+ 			WRITE_ONCE(gc->shrinker_hits, h + 1);
+-			queue_work_on(cpu, mp->m_inodegc_wq, &gc->work);
++			mod_delayed_work_on(cpu, mp->m_inodegc_wq, &gc->work, 0);
+ 			no_items = false;
+ 		}
+ 	}
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index ba5d42abf66e..d2eaebd85abf 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -61,7 +61,7 @@ struct xfs_error_cfg {
+  */
+ struct xfs_inodegc {
+ 	struct llist_head	list;
+-	struct work_struct	work;
++	struct delayed_work	work;
+ 
+ 	/* approximate count of inodes in the list */
+ 	unsigned int		items;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 48a7239ed1b2..651ae75a7e23 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1075,7 +1075,7 @@ xfs_inodegc_init_percpu(
+ 		gc = per_cpu_ptr(mp->m_inodegc, cpu);
+ 		init_llist_head(&gc->list);
+ 		gc->items = 0;
+-		INIT_WORK(&gc->work, xfs_inodegc_worker);
++		INIT_DELAYED_WORK(&gc->work, xfs_inodegc_worker);
+ 	}
+ 	return 0;
+ }
+-- 
+2.35.1
 
