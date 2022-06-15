@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BED054C2F4
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jun 2022 09:54:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3041F54C2E7
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jun 2022 09:53:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343555AbiFOHxq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jun 2022 03:53:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33128 "EHLO
+        id S1343605AbiFOHxk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jun 2022 03:53:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343588AbiFOHxj (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jun 2022 03:53:39 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A202841989
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 00:53:38 -0700 (PDT)
+        with ESMTP id S245659AbiFOHxh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jun 2022 03:53:37 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 73F794163A
+        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 00:53:35 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 97BA810E74FA
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 17:53:34 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 113DA5ECB27
+        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 17:53:33 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o1NqG-006rRF-OE
+        id 1o1NqG-006rRI-PM
         for linux-xfs@vger.kernel.org; Wed, 15 Jun 2022 17:53:32 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1o1NqG-00FJy1-NE
+        id 1o1NqG-00FJy5-O6
         for linux-xfs@vger.kernel.org;
         Wed, 15 Jun 2022 17:53:32 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 07/14] xfs: convert CIL busy extents to per-cpu
-Date:   Wed, 15 Jun 2022 17:53:23 +1000
-Message-Id: <20220615075330.3651541-8-david@fromorbit.com>
+Subject: [PATCH 08/14] xfs: Add order IDs to log items in CIL
+Date:   Wed, 15 Jun 2022 17:53:24 +1000
+Message-Id: <20220615075330.3651541-9-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220615075330.3651541-1-david@fromorbit.com>
 References: <20220615075330.3651541-1-david@fromorbit.com>
@@ -41,7 +41,7 @@ X-Optus-CM-Score: 0
 X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=62a98ffe
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
         a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=vUsicihHAahmRoZZVqUA:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=CQLCtQqWn6iW24E7Yj8A:9 a=AjGcO6oz07-iQ99wixmX:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -53,91 +53,152 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-To get them out from under the CIL lock.
+Before we split the ordered CIL up into per cpu lists, we need a
+mechanism to track the order of the items in the CIL. We need to do
+this because there are rules around the order in which related items
+must physically appear in the log even inside a single checkpoint
+transaction.
 
-This is an unordered list, so we can simply punt it to per-cpu lists
-during transaction commits and reaggregate it back into a single
-list during the CIL push work.
+An example of this is intents - an intent must appear in the log
+before it's intent done record so that log recovery can cancel the
+intent correctly. If we have these two records misordered in the
+CIL, then they will not be recovered correctly by journal replay.
+
+We also will not be able to move items to the tail of
+the CIL list when they are relogged, hence the log items will need
+some mechanism to allow the correct log item order to be recreated
+before we write log items to the hournal.
+
+Hence we need to have a mechanism for recording global order of
+transactions in the log items  so that we can recover that order
+from un-ordered per-cpu lists.
+
+Do this with a simple monotonic increasing commit counter in the CIL
+context. Each log item in the transaction gets stamped with the
+current commit order ID before it is added to the CIL. If the item
+is already in the CIL, leave it where it is instead of moving it to
+the tail of the list and instead sort the list before we start the
+push work.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log_cil.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ fs/xfs/xfs_log_cil.c  | 39 +++++++++++++++++++++++++++++++--------
+ fs/xfs/xfs_log_priv.h |  1 +
+ fs/xfs/xfs_trans.h    |  1 +
+ 3 files changed, 33 insertions(+), 8 deletions(-)
 
 diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index e38e10082da2..f02a75d5a03e 100644
+index f02a75d5a03e..6bc540898e3a 100644
 --- a/fs/xfs/xfs_log_cil.c
 +++ b/fs/xfs/xfs_log_cil.c
-@@ -128,6 +128,11 @@ xlog_cil_push_pcp_aggregate(
- 		ctx->ticket->t_curr_res += cilpcp->space_reserved;
- 		cilpcp->space_reserved = 0;
+@@ -550,6 +550,7 @@ xlog_cil_insert_items(
+ 	int			len = 0;
+ 	int			iovhdr_res = 0, split_res = 0, ctx_res = 0;
+ 	int			space_used;
++	int			order;
+ 	struct xlog_cil_pcp	*cilpcp;
  
-+		if (!list_empty(&cilpcp->busy_extents)) {
-+			list_splice_init(&cilpcp->busy_extents,
-+					&ctx->busy_extents);
-+		}
-+
- 		/*
- 		 * We're in the middle of switching cil contexts.  Reset the
- 		 * counter we use to detect when the current context is nearing
-@@ -634,6 +639,9 @@ xlog_cil_insert_items(
- 	} else {
- 		cilpcp->space_used += len;
- 	}
-+	/* attach the transaction to the CIL if it has any busy extents */
-+	if (!list_empty(&tp->t_busy))
-+		list_splice_init(&tp->t_busy, &cilpcp->busy_extents);
+ 	ASSERT(tp);
+@@ -645,23 +646,22 @@ xlog_cil_insert_items(
  	put_cpu_ptr(cilpcp);
  
  	/*
-@@ -656,9 +664,6 @@ xlog_cil_insert_items(
- 			list_move_tail(&lip->li_cil, &cil->xc_cil);
+-	 * Now (re-)position everything modified at the tail of the CIL.
++	 * Now update the order of everything modified in the transaction
++	 * and insert items into the CIL if they aren't already there.
+ 	 * We do this here so we only need to take the CIL lock once during
+ 	 * the transaction commit.
+ 	 */
++	order = atomic_inc_return(&ctx->order_id);
+ 	spin_lock(&cil->xc_cil_lock);
+ 	list_for_each_entry(lip, &tp->t_items, li_trans) {
+ 		/* Skip items which aren't dirty in this transaction. */
+ 		if (!test_bit(XFS_LI_DIRTY, &lip->li_flags))
+ 			continue;
+ 
+-		/*
+-		 * Only move the item if it isn't already at the tail. This is
+-		 * to prevent a transient list_empty() state when reinserting
+-		 * an item that is already the only item in the CIL.
+-		 */
+-		if (!list_is_last(&lip->li_cil, &cil->xc_cil))
+-			list_move_tail(&lip->li_cil, &cil->xc_cil);
++		lip->li_order_id = order;
++		if (!list_empty(&lip->li_cil))
++			continue;
++		list_add_tail(&lip->li_cil, &cil->xc_cil);
  	}
  
--	/* attach the transaction to the CIL if it has any busy extents */
--	if (!list_empty(&tp->t_busy))
--		list_splice_init(&tp->t_busy, &ctx->busy_extents);
  	spin_unlock(&cil->xc_cil_lock);
+@@ -1082,6 +1082,26 @@ xlog_cil_build_trans_hdr(
+ 	tic->t_curr_res -= lvhdr->lv_bytes;
+ }
  
- 	/*
-@@ -1756,6 +1761,8 @@ xlog_cil_pcp_dead(
- 		ctx->ticket->t_curr_res += cilpcp->space_reserved;
- 	cilpcp->space_reserved = 0;
- 
-+	if (!list_empty(&cilpcp->busy_extents))
-+		list_splice_init(&cilpcp->busy_extents, &ctx->busy_extents);
- 	atomic_add(cilpcp->space_used, &ctx->space_used);
- 	cilpcp->space_used = 0;
- 	up_write(&cil->xc_ctx_lock);
-@@ -1766,10 +1773,12 @@ xlog_cil_pcp_dead(
-  */
- int
- xlog_cil_init(
--	struct xlog	*log)
-+	struct xlog		*log)
- {
--	struct xfs_cil	*cil;
--	struct xfs_cil_ctx *ctx;
-+	struct xfs_cil		*cil;
-+	struct xfs_cil_ctx	*ctx;
-+	struct xlog_cil_pcp	*cilpcp;
-+	int			cpu;
- 
- 	cil = kmem_zalloc(sizeof(*cil), KM_MAYFAIL);
- 	if (!cil)
-@@ -1789,6 +1798,11 @@ xlog_cil_init(
- 	if (!cil->xc_pcp)
- 		goto out_destroy_wq;
- 
-+	for_each_possible_cpu(cpu) {
-+		cilpcp = per_cpu_ptr(cil->xc_pcp, cpu);
-+		INIT_LIST_HEAD(&cilpcp->busy_extents);
-+	}
++/*
++ * CIL item reordering compare function. We want to order in ascending ID order,
++ * but we want to leave items with the same ID in the order they were added to
++ * the list. This is important for operations like reflink where we log 4 order
++ * dependent intents in a single transaction when we overwrite an existing
++ * shared extent with a new shared extent. i.e. BUI(unmap), CUI(drop),
++ * CUI (inc), BUI(remap)...
++ */
++static int
++xlog_cil_order_cmp(
++	void			*priv,
++	const struct list_head	*a,
++	const struct list_head	*b)
++{
++	struct xfs_log_item	*l1 = container_of(a, struct xfs_log_item, li_cil);
++	struct xfs_log_item	*l2 = container_of(b, struct xfs_log_item, li_cil);
 +
- 	INIT_LIST_HEAD(&cil->xc_cil);
- 	INIT_LIST_HEAD(&cil->xc_committing);
- 	spin_lock_init(&cil->xc_cil_lock);
++	return l1->li_order_id > l2->li_order_id;
++}
++
+ /*
+  * Pull all the log vectors off the items in the CIL, and remove the items from
+  * the CIL. We don't need the CIL lock here because it's only needed on the
+@@ -1101,6 +1121,8 @@ xlog_cil_build_lv_chain(
+ {
+ 	struct xfs_log_vec	*lv = NULL;
+ 
++	list_sort(NULL, &cil->xc_cil, xlog_cil_order_cmp);
++
+ 	while (!list_empty(&cil->xc_cil)) {
+ 		struct xfs_log_item	*item;
+ 
+@@ -1114,6 +1136,7 @@ xlog_cil_build_lv_chain(
+ 		}
+ 
+ 		list_del_init(&item->li_cil);
++		item->li_order_id = 0;
+ 		if (!ctx->lv_chain)
+ 			ctx->lv_chain = item->li_lv;
+ 		else
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index 05a5668d8789..563145ea0f7d 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -229,6 +229,7 @@ struct xfs_cil_ctx {
+ 	struct list_head	committing;	/* ctx committing list */
+ 	struct work_struct	discard_endio_work;
+ 	struct work_struct	push_work;
++	atomic_t		order_id;
+ };
+ 
+ /*
+diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
+index 9561f193e7e1..29927ceecf82 100644
+--- a/fs/xfs/xfs_trans.h
++++ b/fs/xfs/xfs_trans.h
+@@ -45,6 +45,7 @@ struct xfs_log_item {
+ 	struct xfs_log_vec		*li_lv;		/* active log vector */
+ 	struct xfs_log_vec		*li_lv_shadow;	/* standby vector */
+ 	xfs_csn_t			li_seq;		/* CIL commit seq */
++	uint32_t			li_order_id;	/* CIL commit order */
+ };
+ 
+ /*
 -- 
 2.35.1
 
