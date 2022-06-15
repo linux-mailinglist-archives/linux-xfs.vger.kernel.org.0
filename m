@@ -2,46 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51E2554C2E8
-	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jun 2022 09:53:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87C3654C2F5
+	for <lists+linux-xfs@lfdr.de>; Wed, 15 Jun 2022 09:54:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244167AbiFOHxk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 15 Jun 2022 03:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
+        id S245688AbiFOHxo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 15 Jun 2022 03:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245299AbiFOHxg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jun 2022 03:53:36 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EF6344133A
-        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 00:53:34 -0700 (PDT)
+        with ESMTP id S1343561AbiFOHxj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 15 Jun 2022 03:53:39 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 90A9941988
+        for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 00:53:38 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2516510E74EF
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 289F85ECB33
         for <linux-xfs@vger.kernel.org>; Wed, 15 Jun 2022 17:53:34 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o1NqG-006rRY-S7
+        id 1o1NqG-006rRa-T1
         for linux-xfs@vger.kernel.org; Wed, 15 Jun 2022 17:53:32 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1o1NqG-00FJyK-R6
+        id 1o1NqG-00FJyP-S0
         for linux-xfs@vger.kernel.org;
         Wed, 15 Jun 2022 17:53:32 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 11/14] xfs: move CIL ordering to the logvec chain
-Date:   Wed, 15 Jun 2022 17:53:27 +1000
-Message-Id: <20220615075330.3651541-12-david@fromorbit.com>
+Subject: [PATCH 12/14] xfs: avoid cil push lock if possible
+Date:   Wed, 15 Jun 2022 17:53:28 +1000
+Message-Id: <20220615075330.3651541-13-david@fromorbit.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220615075330.3651541-1-david@fromorbit.com>
 References: <20220615075330.3651541-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62a98ffe
+X-Optus-CM-Analysis: v=2.4 cv=deDjYVbe c=1 sm=1 tr=0 ts=62a98ffe
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
         a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=kwNYBIauJPz-SwNxrc4A:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=F6O72S5bnyPC6Df_giEA:9 a=AjGcO6oz07-iQ99wixmX:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -53,84 +53,49 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Adding a list_sort() call to the CIL push work while the xc_ctx_lock
-is held exclusively has resulted in fairly long lock hold times and
-that stops all front end transaction commits from making progress.
+Because now it hurts when the CIL fills up.
 
-We can move the sorting out of the xc_ctx_lock if we can transfer
-the ordering information to the log vectors as they are detached
-from the log items and then we can sort the log vectors.  With these
-changes, we can move the list_sort() call to just before we call
-xlog_write() when we aren't holding any locks at all.
+  - 37.20% __xfs_trans_commit
+      - 35.84% xfs_log_commit_cil
+         - 19.34% _raw_spin_lock
+            - do_raw_spin_lock
+                 19.01% __pv_queued_spin_lock_slowpath
+         - 4.20% xfs_log_ticket_ungrant
+              0.90% xfs_log_space_wake
+
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log.h     |  1 +
- fs/xfs/xfs_log_cil.c | 16 +++++++++++-----
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_log_cil.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
-index e7bf3c780cb4..2728886c2963 100644
---- a/fs/xfs/xfs_log.h
-+++ b/fs/xfs/xfs_log.h
-@@ -10,6 +10,7 @@ struct xfs_cil_ctx;
- 
- struct xfs_log_vec {
- 	struct list_head	lv_list;	/* CIL lv chain ptrs */
-+	uint32_t		lv_order_id;	/* chain ordering info */
- 	int			lv_niovecs;	/* number of iovecs in lv */
- 	struct xfs_log_iovec	*lv_iovecp;	/* iovec array */
- 	struct xfs_log_item	*lv_item;	/* owner */
 diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 0e69e855d710..8bb251d2b4d3 100644
+index 8bb251d2b4d3..78f8537860df 100644
 --- a/fs/xfs/xfs_log_cil.c
 +++ b/fs/xfs/xfs_log_cil.c
-@@ -1095,10 +1095,10 @@ xlog_cil_order_cmp(
- 	const struct list_head	*a,
- 	const struct list_head	*b)
- {
--	struct xfs_log_item	*l1 = container_of(a, struct xfs_log_item, li_cil);
--	struct xfs_log_item	*l2 = container_of(b, struct xfs_log_item, li_cil);
-+	struct xfs_log_vec	*l1 = container_of(a, struct xfs_log_vec, lv_list);
-+	struct xfs_log_vec	*l2 = container_of(b, struct xfs_log_vec, lv_list);
+@@ -1422,10 +1422,18 @@ xlog_cil_push_background(
+ 	ASSERT(!test_bit(XLOG_CIL_EMPTY, &cil->xc_flags));
  
--	return l1->li_order_id > l2->li_order_id;
-+	return l1->lv_order_id > l2->lv_order_id;
- }
- 
- /*
-@@ -1117,8 +1117,6 @@ xlog_cil_build_lv_chain(
- 	uint32_t		*num_iovecs,
- 	uint32_t		*num_bytes)
- {
--	list_sort(NULL, &ctx->log_items, xlog_cil_order_cmp);
--
- 	while (!list_empty(&ctx->log_items)) {
- 		struct xfs_log_item	*item;
- 		struct xfs_log_vec	*lv;
-@@ -1133,6 +1131,7 @@ xlog_cil_build_lv_chain(
- 		}
- 
- 		lv = item->li_lv;
-+		lv->lv_order_id = item->li_order_id;
- 
- 		/* we don't write ordered log vectors */
- 		if (lv->lv_buf_len != XFS_LOG_VEC_ORDERED)
-@@ -1292,6 +1291,13 @@ xlog_cil_push_work(
- 	spin_unlock(&cil->xc_push_lock);
- 	up_write(&cil->xc_ctx_lock);
- 
-+	/*
-+	 * Sort the log vector chain before we add the transaction headers.
-+	 * This ensures we always have the transaction headers at the start
-+	 * of the chain.
-+	 */
-+	list_sort(NULL, &ctx->lv_chain, xlog_cil_order_cmp);
-+
  	/*
- 	 * Build a checkpoint transaction header and write it to the log to
- 	 * begin the transaction. We need to account for the space used by the
+-	 * Don't do a background push if we haven't used up all the
+-	 * space available yet.
++	 * We are done if:
++	 * - we haven't used up all the space available yet; or
++	 * - we've already queued up a push; and
++	 * - we're not over the hard limit; and
++	 * - nothing has been over the hard limit.
++	 *
++	 * If so, we don't need to take the push lock as there's nothing to do.
+ 	 */
+-	if (space_used < XLOG_CIL_SPACE_LIMIT(log)) {
++	if (space_used < XLOG_CIL_SPACE_LIMIT(log) ||
++	    (cil->xc_push_seq == cil->xc_current_sequence &&
++	     space_used < XLOG_CIL_BLOCKING_SPACE_LIMIT(log) &&
++	     !waitqueue_active(&cil->xc_push_wait))) {
+ 		up_read(&cil->xc_ctx_lock);
+ 		return;
+ 	}
 -- 
 2.35.1
 
