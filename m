@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE52254F4F1
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9F854F4EF
 	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jun 2022 12:10:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381599AbiFQKHg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Jun 2022 06:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
+        id S1381583AbiFQKHr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Jun 2022 06:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381605AbiFQKHW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Jun 2022 06:07:22 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99CE96A42C;
-        Fri, 17 Jun 2022 03:07:03 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id l2-20020a05600c4f0200b0039c55c50482so4117094wmq.0;
-        Fri, 17 Jun 2022 03:07:03 -0700 (PDT)
+        with ESMTP id S1381581AbiFQKHX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Jun 2022 06:07:23 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F676A436;
+        Fri, 17 Jun 2022 03:07:05 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id z9so2058826wmf.3;
+        Fri, 17 Jun 2022 03:07:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4KLwIj5Vu7AZlMJL3ChxFNmM9rxj5CAzgdTye3eR8PQ=;
-        b=WTrBLahFEki5jxOMZWYPRoyceiXgV9iw1qPlrUbx/Mkaxnp8p2f0vzfygdGGwhF4fd
-         GIPcRHiYlWWPrHrQwRdkRD28EtNIf6fTO3fz1jyES+edEpaj0gZ5ycUbWBqALzBcp21Y
-         hl1m1KIqOVgqo9IIltisvb1S6sq9/ieMkYWbe+pz7FazBOSaQY9975rAENmg0qJcNh7p
-         pshYupgu366+jJAsJOzhiq1HcqwofB51JgyoE8JORbZKUBL1aFFClbbKpiKVoo2RrsUg
-         y/6KK8AVnuiIEtxIepRmDYSJxDbgygeo4TdeBtIny2342ILwyyvxDC8jnYXIufCbc9Tv
-         Tv2Q==
+        bh=VPwd3V/mnJTePijepg+bg6gI8KKUf3jNlg+9LNT8k34=;
+        b=E5Y+jdBNSP6FJgv01znY/FqvVxDVRzuTA0E6/KWltR7AQvsYNt9YDm+rL/qzpI0/LE
+         p1moFKNmkPA05tehp9CVBxKJm3rQW102IV6rKzYRosIjOjT/bReYMDvUTmD13zZzPEit
+         FWvtfBWCAyL8MsTMeynedbm0jE4TkmTvB5N/1r1G/ydySmOz56/2DBXnMT5EV8REKPGn
+         TNkPOCj7//At1V+B+0XfJiO1t3+V8ovSVI2ZfBJ8O3c2/aCRHWzP5sSVcKPiXG8Hou3U
+         TSlodWgAR1UZC1fvgWEVziy5uKo8H4Reo5gyTuGwzv2NAvXPtYrPmPDZJFPNMLdvS/ZN
+         hcvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4KLwIj5Vu7AZlMJL3ChxFNmM9rxj5CAzgdTye3eR8PQ=;
-        b=qjVBD1dufAOOq7g+H437RRn84O/QiSvtmNZUIwE//3R4jNbuCgpqpbmLvTpHQcFYeN
-         u9lJoIc9rwNYUUj3HEMjbtrPZ8/gvQ7T30XBFtyzZzlaf4Ot2G/h/ejrkOs7Yhiqi5ET
-         jIqvy2DrtzqYUUw4HwNy3qdK25Do5WABglr1ydIVPZflOBneQlDY+1P3V9gcQXI+ZLab
-         gf6W1WrQqmlcxZ9rH6R83rMI59mQYcIZ21fTg90VSrzLMmSIt11T7QiZ4+SSwo5rFURz
-         Aiv/v8eL2+jDxl63M+yVMBUR9W5wJ7k4sa6lpN9TA945Iev6Tf/6oGw3DMxBv351YIUz
-         ynpA==
-X-Gm-Message-State: AOAM5324sxmCBf7ucw0GSEJQiAcnprlWnqPnvtRRCIIiXT8nd7qATbNm
-        ULkld2UpmFmfbdhc5uRevVsknsoHdqcO/A==
-X-Google-Smtp-Source: ABdhPJwrIaptM1v8O+UzyLACJ6TPhS00hzw3rvxFC9pDVzrS8iaoiFH3JVDsH2jk+cwZtT5FwsPSRA==
-X-Received: by 2002:a7b:cc13:0:b0:38e:67e3:db47 with SMTP id f19-20020a7bcc13000000b0038e67e3db47mr20197606wmh.133.1655460422202;
-        Fri, 17 Jun 2022 03:07:02 -0700 (PDT)
+        bh=VPwd3V/mnJTePijepg+bg6gI8KKUf3jNlg+9LNT8k34=;
+        b=gZ7abM8lderM5aLFJNK0B08/Fq9fE9Bx4sBkAUhvYgX9macsfM6FSKZ3l2+vtP+4w3
+         9YvG25EY5fC7hxcG/RvhTe2Dn2L5WMHP35Mj5oUSslFy46WLEbKNEvaNWp6bhbzaAq9y
+         0m6I1Yh/oeCs+hI8Jh7BAK+JmJXZdSBKkwlwkzfdyF9NS35Vrto+90k0i5opZoIkx8c6
+         KlXIm1RppHXLuJFBYhRkkbAv+wqsMmHDaQJDyYe1k0J1D9UsixbGOKJQ/HrGcF05zZYv
+         IjAl/81Bd6DZ+o2Zs+Gu96nYducVInK07gJ4gEpRDd4Qaz3Fk4kKNVFP2RVAPAiyhQfm
+         hBjw==
+X-Gm-Message-State: AJIora/TlIls7V3usfJzVDKefYlqNLg98nfcq1jdhnO93NqfHIS7E4YW
+        JWnp+L/u+CXpgifue1xulKw=
+X-Google-Smtp-Source: AGRyM1u2GxiarAuwK9CPF5PGhoMntxA+rwQDI1ys2Luxn5j5Y3sG+3sii7xe9daGZ4qK12PklJWb/w==
+X-Received: by 2002:a05:600c:b51:b0:39d:b58f:67bf with SMTP id k17-20020a05600c0b5100b0039db58f67bfmr9391616wmr.195.1655460423753;
+        Fri, 17 Jun 2022 03:07:03 -0700 (PDT)
 Received: from localhost.localdomain ([77.137.66.49])
-        by smtp.gmail.com with ESMTPSA id m42-20020a05600c3b2a00b003973435c517sm5265534wms.0.2022.06.17.03.07.00
+        by smtp.gmail.com with ESMTPSA id m42-20020a05600c3b2a00b003973435c517sm5265534wms.0.2022.06.17.03.07.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jun 2022 03:07:01 -0700 (PDT)
+        Fri, 17 Jun 2022 03:07:03 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     "Darrick J . Wong" <djwong@kernel.org>
 Cc:     Leah Rumancik <leah.rumancik@gmail.com>,
@@ -54,11 +54,10 @@ Cc:     Leah Rumancik <leah.rumancik@gmail.com>,
         Dave Chinner <david@fromorbit.com>,
         Christoph Hellwig <hch@lst.de>,
         Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>
-Subject: [PATCH 5.10 CANDIDATE 09/11] xfs: only bother with sync_filesystem during readonly remount
-Date:   Fri, 17 Jun 2022 13:06:39 +0300
-Message-Id: <20220617100641.1653164-10-amir73il@gmail.com>
+        linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: [PATCH 5.10 CANDIDATE 10/11] xfs: fix up non-directory creation in SGID directories
+Date:   Fri, 17 Jun 2022 13:06:40 +0300
+Message-Id: <20220617100641.1653164-11-amir73il@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220617100641.1653164-1-amir73il@gmail.com>
 References: <20220617100641.1653164-1-amir73il@gmail.com>
@@ -74,51 +73,66 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+From: Christoph Hellwig <hch@lst.de>
 
-commit b97cca3ba9098522e5a1c3388764ead42640c1a5 upstream.
+commit 01ea173e103edd5ec41acec65b9261b87e123fc2 upstream.
 
-In commit 02b9984d6408, we pushed a sync_filesystem() call from the VFS
-into xfs_fs_remount.  The only time that we ever need to push dirty file
-data or metadata to disk for a remount is if we're remounting the
-filesystem read only, so this really could be moved to xfs_remount_ro.
+XFS always inherits the SGID bit if it is set on the parent inode, while
+the generic inode_init_owner does not do this in a few cases where it can
+create a possible security problem, see commit 0fa3ecd87848
+("Fix up non-directory creation in SGID directories") for details.
 
-Once we've moved the call site, actually check the return value from
-sync_filesystem.
+Switch XFS to use the generic helper for the normal path to fix this,
+just keeping the simple field inheritance open coded for the case of the
+non-sgid case with the bsdgrpid mount option.
 
-Fixes: 02b9984d6408 ("fs: push sync_filesystem() down to the file system's remount_fs()")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 ---
- fs/xfs/xfs_super.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_inode.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 6323974d6b3e..dd0439ae6732 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1716,6 +1716,11 @@ xfs_remount_ro(
- 	};
- 	int			error;
- 
-+	/* Flush all the dirty data to disk. */
-+	error = sync_filesystem(mp->m_super);
-+	if (error)
-+		return error;
-+
- 	/*
- 	 * Cancel background eofb scanning so it cannot race with the final
- 	 * log force+buftarg wait and deadlock the remount.
-@@ -1786,8 +1791,6 @@ xfs_fc_reconfigure(
- 	if (error)
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 1ae669d12301..ae86fbdc1bab 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -802,6 +802,7 @@ xfs_ialloc(
+ 	xfs_buf_t	**ialloc_context,
+ 	xfs_inode_t	**ipp)
+ {
++	struct inode	*dir = pip ? VFS_I(pip) : NULL;
+ 	struct xfs_mount *mp = tp->t_mountp;
+ 	xfs_ino_t	ino;
+ 	xfs_inode_t	*ip;
+@@ -847,18 +848,17 @@ xfs_ialloc(
  		return error;
+ 	ASSERT(ip != NULL);
+ 	inode = VFS_I(ip);
+-	inode->i_mode = mode;
+ 	set_nlink(inode, nlink);
+-	inode->i_uid = current_fsuid();
+ 	inode->i_rdev = rdev;
+ 	ip->i_d.di_projid = prid;
  
--	sync_filesystem(mp->m_super);
--
- 	/* inode32 -> inode64 */
- 	if ((mp->m_flags & XFS_MOUNT_SMALL_INUMS) &&
- 	    !(new_mp->m_flags & XFS_MOUNT_SMALL_INUMS)) {
+-	if (pip && XFS_INHERIT_GID(pip)) {
+-		inode->i_gid = VFS_I(pip)->i_gid;
+-		if ((VFS_I(pip)->i_mode & S_ISGID) && S_ISDIR(mode))
+-			inode->i_mode |= S_ISGID;
++	if (dir && !(dir->i_mode & S_ISGID) &&
++	    (mp->m_flags & XFS_MOUNT_GRPID)) {
++		inode->i_uid = current_fsuid();
++		inode->i_gid = dir->i_gid;
++		inode->i_mode = mode;
+ 	} else {
+-		inode->i_gid = current_fsgid();
++		inode_init_owner(inode, dir, mode);
+ 	}
+ 
+ 	/*
 -- 
 2.25.1
 
