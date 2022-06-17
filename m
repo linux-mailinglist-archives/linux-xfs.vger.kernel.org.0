@@ -2,72 +2,145 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B830754F4EE
-	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jun 2022 12:10:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD3C254F643
+	for <lists+linux-xfs@lfdr.de>; Fri, 17 Jun 2022 13:05:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381743AbiFQKHo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 17 Jun 2022 06:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
+        id S1380369AbiFQLFi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 17 Jun 2022 07:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381669AbiFQKHY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Jun 2022 06:07:24 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE8B46A43D;
-        Fri, 17 Jun 2022 03:07:06 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id m32-20020a05600c3b2000b0039756bb41f2so2138305wms.3;
-        Fri, 17 Jun 2022 03:07:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+F6aTIXlSin5tx3PF0RUSLMxKLKa7f7bpvoyxuqglDY=;
-        b=Y+Zd61v6ktTBXhWUVgV12t8pNlvHlYfwGz9eH2kZS7s66YkpVym6RrEISo/3SfJCG6
-         XIjlSs4CQx21GfhrRhAJR6YMHSi6nyuyRucOc60xyD242QdoOuvJmPiiij9BBVPloHds
-         iY0Z9A+a1n0DitsF9tusC8gjVHvIzELsLA70gZsOQCYFMhUSD6v9DTyzOtuX8Seyg4GA
-         zk3DgJ1CyYGWBn37qFbma0BdIxP6Y7lraoROjxNl/mDt1s06IUfE6F92GYUG7oED6JxP
-         1oJ210g5cS4L0uKSpVP6fXH5XZpyxZudBwEkBXcAPUy/bxIgkt7cgdDMX6q3gSMFJikR
-         djFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+F6aTIXlSin5tx3PF0RUSLMxKLKa7f7bpvoyxuqglDY=;
-        b=w/RfiICczQrailgO21KyQoAtCusg7rHVUzQNi7Lm4MQg3nvYvOTOAM1pOpFOOuEdYY
-         4xXoRgZWsFCjlo6qfEzyGO08T6innhZlh6dbuKJZuzB0qH0nVF1mVshNg93ANQkrfFxS
-         MsW8gKv3E+bZLUHZNtzg4Awj3T09jYqXGASAsUwyVxFbeEBYXzMVqV28CIHh/PzQPEyR
-         5KS3MOkuY+CYCSUEyHP27irpUdkE/zemvq3XCgW5XQBjlpfrOJPog3YQbO6v+qy/aIKL
-         rS1+79OHjmxoDpuYS2ScJjcOjHwAU14/uQgPITFZDUXbaNs8m8ttdKdo9gno3yU+hk5l
-         hRhg==
-X-Gm-Message-State: AOAM531S7mNHjRWHhhyyaFhk0BdT5+cBIqo3RkpKxoo+4t+twFEP20VQ
-        oUBkNnHFJ+JRCsMtq2KCwUg=
-X-Google-Smtp-Source: ABdhPJyCJKuxVWiduVnPGF4s7hzJEkNISVOvHq0ip+JFdNiwuQSNXJ0Ejm0J/7D8gaeOt+8IvkGWxg==
-X-Received: by 2002:a7b:c1c1:0:b0:39c:58c4:c701 with SMTP id a1-20020a7bc1c1000000b0039c58c4c701mr20609265wmj.117.1655460425390;
-        Fri, 17 Jun 2022 03:07:05 -0700 (PDT)
-Received: from localhost.localdomain ([77.137.66.49])
-        by smtp.gmail.com with ESMTPSA id m42-20020a05600c3b2a00b003973435c517sm5265534wms.0.2022.06.17.03.07.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jun 2022 03:07:05 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     "Darrick J . Wong" <djwong@kernel.org>
-Cc:     Leah Rumancik <leah.rumancik@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-xfs@vger.kernel.org, fstests@vger.kernel.org,
-        Dave Chinner <dchinner@redhat.com>,
-        Christian Brauner <brauner@kernel.org>
-Subject: [PATCH 5.10 CANDIDATE 11/11] xfs: use setattr_copy to set vfs inode attributes
-Date:   Fri, 17 Jun 2022 13:06:41 +0300
-Message-Id: <20220617100641.1653164-12-amir73il@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220617100641.1653164-1-amir73il@gmail.com>
-References: <20220617100641.1653164-1-amir73il@gmail.com>
+        with ESMTP id S1380066AbiFQLFh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 17 Jun 2022 07:05:37 -0400
+Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-eopbgr120051.outbound.protection.outlook.com [40.107.12.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AFE16C540;
+        Fri, 17 Jun 2022 04:05:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SS2iJsShMAFfAvTfIRDTZa1WUlZqbAnVe/wu/sMpVTfIS/8IZbidYPeTuBI0+ctTvMaae2AvNc7XTJK2gIOz0jZKXJsg3sgSo3OCbkf8D/wo6kmM4aUKLsfDFBNexJAX4y9Pm4ZTP2yb6aQP5ioh582W3IaazB/513MVkFJ2mTcPtIpzp9y0/RRYoUQOi8vO6se7nY/j2BjSnsLwwyPdCpz6dlakj3Sc+5bQX9lKgZC+R/9LJaOqPdsyBytmAs3XNux9m9SZ3kmZw7mopQ538gX4xXtN8ubNnIerPEBCdt1ospc9innDgdUZAFSVh4vx4JNzI5ntgDypo+b4csCLHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H/SkJ599AQEHvQlLJG9YzlrxxoS0f84POSSZW8Lzoo0=;
+ b=oDZKbtdmO8XkMVMHTjzPnkD+LJmMBMbe6FHBdG3xa/MuElUnSJYA5kPJJvJ6yYMOQJzlEz4FcUAiK2EXhaG+2JmbIfSAatA6gj8yow05R2s2sGq/jp4GhjETp8CVGCzQQEeB5Wm7m7U+/ARTx/mkoA+QAnFz399wLCRNSkkXoAvC+z/BgCnZdR4z/Q5pJJKBepJL4IiDawdRVEADq82zj4Vel1GmHH6/gLsM/hbqXZVXQhEEjuC2Yh/a8b/tLaDdaZpZaG+UHLH+CJ40nUf72FqQ+LXfB0refrDeP3EF/CFNxv2imh9UlUgJf+/y3pnRn8KwwMCH4ju09hsGbqovzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H/SkJ599AQEHvQlLJG9YzlrxxoS0f84POSSZW8Lzoo0=;
+ b=0zPOGWoNqCLweLcAAzSJe6ZgeGQayDfn/rigMIJvG/Vt2WZRRDroRbudnPPOa5BBhA1Dpp3bogNFxto6zLBN2UkyQeOk/cFzCOdL9V5Dk2orSTD1FRQqgjrxJhSF+zfpdiL8xiSkQu4SuTxrfmd5wZ2Yscw/EG7oThLtHJ0yDQxzGrNe2Xhmn3LJPgC+HQUxsRnr4L0fCGcWMi6gwOws3ziyP2LwhnGXX2Z16+VnuDHHGQ5s6CHO/ReF+vpWXZ6zHUNBLkifApHY1ip1WTGfpJi/5tCL+Xdu8ihcSu5hhgLd5gdS7guLkKbwV9wOZNB8+OOB19VJaJd/mo0wqVSl8Q==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by PR0P264MB3786.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:149::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Fri, 17 Jun
+ 2022 11:05:33 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::b15e:862f:adf7:5356]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::b15e:862f:adf7:5356%5]) with mapi id 15.20.5353.016; Fri, 17 Jun 2022
+ 11:05:32 +0000
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] usercopy: use unsigned long instead of uintptr_t
+Thread-Topic: [PATCH] usercopy: use unsigned long instead of uintptr_t
+Thread-Index: AQHYgY56XB5uBmp1zEOymlHEC/X3ka1SGkAAgAADqACAAAiSAIAACqGAgAAMdQCAAANVgIAAJpIAgADVkYCAADQtAA==
+Date:   Fri, 17 Jun 2022 11:05:32 +0000
+Message-ID: <ec7f0c59-f67e-1d7e-c0b3-b0a409623e98@csgroup.eu>
+References: <20220616143617.449094-1-Jason@zx2c4.com>
+ <YqtAShjjo1zC6EgO@casper.infradead.org> <YqtDXPWdFQ/fqgDo@zx2c4.com>
+ <YqtKjAZRPBVjlE8S@casper.infradead.org>
+ <CAHk-=wj2OHy-5e+srG1fy+ZU00TmZ1NFp6kFLbVLMXHe7A1d-g@mail.gmail.com>
+ <Yqtd6hTS52mbb9+q@casper.infradead.org>
+ <CAHk-=wj_K2MnhC6N_LyY6ezmQyWzqBnfobXC354HJuKdqMePzA@mail.gmail.com>
+ <CAHk-=whS3xhJ=quD5bzDb6JsAhKd0vem4K-U=DhUGf-tDJUMHg@mail.gmail.com>
+ <CAMuHMdXxAwbCQPn4jg8X=_p5cYkpvNE4bXfQHWk2vz2Y6hL2-w@mail.gmail.com>
+In-Reply-To: <CAMuHMdXxAwbCQPn4jg8X=_p5cYkpvNE4bXfQHWk2vz2Y6hL2-w@mail.gmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5c48a4ef-9203-424f-8c70-08da50514c56
+x-ms-traffictypediagnostic: PR0P264MB3786:EE_
+x-microsoft-antispam-prvs: <PR0P264MB37865C6CA62EB43593A8FF6DEDAF9@PR0P264MB3786.FRAP264.PROD.OUTLOOK.COM>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: U4/hHpoHO3siG/HfuXZEey2TtOtK/hyJ14OgEl01nfX7Ujy+aR7+kzc3RW92qeOKouesa94n7/Q80qoeBGdgZryhnNdNiFmWjYJ9whfJWBeld/G54DCbzK9XLOE2ucYmukEyFqmNRVzcGIlzSBQDfQNZ/a5P9U9ymnwZ8KoUx2M8Cv8tMePbcN7IDakG/O5kmqZAY86t+KYBqCpQ/3cqjOwH0yA114aEDNsBnj07raPThwVArQ7ydl7LyN4PVtq1JF9iQd6Ps4wxXI5Fa+J31ereN9kQHYqOwm1OhJFpNSssv7oTUDe7nJN7uRGK570CamcBayJBoxBqwLd18ASBr0mmwXhgwyj40NY0BpHa6ngJaCXn+Nx6m5q0Zj5mpzP9GSwTUh9gLTPJ2kF4V7rKSSiY5n2rzwBjlRUJQwYo62lLAaR+g2px7tnv7MHsUYiUF++Z53bwIk1sjhKi+IqfrxuGBYTZRVlEXTHlse2DJ9HTMH0nkfplgksy7l7ikhZ8FhzxT7q3EQveeFUMdt+ve30duvoyHMjNEzCcJTHh6C0LZxg6Q25gLB95lKhgDgG0nc1PozR/5QMqqx1T+Jg4Id52PI9gkXRT1fzuKWFjBdrf2Jki3aoQReeloib/74jEzz2yGShCPlnKqqopezIh4iz7/Q9SmO8+RPBok1bODYHRgtp499IPquqWrwibySlHeJ/68NE8tzNA5g04DOlEIacM1EiwCqS4jwwJLHMKvI7iUSeCfz4U2QhpbHwwITlwgCw7UR8SXUNt5PMwHIdrug==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(122000001)(110136005)(54906003)(31696002)(6506007)(26005)(66556008)(86362001)(66946007)(6512007)(2616005)(38070700005)(6486002)(66476007)(5660300002)(38100700002)(186003)(4744005)(7416002)(316002)(498600001)(36756003)(8936002)(76116006)(91956017)(2906002)(64756008)(66446008)(44832011)(8676002)(4326008)(31686004)(71200400001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?akZ5NFFUdjVORkhwQzlnNHVlZzJvRGhkRWlSbDhFTDhBNWlpeFQ2WHk2UnpF?=
+ =?utf-8?B?a3hrTXdMZ3pjS2Z6ZnRNbXFyWm1TZDAwZkJ6MmRQdGhFOWx2MDBVVHVuVEk5?=
+ =?utf-8?B?NWhuVDcvZGNzSXpWbE5UYkVncDEzVXZ1MVE2L1pmeEVCbS91cG5leVcrS1Vn?=
+ =?utf-8?B?SlpQMGR4Z1NLbUY2a05Va1lhZzgzWG5WV0x1UExCcmV2aXNzQWYwUVZWa3lD?=
+ =?utf-8?B?VDkyTHBsYVdnQjVhaWwwSHh5QzBDNGl2UUQvQlhkazAwZHJnWEo5VFduMEZs?=
+ =?utf-8?B?YlNpSGlxY3Jqbk9ISzYvZ21MU1NwNGRrb1RkeEFWNXZoNlJlWXZCTEhrMUNa?=
+ =?utf-8?B?TEpEV0d2NXhsZUV5OTlVZG9IdVR1UmJndGo3b0F1c1lMaU1HV2RET2xFUCtR?=
+ =?utf-8?B?U1h5NXBBNmVlRHEyVFVTamdGVUptK2RlbVI3RzUwQ1JwRjc2K2FkMVlUbEdW?=
+ =?utf-8?B?OTh2bFFta0xsNFBJTUp3Nm1ZQmNVNzAxaVFmOTJsTERDajRjSk1TYWRvOTlh?=
+ =?utf-8?B?bVc0dzM2Zi9zS2V1dmhCekdtdjc2dnZEK2tiVWsweG1IYk02NHNpblRpb2lY?=
+ =?utf-8?B?dE4yN002TVU5U2YvazljN1pJRUhyVzg1U3B0SlZsR01rTnYxZFUzTUk1ZjVh?=
+ =?utf-8?B?bkxtRnNZWHpvQXVxRER0NWRXeFlCNnpiMkV3UE1VR2kyNTBiNldDVXdjMldQ?=
+ =?utf-8?B?UU5QWXhBRmwzVmpSOXlaT2VEWUNLbjlzTEdhTWxuZk8rS0VubnRCRUlDY0xD?=
+ =?utf-8?B?aXI4ZkVZbzNXVCtldEs4YjFQM0FZNS8wNk1LTFRnbHV6aEppQjdCWGNVTUtn?=
+ =?utf-8?B?aWttM3pLUzBkSHVqcFNCQVdiTDh1SCt4U0ZZMk81MHhEMXhZYkIzMXNTOFc3?=
+ =?utf-8?B?OW5ubXBUZXdVT0ZoRVgrWHpKTGY4M0JFT3ZwMUxlOTVPU2J2SFh3VEg0YlVO?=
+ =?utf-8?B?U1ZpVDZkSU5UMFdMY0c2UEdzWEREa2RidnlmU1NtcTJ0bTdFMUpPOEZ4ZnVP?=
+ =?utf-8?B?eG02T2orS1kwaDFvOUxGYWxMQmNvbUgyc2o3WGh3VzBpcXZxTUJQNFhTQmYr?=
+ =?utf-8?B?UytCdkZOWVQzbGxtQWdQdUE3TmpnQzBEOGpTYjVNenc1Qko5aE50SGRRQmhm?=
+ =?utf-8?B?N041MlZNWml3SVZHMHVFQVlteUFnY21hdGhhSnJRSUY1NjNXUGZ5bmhzQlBB?=
+ =?utf-8?B?R25YaVBxQ2dndVEyNldHZU0vMmFmemxXNWJhZzlXU29USWh3RDNkWTE4T0FL?=
+ =?utf-8?B?UkxNK3c5blBtWHgycC91Z0dTQ3pGZzBWWWx0aGNURlg0SFI3cmZRaW01UGRB?=
+ =?utf-8?B?SUNhV3YxQnFmdnMyOThrZG1uUUZDT0VUZTZNRW56SjB2bDJzV0RLa0Jjd3Az?=
+ =?utf-8?B?bkJxd2VpZXBTQS9BS3ZzWXBld2NRSm41M3pqaWJjcWFBSlZZZUpra25IL3Bw?=
+ =?utf-8?B?d2JsZnlodmtoSVdZeFFmdDNnSFd6WlVDUkVnUVdpck12RDFoRDIySU1tS05w?=
+ =?utf-8?B?Z3RVcE5FZThzc1hNUC9TMWpQbkdUQk9ZMC9IME9ZNlZqTkVLMWVBU0hoUStJ?=
+ =?utf-8?B?TFpsMUEvZEpyMXJva0o0cmM0a1NyUmlXU1FHYmtyM3NoRVhONk16Wld3dlZt?=
+ =?utf-8?B?ZkVPN1FXSnhyYXZoZi9pUUJMUXl5N1ZqSElrNG45UThDZnpaNW91T0xHMVFJ?=
+ =?utf-8?B?NTQ2ZkVkck05UTEzNHNwbnFtVjdlbzN6ZWNaWmQxRTRwN3ljbmI4blVzSXlw?=
+ =?utf-8?B?NWtuUU9hZFVENWZzQS9FSjhIRmcrMFk5Q3I1U3E3WVdoUjZsblM2ZGZmdGJv?=
+ =?utf-8?B?cHllNXFXR2tWVmxRSjloTldSUjBGektVSjBSTVlVZmJza2dMb3hEaG5xSnBw?=
+ =?utf-8?B?YmRZdldHNnZjR09JMWlxK0p3Y1JMUDRkYk1Ja0ZXWWpiWTdaMDBEbjZ6QXlS?=
+ =?utf-8?B?Mk01aE1YV1ZXN0JYRUxjWjhFRkNxV2NET1hZUEV2aXg2QUZQZmNuRXd6UHdM?=
+ =?utf-8?B?TVpzdElaT2k0Y211dWRFRHV2N2JrNUNCRFlEZURBcGo1RW51WWcvN1VzSXg4?=
+ =?utf-8?B?UkZnendodmljczJaSktmbGlRc012bUVscGJaUytDRnFFYldHSlNxYzYwejFa?=
+ =?utf-8?B?SHdJZWUrdFlqSDdWTzJGdXIzUitCZ3lxcEw4NVBrczFuMHFBZEwwVDBkN3I5?=
+ =?utf-8?B?TytVa05Nb2xhVmJVZG40RVRudmxxalkyanNzVjVJcjRVOUhUTllPK3hxSWtm?=
+ =?utf-8?B?V3hzdVQyaEFjLzBEZDN4UkIzak9nS2RXYzdXZkpTU3h3Nk1ldlJYdzJnSmpG?=
+ =?utf-8?B?QWpCeEtjamJ3Vnljdi82YnFmMlkwV0M4dlhvMlVseUFqaXJjT2pmN0RGdklB?=
+ =?utf-8?Q?h/2/Atd5dy2ylmoBlHZoxYC2tm6VuvhsRB7Fp?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A4B5B5E775053B46B136A46F7D38608B@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c48a4ef-9203-424f-8c70-08da50514c56
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2022 11:05:32.9503
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jJudpVy3aRNZ8ePh9XymzMbNM3qm8ILn0kKb8Ta9xNS+fcOegxIGo5o+vqvn/AWUXD3/LA+6CbEvgxYDY7JYVOML6GO8qH/56L8xmKYStLQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR0P264MB3786
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,158 +148,11 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <djwong@kernel.org>
-
-commit e014f37db1a2d109afa750042ac4d69cf3e3d88e upstream.
-
-[remove userns argument of setattr_copy() for backport]
-
-Filipe Manana pointed out that XFS' behavior w.r.t. setuid/setgid
-revocation isn't consistent with btrfs[1] or ext4.  Those two
-filesystems use the VFS function setattr_copy to convey certain
-attributes from struct iattr into the VFS inode structure.
-
-Andrey Zhadchenko reported[2] that XFS uses the wrong user namespace to
-decide if it should clear setgid and setuid on a file attribute update.
-This is a second symptom of the problem that Filipe noticed.
-
-XFS, on the other hand, open-codes setattr_copy in xfs_setattr_mode,
-xfs_setattr_nonsize, and xfs_setattr_time.  Regrettably, setattr_copy is
-/not/ a simple copy function; it contains additional logic to clear the
-setgid bit when setting the mode, and XFS' version no longer matches.
-
-The VFS implements its own setuid/setgid stripping logic, which
-establishes consistent behavior.  It's a tad unfortunate that it's
-scattered across notify_change, should_remove_suid, and setattr_copy but
-XFS should really follow the Linux VFS.  Adapt XFS to use the VFS
-functions and get rid of the old functions.
-
-[1] https://lore.kernel.org/fstests/CAL3q7H47iNQ=Wmk83WcGB-KBJVOEtR9+qGczzCeXJ9Y2KCV25Q@mail.gmail.com/
-[2] https://lore.kernel.org/linux-xfs/20220221182218.748084-1-andrey.zhadchenko@virtuozzo.com/
-
-Fixes: 7fa294c8991c ("userns: Allow chown and setgid preservation")
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
- fs/xfs/xfs_iops.c | 56 +++--------------------------------------------
- fs/xfs/xfs_pnfs.c |  3 ++-
- 2 files changed, 5 insertions(+), 54 deletions(-)
-
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index b7f7b31a77d5..5711c8c12625 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -595,37 +595,6 @@ xfs_vn_getattr(
- 	return 0;
- }
- 
--static void
--xfs_setattr_mode(
--	struct xfs_inode	*ip,
--	struct iattr		*iattr)
--{
--	struct inode		*inode = VFS_I(ip);
--	umode_t			mode = iattr->ia_mode;
--
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
--
--	inode->i_mode &= S_IFMT;
--	inode->i_mode |= mode & ~S_IFMT;
--}
--
--void
--xfs_setattr_time(
--	struct xfs_inode	*ip,
--	struct iattr		*iattr)
--{
--	struct inode		*inode = VFS_I(ip);
--
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
--
--	if (iattr->ia_valid & ATTR_ATIME)
--		inode->i_atime = iattr->ia_atime;
--	if (iattr->ia_valid & ATTR_CTIME)
--		inode->i_ctime = iattr->ia_ctime;
--	if (iattr->ia_valid & ATTR_MTIME)
--		inode->i_mtime = iattr->ia_mtime;
--}
--
- static int
- xfs_vn_change_ok(
- 	struct dentry	*dentry,
-@@ -740,16 +709,6 @@ xfs_setattr_nonsize(
- 				goto out_cancel;
- 		}
- 
--		/*
--		 * CAP_FSETID overrides the following restrictions:
--		 *
--		 * The set-user-ID and set-group-ID bits of a file will be
--		 * cleared upon successful return from chown()
--		 */
--		if ((inode->i_mode & (S_ISUID|S_ISGID)) &&
--		    !capable(CAP_FSETID))
--			inode->i_mode &= ~(S_ISUID|S_ISGID);
--
- 		/*
- 		 * Change the ownerships and register quota modifications
- 		 * in the transaction.
-@@ -761,7 +720,6 @@ xfs_setattr_nonsize(
- 				olddquot1 = xfs_qm_vop_chown(tp, ip,
- 							&ip->i_udquot, udqp);
- 			}
--			inode->i_uid = uid;
- 		}
- 		if (!gid_eq(igid, gid)) {
- 			if (XFS_IS_QUOTA_RUNNING(mp) && XFS_IS_GQUOTA_ON(mp)) {
-@@ -772,15 +730,10 @@ xfs_setattr_nonsize(
- 				olddquot2 = xfs_qm_vop_chown(tp, ip,
- 							&ip->i_gdquot, gdqp);
- 			}
--			inode->i_gid = gid;
- 		}
- 	}
- 
--	if (mask & ATTR_MODE)
--		xfs_setattr_mode(ip, iattr);
--	if (mask & (ATTR_ATIME|ATTR_CTIME|ATTR_MTIME))
--		xfs_setattr_time(ip, iattr);
--
-+	setattr_copy(inode, iattr);
- 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
- 
- 	XFS_STATS_INC(mp, xs_ig_attrchg);
-@@ -1025,11 +978,8 @@ xfs_setattr_size(
- 		xfs_inode_clear_eofblocks_tag(ip);
- 	}
- 
--	if (iattr->ia_valid & ATTR_MODE)
--		xfs_setattr_mode(ip, iattr);
--	if (iattr->ia_valid & (ATTR_ATIME|ATTR_CTIME|ATTR_MTIME))
--		xfs_setattr_time(ip, iattr);
--
-+	ASSERT(!(iattr->ia_valid & (ATTR_UID | ATTR_GID)));
-+	setattr_copy(inode, iattr);
- 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
- 
- 	XFS_STATS_INC(mp, xs_ig_attrchg);
-diff --git a/fs/xfs/xfs_pnfs.c b/fs/xfs/xfs_pnfs.c
-index f3082a957d5e..ae61094bc9d1 100644
---- a/fs/xfs/xfs_pnfs.c
-+++ b/fs/xfs/xfs_pnfs.c
-@@ -283,7 +283,8 @@ xfs_fs_commit_blocks(
- 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
- 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
- 
--	xfs_setattr_time(ip, iattr);
-+	ASSERT(!(iattr->ia_valid & (ATTR_UID | ATTR_GID)));
-+	setattr_copy(inode, iattr);
- 	if (update_isize) {
- 		i_size_write(inode, iattr->ia_size);
- 		ip->i_d.di_size = iattr->ia_size;
--- 
-2.25.1
-
+DQoNCkxlIDE3LzA2LzIwMjIgw6AgMDk6NTgsIEdlZXJ0IFV5dHRlcmhvZXZlbiBhIMOpY3JpdMKg
+Og0KPj4gQnV0IGl0IHRoZW4gY2F1c2VzIHBvaW50bGVzcyBwcm9ibGVtcyB3aGVuIHBlb3BsZSBj
+YW4ndCByZWFsbHkgcmVseSBvbg0KPj4gbW9yZSB0aGFuIDMyIGJpdHMgZm9yIGF0b21pYyBiaXQg
+b3BlcmF0aW9ucywgYW5kIG9uIDY0LWJpdA0KPj4gYXJjaGl0ZWN0dXJlcyB3ZSB1bm5lY2Vzc2Fy
+aWx5IHVzZSAibG9uZyIgYW5kIHdhc3RlIHRoZSB1cHBlciBiaXRzLg0KPiANCj4gV2VsbCwgYXRv
+bWljIHdvcmtzIHVwIHRvIG5hdGl2ZSB3b3JkIHNpemUsIGkuZS4gbG9uZy4NCj4gDQoNCnBvd2Vy
+cGM2NCBoYXMgYSBwYWlyIG9mIGluc3RydWN0aW9ucyB0byBwZXJmb3JtIDEyOGJpdHMgYXRvbWlj
+IA0Kb3BlcmF0aW9ucyA6IGxxYXJ4IC8gc3RxY3gu
