@@ -2,146 +2,89 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81113550DC9
-	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jun 2022 02:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 325CA550E2F
+	for <lists+linux-xfs@lfdr.de>; Mon, 20 Jun 2022 02:57:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236587AbiFTAVb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 19 Jun 2022 20:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32924 "EHLO
+        id S237739AbiFTAyY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 19 Jun 2022 20:54:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232286AbiFTAVa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jun 2022 20:21:30 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CD9C7958F
-        for <linux-xfs@vger.kernel.org>; Sun, 19 Jun 2022 17:21:28 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id AC98510E78EA;
-        Mon, 20 Jun 2022 10:21:27 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1o35AU-008i8T-5i; Mon, 20 Jun 2022 10:21:26 +1000
-Date:   Mon, 20 Jun 2022 10:21:26 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Alli <allison.henderson@oracle.com>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v1 14/17] xfs: Add the parent pointer support to the
- superblock version 5.
-Message-ID: <20220620002126.GM227878@dread.disaster.area>
-References: <20220611094200.129502-1-allison.henderson@oracle.com>
- <20220611094200.129502-15-allison.henderson@oracle.com>
- <20220616060310.GE227878@dread.disaster.area>
- <3d1cdf9bdf67954c457077a58b6520f609999b57.camel@oracle.com>
+        with ESMTP id S238037AbiFTAyX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 19 Jun 2022 20:54:23 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7795E6563;
+        Sun, 19 Jun 2022 17:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655686459; x=1687222459;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wBwCFUA6Q64fHaprgGzpO55tKWN6E6OjOh5MnrN96K8=;
+  b=nQHQEvacjc8Wbz7/mrAmFFH9U0T1fmWgNgDyBrtuK0qOHZIihGeVYx8S
+   5RxjIAb4GNRUkOxY5W2SPnnwvdQvHnNKMNIhjxBJsCGI3Ed++tMrwa288
+   bMNkRrHYpXBBfFAC2vZmi6FILg5XSURwTstjFMMRdIM0z3qWN8iRNcDR+
+   nrRz+SgJzZAHFH5p4ICxVojRy59Kqkwjk7haaUOdlUweqsVSnxs8/yC2U
+   FtevTcQ0G+qQ62wSYJm7+WwsgrxYpVb8B93VbQLvhtoy8MHZlDPjnwWuA
+   VEWzIGMeGw37QTFRylYgZD8obHeCVgqsShu4SSAVS5I8HCSSzu2IoXL+3
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="262810907"
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="262810907"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2022 17:54:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
+   d="scan'208";a="832871961"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Jun 2022 17:54:16 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o35gF-000Riq-FN;
+        Mon, 20 Jun 2022 00:54:15 +0000
+Date:   Mon, 20 Jun 2022 08:53:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Stefan Roesch <shr@fb.com>, io-uring@vger.kernel.org,
+        kernel-team@fb.com, linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     kbuild-all@lists.01.org, shr@fb.com, david@fromorbit.com,
+        jack@suse.cz, hch@infradead.org, axboe@kernel.dk,
+        willy@infradead.org, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v9 03/14] mm: Add balance_dirty_pages_ratelimited_flags()
+ function
+Message-ID: <202206200844.loRI4cvL-lkp@intel.com>
+References: <20220616212221.2024518-4-shr@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3d1cdf9bdf67954c457077a58b6520f609999b57.camel@oracle.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62afbd88
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=JPEYwPQDsx4A:10 a=eJfxgxciAAAA:8 a=20KFwNOVAAAA:8
-        a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8 a=ofUXJsk1A2IqffOnco8A:9
-        a=CjuIK1q_8ugA:10 a=xM9caqqi1sUkTy8OJ5Uh:22 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220616212221.2024518-4-shr@fb.com>
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Jun 17, 2022 at 05:32:36PM -0700, Alli wrote:
-> On Thu, 2022-06-16 at 16:03 +1000, Dave Chinner wrote:
-> > On Sat, Jun 11, 2022 at 02:41:57AM -0700, Allison Henderson wrote:
-> > > [dchinner: forward ported and cleaned up]
-> > > [achender: rebased and added parent pointer attribute to
-> > >            compatible attributes mask]
-> > > 
-> > > Signed-off-by: Mark Tinguely <tinguely@sgi.com>
-> > > Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> > > Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-> > > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > > ---
-> > >  fs/xfs/libxfs/xfs_format.h | 14 +++++++++-----
-> > >  fs/xfs/libxfs/xfs_fs.h     |  1 +
-> > >  fs/xfs/libxfs/xfs_sb.c     |  2 ++
-> > >  fs/xfs/xfs_super.c         |  4 ++++
-> > >  4 files changed, 16 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/fs/xfs/libxfs/xfs_format.h
-> > > b/fs/xfs/libxfs/xfs_format.h
-> > > index 96976497306c..e85d6b643622 100644
-> > > --- a/fs/xfs/libxfs/xfs_format.h
-> > > +++ b/fs/xfs/libxfs/xfs_format.h
-> > > @@ -83,6 +83,7 @@ struct xfs_ifork;
-> > >  #define	XFS_SB_VERSION2_OKBITS		\
-> > >  	(XFS_SB_VERSION2_LAZYSBCOUNTBIT	| \
-> > >  	 XFS_SB_VERSION2_ATTR2BIT	| \
-> > > +	 XFS_SB_VERSION2_PARENTBIT	| \
-> > >  	 XFS_SB_VERSION2_PROJID32BIT	| \
-> > >  	 XFS_SB_VERSION2_FTYPE)
-> > 
-> > No need for a v4 filesystem format feature bit - this is v4 only.
-> Ok, I ended up having to add this in the rebase or we get an "SB
-> validate failed".  I think it has to go over in
-> xfs_sb_validate_v5_features next to the manual crc bit check.  Will
-> move
+Hi Stefan,
 
-Ah, I meant that parent pointers are a v5 only feature, and so we
-don't need a "v4 only" feature bit for it. As it is, we can't use
-that specific bit because SGI shipped a version of parent pointers
-on v4 filesystems on IRIX under that feature bit that was broken and
-subsequently recalled and killed. Essentially, that means
-XFS_SB_VERSION2_PARENTBIT is blacklisted and cannot ever be used by
-upstream kernels.
+I love your patch! Perhaps something to improve:
 
-> > > @@ -353,11 +354,13 @@ xfs_sb_has_compat_feature(
-> > >  #define XFS_SB_FEAT_RO_COMPAT_RMAPBT   (1 << 1)		/*
-> > > reverse map btree */
-> > >  #define XFS_SB_FEAT_RO_COMPAT_REFLINK  (1 << 2)		/*
-> > > reflinked files */
-> > >  #define XFS_SB_FEAT_RO_COMPAT_INOBTCNT (1 << 3)		/*
-> > > inobt block counts */
-> > > +#define XFS_SB_FEAT_RO_COMPAT_PARENT	(1 << 4)		/*
-> > > parent inode ptr */
-> > >  #define XFS_SB_FEAT_RO_COMPAT_ALL \
-> > > -		(XFS_SB_FEAT_RO_COMPAT_FINOBT | \
-> > > -		 XFS_SB_FEAT_RO_COMPAT_RMAPBT | \
-> > > -		 XFS_SB_FEAT_RO_COMPAT_REFLINK| \
-> > > -		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT)
-> > > +		(XFS_SB_FEAT_RO_COMPAT_FINOBT  | \
-> > > +		 XFS_SB_FEAT_RO_COMPAT_RMAPBT  | \
-> > > +		 XFS_SB_FEAT_RO_COMPAT_REFLINK | \
-> > > +		 XFS_SB_FEAT_RO_COMPAT_INOBTCNT| \
-> > > +		 XFS_SB_FEAT_RO_COMPAT_PARENT)
-> > 
-> > I'm not sure this is a RO Compat feature - we added an attribute
-> > namespace flag on disk, and the older kernels do not know about
-> > that (i.e. we changed XFS_ATTR_NSP_ONDISK_MASK). This may result in
-> > parent pointer attrs being exposed as user attrs rather than being
-> > hidden, or maybe parent pointer attrs being seen as corrupt because
-> > they have a flag that isn't defined set, etc.
-> > 
-> > Hence I'm not sure that this classification is correct.
-> 
-> Gosh, I'm sure there was a reason we did this, but what ever it was
-> goes all the way back in the first re-appearance of the set back in
-> 2018 and I just cant remember the discussion at the time.  It may have
-> just been done to get mkfs working and we just never got to reviewing
-> it.
-> 
-> Should we drop it and just use XFS_SB_VERSION2_PARENTBIT?
+[auto build test WARNING on b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3]
 
-No, it needs to be a v5 feature bit - create a v5 parent pointer
-filesystem, create some files on it, and then go an mount it on a
-kernel that doesn't have PP support. If you can see the parent
-pointer attributes from userspace as "user.<binary garbage>"
-attributes, then we need to use an INCOMPAT feature bit rather than
-a RO_COMPAT bit.
+url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Roesch/io-uring-xfs-support-async-buffered-writes/20220617-060910
+base:   b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
+config: i386-randconfig-c021 (https://download.01.org/0day-ci/archive/20220620/202206200844.loRI4cvL-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
 
-Cheers,
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Dave.
+
+cocci warnings: (new ones prefixed by >>)
+>> mm/page-writeback.c:1887:5-8: Unneeded variable: "ret". Return "0" on line 1891
+
 -- 
-Dave Chinner
-david@fromorbit.com
+0-DAY CI Kernel Test Service
+https://01.org/lkp
