@@ -2,137 +2,146 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25BBB557115
-	for <lists+linux-xfs@lfdr.de>; Thu, 23 Jun 2022 04:33:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E3CE557242
+	for <lists+linux-xfs@lfdr.de>; Thu, 23 Jun 2022 06:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235053AbiFWCdC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 22 Jun 2022 22:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40066 "EHLO
+        id S230077AbiFWEri (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 23 Jun 2022 00:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377757AbiFWCdA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 22 Jun 2022 22:33:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFF6F5FFE
-        for <linux-xfs@vger.kernel.org>; Wed, 22 Jun 2022 19:32:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CA83561D70
-        for <linux-xfs@vger.kernel.org>; Thu, 23 Jun 2022 02:32:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366B2C3411B;
-        Thu, 23 Jun 2022 02:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655951574;
-        bh=AWZZEVzzELo5tWsmlN+S6YLOfnp7f767RsvgDdDYZ2Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eV9m8hdh8vK3G754zZ8RrRRBKyHV1/sFdxZgzk3pR0KztAl9yJFhm8EMJL9RC4qhP
-         VMd1m1IUJnnmmdZ8MLkJ5QHiay2y2kDa8DR3XfWBAaTm+Tg0jB8V3cecJqpgstTnBs
-         Xs4JbtzVF+cP8DRYEGEc0A+Aj2nCDi9dg3vxM6kdbMaVWBxKjW5FrzcsOCGE5y9nhv
-         0SAX7bL1NxFGuMvEAUfMT9T2ryaa1G91/ILeUgfS6tbC4PweWZHblRIH7IrF42FP0X
-         ec01PCU6/68VpFJk0+k2i5c/SFGRqvidD+Zaf9yOMoJiHokvM33PSlSEgZMzkYxo4Q
-         KOirQFeegYJpg==
-Date:   Wed, 22 Jun 2022 19:32:53 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Allison Henderson <allison.henderson@oracle.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: [PATCH] xfs: always free xattri_leaf_bp when cancelling a deferred op
-Message-ID: <YrPQ1fAVh4RqPfNh@magnolia>
+        with ESMTP id S1346096AbiFWEXD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 23 Jun 2022 00:23:03 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD76013D71;
+        Wed, 22 Jun 2022 21:23:00 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id h38so11039113vsv.7;
+        Wed, 22 Jun 2022 21:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pFrEfKD/U56o/sw4xb/sn32In6S7q3U8cJGbDDixPgY=;
+        b=b3iKzEoko0m0+QUSEgtkacmZvILMMfu0t5WZ1wXeqictTgV7tFFl1ijC7FEM5n8QEy
+         ru5/YaSUCWSrotCuK3bBYKjAZjWbjl6Gm0Lr4XQml1LPH4adhHBEyyPniopKzIw9Zpef
+         UyCDpvB+pZHH7eWNc2hV0DQagDnW/EmCmI67oKcJ6OifJ5AQRhLcifZ9J0rj4si8e+/O
+         2w7A7IeoWYJo2KVOvW4Jv8VcW248JQURK52fK6yPzt+RlCgrwIaKkfCtQWccdbsxWO8y
+         A8jjilGYwFD7S10f8iXOTT4HVsmc1fsFfR9MOIC/R+0hq04HU1+NFzZ+plSfy0dYQ5B1
+         nuSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pFrEfKD/U56o/sw4xb/sn32In6S7q3U8cJGbDDixPgY=;
+        b=W24T23uyPoS+lhG1/IOS9IxpTJ+6EFcthO4LSHXX12Nw1EuTgpbMae2/nenwnROPEj
+         YgEZbDe2mycMj1BsRaMvbn1RIV3Ydw5x49tMZa+S26aNFnUJ9zY16E4QSn2thUnOIFje
+         VZkx3YGE1S03tJuYU4jvenufjkqHSKxtjMQzQ42689pN/nDNEKXFcX0af7YymvXvNpsI
+         oNpIelhgmo+jY7UvwFMaX7/EzQoaVH0w6j4r3EPWwRjT7og7TgRoLswS5n+aAeIaMJq+
+         +dxneRF20h3HmOvupwpP44f+ls1GvzJvVHolA/Mdqxqy+r+wfqokBpd/YuXAXB7CXRdd
+         +DBg==
+X-Gm-Message-State: AJIora8fUHVsae2Zt/7mDeqATJRbLdX5CciFfg5erH7INAKFQ43vFl6w
+        Ow4VbAHeTFk14iY45J52+E4haMy9zy8v+n/CpI4=
+X-Google-Smtp-Source: AGRyM1sj5LCtfLVkgKK4rmsD3+s28YKetuf7RonC+1gz1hPVcnQMOux3s5yIh/F+jkFKQrqWUeKJ3yV6GJi0+pqRq9w=
+X-Received: by 2002:a67:fa01:0:b0:354:3136:c62e with SMTP id
+ i1-20020a67fa01000000b003543136c62emr9478594vsq.2.1655958179784; Wed, 22 Jun
+ 2022 21:22:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220617100641.1653164-1-amir73il@gmail.com> <20220617100641.1653164-12-amir73il@gmail.com>
+ <YrNGJXYi2jQtPxs0@magnolia> <CAOQ4uxgXobea42K=WVyOhxxq+S=TA3RvLbxypKO02D9TZEgioA@mail.gmail.com>
+ <YrOU/FPCEWkozAQI@google.com>
+In-Reply-To: <YrOU/FPCEWkozAQI@google.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 23 Jun 2022 07:22:48 +0300
+Message-ID: <CAOQ4uxgEXC1v=JceqCwbmsbTaYqh7XUQ3dB=C-nLag4-BB4ArA@mail.gmail.com>
+Subject: Re: [PATCH 5.10 CANDIDATE 11/11] xfs: use setattr_copy to set vfs
+ inode attributes
+To:     Leah Rumancik <leah.rumancik@gmail.com>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        fstests <fstests@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christian Brauner <brauner@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+On Thu, Jun 23, 2022 at 1:17 AM Leah Rumancik <leah.rumancik@gmail.com> wrote:
+>
+> On Wed, Jun 22, 2022 at 09:36:53PM +0300, Amir Goldstein wrote:
+> > On Wed, Jun 22, 2022 at 7:41 PM Darrick J. Wong <djwong@kernel.org> wrote:
+> > >
+> > > On Fri, Jun 17, 2022 at 01:06:41PM +0300, Amir Goldstein wrote:
+> > > > From: "Darrick J. Wong" <djwong@kernel.org>
+> > > >
+> > > > commit e014f37db1a2d109afa750042ac4d69cf3e3d88e upstream.
+> > > >
+> > > > [remove userns argument of setattr_copy() for backport]
+> > > >
+> > > > Filipe Manana pointed out that XFS' behavior w.r.t. setuid/setgid
+> > > > revocation isn't consistent with btrfs[1] or ext4.  Those two
+> > > > filesystems use the VFS function setattr_copy to convey certain
+> > > > attributes from struct iattr into the VFS inode structure.
+> > > >
+> > > > Andrey Zhadchenko reported[2] that XFS uses the wrong user namespace to
+> > > > decide if it should clear setgid and setuid on a file attribute update.
+> > > > This is a second symptom of the problem that Filipe noticed.
+> > > >
+> > > > XFS, on the other hand, open-codes setattr_copy in xfs_setattr_mode,
+> > > > xfs_setattr_nonsize, and xfs_setattr_time.  Regrettably, setattr_copy is
+> > > > /not/ a simple copy function; it contains additional logic to clear the
+> > > > setgid bit when setting the mode, and XFS' version no longer matches.
+> > > >
+> > > > The VFS implements its own setuid/setgid stripping logic, which
+> > > > establishes consistent behavior.  It's a tad unfortunate that it's
+> > > > scattered across notify_change, should_remove_suid, and setattr_copy but
+> > > > XFS should really follow the Linux VFS.  Adapt XFS to use the VFS
+> > > > functions and get rid of the old functions.
+> > > >
+> > > > [1] https://lore.kernel.org/fstests/CAL3q7H47iNQ=Wmk83WcGB-KBJVOEtR9+qGczzCeXJ9Y2KCV25Q@mail.gmail.com/
+> > > > [2] https://lore.kernel.org/linux-xfs/20220221182218.748084-1-andrey.zhadchenko@virtuozzo.com/
+> > > >
+> > > > Fixes: 7fa294c8991c ("userns: Allow chown and setgid preservation")
+> > > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > > > Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> > > > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> > > > Reviewed-by: Christian Brauner <brauner@kernel.org>
+> > > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> > >
+> > > Same question as I posted to Leah's series -- have all the necessary VFS
+> > > fixes and whatnot been backported to 5.10?  Such that all the new sgid
+> > > inheritance tests actually pass with this patch applied? :)
+> >
+> > The only patch I backorted to 5.10 is:
+> > xfs: fix up non-directory creation in SGID directories
+> >
+> > I will check which SGID tests ran on my series.
+> >
+> > Personally, I would rather defer THIS patch to a later post to stable
+> > (Leah's patch as well) until we have a better understanding of the state
+> > of SGID issues.
+> >
+> > Thanks,
+> > Amir.
+>
+> On the latest version of the SGID tests, I see failures of
+> generic/68[3-7] and xfs/019 on both the baseline and backports branch.
+> generic/673 fails on most configs for the baseline but seems to be fixed
+> in the backports branch. Regardless, I am fine dropping this patch for
+> this round.
 
-While running the following fstest with logged xattrs DISabled, I
-noticed the following unmount hang:
+Let's do that then.
+I actually didn't plan to post this patch for this round to begin with.
+I only posted it because you did.
 
-# FSSTRESS_AVOID="-z -f unlink=1 -f rmdir=1 -f creat=2 -f mkdir=2 -f
-getfattr=3 -f listfattr=3 -f attr_remove=4 -f removefattr=4 -f
-setfattr=20 -f attr_set=60" ./check generic/475
-
-INFO: task u9:1:40 blocked for more than 61 seconds.
-      Tainted: G           O      5.19.0-rc2-djwx #rc2
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:u9:1            state:D stack:12872 pid:   40 ppid:     2 flags:0x00004000
-Workqueue: xfs-cil/dm-0 xlog_cil_push_work [xfs]
-Call Trace:
- <TASK>
- __schedule+0x2db/0x1110
- schedule+0x58/0xc0
- schedule_timeout+0x115/0x160
- __down_common+0x126/0x210
- down+0x54/0x70
- xfs_buf_lock+0x2d/0xe0 [xfs 0532c1cb1d67dd81d15cb79ac6e415c8dec58f73]
- xfs_buf_item_unpin+0x227/0x3a0 [xfs 0532c1cb1d67dd81d15cb79ac6e415c8dec58f73]
- xfs_trans_committed_bulk+0x18e/0x320 [xfs 0532c1cb1d67dd81d15cb79ac6e415c8dec58f73]
- xlog_cil_committed+0x2ea/0x360 [xfs 0532c1cb1d67dd81d15cb79ac6e415c8dec58f73]
- xlog_cil_push_work+0x60f/0x690 [xfs 0532c1cb1d67dd81d15cb79ac6e415c8dec58f73]
- process_one_work+0x1df/0x3c0
- worker_thread+0x53/0x3b0
- kthread+0xea/0x110
- ret_from_fork+0x1f/0x30
- </TASK>
-
-This appears to be the result of shortform_to_leaf creating a new leaf
-buffer as part of adding an xattr to a file.  The new leaf buffer is
-held and attached to the xfs_attr_intent structure, but then the
-filesystem shuts down.  Instead of the usual path (which adds the attr
-to the held leaf buffer which releases the hold), we instead cancel the
-entire deferred operation.
-
-Unfortunately, xfs_attr_cancel_item doesn't release any attached leaf
-buffers, so we leak the locked buffer.  The CIL cannot do anything
-about that, and hangs.  Fix this by teaching it to release leaf buffers,
-and make XFS a little more careful about not leaving a dangling
-reference.
-
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_attr_item.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
-index 135d44133477..a2975f0ac280 100644
---- a/fs/xfs/xfs_attr_item.c
-+++ b/fs/xfs/xfs_attr_item.c
-@@ -455,6 +455,8 @@ static inline void
- xfs_attr_free_item(
- 	struct xfs_attr_intent		*attr)
- {
-+	ASSERT(attr->xattri_leaf_bp == NULL);
-+
- 	if (attr->xattri_da_state)
- 		xfs_da_state_free(attr->xattri_da_state);
- 	xfs_attri_log_nameval_put(attr->xattri_nameval);
-@@ -509,6 +511,10 @@ xfs_attr_cancel_item(
- 	struct xfs_attr_intent		*attr;
- 
- 	attr = container_of(item, struct xfs_attr_intent, xattri_list);
-+	if (attr->xattri_leaf_bp) {
-+		xfs_buf_relse(attr->xattri_leaf_bp);
-+		attr->xattri_leaf_bp = NULL;
-+	}
- 	xfs_attr_free_item(attr);
- }
- 
-@@ -670,8 +676,10 @@ xfs_attri_item_recover(
- 	error = xfs_defer_ops_capture_and_commit(tp, capture_list);
- 
- out_unlock:
--	if (attr->xattri_leaf_bp)
-+	if (attr->xattri_leaf_bp) {
- 		xfs_buf_relse(attr->xattri_leaf_bp);
-+		attr->xattri_leaf_bp = NULL;
-+	}
- 
- 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	xfs_irele(ip);
+Thanks,
+Amir.
