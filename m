@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72D0355B4BC
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Jun 2022 02:49:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A587F55B4B6
+	for <lists+linux-xfs@lfdr.de>; Mon, 27 Jun 2022 02:49:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230194AbiF0Anp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 26 Jun 2022 20:43:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43568 "EHLO
+        id S229970AbiF0Ano (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 26 Jun 2022 20:43:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbiF0Anp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Jun 2022 20:43:45 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2D6E26C7
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Jun 2022 17:43:42 -0700 (PDT)
+        with ESMTP id S230027AbiF0Anm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Jun 2022 20:43:42 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 63C492DE4
+        for <linux-xfs@vger.kernel.org>; Sun, 26 Jun 2022 17:43:40 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 27AC010E7601
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Jun 2022 10:43:40 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id A192B5ECCD6
+        for <linux-xfs@vger.kernel.org>; Mon, 27 Jun 2022 10:43:39 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o5cqo-00BU02-Jh
+        id 1o5cqo-00BU04-Kk
         for linux-xfs@vger.kernel.org; Mon, 27 Jun 2022 10:43:38 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1o5cqo-000uag-IC
+        id 1o5cqo-000uak-JN
         for linux-xfs@vger.kernel.org;
         Mon, 27 Jun 2022 10:43:38 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 8/9] xfs: add log item precommit operation
-Date:   Mon, 27 Jun 2022 10:43:35 +1000
-Message-Id: <20220627004336.217366-9-david@fromorbit.com>
+Subject: [PATCH 9/9] xfs: add in-memory iunlink log item
+Date:   Mon, 27 Jun 2022 10:43:36 +1000
+Message-Id: <20220627004336.217366-10-david@fromorbit.com>
 X-Mailer: git-send-email 2.36.1
 In-Reply-To: <20220627004336.217366-1-david@fromorbit.com>
 References: <20220627004336.217366-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=62b8fd3c
+X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=62b8fd3b
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=E9wXMvJij-PDQt6hmJUA:9
+        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=lL1Wyzui6lGyY7qqYfQA:9
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -52,192 +52,389 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-For inodes that are dirty, we have an attached cluster buffer that
-we want to use to track the dirty inode through the AIL.
-Unfortunately, locking the cluster buffer and adding it to the
-transaction when the inode is first logged in a transaction leads to
-buffer lock ordering inversions.
+Now that we have a clean operation to update the di_next_unlinked
+field of inode cluster buffers, we can easily defer this operation
+to transaction commit time so we can order the inode cluster buffer
+locking consistently.
 
-The specific problem is ordering against the AGI buffer. When
-modifying unlinked lists, the buffer lock order is AGI -> inode
-cluster buffer as the AGI buffer lock serialises all access to the
-unlinked lists. Unfortunately, functionality like xfs_droplink()
-logs the inode before calling xfs_iunlink(), as do various directory
-manipulation functions. The inode can be logged way down in the
-stack as far as the bmapi routines and hence, without a major
-rewrite of lots of APIs there's no way we can avoid the inode being
-logged by something until after the AGI has been logged.
+TO do this, we introduce a new in-memory log item to track the
+unlinked list item modification that we are going to make. This
+follows the same observations as the in-memory double linked list
+used to track unlinked inodes in that the inodes on the list are
+pinned in memory and cannot go away, and hence we can simply
+reference them for the duration of the transaction without needing
+to take active references or pin them or look them up.
 
-As we are going to be using ordered buffers for inode AIL tracking,
-there isn't a need to actually lock that buffer against modification
-as all the modifications are captured by logging the inode item
-itself. Hence we don't actually need to join the cluster buffer into
-the transaction until just before it is committed. This means we do
-not perturb any of the existing buffer lock orders in transactions,
-and the inode cluster buffer is always locked last in a transaction
-that doesn't otherwise touch inode cluster buffers.
-
-We do this by introducing a precommit log item method. A log item
-method is used because it is likely dquots will be moved to this
-same ordered buffer tracking scheme and hence will need a similar
-callout. This commit just introduces the mechanism; the inode item
-implementation is in followup commits.
-
-The precommit items need to be sorted into consistent order as we
-may be locking multiple items here. Hence if we have two dirty
-inodes in cluster buffers A and B, and some other transaction has
-two separate dirty inodes in the same cluster buffers, locking them
-in different orders opens us up to ABBA deadlocks. Hence we sort the
-items on the transaction based on the presence of a sort log item
-method.
+This allows us to pass the xfs_inode to the transaction commit code
+along with the modification to be made, and then order the logged
+modifications via the ->iop_sort and ->iop_precommit operations
+for the new log item type. As this is an in-memory log item, it
+doesn't have formatting, CIL or AIL operational hooks - it exists
+purely to run the inode unlink modifications and is then removed
+from the transaction item list and freed once the precommit
+operation has run.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 ---
- fs/xfs/xfs_icache.c |  1 +
- fs/xfs/xfs_trans.c  | 91 +++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_trans.h  |  6 ++-
- 3 files changed, 96 insertions(+), 2 deletions(-)
+ fs/xfs/Makefile           |   1 +
+ fs/xfs/xfs_inode.c        |  64 +-------------
+ fs/xfs/xfs_iunlink_item.c | 180 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_iunlink_item.h |  27 ++++++
+ fs/xfs/xfs_super.c        |  10 +++
+ 5 files changed, 219 insertions(+), 63 deletions(-)
+ create mode 100644 fs/xfs/xfs_iunlink_item.c
+ create mode 100644 fs/xfs/xfs_iunlink_item.h
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 9fc324a29535..374b3bafaeb0 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -914,6 +914,7 @@ xfs_reclaim_inode(
- 	ip->i_checked = 0;
- 	spin_unlock(&ip->i_flags_lock);
- 
-+	ASSERT(!ip->i_itemp || ip->i_itemp->ili_item.li_buf == NULL);
- 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 
- 	XFS_STATS_INC(ip->i_mount, xs_ig_reclaims);
-diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
-index 82cf0189c0db..0acb31093d9f 100644
---- a/fs/xfs/xfs_trans.c
-+++ b/fs/xfs/xfs_trans.c
-@@ -844,6 +844,90 @@ xfs_trans_committed_bulk(
- 	spin_unlock(&ailp->ail_lock);
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index b056cfc6398e..1131dd01e4fe 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -106,6 +106,7 @@ xfs-y				+= xfs_log.o \
+ 				   xfs_icreate_item.o \
+ 				   xfs_inode_item.o \
+ 				   xfs_inode_item_recover.o \
++				   xfs_iunlink_item.o \
+ 				   xfs_refcount_item.o \
+ 				   xfs_rmap_item.o \
+ 				   xfs_log_recover.o \
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index d6c88a27f29d..ef1dae9dbaa4 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -20,6 +20,7 @@
+ #include "xfs_trans.h"
+ #include "xfs_buf_item.h"
+ #include "xfs_inode_item.h"
++#include "xfs_iunlink_item.h"
+ #include "xfs_ialloc.h"
+ #include "xfs_bmap.h"
+ #include "xfs_bmap_util.h"
+@@ -1923,69 +1924,6 @@ xfs_iunlink_update_bucket(
+ 	return 0;
  }
  
+-/* Set an in-core inode's unlinked pointer and return the old value. */
+-static int
+-xfs_iunlink_log_inode(
+-	struct xfs_trans	*tp,
+-	struct xfs_inode	*ip,
+-	struct xfs_perag	*pag,
+-	xfs_agino_t		next_agino)
+-{
+-	struct xfs_mount	*mp = tp->t_mountp;
+-	struct xfs_dinode	*dip;
+-	struct xfs_buf		*ibp;
+-	xfs_agino_t		old_value;
+-	int			offset;
+-	int			error;
+-
+-	ASSERT(xfs_verify_agino_or_null(mp, pag->pag_agno, next_agino));
+-
+-	error = xfs_imap_to_bp(mp, tp, &ip->i_imap, &ibp);
+-	if (error)
+-		return error;
+-	dip = xfs_buf_offset(ibp, ip->i_imap.im_boffset);
+-
+-	/* Make sure the old pointer isn't garbage. */
+-	old_value = be32_to_cpu(dip->di_next_unlinked);
+-	if (old_value != ip->i_next_unlinked ||
+-	    !xfs_verify_agino_or_null(mp, pag->pag_agno, old_value)) {
+-		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
+-				sizeof(*dip), __this_address);
+-		error = -EFSCORRUPTED;
+-		goto out;
+-	}
+-
+-	/*
+-	 * Since we're updating a linked list, we should never find that the
+-	 * current pointer is the same as the new value, unless we're
+-	 * terminating the list.
+-	 */
+-	if (old_value == next_agino) {
+-		if (next_agino != NULLAGINO) {
+-			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
+-					dip, sizeof(*dip), __this_address);
+-			error = -EFSCORRUPTED;
+-		}
+-		goto out;
+-	}
+-
+-	trace_xfs_iunlink_update_dinode(mp, pag->pag_agno,
+-			XFS_INO_TO_AGINO(mp, ip->i_ino),
+-			be32_to_cpu(dip->di_next_unlinked), next_agino);
+-
+-	dip->di_next_unlinked = cpu_to_be32(next_agino);
+-	offset = ip->i_imap.im_boffset +
+-			offsetof(struct xfs_dinode, di_next_unlinked);
+-
+-	xfs_dinode_calc_crc(mp, dip);
+-	xfs_trans_inode_buf(tp, ibp);
+-	xfs_trans_log_buf(tp, ibp, offset, offset + sizeof(xfs_agino_t) - 1);
+-	return 0;
+-out:
+-	xfs_trans_brelse(tp, ibp);
+-	return error;
+-}
+-
+ static int
+ xfs_iunlink_insert_inode(
+ 	struct xfs_trans	*tp,
+diff --git a/fs/xfs/xfs_iunlink_item.c b/fs/xfs/xfs_iunlink_item.c
+new file mode 100644
+index 000000000000..fe38fc61f79e
+--- /dev/null
++++ b/fs/xfs/xfs_iunlink_item.c
+@@ -0,0 +1,180 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Sort transaction items prior to running precommit operations. This will
-+ * attempt to order the items such that they will always be locked in the same
-+ * order. Items that have no sort function are moved to the end of the list
-+ * and so are locked last (XXX: need to check the logic matches the comment).
-+ *
-+ * This may need refinement as different types of objects add sort functions.
-+ *
-+ * Function is more complex than it needs to be because we are comparing 64 bit
-+ * values and the function only returns 32 bit values.
++ * Copyright (c) 2020, Red Hat, Inc.
++ * All Rights Reserved.
 + */
-+static int
-+xfs_trans_precommit_sort(
-+	void			*unused_arg,
-+	const struct list_head	*a,
-+	const struct list_head	*b)
++#include "xfs.h"
++#include "xfs_fs.h"
++#include "xfs_shared.h"
++#include "xfs_format.h"
++#include "xfs_log_format.h"
++#include "xfs_trans_resv.h"
++#include "xfs_mount.h"
++#include "xfs_inode.h"
++#include "xfs_trans.h"
++#include "xfs_trans_priv.h"
++#include "xfs_ag.h"
++#include "xfs_iunlink_item.h"
++#include "xfs_trace.h"
++#include "xfs_error.h"
++
++struct kmem_cache	*xfs_iunlink_cache;
++
++static inline struct xfs_iunlink_item *IUL_ITEM(struct xfs_log_item *lip)
 +{
-+	struct xfs_log_item	*lia = container_of(a,
-+					struct xfs_log_item, li_trans);
-+	struct xfs_log_item	*lib = container_of(b,
-+					struct xfs_log_item, li_trans);
-+	int64_t			diff;
++	return container_of(lip, struct xfs_iunlink_item, item);
++}
 +
-+	/*
-+	 * If both items are non-sortable, leave them alone. If only one is
-+	 * sortable, move the non-sortable item towards the end of the list.
-+	 */
-+	if (!lia->li_ops->iop_sort && !lib->li_ops->iop_sort)
-+		return 0;
-+	if (!lia->li_ops->iop_sort)
-+		return 1;
-+	if (!lib->li_ops->iop_sort)
-+		return -1;
++static void
++xfs_iunlink_item_release(
++	struct xfs_log_item	*lip)
++{
++	struct xfs_iunlink_item	*iup = IUL_ITEM(lip);
 +
-+	diff = lia->li_ops->iop_sort(lia) - lib->li_ops->iop_sort(lib);
-+	if (diff < 0)
-+		return -1;
-+	if (diff > 0)
-+		return 1;
-+	return 0;
++	xfs_perag_put(iup->pag);
++	kmem_cache_free(xfs_iunlink_cache, IUL_ITEM(lip));
++}
++
++
++static uint64_t
++xfs_iunlink_item_sort(
++	struct xfs_log_item	*lip)
++{
++	return IUL_ITEM(lip)->ip->i_ino;
 +}
 +
 +/*
-+ * Run transaction precommit functions.
-+ *
-+ * If there is an error in any of the callouts, then stop immediately and
-+ * trigger a shutdown to abort the transaction. There is no recovery possible
-+ * from errors at this point as the transaction is dirty....
++ * Look up the inode cluster buffer and log the on-disk unlinked inode change
++ * we need to make.
 + */
 +static int
-+xfs_trans_run_precommits(
-+	struct xfs_trans	*tp)
++xfs_iunlink_log_dinode(
++	struct xfs_trans	*tp,
++	struct xfs_iunlink_item	*iup)
 +{
 +	struct xfs_mount	*mp = tp->t_mountp;
-+	struct xfs_log_item	*lip, *n;
-+	int			error = 0;
++	struct xfs_inode	*ip = iup->ip;
++	struct xfs_dinode	*dip;
++	struct xfs_buf		*ibp;
++	int			offset;
++	int			error;
 +
-+	/*
-+	 * Sort the item list to avoid ABBA deadlocks with other transactions
-+	 * running precommit operations that lock multiple shared items such as
-+	 * inode cluster buffers.
-+	 */
-+	list_sort(NULL, &tp->t_items, xfs_trans_precommit_sort);
-+
-+	/*
-+	 * Precommit operations can remove the log item from the transaction
-+	 * if the log item exists purely to delay modifications until they
-+	 * can be ordered against other operations. Hence we have to use
-+	 * list_for_each_entry_safe() here.
-+	 */
-+	list_for_each_entry_safe(lip, n, &tp->t_items, li_trans) {
-+		if (!test_bit(XFS_LI_DIRTY, &lip->li_flags))
-+			continue;
-+		if (lip->li_ops->iop_precommit) {
-+			error = lip->li_ops->iop_precommit(tp, lip);
-+			if (error)
-+				break;
-+		}
-+	}
++	error = xfs_imap_to_bp(mp, tp, &ip->i_imap, &ibp);
 +	if (error)
-+		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_INCORE);
++		return error;
++	/*
++	 * Don't log the unlinked field on stale buffers as this may be the
++	 * transaction that frees the inode cluster and relogging the buffer
++	 * here will incorrectly remove the stale state.
++	 */
++	if (ibp->b_flags & XBF_STALE)
++		goto out;
++
++	dip = xfs_buf_offset(ibp, ip->i_imap.im_boffset);
++
++	/* Make sure the old pointer isn't garbage. */
++	if (be32_to_cpu(dip->di_next_unlinked) != iup->old_agino) {
++		xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__, dip,
++				sizeof(*dip), __this_address);
++		error = -EFSCORRUPTED;
++		goto out;
++	}
++
++	trace_xfs_iunlink_update_dinode(mp, iup->pag->pag_agno,
++			XFS_INO_TO_AGINO(mp, ip->i_ino),
++			be32_to_cpu(dip->di_next_unlinked), iup->next_agino);
++
++	dip->di_next_unlinked = cpu_to_be32(iup->next_agino);
++	offset = ip->i_imap.im_boffset +
++			offsetof(struct xfs_dinode, di_next_unlinked);
++
++	xfs_dinode_calc_crc(mp, dip);
++	xfs_trans_inode_buf(tp, ibp);
++	xfs_trans_log_buf(tp, ibp, offset, offset + sizeof(xfs_agino_t) - 1);
++	return 0;
++out:
++	xfs_trans_brelse(tp, ibp);
 +	return error;
 +}
 +
- /*
-  * Commit the given transaction to the log.
-  *
-@@ -869,6 +953,13 @@ __xfs_trans_commit(
- 
- 	trace_xfs_trans_commit(tp, _RET_IP_);
- 
-+	error = xfs_trans_run_precommits(tp);
-+	if (error) {
-+		if (tp->t_flags & XFS_TRANS_PERM_LOG_RES)
-+			xfs_defer_cancel(tp);
-+		goto out_unreserve;
++/*
++ * On precommit, we grab the inode cluster buffer for the inode number we were
++ * passed, then update the next unlinked field for that inode in the buffer and
++ * log the buffer. This ensures that the inode cluster buffer was logged in the
++ * correct order w.r.t. other inode cluster buffers. We can then remove the
++ * iunlink item from the transaction and release it as it is has now served it's
++ * purpose.
++ */
++static int
++xfs_iunlink_item_precommit(
++	struct xfs_trans	*tp,
++	struct xfs_log_item	*lip)
++{
++	struct xfs_iunlink_item	*iup = IUL_ITEM(lip);
++	int			error;
++
++	error = xfs_iunlink_log_dinode(tp, iup);
++	list_del(&lip->li_trans);
++	xfs_iunlink_item_release(lip);
++	return error;
++}
++
++static const struct xfs_item_ops xfs_iunlink_item_ops = {
++	.iop_release	= xfs_iunlink_item_release,
++	.iop_sort	= xfs_iunlink_item_sort,
++	.iop_precommit	= xfs_iunlink_item_precommit,
++};
++
++
++/*
++ * Initialize the inode log item for a newly allocated (in-core) inode.
++ *
++ * Inode extents can only reside within an AG. Hence specify the starting
++ * block for the inode chunk by offset within an AG as well as the
++ * length of the allocated extent.
++ *
++ * This joins the item to the transaction and marks it dirty so
++ * that we don't need a separate call to do this, nor does the
++ * caller need to know anything about the iunlink item.
++ */
++int
++xfs_iunlink_log_inode(
++	struct xfs_trans	*tp,
++	struct xfs_inode	*ip,
++	struct xfs_perag	*pag,
++	xfs_agino_t		next_agino)
++{
++	struct xfs_mount	*mp = tp->t_mountp;
++	struct xfs_iunlink_item	*iup;
++
++	ASSERT(xfs_verify_agino_or_null(mp, pag->pag_agno, next_agino));
++	ASSERT(xfs_verify_agino_or_null(mp, pag->pag_agno, ip->i_next_unlinked));
++
++	/*
++	 * Since we're updating a linked list, we should never find that the
++	 * current pointer is the same as the new value, unless we're
++	 * terminating the list.
++	 */
++	if (ip->i_next_unlinked == next_agino) {
++		if (next_agino != NULLAGINO)
++			return -EFSCORRUPTED;
++		return 0;
 +	}
 +
- 	/*
- 	 * Finish deferred items on final commit. Only permanent transactions
- 	 * should ever have deferred ops.
-diff --git a/fs/xfs/xfs_trans.h b/fs/xfs/xfs_trans.h
-index 9561f193e7e1..64062e3b788b 100644
---- a/fs/xfs/xfs_trans.h
-+++ b/fs/xfs/xfs_trans.h
-@@ -71,10 +71,12 @@ struct xfs_item_ops {
- 	void (*iop_format)(struct xfs_log_item *, struct xfs_log_vec *);
- 	void (*iop_pin)(struct xfs_log_item *);
- 	void (*iop_unpin)(struct xfs_log_item *, int remove);
--	uint (*iop_push)(struct xfs_log_item *, struct list_head *);
-+	uint64_t (*iop_sort)(struct xfs_log_item *lip);
-+	int (*iop_precommit)(struct xfs_trans *tp, struct xfs_log_item *lip);
- 	void (*iop_committing)(struct xfs_log_item *lip, xfs_csn_t seq);
--	void (*iop_release)(struct xfs_log_item *);
- 	xfs_lsn_t (*iop_committed)(struct xfs_log_item *, xfs_lsn_t);
-+	uint (*iop_push)(struct xfs_log_item *, struct list_head *);
-+	void (*iop_release)(struct xfs_log_item *);
- 	int (*iop_recover)(struct xfs_log_item *lip,
- 			   struct list_head *capture_list);
- 	bool (*iop_match)(struct xfs_log_item *item, uint64_t id);
++	iup = kmem_cache_zalloc(xfs_iunlink_cache, GFP_KERNEL | __GFP_NOFAIL);
++	xfs_log_item_init(mp, &iup->item, XFS_LI_IUNLINK,
++			  &xfs_iunlink_item_ops);
++
++	iup->ip = ip;
++	iup->next_agino = next_agino;
++	iup->old_agino = ip->i_next_unlinked;
++
++	atomic_inc(&pag->pag_ref);
++	iup->pag = pag;
++
++	xfs_trans_add_item(tp, &iup->item);
++	tp->t_flags |= XFS_TRANS_DIRTY;
++	set_bit(XFS_LI_DIRTY, &iup->item.li_flags);
++	return 0;
++}
++
+diff --git a/fs/xfs/xfs_iunlink_item.h b/fs/xfs/xfs_iunlink_item.h
+new file mode 100644
+index 000000000000..280dbf533989
+--- /dev/null
++++ b/fs/xfs/xfs_iunlink_item.h
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2020, Red Hat, Inc.
++ * All Rights Reserved.
++ */
++#ifndef XFS_IUNLINK_ITEM_H
++#define XFS_IUNLINK_ITEM_H	1
++
++struct xfs_trans;
++struct xfs_inode;
++struct xfs_perag;
++
++/* in memory log item structure */
++struct xfs_iunlink_item {
++	struct xfs_log_item	item;
++	struct xfs_inode	*ip;
++	struct xfs_perag	*pag;
++	xfs_agino_t		next_agino;
++	xfs_agino_t		old_agino;
++};
++
++extern struct kmem_cache *xfs_iunlink_cache;
++
++int xfs_iunlink_log_inode(struct xfs_trans *tp, struct xfs_inode *ip,
++			struct xfs_perag *pag, xfs_agino_t next_agino);
++
++#endif	/* XFS_IUNLINK_ITEM_H */
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index ed18160e6181..a7e6b2d7686b 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -40,6 +40,7 @@
+ #include "xfs_defer.h"
+ #include "xfs_attr_item.h"
+ #include "xfs_xattr.h"
++#include "xfs_iunlink_item.h"
+ 
+ #include <linux/magic.h>
+ #include <linux/fs_context.h>
+@@ -2093,8 +2094,16 @@ xfs_init_caches(void)
+ 	if (!xfs_attri_cache)
+ 		goto out_destroy_attrd_cache;
+ 
++	xfs_iunlink_cache = kmem_cache_create("xfs_iul_item",
++					     sizeof(struct xfs_iunlink_item),
++					     0, 0, NULL);
++	if (!xfs_iunlink_cache)
++		goto out_destroy_attri_cache;
++
+ 	return 0;
+ 
++ out_destroy_attri_cache:
++	kmem_cache_destroy(xfs_attri_cache);
+  out_destroy_attrd_cache:
+ 	kmem_cache_destroy(xfs_attrd_cache);
+  out_destroy_bui_cache:
+@@ -2145,6 +2154,7 @@ xfs_destroy_caches(void)
+ 	 * destroy caches.
+ 	 */
+ 	rcu_barrier();
++	kmem_cache_destroy(xfs_iunlink_cache);
+ 	kmem_cache_destroy(xfs_attri_cache);
+ 	kmem_cache_destroy(xfs_attrd_cache);
+ 	kmem_cache_destroy(xfs_bui_cache);
 -- 
 2.36.1
 
