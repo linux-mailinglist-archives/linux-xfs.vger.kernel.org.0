@@ -2,45 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D15055B498
-	for <lists+linux-xfs@lfdr.de>; Mon, 27 Jun 2022 02:24:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D58AA55B4BA
+	for <lists+linux-xfs@lfdr.de>; Mon, 27 Jun 2022 02:49:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbiF0ASm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 26 Jun 2022 20:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        id S229486AbiF0Anq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 26 Jun 2022 20:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbiF0ASk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Jun 2022 20:18:40 -0400
+        with ESMTP id S230027AbiF0Anp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 26 Jun 2022 20:43:45 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1A3D2BE3
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Jun 2022 17:18:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D79842DE3
+        for <linux-xfs@vger.kernel.org>; Sun, 26 Jun 2022 17:43:42 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7D40E5ECD10
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Jun 2022 10:18:36 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id B46C15ECCF2
+        for <linux-xfs@vger.kernel.org>; Mon, 27 Jun 2022 10:43:39 +1000 (AEST)
 Received: from discord.disaster.area ([192.168.253.110])
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o5cSZ-00BTVp-Ca
-        for linux-xfs@vger.kernel.org; Mon, 27 Jun 2022 10:18:35 +1000
+        id 1o5cqo-00BTze-Ar
+        for linux-xfs@vger.kernel.org; Mon, 27 Jun 2022 10:43:38 +1000
 Received: from dave by discord.disaster.area with local (Exim 4.95)
         (envelope-from <david@fromorbit.com>)
-        id 1o5cSZ-000uBg-BG
+        id 1o5cqo-000ua5-8f
         for linux-xfs@vger.kernel.org;
-        Mon, 27 Jun 2022 10:18:35 +1000
+        Mon, 27 Jun 2022 10:43:38 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 14/14] xfs: make is_log_ag() a first class helper
-Date:   Mon, 27 Jun 2022 10:18:32 +1000
-Message-Id: <20220627001832.215779-15-david@fromorbit.com>
+Subject: [PATCH 0/9 v3] xfs: in-memory iunlink items
+Date:   Mon, 27 Jun 2022 10:43:27 +1000
+Message-Id: <20220627004336.217366-1-david@fromorbit.com>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220627001832.215779-1-david@fromorbit.com>
-References: <20220627001832.215779-1-david@fromorbit.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62b8f75c
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62b8fd3b
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=mae3UHUuaFR5lmlHqFUA:9
+        a=JPEYwPQDsx4A:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
+        a=Pse36N-4FazcfQfACL4A:9 a=AjGcO6oz07-iQ99wixmX:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -50,169 +50,171 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi folks,
 
-We check if an ag contains the log in many places, so make this
-a first class XFS helper by lifting it to fs/xfs/libxfs/xfs_ag.h and
-renaming it xfs_ag_contains_log(). The convert all the places that
-check if the AG contains the log to use this helper.
+Time to revist a patchset that has been sitting in my queue for
+a couple of years now - inode cluster buffer lock ordering. The
+description that follows is from the original RFC - nothing has
+really changed in the past couple of years - this is still relevant
+to fixing some of the AIL list scalability issues we have.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/libxfs/xfs_ag.c             | 12 +++---------
- fs/xfs/libxfs/xfs_ag.h             |  7 +++++++
- fs/xfs/libxfs/xfs_ialloc.c         |  3 +--
- fs/xfs/libxfs/xfs_ialloc_btree.c   |  3 +--
- fs/xfs/libxfs/xfs_refcount_btree.c |  3 +--
- fs/xfs/libxfs/xfs_rmap_btree.c     |  3 +--
- fs/xfs/scrub/health.c              |  2 ++
- fs/xfs/scrub/refcount.c            |  2 ++
- 8 files changed, 18 insertions(+), 17 deletions(-)
+This all works, passes fstests in many configurations, doesn't cause
+performance regressions in unlink perf scalability tests, etc, so I
+think it's largely ready for review and merge.
 
-diff --git a/fs/xfs/libxfs/xfs_ag.c b/fs/xfs/libxfs/xfs_ag.c
-index d1a9163d4a48..71f5dae7ad6c 100644
---- a/fs/xfs/libxfs/xfs_ag.c
-+++ b/fs/xfs/libxfs/xfs_ag.c
-@@ -390,12 +390,6 @@ xfs_get_aghdr_buf(
- 	return 0;
- }
- 
--static inline bool is_log_ag(struct xfs_mount *mp, struct aghdr_init_data *id)
--{
--	return mp->m_sb.sb_logstart > 0 &&
--	       id->agno == XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart);
--}
--
- /*
-  * Generic btree root block init function
-  */
-@@ -421,7 +415,7 @@ xfs_freesp_init_recs(
- 	arec = XFS_ALLOC_REC_ADDR(mp, XFS_BUF_TO_BLOCK(bp), 1);
- 	arec->ar_startblock = cpu_to_be32(mp->m_ag_prealloc_blocks);
- 
--	if (is_log_ag(mp, id)) {
-+	if (xfs_ag_contains_log(mp, id->agno)) {
- 		struct xfs_alloc_rec	*nrec;
- 		xfs_agblock_t		start = XFS_FSB_TO_AGBNO(mp,
- 							mp->m_sb.sb_logstart);
-@@ -548,7 +542,7 @@ xfs_rmaproot_init(
- 	}
- 
- 	/* account for the log space */
--	if (is_log_ag(mp, id)) {
-+	if (xfs_ag_contains_log(mp, id->agno)) {
- 		rrec = XFS_RMAP_REC_ADDR(block,
- 				be16_to_cpu(block->bb_numrecs) + 1);
- 		rrec->rm_startblock = cpu_to_be32(
-@@ -619,7 +613,7 @@ xfs_agfblock_init(
- 		agf->agf_refcount_blocks = cpu_to_be32(1);
- 	}
- 
--	if (is_log_ag(mp, id)) {
-+	if (xfs_ag_contains_log(mp, id->agno)) {
- 		int64_t	logblocks = mp->m_sb.sb_logblocks;
- 
- 		be32_add_cpu(&agf->agf_freeblks, -logblocks);
-diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
-index bb9e91bd38e2..75f7c10c110a 100644
---- a/fs/xfs/libxfs/xfs_ag.h
-+++ b/fs/xfs/libxfs/xfs_ag.h
-@@ -165,6 +165,13 @@ xfs_verify_agino_or_null(struct xfs_perag *pag, xfs_agino_t agino)
- 	return xfs_verify_agino(pag, agino);
- }
- 
-+static inline bool
-+xfs_ag_contains_log(struct xfs_mount *mp, xfs_agnumber_t agno)
-+{
-+	return mp->m_sb.sb_logstart > 0 &&
-+	       agno == XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart);
-+}
-+
- /*
-  * Perag iteration APIs
-  */
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index 39ad3b7af502..6cdfd64bc56b 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -2897,8 +2897,7 @@ xfs_ialloc_calc_rootino(
- 	 * allocation group, or very odd geometries created by old mkfs
- 	 * versions on very small filesystems.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == 0)
-+	if (xfs_ag_contains_log(mp, 0))
- 		 first_bno += mp->m_sb.sb_logblocks;
- 
- 	/*
-diff --git a/fs/xfs/libxfs/xfs_ialloc_btree.c b/fs/xfs/libxfs/xfs_ialloc_btree.c
-index 2e0ff99d9f0b..8c83e265770c 100644
---- a/fs/xfs/libxfs/xfs_ialloc_btree.c
-+++ b/fs/xfs/libxfs/xfs_ialloc_btree.c
-@@ -697,8 +697,7 @@ xfs_inobt_max_size(
- 	 * never be available for the kinds of things that would require btree
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
-+	if (xfs_ag_contains_log(mp, pag->pag_agno))
- 		agblocks -= mp->m_sb.sb_logblocks;
- 
- 	return xfs_btree_calc_size(M_IGEO(mp)->inobt_mnr,
-diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
-index 1063234df34a..316c1ec0c3c2 100644
---- a/fs/xfs/libxfs/xfs_refcount_btree.c
-+++ b/fs/xfs/libxfs/xfs_refcount_btree.c
-@@ -507,8 +507,7 @@ xfs_refcountbt_calc_reserves(
- 	 * never be available for the kinds of things that would require btree
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
-+	if (xfs_ag_contains_log(mp, pag->pag_agno))
- 		agblocks -= mp->m_sb.sb_logblocks;
- 
- 	*ask += xfs_refcountbt_max_size(mp, agblocks);
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index 1ae14d0c831c..7f83f62e51e0 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -666,8 +666,7 @@ xfs_rmapbt_calc_reserves(
- 	 * never be available for the kinds of things that would require btree
- 	 * expansion.  We therefore can pretend the space isn't there.
- 	 */
--	if (mp->m_sb.sb_logstart &&
--	    XFS_FSB_TO_AGNO(mp, mp->m_sb.sb_logstart) == pag->pag_agno)
-+	if (xfs_ag_contains_log(mp, pag->pag_agno))
- 		agblocks -= mp->m_sb.sb_logblocks;
- 
- 	/* Reserve 1% of the AG or enough for 1 block per record. */
-diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
-index 2e61df3bca83..aa65ec88a0c0 100644
---- a/fs/xfs/scrub/health.c
-+++ b/fs/xfs/scrub/health.c
-@@ -8,6 +8,8 @@
- #include "xfs_shared.h"
- #include "xfs_format.h"
- #include "xfs_btree.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
- #include "xfs_ag.h"
- #include "xfs_health.h"
- #include "scrub/scrub.h"
-diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
-index 3f82a1a1f390..c68b767dc08f 100644
---- a/fs/xfs/scrub/refcount.c
-+++ b/fs/xfs/scrub/refcount.c
-@@ -13,6 +13,8 @@
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/btree.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
- #include "xfs_ag.h"
- 
- /*
--- 
-2.36.1
+-Dave.
+
+----
+
+Inode cluster buffer pinning by dirty inodes could allow us to
+improve dirty inode tracking efficiency in the AIL by using the
+inode cluster buffer item rather than individual inode items.
+However, this brings with it some new issues, namely the order in
+which we lock inode cluster buffers. While the dirty buffer pinning
+doesn't currently result in nested cluster buffer locking in
+xfs_trans_log_inode() and so there are no current problems, future
+changes will need to nest cluster buffer locking in this context.
+
+That is, transactions that dirty and commit multiple inodes in a
+transaction will now need to locking multiple inode cluster buffers
+in each transaction (e.g. create, rename, etc). This introduces new
+lock ordering constraints in these operations. It also introduces
+lock ordering constraints between the AGI and inode cluster buffers
+as a result of allocation/freeing being serialised by the AGI
+buffer lock. And then there is unlinked inode list logging, which
+currently has no fixed order of inode cluster buffer locking.
+
+It's all a bit Wild West right now.
+
+Locking pure inode modifications in order is relatively easy. We
+don't actually need to attach and log the buffer to the transaction
+until the last moment. We have all the inodes locked, so nothing
+other than unlinked inode list modification can race with the
+transaction modifying inodes. Hence we can safely move the
+attachment of the inodes to the cluster buffer from when we first
+dirty them in xfs_trans_log_inode to just before we commit the
+transaction.
+
+At this point, all the inodes that have been dirtied in the
+transaction have already been locked, modified, logged and attached
+to the transaction. Hence if we add a hook into xfs_trans_commit()
+to run a "precommit" operation on these log items, we can use this
+operation to attach the inodes to the cluster buffer at commit time
+instead of in xfs_trans_log_inode().
+
+This, by itself, doesn't solve the lock ordering problem. What it
+does do, however, is give us a place where we can -order- all the
+dirty items in the transaction list. Hence before we call the
+precommit operation on each log item, we sort them. This allows us
+to sort all the inode items so that the pre-commit functions that
+locks and logs the cluster buffers are run in a deterministic order.
+This solves the lock order problem for pure inode modifications.
+
+The unlinked inode list buffer locking is more complex. The unlinked
+list is unordered - we add to the tail, remove from where-ever the
+inode is in the list. Hence we might need to lock two inode buffers
+here (previous inode in list and the one being removed). While we
+can order the locking of these buffers correctly within the confines
+of the unlinked list, there may be other inodes that need buffer
+locking in the same transaction. e.g. O_TMPFILE being linked into a
+directory also modifies the directory inode.
+
+Hence we need a mechanism for defering unlinked inode list updates
+to the pre-commit operation where it can be sorted into the correct
+order. We can do this by first observing that we serialise unlinked
+list modifications by holding the AGI buffer lock. IOWs, the AGI is
+going to be locked until the transaction commits any time we modify
+the unlinked list. Hence it doesn't matter when in the unlink
+transactions that we actually load, lock and modify the inode
+cluster buffer.
+
+IOWs, what we need is an unlinked inode log item to defer the inode
+cluster buffer update to transaction commit time where it can be
+ordered with all the other inode cluster operations. Essentially all
+we need to do is record the inodes that need to have their unlinked
+list pointer updated in a new log item that we attached to the
+transaction.
+
+This log item exists purely for the purpose of delaying the update
+of the unlinked list pointer until the inode cluster buffer can be
+locked in the correct order around the other inode cluster buffers.
+It plays no part in the actual commit, and there's no change to
+anything that is written to the log. i.e. the inode cluster buffers
+still have to be fully logged here (not just ordered) as log
+recovery depedends on this to replay mods to the unlinked inode
+list.
+
+To make this unlinked inode list processing simpler and easier to
+implement as a log item, we need to change the way we track the
+unlinked list in memory. Starting from the observation that an inode
+on the unlinked list is pinned in memory by the VFS, we can use the
+xfs_inode itself to track the unlinked list. To do this efficiently,
+we want the unlinked list to be a double linked list. The problem
+here is that we need a list per AGI unlinked list, and there are 64
+of these per AGI. The approach taken in this patchset is to shadow
+the AGI unlinked list heads in the perag, and link inodes by agino,
+hence requiring only 8 extra bytes per inode to track this state.
+
+We can then use the agino pointers for lockless inode cache lookups
+to retreive the inode. The aginos in the inode are modified only
+under the AGI lock, just like the cluster buffer pointers, so we
+don't need any extra locking here.  The i_next_unlinked field tracks
+the on-disk value of the unlinked list, and the i_prev_unlinked is a
+purely in-memory pointer that enables us to efficiently remove
+inodes from the middle of the list.
+
+This results in moving a lot of the unlink modification work into
+the precommit operations on the unlink log item. tracking all the
+unlinked inodes in the inodes themselves also gets rid of the
+unlinked list reference hash table that is used to track this back
+pointer relationship. This greatly simplifies the the unlinked list
+modification code, and removes memory allocations in this hot path
+to track back pointers. This, overall, slightly reduces the CPU
+overhead of the unlink path.
+
+The result of this log item means that we move all the actual
+manipulation of objects to be logged out of the iunlink path and
+into the iunlink item. This allows for future optimisation of this
+mechanism without needing changes to high level unlink path, as
+well as making the unlink lock ordering predictable and synchronised
+with other operations that may require inode cluster locking.
+
+Changelog:
+
+Version 3:
+- rebase on 5.19-rc2
+- fixed log recovery bugs that arose from interactions with
+  background inode inactivation being added since the original RFC
+  patches.
+- Note: has significant, non-trivial merge conflicts with
+  xfs-perag-conv-5.20.  Should probably be rebased on that branch to
+  avoid these. Need to know what order these branches are going to
+  get merged first.
+
+Version 2:
+- unpublished
+- rebase on 5.15-rc2 + xlog-intent-whiteouts
+- reverts changes made in V1 that moved to a list_head based double
+  linked list.  This requires on-disk format changes to allow the
+  AGI to use just a single bucket and so is not generically
+  applicable to all XFS filesystem formats. This version goes back
+  to using prev/next agino values and radix tree lookups as the
+  original RFC used.
+
+Version 1:
+- https://lore.kernel.org/linux-xfs/20200812092556.2567285-1-david@fromorbit.com/
+- split up into many smaller patches
+- includes Xiang's single unlinked list bucket modification
+- uses a list_head for the in memory double unlinked inode list
+  rather than aginos and lockless inode lookups
+- much simpler as it doesn't need to look up inodes from agino
+  values
+- iunlink log item changed to take an xfs_inode pointer rather than
+  an imap and agino values
+- a handful of small cleanups that breaking up into small patches
+  allowed.
+
+[RFC]
+- https://lore.kernel.org/linux-xfs/20200623095015.1934171-1-david@fromorbit.com/
+
 
