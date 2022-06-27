@@ -2,182 +2,142 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0708155DF57
-	for <lists+linux-xfs@lfdr.de>; Tue, 28 Jun 2022 15:30:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C42A255C4F5
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Jun 2022 14:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbiF0GIs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 27 Jun 2022 02:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
+        id S232342AbiF0GrN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 27 Jun 2022 02:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232288AbiF0GIr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Jun 2022 02:08:47 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E07826EF
-        for <linux-xfs@vger.kernel.org>; Sun, 26 Jun 2022 23:08:46 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 7F20310E7894
-        for <linux-xfs@vger.kernel.org>; Mon, 27 Jun 2022 16:08:45 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1o5hvQ-00BZW7-8h
-        for linux-xfs@vger.kernel.org; Mon, 27 Jun 2022 16:08:44 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1o5hvQ-0011gi-7d
-        for linux-xfs@vger.kernel.org;
-        Mon, 27 Jun 2022 16:08:44 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 6/6] xfs: lockless buffer lookup
-Date:   Mon, 27 Jun 2022 16:08:41 +1000
-Message-Id: <20220627060841.244226-7-david@fromorbit.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220627060841.244226-1-david@fromorbit.com>
-References: <20220627060841.244226-1-david@fromorbit.com>
+        with ESMTP id S232218AbiF0GrL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 27 Jun 2022 02:47:11 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4642F559E;
+        Sun, 26 Jun 2022 23:47:10 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id r81-20020a1c4454000000b003a0297a61ddso5396886wma.2;
+        Sun, 26 Jun 2022 23:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VZckI0H76D4OeYEPIAeylVOws+YlPiyjDVF4Nbowj0c=;
+        b=Yiloi0V2BsR0U0ChMfnBHilrCJQ64TEWM+l/bCmlCkxkp1yu+iv6Zo74EPqOujLRYN
+         LZTMD1JdHNktabiRK6JCgTmF4J/SnosZVSUmTW06mHHs4UhmUweIezsRsAFMedwmOKeW
+         3d3F7wDQHd8C6dfeXmB3l0EMKL0K4cPqW2fJjpdopO5Efna4b8ZqpKaaDShxzvsRurl1
+         ufnSJ58ozBjO4QNLNx7Tzo7OSZJedlUK6ZputSwvNnt/S6ldrGnWSwG3WjiA0U55giV/
+         stAdMa/ujrqDg/3Q3bNWKh4pn5vNKElZg7MsgsBdLsXpzqXmQIVryZfgIket9nfO8kZh
+         9XYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VZckI0H76D4OeYEPIAeylVOws+YlPiyjDVF4Nbowj0c=;
+        b=QbcMGXqw00rZGItDtUA8cWpFUjXqYku6d/DACxNjh+EoZaIn4AwhyatHHfJrBDsdLl
+         3ySUDqehOn6KSmuWvT2w/yv+GrI2J4i61J+yH/xDyE25Yhs0zMklVuqZqzGoTPRRmnxj
+         pdvNq1BnPx2PueSxzymQfvdkZ+0nAWbsVawQXq2CuFpXSRuyCnoxQAVn/FD+ocW8w+PY
+         8bXjSFEGem/x8BvxjLEnyYvCcLqvKNkbOmGAUhcr3YPn5RhiYrN5Tv/4boWxJBudLin2
+         NOM0FyeQmtI8KELkSZNF470B1sFtF7fwlm42vBQEn70bOitBDIuht0DznLPTUGcELFIE
+         xFqA==
+X-Gm-Message-State: AJIora9OXh14AFhdfE2mBnY6r1fypYRf0o/PmfFnGQx2QKipHbGOIBAD
+        7tCmZCWZaTy/xAxQt0Uiaco=
+X-Google-Smtp-Source: AGRyM1tQ4lRMuVwUPP4VDKRJs6dW9CHSOx4gRdVX12qgyEeXpEVJHAXRZvcOm50sw9tOJ3D78RymTA==
+X-Received: by 2002:a1c:f414:0:b0:3a0:306d:327c with SMTP id z20-20020a1cf414000000b003a0306d327cmr18217608wma.179.1656312428670;
+        Sun, 26 Jun 2022 23:47:08 -0700 (PDT)
+Received: from amir-ThinkPad-T480.lan ([77.137.66.49])
+        by smtp.gmail.com with ESMTPSA id r21-20020a05600c35d500b003a02f957245sm16460839wmq.26.2022.06.26.23.47.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 26 Jun 2022 23:47:07 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Leah Rumancik <leah.rumancik@gmail.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        linux-xfs@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v3 0/5] xfs stable patches for 5.10.y (backports from v5.15.y)
+Date:   Mon, 27 Jun 2022 09:46:58 +0300
+Message-Id: <20220627064703.2798133-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62b9496d
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=2c3CLYOzIkqHg1TAEHkA:9
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+Hi Greg,
 
-Now that we have a standalone fast path for buffer lookup, we can
-easily convert it to use rcu lookups. When we continually hammer the
-buffer cache with trylock lookups, we end up with a huge amount of
-lock contention on the per-ag buffer hash locks:
+We started to experiment with the "xfs stable maintainers" concept that
+Darrick has proposed.
 
--   92.71%     0.05%  [kernel]                  [k] xfs_inodegc_worker
-   - 92.67% xfs_inodegc_worker
-      - 92.13% xfs_inode_unlink
-         - 91.52% xfs_inactive_ifree
-            - 85.63% xfs_read_agi
-               - 85.61% xfs_trans_read_buf_map
-                  - 85.59% xfs_buf_read_map
-                     - xfs_buf_get_map
-                        - 85.55% xfs_buf_find
-                           - 72.87% _raw_spin_lock
-                              - do_raw_spin_lock
-                                   71.86% __pv_queued_spin_lock_slowpath
-                           - 8.74% xfs_buf_rele
-                              - 7.88% _raw_spin_lock
-                                 - 7.88% do_raw_spin_lock
-                                      7.63% __pv_queued_spin_lock_slowpath
-                           - 1.70% xfs_buf_trylock
-                              - 1.68% down_trylock
-                                 - 1.41% _raw_spin_lock_irqsave
-                                    - 1.39% do_raw_spin_lock
-                                         __pv_queued_spin_lock_slowpath
-                           - 0.76% _raw_spin_unlock
-                                0.75% do_raw_spin_unlock
+My focus is on 5.10.y backports,
+Leah's focus is on 5.15.y backports and
+Chandan may pick up the 5.4.y backports.
 
-This is basically hammering the pag->pag_buf_lock from lots of CPUs
-doing trylocks at the same time. Most of the buffer trylock
-operations ultimately fail after we've done the lookup, so we're
-really hammering the buf hash lock whilst making no progress.
+This stable update is the first collaborated series for 5.10.y/5.15.y.
 
-We can also see significant spinlock traffic on the same lock just
-under normal operation when lots of tasks are accessing metadata
-from the same AG, so let's avoid all this by converting the lookup
-fast path to leverages the rhashtable's ability to do rcu protected
-lookups.
+It started with a 5.15.y patch series from Leah [1] of patches that
+specifically fix bugs prior to 5.10, to whom I already had tested
+5.10 backport patches for.
 
-We avoid races with the buffer release path by using
-atomic_inc_not_zero() on the buffer hold count. Any buffer that is
-in the LRU will have a non-zero count, thereby allowing the lockless
-fast path to be taken in most cache hit situations. If the buffer
-hold count is zero, then it is likely going through the release path
-so in that case we fall back to the existing lookup miss slow path.
+Leah will be sending the ACKed 5.15.y series [2].
+This 5.10.y series is a subset of the 5.15.y series that was
+ACKed by xfs developers for 5.10.y.
 
-The slow path will then do an atomic lookup and insert under the
-buffer hash lock and hence serialise correctly against buffer
-release freeing the buffer.
+All the patches in the 5.15.y series were backported to 5.10.
+The ones that are not included in this 5.10.y update were more subtle
+to backport, so the backports need more time for review and I will send
+them in one of the following stable updates.
 
-The use of rcu protected lookups means that buffer handles now need
-to be freed by RCU callbacks (same as inodes). We still free the
-buffer pages before the RCU callback - we won't be trying to access
-them at all on a buffer that has zero references - but we need the
-buffer handle itself to be present for the entire rcu protected read
-side to detect a zero hold count correctly.
+I would like to thank Darrick for reviewing the backport candidates.
+I would like to thank Luis for his ongoing support of the kdevops [3]
+test environment and Samsung for contributing the hardware to drive it.
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_buf.c | 22 +++++++++++++++-------
- fs/xfs/xfs_buf.h |  1 +
- 2 files changed, 16 insertions(+), 7 deletions(-)
+Thanks,
+Amir.
 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 3461ef3ebc1c..14a2d2d6a4e0 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -294,6 +294,16 @@ xfs_buf_free_pages(
- 	bp->b_flags &= ~_XBF_PAGES;
- }
- 
-+static void
-+xfs_buf_free_callback(
-+	struct callback_head	*cb)
-+{
-+	struct xfs_buf		*bp = container_of(cb, struct xfs_buf, b_rcu);
-+
-+	xfs_buf_free_maps(bp);
-+	kmem_cache_free(xfs_buf_cache, bp);
-+}
-+
- static void
- xfs_buf_free(
- 	struct xfs_buf		*bp)
-@@ -307,8 +317,7 @@ xfs_buf_free(
- 	else if (bp->b_flags & _XBF_KMEM)
- 		kmem_free(bp->b_addr);
- 
--	xfs_buf_free_maps(bp);
--	kmem_cache_free(xfs_buf_cache, bp);
-+	call_rcu(&bp->b_rcu, xfs_buf_free_callback);
- }
- 
- static int
-@@ -567,14 +576,13 @@ xfs_buf_find_fast(
- 	struct xfs_buf          *bp;
- 	int			error;
- 
--	spin_lock(&pag->pag_buf_lock);
-+	rcu_read_lock();
- 	bp = rhashtable_lookup(&pag->pag_buf_hash, map, xfs_buf_hash_params);
--	if (!bp) {
--		spin_unlock(&pag->pag_buf_lock);
-+	if (!bp || !atomic_inc_not_zero(&bp->b_hold)) {
-+		rcu_read_unlock();
- 		return -ENOENT;
- 	}
--	atomic_inc(&bp->b_hold);
--	spin_unlock(&pag->pag_buf_lock);
-+	rcu_read_unlock();
- 
- 	error = xfs_buf_find_lock(bp, flags);
- 	if (error) {
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 58e9034d51bd..02b3c1635ec3 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -196,6 +196,7 @@ struct xfs_buf {
- 	int			b_last_error;
- 
- 	const struct xfs_buf_ops	*b_ops;
-+	struct rcu_head		b_rcu;
- };
- 
- /* Finding and Reading Buffers */
+Changes since [v2]:
+- CC stable
+
+Changes since [v1]:
+- Leave 5 out of 11
+- Accked by Darrick
+
+[1] https://lore.kernel.org/linux-xfs/20220616182749.1200971-1-leah.rumancik@gmail.com/
+[2] https://lore.kernel.org/linux-xfs/20220623203641.1710377-1-leah.rumancik@gmail.com/
+[3] https://github.com/linux-kdevops/kdevops
+[v1] https://lore.kernel.org/linux-xfs/20220617100641.1653164-1-amir73il@gmail.com/
+[v2] https://lore.kernel.org/linux-xfs/20220624063702.2380990-1-amir73il@gmail.com/
+
+Brian Foster (1):
+  xfs: punch out data fork delalloc blocks on COW writeback failure
+
+Darrick J. Wong (1):
+  xfs: remove all COW fork extents when remounting readonly
+
+Dave Chinner (1):
+  xfs: check sb_meta_uuid for dabuf buffer recovery
+
+Rustam Kovhaev (1):
+  xfs: use kmem_cache_free() for kmem_cache objects
+
+Yang Xu (1):
+  xfs: Fix the free logic of state in xfs_attr_node_hasname
+
+ fs/xfs/libxfs/xfs_attr.c      | 13 +++++--------
+ fs/xfs/xfs_aops.c             | 15 ++++++++++++---
+ fs/xfs/xfs_buf_item_recover.c |  2 +-
+ fs/xfs/xfs_extfree_item.c     |  6 +++---
+ fs/xfs/xfs_super.c            | 14 +++++++++++---
+ 5 files changed, 32 insertions(+), 18 deletions(-)
+
 -- 
-2.36.1
+2.25.1
 
