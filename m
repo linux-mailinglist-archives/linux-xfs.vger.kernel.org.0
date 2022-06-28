@@ -2,43 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7643A55F187
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jun 2022 00:45:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AC0455F1A0
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jun 2022 00:55:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbiF1Wo5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Jun 2022 18:44:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46678 "EHLO
+        id S229483AbiF1WzG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 28 Jun 2022 18:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiF1Wo4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jun 2022 18:44:56 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3B0227CF6
-        for <linux-xfs@vger.kernel.org>; Tue, 28 Jun 2022 15:44:55 -0700 (PDT)
+        with ESMTP id S229473AbiF1WzF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jun 2022 18:55:05 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB84519C05
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jun 2022 15:55:04 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 08AC010E7829;
-        Wed, 29 Jun 2022 08:44:54 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id EC7165ECE1F;
+        Wed, 29 Jun 2022 08:55:02 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o6Jwz-00CF6v-5M; Wed, 29 Jun 2022 08:44:53 +1000
-Date:   Wed, 29 Jun 2022 08:44:53 +1000
+        id 1o6K6n-00CFGk-Ob; Wed, 29 Jun 2022 08:55:01 +1000
+Date:   Wed, 29 Jun 2022 08:55:01 +1000
 From:   Dave Chinner <david@fromorbit.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Ayushman Dutta <ayushman999@gmail.com>, chandanrlinux@gmail.com,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: syzkaller@googlegroups.com
-Message-ID: <20220628224453.GL227878@dread.disaster.area>
-References: <CA+6OtaVMKW=K2mfbi=3A7fuPw2BmHv-zcx2jVKg9yEEY4wab3g@mail.gmail.com>
- <Yrt7t2Y1tsgAUFAr@magnolia>
+Cc:     sandeen@sandeen.net, linux-xfs@vger.kernel.org
+Subject: Re: [PATCHSET 0/8] xfsprogs: sync libxfs with 5.19
+Message-ID: <20220628225501.GM227878@dread.disaster.area>
+References: <165644930619.1089724.12201433387040577983.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yrt7t2Y1tsgAUFAr@magnolia>
+In-Reply-To: <165644930619.1089724.12201433387040577983.stgit@magnolia>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62bb8467
+X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=62bb86c8
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=4RBUngkUAAAA:8 a=kj9zAlcOel0A:10 a=iWYZZVQfT40A:10 a=JPEYwPQDsx4A:10
-        a=7-415B0cAAAA:8 a=YJYnwHNeAZZscAt-6PAA:9 a=CjuIK1q_8ugA:10
-        a=_sbA2Q-Kp09kWB8D3iXc:22 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=kj9zAlcOel0A:10 a=JPEYwPQDsx4A:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+        a=7-415B0cAAAA:8 a=wyDEJGck7kJVUeCukb4A:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -48,36 +46,41 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 03:07:51PM -0700, Darrick J. Wong wrote:
-> [+linux-xfs]
+On Tue, Jun 28, 2022 at 01:48:26PM -0700, Darrick J. Wong wrote:
+> Hi all,
 > 
-> On Tue, Jun 28, 2022 at 02:27:36PM -0500, Ayushman Dutta wrote:
-> > Kernel Version: 5.10.122
-> > 
-> > Kernel revision: 58a0d94cb56fe0982aa1ce9712e8107d3a2257fe
-> > 
-> > Syzkaller Dashboard report:
-> > 
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 1 PID: 8503 at mm/util.c:618 kvmalloc_node+0x15a/0x170
-> > mm/util.c:618
+> This series corrects any build errors in libxfs and backports libxfs
+> changes from the kernel.
 > 
-> No.  Do not DM your syzbot reports to random XFS developers.
+> If you're going to start using this mess, you probably ought to just
+> pull from my git trees, which are linked below.
 > 
-> Especially do not send me *three message* with 300K of attachments; even
-> the regular syzbot runners dump all that stuff into a web portal.
+> This is an extraordinary way to destroy everything.  Enjoy!
+> Comments and questions are, as always, welcome.
 > 
-> If you are going to run some scripted tool to randomly
-> corrupt the filesystem to find failures, then you have an
-> ethical and moral responsibility to do some of the work to
-> narrow down and identify the cause of the failure, not just
-> throw them at someone else to do all the work.
+> --D
+> 
+> xfsprogs git tree:
+> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=libxfs-5.19-sync
+> ---
+>  db/check.c               |   10 +++++++---
+>  db/metadump.c            |   11 +++++++----
+>  include/xfs_mount.h      |    7 -------
+>  libxfs/util.c            |    6 ------
+>  libxfs/xfs_attr.c        |   47 ++++++++++++++--------------------------------
+>  libxfs/xfs_attr.h        |   17 +----------------
+>  libxfs/xfs_attr_leaf.c   |   37 ++++++++++++++++++++----------------
+>  libxfs/xfs_attr_leaf.h   |    3 +--
+>  libxfs/xfs_da_btree.h    |    4 +++-
+>  logprint/log_print_all.c |    2 +-
+>  repair/attr_repair.c     |   20 ++++++++++++++++++++
+>  repair/dinode.c          |   14 ++++++++++----
+>  12 files changed, 84 insertions(+), 94 deletions(-)
 
-/me reads the stack trace, takes 30s to look at the change log,
-finds commit 29d650f7e3ab ("xfs: reject crazy array sizes being fed
-to XFS_IOC_GETBMAP*").
+Whole series looks good.
 
--Dave.
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
 -- 
 Dave Chinner
 david@fromorbit.com
