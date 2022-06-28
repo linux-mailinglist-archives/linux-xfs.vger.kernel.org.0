@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50D6E55EF88
-	for <lists+linux-xfs@lfdr.de>; Tue, 28 Jun 2022 22:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FF6355EF87
+	for <lists+linux-xfs@lfdr.de>; Tue, 28 Jun 2022 22:26:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230118AbiF1UY7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Jun 2022 16:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34812 "EHLO
+        id S232849AbiF1UZB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 28 Jun 2022 16:25:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229866AbiF1UYU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jun 2022 16:24:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA3A140EE;
-        Tue, 28 Jun 2022 13:21:48 -0700 (PDT)
+        with ESMTP id S229521AbiF1UYX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jun 2022 16:24:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2AB3280;
+        Tue, 28 Jun 2022 13:21:52 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8275FB8203F;
-        Tue, 28 Jun 2022 20:21:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 284DFC3411D;
-        Tue, 28 Jun 2022 20:21:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5EDC661709;
+        Tue, 28 Jun 2022 20:21:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAEBFC3411D;
+        Tue, 28 Jun 2022 20:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1656447706;
-        bh=XYlAphFMdsvmnzakkhya87ROjW4zWZT4k+Q/98btdiM=;
+        s=k20201202; t=1656447711;
+        bh=l3he3Ym32oYQYPvckfK/RcZZHkq03B/5/Pb58aucCps=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ae6GU5qv7wBWgIvFP8u7UBUSO0nBVK7Sf5yY8DRayFbSL6Scj72RBcmnnwuWiv/wF
-         YR0rnqNEJlPoHvV+/wHDVZSuXIsuS2BAh72+UgCpi/94EifuCjUWN/FkB7qElPCGLV
-         ztFwi7m8IzQfsNWvWDYppg+a7nNpRJkxfMD1tA2azjXy8+R0UXFIaYlKLfRTy+h/Vk
-         EdZriT3hv8S6oEcy1do7txmDtHZy9j2EM9RZ+YN0VIlt9L0TAvN7EoeVPEaoof0EQ4
-         7XSxO2XKcNGoESS95Nejz0EhBod9pHLVjbSwSQs4sNhEV8W4/2LuRV5E2z2r1m3zTp
-         mtjZjvk9wYaEA==
-Subject: [PATCH 5/9] check: document mkfs.xfs reliance on fstests exports
+        b=fWw+6xmpZwTypXg3ev7lUcujEhjUwZ3+Ha0mG8yxcxx6uDbkFuoA8Z2Ah1kkID6vF
+         4YrgZI9H3x5tgH8x2rjQ+F0zwlkozY0TaYiD2owK3YCHaPsp3zJZ9gOIwwlDJ7Lq6f
+         StWFM6Yv7Lzm9b+HUTFQT8REqBnpM+alCtK7+JZEehw3gLUCxtDAmQlNWgSbfT1F96
+         9Rd5Qe61LfCZKepEXb1w3JHxN3k14nZkNWc8H20bfWjc5QawAVhmcDpQYSijtPQw15
+         kvcplfJQcalVcb8fEKlbLzEvAfiDFMS5CuaHuCDh9qA+XM+MH10TUW0+L9x6SdGtdv
+         3UuuItA25U6TA==
+Subject: [PATCH 6/9] xfs/109: handle larger minimum filesystem size
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, guaneryu@gmail.com, zlang@redhat.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Tue, 28 Jun 2022 13:21:45 -0700
-Message-ID: <165644770574.1045534.3646229611370914936.stgit@magnolia>
+Date:   Tue, 28 Jun 2022 13:21:51 -0700
+Message-ID: <165644771132.1045534.358827009181930377.stgit@magnolia>
 In-Reply-To: <165644767753.1045534.18231838177395571946.stgit@magnolia>
 References: <165644767753.1045534.18231838177395571946.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,32 +55,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-There are a number of fstests that employ special (and now unsupported)
-XFS filesystem configurations to perform testing in a controlled
-environment.  The presence of the QA_CHECK_FS and MSGVERB variables are
-used by mkfs.xfs to detect that it's running inside fstests, which
-enables the unsupported configurations.  Nobody else should be using
-filesystems with tiny logs, non-redundant superblocks, or smaller than
-the (new) minimum supported size.
+mkfs will soon refuse to format a filesystem smaller than 300MB, so
+increase the size of the filesystem to keep this test scenario
+realistic.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- check |    3 +++
- 1 file changed, 3 insertions(+)
+ tests/xfs/109 |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/check b/check
-index 2ea2920f..4b0ebad6 100755
---- a/check
-+++ b/check
-@@ -33,6 +33,9 @@ _err_msg=""
- # start the initialisation work now
- iam=check
+diff --git a/tests/xfs/109 b/tests/xfs/109
+index 6cb6917a..e3e491f1 100755
+--- a/tests/xfs/109
++++ b/tests/xfs/109
+@@ -78,7 +78,7 @@ if [ -n "$FASTSTART" -a -f $SCRATCH_MNT/f0 ]; then
+ fi
+ _scratch_unmount
  
-+# mkfs.xfs uses the presence of both of these variables to enable formerly
-+# supported tiny filesystem configurations that fstests use for fuzz testing
-+# in a controlled environment
- export MSGVERB="text:action"
- export QA_CHECK_FS=${QA_CHECK_FS:=true}
+-_scratch_mkfs_xfs -dsize=160m,agcount=4 $faststart | _filter_mkfs 2>$tmp.mkfs
++_scratch_mkfs_xfs -dsize=320m,agcount=4 $faststart | _filter_mkfs 2>$tmp.mkfs
+ cat $tmp.mkfs >>$seqres.full
+ _scratch_mount
  
 
