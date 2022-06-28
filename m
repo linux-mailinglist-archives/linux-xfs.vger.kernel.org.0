@@ -2,52 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60C8055F196
-	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jun 2022 00:51:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 504D155F155
+	for <lists+linux-xfs@lfdr.de>; Wed, 29 Jun 2022 00:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbiF1Wu3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 28 Jun 2022 18:50:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
+        id S230139AbiF1WZP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 28 Jun 2022 18:25:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230396AbiF1Wu2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jun 2022 18:50:28 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 954DF39833;
-        Tue, 28 Jun 2022 15:50:27 -0700 (PDT)
+        with ESMTP id S232366AbiF1WYs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 28 Jun 2022 18:24:48 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3A78D3E0D6
+        for <linux-xfs@vger.kernel.org>; Tue, 28 Jun 2022 15:21:53 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 092A910E7862;
-        Wed, 29 Jun 2022 08:17:58 +1000 (AEST)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 1784F5ECC3B;
+        Wed, 29 Jun 2022 08:21:51 +1000 (AEST)
 Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1o6JWv-00CEcF-Ry; Wed, 29 Jun 2022 08:17:57 +1000
-Date:   Wed, 29 Jun 2022 08:17:57 +1000
+        id 1o6Jag-00CEek-Mc; Wed, 29 Jun 2022 08:21:50 +1000
+Date:   Wed, 29 Jun 2022 08:21:50 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>, linux-mm@kvack.org
-Subject: Re: Multi-page folio issues in 5.19-rc4 (was [PATCH v3 25/25] xfs:
- Support large folios)
-Message-ID: <20220628221757.GJ227878@dread.disaster.area>
-References: <20211216210715.3801857-1-willy@infradead.org>
- <20211216210715.3801857-26-willy@infradead.org>
- <YrO243DkbckLTfP7@magnolia>
- <Yrku31ws6OCxRGSQ@magnolia>
- <Yrm6YM2uS+qOoPcn@casper.infradead.org>
- <YrosM1+yvMYliw2l@magnolia>
- <20220628073120.GI227878@dread.disaster.area>
- <YrrlrMK/7pyZwZj2@casper.infradead.org>
- <Yrrmq4hmJPkf5V7s@casper.infradead.org>
- <Yrr/oBlf1Eig8uKS@casper.infradead.org>
+To:     Wengang Wang <wen.gang.wang@oracle.com>
+Cc:     "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>
+Subject: Re: [PATCH V2] xfs: make src file readable during reflink
+Message-ID: <20220628222150.GK227878@dread.disaster.area>
+References: <20220624191037.23683-1-wen.gang.wang@oracle.com>
+ <5ED436A4-6BBF-4868-BF42-3CAC7B90BCCA@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yrr/oBlf1Eig8uKS@casper.infradead.org>
+In-Reply-To: <5ED436A4-6BBF-4868-BF42-3CAC7B90BCCA@oracle.com>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=62bb7e19
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62bb7f00
         a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=JPEYwPQDsx4A:10 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8
-        a=I0e5OopBZKVaJ7lt07gA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        a=kj9zAlcOel0A:10 a=JPEYwPQDsx4A:10 a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8
+        a=NRD0DPY9OXsKKrBbQIAA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -57,64 +47,40 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Jun 28, 2022 at 02:18:24PM +0100, Matthew Wilcox wrote:
-> On Tue, Jun 28, 2022 at 12:31:55PM +0100, Matthew Wilcox wrote:
-> > On Tue, Jun 28, 2022 at 12:27:40PM +0100, Matthew Wilcox wrote:
-> > > On Tue, Jun 28, 2022 at 05:31:20PM +1000, Dave Chinner wrote:
-> > > > So using this technique, I've discovered that there's a dirty page
-> > > > accounting leak that eventually results in fsx hanging in
-> > > > balance_dirty_pages().
-> > > 
-> > > Alas, I think this is only an accounting error, and not related to
-> > > the problem(s) that Darrick & Zorro are seeing.  I think what you're
-> > > seeing is dirty pages being dropped at truncation without the
-> > > appropriate accounting.  ie this should be the fix:
+On Tue, Jun 28, 2022 at 03:57:14PM +0000, Wengang Wang wrote:
+> Hi Darrick,
+> 
+> How about the V2?
+> 
+> thanks,
+> wengang
+> 
+> > On Jun 24, 2022, at 12:10 PM, Wengang Wang <wen.gang.wang@oracle.com> wrote:
 > > 
-> > Argh, try one that actually compiles.
-> 
-> ... that one's going to underflow the accounting.  Maybe I shouldn't
-> be writing code at 6am?
-> 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index f7248002dad9..4eec6ee83e44 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -18,6 +18,7 @@
->  #include <linux/shrinker.h>
->  #include <linux/mm_inline.h>
->  #include <linux/swapops.h>
-> +#include <linux/backing-dev.h>
->  #include <linux/dax.h>
->  #include <linux/khugepaged.h>
->  #include <linux/freezer.h>
-> @@ -2439,11 +2440,15 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->  		__split_huge_page_tail(head, i, lruvec, list);
->  		/* Some pages can be beyond EOF: drop them from page cache */
->  		if (head[i].index >= end) {
-> -			ClearPageDirty(head + i);
-> -			__delete_from_page_cache(head + i, NULL);
-> +			struct folio *tail = page_folio(head + i);
-> +
->  			if (shmem_mapping(head->mapping))
->  				shmem_uncharge(head->mapping->host, 1);
-> -			put_page(head + i);
-> +			else if (folio_test_clear_dirty(tail))
-> +				folio_account_cleaned(tail,
-> +					inode_to_wb(folio->mapping->host));
-> +			__filemap_remove_folio(tail, NULL);
-> +			folio_put(tail);
->  		} else if (!PageAnon(page)) {
->  			__xa_store(&head->mapping->i_pages, head[i].index,
->  					head + i, 0);
-> 
+> > During a reflink operation, the IOLOCK and MMAPLOCK of the source file
+> > are held in exclusive mode for the duration. This prevents reads on the
+> > source file, which could be a very long time if the source file has
+> > millions of extents.
+> > 
+> > As the source of copy, besides some necessary modification (say dirty page
+> > flushing), it plays readonly role. Locking source file exclusively through
+> > out the full reflink copy is unreasonable.
+> > 
+> > This patch downgrades exclusive locks on source file to shared modes after
+> > page cache flushing and before cloning the extents. To avoid source file
+> > change after lock downgradation, direct write paths take IOLOCK_EXCL on
+> > seeing reflink copy happening to the files.
+> > 
+> > Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
+> > ---
+> > V2 changes:
+> > Commit message
+> > Make direct write paths take IOLOCK_EXCL when reflink copy is happening
+> > Tiny changes
 
-Yup, that fixes the leak.
+Version 2 never made it to the list. Please resend.
 
-Tested-by: Dave Chinner <dchinner@redhat.com>
-
-Cheers,
-
-Dave.
+-Dave.
 -- 
 Dave Chinner
 david@fromorbit.com
