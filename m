@@ -2,41 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC86E57058F
-	for <lists+linux-xfs@lfdr.de>; Mon, 11 Jul 2022 16:29:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBC47570D2B
+	for <lists+linux-xfs@lfdr.de>; Tue, 12 Jul 2022 00:06:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231177AbiGKO3R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 11 Jul 2022 10:29:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
+        id S229745AbiGKWGr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 11 Jul 2022 18:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbiGKO3R (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jul 2022 10:29:17 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57753357E7
-        for <linux-xfs@vger.kernel.org>; Mon, 11 Jul 2022 07:29:16 -0700 (PDT)
-Received: from canpemm500005.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LhR4S6lxCzVfb4;
-        Mon, 11 Jul 2022 22:25:28 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by canpemm500005.china.huawei.com
- (7.192.104.229) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 11 Jul
- 2022 22:29:09 +0800
-From:   Zhang Yi <yi.zhang@huawei.com>
-To:     <linux-xfs@vger.kernel.org>
-CC:     <djwong@kernel.org>, <yi.zhang@huawei.com>, <yukuai3@huawei.com>
-Subject: [PATCH] xfs: flush inode gc workqueue before clearing agi bucket
-Date:   Mon, 11 Jul 2022 22:41:34 +0800
-Message-ID: <20220711144134.3103197-1-yi.zhang@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S229718AbiGKWGr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 11 Jul 2022 18:06:47 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7EEF052DE2
+        for <linux-xfs@vger.kernel.org>; Mon, 11 Jul 2022 15:06:45 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 613D362C589;
+        Tue, 12 Jul 2022 08:06:43 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1oB1YA-00HMVU-EC; Tue, 12 Jul 2022 08:06:42 +1000
+Date:   Tue, 12 Jul 2022 08:06:42 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Zhang Yi <yi.zhang@huawei.com>
+Cc:     linux-xfs@vger.kernel.org, djwong@kernel.org, yukuai3@huawei.com
+Subject: Re: [PATCH] xfs: flush inode gc workqueue before clearing agi bucket
+Message-ID: <20220711220642.GC3861211@dread.disaster.area>
+References: <20220711144134.3103197-1-yi.zhang@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500005.china.huawei.com (7.192.104.229)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220711144134.3103197-1-yi.zhang@huawei.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=62cc9ef4
+        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
+        a=kj9zAlcOel0A:10 a=RgO8CyIxsXoA:10 a=i0EeH86SAAAA:8 a=20KFwNOVAAAA:8
+        a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8 a=ZNIgRAvqz_NJNaqDNRgA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,38 +46,56 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-In the procedure of recover AGI unlinked lists, if something bad
-happenes on one of the unlinked inode in the bucket list, we would call
-xlog_recover_clear_agi_bucket() to clear the whole unlinked bucket list,
-not the unlinked inodes after the bad one. If we have already added some
-inodes to the gc workqueue before the bad inode in the list, we could
-get below error when freeing those inodes, and finaly fail to complete
-the log recover procedure.
+On Mon, Jul 11, 2022 at 10:41:34PM +0800, Zhang Yi wrote:
+> In the procedure of recover AGI unlinked lists, if something bad
+> happenes on one of the unlinked inode in the bucket list, we would call
+> xlog_recover_clear_agi_bucket() to clear the whole unlinked bucket list,
+> not the unlinked inodes after the bad one. If we have already added some
+> inodes to the gc workqueue before the bad inode in the list, we could
+> get below error when freeing those inodes, and finaly fail to complete
+> the log recover procedure.
+> 
+>  XFS (ram0): Internal error xfs_iunlink_remove at line 2456 of file
+>  fs/xfs/xfs_inode.c.  Caller xfs_ifree+0xb0/0x360 [xfs]
+> 
+> The problem is xlog_recover_clear_agi_bucket() clear the bucket list, so
+> the gc worker fail to check the agino in xfs_verify_agino(). Fix this by
+> flush workqueue before clearing the bucket.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> ---
+>  fs/xfs/xfs_log_recover.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+> index 5f7e4e6e33ce..2f655ef4364e 100644
+> --- a/fs/xfs/xfs_log_recover.c
+> +++ b/fs/xfs/xfs_log_recover.c
+> @@ -2714,6 +2714,7 @@ xlog_recover_process_one_iunlink(
+>  	 * Call xlog_recover_clear_agi_bucket() to perform a transaction to
+>  	 * clear the inode pointer in the bucket.
+>  	 */
+> +	xfs_inodegc_flush(mp);
+>  	xlog_recover_clear_agi_bucket(mp, agno, bucket);
+>  	return NULLAGINO;
+>  }
 
- XFS (ram0): Internal error xfs_iunlink_remove at line 2456 of file
- fs/xfs/xfs_inode.c.  Caller xfs_ifree+0xb0/0x360 [xfs]
+Looks good.
 
-The problem is xlog_recover_clear_agi_bucket() clear the bucket list, so
-the gc worker fail to check the agino in xfs_verify_agino(). Fix this by
-flush workqueue before clearing the bucket.
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- fs/xfs/xfs_log_recover.c | 1 +
- 1 file changed, 1 insertion(+)
+Darrick, FYI, I actually tripped over this and fixed it in the inode
+iunlink series as part of double linking the unlinked inode list in
+this patch:
 
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index 5f7e4e6e33ce..2f655ef4364e 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -2714,6 +2714,7 @@ xlog_recover_process_one_iunlink(
- 	 * Call xlog_recover_clear_agi_bucket() to perform a transaction to
- 	 * clear the inode pointer in the bucket.
- 	 */
-+	xfs_inodegc_flush(mp);
- 	xlog_recover_clear_agi_bucket(mp, agno, bucket);
- 	return NULLAGINO;
- }
+https://lore.kernel.org/linux-xfs/20220707234345.1097095-6-david@fromorbit.com/
+
+I didn't realise at the time I was forward porting this code that it
+was a pre-existing bug.....
+
+Cheers,
+
+Dave.
 -- 
-2.31.1
-
+Dave Chinner
+david@fromorbit.com
