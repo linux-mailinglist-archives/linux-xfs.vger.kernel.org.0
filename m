@@ -2,208 +2,152 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167EE576426
-	for <lists+linux-xfs@lfdr.de>; Fri, 15 Jul 2022 17:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 098B457648D
+	for <lists+linux-xfs@lfdr.de>; Fri, 15 Jul 2022 17:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233504AbiGOPGT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 15 Jul 2022 11:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        id S229902AbiGOPju (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 15 Jul 2022 11:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233019AbiGOPGC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Jul 2022 11:06:02 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2043.outbound.protection.outlook.com [40.107.92.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC69D7CB7E;
-        Fri, 15 Jul 2022 08:05:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CcmG4GNmbrB2tfag4fHOEduFQO34ba7GDMbT4EHr5kS0+GjSEV5T/hWV/b2BFSTwk+MhXIwyqDYfXO3g/JUoHygVEZU5wL9CwjfpmX9nZbV4/L3A320Frl/S8d/D2jYiiuuP514jR3dye1k4smeJPu2CzqClgSWhdfuw96i9eel+sYkME7u9SccnOigF1hGqcWGj3SmVLOejNL9t9bYB9HCVOyeG7AsoZTS5wDE2rc1r+XvG2MFACl3wR+kiwYqVLNzGvN8iLw0dWu+Rce12PeGdozVMink8SlWqhw3mHxuXhNgX7ySyhuTd+xMz8pTwvgNVNQuqxZSB0G0eKhntow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ghINYxYAaP35msqhqy+uXLJjlA8u9eNbkgf4YFEOveA=;
- b=LVq2X6qCcI7LLAEroBx3pZbOaV8vi0h35tneNYEGs7L6nhDQ/VISrytyDTuVvW68fw3pN/H3ntJkxV7AT8exCVqEsoIjGKQFkOS+DdS0KjxtlDn7DhBLpjMKy+JLDSx7shqdi6fVXcKtf4I1KVUcMc7lPzMjhhOWCrXkkcbmQBN7pPZdn3h78JDXgq8uAsoVRD1/WU+ZinUVD+OIJV4hcuN4fD4lDft7IuG1a09pX4lNHQ/3CBOJoYgtaJqfLLU4RvAyu1d3cEoeGAIBWEreng7zT7xTF49L20Z7W2oVhJeiUC4MvJrNPXdwCw8n2tDhPFA8xQOt+QJn0SRgbalg4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=nvidia.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ghINYxYAaP35msqhqy+uXLJjlA8u9eNbkgf4YFEOveA=;
- b=c++1AQwSq+Ph+FBOcYUKzUqAREwGjmebjvjilZTYsf4Axq8ZzoVpU80NiIG6Dsg6ba+/f7IBJuXvFj94MJkTE8wR7RwpQoawTtOFxgDQbXSSXS1EeYbE+AXjhFjRn9++aDYwBnO/pXyLv8YdQHTlX2oiuVzElm3ZHOwojbDpfDQ=
-Received: from DS7P222CA0015.NAMP222.PROD.OUTLOOK.COM (2603:10b6:8:2e::27) by
- SA1PR12MB6972.namprd12.prod.outlook.com (2603:10b6:806:24f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.14; Fri, 15 Jul
- 2022 15:05:52 +0000
-Received: from DM6NAM11FT045.eop-nam11.prod.protection.outlook.com
- (2603:10b6:8:2e:cafe::2c) by DS7P222CA0015.outlook.office365.com
- (2603:10b6:8:2e::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.17 via Frontend
- Transport; Fri, 15 Jul 2022 15:05:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT045.mail.protection.outlook.com (10.13.173.123) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5438.12 via Frontend Transport; Fri, 15 Jul 2022 15:05:52 +0000
-Received: from alex-MS-7B09.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 15 Jul
- 2022 10:05:50 -0500
-From:   Alex Sierra <alex.sierra@amd.com>
-To:     <jgg@nvidia.com>
-CC:     <david@redhat.com>, <Felix.Kuehling@amd.com>, <linux-mm@kvack.org>,
-        <rcampbell@nvidia.com>, <linux-ext4@vger.kernel.org>,
-        <linux-xfs@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <hch@lst.de>,
-        <jglisse@redhat.com>, <apopple@nvidia.com>, <willy@infradead.org>,
-        <akpm@linux-foundation.org>
-Subject: [PATCH v9 14/14] tools: add selftests to hmm for COW in device memory
-Date:   Fri, 15 Jul 2022 10:05:21 -0500
-Message-ID: <20220715150521.18165-15-alex.sierra@amd.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20220715150521.18165-1-alex.sierra@amd.com>
-References: <20220715150521.18165-1-alex.sierra@amd.com>
+        with ESMTP id S229525AbiGOPjt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 15 Jul 2022 11:39:49 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8CB22E9EB
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Jul 2022 08:39:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7A7DCB82D12
+        for <linux-xfs@vger.kernel.org>; Fri, 15 Jul 2022 15:39:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 322BEC34115;
+        Fri, 15 Jul 2022 15:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657899586;
+        bh=Llg9wnF4r7cUG5PLv33LrDVTdnBw2tLO8fGQf4g7KtM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VhaKV8P2WBEXWimFabXvUSBbVrC3XOm8cP3O0Imh5FpNmExX+xZ/ki5wdZZswKyUi
+         96aTU+nnbNyrAGMxYz63tGzUdevEWAMcOy3D7Iz7lDjvIG16hb2KLvGZEjTAx1C/vB
+         LTBlOGRkoY1FJzHDKFj28272YlkyRot2yjpqEOMwI6Kz0K2xqItHVrdB/LhGrlWcIT
+         sOVFu659dAp6eDABSgdi1JPbaWA42BDFhq9E6geKtGqdLP/vgWyDNLPkXN3aXUF8+4
+         3CYk8zasviddSaSLJr8FQ/dj6kFLlGgYs/+3vsiZ62z+Ld/EDUiz9H859Y40RI3NC3
+         HVe8GZmQ2oxmA==
+Date:   Fri, 15 Jul 2022 08:39:45 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     hexiaole <hexiaole1994@126.com>
+Cc:     linux-xfs@vger.kernel.org, hexiaole@kylinos.cn
+Subject: Re: [PATCH v1 1/2] xfsdocs: fix inode timestamps lower limit value
+Message-ID: <YtGKQaqJ8fnQzIYf@magnolia>
+References: <1657882427-96-1-git-send-email-hexiaole1994@126.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 35a4cc4e-ab65-4cc9-3a3c-08da667382b8
-X-MS-TrafficTypeDiagnostic: SA1PR12MB6972:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /bY27H8ENSJl9dTI5r557agMFt9ob9FbjXMrmBV92gmMpMV9txC1Cum05rYW3SeTQ7c7BM5o3oMJUyjRNCX5uTcMEW+5rmxBmbOc4z9fcm9p0Sfny6mqpWt7/g5GmSJNRtcMk8iKnvkcwp3hg5xiIH6a3lfdHP29giztQ1YjL1TjTLOwZU3zpkEdghe2Qo1PDniG2u+xo06wBPfvCo+pWxYFQkJk86ntrrd0Acc3iG6cChpLP2e/RY8nEoZJaS75K58yHxoODCcmp9rLEmekzdRFJtOpVOlwatJ0afJ/8FgBBtcpicfhkSgg14w7P/Kb20XvTXqq3IVFgrLakKcZGcZcA/SSpFMueTp45vBu8DbfPSX319fDgMEIMHOlaWe3jhNwzblMHDe3ipbEoAtJJ/3AtC9ix2gtpYrmGWtMgHvlSC/UQRTNK3x/OJD/yaoEh40ADz273fcByS2aWQn5nsHY2kcUJJhxmPTPKTKwv6hxRHqMVU+8UcOhBiF8fpQNQMCjEMg5sPkgL0d4TMkjw/ParA1Lg8iGYpcKG4FNLKvfd+BZjePIvO5D+u7nx031A8W/EidMallOwdrt5owM4LhcN3HjG9PVRMOIPGz1wRwHqaZNPyCaaCV1erQ+JaGBdRWBldZjS+qL+SmKMvjSm/I+n48HOMfvo3v4bX9uGZ4mqA/Mn4PRkYYz8wDLGsbPxNSX/3gnmGc2bkvVDIGlaB0KIjEkqM4JZt9qVZwqLBCAc/KHZACItxXzlfLK/yhJmKgHJHXZSFFYNeJhwPOcNPa2UGfnJv0DZpAWVIo3Jp7VWCNrbH/cVcJjnughdi77vPZbGKY+AM3qzTHh6mvcL0gThhrmFf1RTn73B2pVAhA=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(396003)(39860400002)(136003)(346002)(376002)(36840700001)(46966006)(40470700004)(82740400003)(2906002)(36860700001)(47076005)(7696005)(82310400005)(6916009)(83380400001)(2616005)(54906003)(36756003)(336012)(6666004)(356005)(426003)(41300700001)(26005)(478600001)(8936002)(1076003)(5660300002)(7416002)(16526019)(44832011)(316002)(186003)(4326008)(81166007)(70206006)(40460700003)(70586007)(40480700001)(8676002)(86362001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2022 15:05:52.5792
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35a4cc4e-ab65-4cc9-3a3c-08da667382b8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT045.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6972
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1657882427-96-1-git-send-email-hexiaole1994@126.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The objective is to test device migration mechanism in pages marked
-as COW, for private and coherent device type. In case of writing to
-COW private page(s), a page fault will migrate pages back to system
-memory first. Then, these pages will be duplicated. In case of COW
-device coherent type, pages are duplicated directly from device
-memory.
+[Ugh, reflowed this to 72 columns]
 
-Signed-off-by: Alex Sierra <alex.sierra@amd.com>
-Acked-by: Felix Kuehling <Felix.Kuehling@amd.com>
----
- tools/testing/selftests/vm/hmm-tests.c | 80 ++++++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
+On Fri, Jul 15, 2022 at 06:53:46PM +0800, hexiaole wrote:
+> From: hexiaole <hexiaole@kylinos.cn>
+> 
+> 1. Fix description
+> In kernel source tree 'fs/xfs/libxfs/xfs_format.h', there defined
+> inode timestamps as 'xfs_legacy_timestamp' if the 'bigtime' feature
+> disabled, and also defined the min and max time constants
+> 'XFS_LEGACY_TIME_MIN' and 'XFS_LEGACY_TIME_MAX':
+> 
+> /* fs/xfs/libxfs/xfs_format.h begin */
+> struct xfs_legacy_timestamp {
+>         __be32          t_sec;          /* timestamp seconds */
+>         __be32          t_nsec;         /* timestamp nanoseconds */
+> };
+> /* fs/xfs/libxfs/xfs_format.h end */
+> /* include/linux/limits.h begin */
+> /* include/linux/limits.h end */
+> 
+> When the 't_sec' and 't_nsec' are 0, the time value it represents is
+> 1970-01-01 00:00:00 UTC, the 'XFS_LEGACY_TIME_MIN', that is -(2^31),
+> represents the min second offset relative to the 1970-01-01 00:00:00
+> UTC, it can be converted to human-friendly time value by 'date'
+> command:
+> 
+> /* command begin */
+> [root@DESKTOP-G0RBR07 sources]# date --utc -d "@`echo '-(2^31)'|bc`" +'%Y-%m-%d %H:%M:%S'
+> 1901-12-13 20:45:52
+> [root@DESKTOP-G0RBR07 sources]#
+> /* command end */
+> 
+> That is, the min time value is 1901-12-13 20:45:52 UTC, but the
+> 'design/XFS_Filesystem_Structure/timestamps.asciidoc' write the min
+> time value as 'The smalle st date this format can represent is
+> 20:45:52 UTC on December 31st', there should be a typo, and this patch
+> correct 2 places of wrong min time value, from '3 1st' to '13st'.
 
-diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftests/vm/hmm-tests.c
-index bb38b9777610..716b62c05e3d 100644
---- a/tools/testing/selftests/vm/hmm-tests.c
-+++ b/tools/testing/selftests/vm/hmm-tests.c
-@@ -1874,4 +1874,84 @@ TEST_F(hmm, hmm_gup_test)
- 	close(gup_fd);
- 	hmm_buffer_free(buffer);
- }
-+
-+/*
-+ * Test copy-on-write in device pages.
-+ * In case of writing to COW private page(s), a page fault will migrate pages
-+ * back to system memory first. Then, these pages will be duplicated. In case
-+ * of COW device coherent type, pages are duplicated directly from device
-+ * memory.
-+ */
-+TEST_F(hmm, hmm_cow_in_device)
-+{
-+	struct hmm_buffer *buffer;
-+	unsigned long npages;
-+	unsigned long size;
-+	unsigned long i;
-+	int *ptr;
-+	int ret;
-+	unsigned char *m;
-+	pid_t pid;
-+	int status;
-+
-+	npages = 4;
-+	size = npages << self->page_shift;
-+
-+	buffer = malloc(sizeof(*buffer));
-+	ASSERT_NE(buffer, NULL);
-+
-+	buffer->fd = -1;
-+	buffer->size = size;
-+	buffer->mirror = malloc(size);
-+	ASSERT_NE(buffer->mirror, NULL);
-+
-+	buffer->ptr = mmap(NULL, size,
-+			   PROT_READ | PROT_WRITE,
-+			   MAP_PRIVATE | MAP_ANONYMOUS,
-+			   buffer->fd, 0);
-+	ASSERT_NE(buffer->ptr, MAP_FAILED);
-+
-+	/* Initialize buffer in system memory. */
-+	for (i = 0, ptr = buffer->ptr; i < size / sizeof(*ptr); ++i)
-+		ptr[i] = i;
-+
-+	/* Migrate memory to device. */
-+
-+	ret = hmm_migrate_sys_to_dev(self->fd, buffer, npages);
-+	ASSERT_EQ(ret, 0);
-+	ASSERT_EQ(buffer->cpages, npages);
-+
-+	pid = fork();
-+	if (pid == -1)
-+		ASSERT_EQ(pid, 0);
-+	if (!pid) {
-+		/* Child process waitd for SIGTERM from the parent. */
-+		while (1) {
-+		}
-+		perror("Should not reach this\n");
-+		exit(0);
-+	}
-+	/* Parent process writes to COW pages(s) and gets a
-+	 * new copy in system. In case of device private pages,
-+	 * this write causes a migration to system mem first.
-+	 */
-+	for (i = 0, ptr = buffer->ptr; i < size / sizeof(*ptr); ++i)
-+		ptr[i] = i;
-+
-+	/* Terminate child and wait */
-+	EXPECT_EQ(0, kill(pid, SIGTERM));
-+	EXPECT_EQ(pid, waitpid(pid, &status, 0));
-+	EXPECT_NE(0, WIFSIGNALED(status));
-+	EXPECT_EQ(SIGTERM, WTERMSIG(status));
-+
-+	/* Take snapshot to CPU pagetables */
-+	ret = hmm_dmirror_cmd(self->fd, HMM_DMIRROR_SNAPSHOT, buffer, npages);
-+	ASSERT_EQ(ret, 0);
-+	ASSERT_EQ(buffer->cpages, npages);
-+	m = buffer->mirror;
-+	for (i = 0; i < npages; i++)
-+		ASSERT_EQ(HMM_DMIRROR_PROT_WRITE, m[i]);
-+
-+	hmm_buffer_free(buffer);
-+}
- TEST_HARNESS_MAIN
--- 
-2.32.0
+Yep, that's a typo, can you send a patch to fix the xfs_format.h
+comments, please?
 
+> 2. Question
+> In the section 'Quota Timers' of
+> 'design/XFS_Filesystem_Structure/timestamps.asciidoc':
+> 
+> /* timestamps.asciidoc begin */
+> With the introduction of the bigtime feature, the ondisk field now
+> encodes the upper 32 bits of an unsigned 34-bit seconds counter.  ...
+>
+> The smallest quota expiration date is now 00:00:04 UTC on January 1st, 1970;
+> and the largest is 20:20:24 UTC on July 2nd, 2486.
+> /* timestamps.asciidoc end */
+> 
+> It seems hard to understand the the relationship among the '32 bits of
+> an unsigned 34-bit seconds counter', '00:00:04 UTC on January 1st,
+> 1970', and 00:00:04 UTC on January 1st, 1970', is it there a typo for
+> '34-bit' and the expected one is '64-bit'?
+
+The incore timer field is the usual 64-bit time_t, like you'd expect.
+However, its usage is clamped such that we only use the lower 34 bits of
+the field, because the ondisk timer field is still 32 bits wide.  At the
+time of review for bigtime, we decided that losing the lower 2 bits of
+precision was a better sacrifice than redesigning the ondisk dquot
+format.  This results in a resolution of 4 seconds (instead of 1)
+because the conversion is:
+
+ondisk_timer = incore_timer >> 2;
+
+Hence the ondisk field encodes the upper 32 bits of a (logically) 34-bit
+counter.
+
+--D
+
+> ---
+>  design/XFS_Filesystem_Structure/timestamps.asciidoc | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/design/XFS_Filesystem_Structure/timestamps.asciidoc b/design/XFS_Filesystem_Structure/timestamps.asciidoc
+> index 08baa1e..56d4dc9 100644
+> --- a/design/XFS_Filesystem_Structure/timestamps.asciidoc
+> +++ b/design/XFS_Filesystem_Structure/timestamps.asciidoc
+> @@ -26,13 +26,13 @@ struct xfs_legacy_timestamp {
+>  };
+>  ----
+>  
+> -The smallest date this format can represent is 20:45:52 UTC on December 31st,
+> +The smallest date this format can represent is 20:45:52 UTC on December 13st,
+>  1901, and the largest date supported is 03:14:07 UTC on January 19, 2038.
+>  
+>  With the introduction of the bigtime feature, the format is changed to
+>  interpret the timestamp as a 64-bit count of nanoseconds since the smallest
+>  date supported by the old encoding.  This means that the smallest date
+> -supported is still 20:45:52 UTC on December 31st, 1901; but now the largest
+> +supported is still 20:45:52 UTC on December 13st, 1901; but now the largest
+>  date supported is 20:20:24 UTC on July 2nd, 2486.
+>  
+>  [[Quota_Timers]]
+> -- 
+> 2.27.0
+> 
