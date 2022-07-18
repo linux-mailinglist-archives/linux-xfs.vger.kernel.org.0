@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A17E578B9B
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 22:20:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9686B578B9C
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 22:20:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234968AbiGRUUi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jul 2022 16:20:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60194 "EHLO
+        id S234980AbiGRUUj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jul 2022 16:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234980AbiGRUUf (ORCPT
+        with ESMTP id S234984AbiGRUUf (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jul 2022 16:20:35 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407CB2CCAB
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 911C12CCB0
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 13:20:34 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26IHXEeG023346
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26IHZ5Gm026736
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references : content-transfer-encoding :
  content-type : mime-version; s=corp-2022-7-12;
- bh=4tYTG1i3xl4YL9FHaKHjO/ZrgsZjMgjGS4H8bMNkzko=;
- b=OInd7YBr0Y9xzkpMnsFz01EYvKPDB75/CR7TDxZ6LiCRXEl/+PS86TWFyuWN0rVmvhO6
- TX/oIFHsmkUC54XZKKBaIbLT76VCc+m5mtMI8BsTFdR8S0AtveKKxidTxWjn1mDUdUPi
- taUDG8lizLMMIJGsLFk29ivi/2VMQKM7rko0xA4HlNVGeObmHsxN8Y6rLyDlG9QDAP5Q
- oaODJlZtdnXy5jf5WaQ7cRIAmsCEgDGWO/Aif8URZmPx3XKC9jvrmBllHvv4sP2b9P0N
- eNuhL5kSq3pzg63WtS9l5v1ltqww9pXZYTdxiDyE3eufBmpo3jpbF+Gk2KsHBm5iOHGL sQ== 
+ bh=vUNoEHIXvRmyE8mLt6L0pqlEJ3EHdz4j/x1ZNJ2JPFA=;
+ b=LHxoGmo4eoxfuGoysfwBt0UBQBQmdZ0K70kbAR37Fh1fe947m+z4SvG9V4O6xnjBkoPf
+ v+fb36e4KbNuQEnSei3qX3e9+6l4f6411xgLmcJwmha4KILGYmAQ093tvCv2zLMKZAwC
+ VS5L0uM7IvAoFiUONV6wd1bddCqUGBVwgXXBO+MtdqQwlsAf/H6tWdigrJPobxhUgcYu
+ mNddjnHJDLm+1NJcQLf7aDuz3Izzk2g21u8kkLkm7+hI6lapdtv+s5P08YHYjr5EBPu8
+ 7azXY9KFdW5NmGxDaUB2FKZ4SA8sxymXdkvvtWZfHOtt2nJ4xAHxIiN6pqGw4ijekTkC Zg== 
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbnvtce3x-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbn7a4cfy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:33 +0000
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:34 +0000
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26IIp4t6001290
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26IIp4t7001290
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:32 GMT
 Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1k2sfbn-4
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1k2sfbn-5
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:32 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kcvETGKXCMYYR5MN4T+FlyXqjRNZqFV7euJfi9hzg8QdfRsyNSHtMPvpIIvZGm12widyEke9wuIxolQxpmQTiQXLZ356Znq4aSn9lHNJDS2CzpOrCy9hLsWrs+qV1MhzPyiOyJuvXQORR9NLYJGyCGdUylyheLx/ZX9BFzbgOI7WN9eKcnN/5lm5JEpX6C3RjvA7p+Ma5dF0qyDg7TwRzrTMi/3M7D3ryhg4KlBPVNAYze/tUr32V3k6SazpNPQ2HlhDdi6cqPOQKkvqXys7+2Ucektig0GPkeF242p3xGQpl75KMHvmFDae1Pyfo4Tgv3pSTv2UqLRnhJqRbrFcig==
+ b=c6hBsHtGpDFzV56YxFWJ8LCNryHIIyPlap4aEWC9e/P/d4JFtm9klfDM9LKPWlT5+FBhO0gyd1t0q3cB6nFr9GOhoAy3j9LoP393X6yiBZkYojH2Qrkai9srhG0A3g2Dtuy7dCnAhueb6tk7wJ9nhtESh4GMXBIha78KC83/IsmjIc3blkvmYLuiP5lY42RdcypG1tjvhfMAu6bohMu3TpZh6kRFQRwRyr6olgPEnHWjGQaaK+ArHIKGxjJClR3LIFEpK9Flv+CjpfOcjeHqWgVEc7m4Xtgi0/wvVpZuMR6Vos+j1Mtj0ZDbURkEhhIPiT8h0YCKg93Qyg5HLArVOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4tYTG1i3xl4YL9FHaKHjO/ZrgsZjMgjGS4H8bMNkzko=;
- b=ogVG1FsysKKOxIgqwJ+NtmCzleC7qwY/MhH5PZEdIufnwLjHA7aY+0qzCI3R9s4jY0YJygk+d5t1WOE/WWozxnH/1qfSRAnFJr/oVc9uHz/7EsmzB+GKOEqZY6eAOCoRXwxQJcJBZKq7Fmo4igFVHk+/Ll9dQ4sNzxCt6rIVLMBHPlo6ztPe3/Qi+NnyNjjuoP3ydLwRgGFE2XUZcvcIzmyXcM6T8nmcc7nTudPq5/lwQLrKlOSEEcLc36atz41biobcgpj6KFt4PXyYqousS4DivZCTraFxXXxk9PNvqMPQU41oLf/ib+kEyhb9smqpUA43SQ0ydgQkJMI0tlWOiA==
+ bh=vUNoEHIXvRmyE8mLt6L0pqlEJ3EHdz4j/x1ZNJ2JPFA=;
+ b=Qmlk9vRfDbUSKlReavGEIhWuSCvTL8cEDrPajBXX+rmqGqSKOrQa9qnGzE3s7n//zuIqNRTjFZ0l5tyQg4YZRwV2evjVJkqzFh88L9OltGkyz49MztrVJ6b2ekNAPhKei4dZY4O8BSOb7zQnLNRc5NYRjXjXP1bjwvTMoHn0qkzwZTd4OyyJA88WtmWrV1lNGZsEpM6UfjP1h55cv0vKYuRVA5AsJVHf8TQZ4tsd12pCLvBMrMDJyUsxiwEfHs2fLtWQA8QNsm7+VpjlNrWaQqoUusFoZb8QO1jux4OLRehMp+104SHKKVqCpp1gmOOc9eTUawhOv8uMZ6+anBnxBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4tYTG1i3xl4YL9FHaKHjO/ZrgsZjMgjGS4H8bMNkzko=;
- b=tiSmwGfNtUQhVWOPh0Flj6iBUVhY+M2OKMc1wKE+WPLFIVWoaNqgeOgaZwcVBNMUoDN9ITJsNis8W7RDzXxrxwoePhztvC1IuVlbKOXSObonz+KhSSh6looQ8k2z94Gi+aZYDXGeBMn0MByzcek88bvtN4ujd/3z10AqtLt0cNA=
+ bh=vUNoEHIXvRmyE8mLt6L0pqlEJ3EHdz4j/x1ZNJ2JPFA=;
+ b=fFTO56s+bhuYuHT5/3WGjELGnOeqnf3/k6dGrMgK3UezQrBAVKkPHcsPnWcbiQwf8gD2/1pjfoQ96GcAWeXkK6Ag4cawQqq1Idzp/sAdML4aeMRcCuN5a+k1G2yeCKR2j4ocfpvKkyJ/90Wt5zTYw4DTT70cVE3Em3wvFSQX5N4=
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
  by DS0PR10MB6128.namprd10.prod.outlook.com (2603:10b6:8:c4::7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -62,9 +62,9 @@ Received: from BY5PR10MB4306.namprd10.prod.outlook.com
  20:20:30 +0000
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 03/18] xfs: Hold inode locks in xfs_ialloc
-Date:   Mon, 18 Jul 2022 13:20:07 -0700
-Message-Id: <20220718202022.6598-4-allison.henderson@oracle.com>
+Subject: [PATCH v2 04/18] xfs: Hold inode locks in xfs_trans_alloc_dir
+Date:   Mon, 18 Jul 2022 13:20:08 -0700
+Message-Id: <20220718202022.6598-5-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220718202022.6598-1-allison.henderson@oracle.com>
 References: <20220718202022.6598-1-allison.henderson@oracle.com>
@@ -75,52 +75,52 @@ X-ClientProxiedBy: BY3PR03CA0011.namprd03.prod.outlook.com
  (2603:10b6:a03:211::7)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 55ced0d3-4865-4e2a-9d02-08da68faf581
+X-MS-Office365-Filtering-Correlation-Id: 8bf53e1c-5273-44c9-abff-08da68faf5b3
 X-MS-TrafficTypeDiagnostic: DS0PR10MB6128:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NDoVwZIPFzz8u+2uVpzrsnqLH+yJOlpMkErkZwIbDb0NGPl5KnnuCyISRKjA83IFwJy7+RlozVqZjQwALrP2lt/pJHRq1DWpi4hbzsiqWsQoaH7nzZLftUgCJ0S4X/AsROOuDebDGcFfY2sQkat71euK5b2kkhdXguUifhhoOHJKB2kpUECC0abt8rSyfafFbQP9CJ7V83obas/glLRUDyKPTJjavIXJsWwVegU1uZtaDaU2Pkid2vOhXwFnPvl/9pfU3hlFfIz7YTfgWLTifAVupREQlR5uSY/KcDwycza19u6/vEfy2XLR6ggYXR/6wQPf27GBwdu7xzFVHJOrSt0aVmT8lMvme73U4OcHkFs5X5LVmWOqr5g9Da/oFxMHbNDvPDBwI8Y/vxzHtQTcGlGOLgYxK64pjcyS8eOEJyN6KeNBTH2Sv3GBF7HKw1GfnoIIiO3gr1WmhCCkdu5yFsDW/DpB0rkUiIMh5ruJLiyZcwF5bNwKFk+u7oqG8GCgZ1Q9TemNl0xC+wM7EFrPPqRgmxcfh9EdIMYjD5q6roCVKcgu7S/GMXlNXqaL70DFXMxRSIlU6ndDZJkLi9sQaGr2gvmbar4RhuieFkRWPflYOJwwCiGtO4OjkIbYMkePnw2TyYMt5b4zhbj10JUxX3wWZpk01itD+zZRf+F+viVdECFhmYcPMXLTG7w0ckSbhf/Yqbs/Qt26PSwQgyvHc6b7lMaOFvIabPA3n1D5dY7aNl7vBYX/gJdv6Nrl7wFf6G1XrE0fm1kIHum/vgxQxizxrFUHvroNvDUddAsx4J8=
+X-Microsoft-Antispam-Message-Info: G/Q/c4JMoWY3l6CG1AUZMRzyS0OG7UyEJ5pKAlwOLv954/3CHQ426tH2MRbs3hj8J39k7dGYKlL/q6ftRD6WPzBqqQMn3g/yME8n+8YTDnj/3BPLuBZllwcUHi/JGoVWLGX9Y+Yltkts8BlYzfeL4rcmKbeQVX0mg29L30MetMWohxhWuIq7B8nB4sUNQwKgwOXVvTyi7LtO/2w2aP0AReSGDNTXE+OSAL/3VrBP0aDlF++dRX/D6hIQZcECwih6KC650qhIynY2wkxQlEIeozZEjwe2IhAyiGgLw1BfGYEg6+w2MnJKFqqJtwkGGAxhXK5f9F+XpfdQ5ehOFZglFZVuDjXADwt9fpi+kbBSXDH5GMekwZQwlyioBqyn+XzEq2c0JhqsPUfxn4fB4xLP28Q6muOg8eF0M8/KYk6gzsktmqGk+Sh6d3F/xeNKG/UiWjNLpPcvWbiOc07jT2W4QUPM5BsAUVHCbbHa2kXJ9m1Okycz1pOJWSJYobDqFbw0gGMRgXT/y/a9e+LzpzxWfvtO4uENAIwtyMhoKDDLudixc6AX+1LtM/ovcJLwrD0uk3h/Uh5IpmgxBV7Ha81Q24Iv23WqAAjle1J26CKMVzwqRKsCyWisuMHMG7Qb+vCIiDDbgf1MKgy1dGZj5HndP6/jTFLs4MG2H+vzGlulH81fZdpkNBDs7C0+YIDHFUs4cPavesNmT+3nDlS5f68m9Vdh1uKsp8sRoEhp1FApXqCA8sfencZD8GZLQT4YeQGM0qhLTE5XN93koxfswBJljle207VzckGUol8Bi31Td58=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(396003)(136003)(376002)(346002)(366004)(6506007)(52116002)(6666004)(41300700001)(6486002)(83380400001)(5660300002)(478600001)(26005)(1076003)(186003)(2906002)(2616005)(6512007)(44832011)(6916009)(316002)(66476007)(66556008)(8676002)(66946007)(8936002)(38350700002)(36756003)(86362001)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?j/GPjkbC2c/Jx0Y1JrIFpLCKMp60+MGaHIHHHUyrxO9sMr6CRmnkmrf9qIi8?=
- =?us-ascii?Q?WQbUrqAzL1gg+vQOFpLc5XolehLhNoiGmptbMp2ghOw9ghLjhg5s8ip0nFCG?=
- =?us-ascii?Q?XVaOSE5BtJgAFVOuHvr75o1bcvht9gQ4vUCaiOcTyqhh2ENip8iNunpEIr3P?=
- =?us-ascii?Q?A0BrJI/OaDEmJ3YwKPHmnLjZCnWh4KjtwaomijKAU+QPeMX4QW+Oj1mi8gIL?=
- =?us-ascii?Q?vxhmTUhwyf/Ry40dke8+Gbtjz7j1/u6AxkulF/gRyKNkZh4bBN1/fS7Rr+dC?=
- =?us-ascii?Q?a7z8tAOFPhgnz4Dk3w76qImD72stOVFoQK+J/wKv6CNkZUs9+Urya1Dac7G8?=
- =?us-ascii?Q?tbGnIKeDQV3F01XyELe3cTMq4jvSM2uKPW40AE7eqEie+4QfWaVIA0qST2FY?=
- =?us-ascii?Q?8xUewBjz6IAr63cv+v4MOqin+I5QUiVH7kBN5Wy2BFnt1VS61VociECIVUAD?=
- =?us-ascii?Q?BFvsDYBqGiDLqaR8+rzNYcSjUdr0owsxTQs2WN+p1x1DDmULFmlzsZ+9qffZ?=
- =?us-ascii?Q?G1cyvapXrDtwzwfLlbf6pGcdzKtXz0YeTod3TTG2TawWHLErceFgLurdFfzI?=
- =?us-ascii?Q?h884UiPqwFlLLXeoohqyAl8rwFtAs1f5gX7Rjblpz80z9v1P7gKyYXr7WZKi?=
- =?us-ascii?Q?8/npbKKqcuqFFYTrsv3hOjzAV48Gci4e+bcI+F+SWy381gAixfl/mCEfX3Yg?=
- =?us-ascii?Q?jXHvUSkB7cn/2VvI8pT8X8aAoLE850B7/Irphw0NfDIq11U27I2tsj2f/xiK?=
- =?us-ascii?Q?B1e3Qwayv51js/FERTO3Mp+87k9sMTDk5HUGFoc5xa5boj37C769zyqVC97h?=
- =?us-ascii?Q?AdVCSp2mrUPWwR+iyuXkrdh1CBEUMt1GfChmXkvGKsxwqGdRG5W+X35u036f?=
- =?us-ascii?Q?IL9NIPc2V5xt6TyUTKLX/CUZ6SDYh57X85tP/NqcBMwOvKFBtbz5jZi5vMk9?=
- =?us-ascii?Q?58wocTIWJwEUzNoUM5yNBNIrSNWnhnEJxE4YWuadG1n7UQxHU4gJIPnGyAkB?=
- =?us-ascii?Q?+3p8z2tkqXUC2nQFHGvl1zENvxz8XOitBvXFeEGuT5M/VrtyAvps2eMg6bJ0?=
- =?us-ascii?Q?/QAE7cS6Qx9q9f4+Q047JprUSSjWb0aOcrFnhMJ132JGMDekD/lTwxfqxt70?=
- =?us-ascii?Q?Nqg3c36iewMoJGYyahNJ+kgCRF0NTVdXTysIeDXqNjDKEXDMwazxnHlOSz9p?=
- =?us-ascii?Q?Dh9a9osGlFg632q070PCupqLYcTpjzRqMjDvZx2m4XPOYUjerez1cD9kG6wb?=
- =?us-ascii?Q?VtRqcoKBCi7MMzeiS07vVRlg7b3UOrIzXu17D6c6FjcN0lJ9/tWZzgxYdQD3?=
- =?us-ascii?Q?hNJ7IphbpzBC50XDjidanksvvYoGbAFB/GJb0PPxlrnApU+zF9kEpPFy5G7E?=
- =?us-ascii?Q?92fd2L72WhpRj1k/5IEURDl+WdenoW5OqxYuQ9J2yjNem8yYxHgQwHQRx+pO?=
- =?us-ascii?Q?i5t1DNzj8UBf2wpsRL93VU5bvwOUFnfSTbo7dh2S8+LsghJq3axENh1MekMP?=
- =?us-ascii?Q?jlioPfeGLu1fCqnrQGBcNKvS0Jj6qDtb8towwFWo4yn3OcXmecWMRJj2lrsO?=
- =?us-ascii?Q?LGqoVQfGBBi13i/9VCeqGO7E3sOvGEPnozfO0Dj75zHzRp5rlRKPakgfyo+e?=
- =?us-ascii?Q?fA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5OncxJ/q8EifJZPvt3+XKzXZr6unmxrWdudPWDiBWOqJZJ+lDYZB59N1UHgb?=
+ =?us-ascii?Q?UVuCEOEURpCLyLxQh7XX0CyjoqbK3zBLalGJZRvbu5WDscZFV1S6J0PCKCZ7?=
+ =?us-ascii?Q?U5HDu+pSGfcyRhDaG0V1neubMP/sud6J17UBG++GiLy/OsOJvlDgbS4zjhRA?=
+ =?us-ascii?Q?H7sM1m5Gc1VmWsdg+jkMjWkntBBK9JeLPDBqgtIfYQZbDR8Dw+7xZEiuYTKi?=
+ =?us-ascii?Q?fhNFVcZGXOXRl8ANoSGGM4S/FQW1DX8FXQrmnFz4IUbA+7mqG4Tptsg65LWf?=
+ =?us-ascii?Q?ABTYVTK6ek7KXpIDiqwk7ZwWG+pRHwqR/VytWEWCf03/qYHW7Knk4AdugcEW?=
+ =?us-ascii?Q?h+MP2kgecWUgF0A6wKPBw4KG6nHvCYyQo0ntN9to76FxCXZDz0/UHdxu6Kkf?=
+ =?us-ascii?Q?GTDo4IvjCvTZ3nDRWjkTyd2u5DTZucLHOSvBO9pJCJuR8nWjlMatGzoeAXGS?=
+ =?us-ascii?Q?z5bZ9qPCyg029Eww8vaWuWyWYJlKkrK8T0u3a25kFbZEUo+A/RjFCqm9Ukse?=
+ =?us-ascii?Q?Ao9Rc3B4oh4oDu7qpCbQUR3HsnEnZTxmFA0QbXz06Pv0SFMXiHLY4v1Ff77X?=
+ =?us-ascii?Q?q0P1K5TQVFjEzHCosFkQnSLjohuCdbEJGzgBbKuqfuUzwXLUJl4AZJ/G3ahh?=
+ =?us-ascii?Q?ITh3TnLOPdsaiOoKGofl5SGIQButBnFRATtf5tKpkmlLjzkM1EJKztKP9zND?=
+ =?us-ascii?Q?cGmLYM7NTFscgyyIxel2jcNh50jIxrkB2qwar5T8kQnxSu/+go2OpHvSFLau?=
+ =?us-ascii?Q?SEzfjpmSDVO2egnpXOZk2uMKtYu7pR1+GvPNkY3GxeraOm1lK0e0krx51Iv7?=
+ =?us-ascii?Q?H/fpWJo4ef37c1d3ZBPNFa2tEnwGL3QETq5oZDOqP+2KuIICytzpRp13ubSO?=
+ =?us-ascii?Q?gHaKOLtvRcemNg2ifc3qqr4z1GVa+36aiNoIPug3r35tbC2kc5pW7IWXopXw?=
+ =?us-ascii?Q?fcA7FijJ2SmiGkLh6j3WMz6tsVpMG10R8QgnfMdAmaiKRH3/ELHjDZcb/5H2?=
+ =?us-ascii?Q?At6/qBvImUlJQFYGoeKmB7rEMEkmV6Cxk5heyKWbowrkizKsW+YOqeOdOa4t?=
+ =?us-ascii?Q?jfYZ9wUcevPFvDYnVEGJ/K/ILDR9CBxRCMgA2ehc1xvjq3nGRvC4CtUIZhvi?=
+ =?us-ascii?Q?VwlcR2EIF+7CuzRWTnnlM5vu4fmAWgo0N5G2xJr8/KHBEON3RzgsZy1j2bo5?=
+ =?us-ascii?Q?P5kcvWBn0y72Q1NB+Wlu+QhM6+isAi5VEXFD5mhPvvO4HEP/PMF+pfuTqPhL?=
+ =?us-ascii?Q?5FJwQc8zEjL7GmySqdtD+KMSqkFmXWtyXxm47ZW8XeNNKy8Rc69CgQeqq51V?=
+ =?us-ascii?Q?5gB66MiyLPkK90thAbQ4EaWzgyytRoZot19YtRHbP1MVsby1MQF4BU2ul7Q8?=
+ =?us-ascii?Q?vOQzNEWMmVPgbFg8WBUWXNuVJscfsTHUHn1u/p92El5Qpqu4jI+Vax0rHfg2?=
+ =?us-ascii?Q?mPux/IlRCJ+YTlZJ4tKFcXVz+W8foplQvqXGwmdr1tUiD5QRFiGIA07FBlqz?=
+ =?us-ascii?Q?2nvOAxqVnRnGCastV/dLoSZTMMYpOwNmf2w4QEEMvghG4XOA+Bc5b1SFB+79?=
+ =?us-ascii?Q?ZdOjaBo0Rrh5TjSx6OHrHxOhQ0hXU8yXMxqSsXMk90engpPOySsfqrNkn0jX?=
+ =?us-ascii?Q?gw=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55ced0d3-4865-4e2a-9d02-08da68faf581
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bf53e1c-5273-44c9-abff-08da68faf5b3
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2022 20:20:29.8246
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2022 20:20:30.1227
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NzpMRz+kpckzmyNRdOQ/HYPn1DRq6IihgS3k1qWAEb/sKKZZXwWYjB56jCtzh6rFLP+6sj1Ko7k5HG3/0a+zYE39DqrWmmsR4Hfwc9c0b8M=
+X-MS-Exchange-CrossTenant-UserPrincipalName: j0kkHBhhY6yamS4sZcp0K+A7BHrbsvuGApz1X7vS0B+u4T4/7IPj8iX1im3+YANsPyWDrke2aySJZ7ajO2s+a3m9gZpiQYd/mWitfbZZ/n4=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6128
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
@@ -129,8 +129,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adults
  mlxlogscore=999 spamscore=0 malwarescore=0 bulkscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
  definitions=main-2207180086
-X-Proofpoint-GUID: EV4m0BefuQJQ2Y6otBksaLZgK3xDa3uw
-X-Proofpoint-ORIG-GUID: EV4m0BefuQJQ2Y6otBksaLZgK3xDa3uw
+X-Proofpoint-ORIG-GUID: oJMElIpLt4fliFzLnxqxOnHy8ORznrKx
+X-Proofpoint-GUID: oJMElIpLt4fliFzLnxqxOnHy8ORznrKx
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -141,93 +141,83 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Modify xfs_ialloc to hold locks after return.  Caller will be
+Modify xfs_trans_alloc_dir to hold locks after return.  Caller will be
 responsible for manual unlock.  We will need this later to hold locks
 across parent pointer operations
 
 Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_inode.c   | 6 +++++-
- fs/xfs/xfs_qm.c      | 4 +++-
- fs/xfs/xfs_symlink.c | 3 +++
- 3 files changed, 11 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_inode.c | 14 ++++++++++++--
+ fs/xfs/xfs_trans.c |  6 ++++--
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index cfdcca95594f..cce5fe7c048e 100644
+index cce5fe7c048e..2703473b13b1 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -774,6 +774,8 @@ xfs_inode_inherit_flags2(
- /*
-  * Initialise a newly allocated inode and return the in-core inode to the
-  * caller locked exclusively.
+@@ -1278,10 +1278,15 @@ xfs_link(
+ 	if (xfs_has_wsync(mp) || xfs_has_dirsync(mp))
+ 		xfs_trans_set_sync(tp);
+ 
+-	return xfs_trans_commit(tp);
++	error = xfs_trans_commit(tp);
++	xfs_iunlock(tdp, XFS_ILOCK_EXCL);
++	xfs_iunlock(sip, XFS_ILOCK_EXCL);
++	return error;
+ 
+  error_return:
+ 	xfs_trans_cancel(tp);
++	xfs_iunlock(tdp, XFS_ILOCK_EXCL);
++	xfs_iunlock(sip, XFS_ILOCK_EXCL);
+  std_return:
+ 	if (error == -ENOSPC && nospace_error)
+ 		error = nospace_error;
+@@ -2517,15 +2522,20 @@ xfs_remove(
+ 
+ 	error = xfs_trans_commit(tp);
+ 	if (error)
+-		goto std_return;
++		goto out_unlock;
+ 
+ 	if (is_dir && xfs_inode_is_filestream(ip))
+ 		xfs_filestream_deassociate(ip);
+ 
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
++	xfs_iunlock(dp, XFS_ILOCK_EXCL);
+ 	return 0;
+ 
+  out_trans_cancel:
+ 	xfs_trans_cancel(tp);
++ out_unlock:
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
++	xfs_iunlock(dp, XFS_ILOCK_EXCL);
+  std_return:
+ 	return error;
+ }
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 7bd16fbff534..ac98ff416e54 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -1356,6 +1356,8 @@ xfs_trans_alloc_ichange(
+  * The caller must ensure that the on-disk dquots attached to this inode have
+  * already been allocated and initialized.  The ILOCKs will be dropped when the
+  * transaction is committed or cancelled.
 + *
-+ * Caller is responsible for unlocking the inode manually upon return
++ * Caller is responsible for unlocking the inodes manually upon return
   */
  int
- xfs_init_new_inode(
-@@ -900,7 +902,7 @@ xfs_init_new_inode(
- 	/*
- 	 * Log the new values stuffed into the inode.
- 	 */
+ xfs_trans_alloc_dir(
+@@ -1386,8 +1388,8 @@ xfs_trans_alloc_dir(
+ 
+ 	xfs_lock_two_inodes(dp, XFS_ILOCK_EXCL, ip, XFS_ILOCK_EXCL);
+ 
+-	xfs_trans_ijoin(tp, dp, XFS_ILOCK_EXCL);
 -	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
++	xfs_trans_ijoin(tp, dp, 0);
 +	xfs_trans_ijoin(tp, ip, 0);
- 	xfs_trans_log_inode(tp, ip, flags);
  
- 	/* now that we have an i_mode we can setup the inode structure */
-@@ -1077,6 +1079,7 @@ xfs_create(
- 	xfs_qm_dqrele(pdqp);
- 
- 	*ipp = ip;
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	return 0;
- 
-  out_trans_cancel:
-@@ -1173,6 +1176,7 @@ xfs_create_tmpfile(
- 	xfs_qm_dqrele(pdqp);
- 
- 	*ipp = ip;
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	return 0;
- 
-  out_trans_cancel:
-diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
-index 57dd3b722265..5582c44f12ab 100644
---- a/fs/xfs/xfs_qm.c
-+++ b/fs/xfs/xfs_qm.c
-@@ -817,8 +817,10 @@ xfs_qm_qino_alloc(
- 		ASSERT(xfs_is_shutdown(mp));
- 		xfs_alert(mp, "%s failed (error %d)!", __func__, error);
- 	}
--	if (need_alloc)
-+	if (need_alloc) {
- 		xfs_finish_inode_setup(*ipp);
-+		xfs_iunlock(*ipp, XFS_ILOCK_EXCL);
-+	}
- 	return error;
- }
- 
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index 8389f3ef88ef..d8e120913036 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -337,6 +337,7 @@ xfs_symlink(
- 	xfs_qm_dqrele(pdqp);
- 
- 	*ipp = ip;
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	return 0;
- 
- out_trans_cancel:
-@@ -358,6 +359,8 @@ xfs_symlink(
- 
- 	if (unlock_dp_on_error)
- 		xfs_iunlock(dp, XFS_ILOCK_EXCL);
-+	if (ip)
-+		xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	return error;
- }
- 
+ 	error = xfs_qm_dqattach_locked(dp, false);
+ 	if (error) {
 -- 
 2.25.1
 
