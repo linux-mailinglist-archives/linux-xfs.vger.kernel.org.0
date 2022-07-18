@@ -2,60 +2,60 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E63E578BBD
+	by mail.lfdr.de (Postfix) with ESMTP id 9A1D9578BBE
 	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 22:30:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234620AbiGRUa3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jul 2022 16:30:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37646 "EHLO
+        id S235217AbiGRUaa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jul 2022 16:30:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235644AbiGRUaV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jul 2022 16:30:21 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDE32CDD2
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 13:30:20 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id k19so10082816pll.5
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 13:30:20 -0700 (PDT)
+        with ESMTP id S235695AbiGRUaX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jul 2022 16:30:23 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D5EE84
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 13:30:22 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id 5so10080539plk.9
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 13:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0tzSzW3nfswfRmIT2D8fQpUvcD4q8gAEkbhrIWUFuEo=;
-        b=lwFGPfsEnotRYrHiJHss5JTL+M8N1PlDyBwgF67W3rH3u6dvvuTrZLt2zjxWsoyG46
-         MOr5hGw4HYaQTbTT0+NrzE+0O4GQsAExIcwURQXU3mjVNnM4r24x1H6J3ElxLeVNvC4T
-         Og/wuKncbXvFO9EmoAB+IzsEqpOR1+SAt5ooKmj6Zh2VqYW2Rmm6JhYKEk5jVsb2VQa5
-         ZfzHiKEu46IOzvaQPJjM5PK1dhlII5eMXdJZ4FamsKQRCAkMqudXBeAPmDgCgWJ9l8pj
-         bnaOOika3fRbHz6Cf7WUvbqv4Iqs+hScyT71IOQrf/l+lhuj7hTYQ4qIG4MSfai+87IN
-         O75w==
+        bh=Uun7uirnLaIt3lvLmMhnq7AVCceZQvB3jdEBD7rR2YE=;
+        b=kw2Rqx/P9fKSLoVf4GFJfJskgFu1z9Hd0tK5fjVPZKntiDdJdQ2IHP4CR7XW8ZRGFV
+         WEvauO6eiQvWKCvDW/3QAmXXEhkCta2IXtWf7xAB8FkB6v8x37KvU33VRFlzJP4Uzg92
+         2P4xlxeqOYm2JCgI9uHEgHichfdDmlymFwL/MJZadNGWB+nu6ZM8t76XxmyMkpPS/JyY
+         xx4bQPINorgefQwZjdxznXaoK6XBsvcTGfZFBUe6gOM2M4tBJZY4m/HBRKAR43MDouuj
+         1olTL8yIT+prhBn6JH6c9eiiBxRrbF0ux2Hl/jaWA/WMyK6e4oPCHkQ1/J40KU486lC8
+         OJuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0tzSzW3nfswfRmIT2D8fQpUvcD4q8gAEkbhrIWUFuEo=;
-        b=5DvmnDcIjE1UMlKXEcYoblo99DckJDrBRGf5JbuVC2gT3Xyxc8Qc8cqIq81aaiG1Eu
-         KGCWbYS8DLRrYBjMnUUAQvye3IWFiDT/LyajKApUcWyDVdUGss6sP3pRdeRM7vYNLmV0
-         Cp5UKhsXL0nhs31oDKW/YuhkatN5yReevRAywdOaJ8avd3VNVbj1WteLxybicPo8GGBh
-         rMFPQO5HHk/umkp/MjkBQooaOtymLorGKGJ94gSquIvsbVoNkhOvwQhfs+J/jmGHdZ6y
-         4zuHxVrmJUWP1zNPyTNb9SjzPm/SgvTyRnK51M9/6piV2apBjFpdWpr/SoyovurlioIj
-         Pytw==
-X-Gm-Message-State: AJIora9/m03gtn2+MGdU5D6x3A207eJo8/k14js3VNfcZZGQTu2qrdbr
-        XQMtI/dWhGAPOBTGzuVhtJ0dY6jACXXDyQ==
-X-Google-Smtp-Source: AGRyM1tJFTsUpcGaH0nRDewbHU67j4PxcOhmmXhfVB/ADnmJ13PuHOcJfLTQSgF9qjQKHRvHbWPxcw==
-X-Received: by 2002:a17:90b:2243:b0:1f0:b0a:e40c with SMTP id hk3-20020a17090b224300b001f00b0ae40cmr41502839pjb.76.1658176219661;
-        Mon, 18 Jul 2022 13:30:19 -0700 (PDT)
+        bh=Uun7uirnLaIt3lvLmMhnq7AVCceZQvB3jdEBD7rR2YE=;
+        b=OMrsPDu8CwR96eMj+UfYoAlbKAr4VuSE5anC7T9T7+2W0x8jPnSnYzdcVLGG72a38C
+         ymZKc4d1fslsQZ+VvIwF45E2/Q3a7JYCp8nTYixCEfNDNYI95WC/167Jd2QnICaF2v82
+         jBnL7st5JuwXLYutvGBQnaev9u/txML6ItpZ9zzm7h6YDYw86c4s7RCi+6936lIJ3CcQ
+         UJ2zD44TbahBsFK5qdU9YhNEsSZCbS5otFQYoiGe1+mxkpTXJ9h8eZO3BB8NM1Eu7KNC
+         UnFRIkG8JYV+0OMVfTNSbBZLjybl/fOdrn0h2Chom8L5owXqBnQB7pFgwv4X+lhtokmn
+         Qtcg==
+X-Gm-Message-State: AJIora9odk06vOhkKKBjd7auIaSmxv0DoiONqJBAbrr62lkqjiJx2a85
+        Ll5HdTVYjMjPwNAa7L19Ell56OCP0EnOgg==
+X-Google-Smtp-Source: AGRyM1vqc6NvZlWuBX3CyOnOTJJ9ZDZO/UTUbvDBii847eUrwNbkuirDu6aS4vpZaVApJjbnTYqkcg==
+X-Received: by 2002:a17:902:f544:b0:16c:5119:d4b6 with SMTP id h4-20020a170902f54400b0016c5119d4b6mr29426994plf.28.1658176221826;
+        Mon, 18 Jul 2022 13:30:21 -0700 (PDT)
 Received: from lrumancik.svl.corp.google.com ([2620:15c:2d4:203:cd67:7482:195c:2daf])
-        by smtp.gmail.com with ESMTPSA id 11-20020a17090a0ccb00b001ef7fd7954esm11890148pjt.20.2022.07.18.13.30.18
+        by smtp.gmail.com with ESMTPSA id 11-20020a17090a0ccb00b001ef7fd7954esm11890148pjt.20.2022.07.18.13.30.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Jul 2022 13:30:19 -0700 (PDT)
+        Mon, 18 Jul 2022 13:30:21 -0700 (PDT)
 From:   Leah Rumancik <leah.rumancik@gmail.com>
 To:     linux-xfs@vger.kernel.org
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
+Cc:     Brian Foster <bfoster@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <djwong@kernel.org>,
         Leah Rumancik <leah.rumancik@gmail.com>
-Subject: [PATCH 5.15 CANDIDATE 1/9] xfs: fix maxlevels comparisons in the btree staging code
-Date:   Mon, 18 Jul 2022 13:29:51 -0700
-Message-Id: <20220718202959.1611129-2-leah.rumancik@gmail.com>
+Subject: [PATCH 5.15 CANDIDATE 2/9] xfs: fold perag loop iteration logic into helper function
+Date:   Mon, 18 Jul 2022 13:29:52 -0700
+Message-Id: <20220718202959.1611129-3-leah.rumancik@gmail.com>
 X-Mailer: git-send-email 2.37.0.170.g444d1eabd0-goog
 In-Reply-To: <20220718202959.1611129-1-leah.rumancik@gmail.com>
 References: <20220718202959.1611129-1-leah.rumancik@gmail.com>
@@ -71,47 +71,54 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit 78e8ec83a404d63dcc86b251f42e4ee8aff27465 ]
+[ Upstream commit bf2307b195135ed9c95eebb38920d8bd41843092 ]
 
-The btree geometry computation function has an off-by-one error in that
-it does not allow maximally tall btrees (nlevels == XFS_BTREE_MAXLEVELS).
-This can result in repairs failing unnecessarily on very fragmented
-filesystems.  Subsequent patches to remove MAXLEVELS usage in favor of
-the per-btree type computations will make this a much more likely
-occurrence.
+Fold the loop iteration logic into a helper in preparation for
+further fixups. No functional change in this patch.
 
+[backport: dependency for f1788b5e5ee25bedf00bb4d25f82b93820d61189]
+
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Chandan Babu R <chandan.babu@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Leah Rumancik <leah.rumancik@gmail.com>
 ---
- fs/xfs/libxfs/xfs_btree_staging.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_ag.h | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_btree_staging.c b/fs/xfs/libxfs/xfs_btree_staging.c
-index ac9e80152b5c..89c8a1498df1 100644
---- a/fs/xfs/libxfs/xfs_btree_staging.c
-+++ b/fs/xfs/libxfs/xfs_btree_staging.c
-@@ -662,7 +662,7 @@ xfs_btree_bload_compute_geometry(
- 	xfs_btree_bload_ensure_slack(cur, &bbl->node_slack, 1);
+diff --git a/fs/xfs/libxfs/xfs_ag.h b/fs/xfs/libxfs/xfs_ag.h
+index 4c6f9045baca..ddb89e10b6ea 100644
+--- a/fs/xfs/libxfs/xfs_ag.h
++++ b/fs/xfs/libxfs/xfs_ag.h
+@@ -124,12 +124,22 @@ void xfs_perag_put(struct xfs_perag *pag);
+  * for_each_perag_from() because they terminate at sb_agcount where there are
+  * no perag structures in tree beyond end_agno.
+  */
++static inline struct xfs_perag *
++xfs_perag_next(
++	struct xfs_perag	*pag,
++	xfs_agnumber_t		*next_agno)
++{
++	struct xfs_mount	*mp = pag->pag_mount;
++
++	*next_agno = pag->pag_agno + 1;
++	xfs_perag_put(pag);
++	return xfs_perag_get(mp, *next_agno);
++}
++
+ #define for_each_perag_range(mp, next_agno, end_agno, pag) \
+ 	for ((pag) = xfs_perag_get((mp), (next_agno)); \
+ 		(pag) != NULL && (next_agno) <= (end_agno); \
+-		(next_agno) = (pag)->pag_agno + 1, \
+-		xfs_perag_put(pag), \
+-		(pag) = xfs_perag_get((mp), (next_agno)))
++		(pag) = xfs_perag_next((pag), &(next_agno)))
  
- 	bbl->nr_records = nr_this_level = nr_records;
--	for (cur->bc_nlevels = 1; cur->bc_nlevels < XFS_BTREE_MAXLEVELS;) {
-+	for (cur->bc_nlevels = 1; cur->bc_nlevels <= XFS_BTREE_MAXLEVELS;) {
- 		uint64_t	level_blocks;
- 		uint64_t	dontcare64;
- 		unsigned int	level = cur->bc_nlevels - 1;
-@@ -724,7 +724,7 @@ xfs_btree_bload_compute_geometry(
- 		nr_this_level = level_blocks;
- 	}
- 
--	if (cur->bc_nlevels == XFS_BTREE_MAXLEVELS)
-+	if (cur->bc_nlevels > XFS_BTREE_MAXLEVELS)
- 		return -EOVERFLOW;
- 
- 	bbl->btree_height = cur->bc_nlevels;
+ #define for_each_perag_from(mp, next_agno, pag) \
+ 	for_each_perag_range((mp), (next_agno), (mp)->m_sb.sb_agcount, (pag))
 -- 
 2.37.0.170.g444d1eabd0-goog
 
