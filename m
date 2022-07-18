@@ -2,111 +2,78 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB6EC5789C1
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 20:46:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A46B578A36
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 21:01:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235624AbiGRSqo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jul 2022 14:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
+        id S234236AbiGRTBt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jul 2022 15:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbiGRSqn (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jul 2022 14:46:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7DFF82F007
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 11:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1658170001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gvtwFmzJQydskGdmMkAzcYmgFVg8zBkka0UIgO8GwDg=;
-        b=hDpW7Y03pkrONEiOOpxCgjfSHoVyTCZIMjQyMCpkoNxv36Et9PLx9jzHvSL5OzRSzKitoj
-        +4Hl9fr2LQDcIOOLEbUNwk9qwKjMAkpRza0endebgCSWu/b9jzfhs9uxKjp5ZI7YCGkQOB
-        rqFqabmk+2L0V8l1Ukefk1JLQ7E7354=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-663-I20Ed_h6MpWNvdKAlmuccg-1; Mon, 18 Jul 2022 14:46:40 -0400
-X-MC-Unique: I20Ed_h6MpWNvdKAlmuccg-1
-Received: by mail-wm1-f69.google.com with SMTP id 189-20020a1c02c6000000b003a2d01897e4so4770026wmc.9
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 11:46:40 -0700 (PDT)
+        with ESMTP id S234117AbiGRTB1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jul 2022 15:01:27 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C682F677
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 12:01:17 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id i206so22564837ybc.5
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 12:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
+        b=IQXHlBQ3jHSYUTt89EYBBYMpS/rXYtHBaNUJ6e2ZzB07/ETpvOJM0/ZijryokIEfDh
+         oJG0jiachEiIldTcksV5XzU+dy3csOVeMrzVRYAIpdf4PUrGYfI/KNNvcLIWjvmc8oHa
+         yWKlPWKnOFkuEw2Mq2CzZYpqcRK9kJ+LygeUXE0izxh4s3I+nauj1w40rP+480vJCi+X
+         rAPSoEvo8wXV23cydMjOZnuzBivYToT/OwjRuq1iqX/8Isb8Rqougy46FnOdoQuh9Z/u
+         z7xKihQATs9EIIDqpmGAQl/2n//vpMk3ZDpLHQioaLk/1hVBrL4som/CgeyT77yPFwbn
+         VU6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=gvtwFmzJQydskGdmMkAzcYmgFVg8zBkka0UIgO8GwDg=;
-        b=EQwuUAKLiJDV5okjAephwFbrc8E03DAuNGlT5/CPDsRCYcwkHoEnC/FWQYbvzp7ekJ
-         8y3UjfZSlWn7tgLxMHmf85xcquY7g7wcWpVuH7m2Qf0TyRjrC0QxRpGEm2XsN9QrRc91
-         ZUAVX5UYNoJxqsKf0fiT0hNrcROlFw9f1Y4/09JDHKNSeI1/iWVWtQLwexL0z+DiZ9mb
-         P1rVCKrs8NCxPGccHhMad2Xlcbvxj64rqHY2ds62KqIqjxJNX+uGUt9PDHsdyZnbTQpf
-         Y6JJ0ca/4JK3vAbbBdkmvkoNghd+ZIrvkAnjRx1bS2Z8EopTbuAAhul89jJZlcrLyQ2g
-         9PWQ==
-X-Gm-Message-State: AJIora8a0BDuhjOkVAkYkMcN1FdOMerwvsrU4G/jK+spXEk1KDuNxrbs
-        11XXGXvoS4pVsD1m5i22rYkx96NXmYJPxb6PZq47FWiDwkDwCyZy0PNMV5bnTJP8iJULqzIWeDU
-        XMP1cx6CbPT1VIlqv6168
-X-Received: by 2002:adf:e949:0:b0:21d:89d4:91b3 with SMTP id m9-20020adfe949000000b0021d89d491b3mr23742721wrn.162.1658169999185;
-        Mon, 18 Jul 2022 11:46:39 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vOmE4vOGnFiuTP5c2pPtTPJoK81mepVV/JGhoKaECLpmofr++mZLUmicLoz+0bKYGOcrodww==
-X-Received: by 2002:adf:e949:0:b0:21d:89d4:91b3 with SMTP id m9-20020adfe949000000b0021d89d491b3mr23742711wrn.162.1658169998936;
-        Mon, 18 Jul 2022 11:46:38 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c705:7400:6b3a:a74a:bd53:a018? (p200300cbc70574006b3aa74abd53a018.dip0.t-ipconnect.de. [2003:cb:c705:7400:6b3a:a74a:bd53:a018])
-        by smtp.gmail.com with ESMTPSA id m15-20020a7bce0f000000b003a31169a7f4sm10007971wmc.12.2022.07.18.11.46.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Jul 2022 11:46:38 -0700 (PDT)
-Message-ID: <0483651e-d3ae-d5b4-722b-26dc088da2be@redhat.com>
-Date:   Mon, 18 Jul 2022 20:46:37 +0200
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=h0ZslgqQ94UM3iGDYCZGEx8ZwvbYHY5ZrQARiO/Kpbc=;
+        b=WbfdD5Q6kmxkV7lIajqpPaf4rPJxm4BVv0utPgr+/Y0XEyLQJHvZR+J4FW5R0raPqI
+         Fkz44gqOm9AG9/hH8tnfi6jt5j3L2tSmb3ZhI3fFt1UGU/Dy1DUxNMOq2YdS/mZX1Pqd
+         xrTGXGudKGnFQrJ81ytl60riwlBDbR+FJ4aU3d5Kq34Qcne20IxtHz8HMxCptsLz+OQ7
+         O/1AjKa1xOGPTMvvxdx4+KRSmcjEkgic4YfSKwFdxbc4RIkgCaHpqFgEun3SHhAAphbE
+         syXGlIoWbvQ3dNi7yofOoqIsHMFjvsJwW7HS5gnTexqVqhdn1splkz6kBIqflGP3dnKK
+         Ki9g==
+X-Gm-Message-State: AJIora91OHbz2tK9oqkGXuxzRKbYamkbv5Q/MnMHiO/ryGQU6GBBVByA
+        zfS2mlEtJJaaUrOADaU6d0LyCcSlwmUmxXExbX5Dsbz4BucFQw==
+X-Google-Smtp-Source: AGRyM1sOF4caZ/Mzb7i1HwUB8dyXYAmjf9y+Pd1nVHRKiUHeMR6opOrMc10oZNu5DLkN2HS0cpkKNGEh0T+MU99Jmes=
+X-Received: by 2002:a81:5747:0:b0:31d:1bb8:65b7 with SMTP id
+ l68-20020a815747000000b0031d1bb865b7mr30830046ywb.168.1658170865217; Mon, 18
+ Jul 2022 12:01:05 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v9 02/14] mm: move page zone helpers from mm.h to mmzone.h
-Content-Language: en-US
-To:     Felix Kuehling <felix.kuehling@amd.com>,
-        Alex Sierra <alex.sierra@amd.com>, jgg@nvidia.com
-Cc:     linux-mm@kvack.org, rcampbell@nvidia.com,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        hch@lst.de, jglisse@redhat.com, apopple@nvidia.com,
-        willy@infradead.org, akpm@linux-foundation.org
-References: <20220715150521.18165-1-alex.sierra@amd.com>
- <20220715150521.18165-3-alex.sierra@amd.com>
- <12b40848-2e38-df0b-8300-0d338315e9b2@redhat.com>
- <f6834736-3b68-d6e0-ddb2-9d51b8e720b6@amd.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <f6834736-3b68-d6e0-ddb2-9d51b8e720b6@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6919:4004:b0:cc:50ff:b3d8 with HTTP; Mon, 18 Jul 2022
+ 12:01:04 -0700 (PDT)
+Reply-To: lilywilliam989@gmail.com
+From:   Lily William <sgtalberts@gmail.com>
+Date:   Mon, 18 Jul 2022 11:01:04 -0800
+Message-ID: <CALPTejMFgL0Bg7jCKa7j+5KxVv_jnSM4ZPq-QhHCiUpG_ZswsQ@mail.gmail.com>
+Subject: Hi Dear,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On 18.07.22 19:52, Felix Kuehling wrote:
-> On 2022-07-18 06:50, David Hildenbrand wrote:
->> On 15.07.22 17:05, Alex Sierra wrote:
->>> [WHY]
->>> It makes more sense to have these helpers in zone specific header
->>> file, rather than the generic mm.h
->>>
->>> Signed-off-by: Alex Sierra <alex.sierra@amd.com>
->> Acked-by: David Hildenbrand <david@redhat.com>
-> 
-> Thank you! I don't think I have the authority to give this a 
-> Reviewed-by. Who does?
+Hi Dear,
 
+My name is Dr Lily William from the United States.I am a French and
+American nationality (dual) living in the U.S and sometimes in France
+for Work Purpose.
 
-Sure you can. Everybody can give Reviewed-by/Tested-by ... tags. :)
+I hope you consider my friend request. I will share some of my pics
+and more details about myself when I get your response.
 
+Thanks
 
--- 
-Thanks,
-
-David / dhildenb
-
+With love
+Lily
