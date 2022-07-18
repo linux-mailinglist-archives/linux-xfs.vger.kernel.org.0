@@ -2,56 +2,56 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BB99578B98
-	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 22:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EF04578B9A
+	for <lists+linux-xfs@lfdr.de>; Mon, 18 Jul 2022 22:20:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235067AbiGRUUg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 18 Jul 2022 16:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
+        id S235157AbiGRUUh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 18 Jul 2022 16:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231248AbiGRUUf (ORCPT
+        with ESMTP id S234968AbiGRUUf (ORCPT
         <rfc822;linux-xfs@vger.kernel.org>); Mon, 18 Jul 2022 16:20:35 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 896EC27FC1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15AD72CCA5
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 13:20:33 -0700 (PDT)
 Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26IHh8hD026646
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26IHh8hE026646
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
- date : message-id : content-transfer-encoding : content-type :
- mime-version; s=corp-2022-7-12;
- bh=SLeVhxo/7ufr8wX3F0glqxkS6P/cVFMEskk7rxdUkPM=;
- b=gExWpwVneR0RLVkY2hQgKXcNdnF3pNSzqbyqQh0qBK0ZU/sJqJtSODD8qGEAwwPHCq5a
- 4DR160civwlpiDB+53lYh6mEuVNiOXiw6Q+oZXdxRRywk9dWZr2IbSZMdw4cigBGNKrg
- cC0zZS61sR+Sa968UfPFbXXB/EMDcKbS9Eu4mR76oef2Uw3kMhrD8Z2NN11pbAw/Sxqe
- p79aKgjmXbKIi7g0mL4z3xut3utkMrK8C9JSpQWbavDfZ2pY4mIIoPK9lKXoWd1/oUYm
- NzspWcCjh/v8Y7MnyO5Nb2Dhfop8Cli4LH1u2W/69X3g9hPomHU4mtJh0cQrHjIA1773 ng== 
+ date : message-id : in-reply-to : references : content-transfer-encoding :
+ content-type : mime-version; s=corp-2022-7-12;
+ bh=lFFigxoVg0/7IoW7uvwD7trNiu5Jb2uweF8AW3Az49A=;
+ b=jJT170ephY2eRHYtEmwocpHEjY4FDno12GaemlV0KIZdw2yldmvumTxGGTXtIK1IHgYg
+ FAVpgu1Y/bN+M4VYYIXCsKx/TxF6Mg7YJwBVope4dB/1t76ERh9xmY+lpO2gFT0eeE28
+ 2A15ajfwZ2DkcMJMRCuS+XzuB4MUHJeBiVlR/pQrdsZ40RYbOVMm00c9vPYkXUQEVGoy
+ g8ggyVtr+Iz7QahB3TONCfK6qb3/G0NRyn8wDCVMTIGGM3VztPRTFfR5GkzQGPiXFncK
+ OWsFAzK8PU0WrSdDsBHbPzDiJm5ivWJI+dqGuUTvAHxULQpQ90Gw2lTdvPW+lfgQA2wG 6A== 
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbn7a4cfv-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbn7a4cfw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:32 +0000
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:33 +0000
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26IIp4t3001290
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26IIp4t4001290
         for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:31 GMT
 Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1k2sfbn-1
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1k2sfbn-2
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:30 +0000
+        for <linux-xfs@vger.kernel.org>; Mon, 18 Jul 2022 20:20:31 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WGaJ9gXQZb5hcZ1hX5iwXbkmWnnYhYNNLFXevYoOz3lLBSeZjzgcz0uEVdPgOsljGIoIT3VBXUJ1f1yZ9b0FEAZXU2aRDN69wdoxPBhyNMgbIPciGlNJbm1OD0T7oMSMFhj4YrGt9k68DaosHKjrYsT3h9w+PhYCkMpkbD/S+aNZLOJG3hCUCCttDNRFtM/Rm+/KDu9MpS+MZl7GhUNXxwetHoHnZ0j2sT9Z/NBLeWiodfTILrG4S1YdSQKi8lpENJzxtrSdvb5DaeTXVucnXrmaXxPZymabFO3TfcfyiSa4rU7iXwl+VXZ6+3MXBuzRe+gNtnu0VLB1Ofc1uY/C2Q==
+ b=WhfHarFEihy8u9wlHxtvFl1/V6xXy2dRZybZCmgQzDRYlQd8c9AQaf7MYDBIkcPFhfvuy2vJ3bN5qT82I/oJ7pm73ochAAWVaHpPFPOL5AVc5MbPPDs8xGQ3xieC7ctBmvr/Fje2zVLLDO7auTUAWpDxHHqKMPn2g1sl3MM1oM526xt4JPI7USUaT2meFIDXoVYIVYdN0xCl8ih9/TN9zs2S2M78Gp7HZkusDwb+pDpQxFCjLXFqAmFkMKWDoqyHeI/f6DpFkmfbwPuE9YAWyvmNLIwStpMq61zLza+236cBOClUBk5rDaL9fPTHm6Ed4cR0ubC+73mKb8c8ySNEDQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SLeVhxo/7ufr8wX3F0glqxkS6P/cVFMEskk7rxdUkPM=;
- b=Man2xBT45CBwTd71WEPBmd870kCQOVxw8vjwj3fFV1ACC6hGJaFpeQRUbKCklnkaJRsT5Je3dVFmjptdXpnrN1YT/wgWsNEzjj91ZG6jrC/+EqQ63vrbub4ZDPvk9bA9D+ceOx0xatiZraEpFAC/kg8+sRt5T2BrgMU1WhyA30Vj7OFrdJqtVOTiccBDdZn2IO1nam10wuOBTwn6bcCzejcfKLv0DLjXVuigBE88m4c3hu5fAspgtcIsA1GlZQPxhGMzGkKWVVNc1qGgsza3qNPhAH+Jjcu0RKkIWeENgXbrnPO1XI01xYpvbtiKu1MYABYF4E8fapB5O3OOw/CwrQ==
+ bh=lFFigxoVg0/7IoW7uvwD7trNiu5Jb2uweF8AW3Az49A=;
+ b=TYHN5XzWZ/0a4kbJtYtA80ACj/FFAgWL8mTyTX4WOUj4bBjxhT9Cx+8jiICMF16EjGw64ii6FwcLKHmMufIMnpImaVD/X38sPT2yswoTXPHYPxGhMunFRfHc8TQ7NJObXMzJ/uPi8CDjncuZNgF0xu5eobmvkvCxrwranILfnyuJE7PPCb/I5sqioAd4xWBNvSxGgoVNPFS2cwkJQ9m1Ev1LCV+gj0/YjpB+RF5ZYjcC6Ei0zDnoPXiW0u9GNmQKz5vDku6KSnSG3Ko5oHqXxyXZ/SeFQO06G645IyNYaYTQ4FAv81Udh4Ko62woHNYUocfwnXsZutXJadiM2X4aGg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SLeVhxo/7ufr8wX3F0glqxkS6P/cVFMEskk7rxdUkPM=;
- b=fON5JLNRjIRY/qHCrSR0KRGTs3cEC/sTxvFubIl8JDUUCnqoSdG6hJFZ2RbWrd2r5ru7nh9yZqD/CsNDfR6UKRtCjCFH+dmsQpwvsCxPfxHhlgJTD8qWr7+4IYPquoqnEcufi/uzsh+jNTfRMTepeCL7dIMM77cYaPv88SkYF+0=
+ bh=lFFigxoVg0/7IoW7uvwD7trNiu5Jb2uweF8AW3Az49A=;
+ b=mh/738PDkWaO7BR7q7wE128gA4CP35YcT1uOuBwzxUCfB8UijXFwP+j0MvInxSl5UVvx4DHEZJhpQgSO3OlbP/Z+/RYmY/qoYztjUtu/fegwyQw/b7UvEmWS+VjzH9t/XjtnzGNYSEEA3pu3B2m+fpiOKd+dsVEd/JEJ1jhyNbU=
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
  by DS0PR10MB6128.namprd10.prod.outlook.com (2603:10b6:8:c4::7) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -59,13 +59,15 @@ Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com
  ([fe80::65a4:3dc0:32a1:7519]) by BY5PR10MB4306.namprd10.prod.outlook.com
  ([fe80::65a4:3dc0:32a1:7519%4]) with mapi id 15.20.5438.023; Mon, 18 Jul 2022
- 20:20:28 +0000
+ 20:20:29 +0000
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH v2 00/18] Parent Pointers
-Date:   Mon, 18 Jul 2022 13:20:04 -0700
-Message-Id: <20220718202022.6598-1-allison.henderson@oracle.com>
+Subject: [PATCH v2 01/18] xfs: Fix multi-transaction larp replay
+Date:   Mon, 18 Jul 2022 13:20:05 -0700
+Message-Id: <20220718202022.6598-2-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220718202022.6598-1-allison.henderson@oracle.com>
+References: <20220718202022.6598-1-allison.henderson@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: BY3PR03CA0011.namprd03.prod.outlook.com
@@ -73,52 +75,52 @@ X-ClientProxiedBy: BY3PR03CA0011.namprd03.prod.outlook.com
  (2603:10b6:a03:211::7)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 39b59fe4-1c56-40b9-460d-08da68faf503
+X-MS-Office365-Filtering-Correlation-Id: b758023f-bf51-4e9d-90a3-08da68faf530
 X-MS-TrafficTypeDiagnostic: DS0PR10MB6128:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 54E85Ijaq6N7LyomQtmQUwBFnuEEcrlD5rXiizjGBJfjZspQKr25GNtM1hfbGgHOzLLThO302oTLW51N7CGnmPuz+obL6PGGQUYoT3rUtAQIN45H8+C3Dkhy/j3QZVrAZA2bMz2y958sGmnjzBET2ZcKrZJSsOMd1Vi73Y8h9VnqiScxV0aotGHOOO2q6otbTzpZVK/JJmOFaepvEc6J4CF4X+oTYV5vZk16oLqtCZbELmneRSqHHajnNyEZX22xre6/P5LvCt1W4kvpUFvXuR9PrdnSa9S47g+Cd/OCLL2YW3EDK0c4HQZbLJ8gGpDNU3Vzwb2GQnIkZaJI4nK5DvZYoAfENszUWgk/7SO44jcPKG7qmJTtmL/IfBubfzB1tqwRpieTR7QzORrO6QX5/kyysOcp/1cDKqXnsaCBtHU/CfhSlL/aIsPtRJQygUje0fgOSdi8DyhE/S0UAWjZgUghzzwEs9mI/8DApeHFPfo1kg0I8V23Xlu9HID9/FOG6Sr2cjx8obXNN9iqmCyOHhjNRcPeTRx6pNsd0wFX+EyNgyfLHn1EHwcCdUPTp3M75sRo2eoiLuqXcXhvuwqeI6sFUIa+Wg+wAkBHCkWd6mpkyNaq4+Y6ZocmdopfoRDPnIlz473zvwRTapdeOVuWkDLraJ33nJ1vNCs19bQicVoQT3nG1ofisZq+M7sLN6zqvPmmPHq32UnWkbvHizFVKSLkbEbninSiU4id65kLZoQbapx2gFy4lemS+5ajCd6Vt46w9MXSu2bG0z0pnFfNMLWPOlkbiaFDUIv9SYkxg95c5ISDONx8UUIBnvLrbXHq0vf9LfHmsWjJviWAHKpKq22jZgj7gQfm9we210OVsC+n1l4hhUT5p6oOJIAWRvAv
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(396003)(136003)(376002)(346002)(366004)(6506007)(52116002)(6666004)(41300700001)(966005)(6486002)(83380400001)(5660300002)(478600001)(26005)(1076003)(186003)(2906002)(2616005)(6512007)(44832011)(6916009)(316002)(66476007)(66556008)(8676002)(66946007)(8936002)(38350700002)(36756003)(86362001)(38100700002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: yS2gPRMVPyhuShML6Wqtxtce4hUOOV1yU5MH9sQg6rkCW9CuN6HjcpZHflThQqw0NwLXIvyiNilSREUsYkqkOD6wP5C9eVSeM5TrcDMEBw8NmfguoAB7thTiTj1ekXFgYWrB1AcCl+FuaMDqebhG5hE+w0hDKkVXq5cLLqnLgRSekwZR1OZS/oHzthksqWwfqa5aggHJopPetCnAV3Y7+9PLk7eKIWHSkBsM8HLEXSN89k1JL+rwvPRnMvBf+dW7NZBhsbJJEacEaEEcOhKdzhO7eW3qzv2Zpx4mWlVIctdBM0rNyUTfjNNqzsErEmYcX0cv0b+1zAc/tw/Z4WVuRmlzAQlO3uI/FE7svVIoBHtI3wuf+hd8DHwSYOEVTEV/DGB5Eu8YdVD6eRZeO3Ne2uC2LWuBppWilNIJft4vbGk+r30K5Q0SnT/xbUkAMugwSYBLLemuU3J6rqr8LIOtxFP0dVXoRVybb5BgmM5yWrKmVPE3bvcDfSGTNogFPq0QALNWgBduD1++PysPUg3Ra5Coc/WaK2K/YBG+i9zIikhjlVJFq418XGXJkXKU5wwB2YCdzZkyEWn8k3fNZ8rvjPJd/LGeUh1igrhbsoLSAhoLNzydKnh2CAJ10MJO3BIF/QRXNt3Z0CxXZPKD0CNxM92HstnSAe2uPpraLuD3uWraasmbT2lk+7cF+2waKPYx720tHjeTo4F3bgGzQT+lJrcJLTgJciUwV7c8NfxkQ0bE9MQSp14tbLewgFCYOaOKWQnFqIhhWK9KeV0Wc4P7NWMy/4eMrANbC0TBbJR3cKI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(396003)(136003)(376002)(346002)(366004)(6506007)(52116002)(6666004)(41300700001)(6486002)(83380400001)(5660300002)(478600001)(26005)(1076003)(186003)(2906002)(2616005)(6512007)(44832011)(6916009)(316002)(66476007)(66556008)(8676002)(66946007)(8936002)(38350700002)(36756003)(86362001)(38100700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AjHIA+jGKlRuQernRFl/iLczJfHLS6oyx2Qjhcse+h07mzYEhAn0ooCrlE62?=
- =?us-ascii?Q?7b5qS9hC2a6VwN6Gg7YcGBko1hS1Zyv7vAEZbxDTNYYwV6Fv084bF3X5CzEU?=
- =?us-ascii?Q?+o6rfMmBXVKuE6iNc2pGt6HuPoAeuWL6b2hH0waPvnNoFNS7RDBs3Q9uYBXc?=
- =?us-ascii?Q?M0AZy3IaMG/81yr42OmMm0jne+XmLrpct0xoC8/DFYRAmAvzXc8RmXxsv+vg?=
- =?us-ascii?Q?3+fdYK/GV/WfU903TM1A0/DMegzZyjlUSQnwKAcWp0KZw3VzSL1/twCam29x?=
- =?us-ascii?Q?O86xhJ5zk5wwzuApRPYJ2i9LmIk8Wdr5edWSxE10DKcPD5rLM2OY3e8oSrH7?=
- =?us-ascii?Q?OBo849PcCg1pKu7ibC6WboqwYU8Opx5M14nDl3aAns9fBsuCNq6akrwy/gER?=
- =?us-ascii?Q?3PbrLWjXUPQNCCIq2/WrWexypQ+3z0pDjxdn2y8FJn79Qg6EHy8WfdqA5yc+?=
- =?us-ascii?Q?GUlYaqZxOClEXK1CUKRsdXEQ1tcmr+NpYqoo24sUhZQj9RukH1lgrrt6KUQV?=
- =?us-ascii?Q?o8W84lkxgU8LgH0R5qn4oCedaeY+Is2sFe3Cdg7jtmHGS12vx2eh+LwpS90h?=
- =?us-ascii?Q?XYlFeWnnzEKN8PB4nmQkXintGLhmlGVLxCPvC+5eAp2eSm0WYSvrAdiQumjc?=
- =?us-ascii?Q?ruDn+aNiY7JWwh415en0guVGPkJAAHGqV76cmiwvCAitTGfV4mBjfESlU1tE?=
- =?us-ascii?Q?T2tiI29lLPqK+3Tf2k69zGtCD+wSic4SLY6f5Pm0G7fqBirbB6+nH2GtYcR+?=
- =?us-ascii?Q?C7aU1F/aY4LiaWELfEPpB+ecjS9rUYCMeR3jug0bPlSsy0MqVDEEtileFIng?=
- =?us-ascii?Q?TEF+I0Hp6SwfjaDQ3FXppUvYmPvPbWTk5ph7ekYTPe7faQNVGwh/iNPXVeKz?=
- =?us-ascii?Q?m/erbEb+jufA7Z5n/lnfKBzIGkeecUBtiLENXKTXWVt+C9ImIj+66bU2hsll?=
- =?us-ascii?Q?Lowv7faxVlCqNXOFDBjcZvc+ybO8fptu4Z9h1Wa8sS4blqDvJnLDa/t/rCwE?=
- =?us-ascii?Q?SzePBryVAMee02mjJEPWGPT71tJ2AMk4H9toGkTfVowX7PRGo/Lxp7nu03il?=
- =?us-ascii?Q?CcND7qH0uJPONqmwJAUOMyL747x2qmkBPbodmEVyBb4tG12PeH0MCaq/YOg1?=
- =?us-ascii?Q?B6MVAVzKa2NVdNQ3ofPPPqZk9ndGQFjs1D9JdyLjhvQfEeWm88YVd+ylTgV2?=
- =?us-ascii?Q?Eve1GXg9qHJxB4Be2f06v6HPBmODDmu4xU48Q6Ni9VL8wLv5PAUmDAH5ceDV?=
- =?us-ascii?Q?p8NjjInGOjnz8IF3AcF03pWuh7m4utKUweBD3Ig5A5t9nww+r5KQIpdCNftu?=
- =?us-ascii?Q?I0BhtWkwBkDLrfpP9K9U0CM1/KR/ZnmAimnm3Pc9HTNp9yJ4hZ9jVkUBcRv1?=
- =?us-ascii?Q?TNVyJI9r59/FnhWDqLaTf9gBVILom+CKRRDlTmhW4UAaTzn2D4DzJsbe5Nxf?=
- =?us-ascii?Q?GLNgDoAKn2ZyCWwQocdfjNESE0ihP8xRCuoVZQWoKpEKjVplqg8+RlWYm0dd?=
- =?us-ascii?Q?qNZT4WUHVsVTlhvqqeH5XvbVeDypPUgFlhgsHl6KKtDSyeSwzl7+bmLkOvY4?=
- =?us-ascii?Q?dR3b2IzYXSpA3CIkjk3nSq8RYTx2tMJJqmsjWOfU+XCr3ZfRZU8IjNFKvpQJ?=
- =?us-ascii?Q?cg=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?w1QcG3O+p/gvApcUWfzHMUJG7dNyZMq7VoID1xPUV8HRU/COn+auSXd86Nw5?=
+ =?us-ascii?Q?QJQdm5yMj4ZDhKwhSuFDh1GiOmWgb6IzRER+NcAMWgoQg9oKc7b61K7v0QUR?=
+ =?us-ascii?Q?Ukv544u6aPGvA4SW9/8wFTu1s/M68ZrJcB3fltlBHoDKKKtdDAzBxUjvCezY?=
+ =?us-ascii?Q?jkmsAXzFfwqoLVpVSWwlGfMlgWUyQ7aXiKhH+EF80/kxbH08ZqVcDnUY1BM4?=
+ =?us-ascii?Q?PCIWCCpQdBNRwf9x+gu60/LvNL7j1UJXAEteX/N/X28gp5gG7LPcLRBjETk9?=
+ =?us-ascii?Q?kRR/bsJdlRDZkuQGnHFLVs8J9d5FOYge+wTlYl33wsaeU9Sq9lz7z47q+KIK?=
+ =?us-ascii?Q?D4Wa9RuRGUwIEqna/Ar2ctbo6b2T98X3gdCi9eDBuoGhGXjga5GDr/72QZiY?=
+ =?us-ascii?Q?T/eLNAifenAR2rnVH7FCgCbVE4N5HLsLa1TTMBqctBVdnWqQvq4VNm+VkBC8?=
+ =?us-ascii?Q?IbOMjXMgVkZ2Ry9fDO4Fy95RQ2owhxRRlNDh0D/7ljUbbkjCJGiKCSnh6Kai?=
+ =?us-ascii?Q?tbbYPWA01C1R8ir27cgA2BNYggz374Q3S8BkRLnFPQ/rr08E20Oz9KV6pVto?=
+ =?us-ascii?Q?jmqKiupNnOuoUCbtQSKw/gnR+IbL7RVxhgSQMknFhdYO3CBpy9cbvKZT290W?=
+ =?us-ascii?Q?6r6MNLvACQyGV6sIRU0sLQ63KasNI9Ivfg+FwUrGOYbMTCvHNaGJ0d33Z9Xm?=
+ =?us-ascii?Q?glnOEiKdDm14IpSD9tYKZkf4z/uxCME5XR9sG4Nh7z1lBY3/ehLG2la1ggTL?=
+ =?us-ascii?Q?B+C6fIOCrBOQnDS/AkBTiSWQSzDqVDxui+3hd9NISENQAPT6KSNVwELKhJSe?=
+ =?us-ascii?Q?Qlgkfa4wEmcJUUJcRWkwFRhT4bRND6w27WaUHos56HZeTzs2ajpp3dcitAZX?=
+ =?us-ascii?Q?bn0QYbJRvYZP9Djjx1ixbWkfW1Hihsq8NVwpeu8BAdgUl1b6yOpfjdVpXDBE?=
+ =?us-ascii?Q?UWAZ/pAZdE3o2GhaExoel1VFnDjz+cpWkxLvX5OYWa4LOxSBrHdXvQsCP7xA?=
+ =?us-ascii?Q?IDsV2aMij5ayiexL/eTan6AyIHxt7k5zcmQeQ0scLAEYT/UEas7mTZqWRSIm?=
+ =?us-ascii?Q?crpXM/exps/4OHq/H+kvBf0xo4Wdr91SSQcBjgTiOgOSHEg+CY7dKhkevoqB?=
+ =?us-ascii?Q?NJcSXViwnrzNUmgM24keIUgTdXOadKiXJrK49afUqQ+EJPYQfSaS9/XYRDvN?=
+ =?us-ascii?Q?qcQ9LHjniNTVA8cmJBXVyeTmS2IS+oKD7EEBo0zRGi2KNScyYzPe0goJrk4I?=
+ =?us-ascii?Q?b7Dhg+O1kidtALJfZwWs3DEIrpfRgw9sbCQKoxdQPiMoQCeu6LDoZ88y3ZVl?=
+ =?us-ascii?Q?Uo7vkR+qGgRwL4V1Cdd71fcTHxGxA3EvFoGkj/KwoHrWP/5hatHfygIELzON?=
+ =?us-ascii?Q?oHk+plkT9OADwYRiAockDStIlk/AAZKE5fDDxjldv+haMlZl5f0ncyHq8x2n?=
+ =?us-ascii?Q?aHhVimB6l9ecAZo5e0oJBhQgW6o69KfDn4EuZWt4B8MMDUVgJfse/zdxGvDf?=
+ =?us-ascii?Q?2cTzoSWQ+VlbGh+cp7jzPuRp/aLQsG0IdY4fdtGOp1fTrToUPuUWQnh9RYHH?=
+ =?us-ascii?Q?P4cyP+/u+BMXtTJfHsG1EN4GRXuWv5U/cnJ9Y5Xrj8Ro1S4RDPkKFUq/H3b/?=
+ =?us-ascii?Q?AA=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 39b59fe4-1c56-40b9-460d-08da68faf503
+X-MS-Exchange-CrossTenant-Network-Message-Id: b758023f-bf51-4e9d-90a3-08da68faf530
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2022 20:20:28.9497
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2022 20:20:29.2309
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AAGgim6WVeiEoaei3bAG0UT7IYTCRDKv2EuW4nOkAthzIIvvvxWuje+AwV3KMcNOGeNWrGUeMqM/lAhcz+cBheK1WQT8rCEp3h3hOv+59cA=
+X-MS-Exchange-CrossTenant-UserPrincipalName: i7mwJ4VwaSIPnk3sI1VxDOceB7T+q3JU9lqwQZ5DphoMkFo/Zc87uyrpLVs/oLp1ELfYPSkZ88vBcAn68XHHJ33733RqESYD9XTx/q//nZ8=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6128
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
@@ -127,8 +129,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adults
  mlxlogscore=999 spamscore=0 malwarescore=0 bulkscore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
  definitions=main-2207180086
-X-Proofpoint-ORIG-GUID: vxZIceJCufblgM4jwZzD-vJXb0HAEQy4
-X-Proofpoint-GUID: vxZIceJCufblgM4jwZzD-vJXb0HAEQy4
+X-Proofpoint-ORIG-GUID: JKgIiV6Iy7cI1nbWK8Crbcj5Q9JXwdRz
+X-Proofpoint-GUID: JKgIiV6Iy7cI1nbWK8Crbcj5Q9JXwdRz
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -139,156 +141,85 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+Recent parent pointer testing has exposed a bug in the underlying
+attr replay.  A multi transaction replay currently performs a
+single step of the replay, then deferrs the rest if there is more
+to do.  This causes race conditions with other attr replays that
+might be recovered before the remaining deferred work has had a
+chance to finish.  This can lead to interleaved set and remove
+operations that may clobber the attribute fork.  Fix this by
+deferring all work for any attribute operation.
 
-This is the latest rebase of parent pointer attributes for xfs. The goal of
-this patch set is to add a parent pointer attribute to each inode.  The
-attribute name containing the parent inode, generation, and directory offset,
-while the  attribute value contains the file name.  This feature will enable
-future optimizations for online scrub, or any other feature that could make
-use of quickly deriving an inodes path from  the mount point.  
+Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+---
+ fs/xfs/xfs_attr_item.c | 35 ++++++++---------------------------
+ 1 file changed, 8 insertions(+), 27 deletions(-)
 
-This set can be viewed on github here
-https://github.com/allisonhenderson/xfs/tree/xfs_new_pptrsv2
-
-And the corresponding xfsprogs code is here
-https://github.com/allisonhenderson/xfsprogs/tree/xfsprogs_new_pptrsv2
-
-This set has been tested with the below parent pointers tests
-https://www.spinics.net/lists/fstests/msg19963.html
-
-
-Updates since v2:
-
-xfs: Fix multi-transaction larp replay
-  Resend
-
-xfs: Increase XFS_DEFER_OPS_NR_INODES to 5
-  Increased XFS_DEFER_OPS_NR_INODES from 4 to 5
-  Moved to beginning of the set
-  Added code in xfs_defer_ops_continue to sort the inodes
-  Added commentary about which inodes are locked
-
-xfs: Hold inode locks in xfs_trans_alloc_dir
-  New patch
-
-xfs: add parent pointer support to attribute code
-  Typo fix
-
-xfs: extend transaction reservations for parent attribute
-  Made xfs_calc_parent_ptr_reservations static
-  Whitespace fixes
-
-xfs: parent pointer attribute creation
-  Fixed SPDX License Headers
-  Updated xfs_sb_version_hasparent to xfs_has_parent
-  Type def conversions
-  Whitespace
-  Added helper functions: xfs_parent_init, xfs_parent_defer_add,
-    xfs_parent_cancel
-  Investigated mount option that overrides larp option:
-    The larp global itself isnt used with in the delayed ops machinery due
-    to race conditions with the syscall being toggled.  Pptrs dont toggle
-    so we can just set XFS_DA_OP_LOGGED to log the pptr with out requireing
-    all attrs be logged
-
-xfs: add parent attributes to link
-  Rebase to use new helpers: xfs_parent_init, xfs_parent_defer_add,
-  xfs_parent_cancel, xfs_has_parent
-  
-xfs: add parent attributes to unlink
-  rebase to use new helpers
-  added helper function xfs_parent_defer_remove
-  
-xfs: Add parent pointers to rename
-  added extra parent remove for target_ip unlinks
-  rebase to use new helpers
-  
-xfs: Add the parent pointer support to the  superblock version 5.
-changed XFS_SB_FEAT_RO_COMPAT_PARENT to XFS_SB_FEAT_INCOMPAT_PARENT
-
-xfs: Increase XFS_DEFER_OPS_NR_INODES to 5
-  Added comentarty explaining which inodes are locked
-  Updated commit comment
-  updated xfs_defer_ops_continue to relock inodes in the same order they
-    are locked
-
-xfs: Add parent pointer ioctl
-  Added pi_parents[] to struct xfs_parent_ptr
-  Changed pptr helper defines into inline functions
-  White space/indentation
-  Reordered flag check in xfs_ioc_get_parent_pointer to be before the alloc
-  Added gen number check in xfs_ioc_get_parent_pointer
-  Init args in loop body of xfs_attr_get_parent_pointer
-
-Questions comments and feedback appreciated!
-
-Thanks all!
-Allison
-
-Allison Henderson (18):
-  xfs: Fix multi-transaction larp replay
-  xfs: Increase XFS_DEFER_OPS_NR_INODES to 5
-  xfs: Hold inode locks in xfs_ialloc
-  xfs: Hold inode locks in xfs_trans_alloc_dir
-  xfs: get directory offset when adding directory name
-  xfs: get directory offset when removing directory name
-  xfs: get directory offset when replacing a directory name
-  xfs: add parent pointer support to attribute code
-  xfs: define parent pointer xattr format
-  xfs: Add xfs_verify_pptr
-  xfs: extend transaction reservations for parent attributes
-  xfs: parent pointer attribute creation
-  xfs: add parent attributes to link
-  xfs: remove parent pointers in unlink
-  xfs: Add parent pointers to rename
-  xfs: Add the parent pointer support to the  superblock version 5.
-  xfs: Add helper function xfs_attr_list_context_init
-  xfs: Add parent pointer ioctl
-
- fs/xfs/Makefile                |   2 +
- fs/xfs/libxfs/xfs_attr.c       |  53 ++++++-
- fs/xfs/libxfs/xfs_attr.h       |   8 +-
- fs/xfs/libxfs/xfs_da_btree.h   |   1 +
- fs/xfs/libxfs/xfs_da_format.h  |  30 +++-
- fs/xfs/libxfs/xfs_defer.c      |  28 +++-
- fs/xfs/libxfs/xfs_defer.h      |   8 +-
- fs/xfs/libxfs/xfs_dir2.c       |  21 ++-
- fs/xfs/libxfs/xfs_dir2.h       |   7 +-
- fs/xfs/libxfs/xfs_dir2_block.c |   9 +-
- fs/xfs/libxfs/xfs_dir2_leaf.c  |   8 +-
- fs/xfs/libxfs/xfs_dir2_node.c  |   8 +-
- fs/xfs/libxfs/xfs_dir2_sf.c    |   6 +
- fs/xfs/libxfs/xfs_format.h     |   4 +-
- fs/xfs/libxfs/xfs_fs.h         |  58 +++++++
- fs/xfs/libxfs/xfs_log_format.h |   1 +
- fs/xfs/libxfs/xfs_parent.c     | 159 +++++++++++++++++++
- fs/xfs/libxfs/xfs_parent.h     |  39 +++++
- fs/xfs/libxfs/xfs_sb.c         |   4 +
- fs/xfs/libxfs/xfs_trans_resv.c | 105 ++++++++++---
- fs/xfs/scrub/attr.c            |   2 +-
- fs/xfs/xfs_attr_item.c         |  41 ++---
- fs/xfs/xfs_attr_list.c         |  17 ++-
- fs/xfs/xfs_file.c              |   1 +
- fs/xfs/xfs_inode.c             | 271 +++++++++++++++++++++++++--------
- fs/xfs/xfs_inode.h             |   1 +
- fs/xfs/xfs_ioctl.c             | 149 +++++++++++++++---
- fs/xfs/xfs_ioctl.h             |   2 +
- fs/xfs/xfs_ondisk.h            |   4 +
- fs/xfs/xfs_parent_utils.c      | 134 ++++++++++++++++
- fs/xfs/xfs_parent_utils.h      |  22 +++
- fs/xfs/xfs_qm.c                |   4 +-
- fs/xfs/xfs_super.c             |   4 +
- fs/xfs/xfs_symlink.c           |   6 +-
- fs/xfs/xfs_trans.c             |   6 +-
- fs/xfs/xfs_xattr.c             |   2 +-
- fs/xfs/xfs_xattr.h             |   1 +
- 37 files changed, 1056 insertions(+), 170 deletions(-)
- create mode 100644 fs/xfs/libxfs/xfs_parent.c
- create mode 100644 fs/xfs/libxfs/xfs_parent.h
- create mode 100644 fs/xfs/xfs_parent_utils.c
- create mode 100644 fs/xfs/xfs_parent_utils.h
-
+diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
+index 5077a7ad5646..c13d724a3e13 100644
+--- a/fs/xfs/xfs_attr_item.c
++++ b/fs/xfs/xfs_attr_item.c
+@@ -635,52 +635,33 @@ xfs_attri_item_recover(
+ 		break;
+ 	case XFS_ATTRI_OP_FLAGS_REMOVE:
+ 		if (!xfs_inode_hasattr(args->dp))
+-			goto out;
++			return 0;
+ 		attr->xattri_dela_state = xfs_attr_init_remove_state(args);
+ 		break;
+ 	default:
+ 		ASSERT(0);
+-		error = -EFSCORRUPTED;
+-		goto out;
++		return -EFSCORRUPTED;
+ 	}
+ 
+ 	xfs_init_attr_trans(args, &tres, &total);
+ 	error = xfs_trans_alloc(mp, &tres, total, 0, XFS_TRANS_RESERVE, &tp);
+ 	if (error)
+-		goto out;
++		return error;
+ 
+ 	args->trans = tp;
+ 	done_item = xfs_trans_get_attrd(tp, attrip);
++	args->trans->t_flags |= XFS_TRANS_HAS_INTENT_DONE;
++	set_bit(XFS_LI_DIRTY, &done_item->attrd_item.li_flags);
+ 
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 	xfs_trans_ijoin(tp, ip, 0);
+ 
+-	error = xfs_xattri_finish_update(attr, done_item);
+-	if (error == -EAGAIN) {
+-		/*
+-		 * There's more work to do, so add the intent item to this
+-		 * transaction so that we can continue it later.
+-		 */
+-		xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &attr->xattri_list);
+-		error = xfs_defer_ops_capture_and_commit(tp, capture_list);
+-		if (error)
+-			goto out_unlock;
+-
+-		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+-		xfs_irele(ip);
+-		return 0;
+-	}
+-	if (error) {
+-		xfs_trans_cancel(tp);
+-		goto out_unlock;
+-	}
+-
++	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &attr->xattri_list);
+ 	error = xfs_defer_ops_capture_and_commit(tp, capture_list);
+-out_unlock:
++
+ 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	xfs_irele(ip);
+-out:
+-	xfs_attr_free_item(attr);
++
+ 	return error;
+ }
+ 
 -- 
 2.25.1
 
