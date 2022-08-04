@@ -2,70 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B4CB58A162
-	for <lists+linux-xfs@lfdr.de>; Thu,  4 Aug 2022 21:40:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71DCB58A165
+	for <lists+linux-xfs@lfdr.de>; Thu,  4 Aug 2022 21:40:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239405AbiHDTkn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 4 Aug 2022 15:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46160 "EHLO
+        id S237792AbiHDTkr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 4 Aug 2022 15:40:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239263AbiHDTkd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 4 Aug 2022 15:40:33 -0400
+        with ESMTP id S232813AbiHDTkf (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 4 Aug 2022 15:40:35 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA17ED12C
-        for <linux-xfs@vger.kernel.org>; Thu,  4 Aug 2022 12:40:31 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 274HbaaV013546
-        for <linux-xfs@vger.kernel.org>; Thu, 4 Aug 2022 19:40:31 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DF911827
+        for <linux-xfs@vger.kernel.org>; Thu,  4 Aug 2022 12:40:34 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 274HbggU018626
+        for <linux-xfs@vger.kernel.org>; Thu, 4 Aug 2022 19:40:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
  date : message-id : in-reply-to : references : content-transfer-encoding :
  content-type : mime-version; s=corp-2022-7-12;
- bh=s/pR0C/jiCpALnJA1EEzWUFgLfLKq77vi/3k1uKv564=;
- b=Zo0B5LScXdSN1kfCy3e4m0KwvOgjErlLzPcjVMmLMUwZLIgoMuwDziMqMyG0TvKjLip5
- plT4WT5hYrGfHK8+pwvnuglkNo5SU3Lnezzae4KNCZRpPUJLLLJGsVtWDS1PFn23tpNu
- E6hj4axd7O5xiy4w5n/yiL+Qd7Fz6djVn8TaGnmn1Vc9kggrVMAyGTaBMIN+nRlPlNB4
- x0qfQWUwRUyRJsba3jMFROG7BVOYmyBRJUgfojT5VhqpZfybDKvXWW86DvSb2XtuqZ6S
- W3aonnohOOiA5pgwqL1G/tJfXQZ7Afc28tQPZQf8Lllkz439ekdzAFAa3XfDR+tBSVeG aQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hmw6tnyd4-1
+ bh=FxTCf1NND+bkYSwaypWn7co4/i9UK2kB4unz5Fn49rM=;
+ b=cUmhoSHs2McmctnXu5/YkxMz5Iuk36pWVq/LcwfxIqDxqVn9gD5k53cJHuV/F1orvjY7
+ 6DcxnL1oOCGJMZKClSJz0n9YDWIV06eqUA2plPn6U5Bz9VGm4V1c2fAFLdNWlUHpXPOg
+ Rbh7EiIobX/Z2ty5U/jT/NpT84DItvX06CzVOKz/spy8o77Sfx2BF6aJR5Y7vUJGtZHl
+ O3vpH0+1U317IzOZJB7RMEQcJH8ED/OIqCVFaJ+FsWUOe5JJZx6eUhzBW8YzDRzmR6gN
+ fgt0wGwHfDlxcR4xtyNtYDYOfSgJlWTXtrt2RJdj8bH1usalNgMTed0ETsz2GP534/G8 Lw== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hmvh9wmyk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 04 Aug 2022 19:40:31 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 274HjGDW007532
-        for <linux-xfs@vger.kernel.org>; Thu, 4 Aug 2022 19:40:30 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hmu34b95d-1
+        for <linux-xfs@vger.kernel.org>; Thu, 04 Aug 2022 19:40:33 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 274J7Jnn030850
+        for <linux-xfs@vger.kernel.org>; Thu, 4 Aug 2022 19:40:32 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2102.outbound.protection.outlook.com [104.47.55.102])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hmu34mm40-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-xfs@vger.kernel.org>; Thu, 04 Aug 2022 19:40:30 +0000
+        for <linux-xfs@vger.kernel.org>; Thu, 04 Aug 2022 19:40:32 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LcsNT+YTmd2Hd4vS1Mr1MH67ZtVABkqY7GPAESJhC6LmjMDVqGnY6jNXs2RsaNf+VL0KgWcgtxacsyINanXNx6t8xWSj3doZyWODnIc7ZvEASkLYenGLcsfx4HFtV2YdX//+lMm/9uOszBkWEzo9fnW2fyCI1npJA7yP2In+ah8fxVFm3J1tq8LwJM6HTQpNsQzN4ZtFcPxbjAJQRWEZX2KozHOVrE870GoHnW+7SYxY5IodjKkMHD+TMLqqDbtOMPMm7CemOmD+hi/yL+owekvjBx27YxBlXrBxkJuPgS4nhrnzbY0wnLspSrAGtnPN6/jnALkZ5h4gDWN8h37Ypw==
+ b=gP95uHFtB/Meh9BbvXRHLSHsHfRT200wFRbf+OWhRZ4MTjairDqWjvG8LY/c8k6aLdBVN4sVoTS6mFh7Si5NK2feBeeX5Kxd6mN2PDHx1PBs3ZvrACGIETrNjBVhuF2wtPK+Z3MD/PQG7hEdAV/PtzLPQ5mrv2DzDb1dGYFYefRwN9Jk2Rw/nOTPAtbVYPMHUvIdRslQUlKLfvFY2TK6QZ7kqh3MiQPe75RskknJh+jojhXIhr54ErJL1KbBoMFW+7KaeEzcqYPRfyIEoW2DDoCp8/2IGv2FD/0TcfgGhGkPB6lkJxBOI8apqCQvb4/X5BBluzUpK/CiI/hoYCYlLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=s/pR0C/jiCpALnJA1EEzWUFgLfLKq77vi/3k1uKv564=;
- b=FxVm2+jzilCKgcATl1K9d576j98x7UfDEZvbi9Wms2ubQfnm9BA3OQjwvMfeHb8kpKkG2g4ma+2Vjj5t40MgJdCelizC+z+93D9LvNYe63zcZvy5ms+jdyI6Fz2NwPoNRs3vfb28XHh1dlf20iOJzG0nVHTGzFOJU/yQ3eTuTJ7Nj1RR/OR9oZStnVtVf7zINvHf71MYS1As5ahsF2qH55Vc/hPgAsYOMb7bnryqOCBGBLnY40QwnyFvLGKPn1KpaGcEwIgkTYxsE/mRwZkpv6JjYVHvhpXIhnq2Ko4gE4sAZshhzSrVt1xv6itk1ZG+205tZcC5ssWmswTfBOnrgw==
+ bh=FxTCf1NND+bkYSwaypWn7co4/i9UK2kB4unz5Fn49rM=;
+ b=KWB9PlOP0X6pZi+MzQGb1D8A3i2HxF9pjd5Y03Z9JLE91AgcFEVVoCSm+jNwl47i/UVQyefnLo5POHsQXGOqxISiw82GvlfSdxw4+KUje8xvYRdcLAtxNqjGIiwb2GvgEFpkqxM2nNJvdKaF8+BELJuueQQIKmu6/FPAYFvNQbvB424/LyvCEqxw/0fhq7j2Jow1Jf2gJEeTM+kNRUuHm0EAmvss5PkmZ/llgFLjwHiQd34xcf8XncbIc6xxykzMIfu45IaGwB0fgHhEp3wS/PTZ6C5K5jIhz5HiTebzkenD5tsYSMagInIeJoCl8YLMU9HMUpnfulKNUkpetZxgBA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s/pR0C/jiCpALnJA1EEzWUFgLfLKq77vi/3k1uKv564=;
- b=Lt1EJkLvI4Hmf69aWgnIROz8yZw2sNw1CCrP1e71rxBNNB66X+QeoD9BmnKS9F+CZm0Yqtc+gufkWXKt4IGklZTWzY8JIxvxdMD5DcokSNSc+HEfugYQA7+02LZ5WhXwfNUBv0gLoJxl92Ur7FvMmWMnifEewCsCDGFdY4RD8Mo=
+ bh=FxTCf1NND+bkYSwaypWn7co4/i9UK2kB4unz5Fn49rM=;
+ b=HHhWkLpi+qANo6j+mRbeT7JcLjLFu76TAYhfrzj6IadqoaG+j7FXRFSshEVgOoPxeGs42+hBwAkP9Ryyaxqb3AWvPxl0G9AcSQSHq9SxQKZpG/8YBT0Dq+f0x6jVeACL0vNlBNfCQQNQUFHVF3gMHg6N2FKJXYBJ8XTQ+2szf/A=
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com (2603:10b6:a03:211::7)
- by DS7PR10MB5136.namprd10.prod.outlook.com (2603:10b6:5:38d::11) with
+ by BLAPR10MB5011.namprd10.prod.outlook.com (2603:10b6:208:333::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Thu, 4 Aug
- 2022 19:40:28 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.15; Thu, 4 Aug
+ 2022 19:40:29 +0000
 Received: from BY5PR10MB4306.namprd10.prod.outlook.com
  ([fe80::65a4:3dc0:32a1:7519]) by BY5PR10MB4306.namprd10.prod.outlook.com
  ([fe80::65a4:3dc0:32a1:7519%4]) with mapi id 15.20.5504.016; Thu, 4 Aug 2022
- 19:40:28 +0000
+ 19:40:29 +0000
 From:   Allison Henderson <allison.henderson@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH RESEND v2 15/18] xfs: Add parent pointers to rename
-Date:   Thu,  4 Aug 2022 12:40:10 -0700
-Message-Id: <20220804194013.99237-16-allison.henderson@oracle.com>
+Subject: [PATCH RESEND v2 16/18] xfs: Add the parent pointer support to the  superblock version 5.
+Date:   Thu,  4 Aug 2022 12:40:11 -0700
+Message-Id: <20220804194013.99237-17-allison.henderson@oracle.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220804194013.99237-1-allison.henderson@oracle.com>
 References: <20220804194013.99237-1-allison.henderson@oracle.com>
@@ -76,62 +76,62 @@ X-ClientProxiedBy: SJ0PR03CA0198.namprd03.prod.outlook.com
  (2603:10b6:a03:211::7)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7c94f657-40d3-4c41-8a87-08da76512e28
-X-MS-TrafficTypeDiagnostic: DS7PR10MB5136:EE_
+X-MS-Office365-Filtering-Correlation-Id: a96c00dc-9f92-4949-10b0-08da76512e51
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5011:EE_
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qzJMSZGRQERsLLlZMzB3CjGnwL5pORXUVocenwv0ASI9M0XmHjEfDumfrZIHcPuZ9ztX6s5BPnWXEkHCXe31Ti4VfuNab6D/OhwXcSa+Csh1jpb22hcLnED1TC+U9+n5ZMS4HZfwVL5iBdC24RVnqVbul4h0PD9iL83Dxbd1HXwKEbytP6GRci0ZFJCsEvRKumtZ+N3W0p+XZ4HIdusDkbZqEdMz8UYlgbqUPoxvVwSg+KzuOBz2HnMoG7Vy5xcFv9HGWXYCWew1lGYvIxIEsuekiRx6YWz9qdG0dVMb1NvU4FPphfkRGKE2gLEWQr2WQnYsjVfx5nQ/PoLRcYvFX746FSxvenPwqbp4iK2J7peSMjJWd/jqKGEeBOEXn2np8WgsCZjOyI8mHSpbxYVbfvcnweqh633SHXkduoy46vDu8SIwNmNdGMHY0+4UEAf50Q9HkJelgu22wFjcOY3jdAfi64u59HUmG1O0zK0k91EZypAzArQHS4OGUct5ll2TF8hWU47jI5l0+7GALWH9siLILuZ9GTCsFVeCVST2Vg/hT2LtJDcvIA5mmuTMDoBqQe4gn6riYsY8VXt82Zn7ldn1iY4/JnSU+xCMkWrJb9do3SV1Y8ur0nTqQSfovvlLq3OL+9eBVUMkfsC/fWoWJX+qHgJSD0HovE/KXsTkNDOvm/pC3FyqsiELz+NxF2FbKR17jD1rMSwWomLsn/uySJJSZTjWMJNgB6UCo/zDwVJjOPwvKRscjHKhF5J/Go+xnrw+rAQhS8kz7zfduzoZZwsZ370NxcBRNv1C6ySJB+I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(346002)(136003)(39860400002)(366004)(376002)(6486002)(66946007)(66556008)(316002)(8936002)(6916009)(478600001)(38100700002)(44832011)(66476007)(5660300002)(8676002)(36756003)(52116002)(6512007)(1076003)(6506007)(26005)(186003)(2906002)(2616005)(41300700001)(6666004)(83380400001)(38350700002)(86362001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: sVwHOH62MSTKvkJt5udE9xWaDI2ZvnG5Z4T3KvgbOUwBtfygrbBcD9sWc9YcJzz03nx10zut/0JDmJZLoMIrGfZlyK3PM/fJMUEsPafoQluCeV3o9oRoFMHOz5Ee3MV0OQNg0LOEPmXWIID7e8bksoh2RJ1UDJNm8AptEoULDnaxIcLV9SCw//kVSmSD77T3w09ZeHXgbtty51zrPa6BJZo7MXmvNHZLhY4LxZjZqif+g/aqEdNgZGQuP/zuGQ52BZ7h7du77m+GNxIap45k96jEVqeB0yTNspqnEHO/PuIGKX7Ewy5pZzLqe2xM3jWKJSWxVIbYH0HRfnr1lRUPwWNj7kzHoIPzM2Ln5IuX2f7UgS9Ye3x/d5nRJckftoo7Hj4yW+d+39H1DDMYloL05WpcACdH509fKxeJY54D6ocNFnhrb7qbjfA9YXqbZRelzjMs0oVGlcfqNO0q85lA09PzVxsHcglWh3NkaYpOjzodqFPPD4AOVI/AQe5CTF7b94fYDHUUwgvdsXN17nJ//L7grNlRdhgh5BbxJCwthtbEq3nfDC7kJvFyz8wEGAGpZnWawgpcnSwh0zC8NvD4VrVIR9PnC9BPcIP7okDesgq/wH2NYP2WbpWlkw/+AZ9zPNyGvakoEqEcBG6+r79nUEV8XJRydBLCUXKgc4NyXJNjeovbgh5sJg8SpKKufA4aHexEjCu2TSe0RJLxQpIYFPexJkjNxwY1wS6TeRKUt5CUvlLpqDiq7Fx1pF1K8U4pbemyh6qdfsyZRdbCCKrR74VuVTevLszPiGLg3HTZAUY=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4306.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(366004)(396003)(136003)(346002)(376002)(6666004)(41300700001)(478600001)(6506007)(52116002)(6486002)(6512007)(26005)(44832011)(2906002)(36756003)(86362001)(6916009)(316002)(1076003)(38100700002)(38350700002)(8936002)(66946007)(5660300002)(66556008)(8676002)(66476007)(186003)(2616005)(83380400001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/o1ZAqXDVZ567JqJIUlgUxIXYmRiLSqvGdMMdEc/WgyIHKCsJ3/y7+ucLtI0?=
- =?us-ascii?Q?4QFlpLIyV7yLy5HNJ89k6uloHI701lyAcW+yYCOzgDGrq2iuHg+XNYgbcNLr?=
- =?us-ascii?Q?aBn4jy1DQkNLkMKr1sC8CKnhaQMZBLBhHwk4BePmCAbCHTRlt7lti7+wUK+6?=
- =?us-ascii?Q?kJa2AwKi2OenAWYmEpag7iklN1dU6Dw7Nds6L+QyI5+jjPX5ImM8C+/Tp2SW?=
- =?us-ascii?Q?jyrOYqFOKmnCWCnU+WmVVC5IOUNYZ2CFAW1g+uO9wxJDhD/ozUY+XaMhQoeJ?=
- =?us-ascii?Q?7M7Z5EcPYW8/ypXLMNunzMkd7bRnjjhdfsvzgigBVj6CE8GHHODsmkNKJV++?=
- =?us-ascii?Q?yUL/dNk2/BmZw5D3ORBEG5fhnizwWc1PGmYx7vzKiHrf1Pm4QQERa2J78SGp?=
- =?us-ascii?Q?odl3G7+hXUJREoM6PGW/ZPHaYn6TU2SCTHym5m93xqDAMuOWaNK9eCoX+X/N?=
- =?us-ascii?Q?XicoWZ5h6tZaHnjqCtQT7PZzgeZs8PjB605BpTLjUA2sQJshXVkVTbdfaE8k?=
- =?us-ascii?Q?al4PV2191jWWUnEFf+u80XlGD22EEqPGMDMjMEYzYkGdS5G42J/2OX+lkU7K?=
- =?us-ascii?Q?MZ879FYl7ESTIsLyNhtuG3IOmwEPTgs086O4YTq21ckGTolj8wkarETFEKqr?=
- =?us-ascii?Q?XHFKgPBK+xMKX6Iv9EXLXCrWXZrWaXxcO+IXVs+J+7qj06LtfbTnwvNiKKY9?=
- =?us-ascii?Q?i3fakTB7seNc6jjs/7J60Qi9SIhrgAj8rvJfknd+zRGB9i62R7LLgkeIhKBP?=
- =?us-ascii?Q?3RIMGWtDstHsPkQ4wCXLkzVwT+Q9O9SN776iS54UogK6CUA/yVgAuMUhDsUe?=
- =?us-ascii?Q?CFvdRn5HCBmjvwVU6/O488ccEd5ej9PuuXLobw1GxQ2Lv1pRdhzoNgrPB9oz?=
- =?us-ascii?Q?ZtaANhCcaYqBa29quDDbyTues3TrQj0XIrowxmaJ5Z/oqo/0W8SxeT8vo4JW?=
- =?us-ascii?Q?HMYRUnTUiW36ijadRISin+cvPapa/4sMxoLWSeTIVDB4n06lCe4MZSI9zpS+?=
- =?us-ascii?Q?6rSLTMczhDHnhSYn1+dPW+/GETIkzlFq/+6iRHNE5hJa4ZDIga6g1pD9wuvq?=
- =?us-ascii?Q?kiP+Jon7NbeVk1GDiZGWn61e0hfcitaAcHiNSjAHdMzS9YxecWv9xUuJk+MX?=
- =?us-ascii?Q?kwFqJRvWqcHp/Z0wFOgyiQkUOun1AAHaezyMiAFI2rkRzecCnpEqA+An6uRp?=
- =?us-ascii?Q?slX+xi0AsuiFlC3ivj/bXLYOFIos3nAkefz4dQ+PQ5JH7WHEqWFEaltvqtyV?=
- =?us-ascii?Q?PnvvVdYCOEzrTxhqEVhwS9W1ShQAnsjncOwuL9uaJBIiE7/L87QoONHG0cih?=
- =?us-ascii?Q?anLbbi3MS+L+EK3X8e+B5IhtxmXYAVA6Y7lXxSl9vm/WsDEOOkEnP1tqeh1Y?=
- =?us-ascii?Q?sQYIZRIdXu4InXatxHdpdDvMvKte9e8z6qNC5MBAN2YJVOalo1Prczrd/zKe?=
- =?us-ascii?Q?BDRQh2Ur7/eSjUKp3JCZMvxEGT0+VZWR+jhol3jIrw3unPP/oXVbwO8hJanP?=
- =?us-ascii?Q?f10QQymollEBzvoWbTY7zaoAtMOmcxP7baSdTNeNFlb6lx7Eq4gKqPy8SdlF?=
- =?us-ascii?Q?0VtNXyQt0c98K+UNGKNVkm7m/IuaXmSS5HkyAqqj3HAG2/tOy2g+0wQ225JC?=
- =?us-ascii?Q?qw=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?q++3/rqYQZKfepwfvImKSPcpEIGgf3bu9Z/no/yQA0NGrdVlWc7eOuQbpHYL?=
+ =?us-ascii?Q?MO2rkbCKCzfY/RO8e9rKGv9OX58P4viuRgqLWvFIoW0iSYSeDsxDHiECkCmB?=
+ =?us-ascii?Q?z9M7Fd6FBqL5qqEqrOR/w6EfnbL4/eawzf9apO4t+7Chrjn+CjiwOztjOjeu?=
+ =?us-ascii?Q?7yNpYbfIV7itsgAe6OmIqi/Bs/Q6I0vCiZRCMkWt29LId9Fmbas107xDNEqo?=
+ =?us-ascii?Q?fJiSLjq5bJ/ucrSl4X7HYMFAZQpRWj8FlECuiAcFhbSiGQ+5Xy13F6dZwaNJ?=
+ =?us-ascii?Q?Kh8l7WM6JRIgjNrsSP52cDrVd7GokvlChFBGA4Jo2DZw9XxRjyjq8swJhFan?=
+ =?us-ascii?Q?qO/B+i9nQSuPTIhRcJVD8ax4bJWkMGw8UlhR8WaDvhjU8SSv/EkcxEW1zSiF?=
+ =?us-ascii?Q?GS39KwhGLUiXUetc9RgHN+OeGCgQeT9IODe/7GgNrUt7lpcJE8oVp7b8vdkr?=
+ =?us-ascii?Q?xiWB28ADWpqHS7x3Aq7c5iFJjRvwh+DjnjDMBgym+fIfsOfPJQyHIBgWyri3?=
+ =?us-ascii?Q?E2uerj5QdXkh1ZKWw0zgG1jOXSjUhePC0Cx9/O6MPtvgPSavo8CtDplCEgXs?=
+ =?us-ascii?Q?WDyXkXYyiVwMQ+7ixjk1pWWW1di9u46cX8fvRlY9OHYoKkT4oRpXRHiSk/4T?=
+ =?us-ascii?Q?7Ogcz1we4q2/7kzuQQfhZH1QBsbNCdLkdR/a7wUJGEIrQlnkctabN9dIDG01?=
+ =?us-ascii?Q?XFLT5cy3HpGEbmMPsfKqJMMbeJnnJChhG6HxPuAGF2zOWLJ54UXEC90Fo25i?=
+ =?us-ascii?Q?frPCAjOeeC4XfqeOLIW5U2/Bu9cMA8rd5IMoboJTxszOVGjP+r014ThmeKBF?=
+ =?us-ascii?Q?SiBXlgIsiPUMDghj4UJopK8igWKqUvziv9L97/KXX25qjRONDBqf2lEwpciB?=
+ =?us-ascii?Q?hEHqspkjBOt9G+FKWEwQj2DX6zL7MzwkwjktTs2l2kVRRN7ivWGR0482l1zZ?=
+ =?us-ascii?Q?KvYU2no0i0xErvVSsuWbFybzYAYxZcCafOBjeFC/pimXjBmnJJ/S3B7NLnED?=
+ =?us-ascii?Q?qDwnw5DNyFD/N3UYTW61IFnNPYCabD4K6TF+fu2+5v7E/+r9ZI/lo5qiwTY4?=
+ =?us-ascii?Q?mxhLPYd8U8UUF3iOvkdjbE/QAhApaeuf9qtGyAhdU3afpiWDkZU8fiosabNA?=
+ =?us-ascii?Q?nV9RK6GsgqF35LuyBotOE2zcmDWsmwECzXP1G9NjbDjiatX70KrdQjkocK5E?=
+ =?us-ascii?Q?zI7nYaU5DIGRtaqGw8zMwfhxrjtrd3eKbYVDMxwtvyjsrR3yDT7cI6wD/shi?=
+ =?us-ascii?Q?dApzSs24bwCd5APaXnjOlvEME1wXFYvQGnya1/hXmh6nWylp4YA+BcP0IpUR?=
+ =?us-ascii?Q?biR4fTdO6ICXbEjwA+pKqqbV6Vw1d3gOQK65A4lCcG0zs3PfP7y3Bc7pYDsM?=
+ =?us-ascii?Q?H+JBZXnpgKRq5w5ZQW3yURwgCVxGZHpA+yT3RE8myryXfg6Mzv4TAhhSkPo/?=
+ =?us-ascii?Q?xw9XnVGABWv/AlKdnLValA5iAJbBYv2eBfVi7cT4ktFWVX4RyZ6K/cGWG41A?=
+ =?us-ascii?Q?xQFR7pMVst33uvwoeKm+p1Gz5H2Mipg+nmDemmvEnBSy+l05Z9nX05iPWJl+?=
+ =?us-ascii?Q?E+H++KRlR3v3qEH0DlM5ku9eJb3ogGYotZLOQRwOwkbGeYw5DezFsoMt8ELg?=
+ =?us-ascii?Q?vw=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c94f657-40d3-4c41-8a87-08da76512e28
+X-MS-Exchange-CrossTenant-Network-Message-Id: a96c00dc-9f92-4949-10b0-08da76512e51
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4306.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2022 19:40:26.6433
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2022 19:40:26.8933
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ihW8F359ieJGY+5xcqZlc6inqkG3MDmKFaz5ujpjWXlcyn3lfiQWSpkTZR5J8Knr5NCmVzAx58O7I+PDEJLtWq5/R0URp85mvMojap/66zo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5136
+X-MS-Exchange-CrossTenant-UserPrincipalName: hwK4/JlfeJNS+YNsOJ5bQY+OgffJyBFOYFG36+Shue0sV0ZO+sNUaz1SR53dSBF85Vn2JlgJMmaADb5Ewr5cFVNlktZqkc4awZybJXmGA0Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5011
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-08-04_03,2022-08-04_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 suspectscore=0
- adultscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
  definitions=main-2208040085
-X-Proofpoint-GUID: QUysEYisgkc08CQlyI_03In_T8Kbo-XD
-X-Proofpoint-ORIG-GUID: QUysEYisgkc08CQlyI_03In_T8Kbo-XD
+X-Proofpoint-ORIG-GUID: DW5EdxDiXKOsWKq2ZOyEA1bVTQiGg_by
+X-Proofpoint-GUID: DW5EdxDiXKOsWKq2ZOyEA1bVTQiGg_by
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -142,242 +142,91 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This patch removes the old parent pointer attribute during the rename
-operation, and re-adds the updated parent pointer.  In the case of
-xfs_cross_rename, we modify the routine not to roll the transaction just
-yet.  We will do this after the parent pointer is added in the calling
-xfs_rename function.
+[dchinner: forward ported and cleaned up]
+[achender: rebased and added parent pointer attribute to
+           compatible attributes mask]
 
+Signed-off-by: Mark Tinguely <tinguely@sgi.com>
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 ---
- fs/xfs/xfs_inode.c | 128 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 94 insertions(+), 34 deletions(-)
+ fs/xfs/libxfs/xfs_format.h | 4 +++-
+ fs/xfs/libxfs/xfs_fs.h     | 1 +
+ fs/xfs/libxfs/xfs_sb.c     | 4 ++++
+ fs/xfs/xfs_super.c         | 4 ++++
+ 4 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 69bb67f2a252..8a81b78b6dd7 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2776,7 +2776,7 @@ xfs_cross_rename(
- 	}
- 	xfs_trans_ichgtime(tp, dp1, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
- 	xfs_trans_log_inode(tp, dp1, XFS_ILOG_CORE);
--	return xfs_finish_rename(tp);
-+	return 0;
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index b55bdfa9c8a8..0343f8586be3 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -373,13 +373,15 @@ xfs_sb_has_ro_compat_feature(
+ #define XFS_SB_FEAT_INCOMPAT_BIGTIME	(1 << 3)	/* large timestamps */
+ #define XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR (1 << 4)	/* needs xfs_repair */
+ #define XFS_SB_FEAT_INCOMPAT_NREXT64	(1 << 5)	/* large extent counters */
++#define XFS_SB_FEAT_INCOMPAT_PARENT	(1 << 6)	/* parent pointers */
+ #define XFS_SB_FEAT_INCOMPAT_ALL \
+ 		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
+ 		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
+ 		 XFS_SB_FEAT_INCOMPAT_META_UUID| \
+ 		 XFS_SB_FEAT_INCOMPAT_BIGTIME| \
+ 		 XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR| \
+-		 XFS_SB_FEAT_INCOMPAT_NREXT64)
++		 XFS_SB_FEAT_INCOMPAT_NREXT64| \
++		 XFS_SB_FEAT_INCOMPAT_PARENT)
  
- out_trans_abort:
- 	xfs_trans_cancel(tp);
-@@ -2834,26 +2834,31 @@ xfs_rename_alloc_whiteout(
-  */
- int
- xfs_rename(
--	struct user_namespace	*mnt_userns,
--	struct xfs_inode	*src_dp,
--	struct xfs_name		*src_name,
--	struct xfs_inode	*src_ip,
--	struct xfs_inode	*target_dp,
--	struct xfs_name		*target_name,
--	struct xfs_inode	*target_ip,
--	unsigned int		flags)
-+	struct user_namespace		*mnt_userns,
-+	struct xfs_inode		*src_dp,
-+	struct xfs_name			*src_name,
-+	struct xfs_inode		*src_ip,
-+	struct xfs_inode		*target_dp,
-+	struct xfs_name			*target_name,
-+	struct xfs_inode		*target_ip,
-+	unsigned int			flags)
- {
--	struct xfs_mount	*mp = src_dp->i_mount;
--	struct xfs_trans	*tp;
--	struct xfs_inode	*wip = NULL;		/* whiteout inode */
--	struct xfs_inode	*inodes[__XFS_SORT_INODES];
--	int			i;
--	int			num_inodes = __XFS_SORT_INODES;
--	bool			new_parent = (src_dp != target_dp);
--	bool			src_is_directory = S_ISDIR(VFS_I(src_ip)->i_mode);
--	int			spaceres;
--	bool			retried = false;
--	int			error, nospace_error = 0;
-+	struct xfs_mount		*mp = src_dp->i_mount;
-+	struct xfs_trans		*tp;
-+	struct xfs_inode		*wip = NULL;		/* whiteout inode */
-+	struct xfs_inode		*inodes[__XFS_SORT_INODES];
-+	int				i;
-+	int				num_inodes = __XFS_SORT_INODES;
-+	bool				new_parent = (src_dp != target_dp);
-+	bool				src_is_directory = S_ISDIR(VFS_I(src_ip)->i_mode);
-+	int				spaceres;
-+	bool				retried = false;
-+	int				error, nospace_error = 0;
-+	xfs_dir2_dataptr_t		new_diroffset;
-+	xfs_dir2_dataptr_t		old_diroffset;
-+	struct xfs_parent_defer		*old_parent_ptr = NULL;
-+	struct xfs_parent_defer		*new_parent_ptr = NULL;
-+	struct xfs_parent_defer		*target_parent_ptr = NULL;
+ #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
+ static inline bool
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index 1cfd5bc6520a..b0b4d7a3aa15 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -237,6 +237,7 @@ typedef struct xfs_fsop_resblks {
+ #define XFS_FSOP_GEOM_FLAGS_BIGTIME	(1 << 21) /* 64-bit nsec timestamps */
+ #define XFS_FSOP_GEOM_FLAGS_INOBTCNT	(1 << 22) /* inobt btree counter */
+ #define XFS_FSOP_GEOM_FLAGS_NREXT64	(1 << 23) /* large extent counters */
++#define XFS_FSOP_GEOM_FLAGS_PARENT	(1 << 24) /* parent pointers 	    */
  
- 	trace_xfs_rename(src_dp, target_dp, src_name, target_name);
+ /*
+  * Minimum and maximum sizes need for growth checks.
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index a20cade590e9..75e893e93629 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -173,6 +173,8 @@ xfs_sb_version_to_features(
+ 		features |= XFS_FEAT_NEEDSREPAIR;
+ 	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_NREXT64)
+ 		features |= XFS_FEAT_NREXT64;
++	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_PARENT)
++		features |= XFS_FEAT_PARENT;
  
-@@ -2877,6 +2882,15 @@ xfs_rename(
+ 	return features;
+ }
+@@ -1187,6 +1189,8 @@ xfs_fs_geometry(
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_BIGTIME;
+ 	if (xfs_has_inobtcounts(mp))
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_INOBTCNT;
++	if (xfs_has_parent(mp))
++		geo->flags |= XFS_FSOP_GEOM_FLAGS_PARENT;
+ 	if (xfs_has_sector(mp)) {
+ 		geo->flags |= XFS_FSOP_GEOM_FLAGS_SECTOR;
+ 		geo->logsectsize = sbp->sb_logsectsize;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 3d27ba1295c9..eaa2bb63621b 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1655,6 +1655,10 @@ xfs_fs_fill_super(
+ 		xfs_warn(mp,
+ 	"EXPERIMENTAL Large extent counts feature in use. Use at your own risk!");
  
- 	xfs_sort_for_rename(src_dp, target_dp, src_ip, target_ip, wip,
- 				inodes, &num_inodes);
-+	if (xfs_has_parent(mp)) {
-+		error = xfs_parent_init(mp, src_ip, NULL, &old_parent_ptr);
-+		if (error)
-+			goto out_release_wip;
-+		error = xfs_parent_init(mp, src_ip, target_name,
-+					&new_parent_ptr);
-+		if (error)
-+			goto out_release_wip;
-+	}
- 
- retry:
- 	nospace_error = 0;
-@@ -2889,7 +2903,7 @@ xfs_rename(
- 				&tp);
- 	}
++	if (xfs_has_parent(mp))
++		xfs_alert(mp,
++	"EXPERIMENTAL parent pointer feature enabled. Use at your own risk!");
++
+ 	error = xfs_mountfs(mp);
  	if (error)
--		goto out_release_wip;
-+		goto drop_incompat;
- 
- 	/*
- 	 * Attach the dquots to the inodes
-@@ -2911,14 +2925,14 @@ xfs_rename(
- 	 * we can rely on either trans_commit or trans_cancel to unlock
- 	 * them.
- 	 */
--	xfs_trans_ijoin(tp, src_dp, XFS_ILOCK_EXCL);
-+	xfs_trans_ijoin(tp, src_dp, 0);
- 	if (new_parent)
--		xfs_trans_ijoin(tp, target_dp, XFS_ILOCK_EXCL);
--	xfs_trans_ijoin(tp, src_ip, XFS_ILOCK_EXCL);
-+		xfs_trans_ijoin(tp, target_dp, 0);
-+	xfs_trans_ijoin(tp, src_ip, 0);
- 	if (target_ip)
--		xfs_trans_ijoin(tp, target_ip, XFS_ILOCK_EXCL);
-+		xfs_trans_ijoin(tp, target_ip, 0);
- 	if (wip)
--		xfs_trans_ijoin(tp, wip, XFS_ILOCK_EXCL);
-+		xfs_trans_ijoin(tp, wip, 0);
- 
- 	/*
- 	 * If we are using project inheritance, we only allow renames
-@@ -2928,15 +2942,16 @@ xfs_rename(
- 	if (unlikely((target_dp->i_diflags & XFS_DIFLAG_PROJINHERIT) &&
- 		     target_dp->i_projid != src_ip->i_projid)) {
- 		error = -EXDEV;
--		goto out_trans_cancel;
-+		goto out_unlock;
- 	}
- 
- 	/* RENAME_EXCHANGE is unique from here on. */
--	if (flags & RENAME_EXCHANGE)
--		return xfs_cross_rename(tp, src_dp, src_name, src_ip,
-+	if (flags & RENAME_EXCHANGE) {
-+		error = xfs_cross_rename(tp, src_dp, src_name, src_ip,
- 					target_dp, target_name, target_ip,
- 					spaceres);
--
-+		goto out_pptr;
-+	}
- 	/*
- 	 * Try to reserve quota to handle an expansion of the target directory.
- 	 * We'll allow the rename to continue in reservationless mode if we hit
-@@ -3052,7 +3067,7 @@ xfs_rename(
- 		 * to account for the ".." reference from the new entry.
- 		 */
- 		error = xfs_dir_createname(tp, target_dp, target_name,
--					   src_ip->i_ino, spaceres, NULL);
-+					   src_ip->i_ino, spaceres, &new_diroffset);
- 		if (error)
- 			goto out_trans_cancel;
- 
-@@ -3073,10 +3088,14 @@ xfs_rename(
- 		 * name at the destination directory, remove it first.
- 		 */
- 		error = xfs_dir_replace(tp, target_dp, target_name,
--					src_ip->i_ino, spaceres, NULL);
-+					src_ip->i_ino, spaceres, &new_diroffset);
- 		if (error)
- 			goto out_trans_cancel;
- 
-+		if (xfs_has_parent(mp))
-+			error = xfs_parent_init(mp, target_ip, NULL,
-+						&target_parent_ptr);
-+
- 		xfs_trans_ichgtime(tp, target_dp,
- 					XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
- 
-@@ -3146,26 +3165,67 @@ xfs_rename(
- 	 */
- 	if (wip)
- 		error = xfs_dir_replace(tp, src_dp, src_name, wip->i_ino,
--					spaceres, NULL);
-+					spaceres, &old_diroffset);
- 	else
- 		error = xfs_dir_removename(tp, src_dp, src_name, src_ip->i_ino,
--					   spaceres, NULL);
-+					   spaceres, &old_diroffset);
- 
- 	if (error)
- 		goto out_trans_cancel;
- 
-+out_pptr:
-+	if (new_parent_ptr) {
-+		error = xfs_parent_defer_add(tp, target_dp, new_parent_ptr,
-+					     new_diroffset);
-+		if (error)
-+			goto out_trans_cancel;
-+	}
-+
-+	if (old_parent_ptr) {
-+		error = xfs_parent_defer_remove(tp, src_dp, old_parent_ptr,
-+						old_diroffset);
-+		if (error)
-+			goto out_trans_cancel;
-+	}
-+
-+	if (target_parent_ptr) {
-+		error = xfs_parent_defer_remove(tp, target_dp,
-+						target_parent_ptr,
-+						new_diroffset);
-+		if (error)
-+			goto out_trans_cancel;
-+	}
-+
- 	xfs_trans_ichgtime(tp, src_dp, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
- 	xfs_trans_log_inode(tp, src_dp, XFS_ILOG_CORE);
- 	if (new_parent)
- 		xfs_trans_log_inode(tp, target_dp, XFS_ILOG_CORE);
- 
- 	error = xfs_finish_rename(tp);
-+
-+out_unlock:
- 	if (wip)
- 		xfs_irele(wip);
-+	if (wip)
-+		xfs_iunlock(wip, XFS_ILOCK_EXCL);
-+	if (target_ip)
-+		xfs_iunlock(target_ip, XFS_ILOCK_EXCL);
-+	xfs_iunlock(src_ip, XFS_ILOCK_EXCL);
-+	if (new_parent)
-+		xfs_iunlock(target_dp, XFS_ILOCK_EXCL);
-+	xfs_iunlock(src_dp, XFS_ILOCK_EXCL);
-+
- 	return error;
- 
- out_trans_cancel:
- 	xfs_trans_cancel(tp);
-+drop_incompat:
-+	if (new_parent_ptr)
-+		xfs_parent_cancel(mp, new_parent_ptr);
-+	if (old_parent_ptr)
-+		xfs_parent_cancel(mp, old_parent_ptr);
-+	if (target_parent_ptr)
-+		xfs_parent_cancel(mp, target_parent_ptr);
- out_release_wip:
- 	if (wip)
- 		xfs_irele(wip);
+ 		goto out_filestream_unmount;
 -- 
 2.25.1
 
