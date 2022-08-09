@@ -2,106 +2,145 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 986AD58E2EE
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Aug 2022 00:17:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEEAE58E36E
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Aug 2022 00:55:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbiHIWQ3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Aug 2022 18:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37950 "EHLO
+        id S229485AbiHIWzo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Aug 2022 18:55:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229950AbiHIWPS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Aug 2022 18:15:18 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7F326121
-        for <linux-xfs@vger.kernel.org>; Tue,  9 Aug 2022 15:15:15 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id z145so10743791iof.9
-        for <linux-xfs@vger.kernel.org>; Tue, 09 Aug 2022 15:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
-        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
-        b=QTP95oQi+RYhXbI8sz4RyTZp0RSE4jP48cyyUmWbTiK1ItvOHbADVtjkGHK/8zFbqv
-         EIzUG3d4HgG5eAQxnVHuBpH33ycuIiNpMEXk8S0LHARhhQGb6AufQVVn/40aQfLvP77W
-         778oK7qnpGZXO0Q2aGCYT4Mad4FGDHlh1br3s7D4D+9Vr7gPQrhXDR8bwR1fyz6kQ1n2
-         /mI7/+oIm6xqfpBjeRephfywWnzvzUcqvvdKwYuFsxmTm/GRVEQb9jKfBsLPvHEPeyBR
-         SLk52BQ10Zm7GZ4Mv5gugSKJZhGFXVOipaGDVsAOq6ABLyMrmGMv+5RYTjL3cqduwO+M
-         O1Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc;
-        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
-        b=txhcYrsFFs2CO5nw4ahGr8O+/sl+/M1yZBawi4cBtc27dai2kuVPYe8IbZse6EQ1Nk
-         xAJjNNN5zT1pAG23qdXOoQ6NB11qZSDgiwCh2jOMVqyEzOVJF4AkwXcBf9AUew5ndiTr
-         EfOU4r7s2PD6KwIDEPArZOmVEKdGu7t08I+JkT45FmwehnONByu8OV7kL1GINUhLcPo4
-         4hecEQyyWCym6gWyE36bY3X4udmJ0YyM+4Jy4kIUALzXEkoY3P0440QTUp59YovHpWZE
-         +Zl13JRaByVfJ9Wyhv90HBa8tg2L4I4Un+PGy0uSQbyGGqDIBv3yoQmxxVd1Zli2pFZ0
-         YbyQ==
-X-Gm-Message-State: ACgBeo1P/cWyw7Am/MICeJLXS5QLG7Nnc85GKZkfKiGdFbgMBqU75Wwe
-        bQNVAzROd9Gyv7e/L1FffZfxm8raD8Daw950pyeq2Du1vWGtZQ==
-X-Google-Smtp-Source: AA6agR7pJ6r7fhR2kV9XLe+oV3h+/ej1weqLnpTQS1YP5ule1vsDwGSNCnOW6LlEIY2xTapZFY+hu5KXPqSjTYpoaJM=
-X-Received: by 2002:a63:4642:0:b0:41b:d353:c5c7 with SMTP id
- v2-20020a634642000000b0041bd353c5c7mr20359415pgk.568.1660083303718; Tue, 09
- Aug 2022 15:15:03 -0700 (PDT)
+        with ESMTP id S229436AbiHIWzn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Aug 2022 18:55:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C652E636F
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Aug 2022 15:55:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7373EB81A0A
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Aug 2022 22:55:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A40BC433C1;
+        Tue,  9 Aug 2022 22:55:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660085739;
+        bh=jQUWL9y2VP8z8lj7ta4z0jOmGU8IVGYCTZNj0mGufLk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o0cLGU7lUlJSq/ioo4QE2GbDUHhwdi5xuSdO3Hdz5Zo40vm9rQjF//7eNKWbuB3le
+         uquneqM3DxwI1w5+8b9Tr0h59EoXFIveGKKJEx6Kcd0lP7HwtJV4yPqUPSqw5v7lzN
+         mDyrpyP7Fj3756DvFB4ahQaoMvwjWbgPgP91I6CRTjvOdKhURtuHX9CbEdSsEoxtCc
+         RrvV41BRM/giPFZSjRsX5w9RijD7bHYybJ5u2z0dLPW/g9wJe+2ADe/hbl2BmUCiwK
+         Bm9ISvKACfaEjceMKLBQt6hoTqUPNdp2VEY21an8YfT/6QBAU3AKKAhA9fo4ObzGRn
+         ZOncHC9gXxVvg==
+Date:   Tue, 9 Aug 2022 15:55:38 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Allison Henderson <allison.henderson@oracle.com>
+Cc:     linux-xfs@vger.kernel.org
+Subject: [RFC PATCH 19/18] xfs: fix unit conversion error in
+ xfs_log_calc_max_attrsetm_res
+Message-ID: <YvLl6i4YCAdx6hK4@magnolia>
+References: <20220804194013.99237-1-allison.henderson@oracle.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:e8a6:b0:2d4:fb1c:cc5e with HTTP; Tue, 9 Aug 2022
- 15:15:03 -0700 (PDT)
-Reply-To: wijh555@gmail.com
-From:   "Dr. Ali Moses" <alimoses07@gmail.com>
-Date:   Tue, 9 Aug 2022 15:15:03 -0700
-Message-ID: <CADWzZe65tcOX2+bMZfMLLauGpHEQ9Cdv814nLU=uQvKzDFrEVg@mail.gmail.com>
-Subject: Good Day,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:d29 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [alimoses07[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [wijh555[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [alimoses07[at]gmail.com]
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220804194013.99237-1-allison.henderson@oracle.com>
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
--- 
-Hello,
-We the Board Directors believe you are in good health, doing great and
-with the hope that this mail will meet you in good condition, We are
-privileged and delighted to reach you via email" And we are urgently
-waiting to hear from you. and again your number is not connecting.
+From: Darrick J. Wong <djwong@kernel.org>
 
-My regards,
-Dr. Ali Moses..
+Dave and I were discussing some recent test regressions as a result of
+me turning on nrext64=1 on realtime filesystems, when we noticed that
+the minimum log size of a 32M filesystem jumped from 954 blocks to 4287
+blocks.
 
-Sincerely,
-Prof. Chin Guang
+Digging through xfs_log_calc_max_attrsetm_res, Dave noticed that @size
+contains the maximum estimated amount of space needed for a local format
+xattr, in bytes, but we feed this quantity to XFS_NEXTENTADD_SPACE_RES,
+which requires units of blocks.  This has resulted in an overestimation
+of the minimum log size over the years.
+
+We should nominally correct this, but there's a backwards compatibility
+problem -- if we enable it now, the minimum log size will decrease.  If
+a corrected mkfs formats a filesystem with this new smaller log size, a
+user will encounter mount failures on an uncorrected kernel due to the
+larger minimum log size computations there.
+
+However, the large extent counters feature is still EXPERIMENTAL, so we
+can gate the correction on that feature (or any features that get added
+after that) being enabled.  Any filesystem with nrext64 or any of the
+as-yet-undefined feature bits turned on will be rejected by old
+uncorrected kernels, so this should be safe even in the upgrade case.
+
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+---
+ fs/xfs/libxfs/xfs_log_rlimit.c |   43 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+
+diff --git a/fs/xfs/libxfs/xfs_log_rlimit.c b/fs/xfs/libxfs/xfs_log_rlimit.c
+index 9975b93a7412..cc4837b948b1 100644
+--- a/fs/xfs/libxfs/xfs_log_rlimit.c
++++ b/fs/xfs/libxfs/xfs_log_rlimit.c
+@@ -16,6 +16,39 @@
+ #include "xfs_bmap_btree.h"
+ #include "xfs_trace.h"
+ 
++/*
++ * Decide if the filesystem has the parent pointer feature or any feature
++ * added after that.
++ */
++static inline bool
++xfs_has_parent_or_newer_feature(
++	struct xfs_mount	*mp)
++{
++	if (!xfs_sb_is_v5(&mp->m_sb))
++		return false;
++
++	if (xfs_sb_has_compat_feature(&mp->m_sb, ~0))
++		return true;
++
++	if (xfs_sb_has_ro_compat_feature(&mp->m_sb,
++				~(XFS_SB_FEAT_RO_COMPAT_FINOBT |
++				  XFS_SB_FEAT_RO_COMPAT_RMAPBT |
++				  XFS_SB_FEAT_RO_COMPAT_REFLINK |
++				  XFS_SB_FEAT_RO_COMPAT_INOBTCNT)))
++		return true;
++
++	if (xfs_sb_has_incompat_feature(&mp->m_sb,
++				~(XFS_SB_FEAT_INCOMPAT_FTYPE |
++				  XFS_SB_FEAT_INCOMPAT_SPINODES |
++				  XFS_SB_FEAT_INCOMPAT_META_UUID |
++				  XFS_SB_FEAT_INCOMPAT_BIGTIME |
++				  XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR |
++				  XFS_SB_FEAT_INCOMPAT_NREXT64)))
++		return true;
++
++	return false;
++}
++
+ /*
+  * Calculate the maximum length in bytes that would be required for a local
+  * attribute value as large attributes out of line are not logged.
+@@ -31,6 +64,16 @@ xfs_log_calc_max_attrsetm_res(
+ 	       MAXNAMELEN - 1;
+ 	nblks = XFS_DAENTER_SPACE_RES(mp, XFS_ATTR_FORK);
+ 	nblks += XFS_B_TO_FSB(mp, size);
++
++	/*
++	 * Starting with the parent pointer feature, every new fs feature
++	 * corrects a unit conversion error in the xattr transaction
++	 * reservation code that resulted in oversized minimum log size
++	 * computations.
++	 */
++	if (xfs_has_parent_or_newer_feature(mp))
++		size = XFS_B_TO_FSB(mp, size);
++
+ 	nblks += XFS_NEXTENTADD_SPACE_RES(mp, size, XFS_ATTR_FORK);
+ 
+ 	return  M_RES(mp)->tr_attrsetm.tr_logres +
