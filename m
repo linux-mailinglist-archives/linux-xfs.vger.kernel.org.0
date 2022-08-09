@@ -2,81 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9927058E298
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Aug 2022 00:07:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 986AD58E2EE
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Aug 2022 00:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230060AbiHIWFu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Aug 2022 18:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50092 "EHLO
+        id S230009AbiHIWQ3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Aug 2022 18:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbiHIWFT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Aug 2022 18:05:19 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5ABB8A8;
-        Tue,  9 Aug 2022 15:05:18 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-193-158.pa.nsw.optusnet.com.au [49.181.193.158])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 2C7A110E85DA;
-        Wed, 10 Aug 2022 08:05:13 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1oLXLb-00BCHm-Hu; Wed, 10 Aug 2022 08:05:11 +1000
-Date:   Wed, 10 Aug 2022 08:05:11 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH] fs/xfs: Use atomic64_try_cmpxchg in
- xlog_grant_{add,sub}_space
-Message-ID: <20220809220511.GI3600936@dread.disaster.area>
-References: <20220809165615.9694-1-ubizjak@gmail.com>
+        with ESMTP id S229950AbiHIWPS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Aug 2022 18:15:18 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7F326121
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Aug 2022 15:15:15 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id z145so10743791iof.9
+        for <linux-xfs@vger.kernel.org>; Tue, 09 Aug 2022 15:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc;
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=QTP95oQi+RYhXbI8sz4RyTZp0RSE4jP48cyyUmWbTiK1ItvOHbADVtjkGHK/8zFbqv
+         EIzUG3d4HgG5eAQxnVHuBpH33ycuIiNpMEXk8S0LHARhhQGb6AufQVVn/40aQfLvP77W
+         778oK7qnpGZXO0Q2aGCYT4Mad4FGDHlh1br3s7D4D+9Vr7gPQrhXDR8bwR1fyz6kQ1n2
+         /mI7/+oIm6xqfpBjeRephfywWnzvzUcqvvdKwYuFsxmTm/GRVEQb9jKfBsLPvHEPeyBR
+         SLk52BQ10Zm7GZ4Mv5gugSKJZhGFXVOipaGDVsAOq6ABLyMrmGMv+5RYTjL3cqduwO+M
+         O1Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc;
+        bh=GI1h58u9NHz7rI/vIwOU5DkUcoHPmL+b4tk5i/xxv5Y=;
+        b=txhcYrsFFs2CO5nw4ahGr8O+/sl+/M1yZBawi4cBtc27dai2kuVPYe8IbZse6EQ1Nk
+         xAJjNNN5zT1pAG23qdXOoQ6NB11qZSDgiwCh2jOMVqyEzOVJF4AkwXcBf9AUew5ndiTr
+         EfOU4r7s2PD6KwIDEPArZOmVEKdGu7t08I+JkT45FmwehnONByu8OV7kL1GINUhLcPo4
+         4hecEQyyWCym6gWyE36bY3X4udmJ0YyM+4Jy4kIUALzXEkoY3P0440QTUp59YovHpWZE
+         +Zl13JRaByVfJ9Wyhv90HBa8tg2L4I4Un+PGy0uSQbyGGqDIBv3yoQmxxVd1Zli2pFZ0
+         YbyQ==
+X-Gm-Message-State: ACgBeo1P/cWyw7Am/MICeJLXS5QLG7Nnc85GKZkfKiGdFbgMBqU75Wwe
+        bQNVAzROd9Gyv7e/L1FffZfxm8raD8Daw950pyeq2Du1vWGtZQ==
+X-Google-Smtp-Source: AA6agR7pJ6r7fhR2kV9XLe+oV3h+/ej1weqLnpTQS1YP5ule1vsDwGSNCnOW6LlEIY2xTapZFY+hu5KXPqSjTYpoaJM=
+X-Received: by 2002:a63:4642:0:b0:41b:d353:c5c7 with SMTP id
+ v2-20020a634642000000b0041bd353c5c7mr20359415pgk.568.1660083303718; Tue, 09
+ Aug 2022 15:15:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220809165615.9694-1-ubizjak@gmail.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62f2da19
-        a=SeswVvpAPK2RnNNwqI8AaA==:117 a=SeswVvpAPK2RnNNwqI8AaA==:17
-        a=kj9zAlcOel0A:10 a=biHskzXt2R4A:10 a=7-415B0cAAAA:8
-        a=qgxBokI5hthhnRxBgHsA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a10:e8a6:b0:2d4:fb1c:cc5e with HTTP; Tue, 9 Aug 2022
+ 15:15:03 -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Dr. Ali Moses" <alimoses07@gmail.com>
+Date:   Tue, 9 Aug 2022 15:15:03 -0700
+Message-ID: <CADWzZe65tcOX2+bMZfMLLauGpHEQ9Cdv814nLU=uQvKzDFrEVg@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:d29 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [alimoses07[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [alimoses07[at]gmail.com]
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 09, 2022 at 06:56:15PM +0200, Uros Bizjak wrote:
-> Use `!atomic64_try_cmpxchg(ptr, &old, new)` instead of
-> `atomic64_cmpxchg(ptr, old, new) != old` in xlog_grant_{add,sub}_space.
-> This has two benefits:
-> 
-> - The x86 cmpxchg instruction returns success in the ZF flag, so this
->   change saves a compare after cmpxchg, as well as a related move
->   instruction in the front of cmpxchg.
-> 
-> - atomic64_try_cmpxchg implicitly assigns the *ptr value to &old when
->   cmpxchg fails, enabling further code simplifications.
-
-Do the two cmpxchg operations have the same memory ordering
-semantics on failure?
-
-> This patch has no functional change.
-
-The patch looks ok, but ....
-
-... I'm about 2 hours away from posting a patchset that completely
-removes the cmpxchg and the new grant head accounting has
-significantly lower fast path overhead. It also opens the door for
-tracking more than 2GB of log space in the grant heads.
-
-So I don't think we need to be micro-optimising this code given that
-there are much bigger perf gains about to land...
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Hello,
+We the Board Directors believe you are in good health, doing great and
+with the hope that this mail will meet you in good condition, We are
+privileged and delighted to reach you via email" And we are urgently
+waiting to hear from you. and again your number is not connecting.
+
+My regards,
+Dr. Ali Moses..
+
+Sincerely,
+Prof. Chin Guang
