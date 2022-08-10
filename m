@@ -2,45 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C820A58E387
-	for <lists+linux-xfs@lfdr.de>; Wed, 10 Aug 2022 01:04:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47C2E58E4BF
+	for <lists+linux-xfs@lfdr.de>; Wed, 10 Aug 2022 03:59:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbiHIXEF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 9 Aug 2022 19:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49446 "EHLO
+        id S230206AbiHJB6j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 9 Aug 2022 21:58:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229728AbiHIXEA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Aug 2022 19:04:00 -0400
+        with ESMTP id S230228AbiHJB6O (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 9 Aug 2022 21:58:14 -0400
 Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 558426AA0E
-        for <linux-xfs@vger.kernel.org>; Tue,  9 Aug 2022 16:03:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 586757E322
+        for <linux-xfs@vger.kernel.org>; Tue,  9 Aug 2022 18:58:13 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-193-158.pa.nsw.optusnet.com.au [49.181.193.158])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8361362D55A
-        for <linux-xfs@vger.kernel.org>; Wed, 10 Aug 2022 09:03:56 +1000 (AEST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 8279162D086;
+        Wed, 10 Aug 2022 11:58:11 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1oLYGR-00BDIG-HH
-        for linux-xfs@vger.kernel.org; Wed, 10 Aug 2022 09:03:55 +1000
-Received: from dave by discord.disaster.area with local (Exim 4.95)
-        (envelope-from <david@fromorbit.com>)
-        id 1oLYGR-00E4Wi-GC
-        for linux-xfs@vger.kernel.org;
-        Wed, 10 Aug 2022 09:03:55 +1000
+        id 1oLaz3-00BGIy-I0; Wed, 10 Aug 2022 11:58:09 +1000
+Date:   Wed, 10 Aug 2022 11:58:09 +1000
 From:   Dave Chinner <david@fromorbit.com>
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 9/9] xfs: grant heads track byte counts, not LSNs
-Date:   Wed, 10 Aug 2022 09:03:53 +1000
-Message-Id: <20220809230353.3353059-10-david@fromorbit.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220809230353.3353059-1-david@fromorbit.com>
-References: <20220809230353.3353059-1-david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Allison Henderson <allison.henderson@oracle.com>,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH RESEND v2 01/18] xfs: Fix multi-transaction larp replay
+Message-ID: <20220810015809.GK3600936@dread.disaster.area>
+References: <20220804194013.99237-1-allison.henderson@oracle.com>
+ <20220804194013.99237-2-allison.henderson@oracle.com>
+ <YvKQ5+XotiXFDpTA@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YvKQ5+XotiXFDpTA@magnolia>
 X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62f2e7dc
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62f310b3
         a=SeswVvpAPK2RnNNwqI8AaA==:117 a=SeswVvpAPK2RnNNwqI8AaA==:17
-        a=biHskzXt2R4A:10 a=20KFwNOVAAAA:8 a=zNaKvnLwVls_Xgdmr-8A:9
+        a=kj9zAlcOel0A:10 a=biHskzXt2R4A:10 a=yPCof4ZbAAAA:8 a=7-415B0cAAAA:8
+        a=4qbWr1NDMORvN67zLPUA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
         SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -50,596 +48,182 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Tue, Aug 09, 2022 at 09:52:55AM -0700, Darrick J. Wong wrote:
+> On Thu, Aug 04, 2022 at 12:39:56PM -0700, Allison Henderson wrote:
+> > Recent parent pointer testing has exposed a bug in the underlying
+> > attr replay.  A multi transaction replay currently performs a
+> > single step of the replay, then deferrs the rest if there is more
+> > to do.
 
-The grant heads in the log track the space reserved in the log for
-running transactions. They do this by tracking how far ahead of the
-tail that the reservation has reached, and the units for doing this
-are {cycle,bytes} for the reserve head rather than {cycle,blocks}
-which are normal used by LSNs.
+Yup.
 
-This is annoyingly complex because we have to split, crack and
-combined these tuples for any calculation we do to determine log
-space and targets. This is computationally expensive as well as
-difficult to do atomically and locklessly, as well as limiting the
-size of the log to 2^32 bytes.
+> > This causes race conditions with other attr replays that
+> > might be recovered before the remaining deferred work has had a
+> > chance to finish.
 
-Really, though, all the grant heads are tracking is how much space
-is currently available for use in the log. We can track this as a
-simply byte count - we just don't care what the actual physical
-location in the log the head and tail are at, just how much space we
-have remaining before the head and tail overlap.
+What other attr replays are we racing against?  There can only be
+one incomplete attr item intent/done chain per inode present in log
+recovery, right?
 
-So, convert the grant heads to track the byte reservations that are
-active rather than the current (cycle, offset) tuples. This means an
-empty log has zero bytes consumed, and a full log is when the the
-reservations reach the size of the log minus the space consumed by
-the AIL.
+> > This can lead to interleaved set and remove
+> > operations that may clobber the attribute fork.  Fix this by
+> > deferring all work for any attribute operation.
 
-This greatly simplifies the accounting and checks for whether there
-is space available. We no longer need to crack or combine LSNs to
-determine how much space the log has left, nor do we need to look at
-the head or tail of the log to determine how close to full we are.
+Which means this should be an impossible situation.
 
-There is, however, a complexity that needs to be handled. We know
-how much space is being tracked in the AIL now via log->l_tail_space
-and the log tickets track active reservations and return the unused
-portions to the grant heads when ungranted.  Unfortunately, we don't
-track the used portion of the grant, so when we transfer log items
-from the CIL to the AIL, the space accounted to the grant heads is
-transferred to the log tail space.  Hence when we move the AIL head
-forwards on item insert, we have to remove that space from the grant
-heads.
+That is, if we crash before the final attrd DONE intent is written
+to the log, it means that new attr intents for modifications made
+*after* the current attr modification was completed will not be
+present in the log. We have strict ordering of committed operations
+in the journal, hence an operation on an inode has an incomplete
+intent *must* be the last operation and the *only* incomplete intent
+that is found in the journal for that inode.
 
-We also remove the xlog_verify_grant_tail() debug function as it is
-no longer useful. The check it performs has been racy since delayed
-logging was introduced, but now it is clearly only detecting false
-positives so remove it.
+Hence from an operational ordering persepective, this explanation
+for issue being seen doesn't make any sense to me.  If there are
+multiple incomplete attri intents then we've either got a runtime
+journalling problem (a white-out issue? failing to relog the inode
+in each new intent?) or a log recovery problem (failing to match
+intent-done pairs correctly?), not a recovery deferral issue.
 
-The result of this substantially simpler accounting algorithm is an
-increase in sustained transaction rate from ~1.3 million
-transactions/s to ~1.9 million transactions/s with no increase in
-CPU usage. We also remove the 32 bit space limitation on the grant
-heads, which will allow us to increase the journal size beyond 2GB
-in future.
+Hence I think we're still looking for the root cause of this
+problem...
 
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
----
- fs/xfs/xfs_log.c         | 205 ++++++++++++---------------------------
- fs/xfs/xfs_log_cil.c     |  12 +++
- fs/xfs/xfs_log_priv.h    |  45 +++------
- fs/xfs/xfs_log_recover.c |   4 -
- fs/xfs/xfs_sysfs.c       |  17 ++--
- fs/xfs/xfs_trace.h       |  33 ++++---
- 6 files changed, 113 insertions(+), 203 deletions(-)
+> > Signed-off-by: Allison Henderson <allison.henderson@oracle.com>
+> > ---
+> >  fs/xfs/xfs_attr_item.c | 35 ++++++++---------------------------
+> >  1 file changed, 8 insertions(+), 27 deletions(-)
+> > 
+> > diff --git a/fs/xfs/xfs_attr_item.c b/fs/xfs/xfs_attr_item.c
+> > index 5077a7ad5646..c13d724a3e13 100644
+> > --- a/fs/xfs/xfs_attr_item.c
+> > +++ b/fs/xfs/xfs_attr_item.c
+> > @@ -635,52 +635,33 @@ xfs_attri_item_recover(
+> >  		break;
+> >  	case XFS_ATTRI_OP_FLAGS_REMOVE:
+> >  		if (!xfs_inode_hasattr(args->dp))
+> > -			goto out;
+> > +			return 0;
+> >  		attr->xattri_dela_state = xfs_attr_init_remove_state(args);
+> >  		break;
+> >  	default:
+> >  		ASSERT(0);
+> > -		error = -EFSCORRUPTED;
+> > -		goto out;
+> > +		return -EFSCORRUPTED;
+> >  	}
+> >  
+> >  	xfs_init_attr_trans(args, &tres, &total);
+> >  	error = xfs_trans_alloc(mp, &tres, total, 0, XFS_TRANS_RESERVE, &tp);
+> >  	if (error)
+> > -		goto out;
+> > +		return error;
+> >  
+> >  	args->trans = tp;
+> >  	done_item = xfs_trans_get_attrd(tp, attrip);
+> > +	args->trans->t_flags |= XFS_TRANS_HAS_INTENT_DONE;
+> > +	set_bit(XFS_LI_DIRTY, &done_item->attrd_item.li_flags);
+> >  
+> >  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> >  	xfs_trans_ijoin(tp, ip, 0);
+> >  
+> > -	error = xfs_xattri_finish_update(attr, done_item);
+> > -	if (error == -EAGAIN) {
+> > -		/*
+> > -		 * There's more work to do, so add the intent item to this
+> > -		 * transaction so that we can continue it later.
+> > -		 */
+> > -		xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &attr->xattri_list);
+> > -		error = xfs_defer_ops_capture_and_commit(tp, capture_list);
+> > -		if (error)
+> > -			goto out_unlock;
+> > -
+> > -		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+> > -		xfs_irele(ip);
+> > -		return 0;
+> > -	}
+> > -	if (error) {
+> > -		xfs_trans_cancel(tp);
+> > -		goto out_unlock;
+> > -	}
+> > -
+> > +	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_ATTR, &attr->xattri_list);
+> 
+> This seems a little convoluted to me.  Maybe?  Maybe not?
+> 
+> 1. Log recovery recreates an incore xfs_attri_log_item from what it
+> finds in the log.
+> 
+> 2. This function then logs an xattrd for the recovered xattri item.
+> 
+> 3. Then it creates a new xfs_attr_intent to complete the operation.
+> 
+> 4. Finally, it calls xfs_defer_ops_capture_and_commit, which logs a new
+> xattri for the intent created in step 3 and also commits the xattrd for
+> the first xattri.
+> 
+> IOWs, the only difference between before and after is that we're not
+> advancing one more step through the state machine as part of log
+> recovery.  From the perspective of the log, the recovery function merely
+> replaces the recovered xattri log item with a new one.
+> 
+> Why can't we just attach the recovered xattri to the xfs_defer_pending
+> that is created to point to the xfs_attr_intent that's created in step
+> 3, and skip the xattrd?
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index 459c0f438c89..148214cf7032 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -53,9 +53,6 @@ xlog_sync(
- 	struct xlog_ticket	*ticket);
- #if defined(DEBUG)
- STATIC void
--xlog_verify_grant_tail(
--	struct xlog *log);
--STATIC void
- xlog_verify_iclog(
- 	struct xlog		*log,
- 	struct xlog_in_core	*iclog,
-@@ -65,7 +62,6 @@ xlog_verify_tail_lsn(
- 	struct xlog		*log,
- 	struct xlog_in_core	*iclog);
- #else
--#define xlog_verify_grant_tail(a)
- #define xlog_verify_iclog(a,b,c)
- #define xlog_verify_tail_lsn(a,b)
- #endif
-@@ -133,30 +129,13 @@ xlog_prepare_iovec(
- 	return buf;
- }
- 
--static void
-+void
- xlog_grant_sub_space(
- 	struct xlog		*log,
- 	struct xlog_grant_head	*head,
- 	int			bytes)
- {
--	int64_t	head_val = atomic64_read(&head->grant);
--	int64_t new, old;
--
--	do {
--		int	cycle, space;
--
--		xlog_crack_grant_head_val(head_val, &cycle, &space);
--
--		space -= bytes;
--		if (space < 0) {
--			space += log->l_logsize;
--			cycle--;
--		}
--
--		old = head_val;
--		new = xlog_assign_grant_head_val(cycle, space);
--		head_val = atomic64_cmpxchg(&head->grant, old, new);
--	} while (head_val != old);
-+	atomic64_sub(bytes, &head->grant);
- }
- 
- static void
-@@ -165,93 +144,39 @@ xlog_grant_add_space(
- 	struct xlog_grant_head	*head,
- 	int			bytes)
- {
--	int64_t	head_val = atomic64_read(&head->grant);
--	int64_t new, old;
--
--	do {
--		int		tmp;
--		int		cycle, space;
--
--		xlog_crack_grant_head_val(head_val, &cycle, &space);
--
--		tmp = log->l_logsize - space;
--		if (tmp > bytes)
--			space += bytes;
--		else {
--			space = bytes - tmp;
--			cycle++;
--		}
--
--		old = head_val;
--		new = xlog_assign_grant_head_val(cycle, space);
--		head_val = atomic64_cmpxchg(&head->grant, old, new);
--	} while (head_val != old);
-+	atomic64_add(bytes, &head->grant);
- }
- 
--STATIC void
-+static void
- xlog_grant_head_init(
- 	struct xlog_grant_head	*head)
- {
--	xlog_assign_grant_head(&head->grant, 1, 0);
-+	atomic64_set(&head->grant, 0);
- 	INIT_LIST_HEAD(&head->waiters);
- 	spin_lock_init(&head->lock);
- }
- 
- /*
-- * Return the space in the log between the tail and the head.  The head
-- * is passed in the cycle/bytes formal parms.  In the special case where
-- * the reserve head has wrapped passed the tail, this calculation is no
-- * longer valid.  In this case, just return 0 which means there is no space
-- * in the log.  This works for all places where this function is called
-- * with the reserve head.  Of course, if the write head were to ever
-- * wrap the tail, we should blow up.  Rather than catch this case here,
-- * we depend on other ASSERTions in other parts of the code.   XXXmiken
-- *
-- * If reservation head is behind the tail, we have a problem. Warn about it,
-- * but then treat it as if the log is empty.
-- *
-- * If the log is shut down, the head and tail may be invalid or out of whack, so
-- * shortcut invalidity asserts in this case so that we don't trigger them
-- * falsely.
-+ * Return the space in the log between the tail and the head.  In the case where
-+ * we have overrun available reservation space, return 0. The memory barrier
-+ * pairs with the smp_wmb() in xlog_cil_ail_insert() to ensure that grant head
-+ * vs tail space updates are seen in the correct order and hence avoid
-+ * transients as space is transferred from the grant heads to the AIL on commit
-+ * completion.
-  */
--static int
-+static uint64_t
- xlog_grant_space_left(
- 	struct xlog		*log,
- 	struct xlog_grant_head	*head)
- {
--	int			tail_bytes;
--	int			tail_cycle;
--	int			head_cycle;
--	int			head_bytes;
--
--	xlog_crack_grant_head(&head->grant, &head_cycle, &head_bytes);
--	xlog_crack_atomic_lsn(&log->l_tail_lsn, &tail_cycle, &tail_bytes);
--	tail_bytes = BBTOB(tail_bytes);
--	if (tail_cycle == head_cycle && head_bytes >= tail_bytes)
--		return log->l_logsize - (head_bytes - tail_bytes);
--	if (tail_cycle + 1 < head_cycle)
--		return 0;
--
--	/* Ignore potential inconsistency when shutdown. */
--	if (xlog_is_shutdown(log))
--		return log->l_logsize;
--
--	if (tail_cycle < head_cycle) {
--		ASSERT(tail_cycle == (head_cycle - 1));
--		return tail_bytes - head_bytes;
--	}
-+	int64_t			free_bytes;
- 
--	/*
--	 * The reservation head is behind the tail. In this case we just want to
--	 * return the size of the log as the amount of space left.
--	 */
--	xfs_alert(log->l_mp, "xlog_grant_space_left: head behind tail");
--	xfs_alert(log->l_mp, "  tail_cycle = %d, tail_bytes = %d",
--		  tail_cycle, tail_bytes);
--	xfs_alert(log->l_mp, "  GH   cycle = %d, GH   bytes = %d",
--		  head_cycle, head_bytes);
--	ASSERT(0);
--	return log->l_logsize;
-+	smp_rmb();	// paired with smp_wmb in xlog_cil_ail_insert()
-+	free_bytes = log->l_logsize - READ_ONCE(log->l_tail_space) -
-+			atomic64_read(&head->grant);
-+	if (free_bytes > 0)
-+		return free_bytes;
-+	return 0;
- }
- 
- STATIC void
-@@ -455,7 +380,6 @@ xfs_log_regrant(
- 
- 	xlog_grant_add_space(log, &log->l_write_head, need_bytes);
- 	trace_xfs_log_regrant_exit(log, tic);
--	xlog_verify_grant_tail(log);
- 	return 0;
- 
- out_error:
-@@ -507,7 +431,6 @@ xfs_log_reserve(
- 	xlog_grant_add_space(log, &log->l_reserve_head, need_bytes);
- 	xlog_grant_add_space(log, &log->l_write_head, need_bytes);
- 	trace_xfs_log_reserve_exit(log, tic);
--	xlog_verify_grant_tail(log);
- 	return 0;
- 
- out_error:
-@@ -3343,42 +3266,27 @@ xlog_ticket_alloc(
- }
- 
- #if defined(DEBUG)
--/*
-- * Check to make sure the grant write head didn't just over lap the tail.  If
-- * the cycles are the same, we can't be overlapping.  Otherwise, make sure that
-- * the cycles differ by exactly one and check the byte count.
-- *
-- * This check is run unlocked, so can give false positives. Rather than assert
-- * on failures, use a warn-once flag and a panic tag to allow the admin to
-- * determine if they want to panic the machine when such an error occurs. For
-- * debug kernels this will have the same effect as using an assert but, unlinke
-- * an assert, it can be turned off at runtime.
-- */
--STATIC void
--xlog_verify_grant_tail(
--	struct xlog	*log)
-+static void
-+xlog_verify_dump_tail(
-+	struct xlog		*log,
-+	struct xlog_in_core	*iclog)
- {
--	int		tail_cycle, tail_blocks;
--	int		cycle, space;
--
--	xlog_crack_grant_head(&log->l_write_head.grant, &cycle, &space);
--	xlog_crack_atomic_lsn(&log->l_tail_lsn, &tail_cycle, &tail_blocks);
--	if (tail_cycle != cycle) {
--		if (cycle - 1 != tail_cycle &&
--		    !test_and_set_bit(XLOG_TAIL_WARN, &log->l_opstate)) {
--			xfs_alert_tag(log->l_mp, XFS_PTAG_LOGRES,
--				"%s: cycle - 1 != tail_cycle", __func__);
--		}
--
--		if (space > BBTOB(tail_blocks) &&
--		    !test_and_set_bit(XLOG_TAIL_WARN, &log->l_opstate)) {
--			xfs_alert_tag(log->l_mp, XFS_PTAG_LOGRES,
--				"%s: space > BBTOB(tail_blocks)", __func__);
--		}
--	}
--}
--
--/* check if it will fit */
-+	xfs_alert(log->l_mp,
-+"ran out of log space tail 0x%llx/0x%llx, head lsn 0x%llx, head 0x%x/0x%x, prev head 0x%x/0x%x",
-+			iclog ? be64_to_cpu(iclog->ic_header.h_tail_lsn) : -1,
-+			atomic64_read(&log->l_tail_lsn),
-+			log->l_ailp->ail_head_lsn,
-+			log->l_curr_cycle, log->l_curr_block,
-+			log->l_prev_cycle, log->l_prev_block);
-+	xfs_alert(log->l_mp,
-+"write grant 0x%llx, reserve grant 0x%llx, tail_space 0x%llx, size 0x%x, iclog flags 0x%x",
-+			atomic64_read(&log->l_write_head.grant),
-+			atomic64_read(&log->l_reserve_head.grant),
-+			log->l_tail_space, log->l_logsize,
-+			iclog ? iclog->ic_flags : -1);
-+}
-+
-+/* Check if the new iclog will fit in the log. */
- STATIC void
- xlog_verify_tail_lsn(
- 	struct xlog		*log,
-@@ -3387,21 +3295,34 @@ xlog_verify_tail_lsn(
- 	xfs_lsn_t	tail_lsn = be64_to_cpu(iclog->ic_header.h_tail_lsn);
- 	int		blocks;
- 
--    if (CYCLE_LSN(tail_lsn) == log->l_prev_cycle) {
--	blocks =
--	    log->l_logBBsize - (log->l_prev_block - BLOCK_LSN(tail_lsn));
--	if (blocks < BTOBB(iclog->ic_offset)+BTOBB(log->l_iclog_hsize))
--		xfs_emerg(log->l_mp, "%s: ran out of log space", __func__);
--    } else {
--	ASSERT(CYCLE_LSN(tail_lsn)+1 == log->l_prev_cycle);
-+	if (CYCLE_LSN(tail_lsn) == log->l_prev_cycle) {
-+		blocks = log->l_logBBsize -
-+				(log->l_prev_block - BLOCK_LSN(tail_lsn));
-+		if (blocks < BTOBB(iclog->ic_offset) +
-+					BTOBB(log->l_iclog_hsize)) {
-+			xfs_emerg(log->l_mp,
-+					"%s: ran out of log space", __func__);
-+			xlog_verify_dump_tail(log, iclog);
-+		}
-+		return;
-+	}
- 
--	if (BLOCK_LSN(tail_lsn) == log->l_prev_block)
-+	if (CYCLE_LSN(tail_lsn) + 1 != log->l_prev_cycle) {
-+		xfs_emerg(log->l_mp, "%s: head has wrapped tail.", __func__);
-+		xlog_verify_dump_tail(log, iclog);
-+		return;
-+	}
-+	if (BLOCK_LSN(tail_lsn) == log->l_prev_block) {
- 		xfs_emerg(log->l_mp, "%s: tail wrapped", __func__);
-+		xlog_verify_dump_tail(log, iclog);
-+		return;
-+	}
- 
- 	blocks = BLOCK_LSN(tail_lsn) - log->l_prev_block;
--	if (blocks < BTOBB(iclog->ic_offset) + 1)
--		xfs_emerg(log->l_mp, "%s: ran out of log space", __func__);
--    }
-+	if (blocks < BTOBB(iclog->ic_offset) + 1) {
-+		xfs_emerg(log->l_mp, "%s: ran out of iclog space", __func__);
-+		xlog_verify_dump_tail(log, iclog);
-+	}
- }
- 
- /*
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index e482ae9fc01c..7ff4814b7d87 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -753,6 +753,7 @@ xlog_cil_ail_insert(
- 	struct xfs_log_item	*log_items[LOG_ITEM_BATCH_SIZE];
- 	struct xfs_log_vec	*lv;
- 	struct xfs_ail_cursor	cur;
-+	xfs_lsn_t		old_head;
- 	int			i = 0;
- 
- 	/*
-@@ -769,10 +770,21 @@ xlog_cil_ail_insert(
- 			aborted);
- 	spin_lock(&ailp->ail_lock);
- 	xfs_trans_ail_cursor_last(ailp, &cur, ctx->start_lsn);
-+	old_head = ailp->ail_head_lsn;
- 	ailp->ail_head_lsn = ctx->commit_lsn;
- 	/* xfs_ail_update_finish() drops the ail_lock */
- 	xfs_ail_update_finish(ailp, NULLCOMMITLSN);
- 
-+	/*
-+	 * We move the AIL head forwards to account for the space used in the
-+	 * log before we remove that space from the grant heads. This prevents a
-+	 * transient condition where reservation space appears to become
-+	 * available on return, only for it to disappear again immediately as
-+	 * the AIL head update accounts in the log tail space.
-+	 */
-+	smp_wmb();	// paired with smp_rmb in xlog_grant_space_left
-+	xlog_grant_return_space(ailp->ail_log, old_head, ailp->ail_head_lsn);
-+
- 	/* unpin all the log items */
- 	list_for_each_entry(lv, &ctx->lv_chain, lv_list) {
- 		struct xfs_log_item	*lip = lv->lv_item;
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 86b5959b5ef2..c7ae9172dcd9 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -541,36 +541,6 @@ xlog_assign_atomic_lsn(atomic64_t *lsn, uint cycle, uint block)
- 	atomic64_set(lsn, xlog_assign_lsn(cycle, block));
- }
- 
--/*
-- * When we crack the grant head, we sample it first so that the value will not
-- * change while we are cracking it into the component values. This means we
-- * will always get consistent component values to work from.
-- */
--static inline void
--xlog_crack_grant_head_val(int64_t val, int *cycle, int *space)
--{
--	*cycle = val >> 32;
--	*space = val & 0xffffffff;
--}
--
--static inline void
--xlog_crack_grant_head(atomic64_t *head, int *cycle, int *space)
--{
--	xlog_crack_grant_head_val(atomic64_read(head), cycle, space);
--}
--
--static inline int64_t
--xlog_assign_grant_head_val(int cycle, int space)
--{
--	return ((int64_t)cycle << 32) | space;
--}
--
--static inline void
--xlog_assign_grant_head(atomic64_t *head, int cycle, int space)
--{
--	atomic64_set(head, xlog_assign_grant_head_val(cycle, space));
--}
--
- /*
-  * Committed Item List interfaces
-  */
-@@ -636,6 +606,21 @@ xlog_lsn_sub(
- 	return (uint64_t)log->l_logsize - BBTOB(lo_block - hi_block);
- }
- 
-+void	xlog_grant_sub_space(struct xlog *log, struct xlog_grant_head *head,
-+			int bytes);
-+
-+static inline void
-+xlog_grant_return_space(
-+	struct xlog	*log,
-+	xfs_lsn_t	old_head,
-+	xfs_lsn_t	new_head)
-+{
-+	int64_t		diff = xlog_lsn_sub(log, new_head, old_head);
-+
-+	xlog_grant_sub_space(log, &log->l_reserve_head, diff);
-+	xlog_grant_sub_space(log, &log->l_write_head, diff);
-+}
-+
- /*
-  * The LSN is valid so long as it is behind the current LSN. If it isn't, this
-  * means that the next log record that includes this metadata could have a
-diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
-index d9997714f975..0c1da8c13f52 100644
---- a/fs/xfs/xfs_log_recover.c
-+++ b/fs/xfs/xfs_log_recover.c
-@@ -1213,10 +1213,6 @@ xlog_set_state(
- 		log->l_curr_cycle++;
- 	atomic64_set(&log->l_tail_lsn, be64_to_cpu(rhead->h_tail_lsn));
- 	log->l_ailp->ail_head_lsn = be64_to_cpu(rhead->h_lsn);
--	xlog_assign_grant_head(&log->l_reserve_head.grant, log->l_curr_cycle,
--					BBTOB(log->l_curr_block));
--	xlog_assign_grant_head(&log->l_write_head.grant, log->l_curr_cycle,
--					BBTOB(log->l_curr_block));
- }
- 
- /*
-diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
-index f7faf6e70d7f..0b19acea28cb 100644
---- a/fs/xfs/xfs_sysfs.c
-+++ b/fs/xfs/xfs_sysfs.c
-@@ -376,14 +376,11 @@ STATIC ssize_t
- reserve_grant_head_show(
- 	struct kobject	*kobject,
- 	char		*buf)
--
- {
--	int cycle;
--	int bytes;
--	struct xlog *log = to_xlog(kobject);
-+	struct xlog	*log = to_xlog(kobject);
-+	uint64_t	bytes = atomic64_read(&log->l_reserve_head.grant);
- 
--	xlog_crack_grant_head(&log->l_reserve_head.grant, &cycle, &bytes);
--	return sysfs_emit(buf, "%d:%d\n", cycle, bytes);
-+	return sysfs_emit(buf, "%lld\n", bytes);
- }
- XFS_SYSFS_ATTR_RO(reserve_grant_head);
- 
-@@ -392,12 +389,10 @@ write_grant_head_show(
- 	struct kobject	*kobject,
- 	char		*buf)
- {
--	int cycle;
--	int bytes;
--	struct xlog *log = to_xlog(kobject);
-+	struct xlog	*log = to_xlog(kobject);
-+	uint64_t	bytes = atomic64_read(&log->l_write_head.grant);
- 
--	xlog_crack_grant_head(&log->l_write_head.grant, &cycle, &bytes);
--	return sysfs_emit(buf, "%d:%d\n", cycle, bytes);
-+	return sysfs_emit(buf, "%lld\n", bytes);
- }
- XFS_SYSFS_ATTR_RO(write_grant_head);
- 
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 886cde292c95..5c1871e5747e 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1206,6 +1206,7 @@ DECLARE_EVENT_CLASS(xfs_loggrant_class,
- 	TP_ARGS(log, tic),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
-+		__field(unsigned long, tic)
- 		__field(char, ocnt)
- 		__field(char, cnt)
- 		__field(int, curr_res)
-@@ -1213,16 +1214,16 @@ DECLARE_EVENT_CLASS(xfs_loggrant_class,
- 		__field(unsigned int, flags)
- 		__field(int, reserveq)
- 		__field(int, writeq)
--		__field(int, grant_reserve_cycle)
--		__field(int, grant_reserve_bytes)
--		__field(int, grant_write_cycle)
--		__field(int, grant_write_bytes)
-+		__field(uint64_t, grant_reserve_bytes)
-+		__field(uint64_t, grant_write_bytes)
-+		__field(uint64_t, tail_space)
- 		__field(int, curr_cycle)
- 		__field(int, curr_block)
- 		__field(xfs_lsn_t, tail_lsn)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = log->l_mp->m_super->s_dev;
-+		__entry->tic = (unsigned long)tic;
- 		__entry->ocnt = tic->t_ocnt;
- 		__entry->cnt = tic->t_cnt;
- 		__entry->curr_res = tic->t_curr_res;
-@@ -1230,23 +1231,23 @@ DECLARE_EVENT_CLASS(xfs_loggrant_class,
- 		__entry->flags = tic->t_flags;
- 		__entry->reserveq = list_empty(&log->l_reserve_head.waiters);
- 		__entry->writeq = list_empty(&log->l_write_head.waiters);
--		xlog_crack_grant_head(&log->l_reserve_head.grant,
--				&__entry->grant_reserve_cycle,
--				&__entry->grant_reserve_bytes);
--		xlog_crack_grant_head(&log->l_write_head.grant,
--				&__entry->grant_write_cycle,
--				&__entry->grant_write_bytes);
-+		__entry->tail_space = READ_ONCE(log->l_tail_space);
-+		__entry->grant_reserve_bytes = __entry->tail_space +
-+			atomic64_read(&log->l_reserve_head.grant);
-+		__entry->grant_write_bytes = __entry->tail_space +
-+			atomic64_read(&log->l_write_head.grant);
- 		__entry->curr_cycle = log->l_curr_cycle;
- 		__entry->curr_block = log->l_curr_block;
- 		__entry->tail_lsn = atomic64_read(&log->l_tail_lsn);
- 	),
--	TP_printk("dev %d:%d t_ocnt %u t_cnt %u t_curr_res %u "
-+	TP_printk("dev %d:%d tic 0x%lx t_ocnt %u t_cnt %u t_curr_res %u "
- 		  "t_unit_res %u t_flags %s reserveq %s "
--		  "writeq %s grant_reserve_cycle %d "
--		  "grant_reserve_bytes %d grant_write_cycle %d "
--		  "grant_write_bytes %d curr_cycle %d curr_block %d "
-+		  "writeq %s "
-+		  "tail space %llu grant_reserve_bytes %llu "
-+		  "grant_write_bytes %llu curr_cycle %d curr_block %d "
- 		  "tail_cycle %d tail_block %d",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->tic,
- 		  __entry->ocnt,
- 		  __entry->cnt,
- 		  __entry->curr_res,
-@@ -1254,9 +1255,8 @@ DECLARE_EVENT_CLASS(xfs_loggrant_class,
- 		  __print_flags(__entry->flags, "|", XLOG_TIC_FLAGS),
- 		  __entry->reserveq ? "empty" : "active",
- 		  __entry->writeq ? "empty" : "active",
--		  __entry->grant_reserve_cycle,
-+		  __entry->tail_space,
- 		  __entry->grant_reserve_bytes,
--		  __entry->grant_write_cycle,
- 		  __entry->grant_write_bytes,
- 		  __entry->curr_cycle,
- 		  __entry->curr_block,
-@@ -1284,6 +1284,7 @@ DEFINE_LOGGRANT_EVENT(xfs_log_ticket_ungrant);
- DEFINE_LOGGRANT_EVENT(xfs_log_ticket_ungrant_sub);
- DEFINE_LOGGRANT_EVENT(xfs_log_ticket_ungrant_exit);
- DEFINE_LOGGRANT_EVENT(xfs_log_cil_wait);
-+DEFINE_LOGGRANT_EVENT(xfs_log_cil_return);
- 
- DECLARE_EVENT_CLASS(xfs_log_item_class,
- 	TP_PROTO(struct xfs_log_item *lip),
+Remember that attribute intents are different to all other intent
+types that we have. The existing extent based intents define a
+single indepedent operation that needs to be performed, and each
+step of the intent chain is completely independent of the previous
+step in the chain.  e.g. removing the extent from the rmap btree is
+completely independent of removing it from the inode bmap btree -
+all that matters is that the removal from the bmbt happens first.
+The rmapbt removal can happen at any time after than, and is
+completely independent of any other bmbt or rmapbt operation.
+Similarly, the EFI can processed independently of all bmapbt and
+rmapbt modifications, it just has to happen after those
+modifications are done.
+
+Hence if we crash during recovery, we can just restart from
+where-ever we got to in the middle of the intent chains and not have
+to care at all.  IOWs, eventual consistency works with these chains
+because there is no dependencies between each step of the intent
+chain and each step is completely independent of the other steps.
+
+Attribute intent chains are completely different. They link steps in
+a state machine together in a non-trivial, highly dependent chain.
+We can't just restart the chain in the middle like we can for the
+BUI->RUI->CUI->EFI chain because the on-disk attribute is in an
+unknown state and recovering that exact state is .... complex.
+
+Hence the the first step of recovery is to return the attribute we
+are trying to modify back to a known state. That means we have to
+perform a removal of any existing attribute under that name first.
+Hence this first step should be replacing the existing attr intent
+with the intent that defines the recovery operation we are going to
+perform.
+
+That means we need to translate set to replace so that cleanup is
+run first, replace needs to clean up the attr under that name
+regardless of whether it has the incomplete bit set on it or not.
+Remove is the only operation that runs the same as at runtime, as
+cleanup for remove is just repeating the remove operation from
+scratch.
+
+> I /think/ the answer to that question is that we might need to move the
+> log tail forward to free enough log space to finish the intent items, so
+> creating the extra xattrd/xattri (a) avoid the complexity of submitting
+> an incore intent item *and* a log intent item to the defer ops
+> machinery; and (b) avoid livelocks in log recovery.  Therefore, we
+> actually need to do it this way.
+
+We really need the initial operation to rewrite the intent to match
+the recovery operation we are going to perform. Everything else is
+secondary.
+
+Cheers,
+
+Dave.
 -- 
-2.36.1
-
+Dave Chinner
+david@fromorbit.com
