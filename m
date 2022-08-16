@@ -2,110 +2,138 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 245E759594F
-	for <lists+linux-xfs@lfdr.de>; Tue, 16 Aug 2022 13:05:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE8DC595D17
+	for <lists+linux-xfs@lfdr.de>; Tue, 16 Aug 2022 15:19:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235222AbiHPLEi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 16 Aug 2022 07:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37366 "EHLO
+        id S235712AbiHPNTH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 16 Aug 2022 09:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235220AbiHPLEK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Aug 2022 07:04:10 -0400
-Received: from mailly.debian.org (mailly.debian.org [IPv6:2001:41b8:202:deb:6564:a62:52c3:4b72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 512293334D
-        for <linux-xfs@vger.kernel.org>; Tue, 16 Aug 2022 03:11:58 -0700 (PDT)
-Received: from [192.91.235.231] (port=55036 helo=fasolo.debian.org)
-        from C=NA,ST=NA,L=Ankh Morpork,O=Debian SMTP,OU=Debian SMTP CA,CN=fasolo.debian.org,EMAIL=hostmaster@fasolo.debian.org (verified)
-        by mailly.debian.org with esmtps (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <envelope@ftp-master.debian.org>)
-        id 1oNtYC-009rBr-Oc
-        for linux-xfs@vger.kernel.org; Tue, 16 Aug 2022 10:11:56 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=ftp-master.debian.org; s=smtpauto.fasolo; h=Date:Message-Id:Subject:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:To:From:Reply-To:Cc:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=r+ZhG/M7DZcreU6QQc7e9yD2ZVdMm1VtgnIdcDPkDzM=; b=G2cQGPOlg2nzwW0aT+epo7EEmH
-        q6iYMPNrQqBy7SIhsoBvCcKw6C7gbzaWcVrTZFda4maqGutU1Hnwfa9T/om2WwyfoaWkZj70sSrTu
-        M26nvFYsp6RSVRsgGng6oEopQtMc5kvdZOD4jeABEC0f5mFkC5fAqoEKlI6R9Lu6ybdH+NV49Eb5d
-        dDCc/Tzr80Vpv4EHluhXZpJuaGtNvD/HRGsNC7KFnTQ0Mtf6K3DBvfanFOXh5s0nxdlZ1a8jZyciL
-        iuNvqkwl+fxtmbOWmHbJ4mj4AkSJ5G42OUuQziwawjyaiCSsWyWonPMq20Vq0wcvu418oSBjEMYFk
-        IPYrsHlA==;
-Received: from dak by fasolo.debian.org with local (Exim 4.94.2)
-        (envelope-from <envelope@ftp-master.debian.org>)
-        id 1oNtYA-003K1B-7J; Tue, 16 Aug 2022 10:11:54 +0000
-From:   Debian FTP Masters <ftpmaster@ftp-master.debian.org>
-To:     XFS Development Team <linux-xfs@vger.kernel.org>,
-        <bage@debian.org>, Nathan Scott <nathans@debian.org>
-X-DAK:  dak process-upload
-X-Debian: DAK
-X-Debian-Package: xfsprogs
-Auto-Submitted: auto-generated
+        with ESMTP id S235650AbiHPNS1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Aug 2022 09:18:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16793B7777;
+        Tue, 16 Aug 2022 06:17:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31A3A6139D;
+        Tue, 16 Aug 2022 13:17:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10855C433D6;
+        Tue, 16 Aug 2022 13:17:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660655858;
+        bh=IE7XlSYegepCqrWmEUIiUMpY4KYoWosVY7p7mO8nFUQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=a9/kq4pjOWPKLjT3w5c5CyxuU7SkrPqEdbYU7VhYDyWfsb6YTP5IheD9M04zuObiN
+         vpP0dIiGOlZ4O+Zk8VbPK82O/IdETodNZ+GJnK+0gTLplggNB8L70/42CgDRB0IVd5
+         iTslVQAaQwK6AwFqsN4cHF3WTqOuVgNWlgq1PMpgFtR+/YqHplaWcjawPc1zSmzYhJ
+         BwhmF7uPHxx4IMe7uWcPN+k9wynzUo6DpTyRkH22PW80d1+kw8aJDiX+erCER1M9Sz
+         W3fPyWarLgoCvgvQ6WDHtO/EFinn2px3KWUi1XTHLvvz0nnbJjP5x5prBlp5is8TkV
+         nWHJYvLrWDFrw==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCH] xfs: fix i_version handling in xfs
+Date:   Tue, 16 Aug 2022 09:17:36 -0400
+Message-Id: <20220816131736.42615-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Subject: xfsprogs_5.19.0-1_source.changes ACCEPTED into unstable
-Message-Id: <E1oNtYA-003K1B-7J@fasolo.debian.org>
-Date:   Tue, 16 Aug 2022 10:11:54 +0000
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+The i_version in xfs_trans_log_inode is bumped for any inode update,
+including atime-only updates due to reads. We don't want to record those
+in the i_version, as they don't represent "real" changes. Remove that
+callsite.
 
+In xfs_vn_update_time, if S_VERSION is flagged, then attempt to bump the
+i_version and turn on XFS_ILOG_CORE if it happens. In
+xfs_trans_ichgtime, update the i_version if the mtime or ctime are being
+updated.
 
-Accepted:
+Cc: Darrick J. Wong <darrick.wong@oracle.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/xfs/libxfs/xfs_trans_inode.c | 17 +++--------------
+ fs/xfs/xfs_iops.c               |  4 ++++
+ 2 files changed, 7 insertions(+), 14 deletions(-)
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
+diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
+index 8b5547073379..78bf7f491462 100644
+--- a/fs/xfs/libxfs/xfs_trans_inode.c
++++ b/fs/xfs/libxfs/xfs_trans_inode.c
+@@ -71,6 +71,8 @@ xfs_trans_ichgtime(
+ 		inode->i_ctime = tv;
+ 	if (flags & XFS_ICHGTIME_CREATE)
+ 		ip->i_crtime = tv;
++	if (flags & (XFS_ICHGTIME_MOD|XFS_ICHGTIME_CHG))
++		inode_inc_iversion(inode);
+ }
+ 
+ /*
+@@ -116,20 +118,7 @@ xfs_trans_log_inode(
+ 		spin_unlock(&inode->i_lock);
+ 	}
+ 
+-	/*
+-	 * First time we log the inode in a transaction, bump the inode change
+-	 * counter if it is configured for this to occur. While we have the
+-	 * inode locked exclusively for metadata modification, we can usually
+-	 * avoid setting XFS_ILOG_CORE if no one has queried the value since
+-	 * the last time it was incremented. If we have XFS_ILOG_CORE already
+-	 * set however, then go ahead and bump the i_version counter
+-	 * unconditionally.
+-	 */
+-	if (!test_and_set_bit(XFS_LI_DIRTY, &iip->ili_item.li_flags)) {
+-		if (IS_I_VERSION(inode) &&
+-		    inode_maybe_inc_iversion(inode, flags & XFS_ILOG_CORE))
+-			iversion_flags = XFS_ILOG_CORE;
+-	}
++	set_bit(XFS_LI_DIRTY, &iip->ili_item.li_flags);
+ 
+ 	/*
+ 	 * If we're updating the inode core or the timestamps and it's possible
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index 45518b8c613c..162e044c7f56 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -718,6 +718,7 @@ xfs_setattr_nonsize(
+ 	}
+ 
+ 	setattr_copy(mnt_userns, inode, iattr);
++	inode_inc_iversion(inode);
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 
+ 	XFS_STATS_INC(mp, xs_ig_attrchg);
+@@ -943,6 +944,7 @@ xfs_setattr_size(
+ 
+ 	ASSERT(!(iattr->ia_valid & (ATTR_UID | ATTR_GID)));
+ 	setattr_copy(mnt_userns, inode, iattr);
++	inode_inc_iversion(inode);
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 
+ 	XFS_STATS_INC(mp, xs_ig_attrchg);
+@@ -1047,6 +1049,8 @@ xfs_vn_update_time(
+ 		inode->i_mtime = *now;
+ 	if (flags & S_ATIME)
+ 		inode->i_atime = *now;
++	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
++		log_flags |= XFS_ILOG_CORE;
+ 
+ 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+ 	xfs_trans_log_inode(tp, ip, log_flags);
+-- 
+2.37.2
 
-Format: 1.8
-Date: Fri, 12 Aug 2022 13:40:25 -0500
-Source: xfsprogs
-Architecture: source
-Version: 5.19.0-1
-Distribution: unstable
-Urgency: medium
-Maintainer: XFS Development Team <linux-xfs@vger.kernel.org>
-Changed-By: Nathan Scott <nathans@debian.org>
-Changes:
- xfsprogs (5.19.0-1) unstable; urgency=medium
- .
-   * New upstream release
-Checksums-Sha1:
- 2d23b468701fe1978c6e173ac01df35b3a6705e0 2041 xfsprogs_5.19.0-1.dsc
- 12afbdd497603b98945ea18f9aa5a78c671a6e4c 1325160 xfsprogs_5.19.0.orig.tar.xz
- 4dd3f9a23d29dc6b40296029c25e30051a48f4b7 14376 xfsprogs_5.19.0-1.debian.tar.xz
- 192461f42a870863bd202e18ca3abf1b5fc68976 6445 xfsprogs_5.19.0-1_source.buildinfo
-Checksums-Sha256:
- 95b49c7ea794ddd25b627bb4ab43d7f138f46e1247207509edf9f9d474873b31 2041 xfsprogs_5.19.0-1.dsc
- 4b6c6c98c036a37f6d90c82cb7fe9405d3b5856d9345662032d01ff4b140592c 1325160 xfsprogs_5.19.0.orig.tar.xz
- b8374b4f0807fe30d8c2bc3c29511331380c7dc5c2d7757cf34116feaa1724cd 14376 xfsprogs_5.19.0-1.debian.tar.xz
- c99c4460f564ba056bec2a002a8ab3aafcd37a60e4e6d0027daf2478e6175374 6445 xfsprogs_5.19.0-1_source.buildinfo
-Files:
- d3ec9e1d9e07fd15d94bf2f9411ca572 2041 admin optional xfsprogs_5.19.0-1.dsc
- a55ac9550225b863c263852a4dcfd2fb 1325160 admin optional xfsprogs_5.19.0.orig.tar.xz
- 9d52ba10f7ce6427cecc98409a951fad 14376 admin optional xfsprogs_5.19.0-1.debian.tar.xz
- 428f6b43771c5360bb84da12e6a05c41 6445 admin optional xfsprogs_5.19.0-1_source.buildinfo
-
------BEGIN PGP SIGNATURE-----
-
-iQHEBAEBCgAuFiEEQGIgyLhVKAI3jM5BH1x6i0VWQxQFAmL7aYMQHGJhZ2VAZGVi
-aWFuLm9yZwAKCRAfXHqLRVZDFHVzC/40DQnG4auQP9jS4ksD+GttMWaNulDTdtX7
-2hHeQFbqZubyBbAY86Xh3Fu6FFb+GRKoxsqEOjZ155sCRClx1ALNM2hv+PKFbbGa
-Wd1hSFsclj19+071kdEuPqq4uJtQdAFVTNMxHjpEZvIp7jJUf8q4YpPv7FhHVzJI
-2sHvLU8YLeyVURJsDaV1ASJnK77Xf5+5BSHGU98XQc44K5vTSGUVjQ+cn4WpmIaI
-0OTRrSEYymGlS+H/+kvHFKdocEKy5noEkedpBmV0eNZ+9cFvocUs05i5eP9NfosV
-BTYUSj7HLWcC5ZEmWKa0OKQ5vKbjrFhrxRqFy6J/JkBFBpbTM6SMID8QGxA+Fxla
-BfTAKLLm/SABt+5y0hV6G6BOM0A9Wed3QpHATWJqBzgwEk419K8u1OQl0H1ch18n
-W2XxJID2kuyA8uMHKvEMcsgMVF75E80mG//YHc6wkXsPGVtnrNZvMxKW0tAJaUUN
-klQc8J85BmYoPRIqajh3efEyuZgd/OY=
-=assI
------END PGP SIGNATURE-----
-
-
-Thank you for your contribution to Debian.
