@@ -2,61 +2,61 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7A1C596675
-	for <lists+linux-xfs@lfdr.de>; Wed, 17 Aug 2022 02:56:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50D06596676
+	for <lists+linux-xfs@lfdr.de>; Wed, 17 Aug 2022 02:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237746AbiHQA4i (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 16 Aug 2022 20:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47228 "EHLO
+        id S238085AbiHQA4j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 16 Aug 2022 20:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238084AbiHQA4f (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Aug 2022 20:56:35 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CF380343
-        for <linux-xfs@vger.kernel.org>; Tue, 16 Aug 2022 17:56:34 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id t22so11170301pjy.1
-        for <linux-xfs@vger.kernel.org>; Tue, 16 Aug 2022 17:56:34 -0700 (PDT)
+        with ESMTP id S238082AbiHQA4g (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 16 Aug 2022 20:56:36 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E4B80B49
+        for <linux-xfs@vger.kernel.org>; Tue, 16 Aug 2022 17:56:36 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id gp7so11152211pjb.4
+        for <linux-xfs@vger.kernel.org>; Tue, 16 Aug 2022 17:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=WDb9aEZliPejuLd3dSdvbkRV1lWv2feqDEDVspFqbTw=;
-        b=VGvt+8ztohvM9a0HJFADDi/nWAKzRqtcSmAfpcN7megMu8ByEfID6OU/Ik+hvgZrsQ
-         FfqbX+WmkVBoTVZbqU7eTZtlXUuIVchBXwgHJRunJ+PQwqCTDBZzv8BiSHZCdKtFl6sy
-         s6CaGmCE0uGSGqYE9zz+Zf60SjHhvlUsGKWrHhFE+Ci+goySasuEJuC7MFlHh0TejUH0
-         sqnVWkjEYS0l08P8QS02bbPg+25tHRfVPkqOlt76A5z4qmo/Jn1GyVE1xH8iq5azPYMl
-         WegMyezljdKWZKRy0Ex8LTP9Wduqi5QVZZ5NYv+oFrWE2F5wYZTLTNRUl6/jjl7kK3Lg
-         Xh2A==
+        bh=EXwT7aU1M+aVRPwtJig37roVgnapOicHGN5d6rRSqt4=;
+        b=IdL34L2XiKSz19jaICnLuDbItHqZMg8aroPC35Jsbqdiy/LxR63bPeWpWMMCaDsFUI
+         IHdV+aUMeFuS7qaVzY49XvvZpGgKkj/tneRVEPgrdhm1oK5y2L0/+CRj4Ej9nSrUh/yb
+         2WQoLmDfL+Pf3gNE4HyccHghk0IrpHlV6n9iHC57lCJyS/N9y4/tzBrh8gegmzICEHo1
+         E5KLBtiZ1/tWvIzZhKQzU0Qxqa4ybMWAiRNXVGien1JymZ5y74+wRSoknv0YJVxGdIFR
+         3k/UKLRhUQdYv/0qrml2SKO8vxRhEFNySPNsy5ZWmkcAbR2K4WbxYrj8G7t1kAUTYdDi
+         ewTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=WDb9aEZliPejuLd3dSdvbkRV1lWv2feqDEDVspFqbTw=;
-        b=F1EDSERysL+mlf4GowAZ2XnFNNWDLnPYOcSafF0pv3SbrRmAulMLgHS5BaYx5Hp9yf
-         QOc7J3M5dxNidnm6h6l/kPlnWIJ47jfJ5dJxgN/vcBmEWjqvs/28eV5uK9SNkU5oigMF
-         f8RFl099N6xxiR1cOuacaDcf9uWI/2oa4nALCuhSEzC6c5gkMLqBhWFeK0rbJ+6ZL9ps
-         JL63p6K+YuEGmLi5Enyp5sR3VI1Frv5OBpHzH+Rms+wWPip6PYFp+qApIU7lCzIsaI0a
-         hhv1k2l5+MbR7fQ4lnJFAljqmh+3ytZY7mgICAXJG4H2HTj4rHBi07sG1/MkKJGAK0Ms
-         h//Q==
-X-Gm-Message-State: ACgBeo3nYa4HCqgt/Mfz8IvzL07OA0hpMtPoIY119k/+HPwXVxT7jylQ
-        WVnQamoRTYEH8ju/sRqHEtLmhaJHlNDk0w==
-X-Google-Smtp-Source: AA6agR5ySuOIQa6i9JseWTKGk1SvAnsx3Y2XJudq/n6POA8O7fae5wAtUc1JtD9a2aVld4eTjB9q7A==
-X-Received: by 2002:a17:90a:c402:b0:1f7:75ce:1206 with SMTP id i2-20020a17090ac40200b001f775ce1206mr1240039pjt.68.1660697794111;
-        Tue, 16 Aug 2022 17:56:34 -0700 (PDT)
+        bh=EXwT7aU1M+aVRPwtJig37roVgnapOicHGN5d6rRSqt4=;
+        b=ZWGRuz4op8+qfNiwTi0eM/2eJp4JROaU9lmI5i360nUIFdflSFR3FVSDdgGdph58fK
+         kwkiyAWR3rFPSGBjzcFSL6a0/DIJQW5d+N1omcpseWqLYTEwgHhh2a2ChIRC385/Pr4Z
+         jNXBQbIN2N/+1F/c2yVVOgSDRMrOaWS+mENS3hTyqbndilVlGnrmYVFKhQZ+SfIEEMID
+         FlzX6MWgi/2lLVzqQFfuPifmN26OmkWsv6dPJziTtvaXrNk+8sM/AIXF0TtcPDgV/57x
+         ROXnxusjDS51kQDmk9c7xq4dqrRKOmNGFD5qD5H3P0GikW5WyhwMQCU9So0L33RNWM1e
+         YwmA==
+X-Gm-Message-State: ACgBeo0m8tQEuPc3H/l+egF4ymlxDe4gAYKnnLPbg1pvTt5PUq8W/bOX
+        taDe8b90edQtcyz3dt2O2h9llwUv8v5xfw==
+X-Google-Smtp-Source: AA6agR7QCkVj74gbUcDCZTlOpfGOLP4ThkRf8rKg4L8c2QVTFY7kOXK8P2fARTf7UvZueCKUUxy+kg==
+X-Received: by 2002:a17:90b:4a4e:b0:1f5:431c:54f8 with SMTP id lb14-20020a17090b4a4e00b001f5431c54f8mr1227043pjb.161.1660697795605;
+        Tue, 16 Aug 2022 17:56:35 -0700 (PDT)
 Received: from lrumancik.svl.corp.google.com ([2620:15c:2d4:203:eb64:ce74:44c1:343c])
-        by smtp.gmail.com with ESMTPSA id u14-20020a17090a5e4e00b001f8aee0d826sm153458pji.53.2022.08.16.17.56.32
+        by smtp.gmail.com with ESMTPSA id u14-20020a17090a5e4e00b001f8aee0d826sm153458pji.53.2022.08.16.17.56.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 17:56:33 -0700 (PDT)
+        Tue, 16 Aug 2022 17:56:34 -0700 (PDT)
 From:   Leah Rumancik <leah.rumancik@gmail.com>
 To:     linux-xfs@vger.kernel.org
-Cc:     amir73il@gmail.com, Brian Foster <bfoster@redhat.com>,
+Cc:     amir73il@gmail.com, Eric Sandeen <sandeen@redhat.com>,
         "Darrick J . Wong" <djwong@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
+        Dave Chinner <dchinner@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
         Leah Rumancik <leah.rumancik@gmail.com>
-Subject: [PATCH CANDIDATE 5.15 7/9] xfs: fix soft lockup via spinning in filestream ag selection loop
-Date:   Tue, 16 Aug 2022 17:56:08 -0700
-Message-Id: <20220817005610.3170067-8-leah.rumancik@gmail.com>
+Subject: [PATCH CANDIDATE 5.15 8/9] xfs: revert "xfs: actually bump warning counts when we send warnings"
+Date:   Tue, 16 Aug 2022 17:56:09 -0700
+Message-Id: <20220817005610.3170067-9-leah.rumancik@gmail.com>
 X-Mailer: git-send-email 2.37.1.595.g718a3a8f04-goog
 In-Reply-To: <20220817005610.3170067-1-leah.rumancik@gmail.com>
 References: <20220817005610.3170067-1-leah.rumancik@gmail.com>
@@ -72,56 +72,51 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Brian Foster <bfoster@redhat.com>
+From: Eric Sandeen <sandeen@redhat.com>
 
-[ Upstream commit f650df7171b882dca737ddbbeb414100b31f16af ]
+[ Upstream commit bc37e4fb5cac2925b2e286b1f1d4fc2b519f7d92 ]
 
-The filestream AG selection loop uses pagf data to aid in AG
-selection, which depends on pagf initialization. If the in-core
-structure is not initialized, the caller invokes the AGF read path
-to do so and carries on. If another task enters the loop and finds
-a pagf init already in progress, the AGF read returns -EAGAIN and
-the task continues the loop. This does not increment the current ag
-index, however, which means the task spins on the current AGF buffer
-until unlocked.
+This reverts commit 4b8628d57b725b32616965e66975fcdebe008fe7.
 
-If the AGF read I/O submitted by the initial task happens to be
-delayed for whatever reason, this results in soft lockup warnings
-via the spinning task. This is reproduced by xfs/170. To avoid this
-problem, fix the AGF trylock failure path to properly iterate to the
-next AG. If a task iterates all AGs without making progress, the
-trylock behavior is dropped in favor of blocking locks and thus a
-soft lockup is no longer possible.
+XFS quota has had the concept of a "quota warning limit" since
+the earliest Irix implementation, but a mechanism for incrementing
+the warning counter was never implemented, as documented in the
+xfs_quota(8) man page. We do know from the historical archive that
+it was never incremented at runtime during quota reservation
+operations.
 
-Fixes: f48e2df8a877ca1c ("xfs: make xfs_*read_agf return EAGAIN to ALLOC_FLAG_TRYLOCK callers")
-Signed-off-by: Brian Foster <bfoster@redhat.com>
+With this commit, the warning counter quickly increments for every
+allocation attempt after the user has crossed a quote soft
+limit threshold, and this in turn transitions the user to hard
+quota failures, rendering soft quota thresholds and timers useless.
+This was reported as a regression by users.
+
+Because the intended behavior of this warning counter has never been
+understood or documented, and the result of this change is a regression
+in soft quota functionality, revert this commit to make soft quota
+limits and timers operable again.
+
+Fixes: 4b8628d57b72 ("xfs: actually bump warning counts when we send warnings)
+Signed-off-by: Eric Sandeen <sandeen@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Dave Chinner <david@fromorbit.com>
 Signed-off-by: Leah Rumancik <leah.rumancik@gmail.com>
 ---
- fs/xfs/xfs_filestream.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_trans_dquot.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_filestream.c b/fs/xfs/xfs_filestream.c
-index 6a3ce0f6dc9e..be9bcf8a1f99 100644
---- a/fs/xfs/xfs_filestream.c
-+++ b/fs/xfs/xfs_filestream.c
-@@ -128,11 +128,12 @@ xfs_filestream_pick_ag(
- 		if (!pag->pagf_init) {
- 			err = xfs_alloc_pagf_init(mp, NULL, ag, trylock);
- 			if (err) {
--				xfs_perag_put(pag);
--				if (err != -EAGAIN)
-+				if (err != -EAGAIN) {
-+					xfs_perag_put(pag);
- 					return err;
-+				}
- 				/* Couldn't lock the AGF, skip this AG. */
--				continue;
-+				goto next_ag;
- 			}
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index 3872ce671411..955c457e585a 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -603,7 +603,6 @@ xfs_dqresv_check(
+ 			return QUOTA_NL_ISOFTLONGWARN;
  		}
+ 
+-		res->warnings++;
+ 		return QUOTA_NL_ISOFTWARN;
+ 	}
  
 -- 
 2.37.1.595.g718a3a8f04-goog
