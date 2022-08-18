@@ -2,84 +2,102 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FEA5598119
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Aug 2022 11:51:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73FE859821B
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Aug 2022 13:17:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239604AbiHRJvO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Aug 2022 05:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
+        id S244375AbiHRLQ7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Aug 2022 07:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235407AbiHRJvN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Aug 2022 05:51:13 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC6DB07C9
-        for <linux-xfs@vger.kernel.org>; Thu, 18 Aug 2022 02:51:12 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 902283ED3B;
-        Thu, 18 Aug 2022 09:51:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1660816271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=izmoBcXZCzoW+ZBOVabeEeedzEn73APgAMt0TLEhuyI=;
-        b=yDTNtwzYlIIjPi7c1iVUpoVI2MyUsFqClvSt+JBa0duT6tSLC2PaYa9ZViYywW4EMI5KFG
-        x/C/+U6ahzFceEU9vMPumXSYy/Y88fhdSAodnk6A6RekxGKk4TINgynTSany89e+3J2Kfp
-        8Je4mm7YIxVF04RjH97I5QIzo306kTM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1660816271;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=izmoBcXZCzoW+ZBOVabeEeedzEn73APgAMt0TLEhuyI=;
-        b=Oi4CbHmUUC1IhkMVDqDVw1o3Ys86B+4oCvNpO8EX8FrglSXyelgEpyRjX2mCrOE03rT+kk
-        ToV0Au3NBN56wLAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7A26D139B7;
-        Thu, 18 Aug 2022 09:51:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6mhjHI8L/mIlBQAAMHmgww
-        (envelope-from <chrubis@suse.cz>); Thu, 18 Aug 2022 09:51:11 +0000
-Date:   Thu, 18 Aug 2022 11:53:08 +0200
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     Petr Vorel <pvorel@suse.cz>
-Cc:     ltp@lists.linux.it, Li Wang <liwang@redhat.com>,
-        Martin Doucha <mdoucha@suse.cz>,
-        automated-testing@yoctoproject.org,
-        "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        automated-testing@lists.yoctoproject.org
-Subject: Re: [RFC PATCH 1/1] API: Allow to use xfs filesystems < 300 MB
-Message-ID: <Yv4MBF79PnJKJbwm@yuki>
-References: <20220817204015.31420-1-pvorel@suse.cz>
+        with ESMTP id S237435AbiHRLQ7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Aug 2022 07:16:59 -0400
+Received: from sender-of-o50.zoho.in (sender-of-o50.zoho.in [103.117.158.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2F1AE9C0
+        for <linux-xfs@vger.kernel.org>; Thu, 18 Aug 2022 04:16:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1660820437; cv=none; 
+        d=zohomail.in; s=zohoarc; 
+        b=BTMANjpPQ649xN1Ilw1xe5PDp07xqQayiOObxnMnehCh0whAnkBvvKzF96CLAtFZp4YQ8ODaEjbyfxO+8O3f/gIsCrn3d6QS0J7Ec5vbrkdOL7AdTYuhDWEn0Ytbzy53JRClJKXWGM2IHiZXzEaVpHOx4vYLVjY+pkiYXP8DU0I=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.in; s=zohoarc; 
+        t=1660820437; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=w3q3/luKQmtc+VjV/Gf2sz+X/or73ffditweh+vTyCw=; 
+        b=RmUvCSOkclpZwMa6RoA6xFuaJBY/zqVsEm+96Q2v/o3+19cq7Jj+Cy1SOxYqBYt1p7y89zQmwA8ZtL63NN/GcveCbgYuiP+CjjbGq4SzrNz3Eff23eS6+YvUPTXaFpKSL3LcUceRTPAPCWioyQMgL5PvnmFoIk9DH7SRFqhNRho=
+ARC-Authentication-Results: i=1; mx.zohomail.in;
+        dkim=pass  header.i=siddh.me;
+        spf=pass  smtp.mailfrom=code@siddh.me;
+        dmarc=pass header.from=<code@siddh.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1660820437;
+        s=zmail; d=siddh.me; i=code@siddh.me;
+        h=From:From:To:To:Cc:Cc:Message-ID:Subject:Subject:Date:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+        bh=w3q3/luKQmtc+VjV/Gf2sz+X/or73ffditweh+vTyCw=;
+        b=IPmmJF2k6/1SqT02GUNG6cNF9PRrVOBVauI7Gxr3vl6IzUfgHFmetHP6xEJSEs+f
+        UTnuUpVVI0CfxUgWtgfQkowITG0Lu07mgkTl5c/ddZaVDBGWcELlHyYMeBgo7rIUoqi
+        U2aUCQNU7weOGb/EPhCeuYwTPXiR65CFg0+dX/NQ=
+Received: from localhost.localdomain (103.86.19.2 [103.86.19.2]) by mx.zoho.in
+        with SMTPS id 1660820435766507.18754371954867; Thu, 18 Aug 2022 16:30:35 +0530 (IST)
+From:   Siddh Raman Pant <code@siddh.me>
+To:     david@fromorbit.com
+Cc:     djwong@kernel.org, fgheet255t@gmail.com, hch@infradead.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        riteshh@linux.ibm.com,
+        syzbot+a8e049cd3abd342936b6@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Message-ID: <20220818110031.89467-1-code@siddh.me>
+Subject: Re: [syzbot] WARNING in iomap_iter
+Date:   Thu, 18 Aug 2022 16:30:31 +0530
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220214025849.GP59729@dread.disaster.area>
+References: <20220214025849.GP59729@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220817204015.31420-1-pvorel@suse.cz>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi!
-I'm starting to wonder if we should start tracking minimal FS size per
-filesystem since btrfs and xfs will likely to continue to grow and with
-that we will end up disabling the whole fs related testing on embedded
-boards with a little disk space. If we tracked that per filesystem we
-would be able to skip a subset of filesystems when there is not enough
-space. The downside is obviously that we would have to add a bit more
-complexity to the test library.
+This is probably due to mismatch in types between userspace API struct
+and the kernel's internal struct, which leads to offset being overflowed
+after getting converted from __u64 (unsigned long long) to loff_t (signed
+long long), resulting in ridiculously negative offset value.
 
--- 
-Cyril Hrubis
-chrubis@suse.cz
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
+t master
+
+---
+ include/uapi/linux/loop.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/include/uapi/linux/loop.h b/include/uapi/linux/loop.h
+index 6f63527dd2ed..33c07c467da4 100644
+--- a/include/uapi/linux/loop.h
++++ b/include/uapi/linux/loop.h
+@@ -53,12 +53,12 @@ struct loop_info64 {
+ =09__u64=09=09   lo_device;=09=09=09/* ioctl r/o */
+ =09__u64=09=09   lo_inode;=09=09=09/* ioctl r/o */
+ =09__u64=09=09   lo_rdevice;=09=09=09/* ioctl r/o */
+-=09__u64=09=09   lo_offset;
+-=09__u64=09=09   lo_sizelimit;/* bytes, 0 =3D=3D max available */
+-=09__u32=09=09   lo_number;=09=09=09/* ioctl r/o */
+-=09__u32=09=09   lo_encrypt_type;=09=09/* obsolete, ignored */
+-=09__u32=09=09   lo_encrypt_key_size;=09=09/* ioctl w/o */
+-=09__u32=09=09   lo_flags;
++=09__s64=09=09   lo_offset;
++=09__s64=09=09   lo_sizelimit;=09/* bytes, 0 =3D=3D max available */
++=09__s32=09=09   lo_number;=09=09=09/* ioctl r/o */
++=09__s32=09=09   lo_encrypt_type;=09=09/* obsolete, ignored */
++=09__s32=09=09   lo_encrypt_key_size;=09=09/* ioctl w/o */
++=09__s32=09=09   lo_flags;
+ =09__u8=09=09   lo_file_name[LO_NAME_SIZE];
+ =09__u8=09=09   lo_crypt_name[LO_NAME_SIZE];
+ =09__u8=09=09   lo_encrypt_key[LO_KEY_SIZE]; /* ioctl w/o */
+--=20
+2.35.1
+
+
