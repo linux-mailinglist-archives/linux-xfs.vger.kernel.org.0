@@ -2,327 +2,272 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D52C59820B
-	for <lists+linux-xfs@lfdr.de>; Thu, 18 Aug 2022 13:17:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC985598222
+	for <lists+linux-xfs@lfdr.de>; Thu, 18 Aug 2022 13:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244329AbiHRLNL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 18 Aug 2022 07:13:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37178 "EHLO
+        id S244383AbiHRLTt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 18 Aug 2022 07:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244330AbiHRLNI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Aug 2022 07:13:08 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 243E3A895C;
-        Thu, 18 Aug 2022 04:13:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S244180AbiHRLTs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 18 Aug 2022 07:19:48 -0400
+Received: from mail1.bemta34.messagelabs.com (mail1.bemta34.messagelabs.com [195.245.231.4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277B39C1E5;
+        Thu, 18 Aug 2022 04:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+        s=170520fj; t=1660821584; i=@fujitsu.com;
+        bh=+EuciT7jIwu9FzBIejSJprVjCYvd9aSELh+pZeaxSVE=;
+        h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+         In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        b=HxVv8CZ+cTQeJhUdS//KvIKoWyrVEodtRTXIsse6veoy+gqUb4GEP07iizLAp/pEM
+         4MxUgsKZKwSFFVz0uevXqwKH8q0Vqac0A0lL1lWg5gVJa35u8Cxi3oJRV7bcg+mQbo
+         v5dzXTyEKyP+fY/ncRYNZXDm0HMe/HoIJiffVcWGivxRcSnnkBeTeuYP72EnWpaalb
+         WHI+YglQ117VmvKywzaYXIgiyPi6EgZnZspM3pLVa00RX9+tdWSFwpp/pFjEqtxa+v
+         nmrGnyh2v40ESdqCuDAyi7ZEfCC4xitD79HwRhhIm/R02GIl/s0pB9prEZ/gwBKCI1
+         PBqRyYcMK76sg==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRWlGSWpSXmKPExsViZ8ORpOul8C/
+  JYONbK4vpUy8wWmw5do/R4vITPovTExYxWex+fZPNYs/ekywWl3fNYbO4t+Y/q8WuPzvYLVb+
+  +MPqwOVxapGEx+YVWh6L97xk8ti0qpPNY9OnSeweLzbPZPT4+PQWi8fnTXIBHFGsmXlJ+RUJr
+  BkbZt1jK1hkUjGjewZjA+Me7S5GLg4hgY2MEmuav7NCOEuYJA70v2aDcLYzStyav4m9i5GDg1
+  fATqKz3aeLkZODRUBVYvHxI6wgNq+AoMTJmU9YQGxRgWSJu4fXg9nCAr4S3+8fAqsREdCUOPL
+  tGhPITGaB08wS/ZfPQ227wyRxf+E5RpAqNgEdiQsL/oJ1cApoSPxtmcgGYjMLWEgsfnOQHcKW
+  l2jeOpsZ5CAJASWJmd3xIGEJgQqJWbPamCBsNYmr5zYxT2AUmoXkvllIJs1CMmkBI/MqRuuko
+  sz0jJLcxMwcXUMDA11DQ1NdYxNdI0MLvcQq3US91FLd8tTiEl0jvcTyYr3U4mK94src5JwUvb
+  zUkk2MwIhMKVa6tYNxw6qfeocYJTmYlER5Tz35myTEl5SfUpmRWJwRX1Sak1p8iFGGg0NJgve
+  S7L8kIcGi1PTUirTMHGBygElLcPAoifD+FANK8xYXJOYWZ6ZDpE4xGnOsbTiwl5lj8dUre5mF
+  WPLy81KlxHl55IFKBUBKM0rz4AbBktYlRlkpYV5GBgYGIZ6C1KLczBJU+VeM4hyMSsK8xnJAU
+  3gy80rg9r0COoUJ6JRjF3+DnFKSiJCSamCKz+Jbtz7f+eQ728ZTndkyvefm/frk0iTz5cPT6f
+  557Um60/KKzRMS5kg9jm0+lbira+2PuPZb9qEVLDxNfuecfH4F5y21ttRh/XhQb+eC5d7Sboc
+  2esZJ/C1iOMchnLeg4XrO20/pDR38jPOSK95u/soc4cuuzWy0xWGBUORhBvP+Pnm9nqdPrn4I
+  EFIqfxdxvLeSbdKnP+Fqn+e0GDIVqBYrNc7X7ArbJaczf873/lMT89pKLFmM+ndIujGG21sZ/
+  ZhrxpNYp6m6O/fYV2aP5OiTsywtw3zafgfarO5e385bJXjj78KNjQlV04NYnt67Fchqnhm5wP
+  q99KTn/9p7bumb3E0++sRz/p54JZbijERDLeai4kQAkXGRR9UDAAA=
+X-Env-Sender: ruansy.fnst@fujitsu.com
+X-Msg-Ref: server-20.tower-565.messagelabs.com!1660821578!66821!1
+X-Originating-IP: [62.60.8.98]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.87.3; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 27156 invoked from network); 18 Aug 2022 11:19:38 -0000
+Received: from unknown (HELO n03ukasimr03.n03.fujitsu.local) (62.60.8.98)
+  by server-20.tower-565.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 18 Aug 2022 11:19:38 -0000
+Received: from n03ukasimr03.n03.fujitsu.local (localhost [127.0.0.1])
+        by n03ukasimr03.n03.fujitsu.local (Postfix) with ESMTP id 90C001AF;
+        Thu, 18 Aug 2022 12:19:38 +0100 (BST)
+Received: from R01UKEXCASM126.r01.fujitsu.local (R01UKEXCASM126 [10.183.43.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id BD999CE2027;
-        Thu, 18 Aug 2022 11:13:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E322C433D6;
-        Thu, 18 Aug 2022 11:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1660821179;
-        bh=7EsYGeDSy9e7hfwkB5Ilk7lWmXyst9jit4Y2LJEUZFg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SN4TL4WOvf3doL8Ymm41cjfmI6Yz9KiWocga57i2lflWITr/dOLXCMIZ8mKoWs/RA
-         vdvPMpj4cV3TmTjfI5bkS1YSm09njaD8OUIqpvcOi/ypnXePa9hUjMXqAchq23hY+1
-         ZNXrQ5EpYViL8LKHmFD0F834G2mA/VImSFcMw3gY1BUpT5oBKDRt/WzJy0rVDT0vFP
-         JvpQT6ALM6K8a9Z6WdoTObygU6JLQj58sDmiuWErqETYmzDkgofjqushT3QP7P9UfK
-         tbLKTp7o2mI6FMC5uOpG15B4soATeQo0HfSudjmxDncpbQar35fni+AYGyLuFkFya2
-         i8JHFJ/oFliyg==
-Message-ID: <fb5d972e82b310154c5a6cf6dc6fc3cdfa8c3036.camel@kernel.org>
-Subject: Re: [PATCH] xfs: fix i_version handling in xfs
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>
-Date:   Thu, 18 Aug 2022 07:12:57 -0400
-In-Reply-To: <20220818010727.GB3600936@dread.disaster.area>
-References: <20220816131736.42615-1-jlayton@kernel.org>
-         <Yvu7DHDWl4g1KsI5@magnolia>
-         <e77fd4d19815fd661dbdb04ab27e687ff7e727eb.camel@kernel.org>
-         <20220816224257.GV3600936@dread.disaster.area>
-         <b237ae4462b26c88358d4a3aab044f12c86771fb.camel@kernel.org>
-         <20220818010727.GB3600936@dread.disaster.area>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        by n03ukasimr03.n03.fujitsu.local (Postfix) with ESMTPS id 7648E1B2;
+        Thu, 18 Aug 2022 12:19:38 +0100 (BST)
+Received: from [192.168.22.78] (10.167.225.141) by
+ R01UKEXCASM126.r01.fujitsu.local (10.183.43.178) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.32; Thu, 18 Aug 2022 12:19:34 +0100
+Message-ID: <a638751a-ef0f-fa85-4076-5fff2272a669@fujitsu.com>
+Date:   Thu, 18 Aug 2022 19:19:28 +0800
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [RFC PATCH v6] mm, pmem, xfs: Introduce MF_MEM_REMOVE for unbind
+To:     "Darrick J. Wong" <djwong@kernel.org>
+CC:     Dan Williams <dan.j.williams@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "nvdimm@lists.linux.dev" <nvdimm@lists.linux.dev>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>
+References: <20220410171623.3788004-1-ruansy.fnst@fujitsu.com>
+ <20220714103421.1988696-1-ruansy.fnst@fujitsu.com>
+ <62d05eb8e663c_1643dc294fa@dwillia2-xfh.jf.intel.com.notmuch>
+ <YtXbD4e8mLHqWSwL@magnolia>
+ <62d5e515de3a_929192941e@dwillia2-xfh.jf.intel.com.notmuch>
+ <ef6fbc40-db59-eca5-e3e1-19f5809ec357@fujitsu.com>
+ <Yun6qIonQbeqVvso@magnolia>
+From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
+In-Reply-To: <Yun6qIonQbeqVvso@magnolia>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.167.225.141]
+X-ClientProxiedBy: G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.80) To
+ R01UKEXCASM126.r01.fujitsu.local (10.183.43.178)
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, 2022-08-18 at 11:07 +1000, Dave Chinner wrote:
-> On Wed, Aug 17, 2022 at 08:02:23AM -0400, Jeff Layton wrote:
-> > On Wed, 2022-08-17 at 08:42 +1000, Dave Chinner wrote:
-> > > On Tue, Aug 16, 2022 at 11:58:06AM -0400, Jeff Layton wrote:
-> > > > On Tue, 2022-08-16 at 08:43 -0700, Darrick J. Wong wrote:
-> > > > > On Tue, Aug 16, 2022 at 09:17:36AM -0400, Jeff Layton wrote:
-> > > > > > The i_version in xfs_trans_log_inode is bumped for any inode up=
-date,
-> > > > > > including atime-only updates due to reads. We don't want to rec=
-ord those
-> > > > > > in the i_version, as they don't represent "real" changes. Remov=
-e that
-> > > > > > callsite.
-> > > > > >=20
-> > > > > > In xfs_vn_update_time, if S_VERSION is flagged, then attempt to=
- bump the
-> > > > > > i_version and turn on XFS_ILOG_CORE if it happens. In
-> > > > > > xfs_trans_ichgtime, update the i_version if the mtime or ctime =
-are being
-> > > > > > updated.
-> > > > >=20
-> > > > > What about operations that don't touch the mtime but change the f=
-ile
-> > > > > metadata anyway?  There are a few of those, like the blockgc garb=
-age
-> > > > > collector, deduperange, and the defrag tool.
-> > > > >=20
-> > > >=20
-> > > > Do those change the c/mtime at all?
-> > > >=20
-> > > > It's possible we're missing some places that should change the i_ve=
-rsion
-> > > > as well. We may need some more call sites.
-> > > >=20
-> > > > > Zooming out a bit -- what does i_version signal, concretely?  I t=
-hought
-> > > > > it was used by nfs (and maybe ceph?) to signal to clients that th=
-e file
-> > > > > on the server has moved on, and the client needs to invalidate it=
-s
-> > > > > caches.  I thought afs had a similar generation counter, though i=
-t's
-> > > > > only used to cache file data, not metadata?  Does an i_version ch=
-ange
-> > > > > cause all of them to invalidate caches, or is there more behavior=
- I
-> > > > > don't know about?
-> > > > >=20
-> > > >=20
-> > > > For NFS, it indicates a change to the change attribute indicates th=
-at
-> > > > there has been a change to the data or metadata for the file. atime
-> > > > changes due to reads are specifically exempted from this, but we do=
- bump
-> > > > the i_version if someone (e.g.) changes the atime via utimes().=20
-> > >=20
-> > > We have relatime behaviour to optimise away unnecessary atime
-> > > updates on reads.  Trying to explicitly exclude i_version from atime
-> > > updates in one filesystem just because NFS doesn't need that
-> > > information seems ....  misguided.  The -on disk- i_version
-> > > field behaviour is defined by the filesystem implementation, not the
-> > > NFS requirements.
-> >=20
-> > -o relatime does not fix this.
->=20
-> So why not fix -o relatime to handle this? That way the fix works
-> for all filesystems and doesn't require hacking around what the VFS
-> has told us to do in every filesystem.
->=20
-> i.e. the VFS told us to update atime, we updated atime and that is a
-> persistent metadata change to the inode. Hence a filesystem with a
-> persistent change counter has to bump the change counter because
-> we've been asked by the VFS to make a persistent metadata change.
->=20
-> If you want atime updates to not make persistent changes to on disk
-> metadata, then change the relatime implementation so that it doesn't
-> ask the filesystem to update the on-disk atime.
->=20
-> Essentially, what I'm hearing is that NFS wants atime updates to
-> behave like lazytime, not like relatime. With lazytime, atime always
-> gets updated in memory, but it is not written back to the filesystem
-> until a timeout or some other modification is made to the inode or
-> file data. THe filesystem doesn't bump iversion until the timestamp
-> gets written back in the lazytime case.
->=20
-> IOWs, we already have a mechanism in the kernel for making atime
-> updates behave exactly as NFS wants: -o lazytime.
->=20
-
-No, that won't help. Both lazytime and relatime don't help anything
-since they don't address the fundamental problem, which is that the
-i_version changes due to atime updates. They only affect when the atime
-gets updated (or when it goes to disk).
 
 
+在 2022/8/3 12:33, Darrick J. Wong 写道:
+> On Wed, Aug 03, 2022 at 02:43:20AM +0000, ruansy.fnst@fujitsu.com wrote:
+>>
+>> 在 2022/7/19 6:56, Dan Williams 写道:
+>>> Darrick J. Wong wrote:
+>>>> On Thu, Jul 14, 2022 at 11:21:44AM -0700, Dan Williams wrote:
+>>>>> ruansy.fnst@fujitsu.com wrote:
+>>>>>> This patch is inspired by Dan's "mm, dax, pmem: Introduce
+>>>>>> dev_pagemap_failure()"[1].  With the help of dax_holder and
+>>>>>> ->notify_failure() mechanism, the pmem driver is able to ask filesystem
+>>>>>> (or mapped device) on it to unmap all files in use and notify processes
+>>>>>> who are using those files.
+>>>>>>
+>>>>>> Call trace:
+>>>>>> trigger unbind
+>>>>>>    -> unbind_store()
+>>>>>>     -> ... (skip)
+>>>>>>      -> devres_release_all()   # was pmem driver ->remove() in v1
+>>>>>>       -> kill_dax()
+>>>>>>        -> dax_holder_notify_failure(dax_dev, 0, U64_MAX, MF_MEM_PRE_REMOVE)
+>>>>>>         -> xfs_dax_notify_failure()
+>>>>>>
+>>>>>> Introduce MF_MEM_PRE_REMOVE to let filesystem know this is a remove
+>>>>>> event.  So do not shutdown filesystem directly if something not
+>>>>>> supported, or if failure range includes metadata area.  Make sure all
+>>>>>> files and processes are handled correctly.
+>>>>>>
+>>>>>> ==
+>>>>>> Changes since v5:
+>>>>>>     1. Renamed MF_MEM_REMOVE to MF_MEM_PRE_REMOVE
+>>>>>>     2. hold s_umount before sync_filesystem()
+>>>>>>     3. move sync_filesystem() after SB_BORN check
+>>>>>>     4. Rebased on next-20220714
+>>>>>>
+>>>>>> Changes since v4:
+>>>>>>     1. sync_filesystem() at the beginning when MF_MEM_REMOVE
+>>>>>>     2. Rebased on next-20220706
+>>>>>>
+>>>>>> [1]: https://lore.kernel.org/linux-mm/161604050314.1463742.14151665140035795571.stgit@dwillia2-desk3.amr.corp.intel.com/
+>>>>>>
+>>>>>> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+>>>>>> ---
+>>>>>>    drivers/dax/super.c         |  3 ++-
+>>>>>>    fs/xfs/xfs_notify_failure.c | 15 +++++++++++++++
+>>>>>>    include/linux/mm.h          |  1 +
+>>>>>>    3 files changed, 18 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+>>>>>> index 9b5e2a5eb0ae..cf9a64563fbe 100644
+>>>>>> --- a/drivers/dax/super.c
+>>>>>> +++ b/drivers/dax/super.c
+>>>>>> @@ -323,7 +323,8 @@ void kill_dax(struct dax_device *dax_dev)
+>>>>>>    		return;
+>>>>>>    
+>>>>>>    	if (dax_dev->holder_data != NULL)
+>>>>>> -		dax_holder_notify_failure(dax_dev, 0, U64_MAX, 0);
+>>>>>> +		dax_holder_notify_failure(dax_dev, 0, U64_MAX,
+>>>>>> +				MF_MEM_PRE_REMOVE);
+>>>>>>    
+>>>>>>    	clear_bit(DAXDEV_ALIVE, &dax_dev->flags);
+>>>>>>    	synchronize_srcu(&dax_srcu);
+>>>>>> diff --git a/fs/xfs/xfs_notify_failure.c b/fs/xfs/xfs_notify_failure.c
+>>>>>> index 69d9c83ea4b2..6da6747435eb 100644
+>>>>>> --- a/fs/xfs/xfs_notify_failure.c
+>>>>>> +++ b/fs/xfs/xfs_notify_failure.c
+>>>>>> @@ -76,6 +76,9 @@ xfs_dax_failure_fn(
+>>>>>>    
+>>>>>>    	if (XFS_RMAP_NON_INODE_OWNER(rec->rm_owner) ||
+>>>>>>    	    (rec->rm_flags & (XFS_RMAP_ATTR_FORK | XFS_RMAP_BMBT_BLOCK))) {
+>>>>>> +		/* Do not shutdown so early when device is to be removed */
+>>>>>> +		if (notify->mf_flags & MF_MEM_PRE_REMOVE)
+>>>>>> +			return 0;
+>>>>>>    		xfs_force_shutdown(mp, SHUTDOWN_CORRUPT_ONDISK);
+>>>>>>    		return -EFSCORRUPTED;
+>>>>>>    	}
+>>>>>> @@ -174,12 +177,22 @@ xfs_dax_notify_failure(
+>>>>>>    	struct xfs_mount	*mp = dax_holder(dax_dev);
+>>>>>>    	u64			ddev_start;
+>>>>>>    	u64			ddev_end;
+>>>>>> +	int			error;
+>>>>>>    
+>>>>>>    	if (!(mp->m_sb.sb_flags & SB_BORN)) {
+>>>>>>    		xfs_warn(mp, "filesystem is not ready for notify_failure()!");
+>>>>>>    		return -EIO;
+>>>>>>    	}
+>>>>>>    
+>>>>>> +	if (mf_flags & MF_MEM_PRE_REMOVE) {
+>>>>>> +		xfs_info(mp, "device is about to be removed!");
+>>>>>> +		down_write(&mp->m_super->s_umount);
+>>>>>> +		error = sync_filesystem(mp->m_super);
+>>>>>> +		up_write(&mp->m_super->s_umount);
+>>>>>
+>>>>> Are all mappings invalidated after this point?
+>>>>
+>>>> No; all this step does is pushes dirty filesystem [meta]data to pmem
+>>>> before we lose DAXDEV_ALIVE...
+>>>>
+>>>>> The goal of the removal notification is to invalidate all DAX mappings
+>>>>> that are no pointing to pfns that do not exist anymore, so just syncing
+>>>>> does not seem like enough, and the shutdown is skipped above. What am I
+>>>>> missing?
+>>>>
+>>>> ...however, the shutdown above only applies to filesystem metadata.  In
+>>>> effect, we avoid the fs shutdown in MF_MEM_PRE_REMOVE mode, which
+>>>> enables the mf_dax_kill_procs calls to proceed against mapped file data.
+>>>> I have a nagging suspicion that in non-PREREMOVE mode, we can end up
+>>>> shutting down the filesytem on an xattr block and the 'return
+>>>> -EFSCORRUPTED' actually prevents us from reaching all the remaining file
+>>>> data mappings.
+>>>>
+>>>> IOWs, I think that clause above really ought to have returned zero so
+>>>> that we keep the filesystem up while we're tearing down mappings, and
+>>>> only call xfs_force_shutdown() after we've had a chance to let
+>>>> xfs_dax_notify_ddev_failure() tear down all the mappings.
+>>>>
+>>>> I missed that subtlety in the initial ~30 rounds of review, but I figure
+>>>> at this point let's just land it in 5.20 and clean up that quirk for
+>>>> -rc1.
+>>>
+>>> Sure, this is a good baseline to incrementally improve.
+>>
+>> Hi Dan, Darrick
+>>
+>> Do I need to fix somewhere on this patch?  I'm not sure if it is looked good...
+> 
+> Eh, wait for me to send the xfs pull request and then I'll clean things
+> up and send you a patch. :)
 
-> > > > The NFS client will generally invalidate its caches for the inode w=
-hen
-> > > > it notices a change attribute change.
-> > > >=20
-> > > > FWIW, AFS may not meet this standard since it doesn't generally
-> > > > increment the counter on metadata changes. It may turn out that we =
-don't
-> > > > want to expose this to the AFS client due to that (or maybe come up=
- with
-> > > > some way to indicate this difference).
-> > >=20
-> > > In XFS, we've defined the on-disk i_version field to mean
-> > > "increments with any persistent inode data or metadata change",
-> > > regardless of what the high level applications that use i_version
-> > > might actually require.
-> > >=20
-> > > That some network filesystem might only need a subset of the
-> > > metadata to be covered by i_version is largely irrelevant - if we
-> > > don't cover every persistent inode metadata change with i_version,
-> > > then applications that *need* stuff like atime change notification
-> > > can't be supported.
-> > >=20
-> > > > > Does that mean that we should bump i_version for any file data or
-> > > > > attribute that could be queried or observed by userspace?  In whi=
-ch case
-> > > > > I suppose this change is still correct, even if it relaxes i_vers=
-ion
-> > > > > updates from "any change to the inode whatsoever" to "any change =
-that
-> > > > > would bump mtime".  Unless FIEMAP is part of "attributes observed=
- by
-> > > > > userspace".
-> > > > >=20
-> > > > > (The other downside I can see is that now we have to remember to =
-bump
-> > > > > timestamps for every new file operation we add, unlike the curren=
-t code
-> > > > > which is centrally located in xfs_trans_log_inode.)
-> > > > >=20
-> > > >=20
-> > > > The main reason for the change attribute in NFS was that NFSv3 is
-> > > > plagued with cache-coherency problems due to coarse-grained timesta=
-mp
-> > > > granularity. It was conceived as a way to indicate that the inode h=
-ad
-> > > > changed without relying on timestamps.
-> > >=20
-> > > Yes, and the most important design consideration for a filesystem is
-> > > that it -must be persistent-. The constraints on i_version are much
-> > > stricter than timestamps, and they are directly related to how the
-> > > filesystem persists metadata changes, not how metadata is changed or
-> > > accessed in memory.
-> > >=20
-> > > > In practice, we want to bump the i_version counter whenever the cti=
-me or
-> > > > mtime would be changed.
-> > >=20
-> > > What about O_NOCMTIME modifications? What about lazytime
-> > > filesystems? These explicilty avoid or delay persisten c/mtime
-> > > updates, and that means bumping i_version only based on c/mtime
-> > > updates cannot be relied on. i_version is supposed to track user
-> > > visible data and metadata changes, *not timestamp updates*.
-> >=20
-> > I was speaking more about the sorts of activity that should result in
-> > the i_version being changed, not about tracking timestamp updates. IOW,
-> > if some activity would cause the mtime or ctime to change, then we want
-> > to also bump the i_version.
-> >=20
-> > Specifically, for NOCMTIME, I think we'd still want the i_version to
-> > change since that option is about timestamps and not i_version.
->=20
-> Exactly my point: this is what XFS currently does. It is also what
-> your proposed changes break by tying i_version updates to c/mtime
-> updates.
->=20
-> > > Hence, I don't think that trying to modify how filesystems persist
-> > > and maintain i_version coherency because NFS "doesn't need i_version
-> > > to cover atime updates" is the wrong approach. On-disk i_version
-> > > coherency has to work for more than just one NFS implementation
-> > > (especially now i_version will be exported to userspace!).=20
-> > > Persistent atime updates are already optimised away by relatime, and
-> > > so I think that any further atime filtering is largely a NFS
-> > > application layer problem and not something that should be solved by
-> > > changing the on-disk definition of back end filesystem structure
-> > > persistence.
-> > >=20
-> >=20
-> > Fair enough. xfs is not really in my wheelhouse so take this as a patch
-> > that helps illustrate the problem, rather than a serious submission.
-> >=20
-> > There are two consumers of the i_version counter today: the kernel NFS
-> > server and IMA. Having the i_version reflect atime updates due to reads
-> > harms both of those use-cases with unneeded cache invalidations on NFS
-> > and extra measurements on IMA. It would also be problematic for userlan=
-d
-> > NFS servers such as ganesha if we end up exposing this to userland.
->=20
-> So you're wanting define an exact behaviour for atime vs I_VERSION
-> where atime doesn't bump iversion.
->=20
-> However, the definition we baked into the XFS on-disk format is that
-> the on-disk iversion filed changes for every persistent change made
-> to the inode. That includes atime updates. We did this for two
-> reasons - the first is so that we could support any application that
-> needed change detection, and the second was that knowing how many
-> changes have occurred to an inode is extremely useful for forensic
-> purposes (especially given the ability to use O_NOCMTIME to modify
-> file data).
->=20
-> > atime updates are really a special case when it comes to metadata (and =
-I
-> > maintain that they are one of the worst ideas in POSIX). The way you're
-> > choosing to define i_version doesn't really work properly for any
-> > current or projected use case. I'd like to see that changed.
->=20
-> We chose to do that a decade ago, knowing that it is the
-> responsibility of the VFS to avoid unnecessary atime updates, not
-> the responsibility of the filesystem. That was the whole point of
-> introducing the relatime functionality: fix the problem at the VFS,
-> not have to work around generic atime behaviour in every filesystem.
->=20
-> > If the concern is fragility of the code going forward, then maybe we ca=
-n
-> > go with a different approach. Would it be possible to just have
-> > xfs_trans_log_inode skip bumping the i_version when the log transaction
-> > is _only_ for an atime update due to reads? Maybe we could add a new
-> > XFS_ILOG_ATIME_UPDATE flag or something and set it the appropriate
-> > codepaths?
->=20
-> No, I don't think this is something we should be hacking around in
-> individual filesystems. If the VFS tells us we should be updating
-> atime, we should be updating it and bumping persistent change
-> counters because *that's what the VFS asked us to do*.
->=20
-> IOWs, if NFS wants atime to be considered "in memory only" as per
-> the lazytime behaviour, then that behaviour needs to be
-> supported/changed at the VFS, not at the individual fileystem level.
->=20
-> You could add a subset of SB_LAZYTIME functionality just for atime
-> updates, handle that entirely within the existing lazytime
-> infrastructure. THis means the VFS supports non-persistent,
-> best-effort, non-persistent atime updates directly. The VFS will not
-> ack filesystems to persist atime updates the moment they are made,
-> it will tell the filesystem via ->dirty_inode() that it needs to
-> persist the in-memory timestamps.
->=20
-> This gives all the filesystems the same atime behaviour. If the VFS
-> is going to expose the persistent change counter to userspace, we
-> need to have consistent, VFS enforced rules on what is coverred by
-> the change counter. If atime is not covered by the ipersistent
-> change counter, then the VFS must not ask the filesystems to persist
-> atime changes every time atime changes.
->=20
-> Then all filesystems will avoid on-disk atime updates as much as
-> possible, whilst still gathering them correctly when other
-> modifications are made.
->=20
-> Until we've got a definition of what this persistent change counter
-> actually describes and guarantees for userspace, changing filesystem
-> implementations is premature. And if it is decided that atime is not
-> going to be considered a "persistent change" by itself, then that
-> behaviour needs to be encoded at the VFS, not in individual
-> filesystems....
->=20
-> Cheers,
->=20
-> Dave.
+Hi, Darrick
 
---=20
-Jeff Layton <jlayton@kernel.org>
+How is your patch going on?  Forgive me for being so annoying.  I'm 
+afraid of missing your patch, so I'm asking for confirmation.
+
+
+--
+Thanks,
+Ruan.
+
+> 
+> --D
+> 
+>>
+>> --
+>> Thanks,
+>> Ruan.
+>>
+>>>
+>>>>
+>>>>> Notice that kill_dev_dax() does unmap_mapping_range() after invalidating
+>>>>> the dax device and that ensures that all existing mappings are gone and
+>>>>> cannot be re-established. As far as I can see a process with an existing
+>>>>> dax mapping will still be able to use it after this runs, no?
+>>>>
+>>>> I'm not sure where in akpm's tree I find kill_dev_dax()?  I'm cribbing
+>>>> off of:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/tree/fs/xfs/xfs_notify_failure.c?h=mm-stable
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/tree/drivers/dax/bus.c?h=mm-stable#n381
+>>>
+>>> Where the observation is that when device-dax is told that the device is
+>>> going away it invalidates all the active mappings to that single
+>>> character-device-inode. The hope being that in the fsdax case all the
+>>> dax-mapped filesystem inodes would experience the same irreversible
+>>> invalidation as the device is exiting.
