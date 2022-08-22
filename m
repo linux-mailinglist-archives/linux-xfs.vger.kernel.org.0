@@ -2,43 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9042F59BFDE
-	for <lists+linux-xfs@lfdr.de>; Mon, 22 Aug 2022 14:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7BCB59C0AA
+	for <lists+linux-xfs@lfdr.de>; Mon, 22 Aug 2022 15:34:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbiHVM4i (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 22 Aug 2022 08:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33944 "EHLO
+        id S235151AbiHVNdR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 22 Aug 2022 09:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229565AbiHVM4h (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Aug 2022 08:56:37 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0B13B7DC;
-        Mon, 22 Aug 2022 05:56:35 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MBC2T1sTrz1N7Vq;
-        Mon, 22 Aug 2022 20:53:05 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by dggpemm500022.china.huawei.com
- (7.185.36.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Mon, 22 Aug
- 2022 20:56:32 +0800
-From:   Zeng Heng <zengheng4@huawei.com>
-To:     <djwong@kernel.org>
-CC:     <liwei391@huawei.com>, <yangyingliang@huawei.com>,
-        <zhangxiaoxu5@huawei.com>, <weiyongjun1@huawei.com>,
-        <zengheng4@huawei.com>, <linux-xfs@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] xfs: remove the redundant word in comment
-Date:   Mon, 22 Aug 2022 21:04:33 +0800
-Message-ID: <20220822130433.3079523-1-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S234147AbiHVNdQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 22 Aug 2022 09:33:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D223A1A3;
+        Mon, 22 Aug 2022 06:33:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 70D9661190;
+        Mon, 22 Aug 2022 13:33:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA37C433C1;
+        Mon, 22 Aug 2022 13:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661175191;
+        bh=XXoXVTwv4p663PKv29Ug+s5+Q9mMsY4SeFyX9qyLO3k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Y69UKGM3eqjCqXyVWILpXzm3HHnUVFNxp9O49y6Uz020SjbEOnQ4/P8B2pM+W1hs2
+         /GM9JeR3zf2RcUC5Ny249iiba1/ICi2MjjuTVaRHGVkExESDkP9gH6T/cDI8v8d/Fk
+         izGGAvfChPCWKEU0EQmHFmplhUevqkTRzzkd/XuCZCmhGfVE5bPj/DY4w9ND61FK5D
+         ShR8eN1uSEWbYWFZ81iMXtdFMCZD+rCa6dpozxQe3NGEyYf/9yo/X3tTvR6JPD6Lmu
+         cILu31VAIMpU6t7r4/dfPznXwM5uVfruXtQUYl3T0pankxf7T2VMYHUHKfiBA1i/WH
+         1FFgDiUOli0xA==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCH] iversion: update comments with info about atime updates
+Date:   Mon, 22 Aug 2022 09:33:09 -0400
+Message-Id: <20220822133309.86005-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500022.china.huawei.com (7.185.36.162)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -47,26 +54,48 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Just remove the redundant word "being" in comment.
+Add an explicit paragraph codifying that atime updates due to reads
+should not be counted against the i_version counter. None of the
+existing subsystems that use the i_version want those counted, and
+there is an easy workaround for those that do.
 
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+Cc: NeilBrown <neilb@suse.de>
+Cc: Trond Myklebust <trondmy@hammerspace.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Link: https://lore.kernel.org/linux-xfs/166086932784.5425.17134712694961326033@noble.neil.brown.name/#t
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/xfs/xfs_inode_item.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/iversion.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index 6e19ece916bf..ca2941ab6cbc 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -550,7 +550,7 @@ xfs_inode_item_push(
- 
- 	if (!bp || (ip->i_flags & XFS_ISTALE)) {
- 		/*
--		 * Inode item/buffer is being being aborted due to cluster
-+		 * Inode item/buffer is being aborted due to cluster
- 		 * buffer deletion. Trigger a log force to have that operation
- 		 * completed and items removed from the AIL before the next push
- 		 * attempt.
+diff --git a/include/linux/iversion.h b/include/linux/iversion.h
+index 3bfebde5a1a6..da6cc1cc520a 100644
+--- a/include/linux/iversion.h
++++ b/include/linux/iversion.h
+@@ -9,8 +9,8 @@
+  * ---------------------------
+  * The change attribute (i_version) is mandated by NFSv4 and is mostly for
+  * knfsd, but is also used for other purposes (e.g. IMA). The i_version must
+- * appear different to observers if there was a change to the inode's data or
+- * metadata since it was last queried.
++ * appear different to observers if there was an explicit change to the inode's
++ * data or metadata since it was last queried.
+  *
+  * Observers see the i_version as a 64-bit number that never decreases. If it
+  * remains the same since it was last checked, then nothing has changed in the
+@@ -18,6 +18,12 @@
+  * anything about the nature or magnitude of the changes from the value, only
+  * that the inode has changed in some fashion.
+  *
++ * Note that atime updates due to reads or similar activity do _not_ represent
++ * an explicit change to the inode. If the only change is to the atime and it
++ * wasn't set via utimes() or a similar mechanism, then i_version should not be
++ * incremented. If an observer cares about atime updates, it should plan to
++ * fetch and store them in conjunction with the i_version.
++ *
+  * Not all filesystems properly implement the i_version counter. Subsystems that
+  * want to use i_version field on an inode should first check whether the
+  * filesystem sets the SB_I_VERSION flag (usually via the IS_I_VERSION macro).
 -- 
-2.25.1
+2.37.2
 
