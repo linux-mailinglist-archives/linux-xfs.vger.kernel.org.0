@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D8B59E674
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:02:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 55E0459E677
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244197AbiHWQBp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Aug 2022 12:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47212 "EHLO
+        id S244515AbiHWQCO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Aug 2022 12:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244172AbiHWQA2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:00:28 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1514E23DF18;
-        Tue, 23 Aug 2022 05:12:10 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id v7-20020a1cac07000000b003a6062a4f81so9455588wme.1;
-        Tue, 23 Aug 2022 05:12:10 -0700 (PDT)
+        with ESMTP id S244296AbiHWQAn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:00:43 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B8CE0FFD;
+        Tue, 23 Aug 2022 05:12:17 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id r16so16750935wrm.6;
+        Tue, 23 Aug 2022 05:12:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=gbSayT4EtNiq0syTNIIlLCojXVFXd1TeIsCo+4i/G4I=;
-        b=KDQOLrNkbPuciKMdeVWT8rUrIHPAgOFK9HS4HWlj8QYGLRxrp20dpuGMf2WpI9MgN6
-         sE/1CV3u4jztacPwUpFfPtl7sGeWFgXx4mijyDiNtzRTLCcu11p5N6d/CCyT2EOw7Af/
-         nLvm1Mtbp5VcvwzRRwKOfd/wQ8ekO1yaoV80lynOWsyi8cJe3iMhTebO5NNszFNjrnRL
-         G8ERDoyx9+bZAkIPgTI9akXtfmfOYlVrKO/LWBhFEvzaTMp7+Zui6JpelEJzWS/hRrWb
-         oe+Fxwl9l8eF1eFsemuDPYMXI1v+VeDIVrVrqVva5jpVopjK2l2XJHABhLiPSG6wSE+F
-         73Dg==
+        bh=haOSYz+6QrKmwaD4BrFpRocUIGNsBlWlnI4UVn7k7XM=;
+        b=IWFHNFKxPBd87IynPPP9ZcVhwZYPfgzUy2oQ2ZS4mCd9zGqhQTknGrnv4q2v/o6mA7
+         EX5D+DMlkxxMg6H7XefzSCavmo9wsu3D0xGm+oxWWqFSLTrktbqoobVdNWeg1tPSi1tQ
+         OeX21yT7IvyQgvB5QD1nEU/LvPQxihMRsqDfpa/BYLgz4kqj6oQ5qUvdG9rKkjlnqXV7
+         nI/PWFIjVb16sYv2u7323DoqB87K7gK1nRWQZ0KihK03cg+elzbqy7OycoBYw3smniFj
+         mXxbuYJpjl1rhvcQMPASEPoSnFgcY1uTZfGSBAnb7dloP5kyBVg71I8eSyYO3c1YYcPH
+         zvdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=gbSayT4EtNiq0syTNIIlLCojXVFXd1TeIsCo+4i/G4I=;
-        b=6+FZPC6dus0kvEI5JpvocfH+0mor7Ib6lmh2HvoK09v+cNJqIPhGIsvye02bVjEHBX
-         rteulBa84aLMxfsxGzBJ0ShOLzWoeJwY20aUNf6aKVEGb//+FR6i9vmHWzqUZMxlqC5p
-         vAFWt26CnauIlAd/tYDF9dwVynCwHUV4jcfgfnMNIxf2vDMhY+g810dNsxRatE37PzUr
-         1vc+w+b9plBVC1lQ8ggzboJr3B15aSRQ+z0mjdf17Gep6jhIKMY+zTblqyMUQ79N2Lay
-         BYGveWsXxCth5tibDKkWTorvGSB54Muz0kO/NFntaLpfjgx9Z/aGhjB+IM5pRcOgjJsE
-         FDeA==
-X-Gm-Message-State: ACgBeo2iAKhIucy7GqUfF5e17CMRp6sm+hQGbITMXmsg5oMo3bgQJ8XR
-        YYtZCg+6yxlBnmERq5Pfv0OuqUIKo60=
-X-Google-Smtp-Source: AA6agR5d749vcbr7e/ElfSrikvgM2bDRN0p4ls5Xr8814lxtFP4Q4Y9KuYIgNNfSWSJQdOTOphAAsw==
-X-Received: by 2002:a1c:44d7:0:b0:3a6:725:c0a7 with SMTP id r206-20020a1c44d7000000b003a60725c0a7mr2051873wma.137.1661256707083;
-        Tue, 23 Aug 2022 05:11:47 -0700 (PDT)
+        bh=haOSYz+6QrKmwaD4BrFpRocUIGNsBlWlnI4UVn7k7XM=;
+        b=TPq74ALHpPhqilFQQvfdet57xyQ1xaDOEIwx72S0rlpciusF3iFv1BuhvWVPRY94fR
+         IF0e3G1hPVX6ivbgjwAWsOm7AUX/jlVhMYvIgRyQq3FaT6KDRDEQpXMgrKAIfonFxTLC
+         9g5CALEQEHgNBztxTtsYF8FxbikZ32mgbtn5mABCEZeOMLgtYD15zRAT8Izduo6D/1Lc
+         DKAe12no+oMoEXyjS5LS1rIIY6NhjM3olcOkRWKhMvPSgh1hxCjCxzrVQ9aJPqraSSUS
+         XB7mOwyjDDNYnnG4OBPU6/B4o+M8fnIi+s1qmaFu/Jl3sXsDSssbL1e72utvxuReQqGw
+         P9RA==
+X-Gm-Message-State: ACgBeo04x3dicO2RLylrLNtUTYQNMCzzNbMW1QkCNikMULNEgO2az6uZ
+        hd2VQg9XslSJWLVP0StaxKE=
+X-Google-Smtp-Source: AA6agR6qzAhyO++YetpH1tZ2m534iaSAoVAufpjuu3nwbgo+lmwmvpZzWMy9hkHeF399T7Ke7CIDNw==
+X-Received: by 2002:a5d:594a:0:b0:225:3606:da33 with SMTP id e10-20020a5d594a000000b002253606da33mr11254785wri.60.1661256712325;
+        Tue, 23 Aug 2022 05:11:52 -0700 (PDT)
 Received: from amir-ThinkPad-T480.lan ([77.137.66.49])
-        by smtp.gmail.com with ESMTPSA id g11-20020a05600c4ecb00b003a4c6e67f01sm24681879wmq.6.2022.08.23.05.11.45
+        by smtp.gmail.com with ESMTPSA id g11-20020a05600c4ecb00b003a4c6e67f01sm24681879wmq.6.2022.08.23.05.11.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 05:11:46 -0700 (PDT)
+        Tue, 23 Aug 2022 05:11:51 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Sasha Levin <sashal@kernel.org>,
@@ -56,12 +56,10 @@ Cc:     Sasha Levin <sashal@kernel.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Adam Manzanares <a.manzanares@samsung.com>,
         linux-xfs@vger.kernel.org, stable@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.10 v2 3/6] fs: remove __sync_filesystem
-Date:   Tue, 23 Aug 2022 15:11:33 +0300
-Message-Id: <20220823121136.1806820-4-amir73il@gmail.com>
+        Dave Chinner <dchinner@redhat.com>
+Subject: [PATCH 5.10 v2 6/6] xfs: only bother with sync_filesystem during readonly remount
+Date:   Tue, 23 Aug 2022 15:11:36 +0300
+Message-Id: <20220823121136.1806820-7-amir73il@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220823121136.1806820-1-amir73il@gmail.com>
 References: <20220823121136.1806820-1-amir73il@gmail.com>
@@ -77,82 +75,52 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: "Darrick J. Wong" <djwong@kernel.org>
 
-commit 9a208ba5c9afa62c7b1e9c6f5e783066e84e2d3c upstream.
+commit b97cca3ba9098522e5a1c3388764ead42640c1a5 upstream.
 
-[backported for dependency]
+In commit 02b9984d6408, we pushed a sync_filesystem() call from the VFS
+into xfs_fs_remount.  The only time that we ever need to push dirty file
+data or metadata to disk for a remount is if we're remounting the
+filesystem read only, so this really could be moved to xfs_remount_ro.
 
-There is no clear benefit in having this helper vs just open coding it.
+Once we've moved the call site, actually check the return value from
+sync_filesystem.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
-Link: https://lore.kernel.org/r/20211019062530.2174626-2-hch@lst.de
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 02b9984d6408 ("fs: push sync_filesystem() down to the file system's remount_fs()")
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 Acked-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/sync.c | 38 +++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
+ fs/xfs/xfs_super.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/sync.c b/fs/sync.c
-index 1373a610dc78..0d6cdc507cb9 100644
---- a/fs/sync.c
-+++ b/fs/sync.c
-@@ -21,25 +21,6 @@
- #define VALID_FLAGS (SYNC_FILE_RANGE_WAIT_BEFORE|SYNC_FILE_RANGE_WRITE| \
- 			SYNC_FILE_RANGE_WAIT_AFTER)
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index ff686cb16c7b..434c87cc9fbf 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1720,6 +1720,11 @@ xfs_remount_ro(
+ 	};
+ 	int			error;
  
--/*
-- * Do the filesystem syncing work. For simple filesystems
-- * writeback_inodes_sb(sb) just dirties buffers with inodes so we have to
-- * submit IO for these buffers via __sync_blockdev(). This also speeds up the
-- * wait == 1 case since in that case write_inode() functions do
-- * sync_dirty_buffer() and thus effectively write one block at a time.
-- */
--static int __sync_filesystem(struct super_block *sb, int wait)
--{
--	if (wait)
--		sync_inodes_sb(sb);
--	else
--		writeback_inodes_sb(sb, WB_REASON_SYNC);
--
--	if (sb->s_op->sync_fs)
--		sb->s_op->sync_fs(sb, wait);
--	return __sync_blockdev(sb->s_bdev, wait);
--}
--
- /*
-  * Write out and wait upon all dirty data associated with this
-  * superblock.  Filesystem data as well as the underlying block
-@@ -61,10 +42,25 @@ int sync_filesystem(struct super_block *sb)
- 	if (sb_rdonly(sb))
- 		return 0;
- 
--	ret = __sync_filesystem(sb, 0);
-+	/*
-+	 * Do the filesystem syncing work.  For simple filesystems
-+	 * writeback_inodes_sb(sb) just dirties buffers with inodes so we have
-+	 * to submit I/O for these buffers via __sync_blockdev().  This also
-+	 * speeds up the wait == 1 case since in that case write_inode()
-+	 * methods call sync_dirty_buffer() and thus effectively write one block
-+	 * at a time.
-+	 */
-+	writeback_inodes_sb(sb, WB_REASON_SYNC);
-+	if (sb->s_op->sync_fs)
-+		sb->s_op->sync_fs(sb, 0);
-+	ret = __sync_blockdev(sb->s_bdev, 0);
- 	if (ret < 0)
- 		return ret;
--	return __sync_filesystem(sb, 1);
++	/* Flush all the dirty data to disk. */
++	error = sync_filesystem(mp->m_super);
++	if (error)
++		return error;
 +
-+	sync_inodes_sb(sb);
-+	if (sb->s_op->sync_fs)
-+		sb->s_op->sync_fs(sb, 1);
-+	return __sync_blockdev(sb->s_bdev, 1);
- }
- EXPORT_SYMBOL(sync_filesystem);
+ 	/*
+ 	 * Cancel background eofb scanning so it cannot race with the final
+ 	 * log force+buftarg wait and deadlock the remount.
+@@ -1790,8 +1795,6 @@ xfs_fc_reconfigure(
+ 	if (error)
+ 		return error;
  
+-	sync_filesystem(mp->m_super);
+-
+ 	/* inode32 -> inode64 */
+ 	if ((mp->m_flags & XFS_MOUNT_SMALL_INUMS) &&
+ 	    !(new_mp->m_flags & XFS_MOUNT_SMALL_INUMS)) {
 -- 
 2.25.1
 
