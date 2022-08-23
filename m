@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2A9659E554
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 16:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 055FA59E676
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:02:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239085AbiHWOt4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Aug 2022 10:49:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
+        id S244435AbiHWQCN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Aug 2022 12:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240407AbiHWOtF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 10:49:05 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C113797B21;
-        Tue, 23 Aug 2022 05:12:03 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id r83-20020a1c4456000000b003a5cb389944so9446608wma.4;
-        Tue, 23 Aug 2022 05:12:03 -0700 (PDT)
+        with ESMTP id S244277AbiHWQAm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:00:42 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1508923DF17;
+        Tue, 23 Aug 2022 05:12:10 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id k6-20020a05600c1c8600b003a54ecc62f6so7616864wms.5;
+        Tue, 23 Aug 2022 05:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=Sow7EIgFIOPe6XEmV+aS5N5loSVChyRYxntO1B69FSs=;
-        b=Ky8649mVE+WHzwqepaqT2FgpL0wDvjUR3zZFJPYgGbr4jIbE0rIAQeHfHhSNPKKz25
-         mneeC29stBXPCdO84HZEw+/nFiZTIQEJrYo7objtWSjDkjYcl+VxXRmrovOniIhXnNe2
-         s3HREC7+Nc+/Ra/3SA/5nLVg3gzQblL0kmiYg6OGbtu85HdyHWLRDYwvCs2Y6mra+bF9
-         5xGtI2UtwBCjbuGyIK9w3aJeaiThVWCnRNrvLnKgWl/YFixItO1gcbHdEWSr+l9sxAW1
-         yKC6Q5WSAVMod3SrSgiVWzsxP5/Rrbo0ZlJfsCB5Y0CATN8hwGF6DW7ksTGk0u+NeChs
-         CnYA==
+        bh=Z3jS9cDd3S+epLGnpe5pOc0ThMjaHgjznjX+2D3u/4c=;
+        b=n9EtjlSKfSV+gn+H9SwZMXN73r1eEYgb1NqxTc2GgJzuTbX7WFo4Fjg2dZGqKhsnHo
+         9QBVaX6AmpLDSmzsSzGey9d3h/v8aiAfJNR7uPOZ8JO3M0oq2oPB5wRzJduwInm1O9OJ
+         EJbLFZE2aVTOeuDLkCWiBcf7gnnwmR9vzrjcR04clLazJVnAvAlXnJuC5rsAeaD4V2nj
+         W2jqpSoAQ4nBFS2/OFYcev1Wd6hnnqBivQsVKMZouGSgW7qVjIZspKW3JTT+X6Ka0oiL
+         4qoRcxKtxaX/PjgVuP7eRcCmw8iw+veYQWAUuSF6H3Nvkc6y5yQzVuUAgdey2fj8kzNc
+         PM6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=Sow7EIgFIOPe6XEmV+aS5N5loSVChyRYxntO1B69FSs=;
-        b=mU0N17G2sjobCFgO2KrxBbFc0trsCwWwIoYPh5GxhorZQHstj7ck7SaatRbYR5KOMv
-         lofXWmvVP4J0aQnKmEgCJXTSU4D9m1vkNcv2RN/s+UPqXnuLskY/T2ExD+SOBoE11is4
-         JySLid3gQWBwrrwUM9zXvwGJZar0/w1Ck8PVynkQ7oC5dy+QR+2SzORyBv6ElcxF8i/u
-         DjDuoL95hy2Wh44s4itvbWV+NQNt8wjOsgstF0aVELuCygV6F+k4yy/kwzt/h+C7KO0r
-         JSQLYwukGAwiOQTShQoOn/8+cWqCDXD5sET2XoewOnrmQmVPks5GHgVtQG7VdYMzDtun
-         djpA==
-X-Gm-Message-State: ACgBeo378UwbqX+X2sEVdmzPkgy/ne2AD3hysaCG8kScGu/o7cSNKlFD
-        7N7xBkWgEmya/2Ju4KoTu5DYadFliHU=
-X-Google-Smtp-Source: AA6agR7oAH/cSRHFfc4FSK2qKs7uJVSinXKvXhgxBHNr1phYKGTWcmQlGdzio6TXvzTMrLjIOor41w==
-X-Received: by 2002:a7b:cb9a:0:b0:3a6:632d:5ee8 with SMTP id m26-20020a7bcb9a000000b003a6632d5ee8mr1944457wmi.175.1661256703534;
-        Tue, 23 Aug 2022 05:11:43 -0700 (PDT)
+        bh=Z3jS9cDd3S+epLGnpe5pOc0ThMjaHgjznjX+2D3u/4c=;
+        b=KdWtNQKP3ThcMtHLANue2UzJAOMScqkWKJ3+Vd52V9bDVdpNUZqHQo5F8s0+8juSc3
+         IvPunziJEqI4q+m8llBvhdqUTwLPCRMsHdu0pGuqOWwhHpKUEyWkSEam9LuZHNoMopzZ
+         mBp8vYuJCCd0VB0q4yIqaqu2RMJN0yIlO502Kgvt+eu+tG8+pBVCDrwXIWGaCnYERswb
+         zElymteCKl0gdGxafEhcUrby4y6J07FFy7dgsVYXwaFTbbfrkuGq3bxLeyHzMrA42c1D
+         RNcq9j+HFNxChG2Z/oBV3aw8jRnCAnEK3jpaL24rjPY9hmU+XJrkni9QJgaWThYLfErM
+         EAkg==
+X-Gm-Message-State: ACgBeo01FTpn3f9ycIn31/xQagXZb2CkzzYjgj2XLNemJARI31edAX9e
+        BUxsEssJ+EoyuOPDSfIKDCc=
+X-Google-Smtp-Source: AA6agR7P7GVOlr1FjIyCJFQdTjBjUUb9Re01MeZl/ZF5E65SoCa+GuB6SAY+xdXUwY2mxguF+ZNv1w==
+X-Received: by 2002:a05:600c:1f11:b0:3a5:3df9:4859 with SMTP id bd17-20020a05600c1f1100b003a53df94859mr1942884wmb.175.1661256705272;
+        Tue, 23 Aug 2022 05:11:45 -0700 (PDT)
 Received: from amir-ThinkPad-T480.lan ([77.137.66.49])
-        by smtp.gmail.com with ESMTPSA id g11-20020a05600c4ecb00b003a4c6e67f01sm24681879wmq.6.2022.08.23.05.11.42
+        by smtp.gmail.com with ESMTPSA id g11-20020a05600c4ecb00b003a4c6e67f01sm24681879wmq.6.2022.08.23.05.11.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 05:11:43 -0700 (PDT)
+        Tue, 23 Aug 2022 05:11:44 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Sasha Levin <sashal@kernel.org>,
@@ -56,10 +56,11 @@ Cc:     Sasha Levin <sashal@kernel.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Adam Manzanares <a.manzanares@samsung.com>,
         linux-xfs@vger.kernel.org, stable@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 5.10 v2 1/6] xfs: prevent a WARN_ONCE() in xfs_ioc_attr_list()
-Date:   Tue, 23 Aug 2022 15:11:31 +0300
-Message-Id: <20220823121136.1806820-2-amir73il@gmail.com>
+        Allison Henderson <allison.henderson@oracle.com>,
+        Catherine Hoang <catherine.hoang@oracle.com>
+Subject: [PATCH 5.10 v2 2/6] xfs: reject crazy array sizes being fed to XFS_IOC_GETBMAP*
+Date:   Tue, 23 Aug 2022 15:11:32 +0300
+Message-Id: <20220823121136.1806820-3-amir73il@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220823121136.1806820-1-amir73il@gmail.com>
 References: <20220823121136.1806820-1-amir73il@gmail.com>
@@ -75,60 +76,49 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: "Darrick J. Wong" <djwong@kernel.org>
 
-commit 6ed6356b07714e0198be3bc3ecccc8b40a212de4 upstream.
+commit 29d650f7e3ab55283b89c9f5883d0c256ce478b5 upstream.
 
-The "bufsize" comes from the root user.  If "bufsize" is negative then,
-because of type promotion, neither of the validation checks at the start
-of the function are able to catch it:
+Syzbot tripped over the following complaint from the kernel:
 
-	if (bufsize < sizeof(struct xfs_attrlist) ||
-	    bufsize > XFS_XATTR_LIST_MAX)
-		return -EINVAL;
+WARNING: CPU: 2 PID: 15402 at mm/util.c:597 kvmalloc_node+0x11e/0x125 mm/util.c:597
 
-This means "bufsize" will trigger (WARN_ON_ONCE(size > INT_MAX)) in
-kvmalloc_node().  Fix this by changing the type from int to size_t.
+While trying to run XFS_IOC_GETBMAP against the following structure:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+struct getbmap fubar = {
+	.bmv_count	= 0x22dae649,
+};
+
+Obviously, this is a crazy huge value since the next thing that the
+ioctl would do is allocate 37GB of memory.  This is enough to make
+kvmalloc mad, but isn't large enough to trip the validation functions.
+In other words, I'm fussing with checks that were **already sufficient**
+because that's easier than dealing with 644 internal bug reports.  Yes,
+that's right, six hundred and forty-four.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
+Reviewed-by: Catherine Hoang <catherine.hoang@oracle.com>
 Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 Acked-by: Darrick J. Wong <djwong@kernel.org>
 ---
  fs/xfs/xfs_ioctl.c | 2 +-
- fs/xfs/xfs_ioctl.h | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 646735aad45d..d973350d5946 100644
+index d973350d5946..103fa8381e7d 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -371,7 +371,7 @@ int
- xfs_ioc_attr_list(
- 	struct xfs_inode		*dp,
- 	void __user			*ubuf,
--	int				bufsize,
-+	size_t				bufsize,
- 	int				flags,
- 	struct xfs_attrlist_cursor __user *ucursor)
- {
-diff --git a/fs/xfs/xfs_ioctl.h b/fs/xfs/xfs_ioctl.h
-index bab6a5a92407..416e20de66e7 100644
---- a/fs/xfs/xfs_ioctl.h
-+++ b/fs/xfs/xfs_ioctl.h
-@@ -38,8 +38,9 @@ xfs_readlink_by_handle(
- int xfs_ioc_attrmulti_one(struct file *parfilp, struct inode *inode,
- 		uint32_t opcode, void __user *uname, void __user *value,
- 		uint32_t *len, uint32_t flags);
--int xfs_ioc_attr_list(struct xfs_inode *dp, void __user *ubuf, int bufsize,
--	int flags, struct xfs_attrlist_cursor __user *ucursor);
-+int xfs_ioc_attr_list(struct xfs_inode *dp, void __user *ubuf,
-+		      size_t bufsize, int flags,
-+		      struct xfs_attrlist_cursor __user *ucursor);
+@@ -1689,7 +1689,7 @@ xfs_ioc_getbmap(
  
- extern struct dentry *
- xfs_handle_to_dentry(
+ 	if (bmx.bmv_count < 2)
+ 		return -EINVAL;
+-	if (bmx.bmv_count > ULONG_MAX / recsize)
++	if (bmx.bmv_count >= INT_MAX / recsize)
+ 		return -ENOMEM;
+ 
+ 	buf = kvzalloc(bmx.bmv_count * sizeof(*buf), GFP_KERNEL);
 -- 
 2.25.1
 
