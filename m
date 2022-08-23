@@ -2,48 +2,49 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEB3659E7D2
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7320A59E78F
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:40:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245351AbiHWQrF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Aug 2022 12:47:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39152 "EHLO
+        id S244934AbiHWQih (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Aug 2022 12:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343784AbiHWQqO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:46:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D8A7C7FAF;
-        Tue, 23 Aug 2022 07:28:34 -0700 (PDT)
+        with ESMTP id S244954AbiHWQh6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:37:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D529BB41;
+        Tue, 23 Aug 2022 07:43:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BB566B8191E;
-        Tue, 23 Aug 2022 14:28:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61A7BC433C1;
-        Tue, 23 Aug 2022 14:28:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E840615A1;
+        Tue, 23 Aug 2022 14:43:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC84C433D6;
+        Tue, 23 Aug 2022 14:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661264911;
-        bh=1MtnzPedujxaeQqskAInC5MQZi5DdXIRqiIgbQJ0P9s=;
+        s=k20201202; t=1661265834;
+        bh=U6jRPh8vjbsJky5sN8ChZLF2pMdZd2lpZNkdDx2ZLs4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dyf8o4L+Yq3k5XdvTdot1BN3t7UxqOaNp3TGIpnRFxakOVhzWguSCHg6CAbMnxWrs
-         eEA5MxDPJwxC2Iuwr+rc077XBhL92lpmPspJjUq5IXAQ194rFq6RXXHGBuipskbFmQ
-         qQckzge/40HfzFDwUq+gTiHkKlbrYTJsNnm6v07WVhQ19oO4DY/d39poyTwPCMgAIY
-         mH4FH/dhkE1evJ9Yugh9ci13tclREExLnkQNRByjmk9GPr72DwAHcncjQMNpCEBS35
-         vu82Cr75Vin0ZaTrY97LJr1BmUVj5KwIXnGDO76wHkWWsnl2j1FeXPz7JjGu2P9YoH
-         y+4x6k19cDbJA==
-Date:   Tue, 23 Aug 2022 07:28:30 -0700
+        b=FmtSdjbD3Jt3h4M6fM+8yFnOvZn3JjCijyYPaSmBmaehplcAJed+lwN12H4LtyK3m
+         NL3mvLftbYVPPTMeLhKOoE63c9XtdDyJMXX6z2Z0+kHBVCBLyY22lk99CKUZX1mlPl
+         c73OX0ZEv1ImdrYmXeLdDjp6KaQWz8omFP6NS8mHKqzrLeh6iQTkQqXQSmcKtG4kaD
+         o1inyZRzGETMDFo/hP1i4ZFnVS0Bnh9xc88tHmodqEycycSEgPvYxR7g+8MJWrHpav
+         lQtiAtu988yQ4f1dzm2byZ1sV20YVH7F8S7E+0YVVdCTR8JW1SJFizF0olX+rQpkbO
+         L3WIccwFSsZZw==
+Date:   Tue, 23 Aug 2022 07:43:54 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Chandan Babu R <chandan.babu@oracle.com>
-Cc:     fstests@vger.kernel.org, zlang@kernel.org,
+To:     Zorro Lang <zlang@kernel.org>
+Cc:     fstests@vger.kernel.org, amir73il@gmail.com, sandeen@redhat.com,
         linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: Check if a direct write can result in a false
- ENOSPC error
-Message-ID: <YwTkDrlpzPc2TXDC@magnolia>
-References: <20220823090433.1164296-1-chandan.babu@oracle.com>
+Subject: Re: [PATCH v2] generic: new test to verify selinux label of whiteout
+ inode
+Message-ID: <YwTnqpnK9rH7Ori4@magnolia>
+References: <20220714145632.998355-1-zlang@kernel.org>
+ <20220725061327.266746-1-zlang@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220823090433.1164296-1-chandan.babu@oracle.com>
+In-Reply-To: <20220725061327.266746-1-zlang@kernel.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -54,111 +55,115 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Aug 23, 2022 at 02:34:33PM +0530, Chandan Babu R wrote:
-> This commit adds a test to check if a direct write on a delalloc extent
-> present in CoW fork can result in a false ENOSPC error. The bug has been fixed
-> by upstream commit d62113303d691 ("xfs: Fix false ENOSPC when performing
-> direct write on a delalloc extent in cow fork").
+On Mon, Jul 25, 2022 at 02:13:27PM +0800, Zorro Lang wrote:
+> A but on XFS cause renameat2() with flags=RENAME_WHITEOUT doesn't
+> apply an selinux label. That's quite different with other fs (e.g.
+> ext4, tmpfs).
 > 
-> Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
+> Signed-off-by: Zorro Lang <zlang@kernel.org>
 > ---
->  tests/xfs/553     | 63 +++++++++++++++++++++++++++++++++++++++++++++++
->  tests/xfs/553.out |  9 +++++++
->  2 files changed, 72 insertions(+)
->  create mode 100755 tests/xfs/553
->  create mode 100644 tests/xfs/553.out
 > 
-> diff --git a/tests/xfs/553 b/tests/xfs/553
+> Thanks the review points from Amir, this v2 did below changes:
+> 1) Add "whiteout" group
+> 2) Add commit ID from xfs-linux xfs-5.20-merge-2 (will change if need)
+> 3) Rebase to latest fstests for-next branch
+> 
+> Thanks,
+> Zorro
+> 
+>  tests/generic/693     | 64 +++++++++++++++++++++++++++++++++++++++++++
+>  tests/generic/693.out |  2 ++
+>  2 files changed, 66 insertions(+)
+>  create mode 100755 tests/generic/693
+>  create mode 100644 tests/generic/693.out
+> 
+> diff --git a/tests/generic/693 b/tests/generic/693
 > new file mode 100755
-> index 00000000..78ed0995
+> index 00000000..adf191c4
 > --- /dev/null
-> +++ b/tests/xfs/553
-> @@ -0,0 +1,63 @@
+> +++ b/tests/generic/693
+> @@ -0,0 +1,64 @@
 > +#! /bin/bash
 > +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2022 Oracle.  All Rights Reserved.
+> +# Copyright (c) 2022 Red Hat, Copyright.  All Rights Reserved.
 > +#
-> +# FS QA Test 553
+> +# FS QA Test No. 693
 > +#
-> +# Test to check if a direct write on a delalloc extent present in CoW fork can
-> +# result in an ENOSPC error.
+> +# Verify selinux label can be kept after RENAME_WHITEOUT. This is
+> +# a regression test for:
+> +#   70b589a37e1a ("xfs: add selinux labels to whiteout inodes")
 > +#
 > +. ./common/preamble
-> +_begin_fstest auto quick clone
+> +_begin_fstest auto quick rename attr whiteout
 > +
 > +# Import common functions.
-> +. ./common/reflink
-> +. ./common/inject
+> +. ./common/attr
+> +. ./common/renameat2
 > +
 > +# real QA test starts here
-> +_supported_fs xfs
-> +_fixed_by_kernel_commit d62113303d691 \
-> +	"xfs: Fix false ENOSPC when performing direct write on a delalloc extent in cow fork"
-> +_require_scratch_reflink
-> +_require_xfs_debug
-> +_require_test_program "punch-alternating"
-> +_require_xfs_io_error_injection "bmap_alloc_minlen_extent"
-> +_require_xfs_io_command "reflink"
-> +_require_xfs_io_command "cowextsize"
+> +_supported_fs generic
+> +_require_scratch
+> +_require_attrs
+> +_require_renameat2 whiteout
 > +
-> +source=${SCRATCH_MNT}/source
-> +destination=${SCRATCH_MNT}/destination
-> +fragmented_file=${SCRATCH_MNT}/fragmented_file
+> +_fixed_by_kernel_commit 70b589a37e1a \
+> +	xfs: add selinux labels to whiteout inodes
 > +
-> +echo "Format and mount fs"
-> +_scratch_mkfs >> $seqres.full
-> +_scratch_mount >> $seqres.full
+> +get_selinux_label()
+> +{
+> +	local label
 > +
-> +echo "Create source file"
-> +$XFS_IO_PROG -f -c "pwrite 0 32M" $source >> $seqres.full
+> +	label=`_getfattr --absolute-names -n security.selinux $@ | sed -n 's/security.selinux=\"\(.*\)\"/\1/p'`
+> +	if [ ${PIPESTATUS[0]} -ne 0 -o -z "$label" ];then
+> +		_fail "Fail to get selinux label: $label"
+> +	fi
+> +	echo $label
+> +}
 > +
-> +echo "Reflink destination file with source file"
-> +$XFS_IO_PROG -f -c "reflink $source" $destination >> $seqres.full
+> +_scratch_mkfs >> $seqres.full 2>&1
+> +# SELINUX_MOUNT_OPTIONS will be set in common/config if selinux is enabled
+> +if [ -z "$SELINUX_MOUNT_OPTIONS" ]; then
+> +	_notrun "Require selinux to be enabled"
+> +fi
+> +# This test need to verify selinux labels in objects, so unset this selinux
+> +# mount option
+> +export SELINUX_MOUNT_OPTIONS=""
+> +_scratch_mount
 > +
-> +echo "Set destination file's cowextsize"
-> +$XFS_IO_PROG -c "cowextsize 16M" $destination >> $seqres.full
-> +
-> +echo "Fragment FS"
-> +$XFS_IO_PROG -f -c "pwrite 0 64M" $fragmented_file >> $seqres.full
-> +sync
-> +$here/src/punch-alternating $fragmented_file >> $seqres.full
-> +
-> +echo "Inject bmap_alloc_minlen_extent error tag"
-> +_scratch_inject_error bmap_alloc_minlen_extent 1
-> +
-> +echo "Create 16MiB delalloc extent in destination file's CoW fork"
-> +$XFS_IO_PROG -c "pwrite 0 4k" $destination >> $seqres.full
-> +
-> +sync
-> +
-> +echo "Direct I/O write at 12k file offset in destination file"
-> +$XFS_IO_PROG -d -c "pwrite 12k 8k" $destination >> $seqres.full
+> +touch $SCRATCH_MNT/f1
+> +echo "Before RENAME_WHITEOUT" >> $seqres.full
+> +ls -lZ $SCRATCH_MNT >> $seqres.full 2>&1
+> +# Expect f1 and f2 have same label after RENAME_WHITEOUT
+> +$here/src/renameat2 -w $SCRATCH_MNT/f1 $SCRATCH_MNT/f2
+> +echo "After RENAME_WHITEOUT" >> $seqres.full
+> +ls -lZ $SCRATCH_MNT >> $seqres.full 2>&1
+> +label1=`get_selinux_label $SCRATCH_MNT/f1`
+> +label2=`get_selinux_label $SCRATCH_MNT/f2`
 
-Does this still work if the blocksize is 64k? ;)
-
-(The rest of the test code looks ok to me)
+The operations of this test look ok to me, but the piece I do not know
+is the higher level context of whether or not it's appropriate for
+whiteout inodes to have selinux labels, or if the selinux developers
+even care.  Perhaps they should be cc'd?  (And maybe I should've made
+Eric do that for the kernel patch...sigh...)
 
 --D
 
+> +if [ "$label1" != "$label2" ];then
+> +	echo "$label1 != $label2"
+> +fi
 > +
+> +echo "Silence is golden"
 > +# success, all done
 > +status=0
 > +exit
-> diff --git a/tests/xfs/553.out b/tests/xfs/553.out
+> diff --git a/tests/generic/693.out b/tests/generic/693.out
 > new file mode 100644
-> index 00000000..a2e91678
+> index 00000000..01884ea5
 > --- /dev/null
-> +++ b/tests/xfs/553.out
-> @@ -0,0 +1,9 @@
-> +QA output created by 553
-> +Format and mount fs
-> +Create source file
-> +Reflink destination file with source file
-> +Set destination file's cowextsize
-> +Fragment FS
-> +Inject bmap_alloc_minlen_extent error tag
-> +Create 16MiB delalloc extent in destination file's CoW fork
-> +Direct I/O write at 12k file offset in destination file
+> +++ b/tests/generic/693.out
+> @@ -0,0 +1,2 @@
+> +QA output created by 693
+> +Silence is golden
 > -- 
-> 2.35.1
+> 2.31.1
 > 
