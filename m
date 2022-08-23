@@ -2,121 +2,139 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AA4659E686
-	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:03:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEC9859E7F6
+	for <lists+linux-xfs@lfdr.de>; Tue, 23 Aug 2022 18:51:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244528AbiHWQCQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 23 Aug 2022 12:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
+        id S245517AbiHWQrg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 23 Aug 2022 12:47:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244210AbiHWQAa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:00:30 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDD3B23DF27;
-        Tue, 23 Aug 2022 05:12:12 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id k9so16786154wri.0;
-        Tue, 23 Aug 2022 05:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=f8IqA0rpja1ryiZArx8DZuQ4CdrVRu4KVeHRxdOu9GI=;
-        b=CsIGt9C4asU+NYNytquhInvoQbT9oe+codzK0OaRlvg2WwtOoSVv7JxzQAPTkzk+XX
-         UwLlQ7zasv2ZfdS8Bp/+G9VUL9QwRF6z6teKb/sGjJ51jdzRFCQGhDXPH4lr+KGEs6Gq
-         GnRb7ukT6f6xSD6JSe7/xY4IBxupIpJ1ijPKrGGdOk8e6BQO+T/yE0eoJTJtm5E7y+4J
-         9GnCWv5jSPBnY3lfYyiwQkYXPePHE0l9LC44A2kkYDwqCQqF3oSQHk1PzkGlFxtrfSzQ
-         MJm1bz6M6T1k62Sx6o1AS4qCRskAnfyTv7vm8pyJpsmoPKsUfSDCMTea14aMnWnS5b7N
-         shwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=f8IqA0rpja1ryiZArx8DZuQ4CdrVRu4KVeHRxdOu9GI=;
-        b=fw6mdA1XCxeVOT/cPEsTh5NvVe3y71aNLCsPrcnvvXkOU3Ai3FZWJCT9AdIMrk3u3I
-         U6A2ePQXvjQqEG6VfvV9JbUFi511zgUyKlDCO3FM8YMunpVJSu+pCWwQ6nJqR2SNmlJ7
-         jRKMfAvXQ8iAi0+bi/jfuaFUMDcEvHAOHonLyZrVSW+wUQCOp93rDFYzdUSvfwsd9RRY
-         OxuHDyTPbVS5xHenOQ18H/UguRvBvkqpnUVb+oKP2j0zEsevFSggGvW0ShuDSt7aPV//
-         0WwG5rOu125HYv5aGIoFMrvoIMA4CTG4avZZ1XhD0RybcE7MF6z2TLNtD5PjaADGB4Ap
-         GXvw==
-X-Gm-Message-State: ACgBeo2dbq2UIp4mkJOdIgYem77CzVOkR40JFW2VFGl/vSn/qLqHQSTN
-        Kb7tlRx/WAgmHoTDfmO3oRQ=
-X-Google-Smtp-Source: AA6agR7QAecD3Uza+N1Psk5KAyKqmg9ikvTmMDSFLjRdGmzB1CrPo9LKPLKEXJN3YpJrlaWZdlGWng==
-X-Received: by 2002:a05:6000:1885:b0:225:5d24:7ccf with SMTP id a5-20020a056000188500b002255d247ccfmr4191966wri.215.1661256710688;
-        Tue, 23 Aug 2022 05:11:50 -0700 (PDT)
-Received: from amir-ThinkPad-T480.lan ([77.137.66.49])
-        by smtp.gmail.com with ESMTPSA id g11-20020a05600c4ecb00b003a4c6e67f01sm24681879wmq.6.2022.08.23.05.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 05:11:50 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Leah Rumancik <leah.rumancik@gmail.com>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Adam Manzanares <a.manzanares@samsung.com>,
-        linux-xfs@vger.kernel.org, stable@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <brauner@kernel.org>
-Subject: [PATCH 5.10 v2 5/6] xfs: return errors in xfs_fs_sync_fs
-Date:   Tue, 23 Aug 2022 15:11:35 +0300
-Message-Id: <20220823121136.1806820-6-amir73il@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220823121136.1806820-1-amir73il@gmail.com>
-References: <20220823121136.1806820-1-amir73il@gmail.com>
+        with ESMTP id S1344205AbiHWQq4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 23 Aug 2022 12:46:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A028C7436;
+        Tue, 23 Aug 2022 07:25:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DF2B5615A8;
+        Tue, 23 Aug 2022 14:25:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDEFC433C1;
+        Tue, 23 Aug 2022 14:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661264740;
+        bh=HYR1Nqy5GDUx1o1Dte+qnx5P34XauDkV8xn4Z6FHDfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HDfdRj6FoLpL5SwyUT9huPnbxiEAdPaHNFOA6FncnGRxTyfp+TN8pY9om2rBGc8nZ
+         rdDiEb313MtevfBGSlXPDFEoSG6j8rgTIZO/sWhs5ytVOk6ix8XUdC5DB9uZZLuuwz
+         eRmIH9blQerJ/4zu3+oiQ7n59DDKU+Go5E8Y9SOFXwpzEecN912WD4cEdx1DHD16Xg
+         vZG6yNfpzyX2kPlj4BPK+ulb5axpe0G30apzFStBVi7dFFXjMlqrL+87IwM18V0Be2
+         3hf1ynE19bBL0jnGd8UT4dR122lLxhP6pgbS/KCLBB1gKmRGHC/Lxvj4/r7ROgEkIz
+         HCMAueCrrVRQQ==
+Date:   Tue, 23 Aug 2022 07:25:39 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     zhaomzhao@126.com
+Cc:     corbet@lwn.net, linux-xfs@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhao Mengmeng <zhaomengmeng@kylinos.cn>
+Subject: Re: [PATCH v1] Documentation: filesystems: xfs: update pseudocode
+ and typo fixes
+Message-ID: <YwTjYxhhuJBZ9h8Z@magnolia>
+References: <20220823013653.203469-1-zhaomzhao@126.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220823013653.203469-1-zhaomzhao@126.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: "Darrick J. Wong" <djwong@kernel.org>
+On Mon, Aug 22, 2022 at 09:36:53PM -0400, zhaomzhao@126.com wrote:
+> From: Zhao Mengmeng <zhaomengmeng@kylinos.cn>
+> 
+> According to the implementation of xfs_trans_roll(), it calls
+> xfs_trans_reserve(), which reserves not only log space, but also
+> free disk blocks. In short, the "transaction stuff". So change
+> xfs_log_reserve() to xfs_trans_reserve().
+> 
+> Besides, fix several typo issues.
+> 
+> Signed-off-by: Zhao Mengmeng <zhaomengmeng@kylinos.cn>
+> ---
+>  .../filesystems/xfs-delayed-logging-design.rst       | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/xfs-delayed-logging-design.rst b/Documentation/filesystems/xfs-delayed-logging-design.rst
+> index 4ef419f54663..02b32030bab3 100644
+> --- a/Documentation/filesystems/xfs-delayed-logging-design.rst
+> +++ b/Documentation/filesystems/xfs-delayed-logging-design.rst
+> @@ -100,7 +100,7 @@ transactions together::
+>  
+>  	ntp = xfs_trans_dup(tp);
+>  	xfs_trans_commit(tp);
+> -	xfs_log_reserve(ntp);
+> +	xfs_trans_reserve(ntp);
+>  
+>  This results in a series of "rolling transactions" where the inode is locked
+>  across the entire chain of transactions.  Hence while this series of rolling
+> @@ -191,7 +191,7 @@ transaction rolling mechanism to re-reserve space on every transaction roll. We
+>  know from the implementation of the permanent transactions how many transaction
+>  rolls are likely for the common modifications that need to be made.
+>  
+> -For example, and inode allocation is typically two transactions - one to
+> +For example, an inode allocation is typically two transactions - one to
+>  physically allocate a free inode chunk on disk, and another to allocate an inode
+>  from an inode chunk that has free inodes in it.  Hence for an inode allocation
+>  transaction, we might set the reservation log count to a value of 2 to indicate
+> @@ -200,7 +200,7 @@ chain. Each time a permanent transaction rolls, it consumes an entire unit
+>  reservation.
+>  
+>  Hence when the permanent transaction is first allocated, the log space
+> -reservation is increases from a single unit reservation to multiple unit
+> +reservation is increased from a single unit reservation to multiple unit
+>  reservations. That multiple is defined by the reservation log count, and this
+>  means we can roll the transaction multiple times before we have to re-reserve
+>  log space when we roll the transaction. This ensures that the common
+> @@ -259,7 +259,7 @@ the next transaction in the sequeunce, but we have none remaining. We cannot
+>  sleep during the transaction commit process waiting for new log space to become
+>  available, as we may end up on the end of the FIFO queue and the items we have
+>  locked while we sleep could end up pinning the tail of the log before there is
+> -enough free space in the log to fulfil all of the pending reservations and
+> +enough free space in the log to fulfill all of the pending reservations and
+>  then wake up transaction commit in progress.
+>  
+>  To take a new reservation without sleeping requires us to be able to take a
+> @@ -615,7 +615,7 @@ those changes into the current checkpoint context. We then initialise a new
+>  context and attach that to the CIL for aggregation of new transactions.
+>  
+>  This allows us to unlock the CIL immediately after transfer of all the
+> -committed items and effectively allow new transactions to be issued while we
+> +committed items and effectively allows new transactions to be issued while we
+>  are formatting the checkpoint into the log. It also allows concurrent
+>  checkpoints to be written into the log buffers in the case of log force heavy
+>  workloads, just like the existing transaction commit code does. This, however,
+> @@ -886,7 +886,7 @@ can be multiple outstanding checkpoint contexts, we can still see elevated pin
+>  counts, but as each checkpoint completes the pin count will retain the correct
+>  value according to it's context.
+>  
+> -Just to make matters more slightly more complex, this checkpoint level context
+> +Just to make matters slightly more complex, this checkpoint level context
 
-commit 2d86293c70750e4331e9616aded33ab6b47c299d upstream.
+Thanks for the editing :)
 
-Now that the VFS will do something with the return values from
-->sync_fs, make ours pass on error codes.
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Acked-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_super.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--D
 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 6323974d6b3e..ff686cb16c7b 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -757,6 +757,7 @@ xfs_fs_sync_fs(
- 	int			wait)
- {
- 	struct xfs_mount	*mp = XFS_M(sb);
-+	int			error;
- 
- 	/*
- 	 * Doing anything during the async pass would be counterproductive.
-@@ -764,7 +765,10 @@ xfs_fs_sync_fs(
- 	if (!wait)
- 		return 0;
- 
--	xfs_log_force(mp, XFS_LOG_SYNC);
-+	error = xfs_log_force(mp, XFS_LOG_SYNC);
-+	if (error)
-+		return error;
-+
- 	if (laptop_mode) {
- 		/*
- 		 * The disk must be active because we're syncing.
--- 
-2.25.1
-
+>  for the pin count means that the pinning of an item must take place under the
+>  CIL commit/flush lock. If we pin the object outside this lock, we cannot
+>  guarantee which context the pin count is associated with. This is because of
+> -- 
+> 2.37.1
+> 
