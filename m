@@ -2,216 +2,137 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B23D5A349E
-	for <lists+linux-xfs@lfdr.de>; Sat, 27 Aug 2022 06:50:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B58085A355A
+	for <lists+linux-xfs@lfdr.de>; Sat, 27 Aug 2022 09:04:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbiH0Eue (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 27 Aug 2022 00:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
+        id S233106AbiH0HBv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 27 Aug 2022 03:01:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229639AbiH0Eud (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 27 Aug 2022 00:50:33 -0400
+        with ESMTP id S230499AbiH0HBe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 27 Aug 2022 03:01:34 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D37C7BB4
-        for <linux-xfs@vger.kernel.org>; Fri, 26 Aug 2022 21:50:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C788E9A5;
+        Sat, 27 Aug 2022 00:01:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B558CB83372
-        for <linux-xfs@vger.kernel.org>; Sat, 27 Aug 2022 04:50:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 60D39C43142
-        for <linux-xfs@vger.kernel.org>; Sat, 27 Aug 2022 04:50:28 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 78011B80EB0;
+        Sat, 27 Aug 2022 07:01:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEACEC433C1;
+        Sat, 27 Aug 2022 07:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661575828;
-        bh=OftjCy+JlR1+GKJCdzXbsOSxdeg1bIBwDpvLQP4YXMs=;
-        h=From:To:Subject:Date:From;
-        b=tMNYdYuEdn25nQ++JgkZzWDnj7aTsK/AoBnhvSAPW7gw5VQ5KSXiN2xIVT/hTSlQS
-         6daHGXPjplJv9RsXR4P5o9jS2N3Q5+I4AOGzrCuJAFp+vzNLpQ9xIGyWfxGqDy8Cj9
-         NACZnVNptk1kC11rB4F3paOV8oUTDUWDWcJENuq/NOqydGVhuhv65OFkl1GJvqtubW
-         6V+Zfg+qaphRPjtOQiQlMSrk8nbeBw6WhsFQAMLk/qw3+CfjbsVeDY9fNDEJ36QO/1
-         uMIsxYqeO7jkQyq9d/oLdpg4ZWDV0Mt2Op0hrkZqvg4ZENE+AAk33zEOOzUd9njF9E
-         CegmPBJons3oA==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 516B8C433E9; Sat, 27 Aug 2022 04:50:28 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216419] New: Internal error XFS_WANT_CORRUPTED_RETURN at line
- 442 of file fs/xfs/libxfs/xfs_alloc.c
-Date:   Sat, 27 Aug 2022 04:50:27 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: new
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: sunjunchao2870@gmail.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: bug_id short_desc product version
- cf_kernel_version rep_platform op_sys cf_tree bug_status bug_severity
- priority component assigned_to reporter cf_regression attachments.created
-Message-ID: <bug-216419-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        s=k20201202; t=1661583690;
+        bh=TD/VF5KHXD4wRG8Pr+H+EfaARgN73usGJgQBXXdf6qM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LWAceR3fhWYIDpnV9qqfOwOsgBjiLxafwZdx0ifwtHygtEzCeOTClFwZD/Q2YfBW7
+         YPwl6lS4PhtvirZ8wp8caBSWY+mMIrSihflRr5bozhXZ5FK/PrU5FrIybPCGIXMjdH
+         NLO2WO7PqCl+GYNxdjD0iXQmDmLF+2mMX0U/9Gz/r5eeXGdC6GxSbYNWyQaePi90hO
+         J/qqblaICEwrvm0aWoDR+ropylNWmjuUSB4cM6fYqQS9BM1W0FRXtkr145+AZIC0uO
+         VGSXaLiZabc1a9wD+g1cJ5gA5UmWKC6cQh9TW50atN2cCEtx/FUHMyWbtRid75dM6H
+         aO8BLnX612WYQ==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-xfs@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-fscrypt@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH v5 0/8] make statx() return DIO alignment information
+Date:   Fri, 26 Aug 2022 23:58:43 -0700
+Message-Id: <20220827065851.135710-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216419
+This patchset makes the statx() system call return direct I/O (DIO)
+alignment information.  This allows userspace to easily determine
+whether a file supports DIO, and if so with what alignment restrictions.
 
-            Bug ID: 216419
-           Summary: Internal error XFS_WANT_CORRUPTED_RETURN at line 442
-                    of file fs/xfs/libxfs/xfs_alloc.c
-           Product: File System
-           Version: 2.5
-    Kernel Version: 5.3.18
-          Hardware: All
-                OS: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: XFS
-          Assignee: filesystem_xfs@kernel-bugs.kernel.org
-          Reporter: sunjunchao2870@gmail.com
-        Regression: No
+Patch 1 adds the basic VFS support for STATX_DIOALIGN.  Patch 2 wires it
+up for all block device files.  The remaining patches wire it up for
+regular files on ext4, f2fs, and xfs.  Support for regular files on
+other filesystems can be added later.
 
-Created attachment 301678
-  --> https://bugzilla.kernel.org/attachment.cgi?id=3D301678&action=3Dedit
-messages about corrupted xfs
+I've also written a man-pages patch, which I sent separately:
+https://lore.kernel.org/r/20220722074229.148925-1-ebiggers@kernel.org
 
-Recently I ran pressure test on xfs(almost 1.5GB/s bandwidth on write) and I
-discovered a lot of error logs about xfs, just like:
-Aug 21 20:31:20 rg21-oss005 kernel: XFS (bcache4): metadata I/O error in
-"xfs_trans_read_buf_map" at daddr 0x8804a66e8 len 8 error 74
-Aug 21 20:31:20 rg21-oss005 kernel: XFS (bcache4): Metadata CRC error detec=
-ted
-at xfs_dir3_block_read_verify+0xbf/0xe0 [xfs], xfs_dir3_block block 0x8804a=
-66e8=20
-Aug 21 20:31:20 rg21-oss005 kernel: XFS (bcache4): Unmount and run xfs_repa=
-ir
-Aug 21 20:31:20 rg21-oss005 kernel: XFS (bcache4): First 128 bytes of corru=
-pted
-metadata buffer:
-Aug 21 20:31:20 rg21-oss005 kernel: 00000000: 38 30 30 2e 30 2c 20 38 30 30=
- 2e
-30 2c 20 38 30  800.0, 800.0, 80
-Aug 21 20:31:20 rg21-oss005 kernel: 00000010: 30 2e 30 2c 20 31 34 34 30 2e=
- 30
-2c 20 31 34 34  0.0, 1440.0, 144
-Aug 21 20:31:20 rg21-oss005 kernel: 00000020: 30 2e 30 2c 20 32 30 32 39 2e=
- 39
-33 37 35 2c 20  0.0, 2029.9375,=20
-Aug 21 20:31:20 rg21-oss005 kernel: 00000030: 32 30 32 39 2e 39 33 37 35 2c=
- 20
-32 30 32 39 2e  2029.9375, 2029.
-Aug 21 20:31:20 rg21-oss005 kernel: 00000040: 39 33 37 35 2c 20 32 30 32 39=
- 2e
-39 33 37 35 5d  9375, 2029.9375]
-Aug 21 20:31:20 rg21-oss005 kernel: 00000050: 2c 20 22 65 6c 61 70 73 65 64=
- 22
-3a 20 5b 31 34  , "elapsed": [14
-Aug 21 20:31:20 rg21-oss005 kernel: 00000060: 36 35 2e 31 30 35 31 30 34 34=
- 34
-36 34 31 31 31  65.1051044464111
-Aug 21 20:31:20 rg21-oss005 kernel: 00000070: 2c 20 31 34 36 37 2e 34 37 33=
- 33
-31 36 31 39 32  , 1467.473316192
-Aug 21 20:31:20 rg21-oss005 kernel: XFS (bcache4): metadata I/O error in
-"xfs_trans_read_buf_map" at daddr 0x8804a66e8 len 8 error 74
+Note, f2fs has a corner case where DIO reads are allowed but not DIO
+writes.  The proposed statx fields can't represent this.  The current
+proposal just reports that DIO is unsupported in this case.
 
-and=20
+This patchset applies to v6.0-rc2.
 
-Aug 21 22:41:37 rg21-oss005 kernel: XFS (bcache4): Internal error
-XFS_WANT_CORRUPTED_RETURN at line 442 of file fs/xfs/libxfs/xfs_alloc.c.=20
-Caller xfs_alloc_ag_vextent_near+0x7f6/0xb60 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: CPU: 23 PID: 10127 Comm: w16-5 Kdump:
-loaded Tainted: G           OE     N 5.3.18.20211010 #4 SLE15-SP2 (unreleas=
-ed)
-Aug 21 22:41:37 rg21-oss005 kernel: Hardware name: New H3C Technologies Co.,
-Ltd. UniServer R4300 G3/RS01M2C7S, BIOS 2.00.56 12/17/2021
-Aug 21 22:41:37 rg21-oss005 kernel: Call Trace:
-Aug 21 22:41:37 rg21-oss005 kernel: dump_stack+0x64/0x83
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_alloc_fixup_trees+0x211/0x350 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_alloc_ag_vextent_near+0x7f6/0xb60 [=
-xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_alloc_ag_vextent+0x13c/0x150 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_alloc_vextent+0x41f/0x5a0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_bmap_btalloc+0x23c/0x8e0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_bmapi_allocate+0x10c/0x2e0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_bmapi_convert_delalloc+0x267/0x4a0
-[xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_map_blocks+0x195/0x3f0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_do_writepage+0x127/0x3c0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: write_cache_pages+0x1d3/0x410
-Aug 21 22:41:37 rg21-oss005 kernel: ? xfs_vm_writepages+0xa0/0xa0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: ? pagevec_lookup_entries+0x1a/0x30
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_vm_writepages+0x64/0xa0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: do_writepages+0x1a/0x70
-Aug 21 22:41:37 rg21-oss005 kernel: __filemap_fdatawrite_range+0xcf/0x100
-Aug 21 22:41:37 rg21-oss005 kernel: filemap_write_and_wait_range+0x41/0xa0
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_setattr_size+0x10d/0x390 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: xfs_vn_setattr+0x6e/0xc0 [xfs]
-Aug 21 22:41:37 rg21-oss005 kernel: notify_change+0x26c/0x450
-Aug 21 22:41:37 rg21-oss005 kernel: do_truncate+0x72/0xc0
-Aug 21 22:41:37 rg21-oss005 kernel: do_sys_ftruncate+0x10c/0x120
-Aug 21 22:41:37 rg21-oss005 kernel: do_syscall_64+0x5b/0x1f0
-Aug 21 22:41:37 rg21-oss005 kernel: entry_SYSCALL_64_after_hwframe+0x44/0xa9
-Aug 21 22:41:37 rg21-oss005 kernel: RIP: 0033:0x7fb5168a86e7
-Aug 21 22:41:37 rg21-oss005 kernel: Code: 73 01 c3 48 8b 0d 89 f7 2c 00 f7 =
-d8
-64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 4d =
-00
-00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 59 f7 2c 00 f7 d8 64 89 0=
-1 48
-Aug 21 22:41:37 rg21-oss005 kernel: RSP: 002b:00007fb237bfb498 EFLAGS: 0000=
-0206
-ORIG_RAX: 000000000000004d
-Aug 21 22:41:37 rg21-oss005 kernel: RAX: ffffffffffffffda RBX: 00007fb22000=
-38c0
-RCX: 00007fb5168a86e7
-Aug 21 22:41:37 rg21-oss005 kernel: RDX: 00000000000000e0 RSI: 000000000230=
-0000
-RDI: 0000000000000074
-Aug 21 22:41:37 rg21-oss005 kernel: RBP: 00007fb237bfc6b0 R08: 00007fb2360f=
-6050
-R09: 0000000000004000
-Aug 21 22:41:37 rg21-oss005 kernel: R10: 00000000022e4000 R11: 000000000000=
-0206
-R12: 0000000000100000
-Aug 21 22:41:37 rg21-oss005 kernel: R13: 0000000000001000 R14: 000000000000=
-0074
-R15: 00007fb237bfb680
-Aug 21 22:41:37 rg21-oss005 kernel: XFS (bcache4): page discard on page
-00000000d976f7c9, inode 0x400079d77, offset 28315648.
-Aug 21 22:41:37 rg21-oss005 kernel: XFS (bcache4): writeback error on sector
-42005378320
+Changed in v5:
+   - Accounted for the DIO changes in 6.0 by setting dio_mem_align to
+     the DMA alignment instead of the logical block size where needed.
+
+   - Dropped the patch "f2fs: don't allow DIO reads but not DIO writes".
+
+   - Added some Reviewed-by and Acked-by tags.
+
+Changed in v4:
+   - Added xfs support.
+
+   - Moved the helper function for block devices into block/bdev.c.
+   
+   - Adjusted the ext4 patch to not introduce a bug where misaligned DIO
+     starts being allowed on encrypted files when it gets combined with
+     the patch "iomap: add support for dma aligned direct-io" that is
+     queued in the block tree for 5.20.
+
+   - Made a simplification in fscrypt_dio_supported().
+
+Changed in v3:
+   - Dropped the stx_offset_align_optimal field, since its purpose
+     wasn't clearly distinguished from the existing stx_blksize.
+
+   - Renamed STATX_IOALIGN to STATX_DIOALIGN, to reflect the new focus
+     on DIO only.
+
+   - Similarly, renamed stx_{mem,offset}_align_dio to
+     stx_dio_{mem,offset}_align, to reflect the new focus on DIO only.
+
+   - Wired up STATX_DIOALIGN on block device files.
+
+Changed in v2:
+   - No changes.
+
+Eric Biggers (8):
+  statx: add direct I/O alignment information
+  vfs: support STATX_DIOALIGN on block devices
+  fscrypt: change fscrypt_dio_supported() to prepare for STATX_DIOALIGN
+  ext4: support STATX_DIOALIGN
+  f2fs: move f2fs_force_buffered_io() into file.c
+  f2fs: simplify f2fs_force_buffered_io()
+  f2fs: support STATX_DIOALIGN
+  xfs: support STATX_DIOALIGN
+
+ block/bdev.c              | 23 ++++++++++++++++++
+ fs/crypto/inline_crypt.c  | 49 +++++++++++++++++++--------------------
+ fs/ext4/ext4.h            |  1 +
+ fs/ext4/file.c            | 37 ++++++++++++++++++++---------
+ fs/ext4/inode.c           | 37 +++++++++++++++++++++++++++++
+ fs/f2fs/f2fs.h            | 40 --------------------------------
+ fs/f2fs/file.c            | 43 +++++++++++++++++++++++++++++++++-
+ fs/stat.c                 | 14 +++++++++++
+ fs/xfs/xfs_iops.c         | 10 ++++++++
+ include/linux/blkdev.h    |  4 ++++
+ include/linux/fscrypt.h   |  7 ++----
+ include/linux/stat.h      |  2 ++
+ include/uapi/linux/stat.h |  4 +++-
+ 13 files changed, 188 insertions(+), 83 deletions(-)
 
 
+base-commit: 1c23f9e627a7b412978b4e852793c5e3c3efc555
+-- 
+2.37.2
 
-It seems xfs corrupted, and I repaired that by xfs_repair. But after one da=
-y, I
-got some similar questions and xfs corrupted again and again. Is this a kno=
-wn
-issue? Or am I wrong in something? Please let me known if any information is
-missed. Thanks!
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
