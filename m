@@ -2,97 +2,111 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF12E5A6574
-	for <lists+linux-xfs@lfdr.de>; Tue, 30 Aug 2022 15:49:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE1F95A6687
+	for <lists+linux-xfs@lfdr.de>; Tue, 30 Aug 2022 16:44:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbiH3NtZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 30 Aug 2022 09:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57090 "EHLO
+        id S229916AbiH3Ooe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 30 Aug 2022 10:44:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231386AbiH3Nsx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Aug 2022 09:48:53 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B831037F6;
-        Tue, 30 Aug 2022 06:46:42 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MH7mg5DSGzlWYp;
-        Tue, 30 Aug 2022 21:43:15 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by dggpemm500022.china.huawei.com
- (7.185.36.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 30 Aug
- 2022 21:46:38 +0800
-From:   Zeng Heng <zengheng4@huawei.com>
-To:     <djwong@kernel.org>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zengheng4@huawei.com>
-Subject: [PATCH -next] xfs: remove "%Ld" which doesn't meet C standard
-Date:   Tue, 30 Aug 2022 21:54:22 +0800
-Message-ID: <20220830135422.2734749-1-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229512AbiH3Ood (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 30 Aug 2022 10:44:33 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B711EBD772;
+        Tue, 30 Aug 2022 07:44:31 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 2FB115FF7; Tue, 30 Aug 2022 10:44:30 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 2FB115FF7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1661870670;
+        bh=gzW+gZ2zemZDBvDj7lxziqabHjDHurKUBq1mFGCGqI8=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=BSjy+CUyTLErHrViU+opXQ2cWXmOTL2ZfD2Acjf0lTMt0/fw4MoPaPVE4+/K9LU3V
+         okT4PSZs6XXSuC8E4FQ06bFdTWWqmvEZX4iKGOFmVxFMcL/5lkLrui1Y56VBc/Uxzs
+         7nrPrYvha+41+GPYOQlBKo+PMXNaYlj2yPaWPkxA=
+Date:   Tue, 30 Aug 2022 10:44:30 -0400
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     NeilBrown <neilb@suse.de>, Dave Chinner <david@fromorbit.com>,
+        tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
+        lczerner@redhat.com, jack@suse.cz, brauner@kernel.org,
+        linux-api@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ceph@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Colin Walters <walters@verbum.org>
+Subject: Re: [PATCH v3 1/7] iversion: update comments with info about atime
+ updates
+Message-ID: <20220830144430.GD26330@fieldses.org>
+References: <20220826214703.134870-1-jlayton@kernel.org>
+ <20220826214703.134870-2-jlayton@kernel.org>
+ <20220829075651.GS3600936@dread.disaster.area>
+ <549776abfaddcc936c6de7800b6d8249d97d9f28.camel@kernel.org>
+ <166181389550.27490.8200873228292034867@noble.neil.brown.name>
+ <f5c42c0d87dfa45188c2109ccf9baeb7a42aa27e.camel@kernel.org>
+ <20220830132443.GA26330@fieldses.org>
+ <a07686e7e1d1ef15720194be2abe5681f6a6c78e.camel@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500022.china.huawei.com (7.185.36.162)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a07686e7e1d1ef15720194be2abe5681f6a6c78e.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The "%Ld" specifier, which represents long long unsigned,
-doesn't meet C language standard, and even more,
-it makes people easily mistake with "%ld", which represent
-long unsigned. So replace "%Ld" with "lld".
+On Tue, Aug 30, 2022 at 09:50:02AM -0400, Jeff Layton wrote:
+> On Tue, 2022-08-30 at 09:24 -0400, J. Bruce Fields wrote:
+> > On Tue, Aug 30, 2022 at 07:40:02AM -0400, Jeff Layton wrote:
+> > > Yes, saying only that it must be different is intentional. What we
+> > > really want is for consumers to treat this as an opaque value for the
+> > > most part [1]. Therefore an implementation based on hashing would
+> > > conform to the spec, I'd think, as long as all of the relevant info is
+> > > part of the hash.
+> > 
+> > It'd conform, but it might not be as useful as an increasing value.
+> > 
+> > E.g. a client can use that to work out which of a series of reordered
+> > write replies is the most recent, and I seem to recall that can prevent
+> > unnecessary invalidations in some cases.
+> > 
+> 
+> That's a good point; the linux client does this. That said, NFSv4 has a
+> way for the server to advertise its change attribute behavior [1]
+> (though nfsd hasn't implemented this yet).
 
-Do the same with "%Lu".
+It was implemented and reverted.  The issue was that I thought nfsd
+should mix in the ctime to prevent the change attribute going backwards
+on reboot (see fs/nfsd/nfsfh.h:nfsd4_change_attribute()), but Trond was
+concerned about the possibility of time going backwards.  See
+1631087ba872 "Revert "nfsd4: support change_attr_type attribute"".
+There's some mailing list discussion to that I'm not turning up right
+now.
 
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
----
- fs/xfs/xfs_inode_item_recover.c | 4 ++--
- fs/xfs/xfs_stats.c              | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Did NFSv4 add change_attr_type because some implementations needed the
+unordered case, or because they realized ordering was useful but wanted
+to keep backwards compatibility?  I don't know which it was.
 
-diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-index d28ffaebd067..0e5dba2343ea 100644
---- a/fs/xfs/xfs_inode_item_recover.c
-+++ b/fs/xfs/xfs_inode_item_recover.c
-@@ -321,7 +321,7 @@ xlog_recover_inode_commit_pass2(
- 	 */
- 	if (XFS_IS_CORRUPT(mp, !xfs_verify_magic16(bp, dip->di_magic))) {
- 		xfs_alert(mp,
--	"%s: Bad inode magic number, dip = "PTR_FMT", dino bp = "PTR_FMT", ino = %Ld",
-+	"%s: Bad inode magic number, dip = "PTR_FMT", dino bp = "PTR_FMT", ino = %lld",
- 			__func__, dip, bp, in_f->ilf_ino);
- 		error = -EFSCORRUPTED;
- 		goto out_release;
-@@ -329,7 +329,7 @@ xlog_recover_inode_commit_pass2(
- 	ldip = item->ri_buf[1].i_addr;
- 	if (XFS_IS_CORRUPT(mp, ldip->di_magic != XFS_DINODE_MAGIC)) {
- 		xfs_alert(mp,
--			"%s: Bad inode log record, rec ptr "PTR_FMT", ino %Ld",
-+			"%s: Bad inode log record, rec ptr "PTR_FMT", ino %lld",
- 			__func__, item, in_f->ilf_ino);
- 		error = -EFSCORRUPTED;
- 		goto out_release;
-diff --git a/fs/xfs/xfs_stats.c b/fs/xfs/xfs_stats.c
-index 70d38b77682b..90a77cd3ebad 100644
---- a/fs/xfs/xfs_stats.c
-+++ b/fs/xfs/xfs_stats.c
-@@ -74,7 +74,7 @@ int xfs_stats_format(struct xfsstats __percpu *stats, char *buf)
- 		defer_relog += per_cpu_ptr(stats, i)->s.defer_relog;
- 	}
- 
--	len += scnprintf(buf + len, PATH_MAX-len, "xpc %Lu %Lu %Lu\n",
-+	len += scnprintf(buf + len, PATH_MAX-len, "xpc %llu %llu %llu\n",
- 			xs_xstrat_bytes, xs_write_bytes, xs_read_bytes);
- 	len += scnprintf(buf + len, PATH_MAX-len, "defer_relog %llu\n",
- 			defer_relog);
--- 
-2.25.1
+--b.
 
+> We don't have a good way to
+> do that in userland for now.
+> 
+> This is another place where fsinfo() would have been nice to have. I
+> think until we have something like that, we'd want to keep our promises
+> to userland to a minimum.
+> 
+> [1]: https://www.rfc-editor.org/rfc/rfc7862.html#section-12.2.3 . I
+> guess I should look at plumbing this in for IS_I_VERSION inodes...
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
+> 
