@@ -2,42 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB495A9518
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Sep 2022 12:54:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D865A95DE
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Sep 2022 13:43:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233583AbiIAKy2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Sep 2022 06:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50834 "EHLO
+        id S232404AbiIALnW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Sep 2022 07:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233399AbiIAKy1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Sep 2022 06:54:27 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9D6130A12;
-        Thu,  1 Sep 2022 03:54:27 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MJHrh6JYJz1N7k9;
-        Thu,  1 Sep 2022 18:50:44 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by dggpemm500022.china.huawei.com
- (7.185.36.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 1 Sep
- 2022 18:54:25 +0800
-From:   Zeng Heng <zengheng4@huawei.com>
-To:     <djwong@kernel.org>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zengheng4@huawei.com>
-Subject: [PATCH -next] xfs: missing space in xfs trace log
-Date:   Thu, 1 Sep 2022 19:02:05 +0800
-Message-ID: <20220901110205.565167-1-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232065AbiIALnV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Sep 2022 07:43:21 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E9F132ECD
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Sep 2022 04:43:15 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id n23-20020a7bc5d7000000b003a62f19b453so1196032wmk.3
+        for <linux-xfs@vger.kernel.org>; Thu, 01 Sep 2022 04:43:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=bbJQltWPn0a278ieY2senRHzgqz4m0om06hRCaDVLg4=;
+        b=H83xMQLKTiAv1yh7u9VA/5fIuK+BNYHJjOC3SKcH3LOLBUBQKi+ax9Atj9WzORcTmu
+         mAua3KEGWQGxeW3NHb8peiLR6YVYGXqbf0lKG2uFQwoCGnechIBYcc8HSB8C0vf6i/bP
+         zrsMummDvxB7GYiJKwG7bfeIaujopfH2r9Kao=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=bbJQltWPn0a278ieY2senRHzgqz4m0om06hRCaDVLg4=;
+        b=8EKs8YlDt/QuBKCawQEqbfBVn8a7o7386zSapskJ4RayJgJtk7tuQM35+0JsZbimvq
+         jeF3uxYPzJPR9prHCOTYqbFJ5+xBSWGE7R4Gw1JGImQF+v6IL95VhR+LB/YYy8x9aXv0
+         pwdU2f7xYyrIf23UzJgQa9x/A5CVAhdt6hTWHEPAbioZfgxzfm26hMpZeaKCU1xzzpzX
+         sqLzS5mHUy2FUDr0ibiiX4AAunGIjTNqOxtX76Tg9vBqmaNNcWIe0o7VXRkNc+tlWqE5
+         MsMyHBH1xrt2X29olvp6MVy3y17OqEm3dqCFmZhannIg5iTcSoPvl/33IVeiqbEnKnKb
+         p0/Q==
+X-Gm-Message-State: ACgBeo1wQ4qvXJtwvRCJbEuCHiBkyN5iHREnfT9QMQj6MrqAHPzCDJqu
+        0irC1PPy/rqDuuVfPs25RUQFFtBUCZkI+OTQDRYEuw==
+X-Google-Smtp-Source: AA6agR4XuvhnjNg3AZqmNIK3SE7luAS7kPckpXPKtF78zyoDJNRkkgzbjqqbN4Q4Ixv7oyVIblA4WM6HughNbgGs+qU=
+X-Received: by 2002:a05:600c:22cd:b0:3a6:7b62:3778 with SMTP id
+ 13-20020a05600c22cd00b003a67b623778mr4992100wmg.45.1662032594129; Thu, 01 Sep
+ 2022 04:43:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500022.china.huawei.com (7.185.36.162)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20220901054854.2449416-1-amir73il@gmail.com> <20220901054854.2449416-7-amir73il@gmail.com>
+ <CABEBQikqj+Uwae0XMHSbU7FVcrTR7cMb6zgbiRHC0PwFfB7+qw@mail.gmail.com> <CAOQ4uxhNV=-nVO_ezP=Lc42+Q+A+wxdiCBqhVQz8qVkBJba1iA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhNV=-nVO_ezP=Lc42+Q+A+wxdiCBqhVQz8qVkBJba1iA@mail.gmail.com>
+From:   Frank Hofmann <fhofmann@cloudflare.com>
+Date:   Thu, 1 Sep 2022 12:43:03 +0100
+Message-ID: <CABEBQin2VTDbYMEz7_afgKv3dnVZF2VcMYOixD8jm6KikHep_Q@mail.gmail.com>
+Subject: Re: [PATCH 5.10 v2 6/7] xfs: reorder iunlink remove operation in xfs_ifree
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Leah Rumancik <leah.rumancik@gmail.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Adam Manzanares <a.manzanares@samsung.com>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Dave Chinner <david@fromorbit.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,46 +73,46 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Add space between arguments would help someone
-to locate the key words they want, so break
-quoted strings at a space character.
+On Thu, Sep 1, 2022 at 10:30 AM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Thu, Sep 1, 2022 at 12:04 PM Frank Hofmann <fhofmann@cloudflare.com> wrote:
+> >
+> > On Thu, Sep 1, 2022 at 6:49 AM Amir Goldstein <amir73il@gmail.com> wrote:
+> > >
+> > > From: Dave Chinner <dchinner@redhat.com>
+> > >
+> > > commit 9a5280b312e2e7898b6397b2ca3cfd03f67d7be1 upstream.
+> > >
+> > > [backport for 5.10.y]
+> >
+> > Hi Amir, hi Dave,
+> >
+> > I've got no objections to backporting this change at all. We've been
+> > using the patch on our internal 5.15 tracker branch happily for
+> > several months now.
+> >
+> > Would like to highlight though that it's currently not yet merged in
+> > linux-stable 5.15 branch either (it's in 5.19 and mainline alright).
+> > If this gets queued for 5.10 then maybe it also should be for 5.15 ?
+> >
+>
+> Hi Frank,
+>
+> Quoting from my cover letter:
+>
+> Patches 6-7 in this 5.10.y update have not been applied to 5.15.y yet.
+> I pointed Leah's attention to these patches and she said she will
+> include them in a following 5.15.y update.
+>
+> Thanks,
+> Amir.
 
-Such as below:
-[Before]
-kworker/1:0-280     [001] .....   600.782135: xfs_bunmap:
-dev 7:0 ino 0x85 disize 0x0 fileoff 0x0 fsbcount 0x400000001fffffflags ATTRFORK ...
+Apologies missing that one ... I've only been directly cc:'ed on 6/7 though.
 
-[After]
-kworker/1:2-564     [001] ..... 23817.906160: xfs_bunmap:
-dev 7:0 ino 0x85 disize 0x0 fileoff 0x0 fsbcount 0x400000001fffff flags ATTRFORK ...
+In any case, for 6/7, whether applied to 5.10.y or 5.15.y,
 
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
----
- fs/xfs/xfs_trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Acked-by: Frank Hofmann <fhofmann@cloudflare.com>
 
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index f9057af6e0c8..cb7c81ba7fa3 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1170,7 +1170,7 @@ DECLARE_EVENT_CLASS(xfs_dqtrx_class,
- 		__entry->ino_res_used = qtrx->qt_ino_res_used;
- 		__entry->icount_delta = qtrx->qt_icount_delta;
- 	),
--	TP_printk("dev %d:%d dquot id 0x%x type %s flags %s"
-+	TP_printk("dev %d:%d dquot id 0x%x type %s flags %s "
- 		  "blk_res %llu bcount_delta %lld delbcnt_delta %lld "
- 		  "rtblk_res %llu rtblk_res_used %llu rtbcount_delta %lld delrtb_delta %lld "
- 		  "ino_res %llu ino_res_used %llu icount_delta %lld",
-@@ -1602,7 +1602,7 @@ TRACE_EVENT(xfs_bunmap,
- 		__entry->caller_ip = caller_ip;
- 		__entry->flags = flags;
- 	),
--	TP_printk("dev %d:%d ino 0x%llx disize 0x%llx fileoff 0x%llx fsbcount 0x%llx"
-+	TP_printk("dev %d:%d ino 0x%llx disize 0x%llx fileoff 0x%llx fsbcount 0x%llx "
- 		  "flags %s caller %pS",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
- 		  __entry->ino,
--- 
-2.25.1
+And yes, I hope to see it show up in both LTS branches.
 
+FrankH.
