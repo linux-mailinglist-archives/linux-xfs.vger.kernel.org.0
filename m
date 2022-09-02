@@ -2,65 +2,54 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 792425AAD13
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Sep 2022 13:06:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 291DB5AB33A
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Sep 2022 16:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235490AbiIBLGR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 2 Sep 2022 07:06:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53484 "EHLO
+        id S237284AbiIBOSR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Sep 2022 10:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234970AbiIBLGP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Sep 2022 07:06:15 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4FBA5C52
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 04:06:14 -0700 (PDT)
-Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MJw3j0ny2z1N7l9;
-        Fri,  2 Sep 2022 19:02:25 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by kwepemi500019.china.huawei.com
- (7.221.188.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 2 Sep
- 2022 19:06:06 +0800
-From:   Guo Xuenan <guoxuenan@huawei.com>
-To:     <david@fromorbit.com>
-CC:     <chandan.babu@oracle.com>, <dchinner@redhat.com>,
-        <djwong@kernel.org>, <guoxuenan@huawei.com>, <houtao1@huawei.com>,
-        <jack.qiu@huawei.com>, <linux-xfs@vger.kernel.org>,
-        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>
-Subject: add fstest xfs/554 and patch v2
-Date:   Fri, 2 Sep 2022 19:24:07 +0800
-Message-ID: <20220902112407.3989875-1-guoxuenan@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220829081244.GT3600936@dread.disaster.area>
-References: <20220829081244.GT3600936@dread.disaster.area>
+        with ESMTP id S237708AbiIBOR6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Sep 2022 10:17:58 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2849715F8B7
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 06:43:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0419FB82AC5
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 13:43:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51E72C433D6
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 13:43:33 +0000 (UTC)
+From:   Carlos Maiolino <cmaiolino@redhat.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/2] xfsprogs: fix covscan issues
+Date:   Fri,  2 Sep 2022 15:43:28 +0200
+Message-Id: <166212614879.31305.11337231919093625864.stgit@andromeda>
+X-Mailer: git-send-email 2.30.2
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.27]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500019.china.huawei.com (7.221.188.117)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Dave & Darrick:
+Fix a couple of minor issues found by covscan
 
-To reproduce this problem add xfs/554 [1].
-And, I resend a patch v2 [2], considering the situation mentioned by Darrick,
-Meanwhile, check the i_disk_size or get dir blocks at xfs_dir3_leaf_check_int
-looks a little strange. So in my opinion, we can just add judgment in that
-situation, avoiding UAF and return EFSCORRUPTED, xfs_repair will help us fix it.
+Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+---
 
-[1] https://lore.kernel.org/all/20220902094046.3891252-1-guoxuenan@huawei.com/
-[2] https://lore.kernel.org/all/20220831121639.3060527-1-guoxuenan@huawei.com/
+Carlos Maiolino (2):
+      xfs_repair: Fix check_refcount() error path
+      xfs_repair: Fix rmaps_verify_btree() error path
 
 
+ repair/rmap.c |   44 +++++++++++++++++++++-----------------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
 
-thanks
-Xueanan
