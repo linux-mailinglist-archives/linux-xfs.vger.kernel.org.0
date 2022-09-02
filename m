@@ -2,40 +2,40 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 546B55AB337
-	for <lists+linux-xfs@lfdr.de>; Fri,  2 Sep 2022 16:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 766EE5AB33F
+	for <lists+linux-xfs@lfdr.de>; Fri,  2 Sep 2022 16:18:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238670AbiIBOSF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 2 Sep 2022 10:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
+        id S237439AbiIBOS5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 2 Sep 2022 10:18:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238647AbiIBORp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Sep 2022 10:17:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B76115F8BC
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 06:43:53 -0700 (PDT)
+        with ESMTP id S238929AbiIBOSk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 2 Sep 2022 10:18:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D05106DAF
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 06:44:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E4B262122
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 13:43:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A813C433D6
-        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 13:43:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7F36BB82AA1
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 13:43:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC51C433D6
+        for <linux-xfs@vger.kernel.org>; Fri,  2 Sep 2022 13:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662126222;
-        bh=FjUiWpbs+pTWDJZTcuUTrKMm7j00I11AwOsD7uyMeJs=;
+        s=k20201202; t=1662126232;
+        bh=2PIHwO5HxRmn5jSKGY3/QB3+5c+w5G1wKIxiJKmbp2E=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=Ro3TmgjQNAghfTeRrljvQ4Xqef0mCReoRmkD1QXk3hAg/r5szEftaLmP2kUY1vFq0
-         wFS+Ov8VT68uaROte8+rrgxcFUA4DaWQ/9x6Eks7tmyRi22vl5CbVZcY+Mlk9XMUu4
-         ZlRFQ6Q/KkzVx7r51XW86BbF5QlDpkMrwmyYoCBsbFoNR92DY04o5Ly0qURLtz89sR
-         LNgnyd97/0y2nx3XRL10wvUh/2vV6q3BKJf2+zGykHuu19LS7ep4Q5SpkUG0rMHg+u
-         eG55xnEDpHwZaIEMwsmOqEFY4zv6A0NrTWZzyC9gJS1akYXNNtCeXlFBaP1e80kr4p
-         53E6ZNCN65Y1g==
+        b=NUzQ8sm9xB2VBDEmdY0T1hYabz5Ggv8emdDR9X8OJvCWJVAZQWD+5q2jyrin9h5n+
+         zwCXAwjmAvXM9gNlgy+QfhF8aipL+xdSeVv2dpgctAK55yq9TBKqXLJuJqjZStj0y4
+         +XGYVvaER66Wq5lmgGmXDn+dYnHGaiDalYPrF0bHgGrsEbCCRyk8YHxkPwe1UmjVKg
+         BejQ5Tv5u+nNf3SnwC4PvdQcnSsnuxshOgr83ne7c56pqkGE50N5kx1LBRifxy1Hs+
+         4bbqfkeK76F+bXdi+6WmdVfg/xXCfmEiXIel5E2xMoqcXrUqxJaqg6UGwih+GHfygW
+         oToz2BUr9Z7cw==
 From:   Carlos Maiolino <cem@kernel.org>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 1/2] xfs_repair: Fix check_refcount() error path
-Date:   Fri,  2 Sep 2022 15:43:39 +0200
-Message-Id: <166212621918.31305.17388002689404843538.stgit@andromeda>
+Subject: [PATCH 2/2] xfs_repair: Fix rmaps_verify_btree() error path
+Date:   Fri,  2 Sep 2022 15:43:48 +0200
+Message-Id: <166212622823.31305.7621804364378399970.stgit@andromeda>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <166212614879.31305.11337231919093625864.stgit@andromeda>
 References: <166212614879.31305.11337231919093625864.stgit@andromeda>
@@ -57,73 +57,71 @@ From: Carlos Maiolino <cmaiolino@redhat.com>
 
 Add proper exit error paths to avoid checking all pointers at the current path
 
-Fixes-coverity-id: 1512651
+Fixes-coverity-id: 1512654
 
 Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
 ---
- repair/rmap.c |   23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ repair/rmap.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
 diff --git a/repair/rmap.c b/repair/rmap.c
-index a7c4b25b1..0253c0c36 100644
+index 0253c0c36..8b76e290b 100644
 --- a/repair/rmap.c
 +++ b/repair/rmap.c
-@@ -1377,7 +1377,7 @@ check_refcounts(
+@@ -1002,7 +1002,7 @@ rmaps_verify_btree(
  	if (error) {
- 		do_warn(_("Could not read AGF %u to check refcount btree.\n"),
+ 		do_warn(_("Could not read AGF %u to check rmap btree.\n"),
  				agno);
 -		goto err;
 +		goto err_agf;
  	}
  
  	/* Leave the per-ag data "uninitialized" since we rewrite it later */
-@@ -1386,7 +1386,7 @@ check_refcounts(
- 	bt_cur = libxfs_refcountbt_init_cursor(mp, NULL, agbp, pag);
+@@ -1011,7 +1011,7 @@ rmaps_verify_btree(
+ 	bt_cur = libxfs_rmapbt_init_cursor(mp, NULL, agbp, pag);
  	if (!bt_cur) {
- 		do_warn(_("Not enough memory to check refcount data.\n"));
+ 		do_warn(_("Not enough memory to check reverse mappings.\n"));
 -		goto err;
 +		goto err_bt_cur;
  	}
  
- 	rl_rec = pop_slab_cursor(rl_cur);
-@@ -1398,7 +1398,7 @@ check_refcounts(
+ 	rm_rec = pop_slab_cursor(rm_cur);
+@@ -1021,7 +1021,7 @@ rmaps_verify_btree(
  			do_warn(
- _("Could not read reference count record for (%u/%u).\n"),
- 					agno, rl_rec->rc_startblock);
+ _("Could not read reverse-mapping record for (%u/%u).\n"),
+ 					agno, rm_rec->rm_startblock);
 -			goto err;
 +			goto err_loop;
+ 		}
+ 
+ 		/*
+@@ -1037,7 +1037,7 @@ _("Could not read reverse-mapping record for (%u/%u).\n"),
+ 				do_warn(
+ _("Could not read reverse-mapping record for (%u/%u).\n"),
+ 						agno, rm_rec->rm_startblock);
+-				goto err;
++				goto err_loop;
+ 			}
  		}
  		if (!have) {
- 			do_warn(
-@@ -1413,7 +1413,7 @@ _("Missing reference count record for (%u/%u) len %u count %u\n"),
- 			do_warn(
- _("Could not read reference count record for (%u/%u).\n"),
- 					agno, rl_rec->rc_startblock);
--			goto err;
-+			goto err_loop;
- 		}
- 		if (!i) {
- 			do_warn(
-@@ -1436,14 +1436,13 @@ next_loop:
- 		rl_rec = pop_slab_cursor(rl_cur);
+@@ -1088,13 +1088,12 @@ next_loop:
+ 		rm_rec = pop_slab_cursor(rm_cur);
  	}
  
 -err:
 -	if (bt_cur)
--		libxfs_btree_del_cursor(bt_cur, error ? XFS_BTREE_ERROR :
--							XFS_BTREE_NOERROR);
+-		libxfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
 -	if (pag)
 -		libxfs_perag_put(pag);
 -	if (agbp)
 -		libxfs_buf_relse(agbp);
 +err_loop:
-+	libxfs_btree_del_cursor(bt_cur, error ?
-+				XFS_BTREE_ERROR : XFS_BTREE_NOERROR);
++	libxfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
 +err_bt_cur:
 +	libxfs_buf_relse(agbp);
 +err_agf:
 +	libxfs_perag_put(pag);
- 	free_slab_cursor(&rl_cur);
+ 	free_slab_cursor(&rm_cur);
  }
  
 
