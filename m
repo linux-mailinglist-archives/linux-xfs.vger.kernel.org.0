@@ -2,166 +2,81 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F389B5AF235
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 19:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E14315AF3BD
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 20:37:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239641AbiIFRQd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Sep 2022 13:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
+        id S229561AbiIFSgd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Sep 2022 14:36:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233884AbiIFRQP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 13:16:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265A88B2CC;
-        Tue,  6 Sep 2022 10:05:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 26041615D2;
-        Tue,  6 Sep 2022 17:04:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74117C433C1;
-        Tue,  6 Sep 2022 17:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662483848;
-        bh=rAhCSLOrTwfGo2FpGcX0U4IJWpbmLaG/6c1iUIC7dnU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FahQDDB0rwfzhSId2osRUDWnjY1U/m4yS41gsexD+LH5bYuPvvbXT2rQHvJxPVG8o
-         sP1SnsnrkzsknF0uE2iEtswCyPJ2OREbPEjzx9ccrZgiqEy9bly9FpuaZf2gaa5lIb
-         QzwG8rP5vGj4NEM1Wqd2fKJVRF8f5LiOGulqn2lvnHkUuDvH0MmfROv5vLDuqU0+H2
-         /U8hTSYQY6duVo+0w85ViCBO7YwgQRNalVB4J4Uk0Htx7TzcNilHDpUcb6HRQQXkJb
-         PU1eh7g9weTpHUxz8Z3Mwlh2Woi+sPLcLKmJF2wQgsdf64nhdHGRDVdIHvO7nk0pnZ
-         mG9ZmRFQ2WmcA==
-Message-ID: <b8b0c5adc6598c57fb109447e3bc54492b54c36a.camel@kernel.org>
-Subject: Re: [RFC PATCH v2] statx, inode: document the new STATX_INO_VERSION
- field
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
-        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
-        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
-        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
-        bfields@fieldses.org, brauner@kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Date:   Tue, 06 Sep 2022 13:04:05 -0400
-In-Reply-To: <d1ee62062c3f805460b7bdf2776e759be4dba43f.camel@kernel.org>
-References: <20220901121714.20051-1-jlayton@kernel.org>
-         <874jxrqdji.fsf@oldenburg.str.redhat.com>
-         <81e57e81e4570d1659098f2bbc7c9049a605c5e8.camel@kernel.org>
-         <87ilm066jh.fsf@oldenburg.str.redhat.com>
-         <d1ee62062c3f805460b7bdf2776e759be4dba43f.camel@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
+        with ESMTP id S229826AbiIFSgR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 14:36:17 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A07680480
+        for <linux-xfs@vger.kernel.org>; Tue,  6 Sep 2022 11:36:06 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id v202-20020a252fd3000000b006a8f6c5d39bso5312637ybv.21
+        for <linux-xfs@vger.kernel.org>; Tue, 06 Sep 2022 11:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date;
+        bh=i0R53TAK8Pvv1dqj3X6sLp/mYhXJAf8bewUjnJrtogc=;
+        b=oiA1uT/TkBmmqbTWbkabtss704rsOio/xfNZfZkhOW8PVou+H8Sv8ARoqgMaM+bH2c
+         lsZWIaE+KwXDl4TaNk8A3Lp4MLSqKCjh7EspIfr2aukRK0hhUp8PA3GJp3LzzCNs6n5Y
+         25F5Ee2zOh8ZUuD3dbNEj20UEMQO9BsEqIRTqlIWk7wh6i2HATLmFT9HW8nPRNdUq3Xu
+         CkLUW2U9hBCCzIRQyFuO7a/KALCtcGG10BeaMiFp3NucRsG7fJyBBw7vg2kkjJMLuQrs
+         M5HYZcOsqT5kk6KlIzWYt8jR8UiEyF8kYKHcxNQxfCHecs7htrEolEeoYl2YKgUx589X
+         EQfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=i0R53TAK8Pvv1dqj3X6sLp/mYhXJAf8bewUjnJrtogc=;
+        b=EOJ21sE4atDqh+0eI1m73+qwyXPWYUKZ1ywOYkaDp8a5k2fsVF35IT+8YYsKskjsYH
+         +x97uj4b5Ca9Af7JXbj92w6j62+UWrBCarin/sHR0XkGA1fbWkMboJUdz/MFjgu0WL23
+         kWinVB8PLvP3r3Y118TC6KSo0T/i7nXcBEkFdSbjLaClzmIk34WiCAAmm5cHjlHhh1yk
+         vh/DwEDWROv2maEV93p8BjpTZVcFqfPvkdvQYvF0o6vb7b2caCguBvIhyAHsgJlrfVGc
+         EBNes2d5ESmW5iIsiQHAJXaGJXjKh2r72b+u5H6D62cb2qHJWTZ16Y6Po8ExeFQBUGtW
+         j1Vw==
+X-Gm-Message-State: ACgBeo0P5G3CWvLc7F2oJQA0BhEpLaGDFfb/KjsqqNSocMNH3k4adf6C
+        +0s5tsMRKwcjOvqJKKQz9VH/R1FwYHqVUDK/kQ==
+X-Google-Smtp-Source: AA6agR68wmtnyd+6tLLKnKjrQMkTdwVdgbm15czxZnqbkWTAuhNE9Qc+94GhH3giQsB+i4aE5T/pLqg/pkNM/mwcTw==
+X-Received: from varshat.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:a35])
+ (user=teratipally job=sendgmr) by 2002:a5b:84a:0:b0:67c:1db1:2069 with SMTP
+ id v10-20020a5b084a000000b0067c1db12069mr35622834ybq.507.1662489365256; Tue,
+ 06 Sep 2022 11:36:05 -0700 (PDT)
+Date:   Tue,  6 Sep 2022 18:35:59 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
+Message-ID: <20220906183600.1926315-1-teratipally@google.com>
+Subject: Request to cherry-pick 01ea173e103edd5ec41acec65b9261b87e123fc2 to v5.10
+From:   Varsha Teratipally <teratipally@google.com>
+To:     Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, 2022-09-06 at 12:41 -0400, Jeff Layton wrote:
-> On Tue, 2022-09-06 at 14:17 +0200, Florian Weimer wrote:
-> > * Jeff Layton:
-> >=20
-> > > All of the existing implementations use all 64 bits. If you were to
-> > > increment a 64 bit value every nanosecond, it will take >500 years fo=
-r
-> > > it to wrap. I'm hoping that's good enough. ;)
-> > >=20
-> > > The implementation that all of the local Linux filesystems use track
-> > > whether the value has been queried using one bit, so there you only g=
-et
-> > > 63 bits of counter.
-> > >=20
-> > > My original thinking here was that we should leave the spec "loose" t=
-o
-> > > allow for implementations that may not be based on a counter. E.g. co=
-uld
-> > > some filesystem do this instead by hashing certain metadata?
-> >=20
-> > Hashing might have collisions that could be triggered deliberately, so
-> > probably not a good idea.  It's also hard to argue that random
-> > collisions are unlikely.
-> >=20
->=20
-> In principle, if a filesystem could guarantee enough timestamp
-> resolution, it's possible collisions could be hard to achieve. It's also
-> possible you could factor in other metadata that wasn't necessarily
-> visible to userland to try and ensure uniqueness in the counter.
->=20
-> Still...
->=20
+Hi all,
 
-Actually, Bruce brought up a good point on IRC. The main danger here is
-that we might do this:
+Commit 01ea173e103edd5ec41acec65b9261b87e123fc2 (upstream: xfs: fix up
+non-directory creation in SGID directories) fixes an issue where in xfs
+sometimes, a local user could create files with an unitended group
+permissions as an owner and execution where a directory is SGID and belongs=
+ to a certain group and is writable by a user who is not a member of this g=
+roup and seems like a good candidate for the v5.10 stable tree given that 5=
+.10 is used in versions of debian, ubuntu.
 
-Start (i_version is at 1)
-write data (i_version goes to 2)
-statx+read data (observer associates data with i_version of 2)
-Crash, but before new i_version made it to disk
-Machine comes back up (i_version back at 1)
-write data (i_version goes to 2)
-statx (observer assumes his cache is valid)
+This patch applies cleanly. Let me know what you think
 
-We can mitigate this by factoring in the ctime when we do the statx.
-Another option though would be to factor in the ctime when we generate
-the new value and store it.
 
-Here's what nfsd does today:
-
-      chattr =3D  stat->ctime.tv_sec;
-      chattr <<=3D 30;
-      chattr +=3D stat->ctime.tv_nsec;
-      chattr +=3D inode_query_iversion(inode);
-
-Instead of doing this after we query it, we could do that before storing
-it. After a crash, we might see the value go backward, but if a new
-write later happens, the new value would be very unlikely to match the
-one that got lost.
-
-That seems quite doable, and might be better for userland consumers
-overall.
-
-> > > It's arguable though that the NFSv4 spec requires that this be based =
-on
-> > > a counter, as the client is required to increment it in the case of
-> > > write delegations.
-> >=20
-> > Yeah, I think it has to be monotonic.
-> >=20
->=20
-> I think so too. NFSv4 sort of needs that anyway.
->=20
-> > > > If the system crashes without flushing disks, is it possible to obs=
-erve
-> > > > new file contents without a change of i_version?
-> > >=20
-> > > Yes, I think that's possible given the current implementations.
-> > >=20
-> > > We don't have a great scheme to combat that at the moment, other than
-> > > looking at this in conjunction with the ctime. As long as the clock
-> > > doesn't jump backward after the crash and it takes more than one jiff=
-y
-> > > to get the host back up, then you can be reasonably sure that
-> > > i_version+ctime should never repeat.
-> > >=20
-> > > Maybe that's worth adding to the NOTES section of the manpage?
-> >=20
-> > I'd appreciate that.
->=20
-> Ok! New version of the manpage patch sent. If no one has strong
-> objections to the proposed docs, I'll send out new kernel patches in the
-> next day or two.
->=20
-> Thanks!
-
---=20
-Jeff Layton <jlayton@kernel.org>
