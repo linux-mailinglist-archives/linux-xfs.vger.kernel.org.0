@@ -2,118 +2,63 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D620E5AE53D
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 12:21:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A5A45AE70A
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 13:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239293AbiIFKVR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Sep 2022 06:21:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56254 "EHLO
+        id S232412AbiIFL7Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Sep 2022 07:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232752AbiIFKVM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 06:21:12 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A5B41D28;
-        Tue,  6 Sep 2022 03:21:08 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 8B1691F9B8;
-        Tue,  6 Sep 2022 10:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1662459667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JRzzxJnv5MaykTq7esKm/SId3jWkWiPAdjMo5oqrhRE=;
-        b=KxJvAYQmECJdKHflrlphoK6jMea5m356jipctQWsyyBn2mXvuIKqE/JpJczXYmkvoH9nO8
-        NoOB88iSwiI2Ub8MVRt1ql+V2Du8naLMoby+IJylMg9zSLiTlT9sPsRaZXQbR44F6irWgs
-        wfZCT1dxVKV4e5PjvHq5w10DQUscpmI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1662459667;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JRzzxJnv5MaykTq7esKm/SId3jWkWiPAdjMo5oqrhRE=;
-        b=plZXEtxGbS1qVODpVEpx1mvVcKzPPQXJbGzq02JAcGOhoP0DN1kZuv58cv4wa0hVHaZblC
-        6/YkhJlMFnkIsNAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6F33D13A7A;
-        Tue,  6 Sep 2022 10:21:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id M/EfGxMfF2POBgAAMHmgww
-        (envelope-from <jack@suse.cz>); Tue, 06 Sep 2022 10:21:07 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 053EBA067E; Tue,  6 Sep 2022 12:21:06 +0200 (CEST)
-Date:   Tue, 6 Sep 2022 12:21:06 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
-Message-ID: <20220906102106.q23ovgyjyrsnbhkp@quack3>
-References: <20220831041843.973026-1-jhubbard@nvidia.com>
- <20220831041843.973026-5-jhubbard@nvidia.com>
- <YxbtF1O8+kXhTNaj@infradead.org>
- <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
- <Yxb7YQWgjHkZet4u@infradead.org>
+        with ESMTP id S230446AbiIFL7Y (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 07:59:24 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC3FC43
+        for <linux-xfs@vger.kernel.org>; Tue,  6 Sep 2022 04:59:23 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id qh18so22639372ejb.7
+        for <linux-xfs@vger.kernel.org>; Tue, 06 Sep 2022 04:59:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date;
+        bh=QX/1FO7BJ13W8Bio4Hvphp1pk6RLZuW1D+bYVy4ZDhE=;
+        b=b6/4Rn16tV7e5zxsRBKRwfxaqtoejfR0li/cXO/t4EE9Ji12ydEALEzU2frN8D/q3S
+         MhHjPXCo8Bfs2eR0alOuHN5n4Pi3o4sXd/IEKk48G1Omob9rULAcvzPdZ8gvDL+Mx8Q2
+         3Irc0awK/Y8snKTUlruL0FB6vku83mV2CWsLkoslsMPAIsf/Pf6XicqheQo0pID31gut
+         xZf616wMbNMqoPS8vE9p19RxWiNZRdlLs4+fy1YpQ0WsMMCqJagmbXqNVSZoNQfiGrka
+         8NcKBMmN7q+74cjL7CO5TVkSg9tunaqsSYJeOGfTCCVXdz5FDw+2sEB0SP7/oz0fXU8a
+         iGfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=QX/1FO7BJ13W8Bio4Hvphp1pk6RLZuW1D+bYVy4ZDhE=;
+        b=Gu/Cjc72hgRwGH7u9iM2gJIUIKkm7cK5K9SfCQj6e1R/Vo5mtb1N0DB1FUQQM4m87V
+         ZKyBUD51Hne8LeM81JMa4sT2rSUmiiQiiD+129q8s86aH6FviLh4hJYHQGRnT6FyJfsw
+         hji94ZJpsiIw3Gpeps/PIyr6Ai+N0hfwFb16nVKKc+aE2A3H8JWHhVtJg1Kbs9wY9AMq
+         duXkj6J0Pr7FxLE94lQ9eGK7/8Zxcb25D7EdJDrGAjXKo1x6EG2somb4VLNYnAVbDQkK
+         54+qZ9orkM/RVLpcVo3ZGTS23jhrTCuptO3SKpFwf8kkP/Ls+vwkp7SZbPQEtuhb2fN2
+         hB6Q==
+X-Gm-Message-State: ACgBeo1tN9MKGeFONT4jCVsew3+t/3f/v/zx3FgSxoQWR72AeAPrOs7Q
+        PpPmFBHtVZDeqpOVROivB7tF5uqpqC5nxQgfCN/N58Qhyk4=
+X-Google-Smtp-Source: AA6agR52fkrXR9vsigsmSh9lzMlyLi/IzdvYaiPJQa4OSSQmoUtI6GiUuiHSROhtG8ZJHyN7m1qWVdx98udqIgtoG3U=
+X-Received: by 2002:a17:906:65c6:b0:73c:8897:65b0 with SMTP id
+ z6-20020a17090665c600b0073c889765b0mr39240187ejn.322.1662465561567; Tue, 06
+ Sep 2022 04:59:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yxb7YQWgjHkZet4u@infradead.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   JunChao Sun <sunjunchao2870@gmail.com>
+Date:   Tue, 6 Sep 2022 19:59:09 +0800
+Message-ID: <CAHB1Nai8Ux+7DWr89EOdRcwWLxg82iFnNgv6=cP32qiw36wyzA@mail.gmail.com>
+Subject: 
+To:     linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue 06-09-22 00:48:49, Christoph Hellwig wrote:
-> On Tue, Sep 06, 2022 at 12:44:28AM -0700, John Hubbard wrote:
-> > OK, that part is clear.
-> > 
-> > >  - for the pin case don't use the existing bvec helper at all, but
-> > >    copy the logic for the block layer for not pinning.
-> > 
-> > I'm almost, but not quite sure I get the idea above. Overall, what
-> > happens to bvec pages? Leave the get_page() pin in place for FOLL_GET
-> > (or USE_FOLL_GET), I suppose, but do...what, for FOLL_PIN callers?
-> 
-> Do not change anyhing for FOLL_GET callers, as they are on the way out
-> anyway.
-> 
-> For FOLL_PIN callers, never pin bvec and kvec pages:  For file systems
-> not acquiring a reference is obviously safe, and the other callers will
-> need an audit, but I can't think of why it woul  ever be unsafe.
-
-Are you sure about "For file systems not acquiring a reference is obviously
-safe"? I can see places e.g. in orangefs, afs, etc. which create bvec iters
-from pagecache pages. And then we have iter_file_splice_write() which
-creates bvec from pipe pages (which can also be pagecache pages if
-vmsplice() is used). So perhaps there are no lifetime issues even without
-acquiring a reference (but looking at the code I would not say it is
-obvious) but I definitely don't see how it would be safe to not get a pin
-to signal to filesystem backing the pagecache page that there is DMA
-happening to/from the page.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+unsubscribe linux-xfs
