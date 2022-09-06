@@ -2,63 +2,114 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A5A45AE70A
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 13:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56E915AE7E8
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 14:22:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232412AbiIFL7Z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Sep 2022 07:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53240 "EHLO
+        id S240022AbiIFMVp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Sep 2022 08:21:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230446AbiIFL7Y (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 07:59:24 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC3FC43
-        for <linux-xfs@vger.kernel.org>; Tue,  6 Sep 2022 04:59:23 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id qh18so22639372ejb.7
-        for <linux-xfs@vger.kernel.org>; Tue, 06 Sep 2022 04:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date;
-        bh=QX/1FO7BJ13W8Bio4Hvphp1pk6RLZuW1D+bYVy4ZDhE=;
-        b=b6/4Rn16tV7e5zxsRBKRwfxaqtoejfR0li/cXO/t4EE9Ji12ydEALEzU2frN8D/q3S
-         MhHjPXCo8Bfs2eR0alOuHN5n4Pi3o4sXd/IEKk48G1Omob9rULAcvzPdZ8gvDL+Mx8Q2
-         3Irc0awK/Y8snKTUlruL0FB6vku83mV2CWsLkoslsMPAIsf/Pf6XicqheQo0pID31gut
-         xZf616wMbNMqoPS8vE9p19RxWiNZRdlLs4+fy1YpQ0WsMMCqJagmbXqNVSZoNQfiGrka
-         8NcKBMmN7q+74cjL7CO5TVkSg9tunaqsSYJeOGfTCCVXdz5FDw+2sEB0SP7/oz0fXU8a
-         iGfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=QX/1FO7BJ13W8Bio4Hvphp1pk6RLZuW1D+bYVy4ZDhE=;
-        b=Gu/Cjc72hgRwGH7u9iM2gJIUIKkm7cK5K9SfCQj6e1R/Vo5mtb1N0DB1FUQQM4m87V
-         ZKyBUD51Hne8LeM81JMa4sT2rSUmiiQiiD+129q8s86aH6FviLh4hJYHQGRnT6FyJfsw
-         hji94ZJpsiIw3Gpeps/PIyr6Ai+N0hfwFb16nVKKc+aE2A3H8JWHhVtJg1Kbs9wY9AMq
-         duXkj6J0Pr7FxLE94lQ9eGK7/8Zxcb25D7EdJDrGAjXKo1x6EG2somb4VLNYnAVbDQkK
-         54+qZ9orkM/RVLpcVo3ZGTS23jhrTCuptO3SKpFwf8kkP/Ls+vwkp7SZbPQEtuhb2fN2
-         hB6Q==
-X-Gm-Message-State: ACgBeo1tN9MKGeFONT4jCVsew3+t/3f/v/zx3FgSxoQWR72AeAPrOs7Q
-        PpPmFBHtVZDeqpOVROivB7tF5uqpqC5nxQgfCN/N58Qhyk4=
-X-Google-Smtp-Source: AA6agR52fkrXR9vsigsmSh9lzMlyLi/IzdvYaiPJQa4OSSQmoUtI6GiUuiHSROhtG8ZJHyN7m1qWVdx98udqIgtoG3U=
-X-Received: by 2002:a17:906:65c6:b0:73c:8897:65b0 with SMTP id
- z6-20020a17090665c600b0073c889765b0mr39240187ejn.322.1662465561567; Tue, 06
- Sep 2022 04:59:21 -0700 (PDT)
+        with ESMTP id S240036AbiIFMUx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 08:20:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D3577B1ED
+        for <linux-xfs@vger.kernel.org>; Tue,  6 Sep 2022 05:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1662466669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YjvVsGnaOPZ/gpG0KVHSfjbjbq9SkmePYc60DJuuWGs=;
+        b=cT+7bCVxJgQLFqa1HP+1ZQIb55muguaQsYrHBkRhzzdY6qJycblS0wqgVjnGjsm2aVCYqb
+        hXzoqZP/ZbeAJiRe5Lrxcw+TXSvcnlNisF65z641R8AAIrKmOuQSsfyrt0JjQYIGd2Uhdm
+        f3eTlgaNZFd3mI0sU6vACDPWA+py8uc=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-47-HSUfhPJXM-2ppp1fdmrDZw-1; Tue, 06 Sep 2022 08:17:46 -0400
+X-MC-Unique: HSUfhPJXM-2ppp1fdmrDZw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E76891C06901;
+        Tue,  6 Sep 2022 12:17:44 +0000 (UTC)
+Received: from oldenburg.str.redhat.com (unknown [10.39.192.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9F5940334C;
+        Tue,  6 Sep 2022 12:17:39 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
+        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
+        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
+        bfields@fieldses.org, brauner@kernel.org,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH v2] statx, inode: document the new STATX_INO_VERSION
+ field
+References: <20220901121714.20051-1-jlayton@kernel.org>
+        <874jxrqdji.fsf@oldenburg.str.redhat.com>
+        <81e57e81e4570d1659098f2bbc7c9049a605c5e8.camel@kernel.org>
+Date:   Tue, 06 Sep 2022 14:17:38 +0200
+In-Reply-To: <81e57e81e4570d1659098f2bbc7c9049a605c5e8.camel@kernel.org> (Jeff
+        Layton's message of "Thu, 01 Sep 2022 12:30:20 -0400")
+Message-ID: <87ilm066jh.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 MIME-Version: 1.0
-From:   JunChao Sun <sunjunchao2870@gmail.com>
-Date:   Tue, 6 Sep 2022 19:59:09 +0800
-Message-ID: <CAHB1Nai8Ux+7DWr89EOdRcwWLxg82iFnNgv6=cP32qiw36wyzA@mail.gmail.com>
-Subject: 
-To:     linux-xfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-unsubscribe linux-xfs
+* Jeff Layton:
+
+> All of the existing implementations use all 64 bits. If you were to
+> increment a 64 bit value every nanosecond, it will take >500 years for
+> it to wrap. I'm hoping that's good enough. ;)
+>
+> The implementation that all of the local Linux filesystems use track
+> whether the value has been queried using one bit, so there you only get
+> 63 bits of counter.
+>
+> My original thinking here was that we should leave the spec "loose" to
+> allow for implementations that may not be based on a counter. E.g. could
+> some filesystem do this instead by hashing certain metadata?
+
+Hashing might have collisions that could be triggered deliberately, so
+probably not a good idea.  It's also hard to argue that random
+collisions are unlikely.
+
+> It's arguable though that the NFSv4 spec requires that this be based on
+> a counter, as the client is required to increment it in the case of
+> write delegations.
+
+Yeah, I think it has to be monotonic.
+
+>> If the system crashes without flushing disks, is it possible to observe
+>> new file contents without a change of i_version?
+>
+> Yes, I think that's possible given the current implementations.
+>
+> We don't have a great scheme to combat that at the moment, other than
+> looking at this in conjunction with the ctime. As long as the clock
+> doesn't jump backward after the crash and it takes more than one jiffy
+> to get the host back up, then you can be reasonably sure that
+> i_version+ctime should never repeat.
+>
+> Maybe that's worth adding to the NOTES section of the manpage?
+
+I'd appreciate that.
+
+Thanks,
+Florian
+
