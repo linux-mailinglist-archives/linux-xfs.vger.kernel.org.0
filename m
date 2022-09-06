@@ -2,168 +2,95 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7D25AE98C
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 15:30:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7035AEDAD
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 16:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240431AbiIFN3j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Sep 2022 09:29:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46582 "EHLO
+        id S241879AbiIFOnR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Sep 2022 10:43:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240167AbiIFN3h (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 09:29:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35214BC05;
-        Tue,  6 Sep 2022 06:29:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D44BAB818C2;
-        Tue,  6 Sep 2022 13:29:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 791BCC433D6;
-        Tue,  6 Sep 2022 13:29:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662470972;
-        bh=eT4U+WivGyOotiGD0LRV2zLl7flGTzXZdjdWMcvNt7E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XwovBfCAI5xmw0RPdItCdZLjQ7bhW5v9Eu/vggCoju8MpsiPBXQ9MB2FAMttCv+DJ
-         nNFf4HHdz4g+SXNSMUeZuf3erv08qXCs76NUClj77fMxrGkpexrIX0KiBJSs6U6lea
-         9T5yCH9BS4KEJiwDQv3CKt0Iaxtygw8eFvyYON+QXJ0tmYGToCCggQFH3M6U/QMCdL
-         io2MN9GWbXvJuhHMWUHnhg4WzOz8GYzvsNHs65QkYDYqt+Za12C1yUaIdLNRr/jD5M
-         cS9+EXliVqd5LDrc34V0Nrx1sGR8zzIZtyqalLz/D+OAPa/mnX5D5iR0PCCL/LqEvE
-         BvVSERciktYmA==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
-        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
-        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
-        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
-        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com,
-        linux-man@vger.kernel.org
-Cc:     linux-api@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: [man-pages RFC PATCH v3] statx, inode: document the STATX_INO_VERSION field
-Date:   Tue,  6 Sep 2022 09:29:28 -0400
-Message-Id: <20220906132928.106134-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.3
+        with ESMTP id S234722AbiIFOms (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 10:42:48 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0823E9D13A
+        for <linux-xfs@vger.kernel.org>; Tue,  6 Sep 2022 07:03:04 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id 202so12288616ybe.13
+        for <linux-xfs@vger.kernel.org>; Tue, 06 Sep 2022 07:03:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uc-cl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date;
+        bh=M3kjx4Y3PDh1LmA6EIlHrLnuQj4q0vHuaf8i2Q6glTw=;
+        b=E+Z3tYiaqqhX3ewT9tjNYatrnxaV+r5W3vhI+RR+uWIACl04L1Bnui04nEJiwFbtNS
+         A7ZyWXUJQYUyw2yM5TCqv2a6FalBMQWKGxgK6qvMoDmWkm6PLGaqnNW6lq0M1bv1Q1oT
+         Knwy2Dpb8kvbwKRZfBBtQ4avSTLI9CT4oOXc18orUnZsHOXeYL0QOTH7vYy8jFPnZ3Rg
+         AkSvX/xhsGseBY3N/tzZq42+x/5mccsFlHIKbmtyqmRnannfHJMEgVm3ik0KaHqVuxwc
+         woIzHHFXOf1k6+vbdXFkqUQqBbDK2hRWYXnJ3bFX/BgvB+/IzGuFJfoi8L16g3R6clPx
+         VHAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=M3kjx4Y3PDh1LmA6EIlHrLnuQj4q0vHuaf8i2Q6glTw=;
+        b=r02BjDt7NhUImVxDA/OX1ZQEJLKa3iBav/85I75Nqllqv+8EhWzqcf71neSV90lCOp
+         4f2vtdj1jfb0YlW11z0kfeq05en2hxs9pI7DXGWZpma7EfsF/TOMOtzRfcxTw2AnqJsf
+         YU1Kopz3iWF+mpNsrc2ePy8qGCV8MtkHwkCadlBCpN8tQtDcpPBxz5Kzo3qaMw14k7KX
+         gwXfRwqrGeMQr6cukY1FJ2mWtCBTcMmqom3UaeIwQ8VaYodRWN9H1mfiS9iC1pgjt8Es
+         4G0msSbfKwLQzXBEQNprclAVUJK0ETQFO4wDYjwhv2YhoWugaPrdEYPLeUd9G82GtlO8
+         756g==
+X-Gm-Message-State: ACgBeo2zqf5KGLKkcxWB7xfssZdWb7R2jSq6+g+ap6MFkNDihsMRl6oc
+        KqlBfUMfaxkqn4zncf7bo2ajFC3hwCnLDmao5Lkt7y626vRdHqGdrOQtMOhn2+vkXmZu96FUtBC
+        uEy2OUczefpfJ1AQ1EfiDvbPE2OeD
+X-Google-Smtp-Source: AA6agR5iI7iiC6XVQ5DaFgLzs5oiIgbdXb7Kp07/cMkWkUlNo51TtvCATi3eLomt58iPLOK6p3+f/xgp5OmNHq+GsYA=
+X-Received: by 2002:a25:9d01:0:b0:66e:9087:4fb9 with SMTP id
+ i1-20020a259d01000000b0066e90874fb9mr38589554ybp.159.1662472911309; Tue, 06
+ Sep 2022 07:01:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a25:db8b:0:0:0:0:0 with HTTP; Tue, 6 Sep 2022 07:01:50 -0700 (PDT)
+Reply-To: veronica_suecharlottefoundation@outlook.com
+From:   Veronica Sue Charlotte Foundation <pgarciacan@uc.cl>
+Date:   Tue, 6 Sep 2022 22:01:50 +0800
+Message-ID: <CAFvnNwa6s+2ffWoJM8p_7psgOCiYsE_jmffQtS7+Zmvtot4HFA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=7.2 required=5.0 tests=BAYES_80,DKIM_SIGNED,
+        DKIM_VALID,FREEMAIL_FORGED_REPLYTO,HK_LOTTO,LOTS_OF_MONEY,
+        MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b41 listed in]
+        [list.dnswl.org]
+        *  2.0 BAYES_80 BODY: Bayes spam probability is 80 to 95%
+        *      [score: 0.8674]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  1.0 HK_LOTTO No description available.
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
+        *      email?
+        *  0.1 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-I'm proposing to expose the inode change attribute via statx [1]. Document
-what this value means and what an observer can infer from a change in
-its value.
+--=20
+Dear Email Owner Kindly confirm ownership of your email. It was
+randomly selected after a computer draw, to receive a donation of
+$1,700,000.00 USD from Veronica Sue Charlotte Foundation. Send a
+confirmation Email for more details.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-
-[1]: https://lore.kernel.org/linux-nfs/20220826214703.134870-1-jlayton@kernel.org/T/#t
----
- man2/statx.2 |  8 ++++++++
- man7/inode.7 | 34 ++++++++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+)
-
-v3: Move most verbiage to inode(7)
-    Clarify that this must be monotonically increasing
-    Flesh out usage discussion
-    Mention issues with value moving backward and how to combat them
-
-diff --git a/man2/statx.2 b/man2/statx.2
-index 0d1b4591f74c..d98d5148a442 100644
---- a/man2/statx.2
-+++ b/man2/statx.2
-@@ -62,6 +62,7 @@ struct statx {
-     __u32 stx_dev_major;   /* Major ID */
-     __u32 stx_dev_minor;   /* Minor ID */
-     __u64 stx_mnt_id;      /* Mount ID */
-+    __u64 stx_ino_version; /* Inode change attribute */
- };
- .EE
- .in
-@@ -247,6 +248,7 @@ STATX_BTIME	Want stx_btime
- STATX_ALL	The same as STATX_BASIC_STATS | STATX_BTIME.
- 	It is deprecated and should not be used.
- STATX_MNT_ID	Want stx_mnt_id (since Linux 5.8)
-+STATX_INO_VERSION	Want stx_ino_version (DRAFT)
- .TE
- .in
- .PP
-@@ -407,10 +409,16 @@ This is the same number reported by
- .BR name_to_handle_at (2)
- and corresponds to the number in the first field in one of the records in
- .IR /proc/self/mountinfo .
-+.TP
-+.I stx_ino_version
-+The inode version, also known as the inode change attribute. See
-+.BR inode (7)
-+for details.
- .PP
- For further information on the above fields, see
- .BR inode (7).
- .\"
-+.TP
- .SS File attributes
- The
- .I stx_attributes
-diff --git a/man7/inode.7 b/man7/inode.7
-index 9b255a890720..80c2ed4acccd 100644
---- a/man7/inode.7
-+++ b/man7/inode.7
-@@ -184,6 +184,12 @@ Last status change timestamp (ctime)
- This is the file's last status change timestamp.
- It is changed by writing or by setting inode information
- (i.e., owner, group, link count, mode, etc.).
-+.TP
-+Inode version (i_version)
-+(not returned in the \fIstat\fP structure); \fIstatx.stx_ino_version\fP
-+.IP
-+This is the inode change counter. See the discussion of
-+\fBthe inode version counter\fP, below.
- .PP
- The timestamp fields report time measured with a zero point at the
- .IR Epoch ,
-@@ -424,6 +430,34 @@ on a directory means that a file
- in that directory can be renamed or deleted only by the owner
- of the file, by the owner of the directory, and by a privileged
- process.
-+.SS The inode version counter
-+.PP
-+The
-+.I statx.stx_ino_version
-+field is the inode change counter. Any operation that would result in a
-+change to \fIstatx.stx_ctime\fP must result in an increase to this value.
-+The value must increase even in the case where the ctime change is not
-+evident due to coarse timestamp granularity.
-+.PP
-+An observer cannot infer anything from amount of increase about the
-+nature or magnitude of the change. If the returned value is different
-+from the last time it was checked, then something has made an explicit
-+data and/or metadata change to the inode.
-+.PP
-+In the event of a system crash, this value can appear to go backward,
-+if it were queried before ever being written to the backing store. If
-+the value were then incremented again after restart, then an observer
-+could miss noticing a change.
-+.PP
-+In order to guard against this, it is recommended to also watch the
-+\fIstatx.stx_ctime\fP for changes when watching this value. As long as the
-+system clock doesn't jump backward during the crash, an observer can be
-+reasonably sure that the i_version and ctime together represent a unique inode
-+state.
-+.PP
-+The i_version is a Linux extension and is not supported by all filesystems.
-+The application must verify that the \fISTATX_INO_VERSION\fP bit is set in the
-+returned \fIstatx.stx_mask\fP before relying on this field.
- .SH STANDARDS
- If you need to obtain the definition of the
- .I blkcnt_t
--- 
-2.37.3
-
+--=20
+No sienta la obligaci=C3=B3n de contestar este mail fuera de horario labora=
+l.
