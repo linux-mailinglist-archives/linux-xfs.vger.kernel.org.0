@@ -2,130 +2,103 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9817D5AF3BC
-	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 20:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 156405AF46F
+	for <lists+linux-xfs@lfdr.de>; Tue,  6 Sep 2022 21:30:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbiIFSge (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 6 Sep 2022 14:36:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
+        id S229907AbiIFT3n (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 6 Sep 2022 15:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229965AbiIFSgV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 14:36:21 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26F599D112
-        for <linux-xfs@vger.kernel.org>; Tue,  6 Sep 2022 11:36:12 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id d8-20020a25bc48000000b00680651cf051so9149227ybk.23
-        for <linux-xfs@vger.kernel.org>; Tue, 06 Sep 2022 11:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date;
-        bh=tg8eRVP8zBLy5T3GrQ7FiT/ZQysxW7XYE3PgBG3r7xA=;
-        b=S3eZGAdLMcRRyRY6vszLIP46WXXfNPaFsof6i/+H/9GzjHxhbEo/ukVAclyOQblN+j
-         YtC9+9a9bf+fQBYWTX2gtTRsGmMO1RU0UpyyaTw8bFvLbUjeDGJox/tUHnaOTJEKG87k
-         ko89Igxd7SucaTD1zRmPXSO/8FLT9aC6uUZf9i20oB0fQdh/C5KIi7Kk4O+ajyZoiIgk
-         yZdpOlRttxfvW0p6D76rsn1ghk2P8VgSflKUjamOXZ0pDZaT5mntm0KP0oPRArqMY70V
-         fW74DDoADRoOEe+akXtGOqkkmO+qUy7v7CI1HWbmbT8vvsTKxTxVC+TRynMhzmIj1NEH
-         kCYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date;
-        bh=tg8eRVP8zBLy5T3GrQ7FiT/ZQysxW7XYE3PgBG3r7xA=;
-        b=ARCvfZ6UYkc3qhg2aHBLjq6GahdGc0fzOM8+twGuTKob3N9CXg436mHYt/sTopkNw6
-         6blLj8VME9FFUBDeJ9gqvsR/8xZgA3g3N4Wrjuh77WtPJhgfPheCV5NMFa+PqPbaAqmg
-         hSs8J9wPhksxDKBuKb38KjX6JBkCM1qd/Nvv8otFsg3chdnHxD1y1iejAsHnjND+PRM/
-         PcvC6G2+DGS+VQR1fmIZ3jDe2PUM/Bsd6ze3JLcMpQQCAqmW9s74i+3VvKPJDnW0OxUS
-         P7Uv32yLuaNVJDIrDmkb2jX3qpvvSf5eAcbaeEq3qut9S85HhtTjZa8fOKe/o4WXDPfm
-         2WEA==
-X-Gm-Message-State: ACgBeo196O0zAYn2jvxX0QjgCyTvNgo0m1WqjeqM2Zokl9udYJZpjIRW
-        9Zs7oITu4VBXTQnFotmyZWfNhzgmbxgJHg9PpA==
-X-Google-Smtp-Source: AA6agR6Vwr8MTE4dfhtiRJCF7nEbIHmBe90cMOH5rLhEb7utSv2g93fnXwMtOaf2cBTNvcUPMwCRqRrVvJJTAdM4+Q==
-X-Received: from varshat.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:a35])
- (user=teratipally job=sendgmr) by 2002:a0d:cb91:0:b0:345:454a:77d2 with SMTP
- id n139-20020a0dcb91000000b00345454a77d2mr8387739ywd.402.1662489371543; Tue,
- 06 Sep 2022 11:36:11 -0700 (PDT)
-Date:   Tue,  6 Sep 2022 18:36:00 +0000
-In-Reply-To: <20220906183600.1926315-1-teratipally@google.com>
-Mime-Version: 1.0
-References: <20220906183600.1926315-1-teratipally@google.com>
-X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
-Message-ID: <20220906183600.1926315-2-teratipally@google.com>
-Subject: [PATCH] xfs: fix up non-directory creation in SGID directories
-From:   Varsha Teratipally <teratipally@google.com>
-To:     Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S229469AbiIFT3k (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 6 Sep 2022 15:29:40 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E9BDFC5;
+        Tue,  6 Sep 2022 12:29:38 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 665A8478E; Tue,  6 Sep 2022 15:29:37 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 665A8478E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1662492577;
+        bh=XGLBKT9w9XX1IQDmpohtQXUS/bQ7LEyWy9wLLV07wy4=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=f0TOYAqq3DNhAF6nnR14fIi4+n8N0qXVeyO94lwN5bTTt1ovuVrBbkE6i4nvkhYyp
+         j0myfRk6evmW/J/L2L1kMLeesn7O3mG0DduGlRFV2P9AFb/bXCDMRRy89+G2ibprFK
+         bVDUxUV/CaccjngHJ3w9sgmffnlehVAnqqho7iJA=
+Date:   Tue, 6 Sep 2022 15:29:37 -0400
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Florian Weimer <fweimer@redhat.com>, tytso@mit.edu,
+        adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
+        trondmy@hammerspace.com, neilb@suse.de, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
+        lczerner@redhat.com, jack@suse.cz, brauner@kernel.org,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [RFC PATCH v2] statx, inode: document the new STATX_INO_VERSION
+ field
+Message-ID: <20220906192937.GE25323@fieldses.org>
+References: <20220901121714.20051-1-jlayton@kernel.org>
+ <874jxrqdji.fsf@oldenburg.str.redhat.com>
+ <81e57e81e4570d1659098f2bbc7c9049a605c5e8.camel@kernel.org>
+ <87ilm066jh.fsf@oldenburg.str.redhat.com>
+ <d1ee62062c3f805460b7bdf2776e759be4dba43f.camel@kernel.org>
+ <b8b0c5adc6598c57fb109447e3bc54492b54c36a.camel@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8b0c5adc6598c57fb109447e3bc54492b54c36a.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On Tue, Sep 06, 2022 at 01:04:05PM -0400, Jeff Layton wrote:
+> On Tue, 2022-09-06 at 12:41 -0400, Jeff Layton wrote:
+> > On Tue, 2022-09-06 at 14:17 +0200, Florian Weimer wrote:
+> > > * Jeff Layton:
+> > > 
+> > > > All of the existing implementations use all 64 bits. If you were to
+> > > > increment a 64 bit value every nanosecond, it will take >500 years for
+> > > > it to wrap. I'm hoping that's good enough. ;)
+> > > > 
+> > > > The implementation that all of the local Linux filesystems use track
+> > > > whether the value has been queried using one bit, so there you only get
+> > > > 63 bits of counter.
+> > > > 
+> > > > My original thinking here was that we should leave the spec "loose" to
+> > > > allow for implementations that may not be based on a counter. E.g. could
+> > > > some filesystem do this instead by hashing certain metadata?
+> > > 
+> > > Hashing might have collisions that could be triggered deliberately, so
+> > > probably not a good idea.  It's also hard to argue that random
+> > > collisions are unlikely.
+> > > 
+> > 
+> > In principle, if a filesystem could guarantee enough timestamp
+> > resolution, it's possible collisions could be hard to achieve. It's also
+> > possible you could factor in other metadata that wasn't necessarily
+> > visible to userland to try and ensure uniqueness in the counter.
+> > 
+> > Still...
 
-XFS always inherits the SGID bit if it is set on the parent inode, while
-the generic inode_init_owner does not do this in a few cases where it can
-create a possible security problem, see commit 0fa3ecd87848
-("Fix up non-directory creation in SGID directories") for details.
+I've got one other nagging worry, about the ordering of change attribute
+updates with respect to their corresponding changes.  I think with
+current implementations it's possible that the only change attribute
+update(s) may happen while the old file data is still visible, which
+means a concurrent reader could cache the old data with the new change
+attribute, and be left with a stale cache indefinitely.
 
-Switch XFS to use the generic helper for the normal path to fix this,
-just keeping the simple field inheritance open coded for the case of the
-non-sgid case with the bsdgrpid mount option.
+For the purposes of close-to-open semantics I think that's not a
+problem, though.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/xfs/xfs_inode.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+There may be some previous discussion of this in mailing list archives.
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 8ebd9c64aa48..e2a1db4cee43 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -775,6 +775,7 @@ xfs_init_new_inode(
- 	prid_t			prid,
- 	struct xfs_inode	**ipp)
- {
-+	struct inode		*dir = pip ? VFS_I(pip) : NULL;
- 	struct xfs_mount	*mp = tp->t_mountp;
- 	struct xfs_inode	*ip;
- 	unsigned int		flags;
-@@ -804,18 +805,17 @@ xfs_init_new_inode(
- 
- 	ASSERT(ip != NULL);
- 	inode = VFS_I(ip);
--	inode->i_mode = mode;
- 	set_nlink(inode, nlink);
--	inode->i_uid = current_fsuid();
- 	inode->i_rdev = rdev;
- 	ip->i_d.di_projid = prid;
- 
--	if (pip && XFS_INHERIT_GID(pip)) {
--		inode->i_gid = VFS_I(pip)->i_gid;
--		if ((VFS_I(pip)->i_mode & S_ISGID) && S_ISDIR(mode))
--			inode->i_mode |= S_ISGID;
-+	if (dir && !(dir->i_mode & S_ISGID) &&
-+	    (mp->m_flags & XFS_MOUNT_GRPID)) {
-+		inode->i_uid = current_fsuid();
-+		inode->i_gid = dir->i_gid;
-+		inode->i_mode = mode;
- 	} else {
--		inode->i_gid = current_fsgid();
-+		inode_init_owner(inode, dir, mode);
- 	}
- 
- 	/*
--- 
-2.37.2.789.g6183377224-goog
-
+--b.
