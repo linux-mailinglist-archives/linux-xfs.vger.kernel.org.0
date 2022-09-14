@@ -2,112 +2,100 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5435B8D3E
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Sep 2022 18:40:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C58FF5B8D4A
+	for <lists+linux-xfs@lfdr.de>; Wed, 14 Sep 2022 18:43:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbiINQj7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Sep 2022 12:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
+        id S229949AbiINQnJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Sep 2022 12:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229861AbiINQj4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Sep 2022 12:39:56 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1934EE2A;
-        Wed, 14 Sep 2022 09:39:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 743FFB8188A;
-        Wed, 14 Sep 2022 16:39:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27B4DC433D6;
-        Wed, 14 Sep 2022 16:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663173581;
-        bh=ZveLLZvJ+Ts6o0HbiWXx2xckAfycFTaLYVEB1OTB1JI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aGkulEqu6Y3SXg7eBlpZ8+XKiNwDWdU+lbMHC2JnBrw4vtH/yFmKFbaB7NUcNU7RW
-         KqwhV/uM4x17hc40rIciAqM7XuDnBrxUqRPnciG9q5N7pJF9vWFncEAbtDwoixY3j+
-         NdDpdBHYZO5bPZmZai1TryUev3jPY2dNB453t0K0m11gRyleFCtf4I74Q0ZZTMdG4D
-         KLcM8IUeqi5GLAwoLRV8+jDTIsrGp+GJ7ibwQzD19pjUzZfWRH3oOtbXY11IIHEeTn
-         xTrFsJxSu5iWElKLrIh47Pyd295awgvqYEyb3rGi5GUcV3UvYDt/PxVJjrwtk9zgvm
-         q0vmAuuQpHOqA==
-Date:   Wed, 14 Sep 2022 09:39:40 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Varsha Teratipally <teratipally@google.com>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] xfs: fix up non-directory creation in SGID directories
-Message-ID: <YyIDzPTn99XLTCFp@magnolia>
-References: <20220906183600.1926315-1-teratipally@google.com>
- <20220906183600.1926315-2-teratipally@google.com>
- <YxnWi5YcuY6Rbodt@kroah.com>
- <CAOQ4uxi4UH2pDEe1c6Mn52Qh1GABv2axuQqN=D6QHc7rKwQ2zQ@mail.gmail.com>
+        with ESMTP id S229953AbiINQnD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Sep 2022 12:43:03 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF956E8B5;
+        Wed, 14 Sep 2022 09:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=drGd84Y88D87DtABnnd7yh6bhIO3nFxVGZfiNKSay/w=; b=NJ6SAfFns58rMbVH+azyEAlIBe
+        P6n1bn9OXiF4fmUEUpqXGV/bE106qYmZbX/MwFVbHxtW6ssgk2PCE8UfNTQg1aWm+yynxcJ9j7g08
+        8/tgQ5onCzhF8MKSQaEQ6zA3aarCv+3D7yqjX8P1okh4bYNOq1WFHE1a4IQDf5KHdx5u5zA+Wymlc
+        S+7i9ko/VpxQnZRAsQ62an08GtRr8DVSaNW3j49A/qLEWP1M+neWYX1OVsjvTIT7LfH477m66cmRa
+        Nyt7CbCvmVkXs5Lmdv1xX0vhwGMMyYK/hJL+vP9XhDhzkKBGXkATkAHo1w7IXkb8b+clGQVzjQxRV
+        f5T3UCDA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1oYVTE-00GF4L-1R;
+        Wed, 14 Sep 2022 16:42:40 +0000
+Date:   Wed, 14 Sep 2022 17:42:40 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <YyIEgD8ksSZTsUdJ@ZenIV>
+References: <20220831041843.973026-1-jhubbard@nvidia.com>
+ <20220831041843.973026-5-jhubbard@nvidia.com>
+ <YxbtF1O8+kXhTNaj@infradead.org>
+ <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
+ <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
+ <YxhaJktqtHw3QTSG@infradead.org>
+ <YyFPtTtxYozCuXvu@ZenIV>
+ <20220914145233.cyeljaku4egeu4x2@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi4UH2pDEe1c6Mn52Qh1GABv2axuQqN=D6QHc7rKwQ2zQ@mail.gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220914145233.cyeljaku4egeu4x2@quack3>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Sep 08, 2022 at 03:02:41PM +0300, Amir Goldstein wrote:
-> On Thu, Sep 8, 2022 at 2:48 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Sep 06, 2022 at 06:36:00PM +0000, Varsha Teratipally wrote:
-> > > From: Christoph Hellwig <hch@lst.de>
-> > >
-> > > XFS always inherits the SGID bit if it is set on the parent inode, while
-> > > the generic inode_init_owner does not do this in a few cases where it can
-> > > create a possible security problem, see commit 0fa3ecd87848
-> > > ("Fix up non-directory creation in SGID directories") for details.
-> > >
-> > > Switch XFS to use the generic helper for the normal path to fix this,
-> > > just keeping the simple field inheritance open coded for the case of the
-> > > non-sgid case with the bsdgrpid mount option.
-> > >
-> > > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> > > Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> >
-> > Why did you not sign off on this if you are forwarding it on?
-> >
-> > Also, what is the git id of this commit in Linus's tree (we need that
-> > hint...)
-> >
-> > Please fix both up and resend and get the ack of the stable xfs
-> > developers on it as well.
-> >
+On Wed, Sep 14, 2022 at 04:52:33PM +0200, Jan Kara wrote:
+> > =================================================================================
+> > CASE 5: Pinning in order to write to the data within the page
+> > -------------------------------------------------------------
+> > Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
+> > write to a page's data, unpin" can cause a problem. Case 5 may be considered a
+> > superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
+> > other words, if the code is neither Case 1 nor Case 2, it may still require
+> > FOLL_PIN, for patterns like this:
+> > 
+> > Correct (uses FOLL_PIN calls):
+> >     pin_user_pages()
+> >     write to the data within the pages
+> >     unpin_user_pages()
+> > 
+> > INCORRECT (uses FOLL_GET calls):
+> >     get_user_pages()
+> >     write to the data within the pages
+> >     put_page()
+> > =================================================================================
 > 
-> Varsha,
-> 
-> FWIW, I re-tested the patch on top of v5.10.141,
-> so when re-posting [PATCH 5.10] you may add:
-> 
-> Tested-by: Amir Goldstein <amir73il@gmail.com>
-> 
-> Darrick or Christoph,
-> 
-> Can you please ACK this patch?
+> Yes, that was my point.
 
-With all the bookkeepping bits corrected (and assuming that the VFS
-fixes have been or are about to be applied):
+The thing is, at which point do we pin those pages?  pin_user_pages() works by
+userland address; by the time we get to any of those we have struct page
+references and no idea whether they are still mapped anywhere.
 
-Acked-by: Darrick J. Wong <djwong@kernel.org>
-
---D
-
-> 
-> Thanks,
-> Amir.
+How would that work?  What protects the area where you want to avoid running
+into pinned pages from previously acceptable page getting pinned?  If "they
+must have been successfully unmapped" is a part of what you are planning, we
+really do have a problem...
