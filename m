@@ -2,55 +2,45 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEB1D5F0A5F
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Sep 2022 13:30:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C69D5F0A9B
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Sep 2022 13:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230134AbiI3L1W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Sep 2022 07:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32840 "EHLO
+        id S231484AbiI3Le2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Sep 2022 07:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbiI3L0b (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Sep 2022 07:26:31 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA7E2EE2E;
-        Fri, 30 Sep 2022 04:19:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 77060B8280D;
-        Fri, 30 Sep 2022 11:19:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF6BC4347C;
-        Fri, 30 Sep 2022 11:19:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664536744;
-        bh=x94ngh3SR30xuVLdH4ioO8YH0PC8Q6w0q3cK1o2WgAs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E1+suCyBf4Mq23dZykr03FKvOkB2KN2pmo4hPt9FSzh5mDyAgRwzx4IBi3jD2xYta
-         2aH0OFlPU2JQZt0iJZDPo+cYiYNcx36IEelulL17hYdS4gazqnHPs16SmxbYG7/sIh
-         Mn4Q66DPEqaqeLSh88qk9dZa9Z+SLVE+UCijLAM0IQjzkK+04GeTC+Y6owqADky9WX
-         6QI36erT6IJdk6dUqhK+InrXSOp5nQD/lPUXYB6IWKocKgbeYVjwswHwH3urvBP8HN
-         fKO0R+gneckl6h3osuEOy9z4kQ2Iw97ImHbJTgAgvforuxHZb1TWNVjqkRNIonephB
-         t2vFf8ic4Ckug==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
-        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
-        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
-        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
-        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com
-Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: [PATCH v6 9/9] ext4: update times after I/O in write codepaths
-Date:   Fri, 30 Sep 2022 07:18:40 -0400
-Message-Id: <20220930111840.10695-10-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220930111840.10695-1-jlayton@kernel.org>
-References: <20220930111840.10695-1-jlayton@kernel.org>
+        with ESMTP id S232112AbiI3LeF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Sep 2022 07:34:05 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EACAFF8FAE;
+        Fri, 30 Sep 2022 04:27:30 -0700 (PDT)
+Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mf7DF5fPkzpTDQ;
+        Fri, 30 Sep 2022 19:24:29 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by kwepemi500019.china.huawei.com
+ (7.221.188.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 30 Sep
+ 2022 19:27:27 +0800
+From:   Guo Xuenan <guoxuenan@huawei.com>
+To:     <zlang@redhat.com>, <dchinner@redhat.com>, <djwong@kernel.org>
+CC:     <fstests@vger.kernel.org>, <guoxuenan@huawei.com>,
+        <houtao1@huawei.com>, <jack.qiu@huawei.com>,
+        <linux-xfs@vger.kernel.org>, <yi.zhang@huawei.com>,
+        <zhengbin13@huawei.com>
+Subject: [PATCH v3] xfs/554: xfs add illegal bestfree array size inject for leaf dir
+Date:   Fri, 30 Sep 2022 19:53:00 +0800
+Message-ID: <20220930115300.3311245-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220929113213.4r7be3dbr5r2nqqn@zlang-mailbox>
+References: <20220929113213.4r7be3dbr5r2nqqn@zlang-mailbox>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.27]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500019.china.huawei.com (7.221.188.117)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,79 +48,132 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The times currently get updated before the data is copied (or the DIO is
-issued) which is problematic for NFSv4. A READ+GETATTR could race with a
-write in such a way to make the client associate the state of the file
-with the wrong change attribute, and that association could persist
-indefinitely if the file sees no further changes.
+Test leaf dir allocting new block when bestfree array size
+less than data blocks count, which may lead to UAF.
 
-For this reason, it's better to bump the times and change attribute
-after the data has been copied or the DIO write issued.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
 ---
- fs/ext4/file.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+ tests/xfs/554     | 96 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/554.out |  7 ++++
+ 2 files changed, 103 insertions(+)
+ create mode 100755 tests/xfs/554
+ create mode 100644 tests/xfs/554.out
 
-diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-index 109d07629f81..1fa8e0239856 100644
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -246,7 +246,7 @@ static ssize_t ext4_write_checks(struct kiocb *iocb, struct iov_iter *from)
- 	if (count <= 0)
- 		return count;
- 
--	ret = file_modified(iocb->ki_filp);
-+	ret = file_remove_privs(iocb->ki_filp);
- 	if (ret)
- 		return ret;
- 	return count;
-@@ -269,7 +269,11 @@ static ssize_t ext4_buffered_write_iter(struct kiocb *iocb,
- 	current->backing_dev_info = inode_to_bdi(inode);
- 	ret = generic_perform_write(iocb, from);
- 	current->backing_dev_info = NULL;
--
-+	if (ret > 0) {
-+		ssize_t ret2 = file_update_time(iocb->ki_filp);
-+		if (ret2)
-+			ret = ret2;
-+	}
- out:
- 	inode_unlock(inode);
- 	if (likely(ret > 0)) {
-@@ -455,7 +459,7 @@ static ssize_t ext4_dio_write_checks(struct kiocb *iocb, struct iov_iter *from,
- 		goto restart;
- 	}
- 
--	ret = file_modified(file);
-+	ret = file_remove_privs(file);
- 	if (ret < 0)
- 		goto out;
- 
-@@ -572,6 +576,11 @@ static ssize_t ext4_dio_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (extend)
- 		ret = ext4_handle_inode_extension(inode, offset, ret, count);
- 
-+	if (ret > 0) {
-+		ssize_t ret2 = file_update_time(iocb->ki_filp);
-+		if (ret2)
-+			ret = ret2;
-+	}
- out:
- 	if (ilock_shared)
- 		inode_unlock_shared(inode);
-@@ -653,6 +662,11 @@ ext4_dax_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 	if (extend)
- 		ret = ext4_handle_inode_extension(inode, offset, ret, count);
-+	if (ret > 0) {
-+		ssize_t ret2 = file_update_time(iocb->ki_filp);
-+		if (ret2)
-+			ret = ret2;
-+	}
- out:
- 	inode_unlock(inode);
- 	if (ret > 0)
+diff --git a/tests/xfs/554 b/tests/xfs/554
+new file mode 100755
+index 00000000..ee088fdc
+--- /dev/null
++++ b/tests/xfs/554
+@@ -0,0 +1,96 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Huawei Limited.  All Rights Reserved.
++#
++# FS QA Test No. 554
++#
++# Check the running state of the XFS under illegal bestfree count
++# for leaf directory format.
++
++. ./common/preamble
++_begin_fstest auto quick dangerous
++
++# Import common functions.
++. ./common/populate
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++
++# Remove all entries in the last logic dir data block
++leaf_dir_remove_lastdb_entries()
++{
++	local dir_ino=$1
++	local blks_pdirb=$2
++	local nblocks=$(_scratch_xfs_get_metadata_field 'core.nblocks' "inode ${dir_ino}")
++	#last dir data block index = total blocks - one leaf dir block - one dir block
++	local last_db=$((nblocks - blks_pdirb * 2))
++
++	echo "last dir block $last_db" >> $seqres.full
++	_scratch_xfs_db -c "inode $dir_ino" -c "dblock ${last_db}" -c 'p du' |\
++		grep ".name =" | sed -e 's/^.*.name = //g' \
++		-e 's/\"//g' > $tmp.ldb_ents ||\
++		_fail "get last dir block entries failed"
++	cat $tmp.ldb_ents >> $seqres.full
++	_scratch_mount
++	cat $tmp.ldb_ents | while read f
++	do
++		rm -rf ${SCRATCH_MNT}/S_IFDIR.FMT_LEAF/$f
++	done
++	_scratch_unmount
++}
++
++echo "Format and mount"
++_scratch_mkfs > $seqres.full 2>&1
++_scratch_mount
++
++echo "Create and check leaf dir"
++blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
++dirblksz=`$XFS_INFO_PROG "${SCRATCH_DEV}" | grep naming.*bsize |
++	sed -e 's/^.*bsize=//g' -e 's/\([0-9]*\).*$/\1/g'`
++
++# Usually, following routine will create a directory with one leaf block
++# and three data block, meanwhile, the last data block is not full.
++__populate_create_dir "${SCRATCH_MNT}/S_IFDIR.FMT_LEAF" "$((dirblksz / 12))"
++leaf_dir="$(__populate_find_inode "${SCRATCH_MNT}/S_IFDIR.FMT_LEAF")"
++_scratch_unmount
++
++# Delete directory entries in the last directory block,
++leaf_dir_remove_lastdb_entries ${leaf_dir} $((dirblksz / blksz))
++
++# Check leaf directory
++leaf_lblk="$((32 * 1073741824 / blksz))"
++node_lblk="$((64 * 1073741824 / blksz))"
++__populate_check_xfs_dir "${leaf_dir}" "leaf"
++
++# Inject abnormal bestfree count
++echo "Inject bad bestfree count."
++_scratch_xfs_db -x -c "inode ${leaf_dir}" -c "dblock ${leaf_lblk}" \
++	-c "write ltail.bestcount 0"
++
++# Adding new entries to S_IFDIR.FMT_LEAF. Since we delete the files
++# in last directory block, current dir block have no spare space for new
++# entry. With ltail.bestcount setting illegally (eg. bestcount=0), then
++# creating new directories, which will trigger xfs to allocate new dir
++# block, meanwhile, exception will be triggered.
++# Root cause is that xfs don't examin the number bestfree slots, when the
++# slots number less than dir data blocks, if we need to allocate new dir
++# data block and update the bestfree array, we will use the dir block number
++# as index to assign bestfree array, while we did not check the leaf buf
++# boundary which may cause UAF or other memory access problem.
++echo "Add directory entries to trigger exception."
++_scratch_mount
++seq 1 $((dirblksz / 24)) | while read d
++do
++	mkdir "${SCRATCH_MNT}/S_IFDIR.FMT_LEAF/TEST$(printf "%.04d" "$d")" >> $seqres.full 2>&1
++done
++_scratch_unmount
++
++# Bad bestfree count should be found and fixed by xfs_repair
++_scratch_xfs_repair -n >> $seqres.full 2>&1
++egrep -q 'leaf block.*bad tail' $seqres.full && echo "Repair found problems."
++_repair_scratch_fs >> $seqres.full 2>&1 || _fail "Repair failed!"
++
++# Success, all done
++status=0
++exit
+diff --git a/tests/xfs/554.out b/tests/xfs/554.out
+new file mode 100644
+index 00000000..398ee7d5
+--- /dev/null
++++ b/tests/xfs/554.out
+@@ -0,0 +1,7 @@
++QA output created by 554
++Format and mount
++Create and check leaf dir
++Inject bad bestfree count.
++ltail.bestcount = 0
++Add directory entries to trigger exception.
++Repair found problems.
 -- 
-2.37.3
+2.25.1
 
