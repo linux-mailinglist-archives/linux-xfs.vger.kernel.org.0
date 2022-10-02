@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB295F24FD
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:36:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36B895F24F8
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:35:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230105AbiJBSg2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
+        id S230108AbiJBSff (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230111AbiJBSg0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:36:26 -0400
+        with ESMTP id S230102AbiJBSfd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:35:33 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E1E3B949
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:36:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 462532A956
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:35:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3593960F04
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:36:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FDB9C433C1;
-        Sun,  2 Oct 2022 18:36:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F64360F04
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:35:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A98D4C433D6;
+        Sun,  2 Oct 2022 18:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735784;
-        bh=FurszeHmIic3q3wnRPvexm+049Xqq/0ezG1b9NBAn40=;
+        s=k20201202; t=1664735731;
+        bh=UBkf+Qtv+Qc5Zqh3Kys0oOebeY2eO+WGm9sAAvAu3GE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Yylo+oOZX67GnkErrrb5icuCuMyLzx74DPerOqmIYhcfPwlKTeGZ1brdwjABUWjnI
-         6G56GX/QxdCw+JVbi4NTbibTWwLIJkXzu82kZjuMT5oCt/EGo3aQ3CeQHYI1WDf3UD
-         pJh2YmcfGnQDVN+6P5nqi3YAkIrfjr4qSNKFvvZTmHHOo5XiojvLWaaHKfK8z+wB/y
-         6Ada9lGVJ7+XIVztdyQVSDx3N/H+PTmE3lsCI7WgB5uCg5k2UhMkOYp1ur9GKf+CCs
-         GQF8IguLbFjtLp7ssYIF11R5hSIArPhdutNSYg3VI9zJTNVAVmc9EKpCT3GtsMjdDW
-         ypdXeX/pdzsMw==
-Subject: [PATCH 6/6] xfs: check for reverse mapping records that could be
- merged
+        b=CotHJ7MOQgegByFqCirrBCKMymTtjw1eo/AviSmKvnWsSe1Lq7HSs9dICmsq7nVvD
+         R6kEW27NhShSlKt8fuV13pP8Zm8AaN2dKJZjdbs1cWDY1mEqQ1R8ThNpgUV2XskXQz
+         7BUgLciyOgCxBgqYH5er/xotc2h+3rrv+Qw+Xzl4W0ddeQGwL5bnOovP7wl0w6nG3d
+         YQ1+UZ4k3cNndVOBtMVshUSPOALcPqybcEsjcdnIW1uDWTtDihztAX+f/5tQBSHD9y
+         GS1V9eiWPqfA0hym8y3eLsfF4kif/f2Im1jCJ9zjgNHUMwnSCxsc7D8uev7eTO671f
+         7CqDmgPX7lOxw==
+Subject: [PATCH 1/6] xfs: change bmap scrubber to store the previous mapping
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:36 -0700
-Message-ID: <166473483687.1084923.4272579683695514551.stgit@magnolia>
+Message-ID: <166473483619.1084923.6959896326767155292.stgit@magnolia>
 In-Reply-To: <166473483595.1084923.1946295148534639238.stgit@magnolia>
 References: <166473483595.1084923.1946295148534639238.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,89 +54,66 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Enhance the rmap scrubber to flag adjacent records that could be merged.
+Convert the inode data/attr/cow fork scrubber to remember the entire
+previous mapping, not just the next expected offset.  No behavior
+changes here, but this will enable some better checking in subsequent
+patches.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/rmap.c |   52 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+ fs/xfs/scrub/bmap.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/rmap.c b/fs/xfs/scrub/rmap.c
-index efb13a21afbc..76ac2279e37d 100644
---- a/fs/xfs/scrub/rmap.c
-+++ b/fs/xfs/scrub/rmap.c
-@@ -39,6 +39,12 @@ struct xchk_rmap {
- 	 * allocations that cannot be shared.
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index d310f74fe650..aaa73a2bdd17 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -94,7 +94,8 @@ xchk_setup_inode_bmap(
+ struct xchk_bmap_info {
+ 	struct xfs_scrub	*sc;
+ 	struct xfs_iext_cursor	icur;
+-	xfs_fileoff_t		lastoff;
++	struct xfs_bmbt_irec	prev_rec;
++
+ 	bool			is_rt;
+ 	bool			is_shared;
+ 	bool			was_loaded;
+@@ -402,7 +403,8 @@ xchk_bmap_iextent(
+ 	 * Check for out-of-order extents.  This record could have come
+ 	 * from the incore list, for which there is no ordering check.
  	 */
- 	struct xfs_rmap_irec	overlap_rec;
-+
-+	/*
-+	 * The previous rmapbt record, so that we can check for two records
-+	 * that could be one.
-+	 */
-+	struct xfs_rmap_irec	prev_rec;
- };
+-	if (irec->br_startoff < info->lastoff)
++	if (irec->br_startoff < info->prev_rec.br_startoff +
++				info->prev_rec.br_blockcount)
+ 		xchk_fblock_set_corrupt(info->sc, info->whichfork,
+ 				irec->br_startoff);
  
- /* Cross-reference a rmap against the refcount btree. */
-@@ -146,6 +152,51 @@ xchk_rmapbt_check_overlapping(
- 	memcpy(&cr->overlap_rec, irec, sizeof(struct xfs_rmap_irec));
- }
+@@ -703,7 +705,8 @@ xchk_bmap_iextent_delalloc(
+ 	 * Check for out-of-order extents.  This record could have come
+ 	 * from the incore list, for which there is no ordering check.
+ 	 */
+-	if (irec->br_startoff < info->lastoff)
++	if (irec->br_startoff < info->prev_rec.br_startoff +
++				info->prev_rec.br_blockcount)
+ 		xchk_fblock_set_corrupt(info->sc, info->whichfork,
+ 				irec->br_startoff);
  
-+/* Decide if two reverse-mapping records can be merged. */
-+static inline bool
-+xchk_rmap_mergeable(
-+	struct xchk_rmap		*cr,
-+	const struct xfs_rmap_irec	*r2)
-+{
-+	const struct xfs_rmap_irec	*r1 = &cr->prev_rec;
-+
-+	/* Ignore if prev_rec is not yet initialized. */
-+	if (cr->prev_rec.rm_blockcount == 0)
-+		return false;
-+
-+	if (r1->rm_owner != r2->rm_owner)
-+		return false;
-+	if (r1->rm_startblock + r1->rm_blockcount != r2->rm_startblock)
-+		return false;
-+	if ((unsigned long long)r1->rm_blockcount + r2->rm_blockcount >
-+	    XFS_RMAP_LEN_MAX)
-+		return false;
-+	if (XFS_RMAP_NON_INODE_OWNER(r2->rm_owner))
-+		return true;
-+	/* must be an inode owner below here */
-+	if (r1->rm_flags != r2->rm_flags)
-+		return false;
-+	if (r1->rm_flags & XFS_RMAP_BMBT_BLOCK)
-+		return true;
-+	return r1->rm_offset + r1->rm_blockcount == r2->rm_offset;
-+}
-+
-+/* Flag failures for records that could be merged. */
-+STATIC void
-+xchk_rmapbt_check_mergeable(
-+	struct xchk_btree		*bs,
-+	struct xchk_rmap		*cr,
-+	const struct xfs_rmap_irec	*irec)
-+{
-+	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
-+		return;
-+
-+	if (xchk_rmap_mergeable(cr, irec))
-+		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
-+
-+	memcpy(&cr->prev_rec, irec, sizeof(struct xfs_rmap_irec));
-+}
-+
- /* Scrub an rmapbt record. */
- STATIC int
- xchk_rmapbt_rec(
-@@ -218,6 +269,7 @@ xchk_rmapbt_rec(
- 			xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+@@ -797,7 +800,6 @@ xchk_bmap(
+ 		goto out;
+ 
+ 	/* Scrub extent records. */
+-	info.lastoff = 0;
+ 	ifp = xfs_ifork_ptr(ip, whichfork);
+ 	for_each_xfs_iext(ifp, &info.icur, &irec) {
+ 		if (xchk_should_terminate(sc, &error) ||
+@@ -814,7 +816,7 @@ xchk_bmap(
+ 			xchk_bmap_iextent_delalloc(ip, &info, &irec);
+ 		else
+ 			xchk_bmap_iextent(ip, &info, &irec);
+-		info.lastoff = irec.br_startoff + irec.br_blockcount;
++		memcpy(&info.prev_rec, &irec, sizeof(struct xfs_bmbt_irec));
  	}
  
-+	xchk_rmapbt_check_mergeable(bs, cr, &irec);
- 	xchk_rmapbt_check_overlapping(bs, cr, &irec);
- 	xchk_rmapbt_xref(bs->sc, &irec);
- out:
+ 	error = xchk_bmap_check_rmaps(sc, whichfork);
 
