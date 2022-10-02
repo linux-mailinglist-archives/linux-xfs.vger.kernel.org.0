@@ -2,41 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23CC15F24A1
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:24:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 248C85F24EA
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbiJBSYX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        id S230090AbiJBSdT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229919AbiJBSYW (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:24:22 -0400
+        with ESMTP id S230084AbiJBSdS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:33:18 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E4225295
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:24:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F5B3C164
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:33:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BD2D9B80D7E
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CFA9C433D6;
-        Sun,  2 Oct 2022 18:24:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AB7F5B80D6F
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:33:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E68EC433C1;
+        Sun,  2 Oct 2022 18:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735058;
-        bh=d/vTjAuabvZMW1h6fFpOAZmbCjxnjiMKDmDBFSX2eK4=;
-        h=Subject:From:To:Cc:Date:From;
-        b=qfE7EyKwvE9YXFpI5fC3FF425RGPUOdmhUyMwZ+6jmpHnkwhnykCAKjVjmhFif9nt
-         VY4rWhhm6LBd3AUEuF+MUkjmNonHMK8ukISmBnwcPSI0VjbJ1SpoROrWamE3G9spBH
-         2Gl+v+8QIS0qx0gXt9uQSpQsSWRlaPzVxAfgiT3IL5/+yDfs7uOneIQ8sp3ydDJFJm
-         +TYk0MCTpx1T8R7xlQfm32SX6CQSqIg/aXymcJGEGtij1AJfm2rTdN8yJE7sj4/Nzt
-         sPgE4ow4aC005toac4XxRsDrNJX8wukVh82UaOFbCmw1mzTwbdSepK8lyqF+43zPfR
-         /HZ9D3B1fCoGg==
-Subject: [PATCHSET v23.1 0/3] xfs: detect incorrect gaps in inode btree
+        s=k20201202; t=1664735594;
+        bh=3cd5W5KGCLep9vweM/Q76iCXdW+N13/MKNdn5DHFdP4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=r85DrXDixw7BkxdLZucgC8/T2cbXxV6ZJPM8Yc1i0Ag8OIQAAwo3I+70ojsYuIK/i
+         NCmEZut2t2LpxaKAUIK4BrYa5WbreHk2BJEFP6ZuqNJASbykHtEksx3rbAs52LfvZ4
+         xA/zddKfU0V6m+idt+Ewz1jAwXRdPRp4w0CTsFD6uWc6W/VOYFTSaVACCdvIJFIyoL
+         Di3VNolgZuJfdbjibj2GLWA4VImDfURA/JfyZ0ZNtu7EDaLMQ2Q7B0wv03UYIPtocw
+         EboPC5FYucG++oEvkRGDn4hLyBxjFygADBhzo+/LWdw1npyQB3vMvFlj8t27ZKUSIF
+         3FGqihsXkXrsg==
+Subject: [PATCH 1/3] xfs: clean up broken eearly-exit code in the inode btree
+ scrubber
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:19 -0700
-Message-ID: <166473481949.1084372.14443532201653453226.stgit@magnolia>
+Message-ID: <166473481968.1084372.18253504968225202018.stgit@magnolia>
+In-Reply-To: <166473481949.1084372.14443532201653453226.stgit@magnolia>
+References: <166473481949.1084372.14443532201653453226.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -50,32 +53,102 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series continues the corrections for a couple of problems I found
-in the inode btree scrubber.  The first problem is that we don't
-directly check the inobt records have a direct correspondence with the
-finobt records, and vice versa.  The second problem occurs on
-filesystems with sparse inode chunks -- the cross-referencing we do
-detects sparseness, but it doesn't actually check the consistency
-between the inobt hole records and the rmap data.
+Corrupt inode chunks should cause us to exit early after setting the
+CORRUPT flag on the scrub state.  While we're at it, collapse trivial
+helpers.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-detect-inobt-gaps
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-detect-inobt-gaps
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_ialloc.c |   82 ++++++++----
- fs/xfs/libxfs/xfs_ialloc.h |    5 -
- fs/xfs/scrub/ialloc.c      |  292 +++++++++++++++++++++++++++++++++++---------
- 3 files changed, 281 insertions(+), 98 deletions(-)
+ fs/xfs/scrub/ialloc.c |   52 +++++++++++++++++++++----------------------------
+ 1 file changed, 22 insertions(+), 30 deletions(-)
+
+
+diff --git a/fs/xfs/scrub/ialloc.c b/fs/xfs/scrub/ialloc.c
+index efe346ddd1b7..89eaaa12b6ae 100644
+--- a/fs/xfs/scrub/ialloc.c
++++ b/fs/xfs/scrub/ialloc.c
+@@ -79,44 +79,33 @@ xchk_iallocbt_chunk_xref_other(
+ 		xchk_btree_xref_set_corrupt(sc, *pcur, 0);
+ }
+ 
+-/* Cross-reference with the other btrees. */
+-STATIC void
+-xchk_iallocbt_chunk_xref(
+-	struct xfs_scrub		*sc,
++/* Is this chunk worth checking and cross-referencing? */
++STATIC bool
++xchk_iallocbt_chunk(
++	struct xchk_btree		*bs,
+ 	struct xfs_inobt_rec_incore	*irec,
+ 	xfs_agino_t			agino,
+-	xfs_agblock_t			agbno,
+ 	xfs_extlen_t			len)
+ {
+-	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+-		return;
++	struct xfs_scrub		*sc = bs->sc;
++	struct xfs_mount		*mp = bs->cur->bc_mp;
++	struct xfs_perag		*pag = bs->cur->bc_ag.pag;
++	xfs_agblock_t			agbno;
++
++	agbno = XFS_AGINO_TO_AGBNO(mp, agino);
++	if (agbno + len <= agbno ||
++	    !xfs_verify_agbno(pag, agbno) ||
++	    !xfs_verify_agbno(pag, agbno + len - 1))
++		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
++
++	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
++		return false;
+ 
+ 	xchk_xref_is_used_space(sc, agbno, len);
+ 	xchk_iallocbt_chunk_xref_other(sc, irec, agino);
+ 	xchk_xref_is_owned_by(sc, agbno, len, &XFS_RMAP_OINFO_INODES);
+ 	xchk_xref_is_not_shared(sc, agbno, len);
+-}
+-
+-/* Is this chunk worth checking? */
+-STATIC bool
+-xchk_iallocbt_chunk(
+-	struct xchk_btree		*bs,
+-	struct xfs_inobt_rec_incore	*irec,
+-	xfs_agino_t			agino,
+-	xfs_extlen_t			len)
+-{
+-	struct xfs_mount		*mp = bs->cur->bc_mp;
+-	struct xfs_perag		*pag = bs->cur->bc_ag.pag;
+-	xfs_agblock_t			bno;
+-
+-	bno = XFS_AGINO_TO_AGBNO(mp, agino);
+-	if (bno + len <= bno ||
+-	    !xfs_verify_agbno(pag, bno) ||
+-	    !xfs_verify_agbno(pag, bno + len - 1))
+-		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+-
+-	xchk_iallocbt_chunk_xref(bs->sc, irec, agino, bno, len);
+-	xchk_xref_is_not_cow_staging(bs->sc, bno, len);
++	xchk_xref_is_not_cow_staging(sc, agbno, len);
+ 	return true;
+ }
+ 
+@@ -486,7 +475,7 @@ xchk_iallocbt_rec(
+ 		if (holemask & 1)
+ 			holecount += XFS_INODES_PER_HOLEMASK_BIT;
+ 		else if (!xchk_iallocbt_chunk(bs, &irec, agino, len))
+-			break;
++			goto out;
+ 		holemask >>= 1;
+ 		agino += XFS_INODES_PER_HOLEMASK_BIT;
+ 	}
+@@ -496,6 +485,9 @@ xchk_iallocbt_rec(
+ 		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+ 
+ check_clusters:
++	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
++		goto out;
++
+ 	error = xchk_iallocbt_check_clusters(bs, &irec);
+ 	if (error)
+ 		goto out;
 
