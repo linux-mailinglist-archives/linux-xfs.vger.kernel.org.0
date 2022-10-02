@@ -2,42 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C56C5F24A6
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B8B65F24F9
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbiJBSYu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47634 "EHLO
+        id S230102AbiJBSfq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:35:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229935AbiJBSYs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:24:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ED29B85F
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:24:47 -0700 (PDT)
+        with ESMTP id S230101AbiJBSfq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:35:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF0F2B625
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:35:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF11160EFD
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EFEC433D6;
-        Sun,  2 Oct 2022 18:24:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 80123B80D88
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:35:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CCABC433D6;
+        Sun,  2 Oct 2022 18:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735086;
-        bh=PjRCFSSuoxJf7Icc2KdXlq3X6fUuWbLfhpTnyoarjPM=;
-        h=Subject:From:To:Cc:Date:From;
-        b=puqMgxFBEcoFkSF9e8QnwNNAdCpUi4ZttJDdaqimT8L4DtKe6UXrT02a3/Lb72XY0
-         M4wHNamtrJWCp8ZO2VzjoBVHy2e+pLtIE7QQ4cSc+kRWSVUAXf+sjgg+ivesnLmg9l
-         /ieG0M1p4KG95FxEn0EXMapNykMkCap+UIntj0/87srZL2i3gmQspxN5ZeLqjxV5PE
-         8gmUJZMEN5mKxVM3j2jixBhoOsjHuvfHVZiHeUDk4qixN6mTbbiqYoUu9OJPSfLZwG
-         SQq/DzEqdWNcdCmsFU6/QxMHaf9YAH7DwL/IwvbNn/q5ZiJR47gn2BlMAbLnUVhAcp
-         ye/siuAkpSkhQ==
-Subject: [PATCHSET v23.1 0/6] xfs: detect mergeable and overlapping btree
- records
+        s=k20201202; t=1664735742;
+        bh=/1Ir53agzvSCtIdGn9gzJeDDQuthEAXwKkIqgM0lu5Y=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BovnOEyveTQSem8bw363V90KNVH8mE4GyWPBdgDUA7st8p9BkvFuWvpycO1Gbmk9I
+         jqSkPsfEVJp86YlHW5jqbIxFoRF2i+caSp2ZjnqjJ9u+GXEOH+h8ajoZ0ZcijyGLuJ
+         i14iQXn5eJgt+LjuvtCVyQ+K/6YPVwNDrMdrOq/79pu/VhVutWV0nUlNkGGEwQlBqx
+         M8y6o2xO/oSuPemXAa7rCnevxdP3FHPF+WJGiUDdw9oe/SXr9G0KW181e8qfs2kCxT
+         27plWCU61tDVkcEVcWYxwhh0tJe1dO6pms3i6bjXHj4utYm/3ZYJfeH5JL+GSrVSAU
+         337MywT81rW9A==
+Subject: [PATCH 2/6] xfs: alert the user about data/attr fork mappings that
+ could be merged
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:36 -0700
-Message-ID: <166473483595.1084923.1946295148534639238.stgit@magnolia>
+Message-ID: <166473483633.1084923.15717918189479146706.stgit@magnolia>
+In-Reply-To: <166473483595.1084923.1946295148534639238.stgit@magnolia>
+References: <166473483595.1084923.1946295148534639238.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -51,53 +53,62 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-While I was doing differential fuzz analysis between xfs_scrub and
-xfs_repair, I noticed that xfs_repair was only partially effective at
-detecting btree records that can be merged, and xfs_scrub totally didn't
-notice at all.
+If the data or attr forks have mappings that could be merged, let the
+user know that the structure could be optimized.  This isn't a
+filesystem corruption since the regular filesystem does not try to be
+smart about merging bmbt records.
 
-For every interval btree type except for the bmbt, there should never
-exist two adjacent records with adjacent keyspaces because the
-blockcount field is always large enough to span the entire keyspace of
-the domain.  This is because the free space, rmap, and refcount btrees
-have a blockcount field large enough to store the maximum AG length, and
-there can never be an allocation larger than an AG.
-
-The bmbt is a different story due to its ondisk encoding where the
-blockcount is only 21 bits wide.  Because AGs can span up to 2^31 blocks
-and the RT volume can span up to 2^52 blocks, a preallocation of 2^22
-blocks will be expressed as two records of 2^21 length.  We don't
-opportunistically combine records when doing bmbt operations, which is
-why the fsck tools have never complained about this scenario.
-
-Offline repair is partially effective at detecting mergeable records
-because I taught it to do that for the rmap and refcount btrees.  This
-series enhances the free space, rmap, and refcount scrubbers to detect
-mergeable records.  For the bmbt, it will flag the file as being
-eligible for an optimization to shrink the size of the data structure.
-
-The last patch in this set also enhances the rmap scrubber to detect
-records that overlap incorrectly.  This check is done automatically for
-non-overlapping btree types, but we have to do it separately for the
-rmapbt because there are constraints on which allocation types are
-allowed to overlap.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-detect-mergeable-records
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/alloc.c    |   31 +++++++++++-
- fs/xfs/scrub/bmap.c     |   39 +++++++++++++--
- fs/xfs/scrub/refcount.c |   50 +++++++++++++++++++
- fs/xfs/scrub/rmap.c     |  126 ++++++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 238 insertions(+), 8 deletions(-)
+ fs/xfs/scrub/bmap.c |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index aaa73a2bdd17..0f5d7fb61ca1 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -390,6 +390,29 @@ xchk_bmap_dirattr_extent(
+ 		xchk_fblock_set_corrupt(info->sc, info->whichfork, off);
+ }
+ 
++/* Are these two mappings mergeable? */
++static inline bool
++xchk_bmap_mergeable(
++	struct xchk_bmap_info		*info,
++	const struct xfs_bmbt_irec	*b2)
++{
++	const struct xfs_bmbt_irec	*b1 = &info->prev_rec;
++
++	/* Skip uninitialized prev_rec and COW fork extents */
++	if (b1->br_blockcount == 0)
++		return false;
++	if (info->whichfork == XFS_COW_FORK)
++		return false;
++
++	if (b1->br_startoff + b1->br_blockcount != b2->br_startoff)
++		return false;
++	if (b1->br_startblock + b1->br_blockcount != b2->br_startblock)
++		return false;
++	if (b1->br_blockcount + b2->br_blockcount > BMBT_BLOCKCOUNT_MASK)
++		return false;
++	return b1->br_state == b2->br_state;
++}
++
+ /* Scrub a single extent record. */
+ STATIC void
+ xchk_bmap_iextent(
+@@ -441,6 +464,10 @@ xchk_bmap_iextent(
+ 	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return;
+ 
++	/* Notify the user of mergeable records in the data/attr forks. */
++	if (xchk_bmap_mergeable(info, irec))
++		xchk_ino_set_preen(info->sc, info->sc->ip->i_ino);
++
+ 	if (info->is_rt)
+ 		xchk_bmap_rt_iextent_xref(ip, info, irec);
+ 	else
 
