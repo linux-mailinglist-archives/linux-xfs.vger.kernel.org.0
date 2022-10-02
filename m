@@ -2,41 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49F325F24A7
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:24:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F4D75F2501
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:37:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbiJBSY4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:24:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48144 "EHLO
+        id S230103AbiJBShJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229935AbiJBSYy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:24:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E69739591
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:24:52 -0700 (PDT)
+        with ESMTP id S230111AbiJBShI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:37:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C146B3BC61
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:37:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8182060EFD
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9569C433D6;
-        Sun,  2 Oct 2022 18:24:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6199760EDB
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:37:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C16A2C433C1;
+        Sun,  2 Oct 2022 18:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735091;
-        bh=g9D8xzqj8CCK43nlC7PcLLdB1DIw6f4nX/bJv47ykqA=;
-        h=Subject:From:To:Cc:Date:From;
-        b=XYjYfyCrrCl1Le4qVjy2uLC+qSQbH0XDb6UK7doibycgiR72TyOrksHu5ExdUT0UJ
-         OSxd7I8hLgP5WaHZL2VHu15fBfVEtiGuELR6psqxU5HE1ELoZgOdrz70EmmNLCovRz
-         eaaVQraGmOzd4XSArfENfvt9g3AOnmDIPIOXQI6WlwkPjPdInzdU3jK03nl3mAIfAi
-         ja3AfhjOgokXxlzgmkRJIWRPmGLYWXXknmFFjJvo19FLq2PjfrU3noIYoOwbWNqnQU
-         7B7fH6uTp2ZlmswaRzrdvcMHOXnUMcT8IfmfBYe4DzIgg+2poFUgJ0zCbPdlMs4o9B
-         VBIHobU13RAkw==
-Subject: [PATCHSET v23.1 0/9] xfs: clean up memory management in xattr scrub
+        s=k20201202; t=1664735826;
+        bh=aOdr7b+qzAXPWuosG/aLs54TJRLCpjhuV3psAz1P1AU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=NJchXbQxSZ303AENQvzuw3TadqMoFKM0U9Z005UcqUa2KRCDZ2j7WIoXf+su8axyg
+         6ZEgB4OKOvLpLu9UI+9f/HJlpYS3AUae97LqrHN5dkpi5dwFbrF7K9eGUC0elAw6Pn
+         rZ4ro4vaAlDKHjmY5E07rxp63eRcox28STc1+p8ZYXEHodQIaEEZB9LosJR0H8cRyB
+         MGvflCYVyOqbAthkZkPQUSk34lUqu+2T7w6+p8vt0ygnjmGAPxwK1U+6l0nckmq/nN
+         3dFqHqOIdyrvUTA0NIMwnayfEOF7R88fcg8UeTA1nZSQ3Gyqc9XuCyaSMFxRP9xIBS
+         dPa9NKyXt3SmQ==
+Subject: [PATCH 4/9] xfs: split valuebuf from xchk_xattr_buf.buf
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:40 -0700
-Message-ID: <166473483982.1085108.101544412199880535.stgit@magnolia>
+Message-ID: <166473484052.1085108.3416227383582444958.stgit@magnolia>
+In-Reply-To: <166473483982.1085108.101544412199880535.stgit@magnolia>
+References: <166473483982.1085108.101544412199880535.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -50,34 +52,187 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Currently, the extended attribute scrubber uses a single VLA to store
-all the context information needed in various parts of the scrubber
-code.  This includes xattr leaf block space usage bitmaps, and the value
-buffer used to check the correctness of remote xattr value block
-headers.  We try to minimize the insanity through the use of helper
-functions, but this is a memory management nightmare.  Clean this up by
-making the bitmap and value pointers explicit members of struct
-xchk_xattr_buf.
+Move the xattr value buffer from somewhere in xchk_xattr_buf.buf[] to an
+explicit pointer.
 
-Second, strengthen the xattr checking by teaching it to look for overlapping
-data structures in the shortform attr data.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-fix-xattr-memory-mgmt
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c  |  284 +++++++++++++++++++++++++++++++++++---------------
- fs/xfs/scrub/attr.h  |   60 +----------
- fs/xfs/scrub/scrub.c |    3 +
- fs/xfs/scrub/scrub.h |   10 ++
- 4 files changed, 221 insertions(+), 136 deletions(-)
+ fs/xfs/scrub/attr.c |   89 +++++++++++++++++++++++++--------------------------
+ fs/xfs/scrub/attr.h |   21 ++----------
+ 2 files changed, 46 insertions(+), 64 deletions(-)
+
+
+diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
+index 6f3051728da0..71164a0373f1 100644
+--- a/fs/xfs/scrub/attr.c
++++ b/fs/xfs/scrub/attr.c
+@@ -31,6 +31,9 @@ xchk_xattr_buf_cleanup(
+ 	ab->freemap = NULL;
+ 	kvfree(ab->usedmap);
+ 	ab->usedmap = NULL;
++	kvfree(ab->value);
++	ab->value = NULL;
++	ab->value_sz = 0;
+ }
+ 
+ /*
+@@ -44,54 +47,45 @@ xchk_setup_xattr_buf(
+ 	size_t			value_size,
+ 	gfp_t			flags)
+ {
+-	size_t			sz = value_size;
+ 	size_t			bmp_sz;
+ 	struct xchk_xattr_buf	*ab = sc->buf;
+-	unsigned long		*old_usedmap = NULL;
+-	unsigned long		*old_freemap = NULL;
++	void			*new_val;
+ 
+ 	bmp_sz = sizeof(long) * BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
+ 
+-	/*
+-	 * If there's already a buffer, figure out if we need to reallocate it
+-	 * to accommodate a larger size.
+-	 */
+-	if (ab) {
+-		if (sz <= ab->sz)
+-			return 0;
+-		old_freemap = ab->freemap;
+-		old_usedmap = ab->usedmap;
+-		kvfree(ab);
+-		sc->buf = NULL;
+-	}
++	if (ab)
++		goto resize_value;
+ 
+-	/*
+-	 * Don't zero the buffer upon allocation to avoid runtime overhead.
+-	 * All users must be careful never to read uninitialized contents.
+-	 */
+-	ab = kvmalloc(sizeof(*ab) + sz, flags);
++	ab = kvzalloc(sizeof(struct xchk_xattr_buf), flags);
+ 	if (!ab)
+ 		return -ENOMEM;
+-	ab->sz = sz;
+ 	sc->buf = ab;
+ 	sc->buf_cleanup = xchk_xattr_buf_cleanup;
+ 
+-	if (old_usedmap) {
+-		ab->usedmap = old_usedmap;
+-	} else {
+-		ab->usedmap = kvmalloc(bmp_sz, flags);
+-		if (!ab->usedmap)
+-			return -ENOMEM;
+-	}
++	ab->usedmap = kvmalloc(bmp_sz, flags);
++	if (!ab->usedmap)
++		return -ENOMEM;
++
++	ab->freemap = kvmalloc(bmp_sz, flags);
++	if (!ab->freemap)
++		return -ENOMEM;
+ 
+-	if (old_freemap) {
+-		ab->freemap = old_freemap;
+-	} else {
+-		ab->freemap = kvmalloc(bmp_sz, flags);
+-		if (!ab->freemap)
+-			return -ENOMEM;
++resize_value:
++	if (ab->value_sz >= value_size)
++		return 0;
++
++	if (ab->value) {
++		kvfree(ab->value);
++		ab->value = NULL;
++		ab->value_sz = 0;
+ 	}
+ 
++	new_val = kvmalloc(value_size, flags);
++	if (!new_val)
++		return -ENOMEM;
++
++	ab->value = new_val;
++	ab->value_sz = value_size;
+ 	return 0;
+ }
+ 
+@@ -140,11 +134,24 @@ xchk_xattr_listent(
+ 	int				namelen,
+ 	int				valuelen)
+ {
++	struct xfs_da_args		args = {
++		.op_flags		= XFS_DA_OP_NOTIME,
++		.attr_filter		= flags & XFS_ATTR_NSP_ONDISK_MASK,
++		.geo			= context->dp->i_mount->m_attr_geo,
++		.whichfork		= XFS_ATTR_FORK,
++		.dp			= context->dp,
++		.name			= name,
++		.namelen		= namelen,
++		.hashval		= xfs_da_hashname(name, namelen),
++		.trans			= context->tp,
++		.valuelen		= valuelen,
++	};
++	struct xchk_xattr_buf		*ab;
+ 	struct xchk_xattr		*sx;
+-	struct xfs_da_args		args = { NULL };
+ 	int				error = 0;
+ 
+ 	sx = container_of(context, struct xchk_xattr, context);
++	ab = sx->sc->buf;
+ 
+ 	if (xchk_should_terminate(sx->sc, &error)) {
+ 		context->seen_enough = error;
+@@ -176,17 +183,7 @@ xchk_xattr_listent(
+ 		return;
+ 	}
+ 
+-	args.op_flags = XFS_DA_OP_NOTIME;
+-	args.attr_filter = flags & XFS_ATTR_NSP_ONDISK_MASK;
+-	args.geo = context->dp->i_mount->m_attr_geo;
+-	args.whichfork = XFS_ATTR_FORK;
+-	args.dp = context->dp;
+-	args.name = name;
+-	args.namelen = namelen;
+-	args.hashval = xfs_da_hashname(args.name, args.namelen);
+-	args.trans = context->tp;
+-	args.value = xchk_xattr_valuebuf(sx->sc);
+-	args.valuelen = valuelen;
++	args.value = ab->value;
+ 
+ 	error = xfs_attr_get_ilocked(&args);
+ 	/* ENODATA means the hash lookup failed and the attr is bad */
+diff --git a/fs/xfs/scrub/attr.h b/fs/xfs/scrub/attr.h
+index f6f033c19118..18445cc3d33b 100644
+--- a/fs/xfs/scrub/attr.h
++++ b/fs/xfs/scrub/attr.h
+@@ -16,24 +16,9 @@ struct xchk_xattr_buf {
+ 	/* Bitmap of free space in xattr leaf blocks. */
+ 	unsigned long		*freemap;
+ 
+-	/* Size of @buf, in bytes. */
+-	size_t			sz;
+-
+-	/*
+-	 * Memory buffer -- used for extracting attr values while walking the
+-	 * attributes.
+-	 */
+-	uint8_t			buf[];
++	/* Memory buffer used to extract xattr values. */
++	void			*value;
++	size_t			value_sz;
+ };
+ 
+-/* A place to store attribute values. */
+-static inline uint8_t *
+-xchk_xattr_valuebuf(
+-	struct xfs_scrub	*sc)
+-{
+-	struct xchk_xattr_buf	*ab = sc->buf;
+-
+-	return ab->buf;
+-}
+-
+ #endif	/* __XFS_SCRUB_ATTR_H__ */
 
