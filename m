@@ -2,43 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B76045F24E4
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:32:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56D855F24A0
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:24:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230085AbiJBScN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
+        id S229899AbiJBSYP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230071AbiJBScN (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:32:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149123C15B
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:32:12 -0700 (PDT)
+        with ESMTP id S230020AbiJBSYO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:24:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F303225295
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:24:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A4EBD60EDB
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:32:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1043AC433C1;
-        Sun,  2 Oct 2022 18:32:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 914B960EFD
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAED1C433D7;
+        Sun,  2 Oct 2022 18:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735531;
-        bh=u6RvONEunvB6XRMzbLUX5KQA1oV2h+zbLWHw8DnLo5Y=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iIK6b0RmsB2dzOR/TEr9TbZzoyilwgPypuOANce1FgpLY/0mFmTzO7H3haHQtZZ3m
-         Q1a2haq0kA+1vVB74KyZY2zxTEilUPwGKy23d0eK0AFnNKc4RovTatDQd7nV6X7Kgk
-         Yg7cXAkvT7SxGS1fNiHqOqgztmh+JZ1190MLH/mIvc0tZThXCABNAcaqbyqmbiuZpn
-         g3fEMAl/UjmAGHM5ZP4iOG6KIq8MPs+RCzq93sFusrzE/xlqeJqNUWv9Bsq4K69Fmo
-         QyZ7+mogg4IBFG45sBkQir+ECHOKo2bmr69G4VKi05oGzG/AWyFk59L8J5UGK4KJGB
-         9q4x1VJud54yQ==
-Subject: [PATCH 2/2] xfs: check btree keys reflect the child block
+        s=k20201202; t=1664735053;
+        bh=DWAY6lGQzQUManYdZP2As76QURCljrFG46SHdcL6ops=;
+        h=Subject:From:To:Cc:Date:From;
+        b=hE0bA/21ATN85gZL6tZwNTdMsEzJpnYh/+OqQ59hBbstdCSY26OCa4o/smmXBRE3P
+         LYcvffhMVJb9aTsleVLP1caOnFGDtMnRxtoFmDDtbpulo7wH+ADa7fPB2wUKYqZcYv
+         G2DC6kHNYcxo7dVU1P7JGhRaHFAA2tItmp0vrKbYIYGg4sY1IVPMykSlOKaRzMfywL
+         vPolpKugo6gj3xZKnkiaHRiZiIVcgIpqsow15lTngzePhwpLi28kWd4GMObAZjPYBT
+         GvsxY3cF8gStudTnEpH1UuoetjEF1CLFHcp9XdZuYkrlzNTAN41nYyZdXaW1Tv6WwB
+         3+vZtzWis79cQ==
+Subject: [PATCHSET v23.1 0/5] xfs: detect incorrect gaps in refcount btree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sun, 02 Oct 2022 11:20:12 -0700
-Message-ID: <166473481277.1084112.2602696039943979101.stgit@magnolia>
-In-Reply-To: <166473481246.1084112.5533985608121370791.stgit@magnolia>
-References: <166473481246.1084112.5533985608121370791.stgit@magnolia>
+Date:   Sun, 02 Oct 2022 11:20:15 -0700
+Message-ID: <166473481572.1084209.5434516873607335909.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,83 +50,60 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-When scrub is checking a non-root btree block, it should make sure that
-the keys in the parent btree block accurately capture the keyspace that
-the child block stores.
+The next few patchsets address a deficiency in scrub that I found while
+QAing the refcount btree scrubber.  If there's a gap between refcount
+records, we need to cross-reference that gap with the reverse mappings
+to ensure that there are no overlapping records in the rmap btree.  If
+we find any, then the refcount btree is not consistent.  This is not a
+property that is specific to the refcount btree; they all need to have
+this sort of keyspace scanning logic to detect inconsistencies.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+To do this accurately, we need to be able to scan the keyspace of a
+btree (which we already do) to be able to tell the caller if the
+keyspace is empty, sparse, or fully covered by records.  The first few
+patches add the keyspace scanner to the generic btree code, along with
+the ability to mask off parts of btree keys because when we scan the
+rmapbt, we only care about space usage, not the owners.
+
+The final patch closes the scanning gap in the refcountbt scanner.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-detect-refcount-gaps
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-detect-refcount-gaps
 ---
- fs/xfs/scrub/btree.c |   49 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 48 insertions(+), 1 deletion(-)
-
-
-diff --git a/fs/xfs/scrub/btree.c b/fs/xfs/scrub/btree.c
-index 47fa14311d17..2e2aa0773858 100644
---- a/fs/xfs/scrub/btree.c
-+++ b/fs/xfs/scrub/btree.c
-@@ -517,6 +517,48 @@ xchk_btree_check_minrecs(
- 		xchk_btree_set_corrupt(bs->sc, cur, level);
- }
- 
-+/*
-+ * If this btree block has a parent, make sure that the parent's keys capture
-+ * the keyspace contained in this block.
-+ */
-+STATIC void
-+xchk_btree_block_check_keys(
-+	struct xchk_btree	*bs,
-+	int			level,
-+	struct xfs_btree_block	*block)
-+{
-+	union xfs_btree_key	block_key;
-+	union xfs_btree_key	*block_high_key;
-+	union xfs_btree_key	*parent_low_key, *parent_high_key;
-+	struct xfs_btree_cur	*cur = bs->cur;
-+	struct xfs_btree_block	*parent_block;
-+	struct xfs_buf		*bp;
-+
-+	if (level == cur->bc_nlevels - 1)
-+		return;
-+
-+	xfs_btree_get_keys(cur, block, &block_key);
-+
-+	/* Make sure the low key of this block matches the parent. */
-+	parent_block = xfs_btree_get_block(cur, level + 1, &bp);
-+	parent_low_key = xfs_btree_key_addr(cur, cur->bc_levels[level + 1].ptr,
-+			parent_block);
-+	if (cur->bc_ops->diff_two_keys(cur, &block_key, parent_low_key)) {
-+		xchk_btree_set_corrupt(bs->sc, bs->cur, level);
-+		return;
-+	}
-+
-+	if (!(cur->bc_flags & XFS_BTREE_OVERLAPPING))
-+		return;
-+
-+	/* Make sure the high key of this block matches the parent. */
-+	parent_high_key = xfs_btree_high_key_addr(cur,
-+			cur->bc_levels[level + 1].ptr, parent_block);
-+	block_high_key = xfs_btree_high_key_from_key(cur, &block_key);
-+	if (cur->bc_ops->diff_two_keys(cur, block_high_key, parent_high_key))
-+		xchk_btree_set_corrupt(bs->sc, bs->cur, level);
-+}
-+
- /*
-  * Grab and scrub a btree block given a btree pointer.  Returns block
-  * and buffer pointers (if applicable) if they're ok to use.
-@@ -568,7 +610,12 @@ xchk_btree_get_block(
- 	 * Check the block's siblings; this function absorbs error codes
- 	 * for us.
- 	 */
--	return xchk_btree_block_check_siblings(bs, *pblock);
-+	error = xchk_btree_block_check_siblings(bs, *pblock);
-+	if (error)
-+		return error;
-+
-+	xchk_btree_block_check_keys(bs, level, *pblock);
-+	return 0;
- }
- 
- /*
+ fs/xfs/libxfs/xfs_alloc.c          |   11 ++-
+ fs/xfs/libxfs/xfs_alloc.h          |    4 +
+ fs/xfs/libxfs/xfs_alloc_btree.c    |   16 ++++
+ fs/xfs/libxfs/xfs_bmap_btree.c     |   16 ++++
+ fs/xfs/libxfs/xfs_btree.c          |  140 +++++++++++++++++++++++++++++++-----
+ fs/xfs/libxfs/xfs_btree.h          |   23 +++++-
+ fs/xfs/libxfs/xfs_ialloc_btree.c   |   17 ++++
+ fs/xfs/libxfs/xfs_refcount.c       |   11 ++-
+ fs/xfs/libxfs/xfs_refcount.h       |    5 +
+ fs/xfs/libxfs/xfs_refcount_btree.c |   16 ++++
+ fs/xfs/libxfs/xfs_rmap.c           |   17 +++-
+ fs/xfs/libxfs/xfs_rmap.h           |    4 +
+ fs/xfs/libxfs/xfs_rmap_btree.c     |   53 ++++++++++++++
+ fs/xfs/libxfs/xfs_types.h          |   12 +++
+ fs/xfs/scrub/agheader.c            |    5 +
+ fs/xfs/scrub/alloc.c               |    7 +-
+ fs/xfs/scrub/bmap.c                |   11 ++-
+ fs/xfs/scrub/ialloc.c              |    2 -
+ fs/xfs/scrub/inode.c               |    1 
+ fs/xfs/scrub/refcount.c            |  112 +++++++++++++++++++++++++++--
+ fs/xfs/scrub/rmap.c                |    6 +-
+ fs/xfs/scrub/scrub.h               |    2 +
+ 22 files changed, 432 insertions(+), 59 deletions(-)
 
