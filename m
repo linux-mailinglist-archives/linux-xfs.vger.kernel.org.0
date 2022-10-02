@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 679705F2502
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:37:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B8545F2500
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:37:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230114AbiJBShV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:37:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41530 "EHLO
+        id S230115AbiJBSg7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:36:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230122AbiJBShU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:37:20 -0400
+        with ESMTP id S230111AbiJBSg6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:36:58 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DBD23C8D7
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:37:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4ADBE3B977
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:36:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3FA260F06
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:37:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CD7BC433D6;
-        Sun,  2 Oct 2022 18:37:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DAC5960F07
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:36:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AF7C433C1;
+        Sun,  2 Oct 2022 18:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735837;
-        bh=zzKJCJHj8quOHRvqIRaJ5CmVnK6kJ7kw/5/No8lPvGE=;
+        s=k20201202; t=1664735816;
+        bh=xghrJ+Ce7VhZwiGFftbzL/0rsfDwIUT22jJSJrrJ5ek=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ec1q6Xlai1JrHRv04SOw67d8hEJ70OTHNdNJbMt7Bn8D+ngeuiH7mz4KwehThSx0p
-         A6gB3Xqd3EzC6xuCcd+q6dqB0ooO9cv4B5s8GTnzJbnlrRyZHdzivolHqOqLNntBVw
-         s2w1MC4xgyO7G93Jlu+6LZy+WlDQ0YVYhbK1tQxN1biJm08XHkm/oVSbdyOlImHjT4
-         YfjpR3mkiEiESKDecbwQKobnlOU5ZCG/UAXfhl7+I90ysoamkg/ZEkCM8/N23mkukZ
-         AxRI0iizIy74pnsrm+r7IHSxnsIfIh8gafsWhhnCY95lWrvH2Wv8atZbI7ICm6+CC/
-         vr1uWQy8h3fjg==
-Subject: [PATCH 5/9] xfs: remove flags argument from xchk_setup_xattr_buf
+        b=aG6TADMxx2FopLcnjD3wjRkLEHiIiUjPi5JYNul7Ncr2jSSyfNiFF9TZgpJYe4yI8
+         baJk9H1is3Xg8wviT1i7Ih3LanaZzXsx+lBsgOdso1Yqya9/BmxO/G+Q/0RfhXbEPC
+         OcL7TMOKDOKgt9N/P+oqufnA9qa4nHcVGaceIKzq1pELGU7eNG6by1LR4XHRMxHWD0
+         ajtw6jAffz3J+viVYrQt100PkxCMp1ih1kga+b2FXVXhW0wssRIzNuw1yjRWeY2hYG
+         dQ3/cRJ5rPKIjGfS/BrjcUqvpv54ZEFaWWHh290rUBocMEMEJeHmpVmdjzIt1YnleW
+         nwGRScIcwFkDw==
+Subject: [PATCH 3/9] xfs: split usedmap from xchk_xattr_buf.buf
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:40 -0700
-Message-ID: <166473484066.1085108.16936297806265537411.stgit@magnolia>
+Message-ID: <166473484039.1085108.17940910529777391591.stgit@magnolia>
 In-Reply-To: <166473483982.1085108.101544412199880535.stgit@magnolia>
 References: <166473483982.1085108.101544412199880535.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,85 +54,201 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-All callers pass XCHK_GFP_FLAGS as the flags argument to
-xchk_setup_xattr_buf, so get rid of the argument.
+Move the used space bitmap from somewhere in xchk_xattr_buf.buf[] to an
+explicit pointer.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ fs/xfs/scrub/attr.c |   39 +++++++++++++++++++++------------------
+ fs/xfs/scrub/attr.h |   22 +++++-----------------
+ 2 files changed, 26 insertions(+), 35 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index 71164a0373f1..80f39a2c377f 100644
+index a813e914d966..6f3051728da0 100644
 --- a/fs/xfs/scrub/attr.c
 +++ b/fs/xfs/scrub/attr.c
-@@ -44,8 +44,7 @@ xchk_xattr_buf_cleanup(
- static int
- xchk_setup_xattr_buf(
- 	struct xfs_scrub	*sc,
--	size_t			value_size,
--	gfp_t			flags)
-+	size_t			value_size)
+@@ -29,6 +29,8 @@ xchk_xattr_buf_cleanup(
+ 
+ 	kvfree(ab->freemap);
+ 	ab->freemap = NULL;
++	kvfree(ab->usedmap);
++	ab->usedmap = NULL;
+ }
+ 
+ /*
+@@ -42,20 +44,14 @@ xchk_setup_xattr_buf(
+ 	size_t			value_size,
+ 	gfp_t			flags)
  {
+-	size_t			sz;
++	size_t			sz = value_size;
  	size_t			bmp_sz;
  	struct xchk_xattr_buf	*ab = sc->buf;
-@@ -56,17 +55,17 @@ xchk_setup_xattr_buf(
- 	if (ab)
- 		goto resize_value;
++	unsigned long		*old_usedmap = NULL;
+ 	unsigned long		*old_freemap = NULL;
  
--	ab = kvzalloc(sizeof(struct xchk_xattr_buf), flags);
-+	ab = kvzalloc(sizeof(struct xchk_xattr_buf), XCHK_GFP_FLAGS);
- 	if (!ab)
- 		return -ENOMEM;
+ 	bmp_sz = sizeof(long) * BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
+ 
+-	/*
+-	 * We need enough space to read an xattr value from the file or enough
+-	 * space to hold one copy of the xattr free space bitmap.  We don't
+-	 * need the buffer space for both purposes at the same time.
+-	 */
+-	sz = max_t(size_t, bmp_sz, value_size);
+-
+ 	/*
+ 	 * If there's already a buffer, figure out if we need to reallocate it
+ 	 * to accommodate a larger size.
+@@ -64,6 +60,7 @@ xchk_setup_xattr_buf(
+ 		if (sz <= ab->sz)
+ 			return 0;
+ 		old_freemap = ab->freemap;
++		old_usedmap = ab->usedmap;
+ 		kvfree(ab);
+ 		sc->buf = NULL;
+ 	}
+@@ -79,6 +76,14 @@ xchk_setup_xattr_buf(
  	sc->buf = ab;
  	sc->buf_cleanup = xchk_xattr_buf_cleanup;
  
--	ab->usedmap = kvmalloc(bmp_sz, flags);
-+	ab->usedmap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
- 	if (!ab->usedmap)
- 		return -ENOMEM;
- 
--	ab->freemap = kvmalloc(bmp_sz, flags);
-+	ab->freemap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
- 	if (!ab->freemap)
- 		return -ENOMEM;
- 
-@@ -80,7 +79,7 @@ xchk_setup_xattr_buf(
- 		ab->value_sz = 0;
++	if (old_usedmap) {
++		ab->usedmap = old_usedmap;
++	} else {
++		ab->usedmap = kvmalloc(bmp_sz, flags);
++		if (!ab->usedmap)
++			return -ENOMEM;
++	}
++
+ 	if (old_freemap) {
+ 		ab->freemap = old_freemap;
+ 	} else {
+@@ -237,7 +242,6 @@ xchk_xattr_set_map(
+ STATIC bool
+ xchk_xattr_check_freemap(
+ 	struct xfs_scrub		*sc,
+-	unsigned long			*map,
+ 	struct xfs_attr3_icleaf_hdr	*leafhdr)
+ {
+ 	struct xchk_xattr_buf		*ab = sc->buf;
+@@ -254,7 +258,7 @@ xchk_xattr_check_freemap(
  	}
  
--	new_val = kvmalloc(value_size, flags);
-+	new_val = kvmalloc(value_size, XCHK_GFP_FLAGS);
- 	if (!new_val)
- 		return -ENOMEM;
+ 	/* Look for bits that are set in freemap and are marked in use. */
+-	return !bitmap_intersects(ab->freemap, map, mapsize);
++	return !bitmap_intersects(ab->freemap, ab->usedmap, mapsize);
+ }
  
-@@ -102,8 +101,7 @@ xchk_setup_xattr(
- 	 * without the inode lock held, which means we can sleep.
- 	 */
- 	if (sc->flags & XCHK_TRY_HARDER) {
--		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX,
--				XCHK_GFP_FLAGS);
-+		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX);
- 		if (error)
- 			return error;
- 	}
-@@ -175,7 +173,7 @@ xchk_xattr_listent(
- 	 * doesn't work, we overload the seen_enough variable to convey
- 	 * the error message back to the main scrub function.
- 	 */
--	error = xchk_setup_xattr_buf(sx->sc, valuelen, XCHK_GFP_FLAGS);
-+	error = xchk_setup_xattr_buf(sx->sc, valuelen);
- 	if (error == -ENOMEM)
- 		error = -EDEADLOCK;
- 	if (error) {
-@@ -348,7 +346,7 @@ xchk_xattr_block(
- 		return 0;
+ /*
+@@ -274,7 +278,7 @@ xchk_xattr_entry(
+ 	__u32				*last_hashval)
+ {
+ 	struct xfs_mount		*mp = ds->state->mp;
+-	unsigned long			*usedmap = xchk_xattr_usedmap(ds->sc);
++	struct xchk_xattr_buf		*ab = ds->sc->buf;
+ 	char				*name_end;
+ 	struct xfs_attr_leaf_name_local	*lentry;
+ 	struct xfs_attr_leaf_name_remote *rentry;
+@@ -314,7 +318,7 @@ xchk_xattr_entry(
+ 	if (name_end > buf_end)
+ 		xchk_da_set_corrupt(ds, level);
  
- 	/* Allocate memory for block usage checking. */
--	error = xchk_setup_xattr_buf(ds->sc, 0, XCHK_GFP_FLAGS);
-+	error = xchk_setup_xattr_buf(ds->sc, 0);
- 	if (error == -ENOMEM)
+-	if (!xchk_xattr_set_map(ds->sc, usedmap, nameidx, namesize))
++	if (!xchk_xattr_set_map(ds->sc, ab->usedmap, nameidx, namesize))
+ 		xchk_da_set_corrupt(ds, level);
+ 	if (!(ds->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT))
+ 		*usedbytes += namesize;
+@@ -334,7 +338,7 @@ xchk_xattr_block(
+ 	struct xfs_attr_leafblock	*leaf = bp->b_addr;
+ 	struct xfs_attr_leaf_entry	*ent;
+ 	struct xfs_attr_leaf_entry	*entries;
+-	unsigned long			*usedmap;
++	struct xchk_xattr_buf		*ab = ds->sc->buf;
+ 	char				*buf_end;
+ 	size_t				off;
+ 	__u32				last_hashval = 0;
+@@ -352,10 +356,9 @@ xchk_xattr_block(
  		return -EDEADLOCK;
  	if (error)
+ 		return error;
+-	usedmap = xchk_xattr_usedmap(ds->sc);
+ 
+ 	*last_checked = blk->blkno;
+-	bitmap_zero(usedmap, mp->m_attr_geo->blksize);
++	bitmap_zero(ab->usedmap, mp->m_attr_geo->blksize);
+ 
+ 	/* Check all the padding. */
+ 	if (xfs_has_crc(ds->sc->mp)) {
+@@ -379,7 +382,7 @@ xchk_xattr_block(
+ 		xchk_da_set_corrupt(ds, level);
+ 	if (leafhdr.firstused < hdrsize)
+ 		xchk_da_set_corrupt(ds, level);
+-	if (!xchk_xattr_set_map(ds->sc, usedmap, 0, hdrsize))
++	if (!xchk_xattr_set_map(ds->sc, ab->usedmap, 0, hdrsize))
+ 		xchk_da_set_corrupt(ds, level);
+ 
+ 	if (ds->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+@@ -393,7 +396,7 @@ xchk_xattr_block(
+ 	for (i = 0, ent = entries; i < leafhdr.count; ent++, i++) {
+ 		/* Mark the leaf entry itself. */
+ 		off = (char *)ent - (char *)leaf;
+-		if (!xchk_xattr_set_map(ds->sc, usedmap, off,
++		if (!xchk_xattr_set_map(ds->sc, ab->usedmap, off,
+ 				sizeof(xfs_attr_leaf_entry_t))) {
+ 			xchk_da_set_corrupt(ds, level);
+ 			goto out;
+@@ -407,7 +410,7 @@ xchk_xattr_block(
+ 			goto out;
+ 	}
+ 
+-	if (!xchk_xattr_check_freemap(ds->sc, usedmap, &leafhdr))
++	if (!xchk_xattr_check_freemap(ds->sc, &leafhdr))
+ 		xchk_da_set_corrupt(ds, level);
+ 
+ 	if (leafhdr.usedbytes != usedbytes)
+diff --git a/fs/xfs/scrub/attr.h b/fs/xfs/scrub/attr.h
+index e6f11d44e84d..f6f033c19118 100644
+--- a/fs/xfs/scrub/attr.h
++++ b/fs/xfs/scrub/attr.h
+@@ -10,6 +10,9 @@
+  * Temporary storage for online scrub and repair of extended attributes.
+  */
+ struct xchk_xattr_buf {
++	/* Bitmap of used space in xattr leaf blocks. */
++	unsigned long		*usedmap;
++
+ 	/* Bitmap of free space in xattr leaf blocks. */
+ 	unsigned long		*freemap;
+ 
+@@ -17,13 +20,8 @@ struct xchk_xattr_buf {
+ 	size_t			sz;
+ 
+ 	/*
+-	 * Memory buffer -- either used for extracting attr values while
+-	 * walking the attributes; or for computing attr block bitmaps when
+-	 * checking the attribute tree.
+-	 *
+-	 * Each bitmap contains enough bits to track every byte in an attr
+-	 * block (rounded up to the size of an unsigned long).  The attr block
+-	 * used space bitmap starts at the beginning of the buffer.
++	 * Memory buffer -- used for extracting attr values while walking the
++	 * attributes.
+ 	 */
+ 	uint8_t			buf[];
+ };
+@@ -38,14 +36,4 @@ xchk_xattr_valuebuf(
+ 	return ab->buf;
+ }
+ 
+-/* A bitmap of space usage computed by walking an attr leaf block. */
+-static inline unsigned long *
+-xchk_xattr_usedmap(
+-	struct xfs_scrub	*sc)
+-{
+-	struct xchk_xattr_buf	*ab = sc->buf;
+-
+-	return (unsigned long *)ab->buf;
+-}
+-
+ #endif	/* __XFS_SCRUB_ATTR_H__ */
 
