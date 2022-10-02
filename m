@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D44705F2504
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CEC05F24FF
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:36:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230113AbiJBShn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:37:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
+        id S230112AbiJBSg4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230111AbiJBShm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:37:42 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DACF73BC5E
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:37:41 -0700 (PDT)
+        with ESMTP id S230116AbiJBSgv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:36:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C1C3BC71
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:36:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 32EB8CE0A51
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:37:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A3AAC433D6;
-        Sun,  2 Oct 2022 18:37:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 08434B80D7E
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:36:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4BC3C433C1;
+        Sun,  2 Oct 2022 18:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735858;
-        bh=b9u8fOvDeyZPFVyTTQsSftjiA5j3WxwGE3Myd+qzhDQ=;
+        s=k20201202; t=1664735805;
+        bh=k2VWo1anlwKV7yCap6dHWuywwAxtCaWHB6o88LEdOYo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LBdqd13xgMicWnkkmdJ0CQk1ztfoNG4wCtH3duj1u5aIsHJZSszJi90OxeOlZlXvH
-         aHYaNQS43s92JeUDFtCs5n8lPtywJjmdx2JA+Ws0KiNlwJNFj7sMZPPMjKexeBflry
-         0fDK1/zb3JVkm9HbykIdVSxBBX87TkAEcqdtDO563BJQx3VLWP4FFxQFEOmwo4A5ve
-         319R3uPuo2KQ/PYtpdnligLaARAUUUTDGrG6oQ/pPUuLsdnRe2cgxfj8KD2Q21AtDz
-         aC0YjewXcv/vys/hvMGdJS4AaOtwrFt6072xBR6fiG2qe2ScuAfx9DWD1fikdnSyE6
-         7Mgz3hbGvWuMg==
-Subject: [PATCH 7/9] xfs: check used space of shortform xattr structures
+        b=pInVFsquCZWz3K3j2epNixTC6C/Vmazjvg/2Z5zz9zzvTwESjQ4rFtgXDZRIwQJhl
+         CkXnxzMqayJsNYa9t+Ie5hitJpCjhYfIDsDzdAXyYu+OFz/Ed/srnnPtXHnnjLCMgZ
+         JIN5fanRgcsasKrtGlnMu3xa238nkzEF+eEOBRaQIpYHEa5/9/IllH8oVYtmnuMsqd
+         dqgOvip37oe6mA1SoyfNpvzs2qbRQ9+3MsHXe+v/4utN34cfpWdGmz3ev+EJagxSTE
+         0vof23tdzjOb4pO7oHkadP9/abDsZtAYR2iRtuL2+RZZQecrLzkpbDn+4aqfpbhjru
+         Z+gfcp8YNFmhg==
+Subject: [PATCH 2/9] xfs: split freemap from xchk_xattr_buf.buf
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:40 -0700
-Message-ID: <166473484093.1085108.5089524375028440719.stgit@magnolia>
+Message-ID: <166473484025.1085108.11305451681842952737.stgit@magnolia>
 In-Reply-To: <166473483982.1085108.101544412199880535.stgit@magnolia>
 References: <166473483982.1085108.101544412199880535.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,138 +54,190 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that the records used inside a shortform xattr structure do
-not overlap.
+Move the free space bitmap from somewhere in xchk_xattr_buf.buf[] to an
+explicit pointer.  This is the start of removing the complex overloaded
+memory buffer that is the source of weird memory misuse bugs.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c |   79 ++++++++++++++++++++++++++++++++++++++++++++++++---
- fs/xfs/scrub/attr.h |    2 +
- 2 files changed, 76 insertions(+), 5 deletions(-)
+ fs/xfs/scrub/attr.c  |   40 ++++++++++++++++++++++++++++++++--------
+ fs/xfs/scrub/attr.h  |   15 ++++-----------
+ fs/xfs/scrub/scrub.c |    3 +++
+ fs/xfs/scrub/scrub.h |   10 ++++++++++
+ 4 files changed, 49 insertions(+), 19 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index f99961ac11c1..23c559c4ce80 100644
+index a06a3adf72e0..a813e914d966 100644
 --- a/fs/xfs/scrub/attr.c
 +++ b/fs/xfs/scrub/attr.c
-@@ -15,6 +15,7 @@
- #include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_attr_leaf.h"
-+#include "xfs_attr_sf.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
+@@ -20,6 +20,17 @@
  #include "scrub/dabtree.h"
-@@ -481,6 +482,73 @@ xchk_xattr_rec(
- 	return error;
- }
+ #include "scrub/attr.h"
  
-+/* Check space usage of shortform attrs. */
-+STATIC int
-+xchk_xattr_check_sf(
-+	struct xfs_scrub		*sc)
++/* Free the buffers linked from the xattr buffer. */
++static void
++xchk_xattr_buf_cleanup(
++	void			*priv)
 +{
-+	struct xchk_xattr_buf		*ab = sc->buf;
-+	struct xfs_attr_shortform	*sf;
-+	struct xfs_attr_sf_entry	*sfe;
-+	struct xfs_attr_sf_entry	*next;
-+	struct xfs_ifork		*ifp;
-+	unsigned char			*end;
-+	int				i;
-+	int				error = 0;
++	struct xchk_xattr_buf	*ab = priv;
 +
-+	ifp = xfs_ifork_ptr(sc->ip, XFS_ATTR_FORK);
-+
-+	bitmap_zero(ab->usedmap, ifp->if_bytes);
-+	sf = (struct xfs_attr_shortform *)sc->ip->i_af.if_u1.if_data;
-+	end = (unsigned char *)ifp->if_u1.if_data + ifp->if_bytes;
-+	xchk_xattr_set_map(sc, ab->usedmap, 0, sizeof(sf->hdr));
-+
-+	sfe = &sf->list[0];
-+	if ((unsigned char *)sfe > end) {
-+		xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+		return 0;
-+	}
-+
-+	for (i = 0; i < sf->hdr.count; i++) {
-+		unsigned char		*name = sfe->nameval;
-+		unsigned char		*value = &sfe->nameval[sfe->namelen];
-+
-+		if (xchk_should_terminate(sc, &error))
-+			return error;
-+
-+		next = xfs_attr_sf_nextentry(sfe);
-+		if ((unsigned char *)next > end) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		if (!xchk_xattr_set_map(sc, ab->usedmap,
-+				(char *)sfe - (char *)sf,
-+				sizeof(struct xfs_attr_sf_entry))) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		if (!xchk_xattr_set_map(sc, ab->usedmap,
-+				(char *)name - (char *)sf,
-+				sfe->namelen)) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		if (!xchk_xattr_set_map(sc, ab->usedmap,
-+				(char *)value - (char *)sf,
-+				sfe->valuelen)) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		sfe = next;
-+	}
-+
-+	return 0;
++	kvfree(ab->freemap);
++	ab->freemap = NULL;
 +}
 +
- /* Scrub the extended attribute metadata. */
- int
- xchk_xattr(
-@@ -500,10 +568,12 @@ xchk_xattr(
- 	if (error)
- 		return error;
+ /*
+  * Allocate enough memory to hold an attr value and attr block bitmaps,
+  * reallocating the buffer if necessary.  Buffer contents are not preserved
+@@ -32,15 +43,18 @@ xchk_setup_xattr_buf(
+ 	gfp_t			flags)
+ {
+ 	size_t			sz;
++	size_t			bmp_sz;
+ 	struct xchk_xattr_buf	*ab = sc->buf;
++	unsigned long		*old_freemap = NULL;
++
++	bmp_sz = sizeof(long) * BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
  
--	memset(&sx, 0, sizeof(sx));
--	/* Check attribute tree structure */
--	error = xchk_da_btree(sc, XFS_ATTR_FORK, xchk_xattr_rec,
--			&last_checked);
-+	/* Check the physical structure of the xattr. */
-+	if (sc->ip->i_af.if_format == XFS_DINODE_FMT_LOCAL)
-+		error = xchk_xattr_check_sf(sc);
-+	else
-+		error = xchk_da_btree(sc, XFS_ATTR_FORK, xchk_xattr_rec,
-+				&last_checked);
- 	if (error)
- 		goto out;
+ 	/*
+ 	 * We need enough space to read an xattr value from the file or enough
+-	 * space to hold two copies of the xattr free space bitmap.  We don't
++	 * space to hold one copy of the xattr free space bitmap.  We don't
+ 	 * need the buffer space for both purposes at the same time.
+ 	 */
+-	sz = 2 * sizeof(long) * BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
+-	sz = max_t(size_t, sz, value_size);
++	sz = max_t(size_t, bmp_sz, value_size);
  
-@@ -511,6 +581,7 @@ xchk_xattr(
- 		goto out;
+ 	/*
+ 	 * If there's already a buffer, figure out if we need to reallocate it
+@@ -49,6 +63,7 @@ xchk_setup_xattr_buf(
+ 	if (ab) {
+ 		if (sz <= ab->sz)
+ 			return 0;
++		old_freemap = ab->freemap;
+ 		kvfree(ab);
+ 		sc->buf = NULL;
+ 	}
+@@ -60,9 +75,18 @@ xchk_setup_xattr_buf(
+ 	ab = kvmalloc(sizeof(*ab) + sz, flags);
+ 	if (!ab)
+ 		return -ENOMEM;
+-
+ 	ab->sz = sz;
+ 	sc->buf = ab;
++	sc->buf_cleanup = xchk_xattr_buf_cleanup;
++
++	if (old_freemap) {
++		ab->freemap = old_freemap;
++	} else {
++		ab->freemap = kvmalloc(bmp_sz, flags);
++		if (!ab->freemap)
++			return -ENOMEM;
++	}
++
+ 	return 0;
+ }
  
- 	/* Check that every attr key can also be looked up by hash. */
-+	memset(&sx, 0, sizeof(sx));
- 	sx.context.dp = sc->ip;
- 	sx.context.resynch = 1;
- 	sx.context.put_listent = xchk_xattr_listent;
+@@ -216,21 +240,21 @@ xchk_xattr_check_freemap(
+ 	unsigned long			*map,
+ 	struct xfs_attr3_icleaf_hdr	*leafhdr)
+ {
+-	unsigned long			*freemap = xchk_xattr_freemap(sc);
++	struct xchk_xattr_buf		*ab = sc->buf;
+ 	unsigned int			mapsize = sc->mp->m_attr_geo->blksize;
+ 	int				i;
+ 
+ 	/* Construct bitmap of freemap contents. */
+-	bitmap_zero(freemap, mapsize);
++	bitmap_zero(ab->freemap, mapsize);
+ 	for (i = 0; i < XFS_ATTR_LEAF_MAPSIZE; i++) {
+-		if (!xchk_xattr_set_map(sc, freemap,
++		if (!xchk_xattr_set_map(sc, ab->freemap,
+ 				leafhdr->freemap[i].base,
+ 				leafhdr->freemap[i].size))
+ 			return false;
+ 	}
+ 
+ 	/* Look for bits that are set in freemap and are marked in use. */
+-	return !bitmap_intersects(freemap, map, mapsize);
++	return !bitmap_intersects(ab->freemap, map, mapsize);
+ }
+ 
+ /*
 diff --git a/fs/xfs/scrub/attr.h b/fs/xfs/scrub/attr.h
-index 18445cc3d33b..5f6835752738 100644
+index be133e0da71b..e6f11d44e84d 100644
 --- a/fs/xfs/scrub/attr.h
 +++ b/fs/xfs/scrub/attr.h
-@@ -10,7 +10,7 @@
+@@ -10,6 +10,9 @@
   * Temporary storage for online scrub and repair of extended attributes.
   */
  struct xchk_xattr_buf {
--	/* Bitmap of used space in xattr leaf blocks. */
-+	/* Bitmap of used space in xattr leaf blocks and shortform forks. */
- 	unsigned long		*usedmap;
++	/* Bitmap of free space in xattr leaf blocks. */
++	unsigned long		*freemap;
++
+ 	/* Size of @buf, in bytes. */
+ 	size_t			sz;
  
- 	/* Bitmap of free space in xattr leaf blocks. */
+@@ -20,8 +23,7 @@ struct xchk_xattr_buf {
+ 	 *
+ 	 * Each bitmap contains enough bits to track every byte in an attr
+ 	 * block (rounded up to the size of an unsigned long).  The attr block
+-	 * used space bitmap starts at the beginning of the buffer; the free
+-	 * space bitmap follows immediately after.
++	 * used space bitmap starts at the beginning of the buffer.
+ 	 */
+ 	uint8_t			buf[];
+ };
+@@ -46,13 +48,4 @@ xchk_xattr_usedmap(
+ 	return (unsigned long *)ab->buf;
+ }
+ 
+-/* A bitmap of free space computed by walking attr leaf block free info. */
+-static inline unsigned long *
+-xchk_xattr_freemap(
+-	struct xfs_scrub	*sc)
+-{
+-	return xchk_xattr_usedmap(sc) +
+-			BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
+-}
+-
+ #endif	/* __XFS_SCRUB_ATTR_H__ */
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index bc9638c7a379..6697f5f32106 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -189,7 +189,10 @@ xchk_teardown(
+ 	if (sc->flags & XCHK_REAPING_DISABLED)
+ 		xchk_start_reaping(sc);
+ 	if (sc->buf) {
++		if (sc->buf_cleanup)
++			sc->buf_cleanup(sc->buf);
+ 		kvfree(sc->buf);
++		sc->buf_cleanup = NULL;
+ 		sc->buf = NULL;
+ 	}
+ 
+diff --git a/fs/xfs/scrub/scrub.h b/fs/xfs/scrub/scrub.h
+index 20e74179d8a7..5d6e9a9527c3 100644
+--- a/fs/xfs/scrub/scrub.h
++++ b/fs/xfs/scrub/scrub.h
+@@ -77,7 +77,17 @@ struct xfs_scrub {
+ 	 */
+ 	struct xfs_inode		*ip;
+ 
++	/* Kernel memory buffer used by scrubbers; freed at teardown. */
+ 	void				*buf;
++
++	/*
++	 * Clean up resources owned by whatever is in the buffer.  Cleanup can
++	 * be deferred with this hook as a means for scrub functions to pass
++	 * data to repair functions.  This function must not free the buffer
++	 * itself.
++	 */
++	void				(*buf_cleanup)(void *buf);
++
+ 	uint				ilock_flags;
+ 
+ 	/* See the XCHK/XREP state flags below. */
 
