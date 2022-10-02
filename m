@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A616A5F24E9
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97EF75F24E6
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:32:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbiJBSdG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:33:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34656 "EHLO
+        id S230087AbiJBScf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbiJBSdG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:33:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5C73C164
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:33:04 -0700 (PDT)
+        with ESMTP id S230084AbiJBScd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:32:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BDD3C15F
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:32:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 74AA760F06
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:33:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1EF0C433C1;
-        Sun,  2 Oct 2022 18:33:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C3AD160EDB
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:32:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E294C433D6;
+        Sun,  2 Oct 2022 18:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735583;
-        bh=9LC0Q+6q/Ui9YuTSEdv7h1fks63FG3O5KK4KLnD+bzM=;
+        s=k20201202; t=1664735552;
+        bh=GL6wUJ0pndQzymSba/vqNX+sy7EKRYfc4bgD8NpXYAc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bMJ0xUGbjOUHIh/6cSWh4q+rnMXweDuXoAqONSFKeG2foiDrxidcgQU9p0bPxOR8U
-         OEl8ne53Tuvi2sXs6xIiS07gWE7aSoEH21nTUODsyoa9V8P2NmxxttZMmFXtZvkoRD
-         18M7TAaB97d+STMusqqszCLFIJnacjayw2X3lKpXNuay3NqnqKQc0P2rZnWHzRvAyf
-         bBaZnopGZye1Hc2kBkSjCZtTqENFW/SbYerC2bRrrPnh5CwdKRCKQ1q0eH8Hf6jT4i
-         llR1F1W/zGgEJNdahQvUgXE2ur0rslJoCkqpAFfdPWpYZuVRD77yQ+qlF3Drk2Uar/
-         P5xDbZLBrn1Mg==
-Subject: [PATCH 5/5] xfs: ensure that all metadata and data blocks are not cow
- staging extents
+        b=ffBQtkoDjzMVX9Kj2pF5KjytYiX3ydePY8UigQrD+RMpu+ORQncFuZ4tMSiHOyexF
+         YkW/os8b57EBdNsS7bz1paodrTyJnC0kaFLe5VPY64e/oNAOeKEdipgKOBziyccSMd
+         FxWn+noGtJac1EED+PNuuwsDWtUFGxwNp65odNJVe48bPEI9T062GaOSNyqGJhX+S0
+         JyCRfVxRYgNte4lXvot7mfC54ej/cBlYJlNmmHK8hRhZ2Zr3KcqZ/3/IADE128YzGd
+         ontoIGd/FensdCR66LzjU5uTzLYJVwUGzHO4FnF6XZROcwQ1/tyokNQSsMUDXjVnID
+         NK8ZL51ZjijLA==
+Subject: [PATCH 2/5] xfs: refactor converting btree irec to btree key
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:16 -0700
-Message-ID: <166473481655.1084209.12908049694500649697.stgit@magnolia>
+Message-ID: <166473481613.1084209.14289552157471603973.stgit@magnolia>
 In-Reply-To: <166473481572.1084209.5434516873607335909.stgit@magnolia>
 References: <166473481572.1084209.5434516873607335909.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,169 +54,81 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that all filesystem metadata blocks and file data blocks are
-not also marked as CoW staging extents.  The extra checking added here
-was inspired by an actual VM host filesystem corruption incident due to
-bugs in the CoW handling of 4.x kernels.
+We keep doing these conversions to support btree queries, so refactor
+this into a helper.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/agheader.c |    5 +++++
- fs/xfs/scrub/alloc.c    |    1 +
- fs/xfs/scrub/bmap.c     |   11 ++++++++---
- fs/xfs/scrub/ialloc.c   |    2 +-
- fs/xfs/scrub/inode.c    |    1 +
- fs/xfs/scrub/refcount.c |   21 +++++++++++++++++++++
- fs/xfs/scrub/scrub.h    |    2 ++
- 7 files changed, 39 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_btree.c |   33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/agheader.c b/fs/xfs/scrub/agheader.c
-index 3dd9151a20ad..520ec054e4a6 100644
---- a/fs/xfs/scrub/agheader.c
-+++ b/fs/xfs/scrub/agheader.c
-@@ -53,6 +53,7 @@ xchk_superblock_xref(
- 	xchk_xref_is_not_inode_chunk(sc, agbno, 1);
- 	xchk_xref_is_owned_by(sc, agbno, 1, &XFS_RMAP_OINFO_FS);
- 	xchk_xref_is_not_shared(sc, agbno, 1);
-+	xchk_xref_is_not_cow_staging(sc, agbno, 1);
- 
- 	/* scrub teardown will take care of sc->sa for us */
- }
-@@ -517,6 +518,7 @@ xchk_agf_xref(
- 	xchk_xref_is_owned_by(sc, agbno, 1, &XFS_RMAP_OINFO_FS);
- 	xchk_agf_xref_btreeblks(sc);
- 	xchk_xref_is_not_shared(sc, agbno, 1);
-+	xchk_xref_is_not_cow_staging(sc, agbno, 1);
- 	xchk_agf_xref_refcblks(sc);
- 
- 	/* scrub teardown will take care of sc->sa for us */
-@@ -644,6 +646,7 @@ xchk_agfl_block_xref(
- 	xchk_xref_is_not_inode_chunk(sc, agbno, 1);
- 	xchk_xref_is_owned_by(sc, agbno, 1, &XFS_RMAP_OINFO_AG);
- 	xchk_xref_is_not_shared(sc, agbno, 1);
-+	xchk_xref_is_not_cow_staging(sc, agbno, 1);
+diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
+index 5710d3ee582a..edea6db8d8e4 100644
+--- a/fs/xfs/libxfs/xfs_btree.c
++++ b/fs/xfs/libxfs/xfs_btree.c
+@@ -4918,6 +4918,19 @@ xfs_btree_overlapped_query_range(
+ 	return error;
  }
  
- /* Scrub an AGFL block. */
-@@ -700,6 +703,7 @@ xchk_agfl_xref(
- 	xchk_xref_is_not_inode_chunk(sc, agbno, 1);
- 	xchk_xref_is_owned_by(sc, agbno, 1, &XFS_RMAP_OINFO_FS);
- 	xchk_xref_is_not_shared(sc, agbno, 1);
-+	xchk_xref_is_not_cow_staging(sc, agbno, 1);
- 
- 	/*
- 	 * Scrub teardown will take care of sc->sa for us.  Leave sc->sa
-@@ -855,6 +859,7 @@ xchk_agi_xref(
- 	xchk_agi_xref_icounts(sc);
- 	xchk_xref_is_owned_by(sc, agbno, 1, &XFS_RMAP_OINFO_FS);
- 	xchk_xref_is_not_shared(sc, agbno, 1);
-+	xchk_xref_is_not_cow_staging(sc, agbno, 1);
- 	xchk_agi_xref_fiblocks(sc);
- 
- 	/* scrub teardown will take care of sc->sa for us */
-diff --git a/fs/xfs/scrub/alloc.c b/fs/xfs/scrub/alloc.c
-index d8f2ba7efa22..0cd20d998368 100644
---- a/fs/xfs/scrub/alloc.c
-+++ b/fs/xfs/scrub/alloc.c
-@@ -88,6 +88,7 @@ xchk_allocbt_xref(
- 	xchk_xref_is_not_inode_chunk(sc, agbno, len);
- 	xchk_xref_has_no_owner(sc, agbno, len);
- 	xchk_xref_is_not_shared(sc, agbno, len);
-+	xchk_xref_is_not_cow_staging(sc, agbno, len);
- }
- 
- /* Scrub a bnobt/cntbt record. */
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index 5c4b25585b8c..1e4813c82cc5 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -328,12 +328,17 @@ xchk_bmap_iextent_xref(
- 	xchk_bmap_xref_rmap(info, irec, agbno);
- 	switch (info->whichfork) {
- 	case XFS_DATA_FORK:
--		if (xfs_is_reflink_inode(info->sc->ip))
--			break;
--		fallthrough;
-+		if (!xfs_is_reflink_inode(info->sc->ip))
-+			xchk_xref_is_not_shared(info->sc, agbno,
-+					irec->br_blockcount);
-+		xchk_xref_is_not_cow_staging(info->sc, agbno,
-+				irec->br_blockcount);
-+		break;
- 	case XFS_ATTR_FORK:
- 		xchk_xref_is_not_shared(info->sc, agbno,
- 				irec->br_blockcount);
-+		xchk_xref_is_not_cow_staging(info->sc, agbno,
-+				irec->br_blockcount);
- 		break;
- 	case XFS_COW_FORK:
- 		xchk_xref_is_cow_staging(info->sc, agbno,
-diff --git a/fs/xfs/scrub/ialloc.c b/fs/xfs/scrub/ialloc.c
-index 0b27c3520b74..efe346ddd1b7 100644
---- a/fs/xfs/scrub/ialloc.c
-+++ b/fs/xfs/scrub/ialloc.c
-@@ -116,7 +116,7 @@ xchk_iallocbt_chunk(
- 		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
- 
- 	xchk_iallocbt_chunk_xref(bs->sc, irec, agino, bno, len);
--
-+	xchk_xref_is_not_cow_staging(bs->sc, bno, len);
- 	return true;
- }
- 
-diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
-index 998bf06d2347..a68ba8684465 100644
---- a/fs/xfs/scrub/inode.c
-+++ b/fs/xfs/scrub/inode.c
-@@ -558,6 +558,7 @@ xchk_inode_xref(
- 	xchk_inode_xref_finobt(sc, ino);
- 	xchk_xref_is_owned_by(sc, agbno, 1, &XFS_RMAP_OINFO_INODES);
- 	xchk_xref_is_not_shared(sc, agbno, 1);
-+	xchk_xref_is_not_cow_staging(sc, agbno, 1);
- 	xchk_inode_xref_bmap(sc, dip);
- 
- out_free:
-diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
-index d97e7e372b9c..2009efea923c 100644
---- a/fs/xfs/scrub/refcount.c
-+++ b/fs/xfs/scrub/refcount.c
-@@ -562,3 +562,24 @@ xchk_xref_is_not_shared(
- 	if (keyfill != XFS_BTREE_KEYFILL_EMPTY)
- 		xchk_btree_xref_set_corrupt(sc, sc->sa.refc_cur, 0);
- }
-+
-+/* xref check that the extent is not being used for CoW staging. */
-+void
-+xchk_xref_is_not_cow_staging(
-+	struct xfs_scrub	*sc,
-+	xfs_agblock_t		agbno,
-+	xfs_extlen_t		len)
++static inline void
++xfs_btree_key_from_irec(
++	struct xfs_btree_cur		*cur,
++	union xfs_btree_key		*key,
++	const union xfs_btree_irec	*irec)
 +{
-+	enum xfs_btree_keyfill	keyfill;
-+	int			error;
++	union xfs_btree_rec		rec;
 +
-+	if (!sc->sa.refc_cur || xchk_skip_xref(sc->sm))
-+		return;
-+
-+	error = xfs_refcount_scan_keyfill(sc->sa.refc_cur, agbno +
-+			XFS_REFC_COW_START, len, &keyfill);
-+	if (!xchk_should_check_xref(sc, &error, &sc->sa.refc_cur))
-+		return;
-+	if (keyfill != XFS_BTREE_KEYFILL_EMPTY)
-+		xchk_btree_xref_set_corrupt(sc, sc->sa.refc_cur, 0);
++	cur->bc_rec = *irec;
++	cur->bc_ops->init_rec_from_cur(cur, &rec);
++	cur->bc_ops->init_key_from_rec(key, &rec);
 +}
-diff --git a/fs/xfs/scrub/scrub.h b/fs/xfs/scrub/scrub.h
-index 85c055c2ddc5..a331838e22ff 100644
---- a/fs/xfs/scrub/scrub.h
-+++ b/fs/xfs/scrub/scrub.h
-@@ -166,6 +166,8 @@ void xchk_xref_is_cow_staging(struct xfs_scrub *sc, xfs_agblock_t bno,
- 		xfs_extlen_t len);
- void xchk_xref_is_not_shared(struct xfs_scrub *sc, xfs_agblock_t bno,
- 		xfs_extlen_t len);
-+void xchk_xref_is_not_cow_staging(struct xfs_scrub *sc, xfs_agblock_t bno,
-+		xfs_extlen_t len);
- #ifdef CONFIG_XFS_RT
- void xchk_xref_is_used_rt_space(struct xfs_scrub *sc, xfs_rtblock_t rtbno,
- 		xfs_extlen_t len);
++
+ /*
+  * Query a btree for all records overlapping a given interval of keys.  The
+  * supplied function will be called with each record found; return one of the
+@@ -4932,18 +4945,12 @@ xfs_btree_query_range(
+ 	xfs_btree_query_range_fn	fn,
+ 	void				*priv)
+ {
+-	union xfs_btree_rec		rec;
+ 	union xfs_btree_key		low_key;
+ 	union xfs_btree_key		high_key;
+ 
+ 	/* Find the keys of both ends of the interval. */
+-	cur->bc_rec = *high_rec;
+-	cur->bc_ops->init_rec_from_cur(cur, &rec);
+-	cur->bc_ops->init_key_from_rec(&high_key, &rec);
+-
+-	cur->bc_rec = *low_rec;
+-	cur->bc_ops->init_rec_from_cur(cur, &rec);
+-	cur->bc_ops->init_key_from_rec(&low_key, &rec);
++	xfs_btree_key_from_irec(cur, &high_key, high_rec);
++	xfs_btree_key_from_irec(cur, &low_key, low_rec);
+ 
+ 	/* Enforce low key < high key. */
+ 	if (cur->bc_ops->diff_two_keys(cur, &low_key, &high_key) > 0)
+@@ -5069,20 +5076,14 @@ xfs_btree_scan_keyfill(
+ 	struct xfs_btree_scan_keyfill	info = {
+ 		.outcome		= XFS_BTREE_KEYFILL_EMPTY,
+ 	};
+-	union xfs_btree_rec		rec;
+ 	int64_t				res;
+ 	int				error;
+ 
+ 	if (!cur->bc_ops->has_key_gap)
+ 		return -EOPNOTSUPP;
+ 
+-	cur->bc_rec = *low;
+-	cur->bc_ops->init_rec_from_cur(cur, &rec);
+-	cur->bc_ops->init_key_from_rec(&info.start_key, &rec);
+-
+-	cur->bc_rec = *high;
+-	cur->bc_ops->init_rec_from_cur(cur, &rec);
+-	cur->bc_ops->init_key_from_rec(&info.end_key, &rec);
++	xfs_btree_key_from_irec(cur, &info.start_key, low);
++	xfs_btree_key_from_irec(cur, &info.end_key, high);
+ 
+ 	error = xfs_btree_query_range(cur, low, high,
+ 			xfs_btree_scan_keyfill_helper, &info);
 
