@@ -2,41 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78A505F249F
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B76045F24E4
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:32:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229772AbiJBSYL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:24:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46590 "EHLO
+        id S230085AbiJBScN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbiJBSYJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:24:09 -0400
+        with ESMTP id S230071AbiJBScN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:32:13 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEA025295
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:24:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149123C15B
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:32:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0754C60EDB
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62481C433C1;
-        Sun,  2 Oct 2022 18:24:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A4EBD60EDB
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:32:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1043AC433C1;
+        Sun,  2 Oct 2022 18:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735047;
-        bh=aldbX97gq4yXFDTwU8YErxRQ6e7QFI1CeC+F81XLm1E=;
-        h=Subject:From:To:Cc:Date:From;
-        b=mi7s830BSioUektJHN7eI3uY48aP2qNJHDz0XPM+jLEtas3J7IKkFQw75jUuVH8WX
-         fczwEUZsgBAgTOGBp0ULs2qilPH8vQWDxpudzfsB0kW6zYhZ52GlPQUPZfn8qpeD8E
-         iOgxGAqgNMx+HW+Hmbpvj4lxMWyVbKCzpcn9wDQY+fmnMjpMmLNDlVhaedOfT6+32+
-         io5GluOJzYAwNaOIkqsQPvQcHxbD8fVOBknEHMBYq4louxlpYJdNqNpDN1KjRMjYME
-         ly+fzqXZmwtiagUMvLhSUNMlknOTXNge0KTcA2aCld6B2mXUgVqzAOlL9beZjBAjsA
-         RSUoHP7ZSkAqg==
-Subject: [PATCHSET v23.1 0/2] xfs: enhance btree key checking
+        s=k20201202; t=1664735531;
+        bh=u6RvONEunvB6XRMzbLUX5KQA1oV2h+zbLWHw8DnLo5Y=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=iIK6b0RmsB2dzOR/TEr9TbZzoyilwgPypuOANce1FgpLY/0mFmTzO7H3haHQtZZ3m
+         Q1a2haq0kA+1vVB74KyZY2zxTEilUPwGKy23d0eK0AFnNKc4RovTatDQd7nV6X7Kgk
+         Yg7cXAkvT7SxGS1fNiHqOqgztmh+JZ1190MLH/mIvc0tZThXCABNAcaqbyqmbiuZpn
+         g3fEMAl/UjmAGHM5ZP4iOG6KIq8MPs+RCzq93sFusrzE/xlqeJqNUWv9Bsq4K69Fmo
+         QyZ7+mogg4IBFG45sBkQir+ECHOKo2bmr69G4VKi05oGzG/AWyFk59L8J5UGK4KJGB
+         9q4x1VJud54yQ==
+Subject: [PATCH 2/2] xfs: check btree keys reflect the child block
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:12 -0700
-Message-ID: <166473481246.1084112.5533985608121370791.stgit@magnolia>
+Message-ID: <166473481277.1084112.2602696039943979101.stgit@magnolia>
+In-Reply-To: <166473481246.1084112.5533985608121370791.stgit@magnolia>
+References: <166473481246.1084112.5533985608121370791.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -50,30 +52,83 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series addresses some deficiencies in btree key comparisons that I
-noticed while testing online scrub.  The first fixes a bug in the rmap
-key comparison that prevents the rmap scrubber from detecting rmap
-records for file space allocations with mismatched attr/bmbt flags.
-The second patch fixes the scrub btree block checker to ensure that the
-keys in the parent block accurately represent the block.
+When scrub is checking a non-root btree block, it should make sure that
+the keys in the parent btree block accurately capture the keyspace that
+the child block stores.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=btree-key-enhancements
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=btree-key-enhancements
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_rmap_btree.c |   25 ++++++++++++++------
- fs/xfs/scrub/btree.c           |   49 +++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 65 insertions(+), 9 deletions(-)
+ fs/xfs/scrub/btree.c |   49 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
+
+
+diff --git a/fs/xfs/scrub/btree.c b/fs/xfs/scrub/btree.c
+index 47fa14311d17..2e2aa0773858 100644
+--- a/fs/xfs/scrub/btree.c
++++ b/fs/xfs/scrub/btree.c
+@@ -517,6 +517,48 @@ xchk_btree_check_minrecs(
+ 		xchk_btree_set_corrupt(bs->sc, cur, level);
+ }
+ 
++/*
++ * If this btree block has a parent, make sure that the parent's keys capture
++ * the keyspace contained in this block.
++ */
++STATIC void
++xchk_btree_block_check_keys(
++	struct xchk_btree	*bs,
++	int			level,
++	struct xfs_btree_block	*block)
++{
++	union xfs_btree_key	block_key;
++	union xfs_btree_key	*block_high_key;
++	union xfs_btree_key	*parent_low_key, *parent_high_key;
++	struct xfs_btree_cur	*cur = bs->cur;
++	struct xfs_btree_block	*parent_block;
++	struct xfs_buf		*bp;
++
++	if (level == cur->bc_nlevels - 1)
++		return;
++
++	xfs_btree_get_keys(cur, block, &block_key);
++
++	/* Make sure the low key of this block matches the parent. */
++	parent_block = xfs_btree_get_block(cur, level + 1, &bp);
++	parent_low_key = xfs_btree_key_addr(cur, cur->bc_levels[level + 1].ptr,
++			parent_block);
++	if (cur->bc_ops->diff_two_keys(cur, &block_key, parent_low_key)) {
++		xchk_btree_set_corrupt(bs->sc, bs->cur, level);
++		return;
++	}
++
++	if (!(cur->bc_flags & XFS_BTREE_OVERLAPPING))
++		return;
++
++	/* Make sure the high key of this block matches the parent. */
++	parent_high_key = xfs_btree_high_key_addr(cur,
++			cur->bc_levels[level + 1].ptr, parent_block);
++	block_high_key = xfs_btree_high_key_from_key(cur, &block_key);
++	if (cur->bc_ops->diff_two_keys(cur, block_high_key, parent_high_key))
++		xchk_btree_set_corrupt(bs->sc, bs->cur, level);
++}
++
+ /*
+  * Grab and scrub a btree block given a btree pointer.  Returns block
+  * and buffer pointers (if applicable) if they're ok to use.
+@@ -568,7 +610,12 @@ xchk_btree_get_block(
+ 	 * Check the block's siblings; this function absorbs error codes
+ 	 * for us.
+ 	 */
+-	return xchk_btree_block_check_siblings(bs, *pblock);
++	error = xchk_btree_block_check_siblings(bs, *pblock);
++	if (error)
++		return error;
++
++	xchk_btree_block_check_keys(bs, level, *pblock);
++	return 0;
+ }
+ 
+ /*
 
