@@ -2,44 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 218445F24EB
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:33:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23CC15F24A1
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:24:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230092AbiJBSd2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:33:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34734 "EHLO
+        id S230020AbiJBSYX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:24:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbiJBSd1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:33:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1183F3C164
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:33:26 -0700 (PDT)
+        with ESMTP id S229919AbiJBSYW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:24:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E4225295
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:24:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9642760EDB
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:33:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2498C433C1;
-        Sun,  2 Oct 2022 18:33:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BD2D9B80D7E
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CFA9C433D6;
+        Sun,  2 Oct 2022 18:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735605;
-        bh=GpapAh45/yLGRj//vD49MiPQgDKF2yjUtsE2Fg+Q+aY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rxXZtik5iyZ/7L7WRGrbd6PgP4fR+A353IjGnM12OR0U+MMaOcv0OvTxtKfSkylQt
-         hXtnup8+o4U+m9uGQYusKJ17ud5SYzvtEYJzHEJXgJo37szcDvBB3z22Enlu8TCyDk
-         4rnA7h0WqsyqMfUgNu650MPyBJr1plnJbzlms/wMU9Fi9573RZUsK4oAtEMgaEDrSo
-         V678MG1AYhUxArMdImDdeQONhC+fPTq7PCYXRIZFvD4qhNUeLLtqd6xy0hwHub+sXk
-         83QnzuCoLmoUwxt3Gn/BoRnSDNC5qvmaTah1FGTfnX+1UoheS9w6+ad4S46Hi/Wei1
-         vitkcuOY1Sb4A==
-Subject: [PATCH 2/3] xfs: directly cross-reference the inode btrees with each
- other
+        s=k20201202; t=1664735058;
+        bh=d/vTjAuabvZMW1h6fFpOAZmbCjxnjiMKDmDBFSX2eK4=;
+        h=Subject:From:To:Cc:Date:From;
+        b=qfE7EyKwvE9YXFpI5fC3FF425RGPUOdmhUyMwZ+6jmpHnkwhnykCAKjVjmhFif9nt
+         VY4rWhhm6LBd3AUEuF+MUkjmNonHMK8ukISmBnwcPSI0VjbJ1SpoROrWamE3G9spBH
+         2Gl+v+8QIS0qx0gXt9uQSpQsSWRlaPzVxAfgiT3IL5/+yDfs7uOneIQ8sp3ydDJFJm
+         +TYk0MCTpx1T8R7xlQfm32SX6CQSqIg/aXymcJGEGtij1AJfm2rTdN8yJE7sj4/Nzt
+         sPgE4ow4aC005toac4XxRsDrNJX8wukVh82UaOFbCmw1mzTwbdSepK8lyqF+43zPfR
+         /HZ9D3B1fCoGg==
+Subject: [PATCHSET v23.1 0/3] xfs: detect incorrect gaps in inode btree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:19 -0700
-Message-ID: <166473481982.1084372.2348827996566349390.stgit@magnolia>
-In-Reply-To: <166473481949.1084372.14443532201653453226.stgit@magnolia>
-References: <166473481949.1084372.14443532201653453226.stgit@magnolia>
+Message-ID: <166473481949.1084372.14443532201653453226.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,311 +50,32 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Improve the cross-referencing of the two inode btrees by directly
-checking the free and hole state of each inode with the other btree.
+This series continues the corrections for a couple of problems I found
+in the inode btree scrubber.  The first problem is that we don't
+directly check the inobt records have a direct correspondence with the
+finobt records, and vice versa.  The second problem occurs on
+filesystems with sparse inode chunks -- the cross-referencing we do
+detects sparseness, but it doesn't actually check the consistency
+between the inobt hole records and the rmap data.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-detect-inobt-gaps
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-detect-inobt-gaps
 ---
- fs/xfs/scrub/ialloc.c |  225 +++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 198 insertions(+), 27 deletions(-)
-
-
-diff --git a/fs/xfs/scrub/ialloc.c b/fs/xfs/scrub/ialloc.c
-index 89eaaa12b6ae..b889142ccebe 100644
---- a/fs/xfs/scrub/ialloc.c
-+++ b/fs/xfs/scrub/ialloc.c
-@@ -51,32 +51,201 @@ struct xchk_iallocbt {
- };
- 
- /*
-- * If we're checking the finobt, cross-reference with the inobt.
-- * Otherwise we're checking the inobt; if there is an finobt, make sure
-- * we have a record or not depending on freecount.
-+ * Does the finobt have a record for this inode with the same hole/free state?
-+ * This is a bit complicated because of the following:
-+ *
-+ * - The finobt need not have a record if all inodes in the inobt record are
-+ *   allocated.
-+ * - The finobt need not have a record if all inodes in the inobt record are
-+ *   free.
-+ * - The finobt need not have a record if the inobt record says this is a hole.
-+ *   This likely doesn't happen in practice.
-  */
--static inline void
--xchk_iallocbt_chunk_xref_other(
-+STATIC int
-+xchk_inobt_xref_finobt(
-+	struct xfs_scrub	*sc,
-+	struct xfs_inobt_rec_incore *irec,
-+	xfs_agino_t		agino,
-+	bool			free,
-+	bool			hole)
-+{
-+	struct xfs_inobt_rec_incore frec;
-+	struct xfs_btree_cur	*cur = sc->sa.fino_cur;
-+	bool			ffree, fhole;
-+	unsigned int		frec_idx, fhole_idx;
-+	int			has_record;
-+	int			error;
-+
-+	ASSERT(cur->bc_btnum == XFS_BTNUM_FINO);
-+
-+	error = xfs_inobt_lookup(cur, agino, XFS_LOOKUP_LE, &has_record);
-+	if (error)
-+		return error;
-+	if (!has_record)
-+		goto no_record;
-+
-+	error = xfs_inobt_get_rec(cur, &frec, &has_record);
-+	if (!has_record)
-+		return -EFSCORRUPTED;
-+
-+	if (frec.ir_startino + XFS_INODES_PER_CHUNK <= agino)
-+		goto no_record;
-+
-+	/* There's a finobt record; free and hole status must match. */
-+	frec_idx = agino - frec.ir_startino;
-+	ffree = frec.ir_free & (1ULL << frec_idx);
-+	fhole_idx = frec_idx / XFS_INODES_PER_HOLEMASK_BIT;
-+	fhole = frec.ir_holemask & (1U << fhole_idx);
-+
-+	if (ffree != free)
-+		xchk_btree_xref_set_corrupt(sc, cur, 0);
-+	if (fhole != hole)
-+		xchk_btree_xref_set_corrupt(sc, cur, 0);
-+	return 0;
-+
-+no_record:
-+	/* inobt record is fully allocated */
-+	if (irec->ir_free == 0)
-+		return 0;
-+
-+	/* inobt record is totally unallocated */
-+	if (irec->ir_free == XFS_INOBT_ALL_FREE)
-+		return 0;
-+
-+	/* inobt record says this is a hole */
-+	if (hole)
-+		return 0;
-+
-+	/* finobt doesn't care about allocated inodes */
-+	if (!free)
-+		return 0;
-+
-+	xchk_btree_xref_set_corrupt(sc, cur, 0);
-+	return 0;
-+}
-+
-+/*
-+ * Make sure that each inode of this part of an inobt record has the same
-+ * sparse and free status as the finobt.
-+ */
-+STATIC void
-+xchk_inobt_chunk_xref_finobt(
- 	struct xfs_scrub		*sc,
- 	struct xfs_inobt_rec_incore	*irec,
--	xfs_agino_t			agino)
-+	xfs_agino_t			agino,
-+	unsigned int			nr_inodes)
- {
--	struct xfs_btree_cur		**pcur;
--	bool				has_irec;
-+	xfs_agino_t			i;
-+	unsigned int			rec_idx;
- 	int				error;
- 
--	if (sc->sm->sm_type == XFS_SCRUB_TYPE_FINOBT)
--		pcur = &sc->sa.ino_cur;
--	else
--		pcur = &sc->sa.fino_cur;
--	if (!(*pcur))
-+	ASSERT(sc->sm->sm_type == XFS_SCRUB_TYPE_INOBT);
-+
-+	if (!sc->sa.fino_cur || xchk_skip_xref(sc->sm))
- 		return;
--	error = xfs_ialloc_has_inode_record(*pcur, agino, agino, &has_irec);
--	if (!xchk_should_check_xref(sc, &error, pcur))
-+
-+	for (i = agino, rec_idx = agino - irec->ir_startino;
-+	     i < agino + nr_inodes;
-+	     i++, rec_idx++) {
-+		bool			free, hole;
-+		unsigned int		hole_idx;
-+
-+		free = irec->ir_free & (1ULL << rec_idx);
-+		hole_idx = rec_idx / XFS_INODES_PER_HOLEMASK_BIT;
-+		hole = irec->ir_holemask & (1U << hole_idx);
-+
-+		error = xchk_inobt_xref_finobt(sc, irec, i, free, hole);
-+		if (!xchk_should_check_xref(sc, &error, &sc->sa.fino_cur))
-+			return;
-+	}
-+}
-+
-+/*
-+ * Does the inobt have a record for this inode with the same hole/free state?
-+ * The inobt must always have a record if there's a finobt record.
-+ */
-+STATIC int
-+xchk_finobt_xref_inobt(
-+	struct xfs_scrub	*sc,
-+	struct xfs_inobt_rec_incore *frec,
-+	xfs_agino_t		agino,
-+	bool			ffree,
-+	bool			fhole)
-+{
-+	struct xfs_inobt_rec_incore irec;
-+	struct xfs_btree_cur	*cur = sc->sa.ino_cur;
-+	bool			free, hole;
-+	unsigned int		rec_idx, hole_idx;
-+	int			has_record;
-+	int			error;
-+
-+	ASSERT(cur->bc_btnum == XFS_BTNUM_INO);
-+
-+	error = xfs_inobt_lookup(cur, agino, XFS_LOOKUP_LE, &has_record);
-+	if (error)
-+		return error;
-+	if (!has_record)
-+		goto no_record;
-+
-+	error = xfs_inobt_get_rec(cur, &irec, &has_record);
-+	if (!has_record)
-+		return -EFSCORRUPTED;
-+
-+	if (irec.ir_startino + XFS_INODES_PER_CHUNK <= agino)
-+		goto no_record;
-+
-+	/* There's an inobt record; free and hole status must match. */
-+	rec_idx = agino - irec.ir_startino;
-+	free = irec.ir_free & (1ULL << rec_idx);
-+	hole_idx = rec_idx / XFS_INODES_PER_HOLEMASK_BIT;
-+	hole = irec.ir_holemask & (1U << hole_idx);
-+
-+	if (ffree != free)
-+		xchk_btree_xref_set_corrupt(sc, cur, 0);
-+	if (fhole != hole)
-+		xchk_btree_xref_set_corrupt(sc, cur, 0);
-+	return 0;
-+
-+no_record:
-+	/* finobt should never have a record for which the inobt does not */
-+	xchk_btree_xref_set_corrupt(sc, cur, 0);
-+	return 0;
-+}
-+
-+/*
-+ * Make sure that each inode of this part of an finobt record has the same
-+ * sparse and free status as the inobt.
-+ */
-+STATIC void
-+xchk_finobt_chunk_xref_inobt(
-+	struct xfs_scrub		*sc,
-+	struct xfs_inobt_rec_incore	*frec,
-+	xfs_agino_t			agino,
-+	unsigned int			nr_inodes)
-+{
-+	xfs_agino_t			i;
-+	unsigned int			rec_idx;
-+	int				error;
-+
-+	ASSERT(sc->sm->sm_type == XFS_SCRUB_TYPE_FINOBT);
-+
-+	if (!sc->sa.ino_cur || xchk_skip_xref(sc->sm))
- 		return;
--	if (((irec->ir_freecount > 0 && !has_irec) ||
--	     (irec->ir_freecount == 0 && has_irec)))
--		xchk_btree_xref_set_corrupt(sc, *pcur, 0);
-+
-+	for (i = agino, rec_idx = agino - frec->ir_startino;
-+	     i < agino + nr_inodes;
-+	     i++, rec_idx++) {
-+		bool			ffree, fhole;
-+		unsigned int		hole_idx;
-+
-+		ffree = frec->ir_free & (1ULL << rec_idx);
-+		hole_idx = rec_idx / XFS_INODES_PER_HOLEMASK_BIT;
-+		fhole = frec->ir_holemask & (1U << hole_idx);
-+
-+		error = xchk_finobt_xref_inobt(sc, frec, i, ffree, fhole);
-+		if (!xchk_should_check_xref(sc, &error, &sc->sa.ino_cur))
-+			return;
-+	}
- }
- 
- /* Is this chunk worth checking and cross-referencing? */
-@@ -85,14 +254,16 @@ xchk_iallocbt_chunk(
- 	struct xchk_btree		*bs,
- 	struct xfs_inobt_rec_incore	*irec,
- 	xfs_agino_t			agino,
--	xfs_extlen_t			len)
-+	unsigned int			nr_inodes)
- {
- 	struct xfs_scrub		*sc = bs->sc;
- 	struct xfs_mount		*mp = bs->cur->bc_mp;
- 	struct xfs_perag		*pag = bs->cur->bc_ag.pag;
- 	xfs_agblock_t			agbno;
-+	xfs_extlen_t			len;
- 
- 	agbno = XFS_AGINO_TO_AGBNO(mp, agino);
-+	len = XFS_B_TO_FSB(mp, nr_inodes * mp->m_sb.sb_inodesize);
- 	if (agbno + len <= agbno ||
- 	    !xfs_verify_agbno(pag, agbno) ||
- 	    !xfs_verify_agbno(pag, agbno + len - 1))
-@@ -102,7 +273,10 @@ xchk_iallocbt_chunk(
- 		return false;
- 
- 	xchk_xref_is_used_space(sc, agbno, len);
--	xchk_iallocbt_chunk_xref_other(sc, irec, agino);
-+	if (sc->sm->sm_type == XFS_SCRUB_TYPE_INOBT)
-+		xchk_inobt_chunk_xref_finobt(sc, irec, agino, nr_inodes);
-+	else
-+		xchk_finobt_chunk_xref_inobt(sc, irec, agino, nr_inodes);
- 	xchk_xref_is_owned_by(sc, agbno, len, &XFS_RMAP_OINFO_INODES);
- 	xchk_xref_is_not_shared(sc, agbno, len);
- 	xchk_xref_is_not_cow_staging(sc, agbno, len);
-@@ -417,7 +591,6 @@ xchk_iallocbt_rec(
- 	struct xfs_inobt_rec_incore	irec;
- 	uint64_t			holes;
- 	xfs_agino_t			agino;
--	xfs_extlen_t			len;
- 	int				holecount;
- 	int				i;
- 	int				error = 0;
-@@ -451,12 +624,11 @@ xchk_iallocbt_rec(
- 
- 	/* Handle non-sparse inodes */
- 	if (!xfs_inobt_issparse(irec.ir_holemask)) {
--		len = XFS_B_TO_FSB(mp,
--				XFS_INODES_PER_CHUNK * mp->m_sb.sb_inodesize);
- 		if (irec.ir_count != XFS_INODES_PER_CHUNK)
- 			xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
- 
--		if (!xchk_iallocbt_chunk(bs, &irec, agino, len))
-+		if (!xchk_iallocbt_chunk(bs, &irec, agino,
-+					XFS_INODES_PER_CHUNK))
- 			goto out;
- 		goto check_clusters;
- 	}
-@@ -464,8 +636,6 @@ xchk_iallocbt_rec(
- 	/* Check each chunk of a sparse inode cluster. */
- 	holemask = irec.ir_holemask;
- 	holecount = 0;
--	len = XFS_B_TO_FSB(mp,
--			XFS_INODES_PER_HOLEMASK_BIT * mp->m_sb.sb_inodesize);
- 	holes = ~xfs_inobt_irec_to_allocmask(&irec);
- 	if ((holes & irec.ir_free) != holes ||
- 	    irec.ir_freecount > irec.ir_count)
-@@ -474,7 +644,8 @@ xchk_iallocbt_rec(
- 	for (i = 0; i < XFS_INOBT_HOLEMASK_BITS; i++) {
- 		if (holemask & 1)
- 			holecount += XFS_INODES_PER_HOLEMASK_BIT;
--		else if (!xchk_iallocbt_chunk(bs, &irec, agino, len))
-+		else if (!xchk_iallocbt_chunk(bs, &irec, agino,
-+					XFS_INODES_PER_HOLEMASK_BIT))
- 			goto out;
- 		holemask >>= 1;
- 		agino += XFS_INODES_PER_HOLEMASK_BIT;
+ fs/xfs/libxfs/xfs_ialloc.c |   82 ++++++++----
+ fs/xfs/libxfs/xfs_ialloc.h |    5 -
+ fs/xfs/scrub/ialloc.c      |  292 +++++++++++++++++++++++++++++++++++---------
+ 3 files changed, 281 insertions(+), 98 deletions(-)
 
