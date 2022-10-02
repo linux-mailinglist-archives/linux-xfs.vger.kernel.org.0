@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B8B65F24F9
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:35:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFAAA5F24FB
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:36:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230102AbiJBSfq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:35:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40656 "EHLO
+        id S230099AbiJBSgG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230101AbiJBSfq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:35:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF0F2B625
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:35:44 -0700 (PDT)
+        with ESMTP id S230109AbiJBSgF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:36:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0D736840
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:36:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 80123B80D88
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:35:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CCABC433D6;
-        Sun,  2 Oct 2022 18:35:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 07F3D60EDB
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:36:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 673B6C433D6;
+        Sun,  2 Oct 2022 18:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735742;
-        bh=/1Ir53agzvSCtIdGn9gzJeDDQuthEAXwKkIqgM0lu5Y=;
+        s=k20201202; t=1664735763;
+        bh=Qg/RvxHzwGJLaP0y5Bo8XgGcId6apVaGLdq82D5MXxc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BovnOEyveTQSem8bw363V90KNVH8mE4GyWPBdgDUA7st8p9BkvFuWvpycO1Gbmk9I
-         jqSkPsfEVJp86YlHW5jqbIxFoRF2i+caSp2ZjnqjJ9u+GXEOH+h8ajoZ0ZcijyGLuJ
-         i14iQXn5eJgt+LjuvtCVyQ+K/6YPVwNDrMdrOq/79pu/VhVutWV0nUlNkGGEwQlBqx
-         M8y6o2xO/oSuPemXAa7rCnevxdP3FHPF+WJGiUDdw9oe/SXr9G0KW181e8qfs2kCxT
-         27plWCU61tDVkcEVcWYxwhh0tJe1dO6pms3i6bjXHj4utYm/3ZYJfeH5JL+GSrVSAU
-         337MywT81rW9A==
-Subject: [PATCH 2/6] xfs: alert the user about data/attr fork mappings that
- could be merged
+        b=YR+oSESLI4Qm5wXOBUq/dlnXR9vt3bseKXr606CXuXs6f1qujxqOf/R7CeQMoa0ON
+         RBuQBgZQn9m7BbC0sj613SmuyGCSvJiiB2hechbsc/fmyw+JTMEdQQTic1NO0Pk+OB
+         Pu+Xni6AeN2zUgU5CfywO5d0eTHnOSSWZu4kunKmYX6WZqkbZdf+lkGwpicckwSNH8
+         TOpXPtXAabfdoEMjzFUzHdm3oDXWDbEgWOhcbhe1D+svzkpjrNnDHazCiV2a8ltNJN
+         IPoLFVmxqXEaOBxXaA738+Ds3dA4gJnA8va1gScSPcm0SjlWkWVBn6BS5AS+FvyWoy
+         HBfFnjjePikyg==
+Subject: [PATCH 4/6] xfs: flag refcount btree records that could be merged
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:36 -0700
-Message-ID: <166473483633.1084923.15717918189479146706.stgit@magnolia>
+Message-ID: <166473483660.1084923.12809453984875476542.stgit@magnolia>
 In-Reply-To: <166473483595.1084923.1946295148534639238.stgit@magnolia>
 References: <166473483595.1084923.1946295148534639238.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,60 +54,87 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If the data or attr forks have mappings that could be merged, let the
-user know that the structure could be optimized.  This isn't a
-filesystem corruption since the regular filesystem does not try to be
-smart about merging bmbt records.
+Complain if we encounter refcount btree records that could be merged.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/bmap.c |   27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ fs/xfs/scrub/refcount.c |   50 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index aaa73a2bdd17..0f5d7fb61ca1 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -390,6 +390,29 @@ xchk_bmap_dirattr_extent(
- 		xchk_fblock_set_corrupt(info->sc, info->whichfork, off);
+diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
+index 2009efea923c..8282cabd630c 100644
+--- a/fs/xfs/scrub/refcount.c
++++ b/fs/xfs/scrub/refcount.c
+@@ -333,6 +333,9 @@ xchk_refcountbt_xref(
  }
  
-+/* Are these two mappings mergeable? */
+ struct xchk_refcbt_records {
++	/* Previous refcount record. */
++	struct xfs_refcount_irec prev_rec;
++
+ 	/* The next AG block where we aren't expecting shared extents. */
+ 	xfs_agblock_t		next_unshared_agbno;
+ 
+@@ -387,6 +390,52 @@ xchk_refcountbt_xref_gaps(
+ 		xchk_should_check_xref(sc, &error, &sc->sa.rmap_cur);
+ }
+ 
 +static inline bool
-+xchk_bmap_mergeable(
-+	struct xchk_bmap_info		*info,
-+	const struct xfs_bmbt_irec	*b2)
++xchk_refcount_mergeable(
++	struct xchk_refcbt_records	*rrc,
++	const struct xfs_refcount_irec	*r2)
 +{
-+	const struct xfs_bmbt_irec	*b1 = &info->prev_rec;
++	const struct xfs_refcount_irec	*r1 = &rrc->prev_rec;
 +
-+	/* Skip uninitialized prev_rec and COW fork extents */
-+	if (b1->br_blockcount == 0)
-+		return false;
-+	if (info->whichfork == XFS_COW_FORK)
++	/* Ignore if prev_rec is not yet initialized. */
++	if (r1->rc_blockcount > 0)
 +		return false;
 +
-+	if (b1->br_startoff + b1->br_blockcount != b2->br_startoff)
++	if (r1->rc_startblock + r1->rc_blockcount != r2->rc_startblock)
 +		return false;
-+	if (b1->br_startblock + b1->br_blockcount != b2->br_startblock)
++	if (r1->rc_refcount != r2->rc_refcount)
 +		return false;
-+	if (b1->br_blockcount + b2->br_blockcount > BMBT_BLOCKCOUNT_MASK)
++	if ((unsigned long long)r1->rc_blockcount + r2->rc_blockcount >
++			MAXREFCEXTLEN)
 +		return false;
-+	return b1->br_state == b2->br_state;
++
++	return true;
 +}
 +
- /* Scrub a single extent record. */
- STATIC void
- xchk_bmap_iextent(
-@@ -441,6 +464,10 @@ xchk_bmap_iextent(
- 	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
- 		return;
- 
-+	/* Notify the user of mergeable records in the data/attr forks. */
-+	if (xchk_bmap_mergeable(info, irec))
-+		xchk_ino_set_preen(info->sc, info->sc->ip->i_ino);
++/* Flag failures for records that could be merged. */
++STATIC void
++xchk_refcountbt_check_mergeable(
++	struct xchk_btree		*bs,
++	struct xchk_refcbt_records	*rrc,
++	xfs_agblock_t			bno,
++	xfs_extlen_t			len,
++	xfs_nlink_t			refcount)
++{
++	struct xfs_refcount_irec	irec = {
++		.rc_startblock		= bno,
++		.rc_blockcount		= len,
++		.rc_refcount		= refcount,
++	};
 +
- 	if (info->is_rt)
- 		xchk_bmap_rt_iextent_xref(ip, info, irec);
- 	else
++	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
++		return;
++
++	if (xchk_refcount_mergeable(rrc, &irec))
++		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
++
++	memcpy(&rrc->prev_rec, &irec, sizeof(struct xfs_refcount_irec));
++}
++
+ /* Scrub a refcountbt record. */
+ STATIC int
+ xchk_refcountbt_rec(
+@@ -421,6 +470,7 @@ xchk_refcountbt_rec(
+ 	if (refcount == 0)
+ 		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+ 
++	xchk_refcountbt_check_mergeable(bs, rrc, bno, len, refcount);
+ 	xchk_refcountbt_xref(bs->sc, bno, len, refcount);
+ 
+ 	/*
 
