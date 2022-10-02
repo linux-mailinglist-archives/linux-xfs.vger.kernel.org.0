@@ -2,44 +2,47 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66D545F2496
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:23:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E36525F24B4
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:26:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbiJBSXZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        id S229928AbiJBS0H (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbiJBSXZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:23:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0250D25295;
-        Sun,  2 Oct 2022 11:23:23 -0700 (PDT)
+        with ESMTP id S230029AbiJBS0E (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:26:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7928B3B949;
+        Sun,  2 Oct 2022 11:26:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 69FD960EFD;
-        Sun,  2 Oct 2022 18:23:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2336C433D6;
-        Sun,  2 Oct 2022 18:23:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0566760EFE;
+        Sun,  2 Oct 2022 18:26:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E99CC433C1;
+        Sun,  2 Oct 2022 18:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735002;
-        bh=R5rco/Adg7gtF7f1H6/jhwzvu66VL8b5efPjc60F8JE=;
-        h=Subject:From:To:Cc:Date:From;
-        b=Ob/+xzT+puItAXkn3G1LgEB/mHyeM2CuDLUMw/XWX1r0Nn/yIO3dhH7LfJEaidM7J
-         Mb42PVC1LpqE+vhqPKXg4yYpbdpMAiBqtaZ7QMtp6OTZ9cBoKMzdy1syL3EHq43hhx
-         nyQzyYUKw6PpFGiTloexLSOGV3dYMOTwDbLXcI0StrbW5qXjdAQDY7HVD/zymD7rhm
-         ObFmFZwNs+qzsCTnkJzXT93Xv+9uIFEQUvGignDolefD32ZeTHvAOwKWMZwdwUjZgJ
-         ETMj47uj4rGWFdHGj2a+sHvhOHr216bIaGyLJzK98b3169KXvCnJi5H0gYd+KPrV7D
-         XaQnHtcnMp/Ow==
-Subject: [PATCHSET v23.3 00/14] xfs: design documentation for online fsck
+        s=k20201202; t=1664735161;
+        bh=pFmWil/S6LONwCzwOFM6sDohCLj8LSJDzpLr4ZsR/hQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=NGq1TmVo9L0J38pLH3IsKTPCsqmp5kpy05/DPGu14XbGeJDp1wCyUZoWiNo11PCLV
+         HPDM3xIdkuYIvj6uKmbdFtql/4HC2QjEd1tC7nx/xmRFQrk3ScQc78gq5v3u0n8Yxf
+         o7I9KPoCKAyjcJPsziKt0ARbX/WpBxTbX/Ih9fyDXFSUzoNjh9c6VLZRP/CJH2e9kX
+         Dly8RPqX2eUwsaw0MoHYkjvTugZKDvOlzpNEppz1bSwkzlK6bWrjn3ZZv7QX8g1qPO
+         1q3EjHRrrdOi2bbWw87fBIpivp76bxpRrU2tZTT3RI3D0meJjBFbpw8O/kHGRC2wLD
+         Vp6ukaRuQyLLg==
+Subject: [PATCH 06/14] xfs: document how online fsck deals with eventual
+ consistency
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
         chandan.babu@oracle.com, allison.henderson@oracle.com,
         linux-fsdevel@vger.kernel.org, hch@infradead.org,
         catherine.hoang@oracle.com, david@fromorbit.com
-Date:   Sun, 02 Oct 2022 11:19:43 -0700
-Message-ID: <166473478338.1082796.8807888906305023929.stgit@magnolia>
+Date:   Sun, 02 Oct 2022 11:19:44 -0700
+Message-ID: <166473478445.1082796.11085295126750225759.stgit@magnolia>
+In-Reply-To: <166473478338.1082796.8807888906305023929.stgit@magnolia>
+References: <166473478338.1082796.8807888906305023929.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,109 +56,336 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-After six years of development and a nearly two year hiatus from
-patchbombing, I think it is time to resume the process of merging the
-online fsck feature into XFS.  The full patchset comprises 105 separate
-patchsets that capture 470 patches across the kernel, xfsprogs, and
-fstests projects.
+Writes to an XFS filesystem employ an eventual consistency update model
+to break up complex multistep metadata updates into small chained
+transactions.  This is generally good for performance and scalability
+because XFS doesn't need to prepare for enormous transactions, but it
+also means that online fsck must be careful not to attempt a fsck action
+unless it can be shown that there are no other threads processing a
+transaction chain.  This part of the design documentation covers the
+thinking behind the consistency model and how scrub deals with it.
 
-I would like to merge this feature into upstream in time for the 2023
-LTS kernel.  As of 5.15 (aka last year's LTS), we have merged all
-generally useful infrastructure improvements into the regular
-filesystem.  The only changes to the core filesystem that remain are the
-ones that are only useful to online fsck itself.  In other words, the
-vast majority of the new code in the patchsets comprising the online
-fsck feature are is mostly self contained and can be turned off via
-Kconfig.
-
-Many of you readers might be wondering -- why have I chosen to make one
-large submission with 100+ patchsets comprising ~500 patches?  Why
-didn't I merge small pieces of functionality bit by bit and revise
-common code as necessary?  Well, the simple answer is that in the past
-six years, the fundamental algorithms have been revised repeatedly as
-I've built out the functionality.  In other words, the codebase as it is
-now has the benefit that I now know every piece that's necessary to get
-the job done in a reasonable manner and within the constraints laid out
-by community reviews.  I believe this has reduced code churn in mainline
-and freed up my time so that I can iterate faster.
-
-As a concession to the mail servers, I'm breaking up the submission into
-smaller pieces; I'm only pushing the design document and the revisions
-to the existing scrub code, which is the first 20% of the patches.
-Also, I'm arbitrarily restarting the version numbering by reversioning
-all patchsets from version 22 to epoch 23, version 1.
-
-The big question to everyone reading this is: How might I convince you
-that there is more merit in merging the whole feature and dealing with
-the consequences than continuing to maintain it out of tree?
-
----------
-
-To prepare the XFS community and potential patch reviewers for the
-upstream submission of the online fsck feature, I decided to write a
-document capturing the broader picture behind the online repair
-development effort.  The document begins by defining the problems that
-online fsck aims to solve and outlining specific use cases for the
-functionality.
-
-Using that as a base, the rest of the design document presents the high
-level algorithms that fulfill the goals set out at the start and the
-interactions between the large pieces of the system.  Case studies round
-out the design documentation by adding the details of exactly how
-specific parts of the online fsck code integrate the algorithms with the
-filesystem.
-
-The goal of this effort is to help the XFS community understand how the
-gigantic online repair patchset works.  The questions I submit to the
-community reviewers are:
-
-1. As you read the design doc (and later the code), do you feel that you
-   understand what's going on well enough to try to fix a bug if you
-   found one?
-
-2. What sorts of interactions between systems (or between scrub and the
-   rest of the kernel) am I missing?
-
-3. Do you feel confident enough in the implementation as it is now that
-   the benefits of merging the feature (as EXPERIMENTAL) outweigh any
-   potential disruptions to XFS at large?
-
-4. Are there problematic interactions between subsystems that ought to
-   be cleared up before merging?
-
-I intend to commit this document to the kernel's documentation directory
-when we start merging the patchset, albeit without the links to
-git.kernel.org.  A much more readable version of this is posted at:
-https://djwong.org/docs/xfs-online-fsck-design/
-
-v2: add missing sections about: all the in-kernel data structures and
-    new apis that the scrub and repair functions use; how xattrs and
-    directories are checked; how space btree records are checked; and
-    add more details to the parts where all these bits tie together.
-    Proofread for verb tense inconsistencies and eliminate vague 'we'
-    usage.  Move all the discussion of what we can do with pageable
-    kernel memory into a single source file and section.  Document where
-    log incompat feature locks fit into the locking model.
-
-v3: resync with 6.0, fix a few typos, begin discussion of the merging
-    plan for this megapatchset.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=online-fsck-design
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- Documentation/filesystems/index.rst                |    1 
- .../filesystems/xfs-online-fsck-design.rst         | 4979 ++++++++++++++++++++
- .../filesystems/xfs-self-describing-metadata.rst   |    1 
- 3 files changed, 4981 insertions(+)
- create mode 100644 Documentation/filesystems/xfs-online-fsck-design.rst
+ .../filesystems/xfs-online-fsck-design.rst         |  307 ++++++++++++++++++++
+ 1 file changed, 307 insertions(+)
+
+
+diff --git a/Documentation/filesystems/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs-online-fsck-design.rst
+index f45bf97fa9c4..7b783a0e85b9 100644
+--- a/Documentation/filesystems/xfs-online-fsck-design.rst
++++ b/Documentation/filesystems/xfs-online-fsck-design.rst
+@@ -1443,3 +1443,310 @@ This step is critical for enabling system administrator to monitor the status
+ of the filesystem and the progress of any repairs.
+ For developers, it is a useful means to judge the efficacy of error detection
+ and correction in the online and offline checking tools.
++
++Eventual Consistency vs. Online Fsck
++------------------------------------
++
++Midway through the development of online scrubbing, the fsstress tests
++uncovered a misinteraction between online fsck and compound transaction chains
++created by other writer threads that resulted in false reports of metadata
++inconsistency.
++The root cause of these reports is the eventual consistency model introduced by
++the expansion of deferred work items and compound transaction chains when
++reverse mapping and reflink were introduced.
++
++Originally, transaction chains were added to XFS to avoid deadlocks when
++unmapping space from files.
++Deadlock avoidance rules require that AGs only be locked in increasing order,
++which makes it impossible (say) to use a single transaction to free a space
++extent in AG 7 and then try to free a now superfluous block mapping btree block
++in AG 3.
++To avoid these kinds of deadlocks, XFS creates Extent Freeing Intent (EFI) log
++items to commit to freeing some space in one transaction while deferring the
++actual metadata updates to a fresh transaction.
++The transaction sequence looks like this:
++
++1. The first transaction contains a physical update to the file's block mapping
++   structures to remove the mapping from the btree blocks.
++   It then attaches to the in-memory transaction an action item to schedule
++   deferred freeing of space.
++   Concretely, each transaction maintains a list of ``struct
++   xfs_defer_pending`` objects, each of which maintains a list of ``struct
++   xfs_extent_free_item`` objects.
++   Returning to the example above, the action item tracks the freeing of both
++   the unmapped space from AG 7 and the block mapping btree (BMBT) block from
++   AG 3.
++   Deferred frees recorded in this manner are committed in the log by creating
++   an EFI log item from the ``struct xfs_extent_free_item`` object and
++   attaching the log item to the transaction.
++   When the log is persisted to disk, the EFI item is written into the ondisk
++   transaction record.
++   EFIs can list up to 16 extents to free, all sorted in AG order.
++
++2. The second transaction contains a physical update to the free space btrees
++   of AG 3 to release the former BMBT block and a second physical update to the
++   free space btrees of AG 7 to release the unmapped file space.
++   Observe that the the physical updates are resequenced in the correct order
++   when possible.
++   Attached to the transaction is a an extent free done (EFD) log item.
++   The EFD contains a pointer to the EFI logged in transaction #1 so that log
++   recovery can tell if the EFI needs to be replayed.
++
++If the system goes down after transaction #1 is written back to the filesystem
++but before #2 is committed, a scan of the filesystem metadata would show
++inconsistent filesystem metadata because there would not appear to be any owner
++of the unmapped space.
++Happily, log recovery corrects this inconsistency for us -- when recovery finds
++an intent log item but does not find a corresponding intent done item, it will
++reconstruct the incore state of the intent item and finish it.
++In the example above, the log must replay both frees described in the recovered
++EFI to complete the recovery phase.
++
++There are two subtleties to XFS' transaction chaining strategy to consider.
++The first is that log items must be added to a transaction in the correct order
++to prevent conflicts with principal objects that are not held by the
++transaction.
++In other words, all per-AG metadata updates for an unmapped block must be
++completed before the last update to free the extent, and extents should not
++be reallocated until that last update commits to the log.
++The second subtlety comes from the fact that AG header buffers are (usually)
++released between each transaction in a chain.
++This means that other threads can observe an AG in an intermediate state,
++but as long as the first subtlety is handled, this should not affect the
++correctness of filesystem operations.
++Unmounting the filesystem flushes all pending work to disk, which means that
++offline fsck never sees the temporary inconsistencies caused by deferred work
++item processing.
++In this manner, XFS employs a form of eventual consistency to avoid deadlocks
++and increase parallelism.
++
++During the design phase of the reverse mapping and reflink features, it was
++decided that it was impractical to cram all the reverse mapping updates for a
++single filesystem change into a single transaction because a single file
++mapping operation can explode into many small updates:
++
++* The block mapping update itself
++* A reverse mapping update for the block mapping update
++* Fixing the freelist
++* A reverse mapping update for the freelist fix
++
++* A shape change to the block mapping btree
++* A reverse mapping update for the btree update
++* Fixing the freelist (again)
++* A reverse mapping update for the freelist fix
++
++* An update to the reference counting information
++* A reverse mapping update for the refcount update
++* Fixing the freelist (a third time)
++* A reverse mapping update for the freelist fix
++
++* Freeing any space that was unmapped and not owned by any other file
++* Fixing the freelist (a fourth time)
++* A reverse mapping update for the freelist fix
++
++* Freeing the space used by the block mapping btree
++* Fixing the freelist (a fifth time)
++* A reverse mapping update for the freelist fix
++
++Free list fixups are not usually needed more than once per AG per transaction
++chain, but it is theoretically possible if space is very tight.
++For copy-on-write updates this is even worse, because this must be done once to
++remove the space from a staging area and again to map it into the file!
++
++To deal with this explosion in a calm manner, XFS expands its use of deferred
++work items to cover most reverse mapping updates and all refcount updates.
++This reduces the worst case size of transaction reservations by breaking the
++work into a long chain of small updates, which increases the degree of eventual
++consistency in the system.
++Again, this generally isn't a problem because XFS orders its deferred work
++items carefully to avoid resource reuse conflicts between unsuspecting threads.
++
++However, online fsck changes the rules -- remember that although physical
++updates to per-AG structures are coordinated by locking the buffers for AG
++headers, buffer locks are dropped between transactions.
++Once scrub acquires resources and takes locks for a data structure, it must do
++all the validation work without releasing the lock.
++If the main lock for a space btree is an AG header buffer lock, scrub may have
++interrupted another thread that is midway through finishing a chain.
++For example, if a thread performing a copy-on-write has completed a reverse
++mapping update but not the corresponding refcount update, the two AG btrees
++will appear inconsistent to scrub and an observation of corruption will be
++recorded.  This observation will not be correct.
++If a repair is attempted in this state, the results will be catastrophic!
++
++Several solutions to this problem were evaluated upon discovery of this flaw:
++
++1. Add a higher level lock to allocation groups and require writer threads to
++   acquire the higher level lock in AG order before making any changes.
++   This would be very difficult to implement in practice because it is
++   difficult to determine which locks need to be obtained, and in what order,
++   without simulating the entire operation.
++   Performing a dry run of a file operation to discover necessary locks would
++   make the filesystem very slow.
++
++2. Make the deferred work coordinator code aware of consecutive intent items
++   targeting the same AG and have it hold the AG header buffers locked across
++   the transaction roll between updates.
++   This would introduce a lot of complexity into the coordinator since it is
++   only loosely coupled with the actual deferred work items.
++   It would also fail to solve the problem because deferred work items can
++   generate new deferred subtasks, but all subtasks must be complete before
++   work can start on a new sibling task.
++
++3. Teach online fsck to walk all transactions waiting for whichever lock(s)
++   protect the data structure being scrubbed to look for pending operations.
++   The checking and repair operations must factor these pending operations into
++   the evaluations being performed.
++   This solution is a nonstarter because it is *extremely* invasive to the main
++   filesystem.
++
++4. Recognize that only online fsck has this requirement of total consistency
++   of AG metadata, and that online fsck should be relatively rare as compared
++   to filesystem change operations.
++   For each AG, maintain a sloppy count of intent items targetting that AG.
++   When online fsck wants to examine an AG, it should lock the AG header
++   buffers to quiesce all transaction chains that want to modify that AG, and
++   only proceed with the scrub if the count is zero.
++   In other words, scrub only proceeds if it can lock the AG header buffers and
++   there can't possibly be any intents in progress.
++   This may lead to fairness and starvation issues, but regular filesystem
++   updates take precedence over online fsck activity.
++
++Intent Drains
++`````````````
++
++The fourth solution is implemented in the current iteration of online fsck,
++with percpu counters providing the "sloppy" counter.
++Updates to the percpu counter from normal writer threads are very fast, which
++is good for maintaining runtime performance.
++
++There are two key properties to the drain mechanism.
++First, the counter is incremented when a deferred work item is *queued* to a
++transaction, and it is decremented after the associated intent done log item is
++*committed* to another transaction.
++The second property is that deferred work can be added to a transaction without
++holding an AG header lock, but per-AG work items cannot be marked done without
++locking that AG header buffer to log the physical updates and the intent done
++log item.
++The first property enables scrub to yield to running transaction chains, which
++is an explicit deprioritization of online fsck to benefit file operations.
++The second property of the drain is key to the correct coordination of scrub,
++since scrub will always be able to decide if a conflict is possible.
++
++For regular filesystem code, the drain works as follows:
++
++1. Add a deferred item to a transaction.
++
++2. The deferred item manager calls the ``->add_item`` method of the item.
++
++3. The ``->add_item`` implementation calls ``xfs_drain_bump`` to increase the
++   sloppy counter.
++
++4. When the deferred item manager wants to finish the defeferred work, it calls
++   ``->finish_item`` to complete it.
++
++5. The ``->finish_item`` implementation logs some changes and calls
++   ``xfs_drain_drop`` to decrease the sloppy counter and wake up any threads
++   waiting on the drain.
++
++6. The subtransaction commits, which unlocks the resource associated with the
++   intent item.
++
++For scrub, the drain works as follows:
++
++1. Lock the resource(s) associated with the metadata being scrubbed.
++   For example, a scan of the refcount btree would lock the AGI and AGF header
++   buffers.
++
++2. If the sloppy counter is zero (``xfs_drain_busy`` returns false), there are
++   no chains in progress and the operation may proceed.
++
++3. Otherwise, release the resources grabbed in step 1.
++
++4. Wait for the intent counter to reach zero (``xfs_drain_intents``), then go
++   back to step 1 unless a signal has been caught.
++
++To avoid polling in step 4, the drain provides a waitqueue for scrub threads to
++be woken up whenever the intent count drops.
++
++The proposed patchset is the
++`scrub intent drain series
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-drain-intents>`_.
++
++.. _jump_labels:
++
++Static Keys (aka Jump Label Patching)
++`````````````````````````````````````
++
++Online fsck for XFS separates the regular filesystem from the checking and
++repair code as much as possible.
++However, there are a few parts of online fsck (such as the intent drains, and
++later, live update hooks) where it is useful for the online fsck code to know
++what's going on in the rest of the filesystem.
++Since it is not expected that online fsck will be constantly running in the
++background, it is very important to minimize the runtime overhead imposed by
++these hooks when online fsck is compiled into the kernel but not actively
++running on behalf of userspace.
++Taking locks in the hot path of a writer thread to access a data structure only
++to find that no further action is necessary is expensive -- on the author's
++computer, this have an overhead of 40-50ns per access.
++Fortunately, the kernel supports dynamic code patching, which enables XFS to
++replace a static branch to hook code with ``nop`` sleds when online fsck isn't
++running.
++This sled has an overhead of however long it takes the instruction decoder to
++skip past the sled, which seems to be on the order of less than 1ns and
++does not access memory outside of instruction fetching.
++
++When online fsck enables the static key, the sled is replaced with an
++unconditional branch to call the hook code.
++The switchover is quite expensive (~22000ns) but is paid entirely by the
++program that invoked online fsck, and can be amortized if multiple threads
++enter online fsck at the same time, or if multiple filesystems are being
++checked at the same time.
++Changing the branch direction requires taking the CPU hotplug lock, and since
++CPU initialization requires memory allocation, online fsck must be careful not
++to change a static key while holding any locks or resources that could be
++accessed in the memory reclaim paths.
++To minimize contention on the CPU hotplug lock, care should be taken not to
++enable or disable static keys unnecessarily.
++
++Because static keys are intended to minimize hook overhead for regular
++filesystem operations when xfs_scrub is not running, the intended usage
++patterns are as follows:
++
++- The hooked part of XFS should declare a static-scoped static key that
++  defaults to false.
++  The ``DEFINE_STATIC_KEY_FALSE`` macro takes care of this.
++  The static key itself should be declared as a ``static`` variable.
++
++- When deciding to invoke code that's only used by scrub, the regular
++  filesystem should call the ``static_branch_unlikely`` predicate to avoid the
++  scrub-only hook code if the static key is not enabled.
++
++- The regular filesystem should export helper functions that call
++  ``static_branch_inc`` to enable and ``static_branch_dec`` to disable the
++  static key.
++  Wrapper functions make it easy to compile out the relevant code if the kernel
++  distributor turns off online fsck at build time.
++
++- Scrub functions wanting to turn on scrub-only XFS functionality should call
++  the ``xchk_fshooks_enable`` from the setup function to enable a specific
++  hook.
++  This must be done before obtaining any resources that are used by memory
++  reclaim.
++  Callers had better be sure they really need the functionality gated by the
++  static key; the ``TRY_HARDER`` flag is useful here.
++
++Online scrub has resource acquisition helpers (e.g. ``xchk_perag_lock``) to
++handle locking AGI and AGF buffers for all scrubber functions.
++If it detects a conflict between scrub and the running transactions, it will
++try to wait for intents to complete.
++If the caller of the helper has not enabled the static key, the helper will
++return -EDEADLOCK, which should result in the scrub being restarted with the
++``TRY_HARDER`` flag set.
++The scrub setup function should detect that flag, enable the static key, and
++try the scrub again.
++Scrub teardown disables all static keys obtained by ``xchk_fshooks_enable``.
++
++For more information, please see the kernel documentation of
++Documentation/staging/static-keys.rst.
 
