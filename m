@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D62525F24EE
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:34:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D165F24F0
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:34:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230096AbiJBSd7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34904 "EHLO
+        id S230097AbiJBSeX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbiJBSd6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:33:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F2223C167
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:33:57 -0700 (PDT)
+        with ESMTP id S230093AbiJBSeW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:34:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6016A3C173
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:34:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CC9560F07
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:33:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF3DC433C1;
-        Sun,  2 Oct 2022 18:33:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 058FBB80D88
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:34:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9906C433C1;
+        Sun,  2 Oct 2022 18:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735636;
-        bh=OVC+ULuoeXFJfcZrOCwVJEbR/q/Ug5NBMCprs8CuRYA=;
+        s=k20201202; t=1664735657;
+        bh=RrS2WgVw4mHXam8YnVpXEkxI+ac4hDCWSYII2RTLedI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qaiTt2/fcdito9hQ69oJnRHLaELuyarEov/PzoCViQ5jYkDZEpSgS5jrtmHcF69nt
-         US6CnSvPv6h2Z+VFlnEt+VDIgxjgUazWXK7etzQkGe2aPGXl0JyWHae+NZdXazAfWR
-         uGUYk+DeFxsR69+AhsLYsfGOBwuOXaj9VkzzO8w+CjHKmoC3g7nODLqdrkdg+ENEee
-         To3XrGZxbugCVRFm5aem6Soz8U8gVR+Kk/ZAz7ln6fCSdpFDjBIbzCzY0PmrkqXV+Q
-         UOq1sMOkQXOSykRLafUl819siWq4pVUVVzGP3ZA7iooQCcyLMLuXmeCLYgUQI4a8Qf
-         HpeVjqGsWwYhA==
-Subject: [PATCH 2/2] xfs: ensure that single-owner file blocks are not owned
- by others
+        b=nKxEh+iyyHoJb5kvRSCgiJQfe1uglITtYM7QZFyTjs5Pzphw6scQx2bpe6IEB+LbE
+         Tduk17s+7+BzZsAFvv788/4+Ip3+dbnashxPG/udk9y2XsNk/0WM/D3ItXzw9ZBBe4
+         s8JQmDWStwcsJzYTloZ1fH8Hphve6CwInmsb5cf2Q96qijV1hd2zAkzizW6mBibQPQ
+         XZgKVtI/yOUR7EP28AW/k/3BXJ7dT40l8F6oAKdTfP2qCm0CugdXga9jWrmIW2xzVt
+         63g/PGEmqGx6MvJJ4+9jjvoIxfcG+/pyN2zSUxv+CV+neOAFowRcTkoQvVDbgInoNp
+         CpYhzy9A8UBJQ==
+Subject: [PATCH 2/2] xfs: check inode core when scrubbing metadata files
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sun, 02 Oct 2022 11:20:23 -0700
-Message-ID: <166473482321.1084491.4688155992707660926.stgit@magnolia>
-In-Reply-To: <166473482288.1084491.14541503667313246834.stgit@magnolia>
-References: <166473482288.1084491.14541503667313246834.stgit@magnolia>
+Date:   Sun, 02 Oct 2022 11:20:26 -0700
+Message-ID: <166473482636.1084588.10974246607672500827.stgit@magnolia>
+In-Reply-To: <166473482605.1084588.1965700384229898125.stgit@magnolia>
+References: <166473482605.1084588.1965700384229898125.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,61 +54,97 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-For any file fork mapping that can only have a single owner, make sure
-that there are no other rmap owners for that mapping.  This patch
-requires the more detailed checking provided by xfs_rmap_count_owners so
-that we can know how many rmap records for a given range of space had a
-matching owner, how many had a non-matching owner, and how many
-conflicted with the records that have a matching owner.
+Metadata files (e.g. realtime bitmaps and quota files) do not show up in
+the bulkstat output, which means that scrub-by-handle does not work;
+they can only be checked through a specific scrub type.  Therefore, each
+scrub type calls xchk_metadata_inode_forks to check the metadata for
+whatever's in the file.
+
+Unfortunately, that function doesn't actually check the inode record
+itself.  Refactor the function a bit to make that happen.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/bmap.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ fs/xfs/scrub/common.c |   40 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 6 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index 1e4813c82cc5..d310f74fe650 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -308,6 +308,7 @@ xchk_bmap_iextent_xref(
- 	struct xchk_bmap_info	*info,
- 	struct xfs_bmbt_irec	*irec)
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 60c4d33fe6f5..73ac38c1126e 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -866,6 +866,33 @@ xchk_buffer_recheck(
+ 	trace_xchk_block_error(sc, xfs_buf_daddr(bp), fa);
+ }
+ 
++static inline int
++xchk_metadata_inode_subtype(
++	struct xfs_scrub	*sc,
++	unsigned int		scrub_type)
++{
++	__u32			smtype = sc->sm->sm_type;
++	int			error;
++
++	sc->sm->sm_type = scrub_type;
++
++	switch (scrub_type) {
++	case XFS_SCRUB_TYPE_INODE:
++		error = xchk_inode(sc);
++		break;
++	case XFS_SCRUB_TYPE_BMBTD:
++		error = xchk_bmap_data(sc);
++		break;
++	default:
++		ASSERT(0);
++		error = -EFSCORRUPTED;
++		break;
++	}
++
++	sc->sm->sm_type = smtype;
++	return error;
++}
++
+ /*
+  * Scrub the attr/data forks of a metadata inode.  The metadata inode must be
+  * pointed to by sc->ip and the ILOCK must be held.
+@@ -874,13 +901,17 @@ int
+ xchk_metadata_inode_forks(
+ 	struct xfs_scrub	*sc)
  {
-+	struct xfs_owner_info	oinfo;
- 	struct xfs_mount	*mp = info->sc->mp;
- 	xfs_agnumber_t		agno;
- 	xfs_agblock_t		agbno;
-@@ -328,19 +329,30 @@ xchk_bmap_iextent_xref(
- 	xchk_bmap_xref_rmap(info, irec, agbno);
- 	switch (info->whichfork) {
- 	case XFS_DATA_FORK:
--		if (!xfs_is_reflink_inode(info->sc->ip))
-+		if (!xfs_is_reflink_inode(info->sc->ip)) {
-+			xfs_rmap_ino_owner(&oinfo, info->sc->ip->i_ino,
-+					info->whichfork, irec->br_startoff);
-+			xchk_xref_is_only_owned_by(info->sc, agbno,
-+					irec->br_blockcount, &oinfo);
- 			xchk_xref_is_not_shared(info->sc, agbno,
- 					irec->br_blockcount);
-+		}
- 		xchk_xref_is_not_cow_staging(info->sc, agbno,
- 				irec->br_blockcount);
- 		break;
- 	case XFS_ATTR_FORK:
-+		xfs_rmap_ino_owner(&oinfo, info->sc->ip->i_ino,
-+				info->whichfork, irec->br_startoff);
-+		xchk_xref_is_only_owned_by(info->sc, agbno, irec->br_blockcount,
-+				&oinfo);
- 		xchk_xref_is_not_shared(info->sc, agbno,
- 				irec->br_blockcount);
- 		xchk_xref_is_not_cow_staging(info->sc, agbno,
- 				irec->br_blockcount);
- 		break;
- 	case XFS_COW_FORK:
-+		xchk_xref_is_only_owned_by(info->sc, agbno, irec->br_blockcount,
-+				&XFS_RMAP_OINFO_COW);
- 		xchk_xref_is_cow_staging(info->sc, agbno,
- 				irec->br_blockcount);
- 		xchk_xref_is_not_shared(info->sc, agbno,
+-	__u32			smtype;
+ 	bool			shared;
+ 	int			error;
+ 
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return 0;
+ 
++	/* Check the inode record. */
++	error = xchk_metadata_inode_subtype(sc, XFS_SCRUB_TYPE_INODE);
++	if (error || (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT))
++		return error;
++
+ 	/* Metadata inodes don't live on the rt device. */
+ 	if (sc->ip->i_diflags & XFS_DIFLAG_REALTIME) {
+ 		xchk_ino_set_corrupt(sc, sc->ip->i_ino);
+@@ -900,10 +931,7 @@ xchk_metadata_inode_forks(
+ 	}
+ 
+ 	/* Invoke the data fork scrubber. */
+-	smtype = sc->sm->sm_type;
+-	sc->sm->sm_type = XFS_SCRUB_TYPE_BMBTD;
+-	error = xchk_bmap_data(sc);
+-	sc->sm->sm_type = smtype;
++	error = xchk_metadata_inode_subtype(sc, XFS_SCRUB_TYPE_BMBTD);
+ 	if (error || (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT))
+ 		return error;
+ 
+@@ -918,7 +946,7 @@ xchk_metadata_inode_forks(
+ 			xchk_ino_set_corrupt(sc, sc->ip->i_ino);
+ 	}
+ 
+-	return error;
++	return 0;
+ }
+ 
+ /*
 
