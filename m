@@ -2,44 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6970E5F2506
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:38:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1EC25F24A8
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbiJBSiD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41980 "EHLO
+        id S229754AbiJBSZF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:25:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230116AbiJBSiC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:38:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0B53C141
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:38:02 -0700 (PDT)
+        with ESMTP id S229935AbiJBSZD (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:25:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C268F13EA5
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:25:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DC252B80D7E
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:38:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8025DC433D6;
-        Sun,  2 Oct 2022 18:37:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A9F3FB80D81
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:24:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B704C433D7;
+        Sun,  2 Oct 2022 18:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735879;
-        bh=LlYoSdmC6B+IRobr561x0/ulHv+yfwY183bA+rhs2BE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TXy47JoPS5M/Gqntlsydsf1keWgxjWDQu0/MHAnt+h861YC/DFIVBtJAFt+4UYJkJ
-         HxzmbMtjyUsl2uMUbbV9HS7r93FIBhIXAmo/8Y0pvf4IK/udCwpO0NRU+dmoPECVQE
-         thKiOFoMAoyT58FXN028bBmC0mHJggHjW2i9IQOT4EJE5upVA9Kr/HDID/BZMGZ7Lo
-         dA/IRIRQZqI9LG5hz4uTb46GzUUIKu84RJXZo1lCA1HQAGbHS/U52qkjHZoObULLm9
-         AEBeeXdimZ72BW9VeoiiGMVjMNqe3KiD/Ocdji64P82EKV+hJpB1XIls+4g9rLNbcu
-         QhkZdNXmk9zlg==
-Subject: [PATCH 9/9] xfs: only allocate free space bitmap for xattr scrub if
- needed
+        s=k20201202; t=1664735097;
+        bh=0e8wlLGfdqUlNRrYNC9nDK9O6qdT2nT04SKGA6nivtA=;
+        h=Subject:From:To:Cc:Date:From;
+        b=IG2fiYr/CHfu74hvB4So8eo6XqbEbkU9mgjrtxDfdnt691GxbNVVojQZa9SAJAQLX
+         rBUc6cBNrLvmGelTGkDN2/bX6yPqdg68NTymaZnwQAqvAIa73sYEdUylD7jZvZLqcX
+         huXIcq4J0rh/GOPRS0TMl8O+bTya32LYkF9Atp+EQebYXP0RWfYMoavvoU2r1RgEsM
+         Gy1y6I0xTC9X2w3/fvBffCXcODCChFJqmv1Sn+475o+gHPmipY6KEgnA5nGFqwdVny
+         b5JJlEFemgTBh8wQkhTvpIMjFXuCT1rggrEgx8K1dIqBw5+xWdJPCLl0426a8Haee9
+         vUGGMPSYe42qQ==
+Subject: [PATCHSET v23.1 0/3] xfs: rework online fsck incore bitmap
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Sun, 02 Oct 2022 11:20:41 -0700
-Message-ID: <166473484120.1085108.12625299349355602768.stgit@magnolia>
-In-Reply-To: <166473483982.1085108.101544412199880535.stgit@magnolia>
-References: <166473483982.1085108.101544412199880535.stgit@magnolia>
+Date:   Sun, 02 Oct 2022 11:20:44 -0700
+Message-ID: <166473484410.1085359.13141946672747602766.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,66 +50,34 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-The free space bitmap is only required if we're going to check the
-bestfree space at the end of an xattr leaf block.  Therefore, we can
-reduce the memory requirements of this scrubber if we can determine that
-the xattr is in short format.
+In this series, we make some changes to the incore bitmap code: First,
+we shorten the prefix to 'xbitmap'.  Then, we rework some utility
+functions for later use by online repair and clarify how the walk
+functions are supposed to be used.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Finally, we use all these new pieces to convert the incore bitmap to use
+an interval tree instead of linked lists.  This lifts the limitation
+that callers had to be careful not to set a range that was already set;
+and gets us ready for the btree rebuilder functions needing to be able
+to set bits in a bitmap and generate maximal contiguous extents for the
+set ranges.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-bitmap-rework
 ---
- fs/xfs/scrub/attr.c |   31 ++++++++++++++++++++++++++++---
- 1 file changed, 28 insertions(+), 3 deletions(-)
-
-
-diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index f6eb6070488b..b315a499ba32 100644
---- a/fs/xfs/scrub/attr.c
-+++ b/fs/xfs/scrub/attr.c
-@@ -37,6 +37,29 @@ xchk_xattr_buf_cleanup(
- 	ab->value_sz = 0;
- }
- 
-+/*
-+ * Allocate the free space bitmap if we're trying harder; there are leaf blocks
-+ * in the attr fork; or we can't tell if there are leaf blocks.
-+ */
-+static inline bool
-+xchk_xattr_want_freemap(
-+	struct xfs_scrub	*sc)
-+{
-+	struct xfs_ifork	*ifp;
-+
-+	if (sc->flags & XCHK_TRY_HARDER)
-+		return true;
-+
-+	if (!sc->ip)
-+		return true;
-+
-+	ifp = xfs_ifork_ptr(sc->ip, XFS_ATTR_FORK);
-+	if (!ifp)
-+		return false;
-+
-+	return xfs_ifork_has_extents(ifp);
-+}
-+
- /*
-  * Allocate enough memory to hold an attr value and attr block bitmaps,
-  * reallocating the buffer if necessary.  Buffer contents are not preserved
-@@ -66,9 +89,11 @@ xchk_setup_xattr_buf(
- 	if (!ab->usedmap)
- 		return -ENOMEM;
- 
--	ab->freemap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
--	if (!ab->freemap)
--		return -ENOMEM;
-+	if (xchk_xattr_want_freemap(sc)) {
-+		ab->freemap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
-+		if (!ab->freemap)
-+			return -ENOMEM;
-+	}
- 
- resize_value:
- 	if (ab->value_sz >= value_size)
+ fs/xfs/scrub/agheader_repair.c |   99 ++++++-----
+ fs/xfs/scrub/bitmap.c          |  367 +++++++++++++++++++++++++---------------
+ fs/xfs/scrub/bitmap.h          |   33 ++--
+ fs/xfs/scrub/repair.c          |  102 ++++++-----
+ 4 files changed, 357 insertions(+), 244 deletions(-)
 
