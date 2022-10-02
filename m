@@ -2,41 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5A545F249C
-	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 880365F24D7
+	for <lists+linux-xfs@lfdr.de>; Sun,  2 Oct 2022 20:30:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbiJBSXy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 2 Oct 2022 14:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
+        id S230045AbiJBSaS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 2 Oct 2022 14:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbiJBSXy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:23:54 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B8F25295
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:23:53 -0700 (PDT)
+        with ESMTP id S230039AbiJBSaR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 2 Oct 2022 14:30:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196E420346
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 11:30:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1FF18B80D81
-        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:23:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC586C433C1;
-        Sun,  2 Oct 2022 18:23:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A9F9260F04
+        for <linux-xfs@vger.kernel.org>; Sun,  2 Oct 2022 18:30:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113B7C433C1;
+        Sun,  2 Oct 2022 18:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664735030;
-        bh=XlN0yFpnVUtGcbQBBBcOA9meUIixzVJsa0iSiIUp4Fs=;
-        h=Subject:From:To:Cc:Date:From;
-        b=Im0Xd1SL+XgpvQlQmKvR8+t1a//XLgSJUIzaEObSPm9luD7x5vWzcX1n061Rfmym8
-         gycPavDXYvP5HYjsVpmgt+kIc6uV3vdHJcI9rgtI5VbZo4BCxyjGn7y5CzUXyO2VdG
-         6NxGIlFw6wHO0SJDQkze5+0oDzVKeaV9O8ICwktRdmW/x2L7iUF3o4kBm7rrvFicz2
-         EFVScwe5QC5RadpnMv538CPI4ZMfBCVzuFgFSMJIxOw1qhxyC5ZnQAzVtij/KiaK5/
-         l0w+hWMxLjUfrQ9PDe3hPddnDPp8iv+PbHT4Jx1Y4UIERauC6YICP8QzvWia1GVkpp
-         r70y7wKLXsDYg==
-Subject: [PATCHSET v23.1 0/2] xfs: improve rt metadata use for scrub
+        s=k20201202; t=1664735415;
+        bh=PpXG4l6BXlQkBskfQ5nijB5TjOog/xwQYSlgiERXaIw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=SnxWspXYMfyr9hq+S7H9Dm3WhgmSmUNJ+OKd6eZe7/+IbYqtJexFXypUBPr6bb0KD
+         jYoygFyYWx0FWDHnGCyv9PVyIzScfDtwMIut4CdD/emxbnIjpCm86Qp7Ha90czyLQF
+         EVzKc8EoayUmf0J+4oSz9DKgPyqZ+7dGBZrTdZSX/MDQXQ+wujtOrW9N+9AVNz07dL
+         QheWm1wXNnq+scRHzI+r8sxxEMF66cN2s5Zkr3XHVAM50zQ1EKyG5i/kIJnoUEH9/x
+         Om5XbBBBtD5A0npBhwkLaXpS7u2Z/k6lf1Ml1TuYzO5KxseQwvoKa1+LKJd0BntgAd
+         CQEm8ovr7biZA==
+Subject: [PATCH 1/2] xfs: load rtbitmap and rtsummary extent mapping btrees at
+ mount time
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Sun, 02 Oct 2022 11:20:02 -0700
-Message-ID: <166473480232.1083697.18352887736798889545.stgit@magnolia>
+Message-ID: <166473480249.1083697.13081552727850377113.stgit@magnolia>
+In-Reply-To: <166473480232.1083697.18352887736798889545.stgit@magnolia>
+References: <166473480232.1083697.18352887736798889545.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -50,27 +53,110 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This short series makes some small changes to the way we handle the
-realtime metadata inodes.  First, we now make sure that the bitmap and
-summary file forks are always loaded at mount time so that every
-scrubber won't have to call xfs_iread_extents.  This won't be easy if
-we're, say, cross-referencing realtime space allocations.  The second
-change makes the ILOCK annotations more consistent with the rest of XFS.
+It turns out that GETFSMAP and online fsck have had a bug for years due
+to their use of ILOCK_SHARED to coordinate their linear scans of the
+realtime bitmap.  If the bitmap file's data fork happens to be in BTREE
+format and the scan occurs immediately after mounting, the incore bmbt
+will not be populated, leading to ASSERTs tripping over the incorrect
+inode state.  Because the bitmap scans always lock bitmap buffers in
+increasing order of file offset, it is appropriate for these two callers
+to take a shared ILOCK to improve scalability.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+To fix this problem, load both data and attr fork state into memory when
+mounting the realtime inodes.  Realtime metadata files aren't supposed
+to have an attr fork so the second step is likely a nop.
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
+On most filesystems this is unlikely since the rtbitmap data fork is
+usually in extents format, but it's possible to craft a filesystem that
+will by fragmenting the free space in the data section and growfsing the
+rt section.
 
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-fix-rtmeta-ilocking
+Fixes: 4c934c7dd60c ("xfs: report realtime space information via the rtbitmap")
+Also-Fixes: 46d9bfb5e706 ("xfs: cross-reference the realtime bitmap")
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_fsmap.c   |    4 ++-
- fs/xfs/xfs_rtalloc.c |   60 +++++++++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 56 insertions(+), 8 deletions(-)
+ fs/xfs/xfs_rtalloc.c |   56 ++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 52 insertions(+), 4 deletions(-)
+
+
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 292d5e54a92c..b0846204c436 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1325,6 +1325,41 @@ xfs_rtalloc_reinit_frextents(
+ 	return 0;
+ }
+ 
++/*
++ * Read in the bmbt of an rt metadata inode so that we never have to load them
++ * at runtime.  This enables the use of shared ILOCKs for rtbitmap scans.  Use
++ * an empty transaction to avoid deadlocking on loops in the bmbt.
++ */
++static inline int
++xfs_rtmount_iread_extents(
++	struct xfs_inode	*ip,
++	unsigned int		lock_class)
++{
++	struct xfs_trans	*tp;
++	int			error;
++
++	error = xfs_trans_alloc_empty(ip->i_mount, &tp);
++	if (error)
++		return error;
++
++	xfs_ilock(ip, XFS_ILOCK_EXCL | lock_class);
++
++	error = xfs_iread_extents(tp, ip, XFS_DATA_FORK);
++	if (error)
++		goto out_unlock;
++
++	if (xfs_inode_has_attr_fork(ip)) {
++		error = xfs_iread_extents(tp, ip, XFS_ATTR_FORK);
++		if (error)
++			goto out_unlock;
++	}
++
++out_unlock:
++	xfs_iunlock(ip, XFS_ILOCK_EXCL | lock_class);
++	xfs_trans_cancel(tp);
++	return error;
++}
++
+ /*
+  * Get the bitmap and summary inodes and the summary cache into the mount
+  * structure at mount time.
+@@ -1342,14 +1377,27 @@ xfs_rtmount_inodes(
+ 		return error;
+ 	ASSERT(mp->m_rbmip != NULL);
+ 
++	error = xfs_rtmount_iread_extents(mp->m_rbmip, XFS_ILOCK_RTBITMAP);
++	if (error)
++		goto out_rele_bitmap;
++
+ 	error = xfs_iget(mp, NULL, sbp->sb_rsumino, 0, 0, &mp->m_rsumip);
+-	if (error) {
+-		xfs_irele(mp->m_rbmip);
+-		return error;
+-	}
++	if (error)
++		goto out_rele_bitmap;
+ 	ASSERT(mp->m_rsumip != NULL);
++
++	error = xfs_rtmount_iread_extents(mp->m_rsumip, XFS_ILOCK_RTSUM);
++	if (error)
++		goto out_rele_summary;
++
+ 	xfs_alloc_rsum_cache(mp, sbp->sb_rbmblocks);
+ 	return 0;
++
++out_rele_summary:
++	xfs_irele(mp->m_rsumip);
++out_rele_bitmap:
++	xfs_irele(mp->m_rbmip);
++	return error;
+ }
+ 
+ void
 
