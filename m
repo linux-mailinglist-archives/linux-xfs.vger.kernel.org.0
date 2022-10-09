@@ -2,60 +2,86 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83FBF5F93C3
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Oct 2022 01:45:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 920815F9382
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Oct 2022 01:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230283AbiJIXpj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 9 Oct 2022 19:45:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        id S231665AbiJIXU4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 9 Oct 2022 19:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230331AbiJIXop (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 9 Oct 2022 19:44:45 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 515B35A2C7
-        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 16:16:28 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-106-210.pa.nsw.optusnet.com.au [49.181.106.210])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 248BC1101555;
-        Mon, 10 Oct 2022 09:42:19 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ohezx-0004jQ-VC; Mon, 10 Oct 2022 09:42:17 +1100
-Date:   Mon, 10 Oct 2022 09:42:17 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     bugzilla-daemon@kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [Bug 216563] New: [xfstests generic/113] memcpy: detected
- field-spanning write (size 32) of single field
- "efdp->efd_format.efd_extents" at fs/xfs/xfs_extfree_item.c:693 (size 16)
-Message-ID: <20221009224217.GR3600936@dread.disaster.area>
+        with ESMTP id S231724AbiJIXUX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 9 Oct 2022 19:20:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69AC843E67
+        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 15:46:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EC0E760B85
+        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 22:42:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 539B3C43147
+        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 22:42:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665355350;
+        bh=PwratzfjjcSIRB30VbUmFh0p9kGHHRFDTbw//MRMHOI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=LESkajKdtmB4DOJ3VeEI9GpEBT9usk41p8ynhE95y3bhM8TCrYVMD33pNj3q/hIsF
+         HHkF5Gzu+c0SmDBBrFh6YDeT09KtWmp6yZXO8r6aDryd8ig1vkDdLtsWIZ+uJmYW7b
+         aBX4+GZZTA3GX7R8FbMGwNa52L1B/oqN9WbbuoSZ1yBvsLWHsRUaBYEj7JeyRpQdnC
+         h3vd0jYUkiHhTAylyy1zhf4f/h7n0aepGJ2RH7cq7MAJNpPsCCH2VyDR4M+hJ/+EmY
+         i4yQ058cn1jHd3pDaeeh5FmXG7Gi6g7gOvamOj8hQJuEcXsN/WxSq0E/5la5qIIO+l
+         +7rrxVqXH2WSg==
+Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
+        id 435C5C433EA; Sun,  9 Oct 2022 22:42:30 +0000 (UTC)
+From:   bugzilla-daemon@kernel.org
+To:     linux-xfs@vger.kernel.org
+Subject: [Bug 216563] [xfstests generic/113] memcpy: detected field-spanning
+ write (size 32) of single field "efdp->efd_format.efd_extents" at
+ fs/xfs/xfs_extfree_item.c:693 (size 16)
+Date:   Sun, 09 Oct 2022 22:42:29 +0000
+X-Bugzilla-Reason: None
+X-Bugzilla-Type: changed
+X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Product: File System
+X-Bugzilla-Component: XFS
+X-Bugzilla-Version: 2.5
+X-Bugzilla-Keywords: 
+X-Bugzilla-Severity: normal
+X-Bugzilla-Who: david@fromorbit.com
+X-Bugzilla-Status: NEW
+X-Bugzilla-Resolution: 
+X-Bugzilla-Priority: P1
+X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
+X-Bugzilla-Flags: 
+X-Bugzilla-Changed-Fields: 
+Message-ID: <bug-216563-201763-xMifTmrqrR@https.bugzilla.kernel.org/>
+In-Reply-To: <bug-216563-201763@https.bugzilla.kernel.org/>
 References: <bug-216563-201763@https.bugzilla.kernel.org/>
- <Y0MAHhIW4qqpbaLj@magnolia>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Bugzilla-URL: https://bugzilla.kernel.org/
+Auto-Submitted: auto-generated
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0MAHhIW4qqpbaLj@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=63434e4c
-        a=j6JUzzrSC7wlfFge/rmVbg==:117 a=j6JUzzrSC7wlfFge/rmVbg==:17
-        a=kj9zAlcOel0A:10 a=Qawa6l4ZSaYA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
-        a=Z4Rwk6OoAAAA:8 a=7-415B0cAAAA:8 a=ESbuc5oQwcc4iB0716wA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=HkZW87K1Qel5hWWM3VKY:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216563
+
+--- Comment #3 from Dave Chinner (david@fromorbit.com) ---
 On Sun, Oct 09, 2022 at 10:08:46AM -0700, Darrick J. Wong wrote:
-> On Sun, Oct 09, 2022 at 11:59:13AM +0000, bugzilla-daemon@kernel.org wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=216563
-> > 
+> On Sun, Oct 09, 2022 at 11:59:13AM +0000, bugzilla-daemon@kernel.org wrot=
+e:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=3D216563
+> >=20
 > >             Bug ID: 216563
-> >            Summary: [xfstests generic/113] memcpy: detected field-spanning
+> >            Summary: [xfstests generic/113] memcpy: detected field-spann=
+ing
 > >                     write (size 32) of single field
 > >                     "efdp->efd_format.efd_extents" at
 > >                     fs/xfs/xfs_extfree_item.c:693 (size 16)
@@ -72,66 +98,78 @@ On Sun, Oct 09, 2022 at 10:08:46AM -0700, Darrick J. Wong wrote:
 > >           Assignee: filesystem_xfs@kernel-bugs.kernel.org
 > >           Reporter: zlang@redhat.com
 > >         Regression: No
-> > 
-> > I xfstests generic/113 hit below kernel warning [1] on xfs with 64k directory
-> > block size (-n size=65536). It's reproducible for me, and the last time I
-> > reproduce this bug on linux v6.0+ which HEAD= ...
-> > 
+> >=20
+> > I xfstests generic/113 hit below kernel warning [1] on xfs with 64k
+> directory
+> > block size (-n size=3D65536). It's reproducible for me, and the last ti=
+me I
+> > reproduce this bug on linux v6.0+ which HEAD=3D ...
+> >=20
 > > commit e8bc52cb8df80c31c73c726ab58ea9746e9ff734
 > > Author: Linus Torvalds <torvalds@linux-foundation.org>
 > > Date:   Fri Oct 7 17:04:10 2022 -0700
-> > 
+> >=20
 > >     Merge tag 'driver-core-6.1-rc1' of
 > > git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
-> > 
-> > I hit this issue on xfs with 64k directory block size 3 times(aarch64, x86_64
+> >=20
+> > I hit this issue on xfs with 64k directory block size 3 times(aarch64,
+> x86_64
 > > and ppc64le), and once on xfs with 1k blocksize (aarch64).
-> > 
-> > 
+> >=20
+> >=20
 > > [1]
 > > [ 4328.023770] run fstests generic/113 at 2022-10-08 11:57:42
-> > [ 4330.104632] XFS (sda3): EXPERIMENTAL online scrub feature in use. Use at
+> > [ 4330.104632] XFS (sda3): EXPERIMENTAL online scrub feature in use. Us=
+e at
 > > your own risk!
 > > [ 4333.094807] XFS (sda3): Unmounting Filesystem
 > > [ 4333.934996] XFS (sda3): Mounting V5 Filesystem
 > > [ 4333.973061] XFS (sda3): Ending clean mount
-> > [ 4335.457595] XFS (sda3): EXPERIMENTAL online scrub feature in use. Use at
+> > [ 4335.457595] XFS (sda3): EXPERIMENTAL online scrub feature in use. Us=
+e at
 > > your own risk!
 > > [ 4338.564849] XFS (sda3): Unmounting Filesystem
 > > [ 4339.391848] XFS (sda3): Mounting V5 Filesystem
 > > [ 4339.430908] XFS (sda3): Ending clean mount
-> > [ 4340.100364] XFS (sda3): EXPERIMENTAL online scrub feature in use. Use at
+> > [ 4340.100364] XFS (sda3): EXPERIMENTAL online scrub feature in use. Us=
+e at
 > > your own risk!
 > > [ 4343.379506] XFS (sda3): Unmounting Filesystem
 > > [ 4344.195036] XFS (sda3): Mounting V5 Filesystem
 > > [ 4344.232984] XFS (sda3): Ending clean mount
-> > [ 4345.190073] XFS (sda3): EXPERIMENTAL online scrub feature in use. Use at
+> > [ 4345.190073] XFS (sda3): EXPERIMENTAL online scrub feature in use. Us=
+e at
 > > your own risk!
 > > [ 4348.198562] XFS (sda3): Unmounting Filesystem
 > > [ 4349.065061] XFS (sda3): Mounting V5 Filesystem
 > > [ 4349.104995] XFS (sda3): Ending clean mount
-> > [ 4350.118883] XFS (sda3): EXPERIMENTAL online scrub feature in use. Use at
+> > [ 4350.118883] XFS (sda3): EXPERIMENTAL online scrub feature in use. Us=
+e at
 > > your own risk!
 > > [ 4353.233555] XFS (sda3): Unmounting Filesystem
 > > [ 4354.093530] XFS (sda3): Mounting V5 Filesystem
 > > [ 4354.135975] XFS (sda3): Ending clean mount
 > > [ 4354.337550] ------------[ cut here ]------------
-> > [ 4354.342354] memcpy: detected field-spanning write (size 32) of single field
-> > "efdp->efd_format.efd_extents" at fs/xfs/xfs_extfree_item.c:693 (size 16)
-> > [ 4354.355820] WARNING: CPU: 7 PID: 899243 at fs/xfs/xfs_extfree_item.c:693
+> > [ 4354.342354] memcpy: detected field-spanning write (size 32) of single
+> field
+> > "efdp->efd_format.efd_extents" at fs/xfs/xfs_extfree_item.c:693 (size 1=
+6)
+> > [ 4354.355820] WARNING: CPU: 7 PID: 899243 at fs/xfs/xfs_extfree_item.c=
+:693
 > > xfs_efi_item_relog+0x1fc/0x270 [xfs]
-> 
+>=20
 > I think this is caused by an EF[ID] with ef[id]_nextents > 1, since the
 > structure definition is:
-> 
+>=20
 > typedef struct xfs_efd_log_format {
-> 	uint16_t		efd_type;	/* efd log item type */
-> 	uint16_t		efd_size;	/* size of this item */
-> 	uint32_t		efd_nextents;	/* # of extents freed */
-> 	uint64_t		efd_efi_id;	/* id of corresponding efi */
-> 	xfs_extent_t		efd_extents[1];	/* array of extents freed */
+>       uint16_t                efd_type;       /* efd log item type */
+>       uint16_t                efd_size;       /* size of this item */
+>       uint32_t                efd_nextents;   /* # of extents freed */
+>       uint64_t                efd_efi_id;     /* id of corresponding efi =
+*/
+>       xfs_extent_t            efd_extents[1]; /* array of extents freed */
 > } xfs_efd_log_format_t;
-> 
+>=20
 > Yuck, an array[1] that is actually a VLA!
 
 Always been the case; the comment above both EFI and EFD definitions
@@ -152,12 +190,12 @@ BMBT modifications were committed...
 
 > I guess we're going to have to turn that into a real VLA, and adjust the
 > xfs_ondisk.h macros to match?
-> 
+>=20
 > What memory sanitizer kconfig option enables this, anyway?
 
 54d9469bc515 fortify: Add run-time WARN for cross-field memcpy()
 
-CONFIG_FORTIFY_SOURCE=y, committed in 6.0-rc2.
+CONFIG_FORTIFY_SOURCE=3Dy, committed in 6.0-rc2.
 
 It effectively ignores flex arrays defined with [], but sees
 anything defined with [1] as a fixed size array of known size and so
@@ -169,6 +207,9 @@ code works fine as it stands...
 Cheers,
 
 Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+
+--=20
+You may reply to this email to add a comment.
+
+You are receiving this mail because:
+You are watching the assignee of the bug.=
