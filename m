@@ -2,118 +2,125 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE36F5F93B8
-	for <lists+linux-xfs@lfdr.de>; Mon, 10 Oct 2022 01:43:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375195F94A8
+	for <lists+linux-xfs@lfdr.de>; Mon, 10 Oct 2022 01:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231506AbiJIXnF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sun, 9 Oct 2022 19:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
+        id S231407AbiJIX7d (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sun, 9 Oct 2022 19:59:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231656AbiJIXm2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sun, 9 Oct 2022 19:42:28 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E927057E34
-        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 16:14:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E47B0B80DD0
-        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 22:47:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9558EC43142
-        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 22:47:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665355666;
-        bh=TA8WZxaIMD9zOwIi6zlIBUe8wFI/Y9QFrjIaDLiH23k=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ZwHKSlLcBhww4L8fGKd60uJ6yzh4g5LSia+yyIsK/vjdU4gEx/0ZQl5h1XeS91xKY
-         RaYHvWTpXc0uNvOu0csQYdZIwutimtrw1qxgl6nTcy4E/2m0biEkqP7g5Q5zg2jFMQ
-         fNxOfzIACZZDhJtTirgNf/ZoU9Uw8Z9JshPdZvcEYqXhJeyOqrUYp0xcb+Zu+MNsEA
-         raVf1Xa1rKkcseFrBf9tglxfWkthWCzg2zdo0w2Xhyk/85dQdbXIqPmRXpiSPmuc+j
-         I0ip6A0S9ERZuaWHU/k1FRuRLPcC3TcztqwEaHe4fZ8m6Hr2C4sIIHg0abZQ/XeO7E
-         oqluWFdIV4EcQ==
-Received: by aws-us-west-2-korg-bugzilla-1.web.codeaurora.org (Postfix, from userid 48)
-        id 857CBC433E9; Sun,  9 Oct 2022 22:47:46 +0000 (UTC)
-From:   bugzilla-daemon@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [Bug 216566] [xfstests generic/648] BUG: unable to handle page
- fault, RIP: 0010:__xfs_dir3_data_check+0x171/0x700 [xfs]
-Date:   Sun, 09 Oct 2022 22:47:46 +0000
-X-Bugzilla-Reason: None
-X-Bugzilla-Type: changed
-X-Bugzilla-Watch-Reason: AssignedTo filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Product: File System
-X-Bugzilla-Component: XFS
-X-Bugzilla-Version: 2.5
-X-Bugzilla-Keywords: 
-X-Bugzilla-Severity: normal
-X-Bugzilla-Who: david@fromorbit.com
-X-Bugzilla-Status: NEW
-X-Bugzilla-Resolution: 
-X-Bugzilla-Priority: P1
-X-Bugzilla-Assigned-To: filesystem_xfs@kernel-bugs.kernel.org
-X-Bugzilla-Flags: 
-X-Bugzilla-Changed-Fields: 
-Message-ID: <bug-216566-201763-OhX1hI8sZ7@https.bugzilla.kernel.org/>
-In-Reply-To: <bug-216566-201763@https.bugzilla.kernel.org/>
-References: <bug-216566-201763@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Bugzilla-URL: https://bugzilla.kernel.org/
-Auto-Submitted: auto-generated
+        with ESMTP id S232748AbiJIX7N (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sun, 9 Oct 2022 19:59:13 -0400
+Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7C71F1AF32
+        for <linux-xfs@vger.kernel.org>; Sun,  9 Oct 2022 16:31:34 -0700 (PDT)
+Received: from dread.disaster.area (pa49-181-106-210.pa.nsw.optusnet.com.au [49.181.106.210])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 374708AD52E;
+        Mon, 10 Oct 2022 09:58:44 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ohfFq-00055n-Tz; Mon, 10 Oct 2022 09:58:42 +1100
+Date:   Mon, 10 Oct 2022 09:58:42 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     bugzilla-daemon@kernel.org
+Cc:     linux-xfs@vger.kernel.org
+Subject: Re: [Bug 216567] [xfstests generic/451] kernel BUG at
+ mm/truncate.c:669!
+Message-ID: <20221009225842.GT3600936@dread.disaster.area>
+References: <bug-216567-201763@https.bugzilla.kernel.org/>
+ <bug-216567-201763-9phRYnyMqv@https.bugzilla.kernel.org/>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bug-216567-201763-9phRYnyMqv@https.bugzilla.kernel.org/>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=63435224
+        a=j6JUzzrSC7wlfFge/rmVbg==:117 a=j6JUzzrSC7wlfFge/rmVbg==:17
+        a=kj9zAlcOel0A:10 a=Qawa6l4ZSaYA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8
+        a=7-415B0cAAAA:8 a=zyoQlP4wT9Kj4MpBQ7UA:9 a=CjuIK1q_8ugA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D216566
+On Sun, Oct 09, 2022 at 05:58:33PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216567
+> 
+> --- Comment #1 from Zorro Lang (zlang@redhat.com) ---
+> Hmm... besides this panic, g/451 just hit another panic when I tried to
+> reproduce this bug:
+> 
+> [ 1084.111233] run fstests generic/451 at 2022-10-09 11:12:39 
+> [ 1099.015616] restraintd[2581]: *** Current Time: Sun Oct 09 11:12:56 2022 
+> Localwatchdog at: Tue Oct 11 10:57:56 2022 
+> [ 1101.932132] ------------[ cut here ]------------ 
+> [ 1101.932220] ------------[ cut here ]------------ 
+> [ 1101.936972] kernel BUG at include/linux/pagemap.h:1247! 
+> [ 1101.936985] invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI 
+> [ 1101.941681] kernel BUG at include/linux/pagemap.h:1247! 
+> [ 1101.946825] CPU: 19 PID: 557513 Comm: xfs_io Kdump: loaded Not tainted
+> 6.0.0+ #1 
+> [ 1101.946831] Hardware name: Dell Inc. PowerEdge R750/0PJ80M, BIOS 1.5.4
+> 12/17/2021 
+> [ 1101.946833] RIP: 0010:read_pages+0xa29/0xda0 
+> [ 1101.976950] Code: ff ff be 01 00 00 00 e9 87 fe ff ff 0f b6 d0 be ff ff ff
+> ff 4c 89 ff 88 44 24 18 e8 11 74 25 00 0f b6 44 24 18 e9 f1 fe ff ff <0f> 0b 4c
+> 89 ff e8 1d 86 00 00 e9 ea fe ff ff 48 c7 c6 c0 85 55 99 
+> [ 1101.995693] RSP: 0018:ffa00000396ef7f0 EFLAGS: 00010202 
+> [ 1102.000921] RAX: 0000000000000002 RBX: dffffc0000000000 RCX:
+> 0000000000000001 
+> [ 1102.008054] RDX: 1fe220003427d324 RSI: 0000000000000004 RDI:
+> ffd40000095e8500 
+> [ 1102.015186] RBP: ffffffffc13f66c0 R08: 0000000000000000 R09:
+> ffffffff9aa44067 
+> [ 1102.022321] R10: fffffbfff354880c R11: 0000000000000001 R12:
+> fff3fc00072ddf4a 
+> [ 1102.029451] R13: ffa00000396efa54 R14: ffa00000396efa30 R15:
+> 0000000000000003 
+> [ 1102.036584] FS:  00007f1de484b740(0000) GS:ff11002033400000(0000)
+> knlGS:0000000000000000 
+> [ 1102.044671] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033 
+> [ 1102.050418] CR2: 0000000001c81ff8 CR3: 000000016171e004 CR4:
+> 0000000000771ee0 
+> [ 1102.057549] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> 0000000000000000 
+> [ 1102.064681] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> 0000000000000400 
+> [ 1102.071815] PKRU: 55555554 
+> [ 1102.074527] Call Trace: 
+> [ 1102.076982]  <TASK> 
+> [ 1102.079092]  ? file_ra_state_init+0xe0/0xe0 
+> [ 1102.083283]  ? __xa_clear_mark+0x100/0x100 
+> [ 1102.087385]  page_cache_ra_unbounded+0x269/0x510 
+> [ 1102.092013]  filemap_get_pages+0x26d/0x980 
+> [ 1102.096121]  ? filemap_add_folio+0x150/0x150 
+> [ 1102.100403]  filemap_read+0x2a9/0xae0 
+> [ 1102.104074]  ? lock_acquire+0x1d8/0x620 
+> [ 1102.107921]  ? find_held_lock+0x33/0x120 
+> [ 1102.111850]  ? filemap_get_pages+0x980/0x980 
+> [ 1102.116121]  ? validate_chain+0x154/0xdf0 
+> [ 1102.120133]  ? __lock_contended+0x980/0x980 
+> [ 1102.124320]  ? xfs_ilock+0x1d0/0x4d0 [xfs] 
+> [ 1102.128582]  ? xfs_ilock+0x1d0/0x4d0 [xfs] 
+> [ 1102.132816]  xfs_file_buffered_read+0x16f/0x390 [xfs] 
+> [ 1102.137995]  xfs_file_read_iter+0x274/0x560 [xfs] 
+> [ 1102.142831]  vfs_read+0x585/0x810 
 
---- Comment #1 from Dave Chinner (david@fromorbit.com) ---
-On Sun, Oct 09, 2022 at 05:47:49PM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D216566
->=20
->             Bug ID: 216566
->            Summary: [xfstests generic/648] BUG: unable to handle page
->                     fault, RIP: 0010:__xfs_dir3_data_check+0x171/0x700
->                     [xfs]
->            Product: File System
->            Version: 2.5
->     Kernel Version: v6.1-rc0
->           Hardware: All
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: normal
->           Priority: P1
->          Component: XFS
->           Assignee: filesystem_xfs@kernel-bugs.kernel.org
->           Reporter: zlang@redhat.com
->         Regression: No
->=20
-> xfstests generic/648 hit kernel panic[1] on xfs with 64k directory block =
-size
-> (-n size=3D65536), before panic, there's a kernel assertion (not sure if =
-it's
-> related).
->=20
-> It's reproducable, but not easy. Generally I reproduced it by loop running
-> generic/648 on xfs (-n size=3D65536) hundreds of time.
->=20
-> The last time I hit this panic on linux with HEAD=3D
+This is also a problem with the page cache, and doesn't seem related
+to XFS or directory block size configuration:
 
-Given that there have been no changes to XFS committed in v6.1-rc0
-at this point in time, this won't be an XFS regression unless you
-can reproduce it on 6.0 or 5.19 kernels, too. Regardless, I'd suggest
-bisection is in order to find where the problem was introduced.
+	BUG_ON(ractl->_batch_count > ractl->_nr_pages);
+
+Also, there haven't been any changes to XFS code so far in 6.1-rc0,
+so this isn't a recent XFS regression, either. Perhaps a bisect
+would be in order?
 
 -Dave.
-
---=20
-You may reply to this email to add a comment.
-
-You are receiving this mail because:
-You are watching the assignee of the bug.=
+-- 
+Dave Chinner
+david@fromorbit.com
