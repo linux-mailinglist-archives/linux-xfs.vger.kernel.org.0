@@ -2,71 +2,70 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C6CD5FDD78
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Oct 2022 17:47:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FF575FDD82
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Oct 2022 17:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbiJMPr1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Oct 2022 11:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37846 "EHLO
+        id S229797AbiJMPsr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Oct 2022 11:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbiJMPr0 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Oct 2022 11:47:26 -0400
+        with ESMTP id S229822AbiJMPsp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Oct 2022 11:48:45 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A8D9DCADC
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Oct 2022 08:47:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E704FEA68A
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Oct 2022 08:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1665676044;
+        s=mimecast20190719; t=1665676120;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=WLoHnPjXUryLdfE9TfX6Mn5fEYYm8RoqK0vdQ04ngFE=;
-        b=NNEY6oGcCBaptx7PgXFfmc072pJV5hljPrlrVUkfmv3bZ25PejjpopuWJ4VAEwA6OgE2OJ
-        5HiQNzmwu0HTLU1pFnYcuFXhuK56l8psZljHDuKJPjVVGzibvIC/eN5nslshNU57/jSw1n
-        7/8fzJFM3iBMrrGVr68jd8xkC26euK0=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=6z8rf6ZYpSjKMzpItfXQF69axd1BsXH4wsuzdLosv+Y=;
+        b=WBvF4D+tcIX7n6QeQ/9FZrPc6zeN6JWh/Xf6ype2fv+dP5klkHmloUzOq2cyLLcZ8cbQLZ
+        iRwRf+S9moUaBNJiP8D66F9ibx/uMRhtNq/Sr8LghYMyOANF6fWNQCDQiW7WKrzSaaTz3w
+        TdZf/asLdrR4BrjesTkLx+W7zZjrJDE=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-600-6JOjBbhiM3O0N9z3FAKZUQ-1; Thu, 13 Oct 2022 11:47:22 -0400
-X-MC-Unique: 6JOjBbhiM3O0N9z3FAKZUQ-1
-Received: by mail-qt1-f199.google.com with SMTP id br5-20020a05622a1e0500b00394c40fee51so1600549qtb.17
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Oct 2022 08:47:22 -0700 (PDT)
+ us-mta-548-pxNINOd8Pqqb9rdvOTNPQA-1; Thu, 13 Oct 2022 11:48:38 -0400
+X-MC-Unique: pxNINOd8Pqqb9rdvOTNPQA-1
+Received: by mail-qt1-f198.google.com with SMTP id a19-20020a05622a02d300b0039a3711179dso1605179qtx.12
+        for <linux-xfs@vger.kernel.org>; Thu, 13 Oct 2022 08:48:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WLoHnPjXUryLdfE9TfX6Mn5fEYYm8RoqK0vdQ04ngFE=;
-        b=GGMumj6K3oM8jdEXXFs826YgaqqxlsoDKOuQDuM36mvCwe0yiMnq4IwwkKvUtqiYu1
-         q2rxt4+zvtn3s/nWrYqjiLQRq50vJ9sOcZJ0PVfGv9bogwaMaSShQifH6y7JWxV7ovMx
-         LmVWkv+zpuQwy+n7aEDGDLeV/Pk2V/3tu1sKs7PTnjTuFsPMilx539X1IZFhDuhGwPLu
-         0/vrY91PyiqmWOT757AVmIWTmxrQQiTLUQUq4/5nxiumnE0NlyEwTiUM6zx/6t3sHayF
-         AmNHSlAzoDQV1UuVFdn8bwtwEwhyEz40EOf8NYeMO4tyxFCPkl5vmdWXYabOPxtNoT3h
-         DHSg==
-X-Gm-Message-State: ACrzQf2taTPooDLsXxCOmI2b3iXo48mJ82/v3lXzb6v3tOOFfSTveZQz
-        6zmvTpSPNbtWV6aivrr382EUUeFmJvuU1fJAt0jRPw+FGXMFypaVyLAMNBgjR6+tVUpYk3dT0+E
-        DSnmZXFmG7UESqqtJtfry
-X-Received: by 2002:a05:622a:64c:b0:39c:ba62:ef05 with SMTP id a12-20020a05622a064c00b0039cba62ef05mr348557qtb.351.1665676042341;
-        Thu, 13 Oct 2022 08:47:22 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4sHoPrEhG+rV3gcFdD8tDINaSX5BlMm0z5PokDHtnldtNff9/EAlF8NGAel5dUqzdXeqSCqg==
-X-Received: by 2002:a05:622a:64c:b0:39c:ba62:ef05 with SMTP id a12-20020a05622a064c00b0039cba62ef05mr348548qtb.351.1665676042101;
-        Thu, 13 Oct 2022 08:47:22 -0700 (PDT)
+        bh=6z8rf6ZYpSjKMzpItfXQF69axd1BsXH4wsuzdLosv+Y=;
+        b=VmssA+9eXxXC6/gLCIvyGsuiPx2lKtlr9jTGEpvDlfZROdYm3JjL8JXxpsroGr5dpu
+         6Du0R4gRZh8dtXmoN6XFTVIJXLyGXwu8nkFWfqq0m712ROLsv9/Pz8JnzA7Dk6y1Ytje
+         woO5xfdLJqEmQuuinOd8enmlmigEsobkBi8Fg0Jraicc7rM+cYlDdF/dA3OAc7d8aWZK
+         8BzU71AtmdPDB2q67lBO41KY6Q8PYML118XCXwpkO9IHB+NzXg+ZNgrj0+WPI1r64Vc2
+         Z+wMDZEfyefQZpluYzw9EQAX/W/l37Zr58Fle9f+wp3OK1p1LQhtmmRPX7CTqfGbmnBD
+         TVtg==
+X-Gm-Message-State: ACrzQf2z65yWDn5slulMXN8saXrxJjAvY7/ch3lxv7pFS4KTG28OObCT
+        nkXDvghx0hommqsUTLUZwzxS8MpsuKgG1EpmPyl+wmTZB6cOJ4IUN5aAyq8W69ZxeiV5CM3Btcq
+        wf+xSmMj6YMCd3xy9u7F2
+X-Received: by 2002:a37:6504:0:b0:6ee:6fb:4ae2 with SMTP id z4-20020a376504000000b006ee06fb4ae2mr409934qkb.49.1665676118392;
+        Thu, 13 Oct 2022 08:48:38 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6Z1SpCyTqhN8ysHmAkbQaVD7byH61MKGW3R6faEM/yLQYTSaoHeB0GABAOKn/OkIKMvVrang==
+X-Received: by 2002:a37:6504:0:b0:6ee:6fb:4ae2 with SMTP id z4-20020a376504000000b006ee06fb4ae2mr409922qkb.49.1665676118129;
+        Thu, 13 Oct 2022 08:48:38 -0700 (PDT)
 Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id w27-20020a05620a0e9b00b006ce76811a07sm20423qkm.75.2022.10.13.08.47.20
+        by smtp.gmail.com with ESMTPSA id c5-20020ac80545000000b0039913d588fbsm161524qth.48.2022.10.13.08.48.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 08:47:21 -0700 (PDT)
-Date:   Thu, 13 Oct 2022 23:47:17 +0800
+        Thu, 13 Oct 2022 08:48:37 -0700 (PDT)
+Date:   Thu, 13 Oct 2022 23:48:33 +0800
 From:   Zorro Lang <zlang@redhat.com>
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH 3/5] populate: reformat external ext[34] journal devices
- when restoring a cached image
-Message-ID: <20221013154717.tmg4i2ebkmyzew2r@zlang-mailbox>
+Subject: Re: [PATCH 4/5] populate: require e2image before populating
+Message-ID: <20221013154833.kqwygzftf7thscx7@zlang-mailbox>
 References: <166553912229.422450.15473762183660906876.stgit@magnolia>
- <166553913911.422450.17214876114235793554.stgit@magnolia>
+ <166553914474.422450.8871747567060992809.stgit@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <166553913911.422450.17214876114235793554.stgit@magnolia>
+In-Reply-To: <166553914474.422450.8871747567060992809.stgit@magnolia>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -76,77 +75,42 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 06:45:39PM -0700, Darrick J. Wong wrote:
+On Tue, Oct 11, 2022 at 06:45:44PM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <djwong@kernel.org>
 > 
-> The fs population code has the ability to save cached metadumps of
-> filesystems to save time when running fstests.  The cached images should
-> be unmounted cleanly, so we never save the contents of external journal
-> devices.
-> 
-> Unfortunately, the cache restore code fails to reset the external
-> journal when restoring a clean image, so we ignore cached images because
-> the journal doesn't match the filesystem.  This makes test runtimes
-> longer than they need to be.
-> 
-> Solve this by reformatting the external journal to match the filesystem.
+> Use $E2IMAGE_PROG, not e2image, and check that it exists before
+> proceeding.
 > 
 > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > ---
->  common/populate |   20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
+
+Make sense,
+Reviewed-by: Zorro Lang <zlang@redhat.com>
+
+>  common/populate |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 > 
 > diff --git a/common/populate b/common/populate
-> index 0bd78e0a0a..66c55b682f 100644
+> index 66c55b682f..05bdfe33c5 100644
 > --- a/common/populate
 > +++ b/common/populate
-> @@ -16,6 +16,9 @@ _require_populate_commands() {
->  		_require_command "$XFS_DB_PROG" "xfs_db"
->  		_require_command "$WIPEFS_PROG" "wipefs"
+> @@ -18,6 +18,7 @@ _require_populate_commands() {
 >  		;;
-> +	ext*)
-> +		_require_command "$DUMPE2FS_PROG" "dumpe2fs"
-> +		;;
+>  	ext*)
+>  		_require_command "$DUMPE2FS_PROG" "dumpe2fs"
+> +		_require_command "$E2IMAGE_PROG" "e2image"
+>  		;;
 >  	esac
 >  }
->  
-> @@ -871,9 +874,20 @@ _scratch_populate_restore_cached() {
+> @@ -874,7 +875,7 @@ _scratch_populate_restore_cached() {
 >  		return $res
 >  		;;
 >  	"ext2"|"ext3"|"ext4")
-> -		# ext4 cannot e2image external logs, so we cannot restore
-> -		test -n "${SCRATCH_LOGDEV}" && return 1
-> -		e2image -r "${metadump}" "${SCRATCH_DEV}" && return 0
-> +		e2image -r "${metadump}" "${SCRATCH_DEV}"
-> +		ret=$?
-> +		test $ret -ne 0 && return $ret
-> +
-> +		# ext4 cannot e2image external logs, so we have to reformat
-> +		# the scratch device to match the restored fs
-> +		if [ -n "${SCRATCH_LOGDEV}" ]; then
-> +			local fsuuid="$($DUMPE2FS_PROG -h "${SCRATCH_DEV}" 2>/dev/null | \
-> +					grep 'Journal UUID:' | \
-> +					sed -e 's/Journal UUID:[[:space:]]*//g')"
-
-This patch looks good to me,
-Reviewed-by: Zorro Lang <zlang@redhat.com>
-
-Just ask, how about combine that grep and sed lines to:
-
-  sed -n '/Journal UUID:/s/Journal UUID:[[:space:]]*//p'
-
-That's not a big deal, both are OK to me.
-
-Thanks,
-Zorro
-
-> +			$MKFS_EXT4_PROG -O journal_dev "${SCRATCH_LOGDEV}" \
-> +					-F -U "${fsuuid}"
-> +		fi
-> +		return 0
->  		;;
->  	esac
->  	return 1
+> -		e2image -r "${metadump}" "${SCRATCH_DEV}"
+> +		$E2IMAGE_PROG -r "${metadump}" "${SCRATCH_DEV}"
+>  		ret=$?
+>  		test $ret -ne 0 && return $ret
+>  
 > 
 
