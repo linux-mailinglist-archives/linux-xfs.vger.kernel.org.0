@@ -2,50 +2,48 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFE045FDD81
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Oct 2022 17:48:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 354C95FDD87
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Oct 2022 17:50:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbiJMPsp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Oct 2022 11:48:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39012 "EHLO
+        id S229744AbiJMPuM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Oct 2022 11:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbiJMPso (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Oct 2022 11:48:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E283EA69E;
-        Thu, 13 Oct 2022 08:48:43 -0700 (PDT)
+        with ESMTP id S229484AbiJMPuJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Oct 2022 11:50:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC48422CF;
+        Thu, 13 Oct 2022 08:50:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E6873604EF;
-        Thu, 13 Oct 2022 15:48:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5051CC433D7;
-        Thu, 13 Oct 2022 15:48:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F6DE6186B;
+        Thu, 13 Oct 2022 15:50:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87E4FC433D7;
+        Thu, 13 Oct 2022 15:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665676122;
-        bh=rAZmVAL6ExNw6OlHX6L00sEulTBKcFrkL7bUWwx4WXI=;
+        s=k20201202; t=1665676203;
+        bh=+uqZDl54/XnooiyOhlrOeJdNMvQ3hqg6Ja4OTn+rCnQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RGwn78bMQiSqfX5eqk2h1cxjDeqTBRC6OooilbpwhJtMdVrlIDsdk3wIpdv6EFF43
-         v/I+dPGdPtmoWsvf7/FAJZYbZzy1cDChphOeE3RQ3zw/pKOzfroQ44nXcgRtQ52iRc
-         QGYxU/1hIitg1Y10TFxpi6xBGQ4ABPMumw+Ta2wdqJRdF16EbpmslmxJCZejd/fsKy
-         QUp4GhFbVXyQUGCK2avxB6QkdI9LpYzWprwyQ430ewie9MBvfHMTjGAiaT9KqLbl/9
-         s2tLgIcG8pJQiEADJ/nc//Egw6Yww5zqUHIiCm3Btvk3xKK1/+rdukM/Qe8LjWnDww
-         5YhBsA75SEcFg==
-Date:   Thu, 13 Oct 2022 08:48:41 -0700
+        b=LFiLaUNzB1AdOSGAhVmk6hZ7q7NAuEibWgZj+878xpkhthOm2K7wAvTqQxxCZ5JCj
+         v/RPbu0L2wvStIl8JVD2gC8Oc5n6vB3h3W2puf4kmgHvNZzvoqJ9bg3zGGlYumwsuG
+         gDlOAyeTh4sP9BcmsCNWGDjJXo+pa6KMWDdUAwIf7JHe9OicPteQQq2NQT+6kep49/
+         dnvo/8QcMUKbJ+ck8WRRXSpMaMfZyBXLWGuNMtged7nJ2rFN5pyzKz84R7lRHHVhJr
+         NYjh0aBEL2OZFwp5hFLZMQPCwYEJM6UmWKhOXvtCpEjBWSLMxkU3pigF1ErrhuuDi+
+         BSeP1h+ve6GDA==
+Date:   Thu, 13 Oct 2022 08:50:03 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     Zorro Lang <zlang@redhat.com>
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH v2.1 1/2] check: detect and preserve all coredumps made
- by a test
-Message-ID: <Y0gzWbBd5PdlQWP6@magnolia>
+Subject: Re: [PATCH 2/2] check: optionally compress core dumps
+Message-ID: <Y0gzqyyaU171aagR@magnolia>
 References: <166553910766.422356.8069826206437666467.stgit@magnolia>
- <166553911331.422356.4424521847397525024.stgit@magnolia>
- <Y0dZpkOwJpyQ9SA9@magnolia>
- <20221013114446.346ii4nd5i3l77ar@zlang-mailbox>
+ <166553911893.422356.7143540040827489080.stgit@magnolia>
+ <20221013115102.qb7r37ywdy2qbwkn@zlang-mailbox>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221013114446.346ii4nd5i3l77ar@zlang-mailbox>
+In-Reply-To: <20221013115102.qb7r37ywdy2qbwkn@zlang-mailbox>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,109 +53,79 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 07:44:46PM +0800, Zorro Lang wrote:
-> On Wed, Oct 12, 2022 at 05:19:50PM -0700, Darrick J. Wong wrote:
+On Thu, Oct 13, 2022 at 07:51:02PM +0800, Zorro Lang wrote:
+> On Tue, Oct 11, 2022 at 06:45:18PM -0700, Darrick J. Wong wrote:
 > > From: Darrick J. Wong <djwong@kernel.org>
 > > 
-> > If someone sets kernel.core_uses_pid (or kernel.core_pattern), any
-> > coredumps generated by fstests might have names that are longer than
-> > just "core".  Since the pid isn't all that useful by itself, let's
-> > record the coredumps by hash when we save them, so that we don't waste
-> > space storing identical crash dumps.
+> > Add a new option, COREDUMP_COMPRESSOR, that will be used to compress
+> > core dumps collected during a fstests run.  The program specified must
+> > accept the -f -9 arguments that gzip has.
 > > 
 > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 > > ---
-> > v2.1: use REPORT_DIR per maintainer suggestion
-> > ---
+> >  README    |    4 ++++
+> >  common/rc |   14 +++++++++-----
+> >  2 files changed, 13 insertions(+), 5 deletions(-)
+> > 
+> > 
+> > diff --git a/README b/README
+> > index 80d148be82..4c4f22f853 100644
+> > --- a/README
+> > +++ b/README
+> > @@ -212,6 +212,10 @@ Tools specification:
+> >      - Set FSSTRESS_AVOID and/or FSX_AVOID, which contain options added to
+> >        the end of fsstresss and fsx invocations, respectively, in case you wish
+> >        to exclude certain operational modes from these tests.
+> > + - core dumps:
+> > +    - Set COREDUMP_COMPRESSOR to a compression program to compress crash dumps.
+> > +      This program must accept '-f' and the name of a file to compress.  In
+> > +      other words, it must emulate gzip.
+> >  
+> >  Kernel/Modules related configuration:
+> >   - Set TEST_FS_MODULE_RELOAD=1 to unload the module and reload it between
+> > diff --git a/common/rc b/common/rc
+> > index 152b8bb414..c68869b7dc 100644
+> > --- a/common/rc
+> > +++ b/common/rc
+> > @@ -4956,13 +4956,17 @@ _save_coredump()
+> >  	local core_hash="$(_md5_checksum "$path")"
+> >  	local out_file="$RESULT_BASE/$seqnum.core.$core_hash"
+> >  
+> > -	if [ -s "$out_file" ]; then
+> > -		rm -f "$path"
+> > -		return
+> > -	fi
+> > -	rm -f "$out_file"
+> > +	for dump in "$out_file"*; do
+> > +		if [ -s "$dump" ]; then
+> > +			rm -f "$path"
+> > +			return 0
+> > +		fi
+> > +	done
+> >  
+> >  	mv "$path" "$out_file"
+> > +	test -z "$COREDUMP_COMPRESSOR" && return 0
+> > +
+> > +	$COREDUMP_COMPRESSOR -f "$out_file"
 > 
-> This version looks good to me,
+> This patch looks good to me,
 > Reviewed-by: Zorro Lang <zlang@redhat.com>
+> 
+> I'm just not sure if all/most compressor supports "-f" option, I use bzip2
+> and gzip mostly, they both support that.
 
-It occurred to me overnight that ./check doesn't export REPORT_DIR, so
-I'll push out a v2.2 that adds that.  Currently the lack of an export
-doesn't affect anyone, but as soon as any tests want to call
-_save_coredump they're going to run into that issue.
+As do xz, lz4, and zstd, so I think that's sufficient coverage.
 
-(...and yes, I do have future fuzz tests that will call it from a test
-in between fuzz field cycles.)
+The only one I know of that won't be compatible is zip, since it uses -f
+for "freshen archive".
 
 --D
 
-> >  check     |   26 ++++++++++++++++++++++----
-> >  common/rc |   16 ++++++++++++++++
-> >  2 files changed, 38 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/check b/check
-> > index d587a70546..29303db1c8 100755
-> > --- a/check
-> > +++ b/check
-> > @@ -923,11 +923,19 @@ function run_section()
-> >  			sts=$?
-> >  		fi
-> >  
-> > -		if [ -f core ]; then
-> > -			_dump_err_cont "[dumped core]"
-> > -			mv core $RESULT_BASE/$seqnum.core
-> > +		# If someone sets kernel.core_pattern or kernel.core_uses_pid,
-> > +		# coredumps generated by fstests might have a longer name than
-> > +		# just "core".  Use globbing to find the most common patterns,
-> > +		# assuming there are no other coredump capture packages set up.
-> > +		local cores=0
-> > +		for i in core core.*; do
-> > +			test -f "$i" || continue
-> > +			if ((cores++ == 0)); then
-> > +				_dump_err_cont "[dumped core]"
-> > +			fi
-> > +			_save_coredump "$i"
-> >  			tc_status="fail"
-> > -		fi
-> > +		done
-> >  
-> >  		if [ -f $seqres.notrun ]; then
-> >  			$timestamp && _timestamp
-> > @@ -960,6 +968,16 @@ function run_section()
-> >  			# of the check script itself.
-> >  			(_adjust_oom_score 250; _check_filesystems) || tc_status="fail"
-> >  			_check_dmesg || tc_status="fail"
-> > +
-> > +			# Save any coredumps from the post-test fs checks
-> > +			for i in core core.*; do
-> > +				test -f "$i" || continue
-> > +				if ((cores++ == 0)); then
-> > +					_dump_err_cont "[dumped core]"
-> > +				fi
-> > +				_save_coredump "$i"
-> > +				tc_status="fail"
-> > +			done
-> >  		fi
-> >  
-> >  		# Reload the module after each test to check for leaks or
-> > diff --git a/common/rc b/common/rc
-> > index d877ac77a0..2e1891180a 100644
-> > --- a/common/rc
-> > +++ b/common/rc
-> > @@ -4949,6 +4949,22 @@ _create_file_sized()
-> >  	return $ret
+> Thanks,
+> Zorro
+> 
 > >  }
 > >  
-> > +_save_coredump()
-> > +{
-> > +	local path="$1"
-> > +
-> > +	local core_hash="$(_md5_checksum "$path")"
-> > +	local out_file="$REPORT_DIR/$seqnum.core.$core_hash"
-> > +
-> > +	if [ -s "$out_file" ]; then
-> > +		rm -f "$path"
-> > +		return
-> > +	fi
-> > +	rm -f "$out_file"
-> > +
-> > +	mv "$path" "$out_file"
-> > +}
-> > +
 > >  init_rc
-> >  
-> >  ################################################################################
 > > 
 > 
