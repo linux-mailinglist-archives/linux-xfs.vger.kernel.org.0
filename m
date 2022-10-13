@@ -2,200 +2,356 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C1625FDDEC
-	for <lists+linux-xfs@lfdr.de>; Thu, 13 Oct 2022 18:03:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 794005FDE00
+	for <lists+linux-xfs@lfdr.de>; Thu, 13 Oct 2022 18:09:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiJMQDi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 13 Oct 2022 12:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48362 "EHLO
+        id S229540AbiJMQJo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 13 Oct 2022 12:09:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbiJMQDg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Oct 2022 12:03:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EE3B1119C4
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Oct 2022 09:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1665677013;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e93vqJ23RYx44/ECvLt0VpML/YmZi4QGBHib1Tp67Ic=;
-        b=aT52xWMwyLO6UYGpqy6pcKx3MA56WXRbtklObsn5Q2VSHnxiApMOLS/JOQRqENOrtuzqbZ
-        7xuV8DShhEV8/K/aRy4Rr7+6yWVhnBSVkgsaAB8XcPwJ3jyU+26CcUZc0MdUulIbKm0qfv
-        X80MvgswbLd7Wkwnhvetwv8m+EEcWcU=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-529-M4G11yQQOWytCoZ7ICsKkw-1; Thu, 13 Oct 2022 12:03:32 -0400
-X-MC-Unique: M4G11yQQOWytCoZ7ICsKkw-1
-Received: by mail-qv1-f71.google.com with SMTP id ma6-20020a0562145b0600b004b49a5037aeso925000qvb.18
-        for <linux-xfs@vger.kernel.org>; Thu, 13 Oct 2022 09:03:32 -0700 (PDT)
+        with ESMTP id S229484AbiJMQJn (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 13 Oct 2022 12:09:43 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80234B07;
+        Thu, 13 Oct 2022 09:09:37 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id jr1so1711228qtb.0;
+        Thu, 13 Oct 2022 09:09:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8GTSo5wrZfAIJh2pm4rXVf0O1w7nqpSEsZCX3XbWWLc=;
+        b=HQMaKWBUezzmdCnRBARyVKBe5rDs8FkimHe3NjoZFTlmUuIoiuYw1XJ6tARVb0sBdH
+         TFAfranKEoSBVmqaBlOBtix6gbdm6SM0INWp3W802MjEcDVFvT8KFFriUnIdq84uSgkd
+         kuXbg84EDgGl1csTjZPzrGzdTtH58gQ2QKd4ocjVG3uyhepvYijMpLF8I9y36eSqaKZl
+         cJTPsjUJiX4X7V4RoppYe85uUzQG6km9thwDv0DexF+QxgYWkECQ5gOMY3kKOfc5KSS7
+         HdjhGO2fTlUr5T703dZww7Vef9kiHzyi1X41VqkGkfcyB9uhTpsI2Kqy/jaU/ylb6mHW
+         zLpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e93vqJ23RYx44/ECvLt0VpML/YmZi4QGBHib1Tp67Ic=;
-        b=YnP8iMnHo5WkKaqoh+9rxs7AzdVj4noDLiV0QL3acSgi7vaQnNwXvehyjIK+f9+gP1
-         KLi37FMUxq8arJTvASAXIDT0As7SYZ1bG7EMe3GyXg8dIYI+/a700jMnFL/leBDpZO+H
-         qXS4C8u+dLj6KGdiIMKAMjZ5CDeVbwOv4AblMqUWOZQvhi4kPMvLv7J+V3pmy1X42hWg
-         jrwJDSvZuBcUg5v6FQm2n4QDHcDn51n8IXQDhacuYQMdh7HYKBsOgXc6s5lrCv2qSBau
-         GH/9/tkQgsRC/cEUY+q3YP2O4tKKiVcFyZZso531XkTmG2YM+hPdgLEuQyB0AU2dbSDU
-         Ti7w==
-X-Gm-Message-State: ACrzQf364LUx14792VtGfDPO4IS2cial0b80ailRBsn973CIlp+cOMY+
-        zKBmTh0pMLahfI84rGoBqIaTIl3jvJMOVbP3NZXpGVYqk7RewZ7Nh9tyTLudHtf1wUrZvayKEKO
-        HKiGSUsAxim1ydjZesVjK
-X-Received: by 2002:a05:6214:2626:b0:4b1:d285:33b1 with SMTP id gv6-20020a056214262600b004b1d28533b1mr274562qvb.39.1665677011484;
-        Thu, 13 Oct 2022 09:03:31 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM54fy6UXaq67EMDjg8yPJAda44Fy1syJLGNC3kgjTmmfsWLT11YEFGp1YNbfmZL4pYMjqU0oA==
-X-Received: by 2002:a05:6214:2626:b0:4b1:d285:33b1 with SMTP id gv6-20020a056214262600b004b1d28533b1mr274528qvb.39.1665677011110;
-        Thu, 13 Oct 2022 09:03:31 -0700 (PDT)
-Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id r1-20020a05620a298100b006e2a1999263sm71081qkp.62.2022.10.13.09.03.29
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8GTSo5wrZfAIJh2pm4rXVf0O1w7nqpSEsZCX3XbWWLc=;
+        b=42rl7yapIXHTTwXYLnbf7nUk+UjfapR9o/bEpkpqT/j72lLlYsnXaMlBtcHoDdQGB5
+         C/zYiHjZcmZ69dpgCAUSUf8z1I3fzJum50VaLiJMlqJJCexBmPxIsX7tfiKGxsQdyTAt
+         xOuB/H65FA4fgW0nxoqSOHbxzBctwFVC9Bb1pbpugDvvsvD0aagvgesJxRWsNA/lf/uq
+         2kJAojbZWYs+uPmG5YuoutsgbR4vUmSjkDEcsnxvT35AluwWQJ0g3pyV3mDSIKCo8Czq
+         lhLenLC83vXOg8CoQC7o994WvDI7MtzDTO2/c8HazGI354ziSG3qexmBLk1K6Qs5mGpl
+         5y0A==
+X-Gm-Message-State: ACrzQf1rVNamOuRW65LbWLxtGUsvn2k5+PqQjbKJy9feQokikzo8cIJb
+        AfVdKGl5TYH92xnSxIR/vqXJQRF1b2PYMfaw
+X-Google-Smtp-Source: AMsMyM4kM22BglLZhWZYAx4Xnag2ok3sPu6corH3f1I5mAV5G9ZByEyGKDtLBijvsH4usSOua1JBlA==
+X-Received: by 2002:a05:622a:350:b0:39a:286b:1b21 with SMTP id r16-20020a05622a035000b0039a286b1b21mr429881qtw.427.1665677376173;
+        Thu, 13 Oct 2022 09:09:36 -0700 (PDT)
+Received: from shiina-laptop.hsd1.ma.comcast.net ([2601:18f:801:e210:abfc:537a:d62c:c353])
+        by smtp.gmail.com with ESMTPSA id c23-20020a05620a269700b006ee79bb1f8asm69209qkp.68.2022.10.13.09.09.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 09:03:30 -0700 (PDT)
-Date:   Fri, 14 Oct 2022 00:03:26 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
-Subject: Re: [PATCH v2.1 1/2] check: detect and preserve all coredumps made
- by a test
-Message-ID: <20221013160326.l4s6sz4yxeul64d5@zlang-mailbox>
-References: <166553910766.422356.8069826206437666467.stgit@magnolia>
- <166553911331.422356.4424521847397525024.stgit@magnolia>
- <Y0dZpkOwJpyQ9SA9@magnolia>
- <20221013114446.346ii4nd5i3l77ar@zlang-mailbox>
- <Y0gzWbBd5PdlQWP6@magnolia>
+        Thu, 13 Oct 2022 09:09:35 -0700 (PDT)
+From:   Hironori Shiina <shiina.hironori@gmail.com>
+X-Google-Original-From: Hironori Shiina <shiina.hironori@fujitsu.com>
+To:     fstests@vger.kernel.org
+Cc:     linux-xfs@vger.kernel.org,
+        Hironori Shiina <shiina.hironori@fujitsu.com>
+Subject: [PATCH V2] xfs: test for fixing wrong root inode number in dump
+Date:   Thu, 13 Oct 2022 12:04:34 -0400
+Message-Id: <20221013160434.130152-1-shiina.hironori@fujitsu.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <20220928210337.417054-1-shiina.hironori@fujitsu.com>
+References: <20220928210337.417054-1-shiina.hironori@fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0gzWbBd5PdlQWP6@magnolia>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 08:48:41AM -0700, Darrick J. Wong wrote:
-> On Thu, Oct 13, 2022 at 07:44:46PM +0800, Zorro Lang wrote:
-> > On Wed, Oct 12, 2022 at 05:19:50PM -0700, Darrick J. Wong wrote:
-> > > From: Darrick J. Wong <djwong@kernel.org>
-> > > 
-> > > If someone sets kernel.core_uses_pid (or kernel.core_pattern), any
-> > > coredumps generated by fstests might have names that are longer than
-> > > just "core".  Since the pid isn't all that useful by itself, let's
-> > > record the coredumps by hash when we save them, so that we don't waste
-> > > space storing identical crash dumps.
-> > > 
-> > > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> > > ---
-> > > v2.1: use REPORT_DIR per maintainer suggestion
-> > > ---
-> > 
-> > This version looks good to me,
-> > Reviewed-by: Zorro Lang <zlang@redhat.com>
-> 
-> It occurred to me overnight that ./check doesn't export REPORT_DIR, so
-> I'll push out a v2.2 that adds that.  Currently the lack of an export
-> doesn't affect anyone, but as soon as any tests want to call
-> _save_coredump they're going to run into that issue.
+Test '-x' option of xfsrestore. With this option, a wrong root inode
+number in a dump file is corrected. A root inode number can be wrong
+in a dump created by problematic xfsdump (v3.1.7 - v3.1.9) with
+bulkstat misuse. In this test, a corrupted dump file is created by
+overwriting a root inode number in a header.
 
-Hmm... the RESULT_DIR is exported, you can use it, or use $seqres directly due
-to it's defined in common/preamble (although is not exported).
+Signed-off-by: Hironori Shiina <shiina.hironori@fujitsu.com>
+---
+changes since RFC v1:
+  - Skip the test if xfsrestore does not support '-x' flag.
+  - Create a corrupted dump by overwriting a root inode number in a dump
+    file with a new tool instead of checking in a binary dump file.
 
-./common/preamble:42:   seqres=$RESULT_DIR/$seq
+ common/dump             |  2 +-
+ common/xfs              |  6 +++
+ src/Makefile            |  2 +-
+ src/fake-dump-rootino.c | 85 +++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/554           | 73 +++++++++++++++++++++++++++++++++++
+ tests/xfs/554.out       | 40 +++++++++++++++++++
+ 6 files changed, 206 insertions(+), 2 deletions(-)
+ create mode 100644 src/fake-dump-rootino.c
+ create mode 100755 tests/xfs/554
+ create mode 100644 tests/xfs/554.out
 
-What do you think?
-
-Thanks,
-Zorro
-
-> 
-> (...and yes, I do have future fuzz tests that will call it from a test
-> in between fuzz field cycles.)
-> 
-> --D
-> 
-> > >  check     |   26 ++++++++++++++++++++++----
-> > >  common/rc |   16 ++++++++++++++++
-> > >  2 files changed, 38 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/check b/check
-> > > index d587a70546..29303db1c8 100755
-> > > --- a/check
-> > > +++ b/check
-> > > @@ -923,11 +923,19 @@ function run_section()
-> > >  			sts=$?
-> > >  		fi
-> > >  
-> > > -		if [ -f core ]; then
-> > > -			_dump_err_cont "[dumped core]"
-> > > -			mv core $RESULT_BASE/$seqnum.core
-> > > +		# If someone sets kernel.core_pattern or kernel.core_uses_pid,
-> > > +		# coredumps generated by fstests might have a longer name than
-> > > +		# just "core".  Use globbing to find the most common patterns,
-> > > +		# assuming there are no other coredump capture packages set up.
-> > > +		local cores=0
-> > > +		for i in core core.*; do
-> > > +			test -f "$i" || continue
-> > > +			if ((cores++ == 0)); then
-> > > +				_dump_err_cont "[dumped core]"
-> > > +			fi
-> > > +			_save_coredump "$i"
-> > >  			tc_status="fail"
-> > > -		fi
-> > > +		done
-> > >  
-> > >  		if [ -f $seqres.notrun ]; then
-> > >  			$timestamp && _timestamp
-> > > @@ -960,6 +968,16 @@ function run_section()
-> > >  			# of the check script itself.
-> > >  			(_adjust_oom_score 250; _check_filesystems) || tc_status="fail"
-> > >  			_check_dmesg || tc_status="fail"
-> > > +
-> > > +			# Save any coredumps from the post-test fs checks
-> > > +			for i in core core.*; do
-> > > +				test -f "$i" || continue
-> > > +				if ((cores++ == 0)); then
-> > > +					_dump_err_cont "[dumped core]"
-> > > +				fi
-> > > +				_save_coredump "$i"
-> > > +				tc_status="fail"
-> > > +			done
-> > >  		fi
-> > >  
-> > >  		# Reload the module after each test to check for leaks or
-> > > diff --git a/common/rc b/common/rc
-> > > index d877ac77a0..2e1891180a 100644
-> > > --- a/common/rc
-> > > +++ b/common/rc
-> > > @@ -4949,6 +4949,22 @@ _create_file_sized()
-> > >  	return $ret
-> > >  }
-> > >  
-> > > +_save_coredump()
-> > > +{
-> > > +	local path="$1"
-> > > +
-> > > +	local core_hash="$(_md5_checksum "$path")"
-> > > +	local out_file="$REPORT_DIR/$seqnum.core.$core_hash"
-> > > +
-> > > +	if [ -s "$out_file" ]; then
-> > > +		rm -f "$path"
-> > > +		return
-> > > +	fi
-> > > +	rm -f "$out_file"
-> > > +
-> > > +	mv "$path" "$out_file"
-> > > +}
-> > > +
-> > >  init_rc
-> > >  
-> > >  ################################################################################
-> > > 
-> > 
-> 
+diff --git a/common/dump b/common/dump
+index 8e0446d9..50b2ba03 100644
+--- a/common/dump
++++ b/common/dump
+@@ -1003,7 +1003,7 @@ _parse_restore_args()
+         --no-check-quota)
+             do_quota_check=false
+             ;;
+-	-K|-R)
++	-K|-R|-x)
+ 	    restore_args="$restore_args $1"
+             ;;
+ 	*)
+diff --git a/common/xfs b/common/xfs
+index e1c15d3d..8334880e 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -1402,3 +1402,9 @@ _xfs_filter_mkfs()
+ 		print STDOUT "realtime =RDEV extsz=XXX blocks=XXX, rtextents=XXX\n";
+ 	}'
+ }
++
++_require_xfsrestore_xflag()
++{
++	$XFSRESTORE_PROG -h 2>&1 | grep -q -e '-x' || \
++			_notrun 'xfsrestore does not support -x flag.'
++}
+diff --git a/src/Makefile b/src/Makefile
+index 5f565e73..afdf6b30 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -19,7 +19,7 @@ TARGETS = dirstress fill fill2 getpagesize holes lstat64 \
+ 	t_ofd_locks t_mmap_collision mmap-write-concurrent \
+ 	t_get_file_time t_create_short_dirs t_create_long_dirs t_enospc \
+ 	t_mmap_writev_overlap checkpoint_journal mmap-rw-fault allocstale \
+-	t_mmap_cow_memory_failure
++	t_mmap_cow_memory_failure fake-dump-rootino
+ 
+ LINUX_TARGETS = xfsctl bstat t_mtab getdevicesize preallo_rw_pattern_reader \
+ 	preallo_rw_pattern_writer ftrunc trunc fs_perms testx looptest \
+diff --git a/src/fake-dump-rootino.c b/src/fake-dump-rootino.c
+new file mode 100644
+index 00000000..b89351b8
+--- /dev/null
++++ b/src/fake-dump-rootino.c
+@@ -0,0 +1,85 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2022 Fujitsu Limited.  All Rights Reserved. */
++#include <fcntl.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/mman.h>
++#include <unistd.h>
++
++// Values for size of dump file header from xfsdump
++#define PGSZLOG2	12
++#define PGSZ		(1 << PGSZLOG2)
++#define GLOBAL_HDR_SZ		PGSZ
++
++static inline uint32_t convert_endian_32(uint32_t val) {
++#if __BYTE_ORDER == __BIG_ENDIAN
++	return val;
++#else
++	return ((val & 0xff000000u) >> 24 |
++			(val & 0x00ff0000u) >> 8  |
++			(val & 0x0000ff00u) << 8  |
++			(val & 0x000000ffu) << 24);
++#endif
++}
++
++static inline uint64_t convert_endian_64(uint64_t val) {
++#if __BYTE_ORDER == __BIG_ENDIAN
++	return val;
++#else
++	return (uint64_t) convert_endian_32(val >> 32) |
++	       (uint64_t) convert_endian_32(val & 0x00000000ffffffff) << 32;
++#endif
++}
++
++/*
++ * Offset to checksum in dump file header
++ *   global_hdr_t.gh_checksum (0xc)
++ */
++#define OFFSET_CHECKSUM	0xc
++
++/*
++ * Offset to root inode number in dump file header
++ *   global_hdr_t.gh_upper (0x400) + drive_hdr_t.dh_upper (0x400) +
++ *   media_hdr_t.mh_upper (0x400) + content_hdr_t.ch_specific (0x340) +
++ *   content_inode_hdr_t.cih_rootino (0x18)
++ */
++#define OFFSET_ROOTINO	0xf58
++
++int main(int argc, char *argv[]) {
++
++	if (argc < 3) {
++		fprintf(stderr, "Usage: %s <path/to/dumpfile> <fake rootino>\n", argv[0]);
++		exit(1);
++	}
++
++	const char *filepath = argv[1];
++	const uint64_t fake_root_ino = (uint64_t) strtol(argv[2], NULL, 10);
++
++	int fd = open(filepath, O_RDWR);
++	if (fd < 0) {
++		perror("open");
++		exit(1);
++	}
++	char *header = mmap(NULL, GLOBAL_HDR_SZ, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
++	if (header == MAP_FAILED) {
++		perror("mmap");
++		exit(1);
++	}
++
++	uint32_t *checksum_ptr = (uint32_t *) (header + OFFSET_CHECKSUM);
++	uint64_t *rootino_ptr = (uint64_t *) (header + OFFSET_ROOTINO);
++	int32_t checksum = (int32_t) convert_endian_32(*checksum_ptr);
++	uint64_t orig_rootino = convert_endian_64(*rootino_ptr);
++
++	// Fake root inode number
++	*rootino_ptr = convert_endian_64(fake_root_ino);
++
++	// Update checksum along with overwriting rootino.
++	uint64_t gap = orig_rootino - fake_root_ino;
++	checksum += (gap >> 32) + (gap & 0x00000000ffffffff);
++	*checksum_ptr = convert_endian_32(checksum);
++
++	munmap(header, GLOBAL_HDR_SZ);
++	close(fd);
++}
+diff --git a/tests/xfs/554 b/tests/xfs/554
+new file mode 100755
+index 00000000..fcfaa699
+--- /dev/null
++++ b/tests/xfs/554
+@@ -0,0 +1,73 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Fujitsu Limited. All Rights Reserved.
++#
++# FS QA Test No. 554
++#
++# Create a filesystem which contains an inode with a lower number
++# than the root inode. Set the lower number to a dump file as the root inode
++# and ensure that 'xfsrestore -x' handles this wrong inode.
++#
++. ./common/preamble
++_begin_fstest auto quick dump
++
++# Import common functions.
++. ./common/dump
++
++_supported_fs xfs
++_require_xfs_io_command "falloc"
++_require_scratch
++_require_xfsrestore_xflag
++
++# A large stripe unit will put the root inode out quite far
++# due to alignment, leaving free blocks ahead of it.
++_scratch_mkfs_xfs -d sunit=1024,swidth=1024 > $seqres.full 2>&1
++
++# Mounting /without/ a stripe should allow inodes to be allocated
++# in lower free blocks, without the stripe alignment.
++_scratch_mount -o sunit=0,swidth=0
++
++root_inum=$(stat -c %i $SCRATCH_MNT)
++
++# Consume space after the root inode so that the blocks before
++# root look "close" for the next inode chunk allocation
++$XFS_IO_PROG -f -c "falloc 0 16m" $SCRATCH_MNT/fillfile
++
++# And make a bunch of inodes until we (hopefully) get one lower
++# than root, in a new inode chunk.
++echo "root_inum: $root_inum" >> $seqres.full
++for i in $(seq 0 4096) ; do
++	fname=$SCRATCH_MNT/$(printf "FILE_%03d" $i)
++	touch $fname
++	inum=$(stat -c "%i" $fname)
++	[[ $inum -lt $root_inum ]] && break
++done
++
++echo "created: $inum" >> $seqres.full
++
++[[ $inum -lt $root_inum ]] || _notrun "Could not set up test"
++
++# Now try a dump and restore. Cribbed from xfs/068
++_create_dumpdir_stress
++
++echo -n "Before: " >> $seqres.full
++_count_dumpdir_files | tee $tmp.before >> $seqres.full
++
++_do_dump_file
++
++# Set the wrong root inode number to the dump file
++# as problematic xfsdump used to do.
++$here/src/fake-dump-rootino $dump_file $inum
++
++_do_restore_file -x | \
++sed -e "s/rootino #${inum}/rootino #FAKENO/g" \
++	-e "s/# to ${root_inum}/# to ROOTNO/g" \
++	-e "/entries processed$/s/[0-9][0-9]*/NUM/g"
++
++echo -n "After: " >> $seqres.full
++_count_restoredir_files | tee $tmp.after >> $seqres.full
++diff -u $tmp.before $tmp.after
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/554.out b/tests/xfs/554.out
+new file mode 100644
+index 00000000..c5e8c4c5
+--- /dev/null
++++ b/tests/xfs/554.out
+@@ -0,0 +1,40 @@
++QA output created by 554
++Creating directory system to dump using fsstress.
++
++-----------------------------------------------
++fsstress : -f link=10 -f creat=10 -f mkdir=10 -f truncate=5 -f symlink=10
++-----------------------------------------------
++Dumping to file...
++xfsdump  -f DUMP_FILE -M stress_tape_media -L stress_554 SCRATCH_MNT
++xfsdump: using file dump (drive_simple) strategy
++xfsdump: level 0 dump of HOSTNAME:SCRATCH_MNT
++xfsdump: dump date: DATE
++xfsdump: session id: ID
++xfsdump: session label: "stress_554"
++xfsdump: ino map <PHASES>
++xfsdump: ino map construction complete
++xfsdump: estimated dump size: NUM bytes
++xfsdump: /var/xfsdump/inventory created
++xfsdump: creating dump session media file 0 (media 0, file 0)
++xfsdump: dumping ino map
++xfsdump: dumping directories
++xfsdump: dumping non-directory files
++xfsdump: ending media file
++xfsdump: media file size NUM bytes
++xfsdump: dump size (non-dir files) : NUM bytes
++xfsdump: dump complete: SECS seconds elapsed
++xfsdump: Dump Status: SUCCESS
++Restoring from file...
++xfsrestore  -x -f DUMP_FILE  -L stress_554 RESTORE_DIR
++xfsrestore: using file dump (drive_simple) strategy
++xfsrestore: using online session inventory
++xfsrestore: searching media for directory dump
++xfsrestore: examining media file 0
++xfsrestore: reading directories
++xfsrestore: found fake rootino #FAKENO, will fix.
++xfsrestore: fix root # to ROOTNO (bind mount?)
++xfsrestore: NUM directories and NUM entries processed
++xfsrestore: directory post-processing
++xfsrestore: restoring non-directory files
++xfsrestore: restore complete: SECS seconds elapsed
++xfsrestore: Restore Status: SUCCESS
+-- 
+2.37.3
 
