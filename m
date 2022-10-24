@@ -2,148 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE34860A6FB
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 14:43:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CB9B60B8B7
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 21:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbiJXMn0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Oct 2022 08:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37372 "EHLO
+        id S233670AbiJXTxS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Oct 2022 15:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbiJXMlY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 08:41:24 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835378C47E
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 05:08:19 -0700 (PDT)
-Received: from kwepemi500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mwtvh3Jj0zmVJf;
-        Mon, 24 Oct 2022 20:01:20 +0800 (CST)
-Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
- (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 24 Oct
- 2022 20:06:10 +0800
-Date:   Mon, 24 Oct 2022 20:28:07 +0800
-From:   Long Li <leo.lilong@huawei.com>
-To:     Dave Chinner <david@fromorbit.com>,
-        "Darrick J. Wong" <djwong@kernel.org>
-CC:     Dave Chinner <dchinner@redhat.com>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Bill O'Donnell <billodo@redhat.com>,
-        <linux-xfs@vger.kernel.org>, <yi.zhang@huawei.com>,
-        <houtao1@huawei.com>, <guoxuenan@huawei.com>
-Subject: Re: [PATCH v1] xfs: fix sb write verify for lazysbcount
-Message-ID: <20221024122807.GA947523@ceph-admin>
-References: <20221022020345.GA2699923@ceph-admin>
- <Y1NSBMwgUYxhW4PE@magnolia>
- <20221022120125.GA2052581@ceph-admin>
- <20221022211613.GW3600936@dread.disaster.area>
- <Y1YPjkiiN3FyMBfG@magnolia>
- <20221024054345.GZ3600936@dread.disaster.area>
+        with ESMTP id S233672AbiJXTwP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 15:52:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FCF161FED
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 11:17:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 69447B8120C
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 13:02:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E3FC433C1
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 13:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666616565;
+        bh=uKAsEs+OA5DcqoV+l8LS9d/fkAQkkhfAeQF78Es3ZAs=;
+        h=Date:From:To:Subject:From;
+        b=iJVGIZvXWvI469+v4qfRkHcEf7LeBhdRix/U/jbgQAfFcbLFfLFz8pV4jhGsbp2zY
+         3B9TKnDdAps75hvJWuaiB1hoAH6+TFnPQswR7ecNXc0evQd1i7N1yLLj13uDB07z1M
+         HeZFMmyXzsbbGgKCnGxJpNQfRqOrUMjg0y0qfXLugrD0zuA6KGfQXhtsqnn4eMiWNu
+         VvIatNv4K8rkd4aCvEOEKWxACEEu/8b5K9j7Xz2cOD3p6wi8bx9Vk5AtJ/zRekPymG
+         YciE/MmnvU53U75KPwUdbPaPKS8+S+1uq3M8VgEscXAWJtmzrzxGJHe3GDKsZ9Yfvz
+         +e3JX+gkIpLNA==
+Date:   Mon, 24 Oct 2022 15:02:41 +0200
+From:   Carlos Maiolino <cem@kernel.org>
+To:     linux-xfs@vger.kernel.org
+Subject: [ANNOUNCE] xfsdump: for-next (created and) updated to aaaa57f32a605
+Message-ID: <20221024130241.55nbzxn5egzyn5fw@andromeda>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221024054345.GZ3600936@dread.disaster.area>
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500009.china.huawei.com (7.221.188.199)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,TRACKER_ID autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 04:43:45PM +1100, Dave Chinner wrote:
-> On Sun, Oct 23, 2022 at 09:07:42PM -0700, Darrick J. Wong wrote:
-> > On Sun, Oct 23, 2022 at 08:16:13AM +1100, Dave Chinner wrote:
-> > > On Sat, Oct 22, 2022 at 08:01:25PM +0800, Long Li wrote:
-> > > > On Fri, Oct 21, 2022 at 07:14:28PM -0700, Darrick J. Wong wrote:
-> > > > > On Sat, Oct 22, 2022 at 10:03:45AM +0800, Long Li wrote:
-> > > > > > When lazysbcount is enabled, multiple threads stress test the xfs report
-> > > > > > the following problems:
-> > > 
-> > > We've had lazy sb counters for 15 years and just about every XFS
-> > > filesystem in production uses them, so providing us with some idea
-> > > of the scope of the problem and how to reproduce it would be greatly
-> > > appreciated.
-> > > 
-> > > What stress test are you running? What filesystem config does it
-> > > manifest on (other than lazysbcount=1)?  How long does the stress
-> > > test run for, and where/why does log recovery get run in this stress
-> > > test?
-> > > 
-> > > > > > XFS (loop0): SB summary counter sanity check failed
-> > > > > > XFS (loop0): Metadata corruption detected at xfs_sb_write_verify
-> > > > > > 	     +0x13b/0x460, xfs_sb block 0x0
-> > > > > > XFS (loop0): Unmount and run xfs_repair
-> > > > > > XFS (loop0): First 128 bytes of corrupted metadata buffer:
-> > > > > > 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 28 00 00  XFSB.........(..
-> > > > > > 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-> > > > > > 00000020: 69 fb 7c cd 5f dc 44 af 85 74 e0 cc d4 e3 34 5a  i.|._.D..t....4Z
-> > > > > > 00000030: 00 00 00 00 00 20 00 06 00 00 00 00 00 00 00 80  ..... ..........
-> > > > > > 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-> > > > > > 00000050: 00 00 00 01 00 0a 00 00 00 00 00 04 00 00 00 00  ................
-> > > > > > 00000060: 00 00 0a 00 b4 b5 02 00 02 00 00 08 00 00 00 00  ................
-> > > > > > 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 14 00 00 19  ................
-> > > > > > XFS (loop0): Corruption of in-memory data (0x8) detected at _xfs_buf_ioapply
-> > > > > > 	+0xe1e/0x10e0 (fs/xfs/xfs_buf.c:1580).  Shutting down filesystem.
-> > > > > > XFS (loop0): Please unmount the filesystem and rectify the problem(s)
-> > > > > > XFS (loop0): log mount/recovery failed: error -117
-> > > > > > XFS (loop0): log mount failed
-> > > > > > 
-> > > > > > The cause of the problem is that during the log recovery process, incorrect
-> > > > > > icount and ifree are recovered from the log and fail to pass the size check
-> > > > > 
-> > > > > Are you saying that the log contained a transaction in which ifree >
-> > > > > icount?
-> > > > 
-> > > > Yes, this situation is possible. For example consider the following sequence:
-> > > > 
-> > > >  CPU0				    CPU1
-> > > >  xfs_log_sb			    xfs_trans_unreserve_and_mod_sb
-> > > >  ----------			    ------------------------------
-> > > >  percpu_counter_sum(&mp->m_icount)
-> > > > 				    percpu_counter_add(&mp->m_icount, idelta)
-> > > > 				    percpu_counter_add_batch(&mp->m_icount,
-> > > > 						  idelta, XFS_ICOUNT_BATCH)
-> > > >  percpu_counter_sum(&mp->m_ifree)
-> > > 
-> > > What caused the xfs_log_sb() to be called? Very few things
-> > > actually log the superblock this way at runtime - it's generally
-> > > only logged directly like this when a feature bit changes during a
-> > > transaction (rare) or at a synchronisation point when everything
-> > > else is idle and there's no chance of a race like this occurring...
-> > > 
-> > > I can see a couple of routes to this occurring via feature bit
-> > > modification, but I don't see them being easy to hit or something
-> > > that would exist for very long in the journal. Hence I'm wondering
-> > > if there should be runtime protection for xfs_log_sb() to avoid
-> > > these problems....
-> > 
-> > Maybe.  Or perhaps we sample m_i{count,free} until they come up with a
-> > value that will pass the verifier, and only then log the new values to
-> > the primary super xfs_buf?
-> 
-> I suspect the simplest thing to do is this:
-> 
-> 	mp->m_sb.sb_ifree = min_t(uint64_t, percpu_counter_sum(&mp->m_ifree),
-> 				mp->m_sb.sb.icount);
-> 
-> That way ifree will never be logged as being greater than icount.
-> Neither icount or ifree will be accurate if we are racing with other
-> updates, but it will guarantee that what we write to the journal
-> won't trigger corruption warnings.
-> 
+Hi folks,
 
-Agree with you, this is the simplest and cleanest fix method, there will
-be no more impact. This can be fixed at the point where the problem occurs
-rather than after the problem has occurred. I would like to resend a patch
-and attach the reproduce script. Thanks for your advice.
+Today I created a for-next branch on xfsdump repository, to keep it consistent
+with xfsprogs and the kernel repository. It has a smaller patch flow than the
+other tools, but yet, I'd rather have a staging area before releasing a new
+version than pushing directly to the master branch doing a new release.
 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
+As usual, patches often get missed so please check if your outstanding patches
+were in this update. If not please give me a heads up so I'll process them.
+
+The new head of the for-next branch is commit:
+
+aaaa57f32a605e4ebd2e4230fe036afc009ae0a0
+
+
+New Commits:
+
+Donald Douwsma (4):
+      [06dd184] xfsrestore: fix on-media inventory media unpacking
+      [6503407] xfsrestore: fix on-media inventory stream unpacking
+      [7b843fd] xfsdump: fix on-media inventory stream packing
+      [aaaa57f] xfsrestore: untangle inventory unpacking logic
+
+Code Diffstat:
+
+ inventory/inv_stobj.c | 42 +++++++++++++++---------------------------
+ restore/content.c     | 13 +++++--------
+ 2 files changed, 20 insertions(+), 35 deletions(-)
+
+Cheers.
+
+-- 
+Carlos Maiolino
