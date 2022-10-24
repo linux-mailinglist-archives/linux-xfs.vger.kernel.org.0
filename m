@@ -2,46 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E7BF60BE45
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Oct 2022 01:12:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A19C60BE4D
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Oct 2022 01:13:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230057AbiJXXMp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Oct 2022 19:12:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
+        id S230498AbiJXXNX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Oct 2022 19:13:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230029AbiJXXMU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 19:12:20 -0400
+        with ESMTP id S230169AbiJXXND (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 19:13:03 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71089F752
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 14:33:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6273016655A
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 14:34:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8CD51615C2
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 21:32:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD933C433C1;
-        Mon, 24 Oct 2022 21:32:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C1685615C4
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 21:32:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B72AC433D7;
+        Mon, 24 Oct 2022 21:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666647138;
-        bh=8s0hKk0Z/T43b3xhGakn1BjmwUXrTzEKBvsf0syOS9Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VV2DOSCrwfFzEt2UbWc9JLdxjhbRmcZ9gJKyPCCDNA55I0Zjuq1sdrAZ7oZmyB6ln
-         68DZXFGKOFyxkVwYbKeNEZhVEqnxRjuS6LWqR5EOjkRnqhDmM2vl/XJt8h++rikEG+
-         u4nxZ2gWis1uRDbFvc2iBo4dLV0U9jejrt/OEJHfZn0t5AMPyzw6SnX9rpg4W1gh0U
-         165liIkfgwHHH0cjyx0Zttn/gV4Rr3HRx5mCisOXIZBFqVdCdEXocqK9dwf0uKiXB9
-         fKACXansolI5JT//YmqGk8hPRDMbQiUdu8NXKV9l/gf/5k1R3ySPDV2hvNwApxqJtV
-         ZnrICvuVVQ+/g==
-Date:   Mon, 24 Oct 2022 14:32:18 -0700
+        s=k20201202; t=1666647152;
+        bh=Yj/3Uj9N3thFLk8r6kC9iopOF6DRIKbDP4CoH2rWQpk=;
+        h=Subject:From:To:Cc:Date:From;
+        b=NQ8BjTsEGOjjoEHLVcA1KD0C5/W66F4JuEc2QR5JRRO3k2SAat3kNzuqdoeBwx8bZ
+         i/B8jMMOEa2ABi30nMls70mGB9BskFA09yjqR5SPCjtUcc1LZzkWZgPXe0JVhtzE1A
+         Cfct1FVGaj0XmlCSzzsiwepwiRDU0SIgGmB/hhPwHfrONmziLZrnU9cHn8YPzyIpVG
+         g02ENcCCVWonOzFprbNO9XW7FXTK9fxx/6zSTYpg5UmjMa11FxZVPsMd5rtqC2qU+j
+         +KdFuIW0gPS7xyRV75wCvVO0HL8hhWybtozF1joz30NTGrB3JY1J4nmrNUsyNfT4F+
+         tkkJKXhXNpWRw==
+Subject: [PATCHSET 0/6] xfs: fix various problems with log intent item
+ recovery
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     xfs <linux-xfs@vger.kernel.org>
-Cc:     Shiyang Ruan <ruansy.fnst@fujitsu.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [PATCH] xfs: fix incorrect return type for fsdax fault handlers
-Message-ID: <Y1cEYs4TK/kED/52@magnolia>
+To:     djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, david@fromorbit.com
+Date:   Mon, 24 Oct 2022 14:32:31 -0700
+Message-ID: <166664715160.2688790.16712973829093762327.stgit@magnolia>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,54 +51,49 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-The kernel robot complained about this:
+Starting with 6.1-rc1, CONFIG_FORTIFY_SOURCE checks became smart enough
+to detect memcpy() callers that copy beyond what seems to be the end of
+a struct.  Unfortunately, gcc has a bug wherein it cannot reliably
+compute the size of a struct containing another struct containing a flex
+array at the end.  This is the case with the xfs log item format
+structures, which means that -rc1 starts complaining all over the place.
 
->> fs/xfs/xfs_file.c:1266:31: sparse: sparse: incorrect type in return expression (different base types) @@     expected int @@     got restricted vm_fault_t @@
-   fs/xfs/xfs_file.c:1266:31: sparse:     expected int
-   fs/xfs/xfs_file.c:1266:31: sparse:     got restricted vm_fault_t
-   fs/xfs/xfs_file.c:1314:21: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted vm_fault_t [usertype] ret @@     got int @@
-   fs/xfs/xfs_file.c:1314:21: sparse:     expected restricted vm_fault_t [usertype] ret
-   fs/xfs/xfs_file.c:1314:21: sparse:     got int
+Fix these problems by memcpying the struct head and the flex arrays
+separately.  Although it's tempting to use the FLEX_ARRAY macros, the
+structs involved are part of the ondisk log format.  Some day we're
+going to want to make the ondisk log contents endian-safe, which means
+that we will have to stop using memcpy entirely.
 
-Fix the incorrect return type for these two functions, and make the
-!fsdax version return SIGBUS since there is no vm_fault_t that maps to
-zero.
+While we're at it, fix some deficiencies in the validation of recovered
+log intent items -- if the size of the recovery buffer is not even large
+enough to cover the flex array record count in the head, we should abort
+the recovery of that item immediately.
 
-Fixes: ea6c49b784f0 ("xfs: support CoW in fsdax mode")
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+The last patch of this series changes the EFI/EFD sizeof functions names
+and behaviors to be consistent with the similarly named sizeof helpers
+for other log intent items.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=fix-log-recovery-misuse-6.1
 ---
- fs/xfs/xfs_file.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_log_format.h |   60 ++++++++++++++++++++++++++++---
+ fs/xfs/xfs_attr_item.c         |   54 ++++++++++++----------------
+ fs/xfs/xfs_bmap_item.c         |   46 +++++++++++-------------
+ fs/xfs/xfs_extfree_item.c      |   78 +++++++++++++++-------------------------
+ fs/xfs/xfs_extfree_item.h      |   16 ++++++++
+ fs/xfs/xfs_ondisk.h            |   23 ++++++++++--
+ fs/xfs/xfs_refcount_item.c     |   45 +++++++++++------------
+ fs/xfs/xfs_rmap_item.c         |   58 ++++++++++++++----------------
+ fs/xfs/xfs_super.c             |   12 ++----
+ 9 files changed, 216 insertions(+), 176 deletions(-)
 
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index c6c80265c0b2..6b328ffaf629 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -1261,7 +1261,7 @@ xfs_file_llseek(
- }
- 
- #ifdef CONFIG_FS_DAX
--static int
-+static inline vm_fault_t
- xfs_dax_fault(
- 	struct vm_fault		*vmf,
- 	enum page_entry_size	pe_size,
-@@ -1274,14 +1274,14 @@ xfs_dax_fault(
- 				&xfs_read_iomap_ops);
- }
- #else
--static int
-+static inline vm_fault_t
- xfs_dax_fault(
- 	struct vm_fault		*vmf,
- 	enum page_entry_size	pe_size,
- 	bool			write_fault,
- 	pfn_t			*pfn)
- {
--	return 0;
-+	return VM_FAULT_SIGBUS;
- }
- #endif
- 
