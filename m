@@ -2,83 +2,154 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CB9B60B8B7
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 21:53:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A053660B549
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 20:20:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233670AbiJXTxS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Oct 2022 15:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
+        id S231804AbiJXSUE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Oct 2022 14:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233672AbiJXTwP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 15:52:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FCF161FED
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 11:17:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 69447B8120C
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 13:02:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E3FC433C1
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 13:02:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666616565;
-        bh=uKAsEs+OA5DcqoV+l8LS9d/fkAQkkhfAeQF78Es3ZAs=;
-        h=Date:From:To:Subject:From;
-        b=iJVGIZvXWvI469+v4qfRkHcEf7LeBhdRix/U/jbgQAfFcbLFfLFz8pV4jhGsbp2zY
-         3B9TKnDdAps75hvJWuaiB1hoAH6+TFnPQswR7ecNXc0evQd1i7N1yLLj13uDB07z1M
-         HeZFMmyXzsbbGgKCnGxJpNQfRqOrUMjg0y0qfXLugrD0zuA6KGfQXhtsqnn4eMiWNu
-         VvIatNv4K8rkd4aCvEOEKWxACEEu/8b5K9j7Xz2cOD3p6wi8bx9Vk5AtJ/zRekPymG
-         YciE/MmnvU53U75KPwUdbPaPKS8+S+1uq3M8VgEscXAWJtmzrzxGJHe3GDKsZ9Yfvz
-         +e3JX+gkIpLNA==
-Date:   Mon, 24 Oct 2022 15:02:41 +0200
-From:   Carlos Maiolino <cem@kernel.org>
-To:     linux-xfs@vger.kernel.org
-Subject: [ANNOUNCE] xfsdump: for-next (created and) updated to aaaa57f32a605
-Message-ID: <20221024130241.55nbzxn5egzyn5fw@andromeda>
+        with ESMTP id S231881AbiJXSTk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 14:19:40 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47DAAEB75A
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 10:00:45 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id y4so8970955plb.2
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 10:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=own8ye662lUOdQaeWJaxYX3DyTPpqYUnB/yDKK35XDM=;
+        b=J/kqzFiQWUX+/Rv/mE9fXKYNZbANBVZtUbSTi85yprWAzX+R5YMHoghhUN3lRq1Eou
+         1MAbOBEfqVwdsUqbOMPv+yYDVUaX8IhJ6S+tBqcb0hmDkBYwK9esBVfnh5KSFhctfHRx
+         NLOUHlpBIGcs0Llp1thDOz3uLmn0Jry0RJQnI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=own8ye662lUOdQaeWJaxYX3DyTPpqYUnB/yDKK35XDM=;
+        b=uWhrVX5+gVhnYvm3fovYCqxmuF81gVEMyNaN0aPqIsxqqf2MpyfYTYmd8OlViFdxdH
+         tLiWUp5l4gsijajaGf+AO3sa7VxpshMr/Os+8P4JdCx9bnGGwF3r8XstidSkxnb1mnbH
+         QJadY3HfUte2R13ZTwhAksiWfoqd3Gm7Hh3i2JCtHKalVTPtiPHnYvUc8itP1wX57Mkg
+         LB8fElpmH9JM2hRT3L/O91rZ8cIZKxfp1GXri+stpNXAk50Fm3AiwpyfDJBh8OlGqdpb
+         JJAJS3q/stjAxtc8G1iwaHkFzUVKscbaG4H8Se9t5P9nQIbxheTnV1gcRd+8FxvKp/NN
+         5pSQ==
+X-Gm-Message-State: ACrzQf1QHJfVl39zEDZOa+NMs2PMvZNAJEmwjEabx2sGVW9NlkeYnIqx
+        cMFAY8wqWgREAzOSigh2W1p1EP8Kba+SKQ==
+X-Google-Smtp-Source: AMsMyM7QQRDxR5qqHXdLenOvS3yqAV/wzgDDvRjKtKrCpesGicGRRAxE3OZn8H8Bg1RnuBAbY8Y0qw==
+X-Received: by 2002:a17:90b:1bc9:b0:20d:75b8:ee5d with SMTP id oa9-20020a17090b1bc900b0020d75b8ee5dmr40608883pjb.147.1666630750055;
+        Mon, 24 Oct 2022 09:59:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y11-20020aa79aeb000000b0056299fd2ba2sm43112pfp.162.2022.10.24.09.59.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 09:59:09 -0700 (PDT)
+Date:   Mon, 24 Oct 2022 09:59:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     xfs <linux-xfs@vger.kernel.org>, Zorro Lang <zlang@redhat.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH] xfs: fix FORTIFY_SOURCE complaints about log item
+ memcpy
+Message-ID: <202210240937.A1404E5@keescook>
+References: <Y1CQe9FWctRg3OZI@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,TRACKER_ID autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <Y1CQe9FWctRg3OZI@magnolia>
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi folks,
+On Wed, Oct 19, 2022 at 05:04:11PM -0700, Darrick J. Wong wrote:
+> [...]
+> -/*
+> - * Copy an BUI format buffer from the given buf, and into the destination
+> - * BUI format structure.  The BUI/BUD items were designed not to need any
+> - * special alignment handling.
+> - */
+> -static int
+> -xfs_bui_copy_format(
+> -	struct xfs_log_iovec		*buf,
+> -	struct xfs_bui_log_format	*dst_bui_fmt)
+> -{
+> -	struct xfs_bui_log_format	*src_bui_fmt;
+> -	uint				len;
+> -
+> -	src_bui_fmt = buf->i_addr;
+> -	len = xfs_bui_log_format_sizeof(src_bui_fmt->bui_nextents);
+> -
+> -	if (buf->i_len == len) {
+> -		memcpy(dst_bui_fmt, src_bui_fmt, len);
+> -		return 0;
+> -	}
+> -	XFS_ERROR_REPORT(__func__, XFS_ERRLEVEL_LOW, NULL);
+> -	return -EFSCORRUPTED;
+> -}
 
-Today I created a for-next branch on xfsdump repository, to keep it consistent
-with xfsprogs and the kernel repository. It has a smaller patch flow than the
-other tools, but yet, I'd rather have a staging area before releasing a new
-version than pushing directly to the master branch doing a new release.
+This is the place where flex_cpy() could be used:
 
-As usual, patches often get missed so please check if your outstanding patches
-were in this update. If not please give me a heads up so I'll process them.
+	flex_cpy(dst_bui_fmt, src_bui_fmt);
 
-The new head of the for-next branch is commit:
+> [...]
+> diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
+> index 51f66e982484..5367e404aa0f 100644
+> --- a/fs/xfs/xfs_bmap_item.c
+> +++ b/fs/xfs/xfs_bmap_item.c
+> @@ -590,7 +590,7 @@ xfs_bui_item_relog(
+>  	set_bit(XFS_LI_DIRTY, &budp->bud_item.li_flags);
+>  
+>  	buip = xfs_bui_init(tp->t_mountp);
+> -	memcpy(buip->bui_format.bui_extents, extp, count * sizeof(*extp));
+> +	memcpy_array(buip->bui_format.bui_extents, extp, count, sizeof(*extp));
+>  	atomic_set(&buip->bui_next_extent, count);
+>  	xfs_trans_add_item(tp, &buip->bui_item);
+>  	set_bit(XFS_LI_DIRTY, &buip->bui_item.li_flags);
 
-aaaa57f32a605e4ebd2e4230fe036afc009ae0a0
+Looking more closely, I don't understand why this is treated as a flex
+array when it's actually fixed size:
 
+xfs_bui_init():
+        buip = kmem_cache_zalloc(xfs_bui_cache, GFP_KERNEL | __GFP_NOFAIL);
+	...
+        buip->bui_format.bui_nextents = XFS_BUI_MAX_FAST_EXTENTS;
 
-New Commits:
+fs/xfs/xfs_bmap_item.h:#define  XFS_BUI_MAX_FAST_EXTENTS        1
 
-Donald Douwsma (4):
-      [06dd184] xfsrestore: fix on-media inventory media unpacking
-      [6503407] xfsrestore: fix on-media inventory stream unpacking
-      [7b843fd] xfsdump: fix on-media inventory stream packing
-      [aaaa57f] xfsrestore: untangle inventory unpacking logic
+> [...]
+> +/*
+> + * Copy an array from @src into the @dst buffer, allowing for @dst to be a
+> + * structure with a VLAs at the end.  gcc11 is smart enough for
+> + * __builtin_object_size to see through void * arguments to static inline
+> + * function but not to detect VLAs, which leads to kernel warnings.
+> + */
+> +static inline int memcpy_array(void *dst, void *src, size_t nmemb, size_t size)
+> +{
+> +	size_t		bytes;
+> +
+> +	if (unlikely(check_mul_overflow(nmemb, size, &bytes))) {
+> +		ASSERT(0);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	unsafe_memcpy(dst, src, bytes, VLA size detection broken on gcc11 );
+> +	return 0;
+> +}
 
-Code Diffstat:
+This "unsafe_memcpy" isn't needed. FORTIFY won't warn on this copy:
+the destination is a flex array member, not a flex array struct
+(i.e. __builtin_object_size() here will report "-1", rather than a
+fixed size). And while the type bounds checking for overflow is nice,
+it should also be checking the allocated size. (i.e. how large is "dst"?
+this helper only knows how large src is.)
 
- inventory/inv_stobj.c | 42 +++++++++++++++---------------------------
- restore/content.c     | 13 +++++--------
- 2 files changed, 20 insertions(+), 35 deletions(-)
-
-Cheers.
+-Kees
 
 -- 
-Carlos Maiolino
+Kees Cook
