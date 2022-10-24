@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A56660BE53
-	for <lists+linux-xfs@lfdr.de>; Tue, 25 Oct 2022 01:14:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 234CB60BE55
+	for <lists+linux-xfs@lfdr.de>; Tue, 25 Oct 2022 01:14:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbiJXXOR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Oct 2022 19:14:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
+        id S229952AbiJXXOV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Oct 2022 19:14:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231149AbiJXXNe (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 19:13:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 375C252FD2
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 14:34:47 -0700 (PDT)
+        with ESMTP id S230514AbiJXXNv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 19:13:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5FF92E8BAA
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 14:35:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD18F615CE
-        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 21:33:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 394C5C433C1;
-        Mon, 24 Oct 2022 21:33:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 76D3BB8125E
+        for <linux-xfs@vger.kernel.org>; Mon, 24 Oct 2022 21:33:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AC99C433D6;
+        Mon, 24 Oct 2022 21:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666647212;
-        bh=fRFx+bcOzWrLi9ZRxLnrgmZwNgKlXkSQ4ZuPsjt44Bo=;
+        s=k20201202; t=1666647218;
+        bh=zMXj53T5LoA52WcaUDcA4c+UyXCiRzorT61wJdbLRb4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ph/sYcBZ4TSyna83LauVMwWCO8MpQvXzgpDoWjoO+1RqiIZ5xBLvvEtvA35MGCzjw
-         EcEuwWPW+0SUxd6OyL8f3jj0+n+0SRIaswbJU4WHa9nkVGt7YE7YOcEmGam2RRtGWJ
-         HMRhSFzdpooph9O+oACcYV5/BOlHRbqLILGD+4r1B9pkwTDQPouvmrJb6/kI+UVFrh
-         kN3nNHnk+E4SKXGW/jgrdoz095Vi+UmfEmH6qnxkqr2XT43gaCxIXNEjo5VG01TeYk
-         Da8ZIMg0mIm07cokBedJ5nHDzdvaE9TnORJmPfbUtwLs2oESUECTSALglemRYVaw5P
-         CITGvwq1jlXkA==
-Subject: [PATCH 4/5] xfs: rename XFS_REFC_COW_START to _COWFLAG
+        b=HZ6ortQxWXAqDQHTpw/4xbbZcn3k9G7QBSz/ri6d8tBZs+PAcQlRf4zdv8xc64FXS
+         Hgz6Mi5Da/SoVZVLds6bJ+ndIkxnpB/Uvt4ue6rh2BG1yF7529OAmJSCOO5TNY5+fB
+         cn+U6afKq56R3xeTayAWMK/cMcWHa89rHVLXschcEpXWcV6ywK2mqSJ5LvGnl2TqrX
+         K68WBmbe4atpZqBz4BxgTfeMKiSNnk0h1TurLZUbzjZkMiVEqOk+idpUp9hw/BmbTE
+         oEK01kQQDP0BkU/T0P6P8u3Qd7Cb97Jbgy6gKy/QQGQbohaGVRXDLlOg0+y4T5L5FF
+         vEuQQ0ckjmn0A==
+Subject: [PATCH 5/5] xfs: check deferred refcount op continuation parameters
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Mon, 24 Oct 2022 14:33:31 -0700
-Message-ID: <166664721160.2690245.14106535587593195050.stgit@magnolia>
+Date:   Mon, 24 Oct 2022 14:33:37 -0700
+Message-ID: <166664721743.2690245.17086652152508491843.stgit@magnolia>
 In-Reply-To: <166664718897.2690245.5721183007309479393.stgit@magnolia>
 References: <166664718897.2690245.5721183007309479393.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,118 +54,93 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-We've been (ab)using XFS_REFC_COW_START as both an integer quantity and
-a bit flag, even though it's *only* a bit flag.  Rename the variable to
-reflect its nature and update the cast target since we're not supposed
-to be comparing it to xfs_agblock_t now.
+If we're in the middle of a deferred refcount operation and decide to
+roll the transaction to avoid overflowing the transaction space, we need
+to check the new agbno/aglen parameters that we're about to record in
+the new intent.  Specifically, we need to check that the new extent is
+completely within the filesystem, and that continuation does not put us
+into a different AG.
+
+If the keys of a node block are wrong, the lookup to resume an
+xfs_refcount_adjust_extents operation can put us into the wrong record
+block.  If this happens, we might not find that we run out of aglen at
+an exact record boundary, which will cause the loop control to do the
+wrong thing.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_format.h         |    2 +-
- fs/xfs/libxfs/xfs_refcount.c       |   18 +++++++++---------
- fs/xfs/libxfs/xfs_refcount_btree.c |    4 ++--
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ fs/xfs/libxfs/xfs_refcount.c |   48 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 005dd65b71cd..2ce588f154e1 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -1612,7 +1612,7 @@ unsigned int xfs_refc_block(struct xfs_mount *mp);
-  * on the startblock.  This speeds up mount time deletion of stale
-  * staging extents because they're all at the right side of the tree.
-  */
--#define XFS_REFC_COW_START		((xfs_agblock_t)(1U << 31))
-+#define XFS_REFC_COWFLAG		((uint32_t)(1U << 31))
- #define REFCNTBT_COWFLAG_BITLEN		1
- #define REFCNTBT_AGBLOCK_BITLEN		31
- 
 diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
-index fa75e785652b..3e6cc1777ffb 100644
+index 3e6cc1777ffb..a311851a627a 100644
 --- a/fs/xfs/libxfs/xfs_refcount.c
 +++ b/fs/xfs/libxfs/xfs_refcount.c
-@@ -51,7 +51,7 @@ xfs_refcount_lookup_le(
- 	int			*stat)
- {
- 	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
--			bno | (domain == XFS_RCDOM_COW ? XFS_REFC_COW_START : 0),
-+			bno | (domain == XFS_RCDOM_COW ? XFS_REFC_COWFLAG : 0),
- 			XFS_LOOKUP_LE);
- 	cur->bc_rec.rc.rc_startblock = bno;
- 	cur->bc_rec.rc.rc_blockcount = 0;
-@@ -71,7 +71,7 @@ xfs_refcount_lookup_ge(
- 	int			*stat)
- {
- 	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
--			bno | (domain == XFS_RCDOM_COW ? XFS_REFC_COW_START : 0),
-+			bno | (domain == XFS_RCDOM_COW ? XFS_REFC_COWFLAG : 0),
- 			XFS_LOOKUP_GE);
- 	cur->bc_rec.rc.rc_startblock = bno;
- 	cur->bc_rec.rc.rc_blockcount = 0;
-@@ -91,7 +91,7 @@ xfs_refcount_lookup_eq(
- 	int			*stat)
- {
- 	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
--			bno | (domain == XFS_RCDOM_COW ? XFS_REFC_COW_START : 0),
-+			bno | (domain == XFS_RCDOM_COW ? XFS_REFC_COWFLAG : 0),
- 			XFS_LOOKUP_LE);
- 	cur->bc_rec.rc.rc_startblock = bno;
- 	cur->bc_rec.rc.rc_blockcount = 0;
-@@ -108,8 +108,8 @@ xfs_refcount_btrec_to_irec(
- 	__u32				start;
- 
- 	start = be32_to_cpu(rec->refc.rc_startblock);
--	if (start & XFS_REFC_COW_START) {
--		start &= ~XFS_REFC_COW_START;
-+	if (start & XFS_REFC_COWFLAG) {
-+		start &= ~XFS_REFC_COWFLAG;
- 		irec->rc_domain = XFS_RCDOM_COW;
- 	} else {
- 		irec->rc_domain = XFS_RCDOM_SHARED;
-@@ -188,9 +188,9 @@ xfs_refcount_update(
- 
- 	trace_xfs_refcount_update(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
- 
--	start = irec->rc_startblock & ~XFS_REFC_COW_START;
-+	start = irec->rc_startblock & ~XFS_REFC_COWFLAG;
- 	if (irec->rc_domain == XFS_RCDOM_COW)
--		start |= XFS_REFC_COW_START;
-+		start |= XFS_REFC_COWFLAG;
- 
- 	rec.refc.rc_startblock = cpu_to_be32(start);
- 	rec.refc.rc_blockcount = cpu_to_be32(irec->rc_blockcount);
-@@ -1735,7 +1735,7 @@ xfs_refcount_recover_extent(
- 		return -EFSCORRUPTED;
- 
- 	if (XFS_IS_CORRUPT(cur->bc_mp, !(rec->refc.rc_startblock &
--					 cpu_to_be32(XFS_REFC_COW_START))))
-+					 cpu_to_be32(XFS_REFC_COWFLAG))))
- 		return -EFSCORRUPTED;
- 
- 	rr = kmem_alloc(sizeof(struct xfs_refcount_recovery), 0);
-@@ -1762,7 +1762,7 @@ xfs_refcount_recover_cow_leftovers(
- 	int				error;
- 
- 	/* reflink filesystems mustn't have AGs larger than 2^31-1 blocks */
--	BUILD_BUG_ON(XFS_MAX_CRC_AG_BLOCKS >= XFS_REFC_COW_START);
-+	BUILD_BUG_ON(XFS_MAX_CRC_AG_BLOCKS >= XFS_REFC_COWFLAG);
- 	if (mp->m_sb.sb_agblocks > XFS_MAX_CRC_AG_BLOCKS)
- 		return -EOPNOTSUPP;
- 
-diff --git a/fs/xfs/libxfs/xfs_refcount_btree.c b/fs/xfs/libxfs/xfs_refcount_btree.c
-index b0818063aa20..fdbb2895d8c3 100644
---- a/fs/xfs/libxfs/xfs_refcount_btree.c
-+++ b/fs/xfs/libxfs/xfs_refcount_btree.c
-@@ -166,9 +166,9 @@ xfs_refcountbt_encode_startblock(
- 	 * query functions (which set rc_domain == -1U), so we check that the
- 	 * domain is /not/ shared.
- 	 */
--	start = cur->bc_rec.rc.rc_startblock & ~XFS_REFC_COW_START;
-+	start = cur->bc_rec.rc.rc_startblock & ~XFS_REFC_COWFLAG;
- 	if (cur->bc_rec.rc.rc_domain != XFS_RCDOM_SHARED)
--		start |= XFS_REFC_COW_START;
-+		start |= XFS_REFC_COWFLAG;
- 	return start;
+@@ -1180,6 +1180,44 @@ xfs_refcount_finish_one_cleanup(
+ 		xfs_trans_brelse(tp, agbp);
  }
  
++/*
++ * Set up a continuation a deferred refcount operation by updating the intent.
++ * Checks to make sure we're not going to run off the end of the AG.
++ */
++static inline int
++xfs_refcount_continue_op(
++	struct xfs_btree_cur		*cur,
++	xfs_fsblock_t			startblock,
++	xfs_agblock_t			new_agbno,
++	xfs_extlen_t			new_len,
++	xfs_fsblock_t			*fsbp)
++{
++	struct xfs_mount		*mp = cur->bc_mp;
++	struct xfs_perag		*pag = cur->bc_ag.pag;
++	xfs_fsblock_t			new_fsbno;
++	xfs_agnumber_t			old_agno;
++
++	old_agno = XFS_FSB_TO_AGNO(mp, startblock);
++	new_fsbno = XFS_AGB_TO_FSB(mp, pag->pag_agno, new_agbno);
++
++	/*
++	 * If we don't have any work left to do, then there's no need
++	 * to perform the validation of the new parameters.
++	 */
++	if (!new_len)
++		goto done;
++
++	if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, new_fsbno, new_len)))
++		return -EFSCORRUPTED;
++
++	if (XFS_IS_CORRUPT(mp, old_agno != XFS_FSB_TO_AGNO(mp, new_fsbno)))
++		return -EFSCORRUPTED;
++
++done:
++	*fsbp = new_fsbno;
++	return 0;
++}
++
+ /*
+  * Process one of the deferred refcount operations.  We pass back the
+  * btree cursor to maintain our lock on the btree between calls.
+@@ -1247,12 +1285,18 @@ xfs_refcount_finish_one(
+ 	case XFS_REFCOUNT_INCREASE:
+ 		error = xfs_refcount_adjust(rcur, bno, blockcount, &new_agbno,
+ 				new_len, XFS_REFCOUNT_ADJUST_INCREASE);
+-		*new_fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno, new_agbno);
++		if (error)
++			goto out_drop;
++		error = xfs_refcount_continue_op(rcur, startblock, new_agbno,
++				*new_len, new_fsb);
+ 		break;
+ 	case XFS_REFCOUNT_DECREASE:
+ 		error = xfs_refcount_adjust(rcur, bno, blockcount, &new_agbno,
+ 				new_len, XFS_REFCOUNT_ADJUST_DECREASE);
+-		*new_fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno, new_agbno);
++		if (error)
++			goto out_drop;
++		error = xfs_refcount_continue_op(rcur, startblock, new_agbno,
++				*new_len, new_fsb);
+ 		break;
+ 	case XFS_REFCOUNT_ALLOC_COW:
+ 		*new_fsb = startblock + blockcount;
 
