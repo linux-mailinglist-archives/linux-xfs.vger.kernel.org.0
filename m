@@ -2,138 +2,138 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4709C60998A
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 06:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C072609982
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 06:55:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbiJXEzz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Oct 2022 00:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38938 "EHLO
+        id S230010AbiJXEzB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Oct 2022 00:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbiJXEzy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 00:55:54 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31003580B9
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Oct 2022 21:55:53 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29O2WKqO031538;
-        Mon, 24 Oct 2022 04:55:50 GMT
+        with ESMTP id S229997AbiJXEzA (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 00:55:00 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B3E252B9
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Oct 2022 21:54:58 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29O2eWiV025813;
+        Mon, 24 Oct 2022 04:54:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=gj9tCY4Y25cCXdTdSNsN09ENyJnw9ka8ECrbFFoD4OE=;
- b=aHDyjRVBPJ7EFM0hYThq+5KRspgd3JO9lhkFsF5qPhOxDrDa7aet5dCNs7XNWlKzAjmk
- F0KHPtHzGDScKghAH/xwIWWcmgpiJlHrW3upy6FAvMCSHGr8M3olzI1MvHcXSSKhkNZz
- GgbSpxkSAu2Ktn5j+8zKDsKBEqdqwsCccLb13/JMT7ng9J7en5OKIislvhXOH82Nu1Y4
- A1GOI7HrQqIUxUVFfn5k6p0ZlR+AomaE4ROQclvv1VsbBOw0jHjnjSpnK1fXtOwZ3ukW
- fNd5cSwtIPG0gNfAgIId1vu/7OblKXt5E5S9i2v25397dZYsOO++lzJ4aL/zYjqraCu8 uw== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kc8dbasak-1
+ bh=BtL41UmmCbrKmstpTEYree2rE0fQJeZUcCqIRo47RXI=;
+ b=EOgMDVv/By+kTaNN2CUt0WGF6/SMNLl8qmQDK0rvfNsh/kUq90VZ1N9ksPah1zcW8Agk
+ zw1arBh6dwxRT4oXQuRobBhM7WuwUdHMZFCHPOSFDxPxwKoQIzHVw0jiN7O21iSdMRZ9
+ 2R5ZVX0BgvgI0+lHutRJYjt/QSEauG8hEdeMQuEbdAoXLAOrnavbl9+EHOs/zayB53aq
+ NpE1FVINA9YHQz9kLtUoy10oyxco2rUDxzicc1B2xZ5zFc+HYEGMQS2TYZ62f71sCee+
+ bFi/Q0azkoY3daw5oDOsykZs/NB5G8xWia2v97pdxuECOOsJ47hd+3NawBWpXi1BHvEy HQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kc6xdtn4h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Oct 2022 04:55:49 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29O00LKk003625;
-        Mon, 24 Oct 2022 04:54:41 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kc6y9bp8m-1
+        Mon, 24 Oct 2022 04:54:54 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29O0mhI0040497;
+        Mon, 24 Oct 2022 04:54:53 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kc6y944yp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Oct 2022 04:54:41 +0000
+        Mon, 24 Oct 2022 04:54:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NtxswejG+ZdGLKSEs4SxuEXvn/TrjqhONOJBeu7fs3R52miUf/8p5YyKQ0RYtEodqfGjDNHlJ8R5h/kDEEnCaZmR4xPzQqWXDsbwMTj6D78FoJ35Csm0PQ2EdE11XnFyNCGFQ0OcHY8sJFrPfFDV/ruFLVVN8hWbJrxpv5vTnQVmAGO93rLKYLOxIZOPRkP5HJgCaLdevlCkY9ioLZDtov/zGUjmJAfFkNkdqQH5K1G2frNwbzWIoyF8HxP3F2NPsz0oCD0y29xF5h5nPQ16JAb6Vf8tbXPBlBDQk4QqunEYd/w12mb1RtZpbOrOu4EqLax8hq5t6cPZZ1goRRXWQQ==
+ b=BZ9T0TeKB2tp41Cu4M4H9vOrFNaFTyq/F9t+oC0wseMhU+pF3MjnYraOlhT8Yl5u3uWf7YPmqivBqgcdnFt3OwbYxx3XCqgFk10hoslZpXuu+t03uuGxASWR0Iqhg/UCEoPdhqhoS880GlQfGtLpyzMA28j4ilvfzAG01gOOJY+JtgfEliQTpTZY7n2z+Iaog4erZDt1GOJaMJsErjbmakctSsWHTz4lALux11wNEBsg+Wh5ICmq829mjkkojPwEMOmoy/pPlEhczgAh3D6YvgmnwjR4G/jP+b8l2b0idUiMdJfcDvPMhrTBSSgVgiCpuZZEm5SuPyXqCIGWDNmYNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gj9tCY4Y25cCXdTdSNsN09ENyJnw9ka8ECrbFFoD4OE=;
- b=VL9LAL+lwVt576tVZY2bjYxUz9T2GLqf2AIce1xXx7MLeBr05n0rLNAl4nmTGX+T5VNoRIUCuV1aGTeGez5OF+ybEVALLpABvSKMqmRRk6xItKf5X5LJWWw6vFfHdIPD2k3/icKVrDw9tU+42flcxvax2BI4SLG7TQM36jfVp+k41b+gltMIjpwyneAcMUIoZdx7lt+H2DtNFIDgP6YIdiK5sGcYtBEdqo2LGlefVlTfCeCzgb4lia1PPpXWI+/QLK+OV0EUIiIeRl9a0FGM3XtPGbE7VY8Yhm+yYb8jNf48N8SYmwUQFakBLcIquNUWEMHHr3FTKRfb4EVoQZowaQ==
+ bh=BtL41UmmCbrKmstpTEYree2rE0fQJeZUcCqIRo47RXI=;
+ b=VYMWJ/iMM3DE2E6Ng2MOYRqL/bZFntcE5zE0+9MI2Fi1gYI8EXkLqALATnPsdih7/KF9WjH+GXSIHJ4xsrGrbuc71eaPbO+0z7zeqS7Dm3fueTjdX2zlgYjdinAu9I1OtzqW5g7ODGUWOWDYWME6yKqR/h3O0nLceHBw7fAZeynL1qgIOXvpdb4/IK21lh/zbOl4c5Ald7bfef6t69mfWnaGEJ6FKyaqCWhM1BUBgtKZRy+kRwHd1CS2V09RFy4JebmIdFg6ipCs1uwG1d3kw8SKj/yUNINeneEhWCgn4uCgvdSnugnv774XPjUF6Ma7EKbIIWahTV5sU2EGbQPBsw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gj9tCY4Y25cCXdTdSNsN09ENyJnw9ka8ECrbFFoD4OE=;
- b=az1bf03FB028WFMQEfI0ifLpxJ8/FXv78XP/s4AO+GqQj9aHGYFzB7d9oA7S1Uf8DWqfKloDHR4G3yVFZkHPvCTMAl2HJPScQ8JmChHivbB3MFv4GQLY9WANvEY+waT74GvlfgKkw32/4RkQkZc2U0NPvc78Ax9u7U5u3IpnDkU=
+ bh=BtL41UmmCbrKmstpTEYree2rE0fQJeZUcCqIRo47RXI=;
+ b=Q5qBKwiPqcc0NHLJ7tpDJX0MeioDq5RjZukDZ3O7L6LPyeh1gXjtnzFCI5I4UhVAdn4SXFAwnyCq3HVHkaDGFg0efTqA/iQlqvbY9SHWQHaHVtsXeJnERi7YB/PjDfu9p+AFgK1y8Y6L4dfw2d2bNtkrAhIvcKievyZSn1k82Fg=
 Received: from SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:22b::9)
  by DS7PR10MB5374.namprd10.prod.outlook.com (2603:10b6:5:3aa::7) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Mon, 24 Oct
- 2022 04:54:40 +0000
+ 2022 04:54:47 +0000
 Received: from SA1PR10MB5867.namprd10.prod.outlook.com
  ([fe80::81a2:47b1:9cbf:e9c]) by SA1PR10MB5867.namprd10.prod.outlook.com
  ([fe80::81a2:47b1:9cbf:e9c%6]) with mapi id 15.20.5723.033; Mon, 24 Oct 2022
- 04:54:40 +0000
+ 04:54:47 +0000
 From:   Chandan Babu R <chandan.babu@oracle.com>
 To:     djwong@kernel.org
 Cc:     chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
         amir73il@gmail.com, leah.rumancik@gmail.com
-Subject: [PATCH 5.4 CANDIDATE 11/26] xfs: remove the xfs_dq_logitem_t typedef
-Date:   Mon, 24 Oct 2022 10:22:59 +0530
-Message-Id: <20221024045314.110453-12-chandan.babu@oracle.com>
+Subject: [PATCH 5.4 CANDIDATE 12/26] xfs: remove the xfs_qoff_logitem_t typedef
+Date:   Mon, 24 Oct 2022 10:23:00 +0530
+Message-Id: <20221024045314.110453-13-chandan.babu@oracle.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20221024045314.110453-1-chandan.babu@oracle.com>
 References: <20221024045314.110453-1-chandan.babu@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0048.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::11) To SA1PR10MB5867.namprd10.prod.outlook.com
+X-ClientProxiedBy: SI2PR01CA0020.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::6) To SA1PR10MB5867.namprd10.prod.outlook.com
  (2603:10b6:806:22b::9)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|DS7PR10MB5374:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d366b98-150b-4a1d-2bb9-08dab57bdbfc
+X-MS-Office365-Filtering-Correlation-Id: d87c43d7-d9b0-4c76-d314-08dab57bdff3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ytaUD3QF6lfVwtMyAUAzYhVmNnrZHebFwGHtYnN2uow85OH6S8tPNLvGJ9ugKhYUL3pOEHap+sVr+aezhy4/jpVYhazuYW3/usQWJyyiBKMYzcOhXrUwgszpJUIBlGffa3MEcOL1HG8YJFnMSdcIKmO24yHdZAMaKVcQk4jDQ3HGxuKSyZcAIDyhRV/WEVN9H27iMQeDQjxQEOF6KvPtpA8twuaN/R1mVrceJl/Coz1rDeLjgxp5ZmpMs8+NBwd9rFxXREz5q2URZ+oCjc3OxarKA4kQ/ku9cEPli95t+nygaU1BZ6iOdo4JQCMFWUCU4STx4HarYtt2rMh0XJt41XCEPrbtLl7nQv02U3m2ER9bO+Mgx4O/hgfD6jbWnK9mJHs0h2621epfMHIUSZkgK1qrY7natMcQNV2dw9zo04RzqjFGwT+gHO3pjtqYaBOnGvptrLBLSl5R0Tn8KIurQ+6U537XVw/Ryo/BEyv7Boq0k+Fj18PywExX62wEiYKPT15g8YvpiuWCiArEpRFCyz5T/Nt7tWt6QwximXJeKzXJ76XUgdgSGJUg+Hbwylv8KZWANTaCn07jJL9PhhgtPB7na73w8XwCY8+Ufir16Tt72yPv1q88wwmH5tLKf7UiC5CdNWSpvPKyhFhz35ZrzwTVd86rH+cSiQ7yuV4q/xx8gs9lmEsnuHosyy/UqBaWVVvbNOOs/H81jm9i9NtDeA==
+X-Microsoft-Antispam-Message-Info: cf5qJY7lKGN9OHqrBErfNg/PeXC+M09C619jGZu5MTLpmWpYZnXuXILuveC9gpCDaAr+4taEO6fkplCIKbImMgAr5gVA7DZ9qyzhj7xBPubqZFrBaD9MTJUf//GVFAerzxulcJQKfRtWvbPwHI4pb27BAs88VQ75dLybgSHv9UJ9+fuYRST6TLNpx6759cnht0EtmeSEtrmrvW5YZ3jxplmRQ8X3LwQiCLbtvkyMPiFTjFUIKZgKJrQ+ECY++GwNYwEPuwfkyQf1HX4GMdjiZy9r0Vs5o6Guf0LBzUpAOAWAIFEcSoQmb3o6mRkEO82zG4EnCyb1u/SNHWnyOwjv37p8PcwpNXFk21n8JIpU98ZoQ8KV7JT9Fp+XmEemqW+cgZXv9xbN1G4II93/zvBqBxdLUIKgY7CaKrSUOEryJjiQJ19XBXH9M9mtxf2EMMbcV1El6npSmD+VU6y6rjdO2O8tuerqeaNv8vVfPPNTooiITIRoHZ+/ZvB6swb1wB5eAO7yS4Hkvtf8b6yjpeS6mjUTrR7D2qHtTNpcB0HmEZ60OX+mSk+2V6+LZgo7y7UPHveccq+d8LBDgUrjVJpyXld+MW2xwlBVFKiBiIiAcMmTW8f2y0ExF0EFv0A65GbNZfWSR/K/wu1PeEZNhgsjxSf8TZnEbdR04ztJe7Ix4twZ652/G23+5TqYq7/kRnsbe6McXA/XRPynXWPxKgmDYg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(366004)(376002)(346002)(39860400002)(136003)(451199015)(6916009)(83380400001)(2906002)(5660300002)(6512007)(26005)(6486002)(4326008)(8676002)(8936002)(86362001)(66556008)(66946007)(36756003)(66476007)(2616005)(316002)(1076003)(186003)(478600001)(38100700002)(6506007)(41300700001)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Hw3k/nRKoUke+xGjSs8bpuC5rALAqvzIuTkqJkywxeLxfZkUfsAtZQRpurbl?=
- =?us-ascii?Q?JHO0X6FbfvCyR41SY6lKlkJ+VCA+JEGFnO1ExljF4D7lJDXUSsgFXdmPlCBc?=
- =?us-ascii?Q?8k7W21IoI0fNoSkL6diTLN5aEVRm+F5TeJFe2VwGPxtNXOjCh5Ul2ajfrhXR?=
- =?us-ascii?Q?8Fl/8rQjQ0wGwaKpYYMoauwd67Nr1PqROPmt0rqppnwock1j5Vufiys52Spd?=
- =?us-ascii?Q?RJBZAqsHvEglBlsv329AFhznex7cywgPqj3rR3+GPMqksEYdrU6MsQ0IoXNK?=
- =?us-ascii?Q?gIzADmgxbpyvkwbEwcunlmjoUWJ1spXj0k6ucBJ0XMbndBmOL9C9phZeW9ru?=
- =?us-ascii?Q?QIRWx8YDIfW9h/zEd/bBT0Bf2rBGmILGcd2KxuAvqPX3W/nXdQt9vzGU+ICw?=
- =?us-ascii?Q?WlyCHHUqAyGbozdOsaTBBgRK/uxN39loFUpFCrVVAymjvQuuGqAOq/+2v2fI?=
- =?us-ascii?Q?FKOABpVvPC6+mUPeSM6/KnC/mDc/j23xMN8jee7/li/wsCnBQV1rUH3yOHYj?=
- =?us-ascii?Q?387MD44P+enHatGeJ37MnhCS0jAl51JY8WrjxwUVT2UsE5dxi5MRoXG2x//t?=
- =?us-ascii?Q?9URQtFFQATAkdJ3MEKhKf1W0vIOYsUndawEXhZWhElrgRXXhueOPWcBM5Qks?=
- =?us-ascii?Q?ix9CKa3A/PdqPCpol1agG2ZWyBfZ8zZrnLPJGQz7vsR0hGoklid+vv4FCtIH?=
- =?us-ascii?Q?uY/Rz+wEIJ2mWJCvjFvmKvThmfLJ81LE5hBpsvxddMegVcHnFyQB3F6LPxxX?=
- =?us-ascii?Q?wz6GAfw8OZR6iS1+IZidHtZ/jia9oY3Tg5ZVxE4nBjsErXegl5AU+3U0nuJF?=
- =?us-ascii?Q?Q+eE0g1G6rYOQkCuh65ggBvNrtc4oBbj0xN0KxGbUvNFfHhyuccUJlarPuUC?=
- =?us-ascii?Q?MLk4bNlRbybYWxdM1li5yAQkd9txAkU0Td0KVXQiB7NMfaePEe199YyvdsR6?=
- =?us-ascii?Q?l1BtB0/d4z8Rt2jZxW/yODdSLg6banfOgOdxMN+/SD0y6hyx7T/qwU91DMdr?=
- =?us-ascii?Q?iqQPvF/SV/+Ko3aUZ4ghMes5IsxPTgbqS6154cVYxEcZLQkPWjhrezzZL+Jb?=
- =?us-ascii?Q?SlI6ItESqBajHpUNyImM7SDAGvIV9C/aFP6irmgYCbe7hBYyJwcLkLNs/HnG?=
- =?us-ascii?Q?xA5JlZa5TrXVcbXJSWQsC7SMtA4tuZC/eaVLV8GX8fSs30EPeHxMvveo014l?=
- =?us-ascii?Q?3WVxfKg3gSpzwdEFqJnKNdSVzsUTbA1hevRpSj7CexORQmbAR6nRRQR0rvuK?=
- =?us-ascii?Q?nTQ/M77WaMDdNiKeRzv7UGvb2VaeZsEk0dN0ErG29pAz6Gy6Ca+sX0oPNjX6?=
- =?us-ascii?Q?7ZcWUj6dNEtRC5cbciFt8bRm8ZPlzHDme7KwrrftgzPIhPONZZF4qgVuPzxW?=
- =?us-ascii?Q?X+OoJRN+Qes8Av/yLiofDqt/Szs48fQygahrdr+7cMc3iQmIvo9QqAMHkPlp?=
- =?us-ascii?Q?9DYq2LyAB/Z1xEiuofXEmA87sxX25XdL4z6nZO8eCmNeGCkbYsskNn08PKyZ?=
- =?us-ascii?Q?QA2lEK5rmUKRr0CznzFlzpXI0piPfb2PRLP7VGzz4t8JSPJ04ZnX6WQX0mTQ?=
- =?us-ascii?Q?ukNvr5l1eqlaZDSoxElgI7nddFN6wUbpQR6rr+hVedLvyY8DQOrEsT8lnYOe?=
- =?us-ascii?Q?eA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9JY2vkiqH/tS8ypbZfhY/v3hnCBzh/cN4vfepbWyGzJVq2Q0jcd2ICLN9Vs2?=
+ =?us-ascii?Q?GRkDP2jXU2J/84TtBdzSdbiB+D23Tt9E/jDbgVPDKLZm7XD1/ifRT7OCQ0PE?=
+ =?us-ascii?Q?hZ+KNctlOSwH1XQkS8Y57VxpBd0DogJUFuC0tgEUpW9gEDx6AA1PggLKFNOQ?=
+ =?us-ascii?Q?fVKvibtvw+lgFPuhyEd48jE2tILKNS6Up4QphiwPO+yPxZrcCqYMOZpZgZhS?=
+ =?us-ascii?Q?xHMOtj9y54uQhRWr51ms+veUW/RrNxYuCsh2+DJiuqyhSTI+jkx4enzIzbDD?=
+ =?us-ascii?Q?UUgLduJcGDfwAeKImKa0cObQk8P83hqnc17jrZZ31iuOcWmH09iktoh45q1E?=
+ =?us-ascii?Q?yoBIqNN9Oo8IwGlMVxJ9G9Kuah9yNGHnXA1DmRss1gYbqegY12J2FHrbsB5B?=
+ =?us-ascii?Q?jR/CWEZFAKg8yyIMBEcQKaJUydPjGvt5CfljpRcXSnsY/dKGbVxTe5IqekYa?=
+ =?us-ascii?Q?bpxatlEOiwYvCsnXnHHH1pEW5avTZ7wcuTWKOVX3wQ8iaSdlirq54RBytU1Q?=
+ =?us-ascii?Q?U0sxkuBJZq7M8uuTaQhmfw4T8cHxsynDIEZfjq+TDXOUK+CCU/m3ViBKYQBq?=
+ =?us-ascii?Q?0ADZtMs02HNYKmJ4YHIrisu8JDdYoAJqbW3oLZvIM/9mV0SlcFLMG+fx9m4S?=
+ =?us-ascii?Q?qIjYXCYiObRgCK3ZEFISHGjAZlgMPACyPkXZQKlmboma5VskMem657JH/9Pq?=
+ =?us-ascii?Q?mm+bAMg3PUtDEWEfu7DAbf24BCpgPrvwlwQBwXUUrvrxguw8T1DHQ9jso2Rw?=
+ =?us-ascii?Q?EQywzTZ7nn7hyhknhJF4TYgAJ+Sq9HyK1FL0Kibtyi7+2KV1sCPOcNjN+0jT?=
+ =?us-ascii?Q?VQxOP0PXZfCLoG4jb+srvF7XNYq5CBKaQrILwQg7vmIv49SC4GNwI1ZBZYXw?=
+ =?us-ascii?Q?irTuzgxfIWGpgjaHmPHqzGJ+nscMpqFzXFjEXSdu/Vb9iX67CeuMM9ljy5fu?=
+ =?us-ascii?Q?rI9JiYPY8GSTxHkln57ey8QtZYQik+OIU3mDWZ0cOlYsKKc93tR8mJR4aTaP?=
+ =?us-ascii?Q?T10DygIh3dJSEvRObnjvfcfywKo9bWmBq3oyyK9rm9ZTfZ7KwGFxm0nywcFc?=
+ =?us-ascii?Q?2fFMR1DB+hNx8b/FUmyDWyfheawD2NWphahzf4c4lK9z/toYz3EV8xSG+xsT?=
+ =?us-ascii?Q?UG5sgot70apDIO5tAdM7B1nHfpjd3ySqwgCE8YLERS/1G+mN4+WYsnAsyqUF?=
+ =?us-ascii?Q?DgdlZpbPVzObVE78+9rhb5kfRlLCD/Sqc6EwTEIgCfpeZJC9t69BAcgDWPJH?=
+ =?us-ascii?Q?0OEz/SFRrU9jrtfuDgOxuCv3ELaZiP09UJUUKv06bOdXwPLwPuMKwKNdCDQw?=
+ =?us-ascii?Q?wRomjK8XwstWZhDLf7R7SOcnlrFvsUIjE0slspiWsBvku3UkEvTk1acYc62Q?=
+ =?us-ascii?Q?2Ydei1P9bRtSuNJ5XNvToqLRBb2Ii3yIzKIBqvdJnl6Fo0+uIkYQMxD5oPmb?=
+ =?us-ascii?Q?jgofagK82KhmpqQkdCUBnT1x68eSayrsYv50Mse2RWupsuysEteOD4QwVfwB?=
+ =?us-ascii?Q?dJrpsuDhCmLgZVn6EqrcnouW63HKZFu4dXSOZzt/WJq6T3E+3/LF1sFmYpdV?=
+ =?us-ascii?Q?RCSyS4sbz7dfX1hHTzXN05J9fGVMXu65+M5kQ5a1GCRzUQJJzDHUvIkYWUU5?=
+ =?us-ascii?Q?cQ=3D=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d366b98-150b-4a1d-2bb9-08dab57bdbfc
+X-MS-Exchange-CrossTenant-Network-Message-Id: d87c43d7-d9b0-4c76-d314-08dab57bdff3
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5867.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 04:54:40.5343
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 04:54:47.0186
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TljFprDO/wsd697eHhXptrUhtb7mQIu39t3V71eyC8l+E5LJDGBCiSBS5IuSe7fUbr4iwNqB55J6u5b5lPsF3Q==
+X-MS-Exchange-CrossTenant-UserPrincipalName: hWGaFAJdmNz+BvmaG7jSKFzB5xB1NiLmO6aweQFwnzPa7dTh+PtehUm2PYAxJHf6BWdUgPT/FmC8QHnS4g2eig==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5374
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-10-23_02,2022-10-21_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2209130000 definitions=main-2210240031
-X-Proofpoint-ORIG-GUID: mm6kkvuLP7LbxKG6uOQuLBnOr3QSYWI4
-X-Proofpoint-GUID: mm6kkvuLP7LbxKG6uOQuLBnOr3QSYWI4
+X-Proofpoint-GUID: fsEVBYcuxLYV0_LYfZoZy9nyfH1ktG0q
+X-Proofpoint-ORIG-GUID: fsEVBYcuxLYV0_LYfZoZy9nyfH1ktG0q
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -146,65 +146,185 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Pavel Reichl <preichl@redhat.com>
 
-commit fd8b81dbbb23d4a3508cfac83256b4f5e770941c upstream.
+commit d0bdfb106907e4a3ef4f25f6d27e392abf41f3a0 upstream.
 
 Signed-off-by: Pavel Reichl <preichl@redhat.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: fix a comment]
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
 ---
- fs/xfs/xfs_dquot.c      |  2 +-
- fs/xfs/xfs_dquot.h      |  2 +-
- fs/xfs/xfs_dquot_item.h | 10 +++++-----
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ fs/xfs/libxfs/xfs_trans_resv.c |  4 ++--
+ fs/xfs/xfs_dquot_item.h        | 28 +++++++++++++++-------------
+ fs/xfs/xfs_qm_syscalls.c       | 29 ++++++++++++++++-------------
+ fs/xfs/xfs_trans_dquot.c       | 12 ++++++------
+ 4 files changed, 39 insertions(+), 34 deletions(-)
 
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 193a7d3353f4..55c73f012762 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1018,7 +1018,7 @@ xfs_qm_dqflush_done(
- 	struct xfs_buf		*bp,
- 	struct xfs_log_item	*lip)
- {
--	xfs_dq_logitem_t	*qip = (struct xfs_dq_logitem *)lip;
-+	struct xfs_dq_logitem	*qip = (struct xfs_dq_logitem *)lip;
- 	struct xfs_dquot	*dqp = qip->qli_dquot;
- 	struct xfs_ail		*ailp = lip->li_ailp;
+diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+index f7e87b90c7e5..824073a839ac 100644
+--- a/fs/xfs/libxfs/xfs_trans_resv.c
++++ b/fs/xfs/libxfs/xfs_trans_resv.c
+@@ -800,7 +800,7 @@ xfs_calc_qm_dqalloc_reservation(
  
-diff --git a/fs/xfs/xfs_dquot.h b/fs/xfs/xfs_dquot.h
-index 831e4270cf65..fe3e46df604b 100644
---- a/fs/xfs/xfs_dquot.h
-+++ b/fs/xfs/xfs_dquot.h
-@@ -40,7 +40,7 @@ struct xfs_dquot {
- 	xfs_fileoff_t		q_fileoffset;
+ /*
+  * Turning off quotas.
+- *    the xfs_qoff_logitem_t: sizeof(struct xfs_qoff_logitem) * 2
++ *    the quota off logitems: sizeof(struct xfs_qoff_logitem) * 2
+  *    the superblock for the quota flags: sector size
+  */
+ STATIC uint
+@@ -813,7 +813,7 @@ xfs_calc_qm_quotaoff_reservation(
  
- 	struct xfs_disk_dquot	q_core;
--	xfs_dq_logitem_t	q_logitem;
-+	struct xfs_dq_logitem	q_logitem;
- 	/* total regular nblks used+reserved */
- 	xfs_qcnt_t		q_res_bcount;
- 	/* total inos allocd+reserved */
+ /*
+  * End of turning off quotas.
+- *    the xfs_qoff_logitem_t: sizeof(struct xfs_qoff_logitem) * 2
++ *    the quota off logitems: sizeof(struct xfs_qoff_logitem) * 2
+  */
+ STATIC uint
+ xfs_calc_qm_quotaoff_end_reservation(void)
 diff --git a/fs/xfs/xfs_dquot_item.h b/fs/xfs/xfs_dquot_item.h
-index 1aed34ccdabc..3a64a7fd3b8a 100644
+index 3a64a7fd3b8a..3bb19e556ade 100644
 --- a/fs/xfs/xfs_dquot_item.h
 +++ b/fs/xfs/xfs_dquot_item.h
-@@ -11,11 +11,11 @@ struct xfs_trans;
- struct xfs_mount;
+@@ -12,24 +12,26 @@ struct xfs_mount;
  struct xfs_qoff_logitem;
  
--typedef struct xfs_dq_logitem {
--	struct xfs_log_item	 qli_item;	   /* common portion */
--	struct xfs_dquot	*qli_dquot;	   /* dquot ptr */
--	xfs_lsn_t		 qli_flush_lsn;	   /* lsn at last flush */
--} xfs_dq_logitem_t;
-+struct xfs_dq_logitem {
-+	struct xfs_log_item	 qli_item;	/* common portion */
-+	struct xfs_dquot	*qli_dquot;	/* dquot ptr */
-+	xfs_lsn_t		 qli_flush_lsn;	/* lsn at last flush */
+ struct xfs_dq_logitem {
+-	struct xfs_log_item	 qli_item;	/* common portion */
++	struct xfs_log_item	qli_item;	/* common portion */
+ 	struct xfs_dquot	*qli_dquot;	/* dquot ptr */
+-	xfs_lsn_t		 qli_flush_lsn;	/* lsn at last flush */
++	xfs_lsn_t		qli_flush_lsn;	/* lsn at last flush */
+ };
+ 
+-typedef struct xfs_qoff_logitem {
+-	struct xfs_log_item	 qql_item;	/* common portion */
+-	struct xfs_qoff_logitem *qql_start_lip; /* qoff-start logitem, if any */
++struct xfs_qoff_logitem {
++	struct xfs_log_item	qql_item;	/* common portion */
++	struct xfs_qoff_logitem *qql_start_lip;	/* qoff-start logitem, if any */
+ 	unsigned int		qql_flags;
+-} xfs_qoff_logitem_t;
 +};
  
- typedef struct xfs_qoff_logitem {
- 	struct xfs_log_item	 qql_item;	/* common portion */
+ 
+-extern void		   xfs_qm_dquot_logitem_init(struct xfs_dquot *);
+-extern xfs_qoff_logitem_t *xfs_qm_qoff_logitem_init(struct xfs_mount *,
+-					struct xfs_qoff_logitem *, uint);
+-extern xfs_qoff_logitem_t *xfs_trans_get_qoff_item(struct xfs_trans *,
+-					struct xfs_qoff_logitem *, uint);
+-extern void		   xfs_trans_log_quotaoff_item(struct xfs_trans *,
+-					struct xfs_qoff_logitem *);
++void xfs_qm_dquot_logitem_init(struct xfs_dquot *dqp);
++struct xfs_qoff_logitem	*xfs_qm_qoff_logitem_init(struct xfs_mount *mp,
++		struct xfs_qoff_logitem *start,
++		uint flags);
++struct xfs_qoff_logitem	*xfs_trans_get_qoff_item(struct xfs_trans *tp,
++		struct xfs_qoff_logitem *startqoff,
++		uint flags);
++void xfs_trans_log_quotaoff_item(struct xfs_trans *tp,
++		struct xfs_qoff_logitem *qlp);
+ 
+ #endif	/* __XFS_DQUOT_ITEM_H__ */
+diff --git a/fs/xfs/xfs_qm_syscalls.c b/fs/xfs/xfs_qm_syscalls.c
+index da7ad0383037..e685b9ae90b9 100644
+--- a/fs/xfs/xfs_qm_syscalls.c
++++ b/fs/xfs/xfs_qm_syscalls.c
+@@ -19,9 +19,12 @@
+ #include "xfs_qm.h"
+ #include "xfs_icache.h"
+ 
+-STATIC int	xfs_qm_log_quotaoff(xfs_mount_t *, xfs_qoff_logitem_t **, uint);
+-STATIC int	xfs_qm_log_quotaoff_end(xfs_mount_t *, xfs_qoff_logitem_t *,
+-					uint);
++STATIC int xfs_qm_log_quotaoff(struct xfs_mount *mp,
++					struct xfs_qoff_logitem **qoffstartp,
++					uint flags);
++STATIC int xfs_qm_log_quotaoff_end(struct xfs_mount *mp,
++					struct xfs_qoff_logitem *startqoff,
++					uint flags);
+ 
+ /*
+  * Turn off quota accounting and/or enforcement for all udquots and/or
+@@ -40,7 +43,7 @@ xfs_qm_scall_quotaoff(
+ 	uint			dqtype;
+ 	int			error;
+ 	uint			inactivate_flags;
+-	xfs_qoff_logitem_t	*qoffstart;
++	struct xfs_qoff_logitem	*qoffstart;
+ 
+ 	/*
+ 	 * No file system can have quotas enabled on disk but not in core.
+@@ -540,13 +543,13 @@ xfs_qm_scall_setqlim(
+ 
+ STATIC int
+ xfs_qm_log_quotaoff_end(
+-	xfs_mount_t		*mp,
+-	xfs_qoff_logitem_t	*startqoff,
++	struct xfs_mount	*mp,
++	struct xfs_qoff_logitem	*startqoff,
+ 	uint			flags)
+ {
+-	xfs_trans_t		*tp;
++	struct xfs_trans	*tp;
+ 	int			error;
+-	xfs_qoff_logitem_t	*qoffi;
++	struct xfs_qoff_logitem	*qoffi;
+ 
+ 	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_qm_equotaoff, 0, 0, 0, &tp);
+ 	if (error)
+@@ -568,13 +571,13 @@ xfs_qm_log_quotaoff_end(
+ 
+ STATIC int
+ xfs_qm_log_quotaoff(
+-	xfs_mount_t	       *mp,
+-	xfs_qoff_logitem_t     **qoffstartp,
+-	uint		       flags)
++	struct xfs_mount	*mp,
++	struct xfs_qoff_logitem	**qoffstartp,
++	uint			flags)
+ {
+-	xfs_trans_t	       *tp;
++	struct xfs_trans	*tp;
+ 	int			error;
+-	xfs_qoff_logitem_t     *qoffi;
++	struct xfs_qoff_logitem	*qoffi;
+ 
+ 	*qoffstartp = NULL;
+ 
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index b6c8ee0dd39f..2a85c393cb71 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -824,13 +824,13 @@ xfs_trans_reserve_quota_nblks(
+ /*
+  * This routine is called to allocate a quotaoff log item.
+  */
+-xfs_qoff_logitem_t *
++struct xfs_qoff_logitem *
+ xfs_trans_get_qoff_item(
+-	xfs_trans_t		*tp,
+-	xfs_qoff_logitem_t	*startqoff,
++	struct xfs_trans	*tp,
++	struct xfs_qoff_logitem	*startqoff,
+ 	uint			flags)
+ {
+-	xfs_qoff_logitem_t	*q;
++	struct xfs_qoff_logitem	*q;
+ 
+ 	ASSERT(tp != NULL);
+ 
+@@ -852,8 +852,8 @@ xfs_trans_get_qoff_item(
+  */
+ void
+ xfs_trans_log_quotaoff_item(
+-	xfs_trans_t		*tp,
+-	xfs_qoff_logitem_t	*qlp)
++	struct xfs_trans	*tp,
++	struct xfs_qoff_logitem	*qlp)
+ {
+ 	tp->t_flags |= XFS_TRANS_DIRTY;
+ 	set_bit(XFS_LI_DIRTY, &qlp->qql_item.li_flags);
 -- 
 2.35.1
 
