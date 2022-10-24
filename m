@@ -2,264 +2,224 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B19160998F
-	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 06:56:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9454860995F
+	for <lists+linux-xfs@lfdr.de>; Mon, 24 Oct 2022 06:45:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbiJXE4o (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 24 Oct 2022 00:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40008 "EHLO
+        id S229520AbiJXEpP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 24 Oct 2022 00:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230115AbiJXE4n (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 00:56:43 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D447AB04
-        for <linux-xfs@vger.kernel.org>; Sun, 23 Oct 2022 21:56:40 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29NMKxmi019479;
-        Mon, 24 Oct 2022 04:56:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references :
- content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=l1T+OCmoekpDpgYRnrrTIxUgbtFZA200/NTtMRkKNtY=;
- b=1ghZOoUFM74g9y96dTXAEaOADSd2CBr7PBNultMniEMa8cGu6D/4px1LVshi3znHTpjI
- 8nwJ3o9fNZPvpX+TWROXtokTHpqpvDp9bDx97qbLn569ovtkl5yxEK00laopsgPT8J2o
- 1DGAosTvT0reXCrxr844LgzzIxg6CuHjycp3ZT6txVLuFIz1qn8nnZiXgFifVM8yp74X
- 700Ng17vBOWzE93kErYBrhy33mNPa6u+e+cXah1/rcSSfurfx1AfTX0Z/Ugxk0eAtuMl
- JMIt8+miBebbCVKT5ZecLy8ChyCAuy8/UfFOgekIHJNzmOUC7ToQrqGs3X6a2LSMyW7G Jg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kc9392y2v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Oct 2022 04:56:34 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29O4oHlk040579;
-        Mon, 24 Oct 2022 04:56:33 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kc6y945n3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Oct 2022 04:56:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J/QNIaO1uGKlSXAkEiyoFa/xY4HNVnqILUzzE8xZ5O9Zr2t1fyQzMM9J3HtWq+YTZWrAMD4tfoDo43i5msVvsbsgpalwvSd3Nyhmz2mxQcvUs7H5C3CjcxO3sgQv2Yq01hFYiQ9bmSMPSbGB7KjorNUfay0UATpngBniF5MqifOgeOR7j0KyvcucRFe4JtvU67Zl1o0BytMSpjolQvu9SSwHMhQG/vuV7MqaA156U8+nVjUpW/CqzA+D4NczRpq0cA/51QQ3Tc0XYa4E4mVY2g43/XDbF03K9bIUAa1pFwnVKkFyynTMRHNjElxu2vkizCqzwR5Sd81+Pu8ajEtzeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l1T+OCmoekpDpgYRnrrTIxUgbtFZA200/NTtMRkKNtY=;
- b=EXTSpZcXEqqaQ4Y/bKZcd2fT10K2kUAe1S2p9G/Dx/H6RzeLwQdHnPutnzzpRCQ4jz+OaPtpdEJzinOOl65f/anWZt/6rmBig3N12VvI0JxAO+pATjxmYLFo0DsrNtfK9UQRbMtMMXXVMcM5VSI8wVBvtQjT9wffqn4mqauHTx0v9V8nezmjFiWlmgavoEnOUlMOhNpYkHiObT9Rc7GBWmCIqw6HjmcF6wAg+9yzVBKSM72cJkB6+GQM23sb9LUoc7tdEFKg/REnALzJ5+RcBIN3kEczwsP25UdYoOq7pl7ko0j9QucGWzJU+K7MkWBmTeAZqwVLfxOII/CAEjalZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l1T+OCmoekpDpgYRnrrTIxUgbtFZA200/NTtMRkKNtY=;
- b=t4EjbO/Wr17wqOGWXMydEtk0OByvEQhBV9UGjLQ+P+DHFIpgnt7qrb+9eQ77vLAeFJbP0e778Sxe03gLYtx/C7zF7TBo1UbX9te52dbn8wLbneOU1D/pW/qFC6661dLQT5nqtwogR2HpqNzjEHhVfBE84jj4/WeKw0dtpw2X9yc=
-Received: from SA1PR10MB5867.namprd10.prod.outlook.com (2603:10b6:806:22b::9)
- by CH0PR10MB4906.namprd10.prod.outlook.com (2603:10b6:610:c6::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.23; Mon, 24 Oct
- 2022 04:56:31 +0000
-Received: from SA1PR10MB5867.namprd10.prod.outlook.com
- ([fe80::81a2:47b1:9cbf:e9c]) by SA1PR10MB5867.namprd10.prod.outlook.com
- ([fe80::81a2:47b1:9cbf:e9c%6]) with mapi id 15.20.5723.033; Mon, 24 Oct 2022
- 04:56:31 +0000
-From:   Chandan Babu R <chandan.babu@oracle.com>
-To:     djwong@kernel.org
-Cc:     chandan.babu@oracle.com, linux-xfs@vger.kernel.org,
-        amir73il@gmail.com, leah.rumancik@gmail.com
-Subject: [PATCH 5.4 CANDIDATE 26/26] xfs: fix use-after-free on CIL context on shutdown
-Date:   Mon, 24 Oct 2022 10:23:14 +0530
-Message-Id: <20221024045314.110453-27-chandan.babu@oracle.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221024045314.110453-1-chandan.babu@oracle.com>
-References: <20221024045314.110453-1-chandan.babu@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0002.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::16) To SA1PR10MB5867.namprd10.prod.outlook.com
- (2603:10b6:806:22b::9)
+        with ESMTP id S229631AbiJXEpN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 24 Oct 2022 00:45:13 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EBE46DB9
+        for <linux-xfs@vger.kernel.org>; Sun, 23 Oct 2022 21:45:05 -0700 (PDT)
+Received: from kwepemi500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mwj6q2hfPzVj2C;
+        Mon, 24 Oct 2022 12:40:19 +0800 (CST)
+Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
+ (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 24 Oct
+ 2022 12:45:03 +0800
+Date:   Mon, 24 Oct 2022 13:06:59 +0800
+From:   Long Li <leo.lilong@huawei.com>
+To:     Dave Chinner <david@fromorbit.com>
+CC:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Bill O'Donnell <billodo@redhat.com>,
+        <linux-xfs@vger.kernel.org>, <yi.zhang@huawei.com>,
+        <houtao1@huawei.com>, <guoxuenan@huawei.com>
+Subject: Re: [PATCH v1] xfs: fix sb write verify for lazysbcount
+Message-ID: <20221024050659.GA338324@ceph-admin>
+References: <20221022020345.GA2699923@ceph-admin>
+ <Y1NSBMwgUYxhW4PE@magnolia>
+ <20221022120125.GA2052581@ceph-admin>
+ <20221022211613.GW3600936@dread.disaster.area>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR10MB5867:EE_|CH0PR10MB4906:EE_
-X-MS-Office365-Filtering-Correlation-Id: a41f2368-b64d-4aa1-e817-08dab57c1e63
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PkDDQmyuv5JqcNYq5/t/xK5AdMzjSVVPRAy7egwTEfcoupyin0cRecTU2/YYyLm1aE1fOgx4oGlTyECZkRlfIs9ifSkonylgDr35JptbHBkXuCJ8tDZpaisc2MM6mwNhEpq+hYaMVKwCQ7hqMydxGry8k24Q2yO0XcEJZ74dhGim/jm39zKKrTQ2Q5TjnKRT7bVexNPJ5sM6ioi++bN/QDxtotID74VXPriai+Ko8wCdaEhdjM7aYqNqq6NW/FXdR6lFojduHn6mKugC+X20d+2IxQGxChwRcgNEe1RZCOZcqvN+tBs/mOBwytweWVMDCxBLdS0gqjeG5UuTlMaPCDjvOejXz+pqVzMeieLNRTZd1Ro1gQNLKE6ZkJHUDm1FSpkDIYTPIRHT2ycyZuKBnxqcfO/v0QjQAzwv0Xk2H3g6gAHQ/NhfGYudBwq1D0U5yV6+fP7rjK3I9rYQ7p1IXwbe+AjeTd0pcsac69/YuzuXKAnZi/1h8viiwcyO+iMES1y/MB0YIlih9Lamta1MqGwvLfJfPsnDkYjCtF0xm786I0fTOs2Ql6GdQzG3Z8+Cpn6IjD4Ka0EnWrHfEsrKHb5jYVxk6phgQOW6lX0UzJspU0Yc0scIb41dK7Ji+ixpOouBecRNa2y9KVYA1EvCpH8RZ89ya2jK2i4j8vullunP+dAyVFGhyt3U9+c7xm1f+FKIGXm6RYu5u1FjSL2yqA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR10MB5867.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(39860400002)(136003)(346002)(376002)(366004)(451199015)(2616005)(1076003)(66556008)(66946007)(66476007)(5660300002)(6506007)(186003)(6666004)(83380400001)(36756003)(6486002)(4326008)(478600001)(8676002)(38100700002)(86362001)(41300700001)(8936002)(6916009)(2906002)(26005)(6512007)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D4X5dn4h19rM1x1uHP6GuPLbJhPbqJC/i7j+r2/hxZHDO4sgE/2H+M6tmz31?=
- =?us-ascii?Q?F7dN8sJngIzFgo0ceHe8HWYUA94LAY/OynNbil9foGmRuOgU4/hBU3H0uwme?=
- =?us-ascii?Q?1wS4HsPi048e4ttyVcZuU6XfJEs75hOLjVHj5xF/+rkV1AUq6Ne+yZxpHUvO?=
- =?us-ascii?Q?z4q6xax7SEFPQuhVpUC7JIxPkm00QcRrlwtjIhUcdRzSCNMnsY4FFIZIcgnb?=
- =?us-ascii?Q?U4LWxxcjqdg4BpD8/+lBlMpeP7+t1XYx+d8b7VDr9BOaTneYiY6TQV+EDkFV?=
- =?us-ascii?Q?FmIwrVx1JlVu7P8PTBzVFC7ViKu5wwmZLYvyGtLukog1JzMZhK9DpKKl9Chm?=
- =?us-ascii?Q?OOaQOUeP1ipl+723RLu40Lobf4jWwsy5dI8n/JCRPvvX/F3k4vZXKx5ZAz9d?=
- =?us-ascii?Q?54aXrPCSf7IecDHRIK1SZsdxpfppn/60GUAwd1yaWtxffsUwYh5Q9AYJctXn?=
- =?us-ascii?Q?2OuFbVs0EEQa7VMWK8GX2on8RtTnjAxq+hJjSi4ad/pfSqT9yzOWBx8qGc+g?=
- =?us-ascii?Q?vJ2O5AlIgffcDW1nrE7iMWtudWwC1eOYtU3ajJ+o9YDmjDeWuUYLrN5W61GR?=
- =?us-ascii?Q?5im3oKpQgmW2eP30DqmeI5MlILM9HUOA27ws26Ce1kZolqyV44hXI2EVJiWn?=
- =?us-ascii?Q?cIoVDRA19Cb+xlZIOxJcXrriw2rIdAGtbdThj+sHzGUBL7Ab6yMbcvg83xtz?=
- =?us-ascii?Q?AnFVJqpK9bOdicTb2qx2zGbQQdUOG2Hfv6rQKmjm1R4a8SUw+aMX6jLP6UiX?=
- =?us-ascii?Q?VrOF8kqyqH5GuXzqDKuv13H8AN/4j1oMX5/rStI1CGgWzqu5zxvLIB9/kwRl?=
- =?us-ascii?Q?zv8Y3OQG7wHB7WxgrLVYrNFslIy+BuDVUKwToq3sHfZO1EkGrGwIZJDeQUHT?=
- =?us-ascii?Q?Hh7LH+Xc9gpDOiJDEK724a6ooaNv6Utc8+vkh/l5V2wOm6XDm9qXDjfCVpnB?=
- =?us-ascii?Q?2ijK/c/OyKdWyCAH9K3EQCOinwgaw6zQJRsaYWUtcQ/BoFAJkwWTsm429w93?=
- =?us-ascii?Q?anF8EIWpRyZbbZQj8AKALEgqzrqnzUYWXLUPF7FRo5ro6/pk680SPGQ1c3UA?=
- =?us-ascii?Q?A3J6MBVcnNZcteGrg+hxTrDNsv0y1hA248UKglVdn/BPCFQ4dg0imLIm+BSW?=
- =?us-ascii?Q?oCPliLJRxaJaWNBBz9T+gjCU7Hl17XutvwkCXPI1l3SH4YB+PlRimdBFLK7C?=
- =?us-ascii?Q?DQL2qEmh1tqj8R0L8R2jNH/kgfJn8D+7HFkVzeXFIvSSQqtUEqNbO0E0OpGe?=
- =?us-ascii?Q?VTD+Ddx0s1VzU6gcBcb/MBHt5A7PtUUO1RK41n4i7pp9LXxcWc1qNi2RFoCW?=
- =?us-ascii?Q?76IJ0HzoNafn0X3curFN4dwJiRXkpBH5A6FUvDe2aj/UppMUFokG+J+RiiHu?=
- =?us-ascii?Q?lDoaxbCEgkJeD+hxUY+XOR6z1Qnzj0D/+9K258iWzzQTCo+Q2cwHX1YMe5M2?=
- =?us-ascii?Q?jZf3wdTfcM+OXi1sFn6XfKemYnTaCCnPrqCa/HfBODUKoU+NAdj6m63OelOc?=
- =?us-ascii?Q?B55+Nq6LLhtt8VWqKN6v8xAR4zTbTt/GUNFqufSsMHQ+PXSv1VhUnQcIsnyD?=
- =?us-ascii?Q?GySwgZJznMcRzM8Nn+e4CMURvXYLrxSQXwHNXCzMr/o2EFaCrteJwEcq7EHN?=
- =?us-ascii?Q?Gw=3D=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a41f2368-b64d-4aa1-e817-08dab57c1e63
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR10MB5867.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Oct 2022 04:56:31.7720
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tLWBM8zoakWda2Nn9PiAQuE+7El/MSp3GDzaT/IlExkrFMNVhOFTKgcrbLkpfmQyjPvnnMbzcqNa8HitQcM++g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4906
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-23_02,2022-10-21_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2209130000 definitions=main-2210240031
-X-Proofpoint-GUID: EZLYJs2dkx1OdqXpqbCooh9SysQkG1en
-X-Proofpoint-ORIG-GUID: EZLYJs2dkx1OdqXpqbCooh9SysQkG1en
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20221022211613.GW3600936@dread.disaster.area>
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi500009.china.huawei.com (7.221.188.199)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+On Sun, Oct 23, 2022 at 08:16:13AM +1100, Dave Chinner wrote:
+> On Sat, Oct 22, 2022 at 08:01:25PM +0800, Long Li wrote:
+> > On Fri, Oct 21, 2022 at 07:14:28PM -0700, Darrick J. Wong wrote:
+> > > On Sat, Oct 22, 2022 at 10:03:45AM +0800, Long Li wrote:
+> > > > When lazysbcount is enabled, multiple threads stress test the xfs report
+> > > > the following problems:
+> 
+> We've had lazy sb counters for 15 years and just about every XFS
+> filesystem in production uses them, so providing us with some idea
+> of the scope of the problem and how to reproduce it would be greatly
+> appreciated.
 
-commit c7f87f3984cfa1e6d32806a715f35c5947ad9c09 upstream.
+Ok, here is my simplified script that could reproducer the bug:
 
-xlog_wait() on the CIL context can reference a freed context if the
-waiter doesn't get scheduled before the CIL context is freed. This
-can happen when a task is on the hard throttle and the CIL push
-aborts due to a shutdown. This was detected by generic/019:
+#!/bin/bash
 
-thread 1			thread 2
+device=/dev/sda
+testdir=/mnt/test
+round=0
 
-__xfs_trans_commit
- xfs_log_commit_cil
-  <CIL size over hard throttle limit>
-  xlog_wait
-   schedule
-				xlog_cil_push_work
-				wake_up_all
-				<shutdown aborts commit>
-				xlog_cil_committed
-				kmem_free
+function fail()
+{
+	echo "$*"
+	exit 1
+}
 
-   remove_wait_queue
-    spin_lock_irqsave --> UAF
+while [ $round -lt 10000 ]
+do
+	echo "******* round $round ********"
+	mkfs.xfs -f $device
+	mkdir -p $testdir
+	mount $device $testdir || fail "mount failed!"
+	fsstress -d $testdir -l 0 -n 10000 -p 4 >/dev/null &
+	sleep 4
+	killall -w fsstress
+	umount $testdir
+	xfs_repair -e $device > /dev/null
+	if [ $? -eq 2 ];then
+		echo "ERR CODE 2: Dirty log exception encountered during repair."
+		exit 1
+	fi
+	sleep 1
+	round=$(($round+1))
+done
 
-Fix it by moving the wait queue to the CIL rather than keeping it in
-in the CIL context that gets freed on push completion. Because the
-wait queue is now independent of the CIL context and we might have
-multiple contexts in flight at once, only wake the waiters on the
-push throttle when the context we are pushing is over the hard
-throttle size threshold.
+> 
+> What stress test are you running? What filesystem config does it
+> manifest on (other than lazysbcount=1)?  How long does the stress
+> test run for, and where/why does log recovery get run in this stress
+> test?
 
-Fixes: 0e7ab7efe7745 ("xfs: Throttle commits on delayed background CIL push")
-Reported-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Chandan Babu R <chandan.babu@oracle.com>
----
- fs/xfs/xfs_log_cil.c  | 10 +++++-----
- fs/xfs/xfs_log_priv.h |  2 +-
- 2 files changed, 6 insertions(+), 6 deletions(-)
+I tested with the fsstress tool and used the default mount options. 
+More configuration are as follows:
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index 4a09d50e1368..550fd5de2404 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -673,7 +673,8 @@ xlog_cil_push(
- 	/*
- 	 * Wake up any background push waiters now this context is being pushed.
- 	 */
--	wake_up_all(&ctx->push_wait);
-+	if (ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log))
-+		wake_up_all(&cil->xc_push_wait);
- 
- 	/*
- 	 * Check if we've anything to push. If there is nothing, then we don't
-@@ -745,13 +746,12 @@ xlog_cil_push(
- 
- 	/*
- 	 * initialise the new context and attach it to the CIL. Then attach
--	 * the current context to the CIL committing lsit so it can be found
-+	 * the current context to the CIL committing list so it can be found
- 	 * during log forces to extract the commit lsn of the sequence that
- 	 * needs to be forced.
- 	 */
- 	INIT_LIST_HEAD(&new_ctx->committing);
- 	INIT_LIST_HEAD(&new_ctx->busy_extents);
--	init_waitqueue_head(&new_ctx->push_wait);
- 	new_ctx->sequence = ctx->sequence + 1;
- 	new_ctx->cil = cil;
- 	cil->xc_ctx = new_ctx;
-@@ -946,7 +946,7 @@ xlog_cil_push_background(
- 	if (cil->xc_ctx->space_used >= XLOG_CIL_BLOCKING_SPACE_LIMIT(log)) {
- 		trace_xfs_log_cil_wait(log, cil->xc_ctx->ticket);
- 		ASSERT(cil->xc_ctx->space_used < log->l_logsize);
--		xlog_wait(&cil->xc_ctx->push_wait, &cil->xc_push_lock);
-+		xlog_wait(&cil->xc_push_wait, &cil->xc_push_lock);
- 		return;
+CONFIG_XFS_FS=y
+CONFIG_XFS_SUPPORT_V4=y
+CONFIG_XFS_QUOTA=y
+CONFIG_XFS_POSIX_ACL=y
+CONFIG_XFS_RT=y
+CONFIG_XFS_DEBUG=y
+CONFIG_XFS_ASSERT_FATAL=y
+
+xfs_db> info
+meta-data=/dev/sda               isize=512    agcount=4, agsize=65536 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+	 =                       crc=1        finobt=1, sparse=1, rmapbt=0
+	 =                       reflink=1
+data     =                       bsize=4096   blocks=262144, imaxpct=25
+	 =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+	 =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+With the above test script, it will take several days to reproduce the bug.
+If we add a delay in xfs_log_sb(), this will quickly reproduce the problem:
+
+ 	if (xfs_has_lazysbcount(mp)) {
+ 		mp->m_sb.sb_icount = percpu_counter_sum(&mp->m_icount);
++		udelay(2000);
+ 		mp->m_sb.sb_ifree = percpu_counter_sum(&mp->m_ifree);
+ 		mp->m_sb.sb_fdblocks = percpu_counter_sum(&mp->m_fdblocks);
  	}
- 
-@@ -1222,12 +1222,12 @@ xlog_cil_init(
- 	INIT_LIST_HEAD(&cil->xc_committing);
- 	spin_lock_init(&cil->xc_cil_lock);
- 	spin_lock_init(&cil->xc_push_lock);
-+	init_waitqueue_head(&cil->xc_push_wait);
- 	init_rwsem(&cil->xc_ctx_lock);
- 	init_waitqueue_head(&cil->xc_commit_wait);
- 
- 	INIT_LIST_HEAD(&ctx->committing);
- 	INIT_LIST_HEAD(&ctx->busy_extents);
--	init_waitqueue_head(&ctx->push_wait);
- 	ctx->sequence = 1;
- 	ctx->cil = cil;
- 	cil->xc_ctx = ctx;
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index f231b7dfaeab..3a5d7fb09c43 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -247,7 +247,6 @@ struct xfs_cil_ctx {
- 	struct xfs_log_vec	*lv_chain;	/* logvecs being pushed */
- 	struct list_head	iclog_entry;
- 	struct list_head	committing;	/* ctx committing list */
--	wait_queue_head_t	push_wait;	/* background push throttle */
- 	struct work_struct	discard_endio_work;
- };
- 
-@@ -281,6 +280,7 @@ struct xfs_cil {
- 	wait_queue_head_t	xc_commit_wait;
- 	xfs_lsn_t		xc_current_sequence;
- 	struct work_struct	xc_push_work;
-+	wait_queue_head_t	xc_push_wait;	/* background push throttle */
- } ____cacheline_aligned_in_smp;
- 
- /*
--- 
-2.35.1
 
+> 
+> > > > XFS (loop0): SB summary counter sanity check failed
+> > > > XFS (loop0): Metadata corruption detected at xfs_sb_write_verify
+> > > > 	     +0x13b/0x460, xfs_sb block 0x0
+> > > > XFS (loop0): Unmount and run xfs_repair
+> > > > XFS (loop0): First 128 bytes of corrupted metadata buffer:
+> > > > 00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 28 00 00  XFSB.........(..
+> > > > 00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> > > > 00000020: 69 fb 7c cd 5f dc 44 af 85 74 e0 cc d4 e3 34 5a  i.|._.D..t....4Z
+> > > > 00000030: 00 00 00 00 00 20 00 06 00 00 00 00 00 00 00 80  ..... ..........
+> > > > 00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
+> > > > 00000050: 00 00 00 01 00 0a 00 00 00 00 00 04 00 00 00 00  ................
+> > > > 00000060: 00 00 0a 00 b4 b5 02 00 02 00 00 08 00 00 00 00  ................
+> > > > 00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 14 00 00 19  ................
+> > > > XFS (loop0): Corruption of in-memory data (0x8) detected at _xfs_buf_ioapply
+> > > > 	+0xe1e/0x10e0 (fs/xfs/xfs_buf.c:1580).  Shutting down filesystem.
+> > > > XFS (loop0): Please unmount the filesystem and rectify the problem(s)
+> > > > XFS (loop0): log mount/recovery failed: error -117
+> > > > XFS (loop0): log mount failed
+> > > > 
+> > > > The cause of the problem is that during the log recovery process, incorrect
+> > > > icount and ifree are recovered from the log and fail to pass the size check
+> > > 
+> > > Are you saying that the log contained a transaction in which ifree >
+> > > icount?
+> > 
+> > Yes, this situation is possible. For example consider the following sequence:
+> > 
+> >  CPU0				    CPU1
+> >  xfs_log_sb			    xfs_trans_unreserve_and_mod_sb
+> >  ----------			    ------------------------------
+> >  percpu_counter_sum(&mp->m_icount)
+> > 				    percpu_counter_add(&mp->m_icount, idelta)
+> > 				    percpu_counter_add_batch(&mp->m_icount,
+> > 						  idelta, XFS_ICOUNT_BATCH)
+> >  percpu_counter_sum(&mp->m_ifree)
+> 
+> What caused the xfs_log_sb() to be called? Very few things
+> actually log the superblock this way at runtime - it's generally
+> only logged directly like this when a feature bit changes during a
+> transaction (rare) or at a synchronisation point when everything
+> else is idle and there's no chance of a race like this occurring...
+> 
+> I can see a couple of routes to this occurring via feature bit
+> modification, but I don't see them being easy to hit or something
+> that would exist for very long in the journal. Hence I'm wondering
+> if there should be runtime protection for xfs_log_sb() to avoid
+> these problems....
+> 
+> > > > in xfs_validate_sb_write().
+> > > > 
+> > > > With lazysbcount is enabled, There is no additional lock protection for
+> > > > reading m_ifree and m_icount in xfs_log_sb(), if other threads modifies
+> > > > the m_ifree between the read m_icount and the m_ifree, this will make the
+> > > > m_ifree larger than m_icount and written to the log. If we have an unclean
+> > > > shutdown, this will be corrected by xfs_initialize_perag_data() rebuilding
+> > > > the counters from the AGF block counts, and the correction is later than
+> > > > log recovery. During log recovery, incorrect ifree/icount may be restored
+> > > > from the log and written to the super block, since ifree and icount have
+> > > > not been corrected at this time, the relationship between ifree and icount
+> > > > cannot be checked in xfs_validate_sb_write().
+> > > > 
+> > > > So, don't check the size between ifree and icount in xfs_validate_sb_write()
+> > > > when lazysbcount is enabled.
+> > > 
+> > > Um, doesn't that neuter a sanity check on all V5 filesystems?
+> >
+> > Yes, such modifications don't look like the best way, all sb write checks 
+> > will be affect. Maybe it can increase the judgment of clean mount and reduce
+> > the scope of influence, but this requires setting the XFS_OPSTATE_CLEAN after
+> > re-initialise incore superblock counters, like this:
+> 
+> I'm not sure that silencing the warning and continuing log recovery
+> with an invalid accounting state is the best way to proceed. We
+> haven't yet recovered unlinked inodes at the time this warning
+> fires. If ifree really is larger than icount, then we've got a
+> real problem at this point in log recovery.
+> 
+> Hence I suspect that we should be looking at fixing the runtime race
+> condition that leads to the problem, not trying to work around
+> inconsistency in the recovery code.
+> 
+> -Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
