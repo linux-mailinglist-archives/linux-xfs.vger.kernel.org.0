@@ -2,46 +2,46 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0878761123C
-	for <lists+linux-xfs@lfdr.de>; Fri, 28 Oct 2022 15:05:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DED2611269
+	for <lists+linux-xfs@lfdr.de>; Fri, 28 Oct 2022 15:12:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230374AbiJ1NFW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 28 Oct 2022 09:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50636 "EHLO
+        id S230293AbiJ1NMD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 28 Oct 2022 09:12:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbiJ1NFI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 28 Oct 2022 09:05:08 -0400
+        with ESMTP id S230311AbiJ1NMB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 28 Oct 2022 09:12:01 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04E31C8827
-        for <linux-xfs@vger.kernel.org>; Fri, 28 Oct 2022 06:04:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C001C25CE
+        for <linux-xfs@vger.kernel.org>; Fri, 28 Oct 2022 06:11:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666962250;
+        s=mimecast20190719; t=1666962665;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QAoBOQdboEgt4DT/StJPABS1zauUSE6g6Zt8AugoUtc=;
-        b=e2EHy5D6wFMBFKym43cmHuP3wZ49PY0wCnbuxl2I6VLqmnMqezt5wPdg0DjVHxMKN8f1VX
-        naSHPHImkhNTa2VaEA2PyiHSHQRWGjMRc1iTc5ckYHkE7020hCaQR8j5y2VnjT6XwbW4TP
-        H8mmmBHlhowUaVNKaVPxsljhYrFuapM=
+        bh=LcNC7YWA4uLE8BL09yke7JBHW+XjW4WLFzWcInIwnTk=;
+        b=LLGkORzCXzXp/me8TGcXvnS6Ql1XK0GVuvABgXb3IhcV4FUWstXQIqkvivvreiPDrkUPRN
+        DHsfIgLiqsx0sSDw+3eCz7j1Da4Sv+0WW+nzSLdrn6CB4WJQ3WVrPpzoW6Bzuke5eBBKPV
+        AqD+h3OWHm0iXHohNQvtlNZkHqZT/5Q=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-115-gL0YoVbHMhyFycIcqzMVNg-1; Fri, 28 Oct 2022 09:04:08 -0400
-X-MC-Unique: gL0YoVbHMhyFycIcqzMVNg-1
+ us-mta-657-FvC8k1XqM82rwA7DV2BsCQ-1; Fri, 28 Oct 2022 09:11:03 -0400
+X-MC-Unique: FvC8k1XqM82rwA7DV2BsCQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 95B5F1871DA8
-        for <linux-xfs@vger.kernel.org>; Fri, 28 Oct 2022 13:04:07 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8F42B185A79C
+        for <linux-xfs@vger.kernel.org>; Fri, 28 Oct 2022 13:11:03 +0000 (UTC)
 Received: from bfoster.redhat.com (unknown [10.22.16.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B83540C9568
-        for <linux-xfs@vger.kernel.org>; Fri, 28 Oct 2022 13:04:05 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 75FBF40C6EC3
+        for <linux-xfs@vger.kernel.org>; Fri, 28 Oct 2022 13:11:03 +0000 (UTC)
 From:   Brian Foster <bfoster@redhat.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH RFC 2/2] xfs: optimize eof page flush for iomap zeroing on truncate
-Date:   Fri, 28 Oct 2022 09:04:11 -0400
-Message-Id: <20221028130411.977076-3-bfoster@redhat.com>
+Subject: [PATCH] xfs: redirty eof folio on truncate to avoid filemap flush
+Date:   Fri, 28 Oct 2022 09:11:09 -0400
+Message-Id: <20221028131109.977581-1-bfoster@redhat.com>
 In-Reply-To: <20221028130411.977076-1-bfoster@redhat.com>
 References: <20221028130411.977076-1-bfoster@redhat.com>
 MIME-Version: 1.0
@@ -58,103 +58,126 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The flush that occurs just before xfs_truncate_page() during a
-non-extending truncate exists to avoid potential stale data exposure
-problems when iomap zeroing might be racing with buffered writes
-over unwritten extents. However, we've had reports of this causing
-significant performance regressions on overwrite workloads where the
-flush serves no correctness purpose. For example, the uuidd
-mechanism stores time metadata to a file on every generation
-sequence. This involves a buffered (over)write followed by a
-truncate of the file to its current size. If these uuids are used as
-transaction IDs for a database application, then overall performance
-can suffer tremendously by the repeated flushing on every truncate.
-
-To avoid this problem, update the truncate path to only flush in
-scenarios that are known to conflict with iomap zeroing. iomap skips
-zeroing when it sees a hole or unwritten extent, so this essentially
-means the filesystem should flush if either of those scenarios have
-outstanding dirty pagecache and can skip the flush otherwise.
-
-The ideal longer term solution here is to avoid the need to flush
-entirely and allow the zeroing to detect a dirty page and zero it
-accordingly, but this is a bit more involved in that it may involve
-the iomap interface. The purpose of this change is therefore to
-prioritize addressing the performance regression in a straightfoward
-enough manner that it can be separated from further improvements.
-
 Signed-off-by: Brian Foster <bfoster@redhat.com>
 ---
- fs/xfs/xfs_iops.c | 44 ++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 38 insertions(+), 6 deletions(-)
+
+Here's a quick prototype of "option 3" described in my previous mail.
+This has been spot tested and confirmed to prevent the original stale
+data exposure problem. More thorough regression testing is still
+required. Barring unforeseen issues with that, however, I think this is
+tentatively my new preferred option. The primary reason for that is it
+avoids looking at extent state and is more in line with what iomap based
+zeroing should be doing more generically.
+
+Because of that, I think this provides a bit more opportunity for follow
+on fixes (there are other truncate/zeroing problems I've come across
+during this investigation that still need fixing), cleanup and
+consolidation of the zeroing code. For example, I think the trajectory
+of this could look something like:
+
+- Genericize a bit more to handle all truncates.
+- Repurpose iomap_truncate_page() (currently only used by XFS) into a
+  unique implementation from zero range that does explicit zeroing
+  instead of relying on pagecache truncate.
+- Refactor XFS ranged zeroing to an abstraction that uses a combination
+  of iomap_zero_range() and the new iomap_truncate_page().
+
+From there we'd hopefully have predictable and functionally correct
+zeroing in the filesystem. The next step would probably be to see if/how
+the truncate page and zero range implementations could combine into a
+single zero range implementation. I have vague thoughts on that, but at
+this stage I'm not going too deep into how that should look without some
+sort of functional implementation to base it on.
+
+Brian
+
+ fs/xfs/xfs_iops.c | 49 ++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 40 insertions(+), 9 deletions(-)
 
 diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index d31e64db243f..37f78117557e 100644
+index 2e10e1c66ad6..1679fafaec6f 100644
 --- a/fs/xfs/xfs_iops.c
 +++ b/fs/xfs/xfs_iops.c
-@@ -782,7 +782,15 @@ xfs_truncate_zeroing(
- 	xfs_off_t		newsize,
- 	bool			*did_zeroing)
+@@ -784,11 +784,13 @@ xfs_setattr_size(
  {
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct inode		*inode = VFS_I(ip);
-+	struct xfs_ifork	*ifp = ifp = xfs_ifork_ptr(ip, XFS_DATA_FORK);
-+	struct xfs_iext_cursor	icur;
-+	struct xfs_bmbt_irec	got;
-+	xfs_off_t		end;
-+	xfs_fileoff_t		end_fsb = XFS_B_TO_FSBT(mp, newsize);
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 	struct inode		*inode = VFS_I(ip);
++	struct folio		*eof_folio = NULL;
+ 	xfs_off_t		oldsize, newsize;
+ 	struct xfs_trans	*tp;
  	int			error;
-+	bool			found;
+ 	uint			lock_flags = 0;
+ 	bool			did_zeroing = false;
++	bool			eof_dirty;
  
- 	if (newsize > oldsize) {
- 		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
-@@ -790,16 +798,40 @@ xfs_truncate_zeroing(
- 				did_zeroing);
+ 	ASSERT(xfs_isilocked(ip, XFS_IOLOCK_EXCL));
+ 	ASSERT(xfs_isilocked(ip, XFS_MMAPLOCK_EXCL));
+@@ -841,20 +843,40 @@ xfs_setattr_size(
+ 				&did_zeroing);
+ 	} else {
+ 		/*
+-		 * iomap won't detect a dirty page over an unwritten block (or a
+-		 * cow block over a hole) and subsequently skips zeroing the
+-		 * newly post-EOF portion of the page. Flush the new EOF to
+-		 * convert the block before the pagecache truncate.
++		 * iomap won't detect a dirty folio over an unwritten block (or
++		 * a cow block over a hole) and subsequently skips zeroing the
++		 * newly post-EOF portion of the folio. Doing a flush here (i.e.
++		 * as is done for fallocate ZERO_RANGE) updates extent state for
++		 * iomap, but has too much overhead for the truncate path.
++		 *
++		 * Instead, check whether the new EOF is dirty in pagecache. If
++		 * so, hold a reference across the pagecache truncate and dirty
++		 * the folio. This ensures that partial folio zeroing from the
++		 * truncate makes it to disk in the rare event that iomap skips
++		 * zeroing and writeback happens to complete before the
++		 * pagecache truncate. Note that this really should be handled
++		 * properly by iomap zero range.
+ 		 */
+-		error = filemap_write_and_wait_range(inode->i_mapping, newsize,
+-						     newsize);
+-		if (error)
+-			return error;
++		eof_folio = filemap_lock_folio(inode->i_mapping,
++					(newsize - 1) >> PAGE_SHIFT);
++		if (eof_folio) {
++			if (folio_test_dirty(eof_folio) ||
++			    folio_test_writeback(eof_folio))
++				eof_dirty = true;
++			folio_unlock(eof_folio);
++			if (!eof_dirty) {
++				folio_put(eof_folio);
++				eof_folio = NULL;
++			}
++		}
+ 		error = xfs_truncate_page(ip, newsize, &did_zeroing);
  	}
  
-+	/*
-+	 * No zeroing occurs if newsize is block aligned (or zero). The eof page
-+	 * is partially zeroed by the pagecache truncate, if necessary, and
-+	 * post-eof blocks are removed.
-+	 */
-+	if ((newsize & (i_blocksize(inode) - 1)) == 0)
-+		return 0;
-+
- 	/*
- 	 * iomap won't detect a dirty page over an unwritten block (or a cow
- 	 * block over a hole) and subsequently skips zeroing the newly post-EOF
--	 * portion of the page. Flush the new EOF to convert the block before
--	 * the pagecache truncate.
-+	 * portion of the page. To ensure proper zeroing occurs, flush the eof
-+	 * page if it is dirty and backed by a hole or unwritten extent in the
-+	 * data fork. This ensures that iomap sees the eof block in a state that
-+	 * warrants zeroing.
-+	 *
-+	 * This should eventually be handled in iomap processing so we don't
-+	 * have to flush at all. We do it here for now to avoid the additional
-+	 * latency in cases where it's not absolutely required.
- 	 */
--	error = filemap_write_and_wait_range(VFS_I(ip)->i_mapping, newsize - 1,
--					     newsize - 1);
 -	if (error)
--		return error;
-+	end = newsize - 1;
-+	if (filemap_range_needs_writeback(inode->i_mapping, end, end)) {
-+		xfs_ilock(ip, XFS_ILOCK_SHARED);
-+		found = xfs_iext_lookup_extent(ip, ifp, end_fsb, &icur, &got);
-+		xfs_iunlock(ip, XFS_ILOCK_SHARED);
-+
-+		if (!found || got.br_startoff > end_fsb ||
-+		    got.br_state == XFS_EXT_UNWRITTEN) {
-+			error = filemap_write_and_wait_range(inode->i_mapping,
-+					end, end);
-+			if (error)
-+				return error;
-+		}
++	if (error) {
++		if (eof_folio)
++			folio_put(eof_folio);
+ 		return error;
 +	}
- 	return xfs_truncate_page(ip, newsize, did_zeroing);
- }
  
+ 	/*
+ 	 * We've already locked out new page faults, so now we can safely remove
+@@ -878,6 +900,15 @@ xfs_setattr_size(
+ 	 * guaranteed not to write stale data past the new EOF on truncate down.
+ 	 */
+ 	truncate_setsize(inode, newsize);
++	if (eof_folio) {
++		trace_printk("%d: ino 0x%llx newsize 0x%llx folio idx 0x%lx did_zeroing %d\n",
++			__LINE__, ip->i_ino, newsize, folio_index(eof_folio), did_zeroing);
++		if (!did_zeroing) {
++			filemap_dirty_folio(inode->i_mapping, eof_folio);
++			did_zeroing = true;
++		}
++		folio_put(eof_folio);
++	}
+ 
+ 	/*
+ 	 * We are going to log the inode size change in this transaction so
 -- 
 2.37.3
 
