@@ -2,110 +2,206 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41BF0613FCC
-	for <lists+linux-xfs@lfdr.de>; Mon, 31 Oct 2022 22:18:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78A6A61424D
+	for <lists+linux-xfs@lfdr.de>; Tue,  1 Nov 2022 01:34:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230374AbiJaVSM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 31 Oct 2022 17:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56306 "EHLO
+        id S229477AbiKAAeX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 31 Oct 2022 20:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbiJaVSD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Oct 2022 17:18:03 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AAE9140FB
-        for <linux-xfs@vger.kernel.org>; Mon, 31 Oct 2022 14:17:41 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id h193so3068169pgc.10
-        for <linux-xfs@vger.kernel.org>; Mon, 31 Oct 2022 14:17:41 -0700 (PDT)
+        with ESMTP id S229776AbiKAAeU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 31 Oct 2022 20:34:20 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27EF815A24
+        for <linux-xfs@vger.kernel.org>; Mon, 31 Oct 2022 17:34:19 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id b62so1719950pgc.0
+        for <linux-xfs@vger.kernel.org>; Mon, 31 Oct 2022 17:34:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V7imYIaQARpLPoHv27Zftg7BYfJ5RyQtkuHEplG82nQ=;
-        b=TUKPrZ2fIsdw0AVNrGKEn06eBv0OllykmzN7zgLr6nNxtO0KlP1ae6kAsvLITJcov6
-         3Qg+PsYMIGehtfZKLiy65xebpRQh0HXqEIZ7cdkJrX1pQmm031ufn0vxjXAHy17f1Dk7
-         4eg5QXCOdNhbCXqa/6Ed/J1kmGe9dpKYzq4MUJprp4UVhcYLdLXKytGP1LIceMTKprZP
-         HN7Pqi8GGBLBNJXpXPdWIX4izcBWC2Ihf+X6CBMAMFjA3z8YDtFNM3RQ5HTqb2tTMfki
-         HMxmZUJRYRRCLTwN9ZTVl3BrFXrMxNmSX/IZh8/A7elHLGppoCMpqF1MwpmemXW+C5b8
-         UZnw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=utzzxWhOQdIAcW5lUrYp+XP8QYKoeRU3WklpBYmjPnc=;
+        b=vWyPYJ+fCYG+YhZl2nKBLb3u5FSC5ZzYRzlFMVElTZnlflGzky70AJsNZ0BkdoN8Z3
+         /o+O7OiPap3mZwX4Z9Mocw2cUxYSfR2ZhkHavSOAtj+N0SFyGgFo5oQ3x736SRzmh/bF
+         vAvO7ESoFFEaR4WSDiky3mFNlokhbmTRd7WmwdIl8GR/qk/Xl49Em3AB72aEWMnFH+37
+         1S3dih3z11HsGfTADVn2/p0deI716zhf/L2KFrvh9TM2QBxKRasLC8zSJSkt2f8ywgB4
+         2qiK2KjPKD/2Z2P9AnJxEnP2bsxvnUd3g1pjI7Azs9HssFtyfzbO3v+yMsKw01beD9IU
+         F+gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V7imYIaQARpLPoHv27Zftg7BYfJ5RyQtkuHEplG82nQ=;
-        b=A+revXVh5fCF1fd0e6iDjGX1DzZnG4PZlmzAYo5cTNKEyAcW7xIhbBuFR11kavQ6PT
-         piXzbcRo47qnKVjBzj54p/jg87AA3mRbEuRjJGa0n9litWklk8CT8B9CUypIDy2fz2m3
-         HdVjHoK+hTY1ynllLSmplYWHXKblf1Pfy+/xyBbCRhQYcrcJv+cH8Tj3WGLSEzPAT5VB
-         mr5cP9ohPbynmJlOSUE4gK22wn96nEFWXO2ThRyFbobbBjM9eQmYMG2y59q5w7j96iH/
-         JoCBE+aMKk2RtjGbkxFkYWQIMCq5NlbAVaNcP1huPWvLg8X6hHPzwHOcHcLL5MPk8jP0
-         +1Dg==
-X-Gm-Message-State: ACrzQf3YxJVwm4ATtJp3WcbVuZf8xJgwMXM2ZHlBdXOLSL1XsJ5dVjq8
-        vc1cp3RGZMQjZ7y2dpm3HQqgzQ==
-X-Google-Smtp-Source: AMsMyM7sK9XBC3IFAg+B6r7N/sSCuH9tVf4YyciYmkV1PG0am8Nj1z9F+8ztsQaO0KzEVZxInmFENw==
-X-Received: by 2002:aa7:8c44:0:b0:56c:f21f:5e0e with SMTP id e4-20020aa78c44000000b0056cf21f5e0emr16357639pfd.35.1667251060858;
-        Mon, 31 Oct 2022 14:17:40 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=utzzxWhOQdIAcW5lUrYp+XP8QYKoeRU3WklpBYmjPnc=;
+        b=WLyRMT8xQihuehJtXD0v5tl4JTH3NZ+P7FzQKzQKisNrUV9W+NC8ZP9nXVrtQvtjni
+         JA/RX2807uRTQrmhDjU1J915xQGzLEX2wRqUoJQOuLhibS99jtadWNTwHbjF0WGuhr7R
+         Vb303/ZzUWhU2t6il8aYUvLi4IB3t4LkvzdboQn+me6FrOJLFgUkRRVoRYpYXA9QFkdf
+         W4eu78ZIVuqYXWUIvzJckj9+v3XSyq6aG2Iktf0EGi0jSsF8qlIjE2yk9FO/uxTiMRg0
+         vIO7bI0xfQhwgPEgYYKorIr8n/wZtq4qu1Vw4gNyw2OI7iGu5laUmJhQfRwuv5uj/80U
+         omiw==
+X-Gm-Message-State: ACrzQf3wCi6AJVqtEagFGsQAfPv5gNomG5MWLyGcZdO6N0k1AF1bR2Sv
+        zqfdXQ2BB9eCYD6jpjUiVd6rvBXC5wauug==
+X-Google-Smtp-Source: AMsMyM5Lgaqzgtqye4j2gCBC2cxiEJTWWulzKfsxN9qYm8YA4tDsxofwtYfyhBSx7HUQqST4qsPdwQ==
+X-Received: by 2002:a05:6a00:e1b:b0:537:7c74:c405 with SMTP id bq27-20020a056a000e1b00b005377c74c405mr16893321pfb.43.1667262858527;
+        Mon, 31 Oct 2022 17:34:18 -0700 (PDT)
 Received: from dread.disaster.area (pa49-181-106-210.pa.nsw.optusnet.com.au. [49.181.106.210])
-        by smtp.gmail.com with ESMTPSA id mz9-20020a17090b378900b0020a0571b354sm4600606pjb.57.2022.10.31.14.17.40
+        by smtp.gmail.com with ESMTPSA id l1-20020a17090ab70100b00212e5fe09d7sm4763425pjr.10.2022.10.31.17.34.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Oct 2022 14:17:40 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        Mon, 31 Oct 2022 17:34:17 -0700 (PDT)
+Received: from discord.disaster.area ([192.168.253.110])
+        by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <david@fromorbit.com>)
-        id 1opcA4-008jTn-79; Tue, 01 Nov 2022 08:17:36 +1100
-Date:   Tue, 1 Nov 2022 08:17:36 +1100
+        id 1opfEN-008muH-33; Tue, 01 Nov 2022 11:34:15 +1100
+Received: from dave by discord.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1opfEN-00G7dT-05;
+        Tue, 01 Nov 2022 11:34:15 +1100
 From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v23.2 3/4] xfs: log the AGI/AGF buffers when rolling
- transactions during an AG repair
-Message-ID: <20221031211736.GM3600936@dread.disaster.area>
-References: <166473478844.1083155.9238102682926048449.stgit@magnolia>
- <166473478893.1083155.2555785331844801316.stgit@magnolia>
- <Y2APIan1VaLglNzY@magnolia>
+To:     linux-xfs@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org
+Subject: xfs, iomap: fix data corrupton due to stale cached iomaps
+Date:   Tue,  1 Nov 2022 11:34:05 +1100
+Message-Id: <20221101003412.3842572-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y2APIan1VaLglNzY@magnolia>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 11:08:33AM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Currently, the only way to lock an allocation group is to hold the AGI
-> and AGF buffers.  If a repair needs to roll the transaction while
-> repairing some AG metadata, it maintains that lock by holding the two
-> buffers across the transaction roll and joins them afterwards.
-> 
-> However, repair is not like other parts of XFS that employ the bhold -
-> roll - bjoin sequence because it's possible that the AGI or AGF buffers
-> are not actually dirty before the roll.  This presents two problems --
-> First, we need to redirty those buffers to keep them moving along in the
-> log to avoid pinning the log tail.  Second, a clean buffer log item can
-> detach from the buffer.  If this happens, the buffer type state is
-> discarded along with the bli and must be reattached before the next time
-> the buffer is logged.   If it is not, the logging code will complain and
-> log recovery will not work properly.
-> 
-> An earlier version of this patch tried to fix the second problem by
-> re-setting the buffer type in the bli after joining the buffer to the
-> new transaction, but that looked weird and didn't solve the first
-> problem.  Instead, solve both problems by logging the buffer before
-> rolling the transaction.
-> 
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Recently a customer workload encountered a data corruption in a
+specific multi-threaded write operation. The workload combined
+racing unaligned adjacent buffered writes with low memory conditions
+that caused both writeback and memory reclaim to race with the
+writes.
 
-I guess this is fine as long as it is confined to the scrub code;
-if we need to hold clean buffers across transaction rolls in other
-code we really need to sort out the BLI life cycle issues that this
-currently exposes.
+The result of this was random partial blocks containing zeroes
+instead of the correct data.  The underlying problem is that iomap
+caches the write iomap for the duration of the write() operation,
+but it fails to take into account that the extent underlying the
+iomap can change whilst the write is in progress.
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
--- 
-Dave Chinner
-david@fromorbit.com
+The short story is that an iomap can span mutliple folios, and so
+under low memory writeback can be cleaning folios the write()
+overlaps. Whilst the overlapping data is cached in memory, this
+isn't a problem, but because the folios are now clean they can be
+reclaimed. Once reclaimed, the write() does the wrong thing when
+re-instantiating partial folios because the iomap no longer reflects
+the underlying state of the extent. e.g. it thinks the extent is
+unwritten, so it zeroes the partial range, when in fact the
+underlying extent is now written and so it should have read the data
+from disk.  This is how we get random zero ranges in the file
+instead of the correct data.
+
+The gory details of the race condition can be found here:
+
+https://lore.kernel.org/linux-xfs/20220817093627.GZ3600936@dread.disaster.area/
+
+Fixing the problem has two aspects. The first aspect of the problem
+is ensuring that iomap can detect a stale cached iomap during a
+write in a race-free manner. We already do this stale iomap
+detection in the writeback path, so we have a mechanism for
+detecting that the iomap backing the data range may have changed
+and needs to be remapped.
+
+In the case of the write() path, we have to ensure that the iomap is
+validated at a point in time when the page cache is stable and
+cannot be reclaimed from under us. We also need to validate the
+extent before we start performing any modifications to the folio
+state or contents. Combine these two requirements together, and the
+only "safe" place to validate the iomap is after we have looked up
+and locked the folio we are going to copy the data into, but before
+we've performed any initialisation operations on that folio.
+
+If the iomap fails validation, we then mark it stale, unlock the
+folio and end the write. This effectively means a stale iomap
+results in a short write. Filesystems should already be able to
+handle this, as write operations can end short for many reasons and
+need to iterate through another mapping cycle to be completed. Hence
+the iomap changes needed to detect and handle stale iomaps during
+write() operations is relatively simple....
+
+However, the assumption is that filesystems should already be able
+to handle write failures safely, and that's where the second
+(first?) part of the problem exists. That is, handling a partial
+write is harder than just "punching out the unused delayed
+allocation extent". This is because mmap() based faults can race
+with writes, and if they land in the delalloc region that the write
+allocated, then punching out the delalloc region can cause data
+corruption.
+
+This data corruption problem is exposed by generic/346 when iomap is
+converted to detect stale iomaps during write() operations. Hence
+write failure in the filesytems needs to handle the fact that the
+write() in progress doesn't necessarily own the data in the page
+cache over the range of the delalloc extent it just allocated.
+
+As a result, we can't just truncate the page cache over the range
+the write() didn't reach and punch all the delalloc extent. We have
+to walk the page cache over the untouched range and skip over any
+dirty data region in the cache in that range. Which is ....
+non-trivial.
+
+That is, iterating the page cache has to handle partially populated
+folios (i.e. block size < page size) that contain data. The data
+might be discontiguous within a folio. Indeed, there might be
+*multiple* discontiguous data regions within a single folio. And to
+make matters more complex, multi-page folios mean we just don't know
+how many sub-folio regions we might have to iterate to find all
+these regions. All the corner cases between the conversions and
+rounding between filesystem block size, folio size and multi-page
+folio size combined with unaligned write offsets kept breaking my
+brain.
+
+Eventually, I realised that if the XFS code tracked the processed
+write regions by byte ranges instead of fileysetm block or page
+cache index, we could simply use mapping_seek_hole_data() to find
+the start and end of each discrete data region within the range we
+needed to scan. SEEK_DATA finds the start of the cached data region,
+SEEK_HOLE finds the end of the region. THese are byte based
+interfaces that understand partially uptodate folio regions, and so
+can iterate discrete sub-folio data regions directly. This largely
+solved the problem of discovering the dirty regions we need to keep
+the delalloc extent over.
+
+Of course, now xfs/196 fails. This is a error injection test that is
+supposed to exercise the delalloc extent recover code that the above
+fixes just completely reworked. the error injection assumes that it
+can just truncate the page cache over the write and then punch out
+the delalloc extent completely. This is fundamentally broken, and
+only has been working by chance - the chance is that writes are page
+aligned and page aligned writes don't install large folios in the
+page cache.
+
+IOWs, with sub-folio block size, and not know what size folios are
+in the cache, we can't actually guarantee that we can remove the
+cached dirty folios from the cache via truncation, and hence the new
+code will not remove the delalloc extents under those dirty folios.
+As a result the error injection results is writing zeroes to disk
+rather that removing the delalloc extents from memory. I can't make
+this error injection to work the way it was intended, so I removed
+it. The code that it is supposed to exercise is now exercised every time we
+detect a stale iomap, so we have much better coverage of the failed
+write error handling than the error injection provides us with,
+anyway....
+
+So, this passes fstests on 1kb and 4kb block sizes and the data
+corruption reproducer does not detect data corruption, so this set
+of fixes is /finally/ something I'd consider ready for merge.
+Comments and testing welcome!
+
+-Dave.
+
+Version 1:
+- complete rework of iomap stale detection
+- complete rework of XFS partial delalloc write error handling.
+
+Original RFC:
+- https://lore.kernel.org/linux-xfs/20220921082959.1411675-1-david@fromorbit.com/
+
+
