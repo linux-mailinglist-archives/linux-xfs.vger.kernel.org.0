@@ -2,184 +2,341 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E667617896
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Nov 2022 09:22:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0274617A33
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Nov 2022 10:46:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229809AbiKCIWJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 3 Nov 2022 04:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35792 "EHLO
+        id S230336AbiKCJqv (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Nov 2022 05:46:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231216AbiKCIVu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Nov 2022 04:21:50 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FBEA63E5
-        for <linux-xfs@vger.kernel.org>; Thu,  3 Nov 2022 01:21:49 -0700 (PDT)
-Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4N2xYg3kFrz15MJS;
-        Thu,  3 Nov 2022 16:21:43 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by kwepemi500019.china.huawei.com
- (7.221.188.117) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 3 Nov
- 2022 16:21:47 +0800
-From:   Guo Xuenan <guoxuenan@huawei.com>
-To:     <djwong@kernel.org>, <dchinner@redhat.com>
-CC:     <linux-xfs@vger.kernel.org>, <guoxuenan@huawei.com>,
-        <houtao1@huawei.com>, <jack.qiu@huawei.com>, <fangwei1@huawei.com>,
-        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>,
-        <leo.lilong@huawei.com>, <zengheng4@huawei.com>
-Subject: [PATCH 2/2] xfs: fix super block buf log item UAF during force shutdown
-Date:   Thu, 3 Nov 2022 16:36:32 +0800
-Message-ID: <20221103083632.150458-3-guoxuenan@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20221103083632.150458-1-guoxuenan@huawei.com>
-References: <20221103083632.150458-1-guoxuenan@huawei.com>
+        with ESMTP id S229992AbiKCJqu (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Nov 2022 05:46:50 -0400
+Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E334CE000;
+        Thu,  3 Nov 2022 02:46:48 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VTsFRtL_1667468801;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VTsFRtL_1667468801)
+          by smtp.aliyun-inc.com;
+          Thu, 03 Nov 2022 17:46:46 +0800
+From:   Gao Xiang <hsiangkao@linux.alibaba.com>
+To:     linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Zirong Lang <zlang@redhat.com>,
+        Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] xfs: extend the freelist before available space check
+Date:   Thu,  3 Nov 2022 17:46:39 +0800
+Message-Id: <20221103094639.39984-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500019.china.huawei.com (7.221.188.117)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-xfs log io error will trigger xlog shut down, and end_io worker call
-shutdown_callbacks to unpin and release the buf log item. The race
-condition is that when there are some thread doing transaction commit
-and happened not to be intercepted by xlog_is_shutdown, then, these
-log item will be insert into CIL, when unpin and release these buf log
-item, UAF will occur. BTW, add delay before `xlog_cil_commit` while xlog
-shutdown status can increase recurrence probability.
+There is a long standing issue which could cause fs shutdown due to
+inode extent to btree conversion failure right after an extent
+allocation in the same AG, which is absolutely unexpected due to the
+proper minleft reservation in the previous allocation.  Brian once
+addressed one of the root cause [1], however, such symptom can still
+occur after the commit is merged as reported [2], and our cloud
+environment is also suffering from this issue.
 
-The following call graph actually encountered this bad situation.
-fsstress                    io end worker kworker/0:1H-216
-		             xlog_ioend_work
-		               ->xlog_force_shutdown
-		                 ->xlog_state_shutdown_callbacks
-		             	 ->xlog_cil_process_committed
-		             	   ->xlog_cil_committed
-		             	     ->xfs_trans_committed_bulk
-->xfs_trans_apply_sb_deltas               ->li_ops->iop_unpin(lip, 1);
-  ->xfs_trans_getsb
-    ->_xfs_trans_bjoin
-      ->xfs_buf_item_init
-        ->if (bip) { return 0;} //relog
-->xlog_cil_commit
-  ->xlog_cil_insert_items //insert into CIL
-                                            ->xfs_buf_ioend_fail(bp);
-                                              ->xfs_buf_ioend
-                                                ->xfs_buf_item_done
-                                                  ->xfs_buf_item_relse
-                                                    ->xfs_buf_item_free
+From the description of the commit [1], I found that Zirong has an
+in-house stress test reproducer for this issue, therefore I asked him
+to reproduce again and he confirmed that such issue can still be
+reproducable on RHEL 9.
 
-when cil push worker gather percpu cil and insert super block buf log item
-into ctx->log_items then uaf occurs.
+Thanks to him, after dumping the transaction log items, I think
+the root cause is as below:
+ 1. BUF:  ... start blkno:0x3bffe81  len:1  bmap size:1  flags:0x2800
+    AGF Buffer: (XAGF)
+        ver:1  seq#:3  len:2621424
+        root BNO:9  CNT:7
+        level BNO:2  CNT:2
+        1st:64  last:69  cnt:6  freeblks:18277  longest:6395
 
-==================================================================
-BUG: KASAN: use-after-free in xlog_cil_push_work+0x1c8f/0x22f0
-Write of size 8 at addr ffff88801800f3f0 by task kworker/u4:4/105
+ 2. agfl (flfirst = 64, fllast = 69, flcount = 6)
+    64:547 65:167 66:1651 67:2040807 68:783 69:604
 
-CPU: 0 PID: 105 Comm: kworker/u4:4 Tainted: G W
-6.1.0-rc1-00001-g274115149b42 #136
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-1.13.0-1ubuntu1.1 04/01/2014
-Workqueue: xfs-cil/sda xlog_cil_push_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x4d/0x66
- print_report+0x171/0x4a6
- kasan_report+0xb3/0x130
- xlog_cil_push_work+0x1c8f/0x22f0
- process_one_work+0x6f9/0xf70
- worker_thread+0x578/0xf30
- kthread+0x28c/0x330
- ret_from_fork+0x1f/0x30
- </TASK>
+ 3. The log records a new AGF
+    blkno 62914177, len 1, map_size 1
+    00000000: 58 41 47 46 00 00 00 01 00 00 00 03 00 27 ff f0  XAGF.........'..
+    00000010: 00 00 00 09 00 00 00 07 00 00 00 00 00 00 00 02  ................
+    00000020: 00 00 00 02 00 00 00 00 00 00 00 41 00 00 00 45  ...........A...E
+    00000030: 00 00 00 05 00 00 47 65 00 00 18 fb 00 00 00 09  ......Ge........
+    00000040: 75 dc c1 b5 1a 45 40 2a 80 50 72 f0 59 6e 62 66  u....E@*.Pr.Ynbf
+    agf 3  flfirst: 65 (0x41) fllast: 69 (0x45) cnt: 5
 
-Allocated by task 2145:
- kasan_save_stack+0x1e/0x40
- kasan_set_track+0x21/0x30
- __kasan_slab_alloc+0x54/0x60
- kmem_cache_alloc+0x14a/0x510
- xfs_buf_item_init+0x160/0x6d0
- _xfs_trans_bjoin+0x7f/0x2e0
- xfs_trans_getsb+0xb6/0x3f0
- xfs_trans_apply_sb_deltas+0x1f/0x8c0
- __xfs_trans_commit+0xa25/0xe10
- xfs_symlink+0xe23/0x1660
- xfs_vn_symlink+0x157/0x280
- vfs_symlink+0x491/0x790
- do_symlinkat+0x128/0x220
- __x64_sys_symlink+0x7a/0x90
- do_syscall_64+0x35/0x80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
+ 4. agfl 64 (daddr 62918552) was then written as a cntbt block
+    log item:
+      type#011= 0x123c
+      flags#011= 0x8
+    blkno 62918552, len 8, map_size 1
+    00000000: 41 42 33 43 00 00 00 fd 00 1f 23 e4 ff ff ff ff  AB3C......#.....
+    00000010: 00 00 00 00 03 c0 0f 98 00 00 00 00 00 00 00 00  ................
+    00000020: 75 dc c1 b5 1a 45 40 2a 80 50 72 f0 59 6e 62 66  u....E@*.Pr.Ynbf
 
-Freed by task 216:
- kasan_save_stack+0x1e/0x40
- kasan_set_track+0x21/0x30
- kasan_save_free_info+0x2a/0x40
- __kasan_slab_free+0x105/0x1a0
- kmem_cache_free+0xb6/0x460
- xfs_buf_ioend+0x1e9/0x11f0
- xfs_buf_item_unpin+0x3d6/0x840
- xfs_trans_committed_bulk+0x4c2/0x7c0
- xlog_cil_committed+0xab6/0xfb0
- xlog_cil_process_committed+0x117/0x1e0
- xlog_state_shutdown_callbacks+0x208/0x440
- xlog_force_shutdown+0x1b3/0x3a0
- xlog_ioend_work+0xef/0x1d0
- process_one_work+0x6f9/0xf70
- worker_thread+0x578/0xf30
- kthread+0x28c/0x330
- ret_from_fork+0x1f/0x30
+ 5. Finally, kaboom.
+    Nov  1 07:56:09 dell-per750-08 kernel: ------------[ cut here ]------------
+    Nov  1 07:56:09 dell-per750-08 kernel: WARNING: CPU: 15 PID: 49290 at fs/xfs/libxfs/xfs_bmap.c:717 xfs_bmap_extents_to_btree+0xc51/0x1050 [xfs]
+    ...
+    Nov  1 07:56:10 dell-per750-08 kernel: XFS (sda2): agno 3 agflcount 5 freeblks 18277 reservation 18276 6
 
-The buggy address belongs to the object at ffff88801800f388
- which belongs to the cache xfs_buf_item of size 272
-The buggy address is located 104 bytes inside of
- 272-byte region [ffff88801800f388, ffff88801800f498)
+In order to fix the issue above, freelist needs to be filled with the
+minimal blocks at least before available space check, and then we also
+know the freelist has enough blocks for the following emergency btree
+allocations.
 
-The buggy address belongs to the physical page:
-page:ffffea0000600380 refcount:1 mapcount:0 mapping:0000000000000000
-index:0xffff88801800f208 pfn:0x1800e
-head:ffffea0000600380 order:1 compound_mapcount:0 compound_pincount:0
-flags: 0x1fffff80010200(slab|head|node=0|zone=1|lastcpupid=0x1fffff)
-raw: 001fffff80010200 ffffea0000699788 ffff88801319db50 ffff88800fb50640
-raw: ffff88801800f208 000000000015000a 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88801800f280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801800f300: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff88801800f380: fc fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                             ^
- ffff88801800f400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88801800f480: fb fb fb fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-Disabling lock debugging due to kernel taint
-
-Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
+[1] commit 1ca89fbc48e1 ("xfs: don't account extra agfl blocks as available")
+    https://lore.kernel.org/r/20190327145000.10756-1-bfoster@redhat.com
+[2] https://lore.kernel.org/r/20220105071052.GD20464@templeofstupid.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/xfs/xfs_buf_item.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/libxfs/xfs_alloc.c | 187 ++++++++++++++++++++++++--------------
+ 1 file changed, 121 insertions(+), 66 deletions(-)
 
-diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
-index 522d450a94b1..df1fe6e7e2ba 100644
---- a/fs/xfs/xfs_buf_item.c
-+++ b/fs/xfs/xfs_buf_item.c
-@@ -1018,6 +1018,8 @@ xfs_buf_item_relse(
- 	trace_xfs_buf_item_relse(bp, _RET_IP_);
- 	ASSERT(!test_bit(XFS_LI_IN_AIL, &bip->bli_item.li_flags));
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index 6261599bb389..5d5e0e0e5227 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -2587,6 +2587,86 @@ xfs_exact_minlen_extent_available(
+ }
+ #endif
  
-+	if (!list_empty(&bip->bli_item.li_cil))
-+		return;
- 	bp->b_log_item = NULL;
- 	xfs_buf_rele(bp);
- 	xfs_buf_item_free(bip);
++/*
++ * The freelist has to be in a good state before the available space check
++ * since multiple allocations could be performed from a single AG and
++ * transaction under certain conditions.  For example, A bmbt allocation
++ * request made for inode extent to bmap format conversion after an extent
++ * allocation is expected to be satisfied by the same AG.  Such bmap conversion
++ * allocation can fail due to the available space check if allocbt required an
++ * extra btree block from the freelist in the previous allocation but without
++ * make the freelist longer.
++ */
++int
++xfs_fill_agfl(
++	struct xfs_alloc_arg    *args,
++	int			flags,
++	xfs_extlen_t		need,
++	struct xfs_buf          *agbp)
++{
++	struct xfs_trans	*tp = args->tp;
++	struct xfs_perag	*pag = agbp->b_pag;
++	struct xfs_alloc_arg	targs = {
++		.tp		= tp,
++		.mp		= tp->t_mountp,
++		.agbp		= agbp,
++		.agno		= args->agno,
++		.alignment	= 1,
++		.minlen		= 1,
++		.prod		= 1,
++		.type		= XFS_ALLOCTYPE_THIS_AG,
++		.pag		= pag,
++	};
++	struct xfs_buf          *agflbp = NULL;
++	xfs_agblock_t		bno;
++	int error;
++
++	if (flags & XFS_ALLOC_FLAG_NORMAP)
++		targs.oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
++	else
++		targs.oinfo = XFS_RMAP_OINFO_AG;
++
++	error = xfs_alloc_read_agfl(pag, tp, &agflbp);
++	if (error)
++		return error;
++
++	/* Make the freelist longer if it's too short. */
++	while (pag->pagf_flcount < need) {
++		targs.agbno = 0;
++		targs.maxlen = need - pag->pagf_flcount;
++		targs.resv = XFS_AG_RESV_AGFL;
++
++		/* Allocate as many blocks as possible at once. */
++		error = xfs_alloc_ag_vextent(&targs);
++		if (error)
++			goto out_agflbp_relse;
++
++		/*
++		 * Stop if we run out.  Won't happen if callers are obeying
++		 * the restrictions correctly.  Can happen for free calls
++		 * on a completely full ag.
++		 */
++		if (targs.agbno == NULLAGBLOCK) {
++			if (flags & XFS_ALLOC_FLAG_FREEING)
++				break;
++			error = -ENOSPC;
++			goto out_agflbp_relse;
++		}
++		/*
++		 * Put each allocated block on the list.
++		 */
++		for (bno = targs.agbno; bno < targs.agbno + targs.len; bno++) {
++			error = xfs_alloc_put_freelist(pag, tp, agbp,
++							agflbp, bno, 0);
++			if (error)
++				goto out_agflbp_relse;
++		}
++	}
++out_agflbp_relse:
++	xfs_trans_brelse(tp, agflbp);
++	return error;
++}
++
+ /*
+  * Decide whether to use this allocation group for this allocation.
+  * If so, fix up the btree freelist's size.
+@@ -2600,8 +2680,7 @@ xfs_alloc_fix_freelist(
+ 	struct xfs_perag	*pag = args->pag;
+ 	struct xfs_trans	*tp = args->tp;
+ 	struct xfs_buf		*agbp = NULL;
+-	struct xfs_buf		*agflbp = NULL;
+-	struct xfs_alloc_arg	targs;	/* local allocation arguments */
++	struct xfs_owner_info	oinfo;
+ 	xfs_agblock_t		bno;	/* freelist block */
+ 	xfs_extlen_t		need;	/* total blocks needed in freelist */
+ 	int			error = 0;
+@@ -2630,22 +2709,45 @@ xfs_alloc_fix_freelist(
+ 		goto out_agbp_relse;
+ 	}
+ 
+-	need = xfs_alloc_min_freelist(mp, pag);
+-	if (!xfs_alloc_space_available(args, need, flags |
+-			XFS_ALLOC_FLAG_CHECK))
+-		goto out_agbp_relse;
+-
+ 	/*
+-	 * Get the a.g. freespace buffer.
+-	 * Can fail if we're not blocking on locks, and it's held.
++	 * See the comment above xfs_fill_agfl() for the reason why we need to
++	 * make freelist longer here.  Assumed that such case is quite rare, so
++	 * in order to simplify the code, let's take agbp unconditionally.
+ 	 */
+-	if (!agbp) {
+-		error = xfs_alloc_read_agf(pag, tp, flags, &agbp);
+-		if (error) {
+-			/* Couldn't lock the AGF so skip this AG. */
+-			if (error == -EAGAIN)
+-				error = 0;
+-			goto out_no_agbp;
++	need = xfs_alloc_min_freelist(mp, pag);
++	if (pag->pagf_flcount < need) {
++		/*
++		 * Get the a.g. freespace buffer.
++		 * Can fail if we're not blocking on locks, and it's held.
++		 */
++		if (!agbp) {
++			error = xfs_alloc_read_agf(pag, tp, flags, &agbp);
++			if (error) {
++				/* Couldn't lock the AGF so skip this AG. */
++				if (error == -EAGAIN)
++					error = 0;
++				goto out_no_agbp;
++			}
++		}
++
++		need = xfs_alloc_min_freelist(mp, pag);
++		error = xfs_fill_agfl(args, flags, need, agbp);
++		if (error)
++			goto out_agbp_relse;
++	} else {
++		if (!xfs_alloc_space_available(args, need, flags |
++				XFS_ALLOC_FLAG_CHECK))
++			goto out_agbp_relse;
++
++		/* Get the a.g. freespace buffer. */
++		if (!agbp) {
++			error = xfs_alloc_read_agf(pag, tp, flags, &agbp);
++			if (error) {
++				/* Couldn't lock the AGF so skip this AG. */
++				if (error == -EAGAIN)
++					error = 0;
++				goto out_no_agbp;
++			}
+ 		}
+ 	}
+ 
+@@ -2691,69 +2793,22 @@ xfs_alloc_fix_freelist(
+ 	 * regenerated AGFL, bnobt, and cntbt.  See repair/phase5.c and
+ 	 * repair/rmap.c in xfsprogs for details.
+ 	 */
+-	memset(&targs, 0, sizeof(targs));
+-	/* struct copy below */
+ 	if (flags & XFS_ALLOC_FLAG_NORMAP)
+-		targs.oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
++		oinfo = XFS_RMAP_OINFO_SKIP_UPDATE;
+ 	else
+-		targs.oinfo = XFS_RMAP_OINFO_AG;
++		oinfo = XFS_RMAP_OINFO_AG;
+ 	while (!(flags & XFS_ALLOC_FLAG_NOSHRINK) && pag->pagf_flcount > need) {
+ 		error = xfs_alloc_get_freelist(pag, tp, agbp, &bno, 0);
+ 		if (error)
+ 			goto out_agbp_relse;
+ 
+ 		/* defer agfl frees */
+-		xfs_defer_agfl_block(tp, args->agno, bno, &targs.oinfo);
++		xfs_defer_agfl_block(tp, args->agno, bno, &oinfo);
+ 	}
+ 
+-	targs.tp = tp;
+-	targs.mp = mp;
+-	targs.agbp = agbp;
+-	targs.agno = args->agno;
+-	targs.alignment = targs.minlen = targs.prod = 1;
+-	targs.type = XFS_ALLOCTYPE_THIS_AG;
+-	targs.pag = pag;
+-	error = xfs_alloc_read_agfl(pag, tp, &agflbp);
+-	if (error)
+-		goto out_agbp_relse;
+-
+-	/* Make the freelist longer if it's too short. */
+-	while (pag->pagf_flcount < need) {
+-		targs.agbno = 0;
+-		targs.maxlen = need - pag->pagf_flcount;
+-		targs.resv = XFS_AG_RESV_AGFL;
+-
+-		/* Allocate as many blocks as possible at once. */
+-		error = xfs_alloc_ag_vextent(&targs);
+-		if (error)
+-			goto out_agflbp_relse;
+-
+-		/*
+-		 * Stop if we run out.  Won't happen if callers are obeying
+-		 * the restrictions correctly.  Can happen for free calls
+-		 * on a completely full ag.
+-		 */
+-		if (targs.agbno == NULLAGBLOCK) {
+-			if (flags & XFS_ALLOC_FLAG_FREEING)
+-				break;
+-			goto out_agflbp_relse;
+-		}
+-		/*
+-		 * Put each allocated block on the list.
+-		 */
+-		for (bno = targs.agbno; bno < targs.agbno + targs.len; bno++) {
+-			error = xfs_alloc_put_freelist(pag, tp, agbp,
+-							agflbp, bno, 0);
+-			if (error)
+-				goto out_agflbp_relse;
+-		}
+-	}
+-	xfs_trans_brelse(tp, agflbp);
+ 	args->agbp = agbp;
+ 	return 0;
+ 
+-out_agflbp_relse:
+-	xfs_trans_brelse(tp, agflbp);
+ out_agbp_relse:
+ 	if (agbp)
+ 		xfs_trans_brelse(tp, agbp);
 -- 
-2.31.1
+2.24.4
 
