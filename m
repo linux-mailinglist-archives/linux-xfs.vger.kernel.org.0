@@ -2,44 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7CE6617502
-	for <lists+linux-xfs@lfdr.de>; Thu,  3 Nov 2022 04:28:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4C1161756B
+	for <lists+linux-xfs@lfdr.de>; Thu,  3 Nov 2022 05:14:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231326AbiKCD2a (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 2 Nov 2022 23:28:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
+        id S229873AbiKCEOK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 3 Nov 2022 00:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231201AbiKCD0q (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 2 Nov 2022 23:26:46 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB1414D3C
-        for <linux-xfs@vger.kernel.org>; Wed,  2 Nov 2022 20:26:44 -0700 (PDT)
-Received: from kwepemi500009.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N2px73KCGzpW32;
-        Thu,  3 Nov 2022 11:23:07 +0800 (CST)
-Received: from localhost.localdomain (10.175.127.227) by
- kwepemi500009.china.huawei.com (7.221.188.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 11:26:40 +0800
-From:   Long Li <leo.lilong@huawei.com>
-To:     <djwong@kernel.org>
-CC:     <leo.lilong@huawei.com>, <billodo@redhat.com>,
-        <chandan.babu@oracle.com>, <dchinner@redhat.com>,
-        <guoxuenan@huawei.com>, <houtao1@huawei.com>,
-        <linux-xfs@vger.kernel.org>, <sandeen@redhat.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH v3] xfs: fix sb write verify for lazysbcount
-Date:   Thu, 3 Nov 2022 11:47:36 +0800
-Message-ID: <20221103034736.2604208-1-leo.lilong@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S230060AbiKCENx (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 3 Nov 2022 00:13:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E0FE37;
+        Wed,  2 Nov 2022 21:13:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 107ACB8266D;
+        Thu,  3 Nov 2022 04:13:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B750C433D6;
+        Thu,  3 Nov 2022 04:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667448824;
+        bh=4vmMIKGwWHMWxzhEcnUo/zck2KFQB6L16idHpamDdIY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d9ad40yfq3K5Oxm+r8Jl35IKDn2YdADOb8M92Dyg7WMQQB9f40MbwFWqvg7JW5QJM
+         vt0Vvk2hxXG2zAdlxCfh+MYh+ZtA1SuIADC8RbZnqpG9zsVSG1GFVCJRLg+Pe4pagu
+         KslJ/KHJH+8lOegIn5E3xa+OAit5QoB9YVTkW+dF5WiLq43MvjeQdC9t/PUFtm5Khi
+         zto8yc0VmwORUjz/QZlZhAPoHliJPU07miLpgMRFE27j32FOur1dZdJoMN/OSaZIa+
+         U8JcVE6wrFDNRxVupv/MIOtahrXHqNatN9lplrCSPYL4q64084r0HxlLZ1cl0HpSzQ
+         MQlJKP0NfqaBA==
+Date:   Wed, 2 Nov 2022 21:13:44 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Zorro Lang <zlang@redhat.com>
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH 1/1] xfs: test xfs_scrub phase 6 media error reporting
+Message-ID: <Y2M/+DIPjiyIDmxL@magnolia>
+References: <166742857552.1499365.12368724681885402947.stgit@magnolia>
+ <166742858119.1499365.3871531327329245525.stgit@magnolia>
+ <20221103031123.dtipsyq46wzbmp27@zlang-mailbox>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemi500009.china.huawei.com (7.221.188.199)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221103031123.dtipsyq46wzbmp27@zlang-mailbox>
+X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,152 +53,390 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-When lazysbcount is enabled, fsstress and loop mount/unmount test report
-the following problems:
+On Thu, Nov 03, 2022 at 11:11:23AM +0800, Zorro Lang wrote:
+> On Wed, Nov 02, 2022 at 03:36:21PM -0700, Darrick J. Wong wrote:
+> > From: Darrick J. Wong <djwong@kernel.org>
+> > 
+> > Add new helpers to dmerror to provide for marking selected ranges
+> > totally bad -- both reads and writes will fail.  Create a new test for
+> > xfs_scrub to check that it reports media errors in data files correctly.
+> > 
+> > Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+> > ---
+> >  common/dmerror    |  140 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  common/xfs        |    9 +++
+> >  tests/xfs/747     |  155 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  tests/xfs/747.out |   12 ++++
+> >  4 files changed, 316 insertions(+)
+> >  create mode 100755 tests/xfs/747
+> >  create mode 100644 tests/xfs/747.out
+> > 
+> > 
+> > diff --git a/common/dmerror b/common/dmerror
+> > index 54122b12ea..ca71fc11b4 100644
+> > --- a/common/dmerror
+> > +++ b/common/dmerror
+> > @@ -250,3 +250,143 @@ _dmerror_load_working_table()
+> >  	[ $load_res -ne 0 ] && _fail "dmsetup failed to load error table"
+> >  	[ $resume_res -ne 0 ] && _fail  "dmsetup resume failed"
+> >  }
+> > +
+> > +# Given a list of (start, length) tuples on stdin, combine adjacent tuples into
+> > +# larger ones and write the new list to stdout.
+> > +__dmerror_combine_extents()
+> > +{
+> > +	awk 'BEGIN{start = 0; len = 0;}{
+> > +if (start + len == $1) {
+> > +	len += $2;
+> > +} else {
+> > +	if (len > 0)
+> > +		printf("%d %d\n", start, len);
+> > +	start = $1;
+> > +	len = $2;
+> > +}
+> > +} END {
+> > +	if (len > 0)
+> > +		printf("%d %d\n", start, len);
+> > +}'
+> > +}
+> > +
+> > +# Given a block device, the name of a preferred dm target, the name of an
+> > +# implied dm target, and a list of (start, len) tuples on stdin, create a new
+> > +# dm table which maps each of the tuples to the preferred target and all other
+> > +# areas to the implied dm target.
+> > +__dmerror_recreate_map()
+> > +{
+> > +	local device="$1"
+> > +	local preferred_tgt="$2"
+> > +	local implied_tgt="$3"
+> > +	local size=$(blockdev --getsz "$device")
+> > +
+> > +	local awk_program='
+> > +	BEGIN {
+> > +		implied_start = 0;
+> > +	}
+> > +	{
+> > +		extent_start = $1;
+> > +		extent_len = $2;
+> > +
+> > +		if (extent_start > size) {
+> > +			extent_start = size;
+> > +			extent_len = 0;
+> > +		} else if (extent_start + extent_len > size) {
+> > +			extent_len = size - extent_start;
+> > +		}
+> > +
+> > +		if (implied_start < extent_start)
+> > +			printf("%d %d %s %s %d\n", implied_start,
+> > +					extent_start - implied_start,
+> > +					implied_tgt, device, implied_start);
+> > +		printf("%d %d %s %s %d\n", extent_start, extent_len,
+> > +				preferred_tgt, device, extent_start);
+> > +		implied_start = extent_start + extent_len;
+> > +	}
+> > +	END {
+> > +		if (implied_start < size)
+> > +			printf("%d %d %s %s %d\n", implied_start,
+> > +					size - implied_start, implied_tgt,
+> > +					device, implied_start);
+> > +	}'
+> > +
+> > +	awk -v device="$device" -v size=$size -v implied_tgt="$implied_tgt" \
+> > +		-v preferred_tgt="$preferred_tgt" "$awk_program"
+> 
+> Hi,
+> 
+> OK, if you prefer this way, should __dmerror_combine_extents follow this way too :)
 
-XFS (loop0): SB summary counter sanity check failed
-XFS (loop0): Metadata corruption detected at xfs_sb_write_verify+0x13b/0x460,
-	xfs_sb block 0x0
-XFS (loop0): Unmount and run xfs_repair
-XFS (loop0): First 128 bytes of corrupted metadata buffer:
-00000000: 58 46 53 42 00 00 10 00 00 00 00 00 00 28 00 00  XFSB.........(..
-00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-00000020: 69 fb 7c cd 5f dc 44 af 85 74 e0 cc d4 e3 34 5a  i.|._.D..t....4Z
-00000030: 00 00 00 00 00 20 00 06 00 00 00 00 00 00 00 80  ..... ..........
-00000040: 00 00 00 00 00 00 00 81 00 00 00 00 00 00 00 82  ................
-00000050: 00 00 00 01 00 0a 00 00 00 00 00 04 00 00 00 00  ................
-00000060: 00 00 0a 00 b4 b5 02 00 02 00 00 08 00 00 00 00  ................
-00000070: 00 00 00 00 00 00 00 00 0c 09 09 03 14 00 00 19  ................
-XFS (loop0): Corruption of in-memory data (0x8) detected at _xfs_buf_ioapply
-	+0xe1e/0x10e0 (fs/xfs/xfs_buf.c:1580).  Shutting down filesystem.
-XFS (loop0): Please unmount the filesystem and rectify the problem(s)
-XFS (loop0): log mount/recovery failed: error -117
-XFS (loop0): log mount failed
+Eh, ok.
 
-This corruption will shutdown the file system and the file system will
-no longer be mountable. The following script can reproduce the problem,
-but it may take a long time.
+> > +}
+> > +
+> > +# Update the dm error table so that the range (start, len) maps to the
+> > +# preferred dm target, overriding anything that maps to the implied dm target.
+> > +# This assumes that the only desired targets for this dm device are the
+> > +# preferred and and implied targets.  The fifth argument is the scratch device
+> > +# that we want to change the table for.
+> > +__dmerror_change()
+> > +{
+> > +	local start="$1"
+> > +	local len="$2"
+> > +	local preferred_tgt="$3"
+> > +	local implied_tgt="$4"
+> > +	local whichdev="$5"
+> > +	local old_table
+> > +	local new_table
+> > +
+> > +	case "$whichdev" in
+> > +	"SCRATCH_DEV"|"")	whichdev="$SCRATCH_DEV";;
+> > +	"SCRATCH_LOGDEV"|"LOG")	whichdev="$NON_ERROR_LOGDEV";;
+> > +	"SCRATCH_RTDEV"|"RT")	whichdev="$NON_ERROR_RTDEV";;
+> > +	esac
+> > +
+> > +	case "$whichdev" in
+> > +	"$SCRATCH_DEV")		old_table="$DMERROR_TABLE";;
+> > +	"$NON_ERROR_LOGDEV")	old_table="$DMERROR_LOGTABLE";;
+> > +	"$NON_ERROR_RTDEV")	old_table="$DMERROR_RTTABLE";;
+> > +	*)
+> > +		echo "$whichdev: Unknown dmerror device."
+> > +		return
+> > +		;;
+> > +	esac
+> > +
+> > +	new_table="$( (echo "$old_table"; echo "$start $len $preferred_tgt") | \
+> > +		awk -v type="$preferred_tgt" '{if ($3 == type) print $0;}' | \
+> > +		sort -g | \
+> > +		__dmerror_combine_extents | \
+> > +		__dmerror_recreate_map "$whichdev" "$preferred_tgt" \
+> > +				"$implied_tgt" )"
+> > +
+> > +	case "$whichdev" in
+> > +	"$SCRATCH_DEV")		DMERROR_TABLE="$new_table";;
+> > +	"$NON_ERROR_LOGDEV")	DMERROR_LOGTABLE="$new_table";;
+> > +	"$NON_ERROR_RTDEV")	DMERROR_RTTABLE="$new_table";;
+> > +	esac
+> > +}
+> > +
+> > +# Reset the dm error table to everything ok.  The dm device itself must be
+> > +# remapped by calling _dmerror_load_error_table.
+> > +_dmerror_reset_table()
+> > +{
+> > +	DMERROR_TABLE="$DMLINEAR_TABLE"
+> > +	DMERROR_LOGTABLE="$DMLINEAR_LOGTABLE"
+> > +	DMERROR_RTTABLE="$DMLINEAR_RTTABLE"
+> > +}
+> > +
+> > +# Update the dm error table so that IOs to the given range will return EIO.
+> > +# The dm device itself must be remapped by calling _dmerror_load_error_table.
+> > +_dmerror_mark_range_bad()
+> > +{
+> > +	local start="$1"
+> > +	local len="$2"
+> > +	local dev="$3"
+> > +
+> > +	__dmerror_change "$start" "$len" error linear "$dev"
+> > +}
+> > +
+> > +# Update the dm error table so that IOs to the given range will succeed.
+> > +# The dm device itself must be remapped by calling _dmerror_load_error_table.
+> > +_dmerror_mark_range_good()
+> > +{
+> > +	local start="$1"
+> > +	local len="$2"
+> > +	local dev="$3"
+> > +
+> > +	__dmerror_change "$start" "$len" linear error "$dev"
+> > +}
+> > diff --git a/common/xfs b/common/xfs
+> > index 8ac1964e9c..f466d2c42f 100644
+> > --- a/common/xfs
+> > +++ b/common/xfs
+> > @@ -218,6 +218,15 @@ _xfs_get_dir_blocksize()
+> >  	$XFS_INFO_PROG "$fs" | sed -n "s/^naming.*bsize=\([[:digit:]]*\).*/\1/p"
+> >  }
+> >  
+> > +# Decide if this path is a file on the realtime device
+> > +_xfs_is_realtime_file()
+> > +{
+> > +	if [ "$USE_EXTERNAL" != "yes" ] || [ -z "$SCRATCH_RTDEV" ]; then
+> > +		return 1
+> > +	fi
+> > +	$XFS_IO_PROG -c 'stat -v' "$1" | grep -q -w realtime
+> > +}
+> > +
+> >  # Set or clear the realtime status of every supplied path.  The first argument
+> >  # is either 'data' or 'realtime'.  All other arguments should be paths to
+> >  # existing directories or empty regular files.
+> > diff --git a/tests/xfs/747 b/tests/xfs/747
+> > new file mode 100755
+> > index 0000000000..8b828bc48d
+> > --- /dev/null
+> > +++ b/tests/xfs/747
+> > @@ -0,0 +1,155 @@
+> > +#! /bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0-or-later
+> > +# Copyright (c) 2022 Oracle.  All Rights Reserved.
+> > +#
+> > +# FS QA Test No. 747
+> > +#
+> > +# Check xfs_scrub's media scan can actually return diagnostic information for
+> > +# media errors in file data extents.
+> > +
+> > +. ./common/preamble
+> > +_begin_fstest auto quick scrub
+> 
+> Do we need "eio" at here?
 
- #!/bin/bash
+Yep, sorry, that one fell off somehwere.
 
- device=/dev/sda
- testdir=/mnt/test
- round=0
+--D
 
- function fail()
- {
-	 echo "$*"
-	 exit 1
- }
-
- mkdir -p $testdir
- while [ $round -lt 10000 ]
- do
-	 echo "******* round $round ********"
-	 mkfs.xfs -f $device
-	 mount $device $testdir || fail "mount failed!"
-	 fsstress -d $testdir -l 0 -n 10000 -p 4 >/dev/null &
-	 sleep 4
-	 killall -w fsstress
-	 umount $testdir
-	 xfs_repair -e $device > /dev/null
-	 if [ $? -eq 2 ];then
-		 echo "ERR CODE 2: Dirty log exception during repair."
-		 exit 1
-	 fi
-	 round=$(($round+1))
- done
-
-With lazysbcount is enabled, There is no additional lock protection for
-reading m_ifree and m_icount in xfs_log_sb(), if other cpu modifies the
-m_ifree, this will make the m_ifree greater than m_icount. For example,
-consider the following sequence and ifreedelta is postive:
-
- CPU0				 CPU1
- xfs_log_sb			 xfs_trans_unreserve_and_mod_sb
- ----------			 ------------------------------
- percpu_counter_sum(&mp->m_icount)
-				 percpu_counter_add_batch(&mp->m_icount,
-						idelta, XFS_ICOUNT_BATCH)
-				 percpu_counter_add(&mp->m_ifree, ifreedelta);
- percpu_counter_sum(&mp->m_ifree)
-
-After this, incorrect inode count (sb_ifree > sb_icount) will be writen to
-the log. In the subsequent writing of sb, incorrect inode count (sb_ifree >
-sb_icount) will fail to pass the boundary check in xfs_validate_sb_write()
-that cause the file system shutdown.
-
-When lazysbcount is enabled, we don't need to guarantee that Lazy sb
-counters are completely correct, but we do need to guarantee that sb_ifree
-<= sb_icount. On the other hand, the constraint that m_ifree <= m_icount
-must be satisfied any time that there /cannot/ be other threads allocating
-or freeing inode chunks. If the constraint is violated under these
-circumstances, sb_i{count,free} (the ondisk superblock inode counters)
-maybe incorrect and need to be marked sick at unmount, the count will
-be rebuilt on the next mount.
-
-Fixes: 8756a5af1819 ("libxfs: add more bounds checking to sb sanity checks")
-Signed-off-by: Long Li <leo.lilong@huawei.com>
----
-v3:
-- Corrected the description of the cause of the problem 
-- Add a check for m_icount and m_ifree at unmout
-v2:
-- Add scripts that could reproduce the problem
-- Guaranteed that ifree will never be logged as being greater than icount
-
- fs/xfs/libxfs/xfs_sb.c |  4 +++-
- fs/xfs/xfs_mount.c     | 15 +++++++++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index a20cade590e9..1eeecf2eb2a7 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -972,7 +972,9 @@ xfs_log_sb(
- 	 */
- 	if (xfs_has_lazysbcount(mp)) {
- 		mp->m_sb.sb_icount = percpu_counter_sum(&mp->m_icount);
--		mp->m_sb.sb_ifree = percpu_counter_sum(&mp->m_ifree);
-+		mp->m_sb.sb_ifree = min_t(uint64_t,
-+				percpu_counter_sum(&mp->m_ifree),
-+				mp->m_sb.sb_icount);
- 		mp->m_sb.sb_fdblocks = percpu_counter_sum(&mp->m_fdblocks);
- 	}
- 
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index e8bb3c2e847e..fb87ffb48f7f 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -538,6 +538,20 @@ xfs_check_summary_counts(
- 	return 0;
- }
- 
-+static void
-+xfs_unmount_check(
-+	struct xfs_mount	*mp)
-+{
-+	if (xfs_is_shutdown(mp))
-+		return;
-+
-+	if (percpu_counter_sum(&mp->m_ifree) >
-+			percpu_counter_sum(&mp->m_icount)) {
-+		xfs_alert(mp, "ifree/icount mismatch at unmount");
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_COUNTERS);
-+	}
-+}
-+
- /*
-  * Flush and reclaim dirty inodes in preparation for unmount. Inodes and
-  * internal inode structures can be sitting in the CIL and AIL at this point,
-@@ -1077,6 +1091,7 @@ xfs_unmountfs(
- 	if (error)
- 		xfs_warn(mp, "Unable to free reserved block pool. "
- 				"Freespace may not be correct on next mount.");
-+	xfs_unmount_check(mp);
- 
- 	xfs_log_unmount(mp);
- 	xfs_da_unmount(mp);
--- 
-2.31.1
-
+> Others look good to me.
+> 
+> Thanks,
+> Zorro
+> 
+> > +
+> > +# Override the default cleanup function.
+> > +_cleanup()
+> > +{
+> > +	cd /
+> > +	rm -f $tmp.*
+> > +	_dmerror_cleanup
+> > +}
+> > +
+> > +# Import common functions.
+> > +. ./common/fuzzy
+> > +. ./common/filter
+> > +. ./common/dmerror
+> > +
+> > +# real QA test starts here
+> > +_supported_fs xfs
+> > +_require_dm_target error
+> > +_require_scratch
+> > +_require_scratch_xfs_crc
+> > +_require_scrub
+> > +
+> > +filter_scrub_errors() {
+> > +	_filter_scratch | sed \
+> > +		-e "s/offset $((fs_blksz * 2)) /offset 2FSB /g" \
+> > +		-e "s/length $fs_blksz.*/length 1FSB./g"
+> > +}
+> > +
+> > +_scratch_mkfs >> $seqres.full
+> > +_dmerror_init
+> > +_dmerror_mount >> $seqres.full 2>&1
+> > +
+> > +_supports_xfs_scrub $SCRATCH_MNT $SCRATCH_DEV || _notrun "Scrub not supported"
+> > +
+> > +# Write a file with 4 file blocks worth of data
+> > +victim=$SCRATCH_MNT/a
+> > +file_blksz=$(_get_file_block_size $SCRATCH_MNT)
+> > +$XFS_IO_PROG -f -c "pwrite -S 0x58 0 $((4 * file_blksz))" -c "fsync" $victim >> $seqres.full
+> > +unset errordev
+> > +_xfs_is_realtime_file $victim && errordev="RT"
+> > +bmap_str="$($XFS_IO_PROG -c "bmap -elpv" $victim | grep "^[[:space:]]*0:")"
+> > +echo "$errordev:$bmap_str" >> $seqres.full
+> > +
+> > +phys="$(echo "$bmap_str" | $AWK_PROG '{print $3}')"
+> > +if [ "$errordev" = "RT" ]; then
+> > +	len="$(echo "$bmap_str" | $AWK_PROG '{print $4}')"
+> > +else
+> > +	len="$(echo "$bmap_str" | $AWK_PROG '{print $6}')"
+> > +fi
+> > +fs_blksz=$(_get_block_size $SCRATCH_MNT)
+> > +echo "file_blksz:$file_blksz:fs_blksz:$fs_blksz" >> $seqres.full
+> > +kernel_sectors_per_fs_block=$((fs_blksz / 512))
+> > +
+> > +# Did we get at least 4 fs blocks worth of extent?
+> > +min_len_sectors=$(( 4 * kernel_sectors_per_fs_block ))
+> > +test "$len" -lt $min_len_sectors && \
+> > +	_fail "could not format a long enough extent on an empty fs??"
+> > +
+> > +phys_start=$(echo "$phys" | sed -e 's/\.\..*//g')
+> > +
+> > +echo "$errordev:$phys:$len:$fs_blksz:$phys_start" >> $seqres.full
+> > +echo "victim file:" >> $seqres.full
+> > +od -tx1 -Ad -c $victim >> $seqres.full
+> > +
+> > +# Set the dmerror table so that all IO will pass through.
+> > +_dmerror_reset_table
+> > +
+> > +cat >> $seqres.full << ENDL
+> > +dmerror before:
+> > +$DMERROR_TABLE
+> > +$DMERROR_RTTABLE
+> > +<end table>
+> > +ENDL
+> > +
+> > +# All sector numbers that we feed to the kernel must be in units of 512b, but
+> > +# they also must be aligned to the device's logical block size.
+> > +logical_block_size=$(_min_dio_alignment $SCRATCH_DEV)
+> > +kernel_sectors_per_device_lba=$((logical_block_size / 512))
+> > +
+> > +# Mark as bad one of the device LBAs in the middle of the extent.  Target the
+> > +# second LBA of the third block of the four-block file extent that we allocated
+> > +# earlier, but without overflowing into the fourth file block.
+> > +bad_sector=$(( phys_start + (2 * kernel_sectors_per_fs_block) ))
+> > +bad_len=$kernel_sectors_per_device_lba
+> > +if (( kernel_sectors_per_device_lba < kernel_sectors_per_fs_block )); then
+> > +	bad_sector=$((bad_sector + kernel_sectors_per_device_lba))
+> > +fi
+> > +if (( (bad_sector % kernel_sectors_per_device_lba) != 0)); then
+> > +	echo "bad_sector $bad_sector not congruent with device logical block size $logical_block_size"
+> > +fi
+> > +_dmerror_mark_range_bad $bad_sector $bad_len $errordev
+> > +
+> > +cat >> $seqres.full << ENDL
+> > +dmerror after marking bad:
+> > +$DMERROR_TABLE
+> > +$DMERROR_RTTABLE
+> > +<end table>
+> > +ENDL
+> > +
+> > +_dmerror_load_error_table
+> > +
+> > +# See if the media scan picks it up.
+> > +echo "Scrub for injected media error (single threaded)"
+> > +
+> > +# Once in single-threaded mode
+> > +_scratch_scrub -b -x >> $seqres.full 2> $tmp.error
+> > +cat $tmp.error | filter_scrub_errors
+> > +
+> > +# Once in parallel mode
+> > +echo "Scrub for injected media error (multi threaded)"
+> > +_scratch_scrub -x >> $seqres.full 2> $tmp.error
+> > +cat $tmp.error | filter_scrub_errors
+> > +
+> > +# Remount to flush the page cache and reread to see the IO error
+> > +_dmerror_unmount
+> > +_dmerror_mount
+> > +echo "victim file:" >> $seqres.full
+> > +od -tx1 -Ad -c $victim >> $seqres.full 2> $tmp.error
+> > +cat $tmp.error | sed -e 's/read error: //g' | _filter_scratch
+> > +
+> > +# Scrub again to re-confirm the media error across a remount
+> > +echo "Scrub for injected media error (after remount)"
+> > +_scratch_scrub -x >> $seqres.full 2> $tmp.error
+> > +cat $tmp.error | filter_scrub_errors
+> > +
+> > +# Now mark the bad range good so that a retest shows no media failure.
+> > +_dmerror_mark_range_good $bad_sector $bad_len $errordev
+> > +_dmerror_load_error_table
+> > +
+> > +cat >> $seqres.full << ENDL
+> > +dmerror after marking good:
+> > +$DMERROR_TABLE
+> > +$DMERROR_RTTABLE
+> > +<end table>
+> > +ENDL
+> > +
+> > +echo "Scrub after removing injected media error"
+> > +
+> > +# Scrub one last time to make sure the error's gone.
+> > +_scratch_scrub -x >> $seqres.full 2> $tmp.error
+> > +cat $tmp.error | filter_scrub_errors
+> > +
+> > +# success, all done
+> > +status=0
+> > +exit
+> > diff --git a/tests/xfs/747.out b/tests/xfs/747.out
+> > new file mode 100644
+> > index 0000000000..714ceb2e56
+> > --- /dev/null
+> > +++ b/tests/xfs/747.out
+> > @@ -0,0 +1,12 @@
+> > +QA output created by 747
+> > +Scrub for injected media error (single threaded)
+> > +Unfixable Error: SCRATCH_MNT/a: media error at data offset 2FSB length 1FSB.
+> > +SCRATCH_MNT: unfixable errors found: 1
+> > +Scrub for injected media error (multi threaded)
+> > +Unfixable Error: SCRATCH_MNT/a: media error at data offset 2FSB length 1FSB.
+> > +SCRATCH_MNT: unfixable errors found: 1
+> > +od: SCRATCH_MNT/a: Input/output error
+> > +Scrub for injected media error (after remount)
+> > +Unfixable Error: SCRATCH_MNT/a: media error at data offset 2FSB length 1FSB.
+> > +SCRATCH_MNT: unfixable errors found: 1
+> > +Scrub after removing injected media error
+> > 
+> 
