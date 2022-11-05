@@ -2,231 +2,73 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2191E61D9DF
-	for <lists+linux-xfs@lfdr.de>; Sat,  5 Nov 2022 13:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F21B361DA4D
+	for <lists+linux-xfs@lfdr.de>; Sat,  5 Nov 2022 13:40:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbiKEMaE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Sat, 5 Nov 2022 08:30:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
+        id S229703AbiKEMkG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Sat, 5 Nov 2022 08:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbiKEMaE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Sat, 5 Nov 2022 08:30:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0211F11178
-        for <linux-xfs@vger.kernel.org>; Sat,  5 Nov 2022 05:29:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667651348;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UG+68vg0J0evlCJILqP0y3ejKojyB7tn0LpFwXjR5yI=;
-        b=MmUi9qtnZs0W9EnxhI9QxP5bTqit1DU6cFREbqWHfnIeliTTygZbMI3qoddJtrjJqtKrx9
-        I3cSmG+DLiuB+/kF9dk+iXg4zK4amp+DFpA/sdXWp51aHTh9cJKcvtKDJ8N1Gf6E0LyYSS
-        9hPq0Zvk9gDC7ZMRm9Wyjs4fcYqe1RQ=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-133-Dmp9j9etMMut-UCvz2wM3g-1; Sat, 05 Nov 2022 08:29:07 -0400
-X-MC-Unique: Dmp9j9etMMut-UCvz2wM3g-1
-Received: by mail-pl1-f198.google.com with SMTP id c7-20020a170903234700b0018729febd96so5466040plh.19
-        for <linux-xfs@vger.kernel.org>; Sat, 05 Nov 2022 05:29:06 -0700 (PDT)
+        with ESMTP id S229871AbiKEMj7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Sat, 5 Nov 2022 08:39:59 -0400
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBDEE15A26
+        for <linux-xfs@vger.kernel.org>; Sat,  5 Nov 2022 05:39:58 -0700 (PDT)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-12c8312131fso8217191fac.4
+        for <linux-xfs@vger.kernel.org>; Sat, 05 Nov 2022 05:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=mu8m7znM9duu/MEuox3wxE9uI+enJzfHDrHCiCJ0dxXEnbtqlugP30RV4pUA4LaD8D
+         DTqzL6R3iJdygnN0tebcl2jKMC1xnk2qmH9yHj5ZpYJsig0zgAkFbQEJMtQOsyMS9E9+
+         9mZsd+BXbCYizoNZILloIeJgVKBYQDDlfcxWmhtehgP0gShVz6QbysTuA73O0zNW89oN
+         M95vp9qd39mlLDduLYXTQkqHXtcuCB6sr4c0ysKpoCTw5s/vT8zmw06SHC/DLusZ9o66
+         sNkDbmLIhAcJBtA+VmbRSjB+l+4rXBDt3pKOG75zF9L+vjSBjo5n2zZjo+rRsufLH5jZ
+         6xmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UG+68vg0J0evlCJILqP0y3ejKojyB7tn0LpFwXjR5yI=;
-        b=rL80YlleZKvBkrUmzi6sGj9tpkGUPW0RMRb5ilB3HLJ9WjpzG98J+KLaoEIdJloEtt
-         NX4vJQI5jEIFbscY1SRJctN6uhD641tprdOxL7uGxB73kXVUAs1YHw4WqxOYQoZLbVQX
-         qGoxnJDIRighehvJ8ww6zLiMpuWu3g2ddgalVuRaOKItTVTIMTT5lu4S93HGJvGaavkg
-         +OKN5x5/D5uPkrnjAbPI6N24aE3eTtIDENiUsx/vQnz0vOn1wKNqpYo5VyTAQumbEZWk
-         A8++t4+qmY54B5wpppdcG/YQp44EJO5i63nvVFILJwaqzJ4y3LrM/JHf7bbrby0OEIk0
-         FTSA==
-X-Gm-Message-State: ACrzQf1MRagq90pVK0eMUDxSQm1giZ/EbRvFBCLScf/NAXF99L84RuF5
-        ggF3k8CIH8wQl8oypQws3YfSVx+aEpjfkwcS9ypePmj5tlAAnGZ7vi2vyU0lI/g4a9IxueG7IpI
-        HNY5tS0+38HiW2vlYU9C2
-X-Received: by 2002:a63:1a60:0:b0:43c:9bcd:6c37 with SMTP id a32-20020a631a60000000b0043c9bcd6c37mr33956162pgm.125.1667651344925;
-        Sat, 05 Nov 2022 05:29:04 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7lYwZE/liac5nSCZsTaj1eIZx+3xoAiUKLeZJxqsGPjLPD3C3JEiybV/sOmnIbKt6f47k7/Q==
-X-Received: by 2002:a63:1a60:0:b0:43c:9bcd:6c37 with SMTP id a32-20020a631a60000000b0043c9bcd6c37mr33956145pgm.125.1667651344587;
-        Sat, 05 Nov 2022 05:29:04 -0700 (PDT)
-Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id f7-20020a170902ce8700b0018691ce1696sm1579656plg.131.2022.11.05.05.29.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Nov 2022 05:29:03 -0700 (PDT)
-Date:   Sat, 5 Nov 2022 20:28:59 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] generic: shutdown might leave NULL files with nonzero
- di_size
-Message-ID: <20221105122859.d6lymkxcnsddzb3f@zlang-mailbox>
-References: <20221104162002.1912751-1-zlang@kernel.org>
- <Y2U96BrOS2ixJAGh@magnolia>
- <20221105121611.gsq2d4cmp5pasfqo@zlang-mailbox>
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=2AdsvgmRyj+YWPbD7ueXFNw7Y0fBAP767FRWxa8srZ1CNQNNDkVFW8ydxscgI6VmXX
+         PtJN2W/DG9c6nVjRv53s5ApX8N4DvYZZXCH29Mo9bQJYeBnlRYPQTUGKokkY0kp/fpma
+         itW2B9J1NaooEl2Mgrumhh36cnMbKxrB3zPl5fQEJrq+jGKz8mQDCSzdiphGnqTM8bjF
+         Gr8uRlsuokwkvSTvHigw12qc9uZwzLZuSNq38ECCBl0875Odc1vaT2cmu+9m7r6A6TcD
+         g0fNRtRNUYIBfrrHyXmV4yiu/uFsapGLOrgS/HJU6WqlyxJd9UsbIqMyXV6ukxT54k/u
+         FdZw==
+X-Gm-Message-State: ACrzQf2u97eDN8R/XCV79zh/4ud9DmUIrrICCZKNmXyntQ6FfEBy1vZY
+        GOfFZdOgeXUY9Yxwg2Pys7cUKA8zwV76kJ+TZJOzNOr7+hk=
+X-Google-Smtp-Source: AMsMyM5GFe2gsiMaHXHXvp99K7JeNN2UuK6dELDyLpsoJjIUkQcn4q3aD74FbKEapmwctM2YF8x1D4LMLHeg4fM3LVk=
+X-Received: by 2002:a17:90b:4ac3:b0:213:3918:f276 with SMTP id
+ mh3-20020a17090b4ac300b002133918f276mr57022678pjb.19.1667651987563; Sat, 05
+ Nov 2022 05:39:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221105121611.gsq2d4cmp5pasfqo@zlang-mailbox>
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
+ 05:39:47 -0700 (PDT)
+Reply-To: stefanopessia755@hotmail.com
+From:   Stefano Pessina <wamathaibenard@gmail.com>
+Date:   Sat, 5 Nov 2022 15:39:47 +0300
+Message-ID: <CAN7bvZKO8GxFn7CG_EtS_Of+AZ+KsuqTkq40Mq-yJDNrEHyakg@mail.gmail.com>
+Subject: Geldspende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Sat, Nov 05, 2022 at 08:16:11PM +0800, Zorro Lang wrote:
-> On Fri, Nov 04, 2022 at 09:29:28AM -0700, Darrick J. Wong wrote:
-> > On Sat, Nov 05, 2022 at 12:20:02AM +0800, Zorro Lang wrote:
-> > > An old issue might cause on-disk inode sizes are logged prematurely
-> > > via the free eofblocks path on file close. Then fs shutdown might
-> > > leave NULL files but their di_size > 0.
-> > > 
-> > > Signed-off-by: Zorro Lang <zlang@kernel.org>
-> > > ---
-> > > 
-> > > Hi,
-> > > 
-> > > There was an very old xfs bug on rhel-6.5, I'd like to share its reproducer to
-> > > fstests. I've tried generic/044~049, no one can reproduce this bug, so I
-> > > have to write this new one. It fails on rhel-6.5 [1], and test passed on
-> > > later kernel.
-> > > 
-> > > I hard to say which patch fix this issue exactly, it's fixed by a patchset
-> > > which does code improvement/cleanup.
-> > > 
-> > > Thanks,
-> > > Zorro
-> > > 
-> > > [1]
-> > > # ./check generic/999
-> > > FSTYP         -- xfs (non-debug)
-> > > PLATFORM      -- Linux/x86_64
-> > > MKFS_OPTIONS  -- -f -bsize=4096 /dev/loop1
-> > > MOUNT_OPTIONS -- -o context=system_u:object_r:nfs_t:s0 /dev/loop1 /mnt/scratch
-> > > 
-> > > generic/999 2s ... - output mismatch (see /root/xfstests-dev/results//generic/999.out.bad)
-> > >     --- tests/generic/999.out   2022-11-04 00:54:11.123353054 -0400
-> > >     +++ /root/xfstests-dev/results//generic/999.out.bad 2022-11-04 04:24:57.861673433 -0400
-> > >     @@ -1 +1,3 @@
-> > >      QA output created by 999
-> > >     + - /mnt/scratch/1 get no extents, but its di_size > 0
-> > >     +/mnt/scratch/1:
-> > >     ...
-> > >     (Run 'diff -u tests/generic/045.out /root/xfstests-dev/results//generic/999.out.bad'  to see the entire diff)
-> > > Ran: generic/999
-> > > Failures: generic/999
-> > > Failed 1 of 1 tests
-> > > 
-> > >  tests/generic/999     | 46 +++++++++++++++++++++++++++++++++++++++++++
-> > >  tests/generic/999.out |  5 +++++
-> > >  2 files changed, 51 insertions(+)
-> > >  create mode 100755 tests/generic/999
-> > >  create mode 100644 tests/generic/999.out
-> > > 
-> > > diff --git a/tests/generic/999 b/tests/generic/999
-> > > new file mode 100755
-> > > index 00000000..a2e662fc
-> > > --- /dev/null
-> > > +++ b/tests/generic/999
-> > > @@ -0,0 +1,46 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Copyright (c) 2022 Red Hat, Inc.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test No. 999
-> > > +#
-> > > +# Test an issue in the truncate codepath where on-disk inode sizes are logged
-> > > +# prematurely via the free eofblocks path on file close.
-> > > +#
-> > > +. ./common/preamble
-> > > +_begin_fstest auto quick shutdown
-> > > +
-> > > +# real QA test starts here
-> > > +_supported_fs xfs
-> > > +_require_scratch
-> > > +_require_xfs_io_command fiemap
-> > 
-> > /me would've thought you'd use the xfs_io stat/bmap commands to detect
-> > either nextents > 0 (stat) or actual mappings returned (bmap), but I
-
-Wait a minute... the "stat" command can help this case too?
-
-I didn't use bmap command due to it only for xfs, but stat is a common command,
-if it helps, that's better than fiemap (due to it supports old system). I'll
-give it a test, and will resend the patch if it works. Thanks your suggestion!
-
-> > guess if RHEL 6.5 xfsprogs has a fiemap command then this is fine with
-> > me.
-> 
-> Ah, you're right, rhel-6 xfs_io doesn't support fiemap :)
-> 
-> And yes, I wrote this case as a xfs specific case at first, by using xfs_bmap.
-> The original case (of us) uses xfs_bmap too. But I thought fiemap can help it
-> to be a generic case to cover more fs, so I turn to use fiemap.
-> 
-> > 
-> > If the answer to the above is "um, RHEL 6.5 xfsprogs *does* have FIEMAP",
-> > then there's little point in rewriting a stable regression test, so:
-> 
-> I don't worry about rhel6 testing, due to I keep our internal case (for rhel6
-> only). I'd like to see more generic cases, except fiemap can't help this test :)
-> 
-> Thanks,
-> Zorro
-> 
-> > 
-> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
-> > 
-> > --D
-> > 
-> > > +_require_scratch_shutdown
-> > > +_scratch_mkfs > $seqres.full 2>&1
-> > > +_scratch_mount
-> > > +
-> > > +echo "Create many small files with one extent at least"
-> > > +for ((i=0; i<10000; i++));do
-> > > +	$XFS_IO_PROG -f -c "pwrite 0 4k" $SCRATCH_MNT/file.$i >/dev/null 2>&1
-> > > +done
-> > > +
-> > > +echo "Shutdown the fs suddently"
-> > > +_scratch_shutdown
-> > > +
-> > > +echo "Cycle mount"
-> > > +_scratch_cycle_mount
-> > > +
-> > > +echo "Check file's (di_size > 0) extents"
-> > > +for f in $(find $SCRATCH_MNT -type f -size +0);do
-> > > +	$XFS_IO_PROG -c "fiemap" $f > $tmp.fiemap
-> > > +	# Check if the file has any extent
-> > > +	grep -Eq '^[[:space:]]+[0-9]+:' $tmp.fiemap
-> > > +	if [ $? -ne 0 ];then
-> > > +		echo " - $f get no extents, but its di_size > 0"
-> > > +		cat $tmp.fiemap
-> > > +		break
-> > > +	fi
-> > > +done
-> > > +
-> > > +# success, all done
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/generic/999.out b/tests/generic/999.out
-> > > new file mode 100644
-> > > index 00000000..50008783
-> > > --- /dev/null
-> > > +++ b/tests/generic/999.out
-> > > @@ -0,0 +1,5 @@
-> > > +QA output created by 999
-> > > +Create many small files with one extent at least
-> > > +Shutdown the fs suddently
-> > > +Cycle mount
-> > > +Check file's (di_size > 0) extents
-> > > -- 
-> > > 2.31.1
-> > > 
-> > 
-
+--=20
+Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
+t.
+Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
+stefanopessia755@hotmail.com
