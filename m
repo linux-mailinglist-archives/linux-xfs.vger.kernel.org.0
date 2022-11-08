@@ -2,109 +2,105 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E5E1620CC7
-	for <lists+linux-xfs@lfdr.de>; Tue,  8 Nov 2022 11:01:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1D79620EE4
+	for <lists+linux-xfs@lfdr.de>; Tue,  8 Nov 2022 12:24:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233671AbiKHKAx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 8 Nov 2022 05:00:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36540 "EHLO
+        id S233619AbiKHLYW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 8 Nov 2022 06:24:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233800AbiKHKAw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Nov 2022 05:00:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596911A046
-        for <linux-xfs@vger.kernel.org>; Tue,  8 Nov 2022 01:59:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1667901591;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9PIZm9rky0ko7N/9L7/u20SoaI9rhjWzbW7BkWSKy20=;
-        b=gODUGUtMc2mixzzupp24OLl896nLR6Q66abC5++ZAshyIo7Xw7l+qkp6lK82KKw6dtKIMv
-        IlIY7EP3mEG07WqCzw9IytV5B2tjDbPd9n8IxT8AK9gpdy8beWtMHc4lK8yy7pS1wzYDxs
-        R4bcfpILNbsTuCnhs2i4KFjR2QJ/9Jk=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-364-q1y3epGfMwGkBtzfL5AERw-1; Tue, 08 Nov 2022 04:59:50 -0500
-X-MC-Unique: q1y3epGfMwGkBtzfL5AERw-1
-Received: by mail-ed1-f69.google.com with SMTP id v18-20020a056402349200b004622e273bbbso10139715edc.14
-        for <linux-xfs@vger.kernel.org>; Tue, 08 Nov 2022 01:59:50 -0800 (PST)
+        with ESMTP id S233880AbiKHLYO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 8 Nov 2022 06:24:14 -0500
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A423134B
+        for <linux-xfs@vger.kernel.org>; Tue,  8 Nov 2022 03:24:14 -0800 (PST)
+Received: by mail-il1-x12c.google.com with SMTP id m15so7320723ilq.2
+        for <linux-xfs@vger.kernel.org>; Tue, 08 Nov 2022 03:24:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5B7dfi7xVJ3OslQ0ALi00lhJojz9IHhiYsVHA/RHqOE=;
+        b=LXzLwEfFEIjs9nRQ/0D9sK0UdFF/hcYD1/7lPcxtKxGf+ipiOyxIUkG9FxWjTQwnxI
+         D0k1pcJ4r9HbGweGR8VttiL8E2qc4lcsz3jC3X1z+Myzw30J2a8GCz5AS/bkRvOOAlHD
+         E+tAU65cwh01zP65Dht/AwghXmg8POvqM5wMW+NclASoJJ1M+p89BgFOSDch5BgQ0Avc
+         9JiZIkvYkz5qbwJiVyZnhn8aEs4dsNPEV6aJ60VBa1B1c4nkJvkSo/q1xUjbvGvnQsI2
+         YCKRfjADZRvavXIhrgWVqvohpAMKlTCL5cT3Ex4YqBvyGRv/IX591YGJ8Vqkx1vqKbDZ
+         WAQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9PIZm9rky0ko7N/9L7/u20SoaI9rhjWzbW7BkWSKy20=;
-        b=NM0Ma2mrNSBgne94fkjzH+NjU5amt1ZkiTT/mZy7yg0EKdnH4Da51Tp/AZHKwlCpw0
-         qtWy9dXmO/ZN2Dtg9yLTvBHBKu0Yy7aBB5WNNa+KWUXH+cJKGb6+sNFSsk7XFKg8aWXh
-         TCyMP8TVV77wrbng+AXOq1Tn0FG89uyWRzpT6xnBYZBzS0KGy1bZwwFGvHBQMrWaa6lH
-         /YIn9UJvDubcLzYTWz/7OAs9zpkoaY0zYgYLPsEMhpJxN76OIpobPHslFKJWh4aQtgyB
-         fgH7Dc5UEmuF8TV/c5Y/ISRRy24iatHwpBAAVieUDWactZd4jZ3jv9ntTi5EBdJ/3Ipu
-         EwaA==
-X-Gm-Message-State: ACrzQf1y1dHtz5y4tA++mA7NohW20Bag3rZHTCvnb94hbFowXA4fSach
-        yWFOn3e1aMPcHgNkuP81ojMwkt3qcZd8WuwvYqYleFI14UGf2uIyDOQiaRWRzQnT0xCeH8M7HPH
-        rysQM232BwIwKLiHnEiA=
-X-Received: by 2002:a17:907:1de6:b0:7a5:ea4b:ddbb with SMTP id og38-20020a1709071de600b007a5ea4bddbbmr52484263ejc.757.1667901588874;
-        Tue, 08 Nov 2022 01:59:48 -0800 (PST)
-X-Google-Smtp-Source: AMsMyM5mEshjNl0Kjo0Ft5elIE3a26V4bMqNWavOhBhg2Pg69mvQfhi0eeOmgyhuU/p0fBDv/lPOyQ==
-X-Received: by 2002:a17:907:1de6:b0:7a5:ea4b:ddbb with SMTP id og38-20020a1709071de600b007a5ea4bddbbmr52484251ejc.757.1667901588696;
-        Tue, 08 Nov 2022 01:59:48 -0800 (PST)
-Received: from aalbersh.remote.csb ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id sg43-20020a170907a42b00b0078db5bddd9csm4535175ejc.22.2022.11.08.01.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Nov 2022 01:59:48 -0800 (PST)
-Date:   Tue, 8 Nov 2022 10:59:46 +0100
-From:   Andrey Albershteyn <aalbersh@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] xfs: fix incorrect error-out in xfs_remove
-Message-ID: <20221108095946.dtzbx3xsj652e7c5@aalbersh.remote.csb>
-References: <Y2mw3oZ2YVyReWeg@magnolia>
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5B7dfi7xVJ3OslQ0ALi00lhJojz9IHhiYsVHA/RHqOE=;
+        b=R/wifHwkEGPUTqS8ENu2HZ+bUmHA2Z12ghk1kS3cGLZ2e0ACah2yx3BZCimeU1Rd13
+         gyL3QkqG7C62vbYdBl7PvnTQsmv3yxgIvxxC4m4egFRKn6BPY4l4OMRW9g2m9fy0BMs5
+         JaQSgC9ttY2Itd3ucCNXPHfU9ZLGi18siT2E8fClMhGUg5eBpKfV5BvK/icHziZdh6be
+         SubOFN8ELIDYYOPGGt4Npz0//zkM0yp6JKI8Lu2yvWH0SjBWIpGSY6embtvjqvOyIAkK
+         ldJckYxc6xcTTCIqZ0uR9RnXjWvD6Q6rSILYKTM8/mFQ5B6MOqHFGsfalC2gEhuR9yUX
+         SHQw==
+X-Gm-Message-State: ACrzQf2TZawc6b0b9dfP8KWv81HZIq0MNmBsW1xYLsa6bM8nCSry+Wbu
+        drXsMC7WHQoOr1vMzDT5ToYpfwYQ6urYwwRm9CY=
+X-Google-Smtp-Source: AMsMyM7l9664LpWj9QcPDmFBWC92J2k8lgTtaMBq0d8Kn2LaY6/WvjL6jmQ58ep7k3CUc1mU0tvXdcs9IQAedNtHTSY=
+X-Received: by 2002:a92:bf0e:0:b0:300:cc8e:fe07 with SMTP id
+ z14-20020a92bf0e000000b00300cc8efe07mr18642833ilh.184.1667906653482; Tue, 08
+ Nov 2022 03:24:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y2mw3oZ2YVyReWeg@magnolia>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Received: by 2002:a05:6638:1921:0:0:0:0 with HTTP; Tue, 8 Nov 2022 03:24:13
+ -0800 (PST)
+Reply-To: mrinvest1010@gmail.com
+From:   "K. A. Mr. Kairi" <ctocik10@gmail.com>
+Date:   Tue, 8 Nov 2022 03:24:13 -0800
+Message-ID: <CAEbPynvxfjzGLRVVaaVB9fasgmGPWiH+Ceaj9c3oE5eqT5_+0Q@mail.gmail.com>
+Subject: Re: My Response..
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:12c listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrinvest1010[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [ctocik10[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ctocik10[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Mon, Nov 07, 2022 at 05:29:02PM -0800, Darrick J. Wong wrote:
-> From: Darrick J. Wong <djwong@kernel.org>
-> 
-> Clean up resources if resetting the dotdot entry doesn't succeed.
-> Observed through code inspection.
-> 
-> Fixes: 5838d0356bb3 ("xfs: reset child dir '..' entry when unlinking child")
-> Signed-off-by: Darrick J. Wong <djwong@kernel.org>
-> ---
->  fs/xfs/xfs_inode.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index aa303be11576..d354ea2b74f9 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -2479,7 +2479,7 @@ xfs_remove(
->  			error = xfs_dir_replace(tp, ip, &xfs_name_dotdot,
->  					tp->t_mountp->m_sb.sb_rootino, 0);
->  			if (error)
-> -				return error;
-> +				goto out_trans_cancel;
->  		}
->  	} else {
->  		/*
-> 
-
-Looks good to me.
-Reviewed-by: Andrey Albershteyn <aalbersh@redhat.com>
-
 -- 
-- Andrey
+Dear
 
+How are you, I have a serious client, whom will be interested to
+invest in your country, I got your Details through the Investment
+Network and world Global Business directory.
+
+Let me know if you are interested for more details.....
+
+Sincerely,
+Mr. Kairi Andrew
