@@ -2,38 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D08362DC7A
-	for <lists+linux-xfs@lfdr.de>; Thu, 17 Nov 2022 14:17:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FAE262DE63
+	for <lists+linux-xfs@lfdr.de>; Thu, 17 Nov 2022 15:38:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239833AbiKQNRg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 17 Nov 2022 08:17:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37492 "EHLO
+        id S240440AbiKQOiq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 17 Nov 2022 09:38:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239861AbiKQNRf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Nov 2022 08:17:35 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0F01C40A
-        for <linux-xfs@vger.kernel.org>; Thu, 17 Nov 2022 05:17:34 -0800 (PST)
-Received: from kwepemi500009.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4NCgNs5YCSzJnmn;
-        Thu, 17 Nov 2022 21:14:21 +0800 (CST)
-Received: from localhost (10.175.127.227) by kwepemi500009.china.huawei.com
- (7.221.188.199) with Microsoft SMTP Server (version=TLS1_2,
+        with ESMTP id S240427AbiKQOiZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 17 Nov 2022 09:38:25 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A6D873BBB
+        for <linux-xfs@vger.kernel.org>; Thu, 17 Nov 2022 06:36:04 -0800 (PST)
+Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NCj6b1sD6zqSPW;
+        Thu, 17 Nov 2022 22:32:07 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemi500019.china.huawei.com
+ (7.221.188.117) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 17 Nov
- 2022 21:17:31 +0800
-Date:   Thu, 17 Nov 2022 21:38:54 +0800
-From:   Long Li <leo.lilong@huawei.com>
-To:     <djwong@kernel.org>
-CC:     <david@fromorbit.com>, <linux-xfs@vger.kernel.org>,
-        <houtao1@huawei.com>, <yi.zhang@huawei.com>, <guoxuenan@huawei.com>
-Subject: [PATCH v3] xfs: fix incorrect i_nlink caused by inode racing
-Message-ID: <20221117133854.GA525799@ceph-admin>
+ 2022 22:35:55 +0800
+From:   Guo Xuenan <guoxuenan@huawei.com>
+To:     <djwong@kernel.org>, <dchinner@redhat.com>
+CC:     <linux-xfs@vger.kernel.org>, <guoxuenan@huawei.com>,
+        <houtao1@huawei.com>, <jack.qiu@huawei.com>, <fangwei1@huawei.com>,
+        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>,
+        <leo.lilong@huawei.com>, <zengheng4@huawei.com>
+Subject: [PATCH v4 0/2] xfs: shutdown UAF fixes
+Date:   Thu, 17 Nov 2022 22:50:28 +0800
+Message-ID: <20221117145030.5089-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500009.china.huawei.com (7.221.188.199)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.101.6]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500019.china.huawei.com (7.221.188.117)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -43,77 +46,79 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-The following error occurred during the fsstress test:
+Hi xfs folks:
 
-XFS: Assertion failed: VFS_I(ip)->i_nlink >= 2, file: fs/xfs/xfs_inode.c, line: 2452
+The following patches fix some race of xfs force shutdown. 
 
-The problem was that inode race condition causes incorrect i_nlink to be
-written to disk, and then it is read into memory. Consider the following
-call graph, inodes that are marked as both XFS_IFLUSHING and
-XFS_IRECLAIMABLE, i_nlink will be reset to 1 and then restored to original
-value in xfs_reinit_inode(). Therefore, the i_nlink of directory on disk
-may be set to 1.
+Patch 1 fix uaf in xfs_trans_ail_delete during xlog force shutdown.
+In commit cd6f79d1fb32 ("xfs: run callbacks before waking waiters in
+xlog_state_shutdown_callbacks"), seems not enough to avoid UAF of AIL
+before it being tear down in umount.
 
-  xfsaild
-      xfs_inode_item_push
-          xfs_iflush_cluster
-              xfs_iflush
-                  xfs_inode_to_disk
+Patch 2 fix uaf of super block buffer log item during xlog shut down,
+since xfs buf log item can be reloged, super block buffer is most
+frequently modified of all xfs_buf, especially when disable lazy-count
+feature, during force shutdown we will unpin and release log item, due
+to xfs relog mechanism, which may release the log item alread inserted
+in CIL.
 
-  xfs_iget
-      xfs_iget_cache_hit
-          xfs_iget_recycle
-              xfs_reinit_inode
-  	          inode_init_always
+I reproduce the two problems, /importantly/, adding following patches and
+disable lazy-count feature to increase recurrence probability.
 
-xfs_reinit_inode() needs to hold the ILOCK_EXCL as it is changing internal
-inode state and can race with other RCU protected inode lookups. On the
-read side, xfs_iflush_cluster() grabs the ILOCK_SHARED while under rcu +
-ip->i_flags_lock, and so xfs_iflush/xfs_inode_to_disk() are protected from
-racing inode updates (during transactions) by that lock.
-
-Signed-off-by: Long Li <leo.lilong@huawei.com>
----
-v2:
-- Modify the assertion error code line number
-- Use ILOCK_EXCL to prevent inode racing 
-v3:
-- Put ilock and iunlock in the same function
-
- fs/xfs/xfs_icache.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index eae7427062cf..f35e2cee5265 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -342,6 +342,9 @@ xfs_iget_recycle(
- 
- 	trace_xfs_iget_recycle(ip);
- 
-+	if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL))
-+		return -EAGAIN;
+Kernel patch for reproduce the issue of patch 1:
+```
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index 522d450a94b1..b1221d517c00 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -503,6 +503,9 @@ xfs_buf_item_unpin(
+         * the AIL properly holds a reference on the bli.
+         */
+        freed = atomic_dec_and_test(&bip->bli_refcount);
++       if (remove)
++               mdelay(1000);
 +
- 	/*
- 	 * We need to make it look like the inode is being reclaimed to prevent
- 	 * the actual reclaim workers from stomping over us while we recycle
-@@ -355,6 +358,7 @@ xfs_iget_recycle(
+        if (freed && !stale && remove)
+                xfs_buf_hold(bp);
+        if (atomic_dec_and_test(&bp->b_pin_count))
+
+```
+
+Kernel patch for reproduce the issue of patch 2:
+```
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 7bd16fbff534..b1aac4a7576c 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -25,6 +25,9 @@
+ #include "xfs_dquot.h"
+ #include "xfs_icache.h"
  
- 	ASSERT(!rwsem_is_locked(&inode->i_rwsem));
- 	error = xfs_reinit_inode(mp, inode);
-+	xfs_iunlock(ip, XFS_ILOCK_EXCL);
- 	if (error) {
- 		/*
- 		 * Re-initializing the inode failed, and we are in deep
-@@ -518,6 +522,8 @@ xfs_iget_cache_hit(
- 	if (ip->i_flags & XFS_IRECLAIMABLE) {
- 		/* Drops i_flags_lock and RCU read lock. */
- 		error = xfs_iget_recycle(pag, ip);
-+		if (error == -EAGAIN)
-+			goto out_skip;
- 		if (error)
- 			return error;
- 	} else {
++#include <linux/delay.h>
++#include "xfs_log_priv.h"
++
+ struct kmem_cache      *xfs_trans_cache;
+ 
+ #if defined(CONFIG_TRACEPOINTS)
+@@ -1002,6 +1005,8 @@ __xfs_trans_commit(
+                xfs_trans_apply_sb_deltas(tp);
+        xfs_trans_apply_dquot_deltas(tp);
+ 
++       if (xlog_is_shutdown(log))
++               mdelay(1000);
+        xlog_cil_commit(log, tp, &commit_seq, regrant);
+ 
+        xfs_trans_free(tp);
+```
+
+Guo Xuenan (2):
+  xfs: wait xlog ioend workqueue drained before tearing down AIL
+  xfs: fix super block buf log item UAF during force shutdown
+
+ fs/xfs/xfs_buf_item.c  | 8 +++++---
+ fs/xfs/xfs_trans_ail.c | 3 +++
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
 -- 
 2.31.1
 
