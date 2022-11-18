@@ -2,51 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F78062F251
-	for <lists+linux-xfs@lfdr.de>; Fri, 18 Nov 2022 11:17:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E426162F41A
+	for <lists+linux-xfs@lfdr.de>; Fri, 18 Nov 2022 12:57:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbiKRKRW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 18 Nov 2022 05:17:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45912 "EHLO
+        id S234455AbiKRL5R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 18 Nov 2022 06:57:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiKRKRV (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Nov 2022 05:17:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 721067D539
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Nov 2022 02:17:20 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D11F62409
-        for <linux-xfs@vger.kernel.org>; Fri, 18 Nov 2022 10:17:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5693DC433D6;
-        Fri, 18 Nov 2022 10:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668766639;
-        bh=bShtdFP7NxXKaTHnDigUBFthhEzCmpIqTgn/LEnZOds=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RDxjwx0+lfieZrcBZsAlYAkngLp9sRDHkb4whUBJjvd/uDT9K9NNPTLGUBcGKuBMA
-         DExdSl7DZLlrVi1OfV1A4kKSe3uFoDLzU6cMuaBTEVG0C+pRJl5u8CMHQ1x+b2T2Eu
-         pQ3+hbcU6Vu1tTrP3C0iwVuGyshKZ68Z3teh7uctkyx6Z2W4ScTO0kv5YuW0Hi9e6L
-         tA6W8ahuxnPyuFPpOZaJKvDbuY07knGpnoxZ5yoIBYJhmLA4vbg1eZ/i8vjs0xmL1O
-         4paexuaxssAYgH/QDn/iRzbn6CXZlCEbDRFChcfUy8RwWbmdACIVidhGRe44Re+pP0
-         o3nif69M8p2Vg==
-Date:   Fri, 18 Nov 2022 11:17:14 +0100
-From:   Carlos Maiolino <cem@kernel.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH 15/24] xfs: track cow/shared record domains explicitly in
- xfs_refcount_irec
-Message-ID: <20221118101714.vnsh7dkbctgthx7p@andromeda>
-References: <166795954256.3761583.3551179546135782562.stgit@magnolia>
- <m2rVnmn7L8ESQIs1XdwOJFBEBbM4JZ0aXcCk-AV6m_YxUkA2WQXWRSPhC20i-ShoVrp554Ki35iUU-crDqih2A==@protonmail.internalid>
- <166795962631.3761583.16845808206856458930.stgit@magnolia>
+        with ESMTP id S234711AbiKRL5P (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 18 Nov 2022 06:57:15 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D17942C5
+        for <linux-xfs@vger.kernel.org>; Fri, 18 Nov 2022 03:57:12 -0800 (PST)
+Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NDFcs1zgNzmV5w;
+        Fri, 18 Nov 2022 19:56:45 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemi500019.china.huawei.com
+ (7.221.188.117) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 18 Nov
+ 2022 19:57:09 +0800
+From:   Guo Xuenan <guoxuenan@huawei.com>
+To:     <djwong@kernel.org>, <dchinner@redhat.com>
+CC:     <linux-xfs@vger.kernel.org>, <guoxuenan@huawei.com>,
+        <houtao1@huawei.com>, <jack.qiu@huawei.com>, <fangwei1@huawei.com>,
+        <yi.zhang@huawei.com>, <zhengbin13@huawei.com>,
+        <leo.lilong@huawei.com>, <zengheng4@huawei.com>
+Subject: [PATCH v5 0/2] xfs: shutdown UAF fixes
+Date:   Fri, 18 Nov 2022 20:11:41 +0800
+Message-ID: <20221118121143.267895-1-guoxuenan@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <166795962631.3761583.16845808206856458930.stgit@magnolia>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.101.6]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi500019.china.huawei.com (7.221.188.117)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,65 +46,79 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi Darrick.
+Hi xfs folks:
 
-> diff --git a/repair/rmap.c b/repair/rmap.c
-> index a7c4b25b1f..2c809fd4f2 100644
-> --- a/repair/rmap.c
-> +++ b/repair/rmap.c
-> @@ -734,6 +734,8 @@ refcount_emit(
->  	rlrec.rc_startblock = agbno;
->  	rlrec.rc_blockcount = len;
->  	rlrec.rc_refcount = REFCOUNT_CLAMP(nr_rmaps);
-> +	rlrec.rc_domain = XFS_REFC_DOMAIN_SHARED;
-> +
->  	error = slab_add(rlslab, &rlrec);
->  	if (error)
->  		do_error(
-> @@ -1393,7 +1395,8 @@ check_refcounts(
->  	while (rl_rec) {
->  		/* Look for a refcount record in the btree */
->  		error = -libxfs_refcount_lookup_le(bt_cur,
-> -				rl_rec->rc_startblock, &have);
-> +				XFS_REFC_DOMAIN_SHARED, rl_rec->rc_startblock,
-> +				&have);
+The following patches fix some race of xfs force shutdown. 
 
-Out of curiosity, why did you pass XFS_REFC_DOMAIN_SHARED directly here, other
-than just rl_rec->rc_domain?
+Patch 1 fix uaf in xfs_trans_ail_delete during xlog force shutdown.
+In commit cd6f79d1fb32 ("xfs: run callbacks before waking waiters in
+xlog_state_shutdown_callbacks"), seems not enough to avoid UAF of AIL
+before it being tear down in umount.
 
+Patch 2 fix uaf of super block buffer log item during xlog shut down,
+since xfs buf log item can be reloged, super block buffer is most
+frequently modified of all xfs_buf, especially when disable lazy-count
+feature, during force shutdown we will unpin and release log item, due
+to xfs relog mechanism, which may release the log item alread inserted
+in CIL.
 
+I reproduce the two problems, /importantly/, adding following patches and
+disable lazy-count feature to increase recurrence probability.
 
-Cheers.
+Kernel patch for reproduce the issue of patch 1:
+```
+diff --git a/fs/xfs/xfs_buf_item.c b/fs/xfs/xfs_buf_item.c
+index 522d450a94b1..b1221d517c00 100644
+--- a/fs/xfs/xfs_buf_item.c
++++ b/fs/xfs/xfs_buf_item.c
+@@ -503,6 +503,9 @@ xfs_buf_item_unpin(
+         * the AIL properly holds a reference on the bli.
+         */
+        freed = atomic_dec_and_test(&bip->bli_refcount);
++       if (remove)
++               mdelay(1000);
++
+        if (freed && !stale && remove)
+                xfs_buf_hold(bp);
+        if (atomic_dec_and_test(&bp->b_pin_count))
 
->  		if (error) {
->  			do_warn(
->  _("Could not read reference count record for (%u/%u).\n"),
-> @@ -1424,14 +1427,21 @@ _("Missing reference count record for (%u/%u) len %u count %u\n"),
->  		}
-> 
->  		/* Compare each refcount observation against the btree's */
-> -		if (tmp.rc_startblock != rl_rec->rc_startblock ||
-> +		if (tmp.rc_domain != rl_rec->rc_domain ||
-> +		    tmp.rc_startblock != rl_rec->rc_startblock ||
->  		    tmp.rc_blockcount != rl_rec->rc_blockcount ||
-> -		    tmp.rc_refcount != rl_rec->rc_refcount)
-> +		    tmp.rc_refcount != rl_rec->rc_refcount) {
-> +			unsigned int	start;
-> +
-> +			start = xfs_refcount_encode_startblock(
-> +					tmp.rc_startblock, tmp.rc_domain);
-> +
->  			do_warn(
->  _("Incorrect reference count: saw (%u/%u) len %u nlinks %u; should be (%u/%u) len %u nlinks %u\n"),
-> -				agno, tmp.rc_startblock, tmp.rc_blockcount,
-> +				agno, start, tmp.rc_blockcount,
->  				tmp.rc_refcount, agno, rl_rec->rc_startblock,
->  				rl_rec->rc_blockcount, rl_rec->rc_refcount);
-> +		}
->  next_loop:
->  		rl_rec = pop_slab_cursor(rl_cur);
->  	}
-> 
+```
+
+Kernel patch for reproduce the issue of patch 2:
+```
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 7bd16fbff534..b1aac4a7576c 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -25,6 +25,9 @@
+ #include "xfs_dquot.h"
+ #include "xfs_icache.h"
+ 
++#include <linux/delay.h>
++#include "xfs_log_priv.h"
++
+ struct kmem_cache      *xfs_trans_cache;
+ 
+ #if defined(CONFIG_TRACEPOINTS)
+@@ -1002,6 +1005,8 @@ __xfs_trans_commit(
+                xfs_trans_apply_sb_deltas(tp);
+        xfs_trans_apply_dquot_deltas(tp);
+ 
++       if (xlog_is_shutdown(log))
++               mdelay(1000);
+        xlog_cil_commit(log, tp, &commit_seq, regrant);
+ 
+        xfs_trans_free(tp);
+```
+
+Guo Xuenan (2):
+  xfs: wait xlog ioend workqueue drained before tearing down AIL
+  xfs: fix super block buf log item UAF during force shutdown
+
+ fs/xfs/xfs_buf_item.c  | 8 +++++---
+ fs/xfs/xfs_trans_ail.c | 3 +++
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
 -- 
-Carlos Maiolino
+2.31.1
+
