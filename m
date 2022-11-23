@@ -2,74 +2,142 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA641634FD8
-	for <lists+linux-xfs@lfdr.de>; Wed, 23 Nov 2022 06:58:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06A7963507E
+	for <lists+linux-xfs@lfdr.de>; Wed, 23 Nov 2022 07:31:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbiKWF6b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 23 Nov 2022 00:58:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
+        id S236022AbiKWGb4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 23 Nov 2022 01:31:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235604AbiKWF6X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 23 Nov 2022 00:58:23 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E53D2361
-        for <linux-xfs@vger.kernel.org>; Tue, 22 Nov 2022 21:58:20 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id d20so15710782plr.10
-        for <linux-xfs@vger.kernel.org>; Tue, 22 Nov 2022 21:58:20 -0800 (PST)
+        with ESMTP id S234531AbiKWGby (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 23 Nov 2022 01:31:54 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE725CD0A
+        for <linux-xfs@vger.kernel.org>; Tue, 22 Nov 2022 22:31:53 -0800 (PST)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AN64wDJ020554;
+        Wed, 23 Nov 2022 06:31:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-transfer-encoding : content-type :
+ mime-version; s=corp-2022-7-12;
+ bh=d0awOaDZwF1TTs7gFEdjUY1n0IcvC6CB13X81p1XdK0=;
+ b=v0Lx2S5yORlTiFptg6G9kSg/4P2gOopKwZ0jV34TimyuDnZVJ74oR6+tpBCrhWS3HQXA
+ fgNtRetghpLXu0wB+8QXHbzyndOpdXTcyZYMAHKFj4kOy0xaMeMRviKLwhENVeH2WW48
+ 3NECJ0bR36jAwUMqJ+DP03eQfJePRHDYfGJBoY1EMnmSoCCBpvRdB17flfm7QCfLwsY7
+ 92tnCWlh4k3g1V5i/fDNug4Nhg+3oBfTS/02+8nda7omurv/HCw9AHvjuU/+gRI4ogwT
+ OU8CPSHhQ/lM0OM/Z7Hh9igQRgVhdL7/Hc7gMUu8ppg12NKiOCnCNfW7TM1KAztEJoSl KQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3m1c9405tt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Nov 2022 06:31:50 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2AN4JA3C039503;
+        Wed, 23 Nov 2022 06:31:48 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2170.outbound.protection.outlook.com [104.47.73.170])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kxnkcr8tg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Nov 2022 06:31:48 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Lf7QvhG40uk3tl5y+uuJH4it5Lu+FMHXXw0HuJ/nhv9habelLlhVHSOeQ9wThqvd22Aqbrb9Iem3x4smiC63RKgxnBqhX6ZwxDF7xaDAbj7BUmt5XyM6WmDG4gk7fo15YXoGgm874K62GQckXL2dmCWBoar1bAOzHQIA8DHvPDMRc1muAiKkNlMXA0Stqx+qGBIIBmAyxXFxsDPlS4lrbtWS6GiZbr4w/WZNR76DYX41YnHpSHaa7+Csq0tvY/95RthSbDVlD5/iopEuv9s+avylpC6Ju+ZhBF6E4WIrx/5CIrfP9TnM5y9lO9GcQc1hl32yo+jKF5nXIvbs+7sxXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d0awOaDZwF1TTs7gFEdjUY1n0IcvC6CB13X81p1XdK0=;
+ b=TqBYE6FRdAnY8M5AUuFD0sDRvpgpl40EVHGDEeV53xTTYg+Z8r9xOQQxOQZ/RrBPK13PPkLlmWCqBlIEMgBg/p+FIbOlEuigz5th11Anl+A1nS8DZV6DoqzDyRyba/wb7OUeAtPIE7Vjf30flSROEDER3JzcqTtwIFAKI6NiZ8fe5jR8M1sdcXLB5o0yTUVikJHVY2eGzJbYpfcYPHAFexG+ZWKqxPVUYp7cBwc3g6OhI+9adzMWSckUwCxtFbeesp2GdRUUSnE82vzs9tXxQVXz70no8UpZiRaYnxLB30Fi5lqqjEdBgZGMt9/0NoBGxEiO9Ep0UlHDsBtAxGKEtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kb0SoYGcGcDILVT7smIdkXbiBcWb6kSdcrtVkchvQ3s=;
-        b=X9d+fVOYBQC3Fp9rPEr1PR5io7K2vJKmqLfxJuqg8uqWqM9pAfbJ0JMEaAGxwDuQT+
-         MgxSu/dIl+94ki8Af27IhDs8AKubsFEE43gzRG9SNI98Em6u9iritNC8vhyW7QM9/nYP
-         pR6M9ompUjZMa1jv5AffsQljKKq6VEOUuItsaTeYvFkwZoTwTE0uC/Vy3olqLNQwDsFb
-         doVsWVJmWe3Iue+NC4qT2fQiEH+wDZ5zzBhZiFFJoUKCYdDDk9WBt6cZW/fb3kisjkAN
-         ytql8BHeZ3X+KMWfij2hGSevizZRRaXJHnVmJGVZxs7WF35s/tIdxj6NfOh/75pDzBpc
-         z8SA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kb0SoYGcGcDILVT7smIdkXbiBcWb6kSdcrtVkchvQ3s=;
-        b=di0X6YulzzGutLX5AW1mqVQQPEN/7diQHsrRpFnuSGVFqaBoLh2EQZ96rv5z26D980
-         5MQvMWrMMpThZoKL2KxEdyFlBHf+xmoniDM6tQpQrIWQCVhhbBEhiRE1VBFGQwo+Am7u
-         zRqbv02OFeBL2hisplBiS3KJHWzZpv4IrvhPGz41GbdJIbrapG454j4o6Xw/OuqtQJwE
-         SXHulCxwwxpEVrS507s8uwSaT4YJ/yA+MhEiaZrowm3hkAC3DKaxYnXQYGppGRSEd8Hw
-         Af27oP3rnzfsEjyqyMNgCn56q93penojU1UK5o2Xjr1WLhLghV2XNuSjwD0XZTgpkKVm
-         jrXQ==
-X-Gm-Message-State: ANoB5pk8mR2ODXZVZsxOnP25S5wnO9iW5k0lm8CdVDaq/p0bX44jE2HN
-        rfp0qntrEotw3fjWJqxtvYTPugM2VLnJ2A==
-X-Google-Smtp-Source: AA0mqf57ES5Kilo/im7MoEEisEzRfyCOPxRTAYYwLrdZ+Fho7Jc7/ZB+f3H1k7IXEt3NVp1kvuIBiQ==
-X-Received: by 2002:a17:903:31d5:b0:185:4e4c:3483 with SMTP id v21-20020a17090331d500b001854e4c3483mr9040653ple.163.1669183099644;
-        Tue, 22 Nov 2022 21:58:19 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-65-106.pa.vic.optusnet.com.au. [49.186.65.106])
-        by smtp.gmail.com with ESMTPSA id c10-20020a17090a020a00b00213c7cf21c0sm557577pjc.5.2022.11.22.21.58.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Nov 2022 21:58:17 -0800 (PST)
-Received: from discord.disaster.area ([192.168.253.110])
-        by dread.disaster.area with esmtp (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1oxily-00HYSs-KP; Wed, 23 Nov 2022 16:58:14 +1100
-Received: from dave by discord.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1oxily-003A34-1w;
-        Wed, 23 Nov 2022 16:58:14 +1100
-From:   Dave Chinner <david@fromorbit.com>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d0awOaDZwF1TTs7gFEdjUY1n0IcvC6CB13X81p1XdK0=;
+ b=tzvmjphMf5lSgDo5W+7c1jo5BQbX5EQG44QZe6cnsrngl6k8z5kXg/rTA9YslwuEcSH3vV9ndx8EbMRnp2hYdAGv3ml1/sQQVYWmkV0G5Y33VMNjNbLDVmnhIBwWVUjYHjGt3CgLsOHOVYDshitJlwwBHohGsapinuwbkrcwRXo=
+Received: from MWHPR10MB1486.namprd10.prod.outlook.com (2603:10b6:300:24::13)
+ by IA1PR10MB6241.namprd10.prod.outlook.com (2603:10b6:208:3a3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.15; Wed, 23 Nov
+ 2022 06:31:46 +0000
+Received: from MWHPR10MB1486.namprd10.prod.outlook.com
+ ([fe80::6151:c4f7:914b:6036]) by MWHPR10MB1486.namprd10.prod.outlook.com
+ ([fe80::6151:c4f7:914b:6036%8]) with mapi id 15.20.5834.015; Wed, 23 Nov 2022
+ 06:31:45 +0000
+From:   Srikanth C S <srikanth.c.s@oracle.com>
 To:     linux-xfs@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org
-Subject: [PATCH 9/9] xfs: drop write error injection is unfixable, remove it
-Date:   Wed, 23 Nov 2022 16:58:12 +1100
-Message-Id: <20221123055812.747923-10-david@fromorbit.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221123055812.747923-1-david@fromorbit.com>
-References: <20221123055812.747923-1-david@fromorbit.com>
-MIME-Version: 1.0
+Cc:     srikanth.c.s@oracle.com, darrick.wong@oracle.com,
+        rajesh.sivaramasubramaniom@oracle.com, junxiao.bi@oracle.com,
+        david@fromorbit.com, cem@kernel.org
+Subject: [PATCH v3] fsck.xfs: mount/umount xfs fs to replay log before running xfs_repair
+Date:   Wed, 23 Nov 2022 12:00:50 +0530
+Message-Id: <20221123063050.208-1-srikanth.c.s@oracle.com>
+X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain
+X-ClientProxiedBy: MA0PR01CA0045.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:81::20) To MWHPR10MB1486.namprd10.prod.outlook.com
+ (2603:10b6:300:24::13)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR10MB1486:EE_|IA1PR10MB6241:EE_
+X-MS-Office365-Filtering-Correlation-Id: a6e2d433-fdea-47b3-eaca-08dacd1c6413
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: jZSt+VvQ0AJytGCdiPl854ErDeLW0KWWAzr+hmWXF2kR16ug0Lb/ppxDpgrllXuMpmU+WnR+vqs6aMilJ0V9kXKv7Y/QJJEkDfbZOdHA/YxQfJukxiOPhUHbpE4ollKxhmPgeNy2g2CNbHiJ8lro05xBrq96+gsMuJLqxugYKz+egs0H8uqMJl/4uBrf9absfvQ97kUiw+fpHciv0Do2U9wckVk6VGodT2QgIUxki5NFxeIua8X04pW+XbW7vo09p0yk+ZACP2RQ03xfh1kkEtQuBMIJ6V6CHJc3Ymqsl1OIbZcbYsCV5a6CNpSA/N3MZHbhgkW9dHNwBfBjIP2AHFTGvQqLD4AjBiVhk7/odMPqlMBNfBBOi0VOxD3D0p+iYNjI8oDGEWJZcM/WpTFnP17BA0l0VG5RrQ3tF2RJlLb8k1V62a2g7yPLTPp72O3amOspiO0ZyjGdNdddIYzuLJeCHn2neNiiK02DAxpGH5f/aAAl0JnAEL47fcBk4L92mBSJWbAe5KRKinNcCawljQYHs2wxd9g5IMKiK86AAkFTrgyXkP/n5GWvc/mKgRbfd/2H577HcAyln/KfOhILqtXhSKOg6b0TpV4WDL+1IpF7JcbAB4DAMPJX3NhY0aOVVUw/0pAj5NYKOaRR4YI3Pw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR10MB1486.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(39860400002)(366004)(396003)(346002)(376002)(451199015)(478600001)(6666004)(6486002)(186003)(6506007)(26005)(6512007)(6916009)(1076003)(2616005)(36756003)(66946007)(66556008)(66476007)(8676002)(4326008)(83380400001)(316002)(41300700001)(5660300002)(2906002)(86362001)(103116003)(8936002)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Xny4nyg4Tbpf6hBY15Dn+6gCYc84kyzD7CHoryuTf6BjRvnIoDN0DXodxLGK?=
+ =?us-ascii?Q?+xndDGyfJN+WF3Hm9pHb90AluIskZ7WbOIxOPOqemjt2li7889dZmoB20UiW?=
+ =?us-ascii?Q?N8dRWfTxUcVM56AAl8+EoMRH4lsiheqRdTVoVUupvBni+aynZqo+PwiMEtYO?=
+ =?us-ascii?Q?QwCjVJEMxSwRf+DqsOnrKAVEMM/uhv8p9onu5BBDizxxUb6SkY+TnafUm/YF?=
+ =?us-ascii?Q?b8l5zc104sqSEYXU4Oj7ZHnwf2bJCYQA2rE51DbpCLEwhNxdy+Uprhj4k2rY?=
+ =?us-ascii?Q?I64VRJoXpom07iXZ+viM65y9gFwfbo0iXZ5zCtqlsO0jp5yA7yaqY0Q9xrQY?=
+ =?us-ascii?Q?IZmcJGGO31pVUmnKpNS6x2qruDei08q5sw0Vk0iUCI3GgZp9vrj1aX4+UeLN?=
+ =?us-ascii?Q?O0ZhfLRFfL+XwngPk8g/T66CRs3ajUo2dPNhRh/g/yjsRye504SogZlYkj/9?=
+ =?us-ascii?Q?lg7lL7D9Ed6BTK8aJxBit81stY2a3HK3CQLxBffvDKNOKGot0IXr2hMvKXsr?=
+ =?us-ascii?Q?0Yop28zpkcruBY+DcXHX7o+5lP39lAzSoPCqR2qtYPu+VJHqyQ6RJ9t5T0v/?=
+ =?us-ascii?Q?MvdFio80whLCDAQCop8/ul5ISyyRPHdNba3aoROlWyIO5MSIskTf3Rh9Tgzw?=
+ =?us-ascii?Q?odJG7oWt+MMGFFtNNkI+AR9NKA/TjZi0qUClfEvEGedSnMqHP/bMq5Sp318s?=
+ =?us-ascii?Q?fGYeVlVA3MpxqMOTRPhMIugute8lvdy1T+OjDHMEmnvbrBjHSdWxdzpPbf8S?=
+ =?us-ascii?Q?JCtjo+TG2EsveoIiWWFmA62GdtzTuYYF+CLx6E2M+Ts38dQBhkXji1HK/cHi?=
+ =?us-ascii?Q?V8WUz2O3VCt9NtpcalhsbotDXWM5HS1kr4SpqcJ4w1e9Hhm11yb+8Gm7jkIN?=
+ =?us-ascii?Q?5An+IMmiil3c1h1wLyQ3y1/MTecfl+vi6oOZXetJ8kRSWTvJVjnQwOsgaipC?=
+ =?us-ascii?Q?cNV770KqwLNoiyVPsnvQmEcfNJpz7qkXqoN8cvux7Gge2PY0XxPNzO9b2Vf2?=
+ =?us-ascii?Q?sjDExDMXxaN9yssIEbAgL2Hn6Kyn0172qTUHy9wtCsq+hnF9eLXjMVm96KfK?=
+ =?us-ascii?Q?nrL/UtF+a90g37551gacyjdfurcWmVUYOSr/ZjPQFtumh1vJA3fC+BkMKPls?=
+ =?us-ascii?Q?MQiLqTbHZtaq6H9U83QYDtDh6TkJbaRqpUNaMNadxl7XWm8oEe30QU6+TUQq?=
+ =?us-ascii?Q?WnfiVuKHdsg6OrtmMy6P3E4oZ0QBOnQN5AXOrSfPw1wErC1SKqXKW6qTKVER?=
+ =?us-ascii?Q?4yZCvQ+E2absKO5JulwqoBliCXKz1ZcCUG1pOZWPNdC5mkEUkYmdaEHPWuod?=
+ =?us-ascii?Q?E4unBA6OaeYW82jC+lwZBuUGGVqHSOih/36tQfktGtpUTq5MUKaz45eVdbbS?=
+ =?us-ascii?Q?HXA5fkVR+7qqK/7JYmCpL6Aw0GFkRjFuHNE/+bLsG4avh3cHuPl71sAr4422?=
+ =?us-ascii?Q?Q4LYTSBuGOFxsFt+7ZKniwTIJuBHiYA748PV3e7Ms4FJiBv/Hxwz6GL9NPNc?=
+ =?us-ascii?Q?M9QRZHCItICTcnofWJ48YLVQYVXuMZF56p3ymFcrIqr98uqEpsYvZ3m6MeXa?=
+ =?us-ascii?Q?76OxCic/IJIc9D1olbTnN6jBRM2pv/IACi0io7Ok1DeZ6+Vs4X7YNdXL58WM?=
+ =?us-ascii?Q?kg=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: yCBvjEykojQjxu8IUd8al0Oyu0vIOmvzZUV8ju3BucK/BocZ1MBdi4iltWMQ8G5EIMFyqWU4ZMT6opYyUHagVHFHG+kiLS48Q1qdj1P5tlD99wLWdrt3wI68LcXUXoV7HORIvLIrhkf/xKBgqNpGWUdh6G8xGqzQCxa0j5AUGq09q3Ma2aEpqCfk2WuBP8D6VDbskqQWsz/8lIzpp5KURYAK8zs0LXxmZOFg/nAu48jQ7NY7US9/447nyCun9JuSFxEaQzKBL3Lg98Gt9V4yXAt7J1I4F1nzluOi/TldNnkZKjiArreyhuYHZk+pRYqEYYMQjHvWZ84tYuhgd3JLgTUKGM/J3v1QoWg5s3CC+y0vWq4Pguh71q9veR3kmzN6D9jIQtNN7VnF/qAAhmb2S4Vq3FvlTwEzwJ/4Pk8VcsNW66aAnLVELx3zAcFoKwrHMbdQCwGugJfknwu1IdTFiYuAmWIfj+wzGt1wNCS/CcciCXV+dF5XwodNU4xrJ/MzLI1hDk5ESqWybiTJLQn7i7PEmdiP0eNw8s9J8WV+aYOH5M0JQIQCZ+SsZ+sE9feA2lsS/hQnZdeKGmSH3Dilqal6XkQ30XiH7c3a+3vg7keFjBwqUHb3KDhzi6ZqO8tkFTS85FBScAZ+Ldl3wMo3Mjcgc6hkd8r2PMLYX28aCh8HldGfcEMB9tTx5QRKCaDtlFjSqQArJrg8j0n3PPkWYyiaIhPBfKjERDyeffNFTQRLKHOqwEXTWx4Uc8CoTD6KeAyRMhHROmigD7JpOuqHU3DfZ2FQqMWBj7mtuRnPtQUqPx9iN5ad2vxjLOzW3oypzr54yyy7Bc4U17hxC8J01Q==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6e2d433-fdea-47b3-eaca-08dacd1c6413
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR10MB1486.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Nov 2022 06:31:45.1432
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PQ9zocIQHZsIKv+ybe/CZsGKah2lXs8iofvDckQFm679z6rPAKuJXp+219IsNPFm5kujpCweDMD1Q5w9x55PTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6241
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-23_02,2022-11-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
+ adultscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2211230047
+X-Proofpoint-ORIG-GUID: M9Apq0Fi_Id0pT-fxPYq1XLOMJYQ3fLh
+X-Proofpoint-GUID: M9Apq0Fi_Id0pT-fxPYq1XLOMJYQ3fLh
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,211 +145,84 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+After a recent data center crash, we had to recover root filesystems
+on several thousands of VMs via a boot time fsck. Since these
+machines are remotely manageable, support can inject the kernel
+command line with 'fsck.mode=force fsck.repair=yes' to kick off
+xfs_repair if the machine won't come up or if they suspect there
+might be deeper issues with latent errors in the fs metadata, which
+is what they did to try to get everyone running ASAP while
+anticipating any future problems. But, fsck.xfs does not address the
+journal replay in case of a crash.
 
-With the changes to scan the page cache for dirty data to avoid data
-corruptions from partial write cleanup racing with other page cache
-operations, the drop writes error injection no longer works the same
-way it used to and causes xfs/196 to fail. This is because xfs/196
-writes to the file and populates the page cache before it turns on
-the error injection and starts failing -overwrites-.
+fsck.xfs does xfs_repair -e if fsck.mode=force is set. It is
+possible that when the machine crashes, the fs is in inconsistent
+state with the journal log not yet replayed. This can drop the machine
+into the rescue shell because xfs_fsck.sh does not know how to clean the
+log. Since the administrator told us to force repairs, address the
+deficiency by cleaning the log and rerunning xfs_repair.
 
-The result is that the original drop-writes code failed writes only
--after- overwriting the data in the cache, followed by invalidates
-the cached data, then punching out the delalloc extent from under
-that data.
+Run xfs_repair -e when fsck.mode=force and repair=auto or yes.
+Replay the logs only if fsck.mode=force and fsck.repair=yes. For
+other option -fa and -f drop to the rescue shell if repair detects
+any corruptions.
 
-On the surface, this looks fine. The problem is that page cache
-invalidation *doesn't guarantee that it removes anything from the
-page cache* and it doesn't change the dirty state of the folio. When
-block size == page size and we do page aligned IO (as xfs/196 does)
-everything happens to align perfectly and page cache invalidation
-removes the single page folios that span the written data. Hence the
-followup delalloc punch pass does not find cached data over that
-range and it can punch the extent out.
-
-IOWs, xfs/196 "works" for block size == page size with the new
-code. I say "works", because it actually only works for the case
-where IO is page aligned, and no data was read from disk before
-writes occur. Because the moment we actually read data first, the
-readahead code allocates multipage folios and suddenly the
-invalidate code goes back to zeroing subfolio ranges without
-changing dirty state.
-
-Hence, with multipage folios in play, block size == page size is
-functionally identical to block size < page size behaviour, and
-drop-writes is manifestly broken w.r.t to this case. Invalidation of
-a subfolio range doesn't result in the folio being removed from the
-cache, just the range gets zeroed. Hence after we've sequentially
-walked over a folio that we've dirtied (via write data) and then
-invalidated, we end up with a dirty folio full of zeroed data.
-
-And because the new code skips punching ranges that have dirty
-folios covering them, we end up leaving the delalloc range intact
-after failing all the writes. Hence failed writes now end up
-writing zeroes to disk in the cases where invalidation zeroes folios
-rather than removing them from cache.
-
-This is a fundamental change of behaviour that is needed to avoid
-the data corruption vectors that exist in the old write fail path,
-and it renders the drop-writes injection non-functional and
-unworkable as it stands.
-
-As it is, I think the error injection is also now unnecessary, as
-partial writes that need delalloc extent are going to be a lot more
-common with stale iomap detection in place. Hence this patch removes
-the drop-writes error injection completely. xfs/196 can remain for
-testing kernels that don't have this data corruption fix, but those
-that do will report:
-
-xfs/196 3s ... [not run] XFS error injection drop_writes unknown on this kernel.
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Srikanth C S <srikanth.c.s@oracle.com>
 ---
- fs/xfs/libxfs/xfs_errortag.h | 12 +++++-------
- fs/xfs/xfs_error.c           | 27 ++++++++++++++++++++-------
- fs/xfs/xfs_iomap.c           |  9 ---------
- 3 files changed, 25 insertions(+), 23 deletions(-)
+ fsck/xfs_fsck.sh | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_errortag.h b/fs/xfs/libxfs/xfs_errortag.h
-index 5362908164b0..580ccbd5aadc 100644
---- a/fs/xfs/libxfs/xfs_errortag.h
-+++ b/fs/xfs/libxfs/xfs_errortag.h
-@@ -40,13 +40,12 @@
- #define XFS_ERRTAG_REFCOUNT_FINISH_ONE			25
- #define XFS_ERRTAG_BMAP_FINISH_ONE			26
- #define XFS_ERRTAG_AG_RESV_CRITICAL			27
-+
- /*
-- * DEBUG mode instrumentation to test and/or trigger delayed allocation
-- * block killing in the event of failed writes. When enabled, all
-- * buffered writes are silenty dropped and handled as if they failed.
-- * All delalloc blocks in the range of the write (including pre-existing
-- * delalloc blocks!) are tossed as part of the write failure error
-- * handling sequence.
-+ * Drop-writes support removed because write error handling cannot trash
-+ * pre-existing delalloc extents in any useful way anymore. We retain the
-+ * definition so that we can reject it as an invalid value in
-+ * xfs_errortag_valid().
-  */
- #define XFS_ERRTAG_DROP_WRITES				28
- #define XFS_ERRTAG_LOG_BAD_CRC				29
-@@ -95,7 +94,6 @@
- #define XFS_RANDOM_REFCOUNT_FINISH_ONE			1
- #define XFS_RANDOM_BMAP_FINISH_ONE			1
- #define XFS_RANDOM_AG_RESV_CRITICAL			4
--#define XFS_RANDOM_DROP_WRITES				1
- #define XFS_RANDOM_LOG_BAD_CRC				1
- #define XFS_RANDOM_LOG_ITEM_PIN				1
- #define XFS_RANDOM_BUF_LRU_REF				2
-diff --git a/fs/xfs/xfs_error.c b/fs/xfs/xfs_error.c
-index c6b2aabd6f18..dea3c0649d2f 100644
---- a/fs/xfs/xfs_error.c
-+++ b/fs/xfs/xfs_error.c
-@@ -46,7 +46,7 @@ static unsigned int xfs_errortag_random_default[] = {
- 	XFS_RANDOM_REFCOUNT_FINISH_ONE,
- 	XFS_RANDOM_BMAP_FINISH_ONE,
- 	XFS_RANDOM_AG_RESV_CRITICAL,
--	XFS_RANDOM_DROP_WRITES,
-+	0, /* XFS_RANDOM_DROP_WRITES has been removed */
- 	XFS_RANDOM_LOG_BAD_CRC,
- 	XFS_RANDOM_LOG_ITEM_PIN,
- 	XFS_RANDOM_BUF_LRU_REF,
-@@ -162,7 +162,6 @@ XFS_ERRORTAG_ATTR_RW(refcount_continue_update,	XFS_ERRTAG_REFCOUNT_CONTINUE_UPDA
- XFS_ERRORTAG_ATTR_RW(refcount_finish_one,	XFS_ERRTAG_REFCOUNT_FINISH_ONE);
- XFS_ERRORTAG_ATTR_RW(bmap_finish_one,	XFS_ERRTAG_BMAP_FINISH_ONE);
- XFS_ERRORTAG_ATTR_RW(ag_resv_critical,	XFS_ERRTAG_AG_RESV_CRITICAL);
--XFS_ERRORTAG_ATTR_RW(drop_writes,	XFS_ERRTAG_DROP_WRITES);
- XFS_ERRORTAG_ATTR_RW(log_bad_crc,	XFS_ERRTAG_LOG_BAD_CRC);
- XFS_ERRORTAG_ATTR_RW(log_item_pin,	XFS_ERRTAG_LOG_ITEM_PIN);
- XFS_ERRORTAG_ATTR_RW(buf_lru_ref,	XFS_ERRTAG_BUF_LRU_REF);
-@@ -206,7 +205,6 @@ static struct attribute *xfs_errortag_attrs[] = {
- 	XFS_ERRORTAG_ATTR_LIST(refcount_finish_one),
- 	XFS_ERRORTAG_ATTR_LIST(bmap_finish_one),
- 	XFS_ERRORTAG_ATTR_LIST(ag_resv_critical),
--	XFS_ERRORTAG_ATTR_LIST(drop_writes),
- 	XFS_ERRORTAG_ATTR_LIST(log_bad_crc),
- 	XFS_ERRORTAG_ATTR_LIST(log_item_pin),
- 	XFS_ERRORTAG_ATTR_LIST(buf_lru_ref),
-@@ -256,6 +254,19 @@ xfs_errortag_del(
- 	kmem_free(mp->m_errortag);
- }
+diff --git a/fsck/xfs_fsck.sh b/fsck/xfs_fsck.sh
+index 6af0f22..62a1e0b 100755
+--- a/fsck/xfs_fsck.sh
++++ b/fsck/xfs_fsck.sh
+@@ -31,10 +31,12 @@ repair2fsck_code() {
  
-+static bool
-+xfs_errortag_valid(
-+	unsigned int		error_tag)
-+{
-+	if (error_tag >= XFS_ERRTAG_MAX)
-+		return false;
-+
-+	/* Error out removed injection types */
-+	if (error_tag == XFS_ERRTAG_DROP_WRITES)
-+		return false;
-+	return true;
-+}
-+
- bool
- xfs_errortag_test(
- 	struct xfs_mount	*mp,
-@@ -277,7 +288,9 @@ xfs_errortag_test(
- 	if (!mp->m_errortag)
- 		return false;
+ AUTO=false
+ FORCE=false
++REPAIR=false
+ while getopts ":aApyf" c
+ do
+        case $c in
+-       a|A|p|y)        AUTO=true;;
++       a|A|p)          AUTO=true;;
++       y)              REPAIR=true;;
+        f)              FORCE=true;;
+        esac
+ done
+@@ -64,7 +66,32 @@ fi
  
--	ASSERT(error_tag < XFS_ERRTAG_MAX);
-+	if (!xfs_errortag_valid(error_tag))
-+		return false;
-+
- 	randfactor = mp->m_errortag[error_tag];
- 	if (!randfactor || prandom_u32_max(randfactor))
- 		return false;
-@@ -293,7 +306,7 @@ xfs_errortag_get(
- 	struct xfs_mount	*mp,
- 	unsigned int		error_tag)
- {
--	if (error_tag >= XFS_ERRTAG_MAX)
-+	if (!xfs_errortag_valid(error_tag))
- 		return -EINVAL;
+ if $FORCE; then
+        xfs_repair -e $DEV
+-       repair2fsck_code $?
++       error=$?
++       if [ $error -eq 2 ] && [ $REPAIR = true ]; then
++               echo "Replaying log for $DEV"
++               mkdir -p /tmp/repair_mnt || exit 1
++               for x in $(cat /proc/cmdline); do
++                       case $x in
++                               root=*)
++                                       ROOT="${x#root=}"
++                               ;;
++                               rootflags=*)
++                                       ROOTFLAGS="-o ${x#rootflags=}"
++                               ;;
++                       esac
++               done
++               test -b "$ROOT" || ROOT=$(blkid -t "$ROOT" -o device)
++               if [ $(basename $DEV) = $(basename $ROOT) ]; then
++                       mount $DEV /tmp/repair_mnt $ROOTFLAGS || exit 1
++               else
++                       mount $DEV /tmp/repair_mnt || exit 1
++               fi
++               umount /tmp/repair_mnt
++               xfs_repair -e $DEV
++               error=$?
++               rm -d /tmp/repair_mnt
++       fi
++       repair2fsck_code $error
+        exit $?
+ fi
  
- 	return mp->m_errortag[error_tag];
-@@ -305,7 +318,7 @@ xfs_errortag_set(
- 	unsigned int		error_tag,
- 	unsigned int		tag_value)
- {
--	if (error_tag >= XFS_ERRTAG_MAX)
-+	if (!xfs_errortag_valid(error_tag))
- 		return -EINVAL;
- 
- 	mp->m_errortag[error_tag] = tag_value;
-@@ -319,7 +332,7 @@ xfs_errortag_add(
- {
- 	BUILD_BUG_ON(ARRAY_SIZE(xfs_errortag_random_default) != XFS_ERRTAG_MAX);
- 
--	if (error_tag >= XFS_ERRTAG_MAX)
-+	if (!xfs_errortag_valid(error_tag))
- 		return -EINVAL;
- 
- 	return xfs_errortag_set(mp, error_tag,
-diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-index 26ca3cc1a048..1bdd7afc1010 100644
---- a/fs/xfs/xfs_iomap.c
-+++ b/fs/xfs/xfs_iomap.c
-@@ -1190,15 +1190,6 @@ xfs_buffered_write_iomap_end(
- 	struct xfs_mount	*mp = XFS_M(inode->i_sb);
- 	int			error;
- 
--	/*
--	 * Behave as if the write failed if drop writes is enabled. Set the NEW
--	 * flag to force delalloc cleanup.
--	 */
--	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_DROP_WRITES)) {
--		iomap->flags |= IOMAP_F_NEW;
--		written = 0;
--	}
--
- 	error = iomap_file_buffered_write_punch_delalloc(inode, iomap, offset,
- 			length, written, &xfs_buffered_write_delalloc_punch);
- 	if (error && !xfs_is_shutdown(mp)) {
 -- 
-2.37.2
-
+1.8.3.1
