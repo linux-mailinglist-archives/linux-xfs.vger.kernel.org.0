@@ -2,65 +2,83 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5E2F637354
-	for <lists+linux-xfs@lfdr.de>; Thu, 24 Nov 2022 09:08:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32505637C20
+	for <lists+linux-xfs@lfdr.de>; Thu, 24 Nov 2022 15:55:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229554AbiKXIIj (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 24 Nov 2022 03:08:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
+        id S229672AbiKXOzZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 24 Nov 2022 09:55:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbiKXIIi (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Nov 2022 03:08:38 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245E59A5D5
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Nov 2022 00:08:37 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id e76so1007538yba.5
-        for <linux-xfs@vger.kernel.org>; Thu, 24 Nov 2022 00:08:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1H8eACwsPHCorcFfJu+1RNheIDT08lbVO89iT+IwrnE=;
-        b=hcvgfywrs5CNQciRKRok+L2IOwPt9pTi98wn0IlvOxeiwBYuar9JGTQ2hv4dCeko7M
-         ZBp13zhDouAH4H5ECU0rGau8v+fdckbM7MJ9GpMrCJImdG9wrE3G3Rn/B2lXzeZj4Aqa
-         i9Ocixhl+jm3HmWdBvG29olLeMYvewUdacS45whUJ0/oeDIcjU7ZRgkx/XHIIc7oCjcr
-         UwrhwSKungivUzxn29AlDs3wEtz5pe4aSHNPOqX/xAdFHlVHvOqkUU3+KgWzlPcw3cjD
-         3bprMUoOubz2SOrxrtB8biAA5z2xwfZ0bl4gqJR2HqGhPAGYHNBH6I5qy2mawLlHTHjh
-         A0GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1H8eACwsPHCorcFfJu+1RNheIDT08lbVO89iT+IwrnE=;
-        b=AuXdVtXxnHunMMJ0QTKJ0rEHMzSxLyHWgUM+VidXD/qon1SPPRzuXTGiGSMuyMtCac
-         4g94Y9d/Yhw/uzdgOQDWazmnVobIsup7FI+Xoyz3QglN9s2TGRej3JV/BW4nH4sSBvXn
-         KFs5xmbx6BjH13GLOSyLI1fu8aJ9329eKJ0k/RrzZWn9DZjRL5m8bLmYPSrw5f73zvUJ
-         pvvQB/bErKNGaWJ/SRM6uNVew+qMwyk2Trl+4U1qxm0sZri9Y2QxARDW2A/77r9Id+wF
-         gcR3YVfbTKu7mAc3k51x51qRDmWMvjomfhI59nCTj/V5qUV3FibHQz55Gep9rcKrXBPN
-         rvSg==
-X-Gm-Message-State: ANoB5pmuTFrdT9MAXBPCviKKJ52vgs2yhTGzYu4R9mporSt2J7Ijd7KA
-        5ZrAtNT1K9D5mWYlUDCXIORt34wSgh/gnyo935LVOg==
-X-Google-Smtp-Source: AA0mqf6Hbdl6bOW3lnt8Z2632YBw3AlpSzi59Dc46vuxtwqXTS9h2hH8z8cCGrtUctrK50at+cr6iD8ez62zNLmX+ss=
-X-Received: by 2002:a5b:b43:0:b0:6de:1554:867b with SMTP id
- b3-20020a5b0b43000000b006de1554867bmr11396138ybr.16.1669277316282; Thu, 24
- Nov 2022 00:08:36 -0800 (PST)
+        with ESMTP id S229669AbiKXOzO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 24 Nov 2022 09:55:14 -0500
+Received: from mail1.bemta34.messagelabs.com (mail1.bemta34.messagelabs.com [195.245.231.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500A525E8B;
+        Thu, 24 Nov 2022 06:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
+        s=170520fj; t=1669301711; i=@fujitsu.com;
+        bh=alQ7R5Jh0NErV3HrxzICAC/+0mUOPP9X/aFaPsHC9FA=;
+        h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type;
+        b=FLsiwZGfCHP45lQpVpgj6eO4NpEeQgX9uPYR97QjHyJ5ijI+t2qWitMp4oPx8cWQ9
+         D7GNOe11wh9E4pAw5dMsmHAZe8FcbNfU9XQo/Cyn7+Fr6L8onY9A7+2xc5VmfTihua
+         uhDeiNt52ackZGCTBCzl3iHQlpHJIZIkZWDknRUPVmzdCmyM3ykPmSLx+M103Egb9G
+         SM6IBsbOxg5JDvO9RWJnGZhFyQU40Th3w7798NQRN6d2xfrLIQPawKhJDdkDDC0aq1
+         VknjI7wEnzfkG8QwmPSHJckUsgx7KygMZZngVfOWissO0FlB+0r7TuaSE55e6f6aLN
+         +DcT1/B2a02Kg==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRWlGSWpSXmKPExsViZ8ORpHu+tT7
+  ZYEMTp8X0qRcYLbYcu8docfkJn8WevSdZLC7vmsNmsevPDnaLlT/+sDqwe5xaJOGxeM9LJo9N
+  qzrZPF5snsno8XmTXABrFGtmXlJ+RQJrxq4b7AXfOCturNzO2sDYwdHFyMUhJLCRUWLq+eeME
+  M4SJok/G95AOXsZJSY8/s7axcjJwSagI3FhwV8gm4NDRKBa4tZSNpAws4CXxNrXG5hBbGEBE4
+  lNa2aC2SwCqhLTV30Hs3kFXCQ+Xp3BBGJLCChITHn4HiouKHFy5hMWiDkSEgdfvGAGGS8hoCQ
+  xszseorxCYtasNqhWNYmr5zYxT2Dkn4WkexaS7gWMTKsYzYpTi8pSi3QNzfSSijLTM0pyEzNz
+  9BKrdBP1Ukt1y1OLS3SN9BLLi/VSi4v1iitzk3NS9PJSSzYxAsM8pVhx6w7GG8v+6B1ilORgU
+  hLlvZVTnyzEl5SfUpmRWJwRX1Sak1p8iFGGg0NJgtejHignWJSanlqRlpkDjDmYtAQHj5IIr3
+  s5UJq3uCAxtzgzHSJ1itGYY23Dgb3MHJP+XNvLLMSSl5+XKiXO+7IJqFQApDSjNA9uECwVXGK
+  UlRLmZWRgYBDiKUgtys0sQZV/xSjOwagkzKvRAjSFJzOvBG7fK6BTmIBOeapTB3JKSSJCSqqB
+  6Shj+s97PB/L3Vev+1p0PC3pW5py+qmkd7OrL1qVvz0lO6m4brt+7FH3fNbUL6pb79+cwvp1R
+  /qquOeOmy0fu2zZafxbPTUn7UThTa6GK39v6a28cDkmLKvh7Q+vs1s4b957YPvUymD39gQJpS
+  SxB/aHLM+05xu3lgnWLv3j//uUuZufE+/Kbb/9DmUfZvpg63jh0Upd8+cpF93cJfh6ghZKbVA
+  Xkaj0fH74+L5a+8cn9jY27G5PWcq/3+hJ4/k1ifOn2c5xdLoUNCNqv/3VszmO89bcXdCQJLgr
+  rOesSUOFRNPZ2KTlSqZtG3IOLbB/EtsscE02gH1O+oWJ64sV68v/ZelzaKX/MJv2cG5WmxJLc
+  UaioRZzUXEiAPCOJaKAAwAA
+X-Env-Sender: ruansy.fnst@fujitsu.com
+X-Msg-Ref: server-16.tower-565.messagelabs.com!1669301710!39516!1
+X-Originating-IP: [62.60.8.98]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.101.1; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 16235 invoked from network); 24 Nov 2022 14:55:11 -0000
+Received: from unknown (HELO n03ukasimr03.n03.fujitsu.local) (62.60.8.98)
+  by server-16.tower-565.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 24 Nov 2022 14:55:11 -0000
+Received: from n03ukasimr03.n03.fujitsu.local (localhost [127.0.0.1])
+        by n03ukasimr03.n03.fujitsu.local (Postfix) with ESMTP id C9C411AE;
+        Thu, 24 Nov 2022 14:55:10 +0000 (GMT)
+Received: from R01UKEXCASM126.r01.fujitsu.local (R01UKEXCASM126 [10.183.43.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by n03ukasimr03.n03.fujitsu.local (Postfix) with ESMTPS id BE7F41AD;
+        Thu, 24 Nov 2022 14:55:10 +0000 (GMT)
+Received: from localhost.localdomain (10.167.225.141) by
+ R01UKEXCASM126.r01.fujitsu.local (10.183.43.178) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.32; Thu, 24 Nov 2022 14:55:07 +0000
+From:   Shiyang Ruan <ruansy.fnst@fujitsu.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-xfs@vger.kernel.org>,
+        <nvdimm@lists.linux.dev>, <linux-fsdevel@vger.kernel.org>
+CC:     <djwong@kernel.org>, <david@fromorbit.com>,
+        <dan.j.williams@intel.com>
+Subject: [PATCH 0/2] fsdax,xfs: fix warning messages
+Date:   Thu, 24 Nov 2022 14:54:52 +0000
+Message-ID: <1669301694-16-1-git-send-email-ruansy.fnst@fujitsu.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <00000000000063536805ee0769d8@google.com> <20221122043504.GR3600936@dread.disaster.area>
-In-Reply-To: <20221122043504.GR3600936@dread.disaster.area>
-From:   Marco Elver <elver@google.com>
-Date:   Thu, 24 Nov 2022 09:07:59 +0100
-Message-ID: <CANpmjNNH0woaJEzviEj5sfzeOyFXCcE4U-UwUcgjL97aU7LVxg@mail.gmail.com>
-Subject: Re: [syzbot] kernel BUG in assfail
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     syzbot <syzbot+1d8c82e66f2e76b6b427@syzkaller.appspotmail.com>,
-        djwong@kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+Content-Type: text/plain
+X-Originating-IP: [10.167.225.141]
+X-ClientProxiedBy: G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.80) To
+ R01UKEXCASM126.r01.fujitsu.local (10.183.43.178)
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,21 +86,37 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-#syz invalid
+Many testcases failed in dax+reflink mode with warning message in dmesg.
+This also effects dax+noreflink mode if we run the test after a
+dax+reflink test.  So, the most urgent thing is solving the warning
+messages.
 
-On Tue, 22 Nov 2022 at 05:35, Dave Chinner <david@fromorbit.com> wrote:
-...
-> Turn off CONFIG_XFS_DEBUG, and this failure will return
-> -EFSCORRUPTED as expected because syzbot fed it a corrupt log. THe
-> mount will simply fail as you'd expect given the malicious
-> corruption that syzbot has performed.
->
-> If syzbot is going to maliciously corrupt XFS filesytsems and then
-> try to abuse them, then syzbot has two choices. Either:
->
-> 1. do not enable CONFIG_XFS_DEBUG; or
+Patch 1 fixes some mistakes and adds handling of CoW cases not
+previously considered (srcmap is HOLE or UNWRITTEN).
+Patch 2 adds the implementation of unshare for fsdax.
 
-We've disabled CONFIG_XFS_DEBUG - reports like this should no longer be sent.
+With these fixes, most warning messages in dax_associate_entry() are
+gone.  But honestly, generic/388 will randomly failed with the warning.
+The case shutdown the xfs when fsstress is running, and do it for many
+times.  I think the reason is that dax pages in use are not able to be
+invalidated in time when fs is shutdown.  The next time dax page to be
+associated, it still remains the mapping value set last time.  I'll keep
+on solving it.
 
-Thanks,
--- Marco
+The warning message in dax_writeback_one() can also be fixed because of
+the dax unshare.
+
+
+Shiyang Ruan (2):
+  fsdax,xfs: fix warning messages at dax_[dis]associate_entry()
+  fsdax,xfs: port unshare to fsdax
+
+ fs/dax.c             | 166 ++++++++++++++++++++++++++++++-------------
+ fs/xfs/xfs_iomap.c   |   6 +-
+ fs/xfs/xfs_reflink.c |   8 ++-
+ include/linux/dax.h  |   2 +
+ 4 files changed, 129 insertions(+), 53 deletions(-)
+
+-- 
+2.38.1
+
