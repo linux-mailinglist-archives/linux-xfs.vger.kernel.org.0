@@ -2,124 +2,411 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 996C663CE16
-	for <lists+linux-xfs@lfdr.de>; Wed, 30 Nov 2022 04:48:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55F6D63CE37
+	for <lists+linux-xfs@lfdr.de>; Wed, 30 Nov 2022 05:09:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232813AbiK3Ds4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 29 Nov 2022 22:48:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
+        id S231363AbiK3EJW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 29 Nov 2022 23:09:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbiK3Dsz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Nov 2022 22:48:55 -0500
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FB01E3C2
-        for <linux-xfs@vger.kernel.org>; Tue, 29 Nov 2022 19:48:53 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4NMQ4G1tcGz9xqd7
-        for <linux-xfs@vger.kernel.org>; Wed, 30 Nov 2022 11:41:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.170])
-        by APP2 (Coremail) with SMTP id BqC_BwC39l+S0oZj0DJ2AQ--.17355S2;
-        Wed, 30 Nov 2022 03:48:39 +0000 (GMT)
-From:   Guo Xuenan <guoxuenan@huawei.com>
-To:     djwong@kernel.org
-Cc:     dchinner@redhat.com, linux-xfs@vger.kernel.org,
-        guoxuenan@huawei.com, houtao1@huawei.com, jack.qiu@huawei.com,
-        fangwei1@huawei.com, yi.zhang@huawei.com, zhengbin13@huawei.com,
-        leo.lilong@huawei.com
-Subject: [PATCH v2] xfs: get rid of assert from xfs_btree_islastblock
-Date:   Wed, 30 Nov 2022 12:02:37 +0800
-Message-Id: <20221130040237.2434259-1-guoxuenan@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S233244AbiK3EIy (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 29 Nov 2022 23:08:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12E729803;
+        Tue, 29 Nov 2022 20:08:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F14A9B819FC;
+        Wed, 30 Nov 2022 04:08:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998CAC433C1;
+        Wed, 30 Nov 2022 04:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669781327;
+        bh=YqgkfAkC7fkxgy0kQrNLPnoW4g3hvntZHdESVA87dbI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rxus8bK+AeMi3jmPxJ9YYnQ9eNRWMKBAk2NIrm28RPOyPrHAoQhobrQQoaxb2HEDG
+         /zZAwrvErNsq4nYExnOVodJ4RtwBC3NZ1rRPYzmp9RrolDntYkFCQN+CjvyKBPa4g/
+         nTLsaqJK5B64jbADSGx3FW0qQITA3KEtD69rXwc3u6oDCG+peIQHeY7XJGUyzNPlBJ
+         p/u6ip95fQ45MosyDEKrktDzJJXIFNXUEaPijMYnBTjQDEEAQesxkNvkqSBiZ53e49
+         qinB1a9tdT8GaZYJG5BbKQghDiJjJ57aBgV+JZeAzqxXoaVaHtOm2fN2AYe5WLRH7S
+         3V5VeXop36R2A==
+Date:   Tue, 29 Nov 2022 20:08:47 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Shiyang Ruan <ruansy.fnst@fujitsu.com>
+Cc:     linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        david@fromorbit.com, dan.j.williams@intel.com
+Subject: Re: [PATCH 1/2] fsdax,xfs: fix warning messages at
+ dax_[dis]associate_entry()
+Message-ID: <Y4bXTywl3PQTY3Er@magnolia>
+References: <1669301694-16-1-git-send-email-ruansy.fnst@fujitsu.com>
+ <1669301694-16-2-git-send-email-ruansy.fnst@fujitsu.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: BqC_BwC39l+S0oZj0DJ2AQ--.17355S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFyDAw4xAF1fur45ur47XFb_yoW5JrWxp3
-        9ak3WFkrZrKw17uFn8tw1jq3WfWw1fCr4xA393Aryav345Jr1xJryFyry0qF9Fvr4fZ3ZF
-        gF45t3y3A3yUKaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvvb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-        c2Ij64vIr41l42xK82IY64kExVAvwVAq07x20xyl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-        6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-        IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E
-        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-        IFyTuYvjxUFjg4DUUUU
-Sender: guoxuenan@huaweicloud.com
-X-CM-SenderInfo: xjxr53hhqd0q5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1669301694-16-2-git-send-email-ruansy.fnst@fujitsu.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-xfs_btree_check_block contains debugging knobs. With XFS_DEBUG setting up,
-turn on the debugging knob can trigger the assert of xfs_btree_islastblock,
-test script as follows:
+On Thu, Nov 24, 2022 at 02:54:53PM +0000, Shiyang Ruan wrote:
+> This patch fixes the warning message reported in dax_associate_entry()
+> and dax_disassociate_entry().
 
-while true
-do
-    mount $disk $mountpoint
-    fsstress -d $testdir -l 0 -n 10000 -p 4 >/dev/null
-    echo 1 > /sys/fs/xfs/sda/errortag/btree_chk_sblk
-    sleep 10
-    umount $mountpoint
-done
+Hmm, that's quite a bit to put in a single patch, but I'll try to get
+through this...
 
-Kick off fsstress and only *then* turn on the debugging knob. If it
-happens that the knob gets turned on after the cntbt lookup succeeds
-but before the call to xfs_btree_islastblock, then we *can* end up in
-the situation where a previously checked btree block suddenly starts
-returning EFSCORRUPTED from xfs_btree_check_block. Kaboom.
+> 1. reset page->mapping and ->index when refcount counting down to 0.
+> 2. set IOMAP_F_SHARED flag when iomap read to allow one dax page to be
+> associated more than once for not only write but also read.
 
-Darrick give a very detailed explanation as follows:
-Looking back at commit 27d9ee577dcce, I think the point of all this was
-to make sure that the cursor has actually performed a lookup, and that
-the btree block at whatever level we're asking about is ok.
+That makes sense, I think.
 
-If the caller hasn't ever done a lookup, the bc_levels array will be
-empty, so cur->bc_levels[level].bp pointer will be NULL.  The call to
-xfs_btree_get_block will crash anyway, so the "ASSERT(block);" part is
-pointless.
+> 3. should zero the edge (when not aligned) if srcmap is HOLE or
 
-If the caller did a lookup but the lookup failed due to block
-corruption, the corresponding cur->bc_levels[level].bp pointer will also
-be NULL, and we'll still crash.  The "ASSERT(xfs_btree_check_block);"
-logic is also unnecessary.
+When is IOMAP_F_SHARED set on the /source/ mapping?
 
-If the cursor level points to an inode root, the block buffer will be
-incore, so it had better always be consistent.
+> UNWRITTEN.
+> 4. iterator of two files in dedupe should be executed side by side, not
+> nested.
 
-If the caller ignores a failed lookup after a successful one and calls
-this function, the cursor state is garbage and the assert wouldn't have
-tripped anyway. So get rid of the assert.
+Why?  Also, this seems like a separate change?
 
-Fixes: 27d9ee577dcc ("xfs: actually check xfs_btree_check_block return in xfs_btree_islastblock")
-Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
----
- fs/xfs/libxfs/xfs_btree.h | 1 -
- 1 file changed, 1 deletion(-)
+> 5. use xfs_dax_write_iomap_ops for xfs zero and truncate. 
 
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index eef27858a013..29c4b4ccb909 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -556,7 +556,6 @@ xfs_btree_islastblock(
- 	struct xfs_buf		*bp;
- 
- 	block = xfs_btree_get_block(cur, level, &bp);
--	ASSERT(block && xfs_btree_check_block(cur, block, level, bp) == 0);
- 
- 	if (cur->bc_flags & XFS_BTREE_LONG_PTRS)
- 		return block->bb_u.l.bb_rightsib == cpu_to_be64(NULLFSBLOCK);
--- 
-2.31.1
+Makes sense.
 
+> Signed-off-by: Shiyang Ruan <ruansy.fnst@fujitsu.com>
+> ---
+>  fs/dax.c           | 114 ++++++++++++++++++++++++++-------------------
+>  fs/xfs/xfs_iomap.c |   6 +--
+>  2 files changed, 69 insertions(+), 51 deletions(-)
+> 
+> diff --git a/fs/dax.c b/fs/dax.c
+> index 1c6867810cbd..5ea7c0926b7f 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -398,7 +398,7 @@ static void dax_disassociate_entry(void *entry, struct address_space *mapping,
+>  		WARN_ON_ONCE(trunc && page_ref_count(page) > 1);
+>  		if (dax_mapping_is_cow(page->mapping)) {
+>  			/* keep the CoW flag if this page is still shared */
+> -			if (page->index-- > 0)
+> +			if (page->index-- > 1)
+
+Hmm.  So if the fsdax "page" sharing factor drops from 2 to 1, we'll now
+null out the mapping and index?  Before, we only did that when it
+dropped from 1 to 0.
+
+Does this leave the page with no mapping?  And I guess a subsequent
+access will now take a fault to map it back in?
+
+>  				continue;
+>  		} else
+>  			WARN_ON_ONCE(page->mapping && page->mapping != mapping);
+> @@ -840,12 +840,6 @@ static bool dax_fault_is_synchronous(const struct iomap_iter *iter,
+>  		(iter->iomap.flags & IOMAP_F_DIRTY);
+>  }
+>  
+> -static bool dax_fault_is_cow(const struct iomap_iter *iter)
+> -{
+> -	return (iter->flags & IOMAP_WRITE) &&
+> -		(iter->iomap.flags & IOMAP_F_SHARED);
+> -}
+> -
+>  /*
+>   * By this point grab_mapping_entry() has ensured that we have a locked entry
+>   * of the appropriate size so we don't have to worry about downgrading PMDs to
+> @@ -859,13 +853,14 @@ static void *dax_insert_entry(struct xa_state *xas, struct vm_fault *vmf,
+>  {
+>  	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+>  	void *new_entry = dax_make_entry(pfn, flags);
+> -	bool dirty = !dax_fault_is_synchronous(iter, vmf->vma);
+> -	bool cow = dax_fault_is_cow(iter);
+> +	bool write = iter->flags & IOMAP_WRITE;
+> +	bool dirty = write && !dax_fault_is_synchronous(iter, vmf->vma);
+> +	bool shared = iter->iomap.flags & IOMAP_F_SHARED;
+>  
+>  	if (dirty)
+>  		__mark_inode_dirty(mapping->host, I_DIRTY_PAGES);
+>  
+> -	if (cow || (dax_is_zero_entry(entry) && !(flags & DAX_ZERO_PAGE))) {
+> +	if (shared || (dax_is_zero_entry(entry) && !(flags & DAX_ZERO_PAGE))) {
+
+Ah, ok, so now we're yanking the mapping if the extent is shared,
+presumably so that...
+
+>  		unsigned long index = xas->xa_index;
+>  		/* we are replacing a zero page with block mapping */
+>  		if (dax_is_pmd_entry(entry))
+> @@ -877,12 +872,12 @@ static void *dax_insert_entry(struct xa_state *xas, struct vm_fault *vmf,
+>  
+>  	xas_reset(xas);
+>  	xas_lock_irq(xas);
+> -	if (cow || dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
+> +	if (shared || dax_is_zero_entry(entry) || dax_is_empty_entry(entry)) {
+>  		void *old;
+>  
+>  		dax_disassociate_entry(entry, mapping, false);
+>  		dax_associate_entry(new_entry, mapping, vmf->vma, vmf->address,
+> -				cow);
+> +				shared);
+
+...down here we can rebuild the association, but this time we'll set the
+page->mapping to PAGE_MAPPING_DAX_COW?  I see a lot of similar changes,
+so I'm guessing this is how you fixed the failures that were a result of
+read file A -> reflink A to B -> read file B sequences?
+
+>  		/*
+>  		 * Only swap our new entry into the page cache if the current
+>  		 * entry is a zero page or an empty entry.  If a normal PTE or
+> @@ -902,7 +897,7 @@ static void *dax_insert_entry(struct xa_state *xas, struct vm_fault *vmf,
+>  	if (dirty)
+>  		xas_set_mark(xas, PAGECACHE_TAG_DIRTY);
+>  
+> -	if (cow)
+> +	if (write && shared)
+>  		xas_set_mark(xas, PAGECACHE_TAG_TOWRITE);
+>  
+>  	xas_unlock_irq(xas);
+> @@ -1107,23 +1102,35 @@ static int dax_iomap_cow_copy(loff_t pos, uint64_t length, size_t align_size,
+
+I think this function isn't well named.  It's copying into the parts of
+the @daddr page that are *not* covered by @pos/@length.  In other words,
+it's really copying *around* the range that's supplied, isn't it?
+
+>  	loff_t end = pos + length;
+>  	loff_t pg_end = round_up(end, align_size);
+>  	bool copy_all = head_off == 0 && end == pg_end;
+> +	/* write zero at edge if srcmap is a HOLE or IOMAP_UNWRITTEN */
+> +	bool zero_edge = srcmap->flags & IOMAP_F_SHARED ||
+
+When is IOMAP_F_SHARED set on the /source/ mapping?  I don't understand
+that circumstance, so I don't understand why we want to zero around in
+that case.
+
+> +			 srcmap->type == IOMAP_UNWRITTEN;
+
+Though it's self evident why we'd do that if the source map is
+unwritten.
+
+>  	void *saddr = 0;
+>  	int ret = 0;
+>  
+> -	ret = dax_iomap_direct_access(srcmap, pos, size, &saddr, NULL);
+> -	if (ret)
+> -		return ret;
+> +	if (!zero_edge) {
+> +		ret = dax_iomap_direct_access(srcmap, pos, size, &saddr, NULL);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	if (copy_all) {
+> -		ret = copy_mc_to_kernel(daddr, saddr, length);
+> -		return ret ? -EIO : 0;
+> +		if (zero_edge)
+> +			memset(daddr, 0, size);
+> +		else
+> +			ret = copy_mc_to_kernel(daddr, saddr, length);
+> +		goto out;
+>  	}
+>  
+>  	/* Copy the head part of the range */
+>  	if (head_off) {
+> -		ret = copy_mc_to_kernel(daddr, saddr, head_off);
+> -		if (ret)
+> -			return -EIO;
+> +		if (zero_edge)
+> +			memset(daddr, 0, head_off);
+> +		else {
+> +			ret = copy_mc_to_kernel(daddr, saddr, head_off);
+> +			if (ret)
+> +				return -EIO;
+> +		}
+>  	}
+>  
+>  	/* Copy the tail part of the range */
+> @@ -1131,12 +1138,19 @@ static int dax_iomap_cow_copy(loff_t pos, uint64_t length, size_t align_size,
+>  		loff_t tail_off = head_off + length;
+>  		loff_t tail_len = pg_end - end;
+>  
+> -		ret = copy_mc_to_kernel(daddr + tail_off, saddr + tail_off,
+> -					tail_len);
+> -		if (ret)
+> -			return -EIO;
+> +		if (zero_edge)
+> +			memset(daddr + tail_off, 0, tail_len);
+> +		else {
+> +			ret = copy_mc_to_kernel(daddr + tail_off,
+> +						saddr + tail_off, tail_len);
+> +			if (ret)
+> +				return -EIO;
+> +		}
+>  	}
+> -	return 0;
+> +out:
+> +	if (zero_edge)
+> +		dax_flush(srcmap->dax_dev, daddr, size);
+> +	return ret ? -EIO : 0;
+>  }
+>  
+>  /*
+> @@ -1235,13 +1249,9 @@ static int dax_memzero(struct iomap_iter *iter, loff_t pos, size_t size)
+>  	if (ret < 0)
+>  		return ret;
+>  	memset(kaddr + offset, 0, size);
+> -	if (srcmap->addr != iomap->addr) {
+> -		ret = dax_iomap_cow_copy(pos, size, PAGE_SIZE, srcmap,
+> -					 kaddr);
+> -		if (ret < 0)
+> -			return ret;
+> -		dax_flush(iomap->dax_dev, kaddr, PAGE_SIZE);
+> -	} else
+> +	if (iomap->flags & IOMAP_F_SHARED)
+> +		ret = dax_iomap_cow_copy(pos, size, PAGE_SIZE, srcmap, kaddr);
+> +	else
+>  		dax_flush(iomap->dax_dev, kaddr + offset, size);
+>  	return ret;
+>  }
+> @@ -1258,6 +1268,15 @@ static s64 dax_zero_iter(struct iomap_iter *iter, bool *did_zero)
+>  	if (srcmap->type == IOMAP_HOLE || srcmap->type == IOMAP_UNWRITTEN)
+>  		return length;
+>  
+> +	/*
+> +	 * invalidate the pages whose sharing state is to be changed
+> +	 * because of CoW.
+> +	 */
+> +	if (iomap->flags & IOMAP_F_SHARED)
+> +		invalidate_inode_pages2_range(iter->inode->i_mapping,
+> +					      pos >> PAGE_SHIFT,
+> +					      (pos + length - 1) >> PAGE_SHIFT);
+> +
+>  	do {
+>  		unsigned offset = offset_in_page(pos);
+>  		unsigned size = min_t(u64, PAGE_SIZE - offset, length);
+> @@ -1318,12 +1337,13 @@ static loff_t dax_iomap_iter(const struct iomap_iter *iomi,
+>  		struct iov_iter *iter)
+>  {
+>  	const struct iomap *iomap = &iomi->iomap;
+> -	const struct iomap *srcmap = &iomi->srcmap;
+> +	const struct iomap *srcmap = iomap_iter_srcmap(iomi);
+>  	loff_t length = iomap_length(iomi);
+>  	loff_t pos = iomi->pos;
+>  	struct dax_device *dax_dev = iomap->dax_dev;
+>  	loff_t end = pos + length, done = 0;
+>  	bool write = iov_iter_rw(iter) == WRITE;
+> +	bool cow = write && iomap->flags & IOMAP_F_SHARED;
+>  	ssize_t ret = 0;
+>  	size_t xfer;
+>  	int id;
+> @@ -1350,7 +1370,7 @@ static loff_t dax_iomap_iter(const struct iomap_iter *iomi,
+>  	 * into page tables. We have to tear down these mappings so that data
+>  	 * written by write(2) is visible in mmap.
+>  	 */
+> -	if (iomap->flags & IOMAP_F_NEW) {
+> +	if (iomap->flags & IOMAP_F_NEW || cow) {
+>  		invalidate_inode_pages2_range(iomi->inode->i_mapping,
+>  					      pos >> PAGE_SHIFT,
+>  					      (end - 1) >> PAGE_SHIFT);
+> @@ -1384,8 +1404,7 @@ static loff_t dax_iomap_iter(const struct iomap_iter *iomi,
+>  			break;
+>  		}
+>  
+> -		if (write &&
+> -		    srcmap->type != IOMAP_HOLE && srcmap->addr != iomap->addr) {
+> +		if (cow) {
+>  			ret = dax_iomap_cow_copy(pos, length, PAGE_SIZE, srcmap,
+>  						 kaddr);
+>  			if (ret)
+> @@ -1532,7 +1551,7 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
+>  		struct xa_state *xas, void **entry, bool pmd)
+>  {
+>  	const struct iomap *iomap = &iter->iomap;
+> -	const struct iomap *srcmap = &iter->srcmap;
+> +	const struct iomap *srcmap = iomap_iter_srcmap(iter);
+>  	size_t size = pmd ? PMD_SIZE : PAGE_SIZE;
+>  	loff_t pos = (loff_t)xas->xa_index << PAGE_SHIFT;
+>  	bool write = iter->flags & IOMAP_WRITE;
+> @@ -1563,8 +1582,7 @@ static vm_fault_t dax_fault_iter(struct vm_fault *vmf,
+>  
+>  	*entry = dax_insert_entry(xas, vmf, iter, *entry, pfn, entry_flags);
+>  
+> -	if (write &&
+> -	    srcmap->type != IOMAP_HOLE && srcmap->addr != iomap->addr) {
+> +	if (write && iomap->flags & IOMAP_F_SHARED) {
+>  		err = dax_iomap_cow_copy(pos, size, size, srcmap, kaddr);
+>  		if (err)
+>  			return dax_fault_return(err);
+> @@ -1936,15 +1954,15 @@ int dax_dedupe_file_range_compare(struct inode *src, loff_t srcoff,
+
+Does the dedupe change need to be in this patch?  It looks ok both
+before and after, so I don't know why it's necessary.
+
+Welp, thank you for fixing the problems, at least.  After a couple of
+days it looks like the serious problems have cleared up.
+
+--D
+
+>  		.len		= len,
+>  		.flags		= IOMAP_DAX,
+>  	};
+> -	int ret;
+> +	int ret, compared = 0;
+>  
+> -	while ((ret = iomap_iter(&src_iter, ops)) > 0) {
+> -		while ((ret = iomap_iter(&dst_iter, ops)) > 0) {
+> -			dst_iter.processed = dax_range_compare_iter(&src_iter,
+> -						&dst_iter, len, same);
+> -		}
+> -		if (ret <= 0)
+> -			src_iter.processed = ret;
+> +	while ((ret = iomap_iter(&src_iter, ops)) > 0 &&
+> +	       (ret = iomap_iter(&dst_iter, ops)) > 0) {
+> +		compared = dax_range_compare_iter(&src_iter, &dst_iter, len,
+> +						  same);
+> +		if (compared < 0)
+> +			return ret;
+> +		src_iter.processed = dst_iter.processed = compared;
+>  	}
+>  	return ret;
+>  }
+> diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> index 07da03976ec1..d9401d0300ad 100644
+> --- a/fs/xfs/xfs_iomap.c
+> +++ b/fs/xfs/xfs_iomap.c
+> @@ -1215,7 +1215,7 @@ xfs_read_iomap_begin(
+>  		return error;
+>  	error = xfs_bmapi_read(ip, offset_fsb, end_fsb - offset_fsb, &imap,
+>  			       &nimaps, 0);
+> -	if (!error && (flags & IOMAP_REPORT))
+> +	if (!error && ((flags & IOMAP_REPORT) || IS_DAX(inode)))
+>  		error = xfs_reflink_trim_around_shared(ip, &imap, &shared);
+>  	xfs_iunlock(ip, lockmode);
+>  
+> @@ -1370,7 +1370,7 @@ xfs_zero_range(
+>  
+>  	if (IS_DAX(inode))
+>  		return dax_zero_range(inode, pos, len, did_zero,
+> -				      &xfs_direct_write_iomap_ops);
+> +				      &xfs_dax_write_iomap_ops);
+>  	return iomap_zero_range(inode, pos, len, did_zero,
+>  				&xfs_buffered_write_iomap_ops);
+>  }
+> @@ -1385,7 +1385,7 @@ xfs_truncate_page(
+>  
+>  	if (IS_DAX(inode))
+>  		return dax_truncate_page(inode, pos, did_zero,
+> -					&xfs_direct_write_iomap_ops);
+> +					&xfs_dax_write_iomap_ops);
+>  	return iomap_truncate_page(inode, pos, did_zero,
+>  				   &xfs_buffered_write_iomap_ops);
+>  }
+> -- 
+> 2.38.1
+> 
