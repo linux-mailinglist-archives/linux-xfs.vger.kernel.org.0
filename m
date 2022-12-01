@@ -2,130 +2,216 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6994963EC95
-	for <lists+linux-xfs@lfdr.de>; Thu,  1 Dec 2022 10:34:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97BD563F10E
+	for <lists+linux-xfs@lfdr.de>; Thu,  1 Dec 2022 14:01:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbiLAJeT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 1 Dec 2022 04:34:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41496 "EHLO
+        id S229970AbiLANBT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 1 Dec 2022 08:01:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiLAJeS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Dec 2022 04:34:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1B8B8D
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Dec 2022 01:34:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C6A9461EFA
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Dec 2022 09:34:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8BDC433C1
-        for <linux-xfs@vger.kernel.org>; Thu,  1 Dec 2022 09:34:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669887257;
-        bh=ZnOwIxwee67jDlyhfJcBSrKEBX8tmJnCR7GIC+Xrs9A=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=rheilE2bFuJxh0gF8GbawDmGawaWOhAL0qwB80JZvFyBZSz8ZjrIzysbtUznwr/Ul
-         Q9CVuZDkyyKZj1hsjxhZblTM462NjGgXya017nWOTsPS9yObuTU+sRkY7ZQPChrhl0
-         jZ3ZSVk6GX8pYdsk3WbDz/4txtN7c9IA7kVjUoYKrZtXEifaM/AVEoS18Yw1MYrP1i
-         8lJV/5vmvTdTHVuXLXjOc5JIWzohVJV4yBE5wKCAcaa47LTvpmkCUPwKDgcW46c2Rk
-         OHQJK39NN0GaJrApaszjalcx7EcBEvJEZXWj5ERzInYGOkohfoSdyworqvbhCabWwF
-         g03Y7Bimq3AfQ==
-From:   cem@kernel.org
-To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 2/2] xfs_repair: Fix rmaps_verify_btree() error path
-Date:   Thu,  1 Dec 2022 10:34:08 +0100
-Message-Id: <20221201093408.87820-3-cem@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221201093408.87820-1-cem@kernel.org>
-References: <20221201093408.87820-1-cem@kernel.org>
+        with ESMTP id S231277AbiLANA6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 1 Dec 2022 08:00:58 -0500
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944128E58E
+        for <linux-xfs@vger.kernel.org>; Thu,  1 Dec 2022 05:00:54 -0800 (PST)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 30B9D3200065;
+        Thu,  1 Dec 2022 08:00:51 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Thu, 01 Dec 2022 08:00:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=boo.tc; h=cc:cc
+        :content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1669899650; x=
+        1669986050; bh=WBFZQEHnXVYj96TFOiSnFX11ZEmT89TcXKYJ8Qm2afQ=; b=X
+        pK00UlL24/wzJKx0JiQkB7MGe99akqM4OJ6Rz5nRnEzI3WvTFKQqzXDdECO2W3w5
+        7yisb2lGZhq3AG7s2vsnWo0ESV7jn+NANFs02MPEVxNziqRXc51dYZ38yI4A0tiB
+        lpPESOGDLSelLXdz687lCXAF2rS6qKRkJoT0CrEmB9QKauzB9KIMqNj5sD/UgUAH
+        xVIV9aB+N8Qwe9GkBUgTLgxyU30vMUL23Nahmovhe/lPLkXCWHTZkmkVYUBFdYg0
+        0qsf7wNrfy6ikYqTzeLjV2Gm53itlCoRIBNF/eT349ZAhuWjmBKibANwXEp+CBuK
+        f6iNw9LhdGn9EVnYbRhfw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1669899650; x=
+        1669986050; bh=WBFZQEHnXVYj96TFOiSnFX11ZEmT89TcXKYJ8Qm2afQ=; b=s
+        BfHR/Z2f+WwxBxqEJELXEL7k3OkC6kWU3oWnPGZj9qX5O8o7MZhZaczQegFGaclF
+        CExuzWRtQ/icwjM2YdaDeVLjt2mNEPguTd6JXYrstUTOa+cecEBaFsg1Stb/W3e3
+        6PfcC040/izW7cxDxOa8/muDetmPTucTVOaK135ghxUqne6Lz8VkVNdTd/dJ+cL2
+        LDvqCDgMqIWUmMDpfqUw1uQ2TgyGg5JeVmIAYHEepAyT6dmGCP/3R6nkAkOH+O98
+        ck1ksnVv1uHk83WuOYHLPPn9wC08PPFY1vFllMhBxX3XPLzxMBlwD2Srrg8w3pup
+        fbkppZbDOWY5Wpg6VU30A==
+X-ME-Sender: <xms:gqWIY8wwwdBLX5_kZGOnvAwXpjOlJdkELgUI1vwKgllE6ZlL-VuyRA>
+    <xme:gqWIYwQrH6CLyvKszo3YXJrm5BzEyKk--tcJzoxsH63WxqBYwRHAW4mZdZfUBNmsJ
+    hhAERP0ajAush0ibw>
+X-ME-Received: <xmr:gqWIY-VA-0TiKpz66kmDfEq6Dhu136hOG8inI7woPJx7Hc3rBquGENGKpbfaaLS_iPUeLj84xx4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrtdehgdegjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdehtddmnecujfgurhepkfffgggfvfevfhfhufgjtgfgsehtjeertddt
+    feejnecuhfhrohhmpeevhhhrihhsuceuohhothcuoehlihhsthhssegsohhothgtrdgsoh
+    hordhttgeqnecuggftrfgrthhtvghrnhepieevfeffgefhvdfghfefueektefhjefgtdef
+    veffveeikeeiueetfeetleevvedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheplhhishhtshessghoohhttgdrsghoohdrthgt
+X-ME-Proxy: <xmx:gqWIY6jLR8nhjnhWIZVBdq6farqBbooib6APNsekrjLcGm3zEMqoAQ>
+    <xmx:gqWIY-Bqrt-p5K4rU9XWRAKU23cYJ3Z-o-fY3hTTuf_3ii-9lbxazg>
+    <xmx:gqWIY7JdrzhUhYxae4XQeNu7WIV65MfItKGe2PXhcPua39MQfCywAg>
+    <xmx:gqWIYxP0B3lBx4qJ0cpiA8KqQt0INCeeivqNuGhjF3BBNHRDHM3Wkg>
+Feedback-ID: i5869458d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 Dec 2022 08:00:49 -0500 (EST)
+Message-ID: <a019db45-2f05-e2ec-5953-26e20aa9484b@bootc.boo.tc>
+Date:   Thu, 1 Dec 2022 13:00:48 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.5.0
+Content-Language: en-GB
+To:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org
+References: <c3fc1808-dbbf-b1c0-36de-1e55be1942e8@bootc.boo.tc>
+ <20221129220646.GI3600936@dread.disaster.area> <Y4gNntJTb1dZLejo@magnolia>
+From:   Chris Boot <lists@bootc.boo.tc>
+Subject: Re: XFS corruption help; xfs_repair isn't working
+In-Reply-To: <Y4gNntJTb1dZLejo@magnolia>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Carlos Maiolino <cmaiolino@redhat.com>
+On 01/12/2022 02:12, Darrick J. Wong wrote:
+> On Wed, Nov 30, 2022 at 09:06:46AM +1100, Dave Chinner wrote:
+>> On Tue, Nov 29, 2022 at 08:49:27PM +0000, Chris Boot wrote:
+>>> Hi all,
+>>>
+>>> Sorry, I'm mailing here as a last resort before declaring this filesystem
+>>> done for. Following a string of unclean reboots and a dying hard disk I have
+>>> this filesystem in a very poor state that xfs_repair can't make any progress
+>>> on.
+>>>
+>>> It has been mounted on kernel 5.18.14-1~bpo11+1 (from Debian
+>>> bullseye-backports). Most of the repairs were done using xfsprogs 5.10.0-4
+>>> (from Debian bullseye stable), though I did also try with 6.0.0-1 (from
+>>> Debian bookworm/testing re-built myself).
+>>>
+>>> I've attached the full log from xfs_repair, but the summary is it all starts
+>>> with multiple instances of this in Phase 3:
+>>>
+>>> Metadata CRC error detected at 0x5609236ce178, xfs_dir3_block block
+>>> 0xe101f32f8/0x1000
+>>> bad directory block magic # 0x1859dc06 in block 0 for directory inode
+>>> 64426557977
+>>> bad bestfree table in block 0 in directory inode 64426557977: repairing
+>>> table
+>>
+>> I think that the problem is that we are trying to repair garbage
+>> without completely reinitialising the directory block header. We
+>> don't bother checking the incoming directory block for sanity after
+>> the CRC fails, and then we only warn that it has a bad magic number.
+>>
+>> We then go a process it as though it is a directory block,
+>> essentially trusting that the directory block header is actually
+>> sane. Which it clearly isn't because the magic number in the dir
+>> block has been trashed.
+>>
+>> We then rescan parts of the directory block and rewrite parts of the
+>> block header, but the next time we re-scan the block we find that
+>> there are still bad parts in the header/directory block. Then we
+>> rewrite the magic number to make it look like a directory block,
+>> and when repair is finished it goes to write the recovered directory
+>> block to disk and it fails the verifier check - it's still a corrupt
+>> directory block because it's still full of garbage that doesn't pass
+>> muster.
+>>
+>>  From a recovery persepective, I think that if we get a bad CRC and
+>> an unrecognisable magic number, we have no idea what the block is
+>> meant to contain - we cannot trust it to contain directory
+>> information, so we should just trash the block rather than try to
+>> rebuild it. If it was a valid directory block, this will result in
+>> the files it pointed to being moved to lost+found so no data is
+>> actually lost.
+>>
+>> If it wasn't a dir block at all, then simply trashing the data fork
+>> of the inode and not touching the contents of the block at all is
+>> right thing to do. Modifying something that may be cross-linked
+>> before we've resolved all the cross-linked extents is a bad thing to
+>> be doing, so if we cannot recognise the block as a directory block,
+>> we shouldn't try to recover it as a directory block at all....
+>>
+>> Darrick, what are your thoughts on this?
+> 
+> I kinda want to see the metadump of this (possibly enormous) filesystem.
 
-Add proper exit error paths to avoid checking all pointers at the current path
+I've asked whether I can share this with you. The filesystem is indeed 
+huge (35TiB) and I wouldn't be surprised if the metadata alone was 
+rather large. What would be the most efficient way of sharing that with you?
 
-Fixes-coverity-id: 1512654
+It looks like there are exactly 7 unreadable directories scattered 
+across the filesystem, most in data that has been there for weeks/months 
+- but a couple in the most recent complete "snapshot" directory.
 
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
----
-V2:
-	- Rename error label from err_agf to err_pag
-V3:
-	- Rename the remaining 2 err labels to match what they are freeing
+> Probably the best outcome is to figure out which blocks in each
+> directory are corrupt, remove them from the data fork mapping, and see
+> if repair can fix up the other things (e.g. bestfree data) and dump the
+> unlinked files in /lost+found.  Hopefully rsnapshot can deal with the
+> directory tree if we can at least get the bad dirblocks out of the way.
 
- repair/rmap.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+rsnapshot just runs an rsync with --link-dest= set, so it'll just 
+duplicate files that are missing, but it aborts when it hits the 
+corrupted directories as it can't look inside them.
 
-diff --git a/repair/rmap.c b/repair/rmap.c
-index 9ec5e9e13..52106fd42 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -1004,7 +1004,7 @@ rmaps_verify_btree(
- 	if (error) {
- 		do_warn(_("Could not read AGF %u to check rmap btree.\n"),
- 				agno);
--		goto err;
-+		goto err_pag;
- 	}
- 
- 	/* Leave the per-ag data "uninitialized" since we rewrite it later */
-@@ -1013,7 +1013,7 @@ rmaps_verify_btree(
- 	bt_cur = libxfs_rmapbt_init_cursor(mp, NULL, agbp, pag);
- 	if (!bt_cur) {
- 		do_warn(_("Not enough memory to check reverse mappings.\n"));
--		goto err;
-+		goto err_agf;
- 	}
- 
- 	rm_rec = pop_slab_cursor(rm_cur);
-@@ -1023,7 +1023,7 @@ rmaps_verify_btree(
- 			do_warn(
- _("Could not read reverse-mapping record for (%u/%u).\n"),
- 					agno, rm_rec->rm_startblock);
--			goto err;
-+			goto err_cur;
- 		}
- 
- 		/*
-@@ -1039,7 +1039,7 @@ _("Could not read reverse-mapping record for (%u/%u).\n"),
- 				do_warn(
- _("Could not read reverse-mapping record for (%u/%u).\n"),
- 						agno, rm_rec->rm_startblock);
--				goto err;
-+				goto err_cur;
- 			}
- 		}
- 		if (!have) {
-@@ -1090,13 +1090,12 @@ next_loop:
- 		rm_rec = pop_slab_cursor(rm_cur);
- 	}
- 
--err:
--	if (bt_cur)
--		libxfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
--	if (pag)
--		libxfs_perag_put(pag);
--	if (agbp)
--		libxfs_buf_relse(agbp);
-+err_cur:
-+	libxfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
-+err_agf:
-+	libxfs_buf_relse(agbp);
-+err_pag:
-+	libxfs_perag_put(pag);
- 	free_slab_cursor(&rm_cur);
- }
- 
+> If reflink is turned on, repair can deal with crosslinked file data
+> blocks, though anything other kind of block results in the usual
+> scraping-till-its-clean behavior.
+
+Sadly reflink is off:
+
+meta-data=/dev/vg_data/rsnapshot isize=512    agcount=38, 
+agsize=251658224 blks
+          =                       sectsz=4096  attr=2, projid32bit=1
+          =                       crc=1        finobt=1, sparse=0, rmapbt=0
+          =                       reflink=0    bigtime=0 inobtcount=0 
+nrext64=0
+data     =                       bsize=4096   blocks=9395240960, imaxpct=5
+          =                       sunit=16     swidth=64 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=521728, version=2
+          =                       sectsz=4096  sunit=1 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+> I'm also kinda curious what started this corruption problem, and did any
+> of it leak through to other files?
+
+I wish we knew. This came to light when the machine had to be repeatedly 
+rebooted because a large computation job was making the system run out 
+of memory. Unfortunately it has a lot of swap configured so it wasn't 
+just being OOM killed, which would have been much better. This all 
+actually led to soft lockups and to our reboots. This happened 3-4 times 
+before we noticed the corruption.
+
+During the above the RAID controller (an LSI MegaRAID) marked one of the 
+hard disks that makes up the array (a RAID-60 over 18x 8TB SAS disks, 2x 
+9-disk RAID-6 spans) faulty.
+
+During the recovery I know that xfs_repair was run with -L at some 
+point; I'm not certain whether the person doing this actually tried 
+mounting the filesystem first to replay the log, though. There was 
+certainly a lot more corruption than just this, but it seems like that 
+all got repaired away. /lost+found was full of 10s of thousands of 
+displaced files (now removed).
+
+Thanks,
+Chris
+
 -- 
-2.30.2
+Chris Boot
+bootc@boo.tc
 
