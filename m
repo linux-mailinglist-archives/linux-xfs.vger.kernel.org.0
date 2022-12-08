@@ -2,30 +2,30 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC4696469B6
-	for <lists+linux-xfs@lfdr.de>; Thu,  8 Dec 2022 08:29:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A6536469B8
+	for <lists+linux-xfs@lfdr.de>; Thu,  8 Dec 2022 08:29:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbiLHH3O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Thu, 8 Dec 2022 02:29:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34724 "EHLO
+        id S229703AbiLHH3P (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Thu, 8 Dec 2022 02:29:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiLHH3N (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Dec 2022 02:29:13 -0500
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C8F46674;
-        Wed,  7 Dec 2022 23:29:10 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=ziyangzhang@linux.alibaba.com;NM=0;PH=DS;RN=8;SR=0;TI=SMTPD_---0VWpNSaC_1670484546;
-Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VWpNSaC_1670484546)
+        with ESMTP id S229710AbiLHH3O (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Thu, 8 Dec 2022 02:29:14 -0500
+Received: from out30-43.freemail.mail.aliyun.com (out30-43.freemail.mail.aliyun.com [115.124.30.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D98DD4667A;
+        Wed,  7 Dec 2022 23:29:12 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=ziyangzhang@linux.alibaba.com;NM=0;PH=DS;RN=8;SR=0;TI=SMTPD_---0VWpNSao_1670484548;
+Received: from localhost.localdomain(mailfrom:ZiyangZhang@linux.alibaba.com fp:SMTPD_---0VWpNSao_1670484548)
           by smtp.aliyun-inc.com;
-          Thu, 08 Dec 2022 15:29:07 +0800
+          Thu, 08 Dec 2022 15:29:09 +0800
 From:   Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
 To:     fstests@vger.kernel.org, linux-xfs@vger.kernel.org
 Cc:     zlang@redhat.com, david@fromorbit.com, djwong@kernel.org,
         hsiangkao@linux.alibaba.com, allison.henderson@oracle.com,
         Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
-Subject: [PATCH V5 1/2] common/xfs: Add a helper to export inode core size
-Date:   Thu,  8 Dec 2022 15:28:42 +0800
-Message-Id: <20221208072843.1866615-2-ZiyangZhang@linux.alibaba.com>
+Subject: [PATCH V5 2/2] common/populate: Ensure that S_IFDIR.FMT_BTREE is in btree format
+Date:   Thu,  8 Dec 2022 15:28:43 +0800
+Message-Id: <20221208072843.1866615-3-ZiyangZhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.18.4
 In-Reply-To: <20221208072843.1866615-1-ZiyangZhang@linux.alibaba.com>
 References: <20221208072843.1866615-1-ZiyangZhang@linux.alibaba.com>
@@ -39,116 +39,107 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Some xfs test cases need the number of bytes reserved for only the inode
-record, excluding the immediate fork areas. Now the value is hard-coded
-and it is not a good chioce. Add a helper in common/xfs to export the
-inode core size.
+Sometimes "$((128 * dblksz / 40))" dirents cannot make sure that
+S_IFDIR.FMT_BTREE could become btree format for its DATA fork.
 
+Actually we just observed it can fail after apply our inode
+extent-to-btree workaround. The root cause is that the kernel may be
+too good at allocating consecutive blocks so that the data fork is
+still in extents format.
+
+Therefore instead of using a fixed number, let's make sure the number
+of extents is large enough than (inode size - inode core size) /
+sizeof(xfs_bmbt_rec_t).
+
+Reviewed-by: Zorro Lang <zlang@redhat.com>
 Reviewed-by: Allison Henderson <allison.henderson@oracle.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Suggested-by: "Darrick J. Wong" <djwong@kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Ziyang Zhang <ZiyangZhang@linux.alibaba.com>
 ---
- common/xfs    | 15 +++++++++++++++
- tests/xfs/335 |  3 ++-
- tests/xfs/336 |  3 ++-
- tests/xfs/337 |  3 ++-
- tests/xfs/341 |  3 ++-
- tests/xfs/342 |  3 ++-
- 6 files changed, 25 insertions(+), 5 deletions(-)
+ common/populate | 34 +++++++++++++++++++++++++++++++++-
+ common/xfs      |  9 +++++++++
+ 2 files changed, 42 insertions(+), 1 deletion(-)
 
+diff --git a/common/populate b/common/populate
+index 6e004997..0d334a13 100644
+--- a/common/populate
++++ b/common/populate
+@@ -71,6 +71,37 @@ __populate_create_dir() {
+ 	done
+ }
+ 
++# Create a large directory and ensure that it's a btree format
++__populate_xfs_create_btree_dir() {
++	local name="$1"
++	local isize="$2"
++	local missing="$3"
++	local icore_size="$(_xfs_inode_core_bytes)"
++	# We need enough extents to guarantee that the data fork is in
++	# btree format.  Cycling the mount to use xfs_db is too slow, so
++	# watch for when the extent count exceeds the space after the
++	# inode core.
++	local max_nextents="$(((isize - icore_size) / 16))"
++	local nr=0
++
++	mkdir -p "${name}"
++	while true; do
++		local creat=mkdir
++		test "$((nr % 20))" -eq 0 && creat=touch
++		$creat "${name}/$(printf "%.08d" "$nr")"
++		if [ "$((nr % 40))" -eq 0 ]; then
++			local nextents="$(_xfs_get_fsxattr nextents $name)"
++			[ $nextents -gt $max_nextents ] && break
++		fi
++		nr=$((nr+1))
++	done
++
++	test -z "${missing}" && return
++	seq 1 2 "${nr}" | while read d; do
++		rm -rf "${name}/$(printf "%.08d" "$d")"
++	done
++}
++
+ # Add a bunch of attrs to a file
+ __populate_create_attr() {
+ 	name="$1"
+@@ -176,6 +207,7 @@ _scratch_xfs_populate() {
+ 
+ 	blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
+ 	dblksz="$(_xfs_get_dir_blocksize "$SCRATCH_MNT")"
++	isize="$(_xfs_get_inode_size "$SCRATCH_MNT")"
+ 	crc="$(_xfs_has_feature "$SCRATCH_MNT" crc -v)"
+ 	if [ $crc -eq 1 ]; then
+ 		leaf_hdr_size=64
+@@ -226,7 +258,7 @@ _scratch_xfs_populate() {
+ 
+ 	# - BTREE
+ 	echo "+ btree dir"
+-	__populate_create_dir "${SCRATCH_MNT}/S_IFDIR.FMT_BTREE" "$((128 * dblksz / 40))" true
++	__populate_xfs_create_btree_dir "${SCRATCH_MNT}/S_IFDIR.FMT_BTREE" "$isize" true
+ 
+ 	# Symlinks
+ 	# - FMT_LOCAL
 diff --git a/common/xfs b/common/xfs
-index 8ac1964e..674384a9 100644
+index 674384a9..7aaa63c7 100644
 --- a/common/xfs
 +++ b/common/xfs
-@@ -1486,3 +1486,18 @@ _require_xfsrestore_xflag()
- 	$XFSRESTORE_PROG -h 2>&1 | grep -q -e '-x' || \
+@@ -1487,6 +1487,15 @@ _require_xfsrestore_xflag()
  			_notrun 'xfsrestore does not support -x flag.'
  }
-+
-+# Number of bytes reserved for only the inode record, excluding the
+ 
++# Number of bytes reserved for a full inode record, which includes the
 +# immediate fork areas.
-+_xfs_get_inode_core_bytes()
++_xfs_get_inode_size()
 +{
-+	local dir="$1"
-+	
-+	if _xfs_has_feature "$dir" crc; then
-+		# v5 filesystems
-+		echo 176
-+	else
-+		# v4 filesystems
-+		echo 96
-+	fi
++	local mntpoint="$1"
++
++	$XFS_INFO_PROG "$mntpoint" | sed -n '/meta-data=.*isize/s/^.*isize=\([0-9]*\).*$/\1/p'
 +}
-diff --git a/tests/xfs/335 b/tests/xfs/335
-index ccc508e7..3f5223ee 100755
---- a/tests/xfs/335
-+++ b/tests/xfs/335
-@@ -31,7 +31,8 @@ blksz="$(_get_block_size $SCRATCH_MNT)"
- echo "Create a three-level rtrmapbt"
- # inode core size is at least 176 bytes; btree header is 56 bytes;
- # rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
--i_ptrs=$(( (isize - 176) / 56 ))
-+i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
-+i_ptrs=$(( (isize - i_core_size) / 56 ))
- bt_ptrs=$(( (blksz - 56) / 56 ))
- bt_recs=$(( (blksz - 56) / 32 ))
- 
-diff --git a/tests/xfs/336 b/tests/xfs/336
-index b1de8e5f..a686fab4 100755
---- a/tests/xfs/336
-+++ b/tests/xfs/336
-@@ -42,7 +42,8 @@ rm -rf $metadump_file
- echo "Create a three-level rtrmapbt"
- # inode core size is at least 176 bytes; btree header is 56 bytes;
- # rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
--i_ptrs=$(( (isize - 176) / 56 ))
-+i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
-+i_ptrs=$(( (isize - i_core_size) / 56 ))
- bt_ptrs=$(( (blksz - 56) / 56 ))
- bt_recs=$(( (blksz - 56) / 32 ))
- 
-diff --git a/tests/xfs/337 b/tests/xfs/337
-index a2515e36..3bdef4e3 100755
---- a/tests/xfs/337
-+++ b/tests/xfs/337
-@@ -33,7 +33,8 @@ blksz="$(_get_block_size $SCRATCH_MNT)"
- 
- # inode core size is at least 176 bytes; btree header is 56 bytes;
- # rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
--i_ptrs=$(( (isize - 176) / 56 ))
-+i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
-+i_ptrs=$(( (isize - i_core_size) / 56 ))
- bt_ptrs=$(( (blksz - 56) / 56 ))
- bt_recs=$(( (blksz - 56) / 32 ))
- 
-diff --git a/tests/xfs/341 b/tests/xfs/341
-index f026aa37..72f75318 100755
---- a/tests/xfs/341
-+++ b/tests/xfs/341
-@@ -33,7 +33,8 @@ rtextsz_blks=$((rtextsz / blksz))
- 
- # inode core size is at least 176 bytes; btree header is 56 bytes;
- # rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
--i_ptrs=$(( (isize - 176) / 56 ))
-+i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
-+i_ptrs=$(( (isize - i_core_size) / 56 ))
- bt_recs=$(( (blksz - 56) / 32 ))
- 
- blocks=$((i_ptrs * bt_recs + 1))
-diff --git a/tests/xfs/342 b/tests/xfs/342
-index 1ae414eb..0b3b136c 100755
---- a/tests/xfs/342
-+++ b/tests/xfs/342
-@@ -30,7 +30,8 @@ blksz="$(_get_block_size $SCRATCH_MNT)"
- 
- # inode core size is at least 176 bytes; btree header is 56 bytes;
- # rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
--i_ptrs=$(( (isize - 176) / 56 ))
-+i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
-+i_ptrs=$(( (isize - i_core_size) / 56 ))
- bt_recs=$(( (blksz - 56) / 32 ))
- 
- blocks=$((i_ptrs * bt_recs + 1))
++
+ # Number of bytes reserved for only the inode record, excluding the
+ # immediate fork areas.
+ _xfs_get_inode_core_bytes()
 -- 
 2.18.4
 
