@@ -2,65 +2,65 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3905C64BB03
-	for <lists+linux-xfs@lfdr.de>; Tue, 13 Dec 2022 18:30:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A78A364BB11
+	for <lists+linux-xfs@lfdr.de>; Tue, 13 Dec 2022 18:31:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236279AbiLMRan (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 13 Dec 2022 12:30:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49050 "EHLO
+        id S236210AbiLMRbC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 13 Dec 2022 12:31:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236282AbiLMRaa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Dec 2022 12:30:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DDC2315C
-        for <linux-xfs@vger.kernel.org>; Tue, 13 Dec 2022 09:29:42 -0800 (PST)
+        with ESMTP id S236311AbiLMRaj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 13 Dec 2022 12:30:39 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1417722BC4
+        for <linux-xfs@vger.kernel.org>; Tue, 13 Dec 2022 09:29:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670952582;
+        s=mimecast20190719; t=1670952583;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=b6NsA/Xg/ZlBOc/kTzK8dUjJC76dBdCS+EN14dWWQLg=;
-        b=UJ8OU4UNpODsiYGUamIFbrHunC38RGvYHVuOP6noDgSuTir5YyfSfegmcdT3VGKOY6592R
-        i8bbpyBmU4ormeFA0ddzqdo1G0Dz64c8dwjxELmWkTH1bQ6Bp2ZIANRsWD63bEj1YMqeWC
-        s5mcQpSatUFWKObZa3dCCISEzKHgoTw=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=X7aOzaH8w1oPNGJxdFvZ299A/3LW0IWhj+uSH4co6uo=;
+        b=LihQCsTZDU7bICQ4x8zfpsZZ6ThO63huTOH6R/a3G0IaK1KUlqZZaYBU/ldMa5XgPRH+KR
+        KuxEfdr34RYB0p0JmaHKddrZlPwwWFn2ozNmWfXJJJ9yc3mT5Y44VoXqR54A3lQsLHciv5
+        VGNKJ5d90zslDDgAnGcMhc1pKAgYbvg=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-455-SGLwI1w4Nk-WgVhSYU2p-g-1; Tue, 13 Dec 2022 12:29:41 -0500
-X-MC-Unique: SGLwI1w4Nk-WgVhSYU2p-g-1
-Received: by mail-ed1-f70.google.com with SMTP id e14-20020a056402190e00b0047005d4c3e9so3445171edz.2
-        for <linux-xfs@vger.kernel.org>; Tue, 13 Dec 2022 09:29:40 -0800 (PST)
+ us-mta-42-zryZX5N5MW6pd6oxKoenOQ-1; Tue, 13 Dec 2022 12:29:42 -0500
+X-MC-Unique: zryZX5N5MW6pd6oxKoenOQ-1
+Received: by mail-ed1-f72.google.com with SMTP id y20-20020a056402271400b0046c9a6ec30fso7686359edd.14
+        for <linux-xfs@vger.kernel.org>; Tue, 13 Dec 2022 09:29:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b6NsA/Xg/ZlBOc/kTzK8dUjJC76dBdCS+EN14dWWQLg=;
-        b=1i6LwIPYwQkWxU20Z37fI9SCn34D3CpbKC77oBYJBa5suZ2WQvZ0rUdfWRZr+uAtmJ
-         x8t+HT6goXOAVPA7ovDkWKmgMDYPeBfUiuYPFGWx2KB+K9fd+BMDl/fz/Gi7hrbrnKyc
-         D5K8nXlUjfyvZoUgCDvQHEimZgRtHADJkClr98d+n7Oe+OIL8m6SGiJjUuID6+pHTmO+
-         pyJ8p0XZQ8tWgsszOEtCAY/MtBi+jePlJvkk9xhLldqYwUsxMXOthcn5U+77KSCtikvd
-         aYikzJi9ougOlqIJYeu4abkCAG6qYlE1RGzsdnCSxJFrJcGZIXthXgE+owwl4qfeuhRL
-         +DNg==
-X-Gm-Message-State: ANoB5pnrK6U8fzzrptVBWsn7VqKAgI7PSHtvytU4Z29WulkYXJ5KV9AZ
-        Lgqxn1b2BFoyrlrMCmlV7tHJy4Bq7ok2Y30tuFDzSig2DEQUBrE5TLEuHfMQLywDIP/U4IJp8kj
-        bIV2vZxEicbthZb8XkeRDmhU7Nt9eZACiXpPGarruwnHTP4wH5PvGOABiOnkTT0px+wTWuqI=
-X-Received: by 2002:a05:6402:5505:b0:45c:835b:8fb5 with SMTP id fi5-20020a056402550500b0045c835b8fb5mr17687137edb.32.1670952579735;
-        Tue, 13 Dec 2022 09:29:39 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7qjioCE+Wh1+KtVn789k/6rYbXqUD3RgR71ElXoL1vUuQD8oUVn4IS2CUeadEQp2swqGUVJw==
-X-Received: by 2002:a05:6402:5505:b0:45c:835b:8fb5 with SMTP id fi5-20020a056402550500b0045c835b8fb5mr17687123edb.32.1670952579568;
-        Tue, 13 Dec 2022 09:29:39 -0800 (PST)
+        bh=X7aOzaH8w1oPNGJxdFvZ299A/3LW0IWhj+uSH4co6uo=;
+        b=RWN6fFEqJAP6tzlh7F0oRLa60KnfRUAjLjdIJ2/AfyrpZ/zY4bV9fE/lvbAxAy6kcJ
+         C4uV2egfEtWk4TpGNR+5OoaqJSDsZodReCGXlJof667h8/hAXVPkqhupsj3tAf/6kxoy
+         argyfjzCOnbXjTsrHIUpbiSVDR5N+m0kk7Li8mAS8Aaa7u8VPgpBdyyoV5J0bE/eSNB8
+         a4MOWJlFhBn/qcaVjoAPDfHXS1t+A8BmUozEl83tmw9DD7YhxYdmyRL/Xsz2wenpA+p1
+         NlxJI+knzqpAkt++DnMaSsi4lAsI3OjmvlpBFblbN1xiqKF8igzzF3j7ZILHIg5pCrLN
+         1EOw==
+X-Gm-Message-State: ANoB5pnWi6uMDoy089yt/h2PhcV4y8xsAtTKt8SY/Rf97sVUK5zfjrPq
+        sk3419JRIqmBfl+YcWj3csBzob6jOX6qvUrkCBi86bjrAqZr7Lh+b2fCYZmLLFohGp4zF6WmmJj
+        R+Yd+aoIRtNvCmLHwnMx2e0sdT+sqiRiUa2ekpwBGRC3TNzntV+j9Gn0Jy2nB/FvJ08ITJJs=
+X-Received: by 2002:aa7:d4d6:0:b0:46a:a94a:e424 with SMTP id t22-20020aa7d4d6000000b0046aa94ae424mr18886516edr.40.1670952580646;
+        Tue, 13 Dec 2022 09:29:40 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5aVRp2Bd9Ma/3Z+2HR9K9G5JRA0WyHS7yqf2ie0nMXqV9Ii28qX8GFd8o1XgjlG6pHoLu+qw==
+X-Received: by 2002:aa7:d4d6:0:b0:46a:a94a:e424 with SMTP id t22-20020aa7d4d6000000b0046aa94ae424mr18886502edr.40.1670952580439;
+        Tue, 13 Dec 2022 09:29:40 -0800 (PST)
 Received: from aalbersh.remote.csb ([109.183.6.197])
-        by smtp.gmail.com with ESMTPSA id ec14-20020a0564020d4e00b0047025bf942bsm1204187edb.16.2022.12.13.09.29.38
+        by smtp.gmail.com with ESMTPSA id ec14-20020a0564020d4e00b0047025bf942bsm1204187edb.16.2022.12.13.09.29.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Dec 2022 09:29:39 -0800 (PST)
+        Tue, 13 Dec 2022 09:29:40 -0800 (PST)
 From:   Andrey Albershteyn <aalbersh@redhat.com>
 To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     Andrey Albershteyn <aalbersh@redhat.com>
-Subject: [RFC PATCH 01/11] xfs: enable large folios in xfs_setup_inode()
-Date:   Tue, 13 Dec 2022 18:29:25 +0100
-Message-Id: <20221213172935.680971-2-aalbersh@redhat.com>
+Subject: [RFC PATCH 02/11] pagemap: add mapping_clear_large_folios() wrapper
+Date:   Tue, 13 Dec 2022 18:29:26 +0100
+Message-Id: <20221213172935.680971-3-aalbersh@redhat.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20221213172935.680971-1-aalbersh@redhat.com>
 References: <20221213172935.680971-1-aalbersh@redhat.com>
@@ -68,7 +68,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,49 +76,31 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-This is more appropriate place to set large folios flag as other
-mapping's flags are set here. This will also allow to conditionally
-enable large folios based on inode's diflags (e.g. fs-verity).
+Add wrapper to clear mapping's large folio flag. This is handy for
+disabling large folios on already existing inodes (e.g. future XFS
+integration of fs-verity).
 
 Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 ---
- fs/xfs/xfs_icache.c | 2 --
- fs/xfs/xfs_iops.c   | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ include/linux/pagemap.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index f35e2cee52655..8679739160507 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -88,7 +88,6 @@ xfs_inode_alloc(
- 	/* VFS doesn't initialise i_mode or i_state! */
- 	VFS_I(ip)->i_mode = 0;
- 	VFS_I(ip)->i_state = 0;
--	mapping_set_large_folios(VFS_I(ip)->i_mapping);
- 
- 	XFS_STATS_INC(mp, vn_active);
- 	ASSERT(atomic_read(&ip->i_pincount) == 0);
-@@ -323,7 +322,6 @@ xfs_reinit_inode(
- 	inode->i_rdev = dev;
- 	inode->i_uid = uid;
- 	inode->i_gid = gid;
--	mapping_set_large_folios(inode->i_mapping);
- 	return error;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index bbccb40442224..63ca600bdf8f7 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -306,6 +306,11 @@ static inline void mapping_set_large_folios(struct address_space *mapping)
+ 	__set_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
  }
  
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 10a5e85f2a709..9c90cfcecabc2 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1292,6 +1292,8 @@ xfs_setup_inode(
- 	gfp_mask = mapping_gfp_mask(inode->i_mapping);
- 	mapping_set_gfp_mask(inode->i_mapping, (gfp_mask & ~(__GFP_FS)));
- 
-+	mapping_set_large_folios(inode->i_mapping);
++static inline void mapping_clear_large_folios(struct address_space *mapping)
++{
++	__clear_bit(AS_LARGE_FOLIO_SUPPORT, &mapping->flags);
++}
 +
- 	/*
- 	 * If there is no attribute fork no ACL can exist on this inode,
- 	 * and it can't have any file capabilities attached to it either.
+ /*
+  * Large folio support currently depends on THP.  These dependencies are
+  * being worked on but are not yet fixed.
 -- 
 2.31.1
 
