@@ -2,51 +2,72 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B191564D283
-	for <lists+linux-xfs@lfdr.de>; Wed, 14 Dec 2022 23:45:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB5B264D2FD
+	for <lists+linux-xfs@lfdr.de>; Thu, 15 Dec 2022 00:06:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbiLNWpr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 14 Dec 2022 17:45:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36382 "EHLO
+        id S229522AbiLNXGk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 14 Dec 2022 18:06:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiLNWpo (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Dec 2022 17:45:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E60101E0;
-        Wed, 14 Dec 2022 14:45:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0402B61C3A;
-        Wed, 14 Dec 2022 22:45:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39162C433F2;
-        Wed, 14 Dec 2022 22:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671057942;
-        bh=wLd4hn46pl37ZdIHOsePkBTX5A4fW4nKrCWTow70H1c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLzKHO/8H4DFa5Jdzylc7uSkoLeqo1P+7IkcEYelSvjKXJBSZCSw/dsiP2P4J6bru
-         HJP+7eqBV3gjGjbKzQLbmH62xf3fKBic7MZ7SVt6gTwguX8OJLR42U13/8iZGiGmLT
-         ftD8P/TNUJiYbOtFwwDmCGyELujl1rqHsakigMHzwm150wwK3p1atVuK7md8QKM+mU
-         twO1HnAEk16YmYYAEn2Z0RR68mla+mCi7grgmc+UkLJZt7SoEaUJoJwd+LNQQj6bQQ
-         00pECfnYN4UIHopU8jR4EAuCO0Y0SCBYU6lyJL7+ulx7qrpW/Syjh0uueGRx85E3PJ
-         HrPI2wTur2dcw==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fscrypt@vger.kernel.org
-Cc:     linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-btrfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Dave Chinner <david@fromorbit.com>
-Subject: [PATCH 4/4] fsverity: pass pos and size to ->write_merkle_tree_block
-Date:   Wed, 14 Dec 2022 14:43:04 -0800
-Message-Id: <20221214224304.145712-5-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221214224304.145712-1-ebiggers@kernel.org>
-References: <20221214224304.145712-1-ebiggers@kernel.org>
+        with ESMTP id S229441AbiLNXGj (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 14 Dec 2022 18:06:39 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDFFB29832
+        for <linux-xfs@vger.kernel.org>; Wed, 14 Dec 2022 15:06:37 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id 4so5019525plj.3
+        for <linux-xfs@vger.kernel.org>; Wed, 14 Dec 2022 15:06:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eo+tShyeYOSb4TMPbZlPrflwRazEiE7fEZhuw1NYlFQ=;
+        b=kxfOUpIL6u90JuaFTN6zHl8mfTaXY/h51Eal38XQY2mN/b6gcjyi14DvYFn9DdRVhm
+         Hkp6pvGrhnUiKXUTAfu3IMaYTwoA6z3vXCEn1Ivw8O7Osg/70KcjRlhF2OFeyEcnBjLk
+         zcpTtsPep+8CzYBE0pTVj57WwL5tH8DbY3JDI/OW0p0p0TvRKZ1e2WKjimOJeNq7VbYx
+         msu7zT3cO0Mwv4HxtgvdFTRN/IAqBw2x3nUjzfbKgYRAXexwY6U8403NRqxg3s8QmYha
+         Ma5kzLul2qeeuIoHRYXYwlAR8/istDQz8DmsRXxz/kRI5X4oByWNPRgOM6J2s5qiaCFb
+         mMMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Eo+tShyeYOSb4TMPbZlPrflwRazEiE7fEZhuw1NYlFQ=;
+        b=TPciEq05s2uR1lq3a6cJ2Dr9t8e1trFx0ht+Ta674g6hp1qKiUfuoW1qsjyv7P/Alw
+         YPUaPI/lmI1nHCbErABtX1/Xo5AZ0ywQ9OlxEBgKGg7D9bLLOH9MUgfCdLpgg/+d6C9Q
+         Sul016tbVy/OLioHuauy+ouAUp85w6BAvL8fHF5OxJj8u+Mx64hfVEWOC7aRa34qBapv
+         9I+xejnvRxB8omO0z3tJMldXtOEAmp7NeBIyO/uPENAbLhLhuPwb7J0yV0gyorICoE6K
+         VbSIk8R71avhJiOkmSFSeMLvUyCo32uApTD50266QA2kXMeiiEUkIZCQpylAfKhsqXIh
+         1WLA==
+X-Gm-Message-State: ANoB5plAG1kTyw5al2qu3m20In0+Rn6J2Q9YLX3xmRlQvlt1nUrNnEnH
+        GUGIz7VG7ysVzUsVPToPqUaq6WbgoM3MjSrg
+X-Google-Smtp-Source: AA0mqf5ssTDKtyM8pGGP1bkAJ7YbdwMQ2Gad5d2kvkXsNlbceqljut0uue/0Zhx66eI/PUWOPs1AyQ==
+X-Received: by 2002:a05:6a20:a694:b0:ad:eaea:e07 with SMTP id ba20-20020a056a20a69400b000adeaea0e07mr9160352pzb.10.1671059197357;
+        Wed, 14 Dec 2022 15:06:37 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-138-158.pa.nsw.optusnet.com.au. [49.181.138.158])
+        by smtp.gmail.com with ESMTPSA id h25-20020a63f919000000b0047681fa88d1sm332918pgi.53.2022.12.14.15.06.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 15:06:36 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1p5apc-008W55-N9; Thu, 15 Dec 2022 10:06:32 +1100
+Date:   Thu, 15 Dec 2022 10:06:32 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Andrey Albershteyn <aalbersh@redhat.com>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/11] fs-verity support for XFS
+Message-ID: <20221214230632.GA1971568@dread.disaster.area>
+References: <20221213172935.680971-1-aalbersh@redhat.com>
+ <Y5jllLwXlfB7BzTz@sol.localdomain>
+ <20221213221139.GZ3600936@dread.disaster.area>
+ <Y5ltzp6yeMo1oDSk@sol.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y5ltzp6yeMo1oDSk@sol.localdomain>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,147 +75,125 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+On Tue, Dec 13, 2022 at 10:31:42PM -0800, Eric Biggers wrote:
+> On Wed, Dec 14, 2022 at 09:11:39AM +1100, Dave Chinner wrote:
+> > On Tue, Dec 13, 2022 at 12:50:28PM -0800, Eric Biggers wrote:
+> > > On Tue, Dec 13, 2022 at 06:29:24PM +0100, Andrey Albershteyn wrote:
+> > > > Not yet implemented:
+> > > > - No pre-fetching of Merkle tree pages in the
+> > > >   read_merkle_tree_page()
+> > > 
+> > > This would be helpful, but not essential.
+> > > 
+> > > > - No marking of already verified Merkle tree pages (each read, the
+> > > >   whole tree is verified).
+> > 
+> > Ah, I wasn't aware that this was missing.
+> > 
+> > > 
+> > > This is essential to have, IMO.
+> > > 
+> > > You *could* do what btrfs does, where it caches the Merkle tree pages in the
+> > > inode's page cache past i_size, even though btrfs stores the Merkle tree
+> > > separately from the file data on-disk.
+> > >
+> > > However, I'd guess that the other XFS developers would have an adversion to that
+> > > approach, even though it would not affect the on-disk storage.
+> > 
+> > Yup, on an architectural level it just seems wrong to cache secure
+> > verification metadata in the same user accessible address space as
+> > the data it verifies.
+> > 
+> > > The alternatives would be to create a separate in-memory-only inode for the
+> > > cache, or to build a custom cache with its own shrinker.
+> > 
+> > The merkel tree blocks are cached in the XFS buffer cache.
+> > 
+> > Andrey, could we just add a new flag to the xfs_buf->b_flags to
+> > indicate that the buffer contains verified merkle tree records?
+> > i.e. if it's not set after we've read the buffer, we need to verify
+> > the buffer and set th verified buffer in cache and we can skip the
+> > verification?
+> 
+> Well, my proposal at
+> https://lore.kernel.org/r/20221028224539.171818-2-ebiggers@kernel.org is to keep
+> tracking the "verified" status at the individual Merkle tree block level, by
+> adding a bitmap fsverity_info::hash_block_verified.  That is part of the
+> fs/verity/ infrastructure, and all filesystems would be able to use it.
 
-fsverity_operations::write_merkle_tree_block is passed the index of the
-block to write and the log base 2 of the block size.  However, all
-implementations of it use these parameters only to calculate the
-position and the size of the block, in bytes.
+Yeah, i had a look at that rewrite of the verification code last
+night - I get the gist of what it is doing, but a single patch of
+that complexity is largely impossible to sanely review...
 
-Therefore, make ->write_merkle_tree_block take 'pos' and 'size'
-parameters instead of 'index' and 'log_blocksize'.
+Correct me if I'm wrong, but won't using a bitmap with 1 bit per
+verified block cause problems with contiguous memory allocation
+pretty quickly? i.e. a 64kB bitmap only tracks 512k blocks, which is
+only 2GB of merkle tree data. Hence at file sizes of 100+GB, the
+bitmap would have to be kvmalloc()d to guarantee allocation will
+succeed.
 
-Suggested-by: Dave Chinner <david@fromorbit.com>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- fs/btrfs/verity.c        | 19 +++++++------------
- fs/ext4/verity.c         |  6 +++---
- fs/f2fs/verity.c         |  6 +++---
- fs/verity/enable.c       |  4 ++--
- include/linux/fsverity.h |  8 ++++----
- 5 files changed, 19 insertions(+), 24 deletions(-)
+I'm not really worried about the bitmap memory usage, just that it
+handles large contiguous allocations sanely. I suspect we may
+eventually need a sparse bitmap (e.g. the old btrfs bit-radix
+implementation) to track verification in really large files
+efficiently.
 
-diff --git a/fs/btrfs/verity.c b/fs/btrfs/verity.c
-index bf9eb693a6a7..c5ff16f9e9fa 100644
---- a/fs/btrfs/verity.c
-+++ b/fs/btrfs/verity.c
-@@ -783,30 +783,25 @@ static struct page *btrfs_read_merkle_tree_page(struct inode *inode,
- /*
-  * fsverity op that writes a Merkle tree block into the btree.
-  *
-- * @inode:          inode to write a Merkle tree block for
-- * @buf:            Merkle tree data block to write
-- * @index:          index of the block in the Merkle tree
-- * @log_blocksize:  log base 2 of the Merkle tree block size
-- *
-- * Note that the block size could be different from the page size, so it is not
-- * safe to assume that index is a page index.
-+ * @inode:	inode to write a Merkle tree block for
-+ * @buf:	Merkle tree block to write
-+ * @pos:	the position of the block in the Merkle tree (in bytes)
-+ * @size:	the Merkle tree block size (in bytes)
-  *
-  * Returns 0 on success or negative error code on failure
-  */
- static int btrfs_write_merkle_tree_block(struct inode *inode, const void *buf,
--					u64 index, int log_blocksize)
-+					 u64 pos, unsigned int size)
- {
--	u64 off = index << log_blocksize;
--	u64 len = 1ULL << log_blocksize;
- 	loff_t merkle_pos = merkle_file_pos(inode);
- 
- 	if (merkle_pos < 0)
- 		return merkle_pos;
--	if (merkle_pos > inode->i_sb->s_maxbytes - off - len)
-+	if (merkle_pos > inode->i_sb->s_maxbytes - pos - size)
- 		return -EFBIG;
- 
- 	return write_key_bytes(BTRFS_I(inode), BTRFS_VERITY_MERKLE_ITEM_KEY,
--			       off, buf, len);
-+			       pos, buf, size);
- }
- 
- const struct fsverity_operations btrfs_verityops = {
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index 30e3b65798b5..e4da1704438e 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -381,11 +381,11 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
- }
- 
- static int ext4_write_merkle_tree_block(struct inode *inode, const void *buf,
--					u64 index, int log_blocksize)
-+					u64 pos, unsigned int size)
- {
--	loff_t pos = ext4_verity_metadata_pos(inode) + (index << log_blocksize);
-+	pos += ext4_verity_metadata_pos(inode);
- 
--	return pagecache_write(inode, buf, 1 << log_blocksize, pos);
-+	return pagecache_write(inode, buf, size, pos);
- }
- 
- const struct fsverity_operations ext4_verityops = {
-diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-index c352fff88a5e..f320ed8172ec 100644
---- a/fs/f2fs/verity.c
-+++ b/fs/f2fs/verity.c
-@@ -276,11 +276,11 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
- }
- 
- static int f2fs_write_merkle_tree_block(struct inode *inode, const void *buf,
--					u64 index, int log_blocksize)
-+					u64 pos, unsigned int size)
- {
--	loff_t pos = f2fs_verity_metadata_pos(inode) + (index << log_blocksize);
-+	pos += f2fs_verity_metadata_pos(inode);
- 
--	return pagecache_write(inode, buf, 1 << log_blocksize, pos);
-+	return pagecache_write(inode, buf, size, pos);
- }
- 
- const struct fsverity_operations f2fs_verityops = {
-diff --git a/fs/verity/enable.c b/fs/verity/enable.c
-index df6b499bf6a1..a949ce817202 100644
---- a/fs/verity/enable.c
-+++ b/fs/verity/enable.c
-@@ -120,8 +120,8 @@ static int build_merkle_tree_level(struct file *filp, unsigned int level,
- 			       params->block_size - pending_size);
- 			err = vops->write_merkle_tree_block(inode,
- 					pending_hashes,
--					dst_block_num,
--					params->log_blocksize);
-+					dst_block_num << params->log_blocksize,
-+					params->block_size);
- 			if (err) {
- 				fsverity_err(inode,
- 					     "Error %d writing Merkle tree block %llu",
-diff --git a/include/linux/fsverity.h b/include/linux/fsverity.h
-index 203f4962c54a..f5ed7ecfd9ab 100644
---- a/include/linux/fsverity.h
-+++ b/include/linux/fsverity.h
-@@ -109,9 +109,9 @@ struct fsverity_operations {
- 	 * Write a Merkle tree block to the given inode.
- 	 *
- 	 * @inode: the inode for which the Merkle tree is being built
--	 * @buf: block to write
--	 * @index: 0-based index of the block within the Merkle tree
--	 * @log_blocksize: log base 2 of the Merkle tree block size
-+	 * @buf: the Merkle tree block to write
-+	 * @pos: the position of the block in the Merkle tree (in bytes)
-+	 * @size: the Merkle tree block size (in bytes)
- 	 *
- 	 * This is only called between ->begin_enable_verity() and
- 	 * ->end_enable_verity().
-@@ -119,7 +119,7 @@ struct fsverity_operations {
- 	 * Return: 0 on success, -errno on failure
- 	 */
- 	int (*write_merkle_tree_block)(struct inode *inode, const void *buf,
--				       u64 index, int log_blocksize);
-+				       u64 pos, unsigned int size);
- };
- 
- #ifdef CONFIG_FS_VERITY
+> However, since it's necessary to re-verify blocks that have been evicted and
+> then re-instantiated, my patch also repurposes PG_checked as an indicator for
+> whether the Merkle tree pages are newly instantiated.  For a "non-page-cache
+> cache", that part would need to be replaced with something equivalent.
+
+Which we could get as a boolean state from the XFS buffer cache
+fairly easily - did we find the buffer in cache, or was it read from
+disk...
+
+> A different aproach would be to make it so that every time a page (or "cache
+> buffer", to call it something more generic) of N Merkle tree blocks is read,
+> then all N of those blocks are verified immediately.  Then there would be no
+> need to track the "verified" status of individual blocks.
+
+That won't work with XFS - merkle tree blocks are not contiguous in
+the attribute b-tree so there is no efficient "sequential bulk read"
+option available. The xattr structure is largely chosen because it
+allows for fast, deterministic single merkle tree block
+operations....
+
+> My concerns with that approach are:
+> 
+>   * Most data reads only need a single Merkle tree block at the deepest level.
+
+Yup, see above. :)
+
+>     If at least N tree blocks were verified any time that any were verified at
+>     all, that would make the worst-case read latency worse.
+
+*nod*
+
+>   * It's possible that the parents of N tree blocks are split across a cache
+>     buffer.  Thus, while N blocks can't have more than N parents, and in
+>     practice would just have 1-2, those 2 parents could be split into two
+>     separate cache buffers, with a total length of 2*N.  Verifying all of those
+>     would really increase the worst-case latency as well.
+> 
+> So I'm thinking that tracking the "verified" status of tree blocks individually
+> is the right way to go.  But I'd appreciate any other thoughts on this.
+
+I think that having the fsverity code track verified indexes itself
+is a much more felxible and self contained and the right way to go
+about it.
+
+The other issue is that verify_page() assumes that it can drop the
+reference to the cached object itself - the caller actually owns the
+reference to the object, not the verify_page() code. Hence if we are
+passing opaque buffers to verify_page() rather page cache pages, we
+need a ->drop_block method that gets called instead of put_page().
+This will allow the filesystem to hold a reference to the merkle
+tree block data while the verification occurs, ensuring that they
+don't get reclaimed by memory pressure whilst still in use...
+
+Cheers,
+
+Dave.
 -- 
-2.38.1
-
+Dave Chinner
+david@fromorbit.com
