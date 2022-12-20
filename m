@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 270DE6516ED
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Dec 2022 01:01:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 959FA6516EE
+	for <lists+linux-xfs@lfdr.de>; Tue, 20 Dec 2022 01:01:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231531AbiLTAB3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Mon, 19 Dec 2022 19:01:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50104 "EHLO
+        id S232248AbiLTABf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Mon, 19 Dec 2022 19:01:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiLTAB2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Dec 2022 19:01:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEEB266D;
-        Mon, 19 Dec 2022 16:01:27 -0800 (PST)
+        with ESMTP id S232473AbiLTABe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Mon, 19 Dec 2022 19:01:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C326B266D;
+        Mon, 19 Dec 2022 16:01:33 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 377466117E;
-        Tue, 20 Dec 2022 00:01:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF6FC433D2;
-        Tue, 20 Dec 2022 00:01:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C762A611B3;
+        Tue, 20 Dec 2022 00:01:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35BD1C433F0;
+        Tue, 20 Dec 2022 00:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671494486;
-        bh=Wku4FtOgk/DHwwvpv+yxM3NQ/iaBGbXawl52x+/5Fp4=;
+        s=k20201202; t=1671494492;
+        bh=osCYtWlvvFAP0wEvCU8bqtrlJt6VUmNOanZLEEPHx7M=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=C3CiaSUf8l/EmiOKs+XJI8N1QhEyGBrQazlPGI26eSXQVD9EFyynWC2TfTFUsZeTm
-         1+NpWnaggVF/uvYZ9OltsGHueyIl8OBF+mgzqSiR9vrEFYC5PKQlM6rSxQwIO+u5Ns
-         oZIFOX+TT9rZgPuXLwc4tm9KXS5+KRx7ua/oepMEMAOMsgtSg25HSbScIxpe7nZzfe
-         Dbv85bxYjWZ+RtB3dj7HxwdRJi4lJ+w+L4sP5runVGX4ZzTck3G4izACvmkJdoBKfF
-         DMDqdoqeqPLj8O4jfRrU+gNkR196e8H5yLIHFhHSn6FnYGd0poqcrwRWZnJ2g4wMTg
-         XdN1okRgdfupg==
-Subject: [PATCH 4/8] report: sort properties by name
+        b=jR5XzhJ/4NfEBj9I7x6ZxSZyTEXXtNDMsa8oBcA+gW/CPHUARuKz7WMcO/jAIvU5o
+         60S6ifX9sDOtCZceHDmi4vVONZQuumOZ4XPGbKNkW9o5HQ8Fkpr1PR88+iG51I1yw8
+         SL3hKGLxDJM5CGvs4CKcjIB83WRnFUMaq/h2WXy2GNlRDcpgn2OZew1PLSZZtCH9b4
+         gHpvnrQirXYwOww1r9fhKmqV24ts8Zo4S2hWRfTlztW6A+jZTrknidqG+YUeHS1kYz
+         AU5KQN6s4zYmWgKRm1Sebm9h3qPW+zjYvNIDeNTZ4F5RB+DnCPf+XytBdH0Ym/+UzO
+         rwxQ9/XgM6rgA==
+Subject: [PATCH 5/8] report: pass property value to _xunit_add_property
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, zlang@redhat.com
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me,
         leah.rumancik@gmail.com, quwenruo.btrfs@gmx.com
-Date:   Mon, 19 Dec 2022 16:01:26 -0800
-Message-ID: <167149448624.332657.10588092617370450616.stgit@magnolia>
+Date:   Mon, 19 Dec 2022 16:01:31 -0800
+Message-ID: <167149449179.332657.7712352434986216407.stgit@magnolia>
 In-Reply-To: <167149446381.332657.9402608531757557463.stgit@magnolia>
 References: <167149446381.332657.9402608531757557463.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,35 +55,39 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When we're generating a junit xml report, always sort the properties by
-name.  This makes it easier for humans to find a particular property.
+Change this helper to require the caller to pass the value as the second
+parameter.  This prepares us to start reporting a lot more information
+about a test run, not all of which are encoded as bash variables.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/report |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ common/report |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 
 diff --git a/common/report b/common/report
-index 1817132d51..b415a2641d 100644
+index b415a2641d..642e0426a6 100644
 --- a/common/report
 +++ b/common/report
-@@ -27,7 +27,7 @@ _xunit_add_property()
- 	local value="${!name}"
+@@ -24,9 +24,9 @@ encode_xml()
+ _xunit_add_property()
+ {
+ 	local name="$1"
+-	local value="${!name}"
++	local value="$2"
  
- 	if [ ! -z "$value" ]; then
--		echo -e "\t\t<property name=\"$name\" value=\"$value\"/>" >> $REPORT_DIR/result.xml
-+		echo -e "\t\t<property name=\"$name\" value=\"$value\"/>"
+-	if [ ! -z "$value" ]; then
++	if [ -n "$value" ]; then
+ 		echo -e "\t\t<property name=\"$name\" value=\"$value\"/>"
  	fi
  }
- _xunit_make_section_report()
-@@ -68,7 +68,7 @@ ENDL
+@@ -67,7 +67,7 @@ ENDL
+ 	# Properties
  	echo -e "\t<properties>" >> $REPORT_DIR/result.xml
  	for p in "${REPORT_ENV_LIST[@]}"; do
- 		_xunit_add_property "$p"
--	done
-+	done | sort >> $REPORT_DIR/result.xml
+-		_xunit_add_property "$p"
++		_xunit_add_property "$p" "${!p}"
+ 	done | sort >> $REPORT_DIR/result.xml
  	echo -e "\t</properties>" >> $REPORT_DIR/result.xml
  	if [ -f $report ]; then
- 		cat $report >> $REPORT_DIR/result.xml
 
