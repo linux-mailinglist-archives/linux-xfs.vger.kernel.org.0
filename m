@@ -2,69 +2,69 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F38216529C8
-	for <lists+linux-xfs@lfdr.de>; Wed, 21 Dec 2022 00:23:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5157C6529CB
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Dec 2022 00:23:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbiLTXXS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 20 Dec 2022 18:23:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
+        id S229572AbiLTXXV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 20 Dec 2022 18:23:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229727AbiLTXXQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Dec 2022 18:23:16 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 133B7D2
-        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 15:23:15 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id q17-20020a17090aa01100b002194cba32e9so366179pjp.1
-        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 15:23:15 -0800 (PST)
+        with ESMTP id S229983AbiLTXXR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Dec 2022 18:23:17 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4692AF7C
+        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 15:23:16 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id d3so13797941plr.10
+        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 15:23:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XH0Af/kN7ZInRidEVnPhB06qxYUPQCuixBX8Udkd4Qw=;
-        b=39/EIQKiyO2QKpalRlskpMgvoELraX4GNd917QDE6RU80DNWpgEai984dFIWNEJyd6
-         Xbi95HY5bpiEBhCEWjFwicFJp1H76EPi6hCOMPIKmlclsAlhsdHVWcrrEpTCyfH6SMpV
-         HtYjG92y0Y7UdDraNdwuJQiV6GZK1qISr2DVOnt8CUzK7LqEgC/tzoom1WTLn+8IFmcy
-         qci9jL8J8B5V3w8Imq2u0IfXKTGXPjSgobINm3QAj5r2MPEIv+bybmFmWTda9ifIrt6b
-         RgVaaoskem2RP59O9BheazesdsKOPrWDFeaxWkQUOc2uypqIeyfIm1pl0YUCY/A2HUy9
-         Pt6g==
+        bh=c++6OYFdV2U0lktZ7Ykrx8pQFe/3/DEC8n1YNN7iJTA=;
+        b=g+lAo3VNc5IJzy5Cm59UX57NmMFWvbrPjHH/5yUCjJWRl5Zb3txlYMKu+0GJ5FdFUd
+         riE0c1PELYqR4/h/xNdWBdXbtQVrIGPbUlUqYjBAPzn1D0i9Sr8WgG5CIfEgqiUfmbSY
+         AZdDTaGWaBuX18+ZhzAk6tMOFiaow2sXWZ46W4SmqmoUYKeqyyXfwFJoNBVvu3X8Pyvb
+         UGWCDubbBSERaGeMODVz3MQbu3G+/k5LPR7abrX+DpmILefGxTYz0yvb9iyFK/XZekbM
+         ocvtE5p7ASGZ9UO2tUkBBplkTcbkPDfQtqYRxQSNVvjIguom2sa7zt8O53M7tMGgSw75
+         jvjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XH0Af/kN7ZInRidEVnPhB06qxYUPQCuixBX8Udkd4Qw=;
-        b=ZTqzOAiRD4HYT2KG76HGxDoaSnBjM79zItyigOhBrsaEaQMzKhUOktTx5Okzp9XcSa
-         5DJjetsZ5mH1hFl4uo0t25kztNxJFLwulD+XRZfCYVMnmIZAf1cqWHoM2rbarZfdyexj
-         grAmSIMwyzIxhTAzMF000RkvbYT5MMKzUh+8pJAyK9E1USNluIdagP43KkJoAXDjs+oF
-         ty3ieujFx+MUJHm6W4T3aHq1u8zlj3WCitAgpwDCQ2z3oVj5XUNdl7490IxQZ/MQLJOu
-         724OejIXcCBvCseAJHShUwRK7INp1rqgDCXKKlEqS1JjjxgkHJtDOxzmpNsVWQjrs6mO
-         4/ig==
-X-Gm-Message-State: AFqh2kqIQP6ld5tjh2/9P7MhC+G/GU1+SVdczuPCeeVhJ6lMtUXQw7Qi
-        lhVjbDAwy1/nbY997iIKBQ8mZ7CK+eLOmNq/
-X-Google-Smtp-Source: AMrXdXu3s7WAwGEFypWytpacjzZNOQZ9SdJSjbOgJaF5GQTZ3+LV/sKZCCqB0IHeo9yvxabFiVDniA==
-X-Received: by 2002:a17:90b:2d8a:b0:223:b1e4:146 with SMTP id sj10-20020a17090b2d8a00b00223b1e40146mr14004942pjb.37.1671578594494;
-        Tue, 20 Dec 2022 15:23:14 -0800 (PST)
+        bh=c++6OYFdV2U0lktZ7Ykrx8pQFe/3/DEC8n1YNN7iJTA=;
+        b=w+FsnZT2wSLA6VEcsFR67kf/qSnSn1zRDHuL6OSA8+asJvd4Ou8mZJnoCekB2KlcwJ
+         GOMYk1F9rKXGm6Vj59Iw1eLFPChZdiPfZcYkBVgsZlR00SJVEWKyg5zkf4peSFRwfV+p
+         k354MyMpucTfn54j7Znq0pPfI2PrzgN0ZXbpQrIBOjkXpvpGcIdJ/j2jsk50fpsxd72n
+         qBqwIJhXAdv1+Xgb5/IFY+j8nMV7fTqbnqtrtwrEDawFlJX/jgjpRFV1ezUJpBHGNcbF
+         gRakbdaZLOpF+q0yBRhdieW9Rour2KnP73qPsAOpToGnyi1cISfzJYiWaCToBsEoVg5j
+         Aidw==
+X-Gm-Message-State: ANoB5pnO/ecYPyW6GaIeAo2hJ9I3tV2tyh4JDQyTnyxcIQGY5mhX64yB
+        lCl4g8IuGDPuQGBWnFoRtxYDaMDCuRnk2l7M
+X-Google-Smtp-Source: AA0mqf7UzECjoBtQd9zzxs280fQLXwrdHRB20k2fEtt9+yrE/2rTXP2bNKXetsb8+0D5/G0gfwOkDQ==
+X-Received: by 2002:a17:90b:e98:b0:219:a6ab:b95a with SMTP id fv24-20020a17090b0e9800b00219a6abb95amr49383296pjb.22.1671578595659;
+        Tue, 20 Dec 2022 15:23:15 -0800 (PST)
 Received: from dread.disaster.area (pa49-181-138-158.pa.nsw.optusnet.com.au. [49.181.138.158])
-        by smtp.gmail.com with ESMTPSA id s8-20020a17090a760800b00218e8a0d7f0sm71378pjk.22.2022.12.20.15.23.13
+        by smtp.gmail.com with ESMTPSA id om15-20020a17090b3a8f00b00218fba260e2sm58597pjb.43.2022.12.20.15.23.13
         for <linux-xfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Dec 2022 15:23:13 -0800 (PST)
+        Tue, 20 Dec 2022 15:23:14 -0800 (PST)
 Received: from [192.168.253.23] (helo=devoid.disaster.area)
         by dread.disaster.area with esmtp (Exim 4.92.3)
         (envelope-from <dave@fromorbit.com>)
-        id 1p7lx1-00Asnf-9z
+        id 1p7lx1-00Asnh-Ar
         for linux-xfs@vger.kernel.org; Wed, 21 Dec 2022 10:23:11 +1100
 Received: from dave by devoid.disaster.area with local (Exim 4.96)
         (envelope-from <dave@devoid.disaster.area>)
-        id 1p7lx1-00Ec6J-0v
+        id 1p7lx1-00Ec6O-11
         for linux-xfs@vger.kernel.org;
         Wed, 21 Dec 2022 10:23:11 +1100
 From:   Dave Chinner <david@fromorbit.com>
 To:     linux-xfs@vger.kernel.org
-Subject: [PATCH 7/9] xfs: track log space pinned by the AIL
-Date:   Wed, 21 Dec 2022 10:23:06 +1100
-Message-Id: <20221220232308.3482960-8-david@fromorbit.com>
+Subject: [PATCH 8/9] xfs: pass the full grant head to accounting functions
+Date:   Wed, 21 Dec 2022 10:23:07 +1100
+Message-Id: <20221220232308.3482960-9-david@fromorbit.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221220232308.3482960-1-david@fromorbit.com>
 References: <20221220232308.3482960-1-david@fromorbit.com>
@@ -81,137 +81,304 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Dave Chinner <dchinner@redhat.com>
 
-Currently we track space used in the log by grant heads.
-These store the reserved space as a physical log location and
-combine both space reserved for future use with space already used in
-the log in a single variable. The amount of space consumed in the
-log is then calculated as the  distance between the log tail and
-the grant head.
-
-The problem with tracking the grant head as a physical location
-comes from the fact that it tracks both log cycle count and offset
-into the log in bytes in a single 64 bit variable. because the cycle
-count on disk is a 32 bit number, this also limits the offset into
-the log to 32 bits. ANd because that is in bytes, we are limited to
-being able to track only 2GB of log space in the grant head.
-
-Hence to support larger physical logs, we need to track used space
-differently in the grant head. We no longer use the grant head for
-guiding AIL pushing, so the only thing it is now used for is
-determining if we've run out of reservation space via the
-calculation in xlog_space_left().
-
-What we really need to do is move the grant heads away from tracking
-physical space in the log. The issue here is that space consumed in
-the log is not directly tracked by the current mechanism - the
-space consumed in the log by grant head reservations gets returned
-to the free pool by the tail of the log moving forward. i.e. the
-space isn't directly tracked or calculated, but the used grant space
-gets "freed" as the physical limits of the log are updated without
-actually needing to update the grant heads.
-
-Hence to move away from implicit, zero-update log space tracking we
-need to explicitly track the amount of physical space the log
-actually consumes separately to the in-memory reservations for
-operations that will be committed to the journal. Luckily, we
-already track the information we need to calculate this in the AIL
-itself.
-
-That is, the space currently consumed by the journal is the maximum
-LSN that the AIL has seen minus the current log tail. As we update
-both of these items dynamically as the head and tail of the log
-moves, we always know exactly how much space the journal consumes.
-
-This means that we also know exactly how much space the currently
-active reservations require, and exactly how much free space we have
-remaining for new reservations to be made. Most importantly, we know
-what these spaces are indepedently of the physical locations of
-the head and tail of the log.
-
-Hence by separating out the physical space consumed by the journal,
-we can now track reservations in the grant heads purely as a byte
-count, and the log can be considered full when the tail space +
-reservation space exceeds the size of the log. This means we can use
-the full 64 bits of grant head space for reservation space,
-completely removing the 32 bit byte count limitation on log size
-that they impose.
-
-Hence the first step in this conversion is to track and update the
-"log tail space" every time the AIL tail or maximum seen LSN
+Because we are going to need them soon. API change only, no logic
 changes.
 
 Signed-off-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_log_cil.c   | 9 ++++++---
- fs/xfs/xfs_log_priv.h  | 1 +
- fs/xfs/xfs_trans_ail.c | 9 ++++++---
- 3 files changed, 13 insertions(+), 6 deletions(-)
+ fs/xfs/xfs_log.c      | 157 +++++++++++++++++++++---------------------
+ fs/xfs/xfs_log_priv.h |   2 -
+ 2 files changed, 77 insertions(+), 82 deletions(-)
 
-diff --git a/fs/xfs/xfs_log_cil.c b/fs/xfs/xfs_log_cil.c
-index f12e7e8dba30..b294e349798c 100644
---- a/fs/xfs/xfs_log_cil.c
-+++ b/fs/xfs/xfs_log_cil.c
-@@ -761,14 +761,17 @@ xlog_cil_ail_insert(
- 	 * always be the same (as iclogs can contain multiple commit records) or
- 	 * higher LSN than the current head. We do this before insertion of the
- 	 * items so that log space checks during insertion will reflect the
--	 * space that this checkpoint has already consumed.
-+	 * space that this checkpoint has already consumed.  We call
-+	 * xfs_ail_update_finish() so that tail space and space-based wakeups
-+	 * will be recalculated appropriately.
- 	 */
- 	ASSERT(XFS_LSN_CMP(ctx->commit_lsn, ailp->ail_head_lsn) >= 0 ||
- 			aborted);
- 	spin_lock(&ailp->ail_lock);
--	ailp->ail_head_lsn = ctx->commit_lsn;
- 	xfs_trans_ail_cursor_last(ailp, &cur, ctx->start_lsn);
--	spin_unlock(&ailp->ail_lock);
-+	ailp->ail_head_lsn = ctx->commit_lsn;
-+	/* xfs_ail_update_finish() drops the ail_lock */
-+	xfs_ail_update_finish(ailp, NULLCOMMITLSN);
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 25168b38fa25..677636653d39 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -136,10 +136,10 @@ xlog_prepare_iovec(
+ static void
+ xlog_grant_sub_space(
+ 	struct xlog		*log,
+-	atomic64_t		*head,
++	struct xlog_grant_head	*head,
+ 	int			bytes)
+ {
+-	int64_t	head_val = atomic64_read(head);
++	int64_t	head_val = atomic64_read(&head->grant);
+ 	int64_t new, old;
  
- 	/* unpin all the log items */
- 	list_for_each_entry(lv, &ctx->lv_chain, lv_list) {
+ 	do {
+@@ -155,17 +155,17 @@ xlog_grant_sub_space(
+ 
+ 		old = head_val;
+ 		new = xlog_assign_grant_head_val(cycle, space);
+-		head_val = atomic64_cmpxchg(head, old, new);
++		head_val = atomic64_cmpxchg(&head->grant, old, new);
+ 	} while (head_val != old);
+ }
+ 
+ static void
+ xlog_grant_add_space(
+ 	struct xlog		*log,
+-	atomic64_t		*head,
++	struct xlog_grant_head	*head,
+ 	int			bytes)
+ {
+-	int64_t	head_val = atomic64_read(head);
++	int64_t	head_val = atomic64_read(&head->grant);
+ 	int64_t new, old;
+ 
+ 	do {
+@@ -184,7 +184,7 @@ xlog_grant_add_space(
+ 
+ 		old = head_val;
+ 		new = xlog_assign_grant_head_val(cycle, space);
+-		head_val = atomic64_cmpxchg(head, old, new);
++		head_val = atomic64_cmpxchg(&head->grant, old, new);
+ 	} while (head_val != old);
+ }
+ 
+@@ -197,6 +197,63 @@ xlog_grant_head_init(
+ 	spin_lock_init(&head->lock);
+ }
+ 
++/*
++ * Return the space in the log between the tail and the head.  The head
++ * is passed in the cycle/bytes formal parms.  In the special case where
++ * the reserve head has wrapped passed the tail, this calculation is no
++ * longer valid.  In this case, just return 0 which means there is no space
++ * in the log.  This works for all places where this function is called
++ * with the reserve head.  Of course, if the write head were to ever
++ * wrap the tail, we should blow up.  Rather than catch this case here,
++ * we depend on other ASSERTions in other parts of the code.   XXXmiken
++ *
++ * If reservation head is behind the tail, we have a problem. Warn about it,
++ * but then treat it as if the log is empty.
++ *
++ * If the log is shut down, the head and tail may be invalid or out of whack, so
++ * shortcut invalidity asserts in this case so that we don't trigger them
++ * falsely.
++ */
++static int
++xlog_grant_space_left(
++	struct xlog		*log,
++	struct xlog_grant_head	*head)
++{
++	int			tail_bytes;
++	int			tail_cycle;
++	int			head_cycle;
++	int			head_bytes;
++
++	xlog_crack_grant_head(&head->grant, &head_cycle, &head_bytes);
++	xlog_crack_atomic_lsn(&log->l_tail_lsn, &tail_cycle, &tail_bytes);
++	tail_bytes = BBTOB(tail_bytes);
++	if (tail_cycle == head_cycle && head_bytes >= tail_bytes)
++		return log->l_logsize - (head_bytes - tail_bytes);
++	if (tail_cycle + 1 < head_cycle)
++		return 0;
++
++	/* Ignore potential inconsistency when shutdown. */
++	if (xlog_is_shutdown(log))
++		return log->l_logsize;
++
++	if (tail_cycle < head_cycle) {
++		ASSERT(tail_cycle == (head_cycle - 1));
++		return tail_bytes - head_bytes;
++	}
++
++	/*
++	 * The reservation head is behind the tail. In this case we just want to
++	 * return the size of the log as the amount of space left.
++	 */
++	xfs_alert(log->l_mp, "xlog_grant_space_left: head behind tail");
++	xfs_alert(log->l_mp, "  tail_cycle = %d, tail_bytes = %d",
++		  tail_cycle, tail_bytes);
++	xfs_alert(log->l_mp, "  GH   cycle = %d, GH   bytes = %d",
++		  head_cycle, head_bytes);
++	ASSERT(0);
++	return log->l_logsize;
++}
++
+ STATIC void
+ xlog_grant_head_wake_all(
+ 	struct xlog_grant_head	*head)
+@@ -277,7 +334,7 @@ xlog_grant_head_wait(
+ 		spin_lock(&head->lock);
+ 		if (xlog_is_shutdown(log))
+ 			goto shutdown;
+-	} while (xlog_space_left(log, &head->grant) < need_bytes);
++	} while (xlog_grant_space_left(log, head) < need_bytes);
+ 
+ 	list_del_init(&tic->t_queue);
+ 	return 0;
+@@ -322,7 +379,7 @@ xlog_grant_head_check(
+ 	 * otherwise try to get some space for this transaction.
+ 	 */
+ 	*need_bytes = xlog_ticket_reservation(log, head, tic);
+-	free_bytes = xlog_space_left(log, &head->grant);
++	free_bytes = xlog_grant_space_left(log, head);
+ 	if (!list_empty_careful(&head->waiters)) {
+ 		spin_lock(&head->lock);
+ 		if (!xlog_grant_head_wake(log, head, &free_bytes) ||
+@@ -396,7 +453,7 @@ xfs_log_regrant(
+ 	if (error)
+ 		goto out_error;
+ 
+-	xlog_grant_add_space(log, &log->l_write_head.grant, need_bytes);
++	xlog_grant_add_space(log, &log->l_write_head, need_bytes);
+ 	trace_xfs_log_regrant_exit(log, tic);
+ 	xlog_verify_grant_tail(log);
+ 	return 0;
+@@ -447,8 +504,8 @@ xfs_log_reserve(
+ 	if (error)
+ 		goto out_error;
+ 
+-	xlog_grant_add_space(log, &log->l_reserve_head.grant, need_bytes);
+-	xlog_grant_add_space(log, &log->l_write_head.grant, need_bytes);
++	xlog_grant_add_space(log, &log->l_reserve_head, need_bytes);
++	xlog_grant_add_space(log, &log->l_write_head, need_bytes);
+ 	trace_xfs_log_reserve_exit(log, tic);
+ 	xlog_verify_grant_tail(log);
+ 	return 0;
+@@ -1141,7 +1198,7 @@ xfs_log_space_wake(
+ 		ASSERT(!xlog_in_recovery(log));
+ 
+ 		spin_lock(&log->l_write_head.lock);
+-		free_bytes = xlog_space_left(log, &log->l_write_head.grant);
++		free_bytes = xlog_grant_space_left(log, &log->l_write_head);
+ 		xlog_grant_head_wake(log, &log->l_write_head, &free_bytes);
+ 		spin_unlock(&log->l_write_head.lock);
+ 	}
+@@ -1150,7 +1207,7 @@ xfs_log_space_wake(
+ 		ASSERT(!xlog_in_recovery(log));
+ 
+ 		spin_lock(&log->l_reserve_head.lock);
+-		free_bytes = xlog_space_left(log, &log->l_reserve_head.grant);
++		free_bytes = xlog_grant_space_left(log, &log->l_reserve_head);
+ 		xlog_grant_head_wake(log, &log->l_reserve_head, &free_bytes);
+ 		spin_unlock(&log->l_reserve_head.lock);
+ 	}
+@@ -1264,64 +1321,6 @@ xfs_log_cover(
+ 	return error;
+ }
+ 
+-/*
+- * Return the space in the log between the tail and the head.  The head
+- * is passed in the cycle/bytes formal parms.  In the special case where
+- * the reserve head has wrapped passed the tail, this calculation is no
+- * longer valid.  In this case, just return 0 which means there is no space
+- * in the log.  This works for all places where this function is called
+- * with the reserve head.  Of course, if the write head were to ever
+- * wrap the tail, we should blow up.  Rather than catch this case here,
+- * we depend on other ASSERTions in other parts of the code.   XXXmiken
+- *
+- * If reservation head is behind the tail, we have a problem. Warn about it,
+- * but then treat it as if the log is empty.
+- *
+- * If the log is shut down, the head and tail may be invalid or out of whack, so
+- * shortcut invalidity asserts in this case so that we don't trigger them
+- * falsely.
+- */
+-int
+-xlog_space_left(
+-	struct xlog	*log,
+-	atomic64_t	*head)
+-{
+-	int		tail_bytes;
+-	int		tail_cycle;
+-	int		head_cycle;
+-	int		head_bytes;
+-
+-	xlog_crack_grant_head(head, &head_cycle, &head_bytes);
+-	xlog_crack_atomic_lsn(&log->l_tail_lsn, &tail_cycle, &tail_bytes);
+-	tail_bytes = BBTOB(tail_bytes);
+-	if (tail_cycle == head_cycle && head_bytes >= tail_bytes)
+-		return log->l_logsize - (head_bytes - tail_bytes);
+-	if (tail_cycle + 1 < head_cycle)
+-		return 0;
+-
+-	/* Ignore potential inconsistency when shutdown. */
+-	if (xlog_is_shutdown(log))
+-		return log->l_logsize;
+-
+-	if (tail_cycle < head_cycle) {
+-		ASSERT(tail_cycle == (head_cycle - 1));
+-		return tail_bytes - head_bytes;
+-	}
+-
+-	/*
+-	 * The reservation head is behind the tail. In this case we just want to
+-	 * return the size of the log as the amount of space left.
+-	 */
+-	xfs_alert(log->l_mp, "xlog_space_left: head behind tail");
+-	xfs_alert(log->l_mp, "  tail_cycle = %d, tail_bytes = %d",
+-		  tail_cycle, tail_bytes);
+-	xfs_alert(log->l_mp, "  GH   cycle = %d, GH   bytes = %d",
+-		  head_cycle, head_bytes);
+-	ASSERT(0);
+-	return log->l_logsize;
+-}
+-
+-
+ static void
+ xlog_ioend_work(
+ 	struct work_struct	*work)
+@@ -1918,8 +1917,8 @@ xlog_sync(
+ 	if (ticket) {
+ 		ticket->t_curr_res -= roundoff;
+ 	} else {
+-		xlog_grant_add_space(log, &log->l_reserve_head.grant, roundoff);
+-		xlog_grant_add_space(log, &log->l_write_head.grant, roundoff);
++		xlog_grant_add_space(log, &log->l_reserve_head, roundoff);
++		xlog_grant_add_space(log, &log->l_write_head, roundoff);
+ 	}
+ 
+ 	/* put cycle number in every block */
+@@ -2839,17 +2838,15 @@ xfs_log_ticket_regrant(
+ 	if (ticket->t_cnt > 0)
+ 		ticket->t_cnt--;
+ 
+-	xlog_grant_sub_space(log, &log->l_reserve_head.grant,
+-					ticket->t_curr_res);
+-	xlog_grant_sub_space(log, &log->l_write_head.grant,
+-					ticket->t_curr_res);
++	xlog_grant_sub_space(log, &log->l_reserve_head, ticket->t_curr_res);
++	xlog_grant_sub_space(log, &log->l_write_head, ticket->t_curr_res);
+ 	ticket->t_curr_res = ticket->t_unit_res;
+ 
+ 	trace_xfs_log_ticket_regrant_sub(log, ticket);
+ 
+ 	/* just return if we still have some of the pre-reserved space */
+ 	if (!ticket->t_cnt) {
+-		xlog_grant_add_space(log, &log->l_reserve_head.grant,
++		xlog_grant_add_space(log, &log->l_reserve_head,
+ 				     ticket->t_unit_res);
+ 		trace_xfs_log_ticket_regrant_exit(log, ticket);
+ 
+@@ -2897,8 +2894,8 @@ xfs_log_ticket_ungrant(
+ 		bytes += ticket->t_unit_res*ticket->t_cnt;
+ 	}
+ 
+-	xlog_grant_sub_space(log, &log->l_reserve_head.grant, bytes);
+-	xlog_grant_sub_space(log, &log->l_write_head.grant, bytes);
++	xlog_grant_sub_space(log, &log->l_reserve_head, bytes);
++	xlog_grant_sub_space(log, &log->l_write_head, bytes);
+ 
+ 	trace_xfs_log_ticket_ungrant_exit(log, ticket);
+ 
 diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index 70b4280086f2..9c173c48cbcd 100644
+index 9c173c48cbcd..86b5959b5ef2 100644
 --- a/fs/xfs/xfs_log_priv.h
 +++ b/fs/xfs/xfs_log_priv.h
-@@ -435,6 +435,7 @@ struct xlog {
- 
- 	struct xlog_grant_head	l_reserve_head;
- 	struct xlog_grant_head	l_write_head;
-+	uint64_t		l_tail_space;
- 
- 	struct xfs_kobj		l_kobj;
- 
-diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-index 1b5942ef378a..6b1556325277 100644
---- a/fs/xfs/xfs_trans_ail.c
-+++ b/fs/xfs/xfs_trans_ail.c
-@@ -731,6 +731,8 @@ __xfs_ail_assign_tail_lsn(
- 	if (!tail_lsn)
- 		tail_lsn = ailp->ail_head_lsn;
- 
-+	WRITE_ONCE(log->l_tail_space,
-+			xlog_lsn_sub(log, ailp->ail_head_lsn, tail_lsn));
- 	trace_xfs_log_assign_tail_lsn(log, tail_lsn);
- 	atomic64_set(&log->l_tail_lsn, tail_lsn);
+@@ -571,8 +571,6 @@ xlog_assign_grant_head(atomic64_t *head, int cycle, int space)
+ 	atomic64_set(head, xlog_assign_grant_head_val(cycle, space));
  }
-@@ -738,9 +740,10 @@ __xfs_ail_assign_tail_lsn(
+ 
+-int xlog_space_left(struct xlog *log, atomic64_t *head);
+-
  /*
-  * Callers should pass the the original tail lsn so that we can detect if the
-  * tail has moved as a result of the operation that was performed. If the caller
-- * needs to force a tail LSN update, it should pass NULLCOMMITLSN to bypass the
-- * "did the tail LSN change?" checks. If the caller wants to avoid a tail update
-- * (e.g. it knows the tail did not change) it should pass an @old_lsn of 0.
-+ * needs to force a tail space update, it should pass NULLCOMMITLSN to bypass
-+ * the "did the tail LSN change?" checks. If the caller wants to avoid a tail
-+ * update (e.g. it knows the tail did not change) it should pass an @old_lsn of
-+ * 0.
+  * Committed Item List interfaces
   */
- void
- xfs_ail_update_finish(
 -- 
 2.38.1
 
