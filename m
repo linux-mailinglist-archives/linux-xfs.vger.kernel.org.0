@@ -2,118 +2,255 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82456652935
-	for <lists+linux-xfs@lfdr.de>; Tue, 20 Dec 2022 23:55:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A00D6529CD
+	for <lists+linux-xfs@lfdr.de>; Wed, 21 Dec 2022 00:23:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbiLTWzr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Tue, 20 Dec 2022 17:55:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
+        id S233934AbiLTXXX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Tue, 20 Dec 2022 18:23:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbiLTWzq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Dec 2022 17:55:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A36810C3
-        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 14:55:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 92CB6B81A40
-        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 22:55:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31260C433D2;
-        Tue, 20 Dec 2022 22:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671576942;
-        bh=9STm0HhHbUfuZ4BE7lXoLEHC3jdSnO12bfmTztliyYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NkHD+iJgRdCpFd7bRBGeH6d+icDac/DtFMd+8zLXLLKmm17qlVuCtOQF0PXMMjrZ/
-         0sANpzi6fquUwicc59FdCeczz1yHPtEJvP0q+N9S+GqstrGQ/VkV1wIQ/YwzF5iKSD
-         ydVIndwf1V26ZPRi48lLb5A4QfXCYzEd7lM+UqEWCX/RIVvr/Ewcc/pzOKucOl1Eed
-         v7Dzv66a7UvzqZDNdhuMYB6laxO2XrHfoqKCzIYge/zonGGXEZ6unHWIxD9zIJwn6J
-         Ere+zyO4aczNmrO363MuVq6xzBFvSvFWUUxCi/Kn7DY+9joTjO2tTl0Kry6zX4odx6
-         40iY4KvnHQqhw==
-Date:   Tue, 20 Dec 2022 14:55:41 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     "yangx.jy@fujitsu.com" <yangx.jy@fujitsu.com>
-Cc:     xfs <linux-xfs@vger.kernel.org>
-Subject: Re: Question about xfs/440
-Message-ID: <Y6I9bdpTFhsa+eLW@magnolia>
-References: <OS3PR01MB9499A747D11EFFD2654354D483E69@OS3PR01MB9499.jpnprd01.prod.outlook.com>
+        with ESMTP id S233319AbiLTXXR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Tue, 20 Dec 2022 18:23:17 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8332710A4
+        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 15:23:16 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id fy4so14027161pjb.0
+        for <linux-xfs@vger.kernel.org>; Tue, 20 Dec 2022 15:23:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bQmS641ZcG9XGlSDCRNew6UvM+LbS2/OilZ9ZSSFq2M=;
+        b=yUXnWLDjJGfXdALm2b8clzwaAcadWfRHGKCFGVQ4CB9QMLTbLZSD9Tk7BypzAjWUrK
+         HallT6E8Y84tWyvV6ZMkwrxT3F+k6QgAU+t9M02dNiiHsDGAi2W28A+H7YYqbwQ9AScQ
+         pBAjpwapVZ0lvhW/QzSdt2vO7WyM4K2wWussooUhlS765ho+bnLmDsCS7tXdLfKVFb8y
+         XPkxmKZ2YDLH6QFdASJmhQNCbSWNeBihXIu7fr4OMsqUv2Si/I9jots5mRjFEf6KSnBm
+         JGQV7sFDiJLiBbOTP7l2OLcO02ZhgPLjr8WvKW2AFrQ7lDjpTKtszf68hFn5sjYH+QM+
+         /pJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bQmS641ZcG9XGlSDCRNew6UvM+LbS2/OilZ9ZSSFq2M=;
+        b=DZGS4+a395V/4Ku68i7KfTBHwyM461JIflu6FYVi9TPWcqXJlrMf5Hb9MfAaJDk2xx
+         m70V9p7NsYXeHkz+Hx8cu4fF6hDt5Xsaa4IXU6g4zyyhac+J1pyP0VtwRndY8oayxQ5u
+         DpXY32G61sR+TBJwIEMg0etfaDG+AJ+b6PabwWVkFAoJvkP8FsEtnfZuv4FgkR73LlC8
+         bE43CPOuZt6Yw3WGoOT9bgWzMXR2wlfUsEx2riE2yAVgvqXQRaoI2+Ida0+B/yaOfMJ7
+         YzZ3taRR8z1AXSptlo+2f3m4ltp0FpM6D2ttJaXBTZGd9xC6C9+gaB+/KlREJe/SJZLh
+         /zow==
+X-Gm-Message-State: ANoB5pldvtDan8rUYnqzVSOOoSnrc6lNkZI0S3RlAxVpX4xIh97X3xKX
+        DmkYWRRVTlvVLM6SikRlI/4FrAq719r1sEI8
+X-Google-Smtp-Source: AA0mqf5hKHtNJCZYlNXY44fUYAJQKJao1bpmqIprXnY4ioKJLu7YpZ+3yiShNzOL1RLTKHgas/hs8A==
+X-Received: by 2002:a05:6a21:8cc2:b0:9d:efbe:52bf with SMTP id ta2-20020a056a218cc200b0009defbe52bfmr57417347pzb.47.1671578595950;
+        Tue, 20 Dec 2022 15:23:15 -0800 (PST)
+Received: from dread.disaster.area (pa49-181-138-158.pa.nsw.optusnet.com.au. [49.181.138.158])
+        by smtp.gmail.com with ESMTPSA id u31-20020a63235f000000b00488b8ad57bfsm6249051pgm.54.2022.12.20.15.23.13
+        for <linux-xfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Dec 2022 15:23:14 -0800 (PST)
+Received: from [192.168.253.23] (helo=devoid.disaster.area)
+        by dread.disaster.area with esmtp (Exim 4.92.3)
+        (envelope-from <dave@fromorbit.com>)
+        id 1p7lx1-00AsnR-3N
+        for linux-xfs@vger.kernel.org; Wed, 21 Dec 2022 10:23:11 +1100
+Received: from dave by devoid.disaster.area with local (Exim 4.96)
+        (envelope-from <dave@devoid.disaster.area>)
+        id 1p7lx1-00Ec5n-09
+        for linux-xfs@vger.kernel.org;
+        Wed, 21 Dec 2022 10:23:11 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     linux-xfs@vger.kernel.org
+Subject: [PATCH 0/9 v3] xfs: byte-based grant head reservation tracking
+Date:   Wed, 21 Dec 2022 10:22:59 +1100
+Message-Id: <20221220232308.3482960-1-david@fromorbit.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <OS3PR01MB9499A747D11EFFD2654354D483E69@OS3PR01MB9499.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        TVD_PH_BODY_ACCOUNTS_PRE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Fri, Dec 16, 2022 at 01:02:18PM +0000, yangx.jy@fujitsu.com wrote:
-> Hi Darrick,
-> 
-> As you know, the following steps comes from xfs/440. I have two
-> questions about these steps.
-> The first one:
-> Why repquota -u command shows "128" rather than "64" for fsgqa user
-> after cp --reflink command is completed?
+Hi folks,
 
-Quota resource usage are charged for each file, even for shared blocks.
-There's no easy way to amortize the cost of a shared block among its
-owners unless you can walk backwards from a piece of storage back to its
-owners, which is too much work to make it worth the effort.
+One of the significant limitations of the log reservation code is
+that it uses physical tracking of the reservation space to account
+for both the space used in the journal as well as the reservations
+held in memory by the CIL and activei running transactions. Because
+this in-memory reservation tracking requires byte-level granularity,
+this means that the "LSN" that the grant head stores it's location
+in is split into 32 bits for the log cycle and 32 bits for the grant
+head offset into the log.
 
-Hence reflinking a 64k file to another file creates 128k worth of usage.
+Storing a byte count as the grant head offset into the log means
+that we can only index 4GB of space with the grant head. This is one
+of the primary limiting factors preventing us from increasing the
+physical log size beyond 2GB. Hence to increase the physical log
+size, we have to increase the space available for storing the grant
+head.
 
-> The second one:
-> Why repquota -u command shows "1152" for fsgqa user after CoW(Copy on
-> Write) is completed?
+Needing more physical space to store the grant head is an issue
+because we use lockless atomic accounting for the grant head to
+minimise the overhead of new incoming transaction reservations.
+These have unbound concurrency, and hence any lock in the
+reservation path will cause serious scalability issues. The lockless
+accounting fast path was the solution to these scalability problems
+that we had over a decade ago, and hence we know we cannot go back
+to a lock based solution.
 
-The space extents used to stage COW operations are separate space
-allocations, which means they're charged to the quota and hang around
-until writeback happens.  In xfs/440, we set a cow extent size hint of
-1mb, so we've actually staged 1mb of cow so that appending writes to /b
-will end up in contiguous space.  That's why usage goes from 128 to
-1152.
+Therefore we are still largely limited to the storage space we can
+perform atomic operations on. We already use 64 bit compare/exchange
+operations, and there is not widespread hardware support for 128 bit
+atomic compare/exchange operations so increasing the grant head LSN
+to a structure > 64 bits in size is not really an option.
 
---D
+Hence we have to look for a different solution - one that doesn't
+require us to increase the amount of storage space for the grant
+head. This is where we need to recognise that the grant head is
+actually tracking three things:
 
-> 
-> How does the kernel process reflink and CoW?
-> How does the kernel calculate the number(e.g. 128，1152)?
-> 
-> # mount -o usrquota,grpquota /dev/pmem1 /mnt/scratch/
-> # touch /mnt/scratch/a /mnt/scratch/force_fsgqa
-> # chown fsgqa /mnt/scratch/a /mnt/scratch/force_fsgqa
-> # xfs_io -c "pwrite -S 0x58 0 64k" /mnt/scratch/a
-> # repquota -u /mnt/scratch/
-> ...
->                         Block limits                File limits
-> User            used    soft    hard  grace    used  soft  hard  grace
-> ----------------------------------------------------------------------
-> root      --       0       0       0              3     0     0
-> fsgqa     --      64       0       0              2     0     0
-> 
-> # cp --reflink=always -p /mnt/scratch/a /mnt/scratch/b
-> # repquota -u /mnt/scratch/
-> ...
->                         Block limits                File limits
-> User            used    soft    hard  grace    used  soft  hard  grace
-> ----------------------------------------------------------------------
-> root      --       0       0       0              3     0     0
-> fsgqa     --     128       0       0              3     0     0
-> 
-> # xfs_io -c "pwrite -S 0x59 0 64k" /mnt/scratch/a
-> # repquota -u /mnt/scratch/
-> ...
->                         Block limits                File limits
-> User            used    soft    hard  grace    used  soft  hard  grace
-> ----------------------------------------------------------------------
-> root      --       0       0       0              3     0     0
-> fsgqa     --    1152       0       0              3     0     0
-> 
-> Best Regards,
-> Xiao Yang
+1. physical log space that is tracked by the AIL;
+2. physical log space that the CIL will soon consume; and
+3. potential log space that active transactions *may* consume.
+
+One of the tricks that the grant heads play is that the don't need
+to explicitly track the space consumed by the AIL (#1), because the
+consumed log space is simply "grant head - log tail", and so it
+doesn't not matter how the space that is consumed moves between the
+three separate accounting groups. Reservation space is automatically
+returned to the "available pool" by the AIL moving the log tail
+forwards. Hence the grant head only needs to account for the
+journal space that transactions consume as they complete, and never
+have to be updated to account for metadata writeback emptying the
+journal.
+
+This all works because xlog_space_left() is a calculation of the
+difference between two LSNs - the log tail and the grant head. When
+the grant head wraps the log tail, we've run out of log space and
+the journal reservations get throttled until the log tail is moved
+forward to "unwrap" the grant head and make space available again.
+
+But there's no reason why we have to track log space in this way
+to determine that we've run out of reservation space - all we need
+is for xlog_space_left() to be able to accurately calculate when
+we've run out of space. So let's break this down.
+
+Firstly, the AIL tracks all the items in the journal, and so at
+any given time it should know exactly where the on-disk head and
+tail of the journal are located. At the moment, we only know where
+the tail is (xfs_ail_min_lsn()), and we update the log tail
+(log->l_tail_lsn) whenever the AIL minimum LSN changes.
+
+The AIL will see the maximum committed LSN, but it does not track
+this. Instead, the log tracks this as log->l_last_sync_lsn and
+updates this directly in iclog IO completion when a iclog has
+callbacks attached. That is, log->l_last_sync_lsn is updated
+whenever journal IO completion is going to insert the latest
+committed log items into the AIL. If the AIL is empty, the log tail
+is assigned the value stored in l_last_sync_lsn as the log tail
+now points to the last written checkpoint in the journal.
+
+The simplest way I can describe how we track the log space is
+as follows:
+
+   l_tail_lsn		l_last_sync_lsn		grant head lsn
+	|-----------------------|+++++++++++++++++++++|
+	|    physical space	|   in memory space   |
+	| - - - - - - xlog_space_left() - - - - - - - |
+
+It is simple for the AIL to track the maximum LSN that has been
+inserted into the AIL. If we do this, we no longer need to track
+log->l_last_sync_lsn in the journal itself and we can always get the
+physical space tracked by the journal directly from the AIL. The AIL
+functions can calculate the "log tail space" dynamically when either
+the log tail or the max LSN seen changes, thereby removing all need
+for the log itself to track this state. Hence we now have:
+
+   l_tail_lsn		ail_max_lsn_seen	grant head lsn
+	|-----------------------|+++++++++++++++++++++|
+	|    log->l_tail_space	|   in memory space   |
+	| - - - - - - xlog_space_left() - - - - - - - |
+
+And we've solved the problem of efficiently calculating the amount
+of physical space the log is consuming. All this leaves is now
+calculating how much space we are consuming in memory.
+
+Luckily for us, we've just added all the update hooks needed to do
+this. From the above diagram, two things are obvious:
+
+1. when the tail moves, only log->l_tail_space reduces
+2. when the ail_max_lsn_seen increases, log->l_tail_space increases
+   and "in memory space" reduces by the same amount.
+
+IOWs, we now have a mechanism that can transfer the in-memory
+reservation space directly to the on-disk tail space accounting. At
+this point, we can change the grant head from tracking physical
+location to tracking a simple byte count:
+
+   l_tail_lsn		ail_max_lsn_seen	grant head bytes
+	|-----------------------|+++++++++++++++++++++|
+	|    log->l_tail_space	|     grant space     |
+	| - - - - - - xlog_space_left() - - - - - - - |
+
+and xlog_space_left() simply changes to:
+
+space left = log->l_logsize - grant space - log->l_tail_space;
+
+All of the complex grant head cracking, combining and
+compare/exchange code gets replaced by simple atomic add/sub
+operations, and the grant heads can now track a full 64 bit bytes
+space. The fastpath reservation accounting is also much faster
+because it is much simpler.
+
+There's one little problem, though. The transaction reservation code
+has to set the LSN target for the AIL to push to ensure that the log
+tail keeps moving forward (xlog_grant_push_ail()), and the deferred
+intent logging code also tries to keep abreast of the amount of
+space available in the log via xlog_grant_push_threshold().
+
+The AIL pushing problem is actually easy to solve - we don't need to
+push the AIL from the transaction reservation code as the AIL
+already tracks all the space used by the journal. All the
+transaction reservation code does is try to keep 25% of the journal
+physically free, and there's no reason why the AIL can't do that
+itself.
+
+Hence before we start changing any of the grant head accounting, we
+remove all the AIL pushing hooks from the reservation code and let
+the AIL determine the target it needs to push to itself. We also
+allow the deferred intent logging code to determine if the AIL
+should be tail pushing similar to how it currently checks if we are
+running out of log space, so the intent relogging still works as it
+should.
+
+WIth these changes in place, there is no external code that is
+dependent on the grant heads tracking physical space, and hence we
+can then implement the change to pure in-memory reservation space
+tracking in the grant heads.....
+
+This all passes fstests for default and rmapbt enable configs.
+Performance tests also show good improvements where the transaction
+accounting is the bottleneck.
+
+-Dave.
+
+Version 3
+- forward port onto current for-next dev branch.
+- cleaned up static warnings from build bot.
+- fixed comment about minimum AIL push target.
+- fixed whitespace problems in multiple patches.
+
+Version 2
+- https://lore.kernel.org/linux-xfs/20220809230353.3353059-1-david@fromorbit.com/
+- reorder moving xfs_trans_bulk_commit() patch to start of series
+- fix failure to consider NULLCOMMITLSN push target in AIL
+- grant space release based on ctx->start_lsn fails to release the space used in
+  the checkpoint that was just committed. Release needs to be based on the the
+  ctx->commit_lsn which is the end of the region that the checkpoint consumes in
+  the log.
+
+
