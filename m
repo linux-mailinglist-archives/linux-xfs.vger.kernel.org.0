@@ -2,51 +2,64 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 979306539E2
-	for <lists+linux-xfs@lfdr.de>; Thu, 22 Dec 2022 00:48:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F6F5653A67
+	for <lists+linux-xfs@lfdr.de>; Thu, 22 Dec 2022 02:53:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230395AbiLUXsh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Wed, 21 Dec 2022 18:48:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39936 "EHLO
+        id S234740AbiLVBxg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Wed, 21 Dec 2022 20:53:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbiLUXsg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Wed, 21 Dec 2022 18:48:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBEF02333A;
-        Wed, 21 Dec 2022 15:48:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F5446181B;
-        Wed, 21 Dec 2022 23:48:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B06C433D2;
-        Wed, 21 Dec 2022 23:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671666514;
-        bh=dfwaApWQ0HHasq7Na874WL021J+XeyqZRnuKNQdoIeg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lbiOFI5ce6MhuC0e2A8vQiFx/g2qB5m5bAuRy9qk5Mm6jsrk+zWBi3jlAng6HxqRS
-         tkK0WMTApgo6M0Jbg3095s4Q1pMoYgKZS/ZWlc2VENkPe/bJziiHDjmGYr3gWqg0q/
-         P5+W7XUBFaQXduCjSECo0Fbaa9symmfh45iWALREkyJEsVUmBrV0KR4cgEcWC69XAU
-         8kNNFUCCnqTZJM2oskc545+E3tIgEQDhY12cdfhUl6fXV7rYVW+Hdy9jUErqQrqK/S
-         rcWGayoxy12exGtux3xcFCjCAkcRBWcdnXHle4L7F66IcCQHm+yINcrctCpSdkJen2
-         YhHnAN0ngueAA==
-Date:   Wed, 21 Dec 2022 15:48:32 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-fscrypt@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: Separate mailing list (and git and patchwork) for fsverity?
-Message-ID: <Y6ObULdVm2UN5kw1@sol.localdomain>
-References: <Y5jRbLEJh3S46Jer@sol.localdomain>
+        with ESMTP id S234761AbiLVBxe (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Wed, 21 Dec 2022 20:53:34 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27160248E1
+        for <linux-xfs@vger.kernel.org>; Wed, 21 Dec 2022 17:53:31 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id u15-20020a17090a3fcf00b002191825cf02so434975pjm.2
+        for <linux-xfs@vger.kernel.org>; Wed, 21 Dec 2022 17:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONzAnABRY7ilpXpn1DAhpGpO+unnjPo/NEDhe6rYfvo=;
+        b=o728uvYnEFcyhEer7ofjjXhEKlE+6DXTstm8pabC5NUtv/OU09B+7RWBbG75TPkMnD
+         VAV0OaAY4bps99P7t2BDKpuQ0RIFSvfddQ5I/YjcVDdZ4Hs3jzHE6MyXO0X9EMyug0IH
+         E37vjfLRLynzN202e5mMyMa/K0AwEhuwDw0BiJAMaAK7rHRGgsggZrqMHPdiv9Gq+KX8
+         pCDPDjpQtNr9MkhMSKci/Np3GikOvlCJ9IC4qBW/eeKUfP6QYliodv9uRjECTR+2lRL4
+         /rMiA7CKqZdBmjb+BfSP+Zn+1jX38LEVvOSHv9lMlXveV07S3kAp6pzb9aB+ehTXzDhY
+         qUpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ONzAnABRY7ilpXpn1DAhpGpO+unnjPo/NEDhe6rYfvo=;
+        b=F+r/gc8lrggEfrmjESiRmyB1fXv2OK4L+P2D14LH4ZnzYfL96LQH2dnMpaYxfp5EDL
+         R6fVXUSQ3ToGNiJholGyQbySMCGzC5O3JqvS3AHMdIXobwZHP2iwzU6yo2J4BAC1G1eV
+         zmVXBt81A3JOrCdadTxEPaSfCFk7fdc3yho1XnH1aUCasGFvv6dcqwqzb+owriXpHPcL
+         Zz9OglOl9SzR9Wb3CCmhlC1my3w87sCG10aSKcumA1LAWmwyb/Sx8YlcHiHy99zoaAbc
+         ELK1pbyBv5EKVvA+ZqQHWisw94QM2ceFMNA0gXgks9z1Fjb3MSdRL2Vcfu/aA5iXmXhv
+         BvUA==
+X-Gm-Message-State: AFqh2kopFSZXQs7ik19QR1XhPo/ut2uyKCcUdHNR8tcUbtL3MlHTJQLo
+        JKUbGzioYSO81PvJgG6KJ1ynIKiu2Ek=
+X-Google-Smtp-Source: AMrXdXvhKjadil3wx7eXFYMae7kM7n/wqGiQmbYEKZyCNWhgTcUOAhudONpK5qGGVxXGO8qX/w72Qw==
+X-Received: by 2002:a05:6a20:3d1a:b0:a4:b2e4:c561 with SMTP id y26-20020a056a203d1a00b000a4b2e4c561mr6651919pzi.51.1671674010852;
+        Wed, 21 Dec 2022 17:53:30 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::41f2])
+        by smtp.gmail.com with ESMTPSA id f10-20020a631f0a000000b004790f514f15sm10405116pgf.22.2022.12.21.17.53.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Dec 2022 17:53:30 -0800 (PST)
+From:   Khem Raj <raj.khem@gmail.com>
+To:     linux-xfs@vger.kernel.org
+Cc:     Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH 1/2] configure: Use AC_SYS_LARGERFILE autoconf macro
+Date:   Wed, 21 Dec 2022 17:53:26 -0800
+Message-Id: <20221222015327.939932-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y5jRbLEJh3S46Jer@sol.localdomain>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,47 +67,27 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-On Tue, Dec 13, 2022 at 11:24:28AM -0800, Eric Biggers wrote:
-> Currently, fsverity development is reusing the same mailing list, git repo
-> (though a different branch), and patchwork project as fscrypt --- mainly just
-> because I was a little lazy and didn't bother to ask for new ones:
-> 
-> FSCRYPT: FILE SYSTEM LEVEL ENCRYPTION SUPPORT
-> [...]
-> L:      linux-fscrypt@vger.kernel.org
-> Q:      https://patchwork.kernel.org/project/linux-fscrypt/list/
-> T:      git git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git
-> [...]
-> 
-> FSVERITY: READ-ONLY FILE-BASED AUTHENTICITY PROTECTION
-> [...]
-> L:      linux-fscrypt@vger.kernel.org
-> Q:      https://patchwork.kernel.org/project/linux-fscrypt/list/
-> T:      git git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git fsverity
-> [...]
-> 
-> I think this is causing some confusion.  It also makes it so that people can't
-> subscribe to the list for just one or the other.
-> 
-> What would people say about having a separate mailing list, git repo, and
-> patchwork project for fsverity?  So the fsverity entry would look like:
-> 
-> FSVERITY: READ-ONLY FILE-BASED AUTHENTICITY PROTECTION
-> [...]
-> L:      linux-fsverity@vger.kernel.org
-> Q:      https://patchwork.kernel.org/project/linux-fsverity/list/
-> T:      git git://git.kernel.org/pub/scm/fs/fsverity/fsverity.git
-> [...]
-> 
-> For the branches in the git repo, I'm thinking of using 'for-next' and
-> 'for-current'.  (I'd also update the fscrypt ones to match; currently they are
-> 'master' and 'for-stable'.)
-> 
-> If people are okay with these changes, I'll send off the needed requests to
-> helpdesk and linux-next to make these changes, and send Linus a pull request to
-> update MAINTAINERS.  (And update fsverity-utils to point to the new list.)
-> 
+Helps define largefile support on relevant platforms
 
-Any thoughts on this from anyone?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ configure.ac | 3 +++
+ 1 file changed, 3 insertions(+)
 
-- Eric
+diff --git a/configure.ac b/configure.ac
+index c206e111..79aefd2c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -10,6 +10,9 @@ AC_PROG_INSTALL
+ LT_INIT
+ 
+ AC_PROG_CC
++
++AC_SYS_LARGEFILE
++
+ AC_ARG_VAR(BUILD_CC, [C compiler for build tools])
+ if test "${BUILD_CC+set}" != "set"; then
+   if test $cross_compiling = no; then
+-- 
+2.39.0
+
