@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75B85659FAC
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:32:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA46E65A0E6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:47:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235622AbiLaAcA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:32:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33430 "EHLO
+        id S236056AbiLaBrV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:47:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235750AbiLaAb5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:31:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8B313F7A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:31:57 -0800 (PST)
+        with ESMTP id S231435AbiLaBrT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:47:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8E61DDD3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:47:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F6EA61D4B
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:31:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B731C433EF;
-        Sat, 31 Dec 2022 00:31:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 18C02B81DEE
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:47:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE665C433D2;
+        Sat, 31 Dec 2022 01:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446716;
-        bh=PkGczJ7tvQDEY0tAYot2tk1WvdNWx1Z0tEKNg5+9ZFo=;
+        s=k20201202; t=1672451235;
+        bh=IBdwgTEf0ZsUeoyne1EQWuSmbPZQ75/b5Beu0JXZh6I=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nJJ0W356n1ECSOJ/QoY1Uq0u1Al70P1vVkYMOo2SZkkpqRa26oZZKeGQyZ+g6mDN8
-         kJYt90cRGwifqI4mrrQ9UMtHesApEWO8aZRXk7Hrv9WoQXK7RNc9RP1nco0W+NFxMd
-         qH0yBxt2XIM886iUDxqaPrTHqEnaK4zjaEl//Q4B9Yn4Pw0MXF29+rB7XwVPNjTsAr
-         IxCF72sKokyJBepxbvnD616N/hJwHzVmbaD1lCAnTIQURvHhoPfOlHeRxfoFRu/98M
-         jbXOiRJRlfxIZ8XfzW48eM4IcTADLAjH2IntPu0DO8ChzX96yn8GvVCGcCn3NnyIu2
-         9vBA9mxcKWOlg==
-Subject: [PATCH 4/4] xfs_scrub: try to repair space metadata before file
- metadata
+        b=eW472ypcdtsxEgiFgfOTnvUPX3k4qp/pvDnX+kA9GiepXICXxOCJN649wd9gOQeyD
+         DzveC+FqNLTBTZqP13xOeHTE+BowUbft68IKS6SeIX/IjucjURdahNVwR5WsUaydfF
+         RVMb5Qav+9Dg9MdQv7BUzz1S2I5Ro+bsikOQSpkPwvJD3nszPWwc6W8lMkiV8DZcL/
+         59LmSk747e60zC/qOt2/6HgPBpt0TK4x/bXDhLwIGiG/IZu0s0GMtoRLzwx6ZoCB5m
+         T3NrJlWTsIKIjb9s2ksgXyeGvWNS/AMgq4BCOE7bcsWl9QXoGoQWss0B7z2cvF1df1
+         F9rkKzU9XnZcA==
+Subject: [PATCH 2/5] xfs: create specialized classes for refcount tracepoints
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:24 -0800
-Message-ID: <167243870483.716640.9332994789785540092.stgit@magnolia>
-In-Reply-To: <167243870430.716640.15368107413813691968.stgit@magnolia>
-References: <167243870430.716640.15368107413813691968.stgit@magnolia>
+Message-ID: <167243870473.716629.6474319882227995580.stgit@magnolia>
+In-Reply-To: <167243870440.716629.17983217257958002785.stgit@magnolia>
+References: <167243870440.716629.17983217257958002785.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,170 +55,212 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Phase 4 (metadata repairs) of xfs_scrub has suffered a mild race
-condition since the beginning of its existence.  Repair functions for
-higher level metadata such as directories build the new directory blocks
-in an unlinked temporary file and use atomic extent swapping to commit
-the corrected directory contents into the existing directory.  Atomic
-extent swapping requires consistent filesystem space metadata, but phase
-4 has never enforced correctness dependencies between space and file
-metadata repairs.
-
-Before the previous patch eliminated the per-AG repair lists, this error
-was not often hit in testing scenarios because the allocator generally
-succeeds in placing file data blocks in the same AG as the inode.  With
-pool threads now able to pop file repairs from the repair list before
-space repairs complete, this error became much more obvious.
-
-Fortunately, the new phase 4 design makes it easy to try to enforce the
-consistency requirements of higher level file metadata repairs.  Split
-the repair list into one for space metadata and another for file
-metadata.  Phase 4 will now try to fix the space metadata until it stops
-making progress on that, and only then will it try to fix file metadata.
+The only user of the "ag" tracepoint event classes is the refcount
+btree, so rename them to make that obvious and make them take the btree
+cursor to simplify the arguments.  This will save us a lot of trouble
+later on.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase1.c    |   13 ++++++++++---
- scrub/phase2.c    |    2 +-
- scrub/phase3.c    |    4 ++--
- scrub/phase4.c    |   22 +++++++++++++++++-----
- scrub/xfs_scrub.h |    3 ++-
- 5 files changed, 32 insertions(+), 12 deletions(-)
+ fs/xfs/libxfs/xfs_refcount.c |   24 ++++++-----------
+ fs/xfs/xfs_trace.h           |   61 +++++++++++++++++++++++++++---------------
+ 2 files changed, 48 insertions(+), 37 deletions(-)
 
 
-diff --git a/scrub/phase1.c b/scrub/phase1.c
-index 6ad012042da..faa554f1e1e 100644
---- a/scrub/phase1.c
-+++ b/scrub/phase1.c
-@@ -89,7 +89,8 @@ scrub_cleanup(
- 	if (error)
- 		return error;
+diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+index b77d40631e60..1d181561a9ff 100644
+--- a/fs/xfs/libxfs/xfs_refcount.c
++++ b/fs/xfs/libxfs/xfs_refcount.c
+@@ -51,7 +51,7 @@ xfs_refcount_lookup_le(
+ 	xfs_agblock_t		bno,
+ 	int			*stat)
+ {
+-	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
++	trace_xfs_refcount_lookup(cur,
+ 			xfs_refcount_encode_startblock(bno, domain),
+ 			XFS_LOOKUP_LE);
+ 	cur->bc_rec.rc.rc_startblock = bno;
+@@ -71,7 +71,7 @@ xfs_refcount_lookup_ge(
+ 	xfs_agblock_t		bno,
+ 	int			*stat)
+ {
+-	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
++	trace_xfs_refcount_lookup(cur,
+ 			xfs_refcount_encode_startblock(bno, domain),
+ 			XFS_LOOKUP_GE);
+ 	cur->bc_rec.rc.rc_startblock = bno;
+@@ -91,7 +91,7 @@ xfs_refcount_lookup_eq(
+ 	xfs_agblock_t		bno,
+ 	int			*stat)
+ {
+-	trace_xfs_refcount_lookup(cur->bc_mp, cur->bc_ag.pag->pag_agno,
++	trace_xfs_refcount_lookup(cur,
+ 			xfs_refcount_encode_startblock(bno, domain),
+ 			XFS_LOOKUP_LE);
+ 	cur->bc_rec.rc.rc_startblock = bno;
+@@ -1264,11 +1264,9 @@ xfs_refcount_adjust(
+ 	int			error;
  
--	action_list_free(&ctx->action_list);
-+	action_list_free(&ctx->file_repair_list);
-+	action_list_free(&ctx->fs_repair_list);
- 
- 	if (ctx->fshandle)
- 		free_handle(ctx->fshandle, ctx->fshandle_len);
-@@ -186,9 +187,15 @@ _("Not an XFS filesystem."));
- 		return error;
- 	}
- 
--	error = action_list_alloc(&ctx->action_list);
-+	error = action_list_alloc(&ctx->fs_repair_list);
- 	if (error) {
--		str_liberror(ctx, error, _("allocating repair list"));
-+		str_liberror(ctx, error, _("allocating fs repair list"));
-+		return error;
-+	}
-+
-+	error = action_list_alloc(&ctx->file_repair_list);
-+	if (error) {
-+		str_liberror(ctx, error, _("allocating file repair list"));
- 		return error;
- 	}
- 
-diff --git a/scrub/phase2.c b/scrub/phase2.c
-index e07f7a11be5..ebe3ad3ad5c 100644
---- a/scrub/phase2.c
-+++ b/scrub/phase2.c
-@@ -64,7 +64,7 @@ defer_fs_repair(
- 		return error;
- 
- 	pthread_mutex_lock(&ctx->lock);
--	action_list_add(ctx->action_list, aitem);
-+	action_list_add(ctx->fs_repair_list, aitem);
- 	pthread_mutex_unlock(&ctx->lock);
- 	return 0;
- }
-diff --git a/scrub/phase3.c b/scrub/phase3.c
-index e000d8fe4c5..c5950b1b9e3 100644
---- a/scrub/phase3.c
-+++ b/scrub/phase3.c
-@@ -225,7 +225,7 @@ collect_repairs(
- 	struct scrub_ctx	*ctx = foreach_arg;
- 	struct action_list	*alist = data;
- 
--	action_list_merge(ctx->action_list, alist);
-+	action_list_merge(ctx->file_repair_list, alist);
- 	return 0;
- }
- 
-@@ -269,7 +269,7 @@ phase3_func(
- 	 * to repair the space metadata.
- 	 */
- 	for (agno = 0; agno < ctx->mnt.fsgeom.agcount; agno++) {
--		if (!action_list_empty(ctx->action_list))
-+		if (!action_list_empty(ctx->fs_repair_list))
- 			ictx.always_defer_repairs = true;
- 	}
- 
-diff --git a/scrub/phase4.c b/scrub/phase4.c
-index 5563c4c5b0b..aa9aaea1826 100644
---- a/scrub/phase4.c
-+++ b/scrub/phase4.c
-@@ -194,7 +194,13 @@ repair_everything(
- 	do {
- 		fixed_anything = 0;
- 
--		ret = repair_list_schedule(ctx, &wq, ctx->action_list);
-+		ret = repair_list_schedule(ctx, &wq, ctx->fs_repair_list);
-+		if (ret < 0)
-+			break;
-+		if (ret == 1)
-+			fixed_anything++;
-+
-+		ret = repair_list_schedule(ctx, &wq, ctx->file_repair_list);
- 		if (ret < 0)
- 			break;
- 		if (ret == 1)
-@@ -209,8 +215,12 @@ repair_everything(
- 	if (ret < 0)
- 		return ret;
- 
--	/* Repair everything serially.  Last chance to fix things. */
--	return action_list_process(ctx, ctx->action_list, XRM_FINAL_WARNING);
-+	/*
-+	 * Combine both repair lists and repair everything serially.  This is
-+	 * the last chance to fix things.
-+	 */
-+	action_list_merge(ctx->fs_repair_list, ctx->file_repair_list);
-+	return action_list_process(ctx, ctx->fs_repair_list, XRM_FINAL_WARNING);
- }
- 
- /* Trim the unused areas of the filesystem if the caller asked us to. */
-@@ -232,7 +242,8 @@ phase4_func(
- 	struct scrub_item	sri;
- 	int			ret;
- 
--	if (action_list_empty(ctx->action_list))
-+	if (action_list_empty(ctx->fs_repair_list) &&
-+	    action_list_empty(ctx->file_repair_list))
- 		goto maybe_trim;
+ 	if (adj == XFS_REFCOUNT_ADJUST_INCREASE)
+-		trace_xfs_refcount_increase(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, *agbno, *aglen);
++		trace_xfs_refcount_increase(cur, *agbno, *aglen);
+ 	else
+-		trace_xfs_refcount_decrease(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, *agbno, *aglen);
++		trace_xfs_refcount_decrease(cur, *agbno, *aglen);
  
  	/*
-@@ -293,7 +304,8 @@ phase4_estimate(
- 	unsigned long long	need_fixing;
+ 	 * Ensure that no rcextents cross the boundary of the adjustment range.
+@@ -1528,8 +1526,7 @@ xfs_refcount_find_shared(
+ 	int				have;
+ 	int				error;
  
- 	/* Everything on the repair list plus FSTRIM. */
--	need_fixing = action_list_length(ctx->action_list);
-+	need_fixing = action_list_length(ctx->fs_repair_list) +
-+		      action_list_length(ctx->file_repair_list);
- 	need_fixing++;
+-	trace_xfs_refcount_find_shared(cur->bc_mp, cur->bc_ag.pag->pag_agno,
+-			agbno, aglen);
++	trace_xfs_refcount_find_shared(cur, agbno, aglen);
  
- 	*items = need_fixing;
-diff --git a/scrub/xfs_scrub.h b/scrub/xfs_scrub.h
-index d5094147327..8d6ee9826cb 100644
---- a/scrub/xfs_scrub.h
-+++ b/scrub/xfs_scrub.h
-@@ -71,7 +71,8 @@ struct scrub_ctx {
+ 	/* By default, skip the whole range */
+ 	*fbno = NULLAGBLOCK;
+@@ -1616,8 +1613,7 @@ xfs_refcount_find_shared(
+ 	}
  
- 	/* Mutable scrub state; use lock. */
- 	pthread_mutex_t		lock;
--	struct action_list	*action_list;
-+	struct action_list	*fs_repair_list;
-+	struct action_list	*file_repair_list;
- 	unsigned long long	max_errors;
- 	unsigned long long	runtime_errors;
- 	unsigned long long	corruptions_found;
+ done:
+-	trace_xfs_refcount_find_shared_result(cur->bc_mp,
+-			cur->bc_ag.pag->pag_agno, *fbno, *flen);
++	trace_xfs_refcount_find_shared_result(cur, *fbno, *flen);
+ 
+ out_error:
+ 	if (error)
+@@ -1835,8 +1831,7 @@ __xfs_refcount_cow_alloc(
+ 	xfs_agblock_t		agbno,
+ 	xfs_extlen_t		aglen)
+ {
+-	trace_xfs_refcount_cow_increase(rcur->bc_mp, rcur->bc_ag.pag->pag_agno,
+-			agbno, aglen);
++	trace_xfs_refcount_cow_increase(rcur, agbno, aglen);
+ 
+ 	/* Add refcount btree reservation */
+ 	return xfs_refcount_adjust_cow(rcur, agbno, aglen,
+@@ -1852,8 +1847,7 @@ __xfs_refcount_cow_free(
+ 	xfs_agblock_t		agbno,
+ 	xfs_extlen_t		aglen)
+ {
+-	trace_xfs_refcount_cow_decrease(rcur->bc_mp, rcur->bc_ag.pag->pag_agno,
+-			agbno, aglen);
++	trace_xfs_refcount_cow_decrease(rcur, agbno, aglen);
+ 
+ 	/* Remove refcount btree reservation */
+ 	return xfs_refcount_adjust_cow(rcur, agbno, aglen,
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index d6da679ebaba..a5686b53ca80 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -3228,17 +3228,41 @@ DEFINE_AG_ERROR_EVENT(xfs_ag_resv_init_error);
+ 
+ /* refcount tracepoint classes */
+ 
+-/* reuse the discard trace class for agbno/aglen-based traces */
+-#define DEFINE_AG_EXTENT_EVENT(name) DEFINE_DISCARD_EVENT(name)
++DECLARE_EVENT_CLASS(xfs_refcount_class,
++	TP_PROTO(struct xfs_btree_cur *cur, xfs_agblock_t agbno,
++		xfs_extlen_t len),
++	TP_ARGS(cur, agbno, len),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(xfs_agnumber_t, agno)
++		__field(xfs_agblock_t, agbno)
++		__field(xfs_extlen_t, len)
++	),
++	TP_fast_assign(
++		__entry->dev = cur->bc_mp->m_super->s_dev;
++		__entry->agno = cur->bc_ag.pag->pag_agno;
++		__entry->agbno = agbno;
++		__entry->len = len;
++	),
++	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->agno,
++		  __entry->agbno,
++		  __entry->len)
++);
++#define DEFINE_REFCOUNT_EVENT(name) \
++DEFINE_EVENT(xfs_refcount_class, name, \
++	TP_PROTO(struct xfs_btree_cur *cur, xfs_agblock_t agbno, \
++		xfs_extlen_t len), \
++	TP_ARGS(cur, agbno, len))
+ 
+-/* ag btree lookup tracepoint class */
+ TRACE_DEFINE_ENUM(XFS_LOOKUP_EQi);
+ TRACE_DEFINE_ENUM(XFS_LOOKUP_LEi);
+ TRACE_DEFINE_ENUM(XFS_LOOKUP_GEi);
+-DECLARE_EVENT_CLASS(xfs_ag_btree_lookup_class,
+-	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+-		 xfs_agblock_t agbno, xfs_lookup_t dir),
+-	TP_ARGS(mp, agno, agbno, dir),
++TRACE_EVENT(xfs_refcount_lookup,
++	TP_PROTO(struct xfs_btree_cur *cur, xfs_agblock_t agbno,
++		xfs_lookup_t dir),
++	TP_ARGS(cur, agbno, dir),
+ 	TP_STRUCT__entry(
+ 		__field(dev_t, dev)
+ 		__field(xfs_agnumber_t, agno)
+@@ -3246,8 +3270,8 @@ DECLARE_EVENT_CLASS(xfs_ag_btree_lookup_class,
+ 		__field(xfs_lookup_t, dir)
+ 	),
+ 	TP_fast_assign(
+-		__entry->dev = mp->m_super->s_dev;
+-		__entry->agno = agno;
++		__entry->dev = cur->bc_mp->m_super->s_dev;
++		__entry->agno = cur->bc_ag.pag->pag_agno;
+ 		__entry->agbno = agbno;
+ 		__entry->dir = dir;
+ 	),
+@@ -3259,12 +3283,6 @@ DECLARE_EVENT_CLASS(xfs_ag_btree_lookup_class,
+ 		  __entry->dir)
+ )
+ 
+-#define DEFINE_AG_BTREE_LOOKUP_EVENT(name) \
+-DEFINE_EVENT(xfs_ag_btree_lookup_class, name, \
+-	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
+-		 xfs_agblock_t agbno, xfs_lookup_t dir), \
+-	TP_ARGS(mp, agno, agbno, dir))
+-
+ /* single-rcext tracepoint class */
+ DECLARE_EVENT_CLASS(xfs_refcount_extent_class,
+ 	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+@@ -3508,7 +3526,6 @@ DEFINE_EVENT(xfs_refcount_triple_extent_class, name, \
+ 	TP_ARGS(mp, agno, i1, i2, i3))
+ 
+ /* refcount btree tracepoints */
+-DEFINE_AG_BTREE_LOOKUP_EVENT(xfs_refcount_lookup);
+ DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_get);
+ DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_update);
+ DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_insert);
+@@ -3518,10 +3535,10 @@ DEFINE_BTREE_ERROR_EVENT(xfs_refcount_delete_error);
+ DEFINE_BTREE_ERROR_EVENT(xfs_refcount_update_error);
+ 
+ /* refcount adjustment tracepoints */
+-DEFINE_AG_EXTENT_EVENT(xfs_refcount_increase);
+-DEFINE_AG_EXTENT_EVENT(xfs_refcount_decrease);
+-DEFINE_AG_EXTENT_EVENT(xfs_refcount_cow_increase);
+-DEFINE_AG_EXTENT_EVENT(xfs_refcount_cow_decrease);
++DEFINE_REFCOUNT_EVENT(xfs_refcount_increase);
++DEFINE_REFCOUNT_EVENT(xfs_refcount_decrease);
++DEFINE_REFCOUNT_EVENT(xfs_refcount_cow_increase);
++DEFINE_REFCOUNT_EVENT(xfs_refcount_cow_decrease);
+ DEFINE_REFCOUNT_TRIPLE_EXTENT_EVENT(xfs_refcount_merge_center_extents);
+ DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_modify_extent);
+ DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_recover_extent);
+@@ -3541,8 +3558,8 @@ DEFINE_BTREE_ERROR_EVENT(xfs_refcount_find_left_extent_error);
+ DEFINE_BTREE_ERROR_EVENT(xfs_refcount_find_right_extent_error);
+ 
+ /* reflink helpers */
+-DEFINE_AG_EXTENT_EVENT(xfs_refcount_find_shared);
+-DEFINE_AG_EXTENT_EVENT(xfs_refcount_find_shared_result);
++DEFINE_REFCOUNT_EVENT(xfs_refcount_find_shared);
++DEFINE_REFCOUNT_EVENT(xfs_refcount_find_shared_result);
+ DEFINE_BTREE_ERROR_EVENT(xfs_refcount_find_shared_error);
+ 
+ DECLARE_EVENT_CLASS(xfs_refcount_deferred_class,
 
