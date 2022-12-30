@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C08F1659FCA
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D2EB659FCD
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:39:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235836AbiLaAjA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:39:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34812 "EHLO
+        id S235784AbiLaAjs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:39:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235750AbiLaAi6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:38:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE701E3EE;
-        Fri, 30 Dec 2022 16:38:57 -0800 (PST)
+        with ESMTP id S235671AbiLaAjr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:39:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 302421E3FE;
+        Fri, 30 Dec 2022 16:39:46 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 69CA761CF1;
-        Sat, 31 Dec 2022 00:38:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8CB7C433D2;
-        Sat, 31 Dec 2022 00:38:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DD91FB81E49;
+        Sat, 31 Dec 2022 00:39:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE41C433EF;
+        Sat, 31 Dec 2022 00:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447136;
-        bh=8uUp+jz76PhiBHJsOCR1Uj3kMa5h+L0eJ60EOdh5F/4=;
+        s=k20201202; t=1672447183;
+        bh=pQq4B40v4RhHW7cz7BJ0dBjlQZsjXNE87BVyendgV24=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Fw5RiQCXrh5bTx9XGlw2q9T1Lg/F1ea9pVZCD0Y+g/wncPGPAY3RPuf8ZxM0X8jkj
-         4rWoQdijtiE2+B58mHKuExKrH9MK6mwnlPIwHHPvezOJ6X3CyE5BdSJmLaRPOfr8d3
-         4Zn8bEwvhMaf7JseCB/YDWsEm+O7Mr4gUlm9W/3bG3dLp85MZ0YDLAyCBI6vztxsd+
-         dl/dVE0L3ZGD3pQ6Ar/l6cxHDcc+vULAnjXa0yUqAuZgX/DFyqKj75ErI9JPKDs0HB
-         Yq57nQaK+ZxMIbuDUyauqymWNVzKLAV6+7SFqS/yZ24i5sveywblY5IQJsJkbs+ibr
-         nL/bSJ/PSLH3g==
-Subject: [PATCH 1/5] xfs/357: switch fuzzing to agi 1
+        b=ADHXVMBq+odZH7IhRl2pBlYNt25PAfU8854sb4YVqmp5rO2MXCpeqjSlWHmj144Qc
+         m5tRPOp5HFPNKdWT1jw3dx4elvb0/Uk4fuw9n3qr4C+Z4LYFbpa/C3++XoShJBOewj
+         /lGJBgcHEIe1J1FgxwT3BcbbR5LTZHs8IY9C2ALnhbsgSWAgEOoWLOxFzAGkq8JWkv
+         YXOCQ02aQC9NIvNKdPpB+qrleu0TvuXghWTJb2sNhysdWLWubFvXFCfO400X5EgOtc
+         MFzZpm8HZgdYP8KU47w6NKqKea3fMGxqVMdvdrszYGjeD3EXhIWDDWrwbw1ruk451Q
+         a+HgkR2Irzmsw==
+Subject: [PATCH 4/5] fuzzy: allow xfs scrub stress tests to pick preconfigured
+ fsstress configs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:06 -0800
-Message-ID: <167243874627.722028.4085306307237352574.stgit@magnolia>
+Message-ID: <167243874662.722028.15090629914232187990.stgit@magnolia>
 In-Reply-To: <167243874614.722028.11987534226186856347.stgit@magnolia>
 References: <167243874614.722028.11987534226186856347.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -44,8 +45,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,LOTS_OF_MONEY,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,26 +56,148 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Since we now require a working AGI 0 to mount the system, fuzz AGI 1
-instead.
+Make it so that xfs_scrub stress tests can select what kind of fsstress
+operations they want to run.  This will make it easier for, say,
+directory scrubbers to configure fsstress to exercise directory tree
+changes while skipping file data updates, because those are irrelevant.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/357 |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ common/fuzzy |   77 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 74 insertions(+), 3 deletions(-)
 
 
-diff --git a/tests/xfs/357 b/tests/xfs/357
-index 8a2c920ef4..25af8624db 100755
---- a/tests/xfs/357
-+++ b/tests/xfs/357
-@@ -25,7 +25,7 @@ echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
+diff --git a/common/fuzzy b/common/fuzzy
+index e39f787e78..c4a5bc9261 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -466,6 +466,7 @@ __stress_scrub_fsx_loop() {
+ 	local end="$1"
+ 	local runningfile="$2"
+ 	local remount_period="$3"
++	local stress_tgt="$4"	# ignored
+ 	local focus=(-q -X)	# quiet, validate file contents
  
- echo "Fuzz AGI"
--_scratch_xfs_fuzz_metadata '' 'online' 'agi 0' >> $seqres.full
-+_scratch_xfs_fuzz_metadata '' 'online' 'agi 1' >> $seqres.full
- echo "Done fuzzing AGI"
+ 	# As of November 2022, 2 million fsx ops should be enough to keep
+@@ -528,10 +529,70 @@ __stress_scrub_fsstress_loop() {
+ 	local end="$1"
+ 	local runningfile="$2"
+ 	local remount_period="$3"
++	local stress_tgt="$4"
++	local focus=()
++
++	case "$stress_tgt" in
++	"dir")
++		focus+=('-z')
++
++		# Create a directory tree rapidly
++		for op in creat link mkdir mknod symlink; do
++			focus+=('-f' "${op}=8")
++		done
++		focus+=('-f' 'rmdir=2' '-f' 'unlink=8')
++
++		# Rename half as often
++		for op in rename rnoreplace rexchange; do
++			focus+=('-f' "${op}=4")
++		done
++
++		# Read and sync occasionally
++		for op in getdents stat fsync; do
++			focus+=('-f' "${op}=1")
++		done
++		;;
++	"xattr")
++		focus+=('-z')
++
++		# Create a directory tree slowly
++		for op in creat ; do
++			focus+=('-f' "${op}=2")
++		done
++		for op in unlink rmdir; do
++			focus+=('-f' "${op}=1")
++		done
++
++		# Create xattrs rapidly
++		for op in attr_set setfattr; do
++			focus+=('-f' "${op}=80")
++		done
++
++		# Remove xattrs 1/4 as quickly
++		for op in attr_remove removefattr; do
++			focus+=('-f' "${op}=20")
++		done
++
++		# Read and sync occasionally
++		for op in listfattr getfattr fsync; do
++			focus+=('-f' "${op}=10")
++		done
++		;;
++	"writeonly")
++		# Only do things that cause filesystem writes
++		focus+=('-w')
++		;;
++	"default")
++		# No new arguments
++		;;
++	*)
++		echo "$stress_tgt: Unrecognized stress target, using defaults."
++		;;
++	esac
  
- # success, all done
+ 	# As of March 2022, 2 million fsstress ops should be enough to keep
+ 	# any filesystem busy for a couple of hours.
+-	local args=$(_scale_fsstress_args -p 4 -d $SCRATCH_MNT -n 2000000 $FSSTRESS_AVOID)
++	local args=$(_scale_fsstress_args -p 4 -d $SCRATCH_MNT -n 2000000 "${focus[@]}" $FSSTRESS_AVOID)
+ 	echo "Running $FSSTRESS_PROG $args" >> $seqres.full
+ 
+ 	if [ -n "$remount_period" ]; then
+@@ -691,6 +752,14 @@ __stress_scrub_check_commands() {
+ # -w	Delay the start of the scrub/repair loop by this number of seconds.
+ #	Defaults to no delay unless XFS_SCRUB_STRESS_DELAY is set.  This value
+ #	will be clamped to ten seconds before the end time.
++# -x	Focus on this type of fsstress operation.  Possible values:
++#
++#       'dir': Grow the directory trees as much as possible.
++#       'xattr': Grow extended attributes in a small tree.
++#       'default': Run fsstress with default arguments.
++#       'writeonly': Only perform fs updates, no reads.
++#
++#       The default is 'default' unless XFS_SCRUB_STRESS_TARGET is set.
+ # -X	Run this program to exercise the filesystem.  Currently supported
+ #       options are 'fsx' and 'fsstress'.  The default is 'fsstress'.
+ _scratch_xfs_stress_scrub() {
+@@ -703,6 +772,7 @@ _scratch_xfs_stress_scrub() {
+ 	local exerciser="fsstress"
+ 	local io_args=()
+ 	local remount_period="${XFS_SCRUB_STRESS_REMOUNT_PERIOD}"
++	local stress_tgt="${XFS_SCRUB_STRESS_TARGET:-default}"
+ 
+ 	__SCRUB_STRESS_FREEZE_PID=""
+ 	__SCRUB_STRESS_REMOUNT_LOOP=""
+@@ -710,7 +780,7 @@ _scratch_xfs_stress_scrub() {
+ 	touch "$runningfile"
+ 
+ 	OPTIND=1
+-	while getopts "fi:r:s:S:t:w:X:" c; do
++	while getopts "fi:r:s:S:t:w:x:X:" c; do
+ 		case "$c" in
+ 			f) freeze=yes;;
+ 			i) io_args+=("$OPTARG");;
+@@ -719,6 +789,7 @@ _scratch_xfs_stress_scrub() {
+ 			S) xfs_scrub_args+=("$OPTARG");;
+ 			t) scrub_tgt="$OPTARG";;
+ 			w) scrub_delay="$OPTARG";;
++			x) stress_tgt="$OPTARG";;
+ 			X) exerciser="$OPTARG";;
+ 			*) return 1; ;;
+ 		esac
+@@ -757,7 +828,7 @@ _scratch_xfs_stress_scrub() {
+ 	fi
+ 
+ 	"__stress_scrub_${exerciser}_loop" "$end" "$runningfile" \
+-			"$remount_period" &
++			"$remount_period" "$stress_tgt" &
+ 
+ 	if [ -n "$freeze" ]; then
+ 		__stress_scrub_freeze_loop "$end" "$runningfile" &
 
