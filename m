@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03301659E91
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:43:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA51F659DB9
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:04:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235621AbiL3Xnt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:43:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
+        id S229519AbiL3XEZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:04:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235734AbiL3XnR (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:43:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8C31E3DE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:43:10 -0800 (PST)
+        with ESMTP id S231174AbiL3XEY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:04:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C8215FC1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:04:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8DF761C17
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:43:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 450ABC433EF;
-        Fri, 30 Dec 2022 23:43:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0841B81D67
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:04:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D84C433EF;
+        Fri, 30 Dec 2022 23:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672443789;
-        bh=pBJRWSCjQhKKT1SogExQt9tTLg1TrQVAN7iuqpG/lVI=;
+        s=k20201202; t=1672441461;
+        bh=apLc8JEvdMFIKS6hEJLNqqZi8d+7SPev0dv5Oljmtgg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=stXYq6io8NzHWgKq4OnfihioEcJluGVdocFLSGgdXnA5Wl2MU0A2uhhUX9YI499jK
-         lMsLIYPuh8A5w48i0aP+/enzVCFDPIyaP3U+xrMI7YwmKSSP61ynwNAn9g7Nkh5Ek3
-         y72vj8tX3/QL4bs6YYHhsMa5P/BWC+UTSDPaOVDBnniEQqSR7/JeaKXBIJMWihmXh/
-         Kzhu3/qHrMIFUdpJMIchZYj0Q0ZBzInaIB1HKTyRi2wFb5kwNym7D1vfdRdAlI2fqH
-         Wbv7oxiSmOws2DGJaPWwOHU+smi/uiFRsio+oO9MYRV7UkBtn7OXB1rgotHCLpYMF4
-         /R56mO9iSfb9w==
-Subject: [PATCH 1/4] xfs: create a helper to decide if a file mapping targets
- the rt volume
+        b=oeE5Ymvvm8OY/H3bLw/CUVu9c+A9pmHmhfRzf/Nmni9RksaM2puZ/Msi+wIdrQC8i
+         +mB1A8SqP4OuagecfSPpEIhJLzviLZ9AaITFFviLf8Y/Pw/R6KnbB5w9Y3LljKtcCZ
+         98gvI9vJYaCcjAvNQCRpXBqfpNQaFN0UIQdxnyuJH8SESdHQ7+DwAfxyREujfhKrC4
+         vRe6f9t8kFv869xwMrY0YVQD3uDo6LdToJkeB9aRZHq2/a5B/dWfaPxrBezOlFe5Db
+         5Xx7Br0PK7pQzUWrU0OAumo9bjmdS5m+pJrtbhAGFcOVbogqxwrHh9WP/Ieb3wUKQU
+         T1u4yxNPunUlg==
+Subject: [PATCHSET v24.0 0/4] xfs: online repair of rmap btrees
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:13:30 -0800
-Message-ID: <167243841017.696748.13179340079909837496.stgit@magnolia>
-In-Reply-To: <167243840997.696748.11741067698987523110.stgit@magnolia>
-References: <167243840997.696748.11741067698987523110.stgit@magnolia>
+Message-ID: <167243840997.696748.11741067698987523110.stgit@magnolia>
+In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
+References: <Y69Unb7KRM5awJoV@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,100 +52,66 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Create a helper so that we can stop open-coding this decision
-everywhere.
+We have now constructed the four tools that we need to scan the
+filesystem looking for reverse mappings: an inode scanner, hooks to
+receive live updates from other writer threads, the ability to construct
+btrees in memory, and a btree bulk loader.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+This series glues those three together, enabling us to scan the
+filesystem for mappings and keep it up to date while other writers run,
+and then commit the new btree to disk atomically.
+
+To reduce the size of each patch, the functionality is left disabled
+until the end of the series and broken up into three patches: one to
+create the mechanics of scanning the filesystem, a second to transition
+to in-memory btrees, and a third to set up the live hooks.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-rmap-btree
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-rmap-btree
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-rmap-btree
 ---
- fs/xfs/libxfs/xfs_bmap.c       |    6 +++---
- fs/xfs/libxfs/xfs_inode_fork.c |    9 +++++++++
- fs/xfs/libxfs/xfs_inode_fork.h |    1 +
- fs/xfs/scrub/bmap.c            |    4 ++--
- 4 files changed, 15 insertions(+), 5 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index b658373bedc7..89cbd9b563ff 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -4912,7 +4912,7 @@ xfs_bmap_del_extent_delay(
- 
- 	XFS_STATS_INC(mp, xs_del_exlist);
- 
--	isrt = (whichfork == XFS_DATA_FORK) && XFS_IS_REALTIME_INODE(ip);
-+	isrt = xfs_ifork_is_realtime(ip, whichfork);
- 	del_endoff = del->br_startoff + del->br_blockcount;
- 	got_endoff = got->br_startoff + got->br_blockcount;
- 	da_old = startblockval(got->br_startblock);
-@@ -5152,7 +5152,7 @@ xfs_bmap_del_extent_real(
- 		return -ENOSPC;
- 
- 	flags = XFS_ILOG_CORE;
--	if (whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip)) {
-+	if (xfs_ifork_is_realtime(ip, whichfork)) {
- 		xfs_filblks_t	len;
- 		xfs_extlen_t	mod;
- 
-@@ -5417,7 +5417,7 @@ __xfs_bunmapi(
- 		return 0;
- 	}
- 	XFS_STATS_INC(mp, xs_blk_unmap);
--	isrt = (whichfork == XFS_DATA_FORK) && XFS_IS_REALTIME_INODE(ip);
-+	isrt = xfs_ifork_is_realtime(ip, whichfork);
- 	end = start + len;
- 
- 	if (!xfs_iext_lookup_extent_before(ip, ifp, &end, &icur, &got)) {
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 6d23add33de9..c2cc3c193ffc 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -787,3 +787,12 @@ xfs_iext_count_upgrade(
- 
- 	return 0;
- }
-+
-+/* Decide if a file mapping is on the realtime device or not. */
-+bool
-+xfs_ifork_is_realtime(
-+	struct xfs_inode	*ip,
-+	int			whichfork)
-+{
-+	return XFS_IS_REALTIME_INODE(ip) && whichfork != XFS_ATTR_FORK;
-+}
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.h b/fs/xfs/libxfs/xfs_inode_fork.h
-index 36a9fe3420cd..c201d8ad5957 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.h
-+++ b/fs/xfs/libxfs/xfs_inode_fork.h
-@@ -261,6 +261,7 @@ int xfs_iext_count_may_overflow(struct xfs_inode *ip, int whichfork,
- 		int nr_to_add);
- int xfs_iext_count_upgrade(struct xfs_trans *tp, struct xfs_inode *ip,
- 		uint nr_to_add);
-+bool xfs_ifork_is_realtime(struct xfs_inode *ip, int whichfork);
- 
- /* returns true if the fork has extents but they are not read in yet. */
- static inline bool xfs_need_iread_extents(struct xfs_ifork *ifp)
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index 93fb88ca5f28..150b8c40b809 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -711,7 +711,7 @@ xchk_bmap_check_rmaps(
- 		return 0;
- 
- 	/* Don't support realtime rmap checks yet. */
--	if (XFS_IS_REALTIME_INODE(sc->ip) && whichfork == XFS_DATA_FORK)
-+	if (xfs_ifork_is_realtime(sc->ip, whichfork))
- 		return 0;
- 
- 	ASSERT(xfs_ifork_ptr(sc->ip, whichfork) != NULL);
-@@ -796,7 +796,7 @@ xchk_bmap(
- 	if (!ifp)
- 		goto out;
- 
--	info.is_rt = whichfork == XFS_DATA_FORK && XFS_IS_REALTIME_INODE(ip);
-+	info.is_rt = xfs_ifork_is_realtime(ip, whichfork);
- 	info.whichfork = whichfork;
- 	info.is_shared = whichfork == XFS_DATA_FORK && xfs_is_reflink_inode(ip);
- 	info.sc = sc;
+ fs/xfs/Makefile                |    1 
+ fs/xfs/libxfs/xfs_ag.c         |    1 
+ fs/xfs/libxfs/xfs_ag.h         |    3 
+ fs/xfs/libxfs/xfs_bmap.c       |   49 +
+ fs/xfs/libxfs/xfs_bmap.h       |    8 
+ fs/xfs/libxfs/xfs_inode_fork.c |    9 
+ fs/xfs/libxfs/xfs_inode_fork.h |    1 
+ fs/xfs/libxfs/xfs_rmap.c       |  192 +++--
+ fs/xfs/libxfs/xfs_rmap.h       |   30 +
+ fs/xfs/libxfs/xfs_rmap_btree.c |  136 +++
+ fs/xfs/libxfs/xfs_rmap_btree.h |    9 
+ fs/xfs/scrub/bitmap.c          |   14 
+ fs/xfs/scrub/bitmap.h          |    5 
+ fs/xfs/scrub/bmap.c            |    4 
+ fs/xfs/scrub/common.c          |    7 
+ fs/xfs/scrub/common.h          |    1 
+ fs/xfs/scrub/newbt.c           |    5 
+ fs/xfs/scrub/newbt.h           |    6 
+ fs/xfs/scrub/reap.c            |    6 
+ fs/xfs/scrub/repair.c          |   64 +-
+ fs/xfs/scrub/repair.h          |   12 
+ fs/xfs/scrub/rmap.c            |    9 
+ fs/xfs/scrub/rmap_repair.c     | 1651 ++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/scrub.c           |    6 
+ fs/xfs/scrub/scrub.h           |    4 
+ fs/xfs/scrub/trace.c           |    1 
+ fs/xfs/scrub/trace.h           |   80 ++
+ 27 files changed, 2246 insertions(+), 68 deletions(-)
+ create mode 100644 fs/xfs/scrub/rmap_repair.c
 
