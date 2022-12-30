@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D311465A131
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:05:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E89465A13A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:08:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236155AbiLaCF6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:05:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52428 "EHLO
+        id S236160AbiLaCIS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:08:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236150AbiLaCF5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:05:57 -0500
+        with ESMTP id S231494AbiLaCIR (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:08:17 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836071021
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:05:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC4D140F1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:08:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 22A3F61CB1
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:05:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CD7C433EF;
-        Sat, 31 Dec 2022 02:05:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 46BE961CCE
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:08:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3CA1C433D2;
+        Sat, 31 Dec 2022 02:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452355;
-        bh=mLpfzIp/FIGuKvfEQ4BTBFAUkduH6cnlmvtaIV9TJGc=;
+        s=k20201202; t=1672452495;
+        bh=H+EcAR2ZdCeEoQ8JZiJIp4qEv0NEa5hwniJJSDUhis8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hwCQ9SwCQEucT1PaJvVj2Dr6vuSwzES6OeAtotdAajaTCo7vWrycn6w5D1bVD2rLM
-         M320lrpP7JdtkKjrLlIIzqTEzbY+zC5mak9U9l9c0VH8dz8oEZ3o/7R7cOkpiQ64a3
-         Xd1X5guRZyfGMb+s/Lj02SnkpD/d+Ftsiou58TlSl+t5KbAUKkVHEldEsX8FPOVl/y
-         3VmvN/hfxFpfy2lTUuH0Unuo6gD1RbIcrjM4/g36WAGvISS7f7CUW9jpEpR4YbGU+N
-         5F4CJwiy/5eriWR0QWqafEguSJWyZoI4vzmfUPA/QjZo96uVssNZ0S1WafrMYNiTH0
-         d6CuVvxHsLvTw==
-Subject: [PATCH 11/26] libxfs: pass flags2 from parent to child when creating
- files
+        b=f0kBvZ/Zw6PeURL5fJK/Sw/9CVEah2/1IpiSnbpIb4rihvNh52/zdZdLE5/m1AFpy
+         uBl1G2JSYagNGtMmAd5mxbW1sAHupAbhGnlRNiykTsz+tl2nkGFNdT+0OyHS2Nq9GU
+         XVfxt7bYZiF9Sa04pecuDFAQbLxGZ5VpJwyXG1dtPd2685lwK50932E063s2a3GnWO
+         lYj8CVEkKDDc6IcYGIERuZ3OQiR+8z/EcLt1k3kAuyFh5KJPMYkzkpHa4ZKaheJ2Es
+         fRuQSFmRMdaSFNqU4wr3HB007GsMHtwmcMHNiWzYzAFfHPxuZg6OXE6ckZ/+6zzNXb
+         qyU7dSgD+7UHw==
+Subject: [PATCH 20/26] xfs: hoist inode free function to libxfs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:14 -0800
-Message-ID: <167243875454.723621.6299952463214494674.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:15 -0800
+Message-ID: <167243875558.723621.14021574407372540466.stgit@magnolia>
 In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
 References: <167243875315.723621.17759760420120912799.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,49 +55,94 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When mkfs creates a new file as a child of an existing directory, we
-should propagate the flags2 field from parent to child like the kernel
-does.  This ensures that mkfs propagates cowextsize hints properly when
-protofiles are in use.
+Create a libxfs helper function that marks an inode free on disk.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/inode.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ libxfs/xfs_inode_util.c |   50 +++++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_inode_util.h |    5 +++++
+ 2 files changed, 55 insertions(+)
 
 
-diff --git a/libxfs/inode.c b/libxfs/inode.c
-index c63cc0543d6..9835c708021 100644
---- a/libxfs/inode.c
-+++ b/libxfs/inode.c
-@@ -59,6 +59,20 @@ xfs_inode_propagate_flags(
- 	ip->i_diflags |= di_flags;
+diff --git a/libxfs/xfs_inode_util.c b/libxfs/xfs_inode_util.c
+index e12c43954cf..65c025f3573 100644
+--- a/libxfs/xfs_inode_util.c
++++ b/libxfs/xfs_inode_util.c
+@@ -643,3 +643,53 @@ xfs_bumplink(
+ 	inc_nlink(VFS_I(ip));
+ 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
  }
- 
-+/* Propagate di_flags2 from a parent inode to a child inode. */
-+static void
-+xfs_inode_inherit_flags2(
-+	struct xfs_inode	*ip,
-+	const struct xfs_inode	*pip)
-+{
-+	if (pip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE) {
-+		ip->i_diflags2 |= XFS_DIFLAG2_COWEXTSIZE;
-+		ip->i_cowextsize = pip->i_cowextsize;
-+	}
-+	if (pip->i_diflags2 & XFS_DIFLAG2_DAX)
-+		ip->i_diflags2 |= XFS_DIFLAG2_DAX;
-+}
 +
- /*
-  * Initialise a newly allocated inode and return the in-core inode to the
-  * caller locked exclusively.
-@@ -123,6 +137,8 @@ libxfs_icreate(
- 	case S_IFDIR:
- 		if (pip && (pip->i_diflags & XFS_DIFLAG_ANY))
- 			xfs_inode_propagate_flags(ip, pip);
-+		if (pip && (pip->i_diflags2 & XFS_DIFLAG2_ANY))
-+			xfs_inode_inherit_flags2(ip, pip);
- 		/* FALLTHROUGH */
- 	case S_IFLNK:
- 		ip->i_df.if_format = XFS_DINODE_FMT_EXTENTS;
++/* Mark an inode free on disk. */
++int
++xfs_dir_ifree(
++	struct xfs_trans	*tp,
++	struct xfs_perag	*pag,
++	struct xfs_inode	*ip,
++	struct xfs_icluster	*xic)
++{
++	int			error;
++
++	/*
++	 * Free the inode first so that we guarantee that the AGI lock is going
++	 * to be taken before we remove the inode from the unlinked list. This
++	 * makes the AGI lock -> unlinked list modification order the same as
++	 * used in O_TMPFILE creation.
++	 */
++	error = xfs_difree(tp, pag, ip->i_ino, xic);
++	if (error)
++		return error;
++
++	error = xfs_iunlink_remove(tp, pag, ip);
++	if (error)
++		return error;
++
++	/*
++	 * Free any local-format data sitting around before we reset the
++	 * data fork to extents format.  Note that the attr fork data has
++	 * already been freed by xfs_attr_inactive.
++	 */
++	if (ip->i_df.if_format == XFS_DINODE_FMT_LOCAL) {
++		kmem_free(ip->i_df.if_u1.if_data);
++		ip->i_df.if_u1.if_data = NULL;
++		ip->i_df.if_bytes = 0;
++	}
++
++	VFS_I(ip)->i_mode = 0;		/* mark incore inode as free */
++	ip->i_diflags = 0;
++	ip->i_diflags2 = ip->i_mount->m_ino_geo.new_diflags2;
++	ip->i_forkoff = 0;		/* mark the attr fork not in use */
++	ip->i_df.if_format = XFS_DINODE_FMT_EXTENTS;
++
++	/*
++	 * Bump the generation count so no one will be confused
++	 * by reincarnations of this inode.
++	 */
++	VFS_I(ip)->i_generation++;
++	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++	return 0;
++}
+diff --git a/libxfs/xfs_inode_util.h b/libxfs/xfs_inode_util.h
+index f92b14a6fbe..fcddaa6f738 100644
+--- a/libxfs/xfs_inode_util.h
++++ b/libxfs/xfs_inode_util.h
+@@ -6,6 +6,8 @@
+ #ifndef	__XFS_INODE_UTIL_H__
+ #define	__XFS_INODE_UTIL_H__
+ 
++struct xfs_icluster;
++
+ uint16_t	xfs_flags2diflags(struct xfs_inode *ip, unsigned int xflags);
+ uint64_t	xfs_flags2diflags2(struct xfs_inode *ip, unsigned int xflags);
+ uint32_t	xfs_dic2xflags(struct xfs_inode *ip);
+@@ -56,6 +58,9 @@ void xfs_trans_ichgtime(struct xfs_trans *tp, struct xfs_inode *ip, int flags);
+ void xfs_inode_init(struct xfs_trans *tp, const struct xfs_icreate_args *args,
+ 		struct xfs_inode *ip);
+ 
++int xfs_dir_ifree(struct xfs_trans *tp, struct xfs_perag *pag,
++		struct xfs_inode *ip, struct xfs_icluster *xic);
++
+ int xfs_iunlink(struct xfs_trans *tp, struct xfs_inode *ip);
+ int xfs_iunlink_remove(struct xfs_trans *tp, struct xfs_perag *pag,
+ 		struct xfs_inode *ip);
 
