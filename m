@@ -2,44 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE4F9659DB0
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:02:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6CF0659CCA
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:29:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231210AbiL3XCU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:02:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59316 "EHLO
+        id S229821AbiL3W3W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:29:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbiL3XCT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:02:19 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888E415FC1
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:02:18 -0800 (PST)
+        with ESMTP id S229527AbiL3W3W (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:29:22 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61BE71D0E2;
+        Fri, 30 Dec 2022 14:29:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3F751B81D84
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:02:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8B08C433EF;
-        Fri, 30 Dec 2022 23:02:15 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id C92BDCE19BB;
+        Fri, 30 Dec 2022 22:29:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 131BBC433EF;
+        Fri, 30 Dec 2022 22:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672441336;
-        bh=4swFOvwAcdxL04szGm/R6UNYzWO/2Gjaqsky5uSuSKw=;
+        s=k20201202; t=1672439358;
+        bh=Tea2cDALhGhYv7r3QiZFvT544ztxUfUUk5+tD7XtxRU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SrUHOq0R8pGinc/Ti8ZrNp6wUdel+F31MfxpuyojErcWy0cxx8KYed8IImm1+g9nq
-         Cw9O8mD73aOb87iq1SFKroKYeGLg9U+7TiHagU5D7Ym5HV50dW5wyiPb+ZDD7/V9Y8
-         3Y0UKg2EDA3k/u1+OAf6AJruyqOaNmUD6tq8AEayZZ8/ZXNS5nZtMgqHQLw24YQOuh
-         Jw6b9p+XkbK3FEXfSv0bHU9/GZihYby51FnTieMep32+Y3/HoOvT6KjixQP0+ENFMU
-         7P/I4FVLd99WxbMLUr4Rb2y0CrzL5vdY9wP1ZBl83nz/2K4WX+1US7k05uxGCbSf/m
-         eyQUL81GoPmmQ==
-Subject: [PATCHSET v24.0 0/4] xfs: online repair of quota and rt metadata
- files
+        b=IokQuVRxiV1g+Vm/AsXqx3QEMgT3340GpGGjQ9QUltaNWVjcM4YrMbR4PPJ7y/shX
+         MhOlX66DeCaRe8DyVrfmXm8vQnEnHjIV4QoC37aCDAtk6jyAkLMYos1OhmdgWYbtPo
+         tzfTxcyrlFhF+UTM7e1O98+wFkB3p+qixPU9z+cmzTTEcacONbgXAtTkj/RtU/yWT1
+         Ox832AG7BnJuu4IFnDmkoEnLCFs7iCS1UE965XAH+XegF08qFedyuYMnEoF28GET32
+         OYdwGl1MD4ihUW5EOjVSrdhPulurJQs66v2bhE7/DDAHkzd+wLITg5QT/g1PzlK3Nr
+         CmFF9cOwvOjbA==
+Subject: [PATCHSET v24.0 0/2] fstests: race online scrub with mount state
+ changes
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:12:59 -0800
-Message-ID: <167243837989.695277.12249962882609806700.stgit@magnolia>
-In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
-References: <Y69Unb7KRM5awJoV@magnolia>
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+Date:   Fri, 30 Dec 2022 14:13:00 -0800
+Message-ID: <167243838066.695417.12457890635253015617.stgit@magnolia>
+In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
+References: <Y69UceeA2MEpjMJ8@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,17 +55,10 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 Hi all,
 
-XFS stores quota records and free space bitmap information in files.
-Add the necessary infrastructure to enable repairing metadata inodes and
-their forks, and then make it so that we can repair the file metadata
-for the rtbitmap.  Repairing the bitmap contents (and the summary file)
-is left for subsequent patchsets.
-
-We also add the ability to repair file metadata the quota files.  As
-part of these repairs, we also reinitialize the ondisk dquot records as
-necessary to get the incore dquots working.  We can also correct
-obviously bad dquot record attributes, but we leave checking the
-resource usage counts for the next patchsets.
+Introduce the ability to run xfs_scrub(8) itself from our online fsck
+stress test harness.  Create two new tests to race scrub and repair
+against fsstress, and four more tests to do the same but racing against
+fs freeze and ro remounts.
 
 If you're going to start using this mess, you probably ought to just
 pull from my git trees, which are linked below.
@@ -75,32 +68,29 @@ Comments and questions are, as always, welcome.
 
 --D
 
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quota
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-quota
-
 fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-quota
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=race-scrub-and-mount-state-changes
 ---
- fs/xfs/Makefile                |    8 +
- fs/xfs/libxfs/xfs_bmap.c       |   39 ++++
- fs/xfs/libxfs/xfs_bmap.h       |    2 
- fs/xfs/scrub/bmap_repair.c     |   17 +-
- fs/xfs/scrub/quota.c           |   11 +
- fs/xfs/scrub/quota.h           |   11 +
- fs/xfs/scrub/quota_repair.c    |  405 ++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/repair.c          |  151 +++++++++++++++
- fs/xfs/scrub/repair.h          |   22 ++
- fs/xfs/scrub/rtbitmap.c        |   10 +
- fs/xfs/scrub/rtbitmap_repair.c |   56 ++++++
- fs/xfs/scrub/scrub.c           |    8 -
- fs/xfs/scrub/trace.c           |    1 
- fs/xfs/scrub/trace.h           |   28 +++
- fs/xfs/xfs_inode.c             |   24 --
- 15 files changed, 761 insertions(+), 32 deletions(-)
- create mode 100644 fs/xfs/scrub/quota.h
- create mode 100644 fs/xfs/scrub/quota_repair.c
- create mode 100644 fs/xfs/scrub/rtbitmap_repair.c
+ common/fuzzy      |   63 ++++++++++++++++++++++++++++++++++++++++++++++++++---
+ tests/xfs/285     |   44 ++++++++++---------------------------
+ tests/xfs/285.out |    4 +--
+ tests/xfs/286     |   46 ++++++++++-----------------------------
+ tests/xfs/286.out |    4 +--
+ tests/xfs/733     |   39 +++++++++++++++++++++++++++++++++
+ tests/xfs/733.out |    2 ++
+ tests/xfs/771     |   39 +++++++++++++++++++++++++++++++++
+ tests/xfs/771.out |    2 ++
+ tests/xfs/824     |   40 ++++++++++++++++++++++++++++++++++
+ tests/xfs/824.out |    2 ++
+ tests/xfs/825     |   40 ++++++++++++++++++++++++++++++++++
+ tests/xfs/825.out |    2 ++
+ 13 files changed, 252 insertions(+), 75 deletions(-)
+ create mode 100755 tests/xfs/733
+ create mode 100644 tests/xfs/733.out
+ create mode 100755 tests/xfs/771
+ create mode 100644 tests/xfs/771.out
+ create mode 100755 tests/xfs/824
+ create mode 100644 tests/xfs/824.out
+ create mode 100755 tests/xfs/825
+ create mode 100644 tests/xfs/825.out
 
