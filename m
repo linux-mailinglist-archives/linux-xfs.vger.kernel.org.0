@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6759F659F9B
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:29:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E46C165A0C9
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:39:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbiLaA2y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:28:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
+        id S236128AbiLaBjq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:39:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235656AbiLaA2h (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:28:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621FE1E3FE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:28:36 -0800 (PST)
+        with ESMTP id S236129AbiLaBjo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:39:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697391CFF2
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:39:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0304EB81EAC
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:28:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6C31C433EF;
-        Sat, 31 Dec 2022 00:28:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 069E861CC6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:39:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 611CAC433EF;
+        Sat, 31 Dec 2022 01:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446513;
-        bh=WYucsrfUj/a/i1rEGxY0w8reWZASbJ5VvVvHcldRpxE=;
+        s=k20201202; t=1672450782;
+        bh=G5PUs7g/SF61bdrI7n7idYQ2SbHd+DT4jwMJNkeTWUM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=OLzKIjlXSv69Zy1XDRYZVoEurBWenWm6b3Bzi2zbkiwJFNzipnVh5Q5SUh2SgoVHM
-         wCzWZhRmh8Jctf3cCeCai+/GAc6AXs92Iys3SB3E5lankMDCuXdI65QXn+cpbsvPI/
-         fYTPcy3s+NPdeQjWZ8fbAf0URwW4n4t27KlPoyp8TWKc+V4mavW82FxOtsCn2oKk0U
-         VSDOAeKcQ9fZUf25PSjSCp7bdaCTVzamZATqZ96vMXZJyOF+RUiZLik0bToOpwfUaa
-         bDPzdc4RFMxrOGYdQXfEtI7qrxmAqATQ8QaH0bAZtdlyISR4quHszh4PCtJhlfi0QW
-         5Nbswx4QZWo8g==
-Subject: [PATCH 5/9] xfs_scrub: boost the repair priority of dependencies of
- damaged items
+        b=eAzLy5TkHZsdsR5nFC/u9UATDqvCaJmMdODtbKcYW4ZSFRr9CEEFJk71FVOQjkxmo
+         9u6zec/Smb7xWG1RbZ/5Y0gzuggj78ir38hozws132SffbbLbSNpZOzmbCMZbyoNWx
+         bsHxH3JPRAOmeGKNm/VEk7wh0jR8Cnq/sQPJh9QzrOpD9zeyqSKkz5Bd4wgnfeBgOH
+         1LJbQtDewNFr0/Ae74kCli/sH4YzVH/AuHYOUtXK1KCQKid51r1iPb+VwRXkeejUzA
+         WNbp+o4dMKDd96ceoWwTSvnIjEuw/LPGq0Vr6HgZH227TETn1Cy3UpuyoqL3GYErmv
+         B88u4tHAcSzbw==
+Subject: [PATCH 11/38] xfs: attach dquots to rt metadata files when starting
+ quota
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:17 -0800
-Message-ID: <167243869779.715746.14845159623486485344.stgit@magnolia>
-In-Reply-To: <167243869711.715746.14725730988345960302.stgit@magnolia>
-References: <167243869711.715746.14725730988345960302.stgit@magnolia>
+Message-ID: <167243869755.715303.17695593088764549428.stgit@magnolia>
+In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
+References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,252 +56,179 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In XFS, certain types of metadata objects depend on the correctness of
-lower level metadata objects.  For example, directory blocks are stored
-in the data fork of directory files, which means that any issues with
-the inode core and the data fork should be dealt with before we try to
-repair a directory.
-
-xfs_scrub prioritises repairs by the severity of what the kernel scrub
-function reports -- anything directly observed to be corrupt get
-repaired first, then anything that had trouble with cross referencing,
-and finally anything that was correct but could be further optimised.
-Returning to the above example, if a directory data fork mapping offset
-is off by a bit flip, scrub will mark that as failing cross referencing,
-but it'll mark the directory as corrupt.  Repair should check out the
-mapping problem before it tackles the directory.
-
-Do this by embedding a dependency table and using it to boost the
-priority of the repair_item fields as needed.
+Attach dquots to the realtime metadata files when starting up quotas,
+since the resources used by them are charged to the root dquot.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libfrog/scrub.c       |    1 +
- scrub/repair.c        |   98 ++++++++++++++++++++++++++++++++++++++++++++++++-
- scrub/scrub.h         |   12 ++++++
- scrub/scrub_private.h |    8 ++++
- 4 files changed, 116 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_mount.c   |    4 +++-
+ fs/xfs/xfs_qm.c      |   20 +++++++++++++++++---
+ fs/xfs/xfs_qm_bhv.c  |    2 +-
+ fs/xfs/xfs_quota.h   |    4 ++--
+ fs/xfs/xfs_rtalloc.c |   19 +++++++++++++++++++
+ fs/xfs/xfs_rtalloc.h |    3 +++
+ 6 files changed, 45 insertions(+), 7 deletions(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 7cd241d9bce..3e322b4717d 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -150,6 +150,7 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 		.group	= XFROG_SCRUB_GROUP_NONE,
- 	},
- };
-+#undef DEP
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 1d2403b93f58..2e64f18deabf 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1007,7 +1007,9 @@ xfs_mountfs(
+ 		ASSERT(mp->m_qflags == 0);
+ 		mp->m_qflags = quotaflags;
  
- /* Invoke the scrub ioctl.  Returns zero or negative error code. */
- int
-diff --git a/scrub/repair.c b/scrub/repair.c
-index cadd2c20627..16acb0a0f10 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -22,6 +22,28 @@
- 
- /* General repair routines. */
- 
-+/*
-+ * Bitmap showing the correctness dependencies between scrub types for repairs.
-+ * There are no edges between AG btrees and AG headers because we can't mount
-+ * the filesystem if the btree root pointers in the AG headers are wrong.
-+ * Dependencies cannot cross scrub groups.
-+ */
-+#define DEP(x) (1U << (x))
-+static const unsigned int repair_deps[XFS_SCRUB_TYPE_NR] = {
-+	[XFS_SCRUB_TYPE_BMBTD]		= DEP(XFS_SCRUB_TYPE_INODE),
-+	[XFS_SCRUB_TYPE_BMBTA]		= DEP(XFS_SCRUB_TYPE_INODE),
-+	[XFS_SCRUB_TYPE_BMBTC]		= DEP(XFS_SCRUB_TYPE_INODE),
-+	[XFS_SCRUB_TYPE_DIR]		= DEP(XFS_SCRUB_TYPE_BMBTD),
-+	[XFS_SCRUB_TYPE_XATTR]		= DEP(XFS_SCRUB_TYPE_BMBTA),
-+	[XFS_SCRUB_TYPE_SYMLINK]	= DEP(XFS_SCRUB_TYPE_BMBTD),
-+	[XFS_SCRUB_TYPE_PARENT]		= DEP(XFS_SCRUB_TYPE_BMBTD),
-+	[XFS_SCRUB_TYPE_QUOTACHECK]	= DEP(XFS_SCRUB_TYPE_UQUOTA) |
-+					  DEP(XFS_SCRUB_TYPE_GQUOTA) |
-+					  DEP(XFS_SCRUB_TYPE_PQUOTA),
-+	[XFS_SCRUB_TYPE_RTSUM]		= DEP(XFS_SCRUB_TYPE_RTBITMAP),
-+};
-+#undef DEP
-+
- /* Repair some metadata. */
- static enum check_outcome
- xfs_repair_metadata(
-@@ -34,8 +56,16 @@ xfs_repair_metadata(
- 	struct xfs_scrub_metadata	meta = { 0 };
- 	struct xfs_scrub_metadata	oldm;
- 	DEFINE_DESCR(dsc, ctx, format_scrub_descr);
-+	bool				repair_only;
- 	int				error;
- 
-+	/*
-+	 * If the caller boosted the priority of this scrub type on behalf of a
-+	 * higher level repair by setting IFLAG_REPAIR, turn off REPAIR_ONLY.
-+	 */
-+	repair_only = (repair_flags & XRM_REPAIR_ONLY) &&
-+			scrub_item_type_boosted(sri, scrub_type);
-+
- 	assert(scrub_type < XFS_SCRUB_TYPE_NR);
- 	assert(!debug_tweak_on("XFS_SCRUB_NO_KERNEL"));
- 	meta.sm_type = scrub_type;
-@@ -55,7 +85,7 @@ xfs_repair_metadata(
- 		break;
+-		xfs_qm_mount_quotas(mp);
++		error = xfs_qm_mount_quotas(mp);
++		if (error)
++			goto out_rtunmount;
  	}
  
--	if (!is_corrupt(&meta) && (repair_flags & XRM_REPAIR_ONLY))
-+	if (!is_corrupt(&meta) && repair_only)
- 		return CHECK_RETRY;
+ 	/*
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index 905765eedcb0..63085d8b5ec1 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -29,6 +29,7 @@
+ #include "xfs_health.h"
+ #include "xfs_imeta.h"
+ #include "xfs_da_format.h"
++#include "xfs_rtalloc.h"
  
- 	memcpy(&oldm, &meta, sizeof(oldm));
-@@ -215,6 +245,60 @@ struct action_item {
- 	struct scrub_item	sri;
- };
- 
-+/*
-+ * The operation of higher level metadata objects depends on the correctness of
-+ * lower level metadata objects.  This means that if X depends on Y, we must
-+ * investigate and correct all the observed issues with Y before we try to make
-+ * a correction to X.  For all scheduled repair activity on X, boost the
-+ * priority of repairs on all the Ys to ensure this correctness.
-+ */
-+static void
-+repair_item_boost_priorities(
-+	struct scrub_item		*sri)
-+{
-+	unsigned int			scrub_type;
-+
-+	foreach_scrub_type(scrub_type) {
-+		unsigned int		dep_mask = repair_deps[scrub_type];
-+		unsigned int		b;
-+
-+		if (repair_item_count_needsrepair(sri) == 0 || !dep_mask)
-+			continue;
-+
-+		/*
-+		 * Check if the repairs for this scrub type depend on any other
-+		 * scrub types that have been flagged with cross-referencing
-+		 * errors and are not already tagged for the highest priority
-+		 * repair (SCRUB_ITEM_CORRUPT).  If so, boost the priority of
-+		 * that scrub type (via SCRUB_ITEM_BOOST_REPAIR) so that any
-+		 * problems with the dependencies will (hopefully) be fixed
-+		 * before we start repairs on this scrub type.
-+		 *
-+		 * So far in the history of xfs_scrub we have maintained that
-+		 * lower numbered scrub types do not depend on higher numbered
-+		 * scrub types, so we need only process the bit mask once.
-+		 */
-+		for (b = 0; b < XFS_SCRUB_TYPE_NR; b++, dep_mask >>= 1) {
-+			if (!dep_mask)
-+				break;
-+			if (!(dep_mask & 1))
-+				continue;
-+			if (!(sri->sri_state[b] & SCRUB_ITEM_REPAIR_XREF))
-+				continue;
-+			if (sri->sri_state[b] & SCRUB_ITEM_CORRUPT)
-+				continue;
-+			sri->sri_state[b] |= SCRUB_ITEM_BOOST_REPAIR;
-+		}
-+	}
-+}
-+
-+/*
-+ * These are the scrub item state bits that must be copied when scheduling
-+ * a (per-AG) scrub type for immediate repairs.  The original state tracking
-+ * bits are left untouched to force a rescan in phase 4.
-+ */
-+#define MUSTFIX_STATES	(SCRUB_ITEM_CORRUPT | \
-+			 SCRUB_ITEM_BOOST_REPAIR)
  /*
-  * Figure out which AG metadata must be fixed before we can move on
-  * to the inode scan.
-@@ -227,17 +311,21 @@ repair_item_mustfix(
- 	unsigned int		scrub_type;
- 
- 	assert(sri->sri_agno != -1U);
-+	repair_item_boost_priorities(sri);
- 	scrub_item_init_ag(fix_now, sri->sri_agno);
- 
- 	foreach_scrub_type(scrub_type) {
--		if (!(sri->sri_state[scrub_type] & SCRUB_ITEM_CORRUPT))
-+		unsigned int	state;
-+
-+		state = sri->sri_state[scrub_type] & MUSTFIX_STATES;
-+		if (!state)
- 			continue;
- 
- 		switch (scrub_type) {
- 		case XFS_SCRUB_TYPE_AGI:
- 		case XFS_SCRUB_TYPE_FINOBT:
- 		case XFS_SCRUB_TYPE_INOBT:
--			fix_now->sri_state[scrub_type] |= SCRUB_ITEM_CORRUPT;
-+			fix_now->sri_state[scrub_type] = state;
- 			break;
+  * The global quota manager. There is only one of these for the entire
+@@ -1486,7 +1487,7 @@ xfs_qm_quotacheck(
+  * If we fail here, the mount will continue with quota turned off. We don't
+  * need to inidicate success or failure at all.
+  */
+-void
++int
+ xfs_qm_mount_quotas(
+ 	struct xfs_mount	*mp)
+ {
+@@ -1525,7 +1526,7 @@ xfs_qm_mount_quotas(
+ 		error = xfs_qm_quotacheck(mp);
+ 		if (error) {
+ 			/* Quotacheck failed and disabled quotas. */
+-			return;
++			return 0;
  		}
  	}
-@@ -471,6 +559,8 @@ repair_file_corruption(
- 	struct scrub_item	*sri,
- 	int			override_fd)
- {
-+	repair_item_boost_priorities(sri);
-+
- 	return repair_item_class(ctx, sri, override_fd, SCRUB_ITEM_CORRUPT,
- 			XRM_REPAIR_ONLY | XRM_NOPROGRESS);
- }
-@@ -487,6 +577,8 @@ repair_item(
- {
- 	int			ret;
- 
-+	repair_item_boost_priorities(sri);
-+
- 	ret = repair_item_class(ctx, sri, -1, SCRUB_ITEM_CORRUPT, flags);
- 	if (ret)
- 		return ret;
-diff --git a/scrub/scrub.h b/scrub/scrub.h
-index 6e34ca2d7b3..0d5738dc692 100644
---- a/scrub/scrub.h
-+++ b/scrub/scrub.h
-@@ -14,6 +14,14 @@ enum check_outcome {
- 	CHECK_RETRY,	/* repair failed, try again later */
- };
- 
-+/*
-+ * This flag boosts the repair priority of a scrub item when a dependent scrub
-+ * item is scheduled for repair.  Use a separate flag to preserve the
-+ * corruption state that we got from the kernel.  Priority boost is cleared the
-+ * next time xfs_repair_metadata is called.
-+ */
-+#define SCRUB_ITEM_BOOST_REPAIR	(1 << 0)
-+
- /*
-  * These flags record the metadata object state that the kernel returned.
-  * We want to remember if the object was corrupt, if the cross-referencing
-@@ -31,6 +39,10 @@ enum check_outcome {
- 				 SCRUB_ITEM_XFAIL | \
- 				 SCRUB_ITEM_XCORRUPT)
- 
-+/* Cross-referencing failures only. */
-+#define SCRUB_ITEM_REPAIR_XREF	(SCRUB_ITEM_XFAIL | \
-+				 SCRUB_ITEM_XCORRUPT)
-+
- struct scrub_item {
  	/*
- 	 * Information we need to call the scrub and repair ioctls.  Per-AG
-diff --git a/scrub/scrub_private.h b/scrub/scrub_private.h
-index f91c65383d1..eafb750b0d1 100644
---- a/scrub/scrub_private.h
-+++ b/scrub/scrub_private.h
-@@ -71,4 +71,12 @@ scrub_item_clean_state(
- 	sri->sri_state[scrub_type] = 0;
+@@ -1566,8 +1567,21 @@ xfs_qm_mount_quotas(
+ 
+ 	if (error) {
+ 		xfs_warn(mp, "Failed to initialize disk quotas.");
+-		return;
++		return 0;
+ 	}
++
++	/*
++	 * Attach dquots to realtime metadata files before we do anything that
++	 * could alter the resource usage of rt metadata (log recovery, normal
++	 * operation, etc).
++	 */
++	error = xfs_rtmount_dqattach(mp);
++	if (error) {
++		xfs_qm_unmount_quotas(mp);
++		return error;
++	}
++
++	return 0;
  }
  
-+static inline bool
-+scrub_item_type_boosted(
-+	struct scrub_item		*sri,
-+	unsigned  int			scrub_type)
+ /*
+diff --git a/fs/xfs/xfs_qm_bhv.c b/fs/xfs/xfs_qm_bhv.c
+index 271c1021c733..df569a839d3f 100644
+--- a/fs/xfs/xfs_qm_bhv.c
++++ b/fs/xfs/xfs_qm_bhv.c
+@@ -119,7 +119,7 @@ xfs_qm_newmount(
+ 			 * mounting, and get on with the boring life
+ 			 * without disk quotas.
+ 			 */
+-			xfs_qm_mount_quotas(mp);
++			return xfs_qm_mount_quotas(mp);
+ 		} else {
+ 			/*
+ 			 * Clear the quota flags, but remember them. This
+diff --git a/fs/xfs/xfs_quota.h b/fs/xfs/xfs_quota.h
+index fe63489d91b2..0cb52d5be4aa 100644
+--- a/fs/xfs/xfs_quota.h
++++ b/fs/xfs/xfs_quota.h
+@@ -120,7 +120,7 @@ extern void xfs_qm_dqdetach(struct xfs_inode *);
+ extern void xfs_qm_dqrele(struct xfs_dquot *);
+ extern void xfs_qm_statvfs(struct xfs_inode *, struct kstatfs *);
+ extern int xfs_qm_newmount(struct xfs_mount *, uint *, uint *);
+-extern void xfs_qm_mount_quotas(struct xfs_mount *);
++int xfs_qm_mount_quotas(struct xfs_mount *mp);
+ extern void xfs_qm_unmount(struct xfs_mount *);
+ extern void xfs_qm_unmount_quotas(struct xfs_mount *);
+ 
+@@ -205,7 +205,7 @@ xfs_trans_reserve_quota_icreate(struct xfs_trans *tp, struct xfs_dquot *udqp,
+ #define xfs_qm_dqrele(d)			do { (d) = (d); } while(0)
+ #define xfs_qm_statvfs(ip, s)			do { } while(0)
+ #define xfs_qm_newmount(mp, a, b)					(0)
+-#define xfs_qm_mount_quotas(mp)
++#define xfs_qm_mount_quotas(mp)						(0)
+ #define xfs_qm_unmount(mp)
+ #define xfs_qm_unmount_quotas(mp)
+ #define xfs_inode_near_dquot_enforcement(ip, type)			(false)
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 7a94fb5b5a7f..82b729a86740 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -26,6 +26,7 @@
+ #include "xfs_imeta.h"
+ #include "xfs_rtbitmap.h"
+ #include "xfs_rtgroup.h"
++#include "xfs_quota.h"
+ 
+ /*
+  * Realtime metadata files are not quite regular files because userspace can't
+@@ -1686,6 +1687,24 @@ xfs_rtmount_inodes(
+ 	return error;
+ }
+ 
++/* Attach dquots for realtime metadata files. */
++int
++xfs_rtmount_dqattach(
++	struct xfs_mount	*mp)
 +{
-+	return sri->sri_state[scrub_type] & SCRUB_ITEM_BOOST_REPAIR;
++	int			error;
++
++	error = xfs_qm_dqattach(mp->m_rbmip);
++	if (error)
++		return error;
++
++	error = xfs_qm_dqattach(mp->m_rsumip);
++	if (error)
++		return error;
++
++	return 0;
 +}
 +
- #endif /* XFS_SCRUB_SCRUB_PRIVATE_H_ */
+ void
+ xfs_rtunmount_inodes(
+ 	struct xfs_mount	*mp)
+diff --git a/fs/xfs/xfs_rtalloc.h b/fs/xfs/xfs_rtalloc.h
+index 04931ab1bcac..873ebac239dd 100644
+--- a/fs/xfs/xfs_rtalloc.h
++++ b/fs/xfs/xfs_rtalloc.h
+@@ -46,6 +46,8 @@ void
+ xfs_rtunmount_inodes(
+ 	struct xfs_mount	*mp);
+ 
++int xfs_rtmount_dqattach(struct xfs_mount *mp);
++
+ /*
+  * Get the bitmap and summary inodes into the mount structure
+  * at mount time.
+@@ -104,6 +106,7 @@ xfs_rtmount_init(
+ # define xfs_rtfile_convert_unwritten(ip, pos, len)	(0)
+ # define xfs_rt_resv_free(mp)				((void)0)
+ # define xfs_rt_resv_init(mp)				(0)
++# define xfs_rtmount_dqattach(mp)			(0)
+ #endif	/* CONFIG_XFS_RT */
+ 
+ #endif	/* __XFS_RTALLOC_H__ */
 
