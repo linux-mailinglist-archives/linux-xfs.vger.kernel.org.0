@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B63365A1CC
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:44:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD01F65A1CE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:44:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236186AbiLaCnz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:43:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
+        id S236198AbiLaCoX (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:44:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236198AbiLaCnd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:43:33 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25648DF0C
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:43:33 -0800 (PST)
+        with ESMTP id S236196AbiLaCoF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:44:05 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9BE2DED
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:44:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B6BE061CD1
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:43:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE57C433EF;
-        Sat, 31 Dec 2022 02:43:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DECE461D16
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:44:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD49C433D2;
+        Sat, 31 Dec 2022 02:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454612;
-        bh=v0rWZTi45+2TBXBVKHfSTxyzHM7nExx0urk7kL3roQc=;
+        s=k20201202; t=1672454643;
+        bh=35e3sfRaQYYydapqhPVrjADMLeeLJso9obNT/j3KI20=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BvyKcOaXBrj9f/2DPhIta+WDqiBgVHzHDabPakhTYo/M3dm1ohgXVil0UYer1bGA6
-         lFAC/l/uNQMi0Fjb0zXl1o+u5FbNWjTQ61QzOUEWo7Z7qPZuTtcVjdKfxaSiaC4jcq
-         afwkhQiEhkQGmUDpuXbbYtgoTHovidUkmlBeyWILIh4+xj8Rp08MGO6QxdNA6Ttmo4
-         4CLbeEHSuSXG0NO8FW476ZaxRm69IXKi1v2AjDPo5kYE2awMfst2ZHfP6GJgQrGc6q
-         VjQIow9sZoiJ4uu7Kk0qWovPlrufQliW6BWlwWZF9Zxgqespc6ZusSMskUnf1mS6Sx
-         zKddidum8MF1Q==
-Subject: [PATCH 04/41] xfs: realtime rmap btree transaction reservations
+        b=P46CHg5SP3JtweIBb7z9G9KFFEqmI8ntqdk0CDh614yUPw/Rz2L3VRHhkFFBTprvp
+         DCeo14dTkeBeUjfnNv7fyuWbPw6ppJ7quHMbFuHFY5+I2ObSBhpr1eBw/Mu4ncXwlJ
+         NFHhCF//JeTE3RcpfY3TZjmIOiToBbo7WEzN27KEinIro15RLHU5hhBtqZnZEjt3wa
+         51yALnWiC6TbKbGdDtFF5TVWStE/uF4GK4Pd2HXIxf+gSfO67p7jucAdOtT8kQjOCq
+         Do+m+YAc9JTfIyLM3PbpTZK7RqZa62Gy61L1d+MmoAglBSEwqozB9IHazn2nDwDfEu
+         xmXLGxik4GvDQ==
+Subject: [PATCH 06/41] xfs: prepare rmap functions to deal with rtrmapbt
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:56 -0800
-Message-ID: <167243879648.732820.10272380631860178810.stgit@magnolia>
+Message-ID: <167243879675.732820.4803430458675120967.stgit@magnolia>
 In-Reply-To: <167243879574.732820.4725863402652761218.stgit@magnolia>
 References: <167243879574.732820.4725863402652761218.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,89 +55,112 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that there's enough log reservation to handle mapping
-and unmapping realtime extents.  We have to reserve enough space
-to handle a split in the rtrmapbt to add the record and a second
-split in the regular rmapbt to record the rtrmapbt split.
+Prepare the high-level rmap functions to deal with the new realtime
+rmapbt and its slightly different conventions.  Provide the ability
+to talk to either rmapbt or rtrmapbt formats from the same high
+level code.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_swapext.c     |    4 +++-
- libxfs/xfs_trans_resv.c  |   12 ++++++++++--
- libxfs/xfs_trans_space.h |   13 +++++++++++++
- 3 files changed, 26 insertions(+), 3 deletions(-)
+ libxfs/xfs_rmap.c |   66 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
 
-diff --git a/libxfs/xfs_swapext.c b/libxfs/xfs_swapext.c
-index 718600019a7..3c22c1d8e2f 100644
---- a/libxfs/xfs_swapext.c
-+++ b/libxfs/xfs_swapext.c
-@@ -700,7 +700,9 @@ xfs_swapext_rmapbt_blocks(
- 	if (!xfs_has_rmapbt(mp))
- 		return 0;
- 	if (XFS_IS_REALTIME_INODE(req->ip1))
--		return 0;
-+		return howmany_64(req->nr_exchanges,
-+					XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp)) *
-+			XFS_RTRMAPADD_SPACE_RES(mp);
+diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
+index bce30dd66d6..be611b54a6c 100644
+--- a/libxfs/xfs_rmap.c
++++ b/libxfs/xfs_rmap.c
+@@ -23,6 +23,7 @@
+ #include "xfs_inode.h"
+ #include "xfs_ag.h"
+ #include "xfs_health.h"
++#include "xfs_rtgroup.h"
  
- 	return howmany_64(req->nr_exchanges,
- 					XFS_MAX_CONTIG_RMAPS_PER_BLOCK(mp)) *
-diff --git a/libxfs/xfs_trans_resv.c b/libxfs/xfs_trans_resv.c
-index db0c745a431..42322a42058 100644
---- a/libxfs/xfs_trans_resv.c
-+++ b/libxfs/xfs_trans_resv.c
-@@ -210,7 +210,9 @@ xfs_calc_inode_chunk_res(
-  * Per-extent log reservation for the btree changes involved in freeing or
-  * allocating a realtime extent.  We have to be able to log as many rtbitmap
-  * blocks as needed to mark inuse XFS_BMBT_MAX_EXTLEN blocks' worth of realtime
-- * extents, as well as the realtime summary block.
-+ * extents, as well as the realtime summary block (t1).  Realtime rmap btree
-+ * operations happen in a second transaction, so factor in a couple of rtrmapbt
-+ * splits (t2).
-  */
- static unsigned int
- xfs_rtalloc_block_count(
-@@ -219,10 +221,16 @@ xfs_rtalloc_block_count(
- {
- 	unsigned int		rtbmp_blocks;
- 	xfs_rtxlen_t		rtxlen;
-+	unsigned int		t1, t2 = 0;
+ struct kmem_cache	*xfs_rmap_intent_cache;
  
- 	rtxlen = xfs_extlen_to_rtxlen(mp, XFS_MAX_BMBT_EXTLEN);
- 	rtbmp_blocks = xfs_rtbitmap_blockcount(mp, rtxlen);
--	return (rtbmp_blocks + 1) * num_ops;
-+	t1 = (rtbmp_blocks + 1) * num_ops;
-+
-+	if (xfs_has_rmapbt(mp))
-+		t2 = num_ops * (2 * mp->m_rtrmap_maxlevels - 1);
-+
-+	return max(t1, t2);
+@@ -261,12 +262,73 @@ xfs_rmap_check_perag_irec(
+ 	return NULL;
  }
  
- /*
-diff --git a/libxfs/xfs_trans_space.h b/libxfs/xfs_trans_space.h
-index 9640fc232c1..8124893a035 100644
---- a/libxfs/xfs_trans_space.h
-+++ b/libxfs/xfs_trans_space.h
-@@ -14,6 +14,19 @@
- #define XFS_MAX_CONTIG_BMAPS_PER_BLOCK(mp)    \
- 		(((mp)->m_bmap_dmxr[0]) - ((mp)->m_bmap_dmnr[0]))
- 
-+/* Worst case number of realtime rmaps that can be held in a block. */
-+#define XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp)    \
-+		(((mp)->m_rtrmap_mxr[0]) - ((mp)->m_rtrmap_mnr[0]))
++static inline xfs_failaddr_t
++xfs_rmap_check_rtgroup_irec(
++	struct xfs_rtgroup		*rtg,
++	const struct xfs_rmap_irec	*irec)
++{
++	struct xfs_mount		*mp = rtg->rtg_mount;
++	bool				is_inode;
++	bool				is_unwritten;
++	bool				is_bmbt;
++	bool				is_attr;
 +
-+/* Adding one realtime rmap could split every level to the top of the tree. */
-+#define XFS_RTRMAPADD_SPACE_RES(mp) ((mp)->m_rtrmap_maxlevels)
++	if (irec->rm_blockcount == 0)
++		return __this_address;
 +
-+/* Blocks we might need to add "b" realtime rmaps to a tree. */
-+#define XFS_NRTRMAPADD_SPACE_RES(mp, b) \
-+	((((b) + XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp) - 1) / \
-+	  XFS_MAX_CONTIG_RTRMAPS_PER_BLOCK(mp)) * \
-+	  XFS_RTRMAPADD_SPACE_RES(mp))
++	if (irec->rm_owner == XFS_RMAP_OWN_FS) {
++		if (irec->rm_startblock != 0)
++			return __this_address;
++		if (irec->rm_blockcount != mp->m_sb.sb_rextsize)
++			return __this_address;
++		if (irec->rm_offset != 0)
++			return __this_address;
++	} else {
++		if (!xfs_verify_rgbext(rtg, irec->rm_startblock,
++					    irec->rm_blockcount))
++			return __this_address;
++	}
 +
- /* Worst case number of rmaps that can be held in a block. */
- #define XFS_MAX_CONTIG_RMAPS_PER_BLOCK(mp)    \
- 		(((mp)->m_rmap_mxr[0]) - ((mp)->m_rmap_mnr[0]))
++	if (!(xfs_verify_ino(mp, irec->rm_owner) ||
++	      (irec->rm_owner <= XFS_RMAP_OWN_FS &&
++	       irec->rm_owner >= XFS_RMAP_OWN_MIN)))
++		return __this_address;
++
++	/* Check flags. */
++	is_inode = !XFS_RMAP_NON_INODE_OWNER(irec->rm_owner);
++	is_bmbt = irec->rm_flags & XFS_RMAP_BMBT_BLOCK;
++	is_attr = irec->rm_flags & XFS_RMAP_ATTR_FORK;
++	is_unwritten = irec->rm_flags & XFS_RMAP_UNWRITTEN;
++
++	if (!is_inode && irec->rm_owner != XFS_RMAP_OWN_FS)
++		return __this_address;
++
++	if (!is_inode && irec->rm_offset != 0)
++		return __this_address;
++
++	if (is_bmbt || is_attr)
++		return __this_address;
++
++	if (is_unwritten && !is_inode)
++		return __this_address;
++
++	/* Check for a valid fork offset, if applicable. */
++	if (is_inode &&
++	    !xfs_verify_fileext(mp, irec->rm_offset, irec->rm_blockcount))
++		return __this_address;
++
++	return NULL;
++}
++
+ /* Simple checks for rmap records. */
+ xfs_failaddr_t
+ xfs_rmap_check_irec(
+ 	struct xfs_btree_cur		*cur,
+ 	const struct xfs_rmap_irec	*irec)
+ {
++	if (cur->bc_btnum == XFS_BTNUM_RTRMAP)
++		return xfs_rmap_check_rtgroup_irec(cur->bc_ino.rtg, irec);
++
+ 	if (cur->bc_flags & XFS_BTREE_IN_MEMORY)
+ 		return xfs_rmap_check_perag_irec(cur->bc_mem.pag, irec);
+ 	return xfs_rmap_check_perag_irec(cur->bc_ag.pag, irec);
+@@ -283,6 +345,10 @@ xfs_rmap_complain_bad_rec(
+ 	if (cur->bc_flags & XFS_BTREE_IN_MEMORY)
+ 		xfs_warn(mp,
+  "In-Memory Reverse Mapping BTree record corruption detected at %pS!", fa);
++	else if (cur->bc_btnum == XFS_BTNUM_RTRMAP)
++		xfs_warn(mp,
++ "RT Reverse Mapping BTree record corruption in rtgroup %u detected at %pS!",
++				cur->bc_ino.rtg->rtg_rgno, fa);
+ 	else
+ 		xfs_warn(mp,
+  "Reverse Mapping BTree record corruption in AG %d detected at %pS!",
 
