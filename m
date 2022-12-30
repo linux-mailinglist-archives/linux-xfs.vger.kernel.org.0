@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8C9265A194
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:29:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BFF8659FEA
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:46:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236149AbiLaC3v (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:29:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56136 "EHLO
+        id S235933AbiLaAqP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:46:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236141AbiLaC3v (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:29:51 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C6F1CB17
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:29:49 -0800 (PST)
+        with ESMTP id S235927AbiLaAqO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:46:14 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7447C55BF;
+        Fri, 30 Dec 2022 16:46:13 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5E367B81E72
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:29:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE80C433EF;
-        Sat, 31 Dec 2022 02:29:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0EEE161D63;
+        Sat, 31 Dec 2022 00:46:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51072C433D2;
+        Sat, 31 Dec 2022 00:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453787;
-        bh=c+dlL9gCIxOVHKYd7GxKSXIdJB4iLg98Gp4SUnZq2Po=;
+        s=k20201202; t=1672447572;
+        bh=dEhlWmbmnxjiW8QH6B/a9Yb8GMBvcJ3lCezcSuOQFHo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=kV1HJlysTJ9n0uLhYLanKx6ewkbzNSOCb0IbFBUIbFPdc2nySdGNfnnuXkO11XYCS
-         gtSFGxIeQLisYBECrJZTYmKGxaDm+aXOlMVnhTuC0FRqEn/nlyXl1UqkyVgbYgSomj
-         cFoEHvSxHLw/JfrEe9FJzpmR91qRAoQunC2ewXVtuNUxXll7DMc1OfqUF6O+zvejvk
-         54JwrZF+zlGTDyOaCEXkQOvumy0xo5n8VLjN2d1c/NapfhXuM62ps/R06KVrFtRAzJ
-         CwCSzrw0hZ1INAHEkQTJSRDRW8t5deSWUQ1HfPXcby/35feuRREUDJAArbVPtnkbrT
-         /d3QXg5QNvo/Q==
-Subject: [PATCH 4/5] xfs_mdrestore: restore log contents to external log
- devices
+        b=XK4TsgYhFYJIsAayQkr0E+UqmZzGKpA6GOVcU3t2uc/8ylJdQBKdaPlNKuSV7TK5B
+         RHSLXHZfll0c/XjqVNelPKks1PYd7Gtg2G8Ue8Ip4yfgpdIMJRjE6HvVrl4Gc7KQJJ
+         GBeuh4C1DaCJey3yVgqydNJ5xkKVlTQgi93vVRO8QLOJiBXhqLCb78sC3zKqbXfeZM
+         4OwbB1O9aWdTCLred8+UqU7TPfqrxQ3/v4WB8oCBGlpssaoo8swxqxXIfXZlcrchLw
+         w1n7Vlh7qgjZrjNaPl8FNo14U32vvhnr2B/UhsL4zkI4iccTRIX4GYE70GD/7KYUyP
+         qFPviDlfwDyxA==
+Subject: [PATCH 08/24] common/fuzzy: split out each repair strategy into a
+ separate helper
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:40 -0800
-Message-ID: <167243878035.730695.15058686240875755491.stgit@magnolia>
-In-Reply-To: <167243877981.730695.7761889719607533776.stgit@magnolia>
-References: <167243877981.730695.7761889719607533776.stgit@magnolia>
+Message-ID: <167243878009.730387.6498387808305301701.stgit@magnolia>
+In-Reply-To: <167243877899.730387.9276624623424433346.stgit@magnolia>
+References: <167243877899.730387.9276624623424433346.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,325 +55,245 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Support restoring log data to an external log device, if the dumped
-filesystem had one.
+Refactor __scratch_xfs_fuzz_field_test to split out each repair strategy
+into a separate helper function.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- man/man8/xfs_mdrestore.8  |    8 ++
- mdrestore/xfs_mdrestore.c |  176 +++++++++++++++++++++++++++++++--------------
- 2 files changed, 131 insertions(+), 53 deletions(-)
+ common/fuzzy |  212 +++++++++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 166 insertions(+), 46 deletions(-)
 
 
-diff --git a/man/man8/xfs_mdrestore.8 b/man/man8/xfs_mdrestore.8
-index 72f3b297787..4626b98e749 100644
---- a/man/man8/xfs_mdrestore.8
-+++ b/man/man8/xfs_mdrestore.8
-@@ -5,12 +5,17 @@ xfs_mdrestore \- restores an XFS metadump image to a filesystem image
- .B xfs_mdrestore
- [
- .B \-gi
-+] [
-+.B \-l logdev
- ]
- .I source
- .I target
- .br
- .B xfs_mdrestore
- .B \-i
-+[
-+.B \-l logdev
-+]
- .I source
- .br
- .B xfs_mdrestore \-V
-@@ -43,6 +48,9 @@ can be destroyed.
- .B \-g
- Shows restore progress on stdout.
- .TP
-+.B \-l
-+Restore log contents to this external log device.
-+.TP
- .B \-i
- Shows metadump information on stdout.  If no
- .I target
-diff --git a/mdrestore/xfs_mdrestore.c b/mdrestore/xfs_mdrestore.c
-index 9f8cbe98cd6..4318fac9008 100644
---- a/mdrestore/xfs_mdrestore.c
-+++ b/mdrestore/xfs_mdrestore.c
-@@ -38,6 +38,67 @@ print_progress(const char *fmt, ...)
- 	progress_since_warning = 1;
+diff --git a/common/fuzzy b/common/fuzzy
+index 866901931e..ef42336fa6 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -194,6 +194,148 @@ __fuzz_notify() {
+ 	test -w /dev/ttyprintk && echo "$@" >> /dev/ttyprintk
  }
  
-+extern int	platform_check_ismounted(char *, char *, struct stat *, int);
++# Perform the online repair part of a fuzz test.
++__scratch_xfs_fuzz_field_online() {
++	local fuzz_action="$1"
 +
-+static int
-+open_device(
-+	char		*path,
-+	int		*is_target_file)
-+{
-+	struct stat	statbuf;
-+	int		open_flags = O_RDWR;
-+	int		dst_fd;
++	# Mount or else we can't do anything online
++	echo "+ Mount filesystem to try online repair"
++	_try_scratch_mount 2>&1
++	res=$?
++	if [ $res -ne 0 ]; then
++		(>&2 echo "mount failed ($res) with ${fuzz_action}.")
++		return 0
++	fi
 +
-+	*is_target_file = 0;
-+	if (stat(path, &statbuf) < 0)  {
-+		/* ok, assume it's a file and create it */
-+		open_flags |= O_CREAT;
-+		*is_target_file = 1;
-+	} else if (S_ISREG(statbuf.st_mode))  {
-+		open_flags |= O_TRUNC;
-+		*is_target_file = 1;
-+	} else  {
-+		/*
-+		 * check to make sure a filesystem isn't mounted on the device
-+		 */
-+		if (platform_check_ismounted(path, NULL, &statbuf, 0))
-+			fatal("a filesystem is mounted on target device \"%s\","
-+				" cannot restore to a mounted filesystem.\n",
-+				path);
-+	}
++	# Make sure online scrub will catch whatever we fuzzed
++	echo "++ Online scrub"
++	_scratch_scrub -n -a 1 -e continue 2>&1
++	res=$?
++	test $res -eq 0 && \
++		(>&2 echo "scrub didn't fail with ${fuzz_action}.")
 +
-+	dst_fd = open(path, open_flags, 0644);
-+	if (dst_fd < 0)
-+		fatal("couldn't open target \"%s\"\n", path);
++	# Try fixing the filesystem online
++	__fuzz_notify "++ Try to repair filesystem online"
++	_scratch_scrub 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "online repair failed ($res) with ${fuzz_action}.")
 +
-+	return dst_fd;
++	__scratch_xfs_fuzz_unmount
++
++	# Offline scrub should pass now
++	echo "+ Make sure error is gone (offline)"
++	_scratch_xfs_repair -n 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "offline re-scrub failed ($res) with ${fuzz_action}.")
++
++	return 0
 +}
 +
-+static void
-+check_dev(
-+	int			dst_fd,
-+	int			is_target_file,
-+	unsigned long long	bytes)
-+{
-+	if (is_target_file)  {
-+		/* ensure regular files are correctly sized */
++# Perform the offline repair part of a fuzz test.
++__scratch_xfs_fuzz_field_offline() {
++	local fuzz_action="$1"
 +
-+		if (ftruncate(dst_fd, bytes))
-+			fatal("cannot set filesystem image size: %s\n",
-+				strerror(errno));
-+	} else  {
-+		/* ensure device is sufficiently large enough */
++	# Mount or else we can't do anything offline
++	echo "+ Mount filesystem to try offline repair"
++	_try_scratch_mount 2>&1
++	res=$?
++	if [ $res -ne 0 ]; then
++		(>&2 echo "mount failed ($res) with ${fuzz_action}.")
++		return 0
++	fi
 +
-+		char		*lb[XFS_MAX_SECTORSIZE] = { NULL };
-+		off64_t		off;
++	# Make sure online scrub will catch whatever we fuzzed
++	echo "++ Online scrub"
++	_scratch_scrub -n -a 1 -e continue 2>&1
++	res=$?
++	test $res -eq 0 && \
++		(>&2 echo "scrub didn't fail with ${fuzz_action}.")
 +
-+		off = bytes - sizeof(lb);
-+		if (pwrite(dst_fd, lb, sizeof(lb), off) < 0)
-+			fatal("failed to write last block, is target too "
-+				"small? (error: %s)\n", strerror(errno));
-+	}
++	__scratch_xfs_fuzz_unmount
++
++	# Repair the filesystem offline
++	echo "+ Try to repair the filesystem offline"
++	_repair_scratch_fs 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "offline repair failed ($res) with ${fuzz_action}.")
++
++	# See if repair finds a clean fs
++	echo "+ Make sure error is gone (offline)"
++	_scratch_xfs_repair -n 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "offline re-scrub failed ($res) with ${fuzz_action}.")
++
++	return 0
 +}
 +
- /*
-  * perform_restore() -- do the actual work to restore the metadump
-  *
-@@ -53,7 +114,8 @@ perform_restore(
- 	FILE			*src_f,
- 	int			dst_fd,
- 	int			is_target_file,
--	const struct xfs_metablock	*mbp)
-+	const struct xfs_metablock	*mbp,
-+	char			*log_path)
- {
- 	struct xfs_metablock	*metablock;	/* header + index + blocks */
- 	__be64			*block_index;
-@@ -64,6 +126,10 @@ perform_restore(
- 	int			mb_count;
- 	xfs_sb_t		sb;
- 	int64_t			bytes_read;
-+	int			log_fd = -1;
-+	bool			is_mdx;
++# Perform the no-repair part of a fuzz test.
++__scratch_xfs_fuzz_field_norepair() {
++	local fuzz_action="$1"
 +
-+	is_mdx = mbp->mb_magic == cpu_to_be32(XFS_MDX_MAGIC);
++	# Mount or else we can't do anything in norepair mode
++	echo "+ Mount filesystem to try no repair"
++	_try_scratch_mount 2>&1
++	res=$?
++	if [ $res -ne 0 ]; then
++		(>&2 echo "mount failed ($res) with ${fuzz_action}.")
++		return 0
++	fi
++
++	__scratch_xfs_fuzz_unmount
++
++	return 0
++}
++
++# Perform the online-then-offline repair part of a fuzz test.
++__scratch_xfs_fuzz_field_both() {
++	local fuzz_action="$1"
++
++	# Mount or else we can't do anything in both repair mode
++	echo "+ Mount filesystem to try both repairs"
++	_try_scratch_mount 2>&1
++	res=$?
++	if [ $res -ne 0 ]; then
++		(>&2 echo "mount failed ($res) with ${fuzz_action}.")
++		return 0
++	fi
++
++	# Make sure online scrub will catch whatever we fuzzed
++	echo "++ Online scrub"
++	_scratch_scrub -n -a 1 -e continue 2>&1
++	res=$?
++	test $res -eq 0 && \
++		(>&2 echo "online scrub didn't fail with ${fuzz_action}.")
++
++	# Try fixing the filesystem online
++	__fuzz_notify "++ Try to repair filesystem online"
++	_scratch_scrub 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "online repair failed ($res) with ${fuzz_action}.")
++
++	__scratch_xfs_fuzz_unmount
++
++	# Repair the filesystem offline?
++	echo "+ Try to repair the filesystem offline"
++	_repair_scratch_fs 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "offline repair failed ($res) with ${fuzz_action}.")
++
++	# See if repair finds a clean fs
++	echo "+ Make sure error is gone (offline)"
++	_scratch_xfs_repair -n 2>&1
++	res=$?
++	test $res -ne 0 && \
++		(>&2 echo "offline re-scrub ($res) with ${fuzz_action}.")
++
++	return 0
++}
++
+ # Fuzz one field of some piece of metadata.
+ # First arg is the field name
+ # Second arg is the fuzz verb (ones, zeroes, random, add, sub...)
+@@ -211,54 +353,32 @@ __scratch_xfs_fuzz_field_test() {
+ 	res=$?
+ 	test $res -ne 0 && return
  
- 	block_size = 1 << mbp->mb_blocklog;
- 	max_indices = (block_size - sizeof(xfs_metablock_t)) / sizeof(__be64);
-@@ -76,6 +142,7 @@ perform_restore(
- 	if (mb_count == 0 || mb_count > max_indices)
- 		fatal("bad block count: %u\n", mb_count);
- 
-+	memcpy(metablock, mbp, sizeof(struct xfs_metablock));
- 	block_index = (__be64 *)((char *)metablock + sizeof(xfs_metablock_t));
- 	block_buffer = (char *)metablock + block_size;
- 
-@@ -106,32 +173,43 @@ perform_restore(
- 
- 	((struct xfs_dsb*)block_buffer)->sb_inprogress = 1;
- 
--	if (is_target_file)  {
--		/* ensure regular files are correctly sized */
+-	# Try to catch the error with scrub
+-	echo "+ Try to catch the error"
+-	_try_scratch_mount 2>&1
+-	res=$?
+-	if [ $res -eq 0 ]; then
+-		# Try an online scrub unless we're fuzzing ag 0's sb,
+-		# which scrub doesn't know how to fix.
+-		if [ "${repair}" != "none" ]; then
+-			echo "++ Online scrub"
+-			if [ "$1" != "sb 0" ]; then
+-				_scratch_scrub -n -a 1 -e continue 2>&1
+-				res=$?
+-				test $res -eq 0 && \
+-					(>&2 echo "scrub didn't fail with ${field} = ${fuzzverb}.")
+-			fi
+-		fi
 -
--		if (ftruncate(dst_fd, sb.sb_dblocks * sb.sb_blocksize))
--			fatal("cannot set filesystem image size: %s\n",
--				strerror(errno));
--	} else  {
--		/* ensure device is sufficiently large enough */
+-		# Try fixing the filesystem online?!
+-		if [ "${repair}" = "online" ] || [ "${repair}" = "both" ]; then
+-			__fuzz_notify "++ Try to repair filesystem online"
+-			_scratch_scrub 2>&1
+-			res=$?
+-			test $res -ne 0 && \
+-				(>&2 echo "online repair failed ($res) with ${field} = ${fuzzverb}.")
+-		fi
 -
--		char		*lb[XFS_MAX_SECTORSIZE] = { NULL };
--		off64_t		off;
+-		__scratch_xfs_fuzz_unmount
+-	elif [ "${repair}" = "online" ] || [ "${repair}" = "both" ]; then
+-		(>&2 echo "mount failed ($res) with ${field} = ${fuzzverb}.")
+-	fi
 -
--		off = sb.sb_dblocks * sb.sb_blocksize - sizeof(lb);
--		if (pwrite(dst_fd, lb, sizeof(lb), off) < 0)
--			fatal("failed to write last block, is target too "
--				"small? (error: %s)\n", strerror(errno));
--	}
-+	check_dev(dst_fd, is_target_file, sb.sb_dblocks * sb.sb_blocksize);
- 
- 	bytes_read = 0;
- 
- 	for (;;) {
-+		int		write_fd = dst_fd;
-+
-+		if (metablock->mb_magic != mbp->mb_magic)
-+			fatal("magic value 0x%x wrong, expected 0x%x\n",
-+					metablock->mb_magic, mbp->mb_magic);
-+
-+		if (metablock->mb_info & XFS_METADUMP_LOGDEV) {
-+			int	log_is_file;
-+
-+			if (!is_mdx)
-+				fatal("logdev set on an old style metadump?\n");
-+			if (log_fd == -1) {
-+				if (!log_path)
-+					fatal(
-+	"metadump has log contents but -l was not specified?\n");
-+				log_fd = open_device(log_path, &log_is_file);
-+				check_dev(log_fd, log_is_file,
-+						sb.sb_logblocks * sb.sb_blocksize);
-+			}
-+			write_fd = log_fd;
-+		}
-+		if (metablock->mb_info & XFS_METADUMP_RTDEV) {
-+			if (!is_mdx)
-+				fatal("rtdev set on an old style metadump?\n");
-+			fatal("rtdev not supported\n");
-+		}
-+
- 		if (show_progress && (bytes_read & ((1 << 20) - 1)) == 0)
- 			print_progress("%lld MB read", bytes_read >> 20);
- 
- 		for (cur_index = 0; cur_index < mb_count; cur_index++) {
--			if (pwrite(dst_fd, &block_buffer[cur_index <<
-+			if (pwrite(write_fd, &block_buffer[cur_index <<
- 					mbp->mb_blocklog], block_size,
- 					be64_to_cpu(block_index[cur_index]) <<
- 						BBSHIFT) < 0)
-@@ -139,11 +217,20 @@ perform_restore(
- 					be64_to_cpu(block_index[cur_index]) << BBSHIFT,
- 					strerror(errno));
- 		}
--		if (mb_count < max_indices)
--			break;
-+		if (is_mdx) {
-+			size_t	nr = fread(metablock, block_size, 1, src_f);
- 
--		if (fread(metablock, block_size, 1, src_f) != 1)
--			fatal("error reading from metadump file\n");
-+			if (nr == 0)
-+				break;
-+			if (nr != 1)
-+				fatal("error reading from extended metadump file\n");
-+		} else {
-+			if (mb_count < max_indices)
-+				break;
-+
-+			if (fread(metablock, block_size, 1, src_f) != 1)
-+				fatal("error reading from metadump file\n");
-+		}
- 
- 		mb_count = be16_to_cpu(metablock->mb_count);
- 		if (mb_count == 0)
-@@ -170,38 +257,41 @@ perform_restore(
- 	if (pwrite(dst_fd, block_buffer, sb.sb_sectsize, 0) < 0)
- 		fatal("error writing primary superblock: %s\n", strerror(errno));
- 
-+	if (log_fd >= 0)
-+		close(log_fd);
-+
- 	free(metablock);
- }
- 
- static void
- usage(void)
- {
--	fprintf(stderr, "Usage: %s [-V] [-g] [-i] source target\n", progname);
-+	fprintf(stderr, "Usage: %s [-V] [-g] [-i] [-l logdev] source target\n", progname);
- 	exit(1);
- }
- 
--extern int	platform_check_ismounted(char *, char *, struct stat *, int);
+-	# Repair the filesystem offline?
+-	if [ "${repair}" = "offline" ] || [ "${repair}" = "both" ]; then
+-		echo "+ Try to repair the filesystem offline"
+-		_repair_scratch_fs 2>&1
++	# Try to catch the error with whatever repair strategy we picked.
++	# The fs should not be mounted before or after the strategy call.
++	local fuzz_action="${field} = ${fuzzverb}"
++	case "${repair}" in
++	"online")
++		__scratch_xfs_fuzz_field_online "${fuzz_action}"
+ 		res=$?
+-		test $res -ne 0 && \
+-			(>&2 echo "offline repair failed ($res) with ${field} = ${fuzzverb}.")
+-	fi
 -
- int
- main(
- 	int 		argc,
- 	char 		**argv)
- {
-+	char		*log_path = NULL;
- 	FILE		*src_f;
- 	int		dst_fd;
- 	int		c;
--	int		open_flags;
--	struct stat	statbuf;
- 	int		is_target_file;
- 	struct xfs_metablock	mb;
+-	# See if repair finds a clean fs
+-	if [ "${repair}" != "none" ]; then
+-		echo "+ Make sure error is gone (offline)"
+-		_scratch_xfs_repair -n 2>&1
++		;;
++	"offline")
++		__scratch_xfs_fuzz_field_offline "${fuzz_action}"
+ 		res=$?
+-		test $res -ne 0 && \
+-			(>&2 echo "offline re-scrub ($res) with ${field} = ${fuzzverb}.")
+-	fi
++		;;
++	"none")
++		__scratch_xfs_fuzz_field_norepair "${fuzz_action}"
++		res=$?
++		;;
++	"both")
++		__scratch_xfs_fuzz_field_both "${fuzz_action}"
++		res=$?
++		;;
++	*)
++		(>&2 echo "unknown repair strategy ${repair}.")
++		res=2
++		;;
++	esac
++	test $res -eq 0 || return $res
  
- 	progname = basename(argv[0]);
- 
--	while ((c = getopt(argc, argv, "giV")) != EOF) {
-+	while ((c = getopt(argc, argv, "gl:iV")) != EOF) {
- 		switch (c) {
- 			case 'g':
- 				show_progress = 1;
- 				break;
-+			case 'l':
-+				log_path = optarg;
-+				break;
- 			case 'i':
- 				show_info = 1;
- 				break;
-@@ -238,7 +328,8 @@ main(
- 
- 	if (fread(&mb, sizeof(mb), 1, src_f) != 1)
- 		fatal("error reading from metadump file\n");
--	if (mb.mb_magic != cpu_to_be32(XFS_MD_MAGIC))
-+	if (mb.mb_magic != cpu_to_be32(XFS_MD_MAGIC) &&
-+	    mb.mb_magic != cpu_to_be32(XFS_MDX_MAGIC))
- 		fatal("specified file is not a metadata dump\n");
- 
- 	if (show_info) {
-@@ -260,30 +351,9 @@ main(
- 	optind++;
- 
- 	/* check and open target */
--	open_flags = O_RDWR;
--	is_target_file = 0;
--	if (stat(argv[optind], &statbuf) < 0)  {
--		/* ok, assume it's a file and create it */
--		open_flags |= O_CREAT;
--		is_target_file = 1;
--	} else if (S_ISREG(statbuf.st_mode))  {
--		open_flags |= O_TRUNC;
--		is_target_file = 1;
--	} else  {
--		/*
--		 * check to make sure a filesystem isn't mounted on the device
--		 */
--		if (platform_check_ismounted(argv[optind], NULL, &statbuf, 0))
--			fatal("a filesystem is mounted on target device \"%s\","
--				" cannot restore to a mounted filesystem.\n",
--				argv[optind]);
--	}
-+	dst_fd = open_device(argv[optind], &is_target_file);
- 
--	dst_fd = open(argv[optind], open_flags, 0644);
--	if (dst_fd < 0)
--		fatal("couldn't open target \"%s\"\n", argv[optind]);
--
--	perform_restore(src_f, dst_fd, is_target_file, &mb);
-+	perform_restore(src_f, dst_fd, is_target_file, &mb, log_path);
- 
- 	close(dst_fd);
- 	if (src_f != stdin)
+ 	# See if scrub finds a clean fs
+ 	echo "+ Make sure error is gone (online)"
 
