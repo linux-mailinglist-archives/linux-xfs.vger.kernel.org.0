@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8AD965A0FE
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:53:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A28B0659FB6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236042AbiLaBxe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:53:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
+        id S235702AbiLaAei (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:34:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbiLaBxc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:53:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C08DA1DDD3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:53:31 -0800 (PST)
+        with ESMTP id S235715AbiLaAef (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:35 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2492F1EAC0
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:35 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4CB42B81DFC
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:53:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16660C433D2;
-        Sat, 31 Dec 2022 01:53:29 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 73A7BCE19DF
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54A1C433D2;
+        Sat, 31 Dec 2022 00:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451609;
-        bh=G7M0GPo2QMSQtwDDmJ22pseEXMJxV4Gxuw4AtltWmno=;
+        s=k20201202; t=1672446871;
+        bh=hC8eHGeZ+n4lVRpOHeU/AA1l4ZjE8aISGHaoGAvlLxE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cCajrsjpbg4Hrrr75DnKii6PRDilqvLBlf1DEln47ffEcVQ1eJxfbb+IJ7Spike3g
-         CKPckWrmHRCwYu5WgD7aUiM027V8W3nb8C1OPCvKImQMvwIEQfv9FseGH0HCFFMmQu
-         0tm051tnB62XLqcqIEazVKBwhhkq1bjJYLZduGAlpHhyVy7iQz2+9yFo0DFySZROaP
-         /rlKCw9Wtn2s3/wNQY2tlMrRATKPwa8pl5POCt9gInvnP8El7w+55p92IQi+vaP4gH
-         ldn+N4pbDyuZsAvc4ikKWCrcHlKB7BVb70TX1gyDbPfh6PfXr6VUYYvUW80ztoxBDj
-         82sqMEDownM4w==
-Subject: [PATCH 21/42] xfs: allow inodes to have the realtime and reflink
- flags
+        b=kwn1OLqh2+sEVcvWGLjDnbCTUT5XfkcJ1h/V8OASNRiyucfvGcbof1UxGIGbstEd6
+         eTCIrC3LkEeTnK6PmnIqZojDUEl3U5U3/oN/9fd5E+T1c5e5VHjUedSzH/Uen/hmST
+         M1iGGwUGnnmP8lKo8p683GXBTnCGLmefIdSHPThp5SZ9YgBC+dz6IGaDGRdN5nRJn4
+         438LKkKunU/u6QZlcZwZAEzv7dzZU0mnVOEifVsr9GT7ipE4G4kaCdRMUiuXZ2Fv67
+         3e5ZtXsuNymrD8eGnIeNW1NEihDecLkHTzMgSIi+wYjudBQRsKkGHKdJIEFf3dbJ1X
+         VkWrquEGUxg9Q==
+Subject: [PATCH 3/8] xfs_scrub_fail: fix sendmail detection
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871194.717073.18192234817486773032.stgit@magnolia>
-In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
-References: <167243870849.717073.203452386730176902.stgit@magnolia>
+Message-ID: <167243871137.717702.7724582296047344762.stgit@magnolia>
+In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
+References: <167243871097.717702.15336500890922415647.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,85 +54,35 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we can share blocks between realtime files, allow this
-combination.
+This script emails the results of failed scrub runs to root.  We
+shouldn't be hardcoding the path to the mailer program because distros
+can change the path according to their whim.  Modify this script to use
+command -v to find the program.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_inode_buf.c |    3 ++-
- fs/xfs/scrub/inode.c          |    5 +++--
- fs/xfs/scrub/inode_repair.c   |    6 ------
- fs/xfs/xfs_ioctl.c            |    4 ----
- 4 files changed, 5 insertions(+), 13 deletions(-)
+ scrub/xfs_scrub_fail |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index dcf816f2643b..0db719f80bf2 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -675,7 +675,8 @@ xfs_dinode_verify(
- 		return __this_address;
+diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
+index 8ada5dbbe06..a46eb34ee29 100755
+--- a/scrub/xfs_scrub_fail
++++ b/scrub/xfs_scrub_fail
+@@ -7,13 +7,14 @@
  
- 	/* don't let reflink and realtime mix */
--	if ((flags2 & XFS_DIFLAG2_REFLINK) && (flags & XFS_DIFLAG_REALTIME))
-+	if ((flags2 & XFS_DIFLAG2_REFLINK) && (flags & XFS_DIFLAG_REALTIME) &&
-+	    !xfs_has_rtreflink(mp))
- 		return __this_address;
+ # Email logs of failed xfs_scrub unit runs
  
- 	/* COW extent size hint validation */
-diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
-index f2c60c3515e7..3b19976b6066 100644
---- a/fs/xfs/scrub/inode.c
-+++ b/fs/xfs/scrub/inode.c
-@@ -329,8 +329,9 @@ xchk_inode_flags2(
- 	if ((flags2 & XFS_DIFLAG2_REFLINK) && !S_ISREG(mode))
- 		goto bad;
- 
--	/* realtime and reflink make no sense, currently */
--	if ((flags & XFS_DIFLAG_REALTIME) && (flags2 & XFS_DIFLAG2_REFLINK))
-+	/* realtime and reflink don't always go together */
-+	if ((flags & XFS_DIFLAG_REALTIME) && (flags2 & XFS_DIFLAG2_REFLINK) &&
-+	    !xfs_has_rtreflink(mp))
- 		goto bad;
- 
- 	/* no bigtime iflag without the bigtime feature */
-diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
-index 8566282827f8..9f946406cfa0 100644
---- a/fs/xfs/scrub/inode_repair.c
-+++ b/fs/xfs/scrub/inode_repair.c
-@@ -391,8 +391,6 @@ xrep_dinode_flags(
- 		flags2 |= XFS_DIFLAG2_REFLINK;
- 	else
- 		flags2 &= ~(XFS_DIFLAG2_REFLINK | XFS_DIFLAG2_COWEXTSIZE);
--	if (flags & XFS_DIFLAG_REALTIME)
--		flags2 &= ~XFS_DIFLAG2_REFLINK;
- 	if (flags2 & XFS_DIFLAG2_REFLINK)
- 		flags2 &= ~XFS_DIFLAG2_DAX;
- 	if (!xfs_has_bigtime(mp))
-@@ -1480,10 +1478,6 @@ xrep_inode_flags(
- 	if (!(S_ISREG(mode) || S_ISDIR(mode)))
- 		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_DAX;
- 
--	/* No reflink files on the realtime device. */
--	if (sc->ip->i_diflags & XFS_DIFLAG_REALTIME)
--		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_REFLINK;
--
- 	/* No mixing reflink and DAX yet. */
- 	if (sc->ip->i_diflags2 & XFS_DIFLAG2_REFLINK)
- 		sc->ip->i_diflags2 &= ~XFS_DIFLAG2_DAX;
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index fbe9bc50fc20..939cc6d862da 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1115,10 +1115,6 @@ xfs_ioctl_setattr_xflags(
- 			return -EINVAL;
- 	}
- 
--	/* Clear reflink if we are actually able to set the rt flag. */
--	if ((fa->fsx_xflags & FS_XFLAG_REALTIME) && xfs_is_reflink_inode(ip))
--		ip->i_diflags2 &= ~XFS_DIFLAG2_REFLINK;
--
- 	/* diflags2 only valid for v3 inodes. */
- 	i_flags2 = xfs_flags2diflags2(ip, fa->fsx_xflags);
- 	if (i_flags2 && !xfs_has_v3inodes(mp))
+-mailer=/usr/sbin/sendmail
+ recipient="$1"
+ test -z "${recipient}" && exit 0
+ mntpoint="$2"
+ test -z "${mntpoint}" && exit 0
+ hostname="$(hostname -f 2>/dev/null)"
+ test -z "${hostname}" && hostname="${HOSTNAME}"
++
++mailer="$(command -v sendmail)"
+ if [ ! -x "${mailer}" ]; then
+ 	echo "${mailer}: Mailer program not found."
+ 	exit 1
 
