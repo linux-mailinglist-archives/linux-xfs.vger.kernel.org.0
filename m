@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2F22659E4B
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:30:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4D5E659D55
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:57:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235568AbiL3Xai (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:30:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
+        id S235668AbiL3W5w (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:57:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235506AbiL3Xab (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:30:31 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500971DDDD
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:30:29 -0800 (PST)
+        with ESMTP id S235581AbiL3W5v (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:57:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA7D1B9E2;
+        Fri, 30 Dec 2022 14:57:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 10D0FB81D67
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:30:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B004EC43392;
-        Fri, 30 Dec 2022 23:30:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AC34361C30;
+        Fri, 30 Dec 2022 22:57:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10B2FC433D2;
+        Fri, 30 Dec 2022 22:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672443026;
-        bh=tvl9oD9MUo8pMka76IcXdXVqPhzkzWBj36wkxfptnD0=;
+        s=k20201202; t=1672441070;
+        bh=N7ng7JtzN4kW7DNFVLF0bvK5xmgiuIB/v1OJKPdAJqg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=stAO39F6a/aB3GAnpnOET1YMsQb7pMUABKZNuFDf2lXv7AqaJhjZRz3tDQkMexZYS
-         UcujbrHLxwHTlH9pyG/am/maoh9pcMoAcABfIS+soXlfu3OyR/ggnjnCU/p06f4hMy
-         BBtY13+sqtch4duXoGCcuzth8MGYFwn/8uuv1nbfozYHz6HQfa8dEAonvrDsFB6kXy
-         81eCTPwg5MpdhSEhEmuhpTAxh4ppNPGtdxBW46xEHO+yRlKY65G6wzOlTecA+N2BNv
-         UCfPwCZUP4CZEh2eNCyOoPjEjNBBHZG0NgSnqkiRaZAjC7cyIJpcEpfrgJI47ZSB2W
-         kZ9Ul7aM0W+Bg==
-Subject: [PATCH 5/6] xfs: abort directory parent scrub scans if we encounter a
- zapped directory
+        b=taPrPJgG1byzU5mjLTth/jW36w3PcBLyc9Cx8eJLLVmFFPwjAOxgGniH5vQP98Sok
+         lzPS72RgDgPOgJsdbSmBfE3m1UIDsQnkSvicZmJMApym8YulD7BvntJ735pu1Zx/dO
+         GQ0xfAtt/k/7CT4y/dmTFXZo3BD/9Jhgt5A37h4kKpZj3GnUI/D6JDJ/0DaGiXXyTo
+         Eknj2+OHHHEKhQQA1cFSHjIZF+v8OC8+R2c03b/OV5apd+yfB/hrqAuHPxYwp0hHx7
+         9iAcw1NSJeqJtBPpsM5rdq1sTgaLuDYc4pEXnh1eUmNSYHfCFCLUc3K3U7y1LxT5zn
+         NygyaaUMh2DNA==
+Subject: [PATCH 14/16] fuzzy: make freezing optional for scrub stress tests
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:12:53 -0800
-Message-ID: <167243837310.694402.18143116509302770330.stgit@magnolia>
-In-Reply-To: <167243837231.694402.7473901938296662729.stgit@magnolia>
-References: <167243837231.694402.7473901938296662729.stgit@magnolia>
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+Date:   Fri, 30 Dec 2022 14:12:54 -0800
+Message-ID: <167243837487.694541.11855121854386930402.stgit@magnolia>
+In-Reply-To: <167243837296.694541.13203497631389630964.stgit@magnolia>
+References: <167243837296.694541.13203497631389630964.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,103 +54,72 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In the previous patch, we added some code to perform sufficient repairs
-to an ondisk inode record such that the inode cache would be willing to
-load the inode.  If the broken inode was a shortform directory, it will
-reset the directory to something plausible, which is to say an empty
-subdirectory of the root.  The telltale signs that something is
-seriously wrong is the broken link count.
-
-Such directories look clean, but they shouldn't participate in a
-filesystem scan to find or confirm a directory parent pointer.  Create a
-predicate that identifies such directories and abort the scrub.
-
-Found by fuzzing xfs/1554 with multithreaded xfs_scrub enabled and
-u3.bmx[0].startblock = zeroes.
+Make the freeze/thaw loop optional, since that's a significant change in
+behavior if it's enabled.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/common.c |    1 +
- fs/xfs/scrub/common.h |    2 ++
- fs/xfs/scrub/dir.c    |   21 +++++++++++++++++++++
- fs/xfs/scrub/parent.c |   11 +++++++++++
- 4 files changed, 35 insertions(+)
+ common/fuzzy  |   13 ++++++++++---
+ tests/xfs/422 |    2 +-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index 6b9d852873d8..3fc392c1b1a8 100644
---- a/fs/xfs/scrub/common.c
-+++ b/fs/xfs/scrub/common.c
-@@ -26,6 +26,7 @@
- #include "xfs_trans_priv.h"
- #include "xfs_da_format.h"
- #include "xfs_da_btree.h"
-+#include "xfs_dir2_priv.h"
- #include "xfs_attr.h"
- #include "xfs_reflink.h"
- #include "xfs_ag.h"
-diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
-index c1a0a1ac19b2..4c90c45b9b34 100644
---- a/fs/xfs/scrub/common.h
-+++ b/fs/xfs/scrub/common.h
-@@ -173,6 +173,8 @@ static inline bool xchk_skip_xref(struct xfs_scrub_metadata *sm)
- 			       XFS_SCRUB_OFLAG_XCORRUPT);
- }
+diff --git a/common/fuzzy b/common/fuzzy
+index 0f6fc91b80..219dd3bb0a 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -499,6 +499,8 @@ __stress_scrub_check_commands() {
+ #
+ # Various options include:
+ #
++# -f	Run a freeze/thaw loop while we're doing other things.  Defaults to
++#	disabled, unless XFS_SCRUB_STRESS_FREEZE is set.
+ # -s	Pass this command to xfs_io to test scrub.  If zero -s options are
+ #	specified, xfs_io will not be run.
+ # -t	Run online scrub against this file; $SCRATCH_MNT is the default.
+@@ -506,14 +508,16 @@ _scratch_xfs_stress_scrub() {
+ 	local one_scrub_args=()
+ 	local scrub_tgt="$SCRATCH_MNT"
+ 	local runningfile="$tmp.fsstress"
++	local freeze="${XFS_SCRUB_STRESS_FREEZE}"
  
-+bool xchk_dir_looks_zapped(struct xfs_inode *dp);
+ 	__SCRUB_STRESS_FREEZE_PID=""
+ 	rm -f "$runningfile"
+ 	touch "$runningfile"
+ 
+ 	OPTIND=1
+-	while getopts "s:t:" c; do
++	while getopts "fs:t:" c; do
+ 		case "$c" in
++			f) freeze=yes;;
+ 			s) one_scrub_args+=("$OPTARG");;
+ 			t) scrub_tgt="$OPTARG";;
+ 			*) return 1; ;;
+@@ -529,8 +533,11 @@ _scratch_xfs_stress_scrub() {
+ 		   "ending at $(date --date="@${end}")" >> $seqres.full
+ 
+ 	__stress_scrub_fsstress_loop "$end" "$runningfile" &
+-	__stress_scrub_freeze_loop "$end" "$runningfile" &
+-	__SCRUB_STRESS_FREEZE_PID="$!"
 +
- #ifdef CONFIG_XFS_ONLINE_REPAIR
- /* Decide if a repair is required. */
- static inline bool xchk_needs_repair(const struct xfs_scrub_metadata *sm)
-diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-index 2a3107cc8ccb..5b3a9edc8932 100644
---- a/fs/xfs/scrub/dir.c
-+++ b/fs/xfs/scrub/dir.c
-@@ -854,3 +854,24 @@ xchk_directory(
- out:
- 	return error;
- }
-+
-+/*
-+ * Decide if this directory has been zapped to satisfy the inode and ifork
-+ * verifiers.  Checking and repairing should be postponed until the directory
-+ * is fixed.
-+ */
-+bool
-+xchk_dir_looks_zapped(
-+	struct xfs_inode	*dp)
-+{
-+	/*
-+	 * If the dinode repair found a bad data fork, it will reset the fork
-+	 * to extents format with zero records and wait for the bmapbtd
-+	 * scrubber to reconstruct the block mappings.  Directories always
-+	 * contain some content, so this is a clear sign of a zapped directory.
-+	 */
-+	if (dp->i_df.if_format == XFS_DINODE_FMT_EXTENTS)
-+		return dp->i_df.if_nextents == 0;
-+
-+	return false;
-+}
-diff --git a/fs/xfs/scrub/parent.c b/fs/xfs/scrub/parent.c
-index 8581a21bfbfd..371526f4369d 100644
---- a/fs/xfs/scrub/parent.c
-+++ b/fs/xfs/scrub/parent.c
-@@ -89,6 +89,17 @@ xchk_parent_count_parent_dentries(
- 	 * if there is one.
- 	 */
- 	lock_mode = xfs_ilock_data_map_shared(parent);
-+
-+	/*
-+	 * We cannot yet validate this parent pointer if the directory looks as
-+	 * though it has been zapped by the inode record repair code.
-+	 */
-+	if (xchk_dir_looks_zapped(parent)) {
-+		xfs_iunlock(parent, lock_mode);
-+		xchk_set_incomplete(sc);
-+		return -EFSCORRUPTED;
-+	}
-+
- 	if (parent->i_df.if_nextents > 0)
- 		error = xfs_dir3_data_readahead(parent, 0, 0);
- 	xfs_iunlock(parent, lock_mode);
++	if [ -n "$freeze" ]; then
++		__stress_scrub_freeze_loop "$end" "$runningfile" &
++		__SCRUB_STRESS_FREEZE_PID="$!"
++	fi
+ 
+ 	if [ "${#one_scrub_args[@]}" -gt 0 ]; then
+ 		__stress_one_scrub_loop "$end" "$runningfile" "$scrub_tgt" \
+diff --git a/tests/xfs/422 b/tests/xfs/422
+index faea5d6792..ac88713257 100755
+--- a/tests/xfs/422
++++ b/tests/xfs/422
+@@ -31,7 +31,7 @@ _require_xfs_stress_online_repair
+ _scratch_mkfs > "$seqres.full" 2>&1
+ _scratch_mount
+ _require_xfs_has_feature "$SCRATCH_MNT" rmapbt
+-_scratch_xfs_stress_online_repair -s "repair rmapbt 0" -s "repair rmapbt 1"
++_scratch_xfs_stress_online_repair -f -s "repair rmapbt 0" -s "repair rmapbt 1"
+ 
+ # success, all done
+ echo Silence is golden
 
