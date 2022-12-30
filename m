@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A185D65A079
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:20:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0BEC65A078
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:20:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236057AbiLaBUr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:20:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44454 "EHLO
+        id S236062AbiLaBUb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:20:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236061AbiLaBUr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:20:47 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014B721BC
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:20:45 -0800 (PST)
+        with ESMTP id S236057AbiLaBUb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:20:31 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8D91CB3B
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:20:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A1F03B81DF6
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:20:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 635CAC433D2;
-        Sat, 31 Dec 2022 01:20:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2A822B81DFB
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:20:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9E4C433EF;
+        Sat, 31 Dec 2022 01:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449643;
-        bh=RqY0WPRQE83k3gVrbDWfrZnxRAP4pIo10vWFaZLVg4Q=;
+        s=k20201202; t=1672449627;
+        bh=efSdDODCf/QkCrq3NY3/V/0NH+3/0LG3RGeRI/wHmaE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jqkXesoZRltnEcvhg27Vu2IGfl2LE1k86k5eFnFBvGi6hZMzrRlP1Z1nJQiauVoFy
-         /WXZWeCt6IRtmaUWFPnQo5C+ih61OJ6RUScXnRczFb9odqreqSTsb5EZR3gV8Q3kRv
-         gfYh3dIditZ2Re2UMzVQam9GlRg/iXt4YLpIHi5A3aGer8KhA6nGp++sf5ftfDWM8G
-         SugVR3vSgYRygh8cBGQ2TkgLCleGbUUV97Zg6i5bi2fQbu5xo01eRDH+VHmoRGjUM4
-         QMRUgOIoEHOV8Pgx7nihoi3VlFKDRWnWVU+0J/4fRkMle9PZMvbhi8NdoTcEU8i2kq
-         Dr7tRx1p8jnlQ==
-Subject: [PATCH 03/11] xfs: prevent rt growfs when quota is enabled
+        b=EidzIcJGzS7iWFgxwoiyCYdtEy2hY831GhboZKudNhjo6ZWKP4a0ezyyrv1rt+xBS
+         B4Ysa4UVDPQwySBrHs+SXnpFFFdKuz01OFHXSkI7L4ZnSkkOns8SiDUxv5ad4LkVKE
+         kglADYLBRhvamUsOq+4rxqROfp3XMH0RsE1uoiQFZ9HTUCMPO8VKn8tqgcbcPLGzrA
+         eeeK1xBs222J1EyY1i5yE80djbS/mEHYVEIUwRcPFcNoV686eTi9P6tXgc1zBGR/07
+         JZhYhN9Ru/dPNFMzf1AOd+N+3ZNa6P2anDVgV5jYnmMIQ4Zjf78V+2MyOBOkWQcMUs
+         ljT1xkEn/P0Tw==
+Subject: [PATCH 02/11] xfs: bump max fsgeom struct version
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:36 -0800
-Message-ID: <167243865660.709511.1241958901947112425.stgit@magnolia>
+Message-ID: <167243865645.709511.13593751767841627621.stgit@magnolia>
 In-Reply-To: <167243865605.709511.15650588946095003543.stgit@magnolia>
 References: <167243865605.709511.15650588946095003543.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,31 +55,25 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Quotas aren't (yet) supported with realtime, so we shouldn't allow
-userspace to set up a realtime section when quotas are enabled, even if
-they attached one via mount options.  IOWS, you shouldn't be able to do:
-
-# mkfs.xfs -f /dev/sda
-# mount /dev/sda /mnt -o rtdev=/dev/sdb
-# xfs_growfs -r /mnt
+The latest version of the fs geometry structure is v5.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c |    2 +-
+ fs/xfs/libxfs/xfs_sb.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 726e3cec34d5..3ac8ca845239 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -959,7 +959,7 @@ xfs_growfs_rt(
- 		return -EINVAL;
+diff --git a/fs/xfs/libxfs/xfs_sb.h b/fs/xfs/libxfs/xfs_sb.h
+index a5e14740ec9a..19134b23c10b 100644
+--- a/fs/xfs/libxfs/xfs_sb.h
++++ b/fs/xfs/libxfs/xfs_sb.h
+@@ -25,7 +25,7 @@ extern uint64_t	xfs_sb_version_to_features(struct xfs_sb *sbp);
  
- 	/* Unsupported realtime features. */
--	if (xfs_has_rmapbt(mp) || xfs_has_reflink(mp))
-+	if (xfs_has_rmapbt(mp) || xfs_has_reflink(mp) || xfs_has_quota(mp))
- 		return -EOPNOTSUPP;
+ extern int	xfs_update_secondary_sbs(struct xfs_mount *mp);
  
- 	nrblocks = in->newblocks;
+-#define XFS_FS_GEOM_MAX_STRUCT_VER	(4)
++#define XFS_FS_GEOM_MAX_STRUCT_VER	(5)
+ extern void	xfs_fs_geometry(struct xfs_mount *mp, struct xfs_fsop_geom *geo,
+ 				int struct_version);
+ extern int	xfs_sb_read_secondary(struct xfs_mount *mp,
 
