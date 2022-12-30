@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A29565A086
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:23:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE34565A089
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:24:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236074AbiLaBXx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:23:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44726 "EHLO
+        id S236088AbiLaBYo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:24:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236061AbiLaBXw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:23:52 -0500
+        with ESMTP id S236079AbiLaBYm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:24:42 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267729FE3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:23:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC41F1E3CE
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:24:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B29CB61C3A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:23:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2036AC433EF;
-        Sat, 31 Dec 2022 01:23:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6990761B80
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:24:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB3A5C433EF;
+        Sat, 31 Dec 2022 01:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449830;
-        bh=e+isMWqVFggsZJ+AjPhRJSF+JQxCVJ/ay4ONlO5XjAE=;
+        s=k20201202; t=1672449876;
+        bh=yz/zWHRKKe4nGWcY8Dxc/iQ5updlVht8sXlnSoC8Xtw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=EX5SQNU5OA9c/wOEpx9SofRN8Uclv4WN639KGbql6v6PENKpnH+LO/JrbeEEC8LFk
-         WZjLRbFsl/NOp7xjrmcSRt1LRAGk9IaH1ro9Ndy8qaslC0HYfcWWP7DojXF4gqvf80
-         LOxZshrfwdCeIcgFDWFBUN10qoU3wpvlAMHm8Sgzypalfge0Ds83IMPch9274O3i0Q
-         iBrfdTjCtoVNnO4Ell2Y5w9AzLY5tbSVIo/AVRug+fwylKYO9t0674aOrGwvULgN4h
-         c3MrEn+yHsN01lN1AOtmlkoDJy///rvnPhiQkLbiL/oDiBGsvZ+W6G0ldScB3b0Oj9
-         dUdOVXhcULmvA==
-Subject: [PATCH 4/7] xfs: create helpers to convert rt block numbers to rt
- extent numbers
+        b=bUVPWXH++5JGHIfKs8UgMkuHOHoW3mgTSZCpAcrHCKVZdNoZ76nOvoTS+uT3V85nH
+         AZFui76p/eCsBMj9P29GiCFLwEgw4VmRI2fPArV8xE/1/axA0GQ0XiIqcjoeZbnoGT
+         AzQ/6PwupApSqzar4+b2cpqM9KzBMm8wIk8yALUgxChS72ZaEO/yiT3sYAUEdqqsFd
+         15aXX3k7A9QSItsez2A+p9mQs32pc9rOd/MEkDlIYxzsD/3JHIey0N9tOt/8hOrUEh
+         9/+M2uEKNrnilf9Pt7FiJn+39CzMtHKoL8lOetDABKUMEOp/J1/UXgyyS0U2sJTljm
+         CHUxHsqi/eveg==
+Subject: [PATCH 7/7] xfs: use shifting and masking when converting rt extents,
+ if possible
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:41 -0800
-Message-ID: <167243866132.711673.12003671223787619617.stgit@magnolia>
+Message-ID: <167243866172.711673.13765071209876015308.stgit@magnolia>
 In-Reply-To: <167243866067.711673.17279545989126573423.stgit@magnolia>
 References: <167243866067.711673.17279545989126573423.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,159 +56,167 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create helpers to do unit conversions of rt block numbers to rt extent
-numbers.  There are two variations -- the suffix "t" denotes the one
-that returns only the truncated extent number; the other one also
-returns the misalignment.
+Avoid the costs of integer division (32-bit and 64-bit) if the realtime
+extent size is a power of two.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_bmap.c     |    7 +++----
- fs/xfs/libxfs/xfs_rtbitmap.c |    4 ++--
- fs/xfs/libxfs/xfs_rtbitmap.h |   17 +++++++++++++++++
- fs/xfs/libxfs/xfs_swapext.c  |    7 ++++---
- fs/xfs/xfs_rtalloc.c         |    8 ++++----
- 5 files changed, 30 insertions(+), 13 deletions(-)
+ fs/xfs/libxfs/xfs_rtbitmap.h |   20 ++++++++++++++++++++
+ fs/xfs/libxfs/xfs_sb.c       |    2 ++
+ fs/xfs/xfs_linux.h           |   12 ++++++++++++
+ fs/xfs/xfs_mount.h           |    2 ++
+ fs/xfs/xfs_rtalloc.c         |    1 +
+ fs/xfs/xfs_trans.c           |    4 ++++
+ 6 files changed, 41 insertions(+)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 888b51a09acb..055432476ef0 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -5371,7 +5371,6 @@ __xfs_bunmapi(
- 	int			tmp_logflags;	/* partial logging flags */
- 	int			wasdel;		/* was a delayed alloc extent */
- 	int			whichfork;	/* data or attribute fork */
--	xfs_fsblock_t		sum;
- 	xfs_filblks_t		len = *rlen;	/* length to unmap in file */
- 	xfs_fileoff_t		end;
- 	struct xfs_iext_cursor	icur;
-@@ -5468,8 +5467,7 @@ __xfs_bunmapi(
- 		if (!isrt || (flags & XFS_BMAPI_REMAP))
- 			goto delete;
- 
--		sum = del.br_startblock + del.br_blockcount;
--		div_u64_rem(sum, mp->m_sb.sb_rextsize, &mod);
-+		xfs_rtb_to_rtx(mp, del.br_startblock + del.br_blockcount, &mod);
- 		if (mod) {
- 			/*
- 			 * Realtime extent not lined up at the end.
-@@ -5516,7 +5514,8 @@ __xfs_bunmapi(
- 				goto error0;
- 			goto nodelete;
- 		}
--		div_u64_rem(del.br_startblock, mp->m_sb.sb_rextsize, &mod);
-+
-+		xfs_rtb_to_rtx(mp, del.br_startblock, &mod);
- 		if (mod) {
- 			xfs_extlen_t off = mp->m_sb.sb_rextsize - mod;
- 
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index ce1443681131..de54386cf52f 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -1031,13 +1031,13 @@ xfs_rtfree_blocks(
- 
- 	ASSERT(rtlen <= XFS_MAX_BMBT_EXTLEN);
- 
--	len = div_u64_rem(rtlen, mp->m_sb.sb_rextsize, &mod);
-+	len = xfs_rtb_to_rtx(mp, rtlen, &mod);
- 	if (mod) {
- 		ASSERT(mod == 0);
- 		return -EIO;
- 	}
- 
--	start = div_u64_rem(rtbno, mp->m_sb.sb_rextsize, &mod);
-+	start = xfs_rtb_to_rtx(mp, rtbno, &mod);
- 	if (mod) {
- 		ASSERT(mod == 0);
- 		return -EIO;
 diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
-index e2a36fc157c4..bdd4858a794c 100644
+index bc51d3bfc7c4..9dd791181ca2 100644
 --- a/fs/xfs/libxfs/xfs_rtbitmap.h
 +++ b/fs/xfs/libxfs/xfs_rtbitmap.h
-@@ -39,6 +39,23 @@ xfs_extlen_to_rtxlen(
+@@ -11,6 +11,9 @@ xfs_rtx_to_rtb(
+ 	struct xfs_mount	*mp,
+ 	xfs_rtxnum_t		rtx)
+ {
++	if (mp->m_rtxblklog >= 0)
++		return rtx << mp->m_rtxblklog;
++
+ 	return rtx * mp->m_sb.sb_rextsize;
+ }
+ 
+@@ -19,6 +22,9 @@ xfs_rtxlen_to_extlen(
+ 	struct xfs_mount	*mp,
+ 	xfs_rtxlen_t		rtxlen)
+ {
++	if (mp->m_rtxblklog >= 0)
++		return rtxlen << mp->m_rtxblklog;
++
+ 	return rtxlen * mp->m_sb.sb_rextsize;
+ }
+ 
+@@ -28,6 +34,9 @@ xfs_extlen_to_rtxmod(
+ 	struct xfs_mount	*mp,
+ 	xfs_extlen_t		len)
+ {
++	if (mp->m_rtxblklog >= 0)
++		return len & mp->m_rtxblkmask;
++
+ 	return len % mp->m_sb.sb_rextsize;
+ }
+ 
+@@ -36,6 +45,9 @@ xfs_extlen_to_rtxlen(
+ 	struct xfs_mount	*mp,
+ 	xfs_extlen_t		len)
+ {
++	if (mp->m_rtxblklog >= 0)
++		return len >> mp->m_rtxblklog;
++
  	return len / mp->m_sb.sb_rextsize;
  }
  
-+static inline xfs_rtxnum_t
-+xfs_rtb_to_rtx(
-+	struct xfs_mount	*mp,
-+	xfs_rtblock_t		rtbno,
-+	xfs_extlen_t		*mod)
+@@ -45,6 +57,11 @@ xfs_rtb_to_rtx(
+ 	xfs_rtblock_t		rtbno,
+ 	xfs_extlen_t		*mod)
+ {
++	if (mp->m_rtxblklog >= 0) {
++		*mod = rtbno & mp->m_rtxblkmask;
++		return rtbno >> mp->m_rtxblklog;
++	}
++
+ 	return div_u64_rem(rtbno, mp->m_sb.sb_rextsize, mod);
+ }
+ 
+@@ -53,6 +70,9 @@ xfs_rtb_to_rtxt(
+ 	struct xfs_mount	*mp,
+ 	xfs_rtblock_t		rtbno)
+ {
++	if (mp->m_rtxblklog >= 0)
++		return rtbno >> mp->m_rtxblklog;
++
+ 	return div_u64(rtbno, mp->m_sb.sb_rextsize);
+ }
+ 
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 8ebedfe55b15..83930abf935f 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -952,6 +952,8 @@ xfs_sb_mount_common(
+ 	mp->m_blockmask = sbp->sb_blocksize - 1;
+ 	mp->m_blockwsize = sbp->sb_blocksize >> XFS_WORDLOG;
+ 	mp->m_blockwmask = mp->m_blockwsize - 1;
++	mp->m_rtxblklog = log2_if_power2(sbp->sb_rextsize);
++	mp->m_rtxblkmask = mask64_if_power2(sbp->sb_rextsize);
+ 
+ 	mp->m_alloc_mxr[0] = xfs_allocbt_maxrecs(mp, sbp->sb_blocksize, 1);
+ 	mp->m_alloc_mxr[1] = xfs_allocbt_maxrecs(mp, sbp->sb_blocksize, 0);
+diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+index 2cdb3411aabb..7455cbadc262 100644
+--- a/fs/xfs/xfs_linux.h
++++ b/fs/xfs/xfs_linux.h
+@@ -200,6 +200,18 @@ static inline bool isaligned_64(uint64_t x, uint32_t y)
+ 	return do_div(x, y) == 0;
+ }
+ 
++/* If @b is a power of 2, return log2(b).  Else return -1. */
++static inline int8_t log2_if_power2(unsigned long b)
 +{
-+	return div_u64_rem(rtbno, mp->m_sb.sb_rextsize, mod);
++	return is_power_of_2(b) ? ilog2(b) : -1;
 +}
 +
-+static inline xfs_rtxnum_t
-+xfs_rtb_to_rtxt(
-+	struct xfs_mount	*mp,
-+	xfs_rtblock_t		rtbno)
++/* If @b is a power of 2, return a mask of the lower bits, else return zero. */
++static inline unsigned long long mask64_if_power2(unsigned long b)
 +{
-+	return div_u64(rtbno, mp->m_sb.sb_rextsize);
++	return is_power_of_2(b) ? b - 1 : 0;
 +}
 +
- /*
-  * Functions for walking free space rtextents in the realtime bitmap.
-  */
-diff --git a/fs/xfs/libxfs/xfs_swapext.c b/fs/xfs/libxfs/xfs_swapext.c
-index 42df372d1a89..36f03b0bf4ed 100644
---- a/fs/xfs/libxfs/xfs_swapext.c
-+++ b/fs/xfs/libxfs/xfs_swapext.c
-@@ -30,6 +30,7 @@
- #include "xfs_dir2_priv.h"
- #include "xfs_dir2.h"
- #include "xfs_symlink_remote.h"
-+#include "xfs_rtbitmap.h"
+ int xfs_rw_bdev(struct block_device *bdev, sector_t sector, unsigned int count,
+ 		char *data, enum req_op op);
  
- struct kmem_cache	*xfs_swapext_intent_cache;
- 
-@@ -215,19 +216,19 @@ xfs_swapext_check_rt_extents(
- 					  irec2.br_blockcount);
- 
- 		/* Both mappings must be aligned to the realtime extent size. */
--		div_u64_rem(irec1.br_startoff, mp->m_sb.sb_rextsize, &mod);
-+		xfs_rtb_to_rtx(mp, irec1.br_startoff, &mod);
- 		if (mod) {
- 			ASSERT(mod == 0);
- 			return -EINVAL;
- 		}
- 
--		div_u64_rem(irec2.br_startoff, mp->m_sb.sb_rextsize, &mod);
-+		xfs_rtb_to_rtx(mp, irec1.br_startoff, &mod);
- 		if (mod) {
- 			ASSERT(mod == 0);
- 			return -EINVAL;
- 		}
- 
--		div_u64_rem(irec1.br_blockcount, mp->m_sb.sb_rextsize, &mod);
-+		xfs_rtb_to_rtx(mp, irec1.br_blockcount, &mod);
- 		if (mod) {
- 			ASSERT(mod == 0);
- 			return -EINVAL;
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 88fbbaee8806..bad926f3e102 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -118,6 +118,7 @@ typedef struct xfs_mount {
+ 	uint8_t			m_blkbb_log;	/* blocklog - BBSHIFT */
+ 	uint8_t			m_agno_log;	/* log #ag's */
+ 	uint8_t			m_sectbb_log;	/* sectlog - BBSHIFT */
++	int8_t			m_rtxblklog;	/* log2 of rextsize, if possible */
+ 	uint			m_blockmask;	/* sb_blocksize-1 */
+ 	uint			m_blockwsize;	/* sb_blocksize in words */
+ 	uint			m_blockwmask;	/* blockwsize-1 */
+@@ -151,6 +152,7 @@ typedef struct xfs_mount {
+ 	uint64_t		m_features;	/* active filesystem features */
+ 	uint64_t		m_low_space[XFS_LOWSP_MAX];
+ 	uint64_t		m_low_rtexts[XFS_LOWSP_MAX];
++	uint64_t		m_rtxblkmask;	/* rt extent block mask */
+ 	struct xfs_ino_geometry	m_ino_geo;	/* inode geometry */
+ 	struct xfs_trans_resv	m_resv;		/* precomputed res values */
+ 						/* low free space thresholds */
 diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 40b6df0ad633..04a468f4cb8a 100644
+index b74ba5e51cf8..3573dfef5dd7 100644
 --- a/fs/xfs/xfs_rtalloc.c
 +++ b/fs/xfs/xfs_rtalloc.c
-@@ -1494,16 +1494,16 @@ xfs_rtfile_want_conversion(
- 	struct xfs_bmbt_irec	*irec)
- {
- 	xfs_fileoff_t		rext_next;
--	uint32_t		modoff, modcnt;
-+	xfs_extlen_t		modoff, modcnt;
- 
- 	if (irec->br_state != XFS_EXT_UNWRITTEN)
- 		return false;
- 
--	div_u64_rem(irec->br_startoff, mp->m_sb.sb_rextsize, &modoff);
-+	xfs_rtb_to_rtx(mp, irec->br_startoff, &modoff);
- 	if (modoff == 0) {
--		uint64_t	rexts = div_u64_rem(irec->br_blockcount,
--						mp->m_sb.sb_rextsize, &modcnt);
-+		xfs_rtbxlen_t	rexts;
- 
-+		rexts = xfs_rtb_to_rtx(mp, irec->br_blockcount, &modcnt);
- 		if (rexts > 0) {
- 			/*
- 			 * Unwritten mapping starts at an rt extent boundary
+@@ -1052,6 +1052,7 @@ xfs_growfs_rt(
+ 		 * Calculate new sb and mount fields for this round.
+ 		 */
+ 		nsbp->sb_rextsize = in->extsize;
++		nmp->m_rtxblklog = -1; /* don't use shift or masking */
+ 		nsbp->sb_rbmblocks = bmbno + 1;
+ 		nrblocks_step = (bmbno + 1) * NBBY * nsbp->sb_blocksize *
+ 				nsbp->sb_rextsize;
+diff --git a/fs/xfs/xfs_trans.c b/fs/xfs/xfs_trans.c
+index 3e81826c9a0a..f39c5daeef86 100644
+--- a/fs/xfs/xfs_trans.c
++++ b/fs/xfs/xfs_trans.c
+@@ -710,6 +710,10 @@ xfs_trans_unreserve_and_mod_sb(
+ 	mp->m_sb.sb_agcount += tp->t_agcount_delta;
+ 	mp->m_sb.sb_imax_pct += tp->t_imaxpct_delta;
+ 	mp->m_sb.sb_rextsize += tp->t_rextsize_delta;
++	if (tp->t_rextsize_delta) {
++		mp->m_rtxblklog = log2_if_power2(mp->m_sb.sb_rextsize);
++		mp->m_rtxblkmask = mask64_if_power2(mp->m_sb.sb_rextsize);
++	}
+ 	mp->m_sb.sb_rbmblocks += tp->t_rbmblocks_delta;
+ 	mp->m_sb.sb_rblocks += tp->t_rblocks_delta;
+ 	mp->m_sb.sb_rextents += tp->t_rextents_delta;
 
