@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55D4F65A0FB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:52:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1393D659FB7
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235919AbiLaBwq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:52:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49998 "EHLO
+        id S235715AbiLaAew (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:34:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbiLaBwp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:52:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB421DDD6
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:52:44 -0800 (PST)
+        with ESMTP id S235435AbiLaAev (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:51 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85E41DDE4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:50 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AA2AFB81E05
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:52:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0B3C433EF;
-        Sat, 31 Dec 2022 01:52:42 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 3D9EFCE19BB
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77076C433D2;
+        Sat, 31 Dec 2022 00:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451562;
-        bh=ojYa1ZradX95inJnXd8+IGxpgULiz00lhpdFfSAPcC8=;
+        s=k20201202; t=1672446887;
+        bh=NpOtt+luzMwEzyMdzcmGAxqYzLtP5I0Ek93HIUJWdWk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=U1FFAZyQigcyqZDYa3vSs7KLjAgI+rMV1KUEUkiOiYVmhvkFGIps4bJzr+fiM8Nev
-         fDZLEEsoXygVQ8dt6Gh2eD2eoqJF6usK7yUH73Qli+8VJSZUoOmAzpCM0DdVbSpBfE
-         OWldGtGNBRM85sifKn3iRrhRu16Cy9gzu/njJ/WuYzX6u9JCpBGgPEF9ue8C5ereWE
-         AlLeADZ3H9hAJ69bvOttLsilJLdoqx73hB8Egm/BNfLa21ERKuDTF6LswVSeuMB/iu
-         n1NC6bIT60u7pGvYJh13vDvIWsHEYRYantWCCB/GxXWcPLctu3y2JrKscjyuV/OYXv
-         ErlxbFvumSPHQ==
-Subject: [PATCH 18/42] xfs: refactor reflink quota updates
+        b=gNkZebnY0JPFjkONUMwALl0u9NJY1fWt+FhtY0ep4+AtYTga4oEtKMita1H4MxpNZ
+         9KvzP+15BmUOgBMD0QfbZrNpWw82ufZ6js32e3ab8Md/muZ9WSUJOXWThOuLOezdPg
+         y2Dn1euTA3LFkqQoem7OVs2SnO4smHOc6nfyuOig0hOdCkREWlFevqUEyPx2h9/3FO
+         rL+EW8m6joCEl5d0huoEiFTid33Q3IGfod6xQpMk/Ni3nNRMO5WUjgl8DExyb1FGx6
+         3e/Jz8NhcFEM4h/ne5FVaDHorzkO7NT1Y6HUyFt5rkmP7c8XgVN6CoKhpwbTOAkjTc
+         J12iqGCnMb3Ig==
+Subject: [PATCH 4/8] xfs_scrub_fail: escape paths correctly
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871153.717073.17408045000888577090.stgit@magnolia>
-In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
-References: <167243870849.717073.203452386730176902.stgit@magnolia>
+Message-ID: <167243871150.717702.9536987936805993820.stgit@magnolia>
+In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
+References: <167243871097.717702.15336500890922415647.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,82 +54,55 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Hoist all quota updates for reflink into a helper function, since things
-are about to become more complicated.
+Always escape pathnames correctly so that systemd doesn't complain.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_reflink.c |   37 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 32 insertions(+), 5 deletions(-)
+ scrub/xfs_scrub_fail |   28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 1a8a254c81f4..455adcce994d 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -750,6 +750,35 @@ xfs_reflink_cancel_cow_range(
- 	return error;
- }
+diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
+index a46eb34ee29..4ec7e48836a 100755
+--- a/scrub/xfs_scrub_fail
++++ b/scrub/xfs_scrub_fail
+@@ -20,6 +20,32 @@ if [ ! -x "${mailer}" ]; then
+ 	exit 1
+ fi
  
-+#ifdef CONFIG_XFS_QUOTA
-+/*
-+ * Update quota accounting for a remapping operation.  When we're remapping
-+ * something from the CoW fork to the data fork, we must update the quota
-+ * accounting for delayed allocations.  For remapping from the data fork to the
-+ * data fork, use regular block accounting.
-+ */
-+static inline void
-+xfs_reflink_update_quota(
-+	struct xfs_trans	*tp,
-+	struct xfs_inode	*ip,
-+	bool			is_cow,
-+	int64_t			blocks)
-+{
-+	unsigned int		qflag;
++# systemd doesn't like unit instance names with slashes in them, so it
++# replaces them with dashes when it invokes the service.  However, it's not
++# smart enough to convert the dashes to something else, so when it unescapes
++# the instance name to feed to xfs_scrub, it turns all dashes into slashes.
++# "/moo-cow" becomes "-moo-cow" becomes "/moo/cow", which is wrong.  systemd
++# actually /can/ escape the dashes correctly if it is told that this is a path
++# (and not a unit name), but it didn't do this prior to January 2017, so fix
++# this for them.
++#
++# systemd path escaping also drops the initial slash so we add that back in so
++# that log messages from the service units preserve the full path and users can
++# look up log messages using full paths.  However, for "/" the escaping rules
++# do /not/ drop the initial slash, so we have to special-case that here.
++escape_path() {
++	local arg="$1"
 +
-+	if (XFS_IS_REALTIME_INODE(ip)) {
-+		qflag = is_cow ? XFS_TRANS_DQ_DELRTBCOUNT :
-+				 XFS_TRANS_DQ_RTBCOUNT;
-+	} else {
-+		qflag = is_cow ? XFS_TRANS_DQ_DELBCOUNT :
-+				 XFS_TRANS_DQ_BCOUNT;
-+	}
-+	xfs_trans_mod_dquot_byino(tp, ip, qflag, blocks);
++	if [ "${arg}" = "/" ]; then
++		echo "-"
++		exit 0
++	fi
++
++	echo "-$(systemd-escape --path "${mntpoint}")"
 +}
-+#else
-+# define xfs_reflink_update_quota(tp, ip, is_cow, blocks)	((void)0)
-+#endif
 +
- /*
-  * Remap part of the CoW fork into the data fork.
-  *
-@@ -852,8 +881,7 @@ xfs_reflink_end_cow_extent(
- 		 */
- 		xfs_bmap_unmap_extent(tp, ip, XFS_DATA_FORK, &data);
- 		xfs_refcount_decrease_extent(tp, isrt, &data);
--		xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT,
--				-data.br_blockcount);
-+		xfs_reflink_update_quota(tp, ip, false, -data.br_blockcount);
- 	} else if (data.br_startblock == DELAYSTARTBLOCK) {
- 		int		done;
++mntpoint_esc="$(escape_path "${mntpoint}")"
++
+ (cat << ENDL
+ To: $1
+ From: <xfs_scrub@${hostname}>
+@@ -29,4 +55,4 @@ So sorry, the automatic xfs_scrub of ${mntpoint} on ${hostname} failed.
  
-@@ -878,8 +906,7 @@ xfs_reflink_end_cow_extent(
- 	xfs_bmap_map_extent(tp, ip, XFS_DATA_FORK, &del);
- 
- 	/* Charge this new data fork mapping to the on-disk quota. */
--	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_DELBCOUNT,
--			(long)del.br_blockcount);
-+	xfs_reflink_update_quota(tp, ip, true, del.br_blockcount);
- 
- 	/* Remove the mapping from the CoW fork. */
- 	xfs_bmap_del_extent_cow(ip, &icur, &got, &del);
-@@ -1369,7 +1396,7 @@ xfs_reflink_remap_extent(
- 		qdelta += dmap->br_blockcount;
- 	}
- 
--	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT, qdelta);
-+	xfs_reflink_update_quota(tp, ip, false, qdelta);
- 
- 	/* Update dest isize if needed. */
- 	newlen = XFS_FSB_TO_B(mp, dmap->br_startoff + dmap->br_blockcount);
+ A log of what happened follows:
+ ENDL
+-systemctl status --full --lines 4294967295 "xfs_scrub@${mntpoint}") | "${mailer}" -t -i
++systemctl status --full --lines 4294967295 "xfs_scrub@${mntpoint_esc}") | "${mailer}" -t -i
 
