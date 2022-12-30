@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 133C2659CFA
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:37:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52010659CB5
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:24:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235403AbiL3WhC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:37:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54272 "EHLO
+        id S235531AbiL3WY6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:24:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229827AbiL3Wgw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:36:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455FE17E33
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:36:50 -0800 (PST)
+        with ESMTP id S229519AbiL3WY5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:24:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D8E1D0CF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:24:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D50ED61C17
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:36:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42645C433EF;
-        Fri, 30 Dec 2022 22:36:49 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CDFA6B81B91
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:24:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD0BC433EF;
+        Fri, 30 Dec 2022 22:24:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672439809;
-        bh=eoxUUKAFfVdhXAvSYKiULuqiQl2Tk5dktiDu45Lr7J8=;
+        s=k20201202; t=1672439093;
+        bh=1FOFsmAl5aNn+uYljG2iARb0cu1qyruVzT8NFpgOXdc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=D9zPDKt376/YvNAhbotqY4t9XVzzhJ5w1mTC9xTZGfeeu2izKeG3LWYnfj27j+F2i
-         oAAR/mGF9RquNoGOtYRD81Z9/4XMMdifS04wH1Oqj6mltnjw3GVqUf10d/m/uHuboO
-         0cpPhR1Nwy8RCxomAhnu87/8ZYCsHzUsIz2zlDAds7SiqDMVArSRQOJQVCamlwgxqx
-         wqRnjh+QDLqC6+TDddqH4hYzHdoAe3uaFXevwm1qcjxZSbIpDK2biCSqPgAPJstBo9
-         JfnLrVeToprUpsm480yloakCEGs3KU6Nh9kcqD5IuLo5g9U8UlK1xC+08o3D51y4Gc
-         AtwWtgGZv5CKQ==
-Subject: [PATCH 1/5] xfs: add a tracepoint to report incorrect extent
- refcounts
+        b=mzRYWFY+nYkCvEjw6FJ3hQDg2mseYIh/yzL1z+j5UdJ9wWYhoHh9JwNefE+2ihQ/4
+         VuAvVa32/Y9qHbyVKrBvqpf5JSY6Zf612wtAUXueCdJVoQDbw2Z2Djeu4cZ5b1YVGq
+         ZYhjM7ZUx05zFGI3KOqDPL2YO5bNMGlYxVjVjU87YM/GS20Jrnp/fB/QVJtM8EuOTS
+         VhM9iBV3UxMvLQZTXqMbzgQ71ovbQSQI6jK+f9eIC+vyHSnD6kDMxcDxHFms5vctM5
+         QibbtezpwdEBp77dv+Iw4Lu1RRJ7qnvZv25gPBbwiD6Te6q9jnogJAEaPN9xfN8jdm
+         1O5Hj6o7JqweQ==
+Subject: [PATCHSET v24.0 0/5] xfs: drain deferred work items when scrubbing
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:07 -0800
-Message-ID: <167243826765.683691.11622957887822223639.stgit@magnolia>
-In-Reply-To: <167243826744.683691.2061427880010614570.stgit@magnolia>
-References: <167243826744.683691.2061427880010614570.stgit@magnolia>
+Message-ID: <167243826744.683691.2061427880010614570.stgit@magnolia>
+In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
+References: <Y69UceeA2MEpjMJ8@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,93 +52,70 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Add a new tracepoint so that I can see exactly what and where we failed
-the refcount check.
+The design doc for XFS online fsck contains a long discussion of the
+eventual consistency models in use for XFS metadata.  In that chapter,
+we note that it is possible for scrub to collide with a chain of
+deferred space metadata updates, and proposes a lightweight solution:
+The use of a pending-intents counter so that scrub can wait for the
+system to drain all chains.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+This patchset implements that scrub drain.  The first patch implements
+the basic mechanism, and the subsequent patches reduce the runtime
+overhead by converting the implementation to use sloppy counters and
+introducing jump labels to avoid walking into scrub hooks when it isn't
+running.  This last paradigm repeats elsewhere in this megaseries.
+
+v23.1: make intent items take an active ref to the perag structure and
+       document why we bump and drop the intent counts when we do
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-drain-intents
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-drain-intents
 ---
- fs/xfs/scrub/refcount.c |    5 ++++-
- fs/xfs/scrub/trace.h    |   35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 39 insertions(+), 1 deletion(-)
-
-
-diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
-index d9c1b3cea4a5..ffa6eda8b7d4 100644
---- a/fs/xfs/scrub/refcount.c
-+++ b/fs/xfs/scrub/refcount.c
-@@ -13,6 +13,7 @@
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/btree.h"
-+#include "scrub/trace.h"
- #include "xfs_trans_resv.h"
- #include "xfs_mount.h"
- #include "xfs_ag.h"
-@@ -300,8 +301,10 @@ xchk_refcountbt_xref_rmap(
- 		goto out_free;
- 
- 	xchk_refcountbt_process_rmap_fragments(&refchk);
--	if (irec->rc_refcount != refchk.seen)
-+	if (irec->rc_refcount != refchk.seen) {
-+		trace_xchk_refcount_incorrect(sc->sa.pag, irec, refchk.seen);
- 		xchk_btree_xref_set_corrupt(sc, sc->sa.rmap_cur, 0);
-+	}
- 
- out_free:
- 	list_for_each_entry_safe(frag, n, &refchk.fragments, list) {
-diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-index 93ece6df02e3..403c0e62257e 100644
---- a/fs/xfs/scrub/trace.h
-+++ b/fs/xfs/scrub/trace.h
-@@ -30,6 +30,9 @@ TRACE_DEFINE_ENUM(XFS_BTNUM_FINOi);
- TRACE_DEFINE_ENUM(XFS_BTNUM_RMAPi);
- TRACE_DEFINE_ENUM(XFS_BTNUM_REFCi);
- 
-+TRACE_DEFINE_ENUM(XFS_REFC_DOMAIN_SHARED);
-+TRACE_DEFINE_ENUM(XFS_REFC_DOMAIN_COW);
-+
- TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_PROBE);
- TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_SB);
- TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_AGF);
-@@ -657,6 +660,38 @@ TRACE_EVENT(xchk_fscounters_within_range,
- 		  __entry->old_value)
- )
- 
-+TRACE_EVENT(xchk_refcount_incorrect,
-+	TP_PROTO(struct xfs_perag *pag, const struct xfs_refcount_irec *irec,
-+		 xfs_nlink_t seen),
-+	TP_ARGS(pag, irec, seen),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(xfs_agnumber_t, agno)
-+		__field(enum xfs_refc_domain, domain)
-+		__field(xfs_agblock_t, startblock)
-+		__field(xfs_extlen_t, blockcount)
-+		__field(xfs_nlink_t, refcount)
-+		__field(xfs_nlink_t, seen)
-+	),
-+	TP_fast_assign(
-+		__entry->dev = pag->pag_mount->m_super->s_dev;
-+		__entry->agno = pag->pag_agno;
-+		__entry->domain = irec->rc_domain;
-+		__entry->startblock = irec->rc_startblock;
-+		__entry->blockcount = irec->rc_blockcount;
-+		__entry->refcount = irec->rc_refcount;
-+		__entry->seen = seen;
-+	),
-+	TP_printk("dev %d:%d agno 0x%x dom %s agbno 0x%x fsbcount 0x%x refcount %u seen %u",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->agno,
-+		  __print_symbolic(__entry->domain, XFS_REFC_DOMAIN_STRINGS),
-+		  __entry->startblock,
-+		  __entry->blockcount,
-+		  __entry->refcount,
-+		  __entry->seen)
-+)
-+
- /* repair tracepoints */
- #if IS_ENABLED(CONFIG_XFS_ONLINE_REPAIR)
- 
+ fs/xfs/Kconfig             |    5 ++
+ fs/xfs/Makefile            |    2 +
+ fs/xfs/libxfs/xfs_ag.c     |    4 +
+ fs/xfs/libxfs/xfs_ag.h     |    8 +++
+ fs/xfs/libxfs/xfs_defer.c  |    6 +-
+ fs/xfs/scrub/agheader.c    |    9 +++
+ fs/xfs/scrub/alloc.c       |    3 +
+ fs/xfs/scrub/bmap.c        |    3 +
+ fs/xfs/scrub/btree.c       |    1 
+ fs/xfs/scrub/common.c      |  129 ++++++++++++++++++++++++++++++++++++++++----
+ fs/xfs/scrub/common.h      |   15 +++++
+ fs/xfs/scrub/dabtree.c     |    1 
+ fs/xfs/scrub/fscounters.c  |    7 ++
+ fs/xfs/scrub/health.c      |    2 +
+ fs/xfs/scrub/ialloc.c      |    2 +
+ fs/xfs/scrub/inode.c       |    3 +
+ fs/xfs/scrub/quota.c       |    3 +
+ fs/xfs/scrub/refcount.c    |    9 +++
+ fs/xfs/scrub/repair.c      |    3 +
+ fs/xfs/scrub/rmap.c        |    3 +
+ fs/xfs/scrub/scrub.c       |   63 ++++++++++++++++-----
+ fs/xfs/scrub/scrub.h       |    6 ++
+ fs/xfs/scrub/trace.h       |   69 ++++++++++++++++++++++++
+ fs/xfs/xfs_bmap_item.c     |   10 +++
+ fs/xfs/xfs_drain.c         |  121 +++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_drain.h         |   80 +++++++++++++++++++++++++++
+ fs/xfs/xfs_extfree_item.c  |    2 +
+ fs/xfs/xfs_linux.h         |    1 
+ fs/xfs/xfs_refcount_item.c |    2 +
+ fs/xfs/xfs_rmap_item.c     |    2 +
+ fs/xfs/xfs_trace.h         |   71 ++++++++++++++++++++++++
+ 31 files changed, 614 insertions(+), 31 deletions(-)
+ create mode 100644 fs/xfs/xfs_drain.c
+ create mode 100644 fs/xfs/xfs_drain.h
 
