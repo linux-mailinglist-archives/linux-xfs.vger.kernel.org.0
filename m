@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3FA2659EB6
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:49:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8258659EBA
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:50:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235655AbiL3XtL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:49:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48102 "EHLO
+        id S235650AbiL3XuN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:50:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbiL3XtL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:49:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E6D64FA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:49:09 -0800 (PST)
+        with ESMTP id S229749AbiL3XuM (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:50:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD93E657B
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:50:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 10229B81DCA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:49:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD66C433EF;
-        Fri, 30 Dec 2022 23:49:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 729ECB81D67
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:50:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1531CC433EF;
+        Fri, 30 Dec 2022 23:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672444146;
-        bh=qAINk5Siab4dszaxb8/cpIPALByEKzbPMCMme3i4Wnk=;
+        s=k20201202; t=1672444209;
+        bh=bC3roaGyZ1K9U0Y9LVipOFlxflLKwpQriBBTdobe6MM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Lz2eMNjHhcyK08aYsjzlfgmMhp4PK2aJ8ykYfDc3idQ1E7Rjys+kzjKcvl8VBG7K5
-         WLSSGYWj4/dROCJBodZ38fZmiIDaDkh+d3egDZ+5cgBphbVTklT+LZigDEsjxBOE21
-         aVQbEXnw96k6cccQ3rHpu81hdge9jIkPZNygin8J0Pd9OUxPb/AIkWOpR8FTJndKlf
-         2hgZ5LnRrq9Pe+AAjTeDDfA35eYB5Gmr9PBkSUHpcsONJTnHboksRDRjVkkS6q9sEb
-         +Lz5rCiUlE9bNjtLq2SA2d4qr7BTgtmEYdi4u1UEFYtamnIAXFUJjon2m9xUSiDAj2
-         yZztSj4vqTvcA==
-Subject: [PATCH 1/2] xfs: support deferred bmap updates on the attr fork
+        b=Kkwnw9T0RJ12sE3Gi2CGcLsfhLStL3EyQgMocOMb2jQtu3wdtapTGWvwgQCkc0GEu
+         yibe8sPI+PfqTCepBl7yQjnDN9vvG0KFA7tE3z0kekWR7kMfV+Ni3UX4fybYTUSqt6
+         MYoctVkNYN0CPsPKZBV4FnCMN4GzJLvQKNy3bY3I608GGCZzfxn9Sm6WjJ02xyRYLC
+         a7xDbjeWIQyoMZQNN2+GJgfTbuxGB7nX2bTNyRThEVYfO2YREP12HA6/eWogfq8TwQ
+         gUX7gr0LyDCzbTNe8EgyznB7EJPmPSl3juu2th7IwhPoIFaRoz02Y8MXtsx8xRvOWB
+         fouXZYvwQMhdg==
+Subject: [PATCH 3/3] xfs: move symlink target write function to libxfs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:13:48 -0800
-Message-ID: <167243842825.699248.15180819029889376773.stgit@magnolia>
-In-Reply-To: <167243842809.699248.13762919270503755284.stgit@magnolia>
-References: <167243842809.699248.13762919270503755284.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:13:51 -0800
+Message-ID: <167243843181.699346.6022466895234768998.stgit@magnolia>
+In-Reply-To: <167243843134.699346.594115796077510288.stgit@magnolia>
+References: <167243843134.699346.594115796077510288.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,224 +54,199 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The deferred bmap update log item has always supported the attr fork, so
-plumb this in so that higher layers can access this.
+Move xfs_symlink_write_target to xfs_symlink_remote.c so that kernel and
+mkfs can share the same function.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_bmap.c |   47 +++++++++++++++++++---------------------------
- fs/xfs/libxfs/xfs_bmap.h |    4 ++--
- fs/xfs/xfs_bmap_item.c   |    3 ++-
- fs/xfs/xfs_bmap_util.c   |    8 ++++----
- fs/xfs/xfs_reflink.c     |    8 ++++----
- 5 files changed, 31 insertions(+), 39 deletions(-)
+ fs/xfs/libxfs/xfs_symlink_remote.c |   76 ++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_symlink_remote.h |    3 +
+ fs/xfs/xfs_symlink.c               |   68 ++------------------------------
+ 3 files changed, 83 insertions(+), 64 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 4c4e8ab42f63..ecead1feabe5 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -6179,17 +6179,8 @@ xfs_bmap_split_extent(
+diff --git a/fs/xfs/libxfs/xfs_symlink_remote.c b/fs/xfs/libxfs/xfs_symlink_remote.c
+index 7b4f2b306bc4..5261f15ea2ed 100644
+--- a/fs/xfs/libxfs/xfs_symlink_remote.c
++++ b/fs/xfs/libxfs/xfs_symlink_remote.c
+@@ -315,3 +315,79 @@ xfs_symlink_remote_read(
+  out:
  	return error;
  }
- 
--/* Deferred mapping is only for real extents in the data fork. */
--static bool
--xfs_bmap_is_update_needed(
--	struct xfs_bmbt_irec	*bmap)
--{
--	return  bmap->br_startblock != HOLESTARTBLOCK &&
--		bmap->br_startblock != DELAYSTARTBLOCK;
--}
--
- /* Record a bmap intent. */
--static int
-+static void
- __xfs_bmap_add(
- 	struct xfs_trans		*tp,
- 	enum xfs_bmap_intent_type	type,
-@@ -6199,6 +6190,11 @@ __xfs_bmap_add(
- {
- 	struct xfs_bmap_intent		*bi;
- 
-+	if ((whichfork != XFS_DATA_FORK && whichfork != XFS_ATTR_FORK) ||
-+	    bmap->br_startblock == HOLESTARTBLOCK ||
-+	    bmap->br_startblock == DELAYSTARTBLOCK)
-+		return;
 +
- 	bi = kmem_cache_alloc(xfs_bmap_intent_cache, GFP_NOFS | __GFP_NOFAIL);
- 	INIT_LIST_HEAD(&bi->bi_list);
- 	bi->bi_type = type;
-@@ -6210,7 +6206,6 @@ __xfs_bmap_add(
- 
- 	xfs_bmap_update_get_group(tp->t_mountp, bi);
- 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_BMAP, &bi->bi_list);
--	return 0;
- }
- 
- /* Map an extent into a file. */
-@@ -6218,12 +6213,10 @@ void
- xfs_bmap_map_extent(
- 	struct xfs_trans	*tp,
- 	struct xfs_inode	*ip,
-+	int			whichfork,
- 	struct xfs_bmbt_irec	*PREV)
- {
--	if (!xfs_bmap_is_update_needed(PREV))
--		return;
--
--	__xfs_bmap_add(tp, XFS_BMAP_MAP, ip, XFS_DATA_FORK, PREV);
-+	__xfs_bmap_add(tp, XFS_BMAP_MAP, ip, whichfork, PREV);
- }
- 
- /* Unmap an extent out of a file. */
-@@ -6231,12 +6224,10 @@ void
- xfs_bmap_unmap_extent(
- 	struct xfs_trans	*tp,
- 	struct xfs_inode	*ip,
-+	int			whichfork,
- 	struct xfs_bmbt_irec	*PREV)
- {
--	if (!xfs_bmap_is_update_needed(PREV))
--		return;
--
--	__xfs_bmap_add(tp, XFS_BMAP_UNMAP, ip, XFS_DATA_FORK, PREV);
-+	__xfs_bmap_add(tp, XFS_BMAP_UNMAP, ip, whichfork, PREV);
- }
- 
- /*
-@@ -6250,29 +6241,29 @@ xfs_bmap_finish_one(
- {
- 	struct xfs_bmbt_irec		*bmap = &bi->bi_bmap;
- 	int				error = 0;
-+	int				flags = 0;
++/* Write the symlink target into the inode. */
++int
++xfs_symlink_write_target(
++	struct xfs_trans	*tp,
++	struct xfs_inode	*ip,
++	const char		*target_path,
++	int			pathlen,
++	xfs_fsblock_t		fs_blocks,
++	uint			resblks)
++{
++	struct xfs_bmbt_irec	mval[XFS_SYMLINK_MAPS];
++	struct xfs_mount	*mp = tp->t_mountp;
++	const char		*cur_chunk;
++	struct xfs_buf		*bp;
++	xfs_daddr_t		d;
++	int			byte_cnt;
++	int			nmaps;
++	int			offset = 0;
++	int			n;
++	int			error;
 +
-+	if (bi->bi_whichfork == XFS_ATTR_FORK)
-+		flags |= XFS_BMAPI_ATTRFORK;
++	/*
++	 * If the symlink will fit into the inode, write it inline.
++	 */
++	if (pathlen <= xfs_inode_data_fork_size(ip)) {
++		xfs_init_local_fork(ip, XFS_DATA_FORK, target_path, pathlen);
++
++		ip->i_disk_size = pathlen;
++		ip->i_df.if_format = XFS_DINODE_FMT_LOCAL;
++		xfs_trans_log_inode(tp, ip, XFS_ILOG_DDATA | XFS_ILOG_CORE);
++		return 0;
++	}
++
++	nmaps = XFS_SYMLINK_MAPS;
++	error = xfs_bmapi_write(tp, ip, 0, fs_blocks, XFS_BMAPI_METADATA,
++			resblks, mval, &nmaps);
++	if (error)
++		return error;
++
++	ip->i_disk_size = pathlen;
++	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++
++	cur_chunk = target_path;
++	offset = 0;
++	for (n = 0; n < nmaps; n++) {
++		char	*buf;
++
++		d = XFS_FSB_TO_DADDR(mp, mval[n].br_startblock);
++		byte_cnt = XFS_FSB_TO_B(mp, mval[n].br_blockcount);
++		error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d,
++				BTOBB(byte_cnt), 0, &bp);
++		if (error)
++			return error;
++		bp->b_ops = &xfs_symlink_buf_ops;
++
++		byte_cnt = XFS_SYMLINK_BUF_SPACE(mp, byte_cnt);
++		byte_cnt = min(byte_cnt, pathlen);
++
++		buf = bp->b_addr;
++		buf += xfs_symlink_hdr_set(mp, ip->i_ino, offset, byte_cnt,
++				bp);
++
++		memcpy(buf, cur_chunk, byte_cnt);
++
++		cur_chunk += byte_cnt;
++		pathlen -= byte_cnt;
++		offset += byte_cnt;
++
++		xfs_trans_buf_set_type(tp, bp, XFS_BLFT_SYMLINK_BUF);
++		xfs_trans_log_buf(tp, bp, 0, (buf + byte_cnt - 1) -
++						(char *)bp->b_addr);
++	}
++	ASSERT(pathlen == 0);
++	return 0;
++}
+diff --git a/fs/xfs/libxfs/xfs_symlink_remote.h b/fs/xfs/libxfs/xfs_symlink_remote.h
+index 7d3acaee0af0..d81461c06b6b 100644
+--- a/fs/xfs/libxfs/xfs_symlink_remote.h
++++ b/fs/xfs/libxfs/xfs_symlink_remote.h
+@@ -20,5 +20,8 @@ void xfs_symlink_local_to_remote(struct xfs_trans *tp, struct xfs_buf *bp,
+ xfs_failaddr_t xfs_symlink_sf_verify_struct(void *sfp, int64_t size);
+ xfs_failaddr_t xfs_symlink_shortform_verify(struct xfs_inode *ip);
+ int xfs_symlink_remote_read(struct xfs_inode *ip, char *link);
++int xfs_symlink_write_target(struct xfs_trans *tp, struct xfs_inode *ip,
++		const char *target_path, int pathlen, xfs_fsblock_t fs_blocks,
++		uint resblks);
  
- 	ASSERT(tp->t_firstblock == NULLFSBLOCK);
+ #endif /* __XFS_SYMLINK_REMOTE_H */
+diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
+index 710da8dfb7d3..548d9116e0c5 100644
+--- a/fs/xfs/xfs_symlink.c
++++ b/fs/xfs/xfs_symlink.c
+@@ -94,15 +94,7 @@ xfs_symlink(
+ 	int			error = 0;
+ 	int			pathlen;
+ 	bool                    unlock_dp_on_error = false;
+-	xfs_fileoff_t		first_fsb;
+ 	xfs_filblks_t		fs_blocks;
+-	int			nmaps;
+-	struct xfs_bmbt_irec	mval[XFS_SYMLINK_MAPS];
+-	xfs_daddr_t		d;
+-	const char		*cur_chunk;
+-	int			byte_cnt;
+-	int			n;
+-	struct xfs_buf		*bp;
+ 	prid_t			prid;
+ 	struct xfs_dquot	*udqp = NULL;
+ 	struct xfs_dquot	*gdqp = NULL;
+@@ -190,62 +182,10 @@ xfs_symlink(
+ 	xfs_qm_vop_create_dqattach(tp, ip, udqp, gdqp, pdqp);
  
- 	trace_xfs_bmap_deferred(bi);
- 
--	if (WARN_ON_ONCE(bi->bi_whichfork != XFS_DATA_FORK)) {
--		xfs_bmap_mark_sick(bi->bi_owner, bi->bi_whichfork);
--		return -EFSCORRUPTED;
+ 	resblks -= XFS_IALLOC_SPACE_RES(mp);
+-	/*
+-	 * If the symlink will fit into the inode, write it inline.
+-	 */
+-	if (pathlen <= xfs_inode_data_fork_size(ip)) {
+-		xfs_init_local_fork(ip, XFS_DATA_FORK, target_path, pathlen);
+-
+-		ip->i_disk_size = pathlen;
+-		ip->i_df.if_format = XFS_DINODE_FMT_LOCAL;
+-		xfs_trans_log_inode(tp, ip, XFS_ILOG_DDATA | XFS_ILOG_CORE);
+-	} else {
+-		int	offset;
+-
+-		first_fsb = 0;
+-		nmaps = XFS_SYMLINK_MAPS;
+-
+-		error = xfs_bmapi_write(tp, ip, first_fsb, fs_blocks,
+-				  XFS_BMAPI_METADATA, resblks, mval, &nmaps);
+-		if (error)
+-			goto out_trans_cancel;
+-
+-		resblks -= fs_blocks;
+-		ip->i_disk_size = pathlen;
+-		xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+-
+-		cur_chunk = target_path;
+-		offset = 0;
+-		for (n = 0; n < nmaps; n++) {
+-			char	*buf;
+-
+-			d = XFS_FSB_TO_DADDR(mp, mval[n].br_startblock);
+-			byte_cnt = XFS_FSB_TO_B(mp, mval[n].br_blockcount);
+-			error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d,
+-					       BTOBB(byte_cnt), 0, &bp);
+-			if (error)
+-				goto out_trans_cancel;
+-			bp->b_ops = &xfs_symlink_buf_ops;
+-
+-			byte_cnt = XFS_SYMLINK_BUF_SPACE(mp, byte_cnt);
+-			byte_cnt = min(byte_cnt, pathlen);
+-
+-			buf = bp->b_addr;
+-			buf += xfs_symlink_hdr_set(mp, ip->i_ino, offset,
+-						   byte_cnt, bp);
+-
+-			memcpy(buf, cur_chunk, byte_cnt);
+-
+-			cur_chunk += byte_cnt;
+-			pathlen -= byte_cnt;
+-			offset += byte_cnt;
+-
+-			xfs_trans_buf_set_type(tp, bp, XFS_BLFT_SYMLINK_BUF);
+-			xfs_trans_log_buf(tp, bp, 0, (buf + byte_cnt - 1) -
+-							(char *)bp->b_addr);
+-		}
+-		ASSERT(pathlen == 0);
 -	}
--
--	if (XFS_TEST_ERROR(false, tp->t_mountp,
--			XFS_ERRTAG_BMAP_FINISH_ONE))
-+	if (XFS_TEST_ERROR(false, tp->t_mountp, XFS_ERRTAG_BMAP_FINISH_ONE))
- 		return -EIO;
- 
- 	switch (bi->bi_type) {
- 	case XFS_BMAP_MAP:
- 		error = xfs_bmapi_remap(tp, bi->bi_owner, bmap->br_startoff,
--				bmap->br_blockcount, bmap->br_startblock, 0);
-+				bmap->br_blockcount, bmap->br_startblock,
-+				flags);
- 		bmap->br_blockcount = 0;
- 		break;
- 	case XFS_BMAP_UNMAP:
- 		error = __xfs_bunmapi(tp, bi->bi_owner, bmap->br_startoff,
--				&bmap->br_blockcount, XFS_BMAPI_REMAP, 1);
-+				&bmap->br_blockcount, flags | XFS_BMAPI_REMAP,
-+				1);
- 		break;
- 	default:
- 		ASSERT(0);
-diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-index 276ffd098c9e..cb09a43a2872 100644
---- a/fs/xfs/libxfs/xfs_bmap.h
-+++ b/fs/xfs/libxfs/xfs_bmap.h
-@@ -244,9 +244,9 @@ void xfs_bmap_update_get_group(struct xfs_mount *mp,
- 
- int	xfs_bmap_finish_one(struct xfs_trans *tp, struct xfs_bmap_intent *bi);
- void	xfs_bmap_map_extent(struct xfs_trans *tp, struct xfs_inode *ip,
--		struct xfs_bmbt_irec *imap);
-+		int whichfork, struct xfs_bmbt_irec *imap);
- void	xfs_bmap_unmap_extent(struct xfs_trans *tp, struct xfs_inode *ip,
--		struct xfs_bmbt_irec *imap);
-+		int whichfork, struct xfs_bmbt_irec *imap);
- 
- static inline uint32_t xfs_bmap_fork_to_state(int whichfork)
- {
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index 30a5402bb79c..5561c0e1136b 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -560,7 +560,8 @@ xfs_bui_item_recover(
- 
- 	if (fake.bi_bmap.br_blockcount > 0) {
- 		ASSERT(fake.bi_type == XFS_BMAP_UNMAP);
--		xfs_bmap_unmap_extent(tp, ip, &fake.bi_bmap);
-+		xfs_bmap_unmap_extent(tp, fake.bi_owner, fake.bi_whichfork,
-+				&fake.bi_bmap);
- 	}
++	error = xfs_symlink_write_target(tp, ip, target_path, pathlen,
++			fs_blocks, resblks);
++	if (error)
++		goto out_trans_cancel;
+ 	i_size_write(VFS_I(ip), ip->i_disk_size);
  
  	/*
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index e094932869f6..8621534b749b 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -1454,16 +1454,16 @@ xfs_swap_extent_rmap(
- 			}
- 
- 			/* Remove the mapping from the donor file. */
--			xfs_bmap_unmap_extent(tp, tip, &uirec);
-+			xfs_bmap_unmap_extent(tp, tip, XFS_DATA_FORK, &uirec);
- 
- 			/* Remove the mapping from the source file. */
--			xfs_bmap_unmap_extent(tp, ip, &irec);
-+			xfs_bmap_unmap_extent(tp, ip, XFS_DATA_FORK, &irec);
- 
- 			/* Map the donor file's blocks into the source file. */
--			xfs_bmap_map_extent(tp, ip, &uirec);
-+			xfs_bmap_map_extent(tp, ip, XFS_DATA_FORK, &uirec);
- 
- 			/* Map the source file's blocks into the donor file. */
--			xfs_bmap_map_extent(tp, tip, &irec);
-+			xfs_bmap_map_extent(tp, tip, XFS_DATA_FORK, &irec);
- 
- 			error = xfs_defer_finish(tpp);
- 			tp = *tpp;
-diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-index 55604bbd25a4..0804f0ad6b1c 100644
---- a/fs/xfs/xfs_reflink.c
-+++ b/fs/xfs/xfs_reflink.c
-@@ -802,7 +802,7 @@ xfs_reflink_end_cow_extent(
- 		 * If the extent we're remapping is backed by storage (written
- 		 * or not), unmap the extent and drop its refcount.
- 		 */
--		xfs_bmap_unmap_extent(tp, ip, &data);
-+		xfs_bmap_unmap_extent(tp, ip, XFS_DATA_FORK, &data);
- 		xfs_refcount_decrease_extent(tp, &data);
- 		xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_BCOUNT,
- 				-data.br_blockcount);
-@@ -826,7 +826,7 @@ xfs_reflink_end_cow_extent(
- 	xfs_refcount_free_cow_extent(tp, del.br_startblock, del.br_blockcount);
- 
- 	/* Map the new blocks into the data fork. */
--	xfs_bmap_map_extent(tp, ip, &del);
-+	xfs_bmap_map_extent(tp, ip, XFS_DATA_FORK, &del);
- 
- 	/* Charge this new data fork mapping to the on-disk quota. */
- 	xfs_trans_mod_dquot_byino(tp, ip, XFS_TRANS_DQ_DELBCOUNT,
-@@ -1290,7 +1290,7 @@ xfs_reflink_remap_extent(
- 		 * If the extent we're unmapping is backed by storage (written
- 		 * or not), unmap the extent and drop its refcount.
- 		 */
--		xfs_bmap_unmap_extent(tp, ip, &smap);
-+		xfs_bmap_unmap_extent(tp, ip, XFS_DATA_FORK, &smap);
- 		xfs_refcount_decrease_extent(tp, &smap);
- 		qdelta -= smap.br_blockcount;
- 	} else if (smap.br_startblock == DELAYSTARTBLOCK) {
-@@ -1315,7 +1315,7 @@ xfs_reflink_remap_extent(
- 	 */
- 	if (dmap_written) {
- 		xfs_refcount_increase_extent(tp, dmap);
--		xfs_bmap_map_extent(tp, ip, dmap);
-+		xfs_bmap_map_extent(tp, ip, XFS_DATA_FORK, dmap);
- 		qdelta += dmap->br_blockcount;
- 	}
- 
 
