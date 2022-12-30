@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A5AD659FD2
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:41:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A30465A138
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:07:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235721AbiLaAlH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:41:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35212 "EHLO
+        id S236162AbiLaCHr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:07:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235671AbiLaAlD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:41:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF6D1D0C8;
-        Fri, 30 Dec 2022 16:41:02 -0800 (PST)
+        with ESMTP id S231494AbiLaCHq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:07:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8017B1C430
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:07:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0E061D50;
-        Sat, 31 Dec 2022 00:41:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A86C433D2;
-        Sat, 31 Dec 2022 00:41:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2524861CC2
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:07:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C857C433EF;
+        Sat, 31 Dec 2022 02:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447261;
-        bh=tyouE0/BiPchaXN6mjhC/xGdlxUJ0OI8Ato1gc3+B4A=;
+        s=k20201202; t=1672452464;
+        bh=XQifu2S0REiqLMQAKODpExBnNIuq2MHCVVL0PoRnUw0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g3M7gRpyEwbsq9WIU/0kcOW9JgTsSmCFktsQQwh0CW5pOB/CJYn+YjehL/qzt7jI5
-         PRCxeALQcpDQPLwrSj7wuQ8UN9ayYNszb7n5H1HKwJGOInpFTb19LVvxNvwCwIu/Ie
-         1UzdUTPSHF8MjJ9sTuE2v0HmzX9Qc+rV5J+a16TZ6QsTMy9iiFlsu248kEfiN/yd61
-         jObW5f52pqtiWQOyA1AjCM3Dg/7jIc54ja6hz1dTjkqqqyzkQdsKcBmDi6n0xZekAD
-         cmf209TdfYLkCG7Uti36KFUOLkV29YRXuBR97VrBgJy0Rmg+Sulpn/4PIwKd8UwA/P
-         FzsOGhi9XvV0g==
-Subject: [PATCH 1/1] xfs: race fsstress with online repair for inode record
- metadata
+        b=n86MZD1y+MBz9WFtBeM4T1kZdyFoiO1zK01FkgRbdeRLM4L7whLeSmdpTKz0R5sG+
+         +uKCwPJiHc21dyw8flahnyK3CAJ/gqZW2MzAy3SVsUdKcXu9ECPwsrCzZhO9AuB3Ix
+         lmhfjy4K2hvvzsXd9SqufFOdz8/2lX5maFlxpG7zHquiRIu5HrOmBlwccLl1D1JTYK
+         l9RyuI1YDwdVpHgr/jVnzKFlSVPAVRuim6xXWIbJJntkRkQagVlAjk/9ITvkHuF+Of
+         zeBVFpE27KwfPWNay4N1KPh60Y41XTMJUmKVhT4PK+9S0jQpZ4jMIYWpoBPMpz2SWv
+         jJR986fxHiYGA==
+Subject: [PATCH 18/26] xfs: create libxfs helper to link a new inode into a
+ directory
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:15 -0800
-Message-ID: <167243875550.724875.35173902093167169.stgit@magnolia>
-In-Reply-To: <167243875538.724875.4064833218427202716.stgit@magnolia>
-References: <167243875538.724875.4064833218427202716.stgit@magnolia>
+Message-ID: <167243875535.723621.9136738856135046159.stgit@magnolia>
+In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
+References: <167243875315.723621.17759760420120912799.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,68 +56,88 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a test that runs the inode record repairer in the foreground and
-fsstress in the background.
+Create a new libxfs function to link a newly created inode into a
+directory.  The upcoming metadata directory feature will need this to
+create a metadata directory tree.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/806     |   38 ++++++++++++++++++++++++++++++++++++++
- tests/xfs/806.out |    2 ++
- 2 files changed, 40 insertions(+)
- create mode 100755 tests/xfs/806
- create mode 100644 tests/xfs/806.out
+ libxfs/xfs_dir2.c |   45 +++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_dir2.h |    4 ++++
+ 2 files changed, 49 insertions(+)
 
 
-diff --git a/tests/xfs/806 b/tests/xfs/806
-new file mode 100755
-index 0000000000..e07f9f9141
---- /dev/null
-+++ b/tests/xfs/806
-@@ -0,0 +1,38 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 806
-+#
-+# Race fsstress and inode record repair for a while to see if we crash or
-+# livelock.
-+#
-+. ./common/preamble
-+_begin_fstest online_repair dangerous_fsstress_repair
+diff --git a/libxfs/xfs_dir2.c b/libxfs/xfs_dir2.c
+index 460b64339d7..ed52969b45d 100644
+--- a/libxfs/xfs_dir2.c
++++ b/libxfs/xfs_dir2.c
+@@ -18,6 +18,9 @@
+ #include "xfs_errortag.h"
+ #include "xfs_trace.h"
+ #include "xfs_health.h"
++#include "xfs_shared.h"
++#include "xfs_bmap_btree.h"
++#include "xfs_trans_space.h"
+ 
+ const struct xfs_name xfs_name_dotdot = {
+ 	.name	= (const unsigned char *)"..",
+@@ -780,3 +783,45 @@ xfs_dir2_compname(
+ 		return xfs_ascii_ci_compname(args, name, len);
+ 	return xfs_da_compname(args, name, len);
+ }
 +
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
++/*
++ * Given a directory @dp, a newly allocated inode @ip, and a @name, link @ip
++ * into @dp under the given @name.  If @ip is a directory, it will be
++ * initialized.  Both inodes must have the ILOCK held and the transaction must
++ * have sufficient blocks reserved.
++ */
++int
++xfs_dir_create_new_child(
++	struct xfs_trans		*tp,
++	uint				resblks,
++	struct xfs_inode		*dp,
++	struct xfs_name			*name,
++	struct xfs_inode		*ip)
++{
++	struct xfs_mount		*mp = tp->t_mountp;
++	int				error;
++
++	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
++	ASSERT(xfs_isilocked(dp, XFS_ILOCK_EXCL));
++	ASSERT(resblks == 0 || resblks > XFS_IALLOC_SPACE_RES(mp));
++
++	error = xfs_dir_createname(tp, dp, name, ip->i_ino,
++					resblks - XFS_IALLOC_SPACE_RES(mp));
++	if (error) {
++		ASSERT(error != -ENOSPC);
++		return error;
++	}
++
++	xfs_trans_ichgtime(tp, dp, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
++	xfs_trans_log_inode(tp, dp, XFS_ILOG_CORE);
++
++	if (!S_ISDIR(VFS_I(ip)->i_mode))
++		return 0;
++
++	error = xfs_dir_init(tp, ip, dp);
++	if (error)
++		return error;
++
++	xfs_bumplink(tp, dp);
++	return 0;
 +}
-+_register_cleanup "_cleanup" BUS
+diff --git a/libxfs/xfs_dir2.h b/libxfs/xfs_dir2.h
+index 7322284f61a..d3e7607c0e9 100644
+--- a/libxfs/xfs_dir2.h
++++ b/libxfs/xfs_dir2.h
+@@ -253,4 +253,8 @@ unsigned int xfs_dir3_data_end_offset(struct xfs_da_geometry *geo,
+ 		struct xfs_dir2_data_hdr *hdr);
+ bool xfs_dir2_namecheck(const void *name, size_t length);
+ 
++int xfs_dir_create_new_child(struct xfs_trans *tp, uint resblks,
++		struct xfs_inode *dp, struct xfs_name *name,
++		struct xfs_inode *ip);
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_scratch_xfs_stress_online_repair -s "repair inode" -t "%file%"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/806.out b/tests/xfs/806.out
-new file mode 100644
-index 0000000000..463bd7f008
---- /dev/null
-+++ b/tests/xfs/806.out
-@@ -0,0 +1,2 @@
-+QA output created by 806
-+Silence is golden
+ #endif	/* __XFS_DIR2_H__ */
 
