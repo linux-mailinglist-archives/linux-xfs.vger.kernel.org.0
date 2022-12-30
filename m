@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21E4F65A25E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:17:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCDD565A261
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:18:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236308AbiLaDRg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:17:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37212 "EHLO
+        id S236352AbiLaDSV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:18:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235798AbiLaDRf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:17:35 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 217312733;
-        Fri, 30 Dec 2022 19:17:34 -0800 (PST)
+        with ESMTP id S236334AbiLaDSV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:18:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E442733;
+        Fri, 30 Dec 2022 19:18:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 71247CE1AC9;
-        Sat, 31 Dec 2022 03:17:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE6DCC433D2;
-        Sat, 31 Dec 2022 03:17:30 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AA8A7B81E66;
+        Sat, 31 Dec 2022 03:18:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B5DC433EF;
+        Sat, 31 Dec 2022 03:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456650;
-        bh=ae3fZkhjUkgPu/1AAmCrMHrl9N7H8i267tWgT46MGSo=;
+        s=k20201202; t=1672456697;
+        bh=v5t/VCu9Eh7EbvI3dy4porQrhQuQOlHnWICHHOqNeCo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IqWrx82FlQWfK+VFgP+urnxIiYm8J7zT3sb4cfpWx+7CVDskztyN1aCUhK3ZYx7wx
-         DyM3M4yTl+rG/zsxwao/f9uzgVGLzPf8/1kCJpOZ/kIV19tyQgpwLpwWkeAv84bIpu
-         yBBjwAfuqwumpmv7u5iGBFrTqQEpqWxCNYT+uUmC7qzEPfMTEQ2hIRl1ks1bakETPe
-         uIWjC95RkFA0sk3Rg5C49pGLXfsCi4aWCjcsfZ2m8RYWDfgNQyNirpsvkOQX1Ayics
-         6K0Ssm+KW0ZAn5024SAhFK7y0J1VbOKmAraczHzGB/rcv5pJh8jhtwruGLFtjVpFt8
-         3BmknVJRDqd3w==
-Subject: [PATCH 06/10] xfs: race fsstress with realtime refcount btree scrub
- and repair
+        b=V2WI5si+P9BB6u8NzVZ4re6TlN1Xmh8jpddXyjzn3/EynT5En/pfTe9O8zssZHQES
+         SMEqrKhW2D4gk8ctm2e7iOKFkrgwvhNzWjHtkKjJxiipvl7dup57NM+KwjrvBIxTSf
+         ITOJFPcPJcQ+zesWc/fcLVK8JFqNisYRvcECID1VC/+OeF/DaW+3ipVDgrEl6wieje
+         cnZGsQAZfgy2C8ojvI0y47HR/2PaqupcXwP3we5CwXQ1cMVPCoVPGBWfkn8koCesWK
+         OKRp79EdSGDSp7W17zq536Er8yLCO61Pd0zr1DXChpk044alS4qTcaEYdO/jUA6Ohn
+         G3zCg9LefMiQA==
+Subject: [PATCH 09/10] generic/331,xfs/240: support files that skip delayed
+ allocation
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:49 -0800
-Message-ID: <167243884932.740253.9910252200044886209.stgit@magnolia>
+Message-ID: <167243884972.740253.4451750587710158316.stgit@magnolia>
 In-Reply-To: <167243884850.740253.18400210873595872110.stgit@magnolia>
 References: <167243884850.740253.18400210873595872110.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,133 +56,102 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Race checking and rebuilding realtime refcount btrees with fsstress.
+The goal of this test is to ensure that log recovery finishes a copy on
+write operation in the event of temporary media errors.  It's important
+that the test observe some sort of IO error once we switch the scratch
+device to fail all IOs, but regrettably the test encoded the specific
+behavior of XFS and btrfs when the test was written -- the aio write
+to the page cache doesn't have to touch the disk and succeeds, and the
+fdatasync flushes things to disk and hits the IO error.
+
+However, this is not how things work on the XFS realtime device.  There
+is no delalloc on realtime, so the aio write allocates an unwritten
+extent to stage the write.  The allocation fails due to EIO, so it's the
+write call that fails.  Therefore, all we need to do is to detect an IO
+error at any point between the write and the fdatasync call to be
+satisfied that the test does what we want to do.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/818     |   43 +++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/818.out |    2 ++
- tests/xfs/819     |   43 +++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/819.out |    2 ++
- 4 files changed, 90 insertions(+)
- create mode 100755 tests/xfs/818
- create mode 100644 tests/xfs/818.out
- create mode 100755 tests/xfs/819
- create mode 100644 tests/xfs/819.out
+ tests/generic/331     |   12 ++++++++++--
+ tests/generic/331.out |    2 +-
+ tests/xfs/240         |   13 +++++++++++--
+ tests/xfs/240.out     |    2 +-
+ 4 files changed, 23 insertions(+), 6 deletions(-)
 
 
-diff --git a/tests/xfs/818 b/tests/xfs/818
-new file mode 100755
-index 0000000000..aabe636750
---- /dev/null
-+++ b/tests/xfs/818
-@@ -0,0 +1,43 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 818
-+#
-+# Race fsstress and rt refcount btree scrub for a while to see if we crash or
-+# livelock.
-+#
-+. ./common/preamble
-+_begin_fstest scrub dangerous_fsstress_scrub
+diff --git a/tests/generic/331 b/tests/generic/331
+index 492abedf76..8c665ce4fc 100755
+--- a/tests/generic/331
++++ b/tests/generic/331
+@@ -59,9 +59,17 @@ echo "CoW and unmount"
+ $XFS_IO_PROG -f -c "pwrite -S 0x63 $bufsize 1" $testdir/file2 >> $seqres.full
+ $XFS_IO_PROG -f -c "pwrite -S 0x63 -b $bufsize 0 $filesize" $TEST_DIR/moo >> $seqres.full
+ sync
 +
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
-+}
-+_register_cleanup "_cleanup" BUS
++# If the filesystem supports delalloc, then the fdatasync will report an IO
++# error.  If the write goes directly to disk, then aiocp will return nonzero.
++unset write_failed
+ _dmerror_load_error_table
+-$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 >> $seqres.full
+-$XFS_IO_PROG -c "fdatasync" $testdir/file2
++$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 &>> $seqres.full || \
++	write_failed=1
++$XFS_IO_PROG -c "fdatasync" $testdir/file2 2>&1 | grep -q 'Input.output error' && \
++	write_failed=1
++test -n $write_failed && echo "write failed"
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
+ _dmerror_load_working_table
+ _dmerror_unmount
+ _dmerror_mount
+diff --git a/tests/generic/331.out b/tests/generic/331.out
+index adbf841d00..d8ccea704b 100644
+--- a/tests/generic/331.out
++++ b/tests/generic/331.out
+@@ -5,7 +5,7 @@ Compare files
+ 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-331/file1
+ 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-331/file2
+ CoW and unmount
+-fdatasync: Input/output error
++write failed
+ Compare files
+ 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-331/file1
+ d94b0ab13385aba594411c174b1cc13c  SCRATCH_MNT/test-331/file2
+diff --git a/tests/xfs/240 b/tests/xfs/240
+index a65c270d23..cabe309201 100755
+--- a/tests/xfs/240
++++ b/tests/xfs/240
+@@ -66,8 +66,17 @@ $XFS_IO_PROG -f -c "pwrite -S 0x63 $bufsize 1" $testdir/file2 >> $seqres.full
+ $XFS_IO_PROG -f -c "pwrite -S 0x63 -b $bufsize 0 $filesize" $TEST_DIR/moo >> $seqres.full
+ sync
+ _dmerror_load_error_table
+-$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 >> $seqres.full
+-$XFS_IO_PROG -c "fdatasync" $testdir/file2
 +
-+# real QA test starts here
-+_supported_fs xfs
-+_require_realtime
-+_require_scratch
-+_require_xfs_stress_scrub
++# If the filesystem supports delalloc, then the fdatasync will report an IO
++# error.  If the write goes directly to disk, then aiocp will return nonzero.
++unset write_failed
++_dmerror_load_error_table
++$AIO_TEST -b $bufsize $TEST_DIR/moo $testdir/file2 &>> $seqres.full || \
++	write_failed=1
++$XFS_IO_PROG -c "fdatasync" $testdir/file2 2>&1 | grep -q 'Input.output error' && \
++	write_failed=1
++test -n $write_failed && echo "write failed"
 +
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_require_xfs_has_feature "$SCRATCH_MNT" realtime
-+_require_xfs_has_feature "$SCRATCH_MNT" reflink
-+_xfs_force_bdev realtime $SCRATCH_MNT
-+
-+_scratch_xfs_stress_scrub -s "scrub rtrefcountbt %rgno%"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/818.out b/tests/xfs/818.out
-new file mode 100644
-index 0000000000..cb0997862e
---- /dev/null
-+++ b/tests/xfs/818.out
-@@ -0,0 +1,2 @@
-+QA output created by 818
-+Silence is golden
-diff --git a/tests/xfs/819 b/tests/xfs/819
-new file mode 100755
-index 0000000000..e302ed1fdc
---- /dev/null
-+++ b/tests/xfs/819
-@@ -0,0 +1,43 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
-+#
-+# FS QA Test No. 819
-+#
-+# Race fsstress and rt refcount btree scrub for a while to see if we crash or
-+# livelock.
-+#
-+. ./common/preamble
-+_begin_fstest online_repair dangerous_fsstress_repair
-+
-+_cleanup() {
-+	_scratch_xfs_stress_scrub_cleanup &> /dev/null
-+	cd /
-+	rm -r -f $tmp.*
-+}
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/fuzzy
-+. ./common/inject
-+. ./common/xfs
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_realtime
-+_require_scratch
-+_require_xfs_stress_online_repair
-+
-+_scratch_mkfs > "$seqres.full" 2>&1
-+_scratch_mount
-+_require_xfs_has_feature "$SCRATCH_MNT" realtime
-+_require_xfs_has_feature "$SCRATCH_MNT" reflink
-+_xfs_force_bdev realtime $SCRATCH_MNT
-+
-+_scratch_xfs_stress_online_repair -s "repair rtrefcountbt %rgno%"
-+
-+# success, all done
-+echo Silence is golden
-+status=0
-+exit
-diff --git a/tests/xfs/819.out b/tests/xfs/819.out
-new file mode 100644
-index 0000000000..f5df7622a7
---- /dev/null
-+++ b/tests/xfs/819.out
-@@ -0,0 +1,2 @@
-+QA output created by 819
-+Silence is golden
+ _dmerror_load_working_table
+ _dmerror_unmount
+ _dmerror_mount
+diff --git a/tests/xfs/240.out b/tests/xfs/240.out
+index 1a22e8a389..00bb116e5c 100644
+--- a/tests/xfs/240.out
++++ b/tests/xfs/240.out
+@@ -5,7 +5,7 @@ Compare files
+ 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-240/file1
+ 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-240/file2
+ CoW and unmount
+-fdatasync: Input/output error
++write failed
+ Compare files
+ 1886e67cf8783e89ce6ddc5bb09a3944  SCRATCH_MNT/test-240/file1
+ d94b0ab13385aba594411c174b1cc13c  SCRATCH_MNT/test-240/file2
 
