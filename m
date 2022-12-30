@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E0F659FC5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:38:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F170365A11A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:00:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235817AbiLaAh7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:37:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34712 "EHLO
+        id S236118AbiLaCAD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:00:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235750AbiLaAh6 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:37:58 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 385281E3EE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:37:57 -0800 (PST)
+        with ESMTP id S236043AbiLaCAC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:00:02 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657461C430
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:00:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DFE8FB81E07
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:37:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4349C433EF;
-        Sat, 31 Dec 2022 00:37:54 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id B4AFBCE19E6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:59:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CC9C433EF;
+        Sat, 31 Dec 2022 01:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447074;
-        bh=OYF411aDwhrerbL/KzsHSyKtmRfHsiezEiuWUEIq9Uw=;
+        s=k20201202; t=1672451998;
+        bh=bdZVzcx7TM743pMqModRBCcFr8EA8SWIYJEWReq1mSM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Cr3ORys/t3AE0r/+6wxCauYI/V+PVuqMubClgJ25MrXqmp2lzXyMPDl7D9hWpAm1L
-         dDsEwHLEnrtv1GxftlsfIhVbnaWWPcuANaXQC67B0sNrwG/7OdmxdGZjOP7uOi1PKQ
-         UOX6z4BK2Ji2fJKaE7iD39Fpz7aBIAxIp5K6ugVelqz3dys0kMyKX+ZseHV+MfKjrn
-         gY5erF7JHD9k57R3OjszrtB4q7ZwaiS9sQBWU3xnYKm5o76IHqF4BQYzmAWtAdcseh
-         ixwSebIERttQy5TZ2tHfMkOI4/7DmLoyIyspBG9FtAXo9obsJqmOjXSx6dp2jQVURs
-         ClwMG2G0xFr+Q==
-Subject: [PATCH 3/4] xfs_scrub_all: trigger automatic media scans once per
- month
+        b=aTlDfDsO8BxcFs2s2fJI5u79y5qzvGmR/zDDhx9NQYdZAp9pm6xxQQrb/EOMxXm64
+         SyqFUpSEJJbYfvQyXJoiSA+/cEGPkn8H8nfPKGsmYBm+epYi+7jdLQwvn8vVywQjKV
+         DLFwJzuCTiE8G0A3BtqyXqL94hGG/AG1fFb2G6gaijaoivmI/SvdW++0H3sMJv60VI
+         loiXDT+ksc/N3eXFGOuHukkuekOAAZ+NZ0XTkTvMjgWq9CdzSD3q/opC+4KpXIdh7E
+         aEyLdEbAkPmk11ZoUMzKCNjwJPMc+Oy4x9ElN+Qj3XdGpEdxkSRD7o7k80U3dQgi3l
+         1mNlK10Cl+eoQ==
+Subject: [PATCH 4/9] xfs: forcibly convert unwritten blocks within an rt
+ extent before sharing
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:38 -0800
-Message-ID: <167243871831.718563.8824972404105654601.stgit@magnolia>
-In-Reply-To: <167243871794.718563.17643569431631339696.stgit@magnolia>
-References: <167243871794.718563.17643569431631339696.stgit@magnolia>
+Message-ID: <167243871861.718512.15989906047218636590.stgit@magnolia>
+In-Reply-To: <167243871792.718512.13170681692847163098.stgit@magnolia>
+References: <167243871792.718512.13170681692847163098.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,68 +56,50 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach the xfs_scrub_all background service to trigger an automatic scan
-of all file data once per month.
+As noted in the previous patch, XFS can only unmap and map full rt
+extents.  This means that we cannot stop mid-extent for any reason,
+including stepping around unwritten/written extents.  Second, the
+reflink and CoW mechanisms were not designed to handle shared unwritten
+extents, so we have to do something to get rid of them.
+
+If the user asks us to remap two files, we must scan both ranges
+beforehand to convert any unwritten extents that are not aligned to rt
+extent boundaries into zeroed written extents before sharing.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/Makefile                 |    8 +++++++-
- scrub/xfs_scrub_all.cron.in    |    2 +-
- scrub/xfs_scrub_all.service.in |    2 +-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_reflink.c |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
 
-diff --git a/scrub/Makefile b/scrub/Makefile
-index f773995dcd7..7434ac0ce4e 100644
---- a/scrub/Makefile
-+++ b/scrub/Makefile
-@@ -110,6 +110,9 @@ ifeq ($(HAVE_HDIO_GETGEO),yes)
- LCFLAGS += -DHAVE_HDIO_GETGEO
- endif
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 8690017beb9b..b9f47bdbe383 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -1689,6 +1689,25 @@ xfs_reflink_remap_prep(
+ 	if (ret)
+ 		goto out_unlock;
  
-+# Automatically trigger a media scan once per month
-+XFS_SCRUB_ALL_AUTO_MEDIA_SCAN_INTERVAL=1mo
++	/*
++	 * Now that we've marked both inodes for reflink, make sure that all
++	 * possible rt extents in both files' ranges are either wholly written,
++	 * wholly unwritten, or holes.  The bmap code requires that we align
++	 * all unmap and remap requests to a rt extent boundary.  We've already
++	 * flushed the page cache and finished directio for the range that's
++	 * being remapped, so we can convert the extents directly.
++	 */
++	if (xfs_inode_has_bigrtextents(src)) {
++		ret = xfs_rtfile_convert_unwritten(src, pos_in, *len);
++		if (ret)
++			goto out_unlock;
++	}
++	if (xfs_inode_has_bigrtextents(dest)) {
++		ret = xfs_rtfile_convert_unwritten(dest, pos_out, *len);
++		if (ret)
++			goto out_unlock;
++	}
 +
- LDIRT = $(XFS_SCRUB_ALL_PROG) *.service *.cron
- 
- default: depend $(LTCOMMAND) $(XFS_SCRUB_ALL_PROG) $(OPTIONAL_TARGETS)
-@@ -135,11 +138,14 @@ install: $(INSTALL_SCRUB)
- 		   -e "s|@pkg_lib_dir@|$(PKG_LIB_SCRIPT_DIR)|g" \
- 		   -e "s|@pkg_state_dir@|$(PKG_STATE_DIR)|g" \
- 		   -e "s|@pkg_name@|$(PKG_NAME)|g" \
-+		   -e "s|@media_scan_interval@|$(XFS_SCRUB_ALL_AUTO_MEDIA_SCAN_INTERVAL)|g" \
- 		   < $< > $@
- 
- %.cron: %.cron.in $(builddefs)
- 	@echo "    [SED]    $@"
--	$(Q)$(SED) -e "s|@sbindir@|$(PKG_SBIN_DIR)|g" < $< > $@
-+	$(Q)$(SED) -e "s|@sbindir@|$(PKG_SBIN_DIR)|g" \
-+		   -e "s|@media_scan_interval@|$(XFS_SCRUB_ALL_AUTO_MEDIA_SCAN_INTERVAL)|g" \
-+		   < $< > $@
- 
- install-systemd: default $(SYSTEMD_SERVICES)
- 	$(INSTALL) -m 755 -d $(SYSTEMD_SYSTEM_UNIT_DIR)
-diff --git a/scrub/xfs_scrub_all.cron.in b/scrub/xfs_scrub_all.cron.in
-index 0ef97cc0ca8..d55d2ad2d89 100644
---- a/scrub/xfs_scrub_all.cron.in
-+++ b/scrub/xfs_scrub_all.cron.in
-@@ -3,4 +3,4 @@
- # Copyright (C) 2018 Oracle.  All Rights Reserved.
- # Author: Darrick J. Wong <djwong@kernel.org>
- #
--10 3 * * 0 root test -e /run/systemd/system || @sbindir@/xfs_scrub_all
-+10 3 * * 0 root test -e /run/systemd/system || @sbindir@/xfs_scrub_all --auto-media-scan-interval @media_scan_interval@
-diff --git a/scrub/xfs_scrub_all.service.in b/scrub/xfs_scrub_all.service.in
-index 4938404ee95..e831ad58eb8 100644
---- a/scrub/xfs_scrub_all.service.in
-+++ b/scrub/xfs_scrub_all.service.in
-@@ -12,7 +12,7 @@ After=paths.target multi-user.target network.target network-online.target system
- [Service]
- Type=oneshot
- Environment=SERVICE_MODE=1
--ExecStart=@sbindir@/xfs_scrub_all
-+ExecStart=@sbindir@/xfs_scrub_all --auto-media-scan-interval @media_scan_interval@
- SyslogIdentifier=xfs_scrub_all
- 
- # Create the service underneath the scrub background service slice so that we
+ 	/*
+ 	 * If pos_out > EOF, we may have dirtied blocks between EOF and
+ 	 * pos_out. In that case, we need to extend the flush and unmap to cover
 
