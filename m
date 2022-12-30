@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B33E065A0D6
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:43:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B28B465A0D4
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:42:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236027AbiLaBnJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:43:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
+        id S235900AbiLaBmi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:42:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235913AbiLaBnI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:43:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8285C13F7A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:43:07 -0800 (PST)
+        with ESMTP id S236017AbiLaBmh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:42:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A249F026
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:42:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2141961C3A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:43:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D8A9C433D2;
-        Sat, 31 Dec 2022 01:43:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EB3EB61C3A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:42:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 572A3C433EF;
+        Sat, 31 Dec 2022 01:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450986;
-        bh=I2HMR3AKOFHmhJbfSOWeo8c8fkkCe1q0lPlfDNrSPvc=;
+        s=k20201202; t=1672450955;
+        bh=xAuTIVosJ1K+CNexj+btz6+sNpBwD4lR1S39fHNvpvw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VQiaZ7ZAHnNjjkrdiOnOiON2fOmZ3UEC/Tgas0TrhVx32nHeJPJroZnUSPtvnWZXk
-         +1lFE7oHlvoPvdv0ee9Jd9+FLawfSgGSXAb8f/vP0qRAb+9MckQ/CyKQOY4U9Kh1x9
-         46UXS11pqW6+Sq3W0V5SxTeGp2havETVKYv2HpSRe7DbdD4ZtrToJT2EXf65n4ZUdz
-         tv6Ad0IIb4Q+tP9Hd1ifxhN5OdSB/wHFMHggSLKNAzVGP6LrKhGIWDyVTqWkDrN3fR
-         rg9D5xhO2S1VZCq5dx3meqBZBU6U21RiAJp+Q+s2q6HULUYvvMU1Eo5i6C4ue6T1vJ
-         VraHc61pW5+Aw==
-Subject: [PATCH 24/38] xfs: report realtime rmap btree corruption errors to
- the health system
+        b=YD6Ul9qZSm1Zc1eQFyidglIlNow5p5EwKHWdUwBkz02vtaL9+Gf6Pu/aw8X6sNjsm
+         yZWUIczSMKuzl/e8WGCUH3jIf3W2g/0FLIl3w4aEnqFWga6XezBySzD9F0P2Wfu42t
+         gw1RogJ9Ld9dqYoUtVY4WGC4Fdfv7N5y5jpt/brI0KGon6lXokQrQ/z1ned0NtGmIk
+         41TkNZhQ4djvOy4YVzkfZdZaZZPVxXdwyg8v+JI1lGjCYZKT/E0E/a8pld9iBDTQzb
+         jN41DiPKbxeq8rUl66or9QhJF+SfQ9Fbc4jBxW1y292RwfHljTL+D+y7XnF0g3mdMT
+         PwE7p6SU06HwQ==
+Subject: [PATCH 22/38] xfs: check that the rtrmapbt maxlevels doesn't increase
+ when growing fs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:19 -0800
-Message-ID: <167243869942.715303.8274942737380162651.stgit@magnolia>
+Message-ID: <167243869913.715303.244818263733598492.stgit@magnolia>
 In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
 References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,126 +56,202 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Whenever we encounter corrupt realtime rmap btree blocks, we should
-report that to the health monitoring system for later reporting.
+The size of filesystem transaction reservations depends on the maximum
+height (maxlevels) of the realtime btrees.  Since we don't want a grow
+operation to increase the reservation size enough that we'll fail the
+minimum log size checks on the next mount, constrain growfs operations
+if they would cause an increase in those maxlevels.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h           |    1 +
- fs/xfs/libxfs/xfs_health.h       |    4 +++-
- fs/xfs/libxfs/xfs_inode_fork.c   |    4 +++-
- fs/xfs/libxfs/xfs_rtrmap_btree.c |    5 ++++-
- fs/xfs/xfs_health.c              |    4 ++++
- fs/xfs/xfs_rtalloc.c             |    1 +
- 6 files changed, 16 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_fsops.c   |   12 ++++++++++
+ fs/xfs/xfs_rtalloc.c |   63 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_rtalloc.h |    6 +++++
+ fs/xfs/xfs_trace.h   |   21 +++++++++++++++++
+ 4 files changed, 101 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 7e9d7d7bb40b..5c557d5ff13e 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -313,6 +313,7 @@ struct xfs_rtgroup_geometry {
- };
- #define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
- #define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
-+#define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1 << 2)  /* reverse mappings */
+diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
+index 9770916acd69..65b44ad8884e 100644
+--- a/fs/xfs/xfs_fsops.c
++++ b/fs/xfs/xfs_fsops.c
+@@ -23,6 +23,7 @@
+ #include "xfs_trace.h"
+ #include "xfs_rtgroup.h"
+ #include "xfs_rtalloc.h"
++#include "xfs_rtrmap_btree.h"
  
  /*
-  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
-diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index 44137c4983fc..d5976f6b0de1 100644
---- a/fs/xfs/libxfs/xfs_health.h
-+++ b/fs/xfs/libxfs/xfs_health.h
-@@ -67,6 +67,7 @@ struct xfs_rtgroup;
- #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
- #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
- #define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
-+#define XFS_SICK_RT_RMAPBT	(1 << 3)  /* reverse mappings */
+  * Write new AG headers to disk. Non-transactional, but need to be
+@@ -115,6 +116,13 @@ xfs_growfs_data_private(
+ 		xfs_buf_relse(bp);
+ 	}
  
- /* Observable health issues for AG metadata. */
- #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
-@@ -104,7 +105,8 @@ struct xfs_rtgroup;
++	/* Make sure the new fs size won't cause problems with the log. */
++	error = xfs_growfs_check_rtgeom(mp, nb, mp->m_sb.sb_rblocks,
++			mp->m_sb.sb_rextsize, mp->m_sb.sb_rextents,
++			mp->m_sb.sb_rbmblocks, mp->m_sb.sb_rextslog);
++	if (error)
++		return error;
++
+ 	nb_div = nb;
+ 	nb_mod = do_div(nb_div, mp->m_sb.sb_agblocks);
+ 	nagcount = nb_div + (nb_mod != 0);
+@@ -214,7 +222,11 @@ xfs_growfs_data_private(
+ 		error = xfs_fs_reserve_ag_blocks(mp);
+ 		if (error == -ENOSPC)
+ 			error = 0;
++
++		/* Compute new maxlevels for rt btrees. */
++		xfs_rtrmapbt_compute_maxlevels(mp);
+ 	}
++
+ 	return error;
  
- #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
- 				 XFS_SICK_RT_SUMMARY | \
--				 XFS_SICK_RT_SUPER)
-+				 XFS_SICK_RT_SUPER | \
-+				 XFS_SICK_RT_RMAPBT)
- 
- #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
- 				 XFS_SICK_AG_AGF | \
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index 94979bed8f32..61926c07aad3 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -261,8 +261,10 @@ xfs_iformat_data_fork(
- 		case XFS_DINODE_FMT_BTREE:
- 			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
- 		case XFS_DINODE_FMT_RMAP:
--			if (!xfs_has_rtrmapbt(ip->i_mount))
-+			if (!xfs_has_rtrmapbt(ip->i_mount)) {
-+				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 				return -EFSCORRUPTED;
-+			}
- 			return xfs_iformat_rtrmap(ip, dip);
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.c b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-index 9181fca2ba54..2d8130b4c187 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-@@ -28,6 +28,7 @@
- #include "xfs_rtgroup.h"
- #include "xfs_bmap.h"
- #include "xfs_imeta.h"
-+#include "xfs_health.h"
- 
- static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
- 
-@@ -800,8 +801,10 @@ xfs_iformat_rtrmap(
- 	level = be16_to_cpu(dfp->bb_level);
- 
- 	if (level > mp->m_rtrmap_maxlevels ||
--	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize)
-+	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize) {
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	xfs_iroot_alloc(ip, XFS_DATA_FORK,
- 			xfs_rtrmap_broot_space_calc(mp, level, numrecs));
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index 33f332ee8044..80cc735b52d1 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -531,6 +531,7 @@ xfs_ag_geom_health(
- static const struct ioctl_sick_map rtgroup_map[] = {
- 	{ XFS_SICK_RT_SUPER,	XFS_RTGROUP_GEOM_SICK_SUPER },
- 	{ XFS_SICK_RT_BITMAP,	XFS_RTGROUP_GEOM_SICK_BITMAP },
-+	{ XFS_SICK_RT_RMAPBT,	XFS_RTGROUP_GEOM_SICK_RMAPBT },
- 	{ 0, 0 },
- };
- 
-@@ -630,6 +631,9 @@ xfs_btree_mark_sick(
- 	case XFS_BTNUM_BMAP:
- 		xfs_bmap_mark_sick(cur->bc_ino.ip, cur->bc_ino.whichfork);
- 		return;
-+	case XFS_BTNUM_RTRMAP:
-+		xfs_rtgroup_mark_sick(cur->bc_ino.rtg, XFS_SICK_RT_RMAPBT);
-+		return;
- 	case XFS_BTNUM_BNO:
- 		mask = XFS_SICK_AG_BNOBT;
- 		break;
+ out_trans_cancel:
 diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 45c388ad4c1f..0f31680284fb 100644
+index c3d27cb85c26..7b7e22b36d48 100644
 --- a/fs/xfs/xfs_rtalloc.c
 +++ b/fs/xfs/xfs_rtalloc.c
-@@ -1806,6 +1806,7 @@ xfs_rtmount_rmapbt(
- 		goto out_path;
+@@ -1049,6 +1049,57 @@ xfs_growfs_rt_init_primary(
+ 	return 0;
+ }
  
- 	if (XFS_IS_CORRUPT(mp, ip->i_df.if_format != XFS_DINODE_FMT_RMAP)) {
-+		xfs_rtgroup_mark_sick(rtg, XFS_SICK_RT_RMAPBT);
- 		error = -EFSCORRUPTED;
- 		goto out_rele;
++/*
++ * Check that changes to the realtime geometry won't affect the minimum
++ * log size, which would cause the fs to become unusable.
++ */
++int
++xfs_growfs_check_rtgeom(
++	const struct xfs_mount	*mp,
++	xfs_rfsblock_t		dblocks,
++	xfs_rfsblock_t		rblocks,
++	xfs_agblock_t		rextsize,
++	xfs_rtblock_t		rextents,
++	xfs_extlen_t		rbmblocks,
++	uint8_t			rextslog)
++{
++	struct xfs_mount	*fake_mp;
++	int			min_logfsbs;
++
++	fake_mp = kmem_alloc(sizeof(struct xfs_mount), KM_MAYFAIL);
++	if (!fake_mp)
++		return -ENOMEM;
++
++	/*
++	 * Create a dummy xfs_mount with the new rt geometry, and compute the
++	 * new minimum log size.  This ensures that the log is big enough to
++	 * handle the larger transactions that we could start sending.
++	 */
++	memcpy(fake_mp, mp, sizeof(struct xfs_mount));
++
++	fake_mp->m_sb.sb_dblocks = dblocks;
++	fake_mp->m_sb.sb_rblocks = rblocks;
++	fake_mp->m_sb.sb_rextents = rextents;
++	fake_mp->m_sb.sb_rextsize = rextsize;
++	fake_mp->m_sb.sb_rbmblocks = rbmblocks;
++	fake_mp->m_sb.sb_rextslog = rextslog;
++	if (rblocks > 0)
++		fake_mp->m_features |= XFS_FEAT_REALTIME;
++
++	xfs_rtrmapbt_compute_maxlevels(fake_mp);
++
++	xfs_trans_resv_calc(fake_mp, M_RES(fake_mp));
++	min_logfsbs = xfs_log_calc_minimum_size(fake_mp);
++	trace_xfs_growfs_check_rtgeom(mp, min_logfsbs);
++
++	kmem_free(fake_mp);
++
++	if (mp->m_sb.sb_logblocks < min_logfsbs)
++		return -ENOSPC;
++
++	return 0;
++}
++
+ /*
+  * Grow the realtime area of the filesystem.
+  */
+@@ -1139,6 +1190,12 @@ xfs_growfs_rt(
+ 	if (nrsumblocks > (mp->m_sb.sb_logblocks >> 1))
+ 		return -EINVAL;
+ 
++	/* Make sure the new fs size won't cause problems with the log. */
++	error = xfs_growfs_check_rtgeom(mp, mp->m_sb.sb_dblocks, nrblocks,
++			in->extsize, nrextents, nrbmblocks, nrextslog);
++	if (error)
++		return error;
++
+ 	/* Allocate the new rt group structures */
+ 	if (xfs_has_rtgroups(mp)) {
+ 		/*
+@@ -1313,8 +1370,12 @@ xfs_growfs_rt(
+ 			rtg->rtg_blockcount = xfs_rtgroup_block_count(mp,
+ 								rtg->rtg_rgno);
+ 
+-		/* Ensure the mount RT feature flag is now set. */
++		/*
++		 * Ensure the mount RT feature flag is now set, and compute new
++		 * maxlevels for rt btrees.
++		 */
+ 		mp->m_features |= XFS_FEAT_REALTIME;
++		xfs_rtrmapbt_compute_maxlevels(mp);
  	}
+ 	if (error)
+ 		goto out_free;
+diff --git a/fs/xfs/xfs_rtalloc.h b/fs/xfs/xfs_rtalloc.h
+index 873ebac239dd..35737a09cdb9 100644
+--- a/fs/xfs/xfs_rtalloc.h
++++ b/fs/xfs/xfs_rtalloc.h
+@@ -84,6 +84,11 @@ xfs_growfs_rt(
+ int xfs_rtalloc_reinit_frextents(struct xfs_mount *mp);
+ int xfs_rtfile_convert_unwritten(struct xfs_inode *ip, loff_t pos,
+ 		uint64_t len);
++
++int xfs_growfs_check_rtgeom(const struct xfs_mount *mp, xfs_rfsblock_t dblocks,
++		xfs_rfsblock_t rblocks, xfs_agblock_t rextsize,
++		xfs_rtblock_t rextents, xfs_extlen_t rbmblocks,
++		uint8_t rextslog);
+ #else
+ # define xfs_rtallocate_extent(t,b,min,max,l,f,p,rb)	(-ENOSYS)
+ # define xfs_rtpick_extent(m,t,l,rb)			(-ENOSYS)
+@@ -107,6 +112,7 @@ xfs_rtmount_init(
+ # define xfs_rt_resv_free(mp)				((void)0)
+ # define xfs_rt_resv_init(mp)				(0)
+ # define xfs_rtmount_dqattach(mp)			(0)
++# define xfs_growfs_check_rtgeom(mp, d, r, rs, rx, rb, rl)	(0)
+ #endif	/* CONFIG_XFS_RT */
+ 
+ #endif	/* __XFS_RTALLOC_H__ */
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 77f4acc1b923..d90e9183dfc7 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -5196,6 +5196,27 @@ DEFINE_IMETA_RESV_EVENT(xfs_imeta_resv_free_extent);
+ DEFINE_IMETA_RESV_EVENT(xfs_imeta_resv_critical);
+ DEFINE_INODE_ERROR_EVENT(xfs_imeta_resv_init_error);
+ 
++#ifdef CONFIG_XFS_RT
++TRACE_EVENT(xfs_growfs_check_rtgeom,
++	TP_PROTO(const struct xfs_mount *mp, unsigned int min_logfsbs),
++	TP_ARGS(mp, min_logfsbs),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(unsigned int, logblocks)
++		__field(unsigned int, min_logfsbs)
++	),
++	TP_fast_assign(
++		__entry->dev = mp->m_super->s_dev;
++		__entry->logblocks = mp->m_sb.sb_logblocks;
++		__entry->min_logfsbs = min_logfsbs;
++	),
++	TP_printk("dev %d:%d logblocks %u min_logfsbs %u",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->logblocks,
++		  __entry->min_logfsbs)
++);
++#endif /* CONFIG_XFS_RT */
++
+ #endif /* _TRACE_XFS_H */
+ 
+ #undef TRACE_INCLUDE_PATH
 
