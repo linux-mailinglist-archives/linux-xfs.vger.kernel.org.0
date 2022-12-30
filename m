@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29F37659D0C
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:40:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 814D1659CB8
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:25:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbiL3Wkr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:40:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54922 "EHLO
+        id S235580AbiL3WZa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:25:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiL3Wkq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:40:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1056CD63
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:40:45 -0800 (PST)
+        with ESMTP id S235435AbiL3WZ3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:25:29 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A9D1D0CF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:25:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C6F67B81C06
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:40:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868F0C433EF;
-        Fri, 30 Dec 2022 22:40:42 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 8BE9BCE19B8
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:25:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B378C433EF;
+        Fri, 30 Dec 2022 22:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440042;
-        bh=NrxX+RtVCV+DTBmpO5khKdPGieXVCP6nhNg7YtB35fc=;
+        s=k20201202; t=1672439124;
+        bh=oy6b9nD3CittG/zSgQgeBJLpfDBncmJEcfs0gHn9ZS0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=adJnoaBRng+ogHo58EGGUs+nsHzijA9EfluTA49ye93KYpMcNgg/+qNB7clNAgmpQ
-         gS+PXTF5zxagV/DLNR6/ssM8YttM+Pk4bqK/R9kZKxHWMWMxIS3xiNl1pGs5tQJSpX
-         /DzU53LmnqwpXZ+paLI5c/s5SW8bL+z0jgWzzgWHoxHtaa97jqzbBZEwxslPWUwLL3
-         PweCC7gbqtyRRr4T0WYaEp9jZDDWV/ifAkzNi1HgUy+78k38OhYgyBDOUMCFYAuyHd
-         clwPGj9g6w9mjExKViBjsht4bLdncY4O06y1njsIXsWtaYz6Etbh3WVJkB+O7LrlNq
-         Rk7MwnNbMyE/A==
-Subject: [PATCH 3/3] xfs: hoist inode record alignment checks from scrub
+        b=XDrvpBDQY7gibhPkINYNt8hGm6tRSyxlb1XDShmNw7vBlPXtVIzzrrfyTcWXRTINo
+         e/924d99AMX6VQeQeGvG9dSLy7cI6GmswiNOW6AMT3XdvKu4+nECJBYHVDEI/gkRxs
+         CGQ5sPI2Bdr9diACDxwD+dICKibZ1PHZE+wg4A6YxIdYfe7s3aoLViRknD+/TbgG6o
+         Zrvi+Kms3SeE1ivql9MsYlhDBXGG9WR70BBy2mG261A53xuJZ37AWmNSPLY22TZdbn
+         n3we7o/gTPVsd1lms2U0+1NQ7gHZfnENLvWAYr1FzfinPpdN8JfOFcDObLkuxXQB5d
+         S9rmkqwpcj4Gg==
+Subject: [PATCHSET v24.0 0/3] xfs: hoist scrub record checks into libxfs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:15 -0800
-Message-ID: <167243827583.684088.2409271075220837586.stgit@magnolia>
-In-Reply-To: <167243827537.684088.11219968589590305107.stgit@magnolia>
-References: <167243827537.684088.11219968589590305107.stgit@magnolia>
+Message-ID: <167243827537.684088.11219968589590305107.stgit@magnolia>
+In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
+References: <Y69UceeA2MEpjMJ8@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,57 +52,29 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Move the inobt record alignment checks from xchk_iallocbt_rec into
-xfs_inobt_check_irec so that they are applied everywhere.
+There are a few things about btree records that scrub checked but the
+libxfs _get_rec functions didn't.  Move these bits into libxfs so that
+everyone can benefit.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=btree-hoist-scrub-checks
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=btree-hoist-scrub-checks
 ---
  fs/xfs/libxfs/xfs_ialloc.c |    4 ++++
+ fs/xfs/libxfs/xfs_rmap.c   |   27 +++++++++++++++++++++++++++
  fs/xfs/scrub/ialloc.c      |    6 ------
- 2 files changed, 4 insertions(+), 6 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index b6f76935504e..2451db4c687c 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -103,8 +103,12 @@ xfs_inobt_check_irec(
- {
- 	uint64_t			realfree;
- 
-+	/* Record has to be properly aligned within the AG. */
- 	if (!xfs_verify_agino(cur->bc_ag.pag, irec->ir_startino))
- 		return __this_address;
-+	if (!xfs_verify_agino(cur->bc_ag.pag,
-+				irec->ir_startino + XFS_INODES_PER_CHUNK - 1))
-+		return __this_address;
- 	if (irec->ir_count < XFS_INODES_PER_HOLEMASK_BIT ||
- 	    irec->ir_count > XFS_INODES_PER_CHUNK)
- 		return __this_address;
-diff --git a/fs/xfs/scrub/ialloc.c b/fs/xfs/scrub/ialloc.c
-index 9aec5a793397..b85f0cd00bc2 100644
---- a/fs/xfs/scrub/ialloc.c
-+++ b/fs/xfs/scrub/ialloc.c
-@@ -413,7 +413,6 @@ xchk_iallocbt_rec(
- 	const union xfs_btree_rec	*rec)
- {
- 	struct xfs_mount		*mp = bs->cur->bc_mp;
--	struct xfs_perag		*pag = bs->cur->bc_ag.pag;
- 	struct xchk_iallocbt		*iabt = bs->private;
- 	struct xfs_inobt_rec_incore	irec;
- 	uint64_t			holes;
-@@ -431,11 +430,6 @@ xchk_iallocbt_rec(
- 	}
- 
- 	agino = irec.ir_startino;
--	/* Record has to be properly aligned within the AG. */
--	if (!xfs_verify_agino(pag, agino + XFS_INODES_PER_CHUNK - 1)) {
--		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
--		goto out;
--	}
- 
- 	xchk_iallocbt_rec_alignment(bs, &irec);
- 	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ fs/xfs/scrub/rmap.c        |   22 ----------------------
+ 4 files changed, 31 insertions(+), 28 deletions(-)
 
