@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C11C565A093
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:27:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4054F659F61
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236084AbiLaB1R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:27:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45516 "EHLO
+        id S235883AbiLaAR1 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:17:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236082AbiLaB1Q (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:27:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D1B1C93A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:27:15 -0800 (PST)
+        with ESMTP id S235885AbiLaAR0 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:17:26 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81672E0C6
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:17:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5CB84B81DE3
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:27:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC481C433EF;
-        Sat, 31 Dec 2022 01:27:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E1A561D06
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:17:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5E0C433EF;
+        Sat, 31 Dec 2022 00:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450033;
-        bh=bgGIMKAWrKOu+6fs/ymBeea8moo8ZkuivNnD+hiQo+A=;
+        s=k20201202; t=1672445844;
+        bh=MjXg0MWGmO22DNSTvJq1elvyTWprFM5Qkyuet8YHsAI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QEc2urCLcjU3MiXY9844nICNXePaud/dQAfmg4jBQyCga043ZbSovevUXMdzva4hi
-         eLekwgDgXyF7fhFFTIXFgUobqNAXTPTiidjYwp9jatCQanQRMotGNo9vKyq5aQEwyH
-         NqMuzveQFwYV2h/aLwSMA13M02wRYxmWwtsnpQOItWkq0KYKa3QQ4BPG9awU1A2Yix
-         oebGnnf4pRVQGtflT5Jk1bp+On3UGD1OMHNh7giMLy3gOsQpjh+IWT4aTtpAOnloNQ
-         LItOv7gpaABcKEToLktXbTHAE1AFSLg4RpzRRv/Wicme8jSF0cdYEzog4VMpq66Ezl
-         ssiRGuFj6NV6w==
-Subject: [PATCH 2/3] xfs: refactor realtime inode locking
+        b=CtFAfaDIJEFYc8OhkoSt+utnZYH4pfw/cd2Usu3J8ZRAIMaKBLP4QwWZdWNgYjcxU
+         MACoCG2WHQHuh3Sd7ktReE1s93Xv4Bwm9hWd6+0p3rspbrJuleh18KqR7AWJtPwx77
+         cgO/KpQYSejmX0aHq6gF1acAJdT0jx7YBB6BhEu0IPNBlo8DTeVLT3JRwG9JX94K8s
+         9rYmAJrxEnBggSIyI+WZW/Fgdwix8iRKo6Bwb9yozFmH9TDxDk7z2RZrucG3nBeZSa
+         mPo9y7HIf/ogy2Y+EF6TNY8AqYKhxQJwbx3AVexd+Y6h1RaPXHvojxrED4foPy82sZ
+         8kUDu85FWGgVQ==
+Subject: [PATCH 4/5] xfs_repair: port to the new refcount bag structure
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:49 -0800
-Message-ID: <167243866912.712531.12624284771909096670.stgit@magnolia>
-In-Reply-To: <167243866880.712531.9794913817759933297.stgit@magnolia>
-References: <167243866880.712531.9794913817759933297.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:52 -0800
+Message-ID: <167243867296.712955.11117252350666704044.stgit@magnolia>
+In-Reply-To: <167243867247.712955.4006304832992035940.stgit@magnolia>
+References: <167243867247.712955.4006304832992035940.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,255 +54,332 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create helper functions to deal with locking realtime metadata inodes.
-This enables us to maintain correct locking order once we start adding
-the realtime rmap and refcount btree inodes.
+Port the refcount record generating code to use the new refcount bag
+data structure.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_bmap.c     |    7 +----
- fs/xfs/libxfs/xfs_rtbitmap.c |   57 ++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_rtbitmap.h |   17 +++++++++++++
- fs/xfs/scrub/common.c        |    1 +
- fs/xfs/scrub/fscounters.c    |    4 +--
- fs/xfs/xfs_bmap_util.c       |    5 +---
- fs/xfs/xfs_fsmap.c           |    4 +--
- fs/xfs/xfs_rtalloc.c         |   15 ++++-------
- 8 files changed, 87 insertions(+), 23 deletions(-)
+ repair/rmap.c       |  152 +++++++++++++++------------------------------------
+ repair/xfs_repair.c |    6 ++
+ 2 files changed, 52 insertions(+), 106 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 1ad8606c1dd9..55fe8cda3d98 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -5416,12 +5416,9 @@ __xfs_bunmapi(
+diff --git a/repair/rmap.c b/repair/rmap.c
+index e598dd9c9b8..ef1a599162b 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -15,6 +15,7 @@
+ #include "libfrog/bitmap.h"
+ #include "libxfs/xfile.h"
+ #include "libxfs/xfbtree.h"
++#include "rcbag.h"
  
- 	if (isrt) {
- 		/*
--		 * Synchronize by locking the bitmap inode.
-+		 * Synchronize by locking the realtime bitmap.
- 		 */
--		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL|XFS_ILOCK_RTBITMAP);
--		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
--		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL|XFS_ILOCK_RTSUM);
--		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
-+		xfs_rtbitmap_lock(tp, mp);
+ #undef RMAP_DEBUG
+ 
+@@ -762,35 +763,32 @@ rmap_dump(
+  * reflink inode flag, if the stack depth is greater than 1.
+  */
+ static void
+-mark_inode_rl(
++mark_reflink_inodes(
+ 	struct xfs_mount	*mp,
+-	struct xfs_bag		*rmaps)
++	struct rcbag		*rcstack)
+ {
+-	struct rmap_for_refcount *rfr;
++	struct rcbag_iter	rciter;
+ 	struct ino_tree_node	*irec;
+-	int			off;
+-	uint64_t		idx;
+ 
+-	if (bag_count(rmaps) < 2)
+-		return;
+-
+-	/* Reflink flag accounting */
+-	foreach_bag_ptr(rmaps, idx, rfr) {
++	rcbag_ino_iter_start(rcstack, &rciter);
++	while (rcbag_ino_iter(rcstack, &rciter) == 1) {
+ 		xfs_agnumber_t	agno;
+ 		xfs_agino_t	agino;
++		int		off;
+ 
+-		ASSERT(!XFS_RMAP_NON_INODE_OWNER(rfr->rm_owner));
++		ASSERT(!XFS_RMAP_NON_INODE_OWNER(rciter.ino));
+ 
+-		agno = XFS_INO_TO_AGNO(mp, rfr->rm_owner);
+-		agino = XFS_INO_TO_AGINO(mp, rfr->rm_owner);
++		agno = XFS_INO_TO_AGNO(mp, rciter.ino);
++		agino = XFS_INO_TO_AGINO(mp, rciter.ino);
+ 
+ 		pthread_mutex_lock(&ag_locks[agno].lock);
+ 		irec = find_inode_rec(mp, agno, agino);
+-		off = get_inode_offset(mp, rfr->rm_owner, irec);
++		off = get_inode_offset(mp, rciter.ino, irec);
+ 		/* lock here because we might go outside this ag */
+ 		set_inode_is_rl(irec, off);
+ 		pthread_mutex_unlock(&ag_locks[agno].lock);
  	}
- 
- 	extno = 0;
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index b74261abd238..46095acec709 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -1251,3 +1251,60 @@ xfs_rtsummary_wordcount(
- 	blocks = xfs_rtsummary_blockcount(mp, rsumlevels, rbmblocks);
- 	return XFS_FSB_TO_B(mp, blocks) >> XFS_WORDLOG;
- }
-+
-+/*
-+ * Lock both realtime free space metadata inodes for a freespace update.  If a
-+ * transaction is given, the inodes will be joined to the transaction and the
-+ * ILOCKs will be released on transaction commit.
-+ */
-+void
-+xfs_rtbitmap_lock(
-+	struct xfs_trans	*tp,
-+	struct xfs_mount	*mp)
-+{
-+	xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
-+	if (tp)
-+		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
-+
-+	xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
-+	if (tp)
-+		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
-+}
-+
-+/* Unlock both realtime free space metadata inodes after a freespace update. */
-+void
-+xfs_rtbitmap_unlock(
-+	struct xfs_mount	*mp)
-+{
-+	xfs_iunlock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
-+	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
-+}
-+
-+/*
-+ * Lock the realtime free space metadata inodes for a freespace scan.  Callers
-+ * must walk metadata blocks in order of increasing file offset.
-+ */
-+void
-+xfs_rtbitmap_lock_shared(
-+	struct xfs_mount	*mp,
-+	unsigned int		rbmlock_flags)
-+{
-+	if (rbmlock_flags & XFS_RBMLOCK_BITMAP)
-+		xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+
-+	if (rbmlock_flags & XFS_RBMLOCK_SUMMARY)
-+		xfs_ilock(mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
-+}
-+
-+/* Unlock the realtime free space metadata inodes after a freespace scan. */
-+void
-+xfs_rtbitmap_unlock_shared(
-+	struct xfs_mount	*mp,
-+	unsigned int		rbmlock_flags)
-+{
-+	if (rbmlock_flags & XFS_RBMLOCK_SUMMARY)
-+		xfs_iunlock(mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
-+
-+	if (rbmlock_flags & XFS_RBMLOCK_BITMAP)
-+		xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+}
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
-index 749c8e3ec4cb..f6a2a48973ab 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.h
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.h
-@@ -279,6 +279,19 @@ xfs_suminfo_t xfs_suminfo_get(struct xfs_mount *mp,
- 		union xfs_suminfo_ondisk *infoptr);
- void xfs_suminfo_add(struct xfs_mount *mp, union xfs_suminfo_ondisk *infoptr,
- 		int delta);
-+
-+void xfs_rtbitmap_lock(struct xfs_trans *tp, struct xfs_mount *mp);
-+void xfs_rtbitmap_unlock(struct xfs_mount *mp);
-+
-+/* Lock the rt bitmap inode in shared mode */
-+#define XFS_RBMLOCK_BITMAP	(1U << 0)
-+/* Lock the rt summary inode in shared mode */
-+#define XFS_RBMLOCK_SUMMARY	(1U << 1)
-+
-+void xfs_rtbitmap_lock_shared(struct xfs_mount *mp,
-+		unsigned int rbmlock_flags);
-+void xfs_rtbitmap_unlock_shared(struct xfs_mount *mp,
-+		unsigned int rbmlock_flags);
- #else /* CONFIG_XFS_RT */
- # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
- # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
-@@ -295,6 +308,10 @@ xfs_rtbitmap_blockcount(struct xfs_mount *mp, xfs_rtbxlen_t rtextents)
- # define xfs_rtbitmap_wordcount(mp, r)			(0)
- # define xfs_rtsummary_blockcount(mp, l, b)		(0)
- # define xfs_rtsummary_wordcount(mp, l, b)		(0)
-+# define xfs_rtbitmap_lock(tp, mp)		do { } while (0)
-+# define xfs_rtbitmap_unlock(mp)		do { } while (0)
-+# define xfs_rtbitmap_lock_shared(mp, lf)	do { } while (0)
-+# define xfs_rtbitmap_unlock_shared(mp, lf)	do { } while (0)
- #endif /* CONFIG_XFS_RT */
- 
- #endif /* __XFS_RTBITMAP_H__ */
-diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index 4de13f8f4277..dadbe32916de 100644
---- a/fs/xfs/scrub/common.c
-+++ b/fs/xfs/scrub/common.c
-@@ -33,6 +33,7 @@
- #include "xfs_error.h"
- #include "xfs_quota.h"
- #include "xfs_swapext.h"
-+#include "xfs_rtbitmap.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/trace.h"
-diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
-index 680b2e1d2940..043fb5777290 100644
---- a/fs/xfs/scrub/fscounters.c
-+++ b/fs/xfs/scrub/fscounters.c
-@@ -470,7 +470,7 @@ xchk_fscount_count_frextents(
- 	if (!xfs_has_realtime(mp))
- 		return 0;
- 
--	xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+	xfs_rtbitmap_lock_shared(sc->mp, XFS_RBMLOCK_BITMAP);
- 	error = xfs_rtalloc_query_all(sc->mp, sc->tp,
- 			xchk_fscount_add_frextent, fsc);
- 	if (error) {
-@@ -479,7 +479,7 @@ xchk_fscount_count_frextents(
- 	}
- 
- out_unlock:
--	xfs_iunlock(sc->mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+	xfs_rtbitmap_unlock_shared(sc->mp, XFS_RBMLOCK_BITMAP);
- 	return error;
- }
- #else
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 1bfdd31723f5..447c057c9331 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -131,10 +131,7 @@ xfs_bmap_rtalloc(
- 	 * Lock out modifications to both the RT bitmap and summary inodes
- 	 */
- 	if (!rtlocked) {
--		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL|XFS_ILOCK_RTBITMAP);
--		xfs_trans_ijoin(ap->tp, mp->m_rbmip, XFS_ILOCK_EXCL);
--		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL|XFS_ILOCK_RTSUM);
--		xfs_trans_ijoin(ap->tp, mp->m_rsumip, XFS_ILOCK_EXCL);
-+		xfs_rtbitmap_lock(ap->tp, mp);
- 		rtlocked = true;
- 	}
- 
-diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
-index 8d0a6f480d2a..71053f840ea4 100644
---- a/fs/xfs/xfs_fsmap.c
-+++ b/fs/xfs/xfs_fsmap.c
-@@ -525,7 +525,7 @@ xfs_getfsmap_rtdev_rtbitmap_query(
- 	unsigned int			mod;
- 	int				error;
- 
--	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+	xfs_rtbitmap_lock_shared(mp, XFS_RBMLOCK_BITMAP);
- 
- 	/*
- 	 * Set up query parameters to return free rtextents covering the range
-@@ -551,7 +551,7 @@ xfs_getfsmap_rtdev_rtbitmap_query(
- 	if (error)
- 		goto err;
- err:
--	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+	xfs_rtbitmap_unlock_shared(mp, XFS_RBMLOCK_BITMAP);
- 	return error;
++	rcbag_ino_iter_stop(rcstack, &rciter);
  }
  
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 674ca3dab72e..11bea1c60eda 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1081,10 +1081,10 @@ xfs_growfs_rt(
- 		if (error)
- 			break;
- 		/*
--		 * Lock out other callers by grabbing the bitmap inode lock.
-+		 * Lock out other callers by grabbing the bitmap and summary
-+		 * inode locks and joining them to the transaction.
- 		 */
--		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
--		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
-+		xfs_rtbitmap_lock(tp, mp);
- 		/*
- 		 * Update the bitmap inode's size ondisk and incore.  We need
- 		 * to update the incore size so that inode inactivation won't
-@@ -1094,11 +1094,6 @@ xfs_growfs_rt(
- 			nsbp->sb_rbmblocks * nsbp->sb_blocksize;
- 		i_size_write(VFS_I(mp->m_rbmip), mp->m_rbmip->i_disk_size);
- 		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
--		/*
--		 * Get the summary inode into the transaction.
--		 */
--		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
--		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
- 		/*
- 		 * Update the summary inode's size.  We need to update the
- 		 * incore size so that inode inactivation won't punch what it
-@@ -1338,10 +1333,10 @@ xfs_rtalloc_reinit_frextents(
- 	uint64_t		val = 0;
+ /*
+@@ -826,8 +824,6 @@ refcount_emit(
+ _("Insufficient memory while recreating refcount tree."));
+ }
+ 
+-#define RMAP_NEXT(r)	((r)->rm_startblock + (r)->rm_blockcount)
+-
+ /* Decide if an rmap could describe a shared extent. */
+ static inline bool
+ rmap_shareable(
+@@ -887,40 +883,6 @@ refcount_walk_rmaps(
+ 	return 0;
+ }
+ 
+-/*
+- * Find the next block where the refcount changes, given the next rmap we
+- * looked at and the ones we're already tracking.
+- */
+-static inline int
+-next_refcount_edge(
+-	struct xfs_bag		*stack_top,
+-	struct xfs_rmap_irec	*next_rmap,
+-	bool			next_valid,
+-	xfs_agblock_t		*nbnop)
+-{
+-	struct rmap_for_refcount *rfr;
+-	uint64_t		idx;
+-	xfs_agblock_t		nbno = NULLAGBLOCK;
+-
+-	if (next_valid)
+-		nbno = next_rmap->rm_startblock;
+-
+-	foreach_bag_ptr(stack_top, idx, rfr)
+-		nbno = min(nbno, RMAP_NEXT(rfr));
+-
+-	/*
+-	 * We should have found /something/ because either next_rrm is the next
+-	 * interesting rmap to look at after emitting this refcount extent, or
+-	 * there are other rmaps in rmap_bag contributing to the current
+-	 * sharing count.  But if something is seriously wrong, bail out.
+-	 */
+-	if (nbno == NULLAGBLOCK)
+-		return EFSCORRUPTED;
+-
+-	*nbnop = nbno;
+-	return 0;
+-}
+-
+ /*
+  * Walk forward through the rmap btree to collect all rmaps starting at
+  * @bno in @rmap_bag.  These represent the file(s) that share ownership of
+@@ -930,28 +892,19 @@ next_refcount_edge(
+ static int
+ refcount_push_rmaps_at(
+ 	struct rmap_mem_cur	*rmcur,
+-	xfs_agnumber_t		agno,
+-	struct xfs_bag		*stack_top,
++	struct rcbag		*stack,
+ 	xfs_agblock_t		bno,
+-	struct xfs_rmap_irec	*irec,
++	struct xfs_rmap_irec	*rmap,
+ 	bool			*have,
+ 	const char		*tag)
+ {
+ 	int			have_gt;
  	int			error;
  
--	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+	xfs_rtbitmap_lock_shared(mp, XFS_RBMLOCK_BITMAP);
- 	error = xfs_rtalloc_query_all(mp, NULL, xfs_rtalloc_count_frextent,
- 			&val);
--	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
-+	xfs_rtbitmap_unlock_shared(mp, XFS_RBMLOCK_BITMAP);
+-	while (*have && irec->rm_startblock == bno) {
+-		struct rmap_for_refcount	rfr = {
+-			.rm_startblock		= irec->rm_startblock,
+-			.rm_blockcount		= irec->rm_blockcount,
+-			.rm_owner		= irec->rm_owner,
+-		};
++	while (*have && rmap->rm_startblock == bno) {
++		rcbag_add(stack, rmap);
+ 
+-		rmap_dump(tag, agno, &rfr);
+-		error = bag_add(stack_top, &rfr);
+-		if (error)
+-			return error;
+-		error = refcount_walk_rmaps(rmcur->mcur, irec, have);
++		error = refcount_walk_rmaps(rmcur->mcur, rmap, have);
+ 		if (error)
+ 			return error;
+ 	}
+@@ -971,15 +924,14 @@ refcount_push_rmaps_at(
+  */
+ int
+ compute_refcounts(
+-	struct xfs_mount		*mp,
++	struct xfs_mount	*mp,
+ 	xfs_agnumber_t		agno)
+ {
++	struct rcbag		*rcstack;
+ 	struct rmap_mem_cur	rmcur;
+-	struct xfs_rmap_irec	irec;
+-	struct xfs_bag		*stack_top = NULL;
+-	struct rmap_for_refcount *rfr;
+-	uint64_t		idx;
+-	uint64_t		old_stack_nr;
++	struct xfs_rmap_irec	rmap;
++	uint64_t		nr_rmaps;
++	uint64_t		old_stack_height;
+ 	xfs_agblock_t		sbno;	/* first bno of this rmap set */
+ 	xfs_agblock_t		cbno;	/* first bno of this refcount set */
+ 	xfs_agblock_t		nbno;	/* next bno where rmap set changes */
+@@ -991,11 +943,13 @@ compute_refcounts(
+ 	if (ag_rmaps[agno].ar_xfbtree == NULL)
+ 		return 0;
+ 
++	nr_rmaps = rmap_record_count(mp, agno);
++
+ 	error = rmap_init_mem_cursor(mp, NULL, agno, &rmcur);
  	if (error)
  		return error;
  
+-	error = init_bag(&stack_top, sizeof(struct rmap_for_refcount));
++	error = rcbag_init(mp, nr_rmaps, &rcstack);
+ 	if (error)
+ 		goto out_cur;
+ 
+@@ -1008,86 +962,72 @@ compute_refcounts(
+ 	/* Process reverse mappings into refcount data. */
+ 	while (libxfs_btree_has_more_records(rmcur.mcur)) {
+ 		/* Push all rmaps with pblk == sbno onto the stack */
+-		error = refcount_walk_rmaps(rmcur.mcur, &irec, &have);
++		error = refcount_walk_rmaps(rmcur.mcur, &rmap, &have);
+ 		if (error)
+ 			goto out_bag;
+ 		if (!have)
+ 			break;
+-		sbno = cbno = irec.rm_startblock;
+-		error = refcount_push_rmaps_at(&rmcur, agno, stack_top, sbno,
+-				&irec, &have, "push0");
++		sbno = cbno = rmap.rm_startblock;
++		error = refcount_push_rmaps_at(&rmcur, rcstack, sbno, &rmap,
++				&have, "push0");
+ 		if (error)
+ 			goto out_bag;
+-		mark_inode_rl(mp, stack_top);
++		mark_reflink_inodes(mp, rcstack);
+ 
+ 		/* Set nbno to the bno of the next refcount change */
+-		error = next_refcount_edge(stack_top, &irec, have, &nbno);
+-		if (error)
+-			goto out_bag;
++		rcbag_next_edge(rcstack, &rmap, have, &nbno);
+ 
+ 		/* Emit reverse mappings, if needed */
+ 		ASSERT(nbno > sbno);
+-		old_stack_nr = bag_count(stack_top);
++		old_stack_height = rcbag_count(rcstack);
+ 
+ 		/* While stack isn't empty... */
+-		while (bag_count(stack_top)) {
++		while (rcbag_count(rcstack) > 0) {
+ 			/* Pop all rmaps that end at nbno */
+-			foreach_bag_ptr_reverse(stack_top, idx, rfr) {
+-				if (RMAP_NEXT(rfr) != nbno)
+-					continue;
+-				rmap_dump("pop", agno, rfr);
+-				error = bag_remove(stack_top, idx);
+-				if (error)
+-					goto out_bag;
+-			}
++			rcbag_remove_ending_at(rcstack, nbno);
+ 
+ 			/* Push array items that start at nbno */
+-			error = refcount_walk_rmaps(rmcur.mcur, &irec, &have);
++			error = refcount_walk_rmaps(rmcur.mcur, &rmap, &have);
+ 			if (error)
+ 				goto out_bag;
+ 			if (have) {
+-				error = refcount_push_rmaps_at(&rmcur, agno,
+-						stack_top, nbno, &irec, &have,
+-						"push1");
++				error = refcount_push_rmaps_at(&rmcur, rcstack,
++						nbno, &rmap, &have, "push1");
+ 				if (error)
+ 					goto out_bag;
+ 			}
+-			mark_inode_rl(mp, stack_top);
++			mark_reflink_inodes(mp, rcstack);
+ 
+ 			/* Emit refcount if necessary */
+ 			ASSERT(nbno > cbno);
+-			if (bag_count(stack_top) != old_stack_nr) {
+-				if (old_stack_nr > 1) {
++			if (rcbag_count(rcstack) != old_stack_height) {
++				if (old_stack_height > 1) {
+ 					refcount_emit(mp, agno, cbno,
+-						      nbno - cbno,
+-						      old_stack_nr);
++							nbno - cbno,
++							old_stack_height);
+ 				}
+ 				cbno = nbno;
+ 			}
+ 
+ 			/* Stack empty, go find the next rmap */
+-			if (bag_count(stack_top) == 0)
++			if (rcbag_count(rcstack) == 0)
+ 				break;
+-			old_stack_nr = bag_count(stack_top);
++			old_stack_height = rcbag_count(rcstack);
+ 			sbno = nbno;
+ 
+ 			/* Set nbno to the bno of the next refcount change */
+-			error = next_refcount_edge(stack_top, &irec, have,
+-					&nbno);
+-			if (error)
+-				goto out_bag;
++			rcbag_next_edge(rcstack, &rmap, have, &nbno);
+ 
+ 			/* Emit reverse mappings, if needed */
+ 			ASSERT(nbno > sbno);
+ 		}
+ 	}
+ out_bag:
+-	free_bag(&stack_top);
++	rcbag_free(&rcstack);
+ out_cur:
+ 	rmap_free_mem_cursor(NULL, &rmcur, error);
+ 	return error;
+ }
+-#undef RMAP_NEXT
+ 
+ static int
+ count_btree_records(
+diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
+index 251a46d11fe..8e62533ac53 100644
+--- a/repair/xfs_repair.c
++++ b/repair/xfs_repair.c
+@@ -26,6 +26,7 @@
+ #include "libfrog/platform.h"
+ #include "bulkload.h"
+ #include "quotacheck.h"
++#include "rcbag_btree.h"
+ 
+ /*
+  * option tables for getsubopt calls
+@@ -1247,6 +1248,10 @@ main(int argc, char **argv)
+ 	phase3(mp, phase2_threads);
+ 	phase_end(mp, 3);
+ 
++	error = rcbagbt_init_cur_cache();
++	if (error)
++		do_error(_("could not allocate btree cursor memory\n"));
++
+ 	phase4(mp);
+ 	phase_end(mp, 4);
+ 
+@@ -1259,6 +1264,7 @@ main(int argc, char **argv)
+ 		phase5(mp);
+ 	}
+ 	phase_end(mp, 5);
++	rcbagbt_destroy_cur_cache();
+ 
+ 	/*
+ 	 * Done with the block usage maps, toss them...
 
