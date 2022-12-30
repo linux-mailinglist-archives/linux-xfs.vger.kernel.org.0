@@ -2,44 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E69C865A04F
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B8F4659F31
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:07:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236014AbiLaBLK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:11:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
+        id S235873AbiLaAHe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:07:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236015AbiLaBLJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:11:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D29C13CC6
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:11:08 -0800 (PST)
+        with ESMTP id S235857AbiLaAHd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:07:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2CA1E3C3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:07:32 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CF08561D5A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:11:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356D1C433D2;
-        Sat, 31 Dec 2022 01:11:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 787E961CCD
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:07:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9A8C433D2;
+        Sat, 31 Dec 2022 00:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449067;
-        bh=ak8RobrBD5Jqlr9Rk8pnp9gVF1zl9DcUDVwFzFHyHiU=;
+        s=k20201202; t=1672445251;
+        bh=S/KSYmQJ6q2gEYBwIUa10jzEfxJgpcQ8T+U0/5PQmnM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hY+I5SOTMk9o2Kv0JYkq7l+6UwvIT8jDulG4aFtyUUVXDLy2r2UkYx4G3re4ezx5Z
-         EOugY71hPnBoQe67Bk84rDtEdQpGX9cz3aehR0wWTr6C6j4+FsLfvx4/0Yq+Y8IkLY
-         MtAUKS0YuxXoQWitgpMTsl9SwvH7oj6SpcPpZsEKsr7J0cCcbtiS4EMYT/M9SYHEwR
-         vh+eRhMWIA7rV4s5CHsaA5ex9feLx9laU1Q2ENQRlHL5o8aWYAOopTdQDc8spzP7jv
-         +PAsAuMt0373589UGQumI8BdUrusVqD2NFgMudb63Toe6XuMHRRh2mxR9X1xZCdr1F
-         K5XJ8a1i/ckbQ==
-Subject: [PATCH 03/23] xfs: create transaction reservations for metadata inode
- operations
+        b=szzRfHR5jUdzXUxFHctlbWzz5APQ0Gdm+xzqfAadRGNeWL3xKuA+VyBvNTttSsfCE
+         7XXCs5hc53MehW6WbowZvO+DFhm+ufT0h2BalC8OfQ96MyK+zcLqVIB+gfju6HB62H
+         pfDWbBv9pwCyI586L7fntrIKszM/YP1RNQMgmwEYtF7D96vkhTd7WwSaW8mCIZ7Ngk
+         DvSbTtHYDWEnsWGHApHciiFTd6EFshSUPrtg/g8PVI/C2VrA7XGBBDJeqRyCT2ZEbx
+         VjAZNb/GpcOt1amQWzBqklFYfQ5eTxda3xJMgYAYK3NxVy2Ic6vL3HeU6+HUyPTdDA
+         /5QlvmaCEaACA==
+Subject: [PATCH 2/4] libfrog: promote XFROG_SCRUB_DESCR_SUMMARY to a scrub
+ type
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:25 -0800
-Message-ID: <167243864499.708110.13666815843828802033.stgit@magnolia>
-In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
-References: <167243864431.708110.1688096566212843499.stgit@magnolia>
+Message-ID: <167243864581.708428.5060762446690772815.stgit@magnolia>
+In-Reply-To: <167243864554.708428.558285078019160851.stgit@magnolia>
+References: <167243864554.708428.558285078019160851.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,91 +55,178 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create transaction reservation types and block reservation helpers to
-help us calculate transaction requirements.  Right now the reservations
-are the same as always; we're just separating the symbols for a future
-patch.
+"Summary" metadata, at least in the scrub context, are metadata whose
+values depend on some kind of computation and therefore can only be
+checked after we've looked at all the other metadata.  Currently, the
+superblock summary counters are the only thing that are like this, but
+since they run in a totally separate xfs_scrub phase (7 vs. 2), make
+them their own group and remove the group+flag mix.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_imeta.c      |   20 ++++++++++++++++++++
- fs/xfs/libxfs/xfs_imeta.h      |    3 +++
- fs/xfs/libxfs/xfs_trans_resv.c |    4 ++++
- fs/xfs/libxfs/xfs_trans_resv.h |    2 ++
- 4 files changed, 29 insertions(+)
+ io/scrub.c      |    3 +++
+ libfrog/scrub.c |    3 +--
+ libfrog/scrub.h |    8 +-------
+ scrub/phase4.c  |    2 +-
+ scrub/phase7.c  |    4 ++--
+ scrub/scrub.c   |   16 ++++++++++++----
+ scrub/scrub.h   |    3 ++-
+ 7 files changed, 22 insertions(+), 17 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_imeta.c b/fs/xfs/libxfs/xfs_imeta.c
-index 0a1cd0c5c15b..f14b7892f50d 100644
---- a/fs/xfs/libxfs/xfs_imeta.c
-+++ b/fs/xfs/libxfs/xfs_imeta.c
-@@ -19,6 +19,10 @@
- #include "xfs_inode.h"
- #include "xfs_quota.h"
- #include "xfs_ialloc.h"
-+#include "xfs_bmap_btree.h"
-+#include "xfs_da_format.h"
-+#include "xfs_da_btree.h"
-+#include "xfs_trans_space.h"
- 
- /*
-  * Metadata Inode Number Management
-@@ -436,3 +440,19 @@ xfs_imeta_mount(
- {
- 	return 0;
- }
-+
-+/* Calculate the log block reservation to create a metadata inode. */
-+unsigned int
-+xfs_imeta_create_space_res(
-+	struct xfs_mount	*mp)
-+{
-+	return XFS_IALLOC_SPACE_RES(mp);
-+}
-+
-+/* Calculate the log block reservation to unlink a metadata inode. */
-+unsigned int
-+xfs_imeta_unlink_space_res(
-+	struct xfs_mount	*mp)
-+{
-+	return XFS_REMOVE_SPACE_RES(mp);
-+}
-diff --git a/fs/xfs/libxfs/xfs_imeta.h b/fs/xfs/libxfs/xfs_imeta.h
-index b535e19ff1a0..9d54cb0d7962 100644
---- a/fs/xfs/libxfs/xfs_imeta.h
-+++ b/fs/xfs/libxfs/xfs_imeta.h
-@@ -45,4 +45,7 @@ int xfs_imeta_start_update(struct xfs_mount *mp,
- bool xfs_is_static_meta_ino(struct xfs_mount *mp, xfs_ino_t ino);
- int xfs_imeta_mount(struct xfs_mount *mp);
- 
-+unsigned int xfs_imeta_create_space_res(struct xfs_mount *mp);
-+unsigned int xfs_imeta_unlink_space_res(struct xfs_mount *mp);
-+
- #endif /* __XFS_IMETA_H__ */
-diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
-index 5b2f27cbdb80..d2716184bd8f 100644
---- a/fs/xfs/libxfs/xfs_trans_resv.c
-+++ b/fs/xfs/libxfs/xfs_trans_resv.c
-@@ -1025,4 +1025,8 @@ xfs_trans_resv_calc(
- 	resp->tr_itruncate.tr_logcount += logcount_adj;
- 	resp->tr_write.tr_logcount += logcount_adj;
- 	resp->tr_qm_dqalloc.tr_logcount += logcount_adj;
-+
-+	/* metadata inode creation and unlink */
-+	resp->tr_imeta_create = resp->tr_create;
-+	resp->tr_imeta_unlink = resp->tr_remove;
- }
-diff --git a/fs/xfs/libxfs/xfs_trans_resv.h b/fs/xfs/libxfs/xfs_trans_resv.h
-index 0554b9d775d2..3836c5131b91 100644
---- a/fs/xfs/libxfs/xfs_trans_resv.h
-+++ b/fs/xfs/libxfs/xfs_trans_resv.h
-@@ -48,6 +48,8 @@ struct xfs_trans_resv {
- 	struct xfs_trans_res	tr_qm_dqalloc;	/* allocate quota on disk */
- 	struct xfs_trans_res	tr_sb;		/* modify superblock */
- 	struct xfs_trans_res	tr_fsyncts;	/* update timestamps on fsync */
-+	struct xfs_trans_res	tr_imeta_create; /* create metadata inode */
-+	struct xfs_trans_res	tr_imeta_unlink; /* unlink metadata inode */
+diff --git a/io/scrub.c b/io/scrub.c
+index 0cad69253dc..4cfa4bc3c4c 100644
+--- a/io/scrub.c
++++ b/io/scrub.c
+@@ -67,6 +67,7 @@ scrub_ioctl(
+ 		break;
+ 	case XFROG_SCRUB_GROUP_NONE:
+ 	case XFROG_SCRUB_GROUP_FS:
++	case XFROG_SCRUB_GROUP_SUMMARY:
+ 		/* no control parameters */
+ 		break;
+ 	}
+@@ -168,6 +169,7 @@ parse_args(
+ 		break;
+ 	case XFROG_SCRUB_GROUP_FS:
+ 	case XFROG_SCRUB_GROUP_NONE:
++	case XFROG_SCRUB_GROUP_SUMMARY:
+ 		if (optind != argc) {
+ 			fprintf(stderr,
+ 				_("No parameters allowed.\n"));
+@@ -259,6 +261,7 @@ repair_ioctl(
+ 		break;
+ 	case XFROG_SCRUB_GROUP_NONE:
+ 	case XFROG_SCRUB_GROUP_FS:
++	case XFROG_SCRUB_GROUP_SUMMARY:
+ 		/* no control parameters */
+ 		break;
+ 	}
+diff --git a/libfrog/scrub.c b/libfrog/scrub.c
+index 90fc2b1a40c..5a5f522a425 100644
+--- a/libfrog/scrub.c
++++ b/libfrog/scrub.c
+@@ -132,8 +132,7 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
+ 	[XFS_SCRUB_TYPE_FSCOUNTERS] = {
+ 		.name	= "fscounters",
+ 		.descr	= "filesystem summary counters",
+-		.group	= XFROG_SCRUB_GROUP_FS,
+-		.flags	= XFROG_SCRUB_DESCR_SUMMARY,
++		.group	= XFROG_SCRUB_GROUP_SUMMARY,
+ 	},
  };
  
- /* shorthand way of accessing reservation structure */
+diff --git a/libfrog/scrub.h b/libfrog/scrub.h
+index 43a882321f9..68f1a968103 100644
+--- a/libfrog/scrub.h
++++ b/libfrog/scrub.h
+@@ -13,6 +13,7 @@ enum xfrog_scrub_group {
+ 	XFROG_SCRUB_GROUP_PERAG,	/* per-AG metadata */
+ 	XFROG_SCRUB_GROUP_FS,		/* per-FS metadata */
+ 	XFROG_SCRUB_GROUP_INODE,	/* per-inode metadata */
++	XFROG_SCRUB_GROUP_SUMMARY,	/* summary metadata */
+ };
+ 
+ /* Catalog of scrub types and names, indexed by XFS_SCRUB_TYPE_* */
+@@ -20,15 +21,8 @@ struct xfrog_scrub_descr {
+ 	const char		*name;
+ 	const char		*descr;
+ 	enum xfrog_scrub_group	group;
+-	unsigned int		flags;
+ };
+ 
+-/*
+- * The type of metadata checked by this scrubber is a summary of other types
+- * of metadata.  This scrubber should be run after all the others.
+- */
+-#define XFROG_SCRUB_DESCR_SUMMARY	(1 << 0)
+-
+ extern const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR];
+ 
+ int xfrog_scrub_metadata(struct xfs_fd *xfd, struct xfs_scrub_metadata *meta);
+diff --git a/scrub/phase4.c b/scrub/phase4.c
+index ecd56056ca2..3c985cdc13a 100644
+--- a/scrub/phase4.c
++++ b/scrub/phase4.c
+@@ -139,7 +139,7 @@ phase4_func(
+ 	 * counters, so counter repairs have to be put on the list now so that
+ 	 * they get fixed before we stop retrying unfixed metadata repairs.
+ 	 */
+-	ret = scrub_fs_summary(ctx, &ctx->action_lists[0]);
++	ret = scrub_fs_counters(ctx, &ctx->action_lists[0]);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/scrub/phase7.c b/scrub/phase7.c
+index 8d8034c36af..2b83e0a471d 100644
+--- a/scrub/phase7.c
++++ b/scrub/phase7.c
+@@ -116,9 +116,9 @@ phase7_func(
+ 	int			ip;
+ 	int			error;
+ 
+-	/* Check and fix the fs summary counters. */
++	/* Check and fix the summary metadata. */
+ 	action_list_init(&alist);
+-	error = scrub_fs_summary(ctx, &alist);
++	error = scrub_summary_metadata(ctx, &alist);
+ 	if (error)
+ 		return error;
+ 	error = action_list_process(ctx, -1, &alist,
+diff --git a/scrub/scrub.c b/scrub/scrub.c
+index 61a111db080..b7e120e91d6 100644
+--- a/scrub/scrub.c
++++ b/scrub/scrub.c
+@@ -46,6 +46,7 @@ format_scrub_descr(
+ 				_(sc->descr));
+ 		break;
+ 	case XFROG_SCRUB_GROUP_FS:
++	case XFROG_SCRUB_GROUP_SUMMARY:
+ 		return snprintf(buf, buflen, _("%s"), _(sc->descr));
+ 		break;
+ 	case XFROG_SCRUB_GROUP_NONE:
+@@ -356,8 +357,6 @@ scrub_group(
+ 
+ 		if (sc->group != group)
+ 			continue;
+-		if (sc->flags & XFROG_SCRUB_DESCR_SUMMARY)
+-			continue;
+ 
+ 		ret = scrub_meta_type(ctx, type, agno, alist);
+ 		if (ret)
+@@ -410,9 +409,18 @@ scrub_fs_metadata(
+ 	return scrub_group(ctx, XFROG_SCRUB_GROUP_FS, 0, alist);
+ }
+ 
+-/* Scrub FS summary metadata. */
++/* Scrub all FS summary metadata. */
+ int
+-scrub_fs_summary(
++scrub_summary_metadata(
++	struct scrub_ctx		*ctx,
++	struct action_list		*alist)
++{
++	return scrub_group(ctx, XFROG_SCRUB_GROUP_SUMMARY, 0, alist);
++}
++
++/* Scrub /only/ the superblock summary counters. */
++int
++scrub_fs_counters(
+ 	struct scrub_ctx		*ctx,
+ 	struct action_list		*alist)
+ {
+diff --git a/scrub/scrub.h b/scrub/scrub.h
+index 023069ee066..56836cf2ba3 100644
+--- a/scrub/scrub.h
++++ b/scrub/scrub.h
+@@ -23,7 +23,8 @@ int scrub_ag_headers(struct scrub_ctx *ctx, xfs_agnumber_t agno,
+ int scrub_ag_metadata(struct scrub_ctx *ctx, xfs_agnumber_t agno,
+ 		struct action_list *alist);
+ int scrub_fs_metadata(struct scrub_ctx *ctx, struct action_list *alist);
+-int scrub_fs_summary(struct scrub_ctx *ctx, struct action_list *alist);
++int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist);
++int scrub_fs_counters(struct scrub_ctx *ctx, struct action_list *alist);
+ 
+ bool can_scrub_fs_metadata(struct scrub_ctx *ctx);
+ bool can_scrub_inode(struct scrub_ctx *ctx);
 
