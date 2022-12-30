@@ -2,97 +2,109 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BC0D65A01C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:59:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B331965A11C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:00:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235735AbiLaA7N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:59:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39178 "EHLO
+        id S236121AbiLaCAb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:00:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235677AbiLaA7M (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:59:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21B0F03A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:59:11 -0800 (PST)
+        with ESMTP id S236120AbiLaCAa (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:00:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6FE1C438
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:00:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6EE0661D6D
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:59:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1270C433EF;
-        Sat, 31 Dec 2022 00:59:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BF78C61C5B
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:00:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2602AC433EF;
+        Sat, 31 Dec 2022 02:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448350;
-        bh=KSifPbI2TubakbpoOuz2AdtimWEwgpekPN42CDIxqFw=;
+        s=k20201202; t=1672452029;
+        bh=482r1WQSyvTSKfMN7OaT+cZrXg8z80qxIGmmX5w7K54=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=fUI381IjufYp9DKyPQmZXHA6OJ+D0QlvPU9PnjFQMj8+TM0IebUyGHrnwXexNt/sV
-         gJrjIhebGlupD0nT9a/9ke5zl2/hH2jdSBRhbTleN/IBA/rFkXwhP2VM4X5Ze3IT1B
-         Wt/UHfzv3/yT/nLgW8BA3hv4aoEVkQI82Xq5rFTnSHlRQ7MLQM9H0kSDdOfHdjpOTz
-         cw6feMZYNVYleoLiFS3AAW9ywr2BUCVKGjVx9Dt+fzrkpKuWU5FnAMMITaKfM/0Vb6
-         gOq9tJCexngwmsTCUwXpd4z2fGY+mlJB2u+pFzntbxpoJl/ZzTaCDZ43Q9Net+EL2E
-         R72DqhLjDF10A==
-Subject: [PATCHSET v1.0 0/9] xfs: reflink with large realtime extents
+        b=kxnGkmKy2NlA1xGGtgcpfMVfa8W9aCKbQlb0gkBWS0SkH1naUD8CdtrXoqj1EO5d6
+         2trnrtIlWkVroBqxG6ixtYw0EJbABkor2tm0pTNfxvPXAFZT6fdO4PNmgo6q2JuLZv
+         0Imor4AJKxnTTZZCQVrAtyBMQIUI9zF5jx+dgFP6P3U8wDzC4K/WP0w0ZZy+uGiIKw
+         8RiGgbnDmtSrPRtz+Kgb7rrS8ObfueXL/RxeEBTsaOiTZAH3svQG8k7S9uKE3JyNub
+         WA7PRgUFdF/7j8FIi1y/ntpgVUfkqFHaJjkRWDgCQu3I0ZB4wjVpIHRsdvoM10gg7I
+         fOPUzvp1G1BSQ==
+Subject: [PATCH 6/9] xfs: enable extent size hints for CoW when rtextsize > 1
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:38 -0800
-Message-ID: <167243871792.718512.13170681692847163098.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243871889.718512.5550194735087623208.stgit@magnolia>
+In-Reply-To: <167243871792.718512.13170681692847163098.stgit@magnolia>
+References: <167243871792.718512.13170681692847163098.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've landed support for reflink on the realtime device for
-cases where the rt extent size is the same as the fs block size, enhance
-the reflink code further to support cases where the rt extent size is a
-power-of-two multiple of the fs block size.  This enables us to do data
-block sharing (for example) for much larger allocation units by dirtying
-pagecache around shared extents and expanding writeback to write back
-shared extents fully.
+CoW extent size hints are not allowed on filesystems that have large
+realtime extents because we only want to perform the minimum required
+amount of write-around (aka write amplification) for shared extents.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
+On filesystems where rtextsize > 1, allocations can only be done in
+units of full rt extents, which means that we can only map an entire rt
+extent's worth of blocks into the data fork.  Hole punch requests become
+conversions to unwritten if the request isn't aligned properly.
 
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
+Because a copy-write fundamentally requires remapping, this means that
+we also can only do copy-writes of a full rt extent.  This is too
+expensive for large hint sizes, since it's all or nothing.
 
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-reflink-extsize
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-reflink-extsize
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-reflink-extsize
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/dax.c                      |    5 +
- fs/iomap/buffered-io.c        |   55 ++++++++++
- fs/remap_range.c              |   30 +++---
- fs/xfs/libxfs/xfs_bmap.c      |   22 ++++
- fs/xfs/libxfs/xfs_inode_buf.c |   20 +---
- fs/xfs/xfs_aops.c             |   40 +++++++
- fs/xfs/xfs_file.c             |  171 ++++++++++++++++++++++++++++++++
- fs/xfs/xfs_inode.h            |    9 ++
- fs/xfs/xfs_iops.c             |   15 +++
- fs/xfs/xfs_reflink.c          |  220 ++++++++++++++++++++++++++++++++++++++++-
- fs/xfs/xfs_rtalloc.c          |    3 -
- fs/xfs/xfs_super.c            |   17 ++-
- fs/xfs/xfs_trace.h            |    4 +
- include/linux/fs.h            |    3 -
- include/linux/iomap.h         |    2 
- 15 files changed, 574 insertions(+), 42 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index b2bc39b1f9b7..053d72063999 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -6451,6 +6451,28 @@ xfs_get_cowextsz_hint(
+ 	if (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE)
+ 		a = ip->i_cowextsize;
+ 	if (XFS_IS_REALTIME_INODE(ip)) {
++		/*
++		 * For realtime files, the realtime extent is the fundamental
++		 * unit of allocation.  This means that data sharing and CoW
++		 * remapping can only be done in those units.  For filesystems
++		 * where the extent size is larger than one block, write
++		 * requests that are not aligned to an extent boundary employ
++		 * an unshare-around strategy to ensure that all pages for a
++		 * shared extent are fully dirtied.
++		 *
++		 * Because the remapping alignment requirement applies equally
++		 * to all CoW writes, any regular overwrites that could be
++		 * turned (by a speculative CoW preallocation) into a CoW write
++		 * must either employ this dirty-around strategy, or be smart
++		 * enough to ignore the CoW fork mapping unless the entire
++		 * extent is dirty or becomes shared by writeback time.  Doing
++		 * the first would dramatically increase write amplification,
++		 * and the second would require deeper insight into the state
++		 * of the page cache during a writeback request.  For now, we
++		 * ignore the hint.
++		 */
++		if (ip->i_mount->m_sb.sb_rextsize > 1)
++			return ip->i_mount->m_sb.sb_rextsize;
+ 		b = 0;
+ 		if (ip->i_diflags & XFS_DIFLAG_EXTSIZE)
+ 			b = ip->i_extsize;
 
