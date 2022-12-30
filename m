@@ -2,235 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F9CD65A174
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:22:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1792365A023
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:00:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236218AbiLaCWt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:22:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55078 "EHLO
+        id S235807AbiLaBAc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:00:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236216AbiLaCWt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:22:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D6D519C12
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:22:48 -0800 (PST)
+        with ESMTP id S235750AbiLaBAc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:00:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2617C1C921
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:00:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CED4761C43
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:22:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37AA0C433EF;
-        Sat, 31 Dec 2022 02:22:47 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DAD23B81DEF
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:00:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE77C433EF;
+        Sat, 31 Dec 2022 01:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453367;
-        bh=MiuHvsC/tBqxyPKHtP1pAHm4pCl3IpB2W1oOEpp1FKA=;
+        s=k20201202; t=1672448428;
+        bh=Ukg1CXMzx3mra0tCrbEL50tuHnOd06rDZPJDSbLtgPM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KjXfKGT7IF1iTbLqgRhItOJpxTG3cjpwVLvCGU+/I4eIYrzQlTJeea0EdM86wkk4w
-         uRIDe8KTMPY4YVKynkn3lZ2iCycijjyQ4IpmM08JcpIXOJqXSAiyaaTVp1XLN2y19K
-         yqjT3Km6Dc7YA4RMGpWqKX+BljTbjFVlO8jMCo8VUG1iaO7H1RnqHmrGtnS+3WkEGq
-         CwXQEdNDROV6Yua6Kk+xVMos8rXmBS25NWbeRBOb5pud4fKzT+Y43Ml8rR70N7Tlhl
-         urZaSe22WAC+kJNFIr2bWCkMuFjV2Vze8L6Kh30piTfLGpOkPfXY+0N39z9AvudP+B
-         /3nwKf9pqtmIA==
-Subject: [PATCH 04/10] libfrog: move 64-bit division wrappers to libfrog
+        b=fvZuqYME+wZaT+jlK4kOcgOWNTBPdgKVDJawK3eXJ6idsFir3oETX2QOlltId9nYn
+         4IXp3zV82z7to8PUY2RATdTpM7OVWN7Yj994BhSUfeP/7abGZs8WAXC5K0x0UU3Pm9
+         AWb9PcZaImnSHCckKFVJkSE5dRI/Wjh2WQ/V3HQhMPVSVc1xDmqiAcW+7pDjxW9qTj
+         UPXvd1hBmyPhQsdbvo4/Mvwo38aCO0vXLXV5Oi7jlCD3oFt6156H3vqzi3ke9o/o7d
+         WLTUYGYLxhBtUGX6VnylaWu7VOCA4Oz9fXjpEgSodUXSaWl24pDvkyhke41hHtz1zB
+         EqSpYr1zHgb/A==
+Subject: [PATCHSET v1.0 00/10] libxfs: refactor rt extent unit conversions
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:28 -0800
-Message-ID: <167243876868.727509.14947013529888847664.stgit@magnolia>
-In-Reply-To: <167243876812.727509.17144221830951566022.stgit@magnolia>
-References: <167243876812.727509.17144221830951566022.stgit@magnolia>
+Message-ID: <167243876812.727509.17144221830951566022.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-We want to keep the rtgroup unit conversion functions as static inlines,
-so share the div64 functions via libfrog instead of libxfs_priv.h.
+This series replaces all the open-coded integer division and
+multiplication conversions between rt blocks and rt extents with calls
+to static inline helpers.  Having cleaned all that up, the helpers are
+augmented to skip the expensive operations in favor of bit shifts and
+masking if the rt extent size is a power of two.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-rt-unit-conversions
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=refactor-rt-unit-conversions
 ---
- libfrog/Makefile     |    1 +
- libfrog/div64.h      |   69 ++++++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/libxfs_priv.h |   61 +-------------------------------------------
- 3 files changed, 71 insertions(+), 60 deletions(-)
+ include/libxfs.h         |    1 
+ include/xfs_mount.h      |    2 +
+ libfrog/Makefile         |    1 
+ libfrog/div64.h          |   83 +++++++++++++++++++++++++++++++++++++++++
+ libxfs/libxfs_priv.h     |   93 ++++++++++++----------------------------------
+ libxfs/xfs_bmap.c        |   19 +++------
+ libxfs/xfs_rtbitmap.c    |    4 +-
+ libxfs/xfs_rtbitmap.h    |   88 ++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_sb.c          |    2 +
+ libxfs/xfs_swapext.c     |    7 ++-
+ libxfs/xfs_trans_inode.c |    3 +
+ libxfs/xfs_trans_resv.c  |    3 +
+ mkfs/proto.c             |   13 +++---
+ repair/agheader.h        |    2 -
+ repair/dinode.c          |   21 ++++++----
+ repair/incore.c          |   16 ++++----
+ repair/incore.h          |    4 +-
+ repair/phase4.c          |   16 ++++----
+ repair/rt.c              |    4 +-
+ 19 files changed, 259 insertions(+), 123 deletions(-)
  create mode 100644 libfrog/div64.h
-
-
-diff --git a/libfrog/Makefile b/libfrog/Makefile
-index 66d2afe56fe..04aecf1abf1 100644
---- a/libfrog/Makefile
-+++ b/libfrog/Makefile
-@@ -40,6 +40,7 @@ crc32c.h \
- crc32cselftest.h \
- crc32defs.h \
- crc32table.h \
-+div64.h \
- file_exchange.h \
- fsgeom.h \
- logging.h \
-diff --git a/libfrog/div64.h b/libfrog/div64.h
-new file mode 100644
-index 00000000000..265487916fc
---- /dev/null
-+++ b/libfrog/div64.h
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2000-2005 Silicon Graphics, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef LIBFROG_DIV64_H_
-+#define LIBFROG_DIV64_H_
-+
-+static inline int __do_div(unsigned long long *n, unsigned base)
-+{
-+	int __res;
-+	__res = (int)(((unsigned long) *n) % (unsigned) base);
-+	*n = ((unsigned long) *n) / (unsigned) base;
-+	return __res;
-+}
-+
-+#define do_div(n,base)	(__do_div((unsigned long long *)&(n), (base)))
-+#define do_mod(a, b)		((a) % (b))
-+#define rol32(x,y)		(((x) << (y)) | ((x) >> (32 - (y))))
-+
-+/**
-+ * div_u64_rem - unsigned 64bit divide with 32bit divisor with remainder
-+ * @dividend: unsigned 64bit dividend
-+ * @divisor: unsigned 32bit divisor
-+ * @remainder: pointer to unsigned 32bit remainder
-+ *
-+ * Return: sets ``*remainder``, then returns dividend / divisor
-+ *
-+ * This is commonly provided by 32bit archs to provide an optimized 64bit
-+ * divide.
-+ */
-+static inline uint64_t
-+div_u64_rem(uint64_t dividend, uint32_t divisor, uint32_t *remainder)
-+{
-+	*remainder = dividend % divisor;
-+	return dividend / divisor;
-+}
-+
-+/**
-+ * div_u64 - unsigned 64bit divide with 32bit divisor
-+ * @dividend: unsigned 64bit dividend
-+ * @divisor: unsigned 32bit divisor
-+ *
-+ * This is the most common 64bit divide and should be used if possible,
-+ * as many 32bit archs can optimize this variant better than a full 64bit
-+ * divide.
-+ */
-+static inline uint64_t div_u64(uint64_t dividend, uint32_t divisor)
-+{
-+	uint32_t remainder;
-+	return div_u64_rem(dividend, divisor, &remainder);
-+}
-+
-+/**
-+ * div64_u64_rem - unsigned 64bit divide with 64bit divisor and remainder
-+ * @dividend: unsigned 64bit dividend
-+ * @divisor: unsigned 64bit divisor
-+ * @remainder: pointer to unsigned 64bit remainder
-+ *
-+ * Return: sets ``*remainder``, then returns dividend / divisor
-+ */
-+static inline uint64_t
-+div64_u64_rem(uint64_t dividend, uint64_t divisor, uint64_t *remainder)
-+{
-+	*remainder = dividend % divisor;
-+	return dividend / divisor;
-+}
-+
-+#endif /* LIBFROG_DIV64_H_ */
-diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
-index 4cb996a3f3f..49441ac787f 100644
---- a/libxfs/libxfs_priv.h
-+++ b/libxfs/libxfs_priv.h
-@@ -50,6 +50,7 @@
- #include "bitops.h"
- #include "kmem.h"
- #include "libfrog/radix-tree.h"
-+#include "libfrog/div64.h"
- #include "atomic.h"
- #include "spinlock.h"
- #include "linux-err.h"
-@@ -257,66 +258,6 @@ static inline bool __must_check __must_check_overflow(bool overflow)
- 	__builtin_add_overflow(__a, __b, __d);	\
- }))
- 
--static inline int __do_div(unsigned long long *n, unsigned base)
--{
--	int __res;
--	__res = (int)(((unsigned long) *n) % (unsigned) base);
--	*n = ((unsigned long) *n) / (unsigned) base;
--	return __res;
--}
--
--#define do_div(n,base)	(__do_div((unsigned long long *)&(n), (base)))
--#define do_mod(a, b)		((a) % (b))
--#define rol32(x,y)		(((x) << (y)) | ((x) >> (32 - (y))))
--
--/**
-- * div_u64_rem - unsigned 64bit divide with 32bit divisor with remainder
-- * @dividend: unsigned 64bit dividend
-- * @divisor: unsigned 32bit divisor
-- * @remainder: pointer to unsigned 32bit remainder
-- *
-- * Return: sets ``*remainder``, then returns dividend / divisor
-- *
-- * This is commonly provided by 32bit archs to provide an optimized 64bit
-- * divide.
-- */
--static inline uint64_t
--div_u64_rem(uint64_t dividend, uint32_t divisor, uint32_t *remainder)
--{
--	*remainder = dividend % divisor;
--	return dividend / divisor;
--}
--
--/**
-- * div_u64 - unsigned 64bit divide with 32bit divisor
-- * @dividend: unsigned 64bit dividend
-- * @divisor: unsigned 32bit divisor
-- *
-- * This is the most common 64bit divide and should be used if possible,
-- * as many 32bit archs can optimize this variant better than a full 64bit
-- * divide.
-- */
--static inline uint64_t div_u64(uint64_t dividend, uint32_t divisor)
--{
--	uint32_t remainder;
--	return div_u64_rem(dividend, divisor, &remainder);
--}
--
--/**
-- * div64_u64_rem - unsigned 64bit divide with 64bit divisor and remainder
-- * @dividend: unsigned 64bit dividend
-- * @divisor: unsigned 64bit divisor
-- * @remainder: pointer to unsigned 64bit remainder
-- *
-- * Return: sets ``*remainder``, then returns dividend / divisor
-- */
--static inline uint64_t
--div64_u64_rem(uint64_t dividend, uint64_t divisor, uint64_t *remainder)
--{
--	*remainder = dividend % divisor;
--	return dividend / divisor;
--}
--
- #define min_t(type,x,y) \
- 	({ type __x = (x); type __y = (y); __x < __y ? __x: __y; })
- #define max_t(type,x,y) \
 
