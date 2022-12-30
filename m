@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B2F659D2E
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:48:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE474659D33
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:49:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235164AbiL3Wsd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:48:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56668 "EHLO
+        id S235576AbiL3Wtt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:49:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235455AbiL3Wsc (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:48:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC85318E30
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:48:31 -0800 (PST)
+        with ESMTP id S229514AbiL3Wts (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:49:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E15017890
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:49:48 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9C3F5B81C22
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:48:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50133C433D2;
-        Fri, 30 Dec 2022 22:48:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F93761AC4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:49:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06AB3C433EF;
+        Fri, 30 Dec 2022 22:49:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440509;
-        bh=mGwgeu1hj9D453WbT89vVxXyKPx12WmK8r+med5VdL0=;
+        s=k20201202; t=1672440587;
+        bh=LqUM//4hsDq1ErTHGHi9N5XdWAys5/EX1/xBSarsw98=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aJy541lxfNedi0xldlBz3lyZKKhrEMTvVeTph+dDaRHmprxvdq6iL21Qo7nZpChz2
-         Pcc7Q64AVA8mTRD1UiX/JveN/dT7avxRWZY6F6u7iTB+tlfT54EGEDzk/d6Fgpg8mY
-         RO/gXCTT7XbgSdA8B4wJ1Cyptg6oI79PqNhFKjge5V98xn2NwUNw5wAieiFCCQ0yrg
-         bxVtiN/b0HEOadVW6VdJnb6wwOVcVAbncNZmCjKdtuxcnWDX6pSMBFIynepFKuBk3w
-         MfpNvOKkzv/5riD5o7lvtTakIntEpouFY0ikHfUPgqEtRzTxMcZG4IAc+7u4r79ppq
-         g/pO8NMI8zafA==
-Subject: [PATCH 01/11] xfs: xattr scrub should ensure one namespace bit per
- name
+        b=avyL7D9lVHrp8biagxM1CGoq+oeytMfpRdYTxpS4SEfJAi06r3P5THP8YT6QO2xM3
+         lHycBtfJ6GdwAYLNbeV6t62w95xTat3cPI+Pv9o6/0VAVLlEoPeEIQhGOCZgr3ZjVZ
+         W2o7+cgPHU+kqQCx+/n/lnqmzZlbeN24Fo8rLpUBPsOMpEuSDpOEhXD+6Sabj9KD2H
+         yj/gCMXzuEzcbH8NWoMi6PdumUIy43OlPPUedlktiip8O8XdiE/V6ak23jjDBMWh/A
+         XiYxSFQ2OCjU8EId8QIvB1VPDdXY1C/QtQSbcUHTd1MIcGhisXtZL20bHugKwsxs2X
+         MLyBeZwmm5qJQ==
+Subject: [PATCH 06/11] xfs: split valuebuf from xchk_xattr_buf.buf
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:46 -0800
-Message-ID: <167243830623.687022.11979221984710331928.stgit@magnolia>
+Message-ID: <167243830693.687022.11588506062245157795.stgit@magnolia>
 In-Reply-To: <167243830598.687022.17067931640967897645.stgit@magnolia>
 References: <167243830598.687022.17067931640967897645.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,34 +54,185 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Check that each extended attribute exists in only one namespace.
+Move the xattr value buffer from somewhere in xchk_xattr_buf.buf[] to an
+explicit pointer.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/xfs/scrub/attr.c |   89 +++++++++++++++++++++++++--------------------------
+ fs/xfs/scrub/attr.h |   21 ++----------
+ 2 files changed, 46 insertions(+), 64 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index 31529b9bf389..95752e300105 100644
+index c343ae932ae3..98371daa1397 100644
 --- a/fs/xfs/scrub/attr.c
 +++ b/fs/xfs/scrub/attr.c
-@@ -128,10 +128,16 @@ xchk_xattr_listent(
+@@ -31,6 +31,9 @@ xchk_xattr_buf_cleanup(
+ 	ab->freemap = NULL;
+ 	kvfree(ab->usedmap);
+ 	ab->usedmap = NULL;
++	kvfree(ab->value);
++	ab->value = NULL;
++	ab->value_sz = 0;
+ }
+ 
+ /*
+@@ -44,54 +47,45 @@ xchk_setup_xattr_buf(
+ 	size_t			value_size,
+ 	gfp_t			flags)
+ {
+-	size_t			sz = value_size;
+ 	size_t			bmp_sz;
+ 	struct xchk_xattr_buf	*ab = sc->buf;
+-	unsigned long		*old_usedmap = NULL;
+-	unsigned long		*old_freemap = NULL;
++	void			*new_val;
+ 
+ 	bmp_sz = sizeof(long) * BITS_TO_LONGS(sc->mp->m_attr_geo->blksize);
+ 
+-	/*
+-	 * If there's already a buffer, figure out if we need to reallocate it
+-	 * to accommodate a larger size.
+-	 */
+-	if (ab) {
+-		if (sz <= ab->sz)
+-			return 0;
+-		old_freemap = ab->freemap;
+-		old_usedmap = ab->usedmap;
+-		kvfree(ab);
+-		sc->buf = NULL;
+-	}
++	if (ab)
++		goto resize_value;
+ 
+-	/*
+-	 * Don't zero the buffer upon allocation to avoid runtime overhead.
+-	 * All users must be careful never to read uninitialized contents.
+-	 */
+-	ab = kvmalloc(sizeof(*ab) + sz, flags);
++	ab = kvzalloc(sizeof(struct xchk_xattr_buf), flags);
+ 	if (!ab)
+ 		return -ENOMEM;
+-	ab->sz = sz;
+ 	sc->buf = ab;
+ 	sc->buf_cleanup = xchk_xattr_buf_cleanup;
+ 
+-	if (old_usedmap) {
+-		ab->usedmap = old_usedmap;
+-	} else {
+-		ab->usedmap = kvmalloc(bmp_sz, flags);
+-		if (!ab->usedmap)
+-			return -ENOMEM;
+-	}
++	ab->usedmap = kvmalloc(bmp_sz, flags);
++	if (!ab->usedmap)
++		return -ENOMEM;
++
++	ab->freemap = kvmalloc(bmp_sz, flags);
++	if (!ab->freemap)
++		return -ENOMEM;
+ 
+-	if (old_freemap) {
+-		ab->freemap = old_freemap;
+-	} else {
+-		ab->freemap = kvmalloc(bmp_sz, flags);
+-		if (!ab->freemap)
+-			return -ENOMEM;
++resize_value:
++	if (ab->value_sz >= value_size)
++		return 0;
++
++	if (ab->value) {
++		kvfree(ab->value);
++		ab->value = NULL;
++		ab->value_sz = 0;
+ 	}
+ 
++	new_val = kvmalloc(value_size, flags);
++	if (!new_val)
++		return -ENOMEM;
++
++	ab->value = new_val;
++	ab->value_sz = value_size;
+ 	return 0;
+ }
+ 
+@@ -140,11 +134,24 @@ xchk_xattr_listent(
+ 	int				namelen,
+ 	int				valuelen)
+ {
++	struct xfs_da_args		args = {
++		.op_flags		= XFS_DA_OP_NOTIME,
++		.attr_filter		= flags & XFS_ATTR_NSP_ONDISK_MASK,
++		.geo			= context->dp->i_mount->m_attr_geo,
++		.whichfork		= XFS_ATTR_FORK,
++		.dp			= context->dp,
++		.name			= name,
++		.namelen		= namelen,
++		.hashval		= xfs_da_hashname(name, namelen),
++		.trans			= context->tp,
++		.valuelen		= valuelen,
++	};
++	struct xchk_xattr_buf		*ab;
+ 	struct xchk_xattr		*sx;
+-	struct xfs_da_args		args = { NULL };
+ 	int				error = 0;
+ 
+ 	sx = container_of(context, struct xchk_xattr, context);
++	ab = sx->sc->buf;
+ 
+ 	if (xchk_should_terminate(sx->sc, &error)) {
+ 		context->seen_enough = error;
+@@ -182,17 +189,7 @@ xchk_xattr_listent(
  		return;
  	}
  
-+	/* Only one namespace bit allowed. */
-+	if (hweight32(flags & XFS_ATTR_NSP_ONDISK_MASK) > 1) {
-+		xchk_fblock_set_corrupt(sx->sc, XFS_ATTR_FORK, args.blkno);
-+		goto fail_xref;
-+	}
-+
- 	/* Does this name make sense? */
- 	if (!xfs_attr_namecheck(name, namelen)) {
- 		xchk_fblock_set_corrupt(sx->sc, XFS_ATTR_FORK, args.blkno);
--		return;
-+		goto fail_xref;
- 	}
+-	args.op_flags = XFS_DA_OP_NOTIME;
+-	args.attr_filter = flags & XFS_ATTR_NSP_ONDISK_MASK;
+-	args.geo = context->dp->i_mount->m_attr_geo;
+-	args.whichfork = XFS_ATTR_FORK;
+-	args.dp = context->dp;
+-	args.name = name;
+-	args.namelen = namelen;
+-	args.hashval = xfs_da_hashname(args.name, args.namelen);
+-	args.trans = context->tp;
+-	args.value = xchk_xattr_valuebuf(sx->sc);
+-	args.valuelen = valuelen;
++	args.value = ab->value;
  
- 	/*
+ 	error = xfs_attr_get_ilocked(&args);
+ 	/* ENODATA means the hash lookup failed and the attr is bad */
+diff --git a/fs/xfs/scrub/attr.h b/fs/xfs/scrub/attr.h
+index f6f033c19118..18445cc3d33b 100644
+--- a/fs/xfs/scrub/attr.h
++++ b/fs/xfs/scrub/attr.h
+@@ -16,24 +16,9 @@ struct xchk_xattr_buf {
+ 	/* Bitmap of free space in xattr leaf blocks. */
+ 	unsigned long		*freemap;
+ 
+-	/* Size of @buf, in bytes. */
+-	size_t			sz;
+-
+-	/*
+-	 * Memory buffer -- used for extracting attr values while walking the
+-	 * attributes.
+-	 */
+-	uint8_t			buf[];
++	/* Memory buffer used to extract xattr values. */
++	void			*value;
++	size_t			value_sz;
+ };
+ 
+-/* A place to store attribute values. */
+-static inline uint8_t *
+-xchk_xattr_valuebuf(
+-	struct xfs_scrub	*sc)
+-{
+-	struct xchk_xattr_buf	*ab = sc->buf;
+-
+-	return ab->buf;
+-}
+-
+ #endif	/* __XFS_SCRUB_ATTR_H__ */
 
