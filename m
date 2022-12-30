@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F376659F42
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:11:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 043AA659F3F
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:11:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235870AbiLaALM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:11:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
+        id S235741AbiLaAKm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:10:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229758AbiLaALL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:11:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D8FC29
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:11:10 -0800 (PST)
+        with ESMTP id S235867AbiLaAKm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:10:42 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 454871E3C3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:10:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 44FC061CE0
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:11:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BF3C433D2;
-        Sat, 31 Dec 2022 00:11:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 02F3FB81E03
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:10:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97CE1C433F2;
+        Sat, 31 Dec 2022 00:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445469;
-        bh=awcHuqGoimXcM7W9zQ8mpwOpSiLy90+Xro0Zs3S/O5Q=;
+        s=k20201202; t=1672445438;
+        bh=Qwx/j33fOB4L/aVHTedpe5jZBpdg0kzEkoB32H4yL8w=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=mLbmwWyOc07APfoPvm7ZMeiu66vmoVfG6fThRK25/WmQEg4uCX8Ow1/Q1SURE3eXU
-         hX5SZcJ5xx91inMkUi3ipONY5qrltgJWgsvQx9jP7c1GsfkmKVb6+WMN4ha8zF7Fep
-         LbRi6kUGT4xBETX0rMiFubGMoJ/njS5Mb1zYGp2twwGqkZZcK2mYYTTJxkRYwWue1H
-         0sovsCaTrpXPbc3RmQTLmkjRfj4DZnncNN+W3tmTZ0fIocC9HojS1TdV9Wr/NhxjRR
-         hmLbk1UGPZTntICa0+n1mI+dbDCrKQkE+DLc/oS4CJhL2JPDHzLWUy5U6QWDvaNTSK
-         gfHwA5MQJ5Isg==
-Subject: [PATCH 4/4] xfs_scrub: upload clean bills of health
+        b=ARb4AK/CTt4TDpPi9QVG0kq34fxoYUvQXaa+4XHVqGahhCD1Lqxtc7QKPl6k9yNrj
+         GhIixkhPd3n1OGQ40UHMnkNu611nwGQBuKW5zIccZd77bZ3drnJhbRz92prR6iM4wg
+         ny9rPIzEaWm8ACKz6EsIWWtUJgsMvqJOJ/YBKMd7MzQ28kEbF7h3Ju0Rn1q87IXG6l
+         EBN3jHl4iculkFdSe/Pc3mBzpiUrx0d0NWZZaRfWj2htZWTQM9RXvlpTWU2UztayYM
+         El0/z92at2aqE3rUoXcDxrJn54kqP3DPV6ck41hBPe01zEaZxO2qOoMrs9UFSpSKrg
+         69AcxuZ8qPYcg==
+Subject: [PATCH 2/4] xfs: remember sick inodes that get inactivated
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:38 -0800
-Message-ID: <167243865870.711359.9515498282457862448.stgit@magnolia>
+Message-ID: <167243865844.711359.15658344595314273079.stgit@magnolia>
 In-Reply-To: <167243865816.711359.1865490497957941966.stgit@magnolia>
 References: <167243865816.711359.1865490497957941966.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,143 +54,92 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If scrub terminates with a clean bill of health, tell the kernel that
-the result of the scan is that everything's healthy.
+If an unhealthy inode gets inactivated, remember this fact in the
+per-fs health summary.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase1.c |   38 ++++++++++++++++++++++++++++++++++++++
- scrub/repair.c |   15 +++++++++++++++
- scrub/repair.h |    1 +
- scrub/scrub.c  |    9 +++++++++
- scrub/scrub.h  |    1 +
- 5 files changed, 64 insertions(+)
+ libxfs/xfs_fs.h        |    1 +
+ libxfs/xfs_health.h    |    7 +++++--
+ libxfs/xfs_inode_buf.c |    2 +-
+ spaceman/health.c      |    4 ++++
+ 4 files changed, 11 insertions(+), 3 deletions(-)
 
 
-diff --git a/scrub/phase1.c b/scrub/phase1.c
-index 2daf5c7bb38..cecb5e861f4 100644
---- a/scrub/phase1.c
-+++ b/scrub/phase1.c
-@@ -44,6 +44,40 @@ xfs_shutdown_fs(
- 		str_errno(ctx, ctx->mntpoint);
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 3885c56078f..417cf85c0f7 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -292,6 +292,7 @@ struct xfs_ag_geometry {
+ #define XFS_AG_GEOM_SICK_FINOBT	(1 << 7)  /* free inode index */
+ #define XFS_AG_GEOM_SICK_RMAPBT	(1 << 8)  /* reverse mappings */
+ #define XFS_AG_GEOM_SICK_REFCNTBT (1 << 9)  /* reference counts */
++#define XFS_AG_GEOM_SICK_INODES	(1 << 10) /* bad inodes were seen */
+ 
+ /*
+  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
+diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
+index b3733f756bb..252334bc048 100644
+--- a/libxfs/xfs_health.h
++++ b/libxfs/xfs_health.h
+@@ -76,6 +76,7 @@ struct xfs_da_args;
+ #define XFS_SICK_AG_FINOBT	(1 << 7)  /* free inode index */
+ #define XFS_SICK_AG_RMAPBT	(1 << 8)  /* reverse mappings */
+ #define XFS_SICK_AG_REFCNTBT	(1 << 9)  /* reference counts */
++#define XFS_SICK_AG_INODES	(1 << 10) /* inactivated bad inodes */
+ 
+ /* Observable health issues for inode metadata. */
+ #define XFS_SICK_INO_CORE	(1 << 0)  /* inode core */
+@@ -86,6 +87,8 @@ struct xfs_da_args;
+ #define XFS_SICK_INO_XATTR	(1 << 5)  /* extended attributes */
+ #define XFS_SICK_INO_SYMLINK	(1 << 6)  /* symbolic link remote target */
+ #define XFS_SICK_INO_PARENT	(1 << 7)  /* parent pointers */
++/* Don't propagate sick status to ag health summary during inactivation */
++#define XFS_SICK_INO_FORGET	(1 << 8)
+ 
+ /* Primary evidence of health problems in a given group. */
+ #define XFS_SICK_FS_PRIMARY	(XFS_SICK_FS_COUNTERS | \
+@@ -122,12 +125,12 @@ struct xfs_da_args;
+ #define XFS_SICK_FS_SECONDARY	(0)
+ #define XFS_SICK_RT_SECONDARY	(0)
+ #define XFS_SICK_AG_SECONDARY	(0)
+-#define XFS_SICK_INO_SECONDARY	(0)
++#define XFS_SICK_INO_SECONDARY	(XFS_SICK_INO_FORGET)
+ 
+ /* Evidence of health problems elsewhere. */
+ #define XFS_SICK_FS_INDIRECT	(0)
+ #define XFS_SICK_RT_INDIRECT	(0)
+-#define XFS_SICK_AG_INDIRECT	(0)
++#define XFS_SICK_AG_INDIRECT	(XFS_SICK_AG_INODES)
+ #define XFS_SICK_INO_INDIRECT	(0)
+ 
+ /* All health masks. */
+diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
+index aad64c0a2e6..82eb3f91b9d 100644
+--- a/libxfs/xfs_inode_buf.c
++++ b/libxfs/xfs_inode_buf.c
+@@ -136,7 +136,7 @@ xfs_imap_to_bp(
+ 			imap->im_len, XBF_UNMAPPED, bpp, &xfs_inode_buf_ops);
+ 	if (xfs_metadata_is_sick(error))
+ 		xfs_agno_mark_sick(mp, xfs_daddr_to_agno(mp, imap->im_blkno),
+-				XFS_SICK_AG_INOBT);
++				XFS_SICK_AG_INODES);
+ 	return error;
  }
  
-+/*
-+ * If we haven't found /any/ problems at all, tell the kernel that we're giving
-+ * the filesystem a clean bill of health.
-+ */
-+static int
-+report_to_kernel(
-+	struct scrub_ctx	*ctx)
-+{
-+	struct action_list	alist;
-+	int			ret;
-+
-+	if (!ctx->scrub_setup_succeeded || ctx->corruptions_found ||
-+	    ctx->runtime_errors || ctx->unfixable_errors ||
-+	    ctx->warnings_found)
-+		return 0;
-+
-+	action_list_init(&alist);
-+	ret = scrub_clean_health(ctx, &alist);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Complain if we cannot fail the clean bill of health, unless we're
-+	 * just testing repairs.
-+	 */
-+	if (action_list_length(&alist) > 0 &&
-+	    !debug_tweak_on("XFS_SCRUB_FORCE_REPAIR")) {
-+		str_info(ctx, _("Couldn't upload clean bill of health."), NULL);
-+		action_list_discard(&alist);
-+	}
-+
-+	return 0;
-+}
-+
- /* Clean up the XFS-specific state data. */
- int
- scrub_cleanup(
-@@ -51,6 +85,10 @@ scrub_cleanup(
- {
- 	int			error;
+diff --git a/spaceman/health.c b/spaceman/health.c
+index 88b12c0b0ea..12fb67bab28 100644
+--- a/spaceman/health.c
++++ b/spaceman/health.c
+@@ -127,6 +127,10 @@ static const struct flag_map ag_flags[] = {
+ 		.descr = "reference count btree",
+ 		.has_fn = has_reflink,
+ 	},
++	{
++		.mask = XFS_AG_GEOM_SICK_INODES,
++		.descr = "overall inode state",
++	},
+ 	{0},
+ };
  
-+	error = report_to_kernel(ctx);
-+	if (error)
-+		return error;
-+
- 	action_lists_free(&ctx->action_lists);
- 	if (ctx->fshandle)
- 		free_handle(ctx->fshandle, ctx->fshandle_len);
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 8a1ae0226a0..bb0faceca69 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -172,6 +172,21 @@ action_lists_alloc(
- 	return 0;
- }
- 
-+/* Discard repair list contents. */
-+void
-+action_list_discard(
-+	struct action_list		*alist)
-+{
-+	struct action_item		*aitem;
-+	struct action_item		*n;
-+
-+	list_for_each_entry_safe(aitem, n, &alist->list, list) {
-+		alist->nr--;
-+		list_del(&aitem->list);
-+		free(aitem);
-+	}
-+}
-+
- /* Free the repair lists. */
- void
- action_lists_free(
-diff --git a/scrub/repair.h b/scrub/repair.h
-index 102e5779c70..d7a3a9e7cff 100644
---- a/scrub/repair.h
-+++ b/scrub/repair.h
-@@ -24,6 +24,7 @@ static inline bool action_list_empty(const struct action_list *alist)
- 
- unsigned long long action_list_length(struct action_list *alist);
- void action_list_add(struct action_list *dest, struct action_item *item);
-+void action_list_discard(struct action_list *alist);
- void action_list_splice(struct action_list *dest, struct action_list *src);
- 
- void action_list_find_mustfix(struct action_list *actions,
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index 7f80b2de211..975dd8efbbc 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -444,6 +444,15 @@ scrub_nlinks(
- 	return scrub_meta_type(ctx, XFS_SCRUB_TYPE_NLINKS, 0, alist);
- }
- 
-+/* Update incore health records if we were clean. */
-+int
-+scrub_clean_health(
-+	struct scrub_ctx		*ctx,
-+	struct action_list		*alist)
-+{
-+	return scrub_meta_type(ctx, XFS_SCRUB_TYPE_HEALTHY, 0, alist);
-+}
-+
- /* How many items do we have to check? */
- unsigned int
- scrub_estimate_ag_work(
-diff --git a/scrub/scrub.h b/scrub/scrub.h
-index 430ad0fbd83..0622677376c 100644
---- a/scrub/scrub.h
-+++ b/scrub/scrub.h
-@@ -29,6 +29,7 @@ int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist);
- int scrub_fs_counters(struct scrub_ctx *ctx, struct action_list *alist);
- int scrub_quotacheck(struct scrub_ctx *ctx, struct action_list *alist);
- int scrub_nlinks(struct scrub_ctx *ctx, struct action_list *alist);
-+int scrub_clean_health(struct scrub_ctx *ctx, struct action_list *alist);
- 
- bool can_scrub_fs_metadata(struct scrub_ctx *ctx);
- bool can_scrub_inode(struct scrub_ctx *ctx);
 
