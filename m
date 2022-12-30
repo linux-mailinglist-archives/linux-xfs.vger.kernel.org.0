@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6718265A1FB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:53:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5538F65A1FD
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:54:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236279AbiLaCx0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:53:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
+        id S236281AbiLaCx7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:53:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236243AbiLaCxZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:53:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5422618387
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:53:24 -0800 (PST)
+        with ESMTP id S236243AbiLaCx6 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:53:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF25918387
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:53:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E4E4761BF8
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:53:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5768AC433D2;
-        Sat, 31 Dec 2022 02:53:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A0712B81E4A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:53:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616DDC433D2;
+        Sat, 31 Dec 2022 02:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455203;
-        bh=r12IMMAMO5tvSP+Oa4yHmRkzkPmVQa966qh90iKGIYY=;
+        s=k20201202; t=1672455234;
+        bh=OJVV0QzHaXTQ3yXBH/uwnlnqFTcK9sWIMUy42mUey4s=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nqOBf8JEGJ4F2jucPVf73eF8g0ueMqfjlRNYEXQuBsI9W2gN9bknFrUFq1vYqfA2E
-         G4h3PGK0HmMUtjEwlFK6+6dU0g45rKnGxYUI2YCNXTNQG1oBtp+RglsEpJqx84D1w3
-         wdHEb/alMxfGCy1m2uHO6R7CWHLnY5NRLZdVFeclPMKAXEopF+2Kb428vGDoxO9jOe
-         ZHOEFVCDanwDlCPgbLTo+DoIgTK8XNl9bEzP+LZZkma3gkxCQ/e2mlF8j9c3Y/fcgK
-         d+5asM+y+XyincQ7u44AtJpeAJjpHouwrZXgEq4eS/fN6Sb6xyeWA7lvvL1VUig0vj
-         dVAk+qyKZ9BWg==
-Subject: [PATCH 1/4] libxfs: resync libxfs_alloc_file_space interface with the
- kernel
+        b=jvjgBw51Hbl/eOAOXp+5lMjabVmhxBbH8Uylq+bavWlq72Jxw4sPA20iOsKHd6vMy
+         ulyhwIhYKrMkaGvOrxiiFV57fDVmj9eCYfyRcZ4CPOuRK5aOsbv+rUrxNzG78rpA/U
+         gVbN7V7foNVvRDQeEKjJh+OKgjkq76u3qqvi2YY9xe/2+alVv+QjCchj0LcM8kdMss
+         5V8kP9mGYsn6P3mFDavvJAnhysOVuUP6B2TU6VgV9BmIBZ/IvdFEoaIbU4osjA8jPv
+         lXW7zJuAhzS3FBWFk0cbtqYXH1TSZCV+OSYOieUq219AVXH+3KZqheD2eDq514GmhT
+         GRqI5sB2ymG/g==
+Subject: [PATCH 3/4] xfs_repair: use libxfs_alloc_file_space to reallocate rt
+ metadata
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:04 -0800
-Message-ID: <167243880412.733953.13235409478389540449.stgit@magnolia>
+Message-ID: <167243880438.733953.4659523039685755586.stgit@magnolia>
 In-Reply-To: <167243880399.733953.2483387870694006201.stgit@magnolia>
 References: <167243880399.733953.2483387870694006201.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,109 +56,130 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make the userspace xfs_alloc_file_space behave (more or less) like the
-kernel version, at least as far as the interface goes.
+Now that libxfs_alloc_file_space can allocate and zero blocks, use it to
+repair the realtime metadata instead of open-coding all this.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/libxfs.h |    4 ++--
- libxfs/util.c    |   40 +++++++++++++++++++---------------------
- mkfs/proto.c     |    2 +-
- 3 files changed, 22 insertions(+), 24 deletions(-)
+ repair/phase6.c |   74 +++++++------------------------------------------------
+ 1 file changed, 10 insertions(+), 64 deletions(-)
 
 
-diff --git a/include/libxfs.h b/include/libxfs.h
-index b1e499569ac..d4985a5769f 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -167,8 +167,8 @@ extern int	libxfs_log_header(char *, uuid_t *, int, int, int, xfs_lsn_t,
+diff --git a/repair/phase6.c b/repair/phase6.c
+index 8828f7f72b9..890bb20bce1 100644
+--- a/repair/phase6.c
++++ b/repair/phase6.c
+@@ -695,13 +695,8 @@ mk_rbmino(
+ 	struct xfs_imeta_update	upd;
+ 	struct xfs_trans	*tp;
+ 	struct xfs_inode	*ip;
+-	struct xfs_bmbt_irec	*ep;
+ 	int			i;
+-	int			nmap;
+ 	int			error;
+-	xfs_fileoff_t		bno;
+-	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
+-	uint			blocks;
  
- /* Shared utility routines */
- 
--extern int	libxfs_alloc_file_space (struct xfs_inode *, xfs_off_t,
--				xfs_off_t, int, int);
-+extern int	libxfs_alloc_file_space(struct xfs_inode *ip, xfs_off_t offset,
-+					xfs_off_t len, int alloc_type);
- 
- /* XXX: this is messy and needs fixing */
- #ifndef __LIBXFS_INTERNAL_XFS_H__
-diff --git a/libxfs/util.c b/libxfs/util.c
-index e8397fdc341..bb6867c21af 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -179,25 +179,23 @@ libxfs_mod_incore_sb(
-  */
- int
- libxfs_alloc_file_space(
--	xfs_inode_t	*ip,
--	xfs_off_t	offset,
--	xfs_off_t	len,
--	int		alloc_type,
--	int		attr_flags)
-+	struct xfs_inode	*ip,
-+	xfs_off_t		offset,
-+	xfs_off_t		len,
-+	int			alloc_type)
- {
--	xfs_mount_t	*mp;
--	xfs_off_t	count;
--	xfs_filblks_t	datablocks;
--	xfs_filblks_t	allocated_fsb;
--	xfs_filblks_t	allocatesize_fsb;
--	xfs_bmbt_irec_t *imapp;
--	xfs_bmbt_irec_t imaps[1];
--	int		reccount;
--	uint		resblks;
--	xfs_fileoff_t	startoffset_fsb;
--	xfs_trans_t	*tp;
--	int		xfs_bmapi_flags;
--	int		error;
-+	struct xfs_bmbt_irec	imaps[1];
-+	struct xfs_bmbt_irec	*imapp;
-+	struct xfs_mount	*mp;
-+	struct xfs_trans	*tp;
-+	xfs_off_t		count;
-+	xfs_filblks_t		datablocks;
-+	xfs_filblks_t		allocated_fsb;
-+	xfs_filblks_t		allocatesize_fsb;
-+	int			reccount;
-+	uint			resblks;
-+	xfs_fileoff_t		startoffset_fsb;
-+	int			error;
- 
- 	if (len <= 0)
- 		return -EINVAL;
-@@ -206,7 +204,6 @@ libxfs_alloc_file_space(
- 	error = 0;
- 	imapp = &imaps[0];
- 	reccount = 1;
--	xfs_bmapi_flags = alloc_type ? XFS_BMAPI_PREALLOC : 0;
- 	mp = ip->i_mount;
- 	startoffset_fsb = XFS_B_TO_FSBT(mp, offset);
- 	allocatesize_fsb = XFS_B_TO_FSB(mp, count);
-@@ -227,8 +224,9 @@ libxfs_alloc_file_space(
+ 	error = ensure_imeta_dirpath(mp, &XFS_IMETA_RTBITMAP);
+ 	if (error)
+@@ -744,36 +739,15 @@ _("Couldn't find realtime bitmap parent, error %d\n"),
+ 	 * then allocate blocks for file and fill with zeroes (stolen
+ 	 * from mkfs)
+ 	 */
+-	blocks = mp->m_sb.sb_rbmblocks +
+-			XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
+-	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
+-	if (error)
+-		res_failed(error);
+-
+-	libxfs_trans_ijoin(tp, ip, 0);
+-	bno = 0;
+-	while (bno < mp->m_sb.sb_rbmblocks) {
+-		nmap = XFS_BMAP_MAX_NMAP;
+-		error = -libxfs_bmapi_write(tp, ip, bno,
+-			  (xfs_extlen_t)(mp->m_sb.sb_rbmblocks - bno),
+-			  0, mp->m_sb.sb_rbmblocks, map, &nmap);
++	if (mp->m_sb.sb_rbmblocks) {
++		error = -libxfs_alloc_file_space(ip, 0,
++				mp->m_sb.sb_rbmblocks << mp->m_sb.sb_blocklog,
++				XFS_BMAPI_ZERO);
+ 		if (error) {
+ 			do_error(
+-			_("couldn't allocate realtime bitmap, error = %d\n"),
++	_("allocation of the realtime bitmap failed, error = %d\n"),
+ 				error);
  		}
- 		xfs_trans_ijoin(tp, ip, 0);
+-		for (i = 0, ep = map; i < nmap; i++, ep++) {
+-			libxfs_device_zero(mp->m_ddev_targp,
+-				XFS_FSB_TO_DADDR(mp, ep->br_startblock),
+-				XFS_FSB_TO_BB(mp, ep->br_blockcount));
+-			bno += ep->br_blockcount;
+-		}
+-	}
+-	error = -libxfs_trans_commit(tp);
+-	if (error) {
+-		do_error(
+-		_("allocation of the realtime bitmap failed, error = %d\n"),
+-			error);
+ 	}
+ 	libxfs_irele(ip);
+ }
+@@ -951,14 +925,8 @@ mk_rsumino(
+ 	struct xfs_imeta_update	upd;
+ 	struct xfs_trans	*tp;
+ 	struct xfs_inode	*ip;
+-	struct xfs_bmbt_irec	*ep;
+ 	int			i;
+-	int			nmap;
+ 	int			error;
+-	int			nsumblocks;
+-	xfs_fileoff_t		bno;
+-	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
+-	uint			blocks;
  
--		error = xfs_bmapi_write(tp, ip, startoffset_fsb, allocatesize_fsb,
--				xfs_bmapi_flags, 0, imapp, &reccount);
-+		error = xfs_bmapi_write(tp, ip, startoffset_fsb,
-+				allocatesize_fsb, alloc_type, resblks,
-+				imapp, &reccount);
- 
- 		if (error)
- 			goto error0;
-diff --git a/mkfs/proto.c b/mkfs/proto.c
-index 36af61ed5c0..b11b7fa5f95 100644
---- a/mkfs/proto.c
-+++ b/mkfs/proto.c
-@@ -179,7 +179,7 @@ rsvfile(
- 	int		error;
- 	xfs_trans_t	*tp;
- 
--	error = -libxfs_alloc_file_space(ip, 0, llen, 1, 0);
-+	error = -libxfs_alloc_file_space(ip, 0, llen, XFS_BMAPI_PREALLOC);
- 
- 	if (error) {
- 		fail(_("error reserving space for a file"), error);
+ 	error = ensure_imeta_dirpath(mp, &XFS_IMETA_RTSUMMARY);
+ 	if (error)
+@@ -1001,36 +969,14 @@ _("Couldn't find realtime summary parent, error %d\n"),
+ 	 * then allocate blocks for file and fill with zeroes (stolen
+ 	 * from mkfs)
+ 	 */
+-	nsumblocks = mp->m_rsumsize >> mp->m_sb.sb_blocklog;
+-	blocks = nsumblocks + XFS_BM_MAXLEVELS(mp, XFS_DATA_FORK) - 1;
+-	error = -libxfs_trans_alloc_rollable(mp, blocks, &tp);
+-	if (error)
+-		res_failed(error);
+-
+-	libxfs_trans_ijoin(tp, ip, 0);
+-	bno = 0;
+-	while (bno < nsumblocks) {
+-		nmap = XFS_BMAP_MAX_NMAP;
+-		error = -libxfs_bmapi_write(tp, ip, bno,
+-			  (xfs_extlen_t)(nsumblocks - bno),
+-			  0, nsumblocks, map, &nmap);
++	if (mp->m_rsumsize) {
++		error = -libxfs_alloc_file_space(ip, 0, mp->m_rsumsize,
++				XFS_BMAPI_ZERO);
+ 		if (error) {
+ 			do_error(
+-		_("couldn't allocate realtime summary inode, error = %d\n"),
+-				error);
+-		}
+-		for (i = 0, ep = map; i < nmap; i++, ep++) {
+-			libxfs_device_zero(mp->m_ddev_targp,
+-				      XFS_FSB_TO_DADDR(mp, ep->br_startblock),
+-				      XFS_FSB_TO_BB(mp, ep->br_blockcount));
+-			bno += ep->br_blockcount;
+-		}
+-	}
+-	error = -libxfs_trans_commit(tp);
+-	if (error) {
+-		do_error(
+ 	_("allocation of the realtime summary ino failed, error = %d\n"),
+-			error);
++				error);
++		}
+ 	}
+ 	libxfs_irele(ip);
+ }
 
