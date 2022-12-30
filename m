@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CECC465A188
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:27:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D6DE65A18A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:28:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236134AbiLaC13 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:27:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55912 "EHLO
+        id S236094AbiLaC2D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:28:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236094AbiLaC13 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:27:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537801C921
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:27:28 -0800 (PST)
+        with ESMTP id S231466AbiLaC2C (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:28:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0197F1C921
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:28:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E615161CD4
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:27:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EDC0C433EF;
-        Sat, 31 Dec 2022 02:27:27 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AE594B81E69
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:27:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AA2DC433EF;
+        Sat, 31 Dec 2022 02:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453647;
-        bh=gu26SK12RLpjM6eDb3gNwBu0aZO/krySyWCN1OYkbQA=;
+        s=k20201202; t=1672453678;
+        bh=wpEKgu8nv5+BbbpNI42msFc4rs+zeuF5M7bSifakpHA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=I5B9uwHgLplxXA1hkbsBMBqZzLc+Uor+RkGh6KJ+LC+Ys+G8mrY3v1ElnmWYqYttb
-         JQxrXx03jDOpTCr9DsGM7wO5yOh+pCBlf0r8yycq50859YjIvZDXLxRup2GH1rERC4
-         6yT0ZlsbQfGmaZJTxCQXnJGMv4kt8/dAJs9ZPdDZSTd/vB3nRcrlv9lfF3uo1bzWgT
-         Y89pugDyzu80gNV8cgeEwjlHLq2vZ16Bmiamt7/Z/Y2R/19DH6eudFA9eKTAdSLNTI
-         U1SP1T7ylpKUtntLa1jhhVZ4ojfghHXJ/lCajHz4wLlZKOR93WXcATK0EfjjLljjsr
-         Gw/q13xquU80Q==
-Subject: [PATCH 3/8] xfs_db: make the daddr command target the realtime device
+        b=MtMjaW8AxOsD01/LQNbcPrILOWyxCbQtqynh8yl9HuOwexGM+9eV1hkMBvzvF2PG4
+         iFT6MBpEEj6lfDH8bswwTodZcdq4HMLVuRWcIvtU9yCJk0/lcYsyFfXA1ZpmHDPy6c
+         lfxsRJELFJMju+ox4h59L/HhpRRfZ7h8BrcVwh5Uk10tqFg0yUQ+4RLnXN06oTLK3Q
+         yJcQ0kR5uTYf5oCS5WOZa9MfgusWSc6iF4u9k6PWu44wAfTHhXuE7zMzynMtfTGmFn
+         0wF0Ew1RaGN9lA1incCXYqcrzTPwjFCzhhYNyVQ4/4zf2aCBZ/Lh2Daxm6LTzpKkNT
+         UbUelI5TzQHmw==
+Subject: [PATCH 5/8] xfs_db: access arbitrary realtime blocks and extents
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:36 -0800
-Message-ID: <167243877651.728317.312052597903660667.stgit@magnolia>
+Message-ID: <167243877678.728317.13782091019281270247.stgit@magnolia>
 In-Reply-To: <167243877610.728317.12510123562097453242.stgit@magnolia>
 References: <167243877610.728317.12510123562097453242.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,119 +55,184 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make it so that users can issue the command "daddr -r XXX" to select
-disk block XXX on the realtime device.
+Add two commands to xfs_db so that we can point ourselves at any
+arbitrary realtime block or extent.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/block.c        |   43 ++++++++++++++++++++++++++++++++++++++-----
- man/man8/xfs_db.8 |    6 +++++-
- 2 files changed, 43 insertions(+), 6 deletions(-)
+ db/block.c        |  107 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ man/man8/xfs_db.8 |   20 ++++++++++
+ 2 files changed, 127 insertions(+)
 
 
 diff --git a/db/block.c b/db/block.c
-index b2b5edf9385..d064fbed5aa 100644
+index ae8744685b0..1afe201d0b2 100644
 --- a/db/block.c
 +++ b/db/block.c
-@@ -31,7 +31,7 @@ static const cmdinfo_t	ablock_cmd =
- 	{ "ablock", NULL, ablock_f, 1, 1, 1, N_("filoff"),
- 	  N_("set address to file offset (attr fork)"), ablock_help };
- static const cmdinfo_t	daddr_cmd =
--	{ "daddr", NULL, daddr_f, 0, 1, 1, N_("[d]"),
-+	{ "daddr", NULL, daddr_f, 0, -1, 1, N_("[d]"),
- 	  N_("set address to daddr value"), daddr_help };
- static const cmdinfo_t	dblock_cmd =
- 	{ "dblock", NULL, dblock_f, 1, 1, 1, N_("filoff"),
-@@ -117,6 +117,11 @@ daddr_help(void)
- ));
+@@ -25,6 +25,10 @@ static int	dblock_f(int argc, char **argv);
+ static void     dblock_help(void);
+ static int	fsblock_f(int argc, char **argv);
+ static void     fsblock_help(void);
++static int	rtblock_f(int argc, char **argv);
++static void	rtblock_help(void);
++static int	rtextent_f(int argc, char **argv);
++static void	rtextent_help(void);
+ static void	print_rawdata(void *data, int len);
+ 
+ static const cmdinfo_t	ablock_cmd =
+@@ -39,6 +43,12 @@ static const cmdinfo_t	dblock_cmd =
+ static const cmdinfo_t	fsblock_cmd =
+ 	{ "fsblock", "fsb", fsblock_f, 0, 1, 1, N_("[fsb]"),
+ 	  N_("set address to fsblock value"), fsblock_help };
++static const cmdinfo_t	rtblock_cmd =
++	{ "rtblock", "rtbno", rtblock_f, 0, 1, 1, N_("[rtbno]"),
++	  N_("set address to rtblock value"), rtblock_help };
++static const cmdinfo_t	rtextent_cmd =
++	{ "rtextent", "rtx", rtextent_f, 0, 1, 1, N_("[rtxno]"),
++	  N_("set address to rtextent value"), rtextent_help };
+ 
+ static void
+ ablock_help(void)
+@@ -104,6 +114,8 @@ block_init(void)
+ 	add_command(&daddr_cmd);
+ 	add_command(&dblock_cmd);
+ 	add_command(&fsblock_cmd);
++	add_command(&rtblock_cmd);
++	add_command(&rtextent_cmd);
  }
  
-+enum daddr_target {
-+	DT_DATA,
-+	DT_RT,
-+};
-+
- static int
- daddr_f(
- 	int		argc,
-@@ -124,8 +129,23 @@ daddr_f(
- {
- 	int64_t		d;
- 	char		*p;
-+	int		c;
-+	xfs_rfsblock_t	max_daddrs = mp->m_sb.sb_dblocks;
-+	enum daddr_target tgt = DT_DATA;
- 
--	if (argc == 1) {
-+	while ((c = getopt(argc, argv, "r")) != -1) {
-+		switch (c) {
-+		case 'r':
-+			tgt = DT_RT;
-+			max_daddrs = mp->m_sb.sb_rblocks;
-+			break;
-+		default:
-+			daddr_help();
-+			return 0;
-+		}
-+	}
-+
-+	if (optind == argc) {
- 		xfs_daddr_t	daddr = iocur_top->off >> BBSHIFT;
- 
- 		if (iocur_is_ddev(iocur_top))
-@@ -139,14 +159,27 @@ daddr_f(
- 
- 		return 0;
- 	}
--	d = (int64_t)strtoull(argv[1], &p, 0);
-+
-+	if (optind != argc - 1) {
-+		daddr_help();
-+		return 0;
-+	}
-+
-+	d = (int64_t)strtoull(argv[optind], &p, 0);
- 	if (*p != '\0' ||
--	    d >= mp->m_sb.sb_dblocks << (mp->m_sb.sb_blocklog - BBSHIFT)) {
-+	    d >= max_daddrs << (mp->m_sb.sb_blocklog - BBSHIFT)) {
- 		dbprintf(_("bad daddr %s\n"), argv[1]);
- 		return 0;
- 	}
- 	ASSERT(typtab[TYP_DATA].typnm == TYP_DATA);
--	set_cur(&typtab[TYP_DATA], d, 1, DB_RING_ADD, NULL);
-+	switch (tgt) {
-+	case DT_DATA:
-+		set_cur(&typtab[TYP_DATA], d, 1, DB_RING_ADD, NULL);
-+		break;
-+	case DT_RT:
-+		set_rt_cur(&typtab[TYP_DATA], d, 1, DB_RING_ADD, NULL);
-+		break;
-+	}
+ static void
+@@ -301,6 +313,101 @@ fsblock_f(
  	return 0;
  }
  
++static void
++rtblock_help(void)
++{
++	dbprintf(_(
++"\n Example:\n"
++"\n"
++" 'rtblock 1023' - sets the file position to the 1023rd block on the realtime\n"
++" volume. The filesystem block size is specified in the superblock and set\n"
++" during mkfs time.\n\n"
++));
++}
++
++static int
++rtblock_f(
++	int		argc,
++	char		**argv)
++{
++	xfs_rtblock_t	rtbno;
++	char		*p;
++
++	if (argc == 1) {
++		if (!iocur_is_rtdev(iocur_top)) {
++			dbprintf(_("cursor does not point to rt device\n"));
++			return 0;
++		}
++		dbprintf(_("current rtblock is %lld\n"),
++			XFS_BB_TO_FSB(mp, iocur_top->off >> BBSHIFT));
++		return 0;
++	}
++	rtbno = strtoull(argv[1], &p, 0);
++	if (*p != '\0') {
++		dbprintf(_("bad rtblock %s\n"), argv[1]);
++		return 0;
++	}
++	if (rtbno >= mp->m_sb.sb_rblocks) {
++		dbprintf(_("bad rtblock %s\n"), argv[1]);
++		return 0;
++	}
++	ASSERT(typtab[TYP_DATA].typnm == TYP_DATA);
++	set_rt_cur(&typtab[TYP_DATA], XFS_FSB_TO_BB(mp, rtbno), blkbb,
++			DB_RING_ADD, NULL);
++	return 0;
++}
++
++static void
++rtextent_help(void)
++{
++	dbprintf(_(
++"\n Example:\n"
++"\n"
++" 'rtextent 10' - sets the file position to the 10th extent on the realtime\n"
++" volume. The realtime extent size is specified in the superblock and set\n"
++" during mkfs or growfs time.\n\n"
++));
++}
++
++static int
++rtextent_f(
++	int		argc,
++	char		**argv)
++{
++	xfs_rtblock_t	rtbno;
++	xfs_rtxnum_t	rtx;
++	char		*p;
++
++	if (argc == 1) {
++		xfs_extlen_t	dontcare;
++
++		if (!iocur_is_rtdev(iocur_top)) {
++			dbprintf(_("cursor does not point to rt device\n"));
++			return 0;
++		}
++
++		rtbno = XFS_BB_TO_FSB(mp, iocur_top->off >> BBSHIFT);
++		dbprintf(_("current rtextent is %lld\n"),
++				xfs_rtb_to_rtx(mp, rtbno, &dontcare));
++		return 0;
++	}
++	rtx = strtoull(argv[1], &p, 0);
++	if (*p != '\0') {
++		dbprintf(_("bad rtextent %s\n"), argv[1]);
++		return 0;
++	}
++	if (rtx >= mp->m_sb.sb_rextents) {
++		dbprintf(_("bad rtextent %s\n"), argv[1]);
++		return 0;
++	}
++
++	rtbno = xfs_rtx_to_rtb(mp, rtx);
++	ASSERT(typtab[TYP_DATA].typnm == TYP_DATA);
++	set_rt_cur(&typtab[TYP_DATA], XFS_FSB_TO_BB(mp, rtbno),
++			mp->m_sb.sb_rextsize * blkbb, DB_RING_ADD, NULL);
++	return 0;
++}
++
+ void
+ print_block(
+ 	const field_t	*fields,
 diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index 593b8037251..aa097a13b27 100644
+index aa097a13b27..de30fbc6230 100644
 --- a/man/man8/xfs_db.8
 +++ b/man/man8/xfs_db.8
-@@ -590,7 +590,7 @@ Recalculate the current structure's correct CRC value, and write it to disk.
- Validate and display the current value and state of the structure's CRC.
- .RE
+@@ -927,6 +927,26 @@ command.
+ Exit
+ .BR xfs_db .
  .TP
--.BI "daddr [" d ]
-+.BI "daddr [" -r "] [" d ]
- Set current address to the daddr (512 byte block) given by
- .IR d .
- If no value for
-@@ -599,6 +599,10 @@ is given, the current address is printed, expressed as a daddr.
- The type is set to
- .B data
- (uninterpreted).
-+
-+If an address and the
-+.B \-r
-+option are specified, the current address is set to the realtime device.
- .TP
- .BI dblock " filoff"
- Set current address to the offset
++.BI "rtblock [" rtbno ]
++Set current address to the rtblock value given by
++.IR rtbno .
++If no value for
++.I rtbno
++is given the current address is printed, expressed as an rtbno.
++The type is set to
++.B data
++(uninterpreted).
++.TP
++.BI "rtextent [" rtxno ]
++Set current address to the rtextent value given by
++.IR rtextent .
++If no value for
++.I rtextent
++is given the current address is printed, expressed as an rtextent.
++The type is set to
++.B data
++(uninterpreted).
++.TP
+ .BI "ring [" index ]
+ Show position ring (if no
+ .I index
 
