@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8897965A155
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:15:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8E2E659FD8
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:42:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231501AbiLaCPF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:15:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53820 "EHLO
+        id S235852AbiLaAmV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:42:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiLaCPE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:15:04 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1598F1C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:15:03 -0800 (PST)
+        with ESMTP id S235615AbiLaAmV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:42:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D33D1DDE2;
+        Fri, 30 Dec 2022 16:42:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CB3C7B81E52
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:15:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78281C433EF;
-        Sat, 31 Dec 2022 02:15:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A330F61D52;
+        Sat, 31 Dec 2022 00:42:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B87FC433D2;
+        Sat, 31 Dec 2022 00:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452900;
-        bh=z8iBhG84YzLrOHNH7LJIhlMEoq6WDc5Tfi0seC1kojM=;
+        s=k20201202; t=1672447339;
+        bh=DGuHekiM4RFpZKnuATGj7KMjrJbc89l/q9O7FiN1LiI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DarKwyxvYQyclj8ZEACS5VozALIURtR3Fcq0n4xy2oHTK38AFPgu3jnIM6cZBY7qA
-         HdAznfianZ5GArEdgO03y2h3hvjlBXlrFdj7Wp7IgJ5sHJL0m/m9U1q7K2EdbfXHmg
-         QqKQcBiG7V9sqGnLIQe8xZ6DQtkMOQsrlHWp3HJanpMDpbCvcCROhlkPW2OazZeWri
-         k8ahUTVwcSCVcGf+PZbWxkJzuYLC72LlG16GTGPCW2OE3g9FXvh8VBmoYnWz4fgzHK
-         mDTmIUmMENP+dBk+CwWg6hg92isc2pyd812hk/t6C75BohZNpB1NiRgecrVNsXBs7l
-         A01jSyu4b1TRQ==
-Subject: [PATCH 20/46] xfs_db: basic xfs_check support for metadir
+        b=tkPsFFS5aWXC9Bh8aZMIZrcVxlwpdm497ULuOT81X2zqaUnsrlPCAJsa2AstlzLG1
+         sBytHpZhonJorceo72+o/N4ul0sI4sIPfP9BWMoN2QoP7ZvGFcf0jAtsFdIfeU5esN
+         i5gT9wdN/Nk07ATAvRx7KVbcS5IDLhtjhhHC+Ppu+EyAyOt72FmerykyDqaMOgakPK
+         2Yg4OV6jZVPCEjJ3oFTpTdWFEJYnrZ0NZdCWCYVx3Jrx7MXJ7p6F0NoSldelJOdMUn
+         EG89VGigNyvgo51k5TPjr1ffSlsGZQz7KhLq/iB+5vaxMYgDBybZa1bzQ98XGbuDmA
+         nDUlrOrjUZieg==
+Subject: [PATCH 1/1] xfs: race fsstress with online scrub and repair for quota
+ metadata
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:21 -0800
-Message-ID: <167243876197.725900.17317482254140518183.stgit@magnolia>
-In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
-References: <167243875924.725900.7061782826830118387.stgit@magnolia>
+Message-ID: <167243876182.726678.5993728572164871488.stgit@magnolia>
+In-Reply-To: <167243876170.726678.17872891128076933126.stgit@magnolia>
+References: <167243876170.726678.17872891128076933126.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,74 +55,186 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Support metadata directories in xfs_check.
+Create tests to race fsstress with dquot repair while running fsstress
+in the background.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/check.c |   21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ tests/xfs/809     |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/809.out |    2 ++
+ tests/xfs/810     |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/810.out |    2 ++
+ tests/xfs/811     |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/811.out |    2 ++
+ 6 files changed, 126 insertions(+)
+ create mode 100755 tests/xfs/809
+ create mode 100644 tests/xfs/809.out
+ create mode 100755 tests/xfs/810
+ create mode 100644 tests/xfs/810.out
+ create mode 100755 tests/xfs/811
+ create mode 100644 tests/xfs/811.out
 
 
-diff --git a/db/check.c b/db/check.c
-index 964756d0ae5..5297ea25459 100644
---- a/db/check.c
-+++ b/db/check.c
-@@ -2649,7 +2649,9 @@ process_dir(
- 		if (!sflag || id->ilist || CHECK_BLIST(bno))
- 			dbprintf(_("no .. entry for directory %lld\n"), id->ino);
- 		error++;
--	} else if (parent == id->ino && id->ino != mp->m_sb.sb_rootino) {
-+	} else if (parent == id->ino &&
-+		   id->ino != mp->m_sb.sb_rootino &&
-+		   id->ino != mp->m_sb.sb_metadirino) {
- 		if (!sflag || id->ilist || CHECK_BLIST(bno))
- 			dbprintf(_(". and .. same for non-root directory %lld\n"),
- 				id->ino);
-@@ -2659,6 +2661,11 @@ process_dir(
- 			dbprintf(_("root directory %lld has .. %lld\n"), id->ino,
- 				parent);
- 		error++;
-+	} else if (id->ino == mp->m_sb.sb_metadirino && id->ino != parent) {
-+		if (!sflag || id->ilist || CHECK_BLIST(bno))
-+			dbprintf(_("metadata directory %lld has .. %lld\n"),
-+				id->ino, parent);
-+		error++;
- 	} else if (parent != NULLFSINO && id->ino != parent)
- 		addparent_inode(id, parent);
- }
-@@ -2902,6 +2909,9 @@ process_inode(
- 		type = DBM_DIR;
- 		if (dip->di_format == XFS_DINODE_FMT_LOCAL)
- 			break;
-+		if (xfs_has_metadir(mp) &&
-+		    id->ino == mp->m_sb.sb_metadirino)
-+			addlink_inode(id);
- 		blkmap = blkmap_alloc(dnextents);
- 		break;
- 	case S_IFREG:
-@@ -2910,18 +2920,21 @@ process_inode(
- 		else if (id->ino == mp->m_sb.sb_rbmino) {
- 			type = DBM_RTBITMAP;
- 			blkmap = blkmap_alloc(dnextents);
--			addlink_inode(id);
-+			if (!xfs_has_metadir(mp))
-+				addlink_inode(id);
- 		} else if (id->ino == mp->m_sb.sb_rsumino) {
- 			type = DBM_RTSUM;
- 			blkmap = blkmap_alloc(dnextents);
--			addlink_inode(id);
-+			if (!xfs_has_metadir(mp))
-+				addlink_inode(id);
- 		}
- 		else if (id->ino == mp->m_sb.sb_uquotino ||
- 			 id->ino == mp->m_sb.sb_gquotino ||
- 			 id->ino == mp->m_sb.sb_pquotino) {
- 			type = DBM_QUOTA;
- 			blkmap = blkmap_alloc(dnextents);
--			addlink_inode(id);
-+			if (!xfs_has_metadir(mp))
-+				addlink_inode(id);
- 		}
- 		else
- 			type = DBM_DATA;
+diff --git a/tests/xfs/809 b/tests/xfs/809
+new file mode 100755
+index 0000000000..35ac02ff85
+--- /dev/null
++++ b/tests/xfs/809
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
++#
++# FS QA Test No. 809
++#
++# Race fsstress and user quota repair for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++. ./common/quota
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_quota_acct_enabled "$SCRATCH_DEV" usrquota
++_scratch_xfs_stress_online_repair -s "repair usrquota"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/809.out b/tests/xfs/809.out
+new file mode 100644
+index 0000000000..e90865ca8f
+--- /dev/null
++++ b/tests/xfs/809.out
+@@ -0,0 +1,2 @@
++QA output created by 809
++Silence is golden
+diff --git a/tests/xfs/810 b/tests/xfs/810
+new file mode 100755
+index 0000000000..7387910504
+--- /dev/null
++++ b/tests/xfs/810
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
++#
++# FS QA Test No. 810
++#
++# Race fsstress and group quota repair for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++. ./common/quota
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_quota_acct_enabled "$SCRATCH_DEV" grpquota
++_scratch_xfs_stress_online_repair -s "repair grpquota"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/810.out b/tests/xfs/810.out
+new file mode 100644
+index 0000000000..90f12fdd21
+--- /dev/null
++++ b/tests/xfs/810.out
+@@ -0,0 +1,2 @@
++QA output created by 810
++Silence is golden
+diff --git a/tests/xfs/811 b/tests/xfs/811
+new file mode 100755
+index 0000000000..1e13940b46
+--- /dev/null
++++ b/tests/xfs/811
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
++#
++# FS QA Test No. 811
++#
++# Race fsstress and project quota repair for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++. ./common/quota
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_quota_acct_enabled "$SCRATCH_DEV" prjquota
++_scratch_xfs_stress_online_repair -s "repair prjquota"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/811.out b/tests/xfs/811.out
+new file mode 100644
+index 0000000000..cf30f69bdc
+--- /dev/null
++++ b/tests/xfs/811.out
+@@ -0,0 +1,2 @@
++QA output created by 811
++Silence is golden
 
