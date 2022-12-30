@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E92165A110
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:57:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23A2A659FC2
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:37:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235949AbiLaB52 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:57:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50964 "EHLO
+        id S235802AbiLaAhK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:37:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236076AbiLaB50 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:57:26 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221671C438
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:57:25 -0800 (PST)
+        with ESMTP id S235750AbiLaAhJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:37:09 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 046711E3FE
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:37:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C0A1EB81E0A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:57:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5D7C433D2;
-        Sat, 31 Dec 2022 01:57:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9547A61CF1
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:37:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02140C433D2;
+        Sat, 31 Dec 2022 00:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451842;
-        bh=Xuh+vrOz7S8uZilC3phCTjHHgHHjs5Dtkc8QLFfl9ls=;
+        s=k20201202; t=1672447028;
+        bh=CWYkcDjmuCYanAa5NSUJAbgh3lrsl8DtS8Jo2ChSEig=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BQxkFfkSuL1UBRsukgvVVGjLI+U06/ghhDSEDfew0g+zXWXW6MkmPhrf7td98JyjL
-         /tYkQ6rF/0pKkQ4bi4GRkO/7CoE/vSNeYx/Az4y6PlI3ycdGePddS9S3LZNweW3Azt
-         rKYoX0J0Zyxje1DbIH6LWOcmAlK8tDQ+RjcEm1kPYtKnG7J4K9JBsS2R0E8IBc0R8b
-         r1jDgeRQRi5v5WW9J5gw0XmqqU5N7hHY4H7sn3sVxR4Tv4Wp1eRyNAsQ6o6DYhVroP
-         Ia95wyAIHogW3QNDUXRdCT/3MT6a1Ya3yOf2L09IZf1B2km87zKlHrRGZySx7gJXmt
-         vd3wta032unHA==
-Subject: [PATCH 36/42] xfs: check new rtbitmap records against rt refcount
- btree
+        b=tahRgNEZkRDlED4X9/lVEqERkDz2neMfjNldbFjNl/A0h/hb+Ni3trlOvWT/Don1p
+         vW4WNhBuCBVoUt3c0IYTY3XqJwPsSlQuWQ3ELXvGWxUAnEVZZQobK5+qqIkf/WsPQP
+         K6bk4WWmJf3EoO6PqNJ4s0p+Wn9znm96Imom/mYzA/z9F60wt3tm+cuPtRLH6wqPOb
+         Cm6n3OZYvshMV2OeX4e0hZAwHsvhmI2JI2QiWTPshOI3Yt458sMoJfEDE74wxJC+e+
+         /ApVBhqEm9uyJD6cx71EiIVGhqTIYZ7zpvHWcpzlcDc3HMZasWH3dGqqP4oKTFqit5
+         zf2YlLoqBuC6Q==
+Subject: [PATCH 5/5] xfs_scrub_all: tighten up the security on the background
+ systemd service
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:18:34 -0800
-Message-ID: <167243871407.717073.3930845877467547286.stgit@magnolia>
-In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
-References: <167243870849.717073.203452386730176902.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:18:35 -0800
+Message-ID: <167243871531.718298.13745628368000596845.stgit@magnolia>
+In-Reply-To: <167243871464.718298.4729609315819255063.stgit@magnolia>
+References: <167243871464.718298.4729609315819255063.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,86 +55,90 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When we're rebuilding the realtime bitmap, check the proposed free
-extents against the rt refcount btree to make sure we don't commit any
-grievous errors.
+Currently, xfs_scrub_all has to run with enough privileges to find
+mounted XFS filesystems and the device associated with that mount and to
+start xfs_scrub@<mountpoint> sub-services.  Minimize the risk of
+xfs_scrub_all escaping its service container or contaminating the rest
+of the system by using systemd's sandboxing controls to prohibit as much
+access as possible.
+
+The directives added by this patch were recommended by the command
+'systemd-analyze security xfs_scrub_all.service' in systemd 249.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/repair.c          |    7 +++++++
- fs/xfs/scrub/rtbitmap_repair.c |   21 +++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ scrub/xfs_scrub_all.service.in |   62 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index b76c01e9f540..3bde5ea86cf5 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -40,6 +40,7 @@
- #include "xfs_rtgroup.h"
- #include "xfs_rtalloc.h"
- #include "xfs_imeta.h"
-+#include "xfs_rtrefcount_btree.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/trace.h"
-@@ -991,6 +992,12 @@ xrep_rtgroup_btcur_init(
- 	    xfs_has_rtrmapbt(mp))
- 		sr->rmap_cur = xfs_rtrmapbt_init_cursor(mp, sc->tp, sr->rtg,
- 				sr->rtg->rtg_rmapip);
+diff --git a/scrub/xfs_scrub_all.service.in b/scrub/xfs_scrub_all.service.in
+index ae4135033dd..c1c6012b47d 100644
+--- a/scrub/xfs_scrub_all.service.in
++++ b/scrub/xfs_scrub_all.service.in
+@@ -18,3 +18,65 @@ SyslogIdentifier=xfs_scrub_all
+ # Create the service underneath the scrub background service slice so that we
+ # can control resource usage.
+ Slice=system-xfs_scrub.slice
 +
-+	if (sc->sm->sm_type != XFS_SCRUB_TYPE_RTREFCBT &&
-+	    (sr->rtlock_flags & XFS_RTGLOCK_REFCOUNT) &&
-+	    xfs_has_rtreflink(mp))
-+		sr->refc_cur = xfs_rtrefcountbt_init_cursor(mp, sc->tp,
-+				sr->rtg, sr->rtg->rtg_refcountip);
- }
- 
- /*
-diff --git a/fs/xfs/scrub/rtbitmap_repair.c b/fs/xfs/scrub/rtbitmap_repair.c
-index 0fa8942d14e7..d099f988274e 100644
---- a/fs/xfs/scrub/rtbitmap_repair.c
-+++ b/fs/xfs/scrub/rtbitmap_repair.c
-@@ -22,6 +22,7 @@
- #include "xfs_swapext.h"
- #include "xfs_rtbitmap.h"
- #include "xfs_rtgroup.h"
-+#include "xfs_refcount.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/trace.h"
-@@ -447,6 +448,7 @@ xrep_rgbitmap_mark_free(
- 	unsigned int		bufwsize;
- 	xfs_extlen_t		mod;
- 	xfs_rtword_t		mask;
-+	enum xbtree_recpacking	outcome;
- 	int			error;
- 
- 	if (!xfs_verify_rgbext(rtg, rb->next_rgbno, rgbno - rb->next_rgbno))
-@@ -466,6 +468,25 @@ xrep_rgbitmap_mark_free(
- 	if (mod != mp->m_sb.sb_rextsize - 1)
- 		return -EFSCORRUPTED;
- 
-+	/* Must not be shared or CoW staging. */
-+	if (rb->sc->sr.refc_cur) {
-+		error = xfs_refcount_has_records(rb->sc->sr.refc_cur,
-+				XFS_REFC_DOMAIN_SHARED, rb->next_rgbno,
-+				rgbno - rb->next_rgbno, &outcome);
-+		if (error)
-+			return error;
-+		if (outcome != XBTREE_RECPACKING_EMPTY)
-+			return -EFSCORRUPTED;
++# Run scrub_all with minimal CPU and IO priority so that nothing will starve.
++IOSchedulingClass=idle
++CPUSchedulingPolicy=idle
++CPUAccounting=true
++Nice=19
 +
-+		error = xfs_refcount_has_records(rb->sc->sr.refc_cur,
-+				XFS_REFC_DOMAIN_COW, rb->next_rgbno,
-+				rgbno - rb->next_rgbno, &outcome);
-+		if (error)
-+			return error;
-+		if (outcome != XBTREE_RECPACKING_EMPTY)
-+			return -EFSCORRUPTED;
-+	}
++# No realtime scheduling
++RestrictRealtime=true
 +
- 	trace_xrep_rgbitmap_record_free(mp, startrtx, nextrtx - 1);
- 
- 	/* Set bits as needed to round startrtx up to the nearest word. */
++# No special privileges, but we still have to run as root so that we can
++# contact the service manager to start the sub-units.
++CapabilityBoundingSet=
++NoNewPrivileges=true
++RestrictSUIDSGID=true
++
++# Make the entire filesystem readonly.  We don't want to hide anything because
++# we need to find all mounted XFS filesystems in the host.
++ProtectSystem=strict
++ProtectHome=read-only
++PrivateTmp=false
++
++# No network access except to the systemd control socket
++PrivateNetwork=true
++ProtectHostname=true
++RestrictAddressFamilies=AF_UNIX
++IPAddressDeny=any
++
++# Don't let the program mess with the kernel configuration at all
++ProtectKernelLogs=true
++ProtectKernelModules=true
++ProtectKernelTunables=true
++ProtectControlGroups=true
++ProtectProc=invisible
++RestrictNamespaces=true
++
++# Hide everything in /proc, even /proc/mounts
++ProcSubset=pid
++
++# Only allow the default personality Linux
++LockPersonality=true
++
++# No writable memory pages
++MemoryDenyWriteExecute=true
++
++# Don't let our mounts leak out to the host
++PrivateMounts=true
++
++# Restrict system calls to the native arch and only enough to get things going
++SystemCallArchitectures=native
++SystemCallFilter=@system-service
++SystemCallFilter=~@privileged
++SystemCallFilter=~@resources
++SystemCallFilter=~@mount
++
++# Media scan stamp file shouldn't be readable by regular users
++UMask=0077
++
++# lsblk ignores mountpoints if it can't find the device files, so we cannot
++# hide them
++#ProtectClock=true
++#PrivateDevices=true
 
