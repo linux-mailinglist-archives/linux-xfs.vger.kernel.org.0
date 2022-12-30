@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8978F659F30
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:07:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08EBF65A053
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:12:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235872AbiLaAHU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:07:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
+        id S236018AbiLaBMP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:12:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235857AbiLaAHU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:07:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84D41E3C3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:07:18 -0800 (PST)
+        with ESMTP id S236017AbiLaBMO (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:12:14 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0971616588
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:12:13 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A31F7B81DF0
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:07:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB3AC433D2;
-        Sat, 31 Dec 2022 00:07:16 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 61779CE1923
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:12:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EA1AC433EF;
+        Sat, 31 Dec 2022 01:12:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445236;
-        bh=2pK/2z0eULe2PtnjeBVCR4C7EIN6Wg9qb/76YnVf2Fg=;
+        s=k20201202; t=1672449129;
+        bh=QVkN2uWI/9XniCTBTcvTMd43daURda/gwqWIMwpkQC4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dTczdvgC+CJxPKqFXsd9x0JIvi36kluOXtx9XYWURSG8WM72GIAkcrLcGpVUUx+YH
-         r6vBSI9m7fH6YaLP/V8O3rADf43guGOCCqHDlIExfPvvO+UhA7JDxOOjpPsneYgK91
-         GuRd9RWsoZo56ALyPkoUhUXs7+G7jLTRRCnMWemx1K1MNWDSRqvfkA6W7l6PCDBwpV
-         bgFKleKZZOjogN43AzPhbNFImtcs/LiO5ysVuGvSu0jWYk3Hz04FSDd0UGTFkSFbJC
-         tXWPG5nBOUh7MW00WklMti6HuRHHXRybRTEXFFfGWXXvF7nQhMo9Kz5umG8KiSsrbS
-         8Va8UN5A47DTw==
-Subject: [PATCH 1/4] libfrog: rename XFROG_SCRUB_TYPE_* to XFROG_SCRUB_GROUP_*
+        b=o2EzxOtKAM0i6whHJZeERj4iRY5WS+HomWIcxXY6f2dtwrHzdaOgKKhGRbsQvL4Sh
+         6NrT7fiTAEUQhAJXP4BdWRFr/CbB9nPPduWYlOq6njLPiEfJo84TMUFm6hoOaraktn
+         /xk/N1FrV/xzpLMLDVaNMtFE3qpjtA+cUKGfEAuTiGFlUz4HmGwOoSVt0ilaIhmtE2
+         PdVzAKjWAMLlCb91tcuZBCWxx6dMv6mE1kNjyubk56FpttImOZ8GUPSL+SEZ73RqeK
+         TIxfvheJBl6g8SyhFgjyWUWcChVh9z/D430jsrIsV3JGVcVO4A+pNNRwH/sDBH/dgz
+         y2jIhpwBDT6nw==
+Subject: [PATCH 07/23] xfs: define the on-disk format for the metadir feature
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:25 -0800
-Message-ID: <167243864568.708428.13971614791565931968.stgit@magnolia>
-In-Reply-To: <167243864554.708428.558285078019160851.stgit@magnolia>
-References: <167243864554.708428.558285078019160851.stgit@magnolia>
+Message-ID: <167243864556.708110.17274654467058270183.stgit@magnolia>
+In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
+References: <167243864431.708110.1688096566212843499.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,441 +54,186 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-I didn't do a good job of naming XFROG_SCRUB_TYPE when I created that
-enumeration.  The goal of the enum is to group the scrub ioctl's
-XFS_SCRUB_TYPE_* codes by principal filesystem object (AG, inode, etc.)
-but for some dumb reason I chose to reuse "type".  This is confusing,
-so fix this sin.
+Define the on-disk layout and feature flags for the metadata inode
+directory feature.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- io/scrub.c      |   36 ++++++++++++++++++------------------
- libfrog/scrub.c |   50 +++++++++++++++++++++++++-------------------------
- libfrog/scrub.h |   16 ++++++++--------
- scrub/scrub.c   |   54 +++++++++++++++++++++++++++---------------------------
- 4 files changed, 78 insertions(+), 78 deletions(-)
+ fs/xfs/libxfs/xfs_format.h     |   48 ++++++++++++++++++++++++++++++++++++++--
+ fs/xfs/libxfs/xfs_inode_util.c |    2 ++
+ fs/xfs/libxfs/xfs_sb.c         |    2 ++
+ fs/xfs/xfs_inode.h             |    7 ++++++
+ fs/xfs/xfs_mount.h             |    2 ++
+ fs/xfs/xfs_super.c             |    4 +++
+ 6 files changed, 63 insertions(+), 2 deletions(-)
 
 
-diff --git a/io/scrub.c b/io/scrub.c
-index a74e65fbe8d..0cad69253dc 100644
---- a/io/scrub.c
-+++ b/io/scrub.c
-@@ -56,17 +56,17 @@ scrub_ioctl(
- 	sc = &xfrog_scrubbers[type];
- 	memset(&meta, 0, sizeof(meta));
- 	meta.sm_type = type;
--	switch (sc->type) {
--	case XFROG_SCRUB_TYPE_AGHEADER:
--	case XFROG_SCRUB_TYPE_PERAG:
-+	switch (sc->group) {
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
- 		meta.sm_agno = control;
- 		break;
--	case XFROG_SCRUB_TYPE_INODE:
-+	case XFROG_SCRUB_GROUP_INODE:
- 		meta.sm_ino = control;
- 		meta.sm_gen = control2;
- 		break;
--	case XFROG_SCRUB_TYPE_NONE:
--	case XFROG_SCRUB_TYPE_FS:
-+	case XFROG_SCRUB_GROUP_NONE:
-+	case XFROG_SCRUB_GROUP_FS:
- 		/* no control parameters */
- 		break;
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index abd75b3091ec..0bd915bd4eed 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -174,6 +174,16 @@ typedef struct xfs_sb {
+ 	xfs_lsn_t	sb_lsn;		/* last write sequence */
+ 	uuid_t		sb_meta_uuid;	/* metadata file system unique id */
+ 
++	/* Fields beyond here do not match xfs_dsb.  Be very careful! */
++
++	/*
++	 * Metadata Directory Inode.  On disk this lives in the sb_rbmino slot,
++	 * but we continue to use the in-core superblock to cache the classic
++	 * inodes (rt bitmap; rt summary; user, group, and project quotas) so
++	 * we cache the metadir inode value here too.
++	 */
++	xfs_ino_t	sb_metadirino;
++
+ 	/* must be padded to 64 bit alignment */
+ } xfs_sb_t;
+ 
+@@ -190,7 +200,14 @@ struct xfs_dsb {
+ 	uuid_t		sb_uuid;	/* user-visible file system unique id */
+ 	__be64		sb_logstart;	/* starting block of log if internal */
+ 	__be64		sb_rootino;	/* root inode number */
+-	__be64		sb_rbmino;	/* bitmap inode for realtime extents */
++	/*
++	 * bitmap inode for realtime extents.
++	 *
++	 * The metadata directory feature uses the sb_rbmino field to point to
++	 * the root of the metadata directory tree.  All other sb inode
++	 * pointers are no longer used.
++	 */
++	__be64		sb_rbmino;
+ 	__be64		sb_rsumino;	/* summary inode for rt bitmap */
+ 	__be32		sb_rextsize;	/* realtime extent size, blocks */
+ 	__be32		sb_agblocks;	/* size of an allocation group */
+@@ -372,6 +389,7 @@ xfs_sb_has_ro_compat_feature(
+ #define XFS_SB_FEAT_INCOMPAT_BIGTIME	(1 << 3)	/* large timestamps */
+ #define XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR (1 << 4)	/* needs xfs_repair */
+ #define XFS_SB_FEAT_INCOMPAT_NREXT64	(1 << 5)	/* large extent counters */
++#define XFS_SB_FEAT_INCOMPAT_METADIR	(1U << 31)	/* metadata dir tree */
+ #define XFS_SB_FEAT_INCOMPAT_ALL \
+ 		(XFS_SB_FEAT_INCOMPAT_FTYPE|	\
+ 		 XFS_SB_FEAT_INCOMPAT_SPINODES|	\
+@@ -1078,6 +1096,7 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
+ #define XFS_DIFLAG2_COWEXTSIZE_BIT   2  /* copy on write extent size hint */
+ #define XFS_DIFLAG2_BIGTIME_BIT	3	/* big timestamps */
+ #define XFS_DIFLAG2_NREXT64_BIT 4	/* large extent counters */
++#define XFS_DIFLAG2_METADATA_BIT 63	/* filesystem metadata */
+ 
+ #define XFS_DIFLAG2_DAX		(1 << XFS_DIFLAG2_DAX_BIT)
+ #define XFS_DIFLAG2_REFLINK     (1 << XFS_DIFLAG2_REFLINK_BIT)
+@@ -1085,9 +1104,34 @@ static inline void xfs_dinode_put_rdev(struct xfs_dinode *dip, xfs_dev_t rdev)
+ #define XFS_DIFLAG2_BIGTIME	(1 << XFS_DIFLAG2_BIGTIME_BIT)
+ #define XFS_DIFLAG2_NREXT64	(1 << XFS_DIFLAG2_NREXT64_BIT)
+ 
++/*
++ * The inode contains filesystem metadata and can be found through the metadata
++ * directory tree.  Metadata inodes must satisfy the following constraints:
++ *
++ * - V5 filesystem (and ftype) are enabled;
++ * - The only valid modes are regular files and directories;
++ * - The access bits must be zero;
++ * - DMAPI event and state masks are zero;
++ * - The user, group, and project IDs must be zero;
++ * - The immutable, sync, noatime, nodump, nodefrag flags must be set.
++ * - The dax flag must not be set.
++ * - Directories must have nosymlinks set.
++ *
++ * These requirements are chosen defensively to minimize the ability of
++ * userspace to read or modify the contents, should a metadata file ever
++ * escape to userspace.
++ *
++ * There are further constraints on the directory tree itself:
++ *
++ * - Metadata inodes must never be resolvable through the root directory;
++ * - They must never be accessed by userspace;
++ * - Metadata directory entries must have correct ftype.
++ */
++#define XFS_DIFLAG2_METADATA	(1ULL << XFS_DIFLAG2_METADATA_BIT)
++
+ #define XFS_DIFLAG2_ANY \
+ 	(XFS_DIFLAG2_DAX | XFS_DIFLAG2_REFLINK | XFS_DIFLAG2_COWEXTSIZE | \
+-	 XFS_DIFLAG2_BIGTIME | XFS_DIFLAG2_NREXT64)
++	 XFS_DIFLAG2_BIGTIME | XFS_DIFLAG2_NREXT64 | XFS_DIFLAG2_METADATA)
+ 
+ static inline bool xfs_dinode_has_bigtime(const struct xfs_dinode *dip)
+ {
+diff --git a/fs/xfs/libxfs/xfs_inode_util.c b/fs/xfs/libxfs/xfs_inode_util.c
+index 1135bec1328b..7b3e0c79c847 100644
+--- a/fs/xfs/libxfs/xfs_inode_util.c
++++ b/fs/xfs/libxfs/xfs_inode_util.c
+@@ -225,6 +225,8 @@ xfs_inode_inherit_flags2(
  	}
-@@ -126,8 +126,8 @@ parse_args(
- 	}
- 	optind++;
+ 	if (pip->i_diflags2 & XFS_DIFLAG2_DAX)
+ 		ip->i_diflags2 |= XFS_DIFLAG2_DAX;
++	if (pip->i_diflags2 & XFS_DIFLAG2_METADATA)
++		ip->i_diflags2 |= XFS_DIFLAG2_METADATA;
  
--	switch (d->type) {
--	case XFROG_SCRUB_TYPE_INODE:
-+	switch (d->group) {
-+	case XFROG_SCRUB_GROUP_INODE:
- 		if (optind == argc) {
- 			control = 0;
- 			control2 = 0;
-@@ -152,8 +152,8 @@ parse_args(
- 			return 0;
- 		}
- 		break;
--	case XFROG_SCRUB_TYPE_AGHEADER:
--	case XFROG_SCRUB_TYPE_PERAG:
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
- 		if (optind != argc - 1) {
- 			fprintf(stderr,
- 				_("Must specify one AG number.\n"));
-@@ -166,8 +166,8 @@ parse_args(
- 			return 0;
- 		}
- 		break;
--	case XFROG_SCRUB_TYPE_FS:
--	case XFROG_SCRUB_TYPE_NONE:
-+	case XFROG_SCRUB_GROUP_FS:
-+	case XFROG_SCRUB_GROUP_NONE:
- 		if (optind != argc) {
- 			fprintf(stderr,
- 				_("No parameters allowed.\n"));
-@@ -248,17 +248,17 @@ repair_ioctl(
- 	sc = &xfrog_scrubbers[type];
- 	memset(&meta, 0, sizeof(meta));
- 	meta.sm_type = type;
--	switch (sc->type) {
--	case XFROG_SCRUB_TYPE_AGHEADER:
--	case XFROG_SCRUB_TYPE_PERAG:
-+	switch (sc->group) {
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
- 		meta.sm_agno = control;
- 		break;
--	case XFROG_SCRUB_TYPE_INODE:
-+	case XFROG_SCRUB_GROUP_INODE:
- 		meta.sm_ino = control;
- 		meta.sm_gen = control2;
- 		break;
--	case XFROG_SCRUB_TYPE_NONE:
--	case XFROG_SCRUB_TYPE_FS:
-+	case XFROG_SCRUB_GROUP_NONE:
-+	case XFROG_SCRUB_GROUP_FS:
- 		/* no control parameters */
- 		break;
- 	}
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index d900bf2af63..90fc2b1a40c 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -12,127 +12,127 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 	[XFS_SCRUB_TYPE_PROBE] = {
- 		.name	= "probe",
- 		.descr	= "metadata",
--		.type	= XFROG_SCRUB_TYPE_NONE,
-+		.group	= XFROG_SCRUB_GROUP_NONE,
- 	},
- 	[XFS_SCRUB_TYPE_SB] = {
- 		.name	= "sb",
- 		.descr	= "superblock",
--		.type	= XFROG_SCRUB_TYPE_AGHEADER,
-+		.group	= XFROG_SCRUB_GROUP_AGHEADER,
- 	},
- 	[XFS_SCRUB_TYPE_AGF] = {
- 		.name	= "agf",
- 		.descr	= "free space header",
--		.type	= XFROG_SCRUB_TYPE_AGHEADER,
-+		.group	= XFROG_SCRUB_GROUP_AGHEADER,
- 	},
- 	[XFS_SCRUB_TYPE_AGFL] = {
- 		.name	= "agfl",
- 		.descr	= "free list",
--		.type	= XFROG_SCRUB_TYPE_AGHEADER,
-+		.group	= XFROG_SCRUB_GROUP_AGHEADER,
- 	},
- 	[XFS_SCRUB_TYPE_AGI] = {
- 		.name	= "agi",
- 		.descr	= "inode header",
--		.type	= XFROG_SCRUB_TYPE_AGHEADER,
-+		.group	= XFROG_SCRUB_GROUP_AGHEADER,
- 	},
- 	[XFS_SCRUB_TYPE_BNOBT] = {
- 		.name	= "bnobt",
- 		.descr	= "freesp by block btree",
--		.type	= XFROG_SCRUB_TYPE_PERAG,
-+		.group	= XFROG_SCRUB_GROUP_PERAG,
- 	},
- 	[XFS_SCRUB_TYPE_CNTBT] = {
- 		.name	= "cntbt",
- 		.descr	= "freesp by length btree",
--		.type	= XFROG_SCRUB_TYPE_PERAG,
-+		.group	= XFROG_SCRUB_GROUP_PERAG,
- 	},
- 	[XFS_SCRUB_TYPE_INOBT] = {
- 		.name	= "inobt",
- 		.descr	= "inode btree",
--		.type	= XFROG_SCRUB_TYPE_PERAG,
-+		.group	= XFROG_SCRUB_GROUP_PERAG,
- 	},
- 	[XFS_SCRUB_TYPE_FINOBT] = {
- 		.name	= "finobt",
- 		.descr	= "free inode btree",
--		.type	= XFROG_SCRUB_TYPE_PERAG,
-+		.group	= XFROG_SCRUB_GROUP_PERAG,
- 	},
- 	[XFS_SCRUB_TYPE_RMAPBT] = {
- 		.name	= "rmapbt",
- 		.descr	= "reverse mapping btree",
--		.type	= XFROG_SCRUB_TYPE_PERAG,
-+		.group	= XFROG_SCRUB_GROUP_PERAG,
- 	},
- 	[XFS_SCRUB_TYPE_REFCNTBT] = {
- 		.name	= "refcountbt",
- 		.descr	= "reference count btree",
--		.type	= XFROG_SCRUB_TYPE_PERAG,
-+		.group	= XFROG_SCRUB_GROUP_PERAG,
- 	},
- 	[XFS_SCRUB_TYPE_INODE] = {
- 		.name	= "inode",
- 		.descr	= "inode record",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_BMBTD] = {
- 		.name	= "bmapbtd",
- 		.descr	= "data block map",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_BMBTA] = {
- 		.name	= "bmapbta",
- 		.descr	= "attr block map",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_BMBTC] = {
- 		.name	= "bmapbtc",
- 		.descr	= "CoW block map",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_DIR] = {
- 		.name	= "directory",
- 		.descr	= "directory entries",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_XATTR] = {
- 		.name	= "xattr",
- 		.descr	= "extended attributes",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_SYMLINK] = {
- 		.name	= "symlink",
- 		.descr	= "symbolic link",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_PARENT] = {
- 		.name	= "parent",
- 		.descr	= "parent pointer",
--		.type	= XFROG_SCRUB_TYPE_INODE,
-+		.group	= XFROG_SCRUB_GROUP_INODE,
- 	},
- 	[XFS_SCRUB_TYPE_RTBITMAP] = {
- 		.name	= "rtbitmap",
- 		.descr	= "realtime bitmap",
--		.type	= XFROG_SCRUB_TYPE_FS,
-+		.group	= XFROG_SCRUB_GROUP_FS,
- 	},
- 	[XFS_SCRUB_TYPE_RTSUM] = {
- 		.name	= "rtsummary",
- 		.descr	= "realtime summary",
--		.type	= XFROG_SCRUB_TYPE_FS,
-+		.group	= XFROG_SCRUB_GROUP_FS,
- 	},
- 	[XFS_SCRUB_TYPE_UQUOTA] = {
- 		.name	= "usrquota",
- 		.descr	= "user quotas",
--		.type	= XFROG_SCRUB_TYPE_FS,
-+		.group	= XFROG_SCRUB_GROUP_FS,
- 	},
- 	[XFS_SCRUB_TYPE_GQUOTA] = {
- 		.name	= "grpquota",
- 		.descr	= "group quotas",
--		.type	= XFROG_SCRUB_TYPE_FS,
-+		.group	= XFROG_SCRUB_GROUP_FS,
- 	},
- 	[XFS_SCRUB_TYPE_PQUOTA] = {
- 		.name	= "prjquota",
- 		.descr	= "project quotas",
--		.type	= XFROG_SCRUB_TYPE_FS,
-+		.group	= XFROG_SCRUB_GROUP_FS,
- 	},
- 	[XFS_SCRUB_TYPE_FSCOUNTERS] = {
- 		.name	= "fscounters",
- 		.descr	= "filesystem summary counters",
--		.type	= XFROG_SCRUB_TYPE_FS,
-+		.group	= XFROG_SCRUB_GROUP_FS,
- 		.flags	= XFROG_SCRUB_DESCR_SUMMARY,
- 	},
- };
-diff --git a/libfrog/scrub.h b/libfrog/scrub.h
-index e43d8c244e4..43a882321f9 100644
---- a/libfrog/scrub.h
-+++ b/libfrog/scrub.h
-@@ -6,20 +6,20 @@
- #ifndef __LIBFROG_SCRUB_H__
- #define __LIBFROG_SCRUB_H__
+ 	/* Don't let invalid cowextsize hints propagate. */
+ 	failaddr = xfs_inode_validate_cowextsize(ip->i_mount, ip->i_cowextsize,
+diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
+index 5b6f5939fda1..345a6fdf8625 100644
+--- a/fs/xfs/libxfs/xfs_sb.c
++++ b/fs/xfs/libxfs/xfs_sb.c
+@@ -174,6 +174,8 @@ xfs_sb_version_to_features(
+ 		features |= XFS_FEAT_NEEDSREPAIR;
+ 	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_NREXT64)
+ 		features |= XFS_FEAT_NREXT64;
++	if (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_METADIR)
++		features |= XFS_FEAT_METADIR;
  
--/* Type info and names for the scrub types. */
--enum xfrog_scrub_type {
--	XFROG_SCRUB_TYPE_NONE,		/* not metadata */
--	XFROG_SCRUB_TYPE_AGHEADER,	/* per-AG header */
--	XFROG_SCRUB_TYPE_PERAG,		/* per-AG metadata */
--	XFROG_SCRUB_TYPE_FS,		/* per-FS metadata */
--	XFROG_SCRUB_TYPE_INODE,		/* per-inode metadata */
-+/* Group the scrub types by principal filesystem object. */
-+enum xfrog_scrub_group {
-+	XFROG_SCRUB_GROUP_NONE,		/* not metadata */
-+	XFROG_SCRUB_GROUP_AGHEADER,	/* per-AG header */
-+	XFROG_SCRUB_GROUP_PERAG,	/* per-AG metadata */
-+	XFROG_SCRUB_GROUP_FS,		/* per-FS metadata */
-+	XFROG_SCRUB_GROUP_INODE,	/* per-inode metadata */
- };
- 
- /* Catalog of scrub types and names, indexed by XFS_SCRUB_TYPE_* */
- struct xfrog_scrub_descr {
- 	const char		*name;
- 	const char		*descr;
--	enum xfrog_scrub_type	type;
-+	enum xfrog_scrub_group	group;
- 	unsigned int		flags;
- };
- 
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index d899f75a92f..61a111db080 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -34,21 +34,21 @@ format_scrub_descr(
- 	struct xfs_scrub_metadata	*meta = where;
- 	const struct xfrog_scrub_descr	*sc = &xfrog_scrubbers[meta->sm_type];
- 
--	switch (sc->type) {
--	case XFROG_SCRUB_TYPE_AGHEADER:
--	case XFROG_SCRUB_TYPE_PERAG:
-+	switch (sc->group) {
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
- 		return snprintf(buf, buflen, _("AG %u %s"), meta->sm_agno,
- 				_(sc->descr));
- 		break;
--	case XFROG_SCRUB_TYPE_INODE:
-+	case XFROG_SCRUB_GROUP_INODE:
- 		return scrub_render_ino_descr(ctx, buf, buflen,
- 				meta->sm_ino, meta->sm_gen, "%s",
- 				_(sc->descr));
- 		break;
--	case XFROG_SCRUB_TYPE_FS:
-+	case XFROG_SCRUB_GROUP_FS:
- 		return snprintf(buf, buflen, _("%s"), _(sc->descr));
- 		break;
--	case XFROG_SCRUB_TYPE_NONE:
-+	case XFROG_SCRUB_GROUP_NONE:
- 		assert(0);
- 		break;
- 	}
-@@ -276,12 +276,12 @@ scrub_save_repair(
- 	memset(aitem, 0, sizeof(*aitem));
- 	aitem->type = meta->sm_type;
- 	aitem->flags = meta->sm_flags;
--	switch (xfrog_scrubbers[meta->sm_type].type) {
--	case XFROG_SCRUB_TYPE_AGHEADER:
--	case XFROG_SCRUB_TYPE_PERAG:
-+	switch (xfrog_scrubbers[meta->sm_type].group) {
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
- 		aitem->agno = meta->sm_agno;
- 		break;
--	case XFROG_SCRUB_TYPE_INODE:
-+	case XFROG_SCRUB_GROUP_INODE:
- 		aitem->ino = meta->sm_ino;
- 		aitem->gen = meta->sm_gen;
- 		break;
-@@ -336,14 +336,14 @@ scrub_meta_type(
+ 	return features;
  }
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 571f61930b7b..d45583cd349d 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -264,6 +264,13 @@ static inline bool xfs_is_metadata_inode(struct xfs_inode *ip)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
+ 
++	if (xfs_has_metadir(mp))
++		return ip->i_diflags2 & XFS_DIFLAG2_METADATA;
++
++	/*
++	 * Before metadata directories, the only metadata inodes were the
++	 * three quota files, the realtime bitmap, and the realtime summary.
++	 */
+ 	return ip == mp->m_rbmip || ip == mp->m_rsumip ||
+ 		xfs_is_quota_inode(&mp->m_sb, ip->i_ino);
+ }
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index 3b2601ab954d..0fb545e92a26 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -281,6 +281,7 @@ typedef struct xfs_mount {
+ #define XFS_FEAT_BIGTIME	(1ULL << 24)	/* large timestamps */
+ #define XFS_FEAT_NEEDSREPAIR	(1ULL << 25)	/* needs xfs_repair */
+ #define XFS_FEAT_NREXT64	(1ULL << 26)	/* large extent counters */
++#define XFS_FEAT_METADIR	(1ULL << 27)	/* metadata directory tree */
+ 
+ /* Mount features */
+ #define XFS_FEAT_NOATTR2	(1ULL << 48)	/* disable attr2 creation */
+@@ -344,6 +345,7 @@ __XFS_HAS_FEAT(inobtcounts, INOBTCNT)
+ __XFS_HAS_FEAT(bigtime, BIGTIME)
+ __XFS_HAS_FEAT(needsrepair, NEEDSREPAIR)
+ __XFS_HAS_FEAT(large_extent_counts, NREXT64)
++__XFS_HAS_FEAT(metadir, METADIR)
  
  /*
-- * Scrub all metadata types that are assigned to the given XFROG_SCRUB_TYPE_*,
-+ * Scrub all metadata types that are assigned to the given XFROG_SCRUB_GROUP_*,
-  * saving corruption reports for later.  This should not be used for
-- * XFROG_SCRUB_TYPE_INODE or for checking summary metadata.
-+ * XFROG_SCRUB_GROUP_INODE or for checking summary metadata.
-  */
- static bool
--scrub_all_types(
-+scrub_group(
- 	struct scrub_ctx		*ctx,
--	enum xfrog_scrub_type		scrub_type,
-+	enum xfrog_scrub_group		group,
- 	xfs_agnumber_t			agno,
- 	struct action_list		*alist)
- {
-@@ -354,7 +354,7 @@ scrub_all_types(
- 	for (type = 0; type < XFS_SCRUB_TYPE_NR; type++, sc++) {
- 		int			ret;
+  * Mount features
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index 4cf26611f46f..9eff9ee106c4 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -1640,6 +1640,10 @@ xfs_fs_fill_super(
+ 		mp->m_features &= ~XFS_FEAT_DISCARD;
+ 	}
  
--		if (sc->type != scrub_type)
-+		if (sc->group != group)
- 			continue;
- 		if (sc->flags & XFROG_SCRUB_DESCR_SUMMARY)
- 			continue;
-@@ -388,7 +388,7 @@ scrub_ag_headers(
- 	xfs_agnumber_t			agno,
- 	struct action_list		*alist)
- {
--	return scrub_all_types(ctx, XFROG_SCRUB_TYPE_AGHEADER, agno, alist);
-+	return scrub_group(ctx, XFROG_SCRUB_GROUP_AGHEADER, agno, alist);
- }
- 
- /* Scrub each AG's metadata btrees. */
-@@ -398,7 +398,7 @@ scrub_ag_metadata(
- 	xfs_agnumber_t			agno,
- 	struct action_list		*alist)
- {
--	return scrub_all_types(ctx, XFROG_SCRUB_TYPE_PERAG, agno, alist);
-+	return scrub_group(ctx, XFROG_SCRUB_GROUP_PERAG, agno, alist);
- }
- 
- /* Scrub whole-FS metadata btrees. */
-@@ -407,7 +407,7 @@ scrub_fs_metadata(
- 	struct scrub_ctx		*ctx,
- 	struct action_list		*alist)
- {
--	return scrub_all_types(ctx, XFROG_SCRUB_TYPE_FS, 0, alist);
-+	return scrub_group(ctx, XFROG_SCRUB_GROUP_FS, 0, alist);
- }
- 
- /* Scrub FS summary metadata. */
-@@ -430,12 +430,12 @@ scrub_estimate_ag_work(
- 
- 	sc = xfrog_scrubbers;
- 	for (type = 0; type < XFS_SCRUB_TYPE_NR; type++, sc++) {
--		switch (sc->type) {
--		case XFROG_SCRUB_TYPE_AGHEADER:
--		case XFROG_SCRUB_TYPE_PERAG:
-+		switch (sc->group) {
-+		case XFROG_SCRUB_GROUP_AGHEADER:
-+		case XFROG_SCRUB_GROUP_PERAG:
- 			estimate += ctx->mnt.fsgeom.agcount;
- 			break;
--		case XFROG_SCRUB_TYPE_FS:
-+		case XFROG_SCRUB_GROUP_FS:
- 			estimate++;
- 			break;
- 		default:
-@@ -463,7 +463,7 @@ scrub_file(
- 	enum check_outcome		fix;
- 
- 	assert(type < XFS_SCRUB_TYPE_NR);
--	assert(xfrog_scrubbers[type].type == XFROG_SCRUB_TYPE_INODE);
-+	assert(xfrog_scrubbers[type].group == XFROG_SCRUB_GROUP_INODE);
- 
- 	meta.sm_type = type;
- 	meta.sm_ino = bstat->bs_ino;
-@@ -625,12 +625,12 @@ xfs_repair_metadata(
- 	meta.sm_flags = aitem->flags | XFS_SCRUB_IFLAG_REPAIR;
- 	if (use_force_rebuild)
- 		meta.sm_flags |= XFS_SCRUB_IFLAG_FORCE_REBUILD;
--	switch (xfrog_scrubbers[aitem->type].type) {
--	case XFROG_SCRUB_TYPE_AGHEADER:
--	case XFROG_SCRUB_TYPE_PERAG:
-+	switch (xfrog_scrubbers[aitem->type].group) {
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
- 		meta.sm_agno = aitem->agno;
- 		break;
--	case XFROG_SCRUB_TYPE_INODE:
-+	case XFROG_SCRUB_GROUP_INODE:
- 		meta.sm_ino = aitem->ino;
- 		meta.sm_gen = aitem->gen;
- 		break;
++	if (xfs_has_metadir(mp))
++		xfs_warn(mp,
++"EXPERIMENTAL metadata directory feature in use. Use at your own risk!");
++
+ 	if (xfs_has_reflink(mp)) {
+ 		if (mp->m_sb.sb_rblocks) {
+ 			xfs_alert(mp,
 
