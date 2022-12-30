@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9840565A1DD
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:47:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE2965A1E6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:48:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236191AbiLaCr3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:47:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59372 "EHLO
+        id S236243AbiLaCst (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:48:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236196AbiLaCr3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:47:29 -0500
+        with ESMTP id S236240AbiLaCsr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:48:47 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2224D12D0D
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:47:28 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21D5120B6
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:48:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C88D6B81E6C
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:47:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 747E3C433D2;
-        Sat, 31 Dec 2022 02:47:25 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 86B17B81E6E
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:48:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46C71C433EF;
+        Sat, 31 Dec 2022 02:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454845;
-        bh=OgV83HvKYsxjiDSq6wlQyQ188WzR/ctPuoeMELC785k=;
+        s=k20201202; t=1672454923;
+        bh=nvbBly5Ntx3m1HNMtAYcYw2otx3+NrtNXdMC5nwBAx8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=r7PWyPoX54Yhpt30kdYVdI90uv32gQucj8HhCLKccf3grGGdjUTN/ggzyrkF+Mcq/
-         fozJIxmoJ8zjh3zugEuvnCqNgCewohTa4HhzNXs7Fy//H+ouHvNj+TAOH/ytf2pL1n
-         5IdsIWgevnyBMqSJY6l4zRos3sXPwdx2naoYUMqZvjA/4ZopfagNYx1VUtWWZ+DnsS
-         IkSztNmiKfORGjj6MkCntw1/wjKIbrRsEjwC2II49LIdNJ/KbBXyOKu22M72YjzQu4
-         arcg54Wurg/UONl0Gx25r+mnzQU6BA+WTYQ5BLJ49mqx1+DinklfEs7n96u3l/Av5O
-         BbPD7UIZqqSPw==
-Subject: [PATCH 19/41] xfs: hook live realtime rmap operations during a repair
- operation
+        b=bGKn0CFMiyAP9iv8xXW401B9rs5aCLKnyIwPFkp1AM5m6/WtptyMfrpJV4VWQtC42
+         GyRYGR6hlrxfrKgEmof2/8l/w7ViJfnAOTO85wPILzVAYKpj9DQ/i0DV1OQVTSesj4
+         7IUCqYnRR9UjnJy9H/Xm6JPtAFEtP7WpA6pzvVcLJ9JWoIXaB+6wTYK0yrt8x9//Ib
+         HlVU93snGUda9sD3FDygqVsVutSevOLsqot0ODSDgtL5XrxnIyXwci6KvWuy9ZWhr8
+         JQ9MRDk3DOLxaDmRIwb6Rnf5rTbEcQR+fSpqyrbpspYSEYIxAhDVMdl1SXWGSFOV//
+         ysAFPrfjNMWSw==
+Subject: [PATCH 24/41] xfs_db: make fsmap query the realtime reverse mapping
+ tree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:58 -0800
-Message-ID: <167243879845.732820.13143332721787001519.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:59 -0800
+Message-ID: <167243879912.732820.12106848728769249432.stgit@magnolia>
 In-Reply-To: <167243879574.732820.4725863402652761218.stgit@magnolia>
 References: <167243879574.732820.4725863402652761218.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,147 +56,204 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Hook the regular realtime rmap code when an rtrmapbt repair operation is
-running so that we can unlock the AGF buffer to scan the filesystem and
-keep the in-memory btree up to date during the scan.
+Extend the 'fsmap' debugger command to support querying the realtime
+rmap btree via a new -r argument.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_rmap.c    |   39 ++++++++++++++++++++++++++++++++++-----
- libxfs/xfs_rmap.h    |    6 ++++++
- libxfs/xfs_rtgroup.c |    2 +-
- libxfs/xfs_rtgroup.h |    3 +++
- 4 files changed, 44 insertions(+), 6 deletions(-)
+ db/fsmap.c               |  135 +++++++++++++++++++++++++++++++++++++++++++++-
+ libxfs/libxfs_api_defs.h |    2 +
+ 2 files changed, 133 insertions(+), 4 deletions(-)
 
 
-diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
-index 5c118eb98b4..a8ba49a89cf 100644
---- a/libxfs/xfs_rmap.c
-+++ b/libxfs/xfs_rmap.c
-@@ -905,6 +905,7 @@ static inline void
- xfs_rmap_update_hook(
- 	struct xfs_trans		*tp,
- 	struct xfs_perag		*pag,
-+	struct xfs_rtgroup		*rtg,
- 	enum xfs_rmap_intent_type	op,
- 	xfs_agblock_t			startblock,
- 	xfs_extlen_t			blockcount,
-@@ -921,6 +922,8 @@ xfs_rmap_update_hook(
- 
- 		if (pag)
- 			xfs_hooks_call(&pag->pag_rmap_update_hooks, op, &p);
-+		else if (rtg)
-+			xfs_hooks_call(&rtg->rtg_rmap_update_hooks, op, &p);
+diff --git a/db/fsmap.c b/db/fsmap.c
+index 7fd42df2a1c..8d06f3638d6 100644
+--- a/db/fsmap.c
++++ b/db/fsmap.c
+@@ -102,6 +102,120 @@ fsmap(
  	}
  }
  
-@@ -941,8 +944,28 @@ xfs_rmap_hook_del(
- {
- 	xfs_hooks_del(&pag->pag_rmap_update_hooks, &hook->update_hook);
- }
-+
-+# ifdef CONFIG_XFS_RT
-+/* Call the specified function during a rt reverse mapping update. */
-+int
-+xfs_rtrmap_hook_add(
-+	struct xfs_rtgroup	*rtg,
-+	struct xfs_rmap_hook	*hook)
++static int
++fsmap_rt_fn(
++	struct xfs_btree_cur		*cur,
++	const struct xfs_rmap_irec	*rec,
++	void				*priv)
 +{
-+	return xfs_hooks_add(&rtg->rtg_rmap_update_hooks, &hook->update_hook);
++	struct fsmap_info		*info = priv;
++
++	dbprintf(_("%llu: %u/%u len %u owner %lld offset %llu bmbt %d attrfork %d extflag %d\n"),
++		info->nr, cur->bc_ino.rtg->rtg_rgno, rec->rm_startblock,
++		rec->rm_blockcount, rec->rm_owner, rec->rm_offset,
++		!!(rec->rm_flags & XFS_RMAP_BMBT_BLOCK),
++		!!(rec->rm_flags & XFS_RMAP_ATTR_FORK),
++		!!(rec->rm_flags & XFS_RMAP_UNWRITTEN));
++	info->nr++;
++
++	return 0;
 +}
 +
-+/* Stop calling the specified function during a rt reverse mapping update. */
-+void
-+xfs_rtrmap_hook_del(
-+	struct xfs_rtgroup	*rtg,
-+	struct xfs_rmap_hook	*hook)
++static void
++fsmap_rt(
++	xfs_fsblock_t		start_fsb,
++	xfs_fsblock_t		end_fsb)
 +{
-+	xfs_hooks_del(&rtg->rtg_rmap_update_hooks, &hook->update_hook);
++	struct fsmap_info	info;
++	xfs_daddr_t		eofs;
++	struct xfs_rmap_irec	low;
++	struct xfs_rmap_irec	high;
++	struct xfs_btree_cur	*bt_cur;
++	struct xfs_rtgroup	*rtg;
++	xfs_rgnumber_t		start_rg;
++	xfs_rgnumber_t		end_rg;
++	int			error;
++
++	if (mp->m_sb.sb_rblocks == 0)
++		return;
++
++	eofs = XFS_FSB_TO_BB(mp, mp->m_sb.sb_rblocks);
++	if (XFS_FSB_TO_DADDR(mp, end_fsb) >= eofs)
++		end_fsb = XFS_DADDR_TO_FSB(mp, eofs - 1);
++
++	low.rm_startblock = xfs_rtb_to_rgbno(mp, start_fsb, &start_rg);
++	low.rm_owner = 0;
++	low.rm_offset = 0;
++	low.rm_flags = 0;
++	high.rm_startblock = -1U;
++	high.rm_owner = ULLONG_MAX;
++	high.rm_offset = ULLONG_MAX;
++	high.rm_flags = XFS_RMAP_ATTR_FORK | XFS_RMAP_BMBT_BLOCK |
++			XFS_RMAP_UNWRITTEN;
++
++	end_rg = xfs_rtb_to_rgno(mp, end_fsb);
++
++	info.nr = 0;
++	for_each_rtgroup_range(mp, start_rg, end_rg, rtg) {
++		struct xfs_inode	*ip;
++		struct xfs_imeta_path	*path;
++		xfs_ino_t		ino;
++		xfs_rgnumber_t		rgno;
++
++		if (rtg->rtg_rgno == end_rg)
++			high.rm_startblock = xfs_rtb_to_rgbno(mp, end_fsb,
++					&rgno);
++
++		error = -libxfs_rtrmapbt_create_path(mp, rtg->rtg_rgno, &path);
++		if (error) {
++			dbprintf(
++	_("Cannot create path to rtgroup %u rmap inode\n"),
++					rtg->rtg_rgno);
++			libxfs_rtgroup_put(rtg);
++			return;
++		}
++
++		error = -libxfs_imeta_lookup(mp, path, &ino);
++		libxfs_imeta_free_path(path);
++		if (error) {
++			dbprintf(_("Cannot look up rtgroup %u rmap inode\n"),
++					rtg->rtg_rgno);
++			libxfs_rtgroup_put(rtg);
++			return;
++		}
++
++		error = -libxfs_imeta_iget(mp, ino, XFS_DIR3_FT_REG_FILE, &ip);
++		if (error) {
++			dbprintf(_("Cannot load rtgroup %u rmap inode\n"),
++					rtg->rtg_rgno);
++			libxfs_rtgroup_put(rtg);
++			return;
++		}
++
++		bt_cur = libxfs_rtrmapbt_init_cursor(mp, NULL, rtg, ip);
++		if (!bt_cur) {
++			libxfs_imeta_irele(ip);
++			libxfs_rtgroup_put(rtg);
++			dbprintf(_("Not enough memory.\n"));
++			return;
++		}
++
++		error = -libxfs_rmap_query_range(bt_cur, &low, &high,
++				fsmap_rt_fn, &info);
++		libxfs_btree_del_cursor(bt_cur, error);
++		libxfs_imeta_irele(ip);
++		if (error) {
++			libxfs_rtgroup_put(rtg);
++			dbprintf(_("Error %d while querying rt fsmap btree.\n"),
++				error);
++			return;
++		}
++
++		if (rtg->rtg_rgno == start_rg)
++			low.rm_startblock = 0;
++	}
 +}
-+# endif /* CONFIG_XFS_RT */
- #else
--# define xfs_rmap_update_hook(t, p, o, s, b, u, oi)	do { } while(0)
-+# define xfs_rmap_update_hook(t, p, r, o, s, b, u, oi)	do { } while(0)
- #endif /* CONFIG_XFS_LIVE_HOOKS */
++
+ static int
+ fsmap_f(
+ 	int			argc,
+@@ -111,14 +225,18 @@ fsmap_f(
+ 	int			c;
+ 	xfs_fsblock_t		start_fsb = 0;
+ 	xfs_fsblock_t		end_fsb = NULLFSBLOCK;
++	bool			isrt = false;
  
- /*
-@@ -965,7 +988,8 @@ xfs_rmap_free(
+ 	if (!xfs_has_rmapbt(mp)) {
+ 		dbprintf(_("Filesystem does not support reverse mapping btree.\n"));
  		return 0;
+ 	}
  
- 	cur = xfs_rmapbt_init_cursor(mp, tp, agbp, pag);
--	xfs_rmap_update_hook(tp, pag, XFS_RMAP_UNMAP, bno, len, false, oinfo);
-+	xfs_rmap_update_hook(tp, pag, NULL, XFS_RMAP_UNMAP, bno, len, false,
-+			oinfo);
- 	error = xfs_rmap_unmap(cur, bno, len, false, oinfo);
+-	while ((c = getopt(argc, argv, "")) != EOF) {
++	while ((c = getopt(argc, argv, "r")) != EOF) {
+ 		switch (c) {
++		case 'r':
++			isrt = true;
++			break;
+ 		default:
+ 			dbprintf(_("Bad option for fsmap command.\n"));
+ 			return 0;
+@@ -141,14 +259,23 @@ fsmap_f(
+ 		}
+ 	}
  
- 	xfs_btree_del_cursor(cur, error);
-@@ -1209,7 +1233,8 @@ xfs_rmap_alloc(
- 		return 0;
- 
- 	cur = xfs_rmapbt_init_cursor(mp, tp, agbp, pag);
--	xfs_rmap_update_hook(tp, pag, XFS_RMAP_MAP, bno, len, false, oinfo);
-+	xfs_rmap_update_hook(tp, pag, NULL, XFS_RMAP_MAP, bno, len, false,
-+			oinfo);
- 	error = xfs_rmap_map(cur, bno, len, false, oinfo);
- 
- 	xfs_btree_del_cursor(cur, error);
-@@ -2730,8 +2755,12 @@ xfs_rmap_finish_one(
- 	if (error)
- 		return error;
- 
--	xfs_rmap_update_hook(tp, ri->ri_pag, ri->ri_type, bno,
--			ri->ri_bmap.br_blockcount, unwritten, &oinfo);
-+	if (ri->ri_realtime)
-+		xfs_rmap_update_hook(tp, NULL, ri->ri_rtg, ri->ri_type, bno,
-+				ri->ri_bmap.br_blockcount, unwritten, &oinfo);
+-	fsmap(start_fsb, end_fsb);
++	if (argc > optind + 2) {
++		exitcode = 1;
++		dbprintf(_("Too many arguments to fsmap.\n"));
++		return 0;
++	}
++
++	if (isrt)
++		fsmap_rt(start_fsb, end_fsb);
 +	else
-+		xfs_rmap_update_hook(tp, ri->ri_pag, NULL, ri->ri_type, bno,
-+				ri->ri_bmap.br_blockcount, unwritten, &oinfo);
++		fsmap(start_fsb, end_fsb);
+ 
  	return 0;
  }
  
-diff --git a/libxfs/xfs_rmap.h b/libxfs/xfs_rmap.h
-index 9d0aaa16f55..36d071b3b44 100644
---- a/libxfs/xfs_rmap.h
-+++ b/libxfs/xfs_rmap.h
-@@ -279,6 +279,12 @@ void xfs_rmap_hook_enable(void);
+ static const cmdinfo_t	fsmap_cmd =
+-	{ "fsmap", NULL, fsmap_f, 0, 2, 0,
+-	  N_("[start_fsb] [end_fsb]"),
++	{ "fsmap", NULL, fsmap_f, 0, -1, 0,
++	  N_("[-r] [start_fsb] [end_fsb]"),
+ 	  N_("display reverse mapping(s)"), NULL };
  
- int xfs_rmap_hook_add(struct xfs_perag *pag, struct xfs_rmap_hook *hook);
- void xfs_rmap_hook_del(struct xfs_perag *pag, struct xfs_rmap_hook *hook);
-+
-+# ifdef CONFIG_XFS_RT
-+int xfs_rtrmap_hook_add(struct xfs_rtgroup *rtg, struct xfs_rmap_hook *hook);
-+void xfs_rtrmap_hook_del(struct xfs_rtgroup *rtg, struct xfs_rmap_hook *hook);
-+# endif /* CONFIG_XFS_RT */
-+
- #endif
+ void
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 0e284e515d8..f59f9aa2060 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -241,11 +241,13 @@
+ #define xfs_rtsummary_wordcount		libxfs_rtsummary_wordcount
  
- #endif	/* __XFS_RMAP_H__ */
-diff --git a/libxfs/xfs_rtgroup.c b/libxfs/xfs_rtgroup.c
-index 8c41869a61a..f5f981609b4 100644
---- a/libxfs/xfs_rtgroup.c
-+++ b/libxfs/xfs_rtgroup.c
-@@ -130,7 +130,7 @@ xfs_initialize_rtgroups(
- 		/* Place kernel structure only init below this point. */
- 		spin_lock_init(&rtg->rtg_state_lock);
- 		xfs_drain_init(&rtg->rtg_intents);
--
-+		xfs_hooks_init(&rtg->rtg_rmap_update_hooks);
- #endif /* __KERNEL__ */
+ #define xfs_rtfree_extent		libxfs_rtfree_extent
++#define xfs_rtgroup_put			libxfs_rtgroup_put
+ #define xfs_rtgroup_update_secondary_sbs	libxfs_rtgroup_update_secondary_sbs
+ #define xfs_rtgroup_update_super	libxfs_rtgroup_update_super
+ #define xfs_rtrmapbt_create_path	libxfs_rtrmapbt_create_path
+ #define xfs_rtrmapbt_droot_maxrecs	libxfs_rtrmapbt_droot_maxrecs
+ #define xfs_rtrmapbt_maxlevels_ondisk	libxfs_rtrmapbt_maxlevels_ondisk
++#define xfs_rtrmapbt_init_cursor	libxfs_rtrmapbt_init_cursor
+ #define xfs_rtrmapbt_maxrecs		libxfs_rtrmapbt_maxrecs
  
- 		/* first new rtg is fully initialized */
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index 1d41a2cac34..4e9b9098f2f 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -46,6 +46,9 @@ struct xfs_rtgroup {
- 	 * inconsistencies.
- 	 */
- 	struct xfs_drain	rtg_intents;
-+
-+	/* Hook to feed rt rmapbt updates to an active online repair. */
-+	struct xfs_hooks	rtg_rmap_update_hooks;
- #endif /* __KERNEL__ */
- };
- 
+ #define xfs_sb_from_disk		libxfs_sb_from_disk
 
