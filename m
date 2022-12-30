@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD69C659CE4
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:32:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3526D659CDF
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:32:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235603AbiL3Wca (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:32:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
+        id S235583AbiL3WcE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:32:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235614AbiL3Wc1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:32:27 -0500
+        with ESMTP id S235634AbiL3Wb5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:31:57 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D626B1D0DF;
-        Fri, 30 Dec 2022 14:32:25 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE3BC1AA0A;
+        Fri, 30 Dec 2022 14:31:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 73F8860CF0;
-        Fri, 30 Dec 2022 22:32:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64ADC433EF;
-        Fri, 30 Dec 2022 22:32:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A18D61C2A;
+        Fri, 30 Dec 2022 22:31:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A15F3C433D2;
+        Fri, 30 Dec 2022 22:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672439544;
-        bh=kULxrq3DfHNpV9dPzZBhHAETwjWYJl5X2ON0iBBZ6ss=;
+        s=k20201202; t=1672439513;
+        bh=FtvHP3fwzOs/aNRW7mop6R7OqWHDqj2mL+J5i/CCeOU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=i8Ss0fvTRndljS72PoxrDiuINZkmgdpxt8i7q9le3N1YxU6XGyu5A4BgCgW+YCg2h
-         QD+zvsckgfUr5PWaVKL2oBAZ83+DMeX9MOeWP2zCeSX/MYx4Wmo1kaVOe4aWZnsjip
-         7bKlJt6kglmAOjkUeISl6Hp9u3dKMzGWwwGCaVKjUuU7N1+I/dEN7u4X8ZLIc6aU1k
-         P+jKO3Y4BYN+DJI/fRSUuwClMIzW9JZEzYsGS8O22uVc/6QUKXu/WqHGZw6+1c594g
-         jBa82xPp0j32P0yAzLRoeGwkJgbfAiCycduOtgTLMfdamHce85eRiiryF9wfHSJtna
-         VHZ9GfxZghfAA==
-Subject: [PATCH 12/14] xfs: document directory tree repairs
+        b=igiCsWrO8a58Z8kwbJYNG7f2MDNDRuc+3Tl4x5xPckgPwelmOKcvr3MyH3IxOk0Em
+         xRduvYZZpvCtcUPL6wx+hK+e7ED1friU4jRQYREnA779BAEGUKQbIeuwRMn6WFPeKE
+         5zmcRT3H0GT09xiqFEwUHXWgMRTNtEZg/Gb2kF//JOpn+ajPhMjwekf1kf6IDrgMVy
+         GwN/OwjIDjgvxA+nAoYGj8fkkYI280ejwDbP04BQfHc0u8wohkVIRlQKaBgpz+wh3i
+         FQfohO/Vwq7YWsplmVTWw8T49uwL1KdUOwUnWwkcmgcq6cZFADAAEc7Tro4L88o9ig
+         RZfAc2cn7iyqA==
+Subject: [PATCH 10/14] xfs: document full filesystem scans for online fsck
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
@@ -39,7 +39,7 @@ Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
         linux-fsdevel@vger.kernel.org, hch@infradead.org,
         catherine.hoang@oracle.com, david@fromorbit.com
 Date:   Fri, 30 Dec 2022 14:10:53 -0800
-Message-ID: <167243825331.682859.12874143420813343961.stgit@magnolia>
+Message-ID: <167243825302.682859.6563684998299886921.stgit@magnolia>
 In-Reply-To: <167243825144.682859.12802259329489258661.stgit@magnolia>
 References: <167243825144.682859.12802259329489258661.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -57,261 +57,702 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Directory tree repairs are the least complete part of online fsck, due
-to the lack of directory parent pointers.  However, even without that
-feature, we can still make some corrections to the directory tree -- we
-can salvage as many directory entries as we can from a damaged
-directory, and we can reattach orphaned inodes to the lost+found, just
-as xfs_repair does now.
+Certain parts of the online fsck code need to scan every file in the
+entire filesystem.  It is not acceptable to block the entire filesystem
+while this happens, which means that we need to be clever in allowing
+scans to coordinate with ongoing filesystem updates.  We also need to
+hook the filesystem so that regular updates propagate to the staging
+records.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- .../filesystems/xfs-online-fsck-design.rst         |  236 ++++++++++++++++++++
- 1 file changed, 236 insertions(+)
+ .../filesystems/xfs-online-fsck-design.rst         |  677 ++++++++++++++++++++
+ 1 file changed, 677 insertions(+)
 
 
 diff --git a/Documentation/filesystems/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs-online-fsck-design.rst
-index e32506acb66f..2e20314f1831 100644
+index a658da8fe4ae..c0f08a773f08 100644
 --- a/Documentation/filesystems/xfs-online-fsck-design.rst
 +++ b/Documentation/filesystems/xfs-online-fsck-design.rst
-@@ -4269,3 +4269,239 @@ The proposed patchset is the
- `extended attribute repair
- <https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-xattrs>`_
+@@ -3018,3 +3018,680 @@ The proposed patchset is the
+ `summary counter cleanup
+ <https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-fscounters>`_
  series.
 +
-+Fixing Directories
-+------------------
++Full Filesystem Scans
++---------------------
 +
-+Fixing directories is difficult with currently available filesystem features.
-+The offline repair tool scans all inodes to find files with nonzero link count,
-+and then it scans all directories to establish parentage of those linked files.
-+Damaged files and directories are zapped, and files with no parent are
-+moved to the ``/lost+found`` directory.
-+It does not try to salvage anything.
++Certain types of metadata can only be checked by walking every file in the
++entire filesystem to record observations and comparing the observations against
++what's recorded on disk.
++Like every other type of online repair, repairs are made by writing those
++observations to disk in a replacement structure and committing it atomically.
++However, it is not practical to shut down the entire filesystem to examine
++hundreds of billions of files because the downtime would be excessive.
++Therefore, online fsck must build the infrastructure to manage a live scan of
++all the files in the filesystem.
++There are two questions that need to be solved to perform a live walk:
 +
-+The best that online repair can do at this time is to read directory data
-+blocks and salvage any dirents that look plausible, correct link counts, and
-+move orphans back into the directory tree.
-+The salvage process is discussed in the case study at the end of this section.
-+The second component to fixing the directory tree online is the :ref:`file link
-+count fsck <nlinks>`, since it can scan the entire filesystem to make sure that
-+files can neither be deleted while there are still parents nor forgotten after
-+all parents sever their links to the child.
-+The third part is discussed at the :ref:`end of this section<orphanage>`.
-+However, there may be a solution to these deficiencies soon!
++- How does scrub manage the scan while it is collecting data?
 +
-+Parent Pointers
-+```````````````
++- How does the scan keep abreast of changes being made to the system by other
++  threads?
 +
-+The lack of secondary directory metadata hinders directory tree reconstruction
-+in much the same way that the historic lack of reverse space mapping
-+information once hindered reconstruction of filesystem space metadata.
-+Specifically, the lack of redundant metadata makes it nearly impossible to
-+construct a true replacement for a damaged directory; the best repair can do is
-+to salvage the dirents and use the file link count repair function to move
-+orphaned files to the lost and found.
-+The proposed parent pointer feature, however, will make total directory
-+reconstruction possible.
++.. _iscan:
 +
-+Directory parent pointers were first proposed as an XFS feature more than a
-+decade ago by SGI.
-+In that implementation, each link from a parent directory to a child file was
-+augmented by an extended attribute in the child that could be used to identify
-+the parent directory.
-+Unfortunately, this early implementation had several major shortcomings:
++Coordinated Inode Scans
++```````````````````````
 +
-+1. The XFS codebase of the late 2000s did not have the infrastructure to
-+   enforce strong referential integrity in the directory tree, which is a fancy
-+   way to say that it could not guarantee that a change in a forward link would
-+   always be followed up by a corresponding change to the reverse links.
++In the original Unix filesystems of the 1970s, each directory entry contained
++an index number (*inumber*) which was used as an index into on ondisk array
++(*itable*) of fixed-size records (*inodes*) describing a file's attributes and
++its data block mapping.
++This system is described by J. Lions, `"inode (5659)"
++<http://www.lemis.com/grog/Documentation/Lions/>`_ in *Lions' Commentary on
++UNIX, 6th Edition*, (Dept. of Computer Science, the University of New South
++Wales, November 1977), pp. 18-2; and later by D. Ritchie and K. Thompson,
++`"Implementation of the File System"
++<https://archive.org/details/bstj57-6-1905/page/n8/mode/1up>`_, from *The UNIX
++Time-Sharing System*, (The Bell System Technical Journal, July 1978), pp.
++1913-4.
 +
-+2. Referential integrity was not integrated into either offline repair tool.
-+   Checking had to be done online without taking any kernel or inode locks to
-+   coordinate access.
-+   It is not clear if this actually worked properly.
++XFS retains most of this design, except now inumbers are search keys over all
++the space in the data section filesystem.
++They form a continuous keyspace that can be expressed as a 64-bit integer,
++though the inodes themselves are sparsely distributed within the keyspace.
++Scans proceed in a linear fashion across the inumber keyspace, starting from
++``0x0`` and ending at ``0xFFFFFFFFFFFFFFFF``.
++Naturally, a scan through a keyspace requires a scan cursor object to track the
++scan progress.
++Because this keyspace is sparse, this cursor contains two parts.
++The first part of this scan cursor object tracks the inode that will be
++examined next; call this the examination cursor.
++Somewhat less obviously, the scan cursor object must also track which parts of
++the keyspace have already been visited, which is critical for deciding if a
++concurrent filesystem update needs to be incorporated into the scan data.
++Call this the visited inode cursor.
 +
-+3. The extended attribute did not record the name of the directory entry in the
-+   parent, so the first parent pointer implementation cannot be used to
-+   reconnect the directory tree.
++Advancing the scan cursor is a multi-step process encapsulated in
++``xchk_iscan_iter``:
 +
-+4. Extended attribute forks only support 65,536 extents, which means that
-+   parent pointer attribute creation is likely to fail at some point before the
-+   maximum file link count is achieved.
++1. Lock the AGI buffer of the AG containing the inode pointed to by the visited
++   inode cursor.
++   This guarantee that inodes in this AG cannot be allocated or freed while
++   advancing the cursor.
 +
-+In the second implementation (currently being developed by Allison Henderson
-+and Chandan Babu), the extended attribute code will be enhanced to use log
-+intent items to guarantee that an extended attribute update can always be
-+completed by log recovery.
-+The maximum extent counts of both the data and attribute forks have raised to
-+allow for creation of as many parent pointers as possible.
-+The parent pointer data will also include the entry name and location within
-+the parent.
-+In other words, child files will store parent pointer mappings of the form
-+``(parent_ino, parent_gen, dirent_pos) → (dirent_name)`` in their extended
-+attribute data.
-+With that in place, XFS can guarantee strong referential integrity of directory
-+tree operations -- forward links will always be complemented with reverse
-+links.
++2. Use the per-AG inode btree to look up the next inumber after the one that
++   was just visited, since it may not be keyspace adjacent.
 +
-+When the parent pointer feature lands, the directory checking process can be
-+strengthened to ensure that the target of each dirent also contains a parent
-+pointer pointing back to the dirent.
-+The quality of directory repairs will improve because online fsck will be able
-+to reconstruct a directory in its entirety instead of skipping unsalvageable
-+areas.
-+This process is imagined to involve a :ref:`coordinated inode scan <iscan>` and
-+a :ref:`directory entry live update hook <liveupdate>`:
-+Scan every file in the entire filesystem, and every time the scan encounters a
-+file with a parent pointer to the directory that is being reconstructed, record
-+this entry in the temporary directory.
-+When the scan is complete, atomically swap the contents of the temporary
-+directory and the directory being repaired.
-+This code has not yet been constructed, so there is not yet a case study laying
-+out exactly how this process works.
++3. If there are no more inodes left in this AG:
 +
-+Parent pointers themselves can be checked by scanning each pointer and
-+verifying that the target of the pointer is a directory and that it contains a
-+dirent that corresponds to the information recorded in the parent pointer.
-+Reconstruction of the parent pointer information will work similarly to
-+directory reconstruction -- scan the filesystem, record the dirents pointing to
-+the file being repaired, and rebuild that part of the xattr namespace.
++   a. Move the examination cursor to the point of the inumber keyspace that
++      corresponds to the start of the next AG.
 +
-+**Question**: How will repair ensure that the ``dirent_pos`` fields match in
-+the reconstructed directory?
++   b. Adjust the visited inode cursor to indicate that it has "visited" the
++      last possible inode in the current AG's inode keyspace.
++      XFS inumbers are segmented, so the cursor needs to be marked as having
++      visited the entire keyspace up to just before the start of the next AG's
++      inode keyspace.
 +
-+*Answer*: The field could be designated advisory, since the other three values
-+are sufficient to find the entry in the parent.
-+However, this makes indexed key lookup impossible while repairs are ongoing.
-+A second option would be to allow creating directory entries at specified
-+offsets, which solves the referential integrity problem but runs the risk that
-+dirent creation will fail due to conflicts with the free space in the
-+directory.
-+These conflicts could be resolved by appending the directory entry and amending
-+the xattr code to support updating an xattr key and reindexing the dabtree,
-+though this would have to be performed with the parent directory still locked.
-+A fourth option would be to remove the parent pointer entry and re-add it
-+atomically.
++   c. Unlock the AGI and return to step 1 if there are unexamined AGs in the
++      filesystem.
 +
-+Case Study: Salvaging Directories
-+`````````````````````````````````
++   d. If there are no more AGs to examine, set both cursors to the end of the
++      inumber keyspace.
++      The scan is now complete.
 +
-+Unlike extended attributes, directory blocks are all the same size, so
-+salvaging directories is straightforward:
++4. Otherwise, there is at least one more inode to scan in this AG:
 +
-+1. Find the parent of the directory.
-+   If the dotdot entry is not unreadable, try to confirm that the alleged
-+   parent has a child entry pointing back to the directory being repaired.
-+   Otherwise, walk the filesystem to find it.
++   a. Move the examination cursor ahead to the next inode marked as allocated
++      by the inode btree.
 +
-+2. Walk the first partition of data fork of the directory to find the directory
-+   entry data blocks.
-+   When one is found,
++   b. Adjust the visited inode cursor to point to the inode just prior to where
++      the examination cursor is now.
++      Because the scanner holds the AGI buffer lock, no inodes could have been
++      created in the part of the inode keyspace that the visited inode cursor
++      just advanced.
 +
-+   a. Walk the directory data block to find candidate entries.
-+      When an entry is found:
++5. Get the incore inode for the inumber of the examination cursor.
++   By maintaining the AGI buffer lock until this point, the scanner knows that
++   it was safe to advance the examination cursor across the entire keyspace,
++   and that it has stabilized this next inode so that it cannot disappear from
++   the filesystem until the scan releases the incore inode.
 +
-+      i. Check the name for problems, and ignore the name if there are.
++6. Drop the AGI lock and return the incore inode to the caller.
 +
-+      ii. Retrieve the inumber and grab the inode.
-+          If that succeeds, add the name, inode number, and file type to the
-+          staging xfarray and xblob.
++Online fsck functions scan all files in the filesystem as follows:
 +
-+3. If the memory usage of the xfarray and xfblob exceed a certain amount of
-+   memory or there are no more directory data blocks to examine, unlock the
-+   directory and add the staged dirents into the temporary directory.
-+   Truncate the staging files.
++1. Start a scan by calling ``xchk_iscan_start``.
 +
-+4. Use atomic extent swapping to exchange the new and old directory structures.
-+   The old directory blocks are now attached to the temporary file.
++2. Advance the scan cursor (``xchk_iscan_iter``) to get the next inode.
++   If one is provided:
 +
-+5. Reap the temporary file.
++   a. Lock the inode to prevent updates during the scan.
 +
-+**Question**: Should repair invalidate dentries when rebuilding a directory?
++   b. Scan the inode.
 +
-+**Question**: Can the dentry cache know about a directory entry that cannot be
-+salvaged?
++   c. While still holding the inode lock, adjust the visited inode cursor
++      (``xchk_iscan_mark_visited``) to point to this inode.
 +
-+In theory, the dentry cache should be a subset of the directory entries on disk
-+because there's no way to load a dentry without having something to read in the
-+directory.
-+However, it is possible for a coherency problem to be introduced if the ondisk
-+structures becomes corrupt *after* the cache loads.
-+In theory it is necessary to scan all dentry cache entries for a directory to
-+ensure that one of the following apply:
++   d. Unlock and release the inode.
 +
-+1. The cached dentry reflects an ondisk dirent in the new directory.
++8. Call ``xchk_iscan_finish`` to complete the scan.
 +
-+2. The cached dentry no longer has a corresponding ondisk dirent in the new
-+   directory and the dentry can be purged from the cache.
++There are subtleties with the inode cache that complicate grabbing the incore
++inode for the caller.
++Obviously, it is an absolute requirement that the inode metadata be consistent
++enough to load it into the inode cache.
++Second, if the incore inode is stuck in some intermediate state, the scan
++coordinator must release the AGI and push the main filesystem to get the inode
++back into a loadable state.
 +
-+3. The cached dentry no longer has an ondisk dirent but the dentry cannot be
-+   purged.
-+   This is bad.
++The proposed patches are the
++`inode scanner
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-iscan>`_
++series.
 +
-+Unfortunately, the dentry cache does not have a means to walk all the dentries
-+with a particular directory as a parent.
-+This makes detecting situations #2 and #3 impossible, and remains an
-+interesting question for research.
++Inode Management
++````````````````
++
++In regular filesystem code, references to allocated XFS incore inodes are
++always obtained (``xfs_iget``) outside of transaction context because the
++creation of the incore context for ane xisting file does not require metadata
++updates.
++However, it is important to note that references to incore inodes obtained as
++part of file creation must be performed in transaction context because the
++filesystem must ensure the atomicity of the ondisk inode btree index updates
++and the initialization of the actual ondisk inode.
++
++References to incore inodes are always released (``xfs_irele``) outside of
++transaction context because there are a handful of activities that might
++require ondisk updates:
++
++- The VFS may decide to kick off writeback as part of a ``DONTCACHE`` inode
++  release.
++
++- Speculative preallocations need to be unreserved.
++
++- An unlinked file may have lost its last reference, in which case the entire
++  file must be inactivated, which involves releasing all of its resources in
++  the ondisk metadata and freeing the inode.
++
++These activities are collectively called inode inactivation.
++Inactivation has two parts -- the VFS part, which initiates writeback on all
++dirty file pages, and the XFS part, which cleans up XFS-specific information
++and frees the inode if it was unlinked.
++If the inode is unlinked (or unconnected after a file handle operation), the
++kernel drops the inode into the inactivation machinery immediately.
++
++During normal operation, resource acquisition for an update follows this order
++to avoid deadlocks:
++
++1. Inode reference (``iget``).
++
++2. Filesystem freeze protection, if repairing (``mnt_want_write_file``).
++
++3. Inode ``IOLOCK`` (VFS ``i_rwsem``) lock to control file IO.
++
++4. Inode ``MMAPLOCK`` (page cache ``invalidate_lock``) lock for operations that
++   can update page cache mappings.
++
++5. Log feature enablement.
++
++6. Transaction log space grant.
++
++7. Space on the data and realtime devices for the transaction.
++
++8. Incore dquot references, if a file is being repaired.
++   Note that they are not locked, merely acquired.
++
++9. Inode ``ILOCK`` for file metadata updates.
++
++10. AG header buffer locks / Realtime metadata inode ILOCK.
++
++11. Realtime metadata buffer locks, if applicable.
++
++12. Extent mapping btree blocks, if applicable.
++
++Resources are often released in the reverse order, though this is not required.
++However, online fsck differs from regular XFS operations because it may examine
++an object that normally is acquired in a later stage of the locking order, and
++then decide to cross-reference the object with an object that is acquired
++earlier in the order.
++The next few sections detail the specific ways in which online fsck takes care
++to avoid deadlocks.
++
++iget and irele During a Scrub
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++An inode scan performed on behalf of a scrub operation runs in transaction
++context, and possibly with resources already locked and bound to it.
++This isn't much of a problem for ``iget`` since it can operate in the context
++of an existing transaction, as long as all of the bound resources are acquired
++before the inode reference in the regular filesystem.
++
++When the VFS ``iput`` function is given a linked inode with no other
++references, it normally puts the inode on an LRU list in the hope that it can
++save time if another process re-opens the file before the system runs out
++of memory and frees it.
++Filesystem callers can short-circuit the LRU process by setting a ``DONTCACHE``
++flag on the inode to cause the kernel to try to drop the inode into the
++inactivation machinery immediately.
++
++In the past, inactivation was always done from the process that dropped the
++inode, which was a problem for scrub because scrub may already hold a
++transaction, and XFS does not support nesting transactions.
++On the other hand, if there is no scrub transaction, it is desirable to drop
++otherwise unused inodes immediately to avoid polluting caches.
++To capture these nuances, the online fsck code has a separate ``xchk_irele``
++function to set or clear the ``DONTCACHE`` flag to get the required release
++behavior.
++
++Proposed patchsets include fixing
++`scrub iget usage
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-iget-fixes>`_ and
++`dir iget usage
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-dir-iget-fixes>`_.
++
++Locking Inodes
++^^^^^^^^^^^^^^
++
++In regular filesystem code, the VFS and XFS will acquire multiple IOLOCK locks
++in a well-known order: parent → child when updating the directory tree, and
++``struct inode`` address order otherwise.
++For regular files, the MMAPLOCK can be acquired after the IOLOCK to stop page
++faults.
++If two MMAPLOCKs must be acquired, they are acquired in ``struct
++address_space`` order.
++Due to the structure of existing filesystem code, IOLOCKs and MMAPLOCKs must be
++acquired before transactions are allocated.
++If two ILOCKs must be acquired, they are acquired in inumber order.
++
++Inode lock acquisition must be done carefully during a coordinated inode scan.
++Online fsck cannot abide these conventions, because for a directory tree
++scanner, the scrub process holds the IOLOCK of the file being scanned and it
++needs to take the IOLOCK of the file at the other end of the directory link.
++If the directory tree is corrupt because it contains a cycle, ``xfs_scrub``
++cannot use the regular inode locking functions and avoid becoming trapped in an
++ABBA deadlock.
++
++Solving both of these problems is straightforward -- any time online fsck
++needs to take a second lock of the same class, it uses trylock to avoid an ABBA
++deadlock.
++If the trylock fails, scrub drops all inode locks and use trylock loops to
++(re)acquire all necessary resources.
++Trylock loops enable scrub to check for pending fatal signals, which is how
++scrub avoids deadlocking the filesystem or becoming an unresponsive process.
++However, trylock loops means that online fsck must be prepared to measure the
++resource being scrubbed before and after the lock cycle to detect changes and
++react accordingly.
++
++.. _dirparent:
++
++Case Study: Finding a Directory Parent
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Consider the directory parent pointer repair code as an example.
++Online fsck must verify that the dotdot dirent of a directory points up to a
++parent directory, and that the parent directory contains exactly one dirent
++pointing down to the child directory.
++Fully validating this relationship (and repairing it if possible) requires a
++walk of every directory on the filesystem while holding the child locked, and
++while updates to the directory tree are being made.
++The coordinated inode scan provides a way to walk the filesystem without the
++possibility of missing an inode.
++The child directory is kept locked to prevent updates to the dotdot dirent, but
++if the scanner fails to lock a parent, it can drop and relock both the child
++and the prospective parent.
++If the dotdot entry changes while the directory is unlocked, then a move or
++rename operation must have changed the child's parentage, and the scan can
++exit early.
 +
 +The proposed patchset is the
 +`directory repair
 +<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-dirs>`_
 +series.
 +
-+.. _orphanage:
++.. _fshooks:
 +
-+The Orphanage
-+-------------
++Filesystem Hooks
++`````````````````
 +
-+Filesystems present files as a directed, and hopefully acyclic, graph.
-+In other words, a tree.
-+The root of the filesystem is a directory, and each entry in a directory points
-+downwards either to more subdirectories or to non-directory files.
-+Unfortunately, a disruption in the directory graph pointers result in a
-+disconnected graph, which makes files impossible to access via regular path
-+resolution.
-+The directory parent pointer online scrub code can detect a dotdot entry
-+pointing to a parent directory that doesn't have a link back to the child
-+directory, and the file link count checker can detect a file that isn't pointed
-+to by any directory in the filesystem.
-+If the file in question has a positive link count, the file in question is an
-+orphan.
++The second piece of support that online fsck functions need during a full
++filesystem scan is the ability to stay informed about updates being made by
++other threads in the filesystem, since comparisons against the past are useless
++in a dynamic environment.
++Two pieces of Linux kernel infrastructure enable online fsck to monitor regular
++filesystem operations: filesystem hooks and :ref:`static keys<jump_labels>`.
 +
-+When orphans are found, they should be reconnected to the directory tree.
-+Offline fsck solves the problem by creating a directory ``/lost+found`` to
-+serve as an orphanage, and linking orphan files into the orphanage by using the
-+inumber as the name.
-+Reparenting a file to the orphanage does not reset any of its permissions or
-+ACLs.
++Filesystem hooks convey information about an ongoing filesystem operation to
++a downstream consumer.
++In this case, the downstream consumer is always an online fsck function.
++Because multiple fsck functions can run in parallel, online fsck uses the Linux
++notifier call chain facility to dispatch updates to any number of interested
++fsck processes.
++Call chains are a dynamic list, which means that they can be configured at
++run time.
++Because these hooks are private to the XFS module, the information passed along
++contains exactly what the checking function needs to update its observations.
 +
-+This process is more involved in the kernel than it is in userspace.
-+The directory and file link count repair setup functions must use the regular
-+VFS mechanisms to create the orphanage directory with all the necessary
-+security attributes and dentry cache entries, just like a regular directory
-+tree modification.
++The current implementation of XFS hooks uses SRCU notifier chains to reduce the
++impact to highly threaded workloads.
++Regular blocking notifier chains use a rwsem and seem to have a much lower
++overhead for single-threaded applications.
++However, it may turn out that the combination of blocking chains and static
++keys are a more performant combination; more study is needed here.
 +
-+Orphaned files are adopted by the orphanage as follows:
++The following pieces are necessary to hook a certain point in the filesystem:
 +
-+1. Call ``xrep_orphanage_try_create`` at the start of the scrub setup function
-+   to try to ensure that the lost and found directory actually exists.
-+   This also attaches the orphanage directory to the scrub context.
++- A ``struct xfs_hooks`` object must be embedded in a convenient place such as
++  a well-known incore filesystem object.
 +
-+2. If the decision is made to reconnect a file, take the IOLOCK of both the
-+   orphanage and the file being reattached.
-+   The ``xrep_orphanage_iolock_two`` function follows the inode locking
-+   strategy discussed earlier.
++- Each hook must define an action code and a structure containing more context
++  about the action.
 +
-+3. Call ``xrep_orphanage_compute_blkres`` and ``xrep_orphanage_compute_name``
-+   to compute the new name in the orphanage and the block reservation required.
++- Hook providers should provide appropriate wrapper functions and structs
++  around the ``xfs_hooks`` and ``xfs_hook`` objects to take advantage of type
++  checking to ensure correct usage.
 +
-+4. Use ``xrep_orphanage_adoption_prep`` to reserve resources to the repair
-+   transaction.
++- A callsite in the regular filesystem code must be chosen to call
++  ``xfs_hooks_call`` with the action code and data structure.
++  This place should be adjacent to (and not earlier than) the place where
++  the filesystem update is committed to the transaction.
++  In general, when the filesystem calls a hook chain, it should be able to
++  handle sleeping and should not be vulnerable to memory reclaim or locking
++  recursion.
++  However, the exact requirements are very dependent on the context of the hook
++  caller and the callee.
 +
-+5. Call ``xrep_orphanage_adopt`` to reparent the orphaned file into the lost
-+   and found, and update the kernel dentry cache.
++- The online fsck function should define a structure to hold scan data, a lock
++  to coordinate access to the scan data, and a ``struct xfs_hook`` object.
++  The scanner function and the regular filesystem code must acquire resources
++  in the same order; see the next section for details.
 +
-+The proposed patches are in the
-+`orphanage adoption
-+<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-orphanage>`_
++- The online fsck code must contain a C function to catch the hook action code
++  and data structure.
++  If the object being updated has already been visited by the scan, then the
++  hook information must be applied to the scan data.
++
++- Prior to unlocking inodes to start the scan, online fsck must call
++  ``xfs_hooks_setup`` to initialize the ``struct xfs_hook``, and
++  ``xfs_hooks_add`` to enable the hook.
++
++- Online fsck must call ``xfs_hooks_del`` to disable the hook once the scan is
++  complete.
++
++The number of hooks should be kept to a minimum to reduce complexity.
++Static keys are used to reduce the overhead of filesystem hooks to nearly
++zero when online fsck is not running.
++
++.. _liveupdate:
++
++Live Updates During a Scan
++``````````````````````````
++
++The code paths of the online fsck scanning code and the :ref:`hooked<fshooks>`
++filesystem code look like this::
++
++            other program
++                  ↓
++            inode lock ←────────────────────┐
++                  ↓                         │
++            AG header lock                  │
++                  ↓                         │
++            filesystem function             │
++                  ↓                         │
++            notifier call chain             │    same
++                  ↓                         ├─── inode
++            scrub hook function             │    lock
++                  ↓                         │
++            scan data mutex ←──┐    same    │
++                  ↓            ├─── scan    │
++            update scan data   │    lock    │
++                  ↑            │            │
++            scan data mutex ←──┘            │
++                  ↑                         │
++            inode lock ←────────────────────┘
++                  ↑
++            scrub function
++                  ↑
++            inode scanner
++                  ↑
++            xfs_scrub
++
++These rules must be followed to ensure correct interactions between the
++checking code and the code making an update to the filesystem:
++
++- Prior to invoking the notifier call chain, the filesystem function being
++  hooked must acquire the same lock that the scrub scanning function acquires
++  to scan the inode.
++
++- The scanning function and the scrub hook function must coordinate access to
++  the scan data by acquiring a lock on the scan data.
++
++- Scrub hook function must not add the live update information to the scan
++  observations unless the inode being updated has already been scanned.
++  The scan coordinator has a helper predicate (``xchk_iscan_want_live_update``)
++  for this.
++
++- Scrub hook functions must not change the caller's state, including the
++  transaction that it is running.
++  They must not acquire any resources that might conflict with the filesystem
++  function being hooked.
++
++- The hook function can abort the inode scan to avoid breaking the other rules.
++
++The inode scan APIs are pretty simple:
++
++- ``xchk_iscan_start`` starts a scan
++
++- ``xchk_iscan_iter`` grabs a reference to the next inode in the scan or
++  returns zero if there is nothing left to scan
++
++- ``xchk_iscan_want_live_update`` to decide if an inode has already been
++  visited in the scan.
++  This is critical for hook functions to decide if they need to update the
++  in-memory scan information.
++
++- ``xchk_iscan_mark_visited`` to mark an inode as having been visited in the
++  scan
++
++- ``xchk_iscan_finish`` to finish the scan
++
++The proposed patches are at the start of the
++`online quotacheck
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quota>`_
++series.
++
++.. _quotacheck:
++
++Case Study: Quota Counter Checking
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++It is useful to compare the mount time quotacheck code to the online repair
++quotacheck code.
++Mount time quotacheck does not have to contend with concurrent operations, so
++it does the following:
++
++1. Make sure the ondisk dquots are in good enough shape that all the incore
++   dquots will actually load, and zero the resource usage counters in the
++   ondisk buffer.
++
++2. Walk every inode in the filesystem.
++   Add each file's resource usage to the incore dquot.
++
++3. Walk each incore dquot.
++   If the incore dquot is not being flushed, add the ondisk buffer backing the
++   incore dquot to a delayed write (delwri) list.
++
++4. Write the buffer list to disk.
++
++Like most online fsck functions, online quotacheck can't write to regular
++filesystem objects until the newly collected metadata reflect all filesystem
++state.
++Therefore, online quotacheck records file resource usage to a shadow dquot
++index implemented with a sparse ``xfarray``, and only writes to the real dquots
++once the scan is complete.
++Handling transactional updates is tricky because quota resource usage updates
++are handled in phases to minimize contention on dquots:
++
++1. The inodes involved are joined and locked to a transaction.
++
++2. For each dquot attached to the file:
++
++   a. The dquot is locked.
++
++   b. A quota reservation is added to the dquot's resource usage.
++      The reservation is recorded in the transaction.
++
++   c. The dquot is unlocked.
++
++3. Changes in actual quota usage are tracked in the transaction.
++
++4. At transaction commit time, each dquot is examined again:
++
++   a. The dquot is locked again.
++
++   b. Quota usage changes are logged and unused reservation is given back to
++      the dquot.
++
++   c. The dquot is unlocked.
++
++For online quotacheck, hooks are placed in steps 2 and 4.
++The step 2 hook creates a shadow version of the transaction dquot context
++(``dqtrx``) that operates in a similar manner to the regular code.
++The step 4 hook commits the shadow ``dqtrx`` changes to the shadow dquots.
++Notice that both hooks are called with the inode locked, which is how the
++live update coordinates with the inode scanner.
++
++The quotacheck scan looks like this:
++
++1. Set up a coordinated inode scan.
++
++2. For each inode returned by the inode scan iterator:
++
++   a. Grab and lock the inode.
++
++   b. Determine that inode's resource usage (data blocks, inode counts,
++      realtime blocks) and add that to the shadow dquots for the user, group,
++      and project ids associated with the inode.
++
++   c. Unlock and release the inode.
++
++3. For each dquot in the system:
++
++   a. Grab and lock the dquot.
++
++   b. Check the dquot against the shadow dquots created by the scan and updated
++      by the live hooks.
++
++Live updates are key to being able to walk every quota record without
++needing to hold any locks for a long duration.
++If repairs are desired, the real and shadow dquots are locked and their
++resource counts are set to the values in the shadow dquot.
++
++The proposed patchset is the
++`online quotacheck
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quota>`_
++series.
++
++.. _nlinks:
++
++Case Study: File Link Count Checking
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++File link count checking also uses live update hooks.
++The coordinated inode scanner is used to visit all directories on the
++filesystem, and per-file link count records are stored in a sparse ``xfarray``
++indexed by inumber.
++During the scanning phase, each entry in a directory generates observation
++data as follows:
++
++1. If the entry is a dotdot (``'..'``) entry of the root directory, the
++   directory's parent link count is bumped because the root directory's dotdot
++   entry is self referential.
++
++2. If the entry is a dotdot entry of a subdirectory, the parent's backref
++   count is bumped.
++
++3. If the entry is neither a dot nor a dotdot entry, the target file's parent
++   count is bumped.
++
++4. If the target is a subdirectory, the parent's child link count is bumped.
++
++A crucial point to understand about how the link count inode scanner interacts
++with the live update hooks is that the scan cursor tracks which *parent*
++directories have been scanned.
++In other words, the live updates ignore any update about ``A → B`` when A has
++not been scanned, even if B has been scanned.
++Furthermore, a subdirectory A with a dotdot entry pointing back to B is
++accounted as a backref counter in the shadow data for A, since child dotdot
++entries affect the parent's link count.
++Live update hooks are carefully placed in all parts of the filesystem that
++create, change, or remove directory entries, since those operations involve
++bumplink and droplink.
++
++For any file, the correct link count is the number of parents plus the number
++of child subdirectories.
++Non-directories never have children of any kind.
++The backref information is used to detect inconsistencies in the number of
++links pointing to child subdirectories and the number of dotdot entries
++pointing back.
++
++After the scan completes, the link count of each file can be checked by locking
++both the inode and the shadow data, and comparing the link counts.
++A second coordinated inode scan cursor is used for comparisons.
++Live updates are key to being able to walk every inode without needing to hold
++any locks between inodes.
++If repairs are desired, the inode's link count is set to the value in the
++shadow information.
++If no parents are found, the file must be :ref:`reparented <orphanage>` to the
++orphanage to prevent the file from being lost forever.
++
++The proposed patchset is the
++`file link count repair
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-nlinks>`_
++series.
++
++.. _rmap_repair:
++
++Case Study: Rebuilding Reverse Mapping Records
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Most repair functions follow the same pattern: lock filesystem resources,
++walk the surviving ondisk metadata looking for replacement metadata records,
++and use an :ref:`in-memory array <xfarray>` to store the gathered observations.
++The primary advantage of this approach is the simplicity and modularity of the
++repair code -- code and data are entirely contained within the scrub module,
++do not require hooks in the main filesystem, and are usually the most efficient
++in memory use.
++A secondary advantage of this repair approach is atomicity -- once the kernel
++decides a structure is corrupt, no other threads can access the metadata until
++the kernel finishes repairing and revalidating the metadata.
++
++For repairs going on within a shard of the filesystem, these advantages
++outweigh the delays inherent in locking the shard while repairing parts of the
++shard.
++Unfortunately, repairs to the reverse mapping btree cannot use the "standard"
++btree repair strategy because it must scan every space mapping of every fork of
++every file in the filesystem, and the filesystem cannot stop.
++Therefore, rmap repair foregoes atomicity between scrub and repair.
++It combines a :ref:`coordinated inode scanner <iscan>`, :ref:`live update hooks
++<liveupdate>`, and an :ref:`in-memory rmap btree <xfbtree>` to complete the
++scan for reverse mapping records.
++
++1. Set up an xfbtree to stage rmap records.
++
++2. While holding the locks on the AGI and AGF buffers acquired during the
++   scrub, generate reverse mappings for all AG metadata: inodes, btrees, CoW
++   staging extents, and the internal log.
++
++3. Set up an inode scanner.
++
++4. Hook into rmap updates for the AG being repaired so that the live scan data
++   can receive updates to the rmap btree from the rest of the filesystem during
++   the file scan.
++
++5. For each space mapping found in either fork of each file scanned,
++   decide if the mapping matches the AG of interest.
++   If so:
++
++   a. Create a btree cursor for the in-memory btree.
++
++   b. Use the rmap code to add the record to the in-memory btree.
++
++   c. Use the :ref:`special commit function <xfbtree_commit>` to write the
++      xfbtree changes to the xfile.
++
++6. For each live update received via the hook, decide if the owner has already
++   been scanned.
++   If so, apply the live update into the scan data:
++
++   a. Create a btree cursor for the in-memory btree.
++
++   b. Replay the operation into the in-memory btree.
++
++   c. Use the :ref:`special commit function <xfbtree_commit>` to write the
++      xfbtree changes to the xfile.
++      This is performed with an empty transaction to avoid changing the
++      caller's state.
++
++7. When the inode scan finishes, create a new scrub transaction and relock the
++   two AG headers.
++
++8. Compute the new btree geometry using the number of rmap records in the
++   shadow btree, like all other btree rebuilding functions.
++
++9. Allocate the number of blocks computed in the previous step.
++
++10. Perform the usual btree bulk loading and commit to install the new rmap
++    btree.
++
++11. Reap the old rmap btree blocks as discussed in the case study about how
++    to :ref:`reap after rmap btree repair <rmap_reap>`.
++
++12. Free the xfbtree now that it not needed.
++
++The proposed patchset is the
++`rmap repair
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-rmap-btree>`_
 +series.
 
