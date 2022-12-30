@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7090A65A1BC
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:39:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8959565A1BE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:40:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236264AbiLaCj4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:39:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57736 "EHLO
+        id S236164AbiLaCk3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:40:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236164AbiLaCjz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:39:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8182DED
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:39:55 -0800 (PST)
+        with ESMTP id S231522AbiLaCk2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:40:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5F92DED
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:40:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AE7FC61CCF
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:39:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D31C433D2;
-        Sat, 31 Dec 2022 02:39:54 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 81C80B81E0C
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:40:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CE68C433D2;
+        Sat, 31 Dec 2022 02:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454394;
-        bh=O39Y4n7rhLCTqAdJSyUNYIm0gcM4UcYgZ0SWiCppngI=;
+        s=k20201202; t=1672454425;
+        bh=MWq86jyz4sFGWuwt1u9pH+YewCNsCkr1EPh6kjhrFnE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=H+Tdu2i3+glfF9PXwamUY9DIpSDPPsNiw0eckUPou9Y+KeVl+5psawTwcjfSHJTQI
-         PmtKgnxR9Y8bXspQJlbdlKVVdqen9oiyiOLb/sFg2EDBENIRUzCp7FbcoFB1BbOKSq
-         wDcbg5c9WeizDBAhax7/q6LICs4chpoPIlTDQa6wYbgd6R4WjLSfSOIb/IJyB2isdy
-         4aYkwpiQlpX1/UKkereQWunRWOXA/QgAu1uk7Xl5ZrLbN9QFDiamuaBy8aChdyYq45
-         LvRTnAP9Y1dmzXslt1p1QvzyFLgdddAIrlQ1B0OYHCl7K6wPW81r+d7lq4o+p5aUZW
-         qpC4aUnso8PUg==
-Subject: [PATCH 38/45] xfs_io: display rt group in verbose bmap output
+        b=bHtCjIYCy4TSEWO3r3drwHUTJGhjG1x9x2+MNwt2kiTlQkxal6rrBUIPOhbC2Sk7M
+         N8t2/sLaaBWegXklhNb7IzEy8/9YsM/mNQN1gvO/+kO13c5jchUj6ZRtUbdv+Ldfe0
+         Spji+c3tNR/WUlobM1bU7ZR1Jq2tAn59KozBP2pmVPx2vsaMDkITRwSpIuQWrtNsST
+         tOZcLgijV3yxTo3yjCqK+mlTW1BQf5xFNDbk3RqotATIeMnsBIDAZ8zOZNOJaAjqSz
+         bD0NnBOYJ7VQNnxFM8EbfTOBBA2YnID6p34LmwS6+ZoffxAhIopYOX+Tcwo5JvHr1+
+         0Vlij9O5E64PA==
+Subject: [PATCH 40/45] xfs_spaceman: report on realtime group health
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:48 -0800
-Message-ID: <167243878860.731133.14232316103222149536.stgit@magnolia>
+Message-ID: <167243878885.731133.6486251123997724666.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,79 +55,163 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Display the rt group number in the bmap -v output, just like we do for
-regular data files.
+Add the realtime group status to the health reporting done by
+xfs_spaceman.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- io/bmap.c |   30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
+ man/man8/xfs_spaceman.8 |    5 +++-
+ spaceman/health.c       |   59 +++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 61 insertions(+), 3 deletions(-)
 
 
-diff --git a/io/bmap.c b/io/bmap.c
-index 27383ca6037..a78e0c65440 100644
---- a/io/bmap.c
-+++ b/io/bmap.c
-@@ -264,9 +264,16 @@ bmap_f(
+diff --git a/man/man8/xfs_spaceman.8 b/man/man8/xfs_spaceman.8
+index ece840d7300..837fc497f27 100644
+--- a/man/man8/xfs_spaceman.8
++++ b/man/man8/xfs_spaceman.8
+@@ -91,7 +91,7 @@ The output will have the same format that
+ .BR "xfs_info" "(8)"
+ prints when querying a filesystem.
+ .TP
+-.BI "health [ \-a agno] [ \-c ] [ \-f ] [ \-i inum ] [ \-q ] [ paths ]"
++.BI "health [ \-a agno] [ \-c ] [ \-f ] [ \-i inum ] [ \-q ] [ \-r rgno ] [ paths ]"
+ Reports the health of the given group of filesystem metadata.
+ .RS 1.0i
+ .PD 0
+@@ -114,6 +114,9 @@ Report on the health of a specific inode.
+ .B \-q
+ Report only unhealthy metadata.
+ .TP
++.B \-r
++Report on the health of the given realtime group.
++.TP
+ .B paths
+ Report on the health of the files at the given path.
+ .PD
+diff --git a/spaceman/health.c b/spaceman/health.c
+index 12fb67bab28..928d92abb8c 100644
+--- a/spaceman/health.c
++++ b/spaceman/health.c
+@@ -134,6 +134,18 @@ static const struct flag_map ag_flags[] = {
+ 	{0},
+ };
  
- 		foff_w = boff_w = aoff_w = MINRANGE_WIDTH;
- 		tot_w = MINTOT_WIDTH;
--		if (is_rt)
--			sunit = swidth = bbperag = 0;
--		else {
-+		if (is_rt) {
-+			if (fsgeo.rgcount == 0) {
-+				bbperag = 0;
-+			} else {
-+				bbperag = (off64_t)fsgeo.rgblocks *
-+					  (off64_t)fsgeo.blocksize / BBSIZE;
++static const struct flag_map rtgroup_flags[] = {
++	{
++		.mask = XFS_RTGROUP_GEOM_SICK_SUPER,
++		.descr = "superblock",
++	},
++	{
++		.mask = XFS_RTGROUP_GEOM_SICK_BITMAP,
++		.descr = "realtime bitmap",
++	},
++	{0},
++};
++
+ static const struct flag_map inode_flags[] = {
+ 	{
+ 		.mask = XFS_BS_SICK_INODE,
+@@ -214,6 +226,25 @@ report_ag_sick(
+ 	return 0;
+ }
+ 
++/* Report on a rt group's health. */
++static int
++report_rtgroup_sick(
++	xfs_rgnumber_t		rgno)
++{
++	struct xfs_rtgroup_geometry rgeo = { 0 };
++	char			descr[256];
++	int			ret;
++
++	ret = -xfrog_rtgroup_geometry(file->xfd.fd, rgno, &rgeo);
++	if (ret) {
++		xfrog_perror(ret, "rtgroup_geometry");
++		return 1;
++	}
++	snprintf(descr, sizeof(descr) - 1, _("rtgroup %u"), rgno);
++	report_sick(descr, rtgroup_flags, rgeo.rg_sick, rgeo.rg_checked);
++	return 0;
++}
++
+ /* Report on an inode's health. */
+ static int
+ report_inode_health(
+@@ -312,7 +343,7 @@ report_bulkstat_health(
+ 	return error;
+ }
+ 
+-#define OPT_STRING ("a:cfi:q")
++#define OPT_STRING ("a:cfi:qr:")
+ 
+ /* Report on health problems in XFS filesystem. */
+ static int
+@@ -322,6 +353,7 @@ health_f(
+ {
+ 	unsigned long long	x;
+ 	xfs_agnumber_t		agno;
++	xfs_rgnumber_t		rgno;
+ 	bool			default_report = true;
+ 	int			c;
+ 	int			ret;
+@@ -365,6 +397,17 @@ health_f(
+ 		case 'q':
+ 			quiet = true;
+ 			break;
++		case 'r':
++			default_report = false;
++			errno = 0;
++			x = strtoll(optarg, NULL, 10);
++			if (!errno && x >= NULLRGNUMBER)
++				errno = ERANGE;
++			if (errno) {
++				perror("rtgroup health");
++				return 1;
 +			}
-+			sunit = 0;
-+			swidth = 0;
-+		} else {
- 			bbperag = (off64_t)fsgeo.agblocks *
- 				  (off64_t)fsgeo.blocksize / BBSIZE;
- 			sunit = (fsgeo.sunit * fsgeo.blocksize) / BBSIZE;
-@@ -295,7 +302,7 @@ bmap_f(
- 					(long long)(map[i + 1].bmv_block +
- 						map[i + 1].bmv_length - 1LL));
- 				boff_w = max(boff_w, strlen(bbuf));
--				if (!is_rt) {
-+				if (bbperag > 0) {
- 					agno = map[i + 1].bmv_block / bbperag;
- 					agoff = map[i + 1].bmv_block -
- 							(agno * bbperag);
-@@ -312,13 +319,20 @@ bmap_f(
- 					numlen(map[i+1].bmv_length, 10));
- 			}
++			break;
+ 		default:
+ 			return command_usage(&health_cmd);
  		}
--		agno_w = is_rt ? 0 : max(MINAG_WIDTH, numlen(fsgeo.agcount, 10));
-+		if (is_rt) {
-+			if (fsgeo.rgcount > 0)
-+				agno_w = max(MINAG_WIDTH, numlen(fsgeo.rgcount, 10));
-+			else
-+				agno_w = 0;
-+		} else {
-+			agno_w = max(MINAG_WIDTH, numlen(fsgeo.agcount, 10));
+@@ -400,6 +443,12 @@ health_f(
+ 			if (ret)
+ 				return 1;
+ 			break;
++		case 'r':
++			rgno = strtoll(optarg, NULL, 10);
++			ret = report_rtgroup_sick(rgno);
++			if (ret)
++				return 1;
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -421,6 +470,11 @@ health_f(
+ 			if (ret)
+ 				return 1;
+ 		}
++		for (rgno = 0; rgno < file->xfd.fsgeom.rgcount; rgno++) {
++			ret = report_rtgroup_sick(rgno);
++			if (ret)
++				return 1;
 +		}
- 		printf("%4s: %-*s %-*s %*s %-*s %*s%s\n",
- 			_("EXT"),
- 			foff_w, _("FILE-OFFSET"),
- 			boff_w, is_rt ? _("RT-BLOCK-RANGE") : _("BLOCK-RANGE"),
--			agno_w, is_rt ? "" : _("AG"),
--			aoff_w, is_rt ? "" : _("AG-OFFSET"),
-+			agno_w, is_rt ? (fsgeo.rgcount ? _("RG") : "") : _("AG"),
-+			aoff_w, is_rt ? (fsgeo.rgcount ? _("RG-OFFSET") : "") : _("AG-OFFSET"),
- 			tot_w, _("TOTAL"),
- 			flg ? _(" FLAGS") : "");
- 		for (i = 0; i < egcnt; i++) {
-@@ -377,7 +391,7 @@ bmap_f(
- 						map[i + 1].bmv_length - 1LL));
- 				printf("%4d: %-*s %-*s", i, foff_w, rbuf,
- 					boff_w, bbuf);
--				if (!is_rt) {
-+				if (bbperag > 0) {
- 					agno = map[i + 1].bmv_block / bbperag;
- 					agoff = map[i + 1].bmv_block -
- 							(agno * bbperag);
+ 		if (comprehensive) {
+ 			ret = report_bulkstat_health(NULLAGNUMBER);
+ 			if (ret)
+@@ -450,6 +504,7 @@ health_help(void)
+ " -f       -- Report health of the overall filesystem.\n"
+ " -i inum  -- Report health of a given inode number.\n"
+ " -q       -- Only report unhealthy metadata.\n"
++" -r rgno  -- Report health of the given realtime group.\n"
+ " paths    -- Report health of the given file path.\n"
+ "\n"));
+ 
+@@ -460,7 +515,7 @@ static cmdinfo_t health_cmd = {
+ 	.cfunc = health_f,
+ 	.argmin = 0,
+ 	.argmax = -1,
+-	.args = "[-a agno] [-c] [-f] [-i inum] [-q] [paths]",
++	.args = "[-a agno] [-c] [-f] [-i inum] [-q] [-r rgno] [paths]",
+ 	.flags = CMD_FLAG_ONESHOT,
+ 	.help = health_help,
+ };
 
