@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46DB7659F88
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:25:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E83D765A0B6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:36:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbiLaAZr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:25:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59612 "EHLO
+        id S235853AbiLaBgH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235760AbiLaAZq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:25:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8285BB82
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:25:45 -0800 (PST)
+        with ESMTP id S231425AbiLaBgG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:36:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132858FE9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:36:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2BD12B81E9F
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:25:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0C2EC433D2;
-        Sat, 31 Dec 2022 00:25:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BF584B81E0A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:36:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6677FC433EF;
+        Sat, 31 Dec 2022 01:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446342;
-        bh=kkXZpw2e8SvSEmL4krT9vPo+q94TeWS39AGuQ9Eoa0A=;
+        s=k20201202; t=1672450562;
+        bh=2Gs9jX0jJOcYz/Na7rOGSmz/qjIwTcCydg5MMAfCENA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=l7NQ9/W/rt1PoAbuhpArKHVe7KcutDV/32Kzh95cAkERfZJM0UWLEcBYWOZ14EuWI
-         eq8ucOpMD/tZTfrGBHoSJ3TZL9kaYxWaAkAwIrPZbdLeB/70PxWW+/sHblywikGUYG
-         WvcmrA2MdxBnQvdTEcbAAOf2jrC0jlBsUBmYuiNHIkZ+3zEHfE1taGA7+CcmJ9oWir
-         mM8OF+gUB+aG0OJ9F1uUZSU3r/cwir/4MOctVmtRcN8QuN1c1H9HjrYjUO/iDY4H0a
-         Rac8CNKa1dXo3iTiewZR6PCcptbPG5VmaaD4ecIxJJ/CRFCsZLI5DUORisPcMQ/vc3
-         meOjT/KD9Ssmw==
-Subject: [PATCH 6/6] xfs_scrub: actually try to fix summary counters ahead of
- repairs
+        b=IK+rPhhXvmsEI+Ca/tcMdmIOObJMvZtXZrX5yLqupQ6PoEfKY2usJby1XHAUH5TTA
+         chE+oCSyoiqepUp0TJvZcoqxk3UzmvPLj5my2uaPyg4ejTegmg0IKqQ5mIfPTx1g57
+         MmGxSRxkHCG647tVmDwjilNBHRINS0qwWylIWrQ8Rah/+LnU/HMhr7mli0j4O5qsiN
+         rriFADCIVhAaQIE+pahz67OUjond/7LSoInA4bUgYePjxgt0O9OqHSWPJXjEyjo2gy
+         nMVyfqgYCxVYzlmzwXsnO7KnRtMaJLbOW+4U/M5mVHKSQNHkv15swYE1A9n+ZHAMwi
+         QPeWG41nu9r0w==
+Subject: [PATCH 2/5] xfs: give rmap btree cursor error tracepoints their own
+ class
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:11 -0800
-Message-ID: <167243869104.714771.2428848445593088790.stgit@magnolia>
-In-Reply-To: <167243869023.714771.3955258526251265287.stgit@magnolia>
-References: <167243869023.714771.3955258526251265287.stgit@magnolia>
+Message-ID: <167243869189.714954.9497046624198815478.stgit@magnolia>
+In-Reply-To: <167243869156.714954.12346064053546135919.stgit@magnolia>
+References: <167243869156.714954.12346064053546135919.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,71 +56,285 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-A while ago, I decided to make phase 4 check the summary counters before
-it starts any other repairs, having observed that repairs of primary
-metadata can fail because the summary counters (incorrectly) claim that
-there aren't enough free resources in the filesystem.  However, if
-problems are found in the summary counters, the repair work will be run
-as part of the AG 0 repairs, which means that it runs concurrently with
-other scrubbers.  This doesn't quite get us to the intended goal, so try
-to fix the scrubbers ahead of time.  If that fails, tough, we'll get
-back to it in phase 7 if scrub gets that far.
+Create a new tracepoint class for btree-related errors, then convert all
+the rmap tracepoints to use it.  Also fix the one tracepoint that was
+abusing the old class by making it a separate tracepoint.
 
-Fixes: cbaf1c9d91a0 ("xfs_scrub: check summary counters")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase4.c |   20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ fs/xfs/libxfs/xfs_rmap.c |   33 +++++---------
+ fs/xfs/xfs_trace.h       |  106 ++++++++++++++++++++++++++++++++++++++--------
+ 2 files changed, 99 insertions(+), 40 deletions(-)
 
 
-diff --git a/scrub/phase4.c b/scrub/phase4.c
-index c71b56b7bda..5929df38084 100644
---- a/scrub/phase4.c
-+++ b/scrub/phase4.c
-@@ -129,6 +129,7 @@ phase4_func(
- 	struct scrub_ctx	*ctx)
- {
- 	struct xfs_fsop_geom	fsgeom;
-+	struct action_list	alist;
- 	int			ret;
+diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
+index 8da59935780a..f85ff3ddb5c4 100644
+--- a/fs/xfs/libxfs/xfs_rmap.c
++++ b/fs/xfs/libxfs/xfs_rmap.c
+@@ -111,8 +111,7 @@ xfs_rmap_update(
+ 			xfs_rmap_irec_offset_pack(irec));
+ 	error = xfs_btree_update(cur, &rec);
+ 	if (error)
+-		trace_xfs_rmap_update_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_update_error(cur, error, _RET_IP_);
+ 	return error;
+ }
  
- 	if (!have_action_items(ctx))
-@@ -136,11 +137,13 @@ phase4_func(
- 
- 	/*
- 	 * Check the summary counters early.  Normally we do this during phase
--	 * seven, but some of the cross-referencing requires fairly-accurate
--	 * counters, so counter repairs have to be put on the list now so that
--	 * they get fixed before we stop retrying unfixed metadata repairs.
-+	 * seven, but some of the cross-referencing requires fairly accurate
-+	 * summary counters.  Check and try to repair them now to minimize the
-+	 * chance that repairs of primary metadata fail due to secondary
-+	 * metadata.  If repairs fails, we'll come back during phase 7.
- 	 */
--	ret = scrub_fs_counters(ctx, &ctx->action_lists[0]);
-+	action_list_init(&alist);
-+	ret = scrub_fs_counters(ctx, &alist);
- 	if (ret)
- 		return ret;
- 
-@@ -155,11 +158,18 @@ phase4_func(
- 		return ret;
- 
- 	if (fsgeom.sick & XFS_FSOP_GEOM_SICK_QUOTACHECK) {
--		ret = scrub_quotacheck(ctx, &ctx->action_lists[0]);
-+		ret = scrub_quotacheck(ctx, &alist);
- 		if (ret)
- 			return ret;
+@@ -155,8 +154,7 @@ xfs_rmap_insert(
  	}
+ done:
+ 	if (error)
+-		trace_xfs_rmap_insert_error(rcur->bc_mp,
+-				rcur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_insert_error(rcur, error, _RET_IP_);
+ 	return error;
+ }
  
-+	/* Repair counters before starting on the rest. */
-+	ret = action_list_process(ctx, -1, &alist,
-+			XRM_REPAIR_ONLY | XRM_NOPROGRESS);
-+	if (ret)
-+		return ret;
-+	action_list_discard(&alist);
+@@ -194,8 +192,7 @@ xfs_rmap_delete(
+ 	}
+ done:
+ 	if (error)
+-		trace_xfs_rmap_delete_error(rcur->bc_mp,
+-				rcur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_delete_error(rcur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -816,8 +813,7 @@ xfs_rmap_unmap(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_unmap_error(mp, cur->bc_ag.pag->pag_agno,
+-				error, _RET_IP_);
++		trace_xfs_rmap_unmap_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -1139,8 +1135,7 @@ xfs_rmap_map(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_map_error(mp, cur->bc_ag.pag->pag_agno,
+-				error, _RET_IP_);
++		trace_xfs_rmap_map_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -1335,8 +1330,7 @@ xfs_rmap_convert(
+ 	     RIGHT.rm_blockcount > XFS_RMAP_LEN_MAX)
+ 		state &= ~RMAP_RIGHT_CONTIG;
+ 
+-	trace_xfs_rmap_convert_state(mp, cur->bc_ag.pag->pag_agno, state,
+-			_RET_IP_);
++	trace_xfs_rmap_convert_state(cur, state, _RET_IP_);
+ 
+ 	/* reset the cursor back to PREV */
+ 	error = xfs_rmap_lookup_le(cur, bno, owner, offset, oldext, NULL, &i);
+@@ -1689,8 +1683,7 @@ xfs_rmap_convert(
+ 			unwritten, oinfo);
+ done:
+ 	if (error)
+-		trace_xfs_rmap_convert_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_convert_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -1813,8 +1806,7 @@ xfs_rmap_convert_shared(
+ 	     RIGHT.rm_blockcount > XFS_RMAP_LEN_MAX)
+ 		state &= ~RMAP_RIGHT_CONTIG;
+ 
+-	trace_xfs_rmap_convert_state(mp, cur->bc_ag.pag->pag_agno, state,
+-			_RET_IP_);
++	trace_xfs_rmap_convert_state(cur, state, _RET_IP_);
+ 	/*
+ 	 * Switch out based on the FILLING and CONTIG state bits.
+ 	 */
+@@ -2116,8 +2108,7 @@ xfs_rmap_convert_shared(
+ 			unwritten, oinfo);
+ done:
+ 	if (error)
+-		trace_xfs_rmap_convert_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_convert_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -2316,8 +2307,7 @@ xfs_rmap_unmap_shared(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_unmap_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_unmap_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+@@ -2477,8 +2467,7 @@ xfs_rmap_map_shared(
+ 			unwritten, oinfo);
+ out_error:
+ 	if (error)
+-		trace_xfs_rmap_map_error(cur->bc_mp,
+-				cur->bc_ag.pag->pag_agno, error, _RET_IP_);
++		trace_xfs_rmap_map_error(cur, error, _RET_IP_);
+ 	return error;
+ }
+ 
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 698616531ea0..aaac43e61e83 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -2874,46 +2874,87 @@ DEFINE_EVENT(xfs_rmap_class, name, \
+ 		 const struct xfs_owner_info *oinfo), \
+ 	TP_ARGS(mp, agno, agbno, len, unwritten, oinfo))
+ 
+-/* simple AG-based error/%ip tracepoint class */
+-DECLARE_EVENT_CLASS(xfs_ag_error_class,
+-	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int error,
++/* btree cursor error/%ip tracepoint class */
++DECLARE_EVENT_CLASS(xfs_btree_error_class,
++	TP_PROTO(struct xfs_btree_cur *cur, int error,
+ 		 unsigned long caller_ip),
+-	TP_ARGS(mp, agno, error, caller_ip),
++	TP_ARGS(cur, error, caller_ip),
+ 	TP_STRUCT__entry(
+ 		__field(dev_t, dev)
+ 		__field(xfs_agnumber_t, agno)
++		__field(xfs_ino_t, ino)
+ 		__field(int, error)
+ 		__field(unsigned long, caller_ip)
+ 	),
+ 	TP_fast_assign(
+-		__entry->dev = mp->m_super->s_dev;
+-		__entry->agno = agno;
++		__entry->dev = cur->bc_mp->m_super->s_dev;
++		if (cur->bc_flags & XFS_BTREE_IN_MEMORY) {
++			__entry->agno = 0;
++			__entry->ino = 0;
++		} else if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE) {
++			__entry->agno = 0;
++			__entry->ino = cur->bc_ino.ip->i_ino;
++		} else {
++			__entry->agno = cur->bc_ag.pag->pag_agno;
++			__entry->ino = 0;
++		}
+ 		__entry->error = error;
+ 		__entry->caller_ip = caller_ip;
+ 	),
+-	TP_printk("dev %d:%d agno 0x%x error %d caller %pS",
++	TP_printk("dev %d:%d agno 0x%x ino 0x%llx error %d caller %pS",
+ 		  MAJOR(__entry->dev), MINOR(__entry->dev),
+ 		  __entry->agno,
++		  __entry->ino,
+ 		  __entry->error,
+ 		  (char *)__entry->caller_ip)
+ );
+ 
+-#define DEFINE_AG_ERROR_EVENT(name) \
+-DEFINE_EVENT(xfs_ag_error_class, name, \
+-	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int error, \
++#define DEFINE_BTREE_ERROR_EVENT(name) \
++DEFINE_EVENT(xfs_btree_error_class, name, \
++	TP_PROTO(struct xfs_btree_cur *cur, int error, \
+ 		 unsigned long caller_ip), \
+-	TP_ARGS(mp, agno, error, caller_ip))
++	TP_ARGS(cur, error, caller_ip))
+ 
+ DEFINE_RMAP_EVENT(xfs_rmap_unmap);
+ DEFINE_RMAP_EVENT(xfs_rmap_unmap_done);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_unmap_error);
++DEFINE_BTREE_ERROR_EVENT(xfs_rmap_unmap_error);
+ DEFINE_RMAP_EVENT(xfs_rmap_map);
+ DEFINE_RMAP_EVENT(xfs_rmap_map_done);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_map_error);
++DEFINE_BTREE_ERROR_EVENT(xfs_rmap_map_error);
+ DEFINE_RMAP_EVENT(xfs_rmap_convert);
+ DEFINE_RMAP_EVENT(xfs_rmap_convert_done);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_convert_error);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_convert_state);
++DEFINE_BTREE_ERROR_EVENT(xfs_rmap_convert_error);
 +
- 	ret = repair_everything(ctx);
- 	if (ret)
- 		return ret;
++TRACE_EVENT(xfs_rmap_convert_state,
++	TP_PROTO(struct xfs_btree_cur *cur, int state,
++		 unsigned long caller_ip),
++	TP_ARGS(cur, state, caller_ip),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(xfs_agnumber_t, agno)
++		__field(xfs_ino_t, ino)
++		__field(int, state)
++		__field(unsigned long, caller_ip)
++	),
++	TP_fast_assign(
++		__entry->dev = cur->bc_mp->m_super->s_dev;
++		if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE) {
++			__entry->agno = 0;
++			__entry->ino = cur->bc_ino.ip->i_ino;
++		} else {
++			__entry->agno = cur->bc_ag.pag->pag_agno;
++			__entry->ino = 0;
++		}
++		__entry->state = state;
++		__entry->caller_ip = caller_ip;
++	),
++	TP_printk("dev %d:%d agno 0x%x ino 0x%llx state %d caller %pS",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->agno,
++		  __entry->ino,
++		  __entry->state,
++		  (char *)__entry->caller_ip)
++);
+ 
+ DECLARE_EVENT_CLASS(xfs_rmapbt_class,
+ 	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
+@@ -3014,9 +3055,9 @@ DEFINE_RMAP_DEFERRED_EVENT(xfs_rmap_deferred);
+ DEFINE_RMAPBT_EVENT(xfs_rmap_update);
+ DEFINE_RMAPBT_EVENT(xfs_rmap_insert);
+ DEFINE_RMAPBT_EVENT(xfs_rmap_delete);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_insert_error);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_delete_error);
+-DEFINE_AG_ERROR_EVENT(xfs_rmap_update_error);
++DEFINE_BTREE_ERROR_EVENT(xfs_rmap_insert_error);
++DEFINE_BTREE_ERROR_EVENT(xfs_rmap_delete_error);
++DEFINE_BTREE_ERROR_EVENT(xfs_rmap_update_error);
+ 
+ DEFINE_RMAPBT_EVENT(xfs_rmap_find_left_neighbor_candidate);
+ DEFINE_RMAPBT_EVENT(xfs_rmap_find_left_neighbor_query);
+@@ -3142,6 +3183,35 @@ DEFINE_AG_RESV_EVENT(xfs_ag_resv_free_extent);
+ DEFINE_AG_RESV_EVENT(xfs_ag_resv_critical);
+ DEFINE_AG_RESV_EVENT(xfs_ag_resv_needed);
+ 
++/* simple AG-based error/%ip tracepoint class */
++DECLARE_EVENT_CLASS(xfs_ag_error_class,
++	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int error,
++		 unsigned long caller_ip),
++	TP_ARGS(mp, agno, error, caller_ip),
++	TP_STRUCT__entry(
++		__field(dev_t, dev)
++		__field(xfs_agnumber_t, agno)
++		__field(int, error)
++		__field(unsigned long, caller_ip)
++	),
++	TP_fast_assign(
++		__entry->dev = mp->m_super->s_dev;
++		__entry->agno = agno;
++		__entry->error = error;
++		__entry->caller_ip = caller_ip;
++	),
++	TP_printk("dev %d:%d agno 0x%x error %d caller %pS",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->agno,
++		  __entry->error,
++		  (char *)__entry->caller_ip)
++);
++
++#define DEFINE_AG_ERROR_EVENT(name) \
++DEFINE_EVENT(xfs_ag_error_class, name, \
++	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, int error, \
++		 unsigned long caller_ip), \
++	TP_ARGS(mp, agno, error, caller_ip))
+ DEFINE_AG_ERROR_EVENT(xfs_ag_resv_init_error);
+ 
+ /* refcount tracepoint classes */
 
