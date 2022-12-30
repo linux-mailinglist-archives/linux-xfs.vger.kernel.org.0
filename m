@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19F4A65A16D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:21:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B84B659FDA
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:42:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236210AbiLaCVB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:21:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
+        id S235860AbiLaAmh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:42:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236211AbiLaCU7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:20:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CEA12D34
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:20:59 -0800 (PST)
+        with ESMTP id S235615AbiLaAmg (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:42:36 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E5D1DDE2;
+        Fri, 30 Dec 2022 16:42:35 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 050D561C19
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:20:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63EABC433EF;
-        Sat, 31 Dec 2022 02:20:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3616361D58;
+        Sat, 31 Dec 2022 00:42:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D810C433EF;
+        Sat, 31 Dec 2022 00:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453258;
-        bh=ji1rUXHAQzMqjM9Z4Aeq1CAjew27vcZ5lh3OtyeOF9E=;
+        s=k20201202; t=1672447354;
+        bh=ardYTeTGdVKlvKtNdtjlZWnLBRfGlP3Ase+bd+ofVTQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bLXvgnVp4KlYcQUxFU2nDacm1g15JuSazOdbdxkt2A++2mTffueRx/93n1kaAu0vS
-         Vhoao2zhdyu3Z3eejw/IPSeqbrjW0MryrSpdeT+4JWwHV/uAoVM0C++RbMoHRlTsat
-         YUY+tU/EDCE8Bg3EiY9NMsex+nl6/t59+JjR4af7eLL1GvE7AbaOhHaJHBwTj0Arxi
-         ndEWtndaAvcQjeKxRfuYIe++Zn2yv1/C+yKF+2djP2t9VmnYA1ygPuoZFvQ4lCAa1p
-         PZtWhA7evgGZzXer8x1O3Ee/ElJbJY5h2SSdqc+GnOv94xtg0PiW/Zjl31iqNVWCyx
-         WjOGeavptgpQw==
-Subject: [PATCH 43/46] xfs_repair: truncate and unmark orphaned metadata
- inodes
+        b=oTXOiQj/u0DhbGJ3IDS0f8FA7wvsJQYgcEfpTEfdohqW+fUYjRx5CpzcMxD+MtQXT
+         0oYwr3k5x7YxCbXDzwfAo7T9xnDzNrxoLrF9E8GOJSGyXCNkGsEJxyp5HMI7j95IaR
+         +ZEH6G7igFNf7AHCcN1mDJOMskS/dtzhPtfNNF7cz4jE3REyWfOzb6fZ/Et3vUPyvH
+         83W5S8jaI2WVF806L4yMRaAAYbY3APvyXvwyAosKA2eXKIiIVSq8Rzv/DSUKlqot4J
+         G0dbHH1Di87OuWnNWJw5GLMPN38EZ6kz0QTxMztyQKsbECxgLGGkxkxT3xeLFWiEuO
+         N0eB1C7BcwgXw==
+Subject: [PATCH 1/1] xfs: race fsstress with online scrub and repair for
+ quotacheck
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:24 -0800
-Message-ID: <167243876494.725900.10741628794064487652.stgit@magnolia>
-In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
-References: <167243875924.725900.7061782826830118387.stgit@magnolia>
+Message-ID: <167243876474.727185.6330332863953257231.stgit@magnolia>
+In-Reply-To: <167243876462.727185.1053988846654244651.stgit@magnolia>
+References: <167243876462.727185.1053988846654244651.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,88 +55,128 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If an inode claims to be a metadata inode but wasn't linked in either
-directory tree, remove the attr fork and reset the data fork if the
-contents weren't regular extent mappings before moving the inode to the
-lost+found.
-
-We don't ifree the inode, because it's possible that the inode was not
-actually a metadata inode but simply got corrupted due to bitflips or
-something, and we'd rather let the sysadmin examine what's left of the
-file instead of photorec'ing it.
+Create tests to race fsstress with quota count check and repair while
+running fsstress in the background.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/phase6.c |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ tests/xfs/715     |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/715.out |    2 ++
+ tests/xfs/812     |   40 ++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/812.out |    2 ++
+ 4 files changed, 84 insertions(+)
+ create mode 100755 tests/xfs/715
+ create mode 100644 tests/xfs/715.out
+ create mode 100755 tests/xfs/812
+ create mode 100644 tests/xfs/812.out
 
 
-diff --git a/repair/phase6.c b/repair/phase6.c
-index 964342c31d6..13094730407 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -1220,6 +1220,53 @@ mk_orphanage(
- 	return(ino);
- }
- 
-+/* Don't let metadata inode contents leak to lost+found. */
-+static void
-+trunc_metadata_inode(
-+	struct xfs_inode	*ip)
-+{
-+	struct xfs_trans	*tp;
-+	struct xfs_mount	*mp = ip->i_mount;
-+	int			err;
+diff --git a/tests/xfs/715 b/tests/xfs/715
+new file mode 100755
+index 0000000000..eca979b297
+--- /dev/null
++++ b/tests/xfs/715
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
++#
++# FS QA Test No. 715
++#
++# Race fsstress and quotacheck repair for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest online_repair dangerous_fsstress_repair
 +
-+	err = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_ichange, 0, 0, 0, &tp);
-+	if (err)
-+		do_error(
-+	_("space reservation failed (%d), filesystem may be out of space\n"),
-+					err);
-+
-+	libxfs_trans_ijoin(tp, ip, 0);
-+	ip->i_diflags2 &= ~XFS_DIFLAG2_METADATA;
-+
-+	switch (VFS_I(ip)->i_mode & S_IFMT) {
-+	case S_IFIFO:
-+	case S_IFCHR:
-+	case S_IFBLK:
-+	case S_IFSOCK:
-+		ip->i_df.if_format = XFS_DINODE_FMT_DEV;
-+		break;
-+	case S_IFREG:
-+		switch (ip->i_df.if_format) {
-+		case XFS_DINODE_FMT_EXTENTS:
-+		case XFS_DINODE_FMT_BTREE:
-+			break;
-+		default:
-+			ip->i_df.if_format = XFS_DINODE_FMT_EXTENTS;
-+			ip->i_df.if_nextents = 0;
-+			break;
-+		}
-+		break;
-+	}
-+
-+	libxfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
-+
-+	err = -libxfs_trans_commit(tp);
-+	if (err)
-+		do_error(
-+	_("truncation of metadata inode 0x%llx failed, err=%d\n"),
-+				(unsigned long long)ip->i_ino, err);
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
 +}
++_register_cleanup "_cleanup" BUS
 +
- /*
-  * move a file to the orphange.
-  */
-@@ -1262,6 +1309,9 @@ mv_orphanage(
- 	if (err)
- 		do_error(_("%d - couldn't iget disconnected inode\n"), err);
- 
-+	if (xfs_is_metadata_inode(ino_p))
-+		trunc_metadata_inode(ino_p);
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++. ./common/quota
 +
- 	xname.type = libxfs_mode_to_ftype(VFS_I(ino_p)->i_mode);
- 
- 	if (isa_dir)  {
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_online_repair
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_quota_acct_enabled "$SCRATCH_DEV" any
++_scratch_xfs_stress_online_repair -s "repair quotacheck"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/715.out b/tests/xfs/715.out
+new file mode 100644
+index 0000000000..b5947d898b
+--- /dev/null
++++ b/tests/xfs/715.out
+@@ -0,0 +1,2 @@
++QA output created by 715
++Silence is golden
+diff --git a/tests/xfs/812 b/tests/xfs/812
+new file mode 100755
+index 0000000000..f84494e392
+--- /dev/null
++++ b/tests/xfs/812
+@@ -0,0 +1,40 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle. Inc.  All Rights Reserved.
++#
++# FS QA Test No. 812
++#
++# Race fsstress and quotacheck scrub for a while to see if we crash or
++# livelock.
++#
++. ./common/preamble
++_begin_fstest scrub dangerous_fsstress_scrub
++
++_cleanup() {
++	_scratch_xfs_stress_scrub_cleanup &> /dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/fuzzy
++. ./common/inject
++. ./common/xfs
++. ./common/quota
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch
++_require_xfs_stress_scrub
++
++_scratch_mkfs > "$seqres.full" 2>&1
++_scratch_mount
++_require_xfs_quota_acct_enabled "$SCRATCH_DEV" any
++_scratch_xfs_stress_scrub -s "scrub quotacheck"
++
++# success, all done
++echo Silence is golden
++status=0
++exit
+diff --git a/tests/xfs/812.out b/tests/xfs/812.out
+new file mode 100644
+index 0000000000..d8dbb15dc7
+--- /dev/null
++++ b/tests/xfs/812.out
+@@ -0,0 +1,2 @@
++QA output created by 812
++Silence is golden
 
