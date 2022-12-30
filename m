@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2816C65A246
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:11:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63D2965A243
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:10:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236322AbiLaDLg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:11:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36144 "EHLO
+        id S236259AbiLaDKu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:10:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231476AbiLaDLf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:11:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C03FCD8;
-        Fri, 30 Dec 2022 19:11:33 -0800 (PST)
+        with ESMTP id S236307AbiLaDKs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:10:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340A6C7D;
+        Fri, 30 Dec 2022 19:10:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5658A61C7A;
-        Sat, 31 Dec 2022 03:11:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9705C433EF;
-        Sat, 31 Dec 2022 03:11:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BE62D61C7A;
+        Sat, 31 Dec 2022 03:10:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26016C433D2;
+        Sat, 31 Dec 2022 03:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456292;
-        bh=oEf/zdfQhR48NYLAlvHHlJ9PBd0QNd/wjeiAJ8+ka5Q=;
+        s=k20201202; t=1672456246;
+        bh=SaTtuIDKWjtXJHTCqaBfB3+SSvG07GWba4d4SvzcejE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VErj2lI+baO7B9VqF1lAbBTCcJbLnqZX2PLEna5efEr3FZKtgx15FYAiLyKzC8N+H
-         TxJVI88Hh0oeVT8Zi33qpY1RyO1c9vvdnTm5Wff1DpKVeE4eoyu6NqxxOBphBLCEM+
-         tg6Rzvq8RKvnU0vYooQTxT8s+cxOruR3jvzUs/5dKSBPDDCPg3cBYkZtSaom2XzP5w
-         aa2mu2EXQeKXmQhzpaMW/qFACzuD8Nu7LJLAPmed7GS5UKyZC9Q/UVWo7E2aHw3+Zm
-         3nMQ6V4dIHDizv++N1lqtDMCARsMORTb/dbzcjRqhCFH7szvtXRw590LNrWaIeFLSS
-         HLsTGRfx1sAnw==
-Subject: [PATCH 08/12] xfs/122: update for rtbitmap headers
+        b=f1PPDlPmUq5Xu6o7C1qex0Lt7D6sW22TikTeHu0QygTf3Kb2RQrKn9V7xEcudtPdS
+         OqlxjLne8za9L6BaojbSbmJU8MdvvS6zi9mqdIe8KzmhFq7f62uOV/dXM/5Zgnh00t
+         lwSPldp3EnWmpRreDGLdW+UMOfDbAZeF3qc9qesVbHbvh+WZl2oqLkZqavySSLoaSU
+         qHApDAMRL/CjZQ/rVpk4Aj2XG86KC8GSKNqMYAjAkrDLDwG+kLCB1G4xskoQBhXeRH
+         Kj97NB/OrTdiXbFEM5f5XujAHoklTHTNRhkAQbeVx5wfF/ev2MKTEWB1X0AV9kNwC2
+         ueMrsrRtZMmeg==
+Subject: [PATCH 05/12] common: filter rtgroups when we're disabling metadir
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:40 -0800
-Message-ID: <167243884050.739029.15010077823493214188.stgit@magnolia>
+Message-ID: <167243884013.739029.9709263667215231940.stgit@magnolia>
 In-Reply-To: <167243883943.739029.3041109696120604285.stgit@magnolia>
 References: <167243883943.739029.3041109696120604285.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,22 +55,28 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
+If we're forcing a filesystem to be created without the metadir feature,
+we should forcibly disable rtgroups as well.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/122.out |    1 +
- 1 file changed, 1 insertion(+)
+ common/xfs |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 
-diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index 01376180cc..336618cf7a 100644
---- a/tests/xfs/122.out
-+++ b/tests/xfs/122.out
-@@ -115,6 +115,7 @@ sizeof(struct xfs_refcount_key) = 4
- sizeof(struct xfs_refcount_rec) = 12
- sizeof(struct xfs_rmap_key) = 20
- sizeof(struct xfs_rmap_rec) = 24
-+sizeof(struct xfs_rtbuf_blkinfo) = 48
- sizeof(struct xfs_rtgroup_geometry) = 128
- sizeof(struct xfs_rtrmap_key) = 24
- sizeof(struct xfs_rtrmap_rec) = 32
+diff --git a/common/xfs b/common/xfs
+index 0d1e0ec4bc..ccdcf45d0d 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -1821,6 +1821,10 @@ _scratch_xfs_find_metafile()
+ # Force metadata directories off.
+ _scratch_xfs_force_no_metadir()
+ {
++	if echo "$MKFS_OPTIONS" | grep -q 'rtgroups='; then
++		MKFS_OPTIONS="$(echo "$MKFS_OPTIONS" | sed -e 's/rtgroups=\([01]\)/rtgroups=0/g')"
++	fi
++
+ 	if echo "$MKFS_OPTIONS" | grep -q 'metadir='; then
+ 		MKFS_OPTIONS="$(echo "$MKFS_OPTIONS" | sed -e 's/metadir=\([01]\)/metadir=0/g')"
+ 		return
 
