@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6812659FFC
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:51:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B96E265A19C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:31:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235970AbiLaAvB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:51:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37648 "EHLO
+        id S236237AbiLaCbz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:31:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235961AbiLaAu4 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:50:56 -0500
+        with ESMTP id S236141AbiLaCby (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:31:54 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E3E13F29;
-        Fri, 30 Dec 2022 16:50:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 047EB26D9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:31:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E4F5DB81D68;
-        Sat, 31 Dec 2022 00:50:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5065C433EF;
-        Sat, 31 Dec 2022 00:50:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BA568B81E74
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:31:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DBEDC433D2;
+        Sat, 31 Dec 2022 02:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447852;
-        bh=dvyjhui+iQxyCoW6tJ2MrhnAfdiB75xuzwOH/4sotsw=;
+        s=k20201202; t=1672453911;
+        bh=0LhhCwyee2U3iZxGvjHF3U7N5UMf+OjFv/Ws7WWjwas=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QmClZxmZW/4HMZWdG55gFHYcBC8mI2d93mVadg9Ms8HkxQMaYubtA6KSKzXZuQpvC
-         /wc4CfoUGu/1jxJIUVNomjKzNwkmgTCUzYqKOhPVipscOpdnFIoBSZ7poMg7DO7jjW
-         RUMB9f/MWT78ilFvuiGdpoLXFwZdBPf09CEXb5VSejezP1imFrf96MAlJBCJpwEgyf
-         JYXdK+CqINCRYMh0cRz15dpCLCZqpiqaAj+oIXvzf/WJwAkyfpYTaPQ3oNGkGj3kTj
-         ZpAjj4eaeH/vFmF53f8Gd8YQC7SrYZ5EK4Xw23/pVp5NCCjevfomPH4SN4g+rL7Se6
-         3fkGiQak4aEuA==
-Subject: [PATCH 2/5] fuzzy: test fuzzing xattr block mappings
+        b=T9skBGFQdHKU1dDiQliYf0DvFyaNjSNzbRf1D/3adMo/us5F48DeQldQLNi3jQQ1j
+         v9ARwmzaApsqqr7JHkglSpLEQqM799W8bDPakZ1cqqk5dYZjeUjme7mhuleWDXe7LH
+         UMMwvrvqA8wxJsvGYg1lQWqNkfuxUEA4iteJND5SqMfjqkpclIbAsXbGV3joKdG871
+         jEuRdt2Ukz3rQn6nAHdipqg8mnLsIlzRCG83fhW5yLinV8vo9OybSUFci1y7/iH0Sh
+         StyQyUCISvqFLxW31nqKdvATHHQXiO/VTHEgTFbPV/6m7/gKw7qfq+dEgeCrlW34Vf
+         dpuKe7fyltZMA==
+Subject: [PATCH 07/45] xfs: check that rtblock extents do not overlap with the
+ rt group metadata
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:44 -0800
-Message-ID: <167243878496.731641.9800334424221991155.stgit@magnolia>
-In-Reply-To: <167243878469.731641.981302372644525592.stgit@magnolia>
-References: <167243878469.731641.981302372644525592.stgit@magnolia>
+Message-ID: <167243878459.731133.6551854440644710834.stgit@magnolia>
+In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
+References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,261 +56,92 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fuzz the block mappings of extended attributes to see what happens.
+The ondisk format specifies that the start of each realtime group must
+have a superblock so that rt space mappings never cross an rtgroup
+boundary.  Check that rt block pointers obey this.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy       |   16 ++++++++++++++++
- tests/xfs/1557     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1557.out |   10 ++++++++++
- tests/xfs/1558     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1558.out |   10 ++++++++++
- tests/xfs/1559     |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- tests/xfs/1559.out |   10 ++++++++++
- 7 files changed, 190 insertions(+)
- create mode 100755 tests/xfs/1557
- create mode 100644 tests/xfs/1557.out
- create mode 100755 tests/xfs/1558
- create mode 100644 tests/xfs/1558.out
- create mode 100755 tests/xfs/1559
- create mode 100644 tests/xfs/1559.out
+ libxfs/xfs_types.c |   46 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
 
-diff --git a/common/fuzzy b/common/fuzzy
-index 09f42d9225..d8eb7d8b72 100644
---- a/common/fuzzy
-+++ b/common/fuzzy
-@@ -565,6 +565,22 @@ _scratch_xfs_set_dir_fuzz_types() {
- 	SCRATCH_XFS_DIR_FUZZ_TYPES=(BLOCK LEAF LEAFN NODE)
+diff --git a/libxfs/xfs_types.c b/libxfs/xfs_types.c
+index f5eab8839e3..6488cda24e8 100644
+--- a/libxfs/xfs_types.c
++++ b/libxfs/xfs_types.c
+@@ -13,6 +13,8 @@
+ #include "xfs_mount.h"
+ #include "xfs_ag.h"
+ #include "xfs_imeta.h"
++#include "xfs_rtbitmap.h"
++#include "xfs_rtgroup.h"
+ 
+ 
+ /*
+@@ -133,6 +135,26 @@ xfs_verify_dir_ino(
+ 	return xfs_verify_ino(mp, ino);
  }
  
-+# Sets the array SCRATCH_XFS_XATTR_FUZZ_TYPES to the list of xattr formats
-+# available for fuzzing.  Each list item must match one of the /ATTR.FMT_*
-+# files created by the fs population code.  Users can override this by setting
-+# SCRATCH_XFS_LIST_FUZZ_XATTRTYPE in the environment.  BTREE is omitted here
-+# because that refers to the fork format and does not affect the extended
-+# attribute structure at all.
-+_scratch_xfs_set_xattr_fuzz_types() {
-+	if [ -n "${SCRATCH_XFS_LIST_FUZZ_XATTRTYPE}" ]; then
-+		mapfile -t SCRATCH_XFS_XATTR_FUZZ_TYPES < \
-+				<(echo "${SCRATCH_XFS_LIST_FUZZ_XATTRTYPE}" | tr '[ ,]' '[\n\n]')
-+		return
-+	fi
++/*
++ * Verify that an rtgroup block number pointer neither points outside the
++ * rtgroup nor points at static metadata.
++ */
++static inline bool
++xfs_verify_rgno_rgbno(
++	struct xfs_mount	*mp,
++	xfs_rgnumber_t		rgno,
++	xfs_rgblock_t		rgbno)
++{
++	xfs_rgblock_t		eorg;
 +
-+	SCRATCH_XFS_XATTR_FUZZ_TYPES=(EXTENTS_REMOTE3K EXTENTS_REMOTE4K LEAF NODE)
++	eorg = xfs_rtgroup_block_count(mp, rgno);
++	if (rgbno >= eorg)
++		return false;
++	if (rgbno < mp->m_sb.sb_rextsize)
++		return false;
++	return true;
 +}
 +
- # Grab the list of available fuzzing verbs
- _scratch_xfs_list_fuzz_verbs() {
- 	if [ -n "${SCRATCH_XFS_LIST_FUZZ_VERBS}" ]; then
-diff --git a/tests/xfs/1557 b/tests/xfs/1557
-new file mode 100755
-index 0000000000..afd5d31f62
---- /dev/null
-+++ b/tests/xfs/1557
-@@ -0,0 +1,48 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1555
-+#
-+# Populate a XFS filesystem and fuzz the attr mappings of every xattr type.
-+# Use xfs_scrub to fix the corruption.
-+#
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
+ /*
+  * Verify that an realtime block number pointer doesn't point off the
+  * end of the realtime device.
+@@ -142,7 +164,20 @@ xfs_verify_rtbno(
+ 	struct xfs_mount	*mp,
+ 	xfs_rtblock_t		rtbno)
+ {
+-	return rtbno < mp->m_sb.sb_rblocks;
++	xfs_rgnumber_t		rgno;
++	xfs_rgblock_t		rgbno;
 +
-+_register_cleanup "_cleanup" BUS
++	if (rtbno >= mp->m_sb.sb_rblocks)
++		return false;
 +
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
++	if (!xfs_has_rtgroups(mp))
++		return true;
 +
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_xfs_fuzz_fields
++	rgbno = xfs_rtb_to_rgbno(mp, rtbno, &rgno);
++	if (rgno >= mp->m_sb.sb_rgcount)
++		return false;
 +
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
++	return xfs_verify_rgno_rgbno(mp, rgno, rgbno);
+ }
+ 
+ /* Verify that a realtime device extent is fully contained inside the volume. */
+@@ -158,7 +193,14 @@ xfs_verify_rtbext(
+ 	if (!xfs_verify_rtbno(mp, rtbno))
+ 		return false;
+ 
+-	return xfs_verify_rtbno(mp, rtbno + len - 1);
++	if (!xfs_verify_rtbno(mp, rtbno + len - 1))
++		return false;
 +
-+_scratch_xfs_set_xattr_fuzz_types
++	if (xfs_has_rtgroups(mp) &&
++	    xfs_rtb_to_rgno(mp, rtbno) != xfs_rtb_to_rgno(mp, rtbno + len - 1))
++		return false;
 +
-+# Now fuzz the block maps of each xattr type.
-+for attrtype in "${SCRATCH_XFS_XATTR_FUZZ_TYPES[@]}"; do
-+	echo "Fuzz block map for ${attrtype}" | tee -a $seqres.full
-+
-+	# Restore a correct copy of the filesystem before we start a round of
-+	# fuzzing.  This avoids corruption errors from xfs_db when
-+	# _scratch_xfs_fuzz_metadata probes the xattr block fields.
-+	__scratch_xfs_fuzz_mdrestore
-+
-+	_scratch_mount
-+	inum=$(stat -c '%i' $SCRATCH_MNT/ATTR.FMT_${attrtype})
-+	_scratch_unmount
-+
-+	_scratch_xfs_fuzz_metadata 'a*.bmx' 'online'  "inode ${inum}" >> $seqres.full
-+	echo "Done fuzzing attr map ${attrtype}"
-+done
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1557.out b/tests/xfs/1557.out
-new file mode 100644
-index 0000000000..e4d92dd6b8
---- /dev/null
-+++ b/tests/xfs/1557.out
-@@ -0,0 +1,10 @@
-+QA output created by 1557
-+Format and populate
-+Fuzz block map for EXTENTS_REMOTE3K
-+Done fuzzing attr map EXTENTS_REMOTE3K
-+Fuzz block map for EXTENTS_REMOTE4K
-+Done fuzzing attr map EXTENTS_REMOTE4K
-+Fuzz block map for LEAF
-+Done fuzzing attr map LEAF
-+Fuzz block map for NODE
-+Done fuzzing attr map NODE
-diff --git a/tests/xfs/1558 b/tests/xfs/1558
-new file mode 100755
-index 0000000000..0683b06010
---- /dev/null
-+++ b/tests/xfs/1558
-@@ -0,0 +1,48 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1557
-+#
-+# Populate a XFS filesystem and fuzz the attr mappings of every xattr type.
-+# Use xfs_repair to fix the corruption.
-+#
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_xfs_fuzz_fields
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+_scratch_xfs_set_xattr_fuzz_types
-+
-+# Now fuzz the block maps of each xattr type.
-+for attrtype in "${SCRATCH_XFS_XATTR_FUZZ_TYPES[@]}"; do
-+	echo "Fuzz block map for ${attrtype}" | tee -a $seqres.full
-+
-+	# Restore a correct copy of the filesystem before we start a round of
-+	# fuzzing.  This avoids corruption errors from xfs_db when
-+	# _scratch_xfs_fuzz_metadata probes the xattr block fields.
-+	__scratch_xfs_fuzz_mdrestore
-+
-+	_scratch_mount
-+	inum=$(stat -c '%i' $SCRATCH_MNT/ATTR.FMT_${attrtype})
-+	_scratch_unmount
-+
-+	_scratch_xfs_fuzz_metadata 'a*.bmx' 'offline'  "inode ${inum}" >> $seqres.full
-+	echo "Done fuzzing attr map ${attrtype}"
-+done
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1558.out b/tests/xfs/1558.out
-new file mode 100644
-index 0000000000..6fed892cb4
---- /dev/null
-+++ b/tests/xfs/1558.out
-@@ -0,0 +1,10 @@
-+QA output created by 1558
-+Format and populate
-+Fuzz block map for EXTENTS_REMOTE3K
-+Done fuzzing attr map EXTENTS_REMOTE3K
-+Fuzz block map for EXTENTS_REMOTE4K
-+Done fuzzing attr map EXTENTS_REMOTE4K
-+Fuzz block map for LEAF
-+Done fuzzing attr map LEAF
-+Fuzz block map for NODE
-+Done fuzzing attr map NODE
-diff --git a/tests/xfs/1559 b/tests/xfs/1559
-new file mode 100755
-index 0000000000..886c1f2641
---- /dev/null
-+++ b/tests/xfs/1559
-@@ -0,0 +1,48 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1559
-+#
-+# Populate a XFS filesystem and fuzz the attr mappings of every xattr type.
-+# Do not fix the filesystem, to test metadata verifiers.
-+#
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_norepair
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_scratch_xfs_fuzz_fields
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+_scratch_xfs_set_xattr_fuzz_types
-+
-+# Now fuzz the block maps of each xattr type.
-+for attrtype in "${SCRATCH_XFS_XATTR_FUZZ_TYPES[@]}"; do
-+	echo "Fuzz block map for ${attrtype}" | tee -a $seqres.full
-+
-+	# Restore a correct copy of the filesystem before we start a round of
-+	# fuzzing.  This avoids corruption errors from xfs_db when
-+	# _scratch_xfs_fuzz_metadata probes the xattr block fields.
-+	__scratch_xfs_fuzz_mdrestore
-+
-+	_scratch_mount
-+	inum=$(stat -c '%i' $SCRATCH_MNT/ATTR.FMT_${attrtype})
-+	_scratch_unmount
-+
-+	_scratch_xfs_fuzz_metadata 'a*.bmx' 'none'  "inode ${inum}" >> $seqres.full
-+	echo "Done fuzzing attr map ${attrtype}"
-+done
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1559.out b/tests/xfs/1559.out
-new file mode 100644
-index 0000000000..19fe4c91df
---- /dev/null
-+++ b/tests/xfs/1559.out
-@@ -0,0 +1,10 @@
-+QA output created by 1559
-+Format and populate
-+Fuzz block map for EXTENTS_REMOTE3K
-+Done fuzzing attr map EXTENTS_REMOTE3K
-+Fuzz block map for EXTENTS_REMOTE4K
-+Done fuzzing attr map EXTENTS_REMOTE4K
-+Fuzz block map for LEAF
-+Done fuzzing attr map LEAF
-+Fuzz block map for NODE
-+Done fuzzing attr map NODE
++	return true;
+ }
+ 
+ /* Calculate the range of valid icount values. */
 
