@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0931865A0E7
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:47:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4A40659FA6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236054AbiLaBrh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:47:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49302 "EHLO
+        id S235625AbiLaAbL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:31:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231435AbiLaBrf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:47:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4A81DDD3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:47:34 -0800 (PST)
+        with ESMTP id S235622AbiLaAbK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:31:10 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AC513DEA
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:31:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 94C44B81DEE
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:47:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5415CC433D2;
-        Sat, 31 Dec 2022 01:47:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B9A4361D4E
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:31:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25894C433F0;
+        Sat, 31 Dec 2022 00:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451251;
-        bh=L6vIPQv3JfLbyTZBLOiNxo9CF7q6P+ZMX1SVMV4MVX8=;
+        s=k20201202; t=1672446669;
+        bh=CSeQacM9ejZy8MUbqWG4oiVtB+zAZKmEtM338S6p7bs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=eTPWU8s3Q5K4QI4IowXgEtH+4GqtmCoLLojwnJbqIX9LIzeVwd5VbJb3t2G10dB1i
-         Fg+8WMLKSl0WOlfjatzaKJN6/ivnAsMy6yQSfJpgjaWFGg0So1dw4mp7vSvl27mIsq
-         ix3EyGmV8fw5ZR8oGUkGuHFDtecW9Da8F8BagYb2YKrmyuKb67wtBjLfyUWkTKWiU1
-         KE/PuYJ8kVtqa7AJYfwpUQXtF25zw15d22OlP7POWnr702tjf1flhaK7C7TCqM1uKr
-         SnZcGvSPvQaJXdxo9QWS7uJ4Bn5S2n4bRsj/PPOxu5ju2OSfU5NZkIKQ4ZZXBCqAQc
-         YX/01foDeDmcA==
-Subject: [PATCH 3/5] xfs: prepare refcount btree tracepoints for widening
+        b=Z5POvMS/le8tpMxKupO4fSSkogHCD0PUz3+Lp4Y/jCprnQkUcJbS/wIiocRixqT52
+         ixOc4hPNck3P68zr3OibAqahDTT8rhrZNQBR/BhoiJA6cZu8rQVExAXm16zng0H6gi
+         tDhOcH4YDIw8IUEcHIVo1hkLfFrj3YmCc5F4ETi+i0/9uUTqrvkXuHEg3+/rmoxDF2
+         kBbJA+0uWl7bfuJaTmdE7dsvzAPdE1pQy+ZGz346DxZo8PvYDyUo9RuGYStEtNTJ+9
+         BMqZzwbfM+47TS2oXRTfLc/ANds5pNFPLhmMrPeglI0dwKjU0Q747flhXn5Kpd+Zqj
+         Blylp/qDMTQIw==
+Subject: [PATCH 1/4] libfrog: enhance ptvar to support initializer functions
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:24 -0800
-Message-ID: <167243870487.716629.10920845342789966780.stgit@magnolia>
-In-Reply-To: <167243870440.716629.17983217257958002785.stgit@magnolia>
-References: <167243870440.716629.17983217257958002785.stgit@magnolia>
+Message-ID: <167243870444.716640.9510831594966072132.stgit@magnolia>
+In-Reply-To: <167243870430.716640.15368107413813691968.stgit@magnolia>
+References: <167243870430.716640.15368107413813691968.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,352 +54,131 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Prepare the rest of refcount btree tracepoints for use with realtime
-reflink by making them take the btree cursor object as a parameter.
-This will save us a lot of trouble later on.
-
-Remove the xfs_refcount_recover_extent tracepoint since it's already
-covered by other refcount tracepoints.
+Modify the per-thread variable code to support passing in an initializer
+function that will set up each thread's variable space when it is
+claimed.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_refcount.c |   42 ++++++++-------------
- fs/xfs/xfs_trace.h           |   83 +++++++++++++++++++-----------------------
- 2 files changed, 53 insertions(+), 72 deletions(-)
+ libfrog/ptvar.c     |    9 ++++++++-
+ libfrog/ptvar.h     |    4 +++-
+ scrub/counter.c     |    2 +-
+ scrub/descr.c       |    2 +-
+ scrub/phase7.c      |    2 +-
+ scrub/read_verify.c |    2 +-
+ 6 files changed, 15 insertions(+), 6 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
-index 1d181561a9ff..4c6ed75059c8 100644
---- a/fs/xfs/libxfs/xfs_refcount.c
-+++ b/fs/xfs/libxfs/xfs_refcount.c
-@@ -191,7 +191,7 @@ xfs_refcount_get_rec(
- 	if (fa)
- 		return xfs_refcount_complain_bad_rec(cur, fa, irec);
- 
--	trace_xfs_refcount_get(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
-+	trace_xfs_refcount_get(cur, irec);
- 	return 0;
- }
- 
-@@ -209,7 +209,7 @@ xfs_refcount_update(
- 	uint32_t		start;
- 	int			error;
- 
--	trace_xfs_refcount_update(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
-+	trace_xfs_refcount_update(cur, irec);
- 
- 	start = xfs_refcount_encode_startblock(irec->rc_startblock,
- 			irec->rc_domain);
-@@ -236,7 +236,7 @@ xfs_refcount_insert(
+diff --git a/libfrog/ptvar.c b/libfrog/ptvar.c
+index 7ac8c541862..9d5ae6bc8e3 100644
+--- a/libfrog/ptvar.c
++++ b/libfrog/ptvar.c
+@@ -26,6 +26,7 @@
+ struct ptvar {
+ 	pthread_key_t	key;
+ 	pthread_mutex_t	lock;
++	ptvar_init_fn	init_fn;
+ 	size_t		nr_used;
+ 	size_t		nr_counters;
+ 	size_t		data_size;
+@@ -38,6 +39,7 @@ int
+ ptvar_alloc(
+ 	size_t		nr,
+ 	size_t		size,
++	ptvar_init_fn	init_fn,
+ 	struct ptvar	**pptv)
  {
- 	int				error;
- 
--	trace_xfs_refcount_insert(cur->bc_mp, cur->bc_ag.pag->pag_agno, irec);
-+	trace_xfs_refcount_insert(cur, irec);
- 
- 	cur->bc_rec.rc.rc_startblock = irec->rc_startblock;
- 	cur->bc_rec.rc.rc_blockcount = irec->rc_blockcount;
-@@ -281,7 +281,7 @@ xfs_refcount_delete(
- 		error = -EFSCORRUPTED;
- 		goto out_error;
+ 	struct ptvar	*ptv;
+@@ -58,6 +60,7 @@ ptvar_alloc(
+ 	ptv->data_size = size;
+ 	ptv->nr_counters = nr;
+ 	ptv->nr_used = 0;
++	ptv->init_fn = init_fn;
+ 	memset(ptv->data, 0, nr * size);
+ 	ret = -pthread_mutex_init(&ptv->lock, NULL);
+ 	if (ret)
+@@ -98,11 +101,15 @@ ptvar_get(
+ 	if (!p) {
+ 		pthread_mutex_lock(&ptv->lock);
+ 		assert(ptv->nr_used < ptv->nr_counters);
+-		p = &ptv->data[(ptv->nr_used++) * ptv->data_size];
++		p = &ptv->data[ptv->nr_used * ptv->data_size];
+ 		ret = -pthread_setspecific(ptv->key, p);
+ 		if (ret)
+ 			goto out_unlock;
++		ptv->nr_used++;
+ 		pthread_mutex_unlock(&ptv->lock);
++
++		if (ptv->init_fn)
++			ptv->init_fn(p);
  	}
--	trace_xfs_refcount_delete(cur->bc_mp, cur->bc_ag.pag->pag_agno, &irec);
-+	trace_xfs_refcount_delete(cur, &irec);
- 	error = xfs_btree_delete(cur, i);
- 	if (XFS_IS_CORRUPT(cur->bc_mp, *i != 1)) {
- 		xfs_btree_mark_sick(cur);
-@@ -418,8 +418,7 @@ xfs_refcount_split_extent(
- 		return 0;
+ 	*retp = 0;
+ 	return p;
+diff --git a/libfrog/ptvar.h b/libfrog/ptvar.h
+index b7d02d6269e..e4a181ffe76 100644
+--- a/libfrog/ptvar.h
++++ b/libfrog/ptvar.h
+@@ -8,7 +8,9 @@
  
- 	*shape_changed = true;
--	trace_xfs_refcount_split_extent(cur->bc_mp, cur->bc_ag.pag->pag_agno,
--			&rcext, agbno);
-+	trace_xfs_refcount_split_extent(cur, &rcext, agbno);
+ struct ptvar;
  
- 	/* Establish the right extent. */
- 	tmp = rcext;
-@@ -462,8 +461,7 @@ xfs_refcount_merge_center_extents(
- 	int				error;
- 	int				found_rec;
+-int ptvar_alloc(size_t nr, size_t size, struct ptvar **pptv);
++typedef void (*ptvar_init_fn)(void *data);
++int ptvar_alloc(size_t nr, size_t size, ptvar_init_fn init_fn,
++		struct ptvar **pptv);
+ void ptvar_free(struct ptvar *ptv);
+ void *ptvar_get(struct ptvar *ptv, int *ret);
  
--	trace_xfs_refcount_merge_center_extents(cur->bc_mp,
--			cur->bc_ag.pag->pag_agno, left, center, right);
-+	trace_xfs_refcount_merge_center_extents(cur, left, center, right);
+diff --git a/scrub/counter.c b/scrub/counter.c
+index 6d91eb6e015..174f480f882 100644
+--- a/scrub/counter.c
++++ b/scrub/counter.c
+@@ -38,7 +38,7 @@ ptcounter_alloc(
+ 	p = malloc(sizeof(struct ptcounter));
+ 	if (!p)
+ 		return errno;
+-	ret = -ptvar_alloc(nr, sizeof(uint64_t), &p->var);
++	ret = -ptvar_alloc(nr, sizeof(uint64_t), NULL, &p->var);
+ 	if (ret) {
+ 		free(p);
+ 		return ret;
+diff --git a/scrub/descr.c b/scrub/descr.c
+index e694d01d7b7..152d9150621 100644
+--- a/scrub/descr.c
++++ b/scrub/descr.c
+@@ -89,7 +89,7 @@ descr_init_phase(
+ 	int			ret;
  
- 	ASSERT(left->rc_domain == center->rc_domain);
- 	ASSERT(right->rc_domain == center->rc_domain);
-@@ -544,8 +542,7 @@ xfs_refcount_merge_left_extent(
- 	int				error;
- 	int				found_rec;
+ 	assert(descr_ptvar == NULL);
+-	ret = -ptvar_alloc(nr_threads, DESCR_BUFSZ, &descr_ptvar);
++	ret = -ptvar_alloc(nr_threads, DESCR_BUFSZ, NULL, &descr_ptvar);
+ 	if (ret)
+ 		str_liberror(ctx, ret, _("creating description buffer"));
  
--	trace_xfs_refcount_merge_left_extent(cur->bc_mp,
--			cur->bc_ag.pag->pag_agno, left, cleft);
-+	trace_xfs_refcount_merge_left_extent(cur, left, cleft);
- 
- 	ASSERT(left->rc_domain == cleft->rc_domain);
- 
-@@ -609,8 +606,7 @@ xfs_refcount_merge_right_extent(
- 	int				error;
- 	int				found_rec;
- 
--	trace_xfs_refcount_merge_right_extent(cur->bc_mp,
--			cur->bc_ag.pag->pag_agno, cright, right);
-+	trace_xfs_refcount_merge_right_extent(cur, cright, right);
- 
- 	ASSERT(right->rc_domain == cright->rc_domain);
- 
-@@ -749,8 +745,7 @@ xfs_refcount_find_left_extents(
- 		cleft->rc_refcount = 1;
- 		cleft->rc_domain = domain;
+diff --git a/scrub/phase7.c b/scrub/phase7.c
+index 75d0ee0fb02..f3ab1c9d8f6 100644
+--- a/scrub/phase7.c
++++ b/scrub/phase7.c
+@@ -136,7 +136,7 @@ phase7_func(
  	}
--	trace_xfs_refcount_find_left_extent(cur->bc_mp, cur->bc_ag.pag->pag_agno,
--			left, cleft, agbno);
-+	trace_xfs_refcount_find_left_extent(cur, left, cleft, agbno);
- 	return error;
  
- out_error:
-@@ -843,8 +838,8 @@ xfs_refcount_find_right_extents(
- 		cright->rc_refcount = 1;
- 		cright->rc_domain = domain;
- 	}
--	trace_xfs_refcount_find_right_extent(cur->bc_mp, cur->bc_ag.pag->pag_agno,
--			cright, right, agbno + aglen);
-+	trace_xfs_refcount_find_right_extent(cur, cright, right,
-+			agbno + aglen);
- 	return error;
- 
- out_error:
-@@ -1147,8 +1142,7 @@ xfs_refcount_adjust_extents(
- 			tmp.rc_refcount = 1 + adj;
- 			tmp.rc_domain = XFS_REFC_DOMAIN_SHARED;
- 
--			trace_xfs_refcount_modify_extent(cur->bc_mp,
--					cur->bc_ag.pag->pag_agno, &tmp);
-+			trace_xfs_refcount_modify_extent(cur, &tmp);
- 
- 			/*
- 			 * Either cover the hole (increment) or
-@@ -1210,8 +1204,7 @@ xfs_refcount_adjust_extents(
- 		if (ext.rc_refcount == MAXREFCOUNT)
- 			goto skip;
- 		ext.rc_refcount += adj;
--		trace_xfs_refcount_modify_extent(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, &ext);
-+		trace_xfs_refcount_modify_extent(cur, &ext);
- 		cur->bc_ag.refc.nr_ops++;
- 		if (ext.rc_refcount > 1) {
- 			error = xfs_refcount_update(cur, &ext);
-@@ -1723,8 +1716,7 @@ xfs_refcount_adjust_cow_extents(
- 		tmp.rc_refcount = 1;
- 		tmp.rc_domain = XFS_REFC_DOMAIN_COW;
- 
--		trace_xfs_refcount_modify_extent(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, &tmp);
-+		trace_xfs_refcount_modify_extent(cur, &tmp);
- 
- 		error = xfs_refcount_insert(cur, &tmp,
- 				&found_tmp);
-@@ -1755,8 +1747,7 @@ xfs_refcount_adjust_cow_extents(
- 		}
- 
- 		ext.rc_refcount = 0;
--		trace_xfs_refcount_modify_extent(cur->bc_mp,
--				cur->bc_ag.pag->pag_agno, &ext);
-+		trace_xfs_refcount_modify_extent(cur, &ext);
- 		error = xfs_refcount_delete(cur, &found_rec);
- 		if (error)
- 			goto out_error;
-@@ -1989,9 +1980,6 @@ xfs_refcount_recover_cow_leftovers(
- 		if (error)
- 			goto out_free;
- 
--		trace_xfs_refcount_recover_extent(mp, pag->pag_agno,
--				&rr->rr_rrec);
--
- 		/* Free the orphan record */
- 		fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno,
- 				rr->rr_rrec.rc_startblock);
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index a5686b53ca80..233c611b6018 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -3285,9 +3285,8 @@ TRACE_EVENT(xfs_refcount_lookup,
- 
- /* single-rcext tracepoint class */
- DECLARE_EVENT_CLASS(xfs_refcount_extent_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 struct xfs_refcount_irec *irec),
--	TP_ARGS(mp, agno, irec),
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *irec),
-+	TP_ARGS(cur, irec),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
-@@ -3297,8 +3296,8 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_class,
- 		__field(xfs_nlink_t, refcount)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
-+		__entry->dev = cur->bc_mp->m_super->s_dev;
-+		__entry->agno = cur->bc_ag.pag->pag_agno;
- 		__entry->domain = irec->rc_domain;
- 		__entry->startblock = irec->rc_startblock;
- 		__entry->blockcount = irec->rc_blockcount;
-@@ -3315,15 +3314,14 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_class,
- 
- #define DEFINE_REFCOUNT_EXTENT_EVENT(name) \
- DEFINE_EVENT(xfs_refcount_extent_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 struct xfs_refcount_irec *irec), \
--	TP_ARGS(mp, agno, irec))
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *irec), \
-+	TP_ARGS(cur, irec))
- 
- /* single-rcext and an agbno tracepoint class */
- DECLARE_EVENT_CLASS(xfs_refcount_extent_at_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 struct xfs_refcount_irec *irec, xfs_agblock_t agbno),
--	TP_ARGS(mp, agno, irec, agbno),
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *irec,
-+		 xfs_agblock_t agbno),
-+	TP_ARGS(cur, irec, agbno),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
-@@ -3334,8 +3332,8 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_at_class,
- 		__field(xfs_agblock_t, agbno)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
-+		__entry->dev = cur->bc_mp->m_super->s_dev;
-+		__entry->agno = cur->bc_ag.pag->pag_agno;
- 		__entry->domain = irec->rc_domain;
- 		__entry->startblock = irec->rc_startblock;
- 		__entry->blockcount = irec->rc_blockcount;
-@@ -3354,15 +3352,15 @@ DECLARE_EVENT_CLASS(xfs_refcount_extent_at_class,
- 
- #define DEFINE_REFCOUNT_EXTENT_AT_EVENT(name) \
- DEFINE_EVENT(xfs_refcount_extent_at_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 struct xfs_refcount_irec *irec, xfs_agblock_t agbno), \
--	TP_ARGS(mp, agno, irec, agbno))
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *irec, \
-+		 xfs_agblock_t agbno), \
-+	TP_ARGS(cur, irec, agbno))
- 
- /* double-rcext tracepoint class */
- DECLARE_EVENT_CLASS(xfs_refcount_double_extent_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 struct xfs_refcount_irec *i1, struct xfs_refcount_irec *i2),
--	TP_ARGS(mp, agno, i1, i2),
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *i1,
-+		struct xfs_refcount_irec *i2),
-+	TP_ARGS(cur, i1, i2),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
-@@ -3376,8 +3374,8 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_class,
- 		__field(xfs_nlink_t, i2_refcount)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
-+		__entry->dev = cur->bc_mp->m_super->s_dev;
-+		__entry->agno = cur->bc_ag.pag->pag_agno;
- 		__entry->i1_domain = i1->rc_domain;
- 		__entry->i1_startblock = i1->rc_startblock;
- 		__entry->i1_blockcount = i1->rc_blockcount;
-@@ -3403,16 +3401,15 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_class,
- 
- #define DEFINE_REFCOUNT_DOUBLE_EXTENT_EVENT(name) \
- DEFINE_EVENT(xfs_refcount_double_extent_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 struct xfs_refcount_irec *i1, struct xfs_refcount_irec *i2), \
--	TP_ARGS(mp, agno, i1, i2))
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *i1, \
-+		 struct xfs_refcount_irec *i2), \
-+	TP_ARGS(cur, i1, i2))
- 
- /* double-rcext and an agbno tracepoint class */
- DECLARE_EVENT_CLASS(xfs_refcount_double_extent_at_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 struct xfs_refcount_irec *i1, struct xfs_refcount_irec *i2,
--		 xfs_agblock_t agbno),
--	TP_ARGS(mp, agno, i1, i2, agbno),
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *i1,
-+		 struct xfs_refcount_irec *i2, xfs_agblock_t agbno),
-+	TP_ARGS(cur, i1, i2, agbno),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
-@@ -3427,8 +3424,8 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_at_class,
- 		__field(xfs_agblock_t, agbno)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
-+		__entry->dev = cur->bc_mp->m_super->s_dev;
-+		__entry->agno = cur->bc_ag.pag->pag_agno;
- 		__entry->i1_domain = i1->rc_domain;
- 		__entry->i1_startblock = i1->rc_startblock;
- 		__entry->i1_blockcount = i1->rc_blockcount;
-@@ -3456,17 +3453,15 @@ DECLARE_EVENT_CLASS(xfs_refcount_double_extent_at_class,
- 
- #define DEFINE_REFCOUNT_DOUBLE_EXTENT_AT_EVENT(name) \
- DEFINE_EVENT(xfs_refcount_double_extent_at_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 struct xfs_refcount_irec *i1, struct xfs_refcount_irec *i2, \
--		 xfs_agblock_t agbno), \
--	TP_ARGS(mp, agno, i1, i2, agbno))
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *i1, \
-+		struct xfs_refcount_irec *i2, xfs_agblock_t agbno), \
-+	TP_ARGS(cur, i1, i2, agbno))
- 
- /* triple-rcext tracepoint class */
- DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 struct xfs_refcount_irec *i1, struct xfs_refcount_irec *i2,
--		 struct xfs_refcount_irec *i3),
--	TP_ARGS(mp, agno, i1, i2, i3),
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *i1,
-+		struct xfs_refcount_irec *i2, struct xfs_refcount_irec *i3),
-+	TP_ARGS(cur, i1, i2, i3),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
-@@ -3484,8 +3479,8 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
- 		__field(xfs_nlink_t, i3_refcount)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
-+		__entry->dev = cur->bc_mp->m_super->s_dev;
-+		__entry->agno = cur->bc_ag.pag->pag_agno;
- 		__entry->i1_domain = i1->rc_domain;
- 		__entry->i1_startblock = i1->rc_startblock;
- 		__entry->i1_blockcount = i1->rc_blockcount;
-@@ -3520,10 +3515,9 @@ DECLARE_EVENT_CLASS(xfs_refcount_triple_extent_class,
- 
- #define DEFINE_REFCOUNT_TRIPLE_EXTENT_EVENT(name) \
- DEFINE_EVENT(xfs_refcount_triple_extent_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 struct xfs_refcount_irec *i1, struct xfs_refcount_irec *i2, \
--		 struct xfs_refcount_irec *i3), \
--	TP_ARGS(mp, agno, i1, i2, i3))
-+	TP_PROTO(struct xfs_btree_cur *cur, struct xfs_refcount_irec *i1, \
-+		struct xfs_refcount_irec *i2, struct xfs_refcount_irec *i3), \
-+	TP_ARGS(cur, i1, i2, i3))
- 
- /* refcount btree tracepoints */
- DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_get);
-@@ -3541,7 +3535,6 @@ DEFINE_REFCOUNT_EVENT(xfs_refcount_cow_increase);
- DEFINE_REFCOUNT_EVENT(xfs_refcount_cow_decrease);
- DEFINE_REFCOUNT_TRIPLE_EXTENT_EVENT(xfs_refcount_merge_center_extents);
- DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_modify_extent);
--DEFINE_REFCOUNT_EXTENT_EVENT(xfs_refcount_recover_extent);
- DEFINE_REFCOUNT_EXTENT_AT_EVENT(xfs_refcount_split_extent);
- DEFINE_REFCOUNT_DOUBLE_EXTENT_EVENT(xfs_refcount_merge_left_extent);
- DEFINE_REFCOUNT_DOUBLE_EXTENT_EVENT(xfs_refcount_merge_right_extent);
+ 	error = -ptvar_alloc(scrub_nproc(ctx), sizeof(struct summary_counts),
+-			&ptvar);
++			NULL, &ptvar);
+ 	if (error) {
+ 		str_liberror(ctx, error, _("setting up block counter"));
+ 		return error;
+diff --git a/scrub/read_verify.c b/scrub/read_verify.c
+index be30f2688f9..19f74fae722 100644
+--- a/scrub/read_verify.c
++++ b/scrub/read_verify.c
+@@ -120,7 +120,7 @@ read_verify_pool_alloc(
+ 	rvp->disk = disk;
+ 	rvp->ioerr_fn = ioerr_fn;
+ 	ret = -ptvar_alloc(submitter_threads, sizeof(struct read_verify),
+-			&rvp->rvstate);
++			NULL, &rvp->rvstate);
+ 	if (ret)
+ 		goto out_counter;
+ 	ret = -workqueue_create(&rvp->wq, (struct xfs_mount *)rvp,
 
