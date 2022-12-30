@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F286865A0E9
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:48:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B78D659FAE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:32:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236067AbiLaBsG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:48:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
+        id S235656AbiLaAcb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:32:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236064AbiLaBsF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:48:05 -0500
+        with ESMTP id S235655AbiLaAca (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:32:30 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52C81DDD1
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:48:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E15413F7A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:32:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9307BB81DF6
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:48:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5732DC433D2;
-        Sat, 31 Dec 2022 01:48:02 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 57F88B81EB2
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:32:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B19C433D2;
+        Sat, 31 Dec 2022 00:32:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451282;
-        bh=p+KS59amF+oAxHfLW/1JmQQ9nkjbjK0kW6S5zHbz820=;
+        s=k20201202; t=1672446747;
+        bh=6uBWROMEJlb3V7XDV8hQnHvMvTb3X7gdVjnNqniBR+I=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JDhUL5vXvtWHEzBqWjEIgEvnZIxEwr4iF3o3ZXBS0ucXalo5UdkkU736XCp+0d5c0
-         5YAZTmnGGA5om6Xme2O+V76OrXqDZXwsG8GCvJM5PyB8iHxudvXBdLhPmUWoR1xDuk
-         udxSqp1y0bl2Jo0A/2iRAjNu13QRNBYn7G5qDuXgahHNO+jhPtsxlw4+m9z/lrK18n
-         DlrGbPtWbubv6eIx0AGpDbIfLPnyjB9z5H7fva1f1AGeBXtYBt5CK2puhq0KJKlEw2
-         +1aQ0h9sDAseA0w2J1kTcBYKbqpFLqpvRkOViwarmc9A/dXYxuKLAV/W6CaiJf1n+c
-         kQMvZUUWewbvA==
-Subject: [PATCH 5/5] xfs: remove xfs_trans_set_refcount_flags
+        b=uX+ya6nDkYgDge2wzUFfb50JkzBP4bDo8WHdx3KpjG5WgbDcZGRnFlPZO+hlLqrWw
+         WYvwIiW1m3EWhQbD3b/qXyEUQIZF9W89dON5EDE5kNKpJgKPUU9m/FE6x+N+IndBwZ
+         Yp3/e1kEfwUni/E1WhQgxXSInxbihal10sOvzSjGmD6U9QWo2uzFhVkSWWkiaHpUy4
+         yCoK2sJ1GmUMCfZGRW7sOpehyazgKbzlO+8N2JXZ+s+P6cElRvzSf4CyK0TIHqxvZI
+         5756Bs5j5eeAkuoY03Ak/T1Mdrh5yKTKOBTyiVG0AXA/Z41bBBgrIx8OtBCX1H7+pQ
+         KcdkiaENJz8tQ==
+Subject: [PATCH 2/7] xfs_scrub: ignore phase 8 if the user disabled fstrim
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:18:25 -0800
-Message-ID: <167243870516.716629.2373444330153950396.stgit@magnolia>
-In-Reply-To: <167243870440.716629.17983217257958002785.stgit@magnolia>
-References: <167243870440.716629.17983217257958002785.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:18:27 -0800
+Message-ID: <167243870777.716924.8136510482651151559.stgit@magnolia>
+In-Reply-To: <167243870748.716924.8460607901853339412.stgit@magnolia>
+References: <167243870748.716924.8460607901853339412.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,62 +54,56 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Remove this single-use helper.
+If the user told us to skip trimming the filesystem, don't run the phase
+at all.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_refcount_item.c |   32 ++++++++++++--------------------
- 1 file changed, 12 insertions(+), 20 deletions(-)
+ scrub/xfs_scrub.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/xfs_refcount_item.c b/fs/xfs/xfs_refcount_item.c
-index 5c6eecc5318a..ccc334d482a4 100644
---- a/fs/xfs/xfs_refcount_item.c
-+++ b/fs/xfs/xfs_refcount_item.c
-@@ -289,25 +289,6 @@ xfs_refcount_update_diff_items(
- 	return ra->ri_pag->pag_agno - rb->ri_pag->pag_agno;
- }
+diff --git a/scrub/xfs_scrub.c b/scrub/xfs_scrub.c
+index 597be59f9f9..bdee8e4fdae 100644
+--- a/scrub/xfs_scrub.c
++++ b/scrub/xfs_scrub.c
+@@ -246,6 +246,7 @@ struct phase_rusage {
+ /* Operations for each phase. */
+ #define DATASCAN_DUMMY_FN	((void *)1)
+ #define REPAIR_DUMMY_FN		((void *)2)
++#define FSTRIM_DUMMY_FN		((void *)3)
+ struct phase_ops {
+ 	char		*descr;
+ 	int		(*fn)(struct scrub_ctx *ctx);
+@@ -426,6 +427,11 @@ run_scrub_phases(
+ 			.fn = phase7_func,
+ 			.must_run = true,
+ 		},
++		{
++			.descr = _("Trim filesystem storage."),
++			.fn = FSTRIM_DUMMY_FN,
++			.estimate_work = phase8_estimate,
++		},
+ 		{
+ 			NULL
+ 		},
+@@ -446,6 +452,8 @@ run_scrub_phases(
+ 		/* Turn on certain phases if user said to. */
+ 		if (sp->fn == DATASCAN_DUMMY_FN && scrub_data) {
+ 			sp->fn = phase6_func;
++		} else if (sp->fn == FSTRIM_DUMMY_FN && want_fstrim) {
++			sp->fn = phase8_func;
+ 		} else if (sp->fn == REPAIR_DUMMY_FN &&
+ 			   ctx->mode == SCRUB_MODE_REPAIR) {
+ 			sp->descr = _("Repair filesystem.");
+@@ -455,7 +463,8 @@ run_scrub_phases(
  
--/* Set the phys extent flags for this reverse mapping. */
--static void
--xfs_trans_set_refcount_flags(
--	struct xfs_phys_extent		*pmap,
--	enum xfs_refcount_intent_type	type)
--{
--	pmap->pe_flags = 0;
--	switch (type) {
--	case XFS_REFCOUNT_INCREASE:
--	case XFS_REFCOUNT_DECREASE:
--	case XFS_REFCOUNT_ALLOC_COW:
--	case XFS_REFCOUNT_FREE_COW:
--		pmap->pe_flags |= type;
--		break;
--	default:
--		ASSERT(0);
--	}
--}
--
- /* Log refcount updates in the intent item. */
- STATIC void
- xfs_refcount_update_log_item(
-@@ -331,7 +312,18 @@ xfs_refcount_update_log_item(
- 	pmap = &cuip->cui_format.cui_extents[next_extent];
- 	pmap->pe_startblock = ri->ri_startblock;
- 	pmap->pe_len = ri->ri_blockcount;
--	xfs_trans_set_refcount_flags(pmap, ri->ri_type);
-+
-+	pmap->pe_flags = 0;
-+	switch (ri->ri_type) {
-+	case XFS_REFCOUNT_INCREASE:
-+	case XFS_REFCOUNT_DECREASE:
-+	case XFS_REFCOUNT_ALLOC_COW:
-+	case XFS_REFCOUNT_FREE_COW:
-+		pmap->pe_flags |= ri->ri_type;
-+		break;
-+	default:
-+		ASSERT(0);
-+	}
- }
+ 		/* Skip certain phases unless they're turned on. */
+ 		if (sp->fn == REPAIR_DUMMY_FN ||
+-		    sp->fn == DATASCAN_DUMMY_FN)
++		    sp->fn == DATASCAN_DUMMY_FN ||
++		    sp->fn == FSTRIM_DUMMY_FN)
+ 			continue;
  
- static struct xfs_log_item *
+ 		/* Allow debug users to force a particular phase. */
 
