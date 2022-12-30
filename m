@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBF9965A1A8
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:35:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE34665A1AE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:36:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236247AbiLaCfH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:35:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57064 "EHLO
+        id S236253AbiLaCgd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:36:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236284AbiLaCe7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:34:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F1A1CB26
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:34:59 -0800 (PST)
+        with ESMTP id S236249AbiLaCgd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:36:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4668BD6
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:36:32 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D661C61D07
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:34:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B4FC433D2;
-        Sat, 31 Dec 2022 02:34:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FC8661CC2
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:36:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97DE4C433D2;
+        Sat, 31 Dec 2022 02:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454098;
-        bh=iQnAKE2TExEqtcf8s79a2JK9sgknTSWJvcKivkWyFmk=;
+        s=k20201202; t=1672454191;
+        bh=CoLZ5vSgNfPAE/ou3DKvCnnCtz9TbpzKqJPNH5W08Sg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=djGywbHIxCvQ65qGLRmLWvYr2WQYbe0iPS5ZQyNWfJJSmpOKgCAnhfbyTYoBj1oOD
-         4N9ETwyFAvT5gYBhqBb4iVthNl8LCh1mns0AYvlVEB4/Mk3ovF8PGzxmblfpKKgQHU
-         HVS5Djbhu6zKnWGZ3AO5i8QGLuuZpoZbUt1wAX01edIj3Wz2RLa4R+z6Xh0N1mKcGR
-         6aLVsUy7xdWQsTlu59suQfCdXx76zBZDuQR4+s/q/19QKu/FU1NTV+z/z9SovbuxR+
-         e5MsdbRF8E7GuuMvs4gbX+vGtvYtQA+APhITDg6GM2vKaGDGL0cz0br4TXpOP7ZNgU
-         D6mmb6Auab8ew==
-Subject: [PATCH 19/45] xfs: scrub the rtbitmap by group
+        b=GWSaMtaI5sZdVvA4zjD4ZbA3u0k8Rlc/09r/zyE/KW8kiOMy9NCsTXdpmY3vEajsh
+         /ybTk53HrGRaF3G3tDZo34gNOObAXRnqLhKpXsIBU3lmaRRs1uiJhvrn8Dkyu12+hA
+         mfVU7H6SCGJECtQbPmPo/qS2iT+waMJHblVLUvKYF5SbJdxRgszgWT0p+yhk3KoAmj
+         iPhHgTHDboSFWPUPj9FHPYcVGjr2OppyEb2Jj3/+OpHxvYt47tpw3mV9QjxdRS/k+L
+         aUQshZ0FNGBKtt7KoMc+61jI0sl9g8W+sIPxV6ksDQHdh9nt9YtF12O747u/jQ0g69
+         wQnBUNxZPAypQ==
+Subject: [PATCH 25/45] xfs_db: listify the definition of enum typnm
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:46 -0800
-Message-ID: <167243878615.731133.13852321164499144680.stgit@magnolia>
+Message-ID: <167243878691.731133.3678549325865013969.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -45,7 +45,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
         DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,46 +55,53 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Reduce the amount of time that the kernel spends with the rtbitmap
-locked for a scrub by splitting the work by rtgroup.
+Convert the enum definition into a list so that future patches adding
+things to enum typnm don't have to reflow the entire thing.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libfrog/scrub.c |    5 +++++
- libxfs/xfs_fs.h |    3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ db/type.h |   29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 7d6c9c69e4a..7efb7ecfbd0 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -154,6 +154,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 		.descr	= "realtime group superblock",
- 		.group	= XFROG_SCRUB_GROUP_RTGROUP,
- 	},
-+	[XFS_SCRUB_TYPE_RGBITMAP] = {
-+		.name	= "rgbitmap",
-+		.descr	= "realtime group bitmap",
-+		.group	= XFROG_SCRUB_GROUP_RTGROUP,
-+	},
- };
- #undef DEP
+diff --git a/db/type.h b/db/type.h
+index 411bfe90dbc..397dcf5464c 100644
+--- a/db/type.h
++++ b/db/type.h
+@@ -11,11 +11,30 @@ struct field;
  
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index c12be9dbb59..7e9d7d7bb40 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -742,9 +742,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_NLINKS	26	/* inode link counts */
- #define XFS_SCRUB_TYPE_HEALTHY	27	/* everything checked out ok */
- #define XFS_SCRUB_TYPE_RGSUPER	28	/* realtime superblock */
-+#define XFS_SCRUB_TYPE_RGBITMAP	29	/* realtime group bitmap */
+ typedef enum typnm
+ {
+-	TYP_AGF, TYP_AGFL, TYP_AGI, TYP_ATTR, TYP_BMAPBTA,
+-	TYP_BMAPBTD, TYP_BNOBT, TYP_CNTBT, TYP_RMAPBT, TYP_REFCBT, TYP_DATA,
+-	TYP_DIR2, TYP_DQBLK, TYP_INOBT, TYP_INODATA, TYP_INODE,
+-	TYP_LOG, TYP_RTBITMAP, TYP_RTSUMMARY, TYP_SB, TYP_SYMLINK,
+-	TYP_TEXT, TYP_FINOBT, TYP_NONE
++	TYP_AGF,
++	TYP_AGFL,
++	TYP_AGI,
++	TYP_ATTR,
++	TYP_BMAPBTA,
++	TYP_BMAPBTD,
++	TYP_BNOBT,
++	TYP_CNTBT,
++	TYP_RMAPBT,
++	TYP_REFCBT,
++	TYP_DATA,
++	TYP_DIR2,
++	TYP_DQBLK,
++	TYP_INOBT,
++	TYP_INODATA,
++	TYP_INODE,
++	TYP_LOG,
++	TYP_RTBITMAP,
++	TYP_RTSUMMARY,
++	TYP_SB,
++	TYP_SYMLINK,
++	TYP_TEXT,
++	TYP_FINOBT,
++	TYP_NONE
+ } typnm_t;
  
- /* Number of scrub subcommands. */
--#define XFS_SCRUB_TYPE_NR	29
-+#define XFS_SCRUB_TYPE_NR	30
- 
- /* i: Repair this metadata. */
- #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
+ #define DB_FUZZ  2
 
