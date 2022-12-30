@@ -2,102 +2,106 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EED0165A00E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:55:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BAC865A06E
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:17:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235999AbiLaAzh (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:55:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38364 "EHLO
+        id S236052AbiLaBR4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:17:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235930AbiLaAzg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:55:36 -0500
+        with ESMTP id S236051AbiLaBRz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:17:55 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3A413F29
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:55:35 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181C71D0C6
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:17:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4B3D6B81E03
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:55:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE32AC433EF;
-        Sat, 31 Dec 2022 00:55:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B2971B81DF6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:17:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4742DC433EF;
+        Sat, 31 Dec 2022 01:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448132;
-        bh=hjFjoR4ZdV58z4cVYEsJSwt+UFpW24LoPh5Tq3bikhw=;
+        s=k20201202; t=1672449472;
+        bh=iTVfeaSUzSYQNV3y7Z5Rr0S/v24h0YUodMPOZwXIO60=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lj5zMer42NE2SgwY5b4wKxIM/5gT93c0X8TI4IrPy9z3D0xUx5BzYZ2rSyLleTATW
-         cUbbb00KiiQvSTt7SB4BotiuOIWue20UTJX1W2mF16eMXVdqx6gnBczFlSw8jCkT7c
-         D6r3UHb1lP68GUiTZZnfI+UzVMjYlColJUCxikhMShau+CDsf0n1LyoG4DXiRGgEtJ
-         3/wbugLK6Hy6EHcoEhDB9sABBxlrvu2XHDULZxox0l38PuBOJc3bNGCTYeZtJMKEe0
-         VetqG7OLmi2uc35bjWMe4AvVDLApxWo7MzdacP3WnM+Qtix18ruJA3ild6S5GNNEbb
-         ctnl22FkWxl4g==
-Subject: [PATCHSET v1.0 00/14] xfs: refactor btrees to support records in
- inode root
+        b=EzDuax91BURHEtv62KvQzWHDnCXYO/etC4nWEjbRO11cxBJqzOuQUe3mdhHnGmajm
+         dBV+Nj579q3fHL8eIJWMSE9E9xxrT/8LTYlmO8FdTLkNqCYnzwJ5dZIVBphWMDjgZc
+         dlmh+3bu40Bs7EiRg3fIb71Lks2atdT7w1eSpN/IrrbSrZ9SXfTHws+x20Dmq+zL/p
+         juqBOAePFXfZRP/UrlSju1Qfrmrrqaj/j6VDJbTx24pv0KxhmLumkbrwLohkXtlsIf
+         OmBTW1eR4dk/NSioNN7xllwJbtNzT4+W9+n6ajrFdyuurGqkk3Q6Tnd5HCr0+iihYO
+         zZGbHrYHRgh8A==
+Subject: [PATCH 06/14] xfs: move the zero records logic into
+ xfs_bmap_broot_space_calc
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:31 -0800
-Message-ID: <167243865089.708933.5645420573863731083.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243865194.708933.4077599318945848079.stgit@magnolia>
+In-Reply-To: <167243865089.708933.5645420573863731083.stgit@magnolia>
+References: <167243865089.708933.5645420573863731083.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series prepares the btree code to support realtime reverse mapping
-btrees by refactoring xfs_ifork_realloc to be fed a per-btree ops
-structure so that it can handle multiple types of inode-rooted btrees.
-It moves on to refactoring the btree code to use the new realloc
-routines and to support storing btree rcords in the inode root, because
-the current bmbt code does not support this.
+The bmap btree cannot ever have zero records in an incore btree block.
+If the number of records drops to zero, that means we're converting the
+fork to extents format and are trying to remove the tree.  This logic
+won't hold for the future realtime rmap btree, so move the logic into
+the bmbt code.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=btree-ifork-records
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=btree-ifork-records
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc_btree.c    |    6 -
- fs/xfs/libxfs/xfs_alloc_btree.h    |    3 
- fs/xfs/libxfs/xfs_attr_leaf.c      |    8 -
- fs/xfs/libxfs/xfs_bmap.c           |   59 ++----
- fs/xfs/libxfs/xfs_bmap_btree.c     |   93 ++++++++-
- fs/xfs/libxfs/xfs_bmap_btree.h     |  219 +++++++++++++++------
- fs/xfs/libxfs/xfs_btree.c          |  382 ++++++++++++++++++++++++++++--------
- fs/xfs/libxfs/xfs_btree.h          |    4 
- fs/xfs/libxfs/xfs_btree_staging.c  |    4 
- fs/xfs/libxfs/xfs_ialloc.c         |    4 
- fs/xfs/libxfs/xfs_ialloc_btree.c   |    6 -
- fs/xfs/libxfs/xfs_ialloc_btree.h   |    3 
- fs/xfs/libxfs/xfs_inode_fork.c     |  163 +++++++--------
- fs/xfs/libxfs/xfs_inode_fork.h     |   27 ++-
- fs/xfs/libxfs/xfs_refcount_btree.c |    5 
- fs/xfs/libxfs/xfs_refcount_btree.h |    3 
- fs/xfs/libxfs/xfs_rmap_btree.c     |    9 -
- fs/xfs/libxfs/xfs_rmap_btree.h     |    3 
- fs/xfs/libxfs/xfs_sb.c             |   16 +-
- fs/xfs/libxfs/xfs_trans_resv.c     |    2 
- fs/xfs/scrub/bmap_repair.c         |    2 
- fs/xfs/scrub/inode_repair.c        |    8 -
- fs/xfs/xfs_xchgrange.c             |    4 
- 23 files changed, 705 insertions(+), 328 deletions(-)
+ fs/xfs/libxfs/xfs_bmap_btree.h |    7 +++++++
+ fs/xfs/libxfs/xfs_inode_fork.c |    6 ++----
+ 2 files changed, 9 insertions(+), 4 deletions(-)
+
+
+diff --git a/fs/xfs/libxfs/xfs_bmap_btree.h b/fs/xfs/libxfs/xfs_bmap_btree.h
+index 3fe9c4f7f1a0..5a3bae94debd 100644
+--- a/fs/xfs/libxfs/xfs_bmap_btree.h
++++ b/fs/xfs/libxfs/xfs_bmap_btree.h
+@@ -162,6 +162,13 @@ xfs_bmap_broot_space_calc(
+ 	struct xfs_mount	*mp,
+ 	unsigned int		nrecs)
+ {
++	/*
++	 * If the bmbt root block is empty, we should be converting the fork
++	 * to extents format.  Hence, the size is zero.
++	 */
++	if (nrecs == 0)
++		return 0;
++
+ 	return xfs_bmbt_block_len(mp) + \
+ 	       (nrecs * (sizeof(struct xfs_bmbt_key) + sizeof(xfs_bmbt_ptr_t)));
+ }
+diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
+index 16782d3630d2..1bd8c1f9ce37 100644
+--- a/fs/xfs/libxfs/xfs_inode_fork.c
++++ b/fs/xfs/libxfs/xfs_inode_fork.c
+@@ -488,10 +488,8 @@ xfs_iroot_realloc(
+ 	cur_max = xfs_bmbt_maxrecs(mp, old_size, 0);
+ 	new_max = cur_max + rec_diff;
+ 	ASSERT(new_max >= 0);
+-	if (new_max > 0)
+-		new_size = xfs_bmap_broot_space_calc(mp, new_max);
+-	else
+-		new_size = 0;
++
++	new_size = xfs_bmap_broot_space_calc(mp, new_max);
+ 	if (new_size == 0) {
+ 		xfs_iroot_free(ip, whichfork);
+ 		return;
 
