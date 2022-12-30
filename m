@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C803E65A041
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:08:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 670E8659F2B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:06:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236002AbiLaBIE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41248 "EHLO
+        id S235845AbiLaAGE (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:06:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235902AbiLaBID (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:08:03 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506BA1573A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:08:02 -0800 (PST)
+        with ESMTP id S235435AbiLaAGC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:06:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 479061B1D4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:06:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0C996B81D68
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:08:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDA9AC433EF;
-        Sat, 31 Dec 2022 01:07:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 003E1B81DE9
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:06:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EFEC433EF;
+        Sat, 31 Dec 2022 00:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448879;
-        bh=lwioL8W9ZJ7M7InmKZSRhkaWAgihqA1xRwT1HjQkQvg=;
+        s=k20201202; t=1672445158;
+        bh=mCHnM0BzjhS5tq403JOmyF/qfOdCIdJ4YJbg3mC/DKE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=CWSEncBODh1ISVRYhEDsuO1QD27B9mDG4Q1kk63GjGTAnz/nBHYC9NAP+ip0uhnkR
-         EDJ0HrORIVoik9IHIVUg0UiC43PnAkgZ1WhgolY0rn2LdZ407DeFHxxuTSSZ2pNIS8
-         c3xGQ4wb7RekVjbJUobttGitXaYutpone0zg8BPpqzL3biW0aj0pyoyqMDq+nY48uo
-         XdeFiswb4szm+swAAE7qW5vQceeGjXwK3ejaH9P+NuLKahwNjv+KyGB4wxIocJjfkB
-         CtLszRdM0yFUuLsTw5ZuBuOlhGzXWjIz6HCrrNgYoq/fYYpFsC6QVIQ5A0m1c7UVSJ
-         +oAU8OMFS3vbA==
-Subject: [PATCH 11/20] xfs: wrap inode creation dqalloc calls
+        b=uhrY3rTH60+nuVyUVkqBIBSK1ynhdRL/pUjHN0HEtgucgiCFOFvxVvVutZ92W0Pgf
+         iLCI7hgGTh6mH3obFiFh4+FMxkesf+f0QZrUSx174AlwZ1ON/eW4LX1O5S1rbFc4Nh
+         L77SChzxEItuwcTJ9AW3jgD179ntzSbBmtS7POn6MdzfM+cHhoK4crODss4nA7P31m
+         c5eplDgxJ8tyYb4lT8pbtdeJyYBI2GRdTA8W5krKTtdRo/nFi10MQRAdKDfG7vCyQp
+         TjPBQhLR2N1py+q30wN+45NjownwpG39keTuA1EbFAS+oMgoFchJPWqxLvv9E32Oj/
+         qBUbhqmXIwCDg==
+Subject: [PATCH 4/5] xfs: constrain dirty buffers while formatting a staged
+ btree
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:19 -0800
-Message-ID: <167243863987.707335.4838141657069838555.stgit@magnolia>
-In-Reply-To: <167243863809.707335.15895322495460356300.stgit@magnolia>
-References: <167243863809.707335.15895322495460356300.stgit@magnolia>
+Message-ID: <167243863957.707598.4173177371145564589.stgit@magnolia>
+In-Reply-To: <167243863904.707598.12385476439101029022.stgit@magnolia>
+References: <167243863904.707598.12385476439101029022.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,163 +55,180 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a helper that calls dqalloc to allocate and grab a reference to
-dquots for the user, group, and project ids listed in an icreate
-structure.  This simplifies the creat-related dqalloc callsites
-scattered around the code base.
+Constrain the number of dirty buffers that are locked by the btree
+staging code at any given time by establishing a threshold at which we
+put them all on the delwri queue and push them to disk.  This limits
+memory consumption while writing out new btrees.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/tempfile.c |    9 ++++-----
- fs/xfs/xfs_inode.c      |   38 ++++++++++++++++++++++++++------------
- fs/xfs/xfs_inode.h      |    3 +++
- fs/xfs/xfs_symlink.c    |   10 ++++------
- 4 files changed, 37 insertions(+), 23 deletions(-)
+ libxfs/xfs_btree.c         |    2 +-
+ libxfs/xfs_btree.h         |    3 +++
+ libxfs/xfs_btree_staging.c |   50 ++++++++++++++++++++++++++++++++++----------
+ libxfs/xfs_btree_staging.h |   10 +++++++++
+ repair/agbtree.c           |    1 +
+ 5 files changed, 54 insertions(+), 12 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/tempfile.c b/fs/xfs/scrub/tempfile.c
-index 2c630a5e23ea..6efaab50440f 100644
---- a/fs/xfs/scrub/tempfile.c
-+++ b/fs/xfs/scrub/tempfile.c
-@@ -43,9 +43,9 @@ xrep_tempfile_create(
- 	struct xfs_icreate_args	args = { .pip = sc->mp->m_rootip, };
- 	struct xfs_mount	*mp = sc->mp;
- 	struct xfs_trans	*tp = NULL;
--	struct xfs_dquot	*udqp = NULL;
--	struct xfs_dquot	*gdqp = NULL;
--	struct xfs_dquot	*pdqp = NULL;
-+	struct xfs_dquot	*udqp;
-+	struct xfs_dquot	*gdqp;
-+	struct xfs_dquot	*pdqp;
- 	struct xfs_trans_res	*tres;
- 	struct xfs_inode	*dp = mp->m_rootip;
- 	xfs_ino_t		ino;
-@@ -69,8 +69,7 @@ xrep_tempfile_create(
- 	 * inode should be completely root owned so that we don't fail due to
- 	 * quota limits.
- 	 */
--	error = xfs_qm_vop_dqalloc(dp, args.uid, args.gid, args.prid,
--			XFS_QMOPT_QUOTALL, &udqp, &gdqp, &pdqp);
-+	error = xfs_icreate_dqalloc(&args, &udqp, &gdqp, &pdqp);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 5350c55ac25f..db1f521ac6d0 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -806,6 +806,24 @@ xfs_nlink_hook_del(
- # define xfs_nlink_backref_delta(dp, ip, delta)		((void)0)
- #endif /* CONFIG_XFS_LIVE_HOOKS */
- 
+diff --git a/libxfs/xfs_btree.c b/libxfs/xfs_btree.c
+index 3402c25c344..7b2df32960c 100644
+--- a/libxfs/xfs_btree.c
++++ b/libxfs/xfs_btree.c
+@@ -1327,7 +1327,7 @@ xfs_btree_get_buf_block(
+  * Read in the buffer at the given ptr and return the buffer and
+  * the block pointer within the buffer.
+  */
+-STATIC int
 +int
-+xfs_icreate_dqalloc(
-+	const struct xfs_icreate_args	*args,
-+	struct xfs_dquot		**udqpp,
-+	struct xfs_dquot		**gdqpp,
-+	struct xfs_dquot		**pdqpp)
-+{
-+	unsigned int			flags = XFS_QMOPT_QUOTALL;
+ xfs_btree_read_buf_block(
+ 	struct xfs_btree_cur		*cur,
+ 	const union xfs_btree_ptr	*ptr,
+diff --git a/libxfs/xfs_btree.h b/libxfs/xfs_btree.h
+index d8b390e895b..6a565ad5e83 100644
+--- a/libxfs/xfs_btree.h
++++ b/libxfs/xfs_btree.h
+@@ -701,6 +701,9 @@ void xfs_btree_set_ptr_null(struct xfs_btree_cur *cur,
+ int xfs_btree_get_buf_block(struct xfs_btree_cur *cur,
+ 		const union xfs_btree_ptr *ptr, struct xfs_btree_block **block,
+ 		struct xfs_buf **bpp);
++int xfs_btree_read_buf_block(struct xfs_btree_cur *cur,
++		const union xfs_btree_ptr *ptr, int flags,
++		struct xfs_btree_block **block, struct xfs_buf **bpp);
+ void xfs_btree_set_sibling(struct xfs_btree_cur *cur,
+ 		struct xfs_btree_block *block, const union xfs_btree_ptr *ptr,
+ 		int lr);
+diff --git a/libxfs/xfs_btree_staging.c b/libxfs/xfs_btree_staging.c
+index 97fade90622..5391d3fead2 100644
+--- a/libxfs/xfs_btree_staging.c
++++ b/libxfs/xfs_btree_staging.c
+@@ -333,18 +333,35 @@ xfs_btree_commit_ifakeroot(
+ /*
+  * Put a btree block that we're loading onto the ordered list and release it.
+  * The btree blocks will be written to disk when bulk loading is finished.
++ * If we reach the dirty buffer threshold, flush them to disk before
++ * continuing.
+  */
+-static void
++static int
+ xfs_btree_bload_drop_buf(
+-	struct list_head	*buffers_list,
+-	struct xfs_buf		**bpp)
++	struct xfs_btree_bload		*bbl,
++	struct list_head		*buffers_list,
++	struct xfs_buf			**bpp)
+ {
+-	if (*bpp == NULL)
+-		return;
++	struct xfs_buf			*bp = *bpp;
++	int				error;
+ 
+-	xfs_buf_delwri_queue_here(*bpp, buffers_list);
+-	xfs_buf_relse(*bpp);
++	if (!bp)
++		return 0;
 +
-+	*udqpp = *gdqpp = *pdqpp = NULL;
++	xfs_buf_delwri_queue_here(bp, buffers_list);
++	xfs_buf_relse(bp);
+ 	*bpp = NULL;
++	bbl->nr_dirty++;
 +
-+	if (!(args->flags & XFS_ICREATE_ARGS_FORCE_GID))
-+		flags |= XFS_QMOPT_INHERIT;
++	if (!bbl->max_dirty || bbl->nr_dirty < bbl->max_dirty)
++		return 0;
 +
-+	return xfs_qm_vop_dqalloc(args->pip, args->uid, args->gid, args->prid,
-+			flags, udqpp, gdqpp, pdqpp);
-+}
++	error = xfs_buf_delwri_submit(buffers_list);
++	if (error)
++		return error;
 +
- int
- xfs_create(
- 	struct xfs_inode	*dp,
-@@ -816,9 +834,9 @@ xfs_create(
- 	struct xfs_mount	*mp = dp->i_mount;
- 	struct xfs_inode	*ip = NULL;
- 	struct xfs_trans	*tp = NULL;
--	struct xfs_dquot	*udqp = NULL;
--	struct xfs_dquot	*gdqp = NULL;
--	struct xfs_dquot	*pdqp = NULL;
-+	struct xfs_dquot	*udqp;
-+	struct xfs_dquot	*gdqp;
-+	struct xfs_dquot	*pdqp;
- 	struct xfs_trans_res	*tres;
- 	xfs_ino_t		ino;
- 	bool			unlock_dp_on_error = false;
-@@ -835,9 +853,7 @@ xfs_create(
- 	/*
- 	 * Make sure that we have allocated dquot(s) on disk.
++	bbl->nr_dirty = 0;
++	return 0;
+ }
+ 
+ /*
+@@ -416,7 +433,10 @@ xfs_btree_bload_prep_block(
  	 */
--	error = xfs_qm_vop_dqalloc(dp, args->uid, args->gid, args->prid,
--			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
--			&udqp, &gdqp, &pdqp);
-+	error = xfs_icreate_dqalloc(args, &udqp, &gdqp, &pdqp);
- 	if (error)
- 		return error;
+ 	if (*blockp)
+ 		xfs_btree_set_sibling(cur, *blockp, &new_ptr, XFS_BB_RIGHTSIB);
+-	xfs_btree_bload_drop_buf(buffers_list, bpp);
++
++	ret = xfs_btree_bload_drop_buf(bbl, buffers_list, bpp);
++	if (ret)
++		return ret;
  
-@@ -974,9 +990,9 @@ xfs_create_tmpfile(
- 	struct xfs_mount	*mp = dp->i_mount;
- 	struct xfs_inode	*ip = NULL;
- 	struct xfs_trans	*tp = NULL;
--	struct xfs_dquot	*udqp = NULL;
--	struct xfs_dquot	*gdqp = NULL;
--	struct xfs_dquot	*pdqp = NULL;
-+	struct xfs_dquot	*udqp;
-+	struct xfs_dquot	*gdqp;
-+	struct xfs_dquot	*pdqp;
- 	struct xfs_trans_res	*tres;
- 	xfs_ino_t		ino;
- 	uint			resblks;
-@@ -991,9 +1007,7 @@ xfs_create_tmpfile(
- 	/*
- 	 * Make sure that we have allocated dquot(s) on disk.
+ 	/* Initialize the new btree block. */
+ 	xfs_btree_init_block_cur(cur, new_bp, level, nr_this_block);
+@@ -480,7 +500,7 @@ xfs_btree_bload_node(
+ 
+ 		ASSERT(!xfs_btree_ptr_is_null(cur, child_ptr));
+ 
+-		ret = xfs_btree_get_buf_block(cur, child_ptr, &child_block,
++		ret = xfs_btree_read_buf_block(cur, child_ptr, 0, &child_block,
+ 				&child_bp);
+ 		if (ret)
+ 			return ret;
+@@ -759,6 +779,7 @@ xfs_btree_bload(
+ 	cur->bc_nlevels = bbl->btree_height;
+ 	xfs_btree_set_ptr_null(cur, &child_ptr);
+ 	xfs_btree_set_ptr_null(cur, &ptr);
++	bbl->nr_dirty = 0;
+ 
+ 	xfs_btree_bload_level_geometry(cur, bbl, level, nr_this_level,
+ 			&avg_per_block, &blocks, &blocks_with_extra);
+@@ -797,7 +818,10 @@ xfs_btree_bload(
+ 			xfs_btree_copy_ptrs(cur, &child_ptr, &ptr, 1);
+ 	}
+ 	total_blocks += blocks;
+-	xfs_btree_bload_drop_buf(&buffers_list, &bp);
++
++	ret = xfs_btree_bload_drop_buf(bbl, &buffers_list, &bp);
++	if (ret)
++		goto out;
+ 
+ 	/* Populate the internal btree nodes. */
+ 	for (level = 1; level < cur->bc_nlevels; level++) {
+@@ -839,7 +863,11 @@ xfs_btree_bload(
+ 				xfs_btree_copy_ptrs(cur, &first_ptr, &ptr, 1);
+ 		}
+ 		total_blocks += blocks;
+-		xfs_btree_bload_drop_buf(&buffers_list, &bp);
++
++		ret = xfs_btree_bload_drop_buf(bbl, &buffers_list, &bp);
++		if (ret)
++			goto out;
++
+ 		xfs_btree_copy_ptrs(cur, &child_ptr, &first_ptr, 1);
+ 	}
+ 
+diff --git a/libxfs/xfs_btree_staging.h b/libxfs/xfs_btree_staging.h
+index 82a3a8ef0f1..d2eaf4fdc60 100644
+--- a/libxfs/xfs_btree_staging.h
++++ b/libxfs/xfs_btree_staging.h
+@@ -115,6 +115,16 @@ struct xfs_btree_bload {
+ 	 * height of the new btree.
  	 */
--	error = xfs_qm_vop_dqalloc(dp, args->uid, args->gid, args->prid,
--			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
--			&udqp, &gdqp, &pdqp);
-+	error = xfs_icreate_dqalloc(args, &udqp, &gdqp, &pdqp);
- 	if (error)
- 		return error;
+ 	unsigned int			btree_height;
++
++	/*
++	 * Flush the new btree block buffer list to disk after this many blocks
++	 * have been formatted.  Zero prohibits writing any buffers until all
++	 * blocks have been formatted.
++	 */
++	uint16_t			max_dirty;
++
++	/* Number of dirty buffers. */
++	uint16_t			nr_dirty;
+ };
  
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 9617079f0a73..b99c62f14919 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -625,5 +625,8 @@ void xfs_nlink_hook_del(struct xfs_mount *mp, struct xfs_nlink_hook *hook);
- void xfs_icreate_args_inherit(struct xfs_icreate_args *args, struct xfs_inode *dp,
- 		struct user_namespace *mnt_userns, umode_t mode);
- void xfs_icreate_args_rootfile(struct xfs_icreate_args *args, umode_t mode);
-+int xfs_icreate_dqalloc(const struct xfs_icreate_args *args,
-+		struct xfs_dquot **udqpp, struct xfs_dquot **gdqpp,
-+		struct xfs_dquot **pdqpp);
+ int xfs_btree_bload_compute_geometry(struct xfs_btree_cur *cur,
+diff --git a/repair/agbtree.c b/repair/agbtree.c
+index d90cbcc2f28..70ad042f832 100644
+--- a/repair/agbtree.c
++++ b/repair/agbtree.c
+@@ -23,6 +23,7 @@ init_rebuild(
+ 	memset(btr, 0, sizeof(struct bt_rebuild));
  
- #endif	/* __XFS_INODE_H__ */
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index c27bf49de7bf..6dc15f125895 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -98,9 +98,9 @@ xfs_symlink(
- 	int			pathlen;
- 	bool                    unlock_dp_on_error = false;
- 	xfs_filblks_t		fs_blocks;
--	struct xfs_dquot	*udqp = NULL;
--	struct xfs_dquot	*gdqp = NULL;
--	struct xfs_dquot	*pdqp = NULL;
-+	struct xfs_dquot	*udqp;
-+	struct xfs_dquot	*gdqp;
-+	struct xfs_dquot	*pdqp;
- 	uint			resblks;
- 	xfs_ino_t		ino;
- 
-@@ -125,9 +125,7 @@ xfs_symlink(
- 	/*
- 	 * Make sure that we have allocated dquot(s) on disk.
- 	 */
--	error = xfs_qm_vop_dqalloc(dp, args.uid, args.gid, args.prid,
--			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
--			&udqp, &gdqp, &pdqp);
-+	error = xfs_icreate_dqalloc(&args, &udqp, &gdqp, &pdqp);
- 	if (error)
- 		return error;
+ 	bulkload_init_ag(&btr->newbt, sc, oinfo);
++	btr->bload.max_dirty = XFS_B_TO_FSBT(sc->mp, 256U << 10); /* 256K */
+ 	bulkload_estimate_ag_slack(sc, &btr->bload, free_space);
+ }
  
 
