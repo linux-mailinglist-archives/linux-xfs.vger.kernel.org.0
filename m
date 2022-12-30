@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CD72659D2C
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:48:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13DE5659D29
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:47:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235660AbiL3WsA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:48:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56608 "EHLO
+        id S235652AbiL3WrQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:47:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235576AbiL3WsA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:48:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9D917890
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:47:59 -0800 (PST)
+        with ESMTP id S235576AbiL3WrP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:47:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0DB1740A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:47:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CCB8361C0D
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:47:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39817C433EF;
-        Fri, 30 Dec 2022 22:47:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CB11AB81D94
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:47:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 795C2C433D2;
+        Fri, 30 Dec 2022 22:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440478;
-        bh=i+URIf5sYDaVNukGGM4wK7No/WOW++dSZ0zoP253mHI=;
+        s=k20201202; t=1672440431;
+        bh=eIpijF9MIiZ/nrXTv2YrdPAIXSfhwhDhZyMbeNwWNwc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Drnj7s8aawwzr1asw4z/fa+MnKLAwUBwDUCqtgmHKLVjVS2y6uVl2pIZL/0Pt06Ra
-         7HdKraJoAeSSNUYFLWLXrlUGWqu9xupx9D784jcJzE2yj5wkhgNNBIP4ratNSQJWq2
-         5H1Jv4XRTzweLM3ndgjkocnDM1zRQCYIF7xKqDijElPYRN0gW2TjxvLaQFhdjVRnS4
-         AFbEFOuBVxnSXuHPMOHOVo+zf/wduKzk9IvDqYYxuVMUE2VSB43DYEJ2Oi+MX/gOSL
-         R7Rrr/2oXObRJyrftsrDeJL1Cz4WtwQBY4nIsmwpiJewXPWLwlV1D5NAh1LkFRVsvP
-         H6yLTuHUtFKvw==
-Subject: [PATCH 5/6] xfs: check overlapping rmap btree records
+        b=s59OpNle60WE/J25CFhNyATF1m8ls8DZdExo3jVG46m/oP8dpU53npmZ66cDZlbPg
+         0a0DDdK0LPRy3odk9I+RzKM89R9C5idkUWjT0ozPnAdCln7SoRADUiA4LXE6KsrASN
+         i0JN0n8mKwAULSH+IS5577QW992aHUdm7TCrWeC1t38cJ+OEXs3CalnfebKRoteSmd
+         KbwUTrkCh5kH2ETA02x+nkOQs06Wu7X3dx/D9U0/mJShTjY8ze8rpHn0OGwLuOAIWj
+         /ddNSgIVgf+Gx77kgVeIDS3TPdtOi6u1kUA9vr/sUBC/XoddA0L7oOHWUM0szql/tw
+         uyc51xqpxuPkg==
+Subject: [PATCH 2/6] xfs: alert the user about data/attr fork mappings that
+ could be merged
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:42 -0800
-Message-ID: <167243830294.686829.15718124308935184728.stgit@magnolia>
+Message-ID: <167243830252.686829.2793777246600677425.stgit@magnolia>
 In-Reply-To: <167243830218.686829.12866790282629472160.stgit@magnolia>
 References: <167243830218.686829.12866790282629472160.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,132 +55,60 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The rmap btree scrubber doesn't contain sufficient checking for records
-that cannot overlap but do anyway.  For the other btrees, this is
-enforced by the inorder checks in xchk_btree_rec, but the rmap btree is
-special because it allows overlapping records to handle shared data
-extents.
-
-Therefore, enhance the rmap btree record check function to compare each
-record against the previous one so that we can detect overlapping rmap
-records for space allocations that do not allow sharing.
+If the data or attr forks have mappings that could be merged, let the
+user know that the structure could be optimized.  This isn't a
+filesystem corruption since the regular filesystem does not try to be
+smart about merging bmbt records.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/rmap.c |   74 ++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 72 insertions(+), 2 deletions(-)
+ fs/xfs/scrub/bmap.c |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/rmap.c b/fs/xfs/scrub/rmap.c
-index 7b0ad8f846ab..270c4f1e76c9 100644
---- a/fs/xfs/scrub/rmap.c
-+++ b/fs/xfs/scrub/rmap.c
-@@ -32,6 +32,15 @@ xchk_setup_ag_rmapbt(
- 
- /* Reverse-mapping scrubber. */
- 
-+struct xchk_rmap {
-+	/*
-+	 * The furthest-reaching of the rmapbt records that we've already
-+	 * processed.  This enables us to detect overlapping records for space
-+	 * allocations that cannot be shared.
-+	 */
-+	struct xfs_rmap_irec	overlap_rec;
-+};
-+
- /* Cross-reference a rmap against the refcount btree. */
- STATIC void
- xchk_rmapbt_xref_refc(
-@@ -139,12 +148,63 @@ xchk_rmapbt_check_unwritten_in_keyflags(
- 	}
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index 14fe461cac4c..499e82110f2f 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -390,6 +390,29 @@ xchk_bmap_dirattr_extent(
+ 		xchk_fblock_set_corrupt(info->sc, info->whichfork, off);
  }
  
++/* Are these two mappings mergeable? */
 +static inline bool
-+xchk_rmapbt_is_shareable(
-+	struct xfs_scrub		*sc,
-+	const struct xfs_rmap_irec	*irec)
++xchk_bmap_mergeable(
++	struct xchk_bmap_info		*info,
++	const struct xfs_bmbt_irec	*b2)
 +{
-+	if (!xfs_has_reflink(sc->mp))
++	const struct xfs_bmbt_irec	*b1 = &info->prev_rec;
++
++	/* Skip uninitialized prev_rec and COW fork extents */
++	if (b1->br_blockcount == 0)
 +		return false;
-+	if (XFS_RMAP_NON_INODE_OWNER(irec->rm_owner))
++	if (info->whichfork == XFS_COW_FORK)
 +		return false;
-+	if (irec->rm_flags & (XFS_RMAP_BMBT_BLOCK | XFS_RMAP_ATTR_FORK |
-+			      XFS_RMAP_UNWRITTEN))
++
++	if (b1->br_startoff + b1->br_blockcount != b2->br_startoff)
 +		return false;
-+	return true;
++	if (b1->br_startblock + b1->br_blockcount != b2->br_startblock)
++		return false;
++	if (b1->br_blockcount + b2->br_blockcount > BMBT_BLOCKCOUNT_MASK)
++		return false;
++	return b1->br_state == b2->br_state;
 +}
 +
-+/* Flag failures for records that overlap but cannot. */
-+STATIC void
-+xchk_rmapbt_check_overlapping(
-+	struct xchk_btree		*bs,
-+	struct xchk_rmap		*cr,
-+	const struct xfs_rmap_irec	*irec)
-+{
-+	xfs_agblock_t			pnext, inext;
-+
-+	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
-+		return;
-+
-+	/* No previous record? */
-+	if (cr->overlap_rec.rm_blockcount == 0)
-+		goto set_prev;
-+
-+	/* Do overlap_rec and irec overlap? */
-+	pnext = cr->overlap_rec.rm_startblock + cr->overlap_rec.rm_blockcount;
-+	if (pnext <= irec->rm_startblock)
-+		goto set_prev;
-+
-+	/* Overlap is only allowed if both records are data fork mappings. */
-+	if (!xchk_rmapbt_is_shareable(bs->sc, &cr->overlap_rec) ||
-+	    !xchk_rmapbt_is_shareable(bs->sc, irec))
-+		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
-+
-+	/* Save whichever rmap record extends furthest. */
-+	inext = irec->rm_startblock + irec->rm_blockcount;
-+	if (pnext > inext)
-+		return;
-+
-+set_prev:
-+	memcpy(&cr->overlap_rec, irec, sizeof(struct xfs_rmap_irec));
-+}
-+
- /* Scrub an rmapbt record. */
- STATIC int
- xchk_rmapbt_rec(
- 	struct xchk_btree	*bs,
- 	const union xfs_btree_rec *rec)
- {
-+	struct xchk_rmap	*cr = bs->private;
- 	struct xfs_rmap_irec	irec;
+ /* Scrub a single extent record. */
+ STATIC void
+ xchk_bmap_iextent(
+@@ -441,6 +464,10 @@ xchk_bmap_iextent(
+ 	if (info->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+ 		return;
  
- 	if (xfs_rmap_btrec_to_irec(rec, &irec) != NULL ||
-@@ -154,6 +214,7 @@ xchk_rmapbt_rec(
- 	}
- 
- 	xchk_rmapbt_check_unwritten_in_keyflags(bs);
-+	xchk_rmapbt_check_overlapping(bs, cr, &irec);
- 	xchk_rmapbt_xref(bs->sc, &irec);
- 	return 0;
- }
-@@ -163,8 +224,17 @@ int
- xchk_rmapbt(
- 	struct xfs_scrub	*sc)
- {
--	return xchk_btree(sc, sc->sa.rmap_cur, xchk_rmapbt_rec,
--			&XFS_RMAP_OINFO_AG, NULL);
-+	struct xchk_rmap	*cr;
-+	int			error;
++	/* Notify the user of mergeable records in the data/attr forks. */
++	if (xchk_bmap_mergeable(info, irec))
++		xchk_ino_set_preen(info->sc, info->sc->ip->i_ino);
 +
-+	cr = kzalloc(sizeof(struct xchk_rmap), XCHK_GFP_FLAGS);
-+	if (!cr)
-+		return -ENOMEM;
-+
-+	error = xchk_btree(sc, sc->sa.rmap_cur, xchk_rmapbt_rec,
-+			&XFS_RMAP_OINFO_AG, cr);
-+	kfree(cr);
-+	return error;
- }
- 
- /* xref check that the extent is owned only by a given owner */
+ 	if (info->is_rt)
+ 		xchk_bmap_rt_iextent_xref(ip, info, irec);
+ 	else
 
