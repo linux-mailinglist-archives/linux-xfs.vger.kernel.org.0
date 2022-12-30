@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F1F6659D36
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:50:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF981659CC5
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:28:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235583AbiL3Wui (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:50:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
+        id S235585AbiL3W2D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:28:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiL3Wuh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:50:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B1A18E31
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:50:36 -0800 (PST)
+        with ESMTP id S235598AbiL3W2C (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:28:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6711D0CF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:28:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1097AB81D95
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:50:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FDEC433D2;
-        Fri, 30 Dec 2022 22:50:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DF42461C15
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:28:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A95BC433D2;
+        Fri, 30 Dec 2022 22:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440633;
-        bh=IK45BXZCs17zXLUlaU16nNQb8U6/jtJKtTYHKVTslw8=;
+        s=k20201202; t=1672439280;
+        bh=y8ecrpy9lFpD+juX+joHm83N2i1aJL1A1V5UeiOjwqY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=m5NnARdW/hOlo3zZfW2kXQrqrNuIauyVShA5BhKeolgYhe+nfA1nebftewlKmF5Xk
-         7E3wkv0Ihf/eobfKT/xA59Fy9vjjKtaXwozeoLfao69fRU+RNt1TloEWCPqyFs6Rkg
-         KkSJpVePGBcXhEEI1Ehx4NVOIHtKoLPy/Zp1EsTd/L7KbfIgSM6z8MQTsn7XFfyYKf
-         H6NPsUCquguEoj5k4wE1dqV276voaOKxNF5INNQYrHZW0dula9UjqpZ3MVQRcxvZgp
-         XX0WcAt0eego8ZeBM+kH0AZ7BEGvAmnAU/pvtXLGTVY8txH+Jpv7FH+hQ+Xf9Kgfen
-         Q5qdNXwkklz4w==
-Subject: [PATCH 09/11] xfs: check used space of shortform xattr structures
+        b=dldvTiatHlv3n1mF9QRtK5vgZ3ZsWqbjzqE7SQTKFQRiugPllz9n3FaSdwsQavK6c
+         wYO53MlSszSk3NSFWsXL830T0j33DIuRgO4sEoJyMjCZy7hZY4UccubrythyUCrPnv
+         qzUsQYYpqGpjUp5YRKwFToCotrySfo/XEej6CQv/YG/KiIT+T7KtSqmzaPl3RlVGvS
+         VNp2+eLXxFhppJ1aBnmKuBeaB806Tm4GJhapbqE31OkXbZk5gyxOUOMuKOmOcpAe1K
+         9XpRVp1sMTjyQ0hsXlITi+dJNh+Z/wUhgfSSXAZmf+Q6cxFaf3K4ggWO6W0FuUfxYi
+         VYPm8xrdc01Yw==
+Subject: [PATCHSET v24.0 0/3] xfs: rework online fsck incore bitmap
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:11:47 -0800
-Message-ID: <167243830732.687022.11163737318692641827.stgit@magnolia>
-In-Reply-To: <167243830598.687022.17067931640967897645.stgit@magnolia>
-References: <167243830598.687022.17067931640967897645.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:11:50 -0800
+Message-ID: <167243831043.687325.2964308291999582962.stgit@magnolia>
+In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
+References: <Y69UceeA2MEpjMJ8@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,140 +52,34 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Make sure that the records used inside a shortform xattr structure do
-not overlap.
+In this series, we make some changes to the incore bitmap code: First,
+we shorten the prefix to 'xbitmap'.  Then, we rework some utility
+functions for later use by online repair and clarify how the walk
+functions are supposed to be used.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Finally, we use all these new pieces to convert the incore bitmap to use
+an interval tree instead of linked lists.  This lifts the limitation
+that callers had to be careful not to set a range that was already set;
+and gets us ready for the btree rebuilder functions needing to be able
+to set bits in a bitmap and generate maximal contiguous extents for the
+set ranges.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-bitmap-rework
 ---
- fs/xfs/scrub/attr.c |   79 ++++++++++++++++++++++++++++++++++++++++++++++++---
- fs/xfs/scrub/attr.h |    2 +
- 2 files changed, 76 insertions(+), 5 deletions(-)
-
-
-diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index a98ea78c41a0..3e568c78210b 100644
---- a/fs/xfs/scrub/attr.c
-+++ b/fs/xfs/scrub/attr.c
-@@ -15,6 +15,7 @@
- #include "xfs_da_btree.h"
- #include "xfs_attr.h"
- #include "xfs_attr_leaf.h"
-+#include "xfs_attr_sf.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/dabtree.h"
-@@ -487,6 +488,73 @@ xchk_xattr_rec(
- 	return error;
- }
- 
-+/* Check space usage of shortform attrs. */
-+STATIC int
-+xchk_xattr_check_sf(
-+	struct xfs_scrub		*sc)
-+{
-+	struct xchk_xattr_buf		*ab = sc->buf;
-+	struct xfs_attr_shortform	*sf;
-+	struct xfs_attr_sf_entry	*sfe;
-+	struct xfs_attr_sf_entry	*next;
-+	struct xfs_ifork		*ifp;
-+	unsigned char			*end;
-+	int				i;
-+	int				error = 0;
-+
-+	ifp = xfs_ifork_ptr(sc->ip, XFS_ATTR_FORK);
-+
-+	bitmap_zero(ab->usedmap, ifp->if_bytes);
-+	sf = (struct xfs_attr_shortform *)sc->ip->i_af.if_u1.if_data;
-+	end = (unsigned char *)ifp->if_u1.if_data + ifp->if_bytes;
-+	xchk_xattr_set_map(sc, ab->usedmap, 0, sizeof(sf->hdr));
-+
-+	sfe = &sf->list[0];
-+	if ((unsigned char *)sfe > end) {
-+		xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+		return 0;
-+	}
-+
-+	for (i = 0; i < sf->hdr.count; i++) {
-+		unsigned char		*name = sfe->nameval;
-+		unsigned char		*value = &sfe->nameval[sfe->namelen];
-+
-+		if (xchk_should_terminate(sc, &error))
-+			return error;
-+
-+		next = xfs_attr_sf_nextentry(sfe);
-+		if ((unsigned char *)next > end) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		if (!xchk_xattr_set_map(sc, ab->usedmap,
-+				(char *)sfe - (char *)sf,
-+				sizeof(struct xfs_attr_sf_entry))) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		if (!xchk_xattr_set_map(sc, ab->usedmap,
-+				(char *)name - (char *)sf,
-+				sfe->namelen)) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		if (!xchk_xattr_set_map(sc, ab->usedmap,
-+				(char *)value - (char *)sf,
-+				sfe->valuelen)) {
-+			xchk_fblock_set_corrupt(sc, XFS_ATTR_FORK, 0);
-+			break;
-+		}
-+
-+		sfe = next;
-+	}
-+
-+	return 0;
-+}
-+
- /* Scrub the extended attribute metadata. */
- int
- xchk_xattr(
-@@ -506,10 +574,12 @@ xchk_xattr(
- 	if (error)
- 		return error;
- 
--	memset(&sx, 0, sizeof(sx));
--	/* Check attribute tree structure */
--	error = xchk_da_btree(sc, XFS_ATTR_FORK, xchk_xattr_rec,
--			&last_checked);
-+	/* Check the physical structure of the xattr. */
-+	if (sc->ip->i_af.if_format == XFS_DINODE_FMT_LOCAL)
-+		error = xchk_xattr_check_sf(sc);
-+	else
-+		error = xchk_da_btree(sc, XFS_ATTR_FORK, xchk_xattr_rec,
-+				&last_checked);
- 	if (error)
- 		goto out;
- 
-@@ -517,6 +587,7 @@ xchk_xattr(
- 		goto out;
- 
- 	/* Check that every attr key can also be looked up by hash. */
-+	memset(&sx, 0, sizeof(sx));
- 	sx.context.dp = sc->ip;
- 	sx.context.resynch = 1;
- 	sx.context.put_listent = xchk_xattr_listent;
-diff --git a/fs/xfs/scrub/attr.h b/fs/xfs/scrub/attr.h
-index 18445cc3d33b..5f6835752738 100644
---- a/fs/xfs/scrub/attr.h
-+++ b/fs/xfs/scrub/attr.h
-@@ -10,7 +10,7 @@
-  * Temporary storage for online scrub and repair of extended attributes.
-  */
- struct xchk_xattr_buf {
--	/* Bitmap of used space in xattr leaf blocks. */
-+	/* Bitmap of used space in xattr leaf blocks and shortform forks. */
- 	unsigned long		*usedmap;
- 
- 	/* Bitmap of free space in xattr leaf blocks. */
+ fs/xfs/scrub/agheader_repair.c |   99 ++++++-----
+ fs/xfs/scrub/bitmap.c          |  367 +++++++++++++++++++++++++---------------
+ fs/xfs/scrub/bitmap.h          |   33 ++--
+ fs/xfs/scrub/repair.c          |  104 ++++++-----
+ 4 files changed, 358 insertions(+), 245 deletions(-)
 
