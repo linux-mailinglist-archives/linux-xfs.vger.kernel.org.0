@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8715665A07D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:21:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50391659F40
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:11:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236066AbiLaBVu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:21:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44556 "EHLO
+        id S235867AbiLaAK4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:10:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236061AbiLaBVt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:21:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4586026ED
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:21:48 -0800 (PST)
+        with ESMTP id S229758AbiLaAKz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:10:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CCA8C29
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:10:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D0B5CB81DDA
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:21:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87AF0C433EF;
-        Sat, 31 Dec 2022 01:21:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BE0A461CD1
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:10:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCA5C433D2;
+        Sat, 31 Dec 2022 00:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449705;
-        bh=FbzKwad7n7OUXhCct+PcV4kclP17XloNIAd5scwbzoE=;
+        s=k20201202; t=1672445454;
+        bh=J/Gl3bEVY05CI5XDaItz68wuo+PUqV86/Xe6pPLQYD4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GKGBTv+K/RqTaofCG8NeKlLf3q46feLSU/G4ALMc8r6GKW0fby4lo2OAZQJdp3isH
-         A3hxHijPebsCslkewchcnmB2YkFWZDA7ieDuCZz7pXTPtN0Mgm7Wf/EBi14YMlXQNc
-         X6RMpK15hghW86D2qlhgmCV5944kKgtyQ96q3q2WzgAeKUa/q217ZnFICk4AOCG6qC
-         HRA3iXq7E7LNyvxstKFm/0agFsNW1DYQ42lx+12XZmLfALbFBMjrpRVLzTrL2Y5ykN
-         zFMpd+ezgfX/5e65+on9HpIyMXN5jXjKvgTfqmem+loleSMhSt9MeLQ2+nGwKP+O6o
-         7+yq6S8p+RxHw==
-Subject: [PATCH 07/11] xfs: convert xfs_extlen_t to xfs_rtxlen_t in the rt
- allocator
+        b=hCnL+pyhNDKA/kflQL0qGMRfv4Q17DPnntrUWUl0h2HkKxJq8lHAIWoO0N+UWpwq7
+         5ssmgI8IyzEVzuthd9SNVAf4S8zxIhyxFMbA7ekj4mQlOqkQjx4qOIDFyMFKutpwL4
+         VUdDpkzyU1RvSqB123JNiPeOkIUwx3YrQeX03QMVO7uPOdn0Oj+JOJyLRaMMUG1Ea7
+         K5OQnkOLDJDaQ0eap3y6jr8/11UpupNRu6b18671RbpfaViYoAWrI/s3PteVO5QyvC
+         Vx5fHUuTome/jI+2n8yND5aHP4IS65SHEet+vb8OmdjFzGT9BxSu/q6+TUvXeA0cX7
+         CSJ7SbWYQzhAw==
+Subject: [PATCH 3/4] xfs: update health status if we get a clean bill of
+ health
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:37 -0800
-Message-ID: <167243865717.709511.10446124893174812529.stgit@magnolia>
-In-Reply-To: <167243865605.709511.15650588946095003543.stgit@magnolia>
-References: <167243865605.709511.15650588946095003543.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:38 -0800
+Message-ID: <167243865858.711359.2139998774089663481.stgit@magnolia>
+In-Reply-To: <167243865816.711359.1865490497957941966.stgit@magnolia>
+References: <167243865816.711359.1865490497957941966.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,340 +55,93 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In most of the filesystem, we use xfs_extlen_t to store the length of a
-file (or AG) space mapping in units of fs blocks.  Unfortunately, the
-realtime allocator also uses it to store the length of a rt space
-mapping in units of rt extents.  This is confusing, since one rt extent
-can consist of many fs blocks.
-
-Separate the two by introducing a new type (xfs_rtxlen_t) to store the
-length of a space mapping (in units of realtime extents) that would be
-found in a file.
+If scrub finds that everything is ok with the filesystem, we need a way
+to tell the health tracking that it can let go of indirect health flags,
+since indirect flags only mean that at some point in the past we lost
+some context.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_rtbitmap.c |   12 +++++-----
- fs/xfs/libxfs/xfs_rtbitmap.h |   11 ++++-----
- fs/xfs/libxfs/xfs_types.h    |    1 +
- fs/xfs/scrub/rtbitmap.c      |    2 +-
- fs/xfs/xfs_bmap_util.c       |    6 +++--
- fs/xfs/xfs_rtalloc.c         |   50 +++++++++++++++++++++---------------------
- fs/xfs/xfs_rtalloc.h         |   10 ++++----
- 7 files changed, 46 insertions(+), 46 deletions(-)
+ libfrog/scrub.c                     |    5 +++++
+ libxfs/xfs_fs.h                     |    3 ++-
+ man/man2/ioctl_xfs_scrub_metadata.2 |    6 ++++++
+ scrub/scrub.c                       |    7 +------
+ 4 files changed, 14 insertions(+), 7 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index 196cad3ef85c..b90d2f2d5bde 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -541,7 +541,7 @@ xfs_rtmodify_range(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	start,		/* starting block to modify */
--	xfs_extlen_t	len,		/* length of extent to modify */
-+	xfs_rtxlen_t	len,		/* length of extent to modify */
- 	int		val)		/* 1 for free, 0 for allocated */
- {
- 	xfs_rtword_t	*b;		/* current word in buffer */
-@@ -697,7 +697,7 @@ xfs_rtfree_range(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	start,		/* starting block to free */
--	xfs_extlen_t	len,		/* length to free */
-+	xfs_rtxlen_t	len,		/* length to free */
- 	struct xfs_buf	**rbpp,		/* in/out: summary block buffer */
- 	xfs_fsblock_t	*rsb)		/* in/out: summary block number */
- {
-@@ -773,7 +773,7 @@ xfs_rtcheck_range(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	start,		/* starting block number of extent */
--	xfs_extlen_t	len,		/* length of extent */
-+	xfs_rtxlen_t	len,		/* length of extent */
- 	int		val,		/* 1 for free, 0 for allocated */
- 	xfs_rtblock_t	*new,		/* out: first block not matching */
- 	int		*stat)		/* out: 1 for matches, 0 for not */
-@@ -949,7 +949,7 @@ xfs_rtcheck_alloc_range(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	bno,		/* starting block number of extent */
--	xfs_extlen_t	len)		/* length of extent */
-+	xfs_rtxlen_t	len)		/* length of extent */
- {
- 	xfs_rtblock_t	new;		/* dummy for xfs_rtcheck_range */
- 	int		stat;
-@@ -972,7 +972,7 @@ int					/* error */
- xfs_rtfree_extent(
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	bno,		/* starting block number to free */
--	xfs_extlen_t	len)		/* length of extent freed */
-+	xfs_rtxlen_t	len)		/* length of extent freed */
- {
- 	int		error;		/* error value */
- 	xfs_mount_t	*mp;		/* file system mount structure */
-@@ -1123,7 +1123,7 @@ xfs_rtalloc_extent_is_free(
- 	struct xfs_mount		*mp,
- 	struct xfs_trans		*tp,
- 	xfs_rtblock_t			start,
--	xfs_extlen_t			len,
-+	xfs_rtxlen_t			len,
- 	bool				*is_free)
- {
- 	xfs_rtblock_t			end;
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
-index 546dea34bb37..d4449610154a 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.h
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.h
-@@ -26,7 +26,7 @@ typedef int (*xfs_rtalloc_query_range_fn)(
- int xfs_rtbuf_get(struct xfs_mount *mp, struct xfs_trans *tp,
- 		  xfs_rtblock_t block, int issum, struct xfs_buf **bpp);
- int xfs_rtcheck_range(struct xfs_mount *mp, struct xfs_trans *tp,
--		      xfs_rtblock_t start, xfs_extlen_t len, int val,
-+		      xfs_rtblock_t start, xfs_rtxlen_t len, int val,
- 		      xfs_rtblock_t *new, int *stat);
- int xfs_rtfind_back(struct xfs_mount *mp, struct xfs_trans *tp,
- 		    xfs_rtblock_t start, xfs_rtblock_t limit,
-@@ -35,7 +35,7 @@ int xfs_rtfind_forw(struct xfs_mount *mp, struct xfs_trans *tp,
- 		    xfs_rtblock_t start, xfs_rtblock_t limit,
- 		    xfs_rtblock_t *rtblock);
- int xfs_rtmodify_range(struct xfs_mount *mp, struct xfs_trans *tp,
--		       xfs_rtblock_t start, xfs_extlen_t len, int val);
-+		       xfs_rtblock_t start, xfs_rtxlen_t len, int val);
- int xfs_rtmodify_summary_int(struct xfs_mount *mp, struct xfs_trans *tp,
- 			     int log, xfs_rtblock_t bbno, int delta,
- 			     struct xfs_buf **rbpp, xfs_fsblock_t *rsb,
-@@ -44,7 +44,7 @@ int xfs_rtmodify_summary(struct xfs_mount *mp, struct xfs_trans *tp, int log,
- 			 xfs_rtblock_t bbno, int delta, struct xfs_buf **rbpp,
- 			 xfs_fsblock_t *rsb);
- int xfs_rtfree_range(struct xfs_mount *mp, struct xfs_trans *tp,
--		     xfs_rtblock_t start, xfs_extlen_t len,
-+		     xfs_rtblock_t start, xfs_rtxlen_t len,
- 		     struct xfs_buf **rbpp, xfs_fsblock_t *rsb);
- int xfs_rtalloc_query_range(struct xfs_mount *mp, struct xfs_trans *tp,
- 		const struct xfs_rtalloc_rec *low_rec,
-@@ -53,9 +53,8 @@ int xfs_rtalloc_query_range(struct xfs_mount *mp, struct xfs_trans *tp,
- int xfs_rtalloc_query_all(struct xfs_mount *mp, struct xfs_trans *tp,
- 			  xfs_rtalloc_query_range_fn fn,
- 			  void *priv);
--bool xfs_verify_rtbno(struct xfs_mount *mp, xfs_rtblock_t rtbno);
- int xfs_rtalloc_extent_is_free(struct xfs_mount *mp, struct xfs_trans *tp,
--			       xfs_rtblock_t start, xfs_extlen_t len,
-+			       xfs_rtblock_t start, xfs_rtxlen_t len,
- 			       bool *is_free);
- /*
-  * Free an extent in the realtime subvolume.  Length is expressed in
-@@ -65,7 +64,7 @@ int					/* error */
- xfs_rtfree_extent(
- 	struct xfs_trans	*tp,	/* transaction pointer */
- 	xfs_rtblock_t		bno,	/* starting block number to free */
--	xfs_extlen_t		len);	/* length of extent freed */
-+	xfs_rtxlen_t		len);	/* length of extent freed */
+diff --git a/libfrog/scrub.c b/libfrog/scrub.c
+index 95daa78ba65..7cd241d9bce 100644
+--- a/libfrog/scrub.c
++++ b/libfrog/scrub.c
+@@ -144,6 +144,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
+ 		.descr	= "inode link counts",
+ 		.group	= XFROG_SCRUB_GROUP_ISCAN,
+ 	},
++	[XFS_SCRUB_TYPE_HEALTHY] = {
++		.name	= "healthy",
++		.descr	= "retained health records",
++		.group	= XFROG_SCRUB_GROUP_NONE,
++	},
+ };
  
- /* Same as above, but in units of rt blocks. */
- int xfs_rtfree_blocks(struct xfs_trans *tp, xfs_fsblock_t rtbno,
-diff --git a/fs/xfs/libxfs/xfs_types.h b/fs/xfs/libxfs/xfs_types.h
-index 9a4019f23dd5..0856997f84d6 100644
---- a/fs/xfs/libxfs/xfs_types.h
-+++ b/fs/xfs/libxfs/xfs_types.h
-@@ -11,6 +11,7 @@ typedef uint32_t	prid_t;		/* project ID */
- typedef uint32_t	xfs_agblock_t;	/* blockno in alloc. group */
- typedef uint32_t	xfs_agino_t;	/* inode # within allocation grp */
- typedef uint32_t	xfs_extlen_t;	/* extent length in blocks */
-+typedef uint32_t	xfs_rtxlen_t;	/* file extent length in rtextents */
- typedef uint32_t	xfs_agnumber_t;	/* allocation group number */
- typedef uint64_t	xfs_extnum_t;	/* # of extents in a file */
- typedef uint32_t	xfs_aextnum_t;	/* # extents in an attribute fork */
-diff --git a/fs/xfs/scrub/rtbitmap.c b/fs/xfs/scrub/rtbitmap.c
-index 4165ed739136..86f726577ca7 100644
---- a/fs/xfs/scrub/rtbitmap.c
-+++ b/fs/xfs/scrub/rtbitmap.c
-@@ -145,7 +145,7 @@ xchk_xref_is_used_rt_space(
- {
- 	xfs_rtblock_t		startext;
- 	xfs_rtblock_t		endext;
--	xfs_rtblock_t		extcount;
-+	xfs_rtxlen_t		extcount;
- 	bool			is_free;
- 	int			error;
+ /* Invoke the scrub ioctl.  Returns zero or negative error code. */
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 417cf85c0f7..400cf68e551 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -712,9 +712,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_TYPE_FSCOUNTERS 24	/* fs summary counters */
+ #define XFS_SCRUB_TYPE_QUOTACHECK 25	/* quota counters */
+ #define XFS_SCRUB_TYPE_NLINKS	26	/* inode link counts */
++#define XFS_SCRUB_TYPE_HEALTHY	27	/* everything checked out ok */
  
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 3593c0f0ce13..20c1b4f55788 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -77,13 +77,13 @@ xfs_bmap_rtalloc(
- 	struct xfs_mount	*mp = ap->ip->i_mount;
- 	xfs_fileoff_t		orig_offset = ap->offset;
- 	xfs_rtblock_t		rtb;
--	xfs_extlen_t		prod = 0;  /* product factor for allocators */
-+	xfs_rtxlen_t		prod = 0;  /* product factor for allocators */
- 	xfs_extlen_t		mod = 0;   /* product factor for allocators */
--	xfs_extlen_t		ralen = 0; /* realtime allocation length */
-+	xfs_rtxlen_t		ralen = 0; /* realtime allocation length */
- 	xfs_extlen_t		align;     /* minimum allocation alignment */
- 	xfs_extlen_t		orig_length = ap->length;
- 	xfs_extlen_t		minlen = mp->m_sb.sb_rextsize;
--	xfs_extlen_t		raminlen;
-+	xfs_rtxlen_t		raminlen;
- 	bool			rtlocked = false;
- 	bool			ignore_locality = false;
- 	int			error;
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index b732bac11b01..21f0ac611ef8 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -149,7 +149,7 @@ xfs_rtallocate_range(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	start,		/* start block to allocate */
--	xfs_extlen_t	len,		/* length to allocate */
-+	xfs_rtxlen_t	len,		/* length to allocate */
- 	struct xfs_buf	**rbpp,		/* in/out: summary block buffer */
- 	xfs_fsblock_t	*rsb)		/* in/out: summary block number */
- {
-@@ -228,13 +228,13 @@ xfs_rtallocate_extent_block(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	bbno,		/* bitmap block number */
--	xfs_extlen_t	minlen,		/* minimum length to allocate */
--	xfs_extlen_t	maxlen,		/* maximum length to allocate */
--	xfs_extlen_t	*len,		/* out: actual length allocated */
-+	xfs_rtxlen_t	minlen,		/* minimum length to allocate */
-+	xfs_rtxlen_t	maxlen,		/* maximum length to allocate */
-+	xfs_rtxlen_t	*len,		/* out: actual length allocated */
- 	xfs_rtblock_t	*nextp,		/* out: next block to try */
- 	struct xfs_buf	**rbpp,		/* in/out: summary block buffer */
- 	xfs_fsblock_t	*rsb,		/* in/out: summary block number */
--	xfs_extlen_t	prod,		/* extent product factor */
-+	xfs_rtxlen_t	prod,		/* extent product factor */
- 	xfs_rtblock_t	*rtblock)	/* out: start block allocated */
- {
- 	xfs_rtblock_t	besti;		/* best rtblock found so far */
-@@ -312,7 +312,7 @@ xfs_rtallocate_extent_block(
- 	 * Searched the whole thing & didn't find a maxlen free extent.
- 	 */
- 	if (minlen < maxlen && besti != -1) {
--		xfs_extlen_t	p;	/* amount to trim length by */
-+		xfs_rtxlen_t	p;	/* amount to trim length by */
+ /* Number of scrub subcommands. */
+-#define XFS_SCRUB_TYPE_NR	27
++#define XFS_SCRUB_TYPE_NR	28
  
- 		/*
- 		 * If size should be a multiple of prod, make that so.
-@@ -353,16 +353,16 @@ xfs_rtallocate_extent_exact(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	bno,		/* starting block number to allocate */
--	xfs_extlen_t	minlen,		/* minimum length to allocate */
--	xfs_extlen_t	maxlen,		/* maximum length to allocate */
--	xfs_extlen_t	*len,		/* out: actual length allocated */
-+	xfs_rtxlen_t	minlen,		/* minimum length to allocate */
-+	xfs_rtxlen_t	maxlen,		/* maximum length to allocate */
-+	xfs_rtxlen_t	*len,		/* out: actual length allocated */
- 	struct xfs_buf	**rbpp,		/* in/out: summary block buffer */
- 	xfs_fsblock_t	*rsb,		/* in/out: summary block number */
--	xfs_extlen_t	prod,		/* extent product factor */
-+	xfs_rtxlen_t	prod,		/* extent product factor */
- 	xfs_rtblock_t	*rtblock)	/* out: start block allocated */
- {
- 	int		error;		/* error value */
--	xfs_extlen_t	i;		/* extent length trimmed due to prod */
-+	xfs_rtxlen_t	i;		/* extent length trimmed due to prod */
- 	int		isfree;		/* extent is free */
- 	xfs_rtblock_t	next;		/* next block to try (dummy) */
+ /* i: Repair this metadata. */
+ #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
+diff --git a/man/man2/ioctl_xfs_scrub_metadata.2 b/man/man2/ioctl_xfs_scrub_metadata.2
+index db238de1bb5..01f11058839 100644
+--- a/man/man2/ioctl_xfs_scrub_metadata.2
++++ b/man/man2/ioctl_xfs_scrub_metadata.2
+@@ -168,6 +168,12 @@ count) for errors.
+ .TP
+ .B XFS_SCRUB_TYPE_NLINKS
+ Scan all inodes in the filesystem to verify each file's link count.
++
++.TP
++.B XFS_SCRUB_TYPE_HEALTHY
++Mark everything healthy after a clean scrub run.
++This clears out all the indirect health problem markers that might remain
++in the system.
+ .RE
  
-@@ -433,12 +433,12 @@ xfs_rtallocate_extent_near(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	bno,		/* starting block number to allocate */
--	xfs_extlen_t	minlen,		/* minimum length to allocate */
--	xfs_extlen_t	maxlen,		/* maximum length to allocate */
--	xfs_extlen_t	*len,		/* out: actual length allocated */
-+	xfs_rtxlen_t	minlen,		/* minimum length to allocate */
-+	xfs_rtxlen_t	maxlen,		/* maximum length to allocate */
-+	xfs_rtxlen_t	*len,		/* out: actual length allocated */
- 	struct xfs_buf	**rbpp,		/* in/out: summary block buffer */
- 	xfs_fsblock_t	*rsb,		/* in/out: summary block number */
--	xfs_extlen_t	prod,		/* extent product factor */
-+	xfs_rtxlen_t	prod,		/* extent product factor */
- 	xfs_rtblock_t	*rtblock)	/* out: start block allocated */
- {
- 	int		any;		/* any useful extents from summary */
-@@ -642,12 +642,12 @@ STATIC int				/* error */
- xfs_rtallocate_extent_size(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_extlen_t	minlen,		/* minimum length to allocate */
--	xfs_extlen_t	maxlen,		/* maximum length to allocate */
--	xfs_extlen_t	*len,		/* out: actual length allocated */
-+	xfs_rtxlen_t	minlen,		/* minimum length to allocate */
-+	xfs_rtxlen_t	maxlen,		/* maximum length to allocate */
-+	xfs_rtxlen_t	*len,		/* out: actual length allocated */
- 	struct xfs_buf	**rbpp,		/* in/out: summary block buffer */
- 	xfs_fsblock_t	*rsb,		/* in/out: summary block number */
--	xfs_extlen_t	prod,		/* extent product factor */
-+	xfs_rtxlen_t	prod,		/* extent product factor */
- 	xfs_rtblock_t	*rtblock)	/* out: start block allocated */
- {
- 	int		error;		/* error value */
-@@ -1195,11 +1195,11 @@ int					/* error */
- xfs_rtallocate_extent(
- 	xfs_trans_t	*tp,		/* transaction pointer */
- 	xfs_rtblock_t	bno,		/* starting block number to allocate */
--	xfs_extlen_t	minlen,		/* minimum length to allocate */
--	xfs_extlen_t	maxlen,		/* maximum length to allocate */
--	xfs_extlen_t	*len,		/* out: actual length allocated */
-+	xfs_rtxlen_t	minlen,		/* minimum length to allocate */
-+	xfs_rtxlen_t	maxlen,		/* maximum length to allocate */
-+	xfs_rtxlen_t	*len,		/* out: actual length allocated */
- 	int		wasdel,		/* was a delayed allocation extent */
--	xfs_extlen_t	prod,		/* extent product factor */
-+	xfs_rtxlen_t	prod,		/* extent product factor */
- 	xfs_rtblock_t	*rtblock)	/* out: start block allocated */
- {
- 	xfs_mount_t	*mp = tp->t_mountp;
-@@ -1215,7 +1215,7 @@ xfs_rtallocate_extent(
- 	 * If prod is set then figure out what to do to minlen and maxlen.
- 	 */
- 	if (prod > 1) {
--		xfs_extlen_t	i;
-+		xfs_rtxlen_t	i;
- 
- 		if ((i = maxlen % prod))
- 			maxlen -= i;
-@@ -1448,7 +1448,7 @@ int					/* error */
- xfs_rtpick_extent(
- 	xfs_mount_t	*mp,		/* file system mount point */
- 	xfs_trans_t	*tp,		/* transaction pointer */
--	xfs_extlen_t	len,		/* allocation length (rtextents) */
-+	xfs_rtxlen_t	len,		/* allocation length (rtextents) */
- 	xfs_rtblock_t	*pick)		/* result rt extent */
- {
- 	xfs_rtblock_t	b;		/* result block */
-diff --git a/fs/xfs/xfs_rtalloc.h b/fs/xfs/xfs_rtalloc.h
-index f14da84206d9..ec03cc566bec 100644
---- a/fs/xfs/xfs_rtalloc.h
-+++ b/fs/xfs/xfs_rtalloc.h
-@@ -25,11 +25,11 @@ int					/* error */
- xfs_rtallocate_extent(
- 	struct xfs_trans	*tp,	/* transaction pointer */
- 	xfs_rtblock_t		bno,	/* starting block number to allocate */
--	xfs_extlen_t		minlen,	/* minimum length to allocate */
--	xfs_extlen_t		maxlen,	/* maximum length to allocate */
--	xfs_extlen_t		*len,	/* out: actual length allocated */
-+	xfs_rtxlen_t		minlen,	/* minimum length to allocate */
-+	xfs_rtxlen_t		maxlen,	/* maximum length to allocate */
-+	xfs_rtxlen_t		*len,	/* out: actual length allocated */
- 	int			wasdel,	/* was a delayed allocation extent */
--	xfs_extlen_t		prod,	/* extent product factor */
-+	xfs_rtxlen_t		prod,	/* extent product factor */
- 	xfs_rtblock_t		*rtblock); /* out: start block allocated */
- 
- 
-@@ -62,7 +62,7 @@ int					/* error */
- xfs_rtpick_extent(
- 	struct xfs_mount	*mp,	/* file system mount point */
- 	struct xfs_trans	*tp,	/* transaction pointer */
--	xfs_extlen_t		len,	/* allocation length (rtextents) */
-+	xfs_rtxlen_t		len,	/* allocation length (rtextents) */
- 	xfs_rtblock_t		*pick);	/* result rt extent */
- 
- /*
+ .PD 1
+diff --git a/scrub/scrub.c b/scrub/scrub.c
+index fe5c8ade5d8..7f80b2de211 100644
+--- a/scrub/scrub.c
++++ b/scrub/scrub.c
+@@ -39,20 +39,15 @@ format_scrub_descr(
+ 	case XFROG_SCRUB_GROUP_PERAG:
+ 		return snprintf(buf, buflen, _("AG %u %s"), meta->sm_agno,
+ 				_(sc->descr));
+-		break;
+ 	case XFROG_SCRUB_GROUP_INODE:
+ 		return scrub_render_ino_descr(ctx, buf, buflen,
+ 				meta->sm_ino, meta->sm_gen, "%s",
+ 				_(sc->descr));
+-		break;
+ 	case XFROG_SCRUB_GROUP_METAFILES:
+ 	case XFROG_SCRUB_GROUP_SUMMARY:
+ 	case XFROG_SCRUB_GROUP_ISCAN:
+-		return snprintf(buf, buflen, _("%s"), _(sc->descr));
+-		break;
+ 	case XFROG_SCRUB_GROUP_NONE:
+-		assert(0);
+-		break;
++		return snprintf(buf, buflen, _("%s"), _(sc->descr));
+ 	}
+ 	return -1;
+ }
 
