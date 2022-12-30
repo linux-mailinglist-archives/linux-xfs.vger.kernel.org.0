@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE002659D0D
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:41:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2274659CB9
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:25:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231174AbiL3WlD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:41:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55046 "EHLO
+        id S235581AbiL3WZn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:25:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiL3WlB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:41:01 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBA5EF78
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:41:00 -0800 (PST)
+        with ESMTP id S235435AbiL3WZl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:25:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281A31D0CF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:25:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5543CB81C22
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:40:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1875BC433EF;
-        Fri, 30 Dec 2022 22:40:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B8BE061C17
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:25:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6B0C433D2;
+        Fri, 30 Dec 2022 22:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440058;
-        bh=jQlLoirxobamOk5zSpBHRZWL0OdV4jUBLF6zcVRag7A=;
+        s=k20201202; t=1672439140;
+        bh=f6xUFqe0tuL0gkFsXMaYpLY5bIZijg1sUNlCENNdntc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g7EXGGOw0ebCe0iYtdsI167fog387nWq1qWwm1z17A1lba6bLaWwjGbPiTVk54fJS
-         boG/NBxE8a5c0qiSH8mSBQ2lRIKEFO6FTLBCFCRZfqjm+JxWSqyI4V7AhKU3aADEB/
-         ER+gPRFKzug3CcAIay1ts/9lWxvQZFqPl+0d+MVs/t22XJsAY7BuBtlo3X8ylfLR5u
-         J4wp8yzv3gJFuTDdhE/zQJ70KrQagNXU0LFUWw+LbY3MbR9vslp/ecr+GDHHE3UIfE
-         W114qZfl5oRYozHU1OOvWzeFTA6HhHyFEAlBlpLfPb8t+wLyIe95kDKLzjjUgokfNf
-         L2BNyjGxxhirg==
-Subject: [PATCH 1/2] xfs: fix rm_offset flag handling in rmap keys
+        b=WuNSLTTVYOyTLigxfzvtzDm8ORrWHSL/N0AkDFtHGkZ+pMq2XDCadnjrSF7y8cAHN
+         +t1c3rOsrfRAvQ2044y7rDKto+NQRO66Nmr8P4Dp1+u489fQrtZRo/klH5HZiQyFHu
+         b27a/d7oQWvmFOwibXbbp2YDwJiVkxXiSTim4CP9XDRtEmWUk/eMx0H8kUVHeDNkGE
+         i1v5VRzTxntgHjwimEdnwlfy84aw4pmrb1H30RnfFIIS4j3rcwPUyLgTJYX7dsb98Y
+         hHLmqm4TB+rqCPwssqry8wFin0YKneims33pBf0Ki/TV/ggFWnJVkXjVI7+EL6AdVK
+         bE9V5bqg01xGg==
+Subject: [PATCHSET v24.0 0/2] xfs: fix rmap btree key flag handling
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:18 -0800
-Message-ID: <167243827887.684208.1803581018355949162.stgit@magnolia>
-In-Reply-To: <167243827872.684208.12327644447561431612.stgit@magnolia>
-References: <167243827872.684208.12327644447561431612.stgit@magnolia>
+Message-ID: <167243827872.684208.12327644447561431612.stgit@magnolia>
+In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
+References: <Y69UceeA2MEpjMJ8@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,162 +52,58 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Keys for extent interval records in the reverse mapping btree are
-supposed to be computed as follows:
+This series fixes numerous flag handling bugs in the rmapbt key code.
+The most serious transgression is that key comparisons completely strip
+out all flag bits from rm_offset, including the ones that participate in
+record lookups.  The second problem is that for years we've been letting
+the unwritten flag (which is an attribute of a specific record and not
+part of the record key) escape from leaf records into key records.
 
-(physical block, owner, fork, is_btree, offset)
+The solution to the second problem is to filter attribute flags when
+creating keys from records, and the solution to the first problem is to
+preserve *only* the flags used for key lookups.  The ATTR and BMBT flags
+are a part of the lookup key, and the UNWRITTEN flag is a record
+attribute.
 
-This provides users the ability to look up a reverse mapping from a file
-block mapping record -- start with the physical block; then if there are
-multiple records for the same block, move on to the owner; then the
-inode fork type; and so on to the file offset.
+This has worked for years without generating user complaints because
+ATTR and BMBT extents cannot be shared, so key comparisons succeed
+solely on rm_startblock.  Only file data fork extents can be shared, and
+those records never set any of the three flag bits, so comparisons that
+dig into rm_owner and rm_offset work just fine.
 
-Unfortunately, the code that creates rmap lookup keys from rmap records
-forgot to mask off the record attribute flags, leading to ondisk keys
-that look like this:
+A filesystem written with an unpatched kernel and mounted on a patched
+kernel will work correctly because the ATTR/BMBT flags have been
+conveyed into keys correctly all along, and we still ignore the
+UNWRITTEN flag in any key record.  This was what doomed my previous
+attempt to correct this problem in 2019.
 
-(physical block, owner, fork, is_btree, unwritten state, offset)
+A filesystem written with a patched kernel and mounted on an unpatched
+kernel will also work correctly because unpatched kernels ignore all
+flags.
 
-Fortunately, this has all worked ok for the past six years because the
-key comparison functions incorrectly ignore the fork/bmbt/unwritten
-information that's encoded in the on-disk offset.  This means that
-lookup comparisons are only done with:
+With this patchset applied, the scrub code gains the ability to detect
+rmap btrees with incorrectly set attr and bmbt flags in the key records.
+After three years of testing, I haven't encountered any problems.
 
-(physical block, owner, offset)
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Queries can (theoretically) return incorrect results because of this
-omission.  On consistent filesystems this isn't an issue because xattr
-and bmbt blocks cannot be shared and hence the comparisons succeed
-purely on the contents of the rm_startblock field.  For the one case
-where we support sharing (written data fork blocks) all flag bits are
-zero, so the omission in the comparison has no ill effects.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-Unfortunately, this bug prevents scrub from detecting incorrect fork and
-bmbt flag bits in the rmap btree, so we really do need to fix the
-compare code.  Old filesystems with the unwritten bit erroneously set in
-the rmap key struct will work fine on new kernels since we still ignore
-the unwritten bit.  New filesystems on older kernels will work fine
-since the old kernels never paid attention to the unwritten bit.
+--D
 
-A previous version of this patch forgot to keep the (un)written state
-flag masked during the comparison and caused a major regression in
-5.9.x since unwritten extent conversion can update an rmap record
-without requiring key updates.
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=rmap-btree-fix-key-handling
 
-Note that blocks cannot go directly from data fork to attr fork without
-being deallocated and reallocated, nor can they be added to or removed
-from a bmbt without a free/alloc cycle, so this should not cause any
-regressions.
-
-Found by fuzzing keys[1].attrfork = ones on xfs/371.
-
-Fixes: 4b8ed67794fe ("xfs: add rmap btree operations")
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=rmap-btree-fix-key-handling
 ---
- fs/xfs/libxfs/xfs_rmap_btree.c |   40 ++++++++++++++++++++++++++++++----------
- 1 file changed, 30 insertions(+), 10 deletions(-)
-
-
-diff --git a/fs/xfs/libxfs/xfs_rmap_btree.c b/fs/xfs/libxfs/xfs_rmap_btree.c
-index 12c26c42c162..e18f89a68da9 100644
---- a/fs/xfs/libxfs/xfs_rmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rmap_btree.c
-@@ -156,6 +156,16 @@ xfs_rmapbt_get_maxrecs(
- 	return cur->bc_mp->m_rmap_mxr[level != 0];
- }
- 
-+/*
-+ * Convert the ondisk record's offset field into the ondisk key's offset field.
-+ * Fork and bmbt are significant parts of the rmap record key, but written
-+ * status is merely a record attribute.
-+ */
-+static inline __be64 ondisk_rec_offset_to_key(const union xfs_btree_rec *rec)
-+{
-+	return rec->rmap.rm_offset & ~cpu_to_be64(XFS_RMAP_OFF_UNWRITTEN);
-+}
-+
- STATIC void
- xfs_rmapbt_init_key_from_rec(
- 	union xfs_btree_key		*key,
-@@ -163,7 +173,7 @@ xfs_rmapbt_init_key_from_rec(
- {
- 	key->rmap.rm_startblock = rec->rmap.rm_startblock;
- 	key->rmap.rm_owner = rec->rmap.rm_owner;
--	key->rmap.rm_offset = rec->rmap.rm_offset;
-+	key->rmap.rm_offset = ondisk_rec_offset_to_key(rec);
- }
- 
- /*
-@@ -186,7 +196,7 @@ xfs_rmapbt_init_high_key_from_rec(
- 	key->rmap.rm_startblock = rec->rmap.rm_startblock;
- 	be32_add_cpu(&key->rmap.rm_startblock, adj);
- 	key->rmap.rm_owner = rec->rmap.rm_owner;
--	key->rmap.rm_offset = rec->rmap.rm_offset;
-+	key->rmap.rm_offset = ondisk_rec_offset_to_key(rec);
- 	if (XFS_RMAP_NON_INODE_OWNER(be64_to_cpu(rec->rmap.rm_owner)) ||
- 	    XFS_RMAP_IS_BMBT_BLOCK(be64_to_cpu(rec->rmap.rm_offset)))
- 		return;
-@@ -219,6 +229,16 @@ xfs_rmapbt_init_ptr_from_cur(
- 	ptr->s = agf->agf_roots[cur->bc_btnum];
- }
- 
-+/*
-+ * Mask the appropriate parts of the ondisk key field for a key comparison.
-+ * Fork and bmbt are significant parts of the rmap record key, but written
-+ * status is merely a record attribute.
-+ */
-+static inline uint64_t offset_keymask(uint64_t offset)
-+{
-+	return offset & ~XFS_RMAP_OFF_UNWRITTEN;
-+}
-+
- STATIC int64_t
- xfs_rmapbt_key_diff(
- 	struct xfs_btree_cur		*cur,
-@@ -240,8 +260,8 @@ xfs_rmapbt_key_diff(
- 	else if (y > x)
- 		return -1;
- 
--	x = XFS_RMAP_OFF(be64_to_cpu(kp->rm_offset));
--	y = rec->rm_offset;
-+	x = offset_keymask(be64_to_cpu(kp->rm_offset));
-+	y = offset_keymask(xfs_rmap_irec_offset_pack(rec));
- 	if (x > y)
- 		return 1;
- 	else if (y > x)
-@@ -272,8 +292,8 @@ xfs_rmapbt_diff_two_keys(
- 	else if (y > x)
- 		return -1;
- 
--	x = XFS_RMAP_OFF(be64_to_cpu(kp1->rm_offset));
--	y = XFS_RMAP_OFF(be64_to_cpu(kp2->rm_offset));
-+	x = offset_keymask(be64_to_cpu(kp1->rm_offset));
-+	y = offset_keymask(be64_to_cpu(kp2->rm_offset));
- 	if (x > y)
- 		return 1;
- 	else if (y > x)
-@@ -387,8 +407,8 @@ xfs_rmapbt_keys_inorder(
- 		return 1;
- 	else if (a > b)
- 		return 0;
--	a = XFS_RMAP_OFF(be64_to_cpu(k1->rmap.rm_offset));
--	b = XFS_RMAP_OFF(be64_to_cpu(k2->rmap.rm_offset));
-+	a = offset_keymask(be64_to_cpu(k1->rmap.rm_offset));
-+	b = offset_keymask(be64_to_cpu(k2->rmap.rm_offset));
- 	if (a <= b)
- 		return 1;
- 	return 0;
-@@ -417,8 +437,8 @@ xfs_rmapbt_recs_inorder(
- 		return 1;
- 	else if (a > b)
- 		return 0;
--	a = XFS_RMAP_OFF(be64_to_cpu(r1->rmap.rm_offset));
--	b = XFS_RMAP_OFF(be64_to_cpu(r2->rmap.rm_offset));
-+	a = offset_keymask(be64_to_cpu(r1->rmap.rm_offset));
-+	b = offset_keymask(be64_to_cpu(r2->rmap.rm_offset));
- 	if (a <= b)
- 		return 1;
- 	return 0;
+ fs/xfs/libxfs/xfs_rmap_btree.c |   40 +++++++++++++++++++++++-------
+ fs/xfs/scrub/btree.c           |   10 ++++++++
+ fs/xfs/scrub/btree.h           |    2 ++
+ fs/xfs/scrub/rmap.c            |   53 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 95 insertions(+), 10 deletions(-)
 
