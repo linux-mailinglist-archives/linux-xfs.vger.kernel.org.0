@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DBCB659F99
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:28:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E341E65A0C6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:39:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235614AbiLaA2T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:28:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
+        id S236114AbiLaBim (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:38:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235939AbiLaA2F (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:28:05 -0500
+        with ESMTP id S236119AbiLaBil (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:38:41 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C3C1EADE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:28:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E5013DD9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:38:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 48B4561D32
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:28:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32B2C433EF;
-        Sat, 31 Dec 2022 00:28:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 834B961CCB
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:38:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A39C433F1;
+        Sat, 31 Dec 2022 01:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446482;
-        bh=st3VsYxtjCs4C3MHvkBqyRaCYNgQBLVaGZEOKLovux0=;
+        s=k20201202; t=1672450719;
+        bh=0oV0Cy/aDCYdSfP/UqpqNiUEV3mbgKZxbEoUrHml6zE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hlM6t2Cj75PeOBBJZURpw77IKEgH20iaMFLlG02TIgXxIjMaSffcpriJtU2IJ2aIX
-         43nybULGjKPbegLk6NWNWsiHO9xUYC3EFpIt7oKL+Te525WgllkcZh0w00SmE6XmH9
-         YPKEnBB+qNIuoZs0RV3JyvXe9g8cysaT9D9nPFzbQSMyUl7pOY/mS87dMVIrSKnu3W
-         kOyc7TdNF9HElmAwVaLxzn6KnJdD/T61Nr64zLmC5gEP2/3Y2XejkXGCm5kokFzoKe
-         NdHnp81Ea3pdvMGYIhDbWUF/6TnDArbnkWJmmWzExGGgu7LyXQwzb2bBoF7zI1DSpm
-         XMltijHJnJY+w==
-Subject: [PATCH 3/9] xfs_scrub: remove action lists from phaseX code
+        b=UqiMpDXSTltsF09ZxL969mKZL7fKuUt3WBiROMt9i+Y9JJCxJYONSu5EY4tjJLrBT
+         eyph1oOeGfORxQlI98gXy8y9WwYOIUBdTzU11QrqbW9Q9X7IalgeSpaTkfVNDBSn1c
+         4iiX3tWjFmdIZKwIipAt0O8UcL+/MxKxOKpIXAtsEaK6bvU+oJD6aC3sxrL9OZQoK5
+         oLvPErkpluJZp6VKJfdctsz5KXOIo5Nqfe9Mq2tEmKcsMIJF3MMAQ2qaNS4GK2um3Y
+         x3QD6dZgiLfUq3FUWfAPn74eZS/U++dW3TObybtdz26thEc/rySN51AmwKxtiIU9Kd
+         3zjj6k04V1CwQ==
+Subject: [PATCH 07/38] xfs: prepare rmap functions to deal with rtrmapbt
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:17 -0800
-Message-ID: <167243869753.715746.12688530121907469172.stgit@magnolia>
-In-Reply-To: <167243869711.715746.14725730988345960302.stgit@magnolia>
-References: <167243869711.715746.14725730988345960302.stgit@magnolia>
+Message-ID: <167243869701.715303.7065506301518081631.stgit@magnolia>
+In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
+References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,457 +55,112 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we track repair schedules by filesystem object (and not
-individual repairs) we can get rid of all the onstack list heads and
-whatnot in the phaseX code.
+Prepare the high-level rmap functions to deal with the new realtime
+rmapbt and its slightly different conventions.  Provide the ability
+to talk to either rmapbt or rtrmapbt formats from the same high
+level code.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase1.c |    5 +----
- scrub/phase2.c |   16 ++++------------
- scrub/phase3.c |   19 ++++++++-----------
- scrub/phase4.c |    8 ++------
- scrub/phase5.c |    8 ++------
- scrub/phase7.c |    4 +---
- scrub/scrub.c  |   37 ++++++++++++++++++++-----------------
- scrub/scrub.h  |   16 +++++-----------
- 8 files changed, 43 insertions(+), 70 deletions(-)
+ fs/xfs/libxfs/xfs_rmap.c |   66 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
 
-diff --git a/scrub/phase1.c b/scrub/phase1.c
-index 2c0ff7c8327..6b2f6cdd5fa 100644
---- a/scrub/phase1.c
-+++ b/scrub/phase1.c
-@@ -53,7 +53,6 @@ report_to_kernel(
- 	struct scrub_ctx	*ctx)
- {
- 	struct scrub_item	sri;
--	struct action_list	alist;
- 	int			ret;
+diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
+index a2a863e0c7fb..31194cc14c0b 100644
+--- a/fs/xfs/libxfs/xfs_rmap.c
++++ b/fs/xfs/libxfs/xfs_rmap.c
+@@ -24,6 +24,7 @@
+ #include "xfs_inode.h"
+ #include "xfs_ag.h"
+ #include "xfs_health.h"
++#include "xfs_rtgroup.h"
  
- 	if (!ctx->scrub_setup_succeeded || ctx->corruptions_found ||
-@@ -62,8 +61,7 @@ report_to_kernel(
- 		return 0;
+ struct kmem_cache	*xfs_rmap_intent_cache;
  
- 	scrub_item_init_fs(&sri);
--	action_list_init(&alist);
--	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_HEALTHY, 0, &alist, &sri);
-+	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_HEALTHY, &sri);
- 	if (ret)
- 		return ret;
+@@ -262,12 +263,73 @@ xfs_rmap_check_perag_irec(
+ 	return NULL;
+ }
  
-@@ -74,7 +72,6 @@ report_to_kernel(
- 	if (repair_item_count_needsrepair(&sri) != 0 &&
- 	    !debug_tweak_on("XFS_SCRUB_FORCE_REPAIR")) {
- 		str_info(ctx, _("Couldn't upload clean bill of health."), NULL);
--		action_list_discard(&alist);
- 	}
- 
- 	return 0;
-diff --git a/scrub/phase2.c b/scrub/phase2.c
-index 83c467347fe..656eccce449 100644
---- a/scrub/phase2.c
-+++ b/scrub/phase2.c
-@@ -61,8 +61,6 @@ scan_ag_metadata(
- 	struct scrub_item		fix_now;
- 	struct scrub_ctx		*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct scan_ctl			*sctl = arg;
--	struct action_list		alist;
--	struct action_list		immediate_alist;
- 	char				descr[DESCR_BUFSZ];
- 	unsigned int			difficulty;
- 	int				ret;
-@@ -71,15 +69,13 @@ scan_ag_metadata(
- 		return;
- 
- 	scrub_item_init_ag(&sri, agno);
--	action_list_init(&alist);
--	action_list_init(&immediate_alist);
- 	snprintf(descr, DESCR_BUFSZ, _("AG %u"), agno);
- 
- 	/*
- 	 * First we scrub and fix the AG headers, because we need
- 	 * them to work well enough to check the AG btrees.
- 	 */
--	ret = scrub_ag_headers(ctx, agno, &alist, &sri);
-+	ret = scrub_ag_headers(ctx, &sri);
- 	if (ret)
- 		goto err;
- 
-@@ -89,7 +85,7 @@ scan_ag_metadata(
- 		goto err;
- 
- 	/* Now scrub the AG btrees. */
--	ret = scrub_ag_metadata(ctx, agno, &alist, &sri);
-+	ret = scrub_ag_metadata(ctx, &sri);
- 	if (ret)
- 		goto err;
- 
-@@ -126,7 +122,6 @@ scan_metafile(
- 	void			*arg)
- {
- 	struct scrub_item	sri;
--	struct action_list	alist;
- 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct scan_ctl		*sctl = arg;
- 	unsigned int		difficulty;
-@@ -136,8 +131,7 @@ scan_metafile(
- 		goto out;
- 
- 	scrub_item_init_fs(&sri);
--	action_list_init(&alist);
--	ret = scrub_metadata_file(ctx, type, &alist, &sri);
-+	ret = scrub_metadata_file(ctx, type, &sri);
- 	if (ret) {
- 		sctl->aborted = true;
- 		goto out;
-@@ -172,7 +166,6 @@ phase2_func(
- 		.aborted	= false,
- 		.rbm_done	= false,
- 	};
--	struct action_list	alist;
- 	struct scrub_item	sri;
- 	const struct xfrog_scrub_descr *sc = xfrog_scrubbers;
- 	xfs_agnumber_t		agno;
-@@ -196,8 +189,7 @@ phase2_func(
- 	 * If errors occur, this function will log them and return nonzero.
- 	 */
- 	scrub_item_init_ag(&sri, 0);
--	action_list_init(&alist);
--	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_SB, 0, &alist, &sri);
-+	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_SB, &sri);
- 	if (ret)
- 		goto out_wq;
- 	ret = repair_item_completely(ctx, &sri);
-diff --git a/scrub/phase3.c b/scrub/phase3.c
-index 7e09c48ce18..01171de64d1 100644
---- a/scrub/phase3.c
-+++ b/scrub/phase3.c
-@@ -107,7 +107,6 @@ scrub_inode(
- 	struct xfs_bulkstat	*bstat,
- 	void			*arg)
- {
--	struct action_list	alist;
- 	struct scrub_item	sri;
- 	struct scrub_inode_ctx	*ictx = arg;
- 	struct ptcounter	*icount = ictx->icount;
-@@ -115,7 +114,6 @@ scrub_inode(
- 	int			error;
- 
- 	scrub_item_init_file(&sri, bstat);
--	action_list_init(&alist);
- 	background_sleep();
- 
- 	/*
-@@ -146,7 +144,7 @@ scrub_inode(
- 		fd = scrub_open_handle(handle);
- 
- 	/* Scrub the inode. */
--	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_INODE, &alist, &sri);
-+	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_INODE, &sri);
- 	if (error)
- 		goto out;
- 
-@@ -155,13 +153,13 @@ scrub_inode(
- 		goto out;
- 
- 	/* Scrub all block mappings. */
--	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTD, &alist, &sri);
-+	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTD, &sri);
- 	if (error)
- 		goto out;
--	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTA, &alist, &sri);
-+	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTA, &sri);
- 	if (error)
- 		goto out;
--	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTC, &alist, &sri);
-+	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTC, &sri);
- 	if (error)
- 		goto out;
- 
-@@ -172,22 +170,21 @@ scrub_inode(
- 	if (S_ISLNK(bstat->bs_mode)) {
- 		/* Check symlink contents. */
- 		error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_SYMLINK,
--				&alist, &sri);
-+				&sri);
- 	} else if (S_ISDIR(bstat->bs_mode)) {
- 		/* Check the directory entries. */
--		error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_DIR, &alist,
--				&sri);
-+		error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_DIR, &sri);
- 	}
- 	if (error)
- 		goto out;
- 
- 	/* Check all the extended attributes. */
--	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_XATTR, &alist, &sri);
-+	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_XATTR, &sri);
- 	if (error)
- 		goto out;
- 
- 	/* Check parent pointers. */
--	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_PARENT, &alist, &sri);
-+	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_PARENT, &sri);
- 	if (error)
- 		goto out;
- 
-diff --git a/scrub/phase4.c b/scrub/phase4.c
-index 3afd04af47e..ee6aa90f326 100644
---- a/scrub/phase4.c
-+++ b/scrub/phase4.c
-@@ -129,7 +129,6 @@ phase4_func(
- 	struct scrub_ctx	*ctx)
- {
- 	struct xfs_fsop_geom	fsgeom;
--	struct action_list	alist;
- 	struct scrub_item	sri;
- 	int			ret;
- 
-@@ -144,8 +143,7 @@ phase4_func(
- 	 * metadata.  If repairs fails, we'll come back during phase 7.
- 	 */
- 	scrub_item_init_fs(&sri);
--	action_list_init(&alist);
--	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_FSCOUNTERS, 0, &alist, &sri);
-+	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_FSCOUNTERS, &sri);
- 	if (ret)
- 		return ret;
- 
-@@ -160,8 +158,7 @@ phase4_func(
- 		return ret;
- 
- 	if (fsgeom.sick & XFS_FSOP_GEOM_SICK_QUOTACHECK) {
--		ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_QUOTACHECK, 0,
--				&alist, &sri);
-+		ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_QUOTACHECK, &sri);
- 		if (ret)
- 			return ret;
- 	}
-@@ -170,7 +167,6 @@ phase4_func(
- 	ret = repair_item_corruption(ctx, &sri);
- 	if (ret)
- 		return ret;
--	action_list_discard(&alist);
- 
- 	ret = repair_everything(ctx);
- 	if (ret)
-diff --git a/scrub/phase5.c b/scrub/phase5.c
-index b7801b46760..ea32d185751 100644
---- a/scrub/phase5.c
-+++ b/scrub/phase5.c
-@@ -385,7 +385,6 @@ check_fs_label(
- 
- struct iscan_item {
- 	struct scrub_item	sri;
--	struct action_list	alist;
- 	bool			*abortedp;
- 	unsigned int		scrub_type;
- };
-@@ -412,16 +411,14 @@ iscan_worker(
- 		nanosleep(&tv, NULL);
- 	}
- 
--	ret = scrub_meta_type(ctx, item->scrub_type, 0, &item->alist,
--			&item->sri);
-+	ret = scrub_meta_type(ctx, item->scrub_type, &item->sri);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("checking iscan metadata"));
- 		*item->abortedp = true;
- 		goto out;
- 	}
- 
--	ret = action_list_process(ctx, &item->alist,
--			XRM_FINAL_WARNING | XRM_NOPROGRESS);
-+	ret = repair_item_completely(ctx, &item->sri);
- 	if (ret) {
- 		str_liberror(ctx, ret, _("repairing iscan metadata"));
- 		*item->abortedp = true;
-@@ -452,7 +449,6 @@ queue_iscan(
- 		return ret;
- 	}
- 	scrub_item_init_fs(&item->sri);
--	action_list_init(&item->alist);
- 	item->scrub_type = scrub_type;
- 	item->abortedp = abortedp;
- 
-diff --git a/scrub/phase7.c b/scrub/phase7.c
-index 15540778ffa..98846a1566b 100644
---- a/scrub/phase7.c
-+++ b/scrub/phase7.c
-@@ -100,7 +100,6 @@ phase7_func(
- {
- 	struct summary_counts	totalcount = {0};
- 	struct scrub_item	sri;
--	struct action_list	alist;
- 	struct ptvar		*ptvar;
- 	unsigned long long	used_data;
- 	unsigned long long	used_rt;
-@@ -119,8 +118,7 @@ phase7_func(
- 
- 	/* Check and fix the summary metadata. */
- 	scrub_item_init_fs(&sri);
--	action_list_init(&alist);
--	error = scrub_summary_metadata(ctx, &alist, &sri);
-+	error = scrub_summary_metadata(ctx, &sri);
- 	if (error)
- 		return error;
- 	error = repair_item_completely(ctx, &sri);
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index e3bfee40489..5dd5cf67a8e 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -219,6 +219,7 @@ _("Optimizations of %s are possible."), _(xfrog_scrubbers[i].descr));
- 
- /*
-  * Scrub a single XFS_SCRUB_TYPE_*, saving corruption reports for later.
-+ * Do not call this function to repair file metadata.
-  *
-  * Returns 0 for success.  If errors occur, this function will log them and
-  * return a positive error code.
-@@ -227,18 +228,29 @@ int
- scrub_meta_type(
- 	struct scrub_ctx		*ctx,
- 	unsigned int			type,
--	xfs_agnumber_t			agno,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
- {
- 	struct xfs_scrub_metadata	meta = {
- 		.sm_type		= type,
--		.sm_agno		= agno,
- 	};
- 	enum check_outcome		fix;
- 
- 	background_sleep();
- 
-+	switch (xfrog_scrubbers[type].group) {
-+	case XFROG_SCRUB_GROUP_AGHEADER:
-+	case XFROG_SCRUB_GROUP_PERAG:
-+		meta.sm_agno = sri->sri_agno;
-+		break;
-+	case XFROG_SCRUB_GROUP_METAFILES:
-+	case XFROG_SCRUB_GROUP_SUMMARY:
-+	case XFROG_SCRUB_GROUP_NONE:
-+		break;
-+	default:
-+		assert(0);
-+		break;
++static inline xfs_failaddr_t
++xfs_rmap_check_rtgroup_irec(
++	struct xfs_rtgroup		*rtg,
++	const struct xfs_rmap_irec	*irec)
++{
++	struct xfs_mount		*mp = rtg->rtg_mount;
++	bool				is_inode;
++	bool				is_unwritten;
++	bool				is_bmbt;
++	bool				is_attr;
++
++	if (irec->rm_blockcount == 0)
++		return __this_address;
++
++	if (irec->rm_owner == XFS_RMAP_OWN_FS) {
++		if (irec->rm_startblock != 0)
++			return __this_address;
++		if (irec->rm_blockcount != mp->m_sb.sb_rextsize)
++			return __this_address;
++		if (irec->rm_offset != 0)
++			return __this_address;
++	} else {
++		if (!xfs_verify_rgbext(rtg, irec->rm_startblock,
++					    irec->rm_blockcount))
++			return __this_address;
 +	}
 +
- 	/* Check the item. */
- 	fix = xfs_check_metadata(ctx, &ctx->mnt, &meta, false);
- 	progress_add(1);
-@@ -267,8 +279,6 @@ static bool
- scrub_group(
- 	struct scrub_ctx		*ctx,
- 	enum xfrog_scrub_group		group,
--	xfs_agnumber_t			agno,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
++	if (!(xfs_verify_ino(mp, irec->rm_owner) ||
++	      (irec->rm_owner <= XFS_RMAP_OWN_FS &&
++	       irec->rm_owner >= XFS_RMAP_OWN_MIN)))
++		return __this_address;
++
++	/* Check flags. */
++	is_inode = !XFS_RMAP_NON_INODE_OWNER(irec->rm_owner);
++	is_bmbt = irec->rm_flags & XFS_RMAP_BMBT_BLOCK;
++	is_attr = irec->rm_flags & XFS_RMAP_ATTR_FORK;
++	is_unwritten = irec->rm_flags & XFS_RMAP_UNWRITTEN;
++
++	if (!is_inode && irec->rm_owner != XFS_RMAP_OWN_FS)
++		return __this_address;
++
++	if (!is_inode && irec->rm_offset != 0)
++		return __this_address;
++
++	if (is_bmbt || is_attr)
++		return __this_address;
++
++	if (is_unwritten && !is_inode)
++		return __this_address;
++
++	/* Check for a valid fork offset, if applicable. */
++	if (is_inode &&
++	    !xfs_verify_fileext(mp, irec->rm_offset, irec->rm_blockcount))
++		return __this_address;
++
++	return NULL;
++}
++
+ /* Simple checks for rmap records. */
+ xfs_failaddr_t
+ xfs_rmap_check_irec(
+ 	struct xfs_btree_cur		*cur,
+ 	const struct xfs_rmap_irec	*irec)
  {
- 	const struct xfrog_scrub_descr	*sc;
-@@ -281,7 +291,7 @@ scrub_group(
- 		if (sc->group != group)
- 			continue;
- 
--		ret = scrub_meta_type(ctx, type, agno, alist, sri);
-+		ret = scrub_meta_type(ctx, type, sri);
- 		if (ret)
- 			return ret;
- 	}
-@@ -293,22 +303,18 @@ scrub_group(
- int
- scrub_ag_headers(
- 	struct scrub_ctx		*ctx,
--	xfs_agnumber_t			agno,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
- {
--	return scrub_group(ctx, XFROG_SCRUB_GROUP_AGHEADER, agno, alist, sri);
-+	return scrub_group(ctx, XFROG_SCRUB_GROUP_AGHEADER, sri);
- }
- 
- /* Scrub each AG's metadata btrees. */
- int
- scrub_ag_metadata(
- 	struct scrub_ctx		*ctx,
--	xfs_agnumber_t			agno,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
- {
--	return scrub_group(ctx, XFROG_SCRUB_GROUP_PERAG, agno, alist, sri);
-+	return scrub_group(ctx, XFROG_SCRUB_GROUP_PERAG, sri);
- }
- 
- /* Scrub one metadata file */
-@@ -316,22 +322,20 @@ int
- scrub_metadata_file(
- 	struct scrub_ctx		*ctx,
- 	unsigned int			type,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
- {
- 	ASSERT(xfrog_scrubbers[type].group == XFROG_SCRUB_GROUP_METAFILES);
- 
--	return scrub_meta_type(ctx, type, 0, alist, sri);
-+	return scrub_meta_type(ctx, type, sri);
- }
- 
- /* Scrub all FS summary metadata. */
- int
- scrub_summary_metadata(
- 	struct scrub_ctx		*ctx,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
- {
--	return scrub_group(ctx, XFROG_SCRUB_GROUP_SUMMARY, 0, alist, sri);
-+	return scrub_group(ctx, XFROG_SCRUB_GROUP_SUMMARY, sri);
- }
- 
- /* How many items do we have to check? */
-@@ -393,7 +397,6 @@ scrub_file(
- 	int				fd,
- 	const struct xfs_bulkstat	*bstat,
- 	unsigned int			type,
--	struct action_list		*alist,
- 	struct scrub_item		*sri)
- {
- 	struct xfs_scrub_metadata	meta = {0};
-diff --git a/scrub/scrub.h b/scrub/scrub.h
-index 95882eabedb..e1e70b38b8e 100644
---- a/scrub/scrub.h
-+++ b/scrub/scrub.h
-@@ -80,18 +80,13 @@ void scrub_item_dump(struct scrub_item *sri, unsigned int group_mask,
- 		const char *tag);
- 
- void scrub_report_preen_triggers(struct scrub_ctx *ctx);
--int scrub_ag_headers(struct scrub_ctx *ctx, xfs_agnumber_t agno,
--		struct action_list *alist, struct scrub_item *sri);
--int scrub_ag_metadata(struct scrub_ctx *ctx, xfs_agnumber_t agno,
--		struct action_list *alist, struct scrub_item *sri);
-+int scrub_ag_headers(struct scrub_ctx *ctx, struct scrub_item *sri);
-+int scrub_ag_metadata(struct scrub_ctx *ctx, struct scrub_item *sri);
- int scrub_metadata_file(struct scrub_ctx *ctx, unsigned int scrub_type,
--		struct action_list *alist, struct scrub_item *sri);
--int scrub_iscan_metadata(struct scrub_ctx *ctx, struct action_list *alist,
--		struct scrub_item *sri);
--int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist,
- 		struct scrub_item *sri);
-+int scrub_iscan_metadata(struct scrub_ctx *ctx, struct scrub_item *sri);
-+int scrub_summary_metadata(struct scrub_ctx *ctx, struct scrub_item *sri);
- int scrub_meta_type(struct scrub_ctx *ctx, unsigned int type,
--		xfs_agnumber_t agno, struct action_list *alist,
- 		struct scrub_item *sri);
- 
- bool can_scrub_fs_metadata(struct scrub_ctx *ctx);
-@@ -105,7 +100,6 @@ bool can_repair(struct scrub_ctx *ctx);
- bool can_force_rebuild(struct scrub_ctx *ctx);
- 
- int scrub_file(struct scrub_ctx *ctx, int fd, const struct xfs_bulkstat *bstat,
--		unsigned int type, struct action_list *alist,
--		struct scrub_item *sri);
-+		unsigned int type, struct scrub_item *sri);
- 
- #endif /* XFS_SCRUB_SCRUB_H_ */
++	if (cur->bc_btnum == XFS_BTNUM_RTRMAP)
++		return xfs_rmap_check_rtgroup_irec(cur->bc_ino.rtg, irec);
++
+ 	if (cur->bc_flags & XFS_BTREE_IN_MEMORY)
+ 		return xfs_rmap_check_perag_irec(cur->bc_mem.pag, irec);
+ 	return xfs_rmap_check_perag_irec(cur->bc_ag.pag, irec);
+@@ -284,6 +346,10 @@ xfs_rmap_complain_bad_rec(
+ 	if (cur->bc_flags & XFS_BTREE_IN_MEMORY)
+ 		xfs_warn(mp,
+  "In-Memory Reverse Mapping BTree record corruption detected at %pS!", fa);
++	else if (cur->bc_btnum == XFS_BTNUM_RTRMAP)
++		xfs_warn(mp,
++ "RT Reverse Mapping BTree record corruption in rtgroup %u detected at %pS!",
++				cur->bc_ino.rtg->rtg_rgno, fa);
+ 	else
+ 		xfs_warn(mp,
+  "Reverse Mapping BTree record corruption in AG %d detected at %pS!",
 
