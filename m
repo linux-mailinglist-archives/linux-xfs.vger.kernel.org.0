@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE0465A163
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:18:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E85D65A26A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:20:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236198AbiLaCSZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:18:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54316 "EHLO
+        id S236362AbiLaDU0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:20:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236196AbiLaCSY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:18:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A59D713F62
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:18:23 -0800 (PST)
+        with ESMTP id S236216AbiLaDUZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:20:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A11382733
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:20:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 42F3361CAA
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:18:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1744C433EF;
-        Sat, 31 Dec 2022 02:18:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 52090B81E65
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:20:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0062BC433D2;
+        Sat, 31 Dec 2022 03:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453102;
-        bh=9ICsG7feLTjjHlbc8H4hqb9Juxn8YcQ8HFDBu9NE6LQ=;
+        s=k20201202; t=1672456822;
+        bh=jpK/RwsswreX8Sg5CZUJOpYsVLsGt7QWlv52yNoZFTA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=r5QWhColwbgW3Px6gWQTRywyBEnnvP+oQTNX/PjBaTXSx/rfVYgXMo/euVW8OluGz
-         UXKk25eA2y0/ailjI8lG7bs9yI4Yic8JaKL6yymI3YeJeOsnMZwQav+XYFrmwPGYt4
-         Z+p9q0SlWZAOVo3SczMUJ4G+wZu518mCmX21cbuFtSHZBcjL6oT6b0ziTJE/Bt7qIa
-         yKYlHnfySVeKjDNIXyJ/jRtqMYvr3uXWBooPqcwJ8qUxfku1zLFeSp2QRhWTRieYgJ
-         teRIOIx8EqC3EEjl/Kv3L7JVdm5ROhmpW/e87+Lc7OVRHiu0N8K3ZX8WCUsgSUs5jx
-         G3vBHGbIwHNHg==
-Subject: [PATCH 33/46] xfs_repair: check metadata inode flag
+        b=Se9IupJ9m3+4dekzB1SyhuKub2PxgGnPWVAiG4E1KmXEYOoxY3xztq7HE1PEX68MN
+         CeILA3/ZaLTuvmrYRrl/FgLiayAlVfgQ7rrnFrC8xnkP3CQK2yBbcjGoWvtWhkr9bk
+         ZVt67VzO4Hp8zWBQQyo+BgXUtgqHdgHsmezgywya6YmouOvkS/UBdJCDCe7dZEvR1+
+         Vp0wX+rEfACMkeZqXF5L8tzGFcKHXcJoGqlL1Yc0Guxf7RPvE4j4RLfsF6f0wxYCgt
+         mBWMGF29exGsN/0Tq9LZgQ9HZQx2Kcp6WOqU0AGkL6nl2gsWRrhh2USE225RWWa5Xp
+         rUBrQBOqiH8oQ==
+Subject: [PATCHSET 0/3] xfs: vectorize scrub kernel calls
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:23 -0800
-Message-ID: <167243876365.725900.9776367383934384438.stgit@magnolia>
-In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
-References: <167243875924.725900.7061782826830118387.stgit@magnolia>
+Message-ID: <167243876361.726950.2109456102182372814.stgit@magnolia>
+In-Reply-To: <Y69Uw6W5aclS115x@magnolia>
+References: <Y69Uw6W5aclS115x@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,52 +53,43 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Check whether or not the metadata inode flag is set appropriately.
+Create a vectorized version of the metadata scrub and repair ioctl, and
+adapt xfs_scrub to use that.  This is an experiment to measure overhead
+and to try refactoring xfs_scrub.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=vectorized-scrub
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=vectorized-scrub
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=vectorized-scrub
 ---
- libxfs/libxfs_api_defs.h |    1 +
- repair/dinode.c          |   14 ++++++++++++++
- 2 files changed, 15 insertions(+)
-
-
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 785354d3ec8..65fa90c8a2f 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -95,6 +95,7 @@
- #define xfs_dinode_calc_crc		libxfs_dinode_calc_crc
- #define xfs_dinode_good_version		libxfs_dinode_good_version
- #define xfs_dinode_verify		libxfs_dinode_verify
-+#define xfs_dinode_verify_metaflag	libxfs_dinode_verify_metaflag
- 
- #define xfs_dir2_data_bestfree_p	libxfs_dir2_data_bestfree_p
- #define xfs_dir2_data_entry_tag_p	libxfs_dir2_data_entry_tag_p
-diff --git a/repair/dinode.c b/repair/dinode.c
-index ee34a62ae8b..cf517f77173 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -2662,6 +2662,20 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
- 			}
- 		}
- 
-+		if (flags2 & XFS_DIFLAG2_METADATA) {
-+			xfs_failaddr_t	fa;
-+
-+			fa = libxfs_dinode_verify_metaflag(mp, dino, di_mode,
-+					be16_to_cpu(dino->di_flags), flags2);
-+			if (fa) {
-+				if (!uncertain)
-+					do_warn(
-+	_("inode %" PRIu64 " is incorrectly marked as metadata\n"),
-+						lino);
-+				goto clear_bad_out;
-+			}
-+		}
-+
- 		if ((flags2 & XFS_DIFLAG2_REFLINK) &&
- 		    !xfs_has_reflink(mp)) {
- 			if (!uncertain) {
+ fs/xfs/libxfs/xfs_defer.c |   14 +++
+ fs/xfs/libxfs/xfs_fs.h    |   37 +++++++++
+ fs/xfs/scrub/btree.c      |   88 +++++++++++++++++++++
+ fs/xfs/scrub/common.c     |  104 +++++++++++++++++++++++++
+ fs/xfs/scrub/common.h     |    1 
+ fs/xfs/scrub/dabtree.c    |   24 ++++++
+ fs/xfs/scrub/inode.c      |    4 +
+ fs/xfs/scrub/scrub.c      |  185 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/trace.c      |   22 +++++
+ fs/xfs/scrub/trace.h      |   80 +++++++++++++++++++
+ fs/xfs/scrub/xfs_scrub.h  |    2 
+ fs/xfs/xfs_ioctl.c        |   47 +++++++++++
+ fs/xfs/xfs_trace.h        |   19 +++++
+ fs/xfs/xfs_trans.c        |    3 +
+ fs/xfs/xfs_trans.h        |    7 ++
+ 15 files changed, 636 insertions(+), 1 deletion(-)
 
