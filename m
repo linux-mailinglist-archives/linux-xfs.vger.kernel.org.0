@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1F3659F33
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:08:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B71665A059
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:13:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235852AbiLaAIG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:08:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        id S236025AbiLaBNs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:13:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235621AbiLaAIF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:08:05 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A3D31CB3E
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:08:03 -0800 (PST)
+        with ESMTP id S236023AbiLaBNr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:13:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C366016588
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:13:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D32F61CD0
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:08:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA422C433EF;
-        Sat, 31 Dec 2022 00:08:02 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 742E1B81A16
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:13:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124C0C433D2;
+        Sat, 31 Dec 2022 01:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445283;
-        bh=bMo6QwWRqO6mUOgNBjYztAPuiZS4T9xZhMECygc9mlM=;
+        s=k20201202; t=1672449223;
+        bh=qTNfy8/YeMoSSKWe5FNNgZ0+O3wUzQzpQaUtZqpp6KU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J3A3VQXt04vwTxGqOGfFJlLv6uZIWzREuVPwPl9hdS1yEXE9ofKDv7sPu4YMjMEfM
-         RdjIwRUz2Jw5LEYsdAvyyeHBynQNzNVSeiZcDA4LSiMEHt8rz/Gd7c3B/FNZkSPg7F
-         lk1dVJNyh68Ru0ZhpL6E4V+/hbJoGsleqe4V3ySnJg5ffuy1ToWA92EJr1sWSsdsMi
-         /BpyS4wqgdPgRHR825P4OJgNnn50axooNJ8cpfJXiznaN7KVN0dfaGgfe+4GFLdWjQ
-         CEUQf94teXrbz9wNyWEGkFxr1y87b0TxpJqtsVmJZ3sqTD6m5MzKLmsfwcplwHUWZ5
-         frIBQWrJ050jQ==
-Subject: [PATCH 4/4] xfs_scrub: scan metadata files in parallel
+        b=de6NRU/TYZm0AxaMR9JsBU3tr70XQBPspqY1XImLmnAu/dXt4fP+2fg1PzPQWkfso
+         9W5Cpngnrq/eCDX+r98SJgc1H34yQ1obFGGCE9KL+819e8mDRtekRve3XHahueKm5B
+         Nm918RNcAkHgCS93rZJl8gSBJaUxclXvGZykpOTkaWoaKl6/qXok7PAw6mi4im/REK
+         c+BgAmclvbTwm+Fcx+jZ2fI4y0b5zYN4QB+FEPUusG/R1gqZPGjoE/Msy27S7HbuhR
+         gykV9v80TUr+B96hvDfZgP46TsuHncukgzrQHGGO6WM6bvzDvWUopbxV59qhqZtnEj
+         uSfKizPHTsrSg==
+Subject: [PATCH 13/23] xfs: ensure metadata directory paths exist before
+ creating files
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:26 -0800
-Message-ID: <167243864608.708428.2050110389681530091.stgit@magnolia>
-In-Reply-To: <167243864554.708428.558285078019160851.stgit@magnolia>
-References: <167243864554.708428.558285078019160851.stgit@magnolia>
+Message-ID: <167243864640.708110.10841816937652886747.stgit@magnolia>
+In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
+References: <167243864431.708110.1688096566212843499.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,293 +55,170 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The realtime bitmap and the three quota files are completely independent
-of each other, which means that we ought to be able to scan them in
-parallel.  Rework the phase2 code so that we can do this.  Note,
-however, that the realtime summary file summarizes the contents of the
-realtime bitmap, so we must coordinate the workqueue threads.
+Since xfs_imeta_create can create new metadata files arbitrarily deep in
+the metadata directory tree, we must supply a function that can ensure
+that all directories in a path exist, and call it before the quota
+functions create the quota inodes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase2.c |  146 +++++++++++++++++++++++++++++++++++++++++++-------------
- scrub/scrub.c  |    9 ++-
- scrub/scrub.h  |    3 +
- 3 files changed, 121 insertions(+), 37 deletions(-)
+ fs/xfs/libxfs/xfs_imeta.h |    2 +
+ fs/xfs/xfs_inode.c        |  103 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_qm.c           |   16 +++++++
+ 3 files changed, 121 insertions(+)
 
 
-diff --git a/scrub/phase2.c b/scrub/phase2.c
-index 8f82e2a6c04..75c302af075 100644
---- a/scrub/phase2.c
-+++ b/scrub/phase2.c
-@@ -10,6 +10,8 @@
- #include "list.h"
- #include "libfrog/paths.h"
- #include "libfrog/workqueue.h"
-+#include "libfrog/fsgeom.h"
-+#include "libfrog/scrub.h"
- #include "xfs_scrub.h"
- #include "common.h"
- #include "scrub.h"
-@@ -17,6 +19,18 @@
+diff --git a/fs/xfs/libxfs/xfs_imeta.h b/fs/xfs/libxfs/xfs_imeta.h
+index 9b139f6809f0..741f426c6a4a 100644
+--- a/fs/xfs/libxfs/xfs_imeta.h
++++ b/fs/xfs/libxfs/xfs_imeta.h
+@@ -80,5 +80,7 @@ unsigned int xfs_imeta_unlink_space_res(struct xfs_mount *mp);
+ int xfs_imeta_iget(struct xfs_mount *mp, xfs_ino_t ino, unsigned char ftype,
+ 		struct xfs_inode **ipp);
+ void xfs_imeta_irele(struct xfs_inode *ip);
++int xfs_imeta_ensure_dirpath(struct xfs_mount *mp,
++			     const struct xfs_imeta_path *path);
  
- /* Phase 2: Check internal metadata. */
+ #endif /* __XFS_IMETA_H__ */
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 3830e03ceb0a..1eb53ed0097d 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1031,6 +1031,109 @@ xfs_create_tmpfile(
+ 	return error;
+ }
  
-+struct scan_ctl {
++/* Create a metadata for the last component of the path. */
++STATIC int
++xfs_imeta_mkdir(
++	struct xfs_mount		*mp,
++	const struct xfs_imeta_path	*path)
++{
++	struct xfs_imeta_update		upd;
++	struct xfs_inode		*ip = NULL;
++	struct xfs_trans		*tp = NULL;
++	struct xfs_dquot		*udqp = NULL;
++	struct xfs_dquot		*gdqp = NULL;
++	struct xfs_dquot		*pdqp = NULL;
++	unsigned int			resblks;
++	int				error;
++
++	if (xfs_is_shutdown(mp))
++		return -EIO;
++
++	error = xfs_imeta_start_update(mp, path, &upd);
++	if (error)
++		return error;
++
++	/* Grab all the root dquots. */
++	error = xfs_qm_vop_dqalloc(mp->m_metadirip, GLOBAL_ROOT_UID,
++			GLOBAL_ROOT_GID, 0, XFS_QMOPT_QUOTALL, &udqp, &gdqp,
++			&pdqp);
++	if (error)
++		goto out_end;
++
++	/* Allocate a transaction to create the last directory. */
++	resblks = xfs_imeta_create_space_res(mp);
++	error = xfs_trans_alloc_icreate(mp, &M_RES(mp)->tr_imeta_create, udqp,
++			gdqp, pdqp, resblks, &tp);
++	if (error)
++		goto out_dqrele;
++
++	/* Create the subdirectory. */
++	error = xfs_imeta_create(&tp, path, S_IFDIR, 0, &ip, &upd);
++	if (error)
++		goto out_trans_cancel;
++
 +	/*
-+	 * Control mechanism to signal that the rt bitmap file scan is done and
-+	 * wake up any waiters.
++	 * Attach the dquot(s) to the inodes and modify them incore.
++	 * These ids of the inode couldn't have changed since the new
++	 * inode has been locked ever since it was created.
 +	 */
-+	pthread_cond_t		rbm_wait;
-+	pthread_mutex_t		rbm_waitlock;
-+	bool			rbm_done;
++	xfs_qm_vop_create_dqattach(tp, ip, udqp, gdqp, pdqp);
 +
-+	bool			aborted;
-+};
++	error = xfs_trans_commit(tp);
 +
- /* Scrub each AG's metadata btrees. */
- static void
- scan_ag_metadata(
-@@ -25,7 +39,7 @@ scan_ag_metadata(
- 	void				*arg)
- {
- 	struct scrub_ctx		*ctx = (struct scrub_ctx *)wq->wq_ctx;
--	bool				*aborted = arg;
-+	struct scan_ctl			*sctl = arg;
- 	struct action_list		alist;
- 	struct action_list		immediate_alist;
- 	unsigned long long		broken_primaries;
-@@ -33,7 +47,7 @@ scan_ag_metadata(
- 	char				descr[DESCR_BUFSZ];
- 	int				ret;
- 
--	if (*aborted)
-+	if (sctl->aborted)
- 		return;
- 
- 	action_list_init(&alist);
-@@ -89,32 +103,40 @@ _("Filesystem might not be repairable."));
- 	action_list_defer(ctx, agno, &alist);
- 	return;
- err:
--	*aborted = true;
-+	sctl->aborted = true;
- }
- 
--/* Scrub whole-FS metadata btrees. */
-+/* Scan one metadata file. */
- static void
--scan_fs_metadata(
--	struct workqueue		*wq,
--	xfs_agnumber_t			agno,
--	void				*arg)
-+scan_metafile(
-+	struct workqueue	*wq,
-+	xfs_agnumber_t		type,
-+	void			*arg)
- {
--	struct scrub_ctx		*ctx = (struct scrub_ctx *)wq->wq_ctx;
--	bool				*aborted = arg;
--	struct action_list		alist;
--	int				ret;
-+	struct action_list	alist;
-+	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
-+	struct scan_ctl		*sctl = arg;
-+	int			ret;
- 
--	if (*aborted)
--		return;
-+	if (sctl->aborted)
-+		goto out;
- 
- 	action_list_init(&alist);
--	ret = scrub_fs_metadata(ctx, &alist);
-+	ret = scrub_metadata_file(ctx, type, &alist);
- 	if (ret) {
--		*aborted = true;
--		return;
-+		sctl->aborted = true;
-+		goto out;
- 	}
- 
--	action_list_defer(ctx, agno, &alist);
-+	action_list_defer(ctx, 0, &alist);
++	/*
++	 * We don't pass the directory we just created to the caller, so finish
++	 * setting up the inode, then release the dir and the dquots.
++	 */
++	goto out_irele;
 +
-+out:
-+	if (type == XFS_SCRUB_TYPE_RTBITMAP) {
-+		pthread_mutex_lock(&sctl->rbm_waitlock);
-+		sctl->rbm_done = true;
-+		pthread_cond_broadcast(&sctl->rbm_wait);
-+		pthread_mutex_unlock(&sctl->rbm_waitlock);
++out_trans_cancel:
++	xfs_trans_cancel(tp);
++out_irele:
++	/* Have to finish setting up the inode to ensure it's deleted. */
++	if (ip) {
++		xfs_finish_inode_setup(ip);
++		xfs_irele(ip);
 +	}
- }
- 
- /* Scan all filesystem metadata. */
-@@ -122,17 +144,25 @@ int
- phase2_func(
- 	struct scrub_ctx	*ctx)
- {
--	struct action_list	alist;
- 	struct workqueue	wq;
-+	struct scan_ctl		sctl = {
-+		.aborted	= false,
-+		.rbm_done	= false,
++
++out_dqrele:
++	xfs_qm_dqrele(udqp);
++	xfs_qm_dqrele(gdqp);
++	xfs_qm_dqrele(pdqp);
++out_end:
++	xfs_imeta_end_update(mp, &upd, error);
++	return error;
++}
++
++/*
++ * Make sure that every metadata directory path component exists and is a
++ * directory.
++ */
++int
++xfs_imeta_ensure_dirpath(
++	struct xfs_mount		*mp,
++	const struct xfs_imeta_path	*path)
++{
++	struct xfs_imeta_path		temp_path = {
++		.im_path		= path->im_path,
++		.im_depth		= 1,
++		.im_ftype		= XFS_DIR3_FT_DIR,
 +	};
-+	struct action_list	alist;
-+	const struct xfrog_scrub_descr *sc = xfrog_scrubbers;
- 	xfs_agnumber_t		agno;
--	bool			aborted = false;
-+	unsigned int		type;
- 	int			ret, ret2;
- 
-+	pthread_mutex_init(&sctl.rbm_waitlock, NULL);
-+	pthread_cond_init(&sctl.rbm_wait, NULL);
++	unsigned int			i;
++	int				error = 0;
 +
- 	ret = -workqueue_create(&wq, (struct xfs_mount *)ctx,
- 			scrub_nproc_workqueue(ctx));
- 	if (ret) {
- 		str_liberror(ctx, ret, _("creating scrub workqueue"));
--		return ret;
-+		goto out_wait;
- 	}
- 
- 	/*
-@@ -143,29 +173,76 @@ phase2_func(
- 	action_list_init(&alist);
- 	ret = scrub_primary_super(ctx, &alist);
- 	if (ret)
--		goto out;
-+		goto out_wq;
- 	ret = action_list_process_or_defer(ctx, 0, &alist);
- 	if (ret)
--		goto out;
-+		goto out_wq;
- 
--	for (agno = 0; !aborted && agno < ctx->mnt.fsgeom.agcount; agno++) {
--		ret = -workqueue_add(&wq, scan_ag_metadata, agno, &aborted);
-+	/* Scan each AG in parallel. */
-+	for (agno = 0;
-+	     agno < ctx->mnt.fsgeom.agcount && !sctl.aborted;
-+	     agno++) {
-+		ret = -workqueue_add(&wq, scan_ag_metadata, agno, &sctl);
- 		if (ret) {
- 			str_liberror(ctx, ret, _("queueing per-AG scrub work"));
--			goto out;
-+			goto out_wq;
- 		}
- 	}
- 
--	if (aborted)
--		goto out;
-+	if (sctl.aborted)
-+		goto out_wq;
- 
--	ret = -workqueue_add(&wq, scan_fs_metadata, 0, &aborted);
-+	/*
-+	 * Scan all the metadata files in parallel except for the realtime
-+	 * summary file, which must run after the realtime bitmap has been
-+	 * scanned.
-+	 */
-+	for (type = 0; type < XFS_SCRUB_TYPE_NR; type++, sc++) {
-+		if (sc->group != XFROG_SCRUB_GROUP_METAFILES)
-+			continue;
-+		if (type == XFS_SCRUB_TYPE_RTSUM)
-+			continue;
++	if (!xfs_has_metadir(mp))
++		return 0;
 +
-+		ret = -workqueue_add(&wq, scan_metafile, type, &sctl);
-+		if (ret) {
-+			str_liberror(ctx, ret,
-+	_("queueing metadata file scrub work"));
-+			goto out_wq;
-+		}
++	for (i = 0; i < path->im_depth - 1; i++, temp_path.im_depth++) {
++		error = xfs_imeta_mkdir(mp, &temp_path);
++		if (error && error != -EEXIST)
++			break;
 +	}
 +
-+	if (sctl.aborted)
-+		goto out_wq;
++	return error == -EEXIST ? 0 : error;
++}
 +
-+	/*
-+	 * Wait for the rt bitmap to finish scanning, then scan the rt summary
-+	 * since the summary can be regenerated completely from the bitmap.
-+	 */
-+	ret = pthread_mutex_lock(&sctl.rbm_waitlock);
-+	if (ret) {
-+		str_liberror(ctx, ret, _("waiting for rtbitmap scrubber"));
-+		goto out_wq;
-+	}
-+	if (!sctl.rbm_done) {
-+		ret = pthread_cond_wait(&sctl.rbm_wait, &sctl.rbm_waitlock);
-+		if (ret) {
-+			str_liberror(ctx, ret,
-+	_("waiting for rtbitmap scrubber"));
-+			goto out_wq;
-+		}
-+	}
-+	pthread_mutex_unlock(&sctl.rbm_waitlock);
-+
-+	if (sctl.aborted)
-+		goto out_wq;
-+
-+	ret = -workqueue_add(&wq, scan_metafile, XFS_SCRUB_TYPE_RTSUM, &sctl);
- 	if (ret) {
--		str_liberror(ctx, ret, _("queueing per-FS scrub work"));
--		goto out;
-+		str_liberror(ctx, ret, _("queueing rtsummary scrub work"));
-+		goto out_wq;
- 	}
- 
--out:
-+out_wq:
- 	ret2 = -workqueue_terminate(&wq);
- 	if (ret2) {
- 		str_liberror(ctx, ret2, _("finishing scrub work"));
-@@ -173,8 +250,11 @@ phase2_func(
- 			ret = ret2;
- 	}
- 	workqueue_destroy(&wq);
-+out_wait:
-+	pthread_cond_destroy(&sctl.rbm_wait);
-+	pthread_mutex_destroy(&sctl.rbm_waitlock);
- 
--	if (!ret && aborted)
-+	if (!ret && sctl.aborted)
- 		ret = ECANCELED;
- 	return ret;
- }
-diff --git a/scrub/scrub.c b/scrub/scrub.c
-index 1fcd5b8e85d..20067df523f 100644
---- a/scrub/scrub.c
-+++ b/scrub/scrub.c
-@@ -400,13 +400,16 @@ scrub_ag_metadata(
- 	return scrub_group(ctx, XFROG_SCRUB_GROUP_PERAG, agno, alist);
- }
- 
--/* Scrub whole-FS metadata btrees. */
-+/* Scrub one metadata file */
  int
--scrub_fs_metadata(
-+scrub_metadata_file(
- 	struct scrub_ctx		*ctx,
-+	unsigned int			type,
- 	struct action_list		*alist)
- {
--	return scrub_group(ctx, XFROG_SCRUB_GROUP_METAFILES, 0, alist);
-+	ASSERT(xfrog_scrubbers[type].group == XFROG_SCRUB_GROUP_METAFILES);
+ xfs_link(
+ 	xfs_inode_t		*tdp,
+diff --git a/fs/xfs/xfs_qm.c b/fs/xfs/xfs_qm.c
+index 8828e8cafca5..905765eedcb0 100644
+--- a/fs/xfs/xfs_qm.c
++++ b/fs/xfs/xfs_qm.c
+@@ -829,6 +829,22 @@ xfs_qm_qino_alloc(
+ 	if (error)
+ 		return error;
+ 
++	/*
++	 * Ensure the quota directory exists, being careful to disable quotas
++	 * while we do this.  We'll have to quotacheck anyway, so the temporary
++	 * undercount of the directory tree shouldn't affect the quota count.
++	 */
++	if (xfs_has_metadir(mp)) {
++		unsigned int	old_qflags;
 +
-+	return scrub_meta_type(ctx, type, 0, alist);
- }
- 
- /* Scrub all FS summary metadata. */
-diff --git a/scrub/scrub.h b/scrub/scrub.h
-index 56836cf2ba3..a4e36808f34 100644
---- a/scrub/scrub.h
-+++ b/scrub/scrub.h
-@@ -22,7 +22,8 @@ int scrub_ag_headers(struct scrub_ctx *ctx, xfs_agnumber_t agno,
- 		struct action_list *alist);
- int scrub_ag_metadata(struct scrub_ctx *ctx, xfs_agnumber_t agno,
- 		struct action_list *alist);
--int scrub_fs_metadata(struct scrub_ctx *ctx, struct action_list *alist);
-+int scrub_metadata_file(struct scrub_ctx *ctx, unsigned int scrub_type,
-+		struct action_list *alist);
- int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist);
- int scrub_fs_counters(struct scrub_ctx *ctx, struct action_list *alist);
- 
++		old_qflags = mp->m_qflags & XFS_ALL_QUOTA_ACCT;
++		mp->m_qflags &= ~XFS_ALL_QUOTA_ACCT;
++		error = xfs_imeta_ensure_dirpath(mp, path);
++		mp->m_qflags |= old_qflags;
++		if (error)
++			return error;
++	}
++
+ 	error = xfs_imeta_start_update(mp, path, &upd);
+ 	if (error)
+ 		return error;
 
