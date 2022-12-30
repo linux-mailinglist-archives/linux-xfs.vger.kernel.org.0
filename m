@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A5EF65A1B5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:38:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 641DC65A1B7
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:38:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236258AbiLaCie (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:38:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
+        id S236262AbiLaCi5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:38:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236261AbiLaCiY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:38:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA712DED
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:38:23 -0800 (PST)
+        with ESMTP id S236257AbiLaCix (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:38:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D22082DED
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:38:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D1105B81DEE
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:38:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88282C433D2;
-        Sat, 31 Dec 2022 02:38:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 71CC161CBF
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:38:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CABB9C433D2;
+        Sat, 31 Dec 2022 02:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454300;
-        bh=fceC9LIb64WvlzguzBanyBZhBUJKwl+GwEkWysD59pc=;
+        s=k20201202; t=1672454331;
+        bh=vH6blYqox946kruNcp57vOlcDZLfgcxfA7k6IFmypg4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Rjdj9kvktXNI4newfmv7Eajinp/bDfrrZySzCsKmpU30jqL1LPR6l4W8Krbfz6jHm
-         8TGMslSMQxVPeF3dqR4Z8fznCdhVnAE1lkAOFUJq7nvc05MsyUcdEurxU5kUJqF7Rx
-         E9cA5L+wC8pN+H4hfc4noc5x9C2a5mz50O5M6JqcxhG/JLlMy4uhcY9WBdp2HEOUy8
-         dldfsYoqkMTm8ChX1NoEyLvfl9Ib3C9/Q85EClXoMTMiE+2JrEMER5GWP4KEpB3WiR
-         xK0zN0qulQiH0FRCn2fWbdpk1wBx73fwA8QKEB5wbSJEmzYBm9csnx8ExScbRGePaP
-         JCp/HhavxID0A==
-Subject: [PATCH 32/45] xfs_db: metadump realtime devices
+        b=HsjQ+Xp/hITiYa0DhW1jh/JfES/bKuWn3fad1z8jKoqNOGqKOTAhUa3MR2G3fQT+f
+         ApckbUieRHS06F+sxGHl8qrqnN5HwHTNi6Bvc+XbLfhFmP86rreOdgvNcK0wzIJOE9
+         ztWRf0qdGie5Ahtj7dRocAvfQZcgTsI1R8nU00tSXWSNZOqBz3bTA7/oVdBMgdSB8D
+         xgMTXmvWYWlP44umq/gM6nDpsuKX/o2GAgDbB+dlV8+DmUpg1VJ+I1ji42/Dme+r55
+         ZMWSonIojmaerV6dwxZ+HpWxlESdmElXJVA2TAkMJokXlUtEh7PhJK6vW1WDs8kylF
+         Rsjm/2hYRyeig==
+Subject: [PATCH 34/45] xfs_db: dump rt summary blocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:47 -0800
-Message-ID: <167243878785.731133.2412483890968401567.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:19:48 -0800
+Message-ID: <167243878811.731133.9363750288930278535.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,152 +55,150 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach the metadump device to dump the filesystem metadata of a realtime
-device to the metadump file.  Currently, this is limited to the rt group
-superblocks.
+Now that rtsummary blocks have a header, make it so that xfs_db can
+analyze the structure.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/metadump.c           |   51 +++++++++++++++++++++++++++++++++++++++++++++--
- db/xfs_metadump.sh      |    5 +++--
- man/man8/xfs_metadump.8 |   12 ++++++++++-
- 3 files changed, 63 insertions(+), 5 deletions(-)
+ db/field.c   |    5 +++++
+ db/field.h   |    3 +++
+ db/inode.c   |    5 ++++-
+ db/rtgroup.c |   20 ++++++++++++++++++++
+ db/rtgroup.h |    3 +++
+ db/type.c    |    5 +++++
+ db/type.h    |    1 +
+ 7 files changed, 41 insertions(+), 1 deletion(-)
 
 
-diff --git a/db/metadump.c b/db/metadump.c
-index f337493d505..e997c386c0b 100644
---- a/db/metadump.c
-+++ b/db/metadump.c
-@@ -3070,6 +3070,40 @@ _("Could not discern log; image will contain unobfuscated metadata in log."));
- 	return !write_buf(iocur_top);
- }
+diff --git a/db/field.c b/db/field.c
+index 7dee8c3735c..4a6a4cf51c3 100644
+--- a/db/field.c
++++ b/db/field.c
+@@ -397,6 +397,11 @@ const ftattr_t	ftattrtab[] = {
+ 	  FTARG_LE, NULL, NULL },
+ 	{ FLDT_RGBITMAP, "rgbitmap", NULL, (char *)rgbitmap_flds, btblock_size,
+ 	  FTARG_SIZE, NULL, rgbitmap_flds },
++	{ FLDT_SUMINFO, "suminfo", fp_num, "%u", SI(bitsz(xfs_suminfo_t)),
++	  0, NULL, NULL },
++	{ FLDT_RGSUMMARY, "rgsummary", NULL, (char *)rgsummary_flds,
++	  btblock_size, FTARG_SIZE, NULL, rgsummary_flds },
++
+ 	{ FLDT_ZZZ, NULL }
+ };
  
-+static int
-+copy_rtsupers(void)
-+{
-+	int		error;
+diff --git a/db/field.h b/db/field.h
+index ce7e7297afa..e9c6142f282 100644
+--- a/db/field.h
++++ b/db/field.h
+@@ -194,6 +194,9 @@ typedef enum fldt	{
+ 
+ 	FLDT_RTWORD,
+ 	FLDT_RGBITMAP,
++	FLDT_SUMINFO,
++	FLDT_RGSUMMARY,
 +
-+	if (show_progress)
-+		print_progress("Copying realtime superblocks");
-+
-+	xfs_rtblock_t	rtbno;
-+	xfs_rgnumber_t	rgno = 0;
-+
-+	for (rgno = 0; rgno < mp->m_sb.sb_rgcount; rgno++) {
-+		rtbno = xfs_rgbno_to_rtb(mp, rgno, 0);
-+
-+		push_cur();
-+		error = set_rt_cur(&typtab[TYP_RTSB],
-+				xfs_rtb_to_daddr(mp, rtbno),
-+				XFS_FSB_TO_BB(mp, 1), DB_RING_ADD, NULL);
-+		if (error)
-+			return 0;
-+		if (iocur_top->data == NULL) {
-+			pop_cur();
-+			print_warning("cannot read rt super %u", rgno);
-+			return !stop_on_read_error;
+ 	FLDT_ZZZ			/* mark last entry */
+ } fldt_t;
+ 
+diff --git a/db/inode.c b/db/inode.c
+index 663487f8b14..0b9dc617ba9 100644
+--- a/db/inode.c
++++ b/db/inode.c
+@@ -646,8 +646,11 @@ inode_next_type(void)
+ 			if (xfs_has_rtgroups(mp))
+ 				return TYP_RGBITMAP;
+ 			return TYP_RTBITMAP;
+-		} else if (iocur_top->ino == mp->m_sb.sb_rsumino)
++		} else if (iocur_top->ino == mp->m_sb.sb_rsumino) {
++			if (xfs_has_rtgroups(mp))
++				return TYP_RGSUMMARY;
+ 			return TYP_RTSUMMARY;
 +		}
-+		error = write_buf(iocur_top);
-+		pop_cur();
-+		if (error)
-+			return 0;
-+	}
+ 		else if (iocur_top->ino == mp->m_sb.sb_uquotino ||
+ 			 iocur_top->ino == mp->m_sb.sb_gquotino ||
+ 			 iocur_top->ino == mp->m_sb.sb_pquotino)
+diff --git a/db/rtgroup.c b/db/rtgroup.c
+index 350677d4687..db1b9b595d5 100644
+--- a/db/rtgroup.c
++++ b/db/rtgroup.c
+@@ -147,3 +147,23 @@ const field_t	rgbitmap_hfld[] = {
+ 	{ "", FLDT_RGBITMAP, OI(0), C1, 0, TYP_NONE },
+ 	{ NULL }
+ };
 +
-+	return 1;
-+}
++#define	OFF(f)	bitize(offsetof(struct xfs_rtbuf_blkinfo, rt_ ## f))
++const field_t	rgsummary_flds[] = {
++	{ "magicnum", FLDT_UINT32X, OI(OFF(magic)), C1, 0, TYP_NONE },
++	{ "crc", FLDT_CRC, OI(OFF(crc)), C1, 0, TYP_NONE },
++	{ "owner", FLDT_INO, OI(OFF(owner)), C1, 0, TYP_NONE },
++	{ "bno", FLDT_DFSBNO, OI(OFF(blkno)), C1, 0, TYP_BMAPBTD },
++	{ "lsn", FLDT_UINT64X, OI(OFF(lsn)), C1, 0, TYP_NONE },
++	{ "uuid", FLDT_UUID, OI(OFF(uuid)), C1, 0, TYP_NONE },
++	/* the suminfo array is after the actual structure */
++	{ "suminfo", FLDT_SUMINFO, OI(bitize(sizeof(struct xfs_rtbuf_blkinfo))),
++	  rtwords_count, FLD_ARRAY | FLD_COUNT, TYP_DATA },
++	{ NULL }
++};
++#undef OFF
 +
- static int
- metadump_f(
- 	int 		argc,
-@@ -3145,9 +3179,11 @@ metadump_f(
++const field_t	rgsummary_hfld[] = {
++	{ "", FLDT_RGSUMMARY, OI(0), C1, 0, TYP_NONE },
++	{ NULL }
++};
+diff --git a/db/rtgroup.h b/db/rtgroup.h
+index 3c9b16146fc..2e85d3587fe 100644
+--- a/db/rtgroup.h
++++ b/db/rtgroup.h
+@@ -12,6 +12,9 @@ extern const struct field	rtsb_hfld[];
+ extern const struct field	rgbitmap_flds[];
+ extern const struct field	rgbitmap_hfld[];
  
- 	/*
- 	 * Use the old format if there are no external devices with metadata to
--	 * dump.
-+	 * dump.  Force the new format if we have realtime group superblocks.
- 	 */
--	if (mp->m_sb.sb_logstart != 0)
-+	if (xfs_has_rtgroups(mp))
-+		copy_external = true;
-+	else if (mp->m_sb.sb_logstart != 0 /* && !rtgroups */)
- 		copy_external = false;
- 
- 	metablock = (xfs_metablock_t *)calloc(BBSIZE + 1, BBSIZE);
-@@ -3276,6 +3312,17 @@ metadump_f(
- 			exitcode = write_index() < 0;
- 	}
- 
-+	/* write the realtime device, if desired */
-+	if (!exitcode && xfs_has_rtgroups(mp) && copy_external) {
-+		metablock->mb_info &= ~XFS_METADUMP_LOGDEV;
-+		metablock->mb_info |= XFS_METADUMP_RTDEV;
++extern const struct field	rgsummary_flds[];
++extern const struct field	rgsummary_hfld[];
 +
-+		if (!copy_rtsupers())
-+			exitcode = 1;
-+		if (!exitcode)
-+			exitcode = write_index() < 0;
-+	}
-+
- 	if (progress_since_warning)
- 		fputc('\n', stdout_metadump ? stderr : stdout);
+ extern void	rtsb_init(void);
+ extern int	rtsb_size(void *obj, int startoff, int idx);
  
-diff --git a/db/xfs_metadump.sh b/db/xfs_metadump.sh
-index 06bfc4e7bd4..29cced9f302 100755
---- a/db/xfs_metadump.sh
-+++ b/db/xfs_metadump.sh
-@@ -6,9 +6,9 @@
+diff --git a/db/type.c b/db/type.c
+index 65e7b24146f..2091b4ac8b1 100644
+--- a/db/type.c
++++ b/db/type.c
+@@ -68,6 +68,7 @@ static const typ_t	__typtab[] = {
+ 	{ TYP_FINOBT, "finobt", handle_struct, finobt_hfld, NULL,
+ 		TYP_F_NO_CRC_OFF },
+ 	{ TYP_RGBITMAP, NULL },
++	{ TYP_RGSUMMARY, NULL },
+ 	{ TYP_NONE, NULL }
+ };
  
- OPTS=" "
- DBOPTS=" "
--USAGE="Usage: xfs_metadump [-aefFgoVwx] [-m max_extents] [-l logdev] source target"
-+USAGE="Usage: xfs_metadump [-aefFgoVwx] [-m max_extents] [-l logdev] [-R rtdev] source target"
+@@ -116,6 +117,8 @@ static const typ_t	__typtab_crc[] = {
+ 		&xfs_finobt_buf_ops, XFS_BTREE_SBLOCK_CRC_OFF },
+ 	{ TYP_RGBITMAP, "rgbitmap", handle_struct, rgbitmap_hfld,
+ 		&xfs_rtbitmap_buf_ops, XFS_RTBUF_CRC_OFF },
++	{ TYP_RGSUMMARY, "rgsummary", handle_struct, rgsummary_hfld,
++		&xfs_rtsummary_buf_ops, XFS_RTBUF_CRC_OFF },
+ 	{ TYP_NONE, NULL }
+ };
  
--while getopts "aefgl:m:owFVx" c
-+while getopts "aefgl:m:owFVxR:" c
- do
- 	case $c in
- 	a)	OPTS=$OPTS"-a ";;
-@@ -25,6 +25,7 @@ do
- 		exit $status
- 		;;
- 	x)	OPTS=$OPTS"-x ";;
-+	R)	DBOPTS=$DBOPTS"-R "$OPTARG" ";;
- 	\?)	echo $USAGE 1>&2
- 		exit 2
- 		;;
-diff --git a/man/man8/xfs_metadump.8 b/man/man8/xfs_metadump.8
-index b940cb084b5..98e822b39d0 100644
---- a/man/man8/xfs_metadump.8
-+++ b/man/man8/xfs_metadump.8
-@@ -11,6 +11,9 @@ xfs_metadump \- copy XFS filesystem metadata to a file
- ] [
- .B \-l
- .I logdev
-+] [
-+.B \-R
-+.I rtdev
- ]
- .I source
- .I target
-@@ -136,12 +139,19 @@ this value.  The default size is 2097151 blocks.
- .B \-o
- Disables obfuscation of file names and extended attributes.
- .TP
-+.B \-R
-+For filesystems that have a realtime section, this specifies the device where
-+the realtime section resides.
-+To record the contents of the realtime section in the dump, the
-+.B \-x
-+option must also be specified.
-+.TP
- .B \-w
- Prints warnings of inconsistent metadata encountered to stderr. Bad metadata
- is still copied.
- .TP
- .B \-x
--Dump the external log device, if present.
-+Dump the external log and realtime device, if present.
- The metadump file will not be compatible with older versions of
- .BR xfs_mdrestore (1).
- .TP
+@@ -164,6 +167,8 @@ static const typ_t	__typtab_spcrc[] = {
+ 		&xfs_finobt_buf_ops, XFS_BTREE_SBLOCK_CRC_OFF },
+ 	{ TYP_RGBITMAP, "rgbitmap", handle_struct, rgbitmap_hfld,
+ 		&xfs_rtbitmap_buf_ops, XFS_RTBUF_CRC_OFF },
++	{ TYP_RGSUMMARY, "rgsummary", handle_struct, rgsummary_hfld,
++		&xfs_rtsummary_buf_ops, XFS_RTBUF_CRC_OFF },
+ 	{ TYP_NONE, NULL }
+ };
+ 
+diff --git a/db/type.h b/db/type.h
+index e2148c6351d..e7f0ecc1768 100644
+--- a/db/type.h
++++ b/db/type.h
+@@ -36,6 +36,7 @@ typedef enum typnm
+ 	TYP_TEXT,
+ 	TYP_FINOBT,
+ 	TYP_RGBITMAP,
++	TYP_RGSUMMARY,
+ 	TYP_NONE
+ } typnm_t;
+ 
 
