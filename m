@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E98F565A1C1
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:41:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1589A65A1C0
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:41:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236169AbiLaClQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:41:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58114 "EHLO
+        id S231522AbiLaClD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:41:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236173AbiLaClO (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:41:14 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D72DF0C
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:41:12 -0800 (PST)
+        with ESMTP id S236169AbiLaClB (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:41:01 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB2D62FD
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:40:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F7EE61CBF
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:41:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC259C433D2;
-        Sat, 31 Dec 2022 02:41:11 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 28B88CE1A06
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:40:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6634BC433D2;
+        Sat, 31 Dec 2022 02:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454472;
-        bh=ckFPZwwSFTTIdeK98JTDtIW3LMR6YBuCnLS4yTXiAOc=;
+        s=k20201202; t=1672454456;
+        bh=qBbU7P2UGSbrLYvWzT5xFtb9AgVtPubHpTp9ZhA1g54=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RBExLAC71ac4W75LYsnJ1BNyUBodck51tDOpgp0mz3rrEZeK+EWoICJ/pHta7MXmr
-         yZy1tsmH814t8KjtzaGp/Zdi5CcWU7MB9AvasQbdcI7EEegrW1TUaWohLVy8vzV10F
-         vBbYhqRiY2u5ytKOlcdODLqUJrMdiED1VTIY3Y1VO415kM+j2hOcIzn6bRKWFn/RmC
-         4C1TO+/mH04g6tGFYIPvbCDrsczoJewhlAvG1VBhiCpZS5C47HqT1/kSDAXdoK7pYc
-         ujONb76XJIzab9U9dQ62vUv1FfhUkeqCEbxHa3hSeUJ9R0go/KBu+EWYsm62qPhMO7
-         knDJ4AxkuLgCw==
-Subject: [PATCH 43/45] mkfs: add headers to realtime bitmap blocks
+        b=ulX+7w/VYmnWIzjpaMtDAKB1OegtzNwEMMHtHTMHgwScD+UwuWg6bXwgU3tg1ZFWh
+         xQKhacCCUPeg2zqj8k8AwpRpThhE3YqkP6kgBIm0M4Vb0yJn/peFU1Mpqh5p6YdUIe
+         eGSTm35NYdljr3lqD/74Ylw/eNPOmGLYgOFIVaWMIvCMxba40Ztv22QVeVRK6jUGrY
+         VIMhfjx1Wtv5yjfwLpWMq/wm8swq/gLnB8VQWaJfmKZhYnpUEx9B8nbYldz6axwGod
+         ZCMoU3ewK34ADvx/1IflLgJ1tX8wZCDsmAu6P8Du51MWFKzQ6EyirKlVPC6MhluuaT
+         2RAVmjBI0jDUA==
+Subject: [PATCH 42/45] xfs_scrub: fstrim each rtgroup in parallel
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:49 -0800
-Message-ID: <167243878925.731133.17838280747426031006.stgit@magnolia>
+Message-ID: <167243878911.731133.1130139562119311184.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,115 +55,126 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-When the rtgroups feature is enabled, format rtbitmap blocks with the
-appropriate block headers.
-
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- mkfs/proto.c    |   51 +++++++++++++++++++++++++++++++++++++++++++++++++++
- mkfs/xfs_mkfs.c |    6 +++++-
- 2 files changed, 56 insertions(+), 1 deletion(-)
+ libfrog/fsgeom.h |   21 +++++++++++++++++++++
+ scrub/phase8.c   |   46 +++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 66 insertions(+), 1 deletion(-)
 
 
-diff --git a/mkfs/proto.c b/mkfs/proto.c
-index 21fe2c7f972..daf0d419bce 100644
---- a/mkfs/proto.c
-+++ b/mkfs/proto.c
-@@ -813,6 +813,50 @@ rtsummary_create(
- 	libxfs_imeta_end_update(mp, &upd, 0);
+diff --git a/libfrog/fsgeom.h b/libfrog/fsgeom.h
+index 8c21b240bb2..6c6d6bb815a 100644
+--- a/libfrog/fsgeom.h
++++ b/libfrog/fsgeom.h
+@@ -203,4 +203,25 @@ cvt_b_to_agbno(
+ 	return cvt_daddr_to_agbno(xfd, cvt_btobbt(byteno));
  }
  
-+/* Initialize block headers of rt free space files. */
-+static int
-+init_rtblock_headers(
-+	struct xfs_inode	*ip,
-+	xfs_fileoff_t		nrblocks,
-+	const struct xfs_buf_ops *ops,
-+	uint32_t		magic)
++/* Convert rtgroup number and rtgroup block to fs block number */
++static inline uint64_t
++cvt_rgbno_to_daddr(
++	struct xfs_fd		*xfd,
++	uint32_t		rgno,
++	uint32_t		rgbno)
 +{
-+	struct xfs_bmbt_irec	map;
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_rtbuf_blkinfo *hdr;
-+	xfs_fileoff_t		off = 0;
-+	int			error;
-+
-+	while (off < nrblocks) {
-+		struct xfs_buf	*bp;
-+		xfs_daddr_t	daddr;
-+		int		nimaps = 1;
-+
-+		error = -libxfs_bmapi_read(ip, off, 1, &map, &nimaps, 0);
-+		if (error)
-+			return error;
-+
-+		daddr = XFS_FSB_TO_DADDR(mp, map.br_startblock);
-+		error = -libxfs_buf_get(mp->m_ddev_targp, daddr,
-+				XFS_FSB_TO_BB(mp, map.br_blockcount), &bp);
-+		if (error)
-+			return error;
-+
-+		bp->b_ops = ops;
-+		hdr = bp->b_addr;
-+		hdr->rt_magic = cpu_to_be32(magic);
-+		hdr->rt_owner = cpu_to_be64(ip->i_ino);
-+		hdr->rt_blkno = cpu_to_be64(daddr);
-+		platform_uuid_copy(&hdr->rt_uuid, &mp->m_sb.sb_meta_uuid);
-+		libxfs_buf_mark_dirty(bp);
-+		libxfs_buf_relse(bp);
-+
-+		off = map.br_startoff + map.br_blockcount;
-+	}
-+
-+	return 0;
++	return cvt_off_fsb_to_bb(xfd,
++			(uint64_t)rgno * xfd->fsgeom.rgblocks + rgbno);
 +}
 +
- /* Zero the realtime bitmap. */
- static void
- rtbitmap_init(
-@@ -856,6 +900,13 @@ rtbitmap_init(
- 	if (error)
- 		fail(_("Block allocation of the realtime bitmap inode failed"),
- 				error);
++/* Convert rtgroup number and rtgroup block to a byte location on disk. */
++static inline uint64_t
++cvt_rgbno_to_b(
++	struct xfs_fd		*xfd,
++	xfs_rgnumber_t		rgno,
++	xfs_rgblock_t		rgbno)
++{
++	return cvt_bbtob(cvt_rgbno_to_daddr(xfd, rgno, rgbno));
++}
 +
-+	if (xfs_has_rtgroups(mp)) {
-+		error = init_rtblock_headers(mp->m_rbmip, mp->m_sb.sb_rbmblocks,
-+				&xfs_rtbitmap_buf_ops, XFS_RTBITMAP_MAGIC);
-+		if (error)
-+			fail(_("Initialization of rtbitmap failed"), error);
-+	}
- }
+ #endif /* __LIBFROG_FSGEOM_H__ */
+diff --git a/scrub/phase8.c b/scrub/phase8.c
+index a8ea8db706b..cc4901f8614 100644
+--- a/scrub/phase8.c
++++ b/scrub/phase8.c
+@@ -48,6 +48,7 @@ fstrim_ok(
  
- /* Zero the realtime summary file. */
-diff --git a/mkfs/xfs_mkfs.c b/mkfs/xfs_mkfs.c
-index 0324daaad3a..826f9e53309 100644
---- a/mkfs/xfs_mkfs.c
-+++ b/mkfs/xfs_mkfs.c
-@@ -870,6 +870,7 @@ struct sb_feat_args {
- 	bool	nodalign;
- 	bool	nortalign;
- 	bool	nrext64;
-+	bool	rtgroups;		/* XFS_SB_FEAT_COMPAT_RTGROUPS */
+ struct trim_ctl {
+ 	uint64_t	datadev_end_pos;
++	uint64_t	rtdev_end_pos;
+ 	bool		aborted;
  };
  
- struct cli_params {
-@@ -3065,6 +3066,7 @@ validate_rtdev(
- 	char			**devname)
- {
- 	struct libxfs_xinit	*xi = cli->xi;
-+	unsigned int		rbmblocksize = cfg->blocksize;
- 
- 	*devname = NULL;
- 
-@@ -3112,8 +3114,10 @@ reported by the device (%u).\n"),
- 	}
- 
- 	cfg->rtextents = cfg->rtblocks / cfg->rtextblocks;
-+	if (cfg->sb_feat.rtgroups)
-+		rbmblocksize -= sizeof(struct xfs_rtbuf_blkinfo);
- 	cfg->rtbmblocks = (xfs_extlen_t)howmany(cfg->rtextents,
--						NBBY * cfg->blocksize);
-+						NBBY * rbmblocksize);
+@@ -80,6 +81,35 @@ trim_ag(
+ 	progress_add(1);
  }
  
- static bool
++/* Trim each rt group. */
++static void
++trim_rtgroup(
++	struct workqueue	*wq,
++	xfs_agnumber_t		rgno,
++	void			*arg)
++{
++	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
++	struct trim_ctl		*tctl = arg;
++	uint64_t		pos, len, eortg_pos;
++	int			error;
++
++	pos = cvt_rgbno_to_b(&ctx->mnt, rgno, 0);
++	eortg_pos = cvt_rgbno_to_b(&ctx->mnt, rgno, ctx->mnt.fsgeom.rgblocks);
++	len = min(tctl->rtdev_end_pos, eortg_pos) - pos;
++
++	error = fstrim(ctx, pos + tctl->datadev_end_pos, len);
++	if (error) {
++		char		descr[DESCR_BUFSZ];
++
++		snprintf(descr, sizeof(descr) - 1, _("fstrim rgno %u"), rgno);
++		str_liberror(ctx, error, descr);
++		tctl->aborted = true;
++		return;
++	}
++
++	progress_add(1);
++}
++
+ /* Trim the filesystem, if desired. */
+ int
+ phase8_func(
+@@ -97,6 +127,8 @@ phase8_func(
+ 
+ 	tctl.datadev_end_pos = cvt_off_fsb_to_b(&ctx->mnt,
+ 			ctx->mnt.fsgeom.datablocks);
++	tctl.rtdev_end_pos = cvt_off_fsb_to_b(&ctx->mnt,
++			ctx->mnt.fsgeom.rtblocks);
+ 
+ 	error = -workqueue_create(&wq, (struct xfs_mount *)ctx,
+ 			disk_heads(ctx->datadev));
+@@ -117,6 +149,18 @@ phase8_func(
+ 		}
+ 	}
+ 
++	/* Trim each rtgroup in parallel. */
++	for (agno = 0;
++	     agno < ctx->mnt.fsgeom.rgcount && !tctl.aborted;
++	     agno++) {
++		error = -workqueue_add(&wq, trim_rtgroup, agno, &tctl);
++		if (error) {
++			str_liberror(ctx, error,
++					_("queueing per-rtgroup fstrim work"));
++			goto out_wq;
++		}
++	}
++
+ out_wq:
+ 	err2 = -workqueue_terminate(&wq);
+ 	if (err2) {
+@@ -142,7 +186,7 @@ phase8_estimate(
+ 	*items = 0;
+ 
+ 	if (fstrim_ok(ctx))
+-		*items = ctx->mnt.fsgeom.agcount;
++		*items = ctx->mnt.fsgeom.agcount + ctx->mnt.fsgeom.rgcount;
+ 
+ 	*nr_threads = disk_heads(ctx->datadev);
+ 	*rshift = 0;
 
