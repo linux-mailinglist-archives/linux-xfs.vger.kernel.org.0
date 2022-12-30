@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C178E65A126
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:03:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF98F659FD0
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:40:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236142AbiLaCDH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:03:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
+        id S229834AbiLaAkg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:40:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236120AbiLaCDG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:03:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FAA2AF8
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:03:05 -0800 (PST)
+        with ESMTP id S235671AbiLaAke (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:40:34 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35E31E3FE;
+        Fri, 30 Dec 2022 16:40:32 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 349F661C19
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:03:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F9AC433D2;
-        Sat, 31 Dec 2022 02:03:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 95E51B81E34;
+        Sat, 31 Dec 2022 00:40:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F6C3C433EF;
+        Sat, 31 Dec 2022 00:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452184;
-        bh=DHnerPUVTyjGmT0BwgsEUrhd6LdXnfv56/E/F5novNI=;
+        s=k20201202; t=1672447230;
+        bh=NEJVxybmGz9m2WGi9E8ExY9mgy9FwwtkPSjtg8F/6jk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YsMfswCy6kj/X8Idyb1IFLkWtEQhGhhW7qYHxU3u8RVmtyoRq3Jj1A1gjhxJ3ZLW8
-         IpGkkCW938gKOXJ+qDaWZPuo6uMMBOMrXTRRDvnjYOUexDg7hnNlXtjH3mUKbFBnlu
-         SguYDRGnSoywb2LIrTTdkGl2KqwCTYrmIB44hHtcdvmYWW2e8ipfL4apFvH/qDLQV2
-         PGMX2guFVMKIM3p0NRLK0IsOY4ChszjBsppdqAsmfjhqoYsu3GiuRURrC5YSgeBVUg
-         cEWg6/yJpnYZ5PzLb0OuEaI2squ01VXcCzw3diZgohDZo2xoBTZuIkxuxarjhpKSW8
-         nuipE/y+U74JQ==
-Subject: [PATCH 4/4] xfs_repair: allow sysadmins to add reverse mapping
- indexes
+        b=ev7FsCMOx+N2jixBGo2ZjEmLH3S+1DlVRCsw5c8bgYkuJmbhb21EZ8tJnVxaqlVe8
+         eSRcjoZ9NqCKfDZSXALnT7/HrrwNynBb7wCB7AeDWLp2HPri+M0xXLuyJREc3HzHW9
+         eYBA0zUjA84N/1yLq5hOwhyOpJjCTHmgIfbbrk9xrq3n/6LuCGXIQdXSjwOrINlo7z
+         DOSm1quCS1EwxuEe0rBD6T8FcmGs1ia+9qCWz2yWaVmpMk24PukWHmi1haSl/x7+Ux
+         FIxAtSbqNZltwD7/YM+4/OH1dFKZC04uVPtT6X8PcIZG6ZZ28Y5P1PwOR8GIk9MTOT
+         6c5k8TXihsYig==
+Subject: [PATCH 1/2] xfs: test rebuilding the entire filesystem with online
+ fsck
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:19:10 -0800
-Message-ID: <167243875033.722663.8414500476421147864.stgit@magnolia>
-In-Reply-To: <167243874979.722663.18268822003736829003.stgit@magnolia>
-References: <167243874979.722663.18268822003736829003.stgit@magnolia>
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+Date:   Fri, 30 Dec 2022 14:19:12 -0800
+Message-ID: <167243875254.723308.5964105615767086182.stgit@magnolia>
+In-Reply-To: <167243875241.723308.1395808663517469875.stgit@magnolia>
+References: <167243875241.723308.1395808663517469875.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,183 +55,157 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Allow the sysadmin to use xfs_repair to upgrade an existing filesystem
-to support the reverse mapping btree index.  This is needed for online
-fsck.
+Add a new knob, TEST_XFS_SCRUB_REBUILD, that makes it so that we use
+xfs_scrub to rebuild the ondisk metadata after every test.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- man/man8/xfs_admin.8 |    8 ++++++++
- repair/globals.c     |    1 +
- repair/globals.h     |    1 +
- repair/phase2.c      |   38 ++++++++++++++++++++++++++++++++++++++
- repair/rmap.c        |    4 ++--
- repair/xfs_repair.c  |   11 +++++++++++
- 6 files changed, 61 insertions(+), 2 deletions(-)
+ README       |    3 ++
+ common/fuzzy |    1 +
+ common/rc    |    2 +-
+ common/xfs   |   77 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 82 insertions(+), 1 deletion(-)
 
 
-diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
-index 3af201cadc3..467fb2dfd0a 100644
---- a/man/man8/xfs_admin.8
-+++ b/man/man8/xfs_admin.8
-@@ -169,6 +169,14 @@ Enable sharing of file data blocks.
- This upgrade can fail if any AG has less than 2% free space remaining.
- The filesystem cannot be downgraded after this feature is enabled.
- This feature was added to Linux 4.9.
-+.TP 0.4i
-+.B rmapbt
-+Store an index of the owners of on-disk blocks.
-+This enables much stronger cross-referencing of various metadata structures
-+and online repairs to space usage metadata.
-+The filesystem cannot be downgraded after this feature is enabled.
-+This upgrade can fail if any AG has less than 5% free space remaining.
-+This feature was added to Linux 4.8.
- .RE
- .TP
- .BI \-U " uuid"
-diff --git a/repair/globals.c b/repair/globals.c
-index f5b5269c5d9..ec11bc67139 100644
---- a/repair/globals.c
-+++ b/repair/globals.c
-@@ -54,6 +54,7 @@ bool	add_bigtime;		/* add support for timestamps up to 2486 */
- bool	add_nrext64;
- bool	add_finobt;		/* add free inode btrees */
- bool	add_reflink;		/* add reference count btrees */
-+bool	add_rmapbt;		/* add reverse mapping btrees */
- 
- /* misc status variables */
- 
-diff --git a/repair/globals.h b/repair/globals.h
-index d42c4d3c6a5..d5a04a75d41 100644
---- a/repair/globals.h
-+++ b/repair/globals.h
-@@ -95,6 +95,7 @@ extern bool	add_bigtime;		/* add support for timestamps up to 2486 */
- extern bool	add_nrext64;
- extern bool	add_finobt;		/* add free inode btrees */
- extern bool	add_reflink;		/* add reference count btrees */
-+extern bool	add_rmapbt;		/* add reverse mapping btrees */
- 
- /* misc status variables */
- 
-diff --git a/repair/phase2.c b/repair/phase2.c
-index d968b4fd558..05964b3d23c 100644
---- a/repair/phase2.c
-+++ b/repair/phase2.c
-@@ -252,6 +252,40 @@ set_reflink(
- 	return true;
+diff --git a/README b/README
+index 4c4f22f853..744317625f 100644
+--- a/README
++++ b/README
+@@ -191,6 +191,9 @@ Extra XFS specification:
+    to check the filesystem. As of August 2021, xfs_repair finds all
+    filesystem corruptions found by xfs_check, and more, which means that
+    xfs_check is no longer run by default.
++ - Set TEST_XFS_SCRUB_REBUILD=1 to have _check_xfs_filesystem run xfs_scrub in
++   "force_repair" mode to rebuild the filesystem; and xfs_repair -n to check
++   the results of the rebuilding.
+  - xfs_scrub, if present, will always check the test and scratch
+    filesystems if they are still online at the end of the test. It is no
+    longer necessary to set TEST_XFS_SCRUB.
+diff --git a/common/fuzzy b/common/fuzzy
+index 14f7fdf03c..d8de55250d 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -975,6 +975,7 @@ __scratch_xfs_stress_setup_force_rebuild() {
+ # and wait for 30*TIME_FACTOR seconds to see if the filesystem goes down.
+ # Same requirements and arguments as _scratch_xfs_stress_scrub.
+ _scratch_xfs_stress_online_repair() {
++	touch "$RESULT_DIR/.skip_orebuild"	# no need to test online rebuild
+ 	__scratch_xfs_stress_setup_force_rebuild
+ 	XFS_SCRUB_FORCE_REPAIR=1 _scratch_xfs_stress_scrub "$@"
+ }
+diff --git a/common/rc b/common/rc
+index 23530413ec..a1b65f0a7f 100644
+--- a/common/rc
++++ b/common/rc
+@@ -1685,7 +1685,7 @@ _require_scratch_nocheck()
+             exit 1
+         fi
+     fi
+-    rm -f ${RESULT_DIR}/require_scratch
++    rm -f ${RESULT_DIR}/require_scratch "$RESULT_DIR/.skip_orebuild"
  }
  
-+static bool
-+set_rmapbt(
-+	struct xfs_mount	*mp,
-+	struct xfs_sb		*new_sb)
-+{
-+	if (!xfs_has_crc(mp)) {
-+		printf(
-+	_("Reverse mapping btree feature only supported on V5 filesystems.\n"));
-+		exit(0);
-+	}
-+
-+	if (xfs_has_realtime(mp)) {
-+		printf(
-+	_("Reverse mapping btree feature not supported with realtime.\n"));
-+		exit(0);
-+	}
-+
-+	if (xfs_has_reflink(mp)) {
-+		printf(
-+	_("Reverse mapping btrees cannot be added when reflink is enabled.\n"));
-+		exit(0);
-+	}
-+
-+	if (xfs_has_rmapbt(mp)) {
-+		printf(_("Filesystem already supports reverse mapping btrees.\n"));
-+		exit(0);
-+	}
-+
-+	printf(_("Adding reverse mapping btrees to filesystem.\n"));
-+	new_sb->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_RMAPBT;
-+	new_sb->sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
-+	return true;
-+}
-+
- struct check_state {
- 	struct xfs_sb		sb;
- 	uint64_t		features;
-@@ -423,6 +457,8 @@ need_check_fs_free_space(
- 		return true;
- 	if (xfs_has_reflink(mp) && !(old->features & XFS_FEAT_REFLINK))
- 		return true;
-+	if (xfs_has_rmapbt(mp) && !(old->features & XFS_FEAT_RMAPBT))
-+		return true;
- 	return false;
- }
- 
-@@ -502,6 +538,8 @@ upgrade_filesystem(
- 		dirty |= set_finobt(mp, &new_sb);
- 	if (add_reflink)
- 		dirty |= set_reflink(mp, &new_sb);
-+	if (add_rmapbt)
-+		dirty |= set_rmapbt(mp, &new_sb);
- 	if (!dirty)
- 		return;
- 
-diff --git a/repair/rmap.c b/repair/rmap.c
-index e49cd2364ec..00381c6e69d 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -52,7 +52,7 @@ rmap_needs_work(
- 	struct xfs_mount	*mp)
+ # we need the scratch device and it needs to not be an lvm device
+diff --git a/common/xfs b/common/xfs
+index 436569ba28..804047557b 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -692,6 +692,8 @@ _scratch_xfs_mdrestore()
+ # run xfs_check and friends on a FS.
+ _check_xfs_filesystem()
  {
- 	return xfs_has_reflink(mp) || add_reflink ||
--	       xfs_has_rmapbt(mp);
-+	       xfs_has_rmapbt(mp) || add_rmapbt;
- }
++	local can_scrub=
++
+ 	if [ $# -ne 3 ]; then
+ 		echo "Usage: _check_xfs_filesystem device <logdev>|none <rtdev>|none" 1>&2
+ 		exit 1
+@@ -726,6 +728,8 @@ _check_xfs_filesystem()
+ 	# Run online scrub if we can.
+ 	mntpt="$(_is_dev_mounted $device)"
+ 	if [ -n "$mntpt" ] && _supports_xfs_scrub "$mntpt" "$device"; then
++		can_scrub=1
++
+ 		# Tests can create a scenario in which a call to syncfs() issued
+ 		# at the end of the execution of the test script would return an
+ 		# error code. xfs_scrub internally calls syncfs() before
+@@ -842,6 +846,79 @@ _check_xfs_filesystem()
+ 		_mount_or_remount_rw "$extra_mount_options" $device $mountpoint
+ 	fi
  
- /* Destroy an in-memory rmap btree. */
-@@ -1159,7 +1159,7 @@ rmaps_verify_btree(
- 	int			have;
- 	int			error;
- 
--	if (!xfs_has_rmapbt(mp))
-+	if (!xfs_has_rmapbt(mp) || add_rmapbt)
- 		return;
- 	if (rmapbt_suspect) {
- 		if (no_modify && agno == 0)
-diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index 90da0d0e956..c461bc8eb07 100644
---- a/repair/xfs_repair.c
-+++ b/repair/xfs_repair.c
-@@ -71,6 +71,7 @@ enum c_opt_nums {
- 	CONVERT_NREXT64,
- 	CONVERT_FINOBT,
- 	CONVERT_REFLINK,
-+	CONVERT_RMAPBT,
- 	C_MAX_OPTS,
- };
- 
-@@ -81,6 +82,7 @@ static char *c_opts[] = {
- 	[CONVERT_NREXT64]	= "nrext64",
- 	[CONVERT_FINOBT]	= "finobt",
- 	[CONVERT_REFLINK]	= "reflink",
-+	[CONVERT_RMAPBT]	= "rmapbt",
- 	[C_MAX_OPTS]		= NULL,
- };
- 
-@@ -358,6 +360,15 @@ process_args(int argc, char **argv)
- 		_("-c reflink only supports upgrades\n"));
- 					add_reflink = true;
- 					break;
-+				case CONVERT_RMAPBT:
-+					if (!val)
-+						do_abort(
-+		_("-c rmapbt requires a parameter\n"));
-+					if (strtol(val, NULL, 0) != 1)
-+						do_abort(
-+		_("-c rmapbt only supports upgrades\n"));
-+					add_rmapbt = true;
-+					break;
- 				default:
- 					unknown('c', val);
- 					break;
++	# If desired, test the online metadata rebuilding behavior if the
++	# filesystem was mounted when this function was called.
++	if [ -n "$TEST_XFS_SCRUB_REBUILD" ] && [ -n "$can_scrub" ] && [ ! -e "$RESULT_DIR/.skip_orebuild" ]; then
++		orebuild_ok=1
++
++		# Walk the entire directory tree to load directory blocks into
++		# memory and populate the dentry cache, which can speed up the
++		# repairs considerably when the directory tree is very large.
++		find $mntpt &>/dev/null &
++
++		XFS_SCRUB_FORCE_REPAIR=1 "$XFS_SCRUB_PROG" -v -d $mntpt > $tmp.scrub 2>&1
++		if [ $? -ne 0 ]; then
++			if grep -q 'No space left on device' $tmp.scrub; then
++				# It's not an error if the fs does not have
++				# enough space to complete a repair.  We will
++				# check everything, though.
++				echo "*** XFS_SCRUB_FORCE_REPAIR=1 xfs_scrub -v -d ran out of space ***" >> $seqres.full
++				cat $tmp.scrub >> $seqres.full
++				echo "*** end xfs_scrub output" >> $seqres.full
++			else
++				_log_err "_check_xfs_filesystem: filesystem on $device failed scrub orebuild"
++				echo "*** XFS_SCRUB_FORCE_REPAIR=1 xfs_scrub -v -d output ***" >> $seqres.full
++				cat $tmp.scrub >> $seqres.full
++				echo "*** end xfs_scrub output" >> $seqres.full
++				ok=0
++				orebuild_ok=0
++			fi
++		fi
++		rm -f $tmp.scrub
++
++		# Clear force_repair because xfs_scrub could have set it
++		$XFS_IO_PROG -x -c 'inject noerror' "$mntpt" >> $seqres.full
++
++		"$XFS_SCRUB_PROG" -v -d -n $mntpt > $tmp.scrub 2>&1
++		if [ $? -ne 0 ]; then
++			_log_err "_check_xfs_filesystem: filesystem on $device failed scrub orebuild recheck"
++			echo "*** xfs_scrub -v -d -n output ***" >> $seqres.full
++			cat $tmp.scrub >> $seqres.full
++			echo "*** end xfs_scrub output" >> $seqres.full
++			ok=0
++			orebuild_ok=0
++		fi
++		rm -f $tmp.scrub
++
++		mountpoint=`_umount_or_remount_ro $device`
++
++		$XFS_REPAIR_PROG -n $extra_options $extra_log_options $extra_rt_options $device >$tmp.repair 2>&1
++		if [ $? -ne 0 ]; then
++			_log_err "_check_xfs_filesystem: filesystem on $device is inconsistent (orebuild-reverify)"
++			echo "*** xfs_repair -n output ***"	>>$seqres.full
++			cat $tmp.repair				>>$seqres.full
++			echo "*** end xfs_repair output"	>>$seqres.full
++
++			ok=0
++			orebuild_ok=0
++		fi
++		rm -f $tmp.repair
++
++		if [ $ok -eq 0 ]; then
++			echo "*** mount output ***"		>>$seqres.full
++			_mount					>>$seqres.full
++			echo "*** end mount output"		>>$seqres.full
++		elif [ "$type" = "xfs" ]; then
++			_mount_or_remount_rw "$extra_mount_options" $device $mountpoint
++		fi
++
++		if [ "$orebuild_ok" -ne 1 ] && [ "$DUMP_CORRUPT_FS" = "1" ]; then
++			local flatdev="$(basename "$device")"
++			_xfs_metadump "$seqres.$flatdev.orebuild.md" "$device" \
++				"$logdev" compress >> $seqres.full
++		fi
++	fi
++
+ 	if [ $ok -eq 0 ]; then
+ 		status=1
+ 		if [ "$iam" != "check" ]; then
 
