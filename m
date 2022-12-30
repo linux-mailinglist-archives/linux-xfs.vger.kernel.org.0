@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C3FC65A040
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:07:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1BA9659F2A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:05:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236001AbiLaBHt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:07:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41148 "EHLO
+        id S235774AbiLaAFs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:05:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235902AbiLaBHs (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:07:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B29911DF18
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:07:46 -0800 (PST)
+        with ESMTP id S235435AbiLaAFr (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:05:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D33F76157
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:05:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 707B0B81DF9
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:07:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3357FC433EF;
-        Sat, 31 Dec 2022 01:07:44 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7CFB7B81DEC
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:05:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CEB4C433EF;
+        Sat, 31 Dec 2022 00:05:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448864;
-        bh=u3762SEX3HjXqekFYzffjbmIVKDfvo1RdEy7TYxunjM=;
+        s=k20201202; t=1672445143;
+        bh=lHuuOcQAfX93rEEltlP81qFlydyfE7z0taV6SqYbwAY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=i4cKyEFf2+37q3vZalOaSCTGL4+6SkDTBOLjIxJcB2zNIaJZs1inKoE6aUrQMcYoJ
-         b3xv4BzKCeLeRe4shb8YbvJ3yeXq3RPr82oL2vJMW0/xGvhvrTmWVcb5GlJGKfb5MB
-         o9gW3x7gUjNoiR4URaFE0yXNhzi5WB9QQmlwBP1FtbJcAdkGLhZaxzpwpvb6OVMAgG
-         ksljgL4hQ7jC6sTHBX1hYujCd45q+7MVwjeO1Pd0hjsB7hFIOAq2x/oEtEM0a0MDKB
-         d7j6qWd1MYVrlgVZLM5PUJgmTgqN8F84ZqWpFx0t4j0MMPibWNIhipUuQmQmtHtyvK
-         0IGGjrnkewJ/Q==
-Subject: [PATCH 10/20] xfs: push xfs_icreate_args creation out of xfs_create*
+        b=fj3geoTZFnG1uXMheTFCFjpEp7FNCSfJtZunqxtibkXYmZcdiFE95CSuNnm4O8NOO
+         GWwl/al/nC+Pe05hqICdeUPzd6A/ATqmueNtX1GIhp5Y2W8vvOZlCEKBVUUJtAk6fD
+         UTvqKhN029MigH7mNspVaawSMpDbcVXAKnDKPL22oZSw0rRwJmLYX5RJiY71t7LbJ1
+         ddjKENvAVBUfjv+mVCSyEYWZ/D+tEKRIXb9ogJiUHyD3ifdd62GQ+xHpvkeZAIkqbO
+         TnqwEA2lwIuLOnq8PgGP+wqdUlRlkVNLLmfq09kEGOQoLdQQHfI5Pg3nv2fvZjtFzm
+         yniJDG1wkxZ7w==
+Subject: [PATCH 3/5] xfs: move btree bulkload record initialization to
+ ->get_record implementations
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:19 -0800
-Message-ID: <167243863973.707335.4090548610585011757.stgit@magnolia>
-In-Reply-To: <167243863809.707335.15895322495460356300.stgit@magnolia>
-References: <167243863809.707335.15895322495460356300.stgit@magnolia>
+Message-ID: <167243863943.707598.17620950198542269061.stgit@magnolia>
+In-Reply-To: <167243863904.707598.12385476439101029022.stgit@magnolia>
+References: <167243863904.707598.12385476439101029022.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,259 +55,271 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Move the initialization of the xfs_icreate_args structure out of
-xfs_create and xfs_create_tempfile into their callers so that we can set
-the new inode's attributes in one place and pass that through instead of
-open coding the collection of attributes all over the code.
+When we're performing a bulk load of a btree, move the code that
+actually stores the btree record in the new btree block out of the
+generic code and into the individual ->get_record implementations.
+This is preparation for being able to store multiple records with a
+single indirect call.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_inode.c |   59 +++++++++++++++++++++++-----------------------------
- fs/xfs/xfs_inode.h |    9 ++++----
- fs/xfs/xfs_iops.c  |   50 +++++++++++++++++++++++++++-----------------
- 3 files changed, 61 insertions(+), 57 deletions(-)
+ libxfs/libxfs_api_defs.h   |    1 +
+ libxfs/xfs_btree_staging.c |   17 ++++++-------
+ libxfs/xfs_btree_staging.h |   15 ++++++++----
+ repair/agbtree.c           |   56 +++++++++++++++++++++++++++++++++-----------
+ 4 files changed, 60 insertions(+), 29 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 270e81e12015..5350c55ac25f 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -808,44 +808,34 @@ xfs_nlink_hook_del(
- 
- int
- xfs_create(
--	struct user_namespace	*mnt_userns,
--	xfs_inode_t		*dp,
-+	struct xfs_inode	*dp,
- 	struct xfs_name		*name,
--	umode_t			mode,
--	dev_t			rdev,
--	bool			init_xattrs,
--	xfs_inode_t		**ipp)
-+	const struct xfs_icreate_args *args,
-+	struct xfs_inode	**ipp)
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index f8efcce777b..5aa9c019d40 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -50,6 +50,7 @@
+ #define xfs_btree_bload_compute_geometry libxfs_btree_bload_compute_geometry
+ #define xfs_btree_del_cursor		libxfs_btree_del_cursor
+ #define xfs_btree_init_block		libxfs_btree_init_block
++#define xfs_btree_rec_addr		libxfs_btree_rec_addr
+ #define xfs_buf_delwri_submit		libxfs_buf_delwri_submit
+ #define xfs_buf_get			libxfs_buf_get
+ #define xfs_buf_get_uncached		libxfs_buf_get_uncached
+diff --git a/libxfs/xfs_btree_staging.c b/libxfs/xfs_btree_staging.c
+index baf7f422603..97fade90622 100644
+--- a/libxfs/xfs_btree_staging.c
++++ b/libxfs/xfs_btree_staging.c
+@@ -434,22 +434,19 @@ STATIC int
+ xfs_btree_bload_leaf(
+ 	struct xfs_btree_cur		*cur,
+ 	unsigned int			recs_this_block,
+-	xfs_btree_bload_get_record_fn	get_record,
++	xfs_btree_bload_get_records_fn	get_records,
+ 	struct xfs_btree_block		*block,
+ 	void				*priv)
  {
--	struct xfs_icreate_args	args = {
--		.rdev		= rdev,
--		.nlink		= S_ISDIR(mode) ? 2 : 1,
--	};
--	int			is_dir = S_ISDIR(mode);
- 	struct xfs_mount	*mp = dp->i_mount;
- 	struct xfs_inode	*ip = NULL;
- 	struct xfs_trans	*tp = NULL;
--	int			error;
--	bool                    unlock_dp_on_error = false;
- 	struct xfs_dquot	*udqp = NULL;
- 	struct xfs_dquot	*gdqp = NULL;
- 	struct xfs_dquot	*pdqp = NULL;
- 	struct xfs_trans_res	*tres;
--	uint			resblks;
- 	xfs_ino_t		ino;
-+	bool			unlock_dp_on_error = false;
-+	bool			is_dir = S_ISDIR(args->mode);
-+	uint			resblks;
-+	int			error;
+-	unsigned int			j;
++	unsigned int			j = 1;
+ 	int				ret;
  
-+	ASSERT(args->pip == dp);
- 	trace_xfs_create(dp, name);
- 
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
- 
--	xfs_icreate_args_inherit(&args, dp, mnt_userns, mode);
--	if (init_xattrs)
--		args.flags |= XFS_ICREATE_ARGS_INIT_XATTRS;
+ 	/* Fill the leaf block with records. */
+-	for (j = 1; j <= recs_this_block; j++) {
+-		union xfs_btree_rec	*block_rec;
 -
- 	/*
- 	 * Make sure that we have allocated dquot(s) on disk.
- 	 */
--	error = xfs_qm_vop_dqalloc(dp, args.uid, args.gid, args.prid,
-+	error = xfs_qm_vop_dqalloc(dp, args->uid, args->gid, args->prid,
- 			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
- 			&udqp, &gdqp, &pdqp);
- 	if (error)
-@@ -884,9 +874,9 @@ xfs_create(
- 	 * entry pointing to them, but a directory also the "." entry
- 	 * pointing to itself.
- 	 */
--	error = xfs_dialloc(&tp, dp->i_ino, mode, &ino);
-+	error = xfs_dialloc(&tp, dp->i_ino, args->mode, &ino);
- 	if (!error)
--		error = xfs_icreate(tp, ino, &args, &ip);
-+		error = xfs_icreate(tp, ino, args, &ip);
- 	if (error)
- 		goto out_trans_cancel;
- 
-@@ -977,32 +967,31 @@ xfs_create(
- 
- int
- xfs_create_tmpfile(
--	struct user_namespace	*mnt_userns,
- 	struct xfs_inode	*dp,
--	umode_t			mode,
-+	const struct xfs_icreate_args *args,
- 	struct xfs_inode	**ipp)
- {
--	struct xfs_icreate_args	args = { NULL };
- 	struct xfs_mount	*mp = dp->i_mount;
- 	struct xfs_inode	*ip = NULL;
- 	struct xfs_trans	*tp = NULL;
--	int			error;
- 	struct xfs_dquot	*udqp = NULL;
- 	struct xfs_dquot	*gdqp = NULL;
- 	struct xfs_dquot	*pdqp = NULL;
- 	struct xfs_trans_res	*tres;
--	uint			resblks;
- 	xfs_ino_t		ino;
-+	uint			resblks;
-+	int			error;
-+
-+	ASSERT(args->nlink == 0);
-+	ASSERT(args->pip == dp);
- 
- 	if (xfs_is_shutdown(mp))
- 		return -EIO;
- 
--	xfs_icreate_args_inherit(&args, dp, mnt_userns, mode);
--
- 	/*
- 	 * Make sure that we have allocated dquot(s) on disk.
- 	 */
--	error = xfs_qm_vop_dqalloc(dp, args.uid, args.gid, args.prid,
-+	error = xfs_qm_vop_dqalloc(dp, args->uid, args->gid, args->prid,
- 			XFS_QMOPT_QUOTALL | XFS_QMOPT_INHERIT,
- 			&udqp, &gdqp, &pdqp);
- 	if (error)
-@@ -1016,9 +1005,9 @@ xfs_create_tmpfile(
- 	if (error)
- 		goto out_release_dquots;
- 
--	error = xfs_dialloc(&tp, dp->i_ino, mode, &ino);
-+	error = xfs_dialloc(&tp, dp->i_ino, args->mode, &ino);
- 	if (!error)
--		error = xfs_icreate(tp, ino, &args, &ip);
-+		error = xfs_icreate(tp, ino, args, &ip);
- 	if (error)
- 		goto out_trans_cancel;
- 
-@@ -2750,12 +2739,16 @@ xfs_rename_alloc_whiteout(
- 	struct xfs_inode	*dp,
- 	struct xfs_inode	**wip)
- {
-+	struct xfs_icreate_args	args = {
-+		.nlink		= 0,
-+	};
- 	struct xfs_inode	*tmpfile;
- 	struct qstr		name;
- 	int			error;
- 
--	error = xfs_create_tmpfile(mnt_userns, dp, S_IFCHR | WHITEOUT_MODE,
--				   &tmpfile);
-+	xfs_icreate_args_inherit(&args, dp, mnt_userns, S_IFCHR | WHITEOUT_MODE);
-+
-+	error = xfs_create_tmpfile(dp, &args, &tmpfile);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index cb4e5114bac4..9617079f0a73 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -485,12 +485,11 @@ int		xfs_release(struct xfs_inode *ip);
- void		xfs_inactive(struct xfs_inode *ip);
- int		xfs_lookup(struct xfs_inode *dp, const struct xfs_name *name,
- 			   struct xfs_inode **ipp, struct xfs_name *ci_name);
--int		xfs_create(struct user_namespace *mnt_userns,
--			   struct xfs_inode *dp, struct xfs_name *name,
--			   umode_t mode, dev_t rdev, bool need_xattr,
-+int		xfs_create(struct xfs_inode *dp, struct xfs_name *name,
-+			   const struct xfs_icreate_args *iargs,
- 			   struct xfs_inode **ipp);
--int		xfs_create_tmpfile(struct user_namespace *mnt_userns,
--			   struct xfs_inode *dp, umode_t mode,
-+int		xfs_create_tmpfile(struct xfs_inode *dp,
-+			   const struct xfs_icreate_args *iargs,
- 			   struct xfs_inode **ipp);
- int		xfs_remove(struct xfs_inode *dp, struct xfs_name *name,
- 			   struct xfs_inode *ip);
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 80f881c69336..d580bf591d73 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -165,44 +165,56 @@ xfs_create_need_xattr(
- STATIC int
- xfs_generic_create(
- 	struct user_namespace	*mnt_userns,
--	struct inode	*dir,
--	struct dentry	*dentry,
--	umode_t		mode,
--	dev_t		rdev,
--	struct file	*tmpfile)	/* unnamed file */
-+	struct inode		*dir,
-+	struct dentry		*dentry,
-+	umode_t			mode,
-+	dev_t			rdev,
-+	struct file		*tmpfile)	/* unnamed file */
- {
--	struct inode	*inode;
--	struct xfs_inode *ip = NULL;
--	struct posix_acl *default_acl, *acl;
--	struct xfs_name	name;
--	int		error;
-+	struct xfs_icreate_args args = {
-+		.rdev		= rdev,
-+	};
-+	struct inode		*inode;
-+	struct xfs_inode	*ip = NULL;
-+	struct posix_acl	*default_acl, *acl;
-+	struct xfs_name		name;
-+	int			error;
-+
-+	xfs_icreate_args_inherit(&args, XFS_I(dir), mnt_userns, mode);
-+	if (tmpfile)
-+		args.nlink = 0;
-+	else if (S_ISDIR(mode))
-+		args.nlink = 2;
-+	else
-+		args.nlink = 1;
- 
- 	/*
- 	 * Irix uses Missed'em'V split, but doesn't want to see
- 	 * the upper 5 bits of (14bit) major.
- 	 */
--	if (S_ISCHR(mode) || S_ISBLK(mode)) {
--		if (unlikely(!sysv_valid_dev(rdev) || MAJOR(rdev) & ~0x1ff))
-+	if (S_ISCHR(args.mode) || S_ISBLK(args.mode)) {
-+		if (unlikely(!sysv_valid_dev(args.rdev) ||
-+			     MAJOR(args.rdev) & ~0x1ff))
- 			return -EINVAL;
- 	} else {
--		rdev = 0;
-+		args.rdev = 0;
+-		ret = get_record(cur, priv);
+-		if (ret)
++	while (j <= recs_this_block) {
++		ret = get_records(cur, j, block, recs_this_block - j + 1, priv);
++		if (ret < 0)
+ 			return ret;
+-		block_rec = xfs_btree_rec_addr(cur, j, block);
+-		cur->bc_ops->init_rec_from_cur(cur, block_rec);
++		j += ret;
  	}
  
--	error = posix_acl_create(dir, &mode, &default_acl, &acl);
-+	error = posix_acl_create(dir, &args.mode, &default_acl, &acl);
- 	if (error)
- 		return error;
+ 	return 0;
+@@ -787,7 +784,7 @@ xfs_btree_bload(
+ 		trace_xfs_btree_bload_block(cur, level, i, blocks, &ptr,
+ 				nr_this_block);
  
- 	/* Verify mode is valid also for tmpfile case */
--	error = xfs_dentry_mode_to_name(&name, dentry, mode);
-+	error = xfs_dentry_mode_to_name(&name, dentry, args.mode);
- 	if (unlikely(error))
- 		goto out_free_acl;
+-		ret = xfs_btree_bload_leaf(cur, nr_this_block, bbl->get_record,
++		ret = xfs_btree_bload_leaf(cur, nr_this_block, bbl->get_records,
+ 				block, priv);
+ 		if (ret)
+ 			goto out;
+diff --git a/libxfs/xfs_btree_staging.h b/libxfs/xfs_btree_staging.h
+index d6dea3f0088..82a3a8ef0f1 100644
+--- a/libxfs/xfs_btree_staging.h
++++ b/libxfs/xfs_btree_staging.h
+@@ -50,7 +50,9 @@ void xfs_btree_commit_ifakeroot(struct xfs_btree_cur *cur, struct xfs_trans *tp,
+ 		int whichfork, const struct xfs_btree_ops *ops);
  
- 	if (!tmpfile) {
--		error = xfs_create(mnt_userns, XFS_I(dir), &name, mode, rdev,
--				xfs_create_need_xattr(dir, default_acl, acl),
--				&ip);
-+		if (xfs_create_need_xattr(dir, default_acl, acl))
-+			args.flags |= XFS_ICREATE_ARGS_INIT_XATTRS;
-+		error = xfs_create(XFS_I(dir), &name, &args, &ip);
- 	} else {
--		error = xfs_create_tmpfile(mnt_userns, XFS_I(dir), mode, &ip);
-+		error = xfs_create_tmpfile(XFS_I(dir), &args, &ip);
- 	}
- 	if (unlikely(error))
- 		goto out_free_acl;
+ /* Bulk loading of staged btrees. */
+-typedef int (*xfs_btree_bload_get_record_fn)(struct xfs_btree_cur *cur, void *priv);
++typedef int (*xfs_btree_bload_get_records_fn)(struct xfs_btree_cur *cur,
++		unsigned int idx, struct xfs_btree_block *block,
++		unsigned int nr_wanted, void *priv);
+ typedef int (*xfs_btree_bload_claim_block_fn)(struct xfs_btree_cur *cur,
+ 		union xfs_btree_ptr *ptr, void *priv);
+ typedef size_t (*xfs_btree_bload_iroot_size_fn)(struct xfs_btree_cur *cur,
+@@ -58,11 +60,14 @@ typedef size_t (*xfs_btree_bload_iroot_size_fn)(struct xfs_btree_cur *cur,
+ 
+ struct xfs_btree_bload {
+ 	/*
+-	 * This function will be called nr_records times to load records into
+-	 * the btree.  The function does this by setting the cursor's bc_rec
+-	 * field in in-core format.  Records must be returned in sort order.
++	 * This function will be called to load @nr_wanted records into the
++	 * btree.  The implementation does this by setting the cursor's bc_rec
++	 * field in in-core format and using init_rec_from_cur to set the
++	 * records in the btree block.  Records must be returned in sort order.
++	 * The function must return the number of records loaded or the usual
++	 * negative errno.
+ 	 */
+-	xfs_btree_bload_get_record_fn	get_record;
++	xfs_btree_bload_get_records_fn	get_records;
+ 
+ 	/*
+ 	 * This function will be called nr_blocks times to obtain a pointer
+diff --git a/repair/agbtree.c b/repair/agbtree.c
+index 0fd7ef5d351..d90cbcc2f28 100644
+--- a/repair/agbtree.c
++++ b/repair/agbtree.c
+@@ -209,18 +209,25 @@ get_bno_rec(
+ 
+ /* Grab one bnobt record and put it in the btree cursor. */
+ static int
+-get_bnobt_record(
++get_bnobt_records(
+ 	struct xfs_btree_cur		*cur,
++	unsigned int			idx,
++	struct xfs_btree_block		*block,
++	unsigned int			nr_wanted,
+ 	void				*priv)
+ {
+ 	struct bt_rebuild		*btr = priv;
+ 	struct xfs_alloc_rec_incore	*arec = &cur->bc_rec.a;
++	union xfs_btree_rec		*block_rec;
+ 
+ 	btr->bno_rec = get_bno_rec(cur, btr->bno_rec);
+ 	arec->ar_startblock = btr->bno_rec->ex_startblock;
+ 	arec->ar_blockcount = btr->bno_rec->ex_blockcount;
+ 	btr->freeblks += btr->bno_rec->ex_blockcount;
+-	return 0;
++
++	block_rec = libxfs_btree_rec_addr(cur, idx, block);
++	cur->bc_ops->init_rec_from_cur(cur, block_rec);
++	return 1;
+ }
+ 
+ void
+@@ -247,10 +254,10 @@ init_freespace_cursors(
+ 	btr_cnt->cur = libxfs_allocbt_stage_cursor(sc->mp,
+ 			&btr_cnt->newbt.afake, pag, XFS_BTNUM_CNT);
+ 
+-	btr_bno->bload.get_record = get_bnobt_record;
++	btr_bno->bload.get_records = get_bnobt_records;
+ 	btr_bno->bload.claim_block = rebuild_claim_block;
+ 
+-	btr_cnt->bload.get_record = get_bnobt_record;
++	btr_cnt->bload.get_records = get_bnobt_records;
+ 	btr_cnt->bload.claim_block = rebuild_claim_block;
+ 
+ 	/*
+@@ -371,13 +378,17 @@ get_ino_rec(
+ 
+ /* Grab one inobt record. */
+ static int
+-get_inobt_record(
++get_inobt_records(
+ 	struct xfs_btree_cur		*cur,
++	unsigned int			idx,
++	struct xfs_btree_block		*block,
++	unsigned int			nr_wanted,
+ 	void				*priv)
+ {
+ 	struct bt_rebuild		*btr = priv;
+ 	struct xfs_inobt_rec_incore	*irec = &cur->bc_rec.i;
+ 	struct ino_tree_node		*ino_rec;
++	union xfs_btree_rec		*block_rec;
+ 	int				inocnt = 0;
+ 	int				finocnt = 0;
+ 	int				k;
+@@ -431,7 +442,10 @@ get_inobt_record(
+ 		btr->first_agino = ino_rec->ino_startnum;
+ 	btr->freecount += finocnt;
+ 	btr->count += inocnt;
+-	return 0;
++
++	block_rec = libxfs_btree_rec_addr(cur, idx, block);
++	cur->bc_ops->init_rec_from_cur(cur, block_rec);
++	return 1;
+ }
+ 
+ /* Initialize both inode btree cursors as needed. */
+@@ -490,7 +504,7 @@ init_ino_cursors(
+ 	btr_ino->cur = libxfs_inobt_stage_cursor(sc->mp, &btr_ino->newbt.afake,
+ 			pag, XFS_BTNUM_INO);
+ 
+-	btr_ino->bload.get_record = get_inobt_record;
++	btr_ino->bload.get_records = get_inobt_records;
+ 	btr_ino->bload.claim_block = rebuild_claim_block;
+ 	btr_ino->first_agino = NULLAGINO;
+ 
+@@ -510,7 +524,7 @@ _("Unable to compute inode btree geometry, error %d.\n"), error);
+ 	btr_fino->cur = libxfs_inobt_stage_cursor(sc->mp,
+ 			&btr_fino->newbt.afake, pag, XFS_BTNUM_FINO);
+ 
+-	btr_fino->bload.get_record = get_inobt_record;
++	btr_fino->bload.get_records = get_inobt_records;
+ 	btr_fino->bload.claim_block = rebuild_claim_block;
+ 	btr_fino->first_agino = NULLAGINO;
+ 
+@@ -560,16 +574,23 @@ _("Error %d while creating finobt btree for AG %u.\n"), error, agno);
+ 
+ /* Grab one rmap record. */
+ static int
+-get_rmapbt_record(
++get_rmapbt_records(
+ 	struct xfs_btree_cur		*cur,
++	unsigned int			idx,
++	struct xfs_btree_block		*block,
++	unsigned int			nr_wanted,
+ 	void				*priv)
+ {
+ 	struct xfs_rmap_irec		*rec;
+ 	struct bt_rebuild		*btr = priv;
++	union xfs_btree_rec		*block_rec;
+ 
+ 	rec = pop_slab_cursor(btr->slab_cursor);
+ 	memcpy(&cur->bc_rec.r, rec, sizeof(struct xfs_rmap_irec));
+-	return 0;
++
++	block_rec = libxfs_btree_rec_addr(cur, idx, block);
++	cur->bc_ops->init_rec_from_cur(cur, block_rec);
++	return 1;
+ }
+ 
+ /* Set up the rmap rebuild parameters. */
+@@ -589,7 +610,7 @@ init_rmapbt_cursor(
+ 	init_rebuild(sc, &XFS_RMAP_OINFO_AG, free_space, btr);
+ 	btr->cur = libxfs_rmapbt_stage_cursor(sc->mp, &btr->newbt.afake, pag);
+ 
+-	btr->bload.get_record = get_rmapbt_record;
++	btr->bload.get_records = get_rmapbt_records;
+ 	btr->bload.claim_block = rebuild_claim_block;
+ 
+ 	/* Compute how many blocks we'll need. */
+@@ -631,16 +652,23 @@ _("Error %d while creating rmap btree for AG %u.\n"), error, agno);
+ 
+ /* Grab one refcount record. */
+ static int
+-get_refcountbt_record(
++get_refcountbt_records(
+ 	struct xfs_btree_cur		*cur,
++	unsigned int			idx,
++	struct xfs_btree_block		*block,
++	unsigned int			nr_wanted,
+ 	void				*priv)
+ {
+ 	struct xfs_refcount_irec	*rec;
+ 	struct bt_rebuild		*btr = priv;
++	union xfs_btree_rec		*block_rec;
+ 
+ 	rec = pop_slab_cursor(btr->slab_cursor);
+ 	memcpy(&cur->bc_rec.rc, rec, sizeof(struct xfs_refcount_irec));
+-	return 0;
++
++	block_rec = libxfs_btree_rec_addr(cur, idx, block);
++	cur->bc_ops->init_rec_from_cur(cur, block_rec);
++	return 1;
+ }
+ 
+ /* Set up the refcount rebuild parameters. */
+@@ -661,7 +689,7 @@ init_refc_cursor(
+ 	btr->cur = libxfs_refcountbt_stage_cursor(sc->mp, &btr->newbt.afake,
+ 			pag);
+ 
+-	btr->bload.get_record = get_refcountbt_record;
++	btr->bload.get_records = get_refcountbt_records;
+ 	btr->bload.claim_block = rebuild_claim_block;
+ 
+ 	/* Compute how many blocks we'll need. */
 
