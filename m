@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8938865A15B
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A8C65A158
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:15:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236192AbiLaCQi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:16:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54132 "EHLO
+        id S236188AbiLaCPy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:15:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiLaCQh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:16:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631562DD5
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:16:36 -0800 (PST)
+        with ESMTP id S231485AbiLaCPv (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:15:51 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6E02DD5
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:15:50 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16AB2B81E5A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:16:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA4BC433D2;
-        Sat, 31 Dec 2022 02:16:33 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id ED1C5CE1A8E
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:15:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31325C433D2;
+        Sat, 31 Dec 2022 02:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452993;
-        bh=BLmvg4Rqwhm12Rw3rZK/YwtDQ2tBM4JT+/eZfurvbto=;
+        s=k20201202; t=1672452947;
+        bh=AJZ0gNZo4OV20TBRkD8feBasdr/4SPHr8JbaDdPH7rs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GrQxcD2MdHQMqXdhv0lT7pizt+2qQl1u/2DlJfWYgUGN9ypZwxDxc6Y9gJR/stqop
-         HrvzRD9uWXEkuDgyt1dyRSHFjITCAToKUkuUpClFgT2YRq2gZEo73tXV4r+dfWPKYa
-         YywZ2vn37lBlZODt9+tmBJ//lguBAoqELFZ3ITRrsd+aZ4AcPJqCtpRkNXSFx66pLm
-         uu9Uf8knw/FqfNPgaodp9TPLUu6k2nAu2BZuC6mkd5NQRZsx/oIGY5zx7HlcSSgmTP
-         v9yPjeCbTsPGaJHSaZCluCSMwfcTQk8YWfvO8VoJMrMsxR2dXFxdIusdoFQ0YR1R5r
-         coRkScpoPQYOg==
-Subject: [PATCH 26/46] xfs_scrub: scan metadata directories during phase 3
+        b=kdqNjGHX57o1lmiPRc+RpvI2/g7u+flkwW8VKSc3V2LBCcRlMqN2aCfG+0PcL/wpx
+         FfK4ZnE1ETuR7t6WW64eZpELDg9yENyKJtUhAk67xF/g1kGbdC3PUziuk1wYeOrHPi
+         kT9f2ZiK9mCI6OvKdVFLj8/hqkyBBMT28xiQDsxALLd7ksuZSojwnLIU3gc9Ettg6W
+         x2UIpdGQF/fQSJwOIjrO7dlrjzIxFHLkk1nMtJiqO3kTUNfX6hYZ9Sf1g085QpkpJ8
+         fgUR6XZNMlKtwcGInX5jw35LFR+E3XOkkuIvWhE6bKe0lLynduc/nY1SlBFoIvxN+W
+         /hX+TqDPm1WYA==
+Subject: [PATCH 23/46] xfs_db: support metadata directories in the path
+ command
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:22 -0800
-Message-ID: <167243876276.725900.10798991288646986623.stgit@magnolia>
+Message-ID: <167243876237.725900.11095686664824379022.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,125 +56,170 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Scan metadata directories for correctness during phase 3.
+Teach the path command to traverse the metadata directory tree by
+passing a '\' as the first letter in the path.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/inodes.c |    5 +++++
- scrub/inodes.h |    5 ++++-
- scrub/phase3.c |    7 ++++++-
- scrub/phase5.c |    2 +-
- scrub/phase6.c |    2 +-
- 5 files changed, 17 insertions(+), 4 deletions(-)
+ db/namei.c        |   43 +++++++++++++++++++++++++++++++++++++------
+ man/man8/xfs_db.8 |   11 +++++++++--
+ 2 files changed, 46 insertions(+), 8 deletions(-)
 
 
-diff --git a/scrub/inodes.c b/scrub/inodes.c
-index 78f0914b8d9..52d17c5c646 100644
---- a/scrub/inodes.c
-+++ b/scrub/inodes.c
-@@ -100,6 +100,7 @@ struct scan_inodes {
- 	scrub_inode_iter_fn	fn;
- 	void			*arg;
- 	unsigned int		nr_threads;
-+	unsigned int		flags;
- 	bool			aborted;
- };
- 
-@@ -158,6 +159,8 @@ alloc_ichunk(
- 
- 	breq = ichunk_to_bulkstat(ichunk);
- 	breq->hdr.icount = LIBFROG_BULKSTAT_CHUNKSIZE;
-+	if (si->flags & SCRUB_SCAN_METADIR)
-+		breq->hdr.flags |= XFS_BULK_IREQ_METADIR;
- 
- 	*ichunkp = ichunk;
- 	return 0;
-@@ -380,10 +383,12 @@ int
- scrub_scan_all_inodes(
- 	struct scrub_ctx	*ctx,
- 	scrub_inode_iter_fn	fn,
-+	unsigned int		flags,
- 	void			*arg)
+diff --git a/db/namei.c b/db/namei.c
+index dc3cbbeda38..a3d917db5c6 100644
+--- a/db/namei.c
++++ b/db/namei.c
+@@ -139,11 +139,11 @@ path_navigate(
+ /* Walk a directory path to an inode and set the io cursor to that inode. */
+ static int
+ path_walk(
++	xfs_ino_t	rootino,
+ 	char		*path)
  {
- 	struct scan_inodes	si = {
- 		.fn		= fn,
-+		.flags		= flags,
- 		.arg		= arg,
- 		.nr_threads	= scrub_nproc_workqueue(ctx),
- 	};
-diff --git a/scrub/inodes.h b/scrub/inodes.h
-index f03180458ab..d99eaf0a2a7 100644
---- a/scrub/inodes.h
-+++ b/scrub/inodes.h
-@@ -17,8 +17,11 @@
- typedef int (*scrub_inode_iter_fn)(struct scrub_ctx *ctx,
- 		struct xfs_handle *handle, struct xfs_bulkstat *bs, void *arg);
+ 	struct dirpath	*dirpath;
+ 	char		*p = path;
+-	xfs_ino_t	rootino = mp->m_sb.sb_rootino;
+ 	int		error = 0;
  
-+/* Return metadata directories too. */
-+#define SCRUB_SCAN_METADIR	(1 << 0)
-+
- int scrub_scan_all_inodes(struct scrub_ctx *ctx, scrub_inode_iter_fn fn,
--		void *arg);
-+		unsigned int flags, void *arg);
- 
- int scrub_open_handle(struct xfs_handle *handle);
- 
-diff --git a/scrub/phase3.c b/scrub/phase3.c
-index c5950b1b9e3..56a4385a408 100644
---- a/scrub/phase3.c
-+++ b/scrub/phase3.c
-@@ -247,6 +247,7 @@ phase3_func(
- 	struct scrub_inode_ctx	ictx = { .ctx = ctx };
- 	uint64_t		val;
- 	xfs_agnumber_t		agno;
-+	unsigned int		scan_flags = 0;
- 	int			err;
- 
- 	err = -ptvar_alloc(scrub_nproc(ctx), sizeof(struct action_list),
-@@ -263,6 +264,10 @@ phase3_func(
- 		goto out_ptvar;
- 	}
- 
-+	/* Scan the metadata directory tree too. */
-+	if (ctx->mnt.fsgeom.flags & XFS_FSOP_GEOM_FLAGS_METADIR)
-+		scan_flags |= SCRUB_SCAN_METADIR;
-+
- 	/*
- 	 * If we already have ag/fs metadata to repair from previous phases,
- 	 * we would rather not try to repair file metadata until we've tried
-@@ -273,7 +278,7 @@ phase3_func(
- 			ictx.always_defer_repairs = true;
- 	}
- 
--	err = scrub_scan_all_inodes(ctx, scrub_inode, &ictx);
-+	err = scrub_scan_all_inodes(ctx, scrub_inode, scan_flags, &ictx);
- 	if (!err && ictx.aborted)
- 		err = ECANCELED;
- 	if (err)
-diff --git a/scrub/phase5.c b/scrub/phase5.c
-index 96e13ac423f..e6786b4f25c 100644
---- a/scrub/phase5.c
-+++ b/scrub/phase5.c
-@@ -532,7 +532,7 @@ _("Filesystem has errors, skipping connectivity checks."));
- 	if (ret)
- 		return ret;
- 
--	ret = scrub_scan_all_inodes(ctx, check_inode_names, &aborted);
-+	ret = scrub_scan_all_inodes(ctx, check_inode_names, 0, &aborted);
- 	if (ret)
- 		return ret;
- 	if (aborted)
-diff --git a/scrub/phase6.c b/scrub/phase6.c
-index 1a2643bdaf0..fb7cd3f13ea 100644
---- a/scrub/phase6.c
-+++ b/scrub/phase6.c
-@@ -507,7 +507,7 @@ report_all_media_errors(
- 		return ret;
- 
- 	/* Scan for unlinked files. */
--	return scrub_scan_all_inodes(ctx, report_inode_loss, vs);
-+	return scrub_scan_all_inodes(ctx, report_inode_loss, 0, vs);
+ 	if (*p == '/') {
+@@ -173,6 +173,9 @@ path_help(void)
+ 	dbprintf(_(
+ "\n"
+ " Navigate to an inode via directory path.\n"
++"\n"
++" Options:\n"
++"   -m -- Walk an absolute path down the metadata directory tree.\n"
+ 	));
  }
  
- /* Schedule a read-verify of a (data block) extent. */
+@@ -181,18 +184,34 @@ path_f(
+ 	int		argc,
+ 	char		**argv)
+ {
++	xfs_ino_t	rootino = mp->m_sb.sb_rootino;
+ 	int		c;
+ 	int		error;
+ 
+-	while ((c = getopt(argc, argv, "")) != -1) {
++	while ((c = getopt(argc, argv, "m")) != -1) {
+ 		switch (c) {
++		case 'm':
++			/* Absolute path, start from metadata rootdir. */
++			if (!xfs_has_metadir(mp)) {
++				dbprintf(
++	_("filesystem does not support metadata directories.\n"));
++				exitcode = 1;
++				return 0;
++			}
++			rootino = mp->m_sb.sb_metadirino;
++			break;
+ 		default:
+ 			path_help();
+ 			return 0;
+ 		}
+ 	}
+ 
+-	error = path_walk(argv[optind]);
++	if (argc == optind || argc > optind + 1) {
++		dbprintf(_("Only supply one path.\n"));
++		return -1;
++	}
++
++	error = path_walk(rootino, argv[optind]);
+ 	if (error) {
+ 		dbprintf("%s: %s\n", argv[optind], strerror(error));
+ 		exitcode = 1;
+@@ -206,7 +225,7 @@ static struct cmdinfo path_cmd = {
+ 	.altname	= NULL,
+ 	.cfunc		= path_f,
+ 	.argmin		= 1,
+-	.argmax		= 1,
++	.argmax		= -1,
+ 	.canpush	= 0,
+ 	.args		= "",
+ 	.help		= path_help,
+@@ -521,6 +540,7 @@ ls_help(void)
+ " Options:\n"
+ "   -i -- Resolve the given paths to their corresponding inode numbers.\n"
+ "         If no paths are given, display the current inode number.\n"
++"   -m -- Walk an absolute path down the metadata directory tree.\n"
+ "\n"
+ " Directory contents will be listed in the format:\n"
+ " dir_cookie	inode_number	type	hash	name_length	name\n"
+@@ -532,15 +552,26 @@ ls_f(
+ 	int			argc,
+ 	char			**argv)
+ {
++	xfs_ino_t		rootino = mp->m_sb.sb_rootino;
+ 	bool			inum_only = false;
+ 	int			c;
+ 	int			error = 0;
+ 
+-	while ((c = getopt(argc, argv, "i")) != -1) {
++	while ((c = getopt(argc, argv, "im")) != -1) {
+ 		switch (c) {
+ 		case 'i':
+ 			inum_only = true;
+ 			break;
++		case 'm':
++			/* Absolute path, start from metadata rootdir. */
++			if (!xfs_has_metadir(mp)) {
++				dbprintf(
++	_("filesystem does not support metadata directories.\n"));
++				exitcode = 1;
++				return 0;
++			}
++			rootino = mp->m_sb.sb_metadirino;
++			break;
+ 		default:
+ 			ls_help();
+ 			return 0;
+@@ -563,7 +594,7 @@ ls_f(
+ 	for (c = optind; c < argc; c++) {
+ 		push_cur();
+ 
+-		error = path_walk(argv[c]);
++		error = path_walk(rootino, argv[c]);
+ 		if (error)
+ 			goto err_cur;
+ 
+diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
+index 43c7db5e225..a7e42e1a333 100644
+--- a/man/man8/xfs_db.8
++++ b/man/man8/xfs_db.8
+@@ -835,7 +835,7 @@ This makes it easier to find discrepancies in the reservation calculations
+ between xfsprogs and the kernel, which will help when diagnosing minimum
+ log size calculation errors.
+ .TP
+-.BI "ls [\-i] [" paths "]..."
++.BI "ls [\-im] [" paths "]..."
+ List the contents of a directory.
+ If a path resolves to a directory, the directory will be listed.
+ If no paths are supplied and the IO cursor points at a directory inode,
+@@ -849,6 +849,9 @@ directory cookie, inode number, file type, hash, name length, name.
+ Resolve each of the given paths to an inode number and print that number.
+ If no paths are given and the IO cursor points to an inode, print the inode
+ number.
++.TP
++.B \-m
++Absolute paths should be walked from the root of the metadata directory tree.
+ .RE
+ .TP
+ .BI "metadump [\-egow] " filename
+@@ -876,9 +879,13 @@ See the
+ .B print
+ command.
+ .TP
+-.BI "path " dir_path
++.BI "path [\-m] " dir_path
+ Walk the directory tree to an inode using the supplied path.
+ Absolute and relative paths are supported.
++The
++.B \-m
++option causes absolute paths to be walked from the root of the metadata
++directory tree.
+ .TP
+ .B pop
+ Pop location from the stack.
 
