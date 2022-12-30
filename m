@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3DC2659FB4
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 101FE65A0FD
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:53:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235712AbiLaAeC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:34:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
+        id S235981AbiLaBxQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:53:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235655AbiLaAeC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:02 -0500
+        with ESMTP id S231231AbiLaBxP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:53:15 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B9A1DDE4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 866331DDD6
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:53:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1314561C63
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E03C433EF;
-        Sat, 31 Dec 2022 00:34:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2348D61CD3
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:53:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 851ECC433D2;
+        Sat, 31 Dec 2022 01:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446840;
-        bh=hpP4MJ9V6YvRymh4jocqoLMyOjhd22/YYU85ABgSC4M=;
+        s=k20201202; t=1672451593;
+        bh=/DHm+0caYfymiolz4YDzY3knvfM1O7xCGUJ+4KAnYlI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aFsvZ97Da0kBK2QI4dWZ0ZqQr9+zlj1m4jBs9jlfmsuC+5vI7b8svqJ0no1NXQ/GF
-         OKGXwJu0hdbKqIIakNdarSgEvjph6RZ5l9HbiCBy9HK9dHtst3P/3gE6nC5oxoNEwY
-         E+FTOadWPwRhWdKjjQadlpBmGW/oM4Glalbv+XY5E1bbliELO7pOaRa1NLCs9yJHoc
-         RfvSswqaKhYHfof/YC17+JBQHdYWdOoYafdAhMnOlCT+IPLljtHtN07mfALvdejYsY
-         9fhkQrCr002MFCQ7qG301XD0d1lKGKEMKI9/1H3Gi64JsHydC8NKIo0vMuRMUL46do
-         WAnLss6/l3EqA==
-Subject: [PATCH 1/8] debian: install scrub services with dh_installsystemd
+        b=SuX868hdM4FjvR2QWSrupd2e8uSTA8njrS2snG8UD7S8xRgh9MfmIWf+qbQUzgglZ
+         TBrDn7Esg3wz502nPj+Lcx+V+eIH8Oq5q0Lqcm/kQhyTmCFLGDCuZOvrNGOagz4H1Q
+         89BKGGh4iGmeGanPBKz9kDH4uBXgF+J9+0VuKKckNvnDQ+hnxBOVc5oNfTuJtQ3h3s
+         MOc5+ThVoWYtF+XqCjIlvFna6Uzfzj3Uga0DrbV7xfa/PznQJw2KNv881w8JEyHXtt
+         ujhKGI5dz3X1PuqpXJpk/SmdHm7JOROcJuBjBw1KB+BEFzjqr8YwpnISJx+qyjULd5
+         QcmXH58HQ4Emg==
+Subject: [PATCH 20/42] xfs: enable sharing of realtime file blocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871113.717702.9657625631265376492.stgit@magnolia>
-In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
-References: <167243871097.717702.15336500890922415647.stgit@magnolia>
+Message-ID: <167243871180.717073.13325087628739180105.stgit@magnolia>
+In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
+References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,26 +55,77 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use dh_installsystemd to handle the installation and activation of the
-scrub systemd services.  This requires bumping the compat version to 11.
-Note that the services are /not/ activated on installation.
+Update the remapping routines to be able to handle realtime files.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- debian/rules |    1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/xfs_reflink.c |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
 
-diff --git a/debian/rules b/debian/rules
-index 95df4835b25..57baad625c5 100755
---- a/debian/rules
-+++ b/debian/rules
-@@ -108,6 +108,7 @@ binary-arch: checkroot built
- 	dh_compress
- 	dh_fixperms
- 	dh_makeshlibs
-+	dh_installsystemd -p xfsprogs --no-enable --no-start --no-restart-after-upgrade --no-stop-on-upgrade
- 	dh_installdeb
- 	dh_shlibdeps
- 	dh_gencontrol
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 3b5d144bef41..3cead39e4308 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -33,6 +33,7 @@
+ #include "xfs_rtrefcount_btree.h"
+ #include "xfs_rtalloc.h"
+ #include "xfs_rtgroup.h"
++#include "xfs_imeta.h"
+ 
+ /*
+  * Copy on Write of Shared Blocks
+@@ -1207,14 +1208,29 @@ xfs_reflink_update_dest(
+ static int
+ xfs_reflink_ag_has_free_space(
+ 	struct xfs_mount	*mp,
+-	xfs_agnumber_t		agno)
++	struct xfs_inode	*ip,
++	xfs_fsblock_t		fsb)
+ {
+ 	struct xfs_perag	*pag;
++	xfs_agnumber_t		agno;
+ 	int			error = 0;
+ 
+ 	if (!xfs_has_rmapbt(mp))
+ 		return 0;
++	if (XFS_IS_REALTIME_INODE(ip)) {
++		struct xfs_rtgroup	*rtg;
++		xfs_rgnumber_t		rgno;
+ 
++		rgno = xfs_rtb_to_rgno(mp, fsb);
++		rtg = xfs_rtgroup_get(mp, rgno);
++		if (xfs_imeta_resv_critical(rtg->rtg_rmapip) ||
++		    xfs_imeta_resv_critical(rtg->rtg_refcountip))
++			error = -ENOSPC;
++		xfs_rtgroup_put(rtg);
++		return error;
++	}
++
++	agno = XFS_FSB_TO_AGNO(mp, fsb);
+ 	pag = xfs_perag_get(mp, agno);
+ 	if (xfs_ag_resv_critical(pag, XFS_AG_RESV_RMAPBT) ||
+ 	    xfs_ag_resv_critical(pag, XFS_AG_RESV_METADATA))
+@@ -1328,8 +1344,8 @@ xfs_reflink_remap_extent(
+ 
+ 	/* No reflinking if the AG of the dest mapping is low on space. */
+ 	if (dmap_written) {
+-		error = xfs_reflink_ag_has_free_space(mp,
+-				XFS_FSB_TO_AGNO(mp, dmap->br_startblock));
++		error = xfs_reflink_ag_has_free_space(mp, ip,
++				dmap->br_startblock);
+ 		if (error)
+ 			goto out_cancel;
+ 	}
+@@ -1589,8 +1605,8 @@ xfs_reflink_remap_prep(
+ 
+ 	/* Check file eligibility and prepare for block sharing. */
+ 	ret = -EINVAL;
+-	/* Don't reflink realtime inodes */
+-	if (XFS_IS_REALTIME_INODE(src) || XFS_IS_REALTIME_INODE(dest))
++	/* Can't reflink between data and rt volumes */
++	if (XFS_IS_REALTIME_INODE(src) != XFS_IS_REALTIME_INODE(dest))
+ 		goto out_unlock;
+ 
+ 	/* Don't share DAX file data with non-DAX file. */
 
