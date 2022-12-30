@@ -2,51 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 641BA65A098
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:28:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE5A659F67
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:18:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236092AbiLaB2T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:28:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45740 "EHLO
+        id S235892AbiLaARm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:17:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236091AbiLaB2S (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:28:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3C51DF18
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:28:17 -0800 (PST)
+        with ESMTP id S235893AbiLaARl (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:17:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9FC1261F
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:17:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 906A0B81DED
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:28:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6BBC433EF;
-        Sat, 31 Dec 2022 01:28:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADC4D61D08
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:17:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A72C433D2;
+        Sat, 31 Dec 2022 00:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450095;
-        bh=TBQB+myFor72BEdjPpqdyIyQ5EVN1BYYRwIFfBcw5mk=;
+        s=k20201202; t=1672445860;
+        bh=57BjpEo7wTZTHd2JrdpSJSaAekL/R1qn6C51RUWP8z4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Qlw+eDvedbOwHypAquxE752O+aFl0eKKVsC2L/ab8sMbw8ImQg4byfTal3c2BM+Z+
-         L/qwRXQP6wLsYUHUcrJpInBAK4HMSu2rVeIpGcL7zu9rkuuv94THmbuJ9FcOPHzMGd
-         jlKWrUR+5c27Bw/AfIYSds73UbdPGPHfO9XTyMyDc4dLcJr1QNgxXh/D7KXNYfWI6+
-         kCydKrfxbQJ7fHWQYD+MmCFsReI5W5wZ2Yv1AWn7EyV5PASXXnFQjfpKCOdnzriq59
-         9UIi7QQWLOO4qGPoEZaiednUABsGi+DHkNgW7rUZPfsQvu1VY9Fy7hR+DuNtcLepVl
-         DmR51Emc+Dx4g==
-Subject: [PATCH 03/22] xfs: check the realtime superblock at mount time
+        b=KF6rwzi7l+P2yoRPefz74OnsgAc/2RJmRsXdJ/x9Sime1eEMMMuBg1zP3lbUydFZy
+         qSdcbkmV5UZRr9tgJfNhRtChKBgzJnGjJMcd7/n0czMR5aVC+or0HQBoGf5vF6cl1T
+         4CPrOUhtNzNixgEayDShUhAnI8BHPD9PbHFMoyE2pI35xi9q2M1RA0I/m8ICcZdjJ0
+         mHShIRHF+v+lYSijVCfOvWv62XLlkgPYP6uPHj6bC4PgQwqBJG6Uh98Eb07D2/StYH
+         081BiORHKZSNQiJZoWNDcoWTMTUC1l7lpMQ9KdTGjVS5gbCo8V5DJ3V4roXMfH4WEU
+         exjh3tfiZgDlw==
+Subject: [PATCH 5/5] xfs_repair: remove the old bag implementation
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:53 -0800
-Message-ID: <167243867313.712847.15088416523614287132.stgit@magnolia>
-In-Reply-To: <167243867242.712847.10106105868862621775.stgit@magnolia>
-References: <167243867242.712847.10106105868862621775.stgit@magnolia>
+Message-ID: <167243867310.712955.11202535687694387202.stgit@magnolia>
+In-Reply-To: <167243867247.712955.4006304832992035940.stgit@magnolia>
+References: <167243867247.712955.4006304832992035940.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,178 +54,205 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Check the realtime superblock at mount time, to ensure that the label
-actually matches the primary superblock.  If the rt superblock is good,
-attach it to the xfs_mount so that the log can use ordered buffers to
-keep this primary in sync with the primary super on the data device.
+Remove the old bag implementation.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_mount.h   |    1 +
- fs/xfs/xfs_rtalloc.c |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_rtalloc.h |    5 +++++
- fs/xfs/xfs_super.c   |   16 ++++++++++++++--
- 4 files changed, 70 insertions(+), 2 deletions(-)
+ repair/rmap.c |    7 ---
+ repair/slab.c |  130 ---------------------------------------------------------
+ repair/slab.h |   19 --------
+ 3 files changed, 156 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index 674938008a97..7f0a80a8dcd4 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -82,6 +82,7 @@ typedef struct xfs_mount {
- 	struct super_block	*m_super;
- 	struct xfs_ail		*m_ail;		/* fs active log item list */
- 	struct xfs_buf		*m_sb_bp;	/* buffer for superblock */
-+	struct xfs_buf		*m_rtsb_bp;	/* realtime superblock */
- 	char			*m_rtname;	/* realtime device name */
- 	char			*m_logname;	/* external log device name */
- 	struct xfs_da_geometry	*m_dir_geo;	/* directory block geometry */
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 3b13352cfbfc..9c842237c452 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1263,6 +1263,56 @@ xfs_rtallocate_extent(
- 	return 0;
- }
+diff --git a/repair/rmap.c b/repair/rmap.c
+index ef1a599162b..f8294cc3e13 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -34,13 +34,6 @@ struct xfs_ag_rmap {
+ 	struct xfs_slab	*ar_refcount_items;	/* refcount items, p4-5 */
+ };
  
-+/* Read the primary realtime group's superblock and attach it to the mount. */
-+int
-+xfs_rtmount_readsb(
-+	struct xfs_mount	*mp)
-+{
-+	struct xfs_buf		*bp;
-+	int			error;
-+
-+	if (!xfs_has_rtgroups(mp))
-+		return 0;
-+	if (mp->m_sb.sb_rblocks == 0)
-+		return 0;
-+	if (mp->m_rtdev_targp == NULL) {
-+		xfs_warn(mp,
-+	"Filesystem has a realtime volume, use rtdev=device option");
-+		return -ENODEV;
-+	}
-+
-+	/* m_blkbb_log is not set up yet */
-+	error = xfs_buf_read_uncached(mp->m_rtdev_targp, XFS_RTSB_DADDR,
-+			mp->m_sb.sb_blocksize >> BBSHIFT, XBF_NO_IOACCT, &bp,
-+			&xfs_rtsb_buf_ops);
-+	if (error) {
-+		xfs_warn(mp, "rt sb validate failed with error %d.", error);
-+		/* bad CRC means corrupted metadata */
-+		if (error == -EFSBADCRC)
-+			error = -EFSCORRUPTED;
-+		return error;
-+	}
-+
-+	mp->m_rtsb_bp = bp;
-+	xfs_buf_unlock(bp);
-+	return 0;
-+}
-+
-+/* Detach the realtime superblock from the mount and free it. */
-+void
-+xfs_rtmount_freesb(
-+	struct xfs_mount	*mp)
-+{
-+	struct xfs_buf		*bp = mp->m_rtsb_bp;
-+
-+	if (!bp)
-+		return;
-+
-+	xfs_buf_lock(bp);
-+	mp->m_rtsb_bp = NULL;
-+	xfs_buf_relse(bp);
-+}
-+
+-/* Only the parts of struct xfs_rmap_irec that we need to compute refcounts. */
+-struct rmap_for_refcount {
+-	xfs_agblock_t	rm_startblock;
+-	xfs_extlen_t	rm_blockcount;
+-	uint64_t	rm_owner;
+-};
+-
+ static struct xfs_ag_rmap *ag_rmaps;
+ bool rmapbt_suspect;
+ static bool refcbt_suspect;
+diff --git a/repair/slab.c b/repair/slab.c
+index 44ca0468eda..a0114ac2373 100644
+--- a/repair/slab.c
++++ b/repair/slab.c
+@@ -77,28 +77,6 @@ struct xfs_slab_cursor {
+ 	struct xfs_slab_hdr_cursor	hcur[0];	/* per-slab cursors */
+ };
+ 
+-/*
+- * Bags -- each bag is an array of record items; when a bag fills up, we resize
+- * it and hope we don't run out of memory.
+- */
+-#define MIN_BAG_SIZE	4096
+-struct xfs_bag {
+-	uint64_t		bg_nr;		/* number of pointers */
+-	uint64_t		bg_inuse;	/* number of slots in use */
+-	char			*bg_items;	/* pointer to block of items */
+-	size_t			bg_item_sz;	/* size of each item */
+-};
+-
+-static inline void *bag_ptr(struct xfs_bag *bag, uint64_t idx)
+-{
+-	return &bag->bg_items[bag->bg_item_sz * idx];
+-}
+-
+-static inline void *bag_end(struct xfs_bag *bag)
+-{
+-	return bag_ptr(bag, bag->bg_nr);
+-}
+-
  /*
-  * Initialize realtime fields in the mount structure.
+  * Create a slab to hold some objects of a particular size.
   */
-diff --git a/fs/xfs/xfs_rtalloc.h b/fs/xfs/xfs_rtalloc.h
-index 5ac9c15948c8..d0fd49db77bd 100644
---- a/fs/xfs/xfs_rtalloc.h
-+++ b/fs/xfs/xfs_rtalloc.h
-@@ -33,6 +33,9 @@ xfs_rtallocate_extent(
- 	xfs_rtxnum_t		*rtblock); /* out: start rtext allocated */
- 
- 
-+int xfs_rtmount_readsb(struct xfs_mount *mp);
-+void xfs_rtmount_freesb(struct xfs_mount *mp);
-+
- /*
-  * Initialize realtime fields in the mount structure.
-  */
-@@ -81,6 +84,8 @@ int xfs_rtfile_convert_unwritten(struct xfs_inode *ip, loff_t pos,
- # define xfs_rtpick_extent(m,t,l,rb)			(-ENOSYS)
- # define xfs_growfs_rt(mp,in)				(-ENOSYS)
- # define xfs_rtalloc_reinit_frextents(m)		(0)
-+# define xfs_rtmount_readsb(mp)				(0)
-+# define xfs_rtmount_freesb(mp)				((void)0)
- static inline int		/* error */
- xfs_rtmount_init(
- 	xfs_mount_t	*mp)	/* file system mount structure */
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 737c51333d09..bfe93ca6eed4 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -44,6 +44,7 @@
- #include "scrub/rcbag_btree.h"
- #include "xfs_swapext_item.h"
- #include "xfs_rtbitmap.h"
-+#include "xfs_rtalloc.h"
- 
- #include <linux/magic.h>
- #include <linux/fs_context.h>
-@@ -1117,6 +1118,7 @@ xfs_fs_put_super(
- 	xfs_filestream_unmount(mp);
- 	xfs_unmountfs(mp);
- 
-+	xfs_rtmount_freesb(mp);
- 	xfs_freesb(mp);
- 	free_percpu(mp->m_stats.xs_stats);
- 	xfs_mount_list_del(mp);
-@@ -1599,9 +1601,13 @@ xfs_fs_fill_super(
- 		goto out_free_sb;
- 	}
- 
-+	error = xfs_rtmount_readsb(mp);
-+	if (error)
-+		goto out_free_sb;
-+
- 	error = xfs_filestream_mount(mp);
- 	if (error)
--		goto out_free_sb;
-+		goto out_free_rtsb;
- 
- 	/*
- 	 * we must configure the block size in the superblock before we run the
-@@ -1645,6 +1651,10 @@ xfs_fs_fill_super(
- 		xfs_warn(mp,
- "EXPERIMENTAL metadata directory feature in use. Use at your own risk!");
- 
-+	if (xfs_has_rtgroups(mp))
-+		xfs_warn(mp,
-+"EXPERIMENTAL realtime allocation group feature in use. Use at your own risk!");
-+
- 	if (xfs_has_reflink(mp)) {
- 		if (mp->m_sb.sb_rblocks) {
- 			xfs_alert(mp,
-@@ -1689,6 +1699,8 @@ xfs_fs_fill_super(
- 
-  out_filestream_unmount:
- 	xfs_filestream_unmount(mp);
-+ out_free_rtsb:
-+	xfs_rtmount_freesb(mp);
-  out_free_sb:
- 	xfs_freesb(mp);
-  out_free_stats:
-@@ -1710,7 +1722,7 @@ xfs_fs_fill_super(
-  out_unmount:
- 	xfs_filestream_unmount(mp);
- 	xfs_unmountfs(mp);
--	goto out_free_sb;
-+	goto out_free_rtsb;
+@@ -386,111 +364,3 @@ slab_count(
+ {
+ 	return slab->s_nr_items;
  }
+-
+-/*
+- * Create a bag to point to some objects.
+- */
+-int
+-init_bag(
+-	struct xfs_bag	**bag,
+-	size_t		item_sz)
+-{
+-	struct xfs_bag	*ptr;
+-
+-	ptr = calloc(1, sizeof(struct xfs_bag));
+-	if (!ptr)
+-		return -ENOMEM;
+-	ptr->bg_item_sz = item_sz;
+-	ptr->bg_items = calloc(MIN_BAG_SIZE, item_sz);
+-	if (!ptr->bg_items) {
+-		free(ptr);
+-		return -ENOMEM;
+-	}
+-	ptr->bg_nr = MIN_BAG_SIZE;
+-	*bag = ptr;
+-	return 0;
+-}
+-
+-/*
+- * Free a bag of pointers.
+- */
+-void
+-free_bag(
+-	struct xfs_bag	**bag)
+-{
+-	struct xfs_bag	*ptr;
+-
+-	ptr = *bag;
+-	if (!ptr)
+-		return;
+-	free(ptr->bg_items);
+-	free(ptr);
+-	*bag = NULL;
+-}
+-
+-/*
+- * Add an object to the pointer bag.
+- */
+-int
+-bag_add(
+-	struct xfs_bag	*bag,
+-	void		*ptr)
+-{
+-	void		*p, *x;
+-
+-	p = bag_ptr(bag, bag->bg_inuse);
+-	if (p == bag_end(bag)) {
+-		/* No free space, alloc more pointers */
+-		uint64_t	nr;
+-
+-		nr = bag->bg_nr * 2;
+-		x = realloc(bag->bg_items, nr * bag->bg_item_sz);
+-		if (!x)
+-			return -ENOMEM;
+-		bag->bg_items = x;
+-		memset(bag_end(bag), 0, bag->bg_nr * bag->bg_item_sz);
+-		bag->bg_nr = nr;
+-		p = bag_ptr(bag, bag->bg_inuse);
+-	}
+-	memcpy(p, ptr, bag->bg_item_sz);
+-	bag->bg_inuse++;
+-	return 0;
+-}
+-
+-/*
+- * Remove a pointer from a bag.
+- */
+-int
+-bag_remove(
+-	struct xfs_bag	*bag,
+-	uint64_t	nr)
+-{
+-	ASSERT(nr < bag->bg_inuse);
+-	memmove(bag_ptr(bag, nr), bag_ptr(bag, nr + 1),
+-		(bag->bg_inuse - nr - 1) * bag->bg_item_sz);
+-	bag->bg_inuse--;
+-	return 0;
+-}
+-
+-/*
+- * Return the number of items in a bag.
+- */
+-uint64_t
+-bag_count(
+-	struct xfs_bag	*bag)
+-{
+-	return bag->bg_inuse;
+-}
+-
+-/*
+- * Return the nth item in a bag.
+- */
+-void *
+-bag_item(
+-	struct xfs_bag	*bag,
+-	uint64_t	nr)
+-{
+-	if (nr >= bag->bg_inuse)
+-		return NULL;
+-	return bag_ptr(bag, nr);
+-}
+diff --git a/repair/slab.h b/repair/slab.h
+index 019b169024d..77fb32163d5 100644
+--- a/repair/slab.h
++++ b/repair/slab.h
+@@ -26,23 +26,4 @@ void *peek_slab_cursor(struct xfs_slab_cursor *cur);
+ void advance_slab_cursor(struct xfs_slab_cursor *cur);
+ void *pop_slab_cursor(struct xfs_slab_cursor *cur);
  
- static int
+-struct xfs_bag;
+-
+-int init_bag(struct xfs_bag **bagp, size_t itemsz);
+-void free_bag(struct xfs_bag **bagp);
+-int bag_add(struct xfs_bag *bag, void *item);
+-int bag_remove(struct xfs_bag *bag, uint64_t idx);
+-uint64_t bag_count(struct xfs_bag *bag);
+-void *bag_item(struct xfs_bag *bag, uint64_t idx);
+-
+-#define foreach_bag_ptr(bag, idx, ptr) \
+-	for ((idx) = 0, (ptr) = bag_item((bag), (idx)); \
+-	     (idx) < bag_count(bag); \
+-	     (idx)++, (ptr) = bag_item((bag), (idx)))
+-
+-#define foreach_bag_ptr_reverse(bag, idx, ptr) \
+-	for ((idx) = bag_count(bag) - 1, (ptr) = bag_item((bag), (idx)); \
+-	     (ptr) != NULL; \
+-	     (idx)--, (ptr) = bag_item((bag), (idx)))
+-
+ #endif /* SLAB_H_ */
 
