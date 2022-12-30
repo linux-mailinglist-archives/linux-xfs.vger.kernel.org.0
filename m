@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A28B0659FB6
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F3AC6659FBA
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:35:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235702AbiLaAei (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:34:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        id S235745AbiLaAfV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:35:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235715AbiLaAef (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:35 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2492F1EAC0
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:35 -0800 (PST)
+        with ESMTP id S235435AbiLaAfU (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:35:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D779D1DDE4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:35:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 73A7BCE19DF
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B54A1C433D2;
-        Sat, 31 Dec 2022 00:34:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7474061C63
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:35:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E0BC433D2;
+        Sat, 31 Dec 2022 00:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446871;
-        bh=hC8eHGeZ+n4lVRpOHeU/AA1l4ZjE8aISGHaoGAvlLxE=;
+        s=k20201202; t=1672446918;
+        bh=Bodft67axSWtEbIInsJXd2K4KfRR/Y1t3ertYWCMpiU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=kwn1OLqh2+sEVcvWGLjDnbCTUT5XfkcJ1h/V8OASNRiyucfvGcbof1UxGIGbstEd6
-         eTCIrC3LkEeTnK6PmnIqZojDUEl3U5U3/oN/9fd5E+T1c5e5VHjUedSzH/Uen/hmST
-         M1iGGwUGnnmP8lKo8p683GXBTnCGLmefIdSHPThp5SZ9YgBC+dz6IGaDGRdN5nRJn4
-         438LKkKunU/u6QZlcZwZAEzv7dzZU0mnVOEifVsr9GT7ipE4G4kaCdRMUiuXZ2Fv67
-         3e5ZtXsuNymrD8eGnIeNW1NEihDecLkHTzMgSIi+wYjudBQRsKkGHKdJIEFf3dbJ1X
-         VkWrquEGUxg9Q==
-Subject: [PATCH 3/8] xfs_scrub_fail: fix sendmail detection
+        b=l+tqnlzEz7Fod5xXdXd+qsH8XpH7NHLsn5lhjvUm/WTmKj9nXcIxyGIyQYPL3YuUN
+         R6E+0ZTKlFOms2WUoZI7UVJtlZsxA/WQt63lBA4FeZlIphPTTscjaHka9eVMm16JK7
+         jZ8yFRCJnnh1NsOMDdE2nyLbbUz1lB22b1k1e0NShX3CzhpTiS9tAg7pI5QCg81N9W
+         CX82AeznSOO3QRpryjAnIsvTnY9APqacdW0dgwdgcsbFb9rvuFrF+V3YS0eYnf7nvd
+         x6Zf8FtH8y3rSLD3Un0iXmBOYqcsF9PW9YhPKsa9u2eHmLAtL4T5Qa5M0P/7YEbd8n
+         ZJlGhOTcA8BPw==
+Subject: [PATCH 6/8] xfs_scrub_all: fix argument passing when invoking
+ xfs_scrub manually
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871137.717702.7724582296047344762.stgit@magnolia>
+Message-ID: <167243871177.717702.7249068927476129957.stgit@magnolia>
 In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
 References: <167243871097.717702.15336500890922415647.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,35 +55,35 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-This script emails the results of failed scrub runs to root.  We
-shouldn't be hardcoding the path to the mailer program because distros
-can change the path according to their whim.  Modify this script to use
-command -v to find the program.
+Currently, xfs_scrub_all will try to invoke xfs_scrub with argv[1] being
+"-n -x".  This of course is recognized by C getopt as a weird looking
+string, not two individual arguments, and causes the child process to
+exit with complaints about CLI usage.
+
+What we really want is to split the string into a proper array and then
+add them to the xfs_scrub command line.  The code here isn't strictly
+correct, but as @scrub_args@ is controlled by us in the Makefile, it'll
+do for now.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/xfs_scrub_fail |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scrub/xfs_scrub_all.in |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 
-diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
-index 8ada5dbbe06..a46eb34ee29 100755
---- a/scrub/xfs_scrub_fail
-+++ b/scrub/xfs_scrub_fail
-@@ -7,13 +7,14 @@
+diff --git a/scrub/xfs_scrub_all.in b/scrub/xfs_scrub_all.in
+index 5b76b49adab..32bcfb15f5a 100644
+--- a/scrub/xfs_scrub_all.in
++++ b/scrub/xfs_scrub_all.in
+@@ -132,7 +132,9 @@ def run_scrub(mnt, cond, running_devs, mntdevs, killfuncs):
+ 			return
  
- # Email logs of failed xfs_scrub unit runs
- 
--mailer=/usr/sbin/sendmail
- recipient="$1"
- test -z "${recipient}" && exit 0
- mntpoint="$2"
- test -z "${mntpoint}" && exit 0
- hostname="$(hostname -f 2>/dev/null)"
- test -z "${hostname}" && hostname="${HOSTNAME}"
-+
-+mailer="$(command -v sendmail)"
- if [ ! -x "${mailer}" ]; then
- 	echo "${mailer}: Mailer program not found."
- 	exit 1
+ 		# Invoke xfs_scrub manually
+-		cmd=['@sbindir@/xfs_scrub', '@scrub_args@', mnt]
++		cmd = ['@sbindir@/xfs_scrub']
++		cmd += '@scrub_args@'.split()
++		cmd += [mnt]
+ 		ret = run_killable(cmd, None, killfuncs, \
+ 				lambda proc: proc.terminate())
+ 		if ret >= 0:
 
