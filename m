@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD3065A166
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:19:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19F4A65A16D
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:21:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236201AbiLaCTN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:19:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54362 "EHLO
+        id S236210AbiLaCVB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:21:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236196AbiLaCTM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:19:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC5C13F62
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:19:11 -0800 (PST)
+        with ESMTP id S236211AbiLaCU7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:20:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CEA12D34
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:20:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ACA2DB81E00
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:19:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57383C433D2;
-        Sat, 31 Dec 2022 02:19:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 050D561C19
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:20:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63EABC433EF;
+        Sat, 31 Dec 2022 02:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453149;
-        bh=NsJJW2B3tT+o9selrXNCllkGy9H1VKMAtk3LFsQfro4=;
+        s=k20201202; t=1672453258;
+        bh=ji1rUXHAQzMqjM9Z4Aeq1CAjew27vcZ5lh3OtyeOF9E=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZMUujddMv2HT/QsQhx7Pn9bHz8ekSfvPiRiEEW3wIlElrcdcvrOmnTweJ2JTsIv1Z
-         tNaq2WBeS1vHmREwiTwwdQKUktujK1XHm2KGvTcvNCurEWr7H4Q18nCRL35RkqpccS
-         rBS7r49lzxDhGNsQF2K6PSmNm/sMt5f58jjfAvmgOcrtkYME9XBnt+cHdGbBVhWiw7
-         trK4DhztePkhmhDxg49NLkfwVUOFxgKRJbVl4Tq1Q67KnLQarlL54g5zaAWDcH2Ljd
-         XDau5RLtGWXbc1B2QrH1ofogbp6LWza5nQmlCyiSTjNityvRhdpcXnTJRTPVbH8qvU
-         Lk/xlIt6kfDWQ==
-Subject: [PATCH 36/46] xfs_repair: update incore metadata state whenever we
- create new files
+        b=bLXvgnVp4KlYcQUxFU2nDacm1g15JuSazOdbdxkt2A++2mTffueRx/93n1kaAu0vS
+         Vhoao2zhdyu3Z3eejw/IPSeqbrjW0MryrSpdeT+4JWwHV/uAoVM0C++RbMoHRlTsat
+         YUY+tU/EDCE8Bg3EiY9NMsex+nl6/t59+JjR4af7eLL1GvE7AbaOhHaJHBwTj0Arxi
+         ndEWtndaAvcQjeKxRfuYIe++Zn2yv1/C+yKF+2djP2t9VmnYA1ygPuoZFvQ4lCAa1p
+         PZtWhA7evgGZzXer8x1O3Ee/ElJbJY5h2SSdqc+GnOv94xtg0PiW/Zjl31iqNVWCyx
+         WjOGeavptgpQw==
+Subject: [PATCH 43/46] xfs_repair: truncate and unmark orphaned metadata
+ inodes
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:24 -0800
-Message-ID: <167243876403.725900.4669059502287609449.stgit@magnolia>
+Message-ID: <167243876494.725900.10741628794064487652.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,66 +56,88 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make sure that we update our incore metadata inode bookkeepping whenever
-we create new metadata files.
+If an inode claims to be a metadata inode but wasn't linked in either
+directory tree, remove the attr fork and reset the data fork if the
+contents weren't regular extent mappings before moving the inode to the
+lost+found.
+
+We don't ifree the inode, because it's possible that the inode was not
+actually a metadata inode but simply got corrupted due to bitflips or
+something, and we'd rather let the sysadmin examine what's left of the
+file instead of photorec'ing it.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/phase6.c |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ repair/phase6.c |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 
 diff --git a/repair/phase6.c b/repair/phase6.c
-index 3e740079235..b3ad4074ff8 100644
+index 964342c31d6..13094730407 100644
 --- a/repair/phase6.c
 +++ b/repair/phase6.c
-@@ -514,6 +514,24 @@ mark_ino_inuse(
- 		set_inode_isadir(irec, ino_offset);
+@@ -1220,6 +1220,53 @@ mk_orphanage(
+ 	return(ino);
  }
  
-+/*
-+ * Mark a newly allocated inode as metadata in the incore bitmap.  Callers
-+ * must have already called mark_ino_inuse to ensure there is an incore record.
-+ */
++/* Don't let metadata inode contents leak to lost+found. */
 +static void
-+mark_ino_metadata(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		ino)
++trunc_metadata_inode(
++	struct xfs_inode	*ip)
 +{
-+	struct ino_tree_node	*irec;
-+	int			ino_offset;
++	struct xfs_trans	*tp;
++	struct xfs_mount	*mp = ip->i_mount;
++	int			err;
 +
-+	irec = find_inode_rec(mp, XFS_INO_TO_AGNO(mp, ino),
-+			XFS_INO_TO_AGINO(mp, ino));
-+	ino_offset = get_inode_offset(mp, ino, irec);
-+	set_inode_is_meta(irec, ino_offset);
++	err = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_ichange, 0, 0, 0, &tp);
++	if (err)
++		do_error(
++	_("space reservation failed (%d), filesystem may be out of space\n"),
++					err);
++
++	libxfs_trans_ijoin(tp, ip, 0);
++	ip->i_diflags2 &= ~XFS_DIFLAG2_METADATA;
++
++	switch (VFS_I(ip)->i_mode & S_IFMT) {
++	case S_IFIFO:
++	case S_IFCHR:
++	case S_IFBLK:
++	case S_IFSOCK:
++		ip->i_df.if_format = XFS_DINODE_FMT_DEV;
++		break;
++	case S_IFREG:
++		switch (ip->i_df.if_format) {
++		case XFS_DINODE_FMT_EXTENTS:
++		case XFS_DINODE_FMT_BTREE:
++			break;
++		default:
++			ip->i_df.if_format = XFS_DINODE_FMT_EXTENTS;
++			ip->i_df.if_nextents = 0;
++			break;
++		}
++		break;
++	}
++
++	libxfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
++
++	err = -libxfs_trans_commit(tp);
++	if (err)
++		do_error(
++	_("truncation of metadata inode 0x%llx failed, err=%d\n"),
++				(unsigned long long)ip->i_ino, err);
 +}
 +
- /* Make sure this metadata directory path exists. */
- static int
- ensure_imeta_dirpath(
-@@ -547,6 +565,7 @@ ensure_imeta_dirpath(
- 		if (ino == NULLFSINO)
- 			return ENOENT;
- 		mark_ino_inuse(mp, ino, S_IFDIR, parent);
-+		mark_ino_metadata(mp, ino);
- 		parent = ino;
- 	}
+ /*
+  * move a file to the orphange.
+  */
+@@ -1262,6 +1309,9 @@ mv_orphanage(
+ 	if (err)
+ 		do_error(_("%d - couldn't iget disconnected inode\n"), err);
  
-@@ -663,6 +682,7 @@ _("couldn't create new metadata inode, error %d\n"), error);
++	if (xfs_is_metadata_inode(ino_p))
++		trunc_metadata_inode(ino_p);
++
+ 	xname.type = libxfs_mode_to_ftype(VFS_I(ino_p)->i_mode);
  
- 	mark_ino_inuse(mp, (*ipp)->i_ino, S_IFREG,
- 			lookup_imeta_path_dirname(mp, path));
-+	mark_ino_metadata(mp, (*ipp)->i_ino);
- 	return 0;
- }
- 
-@@ -1065,6 +1085,7 @@ mk_metadir(
- 
- 	libxfs_trans_ijoin(tp, mp->m_metadirip, 0);
- 	libxfs_imeta_set_metaflag(tp, mp->m_metadirip);
-+	mark_ino_metadata(mp, mp->m_metadirip->i_ino);
- 
- 	error = -libxfs_trans_commit(tp);
- 	if (error)
+ 	if (isa_dir)  {
 
