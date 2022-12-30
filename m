@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C848F65A128
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:03:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 523A065A12B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:04:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236145AbiLaCDi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:03:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51792 "EHLO
+        id S236143AbiLaCE0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:04:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236143AbiLaCDh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:03:37 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA0C10B64
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:03:36 -0800 (PST)
+        with ESMTP id S236148AbiLaCEZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:04:25 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BB8178A5
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:04:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4915161C5B
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:03:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A005AC433EF;
-        Sat, 31 Dec 2022 02:03:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AB04CB81D63
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:04:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545B3C433EF;
+        Sat, 31 Dec 2022 02:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452215;
-        bh=n5KvCVS41tqf7u7/7Ro0SZ/U5evfri9SF9hnka4f6fM=;
+        s=k20201202; t=1672452262;
+        bh=1I8vjx1anjdjEC4TmUNaTtzTF/xQg3nLvg2APpdwBGs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WaORTVUoO3uhuPk01ww8C/eUOWCOqp342+Dbx9We8Pu0MzP+TIXeLYsaDbJhGqOyj
-         gbzORHVOUiaUTXr4xL+i9MOvLmwnijD+5UMonnEMfMj6njx9rv8VdzqPTtUyQKyyJ/
-         2wV+/kOnC9XZ+mUaIjbSTZso13CLVtNk+vMS4jw03CNpE+rzCHvRWhb9Eof2NOtcc+
-         TN8wNWZGEg63NrN0iagUJnfnRtdkEU2yy7leJEoqim8I46nNtqsY6AqxvD/8MTDTav
-         e9RA6tNXRZE++mVYkf9p0THR3vQ1uDDVEbTjIg8HayxfVvhjDJB/ma7v5VkDFFamzL
-         H06Z+aVhh3zqA==
-Subject: [PATCH 02/26] xfs: hoist inode flag conversion functions to libxfs
+        b=PkyG5FNpIYgOaCRuDYqo8O6+0gzWsf/u3oUGtOvAMjHPtQDNHZB2XXb2PxBWSnjJP
+         Vn0nBdeNmKWb283o8UcSmsKP5SezQKw3ts2gYMB4fyBQ2zGvrOPk8fF5IYz4Dtr1/F
+         h5wC9crbvJiHGHlSIc3LDYUfYs6TIHo0a/oxJrkOqySzhcNpLtuKoLPNcnTXNCIXPb
+         BkVV2kaxwVzy7rIxk4wXWMAZ8e57t1NMi1VwgbEb5nNF1s3t7rvUXPIluSKnbWJwfT
+         cjlHuO35hOyb1gWpFEo2x7DOpqHWnrr7o9YauJSZ1RCgQBOaK02gH5SA9D9IiXZMRX
+         PlQIRYhPPQ76A==
+Subject: [PATCH 05/26] libxfs: pass IGET flags through to xfs_iread
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:13 -0800
-Message-ID: <167243875351.723621.2754453083089475155.stgit@magnolia>
+Message-ID: <167243875385.723621.4220111121208397182.stgit@magnolia>
 In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
 References: <167243875315.723621.17759760420120912799.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,299 +55,80 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Hoist the inode flag conversion functions into libxfs so that we can
-keep them in sync.  Do this by creating a new xfs_inode_util.c file in
-libxfs.
+Change the lock_flags parameter to iget_flags so that we can supply
+XFS_IGET_ flags in future patches.  All callers of libxfs_iget and
+libxfs_trans_iget pass zero for this parameter and there are no inode
+locks in xfsprogs, so there's no behavior change here.
+
+Port the kernel's version of the xfs_inode_from_disk callsite.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- include/libxfs.h        |    1 
- include/xfs_inode.h     |    1 
- libxfs/Makefile         |    2 +
- libxfs/util.c           |   60 -----------------------
- libxfs/xfs_bmap.c       |    1 
- libxfs/xfs_inode_util.c |  124 +++++++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_inode_util.h |   14 +++++
- 7 files changed, 143 insertions(+), 60 deletions(-)
- create mode 100644 libxfs/xfs_inode_util.c
- create mode 100644 libxfs/xfs_inode_util.h
+ libxfs/inode.c |   40 ++++++++++++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 12 deletions(-)
 
 
-diff --git a/include/libxfs.h b/include/libxfs.h
-index 14f6d629c9f..a4f6e1c2b28 100644
---- a/include/libxfs.h
-+++ b/include/libxfs.h
-@@ -68,6 +68,7 @@ struct iomap;
- #include "xfs_attr_sf.h"
- #include "xfs_inode_fork.h"
- #include "xfs_inode_buf.h"
-+#include "xfs_inode_util.h"
- #include "xfs_alloc.h"
- #include "xfs_btree.h"
- #include "xfs_bmap.h"
-diff --git a/include/xfs_inode.h b/include/xfs_inode.h
-index 3bc5aa2c7cb..ef62ac50912 100644
---- a/include/xfs_inode.h
-+++ b/include/xfs_inode.h
-@@ -10,6 +10,7 @@
- /* These match kernel side includes */
- #include "xfs_inode_buf.h"
- #include "xfs_inode_fork.h"
-+#include "xfs_inode_util.h"
+diff --git a/libxfs/inode.c b/libxfs/inode.c
+index c7843aea753..588aff33ef4 100644
+--- a/libxfs/inode.c
++++ b/libxfs/inode.c
+@@ -263,11 +263,10 @@ libxfs_iget(
+ 	struct xfs_mount	*mp,
+ 	struct xfs_trans	*tp,
+ 	xfs_ino_t		ino,
+-	uint			lock_flags,
++	uint			flags,
+ 	struct xfs_inode	**ipp)
+ {
+ 	struct xfs_inode	*ip;
+-	struct xfs_buf		*bp;
+ 	int			error = 0;
  
- struct xfs_trans;
- struct xfs_mount;
-diff --git a/libxfs/Makefile b/libxfs/Makefile
-index 0e43941948d..0d9c4adf82b 100644
---- a/libxfs/Makefile
-+++ b/libxfs/Makefile
-@@ -48,6 +48,7 @@ HFILES = \
- 	xfs_ialloc_btree.h \
- 	xfs_inode_buf.h \
- 	xfs_inode_fork.h \
-+	xfs_inode_util.h \
- 	xfs_quota_defs.h \
- 	xfs_refcount.h \
- 	xfs_refcount_btree.h \
-@@ -96,6 +97,7 @@ CFILES = cache.c \
- 	xfs_iext_tree.c \
- 	xfs_inode_buf.c \
- 	xfs_inode_fork.c \
-+	xfs_inode_util.c \
- 	xfs_ialloc_btree.c \
- 	xfs_log_rlimit.c \
- 	xfs_refcount.c \
-diff --git a/libxfs/util.c b/libxfs/util.c
-index 3d5ef68d8e7..6b888e9f996 100644
---- a/libxfs/util.c
-+++ b/libxfs/util.c
-@@ -150,66 +150,6 @@ current_time(struct inode *inode)
- 	return tv;
- }
+ 	ip = kmem_cache_zalloc(xfs_inode_cache, 0);
+@@ -284,18 +283,35 @@ libxfs_iget(
+ 	if (error)
+ 		goto out_destroy;
  
--STATIC uint16_t
--xfs_flags2diflags(
--	struct xfs_inode	*ip,
--	unsigned int		xflags)
--{
--	/* can't set PREALLOC this way, just preserve it */
--	uint16_t		di_flags =
--		(ip->i_diflags & XFS_DIFLAG_PREALLOC);
--
--	if (xflags & FS_XFLAG_IMMUTABLE)
--		di_flags |= XFS_DIFLAG_IMMUTABLE;
--	if (xflags & FS_XFLAG_APPEND)
--		di_flags |= XFS_DIFLAG_APPEND;
--	if (xflags & FS_XFLAG_SYNC)
--		di_flags |= XFS_DIFLAG_SYNC;
--	if (xflags & FS_XFLAG_NOATIME)
--		di_flags |= XFS_DIFLAG_NOATIME;
--	if (xflags & FS_XFLAG_NODUMP)
--		di_flags |= XFS_DIFLAG_NODUMP;
--	if (xflags & FS_XFLAG_NODEFRAG)
--		di_flags |= XFS_DIFLAG_NODEFRAG;
--	if (xflags & FS_XFLAG_FILESTREAM)
--		di_flags |= XFS_DIFLAG_FILESTREAM;
--	if (S_ISDIR(VFS_I(ip)->i_mode)) {
--		if (xflags & FS_XFLAG_RTINHERIT)
--			di_flags |= XFS_DIFLAG_RTINHERIT;
--		if (xflags & FS_XFLAG_NOSYMLINKS)
--			di_flags |= XFS_DIFLAG_NOSYMLINKS;
--		if (xflags & FS_XFLAG_EXTSZINHERIT)
--			di_flags |= XFS_DIFLAG_EXTSZINHERIT;
--		if (xflags & FS_XFLAG_PROJINHERIT)
--			di_flags |= XFS_DIFLAG_PROJINHERIT;
--	} else if (S_ISREG(VFS_I(ip)->i_mode)) {
--		if (xflags & FS_XFLAG_REALTIME)
--			di_flags |= XFS_DIFLAG_REALTIME;
--		if (xflags & FS_XFLAG_EXTSIZE)
--			di_flags |= XFS_DIFLAG_EXTSIZE;
--	}
--
--	return di_flags;
--}
--
--STATIC uint64_t
--xfs_flags2diflags2(
--	struct xfs_inode	*ip,
--	unsigned int		xflags)
--{
--	uint64_t		di_flags2 =
--		(ip->i_diflags2 & (XFS_DIFLAG2_REFLINK |
--				   XFS_DIFLAG2_BIGTIME |
--				   XFS_DIFLAG2_NREXT64));
--
--	if (xflags & FS_XFLAG_DAX)
--		di_flags2 |= XFS_DIFLAG2_DAX;
--	if (xflags & FS_XFLAG_COWEXTSIZE)
--		di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
--
--	return di_flags2;
--}
--
- /* Propagate di_flags from a parent inode to a child inode. */
- static void
- xfs_inode_propagate_flags(
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index c4a81537ccf..afa432727db 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -31,6 +31,7 @@
- #include "xfs_refcount.h"
- #include "xfs_health.h"
- #include "xfs_symlink_remote.h"
-+#include "xfs_inode_util.h"
+-	error = xfs_imap_to_bp(mp, tp, &ip->i_imap, &bp);
+-	if (error)
+-		goto out_destroy;
++	/*
++	 * For version 5 superblocks, if we are initialising a new inode and we
++	 * are not utilising the XFS_MOUNT_IKEEP inode cluster mode, we can
++	 * simply build the new inode core with a random generation number.
++	 *
++	 * For version 4 (and older) superblocks, log recovery is dependent on
++	 * the di_flushiter field being initialised from the current on-disk
++	 * value and hence we must also read the inode off disk even when
++	 * initializing new inodes.
++	 */
++	if (xfs_has_v3inodes(mp) &&
++	    (flags & XFS_IGET_CREATE) && !xfs_has_ikeep(mp)) {
++		VFS_I(ip)->i_generation = get_random_u32();
++	} else {
++		struct xfs_buf		*bp;
  
- struct kmem_cache		*xfs_bmap_intent_cache;
+-	error = xfs_inode_from_disk(ip,
+-			xfs_buf_offset(bp, ip->i_imap.im_boffset));
+-	if (!error)
+-		xfs_buf_set_ref(bp, XFS_INO_REF);
+-	xfs_trans_brelse(tp, bp);
++		error = xfs_imap_to_bp(mp, tp, &ip->i_imap, &bp);
++		if (error)
++			goto out_destroy;
  
-diff --git a/libxfs/xfs_inode_util.c b/libxfs/xfs_inode_util.c
-new file mode 100644
-index 00000000000..868a77cafa6
---- /dev/null
-+++ b/libxfs/xfs_inode_util.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2000-2006 Silicon Graphics, Inc.
-+ * All Rights Reserved.
-+ */
-+#include "libxfs_priv.h"
-+#include "xfs_fs.h"
-+#include "xfs_shared.h"
-+#include "xfs_format.h"
-+#include "xfs_log_format.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_sb.h"
-+#include "xfs_mount.h"
-+#include "xfs_inode.h"
-+#include "xfs_inode_util.h"
+-	if (error)
+-		goto out_destroy;
++		error = xfs_inode_from_disk(ip,
++				xfs_buf_offset(bp, ip->i_imap.im_boffset));
++		if (!error)
++			xfs_buf_set_ref(bp, XFS_INO_REF);
++		xfs_trans_brelse(tp, bp);
 +
-+uint16_t
-+xfs_flags2diflags(
-+	struct xfs_inode	*ip,
-+	unsigned int		xflags)
-+{
-+	/* can't set PREALLOC this way, just preserve it */
-+	uint16_t		di_flags =
-+		(ip->i_diflags & XFS_DIFLAG_PREALLOC);
-+
-+	if (xflags & FS_XFLAG_IMMUTABLE)
-+		di_flags |= XFS_DIFLAG_IMMUTABLE;
-+	if (xflags & FS_XFLAG_APPEND)
-+		di_flags |= XFS_DIFLAG_APPEND;
-+	if (xflags & FS_XFLAG_SYNC)
-+		di_flags |= XFS_DIFLAG_SYNC;
-+	if (xflags & FS_XFLAG_NOATIME)
-+		di_flags |= XFS_DIFLAG_NOATIME;
-+	if (xflags & FS_XFLAG_NODUMP)
-+		di_flags |= XFS_DIFLAG_NODUMP;
-+	if (xflags & FS_XFLAG_NODEFRAG)
-+		di_flags |= XFS_DIFLAG_NODEFRAG;
-+	if (xflags & FS_XFLAG_FILESTREAM)
-+		di_flags |= XFS_DIFLAG_FILESTREAM;
-+	if (S_ISDIR(VFS_I(ip)->i_mode)) {
-+		if (xflags & FS_XFLAG_RTINHERIT)
-+			di_flags |= XFS_DIFLAG_RTINHERIT;
-+		if (xflags & FS_XFLAG_NOSYMLINKS)
-+			di_flags |= XFS_DIFLAG_NOSYMLINKS;
-+		if (xflags & FS_XFLAG_EXTSZINHERIT)
-+			di_flags |= XFS_DIFLAG_EXTSZINHERIT;
-+		if (xflags & FS_XFLAG_PROJINHERIT)
-+			di_flags |= XFS_DIFLAG_PROJINHERIT;
-+	} else if (S_ISREG(VFS_I(ip)->i_mode)) {
-+		if (xflags & FS_XFLAG_REALTIME)
-+			di_flags |= XFS_DIFLAG_REALTIME;
-+		if (xflags & FS_XFLAG_EXTSIZE)
-+			di_flags |= XFS_DIFLAG_EXTSIZE;
++		if (error)
++			goto out_destroy;
 +	}
-+
-+	return di_flags;
-+}
-+
-+uint64_t
-+xfs_flags2diflags2(
-+	struct xfs_inode	*ip,
-+	unsigned int		xflags)
-+{
-+	uint64_t		di_flags2 =
-+		(ip->i_diflags2 & (XFS_DIFLAG2_REFLINK |
-+				   XFS_DIFLAG2_BIGTIME |
-+				   XFS_DIFLAG2_NREXT64));
-+
-+	if (xflags & FS_XFLAG_DAX)
-+		di_flags2 |= XFS_DIFLAG2_DAX;
-+	if (xflags & FS_XFLAG_COWEXTSIZE)
-+		di_flags2 |= XFS_DIFLAG2_COWEXTSIZE;
-+
-+	return di_flags2;
-+}
-+
-+uint32_t
-+xfs_ip2xflags(
-+	struct xfs_inode	*ip)
-+{
-+	uint32_t		flags = 0;
-+
-+	if (ip->i_diflags & XFS_DIFLAG_ANY) {
-+		if (ip->i_diflags & XFS_DIFLAG_REALTIME)
-+			flags |= FS_XFLAG_REALTIME;
-+		if (ip->i_diflags & XFS_DIFLAG_PREALLOC)
-+			flags |= FS_XFLAG_PREALLOC;
-+		if (ip->i_diflags & XFS_DIFLAG_IMMUTABLE)
-+			flags |= FS_XFLAG_IMMUTABLE;
-+		if (ip->i_diflags & XFS_DIFLAG_APPEND)
-+			flags |= FS_XFLAG_APPEND;
-+		if (ip->i_diflags & XFS_DIFLAG_SYNC)
-+			flags |= FS_XFLAG_SYNC;
-+		if (ip->i_diflags & XFS_DIFLAG_NOATIME)
-+			flags |= FS_XFLAG_NOATIME;
-+		if (ip->i_diflags & XFS_DIFLAG_NODUMP)
-+			flags |= FS_XFLAG_NODUMP;
-+		if (ip->i_diflags & XFS_DIFLAG_RTINHERIT)
-+			flags |= FS_XFLAG_RTINHERIT;
-+		if (ip->i_diflags & XFS_DIFLAG_PROJINHERIT)
-+			flags |= FS_XFLAG_PROJINHERIT;
-+		if (ip->i_diflags & XFS_DIFLAG_NOSYMLINKS)
-+			flags |= FS_XFLAG_NOSYMLINKS;
-+		if (ip->i_diflags & XFS_DIFLAG_EXTSIZE)
-+			flags |= FS_XFLAG_EXTSIZE;
-+		if (ip->i_diflags & XFS_DIFLAG_EXTSZINHERIT)
-+			flags |= FS_XFLAG_EXTSZINHERIT;
-+		if (ip->i_diflags & XFS_DIFLAG_NODEFRAG)
-+			flags |= FS_XFLAG_NODEFRAG;
-+		if (ip->i_diflags & XFS_DIFLAG_FILESTREAM)
-+			flags |= FS_XFLAG_FILESTREAM;
-+	}
-+
-+	if (ip->i_diflags2 & XFS_DIFLAG2_ANY) {
-+		if (ip->i_diflags2 & XFS_DIFLAG2_DAX)
-+			flags |= FS_XFLAG_DAX;
-+		if (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE)
-+			flags |= FS_XFLAG_COWEXTSIZE;
-+	}
-+
-+	if (xfs_inode_has_attr_fork(ip))
-+		flags |= FS_XFLAG_HASATTR;
-+	return flags;
-+}
-diff --git a/libxfs/xfs_inode_util.h b/libxfs/xfs_inode_util.h
-new file mode 100644
-index 00000000000..6ad1898a0f7
---- /dev/null
-+++ b/libxfs/xfs_inode_util.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2000-2003,2005 Silicon Graphics, Inc.
-+ * All Rights Reserved.
-+ */
-+#ifndef	__XFS_INODE_UTIL_H__
-+#define	__XFS_INODE_UTIL_H__
-+
-+uint16_t	xfs_flags2diflags(struct xfs_inode *ip, unsigned int xflags);
-+uint64_t	xfs_flags2diflags2(struct xfs_inode *ip, unsigned int xflags);
-+uint32_t	xfs_dic2xflags(struct xfs_inode *ip);
-+uint32_t	xfs_ip2xflags(struct xfs_inode *ip);
-+
-+#endif /* __XFS_INODE_UTIL_H__ */
+ 
+ 	*ipp = ip;
+ 	return 0;
 
