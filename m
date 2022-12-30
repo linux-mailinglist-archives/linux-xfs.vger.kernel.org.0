@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8449D65A161
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:18:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5FDA65A162
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:18:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236195AbiLaCSA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:18:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54268 "EHLO
+        id S236197AbiLaCSJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:18:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236197AbiLaCRx (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:17:53 -0500
+        with ESMTP id S236196AbiLaCSJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:18:09 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948DF13F62
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:17:52 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2439E13F62
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:18:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 310AF61C9C
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:17:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9780EC433D2;
-        Sat, 31 Dec 2022 02:17:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B61FF61C9C
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:18:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F0FDC433EF;
+        Sat, 31 Dec 2022 02:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453071;
-        bh=IY2cBr3QZGPuSAfrp9InL8Dm+LABs7MxtJa0Rgnrmjk=;
+        s=k20201202; t=1672453087;
+        bh=JtDmoYW3Y7ivBU+EmYd6VOEKGTjjJ3XgUHlRCH5wy2o=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J2Xx+c5bVyMkb/SXSONxv01oCG7dkggQJGmHJplkhUW0xolYFwn7BNBk+Och7B3dR
-         slplCAFayC5zXt0oiHfToqrg2G3wCRA3kOkcbVs1cNPOfjjgNmPVZPh+deQQ7pVLYD
-         f+WKMIJr99cOAXMNjqPZLW/KyUAkmNUHTCkYFLtrC7jKyMXHFqhEVJQuZHBM+u/v2O
-         WaLAYPtMZzbaYfRtJhTRtiTYDKZMXKdHtNnb4BOhPsscgPunE5YK39akV8ITqbNkMB
-         aT6M+ha1eBNWF8Sb/48npOB+KukIRHLlu1Jf5o17zy4+IOtYwSu+UShsp7r7MgTBng
-         OswBR2l1A6A7Q==
-Subject: [PATCH 31/46] xfs_repair: refactor root directory initialization
+        b=qhUbltkeypTN58+I8Lvj/Qr1s38zGU/lRORLr2FGyy2gREy/42VLURJ5idcTuVtLb
+         g4yAevTHfNY+7bEdtI6MwSosjCd8UUuKVfcNkAliCLHzLhoqBgdkw70Y8mD5D+abB5
+         VPzntswrEHvvjfxddxhECQH1WfjpePtjCNo1ROFBW+hLP+bMj9MFlrNwF0Yv9ZU41x
+         KBKmtCCiyMmtoRIypNLsyoqvIoybER+pqw7QpdHgo8h81RXeTgMn2/VhWl5ZkWNGzU
+         H2kItWcJ4TveLOx+AiuIR0d5dXy/g3FftUm3fvfarR+Mcfa86DIz0hcloFY1qvmV+1
+         NGuZUO03lBYzA==
+Subject: [PATCH 32/46] xfs_repair: refactor grabbing realtime metadata inodes
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:23 -0800
-Message-ID: <167243876342.725900.16520400905151204132.stgit@magnolia>
+Message-ID: <167243876354.725900.12838140320983581144.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,100 +55,141 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Refactor root directory initialization into a separate function we can
-call for both the root dir and the metadir.
+Create a helper function to grab a realtime metadata inode.  When
+metadir arrives, the bitmap and summary inodes can float, so we'll
+turn this function into a "load or allocate" function.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/phase6.c |   63 +++++++++++++++++++++++++++++++++++--------------------
- 1 file changed, 40 insertions(+), 23 deletions(-)
+ repair/phase6.c |   90 ++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 53 insertions(+), 37 deletions(-)
 
 
 diff --git a/repair/phase6.c b/repair/phase6.c
-index d8df0f608f8..7e751f41770 100644
+index 7e751f41770..aaaebc79098 100644
 --- a/repair/phase6.c
 +++ b/repair/phase6.c
-@@ -755,27 +755,27 @@ mk_rsumino(xfs_mount_t *mp)
- 	libxfs_irele(ip);
+@@ -469,18 +469,37 @@ reset_root_ino(
+ 	libxfs_inode_init(tp, &args, ip);
  }
  
--/*
-- * makes a new root directory.
-- */
--static void
--mk_root_dir(xfs_mount_t *mp)
-+/* Initialize a root directory. */
++/* Load a realtime metadata inode from disk and reset it. */
 +static int
-+init_fs_root_dir(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		ino,
-+	mode_t			mode,
-+	struct xfs_inode	**ipp)
- {
--	xfs_trans_t	*tp;
--	xfs_inode_t	*ip;
--	int		i;
--	int		error;
--	const mode_t	mode = 0755;
--	ino_tree_node_t	*irec;
-+	struct xfs_trans	*tp;
-+	struct xfs_inode	*ip = NULL;
-+	struct ino_tree_node	*irec;
-+	int			error;
- 
--	ip = NULL;
--	i = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_ichange, 10, 0, 0, &tp);
--	if (i)
--		res_failed(i);
-+	error = -libxfs_trans_alloc(mp, &M_RES(mp)->tr_ichange, 10, 0, 0, &tp);
++ensure_rtino(
++	struct xfs_trans		**tpp,
++	xfs_ino_t			ino,
++	struct xfs_inode		**ipp)
++{
++	struct xfs_mount		*mp = (*tpp)->t_mountp;
++	int				error;
++
++	error = -libxfs_iget(mp, *tpp, ino, 0, ipp);
 +	if (error)
 +		return error;
- 
--	error = -libxfs_iget(mp, tp, mp->m_sb.sb_rootino, 0, &ip);
-+	error = -libxfs_iget(mp, tp, ino, 0, &ip);
- 	if (error) {
--		do_error(_("could not iget root inode -- error - %d\n"), error);
-+		libxfs_trans_cancel(tp);
-+		return error;
- 	}
- 
- 	/* Reset the root directory. */
-@@ -784,14 +784,31 @@ mk_root_dir(xfs_mount_t *mp)
- 
- 	error = -libxfs_trans_commit(tp);
- 	if (error)
--		do_error(_("%s: commit failed, error %d\n"), __func__, error);
-+		return error;
 +
-+	irec = find_inode_rec(mp, XFS_INO_TO_AGNO(mp, ino),
-+				XFS_INO_TO_AGINO(mp, ino));
-+	set_inode_isadir(irec, XFS_INO_TO_AGINO(mp, ino) - irec->ino_startnum);
-+	*ipp = ip;
++	reset_root_ino(*tpp, S_IFREG, *ipp);
 +	return 0;
 +}
 +
-+/*
-+ * makes a new root directory.
-+ */
-+static void
-+mk_root_dir(xfs_mount_t *mp)
-+{
-+	struct xfs_inode	*ip = NULL;
+ static void
+-mk_rbmino(xfs_mount_t *mp)
++mk_rbmino(
++	struct xfs_mount	*mp)
+ {
+-	xfs_trans_t	*tp;
+-	xfs_inode_t	*ip;
+-	xfs_bmbt_irec_t	*ep;
+-	int		i;
+-	int		nmap;
+-	int		error;
+-	xfs_fileoff_t	bno;
+-	xfs_bmbt_irec_t	map[XFS_BMAP_MAX_NMAP];
+-	uint		blocks;
++	struct xfs_trans	*tp;
++	struct xfs_inode	*ip;
++	struct xfs_bmbt_irec	*ep;
++	int			i;
++	int			nmap;
 +	int			error;
-+
-+	error = init_fs_root_dir(mp, mp->m_sb.sb_rootino, 0755, &ip);
-+	if (error)
-+		do_error(
-+	_("Could not reinitialize root directory inode, error %d\n"),
-+			error);
++	xfs_fileoff_t		bno;
++	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
++	uint			blocks;
  
- 	libxfs_irele(ip);
+ 	/*
+ 	 * first set up inode
+@@ -489,15 +508,13 @@ mk_rbmino(xfs_mount_t *mp)
+ 	if (i)
+ 		res_failed(i);
+ 
+-	error = -libxfs_iget(mp, tp, mp->m_sb.sb_rbmino, 0, &ip);
+-	if (error) {
+-		do_error(
+-		_("couldn't iget realtime bitmap inode -- error - %d\n"),
+-			error);
+-	}
 -
--	irec = find_inode_rec(mp, XFS_INO_TO_AGNO(mp, mp->m_sb.sb_rootino),
--				XFS_INO_TO_AGINO(mp, mp->m_sb.sb_rootino));
--	set_inode_isadir(irec, XFS_INO_TO_AGINO(mp, mp->m_sb.sb_rootino) -
--				irec->ino_startnum);
+ 	/* Reset the realtime bitmap inode. */
+-	reset_root_ino(tp, S_IFREG, ip);
++	error = ensure_rtino(&tp, mp->m_sb.sb_rbmino, &ip);
++	if (error) {
++		do_error(
++		_("couldn't iget realtime bitmap inode -- error - %d\n"),
++			error);
++	}
+ 	ip->i_disk_size = mp->m_sb.sb_rbmblocks * mp->m_sb.sb_blocksize;
+ 	libxfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 	error = -libxfs_trans_commit(tp);
+@@ -682,18 +699,19 @@ _("can't access block %" PRIu64 " (fsbno %" PRIu64 ") of realtime summary inode
  }
  
- /*
+ static void
+-mk_rsumino(xfs_mount_t *mp)
++mk_rsumino(
++	struct xfs_mount	*mp)
+ {
+-	xfs_trans_t	*tp;
+-	xfs_inode_t	*ip;
+-	xfs_bmbt_irec_t	*ep;
+-	int		i;
+-	int		nmap;
+-	int		error;
+-	int		nsumblocks;
+-	xfs_fileoff_t	bno;
+-	xfs_bmbt_irec_t	map[XFS_BMAP_MAX_NMAP];
+-	uint		blocks;
++	struct xfs_trans	*tp;
++	struct xfs_inode	*ip;
++	struct xfs_bmbt_irec	*ep;
++	int			i;
++	int			nmap;
++	int			error;
++	int			nsumblocks;
++	xfs_fileoff_t		bno;
++	struct xfs_bmbt_irec	map[XFS_BMAP_MAX_NMAP];
++	uint			blocks;
+ 
+ 	/*
+ 	 * first set up inode
+@@ -702,15 +720,13 @@ mk_rsumino(xfs_mount_t *mp)
+ 	if (i)
+ 		res_failed(i);
+ 
+-	error = -libxfs_iget(mp, tp, mp->m_sb.sb_rsumino, 0, &ip);
+-	if (error) {
+-		do_error(
+-		_("couldn't iget realtime summary inode -- error - %d\n"),
+-			error);
+-	}
+-
+ 	/* Reset the rt summary inode. */
+-	reset_root_ino(tp, S_IFREG, ip);
++	error = ensure_rtino(&tp, mp->m_sb.sb_rsumino, &ip);
++	if (error) {
++		do_error(
++		_("couldn't iget realtime summary inode -- error - %d\n"),
++			error);
++	}
+ 	ip->i_disk_size = mp->m_rsumsize;
+ 	libxfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
+ 	error = -libxfs_trans_commit(tp);
 
