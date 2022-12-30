@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A911659EAE
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:47:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86379659EB3
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:48:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235627AbiL3Xri (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:47:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47902 "EHLO
+        id S235597AbiL3XsZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:48:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235597AbiL3Xrh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:47:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F03064FA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:47:36 -0800 (PST)
+        with ESMTP id S235636AbiL3XsY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:48:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A49657B
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:48:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D2890B81DCA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:47:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 744EDC433D2;
-        Fri, 30 Dec 2022 23:47:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8F2B0B81DCB
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:48:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D50BC433EF;
+        Fri, 30 Dec 2022 23:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672444053;
-        bh=P08CS1puQ7aRJX1SfhHHHIlJx0H15bGJGQ+3W9RfZ9o=;
+        s=k20201202; t=1672444100;
+        bh=0RHGmvnhm+hAUqOB/kyVDZdEiinDZmiXQu30KFTmHiU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tyYAkLgBiSswgpxIuGbmfumHklsZaAAsBqMERWk646R4eoQ8aEfuQCvyRmqpo0zX3
-         IH/sQroohKbzZIxX286g/ne5sEbHnG5luAbnYHCwV0/czHTBqh1BS8zeFZ2cL09Ykk
-         ZIW4WXll1shfWIFcTbSo3Nkn2TTAkgN8fzcyJK1FQO+xXFHbUVvEPBlv59R3ocNW7d
-         pHBenzwuVR+OAf8pLNE3HD9N4aaF3Z33MvExSSRdO/lvPezykG0Pfq8AEGnywpcZbA
-         vjsrWgv/4BbV0OjV3+OTWCE5y+r9Zw21vDqL0nJXW4TbF9SCbyU7occvxqIji0uz75
-         pi9LBUA63Xhmg==
-Subject: [PATCH 2/3] xfs: clean up bmap log intent item tracepoint callsites
+        b=u+ci11yy683KgGZdBaJLGRQ6n8hmDlw3VgXMNmvVIg9ncDHApppndHi7496ioJo16
+         6o03mWBSWUAh6oymUX6/SxCBR+WX2SMS3dGL3ksdaS1hueHpXBw8Ryga1bLRCEgMcC
+         VT4q6QpX/gfnMvtaSLfNsMZgRhtCZWms95hiLIEQhYkmK0FEJlTzu9XKybYXNgK4Os
+         Gca8Gutww+FAHuuZIZYi16dOKb7ikHKwLFWj7gMUlgK2N62kHHbFm8NtLWjmOhyOHN
+         NFl5Z5badn6f5vxRu1lNl3tS7iCGdeEcyibTsNc0vtC6VzVuzg+SerQTeifSu9/Le8
+         8eH/LNnd0I45g==
+Subject: [PATCH 2/4] xfs: hoist freeing of rt data fork extent mappings
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:13:41 -0800
-Message-ID: <167243842153.698982.12181041541568925759.stgit@magnolia>
-In-Reply-To: <167243842121.698982.2011083519163197266.stgit@magnolia>
-References: <167243842121.698982.2011083519163197266.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:13:44 -0800
+Message-ID: <167243842491.699102.14917018062176495863.stgit@magnolia>
+In-Reply-To: <167243842459.699102.4471319762222972730.stgit@magnolia>
+References: <167243842459.699102.4471319762222972730.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,178 +54,129 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Pass the incore bmap structure to the tracepoints instead of open-coding
-the argument passing.
+Currently, xfs_bmap_del_extent_real contains a bunch of code to convert
+the physical extent of a data fork mapping for a realtime file into rt
+extents and pass that to the rt extent freeing function.  Since the
+details of this aren't needed when CONFIG_XFS_REALTIME=n, move it to
+xfs_rtbitmap.c to reduce code size when realtime isn't enabled.
+
+This will (one day) enable realtime EFIs to reuse the same
+unit-converting call with less code duplication.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_bmap.c |   19 +++-------------
- fs/xfs/libxfs/xfs_bmap.h |    4 +++
- fs/xfs/xfs_trace.c       |    1 +
- fs/xfs/xfs_trace.h       |   54 ++++++++++++++++++++--------------------------
- 4 files changed, 32 insertions(+), 46 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c     |   21 +++------------------
+ fs/xfs/libxfs/xfs_rtbitmap.c |   33 +++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_rtalloc.h         |    5 +++++
+ 3 files changed, 41 insertions(+), 18 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index 9b99669be43d..ce12a1fd3209 100644
+index ac5a0d3718f2..4c4e8ab42f63 100644
 --- a/fs/xfs/libxfs/xfs_bmap.c
 +++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -6213,15 +6213,6 @@ __xfs_bmap_add(
- {
- 	struct xfs_bmap_intent		*bi;
- 
--	trace_xfs_bmap_defer(tp->t_mountp,
--			XFS_FSB_TO_AGNO(tp->t_mountp, bmap->br_startblock),
--			type,
--			XFS_FSB_TO_AGBNO(tp->t_mountp, bmap->br_startblock),
--			ip->i_ino, whichfork,
--			bmap->br_startoff,
--			bmap->br_blockcount,
--			bmap->br_state);
+@@ -5149,33 +5149,18 @@ xfs_bmap_del_extent_real(
+ 	flags = XFS_ILOG_CORE;
+ 	if (xfs_ifork_is_realtime(ip, whichfork)) {
+ 		if (!(bflags & XFS_BMAPI_REMAP)) {
+-			xfs_fsblock_t	bno;
+-			xfs_filblks_t	len;
+-			xfs_extlen_t	mod;
 -
- 	bi = kmem_cache_alloc(xfs_bmap_intent_cache, GFP_NOFS | __GFP_NOFAIL);
- 	INIT_LIST_HEAD(&bi->bi_list);
- 	bi->bi_type = type;
-@@ -6229,6 +6220,8 @@ __xfs_bmap_add(
- 	bi->bi_whichfork = whichfork;
- 	bi->bi_bmap = *bmap;
+-			len = div_u64_rem(del->br_blockcount,
+-					mp->m_sb.sb_rextsize, &mod);
+-			ASSERT(mod == 0);
+-
+-			bno = div_u64_rem(del->br_startblock,
+-					mp->m_sb.sb_rextsize, &mod);
+-			ASSERT(mod == 0);
+-
+-			error = xfs_rtfree_extent(tp, bno, (xfs_extlen_t)len);
++			error = xfs_rtfree_blocks(tp, del->br_startblock,
++					del->br_blockcount);
+ 			if (error)
+ 				goto done;
+-			nblks = len * mp->m_sb.sb_rextsize;
+-		} else {
+-			nblks = del->br_blockcount;
+ 		}
+-
+ 		do_fx = 0;
+ 		qfield = XFS_TRANS_DQ_RTBCOUNT;
+ 	} else {
+ 		do_fx = 1;
+-		nblks = del->br_blockcount;
+ 		qfield = XFS_TRANS_DQ_BCOUNT;
+ 	}
++	nblks = del->br_blockcount;
  
-+	trace_xfs_bmap_defer(bi);
-+
- 	xfs_bmap_update_get_group(tp->t_mountp, bi);
- 	xfs_defer_add(tp, XFS_DEFER_OPS_TYPE_BMAP, &bi->bi_list);
+ 	del_endblock = del->br_startblock + del->br_blockcount;
+ 	if (cur) {
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index 99a0af8d9028..c0bd7c44a6b8 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -1012,6 +1012,39 @@ xfs_rtfree_extent(
  	return 0;
-@@ -6274,13 +6267,7 @@ xfs_bmap_finish_one(
+ }
  
- 	ASSERT(tp->t_firstblock == NULLFSBLOCK);
- 
--	trace_xfs_bmap_deferred(tp->t_mountp,
--			XFS_FSB_TO_AGNO(tp->t_mountp, bmap->br_startblock),
--			bi->bi_type,
--			XFS_FSB_TO_AGBNO(tp->t_mountp, bmap->br_startblock),
--			bi->bi_owner->i_ino, bi->bi_whichfork,
--			bmap->br_startoff, bmap->br_blockcount,
--			bmap->br_state);
-+	trace_xfs_bmap_deferred(bi);
- 
- 	if (WARN_ON_ONCE(bi->bi_whichfork != XFS_DATA_FORK)) {
- 		xfs_bmap_mark_sick(bi->bi_owner, bi->bi_whichfork);
-diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
-index bbda4a77cb69..276ffd098c9e 100644
---- a/fs/xfs/libxfs/xfs_bmap.h
-+++ b/fs/xfs/libxfs/xfs_bmap.h
-@@ -226,6 +226,10 @@ enum xfs_bmap_intent_type {
- 	XFS_BMAP_UNMAP,
- };
- 
-+#define XFS_BMAP_INTENT_STRINGS \
-+	{ XFS_BMAP_MAP,		"map" }, \
-+	{ XFS_BMAP_UNMAP,	"unmap" }
++/*
++ * Free some blocks in the realtime subvolume.  rtbno and rtlen are in units of
++ * rt blocks, not rt extents; must be aligned to the rt extent size; and rtlen
++ * cannot exceed XFS_MAX_BMBT_EXTLEN.
++ */
++int
++xfs_rtfree_blocks(
++	struct xfs_trans	*tp,
++	xfs_fsblock_t		rtbno,
++	xfs_filblks_t		rtlen)
++{
++	struct xfs_mount	*mp = tp->t_mountp;
++	xfs_rtblock_t		bno;
++	xfs_filblks_t		len;
++	xfs_extlen_t		mod;
 +
- struct xfs_bmap_intent {
- 	struct list_head			bi_list;
- 	enum xfs_bmap_intent_type		bi_type;
-diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
-index 2d49310fb912..c9a5d8087b63 100644
---- a/fs/xfs/xfs_trace.c
-+++ b/fs/xfs/xfs_trace.c
-@@ -39,6 +39,7 @@
- #include "scrub/xfile.h"
- #include "scrub/xfbtree.h"
- #include "xfs_btree_mem.h"
-+#include "xfs_bmap.h"
++	ASSERT(rtlen <= XFS_MAX_BMBT_EXTLEN);
++
++	len = div_u64_rem(rtlen, mp->m_sb.sb_rextsize, &mod);
++	if (mod) {
++		ASSERT(mod == 0);
++		return -EIO;
++	}
++
++	bno = div_u64_rem(rtbno, mp->m_sb.sb_rextsize, &mod);
++	if (mod) {
++		ASSERT(mod == 0);
++		return -EIO;
++	}
++
++	return xfs_rtfree_extent(tp, bno, len);
++}
++
+ /* Find all the free records within a given range. */
+ int
+ xfs_rtalloc_query_range(
+diff --git a/fs/xfs/xfs_rtalloc.h b/fs/xfs/xfs_rtalloc.h
+index 62c7ad79cbb6..3b2f1b499a11 100644
+--- a/fs/xfs/xfs_rtalloc.h
++++ b/fs/xfs/xfs_rtalloc.h
+@@ -58,6 +58,10 @@ xfs_rtfree_extent(
+ 	xfs_rtblock_t		bno,	/* starting block number to free */
+ 	xfs_extlen_t		len);	/* length of extent freed */
  
++/* Same as above, but in units of rt blocks. */
++int xfs_rtfree_blocks(struct xfs_trans *tp, xfs_fsblock_t rtbno,
++		xfs_filblks_t rtlen);
++
  /*
-  * We include this last to have the helpers above available for the trace
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 66f3a2803dd4..b65b7969a1d3 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -77,6 +77,7 @@ struct xfs_inobt_rec_incore;
- union xfs_btree_ptr;
- struct xfs_dqtrx;
- struct xfs_icwalk;
-+struct xfs_bmap_intent;
- 
- #define XFS_ATTR_FILTER_FLAGS \
- 	{ XFS_ATTR_ROOT,	"ROOT" }, \
-@@ -2962,16 +2963,12 @@ DEFINE_RMAPBT_EVENT(xfs_rmap_find_right_neighbor_result);
- DEFINE_RMAPBT_EVENT(xfs_rmap_find_left_neighbor_result);
- 
- /* deferred bmbt updates */
-+TRACE_DEFINE_ENUM(XFS_BMAP_MAP);
-+TRACE_DEFINE_ENUM(XFS_BMAP_UNMAP);
-+
- DECLARE_EVENT_CLASS(xfs_bmap_deferred_class,
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno,
--		 int op,
--		 xfs_agblock_t agbno,
--		 xfs_ino_t ino,
--		 int whichfork,
--		 xfs_fileoff_t offset,
--		 xfs_filblks_t len,
--		 xfs_exntst_t state),
--	TP_ARGS(mp, agno, op, agbno, ino, whichfork, offset, len, state),
-+	TP_PROTO(struct xfs_bmap_intent *bi),
-+	TP_ARGS(bi),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
- 		__field(xfs_agnumber_t, agno)
-@@ -2984,22 +2981,26 @@ DECLARE_EVENT_CLASS(xfs_bmap_deferred_class,
- 		__field(int, op)
- 	),
- 	TP_fast_assign(
--		__entry->dev = mp->m_super->s_dev;
--		__entry->agno = agno;
--		__entry->ino = ino;
--		__entry->agbno = agbno;
--		__entry->whichfork = whichfork;
--		__entry->l_loff = offset;
--		__entry->l_len = len;
--		__entry->l_state = state;
--		__entry->op = op;
-+		struct xfs_inode	*ip = bi->bi_owner;
-+
-+		__entry->dev = ip->i_mount->m_super->s_dev;
-+		__entry->agno = XFS_FSB_TO_AGNO(ip->i_mount,
-+					bi->bi_bmap.br_startblock);
-+		__entry->ino = ip->i_ino;
-+		__entry->agbno = XFS_FSB_TO_AGBNO(ip->i_mount,
-+					bi->bi_bmap.br_startblock);
-+		__entry->whichfork = bi->bi_whichfork;
-+		__entry->l_loff = bi->bi_bmap.br_startoff;
-+		__entry->l_len = bi->bi_bmap.br_blockcount;
-+		__entry->l_state = bi->bi_bmap.br_state;
-+		__entry->op = bi->bi_type;
- 	),
--	TP_printk("dev %d:%d op %d agno 0x%x agbno 0x%x owner 0x%llx %s fileoff 0x%llx fsbcount 0x%llx state %d",
-+	TP_printk("dev %d:%d op %s ino 0x%llx agno 0x%x agbno 0x%x %s fileoff 0x%llx fsbcount 0x%llx state %d",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
--		  __entry->op,
-+		  __print_symbolic(__entry->op, XFS_BMAP_INTENT_STRINGS),
-+		  __entry->ino,
- 		  __entry->agno,
- 		  __entry->agbno,
--		  __entry->ino,
- 		  __print_symbolic(__entry->whichfork, XFS_WHICHFORK_STRINGS),
- 		  __entry->l_loff,
- 		  __entry->l_len,
-@@ -3007,15 +3008,8 @@ DECLARE_EVENT_CLASS(xfs_bmap_deferred_class,
- );
- #define DEFINE_BMAP_DEFERRED_EVENT(name) \
- DEFINE_EVENT(xfs_bmap_deferred_class, name, \
--	TP_PROTO(struct xfs_mount *mp, xfs_agnumber_t agno, \
--		 int op, \
--		 xfs_agblock_t agbno, \
--		 xfs_ino_t ino, \
--		 int whichfork, \
--		 xfs_fileoff_t offset, \
--		 xfs_filblks_t len, \
--		 xfs_exntst_t state), \
--	TP_ARGS(mp, agno, op, agbno, ino, whichfork, offset, len, state))
-+	TP_PROTO(struct xfs_bmap_intent *bi), \
-+	TP_ARGS(bi))
- DEFINE_BMAP_DEFERRED_EVENT(xfs_bmap_defer);
- DEFINE_BMAP_DEFERRED_EVENT(xfs_bmap_deferred);
- 
+  * Initialize realtime fields in the mount structure.
+  */
+@@ -139,6 +143,7 @@ int xfs_rtalloc_reinit_frextents(struct xfs_mount *mp);
+ #else
+ # define xfs_rtallocate_extent(t,b,min,max,l,f,p,rb)    (ENOSYS)
+ # define xfs_rtfree_extent(t,b,l)                       (ENOSYS)
++# define xfs_rtfree_blocks(t,rb,rl)			(ENOSYS)
+ # define xfs_rtpick_extent(m,t,l,rb)                    (ENOSYS)
+ # define xfs_growfs_rt(mp,in)                           (ENOSYS)
+ # define xfs_rtalloc_query_range(t,l,h,f,p)             (ENOSYS)
 
