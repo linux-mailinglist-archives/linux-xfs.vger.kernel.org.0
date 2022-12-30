@@ -2,83 +2,90 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A64965A017
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:57:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D28EA65A0B4
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:35:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235651AbiLaA5z (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:57:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39040 "EHLO
+        id S235857AbiLaBfd (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:35:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbiLaA5y (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:57:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17A18F03A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:57:54 -0800 (PST)
+        with ESMTP id S235856AbiLaBfc (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:35:32 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E395DEB7
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:35:32 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A905C61D5B
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:57:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13FB5C433EF;
-        Sat, 31 Dec 2022 00:57:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B90FD61CC6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:35:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C150C433EF;
+        Sat, 31 Dec 2022 01:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448273;
-        bh=zwBlOezOeVRqP1rq/dgqYiwcZ6xyIEwOIiNCwTZ82/k=;
+        s=k20201202; t=1672450531;
+        bh=4J2ubBY+hNfeB++cRx4hlG/dnyMgHM8xK592lFlBzZI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cF2cx3VbxkHJXZVzA+oFPsvPMwuqmIp83T/MxMt4C2AweEndu15Ctf7A+VDa2tC4p
-         nPnmXjBcFbeLH2Kz2LRte6UA7PW0wvtclx4QyT8P/zlL2t+fvs66eGrb09rT8Fivih
-         7FgO/VbgXk/CUVvDan8Q3U1t9/3Zvo5/xaItfC+FwisC6k+OXdAkBI4G3qca1n1sl7
-         EbuwEGlt3N3+l/4Zf2vhansZg6KD6cAIL0qXXojD94dbwmxqz61xavMvlZrwtHw72c
-         aa0fn/SEQQVQF+hsV8E9lfiHdzNhWPwHCL6SfHoa9wvznoDdpG/Y2mVPn3yInCmedn
-         NcUcbf+s3HiZw==
-Subject: [PATCHSET v1.0 0/2] xfs: widen EFI format to support rt
+        b=c0BB5hCTfSPLhbfrQB9wqKBV3yR+hlNlm/8MrSWhJv/QceauSx8aeajj4uwU4+Wqf
+         PVS25/0t9U0cyH0m3V4HQwNcDAqs7mKUZbsAo43MttVp90N1p7W8OH95a86qdCMRo9
+         a6PoLsvvTwr4Xo07hxczaB6jI6p+qiRphfArWuYkF2sdmez6caLS892ysdql3rq5XA
+         nHeT04lbeE3w7GBrCrxWhZ6VZ5pBpea11w3iYm6lvxmC9xJkDCirRiv4EveUq70haE
+         8pJv6wh8YISLvqbmwCNxfp85yfY2m1ntyY+iio5kpX13RJuYoF+W6rbMKIxcIL238t
+         CAQhuuvIZVlUg==
+Subject: [PATCH 2/2] xfs: support error injection when freeing rt extents
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:08 -0800
-Message-ID: <167243868836.714671.1578924317888085757.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243868866.714671.584997460355004822.stgit@magnolia>
+In-Reply-To: <167243868836.714671.1578924317888085757.stgit@magnolia>
+References: <167243868836.714671.1578924317888085757.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Realtime reverse mapping (and beyond that, realtime reflink) needs to be
-able to defer file mapping and extent freeing work in much the same
-manner as is required on the data volume.  Make the extent freeing log
-items operate on rt extents in preparation for realtime rmap.
+A handful of fstests expect to be able to test what happens when extent
+free intents fail to actually free the extent.  Now that we're
+supporting EFIs for realtime extents, add to xfs_rtfree_extent the same
+injection point that exists in the regular extent freeing code.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-extfree-intents
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-extfree-intents
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c      |   35 ++++++++++++++++----
- fs/xfs/libxfs/xfs_alloc.h      |   17 ++++++++--
- fs/xfs/libxfs/xfs_defer.c      |    1 +
- fs/xfs/libxfs/xfs_defer.h      |    1 +
- fs/xfs/libxfs/xfs_log_format.h |    7 ++++
- fs/xfs/libxfs/xfs_rtbitmap.c   |    4 ++
- fs/xfs/xfs_extfree_item.c      |   71 ++++++++++++++++++++++++++++++++++++++--
- 7 files changed, 123 insertions(+), 13 deletions(-)
+ fs/xfs/libxfs/xfs_rtbitmap.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index ccefbfc70f8b..a4cd7925492d 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -20,6 +20,7 @@
+ #include "xfs_rtbitmap.h"
+ #include "xfs_log.h"
+ #include "xfs_buf_item.h"
++#include "xfs_errortag.h"
+ 
+ /*
+  * Realtime allocator bitmap functions shared with userspace.
+@@ -1139,6 +1140,9 @@ xfs_rtfree_extent(
+ 	ASSERT(mp->m_rbmip->i_itemp != NULL);
+ 	ASSERT(xfs_isilocked(mp->m_rbmip, XFS_ILOCK_EXCL));
+ 
++	if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_FREE_EXTENT))
++		return -EIO;
++
+ 	error = xfs_rtcheck_alloc_range(mp, tp, start, len);
+ 	if (error)
+ 		return error;
 
