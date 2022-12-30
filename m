@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 130B865A224
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:03:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 351D965A226
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:04:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236258AbiLaDDu (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:03:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34216 "EHLO
+        id S236265AbiLaDEc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:04:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236230AbiLaDDt (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:03:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A44A15FD6
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:03:48 -0800 (PST)
+        with ESMTP id S236290AbiLaDEV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:04:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D256515816
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:04:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4C5ABB81E9F
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:03:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E100C433D2;
-        Sat, 31 Dec 2022 03:03:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8501BB81EA2
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:04:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E24C433D2;
+        Sat, 31 Dec 2022 03:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455826;
-        bh=JhG04/jZtlTGKP1gDo0TBuDVSSRxfODhdTxxFIw58/k=;
+        s=k20201202; t=1672455857;
+        bh=ba9xC7GprnhoQZxS+IP1MdYIlLSt3LvmNU417aThjr0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gPe2AvwYN4ijh2f+1l/kIptl2WePaR42iz+vpjcjP/iWFiMLe2Pg6fIAtfV8Y+4TI
-         IbsM000cFXoeQPNK01EyfTjP4Vdei9UMUZZ0L+HMIjpRys6869b5dKlmBMDDlL/6By
-         hJcbepiifSF8xRcWanUN5hur4JgNXs4AK/N58BItoQHT1fQX+V5OgpFxkTSAf7dZiX
-         jcBbpZDTywWW6Hzc4ZeoY6B0tmsxsxRwbWXiJ8HDLDNemoQyCeBDBRpl2BRzszy8bt
-         zosQ8hPQeWipynJA91ndw56Zf6ofAsaM33nSud9RBTSCU/2UdY2YbjQ7XN1OLWT/aT
-         ++UZB6SeiBQQA==
-Subject: [PATCH 37/41] xfs_repair: allow realtime files to have the reflink
- flag set
+        b=PkeLHRW2vaBn/zExwwS3B/MKj88pOpqtzs6KHM4V2I+e+B1B5TmtFnO613f6cZKw8
+         c6fgENN+PJ1YFTnQDh0JMuvm9kSxXFqe39JcgAfQ5g6XAFFpn+oNrHJzmns+bzFlZs
+         naP6eJPziiUDK4f5iWG/JvVZ4SgCugf8EWoeL3Hkh5mq8uF6+GCd0ayAxSm6hWpAHN
+         tALWHjmfRaycy1kM/0YNEPN2doOZ1AQQ9nLzRi/8rqIXX1m9AFCv6rzFmx3dTTO/9G
+         CZ1cSoedhFSrSZQJQ3k69mn2MceZ1yG6MANMWAAbFOptmmSy72RPMTC9ifhkh6RzUH
+         ueOGKojKuKlxg==
+Subject: [PATCH 39/41] xfs_repair: allow sysadmins to add realtime reflink
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:12 -0800
-Message-ID: <167243881259.734096.4454780130261127675.stgit@magnolia>
+Message-ID: <167243881286.734096.10789662941013004371.stgit@magnolia>
 In-Reply-To: <167243880752.734096.171910706541747310.stgit@magnolia>
 References: <167243880752.734096.171910706541747310.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,39 +55,140 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we allow reflink on the realtime volume, allow that combination
-of inode flags if the feature's enabled.  Note that we now allow inodes
-to have rtinherit even if there's no realtime volume, since the kernel
-has never restricted that.
+Allow the sysadmin to use xfs_repair to upgrade an existing filesystem
+to support the realtime reference count btree, and therefore reflink on
+realtime volumes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/dinode.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ libxfs/libxfs_api_defs.h |    1 +
+ repair/phase2.c          |   75 +++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 74 insertions(+), 2 deletions(-)
 
 
-diff --git a/repair/dinode.c b/repair/dinode.c
-index 1ef93d7aa8e..09cef18f2e9 100644
---- a/repair/dinode.c
-+++ b/repair/dinode.c
-@@ -3186,7 +3186,8 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
- 		}
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 5c7396a53a6..63607cf2b94 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -251,6 +251,7 @@
+ #define xfs_rtgroup_update_super	libxfs_rtgroup_update_super
  
- 		if ((flags2 & XFS_DIFLAG2_REFLINK) &&
--		    (flags & (XFS_DIFLAG_REALTIME | XFS_DIFLAG_RTINHERIT))) {
-+		    !xfs_has_rtreflink(mp) &&
-+		    (flags & XFS_DIFLAG_REALTIME)) {
- 			if (!uncertain) {
- 				do_warn(
- 	_("Cannot have a reflinked realtime inode %" PRIu64 "\n"),
-@@ -3218,7 +3219,8 @@ _("bad (negative) size %" PRId64 " on inode %" PRIu64 "\n"),
- 		}
+ #define xfs_rtrefcountbt_absolute_maxlevels	libxfs_rtrefcountbt_absolute_maxlevels
++#define xfs_rtrefcountbt_calc_reserves	libxfs_rtrefcountbt_calc_reserves
+ #define xfs_rtrefcountbt_commit_staged_btree	libxfs_rtrefcountbt_commit_staged_btree
+ #define xfs_rtrefcountbt_create		libxfs_rtrefcountbt_create
+ #define xfs_rtrefcountbt_create_path	libxfs_rtrefcountbt_create_path
+diff --git a/repair/phase2.c b/repair/phase2.c
+index 35c1214be9a..ded281e4b88 100644
+--- a/repair/phase2.c
++++ b/repair/phase2.c
+@@ -242,14 +242,19 @@ set_reflink(
+ 		exit(0);
+ 	}
  
- 		if ((flags2 & XFS_DIFLAG2_COWEXTSIZE) &&
--		    (flags & (XFS_DIFLAG_REALTIME | XFS_DIFLAG_RTINHERIT))) {
-+		    !xfs_has_rtreflink(mp) &&
-+		    (flags & XFS_DIFLAG_REALTIME)) {
- 			if (!uncertain) {
- 				do_warn(
- 	_("Cannot have CoW extent size hint on a realtime inode %" PRIu64 "\n"),
+-	if (xfs_has_realtime(mp)) {
+-		printf(_("Reflink feature not supported with realtime.\n"));
++	if (xfs_has_realtime(mp) && !xfs_has_rtgroups(mp)) {
++		printf(_("Reference count btree requires realtime groups.\n"));
+ 		exit(0);
+ 	}
+ 
+ 	printf(_("Adding reflink support to filesystem.\n"));
+ 	new_sb->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_REFLINK;
+ 	new_sb->sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
++
++	/* Quota counts will be wrong once we add the refcount inodes. */
++	if (xfs_has_realtime(mp))
++		quotacheck_skip();
++
+ 	return true;
+ }
+ 
+@@ -462,6 +467,55 @@ reserve_rtrmap_inode(
+ 	return -libxfs_imeta_resv_init_inode(rtg->rtg_rmapip, ask);
+ }
+ 
++/*
++ * Reserve space to handle rt refcount btree expansion.
++ *
++ * If the refcount inode for this group already exists, we assume that we're
++ * adding some other feature.  Note that we have not validated the metadata
++ * directory tree, so we must perform the lookup by hand and abort the upgrade
++ * if there are errors.  If the inode does not exist, the amount of space
++ * needed to handle a new maximally sized refcount btree is added to @new_resv.
++ */
++static int
++reserve_rtrefcount_inode(
++	struct xfs_rtgroup	*rtg,
++	xfs_rfsblock_t		*new_resv)
++{
++	struct xfs_mount	*mp = rtg->rtg_mount;
++	struct xfs_imeta_path	*path;
++	xfs_ino_t		ino;
++	xfs_filblks_t		ask;
++	int			error;
++
++	if (!xfs_has_rtreflink(mp))
++		return 0;
++
++	error = -libxfs_rtrefcountbt_create_path(mp, rtg->rtg_rgno, &path);
++	if (error)
++		return error;
++
++	ask = libxfs_rtrefcountbt_calc_reserves(mp);
++
++	error = -libxfs_imeta_lookup(mp, path, &ino);
++	libxfs_imeta_free_path(path);
++	if (error == EFSCORRUPTED) {
++		if (ask > mp->m_sb.sb_fdblocks)
++			return ENOSPC;
++
++		*new_resv += ask;
++		return 0;
++	}
++	if (error)
++		return error;
++
++	error = -libxfs_imeta_iget(mp, ino, XFS_DIR3_FT_REG_FILE,
++			&rtg->rtg_refcountip);
++	if (error)
++		return error;
++
++	return -libxfs_imeta_resv_init_inode(rtg->rtg_refcountip, ask);
++}
++
+ static void
+ check_fs_free_space(
+ 	struct xfs_mount		*mp,
+@@ -561,6 +615,18 @@ _("Not enough free space would remain for rtgroup %u rmap inode.\n"),
+ 			do_error(
+ _("Error %d while checking rtgroup %u rmap inode space reservation.\n"),
+ 					rtg->rtg_rgno, error);
++
++		error = reserve_rtrefcount_inode(rtg, &new_resv);
++		if (error == ENOSPC) {
++			printf(
++_("Not enough free space would remain for rtgroup %u refcount inode.\n"),
++					rtg->rtg_rgno);
++			exit(0);
++		}
++		if (error)
++			do_error(
++_("Error %d while checking rtgroup %u refcount inode space reservation.\n"),
++					rtg->rtg_rgno, error);
+ 	}
+ 
+ 	/*
+@@ -581,6 +647,11 @@ _("Error %d while checking rtgroup %u rmap inode space reservation.\n"),
+ 			libxfs_imeta_irele(rtg->rtg_rmapip);
+ 			rtg->rtg_rmapip = NULL;
+ 		}
++		if (rtg->rtg_refcountip) {
++			libxfs_imeta_resv_free_inode(rtg->rtg_refcountip);
++			libxfs_imeta_irele(rtg->rtg_refcountip);
++			rtg->rtg_refcountip = NULL;
++		}
+ 	}
+ 
+ 	/*
 
