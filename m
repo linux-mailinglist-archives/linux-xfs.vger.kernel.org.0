@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8EC265A1CF
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:45:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BEBE65A1D5
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:46:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236205AbiLaCow (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:44:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58520 "EHLO
+        id S236212AbiLaCqK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:46:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236251AbiLaCog (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:44:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D4ADF76
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:44:35 -0800 (PST)
+        with ESMTP id S229572AbiLaCqJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:46:09 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0534625D
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:46:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 01EEE61D17
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:44:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E601C433EF;
-        Sat, 31 Dec 2022 02:44:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C1D761D1F
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:46:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3485C433EF;
+        Sat, 31 Dec 2022 02:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454674;
-        bh=qn2uRh/QFjODjuCRihPUJIyF0jEiiJScU/+Cmjdxla4=;
+        s=k20201202; t=1672454767;
+        bh=VIEnQ5AJR6Ftgec3yGYKb1k5I/atQePkvY7S6Bho34o=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J5pWJwnBggXN45Xs931wbgYEYYaZJ45IIQLsiZ6Gcc1fKEjv06C7vPZLRlRLnEJDJ
-         YlDJ5KFnqpuJVLTcga5csfNFPPopNRGsf48klSzJjrT2DN7B+vTM9TszKCBqD6BiME
-         7srLEuYTfGokiZaSb15ZNncn64pqY02TCMFEBhi+ekB4bBcjWQj/pK5TkTnk1FULWB
-         3FDrXymtsPEV+Am7ZW13cZMAuo1FG7DxrQr0qc3eOO6iK2iXxs9+XyUgTglMxuf1hb
-         k/arGj2+u7xx/pTGdXMYa2mgmEnLtnSlxOK/6e0fpgTsIwgd5maUbigSPYEzGnaamD
-         12kPVDHk+q+dg==
-Subject: [PATCH 08/41] xfs: add realtime reverse map inode to superblock
+        b=iv81uHBjmLxby9ODw3nebubjnmFbnrj4mg/t3ZMNeXbVEKEiZbHew8FR5qtWQ7HSN
+         d44oq7HWu7Q+pC3s5WqvrIZbDc2ut7odaJXg8f5vo3wdDikrovmLNEE/A40S0vx0q8
+         /tXI88VroZVo+XDlTLsROSHqpuJVBWzT2tHzYEiKdA7nEFyoVEvXxytSbpfjO4tIIt
+         CNpf+rrcagrf3wht6la/ZCM6GB4/eLZ+mLECIYdMTPFJmm61jO1phpJiLypU4vdV/T
+         eEgsR1F1rHNZ1AxyObR7y7xMYwc3yDzhy8Tlj0SthQzjyXN4p0+UyfcrmSzHbaJViJ
+         05SPCZ7iEETIw==
+Subject: [PATCH 14/41] xfs: report realtime rmap btree corruption errors to
+ the health system
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:57 -0800
-Message-ID: <167243879703.732820.18008528042044400135.stgit@magnolia>
+Message-ID: <167243879782.732820.6518594918342608869.stgit@magnolia>
 In-Reply-To: <167243879574.732820.4725863402652761218.stgit@magnolia>
 References: <167243879574.732820.4725863402652761218.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,197 +56,90 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a metadir path to select the realtime rmap btree inode and load
-it at mount time.  The rtrmapbt inode will have a unique extent format
-code, which means that we also have to update the inode validation and
-flush routines to look for it.
+Whenever we encounter corrupt realtime rmap btree blocks, we should
+report that to the health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/init.c             |    8 ++++++++
- libxfs/xfs_format.h       |    6 ++++--
- libxfs/xfs_inode_buf.c    |    6 ++++++
- libxfs/xfs_inode_fork.c   |    9 +++++++++
- libxfs/xfs_rtgroup.h      |    3 +++
- libxfs/xfs_rtrmap_btree.c |   33 +++++++++++++++++++++++++++++++++
- libxfs/xfs_rtrmap_btree.h |    4 ++++
- 7 files changed, 67 insertions(+), 2 deletions(-)
+ libxfs/xfs_fs.h           |    1 +
+ libxfs/xfs_health.h       |    4 +++-
+ libxfs/xfs_inode_fork.c   |    4 +++-
+ libxfs/xfs_rtrmap_btree.c |    5 ++++-
+ 4 files changed, 11 insertions(+), 3 deletions(-)
 
 
-diff --git a/libxfs/init.c b/libxfs/init.c
-index 4ce0aca9796..6f549996b1e 100644
---- a/libxfs/init.c
-+++ b/libxfs/init.c
-@@ -1026,6 +1026,14 @@ libxfs_mount(
- void
- libxfs_rtmount_destroy(xfs_mount_t *mp)
- {
-+	struct xfs_rtgroup	*rtg;
-+	xfs_rgnumber_t		rgno;
-+
-+	for_each_rtgroup(mp, rgno, rtg) {
-+		if (rtg->rtg_rmapip)
-+			libxfs_imeta_irele(rtg->rtg_rmapip);
-+		rtg->rtg_rmapip = NULL;
-+	}
- 	if (mp->m_rsumip)
- 		libxfs_imeta_irele(mp->m_rsumip);
- 	if (mp->m_rbmip)
-diff --git a/libxfs/xfs_format.h b/libxfs/xfs_format.h
-index fb727e1e407..babe5d3fabb 100644
---- a/libxfs/xfs_format.h
-+++ b/libxfs/xfs_format.h
-@@ -1009,7 +1009,8 @@ enum xfs_dinode_fmt {
- 	XFS_DINODE_FMT_LOCAL,		/* bulk data */
- 	XFS_DINODE_FMT_EXTENTS,		/* struct xfs_bmbt_rec */
- 	XFS_DINODE_FMT_BTREE,		/* struct xfs_bmdr_block */
--	XFS_DINODE_FMT_UUID		/* added long ago, but never used */
-+	XFS_DINODE_FMT_UUID,		/* added long ago, but never used */
-+	XFS_DINODE_FMT_RMAP,		/* reverse mapping btree */
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 7e9d7d7bb40..5c557d5ff13 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -313,6 +313,7 @@ struct xfs_rtgroup_geometry {
  };
- 
- #define XFS_INODE_FORMAT_STR \
-@@ -1017,7 +1018,8 @@ enum xfs_dinode_fmt {
- 	{ XFS_DINODE_FMT_LOCAL,		"local" }, \
- 	{ XFS_DINODE_FMT_EXTENTS,	"extent" }, \
- 	{ XFS_DINODE_FMT_BTREE,		"btree" }, \
--	{ XFS_DINODE_FMT_UUID,		"uuid" }
-+	{ XFS_DINODE_FMT_UUID,		"uuid" }, \
-+	{ XFS_DINODE_FMT_RMAP,		"rmap" }
+ #define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
+ #define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
++#define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1 << 2)  /* reverse mappings */
  
  /*
-  * Max values for extnum and aextnum.
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index b5d4e5dd7ca..3aaa1988fb1 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -405,6 +405,12 @@ xfs_dinode_verify_fork(
- 		if (di_nextents > max_extents)
- 			return __this_address;
- 		break;
-+	case XFS_DINODE_FMT_RMAP:
-+		if (!xfs_has_rtrmapbt(mp))
-+			return __this_address;
-+		if (!(dip->di_flags2 & cpu_to_be64(XFS_DIFLAG2_METADATA)))
-+			return __this_address;
-+		break;
- 	default:
- 		return __this_address;
- 	}
+  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
+diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
+index 44137c4983f..d5976f6b0de 100644
+--- a/libxfs/xfs_health.h
++++ b/libxfs/xfs_health.h
+@@ -67,6 +67,7 @@ struct xfs_rtgroup;
+ #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
+ #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
+ #define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
++#define XFS_SICK_RT_RMAPBT	(1 << 3)  /* reverse mappings */
+ 
+ /* Observable health issues for AG metadata. */
+ #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
+@@ -104,7 +105,8 @@ struct xfs_rtgroup;
+ 
+ #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
+ 				 XFS_SICK_RT_SUMMARY | \
+-				 XFS_SICK_RT_SUPER)
++				 XFS_SICK_RT_SUPER | \
++				 XFS_SICK_RT_RMAPBT)
+ 
+ #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
+ 				 XFS_SICK_AG_AGF | \
 diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
-index 58e5ab45e42..b441328cc9c 100644
+index 386f23b2954..2b2a3fcab94 100644
 --- a/libxfs/xfs_inode_fork.c
 +++ b/libxfs/xfs_inode_fork.c
-@@ -257,6 +257,11 @@ xfs_iformat_data_fork(
- 			return xfs_iformat_extents(ip, dip, XFS_DATA_FORK);
+@@ -259,8 +259,10 @@ xfs_iformat_data_fork(
  		case XFS_DINODE_FMT_BTREE:
  			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
-+		case XFS_DINODE_FMT_RMAP:
-+			if (!xfs_has_rtrmapbt(ip->i_mount))
-+				return -EFSCORRUPTED;
-+			ASSERT(0); /* to be implemented later */
-+			return -EFSCORRUPTED;
+ 		case XFS_DINODE_FMT_RMAP:
+-			if (!xfs_has_rtrmapbt(ip->i_mount))
++			if (!xfs_has_rtrmapbt(ip->i_mount)) {
++				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 				return -EFSCORRUPTED;
++			}
+ 			return xfs_iformat_rtrmap(ip, dip);
  		default:
  			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
- 					dip, sizeof(*dip), __this_address);
-@@ -637,6 +642,10 @@ xfs_iflush_fork(
- 		}
- 		break;
- 
-+	case XFS_DINODE_FMT_RMAP:
-+		ASSERT(0); /* to be implemented later */
-+		break;
-+
- 	default:
- 		ASSERT(0);
- 		break;
-diff --git a/libxfs/xfs_rtgroup.h b/libxfs/xfs_rtgroup.h
-index 3c9572677f7..1792a9ab3bb 100644
---- a/libxfs/xfs_rtgroup.h
-+++ b/libxfs/xfs_rtgroup.h
-@@ -20,6 +20,9 @@ struct xfs_rtgroup {
- 	/* for rcu-safe freeing */
- 	struct rcu_head		rcu_head;
- 
-+	/* reverse mapping btree inode */
-+	struct xfs_inode	*rtg_rmapip;
-+
- 	/* Number of blocks in this group */
- 	xfs_rgblock_t		rtg_blockcount;
- 
 diff --git a/libxfs/xfs_rtrmap_btree.c b/libxfs/xfs_rtrmap_btree.c
-index 4dfd4fd1b1f..85608c813b4 100644
+index 38f0b8567a6..b39ccba497a 100644
 --- a/libxfs/xfs_rtrmap_btree.c
 +++ b/libxfs/xfs_rtrmap_btree.c
-@@ -24,6 +24,7 @@
- #include "xfs_cksum.h"
+@@ -25,6 +25,7 @@
  #include "xfs_rtgroup.h"
  #include "xfs_bmap.h"
-+#include "xfs_imeta.h"
+ #include "xfs_imeta.h"
++#include "xfs_health.h"
  
  static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
  
-@@ -473,6 +474,7 @@ xfs_rtrmapbt_commit_staged_btree(
- 	int			flags = XFS_ILOG_CORE | XFS_ILOG_DBROOT;
+@@ -797,8 +798,10 @@ xfs_iformat_rtrmap(
+ 	level = be16_to_cpu(dfp->bb_level);
  
- 	ASSERT(cur->bc_flags & XFS_BTREE_STAGING);
-+	ASSERT(ifake->if_fork->if_format == XFS_DINODE_FMT_RMAP);
- 
- 	/*
- 	 * Free any resources hanging off the real fork, then shallow-copy the
-@@ -573,3 +575,34 @@ xfs_rtrmapbt_compute_maxlevels(
- 	/* Add one level to handle the inode root level. */
- 	mp->m_rtrmap_maxlevels = min(d_maxlevels, r_maxlevels) + 1;
- }
-+
-+#define XFS_RTRMAP_NAMELEN		17
-+
-+/* Create the metadata directory path for an rtrmap btree inode. */
-+int
-+xfs_rtrmapbt_create_path(
-+	struct xfs_mount	*mp,
-+	xfs_rgnumber_t		rgno,
-+	struct xfs_imeta_path	**pathp)
-+{
-+	struct xfs_imeta_path	*path;
-+	char			*fname;
-+	int			error;
-+
-+	error = xfs_imeta_create_file_path(mp, 2, &path);
-+	if (error)
-+		return error;
-+
-+	fname = kmalloc(XFS_RTRMAP_NAMELEN, GFP_KERNEL);
-+	if (!fname) {
-+		xfs_imeta_free_path(path);
-+		return -ENOMEM;
+ 	if (level > mp->m_rtrmap_maxlevels ||
+-	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize)
++	    xfs_rtrmap_droot_space_calc(level, numrecs) > dsize) {
++		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 		return -EFSCORRUPTED;
 +	}
-+
-+	snprintf(fname, XFS_RTRMAP_NAMELEN, "%u.rmap", rgno);
-+	path->im_path[0] = "realtime";
-+	path->im_path[1] = fname;
-+	path->im_dynamicmask = 0x2;
-+	*pathp = path;
-+	return 0;
-+}
-diff --git a/libxfs/xfs_rtrmap_btree.h b/libxfs/xfs_rtrmap_btree.h
-index 7380c04e770..26e2445f5d6 100644
---- a/libxfs/xfs_rtrmap_btree.h
-+++ b/libxfs/xfs_rtrmap_btree.h
-@@ -11,6 +11,7 @@ struct xfs_btree_cur;
- struct xfs_mount;
- struct xbtree_ifakeroot;
- struct xfs_rtgroup;
-+struct xfs_imeta_path;
  
- /* rmaps only exist on crc enabled filesystems */
- #define XFS_RTRMAP_BLOCK_LEN	XFS_BTREE_LBLOCK_CRC_LEN
-@@ -80,4 +81,7 @@ unsigned int xfs_rtrmapbt_maxlevels_ondisk(void);
- int __init xfs_rtrmapbt_init_cur_cache(void);
- void xfs_rtrmapbt_destroy_cur_cache(void);
- 
-+int xfs_rtrmapbt_create_path(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-+		struct xfs_imeta_path **pathp);
-+
- #endif	/* __XFS_RTRMAP_BTREE_H__ */
+ 	xfs_iroot_alloc(ip, XFS_DATA_FORK,
+ 			xfs_rtrmap_broot_space_calc(mp, level, numrecs));
 
