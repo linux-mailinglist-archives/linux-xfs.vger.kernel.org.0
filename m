@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51BB165A060
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:15:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87D30659F34
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:08:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236036AbiLaBPV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:15:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42920 "EHLO
+        id S235851AbiLaAIW (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:08:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236038AbiLaBPT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:15:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8581E3EE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:15:17 -0800 (PST)
+        with ESMTP id S235621AbiLaAIW (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:08:22 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA1E1CB3E
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:08:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 169E261D4A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:15:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7416AC433EF;
-        Sat, 31 Dec 2022 01:15:16 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6AB5B81DF4
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:08:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E0AC433EF;
+        Sat, 31 Dec 2022 00:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449316;
-        bh=kHHdbcSOsnzS+thLaLHOMPF/z9MwgJN4VS3qugne0ag=;
+        s=k20201202; t=1672445298;
+        bh=dpExcijH4owY5W0Ytchhrw0Df3tNf3AwOgXN7Nv5ZTQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aNTpQUIaEmEEjhvgiV7LpogPBOFVLMuUIsmm8bbteVmim3G2FBgYtZL6B1k+YKg/+
-         thd6b9fiLBlITyNfyGmo9KNVfV/Ki00wt97RDZV9s7QSVfy2qUOcAm2hMyaYNcsWUg
-         WUjzFprD3N7aVJObzhsEVhctAjq5aiiZ9oTakWnZheHBYp5LywSElxEjNF+nu/nyyB
-         JPwCGUFSCeJAeqwgi4+Jm9p2TnN8+FeDjIITpudX2P70/1bp8fKg3bqIGgULPa8cME
-         W48TSTB5vV/JyAUfUOUkI9hKUOOVDbZjpitG7eEoOIfvcIqNnsmvAJiZ2kTFTts69+
-         6JUx+2+cYZf6g==
-Subject: [PATCH 19/23] xfs: record health problems with the metadata directory
+        b=n0NitUxpUf81Pqbt668wSvxotrBnvRAoowksou05edccOnGxgIFNrfkPIUhn2T48C
+         1h+YQlmdf0Z6uX+p9ZP/Tt8m5CrolYxdoynMgx7rOaASG3NJyENLNxpZBK6IuR7Iro
+         QC8nfn8STEoZEqqIkfeSNjNGmyEKND6q3peG9qdBG93zd7y96t5esaJ5e1p+LY3YTE
+         AgclU8RESW27KBr9naPXHCxXD1RuDaQyG8wxjC/Fuu9U3zxr8AkNR2tizoSyezIaol
+         +Lwk7pYRxzNhtjXB8DySHZ4MAfkcy1iIVPgv4S5yADsD5EK/jKM1lWTmUFdn3VsXGb
+         sWLxWqSmsO6rA==
+Subject: [PATCH 1/3] xfs: report the health of quota counts
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:27 -0800
-Message-ID: <167243864726.708110.7042365454388128884.stgit@magnolia>
-In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
-References: <167243864431.708110.1688096566212843499.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:29 -0800
+Message-ID: <167243864905.708814.1995101291642739144.stgit@magnolia>
+In-Reply-To: <167243864892.708814.13943121883358066158.stgit@magnolia>
+References: <167243864892.708814.13943121883358066158.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,185 +54,78 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make a report to the health monitoring subsystem any time we encounter
-something in the metadata directory tree that looks like corruption.
+Report the health of quota counts.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h     |    1 +
- fs/xfs/libxfs/xfs_health.h |    4 +++-
- fs/xfs/libxfs/xfs_imeta.c  |   28 ++++++++++++++++++++++------
- fs/xfs/xfs_health.c        |    1 +
- fs/xfs/xfs_icache.c        |    1 +
- fs/xfs/xfs_inode.c         |    1 +
- 6 files changed, 29 insertions(+), 7 deletions(-)
+ libxfs/xfs_fs.h                 |    1 +
+ libxfs/xfs_health.h             |    4 +++-
+ man/man2/ioctl_xfs_fsgeometry.2 |    3 +++
+ spaceman/health.c               |    4 ++++
+ 4 files changed, 11 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 6e0c45fcfeeb..c4995f6557d2 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -197,6 +197,7 @@ struct xfs_fsop_geom {
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 920fd4513fc..7e86e1db66d 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -195,6 +195,7 @@ struct xfs_fsop_geom {
+ #define XFS_FSOP_GEOM_SICK_PQUOTA	(1 << 3)  /* project quota */
+ #define XFS_FSOP_GEOM_SICK_RT_BITMAP	(1 << 4)  /* realtime bitmap */
  #define XFS_FSOP_GEOM_SICK_RT_SUMMARY	(1 << 5)  /* realtime summary */
- #define XFS_FSOP_GEOM_SICK_QUOTACHECK	(1 << 6)  /* quota counts */
- #define XFS_FSOP_GEOM_SICK_NLINKS	(1 << 7)  /* inode link counts */
-+#define XFS_FSOP_GEOM_SICK_METADIR	(1 << 8)  /* metadata directory */
++#define XFS_FSOP_GEOM_SICK_QUOTACHECK	(1 << 6)  /* quota counts */
  
  /* Output for XFS_FS_COUNTS */
  typedef struct xfs_fsop_counts {
-diff --git a/fs/xfs/libxfs/xfs_health.h b/fs/xfs/libxfs/xfs_health.h
-index 252334bc0488..99d53bae9c13 100644
---- a/fs/xfs/libxfs/xfs_health.h
-+++ b/fs/xfs/libxfs/xfs_health.h
-@@ -60,6 +60,7 @@ struct xfs_da_args;
+diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
+index 99e796256c5..1dea286bb15 100644
+--- a/libxfs/xfs_health.h
++++ b/libxfs/xfs_health.h
+@@ -41,6 +41,7 @@ struct xfs_fsop_geom;
+ #define XFS_SICK_FS_UQUOTA	(1 << 1)  /* user quota */
+ #define XFS_SICK_FS_GQUOTA	(1 << 2)  /* group quota */
  #define XFS_SICK_FS_PQUOTA	(1 << 3)  /* project quota */
- #define XFS_SICK_FS_QUOTACHECK	(1 << 4)  /* quota counts */
- #define XFS_SICK_FS_NLINKS	(1 << 5)  /* inode link counts */
-+#define XFS_SICK_FS_METADIR	(1 << 6)  /* metadata directory tree */
++#define XFS_SICK_FS_QUOTACHECK	(1 << 4)  /* quota counts */
  
  /* Observable health issues for realtime volume metadata. */
  #define XFS_SICK_RT_BITMAP	(1 << 0)  /* realtime bitmap */
-@@ -96,7 +97,8 @@ struct xfs_da_args;
+@@ -72,7 +73,8 @@ struct xfs_fsop_geom;
+ #define XFS_SICK_FS_PRIMARY	(XFS_SICK_FS_COUNTERS | \
+ 				 XFS_SICK_FS_UQUOTA | \
  				 XFS_SICK_FS_GQUOTA | \
- 				 XFS_SICK_FS_PQUOTA | \
- 				 XFS_SICK_FS_QUOTACHECK | \
--				 XFS_SICK_FS_NLINKS)
-+				 XFS_SICK_FS_NLINKS | \
-+				 XFS_SICK_FS_METADIR)
+-				 XFS_SICK_FS_PQUOTA)
++				 XFS_SICK_FS_PQUOTA | \
++				 XFS_SICK_FS_QUOTACHECK)
  
  #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
  				 XFS_SICK_RT_SUMMARY)
-diff --git a/fs/xfs/libxfs/xfs_imeta.c b/fs/xfs/libxfs/xfs_imeta.c
-index 8960c13117fc..e4db1651d067 100644
---- a/fs/xfs/libxfs/xfs_imeta.c
-+++ b/fs/xfs/libxfs/xfs_imeta.c
-@@ -26,6 +26,7 @@
- #include "xfs_dir2.h"
- #include "xfs_dir2_priv.h"
- #include "xfs_ag.h"
-+#include "xfs_health.h"
+diff --git a/man/man2/ioctl_xfs_fsgeometry.2 b/man/man2/ioctl_xfs_fsgeometry.2
+index 6b7c83da758..f59a6e8a6a2 100644
+--- a/man/man2/ioctl_xfs_fsgeometry.2
++++ b/man/man2/ioctl_xfs_fsgeometry.2
+@@ -256,6 +256,9 @@ Free space bitmap for the realtime device.
+ .TP
+ .B XFS_FSOP_GEOM_SICK_RT_SUMMARY
+ Free space summary for the realtime device.
++.TP
++.B XFS_FSOP_GEOM_SICK_QUOTACHECK
++Quota resource usage counters.
+ .RE
  
- /*
-  * Metadata Inode Number Management
-@@ -405,16 +406,22 @@ xfs_imeta_dir_lookup_component(
- 
- 	trace_xfs_imeta_dir_lookup_component(dp, xname, NULLFSINO);
- 
--	if (!S_ISDIR(VFS_I(dp)->i_mode))
-+	if (!S_ISDIR(VFS_I(dp)->i_mode)) {
-+		xfs_fs_mark_sick(dp->i_mount, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	error = xfs_imeta_dir_lookup(dp, xname, ino);
- 	if (error)
- 		return error;
--	if (!xfs_verify_ino(dp->i_mount, *ino))
-+	if (!xfs_verify_ino(dp->i_mount, *ino)) {
-+		xfs_fs_mark_sick(dp->i_mount, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
--	if (type_wanted != XFS_DIR3_FT_UNKNOWN && xname->type != type_wanted)
-+	}
-+	if (type_wanted != XFS_DIR3_FT_UNKNOWN && xname->type != type_wanted) {
-+		xfs_fs_mark_sick(dp->i_mount, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	trace_xfs_imeta_dir_lookup_found(dp, xname, *ino);
- 	return 0;
-@@ -713,6 +720,7 @@ xfs_imeta_dir_unlink(
- 	/* Metadata directory root cannot be unlinked. */
- 	if (xfs_imeta_path_compare(path, &XFS_IMETA_METADIR)) {
- 		ASSERT(0);
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
- 	}
- 
-@@ -728,6 +736,7 @@ xfs_imeta_dir_unlink(
- 			error = -ENOENT;
- 		break;
- 	case -ENOENT:
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 		error = -EFSCORRUPTED;
- 		break;
- 	}
-@@ -779,6 +788,7 @@ xfs_imeta_dir_link(
- 	/* Metadata directory root cannot be linked. */
- 	if (xfs_imeta_path_compare(path, &XFS_IMETA_METADIR)) {
- 		ASSERT(0);
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
- 	}
- 
-@@ -856,16 +866,20 @@ xfs_imeta_lookup(
- 
- 	if (xfs_has_metadir(mp)) {
- 		error = xfs_imeta_dir_lookup_int(mp, path, &ino);
--		if (error == -ENOENT)
-+		if (error == -ENOENT) {
-+			xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 			return -EFSCORRUPTED;
-+		}
- 	} else {
- 		error = xfs_imeta_sb_lookup(mp, path, &ino);
- 	}
- 	if (error)
- 		return error;
- 
--	if (!xfs_imeta_verify(mp, ino))
-+	if (!xfs_imeta_verify(mp, ino)) {
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
-+	}
- 
- 	*inop = ino;
- 	return 0;
-@@ -1041,8 +1055,10 @@ xfs_imeta_start_update(
- 	 * to exist.
- 	 */
- 	error = xfs_imeta_dir_parent(mp, path, &upd->dp);
--	if (error == -ENOENT)
-+	if (error == -ENOENT) {
-+		xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 		return -EFSCORRUPTED;
-+	}
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/xfs_health.c b/fs/xfs/xfs_health.c
-index 6de8780b208a..61f7a6aca6b1 100644
---- a/fs/xfs/xfs_health.c
-+++ b/fs/xfs/xfs_health.c
-@@ -360,6 +360,7 @@ static const struct ioctl_sick_map fs_map[] = {
- 	{ XFS_SICK_FS_PQUOTA,	XFS_FSOP_GEOM_SICK_PQUOTA },
- 	{ XFS_SICK_FS_QUOTACHECK, XFS_FSOP_GEOM_SICK_QUOTACHECK },
- 	{ XFS_SICK_FS_NLINKS,	XFS_FSOP_GEOM_SICK_NLINKS },
-+	{ XFS_SICK_FS_METADIR,	XFS_FSOP_GEOM_SICK_METADIR },
- 	{ 0, 0 },
+ .SH RETURN VALUE
+diff --git a/spaceman/health.c b/spaceman/health.c
+index d83c5ccd90d..3318f9d1a7f 100644
+--- a/spaceman/health.c
++++ b/spaceman/health.c
+@@ -72,6 +72,10 @@ static const struct flag_map fs_flags[] = {
+ 		.descr = "realtime summary",
+ 		.has_fn = has_realtime,
+ 	},
++	{
++		.mask = XFS_FSOP_GEOM_SICK_QUOTACHECK,
++		.descr = "quota counts",
++	},
+ 	{0},
  };
  
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index fc11ae6eae0b..728065bdfc32 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -940,6 +940,7 @@ xfs_imeta_iget(
- 	xfs_irele(ip);
- whine:
- 	xfs_err(mp, "metadata inode 0x%llx is corrupt", ino);
-+	xfs_fs_mark_sick(mp, XFS_SICK_FS_METADIR);
- 	return -EFSCORRUPTED;
- }
- 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 187c6025cfd8..51bceccd8c9a 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -577,6 +577,7 @@ xfs_lookup(
- 	 * metadata file.
- 	 */
- 	if (XFS_IS_CORRUPT(dp->i_mount, xfs_is_metadata_inode(*ipp))) {
-+		xfs_fs_mark_sick(dp->i_mount, XFS_SICK_FS_METADIR);
- 		error = -EFSCORRUPTED;
- 		goto out_irele;
- 	}
 
