@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 948F365A184
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90BA5659FDE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:43:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236092AbiLaC0r (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:26:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
+        id S235679AbiLaAnl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:43:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236031AbiLaC0o (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:26:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316E612AC8
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:26:43 -0800 (PST)
+        with ESMTP id S235863AbiLaAnk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:43:40 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F03F1DDE2;
+        Fri, 30 Dec 2022 16:43:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DACF0B81E5E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:26:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C11DC433D2;
-        Sat, 31 Dec 2022 02:26:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 10160B81E64;
+        Sat, 31 Dec 2022 00:43:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0818C433D2;
+        Sat, 31 Dec 2022 00:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453600;
-        bh=FJTozK7q3euO2Pt+iO/+e//lf+iSdYuithguESup7Vw=;
+        s=k20201202; t=1672447416;
+        bh=dy/KuTYnPHg68gvnNcfCdYdlzMOoGb8xpPsjnMBtGig=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=vBXWCNFJfZ94VzB+QlhsMowMLShqlTVyFmOsnoJjZvjzEXpij2LHtyLSZkwneJVfy
-         RJeN1WMhbK8Wd8gGw0sQvaCWy6OHGKKd9Aw0JnrmyVUHZqk6GM0iu4xRkRB7gql7cf
-         RNCncBjVKPzSXQss3CLfvs2uV0tZ5NlsfE81eanmLhqNfSEcfaWWEw9bSdHo+/Cmiw
-         hDYSQODH3KFiTwfT6cMym7ibILPujA5DunzdtYOMqDSZzZl1bq5ityZTnIVOLkuBZ2
-         z3SiyPf3pioXvELlSXTTXiK4/gJhqqmj1fu4U1Ywb/gtI3b2JcIr5XMo+sv8X5Xgj7
-         qFGvcKCn88zJQ==
-Subject: [PATCH 9/9] misc: use m_blockwsize instead of sb_blocksize for rt
- blocks
+        b=jXP8weDwSmiLiUI4eIbz9p6/Q8dVBj98TCWltjMUMiNRH3HZn+lp1wrf9RpT2TCkh
+         dkxJ2t/T81u+bZitf1lDuUH2cxFVoJeHWlHuzvmBPYvbWeeydcHE8McTwzkwJRg3ar
+         FhnsX++XizCJn2X9cfqvITJVJKBzIaGKGhn4Y4uA6GW6BqxJP1xKzecnpdLleLyS5+
+         Egi3pgeHcYEDQNFF3CPYPtEbhvhZaCrTN3NolbrO6a3T0a04uEet9+Fbqfn52G+ReW
+         dN5GdRGqXTWMNwIt7DG+EeqSgUl8RBCpArYxTuOQrm0nL7eKkWAe/sjwunS6IBqtUo
+         mDVWg9NeKXVPg==
+Subject: [PATCH 1/1] xfs/422: don't freeze while racing rmap repair and
+ fsstress
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:33 -0800
-Message-ID: <167243877348.727982.12662155722060955983.stgit@magnolia>
-In-Reply-To: <167243877226.727982.8292582053571487702.stgit@magnolia>
-References: <167243877226.727982.8292582053571487702.stgit@magnolia>
+Message-ID: <167243877357.728215.3478300804915017773.stgit@magnolia>
+In-Reply-To: <167243877345.728215.12907289289488316002.stgit@magnolia>
+References: <167243877345.728215.12907289289488316002.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,97 +55,35 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In preparation to add block headers to rt bitmap and summary blocks,
-convert all the relevant calculations in the userspace tools to use the
-per-block word count instead of the raw blocksize.  This is key to
-adding this support outside of libxfs.
+Since we're moving away from freezing the filesystem for rmap repair,
+remove the freeze/thaw race from this test to make it more interesting.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/check.c      |    4 ++--
- repair/phase6.c |    6 ++++--
- repair/rt.c     |    9 +++++----
- 3 files changed, 11 insertions(+), 8 deletions(-)
+ tests/xfs/422 |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 
-diff --git a/db/check.c b/db/check.c
-index 2dcab8e87e6..f39d732d04d 100644
---- a/db/check.c
-+++ b/db/check.c
-@@ -3624,7 +3624,7 @@ process_rtbitmap(
- 	int		t;
- 	xfs_rtword_t	*words;
+diff --git a/tests/xfs/422 b/tests/xfs/422
+index 995f612166..339f12976a 100755
+--- a/tests/xfs/422
++++ b/tests/xfs/422
+@@ -5,8 +5,6 @@
+ # FS QA Test No. 422
+ #
+ # Race fsstress and rmapbt repair for a while to see if we crash or livelock.
+-# rmapbt repair requires us to freeze the filesystem to stop all filesystem
+-# activity, so we can't have userspace wandering in and thawing it.
+ #
+ . ./common/preamble
+ _begin_fstest online_repair dangerous_fsstress_repair freeze
+@@ -31,7 +29,7 @@ _require_xfs_stress_online_repair
+ _scratch_mkfs > "$seqres.full" 2>&1
+ _scratch_mount
+ _require_xfs_has_feature "$SCRATCH_MNT" rmapbt
+-_scratch_xfs_stress_online_repair -f -s "repair rmapbt %agno%"
++_scratch_xfs_stress_online_repair -s "repair rmapbt %agno%"
  
--	bitsperblock = mp->m_sb.sb_blocksize * NBBY;
-+	bitsperblock = mp->m_blockwsize << XFS_NBWORDLOG;
- 	words = malloc(mp->m_blockwsize << XFS_WORDLOG);
- 	if (!words) {
- 		dbprintf(_("could not allocate rtwords buffer\n"));
-@@ -3738,7 +3738,7 @@ process_rtsummary(
- 		}
- 
- 		ondisk = xfs_rsumblock_infoptr(iocur_top->bp, 0);
--		memcpy(sfile, ondisk, mp->m_sb.sb_blocksize);
-+		memcpy(sfile, ondisk, mp->m_blockwsize << XFS_WORDLOG);
- 		pop_cur();
- 		sfile += mp->m_blockwsize;
- 	}
-diff --git a/repair/phase6.c b/repair/phase6.c
-index 3be1da033c5..31d42b9306b 100644
---- a/repair/phase6.c
-+++ b/repair/phase6.c
-@@ -828,7 +828,8 @@ _("can't access block %" PRIu64 " (fsbno %" PRIu64 ") of realtime bitmap inode %
- 			return(1);
- 		}
- 
--		memcpy(xfs_rbmblock_wordptr(bp, 0), bmp, mp->m_sb.sb_blocksize);
-+		memcpy(xfs_rbmblock_wordptr(bp, 0), bmp,
-+				mp->m_blockwsize << XFS_WORDLOG);
- 
- 		libxfs_trans_log_buf(tp, bp, 0, mp->m_sb.sb_blocksize - 1);
- 
-@@ -899,7 +900,8 @@ _("can't access block %" PRIu64 " (fsbno %" PRIu64 ") of realtime summary inode
- 			return(1);
- 		}
- 
--		memcpy(xfs_rsumblock_infoptr(bp, 0), smp, mp->m_sb.sb_blocksize);
-+		memcpy(xfs_rsumblock_infoptr(bp, 0), smp,
-+				mp->m_blockwsize << XFS_WORDLOG);
- 
- 		libxfs_trans_log_buf(tp, bp, 0, mp->m_sb.sb_blocksize - 1);
- 
-diff --git a/repair/rt.c b/repair/rt.c
-index 9333bce8fbb..56a04c3de6e 100644
---- a/repair/rt.c
-+++ b/repair/rt.c
-@@ -25,8 +25,9 @@ rtinit(xfs_mount_t *mp)
- 		return;
- 
- 	/*
--	 * realtime init -- blockmap initialization is
--	 * handled by incore_init()
-+	 * Allocate buffers for formatting the collected rt free space
-+	 * information.  The rtbitmap buffer must be large enough to compare
-+	 * against any unused bytes in the last block of the file.
- 	 */
- 	wordcnt = libxfs_rtbitmap_wordcount(mp, mp->m_sb.sb_rextents);
- 	btmcompute = calloc(wordcnt, sizeof(union xfs_rtword_ondisk));
-@@ -67,7 +68,7 @@ generate_rtinfo(
- 
- 	ASSERT(mp->m_rbmip == NULL);
- 
--	bitsperblock = mp->m_sb.sb_blocksize * NBBY;
-+	bitsperblock = mp->m_blockwsize << XFS_NBWORDLOG;
- 	extno = start_ext = 0;
- 	bmbno = in_extent = start_bmbno = 0;
- 
-@@ -179,7 +180,7 @@ check_rtfile_contents(
- 			break;
- 		}
- 
--		if (memcmp(bp->b_addr, buf, mp->m_sb.sb_blocksize))
-+		if (memcmp(bp->b_addr, buf, mp->m_blockwsize << XFS_WORDLOG))
- 			do_warn(_("discrepancy in %s at dblock 0x%llx\n"),
- 					filename, (unsigned long long)bno);
- 
+ # success, all done
+ echo Silence is golden
 
