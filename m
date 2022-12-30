@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 872A265A103
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:55:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A287165A100
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:54:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235902AbiLaBzR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:55:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50394 "EHLO
+        id S236043AbiLaByD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:54:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235911AbiLaByv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:54:51 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5251F1DDDD
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:54:50 -0800 (PST)
+        with ESMTP id S231231AbiLaByC (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:54:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F07A1DDD3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:54:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 97952CE19F4
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:54:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D977CC433EF;
-        Sat, 31 Dec 2022 01:54:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BE52D61CE2
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:54:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AC3C433D2;
+        Sat, 31 Dec 2022 01:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451686;
-        bh=om4+79GL+45ZRqsCK0wB4AkGZWkh1Jrw1QfFPDlns2o=;
+        s=k20201202; t=1672451640;
+        bh=pg4B0x7QVtQ7GFIuSuXOfuGL4WVeub5JqBpUKgko6S4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TyO0rb0kDov7C8Jg7jTlALmY2OdrUchrHMKh8gLjJGwo4vA5i6ff0o1/9ELAC7Jh/
-         OQQA9fmt0Pt0qH94bVuN4ccsFrQ1S26Q8MiSuJlg0DCoFoh+4FjS73jBSkmx7slK2+
-         42hK5vwat+ccTLExj/0Yf47MPE10qmmWg+gpnebo/XJHIpYFTg5cW7tf2wxBOk+rIT
-         zRmhtvcpuDaG6cYwd7aeqOEfv5MXaQn2e9p6k3CytRsUzmNPJgT1PsVX4aaL8pT0Xd
-         33Nq+hIhEk/kmjo7ho+AwKMj+CZkZUK2akIq8wPW2Deg7wo5QXYKU0KAPs429Nk4gO
-         9n8tIzYgXuBaQ==
-Subject: [PATCH 26/42] xfs: check that the rtrefcount maxlevels doesn't
- increase when growing fs
+        b=gNhUw08tiJmq2zwDM7MNZ8120I2/hUsgxYqU3/LQXj8bpTAsD92tMHAjwx7hG4lc4
+         N+CGELYABHVoY6HhyTxqIFBXVR+6BnJXaRBqfANJoRL6UquCSdm1a84EbKZjDzjCKi
+         aMt2b181qkYGJ4WBlQlsLeMR5u2znkJFL/Czfm1JpC1RymUhIOHyhBf+9zgJwJDtI8
+         qa4ce51h7rf+QBXK5dyz3OmJrzFvaTcpB883a+hp6ls0OxhJQaj9TMXBnvUX7dmlgH
+         44oJMC8/8XqwKoDPbLIIrXSHnBCrGxgRAk61uPmKWQWGcbDnLlDWHrroa9yl8nAlHP
+         im7SqFilVxgdA==
+Subject: [PATCH 23/42] xfs: fix xfs_get_extsz_hint behavior with realtime
+ alwayscow files
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:32 -0800
-Message-ID: <167243871265.717073.12647043438282202534.stgit@magnolia>
+Message-ID: <167243871222.717073.2381159476227762923.stgit@magnolia>
 In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
 References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,57 +56,36 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The size of filesystem transaction reservations depends on the maximum
-height (maxlevels) of the realtime btrees.  Since we don't want a grow
-operation to increase the reservation size enough that we'll fail the
-minimum log size checks on the next mount, constrain growfs operations
-if they would cause an increase in the rt refcount btree maxlevels.
+Currently, we (ab)use xfs_get_extsz_hint so that it always returns a
+nonzero value for realtime files.  This apparently was done to disable
+delayed allocation for realtime files.
+
+However, once we enable realtime reflink, we can also turn on the
+alwayscow flag to force CoW writes to realtime files.  In this case, the
+logic will incorrectly send the write through the delalloc write path.
+
+Fix this by adjusting the logic slightly.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_fsops.c   |    2 ++
- fs/xfs/xfs_rtalloc.c |    2 ++
- 2 files changed, 4 insertions(+)
+ fs/xfs/libxfs/xfs_bmap.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_fsops.c b/fs/xfs/xfs_fsops.c
-index 65b44ad8884e..317f0461f490 100644
---- a/fs/xfs/xfs_fsops.c
-+++ b/fs/xfs/xfs_fsops.c
-@@ -24,6 +24,7 @@
- #include "xfs_rtgroup.h"
- #include "xfs_rtalloc.h"
- #include "xfs_rtrmap_btree.h"
-+#include "xfs_rtrefcount_btree.h"
- 
- /*
-  * Write new AG headers to disk. Non-transactional, but need to be
-@@ -225,6 +226,7 @@ xfs_growfs_data_private(
- 
- 		/* Compute new maxlevels for rt btrees. */
- 		xfs_rtrmapbt_compute_maxlevels(mp);
-+		xfs_rtrefcountbt_compute_maxlevels(mp);
- 	}
- 
- 	return error;
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 48c7cc28b7f2..7f1ee9432e71 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -1172,6 +1172,7 @@ xfs_growfs_check_rtgeom(
- 		fake_mp->m_features |= XFS_FEAT_REALTIME;
- 
- 	xfs_rtrmapbt_compute_maxlevels(fake_mp);
-+	xfs_rtrefcountbt_compute_maxlevels(fake_mp);
- 
- 	xfs_trans_resv_calc(fake_mp, M_RES(fake_mp));
- 	min_logfsbs = xfs_log_calc_minimum_size(fake_mp);
-@@ -1474,6 +1475,7 @@ xfs_growfs_rt(
- 		 */
- 		mp->m_features |= XFS_FEAT_REALTIME;
- 		xfs_rtrmapbt_compute_maxlevels(mp);
-+		xfs_rtrefcountbt_compute_maxlevels(mp);
- 	}
- 	if (error)
- 		goto out_free;
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index fe31f3cb5d91..552875ddcc4a 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -6427,9 +6427,8 @@ xfs_get_extsz_hint(
+ 	 * No point in aligning allocations if we need to COW to actually
+ 	 * write to them.
+ 	 */
+-	if (xfs_is_always_cow_inode(ip))
+-		return 0;
+-	if ((ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
++	if (!xfs_is_always_cow_inode(ip) &&
++	    (ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
+ 		return ip->i_extsize;
+ 	if (XFS_IS_REALTIME_INODE(ip))
+ 		return ip->i_mount->m_sb.sb_rextsize;
 
