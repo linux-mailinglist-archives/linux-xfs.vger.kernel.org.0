@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F023659E3A
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:27:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26C55659DAC
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:01:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbiL3X1j (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:27:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39644 "EHLO
+        id S235440AbiL3XBS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:01:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbiL3X1i (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:27:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4D519C20
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:27:37 -0800 (PST)
+        with ESMTP id S229733AbiL3XBQ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:01:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 914D9193DB
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:01:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A314EB81D67
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:27:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52442C433D2;
-        Fri, 30 Dec 2022 23:27:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3082461BA9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:01:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834F3C433EF;
+        Fri, 30 Dec 2022 23:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672442855;
-        bh=Fgsi1EQILRBYcUddTo8wgqYpXXz5l8IeWGUms0FhD2E=;
+        s=k20201202; t=1672441273;
+        bh=fx1Y+osgK1kD1kEfnBWpvU4mwWaEjdQkpdZuiV2chJM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hUEOHpCk4C2ZFTeUSfcczKIzYod6KKv4QA6WcaezC5rPy9LzXxfUDmZ2HgGsCxWN4
-         RlUEzvWkqdJWDybDedb7TfHfCT2RELRTYO7+CRKkUUH9LxStvqjnLLAi0oTKUgSIDJ
-         3+3JsApeJYyB+bnqQwWTEx2I+WmIQZmHdlG50oorow+KjHVl3YLgcIAnVxhDB3yy+1
-         Du2coZMXt6kMfqdQ/YBJmo0CiHv2pjdNOgdWWpz8J8eKUa8htZbF+mANvW1JdqLCMs
-         tpwH6yN8u7z+/F3TXSzqlPdPMc03J5mrwP4CKsTsP2mhBxXWNC7olnsCW4C8gjU6OT
-         kGjBtsmwyw1YQ==
-Subject: [PATCH 1/2] xfs: don't complain about unfixed metadata when repairs
- were injected
+        b=t/d1JVgNygi4FkFMXhx8QJOEfqhr+GVTn31QlcuayUZpgUSLW6ZpUYejOfhUFa3BE
+         ZwecOfNphVna0Pm0xMu9t6BDl8x1pJRFm6JihqidMU8lc+b7kD3hwxOud/U/i6autG
+         pbi0EHMpPlyXmbOKROwMKopAPlgUMTxJzZQJgPvd+Fh/ZCjVlkhH92nvvlOsKg5vHs
+         ZsU9HN3UAmvU9ApW8X9HcHw6dh6sMw3wTrSEIbSgScmcPVIrp2RLF5dsEA00y7HQSP
+         vOHp/gbOIzp6NxCuAvOSzxS4F2G2s6bdjzjhHxSvh33hLClIGTye7AoGpNJKnrJLnt
+         vifTqW5CIT6Pg==
+Subject: [PATCHSET v24.0 0/2] xfs: force rebuilding of metadata
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:45 -0800
-Message-ID: <167243836552.692955.15678490136490770591.stgit@magnolia>
-In-Reply-To: <167243836537.692955.2878906942781441773.stgit@magnolia>
-References: <167243836537.692955.2878906942781441773.stgit@magnolia>
+Message-ID: <167243836537.692955.2878906942781441773.stgit@magnolia>
+In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
+References: <Y69Unb7KRM5awJoV@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,75 +52,35 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-While debugging other parts of online repair, I noticed that if someone
-injects FORCE_SCRUB_REPAIR, starts an IFLAG_REPAIR scrub on a piece of
-metadata, and the metadata repair fails, we'll log a message about
-uncorrected errors in the filesystem.
+This patchset adds a new IFLAG to the scrub ioctl so that userspace can
+force a rebuild of an otherwise consistent piece of metadata.  This will
+eventually enable the use of online repair to relocate metadata during a
+filesystem reorganization (e.g. shrink).  For now, it facilitates stress
+testing of online repair without needing the debugging knobs to be
+enabled.
 
-This isn't strictly true if the scrub function didn't set OFLAG_CORRUPT
-and we're only doing the repair because the error injection knob is set.
-Repair functions are allowed to abort the entire operation at any point
-before committing new metadata, in which case the piece of metadata is
-in the same state as it was before.  Therefore, the log message should
-be gated on the results of the scrub.  Refactor the predicate and
-rearrange the code flow to make this happen.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Note: If the repair function errors out after it commits the new
-metadata, the transaction cancellation will shut down the filesystem,
-which is an obvious sign of corrupt metadata.
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-force-rebuild
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-force-rebuild
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-force-rebuild
 ---
- fs/xfs/scrub/common.h |   12 ++++++++++++
- fs/xfs/scrub/scrub.c  |    7 ++-----
- 2 files changed, 14 insertions(+), 5 deletions(-)
-
-
-diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
-index 4b2590540be4..92578c4aed13 100644
---- a/fs/xfs/scrub/common.h
-+++ b/fs/xfs/scrub/common.h
-@@ -167,6 +167,18 @@ static inline bool xchk_skip_xref(struct xfs_scrub_metadata *sm)
- 			       XFS_SCRUB_OFLAG_XCORRUPT);
- }
- 
-+#ifdef CONFIG_XFS_ONLINE_REPAIR
-+/* Decide if a repair is required. */
-+static inline bool xchk_needs_repair(const struct xfs_scrub_metadata *sm)
-+{
-+	return sm->sm_flags & (XFS_SCRUB_OFLAG_CORRUPT |
-+			       XFS_SCRUB_OFLAG_XCORRUPT |
-+			       XFS_SCRUB_OFLAG_PREEN);
-+}
-+#else
-+# define xchk_needs_repair(sc)		(false)
-+#endif /* CONFIG_XFS_ONLINE_REPAIR */
-+
- int xchk_metadata_inode_forks(struct xfs_scrub *sc);
- void xchk_stop_reaping(struct xfs_scrub *sc);
- void xchk_start_reaping(struct xfs_scrub *sc);
-diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
-index fe5faec4d1d2..cda7b55d77a5 100644
---- a/fs/xfs/scrub/scrub.c
-+++ b/fs/xfs/scrub/scrub.c
-@@ -534,15 +534,12 @@ xfs_scrub_metadata(
- 
- 	if ((sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR) &&
- 	    !(sc->flags & XREP_ALREADY_FIXED)) {
--		bool needs_fix;
-+		bool needs_fix = xchk_needs_repair(sc->sm);
- 
- 		/* Let debug users force us into the repair routines. */
- 		if (XFS_TEST_ERROR(false, mp, XFS_ERRTAG_FORCE_SCRUB_REPAIR))
--			sc->sm->sm_flags |= XFS_SCRUB_OFLAG_CORRUPT;
-+			needs_fix = true;
- 
--		needs_fix = (sc->sm->sm_flags & (XFS_SCRUB_OFLAG_CORRUPT |
--						 XFS_SCRUB_OFLAG_XCORRUPT |
--						 XFS_SCRUB_OFLAG_PREEN));
- 		/*
- 		 * If userspace asked for a repair but it wasn't necessary,
- 		 * report that back to userspace.
+ fs/xfs/libxfs/xfs_fs.h |    6 +++++-
+ fs/xfs/scrub/common.h  |   12 ++++++++++++
+ fs/xfs/scrub/scrub.c   |   18 ++++++++++++------
+ fs/xfs/scrub/trace.h   |    3 ++-
+ 4 files changed, 31 insertions(+), 8 deletions(-)
 
