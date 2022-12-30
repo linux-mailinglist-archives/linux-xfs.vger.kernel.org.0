@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87B96659D46
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:54:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A79E9659D48
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:55:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235435AbiL3Wyb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:54:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57566 "EHLO
+        id S229681AbiL3WzA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:55:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbiL3Wya (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:54:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC13A1AA0F;
-        Fri, 30 Dec 2022 14:54:29 -0800 (PST)
+        with ESMTP id S229758AbiL3Wy7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:54:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270E91AA17;
+        Fri, 30 Dec 2022 14:54:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 65D03B81D96;
-        Fri, 30 Dec 2022 22:54:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0788EC433EF;
-        Fri, 30 Dec 2022 22:54:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B8DC061AC4;
+        Fri, 30 Dec 2022 22:54:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2174BC433D2;
+        Fri, 30 Dec 2022 22:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440867;
-        bh=sFuGD3n7++hEnqnDWvFcEcTz7jlN4CvVk+nuBM9fwsg=;
+        s=k20201202; t=1672440898;
+        bh=nKnqdkRnRBI8Qh+Yd6TUhrIjepqFiqtDJUSDh2W3KBc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bF0DIAHN+Rd9LrCTPxCKPg1PMeXHKOYgBnSgkqB4M98QGA6110oVbFf7hDuEOQi6x
-         q2bD/dws+eTaM+zSlXOY6t3rFfJQt2EmnV9AJ783hOw9HF5+AXbtZxtOjKfO3449Fm
-         K+7mothgf08AiNQiN5dwwu1RmHkQOE8n61dkI/OEA4HXx+ZpWsXXMCETY0EnqXftYK
-         MU6gFeTd/lr7hutMdYjoYKUfSnMjPjqdt4g2IpY+CZX9G6qC4zefEn4BIsdAKLGxw2
-         kW1SHuhEKq4lI3wjLKxiiswNePaUMGxLtreSNZ96PVCk4+eElAsqHGwhNuAnpQ6dXv
-         yfu5olOUwt5+A==
-Subject: [PATCH 01/16] xfs/422: create a new test group for fsstress/repair
- racers
+        b=N2xTgL3rvFTtToiGdgnJ/UsVKGKogkz9dgFmOOmkatwwKCMMFL9RtmiIhkBPkC+Vi
+         tfJpa6LQdPE09tCMa1vP2FwN5sDY6y2+G0hOALR7GLTW0igYHdy/UrjPWzoegO7Ai/
+         WR3iMnSzuEMxoVo9FU4cYxzZSn581WCwb8GZUFa3BB0f3FZhI9olpBFLAIFIBc4+Is
+         o1fZ9W/mh5490a/1bQ6qtSGYqndgxJvdFENa1dPjDF7ey3Cww+FnPfbu2pP9WpuY4C
+         Pu56ZcNMHqjNRzXJ3yAF2IRsV51qM+a+wTKs1GcCFhpKdI5nl8cqAIVkBrQkafRoAw
+         n1ZPuLmRNBMpQ==
+Subject: [PATCH 03/16] xfs/422: rework feature detection so we only
+ test-format scratch once
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:12:53 -0800
-Message-ID: <167243837315.694541.14915989006044275705.stgit@magnolia>
+Message-ID: <167243837339.694541.16731359558761133108.stgit@magnolia>
 In-Reply-To: <167243837296.694541.13203497631389630964.stgit@magnolia>
 References: <167243837296.694541.13203497631389630964.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,39 +55,31 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a new group for tests that race fsstress with online filesystem
-repair, and add this to the dangerous_online_repair group too.
+Rework the feature detection in the one online fsck stress test so that
+we only format the scratch device twice per test run.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- doc/group-names.txt |    1 +
- tests/xfs/422       |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ tests/xfs/422 |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/doc/group-names.txt b/doc/group-names.txt
-index 6cc9af7844..ac219e05b3 100644
---- a/doc/group-names.txt
-+++ b/doc/group-names.txt
-@@ -34,6 +34,7 @@ dangerous_bothrepair	fuzzers to evaluate xfs_scrub + xfs_repair repair
- dangerous_fuzzers	fuzzers that can crash your computer
- dangerous_norepair	fuzzers to evaluate kernel metadata verifiers
- dangerous_online_repair	fuzzers to evaluate xfs_scrub online repair
-+dangerous_fsstress_repair	race fsstress and xfs_scrub online repair
- dangerous_repair	fuzzers to evaluate xfs_repair offline repair
- dangerous_scrub		fuzzers to evaluate xfs_scrub checking
- data			data loss checkers
 diff --git a/tests/xfs/422 b/tests/xfs/422
-index f3c63e8d6a..9ed944ed63 100755
+index 0bf08572f3..b3353d2202 100755
 --- a/tests/xfs/422
 +++ b/tests/xfs/422
-@@ -9,7 +9,7 @@
- # activity, so we can't have userspace wandering in and thawing it.
- #
- . ./common/preamble
--_begin_fstest dangerous_scrub dangerous_online_repair freeze
-+_begin_fstest online_repair dangerous_fsstress_repair freeze
+@@ -25,11 +25,12 @@ _register_cleanup "_cleanup" BUS
  
- _register_cleanup "_cleanup" BUS
+ # real QA test starts here
+ _supported_fs xfs
+-_require_xfs_scratch_rmapbt
++_require_scratch
+ _require_xfs_stress_online_repair
  
+ _scratch_mkfs > "$seqres.full" 2>&1
+ _scratch_mount
++_require_xfs_has_feature "$SCRATCH_MNT" rmapbt
+ _scratch_xfs_stress_online_repair
+ 
+ # success, all done
 
