@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A287165A100
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:54:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5319E659FBD
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:35:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236043AbiLaByD (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:54:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50100 "EHLO
+        id S235777AbiLaAf4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:35:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbiLaByC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:54:02 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F07A1DDD3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:54:01 -0800 (PST)
+        with ESMTP id S235750AbiLaAfz (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:35:55 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AD712A9B
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:35:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE52D61CE2
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:54:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AC3C433D2;
-        Sat, 31 Dec 2022 01:54:00 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 1A1B5CE1A94
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:35:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48597C433EF;
+        Sat, 31 Dec 2022 00:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451640;
-        bh=pg4B0x7QVtQ7GFIuSuXOfuGL4WVeub5JqBpUKgko6S4=;
+        s=k20201202; t=1672446950;
+        bh=PoauaQzO0cPN8emQdPOl+YoqXrb5acYl7m8JTFZJbac=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gNhUw08tiJmq2zwDM7MNZ8120I2/hUsgxYqU3/LQXj8bpTAsD92tMHAjwx7hG4lc4
-         N+CGELYABHVoY6HhyTxqIFBXVR+6BnJXaRBqfANJoRL6UquCSdm1a84EbKZjDzjCKi
-         aMt2b181qkYGJ4WBlQlsLeMR5u2znkJFL/Czfm1JpC1RymUhIOHyhBf+9zgJwJDtI8
-         qa4ce51h7rf+QBXK5dyz3OmJrzFvaTcpB883a+hp6ls0OxhJQaj9TMXBnvUX7dmlgH
-         44oJMC8/8XqwKoDPbLIIrXSHnBCrGxgRAk61uPmKWQWGcbDnLlDWHrroa9yl8nAlHP
-         im7SqFilVxgdA==
-Subject: [PATCH 23/42] xfs: fix xfs_get_extsz_hint behavior with realtime
- alwayscow files
+        b=b3B+582uYI8Nl2hDoy603JJSI8kjGnUq682cZ0JM9tFXvdm4I7xLuxOC43UNv65HE
+         agXeKBWukm1PveeoEDl2AAKf2sKR2EK28UB1ccOa09YALuFxxFFmSNdBJ/IlaqG2ZU
+         bu26iDx1vm5aIbecDaGC6wM9BT0/Co4cKYb8q0e0worIEjknPxOEwssWpo7UR6CpiF
+         qtqv0DsuEMl3smbySccP37WxFxY/BLrJH12b/h42OSdoQTRFvN8lvqWVIVAulxA6fD
+         G7/CitH4OY9n2rOykFX4Z1yV1viia188tyXM3fI3NcjzfvoY0CbG0HNZQOr44c2lMa
+         2/UBPnmrZhgRQ==
+Subject: [PATCH 8/8] xfs_scrub_all: survive systemd restarts when waiting for
+ services
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:32 -0800
-Message-ID: <167243871222.717073.2381159476227762923.stgit@magnolia>
-In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
-References: <167243870849.717073.203452386730176902.stgit@magnolia>
+Message-ID: <167243871205.717702.16197845816644006295.stgit@magnolia>
+In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
+References: <167243871097.717702.15336500890922415647.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,36 +55,149 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Currently, we (ab)use xfs_get_extsz_hint so that it always returns a
-nonzero value for realtime files.  This apparently was done to disable
-delayed allocation for realtime files.
+If xfs_scrub_all detects a running systemd, it will use it to invoke
+xfs_scrub subprocesses in a sandboxed and resource-controlled
+environment.  Unfortunately, if you happen to restart dbus or systemd
+while it's running, you get this:
 
-However, once we enable realtime reflink, we can also turn on the
-alwayscow flag to force CoW writes to realtime files.  In this case, the
-logic will incorrectly send the write through the delalloc write path.
+systemd[1]: Reexecuting.
+xfs_scrub_all[9958]: Warning! D-Bus connection terminated.
+xfs_scrub_all[9956]: Warning! D-Bus connection terminated.
+xfs_scrub_all[9956]: Failed to wait for response: Connection reset by peer
+xfs_scrub_all[9958]: Failed to wait for response: Connection reset by peer
+xfs_scrub_all[9930]: Scrubbing / done, (err=1)
+xfs_scrub_all[9930]: Scrubbing /storage done, (err=1)
 
-Fix this by adjusting the logic slightly.
+The xfs_scrub units themselves are still running, it's just that the
+`systemctl start' command that xfs_scrub_all uses to start and wait for
+the unit lost its connection to dbus and hence is no longer monitoring
+sub-services.
+
+When this happens, we don't have great options -- systemctl doesn't have
+a command to wait on an activating (aka running) unit.  Emulate the
+functionality we normally get by polling the failed/active statuses.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_bmap.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ scrub/xfs_scrub_all.in |   78 ++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 65 insertions(+), 13 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
-index fe31f3cb5d91..552875ddcc4a 100644
---- a/fs/xfs/libxfs/xfs_bmap.c
-+++ b/fs/xfs/libxfs/xfs_bmap.c
-@@ -6427,9 +6427,8 @@ xfs_get_extsz_hint(
- 	 * No point in aligning allocations if we need to COW to actually
- 	 * write to them.
- 	 */
--	if (xfs_is_always_cow_inode(ip))
--		return 0;
--	if ((ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
-+	if (!xfs_is_always_cow_inode(ip) &&
-+	    (ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
- 		return ip->i_extsize;
- 	if (XFS_IS_REALTIME_INODE(ip))
- 		return ip->i_mount->m_sb.sb_rextsize;
+diff --git a/scrub/xfs_scrub_all.in b/scrub/xfs_scrub_all.in
+index 2bdbccffd9c..3e0c48acb39 100644
+--- a/scrub/xfs_scrub_all.in
++++ b/scrub/xfs_scrub_all.in
+@@ -14,6 +14,7 @@ import time
+ import sys
+ import os
+ import argparse
++from io import TextIOWrapper
+ 
+ retcode = 0
+ terminate = False
+@@ -58,12 +59,18 @@ def find_mounts():
+ 
+ 	return fs
+ 
+-def kill_systemd(unitname, proc):
+-	'''Kill systemd unit.'''
+-	proc.terminate()
+-	cmd = ['systemctl', 'stop', unitname]
+-	x = subprocess.Popen(cmd)
+-	x.wait()
++def backtick(cmd):
++	'''Generator function that yields lines of a program's stdout.'''
++	p = subprocess.Popen(cmd, stdout = subprocess.PIPE)
++	for line in TextIOWrapper(p.stdout, encoding="utf-8"):
++		yield line.strip()
++
++def remove_killfunc(killfuncs, fn):
++	'''Ensure fn is not in killfuncs.'''
++	try:
++		killfuncs.remove(fn)
++	except:
++		pass
+ 
+ def run_killable(cmd, stdout, killfuncs, kill_fn):
+ 	'''Run a killable program.  Returns program retcode or -1 if we can't start it.'''
+@@ -72,10 +79,7 @@ def run_killable(cmd, stdout, killfuncs, kill_fn):
+ 		real_kill_fn = lambda: kill_fn(proc)
+ 		killfuncs.add(real_kill_fn)
+ 		proc.wait()
+-		try:
+-			killfuncs.remove(real_kill_fn)
+-		except:
+-			pass
++		remove_killfunc(killfuncs, real_kill_fn)
+ 		return proc.returncode
+ 	except:
+ 		return -1
+@@ -107,6 +111,56 @@ def systemd_escape(path):
+ 	except:
+ 		return path
+ 
++def systemctl_stop(unitname):
++	'''Stop a systemd unit.'''
++	cmd = ['systemctl', 'stop', unitname]
++	x = subprocess.Popen(cmd)
++	x.wait()
++
++def systemctl_start(unitname, killfuncs):
++	'''Start a systemd unit and wait for it to complete.'''
++	stop_fn = None
++	cmd = ['systemctl', 'start', unitname]
++	try:
++		proc = subprocess.Popen(cmd, stdout = DEVNULL())
++		stop_fn = lambda: systemctl_stop(unitname)
++		killfuncs.add(stop_fn)
++		proc.wait()
++		ret = proc.returncode
++	except:
++		if stop_fn is not None:
++			remove_killfunc(killfuncs, stop_fn)
++		return -1
++
++	if ret != 1:
++		remove_killfunc(killfuncs, stop_fn)
++		return ret
++
++	# If systemctl-start returns 1, it's possible that the service failed
++	# or that dbus/systemd restarted and the client program lost its
++	# connection -- according to the systemctl man page, 1 means "unit not
++	# failed".
++	#
++	# Either way, we switch to polling the service status to try to wait
++	# for the service to end.  As of systemd 249, the is-active command
++	# returns any of the following states: active, reloading, inactive,
++	# failed, activating, deactivating, or maintenance.  Apparently these
++	# strings are not localized.
++	while True:
++		try:
++			for l in backtick(['systemctl', 'is-active', unitname]):
++				if l == 'failed':
++					remove_killfunc(killfuncs, stop_fn)
++					return 1
++				if l == 'inactive':
++					remove_killfunc(killfuncs, stop_fn)
++					return 0
++		except:
++			remove_killfunc(killfuncs, stop_fn)
++			return -1
++
++		time.sleep(1)
++
+ def run_scrub(mnt, cond, running_devs, mntdevs, killfuncs):
+ 	'''Run a scrub process.'''
+ 	global retcode, terminate
+@@ -120,9 +174,7 @@ def run_scrub(mnt, cond, running_devs, mntdevs, killfuncs):
+ 
+ 		# Try it the systemd way
+ 		unitname = 'xfs_scrub@%s' % systemd_escape(mnt)
+-		cmd = ['systemctl', 'start', unitname]
+-		ret = run_killable(cmd, DEVNULL(), killfuncs, \
+-				lambda proc: kill_systemd(unitname, proc))
++		ret = systemctl_start(unitname, killfuncs)
+ 		if ret == 0 or ret == 1:
+ 			print("Scrubbing %s done, (err=%d)" % (mnt, ret))
+ 			sys.stdout.flush()
 
