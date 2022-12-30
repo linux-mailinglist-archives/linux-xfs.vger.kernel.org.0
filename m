@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B9F9659F54
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:15:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DE4D65A094
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:27:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235661AbiLaAPi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:15:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
+        id S236086AbiLaB1b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:27:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231348AbiLaAPh (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:15:37 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C62102E
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:15:36 -0800 (PST)
+        with ESMTP id S236082AbiLaB1a (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:27:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947ED1C93A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:27:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F18961CF1
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:15:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF5CC433D2;
-        Sat, 31 Dec 2022 00:15:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E50661CB4
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:27:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BAEAC433D2;
+        Sat, 31 Dec 2022 01:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445735;
-        bh=V4XvCqA9MgxPXkKnPi3E5Crf2AXd3rvM+1hKo9mpFkE=;
+        s=k20201202; t=1672450048;
+        bh=ooSBP2yQiZ0xHmVBuWJPdPJ+e/QJHgAfyIEtOLaYTKc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=g+TllQlGZK1kZGpGxnYB4EOkXxHhBp9c2bDnOsqXl98U0OQgQeHNtKmIq20xj2Xk1
-         MshAYYRkTBZYGpNEx8DgO+awFpEPNPffYlp2U1gJinGURIOA1mQo0sDWLiIzRB03d7
-         FvpfVcLfdyp4Jk9v7wCFWAmsvBRbxerHqMzyReXq7OX3VQSE+FVEJDWnk4C46twLrX
-         KiptCPgp+kbK2d7V4xVcC2ujiKNS79rxzMNkMOhTG9Fj6QY1CfYteeZHkLfqQaVbuG
-         DTFZasKKdNoL/OGlC/Z+vbNS9pJLXKc2xCQsp4iWQ61YH+bLNqt4ZDo0vf1KGFuKSo
-         XsegsMmPs4bzQ==
-Subject: [PATCH 3/6] xfs_repair: verify on-disk rmap btrees with in-memory
- btree data
+        b=AclQqe0ZKjcf+KN4lhQBTYeXjurrwXroeQJdD+lfLK1t+6iorkQSTKxPi6wimW80A
+         sfXPGxr1DppJxu+NOUUbUls221kU9M367eD+kYKdWyHmd94I+FCqjAaZDOM6tbhAZU
+         2u2q9dv8wjiNkI8qgsL4RA3ryh2LKZPjVNpPhYOBe3+TSCfSwbC6USJ1i0qxWUqUaB
+         /2hNGVtLlDNbmfGWwDiXMMkpH0d9AkYE4zMxWI6Wj4NsamjbSGJx7L1F+qY/O5QSMK
+         QDU3jHnm9bhVMjlf9i7ZDJSuSOG3QmrI6FpEvRzXLByASaC76mP5EjIYtT/iUOiRXs
+         ey8Wmw1iO5O2Q==
+Subject: [PATCH 3/3] xfs: remove XFS_ILOCK_RT*
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:49 -0800
-Message-ID: <167243866931.712584.16306225170690494673.stgit@magnolia>
-In-Reply-To: <167243866890.712584.9795710743681868714.stgit@magnolia>
-References: <167243866890.712584.9795710743681868714.stgit@magnolia>
+Message-ID: <167243866927.712531.15153228541429297552.stgit@magnolia>
+In-Reply-To: <167243866880.712531.9794913817759933297.stgit@magnolia>
+References: <167243866880.712531.9794913817759933297.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,144 +55,197 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Check the on-disk reverse mappings with the observations we've recorded
-in the in-memory btree during the filesystem walk.
+Now that we've centralized the realtime metadata locking routines, get
+rid of the ILOCK subclasses since we now use explicit lockdep classes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/rmap.c |   58 +++++++++++++++++++++++++++------------------------------
- 1 file changed, 27 insertions(+), 31 deletions(-)
+ fs/xfs/libxfs/xfs_rtbitmap.c |   16 ++++++++--------
+ fs/xfs/scrub/common.c        |    8 ++++----
+ fs/xfs/xfs_inode.c           |    3 +--
+ fs/xfs/xfs_inode.h           |   13 ++++---------
+ fs/xfs/xfs_rtalloc.c         |   11 +++++------
+ 5 files changed, 22 insertions(+), 29 deletions(-)
 
 
-diff --git a/repair/rmap.c b/repair/rmap.c
-index 64a5786faca..a8d973ecd2a 100644
---- a/repair/rmap.c
-+++ b/repair/rmap.c
-@@ -1200,11 +1200,11 @@ rmaps_verify_btree(
- 	struct xfs_mount	*mp,
- 	xfs_agnumber_t		agno)
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index 46095acec709..4237b5703a64 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -1262,11 +1262,11 @@ xfs_rtbitmap_lock(
+ 	struct xfs_trans	*tp,
+ 	struct xfs_mount	*mp)
  {
-+	struct rmap_mem_cur	rm_cur;
-+	struct xfs_rmap_irec	rm_rec;
- 	struct xfs_rmap_irec	tmp;
--	struct xfs_slab_cursor	*rm_cur;
- 	struct xfs_btree_cur	*bt_cur = NULL;
- 	struct xfs_buf		*agbp = NULL;
--	struct xfs_rmap_irec	*rm_rec;
- 	struct xfs_perag	*pag = NULL;
- 	int			have;
- 	int			error;
-@@ -1217,8 +1217,8 @@ rmaps_verify_btree(
- 		return;
- 	}
+-	xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
++	xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL);
+ 	if (tp)
+ 		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
  
--	/* Create cursors to refcount structures */
--	error = rmap_init_cursor(agno, &rm_cur);
-+	/* Create cursors to rmap structures */
-+	error = rmap_init_mem_cursor(mp, NULL, agno, &rm_cur);
- 	if (error) {
- 		do_warn(_("Not enough memory to check reverse mappings.\n"));
- 		return;
-@@ -1241,13 +1241,12 @@ rmaps_verify_btree(
- 		goto err_agf;
- 	}
- 
--	rm_rec = pop_slab_cursor(rm_cur);
--	while (rm_rec) {
--		error = rmap_lookup(bt_cur, rm_rec, &tmp, &have);
-+	while ((error = rmap_get_mem_rec(&rm_cur, &rm_rec)) == 1) {
-+		error = rmap_lookup(bt_cur, &rm_rec, &tmp, &have);
- 		if (error) {
- 			do_warn(
- _("Could not read reverse-mapping record for (%u/%u).\n"),
--					agno, rm_rec->rm_startblock);
-+					agno, rm_rec.rm_startblock);
- 			goto err_cur;
- 		}
- 
-@@ -1257,13 +1256,13 @@ _("Could not read reverse-mapping record for (%u/%u).\n"),
- 		 * match the observed rmap.
- 		 */
- 		if (xfs_has_reflink(bt_cur->bc_mp) &&
--				(!have || !rmap_is_good(rm_rec, &tmp))) {
--			error = rmap_lookup_overlapped(bt_cur, rm_rec,
-+				(!have || !rmap_is_good(&rm_rec, &tmp))) {
-+			error = rmap_lookup_overlapped(bt_cur, &rm_rec,
- 					&tmp, &have);
- 			if (error) {
- 				do_warn(
- _("Could not read reverse-mapping record for (%u/%u).\n"),
--						agno, rm_rec->rm_startblock);
-+						agno, rm_rec.rm_startblock);
- 				goto err_cur;
- 			}
- 		}
-@@ -1271,21 +1270,21 @@ _("Could not read reverse-mapping record for (%u/%u).\n"),
- 			do_warn(
- _("Missing reverse-mapping record for (%u/%u) %slen %u owner %"PRId64" \
- %s%soff %"PRIu64"\n"),
--				agno, rm_rec->rm_startblock,
--				(rm_rec->rm_flags & XFS_RMAP_UNWRITTEN) ?
-+				agno, rm_rec.rm_startblock,
-+				(rm_rec.rm_flags & XFS_RMAP_UNWRITTEN) ?
- 					_("unwritten ") : "",
--				rm_rec->rm_blockcount,
--				rm_rec->rm_owner,
--				(rm_rec->rm_flags & XFS_RMAP_ATTR_FORK) ?
-+				rm_rec.rm_blockcount,
-+				rm_rec.rm_owner,
-+				(rm_rec.rm_flags & XFS_RMAP_ATTR_FORK) ?
- 					_("attr ") : "",
--				(rm_rec->rm_flags & XFS_RMAP_BMBT_BLOCK) ?
-+				(rm_rec.rm_flags & XFS_RMAP_BMBT_BLOCK) ?
- 					_("bmbt ") : "",
--				rm_rec->rm_offset);
--			goto next_loop;
-+				rm_rec.rm_offset);
-+			continue;
- 		}
- 
- 		/* Compare each refcount observation against the btree's */
--		if (!rmap_is_good(rm_rec, &tmp)) {
-+		if (!rmap_is_good(&rm_rec, &tmp)) {
- 			do_warn(
- _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- %"PRIu64"; should be (%u/%u) %slen %u owner %"PRId64" %s%soff %"PRIu64"\n"),
-@@ -1299,20 +1298,17 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- 				(tmp.rm_flags & XFS_RMAP_BMBT_BLOCK) ?
- 					_("bmbt ") : "",
- 				tmp.rm_offset,
--				agno, rm_rec->rm_startblock,
--				(rm_rec->rm_flags & XFS_RMAP_UNWRITTEN) ?
-+				agno, rm_rec.rm_startblock,
-+				(rm_rec.rm_flags & XFS_RMAP_UNWRITTEN) ?
- 					_("unwritten ") : "",
--				rm_rec->rm_blockcount,
--				rm_rec->rm_owner,
--				(rm_rec->rm_flags & XFS_RMAP_ATTR_FORK) ?
-+				rm_rec.rm_blockcount,
-+				rm_rec.rm_owner,
-+				(rm_rec.rm_flags & XFS_RMAP_ATTR_FORK) ?
- 					_("attr ") : "",
--				(rm_rec->rm_flags & XFS_RMAP_BMBT_BLOCK) ?
-+				(rm_rec.rm_flags & XFS_RMAP_BMBT_BLOCK) ?
- 					_("bmbt ") : "",
--				rm_rec->rm_offset);
--			goto next_loop;
-+				rm_rec.rm_offset);
- 		}
--next_loop:
--		rm_rec = pop_slab_cursor(rm_cur);
- 	}
- 
- err_cur:
-@@ -1321,7 +1317,7 @@ _("Incorrect reverse-mapping: saw (%u/%u) %slen %u owner %"PRId64" %s%soff \
- 	libxfs_buf_relse(agbp);
- err_pag:
- 	libxfs_perag_put(pag);
--	free_slab_cursor(&rm_cur);
-+	rmap_free_mem_cursor(NULL, &rm_cur, error);
+-	xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
++	xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL);
+ 	if (tp)
+ 		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
+ }
+@@ -1276,8 +1276,8 @@ void
+ xfs_rtbitmap_unlock(
+ 	struct xfs_mount	*mp)
+ {
+-	xfs_iunlock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
+-	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
++	xfs_iunlock(mp->m_rsumip, XFS_ILOCK_EXCL);
++	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_EXCL);
  }
  
  /*
+@@ -1290,10 +1290,10 @@ xfs_rtbitmap_lock_shared(
+ 	unsigned int		rbmlock_flags)
+ {
+ 	if (rbmlock_flags & XFS_RBMLOCK_BITMAP)
+-		xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++		xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED);
+ 
+ 	if (rbmlock_flags & XFS_RBMLOCK_SUMMARY)
+-		xfs_ilock(mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
++		xfs_ilock(mp->m_rsumip, XFS_ILOCK_SHARED);
+ }
+ 
+ /* Unlock the realtime free space metadata inodes after a freespace scan. */
+@@ -1303,8 +1303,8 @@ xfs_rtbitmap_unlock_shared(
+ 	unsigned int		rbmlock_flags)
+ {
+ 	if (rbmlock_flags & XFS_RBMLOCK_SUMMARY)
+-		xfs_iunlock(mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
++		xfs_iunlock(mp->m_rsumip, XFS_ILOCK_SHARED);
+ 
+ 	if (rbmlock_flags & XFS_RBMLOCK_BITMAP)
+-		xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++		xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED);
+ }
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index dadbe32916de..1b48726fcc65 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -693,14 +693,14 @@ xchk_rt_init(
+ 					 XCHK_RTLOCK_SUMMARY_SHARED)) < 2);
+ 
+ 	if (rtlock_flags & XCHK_RTLOCK_BITMAP)
+-		xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
++		xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_EXCL);
+ 	else if (rtlock_flags & XCHK_RTLOCK_BITMAP_SHARED)
+-		xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++		xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_SHARED);
+ 
+ 	if (rtlock_flags & XCHK_RTLOCK_SUMMARY)
+-		xfs_ilock(sc->mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
++		xfs_ilock(sc->mp->m_rsumip, XFS_ILOCK_EXCL);
+ 	else if (rtlock_flags & XCHK_RTLOCK_SUMMARY_SHARED)
+-		xfs_ilock(sc->mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
++		xfs_ilock(sc->mp->m_rsumip, XFS_ILOCK_SHARED);
+ 
+ 	sr->rtlock_flags = rtlock_flags;
+ }
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 51bceccd8c9a..ab805df9db16 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -361,8 +361,7 @@ xfs_lock_inumorder(
+ {
+ 	uint	class = 0;
+ 
+-	ASSERT(!(lock_mode & (XFS_ILOCK_PARENT | XFS_ILOCK_RTBITMAP |
+-			      XFS_ILOCK_RTSUM)));
++	ASSERT(!(lock_mode & XFS_ILOCK_PARENT));
+ 	ASSERT(xfs_lockdep_subclass_ok(subclass));
+ 
+ 	if (lock_mode & (XFS_IOLOCK_SHARED|XFS_IOLOCK_EXCL)) {
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index 7cf45dd9d86b..06601c409010 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -404,9 +404,8 @@ static inline bool xfs_inode_has_bigrtextents(struct xfs_inode *ip)
+  * However, MAX_LOCKDEP_SUBCLASSES == 8, which means we are greatly
+  * limited to the subclasses we can represent via nesting. We need at least
+  * 5 inodes nest depth for the ILOCK through rename, and we also have to support
+- * XFS_ILOCK_PARENT, which gives 6 subclasses. Then we have XFS_ILOCK_RTBITMAP
+- * and XFS_ILOCK_RTSUM, which are another 2 unique subclasses, so that's all
+- * 8 subclasses supported by lockdep.
++ * XFS_ILOCK_PARENT, which gives 6 subclasses.  That's 6 of the 8 subclasses
++ * supported by lockdep.
+  *
+  * This also means we have to number the sub-classes in the lowest bits of
+  * the mask we keep, and we have to ensure we never exceed 3 bits of lockdep
+@@ -432,8 +431,8 @@ static inline bool xfs_inode_has_bigrtextents(struct xfs_inode *ip)
+  * ILOCK values
+  * 0-4		subclass values
+  * 5		PARENT subclass (not nestable)
+- * 6		RTBITMAP subclass (not nestable)
+- * 7		RTSUM subclass (not nestable)
++ * 6		unused
++ * 7		unused
+  * 
+  */
+ #define XFS_IOLOCK_SHIFT		16
+@@ -449,12 +448,8 @@ static inline bool xfs_inode_has_bigrtextents(struct xfs_inode *ip)
+ #define XFS_ILOCK_SHIFT			24
+ #define XFS_ILOCK_PARENT_VAL		5u
+ #define XFS_ILOCK_MAX_SUBCLASS		(XFS_ILOCK_PARENT_VAL - 1)
+-#define XFS_ILOCK_RTBITMAP_VAL		6u
+-#define XFS_ILOCK_RTSUM_VAL		7u
+ #define XFS_ILOCK_DEP_MASK		0xff000000u
+ #define	XFS_ILOCK_PARENT		(XFS_ILOCK_PARENT_VAL << XFS_ILOCK_SHIFT)
+-#define	XFS_ILOCK_RTBITMAP		(XFS_ILOCK_RTBITMAP_VAL << XFS_ILOCK_SHIFT)
+-#define	XFS_ILOCK_RTSUM			(XFS_ILOCK_RTSUM_VAL << XFS_ILOCK_SHIFT)
+ 
+ #define XFS_LOCK_SUBCLASS_MASK	(XFS_IOLOCK_DEP_MASK | \
+ 				 XFS_MMAPLOCK_DEP_MASK | \
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 11bea1c60eda..c131738efd0f 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1376,8 +1376,7 @@ __xfs_rt_iget(
+  */
+ static inline int
+ xfs_rtmount_iread_extents(
+-	struct xfs_inode	*ip,
+-	unsigned int		lock_class)
++	struct xfs_inode	*ip)
+ {
+ 	struct xfs_trans	*tp;
+ 	int			error;
+@@ -1386,7 +1385,7 @@ xfs_rtmount_iread_extents(
+ 	if (error)
+ 		return error;
+ 
+-	xfs_ilock(ip, XFS_ILOCK_EXCL | lock_class);
++	xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 
+ 	error = xfs_iread_extents(tp, ip, XFS_DATA_FORK);
+ 	if (error)
+@@ -1399,7 +1398,7 @@ xfs_rtmount_iread_extents(
+ 	}
+ 
+ out_unlock:
+-	xfs_iunlock(ip, XFS_ILOCK_EXCL | lock_class);
++	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	xfs_trans_cancel(tp);
+ 	return error;
+ }
+@@ -1424,7 +1423,7 @@ xfs_rtmount_inodes(
+ 		return error;
+ 	ASSERT(mp->m_rbmip != NULL);
+ 
+-	error = xfs_rtmount_iread_extents(mp->m_rbmip, XFS_ILOCK_RTBITMAP);
++	error = xfs_rtmount_iread_extents(mp->m_rbmip);
+ 	if (error)
+ 		goto out_rele_bitmap;
+ 
+@@ -1436,7 +1435,7 @@ xfs_rtmount_inodes(
+ 		goto out_rele_bitmap;
+ 	ASSERT(mp->m_rsumip != NULL);
+ 
+-	error = xfs_rtmount_iread_extents(mp->m_rsumip, XFS_ILOCK_RTSUM);
++	error = xfs_rtmount_iread_extents(mp->m_rsumip);
+ 	if (error)
+ 		goto out_rele_summary;
+ 
 
