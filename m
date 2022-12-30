@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A9D665A0A3
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:31:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1894965A0A8
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:32:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236101AbiLaBbJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:31:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46260 "EHLO
+        id S236105AbiLaBcb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:32:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236087AbiLaBbJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:31:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D6492197
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:31:07 -0800 (PST)
+        with ESMTP id S236082AbiLaBc2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:32:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF81DEB7
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:32:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 18AE961C3A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:31:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D05FC433D2;
-        Sat, 31 Dec 2022 01:31:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9C93BB81E01
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:32:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48F62C433D2;
+        Sat, 31 Dec 2022 01:32:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450266;
-        bh=x8+Hy5puTuW68AR/R6ztJMZZ7mDuT6mo/Gq/DyDEEjs=;
+        s=k20201202; t=1672450344;
+        bh=/KF70EJzvgd7fcguBqJo/W+FA1CLAQkzyn7JHFNbGtE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bO24sjFDWGK25RwRHW2cRkzWVGFrRKpLA+nBQSZ88r2hIj5gZEZxmmwlgNQQzo7Ap
-         uMJUp1i5R50E0wjdTVbpiiU/lNfquTWXX5HKrSO4Fz19rUvspWboRVzzg4KcWBQ+ax
-         MrHPKoKI51Ap5lZc8ECHmhNo+Y1qA8aB5/C2t0AQ7yIEFNe0llzeDZNRbGIpQp8Cz2
-         Snz8/SZhwt6a3U8bspWK/ziyLc1svpKZdafyxAHU/bQjyJY9yf4M1H0Up4hHECKk6d
-         MIC0CkKf/IdKjvMP/XyfQfwWy4d/h4ZXJrQNd+KHfT/c8RpSNWW9/n4TbPI3dAqaOG
-         fCfmMstuCDt4g==
-Subject: [PATCH 14/22] xfs: add block headers to realtime bitmap blocks
+        b=Ns9Sc6i0DSpuZuprC/GQ6lOvJyYWLORo5W4I37rAwY6/CpALrjK9U3KYnu2YJviC1
+         bUoMXQgnarBhTXY3qDDquhi/xdgIYV2+26uebYxJRnZ6dvOpd5ad/0ZHjaXy0FG8TQ
+         milHVc4sHCOHFiQTCVoiFrxR+ywFOX/P1errg/TMlFefFMAa2+0et3a6qFZl2sCUoB
+         R7qU7d+GR6w22mEVzvuNRJ4VO15Jk7D5BwVJ+owRa1GLQhwZMNv+BhBK9unKg6cYH+
+         i+MFNNCTrQcqbXOy/wKyhA3I99BCcvFdHjnJSgsNLaiUQKWOdZTh1sMYqq8+Ta5HQl
+         3JQOc5tZY3NmA==
+Subject: [PATCH 19/22] xfs: scrub the realtime group superblock
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:54 -0800
-Message-ID: <167243867467.712847.13563897655051444408.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:55 -0800
+Message-ID: <167243867539.712847.15291040944782337347.stgit@magnolia>
 In-Reply-To: <167243867242.712847.10106105868862621775.stgit@magnolia>
 References: <167243867242.712847.10106105868862621775.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,507 +55,514 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Upgrade rtbitmap blocks to have self describing metadata like most every
-other thing in XFS.
+Enable scrubbing of realtime group superblocks.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_format.h    |   14 ++++++
- fs/xfs/libxfs/xfs_rtbitmap.c  |  100 +++++++++++++++++++++++++++++++++++++----
- fs/xfs/libxfs/xfs_rtbitmap.h  |   30 ++++++++++++
- fs/xfs/libxfs/xfs_sb.c        |   18 ++++++-
- fs/xfs/libxfs/xfs_shared.h    |    1 
- fs/xfs/xfs_buf_item_recover.c |   20 +++++++-
- fs/xfs/xfs_mount.h            |    3 +
- fs/xfs/xfs_ondisk.h           |    1 
- fs/xfs/xfs_rtalloc.c          |   60 ++++++++++++++++++-------
- 9 files changed, 213 insertions(+), 34 deletions(-)
+ fs/xfs/Makefile        |    1 +
+ fs/xfs/libxfs/xfs_fs.h |    3 +-
+ fs/xfs/scrub/common.c  |   88 ++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/common.h  |   46 ++++++++++++++-----------
+ fs/xfs/scrub/health.c  |    1 +
+ fs/xfs/scrub/rgsuper.c |   77 ++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/scrub.c   |   20 ++++++++++-
+ fs/xfs/scrub/scrub.h   |   40 ++++++++++------------
+ fs/xfs/scrub/trace.h   |    4 ++
+ 9 files changed, 236 insertions(+), 44 deletions(-)
+ create mode 100644 fs/xfs/scrub/rgsuper.c
 
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index a38e1499bd4b..4096d3f069a3 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -1284,6 +1284,20 @@ static inline bool xfs_dinode_has_large_extent_counts(
- /*
-  * RT bit manipulation macros.
-  */
-+#define XFS_RTBITMAP_MAGIC	0x424D505A	/* BMPZ */
-+
-+struct xfs_rtbuf_blkinfo {
-+	__be32		rt_magic;	/* validity check on block */
-+	__be32		rt_crc;		/* CRC of block */
-+	__be64		rt_owner;	/* inode that owns the block */
-+	__be64		rt_blkno;	/* first block of the buffer */
-+	__be64		rt_lsn;		/* sequence number of last write */
-+	uuid_t		rt_uuid;	/* filesystem we belong to */
-+};
-+
-+#define XFS_RTBUF_CRC_OFF \
-+	offsetof(struct xfs_rtbuf_blkinfo, rt_crc)
-+
- #define	XFS_RTMIN(a,b)	((a) < (b) ? (a) : (b))
- #define	XFS_RTMAX(a,b)	((a) > (b) ? (a) : (b))
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index 135a403c0edc..a02fb09fed64 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -178,6 +178,7 @@ xfs-y				+= $(addprefix scrub/, \
+ 				   )
  
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
-index 4237b5703a64..05b0e4e92a0a 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.c
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.c
-@@ -18,28 +18,84 @@
- #include "xfs_error.h"
- #include "xfs_health.h"
- #include "xfs_rtbitmap.h"
-+#include "xfs_log.h"
-+#include "xfs_buf_item.h"
+ xfs-$(CONFIG_XFS_RT)		+= $(addprefix scrub/, \
++				   rgsuper.o \
+ 				   rtbitmap.o \
+ 				   rtsummary.o \
+ 				   )
+diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
+index e3d87665e4a5..c12be9dbb59d 100644
+--- a/fs/xfs/libxfs/xfs_fs.h
++++ b/fs/xfs/libxfs/xfs_fs.h
+@@ -741,9 +741,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_TYPE_QUOTACHECK 25	/* quota counters */
+ #define XFS_SCRUB_TYPE_NLINKS	26	/* inode link counts */
+ #define XFS_SCRUB_TYPE_HEALTHY	27	/* everything checked out ok */
++#define XFS_SCRUB_TYPE_RGSUPER	28	/* realtime superblock */
  
- /*
-  * Realtime allocator bitmap functions shared with userspace.
-  */
+ /* Number of scrub subcommands. */
+-#define XFS_SCRUB_TYPE_NR	28
++#define XFS_SCRUB_TYPE_NR	29
  
--/*
-- * Real time buffers need verifiers to avoid runtime warnings during IO.
-- * We don't have anything to verify, however, so these are just dummy
-- * operations.
-- */
-+static xfs_failaddr_t
-+xfs_rtbuf_verify(
-+	struct xfs_buf			*bp)
-+{
-+	struct xfs_mount		*mp = bp->b_mount;
-+	struct xfs_rtbuf_blkinfo	*hdr = bp->b_addr;
-+
-+	if (!xfs_verify_magic(bp, hdr->rt_magic))
-+		return __this_address;
-+	if (!xfs_has_rtgroups(mp))
-+		return __this_address;
-+	if (!xfs_has_crc(mp))
-+		return __this_address;
-+	if (!uuid_equal(&hdr->rt_uuid, &mp->m_sb.sb_meta_uuid))
-+		return __this_address;
-+	if (hdr->rt_blkno != cpu_to_be64(xfs_buf_daddr(bp)))
-+		return __this_address;
-+	return NULL;
-+}
-+
- static void
- xfs_rtbuf_verify_read(
--	struct xfs_buf	*bp)
-+	struct xfs_buf			*bp)
- {
-+	struct xfs_mount		*mp = bp->b_mount;
-+	struct xfs_rtbuf_blkinfo	*hdr = bp->b_addr;
-+	xfs_failaddr_t			fa;
-+
-+	if (!xfs_has_rtgroups(mp) || bp->b_ops != &xfs_rtbitmap_buf_ops)
-+		return;
-+
-+	if (!xfs_log_check_lsn(mp, be64_to_cpu(hdr->rt_lsn))) {
-+		fa = __this_address;
-+		goto fail;
-+	}
-+
-+	if (!xfs_buf_verify_cksum(bp, XFS_RTBUF_CRC_OFF)) {
-+		fa = __this_address;
-+		goto fail;
-+	}
-+
-+	fa = xfs_rtbuf_verify(bp);
-+	if (fa)
-+		goto fail;
-+
- 	return;
-+fail:
-+	xfs_verifier_error(bp, -EFSCORRUPTED, fa);
- }
- 
- static void
- xfs_rtbuf_verify_write(
- 	struct xfs_buf	*bp)
- {
--	return;
-+	struct xfs_mount		*mp = bp->b_mount;
-+	struct xfs_rtbuf_blkinfo	*hdr = bp->b_addr;
-+	struct xfs_buf_log_item		*bip = bp->b_log_item;
-+	xfs_failaddr_t			fa;
-+
-+	if (!xfs_has_rtgroups(mp) || bp->b_ops != &xfs_rtbitmap_buf_ops)
-+		return;
-+
-+	fa = xfs_rtbuf_verify(bp);
-+	if (fa) {
-+		xfs_verifier_error(bp, -EFSCORRUPTED, fa);
-+		return;
-+	}
-+
-+	if (bip)
-+		hdr->rt_lsn = cpu_to_be64(bip->bli_item.li_lsn);
-+	xfs_buf_update_cksum(bp, XFS_RTBUF_CRC_OFF);
- }
- 
- const struct xfs_buf_ops xfs_rtbuf_ops = {
-@@ -48,6 +104,14 @@ const struct xfs_buf_ops xfs_rtbuf_ops = {
- 	.verify_write = xfs_rtbuf_verify_write,
- };
- 
-+const struct xfs_buf_ops xfs_rtbitmap_buf_ops = {
-+	.name		= "xfs_rtbitmap",
-+	.magic		= { 0, cpu_to_be32(XFS_RTBITMAP_MAGIC) },
-+	.verify_read	= xfs_rtbuf_verify_read,
-+	.verify_write	= xfs_rtbuf_verify_write,
-+	.verify_struct	= xfs_rtbuf_verify,
-+};
-+
- /*
-  * Get a buffer for the bitmap or summary file block specified.
-  * The buffer is returned read and locked.
-@@ -81,13 +145,26 @@ xfs_rtbuf_get(
- 	ASSERT(map.br_startblock != NULLFSBLOCK);
- 	error = xfs_trans_read_buf(mp, tp, mp->m_ddev_targp,
- 				   XFS_FSB_TO_DADDR(mp, map.br_startblock),
--				   mp->m_bsize, 0, &bp, &xfs_rtbuf_ops);
-+				   mp->m_bsize, 0, &bp,
-+				   xfs_rtblock_ops(mp, issum));
- 	if (xfs_metadata_is_sick(error))
- 		xfs_rt_mark_sick(mp, issum ? XFS_SICK_RT_SUMMARY :
- 					     XFS_SICK_RT_BITMAP);
- 	if (error)
- 		return error;
- 
-+	if (xfs_has_rtgroups(mp) && !issum) {
-+		struct xfs_rtbuf_blkinfo *hdr = bp->b_addr;
-+
-+		if (hdr->rt_owner != cpu_to_be64(ip->i_ino)) {
-+			xfs_buf_mark_corrupt(bp);
-+			xfs_trans_brelse(tp, bp);
-+			xfs_rt_mark_sick(mp, issum ? XFS_SICK_RT_SUMMARY :
-+						     XFS_SICK_RT_BITMAP);
-+			return -EFSCORRUPTED;
-+		}
-+	}
-+
- 	xfs_trans_buf_set_type(tp, bp, issum ? XFS_BLFT_RTSUMMARY_BUF
- 					     : XFS_BLFT_RTBITMAP_BUF);
- 	*bpp = bp;
-@@ -1205,7 +1282,12 @@ xfs_rtbitmap_blockcount(
- 	struct xfs_mount	*mp,
- 	xfs_rtbxlen_t		rtextents)
- {
--	return howmany_64(rtextents, NBBY * mp->m_sb.sb_blocksize);
-+	unsigned int		rbmblock_bytes = mp->m_sb.sb_blocksize;
-+
-+	if (xfs_has_rtgroups(mp))
-+		rbmblock_bytes -= sizeof(struct xfs_rtbuf_blkinfo);
-+
-+	return howmany_64(rtextents, NBBY * rbmblock_bytes);
- }
- 
- /*
-diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
-index f6a2a48973ab..c1f740fd27b8 100644
---- a/fs/xfs/libxfs/xfs_rtbitmap.h
-+++ b/fs/xfs/libxfs/xfs_rtbitmap.h
-@@ -100,6 +100,9 @@ xfs_rtx_to_rbmblock(
- 	struct xfs_mount	*mp,
- 	xfs_rtxnum_t		rtx)
- {
-+	if (xfs_has_rtgroups(mp))
-+		return div_u64(rtx, mp->m_rtx_per_rbmblock);
-+
- 	return rtx >> mp->m_blkbit_log;
- }
- 
-@@ -109,6 +112,13 @@ xfs_rtx_to_rbmword(
- 	struct xfs_mount	*mp,
- 	xfs_rtxnum_t		rtx)
- {
-+	if (xfs_has_rtgroups(mp)) {
-+		unsigned int	mod;
-+
-+		div_u64_rem(rtx >> XFS_NBWORDLOG, mp->m_blockwsize, &mod);
-+		return mod;
-+	}
-+
- 	return (rtx >> XFS_NBWORDLOG) & (mp->m_blockwsize - 1);
- }
- 
-@@ -118,16 +128,24 @@ xfs_rbmblock_to_rtx(
- 	struct xfs_mount	*mp,
- 	xfs_fileoff_t		rbmoff)
- {
-+	if (xfs_has_rtgroups(mp))
-+		return rbmoff * mp->m_rtx_per_rbmblock;
-+
- 	return rbmoff << mp->m_blkbit_log;
- }
- 
- /* Return a pointer to a bitmap word within a rt bitmap block buffer. */
- static inline union xfs_rtword_ondisk *
- xfs_rbmbuf_wordptr(
-+	struct xfs_mount	*mp,
- 	void			*buf,
- 	unsigned int		rbmword)
- {
- 	union xfs_rtword_ondisk	*wordp = buf;
-+	struct xfs_rtbuf_blkinfo *hdr = buf;
-+
-+	if (xfs_has_rtgroups(mp))
-+		wordp = (union xfs_rtword_ondisk *)(hdr + 1);
- 
- 	return &wordp[rbmword];
- }
-@@ -138,7 +156,7 @@ xfs_rbmblock_wordptr(
- 	struct xfs_buf		*bp,
- 	unsigned int		rbmword)
- {
--	return xfs_rbmbuf_wordptr(bp->b_addr, rbmword);
-+	return xfs_rbmbuf_wordptr(bp->b_mount, bp->b_addr, rbmword);
- }
- 
- /*
-@@ -200,6 +218,16 @@ xfs_rsumblock_infoptr(
- 	return xfs_rsumbuf_infoptr(bp->b_addr, infoword);
- }
- 
-+static inline const struct xfs_buf_ops *
-+xfs_rtblock_ops(
-+	struct xfs_mount	*mp,
-+	bool			issum)
-+{
-+	if (xfs_has_rtgroups(mp) && !issum)
-+		return &xfs_rtbitmap_buf_ops;
-+	return &xfs_rtbuf_ops;
-+}
-+
- /*
-  * Functions for walking free space rtextents in the realtime bitmap.
-  */
-diff --git a/fs/xfs/libxfs/xfs_sb.c b/fs/xfs/libxfs/xfs_sb.c
-index ee4e59453edc..dbbea5b86f27 100644
---- a/fs/xfs/libxfs/xfs_sb.c
-+++ b/fs/xfs/libxfs/xfs_sb.c
-@@ -518,10 +518,15 @@ xfs_validate_sb_common(
- 	} else {
- 		uint64_t	rexts;
- 		uint64_t	rbmblocks;
-+		unsigned int	rbmblock_bytes = sbp->sb_blocksize;
- 
- 		rexts = div_u64(sbp->sb_rblocks, sbp->sb_rextsize);
--		rbmblocks = howmany_64(sbp->sb_rextents,
--				       NBBY * sbp->sb_blocksize);
-+
-+		if (xfs_sb_is_v5(sbp) &&
-+		    (sbp->sb_features_incompat & XFS_SB_FEAT_INCOMPAT_RTGROUPS))
-+			rbmblock_bytes -= sizeof(struct xfs_rtbuf_blkinfo);
-+
-+		rbmblocks = howmany_64(sbp->sb_rextents, NBBY * rbmblock_bytes);
- 
- 		if (sbp->sb_rextents != rexts ||
- 		    sbp->sb_rextslog != xfs_highbit32(sbp->sb_rextents) ||
-@@ -1032,8 +1037,13 @@ xfs_sb_mount_common(
- 	mp->m_sectbb_log = sbp->sb_sectlog - BBSHIFT;
- 	mp->m_agno_log = xfs_highbit32(sbp->sb_agcount - 1) + 1;
- 	mp->m_blockmask = sbp->sb_blocksize - 1;
--	mp->m_blockwsize = sbp->sb_blocksize >> XFS_WORDLOG;
--	mp->m_blockwmask = mp->m_blockwsize - 1;
-+	if (xfs_has_rtgroups(mp))
-+		mp->m_blockwsize = (sbp->sb_blocksize -
-+					sizeof(struct xfs_rtbuf_blkinfo)) >>
-+					XFS_WORDLOG;
-+	else
-+		mp->m_blockwsize = sbp->sb_blocksize >> XFS_WORDLOG;
-+	mp->m_rtx_per_rbmblock = mp->m_blockwsize << XFS_NBWORDLOG;
- 	mp->m_rtxblklog = log2_if_power2(sbp->sb_rextsize);
- 	mp->m_rtxblkmask = mask64_if_power2(sbp->sb_rextsize);
- 	mp->m_rgblklog = log2_if_power2(sbp->sb_rgblocks);
-diff --git a/fs/xfs/libxfs/xfs_shared.h b/fs/xfs/libxfs/xfs_shared.h
-index bcdf298889af..1c86163915cf 100644
---- a/fs/xfs/libxfs/xfs_shared.h
-+++ b/fs/xfs/libxfs/xfs_shared.h
-@@ -38,6 +38,7 @@ extern const struct xfs_buf_ops xfs_inode_buf_ops;
- extern const struct xfs_buf_ops xfs_inode_buf_ra_ops;
- extern const struct xfs_buf_ops xfs_refcountbt_buf_ops;
- extern const struct xfs_buf_ops xfs_rmapbt_buf_ops;
-+extern const struct xfs_buf_ops xfs_rtbitmap_buf_ops;
- extern const struct xfs_buf_ops xfs_rtbuf_ops;
- extern const struct xfs_buf_ops xfs_rtsb_buf_ops;
- extern const struct xfs_buf_ops xfs_sb_buf_ops;
-diff --git a/fs/xfs/xfs_buf_item_recover.c b/fs/xfs/xfs_buf_item_recover.c
-index 6587d18b21c3..4dcd5d9d2c7c 100644
---- a/fs/xfs/xfs_buf_item_recover.c
-+++ b/fs/xfs/xfs_buf_item_recover.c
-@@ -23,6 +23,7 @@
- #include "xfs_dir2.h"
+ /* i: Repair this metadata. */
+ #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 1b48726fcc65..b63b5c016841 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -34,6 +34,7 @@
  #include "xfs_quota.h"
- #include "xfs_rtgroup.h"
-+#include "xfs_rtbitmap.h"
- 
- /*
-  * This is the number of entries in the l_buf_cancel_table used during
-@@ -391,9 +392,15 @@ xlog_recover_validate_buf_type(
- 		break;
- #ifdef CONFIG_XFS_RT
- 	case XFS_BLFT_RTBITMAP_BUF:
-+		if (xfs_has_rtgroups(mp) && magic32 != XFS_RTBITMAP_MAGIC) {
-+			warnmsg = "Bad rtbitmap magic!";
-+			break;
-+		}
-+		bp->b_ops = xfs_rtblock_ops(mp, false);
-+		break;
- 	case XFS_BLFT_RTSUMMARY_BUF:
- 		/* no magic numbers for verification of RT buffers */
--		bp->b_ops = &xfs_rtbuf_ops;
-+		bp->b_ops = xfs_rtblock_ops(mp, true);
- 		break;
- #endif /* CONFIG_XFS_RT */
- 	default:
-@@ -728,11 +735,20 @@ xlog_recover_get_buf_lsn(
- 	 * UUIDs, so we must recover them immediately.
- 	 */
- 	blft = xfs_blft_from_flags(buf_f);
--	if (blft == XFS_BLFT_RTBITMAP_BUF || blft == XFS_BLFT_RTSUMMARY_BUF)
-+	if (!xfs_has_rtgroups(mp) && blft == XFS_BLFT_RTBITMAP_BUF)
-+		goto recover_immediately;
-+	if (blft == XFS_BLFT_RTSUMMARY_BUF)
- 		goto recover_immediately;
- 
- 	magic32 = be32_to_cpu(*(__be32 *)blk);
- 	switch (magic32) {
-+	case XFS_RTBITMAP_MAGIC: {
-+		struct xfs_rtbuf_blkinfo	*hdr = blk;
-+
-+		lsn = be64_to_cpu(hdr->rt_lsn);
-+		uuid = &hdr->rt_uuid;
-+		break;
-+	}
- 	case XFS_ABTB_CRC_MAGIC:
- 	case XFS_ABTC_CRC_MAGIC:
- 	case XFS_ABTB_MAGIC:
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index 7f0a80a8dcd4..176b2e71da9e 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -123,7 +123,8 @@ typedef struct xfs_mount {
- 	int8_t			m_rgblklog;	/* log2 of rt group sz if possible */
- 	uint			m_blockmask;	/* sb_blocksize-1 */
- 	uint			m_blockwsize;	/* sb_blocksize in words */
--	uint			m_blockwmask;	/* blockwsize-1 */
-+	/* number of rt extents per rt bitmap block if rtgroups enabled */
-+	unsigned int		m_rtx_per_rbmblock;
- 	uint			m_alloc_mxr[2];	/* max alloc btree records */
- 	uint			m_alloc_mnr[2];	/* min alloc btree records */
- 	uint			m_bmap_dmxr[2];	/* max bmap btree records */
-diff --git a/fs/xfs/xfs_ondisk.h b/fs/xfs/xfs_ondisk.h
-index 61909355731d..17e541d35194 100644
---- a/fs/xfs/xfs_ondisk.h
-+++ b/fs/xfs/xfs_ondisk.h
-@@ -76,6 +76,7 @@ xfs_check_ondisk_structs(void)
- 	/* realtime structures */
- 	XFS_CHECK_STRUCT_SIZE(union xfs_rtword_ondisk,		4);
- 	XFS_CHECK_STRUCT_SIZE(union xfs_suminfo_ondisk,		4);
-+	XFS_CHECK_STRUCT_SIZE(struct xfs_rtbuf_blkinfo,		48);
- 
- 	/*
- 	 * m68k has problems with xfs_attr_leaf_name_remote_t, but we pad it to
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 9d8d91fa0ecf..9e013a8e3149 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -791,6 +791,42 @@ xfs_rtallocate_extent_size(
- 	return 0;
+ #include "xfs_swapext.h"
+ #include "xfs_rtbitmap.h"
++#include "xfs_rtgroup.h"
+ #include "scrub/scrub.h"
+ #include "scrub/common.h"
+ #include "scrub/trace.h"
+@@ -121,6 +122,17 @@ xchk_process_error(
+ 			XFS_SCRUB_OFLAG_CORRUPT, __return_address);
  }
  
-+/* Get a buffer for the block. */
-+static int
-+xfs_growfs_init_rtbuf(
-+	struct xfs_trans	*tp,
-+	struct xfs_inode	*ip,
-+	xfs_fsblock_t		fsbno,
-+	enum xfs_blft		buf_type)
++bool
++xchk_process_rt_error(
++	struct xfs_scrub	*sc,
++	xfs_rgnumber_t		rgno,
++	xfs_rgblock_t		rgbno,
++	int			*error)
 +{
-+	struct xfs_mount	*mp = tp->t_mountp;
-+	struct xfs_buf		*bp;
-+	xfs_daddr_t		d;
-+	int			error;
++	return __xchk_process_error(sc, rgno, rgbno, error,
++			XFS_SCRUB_OFLAG_CORRUPT, __return_address);
++}
 +
-+	d = XFS_FSB_TO_DADDR(mp, fsbno);
-+	error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d, mp->m_bsize, 0,
-+			&bp);
-+	if (error)
-+		return error;
+ bool
+ xchk_xref_process_error(
+ 	struct xfs_scrub	*sc,
+@@ -132,6 +144,17 @@ xchk_xref_process_error(
+ 			XFS_SCRUB_OFLAG_XFAIL, __return_address);
+ }
+ 
++bool
++xchk_xref_process_rt_error(
++	struct xfs_scrub	*sc,
++	xfs_rgnumber_t		rgno,
++	xfs_rgblock_t		rgbno,
++	int			*error)
++{
++	return __xchk_process_error(sc, rgno, rgbno, error,
++			XFS_SCRUB_OFLAG_XFAIL, __return_address);
++}
 +
-+	xfs_trans_buf_set_type(tp, bp, buf_type);
-+	bp->b_ops = xfs_rtblock_ops(mp, buf_type == XFS_BLFT_RTSUMMARY_BUF);
-+	memset(bp->b_addr, 0, mp->m_sb.sb_blocksize);
+ /* Check for operational errors for a file offset. */
+ static bool
+ __xchk_fblock_process_error(
+@@ -691,6 +714,7 @@ xchk_rt_init(
+ 					 XCHK_RTLOCK_BITMAP_SHARED)) < 2);
+ 	ASSERT(hweight32(rtlock_flags & (XCHK_RTLOCK_SUMMARY |
+ 					 XCHK_RTLOCK_SUMMARY_SHARED)) < 2);
++	ASSERT(sr->rtg == NULL);
+ 
+ 	if (rtlock_flags & XCHK_RTLOCK_BITMAP)
+ 		xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_EXCL);
+@@ -714,6 +738,8 @@ xchk_rt_unlock(
+ 	struct xfs_scrub	*sc,
+ 	struct xchk_rt		*sr)
+ {
++	ASSERT(sr->rtg == NULL);
 +
-+	if (xfs_has_rtgroups(mp) && buf_type == XFS_BLFT_RTBITMAP_BUF) {
-+		struct xfs_rtbuf_blkinfo	*hdr = bp->b_addr;
+ 	if (!sr->rtlock_flags)
+ 		return;
+ 
+@@ -730,6 +756,68 @@ xchk_rt_unlock(
+ 	sr->rtlock_flags = 0;
+ }
+ 
++#ifdef CONFIG_XFS_RT
++/*
++ * For scrubbing a realtime group, grab all the in-core resources we'll need to
++ * check the metadata, which means taking the ILOCK of the realtime group's
++ * metadata inodes.  Callers must not join these inodes to the transaction with
++ * non-zero lockflags or concurrency problems will result.  The @rtglock_flags
++ * argument takes XFS_RTGLOCK_* flags.
++ */
++int
++xchk_rtgroup_init(
++	struct xfs_scrub	*sc,
++	xfs_rgnumber_t		rgno,
++	struct xchk_rt		*sr,
++	unsigned int		rtglock_flags)
++{
++	ASSERT(sr->rtg == NULL);
++	ASSERT(sr->rtlock_flags == 0);
 +
-+		hdr->rt_magic = cpu_to_be32(XFS_RTBITMAP_MAGIC);
-+		hdr->rt_owner = cpu_to_be64(ip->i_ino);
-+		hdr->rt_blkno = cpu_to_be64(d);
-+		uuid_copy(&hdr->rt_uuid, &mp->m_sb.sb_meta_uuid);
-+	}
++	sr->rtg = xfs_rtgroup_get(sc->mp, rgno);
++	if (!sr->rtg)
++		return -ENOENT;
 +
-+	xfs_trans_log_buf(tp, bp, 0, mp->m_sb.sb_blocksize - 1);
++	xfs_rtgroup_lock(NULL, sr->rtg, rtglock_flags);
++	sr->rtlock_flags = rtglock_flags;
 +	return 0;
 +}
 +
- /*
-  * Allocate space to the bitmap or summary file, and zero it, for growfs.
-  */
-@@ -802,8 +838,6 @@ xfs_growfs_rt_alloc(
- 	struct xfs_inode	*ip)		/* inode (bitmap/summary) */
- {
- 	xfs_fileoff_t		bno;		/* block number in file */
--	struct xfs_buf		*bp;	/* temporary buffer for zeroing */
--	xfs_daddr_t		d;		/* disk block address */
- 	int			error;		/* error return value */
- 	xfs_fsblock_t		fsbno;		/* filesystem block for bno */
- 	struct xfs_bmbt_irec	map;		/* block map output */
-@@ -878,19 +912,11 @@ xfs_growfs_rt_alloc(
- 			 */
- 			xfs_ilock(ip, XFS_ILOCK_EXCL);
- 			xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
--			/*
--			 * Get a buffer for the block.
--			 */
--			d = XFS_FSB_TO_DADDR(mp, fsbno);
--			error = xfs_trans_get_buf(tp, mp->m_ddev_targp, d,
--					mp->m_bsize, 0, &bp);
++/*
++ * Unlock the realtime group.  This must be done /after/ committing (or
++ * cancelling) the scrub transaction.
++ */
++void
++xchk_rtgroup_unlock(
++	struct xfs_scrub	*sc,
++	struct xchk_rt		*sr)
++{
++	ASSERT(sr->rtg != NULL);
 +
-+			error = xfs_growfs_init_rtbuf(tp, ip, fsbno, buf_type);
- 			if (error)
- 				goto out_trans_cancel;
++	if (sr->rtlock_flags) {
++		xfs_rtgroup_unlock(sr->rtg, sr->rtlock_flags);
++		sr->rtlock_flags = 0;
++	}
++}
++
++/*
++ * Unlock the realtime group and release its resources.  This must be done
++ * /after/ committing (or cancelling) the scrub transaction.
++ */
++void
++xchk_rtgroup_free(
++	struct xfs_scrub	*sc,
++	struct xchk_rt		*sr)
++{
++	ASSERT(sr->rtg != NULL);
++
++	xchk_rtgroup_unlock(sc, sr);
++
++	xfs_rtgroup_put(sr->rtg);
++	sr->rtg = NULL;
++}
++#endif /* CONFIG_XFS_RT */
++
+ /* Per-scrubber setup functions */
  
--			xfs_trans_buf_set_type(tp, bp, buf_type);
--			bp->b_ops = &xfs_rtbuf_ops;
--			memset(bp->b_addr, 0, mp->m_sb.sb_blocksize);
--			xfs_trans_log_buf(tp, bp, 0, mp->m_sb.sb_blocksize - 1);
- 			/*
- 			 * Commit the transaction.
- 			 */
-@@ -1159,10 +1185,10 @@ xfs_growfs_rt(
- 	 * Skip the current block if it is exactly full.
- 	 * This also deals with the case where there were no rtextents before.
- 	 */
--	for (bmbno = sbp->sb_rbmblocks -
--		     ((sbp->sb_rextents & ((1 << mp->m_blkbit_log) - 1)) != 0);
--	     bmbno < nrbmblocks;
--	     bmbno++) {
-+	bmbno = sbp->sb_rbmblocks;
-+	if (xfs_rtx_to_rbmword(mp, sbp->sb_rextents) != 0)
-+		bmbno--;
-+	for (; bmbno < nrbmblocks; bmbno++) {
- 		struct xfs_trans	*tp;
- 		struct xfs_rtgroup	*rtg;
- 		xfs_rfsblock_t		nrblocks_step;
-@@ -1177,7 +1203,7 @@ xfs_growfs_rt(
- 		nsbp->sb_rextsize = in->extsize;
- 		nmp->m_rtxblklog = -1; /* don't use shift or masking */
- 		nsbp->sb_rbmblocks = bmbno + 1;
--		nrblocks_step = (bmbno + 1) * NBBY * nsbp->sb_blocksize *
-+		nrblocks_step = (bmbno + 1) * mp->m_rtx_per_rbmblock *
- 				nsbp->sb_rextsize;
- 		nsbp->sb_rblocks = min(nrblocks, nrblocks_step);
- 		nsbp->sb_rextents = xfs_rtb_to_rtxt(nmp, nsbp->sb_rblocks);
+ void
+diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
+index e41224065421..96bb8bc676e7 100644
+--- a/fs/xfs/scrub/common.h
++++ b/fs/xfs/scrub/common.h
+@@ -37,11 +37,15 @@ void xchk_trans_cancel(struct xfs_scrub *sc);
+ 
+ bool xchk_process_error(struct xfs_scrub *sc, xfs_agnumber_t agno,
+ 		xfs_agblock_t bno, int *error);
++bool xchk_process_rt_error(struct xfs_scrub *sc, xfs_rgnumber_t rgno,
++		xfs_rgblock_t rgbno, int *error);
+ bool xchk_fblock_process_error(struct xfs_scrub *sc, int whichfork,
+ 		xfs_fileoff_t offset, int *error);
+ 
+ bool xchk_xref_process_error(struct xfs_scrub *sc,
+ 		xfs_agnumber_t agno, xfs_agblock_t bno, int *error);
++bool xchk_xref_process_rt_error(struct xfs_scrub *sc,
++		xfs_rgnumber_t rgno, xfs_rgblock_t rgbno, int *error);
+ bool xchk_fblock_xref_process_error(struct xfs_scrub *sc,
+ 		int whichfork, xfs_fileoff_t offset, int *error);
+ 
+@@ -78,6 +82,11 @@ int xchk_checkpoint_log(struct xfs_mount *mp);
+ bool xchk_should_check_xref(struct xfs_scrub *sc, int *error,
+ 			   struct xfs_btree_cur **curpp);
+ 
++static inline int xchk_setup_nothing(struct xfs_scrub *sc)
++{
++	return -ENOENT;
++}
++
+ /* Setup functions */
+ int xchk_setup_agheader(struct xfs_scrub *sc);
+ int xchk_setup_fs(struct xfs_scrub *sc);
+@@ -95,17 +104,11 @@ int xchk_setup_parent(struct xfs_scrub *sc);
+ #ifdef CONFIG_XFS_RT
+ int xchk_setup_rtbitmap(struct xfs_scrub *sc);
+ int xchk_setup_rtsummary(struct xfs_scrub *sc);
++int xchk_setup_rgsuperblock(struct xfs_scrub *sc);
+ #else
+-static inline int
+-xchk_setup_rtbitmap(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
+-static inline int
+-xchk_setup_rtsummary(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
++# define xchk_setup_rtbitmap		xchk_setup_nothing
++# define xchk_setup_rtsummary		xchk_setup_nothing
++# define xchk_setup_rgsuperblock	xchk_setup_nothing
+ #endif
+ #ifdef CONFIG_XFS_QUOTA
+ int xchk_ino_dqattach(struct xfs_scrub *sc);
+@@ -117,16 +120,8 @@ xchk_ino_dqattach(struct xfs_scrub *sc)
+ {
+ 	return 0;
+ }
+-static inline int
+-xchk_setup_quota(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
+-static inline int
+-xchk_setup_quotacheck(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
++# define xchk_setup_quota		xchk_setup_nothing
++# define xchk_setup_quotacheck		xchk_setup_nothing
+ #endif
+ int xchk_setup_fscounters(struct xfs_scrub *sc);
+ int xchk_setup_nlinks(struct xfs_scrub *sc);
+@@ -169,6 +164,17 @@ xchk_ag_init_existing(
+ void xchk_rt_init(struct xfs_scrub *sc, struct xchk_rt *sr,
+ 		unsigned int xchk_rtlock_flags);
+ void xchk_rt_unlock(struct xfs_scrub *sc, struct xchk_rt *sr);
++
++#ifdef CONFIG_XFS_RT
++int xchk_rtgroup_init(struct xfs_scrub *sc, xfs_rgnumber_t rgno,
++		struct xchk_rt *sr, unsigned int rtglock_flags);
++void xchk_rtgroup_unlock(struct xfs_scrub *sc, struct xchk_rt *sr);
++void xchk_rtgroup_free(struct xfs_scrub *sc, struct xchk_rt *sr);
++#else
++# define xchk_rtgroup_init(sc, rgno, sr, lockflags)	(-ENOSYS)
++# define xchk_rtgroup_free(sc, sr)			((void)0)
++#endif /* CONFIG_XFS_RT */
++
+ int xchk_ag_read_headers(struct xfs_scrub *sc, xfs_agnumber_t agno,
+ 		struct xchk_ag *sa);
+ void xchk_ag_btcur_free(struct xchk_ag *sa);
+diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
+index 9a8d4c348cc9..a71d4d9087b2 100644
+--- a/fs/xfs/scrub/health.c
++++ b/fs/xfs/scrub/health.c
+@@ -112,6 +112,7 @@ static const struct xchk_health_map type_to_health_flag[XFS_SCRUB_TYPE_NR] = {
+ 	[XFS_SCRUB_TYPE_FSCOUNTERS]	= { XHG_FS,  XFS_SICK_FS_COUNTERS },
+ 	[XFS_SCRUB_TYPE_QUOTACHECK]	= { XHG_FS,  XFS_SICK_FS_QUOTACHECK },
+ 	[XFS_SCRUB_TYPE_NLINKS]		= { XHG_FS,  XFS_SICK_FS_NLINKS },
++	[XFS_SCRUB_TYPE_RGSUPER]	= { XHG_RTGROUP, XFS_SICK_RT_SUPER },
+ };
+ 
+ /* Return the health status mask for this scrub type. */
+diff --git a/fs/xfs/scrub/rgsuper.c b/fs/xfs/scrub/rgsuper.c
+new file mode 100644
+index 000000000000..a85ad580aa62
+--- /dev/null
++++ b/fs/xfs/scrub/rgsuper.c
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2022 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <djwong@kernel.org>
++ */
++#include "xfs.h"
++#include "xfs_fs.h"
++#include "xfs_shared.h"
++#include "xfs_format.h"
++#include "xfs_trans_resv.h"
++#include "xfs_mount.h"
++#include "xfs_rtgroup.h"
++#include "scrub/scrub.h"
++#include "scrub/common.h"
++
++/* Set us up with a transaction and an empty context. */
++int
++xchk_setup_rgsuperblock(
++	struct xfs_scrub	*sc)
++{
++	return xchk_trans_alloc(sc, 0);
++}
++
++/* Cross-reference with the other rt metadata. */
++STATIC void
++xchk_rgsuperblock_xref(
++	struct xfs_scrub	*sc)
++{
++	struct xfs_mount	*mp = sc->mp;
++	xfs_rgnumber_t		rgno = sc->sr.rtg->rtg_rgno;
++	xfs_rtblock_t		rtbno;
++
++	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
++		return;
++
++	rtbno = xfs_rgbno_to_rtb(mp, rgno, 0);
++	xchk_xref_is_used_rt_space(sc, rtbno, 1);
++}
++
++int
++xchk_rgsuperblock(
++	struct xfs_scrub	*sc)
++{
++	struct xfs_buf		*bp;
++	xfs_rgnumber_t		rgno = sc->sm->sm_agno;
++	int			error;
++
++	/*
++	 * Grab an active reference to the rtgroup structure.  If we can't get
++	 * it, we're racing with something that's tearing down the group, so
++	 * signal that the group no longer exists.  Take the rtbitmap in shared
++	 * mode so that the group can't change while we're doing things.
++	 */
++	error = xchk_rtgroup_init(sc, rgno, &sc->sr, XFS_RTGLOCK_BITMAP_SHARED);
++	if (error)
++		return error;
++
++	/*
++	 * If this is the primary rtgroup superblock, we know it passed the
++	 * verifier checks at mount time and do not need to load the buffer
++	 * again.
++	 */
++	if (sc->sr.rtg->rtg_rgno == 0) {
++		xchk_rgsuperblock_xref(sc);
++		return 0;
++	}
++
++	/* The secondary rt super is checked by the read verifier. */
++	error = xfs_buf_read_uncached(sc->mp->m_rtdev_targp, XFS_RTSB_DADDR,
++			XFS_FSB_TO_BB(sc->mp, 1), 0, &bp, &xfs_rtsb_buf_ops);
++	if (!xchk_process_rt_error(sc, rgno, 0, &error))
++		return error;
++
++	xchk_rgsuperblock_xref(sc);
++	xfs_buf_relse(bp);
++	return 0;
++}
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 1b3820b30384..6c54f00b516c 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -189,7 +189,10 @@ xchk_teardown(
+ 			xfs_trans_cancel(sc->tp);
+ 		sc->tp = NULL;
+ 	}
+-	xchk_rt_unlock(sc, &sc->sr);
++	if (sc->sr.rtg)
++		xchk_rtgroup_free(sc, &sc->sr);
++	else
++		xchk_rt_unlock(sc, &sc->sr);
+ 	if (sc->ip) {
+ 		if (sc->ilock_flags)
+ 			xchk_iunlock(sc, sc->ilock_flags);
+@@ -406,6 +409,13 @@ static const struct xchk_meta_ops meta_scrub_ops[] = {
+ 		.scrub	= xchk_health_record,
+ 		.repair = xrep_notsupported,
+ 	},
++	[XFS_SCRUB_TYPE_RGSUPER] = {	/* realtime group superblock */
++		.type	= ST_RTGROUP,
++		.setup	= xchk_setup_rgsuperblock,
++		.scrub	= xchk_rgsuperblock,
++		.has	= xfs_has_rtgroups,
++		.repair = xrep_notsupported,
++	},
+ };
+ 
+ static int
+@@ -453,6 +463,14 @@ xchk_validate_inputs(
+ 		if (sm->sm_agno || (sm->sm_gen && !sm->sm_ino))
+ 			goto out;
+ 		break;
++	case ST_RTGROUP:
++		if (sm->sm_ino || sm->sm_gen)
++			goto out;
++		if (!xfs_has_rtgroups(mp) && sm->sm_agno != 0)
++			goto out;
++		if (xfs_has_rtgroups(mp) && sm->sm_agno >= mp->m_sb.sb_rgcount)
++			goto out;
++		break;
+ 	default:
+ 		goto out;
+ 	}
+diff --git a/fs/xfs/scrub/scrub.h b/fs/xfs/scrub/scrub.h
+index 38437104fc86..6e5b96b6db81 100644
+--- a/fs/xfs/scrub/scrub.h
++++ b/fs/xfs/scrub/scrub.h
+@@ -23,6 +23,7 @@ enum xchk_type {
+ 	ST_PERAG,	/* per-AG metadata */
+ 	ST_FS,		/* per-FS metadata */
+ 	ST_INODE,	/* per-inode metadata */
++	ST_RTGROUP,	/* rtgroup metadata */
+ };
+ 
+ struct xchk_meta_ops {
+@@ -69,7 +70,13 @@ struct xchk_ag {
+ 
+ /* Inode lock state for the RT volume. */
+ struct xchk_rt {
+-	/* XCHK_RTLOCK_* lock state */
++	/* incore rtgroup, if applicable */
++	struct xfs_rtgroup	*rtg;
++
++	/*
++	 * XCHK_RTLOCK_* lock state if rtg == NULL, or XFS_RTGLOCK_* lock state
++	 * if rtg != NULL.
++	 */
+ 	unsigned int		rtlock_flags;
+ };
+ 
+@@ -153,6 +160,11 @@ struct xfs_scrub {
+ 				 XCHK_FSHOOKS_NLINKS | \
+ 				 XCHK_FSHOOKS_RMAP)
+ 
++static inline int xchk_nothing(struct xfs_scrub *sc)
++{
++	return -ENOENT;
++}
++
+ /* Metadata scrubbers */
+ int xchk_tester(struct xfs_scrub *sc);
+ int xchk_superblock(struct xfs_scrub *sc);
+@@ -176,32 +188,18 @@ int xchk_parent(struct xfs_scrub *sc);
+ #ifdef CONFIG_XFS_RT
+ int xchk_rtbitmap(struct xfs_scrub *sc);
+ int xchk_rtsummary(struct xfs_scrub *sc);
++int xchk_rgsuperblock(struct xfs_scrub *sc);
+ #else
+-static inline int
+-xchk_rtbitmap(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
+-static inline int
+-xchk_rtsummary(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
++# define xchk_rtbitmap		xchk_nothing
++# define xchk_rtsummary		xchk_nothing
++# define xchk_rgsuperblock	xchk_nothing
+ #endif
+ #ifdef CONFIG_XFS_QUOTA
+ int xchk_quota(struct xfs_scrub *sc);
+ int xchk_quotacheck(struct xfs_scrub *sc);
+ #else
+-static inline int
+-xchk_quota(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
+-static inline int
+-xchk_quotacheck(struct xfs_scrub *sc)
+-{
+-	return -ENOENT;
+-}
++# define xchk_quota		xchk_nothing
++# define xchk_quotacheck	xchk_nothing
+ #endif
+ int xchk_fscounters(struct xfs_scrub *sc);
+ int xchk_nlinks(struct xfs_scrub *sc);
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 749cf4333c8a..a88ad16c90db 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -74,6 +74,7 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_FSCOUNTERS);
+ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_QUOTACHECK);
+ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_NLINKS);
+ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_HEALTHY);
++TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_RGSUPER);
+ 
+ #define XFS_SCRUB_TYPE_STRINGS \
+ 	{ XFS_SCRUB_TYPE_PROBE,		"probe" }, \
+@@ -103,7 +104,8 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_HEALTHY);
+ 	{ XFS_SCRUB_TYPE_FSCOUNTERS,	"fscounters" }, \
+ 	{ XFS_SCRUB_TYPE_QUOTACHECK,	"quotacheck" }, \
+ 	{ XFS_SCRUB_TYPE_NLINKS,	"nlinks" }, \
+-	{ XFS_SCRUB_TYPE_HEALTHY,	"healthy" }
++	{ XFS_SCRUB_TYPE_HEALTHY,	"healthy" }, \
++	{ XFS_SCRUB_TYPE_RGSUPER,	"rgsuper" }
+ 
+ #define XFS_SCRUB_FLAG_STRINGS \
+ 	{ XFS_SCRUB_IFLAG_REPAIR,		"repair" }, \
 
