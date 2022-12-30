@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF68C65A039
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:06:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36B4465A036
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:05:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235857AbiLaBGN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:06:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40814 "EHLO
+        id S235846AbiLaBF2 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:05:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235809AbiLaBGM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:06:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D276064F9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:06:11 -0800 (PST)
+        with ESMTP id S235779AbiLaBF1 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:05:27 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10AC1DF10
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:05:26 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72C3D61D33
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:06:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1038C433EF;
-        Sat, 31 Dec 2022 01:06:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5CE10B81DE6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:05:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21781C433EF;
+        Sat, 31 Dec 2022 01:05:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448770;
-        bh=jmAyw5GmyH2zqW2aAmCcqVxubT1Dk2vXyMCuAnh2CrM=;
+        s=k20201202; t=1672448724;
+        bh=CnwnnU4y5oIN7jIJL4JAch/MzwrsNkqYAcvtqkLjWC0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TK92Xyf0v8vi6XmZT6uIKezWBnL6aZuy+TDRjjVR678CE2ublRllIjOoyjMfrKKLW
-         dqu0y4rRkkGQtmCnCcgdeknfqePbSvJm9AhynMEIZIP6g2lfryhyF8M7smjHNggkRb
-         IMtUAN7YsEGdj0TtBdgVHgIb7F5vUmQofF3p8G7uIIzl8OrJZFtBd//d1LCobyULds
-         41CoGiqr4ZZ1vmvpnSqStS+fN7Tlh+z+I/wWaZd+O+QrXi4tfSTNEdyo9FNvK9lGoA
-         4NAkO9JSaGVGjckCQZjg9YB0i3UKxdPjRxHh68ZcLGELXOprSHOxMpn32RQc+iSSs2
-         ts62TridvVMUA==
-Subject: [PATCH 04/20] xfs: hoist project id get/set functions to libxfs
+        b=O+5rxEV9MfM8hldHb3ypFbolc/ZeUwkScf3EIGjA3SBpx4lZVxb5gWduF963k7QUb
+         MqrlWSToyHdv/rat/HRyvFIR+xM83ZBsLs5pCS+IdJwSbRnjZzn/HU2WIcZEYfe3Tn
+         z7/D61pQRpr0w5byM7Q4HUaVipdaYCEw/C8ksK48YPr1fm8P2vN3pwU6ezmTkFdzqF
+         fuzdHNuwm+TorMfPm+g2ZublPt7Rb6/1V/BD2OAbmjDDyb7KY9/mRlVgSCcdTivMJe
+         8sl51gvIO/mVCbwibne8o5XP23zWdAIt6qsZapy/qm6FtUKKGUSzVmiP3U46CUP0s9
+         pxXK2H84a3NEw==
+Subject: [PATCH 01/20] xfs: move inode copy-on-write predicates to
+ xfs_inode.[ch]
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:18 -0800
-Message-ID: <167243863889.707335.1570079499343467331.stgit@magnolia>
+Message-ID: <167243863844.707335.18204528114075088956.stgit@magnolia>
 In-Reply-To: <167243863809.707335.15895322495460356300.stgit@magnolia>
 References: <167243863809.707335.15895322495460356300.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,78 +55,69 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Move the project id get and set functions into libxfs.
+Move these inode predicate functions to xfs_inode.[ch] since they're not
+reflink functions.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_inode_util.c |   11 +++++++++++
- fs/xfs/libxfs/xfs_inode_util.h |    2 ++
- fs/xfs/xfs_inode.h             |    9 ---------
- fs/xfs/xfs_linux.h             |    2 --
- 4 files changed, 13 insertions(+), 11 deletions(-)
+ fs/xfs/xfs_inode.c   |    7 +++++++
+ fs/xfs/xfs_inode.h   |    7 +++++++
+ fs/xfs/xfs_reflink.h |   10 ----------
+ 3 files changed, 14 insertions(+), 10 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_inode_util.c b/fs/xfs/libxfs/xfs_inode_util.c
-index ed5e1a9b4b8c..2624d18922c0 100644
---- a/fs/xfs/libxfs/xfs_inode_util.c
-+++ b/fs/xfs/libxfs/xfs_inode_util.c
-@@ -122,3 +122,14 @@ xfs_ip2xflags(
- 		flags |= FS_XFLAG_HASATTR;
- 	return flags;
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index af4ac808a0e0..abf8844df017 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -3859,3 +3859,10 @@ xfs_inode_alloc_unitsize(
+ 
+ 	return XFS_FSB_TO_B(ip->i_mount, blocks);
  }
 +
-+#define XFS_PROJID_DEFAULT	0
-+
-+prid_t
-+xfs_get_initial_prid(struct xfs_inode *dp)
++bool
++xfs_is_always_cow_inode(
++	struct xfs_inode	*ip)
 +{
-+	if (dp->i_diflags & XFS_DIFLAG_PROJINHERIT)
-+		return dp->i_projid;
-+
-+	return XFS_PROJID_DEFAULT;
++	return ip->i_mount->m_always_cow && xfs_has_reflink(ip->i_mount);
 +}
-diff --git a/fs/xfs/libxfs/xfs_inode_util.h b/fs/xfs/libxfs/xfs_inode_util.h
-index 6ad1898a0f73..f7e4d5a8235d 100644
---- a/fs/xfs/libxfs/xfs_inode_util.h
-+++ b/fs/xfs/libxfs/xfs_inode_util.h
-@@ -11,4 +11,6 @@ uint64_t	xfs_flags2diflags2(struct xfs_inode *ip, unsigned int xflags);
- uint32_t	xfs_dic2xflags(struct xfs_inode *ip);
- uint32_t	xfs_ip2xflags(struct xfs_inode *ip);
- 
-+prid_t		xfs_get_initial_prid(struct xfs_inode *dp);
-+
- #endif /* __XFS_INODE_UTIL_H__ */
 diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 2f6072d78444..4803904686f5 100644
+index be704174fa4f..926f2d74413c 100644
 --- a/fs/xfs/xfs_inode.h
 +++ b/fs/xfs/xfs_inode.h
-@@ -255,15 +255,6 @@ xfs_iflags_test_and_set(xfs_inode_t *ip, unsigned short flags)
- 	return ret;
+@@ -276,6 +276,13 @@ static inline bool xfs_is_metadata_inode(struct xfs_inode *ip)
+ 		xfs_is_quota_inode(&mp->m_sb, ip->i_ino);
  }
  
--static inline prid_t
--xfs_get_initial_prid(struct xfs_inode *dp)
++bool xfs_is_always_cow_inode(struct xfs_inode *ip);
++
++static inline bool xfs_is_cow_inode(struct xfs_inode *ip)
++{
++	return xfs_is_reflink_inode(ip) || xfs_is_always_cow_inode(ip);
++}
++
+ /*
+  * Check if an inode has any data in the COW fork.  This might be often false
+  * even for inodes with the reflink flag when there is no pending COW operation.
+diff --git a/fs/xfs/xfs_reflink.h b/fs/xfs/xfs_reflink.h
+index 65c5dfe17ecf..fb55e4ce49fa 100644
+--- a/fs/xfs/xfs_reflink.h
++++ b/fs/xfs/xfs_reflink.h
+@@ -6,16 +6,6 @@
+ #ifndef __XFS_REFLINK_H
+ #define __XFS_REFLINK_H 1
+ 
+-static inline bool xfs_is_always_cow_inode(struct xfs_inode *ip)
 -{
--	if (dp->i_diflags & XFS_DIFLAG_PROJINHERIT)
--		return dp->i_projid;
--
--	return XFS_PROJID_DEFAULT;
+-	return ip->i_mount->m_always_cow && xfs_has_reflink(ip->i_mount);
 -}
 -
- static inline bool xfs_is_reflink_inode(struct xfs_inode *ip)
- {
- 	return ip->i_diflags2 & XFS_DIFLAG2_REFLINK;
-diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
-index 7e9bf03c80a3..2cdb3411aabb 100644
---- a/fs/xfs/xfs_linux.h
-+++ b/fs/xfs/xfs_linux.h
-@@ -134,8 +134,6 @@ typedef __u32			xfs_nlink_t;
-  */
- #define __this_address	({ __label__ __here; __here: barrier(); &&__here; })
- 
--#define XFS_PROJID_DEFAULT	0
+-static inline bool xfs_is_cow_inode(struct xfs_inode *ip)
+-{
+-	return xfs_is_reflink_inode(ip) || xfs_is_always_cow_inode(ip);
+-}
 -
- #define howmany(x, y)	(((x)+((y)-1))/(y))
- 
- static inline void delay(long ticks)
+ extern int xfs_reflink_trim_around_shared(struct xfs_inode *ip,
+ 		struct xfs_bmbt_irec *irec, bool *shared);
+ int xfs_bmap_trim_cow(struct xfs_inode *ip, struct xfs_bmbt_irec *imap,
 
