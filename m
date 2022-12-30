@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6ACB065A117
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:59:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EE51659FC7
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:38:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236113AbiLaB7O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:59:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51168 "EHLO
+        id S235831AbiLaAiQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:38:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236108AbiLaB7N (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:59:13 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613CD1C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:59:12 -0800 (PST)
+        with ESMTP id S235822AbiLaAiP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:38:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD2B81E3FE
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:38:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F060161C63
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:59:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C34C433D2;
-        Sat, 31 Dec 2022 01:59:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 78A58B81E08
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:38:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD06C433EF;
+        Sat, 31 Dec 2022 00:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451951;
-        bh=60Aa8kLwcxl1JFcfdqnLAU0sQB63EmIk8WV/gAj7c7k=;
+        s=k20201202; t=1672447090;
+        bh=y+KQKroufgYQjwLEgOY3uqll077LBKS3Bmuz4IdOyuQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=squ3xetuE8lnO0Ng3C0Frp8XzHFjg39myXWYjDtkVeddn8VHQE/7r4iJr0SJrzhVV
-         jlPxk4rLg9JQi+9AUckt08rmnulLsXY0ETeTFaVZw5hW5+GvGU3PlSPSDu6b9gPwxQ
-         bKCxxk92zWuEeS6Mf0Q/4/tPzRPIWc0Exbh5Nc3D3MqXk7bZmOfxgEOwJqLBeAQ1HV
-         P8xKi7q1O1lRFIQp4PUCGj9FO8MLvO6Xc5QhevbBhYxqj2NKFVD/TSv3Eqpg7nGEn4
-         8I4NJpbsNir8XtZ/l66PMpnFwku5zmfjsnpZRsD5ZVhqWBGM0pIk6a7dKX2+SoqJYy
-         p+6Oe36dPzY8Q==
-Subject: [PATCH 1/9] vfs: explicitly pass the block size to the remap prep
- function
+        b=LRp5V/mGd/pLr1WUm8wkSvFoc8oiMGg+NyHfMeWT0pssY6kpJmm2Xg3h+h+mzuDu+
+         uO2BvtAzX5Rzua1oSueTG3c1X0WeV5+uUyOJDEv5xxiZi+tm7sdHYp1Npu/Wfg3CEq
+         oa6XxeWoG5oWTLY3Io6/CN5WV5CTk/Bki6tN1d23A3NYAcKPMZVnyMsl8d6KI3Q01D
+         m4MEJp6wFJ2Csgef1r8XgC3KgoB9Ios8uwW56N37r9vp0OAwaUUG8vcRYejpVS+KcI
+         MaKOFCVI5X1fIvLcr4YWCg3bES247JV3mjL8M3R49OgPApvct1j6scAf3nMIhOixLm
+         lsDX+Za/Uf3ww==
+Subject: [PATCH 4/4] xfs_scrub_all: failure reporting for the xfs_scrub_all
+ job
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:38 -0800
-Message-ID: <167243871817.718512.8634564486988370537.stgit@magnolia>
-In-Reply-To: <167243871792.718512.13170681692847163098.stgit@magnolia>
-References: <167243871792.718512.13170681692847163098.stgit@magnolia>
+Message-ID: <167243871844.718563.13357729046234850218.stgit@magnolia>
+In-Reply-To: <167243871794.718563.17643569431631339696.stgit@magnolia>
+References: <167243871794.718563.17643569431631339696.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,147 +55,177 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make it so that filesystems can pass an explicit blocksize to the remap
-prep function.  This enables filesystems whose fundamental allocation
-units are /not/ the same as the blocksize to ensure that the remapping
-checks are aligned properly.
+Create a failure reporting service for when xfs_scrub_all fails.  This
+shouldn't happen often, but let's report anyways.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/dax.c           |    5 ++++-
- fs/remap_range.c   |   30 ++++++++++++++++++------------
- include/linux/fs.h |    3 ++-
- 3 files changed, 24 insertions(+), 14 deletions(-)
+ scrub/Makefile                      |    1 +
+ scrub/xfs_scrub_all.service.in      |    1 +
+ scrub/xfs_scrub_all_fail.service.in |   67 +++++++++++++++++++++++++++++++++++
+ scrub/xfs_scrub_fail                |   33 ++++++++++++++---
+ 4 files changed, 96 insertions(+), 6 deletions(-)
+ create mode 100644 scrub/xfs_scrub_all_fail.service.in
 
 
-diff --git a/fs/dax.c b/fs/dax.c
-index c48a3a93ab29..9ec07a06f49c 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -2035,7 +2035,10 @@ int dax_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 			      loff_t *len, unsigned int remap_flags,
- 			      const struct iomap_ops *ops)
- {
-+	unsigned int blocksize = file_inode(file_out)->i_sb->s_blocksize;
+diff --git a/scrub/Makefile b/scrub/Makefile
+index 7434ac0ce4e..f2d0c1aa0bf 100644
+--- a/scrub/Makefile
++++ b/scrub/Makefile
+@@ -21,6 +21,7 @@ SYSTEMD_SERVICES=\
+ 	xfs_scrub_media@.service \
+ 	xfs_scrub_media_fail@.service \
+ 	xfs_scrub_all.service \
++	xfs_scrub_all_fail.service \
+ 	xfs_scrub_all.timer \
+ 	system-xfs_scrub.slice
+ OPTIONAL_TARGETS += $(SYSTEMD_SERVICES)
+diff --git a/scrub/xfs_scrub_all.service.in b/scrub/xfs_scrub_all.service.in
+index e831ad58eb8..c11d6a96037 100644
+--- a/scrub/xfs_scrub_all.service.in
++++ b/scrub/xfs_scrub_all.service.in
+@@ -5,6 +5,7 @@
+ 
+ [Unit]
+ Description=Online XFS Metadata Check for All Filesystems
++OnFailure=xfs_scrub_all_fail.service
+ ConditionACPower=true
+ Documentation=man:xfs_scrub_all(8)
+ After=paths.target multi-user.target network.target network-online.target systemd-networkd.service NetworkManager.service connman.service
+diff --git a/scrub/xfs_scrub_all_fail.service.in b/scrub/xfs_scrub_all_fail.service.in
+new file mode 100644
+index 00000000000..002d05b67de
+--- /dev/null
++++ b/scrub/xfs_scrub_all_fail.service.in
+@@ -0,0 +1,67 @@
++[Unit]
++Description=Online XFS Metadata Check for All Filesystems Failure Reporting
++Documentation=man:xfs_scrub_all(8)
 +
- 	return __generic_remap_file_range_prep(file_in, pos_in, file_out,
--					       pos_out, len, remap_flags, ops);
-+					       pos_out, len, remap_flags, ops,
-+					       blocksize);
- }
- EXPORT_SYMBOL_GPL(dax_remap_file_range_prep);
-diff --git a/fs/remap_range.c b/fs/remap_range.c
-index 469d53fb42e9..8a43038dc3e7 100644
---- a/fs/remap_range.c
-+++ b/fs/remap_range.c
-@@ -29,18 +29,18 @@
-  */
- static int generic_remap_checks(struct file *file_in, loff_t pos_in,
- 				struct file *file_out, loff_t pos_out,
--				loff_t *req_count, unsigned int remap_flags)
-+				loff_t *req_count, unsigned int remap_flags,
-+				unsigned int blocksize)
- {
- 	struct inode *inode_in = file_in->f_mapping->host;
- 	struct inode *inode_out = file_out->f_mapping->host;
- 	uint64_t count = *req_count;
- 	uint64_t bcount;
- 	loff_t size_in, size_out;
--	loff_t bs = inode_out->i_sb->s_blocksize;
- 	int ret;
- 
- 	/* The start of both ranges must be aligned to an fs block. */
--	if (!IS_ALIGNED(pos_in, bs) || !IS_ALIGNED(pos_out, bs))
-+	if (!IS_ALIGNED(pos_in, blocksize) || !IS_ALIGNED(pos_out, blocksize))
- 		return -EINVAL;
- 
- 	/* Ensure offsets don't wrap. */
-@@ -74,10 +74,10 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
- 	 */
- 	if (pos_in + count == size_in &&
- 	    (!(remap_flags & REMAP_FILE_DEDUP) || pos_out + count == size_out)) {
--		bcount = ALIGN(size_in, bs) - pos_in;
-+		bcount = ALIGN(size_in, blocksize) - pos_in;
- 	} else {
--		if (!IS_ALIGNED(count, bs))
--			count = ALIGN_DOWN(count, bs);
-+		if (!IS_ALIGNED(count, blocksize))
-+			count = ALIGN_DOWN(count, blocksize);
- 		bcount = count;
- 	}
- 
-@@ -125,9 +125,10 @@ static int generic_remap_check_len(struct inode *inode_in,
- 				   struct inode *inode_out,
- 				   loff_t pos_out,
- 				   loff_t *len,
--				   unsigned int remap_flags)
-+				   unsigned int remap_flags,
-+				   unsigned int blocksize)
- {
--	u64 blkmask = i_blocksize(inode_in) - 1;
-+	u64 blkmask = blocksize - 1;
- 	loff_t new_len = *len;
- 
- 	if ((*len & blkmask) == 0)
-@@ -268,7 +269,8 @@ int
- __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 				struct file *file_out, loff_t pos_out,
- 				loff_t *len, unsigned int remap_flags,
--				const struct iomap_ops *dax_read_ops)
-+				const struct iomap_ops *dax_read_ops,
-+				unsigned int blocksize)
- {
- 	struct inode *inode_in = file_inode(file_in);
- 	struct inode *inode_out = file_inode(file_out);
-@@ -303,7 +305,7 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 
- 	/* Check that we don't violate system file offset limits. */
- 	ret = generic_remap_checks(file_in, pos_in, file_out, pos_out, len,
--			remap_flags);
-+			remap_flags, blocksize);
- 	if (ret || *len == 0)
- 		return ret;
- 
-@@ -344,7 +346,7 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 	}
- 
- 	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
--			remap_flags);
-+			remap_flags, blocksize);
- 	if (ret || *len == 0)
- 		return ret;
- 
-@@ -354,13 +356,17 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL(__generic_remap_file_range_prep);
- 
- int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 				  struct file *file_out, loff_t pos_out,
- 				  loff_t *len, unsigned int remap_flags)
- {
-+	unsigned int blocksize = file_inode(file_out)->i_sb->s_blocksize;
++[Service]
++Type=oneshot
++Environment=EMAIL_ADDR=root
++ExecStart=@pkg_lib_dir@/@pkg_name@/xfs_scrub_fail "${EMAIL_ADDR}" xfs_scrub_all
++User=mail
++Group=mail
++SupplementaryGroups=systemd-journal
 +
- 	return __generic_remap_file_range_prep(file_in, pos_in, file_out,
--					       pos_out, len, remap_flags, NULL);
-+					       pos_out, len, remap_flags, NULL,
-+					       blocksize);
- }
- EXPORT_SYMBOL(generic_remap_file_range_prep);
++# No realtime scheduling
++RestrictRealtime=true
++
++# Make the entire filesystem readonly and /home inaccessible, then bind mount
++# the filesystem we're supposed to be checking into our private /tmp dir.
++ProtectSystem=full
++ProtectHome=yes
++PrivateTmp=true
++RestrictSUIDSGID=true
++
++# Emailing reports requires network access, but not the ability to change the
++# hostname.
++ProtectHostname=true
++
++# Don't let the program mess with the kernel configuration at all
++ProtectKernelLogs=true
++ProtectKernelModules=true
++ProtectKernelTunables=true
++ProtectControlGroups=true
++ProtectProc=invisible
++RestrictNamespaces=true
++
++# Can't hide /proc because journalctl needs it to find various pieces of log
++# information
++#ProcSubset=pid
++
++# Only allow the default personality Linux
++LockPersonality=true
++
++# No writable memory pages
++MemoryDenyWriteExecute=true
++
++# Don't let our mounts leak out to the host
++PrivateMounts=true
++
++# Restrict system calls to the native arch and only enough to get things going
++SystemCallArchitectures=native
++SystemCallFilter=@system-service
++SystemCallFilter=~@privileged
++SystemCallFilter=~@resources
++SystemCallFilter=~@mount
++
++# xfs_scrub needs these privileges to run, and no others
++CapabilityBoundingSet=
++NoNewPrivileges=true
++
++# Failure reporting shouldn't create world-readable files
++UMask=0077
++
++# Clean up any IPC objects when this unit stops
++RemoveIPC=true
++
++# No access to hardware device files
++PrivateDevices=true
++ProtectClock=true
+diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
+index 58c50abe963..0739a00dec9 100755
+--- a/scrub/xfs_scrub_fail
++++ b/scrub/xfs_scrub_fail
+@@ -5,14 +5,13 @@
+ # Copyright (C) 2018 Oracle.  All Rights Reserved.
+ # Author: Darrick J. Wong <djwong@kernel.org>
  
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index cd86ac22c339..5f8f4b11dc28 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2204,7 +2204,8 @@ extern ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
- int __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 				    struct file *file_out, loff_t pos_out,
- 				    loff_t *len, unsigned int remap_flags,
--				    const struct iomap_ops *dax_read_ops);
-+				    const struct iomap_ops *dax_read_ops,
-+				    unsigned int block_size);
- int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
- 				  struct file *file_out, loff_t pos_out,
- 				  loff_t *count, unsigned int remap_flags);
+-# Email logs of failed xfs_scrub unit runs
++# Email logs of failed xfs_scrub and xfs_scrub_all unit runs
+ 
+ recipient="$1"
+ test -z "${recipient}" && exit 0
+ service="$2"
+ test -z "${service}" && exit 0
+ mntpoint="$3"
+-test -z "${mntpoint}" && exit 0
+ 
+ hostname="$(hostname -f 2>/dev/null)"
+ test -z "${hostname}" && hostname="${HOSTNAME}"
+@@ -47,10 +46,12 @@ escape_path() {
+ 	echo "-$(systemd-escape --path "${mntpoint}")"
+ }
+ 
+-mntpoint_esc="$(escape_path "${mntpoint}")"
++fail_mail_mntpoint() {
++	local mntpoint_esc
+ 
+-(cat << ENDL
+-To: $1
++	mntpoint_esc="$(escape_path "${mntpoint}")"
++	cat << ENDL
++To: ${recipient}
+ From: <${service}@${hostname}>
+ Subject: ${service} failure on ${mntpoint}
+ 
+@@ -58,5 +59,25 @@ So sorry, the automatic ${service} of ${mntpoint} on ${hostname} failed.
+ 
+ A log of what happened follows:
+ ENDL
+-systemctl status --full --lines 4294967295 "${service}@${mntpoint_esc}") | "${mailer}" -t -i
++	systemctl status --full --lines 4294967295 "${service}@${mntpoint_esc}"
++}
++
++fail_mail() {
++	cat << ENDL
++To: ${recipient}
++From: <${service}@${hostname}>
++Subject: ${service} failure
++
++So sorry, the automatic ${service} on ${hostname} failed.
++
++A log of what happened follows:
++ENDL
++	systemctl status --full --lines 4294967295 "${service}"
++}
++
++if [ -n "${mntpoint}" ]; then
++	fail_mail_mntpoint | "${mailer}" -t -i
++else
++	fail_mail | "${mailer}" -t -i
++fi
+ exit "${PIPESTATUS[1]}"
 
