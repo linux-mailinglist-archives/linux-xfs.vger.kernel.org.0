@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9F665A20E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:58:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03FE765A20A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:57:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236274AbiLaC6Y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:58:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
+        id S236186AbiLaC5T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:57:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236248AbiLaC6W (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:58:22 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12101929B
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:58:21 -0800 (PST)
+        with ESMTP id S236292AbiLaC5S (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:57:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6794192B7
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:57:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 667FCB81E6A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:58:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 284ADC433D2;
-        Sat, 31 Dec 2022 02:58:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7385961CD1
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:57:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE4DC433EF;
+        Sat, 31 Dec 2022 02:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455499;
-        bh=qFPD4NuMIClE0AayEhK2gq0Rm94xwRhX8gCtEe+OsZE=;
+        s=k20201202; t=1672455436;
+        bh=g3ZSTTD8ct2jeaJKGbhhVsELS8zMe5benfCVTL493sw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MUJyniBXk1zTS5Eb8ZnmCA4Wh1B087qLbwmFagQZW9tSwPc2YQMjHYOkSLzcABeK2
-         CXDLPFDaD/ToV0Z5PeMv3edzKqOC/G1GKZHgoZ1YMWBYWHYo6Ey9iEiwUNbrjvbjYd
-         iucn4EDP6sc8e5D80UIoaZNVAnaRFeLRrkI6WJUpofe4Zf4eCoCchxMT59m5h4nEI1
-         KGu+JDl+ykytiKTzAmUyfV9+biRugvIIXiHbDzqUrT3x59u7hc5nWZpTiUjYDwopI1
-         hoe0jTbz4RTzXub8MGhzSnnYkPtYRLee9/OwmrptvjfCzg5dcbBAYDNb+psJQqsgjM
-         4CrwtWoI9s6Dw==
-Subject: [PATCH 16/41] xfs: refcover CoW leftovers in the realtime volume
+        b=BqiyhH+ufiisGzBNZfR3Nlv/oA9fptMAl02pPV7jRZl8PDiBiVUmPb2z1D7gXYXxj
+         gPAVv35Ze2sIoGdIDHV7mn95D1ffYdbnj3cQrtd0WQcy05/ReiwGymos5kdTLz1rRw
+         nWa19dEN+l5pK/l3bbecriKjCWlWViFVMuXjqbwg7wUdHqYTR1UdDyzf566L4UmDUw
+         XHPkyc8FCCdAqtNgnUJC+vuU9rxkMs0UgtrTVXsyTTtw1s+ztrm3N307eiBR+BMmkT
+         4xOFPysykZXbhSbXUKEE53H+9+OPbdiBgL6zTFO6BYl618XOK6KWHVYvK8t3KNWCmS
+         sDifF8kfHkZuw==
+Subject: [PATCH 12/41] xfs: create routine to allocate and initialize a
+ realtime refcount btree inode
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:09 -0800
-Message-ID: <167243880981.734096.14613585241356287085.stgit@magnolia>
+Message-ID: <167243880928.734096.8253842279528997937.stgit@magnolia>
 In-Reply-To: <167243880752.734096.171910706541747310.stgit@magnolia>
 References: <167243880752.734096.171910706541747310.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,155 +56,78 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Scan the realtime refcount tree at mount time to get rid of leftover
-CoW staging extents.
+Create a library routine to allocate and initialize an empty realtime
+refcountbt inode.  We'll use this for growfs, mkfs, and repair.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_refcount.c |   63 ++++++++++++++++++++++++++++++++++++++-----------
- libxfs/xfs_refcount.h |    5 +++-
- 2 files changed, 53 insertions(+), 15 deletions(-)
+ libxfs/xfs_rtrefcount_btree.c |   41 +++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_rtrefcount_btree.h |    6 ++++++
+ 2 files changed, 47 insertions(+)
 
 
-diff --git a/libxfs/xfs_refcount.c b/libxfs/xfs_refcount.c
-index 5bc68407215..b96472a2fe2 100644
---- a/libxfs/xfs_refcount.c
-+++ b/libxfs/xfs_refcount.c
-@@ -2035,14 +2035,15 @@ xfs_refcount_recover_extent(
+diff --git a/libxfs/xfs_rtrefcount_btree.c b/libxfs/xfs_rtrefcount_btree.c
+index 2c9fbab5159..5e9930d315c 100644
+--- a/libxfs/xfs_rtrefcount_btree.c
++++ b/libxfs/xfs_rtrefcount_btree.c
+@@ -763,3 +763,44 @@ xfs_iflush_rtrefcount(
+ 			ifp->if_broot_bytes, dfp,
+ 			XFS_DFORK_SIZE(dip, ip->i_mount, XFS_DATA_FORK));
  }
- 
- /* Find and remove leftover CoW reservations. */
--int
--xfs_refcount_recover_cow_leftovers(
-+static int
-+xfs_refcount_recover_group_cow_leftovers(
- 	struct xfs_mount		*mp,
--	struct xfs_perag		*pag)
-+	struct xfs_perag		*pag,
-+	struct xfs_rtgroup		*rtg)
- {
- 	struct xfs_trans		*tp;
- 	struct xfs_btree_cur		*cur;
--	struct xfs_buf			*agbp;
-+	struct xfs_buf			*agbp = NULL;
- 	struct xfs_refcount_recovery	*rr, *n;
- 	struct list_head		debris;
- 	union xfs_btree_irec		low;
-@@ -2052,7 +2053,12 @@ xfs_refcount_recover_cow_leftovers(
- 
- 	/* reflink filesystems mustn't have AGs larger than 2^31-1 blocks */
- 	BUILD_BUG_ON(XFS_MAX_CRC_AG_BLOCKS >= XFS_REFC_COWFLAG);
--	if (mp->m_sb.sb_agblocks > XFS_MAX_CRC_AG_BLOCKS)
-+	if (pag && mp->m_sb.sb_agblocks > XFS_MAX_CRC_AG_BLOCKS)
-+		return -EOPNOTSUPP;
 +
-+	/* rtreflink filesystems can't have rtgroups larger than 2^31-1 blocks */
-+	BUILD_BUG_ON(XFS_MAX_RGBLOCKS >= XFS_REFC_COWFLAG);
-+	if (rtg && mp->m_sb.sb_rgblocks >= XFS_MAX_RGBLOCKS)
- 		return -EOPNOTSUPP;
- 
- 	INIT_LIST_HEAD(&debris);
-@@ -2071,10 +2077,16 @@ xfs_refcount_recover_cow_leftovers(
- 	if (error)
- 		return error;
- 
--	error = xfs_alloc_read_agf(pag, tp, 0, &agbp);
--	if (error)
--		goto out_trans;
--	cur = xfs_refcountbt_init_cursor(mp, tp, agbp, pag);
-+	if (rtg) {
-+		xfs_rtgroup_lock(NULL, rtg, XFS_RTGLOCK_REFCOUNT);
-+		cur = xfs_rtrefcountbt_init_cursor(mp, tp, rtg,
-+				rtg->rtg_refcountip);
-+	} else {
-+		error = xfs_alloc_read_agf(pag, tp, 0, &agbp);
-+		if (error)
-+			goto out_trans;
-+		cur = xfs_refcountbt_init_cursor(mp, tp, agbp, pag);
-+	}
- 
- 	/* Find all the leftover CoW staging extents. */
- 	memset(&low, 0, sizeof(low));
-@@ -2084,7 +2096,10 @@ xfs_refcount_recover_cow_leftovers(
- 	error = xfs_btree_query_range(cur, &low, &high,
- 			xfs_refcount_recover_extent, &debris);
- 	xfs_btree_del_cursor(cur, error);
--	xfs_trans_brelse(tp, agbp);
-+	if (agbp)
-+		xfs_trans_brelse(tp, agbp);
-+	else
-+		xfs_rtgroup_unlock(rtg, XFS_RTGLOCK_REFCOUNT);
- 	xfs_trans_cancel(tp);
- 	if (error)
- 		goto out_free;
-@@ -2097,14 +2112,18 @@ xfs_refcount_recover_cow_leftovers(
- 			goto out_free;
- 
- 		/* Free the orphan record */
--		fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno,
--				rr->rr_rrec.rc_startblock);
--		xfs_refcount_free_cow_extent(tp, false, fsb,
-+		if (rtg)
-+			fsb = xfs_rgbno_to_rtb(mp, rtg->rtg_rgno,
-+					rr->rr_rrec.rc_startblock);
-+		else
-+			fsb = XFS_AGB_TO_FSB(mp, pag->pag_agno,
-+					rr->rr_rrec.rc_startblock);
-+		xfs_refcount_free_cow_extent(tp, rtg != NULL, fsb,
- 				rr->rr_rrec.rc_blockcount);
- 
- 		/* Free the block. */
- 		xfs_free_extent_later(tp, fsb, rr->rr_rrec.rc_blockcount, NULL,
--				0);
-+				rtg != NULL ? XFS_FREE_EXTENT_REALTIME : 0);
- 
- 		error = xfs_trans_commit(tp);
- 		if (error)
-@@ -2126,6 +2145,22 @@ xfs_refcount_recover_cow_leftovers(
- 	return error;
- }
- 
++/*
++ * Create a realtime refcount btree inode.
++ *
++ * Regardless of the return value, the caller must clean up @ic.  If a new
++ * inode is returned through *ipp, the caller must finish setting up the incore
++ * inode and release it.
++ */
 +int
-+xfs_refcount_recover_cow_leftovers(
-+	struct xfs_mount		*mp,
-+	struct xfs_perag		*pag)
++xfs_rtrefcountbt_create(
++	struct xfs_trans	**tpp,
++	struct xfs_imeta_path	*path,
++	struct xfs_imeta_update	*upd,
++	struct xfs_inode	**ipp)
 +{
-+	return xfs_refcount_recover_group_cow_leftovers(mp, pag, NULL);
-+}
++	struct xfs_mount	*mp = (*tpp)->t_mountp;
++	struct xfs_ifork	*ifp;
++	struct xfs_inode	*ip;
++	int			error;
 +
-+int
-+xfs_refcount_recover_rtcow_leftovers(
-+	struct xfs_mount		*mp,
-+	struct xfs_rtgroup		*rtg)
-+{
-+	return xfs_refcount_recover_group_cow_leftovers(mp, NULL, rtg);
-+}
++	*ipp = NULL;
 +
- /*
-  * Scan part of the keyspace of the refcount records and tell us if the area
-  * has no records, is fully mapped by records, or is partially filled.
-diff --git a/libxfs/xfs_refcount.h b/libxfs/xfs_refcount.h
-index 4e725d723e8..c7907119d10 100644
---- a/libxfs/xfs_refcount.h
-+++ b/libxfs/xfs_refcount.h
-@@ -12,6 +12,7 @@ struct xfs_perag;
- struct xfs_btree_cur;
- struct xfs_bmbt_irec;
- struct xfs_refcount_irec;
-+struct xfs_rtgroup;
++	error = xfs_imeta_create(tpp, path, S_IFREG, 0, &ip, upd);
++	if (error)
++		return error;
++
++	ifp = &ip->i_df;
++	ifp->if_format = XFS_DINODE_FMT_REFCOUNT;
++	ASSERT(ifp->if_broot_bytes == 0);
++	ASSERT(ifp->if_bytes == 0);
++
++	/* Initialize the empty incore btree root. */
++	xfs_iroot_alloc(ip, XFS_DATA_FORK,
++			xfs_rtrefcount_broot_space_calc(mp, 0, 0));
++	xfs_btree_init_block(ip->i_mount, ifp->if_broot, &xfs_rtrefcountbt_ops,
++			0, 0, ip->i_ino);
++	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE | XFS_ILOG_DBROOT);
++
++	*ipp = ip;
++	return 0;
++}
+diff --git a/libxfs/xfs_rtrefcount_btree.h b/libxfs/xfs_rtrefcount_btree.h
+index d2fe2004568..86a547529c9 100644
+--- a/libxfs/xfs_rtrefcount_btree.h
++++ b/libxfs/xfs_rtrefcount_btree.h
+@@ -186,4 +186,10 @@ void xfs_rtrefcountbt_to_disk(struct xfs_mount *mp,
+ 		struct xfs_rtrefcount_root *dblock, int dblocklen);
+ void xfs_iflush_rtrefcount(struct xfs_inode *ip, struct xfs_dinode *dip);
  
- extern int xfs_refcount_lookup_le(struct xfs_btree_cur *cur,
- 		enum xfs_refc_domain domain, xfs_agblock_t bno, int *stat);
-@@ -99,8 +100,10 @@ void xfs_refcount_alloc_cow_extent(struct xfs_trans *tp, bool isrt,
- 		xfs_fsblock_t fsb, xfs_extlen_t len);
- void xfs_refcount_free_cow_extent(struct xfs_trans *tp, bool isrt,
- 		xfs_fsblock_t fsb, xfs_extlen_t len);
--extern int xfs_refcount_recover_cow_leftovers(struct xfs_mount *mp,
-+int xfs_refcount_recover_cow_leftovers(struct xfs_mount *mp,
- 		struct xfs_perag *pag);
-+int xfs_refcount_recover_rtcow_leftovers(struct xfs_mount *mp,
-+		struct xfs_rtgroup *rtg);
- 
- /*
-  * While we're adjusting the refcounts records of an extent, we have
++struct xfs_imeta_update;
++
++int xfs_rtrefcountbt_create(struct xfs_trans **tpp,
++		struct xfs_imeta_path *path, struct xfs_imeta_update *ic,
++		struct xfs_inode **ipp);
++
+ #endif	/* __XFS_RTREFCOUNT_BTREE_H__ */
 
