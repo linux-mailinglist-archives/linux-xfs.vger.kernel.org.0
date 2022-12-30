@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A30465A138
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:07:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1AE065A13C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:08:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236162AbiLaCHr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:07:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52682 "EHLO
+        id S236163AbiLaCIt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:08:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231494AbiLaCHq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:07:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8017B1C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:07:45 -0800 (PST)
+        with ESMTP id S231494AbiLaCIs (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:08:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC443140F1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:08:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2524861CC2
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:07:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C857C433EF;
-        Sat, 31 Dec 2022 02:07:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6819661CD3
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:08:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C004BC433D2;
+        Sat, 31 Dec 2022 02:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452464;
-        bh=XQifu2S0REiqLMQAKODpExBnNIuq2MHCVVL0PoRnUw0=;
+        s=k20201202; t=1672452526;
+        bh=D5q96YaFc/DCP0jlaRAH3qdNUF77gERh0mnNLbhv0xU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=n86MZD1y+MBz9WFtBeM4T1kZdyFoiO1zK01FkgRbdeRLM4L7whLeSmdpTKz0R5sG+
-         +uKCwPJiHc21dyw8flahnyK3CAJ/gqZW2MzAy3SVsUdKcXu9ECPwsrCzZhO9AuB3Ix
-         lmhfjy4K2hvvzsXd9SqufFOdz8/2lX5maFlxpG7zHquiRIu5HrOmBlwccLl1D1JTYK
-         l9RyuI1YDwdVpHgr/jVnzKFlSVPAVRuim6xXWIbJJntkRkQagVlAjk/9ITvkHuF+Of
-         zeBVFpE27KwfPWNay4N1KPh60Y41XTMJUmKVhT4PK+9S0jQpZ4jMIYWpoBPMpz2SWv
-         jJR986fxHiYGA==
-Subject: [PATCH 18/26] xfs: create libxfs helper to link a new inode into a
- directory
+        b=V9Wi8/dh4c+VsjPuSoQneMmGRTV7V0M/bxAEgwBT2SZfaa6KsvvBTyt7O+QiA8X7Q
+         CUOchI46Zh+bSVCO7MPKrB24nDpVuwN9PZ6tZZA2PVMT2utlkX5BobNH0HezIP3JMO
+         PdCgUFUETsg4KjNP1PEOX9QULOazhi8DOEc2fqIPUVgz/NZ/iJyVIklCGNeca4tBV4
+         Feiq3kcVd83zuXo7P3MvXrdqNWf318y5TGFUyzZ1Ud5g1MfyczT8foRxQQmR90KXOv
+         9OMhlF19ByVpMFr8oM5sO7G1zujZLm5BYc5Yf9GmhUTzkHijHDwwMBSJaQULyZO5jz
+         L2BlestaU28Rw==
+Subject: [PATCH 22/26] xfs: create libxfs helper to exchange two directory
+ entries
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:15 -0800
-Message-ID: <167243875535.723621.9136738856135046159.stgit@magnolia>
+Message-ID: <167243875581.723621.10793024373873352545.stgit@magnolia>
 In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
 References: <167243875315.723621.17759760420120912799.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,88 +56,145 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a new libxfs function to link a newly created inode into a
-directory.  The upcoming metadata directory feature will need this to
-create a metadata directory tree.
+Create a new libxfs function to exchange two directory entries.
+The upcoming metadata directory feature will need this to replace a
+metadata inode directory entry.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_dir2.c |   45 +++++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_dir2.h |    4 ++++
- 2 files changed, 49 insertions(+)
+ libxfs/xfs_dir2.c |  108 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_dir2.h |    4 ++
+ 2 files changed, 112 insertions(+)
 
 
 diff --git a/libxfs/xfs_dir2.c b/libxfs/xfs_dir2.c
-index 460b64339d7..ed52969b45d 100644
+index a0853d766f2..b0bb22ac506 100644
 --- a/libxfs/xfs_dir2.c
 +++ b/libxfs/xfs_dir2.c
-@@ -18,6 +18,9 @@
- #include "xfs_errortag.h"
- #include "xfs_trace.h"
- #include "xfs_health.h"
-+#include "xfs_shared.h"
-+#include "xfs_bmap_btree.h"
-+#include "xfs_trans_space.h"
+@@ -949,3 +949,111 @@ xfs_dir_remove_child(
  
- const struct xfs_name xfs_name_dotdot = {
- 	.name	= (const unsigned char *)"..",
-@@ -780,3 +783,45 @@ xfs_dir2_compname(
- 		return xfs_ascii_ci_compname(args, name, len);
- 	return xfs_da_compname(args, name, len);
+ 	return 0;
  }
 +
 +/*
-+ * Given a directory @dp, a newly allocated inode @ip, and a @name, link @ip
-+ * into @dp under the given @name.  If @ip is a directory, it will be
-+ * initialized.  Both inodes must have the ILOCK held and the transaction must
-+ * have sufficient blocks reserved.
++ * Exchange the entry (@name1, @ip1) in directory @dp1 with the entry (@name2,
++ * @ip2) in directory @dp2, and update '..' @ip1 and @ip2's entries as needed.
++ * @ip1 and @ip2 need not be of the same type.
++ *
++ * All inodes must have the ILOCK held, and both entries must already exist.
 + */
 +int
-+xfs_dir_create_new_child(
-+	struct xfs_trans		*tp,
-+	uint				resblks,
-+	struct xfs_inode		*dp,
-+	struct xfs_name			*name,
-+	struct xfs_inode		*ip)
++xfs_dir_exchange(
++	struct xfs_trans	*tp,
++	struct xfs_inode	*dp1,
++	struct xfs_name		*name1,
++	struct xfs_inode	*ip1,
++	struct xfs_inode	*dp2,
++	struct xfs_name		*name2,
++	struct xfs_inode	*ip2,
++	unsigned int		spaceres)
 +{
-+	struct xfs_mount		*mp = tp->t_mountp;
-+	int				error;
++	int			ip1_flags = 0;
++	int			ip2_flags = 0;
++	int			dp2_flags = 0;
++	int			error;
 +
-+	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
-+	ASSERT(xfs_isilocked(dp, XFS_ILOCK_EXCL));
-+	ASSERT(resblks == 0 || resblks > XFS_IALLOC_SPACE_RES(mp));
-+
-+	error = xfs_dir_createname(tp, dp, name, ip->i_ino,
-+					resblks - XFS_IALLOC_SPACE_RES(mp));
-+	if (error) {
-+		ASSERT(error != -ENOSPC);
-+		return error;
-+	}
-+
-+	xfs_trans_ichgtime(tp, dp, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
-+	xfs_trans_log_inode(tp, dp, XFS_ILOG_CORE);
-+
-+	if (!S_ISDIR(VFS_I(ip)->i_mode))
-+		return 0;
-+
-+	error = xfs_dir_init(tp, ip, dp);
++	/* Swap inode number for dirent in first parent */
++	error = xfs_dir_replace(tp, dp1, name1, ip2->i_ino, spaceres);
 +	if (error)
 +		return error;
 +
-+	xfs_bumplink(tp, dp);
++	/* Swap inode number for dirent in second parent */
++	error = xfs_dir_replace(tp, dp2, name2, ip1->i_ino, spaceres);
++	if (error)
++		return error;
++
++	/*
++	 * If we're renaming one or more directories across different parents,
++	 * update the respective ".." entries (and link counts) to match the new
++	 * parents.
++	 */
++	if (dp1 != dp2) {
++		dp2_flags = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
++
++		if (S_ISDIR(VFS_I(ip2)->i_mode)) {
++			error = xfs_dir_replace(tp, ip2, &xfs_name_dotdot,
++						dp1->i_ino, spaceres);
++			if (error)
++				return error;
++
++			/* transfer ip2 ".." reference to dp1 */
++			if (!S_ISDIR(VFS_I(ip1)->i_mode)) {
++				error = xfs_droplink(tp, dp2);
++				if (error)
++					return error;
++				xfs_bumplink(tp, dp1);
++			}
++
++			/*
++			 * Although ip1 isn't changed here, userspace needs
++			 * to be warned about the change, so that applications
++			 * relying on it (like backup ones), will properly
++			 * notify the change
++			 */
++			ip1_flags |= XFS_ICHGTIME_CHG;
++			ip2_flags |= XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
++		}
++
++		if (S_ISDIR(VFS_I(ip1)->i_mode)) {
++			error = xfs_dir_replace(tp, ip1, &xfs_name_dotdot,
++						dp2->i_ino, spaceres);
++			if (error)
++				return error;
++
++			/* transfer ip1 ".." reference to dp2 */
++			if (!S_ISDIR(VFS_I(ip2)->i_mode)) {
++				error = xfs_droplink(tp, dp1);
++				if (error)
++					return error;
++				xfs_bumplink(tp, dp2);
++			}
++
++			/*
++			 * Although ip2 isn't changed here, userspace needs
++			 * to be warned about the change, so that applications
++			 * relying on it (like backup ones), will properly
++			 * notify the change
++			 */
++			ip1_flags |= XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
++			ip2_flags |= XFS_ICHGTIME_CHG;
++		}
++	}
++
++	if (ip1_flags) {
++		xfs_trans_ichgtime(tp, ip1, ip1_flags);
++		xfs_trans_log_inode(tp, ip1, XFS_ILOG_CORE);
++	}
++	if (ip2_flags) {
++		xfs_trans_ichgtime(tp, ip2, ip2_flags);
++		xfs_trans_log_inode(tp, ip2, XFS_ILOG_CORE);
++	}
++	if (dp2_flags) {
++		xfs_trans_ichgtime(tp, dp2, dp2_flags);
++		xfs_trans_log_inode(tp, dp2, XFS_ILOG_CORE);
++	}
++	xfs_trans_ichgtime(tp, dp1, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
++	xfs_trans_log_inode(tp, dp1, XFS_ILOG_CORE);
++
 +	return 0;
 +}
 diff --git a/libxfs/xfs_dir2.h b/libxfs/xfs_dir2.h
-index 7322284f61a..d3e7607c0e9 100644
+index e35deb273d8..f63390236f0 100644
 --- a/libxfs/xfs_dir2.h
 +++ b/libxfs/xfs_dir2.h
-@@ -253,4 +253,8 @@ unsigned int xfs_dir3_data_end_offset(struct xfs_da_geometry *geo,
- 		struct xfs_dir2_data_hdr *hdr);
- bool xfs_dir2_namecheck(const void *name, size_t length);
+@@ -262,5 +262,9 @@ int xfs_dir_link_existing_child(struct xfs_trans *tp, uint resblks,
+ int xfs_dir_remove_child(struct xfs_trans *tp, uint resblks,
+ 		struct xfs_inode *dp, struct xfs_name *name,
+ 		struct xfs_inode *ip);
++int xfs_dir_exchange(struct xfs_trans *tp, struct xfs_inode *dp1,
++		struct xfs_name *name1, struct xfs_inode *ip1,
++		struct xfs_inode *dp2, struct xfs_name *name2,
++		struct xfs_inode *ip2, unsigned int spaceres);
  
-+int xfs_dir_create_new_child(struct xfs_trans *tp, uint resblks,
-+		struct xfs_inode *dp, struct xfs_name *name,
-+		struct xfs_inode *ip);
-+
  #endif	/* __XFS_DIR2_H__ */
 
