@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F2B565A0FA
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:52:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 590D1659FB8
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:35:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236099AbiLaBw3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:52:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49976 "EHLO
+        id S235739AbiLaAfH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:35:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbiLaBw2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:52:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D142D1DDD3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:52:27 -0800 (PST)
+        with ESMTP id S235435AbiLaAfG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:35:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A5A1DDE4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:35:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D22361CE1
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:52:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAEEAC433D2;
-        Sat, 31 Dec 2022 01:52:26 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 78373B80883
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:35:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C5D2C433EF;
+        Sat, 31 Dec 2022 00:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451546;
-        bh=oZYAXYKPcDokCJoxBBeSm/PtbG1kJkfKJUs6po1xRjQ=;
+        s=k20201202; t=1672446903;
+        bh=b7ljo0En4q++GnEO7bOXZ/k2e/2L4zIqzdWIpmampXI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=eP8GFlCuMaeiITyRLgKSxTVnzprYaZK+AmHrP0jRPK7ptOhdCCjnBkM+DdWcrtX8I
-         gxgYngCZR5SKgmJTa1mwXIufQi4JCfvtnaNQ5imaCHmrQHKKtcKMsYMKb/pv5LmnaU
-         71nL3cAZHJA9rciQKSQ9uQ4XjqSyfBFnDcs5R9oX9NPAoLpOjc0HeV+Uz74QU84T8p
-         vn4COV0Zsp6cbZZwGVWOUTlzicWuj/J3pV35Hz718Hz5jucTEYXsyQmMtZJx3sp9UJ
-         USwP+cnbcJnmYkWxoDqvmSEg5JpXoNyno6HF5C/OPhvSHq9w7jBq2Z7wlE0n+ebUXv
-         In8+3kA+u4npw==
-Subject: [PATCH 17/42] xfs: compute rtrmap btree max levels when reflink
- enabled
+        b=prnzzmCpuqZmTS0uC1QM5JG72ctqXwhrF9cDskGLPDBiSj7WHWbQjcaiE0LMwYctd
+         BJnYvJydUcHdwdmyTni/0WJWw1POsVnN9fzuhKIU8XZCbD6aKIRHEvCNKeCIb3V5LK
+         QoQe/gbGNduF/4wm+TUqXXb9GJBTBOEDI6BTIkVJNDEZ2R5VVigPZ+ANDJfu6tcArw
+         WvQD8rqbkakBghJZlYQnKyG/wx0yCsKcqeZEoTqig17fLds9AtyEEGwJtOMycZArvK
+         q6c0oVPmh7LsTjCUk+KI9nvpzJd/OwDZUtVrEdZ/xDtSQnmi5P1gs1uH6mAbZyDlYZ
+         YOuk2haTdWj1Q==
+Subject: [PATCH 5/8] xfs_scrub_fail: return the failure status of the mailer
+ program
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871139.717073.10822502195576681130.stgit@magnolia>
-In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
-References: <167243870849.717073.203452386730176902.stgit@magnolia>
+Message-ID: <167243871164.717702.12178389387628868397.stgit@magnolia>
+In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
+References: <167243871097.717702.15336500890922415647.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,69 +55,23 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Compute the maximum possible height of the realtime rmap btree when
-reflink is enabled.
+We should return the exit code of the mailer program sending the scrub
+failure reports, since that's much more important to anyone watching the
+system.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_rtrmap_btree.c |   28 ++++++++++++++++++++++++++--
- 1 file changed, 26 insertions(+), 2 deletions(-)
+ scrub/xfs_scrub_fail |    1 +
+ 1 file changed, 1 insertion(+)
 
 
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.c b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-index 878bfeed411f..35ae3171a0cc 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-@@ -737,6 +737,7 @@ xfs_rtrmapbt_maxrecs(
- unsigned int
- xfs_rtrmapbt_maxlevels_ondisk(void)
- {
-+	unsigned long long	max_dblocks;
- 	unsigned int		minrecs[2];
- 	unsigned int		blocklen;
- 
-@@ -745,8 +746,20 @@ xfs_rtrmapbt_maxlevels_ondisk(void)
- 	minrecs[0] = xfs_rtrmapbt_block_maxrecs(blocklen, true) / 2;
- 	minrecs[1] = xfs_rtrmapbt_block_maxrecs(blocklen, false) / 2;
- 
--	/* We need at most one record for every block in an rt group. */
--	return xfs_btree_compute_maxlevels(minrecs, XFS_MAX_RGBLOCKS);
-+	/*
-+	 * Compute the asymptotic maxlevels for an rtrmapbt on any rtreflink fs.
-+	 *
-+	 * On a reflink filesystem, each block in an rtgroup can have up to
-+	 * 2^32 (per the refcount record format) owners, which means that
-+	 * theoretically we could face up to 2^64 rmap records.  However, we're
-+	 * likely to run out of blocks in the data device long before that
-+	 * happens, which means that we must compute the max height based on
-+	 * what the btree will look like if it consumes almost all the blocks
-+	 * in the data device due to maximal sharing factor.
-+	 */
-+	max_dblocks = -1U; /* max ag count */
-+	max_dblocks *= XFS_MAX_CRC_AG_BLOCKS;
-+	return xfs_btree_space_to_height(minrecs, max_dblocks);
- }
- 
- int __init
-@@ -785,9 +798,20 @@ xfs_rtrmapbt_compute_maxlevels(
- 	 * maximum height is constrained by the size of the data device and
- 	 * the height required to store one rmap record for each block in an
- 	 * rt group.
-+	 *
-+	 * On a reflink filesystem, each rt block can have up to 2^32 (per the
-+	 * refcount record format) owners, which means that theoretically we
-+	 * could face up to 2^64 rmap records.  This makes the computation of
-+	 * maxlevels based on record count meaningless, so we only consider the
-+	 * size of the data device.
- 	 */
- 	d_maxlevels = xfs_btree_space_to_height(mp->m_rtrmap_mnr,
- 				mp->m_sb.sb_dblocks);
-+	if (xfs_has_rtreflink(mp)) {
-+		mp->m_rtrmap_maxlevels = d_maxlevels + 1;
-+		return;
-+	}
-+
- 	r_maxlevels = xfs_btree_compute_maxlevels(mp->m_rtrmap_mnr,
- 				mp->m_sb.sb_rgblocks);
- 
+diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
+index 4ec7e48836a..fbe30cbc4c6 100755
+--- a/scrub/xfs_scrub_fail
++++ b/scrub/xfs_scrub_fail
+@@ -56,3 +56,4 @@ So sorry, the automatic xfs_scrub of ${mntpoint} on ${hostname} failed.
+ A log of what happened follows:
+ ENDL
+ systemctl status --full --lines 4294967295 "xfs_scrub@${mntpoint_esc}") | "${mailer}" -t -i
++exit "${PIPESTATUS[1]}"
 
