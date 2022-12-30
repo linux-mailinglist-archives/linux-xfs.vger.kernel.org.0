@@ -2,44 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA4965A288
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:27:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B67A65A24A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:12:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236382AbiLaD1m (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:27:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
+        id S236332AbiLaDMr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:12:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236230AbiLaD1l (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:27:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D4E13D49
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:27:40 -0800 (PST)
+        with ESMTP id S231476AbiLaDMo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:12:44 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9408E59;
+        Fri, 30 Dec 2022 19:12:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 21CABB81E5A
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:27:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CECEAC433EF;
-        Sat, 31 Dec 2022 03:27:37 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id EE722CE19E1;
+        Sat, 31 Dec 2022 03:12:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BB9FC433EF;
+        Sat, 31 Dec 2022 03:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672457257;
-        bh=ObR+DQwouU/7/H8MVzgsFr3kpjWcTLoWBClV6Ut4laY=;
+        s=k20201202; t=1672456355;
+        bh=yIOVrk9FdagjHi6nbuoTErS4wGnNXWfvoJ3gGIixoqE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MBzt7aC8rzdSWOqwKrEu9Xow20tTka6bv5ZRyLVCqAw+zmDMBUVy5PsyRNcnyqm8G
-         3rjeqAEWo6Qv3mqJ4y2J/676f0hWCQ7FCKTq6IiSN1Z3kOfXU7+UrU7aIQm6kNs249
-         d66C0Z/Ututifb89Iiqh7MIdEsoaiprqVTmwWP1mVqrbAhMw5puSE9KZsz0sHUgZUw
-         ffYMjGYShW3OKf7KmIuMWsItYmfQwzXq0HxrO0DNj2WfYQLjBTpzkMAk2nc423xx90
-         doKjssX/XpUNMNdBqHQYor7ykzMyI0jEC92Ue6ifBl1Nx0sGYeYUVjFBsklqu+O0/T
-         Jm4y125gk9n8Q==
-Subject: [PATCH 11/11] xfs_scrub: try spot repairs of metadata items to make
- scrub progress
+        b=QwLMMnNQBdy5c247TaRbmPQbLh8o2VbqyRHRs7oU3hF6zAMQ25JXgU3616nd8AjwZ
+         bi+Ha4CkWh3b0a3DpBOgYOWUfdp9BiM/G3TjIthN3dCPY8Y18h1rq4E8P+4yiA4/vN
+         ky0MFOdgZA9T42hebNbmOECxxsyLZ45th1fczvRcEEj3U4JSklPlojh/a74XPJFj8Y
+         Ih6b45ZLyk6KP/+Hhow4H/O/HtlJ7TuxhtuyKmObALktjTvRVoH5Ybb0srM8mRf37c
+         s0evuTzxmaCr+UVZcev5Mx/2CKUJVHYuQrtBolDip0pOlhnJpL91D9pyMEYdCy4Jpz
+         ZmBG5UllxQ+Hg==
+Subject: [PATCH 12/12] common/fuzzy: adapt the scrub stress tests to support
+ rtgroups
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:41 -0800
-Message-ID: <167243884179.739244.14046030541432078868.stgit@magnolia>
-In-Reply-To: <167243884029.739244.16777239536975047510.stgit@magnolia>
-References: <167243884029.739244.16777239536975047510.stgit@magnolia>
+Message-ID: <167243884102.739029.3905413777900442709.stgit@magnolia>
+In-Reply-To: <167243883943.739029.3041109696120604285.stgit@magnolia>
+References: <167243883943.739029.3041109696120604285.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,323 +56,176 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we've enabled scrub dependency barriers, it's possible that a
-scrub_item_check call will return with some of the scrub items still in
-NEEDSCHECK state.  If, for example, scrub type B depends on scrub type
-A being clean and A is not clean, B will still be in NEEDSCHECK state.
-
-In order to make as much scanning progress as possible during phase 2
-and phase 3, allow ourselves to try some spot repairs in the hopes that
-it will enable us to make progress towards at least scanning the whole
-metadata item.  If we can't make any forward progress, we'll queue the
-scrub item for repair in phase 4, which means that anything still in in
-NEEDSCHECK state becomes CORRUPT state.  (At worst, the NEEDSCHECK item
-will actually be clean by phase 4, and xfs_scrub will report that it
-didn't need any work after all.)
+Adapt the scrub stress testing framework to support checking realtime
+group metadata.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase2.c |   91 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- scrub/phase3.c |   71 +++++++++++++++++++++++++++++++++++++++++++-
- scrub/repair.c |   15 +++++++++
- 3 files changed, 176 insertions(+), 1 deletion(-)
+ common/fuzzy  |   27 ++++++++++++++++++++++-----
+ common/xfs    |    9 +++++++++
+ tests/xfs/800 |    2 +-
+ tests/xfs/840 |    2 +-
+ tests/xfs/841 |    2 +-
+ 5 files changed, 34 insertions(+), 8 deletions(-)
 
 
-diff --git a/scrub/phase2.c b/scrub/phase2.c
-index e4c7d32d75e..e2d46cba640 100644
---- a/scrub/phase2.c
-+++ b/scrub/phase2.c
-@@ -77,6 +77,53 @@ defer_fs_repair(
- 	return 0;
+diff --git a/common/fuzzy b/common/fuzzy
+index 7f96384402..baba05de0a 100644
+--- a/common/fuzzy
++++ b/common/fuzzy
+@@ -817,8 +817,10 @@ __stress_one_scrub_loop() {
+ 	local scrub_tgt="$3"
+ 	local scrub_startat="$4"
+ 	local start_agno="$5"
+-	shift; shift; shift; shift; shift
++	local start_rgno="$6"
++	shift; shift; shift; shift; shift; shift
+ 	local agcount="$(_xfs_mount_agcount $SCRATCH_MNT)"
++	local rgcount="$(_xfs_mount_rgcount $SCRATCH_MNT)"
+ 
+ 	local xfs_io_args=()
+ 	for arg in "$@"; do
+@@ -831,6 +833,12 @@ __stress_one_scrub_loop() {
+ 				local ag_arg="$(echo "$arg" | sed -e "s|%agno%|$agno|g")"
+ 				xfs_io_args+=('-c' "$ag_arg")
+ 			done
++		elif echo "$arg" | grep -q -w '%rgno%'; then
++			# Substitute the rtgroup number
++			for ((rgno = start_rgno; rgno < rgcount; rgno++)); do
++				local rg_arg="$(echo "$arg" | sed -e "s|%rgno%|$rgno|g")"
++				xfs_io_args+=('-c' "$rg_arg")
++			done
+ 		else
+ 			xfs_io_args+=('-c' "$arg")
+ 		fi
+@@ -1201,7 +1209,9 @@ _scratch_xfs_stress_scrub_cleanup() {
+ __stress_scrub_check_commands() {
+ 	local scrub_tgt="$1"
+ 	local start_agno="$2"
+-	shift; shift
++	local start_rgno="$3"
++	shift; shift; shift
++	local rgcount="$(_xfs_mount_rgcount $SCRATCH_MNT)"
+ 
+ 	local cooked_tgt="$scrub_tgt"
+ 	case "$scrub_tgt" in
+@@ -1231,6 +1241,10 @@ __stress_scrub_check_commands() {
+ 			cooked_arg="$(echo "$cooked_arg" | sed -e 's/^repair/repair -R/g')"
+ 		fi
+ 		cooked_arg="$(echo "$cooked_arg" | sed -e "s/%agno%/$start_agno/g")"
++		if echo "$cooked_arg" | grep -q -w '%rgno%'; then
++			test "$rgcount" -eq 0 && continue
++			cooked_arg="$(echo "$cooked_arg" | sed -e "s/%rgno%/$start_rgno/g")"
++		fi
+ 		testio=`$XFS_IO_PROG -x -c "$cooked_arg" "$cooked_tgt" 2>&1`
+ 		echo $testio | grep -q "Unknown type" && \
+ 			_notrun "xfs_io scrub subcommand support is missing"
+@@ -1256,6 +1270,7 @@ __stress_scrub_check_commands() {
+ #	in a separate loop.  If zero -i options are specified, do not run.
+ #	Callers must check each of these commands (via _require_xfs_io_command)
+ #	before calling here.
++# -R	For %rgno% substitution, start with this rtgroup instead of rtgroup 0.
+ # -r	Run fsstress for this amount of time, then remount the fs ro or rw.
+ #	The default is to run fsstress continuously with no remount, unless
+ #	XFS_SCRUB_STRESS_REMOUNT_PERIOD is set.
+@@ -1301,6 +1316,7 @@ _scratch_xfs_stress_scrub() {
+ 	local remount_period="${XFS_SCRUB_STRESS_REMOUNT_PERIOD}"
+ 	local stress_tgt="${XFS_SCRUB_STRESS_TARGET:-default}"
+ 	local start_agno=0
++	local start_rgno=0
+ 
+ 	__SCRUB_STRESS_FREEZE_PID=""
+ 	__SCRUB_STRESS_REMOUNT_LOOP=""
+@@ -1308,12 +1324,13 @@ _scratch_xfs_stress_scrub() {
+ 	touch "$runningfile"
+ 
+ 	OPTIND=1
+-	while getopts "a:fi:r:s:S:t:w:x:X:" c; do
++	while getopts "a:fi:r:R:s:S:t:w:x:X:" c; do
+ 		case "$c" in
+ 			a) start_agno="$OPTARG";;
+ 			f) freeze=yes;;
+ 			i) io_args+=("$OPTARG");;
+ 			r) remount_period="$OPTARG";;
++			R) start_rgno="$OPTARG";;
+ 			s) one_scrub_args+=("$OPTARG");;
+ 			S) xfs_scrub_args+=("$OPTARG");;
+ 			t) scrub_tgt="$OPTARG";;
+@@ -1324,7 +1341,7 @@ _scratch_xfs_stress_scrub() {
+ 		esac
+ 	done
+ 
+-	__stress_scrub_check_commands "$scrub_tgt" "$start_agno" \
++	__stress_scrub_check_commands "$scrub_tgt" "$start_agno" "$start_rgno" \
+ 			"${one_scrub_args[@]}"
+ 
+ 	if ! command -v "__stress_scrub_${exerciser}_loop" &>/dev/null; then
+@@ -1372,7 +1389,7 @@ _scratch_xfs_stress_scrub() {
+ 
+ 	if [ "${#one_scrub_args[@]}" -gt 0 ]; then
+ 		__stress_one_scrub_loop "$end" "$runningfile" "$scrub_tgt" \
+-				"$scrub_startat" "$start_agno" \
++				"$scrub_startat" "$start_agno" "$start_rgno" \
+ 				"${one_scrub_args[@]}" &
+ 	fi
+ 
+diff --git a/common/xfs b/common/xfs
+index a37284068f..f451dfb8ae 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -1524,6 +1524,15 @@ _xfs_mount_agcount()
+ 	$XFS_INFO_PROG "$1" | sed -n "s/^.*agcount=\([[:digit:]]*\).*/\1/p"
  }
  
-+/*
-+ * If we couldn't check all the scheduled metadata items, try performing spot
-+ * repairs until we check everything or stop making forward progress.
-+ */
-+static int
-+repair_and_scrub_loop(
-+	struct scrub_ctx	*ctx,
-+	struct scrub_item	*sri,
-+	const char		*descr,
-+	bool			*defer)
++# Find rtgroup count of mounted filesystem
++_xfs_mount_rgcount()
 +{
-+	unsigned int		to_check;
-+	int			ret;
++	local rtgroups="$($XFS_INFO_PROG "$1" | grep rgcount= | sed -e 's/^.*rgcount=\([0-9]*\).*$/\1/g')"
 +
-+	*defer = false;
-+	if (ctx->mode != SCRUB_MODE_REPAIR)
-+		return 0;
-+
-+	to_check = scrub_item_count_needscheck(sri);
-+	while (to_check > 0) {
-+		unsigned int	nr;
-+
-+		ret = repair_item_corruption(ctx, sri);
-+		if (ret)
-+			return ret;
-+
-+		ret = scrub_item_check(ctx, sri);
-+		if (ret)
-+			return ret;
-+
-+		nr = scrub_item_count_needscheck(sri);
-+		if (nr == to_check) {
-+			/*
-+			 * We cannot make forward scanning progress with this
-+			 * metadata, so defer the rest until phase 4.
-+			 */
-+			str_info(ctx, descr,
-+ _("Unable to make forward checking progress; will try again in phase 4."));
-+			*defer = true;
-+			return 0;
-+		}
-+		to_check = nr;
-+	}
-+
-+	return 0;
++	test -z "$rtgroups" && rtgroups=0
++	echo "$rtgroups"
 +}
 +
- /* Scrub each AG's metadata btrees. */
- static void
- scan_ag_metadata(
-@@ -90,6 +137,7 @@ scan_ag_metadata(
- 	struct scan_ctl			*sctl = arg;
- 	char				descr[DESCR_BUFSZ];
- 	unsigned int			difficulty;
-+	bool				defer_repairs;
- 	int				ret;
- 
- 	if (sctl->aborted)
-@@ -105,10 +153,22 @@ scan_ag_metadata(
- 	scrub_item_schedule_group(&sri, XFROG_SCRUB_GROUP_AGHEADER);
- 	scrub_item_schedule_group(&sri, XFROG_SCRUB_GROUP_PERAG);
- 
-+	/*
-+	 * Try to check all of the AG metadata items that we just scheduled.
-+	 * If we return with some types still needing a check, try repairing
-+	 * any damaged metadata that we've found so far, and try again.  Abort
-+	 * if we stop making forward progress.
-+	 */
- 	ret = scrub_item_check(ctx, &sri);
- 	if (ret)
- 		goto err;
- 
-+	ret = repair_and_scrub_loop(ctx, &sri, descr, &defer_repairs);
-+	if (ret)
-+		goto err;
-+	if (defer_repairs)
-+		goto defer;
-+
- 	/*
- 	 * Figure out if we need to perform early fixing.  The only
- 	 * reason we need to do this is if the inobt is broken, which
-@@ -125,6 +185,7 @@ scan_ag_metadata(
- 	if (ret)
- 		goto err;
- 
-+defer:
- 	/* Everything else gets fixed during phase 4. */
- 	ret = defer_fs_repair(ctx, &sri);
- 	if (ret)
-@@ -145,11 +206,18 @@ scan_metafile(
- 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct scan_ctl		*sctl = arg;
- 	unsigned int		difficulty;
-+	bool			defer_repairs;
- 	int			ret;
- 
- 	if (sctl->aborted)
- 		goto out;
- 
-+	/*
-+	 * Try to check all of the metadata files that we just scheduled.  If
-+	 * we return with some types still needing a check, try repairing any
-+	 * damaged metadata that we've found so far, and try again.  Abort if
-+	 * we stop making forward progress.
-+	 */
- 	scrub_item_init_fs(&sri);
- 	scrub_item_schedule(&sri, type);
- 	ret = scrub_item_check(ctx, &sri);
-@@ -158,10 +226,20 @@ scan_metafile(
- 		goto out;
- 	}
- 
-+	ret = repair_and_scrub_loop(ctx, &sri, xfrog_scrubbers[type].descr,
-+			&defer_repairs);
-+	if (ret) {
-+		sctl->aborted = true;
-+		goto out;
-+	}
-+	if (defer_repairs)
-+		goto defer;
-+
- 	/* Complain about metadata corruptions that might not be fixable. */
- 	difficulty = repair_item_difficulty(&sri);
- 	warn_repair_difficulties(ctx, difficulty, xfrog_scrubbers[type].descr);
- 
-+defer:
- 	ret = defer_fs_repair(ctx, &sri);
- 	if (ret) {
- 		sctl->aborted = true;
-@@ -188,6 +266,7 @@ scan_rtgroup_metadata(
- 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
- 	struct scan_ctl		*sctl = arg;
- 	char			descr[DESCR_BUFSZ];
-+	bool			defer_repairs;
- 	int			ret;
- 
- 	if (sctl->aborted)
-@@ -196,6 +275,12 @@ scan_rtgroup_metadata(
- 	scrub_item_init_rtgroup(&sri, rgno);
- 	snprintf(descr, DESCR_BUFSZ, _("rtgroup %u"), rgno);
- 
-+	/*
-+	 * Try to check all of the rtgroup metadata items that we just
-+	 * scheduled.  If we return with some types still needing a check, try
-+	 * repairing any damaged metadata that we've found so far, and try
-+	 * again.  Abort if we stop making forward progress.
-+	 */
- 	scrub_item_schedule_group(&sri, XFROG_SCRUB_GROUP_RTGROUP);
- 	ret = scrub_item_check(ctx, &sri);
- 	if (ret) {
-@@ -203,6 +288,12 @@ scan_rtgroup_metadata(
- 		goto out;
- 	}
- 
-+	ret = repair_and_scrub_loop(ctx, &sri, descr, &defer_repairs);
-+	if (ret) {
-+		sctl->aborted = true;
-+		goto out;
-+	}
-+
- 	/* Everything else gets fixed during phase 4. */
- 	ret = defer_fs_repair(ctx, &sri);
- 	if (ret) {
-diff --git a/scrub/phase3.c b/scrub/phase3.c
-index 14fff96ff77..43495b3b746 100644
---- a/scrub/phase3.c
-+++ b/scrub/phase3.c
-@@ -99,6 +99,58 @@ try_inode_repair(
- 	return repair_file_corruption(ictx->ctx, sri, fd);
- }
- 
-+/*
-+ * If we couldn't check all the scheduled file metadata items, try performing
-+ * spot repairs until we check everything or stop making forward progress.
-+ */
-+static int
-+repair_and_scrub_inode_loop(
-+	struct scrub_ctx	*ctx,
-+	struct xfs_bulkstat	*bstat,
-+	int			fd,
-+	struct scrub_item	*sri,
-+	bool			*defer)
-+{
-+	unsigned int		to_check;
-+	int			error;
-+
-+	*defer = false;
-+	if (ctx->mode != SCRUB_MODE_REPAIR)
-+		return 0;
-+
-+	to_check = scrub_item_count_needscheck(sri);
-+	while (to_check > 0) {
-+		unsigned int	nr;
-+
-+		error = repair_file_corruption(ctx, sri, fd);
-+		if (error)
-+			return error;
-+
-+		error = scrub_item_check_file(ctx, sri, fd);
-+		if (error)
-+			return error;
-+
-+		nr = scrub_item_count_needscheck(sri);
-+		if (nr == to_check) {
-+			char	descr[DESCR_BUFSZ];
-+
-+			/*
-+			 * We cannot make forward scanning progress with this
-+			 * inode, so defer the rest until phase 4.
-+			 */
-+			scrub_render_ino_descr(ctx, descr, DESCR_BUFSZ,
-+					bstat->bs_ino, bstat->bs_gen, NULL);
-+			str_info(ctx, descr,
-+ _("Unable to make forward checking progress; will try again in phase 4."));
-+			*defer = true;
-+			return 0;
-+		}
-+		to_check = nr;
-+	}
-+
-+	return 0;
-+}
-+
- /* Verify the contents, xattrs, and extent maps of an inode. */
- static int
- scrub_inode(
-@@ -160,11 +212,28 @@ scrub_inode(
- 	scrub_item_schedule(&sri, XFS_SCRUB_TYPE_XATTR);
- 	scrub_item_schedule(&sri, XFS_SCRUB_TYPE_PARENT);
- 
--	/* Try to check and repair the file while it's open. */
-+	/*
-+	 * Try to check all of the metadata items that we just scheduled.  If
-+	 * we return with some types still needing a check and the space
-+	 * metadata isn't also in need of repairs, try repairing any damaged
-+	 * file metadata that we've found so far, and try checking the file
-+	 * again.  Worst case, defer the repairs and the checks to phase 4 if
-+	 * we can't make any progress on anything.
-+	 */
- 	error = scrub_item_check_file(ctx, &sri, fd);
- 	if (error)
- 		goto out;
- 
-+	if (!ictx->always_defer_repairs) {
-+		bool	defer_repairs;
-+
-+		error = repair_and_scrub_inode_loop(ctx, bstat, fd, &sri,
-+				&defer_repairs);
-+		if (error || defer_repairs)
-+			goto out;
-+	}
-+
-+	/* Try to repair the file while it's open. */
- 	error = try_inode_repair(ictx, &sri, fd);
- 	if (error)
- 		goto out;
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 91259feb758..bf843522993 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -849,6 +849,7 @@ repair_item_to_action_item(
- 	struct action_item	**aitemp)
+ # Wipe the superblock of each XFS AGs
+ _try_wipe_scratch_xfs()
  {
- 	struct action_item	*aitem;
-+	unsigned int		scrub_type;
+diff --git a/tests/xfs/800 b/tests/xfs/800
+index cbcfb5f5a6..a2542be5ec 100755
+--- a/tests/xfs/800
++++ b/tests/xfs/800
+@@ -32,7 +32,7 @@ _require_xfs_stress_scrub
+ _scratch_mkfs > "$seqres.full" 2>&1
+ _scratch_mount
+ _require_xfs_has_feature "$SCRATCH_MNT" realtime
+-_scratch_xfs_stress_scrub -s "scrub rtbitmap"
++_scratch_xfs_stress_scrub -s "scrub rtbitmap"  -s "scrub rgbitmap %rgno%"
  
- 	if (repair_item_count_needsrepair(sri) == 0)
- 		return 0;
-@@ -864,6 +865,20 @@ repair_item_to_action_item(
- 	INIT_LIST_HEAD(&aitem->list);
- 	memcpy(&aitem->sri, sri, sizeof(struct scrub_item));
+ # success, all done
+ echo Silence is golden
+diff --git a/tests/xfs/840 b/tests/xfs/840
+index fff41c5b8a..b9ed0a55b3 100755
+--- a/tests/xfs/840
++++ b/tests/xfs/840
+@@ -39,7 +39,7 @@ alloc_unit=$(_get_file_block_size $SCRATCH_MNT)
+ scratchfile=$SCRATCH_MNT/file
+ touch $scratchfile
+ $XFS_IO_PROG -x -c 'inject force_repair' $SCRATCH_MNT
+-__stress_scrub_check_commands "$scratchfile" "" 'repair bmapbtd'
++__stress_scrub_check_commands "$scratchfile" "" "" 'repair bmapbtd'
  
-+	/*
-+	 * If the scrub item indicates that there is unchecked metadata, assume
-+	 * that the scrub type checker depends on something that couldn't be
-+	 * fixed.  Mark that type as corrupt so that phase 4 will try it again.
-+	 */
-+	foreach_scrub_type(scrub_type) {
-+		__u8		*state = aitem->sri.sri_state;
-+
-+		if (state[scrub_type] & SCRUB_ITEM_NEEDSCHECK) {
-+			state[scrub_type] &= ~SCRUB_ITEM_NEEDSCHECK;
-+			state[scrub_type] |= SCRUB_ITEM_CORRUPT;
-+		}
-+	}
-+
- 	*aitemp = aitem;
- 	return 0;
- }
+ # Compute the number of extent records needed to guarantee btree format,
+ # assuming 16 bytes for each ondisk extent record
+diff --git a/tests/xfs/841 b/tests/xfs/841
+index f743454971..5831961f5f 100755
+--- a/tests/xfs/841
++++ b/tests/xfs/841
+@@ -39,7 +39,7 @@ scratchfile=$SCRATCH_MNT/file
+ mkdir $scratchdir
+ touch $scratchfile
+ $XFS_IO_PROG -x -c 'inject force_repair' $SCRATCH_MNT
+-__stress_scrub_check_commands "$scratchdir" "" 'repair directory'
++__stress_scrub_check_commands "$scratchdir" "" "" 'repair directory'
+ 
+ # Create a 2-dirblock directory
+ total_size=$((alloc_unit * 2))
 
