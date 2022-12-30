@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CBC065A0BA
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44AA465A0BC
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:37:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235919AbiLaBhJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:37:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47204 "EHLO
+        id S236111AbiLaBhl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:37:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236108AbiLaBhH (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:37:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C19A13DD9
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:37:06 -0800 (PST)
+        with ESMTP id S236108AbiLaBhk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:37:40 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8781413DD9
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:37:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B5EE61CC6
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:37:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FF19C433D2;
-        Sat, 31 Dec 2022 01:37:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4D490B81E0A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:37:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45B7C433EF;
+        Sat, 31 Dec 2022 01:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450625;
-        bh=9eJ8luAf8V+tPxcfvgulkbSSn9xRm1Hb6hxCjMbXIUU=;
+        s=k20201202; t=1672450657;
+        bh=C+07sLL0iNegsrDqDalCtM5J4ztIBnQwmGebMiPaR9w=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LrLv75OXgFlTm9NiEahZrz3Qj91/+EOn7TxwbuCvXx9rUA9LiCl54mARRcyDdySKV
-         6evcVCG9CFGibkmC9kwXJSybOw5P1Ga6AFMKh5e6Mmn+AfeHc9wvFf6Y1SSr4fVPl3
-         +3dsEsHXmWhMIBjM/jRQ9xLra3opdSRnyHM5A3L9W3aK+nySocS24l0ZgGLLSzSVaU
-         qXqvpDF+3ivHQ4Qow8qSr5DcvPamrSZsU5kxJ4G4Z20K2lH7pOA4lOBq57vHfsWDoe
-         kCRCA4UvbALjEVEMc7ApOQCAR+phcUN0MVVXx58x/j6/2xE2YA65dYUpFNHQRLoGzp
-         QtVfyOnWzdsaw==
-Subject: [PATCH 01/38] xfs: prepare rmap btree cursor tracepoints for realtime
+        b=EVrPNIpQodF6Qiffh1TBDJ9zrLbPpF7+LRrX6l8d66Ld+qrM/fCml1HULGdn6B/aq
+         ICyZB5yQ08PoP8VLk3qWzRtEXqEJwtYesafebko1JC9QrR5lsX5aswhuJinOxLXMC9
+         kikqEdhIPN4FcH5jjWfuN3PJtuirbGg+JRFodsR1LTo0JegcHCDbISFoD71NQPz/uV
+         9+P7Tj8anKAcjFt7Vytx8Ju7XZQoohLUz9trc5H0Q+qsUZ3bTrW6LMLmgimK5jWJnf
+         17O2obpeA6ngt5AAVOWBErz0DhwbyiLr1nkT+v09/W6NzYP8u9Q5mtINjIC/1Fu2Qf
+         nIjn0rKiVdGbA==
+Subject: [PATCH 03/38] xfs: introduce realtime rmap btree definitions
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:16 -0800
-Message-ID: <167243869615.715303.9064037493733102205.stgit@magnolia>
+Message-ID: <167243869642.715303.17832303961247536911.stgit@magnolia>
 In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
 References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,203 +55,95 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Rework the rmap btree cursor tracepoints in preparation to handle the
-realtime rmap btree cursor.  Mostly this involves renaming the field to
-"rmapbno" and extracting the group number from the cursor when possible.
+Add new realtime rmap btree definitions. The realtime rmap btree will
+be rooted from a hidden inode, but has its own shape and therefore
+needs to have most of its own separate types.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_trace.c |   18 ++++++++++++++++
- fs/xfs/xfs_trace.h |   58 +++++++++++++++++++++++++++-------------------------
- 2 files changed, 48 insertions(+), 28 deletions(-)
+ fs/xfs/libxfs/xfs_btree.h  |    1 +
+ fs/xfs/libxfs/xfs_format.h |    7 +++++++
+ fs/xfs/libxfs/xfs_types.h  |    5 +++--
+ fs/xfs/scrub/trace.h       |    1 +
+ fs/xfs/xfs_trace.h         |    1 +
+ 5 files changed, 13 insertions(+), 2 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_trace.c b/fs/xfs/xfs_trace.c
-index d7ede15110e8..ae35868e0638 100644
---- a/fs/xfs/xfs_trace.c
-+++ b/fs/xfs/xfs_trace.c
-@@ -45,6 +45,24 @@
- #include "xfs_rtgroup.h"
- #include "xfs_rmap.h"
+diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
+index 125f45731a54..ddaad83d4ff9 100644
+--- a/fs/xfs/libxfs/xfs_btree.h
++++ b/fs/xfs/libxfs/xfs_btree.h
+@@ -64,6 +64,7 @@ union xfs_btree_rec {
+ #define	XFS_BTNUM_RMAP	((xfs_btnum_t)XFS_BTNUM_RMAPi)
+ #define	XFS_BTNUM_REFC	((xfs_btnum_t)XFS_BTNUM_REFCi)
+ #define	XFS_BTNUM_RCBAG	((xfs_btnum_t)XFS_BTNUM_RCBAGi)
++#define	XFS_BTNUM_RTRMAP ((xfs_btnum_t)XFS_BTNUM_RTRMAPi)
  
-+static inline void
-+xfs_rmapbt_crack_agno_opdev(
-+	struct xfs_btree_cur	*cur,
-+	xfs_agnumber_t		*agno,
-+	dev_t			*opdev)
-+{
-+	if (cur->bc_flags & XFS_BTREE_IN_MEMORY) {
-+		*agno = 0;
-+		*opdev = xfbtree_target(cur->bc_mem.xfbtree)->bt_dev;
-+	} else if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE) {
-+		*agno = cur->bc_ino.rtg->rtg_rgno;
-+		*opdev = cur->bc_mp->m_rtdev_targp->bt_dev;
-+	} else {
-+		*agno = cur->bc_ag.pag->pag_agno;
-+		*opdev = cur->bc_mp->m_super->s_dev;
-+	}
-+}
+ struct xfs_btree_ops;
+ uint32_t xfs_btree_magic(struct xfs_mount *mp, const struct xfs_btree_ops *ops);
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index e4f3b2c5c054..b2d4ef28a480 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -1727,6 +1727,13 @@ typedef __be32 xfs_rmap_ptr_t;
+ 	 XFS_FIBT_BLOCK(mp) + 1 : \
+ 	 XFS_IBT_BLOCK(mp) + 1)
+ 
++/*
++ * Realtime Reverse mapping btree format definitions
++ *
++ * This is a btree for reverse mapping records for realtime volumes
++ */
++#define	XFS_RTRMAP_CRC_MAGIC	0x4d415052	/* 'MAPR' */
 +
  /*
-  * We include this last to have the helpers above available for the trace
-  * event implementations.
+  * Reference Count Btree format definitions
+  *
+diff --git a/fs/xfs/libxfs/xfs_types.h b/fs/xfs/libxfs/xfs_types.h
+index d37f8a7ce5f8..e6a4f4a7d009 100644
+--- a/fs/xfs/libxfs/xfs_types.h
++++ b/fs/xfs/libxfs/xfs_types.h
+@@ -126,7 +126,7 @@ typedef enum {
+ typedef enum {
+ 	XFS_BTNUM_BNOi, XFS_BTNUM_CNTi, XFS_BTNUM_RMAPi, XFS_BTNUM_BMAPi,
+ 	XFS_BTNUM_INOi, XFS_BTNUM_FINOi, XFS_BTNUM_REFCi, XFS_BTNUM_RCBAGi,
+-	XFS_BTNUM_MAX
++	XFS_BTNUM_RTRMAPi, XFS_BTNUM_MAX
+ } xfs_btnum_t;
+ 
+ #define XFS_BTNUM_STRINGS \
+@@ -137,7 +137,8 @@ typedef enum {
+ 	{ XFS_BTNUM_INOi,	"inobt" }, \
+ 	{ XFS_BTNUM_FINOi,	"finobt" }, \
+ 	{ XFS_BTNUM_REFCi,	"refcbt" }, \
+-	{ XFS_BTNUM_RCBAGi,	"rcbagbt" }
++	{ XFS_BTNUM_RCBAGi,	"rcbagbt" }, \
++	{ XFS_BTNUM_RTRMAPi,	"rtrmapbt" }
+ 
+ struct xfs_name {
+ 	const unsigned char	*name;
+diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
+index 9a51eb404fae..cf1635e00cb0 100644
+--- a/fs/xfs/scrub/trace.h
++++ b/fs/xfs/scrub/trace.h
+@@ -42,6 +42,7 @@ TRACE_DEFINE_ENUM(XFS_BTNUM_FINOi);
+ TRACE_DEFINE_ENUM(XFS_BTNUM_RMAPi);
+ TRACE_DEFINE_ENUM(XFS_BTNUM_REFCi);
+ TRACE_DEFINE_ENUM(XFS_BTNUM_RCBAGi);
++TRACE_DEFINE_ENUM(XFS_BTNUM_RTRMAPi);
+ 
+ TRACE_DEFINE_ENUM(XFS_REFC_DOMAIN_SHARED);
+ TRACE_DEFINE_ENUM(XFS_REFC_DOMAIN_COW);
 diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index fd067e1e28db..6bf7c2aa8e9d 100644
+index 6bf7c2aa8e9d..390aa7a4afae 100644
 --- a/fs/xfs/xfs_trace.h
 +++ b/fs/xfs/xfs_trace.h
-@@ -14,11 +14,15 @@
-  * ino: filesystem inode number
-  *
-  * agbno: per-AG block number in fs blocks
-+ * rgbno: per-rtgroup block number in fs blocks
-  * startblock: physical block number for file mappings.  This is either a
-  *             segmented fsblock for data device mappings, or a rfsblock
-  *             for realtime device mappings
-  * fsbcount: number of blocks in an extent, in fs blocks
-  *
-+ * rmapbno: physical block number for a reverse mapping.  This is an agbno for
-+ *          per-AG rmap btrees or a rgbno for realtime rmap btrees.
-+ *
-  * daddr: physical block number in 512b blocks
-  * bbcount: number of blocks in a physical extent, in 512b blocks
-  *
-@@ -2836,13 +2840,14 @@ DEFINE_DEFER_PENDING_ITEM_EVENT(xfs_defer_finish_item);
- /* rmap tracepoints */
- DECLARE_EVENT_CLASS(xfs_rmap_class,
- 	TP_PROTO(struct xfs_btree_cur *cur,
--		 xfs_agblock_t agbno, xfs_extlen_t len, bool unwritten,
-+		 xfs_agblock_t rmapbno, xfs_extlen_t len, bool unwritten,
- 		 const struct xfs_owner_info *oinfo),
--	TP_ARGS(cur, agbno, len, unwritten, oinfo),
-+	TP_ARGS(cur, rmapbno, len, unwritten, oinfo),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
-+		__field(dev_t, opdev)
- 		__field(xfs_agnumber_t, agno)
--		__field(xfs_agblock_t, agbno)
-+		__field(xfs_agblock_t, rmapbno)
- 		__field(xfs_extlen_t, len)
- 		__field(uint64_t, owner)
- 		__field(uint64_t, offset)
-@@ -2850,8 +2855,8 @@ DECLARE_EVENT_CLASS(xfs_rmap_class,
- 	),
- 	TP_fast_assign(
- 		__entry->dev = cur->bc_mp->m_super->s_dev;
--		__entry->agno = cur->bc_ag.pag->pag_agno;
--		__entry->agbno = agbno;
-+		xfs_rmapbt_crack_agno_opdev(cur, &__entry->agno, &__entry->opdev);
-+		__entry->rmapbno = rmapbno;
- 		__entry->len = len;
- 		__entry->owner = oinfo->oi_owner;
- 		__entry->offset = oinfo->oi_offset;
-@@ -2859,10 +2864,11 @@ DECLARE_EVENT_CLASS(xfs_rmap_class,
- 		if (unwritten)
- 			__entry->flags |= XFS_RMAP_UNWRITTEN;
- 	),
--	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x owner 0x%llx fileoff 0x%llx flags 0x%lx",
-+	TP_printk("dev %d:%d opdev %d:%d agno 0x%x rmapbno 0x%x fsbcount 0x%x owner 0x%llx fileoff 0x%llx flags 0x%lx",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  MAJOR(__entry->opdev), MINOR(__entry->opdev),
- 		  __entry->agno,
--		  __entry->agbno,
-+		  __entry->rmapbno,
- 		  __entry->len,
- 		  __entry->owner,
- 		  __entry->offset,
-@@ -2871,9 +2877,9 @@ DECLARE_EVENT_CLASS(xfs_rmap_class,
- #define DEFINE_RMAP_EVENT(name) \
- DEFINE_EVENT(xfs_rmap_class, name, \
- 	TP_PROTO(struct xfs_btree_cur *cur, \
--		 xfs_agblock_t agbno, xfs_extlen_t len, bool unwritten, \
-+		 xfs_agblock_t rmapbno, xfs_extlen_t len, bool unwritten, \
- 		 const struct xfs_owner_info *oinfo), \
--	TP_ARGS(cur, agbno, len, unwritten, oinfo))
-+	TP_ARGS(cur, rmapbno, len, unwritten, oinfo))
+@@ -2555,6 +2555,7 @@ TRACE_DEFINE_ENUM(XFS_BTNUM_FINOi);
+ TRACE_DEFINE_ENUM(XFS_BTNUM_RMAPi);
+ TRACE_DEFINE_ENUM(XFS_BTNUM_REFCi);
+ TRACE_DEFINE_ENUM(XFS_BTNUM_RCBAGi);
++TRACE_DEFINE_ENUM(XFS_BTNUM_RTRMAPi);
  
- /* btree cursor error/%ip tracepoint class */
- DECLARE_EVENT_CLASS(xfs_btree_error_class,
-@@ -2932,40 +2938,35 @@ TRACE_EVENT(xfs_rmap_convert_state,
- 	TP_ARGS(cur, state, caller_ip),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
-+		__field(dev_t, opdev)
- 		__field(xfs_agnumber_t, agno)
--		__field(xfs_ino_t, ino)
- 		__field(int, state)
- 		__field(unsigned long, caller_ip)
- 	),
- 	TP_fast_assign(
- 		__entry->dev = cur->bc_mp->m_super->s_dev;
--		if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE) {
--			__entry->agno = 0;
--			__entry->ino = cur->bc_ino.ip->i_ino;
--		} else {
--			__entry->agno = cur->bc_ag.pag->pag_agno;
--			__entry->ino = 0;
--		}
-+		xfs_rmapbt_crack_agno_opdev(cur, &__entry->agno, &__entry->opdev);
- 		__entry->state = state;
- 		__entry->caller_ip = caller_ip;
- 	),
--	TP_printk("dev %d:%d agno 0x%x ino 0x%llx state %d caller %pS",
-+	TP_printk("dev %d:%d opdev %d:%d agno 0x%x state %d caller %pS",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  MAJOR(__entry->opdev), MINOR(__entry->opdev),
- 		  __entry->agno,
--		  __entry->ino,
- 		  __entry->state,
- 		  (char *)__entry->caller_ip)
- );
- 
- DECLARE_EVENT_CLASS(xfs_rmapbt_class,
- 	TP_PROTO(struct xfs_btree_cur *cur,
--		 xfs_agblock_t agbno, xfs_extlen_t len,
-+		 xfs_agblock_t rmapbno, xfs_extlen_t len,
- 		 uint64_t owner, uint64_t offset, unsigned int flags),
--	TP_ARGS(cur, agbno, len, owner, offset, flags),
-+	TP_ARGS(cur, rmapbno, len, owner, offset, flags),
- 	TP_STRUCT__entry(
- 		__field(dev_t, dev)
-+		__field(dev_t, opdev)
- 		__field(xfs_agnumber_t, agno)
--		__field(xfs_agblock_t, agbno)
-+		__field(xfs_agblock_t, rmapbno)
- 		__field(xfs_extlen_t, len)
- 		__field(uint64_t, owner)
- 		__field(uint64_t, offset)
-@@ -2973,17 +2974,18 @@ DECLARE_EVENT_CLASS(xfs_rmapbt_class,
- 	),
- 	TP_fast_assign(
- 		__entry->dev = cur->bc_mp->m_super->s_dev;
--		__entry->agno = cur->bc_ag.pag->pag_agno;
--		__entry->agbno = agbno;
-+		xfs_rmapbt_crack_agno_opdev(cur, &__entry->agno, &__entry->opdev);
-+		__entry->rmapbno = rmapbno;
- 		__entry->len = len;
- 		__entry->owner = owner;
- 		__entry->offset = offset;
- 		__entry->flags = flags;
- 	),
--	TP_printk("dev %d:%d agno 0x%x agbno 0x%x fsbcount 0x%x owner 0x%llx fileoff 0x%llx flags 0x%x",
-+	TP_printk("dev %d:%d opdev %d:%d agno 0x%x rmapbno 0x%x fsbcount 0x%x owner 0x%llx fileoff 0x%llx flags 0x%x",
- 		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  MAJOR(__entry->opdev), MINOR(__entry->opdev),
- 		  __entry->agno,
--		  __entry->agbno,
-+		  __entry->rmapbno,
- 		  __entry->len,
- 		  __entry->owner,
- 		  __entry->offset,
-@@ -2992,9 +2994,9 @@ DECLARE_EVENT_CLASS(xfs_rmapbt_class,
- #define DEFINE_RMAPBT_EVENT(name) \
- DEFINE_EVENT(xfs_rmapbt_class, name, \
- 	TP_PROTO(struct xfs_btree_cur *cur, \
--		 xfs_agblock_t agbno, xfs_extlen_t len, \
-+		 xfs_agblock_t rmapbno, xfs_extlen_t len, \
- 		 uint64_t owner, uint64_t offset, unsigned int flags), \
--	TP_ARGS(cur, agbno, len, owner, offset, flags))
-+	TP_ARGS(cur, rmapbno, len, owner, offset, flags))
- 
- TRACE_DEFINE_ENUM(XFS_RMAP_MAP);
- TRACE_DEFINE_ENUM(XFS_RMAP_MAP_SHARED);
+ DECLARE_EVENT_CLASS(xfs_btree_cur_class,
+ 	TP_PROTO(struct xfs_btree_cur *cur, int level, struct xfs_buf *bp),
 
