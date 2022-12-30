@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D887C659D34
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:50:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F138659D37
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:50:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbiL3WuH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:50:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56812 "EHLO
+        id S235603AbiL3Wuz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:50:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235603AbiL3WuF (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:50:05 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B57418E31
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:50:03 -0800 (PST)
+        with ESMTP id S229527AbiL3Wux (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:50:53 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A14BC3F
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:50:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3603A61AC4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:50:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F1AC433EF;
-        Fri, 30 Dec 2022 22:50:02 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8799FB81D94
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:50:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C4A1C433EF;
+        Fri, 30 Dec 2022 22:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440602;
-        bh=Qv1mhyTVoLv/jc0yR4GIftjOASJkVm7qX2e2QCneAWw=;
+        s=k20201202; t=1672440649;
+        bh=T/haMHuOdnL3NfjTHoCkhzVjIdeq7ZxYlYEpKcNKkJk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DY6ejeVopo0wHjg+h+K+TFYzeTFaFBJ2z6UfkP2GLn+EKCFoym6oiCD92LS6xnn/r
-         ojS5w73y0U5UcLNGwnSWwCwEPUSVTMUdnt7NP3KqBvBdXXHrRTP3z3eGEuSsrd6bMs
-         QETNAAwgKfvUavhlBOn8wEFSk3gVv6HQ1aGXbMoKMtEXqRumJd6KGzTZYgKyywnPeO
-         jAHKL2f3L/wSR41zshrROyTeLc7F617gILgGG23j1pC7ssQ9LIE0t9PNHU6Jtn/haK
-         PEJVAa7PeHxU2Nw5+v+A+DysJOKaYF/IeDXfK2ykFNHuHqO8FinF+rTUndY2/67Dgu
-         1OQh7GgRcKKFg==
-Subject: [PATCH 07/11] xfs: remove flags argument from xchk_setup_xattr_buf
+        b=LpbUfpP0kHjrRh73d5BX3y4VKc7qBRbpKPeWkA7HWg677T5VocsWObJM6bTWUteEK
+         1uF1oYGWou81VjnVvS+xZT/7iLXhCeJmAkYtlWlXxPQGULU1qqMeImBT0ukT0m9Myb
+         flJmz/WQblel26cdeOIXJPZvZx+igUr/mauQvZmgcYsEi74hoGI7tdeWZmweh26G0z
+         QGHEnZ5CWNDKtfDYbho+xlu9I2JE7BM0PM0G9mGOVM6Io5C+Fw/NYxCV5GJT+ov2HQ
+         fsJnmavu8X26mGXlBIKV82Ph7AAR5pT00tp1ueBVSxD/hTii2KAGzkmYhctHs8TBmG
+         /LZH2HK0aESAg==
+Subject: [PATCH 10/11] xfs: clean up xattr scrub initialization
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:47 -0800
-Message-ID: <167243830706.687022.10382893310472111770.stgit@magnolia>
+Message-ID: <167243830746.687022.6104601319492322161.stgit@magnolia>
 In-Reply-To: <167243830598.687022.17067931640967897645.stgit@magnolia>
 References: <167243830598.687022.17067931640967897645.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,85 +54,76 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-All callers pass XCHK_GFP_FLAGS as the flags argument to
-xchk_setup_xattr_buf, so get rid of the argument.
+Clean up local variable initialization and error returns in xchk_xattr.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/attr.c |   18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ fs/xfs/scrub/attr.c |   34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
 
 diff --git a/fs/xfs/scrub/attr.c b/fs/xfs/scrub/attr.c
-index 98371daa1397..df2f21296b30 100644
+index 3e568c78210b..ea4a723f175c 100644
 --- a/fs/xfs/scrub/attr.c
 +++ b/fs/xfs/scrub/attr.c
-@@ -44,8 +44,7 @@ xchk_xattr_buf_cleanup(
- static int
- xchk_setup_xattr_buf(
- 	struct xfs_scrub	*sc,
--	size_t			value_size,
--	gfp_t			flags)
-+	size_t			value_size)
+@@ -560,7 +560,16 @@ int
+ xchk_xattr(
+ 	struct xfs_scrub		*sc)
  {
- 	size_t			bmp_sz;
- 	struct xchk_xattr_buf	*ab = sc->buf;
-@@ -56,17 +55,17 @@ xchk_setup_xattr_buf(
- 	if (ab)
- 		goto resize_value;
+-	struct xchk_xattr		sx;
++	struct xchk_xattr		sx = {
++		.sc			= sc,
++		.context		= {
++			.dp		= sc->ip,
++			.tp		= sc->tp,
++			.resynch	= 1,
++			.put_listent	= xchk_xattr_listent,
++			.allow_incomplete = true,
++		},
++	};
+ 	xfs_dablk_t			last_checked = -1U;
+ 	int				error = 0;
  
--	ab = kvzalloc(sizeof(struct xchk_xattr_buf), flags);
-+	ab = kvzalloc(sizeof(struct xchk_xattr_buf), XCHK_GFP_FLAGS);
- 	if (!ab)
- 		return -ENOMEM;
- 	sc->buf = ab;
- 	sc->buf_cleanup = xchk_xattr_buf_cleanup;
- 
--	ab->usedmap = kvmalloc(bmp_sz, flags);
-+	ab->usedmap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
- 	if (!ab->usedmap)
- 		return -ENOMEM;
- 
--	ab->freemap = kvmalloc(bmp_sz, flags);
-+	ab->freemap = kvmalloc(bmp_sz, XCHK_GFP_FLAGS);
- 	if (!ab->freemap)
- 		return -ENOMEM;
- 
-@@ -80,7 +79,7 @@ xchk_setup_xattr_buf(
- 		ab->value_sz = 0;
- 	}
- 
--	new_val = kvmalloc(value_size, flags);
-+	new_val = kvmalloc(value_size, XCHK_GFP_FLAGS);
- 	if (!new_val)
- 		return -ENOMEM;
- 
-@@ -102,8 +101,7 @@ xchk_setup_xattr(
- 	 * without the inode lock held, which means we can sleep.
- 	 */
- 	if (sc->flags & XCHK_TRY_HARDER) {
--		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX,
--				XCHK_GFP_FLAGS);
-+		error = xchk_setup_xattr_buf(sc, XATTR_SIZE_MAX);
- 		if (error)
- 			return error;
- 	}
-@@ -181,7 +179,7 @@ xchk_xattr_listent(
- 	 * doesn't work, we overload the seen_enough variable to convey
- 	 * the error message back to the main scrub function.
- 	 */
--	error = xchk_setup_xattr_buf(sx->sc, valuelen, XCHK_GFP_FLAGS);
-+	error = xchk_setup_xattr_buf(sx->sc, valuelen);
- 	if (error == -ENOMEM)
- 		error = -EDEADLOCK;
- 	if (error) {
-@@ -354,7 +352,7 @@ xchk_xattr_block(
- 		return 0;
- 
- 	/* Allocate memory for block usage checking. */
--	error = xchk_setup_xattr_buf(ds->sc, 0, XCHK_GFP_FLAGS);
-+	error = xchk_setup_xattr_buf(ds->sc, 0);
- 	if (error == -ENOMEM)
- 		return -EDEADLOCK;
+@@ -581,22 +590,13 @@ xchk_xattr(
+ 		error = xchk_da_btree(sc, XFS_ATTR_FORK, xchk_xattr_rec,
+ 				&last_checked);
  	if (error)
+-		goto out;
++		return error;
+ 
+ 	if (sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
+-		goto out;
+-
+-	/* Check that every attr key can also be looked up by hash. */
+-	memset(&sx, 0, sizeof(sx));
+-	sx.context.dp = sc->ip;
+-	sx.context.resynch = 1;
+-	sx.context.put_listent = xchk_xattr_listent;
+-	sx.context.tp = sc->tp;
+-	sx.context.allow_incomplete = true;
+-	sx.sc = sc;
++		return 0;
+ 
+ 	/*
+-	 * Look up every xattr in this file by name.
++	 * Look up every xattr in this file by name and hash.
+ 	 *
+ 	 * Use the backend implementation of xfs_attr_list to call
+ 	 * xchk_xattr_listent on every attribute key in this inode.
+@@ -613,11 +613,11 @@ xchk_xattr(
+ 	 */
+ 	error = xfs_attr_list_ilocked(&sx.context);
+ 	if (!xchk_fblock_process_error(sc, XFS_ATTR_FORK, 0, &error))
+-		goto out;
++		return error;
+ 
+ 	/* Did our listent function try to return any errors? */
+ 	if (sx.context.seen_enough < 0)
+-		error = sx.context.seen_enough;
+-out:
+-	return error;
++		return sx.context.seen_enough;
++
++	return 0;
+ }
 
