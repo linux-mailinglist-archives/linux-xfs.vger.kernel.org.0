@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E099659E25
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:25:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C98BC659E37
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235722AbiL3XZS (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:25:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36590 "EHLO
+        id S235692AbiL3X0V (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235843AbiL3XYr (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:24:47 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A91B1EAF0;
-        Fri, 30 Dec 2022 15:24:15 -0800 (PST)
+        with ESMTP id S235761AbiL3XZt (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:25:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F45512AA6;
+        Fri, 30 Dec 2022 15:25:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 981BFB81D67;
-        Fri, 30 Dec 2022 23:24:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C035C433D2;
-        Fri, 30 Dec 2022 23:24:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F060761C40;
+        Fri, 30 Dec 2022 23:25:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57987C433EF;
+        Fri, 30 Dec 2022 23:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672442652;
-        bh=x1IogGVqxqN0wEOvVsoX5MDPZfWBmOn5CZm9dfhLDmM=;
+        s=k20201202; t=1672442746;
+        bh=jw2iorKGf8ZJXz7ctY+p1Go980NywIcOIwg5tKE8gD4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DlAXyacjLf7SDGnHTa/biRZJbt0RixO+TCbNXRwpVyMrJtiKikH3wudJ8vAtzwbrk
-         OhtHRr5CXIk1x5s7jTTV8t8vVD3qL0viBc0JYHJ1t8cl4Eo2Uh2JSN2FCuBe2nua16
-         MNoAL2rf+fjtnuyihRK3aX1J+jb7jLXqXg0/yi0UMYL8uBbjqKkfC+XaOg5Us3enYS
-         kjfe3C+JsMSgtRNa8U+q9ctG8fh0F2WeYku9UUL1WLAe3QAkCB+0GNriawBk1T4Zmz
-         R/2aV8uyjAtumXeaqo+tJjux3ZwZ0dwlYx53bE5fr2w1H50EuxycjHPXr9wSF22NLH
-         uEIZQRwjKC5oA==
-Subject: [PATCH 1/7] xfs: create a big array data structure
+        b=Kj/nwvTrRGvy2psCBirNni6hWcawJqdOx2aUzwN3x27N9QmZ38ZqY2m+PE/XD+z+x
+         8vzsqu7Eh/+ISK7qFEJRgusFs8itsikhbCfp9ZaLRc7u+jpXXltRRWmLMYRuzQXyeB
+         V4aqAcdmLL2tCRiHwkEv5s20yIW4VtFT0Djm/0mP5EvjyCuqpIdx0tZqFJ6Mj7Tubi
+         yRwJDCwXKMGNWDDCNmWZSL3UnzBW2ml3u5KNzIpYFbbEGJB2OJQtC+zlvIG7hJBKTZ
+         qNCiJgtk3mzkuy6UUPzx2IYS3WxxGX/6+n9pb8V6Qj8BMTGpt+V3rDBKXtIFvn9v/c
+         Cy//uD0o1WqXQ==
+Subject: [PATCH 7/7] xfs: improve xfarray quicksort pivot
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
         linux-fsdevel@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:35 -0800
-Message-ID: <167243835502.692498.7954656803725057326.stgit@magnolia>
+Message-ID: <167243835587.692498.4752204565816305502.stgit@magnolia>
 In-Reply-To: <167243835481.692498.14657125042725378987.stgit@magnolia>
 References: <167243835481.692498.14657125042725378987.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,1048 +55,330 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Create a simple 'big array' data structure for storage of fixed-size
-metadata records that will be used to reconstruct a btree index.  For
-repair operations, the most important operations are append, iterate,
-and sort.
+Now that we have the means to do insertion sorts of small in-memory
+subsets of an xfarray, use it to improve the quicksort pivot algorithm
+by reading 7 records into memory and finding the median of that.  This
+should prevent bad partitioning when a[lo] and a[hi] end up next to each
+other in the final sort, which can happen when sorting for cntbt repair
+when the free space is extremely fragmented (e.g. generic/176).
 
-Earlier implementations of the big array used linked lists and suffered
-from severe problems -- pinning all records in kernel memory was not a
-good idea and frequently lead to OOM situations; random access was very
-inefficient; and record overhead for the lists was unacceptably high at
-40-60%.
-
-Therefore, the big memory array relies on the 'xfile' abstraction, which
-creates a memfd file and stores the records in page cache pages.  Since
-the memfd is created in tmpfs, the memory pages can be pushed out to
-disk if necessary and we have a built-in usage limit of 50% of physical
-memory.
+This doesn't speed up the average quicksort run by much, but it will
+(hopefully) avoid the quadratic time collapse for which quicksort is
+famous.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/Kconfig         |    1 
- fs/xfs/Makefile        |    2 
- fs/xfs/scrub/trace.c   |    4 -
- fs/xfs/scrub/trace.h   |  123 ++++++++++++++++
- fs/xfs/scrub/xfarray.c |  370 ++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/xfarray.h |   58 ++++++++
- fs/xfs/scrub/xfile.c   |  318 +++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/xfile.h   |   58 ++++++++
- 8 files changed, 933 insertions(+), 1 deletion(-)
- create mode 100644 fs/xfs/scrub/xfarray.c
- create mode 100644 fs/xfs/scrub/xfarray.h
- create mode 100644 fs/xfs/scrub/xfile.c
- create mode 100644 fs/xfs/scrub/xfile.h
+ fs/xfs/scrub/xfarray.c |  198 ++++++++++++++++++++++++++++++++----------------
+ fs/xfs/scrub/xfarray.h |   19 +++--
+ 2 files changed, 148 insertions(+), 69 deletions(-)
 
 
-diff --git a/fs/xfs/Kconfig b/fs/xfs/Kconfig
-index 05bc865142b8..6077ac04c0c3 100644
---- a/fs/xfs/Kconfig
-+++ b/fs/xfs/Kconfig
-@@ -101,6 +101,7 @@ config XFS_ONLINE_SCRUB
- 	bool "XFS online metadata check support"
- 	default n
- 	depends on XFS_FS
-+	depends on TMPFS && SHMEM
- 	select XFS_DRAIN_INTENTS
- 	help
- 	  If you say Y here you will be able to check metadata on a
-diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
-index 90f1f01277be..90cbba7dc550 100644
---- a/fs/xfs/Makefile
-+++ b/fs/xfs/Makefile
-@@ -162,6 +162,8 @@ xfs-y				+= $(addprefix scrub/, \
- 				   rmap.o \
- 				   scrub.o \
- 				   symlink.o \
-+				   xfarray.o \
-+				   xfile.o \
- 				   )
+diff --git a/fs/xfs/scrub/xfarray.c b/fs/xfs/scrub/xfarray.c
+index 3e232ee5e7e6..ce1365144209 100644
+--- a/fs/xfs/scrub/xfarray.c
++++ b/fs/xfs/scrub/xfarray.c
+@@ -428,6 +428,14 @@ static inline xfarray_idx_t *xfarray_sortinfo_hi(struct xfarray_sortinfo *si)
+ 	return xfarray_sortinfo_lo(si) + si->max_stack_depth;
+ }
  
- xfs-$(CONFIG_XFS_RT)		+= scrub/rtbitmap.o
-diff --git a/fs/xfs/scrub/trace.c b/fs/xfs/scrub/trace.c
-index b5f94676c37c..4a0385c97ea6 100644
---- a/fs/xfs/scrub/trace.c
-+++ b/fs/xfs/scrub/trace.c
-@@ -12,8 +12,10 @@
- #include "xfs_mount.h"
- #include "xfs_inode.h"
- #include "xfs_btree.h"
--#include "scrub/scrub.h"
- #include "xfs_ag.h"
-+#include "scrub/scrub.h"
-+#include "scrub/xfile.h"
-+#include "scrub/xfarray.h"
++/* Size of each element in the quicksort pivot array. */
++static inline size_t
++xfarray_pivot_rec_sz(
++	struct xfarray		*array)
++{
++	return round_up(array->obj_size, 8) + sizeof(xfarray_idx_t);
++}
++
+ /* Allocate memory to handle the sort. */
+ static inline int
+ xfarray_sortinfo_alloc(
+@@ -438,8 +446,16 @@ xfarray_sortinfo_alloc(
+ {
+ 	struct xfarray_sortinfo	*si;
+ 	size_t			nr_bytes = sizeof(struct xfarray_sortinfo);
++	size_t			pivot_rec_sz = xfarray_pivot_rec_sz(array);
+ 	int			max_stack_depth;
  
- /* Figure out which block the btree cursor was pointing to. */
- static inline xfs_fsblock_t
-diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-index cb33f42190df..84edfa7556ac 100644
---- a/fs/xfs/scrub/trace.h
-+++ b/fs/xfs/scrub/trace.h
-@@ -16,6 +16,9 @@
- #include <linux/tracepoint.h>
- #include "xfs_bit.h"
++	/*
++	 * The median-of-nine pivot algorithm doesn't work if a subset has
++	 * fewer than 9 items.  Make sure the in-memory sort will always take
++	 * over for subsets where this wouldn't be the case.
++	 */
++	BUILD_BUG_ON(XFARRAY_QSORT_PIVOT_NR >= XFARRAY_ISORT_NR);
++
+ 	/*
+ 	 * Tail-call recursion during the partitioning phase means that
+ 	 * quicksort will never recurse more than log2(nr) times.  We need one
+@@ -454,8 +470,10 @@ xfarray_sortinfo_alloc(
+ 	/* Each level of quicksort uses a lo and a hi index */
+ 	nr_bytes += max_stack_depth * sizeof(xfarray_idx_t) * 2;
  
-+struct xfile;
-+struct xfarray;
+-	/* Scratchpad for in-memory sort, or one record for the pivot */
+-	nr_bytes += (XFARRAY_ISORT_NR * array->obj_size);
++	/* Scratchpad for in-memory sort, or finding the pivot */
++	nr_bytes += max_t(size_t,
++			(XFARRAY_QSORT_PIVOT_NR + 1) * pivot_rec_sz,
++			XFARRAY_ISORT_NR * array->obj_size);
+ 
+ 	si = kvzalloc(nr_bytes, XCHK_GFP_FLAGS);
+ 	if (!si)
+@@ -633,14 +651,43 @@ static inline void *xfarray_sortinfo_pivot(struct xfarray_sortinfo *si)
+ 	return xfarray_sortinfo_hi(si) + si->max_stack_depth;
+ }
+ 
++/* Return a pointer to the start of the pivot array. */
++static inline void *
++xfarray_sortinfo_pivot_array(
++	struct xfarray_sortinfo	*si)
++{
++	return xfarray_sortinfo_pivot(si) + si->array->obj_size;
++}
++
++/* The xfarray record is stored at the start of each pivot array element. */
++static inline void *
++xfarray_pivot_array_rec(
++	void			*pa,
++	size_t			pa_recsz,
++	unsigned int		pa_idx)
++{
++	return pa + (pa_recsz * pa_idx);
++}
++
++/* The xfarray index is stored at the end of each pivot array element. */
++static inline xfarray_idx_t *
++xfarray_pivot_array_idx(
++	void			*pa,
++	size_t			pa_recsz,
++	unsigned int		pa_idx)
++{
++	return xfarray_pivot_array_rec(pa, pa_recsz, pa_idx + 1) -
++			sizeof(xfarray_idx_t);
++}
 +
  /*
-  * ftrace's __print_symbolic requires that all enum values be wrapped in the
-  * TRACE_DEFINE_ENUM macro so that the enum value can be encoded in the ftrace
-@@ -726,6 +729,126 @@ TRACE_EVENT(xchk_refcount_incorrect,
- 		  __entry->seen)
- )
+  * Find a pivot value for quicksort partitioning, swap it with a[lo], and save
+  * the cached pivot record for the next step.
+  *
+- * Select the median value from a[lo], a[mid], and a[hi].  Put the median in
+- * a[lo], the lowest in a[mid], and the highest in a[hi].  Using the median of
+- * the three reduces the chances that we pick the worst case pivot value, since
+- * it's likely that our array values are nearly sorted.
++ * Load evenly-spaced records within the given range into memory, sort them,
++ * and choose the pivot from the median record.  Using multiple points will
++ * improve the quality of the pivot selection, and hopefully avoid the worst
++ * quicksort behavior, since our array values are nearly always evenly sorted.
+  */
+ STATIC int
+ xfarray_qsort_pivot(
+@@ -648,76 +695,99 @@ xfarray_qsort_pivot(
+ 	xfarray_idx_t		lo,
+ 	xfarray_idx_t		hi)
+ {
+-	void			*a = xfarray_sortinfo_pivot(si);
+-	void			*b = xfarray_scratch(si->array);
+-	xfarray_idx_t		mid = lo + ((hi - lo) / 2);
++	void			*pivot = xfarray_sortinfo_pivot(si);
++	void			*parray = xfarray_sortinfo_pivot_array(si);
++	void			*recp;
++	xfarray_idx_t		*idxp;
++	xfarray_idx_t		step = (hi - lo) / (XFARRAY_QSORT_PIVOT_NR - 1);
++	size_t			pivot_rec_sz = xfarray_pivot_rec_sz(si->array);
++	int			i, j;
+ 	int			error;
  
-+TRACE_EVENT(xfile_create,
-+	TP_PROTO(struct xfs_mount *mp, struct xfile *xf),
-+	TP_ARGS(mp, xf),
-+	TP_STRUCT__entry(
-+		__field(dev_t, dev)
-+		__field(unsigned long, ino)
-+		__array(char, pathname, 256)
-+	),
-+	TP_fast_assign(
-+		char		pathname[257];
-+		char		*path;
-+
-+		__entry->dev = mp->m_super->s_dev;
-+		__entry->ino = file_inode(xf->file)->i_ino;
-+		memset(pathname, 0, sizeof(pathname));
-+		path = file_path(xf->file, pathname, sizeof(pathname) - 1);
-+		if (IS_ERR(path))
-+			path = "(unknown)";
-+		strncpy(__entry->pathname, path, sizeof(__entry->pathname));
-+	),
-+	TP_printk("dev %d:%d xfino 0x%lx path '%s'",
-+		  MAJOR(__entry->dev), MINOR(__entry->dev),
-+		  __entry->ino,
-+		  __entry->pathname)
-+);
-+
-+TRACE_EVENT(xfile_destroy,
-+	TP_PROTO(struct xfile *xf),
-+	TP_ARGS(xf),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, ino)
-+		__field(unsigned long long, bytes)
-+		__field(loff_t, size)
-+	),
-+	TP_fast_assign(
-+		struct xfile_stat	statbuf;
-+		int			ret;
-+
-+		ret = xfile_stat(xf, &statbuf);
-+		if (!ret) {
-+			__entry->bytes = statbuf.bytes;
-+			__entry->size = statbuf.size;
-+		} else {
-+			__entry->bytes = -1;
-+			__entry->size = -1;
-+		}
-+		__entry->ino = file_inode(xf->file)->i_ino;
-+	),
-+	TP_printk("xfino 0x%lx mem_bytes 0x%llx isize 0x%llx",
-+		  __entry->ino,
-+		  __entry->bytes,
-+		  __entry->size)
-+);
-+
-+DECLARE_EVENT_CLASS(xfile_class,
-+	TP_PROTO(struct xfile *xf, loff_t pos, unsigned long long bytecount),
-+	TP_ARGS(xf, pos, bytecount),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, ino)
-+		__field(unsigned long long, bytes_used)
-+		__field(loff_t, pos)
-+		__field(loff_t, size)
-+		__field(unsigned long long, bytecount)
-+	),
-+	TP_fast_assign(
-+		struct xfile_stat	statbuf;
-+		int			ret;
-+
-+		ret = xfile_stat(xf, &statbuf);
-+		if (!ret) {
-+			__entry->bytes_used = statbuf.bytes;
-+			__entry->size = statbuf.size;
-+		} else {
-+			__entry->bytes_used = -1;
-+			__entry->size = -1;
-+		}
-+		__entry->ino = file_inode(xf->file)->i_ino;
-+		__entry->pos = pos;
-+		__entry->bytecount = bytecount;
-+	),
-+	TP_printk("xfino 0x%lx mem_bytes 0x%llx pos 0x%llx bytecount 0x%llx isize 0x%llx",
-+		  __entry->ino,
-+		  __entry->bytes_used,
-+		  __entry->pos,
-+		  __entry->bytecount,
-+		  __entry->size)
-+);
-+#define DEFINE_XFILE_EVENT(name) \
-+DEFINE_EVENT(xfile_class, name, \
-+	TP_PROTO(struct xfile *xf, loff_t pos, unsigned long long bytecount), \
-+	TP_ARGS(xf, pos, bytecount))
-+DEFINE_XFILE_EVENT(xfile_pread);
-+DEFINE_XFILE_EVENT(xfile_pwrite);
-+DEFINE_XFILE_EVENT(xfile_seek_data);
-+
-+TRACE_EVENT(xfarray_create,
-+	TP_PROTO(struct xfarray *xfa, unsigned long long required_capacity),
-+	TP_ARGS(xfa, required_capacity),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, ino)
-+		__field(uint64_t, max_nr)
-+		__field(size_t, obj_size)
-+		__field(int, obj_size_log)
-+		__field(unsigned long long, required_capacity)
-+	),
-+	TP_fast_assign(
-+		__entry->max_nr = xfa->max_nr;
-+		__entry->obj_size = xfa->obj_size;
-+		__entry->obj_size_log = xfa->obj_size_log;
-+		__entry->ino = file_inode(xfa->xfile->file)->i_ino;
-+		__entry->required_capacity = required_capacity;
-+	),
-+	TP_printk("xfino 0x%lx max_nr %llu reqd_nr %llu objsz %zu objszlog %d",
-+		  __entry->ino,
-+		  __entry->max_nr,
-+		  __entry->required_capacity,
-+		  __entry->obj_size,
-+		  __entry->obj_size_log)
-+);
-+
- /* repair tracepoints */
- #if IS_ENABLED(CONFIG_XFS_ONLINE_REPAIR)
+-	/* if a[mid] < a[lo], swap a[mid] and a[lo]. */
+-	error = xfarray_sort_load(si, mid, a);
+-	if (error)
+-		return error;
+-	error = xfarray_sort_load(si, lo, b);
+-	if (error)
+-		return error;
+-	if (xfarray_sort_cmp(si, a, b) < 0) {
+-		error = xfarray_sort_store(si, lo, a);
+-		if (error)
+-			return error;
+-		error = xfarray_sort_store(si, mid, b);
+-		if (error)
+-			return error;
+-	}
++	ASSERT(step > 0);
  
-diff --git a/fs/xfs/scrub/xfarray.c b/fs/xfs/scrub/xfarray.c
-new file mode 100644
-index 000000000000..8fdd7dd40193
---- /dev/null
-+++ b/fs/xfs/scrub/xfarray.c
-@@ -0,0 +1,370 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2022 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <djwong@kernel.org>
-+ */
-+#include "xfs.h"
-+#include "xfs_fs.h"
-+#include "xfs_shared.h"
-+#include "xfs_format.h"
-+#include "scrub/xfile.h"
-+#include "scrub/xfarray.h"
-+#include "scrub/scrub.h"
-+#include "scrub/trace.h"
+-	/* if a[hi] < a[mid], swap a[mid] and a[hi]. */
+-	error = xfarray_sort_load(si, hi, a);
+-	if (error)
+-		return error;
+-	error = xfarray_sort_load(si, mid, b);
+-	if (error)
+-		return error;
+-	if (xfarray_sort_cmp(si, a, b) < 0) {
+-		error = xfarray_sort_store(si, mid, a);
+-		if (error)
+-			return error;
+-		error = xfarray_sort_store(si, hi, b);
+-		if (error)
+-			return error;
+-	} else {
+-		goto move_front;
++	/*
++	 * Load the xfarray indexes of the records we intend to sample into the
++	 * pivot array.
++	 */
++	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, 0);
++	*idxp = lo;
++	for (i = 1; i < XFARRAY_QSORT_PIVOT_NR - 1; i++) {
++		idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, i);
++		*idxp = lo + (i * step);
+ 	}
++	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz,
++			XFARRAY_QSORT_PIVOT_NR - 1);
++	*idxp = hi;
+ 
+-	/* if a[mid] < a[lo], swap a[mid] and a[lo]. */
+-	error = xfarray_sort_load(si, mid, a);
+-	if (error)
+-		return error;
+-	error = xfarray_sort_load(si, lo, b);
+-	if (error)
+-		return error;
+-	if (xfarray_sort_cmp(si, a, b) < 0) {
+-		error = xfarray_sort_store(si, lo, a);
+-		if (error)
+-			return error;
+-		error = xfarray_sort_store(si, mid, b);
++	/* Load the selected xfarray records into the pivot array. */
++	for (i = 0; i < XFARRAY_QSORT_PIVOT_NR; i++) {
++		xfarray_idx_t	idx;
 +
-+/*
-+ * Large Arrays of Fixed-Size Records
-+ * ==================================
-+ *
-+ * This memory array uses an xfile (which itself is a memfd "file") to store
-+ * large numbers of fixed-size records in memory that can be paged out.  This
-+ * puts less stress on the memory reclaim algorithms during an online repair
-+ * because we don't have to pin so much memory.  However, array access is less
-+ * direct than would be in a regular memory array.  Access to the array is
-+ * performed via indexed load and store methods, and an append method is
-+ * provided for convenience.  Array elements can be unset, which sets them to
-+ * all zeroes.  Unset entries are skipped during iteration, though direct loads
-+ * will return a zeroed buffer.  Callers are responsible for concurrency
-+ * control.
-+ */
++		recp = xfarray_pivot_array_rec(parray, pivot_rec_sz, i);
++		idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, i);
 +
-+/*
-+ * Pointer to scratch space.  Because we can't access the xfile data directly,
-+ * we allocate a small amount of memory on the end of the xfarray structure to
-+ * buffer array items when we need space to store values temporarily.
-+ */
-+static inline void *xfarray_scratch(struct xfarray *array)
-+{
-+	return (array + 1);
-+}
-+
-+/* Compute array index given an xfile offset. */
-+static xfarray_idx_t
-+xfarray_idx(
-+	struct xfarray	*array,
-+	loff_t		pos)
-+{
-+	if (array->obj_size_log >= 0)
-+		return (xfarray_idx_t)pos >> array->obj_size_log;
-+
-+	return div_u64((xfarray_idx_t)pos, array->obj_size);
-+}
-+
-+/* Compute xfile offset of array element. */
-+static inline loff_t xfarray_pos(struct xfarray *array, xfarray_idx_t idx)
-+{
-+	if (array->obj_size_log >= 0)
-+		return idx << array->obj_size_log;
-+
-+	return idx * array->obj_size;
-+}
-+
-+/*
-+ * Initialize a big memory array.  Array records cannot be larger than a
-+ * page, and the array cannot span more bytes than the page cache supports.
-+ * If @required_capacity is nonzero, the maximum array size will be set to this
-+ * quantity and the array creation will fail if the underlying storage cannot
-+ * support that many records.
-+ */
-+int
-+xfarray_create(
-+	struct xfs_mount	*mp,
-+	const char		*description,
-+	unsigned long long	required_capacity,
-+	size_t			obj_size,
-+	struct xfarray		**arrayp)
-+{
-+	struct xfarray		*array;
-+	struct xfile		*xfile;
-+	int			error;
-+
-+	ASSERT(obj_size < PAGE_SIZE);
-+
-+	error = xfile_create(mp, description, 0, &xfile);
-+	if (error)
-+		return error;
-+
-+	error = -ENOMEM;
-+	array = kzalloc(sizeof(struct xfarray) + obj_size, XCHK_GFP_FLAGS);
-+	if (!array)
-+		goto out_xfile;
-+
-+	array->xfile = xfile;
-+	array->obj_size = obj_size;
-+
-+	if (is_power_of_2(obj_size))
-+		array->obj_size_log = ilog2(obj_size);
-+	else
-+		array->obj_size_log = -1;
-+
-+	array->max_nr = xfarray_idx(array, MAX_LFS_FILESIZE);
-+	trace_xfarray_create(array, required_capacity);
-+
-+	if (required_capacity > 0) {
-+		if (array->max_nr < required_capacity) {
-+			error = -ENOMEM;
-+			goto out_xfarray;
-+		}
-+		array->max_nr = required_capacity;
-+	}
-+
-+	*arrayp = array;
-+	return 0;
-+
-+out_xfarray:
-+	kfree(array);
-+out_xfile:
-+	xfile_destroy(xfile);
-+	return error;
-+}
-+
-+/* Destroy the array. */
-+void
-+xfarray_destroy(
-+	struct xfarray	*array)
-+{
-+	xfile_destroy(array->xfile);
-+	kfree(array);
-+}
-+
-+/* Load an element from the array. */
-+int
-+xfarray_load(
-+	struct xfarray	*array,
-+	xfarray_idx_t	idx,
-+	void		*ptr)
-+{
-+	if (idx >= array->nr)
-+		return -ENODATA;
-+
-+	return xfile_obj_load(array->xfile, ptr, array->obj_size,
-+			xfarray_pos(array, idx));
-+}
-+
-+/* Is this array element potentially unset? */
-+static inline bool
-+xfarray_is_unset(
-+	struct xfarray	*array,
-+	loff_t		pos)
-+{
-+	void		*temp = xfarray_scratch(array);
-+	int		error;
-+
-+	if (array->unset_slots == 0)
-+		return false;
-+
-+	error = xfile_obj_load(array->xfile, temp, array->obj_size, pos);
-+	if (!error && xfarray_element_is_null(array, temp))
-+		return true;
-+
-+	return false;
-+}
-+
-+/*
-+ * Unset an array element.  If @idx is the last element in the array, the
-+ * array will be truncated.  Otherwise, the entry will be zeroed.
-+ */
-+int
-+xfarray_unset(
-+	struct xfarray	*array,
-+	xfarray_idx_t	idx)
-+{
-+	void		*temp = xfarray_scratch(array);
-+	loff_t		pos = xfarray_pos(array, idx);
-+	int		error;
-+
-+	if (idx >= array->nr)
-+		return -ENODATA;
-+
-+	if (idx == array->nr - 1) {
-+		array->nr--;
-+		return 0;
-+	}
-+
-+	if (xfarray_is_unset(array, pos))
-+		return 0;
-+
-+	memset(temp, 0, array->obj_size);
-+	error = xfile_obj_store(array->xfile, temp, array->obj_size, pos);
-+	if (error)
-+		return error;
-+
-+	array->unset_slots++;
-+	return 0;
-+}
-+
-+/*
-+ * Store an element in the array.  The element must not be completely zeroed,
-+ * because those are considered unset sparse elements.
-+ */
-+int
-+xfarray_store(
-+	struct xfarray	*array,
-+	xfarray_idx_t	idx,
-+	const void	*ptr)
-+{
-+	int		ret;
-+
-+	if (idx >= array->max_nr)
-+		return -EFBIG;
-+
-+	ASSERT(!xfarray_element_is_null(array, ptr));
-+
-+	ret = xfile_obj_store(array->xfile, ptr, array->obj_size,
-+			xfarray_pos(array, idx));
-+	if (ret)
-+		return ret;
-+
-+	array->nr = max(array->nr, idx + 1);
-+	return 0;
-+}
-+
-+/* Is this array element NULL? */
-+bool
-+xfarray_element_is_null(
-+	struct xfarray	*array,
-+	const void	*ptr)
-+{
-+	return !memchr_inv(ptr, 0, array->obj_size);
-+}
-+
-+/*
-+ * Store an element anywhere in the array that is unset.  If there are no
-+ * unset slots, append the element to the array.
-+ */
-+int
-+xfarray_store_anywhere(
-+	struct xfarray	*array,
-+	const void	*ptr)
-+{
-+	void		*temp = xfarray_scratch(array);
-+	loff_t		endpos = xfarray_pos(array, array->nr);
-+	loff_t		pos;
-+	int		error;
-+
-+	/* Find an unset slot to put it in. */
-+	for (pos = 0;
-+	     pos < endpos && array->unset_slots > 0;
-+	     pos += array->obj_size) {
-+		error = xfile_obj_load(array->xfile, temp, array->obj_size,
-+				pos);
-+		if (error || !xfarray_element_is_null(array, temp))
++		/* No unset records; load directly into the array. */
++		if (likely(si->array->unset_slots == 0)) {
++			error = xfarray_sort_load(si, *idxp, recp);
++			if (error)
++				return error;
 +			continue;
-+
-+		error = xfile_obj_store(array->xfile, ptr, array->obj_size,
-+				pos);
-+		if (error)
-+			return error;
-+
-+		array->unset_slots--;
-+		return 0;
-+	}
-+
-+	/* No unset slots found; attach it on the end. */
-+	array->unset_slots = 0;
-+	return xfarray_append(array, ptr);
-+}
-+
-+/* Return length of array. */
-+uint64_t
-+xfarray_length(
-+	struct xfarray	*array)
-+{
-+	return array->nr;
-+}
-+
-+/*
-+ * Decide which array item we're going to read as part of an _iter_get.
-+ * @cur is the array index, and @pos is the file offset of that array index in
-+ * the backing xfile.  Returns ENODATA if we reach the end of the records.
-+ *
-+ * Reading from a hole in a sparse xfile causes page instantiation, so for
-+ * iterating a (possibly sparse) array we need to figure out if the cursor is
-+ * pointing at a totally uninitialized hole and move the cursor up if
-+ * necessary.
-+ */
-+static inline int
-+xfarray_find_data(
-+	struct xfarray	*array,
-+	xfarray_idx_t	*cur,
-+	loff_t		*pos)
-+{
-+	unsigned int	pgoff = offset_in_page(*pos);
-+	loff_t		end_pos = *pos + array->obj_size - 1;
-+	loff_t		new_pos;
-+
-+	/*
-+	 * If the current array record is not adjacent to a page boundary, we
-+	 * are in the middle of the page.  We do not need to move the cursor.
-+	 */
-+	if (pgoff != 0 && pgoff + array->obj_size - 1 < PAGE_SIZE)
-+		return 0;
-+
-+	/*
-+	 * Call SEEK_DATA on the last byte in the record we're about to read.
-+	 * If the record ends at (or crosses) the end of a page then we know
-+	 * that the first byte of the record is backed by pages and don't need
-+	 * to query it.  If instead the record begins at the start of the page
-+	 * then we know that querying the last byte is just as good as querying
-+	 * the first byte, since records cannot be larger than a page.
-+	 *
-+	 * If the call returns the same file offset, we know this record is
-+	 * backed by real pages.  We do not need to move the cursor.
-+	 */
-+	new_pos = xfile_seek_data(array->xfile, end_pos);
-+	if (new_pos == -ENXIO)
-+		return -ENODATA;
-+	if (new_pos < 0)
-+		return new_pos;
-+	if (new_pos == end_pos)
-+		return 0;
-+
-+	/*
-+	 * Otherwise, SEEK_DATA told us how far up to move the file pointer to
-+	 * find more data.  Move the array index to the first record past the
-+	 * byte offset we were given.
-+	 */
-+	new_pos = roundup_64(new_pos, array->obj_size);
-+	*cur = xfarray_idx(array, new_pos);
-+	*pos = xfarray_pos(array, *cur);
-+	return 0;
-+}
-+
-+/*
-+ * Starting at *idx, fetch the next non-null array entry and advance the index
-+ * to set up the next _load_next call.  Returns ENODATA if we reach the end of
-+ * the array.  Callers must set @*idx to XFARRAY_CURSOR_INIT before the first
-+ * call to this function.
-+ */
-+int
-+xfarray_load_next(
-+	struct xfarray	*array,
-+	xfarray_idx_t	*idx,
-+	void		*rec)
-+{
-+	xfarray_idx_t	cur = *idx;
-+	loff_t		pos = xfarray_pos(array, cur);
-+	int		error;
-+
-+	do {
-+		if (cur >= array->nr)
-+			return -ENODATA;
++		}
 +
 +		/*
-+		 * Ask the backing store for the location of next possible
-+		 * written record, then retrieve that record.
++		 * Load non-null records into the scratchpad without changing
++		 * the xfarray_idx_t in the pivot array.
 +		 */
-+		error = xfarray_find_data(array, &cur, &pos);
-+		if (error)
-+			return error;
-+		error = xfarray_load(array, cur, rec);
-+		if (error)
-+			return error;
++		idx = *idxp;
++		xfarray_sort_bump_loads(si);
++		error = xfarray_load_next(si->array, &idx, recp);
+ 		if (error)
+ 			return error;
+ 	}
+ 
+-move_front:
++	xfarray_sort_bump_heapsorts(si);
++	sort(parray, XFARRAY_QSORT_PIVOT_NR, pivot_rec_sz, si->cmp_fn, NULL);
 +
-+		cur++;
-+		pos += array->obj_size;
-+	} while (xfarray_element_is_null(array, rec));
+ 	/*
+-	 * Move our selected pivot to a[lo].  Recall that a == si->pivot, so
+-	 * this leaves us with the pivot cached in the sortinfo structure.
++	 * We sorted the pivot array records (which includes the xfarray
++	 * indices) in xfarray record order.  The median element of the pivot
++	 * array contains the xfarray record that we will use as the pivot.
++	 * Copy that xfarray record to the designated space.
+ 	 */
+-	error = xfarray_sort_load(si, lo, b);
+-	if (error)
+-		return error;
+-	error = xfarray_sort_load(si, mid, a);
+-	if (error)
+-		return error;
+-	error = xfarray_sort_store(si, mid, b);
++	recp = xfarray_pivot_array_rec(parray, pivot_rec_sz,
++			XFARRAY_QSORT_PIVOT_NR / 2);
++	memcpy(pivot, recp, si->array->obj_size);
 +
-+	*idx = cur;
-+	return 0;
-+}
++	/* If the pivot record we chose was already in a[lo] then we're done. */
++	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz,
++			XFARRAY_QSORT_PIVOT_NR / 2);
++	if (*idxp == lo)
++		return 0;
++
++	/*
++	 * Find the cached copy of a[lo] in the pivot array so that we can swap
++	 * a[lo] and a[pivot].
++	 */
++	for (i = 0, j = -1; i < XFARRAY_QSORT_PIVOT_NR; i++) {
++		idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz, i);
++		if (*idxp == lo)
++			j = i;
++	}
++	if (j < 0) {
++		ASSERT(j >= 0);
++		return -EFSCORRUPTED;
++	}
++
++	/* Swap a[lo] and a[pivot]. */
++	error = xfarray_sort_store(si, lo, pivot);
+ 	if (error)
+ 		return error;
+-	return xfarray_sort_store(si, lo, a);
++
++	recp = xfarray_pivot_array_rec(parray, pivot_rec_sz, j);
++	idxp = xfarray_pivot_array_idx(parray, pivot_rec_sz,
++			XFARRAY_QSORT_PIVOT_NR / 2);
++	return xfarray_sort_store(si, *idxp, recp);
+ }
+ 
+ /*
+@@ -829,7 +899,7 @@ xfarray_sort_load_cached(
+  *    particularly expensive in the kernel.
+  *
+  * 2. For arrays with records in arbitrary or user-controlled order, choose the
+- *    pivot element using a median-of-three decision tree.  This reduces the
++ *    pivot element using a median-of-nine decision tree.  This reduces the
+  *    probability of selecting a bad pivot value which causes worst case
+  *    behavior (i.e. partition sizes of 1).
+  *
 diff --git a/fs/xfs/scrub/xfarray.h b/fs/xfs/scrub/xfarray.h
-new file mode 100644
-index 000000000000..26e2b594f121
---- /dev/null
+index e8a4523bf2de..69f0c922c98a 100644
+--- a/fs/xfs/scrub/xfarray.h
 +++ b/fs/xfs/scrub/xfarray.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2022 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <djwong@kernel.org>
-+ */
-+#ifndef __XFS_SCRUB_XFARRAY_H__
-+#define __XFS_SCRUB_XFARRAY_H__
+@@ -63,6 +63,9 @@ typedef cmp_func_t xfarray_cmp_fn;
+ #define XFARRAY_ISORT_SHIFT		(4)
+ #define XFARRAY_ISORT_NR		(1U << XFARRAY_ISORT_SHIFT)
+ 
++/* Evalulate this many points to find the qsort pivot. */
++#define XFARRAY_QSORT_PIVOT_NR		(9)
 +
-+/* xfile array index type, along with cursor initialization */
-+typedef uint64_t		xfarray_idx_t;
-+#define XFARRAY_CURSOR_INIT	((__force xfarray_idx_t)0)
-+
-+/* Iterate each index of an xfile array. */
-+#define foreach_xfarray_idx(array, idx) \
-+	for ((idx) = XFARRAY_CURSOR_INIT; \
-+	     (idx) < xfarray_length(array); \
-+	     (idx)++)
-+
-+struct xfarray {
-+	/* Underlying file that backs the array. */
-+	struct xfile	*xfile;
-+
-+	/* Number of array elements. */
-+	xfarray_idx_t	nr;
-+
-+	/* Maximum possible array size. */
-+	xfarray_idx_t	max_nr;
-+
-+	/* Number of unset slots in the array below @nr. */
-+	uint64_t	unset_slots;
-+
-+	/* Size of an array element. */
-+	size_t		obj_size;
-+
-+	/* log2 of array element size, if possible. */
-+	int		obj_size_log;
-+};
-+
-+int xfarray_create(struct xfs_mount *mp, const char *descr,
-+		unsigned long long required_capacity, size_t obj_size,
-+		struct xfarray **arrayp);
-+void xfarray_destroy(struct xfarray *array);
-+int xfarray_load(struct xfarray *array, xfarray_idx_t idx, void *ptr);
-+int xfarray_unset(struct xfarray *array, xfarray_idx_t idx);
-+int xfarray_store(struct xfarray *array, xfarray_idx_t idx, const void *ptr);
-+int xfarray_store_anywhere(struct xfarray *array, const void *ptr);
-+bool xfarray_element_is_null(struct xfarray *array, const void *ptr);
-+
-+/* Append an element to the array. */
-+static inline int xfarray_append(struct xfarray *array, const void *ptr)
-+{
-+	return xfarray_store(array, array->nr, ptr);
-+}
-+
-+uint64_t xfarray_length(struct xfarray *array);
-+int xfarray_load_next(struct xfarray *array, xfarray_idx_t *idx, void *rec);
-+
-+#endif /* __XFS_SCRUB_XFARRAY_H__ */
-diff --git a/fs/xfs/scrub/xfile.c b/fs/xfs/scrub/xfile.c
-new file mode 100644
-index 000000000000..43455aa78243
---- /dev/null
-+++ b/fs/xfs/scrub/xfile.c
-@@ -0,0 +1,318 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2022 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <djwong@kernel.org>
-+ */
-+#include "xfs.h"
-+#include "xfs_fs.h"
-+#include "xfs_shared.h"
-+#include "xfs_format.h"
-+#include "xfs_log_format.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
-+#include "xfs_format.h"
-+#include "scrub/xfile.h"
-+#include "scrub/xfarray.h"
-+#include "scrub/scrub.h"
-+#include "scrub/trace.h"
-+#include <linux/shmem_fs.h>
-+
-+/*
-+ * Swappable Temporary Memory
-+ * ==========================
-+ *
-+ * Online checking sometimes needs to be able to stage a large amount of data
-+ * in memory.  This information might not fit in the available memory and it
-+ * doesn't all need to be accessible at all times.  In other words, we want an
-+ * indexed data buffer to store data that can be paged out.
-+ *
-+ * When CONFIG_TMPFS=y, shmemfs is enough of a filesystem to meet those
-+ * requirements.  Therefore, the xfile mechanism uses an unlinked shmem file to
-+ * store our staging data.  This file is not installed in the file descriptor
-+ * table so that user programs cannot access the data, which means that the
-+ * xfile must be freed with xfile_destroy.
-+ *
-+ * xfiles assume that the caller will handle all required concurrency
-+ * management; standard vfs locks (freezer and inode) are not taken.  Reads
-+ * and writes are satisfied directly from the page cache.
-+ *
-+ * NOTE: The current shmemfs implementation has a quirk that in-kernel reads
-+ * of a hole cause a page to be mapped into the file.  If you are going to
-+ * create a sparse xfile, please be careful about reading from uninitialized
-+ * parts of the file.  These pages are !Uptodate and will eventually be
-+ * reclaimed if not written, but in the short term this boosts memory
-+ * consumption.
-+ */
-+
-+/*
-+ * xfiles must not be exposed to userspace and require upper layers to
-+ * coordinate access to the one handle returned by the constructor, so
-+ * establish a separate lock class for xfiles to avoid confusing lockdep.
-+ */
-+static struct lock_class_key xfile_i_mutex_key;
-+
-+/*
-+ * Create an xfile of the given size.  The description will be used in the
-+ * trace output.
-+ */
-+int
-+xfile_create(
-+	struct xfs_mount	*mp,
-+	const char		*description,
-+	loff_t			isize,
-+	struct xfile		**xfilep)
-+{
-+	char			*fname;
-+	struct xfile		*xf;
-+	int			error = -ENOMEM;
-+
-+	xf = kmalloc(sizeof(struct xfile), XCHK_GFP_FLAGS);
-+	if (!xf)
-+		return -ENOMEM;
-+
-+	fname = kmalloc(MAXNAMELEN, XCHK_GFP_FLAGS);
-+	if (!fname)
-+		goto out_xfile;
-+
-+	snprintf(fname, MAXNAMELEN - 1, "XFS (%s): %s", mp->m_super->s_id,
-+			description);
-+	fname[MAXNAMELEN - 1] = 0;
-+
-+	xf->file = shmem_file_setup(fname, isize, 0);
-+	if (!xf->file)
-+		goto out_fname;
-+	if (IS_ERR(xf->file)) {
-+		error = PTR_ERR(xf->file);
-+		goto out_fname;
-+	}
-+
-+	/*
-+	 * We want a large sparse file that we can pread, pwrite, and seek.
-+	 * xfile users are responsible for keeping the xfile hidden away from
-+	 * all other callers, so we skip timestamp updates and security checks.
-+	 */
-+	xf->file->f_mode |= FMODE_PREAD | FMODE_PWRITE | FMODE_NOCMTIME |
-+			    FMODE_LSEEK;
-+	xf->file->f_flags |= O_RDWR | O_LARGEFILE | O_NOATIME;
-+	xf->file->f_inode->i_flags |= S_PRIVATE | S_NOCMTIME | S_NOATIME;
-+
-+	lockdep_set_class(&file_inode(xf->file)->i_rwsem, &xfile_i_mutex_key);
-+
-+	trace_xfile_create(mp, xf);
-+
-+	kfree(fname);
-+	*xfilep = xf;
-+	return 0;
-+out_fname:
-+	kfree(fname);
-+out_xfile:
-+	kfree(xf);
-+	return error;
-+}
-+
-+/* Close the file and release all resources. */
-+void
-+xfile_destroy(
-+	struct xfile		*xf)
-+{
-+	struct inode		*inode = file_inode(xf->file);
-+
-+	trace_xfile_destroy(xf);
-+
-+	lockdep_set_class(&inode->i_rwsem, &inode->i_sb->s_type->i_mutex_key);
-+	fput(xf->file);
-+	kfree(xf);
-+}
-+
-+/*
-+ * Read a memory object directly from the xfile's page cache.  Unlike regular
-+ * pread, we return -E2BIG and -EFBIG for reads that are too large or at too
-+ * high an offset, instead of truncating the read.  Otherwise, we return
-+ * bytes read or an error code, like regular pread.
-+ */
-+ssize_t
-+xfile_pread(
-+	struct xfile		*xf,
-+	void			*buf,
-+	size_t			count,
-+	loff_t			pos)
-+{
-+	struct inode		*inode = file_inode(xf->file);
-+	struct address_space	*mapping = inode->i_mapping;
-+	struct page		*page = NULL;
-+	ssize_t			read = 0;
-+	unsigned int		pflags;
-+	int			error = 0;
-+
-+	if (count > MAX_RW_COUNT)
-+		return -E2BIG;
-+	if (inode->i_sb->s_maxbytes - pos < count)
-+		return -EFBIG;
-+
-+	trace_xfile_pread(xf, pos, count);
-+
-+	pflags = memalloc_nofs_save();
-+	while (count > 0) {
-+		void		*p, *kaddr;
-+		unsigned int	len;
-+
-+		len = min_t(ssize_t, count, PAGE_SIZE - offset_in_page(pos));
-+
-+		/*
-+		 * In-kernel reads of a shmem file cause it to allocate a page
-+		 * if the mapping shows a hole.  Therefore, if we hit ENOMEM
-+		 * we can continue by zeroing the caller's buffer.
-+		 */
-+		page = shmem_read_mapping_page_gfp(mapping, pos >> PAGE_SHIFT,
-+				__GFP_NOWARN);
-+		if (IS_ERR(page)) {
-+			error = PTR_ERR(page);
-+			if (error != -ENOMEM)
-+				break;
-+
-+			memset(buf, 0, len);
-+			goto advance;
-+		}
-+
-+		if (PageUptodate(page)) {
-+			/*
-+			 * xfile pages must never be mapped into userspace, so
-+			 * we skip the dcache flush.
-+			 */
-+			kaddr = kmap_local_page(page);
-+			p = kaddr + offset_in_page(pos);
-+			memcpy(buf, p, len);
-+			kunmap_local(kaddr);
-+		} else {
-+			memset(buf, 0, len);
-+		}
-+		put_page(page);
-+
-+advance:
-+		count -= len;
-+		pos += len;
-+		buf += len;
-+		read += len;
-+	}
-+	memalloc_nofs_restore(pflags);
-+
-+	if (read > 0)
-+		return read;
-+	return error;
-+}
-+
-+/*
-+ * Write a memory object directly to the xfile's page cache.  Unlike regular
-+ * pwrite, we return -E2BIG and -EFBIG for writes that are too large or at too
-+ * high an offset, instead of truncating the write.  Otherwise, we return
-+ * bytes written or an error code, like regular pwrite.
-+ */
-+ssize_t
-+xfile_pwrite(
-+	struct xfile		*xf,
-+	const void		*buf,
-+	size_t			count,
-+	loff_t			pos)
-+{
-+	struct inode		*inode = file_inode(xf->file);
-+	struct address_space	*mapping = inode->i_mapping;
-+	const struct address_space_operations *aops = mapping->a_ops;
-+	struct page		*page = NULL;
-+	ssize_t			written = 0;
-+	unsigned int		pflags;
-+	int			error = 0;
-+
-+	if (count > MAX_RW_COUNT)
-+		return -E2BIG;
-+	if (inode->i_sb->s_maxbytes - pos < count)
-+		return -EFBIG;
-+
-+	trace_xfile_pwrite(xf, pos, count);
-+
-+	pflags = memalloc_nofs_save();
-+	while (count > 0) {
-+		void		*fsdata = NULL;
-+		void		*p, *kaddr;
-+		unsigned int	len;
-+		int		ret;
-+
-+		len = min_t(ssize_t, count, PAGE_SIZE - offset_in_page(pos));
-+
-+		/*
-+		 * We call write_begin directly here to avoid all the freezer
-+		 * protection lock-taking that happens in the normal path.
-+		 * shmem doesn't support fs freeze, but lockdep doesn't know
-+		 * that and will trip over that.
-+		 */
-+		error = aops->write_begin(NULL, mapping, pos, len, &page,
-+				&fsdata);
-+		if (error)
-+			break;
-+
-+		/*
-+		 * xfile pages must never be mapped into userspace, so we skip
-+		 * the dcache flush.  If the page is not uptodate, zero it
-+		 * before writing data.
-+		 */
-+		kaddr = kmap_local_page(page);
-+		if (!PageUptodate(page)) {
-+			memset(kaddr, 0, PAGE_SIZE);
-+			SetPageUptodate(page);
-+		}
-+		p = kaddr + offset_in_page(pos);
-+		memcpy(p, buf, len);
-+		kunmap_local(kaddr);
-+
-+		ret = aops->write_end(NULL, mapping, pos, len, len, page,
-+				fsdata);
-+		if (ret < 0) {
-+			error = ret;
-+			break;
-+		}
-+
-+		written += ret;
-+		if (ret != len)
-+			break;
-+
-+		count -= ret;
-+		pos += ret;
-+		buf += ret;
-+	}
-+	memalloc_nofs_restore(pflags);
-+
-+	if (written > 0)
-+		return written;
-+	return error;
-+}
-+
-+/* Find the next written area in the xfile data for a given offset. */
-+loff_t
-+xfile_seek_data(
-+	struct xfile		*xf,
-+	loff_t			pos)
-+{
-+	loff_t			ret;
-+
-+	ret = vfs_llseek(xf->file, pos, SEEK_DATA);
-+	trace_xfile_seek_data(xf, pos, ret);
-+	return ret;
-+}
-+
-+/* Query stat information for an xfile. */
-+int
-+xfile_stat(
-+	struct xfile		*xf,
-+	struct xfile_stat	*statbuf)
-+{
-+	struct kstat		ks;
-+	int			error;
-+
-+	error = vfs_getattr_nosec(&xf->file->f_path, &ks,
-+			STATX_SIZE | STATX_BLOCKS, AT_STATX_DONT_SYNC);
-+	if (error)
-+		return error;
-+
-+	statbuf->size = ks.size;
-+	statbuf->bytes = ks.blocks << SECTOR_SHIFT;
-+	return 0;
-+}
-diff --git a/fs/xfs/scrub/xfile.h b/fs/xfs/scrub/xfile.h
-new file mode 100644
-index 000000000000..b37dba1961d8
---- /dev/null
-+++ b/fs/xfs/scrub/xfile.h
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2022 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <djwong@kernel.org>
-+ */
-+#ifndef __XFS_SCRUB_XFILE_H__
-+#define __XFS_SCRUB_XFILE_H__
-+
-+struct xfile {
-+	struct file		*file;
-+};
-+
-+int xfile_create(struct xfs_mount *mp, const char *description, loff_t isize,
-+		struct xfile **xfilep);
-+void xfile_destroy(struct xfile *xf);
-+
-+ssize_t xfile_pread(struct xfile *xf, void *buf, size_t count, loff_t pos);
-+ssize_t xfile_pwrite(struct xfile *xf, const void *buf, size_t count,
-+		loff_t pos);
-+
-+/*
-+ * Load an object.  Since we're treating this file as "memory", any error or
-+ * short IO is treated as a failure to allocate memory.
-+ */
-+static inline int
-+xfile_obj_load(struct xfile *xf, void *buf, size_t count, loff_t pos)
-+{
-+	ssize_t	ret = xfile_pread(xf, buf, count, pos);
-+
-+	if (ret < 0 || ret != count)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
-+/*
-+ * Store an object.  Since we're treating this file as "memory", any error or
-+ * short IO is treated as a failure to allocate memory.
-+ */
-+static inline int
-+xfile_obj_store(struct xfile *xf, const void *buf, size_t count, loff_t pos)
-+{
-+	ssize_t	ret = xfile_pwrite(xf, buf, count, pos);
-+
-+	if (ret < 0 || ret != count)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
-+loff_t xfile_seek_data(struct xfile *xf, loff_t pos);
-+
-+struct xfile_stat {
-+	loff_t			size;
-+	unsigned long long	bytes;
-+};
-+
-+int xfile_stat(struct xfile *xf, struct xfile_stat *statbuf);
-+
-+#endif /* __XFS_SCRUB_XFILE_H__ */
+ struct xfarray_sortinfo {
+ 	struct xfarray		*array;
+ 
+@@ -92,7 +95,6 @@ struct xfarray_sortinfo {
+ 	uint64_t		compares;
+ 	uint64_t		heapsorts;
+ #endif
+-
+ 	/*
+ 	 * Extra bytes are allocated beyond the end of the structure to store
+ 	 * quicksort information.  C does not permit multiple VLAs per struct,
+@@ -115,11 +117,18 @@ struct xfarray_sortinfo {
+ 	 * 	xfarray_rec_t	scratch[ISORT_NR];
+ 	 *
+ 	 * Otherwise, we want to partition the records to partition the array.
+-	 * We store the chosen pivot record here and use the xfarray scratchpad
+-	 * to rearrange the array around the pivot:
+-	 *
+-	 * 	xfarray_rec_t	pivot;
++	 * We store the chosen pivot record at the start of the scratchpad area
++	 * and use the rest to sample some records to estimate the median.
++	 * The format of the qsort_pivot array enables us to use the kernel
++	 * heapsort function to place the median value in the middle.
+ 	 *
++	 * 	struct {
++	 * 		xfarray_rec_t	pivot;
++	 * 		struct {
++	 *			xfarray_rec_t	rec;  (rounded up to 8 bytes)
++	 * 			xfarray_idx_t	idx;
++	 *		} qsort_pivot[QSORT_PIVOT_NR];
++	 * 	};
+ 	 * }
+ 	 */
+ };
 
