@@ -2,83 +2,135 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE1765A030
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E889165A239
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:09:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235722AbiLaBDy (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:03:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39932 "EHLO
+        id S236313AbiLaDIs (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:08:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235932AbiLaBDw (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:03:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D242E1DDF0;
-        Fri, 30 Dec 2022 17:03:51 -0800 (PST)
+        with ESMTP id S236321AbiLaDIq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:08:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DDD12A9C;
+        Fri, 30 Dec 2022 19:08:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 70A7A61D70;
-        Sat, 31 Dec 2022 01:03:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD1CC433EF;
-        Sat, 31 Dec 2022 01:03:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C0DF61D43;
+        Sat, 31 Dec 2022 03:08:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6807C433EF;
+        Sat, 31 Dec 2022 03:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448630;
-        bh=05tc+KJzVDyb3CpqvDzgpcLSp4Fj7KEs605HX+imy/4=;
+        s=k20201202; t=1672456121;
+        bh=ZNjCnCZ07gW3ub0N+12jMOAoaMlKgghqJ3lcLjm0/q4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LdVLWZ1GTg+ERhwA18JNexWquvruTTnXz4jBEOgDBdeI1Z3gAViws1Pbe2evY4nEu
-         LmV56MMANctXPgQind2gJfnfsCNy4pCw9o7JkKuJRrsSyOk0QrO8c4ZaYrXVueGr4U
-         1E/2wOClZ8KyiTIfbZIhIq5xJLEpjC8TSkxqd4HBZeFFTY2twwY8Lq8h9QGqoJrbW7
-         4K9RIUpKDXuY71wC36dlZdceLVgm0iHr2xhpUp+lnsibanvmEmviRQ/zpLkUqOHnr5
-         AC28NIQbZgn1p6p1XCP408fTQAXo1rnqSxZRe8udmazYg8LgbE7fEpJMcVBc6KQCxx
-         UpGYUZYMYmhNw==
-Subject: [PATCHSET v1.0 0/4] fstests: support metadump to external devices
+        b=G7h3lexHr+I2YhnKCiE375+N+Nf7Zw3Anix7bW44TjSI+oNjgKcY0Scle15oRHdan
+         3Z4N1+k1qmBTsIqjnacrW0Zn5bdPXDnz4vyOwvSUZcV5J/uORB76yTkqU3MUz8HLW4
+         JFcbdTKltvh2VjzogeTQ9e6cLkiiWLkzB52Hjy6ypVbuBSszDscelYzyUfjjuk89hz
+         xjy6B5xOiEbqZSDET92l733SdF4ThoHaKIOSZ/4aTd84ZgMLGFouVuoy1IlpSYGdh1
+         9kUVLRU1kC4fclpMXQUljbF/ViUM+8QgwkeIo/PeKF62wEWPSM3oWZlY2bdkdLOnQ+
+         V6ayeOVRzqtmQ==
+Subject: [PATCH 1/4] common/populate: refactor caching of metadumps to a
+ helper
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:36 -0800
-Message-ID: <167243883613.738384.6883268151338937809.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243883626.738384.359731015865489369.stgit@magnolia>
+In-Reply-To: <167243883613.738384.6883268151338937809.stgit@magnolia>
+References: <167243883613.738384.6883268151338937809.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This series modifies fstests to take advantage of the fact that
-xfs_metadump and xfs_mdrestore now support capturing the contents of an
-external log in a metadump, and restoring it on the other end.  The
-first part of this series refactors and cleans up the common code a bit,
-and the rest add the actual support.  Once this is merged, we'll be able
-to cache metadumps of populated filesystems with external log devices,
-which will enable faster fuzz testing.
+Hoist out of _scratch_populate_cached all the code that we use to save a
+metadump of the populated filesystem.  We're going to make this more
+involved for XFS in the next few patches so that we can take advantage
+of the new support for external devices in metadump/mdrestore.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=metadump-external-devices
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=metadump-external-devices
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/ext4     |   17 ++++++++++++-
- common/fuzzy    |    7 +++++
- common/populate |   72 ++++++++++++++++++++++++++++---------------------------
- common/xfs      |   39 ++++++++++++++++++++++++++++--
- 4 files changed, 95 insertions(+), 40 deletions(-)
+ common/populate |   37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
+
+
+diff --git a/common/populate b/common/populate
+index 29ea637ecb..8db7acefb6 100644
+--- a/common/populate
++++ b/common/populate
+@@ -938,6 +938,31 @@ _scratch_populate_restore_cached() {
+ 	return 1
+ }
+ 
++# Take a metadump of the scratch filesystem and cache it for later.
++_scratch_populate_save_metadump()
++{
++	local metadump_file="$1"
++
++	case "${FSTYP}" in
++	"xfs")
++		local logdev=none
++		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
++			logdev=$SCRATCH_LOGDEV
++
++		_xfs_metadump "$metadump_file" "$SCRATCH_DEV" "$logdev" \
++				compress
++		res=$?
++		;;
++	"ext2"|"ext3"|"ext4")
++		_ext4_metadump "${SCRATCH_DEV}" "${metadump_file}" compress
++		res=$?
++		;;
++	*)
++		_fail "Don't know how to save a ${FSTYP} filesystem."
++	esac
++	return $res
++}
++
+ # Populate a scratch FS from scratch or from a cached image.
+ _scratch_populate_cached() {
+ 	local meta_descr="$(_scratch_populate_cache_tag "$@")"
+@@ -961,26 +986,20 @@ _scratch_populate_cached() {
+ 
+ 	# Oh well, just create one from scratch
+ 	_scratch_mkfs
+-	echo "${meta_descr}" > "${populate_metadump_descr}"
+ 	case "${FSTYP}" in
+ 	"xfs")
+ 		_scratch_xfs_populate $@
+ 		_scratch_xfs_populate_check
+-
+-		local logdev=none
+-		[ "$USE_EXTERNAL" = yes -a ! -z "$SCRATCH_LOGDEV" ] && \
+-			logdev=$SCRATCH_LOGDEV
+-
+-		_xfs_metadump "$POPULATE_METADUMP" "$SCRATCH_DEV" "$logdev" \
+-			compress
+ 		;;
+ 	"ext2"|"ext3"|"ext4")
+ 		_scratch_ext4_populate $@
+ 		_scratch_ext4_populate_check
+-		_ext4_metadump "${SCRATCH_DEV}" "${POPULATE_METADUMP}" compress
+ 		;;
+ 	*)
+ 		_fail "Don't know how to populate a ${FSTYP} filesystem."
+ 		;;
+ 	esac
++
++	_scratch_populate_save_metadump "${POPULATE_METADUMP}" && \
++			echo "${meta_descr}" > "${populate_metadump_descr}"
+ }
 
