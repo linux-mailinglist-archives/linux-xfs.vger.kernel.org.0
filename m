@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ED7A659FB0
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B7E65A0EE
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:49:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235666AbiLaAdC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:33:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33540 "EHLO
+        id S236064AbiLaBtY (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:49:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235655AbiLaAdB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:33:01 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CE814006
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:33:00 -0800 (PST)
+        with ESMTP id S236079AbiLaBtX (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:49:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953091DDFF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:49:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 71A1DB80883
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:32:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A20C433EF;
-        Sat, 31 Dec 2022 00:32:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5666CB81DF9
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:49:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1805FC433D2;
+        Sat, 31 Dec 2022 01:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446778;
-        bh=paKWJ62A0KpEakAT5JYOS1fMjV1u+J0sCcJ9WFUVMnU=;
+        s=k20201202; t=1672451360;
+        bh=Gia+DuWNZ1ewXa4T2NngBVONHn6W4xPrAj+654Mmwi0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LhrSpq8k36h/zF9b86IJDIDo0iJpuPLyIzshbCIDc27wkq1tNi1pbTTNYxk8zvhfV
-         PlN+Z+d5s49T3VPZCqC8NYD3a74jXxdfNS5vZjgyQaSX0ZihHo+nZwL3qA9KS8ZdWz
-         Bwoge1pkH9cuMJa/H+kSl9mai6xVBmYTweJLtZ29zh2QoCEYMjDYjIIWqdDYoQO5At
-         Xb0JJOi6jBVLdWphThhDKZ4I+07JLAPBtm7lNfaEHYgq0kiye1jtpLDeXo+CabRjW+
-         /XsoCwDEL9RJ9wQb7AQWe/MRNDGUK1MYhks9t2Hruz/UW+70GPw1pSnDtnaxtQ5Kav
-         qf1nvcnsEdwHA==
-Subject: [PATCH 4/7] xfs_scrub: fix the work estimation for phase 8
+        b=GisqnqojEI1Q2wKy01BO7YvJDNk/IpDGFYBAMSv5IZUSlO702k7qUYbditPr+fXRW
+         LSTn/uDyT+HX5Rkls/yAm6hnZyfyaLJvTh1/TrXaU6zM+kvn4vAJumVmUAu7/vr6Xa
+         91y2KlmUH30lfTqdUe6tZWvVCVQEdFKUFDh0ckoiriye1fE9j8T3SHjfY/jq6nYTSZ
+         AYmf/ydOwn736v15xGQ0za+b4qJQymGuFcx8A9EmfR0+oy7UATNkkK/GKL5MUHW+R4
+         4WDePiu8Zw9DLOCNNY1K1uMUeDZcthf7M78Lr+YSVGjxLs9f10nmTzOhnym+Qw9Y90
+         u5e6KUDndZ0lg==
+Subject: [PATCH 05/42] xfs: realtime refcount btree transaction reservations
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:18:28 -0800
-Message-ID: <167243870802.716924.2818760920067531576.stgit@magnolia>
-In-Reply-To: <167243870748.716924.8460607901853339412.stgit@magnolia>
-References: <167243870748.716924.8460607901853339412.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:18:29 -0800
+Message-ID: <167243870969.717073.10174042531639869915.stgit@magnolia>
+In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
+References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,76 +55,72 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If there are latent errors on the filesystem, we aren't going to do any
-work during phase 8 and it makes no sense to add that into the work
-estimate for the progress bar.
+Make sure that there's enough log reservation to handle mapping
+and unmapping realtime extents.  We have to reserve enough space
+to handle a split in the rtrefcountbt to add the record and a second
+split in the regular refcountbt to record the rtrefcountbt split.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/phase8.c |   36 ++++++++++++++++++++++++++----------
- 1 file changed, 26 insertions(+), 10 deletions(-)
+ fs/xfs/libxfs/xfs_trans_resv.c |   25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
 
-diff --git a/scrub/phase8.c b/scrub/phase8.c
-index 80f86f9ecd9..789ef2b2b4e 100644
---- a/scrub/phase8.c
-+++ b/scrub/phase8.c
-@@ -21,23 +21,35 @@
+diff --git a/fs/xfs/libxfs/xfs_trans_resv.c b/fs/xfs/libxfs/xfs_trans_resv.c
+index 52a4386a3d96..2b8b8dd5dec3 100644
+--- a/fs/xfs/libxfs/xfs_trans_resv.c
++++ b/fs/xfs/libxfs/xfs_trans_resv.c
+@@ -90,6 +90,14 @@ xfs_refcountbt_block_count(
+ 	return num_ops * (2 * mp->m_refc_maxlevels - 1);
+ }
  
- /* Phase 8: Trim filesystem. */
- 
--/* Trim the filesystem, if desired. */
--int
--phase8_func(
-+static inline bool
-+fstrim_ok(
- 	struct scrub_ctx	*ctx)
- {
--	if (action_list_empty(ctx->fs_repair_list) &&
--	    action_list_empty(ctx->file_repair_list))
--		goto maybe_trim;
--
- 	/*
- 	 * If errors remain on the filesystem, do not trim anything.  We don't
- 	 * have any threads running, so it's ok to skip the ctx lock here.
- 	 */
--	if (ctx->corruptions_found || ctx->unfixable_errors != 0)
-+	if (!action_list_empty(ctx->fs_repair_list))
-+		return false;
-+	if (!action_list_empty(ctx->file_repair_list))
-+		return false;
-+
-+	if (ctx->corruptions_found != 0)
-+		return false;
-+	if (ctx->unfixable_errors != 0)
-+		return false;
-+
-+	return true;
++static unsigned int
++xfs_rtrefcountbt_block_count(
++	struct xfs_mount	*mp,
++	unsigned int		num_ops)
++{
++	return num_ops * (2 * mp->m_rtrefc_maxlevels - 1);
 +}
 +
-+/* Trim the filesystem, if desired. */
-+int
-+phase8_func(
-+	struct scrub_ctx	*ctx)
-+{
-+	if (!fstrim_ok(ctx))
+ /*
+  * Logging inodes is really tricksy. They are logged in memory format,
+  * which means that what we write into the log doesn't directly translate into
+@@ -257,10 +265,13 @@ xfs_rtalloc_block_count(
+  * Compute the log reservation required to handle the refcount update
+  * transaction.  Refcount updates are always done via deferred log items.
+  *
+- * This is calculated as:
++ * This is calculated as the max of:
+  * Data device refcount updates (t1):
+  *    the agfs of the ags containing the blocks: nr_ops * sector size
+  *    the refcount btrees: nr_ops * 1 trees * (2 * max depth - 1) * block size
++ * Realtime refcount updates (t2);
++ *    the rt refcount inode
++ *    the rtrefcount btrees: nr_ops * 1 trees * (2 * max depth - 1) * block size
+  */
+ static unsigned int
+ xfs_calc_refcountbt_reservation(
+@@ -268,12 +279,20 @@ xfs_calc_refcountbt_reservation(
+ 	unsigned int		nr_ops)
+ {
+ 	unsigned int		blksz = XFS_FSB_TO_B(mp, 1);
++	unsigned int		t1, t2 = 0;
+ 
+ 	if (!xfs_has_reflink(mp))
  		return 0;
  
--maybe_trim:
- 	fstrim(ctx);
- 	progress_add(1);
- 	return 0;
-@@ -51,7 +63,11 @@ phase8_estimate(
- 	unsigned int		*nr_threads,
- 	int			*rshift)
- {
--	*items = 1;
-+	*items = 0;
+-	return xfs_calc_buf_res(nr_ops, mp->m_sb.sb_sectsize) +
+-	       xfs_calc_buf_res(xfs_refcountbt_block_count(mp, nr_ops), blksz);
++	t1 = xfs_calc_buf_res(nr_ops, mp->m_sb.sb_sectsize) +
++	     xfs_calc_buf_res(xfs_refcountbt_block_count(mp, nr_ops), blksz);
 +
-+	if (fstrim_ok(ctx))
-+		*items = 1;
++	if (xfs_has_realtime(mp))
++		t2 = xfs_calc_inode_res(mp, 1) +
++		     xfs_calc_buf_res(xfs_rtrefcountbt_block_count(mp, nr_ops),
++				     blksz);
 +
- 	*nr_threads = 1;
- 	*rshift = 0;
- 	return 0;
++	return max(t1, t2);
+ }
+ 
+ /*
 
