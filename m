@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C32D1659F52
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:15:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C11C565A093
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:27:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235722AbiLaAPH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:15:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55694 "EHLO
+        id S236084AbiLaB1R (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:27:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235661AbiLaAPG (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:15:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CAF560EF
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:15:05 -0800 (PST)
+        with ESMTP id S236082AbiLaB1Q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:27:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D1B1C93A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:27:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 18A3F61CF1
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:15:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7389CC433D2;
-        Sat, 31 Dec 2022 00:15:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5CB84B81DE3
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:27:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC481C433EF;
+        Sat, 31 Dec 2022 01:27:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445704;
-        bh=WVLEsTCHeiM/tF4yytgpwss6yRYJ/1NuYQ50Nnx+Nj4=;
+        s=k20201202; t=1672450033;
+        bh=bgGIMKAWrKOu+6fs/ymBeea8moo8ZkuivNnD+hiQo+A=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=frdp0q/nC5UhfyrRql5vywcYd/k3fqYGks+zBvFocWBAe2j0bZCb1ftH/DA4K4L39
-         6QICLodjYb9kE1i5D9pfWRPj/PTh8fi206bxqtGa1vboetb5LNqqZo7dll1ew070z2
-         RERN+M2l/6fbysJcqL5Lz1gysRLOpV1feY8TDC3FqpZ61ZcftpthJ8TZwEN+8kjgG/
-         RYWmLHrxqvtVDJB6JqaGOSilPAb2sHlb7aMn0SmYg/VMmB571LvYHtzcqQQADxhHte
-         THvsitvQ6II7uq/sDrx6ZtWQCDHXYZAp4mtJuU3/QYdJKuaRLX72VLK4JIyoA09ntA
-         4mF20djDeYg7w==
-Subject: [PATCH 1/6] libxfs: partition memfd files to avoid using too many fds
+        b=QEc2urCLcjU3MiXY9844nICNXePaud/dQAfmg4jBQyCga043ZbSovevUXMdzva4hi
+         eLekwgDgXyF7fhFFTIXFgUobqNAXTPTiidjYwp9jatCQanQRMotGNo9vKyq5aQEwyH
+         NqMuzveQFwYV2h/aLwSMA13M02wRYxmWwtsnpQOItWkq0KYKa3QQ4BPG9awU1A2Yix
+         oebGnnf4pRVQGtflT5Jk1bp+On3UGD1OMHNh7giMLy3gOsQpjh+IWT4aTtpAOnloNQ
+         LItOv7gpaABcKEToLktXbTHAE1AFSLg4RpzRRv/Wicme8jSF0cdYEzog4VMpq66Ezl
+         ssiRGuFj6NV6w==
+Subject: [PATCH 2/3] xfs: refactor realtime inode locking
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:49 -0800
-Message-ID: <167243866905.712584.180383149963743658.stgit@magnolia>
-In-Reply-To: <167243866890.712584.9795710743681868714.stgit@magnolia>
-References: <167243866890.712584.9795710743681868714.stgit@magnolia>
+Message-ID: <167243866912.712531.12624284771909096670.stgit@magnolia>
+In-Reply-To: <167243866880.712531.9794913817759933297.stgit@magnolia>
+References: <167243866880.712531.9794913817759933297.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,287 +55,255 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Make it so that we can partition a memfd file to avoid running out of
-file descriptors.
+Create helper functions to deal with locking realtime metadata inodes.
+This enables us to maintain correct locking order once we start adding
+the realtime rmap and refcount btree inodes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfile.c |  169 +++++++++++++++++++++++++++++++++++++++++++++++++++++---
- libxfs/xfile.h |   10 ++-
- 2 files changed, 167 insertions(+), 12 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c     |    7 +----
+ fs/xfs/libxfs/xfs_rtbitmap.c |   57 ++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_rtbitmap.h |   17 +++++++++++++
+ fs/xfs/scrub/common.c        |    1 +
+ fs/xfs/scrub/fscounters.c    |    4 +--
+ fs/xfs/xfs_bmap_util.c       |    5 +---
+ fs/xfs/xfs_fsmap.c           |    4 +--
+ fs/xfs/xfs_rtalloc.c         |   15 ++++-------
+ 8 files changed, 87 insertions(+), 23 deletions(-)
 
 
-diff --git a/libxfs/xfile.c b/libxfs/xfile.c
-index c1b8b1c5928..dfe3c60a9b3 100644
---- a/libxfs/xfile.c
-+++ b/libxfs/xfile.c
-@@ -95,6 +95,146 @@ xfile_create_fd(
- 	return fd;
- }
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index 1ad8606c1dd9..55fe8cda3d98 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -5416,12 +5416,9 @@ __xfs_bunmapi(
  
-+struct xfile_fcb {
-+	struct list_head	fcb_list;
-+	int			fd;
-+	unsigned int		refcount;
-+};
+ 	if (isrt) {
+ 		/*
+-		 * Synchronize by locking the bitmap inode.
++		 * Synchronize by locking the realtime bitmap.
+ 		 */
+-		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL|XFS_ILOCK_RTBITMAP);
+-		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
+-		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL|XFS_ILOCK_RTSUM);
+-		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
++		xfs_rtbitmap_lock(tp, mp);
+ 	}
+ 
+ 	extno = 0;
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index b74261abd238..46095acec709 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -1251,3 +1251,60 @@ xfs_rtsummary_wordcount(
+ 	blocks = xfs_rtsummary_blockcount(mp, rsumlevels, rbmblocks);
+ 	return XFS_FSB_TO_B(mp, blocks) >> XFS_WORDLOG;
+ }
 +
-+static LIST_HEAD(fcb_list);
-+static pthread_mutex_t fcb_mutex = PTHREAD_MUTEX_INITIALIZER;
-+
-+/* Create a new memfd. */
-+static inline int
-+xfile_fcb_create(
-+	const char		*description,
-+	struct xfile_fcb	**fcbp)
++/*
++ * Lock both realtime free space metadata inodes for a freespace update.  If a
++ * transaction is given, the inodes will be joined to the transaction and the
++ * ILOCKs will be released on transaction commit.
++ */
++void
++xfs_rtbitmap_lock(
++	struct xfs_trans	*tp,
++	struct xfs_mount	*mp)
 +{
-+	struct xfile_fcb	*fcb;
-+	int			fd;
++	xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
++	if (tp)
++		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
 +
-+	fd = xfile_create_fd(description);
-+	if (fd < 0)
-+		return -errno;
-+
-+	fcb = malloc(sizeof(struct xfile_fcb));
-+	if (!fcb) {
-+		close(fd);
-+		return -ENOMEM;
-+	}
-+
-+	list_head_init(&fcb->fcb_list);
-+	fcb->fd = fd;
-+	fcb->refcount = 1;
-+
-+	*fcbp = fcb;
-+	return 0;
++	xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
++	if (tp)
++		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
 +}
 +
-+/* Release an xfile control block */
-+static void
-+xfile_fcb_irele(
-+	struct xfile_fcb	*fcb,
-+	loff_t			pos,
-+	uint64_t		len)
++/* Unlock both realtime free space metadata inodes after a freespace update. */
++void
++xfs_rtbitmap_unlock(
++	struct xfs_mount	*mp)
 +{
-+	/*
-+	 * If this memfd is linked only to itself, it's private, so we can
-+	 * close it without taking any locks.
-+	 */
-+	if (list_empty(&fcb->fcb_list)) {
-+		close(fcb->fd);
-+		free(fcb);
-+		return;
-+	}
-+
-+	pthread_mutex_lock(&fcb_mutex);
-+	if (--fcb->refcount == 0) {
-+		/* If we're the last user of this memfd file, kill it fast. */
-+		list_del(&fcb->fcb_list);
-+		close(fcb->fd);
-+		free(fcb);
-+	} else if (len > 0) {
-+		struct stat	statbuf;
-+		int		ret;
-+
-+		/*
-+		 * If we were using the end of a partitioned file, free the
-+		 * address space.  IOWs, bonus points if you delete these in
-+		 * reverse-order of creation.
-+		 */
-+		ret = fstat(fcb->fd, &statbuf);
-+		if (!ret && statbuf.st_size == pos + len) {
-+			ret = ftruncate(fcb->fd, pos);
-+		}
-+	}
-+	pthread_mutex_unlock(&fcb_mutex);
++	xfs_iunlock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
++	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
 +}
 +
 +/*
-+ * Find an memfd that can accomodate the given amount of address space.
++ * Lock the realtime free space metadata inodes for a freespace scan.  Callers
++ * must walk metadata blocks in order of increasing file offset.
 + */
-+static int
-+xfile_fcb_find(
-+	const char		*description,
-+	uint64_t		maxrange,
-+	loff_t			*pos,
-+	struct xfile_fcb	**fcbp)
++void
++xfs_rtbitmap_lock_shared(
++	struct xfs_mount	*mp,
++	unsigned int		rbmlock_flags)
 +{
-+	struct xfile_fcb	*fcb;
-+	int			ret;
-+	int			error;
++	if (rbmlock_flags & XFS_RBMLOCK_BITMAP)
++		xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
 +
-+	/* No maximum range means that the caller gets a private memfd. */
-+	if (maxrange == 0) {
-+		*pos = 0;
-+		return xfile_fcb_create(description, fcbp);
-+	}
-+
-+	pthread_mutex_lock(&fcb_mutex);
-+
-+	/*
-+	 * If we only need a certain number of byte range, look for one with
-+	 * available file range.
-+	 */
-+	list_for_each_entry(fcb, &fcb_list, fcb_list) {
-+		struct stat	statbuf;
-+
-+		ret = fstat(fcb->fd, &statbuf);
-+		if (ret)
-+			continue;
-+
-+		ret = ftruncate(fcb->fd, statbuf.st_size + maxrange);
-+		if (ret)
-+			continue;
-+
-+		fcb->refcount++;
-+		*pos = statbuf.st_size;
-+		*fcbp = fcb;
-+		goto out_unlock;
-+	}
-+
-+	/* Otherwise, open a new memfd and add it to our list. */
-+	error = xfile_fcb_create(description, &fcb);
-+	if (error)
-+		return error;
-+
-+	ret = ftruncate(fcb->fd, maxrange);
-+	if (ret) {
-+		error = -errno;
-+		xfile_fcb_irele(fcb, 0, maxrange);
-+		return error;
-+	}
-+
-+	list_add_tail(&fcb->fcb_list, &fcb_list);
-+	*pos = 0;
-+	*fcbp = fcb;
-+
-+out_unlock:
-+	pthread_mutex_unlock(&fcb_mutex);
-+	return error;
++	if (rbmlock_flags & XFS_RBMLOCK_SUMMARY)
++		xfs_ilock(mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
 +}
 +
- /*
-  * Create an xfile of the given size.  The description will be used in the
-  * trace output.
-@@ -102,6 +242,7 @@ xfile_create_fd(
- int
- xfile_create(
- 	struct xfs_mount	*mp,
-+	unsigned long long	maxrange,
- 	const char		*description,
- 	struct xfile		**xfilep)
- {
-@@ -117,13 +258,14 @@ xfile_create(
- 	if (!xf)
- 		return -ENOMEM;
++/* Unlock the realtime free space metadata inodes after a freespace scan. */
++void
++xfs_rtbitmap_unlock_shared(
++	struct xfs_mount	*mp,
++	unsigned int		rbmlock_flags)
++{
++	if (rbmlock_flags & XFS_RBMLOCK_SUMMARY)
++		xfs_iunlock(mp->m_rsumip, XFS_ILOCK_SHARED | XFS_ILOCK_RTSUM);
++
++	if (rbmlock_flags & XFS_RBMLOCK_BITMAP)
++		xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++}
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
+index 749c8e3ec4cb..f6a2a48973ab 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.h
++++ b/fs/xfs/libxfs/xfs_rtbitmap.h
+@@ -279,6 +279,19 @@ xfs_suminfo_t xfs_suminfo_get(struct xfs_mount *mp,
+ 		union xfs_suminfo_ondisk *infoptr);
+ void xfs_suminfo_add(struct xfs_mount *mp, union xfs_suminfo_ondisk *infoptr,
+ 		int delta);
++
++void xfs_rtbitmap_lock(struct xfs_trans *tp, struct xfs_mount *mp);
++void xfs_rtbitmap_unlock(struct xfs_mount *mp);
++
++/* Lock the rt bitmap inode in shared mode */
++#define XFS_RBMLOCK_BITMAP	(1U << 0)
++/* Lock the rt summary inode in shared mode */
++#define XFS_RBMLOCK_SUMMARY	(1U << 1)
++
++void xfs_rtbitmap_lock_shared(struct xfs_mount *mp,
++		unsigned int rbmlock_flags);
++void xfs_rtbitmap_unlock_shared(struct xfs_mount *mp,
++		unsigned int rbmlock_flags);
+ #else /* CONFIG_XFS_RT */
+ # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
+ # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
+@@ -295,6 +308,10 @@ xfs_rtbitmap_blockcount(struct xfs_mount *mp, xfs_rtbxlen_t rtextents)
+ # define xfs_rtbitmap_wordcount(mp, r)			(0)
+ # define xfs_rtsummary_blockcount(mp, l, b)		(0)
+ # define xfs_rtsummary_wordcount(mp, l, b)		(0)
++# define xfs_rtbitmap_lock(tp, mp)		do { } while (0)
++# define xfs_rtbitmap_unlock(mp)		do { } while (0)
++# define xfs_rtbitmap_lock_shared(mp, lf)	do { } while (0)
++# define xfs_rtbitmap_unlock_shared(mp, lf)	do { } while (0)
+ #endif /* CONFIG_XFS_RT */
  
--	xf->fd = xfile_create_fd(fname);
--	if (xf->fd < 0) {
--		error = -errno;
-+	error = xfile_fcb_find(description, maxrange, &xf->partition_pos,
-+			&xf->fcb);
-+	if (error) {
- 		kmem_free(xf);
- 		return error;
+ #endif /* __XFS_RTBITMAP_H__ */
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 4de13f8f4277..dadbe32916de 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -33,6 +33,7 @@
+ #include "xfs_error.h"
+ #include "xfs_quota.h"
+ #include "xfs_swapext.h"
++#include "xfs_rtbitmap.h"
+ #include "scrub/scrub.h"
+ #include "scrub/common.h"
+ #include "scrub/trace.h"
+diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+index 680b2e1d2940..043fb5777290 100644
+--- a/fs/xfs/scrub/fscounters.c
++++ b/fs/xfs/scrub/fscounters.c
+@@ -470,7 +470,7 @@ xchk_fscount_count_frextents(
+ 	if (!xfs_has_realtime(mp))
+ 		return 0;
+ 
+-	xfs_ilock(sc->mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++	xfs_rtbitmap_lock_shared(sc->mp, XFS_RBMLOCK_BITMAP);
+ 	error = xfs_rtalloc_query_all(sc->mp, sc->tp,
+ 			xchk_fscount_add_frextent, fsc);
+ 	if (error) {
+@@ -479,7 +479,7 @@ xchk_fscount_count_frextents(
  	}
  
-+	xf->partition_bytes = maxrange;
- 	*xfilep = xf;
- 	return 0;
+ out_unlock:
+-	xfs_iunlock(sc->mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++	xfs_rtbitmap_unlock_shared(sc->mp, XFS_RBMLOCK_BITMAP);
+ 	return error;
  }
-@@ -133,7 +275,7 @@ void
- xfile_destroy(
- 	struct xfile		*xf)
- {
--	close(xf->fd);
-+	xfile_fcb_irele(xf->fcb, xf->partition_pos, xf->partition_bytes);
- 	kmem_free(xf);
+ #else
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 1bfdd31723f5..447c057c9331 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -131,10 +131,7 @@ xfs_bmap_rtalloc(
+ 	 * Lock out modifications to both the RT bitmap and summary inodes
+ 	 */
+ 	if (!rtlocked) {
+-		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL|XFS_ILOCK_RTBITMAP);
+-		xfs_trans_ijoin(ap->tp, mp->m_rbmip, XFS_ILOCK_EXCL);
+-		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL|XFS_ILOCK_RTSUM);
+-		xfs_trans_ijoin(ap->tp, mp->m_rsumip, XFS_ILOCK_EXCL);
++		xfs_rtbitmap_lock(ap->tp, mp);
+ 		rtlocked = true;
+ 	}
+ 
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index 8d0a6f480d2a..71053f840ea4 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -525,7 +525,7 @@ xfs_getfsmap_rtdev_rtbitmap_query(
+ 	unsigned int			mod;
+ 	int				error;
+ 
+-	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++	xfs_rtbitmap_lock_shared(mp, XFS_RBMLOCK_BITMAP);
+ 
+ 	/*
+ 	 * Set up query parameters to return free rtextents covering the range
+@@ -551,7 +551,7 @@ xfs_getfsmap_rtdev_rtbitmap_query(
+ 	if (error)
+ 		goto err;
+ err:
+-	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++	xfs_rtbitmap_unlock_shared(mp, XFS_RBMLOCK_BITMAP);
+ 	return error;
  }
  
-@@ -141,6 +283,9 @@ static inline loff_t
- xfile_maxbytes(
- 	struct xfile		*xf)
- {
-+	if (xf->partition_bytes > 0)
-+		return xf->partition_bytes;
-+
- 	if (sizeof(loff_t) == 8)
- 		return LLONG_MAX;
- 	return LONG_MAX;
-@@ -166,7 +311,7 @@ xfile_pread(
- 	if (xfile_maxbytes(xf) - pos < count)
- 		return -EFBIG;
- 
--	ret = pread(xf->fd, buf, count, pos);
-+	ret = pread(xf->fcb->fd, buf, count, pos + xf->partition_pos);
- 	if (ret >= 0)
- 		return ret;
- 	return -errno;
-@@ -192,7 +337,7 @@ xfile_pwrite(
- 	if (xfile_maxbytes(xf) - pos < count)
- 		return -EFBIG;
- 
--	ret = pwrite(xf->fd, buf, count, pos);
-+	ret = pwrite(xf->fcb->fd, buf, count, pos + xf->partition_pos);
- 	if (ret >= 0)
- 		return ret;
- 	return -errno;
-@@ -207,7 +352,13 @@ xfile_stat(
- 	struct stat		ks;
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index 674ca3dab72e..11bea1c60eda 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -1081,10 +1081,10 @@ xfs_growfs_rt(
+ 		if (error)
+ 			break;
+ 		/*
+-		 * Lock out other callers by grabbing the bitmap inode lock.
++		 * Lock out other callers by grabbing the bitmap and summary
++		 * inode locks and joining them to the transaction.
+ 		 */
+-		xfs_ilock(mp->m_rbmip, XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP);
+-		xfs_trans_ijoin(tp, mp->m_rbmip, XFS_ILOCK_EXCL);
++		xfs_rtbitmap_lock(tp, mp);
+ 		/*
+ 		 * Update the bitmap inode's size ondisk and incore.  We need
+ 		 * to update the incore size so that inode inactivation won't
+@@ -1094,11 +1094,6 @@ xfs_growfs_rt(
+ 			nsbp->sb_rbmblocks * nsbp->sb_blocksize;
+ 		i_size_write(VFS_I(mp->m_rbmip), mp->m_rbmip->i_disk_size);
+ 		xfs_trans_log_inode(tp, mp->m_rbmip, XFS_ILOG_CORE);
+-		/*
+-		 * Get the summary inode into the transaction.
+-		 */
+-		xfs_ilock(mp->m_rsumip, XFS_ILOCK_EXCL | XFS_ILOCK_RTSUM);
+-		xfs_trans_ijoin(tp, mp->m_rsumip, XFS_ILOCK_EXCL);
+ 		/*
+ 		 * Update the summary inode's size.  We need to update the
+ 		 * incore size so that inode inactivation won't punch what it
+@@ -1338,10 +1333,10 @@ xfs_rtalloc_reinit_frextents(
+ 	uint64_t		val = 0;
  	int			error;
  
--	error = fstat(xf->fd, &ks);
-+	if (xf->partition_bytes > 0) {
-+		statbuf->size = xf->partition_bytes;
-+		statbuf->bytes = xf->partition_bytes;
-+		return 0;
-+	}
-+
-+	error = fstat(xf->fcb->fd, &ks);
+-	xfs_ilock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++	xfs_rtbitmap_lock_shared(mp, XFS_RBMLOCK_BITMAP);
+ 	error = xfs_rtalloc_query_all(mp, NULL, xfs_rtalloc_count_frextent,
+ 			&val);
+-	xfs_iunlock(mp->m_rbmip, XFS_ILOCK_SHARED | XFS_ILOCK_RTBITMAP);
++	xfs_rtbitmap_unlock_shared(mp, XFS_RBMLOCK_BITMAP);
  	if (error)
- 		return -errno;
+ 		return error;
  
-@@ -234,7 +385,7 @@ xfile_dump(
- 	}
- 
- 	/* reroute our xfile to stdin and shut everything else */
--	dup2(xf->fd, 0);
-+	dup2(xf->fcb->fd, 0);
- 	for (i = 3; i < 1024; i++)
- 		close(i);
- 
-@@ -251,7 +402,7 @@ xfile_prealloc(
- 	int		error;
- 
- 	count = min(count, xfile_maxbytes(xf) - pos);
--	error = fallocate(xf->fd, 0, pos, count);
-+	error = fallocate(xf->fcb->fd, 0, pos + xf->partition_pos, count);
- 	if (error)
- 		return -errno;
- 	return 0;
-diff --git a/libxfs/xfile.h b/libxfs/xfile.h
-index 9580de32864..9923fe8e5ec 100644
---- a/libxfs/xfile.h
-+++ b/libxfs/xfile.h
-@@ -6,14 +6,18 @@
- #ifndef __LIBXFS_XFILE_H__
- #define __LIBXFS_XFILE_H__
- 
-+struct xfile_fcb;
-+
- struct xfile {
--	int		fd;
-+	struct xfile_fcb	*fcb;
-+	loff_t			partition_pos;
-+	uint64_t		partition_bytes;
- };
- 
- void xfile_libinit(void);
- 
--int xfile_create(struct xfs_mount *mp, const char *description,
--		struct xfile **xfilep);
-+int xfile_create(struct xfs_mount *mp, unsigned long long maxrange,
-+		const char *description, struct xfile **xfilep);
- void xfile_destroy(struct xfile *xf);
- 
- ssize_t xfile_pread(struct xfile *xf, void *buf, size_t count, loff_t pos);
 
