@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5956565A1AB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBF9965A1A8
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:35:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236251AbiLaCfr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:35:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57372 "EHLO
+        id S236247AbiLaCfH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:35:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236249AbiLaCfq (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:35:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF87DEC
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:35:45 -0800 (PST)
+        with ESMTP id S236284AbiLaCe7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:34:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F1A1CB26
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:34:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 81EA761CC2
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:35:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCF12C433D2;
-        Sat, 31 Dec 2022 02:35:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D661C61D07
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:34:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43B4FC433D2;
+        Sat, 31 Dec 2022 02:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454144;
-        bh=unpgNZfxjEoyvL5ZlWrJgvV6Ich17jWYciJwAYB2OOc=;
+        s=k20201202; t=1672454098;
+        bh=iQnAKE2TExEqtcf8s79a2JK9sgknTSWJvcKivkWyFmk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HyWy/1LCmIJOnl9RqLo6x9td5RKtoK3OiJnUQU1NgDsmM8XVJWu+14nXuZsYA5qbg
-         stGenVHawskMSEL/SL5t+stXhPsU/Vka2FF56x4qT13f4qs0XqKu6D3E5lLpNeurSW
-         a51Mdhag4s2FtOdam8WgSqEaIvjX3BbZqGpHr/TWf47ee+x0ycge+q4Rg3/oHpxNji
-         mvl8BovDfFSVdnGQdYgFdw2uO+6fQyLwPL2xMqlMzTETsGsSy3wHD47/0H4ywFuXe6
-         pqxQPW9gufVDbFSPxJNXSIdVFocAk0FxcEGvgSmqFwwQIlWrA2TVx4K0i7agxRUJzd
-         1oGANpqGgDQoA==
-Subject: [PATCH 22/45] xfs_repair: improve rtbitmap discrepancy reporting
+        b=djGywbHIxCvQ65qGLRmLWvYr2WQYbe0iPS5ZQyNWfJJSmpOKgCAnhfbyTYoBj1oOD
+         4N9ETwyFAvT5gYBhqBb4iVthNl8LCh1mns0AYvlVEB4/Mk3ovF8PGzxmblfpKKgQHU
+         HVS5Djbhu6zKnWGZ3AO5i8QGLuuZpoZbUt1wAX01edIj3Wz2RLa4R+z6Xh0N1mKcGR
+         6aLVsUy7xdWQsTlu59suQfCdXx76zBZDuQR4+s/q/19QKu/FU1NTV+z/z9SovbuxR+
+         e5MsdbRF8E7GuuMvs4gbX+vGtvYtQA+APhITDg6GM2vKaGDGL0cz0br4TXpOP7ZNgU
+         D6mmb6Auab8ew==
+Subject: [PATCH 19/45] xfs: scrub the rtbitmap by group
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:46 -0800
-Message-ID: <167243878653.731133.7580105112892217687.stgit@magnolia>
+Message-ID: <167243878615.731133.13852321164499144680.stgit@magnolia>
 In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
 References: <167243878346.731133.14642166452774753637.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,76 +55,46 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Improve the reporting of discrepancies in the realtime bitmap and
-summary files by creating a separate helper function that will pinpoint
-the exact (word) locations of mismatches.  This will help developers to
-diagnose problems with the rtgroups feature and users to figure out
-exactly what's bad in a filesystem.
+Reduce the amount of time that the kernel spends with the rtbitmap
+locked for a scrub by splitting the work by rtgroup.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/rt.c |   42 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 39 insertions(+), 3 deletions(-)
+ libfrog/scrub.c |    5 +++++
+ libxfs/xfs_fs.h |    3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
 
-diff --git a/repair/rt.c b/repair/rt.c
-index 33bc6836f71..ed0f744cb9f 100644
---- a/repair/rt.c
-+++ b/repair/rt.c
-@@ -124,6 +124,44 @@ generate_rtinfo(
- 	return(0);
- }
+diff --git a/libfrog/scrub.c b/libfrog/scrub.c
+index 7d6c9c69e4a..7efb7ecfbd0 100644
+--- a/libfrog/scrub.c
++++ b/libfrog/scrub.c
+@@ -154,6 +154,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
+ 		.descr	= "realtime group superblock",
+ 		.group	= XFROG_SCRUB_GROUP_RTGROUP,
+ 	},
++	[XFS_SCRUB_TYPE_RGBITMAP] = {
++		.name	= "rgbitmap",
++		.descr	= "realtime group bitmap",
++		.group	= XFROG_SCRUB_GROUP_RTGROUP,
++	},
+ };
+ #undef DEP
  
-+static void
-+check_rtwords(
-+	struct xfs_mount	*mp,
-+	const char		*filename,
-+	unsigned long long	bno,
-+	void			*ondisk,
-+	void			*incore)
-+{
-+	unsigned int		wordcnt = mp->m_blockwsize;
-+	union xfs_rtword_ondisk	*o = ondisk, *i = incore;
-+	int			badstart = -1;
-+	unsigned int		j;
-+
-+	if (memcmp(ondisk, incore, wordcnt << XFS_WORDLOG) == 0)
-+		return;
-+
-+	for (j = 0; j < wordcnt; j++, o++, i++) {
-+		if (o->raw == i->raw) {
-+			/* Report a range of inconsistency that just ended. */
-+			if (badstart >= 0)
-+				do_warn(
-+ _("discrepancy in %s at dblock 0x%llx words 0x%x-0x%x/0x%x\n"),
-+					filename, bno, badstart, j - 1, wordcnt);
-+			badstart = -1;
-+			continue;
-+		}
-+
-+		if (badstart == -1)
-+			badstart = j;
-+	}
-+
-+	if (badstart >= 0)
-+		do_warn(
-+ _("discrepancy in %s at dblock 0x%llx words 0x%x-0x%x/0x%x\n"),
-+					filename, bno, badstart, wordcnt,
-+					wordcnt);
-+}
-+
- static void
- check_rtfile_contents(
- 	struct xfs_mount	*mp,
-@@ -180,9 +218,7 @@ check_rtfile_contents(
- 			break;
- 		}
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index c12be9dbb59..7e9d7d7bb40 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -742,9 +742,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_TYPE_NLINKS	26	/* inode link counts */
+ #define XFS_SCRUB_TYPE_HEALTHY	27	/* everything checked out ok */
+ #define XFS_SCRUB_TYPE_RGSUPER	28	/* realtime superblock */
++#define XFS_SCRUB_TYPE_RGBITMAP	29	/* realtime group bitmap */
  
--		if (memcmp(bp->b_addr, buf, mp->m_blockwsize << XFS_WORDLOG))
--			do_warn(_("discrepancy in %s at dblock 0x%llx\n"),
--					filename, (unsigned long long)bno);
-+		check_rtwords(mp, filename, bno, bp->b_addr, buf);
+ /* Number of scrub subcommands. */
+-#define XFS_SCRUB_TYPE_NR	29
++#define XFS_SCRUB_TYPE_NR	30
  
- 		buf += XFS_FSB_TO_B(mp, map.br_blockcount);
- 		bno += map.br_blockcount;
+ /* i: Repair this metadata. */
+ #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
 
