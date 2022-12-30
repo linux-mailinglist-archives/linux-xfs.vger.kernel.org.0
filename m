@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C671865A217
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:00:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E867065A21C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:01:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231514AbiLaDAl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:00:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
+        id S229906AbiLaDBn (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:01:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbiLaDAk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:00:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E891929B
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:00:40 -0800 (PST)
+        with ESMTP id S236287AbiLaDBm (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:01:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9409915F27
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:01:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D530561D07
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:00:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C6DC433D2;
-        Sat, 31 Dec 2022 03:00:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3219461D06
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:01:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9961AC433D2;
+        Sat, 31 Dec 2022 03:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455639;
-        bh=gDz99+4hlZFaG62aQqlbXxamSrWqa2W41b1OYzS95xQ=;
+        s=k20201202; t=1672455701;
+        bh=r8fwNUhf8cW+aWVU1uhsxxFotriQDPowUe0G6rTAJLI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PV/ycm2y7bbJOAyGjk1z2xi8BnhwWb3AY43jjnMjMhrZuD3MxspFDJOVhHH3iGCdQ
-         9nQcldmKw/kPNt3FaleGZPhjXmKFsSNRnsQakgAy/jXqe0T5G/+s4cczZe3IKAn+wm
-         NTnbUfwV8+VaEQJho8S9GxUqidlNZUd5CiEvzoPEcsTrKsNBfFrbdySd2cCJ4NmQIZ
-         r0TTbh5Zr5CHhASVNI6Y71JmW4EBPW49DLIP8R7naclvcp5LpR8rOJKycB957pB+kF
-         MgJ8FY7XJPPHhJZSWRGMy0mB13OhWa4cNum7rq3tam7WKTyiQU7j3HsbT2fzdOuWNL
-         dbujx7BGzOxPg==
-Subject: [PATCH 25/41] xfs_db: support the realtime refcountbt
+        b=PWwIKXYjmLrrq0WrjYvqc5Vk1jPiAYMKnTza5HZ86sn4sU7xTE8lJO8+j4+mGnsU2
+         xyywQPZA3Ypueh49UQuB2DZoZTrMzrLgFDXhho1kssFzNLSFmxA0rUzu6gLtG+HF5t
+         ymGVGkHXuC3sueO3o5MxctD/PV9Zpa5qNxtQHTV3VB2tN+j6lCEP+Ri6zHw184Ggz+
+         oHjJ/aOBatAPNyh5BBWg7tl67yrzzDmL63X2o9gU1qNm89BklQlM9/Hfnt5DFNZZRO
+         4AviROM8a4Jiite73cH7F9LI3vNpiUHuty4ghx2ip2YS8W3DZz+rvvJ1vq87wibNoc
+         rF3JMQc0dZXsw==
+Subject: [PATCH 29/41] xfs_spaceman: report health of the realtime refcount
+ btree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:11 -0800
-Message-ID: <167243881100.734096.18302912584792693090.stgit@magnolia>
+Message-ID: <167243881154.734096.18174238218932229927.stgit@magnolia>
 In-Reply-To: <167243880752.734096.171910706541747310.stgit@magnolia>
 References: <167243880752.734096.171910706541747310.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,113 +56,40 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Wire up various parts of xfs_db for realtime refcount support.
+Report the health of the realtime reference count btree.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/btblock.c             |    3 +++
- db/btdump.c              |   11 ++++++++++-
- db/btheight.c            |    5 +++++
- libxfs/libxfs_api_defs.h |    1 +
- man/man8/xfs_db.8        |    1 +
- 5 files changed, 20 insertions(+), 1 deletion(-)
+ spaceman/health.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 
-diff --git a/db/btblock.c b/db/btblock.c
-index 0a581593a59..6ea146ba62a 100644
---- a/db/btblock.c
-+++ b/db/btblock.c
-@@ -159,6 +159,9 @@ block_to_bt(
- 	case TYP_REFCBT:
- 		magic = crc ? XFS_REFC_CRC_MAGIC : 0;
- 		break;
-+	case TYP_RTREFCBT:
-+		magic = crc ? XFS_RTREFC_CRC_MAGIC : 0;
-+		break;
- 	default:
- 		ASSERT(0);
- 	}
-diff --git a/db/btdump.c b/db/btdump.c
-index 9c528e5a11a..31f32a8f7a5 100644
---- a/db/btdump.c
-+++ b/db/btdump.c
-@@ -447,7 +447,8 @@ is_btree_inode(void)
- 	struct xfs_dinode	*dip;
- 
- 	dip = iocur_top->data;
--	return dip->di_format == XFS_DINODE_FMT_RMAP;
-+	return dip->di_format == XFS_DINODE_FMT_RMAP ||
-+	       dip->di_format == XFS_DINODE_FMT_REFCOUNT;
+diff --git a/spaceman/health.c b/spaceman/health.c
+index 950610d9770..6114be5704c 100644
+--- a/spaceman/health.c
++++ b/spaceman/health.c
+@@ -44,6 +44,11 @@ static bool has_rtrmapbt(const struct xfs_fsop_geom *g)
+ 	return g->rtblocks > 0 && (g->flags & XFS_FSOP_GEOM_FLAGS_RMAPBT);
  }
  
- static int
-@@ -457,6 +458,7 @@ dump_btree_inode(
- 	char			*prefix;
- 	struct xfs_dinode	*dip;
- 	struct xfs_rtrmap_root	*rtrmap;
-+	struct xfs_rtrefcount_root *rtrefc;
- 	int			level;
- 	int			numrecs;
- 	int			ret;
-@@ -469,6 +471,12 @@ dump_btree_inode(
- 		level = be16_to_cpu(rtrmap->bb_level);
- 		numrecs = be16_to_cpu(rtrmap->bb_numrecs);
- 		break;
-+	case XFS_DINODE_FMT_REFCOUNT:
-+		prefix = "u3.rtrefcbt";
-+		rtrefc = (struct xfs_rtrefcount_root *)XFS_DFORK_DPTR(dip);
-+		level = be16_to_cpu(rtrefc->bb_level);
-+		numrecs = be16_to_cpu(rtrefc->bb_numrecs);
-+		break;
- 	default:
- 		dbprintf("Unknown metadata inode type %u\n", dip->di_format);
- 		return 0;
-@@ -550,6 +558,7 @@ btdump_f(
- 	case TYP_BMAPBTA:
- 	case TYP_BMAPBTD:
- 	case TYP_RTRMAPBT:
-+	case TYP_RTREFCBT:
- 		return dump_btree_long(iflag);
- 	case TYP_INODE:
- 		if (is_btree_inode())
-diff --git a/db/btheight.c b/db/btheight.c
-index 25ce3400334..9dd21ddae9a 100644
---- a/db/btheight.c
-+++ b/db/btheight.c
-@@ -58,6 +58,11 @@ struct btmap {
- 		.maxlevels	= libxfs_rtrmapbt_maxlevels_ondisk,
- 		.maxrecs	= libxfs_rtrmapbt_maxrecs,
++static bool has_rtreflink(const struct xfs_fsop_geom *g)
++{
++	return g->rtblocks > 0 && (g->flags & XFS_FSOP_GEOM_FLAGS_REFLINK);
++}
++
+ struct flag_map {
+ 	unsigned int		mask;
+ 	bool			(*has_fn)(const struct xfs_fsop_geom *g);
+@@ -153,6 +158,11 @@ static const struct flag_map rtgroup_flags[] = {
+ 		.descr = "realtime reverse mappings btree",
+ 		.has_fn = has_rtrmapbt,
  	},
 +	{
-+		.tag		= "rtrefcountbt",
-+		.maxlevels	= libxfs_rtrefcountbt_maxlevels_ondisk,
-+		.maxrecs	= libxfs_rtrefcountbt_maxrecs,
++		.mask = XFS_RTGROUP_GEOM_SICK_REFCNTBT,
++		.descr = "realtime reference count btree",
++		.has_fn = has_rtreflink,
 +	},
+ 	{0},
  };
  
- static void
-diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
-index 0ac00fca337..a1c6efd5ca9 100644
---- a/libxfs/libxfs_api_defs.h
-+++ b/libxfs/libxfs_api_defs.h
-@@ -252,6 +252,7 @@
- 
- #define xfs_rtrefcountbt_create_path	libxfs_rtrefcountbt_create_path
- #define xfs_rtrefcountbt_droot_maxrecs	libxfs_rtrefcountbt_droot_maxrecs
-+#define xfs_rtrefcountbt_maxlevels_ondisk	libxfs_rtrefcountbt_maxlevels_ondisk
- #define xfs_rtrefcountbt_maxrecs	libxfs_rtrefcountbt_maxrecs
- 
- #define xfs_rtrmapbt_calc_reserves	libxfs_rtrmapbt_calc_reserves
-diff --git a/man/man8/xfs_db.8 b/man/man8/xfs_db.8
-index a277ea5e668..a694c8ed916 100644
---- a/man/man8/xfs_db.8
-+++ b/man/man8/xfs_db.8
-@@ -455,6 +455,7 @@ The supported btree types are:
- .IR bmapbt ,
- .IR refcountbt ,
- .IR rmapbt ,
-+.IR rtrefcountbt ,
- and
- .IR rtrmapbt .
- The magic value
 
