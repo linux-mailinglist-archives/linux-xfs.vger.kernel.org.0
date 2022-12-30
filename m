@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E396D65A05A
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:14:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DA3665A061
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:15:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236026AbiLaBOC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:14:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42418 "EHLO
+        id S236038AbiLaBPf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:15:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236023AbiLaBOC (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:14:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2087B16588
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:14:01 -0800 (PST)
+        with ESMTP id S236035AbiLaBPd (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:15:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE0618E30
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:15:33 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D9498B81DF6
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:13:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0BB5C433D2;
-        Sat, 31 Dec 2022 01:13:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AE86561D74
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:15:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DADC433D2;
+        Sat, 31 Dec 2022 01:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449238;
-        bh=RR5Kd7D8yEIMHWudheZ7fESnyjMOVGqXqbJ2hU4Kzqs=;
+        s=k20201202; t=1672449332;
+        bh=yRS2VsvOX2QfYTQXiGKktYeYGnMCt7/h9/5YIcmetKQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iDhZrLLOD7FcmOV+IEYySjXfpClJLEDv6rA1Ou2Hc0RDHFDR/yfs3N6wPn1cPVtR0
-         VppnYFZOHvzqx4a/bQfL3K7lL/8hhIaNVXG2TDzuzkhWPm5alVZXT1cT0I07qXx0Rx
-         0mQyS2nlUDwD0wo7atFgnzBY0j8GM4kUY6vLa2bpus4VP/cx2Fta7jtpCibiKnKRbI
-         wGjNOKG6A6IUFLgUVyPPlTDbbjrIm8GfTBHB66UJI19DEtoVkMrNfiCFiH7MXiChwR
-         H6M3G+V6yGCiZCntCwdHbUBcjr0TDT1BEtrFbHafz4RXf/7KD6vWJQzhTtii0KPvD2
-         JvaokPdGi4OPQ==
-Subject: [PATCH 14/23] xfs: disable the agi rotor for metadata inodes
+        b=Alzvstshj2HPb5K2d+NpJJCLEqbLLx/wXN7XEroBFT4K8HTp/0L1CiKVaPUVCiIm9
+         tLhdvk1WBQhuhetVzKI2rYxJTuvBE5T8So3jVkGqBDuRdT/1wvCRXp5hKcoChmBYOP
+         bCg8fUG2XvR/YRXyW7AG4ZL59M4vRcXWve7antN4Gnn6eWExT8fBd02bJpDYz2J+F2
+         2XY6oI1Nk7mgbS1aQ8d0Ix5MVFkRIj+bOBZotuPtk4+YOqj7XUwizy7vKww4N/wZfW
+         o/gXTI4j2krYfn6wqphqeAkdB9NrZ9B5Untk/7nwK3V/hGyO85PId3dYzYGftFGXYL
+         kJQpr8qtvAtBg==
+Subject: [PATCH 20/23] xfs: scrub metadata directories
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:26 -0800
-Message-ID: <167243864655.708110.16700641660672261534.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:27 -0800
+Message-ID: <167243864741.708110.16141637739025575601.stgit@magnolia>
 In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
 References: <167243864431.708110.1688096566212843499.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,144 +54,154 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Ideally, we'd put all the metadata inodes in one place if we could, so
-that the metadata all stay reasonably close together instead of
-spreading out over the disk.  Furthermore, if the log is internal we'd
-probably prefer to keep the metadata near the log.  Therefore, disable
-AGI rotoring for metadata inode allocations.
+Teach online scrub about the metadata directory tree.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_ialloc.c |   16 +++++++++-------
- fs/xfs/libxfs/xfs_ialloc.h |    2 +-
- fs/xfs/libxfs/xfs_imeta.c  |    4 ++--
- fs/xfs/scrub/tempfile.c    |    2 +-
- fs/xfs/xfs_inode.c         |    4 ++--
- fs/xfs/xfs_symlink.c       |    2 +-
- 6 files changed, 16 insertions(+), 14 deletions(-)
+ fs/xfs/scrub/dir.c           |    9 +++++++++
+ fs/xfs/scrub/dir_repair.c    |    6 ++++++
+ fs/xfs/scrub/parent.c        |   18 ++++++++++++++++++
+ fs/xfs/scrub/parent_repair.c |   37 +++++++++++++++++++++++++++++++------
+ 4 files changed, 64 insertions(+), 6 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index d4c202da84cb..1d1c3cb0389c 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -1798,26 +1798,28 @@ xfs_dialloc_try_ag(
- int
- xfs_dialloc(
- 	struct xfs_trans	**tpp,
--	xfs_ino_t		parent,
-+	struct xfs_inode	*pip,
- 	umode_t			mode,
- 	xfs_ino_t		*new_ino)
- {
- 	struct xfs_mount	*mp = (*tpp)->t_mountp;
-+	struct xfs_perag	*pag;
-+	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
-+	xfs_ino_t		ino;
-+	xfs_ino_t		parent = pip ? pip->i_ino : 0;
- 	xfs_agnumber_t		agno;
--	int			error = 0;
- 	xfs_agnumber_t		start_agno;
--	struct xfs_perag	*pag;
--	struct xfs_ino_geometry	*igeo = M_IGEO(mp);
- 	bool			ok_alloc = true;
- 	int			flags;
--	xfs_ino_t		ino;
-+	int			error = 0;
+diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
+index 218cf43cdf93..30636501fb9f 100644
+--- a/fs/xfs/scrub/dir.c
++++ b/fs/xfs/scrub/dir.c
+@@ -59,6 +59,15 @@ xchk_dir_check_ftype(
  
+ 	if (xfs_mode_to_ftype(VFS_I(ip)->i_mode) != ftype)
+ 		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
++
++	/*
++	 * Metadata and regular inodes cannot cross trees.  This property
++	 * cannot change without a full inode free and realloc cycle, so it's
++	 * safe to check this without holding locks.
++	 */
++	if (xfs_is_metadata_inode(ip) ^ xfs_is_metadata_inode(sc->ip))
++		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
++
+ }
+ 
+ /*
+diff --git a/fs/xfs/scrub/dir_repair.c b/fs/xfs/scrub/dir_repair.c
+index 7530819e1435..14f34b9d4448 100644
+--- a/fs/xfs/scrub/dir_repair.c
++++ b/fs/xfs/scrub/dir_repair.c
+@@ -204,6 +204,12 @@ xrep_dir_salvage_entry(
+ 	if (error)
+ 		return 0;
+ 
++	/* Don't mix metadata and regular directory trees. */
++	if (xfs_is_metadata_inode(ip) ^ xfs_is_metadata_inode(rd->sc->ip)) {
++		xchk_irele(sc, ip);
++		return 0;
++	}
++
+ 	entry.ftype = xfs_mode_to_ftype(VFS_I(ip)->i_mode);
+ 	xchk_irele(sc, ip);
+ 
+diff --git a/fs/xfs/scrub/parent.c b/fs/xfs/scrub/parent.c
+index 92866f1757be..5af765a8182c 100644
+--- a/fs/xfs/scrub/parent.c
++++ b/fs/xfs/scrub/parent.c
+@@ -197,6 +197,16 @@ xchk_parent_validate(
+ 		goto out_rele;
+ 	}
+ 
++	/*
++	 * Metadata and regular inodes cannot cross trees.  This property
++	 * cannot change without a full inode free and realloc cycle, so it's
++	 * safe to check this without holding locks.
++	 */
++	if (xfs_is_metadata_inode(dp) ^ xfs_is_metadata_inode(sc->ip)) {
++		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, 0);
++		goto out_rele;
++	}
++
  	/*
- 	 * Directories, symlinks, and regular files frequently allocate at least
- 	 * one block, so factor that potential expansion when we examine whether
--	 * an AG has enough space for file creation.
-+	 * an AG has enough space for file creation.  Try to keep metadata
-+	 * files all in the same AG.
- 	 */
--	if (S_ISDIR(mode))
-+	if (S_ISDIR(mode) && (!pip || !xfs_is_metadata_inode(pip)))
- 		start_agno = xfs_ialloc_next_ag(mp);
- 	else {
- 		start_agno = XFS_INO_TO_AGNO(mp, parent);
-diff --git a/fs/xfs/libxfs/xfs_ialloc.h b/fs/xfs/libxfs/xfs_ialloc.h
-index f4dc97bb8e83..adf60dc56e73 100644
---- a/fs/xfs/libxfs/xfs_ialloc.h
-+++ b/fs/xfs/libxfs/xfs_ialloc.h
-@@ -36,7 +36,7 @@ xfs_make_iptr(struct xfs_mount *mp, struct xfs_buf *b, int o)
-  * Allocate an inode on disk.  Mode is used to tell whether the new inode will
-  * need space, and whether it is a directory.
-  */
--int xfs_dialloc(struct xfs_trans **tpp, xfs_ino_t parent, umode_t mode,
-+int xfs_dialloc(struct xfs_trans **tpp, struct xfs_inode *dp, umode_t mode,
- 		xfs_ino_t *new_ino);
+ 	 * We prefer to keep the inode locked while we lock and search its
+ 	 * alleged parent for a forward reference.  If we can grab the iolock
+@@ -302,5 +312,13 @@ xchk_parent(
+ 		return 0;
+ 	}
  
- int xfs_difree(struct xfs_trans *tp, struct xfs_perag *pag,
-diff --git a/fs/xfs/libxfs/xfs_imeta.c b/fs/xfs/libxfs/xfs_imeta.c
-index d3f60150f8ef..07f88df7a7e5 100644
---- a/fs/xfs/libxfs/xfs_imeta.c
-+++ b/fs/xfs/libxfs/xfs_imeta.c
-@@ -232,7 +232,7 @@ xfs_imeta_sb_create(
- 		return -EEXIST;
++	/* Is this the metadata root dir?  Then '..' must point to itself. */
++	if (sc->ip == mp->m_metadirip) {
++		if (sc->ip->i_ino != mp->m_sb.sb_metadirino ||
++		    sc->ip->i_ino != parent_ino)
++			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, 0);
++		return 0;
++	}
++
+ 	return xchk_parent_validate(sc, parent_ino);
+ }
+diff --git a/fs/xfs/scrub/parent_repair.c b/fs/xfs/scrub/parent_repair.c
+index ffef5de0fbe2..bba1cd1c7c8b 100644
+--- a/fs/xfs/scrub/parent_repair.c
++++ b/fs/xfs/scrub/parent_repair.c
+@@ -135,6 +135,10 @@ xrep_findparent_walk_directory(
+ 	if (xrep_is_tempfile(dp))
+ 		return 0;
  
- 	/* Create a new inode and set the sb pointer. */
--	error = xfs_dialloc(tpp, 0, mode, &ino);
-+	error = xfs_dialloc(tpp, NULL, mode, &ino);
- 	if (error)
- 		return error;
- 	error = xfs_icreate(*tpp, ino, &args, ipp);
-@@ -642,7 +642,7 @@ xfs_imeta_dir_create(
- 	 * entry pointing to them, but a directory also the "." entry
- 	 * pointing to itself.
- 	 */
--	error = xfs_dialloc(tpp, dp->i_ino, mode, &ino);
-+	error = xfs_dialloc(tpp, dp, mode, &ino);
- 	if (error)
- 		goto out_ilock;
- 	error = xfs_icreate(*tpp, ino, &args, ipp);
-diff --git a/fs/xfs/scrub/tempfile.c b/fs/xfs/scrub/tempfile.c
-index 6efaab50440f..beaaebf27284 100644
---- a/fs/xfs/scrub/tempfile.c
-+++ b/fs/xfs/scrub/tempfile.c
-@@ -87,7 +87,7 @@ xrep_tempfile_create(
- 		goto out_release_dquots;
++	/* Don't mix metadata and regular directory trees. */
++	if (xfs_is_metadata_inode(dp) ^ xfs_is_metadata_inode(sc->ip))
++		return 0;
++
+ 	/* Try to lock dp; if we can, we're ready to scan! */
+ 	if (!xfs_ilock_nowait(dp, XFS_IOLOCK_SHARED)) {
+ 		xfs_ino_t	orig_parent, new_parent;
+@@ -227,15 +231,30 @@ xrep_parent_confirm(
+ 	};
+ 	int			error;
  
- 	/* Allocate inode, set up directory. */
--	error = xfs_dialloc(&tp, dp->i_ino, mode, &ino);
-+	error = xfs_dialloc(&tp, dp, mode, &ino);
- 	if (error)
- 		goto out_trans_cancel;
- 	error = xfs_icreate(tp, ino, &args, &sc->tempip);
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 1eb53ed0097d..187c6025cfd8 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -864,7 +864,7 @@ xfs_create(
- 	 * entry pointing to them, but a directory also the "." entry
- 	 * pointing to itself.
- 	 */
--	error = xfs_dialloc(&tp, dp->i_ino, args->mode, &ino);
-+	error = xfs_dialloc(&tp, dp, args->mode, &ino);
- 	if (!error)
- 		error = xfs_icreate(tp, ino, args, &ip);
- 	if (error)
-@@ -980,7 +980,7 @@ xfs_create_tmpfile(
- 	if (error)
- 		goto out_release_dquots;
+-	/*
+-	 * The root directory always points to itself.  Unlinked dirs can point
+-	 * anywhere, so we point them at the root dir too.
+-	 */
+-	if (sc->ip == sc->mp->m_rootip || VFS_I(sc->ip)->i_nlink == 0) {
++	/* The root directory always points to itself. */
++	if (sc->ip == sc->mp->m_rootip) {
+ 		*parent_ino = sc->mp->m_sb.sb_rootino;
+ 		return 0;
+ 	}
  
--	error = xfs_dialloc(&tp, dp->i_ino, args->mode, &ino);
-+	error = xfs_dialloc(&tp, dp, args->mode, &ino);
- 	if (!error)
- 		error = xfs_icreate(tp, ino, args, &ip);
- 	if (error)
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index 6dc15f125895..f26ed3eba6cc 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -158,7 +158,7 @@ xfs_symlink(
- 	/*
- 	 * Allocate an inode for the symlink.
- 	 */
--	error = xfs_dialloc(&tp, dp->i_ino, S_IFLNK, &ino);
-+	error = xfs_dialloc(&tp, dp, S_IFLNK, &ino);
- 	if (!error)
- 		error = xfs_icreate(tp, ino, &args, &ip);
- 	if (error)
++	/* The metadata root directory always points to itself. */
++	if (sc->ip == sc->mp->m_metadirip) {
++		*parent_ino = sc->mp->m_sb.sb_metadirino;
++		return 0;
++	}
++
++	/*
++	 * Unlinked dirs can point anywhere, so we point them at the root dir
++	 * of whichever tree is appropriate.
++	 */
++	if (VFS_I(sc->ip)->i_nlink == 0) {
++		if (xfs_is_metadata_inode(sc->ip))
++			*parent_ino = sc->mp->m_sb.sb_metadirino;
++		else
++			*parent_ino = sc->mp->m_sb.sb_rootino;
++		return 0;
++	}
++
+ 	/* Reject garbage parent inode numbers and self-referential parents. */
+ 	if (*parent_ino == NULLFSINO)
+ 	       return 0;
+@@ -389,8 +408,14 @@ xrep_parent_self_reference(
+ 	if (sc->ip->i_ino == sc->mp->m_sb.sb_rootino)
+ 		return sc->mp->m_sb.sb_rootino;
+ 
+-	if (VFS_I(sc->ip)->i_nlink == 0)
++	if (sc->ip->i_ino == sc->mp->m_sb.sb_metadirino)
++		return sc->mp->m_sb.sb_metadirino;
++
++	if (VFS_I(sc->ip)->i_nlink == 0) {
++		if (xfs_is_metadata_inode(sc->ip))
++			return sc->mp->m_sb.sb_metadirino;
+ 		return sc->mp->m_sb.sb_rootino;
++	}
+ 
+ 	return NULLFSINO;
+ }
 
