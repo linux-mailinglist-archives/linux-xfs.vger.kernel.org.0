@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B09165A210
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:58:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C3865A212
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:59:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236296AbiLaC6y (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:58:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
+        id S236299AbiLaC70 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:59:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236248AbiLaC6y (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:58:54 -0500
+        with ESMTP id S236248AbiLaC7Z (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:59:25 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D53DB1929B
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:58:52 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1564E1929B
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:59:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8F1ABB81E6F
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:58:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 452D7C433D2;
-        Sat, 31 Dec 2022 02:58:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BF1D9B81E71
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:59:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E8BC433EF;
+        Sat, 31 Dec 2022 02:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455530;
-        bh=Xsgo/8F732CaALh4MUfQwgr3YL8tWsqfay0AfPxkh24=;
+        s=k20201202; t=1672455561;
+        bh=/lx3H61ktMs2wlqiT1c+4HnxWeTYjg9B9dpYdAf/YvA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Mimtd//pqclsRiRZPtgfyWFaIwO9w0epho3V8n9I5XXlth5xMKvt4+ONm5ATfu2en
-         iiG2yCVfwSfBQBN6mrWF9qyQnNEH2pNBxJmyraUd+nHeuCR6RDjdBlVpmgnn7VVDiO
-         RVj29dvqjyB/9U37zpLSIYV3skqAL4N8RSBjzfWiW19D1FfKsTfbpadmzDJWY+gkBT
-         C5xvDq55V5kCgKhrS+rBP8tWF2Yt8IUcMPfoUTWIwxuWdYqEaTr2nVMrhRqHHJYvaR
-         p+SsqH2iAcv/QhiqVhrM1fJF8uTJWVvoumHf8EwKyd/gFQOgW2h3rd7/LAMAIjrYVT
-         +2PYjk8FH9T8w==
-Subject: [PATCH 18/41] xfs: apply rt extent alignment constraints to CoW
- extsize hint
+        b=lAlSMiuSHOYm2yFMiPN+u45z0vS9ePn2E6fnISR5ZqyndJWjyVelq6To/H5XKDyj8
+         yJXQXEh05D3nXwxnpcqMWXGyQDpHeR40PHXUu0YMFKj8KhwGQdETukXGIyZxvZrNs8
+         BVtSPMy6OQUG4loNuVkNmDcHkeA6prjH8++mCMJe7SachiV/CZ0u2S785zYKSkb9Kd
+         +XEEVtJM8+j9A4W9o2yzvunVcgUTBc+Zxfut2AyuISqwMVaFnxf5cx15OmLPVrVBU1
+         zUl8Wi2qzslabVmRhfltY5SWXT9YehZ8D9d6fNozwT4zXTDCIXM5OMpO1Z+k7tnkrw
+         f3kUiWCccGt4A==
+Subject: [PATCH 20/41] xfs: report realtime refcount btree corruption errors
+ to the health system
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:10 -0800
-Message-ID: <167243881008.734096.10908414936699863035.stgit@magnolia>
+Message-ID: <167243881034.734096.4449054021704934789.stgit@magnolia>
 In-Reply-To: <167243880752.734096.171910706541747310.stgit@magnolia>
 References: <167243880752.734096.171910706541747310.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,98 +56,90 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The copy-on-write extent size hint is subject to the same alignment
-constraints as the regular extent size hint.  Since we're in the process
-of adding reflink (and therefore CoW) to the realtime device, we must
-apply the same scattered rextsize alignment validation strategies to
-both hints to deal with the possibility of rextsize changing.
-
-Therefore, fix the inode validator to perform rextsize alignment checks
-on regular realtime files, and to remove misaligned directory hints.
+Whenever we encounter corrupt realtime refcount btree blocks, we should
+report that to the health monitoring system for later reporting.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_inode_buf.c   |   25 ++++++++++++++++++++-----
- libxfs/xfs_trans_inode.c |   14 ++++++++++++++
- 2 files changed, 34 insertions(+), 5 deletions(-)
+ libxfs/xfs_fs.h               |    1 +
+ libxfs/xfs_health.h           |    4 +++-
+ libxfs/xfs_inode_fork.c       |    4 +++-
+ libxfs/xfs_rtrefcount_btree.c |    5 ++++-
+ 4 files changed, 11 insertions(+), 3 deletions(-)
 
 
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index b2e47c3adca..ba4df981bd0 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -828,11 +828,29 @@ xfs_inode_validate_cowextsize(
- 	bool				rt_flag;
- 	bool				hint_flag;
- 	uint32_t			cowextsize_bytes;
-+	uint32_t			blocksize_bytes;
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 8547ba85c55..5819576a51a 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -314,6 +314,7 @@ struct xfs_rtgroup_geometry {
+ #define XFS_RTGROUP_GEOM_SICK_SUPER	(1 << 0)  /* superblock */
+ #define XFS_RTGROUP_GEOM_SICK_BITMAP	(1 << 1)  /* rtbitmap for this group */
+ #define XFS_RTGROUP_GEOM_SICK_RMAPBT	(1 << 2)  /* reverse mappings */
++#define XFS_RTGROUP_GEOM_SICK_REFCNTBT	(1 << 3)  /* reference counts */
  
- 	rt_flag = (flags & XFS_DIFLAG_REALTIME);
- 	hint_flag = (flags2 & XFS_DIFLAG2_COWEXTSIZE);
- 	cowextsize_bytes = XFS_FSB_TO_B(mp, cowextsize);
+ /*
+  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
+diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
+index d5976f6b0de..13128216754 100644
+--- a/libxfs/xfs_health.h
++++ b/libxfs/xfs_health.h
+@@ -68,6 +68,7 @@ struct xfs_rtgroup;
+ #define XFS_SICK_RT_SUMMARY	(1 << 1)  /* realtime summary */
+ #define XFS_SICK_RT_SUPER	(1 << 2)  /* rt group superblock */
+ #define XFS_SICK_RT_RMAPBT	(1 << 3)  /* reverse mappings */
++#define XFS_SICK_RT_REFCNTBT	(1 << 4)  /* reference counts */
  
-+	/*
-+	 * Similar to extent size hints, a directory can be configured to
-+	 * propagate realtime status and a CoW extent size hint to newly
-+	 * created files even if there is no realtime device, and the hints on
-+	 * disk can become misaligned if the sysadmin changes the rt extent
-+	 * size while adding the realtime device.
-+	 *
-+	 * Therefore, we can only enforce the rextsize alignment check against
-+	 * regular realtime files, and rely on callers to decide when alignment
-+	 * checks are appropriate, and fix things up as needed.
-+	 */
-+
-+	if (rt_flag)
-+		blocksize_bytes = XFS_FSB_TO_B(mp, mp->m_sb.sb_rextsize);
-+	else
-+		blocksize_bytes = mp->m_sb.sb_blocksize;
-+
- 	if (hint_flag && !xfs_has_reflink(mp))
- 		return __this_address;
+ /* Observable health issues for AG metadata. */
+ #define XFS_SICK_AG_SB		(1 << 0)  /* superblock */
+@@ -106,7 +107,8 @@ struct xfs_rtgroup;
+ #define XFS_SICK_RT_PRIMARY	(XFS_SICK_RT_BITMAP | \
+ 				 XFS_SICK_RT_SUMMARY | \
+ 				 XFS_SICK_RT_SUPER | \
+-				 XFS_SICK_RT_RMAPBT)
++				 XFS_SICK_RT_RMAPBT | \
++				 XFS_SICK_RT_REFCNTBT)
  
-@@ -846,16 +864,13 @@ xfs_inode_validate_cowextsize(
- 	if (mode && !hint_flag && cowextsize != 0)
- 		return __this_address;
+ #define XFS_SICK_AG_PRIMARY	(XFS_SICK_AG_SB | \
+ 				 XFS_SICK_AG_AGF | \
+diff --git a/libxfs/xfs_inode_fork.c b/libxfs/xfs_inode_fork.c
+index b019cbeb5fd..4bdcfcda234 100644
+--- a/libxfs/xfs_inode_fork.c
++++ b/libxfs/xfs_inode_fork.c
+@@ -266,8 +266,10 @@ xfs_iformat_data_fork(
+ 			}
+ 			return xfs_iformat_rtrmap(ip, dip);
+ 		case XFS_DINODE_FMT_REFCOUNT:
+-			if (!xfs_has_rtreflink(ip->i_mount))
++			if (!xfs_has_rtreflink(ip->i_mount)) {
++				xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 				return -EFSCORRUPTED;
++			}
+ 			return xfs_iformat_rtrefcount(ip, dip);
+ 		default:
+ 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
+diff --git a/libxfs/xfs_rtrefcount_btree.c b/libxfs/xfs_rtrefcount_btree.c
+index 5e9930d315c..537287c1696 100644
+--- a/libxfs/xfs_rtrefcount_btree.c
++++ b/libxfs/xfs_rtrefcount_btree.c
+@@ -25,6 +25,7 @@
+ #include "xfs_rtgroup.h"
+ #include "xfs_rtbitmap.h"
+ #include "xfs_imeta.h"
++#include "xfs_health.h"
  
--	if (hint_flag && rt_flag)
--		return __this_address;
--
--	if (cowextsize_bytes % mp->m_sb.sb_blocksize)
-+	if (cowextsize_bytes % blocksize_bytes)
- 		return __this_address;
+ static struct kmem_cache	*xfs_rtrefcountbt_cur_cache;
  
- 	if (cowextsize > XFS_MAX_BMBT_EXTLEN)
- 		return __this_address;
+@@ -691,8 +692,10 @@ xfs_iformat_rtrefcount(
+ 	level = be16_to_cpu(dfp->bb_level);
  
--	if (cowextsize > mp->m_sb.sb_agblocks / 2)
-+	if (!rt_flag && cowextsize > mp->m_sb.sb_agblocks / 2)
- 		return __this_address;
- 
- 	return NULL;
-diff --git a/libxfs/xfs_trans_inode.c b/libxfs/xfs_trans_inode.c
-index e2d5d3efaab..04d5449e3bc 100644
---- a/libxfs/xfs_trans_inode.c
-+++ b/libxfs/xfs_trans_inode.c
-@@ -157,6 +157,20 @@ xfs_trans_log_inode(
- 		flags |= XFS_ILOG_CORE;
- 	}
- 
-+	/*
-+	 * Inode verifiers do not check that the CoW extent size hint is an
-+	 * integer multiple of the rt extent size on a directory with both
-+	 * rtinherit and cowextsize flags set.  If we're logging a directory
-+	 * that is misconfigured in this way, clear the hint.
-+	 */
-+	if ((ip->i_diflags & XFS_DIFLAG_RTINHERIT) &&
-+	    (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE) &&
-+	    (ip->i_cowextsize % ip->i_mount->m_sb.sb_rextsize) > 0) {
-+		ip->i_diflags2 &= ~XFS_DIFLAG2_COWEXTSIZE;
-+		ip->i_cowextsize = 0;
-+		flags |= XFS_ILOG_CORE;
+ 	if (level > mp->m_rtrefc_maxlevels ||
+-	    xfs_rtrefcount_droot_space_calc(level, numrecs) > dsize)
++	    xfs_rtrefcount_droot_space_calc(level, numrecs) > dsize) {
++		xfs_inode_mark_sick(ip, XFS_SICK_INO_CORE);
+ 		return -EFSCORRUPTED;
 +	}
-+
- 	/*
- 	 * Record the specific change for fdatasync optimisation. This allows
- 	 * fdatasync to skip log forces for inodes that are only timestamp
+ 
+ 	xfs_iroot_alloc(ip, XFS_DATA_FORK,
+ 			xfs_rtrefcount_broot_space_calc(mp, level, numrecs));
 
