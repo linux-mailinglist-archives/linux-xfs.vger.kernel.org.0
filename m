@@ -2,44 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E22D659EB5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:48:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DE46659EB7
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:49:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235644AbiL3Xsz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:48:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48064 "EHLO
+        id S235707AbiL3XtZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:49:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbiL3Xsy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:48:54 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5711DF3A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:48:53 -0800 (PST)
+        with ESMTP id S231341AbiL3XtY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:49:24 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C1721DF30
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:49:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 86AFFB81DCA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:48:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B675C433EF;
-        Fri, 30 Dec 2022 23:48:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 08AA260CF0
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:49:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C85FC433D2;
+        Fri, 30 Dec 2022 23:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672444131;
-        bh=dfq6BmYZpcuU/US8j6eJdmhmiAsXIkAxOA4NCu20oik=;
+        s=k20201202; t=1672444162;
+        bh=cqeQdpfji4OJa7IiuVo2izRI5CsJWad95IVg/FW7V0U=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Bt3rDbfynS4BWgmG7HSxvkczneYnUZxs/2j4ubLyMh1bj5Nha6cyXnlIyG2vFWNLS
-         b9WAGkWcj1mFvsLl1YXuLvIu4CWPpKl7Tm9yPhAHPh9WfTBSgZQDnwHzKpZeFd1GgR
-         n/PFwSabvjh47Hkd1/uYPNn4FGGEj/gx+3WCcQUe2C2yK81iNBiNCKISOH7008ATNY
-         SEyWiQGBoON3fbOhaSUfXar2Brit3KW3FbtVJjAo+hK/jIMeUD2sWvuHduxn9xoBV/
-         lNX4ek2Xdj9vRq2F86h/TxKTLk+m30R4zAJGflyYcoqiUsq8BZuBMnDwT95BfuCGSG
-         DR7ZLMZYLe2rQ==
-Subject: [PATCH 4/4] xfs: support recovering bmap intent items targetting
- realtime extents
+        b=U0uXsdVjxsBHtvDkQQDyRCW9QhGWFw5mhEMINf+yMDrTqWhvU9gyy8Ailen96AapW
+         ieTEJORTfvTU3yDg+wB2R0n7i75UXND+cxdU5A91rP6bguaj1cUXGS5E/XRfMthoBM
+         AuoP6ldRa63xvxtHHIIIyJay7dtf+CHBrIVd3K/SDEPOvDE6g6ALKMU54TJqdNXvsU
+         EZtJk8F9Ha4ADxyUoYXJ+7ECKEDaDAFmi8pFVgRXO2RiE27lKRslmzm25XkkHag6Jq
+         aSbtl0uVpFQEtnC6v/B+ah0ge/Ns/9cZa2/NLoRy6d4b4Y73GOIXSKcAunap70dW2f
+         66H5jCuUJbVuQ==
+Subject: [PATCH 2/2] xfs: xfs_bmap_finish_one should map unwritten extents
+ properly
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:13:45 -0800
-Message-ID: <167243842520.699102.10633826363372861202.stgit@magnolia>
-In-Reply-To: <167243842459.699102.4471319762222972730.stgit@magnolia>
-References: <167243842459.699102.4471319762222972730.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:13:48 -0800
+Message-ID: <167243842840.699248.16544369971115644598.stgit@magnolia>
+In-Reply-To: <167243842809.699248.13762919270503755284.stgit@magnolia>
+References: <167243842809.699248.13762919270503755284.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,69 +55,27 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we have reflink on the realtime device, bmap intent items have
-to support remapping extents on the realtime volume.
+The deferred bmap work state and the log item can transmit unwritten
+state, so the XFS_BMAP_MAP handler must map in extents with that
+unwritten state.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_bmap_item.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_bmap.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 
-diff --git a/fs/xfs/xfs_bmap_item.c b/fs/xfs/xfs_bmap_item.c
-index 82970413cb85..30a5402bb79c 100644
---- a/fs/xfs/xfs_bmap_item.c
-+++ b/fs/xfs/xfs_bmap_item.c
-@@ -319,7 +319,7 @@ xfs_bmap_update_log_item(
- 		map->me_flags |= XFS_BMAP_EXTENT_UNWRITTEN;
- 	if (bi->bi_whichfork == XFS_ATTR_FORK)
- 		map->me_flags |= XFS_BMAP_EXTENT_ATTR_FORK;
--	if (xfs_ifork_is_realtime(bmap->bi_owner, bmap->bi_whichfork))
-+	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork))
- 		map->me_flags |= XFS_BMAP_EXTENT_REALTIME;
- }
+diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+index ecead1feabe5..7433e1ecdabb 100644
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -6255,6 +6255,8 @@ xfs_bmap_finish_one(
  
-@@ -362,6 +362,9 @@ xfs_bmap_update_get_group(
- {
- 	xfs_agnumber_t		agno;
- 
-+	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork))
-+		return;
-+
- 	agno = XFS_FSB_TO_AGNO(mp, bi->bi_bmap.br_startblock);
- 	bi->bi_pag = xfs_perag_get(mp, agno);
- 
-@@ -380,6 +383,9 @@ static inline void
- xfs_bmap_update_put_group(
- 	struct xfs_bmap_intent	*bi)
- {
-+	if (xfs_ifork_is_realtime(bi->bi_owner, bi->bi_whichfork))
-+		return;
-+
- 	xfs_perag_drop_intents(bi->bi_pag);
- 	xfs_perag_put(bi->bi_pag);
- }
-@@ -469,6 +475,9 @@ xfs_bui_validate(
- 	if (!xfs_verify_fileext(mp, map->me_startoff, map->me_len))
- 		return false;
- 
-+	if (map->me_flags & XFS_BMAP_EXTENT_REALTIME)
-+		return xfs_verify_rtext(mp, map->me_startblock, map->me_len);
-+
- 	return xfs_verify_fsbext(mp, map->me_startblock, map->me_len);
- }
- 
-@@ -516,6 +525,12 @@ xfs_bui_item_recover(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, ip, 0);
- 
-+	if (!!(map->me_flags & XFS_BMAP_EXTENT_REALTIME) !=
-+	    xfs_ifork_is_realtime(ip, fake.bi_whichfork)) {
-+		error = -EFSCORRUPTED;
-+		goto err_cancel;
-+	}
-+
- 	if (fake.bi_type == XFS_BMAP_MAP)
- 		iext_delta = XFS_IEXT_ADD_NOSPLIT_CNT;
- 	else
+ 	switch (bi->bi_type) {
+ 	case XFS_BMAP_MAP:
++		if (bi->bi_bmap.br_state == XFS_EXT_UNWRITTEN)
++			flags |= XFS_BMAPI_PREALLOC;
+ 		error = xfs_bmapi_remap(tp, bi->bi_owner, bmap->br_startoff,
+ 				bmap->br_blockcount, bmap->br_startblock,
+ 				flags);
 
