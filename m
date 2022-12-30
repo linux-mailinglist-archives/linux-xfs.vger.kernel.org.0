@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5F9C659DAA
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:00:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2A3659E36
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:27:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231256AbiL3XAq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:00:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
+        id S235744AbiL3X0W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:26:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbiL3XAp (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:00:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF75FDCF
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:00:44 -0800 (PST)
+        with ESMTP id S235785AbiL3X0D (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:26:03 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF0A659F
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:26:02 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 741F0B81D95
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:00:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 327C2C433D2;
-        Fri, 30 Dec 2022 23:00:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7962161C0D
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:26:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD527C433D2;
+        Fri, 30 Dec 2022 23:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672441242;
-        bh=2cOTc2ZJpBIzhPdkNU9IQq7XC0cn0MCoSyJHdTYzP6w=;
+        s=k20201202; t=1672442761;
+        bh=zT/XcXJA3phg7Tk1BbM9ltsWTx26ncjYJxXW75i9GR4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=M9OJnS7c2+MRdMFnki6CFuW/FZnRHK3xWoNmA7lCxZk3SijIcs4aV7lpwSq6VI5u1
-         CNUlFH2zQswj7qFK7TzaHGnOrS4DcxCj6Sh5hb+gHHKMGcTNF0+H/vPtue55lwBLl9
-         MaJou4xaUlw0xZpSAldjFN4RnKSYdlPEyKbsi+LX8GonqnsXdCdNQ0VqoGhJio9tht
-         VX4h9qNihCXPXnlGcP4UJ/x9gzNf3GnOGV+2GNq1/n6Mzg65+uHC/W2pdnmInPBSt/
-         yHudXfgzx+mg9i75jA4fKLjdoO9RRltCuy+E5i6IQu4uxD9J0xSWKxxBNB6vyBifl8
-         8wKfozY1wJXrA==
-Subject: [PATCHSET v24.0 0/4] xfs: online scrubbing of realtime summary files
+        b=l8Lr1ahYV3eHIQBRCBfoflhM4SDrbMDtjf3l1Y13P2kj01FVshbPLckXCrR75l3YF
+         a+PPBHtV0rp0x3s5MEnCSJ1EVqRAcIY1KTKO3GYic89UzqCwGYnXk/VlGtuFCrR996
+         +gNQ82dR/3dkoImF8A45d2Vz5R3i140lQWNdYE86p3NJdLGLytCyXKe8hOKRdOwgdV
+         YhD8HAw0YGffHsEobC+ujRvvNyPk+cemd+CKRIr8HMta4//gBihy3jwNcanVW2XHyF
+         B46wo/MY+9PclpJXdp0HSzQ5SxJA0GeybbFE1EQnoF4a1p6GEWT+yAPi3AVWRyyx+8
+         Go68gPR4CxptA==
+Subject: [PATCH 1/4] xfs: get our own reference to inodes that we want to
+ scrub
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:38 -0800
-Message-ID: <167243835873.692714.18058284706535171995.stgit@magnolia>
-In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
-References: <Y69Unb7KRM5awJoV@magnolia>
+Message-ID: <167243835891.692714.3524655393033620039.stgit@magnolia>
+In-Reply-To: <167243835873.692714.18058284706535171995.stgit@magnolia>
+References: <167243835873.692714.18058284706535171995.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,46 +53,151 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-This patchset implements an online checker for the realtime summary
-file.  The first few changes are some general cleanups -- scrub should
-get its own references to all inodes, and we also wrap the inode lock
-functions so that we can standardize unlocking and releasing inodes that
-are the focus of a scrub.
+When we want to scrub a file, get our own reference to the inode
+unconditionally.  This will make disposal rules simpler in the long run.
 
-With that out of the way, we move on to constructing a shadow copy of
-the rtsummary information from the rtbitmap, and compare the new copy
-against the ondisk copy.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-rtsummary
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=scrub-rtsummary
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/Makefile          |    6 +
- fs/xfs/scrub/bmap.c      |    6 -
- fs/xfs/scrub/common.c    |   63 +++++++++--
- fs/xfs/scrub/common.h    |   16 ++-
- fs/xfs/scrub/dir.c       |    3 -
- fs/xfs/scrub/inode.c     |   11 +-
- fs/xfs/scrub/parent.c    |   10 +-
- fs/xfs/scrub/quota.c     |   15 +--
- fs/xfs/scrub/rtbitmap.c  |   48 +-------
- fs/xfs/scrub/rtsummary.c |  262 ++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/scrub.c     |   17 ++-
- fs/xfs/scrub/scrub.h     |    4 +
- fs/xfs/scrub/trace.h     |   34 ++++++
- fs/xfs/xfs_trace.h       |    3 +
- 14 files changed, 411 insertions(+), 87 deletions(-)
- create mode 100644 fs/xfs/scrub/rtsummary.c
+ fs/xfs/scrub/common.c   |   25 +++++++++++++++++++++----
+ fs/xfs/scrub/common.h   |    1 +
+ fs/xfs/scrub/inode.c    |    5 ++++-
+ fs/xfs/scrub/quota.c    |    6 +++++-
+ fs/xfs/scrub/rtbitmap.c |    6 ++++--
+ fs/xfs/scrub/scrub.c    |    6 +-----
+ 6 files changed, 36 insertions(+), 13 deletions(-)
+
+
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 6b2e14aecd66..305bbacc03df 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -807,6 +807,25 @@ xchk_install_handle_inode(
+ 	return 0;
+ }
+ 
++/*
++ * Install an already-referenced inode for scrubbing.  Get our own reference to
++ * the inode to make disposal simpler.  The inode must not be in I_FREEING or
++ * I_WILL_FREE state!
++ */
++int
++xchk_install_live_inode(
++	struct xfs_scrub	*sc,
++	struct xfs_inode	*ip)
++{
++	if (!igrab(VFS_I(ip))) {
++		xchk_ino_set_corrupt(sc, ip->i_ino);
++		return -EFSCORRUPTED;
++	}
++
++	sc->ip = ip;
++	return 0;
++}
++
+ /*
+  * In preparation to scrub metadata structures that hang off of an inode,
+  * grab either the inode referenced in the scrub control structure or the
+@@ -829,10 +848,8 @@ xchk_iget_for_scrubbing(
+ 	ASSERT(sc->tp == NULL);
+ 
+ 	/* We want to scan the inode we already had opened. */
+-	if (sc->sm->sm_ino == 0 || sc->sm->sm_ino == ip_in->i_ino) {
+-		sc->ip = ip_in;
+-		return 0;
+-	}
++	if (sc->sm->sm_ino == 0 || sc->sm->sm_ino == ip_in->i_ino)
++		return xchk_install_live_inode(sc, ip_in);
+ 
+ 	/* Reject internal metadata files and obviously bad inode numbers. */
+ 	if (xfs_internal_inum(mp, sc->sm->sm_ino))
+diff --git a/fs/xfs/scrub/common.h b/fs/xfs/scrub/common.h
+index 9cfc2660dbb4..e51f4b6d287c 100644
+--- a/fs/xfs/scrub/common.h
++++ b/fs/xfs/scrub/common.h
+@@ -137,6 +137,7 @@ int xchk_count_rmap_ownedby_ag(struct xfs_scrub *sc, struct xfs_btree_cur *cur,
+ int xchk_setup_ag_btree(struct xfs_scrub *sc, bool force_log);
+ int xchk_iget_for_scrubbing(struct xfs_scrub *sc);
+ int xchk_setup_inode_contents(struct xfs_scrub *sc, unsigned int resblks);
++int xchk_install_live_inode(struct xfs_scrub *sc, struct xfs_inode *ip);
+ void xchk_buffer_recheck(struct xfs_scrub *sc, struct xfs_buf *bp);
+ 
+ int xchk_iget(struct xfs_scrub *sc, xfs_ino_t inum, struct xfs_inode **ipp);
+diff --git a/fs/xfs/scrub/inode.c b/fs/xfs/scrub/inode.c
+index 51b8ba7037f3..30437a7f5660 100644
+--- a/fs/xfs/scrub/inode.c
++++ b/fs/xfs/scrub/inode.c
+@@ -81,7 +81,10 @@ xchk_setup_inode(
+ 
+ 	/* We want to scan the opened inode, so lock it and exit. */
+ 	if (sc->sm->sm_ino == 0 || sc->sm->sm_ino == ip_in->i_ino) {
+-		sc->ip = ip_in;
++		error = xchk_install_live_inode(sc, ip_in);
++		if (error)
++			return error;
++
+ 		return xchk_prepare_iscrub(sc);
+ 	}
+ 
+diff --git a/fs/xfs/scrub/quota.c b/fs/xfs/scrub/quota.c
+index 7b21e1012eff..57330694cb37 100644
+--- a/fs/xfs/scrub/quota.c
++++ b/fs/xfs/scrub/quota.c
+@@ -59,7 +59,11 @@ xchk_setup_quota(
+ 	error = xchk_setup_fs(sc);
+ 	if (error)
+ 		return error;
+-	sc->ip = xfs_quota_inode(sc->mp, dqtype);
++
++	error = xchk_install_live_inode(sc, xfs_quota_inode(sc->mp, dqtype));
++	if (error)
++		return error;
++
+ 	xfs_ilock(sc->ip, XFS_ILOCK_EXCL);
+ 	sc->ilock_flags = XFS_ILOCK_EXCL;
+ 	return 0;
+diff --git a/fs/xfs/scrub/rtbitmap.c b/fs/xfs/scrub/rtbitmap.c
+index 0a3bde64c675..41dcffeb2947 100644
+--- a/fs/xfs/scrub/rtbitmap.c
++++ b/fs/xfs/scrub/rtbitmap.c
+@@ -28,10 +28,12 @@ xchk_setup_rt(
+ 	if (error)
+ 		return error;
+ 
++	error = xchk_install_live_inode(sc, sc->mp->m_rbmip);
++	if (error)
++		return error;
++
+ 	sc->ilock_flags = XFS_ILOCK_EXCL | XFS_ILOCK_RTBITMAP;
+-	sc->ip = sc->mp->m_rbmip;
+ 	xfs_ilock(sc->ip, sc->ilock_flags);
+-
+ 	return 0;
+ }
+ 
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index afd481f5a15e..5f006e6799c6 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -168,8 +168,6 @@ xchk_teardown(
+ 	struct xfs_scrub	*sc,
+ 	int			error)
+ {
+-	struct xfs_inode	*ip_in = XFS_I(file_inode(sc->file));
+-
+ 	xchk_ag_free(sc, &sc->sa);
+ 	if (sc->tp) {
+ 		if (error == 0 && (sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR))
+@@ -181,9 +179,7 @@ xchk_teardown(
+ 	if (sc->ip) {
+ 		if (sc->ilock_flags)
+ 			xfs_iunlock(sc->ip, sc->ilock_flags);
+-		if (sc->ip != ip_in &&
+-		    !xfs_internal_inum(sc->mp, sc->ip->i_ino))
+-			xchk_irele(sc, sc->ip);
++		xchk_irele(sc, sc->ip);
+ 		sc->ip = NULL;
+ 	}
+ 	if (sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR)
 
