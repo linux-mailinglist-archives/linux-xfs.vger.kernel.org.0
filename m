@@ -2,36 +2,36 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB2F4659CD1
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:30:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3476B659CDD
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:31:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbiL3Wa0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:30:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51698 "EHLO
+        id S229551AbiL3Wbl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbiL3WaZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:30:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DBC1C90C;
-        Fri, 30 Dec 2022 14:30:22 -0800 (PST)
+        with ESMTP id S231256AbiL3Wbk (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:31:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D981DDC4;
+        Fri, 30 Dec 2022 14:31:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 93350B81B91;
-        Fri, 30 Dec 2022 22:30:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4548FC433EF;
-        Fri, 30 Dec 2022 22:30:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B1D1261C18;
+        Fri, 30 Dec 2022 22:31:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D0E1C433EF;
+        Fri, 30 Dec 2022 22:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672439420;
-        bh=6WHLLBEA3HTggMAQ5x0flj6uWfGUrValSykcziBS9pw=;
+        s=k20201202; t=1672439498;
+        bh=07xGzHg6+kYxXAbabpB8SuoMg7wB57HiqSzkR/ug24c=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=eckazOM9EguDTd8fy1j22j5njYc4HinFDb8dQM6f4WIxV1+CTVWiO1yVlVmM0FNnY
-         aKgOiSFwnd1HCxUyggGhIEh7nKTrxHB2Zs2XM+O0tBDPreWGjoFL6HJUk7Ije0k9QB
-         lzHUqU0qQhw3mjNHvDBZSLeyjvjaVJ3dvcHvcKQ5phs9rvDkZia8fAcWgSMNqZy5da
-         TjF+Qvmr9vxCDn/KSQ1uV51qc47+t2BBb+nBZ17s9a73C3ALyQcF3ulAFEPP/Eay6q
-         PCXhy/ExFM8Qg8O5IfEaYfFukB9phGgCf47yqmjOZQqauSbWyaVeHCu8Wba9ycTi6w
-         dg10MYV2FFBhw==
-Subject: [PATCH 04/14] xfs: document the user interface for online fsck
+        b=rjARV89+zyBMpncs6rI/mMOlQC0rFu48mWqnDdzMLLbGoCcF5lSCWukqXrj16jEIY
+         M02/LXuYlrzbpnwrXsGfbEyhP6i0K11mAHD61BkB6ziYIO89QGuk6exmTBr33jzzCL
+         CMPKLPyzMNGiJmz/uqnLlD2Z4zmhLP0W0njjJdX1rR6S+sqM5ksRQVwPahKhMG+QZ1
+         SVOYi7b1WwLCijjgcoB2wpcFDMHx/dRkqC5rzMeB7YTKRj3l3gZnLAP2wFfqF53GKY
+         8l1le1bcXeD2fclcK9JXujGY37coRQxj6jOPcTePda9WiqrwNR6kMs2cE5H/+xqteS
+         RlFJXXCJsx5ig==
+Subject: [PATCH 09/14] xfs: document online file metadata repair code
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
@@ -39,7 +39,7 @@ Cc:     linux-xfs@vger.kernel.org, willy@infradead.org,
         linux-fsdevel@vger.kernel.org, hch@infradead.org,
         catherine.hoang@oracle.com, david@fromorbit.com
 Date:   Fri, 30 Dec 2022 14:10:52 -0800
-Message-ID: <167243825217.682859.14201039734624895373.stgit@magnolia>
+Message-ID: <167243825288.682859.15731800804908617970.stgit@magnolia>
 In-Reply-To: <167243825144.682859.12802259329489258661.stgit@magnolia>
 References: <167243825144.682859.12802259329489258661.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -57,135 +57,172 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Start the fourth chapter of the online fsck design documentation, which
-discusses the user interface and the background scrubbing service.
+Add to the fifth chapter of the online fsck design documentation, where
+we discuss the details of the data structures and algorithms used by the
+kernel to repair file metadata.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- .../filesystems/xfs-online-fsck-design.rst         |  114 ++++++++++++++++++++
- 1 file changed, 114 insertions(+)
+ .../filesystems/xfs-online-fsck-design.rst         |  150 ++++++++++++++++++++
+ 1 file changed, 150 insertions(+)
 
 
 diff --git a/Documentation/filesystems/xfs-online-fsck-design.rst b/Documentation/filesystems/xfs-online-fsck-design.rst
-index d630b6bdbe4a..42e82971e036 100644
+index eb61d867e55c..a658da8fe4ae 100644
 --- a/Documentation/filesystems/xfs-online-fsck-design.rst
 +++ b/Documentation/filesystems/xfs-online-fsck-design.rst
-@@ -750,3 +750,117 @@ Proposed patchsets include `general stress testing
- <https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfstests-dev.git/log/?h=race-scrub-and-mount-state-changes>`_
- and the `evolution of existing per-function stress testing
- <https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfstests-dev.git/log/?h=refactor-scrub-stress>`_.
+@@ -2868,3 +2868,153 @@ The allocation group free block list (AGFL) is repaired as follows:
+ 4. Once the AGFL is full, reap any blocks leftover.
+ 
+ 5. The next operation to fix the freelist will right-size the list.
 +
-+4. User Interface
-+=================
++Inode Record Repairs
++--------------------
 +
-+The primary user of online fsck is the system administrator, just like offline
-+repair.
-+Online fsck presents two modes of operation to administrators:
-+A foreground CLI process for online fsck on demand, and a background service
-+that performs autonomous checking and repair.
++Inode records must be handled carefully, because they have both ondisk records
++("dinodes") and an in-memory ("cached") representation.
++There is a very high potential for cache coherency issues if online fsck is not
++careful to access the ondisk metadata *only* when the ondisk metadata is so
++badly damaged that the filesystem cannot load the in-memory representation.
++When online fsck wants to open a damaged file for scrubbing, it must use
++specialized resource acquisition functions that return either the in-memory
++representation *or* a lock on whichever object is necessary to prevent any
++update to the ondisk location.
 +
-+Checking on Demand
-+------------------
++The only repairs that should be made to the ondisk inode buffers are whatever
++is necessary to get the in-core structure loaded.
++This means fixing whatever is caught by the inode cluster buffer and inode fork
++verifiers, and retrying the ``iget`` operation.
++If the second ``iget`` fails, the repair has failed.
 +
-+For administrators who want the absolute freshest information about the
-+metadata in a filesystem, ``xfs_scrub`` can be run as a foreground process on
-+a command line.
-+The program checks every piece of metadata in the filesystem while the
-+administrator waits for the results to be reported, just like the existing
-+``xfs_repair`` tool.
-+Both tools share a ``-n`` option to perform a read-only scan, and a ``-v``
-+option to increase the verbosity of the information reported.
++Once the in-memory representation is loaded, repair can lock the inode and can
++subject it to comprehensive checks, repairs, and optimizations.
++Most inode attributes are easy to check and constrain, or are user-controlled
++arbitrary bit patterns; these are both easy to fix.
++Dealing with the data and attr fork extent counts and the file block counts is
++more complicated, because computing the correct value requires traversing the
++forks, or if that fails, leaving the fields invalid and waiting for the fork
++fsck functions to run.
 +
-+A new feature of ``xfs_scrub`` is the ``-x`` option, which employs the error
-+correction capabilities of the hardware to check data file contents.
-+The media scan is not enabled by default because it may dramatically increase
-+program runtime and consume a lot of bandwidth on older storage hardware.
++The proposed patchset is the
++`inode
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-inodes>`_
++repair series.
 +
-+The output of a foreground invocation is captured in the system log.
++Quota Record Repairs
++--------------------
 +
-+The ``xfs_scrub_all`` program walks the list of mounted filesystems and
-+initiates ``xfs_scrub`` for each of them in parallel.
-+It serializes scans for any filesystems that resolve to the same top level
-+kernel block device to prevent resource overconsumption.
++Similar to inodes, quota records ("dquots") also have both ondisk records and
++an in-memory representation, and hence are subject to the same cache coherency
++issues.
++Somewhat confusingly, both are known as dquots in the XFS codebase.
 +
-+Background Service
-+------------------
++The only repairs that should be made to the ondisk quota record buffers are
++whatever is necessary to get the in-core structure loaded.
++Once the in-memory representation is loaded, the only attributes needing
++checking are obviously bad limits and timer values.
 +
-+To reduce the workload of system administrators, the ``xfs_scrub`` package
-+provides a suite of `systemd <https://systemd.io/>`_ timers and services that
-+run online fsck automatically on weekends.
-+The background service configures scrub to run with as little privilege as
-+possible, the lowest CPU and IO priority, and in a CPU-constrained single
-+threaded mode.
-+It is hoped that this minimizes the amount of load generated on the system and
-+avoids starving regular workloads.
++Quota usage counters are checked, repaired, and discussed separately in the
++section about :ref:`live quotacheck <quotacheck>`.
 +
-+The output of the background service is also captured in the system log.
-+If desired, reports of failures (either due to inconsistencies or mere runtime
-+errors) can be emailed automatically by setting the ``EMAIL_ADDR`` environment
-+variable in the following service files:
++The proposed patchset is the
++`quota
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-quota>`_
++repair series.
 +
-+* ``xfs_scrub_fail@.service``
-+* ``xfs_scrub_media_fail@.service``
-+* ``xfs_scrub_all_fail.service``
++.. _fscounters:
 +
-+The decision to enable the background scan is left to the system administrator.
-+This can be done by enabling either of the following services:
++Freezing to Fix Summary Counters
++--------------------------------
 +
-+* ``xfs_scrub_all.timer`` on systemd systems
-+* ``xfs_scrub_all.cron`` on non-systemd systems
++Filesystem summary counters track availability of filesystem resources such
++as free blocks, free inodes, and allocated inodes.
++This information could be compiled by walking the free space and inode indexes,
++but this is a slow process, so XFS maintains a copy in the ondisk superblock
++that should reflect the ondisk metadata, at least when the filesystem has been
++unmounted cleanly.
++For performance reasons, XFS also maintains incore copies of those counters,
++which are key to enabling resource reservations for active transactions.
++Writer threads reserve the worst-case quantities of resources from the
++incore counter and give back whatever they don't use at commit time.
++It is therefore only necessary to serialize on the superblock when the
++superblock is being committed to disk.
 +
-+This automatic weekly scan is configured out of the box to perform an
-+additional media scan of all file data once per month.
-+This is less foolproof than, say, storing file data block checksums, but much
-+more performant if application software provides its own integrity checking,
-+redundancy can be provided elsewhere above the filesystem, or the storage
-+device's integrity guarantees are deemed sufficient.
++The lazy superblock counter feature introduced in XFS v5 took this even further
++by training log recovery to recompute the summary counters from the AG headers,
++which eliminated the need for most transactions even to touch the superblock.
++The only time XFS commits the summary counters is at filesystem unmount.
++To reduce contention even further, the incore counter is implemented as a
++percpu counter, which means that each CPU is allocated a batch of blocks from a
++global incore counter and can satisfy small allocations from the local batch.
 +
-+The systemd unit file definitions have been subjected to a security audit
-+(as of systemd 249) to ensure that the xfs_scrub processes have as little
-+access to the rest of the system as possible.
-+This was performed via ``systemd-analyze security``, after which privileges
-+were restricted to the minimum required, sandboxing was set up to the maximal
-+extent possible with sandboxing and system call filtering; and access to the
-+filesystem tree was restricted to the minimum needed to start the program and
-+access the filesystem being scanned.
-+The service definition files restrict CPU usage to 80% of one CPU core, and
-+apply as nice of a priority to IO and CPU scheduling as possible.
-+This measure was taken to minimize delays in the rest of the filesystem.
-+No such hardening has been performed for the cron job.
++The high-performance nature of the summary counters makes it difficult for
++online fsck to check them, since there is no way to quiesce a percpu counter
++while the system is running.
++Although online fsck can read the filesystem metadata to compute the correct
++values of the summary counters, there's no way to hold the value of a percpu
++counter stable, so it's quite possible that the counter will be out of date by
++the time the walk is complete.
++Earlier versions of online scrub would return to userspace with an incomplete
++scan flag, but this is not a satisfying outcome for a system administrator.
++For repairs, the in-memory counters must be stabilize while walking the
++filesystem metadata to get an accurate reading and install it in the percpu
++counter.
 +
-+Proposed patchset:
-+`Enabling the xfs_scrub background service
-+<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-media-scan-service>`_.
++To satisfy this requirement, online fsck must prevent other programs in the
++system from initiating new writes to the filesystem, it must disable background
++garbage collection threads, and it must wait for existing writer programs to
++exit the kernel.
++Once that has been established, scrub can walk the AG free space indexes, the
++inode btrees, and the realtime bitmap to compute the correct value of all
++four summary counters.
++This is very similar to a filesystem freeze.
 +
-+Health Reporting
-+----------------
++The initial implementation used the actual VFS filesystem freeze mechanism to
++quiesce filesystem activity.
++With the filesystem frozen, it is possible to resolve the counter values with
++exact precision, but there are many problems with calling the VFS methods
++directly:
 +
-+XFS caches a summary of each filesystem's health status in memory.
-+The information is updated whenever ``xfs_scrub`` is run, or whenever
-+inconsistencies are detected in the filesystem metadata during regular
-+operations.
-+System administrators should use the ``health`` command of ``xfs_spaceman`` to
-+download this information into a human-readable format.
-+If problems have been observed, the administrator can schedule a reduced
-+service window to run the online repair tool to correct the problem.
-+Failing that, the administrator can decide to schedule a maintenance window to
-+run the traditional offline repair tool to correct the problem.
++- Other programs can unfreeze the filesystem without our knowledge.
++  This leads to incorrect scan results and incorrect repairs.
 +
-+**Question**: Should the health reporting integrate with the new inotify fs
-+error notification system?
++- Adding an extra lock to prevent others from thawing the filesystem required
++  the addition of a ``->freeze_super`` function to wrap ``freeze_fs()``.
++  This in turn caused other subtle problems because it turns out that the VFS
++  ``freeze_super`` and ``thaw_super`` functions can drop the last reference to
++  the VFS superblock, and any subsequent access becomes a UAF bug!
++  This can happen if the filesystem is unmounted while the underlying block
++  device has frozen the filesystem.
++  This problem could be solved by grabbing extra references to the superblock,
++  but it felt suboptimal given the other inadequacies of this approach:
 +
-+**Question**: Would it be helpful for sysadmins to have a daemon to listen for
-+corruption notifications and initiate a repair?
++- The log need not be quiesced to check the summary counters, but a VFS freeze
++  initiates one anyway.
++  This adds unnecessary runtime to live fscounter fsck operations.
 +
-+*Answer*: These questions remain unanswered, but should be a part of the
-+conversation with early adopters and potential downstream users of XFS.
++- Quiescing the log means that XFS flushes the (possibly incorrect) counters to
++  disk as part of cleaning the log.
 +
-+Proposed patchsets include
-+`wiring up health reports to correction returns
-+<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=corruption-health-reports>`_
-+and
-+`preservation of sickness info during memory reclaim
-+<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=indirect-health-reporting>`_.
++- A bug in the VFS meant that freeze could complete even when sync_filesystem
++  fails to flush the filesystem and returns an error.
++  This bug was fixed in Linux 5.17.
++
++The author established that the only component of online fsck that requires the
++ability to freeze the filesystem is the fscounter scrubber, so the code for
++this could be localized to that source file.
++fscounter freeze behaves the same as the VFS freeze method, except:
++
++- The final freeze state is set one higher than ``SB_FREEZE_COMPLETE`` to
++  prevent other threads from thawing the filesystem.
++
++- It does not quiesce the log.
++
++With this code in place, it is now possible to pause the filesystem for just
++long enough to check and correct the summary counters.
++
++The proposed patchset is the
++`summary counter cleanup
++<https://git.kernel.org/pub/scm/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-fscounters>`_
++series.
 
