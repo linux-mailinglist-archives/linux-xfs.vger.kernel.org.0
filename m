@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3921365A215
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4595465A213
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:59:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236186AbiLaDAL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:00:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
+        id S236300AbiLaC7l (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:59:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236248AbiLaDAJ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:00:09 -0500
+        with ESMTP id S236248AbiLaC7i (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:59:38 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFC2192B4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:00:09 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E669192B4
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:59:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BFD9561D11
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:00:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27DD7C433D2;
-        Sat, 31 Dec 2022 03:00:08 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E15E61D11
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:59:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01099C433EF;
+        Sat, 31 Dec 2022 02:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455608;
-        bh=J5udDvvG5WCvsY74x7ui+GX2AtFY4PzbFsy9mvQs6Ug=;
+        s=k20201202; t=1672455577;
+        bh=b2VoYFImPIswkR8dHQUMIC4aWyD0T/yjv70S3lu1B80=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=U2B81fyipaBvXgpnTrqEyAM6DhKrr/gPxbYsSIEq1k3bQcpaDwRBak/gxbObZug/v
-         dvfYjW4pHjdq0tT06BfuYgGpC5W5xq309Hj4fk90PZQhPI2dNdRAr4zS890f0H+Y2R
-         Sj22rFinn8gDe0AXOXQ2ftlKWJqSTpRYj55T9BJ6D0/CYu8CYoWyIQcCpsUrYnh+2t
-         kBgF6AGfELECSJ95ULu+9S7VD/0tte0tn09ZLKdpQPnsI0Pkks39zvrSUoe9ykF1PQ
-         1XzftpRVDTu3lMSw+TkaG/jAKeIqhUc8aWnxmkw7kblSc1UR7uykavvtJNsGr/NV7A
-         WtK79HLzCMEAA==
-Subject: [PATCH 23/41] libfrog: enable scrubbing of the realtime refcount data
+        b=tGYbOlXmkjbbTjWNKbT2WycK4GG7igvicEEN4J1nJrTXcO+qDOiNcLM6waCwdayAN
+         GZmgW/Ot3YrTzq6tFtUpWBuFLkYWGAxp1G560Q9xzti+I9YejoNIqqzZ2Ys+j98I33
+         tvZBBPDeTWET0KG6yrYFlygYlMsuaXx3HSwF9SvDUmkZ4n3ZwOkhTgQtbhTBqy6SMI
+         3fQCyoTROvT1Z50F1PPdUEjRTALaSDVKVGxRlitHHOSrofR0RNE3zcPE592WV0CyTL
+         i+gIoQf6agsVnGoVZV4Mxc2xgeeGv9G8TPpGPtmWd2oejA/vZDdigcVzk71CcVPWtm
+         /GSzs1XVDiitA==
+Subject: [PATCH 21/41] xfs: scrub the realtime refcount btree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:20:10 -0800
-Message-ID: <167243881074.734096.10287365084919820406.stgit@magnolia>
+Message-ID: <167243881047.734096.938489046333779694.stgit@magnolia>
 In-Reply-To: <167243880752.734096.171910706541747310.stgit@magnolia>
 References: <167243880752.734096.171910706541747310.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,41 +55,28 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a new entry so that we can scrub the rtrefcountbt.
+Add code to scrub realtime refcount btrees.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libfrog/scrub.c |    5 +++++
- scrub/repair.c  |    1 +
- 2 files changed, 6 insertions(+)
+ libxfs/xfs_fs.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 
-diff --git a/libfrog/scrub.c b/libfrog/scrub.c
-index 6f12ec72b22..c3cf5312f80 100644
---- a/libfrog/scrub.c
-+++ b/libfrog/scrub.c
-@@ -164,6 +164,11 @@ const struct xfrog_scrub_descr xfrog_scrubbers[XFS_SCRUB_TYPE_NR] = {
- 		.descr	= "realtime reverse mapping btree",
- 		.group	= XFROG_SCRUB_GROUP_RTGROUP,
- 	},
-+	[XFS_SCRUB_TYPE_RTREFCBT] = {
-+		.name	= "rtrefcountbt",
-+		.descr	= "realtime reference count btree",
-+		.group	= XFROG_SCRUB_GROUP_RTGROUP,
-+	},
- };
- #undef DEP
+diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
+index 5819576a51a..453b0861225 100644
+--- a/libxfs/xfs_fs.h
++++ b/libxfs/xfs_fs.h
+@@ -746,9 +746,10 @@ struct xfs_scrub_metadata {
+ #define XFS_SCRUB_TYPE_RGSUPER	28	/* realtime superblock */
+ #define XFS_SCRUB_TYPE_RGBITMAP	29	/* realtime group bitmap */
+ #define XFS_SCRUB_TYPE_RTRMAPBT	30	/* rtgroup reverse mapping btree */
++#define XFS_SCRUB_TYPE_RTREFCBT	31	/* realtime reference count btree */
  
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 3e00db7a2fd..cd652dc85a1 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -424,6 +424,7 @@ repair_item_difficulty(
- 		case XFS_SCRUB_TYPE_RTBITMAP:
- 		case XFS_SCRUB_TYPE_RTSUM:
- 		case XFS_SCRUB_TYPE_RGSUPER:
-+		case XFS_SCRUB_TYPE_RTREFCBT:
- 			ret |= REPAIR_DIFFICULTY_PRIMARY;
- 			break;
- 		}
+ /* Number of scrub subcommands. */
+-#define XFS_SCRUB_TYPE_NR	31
++#define XFS_SCRUB_TYPE_NR	32
+ 
+ /* i: Repair this metadata. */
+ #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
 
