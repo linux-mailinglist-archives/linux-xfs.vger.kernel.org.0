@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 537B565A0AB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8497665A0A6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:32:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231231AbiLaBdN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:33:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46438 "EHLO
+        id S236103AbiLaBb5 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:31:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbiLaBdM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:33:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE07DEB7
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:33:11 -0800 (PST)
+        with ESMTP id S236082AbiLaBb5 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:31:57 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93F0DEB7
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:31:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8827061CC1
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:33:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A8EC433D2;
-        Sat, 31 Dec 2022 01:33:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 83631B81DD0
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:31:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349D8C433D2;
+        Sat, 31 Dec 2022 01:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450391;
-        bh=Uordkm4zZNGEdm1Nl3fTt8tJNL5AgifVQrvmqqZYkxE=;
+        s=k20201202; t=1672450313;
+        bh=mDLx1acuzkQ7LnkS9OCmISCHVJ8P8KiYkElI2JHKUEk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nwEAuSwi56klH+ceNvvX98dHGms951lF8WYwD/B6C97aXATCtehtR68zB+mFLSHjX
-         kpdDcIrzWVzsA5+LbvvPqW5S7nNMiEJWLhDogL45mkqNy3r1/Q4apfd1viEaJrpEBp
-         dc7I9Eqo3JjFfnDa6nVDWvJNxqgLsThqKphEYh+xBRu6WbD7FD0nJhMEPA/QZysPkF
-         qcOyVBvYYEJgd79hJSN0N+GHAUz3JGi76mzO52RMxBMrHeuMdJHKmcwirOUjSojUmK
-         22/FritknlSzyzU2zZY3x+glpT9g2rwbgDw6fE7EKzC8UF1Bv8ZRtTPFmWSCJn0wke
-         vLPHL7tC3WO3g==
-Subject: [PATCH 22/22] xfs: enable realtime group feature
+        b=PhxmPoh4G0wNsSncVCeNsn3mynDxwlnmt4qudKhibJ5YS2/nSuH//dYGZ+HBi7b5m
+         K2ust3Oz0vTV56i4YRMwL9mLOvnqLdWBSlFvhCA4fQ/q+1819+UqdccfIImaD1xNWI
+         urUP+bDh/CFplaOvi+QxjYoovFIAe6438ZQfllk9LsTDTKsI0FnF/lfifeF/f3Aod/
+         bkTu261BBUB5ViXWATFNeodjVbwJbhQLGPX5O5QlBwqimX7H95p7ulsH2ast4JX8uZ
+         OOjeipb+TJnNWzEJe2B2azLYUMCLjLCI3PO2856SeSLJ+Y7rbRvDQh3qqD1r/S2Zy1
+         Oyx5KbA5wB3uw==
+Subject: [PATCH 17/22] xfs: encode the rtsummary in big endian format
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:55 -0800
-Message-ID: <167243867582.712847.5494133812184915458.stgit@magnolia>
+Message-ID: <167243867511.712847.4394753972902151622.stgit@magnolia>
 In-Reply-To: <167243867242.712847.10106105868862621775.stgit@magnolia>
 References: <167243867242.712847.10106105868862621775.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,22 +55,63 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
+Currently, the ondisk realtime summary file counters are accessed in
+units of 32-bit words.  There's no endian translation of the contents of
+this file, which means that the Bad Things Happen(tm) if you go from
+(say) x86 to powerpc.  Since we have a new feature flag, let's take the
+opportunity to enforce an endianness on the file.  Encode the summary
+information in big endian format, like most of the rest of the
+filesystem.
+
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_format.h |    1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/libxfs/xfs_format.h   |    4 +++-
+ fs/xfs/libxfs/xfs_rtbitmap.c |    8 +++++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
 
 diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index 7e76bedda688..e4f3b2c5c054 100644
+index 47b2e31e2560..7e76bedda688 100644
 --- a/fs/xfs/libxfs/xfs_format.h
 +++ b/fs/xfs/libxfs/xfs_format.h
-@@ -416,6 +416,7 @@ xfs_sb_has_ro_compat_feature(
- 		 XFS_SB_FEAT_INCOMPAT_BIGTIME| \
- 		 XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR| \
- 		 XFS_SB_FEAT_INCOMPAT_NREXT64 | \
-+		 XFS_SB_FEAT_INCOMPAT_RTGROUPS | \
- 		 XFS_SB_FEAT_INCOMPAT_METADIR)
+@@ -748,10 +748,12 @@ union xfs_rtword_ondisk {
  
- #define XFS_SB_FEAT_INCOMPAT_UNKNOWN	~XFS_SB_FEAT_INCOMPAT_ALL
+ /*
+  * Realtime summary counts are accessed by the word, which is currently
+- * stored in host-endian format.
++ * stored in host-endian format.  Starting with the realtime groups feature,
++ * the words are stored in be32 ondisk.
+  */
+ union xfs_suminfo_ondisk {
+ 	__u32		raw;
++	__be32		rtg;
+ };
+ 
+ /*
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index 3d5b14cc0f3a..ccefbfc70f8b 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -562,6 +562,9 @@ xfs_suminfo_get(
+ 	struct xfs_mount	*mp,
+ 	union xfs_suminfo_ondisk *infoptr)
+ {
++	if (xfs_has_rtgroups(mp))
++		return be32_to_cpu(infoptr->rtg);
++
+ 	return infoptr->raw;
+ }
+ 
+@@ -571,7 +574,10 @@ xfs_suminfo_add(
+ 	union xfs_suminfo_ondisk *infoptr,
+ 	int			delta)
+ {
+-	infoptr->raw += delta;
++	if (xfs_has_rtgroups(mp))
++		be32_add_cpu(&infoptr->rtg, delta);
++	else
++		infoptr->raw += delta;
+ }
+ 
+ /*
 
