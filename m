@@ -2,50 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4D59659F4E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE6D865A08B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:25:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235580AbiLaAOF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:14:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55336 "EHLO
+        id S236076AbiLaBZN (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:25:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235676AbiLaAOD (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:14:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFE060EF
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:14:02 -0800 (PST)
+        with ESMTP id S236072AbiLaBZL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:25:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4699FE3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:25:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8DA9C61CE2
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:14:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9B55C433D2;
-        Sat, 31 Dec 2022 00:14:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9006161B80
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:25:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8BAEC433EF;
+        Sat, 31 Dec 2022 01:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445642;
-        bh=ixUczhRFkCSf/o7Psq2jzdLhB67MxxLZHOXQSXcGUo8=;
+        s=k20201202; t=1672449908;
+        bh=Obk5YgiX4WJMro0lPmMz6PordUO0v1LKJTwTmqzqOdE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HWttPI8j1qrX9qD18bH7CRaa5Tw6hxeg9gQqQBHjeAs2hIMH1Gs+Uf7ubZMuvScSx
-         FMAJTVxBocGF+piHjJ3N4d2YdwvU7lSh47yfWpiXlKSE8VRLjYimf+SPk9QK095s2N
-         BpOWilOw7KV9DuQkzY2tyO7OF/tTTVDOpZqugzKnxLoJ/Hd2l0WLdITjYByou6cGe1
-         q245jdFpH9TYRCkl+MBYAeDJoC4Rb8IFRR1ZOthIcWvPDUcycDWKzPvpKqFHbrllTz
-         Hivjkq4AacI6Df0YOHk1tn4cexLPJ9N8BS7q7wWOpkujZBZvSfwe6+xquQpPN0ZAfh
-         BqSGwEsGXg36g==
-Subject: [PATCH 2/5] xfs: repair the rmapbt
+        b=mTfqSk9DUYxMCUT/EetmUqoMu8Dq7BC4KrfjXfWQFVN7N9cfDOzv4QhBvZFnuWpNc
+         t6N771KItFj0kD29DStU1P4GJoxonkc45GozO3H7BAxQtzmQ6gdooike+H41mP7CjH
+         eJ258z5gXjP//QqhvyMLigjF+Dm3WDBCVpAsdm91fEXctDK5s1ZqEKR3O5t6aiArz8
+         MvXfFY7SgXz62ChNOOmk1Xc+9N14TO50exrnxfFU3qfYG3rI7hp+heoRqAbnaE8+wy
+         yQe00kcy+3nsJQlbGr30//0juf3R8eaObCGxRbHQPWxnRspceiNUWvnx6gqCjLb9s4
+         FjTzKqKhnj4QQ==
+Subject: [PATCH 2/8] xfs: remove XFS_BLOCKWSIZE and XFS_BLOCKWMASK macros
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:45 -0800
-Message-ID: <167243866589.712315.13232550282179091617.stgit@magnolia>
-In-Reply-To: <167243866562.712315.18184440339100962213.stgit@magnolia>
-References: <167243866562.712315.18184440339100962213.stgit@magnolia>
+Message-ID: <167243866505.712132.2502556337531749406.stgit@magnolia>
+In-Reply-To: <167243866468.712132.9606813674941614562.stgit@magnolia>
+References: <167243866468.712132.9606813674941614562.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,170 +55,117 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Rebuild the reverse mapping btree from all primary metadata.
+Remove these trivial macros since they're not even part of the ondisk
+format.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_bmap.c       |   43 +++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_bmap.h       |    8 ++++++++
- libxfs/xfs_rmap.c       |   22 +++++++++++++++-------
- libxfs/xfs_rmap.h       |    2 ++
- libxfs/xfs_rmap_btree.c |   13 ++++++++++++-
- 5 files changed, 80 insertions(+), 8 deletions(-)
+ fs/xfs/libxfs/xfs_format.h   |    2 --
+ fs/xfs/libxfs/xfs_rtbitmap.c |   16 ++++++++--------
+ fs/xfs/libxfs/xfs_rtbitmap.h |    2 +-
+ 3 files changed, 9 insertions(+), 11 deletions(-)
 
 
-diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
-index 4533db87668..59c9d53bf31 100644
---- a/libxfs/xfs_bmap.c
-+++ b/libxfs/xfs_bmap.c
-@@ -6399,3 +6399,46 @@ xfs_bunmapi_range(
- out:
- 	return error;
- }
-+
-+struct xfs_bmap_query_range {
-+	xfs_bmap_query_range_fn	fn;
-+	void			*priv;
-+};
-+
-+/* Format btree record and pass to our callback. */
-+STATIC int
-+xfs_bmap_query_range_helper(
-+	struct xfs_btree_cur		*cur,
-+	const union xfs_btree_rec	*rec,
-+	void				*priv)
-+{
-+	struct xfs_bmap_query_range	*query = priv;
-+	struct xfs_bmbt_irec		irec;
-+	xfs_failaddr_t			fa;
-+
-+	xfs_bmbt_disk_get_all(&rec->bmbt, &irec);
-+	fa = xfs_bmap_validate_extent(cur->bc_ino.ip, cur->bc_ino.whichfork,
-+			&irec);
-+	if (fa) {
-+		xfs_btree_mark_sick(cur);
-+		return xfs_bmap_complain_bad_rec(cur->bc_ino.ip,
-+				cur->bc_ino.whichfork, fa, &irec);
-+	}
-+
-+	return query->fn(cur, &irec, query->priv);
-+}
-+
-+/* Find all bmaps. */
-+int
-+xfs_bmap_query_all(
-+	struct xfs_btree_cur		*cur,
-+	xfs_bmap_query_range_fn		fn,
-+	void				*priv)
-+{
-+	struct xfs_bmap_query_range	query = {
-+		.priv			= priv,
-+		.fn			= fn,
-+	};
-+
-+	return xfs_btree_query_all(cur, xfs_bmap_query_range_helper, &query);
-+}
-diff --git a/libxfs/xfs_bmap.h b/libxfs/xfs_bmap.h
-index 1201ee024c1..bbda4a77cb6 100644
---- a/libxfs/xfs_bmap.h
-+++ b/libxfs/xfs_bmap.h
-@@ -274,4 +274,12 @@ extern struct kmem_cache	*xfs_bmap_intent_cache;
- int __init xfs_bmap_intent_init_cache(void);
- void xfs_bmap_intent_destroy_cache(void);
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 6a3d684900ab..a4278c8fba5f 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -1196,8 +1196,6 @@ static inline bool xfs_dinode_has_large_extent_counts(
  
-+typedef int (*xfs_bmap_query_range_fn)(
-+	struct xfs_btree_cur	*cur,
-+	struct xfs_bmbt_irec	*rec,
-+	void			*priv);
-+
-+int xfs_bmap_query_all(struct xfs_btree_cur *cur, xfs_bmap_query_range_fn fn,
-+		void *priv);
-+
- #endif	/* __XFS_BMAP_H__ */
-diff --git a/libxfs/xfs_rmap.c b/libxfs/xfs_rmap.c
-index 0816f103f1c..18d9dd480b0 100644
---- a/libxfs/xfs_rmap.c
-+++ b/libxfs/xfs_rmap.c
-@@ -211,13 +211,12 @@ xfs_rmap_btrec_to_irec(
- 			irec);
- }
+ #define	XFS_BLOCKSIZE(mp)	((mp)->m_sb.sb_blocksize)
+ #define	XFS_BLOCKMASK(mp)	((mp)->m_blockmask)
+-#define	XFS_BLOCKWSIZE(mp)	((mp)->m_blockwsize)
+-#define	XFS_BLOCKWMASK(mp)	((mp)->m_blockwmask)
  
--/* Simple checks for rmap records. */
--xfs_failaddr_t
--xfs_rmap_check_irec(
--	struct xfs_btree_cur		*cur,
-+inline xfs_failaddr_t
-+xfs_rmap_check_perag_irec(
-+	struct xfs_perag		*pag,
- 	const struct xfs_rmap_irec	*irec)
+ /*
+  * RT Summary and bit manipulation macros.
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index ce8736666a1e..1f4886287aad 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -181,7 +181,7 @@ xfs_rtfind_back(
+ 				return error;
+ 			}
+ 			bufp = bp->b_addr;
+-			word = XFS_BLOCKWMASK(mp);
++			word = mp->m_blockwsize - 1;
+ 			b = &bufp[word];
+ 		} else {
+ 			/*
+@@ -227,7 +227,7 @@ xfs_rtfind_back(
+ 				return error;
+ 			}
+ 			bufp = bp->b_addr;
+-			word = XFS_BLOCKWMASK(mp);
++			word = mp->m_blockwsize - 1;
+ 			b = &bufp[word];
+ 		} else {
+ 			/*
+@@ -345,7 +345,7 @@ xfs_rtfind_forw(
+ 		 * Go on to next block if that's where the next word is
+ 		 * and we need the next word.
+ 		 */
+-		if (++word == XFS_BLOCKWSIZE(mp) && i < len) {
++		if (++word == mp->m_blockwsize && i < len) {
+ 			/*
+ 			 * If done with this block, get the previous one.
+ 			 */
+@@ -390,7 +390,7 @@ xfs_rtfind_forw(
+ 		 * Go on to next block if that's where the next word is
+ 		 * and we need the next word.
+ 		 */
+-		if (++word == XFS_BLOCKWSIZE(mp) && i < len) {
++		if (++word == mp->m_blockwsize && i < len) {
+ 			/*
+ 			 * If done with this block, get the next one.
+ 			 */
+@@ -600,7 +600,7 @@ xfs_rtmodify_range(
+ 		 * Go on to the next block if that's where the next word is
+ 		 * and we need the next word.
+ 		 */
+-		if (++word == XFS_BLOCKWSIZE(mp) && i < len) {
++		if (++word == mp->m_blockwsize && i < len) {
+ 			/*
+ 			 * Log the changed part of this block.
+ 			 * Get the next one.
+@@ -640,7 +640,7 @@ xfs_rtmodify_range(
+ 		 * Go on to the next block if that's where the next word is
+ 		 * and we need the next word.
+ 		 */
+-		if (++word == XFS_BLOCKWSIZE(mp) && i < len) {
++		if (++word == mp->m_blockwsize && i < len) {
+ 			/*
+ 			 * Log the changed part of this block.
+ 			 * Get the next one.
+@@ -843,7 +843,7 @@ xfs_rtcheck_range(
+ 		 * Go on to next block if that's where the next word is
+ 		 * and we need the next word.
+ 		 */
+-		if (++word == XFS_BLOCKWSIZE(mp) && i < len) {
++		if (++word == mp->m_blockwsize && i < len) {
+ 			/*
+ 			 * If done with this block, get the next one.
+ 			 */
+@@ -889,7 +889,7 @@ xfs_rtcheck_range(
+ 		 * Go on to next block if that's where the next word is
+ 		 * and we need the next word.
+ 		 */
+-		if (++word == XFS_BLOCKWSIZE(mp) && i < len) {
++		if (++word == mp->m_blockwsize && i < len) {
+ 			/*
+ 			 * If done with this block, get the next one.
+ 			 */
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
+index e53011bc638d..5f4a453e29eb 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.h
++++ b/fs/xfs/libxfs/xfs_rtbitmap.h
+@@ -109,7 +109,7 @@ xfs_rtx_to_rbmword(
+ 	struct xfs_mount	*mp,
+ 	xfs_rtxnum_t		rtx)
  {
--	struct xfs_mount		*mp = cur->bc_mp;
-+	struct xfs_mount		*mp = pag->pag_mount;
- 	bool				is_inode;
- 	bool				is_unwritten;
- 	bool				is_bmbt;
-@@ -232,8 +231,8 @@ xfs_rmap_check_irec(
- 			return __this_address;
- 	} else {
- 		/* check for valid extent range, including overflow */
--		if (!xfs_verify_agbext(cur->bc_ag.pag, irec->rm_startblock,
--						       irec->rm_blockcount))
-+		if (!xfs_verify_agbext(pag, irec->rm_startblock,
-+					    irec->rm_blockcount))
- 			return __this_address;
- 	}
- 
-@@ -268,6 +267,15 @@ xfs_rmap_check_irec(
- 	return NULL;
+-	return (rtx >> XFS_NBWORDLOG) & XFS_BLOCKWMASK(mp);
++	return (rtx >> XFS_NBWORDLOG) & (mp->m_blockwsize - 1);
  }
  
-+/* Simple checks for rmap records. */
-+xfs_failaddr_t
-+xfs_rmap_check_irec(
-+	struct xfs_btree_cur		*cur,
-+	const struct xfs_rmap_irec	*irec)
-+{
-+	return xfs_rmap_check_perag_irec(cur->bc_ag.pag, irec);
-+}
-+
- static inline int
- xfs_rmap_complain_bad_rec(
- 	struct xfs_btree_cur		*cur,
-diff --git a/libxfs/xfs_rmap.h b/libxfs/xfs_rmap.h
-index ced605d6932..b7ad51055e1 100644
---- a/libxfs/xfs_rmap.h
-+++ b/libxfs/xfs_rmap.h
-@@ -195,6 +195,8 @@ int xfs_rmap_compare(const struct xfs_rmap_irec *a,
- union xfs_btree_rec;
- xfs_failaddr_t xfs_rmap_btrec_to_irec(const union xfs_btree_rec *rec,
- 		struct xfs_rmap_irec *irec);
-+xfs_failaddr_t xfs_rmap_check_perag_irec(struct xfs_perag *pag,
-+		const struct xfs_rmap_irec *irec);
- xfs_failaddr_t xfs_rmap_check_irec(struct xfs_btree_cur *cur,
- 		const struct xfs_rmap_irec *irec);
- 
-diff --git a/libxfs/xfs_rmap_btree.c b/libxfs/xfs_rmap_btree.c
-index 928f61053b0..574f2dda5c0 100644
---- a/libxfs/xfs_rmap_btree.c
-+++ b/libxfs/xfs_rmap_btree.c
-@@ -340,7 +340,18 @@ xfs_rmapbt_verify(
- 
- 	level = be16_to_cpu(block->bb_level);
- 	if (pag && pag->pagf_init) {
--		if (level >= pag->pagf_levels[XFS_BTNUM_RMAPi])
-+		unsigned int	maxlevel = pag->pagf_levels[XFS_BTNUM_RMAPi];
-+
-+#ifdef CONFIG_XFS_ONLINE_REPAIR
-+		/*
-+		 * Online repair could be rewriting the free space btrees, so
-+		 * we'll validate against the larger of either tree while this
-+		 * is going on.
-+		 */
-+		maxlevel = max_t(unsigned int, maxlevel,
-+				pag->pagf_alt_levels[XFS_BTNUM_RMAPi]);
-+#endif
-+		if (level >= maxlevel)
- 			return __this_address;
- 	} else if (level >= mp->m_rmap_maxlevels)
- 		return __this_address;
+ /* Convert a file block offset in the rt bitmap file to an rt extent number. */
 
