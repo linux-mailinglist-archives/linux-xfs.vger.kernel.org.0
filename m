@@ -2,88 +2,206 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B4965A011
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:56:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0A2F65A090
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235846AbiLaA4X (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:56:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
+        id S236080AbiLaB03 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:26:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235815AbiLaA4X (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:56:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE8DCF3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:56:22 -0800 (PST)
+        with ESMTP id S230058AbiLaB02 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:26:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DD660F3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:26:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CE56AB81E06
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:56:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0A1C433D2;
-        Sat, 31 Dec 2022 00:56:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F51661CAB
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:26:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF7BC433D2;
+        Sat, 31 Dec 2022 01:26:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448179;
-        bh=v6JcySB9miJFsoUMyNMdov2i+hVmYIuumMCFouxQVts=;
+        s=k20201202; t=1672449985;
+        bh=NUrm02hlOKbXyn/tXiSJ8ZiI9BU3+59bFbkgFjmpzFI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=EgctiWONcEC4S1bDj9KLUyQqqKvuLEaUsZH0Jw8k3xi49CZDcQ8sQ6C8XZAGa5rWn
-         1qcEvLeVNLxs4dUfFQf/Yy4NWPVPVYFGz4wCgTmpOB7MSR5ToOEcu++R5Yhgew+wlU
-         dtawfB06AqxJlUID+UwTx6+ihVjcRXbGNfkpSep9Vo9NdQu2sV2TndjT0oUOCaLv6h
-         8pee0XL7YpzzcHReAKUlZHFm8TV+pjy5mPD/ALkl3VjW76Pftk0289DBA8FFAFLrn7
-         gtrAzz5bV7U6TVqLptq32FBitM6BinbgMqDk5da2pL1/yf0j4TIiHva/JpWRgY0HNb
-         JJEbF+1eIt/fQ==
-Subject: [PATCHSET v1.0 0/8] xfs: refactor rtbitmap/summary macros
+        b=KK1qERPGc+EAc6Vz74ipknT2Nh2Gm0gZhGZMVv2+adkb9URtCvqL6WAYFhuuhSUVQ
+         ocShEsIp2olVHIC/OOxEkDzqRGnIbI9r+n7Ck+woDdT7kPpZzyNEAObZ/m7Pw1PmZu
+         U0nOPXihVVcjHKEgDKp8MMdd00DYhB3Got+Y8qyeP/21FVyNOWdUk3CI0J1RGM/65b
+         a08SK09RDnuhu96wyxc6obkki5xDw+IEB/AGk1cuPVW3vJ5Y4dRckYCa9/HI/1ApIz
+         lAUH6GVS5KWxFeVGWzPXuQC3MlRUbrIBEm3lu1r3PzSHxjTh7ChJz0anlrcWrTqcSd
+         yoV8gsldFyOkw==
+Subject: [PATCH 7/8] xfs: create helpers for rtsummary block/wordcount
+ computations
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:44 -0800
-Message-ID: <167243866468.712132.9606813674941614562.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:45 -0800
+Message-ID: <167243866576.712132.11052028874200624563.stgit@magnolia>
+In-Reply-To: <167243866468.712132.9606813674941614562.stgit@magnolia>
+References: <167243866468.712132.9606813674941614562.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-In preparation for adding block headers and enforcing endian order in
-rtbitmap and rtsummary blocks, replace open-coded geometry computations
-and fugly macros with proper helper functions that can be typechecked.
-Soon we'll be needing to add more complex logic to the helpers.
+Create helper functions that compute the number of blocks or words
+necessary to store the rt summary file.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-rtbitmap-macros
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=refactor-rtbitmap-macros
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_format.h      |   32 ++---
- fs/xfs/libxfs/xfs_rtbitmap.c    |  268 ++++++++++++++++++++++++++++-----------
- fs/xfs/libxfs/xfs_rtbitmap.h    |  133 +++++++++++++++++++
- fs/xfs/libxfs/xfs_trans_resv.c  |    9 +
- fs/xfs/libxfs/xfs_types.h       |    2 
- fs/xfs/scrub/rtsummary.c        |   52 ++++----
- fs/xfs/scrub/rtsummary.h        |    6 -
- fs/xfs/scrub/rtsummary_repair.c |    7 +
- fs/xfs/scrub/trace.c            |    1 
- fs/xfs/scrub/trace.h            |    4 -
- fs/xfs/xfs_ondisk.h             |    4 +
- fs/xfs/xfs_rtalloc.c            |   39 +++---
- 12 files changed, 409 insertions(+), 148 deletions(-)
+ fs/xfs/libxfs/xfs_rtbitmap.c |   29 +++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_rtbitmap.h |    7 +++++++
+ fs/xfs/scrub/rtsummary.c     |    7 +++++--
+ fs/xfs/xfs_rtalloc.c         |   17 +++++++----------
+ 4 files changed, 48 insertions(+), 12 deletions(-)
+
+
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.c b/fs/xfs/libxfs/xfs_rtbitmap.c
+index b2b1a1aec342..be5c793da46c 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.c
++++ b/fs/xfs/libxfs/xfs_rtbitmap.c
+@@ -1205,3 +1205,32 @@ xfs_rtbitmap_wordcount(
+ 	blocks = xfs_rtbitmap_blockcount(mp, rtextents);
+ 	return XFS_FSB_TO_B(mp, blocks) >> XFS_WORDLOG;
+ }
++
++/* Compute the number of rtsummary blocks needed to track the given rt space. */
++xfs_filblks_t
++xfs_rtsummary_blockcount(
++	struct xfs_mount	*mp,
++	unsigned int		rsumlevels,
++	xfs_extlen_t		rbmblocks)
++{
++	unsigned long long	rsumwords;
++
++	rsumwords = (unsigned long long)rsumlevels * rbmblocks;
++	return XFS_B_TO_FSB(mp, rsumwords << XFS_WORDLOG);
++}
++
++/*
++ * Compute the number of rtsummary info words needed to populate every block of
++ * a summary file that is large enough to track the given rt space.
++ */
++unsigned long long
++xfs_rtsummary_wordcount(
++	struct xfs_mount	*mp,
++	unsigned int		rsumlevels,
++	xfs_extlen_t		rbmblocks)
++{
++	xfs_filblks_t		blocks;
++
++	blocks = xfs_rtsummary_blockcount(mp, rsumlevels, rbmblocks);
++	return XFS_FSB_TO_B(mp, blocks) >> XFS_WORDLOG;
++}
+diff --git a/fs/xfs/libxfs/xfs_rtbitmap.h b/fs/xfs/libxfs/xfs_rtbitmap.h
+index 0a3c6299af8e..a66357cf002b 100644
+--- a/fs/xfs/libxfs/xfs_rtbitmap.h
++++ b/fs/xfs/libxfs/xfs_rtbitmap.h
+@@ -270,6 +270,11 @@ xfs_rtword_t xfs_rtbitmap_getword(struct xfs_mount *mp,
+ 		union xfs_rtword_ondisk *wordptr);
+ void xfs_rtbitmap_setword(struct xfs_mount *mp,
+ 		union xfs_rtword_ondisk *wordptr, xfs_rtword_t incore);
++
++xfs_filblks_t xfs_rtsummary_blockcount(struct xfs_mount *mp,
++		unsigned int rsumlevels, xfs_extlen_t rbmblocks);
++unsigned long long xfs_rtsummary_wordcount(struct xfs_mount *mp,
++		unsigned int rsumlevels, xfs_extlen_t rbmblocks);
+ #else /* CONFIG_XFS_RT */
+ # define xfs_rtfree_extent(t,b,l)			(-ENOSYS)
+ # define xfs_rtfree_blocks(t,rb,rl)			(-ENOSYS)
+@@ -284,6 +289,8 @@ xfs_rtbitmap_blockcount(struct xfs_mount *mp, xfs_rtbxlen_t rtextents)
+ 	return 0;
+ }
+ # define xfs_rtbitmap_wordcount(mp, r)			(0)
++# define xfs_rtsummary_blockcount(mp, l, b)		(0)
++# define xfs_rtsummary_wordcount(mp, l, b)		(0)
+ #endif /* CONFIG_XFS_RT */
+ 
+ #endif /* __XFS_RTBITMAP_H__ */
+diff --git a/fs/xfs/scrub/rtsummary.c b/fs/xfs/scrub/rtsummary.c
+index dfbbaab5a734..e51c3d10e501 100644
+--- a/fs/xfs/scrub/rtsummary.c
++++ b/fs/xfs/scrub/rtsummary.c
+@@ -40,6 +40,7 @@ xchk_setup_rtsummary(
+ {
+ 	struct xfs_mount	*mp = sc->mp;
+ 	size_t			bufsize = mp->m_sb.sb_blocksize;
++	unsigned int		wordcnt;
+ 	unsigned int		resblks = 0;
+ 	int			error;
+ 
+@@ -53,8 +54,10 @@ xchk_setup_rtsummary(
+ 	 * Create an xfile to construct a new rtsummary file.  The xfile allows
+ 	 * us to avoid pinning kernel memory for this purpose.
+ 	 */
+-	error = xfile_create(mp, "realtime summary file", mp->m_rsumsize,
+-			&sc->xfile);
++	wordcnt = xfs_rtsummary_wordcount(mp, mp->m_rsumlevels,
++			mp->m_sb.sb_rbmblocks);
++	error = xfile_create(mp, "realtime summary file",
++			wordcnt << XFS_WORDLOG, &sc->xfile);
+ 	if (error)
+ 		return error;
+ 
+diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
+index a64f7abe6409..11c42ebfa0a5 100644
+--- a/fs/xfs/xfs_rtalloc.c
++++ b/fs/xfs/xfs_rtalloc.c
+@@ -999,8 +999,7 @@ xfs_growfs_rt(
+ 	nrbmblocks = xfs_rtbitmap_blockcount(mp, nrextents);
+ 	nrextslog = xfs_highbit32(nrextents);
+ 	nrsumlevels = nrextslog + 1;
+-	nrsumsize = (uint)sizeof(xfs_suminfo_t) * nrsumlevels * nrbmblocks;
+-	nrsumblocks = XFS_B_TO_FSB(mp, nrsumsize);
++	nrsumblocks = xfs_rtsummary_blockcount(mp, nrsumlevels, nrbmblocks);
+ 	nrsumsize = XFS_FSB_TO_B(mp, nrsumblocks);
+ 	/*
+ 	 * New summary size can't be more than half the size of
+@@ -1061,10 +1060,8 @@ xfs_growfs_rt(
+ 		ASSERT(nsbp->sb_rextents != 0);
+ 		nsbp->sb_rextslog = xfs_highbit32(nsbp->sb_rextents);
+ 		nrsumlevels = nmp->m_rsumlevels = nsbp->sb_rextslog + 1;
+-		nrsumsize =
+-			(uint)sizeof(xfs_suminfo_t) * nrsumlevels *
+-			nsbp->sb_rbmblocks;
+-		nrsumblocks = XFS_B_TO_FSB(mp, nrsumsize);
++		nrsumblocks = xfs_rtsummary_blockcount(mp, nrsumlevels,
++				nsbp->sb_rbmblocks);
+ 		nmp->m_rsumsize = nrsumsize = XFS_FSB_TO_B(mp, nrsumblocks);
+ 		/*
+ 		 * Start a transaction, get the log reservation.
+@@ -1270,6 +1267,7 @@ xfs_rtmount_init(
+ 	struct xfs_buf		*bp;	/* buffer for last block of subvolume */
+ 	struct xfs_sb		*sbp;	/* filesystem superblock copy in mount */
+ 	xfs_daddr_t		d;	/* address of last block of subvolume */
++	unsigned int		rsumblocks;
+ 	int			error;
+ 
+ 	sbp = &mp->m_sb;
+@@ -1281,10 +1279,9 @@ xfs_rtmount_init(
+ 		return -ENODEV;
+ 	}
+ 	mp->m_rsumlevels = sbp->sb_rextslog + 1;
+-	mp->m_rsumsize =
+-		(uint)sizeof(xfs_suminfo_t) * mp->m_rsumlevels *
+-		sbp->sb_rbmblocks;
+-	mp->m_rsumsize = roundup(mp->m_rsumsize, sbp->sb_blocksize);
++	rsumblocks = xfs_rtsummary_blockcount(mp, mp->m_rsumlevels,
++			mp->m_sb.sb_rbmblocks);
++	mp->m_rsumsize = XFS_FSB_TO_B(mp, rsumblocks);
+ 	mp->m_rbmip = mp->m_rsumip = NULL;
+ 	/*
+ 	 * Check that the realtime section is an ok size.
 
