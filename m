@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56C9865A076
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:20:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36705659F3D
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:10:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236059AbiLaBUB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:20:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44186 "EHLO
+        id S235673AbiLaAKM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:10:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236057AbiLaBUA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:20:00 -0500
+        with ESMTP id S231164AbiLaAKL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:10:11 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 573A91AD9A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:19:59 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0608A1CB3E
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:10:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 159E6B81DDA
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:19:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B528CC433D2;
-        Sat, 31 Dec 2022 01:19:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BB9C9B81DF6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:10:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EFD9C433EF;
+        Sat, 31 Dec 2022 00:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449596;
-        bh=PdQBP08GXvZVZHVT/QpbHZ2xdyVlqEdZOeepipZ4nqQ=;
+        s=k20201202; t=1672445407;
+        bh=mXsZqKDDRl/pVY3Gs0yBZiSTdtMqQl6sJxUXiZotcJo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=HRNUmyasy8bVMOXR3lZ4HAbopzTY7lyDEYearvNgQCC/CPxQsF0Vto7m+UYD9PTwC
-         ktK289kj57oYmOYeQ3Bz70aA+0XerL0+TDhGKVVWfYzp+zhlL1+hwV7l+pkx71LaAl
-         zEgIi3HA+mEMgETYT+vabRvlwrJwGcKbmIAusUs+JumKJQfKhRemyZnwCjaaEjniM4
-         aS1vfbohqJIwhfoKG1DcPkh8XR71+dbKVxb4sKKVv5Hwi6AiQscPrTdJYm21vo3HZ0
-         tAMQg/DuXwJigFI7MYezStvIu7D+vxuc3UCKA3yBItrncmAPqMU2zDbe5Hza8xMOCi
-         owL/Fso/aoulA==
-Subject: [PATCH 14/14] xfs: update btree keys correctly when _insrec splits an
- inode root block
+        b=pTcUiD4GGIwj+BNx6G1lijDvzSwHd7EAfFgJ1ty2zsU+aqux/2HecMwyDD0HQrbM/
+         Nsomc4KLekBGE8teAP21mDmyhqQzUBwgXTuYudqNRJdsGJPHoeXmliAqG1FFyJ7XWY
+         WS8kYDYS9IZzZdek4CX8rKTdZDtRLi3Woi2RzZbUzxIRRbDNtOa8rDEG0/zlHw2qUi
+         XgBthKv9CQCaMvXrqfdFSwK44ISOuB7JuRPkfAN7iEJLndUir2o+YRlD69GEUQ4Tf9
+         7p8ENfpF9CVCO1vNkI0u2qctwD4Uq6QhEsC9OrmxITjG6wk1DeyJqcWJFpYv4Ov3PZ
+         mWW2gdSp6cW9Q==
+Subject: [PATCH 3/3] xfs_scrub: use multiple threads to run in-kernel metadata
+ scrubs that scan inodes
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:33 -0800
-Message-ID: <167243865308.708933.13650417799146260510.stgit@magnolia>
-In-Reply-To: <167243865089.708933.5645420573863731083.stgit@magnolia>
-References: <167243865089.708933.5645420573863731083.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:35 -0800
+Message-ID: <167243865542.709394.18210123102047724459.stgit@magnolia>
+In-Reply-To: <167243865502.709394.13215707195694339795.stgit@magnolia>
+References: <167243865502.709394.13215707195694339795.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,74 +55,230 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In commit 2c813ad66a72, I partially fixed a bug wherein xfs_btree_insrec
-would erroneously try to update the parent's key for a block that had
-been split if we decided to insert the new record into the new block.
-The solution was to detect this situation and update the in-core key
-value that we pass up to the caller so that the caller will (eventually)
-add the new block to the parent level of the tree with the correct key.
+Instead of running the inode link count and quotacheck scanners in
+serial, run them in parallel, with a slight delay to stagger the work to
+reduce inode resource contention.
 
-However, I missed a subtlety about the way inode-rooted btrees work.  If
-the full block was a maximally sized inode root block, we'll solve that
-fullness by moving the root block's records to a new block, resizing the
-root block, and updating the root to point to the new block.  We don't
-pass a pointer to the new block to the caller because that work has
-already been done.  The new record will /always/ land in the new block,
-so in this case we need to use xfs_btree_update_keys to update the keys.
-
-This bug can theoretically manifest itself in the very rare case that we
-split a bmbt root block and the new record lands in the very first slot
-of the new block, though I've never managed to trigger it in practice.
-However, it is very easy to reproduce by running generic/522 with the
-realtime rmapbt patchset if rtinherit=1.
-
-Fixes: 2c813ad66a72 ("xfs: support btrees with overlapping intervals for keys")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_btree.c |   29 +++++++++++++++++++++++------
- 1 file changed, 23 insertions(+), 6 deletions(-)
+ scrub/phase5.c |  136 +++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ scrub/scrub.c  |   18 ++++---
+ scrub/scrub.h  |    1 
+ 3 files changed, 138 insertions(+), 17 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 18628542d316..00bc1dd73675 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -3665,14 +3665,31 @@ xfs_btree_insrec(
- 	xfs_btree_log_block(cur, bp, XFS_BB_NUMRECS);
+diff --git a/scrub/phase5.c b/scrub/phase5.c
+index 123e3751ca1..622e58138db 100644
+--- a/scrub/phase5.c
++++ b/scrub/phase5.c
+@@ -383,12 +383,137 @@ check_fs_label(
+ 	return error;
+ }
  
- 	/*
--	 * If we just inserted into a new tree block, we have to
--	 * recalculate nkey here because nkey is out of date.
-+	 * Update btree keys to reflect the newly added record or keyptr.
-+	 * There are three cases here to be aware of.  Normally, all we have to
-+	 * do is walk towards the root, updating keys as necessary.
- 	 *
--	 * Otherwise we're just updating an existing block (having shoved
--	 * some records into the new tree block), so use the regular key
--	 * update mechanism.
-+	 * If the caller had us target a full block for the insertion, we dealt
-+	 * with that by calling the _make_block_unfull function.  If the
-+	 * "make unfull" function splits the block, it'll hand us back the key
-+	 * and pointer of the new block.  We haven't yet added the new block to
-+	 * the next level up, so if we decide to add the new record to the new
-+	 * block (bp->b_bn != old_bn), we have to update the caller's pointer
-+	 * so that the caller adds the new block with the correct key.
-+	 *
-+	 * However, there is a third possibility-- if the selected block is the
-+	 * root block of an inode-rooted btree and cannot be expanded further,
-+	 * the "make unfull" function moves the root block contents to a new
-+	 * block and updates the root block to point to the new block.  In this
-+	 * case, no block pointer is passed back because the block has already
-+	 * been added to the btree.  In this case, we need to use the regular
-+	 * key update function, just like the first case.  This is critical for
-+	 * overlapping btrees, because the high key must be updated to reflect
-+	 * the entire tree, not just the subtree accessible through the first
-+	 * child of the root (which is now two levels down from the root).
++typedef int (*iscan_item_fn)(struct scrub_ctx *, struct action_list *);
++
++struct iscan_item {
++	struct action_list	alist;
++	bool			*abortedp;
++	iscan_item_fn		scrub_fn;
++};
++
++/* Run one inode-scan scrubber in this thread. */
++static void
++iscan_worker(
++	struct workqueue	*wq,
++	xfs_agnumber_t		nr,
++	void			*arg)
++{
++	struct timespec		tv;
++	struct iscan_item	*item = arg;
++	struct scrub_ctx	*ctx = wq->wq_ctx;
++	int			ret;
++
++	/*
++	 * Delay each successive iscan by a second so that the threads are less
++	 * likely to contend on the inode buffers.
++	 */
++	if (nr) {
++		tv.tv_sec = nr;
++		tv.tv_nsec = 0;
++		nanosleep(&tv, NULL);
++	}
++
++	ret = item->scrub_fn(ctx, &item->alist);
++	if (ret) {
++		str_liberror(ctx, ret, _("checking iscan metadata"));
++		*item->abortedp = true;
++		goto out;
++	}
++
++	ret = action_list_process(ctx, ctx->mnt.fd, &item->alist,
++			ALP_COMPLAIN_IF_UNFIXED | ALP_NOPROGRESS);
++	if (ret) {
++		str_liberror(ctx, ret, _("repairing iscan metadata"));
++		*item->abortedp = true;
++		goto out;
++	}
++
++out:
++	free(item);
++	return;
++}
++
++/* Queue one inode-scan scrubber. */
++static int
++queue_iscan(
++	struct workqueue	*wq,
++	bool			*abortedp,
++	xfs_agnumber_t		nr,
++	iscan_item_fn		scrub_fn)
++{
++	struct iscan_item	*item;
++	struct scrub_ctx	*ctx = wq->wq_ctx;
++	int			ret;
++
++	item = malloc(sizeof(struct iscan_item));
++	if (!item) {
++		ret = ENOMEM;
++		str_liberror(ctx, ret, _("setting up iscan"));
++		return ret;
++	}
++	action_list_init(&item->alist);
++	item->scrub_fn = scrub_fn;
++	item->abortedp = abortedp;
++
++	ret = -workqueue_add(wq, iscan_worker, nr, item);
++	if (ret)
++		str_liberror(ctx, ret, _("queuing iscan work"));
++
++	return ret;
++}
++
++/* Run multiple inode-scan scrubbers at the same time. */
++static int
++run_kernel_iscan_scrubbers(
++	struct scrub_ctx	*ctx)
++{
++	struct workqueue	wq_iscan;
++	unsigned int		nr_threads = scrub_nproc_workqueue(ctx);
++	xfs_agnumber_t		nr = 0;
++	bool			aborted = false;
++	int			ret, ret2;
++
++	ret = -workqueue_create(&wq_iscan, (struct xfs_mount *)ctx,
++			nr_threads);
++	if (ret) {
++		str_liberror(ctx, ret, _("setting up iscan workqueue"));
++		return ret;
++	}
++
++	/*
++	 * The nlinks scanner is much faster than quotacheck because it only
++	 * walks directories, so we start it first.
++	 */
++	ret = queue_iscan(&wq_iscan, &aborted, nr, scrub_nlinks);
++	if (ret)
++		goto wait;
++
++	if (nr_threads > 1)
++		nr++;
++
++	ret = queue_iscan(&wq_iscan, &aborted, nr, scrub_quotacheck);
++	if (ret)
++		goto wait;
++
++wait:
++	ret2 = -workqueue_terminate(&wq_iscan);
++	if (ret2) {
++		str_liberror(ctx, ret2, _("joining iscan workqueue"));
++		if (!ret)
++			ret = ret2;
++	}
++	if (aborted && !ret)
++		ret = ECANCELED;
++
++	workqueue_destroy(&wq_iscan);
++	return ret;
++}
++
+ /* Check directory connectivity. */
+ int
+ phase5_func(
+ 	struct scrub_ctx	*ctx)
+ {
+-	struct action_list	alist;
+ 	bool			aborted = false;
+ 	int			ret;
+ 
+@@ -397,12 +522,7 @@ phase5_func(
+ 	 * after we've checked all inodes and repaired anything that could get
+ 	 * in the way of a scan.
  	 */
--	if (bp && xfs_buf_daddr(bp) != old_bn) {
-+	if (!xfs_btree_ptr_is_null(cur, &nptr) &&
-+	    bp && xfs_buf_daddr(bp) != old_bn) {
- 		xfs_btree_get_keys(cur, block, lkey);
- 	} else if (xfs_btree_needs_key_update(cur, optr)) {
- 		error = xfs_btree_update_keys(cur, level);
+-	action_list_init(&alist);
+-	ret = scrub_iscan_metadata(ctx, &alist);
+-	if (ret)
+-		return ret;
+-	ret = action_list_process(ctx, ctx->mnt.fd, &alist,
+-			ALP_COMPLAIN_IF_UNFIXED | ALP_NOPROGRESS);
++	ret = run_kernel_iscan_scrubbers(ctx);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -435,7 +555,7 @@ phase5_estimate(
+ 	int			*rshift)
+ {
+ 	*items = scrub_estimate_iscan_work(ctx);
+-	*nr_threads = scrub_nproc(ctx);
++	*nr_threads = scrub_nproc(ctx) * 2;
+ 	*rshift = 0;
+ 	return 0;
+ }
+diff --git a/scrub/scrub.c b/scrub/scrub.c
+index f2dd9bb9d0b..fe5c8ade5d8 100644
+--- a/scrub/scrub.c
++++ b/scrub/scrub.c
+@@ -422,15 +422,6 @@ scrub_summary_metadata(
+ 	return scrub_group(ctx, XFROG_SCRUB_GROUP_SUMMARY, 0, alist);
+ }
+ 
+-/* Scrub all metadata requiring a full inode scan. */
+-int
+-scrub_iscan_metadata(
+-	struct scrub_ctx		*ctx,
+-	struct action_list		*alist)
+-{
+-	return scrub_group(ctx, XFROG_SCRUB_GROUP_ISCAN, 0, alist);
+-}
+-
+ /* Scrub /only/ the superblock summary counters. */
+ int
+ scrub_fs_counters(
+@@ -449,6 +440,15 @@ scrub_quotacheck(
+ 	return scrub_meta_type(ctx, XFS_SCRUB_TYPE_QUOTACHECK, 0, alist);
+ }
+ 
++/* Scrub /only/ the file link counters. */
++int
++scrub_nlinks(
++	struct scrub_ctx		*ctx,
++	struct action_list		*alist)
++{
++	return scrub_meta_type(ctx, XFS_SCRUB_TYPE_NLINKS, 0, alist);
++}
++
+ /* How many items do we have to check? */
+ unsigned int
+ scrub_estimate_ag_work(
+diff --git a/scrub/scrub.h b/scrub/scrub.h
+index 42b91fbc3ed..430ad0fbd83 100644
+--- a/scrub/scrub.h
++++ b/scrub/scrub.h
+@@ -28,6 +28,7 @@ int scrub_iscan_metadata(struct scrub_ctx *ctx, struct action_list *alist);
+ int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist);
+ int scrub_fs_counters(struct scrub_ctx *ctx, struct action_list *alist);
+ int scrub_quotacheck(struct scrub_ctx *ctx, struct action_list *alist);
++int scrub_nlinks(struct scrub_ctx *ctx, struct action_list *alist);
+ 
+ bool can_scrub_fs_metadata(struct scrub_ctx *ctx);
+ bool can_scrub_inode(struct scrub_ctx *ctx);
 
