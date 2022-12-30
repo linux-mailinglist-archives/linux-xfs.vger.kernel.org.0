@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4D2965A251
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:15:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5953865A255
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:16:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236274AbiLaDOl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:14:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36422 "EHLO
+        id S236340AbiLaDPq (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:15:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236259AbiLaDO1 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:14:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FAEE59;
-        Fri, 30 Dec 2022 19:14:26 -0800 (PST)
+        with ESMTP id S236337AbiLaDPo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:15:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4E5257;
+        Fri, 30 Dec 2022 19:15:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 35A0FB81E5C;
-        Sat, 31 Dec 2022 03:14:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1EFBC433EF;
-        Sat, 31 Dec 2022 03:14:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CF0FAB81E61;
+        Sat, 31 Dec 2022 03:15:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890FCC433EF;
+        Sat, 31 Dec 2022 03:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456463;
-        bh=5tGYjlAVtTsCmR1z/8/XOITcG+nNZq/DfjTeq+f8+nc=;
+        s=k20201202; t=1672456541;
+        bh=aTkm8z/589qdaL7VLGasCqnTpNpfp9e+HuWHLLuLrY4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pmSv/KwBUhYdRngWGImXGbMeTOlWzj1jLIornZCWEQF5iwHcZr2ZWZGCG+sb/Fzhg
-         UYjiEW37zEJkVKJiz+lsC50ofcIR9e+NWSRU5wQHHWB45/yzBXiJnaZFvO16Vyu/bj
-         YQyTPJgmWvcpWnQEcFR4HhcRc/7EfGjTN6KiaGOjTMEFKRy9pq0y5wR4SoOz59UGKb
-         8tKQp9h7zR69iuoG3probEP0q9Zhq4t/5ROitx3zDRJ3Pp8dtMV4/4wpYpcjyFNMW7
-         txRNK3OkGyvsTiIXqvh2zahrCv1lmaKcu1FzBIPoh2fYpqoovlz343hmGWse8SCmiI
-         cxwwT7f5C/V9A==
-Subject: [PATCH 07/13] xfs/341: update test for rtgroup-based rmap
+        b=B3QVcuQ7CqHHl1+xYAjFGZhfUXAq0kw+t7vAMUzHlyKGKlyP4Q1g1tYYON7n1QuUs
+         T333sD83tDx28C1oHu3WCDJCcPqcfYKtmvD7D2yOITUKggX6lq2GzsxWAsMcxZrepF
+         RDakXaP6vUZyUE+H4IhF/7Mn69p/SJHRxO+oua73PxVsCWhc0mQ5IEG9I2VXF7mi3P
+         SJ9LdmAnLulG4Sjdf0CFs0Jd/QzrEFlpywJ5WAkKY1j8TNlcahuDbY37OB128wqI7m
+         xqPIlalHNTC0lw6T0JUI0oCUwfzqQkVw/mCXTZrzL/E9Z8Xu073Wdcj5rdKju3zQNy
+         kcUO1MyCntcNg==
+Subject: [PATCH 12/13] populate: check that we created a realtime rmap btree
+ of the given height
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Fri, 30 Dec 2022 14:20:44 -0800
-Message-ID: <167243884485.739669.4899909585795610128.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:20:45 -0800
+Message-ID: <167243884551.739669.9596459322408561738.stgit@magnolia>
 In-Reply-To: <167243884390.739669.13524725872131241203.stgit@magnolia>
 References: <167243884390.739669.13524725872131241203.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,58 +56,72 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we're sharding the realtime volume into multiple allocation
-groups, update this test to reflect the new reality.  The realtime rmap
-btree record and key sizes have shrunk, and we can't guarantee that a
-quick file write actually hits the same rt group as the one we fuzzed,
-so eliminate the file write test since we're really only curious if
-xfs_repair will fix the problem.
+Make sure that we actually create an rt rmap btree of the desired height
+somewhere in the filesystem.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/341     |   10 +++-------
- tests/xfs/341.out |    1 -
- 2 files changed, 3 insertions(+), 8 deletions(-)
+ common/populate |   34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
 
-diff --git a/tests/xfs/341 b/tests/xfs/341
-index 8861e751a9..561054f0bd 100755
---- a/tests/xfs/341
-+++ b/tests/xfs/341
-@@ -32,10 +32,10 @@ blksz="$(_get_block_size $SCRATCH_MNT)"
- rtextsz_blks=$((rtextsz / blksz))
+diff --git a/common/populate b/common/populate
+index 7d57cd1287..6a05177e6d 100644
+--- a/common/populate
++++ b/common/populate
+@@ -631,6 +631,37 @@ __populate_check_xfs_agbtree_height() {
+ 	return 1
+ }
  
- # inode core size is at least 176 bytes; btree header is 56 bytes;
--# rtrmap record is 32 bytes; and rtrmap key/pointer are 56 bytes.
-+# rtrmap record is 24 bytes; and rtrmap key/pointer are 48 bytes.
- i_core_size="$(_xfs_get_inode_core_bytes $SCRATCH_MNT)"
--i_ptrs=$(( (isize - i_core_size) / 56 ))
--bt_recs=$(( (blksz - 56) / 32 ))
-+i_ptrs=$(( (isize - i_core_size) / 48 ))
-+bt_recs=$(( (blksz - 56) / 24 ))
++# Check that there's at least one rt btree with multiple levels
++__populate_check_xfs_rgbtree_height() {
++	local bt_type="$1"
++	local rgcount=$(_scratch_xfs_db -c 'sb 0' -c 'p rgcount' | awk '{print $3}')
++	local path
++	local path_format
++	local bt_prefix
++
++	case "${bt_type}" in
++	"rmap")
++		path_format="/realtime/%u.rmap"
++		bt_prefix="u3.rtrmapbt"
++		;;
++	*)
++		_fail "Don't know about rt btree ${bt_type}"
++		;;
++	esac
++
++	for ((rgno = 0; rgno < rgcount; rgno++)); do
++		path="$(printf "${path_format}" "${rgno}")"
++		bt_level=$(_scratch_xfs_db -c "path -m ${path}" -c "p ${bt_prefix}.level" | awk '{print $3}')
++		# "level" is the actual level within the btree
++		if [ "${bt_level}" -gt 0 ]; then
++			return 0
++		fi
++	done
++
++	__populate_fail "Failed to create rt ${bt_type} of sufficient height!"
++	return 1
++}
++
+ # Check that populate created all the types of files we wanted
+ _scratch_xfs_populate_check() {
+ 	_scratch_mount
+@@ -654,6 +685,7 @@ _scratch_xfs_populate_check() {
+ 	is_finobt=$(_xfs_has_feature "$SCRATCH_MNT" finobt -v)
+ 	is_rmapbt=$(_xfs_has_feature "$SCRATCH_MNT" rmapbt -v)
+ 	is_reflink=$(_xfs_has_feature "$SCRATCH_MNT" reflink -v)
++	is_rt="$(_xfs_get_rtextents "$SCRATCH_MNT")"
  
- blocks=$((i_ptrs * bt_recs + 1))
- len=$((blocks * rtextsz))
-@@ -57,10 +57,6 @@ _scratch_xfs_db -x -c 'path -m /realtime/0.rmap' \
- 	-c "write u3.rtrmapbt.ptrs[1] $fsbno" -c 'p' >> $seqres.full
- _scratch_mount
+ 	blksz="$(stat -f -c '%s' "${SCRATCH_MNT}")"
+ 	dblksz="$(_xfs_get_dir_blocksize "$SCRATCH_MNT")"
+@@ -684,6 +716,8 @@ _scratch_xfs_populate_check() {
+ 	test $is_finobt -ne 0 && __populate_check_xfs_agbtree_height "fino"
+ 	test $is_rmapbt -ne 0 && __populate_check_xfs_agbtree_height "rmap"
+ 	test $is_reflink -ne 0 && __populate_check_xfs_agbtree_height "refcnt"
++	test $is_rmapbt -ne 0 && test $is_rt -gt 0 && \
++		__populate_check_xfs_rgbtree_height "rmap"
+ }
  
--echo "Try to create more files"
--$XFS_IO_PROG -f -R -c "pwrite -S 0x68 0 9999" $SCRATCH_MNT/f5 >> $seqres.full 2>&1
--test -e $SCRATCH_MNT/f5 && echo "should not have been able to write f5"
--
- echo "Repair fs"
- _scratch_unmount 2>&1 | _filter_scratch
- _repair_scratch_fs >> $seqres.full 2>&1
-diff --git a/tests/xfs/341.out b/tests/xfs/341.out
-index 75a5bc6c61..580d788954 100644
---- a/tests/xfs/341.out
-+++ b/tests/xfs/341.out
-@@ -2,6 +2,5 @@ QA output created by 341
- Format and mount
- Create some files
- Corrupt fs
--Try to create more files
- Repair fs
- Try to create more files (again)
+ # Check data fork format of ext4 file
 
