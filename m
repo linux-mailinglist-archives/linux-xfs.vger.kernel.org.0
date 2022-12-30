@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F91365A231
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:08:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 005EC65A236
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:08:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236274AbiLaDHf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:07:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35052 "EHLO
+        id S236312AbiLaDII (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:08:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236305AbiLaDHZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:07:25 -0500
+        with ESMTP id S236310AbiLaDH4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:07:56 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA7D21054D;
-        Fri, 30 Dec 2022 19:07:24 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0262210540;
+        Fri, 30 Dec 2022 19:07:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 85D3361D33;
-        Sat, 31 Dec 2022 03:07:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6AB4C433D2;
-        Sat, 31 Dec 2022 03:07:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9EDE361D33;
+        Sat, 31 Dec 2022 03:07:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094DFC433EF;
+        Sat, 31 Dec 2022 03:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456044;
-        bh=Yuh6pKSVZBj0Aj5aA2CmOLwOL+2xwUaEJywYeik6uLU=;
+        s=k20201202; t=1672456075;
+        bh=kE8TtzatSYZ+X71XfAWYa6GAAtZBAoO2+y6B92LdhXw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PRrkUWs1aEDumXYWxi0aZdptThHthpNEfUAixbt3uAGUX/42YOtHoH5oPC+UZOhjl
-         KdM3fy/zeFWYhBl97rdWG/j+CjpDzRrzyglvSlc/6U1B59KeCvbaihgctcYaObnONH
-         4s+NfHEvDrg/hgO9xCT4DzksXuBde15jvViwMjo9tE8/IVO2feH5EgZr/QzLMgkziR
-         iGEpK9LVEdsa7MeHVYfc60m1UUnmo2kRb5p/PVrj2tl8XM4dGE4hNBetC/bdrCTNMw
-         zYdnkfNfcqThyhullk183ZUKXxHjBhUcawT6K+9Ax/X8N7fPdl3wgJvrKu1A1aEQXF
-         5boE5/80xfMEA==
-Subject: [PATCH 5/9] xfs/206: update for metadata directory support
+        b=SgB7a6DR69mvi5pKQjKX4kCyOHR8tGch6edERFj4Op0770h0nWzHTvE3WVEz2+jBB
+         268cEryD72ZmkTvMivNh1CWiQyxmsUWMHd2j2luX6htTMZu3DI0EH4HE+iWhp3AVi/
+         IWFJnFf2CEE/p2bWaiWL5UJcmbK6ibJwlYW9mk61mVA2Uhw4H1b8RcIFWIKr/hBiCD
+         bndeCfOKqrEeOflN8ShEw94XJv3p5Nsx1a2f7Fb2dVkVYJXLqJ8LAdFMTarHNAXl27
+         KIOsJZf1QGLDMXhIYdtynBinjROMtKOtdloPJ77AMclW/OE/zSF0+c+RJkANyGTcR/
+         LTJpxhuZWMDZw==
+Subject: [PATCH 7/9] xfs/769: add metadir upgrade to test matrix
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:33 -0800
-Message-ID: <167243883306.736753.14765365095410052316.stgit@magnolia>
+Message-ID: <167243883329.736753.2626034785600768252.stgit@magnolia>
 In-Reply-To: <167243883244.736753.17143383151073497149.stgit@magnolia>
 References: <167243883244.736753.17143383151073497149.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,27 +55,32 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Filter 'metadir=' out of the golden output so that metadata directories
-don't cause this test to regress.
+Add metadata directory trees to the features that this test will try to
+upgrade.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/206 |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tests/xfs/769 |    2 ++
+ 1 file changed, 2 insertions(+)
 
 
-diff --git a/tests/xfs/206 b/tests/xfs/206
-index cb346b6dc9..c181d7dd3e 100755
---- a/tests/xfs/206
-+++ b/tests/xfs/206
-@@ -64,7 +64,8 @@ mkfs_filter()
- 	    -e "s/\(sunit=\)\([0-9]* blks,\)/\10 blks,/" \
- 	    -e "s/, lazy-count=[0-9]//" \
- 	    -e "/.*crc=/d" \
--	    -e "/^Default configuration/d"
-+	    -e "/^Default configuration/d" \
-+	    -e "/metadir=.*/d"
- }
+diff --git a/tests/xfs/769 b/tests/xfs/769
+index 7613048f52..624dd2a338 100755
+--- a/tests/xfs/769
++++ b/tests/xfs/769
+@@ -174,12 +174,14 @@ if rt_configured; then
+ 	check_repair_upgrade finobt && FEATURES+=("finobt")
+ 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
+ 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
++	check_repair_upgrade metadir && FEATURES+=("metadir")
+ else
+ 	check_repair_upgrade finobt && FEATURES+=("finobt")
+ 	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
+ 	check_repair_upgrade reflink && FEATURES+=("reflink")
+ 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
+ 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
++	check_repair_upgrade metadir && FEATURES+=("metadir")
+ fi
  
- # mkfs slightly smaller than that, small log for speed.
+ test "${#FEATURES[@]}" -eq 0 && \
 
