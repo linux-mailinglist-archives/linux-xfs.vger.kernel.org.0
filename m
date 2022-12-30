@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA30B65A157
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:15:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8938865A15B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:16:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236187AbiLaCPg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:15:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        id S236192AbiLaCQi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:16:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiLaCPg (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:15:36 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A8D1C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:15:35 -0800 (PST)
+        with ESMTP id S231485AbiLaCQh (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:16:37 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631562DD5
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:16:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 62BE0CE1A06
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:15:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F13C433EF;
-        Sat, 31 Dec 2022 02:15:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 16AB2B81E5A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:16:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA4BC433D2;
+        Sat, 31 Dec 2022 02:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452931;
-        bh=eGkuIWqqvyN9X0TtTdNsOtN04139+bOwFi1GB1HGrv4=;
+        s=k20201202; t=1672452993;
+        bh=BLmvg4Rqwhm12Rw3rZK/YwtDQ2tBM4JT+/eZfurvbto=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pB7oY2d9gekDGYSqdj5H8w5zBA5pVZif41UijmUaERTt5N3f3+qjdAuPul1insRpl
-         +qYt6S/zqX8VCF3mn6Z7lA1hvqim1p14PdDGYjh2nStLzcUm0ZGJpR192QWsxQIfTk
-         iX+8QKtXnB59N9PYiC9Kku9i0sfwe6720X/0nyqytCX4bJe8jMmYGB8IMCOu2NZr1u
-         XHOFLcvotfmptGPx7eL51i1hkAXW/FA7eWYnMTviq5xEjczzo6qgsMQDW9HxZ4fyoe
-         v5qCw4DRRnifGOOUEzDbfwO8iTNhfW2VPy2ZSqoEOjhzogDbf6mUTmANxHxBkINQsi
-         hMzG2Gvo2sieQ==
-Subject: [PATCH 22/46] xfs_db: don't obfuscate metadata directories and
- attributes
+        b=GrQxcD2MdHQMqXdhv0lT7pizt+2qQl1u/2DlJfWYgUGN9ypZwxDxc6Y9gJR/stqop
+         HrvzRD9uWXEkuDgyt1dyRSHFjITCAToKUkuUpClFgT2YRq2gZEo73tXV4r+dfWPKYa
+         YywZ2vn37lBlZODt9+tmBJ//lguBAoqELFZ3ITRrsd+aZ4AcPJqCtpRkNXSFx66pLm
+         uu9Uf8knw/FqfNPgaodp9TPLUu6k2nAu2BZuC6mkd5NQRZsx/oIGY5zx7HlcSSgmTP
+         v9yPjeCbTsPGaJHSaZCluCSMwfcTQk8YWfvO8VoJMrMsxR2dXFxdIusdoFQ0YR1R5r
+         coRkScpoPQYOg==
+Subject: [PATCH 26/46] xfs_scrub: scan metadata directories during phase 3
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:22 -0800
-Message-ID: <167243876223.725900.15680015487113391050.stgit@magnolia>
+Message-ID: <167243876276.725900.10798991288646986623.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,340 +55,125 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't obfuscate the directory and attribute names of metadata inodes.
+Scan metadata directories for correctness during phase 3.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/metadump.c |   92 ++++++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 64 insertions(+), 28 deletions(-)
+ scrub/inodes.c |    5 +++++
+ scrub/inodes.h |    5 ++++-
+ scrub/phase3.c |    7 ++++++-
+ scrub/phase5.c |    2 +-
+ scrub/phase6.c |    2 +-
+ 5 files changed, 17 insertions(+), 4 deletions(-)
 
 
-diff --git a/db/metadump.c b/db/metadump.c
-index 27d1df43279..996c97ca6a2 100644
---- a/db/metadump.c
-+++ b/db/metadump.c
-@@ -1234,7 +1234,8 @@ generate_obfuscated_name(
+diff --git a/scrub/inodes.c b/scrub/inodes.c
+index 78f0914b8d9..52d17c5c646 100644
+--- a/scrub/inodes.c
++++ b/scrub/inodes.c
+@@ -100,6 +100,7 @@ struct scan_inodes {
+ 	scrub_inode_iter_fn	fn;
+ 	void			*arg;
+ 	unsigned int		nr_threads;
++	unsigned int		flags;
+ 	bool			aborted;
+ };
  
- static void
- process_sf_dir(
--	struct xfs_dinode	*dip)
-+	struct xfs_dinode	*dip,
-+	bool			is_meta)
+@@ -158,6 +159,8 @@ alloc_ichunk(
+ 
+ 	breq = ichunk_to_bulkstat(ichunk);
+ 	breq->hdr.icount = LIBFROG_BULKSTAT_CHUNKSIZE;
++	if (si->flags & SCRUB_SCAN_METADIR)
++		breq->hdr.flags |= XFS_BULK_IREQ_METADIR;
+ 
+ 	*ichunkp = ichunk;
+ 	return 0;
+@@ -380,10 +383,12 @@ int
+ scrub_scan_all_inodes(
+ 	struct scrub_ctx	*ctx,
+ 	scrub_inode_iter_fn	fn,
++	unsigned int		flags,
+ 	void			*arg)
  {
- 	struct xfs_dir2_sf_hdr	*sfp;
- 	xfs_dir2_sf_entry_t	*sfep;
-@@ -1280,7 +1281,7 @@ process_sf_dir(
- 					 (char *)sfp);
- 		}
+ 	struct scan_inodes	si = {
+ 		.fn		= fn,
++		.flags		= flags,
+ 		.arg		= arg,
+ 		.nr_threads	= scrub_nproc_workqueue(ctx),
+ 	};
+diff --git a/scrub/inodes.h b/scrub/inodes.h
+index f03180458ab..d99eaf0a2a7 100644
+--- a/scrub/inodes.h
++++ b/scrub/inodes.h
+@@ -17,8 +17,11 @@
+ typedef int (*scrub_inode_iter_fn)(struct scrub_ctx *ctx,
+ 		struct xfs_handle *handle, struct xfs_bulkstat *bs, void *arg);
  
--		if (obfuscate)
-+		if (obfuscate && !is_meta)
- 			generate_obfuscated_name(
- 					 libxfs_dir2_sf_get_ino(mp, sfp, sfep),
- 					 namelen, &sfep->name[0]);
-@@ -1363,7 +1364,8 @@ process_sf_symlink(
++/* Return metadata directories too. */
++#define SCRUB_SCAN_METADIR	(1 << 0)
++
+ int scrub_scan_all_inodes(struct scrub_ctx *ctx, scrub_inode_iter_fn fn,
+-		void *arg);
++		unsigned int flags, void *arg);
  
- static void
- process_sf_attr(
--	struct xfs_dinode		*dip)
-+	struct xfs_dinode		*dip,
-+	bool				is_meta)
- {
+ int scrub_open_handle(struct xfs_handle *handle);
+ 
+diff --git a/scrub/phase3.c b/scrub/phase3.c
+index c5950b1b9e3..56a4385a408 100644
+--- a/scrub/phase3.c
++++ b/scrub/phase3.c
+@@ -247,6 +247,7 @@ phase3_func(
+ 	struct scrub_inode_ctx	ictx = { .ctx = ctx };
+ 	uint64_t		val;
+ 	xfs_agnumber_t		agno;
++	unsigned int		scan_flags = 0;
+ 	int			err;
+ 
+ 	err = -ptvar_alloc(scrub_nproc(ctx), sizeof(struct action_list),
+@@ -263,6 +264,10 @@ phase3_func(
+ 		goto out_ptvar;
+ 	}
+ 
++	/* Scan the metadata directory tree too. */
++	if (ctx->mnt.fsgeom.flags & XFS_FSOP_GEOM_FLAGS_METADIR)
++		scan_flags |= SCRUB_SCAN_METADIR;
++
  	/*
- 	 * with extended attributes, obfuscate the names and fill the actual
-@@ -1406,7 +1408,7 @@ process_sf_attr(
- 			break;
- 		}
- 
--		if (obfuscate) {
-+		if (obfuscate && !is_meta) {
- 			generate_obfuscated_name(0, asfep->namelen,
- 						 &asfep->nameval[0]);
- 			memset(&asfep->nameval[asfep->namelen], 'v',
-@@ -1509,7 +1511,8 @@ static void
- process_dir_data_block(
- 	char		*block,
- 	xfs_fileoff_t	offset,
--	int		is_block_format)
-+	int		is_block_format,
-+	bool		is_meta)
- {
- 	/*
- 	 * we have to rely on the fileoffset and signature of the block to
-@@ -1616,7 +1619,7 @@ process_dir_data_block(
- 				dir_offset)
- 			return;
- 
--		if (obfuscate)
-+		if (obfuscate && !is_meta)
- 			generate_obfuscated_name(be64_to_cpu(dep->inumber),
- 					 dep->namelen, &dep->name[0]);
- 		dir_offset += length;
-@@ -1641,7 +1644,8 @@ process_symlink_block(
- 	xfs_fsblock_t	s,
- 	xfs_filblks_t	c,
- 	typnm_t		btype,
--	xfs_fileoff_t	last)
-+	xfs_fileoff_t	last,
-+	bool		is_meta)
- {
- 	struct bbmap	map;
- 	char		*link;
-@@ -1666,7 +1670,7 @@ process_symlink_block(
- 	if (xfs_has_crc((mp)))
- 		link += sizeof(struct xfs_dsymlink_hdr);
- 
--	if (obfuscate)
-+	if (obfuscate && !is_meta)
- 		obfuscate_path_components(link, XFS_SYMLINK_BUF_SPACE(mp,
- 							mp->m_sb.sb_blocksize));
- 	if (zero_stale_data) {
-@@ -1717,7 +1721,8 @@ add_remote_vals(
- static void
- process_attr_block(
- 	char				*block,
--	xfs_fileoff_t			offset)
-+	xfs_fileoff_t			offset,
-+	bool				is_meta)
- {
- 	struct xfs_attr_leafblock	*leaf;
- 	struct xfs_attr3_icleaf_hdr	hdr;
-@@ -1785,7 +1790,7 @@ process_attr_block(
- 						(long long)cur_ino);
- 				break;
- 			}
--			if (obfuscate) {
-+			if (obfuscate && !is_meta) {
- 				generate_obfuscated_name(0, local->namelen,
- 					&local->nameval[0]);
- 				memset(&local->nameval[local->namelen], 'v',
-@@ -1808,7 +1813,7 @@ process_attr_block(
- 						(long long)cur_ino);
- 				break;
- 			}
--			if (obfuscate) {
-+			if (obfuscate && !is_meta) {
- 				generate_obfuscated_name(0, remote->namelen,
- 							 &remote->name[0]);
- 				add_remote_vals(be32_to_cpu(remote->valueblk),
-@@ -1841,7 +1846,8 @@ process_single_fsb_objects(
- 	xfs_fsblock_t	s,
- 	xfs_filblks_t	c,
- 	typnm_t		btype,
--	xfs_fileoff_t	last)
-+	xfs_fileoff_t	last,
-+	bool		is_meta)
- {
- 	int		rval = 1;
- 	char		*dp;
-@@ -1911,12 +1917,13 @@ process_single_fsb_objects(
- 				process_dir_leaf_block(dp);
- 			} else {
- 				process_dir_data_block(dp, o,
--					 last == mp->m_dir_geo->fsbcount);
-+					 last == mp->m_dir_geo->fsbcount,
-+					 is_meta);
- 			}
- 			iocur_top->need_crc = 1;
- 			break;
- 		case TYP_ATTR:
--			process_attr_block(dp, o);
-+			process_attr_block(dp, o, is_meta);
- 			iocur_top->need_crc = 1;
- 			break;
- 		default:
-@@ -1949,7 +1956,8 @@ process_multi_fsb_dir(
- 	xfs_fsblock_t	s,
- 	xfs_filblks_t	c,
- 	typnm_t		btype,
--	xfs_fileoff_t	last)
-+	xfs_fileoff_t	last,
-+	bool		is_meta)
- {
- 	char		*dp;
- 	int		rval = 1;
-@@ -1993,7 +2001,8 @@ process_multi_fsb_dir(
- 				process_dir_leaf_block(dp);
- 			} else {
- 				process_dir_data_block(dp, o,
--					 last == mp->m_dir_geo->fsbcount);
-+					 last == mp->m_dir_geo->fsbcount,
-+					 is_meta);
- 			}
- 			iocur_top->need_crc = 1;
- write:
-@@ -2030,13 +2039,14 @@ process_multi_fsb_objects(
- 	xfs_fsblock_t	s,
- 	xfs_filblks_t	c,
- 	typnm_t		btype,
--	xfs_fileoff_t	last)
-+	xfs_fileoff_t	last,
-+	bool		is_meta)
- {
- 	switch (btype) {
- 	case TYP_DIR2:
--		return process_multi_fsb_dir(o, s, c, btype, last);
-+		return process_multi_fsb_dir(o, s, c, btype, last, is_meta);
- 	case TYP_SYMLINK:
--		return process_symlink_block(o, s, c, btype, last);
-+		return process_symlink_block(o, s, c, btype, last, is_meta);
- 	default:
- 		print_warning("bad type for multi-fsb object %d", btype);
- 		return 1;
-@@ -2048,7 +2058,8 @@ static int
- process_bmbt_reclist(
- 	xfs_bmbt_rec_t		*rp,
- 	int			numrecs,
--	typnm_t			btype)
-+	typnm_t			btype,
-+	bool			is_meta)
- {
- 	int			i;
- 	xfs_fileoff_t		o, op = NULLFILEOFF;
-@@ -2124,10 +2135,10 @@ process_bmbt_reclist(
- 		/* multi-extent blocks require special handling */
- 		if (is_multi_fsb)
- 			rval = process_multi_fsb_objects(o, s, c, btype,
--					last);
-+					last, is_meta);
- 		else
- 			rval = process_single_fsb_objects(o, s, c, btype,
--					last);
-+					last, is_meta);
- 		if (!rval)
- 			break;
+ 	 * If we already have ag/fs metadata to repair from previous phases,
+ 	 * we would rather not try to repair file metadata until we've tried
+@@ -273,7 +278,7 @@ phase3_func(
+ 			ictx.always_defer_repairs = true;
  	}
-@@ -2135,6 +2146,11 @@ process_bmbt_reclist(
- 	return rval;
+ 
+-	err = scrub_scan_all_inodes(ctx, scrub_inode, &ictx);
++	err = scrub_scan_all_inodes(ctx, scrub_inode, scan_flags, &ictx);
+ 	if (!err && ictx.aborted)
+ 		err = ECANCELED;
+ 	if (err)
+diff --git a/scrub/phase5.c b/scrub/phase5.c
+index 96e13ac423f..e6786b4f25c 100644
+--- a/scrub/phase5.c
++++ b/scrub/phase5.c
+@@ -532,7 +532,7 @@ _("Filesystem has errors, skipping connectivity checks."));
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = scrub_scan_all_inodes(ctx, check_inode_names, &aborted);
++	ret = scrub_scan_all_inodes(ctx, check_inode_names, 0, &aborted);
+ 	if (ret)
+ 		return ret;
+ 	if (aborted)
+diff --git a/scrub/phase6.c b/scrub/phase6.c
+index 1a2643bdaf0..fb7cd3f13ea 100644
+--- a/scrub/phase6.c
++++ b/scrub/phase6.c
+@@ -507,7 +507,7 @@ report_all_media_errors(
+ 		return ret;
+ 
+ 	/* Scan for unlinked files. */
+-	return scrub_scan_all_inodes(ctx, report_inode_loss, vs);
++	return scrub_scan_all_inodes(ctx, report_inode_loss, 0, vs);
  }
  
-+struct scan_bmap {
-+	enum typnm	typ;
-+	bool		is_meta;
-+};
-+
- static int
- scanfunc_bmap(
- 	struct xfs_btree_block	*block,
-@@ -2144,6 +2160,7 @@ scanfunc_bmap(
- 	typnm_t			btype,
- 	void			*arg)	/* ptr to itype */
- {
-+	struct scan_bmap	*sbm = arg;
- 	int			i;
- 	xfs_bmbt_ptr_t		*pp;
- 	int			nrecs;
-@@ -2159,7 +2176,7 @@ scanfunc_bmap(
- 			return 1;
- 		}
- 		return process_bmbt_reclist(XFS_BMBT_REC_ADDR(mp, block, 1),
--					    nrecs, *(typnm_t*)arg);
-+					    nrecs, sbm->typ, sbm->is_meta);
- 	}
- 
- 	if (nrecs > mp->m_bmap_dmxr[1]) {
-@@ -2191,6 +2208,15 @@ scanfunc_bmap(
- 	return 1;
- }
- 
-+static inline bool
-+is_metadata_ino(
-+	struct xfs_dinode	*dip)
-+{
-+	return xfs_has_metadir(mp) &&
-+			dip->di_version >= 3 &&
-+			(dip->di_flags2 & cpu_to_be64(XFS_DIFLAG2_METADATA));
-+}
-+
- static int
- process_btinode(
- 	struct xfs_dinode 	*dip,
-@@ -2204,6 +2230,7 @@ process_btinode(
- 	int			maxrecs;
- 	int			whichfork;
- 	typnm_t			btype;
-+	bool			is_meta = is_metadata_ino(dip);
- 
- 	whichfork = (itype == TYP_ATTR) ? XFS_ATTR_FORK : XFS_DATA_FORK;
- 	btype = (itype == TYP_ATTR) ? TYP_BMAPBTA : TYP_BMAPBTD;
-@@ -2222,7 +2249,7 @@ process_btinode(
- 
- 	if (level == 0) {
- 		return process_bmbt_reclist(XFS_BMDR_REC_ADDR(dib, 1),
--					    nrecs, itype);
-+					    nrecs, itype, is_meta);
- 	}
- 
- 	maxrecs = libxfs_bmdr_maxrecs(XFS_DFORK_SIZE(dip, mp, whichfork), 0);
-@@ -2249,6 +2276,10 @@ process_btinode(
- 	}
- 
- 	for (i = 0; i < nrecs; i++) {
-+		struct scan_bmap	sbm = {
-+			.typ = itype,
-+			.is_meta = is_meta,
-+		};
- 		xfs_agnumber_t	ag;
- 		xfs_agblock_t	bno;
- 
-@@ -2265,7 +2296,7 @@ process_btinode(
- 			continue;
- 		}
- 
--		if (!scan_btree(ag, bno, level, btype, &itype, scanfunc_bmap))
-+		if (!scan_btree(ag, bno, level, btype, &sbm, scanfunc_bmap))
- 			return 0;
- 	}
- 	return 1;
-@@ -2279,6 +2310,7 @@ process_exinode(
- 	int			whichfork;
- 	int			used;
- 	xfs_extnum_t		nex, max_nex;
-+	bool			is_meta = is_metadata_ino(dip);
- 
- 	whichfork = (itype == TYP_ATTR) ? XFS_ATTR_FORK : XFS_DATA_FORK;
- 
-@@ -2301,7 +2333,7 @@ process_exinode(
- 
- 
- 	return process_bmbt_reclist((xfs_bmbt_rec_t *)XFS_DFORK_PTR(dip,
--					whichfork), nex, itype);
-+					whichfork), nex, itype, is_meta);
- }
- 
- static int
-@@ -2309,6 +2341,8 @@ process_inode_data(
- 	struct xfs_dinode	*dip,
- 	typnm_t			itype)
- {
-+	bool			is_meta = is_metadata_ino(dip);
-+
- 	switch (dip->di_format) {
- 		case XFS_DINODE_FMT_LOCAL:
- 			if (!(obfuscate || zero_stale_data))
-@@ -2329,7 +2363,7 @@ process_inode_data(
- 
- 			switch (itype) {
- 				case TYP_DIR2:
--					process_sf_dir(dip);
-+					process_sf_dir(dip, is_meta);
- 					break;
- 
- 				case TYP_SYMLINK:
-@@ -2447,12 +2481,14 @@ process_inode(
- 
- 	/* copy extended attributes if they exist and forkoff is valid */
- 	if (XFS_DFORK_DSIZE(dip, mp) < XFS_LITINO(mp)) {
-+		bool	is_meta = is_metadata_ino(dip);
-+
- 		attr_data.remote_val_count = 0;
- 		switch (dip->di_aformat) {
- 			case XFS_DINODE_FMT_LOCAL:
- 				need_new_crc = 1;
- 				if (obfuscate || zero_stale_data)
--					process_sf_attr(dip);
-+					process_sf_attr(dip, is_meta);
- 				break;
- 
- 			case XFS_DINODE_FMT_EXTENTS:
+ /* Schedule a read-verify of a (data block) extent. */
 
