@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1103165A124
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C178E65A126
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:03:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236140AbiLaCCg (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:02:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51704 "EHLO
+        id S236142AbiLaCDH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:03:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236120AbiLaCCf (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:02:35 -0500
+        with ESMTP id S236120AbiLaCDG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:03:06 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F63E2AF8
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:02:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FAA2AF8
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:03:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F5CF61C5B
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:02:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7602FC433EF;
-        Sat, 31 Dec 2022 02:02:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 349F661C19
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:03:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F9AC433D2;
+        Sat, 31 Dec 2022 02:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452153;
-        bh=xNhE/0wPZqS0LUNMz3Yo96SQYPSGYrTirrMGNu/FyVk=;
+        s=k20201202; t=1672452184;
+        bh=DHnerPUVTyjGmT0BwgsEUrhd6LdXnfv56/E/F5novNI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bW6F38L0OjwUE+MmHEe1GNQCF+d3WOuwRG4o0ePKXhdTOAAmxfQAlilS+uLn85q7s
-         AaPMdZklLLmG/j4ZE9NKOdeV/o/4hralZ7XTUQ9gDi0aOs67E9X0js0iHL0e59XlIV
-         MZ/gWK+hJ15CbWWQJTvEXcKWRNLJqd35X5bIxF/lx0PLgOpgDVu4fBuFsb1fuvX7b6
-         EOuGIUT203+T0cwy5ewQRfn9EpMB55LuBoMCdIt3L/qinY3BKATCPw+tzuK/vKeu+f
-         hS5WOfOWjarL6Z/bbkUeIC8dThXKE62a9LV9sGsXGESQkT0T0vadjCq/BR7rgJwg9S
-         rubFYIrvrKozQ==
-Subject: [PATCH 2/4] xfs_repair: allow sysadmins to add free inode btree
+        b=YsMfswCy6kj/X8Idyb1IFLkWtEQhGhhW7qYHxU3u8RVmtyoRq3Jj1A1gjhxJ3ZLW8
+         IpGkkCW938gKOXJ+qDaWZPuo6uMMBOMrXTRRDvnjYOUexDg7hnNlXtjH3mUKbFBnlu
+         SguYDRGnSoywb2LIrTTdkGl2KqwCTYrmIB44hHtcdvmYWW2e8ipfL4apFvH/qDLQV2
+         PGMX2guFVMKIM3p0NRLK0IsOY4ChszjBsppdqAsmfjhqoYsu3GiuRURrC5YSgeBVUg
+         cEWg6/yJpnYZ5PzLb0OuEaI2squ01VXcCzw3diZgohDZo2xoBTZuIkxuxarjhpKSW8
+         nuipE/y+U74JQ==
+Subject: [PATCH 4/4] xfs_repair: allow sysadmins to add reverse mapping
  indexes
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:10 -0800
-Message-ID: <167243875006.722663.7398630779865539391.stgit@magnolia>
+Message-ID: <167243875033.722663.8414500476421147864.stgit@magnolia>
 In-Reply-To: <167243874979.722663.18268822003736829003.stgit@magnolia>
 References: <167243874979.722663.18268822003736829003.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -57,86 +57,101 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 From: Darrick J. Wong <djwong@kernel.org>
 
 Allow the sysadmin to use xfs_repair to upgrade an existing filesystem
-to support the free inode btree.
+to support the reverse mapping btree index.  This is needed for online
+fsck.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- man/man8/xfs_admin.8 |    7 +++++++
+ man/man8/xfs_admin.8 |    8 ++++++++
  repair/globals.c     |    1 +
  repair/globals.h     |    1 +
- repair/phase2.c      |   26 ++++++++++++++++++++++++++
+ repair/phase2.c      |   38 ++++++++++++++++++++++++++++++++++++++
+ repair/rmap.c        |    4 ++--
  repair/xfs_repair.c  |   11 +++++++++++
- 5 files changed, 46 insertions(+)
+ 6 files changed, 61 insertions(+), 2 deletions(-)
 
 
 diff --git a/man/man8/xfs_admin.8 b/man/man8/xfs_admin.8
-index 4794d6774ed..efe2ce45fc2 100644
+index 3af201cadc3..467fb2dfd0a 100644
 --- a/man/man8/xfs_admin.8
 +++ b/man/man8/xfs_admin.8
-@@ -156,6 +156,13 @@ data fork extent count will be 2^48 - 1, while the maximum attribute fork
- extent count will be 2^32 - 1. The filesystem cannot be downgraded after this
- feature is enabled. Once enabled, the filesystem will not be mountable by
- older kernels.  This feature was added to Linux 5.19.
+@@ -169,6 +169,14 @@ Enable sharing of file data blocks.
+ This upgrade can fail if any AG has less than 2% free space remaining.
+ The filesystem cannot be downgraded after this feature is enabled.
+ This feature was added to Linux 4.9.
 +.TP 0.4i
-+.B finobt
-+Track free inodes through a separate free inode btree index to speed up inode
-+allocation on old filesystems.
-+This upgrade can fail if any AG has less than 1% free space remaining.
++.B rmapbt
++Store an index of the owners of on-disk blocks.
++This enables much stronger cross-referencing of various metadata structures
++and online repairs to space usage metadata.
 +The filesystem cannot be downgraded after this feature is enabled.
-+This feature was added to Linux 3.16.
++This upgrade can fail if any AG has less than 5% free space remaining.
++This feature was added to Linux 4.8.
  .RE
  .TP
  .BI \-U " uuid"
 diff --git a/repair/globals.c b/repair/globals.c
-index c40849853b8..9640877b703 100644
+index f5b5269c5d9..ec11bc67139 100644
 --- a/repair/globals.c
 +++ b/repair/globals.c
-@@ -52,6 +52,7 @@ bool	features_changed;	/* did we change superblock feature bits? */
- bool	add_inobtcount;		/* add inode btree counts to AGI */
- bool	add_bigtime;		/* add support for timestamps up to 2486 */
+@@ -54,6 +54,7 @@ bool	add_bigtime;		/* add support for timestamps up to 2486 */
  bool	add_nrext64;
-+bool	add_finobt;		/* add free inode btrees */
+ bool	add_finobt;		/* add free inode btrees */
+ bool	add_reflink;		/* add reference count btrees */
++bool	add_rmapbt;		/* add reverse mapping btrees */
  
  /* misc status variables */
  
 diff --git a/repair/globals.h b/repair/globals.h
-index b65e4a2d09c..d7539294b5f 100644
+index d42c4d3c6a5..d5a04a75d41 100644
 --- a/repair/globals.h
 +++ b/repair/globals.h
-@@ -93,6 +93,7 @@ extern bool	features_changed;	/* did we change superblock feature bits? */
- extern bool	add_inobtcount;		/* add inode btree counts to AGI */
- extern bool	add_bigtime;		/* add support for timestamps up to 2486 */
+@@ -95,6 +95,7 @@ extern bool	add_bigtime;		/* add support for timestamps up to 2486 */
  extern bool	add_nrext64;
-+extern bool	add_finobt;		/* add free inode btrees */
+ extern bool	add_finobt;		/* add free inode btrees */
+ extern bool	add_reflink;		/* add reference count btrees */
++extern bool	add_rmapbt;		/* add reverse mapping btrees */
  
  /* misc status variables */
  
 diff --git a/repair/phase2.c b/repair/phase2.c
-index cdfc98bf39f..29bc0e34363 100644
+index d968b4fd558..05964b3d23c 100644
 --- a/repair/phase2.c
 +++ b/repair/phase2.c
-@@ -203,6 +203,28 @@ set_nrext64(
+@@ -252,6 +252,40 @@ set_reflink(
  	return true;
  }
  
 +static bool
-+set_finobt(
++set_rmapbt(
 +	struct xfs_mount	*mp,
 +	struct xfs_sb		*new_sb)
 +{
 +	if (!xfs_has_crc(mp)) {
 +		printf(
-+	_("Free inode btree feature only supported on V5 filesystems.\n"));
++	_("Reverse mapping btree feature only supported on V5 filesystems.\n"));
 +		exit(0);
 +	}
 +
-+	if (xfs_has_finobt(mp)) {
-+		printf(_("Filesystem already supports free inode btrees.\n"));
++	if (xfs_has_realtime(mp)) {
++		printf(
++	_("Reverse mapping btree feature not supported with realtime.\n"));
 +		exit(0);
 +	}
 +
-+	printf(_("Adding free inode btrees to filesystem.\n"));
-+	new_sb->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_FINOBT;
++	if (xfs_has_reflink(mp)) {
++		printf(
++	_("Reverse mapping btrees cannot be added when reflink is enabled.\n"));
++		exit(0);
++	}
++
++	if (xfs_has_rmapbt(mp)) {
++		printf(_("Filesystem already supports reverse mapping btrees.\n"));
++		exit(0);
++	}
++
++	printf(_("Adding reverse mapping btrees to filesystem.\n"));
++	new_sb->sb_features_ro_compat |= XFS_SB_FEAT_RO_COMPAT_RMAPBT;
 +	new_sb->sb_features_incompat |= XFS_SB_FEAT_INCOMPAT_NEEDSREPAIR;
 +	return true;
 +}
@@ -144,56 +159,78 @@ index cdfc98bf39f..29bc0e34363 100644
  struct check_state {
  	struct xfs_sb		sb;
  	uint64_t		features;
-@@ -370,6 +392,8 @@ need_check_fs_free_space(
- 	struct xfs_mount		*mp,
- 	const struct check_state	*old)
- {
-+	if (xfs_has_finobt(mp) && !(old->features & XFS_FEAT_FINOBT))
+@@ -423,6 +457,8 @@ need_check_fs_free_space(
+ 		return true;
+ 	if (xfs_has_reflink(mp) && !(old->features & XFS_FEAT_REFLINK))
+ 		return true;
++	if (xfs_has_rmapbt(mp) && !(old->features & XFS_FEAT_RMAPBT))
 +		return true;
  	return false;
  }
  
-@@ -445,6 +469,8 @@ upgrade_filesystem(
- 		dirty |= set_bigtime(mp, &new_sb);
- 	if (add_nrext64)
- 		dirty |= set_nrext64(mp, &new_sb);
-+	if (add_finobt)
-+		dirty |= set_finobt(mp, &new_sb);
+@@ -502,6 +538,8 @@ upgrade_filesystem(
+ 		dirty |= set_finobt(mp, &new_sb);
+ 	if (add_reflink)
+ 		dirty |= set_reflink(mp, &new_sb);
++	if (add_rmapbt)
++		dirty |= set_rmapbt(mp, &new_sb);
  	if (!dirty)
  		return;
  
+diff --git a/repair/rmap.c b/repair/rmap.c
+index e49cd2364ec..00381c6e69d 100644
+--- a/repair/rmap.c
++++ b/repair/rmap.c
+@@ -52,7 +52,7 @@ rmap_needs_work(
+ 	struct xfs_mount	*mp)
+ {
+ 	return xfs_has_reflink(mp) || add_reflink ||
+-	       xfs_has_rmapbt(mp);
++	       xfs_has_rmapbt(mp) || add_rmapbt;
+ }
+ 
+ /* Destroy an in-memory rmap btree. */
+@@ -1159,7 +1159,7 @@ rmaps_verify_btree(
+ 	int			have;
+ 	int			error;
+ 
+-	if (!xfs_has_rmapbt(mp))
++	if (!xfs_has_rmapbt(mp) || add_rmapbt)
+ 		return;
+ 	if (rmapbt_suspect) {
+ 		if (no_modify && agno == 0)
 diff --git a/repair/xfs_repair.c b/repair/xfs_repair.c
-index 8e62533ac53..45130ab7559 100644
+index 90da0d0e956..c461bc8eb07 100644
 --- a/repair/xfs_repair.c
 +++ b/repair/xfs_repair.c
-@@ -69,6 +69,7 @@ enum c_opt_nums {
- 	CONVERT_INOBTCOUNT,
- 	CONVERT_BIGTIME,
+@@ -71,6 +71,7 @@ enum c_opt_nums {
  	CONVERT_NREXT64,
-+	CONVERT_FINOBT,
+ 	CONVERT_FINOBT,
+ 	CONVERT_REFLINK,
++	CONVERT_RMAPBT,
  	C_MAX_OPTS,
  };
  
-@@ -77,6 +78,7 @@ static char *c_opts[] = {
- 	[CONVERT_INOBTCOUNT]	= "inobtcount",
- 	[CONVERT_BIGTIME]	= "bigtime",
+@@ -81,6 +82,7 @@ static char *c_opts[] = {
  	[CONVERT_NREXT64]	= "nrext64",
-+	[CONVERT_FINOBT]	= "finobt",
+ 	[CONVERT_FINOBT]	= "finobt",
+ 	[CONVERT_REFLINK]	= "reflink",
++	[CONVERT_RMAPBT]	= "rmapbt",
  	[C_MAX_OPTS]		= NULL,
  };
  
-@@ -336,6 +338,15 @@ process_args(int argc, char **argv)
- 		_("-c nrext64 only supports upgrades\n"));
- 					add_nrext64 = true;
+@@ -358,6 +360,15 @@ process_args(int argc, char **argv)
+ 		_("-c reflink only supports upgrades\n"));
+ 					add_reflink = true;
  					break;
-+				case CONVERT_FINOBT:
++				case CONVERT_RMAPBT:
 +					if (!val)
 +						do_abort(
-+		_("-c finobt requires a parameter\n"));
++		_("-c rmapbt requires a parameter\n"));
 +					if (strtol(val, NULL, 0) != 1)
 +						do_abort(
-+		_("-c finobt only supports upgrades\n"));
-+					add_finobt = true;
++		_("-c rmapbt only supports upgrades\n"));
++					add_rmapbt = true;
 +					break;
  				default:
  					unknown('c', val);
