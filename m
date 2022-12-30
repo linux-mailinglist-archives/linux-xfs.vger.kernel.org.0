@@ -2,105 +2,120 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D981365A26C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6E0E659FDC
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:43:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236363AbiLaDUz (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:20:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
+        id S235615AbiLaAnJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:43:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236216AbiLaDUy (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:20:54 -0500
+        with ESMTP id S235861AbiLaAnI (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:43:08 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C18B6383
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:20:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4DC1EACB;
+        Fri, 30 Dec 2022 16:43:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BB3C061D5E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:20:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 227A1C433D2;
-        Sat, 31 Dec 2022 03:20:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 487AE61D56;
+        Sat, 31 Dec 2022 00:43:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3C0DC433D2;
+        Sat, 31 Dec 2022 00:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456853;
-        bh=Nk3hMpyaUOzgKF6BgQzK6A/LePH8jsCGrm+Iw3m68/Q=;
+        s=k20201202; t=1672447385;
+        bh=f+e4SZBnAc3H//6VWuMHLcELgswxyDtbbfHj5u7UoHI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XhB+YA7s87CQ/SiK90oP3Bz4XcSMoGwJhIPyrBdfRlLx1EdOImgoGEJcA16nLdDT4
-         PPg/m6KYRSGO1ofMadrLQZhqvElDI1IQTm+nqlnVDMVNPiwYm4NeqRLSUWrSXQucR4
-         Y7bgZkuwgSshQePs4JUgaVI/7pH7y71HUnkY536jXgSUX9sikiLg10cpg8hzgkIFzD
-         YV+op/3wqnleSZOosdekTe4WRQeV02bPx1yVXY00d1NbqFBkyxebszFfW4INAQBQ1h
-         Cr582s0TOVieEauIqTmBA6Q9eiwfbqOJ+qDj/uuCqq/QqIAd3usL/uFyoYEd4PF9hz
-         I6FcX6iGrKDxw==
-Subject: [PATCHSET 0/2] xfs: defragment free space
+        b=b+F1amvJxBxfSri4FMpXPfMU9/rz8FwvBuhM5Upfjc3tsSNcYNJ3wVXBowxv2u6xC
+         7bkjebV0AJkly57jWWvJHtKQyjop27YWJr+IE3h5j42K48jbWzcHzkDq1cq88ODn7w
+         flgzvWtMiJpZ9YKr6MOFutIaHCAP46F2GojDvXAuaovIBciF54knUzLhaKPSaUFuBq
+         qHBiJaJNqTpFH5mH5d0Mx0ODFZUYomePBAm6mj8vrfhPIF+JOZItsWBIqU2QB2UHOF
+         MMPhsWMVA3wSqUf8A3n8DlMA92PYKaCM48jEEnDBoAIrvHO0jiRVK1ECr6JP/l8oqC
+         oay93ztFSbEhg==
+Subject: [PATCH 1/2] xfs: test fs summary counter online repair
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:30 -0800
-Message-ID: <167243877005.727784.16278955284134985550.stgit@magnolia>
-In-Reply-To: <Y69Uw6W5aclS115x@magnolia>
-References: <Y69Uw6W5aclS115x@magnolia>
+Message-ID: <167243877052.727863.4657438078725247106.stgit@magnolia>
+In-Reply-To: <167243877039.727863.13765266441029212988.stgit@magnolia>
+References: <167243877039.727863.13765266441029212988.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-These patches contain experimental code to enable userspace to defragment
-the free space in a filesystem.  Two purposes are imagined for this
-functionality: clearing space at the end of a filesystem before
-shrinking it, and clearing free space in anticipation of making a large
-allocation.
+Fuzz the fs summary counters in the primary super and see if online
+repair can fix them.
 
-The first patch adds a new fallocate mode that allows userspace to
-allocate free space from the filesystem into a file.  The goal here is
-to allow the filesystem shrink process to prevent allocation from a
-certain part of the filesystem while a free space defragmenter evacuates
-all the files from the doomed part of the filesystem.
-
-The second patch amends the online repair system to allow the sysadmin
-to forcibly rebuild metadata structures, even if they're not corrupt.
-Without adding an ioctl to move metadata btree blocks, this is the only
-way to dislodge metadata.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=defrag-freespace
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=defrag-freespace
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=defrag-freespace
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/open.c                   |    5 +
- fs/xfs/libxfs/xfs_alloc.c   |   88 ++++++++++++
- fs/xfs/libxfs/xfs_alloc.h   |    4 +
- fs/xfs/libxfs/xfs_bmap.c    |  150 ++++++++++++++++++++
- fs/xfs/libxfs/xfs_bmap.h    |    3 
- fs/xfs/xfs_bmap_util.c      |  315 ++++++++++++++++++++++++++++++++++++++++++-
- fs/xfs/xfs_bmap_util.h      |    7 +
- fs/xfs/xfs_file.c           |   39 +++++
- fs/xfs/xfs_rtalloc.c        |   49 +++++++
- fs/xfs/xfs_rtalloc.h        |   12 ++
- fs/xfs/xfs_trace.h          |   72 +++++++++-
- include/linux/falloc.h      |    3 
- include/uapi/linux/falloc.h |    8 +
- 13 files changed, 742 insertions(+), 13 deletions(-)
+ tests/xfs/713     |   36 ++++++++++++++++++++++++++++++++++++
+ tests/xfs/713.out |    4 ++++
+ 2 files changed, 40 insertions(+)
+ create mode 100755 tests/xfs/713
+ create mode 100644 tests/xfs/713.out
+
+
+diff --git a/tests/xfs/713 b/tests/xfs/713
+new file mode 100755
+index 0000000000..7ac6d1458f
+--- /dev/null
++++ b/tests/xfs/713
+@@ -0,0 +1,36 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 713
++#
++# Populate a XFS filesystem and fuzz every fscounter field.
++# Use xfs_scrub to fix the corruption.
++#
++. ./common/preamble
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
++
++_register_cleanup "_cleanup" BUS
++
++# Import common functions.
++. ./common/filter
++. ./common/populate
++. ./common/fuzzy
++
++# real QA test starts here
++_supported_fs xfs
++_require_scratch_xfs_fuzz_fields
++
++echo "Format and populate"
++_scratch_populate_cached nofill > $seqres.full 2>&1
++
++echo "Fuzz fscounters"
++test -z "$SCRATCH_XFS_LIST_METADATA_FIELDS" &&
++	SCRATCH_XFS_LIST_METADATA_FIELDS='icount,ifree,fdblocks'
++export SCRATCH_XFS_LIST_METADATA_FIELDS
++_scratch_xfs_fuzz_metadata '' 'online' 'sb 0' >> $seqres.full
++echo "Done fuzzing fscounters"
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/713.out b/tests/xfs/713.out
+new file mode 100644
+index 0000000000..6dd322f4ca
+--- /dev/null
++++ b/tests/xfs/713.out
+@@ -0,0 +1,4 @@
++QA output created by 713
++Format and populate
++Fuzz fscounters
++Done fuzzing fscounters
 
