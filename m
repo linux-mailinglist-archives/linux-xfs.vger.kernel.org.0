@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52010659CB5
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 241AD659CFC
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:37:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235531AbiL3WY6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:24:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
+        id S235506AbiL3WhZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:37:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiL3WY5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:24:57 -0500
+        with ESMTP id S229827AbiL3WhY (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:37:24 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D8E1D0CF
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:24:56 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25CDE18692
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:37:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CDFA6B81B91
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:24:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD0BC433EF;
-        Fri, 30 Dec 2022 22:24:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C8D62B81D94
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:37:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67874C433EF;
+        Fri, 30 Dec 2022 22:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672439093;
-        bh=1FOFsmAl5aNn+uYljG2iARb0cu1qyruVzT8NFpgOXdc=;
+        s=k20201202; t=1672439840;
+        bh=WWNNkmGPQSAXdNTfXgN5KkyjkD0SE4VOGM1zGqsrmSY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=mzRYWFY+nYkCvEjw6FJ3hQDg2mseYIh/yzL1z+j5UdJ9wWYhoHh9JwNefE+2ihQ/4
-         VuAvVa32/Y9qHbyVKrBvqpf5JSY6Zf612wtAUXueCdJVoQDbw2Z2Djeu4cZ5b1YVGq
-         ZYhjM7ZUx05zFGI3KOqDPL2YO5bNMGlYxVjVjU87YM/GS20Jrnp/fB/QVJtM8EuOTS
-         VhM9iBV3UxMvLQZTXqMbzgQ71ovbQSQI6jK+f9eIC+vyHSnD6kDMxcDxHFms5vctM5
-         QibbtezpwdEBp77dv+Iw4Lu1RRJ7qnvZv25gPBbwiD6Te6q9jnogJAEaPN9xfN8jdm
-         1O5Hj6o7JqweQ==
-Subject: [PATCHSET v24.0 0/5] xfs: drain deferred work items when scrubbing
+        b=TcslaqTDy+BQU3ByaoPDJicRDuTVLssxyvQh6ifgngAI6CD28ZL4EvD2BhyPMVzMO
+         8Pe/dEDguh05QLpDHd2JhAvCZhGX/7dWbIt8+5hyN1j4UYg32ek/gyNi6O/AqfAuE1
+         5gss8b9L+uLg7pAc41KWKkrvgIGfacpHE+PLpSRVjQQmI1rKg8juRqZWicDhyKDShj
+         nv8o7YId/SNRTpgldChEiRdIVBiLas3rI+oSweHZF2vTmDOQ9jHoJTNnffc18dqC34
+         wcfj3/CZ7KesGy3eoGC++74fobjHq/FMR6ruefvZiwqGaJU4dVfqVs38DM1y54Yh1t
+         0zU40uIYwEITA==
+Subject: [PATCH 3/5] xfs: clean up scrub context if scrub setup returns
+ -EDEADLOCK
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:07 -0800
-Message-ID: <167243826744.683691.2061427880010614570.stgit@magnolia>
-In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
-References: <Y69UceeA2MEpjMJ8@magnolia>
+Message-ID: <167243826794.683691.10735232030785081091.stgit@magnolia>
+In-Reply-To: <167243826744.683691.2061427880010614570.stgit@magnolia>
+References: <167243826744.683691.2061427880010614570.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,70 +53,74 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-The design doc for XFS online fsck contains a long discussion of the
-eventual consistency models in use for XFS metadata.  In that chapter,
-we note that it is possible for scrub to collide with a chain of
-deferred space metadata updates, and proposes a lightweight solution:
-The use of a pending-intents counter so that scrub can wait for the
-system to drain all chains.
+It has been a longstanding convention that online scrub and repair
+functions can return -EDEADLOCK to signal that they weren't able to
+obtain some necessary resource.  When this happens, the scrub framework
+is supposed to release all resources attached to the scrub context, set
+the TRY_HARDER flag in the scrub context flags, and try again.  In this
+context, individual scrub functions are supposed to take all the
+resources they (incorrectly) speculated were not necessary.
 
-This patchset implements that scrub drain.  The first patch implements
-the basic mechanism, and the subsequent patches reduce the runtime
-overhead by converting the implementation to use sloppy counters and
-introducing jump labels to avoid walking into scrub hooks when it isn't
-running.  This last paradigm repeats elsewhere in this megaseries.
+We're about to make it so that the functions that lock and wait for a
+filesystem AG can also return EDEADLOCK to signal that we need to try
+again with the drain waiters enabled.  Therefore, refactor
+xfs_scrub_metadata to support this behavior for ->setup() functions.
 
-v23.1: make intent items take an active ref to the perag structure and
-       document why we bump and drop the intent counts when we do
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-drain-intents
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=scrub-drain-intents
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/Kconfig             |    5 ++
- fs/xfs/Makefile            |    2 +
- fs/xfs/libxfs/xfs_ag.c     |    4 +
- fs/xfs/libxfs/xfs_ag.h     |    8 +++
- fs/xfs/libxfs/xfs_defer.c  |    6 +-
- fs/xfs/scrub/agheader.c    |    9 +++
- fs/xfs/scrub/alloc.c       |    3 +
- fs/xfs/scrub/bmap.c        |    3 +
- fs/xfs/scrub/btree.c       |    1 
- fs/xfs/scrub/common.c      |  129 ++++++++++++++++++++++++++++++++++++++++----
- fs/xfs/scrub/common.h      |   15 +++++
- fs/xfs/scrub/dabtree.c     |    1 
- fs/xfs/scrub/fscounters.c  |    7 ++
- fs/xfs/scrub/health.c      |    2 +
- fs/xfs/scrub/ialloc.c      |    2 +
- fs/xfs/scrub/inode.c       |    3 +
- fs/xfs/scrub/quota.c       |    3 +
- fs/xfs/scrub/refcount.c    |    9 +++
- fs/xfs/scrub/repair.c      |    3 +
- fs/xfs/scrub/rmap.c        |    3 +
- fs/xfs/scrub/scrub.c       |   63 ++++++++++++++++-----
- fs/xfs/scrub/scrub.h       |    6 ++
- fs/xfs/scrub/trace.h       |   69 ++++++++++++++++++++++++
- fs/xfs/xfs_bmap_item.c     |   10 +++
- fs/xfs/xfs_drain.c         |  121 +++++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_drain.h         |   80 +++++++++++++++++++++++++++
- fs/xfs/xfs_extfree_item.c  |    2 +
- fs/xfs/xfs_linux.h         |    1 
- fs/xfs/xfs_refcount_item.c |    2 +
- fs/xfs/xfs_rmap_item.c     |    2 +
- fs/xfs/xfs_trace.h         |   71 ++++++++++++++++++++++++
- 31 files changed, 614 insertions(+), 31 deletions(-)
- create mode 100644 fs/xfs/xfs_drain.c
- create mode 100644 fs/xfs/xfs_drain.h
+ fs/xfs/scrub/scrub.c |   28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
+
+
+diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
+index 07a7a75f987f..50db13c5f626 100644
+--- a/fs/xfs/scrub/scrub.c
++++ b/fs/xfs/scrub/scrub.c
+@@ -491,23 +491,16 @@ xfs_scrub_metadata(
+ 
+ 	/* Set up for the operation. */
+ 	error = sc->ops->setup(sc);
++	if (error == -EDEADLOCK && !(sc->flags & XCHK_TRY_HARDER))
++		goto try_harder;
+ 	if (error)
+ 		goto out_teardown;
+ 
+ 	/* Scrub for errors. */
+ 	error = sc->ops->scrub(sc);
+-	if (!(sc->flags & XCHK_TRY_HARDER) && error == -EDEADLOCK) {
+-		/*
+-		 * Scrubbers return -EDEADLOCK to mean 'try harder'.
+-		 * Tear down everything we hold, then set up again with
+-		 * preparation for worst-case scenarios.
+-		 */
+-		error = xchk_teardown(sc, 0);
+-		if (error)
+-			goto out_sc;
+-		sc->flags |= XCHK_TRY_HARDER;
+-		goto retry_op;
+-	} else if (error || (sm->sm_flags & XFS_SCRUB_OFLAG_INCOMPLETE))
++	if (error == -EDEADLOCK && !(sc->flags & XCHK_TRY_HARDER))
++		goto try_harder;
++	if (error || (sm->sm_flags & XFS_SCRUB_OFLAG_INCOMPLETE))
+ 		goto out_teardown;
+ 
+ 	xchk_update_health(sc);
+@@ -565,4 +558,15 @@ xfs_scrub_metadata(
+ 		error = 0;
+ 	}
+ 	return error;
++try_harder:
++	/*
++	 * Scrubbers return -EDEADLOCK to mean 'try harder'.  Tear down
++	 * everything we hold, then set up again with preparation for
++	 * worst-case scenarios.
++	 */
++	error = xchk_teardown(sc, 0);
++	if (error)
++		goto out_sc;
++	sc->flags |= XCHK_TRY_HARDER;
++	goto retry_op;
+ }
 
