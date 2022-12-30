@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CE1465A0F9
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:52:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AC6D65A0F7
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235911AbiLaBwO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:52:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49952 "EHLO
+        id S236136AbiLaBvp (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:51:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231444AbiLaBwM (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:52:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A4061DDD3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:52:12 -0800 (PST)
+        with ESMTP id S236099AbiLaBvo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:51:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD191DDD3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:51:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB24B61CCE
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:52:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4348BC433EF;
-        Sat, 31 Dec 2022 01:52:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5E0BAB81DFC
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:51:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10046C433D2;
+        Sat, 31 Dec 2022 01:51:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451531;
-        bh=4ZA/1hA0wYQJb6znr2iokgOl90V6LTbtQ9O/AKnvl0Q=;
+        s=k20201202; t=1672451500;
+        bh=U4rDCvlqw8j5LqX4RctbnuqbHVf3uo5s2jb5vM/3mTo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aOrQKav7LvwI7TMLL4w0+DscK4cirIFQ1Al1tVNNUOe2MhBsoWYwsSNtPY+k2/gPu
-         DodsLyieat2CFd/vTmDsAo0JJTSr7flwooEjp7SOenMKutuNKNpDa6qCKCfBMKNuTS
-         whxibcOmYCS6LwtInss+TyC5pJQK/NfxvYWGdr41dWvAturL+wYs3YWVg7LsFXE8rb
-         SCO9hUk7IfUV+FdvkvTMWeDz6zkmzN1Q3aAXQ3n3ME+NmuYFlDaL4w/Nv1EgcaMIOc
-         o4Z9vTBIM6J5AJb2SdQxJeF4475xf+NWuTdT04s36XZtmpQbw+xghPeGjfNvJ58lp2
-         QueC7eyvFak0g==
-Subject: [PATCH 16/42] xfs: update rmap to allow cow staging extents in the rt
- rmap
+        b=J4PSdYVjNPWspHM/kTQCGYOoaPb3/1Osl66Lo1uvZOo7dkNUK7OM7/C/cyb0ouTsc
+         YPBoiQGdAdWrnv9zFOkrtp39v+6JfRCwypK4IqF+98cFMOXhqNRxhzu7eD3lKmsE5I
+         YNYNxpNprjkUfmIj8JFH1hwKXpRu9YniWJNbdva72U8UseaiaAOBEEs2jnCkW4AvjE
+         0l8VjHcLn6eS3Qd3mPcYhrSXJGoUI3Wi5IReMoWxFve12TYOdqhRp9RETaBRjpbD90
+         5TljgdlibJXAwCEA9bZwWh7rToi++LBhxV2QloJnc9k7r7kgiNxXhAFF5Ui4WBmCs7
+         sBqz8fLW1Vopg==
+Subject: [PATCH 14/42] xfs: wire up realtime refcount btree cursors
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871125.717073.9802618689897794582.stgit@magnolia>
+Message-ID: <167243871097.717073.7853127836397868533.stgit@magnolia>
 In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
 References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,60 +55,313 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Don't error out on CoW staging extent records when realtime reflink is
-enabled.
+Wire up realtime refcount btree cursors wherever they're needed
+throughout the code base.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_rmap.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_refcount.c |    7 ++-
+ fs/xfs/libxfs/xfs_rtgroup.c  |   10 ++++
+ fs/xfs/libxfs/xfs_rtgroup.h  |    5 ++
+ fs/xfs/xfs_fsmap.c           |   22 ++++++---
+ fs/xfs/xfs_reflink.c         |   99 ++++++++++++++++++++++++++++++++++--------
+ 5 files changed, 111 insertions(+), 32 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_rmap.c b/fs/xfs/libxfs/xfs_rmap.c
-index a533588a9b5b..891af03afccc 100644
---- a/fs/xfs/libxfs/xfs_rmap.c
-+++ b/fs/xfs/libxfs/xfs_rmap.c
-@@ -274,6 +274,7 @@ xfs_rmap_check_rtgroup_irec(
- 	bool				is_unwritten;
- 	bool				is_bmbt;
- 	bool				is_attr;
-+	bool				is_cow;
+diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+index 999ba2c5c37d..c4ab749c78e4 100644
+--- a/fs/xfs/libxfs/xfs_refcount.c
++++ b/fs/xfs/libxfs/xfs_refcount.c
+@@ -26,6 +26,7 @@
+ #include "xfs_health.h"
+ #include "xfs_rtgroup.h"
+ #include "xfs_rtalloc.h"
++#include "xfs_rtrefcount_btree.h"
  
- 	if (irec->rm_blockcount == 0)
- 		return __this_address;
-@@ -285,6 +286,12 @@ xfs_rmap_check_rtgroup_irec(
- 			return __this_address;
- 		if (irec->rm_offset != 0)
- 			return __this_address;
-+	} else if (irec->rm_owner == XFS_RMAP_OWN_COW) {
-+		if (!xfs_has_rtreflink(mp))
-+			return __this_address;
-+		if (!xfs_verify_rgbext(rtg, irec->rm_startblock,
-+					    irec->rm_blockcount))
-+			return __this_address;
- 	} else {
- 		if (!xfs_verify_rgbext(rtg, irec->rm_startblock,
- 					    irec->rm_blockcount))
-@@ -301,8 +308,10 @@ xfs_rmap_check_rtgroup_irec(
- 	is_bmbt = irec->rm_flags & XFS_RMAP_BMBT_BLOCK;
- 	is_attr = irec->rm_flags & XFS_RMAP_ATTR_FORK;
- 	is_unwritten = irec->rm_flags & XFS_RMAP_UNWRITTEN;
-+	is_cow = xfs_has_rtreflink(mp) &&
-+		 irec->rm_owner == XFS_RMAP_OWN_COW;
+ struct kmem_cache	*xfs_refcount_intent_cache;
  
--	if (!is_inode && irec->rm_owner != XFS_RMAP_OWN_FS)
-+	if (!is_inode && !is_cow && irec->rm_owner != XFS_RMAP_OWN_FS)
- 		return __this_address;
- 
- 	if (!is_inode && irec->rm_offset != 0)
-@@ -314,6 +323,9 @@ xfs_rmap_check_rtgroup_irec(
- 	if (is_unwritten && !is_inode)
- 		return __this_address;
- 
-+	if (is_unwritten && is_cow)
-+		return __this_address;
+@@ -1485,9 +1486,9 @@ xfs_refcount_finish_one(
+ 	}
+ 	if (rcur == NULL) {
+ 		if (ri->ri_realtime) {
+-			/* coming in a later patch */
+-			ASSERT(0);
+-			return -EFSCORRUPTED;
++			xfs_rtgroup_lock(tp, ri->ri_rtg, XFS_RTGLOCK_REFCOUNT);
++			rcur = xfs_rtrefcountbt_init_cursor(mp, tp, ri->ri_rtg,
++					ri->ri_rtg->rtg_refcountip);
+ 		} else {
+ 			error = xfs_alloc_read_agf(ri->ri_pag, tp,
+ 					XFS_ALLOC_FLAG_FREEING, &agbp);
+diff --git a/fs/xfs/libxfs/xfs_rtgroup.c b/fs/xfs/libxfs/xfs_rtgroup.c
+index bd878e65bc44..836b19e0406d 100644
+--- a/fs/xfs/libxfs/xfs_rtgroup.c
++++ b/fs/xfs/libxfs/xfs_rtgroup.c
+@@ -524,6 +524,13 @@ xfs_rtgroup_lock(
+ 		if (tp)
+ 			xfs_trans_ijoin(tp, rtg->rtg_rmapip, XFS_ILOCK_EXCL);
+ 	}
 +
- 	/* Check for a valid fork offset, if applicable. */
- 	if (is_inode &&
- 	    !xfs_verify_fileext(mp, irec->rm_offset, irec->rm_blockcount))
++	if ((rtglock_flags & XFS_RTGLOCK_REFCOUNT) && rtg->rtg_refcountip) {
++		xfs_ilock(rtg->rtg_refcountip, XFS_ILOCK_EXCL);
++		if (tp)
++			xfs_trans_ijoin(tp, rtg->rtg_refcountip,
++					XFS_ILOCK_EXCL);
++	}
+ }
+ 
+ /* Unlock metadata inodes associated with this rt group. */
+@@ -536,6 +543,9 @@ xfs_rtgroup_unlock(
+ 	ASSERT(!(rtglock_flags & XFS_RTGLOCK_BITMAP_SHARED) ||
+ 	       !(rtglock_flags & XFS_RTGLOCK_BITMAP));
+ 
++	if ((rtglock_flags & XFS_RTGLOCK_REFCOUNT) && rtg->rtg_refcountip)
++		xfs_iunlock(rtg->rtg_refcountip, XFS_ILOCK_EXCL);
++
+ 	if ((rtglock_flags & XFS_RTGLOCK_RMAP) && rtg->rtg_rmapip)
+ 		xfs_iunlock(rtg->rtg_rmapip, XFS_ILOCK_EXCL);
+ 
+diff --git a/fs/xfs/libxfs/xfs_rtgroup.h b/fs/xfs/libxfs/xfs_rtgroup.h
+index 0f400f133d88..4f0358d63457 100644
+--- a/fs/xfs/libxfs/xfs_rtgroup.h
++++ b/fs/xfs/libxfs/xfs_rtgroup.h
+@@ -237,10 +237,13 @@ int xfs_rtgroup_init_secondary_super(struct xfs_mount *mp, xfs_rgnumber_t rgno,
+ #define XFS_RTGLOCK_BITMAP_SHARED	(1U << 1)
+ /* Lock the rt rmap inode in exclusive mode */
+ #define XFS_RTGLOCK_RMAP		(1U << 2)
++/* Lock the rt refcount inode in exclusive mode */
++#define XFS_RTGLOCK_REFCOUNT		(1U << 3)
+ 
+ #define XFS_RTGLOCK_ALL_FLAGS	(XFS_RTGLOCK_BITMAP | \
+ 				 XFS_RTGLOCK_BITMAP_SHARED | \
+-				 XFS_RTGLOCK_RMAP)
++				 XFS_RTGLOCK_RMAP | \
++				 XFS_RTGLOCK_REFCOUNT)
+ 
+ void xfs_rtgroup_lock(struct xfs_trans *tp, struct xfs_rtgroup *rtg,
+ 		unsigned int rtglock_flags);
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index efbcc4b1d850..5f7e7ea2fde3 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -27,6 +27,7 @@
+ #include "xfs_ag.h"
+ #include "xfs_rtgroup.h"
+ #include "xfs_rtrmap_btree.h"
++#include "xfs_rtrefcount_btree.h"
+ 
+ /* Convert an xfs_fsmap to an fsmap. */
+ static void
+@@ -209,14 +210,16 @@ xfs_getfsmap_is_shared(
+ 	*stat = false;
+ 	if (!xfs_has_reflink(mp))
+ 		return 0;
+-	/* rt files will have no perag structure */
+-	if (!info->pag)
+-		return 0;
++
++	if (info->rtg)
++		cur = xfs_rtrefcountbt_init_cursor(mp, tp, info->rtg,
++				info->rtg->rtg_refcountip);
++	else
++		cur = xfs_refcountbt_init_cursor(mp, tp, info->agf_bp,
++				info->pag);
+ 
+ 	/* Are there any shared blocks here? */
+ 	flen = 0;
+-	cur = xfs_refcountbt_init_cursor(mp, tp, info->agf_bp, info->pag);
+-
+ 	error = xfs_refcount_find_shared(cur, rec->rm_startblock,
+ 			rec->rm_blockcount, &fbno, &flen, false);
+ 
+@@ -820,7 +823,8 @@ xfs_getfsmap_rtdev_rmapbt_query(
+ 		return xfs_getfsmap_rtdev_helper(*curpp, &info->high, info);
+ 
+ 	/* Query the rtrmapbt */
+-	xfs_rtgroup_lock(NULL, info->rtg, XFS_RTGLOCK_RMAP);
++	xfs_rtgroup_lock(NULL, info->rtg, XFS_RTGLOCK_RMAP |
++					  XFS_RTGLOCK_REFCOUNT);
+ 	*curpp = xfs_rtrmapbt_init_cursor(mp, tp, info->rtg,
+ 			info->rtg->rtg_rmapip);
+ 	return xfs_rmap_query_range(*curpp, &info->low, &info->high,
+@@ -893,7 +897,8 @@ xfs_getfsmap_rtdev_rmapbt(
+ 
+ 		if (bt_cur) {
+ 			xfs_rtgroup_unlock(bt_cur->bc_ino.rtg,
+-					XFS_RTGLOCK_RMAP);
++					XFS_RTGLOCK_RMAP |
++					XFS_RTGLOCK_REFCOUNT);
+ 			xfs_btree_del_cursor(bt_cur, XFS_BTREE_NOERROR);
+ 			bt_cur = NULL;
+ 		}
+@@ -934,7 +939,8 @@ xfs_getfsmap_rtdev_rmapbt(
+ 	}
+ 
+ 	if (bt_cur) {
+-		xfs_rtgroup_unlock(bt_cur->bc_ino.rtg, XFS_RTGLOCK_RMAP);
++		xfs_rtgroup_unlock(bt_cur->bc_ino.rtg, XFS_RTGLOCK_RMAP |
++						       XFS_RTGLOCK_REFCOUNT);
+ 		xfs_btree_del_cursor(bt_cur, error < 0 ? XFS_BTREE_ERROR :
+ 							 XFS_BTREE_NOERROR);
+ 	}
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 52e73aa2c38e..1a8a254c81f4 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -30,6 +30,9 @@
+ #include "xfs_ag.h"
+ #include "xfs_ag_resv.h"
+ #include "xfs_health.h"
++#include "xfs_rtrefcount_btree.h"
++#include "xfs_rtalloc.h"
++#include "xfs_rtgroup.h"
+ 
+ /*
+  * Copy on Write of Shared Blocks
+@@ -155,6 +158,38 @@ xfs_reflink_find_shared(
+ 	return error;
+ }
+ 
++/*
++ * Given an RT extent, find the lowest-numbered run of shared blocks
++ * within that range and return the range in fbno/flen.  If
++ * find_end_of_shared is true, return the longest contiguous extent of
++ * shared blocks.  If there are no shared extents, fbno and flen will
++ * be set to NULLRGBLOCK and 0, respectively.
++ */
++static int
++xfs_reflink_find_rtshared(
++	struct xfs_rtgroup	*rtg,
++	struct xfs_trans	*tp,
++	xfs_agblock_t		rtbno,
++	xfs_extlen_t		rtlen,
++	xfs_agblock_t		*fbno,
++	xfs_extlen_t		*flen,
++	bool			find_end_of_shared)
++{
++	struct xfs_mount	*mp = rtg->rtg_mount;
++	struct xfs_btree_cur	*cur;
++	int			error;
++
++	BUILD_BUG_ON(NULLRGBLOCK != NULLAGBLOCK);
++
++	xfs_rtgroup_lock(NULL, rtg, XFS_RTGLOCK_REFCOUNT);
++	cur = xfs_rtrefcountbt_init_cursor(mp, tp, rtg, rtg->rtg_refcountip);
++	error = xfs_refcount_find_shared(cur, rtbno, rtlen, fbno, flen,
++			find_end_of_shared);
++	xfs_btree_del_cursor(cur, error);
++	xfs_rtgroup_unlock(rtg, XFS_RTGLOCK_REFCOUNT);
++	return error;
++}
++
+ /*
+  * Trim the mapping to the next block where there's a change in the
+  * shared/unshared status.  More specifically, this means that we
+@@ -172,9 +207,7 @@ xfs_reflink_trim_around_shared(
+ 	bool			*shared)
+ {
+ 	struct xfs_mount	*mp = ip->i_mount;
+-	struct xfs_perag	*pag;
+-	xfs_agblock_t		agbno;
+-	xfs_extlen_t		aglen;
++	xfs_agblock_t		orig_bno;
+ 	xfs_agblock_t		fbno;
+ 	xfs_extlen_t		flen;
+ 	int			error = 0;
+@@ -187,13 +220,25 @@ xfs_reflink_trim_around_shared(
+ 
+ 	trace_xfs_reflink_trim_around_shared(ip, irec);
+ 
+-	pag = xfs_perag_get(mp, XFS_FSB_TO_AGNO(mp, irec->br_startblock));
+-	agbno = XFS_FSB_TO_AGBNO(mp, irec->br_startblock);
+-	aglen = irec->br_blockcount;
++	if (XFS_IS_REALTIME_INODE(ip)) {
++		struct xfs_rtgroup	*rtg;
++		xfs_rgnumber_t		rgno;
+ 
+-	error = xfs_reflink_find_shared(pag, NULL, agbno, aglen, &fbno, &flen,
+-			true);
+-	xfs_perag_put(pag);
++		orig_bno = xfs_rtb_to_rgbno(mp, irec->br_startblock, &rgno);
++		rtg = xfs_rtgroup_get(mp, rgno);
++		error = xfs_reflink_find_rtshared(rtg, NULL, orig_bno,
++				irec->br_blockcount, &fbno, &flen, true);
++		xfs_rtgroup_put(rtg);
++	} else {
++		struct xfs_perag	*pag;
++
++		pag = xfs_perag_get(mp, XFS_FSB_TO_AGNO(mp,
++					irec->br_startblock));
++		orig_bno = XFS_FSB_TO_AGBNO(mp, irec->br_startblock);
++		error = xfs_reflink_find_shared(pag, NULL, orig_bno,
++				irec->br_blockcount, &fbno, &flen, true);
++		xfs_perag_put(pag);
++	}
+ 	if (error)
+ 		return error;
+ 
+@@ -203,7 +248,7 @@ xfs_reflink_trim_around_shared(
+ 		return 0;
+ 	}
+ 
+-	if (fbno == agbno) {
++	if (fbno == orig_bno) {
+ 		/*
+ 		 * The start of this extent is shared.  Truncate the
+ 		 * mapping at the end of the shared region so that a
+@@ -221,7 +266,7 @@ xfs_reflink_trim_around_shared(
+ 	 * extent so that a subsequent iteration starts at the
+ 	 * start of the shared region.
+ 	 */
+-	irec->br_blockcount = fbno - agbno;
++	irec->br_blockcount = fbno - orig_bno;
+ 	return 0;
+ }
+ 
+@@ -1574,9 +1619,6 @@ xfs_reflink_inode_has_shared_extents(
+ 	*has_shared = false;
+ 	found = xfs_iext_lookup_extent(ip, ifp, 0, &icur, &got);
+ 	while (found) {
+-		struct xfs_perag	*pag;
+-		xfs_agblock_t		agbno;
+-		xfs_extlen_t		aglen;
+ 		xfs_agblock_t		rbno;
+ 		xfs_extlen_t		rlen;
+ 
+@@ -1584,12 +1626,29 @@ xfs_reflink_inode_has_shared_extents(
+ 		    got.br_state != XFS_EXT_NORM)
+ 			goto next;
+ 
+-		pag = xfs_perag_get(mp, XFS_FSB_TO_AGNO(mp, got.br_startblock));
+-		agbno = XFS_FSB_TO_AGBNO(mp, got.br_startblock);
+-		aglen = got.br_blockcount;
+-		error = xfs_reflink_find_shared(pag, tp, agbno, aglen,
+-				&rbno, &rlen, false);
+-		xfs_perag_put(pag);
++		if (XFS_IS_REALTIME_INODE(ip)) {
++			struct xfs_rtgroup	*rtg;
++			xfs_rgnumber_t		rgno;
++			xfs_rgblock_t		rgbno;
++
++			rgbno = xfs_rtb_to_rgbno(mp, got.br_startblock, &rgno);
++			rtg = xfs_rtgroup_get(mp, rgno);
++			error = xfs_reflink_find_rtshared(rtg, tp, rgbno,
++					got.br_blockcount, &rbno, &rlen,
++					false);
++			xfs_rtgroup_put(rtg);
++		} else {
++			struct xfs_perag	*pag;
++			xfs_agblock_t		agbno;
++
++			pag = xfs_perag_get(mp, XFS_FSB_TO_AGNO(mp,
++						got.br_startblock));
++			agbno = XFS_FSB_TO_AGBNO(mp, got.br_startblock);
++			error = xfs_reflink_find_shared(pag, tp, agbno,
++					got.br_blockcount, &rbno, &rlen,
++					false);
++			xfs_perag_put(pag);
++		}
+ 		if (error)
+ 			return error;
+ 
 
