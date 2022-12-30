@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2531D65A278
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:23:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF7465A14B
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:12:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236371AbiLaDXi (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:23:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38066 "EHLO
+        id S236175AbiLaCMa (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:12:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236373AbiLaDXQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:23:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6F612A91
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 19:23:15 -0800 (PST)
+        with ESMTP id S231494AbiLaCM3 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:12:29 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E8EA1C430
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:12:28 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8A2DEB81E72
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 03:23:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444D7C433EF;
-        Sat, 31 Dec 2022 03:23:13 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 9C360CE1A76
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:12:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D95FEC433D2;
+        Sat, 31 Dec 2022 02:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456993;
-        bh=zCHdghJRa9K1y39/R6qkELcMJeb3gZRbO4QXFg8nNzg=;
+        s=k20201202; t=1672452744;
+        bh=jVUdclQL9aNAdOJM0ZpQ9K7kjG2jttJ7+3CbsF4TFQE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JbQJXyy5RRYbw/FsOJqePJnvrjitVQFJTWOJCvRiCvVm9wXE7p6rGXJb8I5QyrGvn
-         BZ8ZosCkN5fTfx0V361aQ646VuSbBIVjTkFIHHZ3wqLMg3flNSZaBrTGkzbaLdU4ta
-         M9qdGuP4eO5e7I/gm5Fu+WUuvRowgZ/Iq2FSPw1+XT1cAQofRIiwDbjmYqOs1dxtEm
-         SOXXGtr69aBH9UuZ0qbaFZwwo0/orA6kO81ygiSQLOLl75Z1AyBfvkncdb5fMzhinJ
-         +q+V0W5peObaByiJ81IIQ/rqpUNeFjSILp4F0zLycG/qxqOjrqhzq/kVRxdEJBjv7c
-         RJ01yrj0zkm/g==
-Subject: [PATCH 3/3] xfs: Don't free EOF blocks on close when extent size
- hints are set
+        b=mrynAbhm/Hm6R2aPvnsU+YFTe0mB2uFrbo5YWkBO0mpL9hw0ZA1QxatjP9Afm+7dK
+         UI+Q9UN/DicLm6oNmFRwgEsVc/QIO5wg7zLQypbYzH2+Wd0BDS27PxN5OGq+9NoSZY
+         jOp2Vvz5RkcAvU+uGlF3NAtLguI4CWRFXbgaJpoMzULyPYQkxYQO86a2V0tc0NVUx5
+         P+QgQVo1/xuj8I/gCfPpiFMimDGp6aRPbxZlHPiIxVpFhy7Yy1P+ebSnQT1NG5E9rI
+         AVz/JjW/GcNgscqHhjqc3UO8z+v0QYPkqwDIAglwsE/WXA+g+uzsivVKBs40BOWAoA
+         p5X3j3lSAF/0g==
+Subject: [PATCH 10/46] xfs: convert metadata inode lookup keys to use paths
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
-Cc:     Dave Chinner <dchinner@redhat.com>, linux-xfs@vger.kernel.org
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:20 -0800
-Message-ID: <167243876065.726374.4890051106492069344.stgit@magnolia>
-In-Reply-To: <167243876021.726374.15071907725836376245.stgit@magnolia>
-References: <167243876021.726374.15071907725836376245.stgit@magnolia>
+Message-ID: <167243876069.725900.9127748574834493558.stgit@magnolia>
+In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
+References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,82 +53,119 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Dave Chinner <david@fromorbit.com>
+From: Darrick J. Wong <djwong@kernel.org>
 
-When we have a workload that does open/write/close on files with
-extent size hints set in parallel with other allocation, the file
-becomes rapidly fragmented. This is due to close() calling
-xfs_release() and removing the preallocated extent beyond EOF.  This
-occurs for both buffered and direct writes that append to files with
-extent size hints.
+Convert the magic metadata inode lookup keys to use actual strings
+for paths.
 
-The existing open/write/close hueristic in xfs_release() does not
-catch this as writes to files using extent size hints do not use
-delayed allocation and hence do not leave delayed allocation blocks
-allocated on the inode that can be detected in xfs_release(). Hence
-XFS_IDIRTY_RELEASE never gets set.
-
-In xfs_file_release(), we can tell whether the inode has extent size
-hints set and skip EOF block truncation. We add this check to
-xfs_can_free_eofblocks() so that we treat the post-EOF preallocated
-extent like intentional preallocation and so are persistent unless
-directly removed by userspace.
-
-Before:
-
-Test 2: Extent size hint fragmentation counts
-
-/mnt/scratch/file.0: 1002
-/mnt/scratch/file.1: 1002
-/mnt/scratch/file.2: 1002
-/mnt/scratch/file.3: 1002
-/mnt/scratch/file.4: 1002
-/mnt/scratch/file.5: 1002
-/mnt/scratch/file.6: 1002
-/mnt/scratch/file.7: 1002
-
-After:
-
-Test 2: Extent size hint fragmentation counts
-
-/mnt/scratch/file.0: 4
-/mnt/scratch/file.1: 4
-/mnt/scratch/file.2: 4
-/mnt/scratch/file.3: 4
-/mnt/scratch/file.4: 4
-/mnt/scratch/file.5: 4
-/mnt/scratch/file.6: 4
-/mnt/scratch/file.7: 4
-
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_bmap_util.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ libxfs/xfs_imeta.c |   48 ++++++++++++++++++++++++++----------------------
+ libxfs/xfs_imeta.h |   17 +++++++++++++++--
+ 2 files changed, 41 insertions(+), 24 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index a54ed26e1cc0..558951710404 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -710,12 +710,15 @@ xfs_can_free_eofblocks(
- 		return false;
+diff --git a/libxfs/xfs_imeta.c b/libxfs/xfs_imeta.c
+index bc3c94634ce..8fa0b5a5c1c 100644
+--- a/libxfs/xfs_imeta.c
++++ b/libxfs/xfs_imeta.c
+@@ -48,26 +48,17 @@
+  */
  
- 	/*
--	 * Do not free real preallocated or append-only files unless the file
--	 * has delalloc blocks and we are forced to remove them.
-+	 * Do not free extent size hints, real preallocated or append-only files
-+	 * unless the file has delalloc blocks and we are forced to remove
-+	 * them.
- 	 */
--	if (ip->i_diflags & (XFS_DIFLAG_PREALLOC | XFS_DIFLAG_APPEND))
-+	if (xfs_get_extsz_hint(ip) ||
-+	    (ip->i_diflags & (XFS_DIFLAG_PREALLOC | XFS_DIFLAG_APPEND))) {
- 		if (!force || ip->i_delayed_blks == 0)
- 			return false;
-+	}
+ /* Static metadata inode paths */
+-
+-const struct xfs_imeta_path XFS_IMETA_RTBITMAP = {
+-	.bogus = 0,
+-};
+-
+-const struct xfs_imeta_path XFS_IMETA_RTSUMMARY = {
+-	.bogus = 1,
+-};
+-
+-const struct xfs_imeta_path XFS_IMETA_USRQUOTA = {
+-	.bogus = 2,
+-};
+-
+-const struct xfs_imeta_path XFS_IMETA_GRPQUOTA = {
+-	.bogus = 3,
+-};
+-
+-const struct xfs_imeta_path XFS_IMETA_PRJQUOTA = {
+-	.bogus = 4,
+-};
++static const char *rtbitmap_path[]	= {"realtime", "bitmap"};
++static const char *rtsummary_path[]	= {"realtime", "summary"};
++static const char *usrquota_path[]	= {"quota", "user"};
++static const char *grpquota_path[]	= {"quota", "group"};
++static const char *prjquota_path[]	= {"quota", "project"};
++
++XFS_IMETA_DEFINE_PATH(XFS_IMETA_RTBITMAP,	rtbitmap_path);
++XFS_IMETA_DEFINE_PATH(XFS_IMETA_RTSUMMARY,	rtsummary_path);
++XFS_IMETA_DEFINE_PATH(XFS_IMETA_USRQUOTA,	usrquota_path);
++XFS_IMETA_DEFINE_PATH(XFS_IMETA_GRPQUOTA,	grpquota_path);
++XFS_IMETA_DEFINE_PATH(XFS_IMETA_PRJQUOTA,	prjquota_path);
  
- 	/*
- 	 * Do not try to free post-EOF blocks if EOF is beyond the end of the
+ /* Are these two paths equal? */
+ STATIC bool
+@@ -75,7 +66,20 @@ xfs_imeta_path_compare(
+ 	const struct xfs_imeta_path	*a,
+ 	const struct xfs_imeta_path	*b)
+ {
+-	return a == b;
++	unsigned int			i;
++
++	if (a == b)
++		return true;
++
++	if (a->im_depth != b->im_depth)
++		return false;
++
++	for (i = 0; i < a->im_depth; i++)
++		if (a->im_path[i] != b->im_path[i] &&
++		    strcmp(a->im_path[i], b->im_path[i]))
++			return false;
++
++	return true;
+ }
+ 
+ /* Is this path ok? */
+@@ -83,7 +87,7 @@ static inline bool
+ xfs_imeta_path_check(
+ 	const struct xfs_imeta_path	*path)
+ {
+-	return true;
++	return path->im_depth <= XFS_IMETA_MAX_DEPTH;
+ }
+ 
+ /* Functions for storing and retrieving superblock inode values. */
+diff --git a/libxfs/xfs_imeta.h b/libxfs/xfs_imeta.h
+index 312e3a6fdb9..631a88120a7 100644
+--- a/libxfs/xfs_imeta.h
++++ b/libxfs/xfs_imeta.h
+@@ -6,10 +6,23 @@
+ #ifndef __XFS_IMETA_H__
+ #define __XFS_IMETA_H__
+ 
++/* How deep can we nest metadata dirs? */
++#define XFS_IMETA_MAX_DEPTH	64
++
++/* Form an imeta path from a simple array of strings. */
++#define XFS_IMETA_DEFINE_PATH(name, path) \
++const struct xfs_imeta_path name = { \
++	.im_path = (path), \
++	.im_depth = ARRAY_SIZE(path), \
++}
++
+ /* Key for looking up metadata inodes. */
+ struct xfs_imeta_path {
+-	/* Temporary: integer to keep the static imeta definitions unique */
+-	int		bogus;
++	/* Array of string pointers. */
++	const char	**im_path;
++
++	/* Number of strings in path. */
++	unsigned int	im_depth;
+ };
+ 
+ /* Cleanup widget for metadata inode creation and deletion. */
 
