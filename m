@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8567965A092
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:27:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C32D1659F52
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:15:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbiLaB1D (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:27:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
+        id S235722AbiLaAPH (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:15:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236085AbiLaB06 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:26:58 -0500
+        with ESMTP id S235661AbiLaAPG (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:15:06 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F191DF18
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:26:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CAF560EF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:15:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA33261CB4
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:26:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18954C433D2;
-        Sat, 31 Dec 2022 01:26:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 18A3F61CF1
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:15:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7389CC433D2;
+        Sat, 31 Dec 2022 00:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450017;
-        bh=laDVakxdCBlOBKigu6xTJQU/2Mz0o5c3o3rGv5kape4=;
+        s=k20201202; t=1672445704;
+        bh=WVLEsTCHeiM/tF4yytgpwss6yRYJ/1NuYQ50Nnx+Nj4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J3aZ9PAM1gyuN18Rz0Yqs3GbEvfxHOZVa2rKEuJCGcKgjYmzFOqQkPUjvGnP/oP5j
-         S62cfNONQeMTlnXdnOGjQrEXS/rCMqe6ieSf8sE/POOBcQTmOK5v4G8LMmudyCE9HP
-         v9mtbaPTqE+Mx+RrD9uEzJp3BHuod8Fu3OZplAQf0I05FnZi5LmHL8u0qphj0ZEj/V
-         kPv4UVVC2lWLEMDNFwBmjRRDoT5BaZbBSOLo7grkRmub7f31n8pt6AWLf1vu7pFJ6o
-         X7TJdR6P4Y+PHWfPuTfunKdgieY9yj+zm5p1+hVHTAPMsvVzZ2d+EqjZ2aRUCeC+6Q
-         9pO7xesBYHTGA==
-Subject: [PATCH 1/3] xfs: use separate lock classes for realtime metadata
- inode ILOCKs
+        b=frdp0q/nC5UhfyrRql5vywcYd/k3fqYGks+zBvFocWBAe2j0bZCb1ftH/DA4K4L39
+         6QICLodjYb9kE1i5D9pfWRPj/PTh8fi206bxqtGa1vboetb5LNqqZo7dll1ew070z2
+         RERN+M2l/6fbysJcqL5Lz1gysRLOpV1feY8TDC3FqpZ61ZcftpthJ8TZwEN+8kjgG/
+         RYWmLHrxqvtVDJB6JqaGOSilPAb2sHlb7aMn0SmYg/VMmB571LvYHtzcqQQADxhHte
+         THvsitvQ6II7uq/sDrx6ZtWQCDHXYZAp4mtJuU3/QYdJKuaRLX72VLK4JIyoA09ntA
+         4mF20djDeYg7w==
+Subject: [PATCH 1/6] libxfs: partition memfd files to avoid using too many fds
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:49 -0800
-Message-ID: <167243866898.712531.18306581093831583878.stgit@magnolia>
-In-Reply-To: <167243866880.712531.9794913817759933297.stgit@magnolia>
-References: <167243866880.712531.9794913817759933297.stgit@magnolia>
+Message-ID: <167243866905.712584.180383149963743658.stgit@magnolia>
+In-Reply-To: <167243866890.712584.9795710743681868714.stgit@magnolia>
+References: <167243866890.712584.9795710743681868714.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,93 +54,287 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Realtime metadata files are not quite regular files because userspace
-can't access the realtime bitmap directly, and because we take the ILOCK
-of the rt bitmap file while holding the ILOCK of a realtime file.  The
-double nature of inodes confuses lockdep, so up until now we've created
-lockdep subclasses to help lockdep keep things straight.
-
-We've gotten away with using lockdep subclasses because there's only two
-rt metadata files, but with the coming addition of realtime rmap and
-refcounting, we'd need two more subclasses, which is a lot of class bits
-to burn on a side feature.
-
-Therefore, switch to manually setting the lockdep class of the rt
-metadata ILOCKs.  In the next patch we'll remove the rt-related ILOCK
-subclasses.
+Make it so that we can partition a memfd file to avoid running out of
+file descriptors.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_rtalloc.c |   36 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 34 insertions(+), 2 deletions(-)
+ libxfs/xfile.c |  169 +++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ libxfs/xfile.h |   10 ++-
+ 2 files changed, 167 insertions(+), 12 deletions(-)
 
 
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 11c42ebfa0a5..674ca3dab72e 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -26,6 +26,16 @@
- #include "xfs_imeta.h"
- #include "xfs_rtbitmap.h"
- 
-+/*
-+ * Realtime metadata files are not quite regular files because userspace can't
-+ * access the realtime bitmap directly, and because we take the ILOCK of the rt
-+ * bitmap file while holding the ILOCK of a regular realtime file.  This double
-+ * locking confuses lockdep, so create different lockdep classes here to help
-+ * it keep things straight.
-+ */
-+static struct lock_class_key xfs_rbmip_key;
-+static struct lock_class_key xfs_rsumip_key;
-+
- /*
-  * Read and return the summary information for a given extent size,
-  * bitmap block combination.
-@@ -1342,6 +1352,28 @@ xfs_rtalloc_reinit_frextents(
- 	return 0;
+diff --git a/libxfs/xfile.c b/libxfs/xfile.c
+index c1b8b1c5928..dfe3c60a9b3 100644
+--- a/libxfs/xfile.c
++++ b/libxfs/xfile.c
+@@ -95,6 +95,146 @@ xfile_create_fd(
+ 	return fd;
  }
  
++struct xfile_fcb {
++	struct list_head	fcb_list;
++	int			fd;
++	unsigned int		refcount;
++};
++
++static LIST_HEAD(fcb_list);
++static pthread_mutex_t fcb_mutex = PTHREAD_MUTEX_INITIALIZER;
++
++/* Create a new memfd. */
 +static inline int
-+__xfs_rt_iget(
-+	struct xfs_mount	*mp,
-+	xfs_ino_t		ino,
-+	struct lock_class_key	*lockdep_key,
-+	const char		*lockdep_key_name,
-+	struct xfs_inode	**ipp)
++xfile_fcb_create(
++	const char		*description,
++	struct xfile_fcb	**fcbp)
 +{
-+	int			error;
++	struct xfile_fcb	*fcb;
++	int			fd;
 +
-+	error = xfs_imeta_iget(mp, ino, XFS_DIR3_FT_REG_FILE, ipp);
-+	if (error)
-+		return error;
++	fd = xfile_create_fd(description);
++	if (fd < 0)
++		return -errno;
 +
-+	lockdep_set_class_and_name(&(*ipp)->i_lock.mr_lock, lockdep_key,
-+			lockdep_key_name);
++	fcb = malloc(sizeof(struct xfile_fcb));
++	if (!fcb) {
++		close(fd);
++		return -ENOMEM;
++	}
++
++	list_head_init(&fcb->fcb_list);
++	fcb->fd = fd;
++	fcb->refcount = 1;
++
++	*fcbp = fcb;
 +	return 0;
 +}
 +
-+#define xfs_rt_iget(mp, ino, lockdep_key, ipp) \
-+	__xfs_rt_iget((mp), (ino), (lockdep_key), #lockdep_key, (ipp))
++/* Release an xfile control block */
++static void
++xfile_fcb_irele(
++	struct xfile_fcb	*fcb,
++	loff_t			pos,
++	uint64_t		len)
++{
++	/*
++	 * If this memfd is linked only to itself, it's private, so we can
++	 * close it without taking any locks.
++	 */
++	if (list_empty(&fcb->fcb_list)) {
++		close(fcb->fd);
++		free(fcb);
++		return;
++	}
++
++	pthread_mutex_lock(&fcb_mutex);
++	if (--fcb->refcount == 0) {
++		/* If we're the last user of this memfd file, kill it fast. */
++		list_del(&fcb->fcb_list);
++		close(fcb->fd);
++		free(fcb);
++	} else if (len > 0) {
++		struct stat	statbuf;
++		int		ret;
++
++		/*
++		 * If we were using the end of a partitioned file, free the
++		 * address space.  IOWs, bonus points if you delete these in
++		 * reverse-order of creation.
++		 */
++		ret = fstat(fcb->fd, &statbuf);
++		if (!ret && statbuf.st_size == pos + len) {
++			ret = ftruncate(fcb->fd, pos);
++		}
++	}
++	pthread_mutex_unlock(&fcb_mutex);
++}
++
++/*
++ * Find an memfd that can accomodate the given amount of address space.
++ */
++static int
++xfile_fcb_find(
++	const char		*description,
++	uint64_t		maxrange,
++	loff_t			*pos,
++	struct xfile_fcb	**fcbp)
++{
++	struct xfile_fcb	*fcb;
++	int			ret;
++	int			error;
++
++	/* No maximum range means that the caller gets a private memfd. */
++	if (maxrange == 0) {
++		*pos = 0;
++		return xfile_fcb_create(description, fcbp);
++	}
++
++	pthread_mutex_lock(&fcb_mutex);
++
++	/*
++	 * If we only need a certain number of byte range, look for one with
++	 * available file range.
++	 */
++	list_for_each_entry(fcb, &fcb_list, fcb_list) {
++		struct stat	statbuf;
++
++		ret = fstat(fcb->fd, &statbuf);
++		if (ret)
++			continue;
++
++		ret = ftruncate(fcb->fd, statbuf.st_size + maxrange);
++		if (ret)
++			continue;
++
++		fcb->refcount++;
++		*pos = statbuf.st_size;
++		*fcbp = fcb;
++		goto out_unlock;
++	}
++
++	/* Otherwise, open a new memfd and add it to our list. */
++	error = xfile_fcb_create(description, &fcb);
++	if (error)
++		return error;
++
++	ret = ftruncate(fcb->fd, maxrange);
++	if (ret) {
++		error = -errno;
++		xfile_fcb_irele(fcb, 0, maxrange);
++		return error;
++	}
++
++	list_add_tail(&fcb->fcb_list, &fcb_list);
++	*pos = 0;
++	*fcbp = fcb;
++
++out_unlock:
++	pthread_mutex_unlock(&fcb_mutex);
++	return error;
++}
 +
  /*
-  * Read in the bmbt of an rt metadata inode so that we never have to load them
-  * at runtime.  This enables the use of shared ILOCKs for rtbitmap scans.  Use
-@@ -1389,7 +1421,7 @@ xfs_rtmount_inodes(
- 	xfs_sb_t	*sbp;
+  * Create an xfile of the given size.  The description will be used in the
+  * trace output.
+@@ -102,6 +242,7 @@ xfile_create_fd(
+ int
+ xfile_create(
+ 	struct xfs_mount	*mp,
++	unsigned long long	maxrange,
+ 	const char		*description,
+ 	struct xfile		**xfilep)
+ {
+@@ -117,13 +258,14 @@ xfile_create(
+ 	if (!xf)
+ 		return -ENOMEM;
  
- 	sbp = &mp->m_sb;
--	error = xfs_imeta_iget(mp, mp->m_sb.sb_rbmino, XFS_DIR3_FT_REG_FILE,
-+	error = xfs_rt_iget(mp, mp->m_sb.sb_rbmino, &xfs_rbmip_key,
- 			&mp->m_rbmip);
- 	if (xfs_metadata_is_sick(error))
- 		xfs_rt_mark_sick(mp, XFS_SICK_RT_BITMAP);
-@@ -1401,7 +1433,7 @@ xfs_rtmount_inodes(
+-	xf->fd = xfile_create_fd(fname);
+-	if (xf->fd < 0) {
+-		error = -errno;
++	error = xfile_fcb_find(description, maxrange, &xf->partition_pos,
++			&xf->fcb);
++	if (error) {
+ 		kmem_free(xf);
+ 		return error;
+ 	}
+ 
++	xf->partition_bytes = maxrange;
+ 	*xfilep = xf;
+ 	return 0;
+ }
+@@ -133,7 +275,7 @@ void
+ xfile_destroy(
+ 	struct xfile		*xf)
+ {
+-	close(xf->fd);
++	xfile_fcb_irele(xf->fcb, xf->partition_pos, xf->partition_bytes);
+ 	kmem_free(xf);
+ }
+ 
+@@ -141,6 +283,9 @@ static inline loff_t
+ xfile_maxbytes(
+ 	struct xfile		*xf)
+ {
++	if (xf->partition_bytes > 0)
++		return xf->partition_bytes;
++
+ 	if (sizeof(loff_t) == 8)
+ 		return LLONG_MAX;
+ 	return LONG_MAX;
+@@ -166,7 +311,7 @@ xfile_pread(
+ 	if (xfile_maxbytes(xf) - pos < count)
+ 		return -EFBIG;
+ 
+-	ret = pread(xf->fd, buf, count, pos);
++	ret = pread(xf->fcb->fd, buf, count, pos + xf->partition_pos);
+ 	if (ret >= 0)
+ 		return ret;
+ 	return -errno;
+@@ -192,7 +337,7 @@ xfile_pwrite(
+ 	if (xfile_maxbytes(xf) - pos < count)
+ 		return -EFBIG;
+ 
+-	ret = pwrite(xf->fd, buf, count, pos);
++	ret = pwrite(xf->fcb->fd, buf, count, pos + xf->partition_pos);
+ 	if (ret >= 0)
+ 		return ret;
+ 	return -errno;
+@@ -207,7 +352,13 @@ xfile_stat(
+ 	struct stat		ks;
+ 	int			error;
+ 
+-	error = fstat(xf->fd, &ks);
++	if (xf->partition_bytes > 0) {
++		statbuf->size = xf->partition_bytes;
++		statbuf->bytes = xf->partition_bytes;
++		return 0;
++	}
++
++	error = fstat(xf->fcb->fd, &ks);
  	if (error)
- 		goto out_rele_bitmap;
+ 		return -errno;
  
--	error = xfs_imeta_iget(mp, mp->m_sb.sb_rsumino, XFS_DIR3_FT_REG_FILE,
-+	error = xfs_rt_iget(mp, mp->m_sb.sb_rsumino, &xfs_rsumip_key,
- 			&mp->m_rsumip);
- 	if (xfs_metadata_is_sick(error))
- 		xfs_rt_mark_sick(mp, XFS_SICK_RT_SUMMARY);
+@@ -234,7 +385,7 @@ xfile_dump(
+ 	}
+ 
+ 	/* reroute our xfile to stdin and shut everything else */
+-	dup2(xf->fd, 0);
++	dup2(xf->fcb->fd, 0);
+ 	for (i = 3; i < 1024; i++)
+ 		close(i);
+ 
+@@ -251,7 +402,7 @@ xfile_prealloc(
+ 	int		error;
+ 
+ 	count = min(count, xfile_maxbytes(xf) - pos);
+-	error = fallocate(xf->fd, 0, pos, count);
++	error = fallocate(xf->fcb->fd, 0, pos + xf->partition_pos, count);
+ 	if (error)
+ 		return -errno;
+ 	return 0;
+diff --git a/libxfs/xfile.h b/libxfs/xfile.h
+index 9580de32864..9923fe8e5ec 100644
+--- a/libxfs/xfile.h
++++ b/libxfs/xfile.h
+@@ -6,14 +6,18 @@
+ #ifndef __LIBXFS_XFILE_H__
+ #define __LIBXFS_XFILE_H__
+ 
++struct xfile_fcb;
++
+ struct xfile {
+-	int		fd;
++	struct xfile_fcb	*fcb;
++	loff_t			partition_pos;
++	uint64_t		partition_bytes;
+ };
+ 
+ void xfile_libinit(void);
+ 
+-int xfile_create(struct xfs_mount *mp, const char *description,
+-		struct xfile **xfilep);
++int xfile_create(struct xfs_mount *mp, unsigned long long maxrange,
++		const char *description, struct xfile **xfilep);
+ void xfile_destroy(struct xfile *xf);
+ 
+ ssize_t xfile_pread(struct xfile *xf, void *buf, size_t count, loff_t pos);
 
