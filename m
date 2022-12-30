@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E2565A114
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:58:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B265865A111
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:57:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236101AbiLaB6b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:58:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51096 "EHLO
+        id S236076AbiLaB5k (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:57:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236092AbiLaB61 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:58:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4942E1C430
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:58:27 -0800 (PST)
+        with ESMTP id S236091AbiLaB5j (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:57:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEA71C438
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:57:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0E14EB81DF0
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:58:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE69C433D2;
-        Sat, 31 Dec 2022 01:58:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AE8FE61C44
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:57:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1572BC433D2;
+        Sat, 31 Dec 2022 01:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451904;
-        bh=QY4pfgUyOI8NRJ4WzmUz+mRd40gjGvc/tIkqvCVD7m0=;
+        s=k20201202; t=1672451858;
+        bh=j6sJA1G9PKSKfiUoy+6U45B4jtSSLXXWQIEfyAOtGSg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dTpjysoMeQ+tfm5lcKLT+0mA8Es+0H/fWT6vL81EeXi0h8uWviAQxK++28I79R/pf
-         0vA/0g2dbYcEN9JPqmxt6sByDk+E6kfZ9tLjfZknu8tHzvREVYXEm9hjTT/WrKKtiX
-         8D6xrtN76KIoPxN1PVnycSSS+E9ctmmr4+eghkNoh4uQrXljl03wiyRZBd20LLJTjj
-         0L6NUhKF60ZRqvQ122Dcs8z/R2T2IQbi5xx+PBwFag2B20dsve7JOlM/oV1nsLC7vD
-         MyezV9zdtZJODuNZZOA9oBSHUj0Dwsdujj/+ysiNbCw4tH4eGfneu029oppd991Z66
-         hdm7ksnXRXN6Q==
-Subject: [PATCH 40/42] xfs: repair inodes that have a refcount btree in the
- data fork
+        b=Xh+tbRMiNDXuQ6SXdzlISTTqsnpR0z7ao9q2UCaahIObMr7SPzJ+XuRKs8c7JMgI8
+         fNoiMA4ho7+78Nh+yiSdvucbwfI8C9lUDg1VoOJKefORuTu7MeZnHAuZfCa8bhCp9v
+         SCGSog3v6OE+geLRgZYPdBx7KdxrBUyBqZzcDkpzv93wTztIrIv/STxsYiSIy8gO//
+         Yn3NfB3vX/XKUsr8a8kYzx7T7ZBrk6rmEkIDM+5v2pmJJ93N1fd++M9Uiq9LyQQZar
+         2LEgTv2Eqk0AS4+8HCIMmn9lUJG9V5HdBvUnrn05M1FuAlKFZQrP42cLZEf8i2EgbS
+         tnRQn/rlWa/Og==
+Subject: [PATCH 37/42] xfs: walk the rt reference count tree when rebuilding
+ rmap
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:34 -0800
-Message-ID: <167243871465.717073.11753987612330457810.stgit@magnolia>
+Message-ID: <167243871421.717073.4694070852781910720.stgit@magnolia>
 In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
 References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,43 +56,75 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Plumb knowledge of refcount btrees into the inode core repair code.
+When we're rebuilding the data device rmap, if we encounter a "refcount"
+format fork, we have to walk the (realtime) refcount btree inode to
+build the appropriate mappings.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/inode_repair.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/xfs/scrub/rmap_repair.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
-index 3ce9ac5b0fc4..15dbb8a08b81 100644
---- a/fs/xfs/scrub/inode_repair.c
-+++ b/fs/xfs/scrub/inode_repair.c
-@@ -39,6 +39,7 @@
- #include "xfs_rtbitmap.h"
- #include "xfs_rtgroup.h"
+diff --git a/fs/xfs/scrub/rmap_repair.c b/fs/xfs/scrub/rmap_repair.c
+index 86c5338a12b9..24dcd3842ce6 100644
+--- a/fs/xfs/scrub/rmap_repair.c
++++ b/fs/xfs/scrub/rmap_repair.c
+@@ -32,6 +32,7 @@
+ #include "xfs_ag.h"
  #include "xfs_rtrmap_btree.h"
+ #include "xfs_rtgroup.h"
 +#include "xfs_rtrefcount_btree.h"
  #include "scrub/xfs_scrub.h"
  #include "scrub/scrub.h"
  #include "scrub/common.h"
-@@ -977,6 +978,7 @@ xrep_dinode_ensure_forkoff(
- {
- 	struct xfs_bmdr_block	*bmdr;
- 	struct xfs_rtrmap_root	*rmdr;
-+	struct xfs_rtrefcount_root *rcdr;
- 	struct xfs_scrub	*sc = ri->sc;
- 	xfs_extnum_t		attr_extents, data_extents;
- 	size_t			bmdr_minsz = xfs_bmdr_space_calc(1);
-@@ -1087,6 +1089,10 @@ xrep_dinode_ensure_forkoff(
- 		rmdr = XFS_DFORK_PTR(dip, XFS_DATA_FORK);
- 		dfork_min = xfs_rtrmap_broot_space(sc->mp, rmdr);
- 		break;
-+	case XFS_DINODE_FMT_REFCOUNT:
-+		rcdr = XFS_DFORK_PTR(dip, XFS_DATA_FORK);
-+		dfork_min = xfs_rtrefcount_broot_space(sc->mp, rcdr);
-+		break;
- 	default:
- 		dfork_min = 0;
- 		break;
+@@ -530,6 +531,39 @@ xrep_rmap_scan_rtrmapbt(
+ 	return -EFSCORRUPTED;
+ }
+ 
++static int
++xrep_rmap_scan_rtrefcountbt(
++	struct xrep_rmap_ifork	*rf,
++	struct xfs_inode	*ip)
++{
++	struct xfs_scrub	*sc = rf->rr->sc;
++	struct xfs_btree_cur	*cur;
++	struct xfs_rtgroup	*rtg;
++	xfs_rgnumber_t		rgno;
++	int			error;
++
++	if (rf->whichfork != XFS_DATA_FORK)
++		return -EFSCORRUPTED;
++
++	for_each_rtgroup(sc->mp, rgno, rtg) {
++		if (ip == rtg->rtg_refcountip) {
++			cur = xfs_rtrefcountbt_init_cursor(sc->mp, sc->tp, rtg,
++					ip);
++			error = xrep_rmap_scan_iroot_btree(rf, cur);
++			xfs_btree_del_cursor(cur, error);
++			xfs_rtgroup_put(rtg);
++			return error;
++		}
++	}
++
++	/*
++	 * We shouldn't find a refcount format inode that isn't associated with
++	 * an rtgroup!
++	 */
++	ASSERT(0);
++	return -EFSCORRUPTED;
++}
++
+ /* Find all the extents from a given AG in an inode fork. */
+ STATIC int
+ xrep_rmap_scan_ifork(
+@@ -561,6 +595,8 @@ xrep_rmap_scan_ifork(
+ 			return error;
+ 	} else if (ifp->if_format == XFS_DINODE_FMT_RMAP) {
+ 		return xrep_rmap_scan_rtrmapbt(&rf, ip);
++	} else if (ifp->if_format == XFS_DINODE_FMT_REFCOUNT) {
++		return xrep_rmap_scan_rtrefcountbt(&rf, ip);
+ 	} else if (ifp->if_format != XFS_DINODE_FMT_EXTENTS) {
+ 		return 0;
+ 	}
 
