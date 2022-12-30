@@ -2,109 +2,85 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A64F265A0B5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:35:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE3A965A018
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235856AbiLaBfx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:35:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
+        id S235655AbiLaA6M (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:58:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235853AbiLaBfv (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:35:51 -0500
+        with ESMTP id S230017AbiLaA6L (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:58:11 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5292721B2
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:35:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA99F03A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:58:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 04DB4B81E11
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:35:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B168FC433D2;
-        Sat, 31 Dec 2022 01:35:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DDD3DB81E06
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:58:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A379FC433D2;
+        Sat, 31 Dec 2022 00:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450546;
-        bh=+y92eAdaacXVpso0oDsQ3b1gj32CA4Emzi4+ogFJ+o8=;
+        s=k20201202; t=1672448288;
+        bh=IFDSATLJy3ksjSwyzOYTrtEO9zJbFLDxCvIS4Tu4OtA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VFIr/2MA11ZXABzdkiJXOp8mwi+1+vi0/3l640XPhmJ5qkq3XniAi6rlg8m1tBvJf
-         GF2KffhGpiR9fBnFVAGgmCJKMEfXTrzkcaasB9tMX+Ko1uzh0kQWQiwh5X0/PA3abL
-         lCkFnejlkAbfO4xVjQm8lr6cvNSk303b/VPc9rRWCSWDkOVoab9d76ff3xpg/xpsxQ
-         3l3GHGHuOtSH+KyLM5UDhbCGqwsS916BzY1T3c6b2wD3+4pBemZwMN+/wtzl95m9n4
-         Hsz2OspfSp5ZaiuV8PxkyMoKl1vghN7falj7GjIrIBd2c5NU8CkN6zogK8jqRboQht
-         /MUonG0X6yZAQ==
-Subject: [PATCH 1/5] xfs: attach rtgroup objects to btree cursors
+        b=iMW9pM07GAaYpZZEZitkqdYEEEhXnuU+SykwWlkWsr3jbMP6OgqSrK4a+Iwz2fKyf
+         bb9s2VPqpRAwGtueEEWvakcUouTpY0isY2B0UzHg9psFmpfnI1IuVoj/tRknne1CG8
+         +L73OCeJbA2c/FA7uYwpN1WTP4pLpMcoJBVwLbmYFFA/ckujfUowYs/PUd1uptbpLA
+         PG7s0P8Ozz+USxTXSe1tR+x6J6dllP+UTLyT/AYv8HqthR3xSlxJVrBwMSZap7+Xj1
+         TNy2Tx2qMNLfrd4VlWg3JoO/AYrzasG024bw6U9YMkXM/3j80Of3rvg13exCIFymph
+         kFyLtKJwNa0tQ==
+Subject: [PATCHSET v1.0 0/5] xfs: rmap log intent cleanups
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:11 -0800
-Message-ID: <167243869175.714954.2927866081417377028.stgit@magnolia>
-In-Reply-To: <167243869156.714954.12346064053546135919.stgit@magnolia>
-References: <167243869156.714954.12346064053546135919.stgit@magnolia>
+Message-ID: <167243869156.714954.12346064053546135919.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Make it so that we can attach realtime group objects to btree cursors.
-This will be crucial for enabling rmap btrees in realtime groups.
+This series cleans up the rmap intent code before we start adding
+support for realtime devices.  Similar to previous intent cleanup
+patchsets, we start transforming the tracepoints so that the data
+extraction are done inside the tracepoint code, and then we start
+passing the intent itself to the _finish_one function.  This reduces the
+boxing and unboxing of parameters.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=rmap-intent-cleanups
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=rmap-intent-cleanups
 ---
- fs/xfs/libxfs/xfs_btree.c |    4 ++++
- fs/xfs/libxfs/xfs_btree.h |    2 ++
- 2 files changed, 6 insertions(+)
-
-
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 00bc1dd73675..c02748e16075 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -31,6 +31,7 @@
- #include "scrub/xfile.h"
- #include "scrub/xfbtree.h"
- #include "xfs_btree_mem.h"
-+#include "xfs_rtgroup.h"
- 
- /*
-  * Btree magic numbers.
-@@ -476,6 +477,9 @@ xfs_btree_del_cursor(
- 	       xfs_is_shutdown(cur->bc_mp) || error != 0);
- 	if (unlikely(cur->bc_flags & XFS_BTREE_STAGING))
- 		kmem_free(cur->bc_ops);
-+	if ((cur->bc_flags & XFS_BTREE_ROOT_IN_INODE) &&
-+	    !(cur->bc_flags & XFS_BTREE_IN_MEMORY) && cur->bc_ino.rtg)
-+		xfs_rtgroup_put(cur->bc_ino.rtg);
- 	if (!(cur->bc_flags & XFS_BTREE_LONG_PTRS) &&
- 	    !(cur->bc_flags & XFS_BTREE_IN_MEMORY) && cur->bc_ag.pag)
- 		xfs_perag_put(cur->bc_ag.pag);
-diff --git a/fs/xfs/libxfs/xfs_btree.h b/fs/xfs/libxfs/xfs_btree.h
-index b15bc77369cf..125f45731a54 100644
---- a/fs/xfs/libxfs/xfs_btree.h
-+++ b/fs/xfs/libxfs/xfs_btree.h
-@@ -12,6 +12,7 @@ struct xfs_mount;
- struct xfs_trans;
- struct xfs_ifork;
- struct xfs_perag;
-+struct xfs_rtgroup;
- 
- /*
-  * Generic key, ptr and record wrapper structures.
-@@ -244,6 +245,7 @@ struct xfs_btree_cur_ag {
- /* Btree-in-inode cursor information */
- struct xfs_btree_cur_ino {
- 	struct xfs_inode		*ip;
-+	struct xfs_rtgroup		*rtg;	/* if realtime metadata */
- 	struct xbtree_ifakeroot		*ifake;	/* for staging cursor */
- 	int				allocated;
- 	short				forksize;
+ fs/xfs/libxfs/xfs_btree.c |    4 +
+ fs/xfs/libxfs/xfs_btree.h |    2 
+ fs/xfs/libxfs/xfs_rmap.c  |  233 +++++++++++++++++----------------------------
+ fs/xfs/libxfs/xfs_rmap.h  |   10 ++
+ fs/xfs/xfs_rmap_item.c    |   79 +++++++--------
+ fs/xfs/xfs_trace.c        |    1 
+ fs/xfs/xfs_trace.h        |  187 +++++++++++++++++++++++++-----------
+ 7 files changed, 265 insertions(+), 251 deletions(-)
 
