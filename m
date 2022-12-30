@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DA3665A061
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:15:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC20165A063
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:16:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236038AbiLaBPf (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:15:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43032 "EHLO
+        id S236039AbiLaBQG (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:16:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236035AbiLaBPd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:15:33 -0500
+        with ESMTP id S236035AbiLaBQF (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:16:05 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE0618E30
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:15:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDE7267A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:16:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AE86561D74
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:15:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DADC433D2;
-        Sat, 31 Dec 2022 01:15:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0E1F61D76
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:16:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B053C433EF;
+        Sat, 31 Dec 2022 01:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449332;
-        bh=yRS2VsvOX2QfYTQXiGKktYeYGnMCt7/h9/5YIcmetKQ=;
+        s=k20201202; t=1672449363;
+        bh=IUq+uTtRhJRY47zdelTje8W+8i/0bgteo7TdGj2BOVw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Alzvstshj2HPb5K2d+NpJJCLEqbLLx/wXN7XEroBFT4K8HTp/0L1CiKVaPUVCiIm9
-         tLhdvk1WBQhuhetVzKI2rYxJTuvBE5T8So3jVkGqBDuRdT/1wvCRXp5hKcoChmBYOP
-         bCg8fUG2XvR/YRXyW7AG4ZL59M4vRcXWve7antN4Gnn6eWExT8fBd02bJpDYz2J+F2
-         2XY6oI1Nk7mgbS1aQ8d0Ix5MVFkRIj+bOBZotuPtk4+YOqj7XUwizy7vKww4N/wZfW
-         o/gXTI4j2krYfn6wqphqeAkdB9NrZ9B5Untk/7nwK3V/hGyO85PId3dYzYGftFGXYL
-         kJQpr8qtvAtBg==
-Subject: [PATCH 20/23] xfs: scrub metadata directories
+        b=f43mVKyCZY3zpxoNNar4/k/hcdR/S4x+3c1HGrjUilKQ5zccORoOnNyL7TmmO4ZzN
+         G8ZwHHn668yya3bWaKuIsYbnUPQZLOuQyglqG4KL5yXUWgRoeX+OOvuT1doi/EUoGZ
+         oU3eLuhU231+8eLbc9XQ0DPx083CcF81enUpBmLw74okDwyVNw4EdMJg79/cwDM7iD
+         V6+Yrk9x22fw01QhEFM6o2CrzK/fy9LWzZtVfwH8LOTBfSzu3mCY6TlZ8W+phmNFqj
+         D2wss2ctBE1o7hoYdR83uffoCGUbmOAOkuy7VsfzD2KhixklW4cnuKmik6g+cShjz/
+         devMnUihqve8w==
+Subject: [PATCH 22/23] xfs: don't check secondary super inode pointers when
+ metadir enabled
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:27 -0800
-Message-ID: <167243864741.708110.16141637739025575601.stgit@magnolia>
+Message-ID: <167243864769.708110.11113843210077455683.stgit@magnolia>
 In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
 References: <167243864431.708110.1688096566212843499.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,154 +55,70 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Teach online scrub about the metadata directory tree.
+When metadata directories are enabled, the rt and quota inodes are no
+longer pointed to by the superblock, so it doesn't make sense to check
+these.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/dir.c           |    9 +++++++++
- fs/xfs/scrub/dir_repair.c    |    6 ++++++
- fs/xfs/scrub/parent.c        |   18 ++++++++++++++++++
- fs/xfs/scrub/parent_repair.c |   37 +++++++++++++++++++++++++++++++------
- 4 files changed, 64 insertions(+), 6 deletions(-)
+ fs/xfs/scrub/agheader.c |   29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
 
-diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-index 218cf43cdf93..30636501fb9f 100644
---- a/fs/xfs/scrub/dir.c
-+++ b/fs/xfs/scrub/dir.c
-@@ -59,6 +59,15 @@ xchk_dir_check_ftype(
+diff --git a/fs/xfs/scrub/agheader.c b/fs/xfs/scrub/agheader.c
+index fb2f32a2af5d..e5edba4219fd 100644
+--- a/fs/xfs/scrub/agheader.c
++++ b/fs/xfs/scrub/agheader.c
+@@ -144,11 +144,16 @@ xchk_superblock(
+ 	if (sb->sb_rootino != cpu_to_be64(mp->m_sb.sb_rootino))
+ 		xchk_block_set_preen(sc, bp);
  
- 	if (xfs_mode_to_ftype(VFS_I(ip)->i_mode) != ftype)
- 		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+
-+	/*
-+	 * Metadata and regular inodes cannot cross trees.  This property
-+	 * cannot change without a full inode free and realloc cycle, so it's
-+	 * safe to check this without holding locks.
-+	 */
-+	if (xfs_is_metadata_inode(ip) ^ xfs_is_metadata_inode(sc->ip))
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, offset);
-+
- }
+-	if (sb->sb_rbmino != cpu_to_be64(mp->m_sb.sb_rbmino))
+-		xchk_block_set_preen(sc, bp);
++	if (xfs_has_metadir(sc->mp)) {
++		if (sb->sb_rbmino != cpu_to_be64(mp->m_sb.sb_metadirino))
++			xchk_block_set_preen(sc, bp);
++	} else {
++		if (sb->sb_rbmino != cpu_to_be64(mp->m_sb.sb_rbmino))
++			xchk_block_set_preen(sc, bp);
  
- /*
-diff --git a/fs/xfs/scrub/dir_repair.c b/fs/xfs/scrub/dir_repair.c
-index 7530819e1435..14f34b9d4448 100644
---- a/fs/xfs/scrub/dir_repair.c
-+++ b/fs/xfs/scrub/dir_repair.c
-@@ -204,6 +204,12 @@ xrep_dir_salvage_entry(
- 	if (error)
- 		return 0;
- 
-+	/* Don't mix metadata and regular directory trees. */
-+	if (xfs_is_metadata_inode(ip) ^ xfs_is_metadata_inode(rd->sc->ip)) {
-+		xchk_irele(sc, ip);
-+		return 0;
+-	if (sb->sb_rsumino != cpu_to_be64(mp->m_sb.sb_rsumino))
+-		xchk_block_set_preen(sc, bp);
++		if (sb->sb_rsumino != cpu_to_be64(mp->m_sb.sb_rsumino))
++			xchk_block_set_preen(sc, bp);
 +	}
-+
- 	entry.ftype = xfs_mode_to_ftype(VFS_I(ip)->i_mode);
- 	xchk_irele(sc, ip);
  
-diff --git a/fs/xfs/scrub/parent.c b/fs/xfs/scrub/parent.c
-index 92866f1757be..5af765a8182c 100644
---- a/fs/xfs/scrub/parent.c
-+++ b/fs/xfs/scrub/parent.c
-@@ -197,6 +197,16 @@ xchk_parent_validate(
- 		goto out_rele;
- 	}
+ 	if (sb->sb_rextsize != cpu_to_be32(mp->m_sb.sb_rextsize))
+ 		xchk_block_set_corrupt(sc, bp);
+@@ -225,11 +230,13 @@ xchk_superblock(
+ 	 * sb_icount, sb_ifree, sb_fdblocks, sb_frexents
+ 	 */
  
-+	/*
-+	 * Metadata and regular inodes cannot cross trees.  This property
-+	 * cannot change without a full inode free and realloc cycle, so it's
-+	 * safe to check this without holding locks.
-+	 */
-+	if (xfs_is_metadata_inode(dp) ^ xfs_is_metadata_inode(sc->ip)) {
-+		xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, 0);
-+		goto out_rele;
+-	if (sb->sb_uquotino != cpu_to_be64(mp->m_sb.sb_uquotino))
+-		xchk_block_set_preen(sc, bp);
++	if (!xfs_has_metadir(sc->mp)) {
++		if (sb->sb_uquotino != cpu_to_be64(mp->m_sb.sb_uquotino))
++			xchk_block_set_preen(sc, bp);
+ 
+-	if (sb->sb_gquotino != cpu_to_be64(mp->m_sb.sb_gquotino))
+-		xchk_block_set_preen(sc, bp);
++		if (sb->sb_gquotino != cpu_to_be64(mp->m_sb.sb_gquotino))
++			xchk_block_set_preen(sc, bp);
 +	}
-+
+ 
  	/*
- 	 * We prefer to keep the inode locked while we lock and search its
- 	 * alleged parent for a forward reference.  If we can grab the iolock
-@@ -302,5 +312,13 @@ xchk_parent(
- 		return 0;
+ 	 * Skip the quota flags since repair will force quotacheck.
+@@ -338,8 +345,10 @@ xchk_superblock(
+ 		if (sb->sb_spino_align != cpu_to_be32(mp->m_sb.sb_spino_align))
+ 			xchk_block_set_corrupt(sc, bp);
+ 
+-		if (sb->sb_pquotino != cpu_to_be64(mp->m_sb.sb_pquotino))
+-			xchk_block_set_preen(sc, bp);
++		if (!xfs_has_metadir(sc->mp)) {
++			if (sb->sb_pquotino != cpu_to_be64(mp->m_sb.sb_pquotino))
++				xchk_block_set_preen(sc, bp);
++		}
+ 
+ 		/* Don't care about sb_lsn */
  	}
- 
-+	/* Is this the metadata root dir?  Then '..' must point to itself. */
-+	if (sc->ip == mp->m_metadirip) {
-+		if (sc->ip->i_ino != mp->m_sb.sb_metadirino ||
-+		    sc->ip->i_ino != parent_ino)
-+			xchk_fblock_set_corrupt(sc, XFS_DATA_FORK, 0);
-+		return 0;
-+	}
-+
- 	return xchk_parent_validate(sc, parent_ino);
- }
-diff --git a/fs/xfs/scrub/parent_repair.c b/fs/xfs/scrub/parent_repair.c
-index ffef5de0fbe2..bba1cd1c7c8b 100644
---- a/fs/xfs/scrub/parent_repair.c
-+++ b/fs/xfs/scrub/parent_repair.c
-@@ -135,6 +135,10 @@ xrep_findparent_walk_directory(
- 	if (xrep_is_tempfile(dp))
- 		return 0;
- 
-+	/* Don't mix metadata and regular directory trees. */
-+	if (xfs_is_metadata_inode(dp) ^ xfs_is_metadata_inode(sc->ip))
-+		return 0;
-+
- 	/* Try to lock dp; if we can, we're ready to scan! */
- 	if (!xfs_ilock_nowait(dp, XFS_IOLOCK_SHARED)) {
- 		xfs_ino_t	orig_parent, new_parent;
-@@ -227,15 +231,30 @@ xrep_parent_confirm(
- 	};
- 	int			error;
- 
--	/*
--	 * The root directory always points to itself.  Unlinked dirs can point
--	 * anywhere, so we point them at the root dir too.
--	 */
--	if (sc->ip == sc->mp->m_rootip || VFS_I(sc->ip)->i_nlink == 0) {
-+	/* The root directory always points to itself. */
-+	if (sc->ip == sc->mp->m_rootip) {
- 		*parent_ino = sc->mp->m_sb.sb_rootino;
- 		return 0;
- 	}
- 
-+	/* The metadata root directory always points to itself. */
-+	if (sc->ip == sc->mp->m_metadirip) {
-+		*parent_ino = sc->mp->m_sb.sb_metadirino;
-+		return 0;
-+	}
-+
-+	/*
-+	 * Unlinked dirs can point anywhere, so we point them at the root dir
-+	 * of whichever tree is appropriate.
-+	 */
-+	if (VFS_I(sc->ip)->i_nlink == 0) {
-+		if (xfs_is_metadata_inode(sc->ip))
-+			*parent_ino = sc->mp->m_sb.sb_metadirino;
-+		else
-+			*parent_ino = sc->mp->m_sb.sb_rootino;
-+		return 0;
-+	}
-+
- 	/* Reject garbage parent inode numbers and self-referential parents. */
- 	if (*parent_ino == NULLFSINO)
- 	       return 0;
-@@ -389,8 +408,14 @@ xrep_parent_self_reference(
- 	if (sc->ip->i_ino == sc->mp->m_sb.sb_rootino)
- 		return sc->mp->m_sb.sb_rootino;
- 
--	if (VFS_I(sc->ip)->i_nlink == 0)
-+	if (sc->ip->i_ino == sc->mp->m_sb.sb_metadirino)
-+		return sc->mp->m_sb.sb_metadirino;
-+
-+	if (VFS_I(sc->ip)->i_nlink == 0) {
-+		if (xfs_is_metadata_inode(sc->ip))
-+			return sc->mp->m_sb.sb_metadirino;
- 		return sc->mp->m_sb.sb_rootino;
-+	}
- 
- 	return NULLFSINO;
- }
 
