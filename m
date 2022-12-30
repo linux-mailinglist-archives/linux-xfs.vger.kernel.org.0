@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 963DA659FC0
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:36:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ACB065A117
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:59:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235801AbiLaAgl (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:36:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34586 "EHLO
+        id S236113AbiLaB7O (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:59:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235750AbiLaAgk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:36:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6522F12A9B
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:36:39 -0800 (PST)
+        with ESMTP id S236108AbiLaB7N (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:59:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613CD1C430
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:59:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1908AB80883
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:36:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D04A8C433EF;
-        Sat, 31 Dec 2022 00:36:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F060161C63
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:59:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58C34C433D2;
+        Sat, 31 Dec 2022 01:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446996;
-        bh=xy18g4wuD3ySapQDCLPeEQVkt6IvM8/lkW6E35+ksHE=;
+        s=k20201202; t=1672451951;
+        bh=60Aa8kLwcxl1JFcfdqnLAU0sQB63EmIk8WV/gAj7c7k=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VVsvtVFEAdxQzOunkCcim5cfcHurvg+hz9rnt+VO2aRlLb41Sf075tMfTrd0USs4V
-         itQmr5P9fhMPQ4Eoh4eSUNKVVvdN5iAT7a4DHs3axFcHY0E02jI6LSSZws4Fmokxcy
-         8vJY8mByKJrk/SW87QWZJmadzMplPdUgzsNW06hcNfd66oUBOYC5D3nBDUr1oNniHc
-         xoWm3g6/kEPidFkFclYFLL1UDTKH4y0I1mbi+T4USXhS8EeikRBb75mJzu7ZKtue+o
-         4fL24fZA9kvIOt9UWJtJbfzNBO6Mt4UADRY/wG8faQvmu3Qek+cVqvtnWpK/Dq0UhN
-         eK/8ChT5PajYw==
-Subject: [PATCH 3/5] xfs_scrub: tighten up the security on the background
- systemd service
+        b=squ3xetuE8lnO0Ng3C0Frp8XzHFjg39myXWYjDtkVeddn8VHQE/7r4iJr0SJrzhVV
+         jlPxk4rLg9JQi+9AUckt08rmnulLsXY0ETeTFaVZw5hW5+GvGU3PlSPSDu6b9gPwxQ
+         bKCxxk92zWuEeS6Mf0Q/4/tPzRPIWc0Exbh5Nc3D3MqXk7bZmOfxgEOwJqLBeAQ1HV
+         P8xKi7q1O1lRFIQp4PUCGj9FO8MLvO6Xc5QhevbBhYxqj2NKFVD/TSv3Eqpg7nGEn4
+         8I4NJpbsNir8XtZ/l66PMpnFwku5zmfjsnpZRsD5ZVhqWBGM0pIk6a7dKX2+SoqJYy
+         p+6Oe36dPzY8Q==
+Subject: [PATCH 1/9] vfs: explicitly pass the block size to the remap prep
+ function
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:18:35 -0800
-Message-ID: <167243871504.718298.11721955751660856262.stgit@magnolia>
-In-Reply-To: <167243871464.718298.4729609315819255063.stgit@magnolia>
-References: <167243871464.718298.4729609315819255063.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:18:38 -0800
+Message-ID: <167243871817.718512.8634564486988370537.stgit@magnolia>
+In-Reply-To: <167243871792.718512.13170681692847163098.stgit@magnolia>
+References: <167243871792.718512.13170681692847163098.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,107 +56,147 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Currently, xfs_scrub has to run with some elevated privileges.  Minimize
-the risk of xfs_scrub escaping its service container or contaminating
-the rest of the system by using systemd's sandboxing controls to
-prohibit as much access as possible.
-
-The directives added by this patch were recommended by the command
-'systemd-analyze security xfs_scrub@.service' in systemd 249.
+Make it so that filesystems can pass an explicit blocksize to the remap
+prep function.  This enables filesystems whose fundamental allocation
+units are /not/ the same as the blocksize to ensure that the remapping
+checks are aligned properly.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/xfs_scrub@.service.in |   73 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 65 insertions(+), 8 deletions(-)
+ fs/dax.c           |    5 ++++-
+ fs/remap_range.c   |   30 ++++++++++++++++++------------
+ include/linux/fs.h |    3 ++-
+ 3 files changed, 24 insertions(+), 14 deletions(-)
 
 
-diff --git a/scrub/xfs_scrub@.service.in b/scrub/xfs_scrub@.service.in
-index 3c64252de49..39af00d4b73 100644
---- a/scrub/xfs_scrub@.service.in
-+++ b/scrub/xfs_scrub@.service.in
-@@ -10,15 +10,8 @@ Documentation=man:xfs_scrub(8)
+diff --git a/fs/dax.c b/fs/dax.c
+index c48a3a93ab29..9ec07a06f49c 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -2035,7 +2035,10 @@ int dax_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 			      loff_t *len, unsigned int remap_flags,
+ 			      const struct iomap_ops *ops)
+ {
++	unsigned int blocksize = file_inode(file_out)->i_sb->s_blocksize;
++
+ 	return __generic_remap_file_range_prep(file_in, pos_in, file_out,
+-					       pos_out, len, remap_flags, ops);
++					       pos_out, len, remap_flags, ops,
++					       blocksize);
+ }
+ EXPORT_SYMBOL_GPL(dax_remap_file_range_prep);
+diff --git a/fs/remap_range.c b/fs/remap_range.c
+index 469d53fb42e9..8a43038dc3e7 100644
+--- a/fs/remap_range.c
++++ b/fs/remap_range.c
+@@ -29,18 +29,18 @@
+  */
+ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
+ 				struct file *file_out, loff_t pos_out,
+-				loff_t *req_count, unsigned int remap_flags)
++				loff_t *req_count, unsigned int remap_flags,
++				unsigned int blocksize)
+ {
+ 	struct inode *inode_in = file_in->f_mapping->host;
+ 	struct inode *inode_out = file_out->f_mapping->host;
+ 	uint64_t count = *req_count;
+ 	uint64_t bcount;
+ 	loff_t size_in, size_out;
+-	loff_t bs = inode_out->i_sb->s_blocksize;
+ 	int ret;
  
- [Service]
- Type=oneshot
--PrivateNetwork=true
--ProtectSystem=full
--ProtectHome=read-only
--# Disable private /tmp just in case %i is a path under /tmp.
--PrivateTmp=no
--AmbientCapabilities=CAP_SYS_ADMIN CAP_FOWNER CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH CAP_SYS_RAWIO
--NoNewPrivileges=yes
--User=nobody
- Environment=SERVICE_MODE=1
-+Environment=SERVICE_MOUNTPOINT=/tmp/scrub
- ExecStart=@sbindir@/xfs_scrub @scrub_args@ %I
- SyslogIdentifier=%N
+ 	/* The start of both ranges must be aligned to an fs block. */
+-	if (!IS_ALIGNED(pos_in, bs) || !IS_ALIGNED(pos_out, bs))
++	if (!IS_ALIGNED(pos_in, blocksize) || !IS_ALIGNED(pos_out, blocksize))
+ 		return -EINVAL;
  
-@@ -31,3 +24,67 @@ Nice=19
- # Create the service underneath the scrub background service slice so that we
- # can control resource usage.
- Slice=system-xfs_scrub.slice
+ 	/* Ensure offsets don't wrap. */
+@@ -74,10 +74,10 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
+ 	 */
+ 	if (pos_in + count == size_in &&
+ 	    (!(remap_flags & REMAP_FILE_DEDUP) || pos_out + count == size_out)) {
+-		bcount = ALIGN(size_in, bs) - pos_in;
++		bcount = ALIGN(size_in, blocksize) - pos_in;
+ 	} else {
+-		if (!IS_ALIGNED(count, bs))
+-			count = ALIGN_DOWN(count, bs);
++		if (!IS_ALIGNED(count, blocksize))
++			count = ALIGN_DOWN(count, blocksize);
+ 		bcount = count;
+ 	}
+ 
+@@ -125,9 +125,10 @@ static int generic_remap_check_len(struct inode *inode_in,
+ 				   struct inode *inode_out,
+ 				   loff_t pos_out,
+ 				   loff_t *len,
+-				   unsigned int remap_flags)
++				   unsigned int remap_flags,
++				   unsigned int blocksize)
+ {
+-	u64 blkmask = i_blocksize(inode_in) - 1;
++	u64 blkmask = blocksize - 1;
+ 	loff_t new_len = *len;
+ 
+ 	if ((*len & blkmask) == 0)
+@@ -268,7 +269,8 @@ int
+ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 				struct file *file_out, loff_t pos_out,
+ 				loff_t *len, unsigned int remap_flags,
+-				const struct iomap_ops *dax_read_ops)
++				const struct iomap_ops *dax_read_ops,
++				unsigned int blocksize)
+ {
+ 	struct inode *inode_in = file_inode(file_in);
+ 	struct inode *inode_out = file_inode(file_out);
+@@ -303,7 +305,7 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 
+ 	/* Check that we don't violate system file offset limits. */
+ 	ret = generic_remap_checks(file_in, pos_in, file_out, pos_out, len,
+-			remap_flags);
++			remap_flags, blocksize);
+ 	if (ret || *len == 0)
+ 		return ret;
+ 
+@@ -344,7 +346,7 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 	}
+ 
+ 	ret = generic_remap_check_len(inode_in, inode_out, pos_out, len,
+-			remap_flags);
++			remap_flags, blocksize);
+ 	if (ret || *len == 0)
+ 		return ret;
+ 
+@@ -354,13 +356,17 @@ __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL(__generic_remap_file_range_prep);
+ 
+ int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 				  struct file *file_out, loff_t pos_out,
+ 				  loff_t *len, unsigned int remap_flags)
+ {
++	unsigned int blocksize = file_inode(file_out)->i_sb->s_blocksize;
 +
-+# No realtime CPU scheduling
-+RestrictRealtime=true
-+
-+# Dynamically create a user that isn't root
-+DynamicUser=true
-+
-+# Make the entire filesystem readonly and /home inaccessible, then bind mount
-+# the filesystem we're supposed to be checking into our private /tmp dir.
-+# 'norbind' means that we don't bind anything under that original mount.
-+ProtectSystem=strict
-+ProtectHome=yes
-+PrivateTmp=true
-+BindPaths=/%I:/tmp/scrub:norbind
-+
-+# Don't let scrub complain about paths in /etc/projects that have been hidden
-+# by our sandboxing.  scrub doesn't care about project ids anyway.
-+InaccessiblePaths=-/etc/projects
-+
-+# No network access
-+PrivateNetwork=true
-+ProtectHostname=true
-+RestrictAddressFamilies=none
-+IPAddressDeny=any
-+
-+# Don't let the program mess with the kernel configuration at all
-+ProtectKernelLogs=true
-+ProtectKernelModules=true
-+ProtectKernelTunables=true
-+ProtectControlGroups=true
-+ProtectProc=invisible
-+RestrictNamespaces=true
-+
-+# Hide everything in /proc, even /proc/mounts
-+ProcSubset=pid
-+
-+# Only allow the default personality Linux
-+LockPersonality=true
-+
-+# No writable memory pages
-+MemoryDenyWriteExecute=true
-+
-+# Don't let our mounts leak out to the host
-+PrivateMounts=true
-+
-+# Restrict system calls to the native arch and only enough to get things going
-+SystemCallArchitectures=native
-+SystemCallFilter=@system-service
-+SystemCallFilter=~@privileged
-+SystemCallFilter=~@resources
-+SystemCallFilter=~@mount
-+
-+# xfs_scrub needs these privileges to run, and no others
-+CapabilityBoundingSet=CAP_SYS_ADMIN CAP_FOWNER CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH CAP_SYS_RAWIO
-+AmbientCapabilities=CAP_SYS_ADMIN CAP_FOWNER CAP_DAC_OVERRIDE CAP_DAC_READ_SEARCH CAP_SYS_RAWIO
-+NoNewPrivileges=true
-+
-+# xfs_scrub doesn't create files
-+UMask=7777
-+
-+# No access to hardware /dev files except for block devices
-+ProtectClock=true
-+DevicePolicy=closed
-+DeviceAllow=block-*
+ 	return __generic_remap_file_range_prep(file_in, pos_in, file_out,
+-					       pos_out, len, remap_flags, NULL);
++					       pos_out, len, remap_flags, NULL,
++					       blocksize);
+ }
+ EXPORT_SYMBOL(generic_remap_file_range_prep);
+ 
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index cd86ac22c339..5f8f4b11dc28 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2204,7 +2204,8 @@ extern ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
+ int __generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 				    struct file *file_out, loff_t pos_out,
+ 				    loff_t *len, unsigned int remap_flags,
+-				    const struct iomap_ops *dax_read_ops);
++				    const struct iomap_ops *dax_read_ops,
++				    unsigned int block_size);
+ int generic_remap_file_range_prep(struct file *file_in, loff_t pos_in,
+ 				  struct file *file_out, loff_t pos_out,
+ 				  loff_t *count, unsigned int remap_flags);
 
