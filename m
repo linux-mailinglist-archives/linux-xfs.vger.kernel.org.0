@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99405659F4C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:13:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD535659F48
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:12:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235595AbiLaANe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:13:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55276 "EHLO
+        id S235398AbiLaAMc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:12:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235580AbiLaANd (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:13:33 -0500
+        with ESMTP id S229994AbiLaAMb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:12:31 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D247B48F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:13:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3D9102E
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:12:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C5936B81DD9
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:13:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D6CCC433D2;
-        Sat, 31 Dec 2022 00:13:30 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 00DC9B81E07
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:12:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABCF9C433D2;
+        Sat, 31 Dec 2022 00:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445610;
-        bh=BNAtpZACAl2l4KtbQxYnLgyzxcb+vb1e+k0MuWij8sc=;
+        s=k20201202; t=1672445547;
+        bh=xetoTG19L9IIBcjn1e0GZ9FHC/r7WxpFxy2COu9FuL0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RMCE+7Mnpca+xykyw0nZCtB1k9UN4lBtDDqej89M3uhsrZseSCMEy9adCAZZcLbJn
-         QHbQ3gWRSC2yr0kpjXY6KBdDgBPEyQtMvia3WZScHxPCquhaJJ5ogmj+gAynrK5duC
-         RsgiNfgWGIIshCMqvl1ZewVhOglhZ6sd5EmqJDwjABNhutQ4Vuq9wzh9QlzwWVAeoO
-         AFUwzx/NyBAyZv2CX2lpv+7KvirPEnXQmcduNcpigU2lrc5TZaGgMuGAZi0mpvRx7O
-         6XcG1m0InQQr8eKvh/Xo/0qHMXkzH3gUQNWdW5NB9syvlj1e6cfiXGqa7ck4FE6kUk
-         gxS7z8evH90iw==
-Subject: [PATCH 9/9] xfbtree: let the buffer cache flush dirty buffers to the
- xfile
+        b=hyadrQeg3lvtvghts8SMP8nuKflPao9Af8aSKdyfOPdA9mvzxsViNy3WKUeU0KZzn
+         HOlSWR+k8uHmp0l/IR5rqR/AeC3b8yRxKjsYI5HjPYar5GatAW82RoYnD3G9zXzn9b
+         k95o9eiVKk9aENftqhGwQhajch0RAhsC/PW5JuXlAa1ZcvNIaVg1SUE6txEIrZLgUk
+         1NR6pYeNDniWIlDwiI/ElFnZQtpa7BnHugkuGH/uvOZjCjxf4mmUoGA7Vt2LjIDxqz
+         xiXsIul++K9gdz3WLw/tph4sBOo1p52QSvJ89O7pREL5o+/vpTWW0vgohNNknEMuBt
+         QFXIl6YJ0YwAA==
+Subject: [PATCH 5/9] xfs: consolidate btree block freeing tracepoints
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:42 -0800
-Message-ID: <167243866277.711834.8918707899481865492.stgit@magnolia>
+Message-ID: <167243866224.711834.5671254620893854013.stgit@magnolia>
 In-Reply-To: <167243866153.711834.17585439086893346840.stgit@magnolia>
 References: <167243866153.711834.17585439086893346840.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,63 +54,83 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-As a performance optimization, when we're committing xfbtree updates,
-let the buffer cache flush the dirty buffers to disk when it's ready
-instead of writing everything at every transaction commit.  This is a
-bit sketchy but it's an ephemeral tree so we can play fast and loose.
+Don't waste tracepoint segment memory on per-btree block freeing
+tracepoints when we can do it from the generic btree code.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfbtree.c |   17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
+ include/xfs_trace.h         |    3 +--
+ libxfs/xfs_btree.c          |    2 ++
+ libxfs/xfs_refcount_btree.c |    2 --
+ libxfs/xfs_rmap_btree.c     |    2 --
+ 4 files changed, 3 insertions(+), 6 deletions(-)
 
 
-diff --git a/libxfs/xfbtree.c b/libxfs/xfbtree.c
-index 41851c3b9ae..65d6baea856 100644
---- a/libxfs/xfbtree.c
-+++ b/libxfs/xfbtree.c
-@@ -699,7 +699,6 @@ xfbtree_trans_commit(
- 	struct xfbtree		*xfbt,
- 	struct xfs_trans	*tp)
+diff --git a/include/xfs_trace.h b/include/xfs_trace.h
+index 19b05f6e25e..0a7581b5794 100644
+--- a/include/xfs_trace.h
++++ b/include/xfs_trace.h
+@@ -61,6 +61,7 @@
+ #define trace_xfs_btree_commit_ifakeroot(a)	((void) 0)
+ #define trace_xfs_btree_bload_level_geometry(a,b,c,d,e,f,g) ((void) 0)
+ #define trace_xfs_btree_bload_block(a,b,c,d,e,f) ((void) 0)
++#define trace_xfs_btree_free_block(...)		((void) 0)
+ 
+ #define trace_xfs_free_extent(a,b,c,d,e,f,g)	((void) 0)
+ #define trace_xfs_agf(a,b,c,d)			((void) 0)
+@@ -243,7 +244,6 @@
+ #define trace_xfs_rmap_find_left_neighbor_result(...)	((void) 0)
+ #define trace_xfs_rmap_lookup_le_range_result(...)	((void) 0)
+ 
+-#define trace_xfs_rmapbt_free_block(...)	((void) 0)
+ #define trace_xfs_rmapbt_alloc_block(...)	((void) 0)
+ 
+ #define trace_xfs_ag_resv_critical(...)		((void) 0)
+@@ -263,7 +263,6 @@
+ #define trace_xfs_refcount_insert_error(...)	((void) 0)
+ #define trace_xfs_refcount_delete(...)		((void) 0)
+ #define trace_xfs_refcount_delete_error(...)	((void) 0)
+-#define trace_xfs_refcountbt_free_block(...)	((void) 0)
+ #define trace_xfs_refcountbt_alloc_block(...)	((void) 0)
+ #define trace_xfs_refcount_rec_order_error(...)	((void) 0)
+ 
+diff --git a/libxfs/xfs_btree.c b/libxfs/xfs_btree.c
+index e0b9f075015..d7501da87ce 100644
+--- a/libxfs/xfs_btree.c
++++ b/libxfs/xfs_btree.c
+@@ -411,6 +411,8 @@ xfs_btree_free_block(
  {
--	LIST_HEAD(buffer_list);
- 	struct xfs_log_item	*lip, *n;
- 	bool			corrupt = false;
- 	bool			tp_dirty = false;
-@@ -733,12 +732,16 @@ xfbtree_trans_commit(
- 			 * If the buffer fails verification, log the failure
- 			 * but continue walking the transaction items so that
- 			 * we remove all ephemeral btree buffers.
-+			 *
-+			 * Since the userspace buffer cache supports marking
-+			 * buffers dirty and flushing them later, use this to
-+			 * reduce the number of writes to the xfile.
- 			 */
- 			if (fa) {
- 				corrupt = true;
- 				xfs_verifier_error(bp, -EFSCORRUPTED, fa);
- 			} else {
--				xfs_buf_delwri_queue_here(bp, &buffer_list);
-+				libxfs_buf_mark_dirty(bp);
- 			}
- 		}
+ 	int			error;
  
-@@ -752,15 +755,9 @@ xfbtree_trans_commit(
- 	tp->t_flags = (tp->t_flags & ~XFS_TRANS_DIRTY) |
- 			(tp_dirty ? XFS_TRANS_DIRTY : 0);
++	trace_xfs_btree_free_block(cur, bp);
++
+ 	error = cur->bc_ops->free_block(cur, bp);
+ 	if (!error) {
+ 		xfs_trans_binval(cur->bc_tp, bp);
+diff --git a/libxfs/xfs_refcount_btree.c b/libxfs/xfs_refcount_btree.c
+index 0a8e80e705f..c1dd2fe8d37 100644
+--- a/libxfs/xfs_refcount_btree.c
++++ b/libxfs/xfs_refcount_btree.c
+@@ -107,8 +107,6 @@ xfs_refcountbt_free_block(
+ 	xfs_fsblock_t		fsbno = XFS_DADDR_TO_FSB(mp, xfs_buf_daddr(bp));
+ 	int			error;
  
--	if (corrupt) {
--		xfs_buf_delwri_cancel(&buffer_list);
-+	if (corrupt)
- 		return -EFSCORRUPTED;
--	}
--
--	if (list_empty(&buffer_list))
--		return 0;
--
--	return xfs_buf_delwri_submit(&buffer_list);
-+	return 0;
- }
+-	trace_xfs_refcountbt_free_block(cur->bc_mp, cur->bc_ag.pag->pag_agno,
+-			XFS_FSB_TO_AGBNO(cur->bc_mp, fsbno), 1);
+ 	be32_add_cpu(&agf->agf_refcount_blocks, -1);
+ 	xfs_alloc_log_agf(cur->bc_tp, agbp, XFS_AGF_REFCOUNT_BLOCKS);
+ 	error = xfs_free_extent(cur->bc_tp, cur->bc_ag.pag,
+diff --git a/libxfs/xfs_rmap_btree.c b/libxfs/xfs_rmap_btree.c
+index e8ffb23be42..36f6714ed3f 100644
+--- a/libxfs/xfs_rmap_btree.c
++++ b/libxfs/xfs_rmap_btree.c
+@@ -123,8 +123,6 @@ xfs_rmapbt_free_block(
+ 	int			error;
  
- /*
+ 	bno = xfs_daddr_to_agbno(cur->bc_mp, xfs_buf_daddr(bp));
+-	trace_xfs_rmapbt_free_block(cur->bc_mp, pag->pag_agno,
+-			bno, 1);
+ 	be32_add_cpu(&agf->agf_rmap_blocks, -1);
+ 	xfs_alloc_log_agf(cur->bc_tp, agbp, XFS_AGF_RMAP_BLOCKS);
+ 	error = xfs_alloc_put_freelist(pag, cur->bc_tp, agbp, NULL, bno, 1);
 
