@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F82465A169
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7BFA65A167
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:19:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236204AbiLaCT7 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:19:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        id S236196AbiLaCT3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:19:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236202AbiLaCT5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:19:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3E713F7E
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:19:57 -0800 (PST)
+        with ESMTP id S236202AbiLaCT2 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:19:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EF213F7E
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:19:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BC36E61C19
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:19:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24619C433D2;
-        Sat, 31 Dec 2022 02:19:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 363E7B81DEE
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:19:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00597C433EF;
+        Sat, 31 Dec 2022 02:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672453196;
-        bh=BZLMUXaNCLK1GkfOXXa5aEYMx8KZn6EiDRKdY+WYN7A=;
+        s=k20201202; t=1672453165;
+        bh=TdzREApLQdBiYKfgFuSm3Tcx6ce7qxjkNKGTn4kMRhA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Sx7/yNASBNW4/T/sHwv8Y5dnsQeaGrAV9srhmLrpvkuoP6otfx21uBMjw7V/twTAa
-         S5AyGvxmNIfXDBkWf8AZ4ONAW5gWsfA/uPGblkRnHWyG7lMLhSHjWqXyqgEM6hQgrS
-         pDoRtfQJvdIgpfLY2hssXt2vLgoBZ0UWvPCJwG+DWW/RhPBUQKKH+AbX/prmq5BI0w
-         IzUTGaakL2kNAdZQKYiZ8VQxYpFZ4hkbOZJmE6WnNavpqRsuHcX7xkjtsRNcEKZ6Pw
-         /9De8QPGHyK3wgDVk8CTjSKmEVb49Np7ZbORGH8kJaOINwvAv23L225TZABcdoilSX
-         GlHAOPvhMh1xQ==
-Subject: [PATCH 39/46] xfs_repair: adjust keep_fsinos to handle metadata
- directories
+        b=bOHIg5HRWom7uit+H/G4kwhq7ttQ1Wu9fTOFXZw1kQ3ceaeO4g+LS69uYhlnBds78
+         G2C7ESQ0NzJCJ9HP3xGd48j+rgyAHxdCTKz2WJceEzQL45t8h1UgKvocsQrdXMO595
+         /LYvg5Bkr8DCD/x1m/HSdoc+WVUPgvlQIlAPgWROjY+YMgyx9eBlpzjALPfeg1/ebH
+         B4jn6UN+BmhQHGvcTl0xs8eWLp2kSS0AdwOpiGfOm0og2AX38vQt9mtFkh1L29oeiV
+         PccptqHF5ckZ09NoV693wEeyJO2Y84+jSZfUUk2Vwz1NsC+7MoVBwlvjX8ixV47t8I
+         x1ycJeFbV6Cbg==
+Subject: [PATCH 37/46] xfs_repair: pass private data pointer to scan_lbtree
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:24 -0800
-Message-ID: <167243876443.725900.5476388310002551122.stgit@magnolia>
+Message-ID: <167243876417.725900.8741153554130772958.stgit@magnolia>
 In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
 References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,37 +55,110 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-On a filesystem with metadata directories, we only want to automatically
-mark the two root directories present because those are the only two
-statically allocated inode numbers -- the rt summary inode is now just a
-regular file in a directory.
+Pass a private data pointer through scan_lbtree.  We'll use this
+later when scanning the rtrmapbt to keep track of scan state.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- repair/phase5.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ repair/dinode.c |    2 +-
+ repair/scan.c   |   11 +++++++----
+ repair/scan.h   |    7 +++++--
+ 3 files changed, 13 insertions(+), 7 deletions(-)
 
 
-diff --git a/repair/phase5.c b/repair/phase5.c
-index 361e5649b29..252442c9fd8 100644
---- a/repair/phase5.c
-+++ b/repair/phase5.c
-@@ -421,13 +421,14 @@ static void
- keep_fsinos(xfs_mount_t *mp)
+diff --git a/repair/dinode.c b/repair/dinode.c
+index eae64a0556f..4e402d1bd59 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -836,7 +836,7 @@ _("bad bmap btree ptr 0x%" PRIx64 " in ino %" PRIu64 "\n"),
+ 
+ 		if (scan_lbtree(get_unaligned_be64(&pp[i]), level, scan_bmapbt,
+ 				type, whichfork, lino, tot, nex, blkmapp,
+-				&cursor, 1, check_dups, magic,
++				&cursor, 1, check_dups, magic, NULL,
+ 				&xfs_bmbt_buf_ops))
+ 			return(1);
+ 		/*
+diff --git a/repair/scan.c b/repair/scan.c
+index ff51eb0a602..42b37dd22ec 100644
+--- a/repair/scan.c
++++ b/repair/scan.c
+@@ -139,7 +139,8 @@ scan_lbtree(
+ 				int			isroot,
+ 				int			check_dups,
+ 				int			*dirty,
+-				uint64_t		magic),
++				uint64_t		magic,
++				void			*priv),
+ 	int		type,
+ 	int		whichfork,
+ 	xfs_ino_t	ino,
+@@ -150,6 +151,7 @@ scan_lbtree(
+ 	int		isroot,
+ 	int		check_dups,
+ 	uint64_t	magic,
++	void		*priv,
+ 	const struct xfs_buf_ops *ops)
  {
- 	ino_tree_node_t		*irec;
--	int			i;
+ 	struct xfs_buf	*bp;
+@@ -181,7 +183,7 @@ scan_lbtree(
+ 	err = (*func)(XFS_BUF_TO_BLOCK(bp), nlevels - 1,
+ 			type, whichfork, root, ino, tot, nex, blkmapp,
+ 			bm_cursor, isroot, check_dups, &dirty,
+-			magic);
++			magic, priv);
  
- 	irec = find_inode_rec(mp, XFS_INO_TO_AGNO(mp, mp->m_sb.sb_rootino),
- 			XFS_INO_TO_AGINO(mp, mp->m_sb.sb_rootino));
+ 	ASSERT(dirty == 0 || (dirty && !no_modify));
  
--	for (i = 0; i < 3; i++)
--		set_inode_used(irec, i);
-+	set_inode_used(irec, 0);	/* root dir */
-+	set_inode_used(irec, 1);	/* rt bitmap or metadata dir root */
-+	if (!xfs_has_metadir(mp))
-+		set_inode_used(irec, 2);	/* rt summary */
- }
+@@ -210,7 +212,8 @@ scan_bmapbt(
+ 	int			isroot,
+ 	int			check_dups,
+ 	int			*dirty,
+-	uint64_t		magic)
++	uint64_t		magic,
++	void			*priv)
+ {
+ 	int			i;
+ 	int			err;
+@@ -495,7 +498,7 @@ _("bad bmap btree ptr 0x%llx in ino %" PRIu64 "\n"),
  
- static void
+ 		err = scan_lbtree(be64_to_cpu(pp[i]), level, scan_bmapbt,
+ 				type, whichfork, ino, tot, nex, blkmapp,
+-				bm_cursor, 0, check_dups, magic,
++				bm_cursor, 0, check_dups, magic, priv,
+ 				&xfs_bmbt_buf_ops);
+ 		if (err)
+ 			return(1);
+diff --git a/repair/scan.h b/repair/scan.h
+index ee16362b6d3..4da788becbe 100644
+--- a/repair/scan.h
++++ b/repair/scan.h
+@@ -26,7 +26,8 @@ int scan_lbtree(
+ 				int			isroot,
+ 				int			check_dups,
+ 				int			*dirty,
+-				uint64_t		magic),
++				uint64_t		magic,
++				void			*priv),
+ 	int		type,
+ 	int		whichfork,
+ 	xfs_ino_t	ino,
+@@ -37,6 +38,7 @@ int scan_lbtree(
+ 	int		isroot,
+ 	int		check_dups,
+ 	uint64_t	magic,
++	void		*priv,
+ 	const struct xfs_buf_ops *ops);
+ 
+ int scan_bmapbt(
+@@ -53,7 +55,8 @@ int scan_bmapbt(
+ 	int			isroot,
+ 	int			check_dups,
+ 	int			*dirty,
+-	uint64_t		magic);
++	uint64_t		magic,
++	void			*priv);
+ 
+ void
+ scan_ags(
 
