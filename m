@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96A37659CB7
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:25:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95DFD659D01
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:38:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiL3WZL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:25:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
+        id S229994AbiL3Wik (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:38:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235581AbiL3WZK (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:25:10 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215081D0E4
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:25:10 -0800 (PST)
+        with ESMTP id S229827AbiL3Wik (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:38:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7F217E33
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:38:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AB3B261C15
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:25:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13CD3C433D2;
-        Fri, 30 Dec 2022 22:25:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B23FA61645
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:38:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EE8EC433EF;
+        Fri, 30 Dec 2022 22:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672439109;
-        bh=F4yayb5jkEpVKSn1W7WEYfD7sAI1MfkDS9FslYH6jFo=;
+        s=k20201202; t=1672439918;
+        bh=A4n4d7WDJAiNyO+5RLaSvhT6p6s5cmMezPaCbUFqxaE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gzqbgYVuM5dw57E7KkDz+Q6c66aimfe0QtiagXazIL5X2Sfk7VDeV1ApaxUuOrvwI
-         DuZjwIEvmJPrBBmX7jui7XILQtYc7OlXfGW/JuMA8mejyj6XEFdiRZvxjql6a5sPI1
-         YqiZbrP2CHiyBEvrYDb4VjcN71bZSGcklAE+qhNHoyit2NGXbJAofPsbHOigcUFsVy
-         pNzhmI3QHcD/SpfI75PLuU480mdljBma/xgfCBgtZWmKd4+3l9h14UWg5JFbYs9pS6
-         BDE6psZob++oY7TLbOhLoo1py4C+W7ENasJsp0975AIZuIwM8EdRfG6hFHWkKWIdis
-         EnNMJanOl7ZyQ==
-Subject: [PATCHSET v24.0 0/8] xfs: standardize btree record checking code
+        b=kmqb/FeG0P/tIomfYaNouzJY6eEz38PzHGVDHPyFOQDF33OAHSJ+RjiL8QdN01vxa
+         VKt6HYGlO/I9aQpzjsNZzbIW5SUjqxQH3xJTyDsEHMTQ20yHd57CngtGrZdO+8wYgZ
+         A6c3aXutWGlWu1v+18xi3iNeW68FDDzi9kkF1cpHpp/OEhcpRRlIe+cuDtbVLNdXoC
+         /hHedldZ/lrwsf6ztRCODw/9mfj29kBRDEZbQ/nvUaH4kqgVn+3/yMXgzVwj0bni1S
+         L91fMIFTOUrT7GGMwTMfW5TQlvOqRwR9COAI1GXNhg88xLPubGzbqt26VnGfbV/GDA
+         wHpCwqoZCCScQ==
+Subject: [PATCH 3/8] xfs: standardize ondisk to incore conversion for refcount
+ btrees
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:11 -0800
-Message-ID: <167243827121.683855.6049797551028464473.stgit@magnolia>
-In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
-References: <Y69UceeA2MEpjMJ8@magnolia>
+Message-ID: <167243827174.683855.14164094517925889328.stgit@magnolia>
+In-Reply-To: <167243827121.683855.6049797551028464473.stgit@magnolia>
+References: <167243827121.683855.6049797551028464473.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,51 +53,147 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-While I was cleaning things up for 6.1, I noticed that the btree
-_query_range and _query_all functions don't perform the same checking
-that the _get_rec functions perform.  In fact, they don't perform /any/
-sanity checking, which means that callers aren't warned about impossible
-records.
+Create a xfs_refcount_check_irec function to detect corruption in btree
+records.  Fix all xfs_refcount_btrec_to_irec callsites to call the new
+helper and bubble up corruption reports.
 
-Therefore, hoist the record validation and complaint logging code into
-separate functions, and call them from any place where we convert an
-ondisk record into an incore record.  For online scrub, we can replace
-checking code with a call to the record checking functions in libxfs,
-thereby reducing the size of the codebase.
-
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=btree-complain-bad-records
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=btree-complain-bad-records
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c        |   82 ++++++++++++++++++++++++---------
- fs/xfs/libxfs/xfs_alloc.h        |    6 ++
- fs/xfs/libxfs/xfs_bmap.c         |   31 ++++++++++++
- fs/xfs/libxfs/xfs_bmap.h         |    2 +
- fs/xfs/libxfs/xfs_ialloc.c       |   77 +++++++++++++++++++++----------
- fs/xfs/libxfs/xfs_ialloc.h       |    2 +
- fs/xfs/libxfs/xfs_ialloc_btree.c |    2 -
- fs/xfs/libxfs/xfs_ialloc_btree.h |    2 -
- fs/xfs/libxfs/xfs_inode_fork.c   |    3 +
- fs/xfs/libxfs/xfs_refcount.c     |   73 +++++++++++++++++++----------
- fs/xfs/libxfs/xfs_refcount.h     |    2 +
- fs/xfs/libxfs/xfs_rmap.c         |   95 ++++++++++++++++++++++++--------------
- fs/xfs/libxfs/xfs_rmap.h         |   12 +++--
- fs/xfs/scrub/alloc.c             |   24 +++++-----
- fs/xfs/scrub/bmap.c              |    6 ++
- fs/xfs/scrub/ialloc.c            |   24 ++--------
- fs/xfs/scrub/refcount.c          |   14 +-----
- fs/xfs/scrub/rmap.c              |   44 ++----------------
- 18 files changed, 303 insertions(+), 198 deletions(-)
+ fs/xfs/libxfs/xfs_refcount.c |   45 +++++++++++++++++++++++++++++-------------
+ fs/xfs/libxfs/xfs_refcount.h |    2 ++
+ fs/xfs/scrub/refcount.c      |   14 +++----------
+ 3 files changed, 36 insertions(+), 25 deletions(-)
+
+
+diff --git a/fs/xfs/libxfs/xfs_refcount.c b/fs/xfs/libxfs/xfs_refcount.c
+index 6dc968618e66..b77dea10c8bd 100644
+--- a/fs/xfs/libxfs/xfs_refcount.c
++++ b/fs/xfs/libxfs/xfs_refcount.c
+@@ -120,6 +120,30 @@ xfs_refcount_btrec_to_irec(
+ 	irec->rc_refcount = be32_to_cpu(rec->refc.rc_refcount);
+ }
+ 
++/* Simple checks for refcount records. */
++xfs_failaddr_t
++xfs_refcount_check_irec(
++	struct xfs_btree_cur		*cur,
++	const struct xfs_refcount_irec	*irec)
++{
++	struct xfs_perag		*pag = cur->bc_ag.pag;
++
++	if (irec->rc_blockcount == 0 || irec->rc_blockcount > MAXREFCEXTLEN)
++		return __this_address;
++
++	if (!xfs_refcount_check_domain(irec))
++		return __this_address;
++
++	/* check for valid extent range, including overflow */
++	if (!xfs_verify_agbext(pag, irec->rc_startblock, irec->rc_blockcount))
++		return __this_address;
++
++	if (irec->rc_refcount == 0 || irec->rc_refcount > MAXREFCOUNT)
++		return __this_address;
++
++	return NULL;
++}
++
+ /*
+  * Get the data from the pointed-to record.
+  */
+@@ -132,6 +156,7 @@ xfs_refcount_get_rec(
+ 	struct xfs_mount		*mp = cur->bc_mp;
+ 	struct xfs_perag		*pag = cur->bc_ag.pag;
+ 	union xfs_btree_rec		*rec;
++	xfs_failaddr_t			fa;
+ 	int				error;
+ 
+ 	error = xfs_btree_get_rec(cur, &rec, stat);
+@@ -139,17 +164,8 @@ xfs_refcount_get_rec(
+ 		return error;
+ 
+ 	xfs_refcount_btrec_to_irec(rec, irec);
+-	if (irec->rc_blockcount == 0 || irec->rc_blockcount > MAXREFCEXTLEN)
+-		goto out_bad_rec;
+-
+-	if (!xfs_refcount_check_domain(irec))
+-		goto out_bad_rec;
+-
+-	/* check for valid extent range, including overflow */
+-	if (!xfs_verify_agbext(pag, irec->rc_startblock, irec->rc_blockcount))
+-		goto out_bad_rec;
+-
+-	if (irec->rc_refcount == 0 || irec->rc_refcount > MAXREFCOUNT)
++	fa = xfs_refcount_check_irec(cur, irec);
++	if (fa)
+ 		goto out_bad_rec;
+ 
+ 	trace_xfs_refcount_get(cur->bc_mp, pag->pag_agno, irec);
+@@ -157,8 +173,8 @@ xfs_refcount_get_rec(
+ 
+ out_bad_rec:
+ 	xfs_warn(mp,
+-		"Refcount BTree record corruption in AG %d detected!",
+-		pag->pag_agno);
++		"Refcount BTree record corruption in AG %d detected at %pS!",
++		pag->pag_agno, fa);
+ 	xfs_warn(mp,
+ 		"Start block 0x%x, block count 0x%x, references 0x%x",
+ 		irec->rc_startblock, irec->rc_blockcount, irec->rc_refcount);
+@@ -1871,7 +1887,8 @@ xfs_refcount_recover_extent(
+ 	INIT_LIST_HEAD(&rr->rr_list);
+ 	xfs_refcount_btrec_to_irec(rec, &rr->rr_rrec);
+ 
+-	if (XFS_IS_CORRUPT(cur->bc_mp,
++	if (xfs_refcount_check_irec(cur, &rr->rr_rrec) != NULL ||
++	    XFS_IS_CORRUPT(cur->bc_mp,
+ 			   rr->rr_rrec.rc_domain != XFS_REFC_DOMAIN_COW)) {
+ 		kfree(rr);
+ 		return -EFSCORRUPTED;
+diff --git a/fs/xfs/libxfs/xfs_refcount.h b/fs/xfs/libxfs/xfs_refcount.h
+index c89f0fcd1ee3..fc0b58d4c379 100644
+--- a/fs/xfs/libxfs/xfs_refcount.h
++++ b/fs/xfs/libxfs/xfs_refcount.h
+@@ -117,6 +117,8 @@ extern int xfs_refcount_has_record(struct xfs_btree_cur *cur,
+ union xfs_btree_rec;
+ extern void xfs_refcount_btrec_to_irec(const union xfs_btree_rec *rec,
+ 		struct xfs_refcount_irec *irec);
++xfs_failaddr_t xfs_refcount_check_irec(struct xfs_btree_cur *cur,
++		const struct xfs_refcount_irec *irec);
+ extern int xfs_refcount_insert(struct xfs_btree_cur *cur,
+ 		struct xfs_refcount_irec *irec, int *stat);
+ 
+diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
+index 9423aad28511..c2ae5a328a6d 100644
+--- a/fs/xfs/scrub/refcount.c
++++ b/fs/xfs/scrub/refcount.c
+@@ -340,24 +340,16 @@ xchk_refcountbt_rec(
+ {
+ 	struct xfs_refcount_irec irec;
+ 	xfs_agblock_t		*cow_blocks = bs->private;
+-	struct xfs_perag	*pag = bs->cur->bc_ag.pag;
+ 
+ 	xfs_refcount_btrec_to_irec(rec, &irec);
+-
+-	/* Check the domain and refcount are not incompatible. */
+-	if (!xfs_refcount_check_domain(&irec))
++	if (xfs_refcount_check_irec(bs->cur, &irec) != NULL) {
+ 		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
++		return 0;
++	}
+ 
+ 	if (irec.rc_domain == XFS_REFC_DOMAIN_COW)
+ 		(*cow_blocks) += irec.rc_blockcount;
+ 
+-	/* Check the extent. */
+-	if (!xfs_verify_agbext(pag, irec.rc_startblock, irec.rc_blockcount))
+-		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+-
+-	if (irec.rc_refcount == 0)
+-		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+-
+ 	xchk_refcountbt_xref(bs->sc, &irec);
+ 
+ 	return 0;
 
