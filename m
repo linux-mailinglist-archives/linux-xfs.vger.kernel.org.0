@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 023EF659E4D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:31:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAE7D659DAF
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:02:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbiL3XbA (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:31:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
+        id S230093AbiL3XCF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:02:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231348AbiL3Xa7 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:30:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4E0F12D20
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:30:58 -0800 (PST)
+        with ESMTP id S229733AbiL3XCE (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:02:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F410815FC1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:02:02 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CF7061B98
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:30:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C938EC433EF;
-        Fri, 30 Dec 2022 23:30:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B1FABB81D95
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:02:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B584C433D2;
+        Fri, 30 Dec 2022 23:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672443057;
-        bh=SVbKTIwRbEnpgrhJytSLhsddM/cGX8y9m1o6BIdDeSY=;
+        s=k20201202; t=1672441320;
+        bh=iwjUy+ojJJaEtH6qhoYb25bKG8TUIvU1dskAGZoInpI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RbgT5emD2iwWN/J43uigmk+gtUVRRHku1PyeGdH49clmrNtSFn2MNvd/UUlBA1laW
-         EpWZllhI2RApbh17JzhTsPRdAIuVdzukHpfMUzwu1kV2OSpEiUDSRxipiB+gj4c/7Y
-         ewSCt4GFoYTtFcxaamrEO/d8QUz92daYmqwduNjaXnFSEukGTmwXFaWQnHzWYWK9OZ
-         OvCwWLHn4EvTmhtTnaboM3rqjFAerhRFZP5HN4cAfaFwX8Ju+5zio1B2Rwu8cHkEIa
-         DU5130nsIuzg5kuQtoj08cNuxhDacKfgA40uIsZeBkVg/MeTQXUVhfRwWckzuMQ6pW
-         ANLlLSyVEE5Vw==
-Subject: [PATCH 1/5] xfs: reintroduce reaping of file metadata blocks to
- xrep_reap_extents
+        b=J/HNO0S8AzY09qKxudUbWH8XLFhGMpOsMgQ17dKu+JKQGW+yj7SzIJoS8q7YSjAel
+         M7LovhfYAF5uiRi7jxD++AztQUiXojYtzG7PW5j+6Q/U5aVV0uH7pr0ok4gk/Z9/3H
+         72gGmBQRwMacQXd1A0mkt1ax1b2Nn16IWTBY97QT3nlgb+BOu49rI0MUQdTOd40mTN
+         IOBpBBVuLgBhzti7lpBsQcnyRKxIQXlHJInEe2eglBxsEZ1Zc03yWuuq551OO0g4d2
+         qLw5sXbTm4NjOhk3bv7mz10pbRK9KrHRbu6S0dn7uvbqmRRKHxZAeiENGsL7kGlkg2
+         WX+ewp4NPAr0w==
+Subject: [PATCHSET v24.0 0/5] xfs: online repair of file fork mappings
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:12:56 -0800
-Message-ID: <167243837639.694993.12667472137851814390.stgit@magnolia>
-In-Reply-To: <167243837619.694993.4421999845289107494.stgit@magnolia>
-References: <167243837619.694993.4421999845289107494.stgit@magnolia>
+Message-ID: <167243837619.694993.4421999845289107494.stgit@magnolia>
+In-Reply-To: <Y69Unb7KRM5awJoV@magnolia>
+References: <Y69Unb7KRM5awJoV@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,217 +52,58 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Reintroduce to xrep_reap_extents the ability to reap extents from any
-AG.  We dropped this before because it was buggy, but in the next patch
-we will gain the ability to reap old bmap btrees, which can have blocks
-in any AG.  To do this, we require that sc->sa is uninitialized, so that
-we can use it to hold all the per-AG context for a given extent.
+In this series, online repair gains the ability to rebuild data and attr
+fork mappings from the reverse mapping information.  It is at this point
+where we reintroduce the ability to reap file extents.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+Repair of CoW forks is a little different -- on disk, CoW staging
+extents are owned by the refcount btree and cannot be mapped back to
+individual files.  Hence we can only detect staging extents that don't
+quite look right (missing reverse mappings, shared staging extents) and
+replace them with fresh allocations.
+
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=repair-file-mappings
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=repair-file-mappings
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=repair-file-mappings
 ---
- fs/xfs/scrub/bitmap.h |   28 +++++++++++
- fs/xfs/scrub/reap.c   |  120 +++++++++++++++++++++++++++++++++++++++++++++++--
- fs/xfs/scrub/reap.h   |    2 +
- fs/xfs/scrub/repair.h |    1 
- 4 files changed, 147 insertions(+), 4 deletions(-)
-
-
-diff --git a/fs/xfs/scrub/bitmap.h b/fs/xfs/scrub/bitmap.h
-index 4265e53f45fa..7f1b9c9c7831 100644
---- a/fs/xfs/scrub/bitmap.h
-+++ b/fs/xfs/scrub/bitmap.h
-@@ -103,4 +103,32 @@ int xagb_bitmap_set_btblocks(struct xagb_bitmap *bitmap,
- int xagb_bitmap_set_btcur_path(struct xagb_bitmap *bitmap,
- 		struct xfs_btree_cur *cur);
- 
-+/* Bitmaps, but for type-checked for xfs_fsblock_t */
-+
-+struct xfsb_bitmap {
-+	struct xbitmap	fsbitmap;
-+};
-+
-+static inline void xfsb_bitmap_init(struct xfsb_bitmap *bitmap)
-+{
-+	xbitmap_init(&bitmap->fsbitmap);
-+}
-+
-+static inline void xfsb_bitmap_destroy(struct xfsb_bitmap *bitmap)
-+{
-+	xbitmap_destroy(&bitmap->fsbitmap);
-+}
-+
-+static inline int xfsb_bitmap_set(struct xfsb_bitmap *bitmap,
-+		xfs_fsblock_t start, xfs_filblks_t len)
-+{
-+	return xbitmap_set(&bitmap->fsbitmap, start, len);
-+}
-+
-+static inline int xfsb_bitmap_walk(struct xfsb_bitmap *bitmap,
-+		xbitmap_walk_fn fn, void *priv)
-+{
-+	return xbitmap_walk(&bitmap->fsbitmap, fn, priv);
-+}
-+
- #endif	/* __XFS_SCRUB_BITMAP_H__ */
-diff --git a/fs/xfs/scrub/reap.c b/fs/xfs/scrub/reap.c
-index 3ff4adaf3fe8..3da372bc6eaa 100644
---- a/fs/xfs/scrub/reap.c
-+++ b/fs/xfs/scrub/reap.c
-@@ -73,10 +73,10 @@
-  * with only the same rmap owner but the block is not owned by something with
-  * the same rmap owner, the block will be freed.
-  *
-- * The caller is responsible for locking the AG headers for the entire rebuild
-- * operation so that nothing else can sneak in and change the AG state while
-- * we're not looking.  We must also invalidate any buffers associated with
-- * @bitmap.
-+ * The caller is responsible for locking the AG headers/inode for the entire
-+ * rebuild operation so that nothing else can sneak in and change the incore
-+ * state while we're not looking.  We must also invalidate any buffers
-+ * associated with @bitmap.
-  */
- 
- /* Information about reaping extents after a repair. */
-@@ -500,3 +500,115 @@ xrep_reap_agblocks(
- 
- 	return 0;
- }
-+
-+/*
-+ * Break a file metadata extent into sub-extents by fate (crosslinked, not
-+ * crosslinked), and dispose of each sub-extent separately.  The extent must
-+ * not cross an AG boundary.
-+ */
-+STATIC int
-+xreap_fsmeta_extent(
-+	uint64_t		fsbno,
-+	uint64_t		len,
-+	void			*priv)
-+{
-+	struct xreap_state	*rs = priv;
-+	struct xfs_scrub	*sc = rs->sc;
-+	xfs_agnumber_t		agno = XFS_FSB_TO_AGNO(sc->mp, fsbno);
-+	xfs_agblock_t		agbno = XFS_FSB_TO_AGBNO(sc->mp, fsbno);
-+	xfs_agblock_t		agbno_next = agbno + len;
-+	int			error = 0;
-+
-+	ASSERT(len <= XFS_MAX_BMBT_EXTLEN);
-+	ASSERT(sc->ip != NULL);
-+	ASSERT(!sc->sa.pag);
-+
-+	/*
-+	 * We're reaping blocks after repairing file metadata, which means that
-+	 * we have to init the xchk_ag structure ourselves.
-+	 */
-+	sc->sa.pag = xfs_perag_get(sc->mp, agno);
-+	if (!sc->sa.pag)
-+		return -EFSCORRUPTED;
-+
-+	error = xfs_alloc_read_agf(sc->sa.pag, sc->tp, 0, &sc->sa.agf_bp);
-+	if (error)
-+		goto out_pag;
-+
-+	while (agbno < agbno_next) {
-+		xfs_extlen_t	aglen;
-+		bool		crosslinked;
-+
-+		error = xreap_agextent_select(rs, agbno, agbno_next,
-+				&crosslinked, &aglen);
-+		if (error)
-+			goto out_agf;
-+
-+		error = xreap_agextent(rs, agbno, &aglen, crosslinked);
-+		if (error)
-+			goto out_agf;
-+
-+		if (xreap_want_defer_finish(rs)) {
-+			/*
-+			 * Holds the AGF buffer across the deferred chain
-+			 * processing.
-+			 */
-+			error = xrep_defer_finish(sc);
-+			if (error)
-+				goto out_agf;
-+			xreap_defer_finish_reset(rs);
-+		} else if (xreap_want_roll(rs)) {
-+			/*
-+			 * Hold the AGF buffer across the transaction roll so
-+			 * that we don't have to reattach it to the scrub
-+			 * context.
-+			 */
-+			xfs_trans_bhold(sc->tp, sc->sa.agf_bp);
-+			error = xfs_trans_roll_inode(&sc->tp, sc->ip);
-+			xfs_trans_bjoin(sc->tp, sc->sa.agf_bp);
-+			if (error)
-+				goto out_agf;
-+			xreap_reset(rs);
-+		}
-+
-+		agbno += aglen;
-+	}
-+
-+out_agf:
-+	xfs_trans_brelse(sc->tp, sc->sa.agf_bp);
-+	sc->sa.agf_bp = NULL;
-+out_pag:
-+	xfs_perag_put(sc->sa.pag);
-+	sc->sa.pag = NULL;
-+	return error;
-+}
-+
-+/*
-+ * Dispose of every block of every fs metadata extent in the bitmap.
-+ * Do not use this to dispose of the mappings in an ondisk inode fork.
-+ */
-+int
-+xrep_reap_fsblocks(
-+	struct xfs_scrub		*sc,
-+	struct xfsb_bitmap		*bitmap,
-+	const struct xfs_owner_info	*oinfo)
-+{
-+	struct xreap_state		rs = {
-+		.sc			= sc,
-+		.oinfo			= oinfo,
-+		.resv			= XFS_AG_RESV_NONE,
-+	};
-+	int				error;
-+
-+	ASSERT(xfs_has_rmapbt(sc->mp));
-+	ASSERT(sc->ip != NULL);
-+
-+	error = xfsb_bitmap_walk(bitmap, xreap_fsmeta_extent, &rs);
-+	if (error)
-+		return error;
-+
-+	if (xreap_dirty(&rs))
-+		return xrep_defer_finish(sc);
-+
-+	return 0;
-+}
-diff --git a/fs/xfs/scrub/reap.h b/fs/xfs/scrub/reap.h
-index 032d1eac91b2..29a8b52a1a54 100644
---- a/fs/xfs/scrub/reap.h
-+++ b/fs/xfs/scrub/reap.h
-@@ -8,5 +8,7 @@
- 
- int xrep_reap_agblocks(struct xfs_scrub *sc, struct xagb_bitmap *bitmap,
- 		const struct xfs_owner_info *oinfo, enum xfs_ag_resv_type type);
-+int xrep_reap_fsblocks(struct xfs_scrub *sc, struct xfsb_bitmap *bitmap,
-+		const struct xfs_owner_info *oinfo);
- 
- #endif /* __XFS_SCRUB_REAP_H__ */
-diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
-index 892cb593a716..4b01a3d954e4 100644
---- a/fs/xfs/scrub/repair.h
-+++ b/fs/xfs/scrub/repair.h
-@@ -38,6 +38,7 @@ xrep_trans_commit(
- 
- struct xbitmap;
- struct xagb_bitmap;
-+struct xfsb_bitmap;
- 
- int xrep_fix_freelist(struct xfs_scrub *sc, bool can_shrink);
- 
+ fs/xfs/Makefile                   |    2 
+ fs/xfs/libxfs/xfs_bmap_btree.c    |  112 +++++
+ fs/xfs/libxfs/xfs_bmap_btree.h    |    5 
+ fs/xfs/libxfs/xfs_btree_staging.c |   11 -
+ fs/xfs/libxfs/xfs_btree_staging.h |    2 
+ fs/xfs/libxfs/xfs_iext_tree.c     |   23 +
+ fs/xfs/libxfs/xfs_inode_fork.c    |    1 
+ fs/xfs/libxfs/xfs_inode_fork.h    |    3 
+ fs/xfs/libxfs/xfs_refcount.c      |   41 ++
+ fs/xfs/libxfs/xfs_refcount.h      |   10 
+ fs/xfs/scrub/bitmap.h             |   28 +
+ fs/xfs/scrub/bmap.c               |   18 +
+ fs/xfs/scrub/bmap_repair.c        |  776 +++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/cow_repair.c         |  661 ++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/reap.c               |  145 +++++++
+ fs/xfs/scrub/reap.h               |    2 
+ fs/xfs/scrub/repair.c             |   47 ++
+ fs/xfs/scrub/repair.h             |   11 +
+ fs/xfs/scrub/scrub.c              |   20 -
+ fs/xfs/scrub/trace.h              |  115 +++++
+ fs/xfs/xfs_trans.c                |   95 +++++
+ fs/xfs/xfs_trans.h                |    4 
+ 22 files changed, 2087 insertions(+), 45 deletions(-)
+ create mode 100644 fs/xfs/scrub/bmap_repair.c
+ create mode 100644 fs/xfs/scrub/cow_repair.c
 
