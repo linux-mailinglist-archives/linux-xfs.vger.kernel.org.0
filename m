@@ -2,52 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B28E65A074
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:19:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7A98659F37
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:09:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236051AbiLaBTb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:19:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
+        id S235853AbiLaAJJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:09:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236057AbiLaBTa (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:19:30 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA111AD9A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:19:29 -0800 (PST)
+        with ESMTP id S235791AbiLaAJJ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:09:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDECF1CB3E
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:09:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 603F8CE19FC
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:19:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BA6EC433EF;
-        Sat, 31 Dec 2022 01:19:25 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 90BF6B81DF9
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:09:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50BF6C433D2;
+        Sat, 31 Dec 2022 00:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449565;
-        bh=VxM30yBAGXDxxD4J4i+l+Z6kPuxMOpbpBoZ4bGHahwA=;
+        s=k20201202; t=1672445345;
+        bh=L9KcCI6bh4kns0frselq0d4+1Ik9MB4AxmzK36uLuLk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JdSMWdhk6gxByLsTvozsioj4exycRK1VVlXghbBQ4CTE8bTJAcC7PXAgT+mQ3JZEE
-         V7X1pNjxOE8Pmspxj1sBNxVsBlcD39Ib6eO4GdtNsvzpk4IKgwgWF9bD6RMtdd1JLK
-         7lmpGCFUmxQVBqkT+kMR3is5vjFPZufhd1g9A+18CTyf+ibFCmziXXWy2R6KXHjv48
-         YZ+CzcIS4qNpJWaRvMVylhMINyxpTjjzTjH1dSAyJ+De3Nm1gGZYVbq9ZHSEJp5qm3
-         M5CcFHB3qQlUnO4ljE8BZZ2jmu6pua0Yz9S0YUhLs/jZr3d3zcTcPGkKH2jMpi78dO
-         efP64zFBhGPeA==
-Subject: [PATCH 12/14] xfs: hoist the node iroot update code out of
- xfs_btree_kill_iroot
+        b=SL2EAplqZr2wKyd9itVw+ijm1bIQhaLa/8RNQssrcvGbH2RgyWFVuBFM+McFDdtAK
+         NXU1h1625zE/KLFEaL2/M0x8ewvj6nyAn77UmsQSHsSRkP9mxiroCs17X0+ofErKNU
+         K2fHn6vw9p8rHNw8clRp6EXXxknQ5FoCzIth9707At+OYSutuEBU1FhaludVBzIh7K
+         k12yxBz368vryLUucuXnWhvH7jbUOT63Gr5tEphiGV/iu/aF+xCryM8lXRUsnEZ/AV
+         e+Saoajkg1fDXxTylvaAx5NohYfVj09eERz3OhBtNqIOl6TGHduCzYEDa91++98Ks3
+         +PvTgkwCyRbkA==
+Subject: [PATCH 1/2] xfs_repair: push inode buf and dinode pointers all the
+ way to inode fork processing
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:32 -0800
-Message-ID: <167243865279.708933.8482908924042355927.stgit@magnolia>
-In-Reply-To: <167243865089.708933.5645420573863731083.stgit@magnolia>
-References: <167243865089.708933.5645420573863731083.stgit@magnolia>
+Message-ID: <167243865205.709165.3039237323414368997.stgit@magnolia>
+In-Reply-To: <167243865191.709165.12894699968646341429.stgit@magnolia>
+References: <167243865191.709165.12894699968646341429.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,153 +55,264 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In preparation for allowing records in an inode btree root, hoist the
-code that copies keyptrs from an existing node child into the root block
-to a separate function.  Remove some unnecessary conditionals and clean
-up a few function calls in the new function.  Note that this change
-reorders the ->free_block call with respect to the change in bc_nlevels
-to make it easier to support inode root leaf blocks in the next patch.
+Currently, the process_dinode* family of functions assume that they have
+the buffer backing the inodes locked, and therefore the dinode pointer
+won't ever change.  However, the bmbt rebuilding code in the next patch
+will violate that assumption, so we must pass pointers to the inobp and
+the dinode pointer (that is to say, double pointers) all the way through
+to process_inode_{data,attr}_fork so that we can regrab the buffer after
+the rebuilding step finishes.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_btree.c |   94 +++++++++++++++++++++++++++++----------------
- 1 file changed, 60 insertions(+), 34 deletions(-)
+ repair/dino_chunks.c |    5 ++-
+ repair/dinode.c      |   88 ++++++++++++++++++++++++++++----------------------
+ repair/dinode.h      |    7 ++--
+ 3 files changed, 57 insertions(+), 43 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 94df8c6000eb..d3e073a21063 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -3716,6 +3716,63 @@ xfs_btree_insert(
- 	return error;
- }
+diff --git a/repair/dino_chunks.c b/repair/dino_chunks.c
+index 0e09132b0b1..5c7799b1888 100644
+--- a/repair/dino_chunks.c
++++ b/repair/dino_chunks.c
+@@ -851,10 +851,11 @@ process_inode_chunk(
+ 		ino_dirty = 0;
+ 		parent = 0;
  
-+/*
-+ * Move the keyptrs from a child node block to the root block.
-+ *
-+ * Since the keyptr size does not change, all we have to do is increase the
-+ * tree height, copy the keyptrs to the new internal node (cblock), shrink
-+ * the root, and copy the pointers there.
-+ */
-+STATIC int
-+xfs_btree_demote_node_child(
-+	struct xfs_btree_cur	*cur,
-+	struct xfs_btree_block	*cblock,
-+	int			level,
-+	int			numrecs)
-+{
-+	struct xfs_btree_block	*block;
-+	union xfs_btree_key	*ckp;
-+	union xfs_btree_key	*kp;
-+	union xfs_btree_ptr	*cpp;
-+	union xfs_btree_ptr	*pp;
-+	int			i;
-+	int			error;
-+	int			diff;
-+
-+	/*
-+	 * Adjust the root btree node size and the record count to match the
-+	 * doomed child so that we can copy the keyptrs ahead of changing the
-+	 * tree shape.
-+	 */
-+	diff = numrecs - cur->bc_ops->get_maxrecs(cur, level);
-+	xfs_btree_iroot_realloc(cur, diff);
-+	block = xfs_btree_get_iroot(cur);
-+
-+	xfs_btree_set_numrecs(block, numrecs);
-+	ASSERT(block->bb_numrecs == cblock->bb_numrecs);
-+
-+	/* Copy keys from the doomed block. */
-+	kp = xfs_btree_key_addr(cur, 1, block);
-+	ckp = xfs_btree_key_addr(cur, 1, cblock);
-+	xfs_btree_copy_keys(cur, kp, ckp, numrecs);
-+
-+	/* Copy pointers from the doomed block. */
-+	pp = xfs_btree_ptr_addr(cur, 1, block);
-+	cpp = xfs_btree_ptr_addr(cur, 1, cblock);
-+	for (i = 0; i < numrecs; i++) {
-+		error = xfs_btree_debug_check_ptr(cur, cpp, i, level - 1);
-+		if (error)
-+			return error;
-+	}
-+	xfs_btree_copy_ptrs(cur, pp, cpp, numrecs);
-+
-+	/* Decrease tree height, adjusting the root block level to match. */
-+	cur->bc_levels[level - 1].bp = NULL;
-+	be16_add_cpu(&block->bb_level, -1);
-+	cur->bc_nlevels--;
-+	return 0;
-+}
-+
- /*
-  * Try to merge a non-leaf block back into the inode root.
-  *
-@@ -3728,24 +3785,16 @@ STATIC int
- xfs_btree_kill_iroot(
- 	struct xfs_btree_cur	*cur)
+-		status = process_dinode(mp, dino, agno, agino,
++		status = process_dinode(mp, &dino, agno, agino,
+ 				is_inode_free(ino_rec, irec_offset),
+ 				&ino_dirty, &is_used,ino_discovery, check_dups,
+-				extra_attr_check, &isa_dir, &parent);
++				extra_attr_check, &isa_dir, &parent,
++				&bplist[bp_index]);
+ 
+ 		ASSERT(is_used != 3);
+ 		if (ino_dirty) {
+diff --git a/repair/dinode.c b/repair/dinode.c
+index e534a01b500..cea3c1ee5fe 100644
+--- a/repair/dinode.c
++++ b/repair/dinode.c
+@@ -1889,17 +1889,19 @@ _("nblocks (%" PRIu64 ") smaller than nextents for inode %" PRIu64 "\n"), nblock
+  */
+ static int
+ process_inode_data_fork(
+-	xfs_mount_t		*mp,
++	struct xfs_mount	*mp,
+ 	xfs_agnumber_t		agno,
+ 	xfs_agino_t		ino,
+-	struct xfs_dinode	*dino,
++	struct xfs_dinode	**dinop,
+ 	int			type,
+ 	int			*dirty,
+ 	xfs_rfsblock_t		*totblocks,
+ 	xfs_extnum_t		*nextents,
+ 	blkmap_t		**dblkmap,
+-	int			check_dups)
++	int			check_dups,
++	struct xfs_buf		**ino_bpp)
  {
--	int			whichfork = cur->bc_ino.whichfork;
- 	struct xfs_inode	*ip = cur->bc_ino.ip;
--	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, whichfork);
- 	struct xfs_btree_block	*block;
- 	struct xfs_btree_block	*cblock;
--	union xfs_btree_key	*kp;
--	union xfs_btree_key	*ckp;
--	union xfs_btree_ptr	*pp;
--	union xfs_btree_ptr	*cpp;
- 	struct xfs_buf		*cbp;
- 	int			level;
--	int			index;
- 	int			numrecs;
- 	int			error;
- #ifdef DEBUG
- 	union xfs_btree_ptr	ptr;
++	struct xfs_dinode	*dino = *dinop;
+ 	xfs_ino_t		lino = XFS_AGINO_TO_INO(mp, agno, ino);
+ 	int			err = 0;
+ 	xfs_extnum_t		nex, max_nex;
+@@ -2001,20 +2003,22 @@ process_inode_data_fork(
+  */
+ static int
+ process_inode_attr_fork(
+-	xfs_mount_t		*mp,
++	struct xfs_mount	*mp,
+ 	xfs_agnumber_t		agno,
+ 	xfs_agino_t		ino,
+-	struct xfs_dinode	*dino,
++	struct xfs_dinode	**dinop,
+ 	int			type,
+ 	int			*dirty,
+ 	xfs_rfsblock_t		*atotblocks,
+ 	xfs_extnum_t		*anextents,
+ 	int			check_dups,
+ 	int			extra_attr_check,
+-	int			*retval)
++	int			*retval,
++	struct xfs_buf		**ino_bpp)
+ {
+ 	xfs_ino_t		lino = XFS_AGINO_TO_INO(mp, agno, ino);
+-	blkmap_t		*ablkmap = NULL;
++	struct xfs_dinode	*dino = *dinop;
++	struct blkmap		*ablkmap = NULL;
+ 	int			repair = 0;
+ 	int			err;
+ 
+@@ -2073,7 +2077,7 @@ process_inode_attr_fork(
+ 		 * XXX - put the inode onto the "move it" list and
+ 		 *	log the the attribute scrubbing
+ 		 */
+-		do_warn(_("bad attribute fork in inode %" PRIu64), lino);
++		do_warn(_("bad attribute fork in inode %" PRIu64 "\n"), lino);
+ 
+ 		if (!no_modify)  {
+ 			do_warn(_(", clearing attr fork\n"));
+@@ -2272,21 +2276,22 @@ _("Bad extent size hint %u on inode %" PRIu64 ", "),
+  * for detailed, info, look at process_dinode() comments.
+  */
+ static int
+-process_dinode_int(xfs_mount_t *mp,
+-		struct xfs_dinode *dino,
+-		xfs_agnumber_t agno,
+-		xfs_agino_t ino,
+-		int was_free,		/* 1 if inode is currently free */
+-		int *dirty,		/* out == > 0 if inode is now dirty */
+-		int *used,		/* out == 1 if inode is in use */
+-		int verify_mode,	/* 1 == verify but don't modify inode */
+-		int uncertain,		/* 1 == inode is uncertain */
+-		int ino_discovery,	/* 1 == check dirs for unknown inodes */
+-		int check_dups,		/* 1 == check if inode claims
+-					 * duplicate blocks		*/
+-		int extra_attr_check, /* 1 == do attribute format and value checks */
+-		int *isa_dir,		/* out == 1 if inode is a directory */
+-		xfs_ino_t *parent)	/* out -- parent if ino is a dir */
++process_dinode_int(
++	struct xfs_mount	*mp,
++	struct xfs_dinode	**dinop,
++	xfs_agnumber_t		agno,
++	xfs_agino_t		ino,
++	int			was_free,	/* 1 if inode is currently free */
++	int			*dirty,		/* out == > 0 if inode is now dirty */
++	int			*used,		/* out == 1 if inode is in use */
++	int			verify_mode,	/* 1 == verify but don't modify inode */
++	int			uncertain,	/* 1 == inode is uncertain */
++	int			ino_discovery,	/* 1 == check dirs for unknown inodes */
++	int			check_dups,	/* 1 == check if inode claims duplicate blocks */
++	int			extra_attr_check, /* 1 == do attribute format and value checks */
++	int			*isa_dir,	/* out == 1 if inode is a directory */
++	xfs_ino_t		*parent,	/* out -- parent if ino is a dir */
++	struct xfs_buf		**ino_bpp)
+ {
+ 	xfs_rfsblock_t		totblocks = 0;
+ 	xfs_rfsblock_t		atotblocks = 0;
+@@ -2299,6 +2304,7 @@ process_dinode_int(xfs_mount_t *mp,
+ 	const int		is_free = 0;
+ 	const int		is_used = 1;
+ 	blkmap_t		*dblkmap = NULL;
++	struct xfs_dinode	*dino = *dinop;
+ 	xfs_agino_t		unlinked_ino;
+ 	struct xfs_perag	*pag;
+ 
+@@ -2322,6 +2328,7 @@ process_dinode_int(xfs_mount_t *mp,
+ 	 * If uncertain is set, verify_mode MUST be set.
+ 	 */
+ 	ASSERT(uncertain == 0 || verify_mode != 0);
++	ASSERT(ino_bpp != NULL || verify_mode != 0);
+ 
+ 	/*
+ 	 * This is the only valid point to check the CRC; after this we may have
+@@ -2861,18 +2868,21 @@ _("Bad CoW extent size %u on inode %" PRIu64 ", "),
+ 	/*
+ 	 * check data fork -- if it's bad, clear the inode
+ 	 */
+-	if (process_inode_data_fork(mp, agno, ino, dino, type, dirty,
+-			&totblocks, &nextents, &dblkmap, check_dups) != 0)
++	if (process_inode_data_fork(mp, agno, ino, dinop, type, dirty,
++			&totblocks, &nextents, &dblkmap, check_dups,
++			ino_bpp) != 0)
+ 		goto bad_out;
++	dino = *dinop;
+ 
+ 	/*
+ 	 * check attribute fork if necessary.  attributes are
+ 	 * always stored in the regular filesystem.
+ 	 */
+-	if (process_inode_attr_fork(mp, agno, ino, dino, type, dirty,
++	if (process_inode_attr_fork(mp, agno, ino, dinop, type, dirty,
+ 			&atotblocks, &anextents, check_dups, extra_attr_check,
+-			&retval))
++			&retval, ino_bpp))
+ 		goto bad_out;
++	dino = *dinop;
+ 
+ 	/*
+ 	 * enforce totblocks is 0 for misc types
+@@ -2990,8 +3000,8 @@ _("Bad CoW extent size %u on inode %" PRIu64 ", "),
+ 
+ int
+ process_dinode(
+-	xfs_mount_t		*mp,
+-	struct xfs_dinode	*dino,
++	struct xfs_mount	*mp,
++	struct xfs_dinode	**dinop,
+ 	xfs_agnumber_t		agno,
+ 	xfs_agino_t		ino,
+ 	int			was_free,
+@@ -3001,7 +3011,8 @@ process_dinode(
+ 	int			check_dups,
+ 	int			extra_attr_check,
+ 	int			*isa_dir,
+-	xfs_ino_t		*parent)
++	xfs_ino_t		*parent,
++	struct xfs_buf		**ino_bpp)
+ {
+ 	const int		verify_mode = 0;
+ 	const int		uncertain = 0;
+@@ -3009,9 +3020,10 @@ process_dinode(
+ #ifdef XR_INODE_TRACE
+ 	fprintf(stderr, _("processing inode %d/%d\n"), agno, ino);
  #endif
--	int			i;
- 
- 	ASSERT(cur->bc_flags & XFS_BTREE_ROOT_IN_INODE);
- 	ASSERT(cur->bc_nlevels > 1);
-@@ -3785,39 +3834,16 @@ xfs_btree_kill_iroot(
- 	ASSERT(xfs_btree_ptr_is_null(cur, &ptr));
- #endif
- 
--	index = numrecs - cur->bc_ops->get_maxrecs(cur, level);
--	if (index) {
--		xfs_btree_iroot_realloc(cur, index);
--		block = ifp->if_broot;
--	}
--
--	be16_add_cpu(&block->bb_numrecs, index);
--	ASSERT(block->bb_numrecs == cblock->bb_numrecs);
--
--	kp = xfs_btree_key_addr(cur, 1, block);
--	ckp = xfs_btree_key_addr(cur, 1, cblock);
--	xfs_btree_copy_keys(cur, kp, ckp, numrecs);
--
--	pp = xfs_btree_ptr_addr(cur, 1, block);
--	cpp = xfs_btree_ptr_addr(cur, 1, cblock);
--
--	for (i = 0; i < numrecs; i++) {
--		error = xfs_btree_debug_check_ptr(cur, cpp, i, level - 1);
--		if (error)
--			return error;
--	}
--
--	xfs_btree_copy_ptrs(cur, pp, cpp, numrecs);
-+	error = xfs_btree_demote_node_child(cur, cblock, level, numrecs);
-+	if (error)
-+		return error;
- 
- 	error = xfs_btree_free_block(cur, cbp);
- 	if (error)
- 		return error;
- 
--	cur->bc_levels[level - 1].bp = NULL;
--	be16_add_cpu(&block->bb_level, -1);
- 	xfs_trans_log_inode(cur->bc_tp, ip,
- 		XFS_ILOG_CORE | xfs_ilog_fbroot(cur->bc_ino.whichfork));
--	cur->bc_nlevels--;
- out0:
- 	return 0;
+-	return process_dinode_int(mp, dino, agno, ino, was_free, dirty, used,
+-				verify_mode, uncertain, ino_discovery,
+-				check_dups, extra_attr_check, isa_dir, parent);
++	return process_dinode_int(mp, dinop, agno, ino, was_free, dirty, used,
++			verify_mode, uncertain, ino_discovery,
++			check_dups, extra_attr_check, isa_dir, parent,
++			ino_bpp);
  }
+ 
+ /*
+@@ -3036,9 +3048,9 @@ verify_dinode(
+ 	const int		ino_discovery = 0;
+ 	const int		uncertain = 0;
+ 
+-	return process_dinode_int(mp, dino, agno, ino, 0, &dirty, &used,
+-				verify_mode, uncertain, ino_discovery,
+-				check_dups, 0, &isa_dir, &parent);
++	return process_dinode_int(mp, &dino, agno, ino, 0, &dirty, &used,
++			verify_mode, uncertain, ino_discovery,
++			check_dups, 0, &isa_dir, &parent, NULL);
+ }
+ 
+ /*
+@@ -3062,7 +3074,7 @@ verify_uncertain_dinode(
+ 	const int		ino_discovery = 0;
+ 	const int		uncertain = 1;
+ 
+-	return process_dinode_int(mp, dino, agno, ino, 0, &dirty, &used,
++	return process_dinode_int(mp, &dino, agno, ino, 0, &dirty, &used,
+ 				verify_mode, uncertain, ino_discovery,
+-				check_dups, 0, &isa_dir, &parent);
++				check_dups, 0, &isa_dir, &parent, NULL);
+ }
+diff --git a/repair/dinode.h b/repair/dinode.h
+index 333d96d26a2..92df83da621 100644
+--- a/repair/dinode.h
++++ b/repair/dinode.h
+@@ -43,8 +43,8 @@ void
+ update_rootino(xfs_mount_t *mp);
+ 
+ int
+-process_dinode(xfs_mount_t *mp,
+-		struct xfs_dinode *dino,
++process_dinode(struct xfs_mount *mp,
++		struct xfs_dinode **dinop,
+ 		xfs_agnumber_t agno,
+ 		xfs_agino_t ino,
+ 		int was_free,
+@@ -54,7 +54,8 @@ process_dinode(xfs_mount_t *mp,
+ 		int check_dups,
+ 		int extra_attr_check,
+ 		int *isa_dir,
+-		xfs_ino_t *parent);
++		xfs_ino_t *parent,
++		struct xfs_buf **ino_bpp);
+ 
+ int
+ verify_dinode(xfs_mount_t *mp,
 
