@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 680FA65A0CA
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:40:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DBCB659F99
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:28:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236119AbiLaBkB (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:40:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
+        id S235614AbiLaA2T (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:28:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236130AbiLaBkA (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:40:00 -0500
+        with ESMTP id S235939AbiLaA2F (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:28:05 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233051CFF0
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:39:59 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C3C1EADE
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:28:03 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A8CAC61CBD
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:39:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B53FC433EF;
-        Sat, 31 Dec 2022 01:39:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48B4561D32
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:28:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A32B2C433EF;
+        Sat, 31 Dec 2022 00:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672450798;
-        bh=aYQndyBaD62ond7EkDf/Ho7sntO8H81uh9cmQ9WtJHw=;
+        s=k20201202; t=1672446482;
+        bh=st3VsYxtjCs4C3MHvkBqyRaCYNgQBLVaGZEOKLovux0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hfzEaIOaaJCxhSBZ7v/P76fmSuZrWqKF7x1lmmOf+ashV5Lff9c6MtwfLAFL6vxVT
-         kQnAz8+Z239CdWmYYfNShcq4lDsvUTy82XpUh4kwjDsIW+0AxPQQvmNpggQBDHUwTv
-         O3DJshIrCPIAnkJeZiSbkKkaWih0nmKYXDf1n7IgxWkYaKKnpD5W8twR1bNxFlE63e
-         0fqE70utqVF6nv36t7jAXsich60dSGgbCazysgtoX/yP0tVjndePpbnbb3wAWW6X30
-         S3+emTkzCbIz9TZ59zYIjzJW8R0/CDqRZYNC7R2MyFPMHAyasQHt+Mbpco+jloXQGO
-         F98CvCDqbhuXQ==
-Subject: [PATCH 12/38] xfs: add realtime reverse map inode to metadata
- directory
+        b=hlM6t2Cj75PeOBBJZURpw77IKEgH20iaMFLlG02TIgXxIjMaSffcpriJtU2IJ2aIX
+         43nybULGjKPbegLk6NWNWsiHO9xUYC3EFpIt7oKL+Te525WgllkcZh0w00SmE6XmH9
+         YPKEnBB+qNIuoZs0RV3JyvXe9g8cysaT9D9nPFzbQSMyUl7pOY/mS87dMVIrSKnu3W
+         kOyc7TdNF9HElmAwVaLxzn6KnJdD/T61Nr64zLmC5gEP2/3Y2XejkXGCm5kokFzoKe
+         NdHnp81Ea3pdvMGYIhDbWUF/6TnDArbnkWJmmWzExGGgu7LyXQwzb2bBoF7zI1DSpm
+         XMltijHJnJY+w==
+Subject: [PATCH 3/9] xfs_scrub: remove action lists from phaseX code
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:17 -0800
-Message-ID: <167243869769.715303.8418722142356010813.stgit@magnolia>
-In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
-References: <167243869558.715303.13347105677486333748.stgit@magnolia>
+Message-ID: <167243869753.715746.12688530121907469172.stgit@magnolia>
+In-Reply-To: <167243869711.715746.14725730988345960302.stgit@magnolia>
+References: <167243869711.715746.14725730988345960302.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,408 +54,457 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a metadir path to select the realtime rmap btree inode and load
-it at mount time.  The rtrmapbt inode will have a unique extent format
-code, which means that we also have to update the inode validation and
-flush routines to look for it.
+Now that we track repair schedules by filesystem object (and not
+individual repairs) we can get rid of all the onstack list heads and
+whatnot in the phaseX code.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_format.h       |    6 ++-
- fs/xfs/libxfs/xfs_inode_buf.c    |    6 +++
- fs/xfs/libxfs/xfs_inode_fork.c   |    9 ++++
- fs/xfs/libxfs/xfs_rtgroup.h      |    3 +
- fs/xfs/libxfs/xfs_rtrmap_btree.c |   33 ++++++++++++++++
- fs/xfs/libxfs/xfs_rtrmap_btree.h |    4 ++
- fs/xfs/xfs_inode.c               |   19 +++++++++
- fs/xfs/xfs_inode_item.c          |    2 +
- fs/xfs/xfs_inode_item_recover.c  |    1 
- fs/xfs/xfs_rtalloc.c             |   79 ++++++++++++++++++++++++++++++++++++++
- fs/xfs/xfs_trace.h               |    1 
- 11 files changed, 159 insertions(+), 4 deletions(-)
+ scrub/phase1.c |    5 +----
+ scrub/phase2.c |   16 ++++------------
+ scrub/phase3.c |   19 ++++++++-----------
+ scrub/phase4.c |    8 ++------
+ scrub/phase5.c |    8 ++------
+ scrub/phase7.c |    4 +---
+ scrub/scrub.c  |   37 ++++++++++++++++++++-----------------
+ scrub/scrub.h  |   16 +++++-----------
+ 8 files changed, 43 insertions(+), 70 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
-index fb727e1e4072..babe5d3fabb1 100644
---- a/fs/xfs/libxfs/xfs_format.h
-+++ b/fs/xfs/libxfs/xfs_format.h
-@@ -1009,7 +1009,8 @@ enum xfs_dinode_fmt {
- 	XFS_DINODE_FMT_LOCAL,		/* bulk data */
- 	XFS_DINODE_FMT_EXTENTS,		/* struct xfs_bmbt_rec */
- 	XFS_DINODE_FMT_BTREE,		/* struct xfs_bmdr_block */
--	XFS_DINODE_FMT_UUID		/* added long ago, but never used */
-+	XFS_DINODE_FMT_UUID,		/* added long ago, but never used */
-+	XFS_DINODE_FMT_RMAP,		/* reverse mapping btree */
- };
- 
- #define XFS_INODE_FORMAT_STR \
-@@ -1017,7 +1018,8 @@ enum xfs_dinode_fmt {
- 	{ XFS_DINODE_FMT_LOCAL,		"local" }, \
- 	{ XFS_DINODE_FMT_EXTENTS,	"extent" }, \
- 	{ XFS_DINODE_FMT_BTREE,		"btree" }, \
--	{ XFS_DINODE_FMT_UUID,		"uuid" }
-+	{ XFS_DINODE_FMT_UUID,		"uuid" }, \
-+	{ XFS_DINODE_FMT_RMAP,		"rmap" }
- 
- /*
-  * Max values for extnum and aextnum.
-diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
-index 1fb11d0e7eba..9ac84be391b3 100644
---- a/fs/xfs/libxfs/xfs_inode_buf.c
-+++ b/fs/xfs/libxfs/xfs_inode_buf.c
-@@ -408,6 +408,12 @@ xfs_dinode_verify_fork(
- 		if (di_nextents > max_extents)
- 			return __this_address;
- 		break;
-+	case XFS_DINODE_FMT_RMAP:
-+		if (!xfs_has_rtrmapbt(mp))
-+			return __this_address;
-+		if (!(dip->di_flags2 & cpu_to_be64(XFS_DIFLAG2_METADATA)))
-+			return __this_address;
-+		break;
- 	default:
- 		return __this_address;
- 	}
-diff --git a/fs/xfs/libxfs/xfs_inode_fork.c b/fs/xfs/libxfs/xfs_inode_fork.c
-index b844bfd94e9c..899428f96b94 100644
---- a/fs/xfs/libxfs/xfs_inode_fork.c
-+++ b/fs/xfs/libxfs/xfs_inode_fork.c
-@@ -259,6 +259,11 @@ xfs_iformat_data_fork(
- 			return xfs_iformat_extents(ip, dip, XFS_DATA_FORK);
- 		case XFS_DINODE_FMT_BTREE:
- 			return xfs_iformat_btree(ip, dip, XFS_DATA_FORK);
-+		case XFS_DINODE_FMT_RMAP:
-+			if (!xfs_has_rtrmapbt(ip->i_mount))
-+				return -EFSCORRUPTED;
-+			ASSERT(0); /* to be implemented later */
-+			return -EFSCORRUPTED;
- 		default:
- 			xfs_inode_verifier_error(ip, -EFSCORRUPTED, __func__,
- 					dip, sizeof(*dip), __this_address);
-@@ -639,6 +644,10 @@ xfs_iflush_fork(
- 		}
- 		break;
- 
-+	case XFS_DINODE_FMT_RMAP:
-+		ASSERT(0); /* to be implemented later */
-+		break;
-+
- 	default:
- 		ASSERT(0);
- 		break;
-diff --git a/fs/xfs/libxfs/xfs_rtgroup.h b/fs/xfs/libxfs/xfs_rtgroup.h
-index 3c9572677f79..1792a9ab3bbf 100644
---- a/fs/xfs/libxfs/xfs_rtgroup.h
-+++ b/fs/xfs/libxfs/xfs_rtgroup.h
-@@ -20,6 +20,9 @@ struct xfs_rtgroup {
- 	/* for rcu-safe freeing */
- 	struct rcu_head		rcu_head;
- 
-+	/* reverse mapping btree inode */
-+	struct xfs_inode	*rtg_rmapip;
-+
- 	/* Number of blocks in this group */
- 	xfs_rgblock_t		rtg_blockcount;
- 
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.c b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-index 551d575713db..754812eaff87 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.c
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.c
-@@ -18,6 +18,7 @@
- #include "xfs_alloc.h"
- #include "xfs_btree.h"
- #include "xfs_btree_staging.h"
-+#include "xfs_imeta.h"
- #include "xfs_rmap.h"
- #include "xfs_rtrmap_btree.h"
- #include "xfs_trace.h"
-@@ -475,6 +476,7 @@ xfs_rtrmapbt_commit_staged_btree(
- 	int			flags = XFS_ILOG_CORE | XFS_ILOG_DBROOT;
- 
- 	ASSERT(cur->bc_flags & XFS_BTREE_STAGING);
-+	ASSERT(ifake->if_fork->if_format == XFS_DINODE_FMT_RMAP);
- 
- 	/*
- 	 * Free any resources hanging off the real fork, then shallow-copy the
-@@ -575,3 +577,34 @@ xfs_rtrmapbt_compute_maxlevels(
- 	/* Add one level to handle the inode root level. */
- 	mp->m_rtrmap_maxlevels = min(d_maxlevels, r_maxlevels) + 1;
- }
-+
-+#define XFS_RTRMAP_NAMELEN		17
-+
-+/* Create the metadata directory path for an rtrmap btree inode. */
-+int
-+xfs_rtrmapbt_create_path(
-+	struct xfs_mount	*mp,
-+	xfs_rgnumber_t		rgno,
-+	struct xfs_imeta_path	**pathp)
-+{
-+	struct xfs_imeta_path	*path;
-+	char			*fname;
-+	int			error;
-+
-+	error = xfs_imeta_create_file_path(mp, 2, &path);
-+	if (error)
-+		return error;
-+
-+	fname = kmalloc(XFS_RTRMAP_NAMELEN, GFP_KERNEL);
-+	if (!fname) {
-+		xfs_imeta_free_path(path);
-+		return -ENOMEM;
-+	}
-+
-+	snprintf(fname, XFS_RTRMAP_NAMELEN, "%u.rmap", rgno);
-+	path->im_path[0] = "realtime";
-+	path->im_path[1] = fname;
-+	path->im_dynamicmask = 0x2;
-+	*pathp = path;
-+	return 0;
-+}
-diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.h b/fs/xfs/libxfs/xfs_rtrmap_btree.h
-index 7380c04e7705..26e2445f5d6c 100644
---- a/fs/xfs/libxfs/xfs_rtrmap_btree.h
-+++ b/fs/xfs/libxfs/xfs_rtrmap_btree.h
-@@ -11,6 +11,7 @@ struct xfs_btree_cur;
- struct xfs_mount;
- struct xbtree_ifakeroot;
- struct xfs_rtgroup;
-+struct xfs_imeta_path;
- 
- /* rmaps only exist on crc enabled filesystems */
- #define XFS_RTRMAP_BLOCK_LEN	XFS_BTREE_LBLOCK_CRC_LEN
-@@ -80,4 +81,7 @@ unsigned int xfs_rtrmapbt_maxlevels_ondisk(void);
- int __init xfs_rtrmapbt_init_cur_cache(void);
- void xfs_rtrmapbt_destroy_cur_cache(void);
- 
-+int xfs_rtrmapbt_create_path(struct xfs_mount *mp, xfs_rgnumber_t rgno,
-+		struct xfs_imeta_path **pathp);
-+
- #endif	/* __XFS_RTRMAP_BTREE_H__ */
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index ab805df9db16..3b0c04b6bcdf 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -2572,7 +2572,15 @@ xfs_iflush(
- 			__func__, ip->i_ino, be16_to_cpu(dip->di_magic), dip);
- 		goto flush_out;
- 	}
--	if (S_ISREG(VFS_I(ip)->i_mode)) {
-+	if (ip->i_df.if_format == XFS_DINODE_FMT_RMAP) {
-+		if (!S_ISREG(VFS_I(ip)->i_mode) ||
-+		    !(ip->i_diflags2 & XFS_DIFLAG2_METADATA)) {
-+			xfs_alert_tag(mp, XFS_PTAG_IFLUSH,
-+				"%s: Bad rt rmapbt inode %Lu, ptr "PTR_FMT,
-+				__func__, ip->i_ino, ip);
-+			goto flush_out;
-+		}
-+	} else if (S_ISREG(VFS_I(ip)->i_mode)) {
- 		if (XFS_TEST_ERROR(
- 		    ip->i_df.if_format != XFS_DINODE_FMT_EXTENTS &&
- 		    ip->i_df.if_format != XFS_DINODE_FMT_BTREE,
-@@ -2612,6 +2620,15 @@ xfs_iflush(
- 		goto flush_out;
- 	}
- 
-+	if (xfs_inode_has_attr_fork(ip)) {
-+		if (ip->i_af.if_format == XFS_DINODE_FMT_RMAP) {
-+			xfs_alert_tag(mp, XFS_PTAG_IFLUSH,
-+				"%s: rt rmapbt in inode %Lu attr fork, ptr "PTR_FMT,
-+				__func__, ip->i_ino, ip);
-+			goto flush_out;
-+		}
-+	}
-+
- 	/*
- 	 * Inode item log recovery for v2 inodes are dependent on the flushiter
- 	 * count for correct sequencing.  We bump the flush iteration count so
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index ca2941ab6cbc..b6e374744474 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -62,6 +62,7 @@ xfs_inode_item_data_fork_size(
- 		}
- 		break;
- 	case XFS_DINODE_FMT_BTREE:
-+	case XFS_DINODE_FMT_RMAP:
- 		if ((iip->ili_fields & XFS_ILOG_DBROOT) &&
- 		    ip->i_df.if_broot_bytes > 0) {
- 			*nbytes += ip->i_df.if_broot_bytes;
-@@ -182,6 +183,7 @@ xfs_inode_item_format_data_fork(
- 		}
- 		break;
- 	case XFS_DINODE_FMT_BTREE:
-+	case XFS_DINODE_FMT_RMAP:
- 		iip->ili_fields &=
- 			~(XFS_ILOG_DDATA | XFS_ILOG_DEXT | XFS_ILOG_DEV);
- 
-diff --git a/fs/xfs/xfs_inode_item_recover.c b/fs/xfs/xfs_inode_item_recover.c
-index 0e5dba2343ea..3453a204d196 100644
---- a/fs/xfs/xfs_inode_item_recover.c
-+++ b/fs/xfs/xfs_inode_item_recover.c
-@@ -390,6 +390,7 @@ xlog_recover_inode_commit_pass2(
- 
- 	if (unlikely(S_ISREG(ldip->di_mode))) {
- 		if ((ldip->di_format != XFS_DINODE_FMT_EXTENTS) &&
-+		    (ldip->di_format != XFS_DINODE_FMT_RMAP) &&
- 		    (ldip->di_format != XFS_DINODE_FMT_BTREE)) {
- 			XFS_CORRUPTION_ERROR(
- 				"Bad log dinode data fork format for regular file",
-diff --git a/fs/xfs/xfs_rtalloc.c b/fs/xfs/xfs_rtalloc.c
-index 82b729a86740..ba330265ab8a 100644
---- a/fs/xfs/xfs_rtalloc.c
-+++ b/fs/xfs/xfs_rtalloc.c
-@@ -27,6 +27,8 @@
- #include "xfs_rtbitmap.h"
- #include "xfs_rtgroup.h"
- #include "xfs_quota.h"
-+#include "xfs_error.h"
-+#include "xfs_rtrmap_btree.h"
- 
- /*
-  * Realtime metadata files are not quite regular files because userspace can't
-@@ -37,6 +39,7 @@
-  */
- static struct lock_class_key xfs_rbmip_key;
- static struct lock_class_key xfs_rsumip_key;
-+static struct lock_class_key xfs_rrmapip_key;
- 
- /*
-  * Read and return the summary information for a given extent size,
-@@ -1600,6 +1603,47 @@ __xfs_rt_iget(
- #define xfs_rt_iget(mp, ino, lockdep_key, ipp) \
- 	__xfs_rt_iget((mp), (ino), (lockdep_key), #lockdep_key, (ipp))
- 
-+/* Load realtime rmap btree inode. */
-+STATIC int
-+xfs_rtmount_rmapbt(
-+	struct xfs_rtgroup	*rtg)
-+{
-+	struct xfs_mount	*mp = rtg->rtg_mount;
-+	struct xfs_imeta_path	*path;
-+	struct xfs_inode	*ip;
-+	xfs_ino_t		ino;
-+	int			error;
-+
-+	if (!xfs_has_rtrmapbt(mp))
-+		return 0;
-+
-+	error = xfs_rtrmapbt_create_path(mp, rtg->rtg_rgno, &path);
-+	if (error)
-+		return error;
-+
-+	error = xfs_imeta_lookup(mp, path, &ino);
-+	if (error)
-+		goto out_path;
-+
-+	error = xfs_rt_iget(mp, ino, &xfs_rrmapip_key, &ip);
-+	if (error)
-+		goto out_path;
-+
-+	if (XFS_IS_CORRUPT(mp, ip->i_df.if_format != XFS_DINODE_FMT_RMAP)) {
-+		error = -EFSCORRUPTED;
-+		goto out_rele;
-+	}
-+
-+	rtg->rtg_rmapip = ip;
-+	ip = NULL;
-+out_rele:
-+	if (ip)
-+		xfs_imeta_irele(ip);
-+out_path:
-+	xfs_imeta_free_path(path);
-+	return error;
-+}
-+
- /*
-  * Read in the bmbt of an rt metadata inode so that we never have to load them
-  * at runtime.  This enables the use of shared ILOCKs for rtbitmap scans.  Use
-@@ -1638,7 +1682,7 @@ xfs_rtmount_iread_extents(
-  * Get the bitmap and summary inodes and the summary cache into the mount
-  * structure at mount time.
-  */
--int					/* error */
-+int
- xfs_rtmount_inodes(
- 	struct xfs_mount	*mp)		/* file system mount structure */
+diff --git a/scrub/phase1.c b/scrub/phase1.c
+index 2c0ff7c8327..6b2f6cdd5fa 100644
+--- a/scrub/phase1.c
++++ b/scrub/phase1.c
+@@ -53,7 +53,6 @@ report_to_kernel(
+ 	struct scrub_ctx	*ctx)
  {
-@@ -1675,11 +1719,23 @@ xfs_rtmount_inodes(
- 	for_each_rtgroup(mp, rgno, rtg) {
- 		rtg->rtg_blockcount = xfs_rtgroup_block_count(mp,
- 							      rtg->rtg_rgno);
-+
-+		error = xfs_rtmount_rmapbt(rtg);
-+		if (error) {
-+			xfs_rtgroup_put(rtg);
-+			goto out_rele_rtgroup;
-+		}
+ 	struct scrub_item	sri;
+-	struct action_list	alist;
+ 	int			ret;
+ 
+ 	if (!ctx->scrub_setup_succeeded || ctx->corruptions_found ||
+@@ -62,8 +61,7 @@ report_to_kernel(
+ 		return 0;
+ 
+ 	scrub_item_init_fs(&sri);
+-	action_list_init(&alist);
+-	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_HEALTHY, 0, &alist, &sri);
++	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_HEALTHY, &sri);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -74,7 +72,6 @@ report_to_kernel(
+ 	if (repair_item_count_needsrepair(&sri) != 0 &&
+ 	    !debug_tweak_on("XFS_SCRUB_FORCE_REPAIR")) {
+ 		str_info(ctx, _("Couldn't upload clean bill of health."), NULL);
+-		action_list_discard(&alist);
  	}
  
- 	xfs_alloc_rsum_cache(mp, sbp->sb_rbmblocks);
  	return 0;
+diff --git a/scrub/phase2.c b/scrub/phase2.c
+index 83c467347fe..656eccce449 100644
+--- a/scrub/phase2.c
++++ b/scrub/phase2.c
+@@ -61,8 +61,6 @@ scan_ag_metadata(
+ 	struct scrub_item		fix_now;
+ 	struct scrub_ctx		*ctx = (struct scrub_ctx *)wq->wq_ctx;
+ 	struct scan_ctl			*sctl = arg;
+-	struct action_list		alist;
+-	struct action_list		immediate_alist;
+ 	char				descr[DESCR_BUFSZ];
+ 	unsigned int			difficulty;
+ 	int				ret;
+@@ -71,15 +69,13 @@ scan_ag_metadata(
+ 		return;
  
-+out_rele_rtgroup:
-+	for_each_rtgroup(mp, rgno, rtg) {
-+		if (rtg->rtg_rmapip)
-+			xfs_imeta_irele(rtg->rtg_rmapip);
-+		rtg->rtg_rmapip = NULL;
-+	}
- out_rele_summary:
- 	xfs_imeta_irele(mp->m_rsumip);
- out_rele_bitmap:
-@@ -1692,6 +1748,8 @@ int
- xfs_rtmount_dqattach(
- 	struct xfs_mount	*mp)
+ 	scrub_item_init_ag(&sri, agno);
+-	action_list_init(&alist);
+-	action_list_init(&immediate_alist);
+ 	snprintf(descr, DESCR_BUFSZ, _("AG %u"), agno);
+ 
+ 	/*
+ 	 * First we scrub and fix the AG headers, because we need
+ 	 * them to work well enough to check the AG btrees.
+ 	 */
+-	ret = scrub_ag_headers(ctx, agno, &alist, &sri);
++	ret = scrub_ag_headers(ctx, &sri);
+ 	if (ret)
+ 		goto err;
+ 
+@@ -89,7 +85,7 @@ scan_ag_metadata(
+ 		goto err;
+ 
+ 	/* Now scrub the AG btrees. */
+-	ret = scrub_ag_metadata(ctx, agno, &alist, &sri);
++	ret = scrub_ag_metadata(ctx, &sri);
+ 	if (ret)
+ 		goto err;
+ 
+@@ -126,7 +122,6 @@ scan_metafile(
+ 	void			*arg)
  {
-+	struct xfs_rtgroup	*rtg;
-+	xfs_rgnumber_t		rgno;
+ 	struct scrub_item	sri;
+-	struct action_list	alist;
+ 	struct scrub_ctx	*ctx = (struct scrub_ctx *)wq->wq_ctx;
+ 	struct scan_ctl		*sctl = arg;
+ 	unsigned int		difficulty;
+@@ -136,8 +131,7 @@ scan_metafile(
+ 		goto out;
+ 
+ 	scrub_item_init_fs(&sri);
+-	action_list_init(&alist);
+-	ret = scrub_metadata_file(ctx, type, &alist, &sri);
++	ret = scrub_metadata_file(ctx, type, &sri);
+ 	if (ret) {
+ 		sctl->aborted = true;
+ 		goto out;
+@@ -172,7 +166,6 @@ phase2_func(
+ 		.aborted	= false,
+ 		.rbm_done	= false,
+ 	};
+-	struct action_list	alist;
+ 	struct scrub_item	sri;
+ 	const struct xfrog_scrub_descr *sc = xfrog_scrubbers;
+ 	xfs_agnumber_t		agno;
+@@ -196,8 +189,7 @@ phase2_func(
+ 	 * If errors occur, this function will log them and return nonzero.
+ 	 */
+ 	scrub_item_init_ag(&sri, 0);
+-	action_list_init(&alist);
+-	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_SB, 0, &alist, &sri);
++	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_SB, &sri);
+ 	if (ret)
+ 		goto out_wq;
+ 	ret = repair_item_completely(ctx, &sri);
+diff --git a/scrub/phase3.c b/scrub/phase3.c
+index 7e09c48ce18..01171de64d1 100644
+--- a/scrub/phase3.c
++++ b/scrub/phase3.c
+@@ -107,7 +107,6 @@ scrub_inode(
+ 	struct xfs_bulkstat	*bstat,
+ 	void			*arg)
+ {
+-	struct action_list	alist;
+ 	struct scrub_item	sri;
+ 	struct scrub_inode_ctx	*ictx = arg;
+ 	struct ptcounter	*icount = ictx->icount;
+@@ -115,7 +114,6 @@ scrub_inode(
  	int			error;
  
- 	error = xfs_qm_dqattach(mp->m_rbmip);
-@@ -1702,6 +1760,16 @@ xfs_rtmount_dqattach(
+ 	scrub_item_init_file(&sri, bstat);
+-	action_list_init(&alist);
+ 	background_sleep();
+ 
+ 	/*
+@@ -146,7 +144,7 @@ scrub_inode(
+ 		fd = scrub_open_handle(handle);
+ 
+ 	/* Scrub the inode. */
+-	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_INODE, &alist, &sri);
++	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_INODE, &sri);
+ 	if (error)
+ 		goto out;
+ 
+@@ -155,13 +153,13 @@ scrub_inode(
+ 		goto out;
+ 
+ 	/* Scrub all block mappings. */
+-	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTD, &alist, &sri);
++	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTD, &sri);
+ 	if (error)
+ 		goto out;
+-	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTA, &alist, &sri);
++	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTA, &sri);
+ 	if (error)
+ 		goto out;
+-	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTC, &alist, &sri);
++	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_BMBTC, &sri);
+ 	if (error)
+ 		goto out;
+ 
+@@ -172,22 +170,21 @@ scrub_inode(
+ 	if (S_ISLNK(bstat->bs_mode)) {
+ 		/* Check symlink contents. */
+ 		error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_SYMLINK,
+-				&alist, &sri);
++				&sri);
+ 	} else if (S_ISDIR(bstat->bs_mode)) {
+ 		/* Check the directory entries. */
+-		error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_DIR, &alist,
+-				&sri);
++		error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_DIR, &sri);
+ 	}
+ 	if (error)
+ 		goto out;
+ 
+ 	/* Check all the extended attributes. */
+-	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_XATTR, &alist, &sri);
++	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_XATTR, &sri);
+ 	if (error)
+ 		goto out;
+ 
+ 	/* Check parent pointers. */
+-	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_PARENT, &alist, &sri);
++	error = scrub_file(ctx, fd, bstat, XFS_SCRUB_TYPE_PARENT, &sri);
+ 	if (error)
+ 		goto out;
+ 
+diff --git a/scrub/phase4.c b/scrub/phase4.c
+index 3afd04af47e..ee6aa90f326 100644
+--- a/scrub/phase4.c
++++ b/scrub/phase4.c
+@@ -129,7 +129,6 @@ phase4_func(
+ 	struct scrub_ctx	*ctx)
+ {
+ 	struct xfs_fsop_geom	fsgeom;
+-	struct action_list	alist;
+ 	struct scrub_item	sri;
+ 	int			ret;
+ 
+@@ -144,8 +143,7 @@ phase4_func(
+ 	 * metadata.  If repairs fails, we'll come back during phase 7.
+ 	 */
+ 	scrub_item_init_fs(&sri);
+-	action_list_init(&alist);
+-	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_FSCOUNTERS, 0, &alist, &sri);
++	ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_FSCOUNTERS, &sri);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -160,8 +158,7 @@ phase4_func(
+ 		return ret;
+ 
+ 	if (fsgeom.sick & XFS_FSOP_GEOM_SICK_QUOTACHECK) {
+-		ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_QUOTACHECK, 0,
+-				&alist, &sri);
++		ret = scrub_meta_type(ctx, XFS_SCRUB_TYPE_QUOTACHECK, &sri);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -170,7 +167,6 @@ phase4_func(
+ 	ret = repair_item_corruption(ctx, &sri);
+ 	if (ret)
+ 		return ret;
+-	action_list_discard(&alist);
+ 
+ 	ret = repair_everything(ctx);
+ 	if (ret)
+diff --git a/scrub/phase5.c b/scrub/phase5.c
+index b7801b46760..ea32d185751 100644
+--- a/scrub/phase5.c
++++ b/scrub/phase5.c
+@@ -385,7 +385,6 @@ check_fs_label(
+ 
+ struct iscan_item {
+ 	struct scrub_item	sri;
+-	struct action_list	alist;
+ 	bool			*abortedp;
+ 	unsigned int		scrub_type;
+ };
+@@ -412,16 +411,14 @@ iscan_worker(
+ 		nanosleep(&tv, NULL);
+ 	}
+ 
+-	ret = scrub_meta_type(ctx, item->scrub_type, 0, &item->alist,
+-			&item->sri);
++	ret = scrub_meta_type(ctx, item->scrub_type, &item->sri);
+ 	if (ret) {
+ 		str_liberror(ctx, ret, _("checking iscan metadata"));
+ 		*item->abortedp = true;
+ 		goto out;
+ 	}
+ 
+-	ret = action_list_process(ctx, &item->alist,
+-			XRM_FINAL_WARNING | XRM_NOPROGRESS);
++	ret = repair_item_completely(ctx, &item->sri);
+ 	if (ret) {
+ 		str_liberror(ctx, ret, _("repairing iscan metadata"));
+ 		*item->abortedp = true;
+@@ -452,7 +449,6 @@ queue_iscan(
+ 		return ret;
+ 	}
+ 	scrub_item_init_fs(&item->sri);
+-	action_list_init(&item->alist);
+ 	item->scrub_type = scrub_type;
+ 	item->abortedp = abortedp;
+ 
+diff --git a/scrub/phase7.c b/scrub/phase7.c
+index 15540778ffa..98846a1566b 100644
+--- a/scrub/phase7.c
++++ b/scrub/phase7.c
+@@ -100,7 +100,6 @@ phase7_func(
+ {
+ 	struct summary_counts	totalcount = {0};
+ 	struct scrub_item	sri;
+-	struct action_list	alist;
+ 	struct ptvar		*ptvar;
+ 	unsigned long long	used_data;
+ 	unsigned long long	used_rt;
+@@ -119,8 +118,7 @@ phase7_func(
+ 
+ 	/* Check and fix the summary metadata. */
+ 	scrub_item_init_fs(&sri);
+-	action_list_init(&alist);
+-	error = scrub_summary_metadata(ctx, &alist, &sri);
++	error = scrub_summary_metadata(ctx, &sri);
  	if (error)
  		return error;
+ 	error = repair_item_completely(ctx, &sri);
+diff --git a/scrub/scrub.c b/scrub/scrub.c
+index e3bfee40489..5dd5cf67a8e 100644
+--- a/scrub/scrub.c
++++ b/scrub/scrub.c
+@@ -219,6 +219,7 @@ _("Optimizations of %s are possible."), _(xfrog_scrubbers[i].descr));
  
-+	for_each_rtgroup(mp, rgno, rtg) {
-+		if (rtg->rtg_rmapip) {
-+			error = xfs_qm_dqattach(rtg->rtg_rmapip);
-+			if (error) {
-+				xfs_rtgroup_put(rtg);
-+				return error;
-+			}
-+		}
+ /*
+  * Scrub a single XFS_SCRUB_TYPE_*, saving corruption reports for later.
++ * Do not call this function to repair file metadata.
+  *
+  * Returns 0 for success.  If errors occur, this function will log them and
+  * return a positive error code.
+@@ -227,18 +228,29 @@ int
+ scrub_meta_type(
+ 	struct scrub_ctx		*ctx,
+ 	unsigned int			type,
+-	xfs_agnumber_t			agno,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
+ {
+ 	struct xfs_scrub_metadata	meta = {
+ 		.sm_type		= type,
+-		.sm_agno		= agno,
+ 	};
+ 	enum check_outcome		fix;
+ 
+ 	background_sleep();
+ 
++	switch (xfrog_scrubbers[type].group) {
++	case XFROG_SCRUB_GROUP_AGHEADER:
++	case XFROG_SCRUB_GROUP_PERAG:
++		meta.sm_agno = sri->sri_agno;
++		break;
++	case XFROG_SCRUB_GROUP_METAFILES:
++	case XFROG_SCRUB_GROUP_SUMMARY:
++	case XFROG_SCRUB_GROUP_NONE:
++		break;
++	default:
++		assert(0);
++		break;
 +	}
 +
- 	return 0;
+ 	/* Check the item. */
+ 	fix = xfs_check_metadata(ctx, &ctx->mnt, &meta, false);
+ 	progress_add(1);
+@@ -267,8 +279,6 @@ static bool
+ scrub_group(
+ 	struct scrub_ctx		*ctx,
+ 	enum xfrog_scrub_group		group,
+-	xfs_agnumber_t			agno,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
+ {
+ 	const struct xfrog_scrub_descr	*sc;
+@@ -281,7 +291,7 @@ scrub_group(
+ 		if (sc->group != group)
+ 			continue;
+ 
+-		ret = scrub_meta_type(ctx, type, agno, alist, sri);
++		ret = scrub_meta_type(ctx, type, sri);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -293,22 +303,18 @@ scrub_group(
+ int
+ scrub_ag_headers(
+ 	struct scrub_ctx		*ctx,
+-	xfs_agnumber_t			agno,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
+ {
+-	return scrub_group(ctx, XFROG_SCRUB_GROUP_AGHEADER, agno, alist, sri);
++	return scrub_group(ctx, XFROG_SCRUB_GROUP_AGHEADER, sri);
  }
  
-@@ -1709,7 +1777,16 @@ void
- xfs_rtunmount_inodes(
- 	struct xfs_mount	*mp)
+ /* Scrub each AG's metadata btrees. */
+ int
+ scrub_ag_metadata(
+ 	struct scrub_ctx		*ctx,
+-	xfs_agnumber_t			agno,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
  {
-+	struct xfs_rtgroup	*rtg;
-+	xfs_rgnumber_t		rgno;
-+
- 	kmem_free(mp->m_rsum_cache);
-+
-+	for_each_rtgroup(mp, rgno, rtg) {
-+		if (rtg->rtg_rmapip)
-+			xfs_imeta_irele(rtg->rtg_rmapip);
-+		rtg->rtg_rmapip = NULL;
-+	}
- 	if (mp->m_rbmip)
- 		xfs_imeta_irele(mp->m_rbmip);
- 	if (mp->m_rsumip)
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index c02a58cbf15b..77f4acc1b923 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -2235,6 +2235,7 @@ TRACE_DEFINE_ENUM(XFS_DINODE_FMT_LOCAL);
- TRACE_DEFINE_ENUM(XFS_DINODE_FMT_EXTENTS);
- TRACE_DEFINE_ENUM(XFS_DINODE_FMT_BTREE);
- TRACE_DEFINE_ENUM(XFS_DINODE_FMT_UUID);
-+TRACE_DEFINE_ENUM(XFS_DINODE_FMT_RMAP);
+-	return scrub_group(ctx, XFROG_SCRUB_GROUP_PERAG, agno, alist, sri);
++	return scrub_group(ctx, XFROG_SCRUB_GROUP_PERAG, sri);
+ }
  
- DECLARE_EVENT_CLASS(xfs_swap_extent_class,
- 	TP_PROTO(struct xfs_inode *ip, int which),
+ /* Scrub one metadata file */
+@@ -316,22 +322,20 @@ int
+ scrub_metadata_file(
+ 	struct scrub_ctx		*ctx,
+ 	unsigned int			type,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
+ {
+ 	ASSERT(xfrog_scrubbers[type].group == XFROG_SCRUB_GROUP_METAFILES);
+ 
+-	return scrub_meta_type(ctx, type, 0, alist, sri);
++	return scrub_meta_type(ctx, type, sri);
+ }
+ 
+ /* Scrub all FS summary metadata. */
+ int
+ scrub_summary_metadata(
+ 	struct scrub_ctx		*ctx,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
+ {
+-	return scrub_group(ctx, XFROG_SCRUB_GROUP_SUMMARY, 0, alist, sri);
++	return scrub_group(ctx, XFROG_SCRUB_GROUP_SUMMARY, sri);
+ }
+ 
+ /* How many items do we have to check? */
+@@ -393,7 +397,6 @@ scrub_file(
+ 	int				fd,
+ 	const struct xfs_bulkstat	*bstat,
+ 	unsigned int			type,
+-	struct action_list		*alist,
+ 	struct scrub_item		*sri)
+ {
+ 	struct xfs_scrub_metadata	meta = {0};
+diff --git a/scrub/scrub.h b/scrub/scrub.h
+index 95882eabedb..e1e70b38b8e 100644
+--- a/scrub/scrub.h
++++ b/scrub/scrub.h
+@@ -80,18 +80,13 @@ void scrub_item_dump(struct scrub_item *sri, unsigned int group_mask,
+ 		const char *tag);
+ 
+ void scrub_report_preen_triggers(struct scrub_ctx *ctx);
+-int scrub_ag_headers(struct scrub_ctx *ctx, xfs_agnumber_t agno,
+-		struct action_list *alist, struct scrub_item *sri);
+-int scrub_ag_metadata(struct scrub_ctx *ctx, xfs_agnumber_t agno,
+-		struct action_list *alist, struct scrub_item *sri);
++int scrub_ag_headers(struct scrub_ctx *ctx, struct scrub_item *sri);
++int scrub_ag_metadata(struct scrub_ctx *ctx, struct scrub_item *sri);
+ int scrub_metadata_file(struct scrub_ctx *ctx, unsigned int scrub_type,
+-		struct action_list *alist, struct scrub_item *sri);
+-int scrub_iscan_metadata(struct scrub_ctx *ctx, struct action_list *alist,
+-		struct scrub_item *sri);
+-int scrub_summary_metadata(struct scrub_ctx *ctx, struct action_list *alist,
+ 		struct scrub_item *sri);
++int scrub_iscan_metadata(struct scrub_ctx *ctx, struct scrub_item *sri);
++int scrub_summary_metadata(struct scrub_ctx *ctx, struct scrub_item *sri);
+ int scrub_meta_type(struct scrub_ctx *ctx, unsigned int type,
+-		xfs_agnumber_t agno, struct action_list *alist,
+ 		struct scrub_item *sri);
+ 
+ bool can_scrub_fs_metadata(struct scrub_ctx *ctx);
+@@ -105,7 +100,6 @@ bool can_repair(struct scrub_ctx *ctx);
+ bool can_force_rebuild(struct scrub_ctx *ctx);
+ 
+ int scrub_file(struct scrub_ctx *ctx, int fd, const struct xfs_bulkstat *bstat,
+-		unsigned int type, struct action_list *alist,
+-		struct scrub_item *sri);
++		unsigned int type, struct scrub_item *sri);
+ 
+ #endif /* XFS_SCRUB_SCRUB_H_ */
 
