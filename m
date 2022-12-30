@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80655659FDF
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:43:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBF8065A187
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:27:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235867AbiLaAn6 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:43:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
+        id S231503AbiLaC1W (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:27:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235868AbiLaAn5 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:43:57 -0500
+        with ESMTP id S236134AbiLaC1Q (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:27:16 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E321DDE2;
-        Fri, 30 Dec 2022 16:43:55 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FBF1C921
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:27:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AA9C0B81E6A;
-        Sat, 31 Dec 2022 00:43:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44720C433D2;
-        Sat, 31 Dec 2022 00:43:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1C564B81E67
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:27:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D80C433F0;
+        Sat, 31 Dec 2022 02:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447432;
-        bh=1m5U7pR6fT3EIQAXb1UYoy3hoSENtTpY86vqUFcbIs0=;
+        s=k20201202; t=1672453631;
+        bh=ZjDnWwPn+h/VHJn3uoqvAmXCAD6ovoR5HLQb45r5RcM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=n+Tl+mFhYcAQs0rvDGTDWMjcghS/9iE43a6PxhG182UtgipnAfvu6yb1vqKVt+Zbe
-         CDTQQ1k+LHq2HJXNr8tRU3pwxfHvcrrafWvN9VfwIsRHfhxxrxMA57VbSPVugtgfp9
-         r/e1oj/BjmyaahihwafPNpzRzsALdR2b7wMZBlY/Lw8e9O88frnqn55BAN3hUMCm9t
-         9iUnQH5uHGQtEBoEmG8svZK/2+GrKnJTeC0vzsnfYS/c9IEZkKlyqc+wHF8Ym/ulBx
-         CGr7gfsBCOOeqflzWI/X4eT+qH9s1REkoqJf3AAlem2ntowzheH6YuHufaxSvUCYlJ
-         lShVHxl2Tz6vg==
-Subject: [PATCH 1/2] populate: take a snapshot of the filesystem if creation
- fails
+        b=LGiOh3SV/JVXvKOHdUa3Ur1VJKD12uqHaQvBvD6pi+T/OLQjYEtbK2bTv6L7+AF99
+         YENK268as2FJF0P1xTWY2A0CgFDw3bQDG1nbwUBgK5V7s9g+X3rmx9iVsyOJH3wdRj
+         mWDuREXUrmueXIIohKRtIM3yEP+/3XGokkcfoHLxH609jpYtDsl3rcXgyUOcyGRxeg
+         CKVbyDbXmCfECZ5SCyLBdP7ZOJuKqUj6Y4p0vHFKD84pA1+vjsrm5NeuKhRtRGEeS4
+         RBTWPHoy8k5RxjJM6w1KZIbHe8+Anwk3ZyyKW3pLoM0qZH2QxVgLbJqK+pQC9vzDHB
+         /Fy0R4Nlh8Vrw==
+Subject: [PATCH 2/8] xfs_db: report the device associated with each io cursor
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:36 -0800
-Message-ID: <167243877624.728350.10053982828600026086.stgit@magnolia>
-In-Reply-To: <167243877612.728350.1799909806305296744.stgit@magnolia>
-References: <167243877612.728350.1799909806305296744.stgit@magnolia>
+Message-ID: <167243877638.728317.344770129451526584.stgit@magnolia>
+In-Reply-To: <167243877610.728317.12510123562097453242.stgit@magnolia>
+References: <167243877610.728317.12510123562097453242.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,165 +55,130 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-There have been a few bug reports filed about people not being able to
-use the filesystem metadata population code to create filesystems with
-all types of metadata on them.  Right now this is super-annoying to
-debug because we don't capture a metadump for easy debugging.  Fix that.
+When db is reporting on an io cursor, have it print out the device
+that the cursor is pointing to.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |   59 +++++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 40 insertions(+), 19 deletions(-)
+ db/block.c |   16 +++++++++++++++-
+ db/io.c    |   46 +++++++++++++++++++++++++++++++++++++++++++---
+ db/io.h    |    4 ++++
+ 3 files changed, 62 insertions(+), 4 deletions(-)
 
 
-diff --git a/common/populate b/common/populate
-index 44b4af1667..e4090a29d3 100644
---- a/common/populate
-+++ b/common/populate
-@@ -40,6 +40,27 @@ __populate_create_file() {
- 	$XFS_IO_PROG -f -c "pwrite -S 0x62 -W -b 1m 0 $sz" "${fname}"
+diff --git a/db/block.c b/db/block.c
+index 788337d3709..b2b5edf9385 100644
+--- a/db/block.c
++++ b/db/block.c
+@@ -126,7 +126,17 @@ daddr_f(
+ 	char		*p;
+ 
+ 	if (argc == 1) {
+-		dbprintf(_("current daddr is %lld\n"), iocur_top->off >> BBSHIFT);
++		xfs_daddr_t	daddr = iocur_top->off >> BBSHIFT;
++
++		if (iocur_is_ddev(iocur_top))
++			dbprintf(_("datadev daddr is %lld\n"), daddr);
++		else if (iocur_is_extlogdev(iocur_top))
++			dbprintf(_("logdev daddr is %lld\n"), daddr);
++		else if (iocur_is_rtdev(iocur_top))
++			dbprintf(_("rtdev daddr is %lld\n"), daddr);
++		else
++			dbprintf(_("current daddr is %lld\n"), daddr);
++
+ 		return 0;
+ 	}
+ 	d = (int64_t)strtoull(argv[1], &p, 0);
+@@ -220,6 +230,10 @@ fsblock_f(
+ 	char		*p;
+ 
+ 	if (argc == 1) {
++		if (!iocur_is_ddev(iocur_top)) {
++			dbprintf(_("cursor does not point to data device\n"));
++			return 0;
++		}
+ 		dbprintf(_("current fsblock is %lld\n"),
+ 			XFS_DADDR_TO_FSB(mp, iocur_top->off >> BBSHIFT));
+ 		return 0;
+diff --git a/db/io.c b/db/io.c
+index 8688ee8e9c0..00eb5e98dc2 100644
+--- a/db/io.c
++++ b/db/io.c
+@@ -137,18 +137,58 @@ pop_help(void)
+ 		));
  }
  
-+# Fail the test if we failed to create some kind of filesystem metadata.
-+# Create a metadata dump of the failed filesystem so that we can analyze
-+# how things went rong.
-+__populate_fail() {
-+	local flatdev="$(basename "$SCRATCH_DEV")"
-+	local metadump="$seqres.$flatdev.populate.md"
++bool
++iocur_is_ddev(const struct iocur *ioc)
++{
++	if (!ioc->bp)
++		return false;
 +
-+	case "$FSTYP" in
-+	xfs)
-+		_scratch_unmount
-+		_scratch_xfs_metadump "$metadump"
-+		;;
-+	ext4)
-+		_scratch_unmount
-+		_ext4_metadump "${SCRATCH_DEV}" "$metadump"
-+		;;
-+	esac
-+
-+	_fail "$@"
++	return ioc->bp->b_target == ioc->bp->b_mount->m_ddev_targp;
 +}
 +
- # Punch out every other hole in this file, if it exists.
- #
- # The goal here is to force the creation of a large number of metadata records
-@@ -501,7 +522,7 @@ __populate_check_xfs_dformat() {
- 	format="$2"
++bool
++iocur_is_extlogdev(const struct iocur *ioc)
++{
++	struct xfs_buf	*bp = ioc->bp;
++
++	if (!bp)
++		return false;
++	if (bp->b_mount->m_logdev_targp == bp->b_mount->m_ddev_targp)
++		return false;
++
++	return bp->b_target == bp->b_mount->m_logdev_targp;
++}
++
++bool
++iocur_is_rtdev(const struct iocur *ioc)
++{
++	if (!ioc->bp)
++		return false;
++
++	return ioc->bp->b_target == ioc->bp->b_mount->m_rtdev_targp;
++}
++
+ void
+ print_iocur(
+ 	char	*tag,
+ 	iocur_t	*ioc)
+ {
++	const char	*block_unit = "fsbno?";
+ 	int	i;
  
- 	fmt="$(_scratch_xfs_db -c "inode ${inode}" -c 'p core.format' | sed -e 's/^.*(\([a-z]*\)).*$/\1/g')"
--	test "${format}" = "${fmt}" || _fail "failed to create ino ${inode} dformat expected ${format} saw ${fmt}"
-+	test "${format}" = "${fmt}" || __populate_fail "failed to create ino ${inode} dformat expected ${format} saw ${fmt}"
- }
++	if (iocur_is_ddev(ioc))
++		block_unit = "fsbno";
++	else if (iocur_is_extlogdev(ioc))
++		block_unit = "logbno";
++	else if (iocur_is_rtdev(ioc))
++		block_unit = "rtbno";
++
+ 	dbprintf("%s\n", tag);
+ 	dbprintf(_("\tbyte offset %lld, length %d\n"), ioc->off, ioc->len);
+-	dbprintf(_("\tbuffer block %lld (fsbno %lld), %d bb%s\n"), ioc->bb,
+-		(xfs_fsblock_t)XFS_DADDR_TO_FSB(mp, ioc->bb), ioc->blen,
+-		ioc->blen == 1 ? "" : "s");
++	dbprintf(_("\tbuffer block %lld (%s %lld), %d bb%s\n"), ioc->bb,
++			block_unit,
++			(xfs_fsblock_t)XFS_DADDR_TO_FSB(mp, ioc->bb),
++			ioc->blen, ioc->blen == 1 ? "" : "s");
+ 	if (ioc->bbmap) {
+ 		dbprintf(_("\tblock map"));
+ 		for (i = 0; i < ioc->bbmap->nmaps; i++)
+diff --git a/db/io.h b/db/io.h
+index 29b22037bd6..1a37ee78c72 100644
+--- a/db/io.h
++++ b/db/io.h
+@@ -56,6 +56,10 @@ extern void	set_iocur_type(const struct typ *type);
+ extern void	xfs_dummy_verify(struct xfs_buf *bp);
+ extern void	xfs_verify_recalc_crc(struct xfs_buf *bp);
  
- # Check attr fork format of XFS file
-@@ -510,7 +531,7 @@ __populate_check_xfs_aformat() {
- 	format="$2"
- 
- 	fmt="$(_scratch_xfs_db -c "inode ${inode}" -c 'p core.aformat' | sed -e 's/^.*(\([a-z]*\)).*$/\1/g')"
--	test "${format}" = "${fmt}" || _fail "failed to create ino ${inode} aformat expected ${format} saw ${fmt}"
-+	test "${format}" = "${fmt}" || __populate_fail "failed to create ino ${inode} aformat expected ${format} saw ${fmt}"
- }
- 
- # Check structure of XFS directory
-@@ -529,21 +550,21 @@ __populate_check_xfs_dir() {
- 
- 	case "${dtype}" in
- 	"shortform"|"inline"|"local")
--		(test "${datab}" -eq 0 && test "${leafb}" -eq 0 && test "${freeb}" -eq 0) || _fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
-+		(test "${datab}" -eq 0 && test "${leafb}" -eq 0 && test "${freeb}" -eq 0) || __populate_fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
- 		;;
- 	"block")
--		(test "${datab}" -eq 1 && test "${leafb}" -eq 0 && test "${freeb}" -eq 0) || _fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
-+		(test "${datab}" -eq 1 && test "${leafb}" -eq 0 && test "${freeb}" -eq 0) || __populate_fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
- 		;;
- 	"leaf")
--		(test "${datab}" -eq 1 && test "${leafb}" -eq 1 && test "${freeb}" -eq 0) || _fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
-+		(test "${datab}" -eq 1 && test "${leafb}" -eq 1 && test "${freeb}" -eq 0) || __populate_fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
- 		;;
- 	"leafn")
- 		_scratch_xfs_db -x -c "inode ${inode}" -c "dblock ${leaf_lblk}" -c "p lhdr.info.hdr.magic" | grep -q '0x3dff' && return
- 		_scratch_xfs_db -x -c "inode ${inode}" -c "dblock ${leaf_lblk}" -c "p lhdr.info.magic" | grep -q '0xd2ff' && return
--		_fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
-+		__populate_fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
- 		;;
- 	"node"|"btree")
--		(test "${datab}" -eq 1 && test "${leafb}" -eq 1 && test "${freeb}" -eq 1) || _fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
-+		(test "${datab}" -eq 1 && test "${leafb}" -eq 1 && test "${freeb}" -eq 1) || __populate_fail "failed to create ${dtype} dir ino ${inode} datab ${datab} leafb ${leafb} freeb ${freeb}"
- 		;;
- 	*)
- 		_fail "Unknown directory type ${dtype}"
-@@ -563,13 +584,13 @@ __populate_check_xfs_attr() {
- 
- 	case "${atype}" in
- 	"shortform"|"inline"|"local")
--		(test "${datab}" -eq 0 && test "${leafb}" -eq 0) || _fail "failed to create ${atype} attr ino ${inode} datab ${datab} leafb ${leafb}"
-+		(test "${datab}" -eq 0 && test "${leafb}" -eq 0) || __populate_fail "failed to create ${atype} attr ino ${inode} datab ${datab} leafb ${leafb}"
- 		;;
- 	"leaf")
--		(test "${datab}" -eq 1 && test "${leafb}" -eq 0) || _fail "failed to create ${atype} attr ino ${inode} datab ${datab} leafb ${leafb}"
-+		(test "${datab}" -eq 1 && test "${leafb}" -eq 0) || __populate_fail "failed to create ${atype} attr ino ${inode} datab ${datab} leafb ${leafb}"
- 		;;
- 	"node"|"btree")
--		(test "${datab}" -eq 1 && test "${leafb}" -eq 1) || _fail "failed to create ${atype} attr ino ${inode} datab ${datab} leafb ${leafb}"
-+		(test "${datab}" -eq 1 && test "${leafb}" -eq 1) || __populate_fail "failed to create ${atype} attr ino ${inode} datab ${datab} leafb ${leafb}"
- 		;;
- 	*)
- 		_fail "Unknown attribute type ${atype}"
-@@ -605,7 +626,7 @@ __populate_check_xfs_agbtree_height() {
- 			return 100
- 		fi
- 	done
--	test $? -eq 100 || _fail "Failed to create ${bt_type} of sufficient height!"
-+	test $? -eq 100 || __populate_fail "Failed to create ${bt_type} of sufficient height!"
- 	return 1
- }
- 
-@@ -678,13 +699,13 @@ __populate_check_ext4_dformat() {
- 
- 	case "${format}" in
- 	"blockmap")
--		test "${extents}" -eq 0 || _fail "failed to create ino ${inode} with blockmap"
-+		test "${extents}" -eq 0 || __populate_fail "failed to create ino ${inode} with blockmap"
- 		;;
- 	"extent"|"extents")
--		test "${extents}" -eq 1 || _fail "failed to create ino ${inode} with extents"
-+		test "${extents}" -eq 1 || __populate_fail "failed to create ino ${inode} with extents"
- 		;;
- 	"etree")
--		(test "${extents}" -eq 1 && test "${etree}" -eq 1) || _fail "failed to create ino ${inode} with extent tree"
-+		(test "${extents}" -eq 1 && test "${etree}" -eq 1) || __populate_fail "failed to create ino ${inode} with extent tree"
- 		;;
- 	*)
- 		_fail "Unknown dformat ${format}"
-@@ -702,10 +723,10 @@ __populate_check_ext4_aformat() {
- 
- 	case "${format}" in
- 	"local"|"inline")
--		test "${ablock}" -eq 0 || _fail "failed to create inode ${inode} with ${format} xattr"
-+		test "${ablock}" -eq 0 || __populate_fail "failed to create inode ${inode} with ${format} xattr"
- 		;;
- 	"block")
--		test "${extents}" -eq 1 || _fail "failed to create inode ${inode} with ${format} xattr"
-+		test "${extents}" -eq 1 || __populate_fail "failed to create inode ${inode} with ${format} xattr"
- 		;;
- 	*)
- 		_fail "Unknown aformat ${format}"
-@@ -726,13 +747,13 @@ __populate_check_ext4_dir() {
- 
- 	case "${dtype}" in
- 	"inline")
--		(test "${inline}" -eq 1 && test "${htree}" -eq 0) || _fail "failed to create ${dtype} dir ino ${inode} htree ${htree} inline ${inline}"
-+		(test "${inline}" -eq 1 && test "${htree}" -eq 0) || __populate_fail "failed to create ${dtype} dir ino ${inode} htree ${htree} inline ${inline}"
- 		;;
- 	"block")
--		(test "${inline}" -eq 0 && test "${htree}" -eq 0) || _fail "failed to create ${dtype} dir ino ${inode} htree ${htree} inline ${inline}"
-+		(test "${inline}" -eq 0 && test "${htree}" -eq 0) || __populate_fail "failed to create ${dtype} dir ino ${inode} htree ${htree} inline ${inline}"
- 		;;
- 	"htree")
--		(test "${inline}" -eq 0 && test "${htree}" -eq 1) || _fail "failed to create ${dtype} dir ino ${inode} htree ${htree} inline ${inline}"
-+		(test "${inline}" -eq 0 && test "${htree}" -eq 1) || __populate_fail "failed to create ${dtype} dir ino ${inode} htree ${htree} inline ${inline}"
- 		;;
- 	*)
- 		_fail "Unknown directory type ${dtype}"
++bool iocur_is_ddev(const struct iocur *ioc);
++bool iocur_is_extlogdev(const struct iocur *ioc);
++bool iocur_is_rtdev(const struct iocur *ioc);
++
+ /*
+  * returns -1 for unchecked, 0 for bad and 1 for good
+  */
 
