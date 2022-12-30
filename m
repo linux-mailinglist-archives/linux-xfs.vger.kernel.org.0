@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD7B65A22E
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:07:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 966D665A232
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:08:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236268AbiLaDGb (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:06:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34972 "EHLO
+        id S236303AbiLaDHe (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:07:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236304AbiLaDGY (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:06:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DF9DFA;
-        Fri, 30 Dec 2022 19:06:24 -0800 (PST)
+        with ESMTP id S236274AbiLaDHL (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:07:11 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C191054D;
+        Fri, 30 Dec 2022 19:07:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EB0FDB81EAA;
-        Sat, 31 Dec 2022 03:06:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88F8FC433D2;
-        Sat, 31 Dec 2022 03:06:21 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7BB6EB81EA2;
+        Sat, 31 Dec 2022 03:07:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E3E0C433D2;
+        Sat, 31 Dec 2022 03:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672455981;
-        bh=3t+x6wcvdnCnEZRkx5dETm8hgR3phjDiGKquSVrrHA4=;
+        s=k20201202; t=1672456028;
+        bh=zWcZvK5otpvmqwZPIb6vjxtYz/oRQJU1IbLgCJ+PSUg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SpoR0U5aPJBRpnbPVg3sfwQQuA7UmNEHxwVl4IVqv9kuB45aNT7L8Mo6j0ykJeQS3
-         6DdNV8RBgv9rLqyKRn0hW5wC29VdJd6PogDRV/hqJ4St8kHEImRT0mEst0Ls5mGn+0
-         FFI2j6MkczT+sP+9n+P1FFjgmT8a40wXrocsRPVcDoyjk4fGIBG2OZAo3xxyoVMPov
-         pjO83ONJFo35WbDSPXIedUdA9Jb8wtRrYgw6HOiNgg0V1uze9orgPLCBc+KPRAPbq0
-         Xhsg7UFKrBkXPdHl6ft+0hx/NnMPeKFYniE3kTg+s1u90a/HyxqplHdpXkSeB9Hq5c
-         lMUFgYUWb3TKg==
-Subject: [PATCH 1/9] xfs/122: fix metadirino
+        b=PkRbSTuu8dfslv/tXHwtSP47qzfhRzTusebmZfNRmfypemrhyGxwEVE3cItINsWZO
+         lGv/9PZnTgf61AOKvryfj3XNECP6vyQXFKHSM/e0U/zq4gh99gxRKO855bhnkAuM9A
+         9IqJUt3VBeKfX9NrTyQklirYRLVcSYJFMj8QNLYB7jG7MAebcCko1ARdhpkdSHHe4E
+         239PLFSO3+VdxBR9y00QQApvk5sn6uBIMoGMSmb8vVsYOXGPzk2n3vVT7HwlKhGoK5
+         +cxZhygpka1ZvvU+yRbbhW6ECVR7TClLDVgGK+1fsetbFt5chWhBx9tGAvZMfKnY90
+         OVjyQxfu72EIQ==
+Subject: [PATCH 4/9] common/repair: patch up repair sb inode value complaints
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:32 -0800
-Message-ID: <167243883260.736753.15941517302628210329.stgit@magnolia>
+Message-ID: <167243883294.736753.7002825243368357123.stgit@magnolia>
 In-Reply-To: <167243883244.736753.17143383151073497149.stgit@magnolia>
 References: <167243883244.736753.17143383151073497149.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,24 +55,29 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fix xfs/122 to work properly with metadirino.
+Now that we've refactored xfs_repair to be more consistent in how it
+reports unexpected superblock inode pointer values, we have to fix up
+the fstests repair filters to emulate the old golden output.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- tests/xfs/122.out |    1 +
- 1 file changed, 1 insertion(+)
+ common/repair |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 
-diff --git a/tests/xfs/122.out b/tests/xfs/122.out
-index 21549db7fd..eee6c1ee6d 100644
---- a/tests/xfs/122.out
-+++ b/tests/xfs/122.out
-@@ -35,6 +35,7 @@ offsetof(xfs_sb_t, sb_logsunit) = 196
- offsetof(xfs_sb_t, sb_lsn) = 240
- offsetof(xfs_sb_t, sb_magicnum) = 0
- offsetof(xfs_sb_t, sb_meta_uuid) = 248
-+offsetof(xfs_sb_t, sb_metadirino) = 264
- offsetof(xfs_sb_t, sb_pquotino) = 232
- offsetof(xfs_sb_t, sb_qflags) = 176
- offsetof(xfs_sb_t, sb_rblocks) = 16
+diff --git a/common/repair b/common/repair
+index 8945d0028c..c3afcfb3e6 100644
+--- a/common/repair
++++ b/common/repair
+@@ -28,6 +28,10 @@ _filter_repair()
+ 	perl -ne '
+ # for sb
+ /- agno = / && next;	# remove each AG line (variable number)
++s/realtime bitmap inode pointer/realtime bitmap ino pointer/;
++s/sb realtime bitmap inode value/sb realtime bitmap inode/;
++s/realtime summary inode pointer/realtime summary ino pointer/;
++s/sb realtime summary inode value/sb realtime summary inode/;
+ s/(pointer to) (\d+)/\1 INO/;
+ # Changed inode output in 5.5.0
+ s/sb root inode value /sb root inode /;
 
