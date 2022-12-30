@@ -2,208 +2,117 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EB4065A25C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:17:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08EE865A034
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:04:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236337AbiLaDRF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:17:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
+        id S231151AbiLaBE4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:04:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236308AbiLaDRE (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:17:04 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9D042733;
-        Fri, 30 Dec 2022 19:17:02 -0800 (PST)
+        with ESMTP id S231231AbiLaBE4 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:04:56 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887031DDF0;
+        Fri, 30 Dec 2022 17:04:55 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 45EE1CE1AC8;
-        Sat, 31 Dec 2022 03:17:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83099C433EF;
-        Sat, 31 Dec 2022 03:16:59 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 49DDBB81DF9;
+        Sat, 31 Dec 2022 01:04:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ACAFC433EF;
+        Sat, 31 Dec 2022 01:04:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456619;
-        bh=krotYh8JybgzAO1C4X5hqoygGSuQP0LrobVWG4/RKfY=;
+        s=k20201202; t=1672448693;
+        bh=YLpyW0eDj5KLa+i5rgCk6GfBdLas2y2WY+BzQCwSv8M=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cb6plXb1YSqS6qRkVmPcsN5qFkKkaUbHkueA8FKNw7CmgMFcSybDYKuLwnj/yArpg
-         hbXFa4a/M+u4GU11sSw+0k/cY2FiV9/aKzJ81i86MaXsfbGg037+O8Hq1k3ctHaKFp
-         WNNNHQdx/XvwrJPRUDwR0c3hiRaYzFdMslEURSjd62UUu+EniZHukwETyfsvfJ3y7i
-         Atix7x4lmx37n9ejGBR4Hn1+GAxuASSs3RtXvL52G6oux4NISsoYt8+ikWZc2UpMgh
-         gDcVzFZcvtGxeXjOny/bKbIWS4RBONjESGYJf7DEoaxKrlTfetZwQ5o9RKRKDvlZPa
-         mXYU6dSK2e7sg==
-Subject: [PATCH 04/10] xfs/27[24]: adapt for checking files on the realtime
- volume
+        b=hXhsCYyJCq7birdGjijLh094vwym5MsFSTdW6b6SeoVeMhN0pbWybKmaDbMhStNa1
+         ffxaXPXQjOCnW8CgQVlh7D5wd2C19OR+XyTAiy9lPXPn48RKEXE3CvqN54s7wW74Pi
+         N8oGieTaIRNcRTqUVGEg99mFqpmITkd1QMEGt1pACU3GDoDGRxiQyikplBW4mECgWL
+         SBt684Sl0FLFAcYT2e2xZvtZhtdjb3m9nd5KXsHeLyGbkL+sUcc5hEPwxWk+9f4hm5
+         efjbIiHbTSRnN9aMsOQ09xTOyhGe8zxBomaQ8HrRjiy1J6zMekXapR10eeJ8dNt1rH
+         q52mZWVUfX12w==
+Subject: [PATCHSET v1.0 0/4] fstests: reflink with large realtime extents
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
-Date:   Fri, 30 Dec 2022 14:20:49 -0800
-Message-ID: <167243884906.740253.11551634099635190450.stgit@magnolia>
-In-Reply-To: <167243884850.740253.18400210873595872110.stgit@magnolia>
-References: <167243884850.740253.18400210873595872110.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:20:52 -0800
+Message-ID: <167243885270.740527.7129374192035439232.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Adapt both tests to behave properly if the two files being tested are on
-the realtime volume.
+Now that we've landed support for reflink on the realtime device for
+cases where the rt extent size is the same as the fs block size, enhance
+the reflink code further to support cases where the rt extent size is a
+power-of-two multiple of the fs block size.  This enables us to do data
+block sharing (for example) for much larger allocation units by dirtying
+pagecache around shared extents and expanding writeback to write back
+shared extents fully.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-reflink-extsize
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-reflink-extsize
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-reflink-extsize
 ---
- tests/xfs/272 |   40 +++++++++++++++++++++++++------------
- tests/xfs/274 |   62 ++++++++++++++++++++++++++++++++++++++++-----------------
- 2 files changed, 70 insertions(+), 32 deletions(-)
-
-
-diff --git a/tests/xfs/272 b/tests/xfs/272
-index 42b4a2edb5..2d7fc57d55 100755
---- a/tests/xfs/272
-+++ b/tests/xfs/272
-@@ -40,26 +40,40 @@ $here/src/punch-alternating $SCRATCH_MNT/urk >> $seqres.full
- ino=$(stat -c '%i' $SCRATCH_MNT/urk)
- 
- echo "Get fsmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT >> $seqres.full
- $XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT | tr '[]()' '    ' > $TEST_DIR/fsmap
-+cat $TEST_DIR/fsmap >> $seqres.full
- 
- echo "Get bmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/urk >> $seqres.full
- $XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/urk | grep '^[[:space:]]*[0-9]*:' | grep -v 'hole' | tr '[]()' '    ' > $TEST_DIR/bmap
-+cat $TEST_DIR/bmap >> $seqres.full
- 
- echo "Check bmap and fsmap" | tee -a $seqres.full
--cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
--	qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total}$"
--	echo "${qstr}" >> $seqres.full
--	grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
--	found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
--	test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
--done
-+if $XFS_IO_PROG -c 'stat -v' $SCRATCH_MNT/urk | grep -q realtime; then
-+	# file on rt volume
-+	cat $TEST_DIR/bmap | while read ext offrange colon rtblockrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${rtblockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${total}$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
- 
--echo "Check device field of FS metadata and regular file"
--data_dev=$(grep 'inode btree' $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
--rt_dev=$(grep "${ino}[[:space:]]*[0-9]*\.\.[0-9]*" $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
--test "${data_dev}" = "${rt_dev}" || echo "data ${data_dev} realtime ${rt_dev}?"
-+	echo "Check device field of FS metadata and regular file"
-+else
-+	# file on data volume
-+	cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total}$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+
-+	echo "Check device field of FS metadata and regular file"
-+	data_dev=$(grep 'inode btree' $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
-+	rt_dev=$(grep "${ino}[[:space:]]*[0-9]*\.\.[0-9]*" $TEST_DIR/fsmap | head -n 1 | awk '{print $2}')
-+	test "${data_dev}" = "${rt_dev}" || echo "data ${data_dev} realtime ${rt_dev}?"
-+fi
- 
- # success, all done
- status=0
-diff --git a/tests/xfs/274 b/tests/xfs/274
-index dcaea68804..25dd0c3f74 100755
---- a/tests/xfs/274
-+++ b/tests/xfs/274
-@@ -40,34 +40,58 @@ _cp_reflink $SCRATCH_MNT/f1 $SCRATCH_MNT/f2
- ino=$(stat -c '%i' $SCRATCH_MNT/f1)
- 
- echo "Get fsmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT >> $seqres.full
- $XFS_IO_PROG -c 'fsmap -v' $SCRATCH_MNT | tr '[]()' '    ' > $TEST_DIR/fsmap
-+cat $TEST_DIR/fsmap >> $seqres.full
- 
- echo "Get f1 bmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f1 >> $seqres.full
- $XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f1 | grep '^[[:space:]]*[0-9]*:' | grep -v 'hole' | tr '[]()' '    ' > $TEST_DIR/bmap
-+cat $TEST_DIR/bmap >> $seqres.full
- 
--echo "Check f1 bmap and fsmap" | tee -a $seqres.full
--cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
--	qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 0100000$"
--	echo "${qstr}" >> $seqres.full
--	grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
--	found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
--	test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
--done
-+if _xfs_is_realtime_file $SCRATCH_MNT/f1 && ! _xfs_has_feature $SCRATCH_MNT rtgroups; then
-+	# file on rt volume
-+	echo "Check f1 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon rtblockrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${rtblockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${total} 0100000$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+else
-+	# file on data volume
-+	echo "Check f1 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 0100000$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+fi
- 
- echo "Get f2 bmap" | tee -a $seqres.full
--$XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f2 >> $seqres.full
- $XFS_IO_PROG -c 'bmap -v' $SCRATCH_MNT/f2 | grep '^[[:space:]]*[0-9]*:' | grep -v 'hole' | tr '[]()' '    ' > $TEST_DIR/bmap
-+cat $TEST_DIR/bmap >> $seqres.full
- 
--echo "Check f2 bmap and fsmap" | tee -a $seqres.full
--cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
--	qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 0100000$"
--	echo "${qstr}" >> $seqres.full
--	grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
--	found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
--	test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
--done
-+if _xfs_is_realtime_file $SCRATCH_MNT/f2 && ! _xfs_has_feature $SCRATCH_MNT rtgroups; then
-+	echo "Check f2 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon rtblockrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${rtblockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${total} 0100000$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+else
-+	echo "Check f2 bmap and fsmap" | tee -a $seqres.full
-+	cat $TEST_DIR/bmap | while read ext offrange colon blockrange ag agrange total crap; do
-+		qstr="^[[:space:]]*[0-9]*:[[:space:]]*[0-9]*:[0-9]*[[:space:]]*${blockrange} :[[:space:]]*${ino}[[:space:]]*${offrange}[[:space:]]*${ag}[[:space:]]*${agrange}[[:space:]]*${total} 0100000$"
-+		echo "${qstr}" >> $seqres.full
-+		grep "${qstr}" $TEST_DIR/fsmap >> $seqres.full
-+		found=$(grep -c "${qstr}" $TEST_DIR/fsmap)
-+		test $found -eq 1 || echo "Unexpected output for offset ${offrange}."
-+	done
-+fi
- 
- # success, all done
- status=0
+ common/rc         |   23 +++++++
+ common/reflink    |   27 +++++++++
+ tests/generic/145 |    1 
+ tests/generic/147 |    1 
+ tests/generic/261 |    1 
+ tests/generic/262 |    1 
+ tests/generic/303 |    8 ++-
+ tests/generic/331 |    1 
+ tests/generic/353 |    3 +
+ tests/generic/517 |    1 
+ tests/generic/657 |    1 
+ tests/generic/658 |    1 
+ tests/generic/659 |    1 
+ tests/generic/660 |    1 
+ tests/generic/663 |    1 
+ tests/generic/664 |    1 
+ tests/generic/665 |    1 
+ tests/generic/670 |    1 
+ tests/generic/672 |    1 
+ tests/xfs/1212    |    1 
+ tests/xfs/180     |    1 
+ tests/xfs/182     |    1 
+ tests/xfs/184     |    1 
+ tests/xfs/192     |    1 
+ tests/xfs/200     |    1 
+ tests/xfs/204     |    1 
+ tests/xfs/208     |    1 
+ tests/xfs/315     |    1 
+ tests/xfs/326     |    6 ++
+ tests/xfs/420     |    3 +
+ tests/xfs/421     |    3 +
+ tests/xfs/919     |  163 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/919.out |   84 +++++++++++++++++++++++++++
+ 33 files changed, 342 insertions(+), 2 deletions(-)
+ create mode 100755 tests/xfs/919
+ create mode 100644 tests/xfs/919.out
 
