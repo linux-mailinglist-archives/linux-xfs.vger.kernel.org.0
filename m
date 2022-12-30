@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 964B8659F76
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:21:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2674659F73
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:20:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235887AbiLaAVJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:21:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58676 "EHLO
+        id S235923AbiLaAUV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:20:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235894AbiLaAVI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:21:08 -0500
+        with ESMTP id S235925AbiLaAUT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:20:19 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5E3B4AF
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:21:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF831E3F0
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:20:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1E816B81E7C
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:21:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB61AC433D2;
-        Sat, 31 Dec 2022 00:21:02 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 46C45B81E75
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:20:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F6BC433D2;
+        Sat, 31 Dec 2022 00:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446062;
-        bh=ALZ/sNWYhKPbQ9zS7CgZisst+CMUhfmDd5tUFGuXt4I=;
+        s=k20201202; t=1672446016;
+        bh=46jpfXRDJm0OanP2NDPmFTai+UZfWqbnc6/C9YTZPbk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=fpbnLSnI4Bjbbpz5deocrOhNeP0lHoOh7y4+FqbVcNf3NiqM058rbnzHIA43X/Msv
-         bzpqQS7cb9S1+5ONdbvbRTC3ToLlyBhi0wZ+Wkw0lt0AUUU+RWklcqxNJIlC6i/h4U
-         HZLJ9e3KPbr1mk8DfHRkCK8wlfYlo2Vk1bkj7Z8clT3i+XOg2d0vtJ7aQW6HjIdgWP
-         fdnokJk/m2B8Pi1IilcBrprrb4CVyhK1nDsHJzDtBZ29rQcOq4hGzSivKhdEQ7W0TT
-         vwI81fJ+rebQulwArb+iPn7gjNBYoSzTbGvJZW7NEU9o7GWLsyKfkVS7Jys5b/RgAr
-         +gFaM+lxJIQjg==
-Subject: [PATCH 09/19] xfs: condense symbolic links after an atomic swap
+        b=DJ6iTwBsxkt+6GmJEunkpZqGmVHSMlx0kDQ+eax0VbVjntAOhXhM/7hDyM7hIt52H
+         2u9WGu7EKP06oyd9/mrDDAn9QLWuNXXKxUoI+LwByHbEnAxHyaVEr2czDRCFPWmkcU
+         0OQFCWYHtvjpK08F/Q/7Aq2GvZJGnTF+k1A5M70kUxm73gC1+Auy8Q34VndkkSDKNL
+         kjCZvEG9/FmOUCA3up2UZBxtqWVmavmPJ0FRaKM5bCc3tckX1J7I3nItydakuLMEOZ
+         5A66PYrkJ8JD3HZ1+duuTZkq08Abv7kXe/M3qnqL8VG+gyIMixHvKQ1n0umJe2oxAc
+         CY9QFfoHgpKSg==
+Subject: [PATCH 06/19] xfs: add error injection to test swapext recovery
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:00 -0800
-Message-ID: <167243868056.713817.16461690212103253756.stgit@magnolia>
+Message-ID: <167243868018.713817.16393849878133163740.stgit@magnolia>
 In-Reply-To: <167243867932.713817.982387501030567647.stgit@magnolia>
 References: <167243867932.713817.982387501030567647.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,170 +54,69 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The previous commit added a new swapext flag that enables us to perform
-post-swap processing on file2 once we're done swapping the extent maps.
-Now add this ability for symlinks.
-
-This isn't used anywhere right now, but we need to have the basic ondisk
-flags in place so that a future online symlink repair feature can
-salvage the remote target in a temporary link and swap the data forks
-when ready.  If one file is in extents format and the other is inline,
-we will have to promote both to extents format to perform the swap.
-After the swap, we can try to condense the fixed symlink down to inline
-format if possible.
+Add an errortag so that we can test recovery of swapext log items.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/xfs_swapext.c        |   48 ++++++++++++++++++++++++++++++++++++++++++-
- libxfs/xfs_symlink_remote.c |   47 ++++++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_symlink_remote.h |    1 +
- 3 files changed, 95 insertions(+), 1 deletion(-)
+ io/inject.c           |    1 +
+ libxfs/xfs_errortag.h |    4 +++-
+ libxfs/xfs_swapext.c  |    4 ++++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
 
+diff --git a/io/inject.c b/io/inject.c
+index 6ef1fc8d2f4..4b0cd76005c 100644
+--- a/io/inject.c
++++ b/io/inject.c
+@@ -63,6 +63,7 @@ error_tag(char *name)
+ 		{ XFS_ERRTAG_ATTR_LEAF_TO_NODE,		"attr_leaf_to_node" },
+ 		{ XFS_ERRTAG_WB_DELAY_MS,		"wb_delay_ms" },
+ 		{ XFS_ERRTAG_WRITE_DELAY_MS,		"write_delay_ms" },
++		{ XFS_ERRTAG_SWAPEXT_FINISH_ONE,	"swapext_finish_one" },
+ 		{ XFS_ERRTAG_MAX,			NULL }
+ 	};
+ 	int	count;
+diff --git a/libxfs/xfs_errortag.h b/libxfs/xfs_errortag.h
+index 01a9e86b303..263d62a8d70 100644
+--- a/libxfs/xfs_errortag.h
++++ b/libxfs/xfs_errortag.h
+@@ -63,7 +63,8 @@
+ #define XFS_ERRTAG_ATTR_LEAF_TO_NODE			41
+ #define XFS_ERRTAG_WB_DELAY_MS				42
+ #define XFS_ERRTAG_WRITE_DELAY_MS			43
+-#define XFS_ERRTAG_MAX					44
++#define XFS_ERRTAG_SWAPEXT_FINISH_ONE			44
++#define XFS_ERRTAG_MAX					45
+ 
+ /*
+  * Random factors for above tags, 1 means always, 2 means 1/2 time, etc.
+@@ -111,5 +112,6 @@
+ #define XFS_RANDOM_ATTR_LEAF_TO_NODE			1
+ #define XFS_RANDOM_WB_DELAY_MS				3000
+ #define XFS_RANDOM_WRITE_DELAY_MS			3000
++#define XFS_RANDOM_SWAPEXT_FINISH_ONE			1
+ 
+ #endif /* __XFS_ERRORTAG_H_ */
 diff --git a/libxfs/xfs_swapext.c b/libxfs/xfs_swapext.c
-index cb5bafe3112..e439b938f10 100644
+index 4c3dd4f7c7f..3557efedeb6 100644
 --- a/libxfs/xfs_swapext.c
 +++ b/libxfs/xfs_swapext.c
-@@ -27,6 +27,7 @@
- #include "xfs_attr.h"
- #include "xfs_dir2_priv.h"
- #include "xfs_dir2.h"
-+#include "xfs_symlink_remote.h"
+@@ -20,6 +20,7 @@
+ #include "xfs_trans_space.h"
+ #include "xfs_quota_defs.h"
+ #include "xfs_health.h"
++#include "xfs_errortag.h"
  
  struct kmem_cache	*xfs_swapext_intent_cache;
  
-@@ -421,6 +422,48 @@ xfs_swapext_dir_to_sf(
- 	return xfs_dir2_block_to_sf(&args, bp, size, &sfh);
- }
- 
-+/* Convert inode2's remote symlink target back to shortform, if possible. */
-+STATIC int
-+xfs_swapext_link_to_sf(
-+	struct xfs_trans		*tp,
-+	struct xfs_swapext_intent	*sxi)
-+{
-+	struct xfs_inode		*ip = sxi->sxi_ip2;
-+	struct xfs_ifork		*ifp = xfs_ifork_ptr(ip, XFS_DATA_FORK);
-+	char				*buf;
-+	int				error;
-+
-+	if (ifp->if_format == XFS_DINODE_FMT_LOCAL ||
-+	    ip->i_disk_size > xfs_inode_data_fork_size(ip))
-+		return 0;
-+
-+	/* Read the current symlink target into a buffer. */
-+	buf = kmem_alloc(ip->i_disk_size + 1, KM_NOFS);
-+	if (!buf) {
-+		ASSERT(0);
-+		return -ENOMEM;
-+	}
-+
-+	error = xfs_symlink_remote_read(ip, buf);
-+	if (error)
-+		goto free;
-+
-+	/* Remove the blocks. */
-+	error = xfs_symlink_remote_truncate(tp, ip);
-+	if (error)
-+		goto free;
-+
-+	/* Convert fork to local format and log our changes. */
-+	xfs_idestroy_fork(ifp);
-+	ifp->if_bytes = 0;
-+	ifp->if_format = XFS_DINODE_FMT_LOCAL;
-+	xfs_init_local_fork(ip, XFS_DATA_FORK, buf, ip->i_disk_size);
-+	xfs_trans_log_inode(tp, ip, XFS_ILOG_DDATA | XFS_ILOG_CORE);
-+free:
-+	kmem_free(buf);
-+	return error;
-+}
-+
- static inline void
- xfs_swapext_clear_reflink(
- 	struct xfs_trans	*tp,
-@@ -445,6 +488,8 @@ xfs_swapext_do_postop_work(
- 			error = xfs_swapext_attr_to_sf(tp, sxi);
- 		else if (S_ISDIR(VFS_I(sxi->sxi_ip2)->i_mode))
- 			error = xfs_swapext_dir_to_sf(tp, sxi);
-+		else if (S_ISLNK(VFS_I(sxi->sxi_ip2)->i_mode))
-+			error = xfs_swapext_link_to_sf(tp, sxi);
- 		sxi->sxi_flags &= ~XFS_SWAP_EXT_CVT_INO2_SF;
- 		if (error)
+@@ -423,6 +424,9 @@ xfs_swapext_finish_one(
  			return error;
-@@ -1101,7 +1146,8 @@ xfs_swapext(
- 	if (req->req_flags & XFS_SWAP_REQ_CVT_INO2_SF)
- 		ASSERT(req->whichfork == XFS_ATTR_FORK ||
- 		       (req->whichfork == XFS_DATA_FORK &&
--			S_ISDIR(VFS_I(req->ip2)->i_mode)));
-+			(S_ISDIR(VFS_I(req->ip2)->i_mode) ||
-+			 S_ISLNK(VFS_I(req->ip2)->i_mode))));
+ 	}
  
- 	if (req->blockcount == 0)
- 		return;
-diff --git a/libxfs/xfs_symlink_remote.c b/libxfs/xfs_symlink_remote.c
-index 740db58d99c..3565135bead 100644
---- a/libxfs/xfs_symlink_remote.c
-+++ b/libxfs/xfs_symlink_remote.c
-@@ -388,3 +388,50 @@ xfs_symlink_write_target(
- 	ASSERT(pathlen == 0);
- 	return 0;
- }
++	if (XFS_TEST_ERROR(false, tp->t_mountp, XFS_ERRTAG_SWAPEXT_FINISH_ONE))
++		return -EIO;
 +
-+/* Remove all the blocks from a symlink and invalidate buffers. */
-+int
-+xfs_symlink_remote_truncate(
-+	struct xfs_trans	*tp,
-+	struct xfs_inode	*ip)
-+{
-+	struct xfs_bmbt_irec	mval[XFS_SYMLINK_MAPS];
-+	struct xfs_mount	*mp = tp->t_mountp;
-+	struct xfs_buf		*bp;
-+	int			nmaps = XFS_SYMLINK_MAPS;
-+	int			done = 0;
-+	int			i;
-+	int			error;
-+
-+	/* Read mappings and invalidate buffers. */
-+	error = xfs_bmapi_read(ip, 0, XFS_MAX_FILEOFF, mval, &nmaps, 0);
-+	if (error)
-+		return error;
-+
-+	for (i = 0; i < nmaps; i++) {
-+		if (!xfs_bmap_is_real_extent(&mval[i]))
-+			break;
-+
-+		error = xfs_trans_get_buf(tp, mp->m_ddev_targp,
-+				XFS_FSB_TO_DADDR(mp, mval[i].br_startblock),
-+				XFS_FSB_TO_BB(mp, mval[i].br_blockcount), 0,
-+				&bp);
-+		if (error)
-+			return error;
-+
-+		xfs_trans_binval(tp, bp);
-+	}
-+
-+	/* Unmap the remote blocks. */
-+	error = xfs_bunmapi(tp, ip, 0, XFS_MAX_FILEOFF, 0, nmaps, &done);
-+	if (error)
-+		return error;
-+	if (!done) {
-+		ASSERT(done);
-+		xfs_inode_mark_sick(ip, XFS_SICK_INO_SYMLINK);
-+		return -EFSCORRUPTED;
-+	}
-+
-+	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
-+	return 0;
-+}
-diff --git a/libxfs/xfs_symlink_remote.h b/libxfs/xfs_symlink_remote.h
-index d81461c06b6..05eb9c3937d 100644
---- a/libxfs/xfs_symlink_remote.h
-+++ b/libxfs/xfs_symlink_remote.h
-@@ -23,5 +23,6 @@ int xfs_symlink_remote_read(struct xfs_inode *ip, char *link);
- int xfs_symlink_write_target(struct xfs_trans *tp, struct xfs_inode *ip,
- 		const char *target_path, int pathlen, xfs_fsblock_t fs_blocks,
- 		uint resblks);
-+int xfs_symlink_remote_truncate(struct xfs_trans *tp, struct xfs_inode *ip);
- 
- #endif /* __XFS_SYMLINK_REMOTE_H */
+ 	/* If we still have work to do, ask for a new transaction. */
+ 	if (sxi_has_more_swap_work(sxi) || sxi_has_postop_work(sxi)) {
+ 		trace_xfs_swapext_defer(tp->t_mountp, sxi);
 
