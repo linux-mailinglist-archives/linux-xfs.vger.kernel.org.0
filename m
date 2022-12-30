@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DEAE659D3D
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:52:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1A1B659CC6
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:28:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235484AbiL3WwJ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:52:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        id S235484AbiL3W2S (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:28:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235506AbiL3WwI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:52:08 -0500
+        with ESMTP id S229749AbiL3W2R (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:28:17 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 181BC1AA29
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:52:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC1411C90C
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:28:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A70F661B98
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:52:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 180F1C433EF;
-        Fri, 30 Dec 2022 22:52:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7781361C15
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:28:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D56F6C433EF;
+        Fri, 30 Dec 2022 22:28:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440727;
-        bh=GG0Ka0hO9XMSQk2D8JuxouBqjVaQgRIx7SkNYWhQWF8=;
+        s=k20201202; t=1672439295;
+        bh=dgflBhBcktMBAPvaKEGm7q1dKAlz4XF2CRB9WD0JdZM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=s3oHnBAoJn2SMWmE53IQ3bk77KiwnmdtnlEvWhbZEMYpTVGlfaX/0mDtLP8WTJwv5
-         R52noGusIzg6/Psdi4DLBKxB4LUr6PuK1C6wUS/SXhV00XMSjF49nSFdyY/tVu3+Wm
-         wOmpu9Mxjg2Rq/7pzXx2QA4dFeKCxwrmOszcAIG7II69dcS5TshqtqujDq9hpN4u7j
-         PWjQNqNeTzHaGI9Gea2niEGeirX3gr4CF6UXFdvf1e7E0Jx2cYnMGAgubjXP1bdpBE
-         l1h0pzY7ujunqaLOPIzP43dVdvYxKh+mEt9ii5ldPPTO6OsANL4FUEw289a1aZ36c2
-         E4ryIqL3WfVhQ==
-Subject: [PATCH 1/5] xfs: introduce bitmap type for AG blocks
+        b=spiC7Mkls7nRd/ju1W7kKFQ912g0YzzPXtXA1khE3YcsoQH/p9uAEpFZpPIrBscx9
+         OZtSee/gv4+DoMSUN2nDAboqZ8Nx2ryrYbmc1lCzc9XvE31ea99xCUEUHppZzDoQvv
+         4T2sBuf8cR9LxT8i+yTAOL9QBCXg57Gu7fyuDC7N6DtqV8J1sHQHpqaPxWtrGTxHBZ
+         xFadJzivxsKhwPmdqpFCeYVFdzs2kFCDRvRtr+4ZRnytEsuWLmcomiZoKjOcWzYWNk
+         MZZs9nPgy95tyIDEHGE1a/86cwES+JrfdAPpwFiQhYiEBru3VMuAu+7LdkvYzX7EPJ
+         f2UriruhDnHOQ==
+Subject: [PATCHSET v24.0 0/5] xfs: strengthen rmapbt scrubbing
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:11:53 -0800
-Message-ID: <167243831389.687445.8815017730004417857.stgit@magnolia>
-In-Reply-To: <167243831370.687445.933956691451974089.stgit@magnolia>
-References: <167243831370.687445.933956691451974089.stgit@magnolia>
+Message-ID: <167243831370.687445.933956691451974089.stgit@magnolia>
+In-Reply-To: <Y69UceeA2MEpjMJ8@magnolia>
+References: <Y69UceeA2MEpjMJ8@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,91 +52,28 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-Create a typechecked bitmap for extents within an AG.  Online repair
-uses bitmaps to store various different types of numbers, so let's make
-it obvious when we're storing xfs_agblock_t (and later xfs_fsblock_t)
-versus anything else.
+This series strengthens space allocation record cross referencing by
+using AG block bitmaps to compute the difference between space used
+according to the rmap records and the primary metadata, and reports
+cross-referencing errors for any discrepancies.
 
-In subsequent patches, we're going to use agblock bitmaps to enhance the
-rmapbt checker to look for discrepancies between the rmapbt records and
-AG metadata block usage.
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=scrub-strengthen-rmap-checking
 ---
- fs/xfs/scrub/bitmap.h |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/repair.h |    1 +
- 2 files changed, 49 insertions(+)
-
-
-diff --git a/fs/xfs/scrub/bitmap.h b/fs/xfs/scrub/bitmap.h
-index 7afd64a318d1..7f538effc196 100644
---- a/fs/xfs/scrub/bitmap.h
-+++ b/fs/xfs/scrub/bitmap.h
-@@ -39,4 +39,52 @@ int xbitmap_walk_bits(struct xbitmap *bitmap, xbitmap_walk_bits_fn fn,
- 
- bool xbitmap_empty(struct xbitmap *bitmap);
- 
-+/* Bitmaps, but for type-checked for xfs_agblock_t */
-+
-+struct xagb_bitmap {
-+	struct xbitmap	agbitmap;
-+};
-+
-+static inline void xagb_bitmap_init(struct xagb_bitmap *bitmap)
-+{
-+	xbitmap_init(&bitmap->agbitmap);
-+}
-+
-+static inline void xagb_bitmap_destroy(struct xagb_bitmap *bitmap)
-+{
-+	xbitmap_destroy(&bitmap->agbitmap);
-+}
-+
-+static inline int xagb_bitmap_clear(struct xagb_bitmap *bitmap,
-+		xfs_agblock_t start, xfs_extlen_t len)
-+{
-+	return xbitmap_clear(&bitmap->agbitmap, start, len);
-+}
-+static inline int xagb_bitmap_set(struct xagb_bitmap *bitmap,
-+		xfs_agblock_t start, xfs_extlen_t len)
-+{
-+	return xbitmap_set(&bitmap->agbitmap, start, len);
-+}
-+
-+static inline int xagb_bitmap_disunion(struct xagb_bitmap *bitmap,
-+		struct xagb_bitmap *sub)
-+{
-+	return xbitmap_disunion(&bitmap->agbitmap, &sub->agbitmap);
-+}
-+
-+static inline uint32_t xagb_bitmap_hweight(struct xagb_bitmap *bitmap)
-+{
-+	return xbitmap_hweight(&bitmap->agbitmap);
-+}
-+static inline bool xagb_bitmap_empty(struct xagb_bitmap *bitmap)
-+{
-+	return xbitmap_empty(&bitmap->agbitmap);
-+}
-+
-+static inline int xagb_bitmap_walk(struct xagb_bitmap *bitmap,
-+		xbitmap_walk_fn fn, void *priv)
-+{
-+	return xbitmap_walk(&bitmap->agbitmap, fn, priv);
-+}
-+
- #endif	/* __XFS_SCRUB_BITMAP_H__ */
-diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
-index 840f74ec431c..150157ac2489 100644
---- a/fs/xfs/scrub/repair.h
-+++ b/fs/xfs/scrub/repair.h
-@@ -31,6 +31,7 @@ int xrep_init_btblock(struct xfs_scrub *sc, xfs_fsblock_t fsb,
- 		const struct xfs_buf_ops *ops);
- 
- struct xbitmap;
-+struct xagb_bitmap;
- 
- int xrep_fix_freelist(struct xfs_scrub *sc, bool can_shrink);
- int xrep_invalidate_blocks(struct xfs_scrub *sc, struct xbitmap *btlist);
+ fs/xfs/Makefile       |    2 
+ fs/xfs/scrub/bitmap.c |   55 +++++++++
+ fs/xfs/scrub/bitmap.h |   70 ++++++++++++
+ fs/xfs/scrub/repair.h |    1 
+ fs/xfs/scrub/rmap.c   |  284 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 410 insertions(+), 2 deletions(-)
 
