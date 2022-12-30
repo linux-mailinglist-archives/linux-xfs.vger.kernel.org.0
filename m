@@ -2,149 +2,97 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A0C65A118
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BC0D65A01C
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:59:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236108AbiLaB7b (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:59:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51216 "EHLO
+        id S235735AbiLaA7N (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:59:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236118AbiLaB7a (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:59:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EB461C900
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:59:29 -0800 (PST)
+        with ESMTP id S235677AbiLaA7M (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:59:12 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21B0F03A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:59:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1C79DB81DED
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:59:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD86C433EF;
-        Sat, 31 Dec 2022 01:59:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6EE0661D6D
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:59:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1270C433EF;
+        Sat, 31 Dec 2022 00:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672451966;
-        bh=NDa7sWjMOAth0FgBAHhpqBHDbEcdpUHtN5FZiLgG2Y4=;
+        s=k20201202; t=1672448350;
+        bh=KSifPbI2TubakbpoOuz2AdtimWEwgpekPN42CDIxqFw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZWp8QTg8MftwvumbMiEz/1lBLXOzNrRrOwgBMzZe3P05xv1kVo38M/Jzq7cAjQW7+
-         3jrjGbUNWam7dm+j0HU4chfe+32r0YtbtRMWpoVkyvQOcMQSQUf2v+Qj/JeGlDnLOF
-         6Xies/RIU+bYXIiyg4HktvYqs3w8Y8caSL7QRTDpcjxmUmoUMgcc8AWtoByFxV/RIP
-         B8WIYvgHABCJsxJ/XSCRKBghRkYfbbkWyNb44bgHFczI/lcbwfrZEsIKYZF/c+Ltl9
-         TALUGF7zEqsNtzKVWnfLjQGRMTsdMgHXsYkkG63xKWXwYORDXEGrNBC1y6/UDf+8aI
-         owbn6bj7XajAw==
-Subject: [PATCH 2/9] iomap: set up for COWing around pages
+        b=fUI381IjufYp9DKyPQmZXHA6OJ+D0QlvPU9PnjFQMj8+TM0IebUyGHrnwXexNt/sV
+         gJrjIhebGlupD0nT9a/9ke5zl2/hH2jdSBRhbTleN/IBA/rFkXwhP2VM4X5Ze3IT1B
+         Wt/UHfzv3/yT/nLgW8BA3hv4aoEVkQI82Xq5rFTnSHlRQ7MLQM9H0kSDdOfHdjpOTz
+         cw6feMZYNVYleoLiFS3AAW9ywr2BUCVKGjVx9Dt+fzrkpKuWU5FnAMMITaKfM/0Vb6
+         gOq9tJCexngwmsTCUwXpd4z2fGY+mlJB2u+pFzntbxpoJl/ZzTaCDZ43Q9Net+EL2E
+         R72DqhLjDF10A==
+Subject: [PATCHSET v1.0 0/9] xfs: reflink with large realtime extents
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:38 -0800
-Message-ID: <167243871832.718512.8291440482430734344.stgit@magnolia>
-In-Reply-To: <167243871792.718512.13170681692847163098.stgit@magnolia>
-References: <167243871792.718512.13170681692847163098.stgit@magnolia>
+Message-ID: <167243871792.718512.13170681692847163098.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-In anticipation of enabling reflink on the realtime volume where the
-allocation unit is larger than a page, create an iomap function to dirty
-arbitrary parts of a file's page cache so that when we dirty part of a
-file that could undergo a COW extent, we can dirty an entire allocation
-unit's worth of pages.
+Now that we've landed support for reflink on the realtime device for
+cases where the rt extent size is the same as the fs block size, enhance
+the reflink code further to support cases where the rt extent size is a
+power-of-two multiple of the fs block size.  This enables us to do data
+block sharing (for example) for much larger allocation units by dirtying
+pagecache around shared extents and expanding writeback to write back
+shared extents fully.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=realtime-reflink-extsize
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=realtime-reflink-extsize
+
+fstests git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=realtime-reflink-extsize
 ---
- fs/iomap/buffered-io.c |   55 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/iomap.h  |    2 ++
- 2 files changed, 57 insertions(+)
-
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 356193e44cf0..da5a5d28e2ee 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1141,6 +1141,61 @@ iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
- }
- EXPORT_SYMBOL_GPL(iomap_file_unshare);
- 
-+static loff_t iomap_dirty_iter(struct iomap_iter *iter)
-+{
-+	loff_t pos = iter->pos;
-+	loff_t length = iomap_length(iter);
-+	long status = 0;
-+	loff_t written = 0;
-+
-+	do {
-+		unsigned long offset = offset_in_page(pos);
-+		unsigned long bytes = min_t(loff_t, PAGE_SIZE - offset, length);
-+		struct folio *folio;
-+
-+		status = iomap_write_begin(iter, pos, bytes, &folio);
-+		if (unlikely(status))
-+			return status;
-+
-+		folio_mark_accessed(folio);
-+
-+		status = iomap_write_end(iter, pos, bytes, bytes, folio);
-+		if (WARN_ON_ONCE(status == 0))
-+			return -EIO;
-+
-+		cond_resched();
-+
-+		pos += status;
-+		written += status;
-+		length -= status;
-+
-+		balance_dirty_pages_ratelimited(iter->inode->i_mapping);
-+	} while (length);
-+
-+	return written;
-+}
-+
-+int
-+iomap_dirty_range(struct inode *inode, loff_t pos, u64 len,
-+		const struct iomap_ops *ops)
-+{
-+	struct iomap_iter iter = {
-+		.inode		= inode,
-+		.pos		= pos,
-+		.len		= len,
-+		.flags		= IOMAP_WRITE,
-+	};
-+	int ret;
-+
-+	if (IS_DAX(inode))
-+		return -EINVAL;
-+
-+	while ((ret = iomap_iter(&iter, ops)) > 0)
-+		iter.processed = iomap_dirty_iter(&iter);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(iomap_dirty_range);
-+
- static loff_t iomap_zero_iter(struct iomap_iter *iter, bool *did_zero)
- {
- 	const struct iomap *srcmap = iomap_iter_srcmap(iter);
-diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-index 0983dfc9a203..4d911d780165 100644
---- a/include/linux/iomap.h
-+++ b/include/linux/iomap.h
-@@ -264,6 +264,8 @@ bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
- void iomap_invalidate_folio(struct folio *folio, size_t offset, size_t len);
- int iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
- 		const struct iomap_ops *ops);
-+int iomap_dirty_range(struct inode *inode, loff_t pos, u64 len,
-+		const struct iomap_ops *ops);
- int iomap_zero_range(struct inode *inode, loff_t pos, loff_t len,
- 		bool *did_zero, const struct iomap_ops *ops);
- int iomap_truncate_page(struct inode *inode, loff_t pos, bool *did_zero,
+ fs/dax.c                      |    5 +
+ fs/iomap/buffered-io.c        |   55 ++++++++++
+ fs/remap_range.c              |   30 +++---
+ fs/xfs/libxfs/xfs_bmap.c      |   22 ++++
+ fs/xfs/libxfs/xfs_inode_buf.c |   20 +---
+ fs/xfs/xfs_aops.c             |   40 +++++++
+ fs/xfs/xfs_file.c             |  171 ++++++++++++++++++++++++++++++++
+ fs/xfs/xfs_inode.h            |    9 ++
+ fs/xfs/xfs_iops.c             |   15 +++
+ fs/xfs/xfs_reflink.c          |  220 ++++++++++++++++++++++++++++++++++++++++-
+ fs/xfs/xfs_rtalloc.c          |    3 -
+ fs/xfs/xfs_super.c            |   17 ++-
+ fs/xfs/xfs_trace.h            |    4 +
+ include/linux/fs.h            |    3 -
+ include/linux/iomap.h         |    2 
+ 15 files changed, 574 insertions(+), 42 deletions(-)
 
