@@ -2,52 +2,50 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C68B465A1BB
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:39:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FBB465A003
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:52:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236257AbiLaCjk (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:39:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        id S235981AbiLaAwt (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:52:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236264AbiLaCjk (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:39:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F51A2DED
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:39:39 -0800 (PST)
+        with ESMTP id S235930AbiLaAwp (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:52:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C32164AF;
+        Fri, 30 Dec 2022 16:52:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2EA7B61CC2
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:39:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 892D2C433D2;
-        Sat, 31 Dec 2022 02:39:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E5554B81DF9;
+        Sat, 31 Dec 2022 00:52:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DB3C433D2;
+        Sat, 31 Dec 2022 00:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672454378;
-        bh=pzTidaFlatay0CJAF24UCRmTVsR6QzSsvS2mb5SwDiI=;
+        s=k20201202; t=1672447961;
+        bh=jCd70p5Pr1AOpN7FDioDI465/hZ01C/z5+b34HLdQ8c=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=eZxM60SWmWNoTDhDVBEpTZwR+0Y1aXypBsUx0F9T8kr/SVDu9D0BFGpKoVm02xJsp
-         LxJReAPRk2mJK7H95GVAnRZ4dnCAD6m23KRL3fC9eQ1bWen2LR1SE+AifJ0wiY5vBV
-         cIwRGNh8b65NvN1ewbkz5P9JHh0a9n8GlAZyfexxSXQkRGLIRpOCsSQVEiIoq3LpTf
-         St7fOSV8eEa4FTI8OPlulVo0Q9PWk/akus96iHtrNAVAydVPRvbOZwxWauCsxf8UnJ
-         PY7zt1+UOdwVPtiVUKB7Fx3JQgwFDOSYleBKXNzyfXo+qOdFju+d0VuH5QlsdrFBQJ
-         0KvTNFxjmlM4A==
-Subject: [PATCH 37/45] xfs_io: add a command to display realtime group
- information
+        b=r/UOe03TypbxYtofi2rM7FLeF8bQGi/DfXOsvuqp0GyA2oB+YZ1wqRdnwK2ksMyvV
+         uctFJ5Q2QUXRZ0ymtVhnQXRphI6AEM99Y+dUnN5fqPJLi9dZbdWSjqDFkXDRnuU8Ej
+         j6i6nGgIN4KTkYIK2c6gtZU6aOoHV7JztxoGphrz4VOQwM9ON+4aUAR7yFbVAJEKVn
+         SlasNy7orAK18eMrGTr2rRiLl7iHRsMxvgByXZ/DlPjvmgi4qNIRAUVcdH/XC/PkyK
+         7WWkGlGJ4/Us/GAMqDQDA7we4ldcRBFnfRROdfYgn2kL7gNdUtZzsnwCz+s7ZO0Uag
+         8WpQVKrOAzohw==
+Subject: [PATCH 4/7] generic, xfs: test scatter-gather atomic file updates
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org, cem@kernel.org
-Cc:     linux-xfs@vger.kernel.org
+To:     zlang@redhat.com, djwong@kernel.org
+Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:48 -0800
-Message-ID: <167243878846.731133.13158073002533445714.stgit@magnolia>
-In-Reply-To: <167243878346.731133.14642166452774753637.stgit@magnolia>
-References: <167243878346.731133.14642166452774753637.stgit@magnolia>
+Message-ID: <167243878873.732172.15272053729945358940.stgit@magnolia>
+In-Reply-To: <167243878818.732172.6392253687008406885.stgit@magnolia>
+References: <167243878818.732172.6392253687008406885.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -56,194 +54,357 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add a new 'rginfo' command to xfs_io so that we can display realtime
-group geometry.
+Make sure that FILE_SWAP_RANGE_SKIP_FILE1_HOLES does what we want it to
+do -- provide a means to implement scatter-gather atomic file writes.
+That means we create a temporary file, write whatever sparse bits to it
+that we want, and swap the non-hole parts of the temp file.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- io/aginfo.c       |   96 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- libfrog/fsgeom.c  |   18 ++++++++++
- libfrog/fsgeom.h  |    2 +
- man/man8/xfs_io.8 |   11 ++++++
- 4 files changed, 127 insertions(+)
+ common/xfs             |   19 +++++++++++++++
+ tests/generic/1216     |   53 ++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/1216.out |    6 +++++
+ tests/generic/1217     |   56 ++++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/1217.out |    4 +++
+ tests/xfs/1211         |   59 ++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1211.out     |    7 ++++++
+ tests/xfs/1212         |   61 ++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1212.out     |    5 ++++
+ 9 files changed, 270 insertions(+)
+ create mode 100755 tests/generic/1216
+ create mode 100644 tests/generic/1216.out
+ create mode 100755 tests/generic/1217
+ create mode 100644 tests/generic/1217.out
+ create mode 100755 tests/xfs/1211
+ create mode 100644 tests/xfs/1211.out
+ create mode 100755 tests/xfs/1212
+ create mode 100644 tests/xfs/1212.out
 
 
-diff --git a/io/aginfo.c b/io/aginfo.c
-index 06e1cb7ba88..037af54b60c 100644
---- a/io/aginfo.c
-+++ b/io/aginfo.c
-@@ -14,6 +14,7 @@
- #include "libfrog/fsgeom.h"
+diff --git a/common/xfs b/common/xfs
+index 610730e5ef..8b365ad18b 100644
+--- a/common/xfs
++++ b/common/xfs
+@@ -1723,3 +1723,22 @@ _scratch_xfs_find_agbtree_height() {
  
- static cmdinfo_t aginfo_cmd;
-+static cmdinfo_t rginfo_cmd;
- 
- static int
- report_aginfo(
-@@ -111,9 +112,104 @@ static cmdinfo_t aginfo_cmd = {
- 	.help = aginfo_help,
- };
- 
-+static int
-+report_rginfo(
-+	struct xfs_fd		*xfd,
-+	xfs_rgnumber_t		rgno)
-+{
-+	struct xfs_rtgroup_geometry	rgeo = { 0 };
-+	int			ret;
-+
-+	ret = -xfrog_rtgroup_geometry(xfd->fd, rgno, &rgeo);
-+	if (ret) {
-+		xfrog_perror(ret, "rginfo");
-+		return 1;
-+	}
-+
-+	printf(_("RG: %u\n"),		rgeo.rg_number);
-+	printf(_("Blocks: %u\n"),	rgeo.rg_length);
-+	printf(_("Sick: 0x%x\n"),	rgeo.rg_sick);
-+	printf(_("Checked: 0x%x\n"),	rgeo.rg_checked);
-+	printf(_("Flags: 0x%x\n"),	rgeo.rg_flags);
-+
-+	return 0;
-+}
-+
-+/* Display rtgroup status. */
-+static int
-+rginfo_f(
-+	int			argc,
-+	char			**argv)
-+{
-+	struct xfs_fd		xfd = XFS_FD_INIT(file->fd);
-+	unsigned long long	x;
-+	xfs_rgnumber_t		rgno = NULLRGNUMBER;
-+	int			c;
-+	int			ret = 0;
-+
-+	ret = -xfd_prepare_geometry(&xfd);
-+	if (ret) {
-+		xfrog_perror(ret, "xfd_prepare_geometry");
-+		exitcode = 1;
-+		return 1;
-+	}
-+
-+	while ((c = getopt(argc, argv, "r:")) != EOF) {
-+		switch (c) {
-+		case 'r':
-+			errno = 0;
-+			x = strtoll(optarg, NULL, 10);
-+			if (!errno && x >= NULLRGNUMBER)
-+				errno = ERANGE;
-+			if (errno) {
-+				perror("rginfo");
-+				return 1;
-+			}
-+			rgno = x;
-+			break;
-+		default:
-+			return command_usage(&rginfo_cmd);
-+		}
-+	}
-+
-+	if (rgno != NULLRGNUMBER) {
-+		ret = report_rginfo(&xfd, rgno);
-+	} else {
-+		for (rgno = 0; !ret && rgno < xfd.fsgeom.rgcount; rgno++) {
-+			ret = report_rginfo(&xfd, rgno);
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static void
-+rginfo_help(void)
-+{
-+	printf(_(
-+"\n"
-+"Report realtime group geometry.\n"
-+"\n"
-+" -r rgno  -- Report on the given realtime group.\n"
-+"\n"));
-+
-+}
-+
-+static cmdinfo_t rginfo_cmd = {
-+	.name = "rginfo",
-+	.cfunc = rginfo_f,
-+	.argmin = 0,
-+	.argmax = -1,
-+	.args = "[-r rgno]",
-+	.flags = CMD_NOMAP_OK,
-+	.help = rginfo_help,
-+};
-+
- void
- aginfo_init(void)
- {
- 	aginfo_cmd.oneline = _("Get XFS allocation group state.");
- 	add_command(&aginfo_cmd);
-+	rginfo_cmd.oneline = _("Get XFS realtime group state.");
-+	add_command(&rginfo_cmd);
- }
-diff --git a/libfrog/fsgeom.c b/libfrog/fsgeom.c
-index 66e813a863f..5a89c3e3ca3 100644
---- a/libfrog/fsgeom.c
-+++ b/libfrog/fsgeom.c
-@@ -210,3 +210,21 @@ xfrog_ag_geometry(
- 		return -errno;
- 	return 0;
+ 	return 1
  }
 +
-+/*
-+ * Try to obtain a rt group's geometry.  Returns zero or a negative error code.
-+ */
-+int
-+xfrog_rtgroup_geometry(
-+	int			fd,
-+	unsigned int		rgno,
-+	struct xfs_rtgroup_geometry	*rgeo)
++_require_xfs_mkfs_atomicswap()
 +{
-+	int			ret;
-+
-+	rgeo->rg_number = rgno;
-+	ret = ioctl(fd, XFS_IOC_RTGROUP_GEOMETRY, rgeo);
-+	if (ret)
-+		return -errno;
-+	return 0;
++	# atomicswap can be activated on rmap or reflink filesystems.
++	# reflink is newer (4.9 for reflink vs. 4.8 for rmap) so test that.
++	_scratch_mkfs_xfs_supported -m reflink=1 >/dev/null 2>&1 || \
++		_notrun "mkfs.xfs doesn't have atomicswap dependent features"
 +}
-diff --git a/libfrog/fsgeom.h b/libfrog/fsgeom.h
-index bef864fce63..8c21b240bb2 100644
---- a/libfrog/fsgeom.h
-+++ b/libfrog/fsgeom.h
-@@ -9,6 +9,8 @@ void xfs_report_geom(struct xfs_fsop_geom *geo, const char *mntpoint,
- 		const char *logname, const char *rtname);
- int xfrog_geometry(int fd, struct xfs_fsop_geom *fsgeo);
- int xfrog_ag_geometry(int fd, unsigned int agno, struct xfs_ag_geometry *ageo);
-+int xfrog_rtgroup_geometry(int fd, unsigned int rgno,
-+		struct xfs_rtgroup_geometry *rgeo);
- 
- /*
-  * Structure for recording whatever observations we want about the level of
-diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
-index 95c63f32a2a..16768275b5c 100644
---- a/man/man8/xfs_io.8
-+++ b/man/man8/xfs_io.8
-@@ -1556,6 +1556,17 @@ Show information about or update the state of allocation groups.
- Act only on a specific allocation group.
- .PD
- .RE
-+.TP
-+.BI "rginfo [ \-r " rgno " ]"
-+Show information about or update the state of realtime allocation groups.
-+.RE
-+.RS 1.0i
-+.PD 0
-+.TP
-+.BI \-a
-+Act only on a specific realtime group.
-+.PD
-+.RE
- 
- .SH OTHER COMMANDS
- .TP
++
++_require_xfs_scratch_atomicswap()
++{
++	_require_xfs_mkfs_atomicswap
++	_require_scratch
++	_require_xfs_io_command swapext '-v vfs -a'
++	_scratch_mkfs -m reflink=1 > /dev/null
++	_try_scratch_mount || \
++		_notrun "atomicswap dependencies not supported by scratch filesystem type: $FSTYP"
++	_scratch_unmount
++}
+diff --git a/tests/generic/1216 b/tests/generic/1216
+new file mode 100755
+index 0000000000..802cfe14d4
+--- /dev/null
++++ b/tests/generic/1216
+@@ -0,0 +1,53 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1216
++#
++# Test scatter-gather atomic file writes.  We create a temporary file, write
++# sparsely to it, then use FILE_SWAP_RANGE_SKIP_FILE1_HOLES flag to swap
++# atomicallly only the ranges that we wrote.
++
++. ./common/preamble
++_begin_fstest auto quick fiexchange swapext
++
++# Override the default cleanup function.
++_cleanup()
++{
++	cd /
++	rm -r -f $tmp.* $dir
++}
++
++# Import common functions.
++. ./common/filter
++
++# real QA test starts here
++_require_xfs_io_command swapext '-v vfs -a'
++_require_scratch
++
++_scratch_mkfs >> $seqres.full
++_scratch_mount
++_require_congruent_file_oplen $SCRATCH_MNT 65536
++
++# Create original file
++_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
++
++# Create the donor file
++_pwrite_byte 0x59 64k 64k $SCRATCH_MNT/b >> $seqres.full
++_pwrite_byte 0x57 768k 64k $SCRATCH_MNT/b >> $seqres.full
++$XFS_IO_PROG -c 'truncate 1m' $SCRATCH_MNT/b
++
++md5sum $SCRATCH_MNT/a | _filter_scratch
++md5sum $SCRATCH_MNT/b | _filter_scratch
++
++# Test swapext.  -h means skip holes in /b, and -e means operate to EOF
++echo swap | tee -a $seqres.full
++$XFS_IO_PROG -c "swapext -v vfs -f -u -h -e -a $SCRATCH_MNT/b" $SCRATCH_MNT/a
++_scratch_cycle_mount
++
++md5sum $SCRATCH_MNT/a | _filter_scratch
++md5sum $SCRATCH_MNT/b | _filter_scratch
++
++# success, all done
++status=0
++exit
+diff --git a/tests/generic/1216.out b/tests/generic/1216.out
+new file mode 100644
+index 0000000000..2b49d5cfa8
+--- /dev/null
++++ b/tests/generic/1216.out
+@@ -0,0 +1,6 @@
++QA output created by 1216
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++c9fb827e2e3e579dc2a733ddad486d1d  SCRATCH_MNT/b
++swap
++e9cbfe8489a68efaa5fcf40cf3106118  SCRATCH_MNT/a
++faf8ed02a5b0638096a817abcc6c2127  SCRATCH_MNT/b
+diff --git a/tests/generic/1217 b/tests/generic/1217
+new file mode 100755
+index 0000000000..78c49751f7
+--- /dev/null
++++ b/tests/generic/1217
+@@ -0,0 +1,56 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1217
++#
++# Test scatter-gather atomic file commits.  Use the startupdate command to
++# create a temporary file, write sparsely to it, then commitupdate -h to
++# perform the scattered update.
++
++. ./common/preamble
++_begin_fstest auto quick fiexchange swapext
++
++# Override the default cleanup function.
++_cleanup()
++{
++	cd /
++	rm -r -f $tmp.* $dir
++}
++
++# Import common functions.
++. ./common/filter
++
++# real QA test starts here
++_require_xfs_io_command swapext '-v vfs -a'
++_require_xfs_io_command startupdate '-e'
++_require_scratch
++
++_scratch_mkfs >> $seqres.full
++_scratch_mount
++_require_congruent_file_oplen $SCRATCH_MNT 65536
++
++# Create original file
++_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
++sync
++md5sum $SCRATCH_MNT/a | _filter_scratch
++
++# Test atomic scatter-gather file commits.
++echo commit | tee -a $seqres.full
++$XFS_IO_PROG \
++	-c 'bmap -elpv' \
++	-c 'startupdate -e' \
++	-c 'truncate 1m' \
++	-c 'pwrite -S 0x59 64k 64k' \
++	-c 'pwrite -S 0x57 768k 64k' \
++	-c 'bmap -elpv' \
++	-c 'commitupdate -h -k' \
++	-c 'bmap -elpv' \
++	$SCRATCH_MNT/a >> $seqres.full
++_scratch_cycle_mount
++
++md5sum $SCRATCH_MNT/a | _filter_scratch
++
++# success, all done
++status=0
++exit
+diff --git a/tests/generic/1217.out b/tests/generic/1217.out
+new file mode 100644
+index 0000000000..73bf89895d
+--- /dev/null
++++ b/tests/generic/1217.out
+@@ -0,0 +1,4 @@
++QA output created by 1217
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++commit
++e9cbfe8489a68efaa5fcf40cf3106118  SCRATCH_MNT/a
+diff --git a/tests/xfs/1211 b/tests/xfs/1211
+new file mode 100755
+index 0000000000..6297b8ad67
+--- /dev/null
++++ b/tests/xfs/1211
+@@ -0,0 +1,59 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1211
++#
++# Test scatter-gather atomic file writes.  We create a temporary file, write
++# sparsely to it, then use FILE_SWAP_RANGE_SKIP_FILE1_HOLES flag to swap
++# atomicallly only the ranges that we wrote.  Inject an error so that we can
++# test that log recovery finishes the swap.
++
++. ./common/preamble
++_begin_fstest auto quick fiexchange swapext
++
++# Override the default cleanup function.
++_cleanup()
++{
++	cd /
++	rm -r -f $tmp.* $dir
++}
++
++# Import common functions.
++. ./common/filter
++. ./common/inject
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_io_command swapext '-v vfs -a'
++_require_xfs_scratch_atomicswap
++_require_xfs_io_error_injection "bmap_finish_one"
++
++_scratch_mkfs >> $seqres.full
++_scratch_mount
++_require_congruent_file_oplen $SCRATCH_MNT 65536
++
++# Create original file
++_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
++
++# Create the donor file
++_pwrite_byte 0x59 64k 64k $SCRATCH_MNT/b >> $seqres.full
++_pwrite_byte 0x57 768k 64k $SCRATCH_MNT/b >> $seqres.full
++$XFS_IO_PROG -c 'truncate 1m' $SCRATCH_MNT/b
++sync
++
++md5sum $SCRATCH_MNT/a | _filter_scratch
++md5sum $SCRATCH_MNT/b | _filter_scratch
++
++# Test swapext.  -h means skip holes in /b, and -e means operate to EOF
++echo swap | tee -a $seqres.full
++$XFS_IO_PROG -x -c 'inject bmap_finish_one' \
++	-c "swapext -v vfs -f -u -h -e -a $SCRATCH_MNT/b" $SCRATCH_MNT/a
++_scratch_cycle_mount
++
++md5sum $SCRATCH_MNT/a | _filter_scratch
++md5sum $SCRATCH_MNT/b | _filter_scratch
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1211.out b/tests/xfs/1211.out
+new file mode 100644
+index 0000000000..19412c21a1
+--- /dev/null
++++ b/tests/xfs/1211.out
+@@ -0,0 +1,7 @@
++QA output created by 1211
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++c9fb827e2e3e579dc2a733ddad486d1d  SCRATCH_MNT/b
++swap
++swapext: Input/output error
++e9cbfe8489a68efaa5fcf40cf3106118  SCRATCH_MNT/a
++faf8ed02a5b0638096a817abcc6c2127  SCRATCH_MNT/b
+diff --git a/tests/xfs/1212 b/tests/xfs/1212
+new file mode 100755
+index 0000000000..d2292d65a2
+--- /dev/null
++++ b/tests/xfs/1212
+@@ -0,0 +1,61 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (c) 2022 Oracle.  All Rights Reserved.
++#
++# FS QA Test No. 1212
++#
++# Test scatter-gather atomic file commits.  Use the startupdate command to
++# create a temporary file, write sparsely to it, then commitupdate -h to
++# perform the scattered update.  Inject an error so that we can test that log
++# recovery finishes the swap.
++
++. ./common/preamble
++_begin_fstest auto quick fiexchange swapext
++
++# Override the default cleanup function.
++_cleanup()
++{
++	cd /
++	rm -r -f $tmp.* $dir
++}
++
++# Import common functions.
++. ./common/filter
++. ./common/inject
++
++# real QA test starts here
++_supported_fs xfs
++_require_xfs_io_command swapext '-v vfs -a'
++_require_xfs_io_command startupdate '-e'
++_require_xfs_scratch_atomicswap
++_require_xfs_io_error_injection "bmap_finish_one"
++
++_scratch_mkfs >> $seqres.full
++_scratch_mount
++
++# Create original file
++_pwrite_byte 0x58 0 1m $SCRATCH_MNT/a >> $seqres.full
++sync
++md5sum $SCRATCH_MNT/a | _filter_scratch
++
++# Test atomic scatter-gather file commits.
++echo commit | tee -a $seqres.full
++$XFS_IO_PROG -x \
++	-c 'bmap -elpv' \
++	-c 'startupdate -e' \
++	-c 'truncate 1m' \
++	-c 'pwrite -S 0x59 64k 64k' \
++	-c 'pwrite -S 0x57 768k 64k' \
++	-c 'sync' \
++	-c 'bmap -elpv' \
++	-c 'inject bmap_finish_one' \
++	-c 'commitupdate -h -k' \
++	$SCRATCH_MNT/a >> $seqres.full
++_scratch_cycle_mount
++
++$XFS_IO_PROG -c 'bmap -elpv' $SCRATCH_MNT/a >> $seqres.full
++md5sum $SCRATCH_MNT/a | _filter_scratch
++
++# success, all done
++status=0
++exit
+diff --git a/tests/xfs/1212.out b/tests/xfs/1212.out
+new file mode 100644
+index 0000000000..29718e2024
+--- /dev/null
++++ b/tests/xfs/1212.out
+@@ -0,0 +1,5 @@
++QA output created by 1212
++310f146ce52077fcd3308dcbe7632bb2  SCRATCH_MNT/a
++commit
++committing update: Input/output error
++e9cbfe8489a68efaa5fcf40cf3106118  SCRATCH_MNT/a
 
