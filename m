@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3052B65A03D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:07:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7055B659F29
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:05:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235913AbiLaBHQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:07:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40946 "EHLO
+        id S235714AbiLaAFc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:05:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235933AbiLaBHP (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:07:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222A715F3F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:07:14 -0800 (PST)
+        with ESMTP id S235435AbiLaAFb (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:05:31 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EEB14D14
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:05:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B25EC61D03
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:07:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A09EC433D2;
-        Sat, 31 Dec 2022 01:07:13 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 5A87BCE19FC
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:05:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96034C433D2;
+        Sat, 31 Dec 2022 00:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448833;
-        bh=54/Oe335M0PgDjW+vctb7QIGbdsV77/I3s6CjrVt4+o=;
+        s=k20201202; t=1672445127;
+        bh=XH86zN/DxT8HwXBgzspYADprt3aoDvAE4xBe2RvWEHA=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bS8LBBc8sXjWYemmvjIYckGXt3rcd83p7LS3vsiYYq4Mm6pRUWDiPA330EK5OkC0V
-         T5ZP8ppPTX9DOuGRWRJQlMR64GkssXMUp6CV9q1m2ZFaxX5gP0l7ZYcs55+5ZjP4ga
-         yEO4wqLp/Hul9Nmy95xrJEG6JWvErQIfvhNn/rbRb8+/y3gAJbJUMKOe4gx3iMriQd
-         rme7NUd1PsK2BcFaH4KHM6exWoLwRK9cVnY9JZo1FMKFNlypnJIyB0BkLQzt5QJN6M
-         GTshKW6muRPJ5B9PamN5kTKsMuHWPy3iwpMzao0BYBsFLP/ZNx+DZG2Xe0QunPbxYa
-         HBOmlnLHqfO0Q==
-Subject: [PATCH 08/20] xfs: split new inode creation into two pieces
+        b=HMoy6wexTZY2qlh0NhmcJLKp3qfOq+t/CkmXwKoGgFref4o/vBiLKo6jN/C3ri/sf
+         BP/aMu7rkJm/x/lQgQ3QtrBUkqGMc9OqaWk2XQabAvj4RWolvi/thejE1ZBs4ry8a4
+         rocuDJL8FzaGtIpUW5JwMa9siOIacJS8hDP6AL90HInbtf8ISZ7CwEBPNobMuTnOeT
+         4gaCijYfxxPGR1APliGNoYWiLs5Es51disk1SpPdsARpGjCf3N3PGPviNCOwHCDgpG
+         bwGos7zteBaPbo01bqqv1x1sMFIpKHzD44IcvpHZZVjjSGZzd2DDHWhGYyut7QvoZ6
+         rPIQHD4/hTaEg==
+Subject: [PATCH 2/5] xfs: implement block reservation accounting for btrees
+ we're staging
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     djwong@kernel.org
+To:     cem@kernel.org, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:19 -0800
-Message-ID: <167243863946.707335.1074883601333784409.stgit@magnolia>
-In-Reply-To: <167243863809.707335.15895322495460356300.stgit@magnolia>
-References: <167243863809.707335.15895322495460356300.stgit@magnolia>
+Message-ID: <167243863930.707598.16411891612752740522.stgit@magnolia>
+In-Reply-To: <167243863904.707598.12385476439101029022.stgit@magnolia>
+References: <167243863904.707598.12385476439101029022.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,145 +55,32 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-There are two parts to initializing a newly allocated inode: setting up
-the incore structures, and initializing the new inode core based on the
-parent inode and the current user's environment.  The initialization
-code is not specific to the kernel, so we would like to share that with
-userspace by hoisting it to libxfs.  Therefore, split xfs_icreate into
-separate functions to prepare for the next few patches.
+Create a new xrep_newbt structure to encapsulate a fake root for
+creating a staged btree cursor as well as to track all the blocks that
+we need to reserve in order to build that btree.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_ialloc.c |   20 ++++++++++++-
- fs/xfs/xfs_inode.c         |   66 ++++++++++++++++++++------------------------
- 2 files changed, 48 insertions(+), 38 deletions(-)
+ libxfs/xfs_btree_staging.h |    7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
-index ecf53198907f..d4c202da84cb 100644
---- a/fs/xfs/libxfs/xfs_ialloc.c
-+++ b/fs/xfs/libxfs/xfs_ialloc.c
-@@ -1870,9 +1870,25 @@ xfs_dialloc(
- 		}
- 		xfs_perag_put(pag);
- 	}
-+	if (error)
-+		goto out;
+diff --git a/libxfs/xfs_btree_staging.h b/libxfs/xfs_btree_staging.h
+index f0d2976050a..d6dea3f0088 100644
+--- a/libxfs/xfs_btree_staging.h
++++ b/libxfs/xfs_btree_staging.h
+@@ -38,11 +38,8 @@ struct xbtree_ifakeroot {
+ 	/* Number of bytes available for this fork in the inode. */
+ 	unsigned int		if_fork_size;
  
--	if (!error)
--		*new_ino = ino;
-+	/*
-+	 * Protect against obviously corrupt allocation btree records. Later
-+	 * xfs_iget checks will catch re-allocation of other active in-memory
-+	 * and on-disk inodes. If we don't catch reallocating the parent inode
-+	 * here we will deadlock in xfs_iget() so we have to do these checks
-+	 * first.
-+	 */
-+	if (ino == parent || !xfs_verify_dir_ino(mp, ino)) {
-+		xfs_alert(mp, "Allocated a known in-use inode 0x%llx!", ino);
-+		xfs_ag_mark_sick(pag, XFS_SICK_AG_INOBT);
-+		error = -EFSCORRUPTED;
-+		goto out;
-+	}
-+
-+	*new_ino = ino;
-+out:
- 	xfs_perag_put(pag);
- 	return error;
- }
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 7a634a1ea111..1352599fee4c 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -674,51 +674,21 @@ xfs_inode_inherit_flags2(
- 	}
- }
- 
--/*
-- * Initialise a newly allocated inode and return the in-core inode to the
-- * caller locked exclusively.
-- */
--int
--xfs_icreate(
-+/* Initialise an inode's attributes. */
-+static void
-+xfs_inode_init(
- 	struct xfs_trans	*tp,
--	xfs_ino_t		ino,
- 	const struct xfs_icreate_args *args,
--	struct xfs_inode	**ipp)
-+	struct xfs_inode	*ip)
- {
- 	struct xfs_inode	*pip = args->pip;
- 	struct inode		*dir = pip ? VFS_I(pip) : NULL;
- 	struct xfs_mount	*mp = tp->t_mountp;
--	struct xfs_inode	*ip;
--	struct inode		*inode;
-+	struct inode		*inode = VFS_I(ip);
- 	unsigned int		flags;
- 	int			times = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG |
- 					XFS_ICHGTIME_ACCESS;
--	int			error;
- 
--	/*
--	 * Protect against obviously corrupt allocation btree records. Later
--	 * xfs_iget checks will catch re-allocation of other active in-memory
--	 * and on-disk inodes. If we don't catch reallocating the parent inode
--	 * here we will deadlock in xfs_iget() so we have to do these checks
--	 * first.
--	 */
--	if ((pip && ino == pip->i_ino) || !xfs_verify_dir_ino(mp, ino)) {
--		xfs_alert(mp, "Allocated a known in-use inode 0x%llx!", ino);
--		xfs_agno_mark_sick(mp, XFS_INO_TO_AGNO(mp, ino),
--				XFS_SICK_AG_INOBT);
--		return -EFSCORRUPTED;
--	}
+-	/* Fork format. */
+-	unsigned int		if_format;
 -
--	/*
--	 * Get the in-core inode with the lock held exclusively to prevent
--	 * others from looking at until we're done.
--	 */
--	error = xfs_iget(mp, tp, ino, XFS_IGET_CREATE, XFS_ILOCK_EXCL, &ip);
--	if (error)
--		return error;
--
--	ASSERT(ip != NULL);
--	inode = VFS_I(ip);
- 	set_nlink(inode, args->nlink);
- 	inode->i_rdev = args->rdev;
- 	ip->i_projid = args->prid;
-@@ -815,8 +785,32 @@ xfs_icreate(
+-	/* Number of records. */
+-	unsigned int		if_extents;
++	/* Which fork is this btree being built for? */
++	int			if_whichfork;
+ };
  
- 	/* now that we have an i_mode we can setup the inode structure */
- 	xfs_setup_inode(ip);
-+}
- 
--	*ipp = ip;
-+/*
-+ * Initialise a newly allocated inode and return the in-core inode to the
-+ * caller locked exclusively.
-+ */
-+int
-+xfs_icreate(
-+	struct xfs_trans	*tp,
-+	xfs_ino_t		ino,
-+	const struct xfs_icreate_args *args,
-+	struct xfs_inode	**ipp)
-+{
-+	struct xfs_mount	*mp = tp->t_mountp;
-+	int			error;
-+
-+	/*
-+	 * Get the in-core inode with the lock held exclusively to prevent
-+	 * others from looking at until we're done.
-+	 */
-+	error = xfs_iget(mp, tp, ino, XFS_IGET_CREATE, XFS_ILOCK_EXCL, ipp);
-+	if (error)
-+		return error;
-+
-+	ASSERT(*ipp != NULL);
-+	xfs_inode_init(tp, args, *ipp);
- 	return 0;
- }
- 
+ /* Cursor interactions with fake roots for inode-rooted btrees. */
 
