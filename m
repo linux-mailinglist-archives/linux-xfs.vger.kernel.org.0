@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59CA8659E56
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:32:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9B2B659E52
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235490AbiL3Xcw (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:32:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41800 "EHLO
+        id S235655AbiL3XcU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:32:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235459AbiL3Xcu (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:32:50 -0500
+        with ESMTP id S235664AbiL3XcT (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:32:19 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6672212D20
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:32:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59FA9164AF
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:32:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1B485B81D67
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:32:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D35EAC433D2;
-        Fri, 30 Dec 2022 23:32:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 12731B81DAD
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:32:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0A2CC433EF;
+        Fri, 30 Dec 2022 23:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672443166;
-        bh=j/xuhVUq/Onzb9Rziznh4A9rj/zOKbUXQAVBq5oSak0=;
+        s=k20201202; t=1672443135;
+        bh=XKY2OuTN/SSoHe+f8lbIq6CuL64pMRFtFJhc5FNC7Gs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lFNXL+9Tkmx3nnpIdMdoRGiasfYGo4wKUJqeWHOFkSvLWIhfKLzlaoOp2votJBjYo
-         ktRfnnjGeGrj+LRNbdhX9y0w+bywF2E4cTKteZL7dmmmzV/P/ue3SRsLqLfnJGLmJW
-         1bs4SYUkq/exD2E6FTH2jTvdVvalahlH0sK7msfGKvW7p9aFjyzKonH0LSjFarLcFJ
-         RXRK6sgpYG3UM6BldhRyQ1DDGmeytVpHJ4EDG0zjSs57vQPucx9uf5gcjMEF0GNqp5
-         JMIqqkQheSKZERRb67yLgZpsSAYxWVO4Tq/6xKDyJkt98687aIfe462Ic7YjcJgU+O
-         syLTKy6VpPv6A==
-Subject: [PATCH 3/4] xfs: online repair of realtime bitmaps
+        b=sElGeOJiY2OSYRfoa3DzLbxXylbTuhi1YD6DZ3rk2uL9hGSxrBXj8W79kAGumw4rV
+         +sauOj9zNHffnlEcnW7UngQQthZECvqoRTMA5gyYjUfVAlY//19o3gThI9vPtRegdK
+         S46yOBoyWkeijHQ+hnG2ZzqUrLoojFZz2XgegLS1oicqmBmVf/r7p7aRyi3MYcJdeD
+         n7y1R5Z5dFWsoE2RLh61RUD8+AZkGCLYI7X6I26fri0Dm4gxhuH6QhBA9YiMs7WCsJ
+         6UV0qEC1+9/vqkb6/ixQyDiJo5GpIEjpLXW4xHqB/lL64J/K58K9CrFUTnUlujURDB
+         jiIENNev4FbCw==
+Subject: [PATCH 1/4] xfs: repair the inode core and forks of a metadata inode
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:13:00 -0800
-Message-ID: <167243838035.695277.8646550280841210602.stgit@magnolia>
+Message-ID: <167243838007.695277.14042285203439915158.stgit@magnolia>
 In-Reply-To: <167243837989.695277.12249962882609806700.stgit@magnolia>
 References: <167243837989.695277.12249962882609806700.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,180 +54,258 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Rebuild the realtime bitmap from the realtime rmap btree.
+Add a helper function to repair the core and forks of a metadata inode,
+so that we can get move onto the task of repairing higher level metadata
+that lives in an inode.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/Makefile                |    4 +++
- fs/xfs/scrub/repair.h          |   13 +++++++++
- fs/xfs/scrub/rtbitmap.c        |   10 ++++++-
- fs/xfs/scrub/rtbitmap_repair.c |   56 ++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/scrub.c           |    2 +
- 5 files changed, 83 insertions(+), 2 deletions(-)
- create mode 100644 fs/xfs/scrub/rtbitmap_repair.c
+ fs/xfs/scrub/bmap_repair.c |   17 ++++-
+ fs/xfs/scrub/repair.c      |  151 ++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/repair.h      |    2 +
+ 3 files changed, 166 insertions(+), 4 deletions(-)
 
 
-diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
-index b0a36ebb0a3b..74fcf2b4dc86 100644
---- a/fs/xfs/Makefile
-+++ b/fs/xfs/Makefile
-@@ -187,5 +187,9 @@ xfs-y				+= $(addprefix scrub/, \
- 				   refcount_repair.o \
- 				   repair.o \
- 				   )
+diff --git a/fs/xfs/scrub/bmap_repair.c b/fs/xfs/scrub/bmap_repair.c
+index b9425f1a87d7..4638f3652b54 100644
+--- a/fs/xfs/scrub/bmap_repair.c
++++ b/fs/xfs/scrub/bmap_repair.c
+@@ -74,6 +74,9 @@ struct xrep_bmap {
+ 
+ 	/* Which fork are we fixing? */
+ 	int			whichfork;
 +
-+xfs-$(CONFIG_XFS_RT)		+= $(addprefix scrub/, \
-+				   rtbitmap_repair.o \
-+				   )
- endif
- endif
-diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
-index 69cb6b38bc55..74325131f3ca 100644
---- a/fs/xfs/scrub/repair.h
-+++ b/fs/xfs/scrub/repair.h
-@@ -80,6 +80,7 @@ int xrep_setup_ag_allocbt(struct xfs_scrub *sc);
++	/* Do we allow unwritten extents? */
++	bool			allow_unwritten;
+ };
  
- struct xfs_imap;
- int xrep_setup_inode(struct xfs_scrub *sc, struct xfs_imap *imap);
-+int xrep_setup_rtbitmap(struct xfs_scrub *sc, unsigned int *resblks);
+ /* Remember this reverse-mapping as a series of bmap records. */
+@@ -213,6 +216,10 @@ xrep_bmap_walk_rmap(
+ 	    !(rec->rm_flags & XFS_RMAP_ATTR_FORK))
+ 		return 0;
  
- void xrep_ag_btcur_init(struct xfs_scrub *sc, struct xchk_ag *sa);
- int xrep_ag_init(struct xfs_scrub *sc, struct xfs_perag *pag,
-@@ -105,6 +106,12 @@ int xrep_bmap_data(struct xfs_scrub *sc);
- int xrep_bmap_attr(struct xfs_scrub *sc);
- int xrep_bmap_cow(struct xfs_scrub *sc);
- 
-+#ifdef CONFIG_XFS_RT
-+int xrep_rtbitmap(struct xfs_scrub *sc);
-+#else
-+# define xrep_rtbitmap			xrep_notsupported
-+#endif /* CONFIG_XFS_RT */
++	/* Reject unwritten extents if we don't allow those. */
++	if ((rec->rm_flags & XFS_RMAP_UNWRITTEN) && !rb->allow_unwritten)
++		return -EFSCORRUPTED;
 +
- int xrep_reinit_pagf(struct xfs_scrub *sc);
- int xrep_reinit_pagi(struct xfs_scrub *sc);
+ 	fsbno = XFS_AGB_TO_FSB(mp, cur->bc_ag.pag->pag_agno,
+ 			rec->rm_startblock);
  
-@@ -151,6 +158,11 @@ xrep_setup_nothing(
+@@ -705,10 +712,11 @@ xrep_bmap_check_inputs(
+ }
  
- #define xrep_setup_inode(sc, imap)	((void)0)
+ /* Repair an inode fork. */
+-STATIC int
++int
+ xrep_bmap(
+ 	struct xfs_scrub	*sc,
+-	int			whichfork)
++	int			whichfork,
++	bool			allow_unwritten)
+ {
+ 	struct xrep_bmap	*rb;
+ 	unsigned int		max_bmbt_recs;
+@@ -726,6 +734,7 @@ xrep_bmap(
+ 		return -ENOMEM;
+ 	rb->sc = sc;
+ 	rb->whichfork = whichfork;
++	rb->allow_unwritten = allow_unwritten;
  
-+static inline int xrep_setup_rtbitmap(struct xfs_scrub *sc, unsigned int *x)
-+{
-+	return 0;
-+}
-+
- #define xrep_revalidate_allocbt		(NULL)
- #define xrep_revalidate_iallocbt	(NULL)
- 
-@@ -166,6 +178,7 @@ xrep_setup_nothing(
- #define xrep_bmap_data			xrep_notsupported
- #define xrep_bmap_attr			xrep_notsupported
- #define xrep_bmap_cow			xrep_notsupported
-+#define xrep_rtbitmap			xrep_notsupported
- 
- #endif /* CONFIG_XFS_ONLINE_REPAIR */
- 
-diff --git a/fs/xfs/scrub/rtbitmap.c b/fs/xfs/scrub/rtbitmap.c
-index c22427012a11..1d84a9eed67c 100644
---- a/fs/xfs/scrub/rtbitmap.c
-+++ b/fs/xfs/scrub/rtbitmap.c
-@@ -16,15 +16,23 @@
- #include "xfs_bmap.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
-+#include "scrub/repair.h"
- 
- /* Set us up with the realtime metadata locked. */
- int
- xchk_setup_rtbitmap(
+ 	/* Set up enough storage to handle the max records for this fork. */
+ 	large_extcount = xfs_has_large_extent_counts(sc->mp);
+@@ -764,7 +773,7 @@ int
+ xrep_bmap_data(
  	struct xfs_scrub	*sc)
  {
-+	unsigned int		resblks = 0;
- 	int			error;
+-	return xrep_bmap(sc, XFS_DATA_FORK);
++	return xrep_bmap(sc, XFS_DATA_FORK, true);
+ }
  
--	error = xchk_trans_alloc(sc, 0);
-+	if (xchk_could_repair(sc)) {
-+		error = xrep_setup_rtbitmap(sc, &resblks);
+ /* Repair an inode's attr fork. */
+@@ -772,5 +781,5 @@ int
+ xrep_bmap_attr(
+ 	struct xfs_scrub	*sc)
+ {
+-	return xrep_bmap(sc, XFS_ATTR_FORK);
++	return xrep_bmap(sc, XFS_ATTR_FORK, false);
+ }
+diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
+index 3f3554d82eeb..2de438ddb8ac 100644
+--- a/fs/xfs/scrub/repair.c
++++ b/fs/xfs/scrub/repair.c
+@@ -29,6 +29,7 @@
+ #include "xfs_defer.h"
+ #include "xfs_errortag.h"
+ #include "xfs_error.h"
++#include "xfs_reflink.h"
+ #include "scrub/scrub.h"
+ #include "scrub/common.h"
+ #include "scrub/trace.h"
+@@ -947,3 +948,153 @@ xrep_will_attempt(
+ 
+ 	return false;
+ }
++
++/* Try to fix some part of a metadata inode by calling another scrubber. */
++STATIC int
++xrep_metadata_inode_subtype(
++	struct xfs_scrub	*sc,
++	unsigned int		scrub_type)
++{
++	__u32			smtype = sc->sm->sm_type;
++	__u32			smflags = sc->sm->sm_flags;
++	int			error;
++
++	/*
++	 * Let's see if the inode needs repair.  We're going to open-code calls
++	 * to the scrub and repair functions so that we can hang on to the
++	 * resources that we already acquired instead of using the standard
++	 * setup/teardown routines.
++	 */
++	sc->sm->sm_flags &= ~XFS_SCRUB_FLAGS_OUT;
++	sc->sm->sm_type = scrub_type;
++
++	switch (scrub_type) {
++	case XFS_SCRUB_TYPE_INODE:
++		error = xchk_inode(sc);
++		break;
++	case XFS_SCRUB_TYPE_BMBTD:
++		error = xchk_bmap_data(sc);
++		break;
++	case XFS_SCRUB_TYPE_BMBTA:
++		error = xchk_bmap_attr(sc);
++		break;
++	default:
++		ASSERT(0);
++		error = -EFSCORRUPTED;
++	}
++	if (error)
++		goto out;
++
++	if (!xrep_will_attempt(sc))
++		goto out;
++
++	/*
++	 * Repair some part of the inode.  This will potentially join the inode
++	 * to the transaction.
++	 */
++	switch (scrub_type) {
++	case XFS_SCRUB_TYPE_INODE:
++		error = xrep_inode(sc);
++		break;
++	case XFS_SCRUB_TYPE_BMBTD:
++		error = xrep_bmap(sc, XFS_DATA_FORK, false);
++		break;
++	case XFS_SCRUB_TYPE_BMBTA:
++		error = xrep_bmap(sc, XFS_ATTR_FORK, false);
++		break;
++	}
++	if (error)
++		goto out;
++
++	/*
++	 * Finish all deferred intent items and then roll the transaction so
++	 * that the inode will not be joined to the transaction when we exit
++	 * the function.
++	 */
++	error = xfs_defer_finish(&sc->tp);
++	if (error)
++		goto out;
++	error = xfs_trans_roll(&sc->tp);
++	if (error)
++		goto out;
++
++	/*
++	 * Clear the corruption flags and re-check the metadata that we just
++	 * repaired.
++	 */
++	sc->sm->sm_flags &= ~XFS_SCRUB_FLAGS_OUT;
++
++	switch (scrub_type) {
++	case XFS_SCRUB_TYPE_INODE:
++		error = xchk_inode(sc);
++		break;
++	case XFS_SCRUB_TYPE_BMBTD:
++		error = xchk_bmap_data(sc);
++		break;
++	case XFS_SCRUB_TYPE_BMBTA:
++		error = xchk_bmap_attr(sc);
++		break;
++	}
++	if (error)
++		goto out;
++
++	/* If corruption persists, the repair has failed. */
++	if (xchk_needs_repair(sc->sm)) {
++		error = -EFSCORRUPTED;
++		goto out;
++	}
++out:
++	sc->sm->sm_type = smtype;
++	sc->sm->sm_flags = smflags;
++	return error;
++}
++
++/*
++ * Repair the ondisk forks of a metadata inode.  The caller must ensure that
++ * sc->ip points to the metadata inode and the ILOCK is held on that inode.
++ * The inode must not be joined to the transaction before the call, and will
++ * not be afterwards.
++ */
++int
++xrep_metadata_inode_forks(
++	struct xfs_scrub	*sc)
++{
++	bool			dirty = false;
++	int			error;
++
++	/* Repair the inode record and the data fork. */
++	error = xrep_metadata_inode_subtype(sc, XFS_SCRUB_TYPE_INODE);
++	if (error)
++		return error;
++
++	error = xrep_metadata_inode_subtype(sc, XFS_SCRUB_TYPE_BMBTD);
++	if (error)
++		return error;
++
++	/* Make sure the attr fork looks ok before we delete it. */
++	error = xrep_metadata_inode_subtype(sc, XFS_SCRUB_TYPE_BMBTA);
++	if (error)
++		return error;
++
++	/* Clear the reflink flag since metadata never shares. */
++	if (xfs_is_reflink_inode(sc->ip)) {
++		dirty = true;
++		xfs_trans_ijoin(sc->tp, sc->ip, 0);
++		error = xfs_reflink_clear_inode_flag(sc->ip, &sc->tp);
 +		if (error)
 +			return error;
 +	}
 +
-+	error = xchk_trans_alloc(sc, resblks);
- 	if (error)
- 		return error;
- 
-diff --git a/fs/xfs/scrub/rtbitmap_repair.c b/fs/xfs/scrub/rtbitmap_repair.c
-new file mode 100644
-index 000000000000..c88c49b03e86
---- /dev/null
-+++ b/fs/xfs/scrub/rtbitmap_repair.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2022 Oracle.  All Rights Reserved.
-+ * Author: Darrick J. Wong <djwong@kernel.org>
-+ */
-+#include "xfs.h"
-+#include "xfs_fs.h"
-+#include "xfs_shared.h"
-+#include "xfs_format.h"
-+#include "xfs_trans_resv.h"
-+#include "xfs_mount.h"
-+#include "xfs_btree.h"
-+#include "xfs_log_format.h"
-+#include "xfs_trans.h"
-+#include "xfs_inode.h"
-+#include "xfs_bit.h"
-+#include "xfs_bmap.h"
-+#include "xfs_bmap_btree.h"
-+#include "scrub/scrub.h"
-+#include "scrub/common.h"
-+#include "scrub/trace.h"
-+#include "scrub/repair.h"
-+#include "scrub/xfile.h"
-+
-+/* Set up to repair the realtime bitmap file metadata. */
-+int
-+xrep_setup_rtbitmap(
-+	struct xfs_scrub	*sc,
-+	unsigned int		*resblks)
-+{
-+	struct xfs_mount	*mp = sc->mp;
-+	unsigned long long	blocks = 0;
-+
 +	/*
-+	 * Reserve enough blocks to write out a completely new bmbt for the
-+	 * bitmap file.
++	 * If we modified the inode, roll the transaction but don't rejoin the
++	 * inode to the new transaction because xrep_bmap_data can do that.
 +	 */
-+	blocks = xfs_bmbt_calc_size(mp, mp->m_sb.sb_rbmblocks);
-+	if (blocks > UINT_MAX)
-+		return -EOPNOTSUPP;
++	if (dirty) {
++		error = xfs_trans_roll(&sc->tp);
++		if (error)
++			return error;
++		dirty = false;
++	}
 +
-+	*resblks += blocks;
 +	return 0;
 +}
-+
-+/* Repair the realtime bitmap file metadata. */
-+int
-+xrep_rtbitmap(
-+	struct xfs_scrub	*sc)
-+{
-+	/*
-+	 * The only thing we know how to fix right now is problems with the
-+	 * inode or its fork data.
-+	 */
-+	return xrep_metadata_inode_forks(sc);
-+}
-diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
-index 1fed319b4f7a..06da054bf9e4 100644
---- a/fs/xfs/scrub/scrub.c
-+++ b/fs/xfs/scrub/scrub.c
-@@ -330,7 +330,7 @@ static const struct xchk_meta_ops meta_scrub_ops[] = {
- 		.setup	= xchk_setup_rtbitmap,
- 		.scrub	= xchk_rtbitmap,
- 		.has	= xfs_has_realtime,
--		.repair	= xrep_notsupported,
-+		.repair	= xrep_rtbitmap,
- 	},
- 	[XFS_SCRUB_TYPE_RTSUM] = {	/* realtime summary */
- 		.type	= ST_FS,
+diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
+index 8f525d7c63c7..69cb6b38bc55 100644
+--- a/fs/xfs/scrub/repair.h
++++ b/fs/xfs/scrub/repair.h
+@@ -72,6 +72,8 @@ int xrep_ino_dqattach(struct xfs_scrub *sc);
+ int xrep_ino_ensure_extent_count(struct xfs_scrub *sc, int whichfork,
+ 		xfs_extnum_t nextents);
+ int xrep_reset_perag_resv(struct xfs_scrub *sc);
++int xrep_bmap(struct xfs_scrub *sc, int whichfork, bool allow_unwritten);
++int xrep_metadata_inode_forks(struct xfs_scrub *sc);
+ 
+ /* Repair setup functions */
+ int xrep_setup_ag_allocbt(struct xfs_scrub *sc);
 
