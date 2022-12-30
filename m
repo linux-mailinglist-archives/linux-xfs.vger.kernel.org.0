@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7665659E73
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:40:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3365659E78
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:41:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235398AbiL3XkU (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:40:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        id S235609AbiL3XlK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:41:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiL3XkT (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:40:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12EEB1DF1A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:40:19 -0800 (PST)
+        with ESMTP id S235602AbiL3XlK (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:41:10 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66921DF1A
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:41:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A10A561C31
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:40:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F77C433EF;
-        Fri, 30 Dec 2022 23:40:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5231961C31
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:41:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C0DC433EF;
+        Fri, 30 Dec 2022 23:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672443618;
-        bh=AYpNH1lgIk31ad5PcPRSojWpQ56fEoU02hFJe28HQjY=;
+        s=k20201202; t=1672443664;
+        bh=f8bhhNsXkZwvQpYNB6KBdtuq1bV+vNX2AG+YEQPmMrs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IweZkRNv/h5WLalX5LNHwxXuhDnz2HdF52PfFSPRorWVUHwqBXg+y0boVtluYSpaW
-         0qdnW/uJKGbjwP8EFwWAQbQF6XPDZCXAV8AO3j7onakyQZa9QvrLN5dhQYaDdSnVm4
-         MbTdBQuSEfMIIbLsl6896pVdvid6cMF3PBpvBAcnMNkIQNqNDuOX8AB3eAIfZebw+/
-         fip+8vg+s2ZHgIc5Er6rbmAYCL5N8VosWl6sdm5Lz9aQyTpBf2Ww24UW0AJa6aeZFG
-         IIj5erPdmdrzvMYbydPbuCmW/CY3A7Juagg/Sjko6RFMmiG26MkYQ7+y866YW/ICzr
-         ZYJI/T7YOapVg==
-Subject: [PATCH 3/3] xfs: update health status if we get a clean bill of
- health
+        b=mTI8to19em3rU9TERR4jHflHC+JsQ6RrS0+o54uhSNjJXyJGtTQa+WDirYtNc5Sbc
+         BV/09t7IN9IaQwx72cqpqZq4Rao3p1E1JSlofPxj8nwmJR1nu6sa44CNiGAPGzkdHl
+         Xx62cPqphKLR5KQUlQUNWQxb4zR8ilgHN2D8Oc6bOh922ubvQUCjxcvQN4IWXL+OIw
+         V9IZbOowS7wmccDw7HEY/fVGd6MtIeXTpzjPvJJORsVHehOJq8LppDwsTkrBZcmSpH
+         X5vvi3sDWZV4fRyz+XjKKliqUxxZukprW6gCzMn4pYG2FmZDJaBCVcHgapH7I9IgoF
+         l1DW1WfBy2KQg==
+Subject: [PATCH 3/3] xfs: repair summary counters
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:13:19 -0800
-Message-ID: <167243839958.696295.10266711605056168850.stgit@magnolia>
-In-Reply-To: <167243839911.696295.17985265962177375571.stgit@magnolia>
-References: <167243839911.696295.17985265962177375571.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:13:22 -0800
+Message-ID: <167243840293.696415.3584558383285965358.stgit@magnolia>
+In-Reply-To: <167243840246.696415.12006477739455537131.stgit@magnolia>
+References: <167243840246.696415.12006477739455537131.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,191 +54,243 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-If scrub finds that everything is ok with the filesystem, we need a way
-to tell the health tracking that it can let go of indirect health flags,
-since indirect flags only mean that at some point in the past we lost
-some context.
+Use the same summary counter calculation infrastructure to generate new
+values for the in-core summary counters.   The difference between the
+scrubber and the repairer is that the repairer will freeze the fs during
+setup, which means that the values should match exactly.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_fs.h |    3 ++
- fs/xfs/scrub/health.c  |   64 ++++++++++++++++++++++++++++++++++++++++++++++++
- fs/xfs/scrub/health.h  |    1 +
- fs/xfs/scrub/repair.c  |    1 +
- fs/xfs/scrub/scrub.c   |    6 +++++
- fs/xfs/scrub/trace.h   |    4 ++-
- 6 files changed, 77 insertions(+), 2 deletions(-)
+ fs/xfs/Makefile                  |    1 +
+ fs/xfs/scrub/fscounters.c        |   15 +++++++-
+ fs/xfs/scrub/fscounters_repair.c |   72 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/scrub/repair.h            |    2 +
+ fs/xfs/scrub/scrub.c             |    2 +
+ fs/xfs/scrub/trace.c             |    1 +
+ fs/xfs/scrub/trace.h             |   21 +++++++++--
+ 7 files changed, 107 insertions(+), 7 deletions(-)
+ create mode 100644 fs/xfs/scrub/fscounters_repair.c
 
 
-diff --git a/fs/xfs/libxfs/xfs_fs.h b/fs/xfs/libxfs/xfs_fs.h
-index 417cf85c0f70..400cf68e551e 100644
---- a/fs/xfs/libxfs/xfs_fs.h
-+++ b/fs/xfs/libxfs/xfs_fs.h
-@@ -712,9 +712,10 @@ struct xfs_scrub_metadata {
- #define XFS_SCRUB_TYPE_FSCOUNTERS 24	/* fs summary counters */
- #define XFS_SCRUB_TYPE_QUOTACHECK 25	/* quota counters */
- #define XFS_SCRUB_TYPE_NLINKS	26	/* inode link counts */
-+#define XFS_SCRUB_TYPE_HEALTHY	27	/* everything checked out ok */
+diff --git a/fs/xfs/Makefile b/fs/xfs/Makefile
+index a69c5585e41c..2d756e13d441 100644
+--- a/fs/xfs/Makefile
++++ b/fs/xfs/Makefile
+@@ -187,6 +187,7 @@ xfs-y				+= $(addprefix scrub/, \
+ 				   alloc_repair.o \
+ 				   bmap_repair.o \
+ 				   cow_repair.o \
++				   fscounters_repair.o \
+ 				   ialloc_repair.o \
+ 				   inode_repair.o \
+ 				   newbt.o \
+diff --git a/fs/xfs/scrub/fscounters.c b/fs/xfs/scrub/fscounters.c
+index e90e59c2e565..ae12da1be95c 100644
+--- a/fs/xfs/scrub/fscounters.c
++++ b/fs/xfs/scrub/fscounters.c
+@@ -281,8 +281,13 @@ xchk_setup_fscounters(
+ 	 * Pause all writer activity in the filesystem while we're scrubbing to
+ 	 * reduce the likelihood of background perturbations to the counters
+ 	 * throwing off our calculations.
++	 *
++	 * If we're repairing, we need to prevent any other thread from
++	 * changing the global fs summary counters while we're repairing them.
++	 * This requires the fs to be frozen, which will disable background
++	 * reclaim and purge all inactive inodes.
+ 	 */
+-	if (sc->flags & XCHK_TRY_HARDER) {
++	if ((sc->flags & XCHK_TRY_HARDER) || xchk_could_repair(sc)) {
+ 		error = xchk_fscounters_freeze(sc);
+ 		if (error)
+ 			return error;
+@@ -300,7 +305,9 @@ xchk_setup_fscounters(
+  * set the INCOMPLETE flag even when a negative errno is returned.  This care
+  * must be taken with certain errno values (i.e. EFSBADCRC, EFSCORRUPTED,
+  * ECANCELED) that are absorbed into a scrub state flag update by
+- * xchk_*_process_error.
++ * xchk_*_process_error.  Scrub and repair share the same incore data
++ * structures, so the INCOMPLETE flag is critical to prevent a repair based on
++ * insufficient information.
+  */
  
- /* Number of scrub subcommands. */
--#define XFS_SCRUB_TYPE_NR	27
-+#define XFS_SCRUB_TYPE_NR	28
+ /* Count free space btree blocks manually for pre-lazysbcount filesystems. */
+@@ -527,6 +534,10 @@ xchk_fscount_within_range(
+ 	if (curr_value == expected)
+ 		return true;
  
- /* i: Repair this metadata. */
- #define XFS_SCRUB_IFLAG_REPAIR		(1u << 0)
-diff --git a/fs/xfs/scrub/health.c b/fs/xfs/scrub/health.c
-index 962791c8fafb..cdf059f47656 100644
---- a/fs/xfs/scrub/health.c
-+++ b/fs/xfs/scrub/health.c
-@@ -16,6 +16,7 @@
- #include "xfs_health.h"
- #include "scrub/scrub.h"
- #include "scrub/health.h"
-+#include "scrub/common.h"
++	/* We require exact matches when repair is running. */
++	if (sc->sm->sm_flags & XFS_SCRUB_IFLAG_REPAIR)
++		return false;
++
+ 	min_value = min(old_value, curr_value);
+ 	max_value = max(old_value, curr_value);
  
- /*
-  * Scrub and In-Core Filesystem Health Assessments
-@@ -119,6 +120,24 @@ xchk_health_mask_for_scrub_type(
- 	return type_to_health_flag[scrub_type].sick_mask;
- }
- 
+diff --git a/fs/xfs/scrub/fscounters_repair.c b/fs/xfs/scrub/fscounters_repair.c
+new file mode 100644
+index 000000000000..1c38870736d9
+--- /dev/null
++++ b/fs/xfs/scrub/fscounters_repair.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Scrub gave the filesystem a clean bill of health, so clear all the indirect
-+ * markers of past problems (at least for the fs and ags) so that we can be
-+ * healthy again.
++ * Copyright (C) 2022 Oracle.  All Rights Reserved.
++ * Author: Darrick J. Wong <djwong@kernel.org>
 + */
-+STATIC void
-+xchk_mark_all_healthy(
-+	struct xfs_mount	*mp)
-+{
-+	struct xfs_perag	*pag;
-+	xfs_agnumber_t		agno;
-+
-+	xfs_fs_mark_healthy(mp, XFS_SICK_FS_INDIRECT);
-+	xfs_rt_mark_healthy(mp, XFS_SICK_RT_INDIRECT);
-+	for_each_perag(mp, agno, pag)
-+		xfs_ag_mark_healthy(pag, XFS_SICK_AG_INDIRECT);
-+}
-+
- /*
-  * Update filesystem health assessments based on what we found and did.
-  *
-@@ -136,6 +155,18 @@ xchk_update_health(
- 	struct xfs_perag	*pag;
- 	bool			bad;
- 
-+	/*
-+	 * The HEALTHY scrub type is a request from userspace to clear all the
-+	 * indirect flags after a clean scan of the entire filesystem.  As such
-+	 * there's no sick flag defined for it, so we branch here ahead of the
-+	 * mask check.
-+	 */
-+	if (sc->sm->sm_type == XFS_SCRUB_TYPE_HEALTHY &&
-+	    !(sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)) {
-+		xchk_mark_all_healthy(sc->mp);
-+		return;
-+	}
-+
- 	if (!sc->sick_mask)
- 		return;
- 
-@@ -259,3 +290,36 @@ xchk_ag_btree_healthy_enough(
- 
- 	return true;
- }
++#include "xfs.h"
++#include "xfs_fs.h"
++#include "xfs_shared.h"
++#include "xfs_format.h"
++#include "xfs_trans_resv.h"
++#include "xfs_mount.h"
++#include "xfs_defer.h"
++#include "xfs_btree.h"
++#include "xfs_bit.h"
++#include "xfs_log_format.h"
++#include "xfs_trans.h"
++#include "xfs_sb.h"
++#include "xfs_inode.h"
++#include "xfs_alloc.h"
++#include "xfs_ialloc.h"
++#include "xfs_rmap.h"
++#include "xfs_health.h"
++#include "scrub/xfs_scrub.h"
++#include "scrub/scrub.h"
++#include "scrub/common.h"
++#include "scrub/trace.h"
++#include "scrub/repair.h"
++#include "scrub/fscounters.h"
 +
 +/*
-+ * Quick scan to double-check that there isn't any evidence of lingering
-+ * primary health problems.  If we're still clear, then the health update will
-+ * take care of clearing the indirect evidence.
++ * FS Summary Counters
++ * ===================
++ *
++ * We correct errors in the filesystem summary counters by setting them to the
++ * values computed during the obligatory scrub phase.  However, we must be
++ * careful not to allow any other thread to change the counters while we're
++ * computing and setting new values.  To achieve this, we freeze the
++ * filesystem for the whole operation if the REPAIR flag is set.  The checking
++ * function is stricter when we've frozen the fs.
++ */
++
++/*
++ * Reset the superblock counters.  Caller is responsible for freezing the
++ * filesystem during the calculation and reset phases.
 + */
 +int
-+xchk_health_record(
++xrep_fscounters(
 +	struct xfs_scrub	*sc)
 +{
 +	struct xfs_mount	*mp = sc->mp;
-+	struct xfs_perag	*pag;
-+	xfs_agnumber_t		agno;
++	struct xchk_fscounters	*fsc = sc->buf;
 +
-+	unsigned int		sick;
-+	unsigned int		checked;
-+
-+	xfs_fs_measure_sickness(mp, &sick, &checked);
-+	if (sick & XFS_SICK_FS_PRIMARY)
-+		xchk_set_corrupt(sc);
-+
-+	xfs_rt_measure_sickness(mp, &sick, &checked);
-+	if (sick & XFS_SICK_RT_PRIMARY)
-+		xchk_set_corrupt(sc);
-+
-+	for_each_perag(mp, agno, pag) {
-+		xfs_ag_measure_sickness(pag, &sick, &checked);
-+		if (sick & XFS_SICK_AG_PRIMARY)
-+			xchk_set_corrupt(sc);
++	/*
++	 * Reinitialize the in-core counters from what we computed.  We froze
++	 * the filesystem, so there shouldn't be anyone else trying to modify
++	 * these counters.
++	 */
++	if (!fsc->frozen) {
++		ASSERT(fsc->frozen);
++		return -EFSCORRUPTED;
 +	}
++
++	trace_xrep_reset_counters(mp, fsc);
++
++	percpu_counter_set(&mp->m_icount, fsc->icount);
++	percpu_counter_set(&mp->m_ifree, fsc->ifree);
++	percpu_counter_set(&mp->m_fdblocks, fsc->fdblocks);
++	percpu_counter_set(&mp->m_frextents, fsc->frextents);
++	mp->m_sb.sb_frextents = fsc->frextents;
 +
 +	return 0;
 +}
-diff --git a/fs/xfs/scrub/health.h b/fs/xfs/scrub/health.h
-index d0b938d3d028..ee80b663cfab 100644
---- a/fs/xfs/scrub/health.h
-+++ b/fs/xfs/scrub/health.h
-@@ -10,5 +10,6 @@ unsigned int xchk_health_mask_for_scrub_type(__u32 scrub_type);
- void xchk_update_health(struct xfs_scrub *sc);
- bool xchk_ag_btree_healthy_enough(struct xfs_scrub *sc, struct xfs_perag *pag,
- 		xfs_btnum_t btnum);
-+int xchk_health_record(struct xfs_scrub *sc);
+diff --git a/fs/xfs/scrub/repair.h b/fs/xfs/scrub/repair.h
+index 6c19f0d7f335..5e3e6cfe3332 100644
+--- a/fs/xfs/scrub/repair.h
++++ b/fs/xfs/scrub/repair.h
+@@ -108,6 +108,7 @@ int xrep_bmap_data(struct xfs_scrub *sc);
+ int xrep_bmap_attr(struct xfs_scrub *sc);
+ int xrep_bmap_cow(struct xfs_scrub *sc);
+ int xrep_nlinks(struct xfs_scrub *sc);
++int xrep_fscounters(struct xfs_scrub *sc);
  
- #endif /* __XFS_SCRUB_HEALTH_H__ */
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index 7f66c763580b..1862e05e398f 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -30,6 +30,7 @@
- #include "xfs_errortag.h"
- #include "xfs_error.h"
- #include "xfs_reflink.h"
-+#include "xfs_health.h"
- #include "scrub/scrub.h"
- #include "scrub/common.h"
- #include "scrub/trace.h"
+ #ifdef CONFIG_XFS_RT
+ int xrep_rtbitmap(struct xfs_scrub *sc);
+@@ -193,6 +194,7 @@ static inline int xrep_setup_rtbitmap(struct xfs_scrub *sc, unsigned int *x)
+ #define xrep_quota			xrep_notsupported
+ #define xrep_quotacheck			xrep_notsupported
+ #define xrep_nlinks			xrep_notsupported
++#define xrep_fscounters			xrep_notsupported
+ 
+ #endif /* CONFIG_XFS_ONLINE_REPAIR */
+ 
 diff --git a/fs/xfs/scrub/scrub.c b/fs/xfs/scrub/scrub.c
-index 2c05fbde1f88..a9d3f344f8af 100644
+index 4ec9ff259c5e..fd116531a0d9 100644
 --- a/fs/xfs/scrub/scrub.c
 +++ b/fs/xfs/scrub/scrub.c
-@@ -381,6 +381,12 @@ static const struct xchk_meta_ops meta_scrub_ops[] = {
- 		.scrub	= xchk_nlinks,
- 		.repair	= xrep_nlinks,
+@@ -367,7 +367,7 @@ static const struct xchk_meta_ops meta_scrub_ops[] = {
+ 		.type	= ST_FS,
+ 		.setup	= xchk_setup_fscounters,
+ 		.scrub	= xchk_fscounters,
+-		.repair	= xrep_notsupported,
++		.repair	= xrep_fscounters,
  	},
-+	[XFS_SCRUB_TYPE_HEALTHY] = {	/* fs healthy; clean all reminders */
-+		.type	= ST_FS,
-+		.setup	= xchk_setup_fs,
-+		.scrub	= xchk_health_record,
-+		.repair = xrep_notsupported,
-+	},
- };
+ 	[XFS_SCRUB_TYPE_QUOTACHECK] = {	/* quota counters */
+ 		.type	= ST_FS,
+diff --git a/fs/xfs/scrub/trace.c b/fs/xfs/scrub/trace.c
+index 82edcc830fb8..08e05d49e7c0 100644
+--- a/fs/xfs/scrub/trace.c
++++ b/fs/xfs/scrub/trace.c
+@@ -20,6 +20,7 @@
+ #include "scrub/xfarray.h"
+ #include "scrub/iscan.h"
+ #include "scrub/nlinks.h"
++#include "scrub/fscounters.h"
  
- static int
+ /* Figure out which block the btree cursor was pointing to. */
+ static inline xfs_fsblock_t
 diff --git a/fs/xfs/scrub/trace.h b/fs/xfs/scrub/trace.h
-index dcbab5a197c1..c723b6302bd6 100644
+index e0de12c4fcf4..14569068b6ee 100644
 --- a/fs/xfs/scrub/trace.h
 +++ b/fs/xfs/scrub/trace.h
-@@ -68,6 +68,7 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_PQUOTA);
- TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_FSCOUNTERS);
- TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_QUOTACHECK);
- TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_NLINKS);
-+TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_HEALTHY);
+@@ -23,6 +23,7 @@ struct xfarray;
+ struct xfarray_sortinfo;
+ struct xchk_iscan;
+ struct xchk_nlink;
++struct xchk_fscounters;
  
- #define XFS_SCRUB_TYPE_STRINGS \
- 	{ XFS_SCRUB_TYPE_PROBE,		"probe" }, \
-@@ -96,7 +97,8 @@ TRACE_DEFINE_ENUM(XFS_SCRUB_TYPE_NLINKS);
- 	{ XFS_SCRUB_TYPE_PQUOTA,	"prjquota" }, \
- 	{ XFS_SCRUB_TYPE_FSCOUNTERS,	"fscounters" }, \
- 	{ XFS_SCRUB_TYPE_QUOTACHECK,	"quotacheck" }, \
--	{ XFS_SCRUB_TYPE_NLINKS,	"nlinks" }
-+	{ XFS_SCRUB_TYPE_NLINKS,	"nlinks" }, \
-+	{ XFS_SCRUB_TYPE_HEALTHY,	"healthy" }
+ /*
+  * ftrace's __print_symbolic requires that all enum values be wrapped in the
+@@ -1623,16 +1624,28 @@ TRACE_EVENT(xrep_calc_ag_resblks_btsize,
+ 		  __entry->refcbt_sz)
+ )
+ TRACE_EVENT(xrep_reset_counters,
+-	TP_PROTO(struct xfs_mount *mp),
+-	TP_ARGS(mp),
++	TP_PROTO(struct xfs_mount *mp, struct xchk_fscounters *fsc),
++	TP_ARGS(mp, fsc),
+ 	TP_STRUCT__entry(
+ 		__field(dev_t, dev)
++		__field(uint64_t, icount)
++		__field(uint64_t, ifree)
++		__field(uint64_t, fdblocks)
++		__field(uint64_t, frextents)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->dev = mp->m_super->s_dev;
++		__entry->icount = fsc->icount;
++		__entry->ifree = fsc->ifree;
++		__entry->fdblocks = fsc->fdblocks;
++		__entry->frextents = fsc->frextents;
+ 	),
+-	TP_printk("dev %d:%d",
+-		  MAJOR(__entry->dev), MINOR(__entry->dev))
++	TP_printk("dev %d:%d icount %llu ifree %llu fdblocks %llu frextents %llu",
++		  MAJOR(__entry->dev), MINOR(__entry->dev),
++		  __entry->icount,
++		  __entry->ifree,
++		  __entry->fdblocks,
++		  __entry->frextents)
+ )
  
- #define XFS_SCRUB_FLAG_STRINGS \
- 	{ XFS_SCRUB_IFLAG_REPAIR,		"repair" }, \
+ DECLARE_EVENT_CLASS(xrep_newbt_extent_class,
 
