@@ -2,51 +2,51 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FFC5659FE0
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:44:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5341E65A189
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:27:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235875AbiLaAoM (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:44:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35876 "EHLO
+        id S236006AbiLaC1p (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:27:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235868AbiLaAoL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:44:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D11F1D0C8;
-        Fri, 30 Dec 2022 16:44:10 -0800 (PST)
+        with ESMTP id S231466AbiLaC1o (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:27:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B4D1C921
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:27:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2AAB0B81E6B;
-        Sat, 31 Dec 2022 00:44:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2ADC433EF;
-        Sat, 31 Dec 2022 00:44:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F45E61CC6
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:27:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B30C433EF;
+        Sat, 31 Dec 2022 02:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447447;
-        bh=dZhfbp+phhoyX7txuSa+hOgPomovWB9S2tdsHbB+U9M=;
+        s=k20201202; t=1672453662;
+        bh=0V1mRCQ+Bkkeq+VSeGRgrm1lRnbR85uvxH1EhYSQawc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=awZIIxin5xYgTwIOUkRIQdPzzyaNIrnJdPLRw8827/8Y7iX5/icd1G8PsH+9q9H7e
-         9i/sgS5oLigL+vgPKX1qlaeUKiE9UdaR0AMpOyYcVJTlQKtS+zswXIux0vmGHmM8LB
-         aSnetbDjk+pWxmOJNaqWryGnK/j3g7SFs6iAxUtN7vPPL5kNztkqA8eWdBMG7gigr/
-         QQ7B6MsgN9OQNV6KjNn4R0565tMQhau88U8ZYYaV8gkyCOMXZMZbyB8cY9ylgUK2oI
-         0E7VkMCLTyJhg7qsI/OtKjdZ8dzsDB5yN5HbX5v9x7/xsyVHT44s8Rh88csj42/spD
-         BNDAwVw+epvGQ==
-Subject: [PATCH 2/2] populate: fix some weirdness in
- __populate_check_xfs_agbtree_height
+        b=O3tqzLCOwCzR4SUCoQJQgHe8ZHRVY7WufzEBbE8DM1+M+2OSHTk/cJ6dg2lZpCVTt
+         HmDCCqbf03Y521cUHj1GSzP+/jHC29NULvliTv/cOSVX5TkGF+e6TgSFRCO+XTgsWk
+         0Df1jxGFRDzA3XVuiueWcpL2MmYgzz6eeCSjrp5JX/vhejFigG9oPKB1X0VvDDwsOj
+         vgJi09eYac0t27o4Uo+9rMuZkCjXXCpbJW2ABn7Zq5yurqWEiINz3C//yFcsF/yYTb
+         OTeilvCPzi4RMEcXxzjKLvC7D0uI3YhByBd5dk7+qHLBPTt3nZEgo93SGX/OI3rkgs
+         GJADjfIh36DLQ==
+Subject: [PATCH 4/8] xfs_db: access realtime file blocks
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     zlang@redhat.com, djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
+To:     djwong@kernel.org, cem@kernel.org
+Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:36 -0800
-Message-ID: <167243877638.728350.6533315172129762467.stgit@magnolia>
-In-Reply-To: <167243877612.728350.1799909806305296744.stgit@magnolia>
-References: <167243877612.728350.1799909806305296744.stgit@magnolia>
+Message-ID: <167243877664.728317.4712975169277704547.stgit@magnolia>
+In-Reply-To: <167243877610.728317.12510123562097453242.stgit@magnolia>
+References: <167243877610.728317.12510123562097453242.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,47 +55,65 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use a for loop to scan the AGs, and make all the variables local like
-you'd expect them to be.
+Now that we have the ability to point the io cursor at the realtime
+device, let's make it so that the "dblock" command can walk the contents
+of realtime files.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/populate |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ db/block.c |   17 +++++++++++++++--
+ db/faddr.c |    4 +++-
+ 2 files changed, 18 insertions(+), 3 deletions(-)
 
 
-diff --git a/common/populate b/common/populate
-index e4090a29d3..29ea637ecb 100644
---- a/common/populate
-+++ b/common/populate
-@@ -599,8 +599,8 @@ __populate_check_xfs_attr() {
- 
- # Check that there's at least one per-AG btree with multiple levels
- __populate_check_xfs_agbtree_height() {
--	bt_type="$1"
--	nr_ags=$(_scratch_xfs_db -c 'sb 0' -c 'p agcount' | awk '{print $3}')
-+	local bt_type="$1"
-+	local agcount=$(_scratch_xfs_db -c 'sb 0' -c 'p agcount' | awk '{print $3}')
- 
- 	case "${bt_type}" in
- 	"bno"|"cnt"|"rmap"|"refcnt")
-@@ -620,13 +620,14 @@ __populate_check_xfs_agbtree_height() {
- 		;;
- 	esac
- 
--	seq 0 $((nr_ags - 1)) | while read ag; do
--		bt_level=$(_scratch_xfs_db -c "${hdr} ${ag}" -c "p ${bt_prefix}level" | awk '{print $3}')
-+	for ((agno = 0; agno < agcount; agno++)); do
-+		bt_level=$(_scratch_xfs_db -c "${hdr} ${agno}" -c "p ${bt_prefix}level" | awk '{print $3}')
-+		# "level" is really the btree height
- 		if [ "${bt_level}" -gt 1 ]; then
--			return 100
-+			return 0
- 		fi
- 	done
--	test $? -eq 100 || __populate_fail "Failed to create ${bt_type} of sufficient height!"
-+	__populate_fail "Failed to create ${bt_type} of sufficient height!"
- 	return 1
+diff --git a/db/block.c b/db/block.c
+index d064fbed5aa..ae8744685b0 100644
+--- a/db/block.c
++++ b/db/block.c
+@@ -195,6 +195,13 @@ dblock_help(void)
+ ));
  }
  
++static inline bool
++is_rtfile(
++	struct xfs_dinode	*dip)
++{
++	return dip->di_flags & cpu_to_be16(XFS_DIFLAG_REALTIME);
++}
++
+ static int
+ dblock_f(
+ 	int		argc,
+@@ -234,8 +241,14 @@ dblock_f(
+ 	ASSERT(typtab[type].typnm == type);
+ 	if (nex > 1)
+ 		make_bbmap(&bbmap, nex, bmp);
+-	set_cur(&typtab[type], (int64_t)XFS_FSB_TO_DADDR(mp, dfsbno),
+-		nb * blkbb, DB_RING_ADD, nex > 1 ? &bbmap : NULL);
++	if (is_rtfile(iocur_top->data))
++		set_rt_cur(&typtab[type], (int64_t)XFS_FSB_TO_DADDR(mp, dfsbno),
++				nb * blkbb, DB_RING_ADD,
++				nex > 1 ? &bbmap : NULL);
++	else
++		set_cur(&typtab[type], (int64_t)XFS_FSB_TO_DADDR(mp, dfsbno),
++				nb * blkbb, DB_RING_ADD,
++				nex > 1 ? &bbmap : NULL);
+ 	free(bmp);
+ 	return 0;
+ }
+diff --git a/db/faddr.c b/db/faddr.c
+index ec4aae68bb5..fd65b86b5e9 100644
+--- a/db/faddr.c
++++ b/db/faddr.c
+@@ -323,7 +323,9 @@ fa_drtbno(
+ 		dbprintf(_("null block number, cannot set new addr\n"));
+ 		return;
+ 	}
+-	/* need set_cur to understand rt subvolume */
++
++	set_rt_cur(&typtab[next], (int64_t)XFS_FSB_TO_BB(mp, bno), blkbb,
++			DB_RING_ADD, NULL);
+ }
+ 
+ /*ARGSUSED*/
 
