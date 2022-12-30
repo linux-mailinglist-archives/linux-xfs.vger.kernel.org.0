@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 523A065A12B
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:04:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0826A65A127
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:03:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236143AbiLaCE0 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 21:04:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51896 "EHLO
+        id S236120AbiLaCDc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:03:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236148AbiLaCEZ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:04:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BB8178A5
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:04:25 -0800 (PST)
+        with ESMTP id S236143AbiLaCDV (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:03:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2082AF8
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:03:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AB04CB81D63
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:04:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545B3C433EF;
-        Sat, 31 Dec 2022 02:04:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BB09261C19
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:03:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28436C433EF;
+        Sat, 31 Dec 2022 02:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672452262;
-        bh=1I8vjx1anjdjEC4TmUNaTtzTF/xQg3nLvg2APpdwBGs=;
+        s=k20201202; t=1672452200;
+        bh=c8807y3+Q+eEQuHSZ/lACy9JdnM+skcHahQLpjbPyHw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PkyG5FNpIYgOaCRuDYqo8O6+0gzWsf/u3oUGtOvAMjHPtQDNHZB2XXb2PxBWSnjJP
-         Vn0nBdeNmKWb283o8UcSmsKP5SezQKw3ts2gYMB4fyBQ2zGvrOPk8fF5IYz4Dtr1/F
-         h5wC9crbvJiHGHlSIc3LDYUfYs6TIHo0a/oxJrkOqySzhcNpLtuKoLPNcnTXNCIXPb
-         BkVV2kaxwVzy7rIxk4wXWMAZ8e57t1NMi1VwgbEb5nNF1s3t7rvUXPIluSKnbWJwfT
-         cjlHuO35hOyb1gWpFEo2x7DOpqHWnrr7o9YauJSZ1RCgQBOaK02gH5SA9D9IiXZMRX
-         PlQIRYhPPQ76A==
-Subject: [PATCH 05/26] libxfs: pass IGET flags through to xfs_iread
+        b=sIVjwoEJ6ibdZYCdIw3ftE50hAfzNRZHLo1qbIFxhOxrc223x3atzbNv3SgG4I5dP
+         Cfg8A5TAH36n1ga4z574Ooh/heARYnJYpr8NbEMOteB12aJqilClLR+Ag5o57CEosE
+         uDF0heLdIfjzx2fg5YqcVNaWhJqaJQ1hFnhLY13zkuKT51VgfNPoKpFLblDDKycWLt
+         TxSQCLTWI6RfRCuxx+zb16WpROMz6rsbZX3aM4m4j7MlLk4uWGtCM5i5mUMWBmhOBr
+         OYzdqV2giUqke25kZl9GUwBEspM+FmKvB9XsWLiCOSfIREA9gh/ta6utPpFujY50ZL
+         TfBd1lgbhFiBg==
+Subject: [PATCH 01/26] xfs: hoist extent size helpers to libxfs
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:13 -0800
-Message-ID: <167243875385.723621.4220111121208397182.stgit@magnolia>
+Message-ID: <167243875339.723621.2360895558110300051.stgit@magnolia>
 In-Reply-To: <167243875315.723621.17759760420120912799.stgit@magnolia>
 References: <167243875315.723621.17759760420120912799.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,80 +55,113 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Change the lock_flags parameter to iget_flags so that we can supply
-XFS_IGET_ flags in future patches.  All callers of libxfs_iget and
-libxfs_trans_iget pass zero for this parameter and there are no inode
-locks in xfsprogs, so there's no behavior change here.
-
-Port the kernel's version of the xfs_inode_from_disk callsite.
+Move the extent size helpers to xfs_bmap.c in libxfs since they're used
+there already.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- libxfs/inode.c |   40 ++++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+ include/xfs_inode.h  |    7 +++++++
+ libxfs/libxfs_priv.h |    2 --
+ libxfs/xfs_bmap.c    |   41 +++++++++++++++++++++++++++++++++++++++++
+ libxfs/xfs_bmap.h    |    3 +++
+ 4 files changed, 51 insertions(+), 2 deletions(-)
 
 
-diff --git a/libxfs/inode.c b/libxfs/inode.c
-index c7843aea753..588aff33ef4 100644
---- a/libxfs/inode.c
-+++ b/libxfs/inode.c
-@@ -263,11 +263,10 @@ libxfs_iget(
- 	struct xfs_mount	*mp,
- 	struct xfs_trans	*tp,
- 	xfs_ino_t		ino,
--	uint			lock_flags,
-+	uint			flags,
- 	struct xfs_inode	**ipp)
- {
- 	struct xfs_inode	*ip;
--	struct xfs_buf		*bp;
- 	int			error = 0;
+diff --git a/include/xfs_inode.h b/include/xfs_inode.h
+index 489fd7d107d..3bc5aa2c7cb 100644
+--- a/include/xfs_inode.h
++++ b/include/xfs_inode.h
+@@ -237,6 +237,11 @@ static inline bool xfs_inode_has_bigrtextents(struct xfs_inode *ip)
+ 	return XFS_IS_REALTIME_INODE(ip) && ip->i_mount->m_sb.sb_rextsize > 1;
+ }
  
- 	ip = kmem_cache_zalloc(xfs_inode_cache, 0);
-@@ -284,18 +283,35 @@ libxfs_iget(
- 	if (error)
- 		goto out_destroy;
- 
--	error = xfs_imap_to_bp(mp, tp, &ip->i_imap, &bp);
--	if (error)
--		goto out_destroy;
-+	/*
-+	 * For version 5 superblocks, if we are initialising a new inode and we
-+	 * are not utilising the XFS_MOUNT_IKEEP inode cluster mode, we can
-+	 * simply build the new inode core with a random generation number.
-+	 *
-+	 * For version 4 (and older) superblocks, log recovery is dependent on
-+	 * the di_flushiter field being initialised from the current on-disk
-+	 * value and hence we must also read the inode off disk even when
-+	 * initializing new inodes.
-+	 */
-+	if (xfs_has_v3inodes(mp) &&
-+	    (flags & XFS_IGET_CREATE) && !xfs_has_ikeep(mp)) {
-+		VFS_I(ip)->i_generation = get_random_u32();
-+	} else {
-+		struct xfs_buf		*bp;
- 
--	error = xfs_inode_from_disk(ip,
--			xfs_buf_offset(bp, ip->i_imap.im_boffset));
--	if (!error)
--		xfs_buf_set_ref(bp, XFS_INO_REF);
--	xfs_trans_brelse(tp, bp);
-+		error = xfs_imap_to_bp(mp, tp, &ip->i_imap, &bp);
-+		if (error)
-+			goto out_destroy;
- 
--	if (error)
--		goto out_destroy;
-+		error = xfs_inode_from_disk(ip,
-+				xfs_buf_offset(bp, ip->i_imap.im_boffset));
-+		if (!error)
-+			xfs_buf_set_ref(bp, XFS_INO_REF);
-+		xfs_trans_brelse(tp, bp);
++static inline bool xfs_is_always_cow_inode(struct xfs_inode *ip)
++{
++	return false;
++}
 +
-+		if (error)
-+			goto out_destroy;
-+	}
+ /* Always set the child's GID to this value, even if the parent is setgid. */
+ #define CRED_FORCE_GID	(1U << 0)
+ struct cred {
+@@ -262,4 +267,6 @@ extern int	libxfs_iget(struct xfs_mount *, struct xfs_trans *, xfs_ino_t,
+ 				uint, struct xfs_inode **);
+ extern void	libxfs_irele(struct xfs_inode *ip);
  
- 	*ipp = ip;
- 	return 0;
++#define XFS_DEFAULT_COWEXTSZ_HINT 32
++
+ #endif /* __XFS_INODE_H__ */
+diff --git a/libxfs/libxfs_priv.h b/libxfs/libxfs_priv.h
+index 63bc6ea7c2b..716e711cde4 100644
+--- a/libxfs/libxfs_priv.h
++++ b/libxfs/libxfs_priv.h
+@@ -508,8 +508,6 @@ void __xfs_buf_mark_corrupt(struct xfs_buf *bp, xfs_failaddr_t fa);
+ 
+ #define xfs_rotorstep				1
+ #define xfs_bmap_rtalloc(a)			(-ENOSYS)
+-#define xfs_get_extsz_hint(ip)			(0)
+-#define xfs_get_cowextsz_hint(ip)		(0)
+ #define xfs_inode_is_filestream(ip)		(0)
+ #define xfs_filestream_lookup_ag(ip)		(0)
+ #define xfs_filestream_new_ag(ip,ag)		(0)
+diff --git a/libxfs/xfs_bmap.c b/libxfs/xfs_bmap.c
+index f2af8a012a9..c4a81537ccf 100644
+--- a/libxfs/xfs_bmap.c
++++ b/libxfs/xfs_bmap.c
+@@ -6406,3 +6406,44 @@ xfs_bmap_query_all(
+ 
+ 	return xfs_btree_query_all(cur, xfs_bmap_query_range_helper, &query);
+ }
++
++/* Helper function to extract extent size hint from inode */
++xfs_extlen_t
++xfs_get_extsz_hint(
++	struct xfs_inode	*ip)
++{
++	/*
++	 * No point in aligning allocations if we need to COW to actually
++	 * write to them.
++	 */
++	if (xfs_is_always_cow_inode(ip))
++		return 0;
++	if ((ip->i_diflags & XFS_DIFLAG_EXTSIZE) && ip->i_extsize)
++		return ip->i_extsize;
++	if (XFS_IS_REALTIME_INODE(ip))
++		return ip->i_mount->m_sb.sb_rextsize;
++	return 0;
++}
++
++/*
++ * Helper function to extract CoW extent size hint from inode.
++ * Between the extent size hint and the CoW extent size hint, we
++ * return the greater of the two.  If the value is zero (automatic),
++ * use the default size.
++ */
++xfs_extlen_t
++xfs_get_cowextsz_hint(
++	struct xfs_inode	*ip)
++{
++	xfs_extlen_t		a, b;
++
++	a = 0;
++	if (ip->i_diflags2 & XFS_DIFLAG2_COWEXTSIZE)
++		a = ip->i_cowextsize;
++	b = xfs_get_extsz_hint(ip);
++
++	a = max(a, b);
++	if (a == 0)
++		return XFS_DEFAULT_COWEXTSZ_HINT;
++	return a;
++}
+diff --git a/libxfs/xfs_bmap.h b/libxfs/xfs_bmap.h
+index 9559f7174bb..d870c6a62e4 100644
+--- a/libxfs/xfs_bmap.h
++++ b/libxfs/xfs_bmap.h
+@@ -292,4 +292,7 @@ typedef int (*xfs_bmap_query_range_fn)(
+ int xfs_bmap_query_all(struct xfs_btree_cur *cur, xfs_bmap_query_range_fn fn,
+ 		void *priv);
+ 
++xfs_extlen_t	xfs_get_extsz_hint(struct xfs_inode *ip);
++xfs_extlen_t	xfs_get_cowextsz_hint(struct xfs_inode *ip);
++
+ #endif	/* __XFS_BMAP_H__ */
 
