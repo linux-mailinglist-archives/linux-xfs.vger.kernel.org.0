@@ -2,41 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9E7D659D2A
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:47:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2329659D2D
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:48:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235659AbiL3Wrc (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:47:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56550 "EHLO
+        id S235524AbiL3WsQ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:48:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235576AbiL3Wr3 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:47:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2306317890
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:47:28 -0800 (PST)
+        with ESMTP id S235164AbiL3WsP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:48:15 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC6D818E1D
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:48:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B00FD61C0D
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:47:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D65BC433EF;
-        Fri, 30 Dec 2022 22:47:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65DA161B98
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:48:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB05C433D2;
+        Fri, 30 Dec 2022 22:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440447;
-        bh=gLALxO6vu3f2MrlWn71+XGvrEL+6CGkqeF/7ddnjWso=;
+        s=k20201202; t=1672440493;
+        bh=YvduKITYQLysOZfOehPGaUEqSmlIeOQn1oMlna0q49E=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=k90frXERr/Y3lt+iy9j9w+tNZrC2ye6cpfBG7asJJSQhdwa2NCBeu8spKIQuzH2Cv
-         JBUDEOaAn/7bpoWIzDZEyHXktgxG2+94DOM/w+6mbk456M4+QBUsnWOfv4ROr/Iv+z
-         kjr18hH6TuxIn7ub0RGWC1+2Cr34qRys3iA9txEs3HE+7Mfi/qJ1zpjfyADTXwlKqn
-         51obylba3qJ6rJi3NFfkm/Fw1TTHeoyEqAH/d0W2oKvxYgo+3yOem6NlS+ePhHB41a
-         uEQ0PvD/+m/0q6x/8UiQ9f1fOobDUlt+2rolaGCsHAE44GmQCHRmaJn5sLVwq0oPCx
-         QmnWMJAvxSSag==
-Subject: [PATCH 3/6] xfs: flag free space btree records that could be merged
+        b=jZysfg+EdXbxeKdqJbtwn4KTXHaUxFsXX3u1Vx1p3mo2WP1HFabmdgjCE9ZcZWeAh
+         1vHeobEr6aobzidOAIHuk42jGPlpmkNQ31jLUvRjq8HMCEAlhU7jdyEqdBFr6z+KEf
+         jO60D/VHHsHWmxpD814zKuxuqAOaC5hb7DBEEIPpuqdw5jg9qzd1kSvqQct8Q8rf1C
+         AEFaKGy9ikF29zAYOyEKcy1Z+D/4pmmcPqFZoB11iDiLLRpVdGpVIfmUvjxRL1Ypv3
+         BHt4DXm7kKGaCY/c+Kfkxew5znP+LX7iaBv1K97Q/CXynpUaiYOrpVda8X0BwsIjLi
+         Fuc9kZmuqPWIQ==
+Subject: [PATCH 6/6] xfs: check for reverse mapping records that could be
+ merged
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:11:42 -0800
-Message-ID: <167243830266.686829.7580042084001634501.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:11:43 -0800
+Message-ID: <167243830308.686829.2436455458356097769.stgit@magnolia>
 In-Reply-To: <167243830218.686829.12866790282629472160.stgit@magnolia>
 References: <167243830218.686829.12866790282629472160.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,83 +55,89 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Complain if we encounter free space btree records that could be merged.
+Enhance the rmap scrubber to flag adjacent records that could be merged.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/alloc.c |   29 ++++++++++++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
+ fs/xfs/scrub/rmap.c |   52 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/alloc.c b/fs/xfs/scrub/alloc.c
-index e9f8d29544aa..94f4b836c48d 100644
---- a/fs/xfs/scrub/alloc.c
-+++ b/fs/xfs/scrub/alloc.c
-@@ -31,6 +31,12 @@ xchk_setup_ag_allocbt(
+diff --git a/fs/xfs/scrub/rmap.c b/fs/xfs/scrub/rmap.c
+index 270c4f1e76c9..3cb92f7ac165 100644
+--- a/fs/xfs/scrub/rmap.c
++++ b/fs/xfs/scrub/rmap.c
+@@ -39,6 +39,12 @@ struct xchk_rmap {
+ 	 * allocations that cannot be shared.
+ 	 */
+ 	struct xfs_rmap_irec	overlap_rec;
++
++	/*
++	 * The previous rmapbt record, so that we can check for two records
++	 * that could be one.
++	 */
++	struct xfs_rmap_irec	prev_rec;
+ };
+ 
+ /* Cross-reference a rmap against the refcount btree. */
+@@ -198,6 +204,51 @@ xchk_rmapbt_check_overlapping(
+ 	memcpy(&cr->overlap_rec, irec, sizeof(struct xfs_rmap_irec));
  }
  
- /* Free space btree scrubber. */
++/* Decide if two reverse-mapping records can be merged. */
++static inline bool
++xchk_rmap_mergeable(
++	struct xchk_rmap		*cr,
++	const struct xfs_rmap_irec	*r2)
++{
++	const struct xfs_rmap_irec	*r1 = &cr->prev_rec;
 +
-+struct xchk_alloc {
-+	/* Previous free space extent. */
-+	struct xfs_alloc_rec_incore	prev;
-+};
++	/* Ignore if prev_rec is not yet initialized. */
++	if (cr->prev_rec.rm_blockcount == 0)
++		return false;
 +
- /*
-  * Ensure there's a corresponding cntbt/bnobt record matching this
-  * bnobt/cntbt record, respectively.
-@@ -93,6 +99,24 @@ xchk_allocbt_xref(
- 	xchk_xref_is_not_cow_staging(sc, agbno, len);
- }
- 
++	if (r1->rm_owner != r2->rm_owner)
++		return false;
++	if (r1->rm_startblock + r1->rm_blockcount != r2->rm_startblock)
++		return false;
++	if ((unsigned long long)r1->rm_blockcount + r2->rm_blockcount >
++	    XFS_RMAP_LEN_MAX)
++		return false;
++	if (XFS_RMAP_NON_INODE_OWNER(r2->rm_owner))
++		return true;
++	/* must be an inode owner below here */
++	if (r1->rm_flags != r2->rm_flags)
++		return false;
++	if (r1->rm_flags & XFS_RMAP_BMBT_BLOCK)
++		return true;
++	return r1->rm_offset + r1->rm_blockcount == r2->rm_offset;
++}
++
 +/* Flag failures for records that could be merged. */
 +STATIC void
-+xchk_allocbt_mergeable(
-+	struct xchk_btree	*bs,
-+	struct xchk_alloc	*ca,
-+	const struct xfs_alloc_rec_incore *irec)
++xchk_rmapbt_check_mergeable(
++	struct xchk_btree		*bs,
++	struct xchk_rmap		*cr,
++	const struct xfs_rmap_irec	*irec)
 +{
 +	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
 +		return;
 +
-+	if (ca->prev.ar_blockcount > 0 &&
-+	    ca->prev.ar_startblock + ca->prev.ar_blockcount == irec->ar_startblock &&
-+	    ca->prev.ar_blockcount + irec->ar_blockcount < (uint32_t)~0U)
++	if (xchk_rmap_mergeable(cr, irec))
 +		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
 +
-+	memcpy(&ca->prev, irec, sizeof(*irec));
++	memcpy(&cr->prev_rec, irec, sizeof(struct xfs_rmap_irec));
 +}
 +
- /* Scrub a bnobt/cntbt record. */
+ /* Scrub an rmapbt record. */
  STATIC int
- xchk_allocbt_rec(
-@@ -100,6 +124,7 @@ xchk_allocbt_rec(
- 	const union xfs_btree_rec	*rec)
- {
- 	struct xfs_alloc_rec_incore	irec;
-+	struct xchk_alloc	*ca = bs->private;
- 
- 	xfs_alloc_btrec_to_irec(rec, &irec);
- 	if (xfs_alloc_check_irec(bs->cur, &irec) != NULL) {
-@@ -107,6 +132,7 @@ xchk_allocbt_rec(
- 		return 0;
+ xchk_rmapbt_rec(
+@@ -214,6 +265,7 @@ xchk_rmapbt_rec(
  	}
  
-+	xchk_allocbt_mergeable(bs, ca, &irec);
- 	xchk_allocbt_xref(bs->sc, &irec);
- 
+ 	xchk_rmapbt_check_unwritten_in_keyflags(bs);
++	xchk_rmapbt_check_mergeable(bs, cr, &irec);
+ 	xchk_rmapbt_check_overlapping(bs, cr, &irec);
+ 	xchk_rmapbt_xref(bs->sc, &irec);
  	return 0;
-@@ -118,10 +144,11 @@ xchk_allocbt(
- 	struct xfs_scrub	*sc,
- 	xfs_btnum_t		which)
- {
-+	struct xchk_alloc	ca = { };
- 	struct xfs_btree_cur	*cur;
- 
- 	cur = which == XFS_BTNUM_BNO ? sc->sa.bno_cur : sc->sa.cnt_cur;
--	return xchk_btree(sc, cur, xchk_allocbt_rec, &XFS_RMAP_OINFO_AG, NULL);
-+	return xchk_btree(sc, cur, xchk_allocbt_rec, &XFS_RMAP_OINFO_AG, &ca);
- }
- 
- int
 
