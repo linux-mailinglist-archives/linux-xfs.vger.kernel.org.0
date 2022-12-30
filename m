@@ -2,41 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A9D6659FFD
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:51:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6621659FFF
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:51:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235971AbiLaAvL (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:51:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
+        id S235976AbiLaAvo (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:51:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235961AbiLaAvL (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:51:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5C61C921;
-        Fri, 30 Dec 2022 16:51:09 -0800 (PST)
+        with ESMTP id S235973AbiLaAvo (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:51:44 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C8B164AF;
+        Fri, 30 Dec 2022 16:51:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D0CA661D14;
-        Sat, 31 Dec 2022 00:51:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32776C433D2;
-        Sat, 31 Dec 2022 00:51:08 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 140A4CE19E1;
+        Sat, 31 Dec 2022 00:51:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54084C433D2;
+        Sat, 31 Dec 2022 00:51:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672447868;
-        bh=oyyuHur/DXFNz7J/oQoWbdhwO+6Pd55fMwPnIveT6oY=;
+        s=k20201202; t=1672447899;
+        bh=9i7Y2aQnrCVI4oRd3YBxQ1nAoeN3pV8ynsITdPc06eM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oT/k8+TVCSh/w68Bf8eKyGJMKavtSEqCl3aLgNPAfWTBBSU1bwnQ6kDuPnfBrkpvz
-         QUnBycc4D2+9zY7yfeqKmDhdAyRwVy04q9YZAxAiKL4msRdMZLC1BUXXaMxaiuICs5
-         5pQk/zLz02qjxbIuJZY3Pkh9iZtaO6UE2l56gq6OEQvDdVKvit9o7TSGuA8BH0riAE
-         PI3EvrmA9N6xlebqXJTaj5440G6jQ7ALhAzd2tnE4wOzpNtlaw1bSlauDVB9Al7m47
-         qEp9Ws6vOIJKZwX9I25rt2eZzhwvzK74RuqodQxgeCUrorvMekJkK6bs2aTGoSi1Px
-         SDT4RDl3NxpEA==
-Subject: [PATCH 3/5] fuzzy: test fuzzing realtime free space metadata
+        b=R3zXEi+sZILhSyHveMSTAq2qvBnBWg7BjRW1iZTcjFmS5pffMPVzwTn7JQxvbqnvb
+         THoe4M/ODslYow9jRQhJ0f/b+wJEezkpFuGKwMc+efO3/EY52plHQcH9DaOdYyWxAK
+         GGioqrssebP4plwqIBDuJXX89U6ltvEaZvZGge0gpaxwA29hvrTHM8fDxfe4ZC0Rgz
+         iPIlWGefS5VXC1mzz/KQ9WhOTDxRXd5CM5ynTGwnVTSSJou0edRC3UgC9RlOlb71o3
+         bZr48If4afayHAj2AVT8fW3S9O4f+TkSOlRV0vCapgxIQ43bvXIrUZQLNn0ANlGGgv
+         FHlkOvE/ZMPdw==
+Subject: [PATCH 5/5] fuzzy: fuzz test key/pointers of inode btrees
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:19:45 -0800
-Message-ID: <167243878509.731641.14915208406311416359.stgit@magnolia>
+Message-ID: <167243878535.731641.3126908985481377916.stgit@magnolia>
 In-Reply-To: <167243878469.731641.981302372644525592.stgit@magnolia>
 References: <167243878469.731641.981302372644525592.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -54,331 +54,47 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Fuzz the contents of the realtime bitmap and summary files to see what
-happens.
+Test what happens when we fuzz the key/pointer blocks (aka the interior
+nodes) of the inode btree.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/fuzzy       |  107 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- tests/xfs/1562     |   41 ++++++++++++++++++++
- tests/xfs/1562.out |    4 ++
- tests/xfs/1563     |   41 ++++++++++++++++++++
- tests/xfs/1563.out |    4 ++
- tests/xfs/1564     |   41 ++++++++++++++++++++
- tests/xfs/1564.out |    4 ++
- tests/xfs/1565     |   41 ++++++++++++++++++++
- tests/xfs/1565.out |    4 ++
- tests/xfs/1566     |   42 ++++++++++++++++++++
- tests/xfs/1566.out |    4 ++
- tests/xfs/1567     |   42 ++++++++++++++++++++
- tests/xfs/1567.out |    4 ++
- tests/xfs/1568     |   41 ++++++++++++++++++++
- tests/xfs/1568.out |    4 ++
- tests/xfs/1569     |   41 ++++++++++++++++++++
- tests/xfs/1569.out |    4 ++
- 17 files changed, 465 insertions(+), 4 deletions(-)
- create mode 100755 tests/xfs/1562
- create mode 100644 tests/xfs/1562.out
- create mode 100755 tests/xfs/1563
- create mode 100644 tests/xfs/1563.out
- create mode 100755 tests/xfs/1564
- create mode 100644 tests/xfs/1564.out
- create mode 100755 tests/xfs/1565
- create mode 100644 tests/xfs/1565.out
- create mode 100755 tests/xfs/1566
- create mode 100644 tests/xfs/1566.out
- create mode 100755 tests/xfs/1567
- create mode 100644 tests/xfs/1567.out
- create mode 100755 tests/xfs/1568
- create mode 100644 tests/xfs/1568.out
- create mode 100755 tests/xfs/1569
- create mode 100644 tests/xfs/1569.out
+ tests/xfs/1570     |   36 ++++++++++++++++++++++++++++++++++++
+ tests/xfs/1570.out |    4 ++++
+ tests/xfs/1571     |   36 ++++++++++++++++++++++++++++++++++++
+ tests/xfs/1571.out |    4 ++++
+ tests/xfs/1572     |   38 ++++++++++++++++++++++++++++++++++++++
+ tests/xfs/1572.out |    4 ++++
+ tests/xfs/1573     |   37 +++++++++++++++++++++++++++++++++++++
+ tests/xfs/1573.out |    4 ++++
+ 8 files changed, 163 insertions(+)
+ create mode 100755 tests/xfs/1570
+ create mode 100644 tests/xfs/1570.out
+ create mode 100755 tests/xfs/1571
+ create mode 100644 tests/xfs/1571.out
+ create mode 100755 tests/xfs/1572
+ create mode 100755 tests/xfs/1572.out
+ create mode 100755 tests/xfs/1573
+ create mode 100644 tests/xfs/1573.out
 
 
-diff --git a/common/fuzzy b/common/fuzzy
-index d8eb7d8b72..ef54f2fe2c 100644
---- a/common/fuzzy
-+++ b/common/fuzzy
-@@ -154,6 +154,12 @@ _scratch_xfs_dump_metadata() {
- 	_scratch_xfs_db "${cmds[@]}" -c print
- }
- 
-+# Decide from the output of the xfs_db "stack" command if the debugger's io
-+# cursor is pointed at a block that is an unstructured data format (blob).
-+__scratch_xfs_detect_blob_from_stack() {
-+	grep -q -E 'inode.*, type (data|rtsummary|rtbitmap)'
-+}
-+
- # Navigate to some part of the filesystem and print the field info.
- # The first argument is an grep filter for the fields
- # The rest of the arguments are xfs_db commands to locate the metadata.
-@@ -169,7 +175,17 @@ _scratch_xfs_list_metadata_fields() {
- 	for arg in "$@"; do
- 		cmds+=("-c" "${arg}")
- 	done
--	_scratch_xfs_db "${cmds[@]}" -c print | __filter_xfs_db_print_fields "${filter}"
-+
-+	# Does the path argument point towards something that is an
-+	# unstructured blob?
-+	if _scratch_xfs_db "${cmds[@]}" -c stack 2>/dev/null | \
-+			__scratch_xfs_detect_blob_from_stack; then
-+		echo "<blob>"
-+		return
-+	fi
-+
-+	_scratch_xfs_db "${cmds[@]}" -c print | \
-+		__filter_xfs_db_print_fields "${filter}"
- }
- 
- # Fuzz a metadata field
-@@ -207,6 +223,70 @@ _scratch_xfs_fuzz_metadata_field() {
- 	return 0
- }
- 
-+# List the fuzzing verbs available for unstructured blobs
-+__scratch_xfs_list_blob_fuzz_verbs() {
-+		cat << ENDL
-+zeroes
-+ones
-+firstbit
-+middlebit
-+lastbit
-+random
-+ENDL
-+}
-+
-+# Fuzz a metadata blob
-+# The first arg is a blob fuzzing verb
-+# The rest of the arguments are xfs_db commands to find the metadata.
-+_scratch_xfs_fuzz_metadata_blob() {
-+	local fuzzverb="$1"
-+	shift
-+	local trashcmd=(blocktrash -z)
-+
-+	local cmds=()
-+	for arg in "$@"; do
-+		cmds+=("-c" "${arg}")
-+	done
-+
-+	local bytecount=$(_scratch_xfs_db "${cmds[@]}" -c "stack" | grep 'byte.*length' | awk '{print $5}')
-+	local bitmax=$((bytecount * 8))
-+
-+	case "${fuzzverb}" in
-+	"zeroes")
-+		trashcmd+=(-0 -o 0 -x "${bitmax}" -y "${bitmax}");;
-+	"ones")
-+		trashcmd+=(-1 -o 0 -x "${bitmax}" -y "${bitmax}");;
-+	"firstbit")
-+		trashcmd+=(-2 -o 0 -x 1 -y 1);;
-+	"middlebit")
-+		trashcmd+=(-2 -o $((bitmax / 2)) -x 1 -y 1);;
-+	"lastbit")
-+		trashcmd+=(-2 -o "${bitmax}" -x 1 -y 1);;
-+	"random")
-+		trashcmd+=(-3 -o 0 -x "${bitmax}" -y "${bitmax}");;
-+	*)
-+		echo "Unknown blob fuzz verb \"${fuzzverb}\"."
-+		return 1
-+		;;
-+	esac
-+
-+	trashcmd="${trashcmd[@]}"
-+	oldval="$(_scratch_xfs_get_metadata_field "" "$@")"
-+	while true; do
-+		_scratch_xfs_db -x "${cmds[@]}" -c "${trashcmd}"
-+		echo
-+		newval="$(_scratch_xfs_get_metadata_field "" "$@" 2> /dev/null)"
-+		if [ "${fuzzverb}" != "random" ] || [ "${oldval}" != "${newval}" ]; then
-+			break;
-+		fi
-+	done
-+	if [ "${oldval}" = "${newval}" ]; then
-+		echo "Blob already set to new value, skipping test."
-+		return 1
-+	fi
-+	return 0
-+}
-+
- # Try to forcibly unmount the scratch fs
- __scratch_xfs_fuzz_unmount()
- {
-@@ -503,7 +583,11 @@ __scratch_xfs_fuzz_field_test() {
- 
- 	# Set the new field value
- 	__fuzz_notify "+ Fuzz ${field} = ${fuzzverb}"
--	_scratch_xfs_fuzz_metadata_field "${field}" ${fuzzverb} "$@"
-+	if [ "$field" = "<blob>" ]; then
-+		_scratch_xfs_fuzz_metadata_blob ${fuzzverb} "$@"
-+	else
-+		_scratch_xfs_fuzz_metadata_field "${field}" ${fuzzverb} "$@"
-+	fi
- 	res=$?
- 	test $res -ne 0 && return
- 
-@@ -587,7 +671,22 @@ _scratch_xfs_list_fuzz_verbs() {
- 		echo "${SCRATCH_XFS_LIST_FUZZ_VERBS}" | tr '[ ,]' '[\n\n]'
- 		return;
- 	fi
--	_scratch_xfs_db -x -c 'sb 0' -c 'fuzz' | grep '^Fuzz commands:' | \
-+
-+	local cmds=()
-+	for arg in "$@"; do
-+		cmds+=("-c" "${arg}")
-+	done
-+	test "${#cmds[@]}" -eq 0 && cmds=('-c' 'sb 0')
-+
-+	# Does the path argument point towards something that is an
-+	# unstructured blob?
-+	if _scratch_xfs_db "${cmds[@]}" -c stack 2>/dev/null | \
-+			__scratch_xfs_detect_blob_from_stack; then
-+		__scratch_xfs_list_blob_fuzz_verbs
-+		return
-+	fi
-+
-+	_scratch_xfs_db -x "${cmds[@]}" -c 'fuzz' | grep '^Fuzz commands:' | \
- 		sed -e 's/[,.]//g' -e 's/Fuzz commands: //g' -e 's/ /\n/g' | \
- 		grep -v '^random$'
- }
-@@ -605,7 +704,7 @@ _scratch_xfs_fuzz_metadata() {
- 	shift; shift
- 
- 	fields="$(_scratch_xfs_list_metadata_fields "${filter}" "$@")"
--	verbs="$(_scratch_xfs_list_fuzz_verbs)"
-+	verbs="$(_scratch_xfs_list_fuzz_verbs "$@")"
- 	echo "Fields we propose to fuzz with the \"${repair}\" repair strategy: $@"
- 	echo $(echo "${fields}")
- 	echo "Verbs we propose to fuzz with:"
-diff --git a/tests/xfs/1562 b/tests/xfs/1562
+diff --git a/tests/xfs/1570 b/tests/xfs/1570
 new file mode 100755
-index 0000000000..015209eeb2
+index 0000000000..c2d144e298
 --- /dev/null
-+++ b/tests/xfs/1562
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1570
+@@ -0,0 +1,36 @@
 +#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle, Inc.  All Rights Reserved.
 +#
-+# FS QA Test No. 1562
++# FS QA Test No. 1570
 +#
-+# Populate a XFS filesystem and fuzz every realtime bitmap field.
-+# Use xfs_scrub to fix the corruption.
-+
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_realtime
-+_require_scratch_xfs_fuzz_fields
-+_disable_dmesg_check
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+echo "Fuzz rtbitmap"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.bitmap')
-+else
-+	path=('sb' 'addr rbmino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'online' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtbitmap"
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1562.out b/tests/xfs/1562.out
-new file mode 100644
-index 0000000000..63a3bc7600
---- /dev/null
-+++ b/tests/xfs/1562.out
-@@ -0,0 +1,4 @@
-+QA output created by 1562
-+Format and populate
-+Fuzz rtbitmap
-+Done fuzzing rtbitmap
-diff --git a/tests/xfs/1563 b/tests/xfs/1563
-new file mode 100755
-index 0000000000..2be0870a3d
---- /dev/null
-+++ b/tests/xfs/1563
-@@ -0,0 +1,41 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1563
-+#
-+# Populate a XFS filesystem and fuzz every realtime summary field.
-+# Use xfs_scrub to fix the corruption.
-+
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair realtime
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_realtime
-+_require_scratch_xfs_fuzz_fields
-+_disable_dmesg_check
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+echo "Fuzz rtsummary"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.summary')
-+else
-+	path=('sb' 'addr rsumino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'online' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtsummary"
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1563.out b/tests/xfs/1563.out
-new file mode 100644
-index 0000000000..e4ca8c3733
---- /dev/null
-+++ b/tests/xfs/1563.out
-@@ -0,0 +1,4 @@
-+QA output created by 1563
-+Format and populate
-+Fuzz rtsummary
-+Done fuzzing rtsummary
-diff --git a/tests/xfs/1564 b/tests/xfs/1564
-new file mode 100755
-index 0000000000..c0d10ff0e9
---- /dev/null
-+++ b/tests/xfs/1564
-@@ -0,0 +1,41 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1564
-+#
-+# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Populate a XFS filesystem and fuzz every inobt key/pointer field.
 +# Use xfs_repair to fix the corruption.
-+
++#
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -389,53 +105,48 @@ index 0000000000..c0d10ff0e9
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
 +_require_scratch_xfs_fuzz_fields
-+_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+echo "Fuzz rtbitmap"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.bitmap')
-+else
-+	path=('sb' 'addr rbmino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'offline' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtbitmap"
++path="$(_scratch_xfs_find_agbtree_height 'ino' 2)" || \
++	_fail "could not find two-level inobt"
++
++echo "Fuzz inobt"
++_scratch_xfs_fuzz_metadata '' 'offline'  "$path" 'addr root' >> $seqres.full
++echo "Done fuzzing inobt"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1564.out b/tests/xfs/1564.out
+diff --git a/tests/xfs/1570.out b/tests/xfs/1570.out
 new file mode 100644
-index 0000000000..afede817b8
+index 0000000000..b3977dca57
 --- /dev/null
-+++ b/tests/xfs/1564.out
++++ b/tests/xfs/1570.out
 @@ -0,0 +1,4 @@
-+QA output created by 1564
++QA output created by 1570
 +Format and populate
-+Fuzz rtbitmap
-+Done fuzzing rtbitmap
-diff --git a/tests/xfs/1565 b/tests/xfs/1565
++Fuzz inobt
++Done fuzzing inobt
+diff --git a/tests/xfs/1571 b/tests/xfs/1571
 new file mode 100755
-index 0000000000..6b4186fb3c
+index 0000000000..c64b321ff6
 --- /dev/null
-+++ b/tests/xfs/1565
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1571
+@@ -0,0 +1,36 @@
 +#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle, Inc.  All Rights Reserved.
 +#
-+# FS QA Test No. 1565
++# FS QA Test No. 1571
 +#
-+# Populate a XFS filesystem and fuzz every realtime summary field.
-+# Use xfs_repair to fix the corruption.
-+
++# Populate a XFS filesystem and fuzz every inobt key/pointer field.
++# Use xfs_scrub to fix the corruption.
++#
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_repair realtime
++_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_online_repair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -446,54 +157,49 @@ index 0000000000..6b4186fb3c
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
 +_require_scratch_xfs_fuzz_fields
-+_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+echo "Fuzz rtsummary"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.summary')
-+else
-+	path=('sb' 'addr rsumino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'offline' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtsummary"
++path="$(_scratch_xfs_find_agbtree_height 'ino' 2)" || \
++	_fail "could not find two-level inobt"
++
++echo "Fuzz inobt"
++_scratch_xfs_fuzz_metadata '' 'online'  "$path" 'addr root' >> $seqres.full
++echo "Done fuzzing inobt"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1565.out b/tests/xfs/1565.out
+diff --git a/tests/xfs/1571.out b/tests/xfs/1571.out
 new file mode 100644
-index 0000000000..7a8d9d04d6
+index 0000000000..292e8bdec4
 --- /dev/null
-+++ b/tests/xfs/1565.out
++++ b/tests/xfs/1571.out
 @@ -0,0 +1,4 @@
-+QA output created by 1565
++QA output created by 1571
 +Format and populate
-+Fuzz rtsummary
-+Done fuzzing rtsummary
-diff --git a/tests/xfs/1566 b/tests/xfs/1566
++Fuzz inobt
++Done fuzzing inobt
+diff --git a/tests/xfs/1572 b/tests/xfs/1572
 new file mode 100755
-index 0000000000..8d0f61ae10
+index 0000000000..abcdc2397f
 --- /dev/null
-+++ b/tests/xfs/1566
-@@ -0,0 +1,42 @@
++++ b/tests/xfs/1572
+@@ -0,0 +1,38 @@
 +#! /bin/bash
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# Copyright (c) 2022 Oracle.  All Rights Reserved.
 +#
-+# FS QA Test No. 1566
++# FS QA Test No. 1572
 +#
-+# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Populate a XFS filesystem and fuzz every inobt key/pointer field.
 +# Try online repair and, if necessary, offline repair,
 +# to test the most likely usage pattern.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_bothrepair realtime
++_begin_fstest dangerous_fuzzers dangerous_bothrepair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -504,111 +210,49 @@ index 0000000000..8d0f61ae10
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+echo "Fuzz rtbitmap"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.bitmap')
-+else
-+	path=('sb' 'addr rbmino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'both' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtbitmap"
++path="$(_scratch_xfs_find_agbtree_height 'ino' 2)" || \
++	_fail "could not find two-level inobt"
++
++echo "Fuzz inobt"
++_scratch_xfs_fuzz_metadata '' 'both'  "$path" 'addr root' >> $seqres.full
++echo "Done fuzzing inobt"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1566.out b/tests/xfs/1566.out
-new file mode 100644
-index 0000000000..d50e1d8539
---- /dev/null
-+++ b/tests/xfs/1566.out
-@@ -0,0 +1,4 @@
-+QA output created by 1566
-+Format and populate
-+Fuzz rtbitmap
-+Done fuzzing rtbitmap
-diff --git a/tests/xfs/1567 b/tests/xfs/1567
+diff --git a/tests/xfs/1572.out b/tests/xfs/1572.out
 new file mode 100755
-index 0000000000..7dc2012b67
+index 0000000000..8afa3ea075
 --- /dev/null
-+++ b/tests/xfs/1567
-@@ -0,0 +1,42 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1567
-+#
-+# Populate a XFS filesystem and fuzz every realtime summary field.
-+# Try online repair and, if necessary, offline repair,
-+# to test the most likely usage pattern.
-+
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_bothrepair realtime
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_realtime
-+_require_scratch_xfs_fuzz_fields
-+_disable_dmesg_check
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+echo "Fuzz rtsummary"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.summary')
-+else
-+	path=('sb' 'addr rsumino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'both' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtsummary"
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1567.out b/tests/xfs/1567.out
-new file mode 100644
-index 0000000000..b88fa0c1b3
---- /dev/null
-+++ b/tests/xfs/1567.out
++++ b/tests/xfs/1572.out
 @@ -0,0 +1,4 @@
-+QA output created by 1567
++QA output created by 1572
 +Format and populate
-+Fuzz rtsummary
-+Done fuzzing rtsummary
-diff --git a/tests/xfs/1568 b/tests/xfs/1568
++Fuzz inobt
++Done fuzzing inobt
+diff --git a/tests/xfs/1573 b/tests/xfs/1573
 new file mode 100755
-index 0000000000..c80640ef97
+index 0000000000..7a816e59b8
 --- /dev/null
-+++ b/tests/xfs/1568
-@@ -0,0 +1,41 @@
++++ b/tests/xfs/1573
+@@ -0,0 +1,37 @@
 +#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2022 Oracle, Inc.  All rights reserved.
 +#
-+# FS QA Test No. 1568
++# FS QA Test No. 1573
 +#
-+# Populate a XFS filesystem and fuzz every realtime bitmap field.
++# Populate a XFS filesystem and fuzz every inobt key/pointer field.
 +# Do not fix the filesystem, to test metadata verifiers.
 +
 +. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_norepair realtime
++_begin_fstest dangerous_fuzzers dangerous_norepair
 +
 +_register_cleanup "_cleanup" BUS
 +
@@ -619,91 +263,30 @@ index 0000000000..c80640ef97
 +
 +# real QA test starts here
 +_supported_fs xfs
-+_require_realtime
 +_require_scratch_xfs_fuzz_fields
 +_disable_dmesg_check
 +
 +echo "Format and populate"
 +_scratch_populate_cached nofill > $seqres.full 2>&1
 +
-+echo "Fuzz rtbitmap"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.bitmap')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.bitmap')
-+else
-+	path=('sb' 'addr rbmino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'none' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtbitmap"
++path="$(_scratch_xfs_find_agbtree_height 'ino' 2)" || \
++	_fail "could not find two-level inobt"
++
++echo "Fuzz inobt"
++_scratch_xfs_fuzz_metadata '' 'none'  "$path" 'addr root' >> $seqres.full
++echo "Done fuzzing inobt"
 +
 +# success, all done
 +status=0
 +exit
-diff --git a/tests/xfs/1568.out b/tests/xfs/1568.out
+diff --git a/tests/xfs/1573.out b/tests/xfs/1573.out
 new file mode 100644
-index 0000000000..a80f579662
+index 0000000000..cef5aef758
 --- /dev/null
-+++ b/tests/xfs/1568.out
++++ b/tests/xfs/1573.out
 @@ -0,0 +1,4 @@
-+QA output created by 1568
++QA output created by 1573
 +Format and populate
-+Fuzz rtbitmap
-+Done fuzzing rtbitmap
-diff --git a/tests/xfs/1569 b/tests/xfs/1569
-new file mode 100755
-index 0000000000..e303f08ff5
---- /dev/null
-+++ b/tests/xfs/1569
-@@ -0,0 +1,41 @@
-+#! /bin/bash
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (c) 2022 Oracle.  All Rights Reserved.
-+#
-+# FS QA Test No. 1569
-+#
-+# Populate a XFS filesystem and fuzz every realtime summary field.
-+# Do not fix the filesystem, to test metadata verifiers.
-+
-+. ./common/preamble
-+_begin_fstest dangerous_fuzzers dangerous_scrub dangerous_norepair realtime
-+
-+_register_cleanup "_cleanup" BUS
-+
-+# Import common functions.
-+. ./common/filter
-+. ./common/populate
-+. ./common/fuzzy
-+
-+# real QA test starts here
-+_supported_fs xfs
-+_require_realtime
-+_require_scratch_xfs_fuzz_fields
-+_disable_dmesg_check
-+
-+echo "Format and populate"
-+_scratch_populate_cached nofill > $seqres.full 2>&1
-+
-+echo "Fuzz rtsummary"
-+is_metadir=$(_scratch_xfs_get_metadata_field "core.version" 'path -m /realtime/0.summary')
-+if [ -n "$is_metadir" ]; then
-+	path=('path -m /realtime/0.summary')
-+else
-+	path=('sb' 'addr rsumino')
-+fi
-+_scratch_xfs_fuzz_metadata '' 'none' "${path[@]}" 'dblock 0' >> $seqres.full
-+echo "Done fuzzing rtsummary"
-+
-+# success, all done
-+status=0
-+exit
-diff --git a/tests/xfs/1569.out b/tests/xfs/1569.out
-new file mode 100644
-index 0000000000..d6202cc3af
---- /dev/null
-+++ b/tests/xfs/1569.out
-@@ -0,0 +1,4 @@
-+QA output created by 1569
-+Format and populate
-+Fuzz rtsummary
-+Done fuzzing rtsummary
++Fuzz inobt
++Done fuzzing inobt
 
