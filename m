@@ -2,44 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5AB7659D26
-	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:46:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52944659D2B
+	for <lists+linux-xfs@lfdr.de>; Fri, 30 Dec 2022 23:47:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235658AbiL3Wq3 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 17:46:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        id S235661AbiL3Wrr (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 17:47:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235657AbiL3Wq2 (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:46:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708B232F
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:46:27 -0800 (PST)
+        with ESMTP id S235576AbiL3Wrq (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 17:47:46 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EAD818E1D
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 14:47:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 27F76B81D94
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:46:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D45A6C433EF;
-        Fri, 30 Dec 2022 22:46:24 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E8021B81C22
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 22:47:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3EEBC433EF;
+        Fri, 30 Dec 2022 22:47:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672440384;
-        bh=M7xG7Fyk+gJBf/px5MS/SIU2e1OFfD59hvrsPHl3Czg=;
+        s=k20201202; t=1672440462;
+        bh=bhWOl/1vqR0YuHs4vjO3i+h8uUT3KKNKVJPstqBGWiQ=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GooyLBobJqjlSckJawdBNb2o6v0xExUx0vysv6VaUJMPkUkMLirk3pyDd/3eNwaTq
-         45nE11kZtENetLdLla42K0S/masvw3qADSwNkupHad6mds/m8gW36yD088W6Gaaztt
-         lZmakQV1Q6qCyE9aDrKYgfGHVlAggwYTSEhlSqcf4fiAh5CdUb4XpidmjDBYp1Qxzd
-         nJvZp5b2FuURy2x9fzgeV3yl/ETZakuOHMpYiRuW4J936WF4G5HdAdJPWTXOrq/OCo
-         KvwlilCTobVMb55LNoCqnX2ApmXQzBHGgSCUxK5OvGWxL3qEewjHns2Xy4UeJca/6f
-         /w9y5r7FT4Cow==
-Subject: [PATCH 2/3] xfs: xfs_iget in the directory scrubber needs to use
- UNTRUSTED
+        b=p2hTwMg5OLZ+w/2lQ69Z0EnLVpAYDAJv1gORfiwHjGuGQ1yT+i8+QkEd0yAYIwNNR
+         dBg4cgBlJj6tD2AsxB4QmZkwNo1zl7ndUH9+3W6NQ+0fqU6ByooTNq/pTw8lrBcvdL
+         zNoYzhy6Ed7HU/1gynVUhNCQV7JVZONRLqWUzyi37/C4b+eB+h4khmmHrlreUnhBtc
+         2yPthfSAKxLqdQLkC6bjst6l8Fwu1OrAOeJQMCSWZ4UW6LZV/Ct2fPPIYgY+tmd8Gg
+         oucZ5MFHFO3oSMQ5C1hb7vd1/e60enHA3Pj6B5DpNu8nFmPA8L0/zDJsIamr1h7+H4
+         35F1Pwz26xIpQ==
+Subject: [PATCH 4/6] xfs: flag refcount btree records that could be merged
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:11:39 -0800
-Message-ID: <167243829923.686639.14682426697521660335.stgit@magnolia>
-In-Reply-To: <167243829892.686639.6418703789098326027.stgit@magnolia>
-References: <167243829892.686639.6418703789098326027.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:11:42 -0800
+Message-ID: <167243830280.686829.12458104861298123850.stgit@magnolia>
+In-Reply-To: <167243830218.686829.12866790282629472160.stgit@magnolia>
+References: <167243830218.686829.12866790282629472160.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -55,46 +54,81 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-In commit 4b80ac64450f, we tried to strengthen the directory scrubber by
-using the iget call to detect directory entries that point to
-unallocated inodes.  Unfortunately, that commit neglected to pass
-XFS_IGET_UNTRUSTED to xfs_iget, so we don't check the inode btree first.
-If the inode number points to something that isn't even an inode
-cluster, iget will throw corruption errors and return -EFSCORRUPTED,
-which means that we fail to mark the directory corrupt.
+Complain if we encounter refcount btree records that could be merged.
 
-Fixes: 4b80ac64450f ("xfs: scrub should mark a directory corrupt if any entries cannot be iget'd")
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/dir.c |   10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ fs/xfs/scrub/refcount.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 
-diff --git a/fs/xfs/scrub/dir.c b/fs/xfs/scrub/dir.c
-index 677b21c3c865..ec0c73e0eb0c 100644
---- a/fs/xfs/scrub/dir.c
-+++ b/fs/xfs/scrub/dir.c
-@@ -59,19 +59,15 @@ xchk_dir_check_ftype(
- 	}
+diff --git a/fs/xfs/scrub/refcount.c b/fs/xfs/scrub/refcount.c
+index e99c1e1246f8..9d957d2df3e1 100644
+--- a/fs/xfs/scrub/refcount.c
++++ b/fs/xfs/scrub/refcount.c
+@@ -333,6 +333,9 @@ xchk_refcountbt_xref(
+ }
+ 
+ struct xchk_refcbt_records {
++	/* Previous refcount record. */
++	struct xfs_refcount_irec prev_rec;
++
+ 	/* The next AG block where we aren't expecting shared extents. */
+ 	xfs_agblock_t		next_unshared_agbno;
+ 
+@@ -390,6 +393,46 @@ xchk_refcountbt_xref_gaps(
+ 		xchk_should_check_xref(sc, &error, &sc->sa.rmap_cur);
+ }
+ 
++static inline bool
++xchk_refcount_mergeable(
++	struct xchk_refcbt_records	*rrc,
++	const struct xfs_refcount_irec	*r2)
++{
++	const struct xfs_refcount_irec	*r1 = &rrc->prev_rec;
++
++	/* Ignore if prev_rec is not yet initialized. */
++	if (r1->rc_blockcount > 0)
++		return false;
++
++	if (r1->rc_domain != r2->rc_domain)
++		return false;
++	if (r1->rc_startblock + r1->rc_blockcount != r2->rc_startblock)
++		return false;
++	if (r1->rc_refcount != r2->rc_refcount)
++		return false;
++	if ((unsigned long long)r1->rc_blockcount + r2->rc_blockcount >
++			MAXREFCEXTLEN)
++		return false;
++
++	return true;
++}
++
++/* Flag failures for records that could be merged. */
++STATIC void
++xchk_refcountbt_check_mergeable(
++	struct xchk_btree		*bs,
++	struct xchk_refcbt_records	*rrc,
++	const struct xfs_refcount_irec	*irec)
++{
++	if (bs->sc->sm->sm_flags & XFS_SCRUB_OFLAG_CORRUPT)
++		return;
++
++	if (xchk_refcount_mergeable(rrc, irec))
++		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
++
++	memcpy(&rrc->prev_rec, irec, sizeof(struct xfs_refcount_irec));
++}
++
+ /* Scrub a refcountbt record. */
+ STATIC int
+ xchk_refcountbt_rec(
+@@ -414,6 +457,7 @@ xchk_refcountbt_rec(
+ 		xchk_btree_set_corrupt(bs->sc, bs->cur, 0);
+ 	rrc->prev_domain = irec.rc_domain;
+ 
++	xchk_refcountbt_check_mergeable(bs, rrc, &irec);
+ 	xchk_refcountbt_xref(bs->sc, &irec);
  
  	/*
--	 * Grab the inode pointed to by the dirent.  We release the
--	 * inode before we cancel the scrub transaction.  Since we're
--	 * don't know a priori that releasing the inode won't trigger
--	 * eofblocks cleanup (which allocates what would be a nested
--	 * transaction), we can't use DONTCACHE here because DONTCACHE
--	 * inodes can trigger immediate inactive cleanup of the inode.
-+	 * Grab the inode pointed to by the dirent.  Use UNTRUSTED here to
-+	 * check the allocation status of the inode in the inode btrees.
- 	 *
- 	 * If _iget returns -EINVAL or -ENOENT then the child inode number is
- 	 * garbage and the directory is corrupt.  If the _iget returns
- 	 * -EFSCORRUPTED or -EFSBADCRC then the child is corrupt which is a
- 	 *  cross referencing error.  Any other error is an operational error.
- 	 */
--	error = xfs_iget(mp, sdc->sc->tp, inum, 0, 0, &ip);
-+	error = xchk_iget(sdc->sc, inum, &ip);
- 	if (error == -EINVAL || error == -ENOENT) {
- 		error = -EFSCORRUPTED;
- 		xchk_fblock_process_error(sdc->sc, XFS_DATA_FORK, 0, &error);
 
