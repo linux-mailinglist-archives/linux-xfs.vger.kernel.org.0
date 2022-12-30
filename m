@@ -2,43 +2,44 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0790C659EB9
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:49:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F50659EC6
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 00:51:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235398AbiL3Xt4 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 18:49:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48174 "EHLO
+        id S235580AbiL3XvP (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 18:51:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbiL3Xtz (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:49:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A289064FA
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 15:49:54 -0800 (PST)
+        with ESMTP id S235566AbiL3XvP (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 18:51:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB664262A;
+        Fri, 30 Dec 2022 15:51:13 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27FBE61C39
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 23:49:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882A0C433D2;
-        Fri, 30 Dec 2022 23:49:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A1632B81DCA;
+        Fri, 30 Dec 2022 23:51:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BAFC433D2;
+        Fri, 30 Dec 2022 23:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672444193;
-        bh=Ph6ucvWKe3RU8ouAKR0Y2/T2X47N3FMcHXbTlidONzk=;
+        s=k20201202; t=1672444271;
+        bh=6E8jbKf7iy1+nbQHRKu7MpZkjsB/2aoy1V0uNTM6rIM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=k7myGQCynSqVmEwbBpZ9Q4r0cn+qkQ/KG4oT8DJvaygoYRwL0kurNPz33DzIhz54s
-         sOqvujQeQ8NJyUCKAdWMgiRGnwOidQyjVx92tP1+BzeOkO+kZVavDxOUhTjW4O1h7I
-         6rc3TCaqzXy7vmnDi3XAhrrVePvFLStLdTWDOHJWNCTgM8Egm0nMQjCxntB2u9O6sL
-         jwud5DuaxtXZBgzn3owT5gj2qgzhuZOjnDT4cTPA/sF2peuloVmhGj319UdBoGEd2v
-         MkjB9FlQ0eTN8rIj8WvxalSuveIo4yzpJAZ0ZcoZqKSufVF+bcHEzAH1H5l59AulBs
-         mQbHau967LoYw==
-Subject: [PATCH 2/3] xfs: move remote symlink target read function to libxfs
+        b=kJ3Fvu5GjMzcMVl3jyibRIlIRrAZtio1jsftWP6Yp5x5zXEzBw7JGuzc1rakdjqhH
+         BV7mrjVG8GVHQCwXYvmtG0i828O776ZE6VJxGCoBt6t7UjRTTIag+GB0Npv7XgLMat
+         sRpXUEoXR9pzXWZvklhut8crgg0bdtgvntDbB+AbM3PRso/LYhFGXrFvXJDDsrPmCT
+         HKfJ7H+4oYIrFtQsT/dmMG98sBK48fvbCK8qfb/29IqrmMv+5A5KEBXbQZs/J8Sgjw
+         NYv2cYM9t7hgut6l+tYU3eGymu8ulau4N1x4rfAqOSVeNcvMUeudVD+Iy3jg8zGgZO
+         DCJYLDK/wZP1w==
+Subject: [PATCH 04/21] xfs: parameterize all the incompat log feature helpers
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
-Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:13:51 -0800
-Message-ID: <167243843166.699346.3184723834314773941.stgit@magnolia>
-In-Reply-To: <167243843134.699346.594115796077510288.stgit@magnolia>
-References: <167243843134.699346.594115796077510288.stgit@magnolia>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org
+Date:   Fri, 30 Dec 2022 14:13:55 -0800
+Message-ID: <167243843579.699466.1331325312571395676.stgit@magnolia>
+In-Reply-To: <167243843494.699466.5163281976943635014.stgit@magnolia>
+References: <167243843494.699466.5163281976943635014.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -54,240 +55,244 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Move xfs_readlink_bmap_ilocked to xfs_symlink_remote.c so that the
-swapext code can use it to convert a remote format symlink back to
-shortform format after a metadata repair.  While we're at it, fix a
-broken printf prefix.
+We're about to define a new XFS_SB_FEAT_INCOMPAT_LOG_ bit, which means
+that callers will soon require the ability to toggle on and off
+different log incompat feature bits.  Parameterize the
+xlog_{use,drop}_incompat_feat and xfs_sb_remove_incompat_log_features
+functions so that callers can specify which feature they're trying to
+use and so that we can clear individual log incompat bits as needed.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/libxfs/xfs_symlink_remote.c |   77 ++++++++++++++++++++++++++++++++++++
- fs/xfs/libxfs/xfs_symlink_remote.h |    1 
- fs/xfs/scrub/symlink.c             |    2 -
- fs/xfs/xfs_symlink.c               |   75 -----------------------------------
- fs/xfs/xfs_symlink.h               |    1 
- 5 files changed, 80 insertions(+), 76 deletions(-)
+ fs/xfs/libxfs/xfs_format.h |    5 +++--
+ fs/xfs/xfs_log.c           |   34 +++++++++++++++++++++++++---------
+ fs/xfs/xfs_log.h           |    9 ++++++---
+ fs/xfs/xfs_log_priv.h      |    2 +-
+ fs/xfs/xfs_log_recover.c   |    3 ++-
+ fs/xfs/xfs_mount.c         |   11 +++++------
+ fs/xfs/xfs_mount.h         |    2 +-
+ fs/xfs/xfs_xattr.c         |    6 +++---
+ 8 files changed, 46 insertions(+), 26 deletions(-)
 
 
-diff --git a/fs/xfs/libxfs/xfs_symlink_remote.c b/fs/xfs/libxfs/xfs_symlink_remote.c
-index 3ea30adc8220..7b4f2b306bc4 100644
---- a/fs/xfs/libxfs/xfs_symlink_remote.c
-+++ b/fs/xfs/libxfs/xfs_symlink_remote.c
-@@ -17,6 +17,9 @@
- #include "xfs_buf_item.h"
- #include "xfs_log.h"
- #include "xfs_symlink_remote.h"
-+#include "xfs_bit.h"
-+#include "xfs_bmap.h"
-+#include "xfs_health.h"
+diff --git a/fs/xfs/libxfs/xfs_format.h b/fs/xfs/libxfs/xfs_format.h
+index 5ba2dae7aa2f..817adb36cb1e 100644
+--- a/fs/xfs/libxfs/xfs_format.h
++++ b/fs/xfs/libxfs/xfs_format.h
+@@ -404,9 +404,10 @@ xfs_sb_has_incompat_log_feature(
+ 
+ static inline void
+ xfs_sb_remove_incompat_log_features(
+-	struct xfs_sb	*sbp)
++	struct xfs_sb	*sbp,
++	uint32_t	feature)
+ {
+-	sbp->sb_features_log_incompat &= ~XFS_SB_FEAT_INCOMPAT_LOG_ALL;
++	sbp->sb_features_log_incompat &= ~feature;
+ }
+ 
+ static inline void
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index b32a8e57f576..a0ef09addc84 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1082,7 +1082,7 @@ xfs_log_quiesce(
+ 	 * failures, though it's not fatal to have a higher log feature
+ 	 * protection level than the log contents actually require.
+ 	 */
+-	if (xfs_clear_incompat_log_features(mp)) {
++	if (xfs_clear_incompat_log_features(mp, XFS_SB_FEAT_INCOMPAT_LOG_ALL)) {
+ 		int error;
+ 
+ 		error = xfs_sync_sb(mp, false);
+@@ -1489,6 +1489,7 @@ xlog_clear_incompat(
+ 	struct xlog		*log)
+ {
+ 	struct xfs_mount	*mp = log->l_mp;
++	uint32_t		incompat_mask = 0;
+ 
+ 	if (!xfs_sb_has_incompat_log_feature(&mp->m_sb,
+ 				XFS_SB_FEAT_INCOMPAT_LOG_ALL))
+@@ -1497,11 +1498,16 @@ xlog_clear_incompat(
+ 	if (log->l_covered_state != XLOG_STATE_COVER_DONE2)
+ 		return;
+ 
+-	if (!down_write_trylock(&log->l_incompat_users))
++	if (down_write_trylock(&log->l_incompat_xattrs))
++		incompat_mask |= XFS_SB_FEAT_INCOMPAT_LOG_XATTRS;
++
++	if (!incompat_mask)
+ 		return;
+ 
+-	xfs_clear_incompat_log_features(mp);
+-	up_write(&log->l_incompat_users);
++	xfs_clear_incompat_log_features(mp, incompat_mask);
++
++	if (incompat_mask & XFS_SB_FEAT_INCOMPAT_LOG_XATTRS)
++		up_write(&log->l_incompat_xattrs);
+ }
  
  /*
-  * Each contiguous block has a header, so it is not just a simple pathlen
-@@ -238,3 +241,77 @@ xfs_symlink_shortform_verify(
+@@ -1618,7 +1624,7 @@ xlog_alloc_log(
+ 	}
+ 	log->l_sectBBsize = 1 << log2_size;
  
- 	return xfs_symlink_sf_verify_struct(ifp->if_u1.if_data, ifp->if_bytes);
- }
-+
-+/* Read a remote symlink target into the buffer. */
-+int
-+xfs_symlink_remote_read(
-+	struct xfs_inode	*ip,
-+	char			*link)
-+{
-+	struct xfs_mount	*mp = ip->i_mount;
-+	struct xfs_bmbt_irec	mval[XFS_SYMLINK_MAPS];
-+	struct xfs_buf		*bp;
-+	xfs_daddr_t		d;
-+	char			*cur_chunk;
-+	int			pathlen = ip->i_disk_size;
-+	int			nmaps = XFS_SYMLINK_MAPS;
-+	int			byte_cnt;
-+	int			n;
-+	int			error = 0;
-+	int			fsblocks = 0;
-+	int			offset;
-+
-+	ASSERT(xfs_isilocked(ip, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
-+
-+	fsblocks = xfs_symlink_blocks(mp, pathlen);
-+	error = xfs_bmapi_read(ip, 0, fsblocks, mval, &nmaps, 0);
-+	if (error)
-+		goto out;
-+
-+	offset = 0;
-+	for (n = 0; n < nmaps; n++) {
-+		d = XFS_FSB_TO_DADDR(mp, mval[n].br_startblock);
-+		byte_cnt = XFS_FSB_TO_B(mp, mval[n].br_blockcount);
-+
-+		error = xfs_buf_read(mp->m_ddev_targp, d, BTOBB(byte_cnt), 0,
-+				&bp, &xfs_symlink_buf_ops);
-+		if (xfs_metadata_is_sick(error))
-+			xfs_inode_mark_sick(ip, XFS_SICK_INO_SYMLINK);
-+		if (error)
-+			return error;
-+		byte_cnt = XFS_SYMLINK_BUF_SPACE(mp, byte_cnt);
-+		if (pathlen < byte_cnt)
-+			byte_cnt = pathlen;
-+
-+		cur_chunk = bp->b_addr;
-+		if (xfs_has_crc(mp)) {
-+			if (!xfs_symlink_hdr_ok(ip->i_ino, offset,
-+							byte_cnt, bp)) {
-+				xfs_inode_mark_sick(ip, XFS_SICK_INO_SYMLINK);
-+				error = -EFSCORRUPTED;
-+				xfs_alert(mp,
-+"symlink header does not match required off/len/owner (0x%x/0x%x,0x%llx)",
-+					offset, byte_cnt, ip->i_ino);
-+				xfs_buf_relse(bp);
-+				goto out;
-+
-+			}
-+
-+			cur_chunk += sizeof(struct xfs_dsymlink_hdr);
-+		}
-+
-+		memcpy(link + offset, cur_chunk, byte_cnt);
-+
-+		pathlen -= byte_cnt;
-+		offset += byte_cnt;
-+
-+		xfs_buf_relse(bp);
+-	init_rwsem(&log->l_incompat_users);
++	init_rwsem(&log->l_incompat_xattrs);
+ 
+ 	xlog_get_iclog_buffer_size(mp, log);
+ 
+@@ -3909,15 +3915,25 @@ xfs_log_check_lsn(
+  */
+ void
+ xlog_use_incompat_feat(
+-	struct xlog		*log)
++	struct xlog		*log,
++	enum xlog_incompat_feat	what)
+ {
+-	down_read(&log->l_incompat_users);
++	switch (what) {
++	case XLOG_INCOMPAT_FEAT_XATTRS:
++		down_read(&log->l_incompat_xattrs);
++		break;
 +	}
-+	ASSERT(pathlen == 0);
-+
-+	link[ip->i_disk_size] = '\0';
-+	error = 0;
-+
-+ out:
-+	return error;
-+}
-diff --git a/fs/xfs/libxfs/xfs_symlink_remote.h b/fs/xfs/libxfs/xfs_symlink_remote.h
-index a58d536c8b83..7d3acaee0af0 100644
---- a/fs/xfs/libxfs/xfs_symlink_remote.h
-+++ b/fs/xfs/libxfs/xfs_symlink_remote.h
-@@ -19,5 +19,6 @@ void xfs_symlink_local_to_remote(struct xfs_trans *tp, struct xfs_buf *bp,
- 				 struct xfs_inode *ip, struct xfs_ifork *ifp);
- xfs_failaddr_t xfs_symlink_sf_verify_struct(void *sfp, int64_t size);
- xfs_failaddr_t xfs_symlink_shortform_verify(struct xfs_inode *ip);
-+int xfs_symlink_remote_read(struct xfs_inode *ip, char *link);
+ }
  
- #endif /* __XFS_SYMLINK_REMOTE_H */
-diff --git a/fs/xfs/scrub/symlink.c b/fs/xfs/scrub/symlink.c
-index 3c9900b242e4..c134f738bc43 100644
---- a/fs/xfs/scrub/symlink.c
-+++ b/fs/xfs/scrub/symlink.c
-@@ -60,7 +60,7 @@ xchk_symlink(
+ /* Notify the log that we've finished using log incompat features. */
+ void
+ xlog_drop_incompat_feat(
+-	struct xlog		*log)
++	struct xlog		*log,
++	enum xlog_incompat_feat	what)
+ {
+-	up_read(&log->l_incompat_users);
++	switch (what) {
++	case XLOG_INCOMPAT_FEAT_XATTRS:
++		up_read(&log->l_incompat_xattrs);
++		break;
++	}
+ }
+diff --git a/fs/xfs/xfs_log.h b/fs/xfs/xfs_log.h
+index 2728886c2963..d187f6445909 100644
+--- a/fs/xfs/xfs_log.h
++++ b/fs/xfs/xfs_log.h
+@@ -159,8 +159,11 @@ bool	xfs_log_check_lsn(struct xfs_mount *, xfs_lsn_t);
+ xfs_lsn_t xlog_grant_push_threshold(struct xlog *log, int need_bytes);
+ bool	  xlog_force_shutdown(struct xlog *log, uint32_t shutdown_flags);
+ 
+-void xlog_use_incompat_feat(struct xlog *log);
+-void xlog_drop_incompat_feat(struct xlog *log);
+-int xfs_attr_use_log_assist(struct xfs_mount *mp);
++enum xlog_incompat_feat {
++	XLOG_INCOMPAT_FEAT_XATTRS = XFS_SB_FEAT_INCOMPAT_LOG_XATTRS,
++};
++
++void xlog_use_incompat_feat(struct xlog *log, enum xlog_incompat_feat what);
++void xlog_drop_incompat_feat(struct xlog *log, enum xlog_incompat_feat what);
+ 
+ #endif	/* __XFS_LOG_H__ */
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index 1bd2963e8fbd..a13b5b6b744d 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -447,7 +447,7 @@ struct xlog {
+ 	uint32_t		l_iclog_roundoff;/* padding roundoff */
+ 
+ 	/* Users of log incompat features should take a read lock. */
+-	struct rw_semaphore	l_incompat_users;
++	struct rw_semaphore	l_incompat_xattrs;
+ };
+ 
+ /*
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 6b1f37bc3e95..81ce08c23306 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -3473,7 +3473,8 @@ xlog_recover_finish(
+ 	 * longer anything to protect.  We rely on the AIL push to write out the
+ 	 * updated superblock after everything else.
+ 	 */
+-	if (xfs_clear_incompat_log_features(log->l_mp)) {
++	if (xfs_clear_incompat_log_features(log->l_mp,
++				XFS_SB_FEAT_INCOMPAT_LOG_ALL)) {
+ 		error = xfs_sync_sb(log->l_mp, false);
+ 		if (error < 0) {
+ 			xfs_alert(log->l_mp,
+diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
+index 31f49211fdd6..54cd47882991 100644
+--- a/fs/xfs/xfs_mount.c
++++ b/fs/xfs/xfs_mount.c
+@@ -1357,13 +1357,13 @@ xfs_add_incompat_log_feature(
+  */
+ bool
+ xfs_clear_incompat_log_features(
+-	struct xfs_mount	*mp)
++	struct xfs_mount	*mp,
++	uint32_t		features)
+ {
+ 	bool			ret = false;
+ 
+ 	if (!xfs_has_crc(mp) ||
+-	    !xfs_sb_has_incompat_log_feature(&mp->m_sb,
+-				XFS_SB_FEAT_INCOMPAT_LOG_ALL) ||
++	    !xfs_sb_has_incompat_log_feature(&mp->m_sb, features) ||
+ 	    xfs_is_shutdown(mp))
+ 		return false;
+ 
+@@ -1375,9 +1375,8 @@ xfs_clear_incompat_log_features(
+ 	xfs_buf_lock(mp->m_sb_bp);
+ 	xfs_buf_hold(mp->m_sb_bp);
+ 
+-	if (xfs_sb_has_incompat_log_feature(&mp->m_sb,
+-				XFS_SB_FEAT_INCOMPAT_LOG_ALL)) {
+-		xfs_sb_remove_incompat_log_features(&mp->m_sb);
++	if (xfs_sb_has_incompat_log_feature(&mp->m_sb, features)) {
++		xfs_sb_remove_incompat_log_features(&mp->m_sb, features);
+ 		ret = true;
  	}
  
- 	/* Remote symlink; must read the contents. */
--	error = xfs_readlink_bmap_ilocked(sc->ip, sc->buf);
-+	error = xfs_symlink_remote_read(sc->ip, sc->buf);
- 	if (!xchk_fblock_process_error(sc, XFS_DATA_FORK, 0, &error))
- 		goto out;
- 	if (strnlen(sc->buf, XFS_SYMLINK_MAXLEN) < len)
-diff --git a/fs/xfs/xfs_symlink.c b/fs/xfs/xfs_symlink.c
-index 76f80f958381..710da8dfb7d3 100644
---- a/fs/xfs/xfs_symlink.c
-+++ b/fs/xfs/xfs_symlink.c
-@@ -27,79 +27,6 @@
- #include "xfs_symlink_remote.h"
+diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
+index ec8b185d45f8..7c48a2b70f6f 100644
+--- a/fs/xfs/xfs_mount.h
++++ b/fs/xfs/xfs_mount.h
+@@ -547,7 +547,7 @@ struct xfs_error_cfg * xfs_error_get_cfg(struct xfs_mount *mp,
+ 		int error_class, int error);
+ void xfs_force_summary_recalc(struct xfs_mount *mp);
+ int xfs_add_incompat_log_feature(struct xfs_mount *mp, uint32_t feature);
+-bool xfs_clear_incompat_log_features(struct xfs_mount *mp);
++bool xfs_clear_incompat_log_features(struct xfs_mount *mp, uint32_t feature);
+ void xfs_mod_delalloc(struct xfs_mount *mp, int64_t delta);
  
- /* ----- Kernel only functions below ----- */
--int
--xfs_readlink_bmap_ilocked(
--	struct xfs_inode	*ip,
--	char			*link)
--{
--	struct xfs_mount	*mp = ip->i_mount;
--	struct xfs_bmbt_irec	mval[XFS_SYMLINK_MAPS];
--	struct xfs_buf		*bp;
--	xfs_daddr_t		d;
--	char			*cur_chunk;
--	int			pathlen = ip->i_disk_size;
--	int			nmaps = XFS_SYMLINK_MAPS;
--	int			byte_cnt;
--	int			n;
--	int			error = 0;
--	int			fsblocks = 0;
--	int			offset;
--
--	ASSERT(xfs_isilocked(ip, XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
--
--	fsblocks = xfs_symlink_blocks(mp, pathlen);
--	error = xfs_bmapi_read(ip, 0, fsblocks, mval, &nmaps, 0);
--	if (error)
--		goto out;
--
--	offset = 0;
--	for (n = 0; n < nmaps; n++) {
--		d = XFS_FSB_TO_DADDR(mp, mval[n].br_startblock);
--		byte_cnt = XFS_FSB_TO_B(mp, mval[n].br_blockcount);
--
--		error = xfs_buf_read(mp->m_ddev_targp, d, BTOBB(byte_cnt), 0,
--				&bp, &xfs_symlink_buf_ops);
--		if (xfs_metadata_is_sick(error))
--			xfs_inode_mark_sick(ip, XFS_SICK_INO_SYMLINK);
--		if (error)
--			return error;
--		byte_cnt = XFS_SYMLINK_BUF_SPACE(mp, byte_cnt);
--		if (pathlen < byte_cnt)
--			byte_cnt = pathlen;
--
--		cur_chunk = bp->b_addr;
--		if (xfs_has_crc(mp)) {
--			if (!xfs_symlink_hdr_ok(ip->i_ino, offset,
--							byte_cnt, bp)) {
--				xfs_inode_mark_sick(ip, XFS_SICK_INO_SYMLINK);
--				error = -EFSCORRUPTED;
--				xfs_alert(mp,
--"symlink header does not match required off/len/owner (0x%x/Ox%x,0x%llx)",
--					offset, byte_cnt, ip->i_ino);
--				xfs_buf_relse(bp);
--				goto out;
--
--			}
--
--			cur_chunk += sizeof(struct xfs_dsymlink_hdr);
--		}
--
--		memcpy(link + offset, cur_chunk, byte_cnt);
--
--		pathlen -= byte_cnt;
--		offset += byte_cnt;
--
--		xfs_buf_relse(bp);
--	}
--	ASSERT(pathlen == 0);
--
--	link[ip->i_disk_size] = '\0';
--	error = 0;
--
-- out:
--	return error;
--}
--
- int
- xfs_readlink(
- 	struct xfs_inode	*ip,
-@@ -142,7 +69,7 @@ xfs_readlink(
- 		memcpy(link, ip->i_df.if_u1.if_data, pathlen + 1);
- 		error = 0;
- 	} else {
--		error = xfs_readlink_bmap_ilocked(ip, link);
-+		error = xfs_symlink_remote_read(ip, link);
- 	}
+ #endif	/* __XFS_MOUNT_H__ */
+diff --git a/fs/xfs/xfs_xattr.c b/fs/xfs/xfs_xattr.c
+index 10aa1fd39d2b..e03f199f50c7 100644
+--- a/fs/xfs/xfs_xattr.c
++++ b/fs/xfs/xfs_xattr.c
+@@ -37,7 +37,7 @@ xfs_attr_grab_log_assist(
+ 	 * Protect ourselves from an idle log clearing the logged xattrs log
+ 	 * incompat feature bit.
+ 	 */
+-	xlog_use_incompat_feat(mp->m_log);
++	xlog_use_incompat_feat(mp->m_log, XLOG_INCOMPAT_FEAT_XATTRS);
  
-  out:
-diff --git a/fs/xfs/xfs_symlink.h b/fs/xfs/xfs_symlink.h
-index 2586b7e393f3..526ea98315b5 100644
---- a/fs/xfs/xfs_symlink.h
-+++ b/fs/xfs/xfs_symlink.h
-@@ -10,7 +10,6 @@
- int xfs_symlink(struct user_namespace *mnt_userns, struct xfs_inode *dp,
- 		struct xfs_name *link_name, const char *target_path,
- 		umode_t mode, struct xfs_inode **ipp);
--int xfs_readlink_bmap_ilocked(struct xfs_inode *ip, char *link);
- int xfs_readlink(struct xfs_inode *ip, char *link);
- int xfs_inactive_symlink(struct xfs_inode *ip);
+ 	/*
+ 	 * If log-assisted xattrs are already enabled, the caller can use the
+@@ -57,7 +57,7 @@ xfs_attr_grab_log_assist(
  
+ 	return 0;
+ drop_incompat:
+-	xlog_drop_incompat_feat(mp->m_log);
++	xlog_drop_incompat_feat(mp->m_log, XLOG_INCOMPAT_FEAT_XATTRS);
+ 	return error;
+ }
+ 
+@@ -65,7 +65,7 @@ static inline void
+ xfs_attr_rele_log_assist(
+ 	struct xfs_mount	*mp)
+ {
+-	xlog_drop_incompat_feat(mp->m_log);
++	xlog_drop_incompat_feat(mp->m_log, XLOG_INCOMPAT_FEAT_XATTRS);
+ }
+ 
+ static inline bool
 
