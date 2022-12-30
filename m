@@ -2,42 +2,42 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 381E765A03C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:07:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F37665A04A
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:09:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235809AbiLaBHC (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:07:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40928 "EHLO
+        id S231425AbiLaBJx (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:09:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235913AbiLaBHB (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:07:01 -0500
+        with ESMTP id S235827AbiLaBJw (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:09:52 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 220651573A
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:07:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B4531EAD1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:09:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CF7E3B81DE6
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:06:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7ADC433EF;
-        Sat, 31 Dec 2022 01:06:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 035D6B81DEF
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:09:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8C6C433EF;
+        Sat, 31 Dec 2022 01:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448817;
-        bh=hy3vBtUlSK3owKpnKRIUO+0a115PSlhduXNOVthMFGQ=;
+        s=k20201202; t=1672448988;
+        bh=SxR9DrNBVGqk1/rHPInzy1Pcp3tk59XBkgbuLTPHE04=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PnBbHHh/mzCbsrlEjKqOnogmcj24o588Vf3PxkVMRa41n9e/Uj5hk0P9ON6Wex2CD
-         Tr8dOXg3y3tirDtJ2Y4hfpUM02KSaszWAEI3r4PukUVCThMPTc3KJ/d9tTgCC+rVZD
-         BIYYxjGaD4091nRCFUCjVc5Jaa9ffzf0hZq5htecOShSDUfWzLpx66g7C1t1GcEgTY
-         k5ZS8PxEKFxBeMSoCoeEkolaNmjz3OMQ0JbgKv7HVzamRZKP/QUW+HuEyxjvvE78fM
-         kXKSDLfPKEVLYKuUSN/+j994aefoi4ISe75jnkDx+p9ulBttS3pA7lRBydB9+97pzd
-         Oal/U1GMTz+Uw==
-Subject: [PATCH 07/20] xfs: use xfs_trans_ichgtime to set times when
- allocating inode
+        b=BFG8GXKx+pTwwbsuLnHHhYFqYQya7hswOfy23PSYFLwRBT2eB5zqn04mbGgHUYsOg
+         aRmTQUft3yIMXTH1XiXihw2/TsTooPT6SvZI/g6vLsJKu7sGfMHOTLFmHaHm3V6Dxx
+         noqkhwUFBABpF7lq8GTvBzl4IkFP1vx++nO33lXRaX2Lsk84kTGUXLBVUHKnio0ZDk
+         is4uPi3SIJipfe2mguh4CfmwTjYHwSZxr00Q1QcgOZ9tAPQibsLmG4jWUWl1ZR4nPm
+         0bAWcdSOycDgIoS2vSN/H24NWXnJn1DeCVUfmhdzFEY6cReudSNB7/09vcH4WMLBgq
+         ja/9LnOXEB/GA==
+Subject: [PATCH 18/20] xfs: create libxfs helper to exchange two directory
+ entries
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:19 -0800
-Message-ID: <167243863932.707335.13862526907703121698.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:20 -0800
+Message-ID: <167243864089.707335.16200487956811105227.stgit@magnolia>
 In-Reply-To: <167243863809.707335.15895322495460356300.stgit@magnolia>
 References: <167243863809.707335.15895322495460356300.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,56 +55,247 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Use xfs_trans_ichgtime to set the inode times when allocating an inode,
-instead of open-coding them here.
+Create a new libxfs function to exchange two directory entries.
+The upcoming metadata directory feature will need this to replace a
+metadata inode directory entry.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/xfs_inode.c |   16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ fs/xfs/libxfs/xfs_dir2.c |  108 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_dir2.h |    4 ++
+ fs/xfs/xfs_inode.c       |   86 +------------------------------------
+ 3 files changed, 115 insertions(+), 83 deletions(-)
 
 
+diff --git a/fs/xfs/libxfs/xfs_dir2.c b/fs/xfs/libxfs/xfs_dir2.c
+index 2923cf568e9d..6d7851a613e7 100644
+--- a/fs/xfs/libxfs/xfs_dir2.c
++++ b/fs/xfs/libxfs/xfs_dir2.c
+@@ -949,3 +949,111 @@ xfs_dir_remove_child(
+ 
+ 	return 0;
+ }
++
++/*
++ * Exchange the entry (@name1, @ip1) in directory @dp1 with the entry (@name2,
++ * @ip2) in directory @dp2, and update '..' @ip1 and @ip2's entries as needed.
++ * @ip1 and @ip2 need not be of the same type.
++ *
++ * All inodes must have the ILOCK held, and both entries must already exist.
++ */
++int
++xfs_dir_exchange(
++	struct xfs_trans	*tp,
++	struct xfs_inode	*dp1,
++	struct xfs_name		*name1,
++	struct xfs_inode	*ip1,
++	struct xfs_inode	*dp2,
++	struct xfs_name		*name2,
++	struct xfs_inode	*ip2,
++	unsigned int		spaceres)
++{
++	int			ip1_flags = 0;
++	int			ip2_flags = 0;
++	int			dp2_flags = 0;
++	int			error;
++
++	/* Swap inode number for dirent in first parent */
++	error = xfs_dir_replace(tp, dp1, name1, ip2->i_ino, spaceres);
++	if (error)
++		return error;
++
++	/* Swap inode number for dirent in second parent */
++	error = xfs_dir_replace(tp, dp2, name2, ip1->i_ino, spaceres);
++	if (error)
++		return error;
++
++	/*
++	 * If we're renaming one or more directories across different parents,
++	 * update the respective ".." entries (and link counts) to match the new
++	 * parents.
++	 */
++	if (dp1 != dp2) {
++		dp2_flags = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
++
++		if (S_ISDIR(VFS_I(ip2)->i_mode)) {
++			error = xfs_dir_replace(tp, ip2, &xfs_name_dotdot,
++						dp1->i_ino, spaceres);
++			if (error)
++				return error;
++
++			/* transfer ip2 ".." reference to dp1 */
++			if (!S_ISDIR(VFS_I(ip1)->i_mode)) {
++				error = xfs_droplink(tp, dp2);
++				if (error)
++					return error;
++				xfs_bumplink(tp, dp1);
++			}
++
++			/*
++			 * Although ip1 isn't changed here, userspace needs
++			 * to be warned about the change, so that applications
++			 * relying on it (like backup ones), will properly
++			 * notify the change
++			 */
++			ip1_flags |= XFS_ICHGTIME_CHG;
++			ip2_flags |= XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
++		}
++
++		if (S_ISDIR(VFS_I(ip1)->i_mode)) {
++			error = xfs_dir_replace(tp, ip1, &xfs_name_dotdot,
++						dp2->i_ino, spaceres);
++			if (error)
++				return error;
++
++			/* transfer ip1 ".." reference to dp2 */
++			if (!S_ISDIR(VFS_I(ip2)->i_mode)) {
++				error = xfs_droplink(tp, dp1);
++				if (error)
++					return error;
++				xfs_bumplink(tp, dp2);
++			}
++
++			/*
++			 * Although ip2 isn't changed here, userspace needs
++			 * to be warned about the change, so that applications
++			 * relying on it (like backup ones), will properly
++			 * notify the change
++			 */
++			ip1_flags |= XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
++			ip2_flags |= XFS_ICHGTIME_CHG;
++		}
++	}
++
++	if (ip1_flags) {
++		xfs_trans_ichgtime(tp, ip1, ip1_flags);
++		xfs_trans_log_inode(tp, ip1, XFS_ILOG_CORE);
++	}
++	if (ip2_flags) {
++		xfs_trans_ichgtime(tp, ip2, ip2_flags);
++		xfs_trans_log_inode(tp, ip2, XFS_ILOG_CORE);
++	}
++	if (dp2_flags) {
++		xfs_trans_ichgtime(tp, dp2, dp2_flags);
++		xfs_trans_log_inode(tp, dp2, XFS_ILOG_CORE);
++	}
++	xfs_trans_ichgtime(tp, dp1, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
++	xfs_trans_log_inode(tp, dp1, XFS_ILOG_CORE);
++
++	return 0;
++}
+diff --git a/fs/xfs/libxfs/xfs_dir2.h b/fs/xfs/libxfs/xfs_dir2.h
+index e35deb273d84..f63390236f09 100644
+--- a/fs/xfs/libxfs/xfs_dir2.h
++++ b/fs/xfs/libxfs/xfs_dir2.h
+@@ -262,5 +262,9 @@ int xfs_dir_link_existing_child(struct xfs_trans *tp, uint resblks,
+ int xfs_dir_remove_child(struct xfs_trans *tp, uint resblks,
+ 		struct xfs_inode *dp, struct xfs_name *name,
+ 		struct xfs_inode *ip);
++int xfs_dir_exchange(struct xfs_trans *tp, struct xfs_inode *dp1,
++		struct xfs_name *name1, struct xfs_inode *ip1,
++		struct xfs_inode *dp2, struct xfs_name *name2,
++		struct xfs_inode *ip2, unsigned int spaceres);
+ 
+ #endif	/* __XFS_DIR2_H__ */
 diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index ffbf504891aa..7a634a1ea111 100644
+index f2a5de0119b3..591721755b78 100644
 --- a/fs/xfs/xfs_inode.c
 +++ b/fs/xfs/xfs_inode.c
-@@ -689,10 +689,11 @@ xfs_icreate(
- 	struct inode		*dir = pip ? VFS_I(pip) : NULL;
- 	struct xfs_mount	*mp = tp->t_mountp;
- 	struct xfs_inode	*ip;
--	unsigned int		flags;
--	int			error;
--	struct timespec64	tv;
- 	struct inode		*inode;
-+	unsigned int		flags;
-+	int			times = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG |
-+					XFS_ICHGTIME_ACCESS;
+@@ -2207,93 +2207,13 @@ xfs_cross_rename(
+ 	struct xfs_inode	*ip2,
+ 	int			spaceres)
+ {
+-	int		error = 0;
+-	int		ip1_flags = 0;
+-	int		ip2_flags = 0;
+-	int		dp2_flags = 0;
 +	int			error;
  
- 	/*
- 	 * Protect against obviously corrupt allocation btree records. Later
-@@ -755,20 +756,17 @@ xfs_icreate(
- 	ip->i_df.if_nextents = 0;
- 	ASSERT(ip->i_nblocks == 0);
+-	/* Swap inode number for dirent in first parent */
+-	error = xfs_dir_replace(tp, dp1, name1, ip2->i_ino, spaceres);
++	error = xfs_dir_exchange(tp, dp1, name1, ip1, dp2, name2, ip2,
++			spaceres);
+ 	if (error)
+ 		goto out_trans_abort;
  
--	tv = current_time(inode);
--	inode->i_mtime = tv;
--	inode->i_atime = tv;
--	inode->i_ctime = tv;
+-	/* Swap inode number for dirent in second parent */
+-	error = xfs_dir_replace(tp, dp2, name2, ip1->i_ino, spaceres);
+-	if (error)
+-		goto out_trans_abort;
 -
- 	ip->i_extsize = 0;
- 	ip->i_diflags = 0;
- 
- 	if (xfs_has_v3inodes(mp)) {
- 		inode_set_iversion(inode, 1);
- 		ip->i_cowextsize = 0;
--		ip->i_crtime = tv;
-+		times |= XFS_ICHGTIME_CREATE;
- 	}
- 
-+	xfs_trans_ichgtime(tp, ip, times);
-+
- 	flags = XFS_ILOG_CORE;
- 	switch (args->mode & S_IFMT) {
- 	case S_IFIFO:
+-	/*
+-	 * If we're renaming one or more directories across different parents,
+-	 * update the respective ".." entries (and link counts) to match the new
+-	 * parents.
+-	 */
+-	if (dp1 != dp2) {
+-		dp2_flags = XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
+-
+-		if (S_ISDIR(VFS_I(ip2)->i_mode)) {
+-			error = xfs_dir_replace(tp, ip2, &xfs_name_dotdot,
+-						dp1->i_ino, spaceres);
+-			if (error)
+-				goto out_trans_abort;
+-
+-			/* transfer ip2 ".." reference to dp1 */
+-			if (!S_ISDIR(VFS_I(ip1)->i_mode)) {
+-				error = xfs_droplink(tp, dp2);
+-				if (error)
+-					goto out_trans_abort;
+-				xfs_bumplink(tp, dp1);
+-			}
+-
+-			/*
+-			 * Although ip1 isn't changed here, userspace needs
+-			 * to be warned about the change, so that applications
+-			 * relying on it (like backup ones), will properly
+-			 * notify the change
+-			 */
+-			ip1_flags |= XFS_ICHGTIME_CHG;
+-			ip2_flags |= XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
+-		}
+-
+-		if (S_ISDIR(VFS_I(ip1)->i_mode)) {
+-			error = xfs_dir_replace(tp, ip1, &xfs_name_dotdot,
+-						dp2->i_ino, spaceres);
+-			if (error)
+-				goto out_trans_abort;
+-
+-			/* transfer ip1 ".." reference to dp2 */
+-			if (!S_ISDIR(VFS_I(ip2)->i_mode)) {
+-				error = xfs_droplink(tp, dp1);
+-				if (error)
+-					goto out_trans_abort;
+-				xfs_bumplink(tp, dp2);
+-			}
+-
+-			/*
+-			 * Although ip2 isn't changed here, userspace needs
+-			 * to be warned about the change, so that applications
+-			 * relying on it (like backup ones), will properly
+-			 * notify the change
+-			 */
+-			ip1_flags |= XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG;
+-			ip2_flags |= XFS_ICHGTIME_CHG;
+-		}
+-	}
+-
+-	if (ip1_flags) {
+-		xfs_trans_ichgtime(tp, ip1, ip1_flags);
+-		xfs_trans_log_inode(tp, ip1, XFS_ILOG_CORE);
+-	}
+-	if (ip2_flags) {
+-		xfs_trans_ichgtime(tp, ip2, ip2_flags);
+-		xfs_trans_log_inode(tp, ip2, XFS_ILOG_CORE);
+-	}
+-	if (dp2_flags) {
+-		xfs_trans_ichgtime(tp, dp2, dp2_flags);
+-		xfs_trans_log_inode(tp, dp2, XFS_ILOG_CORE);
+-	}
+-	xfs_trans_ichgtime(tp, dp1, XFS_ICHGTIME_MOD | XFS_ICHGTIME_CHG);
+-	xfs_trans_log_inode(tp, dp1, XFS_ILOG_CORE);
+-
+ 	if (xfs_hooks_switched_on(&xfs_nlinks_hooks_switch))
+ 		xfs_rename_call_nlink_hooks(dp1, name1, ip1, dp2, name2, ip2,
+ 				NULL, RENAME_EXCHANGE);
 
