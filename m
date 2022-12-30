@@ -2,50 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D81B6659FB5
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:34:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8A765A0F8
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:52:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235655AbiLaAeV (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:34:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
+        id S235815AbiLaBwF (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:52:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235739AbiLaAeU (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:34:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A665F1EAC0
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:34:18 -0800 (PST)
+        with ESMTP id S236138AbiLaBv7 (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:51:59 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E091DDDA
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:51:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5D03EB81DCC
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:34:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0845AC433D2;
-        Sat, 31 Dec 2022 00:34:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EA397B81DFC
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:51:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0297C433EF;
+        Sat, 31 Dec 2022 01:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446856;
-        bh=gHkUpoL5ErM6WSK2LzdXFjgpnYxQD8zL3JsPsj1902k=;
+        s=k20201202; t=1672451515;
+        bh=scSHGjMPdBNrFB1pSJcYoyuy1Bp4xm2RdsIQMVwOc2g=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rtLUYo4zmM9+0xMqZmqYVvYptnpgk+fmSf9LkAnbvApqVTOAe2JiP0i0LHehMaeXT
-         SzDA/TsvPLgFGMGeG7iVaInMh8bI2ZQPk7lxOL/Cvc63EFTFfiOeL2oYqlvm8v5ZrJ
-         9wlLfncWlyNDVdP3LWxZOpzdkZNAIQcFXmQb53hBL7W9XnAsY+p4JCEak4FiTgxAAb
-         5C0NduU+h5RqvtqDHM+8ttILAl1Jc8ynhQDtFv5+NJ1BAfjEbEhRHgB/RZkHs1DdsJ
-         DPECLE1OY2kW+NFTfD91Gmwt6pYsqYNcq1XLxmvJ8ZkL6pFEIobEUgxYLF/Z8PJYdd
-         spKZv9kTE/uKw==
-Subject: [PATCH 2/8] xfs_scrub: add missing copyrights and spdx headers
+        b=SrF2EmurpGN15XwA4hgDYcVdAnvscaoBHqyqQl4+86qZEqUlbwKr74QixecESwg4K
+         9eX8CyGaDpGIFCWTFaC4QpWVX5W2MvZZY4ob1dO+9miHawlQ/LWbNC2FT66FRDJoxP
+         rwmSfuNChAbN86hUXhvUUuYrFimHC6wtHt3KNqND9WIcnlnr8v4pmN2wfsKLhxs+DI
+         FPscC/izyGpr44gHbFu0TP5hrQSfXgLBIx2dj1eppmz+vbb05+BjE34oq5aNWRBcxy
+         yS42QcqMsqnQ/XHYQrPxl0j+vJSyPxWwdvocnQbohaFNcV1zHF+JsIgaWd/C8FE80u
+         s4YRhNqWNv1cg==
+Subject: [PATCH 15/42] xfs: create routine to allocate and initialize a
+ realtime refcount btree inode
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:31 -0800
-Message-ID: <167243871124.717702.7783784861015870036.stgit@magnolia>
-In-Reply-To: <167243871097.717702.15336500890922415647.stgit@magnolia>
-References: <167243871097.717702.15336500890922415647.stgit@magnolia>
+Message-ID: <167243871111.717073.3368219455039072884.stgit@magnolia>
+In-Reply-To: <167243870849.717073.203452386730176902.stgit@magnolia>
+References: <167243870849.717073.203452386730176902.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,96 +56,78 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Add missing license and copyright information to the systemd control
-files in this directory.
+Create a library routine to allocate and initialize an empty realtime
+refcountbt inode.  We'll use this for growfs, mkfs, and repair.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/xfs_scrub@.service.in      |    5 +++++
- scrub/xfs_scrub_all.cron.in      |    5 +++++
- scrub/xfs_scrub_all.service.in   |    5 +++++
- scrub/xfs_scrub_all.timer        |    5 +++++
- scrub/xfs_scrub_fail             |    5 +++++
- scrub/xfs_scrub_fail@.service.in |    5 +++++
- 6 files changed, 30 insertions(+)
+ fs/xfs/libxfs/xfs_rtrefcount_btree.c |   41 ++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_rtrefcount_btree.h |    6 +++++
+ 2 files changed, 47 insertions(+)
 
 
-diff --git a/scrub/xfs_scrub@.service.in b/scrub/xfs_scrub@.service.in
-index 6fb3f6ea2e9..c8662fc85a6 100644
---- a/scrub/xfs_scrub@.service.in
-+++ b/scrub/xfs_scrub@.service.in
-@@ -1,3 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2018 Oracle.  All Rights Reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
+diff --git a/fs/xfs/libxfs/xfs_rtrefcount_btree.c b/fs/xfs/libxfs/xfs_rtrefcount_btree.c
+index a43ee6d7b547..0a6fa9851371 100644
+--- a/fs/xfs/libxfs/xfs_rtrefcount_btree.c
++++ b/fs/xfs/libxfs/xfs_rtrefcount_btree.c
+@@ -765,3 +765,44 @@ xfs_iflush_rtrefcount(
+ 			ifp->if_broot_bytes, dfp,
+ 			XFS_DFORK_SIZE(dip, ip->i_mount, XFS_DATA_FORK));
+ }
 +
- [Unit]
- Description=Online XFS Metadata Check for %I
- OnFailure=xfs_scrub_fail@%i.service
-diff --git a/scrub/xfs_scrub_all.cron.in b/scrub/xfs_scrub_all.cron.in
-index 3dea9296077..0ef97cc0ca8 100644
---- a/scrub/xfs_scrub_all.cron.in
-+++ b/scrub/xfs_scrub_all.cron.in
-@@ -1 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2018 Oracle.  All Rights Reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
-+#
- 10 3 * * 0 root test -e /run/systemd/system || @sbindir@/xfs_scrub_all
-diff --git a/scrub/xfs_scrub_all.service.in b/scrub/xfs_scrub_all.service.in
-index b1b80da40a3..b874eb6f757 100644
---- a/scrub/xfs_scrub_all.service.in
-+++ b/scrub/xfs_scrub_all.service.in
-@@ -1,3 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2018 Oracle.  All Rights Reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
++/*
++ * Create a realtime refcount btree inode.
++ *
++ * Regardless of the return value, the caller must clean up @ic.  If a new
++ * inode is returned through *ipp, the caller must finish setting up the incore
++ * inode and release it.
++ */
++int
++xfs_rtrefcountbt_create(
++	struct xfs_trans	**tpp,
++	struct xfs_imeta_path	*path,
++	struct xfs_imeta_update	*upd,
++	struct xfs_inode	**ipp)
++{
++	struct xfs_mount	*mp = (*tpp)->t_mountp;
++	struct xfs_ifork	*ifp;
++	struct xfs_inode	*ip;
++	int			error;
 +
- [Unit]
- Description=Online XFS Metadata Check for All Filesystems
- ConditionACPower=true
-diff --git a/scrub/xfs_scrub_all.timer b/scrub/xfs_scrub_all.timer
-index 2e4a33b1666..1aef11e18f9 100644
---- a/scrub/xfs_scrub_all.timer
-+++ b/scrub/xfs_scrub_all.timer
-@@ -1,3 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2018 Oracle.  All Rights Reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
++	*ipp = NULL;
 +
- [Unit]
- Description=Periodic XFS Online Metadata Check for All Filesystems
++	error = xfs_imeta_create(tpp, path, S_IFREG, 0, &ip, upd);
++	if (error)
++		return error;
++
++	ifp = &ip->i_df;
++	ifp->if_format = XFS_DINODE_FMT_REFCOUNT;
++	ASSERT(ifp->if_broot_bytes == 0);
++	ASSERT(ifp->if_bytes == 0);
++
++	/* Initialize the empty incore btree root. */
++	xfs_iroot_alloc(ip, XFS_DATA_FORK,
++			xfs_rtrefcount_broot_space_calc(mp, 0, 0));
++	xfs_btree_init_block(ip->i_mount, ifp->if_broot, &xfs_rtrefcountbt_ops,
++			0, 0, ip->i_ino);
++	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE | XFS_ILOG_DBROOT);
++
++	*ipp = ip;
++	return 0;
++}
+diff --git a/fs/xfs/libxfs/xfs_rtrefcount_btree.h b/fs/xfs/libxfs/xfs_rtrefcount_btree.h
+index d2fe2004568d..86a547529c9d 100644
+--- a/fs/xfs/libxfs/xfs_rtrefcount_btree.h
++++ b/fs/xfs/libxfs/xfs_rtrefcount_btree.h
+@@ -186,4 +186,10 @@ void xfs_rtrefcountbt_to_disk(struct xfs_mount *mp,
+ 		struct xfs_rtrefcount_root *dblock, int dblocklen);
+ void xfs_iflush_rtrefcount(struct xfs_inode *ip, struct xfs_dinode *dip);
  
-diff --git a/scrub/xfs_scrub_fail b/scrub/xfs_scrub_fail
-index 36dd50e9653..8ada5dbbe06 100755
---- a/scrub/xfs_scrub_fail
-+++ b/scrub/xfs_scrub_fail
-@@ -1,5 +1,10 @@
- #!/bin/bash
- 
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2018 Oracle.  All Rights Reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
++struct xfs_imeta_update;
 +
- # Email logs of failed xfs_scrub unit runs
- 
- mailer=/usr/sbin/sendmail
-diff --git a/scrub/xfs_scrub_fail@.service.in b/scrub/xfs_scrub_fail@.service.in
-index 8d106e9ba4b..ac0cb2e283b 100644
---- a/scrub/xfs_scrub_fail@.service.in
-+++ b/scrub/xfs_scrub_fail@.service.in
-@@ -1,3 +1,8 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Copyright (C) 2018 Oracle.  All Rights Reserved.
-+# Author: Darrick J. Wong <djwong@kernel.org>
++int xfs_rtrefcountbt_create(struct xfs_trans **tpp,
++		struct xfs_imeta_path *path, struct xfs_imeta_update *ic,
++		struct xfs_inode **ipp);
 +
- [Unit]
- Description=Online XFS Metadata Check Failure Reporting for %I
- Documentation=man:xfs_scrub(8)
+ #endif	/* __XFS_RTREFCOUNT_BTREE_H__ */
 
