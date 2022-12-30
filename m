@@ -2,51 +2,52 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1512659F9D
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:29:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9FF765A0CF
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:41:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231570AbiLaA30 (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:29:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60960 "EHLO
+        id S236135AbiLaBlT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:41:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235583AbiLaA3G (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:29:06 -0500
+        with ESMTP id S236129AbiLaBlS (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:41:18 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9DE1E3FE
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:29:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F3B26D2
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:41:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 69EC561D3E
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:29:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA231C433D2;
-        Sat, 31 Dec 2022 00:29:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6FD2661C3A
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:41:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1AA0C433EF;
+        Sat, 31 Dec 2022 01:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672446544;
-        bh=khK6i/zrvDEnxOYr9g+ON7FbIBrB7/utzpBc0YK49Sc=;
+        s=k20201202; t=1672450876;
+        bh=bpsxLlA9UrZheMn2UP24dl5HxG0Ic/pudPCYxoERVW8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nFZXmAqXwV/TMiO+9XCmRrkCJmwPGSEzlTeo82R+652XqFkpJs1ldvb90aZ1VrKEC
-         y2UmFDr8tq1WoJHmU7XY18KNXK1e4w2ATsk+5H0DIIiBZeruIBC2SkwzeRjgIU1Ayv
-         26wA73BzhwIuyLjHVsxKHUkqkgszoHCz4+TDRiDvr0H/UCzAjhvHggUmIxEVuzlVZG
-         lr22ScInB1Qs8hy+fsV7MxScb+p/TfJXa6U5EAQgQ5U4DLZHx/CVXeiqErSX7JyaKA
-         kEIsCG973wbWn0vvOcjjaH5fdPe14Yx9qBXZxf02I3XSil+9KXjJ5tdAARN/1wY1f3
-         Yr2wDqT/qNwpQ==
-Subject: [PATCH 7/9] xfs_scrub: check dependencies of a scrub type before
- repairing
+        b=Ou5rfoG/53j37KU3mJAgTXkQPPdGbeAQwTb7MRQ9jii/gvb7oJJxegDcseuP7L3Xa
+         okC1hckWE4a0+Ym1DXJkVSNAyc/P2qa/mmDoHNpsIuhedT3VZUWwcBvf+7J299zqZT
+         TY2Zi3d2zrwOc//Km2NZU179xhd0Vr1Z0H/uCjpOwGp1Ka9wlyHJ8oFXFOiUAM+cNi
+         Ilyf+m3JEseX12CoxJaSYidWwAg+08Ibyl2YmGStaxfxEAd0t92AbeadokOw/BSGGp
+         M9cgWjHopXTL6p9Tux0RqfJ8D8jCHNgsOeL3G0nCrAaei0KNbf/YXteHf6NKDe/LVx
+         OhfIvINOzXYJw==
+Subject: [PATCH 17/38] xfs: create routine to allocate and initialize a
+ realtime rmap btree inode
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:18:18 -0800
-Message-ID: <167243869806.715746.18228141058609604189.stgit@magnolia>
-In-Reply-To: <167243869711.715746.14725730988345960302.stgit@magnolia>
-References: <167243869711.715746.14725730988345960302.stgit@magnolia>
+Message-ID: <167243869841.715303.1721205201463684435.stgit@magnolia>
+In-Reply-To: <167243869558.715303.13347105677486333748.stgit@magnolia>
+References: <167243869558.715303.13347105677486333748.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,81 +56,85 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Now that we have a map of a scrub type to its dependent scrub types, use
-this information to avoid trying to fix higher level metadata before the
-lower levels have passed.
+Create a library routine to allocate and initialize an empty realtime
+rmapbt inode.  We'll use this for mkfs and repair.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- scrub/repair.c |   32 ++++++++++++++++++++++++++++++++
- scrub/scrub.h  |    5 +++++
- 2 files changed, 37 insertions(+)
+ fs/xfs/libxfs/xfs_rtrmap_btree.c |   42 ++++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_rtrmap_btree.h |    5 +++++
+ 2 files changed, 47 insertions(+)
 
 
-diff --git a/scrub/repair.c b/scrub/repair.c
-index 7ad4f6cfe8a..8624167246a 100644
---- a/scrub/repair.c
-+++ b/scrub/repair.c
-@@ -488,6 +488,29 @@ action_list_process(
- 	return ret;
+diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.c b/fs/xfs/libxfs/xfs_rtrmap_btree.c
+index a099f33f26ab..9181fca2ba54 100644
+--- a/fs/xfs/libxfs/xfs_rtrmap_btree.c
++++ b/fs/xfs/libxfs/xfs_rtrmap_btree.c
+@@ -27,6 +27,7 @@
+ #include "xfs_extent_busy.h"
+ #include "xfs_rtgroup.h"
+ #include "xfs_bmap.h"
++#include "xfs_imeta.h"
+ 
+ static struct kmem_cache	*xfs_rtrmapbt_cur_cache;
+ 
+@@ -867,3 +868,44 @@ xfs_iflush_rtrmap(
+ 	xfs_rtrmapbt_to_disk(ip->i_mount, ifp->if_broot, ifp->if_broot_bytes,
+ 			dfp, XFS_DFORK_SIZE(dip, ip->i_mount, XFS_DATA_FORK));
  }
- 
-+/* Decide if the dependent scrub types of the given scrub type are ok. */
-+static bool
-+repair_item_dependencies_ok(
-+	const struct scrub_item	*sri,
-+	unsigned int		scrub_type)
++
++/*
++ * Create a realtime rmap btree inode.
++ *
++ * Regardless of the return value, the caller must clean up @ic.  If a new
++ * inode is returned through *ipp, the caller must finish setting up the incore
++ * inode and release it.
++ */
++int
++xfs_rtrmapbt_create(
++	struct xfs_trans	**tpp,
++	struct xfs_imeta_path	*path,
++	struct xfs_imeta_update	*upd,
++	struct xfs_inode	**ipp)
 +{
-+	unsigned int		dep_mask = repair_deps[scrub_type];
-+	unsigned int		b;
++	struct xfs_mount	*mp = (*tpp)->t_mountp;
++	struct xfs_ifork	*ifp;
++	struct xfs_inode	*ip;
++	int			error;
 +
-+	for (b = 0; dep_mask && b < XFS_SCRUB_TYPE_NR; b++, dep_mask >>= 1) {
-+		if (!(dep_mask & 1))
-+			continue;
-+		/*
-+		 * If this lower level object also needs repair, we can't fix
-+		 * the higher level item.
-+		 */
-+		if (sri->sri_state[b] & SCRUB_ITEM_NEEDSREPAIR)
-+			return false;
-+	}
++	*ipp = NULL;
 +
-+	return true;
++	error = xfs_imeta_create(tpp, path, S_IFREG, 0, &ip, upd);
++	if (error)
++		return error;
++
++	ifp = &ip->i_df;
++	ifp->if_format = XFS_DINODE_FMT_RMAP;
++	ASSERT(ifp->if_broot_bytes == 0);
++	ASSERT(ifp->if_bytes == 0);
++
++	/* Initialize the empty incore btree root. */
++	xfs_iroot_alloc(ip, XFS_DATA_FORK,
++			xfs_rtrmap_broot_space_calc(mp, 0, 0));
++	xfs_btree_init_block(mp, ifp->if_broot, &xfs_rtrmapbt_ops, 0, 0,
++			ip->i_ino);
++	xfs_trans_log_inode(*tpp, ip, XFS_ILOG_CORE | XFS_ILOG_DBROOT);
++
++	*ipp = ip;
++	return 0;
 +}
-+
- /*
-  * For a given filesystem object, perform all repairs of a given class
-  * (corrupt, xcorrupt, xfail, preen) if the repair item says it's needed.
-@@ -527,6 +550,15 @@ repair_item_class(
- 		if (!(sri->sri_state[scrub_type] & repair_mask))
- 			continue;
+diff --git a/fs/xfs/libxfs/xfs_rtrmap_btree.h b/fs/xfs/libxfs/xfs_rtrmap_btree.h
+index 6917a31bfe0c..046a60816736 100644
+--- a/fs/xfs/libxfs/xfs_rtrmap_btree.h
++++ b/fs/xfs/libxfs/xfs_rtrmap_btree.h
+@@ -198,4 +198,9 @@ void xfs_rtrmapbt_to_disk(struct xfs_mount *mp, struct xfs_btree_block *rblock,
+ 		unsigned int dblocklen);
+ void xfs_iflush_rtrmap(struct xfs_inode *ip, struct xfs_dinode *dip);
  
-+		/*
-+		 * Don't try to repair higher level items if their lower-level
-+		 * dependencies haven't been verified, unless this is our last
-+		 * chance to fix things without complaint.
-+		 */
-+		if (!(flags & XRM_FINAL_WARNING) &&
-+		    !repair_item_dependencies_ok(sri, scrub_type))
-+			continue;
++struct xfs_imeta_update;
 +
- 		fix = xfs_repair_metadata(ctx, xfdp, scrub_type, sri, flags);
- 		switch (fix) {
- 		case CHECK_DONE:
-diff --git a/scrub/scrub.h b/scrub/scrub.h
-index 0d5738dc692..75595f43ee9 100644
---- a/scrub/scrub.h
-+++ b/scrub/scrub.h
-@@ -43,6 +43,11 @@ enum check_outcome {
- #define SCRUB_ITEM_REPAIR_XREF	(SCRUB_ITEM_XFAIL | \
- 				 SCRUB_ITEM_XCORRUPT)
- 
-+/* Mask of bits signalling that a piece of metadata requires attention. */
-+#define SCRUB_ITEM_NEEDSREPAIR	(SCRUB_ITEM_CORRUPT | \
-+				 SCRUB_ITEM_XFAIL | \
-+				 SCRUB_ITEM_XCORRUPT)
++int xfs_rtrmapbt_create(struct xfs_trans **tpp, struct xfs_imeta_path *path,
++		struct xfs_imeta_update *ic, struct xfs_inode **ipp);
 +
- struct scrub_item {
- 	/*
- 	 * Information we need to call the scrub and repair ioctls.  Per-AG
+ #endif	/* __XFS_RTRMAP_BTREE_H__ */
 
