@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7636365A05B
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:14:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CFEF65A057
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:13:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236027AbiLaBOT (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:14:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42456 "EHLO
+        id S236017AbiLaBNO (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 20:13:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236023AbiLaBOS (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:14:18 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF4018E30
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:14:17 -0800 (PST)
+        with ESMTP id S236023AbiLaBNN (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:13:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD7F5183B1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:13:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 0B01ECE1921
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:14:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49E7CC433D2;
-        Sat, 31 Dec 2022 01:14:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D64261D5C
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:13:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC359C433EF;
+        Sat, 31 Dec 2022 01:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672449254;
-        bh=/heM1ZPC3PURgd83vq9uzCv0YjiU97tvFBpQV9U+qXU=;
+        s=k20201202; t=1672449191;
+        bh=gaIIH4FwthNbsEIcIkUlpnGzAxXIBfaTnqFsZOlaPHs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=c0iB48yRyKqcH6bFS6Sw0xL2qUBrjs5e8Cs3FYkoavYJZO68xwoL1wFGB75KzbWGN
-         ZtbKe8sXgVwPjwkJj/As6V48hedotFPnslP9KxHu34Ns6AKEuQR4Vs8ZO3F5/QpUDs
-         QsEr8MJgHHUE1x+7qwZ7koqNMTQ+aY/yBRhLY/QHbC9u9rG7namVYHtNY1AhM9pZJb
-         A7z88jAz25OqVVqSyBTEwrHWZH+nxWRz0eWeHwVnCGCOFk4ASmV4tUCoxJXxKdLUlQ
-         HKpAtg30DMnzG0Fm5UVPA6BJQCS8768PsYhfKHcoRWPG+xzFZRo67P1DXqROiEVc5d
-         pyZt+OB/KVX4Q==
-Subject: [PATCH 15/23] xfs: hide metadata inodes from everyone because they
- are special
+        b=NY9iSgAwdgWcuDs5qGW5CzTHCqeMfAnkLgXwj8qb/Pkf5HzHsOP3+6dlGEQ4Ho9aD
+         rMfNw/Za5FE8qQ/mEcIhEE6EVLXcYR8mdacl6mkONCdqHPg1YU/4bgbGMCwVFq206A
+         fSmAPuNzFODgQ+OPGRoBiEedg4lODKHgsDNAWBQ8iIcw+QKEk8KVX2lYjyNyNB8lcm
+         AgEuHr/R7ISuxMkcKOrMbZ+7Qg3M4ZyVmdoR9VyOsZSb5e+5urc8TvJTSm62MuHsZG
+         RYxymOivmHL0OGC+XPFnb/lN2Ez1RxmDr2jGH74nH9yw03RyukwRgM0wrZpyqEssd3
+         rizsYyIO2t/bg==
+Subject: [PATCH 11/23] xfs: enforce metadata inode flag
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:17:26 -0800
-Message-ID: <167243864669.708110.10147796623388213764.stgit@magnolia>
+Message-ID: <167243864610.708110.12688103056705381916.stgit@magnolia>
 In-Reply-To: <167243864431.708110.1688096566212843499.stgit@magnolia>
 References: <167243864431.708110.1688096566212843499.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -55,106 +54,209 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-Metadata inodes are private files and therefore cannot be exposed to
-userspace.  This means no bulkstat, no open-by-handle, no linking them
-into the directory tree, and no feeding them to LSMs.  As such, we mark
-them S_PRIVATE, which stops all that.
-
-While we're at it, put them in a separate lockdep class so that it won't
-get confused by "recursive" i_rwsem locking such as what happens when we
-write to a rt file and need to allocate from the rt bitmap file.
+Add checks for the metadata inode flag so that we don't ever leak
+metadata inodes out to userspace, and we don't ever try to read a
+regular inode as metadata.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- fs/xfs/scrub/tempfile.c |    8 ++++++++
- fs/xfs/xfs_iops.c       |   34 ++++++++++++++++++++++++++++++++--
- 2 files changed, 40 insertions(+), 2 deletions(-)
+ fs/xfs/libxfs/xfs_inode_buf.c |   73 +++++++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_inode_buf.h |    3 ++
+ fs/xfs/scrub/common.c         |    7 +++-
+ fs/xfs/scrub/inode_repair.c   |   10 ++++++
+ fs/xfs/xfs_icache.c           |    2 +
+ fs/xfs/xfs_inode.c            |   13 +++++++
+ 6 files changed, 107 insertions(+), 1 deletion(-)
 
 
-diff --git a/fs/xfs/scrub/tempfile.c b/fs/xfs/scrub/tempfile.c
-index beaaebf27284..9ae556fa4b7a 100644
---- a/fs/xfs/scrub/tempfile.c
-+++ b/fs/xfs/scrub/tempfile.c
-@@ -805,6 +805,14 @@ xrep_is_tempfile(
- 	const struct xfs_inode	*ip)
- {
- 	const struct inode	*inode = &ip->i_vnode;
-+	struct xfs_mount	*mp = ip->i_mount;
-+
-+	/*
-+	 * Files in the metadata directory tree also have S_PRIVATE set and
-+	 * IOP_XATTR unset, so we must distinguish them separately.
-+	 */
-+	if (xfs_has_metadir(mp) && (ip->i_diflags2 & XFS_DIFLAG2_METADATA))
-+		return false;
- 
- 	if (IS_PRIVATE(inode) && !(inode->i_opflags & IOP_XATTR))
- 		return true;
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index d580bf591d73..626ce6c4e2bf 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -44,6 +44,15 @@
- static struct lock_class_key xfs_nondir_ilock_class;
- static struct lock_class_key xfs_dir_ilock_class;
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.c b/fs/xfs/libxfs/xfs_inode_buf.c
+index 454f40b29249..1fb11d0e7eba 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.c
++++ b/fs/xfs/libxfs/xfs_inode_buf.c
+@@ -457,6 +457,73 @@ xfs_dinode_verify_nrext64(
+ 	return NULL;
+ }
  
 +/*
-+ * Metadata directories and files are not exposed to userspace, which means
-+ * that they never access any of the VFS IO locks and never experience page
-+ * faults.  Give them separate locking classes so that lockdep will not
-+ * complain about conflicts that cannot happen.
++ * Validate all the picky requirements we have for a file that claims to be
++ * filesystem metadata.
 + */
-+static struct lock_class_key xfs_metadata_file_ilock_class;
-+static struct lock_class_key xfs_metadata_dir_ilock_class;
++xfs_failaddr_t
++xfs_dinode_verify_metaflag(
++	struct xfs_mount	*mp,
++	struct xfs_dinode	*dip,
++	uint16_t		mode,
++	uint16_t		flags,
++	uint64_t		flags2)
++{
++	if (!xfs_has_metadir(mp))
++		return __this_address;
 +
- static int
- xfs_initxattrs(
- 	struct inode		*inode,
-@@ -1270,6 +1279,7 @@ xfs_setup_inode(
- {
- 	struct inode		*inode = &ip->i_vnode;
- 	gfp_t			gfp_mask;
-+	bool			is_meta = xfs_is_metadata_inode(ip);
++	/* V5 filesystem only */
++	if (dip->di_version < 3)
++		return __this_address;
++
++	/* V3 inode fields that are always zero */
++	if (dip->di_onlink)
++		return __this_address;
++	if ((flags2 & XFS_DIFLAG2_NREXT64) && dip->di_nrext64_pad)
++		return __this_address;
++	if (!(flags2 & XFS_DIFLAG2_NREXT64) && dip->di_flushiter)
++		return __this_address;
++
++	/* Metadata files can only be directories or regular files */
++	if (!S_ISDIR(mode) && !S_ISREG(mode))
++		return __this_address;
++
++	/* They must have zero access permissions */
++	if (mode & 0777)
++		return __this_address;
++
++	/* DMAPI event and state masks are zero */
++	if (dip->di_dmevmask || dip->di_dmstate)
++		return __this_address;
++
++	/* User, group, and project IDs must be zero */
++	if (dip->di_uid || dip->di_gid ||
++	    dip->di_projid_lo || dip->di_projid_hi)
++		return __this_address;
++
++	/* Immutable, sync, noatime, nodump, and nodefrag flags must be set */
++	if (!(flags & XFS_DIFLAG_IMMUTABLE))
++		return __this_address;
++	if (!(flags & XFS_DIFLAG_SYNC))
++		return __this_address;
++	if (!(flags & XFS_DIFLAG_NOATIME))
++		return __this_address;
++	if (!(flags & XFS_DIFLAG_NODUMP))
++		return __this_address;
++	if (!(flags & XFS_DIFLAG_NODEFRAG))
++		return __this_address;
++
++	/* Directories must have nosymlinks flags set */
++	if (S_ISDIR(mode) && !(flags & XFS_DIFLAG_NOSYMLINKS))
++		return __this_address;
++
++	/* dax flags2 must not be set */
++	if (flags2 & XFS_DIFLAG2_DAX)
++		return __this_address;
++
++	return NULL;
++}
++
+ xfs_failaddr_t
+ xfs_dinode_verify(
+ 	struct xfs_mount	*mp,
+@@ -610,6 +677,12 @@ xfs_dinode_verify(
+ 	    !xfs_has_bigtime(mp))
+ 		return __this_address;
  
- 	inode->i_ino = ip->i_ino;
- 	inode->i_state |= I_NEW;
-@@ -1281,6 +1291,16 @@ xfs_setup_inode(
- 	i_size_write(inode, ip->i_disk_size);
- 	xfs_diflags_to_iflags(ip, true);
- 
-+	/*
-+	 * Mark our metadata files as private so that LSMs and the ACL code
-+	 * don't try to add their own metadata or reason about these files,
-+	 * and users cannot ever obtain file handles to them.
-+	 */
-+	if (is_meta) {
-+		inode->i_flags |= S_PRIVATE;
-+		inode->i_opflags &= ~IOP_XATTR;
++	if (flags2 & XFS_DIFLAG2_METADATA) {
++		fa = xfs_dinode_verify_metaflag(mp, dip, mode, flags, flags2);
++		if (fa)
++			return fa;
 +	}
 +
- 	if (S_ISDIR(inode->i_mode)) {
- 		/*
- 		 * We set the i_rwsem class here to avoid potential races with
-@@ -1290,9 +1310,19 @@ xfs_setup_inode(
- 		 */
- 		lockdep_set_class(&inode->i_rwsem,
- 				  &inode->i_sb->s_type->i_mutex_dir_key);
--		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_dir_ilock_class);
-+		if (is_meta)
-+			lockdep_set_class(&ip->i_lock.mr_lock,
-+					  &xfs_metadata_dir_ilock_class);
-+		else
-+			lockdep_set_class(&ip->i_lock.mr_lock,
-+					  &xfs_dir_ilock_class);
- 	} else {
--		lockdep_set_class(&ip->i_lock.mr_lock, &xfs_nondir_ilock_class);
-+		if (is_meta)
-+			lockdep_set_class(&ip->i_lock.mr_lock,
-+					  &xfs_metadata_file_ilock_class);
-+		else
-+			lockdep_set_class(&ip->i_lock.mr_lock,
-+					  &xfs_nondir_ilock_class);
- 	}
+ 	return NULL;
+ }
  
- 	/*
+diff --git a/fs/xfs/libxfs/xfs_inode_buf.h b/fs/xfs/libxfs/xfs_inode_buf.h
+index 585ed5a110af..94d6e7c018e2 100644
+--- a/fs/xfs/libxfs/xfs_inode_buf.h
++++ b/fs/xfs/libxfs/xfs_inode_buf.h
+@@ -28,6 +28,9 @@ int	xfs_inode_from_disk(struct xfs_inode *ip, struct xfs_dinode *from);
+ 
+ xfs_failaddr_t xfs_dinode_verify(struct xfs_mount *mp, xfs_ino_t ino,
+ 			   struct xfs_dinode *dip);
++xfs_failaddr_t xfs_dinode_verify_metaflag(struct xfs_mount *mp,
++		struct xfs_dinode *dip, uint16_t mode, uint16_t flags,
++		uint64_t flags2);
+ xfs_failaddr_t xfs_inode_validate_extsize(struct xfs_mount *mp,
+ 		uint32_t extsize, uint16_t mode, uint16_t flags);
+ xfs_failaddr_t xfs_inode_validate_cowextsize(struct xfs_mount *mp,
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 2fbd8aa01ef7..b9c4f335cd8e 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -862,7 +862,12 @@ xchk_install_handle_inode(
+ 	struct xfs_scrub	*sc,
+ 	struct xfs_inode	*ip)
+ {
+-	if (VFS_I(ip)->i_generation != sc->sm->sm_gen) {
++	/*
++	 * Only the directories in the metadata directory tree can be scrubbed
++	 * by handle -- files must be checked through an explicit scrub type.
++	 */
++	if ((xfs_is_metadata_inode(ip) && !S_ISDIR(VFS_I(ip)->i_mode)) ||
++	    VFS_I(ip)->i_generation != sc->sm->sm_gen) {
+ 		xchk_irele(sc, ip);
+ 		return -ENOENT;
+ 	}
+diff --git a/fs/xfs/scrub/inode_repair.c b/fs/xfs/scrub/inode_repair.c
+index 6c889c21ddec..e9225536dc65 100644
+--- a/fs/xfs/scrub/inode_repair.c
++++ b/fs/xfs/scrub/inode_repair.c
+@@ -400,6 +400,16 @@ xrep_dinode_flags(
+ 		dip->di_nrext64_pad = 0;
+ 	else if (dip->di_version >= 3)
+ 		dip->di_v3_pad = 0;
++
++	if (flags2 & XFS_DIFLAG2_METADATA) {
++		xfs_failaddr_t	fa;
++
++		fa = xfs_dinode_verify_metaflag(sc->mp, dip, mode, flags,
++				flags2);
++		if (fa)
++			flags2 &= ~XFS_DIFLAG2_METADATA;
++	}
++
+ 	dip->di_flags = cpu_to_be16(flags);
+ 	dip->di_flags2 = cpu_to_be64(flags2);
+ }
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index bccdaf51cd67..fc11ae6eae0b 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -931,6 +931,8 @@ xfs_imeta_iget(
+ 		goto bad_rele;
+ 	if (xfs_mode_to_ftype(VFS_I(ip)->i_mode) != ftype)
+ 		goto bad_rele;
++	if (xfs_has_metadir(mp) && !xfs_is_metadata_inode(ip))
++		goto bad_rele;
+ 
+ 	*ipp = ip;
+ 	return 0;
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 83127fed2b10..2c140c6d51e7 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -572,8 +572,19 @@ xfs_lookup(
+ 	if (error)
+ 		goto out_free_name;
+ 
++	/*
++	 * Make sure that a corrupt directory cannot accidentally link to a
++	 * metadata file.
++	 */
++	if (XFS_IS_CORRUPT(dp->i_mount, xfs_is_metadata_inode(*ipp))) {
++		error = -EFSCORRUPTED;
++		goto out_irele;
++	}
++
+ 	return 0;
+ 
++out_irele:
++	xfs_irele(*ipp);
+ out_free_name:
+ 	if (ci_name)
+ 		kmem_free(ci_name->name);
+@@ -2714,6 +2725,8 @@ void
+ xfs_imeta_irele(
+ 	struct xfs_inode	*ip)
+ {
++	ASSERT(!xfs_has_metadir(ip->i_mount) || xfs_is_metadata_inode(ip));
++
+ 	xfs_irele(ip);
+ }
+ 
 
