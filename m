@@ -2,43 +2,43 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 043AA659F3F
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:11:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70A6365A010
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 01:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235741AbiLaAKm (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 19:10:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
+        id S236000AbiLaA4G (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 19:56:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235867AbiLaAKm (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:10:42 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 454871E3C3
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:10:41 -0800 (PST)
+        with ESMTP id S235815AbiLaA4F (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 19:56:05 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BF9CF3
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 16:56:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 02F3FB81E03
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:10:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97CE1C433F2;
-        Sat, 31 Dec 2022 00:10:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9580161D62
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 00:56:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02E82C433D2;
+        Sat, 31 Dec 2022 00:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672445438;
-        bh=Qwx/j33fOB4L/aVHTedpe5jZBpdg0kzEkoB32H4yL8w=;
+        s=k20201202; t=1672448164;
+        bh=/kmJQcs71yex9BZKuS+eMc5GoKJmMmo4Iiltc7aIKKk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ARb4AK/CTt4TDpPi9QVG0kq34fxoYUvQXaa+4XHVqGahhCD1Lqxtc7QKPl6k9yNrj
-         GhIixkhPd3n1OGQ40UHMnkNu611nwGQBuKW5zIccZd77bZ3drnJhbRz92prR6iM4wg
-         ny9rPIzEaWm8ACKz6EsIWWtUJgsMvqJOJ/YBKMd7MzQ28kEbF7h3Ju0Rn1q87IXG6l
-         EBN3jHl4iculkFdSe/Pc3mBzpiUrx0d0NWZZaRfWj2htZWTQM9RXvlpTWU2UztayYM
-         El0/z92at2aqE3rUoXcDxrJn54kqP3DPV6ck41hBPe01zEaZxO2qOoMrs9UFSpSKrg
-         69AcxuZ8qPYcg==
-Subject: [PATCH 2/4] xfs: remember sick inodes that get inactivated
+        b=Y4OzBMQr+HBmQDdK9bdqnaCKSGkF5RmcLNk2JLpNLboBs4y1TpBhaImJ0Jc2Aln7D
+         gIiJUtm749BvDv6IegYptjWcP1NDJQ5BTZVsidJxvJmr+YedQoCIhuaeG7n4sqD+qx
+         3IYvj3NzZf8HAmc91Ao+AZV7OFW9WKOaDO6BTcdkO1WXC12GkLl0qLcnNdVyoUEKZc
+         wrId6ORd6N83ljR3HXN2rJKYO6U3HEAiBomtqKBmU7dN2zh2tJdDoc/b3xxkXa3ut6
+         Dd9CrV4eYR6lz90ZTHh3mYkZkNu6Mm7uzoFUhE/Z5VZekPVNzeQPR45OLgWKpEeacS
+         aw3c3AC/gUs8Q==
+Subject: [PATCHSET v1.0 0/7] xfs: refactor rt extent unit conversions
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     cem@kernel.org, djwong@kernel.org
+To:     djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org
-Date:   Fri, 30 Dec 2022 14:17:38 -0800
-Message-ID: <167243865844.711359.15658344595314273079.stgit@magnolia>
-In-Reply-To: <167243865816.711359.1865490497957941966.stgit@magnolia>
-References: <167243865816.711359.1865490497957941966.stgit@magnolia>
+Date:   Fri, 30 Dec 2022 14:17:40 -0800
+Message-ID: <167243866067.711673.17279545989126573423.stgit@magnolia>
+In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
+References: <Y69UsO7tDT3HcFri@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,94 +52,47 @@ Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi all,
 
-If an unhealthy inode gets inactivated, remember this fact in the
-per-fs health summary.
+This series replaces all the open-coded integer division and
+multiplication conversions between rt blocks and rt extents with calls
+to static inline helpers.  Having cleaned all that up, the helpers are
+augmented to skip the expensive operations in favor of bit shifts and
+masking if the rt extent size is a power of two.
 
-Signed-off-by: Darrick J. Wong <djwong@kernel.org>
+If you're going to start using this mess, you probably ought to just
+pull from my git trees, which are linked below.
+
+This is an extraordinary way to destroy everything.  Enjoy!
+Comments and questions are, as always, welcome.
+
+--D
+
+kernel git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=refactor-rt-unit-conversions
+
+xfsprogs git tree:
+https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=refactor-rt-unit-conversions
 ---
- libxfs/xfs_fs.h        |    1 +
- libxfs/xfs_health.h    |    7 +++++--
- libxfs/xfs_inode_buf.c |    2 +-
- spaceman/health.c      |    4 ++++
- 4 files changed, 11 insertions(+), 3 deletions(-)
-
-
-diff --git a/libxfs/xfs_fs.h b/libxfs/xfs_fs.h
-index 3885c56078f..417cf85c0f7 100644
---- a/libxfs/xfs_fs.h
-+++ b/libxfs/xfs_fs.h
-@@ -292,6 +292,7 @@ struct xfs_ag_geometry {
- #define XFS_AG_GEOM_SICK_FINOBT	(1 << 7)  /* free inode index */
- #define XFS_AG_GEOM_SICK_RMAPBT	(1 << 8)  /* reverse mappings */
- #define XFS_AG_GEOM_SICK_REFCNTBT (1 << 9)  /* reference counts */
-+#define XFS_AG_GEOM_SICK_INODES	(1 << 10) /* bad inodes were seen */
- 
- /*
-  * Structures for XFS_IOC_FSGROWFSDATA, XFS_IOC_FSGROWFSLOG & XFS_IOC_FSGROWFSRT
-diff --git a/libxfs/xfs_health.h b/libxfs/xfs_health.h
-index b3733f756bb..252334bc048 100644
---- a/libxfs/xfs_health.h
-+++ b/libxfs/xfs_health.h
-@@ -76,6 +76,7 @@ struct xfs_da_args;
- #define XFS_SICK_AG_FINOBT	(1 << 7)  /* free inode index */
- #define XFS_SICK_AG_RMAPBT	(1 << 8)  /* reverse mappings */
- #define XFS_SICK_AG_REFCNTBT	(1 << 9)  /* reference counts */
-+#define XFS_SICK_AG_INODES	(1 << 10) /* inactivated bad inodes */
- 
- /* Observable health issues for inode metadata. */
- #define XFS_SICK_INO_CORE	(1 << 0)  /* inode core */
-@@ -86,6 +87,8 @@ struct xfs_da_args;
- #define XFS_SICK_INO_XATTR	(1 << 5)  /* extended attributes */
- #define XFS_SICK_INO_SYMLINK	(1 << 6)  /* symbolic link remote target */
- #define XFS_SICK_INO_PARENT	(1 << 7)  /* parent pointers */
-+/* Don't propagate sick status to ag health summary during inactivation */
-+#define XFS_SICK_INO_FORGET	(1 << 8)
- 
- /* Primary evidence of health problems in a given group. */
- #define XFS_SICK_FS_PRIMARY	(XFS_SICK_FS_COUNTERS | \
-@@ -122,12 +125,12 @@ struct xfs_da_args;
- #define XFS_SICK_FS_SECONDARY	(0)
- #define XFS_SICK_RT_SECONDARY	(0)
- #define XFS_SICK_AG_SECONDARY	(0)
--#define XFS_SICK_INO_SECONDARY	(0)
-+#define XFS_SICK_INO_SECONDARY	(XFS_SICK_INO_FORGET)
- 
- /* Evidence of health problems elsewhere. */
- #define XFS_SICK_FS_INDIRECT	(0)
- #define XFS_SICK_RT_INDIRECT	(0)
--#define XFS_SICK_AG_INDIRECT	(0)
-+#define XFS_SICK_AG_INDIRECT	(XFS_SICK_AG_INODES)
- #define XFS_SICK_INO_INDIRECT	(0)
- 
- /* All health masks. */
-diff --git a/libxfs/xfs_inode_buf.c b/libxfs/xfs_inode_buf.c
-index aad64c0a2e6..82eb3f91b9d 100644
---- a/libxfs/xfs_inode_buf.c
-+++ b/libxfs/xfs_inode_buf.c
-@@ -136,7 +136,7 @@ xfs_imap_to_bp(
- 			imap->im_len, XBF_UNMAPPED, bpp, &xfs_inode_buf_ops);
- 	if (xfs_metadata_is_sick(error))
- 		xfs_agno_mark_sick(mp, xfs_daddr_to_agno(mp, imap->im_blkno),
--				XFS_SICK_AG_INOBT);
-+				XFS_SICK_AG_INODES);
- 	return error;
- }
- 
-diff --git a/spaceman/health.c b/spaceman/health.c
-index 88b12c0b0ea..12fb67bab28 100644
---- a/spaceman/health.c
-+++ b/spaceman/health.c
-@@ -127,6 +127,10 @@ static const struct flag_map ag_flags[] = {
- 		.descr = "reference count btree",
- 		.has_fn = has_reflink,
- 	},
-+	{
-+		.mask = XFS_AG_GEOM_SICK_INODES,
-+		.descr = "overall inode state",
-+	},
- 	{0},
- };
- 
+ fs/xfs/libxfs/xfs_bmap.c        |   19 +++-----
+ fs/xfs/libxfs/xfs_rtbitmap.c    |    4 +-
+ fs/xfs/libxfs/xfs_rtbitmap.h    |   88 +++++++++++++++++++++++++++++++++++++++
+ fs/xfs/libxfs/xfs_sb.c          |    2 +
+ fs/xfs/libxfs/xfs_swapext.c     |    7 ++-
+ fs/xfs/libxfs/xfs_trans_inode.c |    3 +
+ fs/xfs/libxfs/xfs_trans_resv.c  |    3 +
+ fs/xfs/scrub/inode.c            |    3 +
+ fs/xfs/scrub/inode_repair.c     |    3 +
+ fs/xfs/scrub/rtbitmap.c         |   18 +++-----
+ fs/xfs/scrub/rtsummary.c        |    4 +-
+ fs/xfs/xfs_bmap_util.c          |   38 +++++++----------
+ fs/xfs/xfs_fsmap.c              |   12 +++--
+ fs/xfs/xfs_ioctl.c              |    5 +-
+ fs/xfs/xfs_linux.h              |   12 +++++
+ fs/xfs/xfs_mount.h              |    2 +
+ fs/xfs/xfs_rtalloc.c            |   16 ++++---
+ fs/xfs/xfs_super.c              |    3 +
+ fs/xfs/xfs_trans.c              |    9 +++-
+ fs/xfs/xfs_xchgrange.c          |    4 +-
+ 20 files changed, 178 insertions(+), 77 deletions(-)
 
