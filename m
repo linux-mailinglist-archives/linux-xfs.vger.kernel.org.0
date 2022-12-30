@@ -2,154 +2,164 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1630F65A021
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 02:00:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BD5F65A143
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 03:10:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235779AbiLaBAR (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 20:00:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39292 "EHLO
+        id S236169AbiLaCKZ (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 21:10:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235750AbiLaBAQ (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 20:00:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF1F1C913
-        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 17:00:15 -0800 (PST)
+        with ESMTP id S231494AbiLaCKZ (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 21:10:25 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFECA140F1
+        for <linux-xfs@vger.kernel.org>; Fri, 30 Dec 2022 18:10:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4F302B81E0F
-        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 01:00:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 139C6C433D2;
-        Sat, 31 Dec 2022 01:00:13 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 25432CE1926
+        for <linux-xfs@vger.kernel.org>; Sat, 31 Dec 2022 02:10:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612F2C433D2;
+        Sat, 31 Dec 2022 02:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672448413;
-        bh=HS8HgPlWpUNECKZnA3KOHQpp4cZ09IgLn8zmpUyncrk=;
+        s=k20201202; t=1672452620;
+        bh=E2MOaathI95qDx3Jtrv9M8MI1l2ubyuCYPg5etJgn0Q=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SyAoLTbtkStVeNhB/RgOMgUazBEdCKFnc2vFMIgi3NR1qtelXisRIJvMKgv6kY12y
-         wskOVnX9yqLFTfPEqUFZ8Bri3Npw5Zsa8E+rWWGke11lyXSIzAgD7QcszgrRzvfRbQ
-         /bu0aPgBWLab2MhI7jcpHI9l4NyPOA4r0txOgDV9w18yBd3IviPOdreA8tWS+bhqia
-         euJ/ZWhFpIzCFVadCKmfIaZkyCH04eurBmDWcabbPNrPjP1sptjBxGexw9b3qlCZ1Y
-         GSr1H1Kg7EvztrAog3bKW1Xies4QM8Xlb4wOUpHhbnphqDJPV+2jfMx41UU01Us3k/
-         YP25qTy4OA4JA==
-Subject: [PATCHSET v1.0 00/46] libxfs: metadata inode directories
+        b=Ek1eXABmaSMGZVDFK1HskMWERJOGw/RULxLwXzc/qx3XDG+T735HryPiD3ygSpaym
+         agxNdtmCCQPEWo8ni+pj8tRkGtBNw2ObN8ryciBQeXKHt3UM5uGvNF7nQc2Y95yJe6
+         erAEqIK4sWTndycPgPtSgkZBSxfqWJ2t9KaK+njHLHjJddODhUjm7xSRoCq+IU6PKr
+         86kFiAu6/wKHsOfz/SLG5KdCFfN8Ae3UVXcppfG0Q/F0oscfiMJVzQY5NEdMr1vthi
+         Zgj6OISgINZl/KMF4wuuWzpyJwC9kRxfgtGJhPBlu06ZrdmajlqnUIeak/CVguHIuP
+         h8l96SaqVncnA==
+Subject: [PATCH 02/46] xfs: create transaction reservations for metadata inode
+ operations
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     djwong@kernel.org, cem@kernel.org
 Cc:     linux-xfs@vger.kernel.org
 Date:   Fri, 30 Dec 2022 14:19:19 -0800
-Message-ID: <167243875924.725900.7061782826830118387.stgit@magnolia>
-In-Reply-To: <Y69UsO7tDT3HcFri@magnolia>
-References: <Y69UsO7tDT3HcFri@magnolia>
+Message-ID: <167243875969.725900.3452525934158218936.stgit@magnolia>
+In-Reply-To: <167243875924.725900.7061782826830118387.stgit@magnolia>
+References: <167243875924.725900.7061782826830118387.stgit@magnolia>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-xfs.vger.kernel.org>
 X-Mailing-List: linux-xfs@vger.kernel.org
 
-Hi all,
+From: Darrick J. Wong <djwong@kernel.org>
 
-Add libxfs code from the kernel, then teach xfs_repair and mkfs to
-use the metadir functions to find metadata inodes.
+Create transaction reservation types and block reservation helpers to
+help us calculate transaction requirements.  Right now we're just
+separating the symbols for a future patch.
 
-If you're going to start using this mess, you probably ought to just
-pull from my git trees, which are linked below.
-
-This is an extraordinary way to destroy everything.  Enjoy!
-Comments and questions are, as always, welcome.
-
---D
-
-kernel git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=metadir
-
-xfsprogs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfsprogs-dev.git/log/?h=metadir
-
-fstests git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfstests-dev.git/log/?h=metadir
-
-xfsdocs git tree:
-https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-documentation.git/log/?h=metadir
+Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- db/check.c                      |   21 +
- db/inode.c                      |    3 
- db/metadump.c                   |   92 ++-
- db/namei.c                      |   43 +
- db/sb.c                         |   43 +
- include/kmem.h                  |    4 
- include/libxfs.h                |    1 
- include/xfs_inode.h             |   13 
- include/xfs_mount.h             |    3 
- include/xfs_trace.h             |   13 
- io/bulkstat.c                   |   16 -
- libfrog/fsgeom.c                |    4 
- libxfs/Makefile                 |    2 
- libxfs/init.c                   |   40 +
- libxfs/inode.c                  |  130 ++++
- libxfs/libxfs_api_defs.h        |   20 +
- libxfs/libxfs_priv.h            |    4 
- libxfs/util.c                   |   75 ++
- libxfs/xfs_format.h             |   51 ++
- libxfs/xfs_fs.h                 |   12 
- libxfs/xfs_health.h             |    4 
- libxfs/xfs_ialloc.c             |   16 -
- libxfs/xfs_ialloc.h             |    2 
- libxfs/xfs_imeta.c              | 1209 +++++++++++++++++++++++++++++++++++++++
- libxfs/xfs_imeta.h              |   94 +++
- libxfs/xfs_inode_buf.c          |   73 ++
- libxfs/xfs_inode_buf.h          |    3 
- libxfs/xfs_inode_util.c         |    4 
- libxfs/xfs_log_rlimit.c         |    9 
- libxfs/xfs_sb.c                 |   35 +
- libxfs/xfs_trans_resv.c         |   74 ++
- libxfs/xfs_trans_resv.h         |    2 
- libxfs/xfs_types.c              |    7 
- man/man2/ioctl_xfs_fsgeometry.2 |    3 
- man/man8/mkfs.xfs.8.in          |   11 
- man/man8/xfs_admin.8            |    9 
- man/man8/xfs_db.8               |   11 
- man/man8/xfs_io.8               |   10 
- man/man8/xfs_protofile.8        |   33 +
- mkfs/Makefile                   |   10 
- mkfs/lts_4.19.conf              |    1 
- mkfs/lts_5.10.conf              |    1 
- mkfs/lts_5.15.conf              |    1 
- mkfs/proto.c                    |  283 +++++++--
- mkfs/xfs_mkfs.c                 |   26 +
- mkfs/xfs_protofile.in           |  152 +++++
- repair/agheader.c               |    7 
- repair/dino_chunks.c            |   58 ++
- repair/dinode.c                 |  173 +++++-
- repair/dinode.h                 |    6 
- repair/dir2.c                   |   77 ++
- repair/globals.c                |    4 
- repair/globals.h                |    4 
- repair/incore.h                 |   50 +-
- repair/incore_ino.c             |    1 
- repair/phase1.c                 |    2 
- repair/phase2.c                 |   76 ++
- repair/phase4.c                 |   21 +
- repair/phase5.c                 |    7 
- repair/phase6.c                 |  853 +++++++++++++++++++++++-----
- repair/protos.h                 |    6 
- repair/sb.c                     |    3 
- repair/scan.c                   |   43 +
- repair/scan.h                   |    7 
- repair/xfs_repair.c             |   88 +++
- scrub/inodes.c                  |    5 
- scrub/inodes.h                  |    5 
- scrub/phase3.c                  |    7 
- scrub/phase5.c                  |    2 
- scrub/phase6.c                  |    2 
- 70 files changed, 3785 insertions(+), 395 deletions(-)
- create mode 100644 libxfs/xfs_imeta.c
- create mode 100644 libxfs/xfs_imeta.h
- create mode 100644 man/man8/xfs_protofile.8
- create mode 100644 mkfs/xfs_protofile.in
+ libxfs/libxfs_api_defs.h |    2 ++
+ libxfs/xfs_imeta.c       |   20 ++++++++++++++++++++
+ libxfs/xfs_imeta.h       |    3 +++
+ libxfs/xfs_trans_resv.c  |    4 ++++
+ libxfs/xfs_trans_resv.h  |    2 ++
+ 5 files changed, 31 insertions(+)
+
+
+diff --git a/libxfs/libxfs_api_defs.h b/libxfs/libxfs_api_defs.h
+index 5657fee51b8..69f1cf2c752 100644
+--- a/libxfs/libxfs_api_defs.h
++++ b/libxfs/libxfs_api_defs.h
+@@ -157,12 +157,14 @@
+ #define xfs_imap_to_bp			libxfs_imap_to_bp
+ 
+ #define xfs_imeta_create		libxfs_imeta_create
++#define xfs_imeta_create_space_res	libxfs_imeta_create_space_res
+ #define xfs_imeta_end_update		libxfs_imeta_end_update
+ #define xfs_imeta_link			libxfs_imeta_link
+ #define xfs_imeta_lookup		libxfs_imeta_lookup
+ #define xfs_imeta_mount			libxfs_imeta_mount
+ #define xfs_imeta_start_update		libxfs_imeta_start_update
+ #define xfs_imeta_unlink		libxfs_imeta_unlink
++#define xfs_imeta_unlink_space_res	libxfs_imeta_unlink_space_res
+ 
+ #define xfs_initialize_perag		libxfs_initialize_perag
+ #define xfs_initialize_perag_data	libxfs_initialize_perag_data
+diff --git a/libxfs/xfs_imeta.c b/libxfs/xfs_imeta.c
+index b5c6672e7d5..bc3c94634ce 100644
+--- a/libxfs/xfs_imeta.c
++++ b/libxfs/xfs_imeta.c
+@@ -18,6 +18,10 @@
+ #include "xfs_trace.h"
+ #include "xfs_inode.h"
+ #include "xfs_ialloc.h"
++#include "xfs_bmap_btree.h"
++#include "xfs_da_format.h"
++#include "xfs_da_btree.h"
++#include "xfs_trans_space.h"
+ 
+ /*
+  * Metadata Inode Number Management
+@@ -435,3 +439,19 @@ xfs_imeta_mount(
+ {
+ 	return 0;
+ }
++
++/* Calculate the log block reservation to create a metadata inode. */
++unsigned int
++xfs_imeta_create_space_res(
++	struct xfs_mount	*mp)
++{
++	return XFS_IALLOC_SPACE_RES(mp);
++}
++
++/* Calculate the log block reservation to unlink a metadata inode. */
++unsigned int
++xfs_imeta_unlink_space_res(
++	struct xfs_mount	*mp)
++{
++	return XFS_REMOVE_SPACE_RES(mp);
++}
+diff --git a/libxfs/xfs_imeta.h b/libxfs/xfs_imeta.h
+index b535e19ff1a..9d54cb0d796 100644
+--- a/libxfs/xfs_imeta.h
++++ b/libxfs/xfs_imeta.h
+@@ -45,4 +45,7 @@ int xfs_imeta_start_update(struct xfs_mount *mp,
+ bool xfs_is_static_meta_ino(struct xfs_mount *mp, xfs_ino_t ino);
+ int xfs_imeta_mount(struct xfs_mount *mp);
+ 
++unsigned int xfs_imeta_create_space_res(struct xfs_mount *mp);
++unsigned int xfs_imeta_unlink_space_res(struct xfs_mount *mp);
++
+ #endif /* __XFS_IMETA_H__ */
+diff --git a/libxfs/xfs_trans_resv.c b/libxfs/xfs_trans_resv.c
+index 04c444806fe..00bdcb1d550 100644
+--- a/libxfs/xfs_trans_resv.c
++++ b/libxfs/xfs_trans_resv.c
+@@ -1024,4 +1024,8 @@ xfs_trans_resv_calc(
+ 	resp->tr_itruncate.tr_logcount += logcount_adj;
+ 	resp->tr_write.tr_logcount += logcount_adj;
+ 	resp->tr_qm_dqalloc.tr_logcount += logcount_adj;
++
++	/* metadata inode creation and unlink */
++	resp->tr_imeta_create = resp->tr_create;
++	resp->tr_imeta_unlink = resp->tr_remove;
+ }
+diff --git a/libxfs/xfs_trans_resv.h b/libxfs/xfs_trans_resv.h
+index 0554b9d775d..3836c5131b9 100644
+--- a/libxfs/xfs_trans_resv.h
++++ b/libxfs/xfs_trans_resv.h
+@@ -48,6 +48,8 @@ struct xfs_trans_resv {
+ 	struct xfs_trans_res	tr_qm_dqalloc;	/* allocate quota on disk */
+ 	struct xfs_trans_res	tr_sb;		/* modify superblock */
+ 	struct xfs_trans_res	tr_fsyncts;	/* update timestamps on fsync */
++	struct xfs_trans_res	tr_imeta_create; /* create metadata inode */
++	struct xfs_trans_res	tr_imeta_unlink; /* unlink metadata inode */
+ };
+ 
+ /* shorthand way of accessing reservation structure */
 
