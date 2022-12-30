@@ -2,42 +2,41 @@ Return-Path: <linux-xfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-xfs@lfdr.de
 Delivered-To: lists+linux-xfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70B9F65A24C
-	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:13:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E85065A24E
+	for <lists+linux-xfs@lfdr.de>; Sat, 31 Dec 2022 04:14:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236335AbiLaDNK (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
-        Fri, 30 Dec 2022 22:13:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36274 "EHLO
+        id S236338AbiLaDOI (ORCPT <rfc822;lists+linux-xfs@lfdr.de>);
+        Fri, 30 Dec 2022 22:14:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236334AbiLaDNI (ORCPT
-        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:13:08 -0500
+        with ESMTP id S236216AbiLaDNi (ORCPT
+        <rfc822;linux-xfs@vger.kernel.org>); Fri, 30 Dec 2022 22:13:38 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49FD8FCD8;
-        Fri, 30 Dec 2022 19:13:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CBE1104;
+        Fri, 30 Dec 2022 19:13:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEE2E61D11;
-        Sat, 31 Dec 2022 03:13:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31CC7C433D2;
-        Sat, 31 Dec 2022 03:13:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D964661C7A;
+        Sat, 31 Dec 2022 03:13:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F287C433EF;
+        Sat, 31 Dec 2022 03:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672456386;
-        bh=VZqkYzqcVJ4BNbT5Dw9NFgcKVqlCex7OsHFIvfLszCk=;
+        s=k20201202; t=1672456417;
+        bh=jfYLF3Re+dwp7FUKkBZwhLg+BKZUEYdY4iW3sqaOWOs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hpxvrD6Gju2ca95g7RXeWldDtxQ9PixFORUs2CFSRQU5HoXrMu8uVKNCCCZfQSwjz
-         gmKgTD1oUFHJDS44FBZIk0VHzLojh5ngh6SZ5iCwKK0xnDNPxnv34VQWI/XdgvvNvj
-         1UJ7jZn3lKEKomrcH1CPFIzZBYeSdgBdBVaI8H13OGNIxWVU3dtFxfJwcBo7ZnueRy
-         Rp5cXX+OcheG9V4jRxhjdwgzvcR2T6FC5UqCVvA3nowaD1z4A65QZ7kuoO6Q5BD653
-         Jb4yFZL1YwsLYnevLGEDLIc7HDrJfOJUMsQjVtrg9IV2tQvXZDCDu2OVeol1I1C8Ql
-         FX+EFzQfYUa8w==
-Subject: [PATCH 02/13] fuzz: for fuzzing the rtrmapbt,
- find the path to the rt rmap btree file
+        b=Mpp3t8kR+IdAfVZGCYBhYITZ2gClbzTklAVf/o+qae2Y+b8mN6ufx5w9O+TwNQvHK
+         i3atS5vCM45zV0fD2DwyD9pGHOWCqM7+mYrakB9poYSLZ8p7vIe++yuUo1UMGOxci0
+         VsNC5VepY9EzeMhbOivWWDPweZEyfTryt6F/F7kyq/FQb1STqm1RAEzxChJOmqguHw
+         hlXOkgt3/P6Le4o+8s2QyjOaSlbmOJIL9QVIS1QVfLo6Y6dTz+hzRYzK/KFbMj3Lps
+         3ADUgy5404Kt0LeDRvYlacH657dB1gMMBy6FqtoPUEi3ISRUdujZPbp1WBlFqGY4Eg
+         HJIXDF7ns98yw==
+Subject: [PATCH 04/13] xfs/769: add rtrmapbt upgrade to test matrix
 From:   "Darrick J. Wong" <djwong@kernel.org>
 To:     zlang@redhat.com, djwong@kernel.org
 Cc:     linux-xfs@vger.kernel.org, fstests@vger.kernel.org, guan@eryu.me
 Date:   Fri, 30 Dec 2022 14:20:44 -0800
-Message-ID: <167243884421.739669.14830141556148374386.stgit@magnolia>
+Message-ID: <167243884448.739669.13756867615096925280.stgit@magnolia>
 In-Reply-To: <167243884390.739669.13524725872131241203.stgit@magnolia>
 References: <167243884390.739669.13524725872131241203.stgit@magnolia>
 User-Agent: StGit/0.19
@@ -56,199 +55,76 @@ X-Mailing-List: linux-xfs@vger.kernel.org
 
 From: Darrick J. Wong <djwong@kernel.org>
 
-The fs population code creates a realtime rmap btree in /some/ realtime
-group with at least two levels.  This rmapbt file isn't necessarily the
-one for group 0, so we need to find it programmatically.
+Add realtime reverse mapping btrees to the features that this test will
+try to upgrade.
 
 Signed-off-by: Darrick J. Wong <djwong@kernel.org>
 ---
- common/xfs    |   33 +++++++++++++++++++++++++++++++++
- tests/xfs/406 |    6 ++++--
- tests/xfs/407 |    6 ++++--
- tests/xfs/408 |    7 +++++--
- tests/xfs/409 |    7 +++++--
- tests/xfs/481 |    6 ++++--
- tests/xfs/482 |    7 +++++--
- 7 files changed, 60 insertions(+), 12 deletions(-)
+ tests/xfs/769 |   29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
 
-diff --git a/common/xfs b/common/xfs
-index aea2b678c8..63eff39d47 100644
---- a/common/xfs
-+++ b/common/xfs
-@@ -1814,6 +1814,39 @@ _scratch_xfs_find_agbtree_height() {
- 	return 1
+diff --git a/tests/xfs/769 b/tests/xfs/769
+index 624dd2a338..ccc3ea10bc 100755
+--- a/tests/xfs/769
++++ b/tests/xfs/769
+@@ -35,11 +35,36 @@ rt_configured()
+ 	test "$USE_EXTERNAL" = "yes" && test -n "$SCRATCH_RTDEV"
  }
  
-+# Find us the path to the inode containing a realtime btree with a specific
-+# height.
-+_scratch_xfs_find_rgbtree_height() {
-+	local bt_type="$1"
-+	local bt_height="$2"
-+	local rgcount=$(_xfs_mount_rgcount $SCRATCH_DEV)
-+	local path
-+	local path_format
-+	local bt_prefix
++need_rtgroups()
++{
++	local feat="$1"
 +
-+	case "${bt_type}" in
-+	"rmap")
-+		path_format="/realtime/%u.rmap"
-+		bt_prefix="u3.rtrmapbt"
-+		;;
-+	*)
-+		_fail "Don't know about rt btree ${bt_type}"
-+		;;
-+	esac
++	# if realtime isn't configured, we don't need rt groups
++	rt_configured || return 1
 +
-+	for ((rgno = 0; rgno < rgcount; rgno++)); do
-+		path="$(printf "${path_format}" "${rgno}")"
-+		bt_level=$(_scratch_xfs_db -c "path -m ${path}" -c "p ${bt_prefix}.level" | awk '{print $3}')
-+		# "level" is the actual level within the btree
-+		if [ "${bt_level}" -eq "$((bt_height - 1))" ]; then
-+			echo "${path}"
-+			return 0
-+		fi
-+	done
++	# rt rmap btrees require rt groups but rt groups cannot be added to
++	# an existing filesystem, so we must force it on at mkfs time
++	test "${FEATURE_STATE["rmapbt"]}" -eq 1 && return 0
++	test "$feat" = "rmapbt" && return 0
 +
 +	return 1
 +}
 +
- _require_xfs_mkfs_atomicswap()
+ # Compute the MKFS_OPTIONS string for a particular feature upgrade test
+ compute_mkfs_options()
  {
- 	# atomicswap can be activated on rmap or reflink filesystems.
-diff --git a/tests/xfs/406 b/tests/xfs/406
-index 78db18077c..8c5570886b 100755
---- a/tests/xfs/406
-+++ b/tests/xfs/406
-@@ -26,10 +26,12 @@ _require_scratch_xfs_fuzz_fields
- echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- 
--inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'sb 0' 'addr rrmapino')
-+path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
-+	_fail "could not find two-level rtrmapbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
- 
- echo "Fuzz rtrmapbt recs"
--_scratch_xfs_fuzz_metadata '' 'offline' 'sb 0' 'addr rrmapino' "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
-+_scratch_xfs_fuzz_metadata '' 'offline' "path -m $path" "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
- echo "Done fuzzing rtrmapbt recs"
- 
- # success, all done
-diff --git a/tests/xfs/407 b/tests/xfs/407
-index 5a43775b55..2460ea336c 100755
---- a/tests/xfs/407
-+++ b/tests/xfs/407
-@@ -26,10 +26,12 @@ _require_scratch_xfs_fuzz_fields
- echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- 
--inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'sb 0' 'addr rrmapino')
-+path="$(_scratch_xfs_find_rgbtree_height 'rmap' 1)" || \
-+	_fail "could not find two-level rtrmapbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
- 
- echo "Fuzz rtrmapbt recs"
--_scratch_xfs_fuzz_metadata '' 'online' 'sb 0' 'addr rrmapino' "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
-+_scratch_xfs_fuzz_metadata '' 'online' "path -m $path" "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
- echo "Done fuzzing rtrmapbt recs"
- 
- # success, all done
-diff --git a/tests/xfs/408 b/tests/xfs/408
-index 8049d6bead..3bed3824e8 100755
---- a/tests/xfs/408
-+++ b/tests/xfs/408
-@@ -4,7 +4,7 @@
- #
- # FS QA Test No. 408
- #
--# Populate a XFS filesystem and fuzz every rtrmapbt keyptr field.
-+# Populate a XFS filesystem and fuzz every rtrmapbt key/pointer field.
- # Use xfs_repair to fix the corruption.
- #
- . ./common/preamble
-@@ -26,8 +26,11 @@ _require_scratch_xfs_fuzz_fields
- echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- 
-+path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
-+	_fail "could not find two-level rtrmapbt"
++	local feat="$1"
+ 	local m_opts=""
+ 	local caller_options="$MKFS_OPTIONS"
++	local rtgroups
 +
- echo "Fuzz rtrmapbt keyptrs"
--_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'offline' 'sb 0' 'addr rrmapino' >> $seqres.full
-+_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'offline' "path -m $path" >> $seqres.full
- echo "Done fuzzing rtrmapbt keyptrs"
++	need_rtgroups "$feat" && rtgroups=1
++	if echo "$caller_options" | grep -q 'rtgroups='; then
++		test -z "$rtgroups" && rtgroups=0
++		caller_options="$(echo "$caller_options" | sed -e 's/rtgroups=*[0-9]*/rtgroups='$rtgroups'/g')"
++	elif [ -n "$rtgroups" ]; then
++		caller_options="$caller_options -r rtgroups=$rtgroups"
++	fi
  
- # success, all done
-diff --git a/tests/xfs/409 b/tests/xfs/409
-index adac95fea8..ce66175c6e 100755
---- a/tests/xfs/409
-+++ b/tests/xfs/409
-@@ -4,7 +4,7 @@
- #
- # FS QA Test No. 409
- #
--# Populate a XFS filesystem and fuzz every rtrmapbt keyptr field.
-+# Populate a XFS filesystem and fuzz every rtrmapbt key/pointer field.
- # Use xfs_scrub to fix the corruption.
- #
- . ./common/preamble
-@@ -26,8 +26,11 @@ _require_scratch_xfs_fuzz_fields
- echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
+ 	for feat in "${FEATURES[@]}"; do
+ 		local feat_state="${FEATURE_STATE["${feat}"]}"
+@@ -171,10 +196,12 @@ function post_exercise()
+ # upgrade don't spread failure to the rest of the tests.
+ FEATURES=()
+ if rt_configured; then
++	# rmap wasn't added to rt devices until after metadir
+ 	check_repair_upgrade finobt && FEATURES+=("finobt")
+ 	check_repair_upgrade inobtcount && FEATURES+=("inobtcount")
+ 	check_repair_upgrade bigtime && FEATURES+=("bigtime")
+ 	check_repair_upgrade metadir && FEATURES+=("metadir")
++	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
+ else
+ 	check_repair_upgrade finobt && FEATURES+=("finobt")
+ 	check_repair_upgrade rmapbt && FEATURES+=("rmapbt")
+@@ -197,7 +224,7 @@ for feat in "${FEATURES[@]}"; do
  
-+path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
-+	_fail "could not find two-level rtrmapbt"
-+
- echo "Fuzz rtrmapbt keyptrs"
--_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'offline' 'sb 0' 'addr rrmapino' >> $seqres.full
-+_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'online' "path -m $path" >> $seqres.full
- echo "Done fuzzing rtrmapbt keyptrs"
+ 	upgrade_start_message "$feat" | tee -a $seqres.full /dev/ttyprintk > /dev/null
  
- # success, all done
-diff --git a/tests/xfs/481 b/tests/xfs/481
-index 48c7580ccb..d303f2c27d 100755
---- a/tests/xfs/481
-+++ b/tests/xfs/481
-@@ -27,10 +27,12 @@ _disable_dmesg_check
- echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
+-	opts="$(compute_mkfs_options)"
++	opts="$(compute_mkfs_options "$feat")"
+ 	echo "mkfs.xfs $opts" >> $seqres.full
  
--inode_ver=$(_scratch_xfs_get_metadata_field "core.version" 'sb 0' 'addr rrmapino')
-+path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
-+	_fail "could not find two-level rtrmapbt"
-+inode_ver=$(_scratch_xfs_get_metadata_field "core.version" "path -m $path")
- 
- echo "Fuzz rtrmapbt recs"
--_scratch_xfs_fuzz_metadata '' 'none' 'sb 0' 'addr rrmapino' "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
-+_scratch_xfs_fuzz_metadata '' 'none' "path -m $path" "addr u${inode_ver}.rtrmapbt.ptrs[1]" >> $seqres.full
- echo "Done fuzzing rtrmapbt recs"
- 
- # success, all done
-diff --git a/tests/xfs/482 b/tests/xfs/482
-index 0192b94cc0..32a3012154 100755
---- a/tests/xfs/482
-+++ b/tests/xfs/482
-@@ -4,7 +4,7 @@
- #
- # FS QA Test No. 482
- #
--# Populate a XFS filesystem and fuzz every rtrmapbt keyptr field.
-+# Populate a XFS filesystem and fuzz every rtrmapbt key/pointer field.
- # Do not fix the filesystem, to test metadata verifiers.
- 
- . ./common/preamble
-@@ -27,8 +27,11 @@ _disable_dmesg_check
- echo "Format and populate"
- _scratch_populate_cached nofill > $seqres.full 2>&1
- 
-+path="$(_scratch_xfs_find_rgbtree_height 'rmap' 2)" || \
-+	_fail "could not find two-level rtrmapbt"
-+
- echo "Fuzz rtrmapbt keyptrs"
--_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'offline' 'sb 0' 'addr rrmapino' >> $seqres.full
-+_scratch_xfs_fuzz_metadata '(rtrmapbt)' 'offline' "path -m $path" >> $seqres.full
- echo "Done fuzzing rtrmapbt keyptrs"
- 
- # success, all done
+ 	# Format filesystem
 
